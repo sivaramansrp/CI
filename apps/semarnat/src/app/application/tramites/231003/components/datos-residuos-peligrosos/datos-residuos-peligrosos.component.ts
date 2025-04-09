@@ -1,6 +1,6 @@
 import { Catalogo, CatalogoSelectComponent, InputRadioComponent, TableComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder,FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RadioOpcion, SolicitudJson } from '@libs/shared/data-access-user/src/core/models/231003/solicitud.model'
 import { CommonModule } from '@angular/common';
 import rawData from '@libs/shared/theme/assets/json/231003/solicitud.json';
@@ -41,6 +41,10 @@ export class DatosResiduosPeligrososComponent implements OnInit {
   radioOptions: RadioOpcion[] = RADIO_OPCIONES.radioOptions;
   clasificacionRadioOptions: RadioOpcion[] = RADIO_OPCIONES.clasificacionRadioOptions;
 
+  constructor(public fb: FormBuilder) {
+    // Constructor logic if needed  
+  }
+
   ngOnInit(): void {
     this.nombre = RADIO_OPCIONES.nombre;
     this.establecimientoHeaderData = RADIO_OPCIONES.PrimasRelacionadas[0]?.encabezadoDeTabla || [];
@@ -59,36 +63,35 @@ export class DatosResiduosPeligrososComponent implements OnInit {
   }
 
   private inicializarFormulario(): void {
-    this.formularioDatos = new FormGroup({
-      numero: new FormControl('', Validators.required),
-      nombreMateriaPrima: new FormControl('', Validators.required),
-      cantidad: new FormControl({ value: '', disabled: true }),
-      cantidadLetra: new FormControl({ value: '', disabled: true }),
-      unidadDeMedida: new FormControl({ value: '', disabled: true }),
-      fraccionArancelaria: new FormControl({ value: '', disabled: true })
+    this.formularioDatos = this.fb.group({
+      numero: ['', Validators.required],
+      nombreMateriaPrima: ['', Validators.required],
+      cantidad: [{ value: '', disabled: true }],
+      cantidadLetra: [{ value: '', disabled: true }],
+      unidadDeMedida: [{ value: '', disabled: true }],
+      fraccionArancelaria: [{ value: '', disabled: true }]
     });
   }
+
 
   private crearFormularioResiduo(): void {
-    this.formularioResiduo = new FormGroup({
-      fraccionArancelaria: new FormControl('', Validators.required),
-      nico: new FormControl('', Validators.required),
-      acotacion: new FormControl({ value: '', disabled: true }, Validators.required),
-      residuoPeligroso: new FormControl('', Validators.required),
-      cantidad: new FormControl('', Validators.required),
-      cantidadLetra: new FormControl({ value: '', disabled: true }),
-      unidadMedida: new FormControl('', Validators.required),
-      clasificacion: new FormControl('', Validators.required),
-      claveResiduo: new FormControl({ value: '', disabled: true }, Validators.required),
-      nombre: new FormControl({ value: '', disabled: true }, Validators.required),
-      descripcion: new FormControl({ value: '', disabled: true }, Validators.required),
-      creti: new FormControl('', Validators.required),
-      estadoFisico: new FormControl('', Validators.required),
-      tipoContenedor: new FormControl('', Validators.required),
-      capacidad: new FormControl('', Validators.required)
+    this.formularioResiduo = this.fb.group({
+      fraccionArancelaria: ['', Validators.required],
+      nico: ['', Validators.required],
+      acotacion: [{ value: '', disabled: true }, Validators.required],
+      residuoPeligroso: ['', Validators.required],
+      cantidad: ['', Validators.required],
+      cantidadLetra: [{ value: '', disabled: true }],
+      unidadMedida: ['', Validators.required],
+      clasificacion: ['', Validators.required],
+      claveResiduo: [{ value: '', disabled: true }, Validators.required],
+      nombre: [{ value: '', disabled: true }, Validators.required],
+      descripcion: [{ value: '', disabled: true }, Validators.required],
+      creti: ['', Validators.required],
+      estadoFisico: ['', Validators.required],
+      tipoContenedor: ['', Validators.required],
+      capacidad: ['', Validators.required]
     });
   }
-
-
 
 }
