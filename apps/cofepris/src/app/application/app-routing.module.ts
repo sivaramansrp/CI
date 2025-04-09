@@ -6,13 +6,27 @@ const ROUTES: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'seleccion-tramite' },
   {
     path: 'seleccion-tramite',
-    component: SeleccionTramiteComponent,
+    component: SeleccionTramiteComponent
+  },
+  {
+    path: 'dispositivos-medicos-laboratorio',
+    loadChildren: () =>
+      import('./tramites/260218/importacion-dispositivos-mediocos-laboratorio.module').then(
+        (m) => m.ImportacionDispositivosMedicosLaboratorioModule
+      )
   },
   {
     path: 'permiso-maquila',
     loadChildren: () =>
       import('./tramites/260212/permiso-maquila.module').then(
         (m) => m.PermisoMaquilaModule
+      ),
+  },
+  {
+    path: 'consumo-personal',
+    loadChildren: () =>
+      import('./tramites/260102/consumo-personal.module').then(
+        (m) => m.ConsumoPersonalModule
       ),
   },
   {
@@ -110,6 +124,15 @@ const ROUTES: Routes = [
         (m) => m.AvisoSanitarioModule
       ),
   },
+
+  {
+    path: 'dispositivos-medicos-sin-registrar',
+    loadChildren: () =>
+      import('./tramites/260217/importacion-dispositivos-medicos-sin-registrar.module').then(
+        (m) => m.ImportacionDispositivosMedicosSinRegistrarModule
+      ),
+  },
+
   {
     path: 'materias-primas-destinados',
     loadChildren: () =>
@@ -137,6 +160,13 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/260203/permiso-sanitario-importacion-medicamentos.module').then(
         (m) => m.PermisoSanitarioImportacion260203Module
+      ),
+  },
+  {
+    path: 'retiros-cofepris',
+    loadChildren: () =>
+      import('./tramites/261702/retiros-cofepris.module').then(
+        (m) => m.RetirosCofeprisModule
       ),
   }
 ];

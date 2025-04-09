@@ -114,20 +114,20 @@ const ROUTES: Routes = [
         './tramites/570101/cancelacion-servicios-extraordinarios.module'
       ).then((m) => m.CancelacionServiciosExtraordinariosModule),
   },
-  
-{
-  path: 'registro-digitalizar-documentos',
-  loadChildren: () =>
-    import('./tramites/701/registro-digitalizar-documentos.module').then(
-      (m) => m.RegistroDigitalizarDocumentosModule
-    ),
-},
-{
-  path: 'transferencia-contenedores',
-  loadChildren: () =>
-    import('./tramites/11204/temporal-contenedores.module').then(
-      (m) => m.TemporalContenedoresModule
-    ),
+
+  {
+    path: 'registro-digitalizar-documentos',
+    loadChildren: () =>
+      import('./tramites/701/registro-digitalizar-documentos.module').then(
+        (m) => m.RegistroDigitalizarDocumentosModule
+      ),
+  },
+  {
+    path: 'transferencia-contenedores',
+    loadChildren: () =>
+      import('./tramites/11204/temporal-contenedores.module').then(
+        (m) => m.TemporalContenedoresModule
+      ),
   },
   {
     path: 'registro-digitalizar-documentos',
@@ -165,6 +165,13 @@ const ROUTES: Routes = [
       )
   },
   {
+    path: 'deposito-fiscal',
+    loadChildren: () =>
+      import('./tramites/104/deposito-fiscal-manufactura-vehiculos/deposito-fiscal-manufactura-vehiculos.module').then(
+        (m) => m.DepositoFiscalManufacturaVehiculosModule
+      )
+  },
+  {
     path: 'junta-tecnica',
     loadChildren: () =>
       import('./tramites/6101/junta-tecnica.module').then(
@@ -177,4 +184,4 @@ const ROUTES: Routes = [
   imports: [RouterModule.forChild(ROUTES)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

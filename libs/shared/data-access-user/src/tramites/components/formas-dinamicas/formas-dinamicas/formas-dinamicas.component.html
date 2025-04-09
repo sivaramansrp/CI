@@ -1,0 +1,149 @@
+@if (formularioTitulo) {
+  <ng-titulo [titulo]="formularioTitulo"></ng-titulo>
+}
+<form [formGroup]="forma">
+    @for (item of formularioDatos; track item.campo; let i = $index) {
+            @switch(item.tipo_input) {
+                @case ('text') {
+                    <div [ngClass]="[obtenerClaseResponsiva(item.clase), 'mt-' + item.margin_top]" class="min-height">
+                        <div class="form-group">
+                          <label class="form-label" [for]="item.id">{{
+                            item.label_nombre
+                          }} {{seRequiere(item.campo) ? '*:' : ':'}}</label>
+
+                          <input
+                            class="form-control"
+                            type="text"
+                            [id]="item.id"
+                            [placeholder]="item.marcador_de_posicion"
+                            [formControlName]="item.campo"
+                            [required]="seRequiere(item.campo)"
+                            [readonly]="item.solo_lectura"
+                            [ngClass]="esValido(item.campo) ? 'required' : ''"
+                            (change)="eventoDeCambioDeValor($event, item.campo)"
+                          />
+                          
+                          <validadores-de-formularios 
+                            [forma]="forma" 
+                            [controlDeFormulario]="item.campo" 
+                            [validadores]="item.validadores ?? []"
+                          ></validadores-de-formularios>
+                        </div>
+                      </div>
+                }  @case ('number') {
+                    <div [ngClass]="[obtenerClaseResponsiva(item.clase), 'mt-' + item.margin_top]" class="min-height">
+                        <div class="form-group">
+                          <label class="form-label" [for]="item.id">{{
+                            item.label_nombre
+                          }} {{seRequiere(item.campo) ? '*:' : ':'}}</label>
+
+                          <input
+                            class="form-control"
+                            type="number"
+                            [id]="item.id"
+                            [placeholder]="item.marcador_de_posicion"
+                            [formControlName]="item.campo"
+                            [required]="seRequiere(item.campo)"
+                            [readonly]="item.solo_lectura"
+                            [ngClass]="esValido(item.campo) ? 'required' : ''"
+                            (change)="eventoDeCambioDeValor($event, item.campo)"
+                          />
+                          <validadores-de-formularios 
+                            [forma]="forma" 
+                            [controlDeFormulario]="item.campo" 
+                            [validadores]="item.validadores ?? []"
+                          ></validadores-de-formularios>
+                        </div>
+                      </div>
+                } @case ('textarea') {
+                    <div [ngClass]="[obtenerClaseResponsiva(item.clase), 'mt-' + item.margin_top]" class="min-height">
+                        <label for="{{ item.id }}">{{ item.label_nombre }} {{seRequiere(item.campo) ? '*:' : ':'}}</label>
+
+                        <textarea
+                          class="form-control"
+                          name="{{ item.label_nombre }}"
+                          id="{{ item.id }}"
+                          rows="5"
+                          style="height: 100px !important"
+                          [formControlName]="item.campo"
+                          [required]="seRequiere(item.campo)"
+                          [readonly]="item.solo_lectura"
+                          [ngClass]="esValido(item.campo) ? 'required' : ''"
+                          (change)="eventoDeCambioDeValor($event, item.campo)"
+                        ></textarea>
+                
+                          <validadores-de-formularios 
+                            [forma]="forma" 
+                            [controlDeFormulario]="item.campo" 
+                            [validadores]="item.validadores ?? []"
+                          ></validadores-de-formularios>
+                      </div>
+                  } @case ('select-catalogos') {
+                    <div [ngClass]="[obtenerClaseResponsiva(item.clase), 'mt-' + item.margin_top]" class="min-height">
+                      <app-catalogo-select
+                        [catalogo]="item?.opciones || []" 
+                        [formControlName]="item.campo" 
+                        [label]="item.label_nombre" 
+                        [required]="seRequiere(item.campo)" 
+                        name=""
+                        (selectionChange)="eventoDeCambioDeValor($event, item.campo)"
+                      ></app-catalogo-select>
+                      
+                      <validadores-de-formularios 
+                            [forma]="forma" 
+                            [controlDeFormulario]="item.campo" 
+                            [validadores]="item.validadores ?? []"
+                          ></validadores-de-formularios>
+                      
+                    </div>
+                  } @case ('checkbox') {
+                    <div
+                    [ngClass]="[obtenerClaseResponsiva(item.clase), 'mt-' + item.margin_top]"
+                      class="formas-checkbox min-height">
+                    <div class="form-group w-100">
+                      <input
+                        type="checkbox"
+                        [id]="item.id"
+                        [formControlName]="item.campo"
+                        (change)="eventoDeCambioDeValor($event, item.campo)"
+                      />
+                      
+                      
+                      <label class="form-label" [for]="item.id" style="margin-left: 10px;">{{
+                        item.label_nombre
+                      }}</label>
+                    </div>
+                    </div>
+                  } @case ('button') {
+                    <div [ngClass]="[obtenerClaseResponsiva(item.clase), 'mt-' + item.margin_top]" class="min-height">
+                      <div class="form-group">
+                        <input 
+                          [id]="item.id"
+                          type="button" 
+                          class="btn btn-primary" 
+                          [value]="item.label_nombre" 
+                          (click)="alHacerClicEnElBoton(item)" 
+                        />
+                      </div>
+                    </div>
+                  } @case ('radio') {
+                    <div [ngClass]="[obtenerClaseResponsiva(item.clase), 'mt-' + item.margin_top]" class="min-height">
+                      <div class="form-group">
+                        <label class="form-label" [for]="item.id">{{
+                          item.label_nombre
+                        }}</label>
+                        <app-input-radio
+                          [radioOptions]="item.opciones || []"
+                          [selectedValue]="valorSeleccionado"
+                          (valueChange)="cambiarRadio($event)"
+                          id="{{item.id}}"
+                          formControlName="{{item.campo}}"
+                          (valueChange)="eventoDeCambioDeValor($event, item.campo)"
+                        ></app-input-radio>
+                        
+                      </div>
+                    </div>
+                  }
+            }
+    }
+  </form>

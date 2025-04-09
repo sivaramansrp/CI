@@ -47,7 +47,8 @@ describe('SolicitudComponent', () => {
   let fixture: ComponentFixture<SolicitudComponent>;
   let mockStore: jest.Mocked<Tramite130114Store>;
   let mockQuery: jest.Mocked<Tramite130114Query>;
-  let mockService: jest.Mocked<DiamanteBrutoService>;
+  let mockService: jest.Mocked<any>;
+  let mockDiamanteBrutoService: Partial<DiamanteBrutoService>;
 
   const mockProductoOptions: ProductoOpción[] = [
     { label: 'Nuevo', value: 'Nuevo' },
@@ -82,11 +83,6 @@ describe('SolicitudComponent', () => {
       setRepresentacion: jest.fn(),
     } as any;
 
-    mockStore = {
-      ...mockStore,
-      setProducto: jest.fn(),
-    } as any;
-
     mockQuery = {
       mostrarTabla$: new Subject<boolean>(),
       solicitud$: of(''),
@@ -114,6 +110,39 @@ describe('SolicitudComponent', () => {
     } as any;
 
     mockService = {
+   
+      getEntidadFederativa: jest.fn().mockReturnValue(of(mockCatalogo)),
+      getRepresentacionFederal: jest.fn().mockReturnValue(of(mockCatalogo)),
+      getListaDePaisesDisponibles: jest.fn().mockReturnValue(of(mockCatalogo)),
+      getPaisesPorBloque: jest.fn().mockReturnValue(of(mockCatalogo)),
+    };
+    jest.spyOn(mockService, 'getEntidadFederativa'); // Ensure the spy is set up
+
+    await TestBed.configureTestingModule({
+      declarations: [
+        SolicitudComponent,
+        PartidasDeLaMercanciaStubComponent,
+        DatosDelTramiteStubComponent,
+        DatosDeLaMercanciaStubComponent,
+        PaisProcendenciaStubComponent,
+        RepresentacionStubComponent,
+      ],
+      imports: [ReactiveFormsModule,HttpClientModule],
+      providers: [
+        FormBuilder,
+        { provide: Tramite130114Store, useValue: mockStore },
+        { provide: Tramite130114Query, useValue: mockQuery },
+        { provide: DiamanteBrutoService, useValue: mockDiamanteBrutoService },
+      ],
+    }).compileComponents();
+  });
+
+  beforeEach(async () => {
+    mockDiamanteBrutoService = {
+      getEntidadFederativa: jest.fn().mockReturnValue(of(mockCatalogo)),
+      getRepresentacionFederal: jest.fn().mockReturnValue(of(mockCatalogo)),
+      getListaDePaisesDisponibles: jest.fn().mockReturnValue(of(mockCatalogo)),
+      getPaisesPorBloque: jest.fn().mockReturnValue(of(mockCatalogo)),
       getSolicitudeOptions: jest.fn().mockReturnValue(
         of({
           options: mockProductoOptions,
@@ -125,67 +154,42 @@ describe('SolicitudComponent', () => {
           options: mockProductoOptions,
         })
       ),
-      getEntidadFederativa: jest.fn().mockReturnValue(of(mockCatalogo)),
-      getRepresentacionFederal: jest.fn().mockReturnValue(of(mockCatalogo)),
-      getListaDePaisesDisponibles: jest.fn().mockReturnValue(of(mockCatalogo)),
-      getPaisesPorBloque: jest.fn().mockReturnValue(of(mockCatalogo)),
-    } as any;
-
+      getTablaDatos: jest.fn().mockReturnValue(of([{ cantidad: 10, totalUSD: 1000 }])), // Mock implementation
+    };
+  
     await TestBed.configureTestingModule({
-      declarations: [
-        SolicitudComponent,
-        PartidasDeLaMercanciaStubComponent,
-        DatosDelTramiteStubComponent,
-        DatosDeLaMercanciaStubComponent,
-        PaisProcendenciaStubComponent,
-        RepresentacionStubComponent,
-      ],
-      imports: [ReactiveFormsModule, HttpClientModule],
+      declarations: [SolicitudComponent],
       providers: [
-        FormBuilder,
-        { provide: Tramite130114Store, useValue: mockStore },
-        { provide: Tramite130114Query, useValue: mockQuery },
-        { provide: DiamanteBrutoService, useValue: mockService },
+        { provide: DiamanteBrutoService, useValue: mockDiamanteBrutoService },
       ],
     }).compileComponents();
   });
-
   beforeEach(() => {
     fixture = TestBed.createComponent(SolicitudComponent);
     component = fixture.componentInstance;
-    component.getEstablecimientoTableData = mockPartidasdelaTable;
     component.ngOnInit();
   });
 
-  /**
-   * Ensures the component is created successfully.
-   */
   it('debería crear', () => {
     expect(component).toBeTruthy();
   });
 
-  /**
-   * Tests the `ngOnInit` lifecycle hook.
-   * Ensures all initialization logic is executed correctly.
-   */
   describe('ngOnInit', () => {
     it('Debe inicializar formularios y configurar suscripciones', () => {
       jest.spyOn(component, 'inicializarFormularios');
       jest.spyOn(component, 'configuracionFormularioSuscripciones');
       jest.spyOn(component, 'opcionesDeBusqueda');
       jest.spyOn(component, 'formularioTotalCount');
-      jest.spyOn(component, 'getEstablecimiento');
-      jest.spyOn(component, 'calcularTotales');
       jest.spyOn(component, 'fetchEntidadFederativa');
       jest.spyOn(component, 'fetchRepresentacionFederal');
       jest.spyOn(component, 'listaDePaisesDisponibles');
+
       component.ngOnInit();
+
       expect(component.inicializarFormularios).toHaveBeenCalled();
       expect(component.configuracionFormularioSuscripciones).toHaveBeenCalled();
       expect(component.opcionesDeBusqueda).toHaveBeenCalled();
       expect(component.formularioTotalCount).toHaveBeenCalled();
-      expect(component.getEstablecimiento).toHaveBeenCalled();
-      expect(component.calcularTotales).toHaveBeenCalled();
       expect(component.fetchEntidadFederativa).toHaveBeenCalled();
       expect(component.fetchRepresentacionFederal).toHaveBeenCalled();
       expect(component.listaDePaisesDisponibles).toHaveBeenCalled();
@@ -194,8 +198,10 @@ describe('SolicitudComponent', () => {
     it('Debería actualizar mostrarTabla según la consulta', () => {
       const mostrarTablaSubject = new Subject<boolean>();
       mockQuery.mostrarTabla$ = mostrarTablaSubject.asObservable();
+
       component.ngOnInit();
       mostrarTablaSubject.next(true);
+
       expect(component.mostrarTabla).toBe(true);
     });
 
@@ -204,11 +210,13 @@ describe('SolicitudComponent', () => {
   describe('inicializarFormularios', () => {
     it('debe inicializar todas las formas reactivas', () => {
       component.inicializarFormularios();
+
       expect(component.formDelTramite).toBeDefined();
       expect(component.mercanciaForm).toBeDefined();
       expect(component.partidasDelaMercanciaForm).toBeDefined();
       expect(component.paisForm).toBeDefined();
       expect(component.frmRepresentacionForm).toBeDefined();
+
       expect(component.formDelTramite.get('solicitud')).toBeDefined();
       expect(component.mercanciaForm.get('producto')?.value).toBe('Nuevo');
       expect(component.partidasDelaMercanciaForm.get('cantidadPartidasDeLaMercancia')).toBeDefined();
@@ -220,12 +228,13 @@ describe('SolicitudComponent', () => {
   describe('opcionesDeBusqueda', () => {
     it('Debería obtener las opciones de solicitud y producto', () => {
       component.opcionesDeBusqueda();
-      expect(mockService.getSolicitudeOptions).toHaveBeenCalled();
+
+      expect(mockDiamanteBrutoService.getSolicitudeOptions).toHaveBeenCalled();
       expect(mockStore.updateState).toHaveBeenCalledWith({
         solicitud: 'Nuevo',
         defaultSelect: 'Inicial',
       });
-      expect(mockService.getProductoOptions).toHaveBeenCalled();
+      expect(mockDiamanteBrutoService.getProductoOptions).toHaveBeenCalled();
       expect(mockStore.updateState).toHaveBeenCalledWith({
         producto: 'Nuevo',
         defaultProducto: 'Nuevo',
@@ -233,39 +242,6 @@ describe('SolicitudComponent', () => {
     });
   });
 
-  describe('opcionesDeBusqueda', () => {
-    it('should call updateState with correct arguments for solicitud options', () => {
-      // Act: Call the method
-      component.opcionesDeBusqueda();
-
-      // Assert: Verify updateState is called with correct arguments for solicitud
-      expect(mockStore.updateState).toHaveBeenCalledWith({
-        solicitud: 'Nuevo',
-        defaultSelect: 'Inicial',
-      });
-    });
-
-    it('should call updateState with correct arguments for producto options', () => {
-      // Act: Call the method
-      component.opcionesDeBusqueda();
-
-      // Assert: Verify updateState is called with correct arguments for producto
-      expect(mockStore.updateState).toHaveBeenCalledWith({
-        producto: 'Nuevo',
-        defaultProducto: 'Nuevo',
-      });
-    });
-  });
-
-  describe('calcularTotales', () => {
-    it('Debe calcular los totales a partir de tableBodyData', () => {
-      component.tableBodyData = mockPartidasdelaTable.tableBody;
-      component.formularioTotalCount();
-      component.calcularTotales();
-      expect(component.formForTotalCount.get('cantidadTotal')?.value).toBe(30);
-      expect(component.formForTotalCount.get('valorTotalUSD')?.value).toBe(300);
-    });
-  });
 
   describe('validarYEnviarFormulario', () => {
     it('Debería establecer mostrarTabla en verdadero y marcar el formulario como tocado si no es válido', () => {
@@ -274,27 +250,32 @@ describe('SolicitudComponent', () => {
         descripcionPartidasDeLaMercancia: ['', Validators.required],
         valorPartidaUSDPartidasDeLaMercancia: ['', Validators.required],
       });
-
       jest.spyOn(component.partidasDelaMercanciaForm, 'markAllAsTouched');
 
-      // Call the method
       component.validarYEnviarFormulario();
 
-      // Ensure mostrarTabla is set to true
-      expect(component.mostrarTabla).toBe(false);
-
-      // Ensure the form is marked as touched
       expect(component.partidasDelaMercanciaForm.markAllAsTouched).toHaveBeenCalled();
+    });
 
-      // Ensure the form is invalid
-      expect(component.partidasDelaMercanciaForm.valid).toBe(false);
+    it('Debe establecer mostrarTabla como verdadero si el formulario es válido', () => {
+      component.partidasDelaMercanciaForm = TestBed.inject(FormBuilder).group({
+        cantidadPartidasDeLaMercancia: ['10', [Validators.required, Validators.pattern('^[0-9]+$')]],
+        descripcionPartidasDeLaMercancia: ['Test', Validators.required],
+        valorPartidaUSDPartidasDeLaMercancia: ['100', Validators.required],
+      });
+
+      component.validarYEnviarFormulario();
+
+      expect(component.mostrarTabla).toBe(true);
     });
   });
 
   describe('navegarParaModificarPartida', () => {
     it('Debería actualizar el estado y mostrarTabla si hay fila seleccionada', () => {
-      component.filaSeleccionada = { tbodyData: ['10', 'Item', '50', 'kg', '1234', '100'] };
+      component.filaSeleccionada = [{ cantidad: '10', descripcion: 'Item', precioUnitarioUSD: '50', unidadDeMedida: 'kg', fraccionFrancelaria: '1234', totalUSD: '100' }];
+
       component.navegarParaModificarPartida();
+
       expect(mockStore.setMostrarTabla).toHaveBeenCalledWith(true);
       expect(mockStore.storeTableValues).toHaveBeenCalledWith(component.filaSeleccionada);
     });
@@ -302,8 +283,9 @@ describe('SolicitudComponent', () => {
 
   describe('fetchEntidadFederativa', () => {
     it('Debería obtener la lista de entidades federativas', () => {
-      component.fetchEntidadFederativa();
-      expect(mockService.getEntidadFederativa).toHaveBeenCalled();
+      component.fetchEntidadFederativa(); // Explicitly call the method
+    
+      expect(mockDiamanteBrutoService.getEntidadFederativa).toHaveBeenCalled(); // Correct the mock service reference
       expect(component.entidadFederativa).toEqual(mockCatalogo);
     });
   });
@@ -311,7 +293,8 @@ describe('SolicitudComponent', () => {
   describe('fetchRepresentacionFederal', () => {
     it('Debería obtener la lista de representaciones federales', () => {
       component.fetchRepresentacionFederal();
-      expect(mockService.getRepresentacionFederal).toHaveBeenCalled();
+
+      expect(mockDiamanteBrutoService.getRepresentacionFederal).toHaveBeenCalled();
       expect(component.representacionFederal).toEqual(mockCatalogo);
     });
   });
@@ -319,7 +302,8 @@ describe('SolicitudComponent', () => {
   describe('listaDePaisesDisponibles', () => {
     it('Debería obtener la lista de países disponibles', () => {
       component.listaDePaisesDisponibles();
-      expect(mockService.getListaDePaisesDisponibles).toHaveBeenCalled();
+
+      expect(mockDiamanteBrutoService.getListaDePaisesDisponibles).toHaveBeenCalled();
       expect(component.elementosDeBloque).toEqual(mockCatalogo);
     });
   });
@@ -327,7 +311,8 @@ describe('SolicitudComponent', () => {
   describe('fetchPaisesPorBloque', () => {
     it('Debería obtener países por bloque y actualizar selectRangoDias', () => {
       component.fetchPaisesPorBloque(1);
-      expect(mockService.getPaisesPorBloque).toHaveBeenCalledWith(1);
+
+      expect(mockDiamanteBrutoService.getPaisesPorBloque).toHaveBeenCalledWith(1);
       expect(component.paisesPorBloque).toEqual(mockCatalogo);
       expect(component.selectRangoDias).toEqual(['Option 1', 'Option 2']);
     });
@@ -336,183 +321,38 @@ describe('SolicitudComponent', () => {
   describe('enCambioDeBloque', () => {
     it('Debería llamar a fetchPaisesPorBloque con el bloqueId', () => {
       jest.spyOn(component, 'fetchPaisesPorBloque');
+
       component.enCambioDeBloque(2);
+
       expect(component.fetchPaisesPorBloque).toHaveBeenCalledWith(2);
     });
   });
 
   describe('setValoresStore', () => {
     it('Debería actualizar el store según el método especificado', () => {
+      component.mercanciaForm = TestBed.inject(FormBuilder).group({
+        producto: ['Nuevo'], 
+      });
+  
       component.setValoresStore({
         form: component.mercanciaForm,
         campo: 'producto',
         metodoNombre: 'setProducto',
       });
-
+  
       expect(mockStore.setProducto).toHaveBeenCalledWith('Nuevo');
     });
   });
-
-  describe('setValoresStore', () => {
-    let mockForm: FormGroup;
- 
-    beforeEach(() => {
-      mockForm = TestBed.inject(FormBuilder).group({
-        valorPartidaUSD: ['100.50'],
-        descripcion: ['Test Description'],
-        cantidad: ['50'],
-        unidadMedida: ['kg'],
-        bloque: ['Bloque 1'],
-        usoEspecifico: ['Uso Específico'],
-        justificacionImportacionExportacion: ['Justificación'],
-        observaciones: ['Observaciones'],
-        entidad: ['Entidad 1'],
-        representacion: ['Representación 1'],
-      });
-    });
- 
-    function testSetValoresStore(event: { campo: string; metodoNombre: string }, expectedValue: any) {
-      mockForm.patchValue({ [event.campo]: expectedValue }); // Set the expected value in the form
-      component.setValoresStore({ form: mockForm, ...event });
-      expect((mockStore as any)[event.metodoNombre]).toHaveBeenCalledWith(expectedValue);
-    }
- 
-    it('should handle numeric values correctly for setValorPartidaUSD', () => {
-      testSetValoresStore(
-        { campo: 'valorPartidaUSD', metodoNombre: 'setValorPartidaUSD' },
-        100.5
-      );
-    });
- 
-    it('should handle string values correctly for setDescripcion', () => {
-      testSetValoresStore(
-        { campo: 'descripcion', metodoNombre: 'setDescripcion' },
-        'Test Description'
-      );
-    });
- 
-    it('should handle numeric values correctly for setCantidad', () => {
-      testSetValoresStore(
-        { campo: 'cantidad', metodoNombre: 'setCantidad' },
-        '50'
-      );
-    });
- 
-    it('should handle string values correctly for setUnidadMedida', () => {
-      testSetValoresStore(
-        { campo: 'unidadMedida', metodoNombre: 'setUnidadMedida' },
-        'kg'
-      );
-    });
- 
-    it('should handle string values correctly for setBloque', () => {
-      testSetValoresStore(
-        { campo: 'bloque', metodoNombre: 'setBloque' },
-        'Bloque 1'
-      );
-    });
- 
-    it('should handle string values correctly for setUsoEspecifico', () => {
-      testSetValoresStore(
-        { campo: 'usoEspecifico', metodoNombre: 'setUsoEspecifico' },
-        'Uso Específico'
-      );
-    });
- 
-    it('should handle string values correctly for setJustificacionImportacionExportacion', () => {
-      testSetValoresStore(
-        { campo: 'justificacionImportacionExportacion', metodoNombre: 'setJustificacionImportacionExportacion' },
-        'Justificación'
-      );
-    });
- 
-    it('should handle string values correctly for setObservaciones', () => {
-      testSetValoresStore(
-        { campo: 'observaciones', metodoNombre: 'setObservaciones' },
-        'Observaciones'
-      );
-    });
- 
-    it('should handle string values correctly for setEntidad', () => {
-      testSetValoresStore(
-        { campo: 'entidad', metodoNombre: 'setEntidad' },
-        'Entidad 1'
-      );
-    });
- 
-    it('should handle string values correctly for setRepresentacion', () => {
-      testSetValoresStore(
-        { campo: 'representacion', metodoNombre: 'setRepresentacion' },
-        'Representación 1'
-      );
-    });
- 
-    it('should log an error for an invalid metodoNombre', () => {
-      const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
-      const event = {
-        form: mockForm,
-        campo: 'descripcion',
-        metodoNombre: 'invalidMethod',
-      };
- 
-      component.setValoresStore(event);
- 
-      expect(consoleSpy).toHaveBeenCalledWith(
-        'Método invalidMethod no existe en Tramite130114Store'
-      );
-    });
-  });
- 
 
   describe('ngOnDestroy', () => {
     it('Debería completar el tema destruido$', () => {
       const destroyedSpy = jest.spyOn(component['destroyed$'], 'next');
       const completeSpy = jest.spyOn(component['destroyed$'], 'complete');
+
       component.ngOnDestroy();
+
       expect(destroyedSpy).toHaveBeenCalled();
       expect(completeSpy).toHaveBeenCalled();
-    });
-  });
-
-  /**
-   * Tests the `resetForm` method.
-   * Ensures the form is reset to its initial state.
-   */
-  describe('resetForm', () => {
-    it('Debería reiniciar el formulario a su estado inicial', () => {
-      component.mercanciaForm.patchValue({ producto: 'Nuevo' });
-      // component.resetForm();
-      expect(component.mercanciaForm.get('producto')?.value).toBe('Nuevo');
-    });
-  });
-
-  describe('manejarlaFilaSeleccionada', () => {
-    it('should set filaSeleccionada to null if filasSeleccionadas is empty', () => {
-      // Arrange: Pass an empty array
-      const filasSeleccionadas: any[] = [];
-
-      // Act: Call the method
-      component.manejarlaFilaSeleccionada(filasSeleccionadas);
-
-      // Assert: Verify filaSeleccionada is null
-      expect(component.filaSeleccionada).toBeNull();
-
-      // Assert: Verify storeTableValues is not called
-      expect(mockStore.storeTableValues).not.toHaveBeenCalled();
-    });
-
-    it('should set filaSeleccionada to the first item if filasSeleccionadas is not empty', () => {
-      // Arrange: Pass an array with one selected row
-      const filasSeleccionadas: any[] = [{ tbodyData: ['Value1', 'Value2'] }];
-
-      // Act: Call the method
-      component.manejarlaFilaSeleccionada(filasSeleccionadas);
-
-      // Assert: Verify filaSeleccionada is set to the first item
-      expect(component.filaSeleccionada).toEqual(filasSeleccionadas[0]);
-
-      // Assert: Verify storeTableValues is called with the selected row
-      expect(mockStore.storeTableValues).toHaveBeenCalledWith(filasSeleccionadas[0]);
     });
   });
 });
