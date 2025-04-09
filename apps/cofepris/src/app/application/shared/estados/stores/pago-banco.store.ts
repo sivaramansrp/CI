@@ -165,7 +165,7 @@ export class TramitePagoBancoStore extends Store<SolicitudPagoBancoState> {
   /**
    * Limpia los datos de la solicitud
    */
-  public limpiarSolicitud() {
+  public limpiarSolicitud(): void {
     this.reset();
   }
 }
