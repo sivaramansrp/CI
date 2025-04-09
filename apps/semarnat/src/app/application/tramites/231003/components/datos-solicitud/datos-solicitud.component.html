@@ -117,15 +117,15 @@
   </form>
 </div>
 <ng-titulo titulo="Información sobre precauciones"></ng-titulo>
-<div class="row mb-3">
+<div class="row mb-3" [formGroup]="formularioPrecaucionesManejo">
   <div class="col-md-10">
     <div class="form-group">
-      <label class="form-label">Información sobre las precauciones de manejo que se debe dar al residuo
-        peligroso*:</label>
-      <textarea class="form-control disabled-color textarea-auto-height" rows="4" name="solicitudAcotacion"></textarea>
+      <label class="form-label">Información sobre las precauciones de manejo que se debe dar al residuo peligroso*:</label>
+      <textarea class="form-control disabled-color textarea-auto-height" rows="4" formControlName="precaucionesManejo"></textarea>
     </div>
   </div>
 </div>
+
 
 <ng-titulo titulo="Lugar donde se realizará el reciclaje"></ng-titulo>
 <form [formGroup]="formularioLugarReciclaje">

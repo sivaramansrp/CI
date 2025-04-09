@@ -31,6 +31,8 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
 
   formularioEmpresaTransportista!: FormGroup;
 
+  formularioPrecaucionesManejo!: FormGroup;
+
   aduanas!: Catalogo[];
 
   radioOptions: RadioOpcion[] = RADIO_OPCIONES.radioOptions;
@@ -61,6 +63,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     this.inicializarFormularioEmpresaReciclaje();
     this.inicializarFormularioLugarReciclaje();
     this.inicializarFormularioEmpresaTransportista();
+    this.inicializarFormularioPrecaucionesManejo();
     this.suscribirCambioRequiereEmpresa();
     this.suscribirCambioReciclajeInstalaciones();
     this.recuperarValoresDesdeStore();
@@ -94,6 +97,12 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     this.formularioEmpresaTransportista = this.fb.group({
       nombreEmpresaTransportistaResiduos: ['', Validators.required],
       numeroAutorizacionSemarnat: ['', Validators.required]
+    });
+  }
+
+  private inicializarFormularioPrecaucionesManejo(): void {
+    this.formularioPrecaucionesManejo = this.fb.group({
+      precaucionesManejo: ['', Validators.required]
     });
   }
 
@@ -160,6 +169,8 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     this.formularioEmpresaReciclaje.patchValue(ESTADO.empresaReciclaje, { emitEvent: false });
     this.formularioLugarReciclaje.patchValue(ESTADO.lugarReciclaje, { emitEvent: false });
     this.formularioEmpresaTransportista.patchValue(ESTADO.empresaTransportista, { emitEvent: false });
+    this.formularioPrecaucionesManejo.patchValue(ESTADO.precaucionesManejo, { emitEvent: false });
+
   }
 
   private suscribirseACambiosDeFormulario(): void {
@@ -178,6 +189,10 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     this.formularioEmpresaTransportista.valueChanges
       .pipe(takeUntil(this.destruir$))
       .subscribe(valor => this.formularioSolicitudStore.actualizarEmpresaTransportista(valor));
+
+      this.formularioPrecaucionesManejo.valueChanges
+      .pipe(takeUntil(this.destruir$))
+      .subscribe(valor => this.formularioSolicitudStore.actualizarPrecaucionesManejo(valor));
 
   }
 

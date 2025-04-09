@@ -27,6 +27,10 @@ export interface EstadoFormularioReciclaje {
         numeroAutorizacionSemarnat: string;
     };
 
+    precaucionesManejo: {
+        precaucionesManejo: string;
+      };
+    
 }
 
 /**
@@ -54,7 +58,10 @@ export function crearEstadoInicialFormularioReciclaje(): EstadoFormularioRecicla
         empresaTransportista: {
             nombreEmpresaTransportistaResiduos: '',
             numeroAutorizacionSemarnat: ''
-        }
+        },
+        precaucionesManejo: {
+            precaucionesManejo: '',
+          }        
 
     };
 }
@@ -93,7 +100,13 @@ export class FormularioReciclajeStore extends Store<EstadoFormularioReciclaje> {
           empresaTransportista: { ...valores }
         }));
       }
-    
+
+      actualizarPrecaucionesManejo(valores: EstadoFormularioReciclaje['precaucionesManejo']): void {
+        this.update(state => ({
+          ...state,
+          precaucionesManejo: { ...valores }
+        }));
+      }    
 
     limpiarFormulario(): void {
         this.reset();
