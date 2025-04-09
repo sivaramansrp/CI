@@ -192,8 +192,6 @@ describe('SolicitudComponent', () => {
     });
   });
 
-  // (Rest of your test cases go here)
-
   describe('ngOnDestroy', () => {
     it('Debería completar el tema destruido$', () => {
       const destroyedSpy = jest.spyOn(component['destroyed$'], 'next');
