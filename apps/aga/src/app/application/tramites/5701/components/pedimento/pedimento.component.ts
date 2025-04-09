@@ -1,22 +1,25 @@
-import { BooleanoSiNoPipe, SoloNumerosDirective } from '@ng-mf/data-access-user';
-import { Component, Input, OnChanges, SimpleChanges, forwardRef, output } from '@angular/core';
-import { DatosComponentePedimento, Pedimento } from '../../../../core/models/5701/tramite5701.model';
-import { ERR_VALIDACION_PEDIMENTO, MSG_ADUANA_PEDIMENTO, MSG_ELIMINA_ELEMENTO, MSG_NRO_PEDIMENTO } from '../../../../core/enums/5701/tramite5701.enum';
-import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
+import { Component, ElementRef, Input, OnChanges, SimpleChanges, ViewChild, forwardRef, output } from '@angular/core';
+import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
+import { BooleanoSiNoPipe, Notificacion, PRECAUCION, SoloNumerosDirective } from '@ng-mf/data-access-user';
+import { ERR_VALIDACION_PEDIMENTO, MSG_ADUANA_PEDIMENTO, MSG_ELIMINA_ELEMENTO, MSG_NRO_PEDIMENTO } from '../../../../core/enums/5701/tramite5701.enum';
+import { DatosComponentePedimento, Pedimento } from '../../../../core/models/5701/tramite5701.model';
+import { NotificacionesComponent } from "../../../../../../../../../libs/shared/data-access-user/src/tramites/components/notificaciones/notificaciones.component";
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'c-pedimento',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, forwardRef(() => BooleanoSiNoPipe), forwardRef(() => SoloNumerosDirective)],
+  imports: [ReactiveFormsModule, CommonModule, forwardRef(() => BooleanoSiNoPipe), forwardRef(() => SoloNumerosDirective), NotificacionesComponent],
   templateUrl: './pedimento.component.html',
   styleUrl: './pedimento.component.scss',
+  providers: [
+    ToastrService,
+  ]
 })
 export class PedimentoComponent implements OnChanges {
   @Input({ required: true }) validacion!: boolean;
   @Input({ required: true }) datosNroPedimento!: DatosComponentePedimento;
-
   validaCampos = output<void>();
 
   pedimentoForm: FormControl = new FormControl('', [Validators.maxLength(7)]);
@@ -37,6 +40,8 @@ export class PedimentoComponent implements OnChanges {
   modal: string = '';
   tituloModal!: string;
   mensajeModal!: string;
+  elementoParaEliminar!: number;
+  public nuevaNotificacion!: Notificacion;
 
 
   /**
@@ -140,28 +145,30 @@ export class PedimentoComponent implements OnChanges {
    * Después de eliminar el elemento, se actualiza el título y mensaje del modal,
    * y se abre el modal para mostrar un aviso al usuario.
    */
-  eliminar(i: number): void {
-    this.pedimentos.splice(i, 1)
-    this.tituloModal = 'Aviso';
-    this.mensajeModal = MSG_ELIMINA_ELEMENTO;
-    this.abrirModal();
+  abrirModal(i: number = 0): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: 'Avisos',
+      mensaje: '¿Desea eliminar este item?',
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    }
+
+    this.elementoParaEliminar = i;
   }
 
   /**
-* Abre el modal para eliminar un documento.
-* @param {number} i - El índice del documento.
-*/
-  abrirModal(): void {
-
-    this.modal = 'show';
-  }
-
-  /**
-  * Cierra el modal.
-  */
-  cerrarModal(): void {
-    this.modal = '';
-    this.tituloModal = '';
-    this.mensajeModal = '';
+   * Elimina un elemento de la tabla de pedimento, si se confirma la acción.
+   * @param borrar Indica si se debe proceder con la eliminación.
+   * @returns {void}
+   */
+  eliminarPedimento(borrar: boolean): void {
+    if (borrar) {
+      this.pedimentos.splice(this.elementoParaEliminar, 1);
+    }
   }
 }
