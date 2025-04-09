@@ -28,6 +28,7 @@ export class DatosSolicitudComponent implements OnInit {
   radioOptions: RadioOpcion[] = RADIO_OPCIONES.radioOptions;
 
   requiereEmpresaServicioReciclaje: RadioOpcion[] = RADIO_OPCIONES.requiereEmpresaServicioReciclaje;
+  reciclajeEnInstalaciones: RadioOpcion[] = RADIO_OPCIONES.reciclajeEnInstalaciones
 
   public establecimientoHeaderData: string[] = [];
 
@@ -51,6 +52,7 @@ export class DatosSolicitudComponent implements OnInit {
     this.establecimientoHeaderData = RADIO_OPCIONES.table[0]?.encabezadoDeTabla || [];
     this.establecimientoBodyData = RADIO_OPCIONES.table[0]?.cuerpoTabla || [];
     this.requiereEmpresaServicioReciclaje = RADIO_OPCIONES.requiereEmpresaServicioReciclaje;
+    this.reciclajeEnInstalaciones = RADIO_OPCIONES.reciclajeEnInstalaciones;
 
   }
 

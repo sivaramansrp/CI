@@ -46,6 +46,7 @@ export interface SolicitudJson {
     tipoContenedor: ImmexItem[];
     clasificacionRadioOptions: RadioOpcion[];
     requiereEmpresaServicioReciclaje: RadioOpcion[];
+    reciclajeEnInstalaciones: RadioOpcion[];
 }
 
 
