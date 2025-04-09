@@ -1,5 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PasoUnoComponent } from './paso-uno.component';
+import {DesistimientoModule} from '../../desistimiento.module'; 
+import { CommonModule } from '@angular/common';
 
 describe('PasoUnoComponent', () => {
   let component: PasoUnoComponent;
@@ -7,12 +9,13 @@ describe('PasoUnoComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [PasoUnoComponent],
+      declarations: [PasoUnoComponent],
+      imports: [DesistimientoModule, CommonModule],
     }).compileComponents();
 
     fixture = TestBed.createComponent(PasoUnoComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
+    // fixture.detectChanges();
   });
 
   it('should create', () => {

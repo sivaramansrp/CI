@@ -12,59 +12,66 @@ import { TEXTOS } from '../../enum/constants';
 
 export class DesistimientoSolicitudComponent {
 
+  /**
+   * Referencia al componente del asistente (wizard).
+   * @type {WizardComponent}
+   */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
 
-    /**
-     * @property {number} indice - El índice del paso en el asistente.
-     */
-    indice: number = 1;
-
-    /**
-     * @property {ListaPasosWizard[]} pasos - Lista de pasos del wizard.
-     */
-    pasos: ListaPasosWizard[] = PASOS;
-
-    /**
-   * Datos de los pasos del asistente.
+  /**
+   * Índice del paso actual en el asistente.
+   * @type {number}
    */
-    datosPasos: DatosPasos = {
+  indice: number = 1;
+
+  /**
+   * Lista de pasos del asistente.
+   * @type {ListaPasosWizard[]}
+   */
+  pasos: ListaPasosWizard[] = PASOS;
+
+  /**
+   * Datos de los pasos del asistente.
+   * @type {DatosPasos}
+   */
+  datosPasos: DatosPasos = {
     nroPasos: this.pasos.length,
     indice: this.indice,
     txtBtnAnt: 'Anterior',
     txtBtnSig: 'Continuar',
   };
 
-  
   /**
    * Textos utilizados en el componente.
    * 
    * Esta propiedad contiene textos como instrucciones o mensajes que se muestran
    * en la interfaz del usuario.
-   */
-  /**
-   * Textos utilizados en el componente.
-   * 
-   * Esta propiedad contiene textos como instrucciones o mensajes que se muestran
-   * en la interfaz del usuario.
+   * @type {typeof TEXTOS}
    */
   TEXTOS = TEXTOS;
 
-    /**
+  /**
+   * Clase CSS para una alerta de información.
    * 
-   * Una cadena que representa la clase CSS para una alerta de información.
    * Esta clase se utiliza para aplicar estilo a los mensajes de información en el componente.
+   * @type {string}
    */
-    public infoAlert = 'alert-info';
+  public infoAlert = 'alert-info';
 
-
-      /**
-   * @description Método para seleccionar una pestaña específica.
+  /**
+   * Método para seleccionar una pestaña específica.
    * @param {number} i - Índice de la pestaña a seleccionar.
+   * @returns {void}
    */
-    seleccionaTab(i: number): void {
+  seleccionaTab(i: number): void {
     this.indice = i;
   }
 
+  /**
+   * Constructor de la clase `DesistimientoSolicitudComponent`.
+   * Inicializa el estado de las secciones y las formas en el almacén.
+   * @param {SeccionLibStore} seccionStore - Almacén para gestionar el estado de las secciones.
+   */
   constructor(private readonly seccionStore: SeccionLibStore) {
     this.seccionStore.establecerFormaValida([false]);
     this.seccionStore.establecerSeccion([true]);
@@ -72,10 +79,13 @@ export class DesistimientoSolicitudComponent {
 
   /**
    * Obtiene el valor del índice de la acción del botón.
-   * @param e Acción del botón.
+   * 
+   * Este método actualiza el índice del asistente y navega al siguiente o anterior paso
+   * dependiendo de la acción del botón.
+   * @param {AccionBoton} e - Acción del botón.
+   * @returns {void}
    */
-  
-  getValorIndice(e: AccionBoton) {
+  getValorIndice(e: AccionBoton): void {
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
       if (e.accion === 'cont') {

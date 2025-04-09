@@ -1,39 +1,83 @@
 /**
  * Interfaz que representa una lista de pasos en un asistente.
- * 
  */
 export interface ListaPasosWizard {
-    /**
-   * @property {number} indice - El índice del paso en el asistente.
+  /**
+   * Índice del paso en el asistente.
+   * @type {number}
    */
-    indice: number;
-    /**
-   * @property {string} titulo - El título del paso.
-   */
-    titulo: string;
-    /**
-   * @property {boolean} activo - Indica si el paso está activo.
-   */
-    activo: boolean;
-    /**
-   * Interfaz que representa una lista de pasos en un asistente.
-   * 
-   * @property {boolean} completado - Indica si el paso ha sido completado.
-   */
-    completado: boolean;
-  }
+  indice: number;
 
-  export const PASOS = [
-    {
-      indice: 1,
-      titulo: 'Capturar solicitud',
-      activo: true,
-      completado: true,
-    },
-    {
-      indice: 2,
-      titulo: 'Firmar solicitud',
-      activo: false,
-      completado: false,
-    },
-  ]  
+  /**
+   * Título del paso.
+   * @type {string}
+   */
+  titulo: string;
+
+  /**
+   * Indica si el paso está activo.
+   * @type {boolean}
+   */
+  activo: boolean;
+
+  /**
+   * Indica si el paso ha sido completado.
+   * @type {boolean}
+   */
+  completado: boolean;
+}
+
+/**
+ * Constante que define los pasos del asistente.
+ * @type {Array<ListaPasosWizard>}
+ */
+export const PASOS = [
+  {
+    /**
+     * Índice del primer paso.
+     */
+    indice: 1,
+    /**
+     * Título del primer paso.
+     */
+    titulo: 'Capturar solicitud',
+    /**
+     * Indica si el primer paso está activo.
+     */
+    activo: true,
+    /**
+     * Indica si el primer paso ha sido completado.
+     */
+    completado: true,
+  },
+  {
+    /**
+     * Índice del segundo paso.
+     */
+    indice: 2,
+    /**
+     * Título del segundo paso.
+     */
+    titulo: 'Firmar solicitud',
+    /**
+     * Indica si el segundo paso está activo.
+     */
+    activo: false,
+    /**
+     * Indica si el segundo paso ha sido completado.
+     */
+    completado: false,
+  },
+];
+
+export interface DesistimientoForm {
+desistimientoFolio: string,
+solicitudTipo: string,
+desistimientoMotivo: string
+}
+
+export interface RespuestaDesistimientoSolicitud {
+  code: number;
+  data: DesistimientoForm
+  message: string;
+}
