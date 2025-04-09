@@ -12,6 +12,8 @@ import { map } from 'rxjs';
 
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
+import { PARTIDASDELAMERCANCIA_TABLA } from '../../../../shared/constantes/partidas-de-la-mercancia.enum';
+import { PartidasDeLaMercanciaModelo } from '../../../../shared/models/partidas-de-la-mercancia.model';
 import PartidasdelaTable from '@libs/shared/theme/assets/json/130202/partidas-de-la.json';
 import { ProductoOpción } from '../../../../shared/constantes/vehiculos-adaptados.enum';
 import { REG_X } from '@libs/shared/data-access-user/src';
@@ -123,13 +125,14 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   /**
    * Datos del cuerpo de la tabla.
    */
-  tableBodyData: { tbodyData: string[] }[] = [];
+  tableBodyData: PartidasDeLaMercanciaModelo[] = [];
 
   /**
-   * Datos del encabezado de la tabla.
+   * tableHeaderData
+   * Configuración de las columnas de la tabla dinámica.
    */
-  tableHeaderData: ConfiguracionColumna<string>[] = [];
-
+  tableHeaderData: ConfiguracionColumna<PartidasDeLaMercanciaModelo>[] =
+    PARTIDASDELAMERCANCIA_TABLA;
   /**
    * Datos de establecimiento para la tabla.
    */
@@ -138,7 +141,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   /**
    * Fila seleccionada en la tabla.
    */
-  filaSeleccionada: any = null;
+  filaSeleccionada: PartidasDeLaMercanciaModelo[] = [];
 
   /**
    * Elementos del bloque seleccionados.
@@ -199,8 +202,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.configuracionFormularioSuscripciones();
 
     this.formularioTotalCount();
-    this.getEstablecimiento();
-    this.calcularTotales();
+    this.obtenerTablaDatos();
     this.fetchEntidadFederativa();
     this.fetchRepresentacionFederal();
     this.listaDePaisesDisponibles();
@@ -462,29 +464,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-
-    // this.formDelTramite.valueChanges
-    //   .pipe(takeUntil(this.destroyed$))
-    //   .subscribe((value) => {
-    //     this.tramite130203Store.updateState({
-    //       solicitud: value.solicitud,
-    //       regimen: value.regimen,
-    //       clasificacion: value.clasificacion,
-    //     });
-    //   });
-
-    // this.mercanciaForm.valueChanges
-    //   .pipe(takeUntil(this.destroyed$))
-    //   .subscribe((value) => {
-    //     this.tramite130203Store.updateState({
-    //       producto: value.producto,
-    //       descripcion: value.descripcion,
-    //       fraccion: value.fraccion,
-    //       cantidad: value.cantidad,
-    //       valorPartidaUSD: parseFloat(value.valorFacturaUSD) || 0,
-    //       unidadMedida: value.unidadMedida,
-    //     });
-    //   });
   }
 
   /**
@@ -492,11 +471,12 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * Valida y envía el formulario, mostrando la tabla si es válido.
    */
   validarYEnviarFormulario(): void {
-    this.mostrarTabla = true;
     if (this.partidasDelaMercanciaForm.invalid) {
       this.partidasDelaMercanciaForm.markAllAsTouched();
     } else {
       this.mostrarTabla = true;
+      this.tramite130203Store.setMostrarTabla(true);
+
     }
   }
 
@@ -509,43 +489,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       cantidadTotal: [{ value: '', disabled: true }],
       valorTotalUSD: [{ value: '', disabled: true }],
     });
-  }
-
-  /**
-   * @description
-   * Calcula los totales de cantidad y valor en USD de la tabla.
-   */
-  calcularTotales(): void {
-    const CANTITAD_TOTAL = this.tableBodyData.reduce(
-      (sum: number, item: { tbodyData: string[] }) =>
-        sum + parseFloat(item.tbodyData[0]),
-      0
-    );
-    const VALOR_TOTALUSD = this.tableBodyData.reduce(
-      (sum: number, item: { tbodyData: string[] }) =>
-        sum + parseFloat(item.tbodyData[5]),
-      0
-    );
-    // eslint-disable-next-line dot-notation
-    this.formForTotalCount.controls['cantidadTotal'].setValue(CANTITAD_TOTAL);
-    // eslint-disable-next-line dot-notation
-    this.formForTotalCount.controls['valorTotalUSD'].setValue(VALOR_TOTALUSD);
-  }
-
-  /**
-   * @description
-   * Obtiene los datos de establecimiento para la tabla.
-   */
-  getEstablecimiento(): void {
-    this.tableHeaderData = this.getEstablecimientoTableData.tableHeader.map(
-      (header, index) => ({
-        encabezado: header,
-        /* eslint-disable @typescript-eslint/no-explicit-any */
-        clave: (fila: any): string => fila.tbodyData[index],
-        orden: index,
-      })
-    );
-    this.tableBodyData = this.getEstablecimientoTableData.tableBody;
   }
 
   /**
@@ -564,15 +507,14 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * Maneja la fila seleccionada en la tabla.
    * @param filasSeleccionadas Lista de filas seleccionadas.
    */
-  manejarlaFilaSeleccionada(filasSeleccionadas: any[]): void {
-    this.filaSeleccionada = filasSeleccionadas.length
-      ? filasSeleccionadas[0]
-      : null;
+  manejarlaFilaSeleccionada(
+    filasSeleccionadas: PartidasDeLaMercanciaModelo[]
+  ): void {
+    this.filaSeleccionada = filasSeleccionadas.length ? filasSeleccionadas : [];
     if (this.filaSeleccionada) {
       this.tramite130203Store.storeTableValues(this.filaSeleccionada);
     }
   }
-
   /**
    * @description
    * Obtiene la lista de países disponibles desde el servicio.
@@ -636,5 +578,41 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       .subscribe((data) => {
         this.representacionFederal = data;
       });
+  }
+
+  /**
+   * Método para obtener los datos de la tabla dinámica.
+   * Este método realiza una solicitud al servicio `ImportacionDeVehiculosService` para obtener los datos
+   * de la tabla y actualiza las propiedades relacionadas con la tabla dinámica.
+   *
+   * - Actualiza `tableBodyData` con los datos obtenidos.
+   * - Asigna valores a las propiedades `cantidad` y `descripcion` del primer elemento de la tabla.
+   * - Actualiza el formulario `formForTotalCount` con los valores totales de cantidad y valor en USD.
+   *
+   */
+  obtenerTablaDatos(): void {
+    this.exportacionDeDiamantesEnBrutoService
+      .getTablaDatos()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((data) => {
+        this.tableBodyData = data;
+        this.formForTotalCount.patchValue({
+          cantidadTotal: data[0].cantidad,
+          valorTotalUSD: data[0].totalUSD,
+        });
+      });
+  }
+
+  /**
+   * Determina si el botón "Modificar" debe estar deshabilitado.
+   * Este método verifica si no hay filas seleccionadas en la tabla dinámica.
+   *
+   */
+  disabledModificar(): boolean {
+    let disabled = false;
+    if (this.filaSeleccionada.length === 0) {
+      disabled = true;
+    }
+    return disabled;
   }
 }
