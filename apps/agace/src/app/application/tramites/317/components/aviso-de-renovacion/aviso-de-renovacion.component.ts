@@ -15,7 +15,7 @@ import { Subject, takeUntil } from 'rxjs';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule,TituloComponent,InputFechaComponent,CatalogoSelectComponent],
   templateUrl: './aviso-de-renovacion.component.html',
-  styleUrls: ['./aviso-de-renovacion.component.css'],
+  styleUrls: ['./aviso-de-renovacion.component.scss'],
 })
 export class AvisoDeRenovacionComponent implements OnInit, OnDestroy {
   fechaInicioInput: InputFecha = FECHA_DE_PAGO;

@@ -44,7 +44,7 @@
 
   <div class="container mt-5">
     <ng-titulo titulo="Pago de derechos" />
-    <div class="row">
+    <div class="row mt-5">
       <div class="col-md-6">
         <label for="claveReferencia">Clave de referencia:</label>
         <input id="claveReferencia" type="text" class="form-control" formControlName="claveReferencia" />
@@ -54,13 +54,13 @@
         <input id="numeroOperacion" type="text" class="form-control" formControlName="numeroOperacion" />
       </div>
     </div>
-    <div class="row mt-3">
+    <div class="row mt-5">
       <div class="col-md-6">
         <label for="cadenaDependencia">Cadena de la dependencia:</label>
         <input id="cadenaDependencia" type="text" class="form-control" formControlName="cadenaDependencia" />
       </div>
-      <div class="col-md-6">
-       <app-catalogo-select
+      <div class="col-md-6  custom-banco">
+      <app-catalogo-select
         [catalogo]="localidadList"
         formControlName="banco"
         [label]="'Banco'"
@@ -68,12 +68,12 @@
        ></app-catalogo-select>
       </div>
     </div>
-    <div class="row mt-3">
+    <div class="row mt-5">
       <div class="col-md-6">
         <label for="llavePago">Llave de pago:</label>
         <input id="llavePago" type="text" class="form-control" formControlName="llavePago" />
       </div>
-      <div class="col-md-3">
+      <div class="col-md-3 custom-fetchapago">
        <input-fecha [datos]="fechaInicioInput"
         name="fechaPago"
         (valorCambiado)="onFechaCambiada($event)"
@@ -85,7 +85,7 @@
         <input id="importePago" type="text" class="form-control" formControlName="importePago" />
       </div>
     </div>
-    <div class="row mt-4">
+    <div class="row mt-5">
       <div class="col-md-12 ">
         <div class="pull-right">
         <button type="button" class="btn btn-primary" (click)="resetPagoDatos()">Borrar datos del pago</button>
