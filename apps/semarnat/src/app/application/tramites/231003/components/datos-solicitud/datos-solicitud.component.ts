@@ -90,7 +90,7 @@ export class DatosSolicitudComponent implements OnInit {
     const CONTROL_REQUIERE_EMPRESA: FormControl<string> = this.formularioEmpresaReciclaje.get(CAMPO_REQUIERE_EMPRESA) as FormControl<string>;
   
     CONTROL_REQUIERE_EMPRESA.valueChanges.subscribe((valor: string): void => {
-      const DEBE_HABILITAR: boolean = valor === 'Sí';
+      const DEBE_HABILITAR: boolean = valor === 'Si';
   
       CAMPOS_A_CONTROLAR.forEach((CAMPO: string): void => {
         const CONTROL_CAMPO: FormControl<string> = this.formularioEmpresaReciclaje.get(CAMPO) as FormControl<string>;
