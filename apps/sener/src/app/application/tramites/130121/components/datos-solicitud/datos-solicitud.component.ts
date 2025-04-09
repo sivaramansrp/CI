@@ -97,12 +97,6 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
  checkBox = TablaSeleccion.CHECKBOX;
 
  /**
-   * Función para obtener los datos de la tabla de establecimiento.
-   * @type {any} Datos de la tabla que serán mostrados para el establecimiento.
-   */
-//  public getEstablecimientoTableData = PartidasdelaTable;
-
- /**
   * Fila seleccionada en la tabla.
   * @type {any} Contiene la fila seleccionada de la tabla.
   */
@@ -119,7 +113,10 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    * @type {Catalogo[]} Arreglo que contiene los valores disponibles en el catálogo de unidades.
    */
   unidadCatalogo: Catalogo[] = unidadOptions;
-
+/**
+ * Catálogo de acotación disponible.
+ * @type {Catalogo[]} Arreglo que contiene las opciones de acotación.
+ */
   acotacionCatalogo: Catalogo[] = acotacionOptions;
 
   
@@ -274,25 +271,25 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     // Constructor vacío, solo se inyectan los servicios
   }
 
-   /**
-  * Método de ciclo de vida de Angular, llamado al inicializar el componente.
-  * En este método se configuran varios formularios, consultas y se suscribe a diversos observables.
-  * 
-  * 1. Inicializa los formularios utilizando `inicializarFormularios()`.
-  * 2. Configura los formularios específicos para suscripciones mediante `configuracionFormularioSuscripciones()`.
-  * 3. Llama al método `opcionesDeBusqueda()` para establecer las opciones de búsqueda.
-  * 4. Realiza un cálculo del total mediante `formularioTotalCount()`.
-  * 5. Obtiene la información del establecimiento mediante `getEstablecimiento()`.
-  * 6. Ejecuta el cálculo de totales con el método `calcularTotales()`.
-  * 7. Obtiene las entidades federativas usando `fetchEntidadFederativa()`.
-  * 8. Obtiene la representación federal con `fetchRepresentacionFederal()`.
-  * 9. Carga la lista de países disponibles con `listaDePaisesDisponibles()`.
-  * 10. Se suscribe al observable `mostrarTabla$` de la consulta `tramite130121Query` para actualizar el estado de la variable `mostrarTabla`.
-  * 11. Se suscribe al observable `selectSolicitud$` de la consulta `tramite130121Query`, donde se actualizan los valores del formulario `partidasDelaMercanciaForm`
-  *     con los valores provenientes del estado de la sección, utilizando `patchValue()`.
-  * 
-  * @returns void
-  */
+ /**
+ * Método de ciclo de vida de Angular, llamado al inicializar el componente.
+ * En este método se configuran varios formularios, consultas y se suscribe a diversos observables.
+ * 
+ * 1. Inicializa los formularios utilizando `inicializarFormularios()`.
+ * 2. Configura los formularios específicos para suscripciones mediante `configuracionFormularioSuscripciones()`.
+ * 3. Llama al método `opcionesDeBusqueda()` para establecer las opciones de búsqueda.
+ * 4. Realiza un cálculo del total mediante `formularioTotalCount()`.
+ * 5. Obtiene los datos de la tabla mediante `obtenerTablaDatos()`.
+ * 6. Obtiene las entidades federativas usando `fetchEntidadFederativa()`.
+ * 7. Obtiene la representación federal con `fetchRepresentacionFederal()`.
+ * 8. Carga la lista de países disponibles con `listaDePaisesDisponibles()`.
+ * 9. Se suscribe al observable `mostrarTabla$` de la consulta `tramite130121Query` para actualizar el estado de la variable `mostrarTabla`.
+ * 10. Se suscribe al observable `selectSolicitud$` de la consulta `tramite130121Query`, donde se actualizan los valores del formulario `partidasDelaMercanciaForm`
+ *     con los valores provenientes del estado de la sección, utilizando `patchValue()`.
+ * 
+ * @returns void
+ */
+
   ngOnInit(): void {
     this.inicializarFormularios();
     this.configuracionFormularioSuscripciones();
@@ -530,135 +527,73 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   * - Suscripciones a los valores de 'mercanciaState', 'selectSolicitud' y 'frmRepresentacionForm'.
   * - Actualización del estado global del store cada vez que los formularios se modifican.
   */
-  configuracionFormularioSuscripciones(): void {
+    configuracionFormularioSuscripciones(): void {
+     
+      this.tramite130121Query.selectSolicitud$
+        .pipe(
+          takeUntil(this.destroyed$),
+          map((seccionState) => {
+            // formDelTramite: solicitud, régimen, clasificación
+            this.formDelTramite.patchValue({
+              solicitud: seccionState.solicitud,
+              regimen:   seccionState.regimen,
+              clasificacion: seccionState.clasificacion,
+            }, { emitEvent: false });
     
-    // Suscripción para recibir cambios en el valor de 'solicitud' desde el store y actualizar el formulario correspondiente
-    this.tramite130121Query.solicitud$
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((solicitud) => {
-        /**
-         * Actualiza el valor del formulario 'formDelTramite' con el valor de 'solicitud'.
-         * No se emiten eventos de cambio con { emitEvent: false } para evitar una actualización circular.
-         */
-        this.formDelTramite.patchValue({ solicitud }, { emitEvent: false });
-      });
-
-    // Suscripción para recibir cambios en el valor de 'regimen' desde el store y actualizar el formulario correspondiente
-    this.tramite130121Query.regimen$
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((regimen) => {
-         /**
-         * Actualiza el valor del formulario 'formDelTramite' con el valor de 'regimen'.
-         * Se evita la emisión de eventos para evitar ciclos de cambio innecesarios.
-         */
-        this.formDelTramite.patchValue({ regimen }, { emitEvent: false });
-      });
-
-     // Suscripción para recibir cambios en el valor de 'clasificacion' desde el store y actualizar el formulario correspondiente
-    this.tramite130121Query.clasificacion$
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((clasificacion) => {
-         /**
-         * Actualiza el valor del formulario 'formDelTramite' con el valor de 'clasificacion'.
-         * La opción { emitEvent: false } previene que los cambios en el formulario
-         * generen eventos adicionales.
-         */
-        this.formDelTramite.patchValue({ clasificacion }, { emitEvent: false });
-      });
-
-    // Suscripción para recibir cambios en el estado de 'mercanciaState' y actualizar el formulario correspondiente
-    this.tramite130121Query.mercanciaState$
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((state) => {
-         /**
-         * Actualiza el formulario 'mercanciaForm' con los valores de 'mercanciaState'.
-         * 
-         * - Se asignan los valores de plazo, descripción, fracción, cantidad, valor de factura (en USD) y unidad de medida.
-         * - El valor de la factura en USD se convierte a string si es necesario para mantener el formato.
-         */
-        this.mercanciaForm.patchValue(
-          {
-            plazo: state.plazo,
-            descripcion: state.descripcion,
-            fraccion: state.fraccion,
-            cantidad: state.cantidad,
-            valorFacturaUSD: state.valorPartidaUSD ? state.valorPartidaUSD.toString() : '',
-            unidadMedida: state.unidadMedida,
-          },
-          { emitEvent: false }
-        );
-      });
-
-     // Suscripción para recibir cambios en el valor de 'selectSolicitud' y actualizar el formulario relacionado con el país
-    this.tramite130121Query.selectSolicitud$
-      .pipe(
-        takeUntil(this.destroyed$),
-        map((seccionState) => {
-          /**
-           * Actualiza el formulario 'paisForm' con los valores del estado recibido en 'seccionState'.
-           * - Bloque, uso específico, justificación de importación/exportación y observaciones son asignados al formulario.
-           */
-          this.paisForm.patchValue({
-            bloque: seccionState.bloque,
-            usoEspecifico: seccionState.usoEspecifico,
-            justificacionImportacionExportacion: seccionState.justificacionImportacionExportacion,
-            observaciones: seccionState.observaciones,
+            // mercanciaForm: plazo, descripción, fracción, cantidad, valor, unidad
+            this.mercanciaForm.patchValue({
+              plazo:             seccionState.plazo,
+              descripcion:       seccionState.descripcion,
+              fraccion:          seccionState.fraccion,
+              cantidad:          seccionState.cantidad,
+              valorFacturaUSD:   seccionState.valorPartidaUSD !== null
+                                 ? seccionState.valorPartidaUSD.toString()
+                                 : '',
+              unidadMedida:      seccionState.unidadMedida,
+            }, { emitEvent: false });
+    
+            // paisForm: bloque, uso específico, justificación, observaciones
+            this.paisForm.patchValue({
+              bloque:                             seccionState.bloque,
+              usoEspecifico:                      seccionState.usoEspecifico,
+              justificacionImportacionExportacion:
+                seccionState.justificacionImportacionExportacion,
+              observaciones:                      seccionState.observaciones,
+            }, { emitEvent: false });
+    
+            // frmRepresentacionForm: entidad, representación
+            this.frmRepresentacionForm.patchValue({
+              entidad:        seccionState.entidad,
+              representacion: seccionState.representacion,
+            }, { emitEvent: false });
+          })
+        )
+        .subscribe();
+    
+    
+      this.formDelTramite.valueChanges
+        .pipe(takeUntil(this.destroyed$))
+        .subscribe((value) => {
+          this.tramite130121Store.updateState({
+            solicitud: value.solicitud,
+            regimen:   value.regimen,
+            clasificacion: value.clasificacion,
           });
-        })
-      )
-      .subscribe();
-
-     // Suscripción para recibir cambios en el valor de 'selectSolicitud' y actualizar el formulario de representación
-    this.tramite130121Query.selectSolicitud$
-      .pipe(
-        takeUntil(this.destroyed$),
-        map((seccionState) => {
-          /**
-           * Actualiza el formulario 'frmRepresentacionForm' con los valores del estado de representación.
-           * - Entidad y representación son asignados al formulario.
-           */
-          this.frmRepresentacionForm.patchValue({
-            entidad: seccionState.entidad,
-            representacion: seccionState.representacion,
+        });
+    
+      this.mercanciaForm.valueChanges
+        .pipe(takeUntil(this.destroyed$))
+        .subscribe((value) => {
+          this.tramite130121Store.updateState({
+            plazo:            value.plazo,
+            descripcion:      value.descripcion,
+            fraccion:         value.fraccion,
+            cantidad:         value.cantidad,
+            valorPartidaUSD:  parseFloat(value.valorFacturaUSD) || 0,
+            unidadMedida:     value.unidadMedida,
           });
-        })
-      )
-      .subscribe();
-
-    // Suscripción para escuchar cambios en el formulario 'formDelTramite' y actualizar el estado global
-    this.formDelTramite.valueChanges
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((value) => {
-        /**
-         * Actualiza el estado global del store con los valores de 'formDelTramite'.
-         * Los campos solicitados son 'solicitud', 'regimen' y 'clasificacion'.
-         */
-        this.tramite130121Store.updateState({
-          solicitud: value.solicitud,
-          regimen: value.regimen,
-          clasificacion: value.clasificacion,
         });
-      });
-
-    // Suscripción para escuchar cambios en el formulario 'mercanciaForm' y actualizar el estado global
-    this.mercanciaForm.valueChanges
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((value) => {
-         /**
-         * Actualiza el estado global del store con los valores de 'mercanciaForm'.
-         * - Los campos actualizados son 'plazo', 'descripcion', 'fraccion', 'cantidad', 'valorPartidaUSD' y 'unidadMedida'.
-         * - Se convierte el valor de 'valorFacturaUSD' a tipo numérico y se asigna un valor por defecto si es inválido.
-         */
-        this.tramite130121Store.updateState({
-          plazo: value.plazo,
-          descripcion: value.descripcion,
-          fraccion: value.fraccion,
-          cantidad: value.cantidad,
-          valorPartidaUSD: parseFloat(value.valorFacturaUSD) || 0,
-          unidadMedida: value.unidadMedida,
-        });
-      });
-  }
+    }
 
     /**
    * @description
