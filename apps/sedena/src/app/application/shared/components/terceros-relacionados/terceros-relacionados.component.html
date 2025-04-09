@@ -13,6 +13,37 @@
     ></app-tabla-dinamica>
   </div>
   <div class="row mt-5">
+    <div class="col-md-12">
+      <div class="pull-right">
+        <button
+          type="button"
+          name="modificarMercancias"
+          class="btn btn-default"
+        >
+          Modificar
+        </button>
+        <button
+          type="button"
+          name="eliminarMercancias"
+          class="btn btn-danger ms-2"
+        >
+          Eliminar
+        </button>
+
+        <button
+          type="button"
+          name="agregarMercancias"
+          class="btn btn-primary ms-2"
+          data-bs-toggle="modal"
+          data-bs-target="#modalAgregarMercancias"
+          (click)="irAAcciones('../agregar-destino-final')"
+        >
+          Agregar
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="row mt-5">
     <h5>Proveedor*</h5>
   </div>
   <div class="row">
@@ -21,5 +52,36 @@
       [configuracionTabla]="dproveedorTablaConfiguracion.configuracionTabla"
       [datos]="dproveedorTablaConfiguracion.datos"
     ></app-tabla-dinamica>
+  </div>
+  <div class="row mt-5">
+    <div class="col-md-12">
+      <div class="pull-right">
+        <button
+          type="button"
+          name="modificarMercancias"
+          class="btn btn-default"
+        >
+          Modificar
+        </button>
+        <button
+          type="button"
+          name="eliminarMercancias"
+          class="btn btn-danger ms-2"
+        >
+          Eliminar
+        </button>
+
+        <button
+          type="button"
+          name="agregarMercancias"
+          class="btn btn-primary ms-2"
+          data-bs-toggle="modal"
+          data-bs-target="#modalAgregarMercancias"
+          (click)="irAAcciones('../agregar-proveedor')"
+        >
+          Agregar
+        </button>
+      </div>
+    </div>
   </div>
 </div>

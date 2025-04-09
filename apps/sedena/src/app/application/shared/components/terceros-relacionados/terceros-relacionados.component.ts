@@ -10,6 +10,7 @@ import {
   PROVEEDOR_ENCABEZADO_DE_TABLA,
   TERCEROR_TEXTO_DE_ALERTA,
 } from '../../models/terceros-relacionados.model';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-terceros-relacionados',
@@ -32,4 +33,12 @@ export class TercerosRelacionadosComponent {
     configuracionTabla: PROVEEDOR_ENCABEZADO_DE_TABLA,
     datos: [],
   };
+  irAAcciones(accionesPath: string): void {
+    this.router.navigate([accionesPath], {
+      relativeTo: this.activatedRoute,
+    });
+  }
+
+  // eslint-disable-next-line no-empty-function
+  constructor(private router: Router, private activatedRoute: ActivatedRoute) {}
 }

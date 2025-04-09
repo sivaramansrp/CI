@@ -16,6 +16,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { MERCANCIA_ENCABEZADO_DE_TABLA } from '../../models/datos-del-tramite.model';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-datos-del-tramite',
@@ -43,7 +44,11 @@ export class DatosDelTramiteComponent {
     configuracionTabla: MERCANCIA_ENCABEZADO_DE_TABLA,
     datos: [],
   };
-  constructor(private fb: FormBuilder) {
+  constructor(
+    private fb: FormBuilder,
+    private activatedRoute: ActivatedRoute,
+    private router: Router
+  ) {
     this.form = this.fb.group({
       permisoGeneral: ['', Validators.required],
       paisDestino: [
@@ -54,5 +59,11 @@ export class DatosDelTramiteComponent {
   }
   aduanasDisponiblesSeleccionadasChange(events: string[]): void {
     this.seleccionarAduanasDisponiblesDatos = events;
+  }
+
+  irAAcciones(accionesPath: string): void {
+    this.router.navigate([accionesPath], {
+      relativeTo: this.activatedRoute,
+    });
   }
 }
