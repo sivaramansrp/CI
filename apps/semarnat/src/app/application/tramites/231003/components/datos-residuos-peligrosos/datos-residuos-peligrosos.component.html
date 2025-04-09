@@ -9,61 +9,69 @@
             </div>
         </div>
         <ng-titulo titulo="Materias primas relacionadas" />
-        <div class="row mb-3 align-items-end">
-            <div class="col-md-6">
-                <div class="form-group mb-3">
-                    <label for="Numero" class="form-label">Número de bitácora*:</label>
-                    <input type="text" class="form-control" id="Numero">
+        <form [formGroup]="formularioDatos">
+            <div class="row mb-3 align-items-end">
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label for="numero" class="form-label">Número de bitácora*:</label>
+                        <input type="text" class="form-control" id="numero" formControlName="numero">
+                    </div>
+                </div>
+                <div class="col-md-6 d-flex justify-content-start">
+                    <button type="button" class="btn btn-primary">Buscar</button>
                 </div>
             </div>
-            <div class="col-md-6 d-flex justify-content-start">
-                <button type="button" class="btn btn-primary">Buscar</button>
-            </div>
-        </div>
 
-        <div class="row mb-3">
-            <div class="col-md-6">
-                <app-catalogo-select [catalogo]='nombre' [label]="'Nombre de la materia prima'"
-                    [required]="true"></app-catalogo-select>
-            </div>
-        </div>
-        <div class="row mb-3">
-            <div class="col-md-6">
-                <div class="form-group mb-3">
-                    <label for="Candidad" class="form-label">Candidad</label>
-                    <input type="text" class="form-control" id="Candidad" readonly>
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <app-catalogo-select [catalogo]="nombre" [label]="'Nombre de la materia prima'" [required]="true"
+                        formControlName="nombreMateriaPrima">
+                    </app-catalogo-select>
                 </div>
             </div>
-            <div class="col-md-6">
-                <div class="form-group mb-3">
-                    <label for="CandidadLetra" class="form-label">Candidad (letra)</label>
-                    <input type="text" class="form-control" id="CandidadLetra">
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label for="cantidad" class="form-label">Cantidad</label>
+                        <input type="text" class="form-control" id="cantidad" formControlName="cantidad" readonly>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label for="cantidadLetra" class="form-label">Cantidad (letra)</label>
+                        <input type="text" class="form-control" id="cantidadLetra" formControlName="cantidadLetra">
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="row mb-3">
-            <div class="col-md-6">
-                <div class="form-group mb-3">
-                    <label for="UnidadDeMedida" class="form-label">Unidad de medida</label>
-                    <input type="text" class="form-control" id="UnidadDeMedida">
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label for="unidadDeMedida" class="form-label">Unidad de medida</label>
+                        <input type="text" class="form-control" id="unidadDeMedida" formControlName="unidadDeMedida">
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="row mb-3">
-            <div class="col-md-6">
-                <div class="form-group mb-3">
-                    <label for="FraccionArancelaria" class="form-label">Fracción arancelaria</label>
-                    <input type="text" class="form-control" id="FraccionArancelaria">
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label for="fraccionArancelaria" class="form-label">Fracción arancelaria</label>
+                        <input type="text" class="form-control" id="fraccionArancelaria"
+                            formControlName="fraccionArancelaria">
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="row mt-5">
-            <div class="col-md-12 d-flex justify-content-end align-items-end">
-                <button type="button" class="btn btn-primary ms-3" data-bs-toggle="modal">
-                    Agregar
-                </button>
+
+            <div class="row mt-5">
+                <div class="col-md-12 d-flex justify-content-end align-items-end">
+                    <button type="submit" class="btn btn-primary ms-3">
+                        Agregar
+                    </button>
+                </div>
             </div>
-        </div>
+        </form>
         <div class="row mt-5">
             <h6>Materias primas relacionadas*:</h6>
             <div class="row mb-3">
@@ -84,116 +92,116 @@
             </div>
         </div>
         <ng-titulo titulo="Datos de los residuos peligrosos a reciclar" />
-        <div class="row mb-3">
-            <div class="col-md-6">
-                <app-catalogo-select [catalogo]='fraccion' [label]="'Fracción arancelaria'"
-                    [required]="true"></app-catalogo-select>
-            </div>
-            <div class="col-md-6">
-                <app-catalogo-select [catalogo]='nico' [label]="'NICO'" [required]="true"></app-catalogo-select>
-            </div>
-        </div>
-        <div class="row mb-3">
-            <div class="col-md-5">
-                <div class="form-group">
-                    <label class="form-label">Acotación:</label>
-                    <textarea class="form-control disabled-color textarea-auto-height" rows="2"
-                        name="solicitudAcotacion"></textarea>
+        <form [formGroup]="formularioResiduo">
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <app-catalogo-select [catalogo]="fraccion" [label]="'Fracción arancelaria'" [required]="true"
+                        formControlName="fraccionArancelaria"></app-catalogo-select>
+                </div>
+                <div class="col-md-6">
+                    <app-catalogo-select [catalogo]="nico" [label]="'NICO'" [required]="true"
+                        formControlName="nico"></app-catalogo-select>
                 </div>
             </div>
-        </div>
-        <div class="row mb-3">
-            <div class="col-md-6">
-                <div class="form-group mb-3">
+
+            <div class="row mb-3">
+                <div class="col-md-5">
+                    <label class="form-label">Acotación*:</label>
+                    <textarea class="form-control textarea-auto-height" rows="2" formControlName="acotacion"></textarea>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-6">
                     <label for="peligroso" class="form-label">Nombre del residuo peligroso generado*:</label>
-                    <input type="text" class="form-control" id="peligroso">
+                    <input type="text" class="form-control" id="peligroso" formControlName="residuoPeligroso">
                 </div>
             </div>
-        </div>
-        <div class="row mb-3">
-            <div class="col-md-6">
-                <div class="form-group mb-3">
+
+            <div class="row mb-3">
+                <div class="col-md-6">
                     <label for="cantidad" class="form-label">Cantidad*:</label>
-                    <input type="text" class="form-control" id="Cantidad">
+                    <input type="text" class="form-control" id="cantidad" formControlName="cantidad">
                 </div>
             </div>
-        </div>
-        <div class="row mb-3">
-            <div class="col-md-6">
-                <div class="form-group mb-3">
-                    <label for="cantidadletra" class="form-label">Cantidad (letra):*</label>
-                    <input type="text" class="form-control" id="cantidadletra" readonly>
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="cantidadletra" class="form-label">Cantidad (letra):</label>
+                    <input type="text" class="form-control" id="cantidadletra" formControlName="cantidadLetra" readonly>
                 </div>
             </div>
-        </div>
-        <div class="row mb-3">
-            <div class="col-md-6">
-                <app-catalogo-select [catalogo]='unidad' [label]="'Unidad de medida*:'"
-                    [required]="true"></app-catalogo-select>
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <app-catalogo-select [catalogo]="unidad" [label]="'Unidad de medida*:'" [required]="true"
+                        formControlName="unidadMedida"></app-catalogo-select>
+                </div>
             </div>
-        </div>
-        <div class="row mb-3">
-            <div class="col-md-8">
-                <label required="true">Clasificación / Tipo*:</label>
-                <app-input-radio [radioOptions]="clasificacionRadioOptions" [isRequired]="true"
-                    [layout]="'horizontal'"></app-input-radio>
+
+            <div class="row mb-3">
+                <div class="col-md-8">
+                    <label>Clasificación / Tipo*:</label>
+                    <app-input-radio [radioOptions]="clasificacionRadioOptions" [isRequired]="true"
+                        [layout]="'horizontal'" formControlName="clasificacion"></app-input-radio>
+                </div>
             </div>
-        </div>
-        <div class="row mb-3">
-            <div class="col-md-6">
-                <app-catalogo-select [catalogo]='residuo' [label]="'Clave de residuo*:'"
-                    [required]="true"></app-catalogo-select>
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <app-catalogo-select [catalogo]="residuo" [label]="'Clave de residuo*:'" [required]="true"
+                        formControlName="claveResiduo"></app-catalogo-select>
+                </div>
             </div>
-        </div>
-        <div class="row mb-3">
-            <div class="col-md-6">
-                <app-catalogo-select [catalogo]='tipoNombre' [label]="'Nombre*'"
-                    [required]="true"></app-catalogo-select>
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <app-catalogo-select [catalogo]="tipoNombre" [label]="'Nombre*'" [required]="true"
+                        formControlName="nombre"></app-catalogo-select>
+                </div>
             </div>
-        </div>
-        <div class="row mb-3">
-            <div class="col-md-6">
-                <app-catalogo-select [catalogo]='descripcion' [label]="'Descripción*:'"
-                    [required]="true"></app-catalogo-select>
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <app-catalogo-select [catalogo]="descripcion" [label]="'Descripción*:'" [required]="true"
+                        formControlName="descripcion"></app-catalogo-select>
+                </div>
             </div>
-        </div>
-        <div class="row mb-3">
-            <div class="col-md-6">
-                <app-catalogo-select [catalogo]='creti' [label]="'CRETI*:'" [required]="true"></app-catalogo-select>
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <app-catalogo-select [catalogo]="creti" [label]="'CRETI*:'" [required]="true"
+                        formControlName="creti"></app-catalogo-select>
+                </div>
             </div>
-        </div>
-        <div class="row mb-3">
-            <div class="col-md-6">
-                <app-catalogo-select [catalogo]='estadoFisico' [label]="'Estado físico*:'"
-                    [required]="true"></app-catalogo-select>
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <app-catalogo-select [catalogo]="estadoFisico" [label]="'Estado físico*:'" [required]="true"
+                        formControlName="estadoFisico"></app-catalogo-select>
+                </div>
             </div>
-        </div>
-        <div class="row mb-3">
-            <div class="col-md-6">
-                <app-catalogo-select [catalogo]='tipoContenedor' [label]="'Tipo de Contenedor*:'"
-                    [required]="true"></app-catalogo-select>
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <app-catalogo-select [catalogo]="tipoContenedor" [label]="'Tipo de Contenedor*:'" [required]="true"
+                        formControlName="tipoContenedor"></app-catalogo-select>
+                </div>
             </div>
-        </div>
-        <div class="row mb-3">
-            <div class="col-md-6">
-                <div class="form-group mb-3">
+
+            <div class="row mb-3">
+                <div class="col-md-6">
                     <label for="capacidad" class="form-label">Capacidad*:</label>
-                    <input type="text" class="form-control" id="capacidad">
+                    <input type="text" class="form-control" id="capacidad" formControlName="capacidad">
                 </div>
             </div>
-        </div>
-        <div class="row mt-3">
-            <div class="col-md-12">
-                <div class="pull-right">
+
+            <div class="row mt-3">
+                <div class="col-md-12 text-end">
                     <button type="button" id="cancelarDatosOperacionImp" class="mid btn btn-default me-3"
-                        data-bs-dismiss="modal">
-                        Cancelar
-                    </button>
-                    <button type="button" id="agregarDatosOperacionImp" class="default btn btn-primary"
-                        data-bs-dismiss="modal">
-                        Agregar
-                    </button>
+                        data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Agregar</button>
                 </div>
             </div>
-        </div>
+        </form>
     </div>

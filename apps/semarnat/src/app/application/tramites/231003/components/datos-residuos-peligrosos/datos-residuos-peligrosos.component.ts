@@ -1,6 +1,6 @@
 import { Catalogo, CatalogoSelectComponent, InputRadioComponent, TableComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import {RadioOpcion,SolicitudJson} from '@libs/shared/data-access-user/src/core/models/231003/solicitud.model'
 import { CommonModule } from '@angular/common';
 import rawData from '@libs/shared/theme/assets/json/231003/solicitud.json';
@@ -16,7 +16,9 @@ const RADIO_OPCIONES = rawData as SolicitudJson;
   styleUrl: './datos-residuos-peligrosos.component.css',
 })
 export class DatosResiduosPeligrososComponent implements OnInit {
-  datosResiduospPeligrosos!: FormGroup;
+  formularioDatos!: FormGroup
+
+  formularioResiduo!: FormGroup;
 
   nombre!: Catalogo[];
 
@@ -52,5 +54,39 @@ export class DatosResiduosPeligrososComponent implements OnInit {
     this.creti = RADIO_OPCIONES.creti;
     this.estadoFisico = RADIO_OPCIONES.estadoFisico;
     this.tipoContenedor = RADIO_OPCIONES.tipoContenedor;
+    this.inicializarFormulario();
+    this.crearFormularioResiduo();
   }
+
+  private inicializarFormulario(): void {
+    this.formularioDatos = new FormGroup({
+      numero: new FormControl('', Validators.required),
+      nombreMateriaPrima: new FormControl('', Validators.required),
+      cantidad: new FormControl({ value: '', disabled: true }),
+      cantidadLetra: new FormControl({ value: '', disabled: true }),
+      unidadDeMedida: new FormControl({ value: '', disabled: true }),
+      fraccionArancelaria: new FormControl({ value: '', disabled: true })
+    });
+  }
+
+  private crearFormularioResiduo(): void {
+    this.formularioResiduo = new FormGroup({
+      fraccionArancelaria: new FormControl('', Validators.required),
+      nico: new FormControl('', Validators.required),
+      acotacion: new FormControl('', Validators.required),
+      residuoPeligroso: new FormControl('', Validators.required),
+      cantidad: new FormControl('', Validators.required),
+      cantidadLetra: new FormControl({ value: '', disabled: true }),
+      unidadMedida: new FormControl('', Validators.required),
+      clasificacion: new FormControl('', Validators.required),
+      claveResiduo: new FormControl('', Validators.required),
+      nombre: new FormControl('', Validators.required),
+      descripcion: new FormControl('', Validators.required),
+      creti: new FormControl('', Validators.required),
+      estadoFisico: new FormControl('', Validators.required),
+      tipoContenedor: new FormControl('', Validators.required),
+      capacidad: new FormControl('', Validators.required)
+    });
+  }
+  
 }
