@@ -12,7 +12,7 @@ import { RadioOpcion } from '../../models/radio.model';
 import { Catalogo, CatalogosSelect, ConfiguracionColumna, InputFecha, InputRadioComponent, TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { RegistrarSolicitudMCPModule } from '../../registrar-solicitud-mcp.module';
-import { ReplaySubject, takeUntil } from 'rxjs';
+import { map, ReplaySubject, takeUntil } from 'rxjs';
 import { RegistrarSolicitudMcpService } from '../../services/registrar-solicitud-mcp.service';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { FilaData, FilaData2, ListaClave } from '../../models/fila-modal';
@@ -23,6 +23,10 @@ import { CrosslistComponent } from '../../../../../../../../../libs/shared/data-
 import { InputFechaComponent } from '../../../../../../../../../libs/shared/data-access-user/src/tramites/components/input-fecha/input-fecha.component';
 import { Modal } from 'bootstrap';
 import { MercanciaCrossList,CrossList,CrossListLable } from '../../models/mercancia.model';
+import { Solicitud260702State, Solicitud260702Store } from '../../estados/tramites260702.store';
+import { Solicitud260702Query } from '../../estados/tramites260702.query';
+
+
 @Component({
   selector: 'app-datos-de-la-solicitud',
   standalone: true,
@@ -33,7 +37,8 @@ import { MercanciaCrossList,CrossList,CrossListLable } from '../../models/mercan
 export class DatosdelasolicitudComponent implements OnInit,OnDestroy {
   dataDeLaSolicitudForm!: FormGroup;
   TEXTOS = TEXTOS;
-  
+  dataDeLaSolicitudState!: Solicitud260702State;
+
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   clavaScianForm!: FormGroup;
   public showClavaScianForm: boolean = false; 
@@ -47,15 +52,30 @@ export class DatosdelasolicitudComponent implements OnInit,OnDestroy {
   paisProcedencisCrossList: CrossList = {} as CrossList;
   paisProcedencisColapsable = false;
   @ViewChild('modalAlerta') modalElement!: ElementRef;
-  fechaInicialInput: InputFecha = FECHAINICIAL;
-  fechaFinalInput: InputFecha = FECHAFINAL;
+  // fechaInicialInput: InputFecha = FECHAINICIAL;
+  // fechaFinalInput: InputFecha = FECHAFINAL;
+  fechaFabricacionDatos: InputFecha = {
+    labelNombre: 'Fecha de fabricación',
+    required: false,
+    habilitado: true,
+  };
+
+  /**
+   * Configuración para el campo de fecha de caducidad.
+   * Incluye nombre de etiqueta, estado de requerido y habilitación.
+   */
+  fechaCaducidad: InputFecha = {
+    labelNombre: 'Fecha de Caducidad',
+    required: false,
+    habilitado: true,
+  };
   editingRowIndex: number | null = null;
 //   fechaInicialInput = { habilitado: true }; // Example InputFecha object
 // fechaFinalInput = { habilitado: true }; 
   
 usoEspecifico = false;
 usoEspecificoCrossList: CrossList = {} as CrossList;
-  
+selectedRowIndex: number | null = null;
 fechaInicialSeleccionada: string = '';
 fechaFinalSeleccionada: string = '';
   opcionDeBotonDeRadio = [
@@ -123,7 +143,11 @@ hacerlosRadioOptions = [
 ];
   selectedRow: any;
 
-  constructor(private fb: FormBuilder, private registrarsolicitudmcp: RegistrarSolicitudMcpService, private cdr: ChangeDetectorRef) {}
+  constructor(private fb: FormBuilder, 
+    private registrarsolicitudmcp: RegistrarSolicitudMcpService,
+     private cdr: ChangeDetectorRef,
+     private solicitud260702Store: Solicitud260702Store,
+     private solicitud260702Query: Solicitud260702Query) {}
 
   configuracionColumnasoli: ConfiguracionColumna<FilaData>[] = [
     {
@@ -152,7 +176,7 @@ mercanciasDatos : ConfiguracionColumna<FilaData2>[] = [
   },
   {
     encabezado: 'Denominación específico del producto',
-    clave: (fila) => fila.denominacionEspecifica,
+    clave: (fila) => fila.nombreProductoEspecifico,
     orden: 3,
   },
   {
@@ -177,7 +201,7 @@ mercanciasDatos : ConfiguracionColumna<FilaData2>[] = [
   },
   {
     encabezado: 'Unidad de medida de comercialización (UMC)',
-    clave: (fila) => fila.UMC,
+    clave: (fila) => fila.umc,
     orden: 8,
   },
   {
@@ -187,7 +211,7 @@ mercanciasDatos : ConfiguracionColumna<FilaData2>[] = [
   },
   {
     encabezado: 'Unidad de medida de tarifa (UMT)',
-    clave: (fila) => fila.UMT,
+    clave: (fila) => fila.umt,
     orden: 10,
   },
   {
@@ -231,22 +255,54 @@ public listaClave: ConfiguracionColumna<ListaClave>[] = [
 ];
 
   ngOnInit(): void {
+   this.solicitud260702Query.selectSolicitud$
+        .pipe(
+          takeUntil(this.destroyed$),
+          map((seccionState) => {
+            this.dataDeLaSolicitudState = seccionState;
+          })
+        )
+        .subscribe();
     this.dataDeLaSolicitudForm = this.fb.group({
-      claveDeLosLotes: ['', Validators.required],
-      fechaDeFabricacion: ['', Validators.required],
-      fechaDeCaducidad: ['', Validators.required],
+      claveDeLosLotes: [this.dataDeLaSolicitudState?.claveDeLosLotes, Validators.required],
+      fechaDeFabricacion: [this.dataDeLaSolicitudState?.fechaDeFabricacion,Validators.required],
+      fechaDeCaducidad: [this.dataDeLaSolicitudState?.fechaDeCaducidad,Validators.required],
+      descripcionFraccionArancelaria: [this.dataDeLaSolicitudState?.descripcionFraccionArancelaria, Validators.required],
+        cantidadUMT:[this.dataDeLaSolicitudState?.cantidadUMT, Validators.required],
+        umt:[this.dataDeLaSolicitudState?.descripcionFraccionArancelaria, Validators.required],
+        cantidadUMC:[this.dataDeLaSolicitudState?.cantidadUMC, Validators.required],
+        umc:[this.dataDeLaSolicitudState?.umc, Validators.required],
+        tipoProducto: [this.dataDeLaSolicitudState?.tipoProducto, Validators.required],
+        clasificaionProductos: [this.dataDeLaSolicitudState?.clasificaionProductos, Validators.required], 
+        especificarProducto: [this.dataDeLaSolicitudState?.especificarProducto, Validators.required],
+        nombreProductoEspecifico: [this.dataDeLaSolicitudState?.nombreProductoEspecifico, Validators.required],
+        marca:[this.dataDeLaSolicitudState?.marca, Validators.required],
+        fraccionArancelaria:[this.dataDeLaSolicitudState?.fraccionArancelaria, Validators.required],
+      datosDelTramiteRealizar: this.fb.group({
+       
+        justification: [this.dataDeLaSolicitudState?.justification, Validators.required],
+        denominacion: [this.dataDeLaSolicitudState?.denominacion, Validators.required],
+        correoElectronico: [this.dataDeLaSolicitudState?.correoElectronico, Validators.required],
+        codigopostal: [this.dataDeLaSolicitudState?.codigopostal, Validators.required],
+        estado: [this.dataDeLaSolicitudState?.estado, Validators.required],
+        municipoyalcaldia: [this.dataDeLaSolicitudState?.municipoyalcaldia, Validators.required],
+        localidad: [this.dataDeLaSolicitudState?.localidad, Validators.required],
+        colonia: [this.dataDeLaSolicitudState?.colonia, Validators.required],
+        calle: [this.dataDeLaSolicitudState?.calle, Validators.required],
+        lada: [this.dataDeLaSolicitudState?.lada, Validators.required],
+        telefono: [this.dataDeLaSolicitudState?.telefono, Validators.required],
+        avisoDeFuncionamiento: [this.dataDeLaSolicitudState?.avisoDeFuncionamiento, Validators.required],
+        licenciaSanitaria: [this.dataDeLaSolicitudState?.licenciaSanitaria, Validators.required],
+        regimenalque: [this.dataDeLaSolicitudState?.regimenalque, Validators.required],
+        aduana: [this.dataDeLaSolicitudState?.aduana, Validators.required],
+        rfc: [this.dataDeLaSolicitudState?.rfc, Validators.required],
+        legalRazonSocial: [this.dataDeLaSolicitudState?.legalRazonSocial, Validators.required],
+        apellidoPaterno: [this.dataDeLaSolicitudState?.apellidoPaterno, Validators.required],
+        apellidoMaterno: [this.dataDeLaSolicitudState?.apellidoMaterno,Validators.required],
+      }),
+     
     });
-   
-    // this.dataDeLaSolicitudForm.get('fechaDeFabricacion')?.valueChanges.subscribe((value) => {
-    //   console.log('Fecha de Fabricación changed:', value);
-    //   this.fechaInicialSeleccionada = value; // Store the selected date
-    // });
-  
-    // // Subscribe to value changes for fechaDeCaducidad
-    // this.dataDeLaSolicitudForm.get('fechaDeCaducidad')?.valueChanges.subscribe((value) => {
-    //   console.log('Fecha de Caducidad changed:', value);
-    //   this.fechaFinalSeleccionada = value; // Store the selected date
-    // });
+    
     this.getEstadosData();
     this.getClaveScianData();
     this.createclaveScianForm();
@@ -268,6 +324,7 @@ public listaClave: ConfiguracionColumna<ListaClave>[] = [
       }),
   });
   }
+
   getMercanciaCrosslistData(): void {
     this.registrarsolicitudmcp
       .getMercanciaCrosslistData()
@@ -289,15 +346,7 @@ public listaClave: ConfiguracionColumna<ListaClave>[] = [
         },
       });
   }
-  // onFechaDeFabricacionChange(event: string): void {
-  //   this.fechaInicialSeleccionada = event; // Update the selected date
-  //   this.dataDeLaSolicitudForm.get('fechaDeFabricacion')?.setValue(event);
-  // }
   
-  // onFechaDeCaducidadChange(event: string): void {
-  //   this.fechaFinalSeleccionada = event; // Update the selected date
-  //   this.dataDeLaSolicitudForm.get('fechaDeCaducidad')?.setValue(event);
-  // }
   paisOrigenColapsable(): void {
     this.paisOrigen = !this.paisOrigen;
   }
@@ -414,14 +463,6 @@ public listaClave: ConfiguracionColumna<ListaClave>[] = [
     
   }
   
-  // onSelectedRowsChange(selectedRows: FilaData[]): void {
-  //   this.selectedRows = new Set(selectedRows.map((row) => row.id)); // Update selected rows
-  //   // this.esFormularioVisible = false;
-  // }
-  // onSelectedRowsChanges(selectedRows: ListaClave[]): void {
-  //   this.selectedRows = new Set(selectedRows.map((row) => row.id)); // Update selected rows
-  //   // this.esFormularioVisible = false;
-  // }
   onSelectedRows(selectedRows: FilaData[] | ListaClave[]): void {
     console.log('Selected rows:', selectedRows);
   
@@ -430,9 +471,15 @@ public listaClave: ConfiguracionColumna<ListaClave>[] = [
       this.selectedRows = new Set((selectedRows as ListaClave[]).map((row) => Number(row.claveDeLosLotes)));
     } else if (selectedRows.length > 0 && 'id' in selectedRows[0]) {
       // Handle FilaData[]
-      this.selectedRows = new Set((selectedRows as FilaData[]).map((row) => row.id));
-    } else {
-      console.error('Selected rows do not contain expected properties.');
+      this.selectedRows = new Set((selectedRows as FilaData[]).map((row) => Number(row.id)));
+    } else if (selectedRows[0] && 'claveScianG' in selectedRows[0] && 'claveScian' in selectedRows[0].claveScianG) {
+      // Handle rows with claveScianG structure
+      this.selectedRows = new Set((selectedRows as FilaData[]).map((row) => Number(row.claveScianG.claveScian)));
+    }
+    else {
+      console.error('Selected rows do not contain expected properties:', selectedRows[0]);
+      this.selectedRows.clear(); 
+
     }
   
     console.log('Updated selectedRows:', Array.from(this.selectedRows));
@@ -480,12 +527,25 @@ public listaClave: ConfiguracionColumna<ListaClave>[] = [
   onAgregar(){
     this.showClavaScianForm = true; // Show the form when "Agregar" is clicked
   }
-  onDelete() {
-    console.log("Deleting selected rows...");
-    this.tableData = this.tableData.filter((row) => !this.selectedRows.has(row.id));
-    this.selectedRows.clear(); // Clear the selection after deletion
-    console.log("Updated Table Data:", this.tableData);
+  onDelete(): void {
+    console.log('onDelete called. Current selectedRows:', Array.from(this.selectedRows));
+
+    if (!this.selectedRows || this.selectedRows.size === 0) {
+      console.warn('No rows selected for deletion.');
+      return;
+    }
+
+    // Filter out rows that are not in the selectedRows set
+    this.tableData = this.tableData.filter((row) => {
+      const rowId = row.id || (row.claveScianG && row.claveScianG.claveScian); // Adjust based on actual structure
+      return !this.selectedRows.has(Number(rowId));
+    });
+    // Clear the selected rows after deletion
+    this.selectedRows.clear();
+
+    console.log('Updated tableData after deletion:', this.tableData);
   }
+  
   onCancelar() {
     this.showClavaScianForm = false; // Hide the form without submitting
     this.clavaScianForm.reset(); // Reset the form
@@ -496,71 +556,95 @@ public listaClave: ConfiguracionColumna<ListaClave>[] = [
      MODAL_INSTANCE.show();
    }
  }
- onAgregarListaClave() {
-  console.log('onAgregarListaClave triggered');
-  
-  console.log('onAgregarListaClave triggered');
-  console.log('Form Value:', this.dataDeLaSolicitudForm.value);
+ onFechaDeFabricacionChange(event: any): void {
+  this.dataDeLaSolicitudForm.patchValue({ fechaDeFabricacion: event });
+}
 
-  const claveDeLosLotes = this.dataDeLaSolicitudForm.get('claveDeLosLotes')?.value || '';
-  const fechaDeFabricacion = this.dataDeLaSolicitudForm.get('fechaDeFabricacion')?.value || '';
-  const fechaDeCaducidad = this.dataDeLaSolicitudForm.get('fechaDeCaducidad')?.value || '';
+onFechaDeCaducidadChange(event: any): void {
+  this.dataDeLaSolicitudForm.patchValue({ fechaDeCaducidad: event });
+}
 
-  console.log('Form Value:', this.dataDeLaSolicitudForm.value);
-  console.log('claveDeLosLotes:', claveDeLosLotes);
-  console.log('fechaDeFabricacion:', fechaDeFabricacion);
-  console.log('fechaDeCaducidad:', fechaDeCaducidad);
+onAgregarListaClave(): void {
+  // Retrieve the form values
+  const claveDeLosLotes = this.dataDeLaSolicitudForm.get('claveDeLosLotes')?.value;
+  const fechaDeFabricacion = this.dataDeLaSolicitudForm.get('fechaDeFabricacion')?.value;
+  const fechaDeCaducidad = this.dataDeLaSolicitudForm.get('fechaDeCaducidad')?.value;
+  // Create a new row object
+  if (!claveDeLosLotes && fechaDeFabricacion && fechaDeCaducidad) {
+    console.error('All fields are required to add a row.');
+    return;
+  }
+  const newRow = {
+    id: this.listaClaveTabla.length + 1, // Generate a unique ID
+    claveDeLosLotes,
+    fechaDeFabricacion,
+    fechaDeCaducidad,
+  };
 
-  // Validate form values
-  if (!claveDeLosLotes || !fechaDeFabricacion || !fechaDeCaducidad) {
-    console.error('One or more fields are empty. Please fill out all fields.');
+  // Add the new row to the table data
+  this.listaClaveTabla.push(newRow);
+
+  // Log the updated table for debugging
+  console.log('Updated listaClaveTabla:', this.listaClaveTabla);
+
+  // Optionally, reset the form fields
+  this.dataDeLaSolicitudForm.reset();
+}
+
+onModificar(): void {
+  console.log('Selected rows:', Array.from(this.selectedRows)); // Debug log
+
+  if (this.selectedRows.size === 0) {
+    console.error('No row selected for modification');
     return;
   }
 
-  if (this.editingRowIndex !== null) {
-    this.listaClaveTabla[this.editingRowIndex] = {
-      ...this.listaClaveTabla[this.editingRowIndex],
-      claveDeLosLotes,
-      fechaDeFabricacion,
-      fechaDeCaducidad,
-    };
-    this.editingRowIndex = null;
-  } else {
-    const newId = this.listaClaveTabla.length > 0 
-      ? Math.max(...this.listaClaveTabla.map(row => row.id)) + 1 
-      : 1;
+  // Get the first selected row's index
+  const selectedRowIndex = Array.from(this.selectedRows)[0];
+  const rowIndex = this.listaClaveTabla.findIndex(
+    (row) => Number(row.claveDeLosLotes) === selectedRowIndex
+  );
 
-    const newRow: ListaClave = {
-      id: newId,
-      claveDeLosLotes,
-      fechaDeFabricacion,
-      fechaDeCaducidad,
-    };
-
-    this.listaClaveTabla.push(newRow);
+  if (rowIndex === -1) {
+    console.error('Selected row not found');
+    return;
   }
 
-  this.dataDeLaSolicitudForm.reset();
+  const selectedRow = this.listaClaveTabla[rowIndex];
 
-  console.log('Updated listaClaveTabla:', this.listaClaveTabla);
+  // Populate the form fields with the selected row's data
+  this.dataDeLaSolicitudForm.patchValue({
+    claveDeLosLotes: selectedRow.claveDeLosLotes || '',
+    fechaDeFabricacion: selectedRow.fechaDeFabricacion || '',
+    fechaDeCaducidad: selectedRow.fechaDeCaducidad || '',
+  });
 
+  // Update the row in the table after editing
+  this.dataDeLaSolicitudForm.valueChanges.subscribe((formData) => {
+    this.listaClaveTabla[rowIndex] = {
+      ...this.listaClaveTabla[rowIndex],
+      claveDeLosLotes: formData.claveDeLosLotes,
+      fechaDeFabricacion: formData.fechaDeFabricacion,
+      fechaDeCaducidad: formData.fechaDeCaducidad,
+    };
+    console.log('Updated row:', this.listaClaveTabla[rowIndex]);
+  });
+
+  console.log('Editing row:', selectedRow);
 }
 
- 
-// onModificar(rowIndex: number): void {
-//   // const row = this.listaClaveTabla[rowIndex];
-//   // this.editingRowIndex = rowIndex; // Track the row being edited
+get datosDelTramiteRealizar(): FormGroup {
+  return this.dataDeLaSolicitudForm.get('datosDelTramiteRealizar') as FormGroup;
+}
 
-//   // // Populate the form with the row's data
-//   // this.dataDeLaSolicitudForm.patchValue({
-//   //   claveDeLosLotes: row.claveDeLosLotes || '',
-//   //   fechaDeFabricacion: row.fechaDeFabricacion || '',
-//   //   fechaDeCaducidad: row.fechaDeCaducidad || '',
-//   // });
-//   // console.log('Form Value:', this.dataDeLaSolicitudForm.value);
-//   // console.log('listaClaveTabla Before:', this.listaClaveTabla);
-//   // console.log('Editing row:', row);
-// }
+setValoresStore(
+  form: FormGroup,
+  campo: string,
+  metodoNombre: keyof Solicitud260702Store
+): void {
+  const VALOR = form.get(campo)?.value;
+  (this.solicitud260702Store[metodoNombre] as (value: any) => void)(VALOR);
+}
 
   ngOnDestroy(): void {
     this.destroyed$.next(true);

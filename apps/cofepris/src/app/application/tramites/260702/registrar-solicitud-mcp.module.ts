@@ -20,7 +20,7 @@ import { TercerosrelacionadosComponent } from './components/terceros relacionado
 import { TramitesAsociadosComponent } from './components/tramitesasociados/tramites-asociados.component';
 import { RegistrarSolicitudMcpService } from './services/registrar-solicitud-mcp.service';
 import { PagoDeDerechoComponent } from './components/pagodederechos/pago-de-derecho.component'; 
-
+import { InputFechaComponent } from '@libs/shared/data-access-user/src';
 @NgModule({
   declarations: [
     PasoUnoComponent,
@@ -32,6 +32,7 @@ import { PagoDeDerechoComponent } from './components/pagodederechos/pago-de-dere
    
   ],
   imports: [
+    InputFechaComponent,
     DatosdelasolicitudComponent,
     PagoDeDerechoComponent,
     TercerosrelacionadosComponent,
