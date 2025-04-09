@@ -32,7 +32,6 @@ import { takeUntil } from 'rxjs';
  * de gestionar las interacciones del usuario con los campos del formulario.
  */
 export class SolicitudComponent implements OnInit, OnDestroy {
-
   /** Formulario reactivo principal */
   solicitudForm!: FormGroup;
 
@@ -64,7 +63,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     public solicitudService: SolicitudService,
     public solicitud6101Store: Solicitud6101Store,
-    public solicitud6101Query: Solicitud6101Query,
+    public solicitud6101Query: Solicitud6101Query
   ) {
     this.conseguirSolicitudCatologo();
   }
@@ -76,35 +75,73 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.solicitudForm = this.fb.group({
       aduanaAux: [this.solicitud6101State.aduanaAux, [Validators.required]],
-      juntaTecnicaDerivada: [this.solicitud6101State.juntaTecnicaDerivada, [Validators.required]],
+      juntaTecnicaDerivada: [
+        this.solicitud6101State.juntaTecnicaDerivada,
+        [Validators.required],
+      ],
       numeroPedimento: [this.solicitud6101State.numeroPedimento],
-      nombreComercialMercancia: [this.solicitud6101State.nombreComercialMercancia, [Validators.required]],
-      descDetalladaMercancia: [this.solicitud6101State.descDetalladaMercancia, [Validators.required]],
-      fraccionI: [this.solicitud6101State.fraccionI, [Validators.required, Validators.maxLength(10)]],
+      nombreComercialMercancia: [
+        this.solicitud6101State.nombreComercialMercancia,
+        [Validators.required],
+      ],
+      descDetalladaMercancia: [
+        this.solicitud6101State.descDetalladaMercancia,
+        [Validators.required],
+      ],
+      fraccionI: [
+        this.solicitud6101State.fraccionI,
+        [Validators.required, Validators.maxLength(10)],
+      ],
       capitulo: [{ value: this.solicitud6101State.capitulo, disabled: true }],
       partida: [{ value: this.solicitud6101State.partida, disabled: true }],
-      subpartida: [{ value: this.solicitud6101State.subpartida, disabled: true }],
-      subdivision: [{ value: this.solicitud6101State.subdivision, disabled: true }],
-      fraccionII: [this.solicitud6101State.fraccionII, [Validators.required, Validators.maxLength(10)]],
-      capituloII: [{ value: this.solicitud6101State.capituloII, disabled: true }],
+      subpartida: [
+        { value: this.solicitud6101State.subpartida, disabled: true },
+      ],
+      subdivision: [
+        { value: this.solicitud6101State.subdivision, disabled: true },
+      ],
+      fraccionII: [
+        this.solicitud6101State.fraccionII,
+        [Validators.required, Validators.maxLength(10)],
+      ],
+      capituloII: [
+        { value: this.solicitud6101State.capituloII, disabled: true },
+      ],
       partidaII: [{ value: this.solicitud6101State.partidaII, disabled: true }],
-      subpartidaII: [{ value: this.solicitud6101State.subpartidaII, disabled: true }],
-      subdivisionII: [{ value: this.solicitud6101State.subdivisionII, disabled: true }],
-      fraccionIII: [this.solicitud6101State.fraccionIII, [Validators.maxLength(10)]],
-      capituloIII: [{ value: this.solicitud6101State.capituloIII, disabled: true }],
-      partidaIII: [{ value: this.solicitud6101State.partidaIII, disabled: true }],
-      subpartidaIII: [{ value: this.solicitud6101State.subpartidaIII, disabled: true }],
-      subdivisionIII: [{ value: this.solicitud6101State.subdivisionIII, disabled: true }],
+      subpartidaII: [
+        { value: this.solicitud6101State.subpartidaII, disabled: true },
+      ],
+      subdivisionII: [
+        { value: this.solicitud6101State.subdivisionII, disabled: true },
+      ],
+      fraccionIII: [
+        this.solicitud6101State.fraccionIII,
+        [Validators.maxLength(10)],
+      ],
+      capituloIII: [
+        { value: this.solicitud6101State.capituloIII, disabled: true },
+      ],
+      partidaIII: [
+        { value: this.solicitud6101State.partidaIII, disabled: true },
+      ],
+      subpartidaIII: [
+        { value: this.solicitud6101State.subpartidaIII, disabled: true },
+      ],
+      subdivisionIII: [
+        { value: this.solicitud6101State.subdivisionIII, disabled: true },
+      ],
       manifiestosSeleccionados: [false, [Validators.required]],
     });
-    
-    this.solicitud6101Query.seleccionarSolicitud$.pipe(
-      takeUntil(this.destroyNotifier$),
-      map((respuesta: Solicitud6101State) => {
-        this.solicitud6101State = respuesta;
-        this.solicitudForm.patchValue(respuesta);
-      })
-    ).subscribe();
+
+    this.solicitud6101Query.seleccionarSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((respuesta: Solicitud6101State) => {
+          this.solicitud6101State = respuesta;
+          this.solicitudForm.patchValue(respuesta);
+        })
+      )
+      .subscribe();
   }
 
   /**
@@ -144,20 +181,27 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   onNumeroPedimento(evento: Event): void {
     const ELEMENTO_DE_ENTRADA = evento.target as HTMLInputElement;
-    const VALOR_DESINFECTADO = ELEMENTO_DE_ENTRADA.value.replace(REGEX_NUMEROS, '');
+    const VALOR_DESINFECTADO = ELEMENTO_DE_ENTRADA.value.replace(
+      REGEX_NUMEROS,
+      ''
+    );
     this.solicitud6101Store.actualizarNumeroPedimento(VALOR_DESINFECTADO);
   }
 
   /** Actualiza el nombre comercial de la mercancía */
   onNombreComercialMercancia(evento: Event): void {
     const ELEMENTO_DE_ENTRADA = evento.target as HTMLInputElement;
-    this.solicitud6101Store.actualizarNombreComercialMercancia(ELEMENTO_DE_ENTRADA.value);
+    this.solicitud6101Store.actualizarNombreComercialMercancia(
+      ELEMENTO_DE_ENTRADA.value
+    );
   }
 
   /** Actualiza la descripción detallada de la mercancía */
   onDescDetalladaMercancia(evento: Event): void {
     const ELEMENTO_DE_ENTRADA = evento.target as HTMLInputElement;
-    this.solicitud6101Store.actualizarDescDetalladaMercancia(ELEMENTO_DE_ENTRADA.value);
+    this.solicitud6101Store.actualizarDescDetalladaMercancia(
+      ELEMENTO_DE_ENTRADA.value
+    );
   }
 
   /** Procesa la fracción I y actualiza sus partes */
@@ -183,7 +227,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   }
 
   /** Procesa la fracción III y actualiza sus partes */
-  onFraccionIII(evento : Event): void {
+  onFraccionIII(evento: Event): void {
     const ELEMENTO_DE_ENTRADA = evento.target as HTMLInputElement;
     this.solicitud6101Store.actualizarFraccionIII(ELEMENTO_DE_ENTRADA.value);
     const FRACCION = this.divideFraccion(ELEMENTO_DE_ENTRADA.value);
@@ -191,12 +235,14 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.solicitud6101Store.actualizarPartidaIII(FRACCION.partida);
     this.solicitud6101Store.actualizarSubpartidaIII(FRACCION.subpartida);
     this.solicitud6101Store.actualizarSubdivisionIII(FRACCION.subdivision);
-  }    
+  }
 
   /** Actualiza el valor del checkbox de manifiestos seleccionados */
   onManifiesto(evento: Event): void {
     const ELEMENTO_DE_ENTRADA = evento.target as HTMLInputElement;
-    this.solicitud6101Store.actualizarManifiestosSeleccionados(ELEMENTO_DE_ENTRADA.checked);
+    this.solicitud6101Store.actualizarManifiestosSeleccionados(
+      ELEMENTO_DE_ENTRADA.checked
+    );
   }
 
   /**
@@ -206,24 +252,24 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   // eslint-disable-next-line class-methods-use-this
   divideFraccion(valor: string): DivideFraccion {
-    const LONGITUDVALUE = valor.length;
+    const LONGITUD_VALUE = valor.length;
     let capitulo = '';
     let partida = '';
     let subpartida = '';
     let subdivision = '';
 
-    if (LONGITUDVALUE === 10 || LONGITUDVALUE === 8) {
+    if (LONGITUD_VALUE === 10 || LONGITUD_VALUE === 8) {
       capitulo = valor.substr(0, 2);
       partida = valor.substr(0, 4);
       subpartida = valor.substr(0, 6);
-      subdivision = LONGITUDVALUE === 10 ? valor.substr(8, 2) : '00';
+      subdivision = LONGITUD_VALUE === 10 ? valor.substr(8, 2) : '00';
     }
 
     return {
       capitulo,
       partida,
       subpartida,
-      subdivision
+      subdivision,
     };
   }
 

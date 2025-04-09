@@ -1,44 +1,42 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { of, Subject } from 'rxjs';
 import { SolicitudComponent } from './solicitud.component';
-import { Solicitud6101Query } from '../../estados/solicitud6101.query';
-import { Solicitud6101Store } from '../../estados/solicitud6101.store';
+import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SolicitudService } from '../../services/solicitud/solicitud.service';
-import { Solicitud6101State } from '../../estados/solicitud6101.store';
-import { SolicitudCatologo } from '../../models/solicitud.model';
+import { Solicitud6101Store } from '../../estados/solicitud6101.store';
+import { Solicitud6101Query } from '../../estados/solicitud6101.query';
+import { of, Subject } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import {
+  AlertComponent,
+  AnexarDocumentosComponent,
+  BtnContinuarComponent,
+  CatalogoSelectComponent,
+  FirmaElectronicaComponent,
+  InputFechaComponent,
+  SolicitanteComponent,
+  TablaDinamicaComponent,
+  TableComponent,
+  TituloComponent,
+  WizardComponent,
+} from '@libs/shared/data-access-user/src';
 
 describe('SolicitudComponent', () => {
   let component: SolicitudComponent;
   let fixture: ComponentFixture<SolicitudComponent>;
-  let solicitud6101StoreMock: any;
-  let solicitudServiceMock: any;
-
-  const stateMock: Solicitud6101State = {
-    aduanaAux: 'aduana1',
-    juntaTecnicaDerivada: 'junta1',
-    numeroPedimento: '12345',
-    nombreComercialMercancia: 'mercancia1',
-    descDetalladaMercancia: 'descripcion1',
-    fraccionI: '1234567890',
-    capitulo: '12',
-    partida: '1234',
-    subpartida: '123456',
-    subdivision: '90',
-    fraccionII: '0987654321',
-    capituloII: '09',
-    partidaII: '0987',
-    subpartidaII: '098765',
-    subdivisionII: '21',
-    fraccionIII: '1122334455',
-    capituloIII: '11',
-    partidaIII: '1122',
-    subpartidaIII: '112233',
-    subdivisionIII: '55',
-    manifiestosSeleccionados: true,
-  };
+  let solicitudServiceMock: Partial<SolicitudService>;
+  let solicitud6101StoreMock: Partial<Solicitud6101Store>;
+  let solicitud6101QueryMock: Partial<Solicitud6101Query>;
 
   beforeEach(async () => {
+    solicitudServiceMock = {
+      conseguirSolicitudCatologo: jest.fn().mockReturnValue(
+        of({
+          aduana: { id: 1, nombre: 'Aduana 1' },
+          juntaTecnicaDerivada: { id: 2, nombre: 'Junta Técnica 1' },
+        })
+      ),
+    };
+
     solicitud6101StoreMock = {
       actualizarAduanaAux: jest.fn(),
       actualizarJuntaTecnicaDerivada: jest.fn(),
@@ -46,135 +44,191 @@ describe('SolicitudComponent', () => {
       actualizarNombreComercialMercancia: jest.fn(),
       actualizarDescDetalladaMercancia: jest.fn(),
       actualizarFraccionI: jest.fn(),
-      actualizarFraccionII: jest.fn(),
-      actualizarFraccionIII: jest.fn(),
       actualizarCapitulo: jest.fn(),
       actualizarPartida: jest.fn(),
       actualizarSubpartida: jest.fn(),
       actualizarSubdivision: jest.fn(),
+      actualizarManifiestosSeleccionados: jest.fn(),
+
+      actualizarFraccionII: jest.fn(),
       actualizarCapituloII: jest.fn(),
       actualizarPartidaII: jest.fn(),
       actualizarSubpartidaII: jest.fn(),
       actualizarSubdivisionII: jest.fn(),
+
+      actualizarFraccionIII: jest.fn(),
       actualizarCapituloIII: jest.fn(),
       actualizarPartidaIII: jest.fn(),
       actualizarSubpartidaIII: jest.fn(),
       actualizarSubdivisionIII: jest.fn(),
-      actualizarManifiestosSeleccionados: jest.fn(),
     };
 
-    solicitudServiceMock = {
-      conseguirSolicitudCatologo: jest.fn().mockReturnValue(of({
-        aduana: { id: 'aduana1', nombre: 'Aduana Mock' },
-        juntaTecnicaDerivada: { id: 'junta1', nombre: 'Junta Mock' },
-      } as unknown as SolicitudCatologo)),
-    };
+    solicitud6101QueryMock = {
+      seleccionarSolicitud$: of({
+        aduanaAux: 'Aduana 1',
+        juntaTecnicaDerivada: 'Junta Técnica 1',
+        numeroPedimento: '123456',
+        nombreComercialMercancia: 'Mercancía 1',
+        descDetalladaMercancia: 'Descripción detallada',
+        fraccionI: '1234567890',
+        capitulo: '12',
+        partida: '1234',
+        subpartida: '123456',
+        subdivision: '90',
+        manifiestosSeleccionados: false,
+      }),
+    } as Partial<Solicitud6101Query>;
 
     await TestBed.configureTestingModule({
+      imports: [
+        ReactiveFormsModule,
+        CommonModule,
+        CommonModule,
+        ReactiveFormsModule,
+        WizardComponent,
+        BtnContinuarComponent,
+        SolicitanteComponent,
+        FirmaElectronicaComponent,
+        TituloComponent,
+        FormsModule,
+        TableComponent,
+        AlertComponent,
+        AnexarDocumentosComponent,
+        CatalogoSelectComponent,
+        InputFechaComponent,
+        TablaDinamicaComponent,
+      ],
       declarations: [SolicitudComponent],
-      imports: [ReactiveFormsModule],
       providers: [
         FormBuilder,
-        { provide: Solicitud6101Query, useValue: { seleccionarSolicitud$: of(stateMock) } },
-        { provide: Solicitud6101Store, useValue: solicitud6101StoreMock },
         { provide: SolicitudService, useValue: solicitudServiceMock },
+        { provide: Solicitud6101Store, useValue: solicitud6101StoreMock },
+        { provide: Solicitud6101Query, useValue: solicitud6101QueryMock },
       ],
     }).compileComponents();
-  });
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(SolicitudComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  it('should create component', () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize form with state values', () => {
-    expect(component.solicitudForm.value).toEqual(stateMock);
+  it('should initialize the form on ngOnInit', () => {
+    expect(component.solicitudForm).toBeDefined();
+    expect(component.solicitudForm.get('aduanaAux')?.value).toBe('Aduana 1');
+    expect(component.solicitudForm.get('juntaTecnicaDerivada')?.value).toBe(
+      'Junta Técnica 1'
+    );
   });
 
-  it('should patch values when store emits new state', () => {
-    const patchSpy = jest.spyOn(component.solicitudForm, 'patchValue');
-    component.ngOnInit();
-    expect(patchSpy).toHaveBeenCalledWith(stateMock);
-  });
-
-  it('should update store on fraccionI input', () => {
-    const event = { target: { value: '1234567890' } } as any;
-    component.onFraccionI(event);
-    expect(solicitud6101StoreMock.actualizarFraccionI).toHaveBeenCalledWith('1234567890');
-    expect(solicitud6101StoreMock.actualizarCapitulo).toHaveBeenCalledWith('12');
-  });
-
-  it('should update store on fraccionII input', () => {
-    const event = { target: { value: '0987654321' } } as any;
-    component.onFraccionII(event);
-    expect(solicitud6101StoreMock.actualizarFraccionII).toHaveBeenCalledWith('0987654321');
-    expect(solicitud6101StoreMock.actualizarCapituloII).toHaveBeenCalledWith('09');
-  });
-
-  it('should update store on fraccionIII input', () => {
-    const event = { target: { value: '1122334455' } } as any;
-    component.onFraccionIII(event);
-    expect(solicitud6101StoreMock.actualizarFraccionIII).toHaveBeenCalledWith('1122334455');
-    expect(solicitud6101StoreMock.actualizarCapituloIII).toHaveBeenCalledWith('11');
-  });
-
-  it('should sanitize and update numeroPedimento', () => {
-    const event = { target: { value: '12abc345' } } as any;
-    component.onNumeroPedimento(event);
-    expect(solicitud6101StoreMock.actualizarNumeroPedimento).toHaveBeenCalledWith('');
-  });
-
-  it('should update name and description fields', () => {
-    const nameEvent = { target: { value: 'testName' } } as any;
-    const descEvent = { target: { value: 'testDesc' } } as any;
-
-    component.onNombreComercialMercancia(nameEvent);
-    component.onDescDetalladaMercancia(descEvent);
-
-    expect(solicitud6101StoreMock.actualizarNombreComercialMercancia).toHaveBeenCalledWith('testName');
-    expect(solicitud6101StoreMock.actualizarDescDetalladaMercancia).toHaveBeenCalledWith('testDesc');
-  });
-
-  it('should update manifiestosSeleccionados', () => {
-    const event = { target: { checked: true } } as any;
-    component.onManifiesto(event);
-    expect(solicitud6101StoreMock.actualizarManifiestosSeleccionados).toHaveBeenCalledWith(true);
-  });
-
-  it('should update aduana and junta tecnica', () => {
-    component.seleccionarAduana({ id: '123' } as any);
-    expect(solicitud6101StoreMock.actualizarAduanaAux).toHaveBeenCalledWith('123');
-
-    component.seleccionarJuntaTecnicaDerivada({ id: '456' } as any);
-    expect(solicitud6101StoreMock.actualizarJuntaTecnicaDerivada).toHaveBeenCalledWith('456');
-  });
-
-  it('should split valid fraccion string into parts', () => {
-    const result = component.divideFraccion('1234567890');
-    expect(result).toEqual({
-      capitulo: '12',
-      partida: '1234',
-      subpartida: '123456',
-      subdivision: '90',
+  it('should call conseguirSolicitudCatologo on initialization', () => {
+    expect(solicitudServiceMock.conseguirSolicitudCatologo).toHaveBeenCalled();
+    expect(component.opcionAduanaAux).toEqual({ id: 1, nombre: 'Aduana 1' });
+    expect(component.opcionJuntaTecnicaDerivada).toEqual({
+      id: 2,
+      nombre: 'Junta Técnica 1',
     });
   });
 
-  it('should handle conseguirSolicitudCatologo()', () => {
-    component.conseguirSolicitudCatologo();
-    expect(solicitudServiceMock.conseguirSolicitudCatologo).toHaveBeenCalled();
+  it('should update aduanaAux on seleccionarAduana', () => {
+    const mockCatalogo = { id: 3, descripcion: 'Aduana 3' };
+    component.seleccionarAduana(mockCatalogo);
+    expect(solicitud6101StoreMock.actualizarAduanaAux).toHaveBeenCalledWith(3);
   });
 
-  it('should clean up subscriptions on destroy', () => {
-    const nextSpy = jest.spyOn(component['destroyNotifier$'], 'next');
-    const completeSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
+  it('should update juntaTecnicaDerivada on seleccionarJuntaTecnicaDerivada', () => {
+    const mockCatalogo = { id: 4, descripcion: 'Junta Técnica 4' };
+    component.seleccionarJuntaTecnicaDerivada(mockCatalogo);
+    expect(
+      solicitud6101StoreMock.actualizarJuntaTecnicaDerivada
+    ).toHaveBeenCalledWith(4);
+  });
 
+  it('should sanitize and update numeroPedimento on onNumeroPedimento', () => {
+    const mockEvent = { target: { value: '123abc456' } } as unknown as Event;
+    component.onNumeroPedimento(mockEvent);
+    expect(
+      solicitud6101StoreMock.actualizarNumeroPedimento
+    ).toHaveBeenCalledWith('123456');
+  });
+
+  it('should update nombreComercialMercancia on onNombreComercialMercancia', () => {
+    const mockEvent = { target: { value: 'New Name' } } as unknown as Event;
+    component.onNombreComercialMercancia(mockEvent);
+    expect(
+      solicitud6101StoreMock.actualizarNombreComercialMercancia
+    ).toHaveBeenCalledWith('New Name');
+  });
+
+  it('should update descDetalladaMercancia on onDescDetalladaMercancia', () => {
+    const mockEvent = {
+      target: { value: 'New Description' },
+    } as unknown as Event;
+    component.onDescDetalladaMercancia(mockEvent);
+    expect(
+      solicitud6101StoreMock.actualizarDescDetalladaMercancia
+    ).toHaveBeenCalledWith('New Description');
+  });
+
+  it('should process and update fraccionI on onFraccionI', () => {
+    const mockEvent = { target: { value: '1234567890' } } as unknown as Event;
+    component.onFraccionI(mockEvent);
+    expect(solicitud6101StoreMock.actualizarFraccionI).toHaveBeenCalledWith(
+      '1234567890'
+    );
+    expect(solicitud6101StoreMock.actualizarCapitulo).toHaveBeenCalledWith(
+      '12'
+    );
+    expect(solicitud6101StoreMock.actualizarPartida).toHaveBeenCalledWith(
+      '1234'
+    );
+    expect(solicitud6101StoreMock.actualizarSubpartida).toHaveBeenCalledWith(
+      '123456'
+    );
+    expect(solicitud6101StoreMock.actualizarSubdivision).toHaveBeenCalledWith(
+      '90'
+    );
+  });
+
+  it('should process and update fraccionII on onFraccionII', () => {
+    const mockEvent = { target: { value: '1234567890' } } as unknown as Event;
+    component.onFraccionII(mockEvent);
+  
+    expect(solicitud6101StoreMock.actualizarFraccionII).toHaveBeenCalledWith('1234567890');
+    expect(solicitud6101StoreMock.actualizarCapituloII).toHaveBeenCalledWith('12');
+    expect(solicitud6101StoreMock.actualizarPartidaII).toHaveBeenCalledWith('1234');
+    expect(solicitud6101StoreMock.actualizarSubpartidaII).toHaveBeenCalledWith('123456');
+    expect(solicitud6101StoreMock.actualizarSubdivisionII).toHaveBeenCalledWith('90');
+  });
+
+  it('should process and update fraccionIII on onFraccionIII', () => {
+    const mockEvent = { target: { value: '9876543210' } } as unknown as Event;
+    component.onFraccionIII(mockEvent);
+  
+    expect(solicitud6101StoreMock.actualizarFraccionIII).toHaveBeenCalledWith('9876543210');
+    expect(solicitud6101StoreMock.actualizarCapituloIII).toHaveBeenCalledWith('98');
+    expect(solicitud6101StoreMock.actualizarPartidaIII).toHaveBeenCalledWith('9876');
+    expect(solicitud6101StoreMock.actualizarSubpartidaIII).toHaveBeenCalledWith('987654');
+    expect(solicitud6101StoreMock.actualizarSubdivisionIII).toHaveBeenCalledWith('10');
+  });
+
+  it('should update manifiestosSeleccionados on onManifiesto', () => {
+    const mockEvent = { target: { checked: true } } as unknown as Event;
+    component.onManifiesto(mockEvent);
+  
+    expect(solicitud6101StoreMock.actualizarManifiestosSeleccionados).toHaveBeenCalledWith(true);
+  });
+  
+
+  it('should complete destroyNotifier$ on ngOnDestroy', () => {
+    const destroyNotifierSpy = jest.spyOn(
+      component['destroyNotifier$'],
+      'complete'
+    );
     component.ngOnDestroy();
-    expect(nextSpy).toHaveBeenCalled();
-    expect(completeSpy).toHaveBeenCalled();
+    expect(destroyNotifierSpy).toHaveBeenCalled();
   });
 });

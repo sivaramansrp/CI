@@ -1,57 +1,47 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { PasoTresComponent } from './paso-tres.component';
-import { Router } from '@angular/router';
-import { TestBed } from '@angular/core/testing';
-import { ToastrModule } from 'ngx-toastr';
-import { ToastrService } from 'ngx-toastr';
 
-fdescribe('PasoTresComponent', () => {
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { PasoTresComponent } from './paso-tres.component';
+import { provideToastr, ToastrService } from 'ngx-toastr';
+import { Router } from '@angular/router';
+import { FirmaElectronicaComponent } from '@libs/shared/data-access-user/src';
+import { CommonModule } from '@angular/common';
+
+describe('PasoTresComponent', () => {
   let component: PasoTresComponent;
+  let fixture: ComponentFixture<PasoTresComponent>;
   let router: Router;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      declarations: [],
-      imports: [
-        PasoTresComponent,
-        HttpClientTestingModule,
-        ToastrModule.forRoot(),
-      ],
-      providers: [
-        ToastrService,
-        {
-          provide: Router,
-          useValue: {
-            navigate: jest.fn(),
-          },
-        },
-      ],
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [FirmaElectronicaComponent, CommonModule],
+      declarations: [PasoTresComponent],
+      providers: [ToastrService,
+        provideToastr({
+          positionClass: 'toast-top-right',
+        }),],
     }).compileComponents();
 
-    const FIXTURE = TestBed.createComponent(PasoTresComponent);
-    component = FIXTURE.componentInstance;
+    fixture = TestBed.createComponent(PasoTresComponent);
+    component = fixture.componentInstance;
     router = TestBed.inject(Router);
+    fixture.detectChanges();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-
-  it('should navigate to "servicios-extraordinarios/acuse" when a valid signature is provided', () => {
-    const ROUTERSPY = jest.spyOn(component.router, 'navigate');
-    const VALIDSIGNATURE = 'validSignature';
-
-    component.obtieneFirma(VALIDSIGNATURE);
-
-    expect(ROUTERSPY).toHaveBeenCalledWith(['servicios-extraordinarios/acuse']);
+  it('should navigate to acuse page on valid firma', () => {
+    const navigateSpy = jest.spyOn(router, 'navigate');
+    const firma = 'valid-firma';
+    component.obtieneFirma(firma);
+    expect(navigateSpy).toHaveBeenCalledWith(['temporal-contenedores/acuse']);
   });
 
-  it('should not navigate when an invalid signature is provided', () => {
-    const ROUTERSPY = jest.spyOn(component.router, 'navigate');
-    const INVALIDSIGNATURE = '';
-
-    component.obtieneFirma(INVALIDSIGNATURE);
-
-    expect(ROUTERSPY).not.toHaveBeenCalled();
+  it('should not navigate to acuse page on invalid firma', () => {
+    const navigateSpy = jest.spyOn(router, 'navigate');
+    const firma = '';
+    component.obtieneFirma(firma);
+    expect(navigateSpy).not.toHaveBeenCalled();
   });
 });
+
