@@ -6,7 +6,7 @@
         <div class="form-group">
           <label for="solicitud">Solicitud*:</label>
           <app-input-radio [radioOptions]="solicitudOpciones" formControlName="solicitud" [isRequired]="true"
-            (valueChange)="setValoresStore(form, 'solicitud', 'updateSolicitud')"
+            (change)="setValoresStore(form, 'solicitud', 'updateSolicitud')"
             [layout]="'vertical'"></app-input-radio>
           <div *ngIf="esInvalido('solicitud')" class="text-danger">
             <small *ngIf="form.controls['solicitud'].errors?.['required']">
@@ -20,7 +20,7 @@
           <app-catalogo-select [catalogo]="catalogosArray[i]" [label]="inputFields[i].label"
             [placeholder]="inputFields[i].placeholder" [required]="inputFields[i].required"
             [formControlName]="inputFields[i].controlName"
-            (valueChange)="setValoresStore(form, inputFields[i].controlName, i === 0 ? 'setregimen' : 'setclasificacion')"></app-catalogo-select>
+            (change)="setValoresStore(form, inputFields[i].controlName, i === 0 ? 'setregimen' : 'setclasificacion')"></app-catalogo-select>
           <div *ngIf="esInvalido(inputFields[i].controlName)" class="text-danger">
             <small *ngIf="form.controls[inputFields[i].controlName].errors?.['required']">
               Este campo es obligatorio.
