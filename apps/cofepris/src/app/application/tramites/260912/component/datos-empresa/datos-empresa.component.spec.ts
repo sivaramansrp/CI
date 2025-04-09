@@ -18,6 +18,13 @@ describe('DatosEmpresaComponent', () => {
       rfcDel$: of('RFC123'),
       denominacion$: of('Denomination'),
       correo$: of('test@example.com'),
+      selectTramite260912$: of({
+        btonDeRadio: 'option1',
+        justificacion: 'justification',
+        rfcDel: 'RFC123',
+        denominacion: 'Denomination',
+        correo: 'test@example.com',
+      }), // Mocking selectTramite260912$
     } as jest.Mocked<Tramite260912Query>;
 
     const storeMock = {

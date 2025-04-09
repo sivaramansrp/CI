@@ -10,8 +10,8 @@ describe('TramitesAsociadoComponent', () => {
   beforeEach(() => {
     const mockService = {
       enListaDeAsociados: jest.fn().mockReturnValue(of([
-        { id: 1, folioTrámite: '12345', tipoTrámite: 'Tipo1', estatus: 'Activo', fechaAltaDeRegistro: '2025-03-19' },
-        { id: 2, folioTrámite: '67890', tipoTrámite: 'Tipo2', estatus: 'Inactivo', fechaAltaDeRegistro: '2025-03-18' },
+        { id: 1, folioTramite: '12345', tipoTrámite: 'Tipo1', estatus: 'Activo', fechaAltaDeRegistro: '2025-03-19' },
+        { id: 2, folioTramite: '67890', tipoTrámite: 'Tipo2', estatus: 'Inactivo', fechaAltaDeRegistro: '2025-03-18' },
       ]))
     };
 
