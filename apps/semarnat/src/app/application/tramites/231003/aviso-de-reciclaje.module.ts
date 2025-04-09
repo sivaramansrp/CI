@@ -13,6 +13,7 @@ import { AvisoDeReciclajeRoutingModule } from './aviso-de-reciclaje-routing.modu
 import { AvisoReciclajeComponent } from './pages/aviso-reciclaje/aviso-reciclaje.component';
 import { PantallasComponent } from './pages/pantallas/pantallas.component';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
+import { RouterModule } from '@angular/router';
 import { SolicitudDatosSolicitanteComponent } from './pages/solicitud-datos-solicitante/solicitud-datos-solicitante.component';
 
 @NgModule({
@@ -30,7 +31,8 @@ import { SolicitudDatosSolicitanteComponent } from './pages/solicitud-datos-soli
     DatosSolicitudComponent,
     BtnContinuarComponent,
     AvisoDeReciclajeRoutingModule,
-    FirmaElectronicaComponent
+    FirmaElectronicaComponent,
+    RouterModule
   ],
 })
 export class AvisoDeReciclajeModule {}
