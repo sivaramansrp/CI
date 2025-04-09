@@ -27,7 +27,7 @@
             [placeholder]="inputFields[i].placeholder"
             [required]="inputFields[i].required"
             [formControlName]="inputFields[i].controlName"
-            (valueChange)="setValoresStore(form, inputFields[i].controlName, i === 0 ? 'setregimen' : 'setclasificacion')"
+            (selectionChange)="setValoresStore(form, inputFields[i].controlName, i === 0 ? 'setregimen' : 'setclasificacion')"
           ></app-catalogo-select>
           <div *ngIf="esInvalido(inputFields[i].controlName)" class="text-danger">
             <small *ngIf="form.controls[inputFields[i].controlName].errors?.['required']">
