@@ -72,6 +72,17 @@ export class AgregarOtrosComponent implements OnInit, OnDestroy {
     private tramiteStore: Tramite260301Store,
     private importacionMateriasPrimasService: ImportacionMateriasPrimasService
   ) {
+    this.crearFormulario();
+    this.changeNacionalidad();
+  }
+
+  /**
+   * Crea y inicializa el formulario con los campos y validaciones necesarios.
+   * Este formulario incluye información personal y de contacto.
+   * 
+   * @returns {void}
+   */
+  crearFormulario(): void {
     this.agregarDatosForm = this.fb.group({
       curp: [''],
       rfc: [''],
@@ -95,8 +106,6 @@ export class AgregarOtrosComponent implements OnInit, OnDestroy {
       municipio: [''],
       denominacionRazon: [''],
     });
-
-    this.changeNacionalidad();
   }
 
   /**

@@ -3,6 +3,7 @@ import {
   ALERTA_OPCIONS,
   CAMPOS_ADICIONALES_POR_PROCEDIMIENTO_MAP,
   CAMPOS_REQUERIDOS_FORMULARIO_MAP,
+  NUMERO_TRAMITE,
   PROCEDIMIENTOS_NO_PARA_ELEMENTO_CALLE,
   PROCEDIMIENTOS_NO_PARA_ELEMENTO_COLAPSABLE,
   PROCEDIMIENTOS_NO_PARA_ELEMENTO_CORREO_ELECTRONIC,
@@ -668,7 +669,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @returns {void} No retorna ningún valor.
    */
   cambioDeEstado(event: Catalogo): void {
-    if (this.idProcedimiento === 260301) {
+    if (this.idProcedimiento === NUMERO_TRAMITE.TRAMITE_260301) {
       if (event) {
         this.datosSolicitudForm
           .get('municipioAlcaldia')

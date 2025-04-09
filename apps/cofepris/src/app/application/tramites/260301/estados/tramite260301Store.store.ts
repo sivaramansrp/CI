@@ -12,12 +12,27 @@ import { TABLA_OPCION_DATA } from '../../../shared/constantes/datos-solicitud.en
 import { TablaMercanciasDatos } from '../../../shared/models/datos-solicitud.model';
 import { TablaOpcionConfig } from '../../../shared/models/datos-solicitud.model';
 import { TablaScianConfig } from '../../../shared/models/datos-solicitud.model';
+
 /**
- * @interface
- * @name Tramite260301State
- * @description
- * Representa el estado de la tienda para el trámite 260301. Contiene datos relacionados
- * con destinatarios, facturadores, proveedores, fabricantes, formularios y configuraciones.
+ * Estado que representa los datos de un trámite 260301, incluyendo tablas de datos, formularios y configuraciones.
+ * 
+ * @interface Tramite260301State
+ * @property {Destinatario[]} certificadoTablaDatos - Datos de destinatarios para la tabla de certificados.
+ * @property {Facturador[]} facturadorTablaDatos - Datos de facturadores para la tabla de facturadores.
+ * @property {Facturador[]} proveedorTablaDatos - Datos de proveedores para la tabla de proveedores.
+ * @property {Facturador[]} fabricanteTablaDatos - Datos de fabricantes para la tabla de fabricantes.
+ * @property {Facturador[]} otrosTablaDatos - Datos de otros para la tabla de otros.
+ * @property {DatosSolicitudFormState} datosSolicitudFormState - Estado del formulario de solicitud de datos.
+ * @property {MercanciaFormEstupefacientes} mercanciaForm - Formulario relacionado con la mercancía de estupefacientes.
+ * @property {TablaOpcionConfig[]} opcionConfigDatos - Datos de configuración de opciones.
+ * @property {TablaScianConfig[]} scianConfigDatos - Datos de configuración SCIAN.
+ * @property {TablaMercanciasDatos[]} tablaMercanciasConfigDatos - Datos de configuración de mercancías.
+ * @property {TablaOpcionConfig[]} seleccionadoopcionDatos - Datos de selección de opciones.
+ * @property {TablaScianConfig[]} seleccionadoScianDatos - Datos de selección SCIAN.
+ * @property {TablaMercanciasDatos[]} seleccionadoTablaMercanciasDatos - Datos de selección de mercancías.
+ * @property {boolean} opcionesColapsableState - Estado de las opciones colapsables (si están expandidas o colapsadas).
+ * @property {PagoDerechosFormState} pagoDerechos - Estado del formulario de pago de derechos.
+ * @property {number} [tabSeleccionado] - Índice del tab seleccionado (opcional).
  */
 export interface Tramite260301State {
   certificadoTablaDatos: Destinatario[];
@@ -106,7 +121,7 @@ export function createInitialState(): Tramite260301State {
       paisOrigen:''
     },
     opcionConfigDatos: TABLA_OPCION_DATA,
-    scianConfigDatos: [], // SCIAN_TABLA_DATA
+    scianConfigDatos: [],
     tablaMercanciasConfigDatos: [],
     seleccionadoopcionDatos: [],
     seleccionadoScianDatos: [],

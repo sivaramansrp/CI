@@ -1,26 +1,16 @@
 import {
-  AlertComponent,
-  AnexarDocumentosComponent,
   CATALOGOS_ID,
   Catalogo,
   CatalogosService,
-  TituloComponent,
 } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
-import { CommonModule } from '@angular/common';
 import { TEXTOS_REQUISITOS } from '../../constants/estupefacientes.enum';
 
 
 @Component({
   selector: 'app-paso-dos',
-  standalone: true,
-  imports: [
-    CommonModule,
-    AlertComponent,
-    TituloComponent,
-    AnexarDocumentosComponent,
-  ],
+
   templateUrl: './paso-dos.component.html',
   styleUrl: './paso-dos.component.css',
 })

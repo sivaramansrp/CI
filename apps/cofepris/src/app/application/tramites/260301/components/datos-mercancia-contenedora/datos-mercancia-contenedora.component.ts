@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import { Tramite260301State, Tramite260301Store } from '../../estados/tramite260301Store.store';
 import { map, takeUntil } from 'rxjs';
@@ -21,7 +21,7 @@ import { Tramite260301Query } from '../../estados/tramite260301Query.query';
   templateUrl: './datos-mercancia-contenedora.component.html',
   styleUrl: './datos-mercancia-contenedora.component.scss',
 })
-export class DatosMercanciaContenedoraComponent implements OnInit {
+export class DatosMercanciaContenedoraComponent implements OnInit, OnDestroy {
   /**
    * @property {TablaMercanciasDatos} SeleccionadoDatos
    * Contiene los datos de la mercancía actualmente seleccionada en la tabla.
@@ -54,6 +54,7 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
   ) {
         //Constructor necesario para inyectar las dependencias
   }
+
 
   /**
    * @method ngOnInit
@@ -137,5 +138,14 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
       seleccionadoTablaMercanciasDatos: [SELECCIONADO_MERCANCIA],
       tablaMercanciasConfigDatos: datosActivos,
     }));
+  }
+
+  /**
+   * @method ngOnDestroy
+   * @description Hook de destrucción del componente. Libera las suscripciones activas.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

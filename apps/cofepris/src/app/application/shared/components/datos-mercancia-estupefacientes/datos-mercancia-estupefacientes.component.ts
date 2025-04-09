@@ -263,6 +263,10 @@ export class DatosMercanciaEstupefacientesComponent implements OnInit {
    */
   public tablaMercanciasLista: DetalleMercanciaEstupefacientes[] = [];
 
+  /**
+   * Arreglo que almacena los detalles de mercancía de estupefacientes.
+   * @type {DetalleMercanciaEstupefacientes[]}
+   */
   public detalleMercanciaDatos: DetalleMercanciaEstupefacientes[] = [];
 
   /**

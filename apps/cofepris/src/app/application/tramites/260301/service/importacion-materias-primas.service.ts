@@ -19,6 +19,13 @@ export class ImportacionMateriasPrimasService {
     // Constructor necesario para inyectar el servicio HttpClient
   }
 
+  /**
+   * Método para obtener datos de un "Facturador" desde un archivo JSON remoto.
+   * Realiza una solicitud HTTP GET a la URL especificada y devuelve un observable
+   * que emite el resultado de la petición.
+   * 
+   * @returns {Observable<Facturador>} Un observable que emite los datos de un facturador.
+   */
   obtenerOstro(): Observable<Facturador> {
     return this.httpServicios.get<Facturador>(
       this.jsonUrl + 'buscar-otros.json'

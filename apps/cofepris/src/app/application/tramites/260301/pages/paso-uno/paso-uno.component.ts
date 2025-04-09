@@ -1,29 +1,26 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
-import { CommonModule } from '@angular/common';
-import { ContenedorDeDatosSolicitudComponent } from '../../components/contenedor-de-datos-solicitud/contenedor-de-datos-solicitud.component';
-import { PagoDeDerechosContenedoraComponent } from '../../components/pago-de-derechos-contenedora/pago-de-derechos-contenedora/pago-de-derechos-contenedora.component';
-import { SolicitanteComponent } from '@ng-mf/data-access-user';
-import { TercerosRelacionadosVistaComponent } from '../../components/terceros-relacionados-vista/terceros-relacionados-vista.component';
 import { Tramite260301Query } from '../../estados/tramite260301Query.query';
 import { Tramite260301Store } from '../../estados/tramite260301Store.store';
 
 @Component({
   selector: 'app-paso-uno',
-  standalone: true,
-  imports: [
-    CommonModule,
-    SolicitanteComponent,
-    ContenedorDeDatosSolicitudComponent,
-    TercerosRelacionadosVistaComponent,
-    PagoDeDerechosContenedoraComponent
-  ],
   templateUrl: './paso-uno.component.html',
   styleUrl: './paso-uno.component.css',
 })
 export class PasoUnoComponent implements OnDestroy, OnInit {
+  /**
+   * Índice utilizado para realizar selecciones o identificaciones de elementos. 
+   * Puede ser un número o estar indefinido.
+   * @type {number | undefined}
+   */
   indice: number | undefined = 1;
 
+  /**
+   * Notificador para gestionar la destrucción de observables y evitar fugas de memoria.
+   * @private
+   * @type {Subject<void>}
+   */
   private destroyNotifier$: Subject<void> = new Subject();
 
   constructor(
@@ -33,16 +30,29 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
     // Constructor necesario para inyectar el store del trámite
   }
 
+  /**
+   * Método de ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Se suscribe al flujo de datos `getTabSeleccionado$` para obtener el índice de la pestaña seleccionada
+   * y actualizar el valor de `indice`. Se utiliza `takeUntil` para desuscribirse cuando el componente se destruya.
+   * 
+   * @returns {void}
+   */
   ngOnInit(): void {
-    this.tramite260301Query.getTabSeleccionado$
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((tab) => {
-        this.indice = tab;
-      });
+      this.tramite260301Query.getTabSeleccionado$
+        .pipe(takeUntil(this.destroyNotifier$))
+        .subscribe((tab) => {
+          this.indice = tab;
+        });
   }
 
+  /**
+   * Método para seleccionar una pestaña. Actualiza el estado de la pestaña seleccionada en el store.
+   * 
+   * @param {number} i - El índice de la pestaña que se desea seleccionar.
+   * @returns {void}
+   */
   seleccionaTab(i: number): void {
-    this.tramite260301Store.updateTabSeleccionado(i);
+      this.tramite260301Store.updateTabSeleccionado(i);
   }
 
   /**
