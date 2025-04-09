@@ -52,7 +52,6 @@ export class PasoDosComponent implements OnInit, OnDestroy, AfterViewInit {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.tramiteState = seccionState;
-          console.log(this.tramiteState);
         })
       )
       .subscribe();
@@ -61,7 +60,7 @@ export class PasoDosComponent implements OnInit, OnDestroy, AfterViewInit {
     this.inicializarFormulario();
     this.cargarTipoDocumento();
   }
-  ngAfterViewInit() {
+  ngAfterViewInit(): void {
     this.controlarCajaTodo.nativeElement.checked = this.tablaDatos.every((el) => el.controlarCaja);
   }
   setValoresStore(
@@ -109,7 +108,6 @@ export class PasoDosComponent implements OnInit, OnDestroy, AfterViewInit {
   agregarFila(): void {
     const TIPO = this.requisitosOpcionalesFormulario.get('tipoDocumento')?.value;
     const EL = this.tipoDocumento.catalogos.find((el) => el.id.toString() === TIPO);
-    console.log(this.tablaDatos);
     if (TIPO && EL) {
       this.tablaDatos.push({ ...EL, controlarCaja: false });
       this.controlarCajaTodo.nativeElement.checked = false;

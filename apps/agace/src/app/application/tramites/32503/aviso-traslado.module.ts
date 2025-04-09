@@ -3,6 +3,7 @@ import { AvisoTrasladoRoutingModule } from "./aviso-traslado-routing.module";
 import { AvisoTrasladoService } from "./services/aviso-traslado.service";
 import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
+import { PasoCuatroComponent } from "./pages/paso-cuatro/paso-cuatro.component";
 import { PasoDosComponent } from "./pages/paso-dos/paso-dos.component";
 import { PasoTresComponent } from "./pages/paso-tres/paso-tres.component";
 import { PasoUnoComponent } from "./pages/paso-uno/paso-uno.component";
@@ -23,7 +24,8 @@ import { ToastrService } from "ngx-toastr";
     PasoUnoComponent,
     PasoTresComponent,
     AlertComponent,
-    PasoDosComponent
+    PasoDosComponent,
+    PasoCuatroComponent
   ],
   exports: [],
   providers: [ToastrService, AvisoTrasladoService]

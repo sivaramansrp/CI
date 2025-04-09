@@ -151,6 +151,7 @@ export class AvisoComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.tramiteState = seccionState;
+          console.log(this.tramiteState);
         })
       )
       .subscribe();

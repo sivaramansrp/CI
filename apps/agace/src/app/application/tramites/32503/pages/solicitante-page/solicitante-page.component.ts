@@ -38,7 +38,7 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
    * 
    * Esta propiedad indica el paso actual en el wizard, comenzando desde 1.
    */
-  indice: number = 2;
+  indice: number =3;
 
   /**
    * Textos utilizados en el componente.

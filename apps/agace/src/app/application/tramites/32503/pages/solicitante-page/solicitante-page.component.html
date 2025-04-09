@@ -10,6 +10,8 @@
         }@if(indice === 2) {
         <h3>Cargar archivos</h3>
         <ng-alert [CONTENIDO]="TEXTOS.TERCEROS_TEXTO_DE_ALERTA"></ng-alert>
+        }@if(indice === 3) {
+        <h2>Cargar archivos</h2>
         }
 
       </div>
@@ -21,8 +23,9 @@
       } @case (2) {
       <app-paso-dos></app-paso-dos>
       } @case (3) {
-      } @case (4) {
       <app-paso-tres></app-paso-tres>
+      } @case (4) {
+      <app-paso-cuatro></app-paso-cuatro>
       }}
       <btn-continuar [datos]="datosPasos" (continuarEvento)="getValorIndice($event)"></btn-continuar>
       @if(indice ===1){

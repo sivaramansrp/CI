@@ -1,7 +1,116 @@
 <div class="container">
-    <div class="row">
-        <div class="col-md-4">
-            <firma-electronica [tipo]="''" (firma)="obtieneFirma($event)"></firma-electronica>
+    <div class="row mt-10">
+        <ng-alert style="margin-top: 30px" [CONTENIDO]="TEXTOS.TEXTO_DE_ALERTA_ARCHIVOS">
+        </ng-alert>
+    </div>
+    <form [formGroup]="tipoDocumentoFormulario">
+        <table class="table" formArrayName="documentos">
+            <thead class="table-light">
+                <tr>
+                    <th style="width: 690px">Tipo de documentos</th>
+                    <th>Documentos</th>
+                    <th>ver documento</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let el of tiposDeDocumentos; let i = index" [formGroupName]="i">
+                    <td>{{ el?.descripcion }}*:</td>
+                    <td>
+                        <app-catalogo-select [catalogo]="el.archivoDisponible" [required]="true"
+                            name="valorSeleccionado" formControlName="seleccionar"></app-catalogo-select>
+                    </td>
+                    <td class="text-center">
+                        <button class="btn btn-link">
+                            <i class="bi bi-file-earmark-pdf" style="font-size: 1.5rem"></i>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
+    <div class="col-md-12 mt-5 d-flex justify-content-end">
+        <button type="button" class="btn btn-default">
+            Guardar
+        </button>
+        <button class="btn btn-primary  ms-3" (click)="adjuntarDocumentos()">
+            Adjuntar documentos
+        </button>
+    </div>
+
+</div>
+<div class="modal fade" id="modalAdjuntar" tabindex="-1" #modalAdjuntar aria-labelledby="modalAdjuntar"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body">
+                <ng-titulo titulo="Adjuntar documentos" />
+                <ng-alert [CONTENIDO]="TEXTOS.TERCEROS_TEXTO_DE_ADJUNTAR"></ng-alert>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th class="w-21 align-baseline">Tipo de documento</th>
+                            <th class="w-21 align-baseline">Tamaño máximo permitido(en MB)</th>
+                            <th class="w-21 align-baseline">Resolución mínima de las imágenes contenidas(en DPIs)
+                            </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let doc of tiposDeDocumentos; let i = index">
+                            <td>{{ doc.descripcion }}</td>
+                            <td>{{tamanosDeArchivos[i].tamano}}</td>
+                            <td>
+                                {{tamanosDeArchivos[i].resolucion}}
+                            </td>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <label class="custome-file-label" for="fileInput{{ i }}"
+                                        value="Seleccionar archivo">Seleccionar archivo
+                                        <input type="file" id="fileInput{{ i }}" (change)="cambioArchivo($event, i)"
+                                            class="input-hidden" />
+                                    </label>
+                                    <div class="ms-2">
+                                        {{tamanosDeArchivos[i].nombreDelArchivo}}
+                                    </div>
+                                </div>
+
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <ng-alert [CONTENIDO]="TEXTOS.TERCEROS_TEXTO_DE_ADJUNTAR_ALERTA"
+                    [CUSTOMECLASS]="'alert-warning'"></ng-alert>
+
+            </div>
+            <div class="modal-footer custom-footer mt-4">
+                <button type="button" class="btn btn-default" data-bs-dismiss="modal" #closeModal> Cerrar </button>
+                <button type="submit" class="btn btn-primary" #closeModal (click)="adjuntarArchivos()"> Adjuntar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-backdrop" *ngIf="cargando">
+    <div class="modal-content custom-modal p-0">
+        <div class="title w-100 p-0 m-0">
+            <h5>
+                Cargando...
+            </h5>
+        </div>
+        <p class="mt-3">{{ progreso }}%</p>
+    </div>
+</div>
+<div class="modal fade" id="modalAnexos" tabindex="-1" #modalAnexos aria-labelledby="modalAnexos" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body">
+                <ng-titulo titulo="Documentos anexos" />
+                <app-tabla-dinamica [configuracionTabla]="tablaDeDatos.encabezadas"
+                    [datos]="tablaDeDatos.datos"></app-tabla-dinamica>
+            </div>
+            <div class="modal-footer custom-footer mt-4">
+                <button type="button" class="btn btn-default" data-bs-dismiss="modal" #closeModal> Cerrar </button>
+            </div>
         </div>
     </div>
 </div>

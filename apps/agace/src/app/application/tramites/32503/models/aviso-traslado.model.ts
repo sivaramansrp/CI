@@ -104,3 +104,24 @@ export interface TipoDocumento {
   descripcion: string;
   controlarCaja: boolean;
 }
+export interface Documentos {
+  id: number;
+  descripcion: string;
+  archivoDisponible: Catalogo[];
+}
+export interface DocumentosLista {
+  datos: Documentos[];
+}
+export interface ArchivoDocumentos {
+  nombreDelArchivo: string;
+  tamano: number;
+  resolucion: string;
+}
+export interface AnexosLista {
+  datos: DocumentosAnexos[];
+}
+export interface DocumentosAnexos {
+  estatus: string;
+  documentos: string;
+  mensajes: string;
+}

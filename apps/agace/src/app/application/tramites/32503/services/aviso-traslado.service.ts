@@ -1,4 +1,4 @@
-import { AvisoTablaDatos, CatalogoLista, MercanciaTablaDatos, RespuestaCatalogos } from '../models/aviso-traslado.model';
+import { AnexosLista, AvisoTablaDatos, CatalogoLista, DocumentosLista, MercanciaTablaDatos, RespuestaCatalogos } from '../models/aviso-traslado.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -7,6 +7,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class AvisoTrasladoService {
+  // eslint-disable-next-line no-empty-function
   constructor(private http: HttpClient) { }
 
   obtenerIdioma(): Observable<CatalogoLista> {
@@ -39,5 +40,11 @@ export class AvisoTrasladoService {
   }
   obtenerTipoDocumento(): Observable<CatalogoLista> {
     return this.http.get<CatalogoLista>(`assets/json/32503/tipo-documento.json`);
+  }
+  obtenerTipoDocumentoSeleccionado(): Observable<DocumentosLista> {
+    return this.http.get<DocumentosLista>(`assets/json/32503/tipo-documento-seleccionado.json`);
+  }
+  obtenerAnexos(): Observable<AnexosLista> {
+    return this.http.get<AnexosLista>(`assets/json/32503/anexos.json`);
   }
 }

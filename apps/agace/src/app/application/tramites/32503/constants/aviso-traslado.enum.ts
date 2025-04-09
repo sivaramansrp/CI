@@ -50,7 +50,9 @@ export const TEXTOS = {
       <p>- En caso de que no requieras algún documento, seleccionalo y elíminalo</p>
       <p>- Si necesitas anexar más de un documento del mismo tipo selecciónalo de la lista y presiona "Agregar nuevo"</p>`,
   TERCEROS_TEXTO_DE_ALERTA: 'La solicitud ha quedado registrada con el número temporal 202767903 Éste no tiene validez legal y sirve solamente para efectos de identificar tu solicitud. Un folio oficial le será asignado a la solicitud al momento en que ésta sea firmada.',
-
+  TEXTO_DE_ALERTA_ARCHIVOS: `Si deseas adjuntar un nuevo documento, selecciona la opción --Adjuntar nuevo documento-- y presiona el botón "Adjuntar documentos"`,
+  TERCEROS_TEXTO_DE_ADJUNTAR: `Para poder adjuntar tu documento, deberá cumplir las siguientes características:<br> <b>&#8226;</b> Debe ser formato PDF que no contenga formularios, objetos OLE incrustrados, código JavaScript, etc.<br><b>&#8226;</b> No debe contener páginas en blanco.`,
+  TERCEROS_TEXTO_DE_ADJUNTAR_ALERTA: `La carga del documento puede tardar varois segundos, este tiempo dependerá del tamaño de tu archivo y de tu velocidad de conexión`
 };
 
 export const FECHA_INGRESO = {
@@ -83,4 +85,9 @@ export const TIPO_DOCUMENTO = {
   required: false,
   primerOpcion: 'Seleccion una valor',
   catalogos: [],
+}
+export const TIPO_DOCUMENTO_TAMANO = {
+  nombreDelArchivo: '',
+  tamano: 3,
+  resolucion: '300',
 }
