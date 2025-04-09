@@ -313,6 +313,12 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'solicitud-de-cancelacion',
+    loadChildren: () =>
+      import('./tramites/140101/solicitud-de-cancelacion.module').then(
+        (m) => m.SolicitudDeCancelacionModule),
+  },
+  {
     path: 'validar-certificado',
     loadChildren: () =>
       import('./tramites/110211/validar-certificado.module').then(
