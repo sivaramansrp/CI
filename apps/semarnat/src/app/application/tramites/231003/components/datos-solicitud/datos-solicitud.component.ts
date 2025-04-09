@@ -1,10 +1,9 @@
 import { Catalogo, CatalogoSelectComponent, InputRadioComponent, TableComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { RadioOpcion, SolicitudJson } from '@libs/shared/data-access-user/src/core/models/231003/solicitud.model';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-// import SolicitudeJson from '@libs/shared/theme/assets/json/231003/solicitud.json';
-import { RadioOpcion, SolicitudJson } from '@libs/shared/data-access-user/src/core/models/231003/solicitud.model';
 import rawData from '@libs/shared/theme/assets/json/231003/solicitud.json';
 const RADIO_OPCIONES = rawData as SolicitudJson;
 
