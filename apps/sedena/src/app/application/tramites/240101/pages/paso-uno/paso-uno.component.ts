@@ -4,10 +4,19 @@ import { SolicitanteComponent } from '@ng-mf/data-access-user';
 import { Subject, takeUntil } from 'rxjs';
 import { Tramite240101Query } from '../../estados/tramite240101Query.query';
 import { Tramite240101Store } from '../../estados/tramite240101Store.store';
+import { DatosDelTramiteContenedoraComponent } from '../../components/datos-del-tramite-contenedora/datos-del-tramite-contenedora.component';
+import { TercerosRelacionadosContenedoraComponent } from '../../components/terceros-relacionados-contenedora/terceros-relacionados-contenedora.component';
+import { PagoDeDerechosContenedoraComponent } from '../../components/pago-de-derechos-contenedora/pago-de-derechos-contenedora.component';
 @Component({
   selector: 'app-paso-uno',
   standalone: true,
-  imports: [CommonModule, SolicitanteComponent],
+  imports: [
+    CommonModule,
+    SolicitanteComponent,
+    DatosDelTramiteContenedoraComponent,
+    TercerosRelacionadosContenedoraComponent,
+    PagoDeDerechosContenedoraComponent,
+  ],
   templateUrl: './paso-uno.component.html',
   styleUrl: './paso-uno.component.css',
 })
