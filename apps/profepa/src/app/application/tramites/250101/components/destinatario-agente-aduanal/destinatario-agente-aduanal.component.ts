@@ -30,6 +30,7 @@ export class DestinatarioAgenteAduanalComponent implements OnInit {
   showTableDiv = true;
 
   showDestinatarioModal = false;
+  showAgenteModal = false;
 
    destinatarioOpcionDeBotonDeRadio = DESTINATARIO_OPCIONES_DE_BOTON_DE_RADIO;
 
@@ -55,4 +56,8 @@ export class DestinatarioAgenteAduanalComponent implements OnInit {
     this.showDestinatarioModal = !this.showDestinatarioModal;
   }
 
+  cambiarAgenteAduanal(): void {
+    this.showTableDiv = !this.showTableDiv;
+    this.showAgenteModal = !this.showAgenteModal;
+  }
 }

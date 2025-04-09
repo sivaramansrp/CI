@@ -7,6 +7,7 @@ import {
   WizardComponent,
 } from '@ng-mf/data-access-user';
 import { CertificadosComponent } from './components/certificados/certificados.component';
+import { CertificadosService } from './services/certificados.service';
 import { Datos250101Component } from './pages/datos-250101/datos-250101.component';
 import { DestinatarioAgenteAduanalComponent } from './components/destinatario-agente-aduanal/destinatario-agente-aduanal.component';
 import { DestinatarioService } from './services/destinatario.service';
@@ -37,6 +38,7 @@ import { provideHttpClient } from '@angular/common/http';
   providers: [
     provideHttpClient(),
     ToastrService,
+    CertificadosService,
     DestinatarioService,
     SolicitanteService,
     InicioSesionService,

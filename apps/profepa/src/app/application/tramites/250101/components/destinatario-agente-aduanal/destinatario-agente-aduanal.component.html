@@ -9,8 +9,8 @@
             </div>
             <div class="col-md-12 mt-5 d-flex justify-content-end">
                 <button type="button" class="btn btn-danger">Eliminar</button>
-                <button type="button" class="btn btn-default ms-3">Seleccionar</button>
-                <button type="button" class="btn btn-primary ms-3" (click)="cambiarDestinatario()">Agregar</button>
+                <button type="button" class="btn btn-default ms-3"  id="agregarDestinatario">Seleccionar</button>
+                <button type="button" class="btn btn-primary ms-3" id="capturarDestinatario" (click)="cambiarDestinatario()">Agregar</button>
             </div>
         </div>
 
@@ -23,8 +23,8 @@
             </div>
 
             <div class="col-md-12 mt-5 d-flex justify-content-end">
-                <button type="button" class="btn btn-danger">Eliminar</button>
-                <button type="button" class="btn btn-primary ms-3">Agregar</button>
+                <button type="button" class="btn btn-danger" id="eliminarRequisito">Eliminar</button>
+                <button type="button" class="btn btn-primary ms-3" id="agregarRequisito" (click)="cambiarAgenteAduanal()">Agregar</button>
             </div>
         </div>
     </div>
@@ -38,8 +38,8 @@
                 [layout]="'horizontal'"></app-input-radio>
 
             <div class="col-md-8 mt-5">
-                <label class="form-label" for="denominacion">Denominación o razón social*:</label>
-                <input type="text" class="form-control" id="denominacion" name="denominacion" [required]=true>
+                <label class="form-label" for="denominacionRSDestinatario">Denominación o razón social*:</label>
+                <input type="text" class="form-control" id="denominacionRSDestinatario" name="denominacionRSDestinatario" [required]=true>
             </div>
 
             <div class="clearfix"></div>
@@ -47,7 +47,7 @@
 
             <div class="col-md-4 mt-5 destinatario-field">
                 <div class="form-group">
-                    <app-catalogo-select [label]="'País'" [required]="true" name="" id="pais"
+                    <app-catalogo-select [label]="'País'" [required]="true" name="" id="paisNacionalDestinatario1"
                         formControlName=""></app-catalogo-select>
                 </div>
             </div>
@@ -60,8 +60,8 @@
             </div>
 
             <div class="col-md-4 mt-5 destinatario-field">
-                <label class="form-label" for="codigoPostalEquivalente">Código postal o equivalente*:</label>
-                <input type="text" class="form-control" id="codigoPostalEquivalente" name="codigoPostalEquivalente" [required]=true>
+                <label class="form-label" for="codigoPostalDestinatario">Código postal o equivalente*:</label>
+                <input type="text" class="form-control" id="codigoPostalDestinatario" name="codigoPostalDestinatario" [required]=true>
             </div>
 
             <div class="col-md-8 mt-4">
@@ -70,9 +70,41 @@
             </div>
 
             <div class="col-md-12 mt-5 d-flex justify-content-end">
-                <button type="button" class="btn btn-danger" (click)="cambiarDestinatario()">Cancelar</button>
-                <button type="button" class="btn btn-default ms-3">Limpiar</button>
-                <button type="button" class="btn btn-primary ms-3">Agregar</button>
+                <button type="button" class="btn btn-danger" id="cancelarDestinatarioBtn" (click)="cambiarDestinatario()">Cancelar</button>
+                <button type="button" class="btn btn-default ms-3" id="limpiarDestinatarioBtn">Limpiar</button>
+                <button type="button" class="btn btn-primary ms-3" id="registroDestinatarioBtn">Agregar</button>
+            </div>
+        </form>
+    </div>
+</app-modal>
+
+<app-modal [active]="showAgenteModal">
+    <div>
+        <ng-titulo titulo="Agente aduanal" />
+        <form>
+            <div class="col-md-4 mt-5">
+                <label class="form-label" for="nombreAgente">Nombre(s)*:</label>
+                <input type="text" class="form-control" id="nombreAgente" name="nombreAgente" [required]=true>
+            </div>  
+
+            <div class="col-md-4 mt-5">
+                <label class="form-label" for="apellidoPaternoAgente">Primer apellido*:</label>
+                <input type="text" class="form-control" id="apellidoPaternoAgente" name="apellidoPaternoAgente" [required]=true>
+            </div>  
+
+            <div class="col-md-4 mt-5">
+                <label class="form-label" for="apellidoMaternoAgente">Segundo apellido*:</label>
+                <input type="text" class="form-control" id="apellidoMaternoAgente" name="apellidoMaternoAgente" [required]=true>
+            </div>  
+
+            <div class="col-md-8 mt-5">
+                <label class="form-label" for="patente">Número de patente de agente aduanal*:</label>
+                <input type="text" class="form-control" id="patente" name="patente" [required]=true>
+            </div> 
+
+            <div class="col-md-12 mt-5 d-flex justify-content-end">
+                <button type="button" class="btn btn-danger" id="btnCancelarAgente" (click)="cambiarAgenteAduanal()">Cancelar</button>
+                <button type="button" class="btn btn-primary ms-3" id="btnAgregarAgente">Agregar</button>
             </div>
         </form>
     </div>
