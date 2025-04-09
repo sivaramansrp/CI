@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 
-import { AlertComponent, BtnContinuarComponent, CatalogoSelectComponent, CrosslistComponent, InputFechaComponent, SolicitanteComponent, TablaDinamicaComponent, TableComponent,TituloComponent, WizardComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, CatalogoSelectComponent, CrosslistComponent, FirmaElectronicaComponent, InputFechaComponent, SolicitanteComponent, TablaDinamicaComponent, TableComponent,TituloComponent, WizardComponent } from '@ng-mf/data-access-user';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { AutorizacionesDeVidaSilvestreRoutingModule } from './autorizaciones-de-vida-silvestre-routing.module';
 import { DatosComponent } from './pages/datos/datos.component';
@@ -18,7 +18,7 @@ import { TercerosComponent } from './components/terceros/terceros.component';
 
 
 @NgModule({
-  declarations: [DatosComponent, PasoUnoComponent, DatosSolicitudComponent, TercerosComponent ,PagoDeDerechosComponent, ModalComponent],
+  declarations: [DatosComponent, PasoUnoComponent, PasoDosComponent, PasoTresComponent, DatosSolicitudComponent, TercerosComponent ,PagoDeDerechosComponent, ModalComponent],
   imports: [
     CommonModule,
     AutorizacionesDeVidaSilvestreRoutingModule,
@@ -29,12 +29,12 @@ import { TercerosComponent } from './components/terceros/terceros.component';
     ReactiveFormsModule,
     BtnContinuarComponent,
     TablaDinamicaComponent,
-    PasoDosComponent,
-    PasoTresComponent,
     AlertComponent,
     CrosslistComponent,
     TableComponent,
     InputFechaComponent,
+    AnexarDocumentosComponent,
+    FirmaElectronicaComponent,
     ToastrModule.forRoot()
 ],
 providers:[ToastrService]

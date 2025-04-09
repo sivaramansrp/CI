@@ -200,7 +200,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     public autorizacionesDeVidaSilvestreService: AutorizacionesDeVidaSilvestreService,
     private tramite230901Store: Tramite230901Store,
     private tramite230901Query: Tramite230901Query,
-    public formBuilder: FormBuilder
+    private formBuilder: FormBuilder
   ) {
     // No se realiza ninguna acción aquí en el constructor.
   }
