@@ -6,6 +6,7 @@ import { catchError, Observable,throwError } from 'rxjs';
 
 import { Catalogo, RespuestaCatalogos } from '@libs/shared/data-access-user/src';
 import { MercanciasTabla, RespuestaTabla } from '../components/domicillo/domicillo.component';
+import { DatosDeSolicitud } from '../models/solicitud-datos.model';
 
  
 /**
@@ -92,6 +93,17 @@ obtenerTablaDatos(): Observable<RespuestaTabla> {
 obtenerMercanciasDatos(): Observable<MercanciasTabla> {
   return this.http.get<MercanciasTabla>('assets/json/260906/mercanciasDatos.json');
 }
+
+  /**
+   * Obtiene los datos generales de la solicitud.
+   * @returns Observable con los datos de la solicitud.
+   */
+  obtenerDatosDeSolicitud(): Observable<DatosDeSolicitud> {
+    return this.http
+      .get<DatosDeSolicitud>('../../../assets/json/260906/solicitud-datos.json')
+      .pipe();
+  }
+
 }
 
  

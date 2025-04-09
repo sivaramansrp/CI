@@ -33,6 +33,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { TercerosRelacionadoesComponent } from './components/terceros-Relacionados/terceros-Relacionados.component';
 import { ModificacionPermisoSanitarioRoutingModule } from './modificacion-permiso-sanitario-routing.module';
 import { forwardRef } from '@angular/core';
+import { AsociadosComponent } from './components/asociados/asociados.component';
 
 
 
@@ -55,6 +56,7 @@ import { forwardRef } from '@angular/core';
     TercerosRelacionadoesComponent,
     DatosEstablecimientoComponent,
     DerechosComponent,
+    AsociadosComponent,
     AnexarDocumentosComponent,
     TituloComponent,
     ToastrModule.forRoot(),

@@ -14,6 +14,9 @@
             <li [ngClass]="indice === 4 ? 'active' : ''">
                 <a data-toggle="tab" tabindex="0" (keyup)="seleccionaTab(1)" (click)="seleccionaTab(4)">Pago de derechos</a>
             </li>
+            <li [ngClass]="indice === 5 ? 'active' : ''">
+                <a data-toggle="tab" tabindex="0" (keyup)="seleccionaTab(1)" (click)="seleccionaTab(5)">Tramites Asociados</a>
+            </li>
             
         </ul>
         <ng-container>
@@ -29,8 +32,11 @@
                 }
                
                 @case(4) {
-                   <app-derechos></app-derechos>
-                    }
+                    <app-derechos></app-derechos>
+                     }
+                     @case(5) {
+                        <app-asociados></app-asociados>
+                         }
                 }
         </ng-container>
     </div>
