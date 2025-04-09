@@ -1,7 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { SeccionLibStore } from '@ng-mf/data-access-user';
 import { ServicioDeMensajesService } from '../../services/servicio-de-mensajes.service';
-
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 /**
  * Componente `PasoUnoComponent` que representa el primer paso del flujo de solicitud.
  * Controla el índice de la sección activa del formulario multipaso y maneja
@@ -67,18 +68,25 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     this.seccionStore.establecerSeccion([false]);
   }
 
+  private destroy$ = new Subject<void>(); // Subject to manage unsubscription
+
   /**
    * @description Método que se ejecuta después de inicializar el componente.
    * Se suscribe a los observables `mensaje$` y `devolverFacturasMensaje$` para
    * controlar la visibilidad de las secciones correspondientes.
    */
   ngOnInit(): void {
-    this.servicioDeMensajesService.mensaje$.subscribe((mensaje) => {
-      this.mostrarBusqueda = mensaje;
-    });
-    this.servicioDeMensajesService.devolverFacturasMensaje$.subscribe((mensaje) => {
-      this.mostrarDevolverFacturas = mensaje;
-    });
+    this.servicioDeMensajesService.mensaje$
+      .pipe(takeUntil(this.destroy$)) // Automatically unsubscribe on destroy
+      .subscribe((mensaje) => {
+        this.mostrarBusqueda = mensaje;
+      });
+
+    this.servicioDeMensajesService.devolverFacturasMensaje$
+      .pipe(takeUntil(this.destroy$)) // Automatically unsubscribe on destroy
+      .subscribe((mensaje) => {
+        this.mostrarDevolverFacturas = mensaje;
+      });
   }
 
   /**
@@ -87,6 +95,8 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * y evitar efectos secundarios al desmontar el componente.
    */
   ngOnDestroy(): void {
+    this.destroy$.next(); // Emit a value to signal completion
+    this.destroy$.complete(); // Complete the Subject to clean up resources
     this.servicioDeMensajesService.enviarMensaje(false);
     this.servicioDeMensajesService.enviarDevolverFacturasMensaje(false);
   }
