@@ -62,7 +62,7 @@ export class DatosDelEstablecimientoRFCComponent implements OnInit, OnDestroy {
     private avisocalidadStore: AvisocalidadStore,
     private avisocalidadQuery: AvisocalidadQuery
   ) {
-    // Llama al constructor de la clase base Query con el almacén inyectado.
+    // Reservado para futuras inyecciones de dependencias o inicializaciones.
   }
 
   /**
@@ -80,13 +80,21 @@ export class DatosDelEstablecimientoRFCComponent implements OnInit, OnDestroy {
       )
       .subscribe();
 
+    this.configurarGrupoForm(); // Configura el grupo de formularios con los valores iniciales.
+
+  }
+
+  /**
+   * @method configurarGrupoForm
+   * @description Configures the reactive form group for the "Datos del Establecimiento RFC" component.
+   */
+  configurarGrupoForm() {
     this.datosDelForm = this.fb.group({
       rfcDel: [this.solicitudState?.rfcDel, [Validators.maxLength(254)]],
       denominacionRazonSocial: [this.solicitudState?.denominacionRazonSocial, [Validators.required, Validators.maxLength(254)]],
-      correoElectronico: [this.solicitudState?.correoElectronico, [Validators.required, Validators.email, Validators.maxLength(320)]]  
+      correoElectronico: [this.solicitudState?.correoElectronico, [Validators.required, Validators.email, Validators.maxLength(320)]]
     });
   }
-
   /**
    * @description
    * Método que actualiza el estado del store con los valores del formulario.

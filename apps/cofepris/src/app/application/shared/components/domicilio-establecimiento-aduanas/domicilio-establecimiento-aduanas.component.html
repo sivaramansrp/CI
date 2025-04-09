@@ -16,10 +16,10 @@
         />
         <div class="d-grid">
           <div *ngIf="domicilio.get('codigoPostal')?.touched">
-            <small class="text-danger" *ngIf="domicilio.get('codigoPostal')?.hasError('required')">
+            <small class="mensaje-error" *ngIf="domicilio.get('codigoPostal')?.hasError('required')">
               Este campo es obligatorio.
             </small>
-            <small class="text-danger" *ngIf="domicilio.get('codigoPostal')?.hasError('maxlength')">
+            <small class="mensaje-error" *ngIf="domicilio.get('codigoPostal')?.hasError('maxlength')">
               El código postal no puede exceder los 12 caracteres.
             </small>
           </div>
@@ -37,7 +37,7 @@
       ></app-catalogo-select>
       <div class="d-grid">
       <div *ngIf="domicilio.get('estado')?.touched">
-        <small class="text-danger" *ngIf="domicilio.get('estado')?.hasError('required')">
+        <small class="mensaje-error" *ngIf="domicilio.get('estado')?.hasError('required')">
         Este campo es obligatorio.
         </small>
       </div>
@@ -56,7 +56,7 @@
         />
         <div class="d-grid">
           <div *ngIf="domicilio.get('muncipio')?.touched">
-        <small class="text-danger" *ngIf="domicilio.get('muncipio')?.hasError('required')">
+        <small class="mensaje-error" *ngIf="domicilio.get('muncipio')?.hasError('required')">
           Este campo es obligatorio.
         </small>
           </div>
@@ -106,7 +106,7 @@
         />
         <div class="d-grid">
           <div *ngIf="domicilio.get('calle')?.touched">
-        <small class="text-danger" *ngIf="domicilio.get('calle')?.hasError('required')">
+        <small class="mensaje-error" *ngIf="domicilio.get('calle')?.hasError('required')">
           Este campo es obligatorio.
         </small>
           </div>
@@ -143,10 +143,10 @@
         />
         <div class="d-grid">
           <div *ngIf="domicilio.get('telefono')?.touched">
-        <small class="text-danger" *ngIf="domicilio.get('telefono')?.hasError('required')">
+        <small class="mensaje-error" *ngIf="domicilio.get('telefono')?.hasError('required')">
           Este campo es obligatorio.
         </small>
-        <small class="text-danger" *ngIf="domicilio.get('telefono')?.hasError('maxlength')">
+        <small class="mensaje-error" *ngIf="domicilio.get('telefono')?.hasError('maxlength')">
           El teléfono no puede exceder los 30 caracteres.
         </small>
           </div>
@@ -325,7 +325,7 @@
               class="form-control"/>
             <div class="d-grid">
               <div *ngIf="formMercancias.get('nombreComercial')?.touched">
-              <small class="text-danger" *ngIf="formMercancias.get('nombreComercial')?.hasError('required')">
+              <small class="mensaje-error" *ngIf="formMercancias.get('nombreComercial')?.hasError('required')">
                 Este campo es obligatorio.
               </small>
               </div>
@@ -342,7 +342,7 @@
               class="form-control"/>
             <div class="d-grid">
               <div *ngIf="formMercancias.get('nombreComun')?.touched">
-              <small class="text-danger" *ngIf="formMercancias.get('nombreComun')?.hasError('required')">
+              <small class="mensaje-error" *ngIf="formMercancias.get('nombreComun')?.hasError('required')">
                 Este campo es obligatorio.
               </small>
               </div>
@@ -359,7 +359,7 @@
               class="form-control" />
             <div class="d-grid">
               <div *ngIf="formMercancias.get('nombreCientifico')?.touched">
-              <small class="text-danger" *ngIf="formMercancias.get('nombreCientifico')?.hasError('required')">
+              <small class="mensaje-error" *ngIf="formMercancias.get('nombreCientifico')?.hasError('required')">
                 Este campo es obligatorio.
               </small>
               </div>
@@ -376,7 +376,7 @@
             ></textarea>
             <div class="d-grid">
               <div *ngIf="formMercancias.get('usoEspecifico')?.touched">
-              <small class="text-danger" *ngIf="formMercancias.get('usoEspecifico')?.hasError('required')">
+              <small class="mensaje-error" *ngIf="formMercancias.get('usoEspecifico')?.hasError('required')">
                 Este campo es obligatorio.
               </small>
               </div>
@@ -401,7 +401,7 @@
               class="form-control"/>
               <div class="d-grid">
               <div *ngIf="formMercancias.get('fraccionArancelaria')?.touched">
-                <small class="text-danger" *ngIf="formMercancias.get('fraccionArancelaria')?.hasError('required')">
+                <small class="mensaje-error" *ngIf="formMercancias.get('fraccionArancelaria')?.hasError('required')">
                 Este campo es obligatorio.
                 </small>
               </div>
@@ -418,7 +418,7 @@
               />
               <div class="d-grid">
               <div *ngIf="formMercancias.get('descripcionFraccion')?.touched">
-                <small class="text-danger" *ngIf="formMercancias.get('descripcionFraccion')?.hasError('required')">
+                <small class="mensaje-error" *ngIf="formMercancias.get('descripcionFraccion')?.hasError('required')">
                 Este campo es obligatorio.
                 </small>
               </div>
@@ -434,7 +434,7 @@
                   class="form-control"/>
                 <div class="d-grid">
                   <div *ngIf="formMercancias.get('cantidadUMT')?.touched">
-                  <small class="text-danger" *ngIf="formMercancias.get('cantidadUMT')?.hasError('required')">
+                  <small class="mensaje-error" *ngIf="formMercancias.get('cantidadUMT')?.hasError('required')">
                     Este campo es obligatorio.
                   </small>
                   </div>
@@ -450,7 +450,7 @@
                 />
                 <div class="d-grid">
                   <div *ngIf="formMercancias.get('UMT')?.touched">
-                  <small class="text-danger" *ngIf="formMercancias.get('UMT')?.hasError('required')">
+                  <small class="mensaje-error" *ngIf="formMercancias.get('UMT')?.hasError('required')">
                     Este campo es obligatorio.
                   </small>
                   </div>
@@ -469,7 +469,7 @@
                   />
                   <div class="d-grid">
                   <div *ngIf="formMercancias.get('cantidadUMC')?.touched">
-                    <small class="text-danger" *ngIf="formMercancias.get('cantidadUMC')?.hasError('required')">
+                    <small class="mensaje-error" *ngIf="formMercancias.get('cantidadUMC')?.hasError('required')">
                     Este campo es obligatorio.
                     </small>
                   </div>
@@ -500,7 +500,7 @@
               />
               <div class="d-grid">
               <div *ngIf="formMercancias.get('numerocas')?.touched">
-                <small class="text-danger" *ngIf="formMercancias.get('numerocas')?.hasError('required')">
+                <small class="mensaje-error" *ngIf="formMercancias.get('numerocas')?.hasError('required')">
                 Este campo es obligatorio.
                 </small>
               </div>
@@ -518,7 +518,7 @@
               />
               <div class="d-grid">
               <div *ngIf="formMercancias.get('porcentajeConcentracion')?.touched">
-                <small class="text-danger" *ngIf="formMercancias.get('porcentajeConcentracion')?.hasError('required')">
+                <small class="mensaje-error" *ngIf="formMercancias.get('porcentajeConcentracion')?.hasError('required')">
                 Este campo es obligatorio.
                 </small>
               </div>

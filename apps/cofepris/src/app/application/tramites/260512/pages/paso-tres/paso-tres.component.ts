@@ -30,7 +30,7 @@ export class PasoTresComponent {
    * @param {Router} router - Servicio de Angular para la navegación entre rutas.
    */
   constructor(private router: Router) {
-    // Constructor del componente
+    // Reservado para futuras inyecciones de dependencias o inicializaciones.
   }
 
   /**

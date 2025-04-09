@@ -1,14 +1,14 @@
-import { AvisocalidadStore, SolicitudState } from '../../estados/stores/aviso-calidad.store'; 
+import { AvisocalidadStore, SolicitudState } from '../../estados/stores/aviso-calidad.store';
 import { Catalogo, InputFecha, InputFechaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';  
-import { map, takeUntil } from 'rxjs'; 
-import { AvisoImportacionService } from '../../services/parmiso-importacion.service'; 
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { map, takeUntil } from 'rxjs';
+import { AvisoImportacionService } from '../../services/parmiso-importacion.service';
 import { AvisocalidadQuery } from '../../estados/queries/aviso-calidad.query';
-import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';  
-import { CommonModule } from '@angular/common'; 
-import { FECHA_DE_PAGO } from '../../models/pago-derechos.model'; 
-import { Subject } from 'rxjs'; 
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
+import { CommonModule } from '@angular/common';
+import { FECHA_DE_PAGO } from '../../models/pago-derechos.model';
+import { Subject } from 'rxjs';
 
 /**
  * Component Define el componente de Angular.
@@ -64,7 +64,7 @@ export class PagoDerechosComponent implements OnDestroy, OnInit {
     private avisocalidadStore: AvisocalidadStore, // Inyección del store para manejar el estado.
     private avisocalidadQuery: AvisocalidadQuery // Inyección de la query para consultar el estado.
   ) {
-    //constructor
+    //Reservado para futuras inyecciones de dependencias o inicializaciones.
   }
 
   /**
@@ -81,6 +81,23 @@ export class PagoDerechosComponent implements OnDestroy, OnInit {
       )
       .subscribe(); // Se suscribe al observable.
 
+
+    this.configurarGrupoForm(); // Configura el formulario reactivo.
+    this.loadComboUnidadMedida(); // Carga la lista de derechos.
+  }
+
+/**
+ * @method configurarGrupoForm
+ * @description Configures the reactive form group for the "Datos del Establecimiento RFC" component.
+ * This method initializes the form group with default values and validation rules for the fields:
+ * - `rfcDel`: Optional field with a maximum length of 254 characters.
+ * - `denominacionRazonSocial`: Required field with a maximum length of 254 characters.
+ * - `correoElectronico`: Required field with a valid email format and a maximum length of 320 characters.
+ * 
+ * @memberof DatosDelEstablecimientoRfcComponent
+ */
+  configurarGrupoForm(): void {
+
     // Inicializa el formulario reactivo con los valores del estado.
     this.derechosForm = this.fb.group({
       claveReferencia: [this.solicitudState?.claveReferencia], // Campo claveReferencia.
@@ -90,10 +107,7 @@ export class PagoDerechosComponent implements OnDestroy, OnInit {
       fechaPago: [this.solicitudState?.fechaPago], // Campo fechaPago.
       importePago: [this.solicitudState?.importePago], // Campo importePago.
     });
-
-    this.loadComboUnidadMedida(); // Carga la lista de derechos.
-  } 
-
+  }
   /**
    * method loadComboUnidadMedida
    * description Carga la lista de derechos desde el servicio.
@@ -129,7 +143,7 @@ export class PagoDerechosComponent implements OnDestroy, OnInit {
     const VALOR = form.get(campo)?.value as T; // Obtiene el valor del campo.
     (this.avisocalidadStore[metodoNombre] as (value: T) => void)(VALOR); // Llama al método correspondiente del store.
   }
-    
+
   /**
    * method ngOnDestroy
    * description Método para limpiar las suscripciones al destruir el componente.

@@ -1,38 +1,9 @@
 import { AvisocalidadStore, SolicitudState } from '../../estados/stores/aviso-calidad.store';
-import {
-  CROSLISTA_DE_PAISES,
-  INPUT_FECHA_CADUCIDAD_CONFIG,
-} from '../../constantes/datos-domicilio-legal.enum';
-import {
-  Catalogo,
-  CatalogoSelectComponent,
-  ConfiguracionColumna,
-  CrossListLable,
-  CrosslistComponent,
-  TablaDinamicaComponent,
-  TablaSeleccion,
-  TituloComponent,
-} from '@libs/shared/data-access-user/src';
-import {
-  Component,
-  OnDestroy,
-  OnInit,
-  QueryList,
-  ViewChildren,
-} from '@angular/core';
-import {
-  DATOS_MERCANCIAS,
-  MercanciasInfo,
-  NICO_TABLA,
-  NicoInfo,
-} from '../../models/datos-domicilio-legal.model';
-import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { CROSLISTA_DE_PAISES, INPUT_FECHA_CADUCIDAD_CONFIG, } from '../../constantes/datos-domicilio-legal.enum';
+import { Catalogo, CatalogoSelectComponent, ConfiguracionColumna, CrossListLable, CrosslistComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Component, OnDestroy, OnInit, QueryList, ViewChildren, } from '@angular/core';
+import { DATOS_MERCANCIAS, MercanciasInfo, NICO_TABLA, NicoInfo, } from '../../models/datos-domicilio-legal.model';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators, } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { AvisocalidadQuery } from '../../estados/queries/aviso-calidad.query';
 import { CommonModule } from '@angular/common';
@@ -133,7 +104,7 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
     private avisocalidadQuery: AvisocalidadQuery,
     private service: DatosDomicilioLegalService
   ) {
-    // constructor
+    // Reservado para futuras inyecciones de dependencias o inicializaciones.
   }
 
   /**
@@ -253,21 +224,21 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
     derecha: 'Aduanas de entrada seleccionadas*:',
   };
 
-   /**
-   * Etiqueta de la lista de fechas.
-   * */
- public paisDeOrigenLabel: CrossListLable = {
-  tituluDeLaIzquierda: 'País de origen:',
-  derecha: 'País(es) seleccionado(s)*:',
-};
+  /**
+  * Etiqueta de la lista de fechas.
+  * */
+  public paisDeOrigenLabel: CrossListLable = {
+    tituluDeLaIzquierda: 'País de origen:',
+    derecha: 'País(es) seleccionado(s)*:',
+  };
 
- /**
-   * Etiqueta de la lista de fechas.
-   * */
- public paisDeProcedenciaLabel: CrossListLable = {
-  tituluDeLaIzquierda: 'País de procedencia:',
-  derecha: 'País(es) seleccionado(s)*:',
-};
+  /**
+    * Etiqueta de la lista de fechas.
+    * */
+  public paisDeProcedenciaLabel: CrossListLable = {
+    tituluDeLaIzquierda: 'País de procedencia:',
+    derecha: 'País(es) seleccionado(s)*:',
+  };
 
 
   /**
@@ -285,6 +256,21 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
     this.obtenerEstadoList();
     this.obtenerTablaDatos();
     this.obtenerMercanciasDatos();
+    this.configurarGrupoForm(); // Configura el grupo de formularios con los valores iniciales.
+
+  }
+
+  /**
+   * @method configurarGrupoForm
+   * @description Configures the reactive form group for the "Datos del Establecimiento RFC" component.
+   * This method initializes the form group with default values and validation rules for the fields:
+   * - `rfcDel`: Optional field with a maximum length of 254 characters.
+   * - `denominacionRazonSocial`: Required field with a maximum length of 254 characters.
+   * - `correoElectronico`: Required field with a valid email format and a maximum length of 320 characters.
+   * 
+   * @memberof DatosDelEstablecimientoRfcComponent
+   */
+  configurarGrupoForm(): void {
     this.domicilio = this.fb.group({
       codigoPostal: [this.solicitudState?.codigoPostal, [Validators.required, Validators.maxLength(12)]],
       estado: [this.solicitudState?.estado, Validators.required],
@@ -296,7 +282,7 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
       telefono: [this.solicitudState?.telefono, [Validators.required, Validators.maxLength(30)]],
       avisoCheckbox: [this.solicitudState?.avisoCheckbox, Validators.required],
       licenciaSanitaria: [
-      { value: this.solicitudState?.licenciaSanitaria, disabled: false },[Validators.required]],
+        { value: this.solicitudState?.licenciaSanitaria, disabled: false }, [Validators.required]],
     });
 
     this.formAgente = this.fb.group({
@@ -315,14 +301,13 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
       UMT: [{ value: '', disabled: true }, Validators.required],
       cantidadUMC: ['', Validators.required],
       UMC: ['', Validators.required],
-      numerocas:['', Validators.required],
+      numerocas: ['', Validators.required],
       porcentajeConcentracion: ['', Validators.required],
       numeroRegistro: ['', Validators.required],
       clasificacionToxicologica: ['', Validators.required],
       objetoImportacion: ['', Validators.required],
     });
   }
-
   /**
    * Botones de acción disponibles para gestionar las listas de fechas.
    */
@@ -403,17 +388,17 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
     this.colapsableTres = !this.colapsableTres;
   }
 
-    /**
-   * @description
-   * Método que actualiza el estado del store con los valores del formulario.
-   * @param form Formulario reactivo.
-   * @param campo Campo del formulario que se desea actualizar.
-   * @param metodoNombre Nombre del método del store que se invocará.
-   */
-    setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof AvisocalidadStore): void {
-      const VALOR = form.get(campo)?.value;
-      (this.avisocalidadStore[metodoNombre] as (value: string | number) => void)(VALOR);
-    }
+  /**
+ * @description
+ * Método que actualiza el estado del store con los valores del formulario.
+ * @param form Formulario reactivo.
+ * @param campo Campo del formulario que se desea actualizar.
+ * @param metodoNombre Nombre del método del store que se invocará.
+ */
+  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof AvisocalidadStore): void {
+    const VALOR = form.get(campo)?.value;
+    (this.avisocalidadStore[metodoNombre] as (value: string | number) => void)(VALOR);
+  }
 
   /**
    * Método del ciclo de vida de Angular que se llama cuando el componente se destruye.

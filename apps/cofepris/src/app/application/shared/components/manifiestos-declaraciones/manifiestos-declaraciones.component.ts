@@ -1,19 +1,7 @@
-import {
-  AlertComponent,
-  InputRadioComponent,
-  TituloComponent,
-} from '@libs/shared/data-access-user/src';
+import {AlertComponent,InputRadioComponent,TituloComponent,} from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import {
-  DatosDomicilioLegalState,
-  DatosDomicilioLegalStore,
-} from '../../estados/stores/datos-domicilio-legal.store';
-import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import {DatosDomicilioLegalState, DatosDomicilioLegalStore,} from '../../estados/stores/datos-domicilio-legal.store';
+import {FormBuilder,FormGroup,ReactiveFormsModule,Validators,} from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import CumplimientoOptions from '@libs/shared/theme/assets/json/260501/cumplimiento-options.json';
@@ -76,7 +64,7 @@ export class ManifiestosComponent implements OnInit, OnDestroy {
     private DatosDomicilioLegalStore: DatosDomicilioLegalStore,
     private DatosDomicilioLegalQuery: DatosDomicilioLegalQuery
   ) {
-    // Constructor
+    //Reservado para futuras inyecciones de dependencias o inicializaciones.
   }
 
   /**
@@ -100,16 +88,19 @@ export class ManifiestosComponent implements OnInit, OnDestroy {
       )
       .subscribe();
 
-    this.manifiestos = this.fb.group({
-      /**
-       * @description
-       * Campo para capturar el cumplimiento de manifiestos.
-       * Es un campo obligatorio.
-       */
-      cumplimiento: [this.solicitudState?.cumplimiento, Validators.required],
-    });
+      this.configurarGrupoForm(); // Configura el formulario reactivo.
   }
 
+  /**
+   * @method configurarGrupoForm
+   * @description Configura el formulario reactivo para los manifiestos, estableciendo los controles necesarios
+   * y asignando valores iniciales desde el estado de la solicitud.
+   */
+  configurarGrupoForm(): void {
+  this.manifiestos = this.fb.group({
+    cumplimiento: [this.solicitudState?.cumplimiento, Validators.required],
+  });
+}
   /**
    * @description
    * Método que actualiza el estado del store con los valores del formulario.
