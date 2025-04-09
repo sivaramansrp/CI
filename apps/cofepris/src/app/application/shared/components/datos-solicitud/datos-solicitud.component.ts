@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import {
   DatosDomicilioLegalState,
   DatosDomicilioLegalStore,
@@ -14,7 +14,7 @@ import { CommonModule } from '@angular/common';
 import { DatosDomicilioLegalQuery } from '../../estados/queries/datos-domicilio-legal.query';
 import { DomicilioComponent } from '../domicilio-establecimiento/domicilio-establecimiento.component';
 import { ManifiestosComponent } from '../manifiestos-declaraciones/manifiestos-declaraciones.component';
-import { RepresentanteLegalComponent } from '../representante-legal-rfc/representante-legal-rfc.component';
+import { RepresentanteLegalRfcComponent } from '../representante-legal-rfc/representante-legal-rfc.component';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 /**
  * Componente responsable de gestionar y mostrar los datos principales del formulario,
@@ -29,12 +29,22 @@ import { TituloComponent } from '@libs/shared/data-access-user/src';
     TituloComponent,
     DomicilioComponent,
     ManifiestosComponent,
-    RepresentanteLegalComponent,
+    RepresentanteLegalRfcComponent,
   ],
   templateUrl: './datos-solicitud.component.html',
   styleUrl: './datos-solicitud.component.css',
 })
 export class DatosDeLaComponent implements OnInit, OnDestroy {
+  /**
+   * Indica si el campo RFC del solicitante es visible.
+   */
+  @Input() isAvisoLicenciaVisible: boolean = true;
+
+  /**
+   * Indica si el campo RFC del solicitante es visible.
+   */
+  @Input() isAduanasEntradaVisible: boolean = false;
+
   /**
    * Estado de la solicitud.
    */
@@ -68,7 +78,7 @@ export class DatosDeLaComponent implements OnInit, OnDestroy {
   /**
    * Método que se llama cuando se inicializa el componente
    * */
-  ngOnInit() {
+  ngOnInit(): void {
     this.DatosDomicilioLegalQuery.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -93,7 +103,7 @@ export class DatosDeLaComponent implements OnInit, OnDestroy {
   /**
    * Método que se llama cuando se envía el formulario.
    */
-  alternarControlesDeFormulario() {
+  alternarControlesDeFormulario(): void {
     Object.keys(this.forma.controls).forEach((controlName) => {
       const CONTROL = this.forma.get(controlName);
       if (CONTROL?.disabled) {
