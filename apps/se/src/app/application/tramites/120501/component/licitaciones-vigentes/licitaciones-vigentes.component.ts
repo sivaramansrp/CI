@@ -238,7 +238,7 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
     this.getRepresentacionFederal();
     this.getDetallesDelalicitacion();
     this.getAdquiriente();
-    this.getTabledatas();
+    this.obtenerDatosDeTabla();
 
     this.montoRecibir$.subscribe((montoRecibir) => {
       if(montoRecibir){
@@ -372,7 +372,7 @@ getDetallesDelalicitacion():void{
      * LicitacionesVigentesComponent
      * 
      */ 
-  getTabledatas(): void {
+  obtenerDatosDeTabla(): void {
     this.service.getTableData().subscribe(
         (data: any) => {
             this.datos = data;

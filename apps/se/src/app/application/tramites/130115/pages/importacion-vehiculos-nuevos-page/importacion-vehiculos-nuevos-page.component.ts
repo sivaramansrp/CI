@@ -4,36 +4,49 @@
 import { Component, ViewChild } from '@angular/core';
 import { DatosPasos, PASOS } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
+<<<<<<<< HEAD:apps/se/src/app/application/tramites/130115/pages/importacion-vehiculos-nuevos-page/importacion-vehiculos-nuevos-page.component.ts
+========
+import { PASOS } from '@libs/shared/data-access-user/src/tramites/constantes/paso-tres-steps.enum';
+>>>>>>>> d7f7e885870d6f463bd458ad92a708fd035a9766:apps/agace/src/app/application/tramites/32501/pages/solicitud-page/solicitud-page.component.ts
 import { WizardComponent } from '@ng-mf/data-access-user';
 
 /**
- * Interfaz que representa la acción de un botón.
+ * Interfaz que define la estructura de una acción de botón.
  */
 interface AccionBoton {
   /**
-   * La acción que se va a realizar.
+   * La acción que se realizará.
    */
   accion: string;
+
   /**
    * El valor asociado a la acción.
    */
   valor: number;
 }
 
-/**
- * Componente que representa los pasos de datos en un proceso de múltiples pasos.
- */
 @Component({
+<<<<<<<< HEAD:apps/se/src/app/application/tramites/130115/pages/importacion-vehiculos-nuevos-page/importacion-vehiculos-nuevos-page.component.ts
   selector: 'app-importacion-vehiculos-nuevos-page',
  templateUrl: './importacion-vehiculos-nuevos-page.component.html'
 })
 export class ImportacionVehiculosNuevosPageComponent {
+========
+  templateUrl: './solicitud-page.component.html',
+  styles: ``,
+})
+/**
+ * Componente que representa la página de solicitud.
+ */
+export class SolicitudPageComponent {
+>>>>>>>> d7f7e885870d6f463bd458ad92a708fd035a9766:apps/agace/src/app/application/tramites/32501/pages/solicitud-page/solicitud-page.component.ts
   /**
-   * Lista de pasos en el asistente.
+   * Lista de pasos del asistente.
    */
   pasos: ListaPasosWizard[] = PASOS;
 
   /**
+<<<<<<<< HEAD:apps/se/src/app/application/tramites/130115/pages/importacion-vehiculos-nuevos-page/importacion-vehiculos-nuevos-page.component.ts
    * Referencia al componente WizardComponent.
    */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
@@ -45,11 +58,19 @@ export class ImportacionVehiculosNuevosPageComponent {
 
   /**
    * Variable utilizada para almacenar el índice del paso actual.
+========
+   * Índice del paso actual.
+>>>>>>>> d7f7e885870d6f463bd458ad92a708fd035a9766:apps/agace/src/app/application/tramites/32501/pages/solicitud-page/solicitud-page.component.ts
    */
   indice: number = 1;
 
   /**
-   * Datos para los pasos en el asistente.
+   * Referencia al componente del asistente.
+   */
+  @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
+
+  /**
+   * Datos de los pasos del asistente.
    */
   datosPasos: DatosPasos = {
     nroPasos: this.pasos.length,
@@ -59,10 +80,18 @@ export class ImportacionVehiculosNuevosPageComponent {
   };
 
   /**
-   * Actualiza el valor del índice según el evento del botón de acción.
-   * @param e El evento del botón de acción que contiene la acción y el valor.
+   * Selecciona una pestaña del asistente.
+   * @param i Índice de la pestaña a seleccionar.
    */
-  public getValorIndice(e: AccionBoton): void {
+  seleccionaTab(i: number): void {
+    this.indice = i;
+  }
+
+  /**
+   * Obtiene el valor del índice de la acción del botón.
+   * @param e Acción del botón.
+   */
+  getValorIndice(e: AccionBoton): void {
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
       if (e.accion === 'cont') {
