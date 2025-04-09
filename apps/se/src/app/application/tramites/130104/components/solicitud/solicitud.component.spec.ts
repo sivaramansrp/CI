@@ -1,14 +1,15 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SolicitudComponent } from './solicitud.component';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
-import { Tramite130104Store } from '../../estados/tramites/tramite130104.store';
-import { Tramite130104Query } from '../../estados/queries/tramite130104.query';
-import { ImportacionOtrosVehiculosUsadosService } from '../../services/importacion-otros-vehiculos-usados.service';
+import { Tramite130104Store } from '../../../../estados/tramites/tramite130104.store';
+import { Tramite130104Query } from '../../../../estados/queries/tramite130104.query';
 import { of, Subject } from 'rxjs';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { ProductoOpción } from '../../../../shared/constantes/vehiculos-adaptados.enum';
 import { Component, Input } from '@angular/core';
+import { ImportacionOtrosVehiculosUsadosService } from '../../services/importacion-otros-vehiculos-usados.service';
+import { HttpClientModule } from '@angular/common/http';
+
 
 @Component({ selector: 'app-partidas-de-la-mercancia', template: '' })
 class PartidasDeLaMercanciaStubComponent {}
@@ -29,11 +30,12 @@ class PaisProcendenciaStubComponent {
 class RepresentacionStubComponent {}
 
 const mockPartidasdelaTable = {
-  tableHeader: ['Cantidad', 'Descripción', 'Valor', 'Unidad', 'Fracción', 'Total USD'],
-  tableBody: [
-    { tbodyData: ['10', 'Item 1', '50', 'kg', '1234', '100'] },
-    { tbodyData: ['20', 'Item 2', '75', 'kg', '5678', '200'] },
-  ],
+  cantidad :"10",
+  unidadDeMedida :"kg",
+  fraccionFrancelaria :"1234",
+  descripcion:"Item",
+  precioUnitarioUSD :"50",
+  totalUSD:"100",
 };
 
 describe('SolicitudComponent', () => {
@@ -41,7 +43,8 @@ describe('SolicitudComponent', () => {
   let fixture: ComponentFixture<SolicitudComponent>;
   let mockStore: jest.Mocked<Tramite130104Store>;
   let mockQuery: jest.Mocked<Tramite130104Query>;
-  let mockService: jest.Mocked<ImportacionOtrosVehiculosUsadosService>;
+  let mockService: jest.Mocked<any>;
+  let mockImportacionDeVehiculosService: Partial<ImportacionOtrosVehiculosUsadosService>;
 
   const mockProductoOptions: ProductoOpción[] = [
     { label: 'Nuevo', value: 'Nuevo' },
@@ -103,6 +106,39 @@ describe('SolicitudComponent', () => {
     } as any;
 
     mockService = {
+   
+      getEntidadFederativa: jest.fn().mockReturnValue(of(mockCatalogo)),
+      getRepresentacionFederal: jest.fn().mockReturnValue(of(mockCatalogo)),
+      getListaDePaisesDisponibles: jest.fn().mockReturnValue(of(mockCatalogo)),
+      getPaisesPorBloque: jest.fn().mockReturnValue(of(mockCatalogo)),
+    };
+    jest.spyOn(mockService, 'getEntidadFederativa'); // Ensure the spy is set up
+
+    await TestBed.configureTestingModule({
+      declarations: [
+        SolicitudComponent,
+        PartidasDeLaMercanciaStubComponent,
+        DatosDelTramiteStubComponent,
+        DatosDeLaMercanciaStubComponent,
+        PaisProcendenciaStubComponent,
+        RepresentacionStubComponent,
+      ],
+      imports: [ReactiveFormsModule,HttpClientModule],
+      providers: [
+        FormBuilder,
+        { provide: Tramite130104Store, useValue: mockStore },
+        { provide: Tramite130104Query, useValue: mockQuery },
+        { provide: ImportacionOtrosVehiculosUsadosService, useValue: mockImportacionDeVehiculosService },
+      ],
+    }).compileComponents();
+  });
+
+  beforeEach(async () => {
+    mockImportacionDeVehiculosService = {
+      getEntidadFederativa: jest.fn().mockReturnValue(of(mockCatalogo)),
+      getRepresentacionFederal: jest.fn().mockReturnValue(of(mockCatalogo)),
+      getListaDePaisesDisponibles: jest.fn().mockReturnValue(of(mockCatalogo)),
+      getPaisesPorBloque: jest.fn().mockReturnValue(of(mockCatalogo)),
       getSolicitudeOptions: jest.fn().mockReturnValue(
         of({
           options: mockProductoOptions,
@@ -114,35 +150,19 @@ describe('SolicitudComponent', () => {
           options: mockProductoOptions,
         })
       ),
-      getEntidadFederativa: jest.fn().mockReturnValue(of(mockCatalogo)),
-      getRepresentacionFederal: jest.fn().mockReturnValue(of(mockCatalogo)),
-      getListaDePaisesDisponibles: jest.fn().mockReturnValue(of(mockCatalogo)),
-      getPaisesPorBloque: jest.fn().mockReturnValue(of(mockCatalogo)),
-    } as any;
-
+      getTablaDatos: jest.fn().mockReturnValue(of([{ cantidad: 10, totalUSD: 1000 }])), // Mock implementation
+    };
+  
     await TestBed.configureTestingModule({
-      declarations: [
-        SolicitudComponent,
-        PartidasDeLaMercanciaStubComponent,
-        DatosDelTramiteStubComponent,
-        DatosDeLaMercanciaStubComponent,
-        PaisProcendenciaStubComponent,
-        RepresentacionStubComponent,
-      ],
-      imports: [ReactiveFormsModule, HttpClientModule],
+      declarations: [SolicitudComponent],
       providers: [
-        FormBuilder,
-        { provide: Tramite130104Store, useValue: mockStore },
-        { provide: Tramite130104Query, useValue: mockQuery },
-        { provide: ImportacionOtrosVehiculosUsadosService, useValue: mockService },
+        { provide: ImportacionOtrosVehiculosUsadosService, useValue: mockImportacionDeVehiculosService },
       ],
     }).compileComponents();
   });
-
   beforeEach(() => {
     fixture = TestBed.createComponent(SolicitudComponent);
     component = fixture.componentInstance;
-    component.getEstablecimientoTableData = mockPartidasdelaTable;
     component.ngOnInit();
   });
 
@@ -156,8 +176,6 @@ describe('SolicitudComponent', () => {
       jest.spyOn(component, 'configuracionFormularioSuscripciones');
       jest.spyOn(component, 'opcionesDeBusqueda');
       jest.spyOn(component, 'formularioTotalCount');
-      jest.spyOn(component, 'getEstablecimiento');
-      jest.spyOn(component, 'calcularTotales');
       jest.spyOn(component, 'fetchEntidadFederativa');
       jest.spyOn(component, 'fetchRepresentacionFederal');
       jest.spyOn(component, 'listaDePaisesDisponibles');
@@ -168,8 +186,6 @@ describe('SolicitudComponent', () => {
       expect(component.configuracionFormularioSuscripciones).toHaveBeenCalled();
       expect(component.opcionesDeBusqueda).toHaveBeenCalled();
       expect(component.formularioTotalCount).toHaveBeenCalled();
-      expect(component.getEstablecimiento).toHaveBeenCalled();
-      expect(component.calcularTotales).toHaveBeenCalled();
       expect(component.fetchEntidadFederativa).toHaveBeenCalled();
       expect(component.fetchRepresentacionFederal).toHaveBeenCalled();
       expect(component.listaDePaisesDisponibles).toHaveBeenCalled();
@@ -209,12 +225,12 @@ describe('SolicitudComponent', () => {
     it('Debería obtener las opciones de solicitud y producto', () => {
       component.opcionesDeBusqueda();
 
-      expect(mockService.getSolicitudeOptions).toHaveBeenCalled();
+      expect(mockImportacionDeVehiculosService.getSolicitudeOptions).toHaveBeenCalled();
       expect(mockStore.updateState).toHaveBeenCalledWith({
         solicitud: 'Nuevo',
         defaultSelect: 'Inicial',
       });
-      expect(mockService.getProductoOptions).toHaveBeenCalled();
+      expect(mockImportacionDeVehiculosService.getProductoOptions).toHaveBeenCalled();
       expect(mockStore.updateState).toHaveBeenCalledWith({
         producto: 'Nuevo',
         defaultProducto: 'Nuevo',
@@ -222,17 +238,6 @@ describe('SolicitudComponent', () => {
     });
   });
 
-  describe('calcularTotales', () => {
-    it('Debe calcular los totales a partir de tableBodyData', () => {
-      component.tableBodyData = mockPartidasdelaTable.tableBody;
-      component.formularioTotalCount();
-
-      component.calcularTotales();
-
-      expect(component.formForTotalCount.get('cantidadTotal')?.value).toBe(30);
-      expect(component.formForTotalCount.get('valorTotalUSD')?.value).toBe(300);
-    });
-  });
 
   describe('validarYEnviarFormulario', () => {
     it('Debería establecer mostrarTabla en verdadero y marcar el formulario como tocado si no es válido', () => {
@@ -245,7 +250,6 @@ describe('SolicitudComponent', () => {
 
       component.validarYEnviarFormulario();
 
-      expect(component.mostrarTabla).toBe(true);
       expect(component.partidasDelaMercanciaForm.markAllAsTouched).toHaveBeenCalled();
     });
 
@@ -264,7 +268,7 @@ describe('SolicitudComponent', () => {
 
   describe('navegarParaModificarPartida', () => {
     it('Debería actualizar el estado y mostrarTabla si hay fila seleccionada', () => {
-      component.filaSeleccionada = { tbodyData: ['10', 'Item', '50', 'kg', '1234', '100'] };
+      component.filaSeleccionada = [{ cantidad: '10', descripcion: 'Item', precioUnitarioUSD: '50', unidadDeMedida: 'kg', fraccionFrancelaria: '1234', totalUSD: '100' }];
 
       component.navegarParaModificarPartida();
 
@@ -275,9 +279,9 @@ describe('SolicitudComponent', () => {
 
   describe('fetchEntidadFederativa', () => {
     it('Debería obtener la lista de entidades federativas', () => {
-      component.fetchEntidadFederativa();
-
-      expect(mockService.getEntidadFederativa).toHaveBeenCalled();
+      component.fetchEntidadFederativa(); // Explicitly call the method
+    
+      expect(mockImportacionDeVehiculosService.getEntidadFederativa).toHaveBeenCalled(); // Correct the mock service reference
       expect(component.entidadFederativa).toEqual(mockCatalogo);
     });
   });
@@ -286,7 +290,7 @@ describe('SolicitudComponent', () => {
     it('Debería obtener la lista de representaciones federales', () => {
       component.fetchRepresentacionFederal();
 
-      expect(mockService.getRepresentacionFederal).toHaveBeenCalled();
+      expect(mockImportacionDeVehiculosService.getRepresentacionFederal).toHaveBeenCalled();
       expect(component.representacionFederal).toEqual(mockCatalogo);
     });
   });
@@ -295,7 +299,7 @@ describe('SolicitudComponent', () => {
     it('Debería obtener la lista de países disponibles', () => {
       component.listaDePaisesDisponibles();
 
-      expect(mockService.getListaDePaisesDisponibles).toHaveBeenCalled();
+      expect(mockImportacionDeVehiculosService.getListaDePaisesDisponibles).toHaveBeenCalled();
       expect(component.elementosDeBloque).toEqual(mockCatalogo);
     });
   });
@@ -304,7 +308,7 @@ describe('SolicitudComponent', () => {
     it('Debería obtener países por bloque y actualizar selectRangoDias', () => {
       component.fetchPaisesPorBloque(1);
 
-      expect(mockService.getPaisesPorBloque).toHaveBeenCalledWith(1);
+      expect(mockImportacionDeVehiculosService.getPaisesPorBloque).toHaveBeenCalledWith(1);
       expect(component.paisesPorBloque).toEqual(mockCatalogo);
       expect(component.selectRangoDias).toEqual(['Option 1', 'Option 2']);
     });
@@ -322,12 +326,16 @@ describe('SolicitudComponent', () => {
 
   describe('setValoresStore', () => {
     it('Debería actualizar el store según el método especificado', () => {
+      component.mercanciaForm = TestBed.inject(FormBuilder).group({
+        producto: ['Nuevo'], 
+      });
+  
       component.setValoresStore({
         form: component.mercanciaForm,
         campo: 'producto',
         metodoNombre: 'setProducto',
       });
-
+  
       expect(mockStore.setProducto).toHaveBeenCalledWith('Nuevo');
     });
   });

@@ -6,6 +6,8 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ProductoResponse } from '../../../shared/constantes/vehiculos-adaptados.enum';
+
+import { PartidasDeLaMercanciaModelo } from '../../../shared/models/partidas-de-la-mercancia.model';
 /**
  * ImportacionOtrosVehiculosUsadosService
  **/
@@ -72,4 +74,12 @@ export class ImportacionOtrosVehiculosUsadosService {
       'assets/json/130104/producto-otions.json'
     );
   }
+  /**
+   * Obtiene los datos de la tabla de partidas de la mercancía desde un archivo JSON.
+   */
+   getTablaDatos(): Observable<PartidasDeLaMercanciaModelo[]> {
+      return this.http.get<PartidasDeLaMercanciaModelo[]>(
+            'assets/json/130104/partidas-de-la.json'
+          );
+    }
 }

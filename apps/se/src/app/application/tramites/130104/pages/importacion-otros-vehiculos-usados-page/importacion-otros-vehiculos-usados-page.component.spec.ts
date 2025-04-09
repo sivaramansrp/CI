@@ -30,9 +30,9 @@ describe('ImportacionOtrosVehiculosUsadosPageComponent', () => {
 
   it('should initialize with the correct default values', () => {
     expect(component.indice).toBe(1);
-    expect(component.pasos).toBeDefined();
     expect(component.pantallasPasos).toBeDefined();
-    expect(component.datosPasos.nroPasos).toBe(component.pasos.length);
+    expect(component.pantallasPasos).toBeDefined();
+    expect(component.datosPasos.nroPasos).toBe(component.pantallasPasos.length);
     expect(component.datosPasos.indice).toBe(component.indice);
     expect(component.datosPasos.txtBtnAnt).toBe('Anterior');
     expect(component.datosPasos.txtBtnSig).toBe('Continuar');

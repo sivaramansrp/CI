@@ -2,23 +2,14 @@
  * Componente que representa los pasos de datos en un proceso de múltiples pasos. 
  * */
 import { Component, ViewChild } from '@angular/core';
-import { DatosPasos, PASOS } from '@ng-mf/data-access-user';
+import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
-/**
- * Interfaz que representa la acción de un botón.
- */
-interface AccionBoton {
-  /**
-   * La acción que se va a realizar.
-   */
-  accion: string;
-  /**
-   * El valor asociado a la acción.
-   */
-  valor: number;
-}
+import { AccionBoton } from '../../enums/accionbotton.enum';
+import { PASOS_EXPORTACION } from '../../constants/importacion-otros-vehiculos-usados-pasos.enum';
+
+
 
 /**
  * Componente que representa los pasos de datos en un proceso de múltiples pasos.
@@ -29,11 +20,6 @@ interface AccionBoton {
 })
 export class ImportacionOtrosVehiculosUsadosPageComponent {
   /**
-   * Lista de pasos en el asistente.
-   */
-  pasos: ListaPasosWizard[] = PASOS;
-
-  /**
    * Referencia al componente WizardComponent.
    */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
@@ -41,7 +27,7 @@ export class ImportacionOtrosVehiculosUsadosPageComponent {
   /**
    * Variable utilizada para almacenar la lista de pasos.
    */
-  pantallasPasos: ListaPasosWizard[] = PASOS;
+  pantallasPasos: ListaPasosWizard[] = PASOS_EXPORTACION;
 
   /**
    * Variable utilizada para almacenar el índice del paso actual.
@@ -52,7 +38,7 @@ export class ImportacionOtrosVehiculosUsadosPageComponent {
    * Datos para los pasos en el asistente.
    */
   datosPasos: DatosPasos = {
-    nroPasos: this.pasos.length,
+    nroPasos: this.pantallasPasos.length,
     indice: this.indice,
     txtBtnAnt: 'Anterior',
     txtBtnSig: 'Continuar',
