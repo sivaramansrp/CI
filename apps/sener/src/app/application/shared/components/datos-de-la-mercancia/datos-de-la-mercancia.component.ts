@@ -57,6 +57,7 @@ export class DatosDeLaMercanciaComponent {
    */
   @Input() unidadCatalogo: Catalogo[] = [];
 
+  @Input() acotacionCatalogo: Catalogo[] = [];
   /**
    * @description Catálogo que contiene opciones de NICO.
    */
@@ -110,23 +111,34 @@ export class DatosDeLaMercanciaComponent {
    * @description Maneja el cambio de fracción, actualiza el formulario y emite eventos relacionados.
    * @param selected Objeto seleccionado que contiene el ID de la fracción y el ID relacionado de la unidad de medida.
    */
-  onFraccionChange(selected: { id: string | number; relacionadaUmtId?: string | number }): void {
+  onFraccionChange(selected: { id: string | number; relacionadaUmtId?: string | number; relacionadaAcotacionId?: string | number }): void {
     this.form.get('fraccion')?.setValue(selected.id);
     this.setValoresStore(this.form, 'fraccion', 'setFraccion');
-
+ 
     const UMT_MATCH = this.unidadCatalogo.find(
       (umt) => umt.id === selected?.relacionadaUmtId
     );
-
+ 
     if (UMT_MATCH) {
       this.form.get('unidadMedida')?.setValue(UMT_MATCH.id);
       this.form.get('unidadMedida')?.updateValueAndValidity();
-
+ 
       this.setValoresStore(this.form, 'unidadMedida', 'setUmt');
+      const ACOTACION_MATCH = this.acotacionCatalogo.find(
+        (acotacion) => acotacion.id === selected?.relacionadaAcotacionId
+      );
+      if (ACOTACION_MATCH) {
+        this.form.get('acotacion')?.setValue(ACOTACION_MATCH.descripcion);
+       
+        this.setValoresStore(this.form, 'acotacion', 'setAcotacion');
+      } else {
+        console.warn('No se encontró una acotación coincidente para la fracción seleccionada.');
+      }
     } else {
       console.warn('No se encontró una unidad de medida coincidente para la fracción seleccionada.');
     }
   }
+ 
 
   /**
    * @method onUmtChange
@@ -146,6 +158,22 @@ export class DatosDeLaMercanciaComponent {
   onNicoChange(selected: { id: string | number }): void {
     this.form.get('nico')?.setValue(selected.id);
     this.setValoresStore(this.form, 'nico', 'setNico');
+ 
+    const RAW = this.form.get('fraccion')?.value;
+    if (!RAW) {
+      return;
+    }
+    const FRACCION_ID = typeof RAW === 'string'
+      ? parseInt(RAW, 10)
+      : RAW;
+ 
+    const FRACCION_OPTION = this.mercanciaCatalogoArray[0]
+      .find(c => c.id === FRACCION_ID);
+      if (FRACCION_OPTION) {        
+        const TEXT_ONLY = FRACCION_OPTION.descripcion.replace(/^[\d\s-]+/, '').trim();        
+        this.form.get('descripcionNico')?.setValue(TEXT_ONLY);        
+        this.setValoresStore(this.form, 'descripcionNico', 'setDescripcionNico');
+      }
   }
 
   /**

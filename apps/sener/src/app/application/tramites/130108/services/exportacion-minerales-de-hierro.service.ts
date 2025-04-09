@@ -2,7 +2,9 @@ import { Catalogo } from '@ng-mf/data-access-user';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { PartidasDeLaMercanciaModelo } from '../../../shared/models/partidas-de-la-mercancia.model';
 import { ProductoResponse } from '../../../shared/constantes/vehiculos-adaptados.enum';
+
 
 /**
  * Servicio que maneja la exportación de datos relacionados con minerales de hierro.
@@ -98,5 +100,10 @@ export class ExportacionMineralesDeHierroService {
    */
   getProductoOptions(): Observable<ProductoResponse> {
     return this.http.get<ProductoResponse>('assets/json/130108/producto-otions.json');
+  }
+  getTablaDatos(): Observable<PartidasDeLaMercanciaModelo[]> {
+    return this.http.get<PartidasDeLaMercanciaModelo[]>(
+          'assets/json/130111/partidas-de-la.json'
+        );
   }
 }

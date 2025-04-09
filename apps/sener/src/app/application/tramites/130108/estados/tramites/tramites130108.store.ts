@@ -1,5 +1,6 @@
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
+import { PartidasDeLaMercanciaModelo } from '../../../../shared/models/partidas-de-la-mercancia.model'; // Replace with the correct path
 
 /**
  * Interfaz que define el estado del trámite 130108.
@@ -33,7 +34,7 @@ export interface Tramite130108State {
   /** Clasificación del trámite */
   clasificacion: string;
   /** Fila seleccionada para mostrar */
-  filaSeleccionada: null;
+  filaSeleccionada: PartidasDeLaMercanciaModelo[];
   /** Cantidad de partidas de la mercancía */
   cantidadPartidasDeLaMercancia: string;
   /** Valor de la partida en USD para las partidas de la mercancía */
@@ -64,7 +65,7 @@ export interface Tramite130108State {
  */
 export function createInitialState(): Tramite130108State {
   return {
-    filaSeleccionada: null,
+    filaSeleccionada: [],
     mostrarTabla: false,
     solicitud: '',
     fraccion: '',
@@ -151,6 +152,7 @@ export class Tramite130108Store extends Store<Tramite130108State> {
   public setDescripcion(descripcion: string): void {
     this.update({ descripcion });
   }
+  
 
   /**
    * Actualiza la cantidad en el estado.
@@ -323,7 +325,8 @@ export class Tramite130108Store extends Store<Tramite130108State> {
    * Actualiza la fila seleccionada en el estado.
    * @param {null} fila - Fila seleccionada, puede ser null.
    */
-  public storeTableValues(fila: null): void {
+  
+  public storeTableValues(fila: PartidasDeLaMercanciaModelo[]): void {
     this.update({
       filaSeleccionada: fila,
     });
@@ -359,6 +362,13 @@ export class Tramite130108Store extends Store<Tramite130108State> {
     this.update((state) => ({
       ...state,
       nico,
+    }));
+  }
+
+  public setDescripcionNico(descripcionNico: string): void {
+    this.update((state) => ({
+      ...state,
+      descripcionNico,
     }));
   }
 }
