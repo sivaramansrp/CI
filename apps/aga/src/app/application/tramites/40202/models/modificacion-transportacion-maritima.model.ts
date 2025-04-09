@@ -34,10 +34,28 @@ export interface CAATRegistradoEmpresaForm {
     rfc: string;
 
     /**
-     * Nombre de la empresa CAAT
+     * Nombre o denominación o razón social de la empresa CAAT
      * @type {string}
      */
     nombreDenominacionRazonSocial: string;
+
+    /**
+     * Nombre de la empresa CAAT
+     * @type {string}
+     */
+    nombrePFE?: string;
+
+    /**
+     * Primer apellido de la empresa CAAT
+     * @type {string}
+     */
+    apellidoPaternoPFE?: string;
+
+    /**
+     * Segundo apellido de la empresa CAAT
+     * @type {string}
+     */
+    apellidoMaternoPFE?: string;
 
     /**
      * Catálogo de CAAT
@@ -61,7 +79,49 @@ export interface CAATRegistradoEmpresaForm {
      * País de la empresa CAAT
      * @type {string}
      */
-    pais: string;
+    pais: string
+
+    /**
+     * Código postal de la empresa CAAT
+     * @type {string}
+     */
+    codigoPostalPFE?: string;
+
+    /**
+     * Calle de la empresa CAAT
+     * @type {string}
+     */
+    callePFE?: string;
+
+    /**
+     * Número exterior de la empresa CAAT
+     * @type {string}
+     */
+    numeroExteriorPFE?: string;
+
+    /**
+     * Número interior de la empresa CAAT
+     * @type {string}
+     */
+    numeroInteriorPFE?: string;
+
+    /**
+     * Ciudad de la empresa CAAT
+     * @type {string}
+     */
+    ciudadPFE?: string;
+
+    /**
+     * Correo electrónico de la empresa CAAT
+     * @type {string}
+     */
+    correoPFE?: string;
+
+    /**
+     * Estado de la empresa CAAT
+     * @type {string}
+     */
+    estadoPFE?: string;
 }
 
 export interface CandidatoModificarCaatForm {
@@ -69,5 +129,95 @@ export interface CandidatoModificarCaatForm {
     nombreDenominacionRazonSocial: string;
     correoElectronico: string;
     domicilio: string;
+    nombreDG: string;
+}
+
+/**
+ * PersonaFisicaExtranjeraForm: Interface para la información de la persona física extranjera
+ * @interface PersonaFisicaExtranjeraForm
+ */
+export interface PersonaFisicaExtranjeraForm {
+    /**
+     * Nombre de la persona física extranjera
+     * @type {string}
+     */
+    nombrePFE: string;
+
+    /**
+     * Primer apellido de la persona física extranjera
+     * @type {string}
+     */
+    apellidoPaternoPFE?: string;
+
+    /**
+     * Segundo apellido de la persona física extranjera
+     * @type {string}
+     */
+    apellidoMaternoPFE?: string;
+
+    /**
+     * Seguro numero de la persona física extranjera
+     * @type {string}
+     */
+    seguroNumero: string;
+
+    /**
+     * Domicilio de la persona física extranjera
+     * @type {string}
+     */
+    domicilioPFE: string;
+
+    /**
+     * País de la persona física extranjera
+     * @type {number | string}
+     */
+    paisPFE: number | string;
+
+    /**
+     * Estado de la persona física extranjera
+     * @type {string}
+     */
+    estadoPFE: string;
+
+    /**
+     * Correo electrónico de la persona física extranjera
+     * @type {string}
+     */
+    correoPFE: string;
+
+    /**
+     * Código postal de la persona física extranjera
+     * @type {string}
+     */
+    codigoPostalPFE?: string;
+
+    /**
+     * Calle de la persona física extranjera
+     * @type {string}
+     */
+    callePFE?: string;
+
+    /**
+     * Número exterior de la persona física extranjera
+     * @type {string}
+     */
+    numeroExteriorPFE?: string;
+
+    /**
+     * Número interior de la persona física extranjera
+     * @type {string}
+     */
+    numeroInteriorPFE?: string;
+
+    /**
+     * Ciudad de la persona física extranjera
+     * @type {string}
+     */
+    ciudadPFE?: string;
+
+    /**
+     * Nombre del director general de la persona física extranjera
+     * @type {string}
+     */
     nombreDG: string;
 }

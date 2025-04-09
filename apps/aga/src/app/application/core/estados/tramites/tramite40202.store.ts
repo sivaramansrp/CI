@@ -1,7 +1,7 @@
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
 
-import { CAATRegistradoEmpresaForm } from '../../../tramites/40202/models/modificacion-transportacion-maritima.model';
+import { CAATRegistradoEmpresaForm, CandidatoModificarCaatForm } from '../../../tramites/40202/models/modificacion-transportacion-maritima.model';
 
 export interface TransportacionMaritima40202State {
     /**
@@ -45,6 +45,84 @@ export interface TransportacionMaritima40202State {
      * @type {CAATRegistradoEmpresaForm[]}
      */
     caatRegistradoEmpresaTabla?: CAATRegistradoEmpresaForm[];
+
+    /**
+     * Tabla de candidatos a modificar CAAT.
+     * @type {CandidatoModificarCaatForm[]}
+     */
+    candidatoModificarCaatTabla?: CandidatoModificarCaatForm[];
+
+    /**
+     * Número de seguro social de la persona física extranjera.
+     * @type {string}
+     */
+    seguroNumero?: string;
+
+    /**
+     * Nombre de la persona física extranjera.
+     * @type {string}
+     */
+    nombrePFE?: string;
+
+    /**
+     * Apellido paterno de la persona física extranjera.
+     * @type {string}
+     */
+    apellidoPaternoPFE?: string;
+
+    /**
+     * Apellido materno de la persona física extranjera.
+     * @type {string}
+     */
+    apellidoMaternoPFE?: string;
+
+    /**
+     * Correo electrónico de la persona física extranjera.
+     * @type {string}
+     */
+    correoPFE?: string;
+
+    /**
+     * País de la persona física extranjera.
+     * @type {string}
+     */
+    paisPFE?: string;
+
+    /**
+     * Código postal de la persona física extranjera.
+     * @type {string}
+     */
+    codigoPostalPFE?: string;
+
+    /**
+     * Ciudad de la persona física extranjera.
+     * @type {string}
+     */
+    ciudadPFE?: string;
+
+    /**
+     * Estado de la persona física extranjera.
+     * @type {string}
+     */
+    estadoPFE?: string;
+
+    /**
+     * Calle de la persona física extranjera.
+     * @type {string}
+     */
+    callePFE?: string;
+
+    /**
+     * Número exterior de la persona física extranjera.
+     * @type {string}
+     */
+    numeroExteriorPFE?: string;
+
+    /**
+     * Número interior de la persona física extranjera.
+     * @type {string}
+     */
+    numeroInteriorPFE?: string;
 }
 
 /**
@@ -60,7 +138,21 @@ export function createInitialState(): TransportacionMaritima40202State {
         buscarPorDenominacionEx: '',
         folioCaatBusquedaEx: '',
 
-        caatRegistradoEmpresaTabla: []
+        caatRegistradoEmpresaTabla: [],
+        candidatoModificarCaatTabla: [],
+
+        seguroNumero: '',
+        nombrePFE: '',
+        apellidoPaternoPFE: '',
+        apellidoMaternoPFE: '',
+        correoPFE: '',
+        paisPFE: '',
+        codigoPostalPFE: '',
+        ciudadPFE: '',
+        estadoPFE: '',
+        callePFE: '',
+        numeroExteriorPFE: '',
+        numeroInteriorPFE: '',
     };
 }
 
@@ -164,6 +256,162 @@ export class Tramite40202Store extends Store<TransportacionMaritima40202State> {
         this.update((state) => ({
             ...state,
             caatRegistradoEmpresaTabla,
+        }));
+    }
+
+    /**
+     * Establece la tabla de candidatos a modificar CAAT en el estado.
+     * @param candidatoModificarCaatTabla - Tabla de candidatos a modificar CAAT.
+     * @description Establece la tabla de candidatos a modificar CAAT en el estado.
+     */
+    public setCandidatoModificarCaatTabla(candidatoModificarCaatTabla: CandidatoModificarCaatForm[]): void {
+        this.update((state) => ({
+            ...state,
+            candidatoModificarCaatTabla,
+        }));
+    }
+
+    /**
+     * Establece el número de seguro social de la persona física extranjera en el estado.
+     * @param seguroNumero - Número de seguro social de la persona física extranjera.
+     * @description Establece el número de seguro social de la persona física extranjera en el estado.
+     */
+    public setSeguroNumero(seguroNumero: string): void {
+        this.update((state) => ({
+            ...state,
+            seguroNumero,
+        }));
+    }
+
+    /**
+     * Establece el nombre de la persona física extranjera en el estado.
+     * @param nombrePFE - Nombre de la persona física extranjera.
+     * @description Establece el nombre de la persona física extranjera en el estado.
+     */
+    public setNombrePFE(nombrePFE: string): void {
+        this.update((state) => ({
+            ...state,
+            nombrePFE,
+        }));
+    }
+
+    /**
+     * Establece el apellido paterno de la persona física extranjera en el estado.
+     * @param apellidoPaternoPFE - Apellido paterno de la persona física extranjera.
+     * @description Establece el apellido paterno de la persona física extranjera en el estado.
+     */
+    public setApellidoPaternoPFE(apellidoPaternoPFE: string): void {
+        this.update((state) => ({
+            ...state,
+            apellidoPaternoPFE,
+        }));
+    }
+
+    /**
+     * Establece el apellido materno de la persona física extranjera en el estado.
+     * @param apellidoMaternoPFE - Apellido materno de la persona física extranjera.
+     * @description Establece el apellido materno de la persona física extranjera en el estado.
+     */
+    public setApellidoMaternoPFE(apellidoMaternoPFE: string): void {
+        this.update((state) => ({
+            ...state,
+            apellidoMaternoPFE,
+        }));
+    }
+
+    /**
+     * Establece el correo electrónico de la persona física extranjera en el estado.
+     * @param correoPFE - Correo electrónico de la persona física extranjera.
+     * @description Establece el correo electrónico de la persona física extranjera en el estado.
+     */
+    public setCorreoPFE(correoPFE: string): void {
+        this.update((state) => ({
+            ...state,
+            correoPFE,
+        }));
+    }
+
+    /**
+     * Establece el país de la persona física extranjera en el estado.
+     * @param paisPFE - País de la persona física extranjera.
+     * @description Establece el país de la persona física extranjera en el estado.
+     */
+    public setPaisPFE(paisPFE: string): void {
+        this.update((state) => ({
+            ...state,
+            paisPFE,
+        }));
+    }
+
+    /**
+     * Establece el código postal de la persona física extranjera en el estado.
+     * @param codigoPostalPFE - Código postal de la persona física extranjera.
+     * @description Establece el código postal de la persona física extranjera en el estado.
+     */
+    public setCodigoPostalPFE(codigoPostalPFE: string): void {
+        this.update((state) => ({
+            ...state,
+            codigoPostalPFE,
+        }));
+    }
+
+    /**
+     * Establece la ciudad de la persona física extranjera en el estado.
+     * @param ciudadPFE - Ciudad de la persona física extranjera.
+     * @description Establece la ciudad de la persona física extranjera en el estado.
+     */
+    public setCiudadPFE(ciudadPFE: string): void {
+        this.update((state) => ({
+            ...state,
+            ciudadPFE,
+        }));
+    }
+
+    /**
+     * Establece el estado de la persona física extranjera en el estado.
+     * @param estadoPFE - Estado de la persona física extranjera.
+     * @description Establece el estado de la persona física extranjera en el estado.
+     */
+    public setEstadoPFE(estadoPFE: string): void {
+        this.update((state) => ({
+            ...state,
+            estadoPFE,
+        }));
+    }
+
+    /**
+     * Establece la calle de la persona física extranjera en el estado.
+     * @param callePFE - Calle de la persona física extranjera.
+     * @description Establece la calle de la persona física extranjera en el estado.
+     */
+    public setCallePFE(callePFE: string): void {
+        this.update((state) => ({
+            ...state,
+            callePFE,
+        }));
+    }
+
+    /**
+     * Establece el número exterior de la persona física extranjera en el estado.
+     * @param numeroExteriorPFE - Número exterior de la persona física extranjera.
+     * @description Establece el número exterior de la persona física extranjera en el estado.
+     */
+    public setNumeroExteriorPFE(numeroExteriorPFE: string): void {
+        this.update((state) => ({
+            ...state,
+            numeroExteriorPFE,
+        }));
+    }
+
+    /**
+     * Establece el número interior de la persona física extranjera en el estado.
+     * @param numeroInteriorPFE - Número interior de la persona física extranjera.
+     * @description Establece el número interior de la persona física extranjera en el estado.
+     */
+    public setNumeroInteriorPFE(numeroInteriorPFE: string): void {
+        this.update((state) => ({
+            ...state,
+            numeroInteriorPFE,
         }));
     }
 }

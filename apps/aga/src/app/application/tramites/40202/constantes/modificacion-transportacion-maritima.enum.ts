@@ -47,7 +47,8 @@ export const CAAT_CANDIDATO_MODIFICAR_ENCABEZADO_DE_TABLA: ConfiguracionColumna<
  */
 export const TEXTOS = {
     RFC_TITULO_TOOLTIP: 'Registro Federal de Contribuyente',
-    CAAT_TITULO_TOOLTIP: 'Código alfanumérico armonizado del transportista'
+    CAAT_TITULO_TOOLTIP: 'Código alfanumérico armonizado del transportista',
+    CORREO_TITULO_TOOLTIP: 'ejemplo@dominio.com'
 };
 
 /**

@@ -1,14 +1,15 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Subject, map, takeUntil } from 'rxjs';
+import { Subject, map, merge, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 
-import { CAATRegistradoEmpresaForm, CandidatoModificarCaatForm } from '../../models/modificacion-transportacion-maritima.model';
+import { CAATRegistradoEmpresaForm, CandidatoModificarCaatForm, PersonaFisicaExtranjeraForm } from '../../models/modificacion-transportacion-maritima.model';
 import { CAAT_CANDIDATO_MODIFICAR_ENCABEZADO_DE_TABLA, CAAT_REGISTRADO_EMPRESA_ENCABEZADO_DE_TABLA, OPCIONES_DE_BOTON_DE_RADIO, TEXTOS } from '../../constantes/modificacion-transportacion-maritima.enum';
-import { InputRadioComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, InputRadioComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Tramite40202Store, TransportacionMaritima40202State } from '../../../../core/estados/tramites/tramite40202.store';
 import { ModificacionTransportacionMaritimaService } from '../../services/modificacion-transportacion-maritima/modificacion-transportacion-maritima.service';
 import { Tramite40202Query } from '../../../../core/queries/tramite40202.query';
+import { Modal } from 'bootstrap';
 
 @Component({
   selector: 'app-modificar-caat-maritimo',
@@ -19,7 +20,8 @@ import { Tramite40202Query } from '../../../../core/queries/tramite40202.query';
     ReactiveFormsModule,
     TituloComponent,
     InputRadioComponent,
-    TablaDinamicaComponent
+    TablaDinamicaComponent,
+    CatalogoSelectComponent
   ],
   templateUrl: './modificar-caat-maritimo.component.html',
   styleUrl: './modificar-caat-maritimo.component.css',
@@ -29,6 +31,16 @@ export class ModificarCaatMaritimoComponent implements OnInit, OnDestroy {
    * Formulario reactivo para buscar empresas CAAT.
    */
   buscarEmpresaForm!: FormGroup;
+
+  /**
+   * Formulario reactivo para gestionar la información de personas físicas extranjeras.
+   */
+  personaFisicaExtranjeraForm!: FormGroup;
+
+  /**
+   * Catálogos para los selectores.
+   */
+  pais!: Catalogo[];
 
   /**
    * Opciones de botón de radio.
@@ -70,6 +82,16 @@ export class ModificarCaatMaritimoComponent implements OnInit, OnDestroy {
   public transportacionMaritimaState!: TransportacionMaritima40202State;
 
   /**
+   * Referencia al botón de cerrar el modal.
+   */
+  @ViewChild('closeModal') closeModal!: ElementRef;
+
+  /**
+   * Bandera para mostrar el botón de agregar seleccionado.
+   */
+  mostrarAgregarSeleccionado: boolean = true;
+
+  /**
    * Subject para destruir notificador.
    */
   private destruirNotificador$: Subject<void> = new Subject();
@@ -95,12 +117,15 @@ export class ModificarCaatMaritimoComponent implements OnInit, OnDestroy {
    * Suscribe a los cambios en el estado de la sección y crea el formulario reactivo.
    */
   ngOnInit(): void {
+    this.inicializaCatalogos();
+
     this.tramite40202Query.selectSeccionState$
       .pipe(
         takeUntil(this.destruirNotificador$),
         map((seccionState) => {
           this.transportacionMaritimaState = seccionState;
           this.caatRegistradoEmpresaTabla = seccionState.caatRegistradoEmpresaTabla ?? [];
+          this.candidatoModificarCaatTabla = seccionState.candidatoModificarCaatTabla ?? [];
           if (seccionState.tipoDeEmpresaOpcion) {
             this.vista = seccionState.tipoDeEmpresaOpcion;
           }
@@ -110,6 +135,8 @@ export class ModificarCaatMaritimoComponent implements OnInit, OnDestroy {
 
     // Inicializar el formulario principal
     this.crearTipoDeEmpresaForm();
+
+    this.paisSeleccion();
   }
 
   /**
@@ -157,6 +184,88 @@ export class ModificarCaatMaritimoComponent implements OnInit, OnDestroy {
         ]
       })
     });
+    this.personaFisicaExtranjeraForm = this.fb.group({
+      seguroNumero: [
+        this.transportacionMaritimaState.seguroNumero,
+        [
+          Validators.required,
+          Validators.maxLength(11)
+        ]
+      ],
+      nombrePFE: [
+        this.transportacionMaritimaState.nombrePFE,
+        [
+          Validators.required,
+          Validators.maxLength(200)
+        ]
+      ],
+      apellidoPaternoPFE: [
+        this.transportacionMaritimaState.apellidoPaternoPFE,
+        [
+          Validators.required,
+          Validators.maxLength(200)
+        ]
+      ],
+      apellidoMaternoPFE: [
+        this.transportacionMaritimaState.apellidoMaternoPFE,
+        [
+          Validators.required,
+          Validators.maxLength(200)
+        ]
+      ],
+      correoPFE: [
+        this.transportacionMaritimaState.correoPFE,
+        [
+          Validators.required,
+          Validators.maxLength(320)
+        ]
+      ],
+      paisPFE: [
+        this.transportacionMaritimaState.paisPFE,
+        Validators.required
+      ],
+      codigoPostalPFE: [
+        this.transportacionMaritimaState.codigoPostalPFE,
+        [
+          Validators.required,
+          Validators.maxLength(12)
+        ]
+      ],
+      ciudadPFE: [
+        this.transportacionMaritimaState.ciudadPFE,
+        [
+          Validators.required,
+          Validators.maxLength(120)
+        ]
+      ],
+      estadoPFE: [
+        this.transportacionMaritimaState.estadoPFE,
+        [
+          Validators.required,
+          Validators.maxLength(200)
+        ]
+      ],
+      callePFE: [
+        this.transportacionMaritimaState.callePFE,
+        [
+          Validators.required,
+          Validators.maxLength(100)
+        ]
+      ],
+      numeroExteriorPFE: [
+        this.transportacionMaritimaState.numeroExteriorPFE,
+        [
+          Validators.required,
+          Validators.maxLength(55)
+        ]
+      ],
+      numeroInteriorPFE: [
+        this.transportacionMaritimaState.numeroInteriorPFE,
+        [
+          Validators.maxLength(55)
+        ]
+      ],
+    });
   }
 
   /**
@@ -184,6 +293,34 @@ export class ModificarCaatMaritimoComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Inicializa los catálogos necesarios para el formulario.
+   */
+  inicializaCatalogos(): void {
+    const PAIS$ = this.modificacionTransportacionMaritimaService
+      .getPaisCatalogo()
+      .pipe(
+        map((resp) => {
+          this.pais = resp.data;
+        })
+      );
+
+    merge(
+      PAIS$
+    )
+      .pipe(takeUntil(this.destruirNotificador$))
+      .subscribe();
+  }
+
+  /**
+   * Selecciona el país de la persona física extranjera y lo guarda en el store.
+   * @description Este método se ejecuta cuando se selecciona un país en el formulario.
+   */
+  paisSeleccion(): void {
+    const PAIS = this.personaFisicaExtranjeraForm.get('paisPFE')?.value;
+    this.tramite40202Store.setPaisPFE(PAIS);
+  }
+
+  /**
    * Método que se ejecuta cuando el usuario selecciona una opción de tipo de empresa.
    * @returns {void}
    * @param valor - Valor seleccionado por el usuario.
@@ -199,9 +336,11 @@ export class ModificarCaatMaritimoComponent implements OnInit, OnDestroy {
    * @returns {void}
    * @description Este método se ejecuta cuando el usuario hace clic en el botón de buscar empresa.
    */
-  buscarEmpresa(): void {
-    this.limpiarCampos();
-    this.obtenerBuscarEmpresaCaat();
+  buscarEmpresa(valor: number): void {
+    if(valor === 2) {
+      this.limpiarCampos();
+      this.obtenerBuscarEmpresaCaat();
+    }    
   }
 
   /**
@@ -211,6 +350,7 @@ export class ModificarCaatMaritimoComponent implements OnInit, OnDestroy {
    */
   limpiarCampos(): void {
     this.tramite40202Store.setCaatRegistradoEmpresaTabla([]);
+    this.tramite40202Store.setCandidatoModificarCaatTabla([]);
     this.tipoDeEmpresaExtranjera.reset();
     this.tipoDeEmpresaNacional.reset();
     this.setValoresStore(this.tipoDeEmpresaExtranjera, 'buscarPorDenominacionEx', 'setBuscarPorDenominacionEx');
@@ -237,12 +377,121 @@ export class ModificarCaatMaritimoComponent implements OnInit, OnDestroy {
             caat: item.caat,
             inicioVigencia: item.inicioVigencia,
             finVigencia: item.finVigencia,
-            pais: item.pais
+            pais: item.pais,
+            nombrePFE: item.nombrePFE,
+            apellidoPaternoPFE: item.apellidoPaternoPFE,
+            apellidoMaternoPFE: item.apellidoMaternoPFE,
+            correoPFE: item.correoPFE,
+            callePFE: item.callePFE,
+            numeroExteriorPFE: item.numeroExteriorPFE,
+            numeroInteriorPFE: item.numeroInteriorPFE,
+            ciudadPFE: item.ciudadPFE,
+            estadoPFE: item.estadoPFE,
+            codigoPostalPFE: item.codigoPostalPFE
           }));
           this.caatRegistradoEmpresaTabla = NUEVO_CUERPO_TABLA;
           this.tramite40202Store.setCaatRegistradoEmpresaTabla(NUEVO_CUERPO_TABLA);
         }
       });
+  }
+
+  agregarSeleccionado(caatRegistradoEmpresaTabla: CAATRegistradoEmpresaForm[]): void {
+    if (!caatRegistradoEmpresaTabla || caatRegistradoEmpresaTabla.length <= 0) {
+      this.mostrarModal('modalAlertaSeleccion');
+      return;
+    }
+    
+    const PAIS = this.pais.find((pais) => pais.descripcion === caatRegistradoEmpresaTabla[0].pais)?.id;
+    this.personaFisicaExtranjeraForm.patchValue({
+      nombrePFE: caatRegistradoEmpresaTabla[0].nombrePFE,
+      apellidoPaternoPFE: caatRegistradoEmpresaTabla[0].apellidoPaternoPFE,
+      apellidoMaternoPFE: caatRegistradoEmpresaTabla[0].apellidoMaternoPFE,
+      seguroNumero: caatRegistradoEmpresaTabla[0].rfc,
+      correoPFE: caatRegistradoEmpresaTabla[0].correoPFE,
+      callePFE: caatRegistradoEmpresaTabla[0].callePFE,
+      numeroExteriorPFE: caatRegistradoEmpresaTabla[0].numeroExteriorPFE,
+      numeroInteriorPFE: caatRegistradoEmpresaTabla[0].numeroInteriorPFE,
+      ciudadPFE: caatRegistradoEmpresaTabla[0].ciudadPFE,
+      estadoPFE: caatRegistradoEmpresaTabla[0].estadoPFE,
+      codigoPostalPFE: caatRegistradoEmpresaTabla[0].codigoPostalPFE,
+      pais: PAIS || ''
+    });
+    
+    this.mostrarModal('modalAgregarPFE');
+  }
+
+  mostrarModal(id: string): void {
+    const MODAL_ELEMENT = document.getElementById(id);
+    if (MODAL_ELEMENT) {
+      const MODAL = new Modal(MODAL_ELEMENT);
+      MODAL.show();
+    }
+  }
+
+  /**
+   * Agrega una nueva persona física extranjera a la tabla.
+   * @description Este método se ejecuta cuando se hace clic en el botón "Agregar" en el formulario.
+   * @param personaFisicaExtranjeraFormDatos - Los datos de la persona física extranjera a agregar.
+   * @returns {void}
+   */
+  agregarPFE(personaFisicaExtranjeraFormDatos: PersonaFisicaExtranjeraForm): void {
+    const PAIS = this.pais.find((pais) => pais.id === Number(personaFisicaExtranjeraFormDatos.paisPFE))?.descripcion;
+    
+    const NUEVO_CUERPO_TABLA = [...this.candidatoModificarCaatTabla];
+
+    NUEVO_CUERPO_TABLA.push({
+      nombreDenominacionRazonSocial: `${personaFisicaExtranjeraFormDatos.nombrePFE} ${personaFisicaExtranjeraFormDatos.apellidoPaternoPFE} ${personaFisicaExtranjeraFormDatos.apellidoMaternoPFE}`.trim(),
+      rfc: personaFisicaExtranjeraFormDatos.seguroNumero,
+      correoElectronico: personaFisicaExtranjeraFormDatos.correoPFE,
+      nombreDG: personaFisicaExtranjeraFormDatos.nombreDG,
+      domicilio: `${personaFisicaExtranjeraFormDatos.callePFE} ${personaFisicaExtranjeraFormDatos.numeroExteriorPFE} ${personaFisicaExtranjeraFormDatos.ciudadPFE} ${personaFisicaExtranjeraFormDatos.estadoPFE} ${PAIS} ${personaFisicaExtranjeraFormDatos.codigoPostalPFE}`.trim(),
+    });
+    this.candidatoModificarCaatTabla = NUEVO_CUERPO_TABLA;
+    this.mostrarAgregarSeleccionado = false;
+    this.tramite40202Store.setCandidatoModificarCaatTabla(this.candidatoModificarCaatTabla);
+    this.limpiarDatosPFE();
+    this.cerrarModal();
+  }
+
+  /**
+   * Limpia los datos del formulario de persona física extranjera.
+   * @description Este método se ejecuta cuando se hace clic en el botón "Limpiar" en el formulario.
+   * @returns {void}
+   */
+  limpiarDatosPFE(): void {
+    this.personaFisicaExtranjeraForm.reset();
+    this.actualizarFormularioState();
+  }
+
+  /**
+   * Actualiza el estado del formulario en el store.
+   * @description Este método se ejecuta cuando se cambian los valores en el formulario.
+   * @returns {void}
+   */
+  actualizarFormularioState(): void {
+    this.setValoresStore(this.personaFisicaExtranjeraForm, 'nombrePFE', 'setNombrePFE');
+    this.setValoresStore(this.personaFisicaExtranjeraForm, 'seguroNumero', 'setSeguroNumero');
+    this.setValoresStore(this.personaFisicaExtranjeraForm, 'apellidoPaternoPFE', 'setApellidoMaternoPFE');
+    this.setValoresStore(this.personaFisicaExtranjeraForm, 'apellidoMaternoPFE', 'setApellidoMaternoPFE');
+    this.setValoresStore(this.personaFisicaExtranjeraForm, 'correoPFE', 'setCorreoPFE');
+    this.setValoresStore(this.personaFisicaExtranjeraForm, 'paisPFE', 'setPaisPFE');
+    this.setValoresStore(this.personaFisicaExtranjeraForm, 'codigoPostalPFE', 'setCodigoPostalPFE');
+    this.setValoresStore(this.personaFisicaExtranjeraForm, 'ciudadPFE', 'setCiudadPFE');
+    this.setValoresStore(this.personaFisicaExtranjeraForm, 'estadoPFE', 'setEstadoPFE');
+    this.setValoresStore(this.personaFisicaExtranjeraForm, 'callePFE', 'setCallePFE');
+    this.setValoresStore(this.personaFisicaExtranjeraForm, 'numeroExteriorPFE', 'setNumeroExteriorPFE');
+    this.setValoresStore(this.personaFisicaExtranjeraForm, 'numeroInteriorPFE', 'setNumeroInteriorPFE');
+  }
+
+  /**
+   * Cierra el modal.
+   * 
+   * @returns {void}
+   */
+  cerrarModal(): void {
+    if (this.closeModal) {
+      this.closeModal.nativeElement.click();
+    }
   }
 
   /**
