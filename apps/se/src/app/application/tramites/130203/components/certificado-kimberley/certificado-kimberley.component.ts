@@ -268,7 +268,7 @@ export class CertificadoKimberleyComponent implements OnInit, OnDestroy {
    * Se suscribe al estado del store y actualiza el estado local.
    */
   // private subscribeToState(): void {
-   
+
   // }
 
   /**
@@ -293,22 +293,31 @@ export class CertificadoKimberleyComponent implements OnInit, OnDestroy {
         Validators.required,
       ],
     });
+  }
 
-    this.formularioEmpresa
-      .get('tipoEmpresa')
-      ?.valueChanges.subscribe((value) => {
-        this.updateNombreIngles(value);
-      });
+  /**
+   * @description
+   * Método que se ejecuta cuando cambia el valor de 'lineaCheckbox'.
+   * @param value Nuevo valor de 'lineaCheckbox'.
+   */
+  public onLineaCheckboxChange(event: Event): void {
+    const CHECKED = (event.target as HTMLInputElement).checked;
+    this.setValoresStore(this.formularioEmpresa, 'lineaCheckbox', 'setLineaCheckbox');
+  }
 
-    this.formularioEmpresa
-      .get('lineaCheckbox')
-      ?.valueChanges.subscribe((value) => {
-        this.setValoresStore(
-          this.formularioEmpresa,
-          'lineaCheckbox',
-          'setLineaCheckbox'
-        );
-      });
+  /**
+   * @description
+   * Método que se ejecuta cuando cambia el valor de 'tipoEmpresa'.
+   * @param event Evento de cambio.
+   */
+  public onTipoEmpresaChange(event: Event): void {
+    const VALUE = (event.target as HTMLSelectElement).value;
+    this.setValoresStore(
+      this.formularioEmpresa,
+      'tipoEmpresa',
+      'setTipoEmpresa'
+    );
+    this.updateNombreIngles(Number(VALUE));
   }
 
   /**

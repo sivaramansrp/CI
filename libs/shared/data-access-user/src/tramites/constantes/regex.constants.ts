@@ -255,3 +255,5 @@ export const REGEX_SOLO_NUMEROS = /^[0-9]*$/;
  */
 export const REGEX_CURP =
   /^([a-zA-Z]{4})([0-9]{6})([HhMm][a-zA-Z]{5})([0-9]{2})$/;
+
+export const REGEX_NUMERO_DECIMAL_2_DIGITOS = /^\d+(\.\d{1,2})?$/;

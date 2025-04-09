@@ -45,9 +45,7 @@
           [label]="'País emisor del certificado Kimberley:'"
           [required]="true"
           formControlName="tipoEmpresa"
-          (change)="
-            setValoresStore(formularioEmpresa, 'tipoEmpresa', 'setTipoEmpresa')
-          "
+          (change)="onTipoEmpresaChange($event)"
         ></app-catalogo-select>
         <div *ngIf="isInvalid('tipoEmpresa')" class="invalid-feedback">
           Debe seleccionar un tipo de empresa.
@@ -85,7 +83,7 @@
             id="lineaCheckbox"
             formControlName="lineaCheckbox"
             [ngClass]="{ 'is-invalid': isInvalid('lineaCheckbox') }"
-          />
+            (change)="onLineaCheckboxChange($event)"            />
           <label class="form-check-label" for="lineaCheckbox">
             <span>Mixed</span>
           </label>

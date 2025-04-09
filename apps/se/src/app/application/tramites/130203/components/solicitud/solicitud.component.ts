@@ -1,6 +1,7 @@
 import {
   Catalogo,
   ConfiguracionColumna,
+  REGEX_NUMERO_DECIMAL_2_DIGITOS,
 } from '@libs/shared/data-access-user/src';
 import { Component } from '@angular/core';
 import { ExportacionDeDiamantesEnBrutoService } from '../../services/exportacion-de-diamantes-en-bruto.service';
@@ -204,22 +205,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.fetchRepresentacionFederal();
     this.listaDePaisesDisponibles();
 
-    this.tramite130203Query.selectSolicitud$
-      .pipe(
-        takeUntil(this.destroyed$),
-        map((seccionState) => {
-          this.partidasDelaMercanciaForm.patchValue({
-            cantidadPartidasDeLaMercancia:
-              seccionState.cantidadPartidasDeLaMercancia,
-            valorPartidaUSDPartidasDeLaMercancia:
-              seccionState.valorPartidaUSDPartidasDeLaMercancia,
-            descripcionPartidasDeLaMercancia:
-              seccionState.descripcionPartidasDeLaMercancia,
-          });
-        })
-      )
-      .subscribe();
-
     this.tramite130203Query.mostrarTabla$
       .pipe(takeUntil(this.destroyed$))
       .subscribe((mostrarTabla) => {
@@ -297,7 +282,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         [
           Validators.required,
           Validators.min(0),
-          Validators.pattern('^[0-9]+(\\.[0-9]{1,2})?$'),
+          Validators.pattern(REGEX_NUMERO_DECIMAL_2_DIGITOS),
           Validators.maxLength(20),
         ],
       ],
@@ -356,6 +341,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * Actualiza los valores en el store según el formulario y el campo proporcionados.
    * @param event Objeto que contiene el formulario, el campo y el método del store.
    */
+  // eslint-disable-next-line complexity
   setValoresStore(event: {
     form: FormGroup;
     campo: string;
@@ -381,7 +367,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       case 'setclasificacion':
         this.tramite130203Store.setclasificacion(VALOR);
         break;
-
       case 'setProducto':
         this.tramite130203Store.setProducto(VALOR);
         break;
@@ -415,6 +400,13 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       case 'setRepresentacion':
         this.tramite130203Store.setRepresentacion(VALOR);
         break;
+      case 'setFraccion':
+        this.tramite130203Store.setFraccion(VALOR);
+        this.tramite130203Store.setUnidadMedida('1');
+        break;
+      case 'setValorFacturaUSD':
+        this.tramite130203Store.setValorFacturaUSD(VALOR);
+        break;
       default:
         console.error(
           `Método ${event.metodoNombre} no existe en Tramite130203Store`
@@ -427,45 +419,34 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * Configura las suscripciones para los formularios y actualiza el estado del store.
    */
   configuracionFormularioSuscripciones(): void {
-    this.tramite130203Query.solicitud$
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((solicitud) => {
-        this.formDelTramite.patchValue({ solicitud }, { emitEvent: false });
-      });
-
-    this.tramite130203Query.regimen$
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((regimen) => {
-        this.formDelTramite.patchValue({ regimen }, { emitEvent: false });
-      });
-
-    this.tramite130203Query.clasificacion$
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((clasificacion) => {
-        this.formDelTramite.patchValue({ clasificacion }, { emitEvent: false });
-      });
-    this.tramite130203Query.mercanciaState$
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((state) => {
-        this.mercanciaForm.patchValue(
-          {
-            producto: state.producto,
-            descripcion: state.descripcion,
-            fraccion: state.fraccion,
-            cantidad: state.cantidad,
-            valorFacturaUSD: state.valorPartidaUSD
-              ? state.valorPartidaUSD.toString()
-              : '',
-            unidadMedida: state.unidadMedida,
-          },
-          { emitEvent: false }
-        );
-      });
-
     this.tramite130203Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyed$),
         map((seccionState) => {
+          this.partidasDelaMercanciaForm.patchValue({
+            cantidadPartidasDeLaMercancia:
+              seccionState.cantidadPartidasDeLaMercancia,
+            valorPartidaUSDPartidasDeLaMercancia:
+              seccionState.valorPartidaUSDPartidasDeLaMercancia,
+            descripcionPartidasDeLaMercancia:
+              seccionState.descripcionPartidasDeLaMercancia,
+          });
+
+          this.formDelTramite.patchValue({
+            solicitud: seccionState.solicitud,
+            regimen: seccionState.regimen,
+            clasificacion: seccionState.clasificacion,
+          });
+
+          this.mercanciaForm.patchValue({
+            producto: seccionState.producto,
+            descripcion: seccionState.descripcion,
+            fraccion: seccionState.fraccion,
+            cantidad: seccionState.cantidad,
+            valorFacturaUSD: seccionState.valorFacturaUSD,
+            unidadMedida: seccionState.unidadMedida,
+          });
+
           this.paisForm.patchValue({
             bloque: seccionState.bloque,
             usoEspecifico: seccionState.usoEspecifico,
@@ -473,13 +454,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
               seccionState.justificacionImportacionExportacion,
             observaciones: seccionState.observaciones,
           });
-        })
-      )
-      .subscribe();
-    this.tramite130203Query.selectSolicitud$
-      .pipe(
-        takeUntil(this.destroyed$),
-        map((seccionState) => {
+
           this.frmRepresentacionForm.patchValue({
             entidad: seccionState.entidad,
             representacion: seccionState.representacion,
@@ -488,28 +463,28 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       )
       .subscribe();
 
-    this.formDelTramite.valueChanges
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((value) => {
-        this.tramite130203Store.updateState({
-          solicitud: value.solicitud,
-          regimen: value.regimen,
-          clasificacion: value.clasificacion,
-        });
-      });
+    // this.formDelTramite.valueChanges
+    //   .pipe(takeUntil(this.destroyed$))
+    //   .subscribe((value) => {
+    //     this.tramite130203Store.updateState({
+    //       solicitud: value.solicitud,
+    //       regimen: value.regimen,
+    //       clasificacion: value.clasificacion,
+    //     });
+    //   });
 
-    this.mercanciaForm.valueChanges
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((value) => {
-        this.tramite130203Store.updateState({
-          producto: value.producto,
-          descripcion: value.descripcion,
-          fraccion: value.fraccion,
-          cantidad: value.cantidad,
-          valorPartidaUSD: parseFloat(value.valorFacturaUSD) || 0,
-          unidadMedida: value.unidadMedida,
-        });
-      });
+    // this.mercanciaForm.valueChanges
+    //   .pipe(takeUntil(this.destroyed$))
+    //   .subscribe((value) => {
+    //     this.tramite130203Store.updateState({
+    //       producto: value.producto,
+    //       descripcion: value.descripcion,
+    //       fraccion: value.fraccion,
+    //       cantidad: value.cantidad,
+    //       valorPartidaUSD: parseFloat(value.valorFacturaUSD) || 0,
+    //       unidadMedida: value.unidadMedida,
+    //     });
+    //   });
   }
 
   /**
