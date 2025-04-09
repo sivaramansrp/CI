@@ -7,7 +7,14 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class PagoBancoService {
-  constructor(public http: HttpClient) {}
+  /**
+   * Constructor de la clase PagoBancoService.
+   *
+   * @param http - Instancia de HttpClient para realizar solicitudes HTTP.
+   */
+  constructor(public http: HttpClient) {
+    // Constructor de la clase PagoBancoService
+  }
 
   /**
    * Obtiene los datos de la tabla desde un archivo JSON local.
