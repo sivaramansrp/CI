@@ -14,4 +14,6 @@ export class FormularioReciclajeQuery extends Query<EstadoFormularioReciclaje> {
   obtenerSolicitudForm$ = this.select(state => state.solicitudForm);
   obtenerEmpresaReciclaje$ = this.select(state => state.empresaReciclaje);
   obtenerLugarReciclaje$ = this.select(state => state.lugarReciclaje);
+  obtenerEmpresaTransportista$ = this.select(state => state.empresaTransportista);
+
 }

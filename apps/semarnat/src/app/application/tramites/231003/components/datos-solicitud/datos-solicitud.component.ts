@@ -29,6 +29,8 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
 
   formularioLugarReciclaje!: FormGroup;
 
+  formularioEmpresaTransportista!: FormGroup;
+
   aduanas!: Catalogo[];
 
   radioOptions: RadioOpcion[] = RADIO_OPCIONES.radioOptions;
@@ -57,8 +59,9 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     this.reciclajeEnInstalaciones = RADIO_OPCIONES.reciclajeEnInstalaciones;
     this.inicializarSolicitudForm();
     this.inicializarFormularioEmpresaReciclaje();
-    this.suscribirCambioRequiereEmpresa();
     this.inicializarFormularioLugarReciclaje();
+    this.inicializarFormularioEmpresaTransportista();
+    this.suscribirCambioRequiereEmpresa();
     this.suscribirCambioReciclajeInstalaciones();
     this.recuperarValoresDesdeStore();
     this.suscribirseACambiosDeFormulario();
@@ -84,6 +87,13 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
       representanteLegal: ['', Validators.required],
       telefono: ['', Validators.required],
       correoElectronico: ['', [Validators.required, Validators.email]],
+    });
+  }
+
+  private inicializarFormularioEmpresaTransportista(): void {
+    this.formularioEmpresaTransportista = this.fb.group({
+      nombreEmpresaTransportistaResiduos: ['', Validators.required],
+      numeroAutorizacionSemarnat: ['', Validators.required]
     });
   }
 
@@ -149,6 +159,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     this.solicitudForm.patchValue(ESTADO.solicitudForm, { emitEvent: false });
     this.formularioEmpresaReciclaje.patchValue(ESTADO.empresaReciclaje, { emitEvent: false });
     this.formularioLugarReciclaje.patchValue(ESTADO.lugarReciclaje, { emitEvent: false });
+    this.formularioEmpresaTransportista.patchValue(ESTADO.empresaTransportista, { emitEvent: false });
   }
 
   private suscribirseACambiosDeFormulario(): void {
@@ -163,6 +174,11 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     this.formularioLugarReciclaje.valueChanges
       .pipe(takeUntil(this.destruir$))
       .subscribe(valor => this.formularioSolicitudStore.actualizarLugarReciclaje(valor));
+
+    this.formularioEmpresaTransportista.valueChanges
+      .pipe(takeUntil(this.destruir$))
+      .subscribe(valor => this.formularioSolicitudStore.actualizarEmpresaTransportista(valor));
+
   }
 
 

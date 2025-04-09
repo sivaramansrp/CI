@@ -43,23 +43,32 @@
     </div>
   </div>
   <ng-titulo titulo="Datos de la empresa transportista"></ng-titulo>
-  <div class="row mb-3">
-    <div class="col-md-8">
-      <div class="form-group mb-3">
-        <label for="nombreEmpresaTransportistaResiduos" class="form-label">Nombre de la empresa transportista de
-          residuos peligrosos*:</label>
-        <input type="text" class="form-control" id="nombreEmpresaTransportistaResiduos">
+  <form [formGroup]="formularioEmpresaTransportista">
+    <div class="row mb-3">
+      <div class="col-md-8">
+        <div class="form-group mb-3">
+          <label for="nombreEmpresaTransportistaResiduos" class="form-label">
+            Nombre de la empresa transportista de residuos peligrosos*:
+          </label>
+          <input type="text" class="form-control" id="nombreEmpresaTransportistaResiduos"
+            formControlName="nombreEmpresaTransportistaResiduos" />
+        </div>
       </div>
     </div>
-  </div>
-  <div class="row mb-3">
-    <div class="col-md-8">
-      <div class="form-group mb-3">
-        <label for="numeroAutorizacionSemarnat" class="form-label">Número de autorización SEMARNAT*:</label>
-        <input type="text" class="form-control" id="numeroAutorizacionSemarnat">
+
+    <div class="row mb-3">
+      <div class="col-md-8">
+        <div class="form-group mb-3">
+          <label for="numeroAutorizacionSemarnat" class="form-label">
+            Número de autorización SEMARNAT*:
+          </label>
+          <input type="text" class="form-control" id="numeroAutorizacionSemarnat"
+            formControlName="numeroAutorizacionSemarnat" />
+        </div>
       </div>
     </div>
-  </div>
+  </form>
+
   <ng-titulo titulo="Datos de la empresa de servicio que realizará el reciclaje"></ng-titulo>
   <form [formGroup]="formularioEmpresaReciclaje">
     <div class="row mb-3">
