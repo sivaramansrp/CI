@@ -5,13 +5,7 @@
   <div class="alert alert-info">
     <label style="font-weight: normal">
       <div class="col-md-1 mt-5">
-        <input
-          type="checkbox"
-          class="mt-5"
-          formControlName="manifesto"
-          (change)="setManifesto($event)"
-          id="manifesto"
-        />
+        <input type="checkbox" class="mt-5" formControlName="manifesto" (change)="setManifesto($event)" id="manifesto" />
         <b> *</b>
       </div>
       <div class="col-md-11 mt-4">{{mensaje}}</div>
@@ -19,19 +13,19 @@
   </div>
 </div>
 <form [formGroup]="manifiestos">
-    <div class="form mt-5">
-        <div class="row">
-            <div class="col-md-12">
-              <label class="control-label" for="buscar">Los datos o anexos pueden contener información confidencial ¿Está de acuerdo en hacerlos públicos?*:</label>
-            </div>
-            <div class="col-md-2">
-              <input class="form-check-input me-3" type="radio" name="cumplimiento" id="certficacion_no" formControlName="cumplimiento" value="No" (change)="setValoresStore(manifiestos,'cumplimiento', 'setCumplimiento')">
-              <label class="control-label" for="cumplimiento">No</label>
-            </div>
-            <div class="col-md-2">
-              <input class="form-check-input me-3" type="radio" name="cumplimiento" id="cumplimiento_si" formControlName="cumplimiento" value="Si" (change)="setValoresStore(manifiestos,'cumplimiento', 'setCumplimiento')">
-              <label class="control-label" for="cumplimiento">Si</label>
-            </div>
-          </div>
+  <div class="form mt-5">
+    <div class="row">
+      <div class="col-md-12">
+        <label class="control-label" for="buscar">Los datos o anexos pueden contener información confidencial ¿Está de acuerdo en hacerlos públicos?*:</label>
+      </div>
+      <div class="col-md-2">
+        <input class="form-check-input me-3" type="radio" name="cumplimiento" id="certficacion_no" formControlName="cumplimiento" value="No" (change)="setValoresStore(manifiestos,'cumplimiento', 'setCumplimiento')">
+        <label class="control-label" for="cumplimiento">No</label>
+      </div>
+      <div class="col-md-2">
+        <input class="form-check-input me-3" type="radio" name="cumplimiento" id="cumplimiento_si" formControlName="cumplimiento" value="Si" (change)="setValoresStore(manifiestos,'cumplimiento', 'setCumplimiento')">
+        <label class="control-label" for="cumplimiento">Si</label>
+      </div>
     </div>
+  </div>
 </form>
