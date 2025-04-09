@@ -23,55 +23,55 @@
               "descripcion": "Tránsito de mercancías"
             }
           ],
-          "mercancias":[
-          {
-            "no_partida": 1,
-            "tipo_requisito": "Inspección Ocular",
-            "requisito": "NO APLICA",
-            "numero_certificado_internacional": 40012999,
-            "fraccion_arancelaria": "Los demás.",
-            "nico": "00",
-            "descripcion_nico": "Los demás.",
-            "descripcion": "Alfombra de Caucho Natural",
-            "unidad_medida_tarifa": "Kilogramo",
-            "cantidad_umt": 20.15,
-            "unidad_medida_comercializacion": "Pieza",
-            "cantidad_umc": 1.00,
-            "uso": "Industria",
-            "tipo_producto": "Otro",
-            "numero_lote": "NA",
-            "pais_origen": "JAPON",
-            "pais_procedencia": "JAPON",
-            "certificado_internacional_electronico": ""
-          }],
+         "mercancias": [
+              {
+                "noPartida": 1,
+                "tipoRequisito": "Inspección Ocular",
+                "requisito": "NO APLICA",
+                "numeroCertificadoInternacional": 40012999,
+                "fraccionArancelaria": "Los demás.",
+                "nico": "00",
+                "descripcionNico": "Los demás.",
+                "descripcion": "Alfombra de Caucho Natural",
+                "unidadMedidaTarifa": "Kilogramo",
+                "cantidadUmt": 20.15,
+                "unidadMedidaComercializacion": "Pieza",
+                "cantidadUmc": 1.00,
+                "uso": "Industria",
+                "tipoProducto": "Otro",
+                "numeroLote": "NA",
+                "paisOrigen": "JAPON",
+                "paisProcedencia": "JAPON",
+                "certificadoInternacionalElectronico": ""
+              }
+            ],
           "medio":[{ "id": 1, "descripcion": "Terrestre" }], 
           "verificacion":[{ "id": 1, "descripcion": "NO CRUZA NINGUN PUNTO." }] ,
-          "exportador":[
-            {
-                "nombre_denominacion_o_razon_social": "IDAKA & CO. LTD.",
+          "exportador": [
+              {
+                "nombreDenominacionORazonSocial": "IDAKA & CO. LTD.",
                 "telefono": "444-1234567",
-                "correo_electronico": "nose@gmail.com",
+                "correoElectronico": "nose@gmail.com",
                 "domicilio": "1-6-3, Kamimaezu, Na...",
                 "pais": "JAPON"
               }
-              
-          ],
-          "destinatario":[
-            {
-                "nombre_denominacion_o_razon_social": "ADVICS MANUFACTURING MEXICO S DE R.L. DE C.V.",
+            ],
+          "destinatario": [
+              {
+                "nombreDenominacionORazonSocial": "ADVICS MANUFACTURING MEXICO S DE R.L. DE C.V.",
                 "telefono": "555-3456789",
-                "correo_electronico": "nose@gmail.com",
+                "correoElectronico": "nose@gmail.com",
                 "calle": "Av. Cazcanes",
-                "numero_exterior": "2210",
-                "numero_interior": "",
+                "numeroExterior": "2210",
+                "numeroInterior": "",
                 "pais": "MEXICO (ESTADOS UNIDOS MEXICANOS)",
                 "colonia": "COLINAS DE LAGOS",
-                "municipio_o_alcaldia": "LAGOS DE MORENO",
-                "entidad_federativa": "JALISCO",
-                "codigo_postal": "47515"
+                "municipioOAlcaldia": "LAGOS DE MORENO",
+                "entidadFederativa": "JALISCO",
+                "codigoPostal": "47515"
               }
-              
-          ],
+            ],
+
           "banco":[
             {
               "id": 1,
@@ -134,14 +134,7 @@
             "aduana": "QUERETARO, QRO.",
             "oficina": "Querétaro",
             "punto": "Querétaro Oficina de Inspección"
-          }
-          
-          
-          
-          
-
-
-          
+          }      
           
        
       

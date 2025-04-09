@@ -1,27 +1,24 @@
 import { Component, ViewChild } from '@angular/core';
+import { ALERTA_COM } from '@libs/shared/data-access-user/src/tramites/constantes/110208/certificado.enum';
 import{AccionBoton} from '@libs/shared/data-access-user/src/core/models/140103/cancelacion.model';
-
-import { AVISO_DATOS } from '@libs/shared/data-access-user/src/core/models/221602/mercancia.model';
 import { DatosPasos } from '@libs/shared/data-access-user/src';
 import { ListaPasosWizard } from '@libs/shared/data-access-user/src';
 import { PASOS} from '@libs/shared/data-access-user/src/core/models/221602/mercancia.model';
 import { WizardComponent } from '@libs/shared/data-access-user/src';
 
-
-
 @Component({
-  selector: 'app-phytosanitary', 
-  templateUrl: './phytosanitary.component.html',
+  selector: 'app-fitosanitario', 
+  templateUrl: './fitosanitario.component.html',
  
 })
 
-export class PhytosanitaryComponent {
+export class FitosanitarioComponent {
     /**
    * @property {ListaPasosWizard[]} pantallasPasos - Array para almacenar los pasos del wizard.
    */
   pantallasPasos: ListaPasosWizard[] = PASOS;
 
-    TEXTOS: string = AVISO_DATOS;
+    TEXTOS= ALERTA_COM;
 
   /**
    * @property {number} indice - El índice actual del paso.

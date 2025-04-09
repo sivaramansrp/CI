@@ -13,29 +13,20 @@ import { ToastrService } from 'ngx-toastr';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
 import { DatosDeLaSolicitudComponent } from './components/datos-de-la-solicitud/datos-de-la-solicitud.component';
+import { FitosanitarioComponent } from './pages/fitosanitario/fitosanitario.component';
+import { FitosanitarioRoutingModule } from './fitosanitario-routing.module';
 import { MovilizacionComponent } from './components/movilizacion/movilizacion.component';
 import { PagoDeDerechos221602Component } from './components/pago-de-derechos221602/pago-de-derechos221602.component';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
-import { PhytosanitaryComponent } from './pages/phytosanitary/phytosanitary.component';
-import { PhytosanitaryRoutingModule } from './phytosanitary-routing.module';
 import { TercerosComponent } from './components/terceros/terceros.component';
-
-
-
-
-
-
-
-
-
 
 @NgModule({
   declarations: [    
-    DatosComponent,FirmarSolicitudComponent,PhytosanitaryComponent,PasoDosComponent
+    DatosComponent,FirmarSolicitudComponent,FitosanitarioComponent,PasoDosComponent
   ],
   imports: [
     CommonModule,AlertComponent,AnexarDocumentosComponent,
-    PhytosanitaryRoutingModule,
+    FitosanitarioRoutingModule,
     BtnContinuarComponent,   
     TituloComponent,
     WizardComponent,FirmaElectronicaComponent,
@@ -45,4 +36,4 @@ import { TercerosComponent } from './components/terceros/terceros.component';
     ToastrService
   ]
 })
-export class PhytosanitaryModule { }
+export class FitosanitarioModule { }
