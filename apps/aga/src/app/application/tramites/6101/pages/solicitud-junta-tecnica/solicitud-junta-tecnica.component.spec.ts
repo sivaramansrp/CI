@@ -1,7 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SolicitudJuntaTecnicaComponent } from './solicitud-junta-tecnica.component';
-import { WizardComponent } from '@ng-mf/data-access-user';
+import {
+  BtnContinuarComponent,
+  SolicitanteComponent,
+  WizardComponent,
+} from '@ng-mf/data-access-user';
 import { PASOS } from '@ng-mf/data-access-user';
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
+import { PasoDosComponent } from '../paso-dos/paso-dos.component';
+import { PasoTresComponent } from '../paso-tres/paso-tres.component';
+import { SolicitudComponent } from '../../components/solicitud/solicitud.component';
+import { provideHttpClient } from '@angular/common/http';
 
 describe('SolicitudJuntaTecnicaComponent', () => {
   let component: SolicitudJuntaTecnicaComponent;
@@ -9,8 +18,15 @@ describe('SolicitudJuntaTecnicaComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [SolicitudJuntaTecnicaComponent],
-      providers: [],
+      declarations: [
+        PasoUnoComponent,
+        PasoDosComponent,
+        PasoTresComponent,
+        SolicitudJuntaTecnicaComponent,
+        SolicitudComponent,
+      ],
+      imports: [WizardComponent, BtnContinuarComponent, SolicitanteComponent],
+      providers: [provideHttpClient()],
     }).compileComponents();
   });
 
@@ -46,7 +62,8 @@ describe('SolicitudJuntaTecnicaComponent', () => {
       siguiente: jest.fn(),
       atras: jest.fn(),
     };
-    component.wizardComponent = mockWizardComponent as unknown as WizardComponent;
+    component.wizardComponent =
+      mockWizardComponent as unknown as WizardComponent;
 
     const evento = { accion: 'cont', valor: 2 };
     component.getValorIndice(evento);
@@ -60,7 +77,8 @@ describe('SolicitudJuntaTecnicaComponent', () => {
       siguiente: jest.fn(),
       atras: jest.fn(),
     };
-    component.wizardComponent = mockWizardComponent as unknown as WizardComponent;
+    component.wizardComponent =
+      mockWizardComponent as unknown as WizardComponent;
 
     const evento = { accion: 'ant', valor: 0 };
     component.getValorIndice(evento);
