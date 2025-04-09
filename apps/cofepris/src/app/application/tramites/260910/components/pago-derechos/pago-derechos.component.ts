@@ -91,8 +91,7 @@ export class PagoDerechosComponent implements OnInit, OnDestroy {
     });
 
     // Suscripción al estado de la solicitud y actualización del formulario reactivo.
-    this.solicitud260910Query.seleccionarSolicitud$
-      .pipe(
+    this.solicitud260910Query.seleccionarSolicitud$.pipe(
         takeUntil(this.destroyNotifier$),
         map((respuesta: Solicitud260910State) => {
           this.solicitud260910State = respuesta;
@@ -114,8 +113,7 @@ export class PagoDerechosComponent implements OnInit, OnDestroy {
    */
   obtenerPagoDerechos(): void {
     this.solicitudDatosService
-      .obtenerPagoDerechos()
-      .pipe(takeUntil(this.destroyNotifier$))
+      .obtenerPagoDerechos().pipe(takeUntil(this.destroyNotifier$))
       .subscribe({
         next: (respuesta: CatalogosSelect) => {
           this.bancoCatalogo = respuesta;

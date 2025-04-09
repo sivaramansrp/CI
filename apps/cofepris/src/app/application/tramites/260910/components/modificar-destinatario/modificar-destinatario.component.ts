@@ -191,8 +191,7 @@ export class ModificarDestinatarioComponent implements OnInit, OnDestroy {
     });
 
     // Observa cambios en el estado y actualiza los valores en el formulario.
-    this.solicitud260910Query.seleccionarSolicitud$
-      .pipe(
+    this.solicitud260910Query.seleccionarSolicitud$.pipe(
         takeUntil(this.destroyNotifier$),
         map((respuesta: Solicitud260910State) => {
           this.solicitud260910State = respuesta;
@@ -227,8 +226,7 @@ export class ModificarDestinatarioComponent implements OnInit, OnDestroy {
    */
   obtenerDestinatarioCatalogos(): void {
     this.solicitudDatosService
-      .obtenerDestinatarioCatalogos()
-      .pipe(takeUntil(this.destroyNotifier$))
+      .obtenerDestinatarioCatalogos().pipe(takeUntil(this.destroyNotifier$))
       .subscribe({
         next: (respuesta: DestinatarioCatalogos) => {
           this.paisCatalogo = respuesta.paisCatalogo;
@@ -246,8 +244,7 @@ export class ModificarDestinatarioComponent implements OnInit, OnDestroy {
    */
   obtenerDestinatarioRadio(): void {
     this.solicitudDatosService
-      .obtenerDestinatarioRadio()
-      .pipe(takeUntil(this.destroyNotifier$))
+      .obtenerDestinatarioRadio().pipe(takeUntil(this.destroyNotifier$))
       .subscribe({
         next: (respuesta: { label: string; value: string | number }[]) => {
           this.tipoPersonaRadioOptions = respuesta;
@@ -260,8 +257,7 @@ export class ModificarDestinatarioComponent implements OnInit, OnDestroy {
    */
   obtenerDestinatarioImitar(): void {
     this.solicitudDatosService
-      .obtenerDestinatarioImitar()
-      .pipe(takeUntil(this.destroyNotifier$))
+      .obtenerDestinatarioImitar().pipe(takeUntil(this.destroyNotifier$))
       .subscribe({
         next: (respuesta: DestinatarioImitar) => {
           this.solicitud260910Store.setDomicilioPais(respuesta.domicilioPais);

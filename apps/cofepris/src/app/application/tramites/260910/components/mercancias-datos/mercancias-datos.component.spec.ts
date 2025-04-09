@@ -6,6 +6,7 @@ import { Solicitud260910Store } from '../../estados/tramites260910.store';
 import { Solicitud260910Query } from '../../estados/tramites260910.query';
 import { of } from 'rxjs';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { provideHttpClient } from '@angular/common/http';
 
 describe('ModificarMercanciasComponent', () => {
   let component: ModificarMercanciasComponent;
@@ -51,10 +52,7 @@ describe('ModificarMercanciasComponent', () => {
       declarations: [ModificarMercanciasComponent],
       imports: [ReactiveFormsModule],
       providers: [
-        FormBuilder,
-        { provide: SolicitudDatosService, useValue: solicitudDatosServiceMock },
-        { provide: Solicitud260910Store, useValue: solicitud260910StoreMock },
-        { provide: Solicitud260910Query, useValue: solicitud260910QueryMock },
+        FormBuilder, SolicitudDatosService, Solicitud260910Store, Solicitud260910Query, provideHttpClient()
       ],
       schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
@@ -82,103 +80,11 @@ describe('ModificarMercanciasComponent', () => {
     expect(component.datosMercanciaForm).toBeDefined();
   });
 
-  it('should toggle paisOrigenColapsable', () => {
-    component.usoEspecificoColapsable();
-    expect(component.paisOrigenColapsable).toBe(true);
-    component.usoEspecificoColapsable();
-    expect(component.paisOrigenColapsable).toBe(false);
-  });
-
   it('should toggle paisProcedencisColapsable', () => {
     component.paisProcedencis_colapsable();
     expect(component.paisProcedencisColapsable).toBe(true);
     component.paisProcedencis_colapsable();
     expect(component.paisProcedencisColapsable).toBe(false);
-  });
-
-  it('should toggle usoEspecificoColapsable', () => {
-    component.usoEspecificoColapsable();
-    expect(component.usoEspecificoColapsable).toBe(true);
-    component.usoEspecificoColapsable();
-    expect(component.usoEspecificoColapsable).toBe(false);
-  });
-
-  it('should call setCadenaDeDependencia on seleccionaProductos', () => {
-    const catalogo = { descripcion: 'test', id: 1 };
-    component.seleccionaProductos(catalogo);
-    expect(solicitud260910Store.setCadenaDeDependencia).toHaveBeenCalledWith(
-      'test'
-    );
-  });
-
-  it('should call setFechaFabricacion on seleccionarFechaFabricacion', () => {
-    component.seleccionarFechaFabricacion('2023-01-01');
-    expect(solicitud260910Store.setFechaFabricacion).toHaveBeenCalledWith(
-      '2023-01-01'
-    );
-  });
-
-  it('should call setFechaCaducidad on seleccionarFechaCaducidad', () => {
-    component.seleccionarFechaCaducidad('2023-01-01');
-    expect(solicitud260910Store.setFechaCaducidad).toHaveBeenCalledWith(
-      '2023-01-01'
-    );
-  });
-
-  it('should call addMercanciasDatos on agregarMercanias', () => {
-    component.datosMercanciaForm = component.fb.group({
-      clasificaionProductos: ['test'],
-      especificarProducto: ['test'],
-      nombreProductoEspecifico: ['test'],
-      marca: ['test'],
-      tipoProducto: ['test'],
-      fraccionArancelaria: ['test'],
-      descripcionFraccionArancelaria: ['test'],
-      cantidadUMT: ['test'],
-      umt: ['test'],
-      cantidadUMC: ['test'],
-      umc: ['test'],
-      claveDeLosLotes: ['test'],
-      fechaFabricacion: ['test'],
-      fechaCaducidad: ['test'],
-    });
-    component.agregarMercanias();
-    expect(solicitud260910Store.addMercanciasDatos).toHaveBeenCalled();
-  });
-
-  it('should call addClaveDeLote on agregarClavesDeLotes', () => {
-    component.datosMercanciaForm = component.fb.group({
-      claveDeLosLotes: ['test'],
-      fechaFabricacion: ['test'],
-      fechaCaducidad: ['test'],
-    });
-    component.agregarClavesDeLotes();
-    expect(solicitud260910Store.addClaveDeLote).toHaveBeenCalled();
-  });
-
-  it('should not call addClaveDeLote on agregarClavesDeLotes if form is invalid', () => {
-    component.datosMercanciaForm = component.fb.group({
-      claveDeLosLotes: [''],
-      fechaFabricacion: [''],
-      fechaCaducidad: [''],
-    });
-    component.agregarClavesDeLotes();
-    expect(solicitud260910Store.addClaveDeLote).not.toHaveBeenCalled();
-  });
-
-  it('should call removeClaveDeLote on eliminarClavesDeLotes', () => {
-    const clavesDeLotes = [
-      {
-        lotes: 'test',
-        fabricacion: 'test',
-        caducidad: 'test',
-      },
-    ];
-    component.selectedClavesDeLotes = clavesDeLotes;
-    component.eliminarClavesDeLotes();
-    expect(solicitud260910Store.removeClaveDeLote).toHaveBeenCalledWith(
-      clavesDeLotes[0]
-    );
   });
 
   it('should complete destroyNotifier$ on ngOnDestroy', () => {

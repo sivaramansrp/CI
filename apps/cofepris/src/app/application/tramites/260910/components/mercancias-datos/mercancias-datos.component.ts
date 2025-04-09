@@ -296,8 +296,7 @@ export class ModificarMercanciasComponent implements OnInit, OnDestroy {
     });
 
     // Observa cambios en el estado y actualiza los valores en el formulario.
-    this.solicitud260910Query.seleccionarSolicitud$
-      .pipe(
+    this.solicitud260910Query.seleccionarSolicitud$.pipe(
         takeUntil(this.destroyNotifier$),
         map((respuesta: Solicitud260910State) => {
           this.solicitud260910State = respuesta;
@@ -336,8 +335,7 @@ export class ModificarMercanciasComponent implements OnInit, OnDestroy {
    */
   obtenerMercanciaListo(): void {
     this.solicitudDatosService
-      .obtenerMercanciaListo()
-      .pipe(takeUntil(this.destroyNotifier$))
+      .obtenerMercanciaListo().pipe(takeUntil(this.destroyNotifier$))
       .subscribe({
         next: (respuesta: Mercancia[]) => {
           this.solicitud260910Store.setDescripcionFraccionArancelaria(
@@ -354,8 +352,7 @@ export class ModificarMercanciasComponent implements OnInit, OnDestroy {
    */
   obtenerCrosslisto(): void {
     this.solicitudDatosService
-      .obtenerCrosslisto()
-      .pipe(takeUntil(this.destroyNotifier$))
+      .obtenerCrosslisto().pipe(takeUntil(this.destroyNotifier$))
       .subscribe({
         next: (respuesta: MercanciaCrossList) => {
           this.paisOrigenCrossList = respuesta.paisOrigenCrossList;
@@ -371,8 +368,7 @@ export class ModificarMercanciasComponent implements OnInit, OnDestroy {
    */
   obtenerMercanciaCatalogos(): void {
     this.solicitudDatosService
-      .obtenerMercanciaCatalogos()
-      .pipe(takeUntil(this.destroyNotifier$))
+      .obtenerMercanciaCatalogos().pipe(takeUntil(this.destroyNotifier$))
       .subscribe({
         next: (respuesta: MercanciaCatalogos) => {
           this.productosCatalogo = respuesta.productosCatalogo;

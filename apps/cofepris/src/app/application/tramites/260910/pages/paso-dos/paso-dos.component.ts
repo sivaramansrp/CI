@@ -38,12 +38,6 @@ export class PasoDosComponent implements OnInit {
   catalogoDocumentos: Catalogo[] = [];
 
   /**
-   * Lista de documentos seleccionados por el usuario.
-   * Inicializado con documentos preseleccionados.
-   */
-  documentosSeleccionados: Catalogo[] = [];
-
-  /**
    * Constructor de PasoDosComponent.
    * @param catalogosServices Servicio para interactuar con los catálogos.
    */
@@ -51,7 +45,6 @@ export class PasoDosComponent implements OnInit {
     private catalogosServices: CatalogosService,
   ) {
     // Inicialización del componente
-    this.getTiposDocumentos();
   }
 
   /**
@@ -60,16 +53,7 @@ export class PasoDosComponent implements OnInit {
    * Obtiene los tipos de documentos y establece documentos preseleccionados.
    */
   ngOnInit(): void {
-    this.documentosSeleccionados = [
-      {
-        id: 1,
-        descripcion: 'Documentos que ampare el valor de la mercancía'
-      },
-      {
-        id: 2,
-        descripcion: 'Documentos del medio de transporte (Guías, BL o carta porte según corresponda)'
-      }
-    ];
+    this.getTiposDocumentos();
   }
 
   /**
@@ -77,9 +61,7 @@ export class PasoDosComponent implements OnInit {
    * Actualiza la propiedad `catalogoDocumentos` con los datos obtenidos.
    */
   getTiposDocumentos(): void {
-    this.catalogosServices
-      .getCatalogo(CATALOGOS_ID.CAT_TIPO_DOCUMENTO)
-      .subscribe({
+    this.catalogosServices.getCatalogo(CATALOGOS_ID.CAT_TIPO_DOCUMENTO).subscribe({
         next: (respuesta): void => {
           if (respuesta.length > 0) {
             this.catalogoDocumentos = respuesta;

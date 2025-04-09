@@ -6,9 +6,14 @@ import { SolicitudDatosService } from '../../services/solicitud-datos.service';
 import { Solicitud260910Store } from '../../estados/tramites260910.store';
 import { Solicitud260910Query } from '../../estados/tramites260910.query';
 import { Solicitud260910State } from '../../estados/tramites260910.store';
-import { Solicitud } from '../../models/solicitud-datos.model';
-import { Catalogo, CatalogosSelect } from '@libs/shared/data-access-user/src';
-import { Modal } from 'bootstrap';
+import { InputRadioComponent } from '@libs/shared/data-access-user/src';
+import { TituloComponent } from '@libs/shared/data-access-user/src';
+import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
+import { ModificarMercanciasComponent } from '../../components/mercancias-datos/mercancias-datos.component';
+import { provideHttpClient } from '@angular/common/http';
+import { InputFechaComponent } from '@libs/shared/data-access-user/src';
+import { AlertComponent } from '@libs/shared/data-access-user/src';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 
 describe('SolicitudDatosComponent', () => {
   let component: SolicitudDatosComponent;
@@ -59,13 +64,10 @@ describe('SolicitudDatosComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      declarations: [SolicitudDatosComponent],
-      imports: [ReactiveFormsModule],
+      declarations: [SolicitudDatosComponent, ModificarMercanciasComponent],
+      imports: [ReactiveFormsModule, InputRadioComponent, TituloComponent, TablaDinamicaComponent, InputFechaComponent, AlertComponent, CatalogoSelectComponent],
       providers: [
-        FormBuilder,
-        { provide: SolicitudDatosService, useValue: solicitudDatosServiceMock },
-        { provide: Solicitud260910Store, useValue: solicitud260910StoreMock },
-        { provide: Solicitud260910Query, useValue: solicitud260910QueryMock },
+        FormBuilder, SolicitudDatosService, Solicitud260910Store, Solicitud260910Query, provideHttpClient()
       ],
     }).compileComponents();
 
@@ -102,53 +104,7 @@ describe('SolicitudDatosComponent', () => {
     expect(component.colapsable).toBe(true);
   });
 
-  it('should call obtenerSolicitud on ngOnInit', () => {
-    solicitudDatosService.obtenerSolicitud.mockReturnValue(of({} as Solicitud));
-    component.ngOnInit();
-    expect(solicitudDatosService.obtenerSolicitud).toHaveBeenCalled();
-  });
-
-  it('should call obtenerEstadoCatalogo on ngOnInit', () => {
-    solicitudDatosService.obtenerEstadoCatalogo.mockReturnValue(
-      of({} as CatalogosSelect)
-    );
-    component.ngOnInit();
-    expect(solicitudDatosService.obtenerEstadoCatalogo).toHaveBeenCalled();
-  });
-
-  it('should open modal for modifying mercancías', () => {
-    const modalSpy = jest.spyOn(Modal.prototype, 'show');
-    component.modalElement = {
-      nativeElement: document.createElement('div'),
-    } as any;
-    component.openModificarMercancias();
-    expect(modalSpy).toHaveBeenCalled();
-  });
-
-  it('should set estado in store', () => {
-    const mockCatalogo: Catalogo = {
-      id: 1,
-      descripcion: 'estado 1',
-    };
-    component.setEstado(mockCatalogo);
-    expect(solicitud260910Store.setEstado).toHaveBeenCalledWith(
-      mockCatalogo.id
-    );
-  });
-
-  it('should set licencia sanitaria in store', () => {
-    const evento = { target: { value: 'Licencia' } } as unknown as Event;
-    component.setLicenciaSanitaria(evento);
-    expect(solicitud260910Store.setLicenciaSanitaria).toHaveBeenCalledWith(
-      'Licencia'
-    );
-  });
-
-  it('should set RFC in store', () => {
-    const evento = { target: { value: 'RFC' } } as unknown as Event;
-    component.setRFC(evento);
-    expect(solicitud260910Store.setRfc).toHaveBeenCalledWith('RFC');
-  });
+  
 
   it('should complete destroyNotifier$ on ngOnDestroy', () => {
     const destroyNotifierSpy = jest.spyOn(

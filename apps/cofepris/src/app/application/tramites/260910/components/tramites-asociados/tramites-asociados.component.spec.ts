@@ -1,17 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { TercerosRelacionadosComponent } from './tramites-asociados.component';
+import { TramitesAsociadosComponent } from './tramites-asociados.component';
 import { SolicitudDatosService } from '../../services/solicitud-datos.service';
 import { Solicitud260910Store } from '../../estados/tramites260910.store';
 import { Solicitud260910Query } from '../../estados/tramites260910.query';
-import { of, Subject } from 'rxjs';
-import { ElementRef } from '@angular/core';
-import { Destinatario } from '../../models/destinatario.model';
-import { Fabricante } from '../../models/fabricante.model';
-import { Modal } from 'bootstrap';
+import { of } from 'rxjs';
+import { provideHttpClient } from '@angular/common/http';
+import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 
-describe('TercerosRelacionadosComponent', () => {
-  let component: TercerosRelacionadosComponent;
-  let fixture: ComponentFixture<TercerosRelacionadosComponent>;
+
+describe('TramitesAsociadosComponent', () => {
+  let component: TramitesAsociadosComponent;
+  let fixture: ComponentFixture<TramitesAsociadosComponent>;
   let solicitudDatosService: jest.Mocked<SolicitudDatosService>;
   let solicitud260910Store: jest.Mocked<Solicitud260910Store>;
   let solicitud260910Query: jest.Mocked<Solicitud260910Query>;
@@ -34,22 +33,19 @@ describe('TercerosRelacionadosComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      declarations: [TercerosRelacionadosComponent],
-      providers: [
-        { provide: SolicitudDatosService, useValue: solicitudDatosServiceMock },
-        { provide: Solicitud260910Store, useValue: solicitud260910StoreMock },
-        { provide: Solicitud260910Query, useValue: solicitud260910QueryMock },
-      ],
+      declarations: [TramitesAsociadosComponent],
+      imports: [TablaDinamicaComponent],
+      providers: [SolicitudDatosService, Solicitud260910Store, Solicitud260910Query, provideHttpClient()]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(TercerosRelacionadosComponent);
+    fixture = TestBed.createComponent(TramitesAsociadosComponent);
     component = fixture.componentInstance;
 
     solicitudDatosService = TestBed.inject(SolicitudDatosService) as jest.Mocked<SolicitudDatosService>;
     solicitud260910Store = TestBed.inject(Solicitud260910Store) as jest.Mocked<Solicitud260910Store>;
     solicitud260910Query = TestBed.inject(Solicitud260910Query) as jest.Mocked<Solicitud260910Query>;
 
-    fixture.detectChanges(); 
+    fixture.detectChanges();
   });
 
   it('should create the component', () => {
@@ -57,61 +53,8 @@ describe('TercerosRelacionadosComponent', () => {
   });
 
   it('should initialize with empty destinatarioDatos and subscribe to seleccionarSolicitud$', () => {
-    expect(component.destinatarioDatos).toEqual([]);
+    expect(component.tramitesAsociadosDatos).toEqual([]);
     expect(solicitud260910Query.seleccionarSolicitud$).toBeDefined();
-  });
-
-  it('should call obtenerDestinatarioListo and set destinatarioDatos on service response', () => {
-    const mockDestinatarios: Destinatario[] = [{ nombre: 'John Doe' }] as Destinatario[];
-    solicitudDatosService.obtenerDestinatarioListo.mockReturnValue(of(mockDestinatarios));
-
-    component.obtenerDestinatarioListo();
-
-    expect(solicitudDatosService.obtenerDestinatarioListo).toHaveBeenCalled();
-    expect(component.destinatarioDatos).toEqual(mockDestinatarios);
-    expect(solicitud260910Store.setDestinatarioDatos).toHaveBeenCalledWith(mockDestinatarios);
-  });
-
-  it('should call obtenerFabricanteListo and set fabricanteDatos on service response', () => {
-    const mockFabricantes: Fabricante[] = [{ nombre: 'ABC Corp' }] as Fabricante[];
-    solicitudDatosService.obtenerFabricanteListo.mockReturnValue(of(mockFabricantes));
-
-    component.obtenerFabricanteListo();
-
-    expect(solicitudDatosService.obtenerFabricanteListo).toHaveBeenCalled();
-    expect(component.fabricanteDatos).toEqual(mockFabricantes);
-  });
-
-  it('should open modal when openModificarMercancias is called', () => {
-    const modalSpy = jest.spyOn(Modal.prototype, 'show');
-    component.modalElement = { nativeElement: document.createElement('div') } as ElementRef;
-
-    component.openModificarMercancias();
-
-    expect(modalSpy).toHaveBeenCalled();
-  });
-
-  it('should add destinatarioDatos to selectedDestinatario', () => {
-    const mockDestinatarios: Fabricante[] = [{ nombre: 'Fabricante 1' }] as Fabricante[];
-    component.getDestinatarioDatos(mockDestinatarios);
-    expect(component.selectedDestinatario).toEqual(mockDestinatarios);
-  });
-
-  it('should call removeDestinatarioDato on eliminarMercancias if selectedDestinatario exists', () => {
-    const mockDestinatario: Fabricante = { nombre: 'Fabricante 1' } as Fabricante;
-    component.selectedDestinatario = [mockDestinatario];
-
-    component.eliminarMercancias();
-
-    expect(solicitud260910Store.removeDestinatarioDato).toHaveBeenCalledWith(mockDestinatario);
-  });
-
-  it('should not call removeDestinatarioDato on eliminarMercancias if selectedDestinatario is empty', () => {
-    component.selectedDestinatario = [];
-
-    component.eliminarMercancias();
-
-    expect(solicitud260910Store.removeDestinatarioDato).not.toHaveBeenCalled();
   });
 
   it('should complete destroyNotifier$ on ngOnDestroy', () => {

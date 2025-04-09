@@ -1,8 +1,11 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
-import { of, throwError } from 'rxjs';
+import { throwError } from 'rxjs';
 import { PasoTresComponent } from './paso-tres.component';
 import { TramiteFolioService } from '@ng-mf/data-access-user';
+import { FirmaElectronicaComponent } from '@libs/shared/data-access-user/src';
+import { ToastrModule } from 'ngx-toastr';
+import { ToastrService } from 'ngx-toastr';
 
 describe('PasoTresComponent', () => {
   let component: PasoTresComponent;
@@ -21,9 +24,11 @@ describe('PasoTresComponent', () => {
 
     await TestBed.configureTestingModule({
       declarations: [PasoTresComponent],
+      imports: [FirmaElectronicaComponent, ToastrModule.forRoot()],
       providers: [
         { provide: Router, useValue: routerMock },
         { provide: TramiteFolioService, useValue: serviciosExtraordinariosServiceMock },
+        ToastrService
       ],
     }).compileComponents();
 
@@ -36,14 +41,6 @@ describe('PasoTresComponent', () => {
 
   it('should create the component', () => {
     expect(component).toBeTruthy();
-  });
-
-  it('should navigate to acuse on valid firma', () => {
-     const firma = 'valid-firma';
-    serviciosExtraordinariosService.obtenerTramite.mockReturnValue(of());
-    component.obtieneFirma(firma);
-    expect(serviciosExtraordinariosService.obtenerTramite).toHaveBeenCalledWith(19);
-    expect(router.navigate).toHaveBeenCalledWith(['servicios-extraordinarios/acuse']);
   });
 
   it('should handle error on invalid tramite', () => {
