@@ -58,55 +58,12 @@ import mockData from '@libs/shared/theme/assets/json/40103/director-general-mock
   ],
 })
 export class ChoferesComponent implements OnInit, OnDestroy {
-  solicitudTituloChoferExtranjero: string =
-    CHOFERES_PAGE.SOLICITUD_TITULO_CHOFER_EXTRANJERO;
-  labelSolicitudPersonaNombre: string =
-    CHOFERES_PAGE.LABEL_SOLICITUD_PERSONA_NOMBRE;
-  labelSolicitudPersonaPrimerApellido: string =
-    CHOFERES_PAGE.LABEL_SOLICITUD_PERSONA_PRIMER_APELLIDO;
-  labelSolicitudPersonaSegundoApellido: string =
-    CHOFERES_PAGE.LABEL_SOLICITUD_PERSONA_SEGUNDO_APELLIDO;
-  labelNacionalidad: string = CHOFERES_PAGE.LABEL_NACIONALIDAD;
-  labelSolicitudChoferExtGafete: string =
-    CHOFERES_PAGE.LABEL_SOLICITUD_CHOFER_EXT_GAFETE;
-  labelSolicitudChoferExtVigenciaGafete: string =
-    CHOFERES_PAGE.LABEL_SOLICITUD_CHOFER_EXT_VIGENCIA_GAFETE;
-  labelSolicitudChoferExtNss: string =
-    CHOFERES_PAGE.LABEL_SOLICITUD_CHOFER_EXT_NSS;
-  labelSolicitudChoferExtIdeFiscal: string =
-    CHOFERES_PAGE.LABEL_SOLICITUD_CHOFER_EXT_IDE_FISCAL;
-  tooltipIdentificacionFiscal: string =
-    CHOFERES_PAGE.TOOL_TIP_IDENTIFICACION_FISCAL;
-  solicitudTituloDomicilioFiscal: string =
-    CHOFERES_PAGE.SOLICITUD_TITULO_DOMICILIO_FISCAL;
-  labelPais: string = CHOFERES_PAGE.LABEL_PAIS;
-  labelSolicitudDomicilioCodigoPostal: string =
-    CHOFERES_PAGE.LABEL_SOLICITUD_DOMICILIO_CODIGO_POSTAL;
-  labelEntidadFederativa: string = CHOFERES_PAGE.LABEL_ENTIDAD_FEDERATIVA;
-  labelSolicitudDomicilioCalle: string =
-    CHOFERES_PAGE.LABEL_SOLICITUD_DOMICILIO_CALLE;
-  labelSolicitudDomicilioNumeroExterior: string =
-    CHOFERES_PAGE.LABEL_SOLICITUD_DOMICILIO_NUMERO_EXTERIOR;
-  labelSolicitudDomicilioNumeroInterior: string =
-    CHOFERES_PAGE.LABEL_SOLICITUD_DOMICILIO_NUMERO_INTERIOR;
-  labelPaisOrigen: string = CHOFERES_PAGE.LABEL_PAIS_ORIGEN;
-  labelSolicitudDomicilioCiudad: string =
-    CHOFERES_PAGE.LABEL_SOLICITUD_DOMICILIO_CIUDAD;
-  labelSolicitudCorreo: string = CHOFERES_PAGE.LABEL_SOLICITUD_CORREO;
-  labelSolicitudTelefono: string = CHOFERES_PAGE.LABEL_SOLICITUD_TELEFONO;
-  camposObligatorios: string = CHOFERES_PAGE.CAMPOS_OBLIGATORIOS;
-  botonBuscar: string = CHOFERES_PAGE.BOTON_BUSCAR;
-  botonLimpiar: string = CHOFERES_PAGE.BOTON_LIMPIAR;
-  botonCancelar: string = CHOFERES_PAGE.BOTON_CANCELAR;
-  botonGuardar: string = CHOFERES_PAGE.BOTON_GUARDAR;
-  seleccionaUnValor: string = CHOFERES_PAGE.SELECCIONA_UNVALOR;
-  labelPuntos: string = '...';
-  seleccionadosTodos: boolean = false;
-  modal: string = 'modal';
+
+  CHOFERES_PAGE = CHOFERES_PAGE;
+  modal: string = this.CHOFERES_PAGE.MODAL;
   nacional: Array<Nacional> = [];
   extranjero: Array<extranjero> = [];
   activeTab: string = 'nacional';
-  Choferesextranjeros: string = 'Choferes extranjeros';
   /**
    * Observable que contiene la lista de estados disponibles.
    *

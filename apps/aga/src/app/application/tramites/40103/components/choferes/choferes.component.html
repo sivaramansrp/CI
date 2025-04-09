@@ -30,7 +30,7 @@
   <div class="row mt-5">
     <div class="col-md-12">
       <h3 *ngIf="activeTab === 'nacional'">Datos del Chofer Nacional</h3>
-      <h3 *ngIf="activeTab === 'extranjero'">{{ Choferesextranjeros }}</h3>
+      <h3 *ngIf="activeTab === 'extranjero'">{{ CHOFERES_PAGE.CHOFERES_EXTRANJEROS }}</h3>
       <hr class="red" />
     </div>
 
@@ -681,7 +681,7 @@
             <div>
               <div class="row">
                 <div class="col-md-12">
-                  <h3>{{ solicitudTituloChoferExtranjero }}</h3>
+                  <h3>{{ CHOFERES_PAGE.SOLICITUD_TITULO_CHOFER_EXTRANJERO }}</h3>
                   <hr class="red" />
                 </div>
               </div>
@@ -690,9 +690,7 @@
               <div class="row">
                 <div class="col-md-4">
                   <div>
-                    <label for="nombreCHE">{{
-                      labelSolicitudPersonaNombre
-                    }}</label>
+                    <label for="nombreCHE">{{ CHOFERES_PAGE.LABEL_SOLICITUD_PERSONA_NOMBRE }}</label>
                     <span class="require">*</span>
                   </div>
                   <div>
@@ -709,7 +707,7 @@
                 <div class="col-md-4">
                   <div>
                     <label for="apellidoPaternoCHE">{{
-                      labelSolicitudPersonaPrimerApellido
+                      CHOFERES_PAGE.LABEL_SOLICITUD_PERSONA_PRIMER_APELLIDO
                     }}</label>
                     <span class="require">*</span>
                   </div>
@@ -726,7 +724,7 @@
                 <div class="col-md-4">
                   <div>
                     <label for="apellidoMaternoCHE">{{
-                      labelSolicitudPersonaSegundoApellido
+                      CHOFERES_PAGE.LABEL_SOLICITUD_PERSONA_SEGUNDO_APELLIDO
                     }}</label>
                   </div>
                   <div>
@@ -763,7 +761,7 @@
                 <div class="col-md-4">
                   <div>
                     <label for="gafeteCHE">{{
-                      labelSolicitudChoferExtGafete
+                      CHOFERES_PAGE.LABEL_SOLICITUD_CHOFER_EXT_GAFETE
                     }}</label>
                   </div>
                   <div>
@@ -783,7 +781,7 @@
                 <div class="col-md-4">
                   <div>
                     <label for="vigenciagafeteCHE">{{
-                      labelSolicitudChoferExtVigenciaGafete
+                      CHOFERES_PAGE.LABEL_SOLICITUD_CHOFER_EXT_VIGENCIA_GAFETE
                     }}</label>
                   </div>
                   <div>
@@ -804,7 +802,7 @@
                 <!-- NSS -->
                 <div class="col-md-4">
                   <div>
-                    <label for="nssCHE">{{ labelSolicitudChoferExtNss }}</label>
+                    <label for="nssCHE">{{ CHOFERES_PAGE.LABEL_SOLICITUD_CHOFER_EXT_NSS }}</label>
                     <span class="require">*</span>
                   </div>
                   <div>
@@ -822,14 +820,14 @@
                 <div class="col-md-4">
                   <div>
                     <label for="idefiscalCHE">{{
-                      labelSolicitudChoferExtIdeFiscal
+                      CHOFERES_PAGE.LABEL_SOLICITUD_CHOFER_EXT_IDE_FISCAL
                     }}</label>
                     <span class="require">*</span>
                     <span
                       class="glyphicon glyphicon-question-sign"
                       data-toggle="tooltip"
                       data-placement="top"
-                      [title]="tooltipIdentificacionFiscal"
+                      [title]="CHOFERES_PAGE.TOOL_TIP_IDENTIFICACION_FISCAL"
                       aria-hidden="true"
                     ></span>
                   </div>
@@ -858,7 +856,7 @@
             <div>
               <div class="row">
                 <div class="col-md-12">
-                  <h3>{{ solicitudTituloDomicilioFiscal }}</h3>
+                  <h3>{{ CHOFERES_PAGE.SOLICITUD_TITULO_DOMICILIO_FISCAL }}</h3>
                   <hr class="red" />
                 </div>
               </div>
@@ -884,7 +882,7 @@
                 <div class="col-md-4">
                   <div>
                     <label for="codigoPostalCHE">{{
-                      labelSolicitudDomicilioCodigoPostal
+                      CHOFERES_PAGE.LABEL_SOLICITUD_DOMICILIO_CODIGO_POSTAL
                     }}</label>
                     <span class="require">*</span>
                   </div>
@@ -904,7 +902,7 @@
                 <div class="col-md-4">
                   <div>
                     <label for="entidadFederativaCHE">{{
-                      labelEntidadFederativa
+                      CHOFERES_PAGE.LABEL_ENTIDAD_FEDERATIVA
                     }}</label>
                     <span class="require">*</span>
                   </div>
@@ -926,7 +924,7 @@
                 <div class="col-md-4">
                   <div>
                     <label for="calleCHE">{{
-                      labelSolicitudDomicilioCalle
+                      CHOFERES_PAGE.LABEL_SOLICITUD_DOMICILIO_CALLE
                     }}</label>
                     <span class="require">*</span>
                   </div>
@@ -946,7 +944,7 @@
                 <div class="col-md-4">
                   <div>
                     <label for="numeroExteriorCHE">{{
-                      labelSolicitudDomicilioNumeroExterior
+                      CHOFERES_PAGE.LABEL_SOLICITUD_DOMICILIO_NUMERO_EXTERIOR
                     }}</label>
                     <span class="require">*</span>
                   </div>
@@ -966,7 +964,7 @@
                 <div class="col-md-4">
                   <div>
                     <label for="numeroInteriorCHE">{{
-                      labelSolicitudDomicilioNumeroInterior
+                      CHOFERES_PAGE.LABEL_SOLICITUD_DOMICILIO_NUMERO_INTERIOR
                     }}</label>
                   </div>
                   <div>
@@ -1003,7 +1001,7 @@
                 <div class="col-md-4">
                   <div>
                     <label for="ciudadCHE">{{
-                      labelSolicitudDomicilioCiudad
+                      CHOFERES_PAGE.LABEL_SOLICITUD_DOMICILIO_CIUDAD
                     }}</label>
                     <span class="require">*</span>
                   </div>
@@ -1025,7 +1023,7 @@
                 <!-- Correo -->
                 <div class="col-md-8">
                   <div>
-                    <label for="correoCHE">{{ labelSolicitudCorreo }}</label>
+                    <label for="correoCHE">{{ CHOFERES_PAGE.LABEL_SOLICITUD_CORREO }}</label>
                   </div>
                   <div>
                     <input
@@ -1043,7 +1041,7 @@
                 <div class="col-md-4">
                   <div>
                     <label for="telefonoCHE">{{
-                      labelSolicitudTelefono
+                      CHOFERES_PAGE.LABEL_SOLICITUD_TELEFONO
                     }}</label>
                   </div>
                   <div>
@@ -1061,7 +1059,7 @@
               <!-- Campos Obligatorios y Botones de Acción -->
               <div class="row mt-3">
                 <div class="col-md-3 text-muted text-vertical-align-button">
-                  <div id="lblCamposObligatorios">{{ camposObligatorios }}</div>
+                  <div id="lblCamposObligatorios">{{ CHOFERES_PAGE.CAMPOS_OBLIGATORIOS }}</div>
                 </div>
                 <div class="col-md-9">
                   <div class="pull-right">
