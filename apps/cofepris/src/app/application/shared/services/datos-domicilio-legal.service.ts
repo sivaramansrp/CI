@@ -16,23 +16,46 @@ import { PermisoModel } from '../models/datos-domicilio-legal.model';
   providedIn: 'root',
 })
 export class DatosDomicilioLegalService {
-  constructor(public http: HttpClient) {}
+  /**
+   * Servicio para obtener datos de terceros relacionados y permisos.
+   *
+   * @param http - Instancia de HttpClient para realizar solicitudes HTTP.
+   */
+  constructor(public http: HttpClient) {
+    // Constructor del servicio
+  }
 
-  getObtenerEstadoList() {
+  /**
+   * Obtiene los datos de selección desde un archivo JSON local.
+   *
+   * @returns Observable que emite un objeto RespuestaCatalogos.
+   */
+  getObtenerEstadoList(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>(
       'assets/json/260501/seleccion.json'
     );
   }
 
-  getObtenerTablaDatos() {
+  /**
+   * Obtiene los datos de la tabla desde un archivo JSON local.
+   *
+   * @returns Observable que emite un objeto RespuestaTabla.
+   */
+  getObtenerTablaDatos(): Observable<RespuestaTabla> {
     return this.http.get<RespuestaTabla>('assets/json/260501/tablaDatos.json');
   }
 
-  getObtenerMercanciasDatos() {
+  /**
+   * Obtiene los datos de mercancías desde un archivo JSON local.
+   *
+   * @returns Observable que emite un objeto MercanciasTabla.
+   */
+  getObtenerMercanciasDatos(): Observable<MercanciasTabla> {
     return this.http.get<MercanciasTabla>(
       'assets/json/260501/mercanciasDatos.json'
     );
   }
+
   /**
    * Obtiene los datos de terceros relacionados desde un archivo JSON local.
    *
@@ -44,6 +67,10 @@ export class DatosDomicilioLegalService {
     );
   }
 
+  /**
+   * Obtiene los datos de permisos desde un archivo JSON local.
+   * @returns Observable que emite un arreglo de objetos PermisoModel.
+   */
   getTable(): Observable<PermisoModel[]> {
     return this.http.get<PermisoModel[]>('assets/json/260501/terceros.json');
   }

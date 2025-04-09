@@ -1,42 +1,51 @@
 export interface NicoInfo {
-    clave_Scian: string;
-    descripcion_Scian: string;
-  }
-  
-  export const NICO_TABLA = [
-    {
-      encabezado: 'Clave S.C.I.A.N.',
-      clave: (ele: NicoInfo) => ele.clave_Scian,
-      orden: 1,
-    },
-    {
-      encabezado: 'Descripción del S.C.I.A.N.',
-      clave: (ele: NicoInfo) => ele.descripcion_Scian,
-      orden: 2,
-    },
-  ];
-  
-  export interface MercanciasInfo {
-    nombreComercial: string;
-    nombreComun: string;
-    nombreCientifico: string;
-    porcentajeConcentracion: string;
-    clasificacionToxicologica: string;
-    objetoImportacion: string;
-    fraccionArancelaria: string;
-    descripcionFraccion: string;
-    unidadMedidaTarifa: string;
-    cantidadUmt: string;
-    cantidadUmc: string;
-    paisProduccionIngredienteActivo: string;
-    paisElaboracionProducto: string;
-    paisProcedenciaUltimoPuerto: string;
-    paisOrigen: string;
-    numeroRegistroSanitario: string;
-    numeroCas: string;
-    estadoFisico: string;
-    usoEspecifico: string;
-    umc: string;
+  clave_Scian: string;
+  descripcion_Scian: string;
+}
+
+export const NICO_TABLA = [
+  {
+    encabezado: 'Clave S.C.I.A.N.',
+    clave: (ele: NicoInfo): string => ele.clave_Scian,
+    orden: 1,
+  },
+  {
+    encabezado: 'Descripción del S.C.I.A.N.',
+    clave: (ele: NicoInfo): string => ele.descripcion_Scian,
+    orden: 2,
+  },
+];
+
+export interface MercanciasInfo {
+  nombreComercial: string;
+  nombreComun: string;
+  nombreCientifico: string;
+  porcentajeConcentracion: string;
+  clasificacionToxicologica: string;
+  objetoImportacion: string;
+  fraccionArancelaria: string;
+  descripcionFraccion: string;
+  unidadMedidaTarifa: string;
+  cantidadUmt: string;
+  cantidadUmc: string;
+  paisProduccionIngredienteActivo: string;
+  paisElaboracionProducto: string;
+  paisProcedenciaUltimoPuerto: string;
+  paisOrigen: string;
+  numeroRegistroSanitario: string;
+  numeroCas: string;
+  estadoFisico: string;
+  usoEspecifico: string;
+  umc: string;
+}
+
+export interface PermisoModel {
+  nombre: string;
+  rfc: string;
+  curp: string;
+  telefono: number;
+  correoElectronico: string;
+  calle: string;
 }
   
   export const MERCANCIAS_DATA = [
@@ -141,14 +150,7 @@ export interface NicoInfo {
       orden: 20,
     },
   ];
-  export interface PermisoModel {
-    Nombre: string;
-    RFC: string;
-    CURP: string;
-    Teléfono: number;
-    CorreoElectrónico: string;
-    calle: string;
-  }
+
 
   export const DATOS_MERCANCIAS = [
     {

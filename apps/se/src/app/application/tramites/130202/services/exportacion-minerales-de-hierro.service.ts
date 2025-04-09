@@ -4,6 +4,8 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ProductoResponse } from '../../../shared/constantes/vehiculos-adaptados.enum';
 
+import { PartidasDeLaMercanciaModelo } from '../../../shared/models/partidas-de-la-mercancia.model';
+
 @Injectable({
   providedIn: 'root',
 })
@@ -66,4 +68,9 @@ export class ExportacionMineralesDeHierroService {
       'assets/json/130202/producto-otions.json'
     );
   }
+  getTablaDatos(): Observable<PartidasDeLaMercanciaModelo[]> {
+      return this.http.get<PartidasDeLaMercanciaModelo[]>(
+            'assets/json/130202/partidas-de-la.json'
+          );
+    }
 }
