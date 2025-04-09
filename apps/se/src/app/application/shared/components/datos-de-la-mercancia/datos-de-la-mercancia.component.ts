@@ -53,14 +53,6 @@ export class DatosDeLaMercanciaComponent {
   }>();
 
   /**
-   * compo doc
-   * @method fetchFraccion
-   * @description Obtiene información de fracción arancelaria.
-   */
-  obtenerFraccion(): void {
-    this.form.get('unidadMedida')?.setValue(this.unidadCatalogo[0].id);
-  }
-  /**
    * @description Verifica si un control del formulario es inválido.
    * @param nombreControl El nombre del control a verificar.
    * @returns Verdadero si el control es inválido y está tocado o modificado, de lo contrario, falso.

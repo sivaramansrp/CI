@@ -8,7 +8,7 @@ import { CommonModule } from '@angular/common';
 import { EstablecimientoService } from './shared/services/establecimiento.service';
 import { FooterComponent } from '@ng-mf/data-access-user';
 import { HeaderComponent } from '@ng-mf/data-access-user';
-import { InformacionUsuarioComponent } from "@ng-mf/data-access-user";
+import { InformacionUsuarioComponent } from '@ng-mf/data-access-user';
 import { NavComponent } from '@ng-mf/data-access-user';
 import { NgModule } from '@angular/core';
 
@@ -24,6 +24,7 @@ import { ServiciosPantallaService } from '@libs/shared/data-access-user/src/core
 
 
 import { SeleccionTramiteComponent } from './seleccion-tramite/seleccion-tramite.component';
+
 
 import { PagoDeDerechosEntradaService } from './shared/services/pago-de-derechos-entrada.service';
 
@@ -55,7 +56,7 @@ import { PagoDeDerechosEntradaService } from './shared/services/pago-de-derechos
       positionClass: 'toast-top-right',
     }),
     provideHttpClient(),
-    SolicitanteService
+    SolicitanteService,
   ],
   bootstrap: [AppComponent],
 })

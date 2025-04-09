@@ -132,13 +132,28 @@ export class EstablecimientoService {
   getInformacionConfidencialRadioOptions(): Observable<PropietarioTipoPersona[]> {
     return this.http.get<PropietarioTipoPersona[]>('assets/json/260401/radioSiNo.json');
   }
+  /**
+   * Obtiene los datos de justificación.
+   * @returns {Observable<PropietarioTipoPersona[]>} Un observable con los datos de justificación.
+   */
   getJustificationData(): Observable<PropietarioTipoPersona[]> {
     return this.http.get<PropietarioTipoPersona[]>('assets/json/cofepris/justificacion.json');
   }
+  /**
+   * Obtiene los datos de un establecimiento por su ID.
+   * @param id ID del establecimiento.
+   * @returns {Observable<Catalogo[]>} Un observable con los datos del establecimiento.
+   */
   getEstadodata(): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>('assets/json/260401/scianda.json');
   }
+
+  /**
+   * Obtiene la lista de asociados desde un archivo JSON.
+   * @returns {Observable<Asociados[]>} Un observable con la lista de asociados.
+   */
   enListaDeAsociados(): Observable<Asociados[]> {
     return this.http.get<Asociados[]>('assets/json/cofepris/asociadosJson.json');
   }
 }
+

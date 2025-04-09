@@ -24,8 +24,23 @@ export const MENSAJE_DE_ALERTA: string =
     'BHUTAN (KINGDOM OF)',
   ];
 
-  export const INPUT_FECHA_CADUCIDAD_CONFIG = {
-    labelNombre: 'Fecha de caducidad',
-    required: false,
-    habilitado: true,
-  };
+export const INPUT_FECHA_CADUCIDAD_CONFIG = {
+  labelNombre: 'Fecha de caducidad',
+  required: false,
+  habilitado: true,
+};
+
+export const CROSLISTA_DE_ADUANAS_ENTRADA: string[] = [
+  'ACAPULCO, PUERTO Y AEROPUERTO',
+  'ADUANA DE PANTACO',
+  'AEROPUERTO INT. DE LA CD DE MEXI',
+  'AEROPUERTO INTERNACIONAL FELIF',
+  'AGUA PRIETA',
+  'AGUASCALIENTES, AGS.',
+  'ALTAMIRA',
+  'CANCUN, AEROPUERTO',
+  'CD. CAMARGO, TAMPS.',
+  'CD. DEL CARMEN',
+  'CD. JUAREZ',
+  'CHIHUAHUA, CHIH.'
+];
