@@ -1,5 +1,5 @@
 <div class="container">
-  <div class="row mt-5">
+  <div class="row mt-5"  *ngIf="showPreFillingOptions">
     <div class="col-md-12">
       <div class="panel-group ficha-collapse" id="accordion">
         <div class="panel panel-default">
@@ -44,6 +44,7 @@
           [isRequired]="true"
           [layout]="'horizontal'"
           formControlName="ideGenerica1"
+          (change)="onControlChange('ideGenerica1')"
         ></app-input-radio>
       </div>
 
@@ -61,6 +62,7 @@
               class="form-control"
               formControlName="observaciones" 
               placeholder="Justificación"
+              (change)="onControlChange('observaciones')"
             ></textarea>
           </div>
         </div>
@@ -90,6 +92,7 @@
               placeholder=""
               type="text"
               formControlName="establecimientoRFCResponsableSanitario"
+              (change)="onControlChange('establecimientoRFCResponsableSanitario')"
             />
           </div>
         </div>
@@ -104,6 +107,7 @@
               placeholder=""
               type="text"
               formControlName="establecimientoRazonSocial"
+              (change)="onControlChange('establecimientoRazonSocial')"
             />
           </div>
         </div>
@@ -118,6 +122,8 @@
               placeholder=""
               type="text"
               formControlName="establecimientoCorreoElectronico"
+              (change)="onControlChange('establecimientoCorreoElectronico')"
+              
             />
           </div>
         </div>
@@ -291,7 +297,7 @@
             type="checkbox"
             id="avisoCheckbox"
             formControlName="avisoCheckbox"
-            (change)="toggleNoLicenciaSanitaria($event)"
+            (change)="toggleNoLicenciaSanitaria($event); onControlChangeForm('avisoCheckbox')"
           />
           <label class="form-check-label" for="avisoCheckbox">
             <span>Aviso de funcionamiento</span>
@@ -314,6 +320,7 @@
             placeholder=""
             type="text"
             formControlName="noLicenciaSanitaria"
+            (change)="onControlChangeForm('noLicenciaSanitaria')"
           />
         </div>
       </div>
@@ -328,6 +335,7 @@
           name="regimen"
           [tooltipQuestionCircle]="true"
           formControlName="regimen"
+          (change)="onControlChangeForm('regimen')"
         ></app-catalogo-select>
       </div>
       <div class="col-md-8">
@@ -337,6 +345,7 @@
           [required]="true"
           name="aduanasEntradas"
           formControlName="aduanasEntradas"
+          (change)="onControlChangeForm('aduanasEntradas')"
         ></app-catalogo-select>
       </div>
     </div>
@@ -350,7 +359,7 @@
             type="checkbox"
             id="aifaCheckbox"
             formControlName="aifaCheckbox"
-            
+            (change)="onControlChangeForm('aifaCheckbox')"
           />
           <label class="form-check-label" for="aifaCheckbox">
             <span

@@ -5,7 +5,14 @@ import { DatosDelSolicituteSeccionStateStore } from '../stores/datos-del-solicit
 
 import { DatosDelSolicituteSeccionState } from '../stores/datos-del-solicitute-seccion.store';
 
-
+/**
+ * Clase `DatosDelSolicituteSeccionQuery`
+ * 
+ * Esta clase es una consulta (`Query`) que permite acceder al estado de la sección
+ * de datos del solicitante. Utiliza Akita para gestionar el estado de la aplicación.
+ * 
+ * Proporciona observables para acceder a propiedades específicas del estado.
+ */
 @Injectable({ providedIn: 'root' })
 export class DatosDelSolicituteSeccionQuery extends Query<DatosDelSolicituteSeccionState> {
   representanteRfc$ = this.select('representanteRfc');
@@ -40,8 +47,12 @@ export class DatosDelSolicituteSeccionQuery extends Query<DatosDelSolicituteSecc
   telefono$ = this.select('telefono');
   scian$ = this.select('scian');
   establishomentoColonias$ = this.select('establishomentoColonias');
-
-  
+  noLicenciaSanitaria$ = this.select('noLicenciaSanitaria');  
+  avisoCheckbox = this.select('avisoCheckbox');  
+  licenciaSanitaria = this.select('licenciaSanitaria');  
+  regimen = this.select('regimen');  
+  aduanasEntradas = this.select('aduanasEntradas');  
+  aifaCheckbox = this.select('aifaCheckbox');  
 
   constructor(protected override store: DatosDelSolicituteSeccionStateStore) {
     super(store);

@@ -1,59 +1,57 @@
-import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
-import {
-  AfterViewInit,
-  Component,
-  ElementRef,
-  OnDestroy,
-  OnInit,
-  QueryList,
-  ViewChild,
-  ViewChildren,
-} from '@angular/core';
-import {
-  FormBuilder,
-  FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+/**
+ * @component DatosDelSolicitudModificacionComponent
+ * @description
+ * Este componente gestiona la modificación de datos relacionados con una solicitud.
+ * Proporciona formularios reactivos para capturar información del establecimiento,
+ * datos SCIAN, y otros detalles relacionados con la solicitud.
+ * También incluye funcionalidades para manejar modales, tablas dinámicas y listas cruzadas.
+ */
 import {
   ALERT,
   AlertComponent,
   Catalogo,
   CatalogoSelectComponent,
   ConfiguracionColumna,
-  CrosslistComponent,
   CrossListLable,
+  CrosslistComponent,
   InputFecha,
   InputFechaComponent,
   InputRadioComponent,
+  REGEX_RFC_SANITARIO,
+  REGEX_SOLO_DIGITOS,
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
-import {Subject, takeUntil } from 'rxjs';
+import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+
+import { CROSLISTA_DE_PAISES, FECHA_DE_PAGO, MERCANCIAS_DATA, TEXTOS } from '../../constantes/aviso-de-funcionamiento.enum';
+import { CommonModule } from '@angular/common';
+import { DatosDelSolicituteSeccionQuery } from '../../estados/queries/datos-del-solicitute-seccion.query';
+import { DatosDelSolicituteSeccionStateStore } from '../../estados/stores/datos-del-solicitute-seccion.store';
+
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+
+import { HttpClient } from '@angular/common/http';
+
+import { Modal } from 'bootstrap';
+
+
+
 import {
-  
   MercanciasInfo,
   PropietarioTipoPersona,
   ScianModel,
 } from '../../models/datos-de-la-solicitud.model';
-import { EstablecimientoService } from '../../services/establecimiento.service';
-import { DatosDelEstablecimientoComponent } from '../datos-del-establecimiento/datos-del-establecimiento.component';
-import { Modal } from 'bootstrap';
-import { SCIAN_DATA } from '../../constantes/datos-scian.enum';
+import { Subject, takeUntil } from 'rxjs';
 import { ScianData } from '../../../shared/models/datos-modificacion.model';
-import { DatosDelSolicituteSeccionStateStore } from '../../estados/stores/datos-del-solicitute-seccion.store';
-import {
-  CROSLISTA_DE_PAISES,
-  FECHA_DE_PAGO,
-  MERCANCIAS_DATA,
-  TEXTOS,
-} from '../../constantes/aviso-de-funcionamiento.enum';
-import { ManifiestosComponent } from '../manifiestos-declaraciones/manifiestos-declaraciones.component';
-import { ManifiestosRepresentanteSeccionComponent } from '../manifiestos-representante-seccion/manifiestos-representante-seccion.component';
-import { DatosDelSolicituteSeccionQuery } from '../../estados/queries/datos-del-solicitute-seccion.query';
+
+import { SCIAN_DATA } from '../../constantes/datos-scian.enum';
+
+import { EstablecimientoService } from '../../services/establecimiento.service';
+import { ManifiestosRepresentanteSeccionComponent } from '../manifiestos-representante-seccion/manifiestos-representante-seccion.component';/*
+** component 
+*/
 @Component({
   selector: 'app-datos-del-solicitud-modificacion',
   standalone: true,
@@ -77,30 +75,77 @@ import { DatosDelSolicituteSeccionQuery } from '../../estados/queries/datos-del-
 export class DatosDelSolicitudModificacionComponent
   implements OnInit, OnDestroy ,AfterViewInit
 {
+  /**
+   * @input showPreFillingOptions
+   * Indica si se deben mostrar las opciones de prellenado.
+   */
+  @Input() showPreFillingOptions: boolean = true; 
+  /**
+   * Referencia al modal del establecimiento.
+   */
   @ViewChild('establecimientoModal', { static: false })
   establecimientoModal!: ElementRef;
-
+ /**
+   * Referencia al botón del modal del establecimiento.
+   */
   @ViewChild('establecimientoModalButton', { static: false })
   establecimientoModalButton!: ElementRef;
-
+ /**
+   * Fecha de caducidad para el formulario.
+   */
   public fechaCaducidadInput: InputFecha = FECHA_DE_PAGO;
-  modalInstance!: Modal;
-  formMercancias!: FormGroup;
+   /**
+   * Instancia del modal de Bootstrap.
+   */
+   modalInstance!: Modal;
 
+   /**
+    * Formulario para gestionar mercancías.
+    */
+   formMercancias!: FormGroup;
+  /**
+   * Instancia del modal del establecimiento.
+   */
   establecimientoModalInstance!: Modal;
 
+  /**
+   * Datos del catálogo SCIAN.
+   */
   scianJson: Catalogo[] = [];
 
+  /**
+   * Formulario para datos SCIAN.
+   */
   scianForm!: FormGroup;
-  solicitudEstablecimientoForm!: FormGroup;
+   /**
+   * Formulario para datos del establecimiento.
+   */
+   solicitudEstablecimientoForm!: FormGroup;
 
-  @ViewChildren(CrosslistComponent) crossList!: QueryList<CrosslistComponent>;
-  genericOptions: PropietarioTipoPersona[] = [];
+   /**
+    * Referencias a los componentes de listas cruzadas.
+    */
+   @ViewChildren(CrosslistComponent) crossList!: QueryList<CrosslistComponent>;
+ 
+   /**
+    * Opciones genéricas para el formulario.
+    */
+   genericOptions: PropietarioTipoPersona[] = [];
 
-  public modal: string = 'modal';
+   /**
+   * Nombre del modal.
+   */
+   public modal: string = 'modal';
 
-  form!: FormGroup;
-  solicitudForm!: FormGroup;
+   /**
+    * Formulario principal.
+    */
+   form!: FormGroup;
+ 
+   /**
+    * Formulario de solicitud.
+    */
+   solicitudForm!: FormGroup;
 
   /**
    * Botones de acción para gestionar listas de países en la primera sección.
@@ -205,6 +250,9 @@ export class DatosDelSolicitudModificacionComponent
    * Indica si la sección "Tres" es colapsable.
    */
   colapsableTres: boolean = false;
+  /**
+   * Indica si la sección "Uno" es colapsable.
+   */
   public cambioFechaFinal(nuevo_valor: string): void {
     this.formMercancias.get('fechaCaducidad')?.setValue(nuevo_valor);
     this.formMercancias.get('fechaCaducidad')?.markAsUntouched();
@@ -276,6 +324,9 @@ export class DatosDelSolicitudModificacionComponent
    * Formulario de domicilio.
    */
   domicilio!: FormGroup;
+  /**
+   * Formulario de establecimiento.
+   */
   domicilioEstablecimiento!: FormGroup;
   /**
    * Muestra el modal para la clave SCIAN.
@@ -284,6 +335,9 @@ export class DatosDelSolicitudModificacionComponent
     this.modalInstance.show();
   }
 
+  /**
+   * Cierra el modal de clave SCIAN.
+   */
   openEstablecimientoModal(): void {
     this.establecimientoModalInstance.show();
   }
@@ -302,9 +356,21 @@ export class DatosDelSolicitudModificacionComponent
     }
   }
 
+  /**
+   * Formulario para gestionar el representante legal.
+   */
   representanteLegal!: FormGroup;
+  /**
+   * Texto de los manifiestos.
+   */
   TEXTOS1 = TEXTOS;
+  /**
+   * Texto de los manifiestos.
+   */
   colapsable1: boolean = true;
+  /**
+   * Texto de los manifiestos.
+   */
   private destroy$ = new Subject<void>();
 
   /**
@@ -347,7 +413,7 @@ export class DatosDelSolicitudModificacionComponent
     this.domicilioEstablecimiento = this.fb.group({
       ideGenerica1: ['', Validators.required],
       observaciones: ['', [Validators.required, Validators.maxLength(2000)]],
-      establecimientoRFCResponsableSanitario: ['', Validators.pattern(/^[A-Z]{4}\d{6}[A-Z\d]{3}$/)],
+      establecimientoRFCResponsableSanitario: ['', Validators.pattern(REGEX_RFC_SANITARIO)],
       establecimientoRazonSocial:['', Validators.required],
       establecimientoCorreoElectronico :['', [Validators.required, Validators.email]],
       establecimientoEstados :['', Validators.required],
@@ -355,8 +421,8 @@ export class DatosDelSolicitudModificacionComponent
       localidad :[''],
       establishomentoColonias:[''],
       calle: ['', Validators.required],
-      lada: ['', [Validators.maxLength(5), Validators.pattern(/^\d+$/)]],
-      telefono: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
+      lada: ['', [Validators.maxLength(5), Validators.pattern(REGEX_SOLO_DIGITOS)]],
+      telefono: ['', [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS)]],
       establecimientoDomicilioCodigoPostal :['', Validators.required],
       scian :['', Validators.required]
     });
@@ -367,11 +433,11 @@ export class DatosDelSolicitudModificacionComponent
 
     this.solicitudEstablecimientoForm = this.fb.group({
       noLicenciaSanitaria: ['', Validators.required],
-      avisoCheckbox: [true],
+      avisoCheckbox: [false],
        licenciaSanitaria: [{ value: '', disabled: true }],
-       regimen: [],
-       aduanasEntradas: [],
-       aifaCheckbox: [true],
+       regimen: [''],
+       aduanasEntradas: [''],
+       aifaCheckbox: [false],
     });
     this.formMercancias = this.fb.group({
       clasificacion: ['', Validators.required],
@@ -404,12 +470,15 @@ export class DatosDelSolicitudModificacionComponent
       .subscribe((state) => {
         this.domicilioEstablecimiento.patchValue(state, { emitEvent: false });
       });
+      this.domicilioEstablecimientoQuery
+      .select()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((state) => {
+        this.solicitudEstablecimientoForm.patchValue(state, { emitEvent: false });
+      });
   }
 
-  // onControlChange(controlName: string): void {
-  //   const UPDATED_VALUE = { [controlName]: this.domicilioEstablecimiento.get(controlName)?.value };
-  //   this.domicilioEstablecimientoStore.update(UPDATED_VALUE);
-  // }
+  
   mostrarColapsable(): void {
     this.colapsable1 = !this.colapsable1;
   }
@@ -433,15 +502,29 @@ export class DatosDelSolicitudModificacionComponent
       });
   }
 
+  /**
+   * Carga los datos del catálogo de justificación.
+   */
   onControlChange(controlName: string): void {
-    console.log(controlName);
+    
     const UPDATED_VALUE = {
       [controlName]: this.domicilioEstablecimiento.get(controlName)?.value,
     };
-    console.log(UPDATED_VALUE);
+    
     this.domicilioEstablecimientoStore.update(UPDATED_VALUE);
   }
-
+  /**
+   * Actualiza el estado del formulario según los cambios en los controles.
+   * @param controlName Nombre del control que cambió.
+   */
+  onControlChangeForm(controlName: string): void {
+  
+    const UPDATED_VALUE = {
+      [controlName]: this.solicitudEstablecimientoForm.get(controlName)?.value,
+    };
+   
+    this.domicilioEstablecimientoStore.update(UPDATED_VALUE);
+  }
   /**
    * Habilita o deshabilita el campo "No Licencia Sanitaria" según el estado del checkbox.
    * @param event Evento del checkbox.

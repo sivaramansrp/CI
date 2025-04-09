@@ -255,3 +255,6 @@ export const REGEX_SOLO_NUMEROS = /^[0-9]*$/;
  */
 export const REGEX_CURP =
   /^([a-zA-Z]{4})([0-9]{6})([HhMm][a-zA-Z]{5})([0-9]{2})$/;
+
+
+  export const REGEX_RFC_SANITARIO =/^[A-Z]{4}\d{6}[A-Z\d]{3}$/;   

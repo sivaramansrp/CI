@@ -1,23 +1,38 @@
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
 
 import {
+  Asociados,
   DatosDeLaProductoModel,
   MercanciasInfo,
   PropietarioModel,
   ScianModel,
 } from '../models/datos-de-la-solicitud.model';
-
+/**
+ * Configuración para el campo de RFC de autorización LDA.
+ */
 export const DESPACHO_LDA = {
   labelNombre: 'RFC autorización LDA',
   required: false,
   alfanumerico: true,
 };
-
+/**
+ * Declaración de manifiestos para cumplir con normatividad.
+ */
 export const MANIFIESTOS_DECLARACION = {
   MANIFIESTOS:
     'Cumplo con los requisitos y normatividad aplicable, sin que me eximan de que la autoridad sanitaria verifique su cumplimiento, esto sin perjuicio de las sanciones en que puedo incurrir por falsedad de declaraciones dadas a una autoridad. Asimismo acepto que la notificación de este trámite, sea a través de la Ventanilla Única de Comercio Exterior por los mecanismos de la misma.',
 };
 
+export const TRAMITES_ASOCIADOS : ConfiguracionColumna<Asociados>[] = [
+    { encabezado: '', clave: (item: Asociados) => item.id, orden: 1 },
+    { encabezado: 'Folio trámite', clave: (item: Asociados) => item.folioTramite, orden: 2 },
+    { encabezado: 'Tipo trámite', clave: (item: Asociados) => item.tipoTramite, orden: 3 },
+    { encabezado: 'Estatus', clave: (item: Asociados) => item.estatus, orden: 4 },
+    { encabezado: 'Fecha alta de registro', clave: (item: Asociados) => item.fechaAltaDeRegistro, orden: 5 },
+  ];
+/**
+ * Configuración de columnas para la tabla de SCIAN.
+ */
 export const SCIAN_TABLE_CONFIG: ConfiguracionColumna<ScianModel>[] = [
   {
     encabezado: 'Clave S.C.I.A.N.',
@@ -30,6 +45,9 @@ export const SCIAN_TABLE_CONFIG: ConfiguracionColumna<ScianModel>[] = [
     orden: 2,
   },
 ];
+/**
+ * Configuración de columnas para los datos del producto.
+ */
 
 export const DATOS_DE_LA_PRODUCTO_MODEL: ConfiguracionColumna<DatosDeLaProductoModel>[] =
   [
@@ -109,6 +127,9 @@ export const DATOS_DE_LA_PRODUCTO_MODEL: ConfiguracionColumna<DatosDeLaProductoM
       orden: 15,
     },
   ];
+  /**
+ * Configuración de columnas para la tabla de propietarios.
+ */
 export const ESTABLECIMIENTO_TABLE_CONFIG: ConfiguracionColumna<PropietarioModel>[] =
 [
   {
@@ -187,7 +208,9 @@ export const ESTABLECIMIENTO_TABLE_CONFIG: ConfiguracionColumna<PropietarioModel
     orden: 15,
   },
 ];
-
+/**
+ * Configuración de datos para la tabla de mercancías.
+ */
 export const MERCANCIAS_DATA = [
   {
     encabezado: 'Clasificación del producto',
@@ -285,6 +308,9 @@ export const MERCANCIAS_DATA = [
     orden: 19,
   },
 ];
+/**
+ * Configuración para la fecha de pago.
+ */
 export const FECHA_DE_PAGO = {
   labelNombre: 'Fecha de caducidad',
   required: false,
@@ -317,7 +343,9 @@ export const CROSLISTA_DE_PAISES: string[] = [
   "BENIN (REPUBLIC OF)",
   "BHUTAN (KINGDOM OF)"
 ];
-
+/**
+ * Textos utilizados en la aplicación.
+ */
 export const TEXTOS = {
   /**
    * Texto para la solicitud.

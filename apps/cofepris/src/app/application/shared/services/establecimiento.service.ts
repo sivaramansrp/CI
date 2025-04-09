@@ -24,7 +24,9 @@ export class EstablecimientoService {
    * Constructor del servicio.
    * @param http Cliente HTTP para realizar solicitudes.
    */
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+    //constructor
+  }
 
   /**
    * Obtiene los datos del catálogo de estados.
@@ -137,6 +139,6 @@ export class EstablecimientoService {
     return this.http.get<Catalogo[]>('assets/json/260401/scianda.json');
   }
   enListaDeAsociados(): Observable<Asociados[]> {
-    return this.http.get<Asociados[]>('assets/json/cofepris/asociadosList.json');
+    return this.http.get<Asociados[]>('assets/json/cofepris/asociadosJson.json');
   }
 }
