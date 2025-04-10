@@ -1,13 +1,14 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
 import { DatosDelTramiteComponent } from '../../../../shared/components/datos-del-tramite/datos-del-tramite.component';
+import { DatosDelTramiteFormState } from '../../../../shared/models/datos-del-tramite.model';
+import { MercanciaDetalle } from '../../../../shared/models/datos-del-tramite.model';
+import { OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
+import { Subject } from 'rxjs';
 import { Tramite240101Query } from '../../estados/tramite240101Query.query';
-import { Subject, takeUntil } from 'rxjs';
-import {
-  DatosDelTramiteFormState,
-  MercanciaDetalle,
-} from '../../../../shared/models/datos-del-tramite.model';
 import { Tramite240101Store } from '../../estados/tramite240101Store.store';
+import { takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-datos-del-tramite-contenedora',
@@ -24,7 +25,8 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
   constructor(
     private tramiteQuery: Tramite240101Query,
     private tramiteStore: Tramite240101Store
-  ) {}
+  ) // eslint-disable-next-line no-empty-function
+  {}
 
   /**
    * @method ngOnInit

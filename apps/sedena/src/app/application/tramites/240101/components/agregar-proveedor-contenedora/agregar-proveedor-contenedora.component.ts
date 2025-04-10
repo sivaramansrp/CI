@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { AgregarProveedorComponent } from '../../../../shared/components/agregar-proveedor/agregar-proveedor.component';
-import { Tramite240101Store } from '../../estados/tramite240101Store.store';
+import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
 import { Proveedor } from '../../../../shared/models/terceros-relacionados.model';
+import { Tramite240101Store } from '../../estados/tramite240101Store.store';
+
 @Component({
   selector: 'app-agregar-proveedor-contenedora',
   standalone: true,
@@ -17,6 +18,7 @@ export class AgregarProveedorContenedoraComponent {
    *
    * @param tramite260214Store - Store que administra el estado del trámite 260214.
    */
+  // eslint-disable-next-line no-empty-function
   constructor(public tramite240101Store: Tramite240101Store) {}
 
   /**

@@ -1,13 +1,13 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
+import { OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
 import { PagoDeDerechosComponent } from '../../../../shared/components/pago-de-derechos/pago-de-derechos.component';
-import { Subject, takeUntil } from 'rxjs';
 import { PagoDerechosFormState } from '../../../../shared/models/pago-de-derechos.model';
+import { Subject } from 'rxjs';
 import { Tramite240101Query } from '../../estados/tramite240101Query.query';
-import {
-  Tramite240101State,
-  Tramite240101Store,
-} from '../../estados/tramite240101Store.store';
+import { Tramite240101Store } from '../../estados/tramite240101Store.store';
+import { takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-pago-de-derechos-contenedora',
@@ -24,7 +24,8 @@ export class PagoDeDerechosContenedoraComponent implements OnInit, OnDestroy {
   constructor(
     private tramiteQuery: Tramite240101Query,
     private tramiteStore: Tramite240101Store
-  ) {}
+  ) // eslint-disable-next-line no-empty-function
+  {}
 
   /**
    * @method ngOnInit

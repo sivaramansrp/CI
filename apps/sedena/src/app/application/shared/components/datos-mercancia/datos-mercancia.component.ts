@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { CrossListLable } from '@ng-mf/data-access-user';
 import { CrosslistComponent } from '@ng-mf/data-access-user';
+import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 import { EventEmitter } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
@@ -15,8 +16,10 @@ import { OnInit } from '@angular/core';
 import { Output } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Subject } from 'rxjs';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { Validators } from '@angular/forms';
+import { takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-datos-mercancia',
@@ -32,6 +35,8 @@ import { Validators } from '@angular/forms';
   styleUrl: './datos-mercancia.component.css',
 })
 export class DatosMercanciaComponent implements OnInit {
+  private unsubscribe$ = new Subject<void>();
+
   irAAcciones(accionesPath: string): void {
     this.router.navigate([accionesPath], {
       relativeTo: this.activatedRoute,
@@ -41,22 +46,12 @@ export class DatosMercanciaComponent implements OnInit {
   @Output() updateMercanciaDetalle = new EventEmitter<MercanciaDetalle[]>();
 
   datosMercancia!: FormGroup; // Changed from datosForm
-
   // Sample data for dropdowns
-  fraccionesCatalogo: Catalogo[] = [
-    { id: 1, descripcion: '25030002' },
-    { id: 2, descripcion: '25030003' },
-  ];
+  fraccionesCatalogo: Catalogo[] = [];
 
-  umcCatalogo: Catalogo[] = [
-    { id: 1, descripcion: 'Tonelada' },
-    { id: 2, descripcion: 'Kilogramo' },
-  ];
+  umcCatalogo: Catalogo[] = [];
 
-  monedaCatalogo: Catalogo[] = [
-    { id: 1, descripcion: 'Peso Mexicano' },
-    { id: 2, descripcion: 'Dólar Estadounidense' },
-  ];
+  monedaCatalogo: Catalogo[] = [];
   public seleccionarOrigenDelPais = CROSLISTA_DE_PAISES;
   public paisDeOriginLabel: CrossListLable = {
     tituluDeLaIzquierda: 'País de origen',
@@ -73,9 +68,33 @@ export class DatosMercanciaComponent implements OnInit {
     private fb: FormBuilder,
     private router: Router,
     private activatedRoute: ActivatedRoute,
-    private ubicaccion: Location
-  ) // eslint-disable-next-line no-empty-function
-  {}
+    private ubicaccion: Location,
+    private datosSolicitudService: DatosSolicitudService
+  ) {
+    this.cargarDatos();
+  }
+  cargarDatos(): void {
+    this.datosSolicitudService
+      .obtenerFraccionesCatalogo()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((data) => {
+        this.fraccionesCatalogo = data;
+      });
+
+    this.datosSolicitudService
+      .obtenerUMCCatalogo()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((data) => {
+        this.umcCatalogo = data;
+      });
+
+    this.datosSolicitudService
+      .obtenerMonedaCatalogo()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((data) => {
+        this.monedaCatalogo = data;
+      });
+  }
 
   guardar(): void {
     const DATOS_MERCANCIA: MercanciaDetalle = {

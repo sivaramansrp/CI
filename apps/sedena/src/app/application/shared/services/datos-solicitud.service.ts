@@ -1,9 +1,10 @@
-import { Observable, map } from 'rxjs';
+import { AppSedenaModule } from '../../app.module';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 import { RespuestaCatalogos } from '../models/datos-solicitud.model';
-import { AppSedenaModule } from '../../app.module';
+import { map } from 'rxjs';
 
 @Injectable({
   providedIn: AppSedenaModule,
@@ -17,6 +18,7 @@ export class DatosSolicitudService {
    */
   private jsonUrl = 'assets/json/sedena/domicilio.json';
 
+  // eslint-disable-next-line no-empty-function
   constructor(public httpServicios: HttpClient) {}
   /**
    * Obtiene una respuesta desde una URL y asigna los datos a una variable.
@@ -81,5 +83,20 @@ export class DatosSolicitudService {
     return this.httpServicios
       .get<{ banco: Catalogo[] }>(this.jsonUrl)
       .pipe(map((res) => res.banco));
+  }
+  obtenerFraccionesCatalogo(): Observable<Catalogo[]> {
+    return this.httpServicios
+      .get<{ fraccionesCatalogo: Catalogo[] }>(this.jsonUrl)
+      .pipe(map((res) => res.fraccionesCatalogo));
+  }
+  obtenerUMCCatalogo(): Observable<Catalogo[]> {
+    return this.httpServicios
+      .get<{ umcCatalogo: Catalogo[] }>(this.jsonUrl)
+      .pipe(map((res) => res.umcCatalogo));
+  }
+  obtenerMonedaCatalogo(): Observable<Catalogo[]> {
+    return this.httpServicios
+      .get<{ monedaCatalogo: Catalogo[] }>(this.jsonUrl)
+      .pipe(map((res) => res.monedaCatalogo));
   }
 }

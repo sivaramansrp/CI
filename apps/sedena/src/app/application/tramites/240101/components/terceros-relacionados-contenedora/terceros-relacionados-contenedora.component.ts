@@ -1,13 +1,13 @@
-import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
+import { DestinoFinal } from '../../../../shared/models/terceros-relacionados.model';
+import { OnInit } from '@angular/core';
+import { Proveedor } from '../../../../shared/models/terceros-relacionados.model';
+import { Subject } from 'rxjs';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
-import {
-  DestinoFinal,
-  Proveedor,
-} from '../../../../shared/models/terceros-relacionados.model';
-import { Tramite240101Store } from '../../estados/tramite240101Store.store';
 import { Tramite240101Query } from '../../estados/tramite240101Query.query';
-import { Subject, takeUntil } from 'rxjs';
+import { Tramite240101Store } from '../../estados/tramite240101Store.store';
+import { takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-terceros-relacionados-contenedora',
@@ -25,7 +25,8 @@ export class TercerosRelacionadosContenedoraComponent implements OnInit {
   constructor(
     private tramiteStore: Tramite240101Store,
     private tramiteQuery: Tramite240101Query
-  ) {}
+  ) // eslint-disable-next-line no-empty-function
+  {}
 
   /**
    * @method ngOnInit

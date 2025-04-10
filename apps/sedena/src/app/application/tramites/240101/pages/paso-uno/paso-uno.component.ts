@@ -1,12 +1,16 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
+import { DatosDelTramiteContenedoraComponent } from '../../components/datos-del-tramite-contenedora/datos-del-tramite-contenedora.component';
+import { OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
+import { PagoDeDerechosContenedoraComponent } from '../../components/pago-de-derechos-contenedora/pago-de-derechos-contenedora.component';
 import { SolicitanteComponent } from '@ng-mf/data-access-user';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject } from 'rxjs';
+import { TercerosRelacionadosContenedoraComponent } from '../../components/terceros-relacionados-contenedora/terceros-relacionados-contenedora.component';
 import { Tramite240101Query } from '../../estados/tramite240101Query.query';
 import { Tramite240101Store } from '../../estados/tramite240101Store.store';
-import { DatosDelTramiteContenedoraComponent } from '../../components/datos-del-tramite-contenedora/datos-del-tramite-contenedora.component';
-import { TercerosRelacionadosContenedoraComponent } from '../../components/terceros-relacionados-contenedora/terceros-relacionados-contenedora.component';
-import { PagoDeDerechosContenedoraComponent } from '../../components/pago-de-derechos-contenedora/pago-de-derechos-contenedora.component';
+import { takeUntil } from 'rxjs';
+
 @Component({
   selector: 'app-paso-uno',
   standalone: true,
@@ -45,7 +49,8 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
   constructor(
     private tramite240101Query: Tramite240101Query,
     private tramite240101Store: Tramite240101Store
-  ) {}
+  ) // eslint-disable-next-line no-empty-function
+  {}
 
   /**
    * Angular lifecycle method that runs on component initialization.
