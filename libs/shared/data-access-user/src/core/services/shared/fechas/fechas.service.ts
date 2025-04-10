@@ -5,28 +5,15 @@ import { SEMANA_D } from '../../../enums/constantes-alertas.enum';
   providedIn: 'root',
 })
 export class FechasService {
-  /**
-   * Devuelve la fecha actual en formato 'DD-MM-AAAA'
-   * @param {string} fecha
-   * @param {boolean} dma, si es false, regresa el formato 'AAAA-MM-DD'
-   * @returns {string} Fecha en formato 'DD-MM-AAAA' o 'AAAA-MM-DD'
-   */
-  formatoFechaGuion(fecha: string, dma = true): string {
-    const [dia, mes, anio] = fecha.split('/');
-    if (dma) {
-      return `${dia}-${mes}-${anio}`;
-    }
-    return `${anio}-${mes}-${dia}`;
-  }
 
   /**
    * Obtiene el nombre del día de la semana en español.
    * @param {Date} fecha
    * @returns {string} Nombre del día de la semana en español.
    */
-  obtenerNombreDiaSemana(fecha: Date): string {
-    const diasSemana = SEMANA_D;
-    return diasSemana[fecha.getDay()];
+  static obtenerNombreDiaSemana(fecha: Date): string {
+    const DIA_SEMANA = SEMANA_D;
+    return DIA_SEMANA[fecha.getDay()];
   }
 
   /**
@@ -35,23 +22,23 @@ export class FechasService {
    * @param {string} fechaFinal, fecha final en formato string.
    * @returns {Array<string>} Array con las fechas comprendidas entre la fecha de inicio y la fecha final
    */
-  obtenerDiasEntreFechas(fechaInicio: string, fechaFinal: string, horaInicial: string, horaFinal: string): string[] {
-    const inicio = `${fechaInicio}T${horaInicial}`;
-    const fin = `${fechaFinal}T${horaFinal}`;
-    const fechaPrincipio = new Date(inicio);
-    const fechaFin = new Date(fin);    
+  static obtenerDiasEntreFechas(fechaInicio: string, fechaFinal: string, horaInicial: string, horaFinal: string): string[] {
+    const INICIO = `${fechaInicio}T${horaInicial}`;
+    const FIN = `${fechaFinal}T${horaFinal}`;
+    const FECHA_PRINCIPIO = new Date(INICIO);
+    const FECHA_FIN = new Date(FIN);    
     
-    const dias = [];
+    const DIAS = [];
 
-    while (fechaPrincipio <= new Date(fechaFin)) {
+    while (FECHA_PRINCIPIO <= new Date(FECHA_FIN)) {
       // Formatear la fecha actual en formato Día de la semana, DD/MM/YYYY, HH:MM
-      const diaSemana = this.obtenerNombreDiaSemana(fechaPrincipio);
-      const dia = String(fechaPrincipio.getDate()).padStart(2, '0');
-      const mes = String(fechaPrincipio.getMonth() + 1).padStart(2, '0');
-      const año = fechaPrincipio.getFullYear();
-      dias.push(`${diaSemana}, ${dia}/${mes}/${año}`); // Incrementar la fecha en un día
-      fechaPrincipio.setDate(fechaPrincipio.getDate() + 1);
+      const DIA_SEMANA = FechasService.obtenerNombreDiaSemana(FECHA_PRINCIPIO);
+      const DIA = String(FECHA_PRINCIPIO.getDate()).padStart(2, '0');
+      const MES = String(FECHA_PRINCIPIO.getMonth() + 1).padStart(2, '0');
+      const ANIO = FECHA_PRINCIPIO.getFullYear();
+      DIAS.push(`${DIA_SEMANA}, ${DIA}/${MES}/${ANIO}`); // Incrementar la fecha en un día
+      FECHA_PRINCIPIO.setDate(FECHA_PRINCIPIO.getDate() + 1);
     }    
-    return dias;
+    return DIAS;
   }
 }

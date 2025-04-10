@@ -15,7 +15,6 @@ import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule} from '@angular/router';
-import { SelectCatalogosComponent } from '@ng-mf/data-access-user';
 import { SharedModule } from '@ng-mf/data-access-user';
 import { SolicitanteComponent } from '@ng-mf/data-access-user';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
@@ -48,7 +47,6 @@ import {RegionesComponent} from './pages/regiones/regiones.component'
     AlertComponent,
     CatalogoSelectComponent,
     TablaDinamicaComponent,
-    SelectCatalogosComponent,
     SolicitanteComponent,
     NacionalCafeExportadoresRoutingModule,
     DatosDeLaSolicitudComponent,
