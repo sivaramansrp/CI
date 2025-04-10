@@ -22,7 +22,6 @@ import { PedimentoComponent } from './components/pedimento/pedimento.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RepresentanteFiscalComponent } from '@ng-mf/data-access-user';
 import { RouterModule } from '@angular/router';
-import { SelectCatalogosComponent } from '@ng-mf/data-access-user';
 import { SelectPaisesComponent } from '@ng-mf/data-access-user';
 import { ServiciosExtraordinariosRoutingModule } from './servicios-extraordinarios-routing.module';
 import { SolicitanteComponent } from '@ng-mf/data-access-user';
@@ -60,7 +59,6 @@ import { WizardComponent } from '@ng-mf/data-access-user';
     ReactiveFormsModule,
     forwardRef(() => RepresentanteFiscalComponent),
     RouterModule,
-    forwardRef(() => SelectCatalogosComponent),
     forwardRef(() => SelectPaisesComponent),
     ServiciosExtraordinariosRoutingModule,
     forwardRef(() => SolicitanteComponent),

@@ -15,6 +15,7 @@ import { InputCheckComponent } from '../input-check/input-check.component';
 import { InputHoraComponent } from '../input-hora/input-hora.component';
 import { Modal } from 'bootstrap';
 import { Subject } from 'rxjs';
+
 @Component({
   selector: 'lib-agregar-transporte',
   standalone: true,
@@ -151,13 +152,16 @@ export class AgregarTransporteComponent implements OnChanges {
   ) { }
 
   /**
-   * Detecta cambios en las propiedades de entrada y actualiza los datos de la tabla según el tipo y la información de transporte.
-   * @param changes - Cambios detectados en las propiedades de entrada del componente.
+   * Detecta y maneja los cambios en las propiedades de entrada del componente.
+   * 
+   * @param changes - Objeto que contiene los cambios en las propiedades de entrada.
+   *                  'tipo': Actualiza el encabezado de la tabla según el tipo.
+   *                  'tablaTransporte': Actualiza el cuerpo de la tabla con los datos proporcionados.
+   * @returns void
    */
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['tipo'] && changes['tipo'].currentValue) {
       this.headerTabla = this.tipoTabla();
-
     }
 
     if (changes['tablaTransporte'] && changes['tablaTransporte'].currentValue) {
@@ -165,10 +169,10 @@ export class AgregarTransporteComponent implements OnChanges {
     }
   }
 
-  // #Seccion de creacion de formularios
   /**
-   * Crea el formulario de transporte carretero.
-   * @returns {void} No retorna ningún valor.
+   * Crea y configura el formulario reactivo para los datos del transporte carretero.
+   * Define los campos con sus valores iniciales y validaciones correspondientes.
+   * @returns void
    */
   crearCarreteroForm(): void {
     this.carreteroForma = this.fb.group({
@@ -183,9 +187,10 @@ export class AgregarTransporteComponent implements OnChanges {
   }
 
   /**
-   * Crea el formulario de transporte ferroviario.
-   * @returns {void} No retorna ningún valor.
-   */
+ * Crea y configura el formulario reactivo para los datos del transporte carretero.
+ * Define los campos con sus valores iniciales y validaciones correspondientes.
+ * @returns void
+ */
   crearFerroviarioForm(): void {
     this.ferroviarioForma = this.fb.group({
       numeroBL: ['', [Validators.maxLength(25)]],
@@ -193,13 +198,13 @@ export class AgregarTransporteComponent implements OnChanges {
       inicialesEquipo: ['', [Validators.maxLength(10)]],
       numeroEquipo: ['', [Validators.maxLength(15)]],
     });
-
   }
 
   /**
-   * Crea el formulario de transporte peatonal.
-   * @returns {void} No retorna ningún valor.
-   */
+ * Crea y configura el formulario reactivo para los datos del transporte peatonal.
+ * Define los campos con sus valores iniciales y validaciones correspondientes.
+ * @returns void
+ */
   crearPeatonalForm(): void {
     this.peatonalForma = this.fb.group({
       rfcEmpresa: ['', [Validators.maxLength(13)]],
@@ -210,9 +215,10 @@ export class AgregarTransporteComponent implements OnChanges {
   }
 
   /**
-   * Crea el formulario de transporte otro.
-   * @returns {void} No retorna ningún valor.
-   */
+ * Crea y configura el formulario reactivo para los datos del transporte otro.
+ * Define los campos con sus valores iniciales y validaciones correspondientes.
+ * @returns void
+ */
   crearOtroForm(): void {
     this.otroForma = this.fb.group({
       tipoTransporteDes: ['', [Validators.maxLength(100)]],
@@ -222,9 +228,10 @@ export class AgregarTransporteComponent implements OnChanges {
   }
 
   /**
-   * Crea el formulario de transporte aereo.
-   * @returns {void} No retorna ningún valor.
-   */
+ * Crea y configura el formulario reactivo para los datos del transporte áereo.
+ * Define los campos con sus valores iniciales y validaciones correspondientes.
+ * @returns void
+ */
   crearAereoForm(): void {
     this.aereoForma = this.fb.group({
       arriboPendienteAereo: [''],
@@ -237,9 +244,10 @@ export class AgregarTransporteComponent implements OnChanges {
   }
 
   /**
-   * Crea el formulario de transporte maritimo.
-   * @returns {void} No retorna ningún valor.
-   */
+ * Crea y configura el formulario reactivo para los datos del transporte marítimo.
+ * Define los campos con sus valores iniciales y validaciones correspondientes.
+ * @returns void
+ */
   crearMaritimoForm(): void {
     this.maritimoForma = this.fb.group({
       guiaBLMaritimo: ['', [Validators.maxLength(15)]],
@@ -248,10 +256,12 @@ export class AgregarTransporteComponent implements OnChanges {
       contenedorMaritimo: ['', Validators.maxLength(600)],
     });
   }
-  // #Termina seccion de creacion de formularios
+
 
   /**
-   * Crea un nuevo formulario de transporte, dependiendo del tipo de transporte seleccionado.
+   * Determina el tipo de tabla y configura el formulario correspondiente según el tipo de transporte.
+   * 
+   * @returns {ItemTransporte[]} Encabezados de la tabla correspondientes al tipo de transporte seleccionado.
    */
   tipoTabla(): ItemTransporte[] {
     switch (parseInt(this.tipo, 10)) {
@@ -281,9 +291,11 @@ export class AgregarTransporteComponent implements OnChanges {
     }
   }
 
+
   /**
 * Abre el modal para eliminar un documento.
 * @param {number} i - El índice del documento.
+* @returns {void}
 */
   abrirModal(): void {
     const MODAL_AGREGA = new Modal(this.agregarTransporte.nativeElement);
@@ -292,6 +304,7 @@ export class AgregarTransporteComponent implements OnChanges {
 
   /**
   * Cierra el modal.
+  * @returns {void}
   */
   cerrarModal(): void {
     this.btnCerrarModal.nativeElement.click();
@@ -300,15 +313,18 @@ export class AgregarTransporteComponent implements OnChanges {
   }
 
   /**
-   * Limpia el formulario actual.
+   * Restablece el formulario carretero a su estado inicial.
+   * @returns {void}
    */
   limpiarFormulario(): void {
     this.carreteroForma.reset();
-
   }
 
+
   /**
-   * Crea la tabla y agrega un elemento, según el tipo de transporte seleccionado.    
+   * Agrega un tipo de transporte a la tabla según el tipo seleccionado.
+   * 
+   * @returns {void} No retorna ningún valor.
    */
   agregarTipoTransporte(): void {
     switch (parseInt(this.tipo, 10)) {
@@ -361,8 +377,10 @@ export class AgregarTransporteComponent implements OnChanges {
   }
 
   /**
-   * Selecciona todos los elementos de la tabla.
-   * @param {Event} event - El evento del checkbox de seleccionar todos.
+   * Selecciona o deselecciona todos los checkboxes con la clase 'check-transporte'.
+   *
+   * @param event - Evento que contiene el estado del checkbox principal.
+   * @returns void
    */
   // eslint-disable-next-line class-methods-use-this
   seleccionarTodos(event: Event): void {

@@ -55,6 +55,13 @@ export class TercerosComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Agrega una persona al arreglo `personas` si el formulario es válido y hay menos de 5 personas.
+   * Resetea el formulario después de agregar.
+   * Si no se cumplen las condiciones, se dispara un modal de confirmación.
+   *
+   * @returns {void} No retorna ningún valor.
+   */
   agregaPersona(): void {
     if (this.personas.length < 5 && this.FormPersona.valid) {
       const DATOS = this.FormPersona.value;
@@ -62,13 +69,16 @@ export class TercerosComponent implements OnInit, OnDestroy {
       this.tercerosStore.setTerceros(this.personas);
       this.FormPersona.reset();
     } else {
-      console.log(
-        'No puede agregar mas de cinco personas o el formato de la dirección correo no es valido'
-      );
+      // Aqui se dispara un modal de confirmacion
     }
   }
 
-  eliminar(i: number) {
+  /**
+   * Elimina una persona de la lista en el índice especificado.
+   * @param i - Índice de la persona a eliminar.
+   * @returns void
+   */
+  eliminar(i: number): void {
     this.personas.splice(i, 1);
     this.tercerosStore.setTerceros(this.personas);
   }

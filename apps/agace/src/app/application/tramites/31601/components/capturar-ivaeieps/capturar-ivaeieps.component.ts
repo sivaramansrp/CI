@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @nx/enforce-module-boundaries */
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { REGEX_LLAVE_DE_PAGO, TituloComponent } from '@ng-mf/data-access-user';
+import { REGEX_LLAVE_DE_PAGO, REGEX_RFC, TituloComponent } from '@ng-mf/data-access-user';
 
 import { SelectCatalogosComponent } from '@ng-mf/data-access-user';
 

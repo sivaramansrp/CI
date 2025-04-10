@@ -34,7 +34,6 @@ import {
   Solicitud5701State,
   Tramite5701Store,
 } from '../../../../core/estados/tramites/tramite5701.store';
-
 import { DatosCheckInputText } from '../../../../core/models/shared/check-input-text.model';
 import { DatosComponentePedimento } from '../../../../core/models/5701/tramite5701.model';
 import { Modal } from 'bootstrap';
@@ -317,7 +316,6 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
     if (changes['folioSolicitud'] && changes['folioSolicitud'].currentValue) {
       this.FormSolicitud.get('folioSolicitud')?.setValue(this.folioSolicitud);
       // Se hace la peticion para obtener los datos de la solicitud
-
     }
   }
 
@@ -601,7 +599,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       field: 'patente',
       valor: '3061',
     };
-    this.formulariosService.agregarValorCamposDesactivados(DATOS_PATENTE);
+    FormulariosService.agregarValorCamposDesactivados(DATOS_PATENTE);
   }
 
   /**
@@ -656,11 +654,11 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       datosServicio: this.fb.group({
         fechaInicio: [
           this.solicitudState?.fechaInicio,
-          [Validators.required, this.validacionesService.validaFechaNoHoy],
+          [Validators.required, ValidacionesFormularioService.validaFechaNoHoy],
         ],
         fechaFinal: [
           this.solicitudState?.fechaFinal,
-          [Validators.required, this.validacionesService.validaFechaNoHoy],
+          [Validators.required, ValidacionesFormularioService.validaFechaNoHoy],
         ],
         horaInicio: [this.solicitudState?.horaInicio, Validators.required],
         horaFinal: [this.solicitudState?.horaFinal, Validators.required],
@@ -915,11 +913,11 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
     );
     this.validacionPedimento = true;
 
-    const PATENTE = this.formulariosService.convertirValorANumero(
+    const PATENTE = FormulariosService.convertirValorANumero(
       this.despacho,
       'patente'
     );
-    const ID_ADUANA = this.formulariosService.convertirValorANumero(
+    const ID_ADUANA = FormulariosService.convertirValorANumero(
       this.despacho,
       'idAduanaDespacho'
     );
@@ -1050,7 +1048,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
     const HORA_INICIO = this.datosServicio.get('horaInicio')?.value;
     const HORA_FINAL = this.datosServicio.get('horaFinal')?.value;
 
-    this.selectRangoDias = this.fechaService.obtenerDiasEntreFechas(
+    this.selectRangoDias = FechasService.obtenerDiasEntreFechas(
       FECHA_INICIAL,
       FECHA_FINAL,
       HORA_INICIO,
@@ -1234,7 +1232,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       field: 'patente',
       valor: PATENTE,
     };
-    this.formulariosService.agregarValorCamposDesactivados(DATOS_PATENTE);
+    FormulariosService.agregarValorCamposDesactivados(DATOS_PATENTE);
     this.obtenerIdPatentesAduanales();
   }
 
@@ -1404,7 +1402,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
     this.verificaDatosCheckInput('dd', 'despachoSeleccion', this.despachoSeleccion);
 
     if (this.solicitudState.horaFinal && this.solicitudState.horaInicio && this.solicitudState.fechaInicio && this.solicitudState.fechaFinal) {
-      this.selectRangoDias = this.fechaService.obtenerDiasEntreFechas(
+      this.selectRangoDias = FechasService.obtenerDiasEntreFechas(
         this.solicitudState.fechaInicio,
         this.solicitudState.fechaFinal,
         this.solicitudState.horaInicio,

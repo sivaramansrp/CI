@@ -1,4 +1,3 @@
-/* eslint-disable class-methods-use-this */
 import {
   Component,
   Input,
@@ -16,7 +15,6 @@ import {
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
-
 @Component({
   selector: 'lib-input-check',
   standalone: true,
@@ -33,18 +31,38 @@ import { CommonModule } from '@angular/common';
 })
 
 export class InputCheckComponent implements OnChanges, ControlValueAccessor {
+  /**
+   * Identificador único requerido para el checkbox del componente.
+   * @required
+   * @type {string}
+   */
   @Input({ required: true }) id!: string;
+
+  /**
+   * Etiqueta para mostrar junto al componente.
+   * @required
+   * @type {string}
+   */
   @Input({ required: true }) label!: string;
+
+  /**
+   * Indica si el checkbox es obligatorio.
+   * @required
+   * @type {boolean}
+   */
   @Input({ required: true }) required!: boolean;
+
+  /**
+   * Indica si el checkbox está deshabilitado.
+   * @required
+   * @type {boolean}
+   */
   @Input() isDisabled: boolean = false;
 
+  /**
+   * Control de formulario que contiene el estado del checkbox.
+   */
   forma: FormGroup;
-  private onChange: (value: boolean) => void = () => {
-    //
-  };
-  private onTouched: () => void = () => {
-    //
-  };
 
   constructor() {
     this.forma = new FormGroup({
@@ -52,6 +70,27 @@ export class InputCheckComponent implements OnChanges, ControlValueAccessor {
     });
   }
 
+  /**
+   * Función de callback que se ejecuta cuando el valor cambia.
+   * @param value Indica el nuevo valor booleano.
+   */
+  // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-empty-function
+  private onChange: (value: boolean) => void = () => { };
+
+  /**
+   * Función que se llama cuando el control es marcado como "tocado".
+   * @returns void
+   */
+  // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-empty-function
+  private onTouched: () => void = () => { };
+
+
+  /**
+   * Detecta cambios en las propiedades de entrada y actualiza las validaciones del control de formulario 'checkbox'.
+   * 
+   * @param changes - Cambios detectados en las propiedades de entrada.
+   * @returns void
+   */
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['required']) {
       const CONTROL = this.forma.get('checkbox');
@@ -72,27 +111,54 @@ export class InputCheckComponent implements OnChanges, ControlValueAccessor {
       } else {
         CONTROL?.enable(); // Activa el control
       }
+      CONTROL?.updateValueAndValidity();
     }
   }
 
+  /**
+   * Maneja el evento de cambio de un input tipo checkbox.
+   * 
+   * @param event - Evento de cambio del checkbox.
+   * @returns void
+   */
   handleChange(event: Event): void {
     const VALUE = (event.target as HTMLInputElement).checked;
     this.onChange(VALUE);
   }
 
+  /**
+   * Escribe un valor booleano en el control de formulario 'check'.
+   * 
+   * @param value - Valor booleano a establecer en el control.
+   * @returns void
+   */
   writeValue(value: boolean): void {
     this.forma.controls['check'].setValue(value);
   }
 
+  /**
+   * Registra una función de callback que se ejecutará cuando el valor del control cambie.
+   * @param fn - Función que recibe el nuevo valor booleano del control.
+   * @returns void
+   */
   registerOnChange(fn: (value: boolean) => void): void {
     this.onChange = fn;
     this.forma.get('check')?.valueChanges.subscribe(fn);
   }
 
+  /**
+   * Registra una función que se ejecutará cuando el control sea marcado como "tocado".
+   * @param fn - Función que se invoca al marcar el control como tocado.
+   * @returns void
+   */
   registerOnTouched(fn: () => void): void {
     this.onTouched = fn;
   }
 
+  /**
+   * Verifica si el campo 'check' del formulario tiene errores y ha sido tocado.
+   * @returns {boolean | null | undefined} `true` si tiene errores y ha sido tocado, de lo contrario `false`, `null` o `undefined`.
+   */
   get isValid(): boolean | null | undefined {
     return this.forma.get('check')?.errors && this.forma.get('check')?.touched;
   }
