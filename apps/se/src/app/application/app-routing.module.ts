@@ -203,6 +203,13 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'importacion-de-vehiculos-usados',
+    loadChildren: () =>
+      import('./tramites/130111/importacion-de-vehiculos-usados.module').then(
+        (m) => m.ImportacionDeVehiculosUsadosModule
+      ),
+  },   
+  {      
     path: 'diamante-bruto',
     loadChildren: () =>
       import('./tramites/130114/diamante-bruto.module').then(
@@ -309,6 +316,12 @@ const ROUTES: Routes = [
       import('./tramites/150102/reporte-anual.module').then(
         (m) => m.ReporteAnualModule
       ),
+  },
+  {
+    path: 'solicitud-de-cancelacion',
+    loadChildren: () =>
+      import('./tramites/140101/solicitud-de-cancelacion.module').then(
+        (m) => m.SolicitudDeCancelacionModule),
   },
   {
     path: 'validar-certificado',
