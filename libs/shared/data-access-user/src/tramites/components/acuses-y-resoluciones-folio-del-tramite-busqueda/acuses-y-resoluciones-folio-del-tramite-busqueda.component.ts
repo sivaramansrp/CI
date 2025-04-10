@@ -2,7 +2,8 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import {
   ConfiguracionColumna,
   InputFecha,
-  TablaDinamicaComponent,
+  InputFechaComponent,
+  TablaDinamicaComponent
 } from '@libs/shared/data-access-user/src';
 import {
   FormBuilder,
@@ -14,9 +15,7 @@ import { Router, RouterModule } from '@angular/router';
 import { AcuseYResolucionesFolioTramite } from '../../../core/models/shared/acuse-y-resoluciones-folio-tramite.model';
 import { AcuseYResolucionesFolioTramiteService } from '../../../core/services/shared/acuses-y-resolucions-folio-tramite/acuses-y-resoluciones-folio-tramite.service';
 import { CommonModule } from '@angular/common';
-import { InputFechaComponent } from '../input-fecha/input-fecha.component';
 import { ToastrService } from 'ngx-toastr';
-
 
 /**
  * Configuración para el campo de fecha inicial.

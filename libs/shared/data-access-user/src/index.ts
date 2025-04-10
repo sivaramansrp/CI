@@ -1,7 +1,4 @@
 
-
-
-
 export { AcusesYResolucionesFolioDelTramiteBusquedaComponent } from './tramites/components/acuses-y-resoluciones-folio-del-tramite-busqueda/acuses-y-resoluciones-folio-del-tramite-busqueda.component';
 export { AcusesYResolucionesFolioDelTramiteDetallesComponent } from './tramites/components/acuses-y-resoluciones-folio-del-tramite-detalles/acuses-y-resoluciones-folio-del-tramite-detalles.component';
 export { ASIGNACION_REGISTRO } from './tramites/constantes/120404/entidad.enum';
@@ -30,12 +27,10 @@ export * from './core/enums/solicitar-transferencia.enum';
 export * from './core/enums/tabla-seleccion.enum';
 export * from './core/enums/tipoPersona.enum';
 export * from './core/estados/seccion.store';
-export * from './core/estados/terceros.store';
 export * from './core/models/260303/certificados-licencias-permisos.model';
 export * from './core/models/260701/certificados-licencias.model';
 export * from './core/models/301/servicios-pantallas.model';
 export * from './core/models/303/secciones.model';
-export * from './core/models/shared/agregar-trasnporte.model'
 export * from './core/models/shared/catalogos.model';
 export * from './core/models/shared/components.model';
 export * from './core/models/shared/configuracion-columna.model';
@@ -44,7 +39,6 @@ export * from './core/models/shared/forms-model';
 export * from './core/models/usuario/perfilUsuario.model';
 export * from './core/models/usuario/rol.model';
 export * from './core/queries/seccion.query';
-export * from './core/queries/terceros.query';
 export * from './core/services/110102/datos-tratados-acuerdos/datosTratadosacuerdos.service';
 export * from './core/services/110102/exportador-autorizado/exportadorAutorizado.service';
 export * from './core/services/110102/mercancia-asociada/mercanciaAsociada.service';
@@ -66,7 +60,6 @@ export * from './core/services/shared/fechas/fechas.service';
 export * from './core/services/shared/formularios/formularios.service';
 export * from './core/services/shared/http/http.service';
 export * from './core/services/shared/inicio-sesion/inicio-sesion.service';
-export * from './core/services/shared/modal-aviso/modal-aviso.service';
 export * from './core/services/shared/solicitante/solicitante.service';
 export * from './core/services/shared/subir-documento/subir-documento.service';
 export * from './core/services/shared/tramite-folio/tramite-folio.service';
@@ -92,7 +85,6 @@ export * from './tramites/components/input-check/input-check.component';
 export * from './tramites/components/input-fecha/input-fecha.component';
 export * from './tramites/components/input-hora/input-hora.component';
 export * from './tramites/components/input-radio/input-radio.component';
-export * from './tramites/components/modal-aviso/modal-aviso.component';
 export * from './tramites/components/nav/nav.component';
 export * from './tramites/components/notificaciones/notificaciones.component';
 export * from './tramites/components/representante-fiscal/representante-fiscal.component';
@@ -120,3 +112,10 @@ export * from './tramites/pages/acuse-page/acuse-page.component';
 export * from './tramites/pages/firma-page/firma-page.component';
 export * from './tramites/pipes/booleanoSiNo/booleano-si-no.pipe';
 export * from './tramites/shared.module';
+export * from './core/estados/terceros.store';
+export * from './core/models/shared/agregar-trasnporte.model'
+export * from './core/queries/terceros.query';
+export * from './core/services/shared/modal-aviso/modal-aviso.service';
+
+
+

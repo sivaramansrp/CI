@@ -41,6 +41,7 @@ import { ServiciosExtraordinariosService } from '../../../../core/services/5701/
 import { Tramite5701Query } from '../../../../core/queries/tramite5701.query';
 
 import patentes from 'libs/shared/theme/assets/json/5701/patentes.json';
+import rfcs from 'libs/shared/theme/assets/json/5701/rfcs.json';
 
 @Component({
   selector: 'app-solicitud',
@@ -218,7 +219,9 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    */
   radioOpciones = EMPRESAS_CERTIFICADAS;
 
-  radioPatentes: any = patentes;
+  radioPatentes = patentes.patentes;
+
+  rfcs = rfcs.rfcs;
 
   /**
    * Notificador para gestionar la destrucción de suscripciones y evitar fugas de memoria.
@@ -248,6 +251,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
   ) { }
 
   ngOnInit(): void {
+    
     // Peticiones a las apis
     this.inicializaCatalogos();
 
@@ -319,6 +323,8 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       this.FormSolicitud.get('folioSolicitud')?.setValue(this.folioSolicitud);
       // Se hace la peticion para obtener los datos de la solicitud
     }
+
+
   }
 
   /**
