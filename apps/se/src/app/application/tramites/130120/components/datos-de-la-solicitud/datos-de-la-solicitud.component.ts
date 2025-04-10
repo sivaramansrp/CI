@@ -1,7 +1,8 @@
-import { CatalogoSelectComponent, MenuConfig, Props } from "@ng-mf/data-access-user";
+import { CatalogoSelectComponent, MenuConfig, Props, SeccionLibQuery, SeccionLibState, SeccionLibStore } from "@ng-mf/data-access-user";
 import { Component, OnInit } from '@angular/core';
 import { DATOS_EXPORTACION, DATOS_EXPORTADOR, DATOS_MERCANCIA, DATOS_PRODUCTOR, DATOS_REALIZAR } from '../../constants/permiso-importacion-modification.enum';
 import { FormBuilder, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CatalogosService } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { FormularioDinamico } from '@ng-mf/data-access-user';
@@ -10,7 +11,7 @@ import { InputFechaComponent } from "@ng-mf/data-access-user";
 import { InputRadioComponent } from "@ng-mf/data-access-user";
 import { InputTypes } from '@ng-mf/data-access-user';
 import { TituloComponent } from "@ng-mf/data-access-user";
-import { map } from 'rxjs';
+
 
 @Component({
   selector: 'app-datos-de-la-solicitud',
@@ -23,7 +24,7 @@ export class DatosDeLaSolicitudComponent implements OnInit {
   
   configuracion: InputConfig[] = [
     {
-      title: 'Datos del tramite a realizer',
+      title: 'Datos del trámite a realizer',
       formGroupName: 'datosRealizer',
       menu: [
         {
@@ -43,7 +44,7 @@ export class DatosDeLaSolicitudComponent implements OnInit {
       formGroupName: 'datosMercanica',
       menu: [
         {
-          inputType: InputTypes.TEXT,
+          inputType: InputTypes.TEXTAREA,
           props: DATOS_MERCANCIA[0] as unknown as Props,
           class: 'col-md-8',
         },
@@ -209,7 +210,7 @@ export class DatosDeLaSolicitudComponent implements OnInit {
           class: '',
         },
         {
-          inputType: InputTypes.TEXT,
+          inputType: InputTypes.TEXTAREA,
           props: DATOS_EXPORTACION[2] as unknown as Props,
           class: 'col-md-8',
         },
@@ -280,7 +281,7 @@ export class DatosDeLaSolicitudComponent implements OnInit {
           class: 'col-md-8',
         },
         {
-          inputType: InputTypes.TEXT,
+          inputType: InputTypes.TEXTAREA,
           props: DATOS_PRODUCTOR[5] as unknown as Props,
           class: 'col-md-8',
         },
@@ -321,7 +322,7 @@ export class DatosDeLaSolicitudComponent implements OnInit {
           class: 'col-md-8',
         },
         {
-          inputType: InputTypes.TEXT,
+          inputType: InputTypes.TEXTAREA,
           props: DATOS_EXPORTADOR[5] as unknown as Props,
           class: 'col-md-8',
         },
@@ -338,7 +339,14 @@ export class DatosDeLaSolicitudComponent implements OnInit {
   evento = {};
   inputTypes = InputTypes;
 
-  constructor(private fb: FormBuilder, private catalogosServicios: CatalogosService) {
+  private destroyNotifier$: Subject<void> = new Subject();
+
+  private seccionState!: SeccionLibState;
+
+  constructor(private fb: FormBuilder, private catalogosServicios: CatalogosService,
+    private seccionStore: SeccionLibStore,
+    private seccionQuery: SeccionLibQuery
+  ) {
     this.crearFormulario();
   }
 
@@ -374,6 +382,25 @@ export class DatosDeLaSolicitudComponent implements OnInit {
     this.configuracion.forEach((eachConfig: InputConfig, groupIndex: number) => {
       this.inicializarFormGroup(eachConfig.menu, eachConfig.formGroupName, groupIndex);
     });
+    this.seccionQuery.selectSeccionState$
+        .pipe(
+          takeUntil(this.destroyNotifier$),
+          map((seccionState) => {
+            this.seccionState = seccionState;
+          })
+        )
+        .subscribe();
+    this.seccionStore.establecerSeccion([false]);
+    const isValid = this.formulario.get('datosRealizer')?.valid &&
+        this.formulario.get('datosMercanica')?.valid &&
+        this.formulario.get('datosExporta')?.valid &&
+        this.formulario.get('datosProductor')?.valid &&
+        this.formulario.get('datosExportador')?.valid;
+
+    if(isValid) {
+      this.seccionStore.establecerSeccion([true]);
+      this.seccionStore.establecerFormaValida([true])
+    }
   }
   
   /**

@@ -5,6 +5,7 @@ export enum InputTypes {
     DATE = 'date',
     RADIO = 'radio',
     ALERT_CONTENT = 'alert-content',
+    TEXTAREA = 'textarea',
   }
   
   export enum BotonAccionesTipos {
