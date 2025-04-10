@@ -351,6 +351,7 @@ export interface PagoDerechosFormState {
   llavePago: string;
   fechaPago: string;
   importePago: string;
+  banco?: string;
 }
 
 /**
