@@ -1,7 +1,10 @@
 import { EstadoFormularioResiduo, FormularioResiduoStore } from '../tramites/datos-residuos.store';
 import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
-
+/**
+ * Query para acceder al estado del formulario de residuos peligrosos
+ * usando Akita. Proporciona una forma reactiva de obtener datos desde el store.
+ */
 @Injectable({ providedIn: 'root' })
 export class FormularioResiduoQuery extends Query<EstadoFormularioResiduo> {
 
