@@ -7,7 +7,7 @@ import { CommonModule } from '@angular/common';
 
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
-import { CatalogoSelectComponent, InputFecha, InputFechaComponent, catalogoResponse } from '@libs/shared/data-access-user/src';
+import { CatalogoResponse, CatalogoSelectComponent, InputFecha, InputFechaComponent } from '@libs/shared/data-access-user/src';
 
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 
@@ -41,7 +41,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   /** Subject para destruir el componente */
   private destroy$ = new Subject<void>();
   /** Observable para el estado seleccionado */
-  selectedBanco$: Observable<catalogoResponse | null> =
+  selectedBanco$: Observable<CatalogoResponse | null> =
     this.tramite260212Query.selectedBanco$;
   /** Catálogo de estados cargado desde un archivo JSON */
 
@@ -59,7 +59,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   /**
    * Datos para el selector de opciones.
    */
-  dropdownData: catalogoResponse[] = [];
+  dropdownData: CatalogoResponse[] = [];
 
   /**
  * Constructor del componente.

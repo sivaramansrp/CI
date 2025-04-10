@@ -1,3 +1,4 @@
+import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { AgregarDestinatarioComponent } from './components/agregar-destinatario/agregar-destinatario.component';
 import { AgregarTransporteComponent } from '@ng-mf/data-access-user';
 import { AlertComponent } from '@ng-mf/data-access-user';
@@ -20,14 +21,12 @@ import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RepresentanteFiscalComponent } from '@ng-mf/data-access-user';
 import { RouterModule } from '@angular/router';
-import { SelectCatalogosComponent } from '@ng-mf/data-access-user';
 import { SelectPaisesComponent } from '@ng-mf/data-access-user';
 import { SharedModule } from '@ng-mf/data-access-user';
 import { SolicitanteComponent } from '@ng-mf/data-access-user';
 import { SolicitudComponent } from './components/solicitud/solicitud.component';
 import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
 import { TituloComponent } from '@ng-mf/data-access-user';
-import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { TransporteComponent } from './components/transporte/transporte.component';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
@@ -55,7 +54,6 @@ import { WizardComponent } from '@ng-mf/data-access-user';
     ReactiveFormsModule,
     AlertComponent,
     FirmaElectronicaComponent,
-    SelectCatalogosComponent,
     SolicitanteComponent,
     AnexarDocumentosComponent,
     InputCheckComponent,
