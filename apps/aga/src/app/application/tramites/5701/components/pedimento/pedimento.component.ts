@@ -1,5 +1,5 @@
 import { BooleanoSiNoPipe, Notificacion, SoloNumerosDirective, } from '@ng-mf/data-access-user';
-import { Component, ElementRef, Input, OnChanges, OnInit, SimpleChanges, ViewChild, forwardRef, output } from '@angular/core';
+import { Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild, forwardRef, output } from '@angular/core';
 import { DatosComponentePedimento, Pedimento } from '../../../../core/models/5701/tramite5701.model';
 import { ERR_VALIDACION_PEDIMENTO, MSG_ADUANA_PEDIMENTO, MSG_ELIMINA_ELEMENTO, MSG_NRO_PEDIMENTO } from '../../../../core/enums/5701/tramite5701.enum';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -21,20 +21,51 @@ import { ToastrService } from 'ngx-toastr';
     ToastrService,
   ]
 })
-export class PedimentoComponent implements OnInit, OnChanges {
+export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
+  /**
+   * @description Propiedades de entrada del componente.
+   * @param validacion: Indica si la validación es correcta.
+   */
   @Input({ required: true }) validacion!: boolean;
+
+  /**
+   * @description Propiedades de entrada del componente.
+   * @param datosNroPedimento: Datos del número de pedimento.
+   * patente: numero
+   * idAduanaDespacho: numero
+   */
   @Input({ required: true }) datosNroPedimento!: DatosComponentePedimento;
+
 
   @ViewChild('aviso') AvisoModal!: ElementRef;
   @ViewChild('closeModal') closeModal!: ElementRef;
 
+  /**
+   * @description Estado de la solicitud 5701.
+   */
   public solicitudState!: Solicitud5701State;
+
+  /**
+   * @description Subject para manejar la destrucción del componente y limpiar las suscripciones.
+   */
   private destroyNotifier$: Subject<void> = new Subject();
 
+  /**
+   * @description Emisor de eventos para validar los campos del formulario.
+   * Se utiliza para emitir un evento cuando se requiere validar los campos del formulario.
+   */
   validaCampos = output<void>();
 
+  /**
+   * @description Formulario reactivo para el componente de pedimento.
+   * Se utiliza para manejar la validación y los valores del formulario.
+   */
   pedimentoForm: FormControl = new FormControl('', [Validators.maxLength(7)]);
 
+  /**
+   * @description Array con los encabezados de la tabla de pedimentos.
+   * Se utiliza para mostrar los encabezados de las columnas en la tabla de pedimentos.
+   */
   hTabla: Array<string> = [
     'Patente',
     'Pedimento',
@@ -46,14 +77,24 @@ export class PedimentoComponent implements OnInit, OnChanges {
     'Accion',
   ];
 
+  /**
+   * @description Array con los datos de los pedimentos.
+   * Se utiliza para almacenar los pedimentos ingresados por el usuario.
+   */
   pedimentos: Array<Pedimento> = [];
 
-  modal: string = '';
   tituloModal!: string;
   mensajeModal!: string;
-  elementoParaEliminar!: number;
-  public nuevaNotificacion!: Notificacion;
 
+  /**
+   * @description Elemento a eliminar de la tabla de pedimentos.
+   */
+  elementoParaEliminar!: number;
+
+  /**
+   * @descripcion Notificación para mostrar mensajes al usuario.
+   */
+  public nuevaNotificacion!: Notificacion;
 
   constructor(
     private tramite5701Query: Tramite5701Query,
@@ -69,8 +110,6 @@ export class PedimentoComponent implements OnInit, OnChanges {
         })
       ).subscribe();
   }
-
-
 
   /**
    * Verifica si el formulario de pedimento es válido.
@@ -132,7 +171,6 @@ export class PedimentoComponent implements OnInit, OnChanges {
    * @returns {void}
    */
   acciones(): void {
-
     if (this.validacion) {
       const NUMERO_PEDIMENTO = this.pedimentoForm.value
         ? parseInt(this.pedimentoForm.value, 10)
@@ -154,7 +192,6 @@ export class PedimentoComponent implements OnInit, OnChanges {
         this.mensajeModal = ERR_VALIDACION_PEDIMENTO;
         this.abrirModal();
         this.pedimentos.push(PEDIMENTO);
-        // this.setStore
       } else {
         this.tituloModal = 'Aviso';
         this.mensajeModal = MSG_NRO_PEDIMENTO;
@@ -204,8 +241,25 @@ export class PedimentoComponent implements OnInit, OnChanges {
     }
   }
 
+  /**
+   * Método para establecer valores en el store de Tramite5701.
+   * @param form - Formulario del componente.
+   * @param campo - Campo del formulario cuyo valor se desea establecer.
+   * @param metodoNombre - Nombre del método en el store que se utilizará para establecer el valor.
+   * @returns {void}
+   */
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite5701Store): void {
     const VALOR = form.get(campo)?.value;
     (this.tramite5701Store[metodoNombre] as (value: string) => void)(VALOR);
+  }
+
+  /**
+ * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
+ * Notifica y completa el observable `destroyNotifier$` para limpiar suscripciones.
+ * @returns {void}
+ */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

@@ -22,23 +22,61 @@ import { Tramite5701Query } from '../../../../core/queries/tramite5701.query';
   styleUrl: './agrega-personas.component.scss',
 })
 export class AgregaPersonasComponent implements OnInit, OnDestroy {
+  /**
+   * Campo de formulario para el gafete del responsable de despacho.
+   */
   gafeteRespoDespacho: FormControl = new FormControl('', [Validators.maxLength(25)]);
 
+  /**
+   * Formulario reactivo que contiene los campos de nombre, primer apellido y segundo apellido del responsable de despacho.
+   * Los campos están inicialmente deshabilitados.
+   * Se utilizan validaciones para asegurarse de que los campos sean obligatorios y no excedan una longitud máxima de 30 caracteres.
+   */
   personaForm: FormGroup = this.fb.group({
     nombreRespoDespacho: [{ value: '', disabled: true }],
     paternoRespoDespacho: [{ value: '', disabled: true }],
     maternoRespoDespacho: [{ value: '', disabled: true }],
   });
 
+  /**
+   * Objeto que representa a una persona responsable de despacho.
+   * Se inicializa como un objeto vacío y se espera que contenga los datos del responsable de despacho.
+   */
   persona!: ResponsablesDespacho;
 
+  /**
+   * Lista de personas responsables de despacho.
+   * Se inicializa como un arreglo vacío y se espera que contenga múltiples objetos de tipo ResponsablesDespacho.
+   */
   personas: ResponsablesDespacho[] = [];
 
+  /**
+   * Variable que representa el estado del modal.
+   * Se inicializa como una cadena vacía y se espera que contenga el estado del modal (por ejemplo, 'show' o '').
+   */
   modal: string = '';
+
+  /**
+   * Título del modal.
+   * Se inicializa como una cadena vacía y se espera que contenga el título que se mostrará en el modal.
+   */
   tituloModal!: string;
+
+  /**
+   * Mensaje del modal.
+   * Se inicializa como una cadena vacía y se espera que contenga el mensaje que se mostrará en el modal.
+   */
   mensajeModal!: string;
 
+  /**
+   * Estado de la solicitud 5701.
+   */
   public solicitudState!: Solicitud5701State;
+
+  /**
+   * Subject que se utiliza para notificar la destrucción del componente.
+   * Se utiliza para limpiar las suscripciones y evitar fugas de memoria.
+   */
   private destroyNotifier$: Subject<void> = new Subject();
 
   constructor(
@@ -130,7 +168,6 @@ export class AgregaPersonasComponent implements OnInit, OnDestroy {
       CONTROL?.updateValueAndValidity();
     });
   }
-
 
   /**
    * Agrega una persona a la lista de personas.
@@ -231,7 +268,6 @@ export class AgregaPersonasComponent implements OnInit, OnDestroy {
     const VALOR = form.get(campo)?.value;
     (this.tramite5701Store[metodoNombre] as (value: string) => void)(VALOR);
   }
-
 
   /**
    * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.

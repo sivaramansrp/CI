@@ -1,29 +1,3 @@
-export const DESPACHO_LDA = {
-  labelNombre: 'RFC autorización LDA',
-  maxlength: 10,
-  minlenght: 0,
-  required: false,
-  alfanumerico: true,
-};
-
-export const DESPACHO_DD = {
-  labelNombre: 'Autorizacion DDEX',
-  maxlength: 10,
-  minlenght: 0,
-  required: false,
-  alfanumerico: true,
-};
-
-export const HORA_INICIO = {
-  labelNombre: 'Hora inicio',
-  required: true,
-};
-
-export const HORA_FINAL = {
-  labelNombre: 'Hora final',
-  required: true,
-};
-
 export const FECHA_INICIO = {
   labelNombre: 'Fecha inicio',
   required: true,
@@ -52,15 +26,34 @@ export const ERR_VALIDACION_PEDIMENTO = 'No se pudo validar el pedimento, favor 
 export const TITULO_MODAL_ERROR = 'Aviso';
 export const MSJ_ERROR_FECHA = 'Fecha inválida. La fecha final no puede ser menor a la fecha de inicio.'
 
+/**
+ * @description Constantes para el manejo de las etiquetas de los inputs de la autorización LDA y DDEX
+ * @param LABEL_DESPACHO_LDA: Etiqueta del input de la autorización LDA
+ * @param LABEL_DESPACHO_DD: Etiqueta del input de la autorización DDEX
+ */
 export const LABEL_DESPACHO_LDA = 'RFC autorización LDA';
 export const LABEL_DESPACHO_DD = 'Autorizacion DDEX';
 
+/**
+ * @description Constantes para el manejo de los ids de los inputs de la autorización LDA y DDEX
+ * @param ID_NAME_LDA: Id del input de la autorización LDA
+ * @param ID_NAME_DD: Id del input de la autorización DDEX
+ */
 export const ID_NAME_DD = 'autorizacionDDEX';
 export const ID_NAME_LDA = 'autorizacionLDA';
 
+/**
+ * @description Constantes para el manejo de los nombres de las funciones del store
+ * @param FUNCION_STORE_LDA: Función para guardar la autorización LDA en el store
+ * @param FUNCION_STORE_DD: Función para guardar la autorización DDEX en el store
+ */
 export const FUNCION_STORE_LDA = 'setAutorizacionLDA';
 export const FUNCION_STORE_DD = 'setAutorizacionDDEX';
 
+/**
+ * @description Constantes para el manejo del tipo de vehiculos en la seccion --
+
+*/
 export const VEHICULO = [
   'Carretero',
   'Ferroviario',
@@ -68,6 +61,9 @@ export const VEHICULO = [
   'Otro'
 ]
 
+/**
+ * @description Constantes para el manejo del tipo de transporte en la seccion --
+ */
 export const TRANSPORTE = [
   'Carretero',
   'Ferroviario',
@@ -78,6 +74,10 @@ export const TRANSPORTE = [
 
 export const PATENTES_ID = 33;
 
+/**
+ * @description Constantes para el manejor de los tipos de empresas certificadas y su valor.
+ * Se requiere para el parametro que le se pasa al input-radio component
+ */
 export const EMPRESAS_CERTIFICADAS = [
   {
     label: 'I.V.A e I.E.P.S Certificación A',
