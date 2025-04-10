@@ -187,6 +187,10 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'aviso-de-importacion',
+    loadChildren: () => import('./tramites/260603/aviso-de-importacion.module').then(m => m.AvisoDeImportacionModule) 
+  },
+  {
     path: 'muestras-plaguicidas',
     loadChildren: () =>
       import('./tramites/260502/muestras-plaguicidas.module').then(
