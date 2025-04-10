@@ -1,0 +1,27 @@
+{
+    "code": 200,
+    "data": [
+      {
+        "id": 0,
+        "descripcion": "BELICE"
+      },
+      {
+        "id": 1,
+        "descripcion": "MEXICO"
+      },
+      {
+        "id": 2,
+        "descripcion": "GUATEMALA"
+      },
+      {
+        "id": 3,
+        "descripcion": "HONDURAS"
+      },
+      {
+        "id": 4,
+        "descripcion": "Navin"
+      }
+      
+    ],
+    "message": "entidad federativa"
+  }

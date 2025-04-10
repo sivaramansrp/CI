@@ -140,6 +140,13 @@ const ROUTES: Routes = [
       import('./tramites/40101/transportista-terrestre.module').then(
         (m) => m.TransportistaTerrestreModule
       ),
+  },
+  {
+    path: 'invoCar-modulo',
+    loadChildren: () =>
+      import('./tramites/105/invocar.module').then(
+        (m) => m.InvocarModule
+      ),
   }
 ];
 
