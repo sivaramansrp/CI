@@ -15,7 +15,7 @@ describe('PasoDosComponent', () => {
 
     fixture = TestBed.createComponent(PasoDosComponent);
     component = fixture.componentInstance;
-    // fixture.detectChanges();
+    fixture.detectChanges();
   });
 
   it('should create', () => {

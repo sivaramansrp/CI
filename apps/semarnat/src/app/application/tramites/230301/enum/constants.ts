@@ -1,4 +1,3 @@
-
 /**
  * Constante que define los textos utilizados en el trámite.
  * 
@@ -6,30 +5,60 @@
  * en la interfaz del usuario.
  */
 export const TEXTOS = {
-    INSTRUCCIONES: `<h5>Aviso de privacidad simplificado</h5>
+  INSTRUCCIONES: `<h5>Aviso de privacidad simplificado</h5>
         <p class="text-left">El Servicio de Administración Tributaria (SAT), es el sujeto obligado y responsable del tratamiento de los datos personales que se recaban a través de la Ventanilla Digital Mexicana de Comercio Exterior (VUCEM), los datos personales podrán ser utilizados y transferidos a la autoridades competentes, con la finalidad de llevar a cabo cualquier trámite relacionado con importaciones, exportaciones y tránsito de mercancías de comercio exterior, incluyendo las regulaciones y restricciones no arancelarias que, conforme a la legislación aplicable, sea exigido por las autoridades competentes en materia de comercio exterior y/o consultar información sobre los procedimientos para la importación, exportación y tránsito de mercancías de comercio exterior, incluyendo las regulaciones y restricciones no arancelarias, así como las notificaciones que se deriven de dichos trámites y serán protegidos, incorporados y tratados en el sistema de datos personales de la VUCEM, asimismo podrán ser transmitidos a las autoridades competentes establecidas en el Decreto por el que se establece la Ventanilla Digital Mexicana de Comercio Exterior, publicado en el Diario Oficial de la Federación el 14 de enero de 2011, así como al propio titular de la información. El titular, en su caso, podrá manifestar su negativa para el tratamiento de sus datos personales para finalidades y transferencias de los mismos que requieran el consentimiento del titular. Si desea conocer nuestro aviso de privacidad integral, lo podrá consultar en el portal.</p>
         <p class="mt-5 mb-3 text-muted">Aviso de privacidad integral</p>
         `,
-  };
-
-
-export const URL = "../../../../../assets/json/230301/";
-
+};
 
 /**
-* Secciones a mostrar dentro de cada Paso de acuerdo al trámite
-*/
+ * URL base para acceder a los recursos JSON del trámite 230301.
+ * 
+ * Esta constante define la ruta relativa donde se encuentran los archivos JSON
+ * utilizados en el trámite.
+ * @type {string}
+ */
+export const URL = "../../../../../assets/json/230301/";
+
+/**
+ * Secciones a mostrar dentro de cada paso de acuerdo al trámite.
+ * 
+ * Esta constante define las validaciones de las secciones que se deben mostrar
+ * o habilitar en cada paso del asistente del trámite 230301.
+ */
 export const SECCIONES_TRAMITE_230301 = {
-    PASO_1: {
-      VALIDACION_SECCION_1: false,
-      VALIDACION_SECCION_2: true,
-    },
-    PASO_2: {
-      VALIDACION_SECCION: false,
-    },
-  };
+  PASO_1: {
+    /**
+     * Validación de la primera sección del paso 1.
+     * @type {boolean}
+     */
+    VALIDACION_SECCION_1: false,
 
+    /**
+     * Validación de la segunda sección del paso 1.
+     * @type {boolean}
+     */
+    VALIDACION_SECCION_2: true,
+  },
+  PASO_2: {
+    /**
+     * Validación de la sección del paso 2.
+     * @type {boolean}
+     */
+    VALIDACION_SECCION: false,
+  },
+};
 
-  export interface DesistimientoForm {
-   data: JSON;
-  }
+/**
+ * Interfaz que representa el formulario de desistimiento.
+ * 
+ * Esta interfaz define la estructura de los datos que se manejan en el formulario
+ * de desistimiento del trámite.
+ */
+export interface DesistimientoForm {
+  /**
+   * Datos en formato JSON.
+   * @type {JSON}
+   */
+  data: JSON;
+}

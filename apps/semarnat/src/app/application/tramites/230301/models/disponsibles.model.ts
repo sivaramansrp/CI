@@ -70,14 +70,48 @@ export const PASOS = [
   },
 ];
 
+/**
+ * Interfaz que representa el formulario de desistimiento.
+ */
 export interface DesistimientoForm {
-desistimientoFolio: string,
-solicitudTipo: string,
-desistimientoMotivo: string
+  /**
+   * Folio del desistimiento.
+   * @type {string}
+   */
+  desistimientoFolio: string;
+
+  /**
+   * Tipo de solicitud asociada al desistimiento.
+   * @type {string}
+   */
+  solicitudTipo: string;
+
+  /**
+   * Motivo del desistimiento.
+   * @type {string}
+   */
+  desistimientoMotivo: string;
 }
 
+/**
+ * Interfaz que representa la respuesta de una solicitud de desistimiento.
+ */
 export interface RespuestaDesistimientoSolicitud {
+  /**
+   * Código de respuesta.
+   * @type {number}
+   */
   code: number;
-  data: DesistimientoForm
+
+  /**
+   * Datos del formulario de desistimiento.
+   * @type {DesistimientoForm}
+   */
+  data: DesistimientoForm;
+
+  /**
+   * Mensaje asociado a la respuesta.
+   * @type {string}
+   */
   message: string;
 }
