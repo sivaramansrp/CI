@@ -77,8 +77,8 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   }
   donanteDomicilio(): void {
     this.pagoDeDerechosForm = this.fb.group({
-      claveDeReferencia: [this.solicitudState?.tipoOperacion, [Validators.required]],
-      cadenaDependecial: [this.solicitudState?.tipoOperacion, [Validators.required]],
+      claveDeReferencia: [this.solicitudState?.claveDeReferencia, [Validators.required]],
+      cadenaDependecia: [this.solicitudState?.cadenaDependecia, [Validators.required]],
       fechaPago: [this.solicitudState?.fechaPago, [Validators.required]],
       banco: [this.solicitudState?.banco, [Validators.required]],
       liaveDePago: [this.solicitudState?.claveDeReferencia, [Validators.required]],

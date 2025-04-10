@@ -1,18 +1,18 @@
 [
   {
     "id": 0,
-    "description": "acapulco oficina  de inspeccion"
+    "descripcion": "acapulco oficina  de inspeccion"
   },
   {
     "id": 1,
-    "description": "zihuatanejo oficina  de inspeccion"
+    "descripcion": "zihuatanejo oficina  de inspeccion"
   },
   {
     "id": 2,
-    "description": "taxco oficina  de inspeccion"
+    "descripcion": "taxco oficina  de inspeccion"
   },
   {
     "id": 3,
-    "description": "chilpancingo oficina  de inspeccion"
+    "descripcion": "chilpancingo oficina  de inspeccion"
   }
 ]
