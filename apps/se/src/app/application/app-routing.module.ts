@@ -128,6 +128,12 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'cancelacion-de-certificados-de-cupo',
+    loadChildren: () =>
+      import('./tramites/140104/cancelacion-de-certificados-de-cupo.module').then(
+        (m) => m.CancelacionDeCertificadosDeCupoModule)
+  },
+  {
     path: 'desistimiento-de-permiso',
     loadChildren: () =>
       import('./tramites/140105/desistimiento-de-permiso.module').then(
@@ -280,6 +286,13 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'previos-exportacion',
+    loadChildren: () =>
+      import('./tramites/130217/control-permisos-previos-exportacion.module').then(
+        (m) => m.ControlPermisosPreviosExportacionModule
+      )
+  },
+  {
     path: 'inicialmente-certificado-origen',
     loadChildren: () =>
       import('./tramites/110216/inicialmente-certificado-origen.module').then(
@@ -304,6 +317,11 @@ const ROUTES: Routes = [
     path: 'cupos',
     loadChildren: () =>
       import('./tramites/120201/cupos.module').then((m) => m.CuposModule),
+  },
+  {
+    path: 'solicitud-prorroga',
+    loadChildren: () =>
+      import('./tramites/130301/solicitud-prorroga.module').then((m) => m.SolicitudProrrogaModule),
   },
   {
     path: 'aviso-importacion-maquinas',

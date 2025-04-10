@@ -52,6 +52,13 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'mod-permiso-importacion',
+    loadChildren: () =>
+      import('./tramites/260912/mod-permiso-importacion.module').then(
+        (m)=> m.ModPermisoImportacionModule
+      )
+  },
+  {
     path: 'permiso-plaguicidas',
     loadChildren: () =>
       import('./tramites/260501/permiso-plaguicidas-importacion.module').then(
@@ -85,6 +92,12 @@ const ROUTES: Routes = [
       import('./tramites/260215/permiso-sanitario-importacion.module').then(
         (m) => m.PermisoSanitarioImportacionModule
       ),
+  },
+  {
+    path: 'permiso-certificados',
+    loadChildren: () =>
+      import('./tramites/260701/certificados/certificados.module').then(
+        (m) => m.CertificadosModule),
   },
   {
     path: 'permiso-importacion-biologica',
@@ -180,6 +193,24 @@ const ROUTES: Routes = [
         (m) => m.RetirosCofeprisModule
       ),
   },
+  {
+    path: 'aviso-de-importacion',
+    loadChildren: () => import('./tramites/260603/aviso-de-importacion.module').then(m => m.AvisoDeImportacionModule) 
+  },
+  {
+    path: 'muestras-plaguicidas',
+    loadChildren: () =>
+      import('./tramites/260502/muestras-plaguicidas.module').then(
+        (m) => m.MuestrasPlaguicidasModule
+      ),
+  },
+  {
+        path: 'importacion-materias-primas-estupefacientes',
+        loadChildren: () =>
+          import(
+            './tramites/260301/importacion-materias-primas-estupefacientes.module'
+          ).then((m) => m.ImportacionMateriasPrimasEstupefacientesModule),
+  }
 ];
 
 @NgModule({
