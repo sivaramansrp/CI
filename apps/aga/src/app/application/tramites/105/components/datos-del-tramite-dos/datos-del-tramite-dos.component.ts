@@ -16,7 +16,6 @@ import { Subject, Subscription, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { InvoCarService } from '../../services/invocar.service';
 import { Tramite105Query } from '../../estados/tramite105.query';
-// eslint-disable-next-line @nx/enforce-module-boundaries
 import mercanciaTable from 'libs/shared/theme/assets/json/105/mercancia-table.json';
 
 /**
