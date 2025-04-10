@@ -1,7 +1,13 @@
 import {
   ALERTA_DE_MANIFESTO_Y_DECLARACIONES,
   ALERTA_OPCIONS,
+  CAMPOS_ADICIONALES_POR_PROCEDIMIENTO_MAP,
+  CAMPOS_REQUERIDOS_FORMULARIO_MAP,
+  PROCEDIMIENTOS_NO_PARA_ELEMENTO_CALLE,
   PROCEDIMIENTOS_NO_PARA_ELEMENTO_COLAPSABLE,
+  PROCEDIMIENTOS_NO_PARA_ELEMENTO_CORREO_ELECTRONIC,
+  PROCEDIMIENTOS_NO_PARA_ELEMENTO_RFC_DEL_SANITARIO,
+  PROCEDIMIENTOS_PARA_DESHABILITAR_MUNICIPIO_ALCALDIA,
 } from '../../constantes/datos-solicitud.enum';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
@@ -23,9 +29,7 @@ import {
 } from '@angular/forms';
 import { delay, takeUntil } from 'rxjs';
 import { AbstractControl } from '@angular/forms';
-import {
-  AlertComponent
-} from '@libs/shared/data-access-user/src';
+import { AlertComponent } from '@libs/shared/data-access-user/src';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
@@ -211,6 +215,35 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   public mostrarElementoColapsable = true;
 
   /**
+   * @property {boolean} mostrarCorreoElectronico
+   * Controla la visibilidad del campo de correo electrónico en el formulario.
+   *
+   * @description
+   * Este valor se utiliza para determinar si el campo de correo electrónico debe ser visible
+   * o no, dependiendo de la lógica implementada en el componente.
+   */
+  public mostrarCorreoElectronico = true;
+
+  /**
+   * @property {boolean} mostrarRFCSanitario
+   * Controla la visibilidad del campo de RFC sanitario en el formulario.
+   *
+   * @description
+   * Este valor se utiliza para determinar si el campo de RFC sanitario debe ser visible
+   * o no, dependiendo de la lógica implementada en el componente.
+   */
+  public mostrarRFCSanitario = true;
+
+  /**
+   * @property {boolean} mostrarRFCCalle
+   * Controla la visibilidad del campo de RFC de calle en el formulario.
+   *
+   * @description
+   * Este valor se utiliza para determinar si el campo de RFC de calle debe ser visible
+   * o no, dependiendo de la lógica implementada en el componente.
+   */
+  public mostrarRFCCalle = true;
+  /**
    * @constructor
    * Inyecta los servicios necesarios para el enrutamiento y construcción del formulario.
    *
@@ -222,13 +255,24 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     public fb: FormBuilder,
     public router: Router,
     public activatedRoute: ActivatedRoute,
-     public datosSolicitudService: DatosSolicitudService
-      ) {
-        this.datosSolicitudService.obtenerRespuestaPorUrl(this, 'regimenDatos', '/cofepris/regimenDatos.json');
-        this.datosSolicitudService.obtenerRespuestaPorUrl(this, 'adunasDeEntradasDatos', '/cofepris/adunasDeEntradasDatos.json');
-        this.datosSolicitudService.obtenerRespuestaPorUrl(this, 'estadoDatos', '/cofepris/estadoDatos.json');
-
-      }
+    public datosSolicitudService: DatosSolicitudService
+  ) {
+    this.datosSolicitudService.obtenerRespuestaPorUrl(
+      this,
+      'regimenDatos',
+      '/cofepris/regimenDatos.json'
+    );
+    this.datosSolicitudService.obtenerRespuestaPorUrl(
+      this,
+      'adunasDeEntradasDatos',
+      '/cofepris/adunasDeEntradasDatos.json'
+    );
+    this.datosSolicitudService.obtenerRespuestaPorUrl(
+      this,
+      'estadoDatos',
+      '/cofepris/estadoDatos.json'
+    );
+  }
 
   /**
    * @method ngOnInit
@@ -236,13 +280,20 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Crea el formulario, activa la escucha de cambios y sincroniza el estado con el input.
    */
   ngOnInit(): void {
+    this.mostrarCorreoElectronico =
+      PROCEDIMIENTOS_NO_PARA_ELEMENTO_CORREO_ELECTRONIC.includes(
+        this.idProcedimiento
+      )
+        ? false
+        : true;
     this.crearDatosSolicitudForm();
-
+    this.actualizarDatosFormularioSolicitud();
     this.datosSolicitudForm.valueChanges
       .pipe(takeUntil(this.destroyNotifier$), delay(10))
       .subscribe((value) => {
         if (value) {
-          this.datasolicituActualizar.emit(value);
+          const VALORES_COMPLETOS = this.datosSolicitudForm.getRawValue();
+          this.datasolicituActualizar.emit(VALORES_COMPLETOS);
         }
       });
 
@@ -251,6 +302,17 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       PROCEDIMIENTOS_NO_PARA_ELEMENTO_COLAPSABLE.includes(this.idProcedimiento)
         ? false
         : true;
+    this.mostrarRFCSanitario =
+      PROCEDIMIENTOS_NO_PARA_ELEMENTO_RFC_DEL_SANITARIO.includes(
+        this.idProcedimiento
+      )
+        ? false
+        : true;
+    this.mostrarRFCCalle = PROCEDIMIENTOS_NO_PARA_ELEMENTO_CALLE.includes(
+      this.idProcedimiento
+    )
+      ? false
+      : true;
   }
 
   /**
@@ -274,7 +336,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       denominacionRazon: [
         this.datosSolicitudFormState.denominacionRazon,
         [
-          Validators.required,
           Validators.minLength(2),
           Validators.maxLength(150),
         ],
@@ -304,22 +365,29 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
         ],
       ],
       municipioAlcaldia: [
-        this.datosSolicitudFormState.municipioAlcaldia,
+        {
+          value: this.datosSolicitudFormState.municipioAlcaldia,
+          disabled:
+            PROCEDIMIENTOS_PARA_DESHABILITAR_MUNICIPIO_ALCALDIA.includes(
+              this.idProcedimiento
+            ),
+        },
         [
           Validators.required,
           Validators.minLength(2),
           Validators.maxLength(150),
         ],
       ],
-      localidad: [
-        this.datosSolicitudFormState.localidad,
+      localidad: [this.datosSolicitudFormState.localidad],
+      colonia: [this.datosSolicitudFormState.colonia],
+      calleYNumero: [
+        this.datosSolicitudFormState.calleYNumero,
         [Validators.required],
       ],
-      colonia: [this.datosSolicitudFormState.colonia, [Validators.required]],
       calle: [this.datosSolicitudFormState.calle, [Validators.required]],
       lada: [this.datosSolicitudFormState.lada, [Validators.required]],
       telefono: [this.datosSolicitudFormState.telefono, [Validators.required]],
-      aviso: [this.datosSolicitudFormState.aviso, [Validators.required]],
+      aviso: [this.datosSolicitudFormState.aviso],
       licenciaSanitaria: [
         this.datosSolicitudFormState.licenciaSanitaria,
         [Validators.required],
@@ -350,6 +418,24 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
         this.datosSolicitudFormState.apellidoMaterno,
         [Validators.required],
       ],
+    });
+  }
+
+/**
+ * @method actualizarDatosFormularioSolicitud
+ * @description Actualiza las validaciones de los campos del formulario `datosSolicitudForm`
+ * en función de los procedimientos definidos en `CAMPOS_REQUERIDOS_FORMULARIO_MAP`.
+ 
+ */
+  actualizarDatosFormularioSolicitud():void{
+    CAMPOS_REQUERIDOS_FORMULARIO_MAP.forEach((procedimientos, campo) => {
+      if (procedimientos?.includes(this.idProcedimiento)) {
+        const CONTROL = this.datosSolicitudForm.get(campo);
+        if (CONTROL) {
+          CONTROL.setValidators(Validators.required);
+          CONTROL.updateValueAndValidity();
+        }
+      }
     });
   }
 
@@ -525,7 +611,60 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       });
     }
   }
+  /**
+   * Método que se ejecuta cuando se cambia el estado de un elemento.
+   * Actualmente no tiene implementación.
+   *
+   * @returns {void} No retorna ningún valor.
+   */
+  cambioDeEstado(event: Catalogo): void {
+    if (this.idProcedimiento === 260301) {
+      if (event) {
+        this.datosSolicitudForm
+          .get('municipioAlcaldia')
+          ?.setValue('DISTITO FEDERAL', { emitEvent: true });
+      }
+    }
+  }
 
+  /**
+   * Verifica si un campo es requerido según la configuración de campos requeridos.
+   *
+   * @param {string} campo - Nombre del campo a verificar.
+   * @returns {boolean} Retorna `true` si el campo es requerido, `false` en caso contrario.
+   */
+  esCampoRequerido(campo: string): boolean {
+    const PROCEDIMIENTOS = CAMPOS_REQUERIDOS_FORMULARIO_MAP.get(campo);
+    return PROCEDIMIENTOS?.includes(this.idProcedimiento) ?? false;
+  }
+
+  /**
+   * Verifica si un campo adicional debe mostrarse según la configuración de procedimientos.
+   *
+   * @param {string} campo - Nombre del campo a verificar.
+   * @returns {boolean} Retorna `true` si el campo adicional debe mostrarse, `false` en caso contrario.
+   */
+  mostrarCamposDelProcedimiento(campo: string): boolean {
+    const PROCEDIMIENTOS = CAMPOS_ADICIONALES_POR_PROCEDIMIENTO_MAP.get(campo);
+    return PROCEDIMIENTOS?.includes(this.idProcedimiento) ?? false;
+  }
+
+  /**
+   * @method cambioAviso
+   * @description Método que habilita o deshabilita el campo `aviso` en el formulario reactivo `datosSolicitudForm`
+   * dependiendo del estado del checkbox seleccionado.
+   *
+   * @param {Event} event - Evento que se dispara al cambiar el estado del checkbox.
+   * @returns {void} Este método no retorna ningún valor.
+   **/
+  cambioAviso(event: Event): void {
+    const CHECKED = (event.target as HTMLInputElement).checked;
+    if (CHECKED) {
+      this.datosSolicitudForm.get('licenciaSanitaria')?.disable();
+    } else {
+      this.datosSolicitudForm.get('licenciaSanitaria')?.enable();
+    }
+  }
   /**
    * Emite un evento con los datos seleccionados de la tabla.
    *

@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { OpcionesPublicacion, SolicitudModel } from '../models/permiso-maquila.models';
-import { catalogoResponse } from '@libs/shared/data-access-user/src';
+import { CatalogoResponse } from '@libs/shared/data-access-user/src';
 
 @Injectable({
   providedIn: 'root'
@@ -27,10 +27,10 @@ export class SolicitudService {
 
   /**
    * Obtiene la lista de claves desde un recurso externo.
-   * @returns Un Observable que emite un arreglo de objetos de tipo catalogoResponse.
+   * @returns Un Observable que emite un arreglo de objetos de tipo CatalogoResponse.
    */
-  getClave(): Observable<catalogoResponse[]> {
-    return this.http.get<catalogoResponse[]>('assets/json/260212/clave.json');
+  getClave(): Observable<CatalogoResponse[]> {
+    return this.http.get<CatalogoResponse[]>('assets/json/260212/clave.json');
   }
 
   /**
