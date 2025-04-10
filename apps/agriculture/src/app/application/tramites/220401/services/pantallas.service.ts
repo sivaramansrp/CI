@@ -1,7 +1,7 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 
-import { catalogoResponse } from "@libs/shared/data-access-user/src";
+import { CatalogoResponse } from "@libs/shared/data-access-user/src";
 
 import { Observable } from "rxjs";
 
@@ -15,7 +15,7 @@ export class DetosDelService {
     constructor( private http:HttpClient){}
 
 
-    getEstadoData(): Observable<catalogoResponse[]> {
-        return this.http.get<catalogoResponse[]>('assets/json/220401/estatos.json');
+    getEstadoData(): Observable<CatalogoResponse[]> {
+        return this.http.get<CatalogoResponse[]>('assets/json/220401/estatos.json');
       }
 }
