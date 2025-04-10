@@ -5,16 +5,42 @@ import { Query } from '@datorama/akita';
 @Injectable({ providedIn: 'root' })
 export class FormularioReciclajeQuery extends Query<EstadoFormularioReciclaje> {
 
-  estadoFormulario$ = this.select();
+ /** 
+ * Observable del estado completo del formulario de reciclaje.
+ */
+estadoFormulario$ = this.select();
 
-  constructor(protected override store: FormularioReciclajeStore) {
-    super(store);
-  }
+/**
+ * Constructor del query que inyecta el store correspondiente.
+ * @param store - Store que contiene el estado del formulario de reciclaje.
+ */
+constructor(protected override store: FormularioReciclajeStore) {
+  super(store);
+}
 
-  obtenerSolicitudForm$ = this.select(state => state.solicitudForm);
-  obtenerEmpresaReciclaje$ = this.select(state => state.empresaReciclaje);
-  obtenerLugarReciclaje$ = this.select(state => state.lugarReciclaje);
-  obtenerEmpresaTransportista$ = this.select(state => state.empresaTransportista);
-  obtenerPrecaucionesManejo$ = this.select(state => state.precaucionesManejo);
+/**
+ * Obtiene los valores actuales del formulario 'solicitudForm'.
+ */
+obtenerSolicitudForm$ = this.select(state => state.solicitudForm);
+
+/**
+ * Obtiene los valores actuales del formulario 'empresaReciclaje'.
+ */
+obtenerEmpresaReciclaje$ = this.select(state => state.empresaReciclaje);
+
+/**
+ * Obtiene los valores actuales del formulario 'lugarReciclaje'.
+ */
+obtenerLugarReciclaje$ = this.select(state => state.lugarReciclaje);
+
+/**
+ * Obtiene los valores actuales del formulario 'empresaTransportista'.
+ */
+obtenerEmpresaTransportista$ = this.select(state => state.empresaTransportista);
+
+/**
+ * Obtiene los valores actuales del formulario 'precaucionesManejo'.
+ */
+obtenerPrecaucionesManejo$ = this.select(state => state.precaucionesManejo);
 
 }
