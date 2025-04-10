@@ -330,3 +330,7 @@ export const CAMPOS_ADICIONALES_POR_PROCEDIMIENTO_MAP: Map<string, number[]> = n
   ['correoElectronico', [260301]],
   ['rfcSanitario', [260301]],
 ]);
+
+export const DESCRIPCION_FRACCION_DESHABILITADO_VALOR="Algodón absorbente o gasas, con sustancias medicinales";
+
+export const UMT_DESHABILITADO_VALOR="Kilogramo";
