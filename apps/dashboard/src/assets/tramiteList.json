@@ -1,0 +1,1969 @@
+[
+    {
+        "id": 1,
+        "tramite": 104,
+        "URL": "{{ ruta }}/pago/deposito-fiscal/solicitud",
+        "link": "/pago/deposito-fiscal/solicitud",
+        "department": "aga"
+    },
+    {
+        "id": 2,
+        "tramite": 301,
+        "URL": "{{ ruta }}/aga/importante/datosdelasolicitud",
+        "link": "/aga/importante/datosdelasolicitud",
+        "department": "aga "
+    },
+    {
+        "id": 3,
+        "tramite": 303,
+        "URL": "{{ ruta }}/aga/despacho-mercancias/registro/registro",
+        "link": "/aga/despacho-mercancias/registro/registro",
+        "department": "agace"
+    },
+    {
+        "id": 4,
+        "tramite": 701,
+        "URL": "{{ ruta }}/aga/registro-digitalizar-documentos/solicitud",
+        "link": "/aga/registro-digitalizar-documentos/solicitud",
+        "department": "agadig"
+    },
+    {
+        "id": 5,
+        "tramite": 5701,
+        "URL": "{{ ruta }}/aga/servicios-extraordinarios/solicitud",
+        "link": "/aga/servicios-extraordinarios/solicitud",
+        "department": "aga"
+    },
+    {
+        "id": 6,
+        "tramite": 5701,
+        "URL": "{{ ruta }}/aga/atender-requerimientos",
+        "link": "/aga/atender-requerimientos",
+        "department": "aga"
+    },
+    {
+        "id": 7,
+        "tramite": 5701,
+        "URL": "{{ ruta }}/aga/notificacion",
+        "link": "/aga/notificacion",
+        "department": "aga"
+    },
+    {
+        "id": 8,
+        "tramite": 6001,
+        "URL": "{{ ruta }}/aga/registro-cuentas-bancarias/todospasos",
+        "link": "/aga/registro-cuentas-bancarias/todospasos",
+        "department": "aga"
+    },
+    {
+        "id": 9,
+        "tramite": 10301,
+        "URL": "{{ ruta }}/aga/importador-exportador/solicitud",
+        "link": "/aga/importador-exportador/solicitud",
+        "department": "aga"
+    },
+    {
+        "id": 10,
+        "tramite": 10303,
+        "URL": "{{ ruta }}/aga/donaciones-extranjeras/solicitud",
+        "link": "/aga/donaciones-extranjeras/solicitud",
+        "department": "aga"
+    },
+    {
+        "id": 11,
+        "tramite": 11105,
+        "URL": "{{ ruta }}/aga/retirada-de-la-autorizacion-de-donaciones/pagina-uno-acuses-y-resoluciones-busqueda",
+        "link": "/aga/retirada-de-la-autorizacion-de-donaciones/pagina-uno-acuses-y-resoluciones-busqueda",
+        "department": "aga"
+    },
+    {
+        "id": 12,
+        "tramite": 11201,
+        "URL": "{{ ruta }}/aga/despacho-mercancias/registro/registro",
+        "link": "/aga/despacho-mercancias/registro/registro",
+        "department": "aga"
+    },
+    {
+        "id": 13,
+        "tramite": 11202,
+        "URL": "{{ ruta }}/aga/retorno-contenedores/solicitante",
+        "link": "/aga/retorno-contenedores/solicitante",
+        "department": "aga"
+    },
+    {
+        "id": 14,
+        "tramite": 11204,
+        "URL": "{{ ruta}}/pago/transferencia-contenedores/solicitud",
+        "link": "/pago/transferencia-contenedores/solicitud",
+        "department": ""
+    },
+    {
+        "id": 15,
+        "tramite": 30901,
+        "URL": "{{ ruta }}/aga/muestras-mercancias/renovaciones",
+        "link": "/aga/muestras-mercancias/renovaciones",
+        "department": "aga"
+    },
+    {
+        "id": 16,
+        "tramite": 31601,
+        "URL": "{{ ruta }}/agace/pago/antecesor/datosdelasolicitud",
+        "link": "/agace/pago/antecesor/datosdelasolicitud",
+        "department": "agace"
+    },
+    {
+        "id": 17,
+        "tramite": 31803,
+        "URL": "{{ruta}}/agace/registro-solicitud/pagina-uno-acuses-y-resoluciones-busqueda",
+        "link": "gace/registro-solicitud/pagina-uno-acuses-y-resoluciones-busqueda",
+        "department": "agace"
+    },
+    {
+        "id": 18,
+        "tramite": 32501,
+        "URL": "{{ ruta }}/agace/mercancias-desmontadas-o-sin-montar/solicitud",
+        "link": "/agace/mercancias-desmontadas-o-sin-montar/solicitud",
+        "department": "agace"
+    },
+    {
+        "id": 19,
+        "tramite": 32502,
+        "URL": "{{ ruta }}/agace/aviso",
+        "link": "/agace/aviso",
+        "department": "agace"
+    },
+    {
+        "id": 20,
+        "tramite": 32504,
+        "URL": "{{ ruta }}/agace/aviso/aviso-procesos",
+        "link": "/agace/aviso/aviso-procesos",
+        "department": "agace"
+    },
+    {
+        "id": 21,
+        "tramite": 40101,
+        "URL": "{{ ruta }}/aga/transportista-terrestre/solicitante",
+        "link": "/aga/transportista-terrestre/solicitante",
+        "department": "aga"
+    },
+    {
+        "id": 22,
+        "tramite": 40102,
+        "URL": "{{ ruta }}/aga/transportista-terrestre/solicitante",
+        "link": "/aga/transportista-terrestre/solicitante",
+        "department": "aga"
+    },
+    {
+        "id": 23,
+        "tramite": 40103,
+        "URL": "{{ ruta }}/aga/modificar-caat-terrestre/solicitante",
+        "link": "/aga/modificar-caat-terrestre/solicitante",
+        "department": "aga"
+    },
+    {
+        "id": 24,
+        "tramite": 40302,
+        "URL": "{{ ruta }}/aga/registro-transportista/solicitante",
+        "link": "/aga/registro-transportista/solicitante",
+        "department": "aga"
+    },
+    {
+        "id": 25,
+        "tramite": 80101,
+        "URL": "{{ ruta }}/se/pago/nuevo-programa-industrial/action",
+        "link": "/se/pago/nuevo-programa-industrial/action",
+        "department": "se"
+    },
+    {
+        "id": 26,
+        "tramite": 80102,
+        "URL": "{{ ruta }}/se/autorizacion-programa-nuevo/solicitud",
+        "link": "/se/autorizacion-programa-nuevo/solicitud",
+        "department": "se"
+    },
+    {
+        "id": 27,
+        "tramite": 80202,
+        "URL": "{{ ruta }}/agace/pago/antecesor/datosdelasolicitud",
+        "link": "/agace/pago/antecesor/datosdelasolicitud",
+        "department": "agace"
+    },
+    {
+        "id": 28,
+        "tramite": 80203,
+        "URL": "{{ ruta }}/se/immex-registro-solicitud-modality/immex-registro",
+        "link": "/se/immex-registro-solicitud-modality/immex-registro",
+        "department": "se"
+    },
+    {
+        "id": 29,
+        "tramite": 80205,
+        "URL": "{{ ruta }}/se/certificado-registro/registro",
+        "link": "/se/certificado-registro/registro",
+        "department": "se"
+    },
+    {
+        "id": 30,
+        "tramite": 80207,
+        "URL": "{{ ruta }}/se/subfabricante-immex/contenedor-de-pasos",
+        "link": "/se/subfabricante-immex/contenedor-de-pasos",
+        "department": "se"
+    },
+    {
+        "id": 31,
+        "tramite": 80208,
+        "URL": "{{ ruta }}/se/pago/solicitud-modalidad/modalidad",
+        "link": "/se/pago/solicitud-modalidad/modalidad",
+        "department": "se"
+    },
+    {
+        "id": 32,
+        "tramite": 80302,
+        "URL": "{{ ruta }}/se/solicitud-modificacion",
+        "link": "/se/solicitud-modificacion",
+        "department": "se"
+    },
+    {
+        "id": 33,
+        "tramite": 80308,
+        "URL": "{{ ruta }}/se/modificacion/solicitud",
+        "link": "/se/modificacion/solicitud",
+        "department": "se"
+    },
+    {
+        "id": 34,
+        "tramite": 90101,
+        "URL": "{{ ruta }}/se/autorizacion-prosec/prosec",
+        "link": "/se/autorizacion-prosec/prosec",
+        "department": "se"
+    },
+    {
+        "id": 35,
+        "tramite": 90201,
+        "URL": "{{ ruta }}/se/expansion-de-productores/registrar-solicitud",
+        "link": "/se/expansion-de-productores/registrar-solicitud",
+        "department": "se"
+    },
+    {
+        "id": 36,
+        "tramite": 90305,
+        "URL": "{{ ruta }}/se/prosec-modificacion/solicitante",
+        "link": "/se/prosec-modificacion/solicitante",
+        "department": "se"
+    },
+    {
+        "id": 37,
+        "tramite": 110101,
+        "URL": "{{ ruta }}/se/pantallas/datosdecomponentes",
+        "link": "/se/pantallas/datosdecomponentes",
+        "department": "se"
+    },
+    {
+        "id": 38,
+        "tramite": 110102,
+        "URL": "{{ ruta }}/se/exportador-autorizado/registrar-solicitud",
+        "link": "/se/exportador-autorizado/registrar-solicitud",
+        "department": "se"
+    },
+    {
+        "id": 39,
+        "tramite": 110201,
+        "URL": "{{ ruta }}/se/registro/solicitud",
+        "link": "/se/registro/solicitud",
+        "department": "se"
+    },
+    {
+        "id": 40,
+        "tramite": 110202,
+        "URL": "{{ ruta }}/se/certificado-validacion/validacion",
+        "link": "/se/certificado-validacion/validacion",
+        "department": "se"
+    },
+    {
+        "id": 41,
+        "tramite": 110203,
+        "URL": "{{ ruta }}/se/tecnicos/solicitante",
+        "link": "/se/tecnicos/solicitante",
+        "department": "se"
+    },
+    {
+        "id": 42,
+        "tramite": 110204,
+        "URL": "{{ ruta }}/se/pago/pexim/certificado-origen",
+        "link": "/se/pago/pexim/certificado-origen",
+        "department": "se"
+    },
+    {
+        "id": 43,
+        "tramite": 110208,
+        "URL": "{{ ruta }}/se/validar-inicialmente/certificado-origen",
+        "link": "/se/validar-inicialmente/certificado-origen",
+        "department": "se"
+    },
+    {
+        "id": 44,
+        "tramite": 110209,
+        "URL": "{{ ruta }}/se/certificado-sgp/solicitud",
+        "link": "/se/certificado-sgp/solicitud",
+        "department": "se"
+    },
+    {
+        "id": 45,
+        "tramite": 110211,
+        "URL": "{{ ruta }}/se/validar-certificado/cam",
+        "link": "/se/validar-certificado/cam",
+        "department": "se"
+    },
+    {
+        "id": 46,
+        "tramite": 110216,
+        "URL": "{{ ruta }}/se/inicialmente-certificado-origen/solicitante",
+        "link": "/se/inicialmente-certificado-origen/solicitante",
+        "department": "se"
+    },
+    {
+        "id": 47,
+        "tramite": 110217,
+        "URL": "{{ ruta }}/se/certificado-origen/solicitante",
+        "link": "/se/certificado-origen/solicitante",
+        "department": "se"
+    },
+    {
+        "id": 48,
+        "tramite": 110218,
+        "URL": "{{ ruta }}/se/certificado-tecnico-japon/validar-certificado-tecnico-japon",
+        "link": "/se/certificado-tecnico-japon/validar-certificado-tecnico-japon",
+        "department": "se"
+    },
+    {
+        "id": 49,
+        "tramite": 110219,
+        "URL": "{{ ruta }}/se/certificado/solicitud",
+        "link": "/se/certificado/solicitud",
+        "department": "se"
+    },
+    {
+        "id": 50,
+        "tramite": 110221,
+        "URL": "{{ ruta }}/se/validador-certificado-cam",
+        "link": "/se/validador-certificado-cam",
+        "department": "se"
+    },
+    {
+        "id": 51,
+        "tramite": 120201,
+        "URL": "{{ ruta }}/pago/cupos/consultar-cupo",
+        "link": "/pago/cupos/consultar-cupo",
+        "department": ""
+    },
+    {
+        "id": 52,
+        "tramite": 120301,
+        "URL": "{{ ruta }}/se/elegibilidad-de-textiles/elegibilidad-textiles",
+        "link": "/se/elegibilidad-de-textiles/elegibilidad-textiles",
+        "department": "se"
+    },
+    {
+        "id": 53,
+        "tramite": 120402,
+        "URL": "{{ ruta }}/se/asignacion-directa-de-cupo/solicitante",
+        "link": "/se/asignacion-directa-de-cupo/solicitante",
+        "department": "se"
+    },
+    {
+        "id": 54,
+        "tramite": 120402,
+        "URL": "{{ ruta }}/aga/muestras-mercancias/renovaciones",
+        "link": "/aga/muestras-mercancias/renovaciones",
+        "department": "aga"
+    },
+    {
+        "id": 55,
+        "tramite": 120404,
+        "URL": "{{ ruta }}/se/entidad-legal/soliciante",
+        "link": "/se/entidad-legal/soliciante",
+        "department": "se"
+    },
+    {
+        "id": 56,
+        "tramite": 120501,
+        "URL": "{{ ruta }}/se/solicitartransferencia/cupos-solicitud-transferencia",
+        "link": "/se/solicitartransferencia/cupos-solicitud-transferencia",
+        "department": "se"
+    },
+    {
+        "id": 57,
+        "tramite": 120601,
+        "URL": "{{ ruta }}/se/registro-como-empresa/datos",
+        "link": "/se/registro-como-empresa/datos",
+        "department": "se"
+    },
+    {
+        "id": 58,
+        "tramite": 120602,
+        "URL": "{{ ruta }}/se/empresa-frontera/datos-empresad",
+        "link": "/se/empresa-frontera/datos-empresad",
+        "department": "se"
+    },
+    {
+        "id": 59,
+        "tramite": 120602,
+        "URL": "{{ ruta }}/se/pago/empresa-frontera/datos-empresad",
+        "link": "/se/pago/empresa-frontera/datos-empresad",
+        "department": "se"
+    },
+    {
+        "id": 60,
+        "tramite": 130102,
+        "URL": "{{ ruta }}/se/octava-temporal/solicitante",
+        "link": "/se/octava-temporal/solicitante",
+        "department": "se"
+    },
+    {
+        "id": 61,
+        "tramite": 130106,
+        "URL": "{{ ruta }}/desmantelar/solicitante",
+        "link": "/desmantelar/solicitante",
+        "department": ""
+    },
+    {
+        "id": 62,
+        "tramite": 130111,
+        "URL": "{{ ruta }}/se/importacion-de-vehiculos-usados/importacion-de-vehiculos",
+        "link": "/se/importacion-de-vehiculos-usados/importacion-de-vehiculos",
+        "department": "se"
+    },
+    {
+        "id": 63,
+        "tramite": 130118,
+        "URL": "{{ ruta }}/se/pexim/solicitud",
+        "link": "/se/pexim/solicitud",
+        "department": "se"
+    },
+    {
+        "id": 64,
+        "tramite": 130119,
+        "URL": "{{ ruta }}/se/aviso-importacion-maquinas/registrar-solicitud",
+        "link": "/se/aviso-importacion-maquinas/registrar-solicitud",
+        "department": "se"
+    },
+    {
+        "id": 65,
+        "tramite": 130120,
+        "URL": "{{ ruta }}/se/permiso-importacion/intro-permiso",
+        "link": "/se/permiso-importacion/intro-permiso",
+        "department": "se"
+    },
+    {
+        "id": 66,
+        "tramite": 130202,
+        "URL": "{{ ruta }}/se/exportacion-minerales/exportacion-mineralesde-hierro",
+        "link": "/se/exportacion-minerales/exportacion-mineralesde-hierro",
+        "department": "se"
+    },
+    {
+        "id": 67,
+        "tramite": 140103,
+        "URL": "{{ ruta }}/se/pago/cancelacion-de/solicitante",
+        "link": "/se/pago/cancelacion-de/solicitante",
+        "department": "se"
+    },
+    {
+        "id": 68,
+        "tramite": 140105,
+        "URL": "{{ ruta }}/se/pago/desistimiento-de-permiso/solicitante",
+        "link": "/se/pago/desistimiento-de-permiso/solicitante",
+        "department": "se"
+    },
+    {
+        "id": 69,
+        "tramite": 140201,
+        "URL": "{{ ruta }}/se/cancelaciones-ministerio/solicitud",
+        "link": "/se/cancelaciones-ministerio/solicitud",
+        "department": "se"
+    },
+    {
+        "id": 70,
+        "tramite": 150101,
+        "URL": "{{ ruta }}/se/registro-solicitud-anual/solicitud",
+        "link": "/se/registro-solicitud-anual/solicitud",
+        "department": "se"
+    },
+    {
+        "id": 71,
+        "tramite": 150102,
+        "URL": "{{ ruta }}/se/reporte-anual/solicitud",
+        "link": "/se/reporte-anual/solicitud",
+        "department": "se"
+    },
+    {
+        "id": 72,
+        "tramite": 220102,
+        "URL": "{{ ruta }}/peticion-requisitos-fitosanitarios/invocar-modulo",
+        "link": "/peticion-requisitos-fitosanitarios/invocar-modulo",
+        "department": ""
+    },
+    {
+        "id": 73,
+        "tramite": 220201,
+        "URL": "{{ ruta }}/agriculture/certificado-zoosanitario/zoosanitario",
+        "link": "/agriculture/certificado-zoosanitario/zoosanitario",
+        "department": "agriculture"
+    },
+    {
+        "id": 74,
+        "tramite": 220202,
+        "URL": "{{ ruta }}/agriculture/certificado-fitosanitario/agriculture",
+        "link": "/agriculture/certificado-fitosanitario/agriculture",
+        "department": "agriculture"
+    },
+    {
+        "id": 75,
+        "tramite": 220203,
+        "URL": "{{ ruta }}/agriculture/importacion-acuacultura/sanidad",
+        "link": "/agriculture/importacion-acuacultura/sanidad",
+        "department": "agriculture"
+    },
+    {
+        "id": 76,
+        "tramite": 220401,
+        "URL": "{{ ruta }}/agriculture/pantallas-extraordinarios",
+        "link": "/agriculture/pantallas-extraordinarios",
+        "department": "agriculture"
+    },
+    {
+        "id": 77,
+        "tramite": 220402,
+        "URL": "{{ ruta }}/pantallas-captura/solicitud",
+        "link": "/pantallas-captura/solicitud",
+        "department": ""
+    },
+    {
+        "id": 78,
+        "tramite": 220404,
+        "URL": "{{ ruta }}/agriculture/pago/desistimiento/desistimiento-page",
+        "link": "/agriculture/pago/desistimiento/desistimiento-page",
+        "department": "agriculture"
+    },
+    {
+        "id": 79,
+        "tramite": 220501,
+        "URL": "{{ ruta }}/agriculture/sagarpa/datosdelasolicitud",
+        "link": "/agriculture/sagarpa/datosdelasolicitud",
+        "department": "agriculture"
+    },
+    {
+        "id": 80,
+        "tramite": 220502,
+        "URL": "{{ ruta }}/agriculture/inspeccion-fisica/pantallas",
+        "link": "/agriculture/inspeccion-fisica/pantallas",
+        "department": "agriculture"
+    },
+    {
+        "id": 81,
+        "tramite": 220701,
+        "URL": "{{ ruta }}/agriculture/inspeccion-fisica/inspeccion-fisica-zoosanitario",
+        "link": "/agriculture/inspeccion-fisica/inspeccion-fisica-zoosanitario",
+        "department": "agriculture"
+    },
+    {
+        "id": 82,
+        "tramite": 220702,
+        "URL": "{{ ruta }}/agriculture/inspeccion-fitosanitario/fitosanitario",
+        "link": "/agriculture/inspeccion-fitosanitario/fitosanitario",
+        "department": "agriculture"
+    },
+    {
+        "id": 83,
+        "tramite": 220703,
+        "URL": "{{ ruta }}/agriculture/acuicola-fisica/acuicola",
+        "link": "/agriculture/acuicola-fisica/acuicola",
+        "department": "agriculture"
+    },
+    {
+        "id": 84,
+        "tramite": 230101,
+        "URL": "{{ ruta }}/tramites-disponibles/solicitud",
+        "link": "/tramites-disponibles/solicitud",
+        "department": ""
+    },
+    {
+        "id": 85,
+        "tramite": 230401,
+        "URL": "{{ ruta }}/semarnat/pantallas",
+        "link": "/semarnat/pantallas",
+        "department": "semarnat"
+    },
+    {
+        "id": 86,
+        "tramite": 231001,
+        "URL": "{{ ruta }}/aviso-de-materiales/datos",
+        "link": "/aviso-de-materiales/datos",
+        "department": ""
+    },
+    {
+        "id": 87,
+        "tramite": 260101,
+        "URL": "{{ ruta }}/cofepris/importacion-productos/productos",
+        "link": "/cofepris/importacion-productos/productos",
+        "department": "cofepris"
+    },
+    {
+        "id": 88,
+        "tramite": 260203,
+        "URL": "{{ ruta }}/cofepris/medicamentos-registro-sanitario/solicitud",
+        "link": "/cofepris/medicamentos-registro-sanitario/solicitud",
+        "department": "cofepris"
+    },
+    {
+        "id": 89,
+        "tramite": 260205,
+        "URL": "{{ ruta }}/cofepris/materias-primas-destinados/solicitud",
+        "link": "/cofepris/materias-primas-destinados/solicitud",
+        "department": "cofepris"
+    },
+    {
+        "id": 90,
+        "tramite": 260211,
+        "URL": "{{ ruta }}/permiso-sanitario/pantallas",
+        "link": "/permiso-sanitario/pantallas",
+        "department": ""
+    },
+    {
+        "id": 91,
+        "tramite": 260212,
+        "URL": "{{ ruta }}/cofepris/permiso-maquila/solictud",
+        "link": "/cofepris/permiso-maquila/solictud",
+        "department": "cofepris"
+    },
+    {
+        "id": 92,
+        "tramite": 260214,
+        "URL": "{{ ruta }}/cofepris/importacion-dispositivos-medicos-uso/contenedor-de-pasos",
+        "link": "/cofepris/importacion-dispositivos-medicos-uso/contenedor-de-pasos",
+        "department": "cofepris"
+    },
+    {
+        "id": 93,
+        "tramite": 260215,
+        "URL": "{{ ruta }}/cofepris/permiso-sanitario-importacion/sanitario",
+        "link": "/cofepris/permiso-sanitario-importacion/sanitario",
+        "department": "cofepris"
+    },
+    {
+        "id": 94,
+        "tramite": 260216,
+        "URL": "{{ ruta }}/cofepris/importacion-dispositivos-medicos-donacion/contenedor-de-pasos",
+        "link": "/cofepris/importacion-dispositivos-medicos-donacion/contenedor-de-pasos",
+        "department": "cofepris"
+    },
+    {
+        "id": 95,
+        "tramite": 260401,
+        "URL": "{{ ruta }}/cofepris/territorio-nacional/solicitante",
+        "link": "/cofepris/territorio-nacional/solicitante",
+        "department": "cofepris"
+    },
+    {
+        "id": 96,
+        "tramite": 260402,
+        "URL": "{{ ruta }}/cofepris/permiso-importacion-biologica/solictud",
+        "link": "/cofepris/permiso-importacion-biologica/solictud",
+        "department": "cofepris"
+    },
+    {
+        "id": 97,
+        "tramite": 260501,
+        "URL": "{{ ruta }}/cofepris/permiso-plaguicidas/plaguicidas",
+        "link": "/cofepris/permiso-plaguicidas/plaguicidas",
+        "department": "cofepris"
+    },
+    {
+        "id": 98,
+        "tramite": 260502,
+        "URL": "{{ ruta }}/pago/muestras-plaguicidas/plaguicidas",
+        "link": "/pago/muestras-plaguicidas/plaguicidas",
+        "department": ""
+    },
+    {
+        "id": 99,
+        "tramite": 260503,
+        "URL": "{{ ruta }}/cofepris/permiso-experimentales-plaguicidas/plaguicidas",
+        "link": "/cofepris/permiso-experimentales-plaguicidas/plaguicidas",
+        "department": "cofepris"
+    },
+    {
+        "id": 100,
+        "tramite": 260601,
+        "URL": "{{ ruta }}/cofepris/aviso-sanitario/datosde-la-solicitud",
+        "link": "/cofepris/aviso-sanitario/datosde-la-solicitud",
+        "department": "cofepris"
+    },
+    {
+        "id": 101,
+        "tramite": 260603,
+        "URL": "{{ ruta }}/cofepris/aviso-de-importacion/SolicitudePage",
+        "link": "/cofepris/aviso-de-importacion/SolicitudePage",
+        "department": "cofepris"
+    },
+    {
+        "id": 102,
+        "tramite": 260604,
+        "URL": "{{ ruta }}/cofepris/aviso-exportacion/pantallas",
+        "link": "/cofepris/aviso-exportacion/pantallas",
+        "department": "cofepris"
+    },
+    {
+        "id": 103,
+        "tramite": 260605,
+        "URL": "{{ ruta }}/pago/aviso-de-modificacion-module/datos-de-la-solicitud",
+        "link": "/pago/aviso-de-modificacion-module/datos-de-la-solicitud",
+        "department": ""
+    },
+    {
+        "id": 104,
+        "tramite": 260701,
+        "URL": "{{ ruta }}/cofepris/permiso-certificados/registrarSolicitudIP",
+        "link": "/cofepris/permiso-certificados/registrarSolicitudIP",
+        "department": "cofepris"
+    },
+    {
+        "id": 105,
+        "tramite": 290101,
+        "URL": "{{ ruta }}/cafe-exportadores/cafe-exportadores",
+        "link": "/cafe-exportadores/cafe-exportadores",
+        "department": ""
+    },
+    {
+        "id": 106,
+        "tramite": 290201,
+        "URL": "{{ ruta }}/amecafe/registrar-solicitud/solicitud",
+        "link": "/amecafe/registrar-solicitud/solicitud",
+        "department": "amecafe"
+    },
+    {
+        "id": 107,
+        "tramite": 570101,
+        "URL": "{{ ruta }}/aga/pago/cancelacion-servicios-extraordinarios/cancelacion-extraordinarios",
+        "link": "/aga/pago/cancelacion-servicios-extraordinarios/cancelacion-extraordinarios",
+        "department": "aga"
+    },
+    {
+        "id": 108,
+        "tramite": 140104,
+        "URL": "",
+        "link": "",
+        "department": "se"
+    },
+    {
+        "id": 109,
+        "tramite": 260204,
+        "URL": "",
+        "link": "",
+        "department": "cofepris"
+    },
+    {
+        "id": 110,
+        "tramite": 260210,
+        "URL": "",
+        "link": "",
+        "department": "cofepris"
+    },
+    {
+        "id": 111,
+        "tramite": 260904,
+        "URL": "",
+        "link": "",
+        "department": "cofepris"
+    },
+    {
+        "id": 112,
+        "tramite": 260911,
+        "URL": "",
+        "link": "",
+        "department": "cofepris"
+    },
+    {
+        "id": 113,
+        "tramite": 260912,
+        "URL": "",
+        "link": "",
+        "department": "cofepris"
+    },
+    {
+        "id": 114,
+        "tramite": 40403,
+        "URL": "",
+        "link": "",
+        "department": "aga"
+    },
+    {
+        "id": 115,
+        "tramite": 32301,
+        "URL": "",
+        "link": "",
+        "department": "agace"
+    },
+    {
+        "id": 116,
+        "tramite": 260202,
+        "URL": "",
+        "link": "",
+        "department": "cofepris"
+    },
+    {
+        "id": 117,
+        "tramite": 110207,
+        "URL": "",
+        "link": "",
+        "department": "se"
+    },
+    {
+        "id": 118,
+        "tramite": 110212,
+        "URL": "",
+        "link": "",
+        "department": "se"
+    },
+    {
+        "id": 119,
+        "tramite": 110214,
+        "URL": "",
+        "link": "",
+        "department": "se"
+    },
+    {
+        "id": 120,
+        "tramite": 110223,
+        "URL": "",
+        "link": "",
+        "department": "se"
+    },
+    {
+        "id": 121,
+        "tramite": 120101,
+        "URL": "",
+        "link": "",
+        "department": "se"
+    },
+    {
+        "id": 122,
+        "tramite": 120202,
+        "URL": "",
+        "link": "",
+        "department": "se"
+    },
+    {
+        "id": 123,
+        "tramite": 120203,
+        "URL": "",
+        "link": "",
+        "department": "se"
+    },
+    {
+        "id": 124,
+        "tramite": 150103,
+        "URL": "",
+        "link": "",
+        "department": "se"
+    },
+    {
+        "id": 125,
+        "tramite": 190101,
+        "URL": "",
+        "link": "",
+        "department": "se"
+    },
+    {
+        "id": 126,
+        "tramite": 220503,
+        "URL": "",
+        "link": "",
+        "department": "agricultura"
+    },
+    {
+        "id": 127,
+        "tramite": 221601,
+        "URL": "",
+        "link": "",
+        "department": "agricultura"
+    },
+    {
+        "id": 128,
+        "tramite": 130109,
+        "URL": "",
+        "link": "",
+        "department": "se"
+    },
+    {
+        "id": 129,
+        "tramite": 130110,
+        "URL": "",
+        "link": "",
+        "department": "se"
+    },
+    {
+        "id": 130,
+        "tramite": 302,
+        "URL": "",
+        "link": "",
+        "department": "aga"
+    },
+    {
+        "id": 131,
+        "tramite": 10302,
+        "URL": "",
+        "link": "",
+        "department": "aga"
+    },
+    {
+        "id": 132,
+        "tramite": 40201,
+        "URL": "",
+        "link": "",
+        "department": "aga"
+    },
+    {
+        "id": 133,
+        "tramite": 40301,
+        "URL": "",
+        "link": "",
+        "department": "aga"
+    },
+    {
+        "id": 134,
+        "tramite": 40401,
+        "URL": "",
+        "link": "",
+        "department": "aga"
+    },
+    {
+        "id": 135,
+        "tramite": 40402,
+        "URL": "",
+        "link": "",
+        "department": "aga"
+    },
+    {
+        "id": 136,
+        "tramite": 570102,
+        "URL": "",
+        "link": "",
+        "department": "aga"
+    },
+    {
+        "id": 137,
+        "tramite": 31501,
+        "URL": "",
+        "link": "",
+        "department": "agace"
+    },
+    {
+        "id": 138,
+        "tramite": 32605,
+        "URL": "",
+        "link": "",
+        "department": "agace"
+    },
+    {
+        "id": 139,
+        "tramite": 31802,
+        "URL": "",
+        "link": "",
+        "department": "agace"
+    },
+    {
+        "id": 140,
+        "tramite": 32401,
+        "URL": "",
+        "link": "",
+        "department": "agace"
+    },
+    {
+        "id": 141,
+        "tramite": 32503,
+        "URL": "",
+        "link": "",
+        "department": "agace"
+    },
+    {
+        "id": 142,
+        "tramite": 32505,
+        "URL": "",
+        "link": "",
+        "department": "agace"
+    },
+    {
+        "id": 143,
+        "tramite": 32506,
+        "URL": "",
+        "link": "",
+        "department": "agace"
+    },
+    {
+        "id": 144,
+        "tramite": 32507,
+        "URL": "",
+        "link": "",
+        "department": "agace"
+    },
+    {
+        "id": 145,
+        "tramite": 32508,
+        "URL": "",
+        "link": "",
+        "department": "agace"
+    },
+    {
+        "id": 146,
+        "tramite": 220403,
+        "URL": "",
+        "link": "",
+        "department": "agricultura"
+    },
+    {
+        "id": 147,
+        "tramite": 260102,
+        "URL": "",
+        "link": "",
+        "department": "cofepris"
+    },
+    {
+        "id": 148,
+        "tramite": 260206,
+        "URL": "",
+        "link": "",
+        "department": "cofepris"
+    },
+    {
+        "id": 149,
+        "tramite": 260213,
+        "URL": "",
+        "link": "",
+        "department": "cofepris"
+    },
+    {
+        "id": 150,
+        "tramite": 260217,
+        "URL": "",
+        "link": "",
+        "department": "cofepris"
+    },
+    {
+        "id": 151,
+        "tramite": 260218,
+        "URL": "",
+        "link": "",
+        "department": "cofepris"
+    },
+    {
+        "id": 152,
+        "tramite": 260301,
+        "URL": "",
+        "link": "",
+        "department": "cofepris"
+    },
+    {
+        "id": 153,
+        "tramite": 260303,
+        "URL": "",
+        "link": "",
+        "department": "cofepris"
+    },
+    {
+        "id": 154,
+        "tramite": 260512,
+        "URL": "",
+        "link": "",
+        "department": "cofepris"
+    },
+    {
+        "id": 155,
+        "tramite": 260514,
+        "URL": "",
+        "link": "",
+        "department": "cofepris"
+    },
+    {
+        "id": 156,
+        "tramite": 260902,
+        "URL": "",
+        "link": "",
+        "department": "cofepris"
+    },
+    {
+        "id": 157,
+        "tramite": 260903,
+        "URL": "",
+        "link": "",
+        "department": "cofepris"
+    },
+    {
+        "id": 158,
+        "tramite": 261702,
+        "URL": "",
+        "link": "",
+        "department": "cofepris"
+    },
+    {
+        "id": 159,
+        "tramite": 270201,
+        "URL": "",
+        "link": "",
+        "department": "inbal"
+    },
+    {
+        "id": 160,
+        "tramite": 110210,
+        "URL": "",
+        "link": "",
+        "department": "se"
+    },
+    {
+        "id": 161,
+        "tramite": 130112,
+        "URL": "",
+        "link": "",
+        "department": "se"
+    },
+    {
+        "id": 162,
+        "tramite": 130114,
+        "URL": "",
+        "link": "",
+        "department": "se"
+    },
+    {
+        "id": 163,
+        "tramite": 130115,
+        "URL": "",
+        "link": "",
+        "department": "se"
+    },
+    {
+        "id": 164,
+        "tramite": 130203,
+        "URL": "",
+        "link": "",
+        "department": "se"
+    },
+    {
+        "id": 165,
+        "tramite": 130217,
+        "URL": "",
+        "link": "",
+        "department": "se"
+    },
+    {
+        "id": 166,
+        "tramite": 230901,
+        "URL": "",
+        "link": "",
+        "department": "semarnat"
+    },
+    {
+        "id": 167,
+        "tramite": 230902,
+        "URL": "",
+        "link": "",
+        "department": "semarnat"
+    },
+    {
+        "id": 168,
+        "tramite": 130108,
+        "URL": "",
+        "link": "",
+        "department": "sener"
+    },
+    {
+        "id": 169,
+        "tramite": 130121,
+        "URL": "",
+        "link": "",
+        "department": "sener"
+    },
+    {
+        "id": 170,
+        "tramite": 140111,
+        "URL": "",
+        "link": "",
+        "department": "sener"
+    },
+    {
+        "id": 171,
+        "tramite": 140112,
+        "URL": "",
+        "link": "",
+        "department": "sener"
+    },
+    {
+        "id": 172,
+        "tramite": 120204,
+        "URL": "",
+        "link": "",
+        "department": "se"
+    },
+    {
+        "id": 173,
+        "tramite": 130103,
+        "URL": "",
+        "link": "",
+        "department": "se"
+    },
+    {
+        "id": 174,
+        "tramite": 105,
+        "URL": "",
+        "link": "",
+        "department": "aga"
+    },
+    {
+        "id": 175,
+        "tramite": 31201,
+        "URL": "",
+        "link": "",
+        "department": "aga"
+    },
+    {
+        "id": 176,
+        "tramite": 317,
+        "URL": "",
+        "link": "",
+        "department": "agace"
+    },
+    {
+        "id": 177,
+        "tramite": 221602,
+        "URL": "",
+        "link": "",
+        "department": "agricultura"
+    },
+    {
+        "id": 178,
+        "tramite": 260702,
+        "URL": "",
+        "link": "",
+        "department": "cofepris"
+    },
+    {
+        "id": 179,
+        "tramite": 260704,
+        "URL": "",
+        "link": "",
+        "department": "cofepris"
+    },
+    {
+        "id": 180,
+        "tramite": 260906,
+        "URL": "",
+        "link": "",
+        "department": "cofepris"
+    },
+    {
+        "id": 181,
+        "tramite": 260910,
+        "URL": "",
+        "link": "",
+        "department": "cofepris"
+    },
+    {
+        "id": 182,
+        "tramite": 260915,
+        "URL": "",
+        "link": "",
+        "department": "cofepris"
+    },
+    {
+        "id": 183,
+        "tramite": 260918,
+        "URL": "",
+        "link": "",
+        "department": "cofepris"
+    },
+    {
+        "id": 184,
+        "tramite": 261601,
+        "URL": "",
+        "link": "",
+        "department": "cofepris"
+    },
+    {
+        "id": 185,
+        "tramite": 130301,
+        "URL": "",
+        "link": "",
+        "department": "se"
+    },
+    {
+        "id": 186,
+        "tramite": 140101,
+        "URL": "",
+        "link": "",
+        "department": "se"
+    },
+    {
+        "id": 187,
+        "tramite": 231003,
+        "URL": "",
+        "link": "",
+        "department": "semarnat"
+    },
+    {
+        "id": 188,
+        "tramite": 202,
+        "URL": "",
+        "link": "",
+        "department": "aga"
+    },
+    {
+        "id": 189,
+        "tramite": 6101,
+        "URL": "",
+        "link": "",
+        "department": "aga"
+    },
+    {
+        "id": 190,
+        "tramite": 11102,
+        "URL": "",
+        "link": "",
+        "department": "aga"
+    },
+    {
+        "id": 191,
+        "tramite": 11106,
+        "URL": "",
+        "link": "",
+        "department": "aga"
+    },
+    {
+        "id": 192,
+        "tramite": 30401,
+        "URL": "",
+        "link": "",
+        "department": "aga"
+    },
+    {
+        "id": 193,
+        "tramite": 30503,
+        "URL": "",
+        "link": "",
+        "department": "aga"
+    },
+    {
+        "id": 194,
+        "tramite": 31202,
+        "URL": "",
+        "link": "",
+        "department": "aga"
+    },
+    {
+        "id": 195,
+        "tramite": 31203,
+        "URL": "",
+        "link": "",
+        "department": "aga"
+    },
+    {
+        "id": 196,
+        "tramite": 40202,
+        "URL": "",
+        "link": "",
+        "department": "aga"
+    },
+    {
+        "id": 197,
+        "tramite": 630104,
+        "URL": "",
+        "link": "",
+        "department": "aga"
+    },
+    {
+        "id": 198,
+        "tramite": 630303,
+        "URL": "",
+        "link": "",
+        "department": "aga"
+    },
+    {
+        "id": 199,
+        "tramite": 630307,
+        "URL": "",
+        "link": "",
+        "department": "aga"
+    },
+    {
+        "id": 200,
+        "tramite": 31101,
+        "URL": "",
+        "link": "",
+        "department": "agace"
+    },
+    {
+        "id": 201,
+        "tramite": 31301,
+        "URL": "",
+        "link": "",
+        "department": "agace"
+    },
+    {
+        "id": 202,
+        "tramite": 31602,
+        "URL": "",
+        "link": "",
+        "department": "agace"
+    },
+    {
+        "id": 203,
+        "tramite": 31603,
+        "URL": "",
+        "link": "",
+        "department": "agace"
+    },
+    {
+        "id": 204,
+        "tramite": 31604,
+        "URL": "",
+        "link": "",
+        "department": "agace"
+    },
+    {
+        "id": 205,
+        "tramite": 31608,
+        "URL": "",
+        "link": "",
+        "department": "agace"
+    },
+    {
+        "id": 206,
+        "tramite": 31616,
+        "URL": "",
+        "link": "",
+        "department": "agace"
+    },
+    {
+        "id": 207,
+        "tramite": 32101,
+        "URL": "",
+        "link": "",
+        "department": "agace"
+    },
+    {
+        "id": 208,
+        "tramite": 32102,
+        "URL": "",
+        "link": "",
+        "department": "agace"
+    },
+    {
+        "id": 209,
+        "tramite": 32201,
+        "URL": "",
+        "link": "",
+        "department": "agace"
+    },
+    {
+        "id": 210,
+        "tramite": 221603,
+        "URL": "",
+        "link": "",
+        "department": "agricultura"
+    },
+    {
+        "id": 211,
+        "tramite": 260103,
+        "URL": "",
+        "link": "",
+        "department": "cofepris"
+    },
+    {
+        "id": 212,
+        "tramite": 260201,
+        "URL": "",
+        "link": "",
+        "department": "cofepris"
+    },
+    {
+        "id": 213,
+        "tramite": 260207,
+        "URL": "",
+        "link": "",
+        "department": "cofepris"
+    },
+    {
+        "id": 214,
+        "tramite": 260208,
+        "URL": "",
+        "link": "",
+        "department": "cofepris"
+    },
+    {
+        "id": 215,
+        "tramite": 260209,
+        "URL": "",
+        "link": "",
+        "department": "cofepris"
+    },
+    {
+        "id": 216,
+        "tramite": 260219,
+        "URL": "",
+        "link": "",
+        "department": "cofepris"
+    },
+    {
+        "id": 217,
+        "tramite": 260302,
+        "URL": "",
+        "link": "",
+        "department": "cofepris"
+    },
+    {
+        "id": 218,
+        "tramite": 260304,
+        "URL": "",
+        "link": "",
+        "department": "cofepris"
+    },
+    {
+        "id": 219,
+        "tramite": 260504,
+        "URL": "",
+        "link": "",
+        "department": "cofepris"
+    },
+    {
+        "id": 220,
+        "tramite": 260505,
+        "URL": "",
+        "link": "",
+        "department": "cofepris"
+    },
+    {
+        "id": 221,
+        "tramite": 260508,
+        "URL": "",
+        "link": "",
+        "department": "cofepris"
+    },
+    {
+        "id": 222,
+        "tramite": 260509,
+        "URL": "",
+        "link": "",
+        "department": "cofepris"
+    },
+    {
+        "id": 223,
+        "tramite": 260510,
+        "URL": "",
+        "link": "",
+        "department": "cofepris"
+    },
+    {
+        "id": 224,
+        "tramite": 260511,
+        "URL": "",
+        "link": "",
+        "department": "cofepris"
+    },
+    {
+        "id": 225,
+        "tramite": 260513,
+        "URL": "",
+        "link": "",
+        "department": "cofepris"
+    },
+    {
+        "id": 226,
+        "tramite": 260515,
+        "URL": "",
+        "link": "",
+        "department": "cofepris"
+    },
+    {
+        "id": 227,
+        "tramite": 260516,
+        "URL": "",
+        "link": "",
+        "department": "cofepris"
+    },
+    {
+        "id": 228,
+        "tramite": 260703,
+        "URL": "",
+        "link": "",
+        "department": "cofepris"
+    },
+    {
+        "id": 229,
+        "tramite": 260901,
+        "URL": "",
+        "link": "",
+        "department": "cofepris"
+    },
+    {
+        "id": 230,
+        "tramite": 260905,
+        "URL": "",
+        "link": "",
+        "department": "cofepris"
+    },
+    {
+        "id": 231,
+        "tramite": 260907,
+        "URL": "",
+        "link": "",
+        "department": "cofepris"
+    },
+    {
+        "id": 232,
+        "tramite": 260908,
+        "URL": "",
+        "link": "",
+        "department": "cofepris"
+    },
+    {
+        "id": 233,
+        "tramite": 260909,
+        "URL": "",
+        "link": "",
+        "department": "cofepris"
+    },
+    {
+        "id": 234,
+        "tramite": 260913,
+        "URL": "",
+        "link": "",
+        "department": "cofepris"
+    },
+    {
+        "id": 235,
+        "tramite": 260914,
+        "URL": "",
+        "link": "",
+        "department": "cofepris"
+    },
+    {
+        "id": 236,
+        "tramite": 260916,
+        "URL": "",
+        "link": "",
+        "department": "cofepris"
+    },
+    {
+        "id": 237,
+        "tramite": 260917,
+        "URL": "",
+        "link": "",
+        "department": "cofepris"
+    },
+    {
+        "id": 238,
+        "tramite": 261101,
+        "URL": "",
+        "link": "",
+        "department": "cofepris"
+    },
+    {
+        "id": 239,
+        "tramite": 261103,
+        "URL": "",
+        "link": "",
+        "department": "cofepris"
+    },
+    {
+        "id": 240,
+        "tramite": 261401,
+        "URL": "",
+        "link": "",
+        "department": "cofepris"
+    },
+    {
+        "id": 241,
+        "tramite": 261402,
+        "URL": "",
+        "link": "",
+        "department": "cofepris"
+    },
+    {
+        "id": 242,
+        "tramite": 261701,
+        "URL": "",
+        "link": "",
+        "department": "cofepris"
+    },
+    {
+        "id": 243,
+        "tramite": 280101,
+        "URL": "",
+        "link": "",
+        "department": "inah"
+    },
+    {
+        "id": 244,
+        "tramite": 270101,
+        "URL": "",
+        "link": "",
+        "department": "inbal"
+    },
+    {
+        "id": 245,
+        "tramite": 270301,
+        "URL": "",
+        "link": "",
+        "department": "inbal"
+    },
+    {
+        "id": 246,
+        "tramite": 250101,
+        "URL": "",
+        "link": "",
+        "department": "profepa"
+    },
+    {
+        "id": 247,
+        "tramite": 80206,
+        "URL": "",
+        "link": "",
+        "department": "se"
+    },
+    {
+        "id": 248,
+        "tramite": 80301,
+        "URL": "",
+        "link": "",
+        "department": "se"
+    },
+    {
+        "id": 249,
+        "tramite": 130104,
+        "URL": "",
+        "link": "",
+        "department": "se"
+    },
+    {
+        "id": 250,
+        "tramite": 130105,
+        "URL": "",
+        "link": "",
+        "department": "se"
+    },
+    {
+        "id": 251,
+        "tramite": 130113,
+        "URL": "",
+        "link": "",
+        "department": "se"
+    },
+    {
+        "id": 252,
+        "tramite": 130116,
+        "URL": "",
+        "link": "",
+        "department": "se"
+    },
+    {
+        "id": 253,
+        "tramite": 130401,
+        "URL": "",
+        "link": "",
+        "department": "se"
+    },
+    {
+        "id": 254,
+        "tramite": 240101,
+        "URL": "",
+        "link": "",
+        "department": "sedena"
+    },
+    {
+        "id": 255,
+        "tramite": 240102,
+        "URL": "",
+        "link": "",
+        "department": "sedena"
+    },
+    {
+        "id": 256,
+        "tramite": 240105,
+        "URL": "",
+        "link": "",
+        "department": "sedena"
+    },
+    {
+        "id": 257,
+        "tramite": 240106,
+        "URL": "",
+        "link": "",
+        "department": "sedena"
+    },
+    {
+        "id": 258,
+        "tramite": 240107,
+        "URL": "",
+        "link": "",
+        "department": "sedena"
+    },
+    {
+        "id": 259,
+        "tramite": 240108,
+        "URL": "",
+        "link": "",
+        "department": "sedena"
+    },
+    {
+        "id": 260,
+        "tramite": 240111,
+        "URL": "",
+        "link": "",
+        "department": "sedena"
+    },
+    {
+        "id": 261,
+        "tramite": 240114,
+        "URL": "",
+        "link": "",
+        "department": "sedena"
+    },
+    {
+        "id": 262,
+        "tramite": 240117,
+        "URL": "",
+        "link": "",
+        "department": "sedena"
+    },
+    {
+        "id": 263,
+        "tramite": 240118,
+        "URL": "",
+        "link": "",
+        "department": "sedena"
+    },
+    {
+        "id": 264,
+        "tramite": 240119,
+        "URL": "",
+        "link": "",
+        "department": "sedena"
+    },
+    {
+        "id": 265,
+        "tramite": 240120,
+        "URL": "",
+        "link": "",
+        "department": "sedena"
+    },
+    {
+        "id": 266,
+        "tramite": 240121,
+        "URL": "",
+        "link": "",
+        "department": "sedena"
+    },
+    {
+        "id": 267,
+        "tramite": 240122,
+        "URL": "",
+        "link": "",
+        "department": "sedena"
+    },
+    {
+        "id": 268,
+        "tramite": 240305,
+        "URL": "",
+        "link": "",
+        "department": "sedena"
+    },
+    {
+        "id": 269,
+        "tramite": 240308,
+        "URL": "",
+        "link": "",
+        "department": "sedena"
+    },
+    {
+        "id": 270,
+        "tramite": 240311,
+        "URL": "",
+        "link": "",
+        "department": "sedena"
+    },
+    {
+        "id": 271,
+        "tramite": 240405,
+        "URL": "",
+        "link": "",
+        "department": "sedena"
+    },
+    {
+        "id": 272,
+        "tramite": 240407,
+        "URL": "",
+        "link": "",
+        "department": "sedena"
+    },
+    {
+        "id": 273,
+        "tramite": 240411,
+        "URL": "",
+        "link": "",
+        "department": "sedena"
+    },
+    {
+        "id": 274,
+        "tramite": 230201,
+        "URL": "",
+        "link": "",
+        "department": "semarnat"
+    },
+    {
+        "id": 275,
+        "tramite": 230202,
+        "URL": "",
+        "link": "",
+        "department": "semarnat"
+    },
+    {
+        "id": 276,
+        "tramite": 230301,
+        "URL": "",
+        "link": "",
+        "department": "semarnat"
+    },
+    {
+        "id": 277,
+        "tramite": 230501,
+        "URL": "",
+        "link": "",
+        "department": "semarnat"
+    },
+    {
+        "id": 278,
+        "tramite": 130201,
+        "URL": "",
+        "link": "",
+        "department": "sener"
+    },
+    {
+        "id": 279,
+        "tramite": 130204,
+        "URL": "",
+        "link": "",
+        "department": "sener"
+    },
+    {
+        "id": 280,
+        "tramite": 140216,
+        "URL": "",
+        "link": "",
+        "department": "sener"
+    },
+    {
+        "id": 281,
+        "tramite": 300105,
+        "URL": "",
+        "link": "",
+        "department": "sener"
+    }
+]
