@@ -8,6 +8,7 @@ import {
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 
 import {
+  REGEX_RFC,
   SeccionLibQuery,
   SeccionLibState,
   SeccionLibStore,
@@ -40,7 +41,7 @@ import { CatalogosService } from '@ng-mf/data-access-user';
 
 import { FechasService } from '@ng-mf/data-access-user';
 import { FormulariosService } from '@ng-mf/data-access-user';
-import { datosAgregarFormulario } from '@ng-mf/data-access-user';
+import { DatosAgregarFormulario } from '@ng-mf/data-access-user';
 
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 
@@ -166,7 +167,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
 
 
     if (this.solicitudState.horaFinal && this.solicitudState.horaInicio && this.solicitudState.fechaInicio && this.solicitudState.fechaFinal) {
-      this.selectRangoDias = this.fechaService.obtenerDiasEntreFechas(
+      this.selectRangoDias = FechasService.obtenerDiasEntreFechas(
         this.solicitudState.fechaInicio,
         this.solicitudState.fechaFinal,
         this.solicitudState.horaInicio,
@@ -347,12 +348,12 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   private obtenerPatente(): void {
     // Busqueda de la patente a algun endpoint
-    const DATOS_PATENTE: datosAgregarFormulario = {
+    const DATOS_PATENTE: DatosAgregarFormulario = {
       form: this.despacho,
       field: 'patente',
       valor: '3061',
     };
-    this.formulariosService.agregarValorCamposDesactivados(DATOS_PATENTE);
+    FormulariosService.agregarValorCamposDesactivados(DATOS_PATENTE);
   }
 
   /**
@@ -370,7 +371,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
           this.solicitudState?.rfcImportExport,
           [
             Validators.required,
-            Validators.pattern(this.validacionesService.rfcPattern),
+            Validators.pattern(REGEX_RFC),
           ],
         ],
         nombreImportExport: [
@@ -395,11 +396,11 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       datosServicio: this.fb.group({
         fechaInicio: [
           this.solicitudState?.fechaInicio,
-          [Validators.required, this.validacionesService.validaFechaNoHoy],
+          [Validators.required, ValidacionesFormularioService.validaFechaNoHoy],
         ],
         fechaFinal: [
           this.solicitudState?.fechaFinal,
-          [Validators.required, this.validacionesService.validaFechaNoHoy],
+          [Validators.required, ValidacionesFormularioService.validaFechaNoHoy],
         ],
         horaInicio: [this.solicitudState?.horaInicio, Validators.required],
         horaFinal: [this.solicitudState?.horaFinal, Validators.required],
@@ -608,11 +609,11 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     );
     this.validacionPedimento = true;
 
-    const PATENTE = this.formulariosService.convertirValorANumero(
+    const PATENTE = FormulariosService.convertirValorANumero(
       this.despacho,
       'patente'
     );
-    const ID_ADUANA = this.formulariosService.convertirValorANumero(
+    const ID_ADUANA = FormulariosService.convertirValorANumero(
       this.despacho,
       'idAduana'
     );
@@ -740,7 +741,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     const HORA_INICIO = this.datosServicio.get('horaInicio')?.value;
     const HORA_FINAL = this.datosServicio.get('horaFinal')?.value;
 
-    this.selectRangoDias = this.fechaService.obtenerDiasEntreFechas(
+    this.selectRangoDias = FechasService.obtenerDiasEntreFechas(
       FECHA_INICIAL,
       FECHA_FINAL,
       HORA_INICIO,
