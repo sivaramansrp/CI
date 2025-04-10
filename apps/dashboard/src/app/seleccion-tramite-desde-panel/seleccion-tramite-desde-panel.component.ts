@@ -1,11 +1,12 @@
 import { AMBIENTES } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { TituloComponent } from "@ng-mf/data-access-user";
-import { map, Subject, takeUntil } from 'rxjs';
 
+import { Subject, takeUntil } from 'rxjs';
+
+import { Component, OnDestroy, OnInit } from '@angular/core';
 interface TramiteDetails {
   id: number;
   tramite: number;
@@ -29,8 +30,11 @@ export class SeleccionTramiteDesdePanelComponent implements OnInit, OnDestroy {
   public ruta: string = '';
   public tramiteData: TramiteDetails[] = [];
   private destroy$ = new Subject<void>();
+  private http: HttpClient;
   
-  constructor(private http: HttpClient) {  }
+  constructor(http: HttpClient) {
+    this.http = http;
+  }
 
   ngOnInit(): void {
     if (window.location.host.indexOf('localhost') !== -1) {
