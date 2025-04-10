@@ -1,7 +1,7 @@
 import { AlertComponent, CatalogoSelectComponent, TablaDinamicaComponent, TituloComponent } from "@libs/shared/data-access-user/src";
 import { AnexosLista, ArchivoDocumentos, Documentos, DocumentosAnexos, DocumentosLista } from "../../models/aviso-traslado.model";
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from "@angular/core";
-import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
 import { TEXTOS, TIPO_DOCUMENTO_TAMANO } from "../../constants/aviso-traslado.enum";
 import { Tramite32503State, Tramite32503Store } from "../../../../estados/tramites/tramite32503.store";
 import { AvisoTrasladoService } from "../../services/aviso-traslado.service";
@@ -72,7 +72,6 @@ export class PasoTresComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.tramiteState = seccionState;
-          console.log(this.tramiteState);
         })
       )
       .subscribe();
@@ -89,13 +88,11 @@ export class PasoTresComponent implements OnInit, OnDestroy {
     return this.tipoDocumentoFormulario.get('documentos') as FormArray;
   }
   agregarDocumentos(): void {
-    this.tiposDeDocumentos.forEach(() => {
-      const ELE = this.fb.group({
-        seleccionar: [''],
-      });
-      this.documentos.push(ELE);
-      this.tamanosDeArchivos.push(JSON.parse(JSON.stringify(TIPO_DOCUMENTO_TAMANO)));
-    })
+    this.tiposDeDocumentos.forEach((item, i) => {
+      this.documentos.push(this.fb.control(this.tramiteState?.valorSeleccionado[i], Validators.required));
+      this.tamanosDeArchivos.push(this.tramiteState?.documentosDesplegable[i] ?? JSON.parse(JSON.stringify(TIPO_DOCUMENTO_TAMANO)));
+    });
+    this.actualizarDesplegable();
   }
   public cargarTipoDocumentoSeleccionado(): void {
     this.avisoTrasladoService
@@ -123,6 +120,9 @@ export class PasoTresComponent implements OnInit, OnDestroy {
       tipoDocumento.archivoDisponible[0].descripcion = this.tamanosDeArchivos[index].nombreDelArchivo;
     });
   }
+  valorSeleccion(): void {
+    this.store.setValorSeleccionado(this.tipoDocumentoFormulario.value.documentos);
+  }
   cambioArchivo(event: Event, index: number): void {
     const INPUT = event.target as HTMLInputElement;
     const FILE = INPUT?.files?.[0];
@@ -149,6 +149,7 @@ export class PasoTresComponent implements OnInit, OnDestroy {
         };
         IMG.src = e?.target?.result as string;
       };
+      this.store.setDocumentosDesplegable(this.tamanosDeArchivos);
       READER.readAsDataURL(FILE);
     }
   }

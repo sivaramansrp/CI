@@ -1,4 +1,4 @@
-import { AvisoFormulario, DatosSolicitante, DomicilioFormulario, MercanciaFormulario, TipoDocumento } from '../../tramites/32503/models/aviso-traslado.model';
+import { ArchivoDocumentos, AvisoFormulario, Catalogo, DatosSolicitante, DocumentosAnexos, DomicilioFormulario, MercanciaFormulario, TipoDocumento } from '../../tramites/32503/models/aviso-traslado.model';
 import { Injectable } from '@angular/core';
 import { Store } from '@datorama/akita';
 import { StoreConfig } from '@datorama/akita';
@@ -12,7 +12,9 @@ export interface Tramite32503State {
   domicilioFormulario: DomicilioFormulario;
   avisoFormulario: AvisoFormulario;
   tipoTablaDatos: TipoDocumento[];
-  tipoDocumento: string
+  tipoDocumento: string;
+  documentosDesplegable: ArchivoDocumentos[],
+  valorSeleccionado: string[],
 
 }
 
@@ -79,7 +81,9 @@ export function createInitialState(): Tramite32503State {
       tipoCarga: '',
     },
     tipoTablaDatos: [],
-    tipoDocumento: ''
+    tipoDocumento: '',
+    documentosDesplegable: [],
+    valorSeleccionado: []
   };
 }
 @Injectable({
@@ -104,7 +108,18 @@ export class Tramite32503Store extends Store<Tramite32503State> {
       tipoDocumento,
     }));
   }
-
+  public setDocumentosDesplegable(documentosDesplegable: ArchivoDocumentos[]): void {
+    this.update((state) => ({
+      ...state,
+      documentosDesplegable,
+    }));
+  }
+  public setValorSeleccionado(valorSeleccionado: string[]): void {
+    this.update((state) => ({
+      ...state,
+      valorSeleccionado,
+    }));
+  }
   public setPestanaActiva(pestanaActiva: number): void {
     this.update((state) => ({
       ...state,

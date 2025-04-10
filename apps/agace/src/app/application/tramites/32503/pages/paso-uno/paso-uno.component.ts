@@ -63,7 +63,9 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   constructor(
     public store: Tramite32503Store,
     public tramiteQuery: Tramite32503Query
-  ) { }
+  ) {
+    // El constructor se utiliza para la inyección de dependencias.
+  }
 
   /**
    * Método que se ejecuta al inicializar el componente.

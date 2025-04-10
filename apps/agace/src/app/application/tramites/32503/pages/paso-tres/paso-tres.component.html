@@ -13,11 +13,12 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let el of tiposDeDocumentos; let i = index" [formGroupName]="i">
+                <tr *ngFor="let el of tiposDeDocumentos; let i = index">
                     <td>{{ el?.descripcion }}*:</td>
                     <td>
                         <app-catalogo-select [catalogo]="el.archivoDisponible" [required]="true"
-                            name="valorSeleccionado" formControlName="seleccionar"></app-catalogo-select>
+                            name="valorSeleccionado" (change)="valorSeleccion()"
+                            [formControlName]="i"></app-catalogo-select>
                     </td>
                     <td class="text-center">
                         <button class="btn btn-link">

@@ -143,15 +143,15 @@ export class AvisoComponent implements OnInit, OnDestroy {
     public tramiteQuery: Tramite32503Query,
     public avisoTrasladoService: AvisoTrasladoService,
     private validacionesService: ValidacionesFormularioService,
-    // eslint-disable-next-line no-empty-function
-  ) { }
+  ) {
+    // El constructor se utiliza para la inyección de dependencias.
+  }
   ngOnInit(): void {
     this.tramiteQuery.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.tramiteState = seccionState;
-          console.log(this.tramiteState);
         })
       )
       .subscribe();
