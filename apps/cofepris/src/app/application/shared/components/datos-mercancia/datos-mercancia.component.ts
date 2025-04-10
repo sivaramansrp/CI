@@ -224,6 +224,10 @@ export class DatosMercanciaComponent implements OnInit {
    */
   public seleccionarOrigenDelPais = CROSLISTA_DE_PAISES;
 
+  /**
+   * Indica si se debe mostrar el campo de datos de mercancía en la interfaz.
+   * @type {boolean}
+   */
   public datosMercanciaCampo = false;
 
   /**

@@ -226,8 +226,16 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   public mostrarCorreoElectronico = true;
 
-  public correoElectronicoMostrar = true;
+  /**
+   * Indica si se debe mostrar el campo de correo electrónico en la interfaz.
+   * @type {boolean}
+   */
+  public mostrarCorreoElectronicoRevision = true;
 
+  /**
+   * Indica si se debe mostrar la sección del representante legal en la interfaz.
+   * @type {boolean}
+   */
   public mostrarRepresentanteLegal = true;
   
 
@@ -321,7 +329,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       ? false
       : true;
 
-    this.correoElectronicoMostrar = CORREO_ELECTRONICO.includes(this.idProcedimiento)
+    this.mostrarCorreoElectronicoRevision = CORREO_ELECTRONICO.includes(this.idProcedimiento)
       ? true
       : false;
 

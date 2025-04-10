@@ -48,6 +48,10 @@ export class PagoDeDerechosComponent implements OnInit {
    */
   @Input() public pagoDerechoFormState!: PagoDerechosFormState;
 
+  /**
+  * Identificador del procedimiento recibido como entrada desde un componente padre.
+  * @type {number}
+  */
   @Input() public idProcedimiento!: number;
 
   /**
@@ -67,6 +71,10 @@ export class PagoDeDerechosComponent implements OnInit {
    */
   private unsubscribe$ = new Subject<void>();
 
+  /**
+    * Indica si se debe mostrar la sección de información bancaria en la interfaz.
+    * @type {boolean}
+  */
   public mostrarBanco = true;
 
   /**

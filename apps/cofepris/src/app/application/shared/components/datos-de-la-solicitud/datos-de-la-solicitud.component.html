@@ -70,7 +70,7 @@
         </div>
       </div>
       }
-      <div [class.col-md-6]="!correoElectronicoMostrar" [class.col-md-8]="correoElectronicoMostrar">
+      <div [class.col-md-6]="!mostrarCorreoElectronicoRevision" [class.col-md-8]="mostrarCorreoElectronicoRevision">
         <div class="form-group">
           <label class="form-label" for="denominacionRazon"
             >Denominación o razón social</label>
@@ -88,8 +88,8 @@
         </div>
       </div>
 
-      @if (correoElectronicoMostrar || mostrarCorreoElectronico) {
-        <div [class.col-md-4]="correoElectronicoMostrar" [class.col-md-12]="mostrarCorreoElectronico">
+      @if (mostrarCorreoElectronicoRevision || mostrarCorreoElectronico) {
+        <div [class.col-md-4]="mostrarCorreoElectronicoRevision" [class.col-md-12]="mostrarCorreoElectronico">
           <div class="form-group">
             <label class="form-label" for="correoElectronico"
               >Correo electrónico:</label
@@ -113,32 +113,6 @@
       }
       
     </div>
-
-    <!-- @if(mostrarCorreoElectronico){
-      <div class="row">
-        <div class="col-md-12">
-          <div class="form-group">
-            <label class="form-label" for="correoElectronico"
-              >Correo electrónico:</label
-            >
-            <span
-              class="bi bi-question-circle-fill"
-              title="Correo electrónico"
-              data-bs-toggle="tooltip"
-            ></span>
-            <input
-              class="form-control"
-              id="correoElectronico"
-              type="text"
-              formControlName="correoElectronico"
-              [ngClass]="
-                isValid(datosSolicitudForm, 'correoElectronico') ? 'required' : ''
-              "
-            />
-          </div>
-        </div>
-      </div>
-    } -->
 
     <ng-titulo titulo="Domicilio del establecimiento"></ng-titulo>
 
