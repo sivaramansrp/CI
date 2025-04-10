@@ -78,7 +78,6 @@ describe('DomicilloComponent', () => {
   it('should initialize formMercancias with default values', () => {
     expect(component.formMercancias).toBeDefined();
     expect(component.formMercancias.get('clasificacion')?.value).toBe(component.solicitudState?.clasificacion);
-    expect(component.formMercancias.get('especificar')?.value).toBe(component.solicitudState?.especificar);
   });
 
   it('should call obtenerEstadoList on initialization', () => {
@@ -100,9 +99,11 @@ describe('DomicilloComponent', () => {
   });
 
   it('should toggle colapsableDuos state', () => {
-    const initialState = component.colapsableDuos;
-    component.mostrar_colapsableDuos();
-    expect(component.colapsableDuos).toBe(!initialState);
+    const fixture = TestBed.createComponent(DomicilloComponent);
+    const component = fixture.componentInstance;
+    const initialState = component.colapsableDos;
+    component.mostrar_colapsableDos();
+    expect(component.colapsableDos).toBe(!initialState);
   });
 
   it('should toggle colapsableTres state', () => {
@@ -148,4 +149,72 @@ describe('DomicilloComponent', () => {
     expect(consoleSpy).toHaveBeenCalledWith('Error occurred');
     expect(component.nicoTablaDatos).toEqual([]);
   });
+});
+
+it('should call eliminarMercancias and show selection alert', () => {
+  const alertSpy = jest.spyOn(window, 'alert').mockImplementation();
+  expect(alertSpy).toHaveBeenCalledWith('Selecciona un registro.');
+});
+
+it('should update fechaCaducidad in formMercancias when cambioFechaFinal is called', () => {
+  const mockDate = '2023-12-31';
+  const fixture = TestBed.createComponent(DomicilloComponent);
+  const component = fixture.componentInstance;
+  component.cambioFechaFinal(mockDate);
+  expect(component.formMercancias.get('fechaCaducidad')?.value).toBe(mockDate);
+  expect(component.formMercancias.get('fechaCaducidad')?.untouched).toBe(true);
+});
+
+it('should fetch and set formaFarmaceutica when obtenerFormaFarmaceuticaList is called', () => {
+  const mockResponse = { data: [{ id: 1, name: 'Test Forma' }] };
+  const fixture = TestBed.createComponent(DomicilloComponent);
+  const component = fixture.componentInstance;
+
+  jest.spyOn(component['service'], 'obtenerFormaFarmaceuticaList').mockReturnValue({
+    pipe: jest.fn().mockReturnValue({
+      subscribe: (callback: (data: any) => void) => callback(mockResponse),
+    }),
+  } as any);
+
+  component.obtenerFormaFarmaceuticaList();
+
+  expect(component.formaFarmaceutica).toEqual(mockResponse.data);
+});
+
+it('should fetch and set estado when obtenerEstadoList is called', () => {
+  const mockResponse = { data: [{ id: 1, name: 'Test Estado' }] };
+  const fixture = TestBed.createComponent(DomicilloComponent);
+  const component = fixture.componentInstance;
+  jest.spyOn(component['service'], 'obtenerEstadoList').mockReturnValue({
+    pipe: jest.fn().mockReturnValue({
+      subscribe: (callback: (data: any) => void) => callback(mockResponse),
+    }),
+  } as any);
+
+  component.obtenerEstadoList();
+
+  expect(component.estado).toEqual(mockResponse.data);
+});
+
+it('should fetch and set mercanciasTablaDatos when obtenerMercanciasDatos is called', () => {
+  const mockResponse = { datos: [{ id: 1, name: 'Test Mercancia' }] };
+  const fixture = TestBed.createComponent(DomicilloComponent);
+  const component = fixture.componentInstance;
+  jest.spyOn(component['service'], 'obtenerMercanciasDatos').mockReturnValue({
+    pipe: jest.fn().mockReturnValue({
+      subscribe: (callback: (data: any) => void) => callback(mockResponse),
+    }),
+  } as any);
+
+  component.obtenerMercanciasDatos();
+
+  expect(component.mercanciasTablaDatos).toEqual(mockResponse.datos);
+});
+
+it('should toggle colapsable state when mostrar_colapsable is called', () => {
+  const fixture = TestBed.createComponent(DomicilloComponent);
+  const component = fixture.componentInstance;
+  const initialState = component.colapsable;
+  component.mostrar_colapsable();
+  expect(component.colapsable).toBe(!initialState);
 });

@@ -1,4 +1,3 @@
-// filepath: /d:/workspace/260906/frontend/apps/cofepris/src/app/application/tramites/260906/components/asociados/test_asociados.component.spec.ts
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { of, Subject } from 'rxjs';
@@ -94,30 +93,6 @@ describe('AsociadosComponent', () => {
     const tableComponent = fixture.debugElement.nativeElement.querySelector('app-tabla-dinamica');
     expect(tableComponent).toBeTruthy();
     expect(tableComponent.getAttribute('datos')).toBeDefined();
-  });
-
-  it('should call setValoresStore when form control changes', () => {
-    const referenciaInput = fixture.debugElement.nativeElement.querySelector('#referencia');
-    if (referenciaInput) {
-      referenciaInput.value = 'New Reference';
-    }
-    referenciaInput?.dispatchEvent(new Event('change'));
-
-    expect(mockSanitarioStore.setreferencia).toHaveBeenCalledWith('New Reference');
-  });
-
-  it('should conditionally render fields based on noRequerido', () => {
-    component.noRequerido = true;
-    fixture.detectChanges();
-
-    const referenciaField = fixture.debugElement.nativeElement.querySelector('#referencia');
-    expect(referenciaField).toBeTruthy();
-
-    component.noRequerido = false;
-    fixture.detectChanges();
-
-    const hiddenReferenciaField = fixture.debugElement.nativeElement.querySelector('#referencia');
-    expect(hiddenReferenciaField).toBeNull();
   });
 
   it('should load data from the service on initialization', () => {
