@@ -3,12 +3,16 @@ import {
   ALERTA_OPCIONS,
   CAMPOS_ADICIONALES_POR_PROCEDIMIENTO_MAP,
   CAMPOS_REQUERIDOS_FORMULARIO_MAP,
-  CORREO_ELECTRONICO,
+  NUMERO_TRAMITE,
   PROCEDIMIENTOS_NO_PARA_ELEMENTO_CALLE,
   PROCEDIMIENTOS_NO_PARA_ELEMENTO_COLAPSABLE,
   PROCEDIMIENTOS_NO_PARA_ELEMENTO_CORREO_ELECTRONIC,
   PROCEDIMIENTOS_NO_PARA_ELEMENTO_RFC_DEL_SANITARIO,
+  PROCEDIMIENTOS_PARA_CORREO_ELECTRONICO_EN_MISMA_FILA,
+  PROCEDIMIENTOS_PARA_DESHABILITAR_APELLIDO_MATERNO,
+  PROCEDIMIENTOS_PARA_DESHABILITAR_APELLIDO_PATERNO,
   PROCEDIMIENTOS_PARA_DESHABILITAR_MUNICIPIO_ALCALDIA,
+  PROCEDIMIENTOS_PARA_DESHABILITAR_NOMBRE_RAZON_SOCIAL,
   REPRESENTANTE_LEGAL,
 } from '../../constantes/datos-solicitud.enum';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -230,7 +234,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Indica si se debe mostrar el campo de correo electrónico en la interfaz.
    * @type {boolean}
    */
-  public mostrarCorreoElectronicoRevision = true;
+  public mostrarCorreoElectronicoenMismaFila = true;
 
   /**
    * Indica si se debe mostrar la sección del representante legal en la interfaz.
@@ -258,6 +262,27 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * o no, dependiendo de la lógica implementada en el componente.
    */
   public mostrarRFCCalle = true;
+
+  /**
+   * @property {Catalogo[]} regimenLaMercanciaDatos
+   * Lista de regímenes relacionados con la mercancía.
+   *
+   * @description
+   * Esta propiedad se utiliza para almacenar los regímenes asociados a la mercancía,
+   * que son seleccionados por el usuario en el formulario.
+   */
+  public regimenLaMercanciaDatos: Catalogo[] = [];
+
+  /**
+   * @property {Catalogo[]} aduanaDatos
+   * Lista de aduanas relacionadas con la mercancía.
+   *
+   * @description
+   * Esta propiedad se utiliza para almacenar las aduanas asociadas a la mercancía,
+   * que son seleccionadas por el usuario en el formulario.
+   */
+  public aduanaDatos: Catalogo[] = [];
+
   /**
    * @constructor
    * Inyecta los servicios necesarios para el enrutamiento y construcción del formulario.
@@ -287,6 +312,16 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       'estadoDatos',
       '/cofepris/estadoDatos.json'
     );
+    this.datosSolicitudService.obtenerRespuestaPorUrl(
+      this,
+      'regimenLaMercanciaDatos',
+      '/cofepris/regimenLaMercanciaDatos.json'
+    );
+    this.datosSolicitudService.obtenerRespuestaPorUrl(
+      this,
+      'aduanaDatos',
+      '/cofepris/aduanaDatos.json'
+    );
   }
 
   /**
@@ -295,14 +330,15 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Crea el formulario, activa la escucha de cambios y sincroniza el estado con el input.
    */
   ngOnInit(): void {
+    this.crearDatosSolicitudForm();
+    this.actualizarDatosFormularioSolicitud();
     this.mostrarCorreoElectronico =
       PROCEDIMIENTOS_NO_PARA_ELEMENTO_CORREO_ELECTRONIC.includes(
         this.idProcedimiento
       )
         ? false
         : true;
-    this.crearDatosSolicitudForm();
-    this.actualizarDatosFormularioSolicitud();
+  
     this.datosSolicitudForm.valueChanges
       .pipe(takeUntil(this.destroyNotifier$), delay(10))
       .subscribe((value) => {
@@ -329,7 +365,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       ? false
       : true;
 
-    this.mostrarCorreoElectronicoRevision = CORREO_ELECTRONICO.includes(this.idProcedimiento)
+    this.mostrarCorreoElectronicoenMismaFila = PROCEDIMIENTOS_PARA_CORREO_ELECTRONICO_EN_MISMA_FILA.includes(this.idProcedimiento)
       ? true
       : false;
 
@@ -359,10 +395,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       ],
       denominacionRazon: [
         this.datosSolicitudFormState.denominacionRazon,
-        [
-          Validators.minLength(2),
-          Validators.maxLength(150),
-        ],
+        [Validators.minLength(2), Validators.maxLength(150)],
       ],
       correoElectronico: [
         this.datosSolicitudFormState.correoElectronico,
@@ -431,17 +464,35 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
         [Validators.required],
       ],
       representanteNombre: [
-        this.datosSolicitudFormState.representanteNombre,
+        {
+          value: this.datosSolicitudFormState.representanteNombre,
+          disabled:
+            PROCEDIMIENTOS_PARA_DESHABILITAR_NOMBRE_RAZON_SOCIAL.includes(
+              this.idProcedimiento
+            ),
+        },
         [Validators.required],
       ],
       apellidoPaterno: [
-        this.datosSolicitudFormState.apellidoPaterno,
+        {
+          value: this.datosSolicitudFormState.apellidoPaterno,
+          disabled: PROCEDIMIENTOS_PARA_DESHABILITAR_APELLIDO_PATERNO.includes(
+            this.idProcedimiento
+          ),
+        },
         [Validators.required],
       ],
       apellidoMaterno: [
-        this.datosSolicitudFormState.apellidoMaterno,
+        {
+          value: this.datosSolicitudFormState.apellidoMaterno,
+          disabled: PROCEDIMIENTOS_PARA_DESHABILITAR_APELLIDO_MATERNO.includes(
+            this.idProcedimiento
+          ),
+        },
         [Validators.required],
       ],
+      regimenLaMercancia: ['101', [Validators.required]],
+      aduana: [this.datosSolicitudFormState.aduana, [Validators.required]],
     });
   }
 
@@ -451,7 +502,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
  * en función de los procedimientos definidos en `CAMPOS_REQUERIDOS_FORMULARIO_MAP`.
  
  */
-  actualizarDatosFormularioSolicitud():void{
+  actualizarDatosFormularioSolicitud(): void {
     CAMPOS_REQUERIDOS_FORMULARIO_MAP.forEach((procedimientos, campo) => {
       if (procedimientos?.includes(this.idProcedimiento)) {
         const CONTROL = this.datosSolicitudForm.get(campo);
@@ -472,9 +523,9 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   // eslint-disable-next-line class-methods-use-this
   public isValid(control: AbstractControl, campo?: string): boolean | null {
     if (control instanceof FormGroup && campo) {
-      return control.controls[campo].errors && control.controls[campo].touched;
+      return control.controls[campo]?.errors && control.controls[campo]?.touched;
     }
-    return control.errors && control.touched;
+    return control?.errors && control?.touched;
   }
 
   /**
@@ -642,7 +693,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @returns {void} No retorna ningún valor.
    */
   cambioDeEstado(event: Catalogo): void {
-    if (this.idProcedimiento === 260301) {
+    if (this.idProcedimiento === NUMERO_TRAMITE.TRAMITE_260301) {
       if (event) {
         this.datosSolicitudForm
           .get('municipioAlcaldia')
