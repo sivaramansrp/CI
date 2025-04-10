@@ -20,7 +20,7 @@ import { PermisoModel } from '../models/datos-domicilio-legal.model';
 @Injectable({
   providedIn: 'root',
 })
-export class DatosDomicilioLegalService {
+export class ServicioDatosDomicilioLegal {
   /**
    * @description
    * Constructor del servicio.
