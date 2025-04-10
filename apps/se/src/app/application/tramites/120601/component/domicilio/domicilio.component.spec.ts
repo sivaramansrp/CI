@@ -14,7 +14,7 @@ describe('DomicilioComponent', () => {
   beforeEach(async () => {
     formServices = {
       obtenerNombresCamposForm: jest.fn().mockReturnValue([]),
-      agregarValorCampoDesactivados: jest.fn(),
+      agregarValorCampoDesactivado: jest.fn(),
     };
 
     solicitanteServicio = {
@@ -31,7 +31,6 @@ describe('DomicilioComponent', () => {
 
     component = new DomicilioComponent(
       TestBed.inject(SolicitanteService),
-      new FormBuilder(),
       TestBed.inject(FormulariosService)
     );
   });

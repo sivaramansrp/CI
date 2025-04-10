@@ -5,7 +5,7 @@
 
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
-import { catalogoResponse } from '@libs/shared/data-access-user/src';
+import { CatalogoResponse } from '@libs/shared/data-access-user/src';
 
 /**
  * @interface solicitud220401State
@@ -24,7 +24,7 @@ export interface solicitud220401State {
   identificationDelTransporte: string;
 
   /** Estado seleccionado, obtenido de un catálogo de respuestas. */
-  selectedEstado: catalogoResponse | null;
+  selectedEstado: CatalogoResponse | null;
 
   /** Número de contenedor para el transporte de la mercancía. */
   numerodeContenedor: string;
@@ -263,9 +263,9 @@ export class Agregar220401Store extends Store<solicitud220401State> {
   /**
    * @method setJustification
    * @description Establece el valor de 'selectedEstado'.
-   * @param {catalogoResponse} selectedEstado - El valor de 'selectedEstado'.
+   * @param {CatalogoResponse} selectedEstado - El valor de 'selectedEstado'.
    */
-  public setJustification(selectedEstado: catalogoResponse) {
+  public setJustification(selectedEstado: CatalogoResponse) {
     this.update((state) => ({
       ...state,
       selectedEstado,

@@ -214,11 +214,11 @@ export class SolicitudComponent implements OnInit, OnDestroy{
         rangoDeFechas: [this.solicitudState?.rangoDeFechas],
         fechaInicio: [
           this.solicitudState?.fechaInicio,
-          [Validators.required, this.validacionesService.validaFechaNoHoy],
+          [Validators.required, ValidacionesFormularioService.validaFechaNoHoy],
         ],
         fechaFinal: [
           this.solicitudState?.fechaFinal,
-          [Validators.required, this.validacionesService.validaFechaNoHoy],
+          [Validators.required, ValidacionesFormularioService.validaFechaNoHoy],
         ],
         datosGenerales: this.fb.group({
           fraccionArancelaria: [this.solicitudState?.fraccionArancelaria, [Validators.required]],
