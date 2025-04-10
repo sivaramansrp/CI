@@ -1,9 +1,11 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { catchError, Observable, throwError } from 'rxjs';
 import { Catalogo, RespuestaCatalogos } from '@libs/shared/data-access-user/src';
 import { MercanciasTabla, RespuestaTabla } from '../components/domicillo/domicillo.component';
 import { DatosDeSolicitud } from '../models/solicitud-datos.model';
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { catchError } from 'rxjs';
+import { throwError } from 'rxjs';
 
 /**
  * @class
@@ -24,7 +26,9 @@ export class SanitarioService {
    * 
    * @param {HttpClient} http - Cliente HTTP para realizar solicitudes.
    */
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+    // Inicialización adicional si es necesario
+  }
 
   /**
    * @method

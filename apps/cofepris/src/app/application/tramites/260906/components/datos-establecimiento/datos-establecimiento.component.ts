@@ -1,19 +1,15 @@
 import { AlDar, AlertComponent, InputRadioComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import {
-  Solicitud260906State,
-  Tramite260906Store
-} from '../../../../estados/tramites/tramite260906.store';
+import { Solicitud260906State, Tramite260906Store } from '../../../../estados/tramites/tramite260906.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DomicilloComponent } from '../domicillo/domicillo.component';
 import { ManifiestosComponent } from '../manifiestos/manifiestos.component';
 import { RepresentanteLegalComponent } from '../representante-legal/representanteLegal.component';
-import { Tramite260906Query } from '../../../../estados/queries/tramite260906.query';
-import { DatosDeSolicitud, RadioOptions } from '../../models/solicitud-datos.model';
 import { SolicitudDatosService } from '../../services/solicitud-datos.service';
-import tipoOperacion from 'libs/shared/theme/assets/json/260906/tipoOperacion.json';
+import { Tramite260906Query } from '../../../../estados/queries/tramite260906.query';
+import tipoOperacion from '@libs/shared/theme/assets/json/260906/tipoOperacion.json';
 
 /**
  * @component
@@ -35,8 +31,8 @@ import tipoOperacion from 'libs/shared/theme/assets/json/260906/tipoOperacion.js
     RepresentanteLegalComponent,
     InputRadioComponent
   ],
-  templateUrl: './datosEstablecimiento.component.html',
-  styleUrls: ['./datosEstablecimiento.component.css'],
+  templateUrl: './datos-establecimiento.component.html',
+  styleUrls: ['./datos-establecimiento.component.css'],
 })
 export class DatosEstablecimientoComponent implements OnInit, OnDestroy {
   /**
@@ -98,7 +94,9 @@ export class DatosEstablecimientoComponent implements OnInit, OnDestroy {
     private tramite260906Store: Tramite260906Store,
     private tramite260906Query: Tramite260906Query,
     public solicitudDatosService: SolicitudDatosService
-  ) {}
+  ) {
+    // Inicialización adicional si es necesario
+  }
 
   /**
    * Método del ciclo de vida de Angular que se llama al inicializar el componente.
@@ -173,7 +171,7 @@ export class DatosEstablecimientoComponent implements OnInit, OnDestroy {
     metodoNombre: keyof Tramite260906Store
   ): void {
     const VALOR = form.get(campo)?.value;
-    (this.tramite260906Store[metodoNombre] as (value: any) => void)(VALOR);
+    (this.tramite260906Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
 
   /**
@@ -181,7 +179,7 @@ export class DatosEstablecimientoComponent implements OnInit, OnDestroy {
    * @param {any} evento - Valor seleccionado para la propiedad "tipoOperacion".
    * @returns {void}
    */
-  setTipoOperacion(evento: any): void {
+  setTipoOperacion(evento: string | number): void {
     this.tramite260906Store.setTipoOperacion(evento);
   }
 

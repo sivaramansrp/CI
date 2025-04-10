@@ -1,10 +1,7 @@
 import { AlertComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import {
-  Solicitud260906State,
-  Tramite260906Store,
-} from '../../../../estados/tramites/tramite260906.store';
+import { Solicitud260906State, Tramite260906Store } from '../../../../estados/tramites/tramite260906.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { MENSAJE_DE_ALERTA } from '@libs/shared/data-access-user/src/core/enums/260906/manifiestos.enum';
@@ -99,7 +96,7 @@ export class ManifiestosComponent implements OnInit, OnDestroy {
     metodoNombre: keyof Tramite260906Store
   ): void {
     const VALOR = form.get(campo)?.value;
-    (this.tramite260906Store[metodoNombre] as (value: any) => void)(VALOR);
+    (this.tramite260906Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
  
   /**

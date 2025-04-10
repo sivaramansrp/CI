@@ -1,90 +1,135 @@
-import { TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
+// filepath: /d:/workspace/260906/frontend/apps/cofepris/src/app/application/tramites/260906/components/asociados/test_asociados.component.spec.ts
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ReactiveFormsModule } from '@angular/forms';
+import { of, Subject } from 'rxjs';
 import { AsociadosComponent } from './asociados.component';
 import { SanitarioService } from '../../services/sanitario.service';
 import { Sanitario260906Store } from '../../../../estados/tramites/sanitario260906.store';
 import { Permiso260906Query } from '../../../../estados/queries/permiso260906.query';
-import { of, Subject } from 'rxjs';
+import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 
 describe('AsociadosComponent', () => {
   let component: AsociadosComponent;
-  let sanitarioServiceMock: any;
-  let sanitarioStoreMock: any;
-  let permisoQueryMock: any;
+  let fixture: ComponentFixture<AsociadosComponent>;
+  let mockSanitarioService: Partial<SanitarioService>;
+  let mockSanitarioStore: Partial<Sanitario260906Store>;
+  let mockPermisoQuery: Partial<Permiso260906Query>;
 
-  beforeEach(() => {
-    sanitarioServiceMock = {
+  beforeEach(async () => {
+    mockSanitarioService = {
       getDatos: jest.fn().mockReturnValue(of([])),
+      obtenerDatosDeSolicitud: jest.fn().mockReturnValue(of({ tablaFilaDatos: [] })),
     };
 
-    sanitarioStoreMock = {
-      update: jest.fn(),
+    mockSanitarioStore = {
+      setreferencia: jest.fn(),
+      setcadenaDependencia: jest.fn(),
+      setbanco: jest.fn(),
+      setLlave: jest.fn(),
+      settipoFetch: jest.fn(),
+      setimporte: jest.fn(),
     };
 
-    permisoQueryMock = {
-      selectSolicitud$: of({
-        referencia: 'Referencia Test',
-        Chandenadependencia: 'Dependencia Test',
-        Llave: 'Llave Test',
-        benco: 'Benco Test',
-        deFetch: 'Fetch Test',
-        importe: 1000,
-      }),
+    mockPermisoQuery = {
+      selectSolicitud$: new Subject(),
     };
 
-    TestBed.configureTestingModule({
+    await TestBed.configureTestingModule({
+      declarations: [AsociadosComponent, TablaDinamicaComponent, CatalogoSelectComponent],
       imports: [ReactiveFormsModule],
       providers: [
-        FormBuilder,
-        { provide: SanitarioService, useValue: sanitarioServiceMock },
-        { provide: Sanitario260906Store, useValue: sanitarioStoreMock },
-        { provide: Permiso260906Query, useValue: permisoQueryMock },
+        { provide: SanitarioService, useValue: mockSanitarioService },
+        { provide: Sanitario260906Store, useValue: mockSanitarioStore },
+        { provide: Permiso260906Query, useValue: mockPermisoQuery },
       ],
-    });
+    }).compileComponents();
 
-    const fb = TestBed.inject(FormBuilder);
-    component = new AsociadosComponent(fb, sanitarioServiceMock, sanitarioStoreMock, permisoQueryMock);
-    component.ngOnInit(); // Asegurarse de inicializar el componente
+    fixture = TestBed.createComponent(AsociadosComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
   });
 
-  it('debería crear el componente', () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('debería inicializar el formulario derechosForm en ngOnInit', () => {
+  it('should initialize the form with default values', () => {
     expect(component.derechosForm).toBeDefined();
-    expect(component.derechosForm.controls['referencia'].value).toBe('Referencia Test');
-    expect(component.derechosForm.controls['importe'].value).toBe(1000);
+    expect(component.derechosForm.value).toEqual({
+      referencia: null,
+      cadenaDependencia: null,
+      Llave: null,
+      banco: null,
+      tipoFetch: null,
+      importe: null,
+    });
   });
 
-  it('debería cargar la lista de derechos en loadComboUnidadMedida', () => {
-    component.loadComboUnidadMedida();
-    expect(sanitarioServiceMock.getDatos).toHaveBeenCalled();
-    expect(component.derechosList).toEqual([]);
+  it('should bind data to the dynamic table', () => {
+    component.solicitudDatos = [
+      { fechaCreacion: '2023-01-01', mercancia: 'Type A', cantidad: '10', proovedor: 'Provider A', "SCIANLista": {
+                "tableHeader": [
+                    "Clave S.C.I.A.N",
+                    "Descripción del S.C.I.A.N."
+                ],
+                "tableBody": [
+                    {
+                        "tbodyData": [
+                            "311321",
+                            "Deshidratación  de productos agrícolas alimecticios."
+                        ]
+                    },
+                    {
+                        "tbodyData": [
+                            "614074",
+                            "Deshidratación  de productos agrícolas alimecticios."
+                        ]
+                    }
+                ]
+            }, },
+    ];
+    fixture.detectChanges();
+
+    const tableComponent = fixture.debugElement.nativeElement.querySelector('app-tabla-dinamica');
+    expect(tableComponent).toBeTruthy();
+    expect(tableComponent.getAttribute('datos')).toBeDefined();
   });
 
-  it('debería actualizar el valor en el store cuando se llama a setValoresStore', () => {
-    component.derechosForm.controls['referencia'].setValue('Nueva Referencia');
-    component.setValoresStore(component.derechosForm, 'referencia', 'update');
-    expect(sanitarioStoreMock.update).toHaveBeenCalledWith('Nueva Referencia');
+  it('should call setValoresStore when form control changes', () => {
+    const referenciaInput = fixture.debugElement.nativeElement.querySelector('#referencia');
+    referenciaInput.value = 'New Reference';
+    referenciaInput.dispatchEvent(new Event('change'));
+
+    expect(mockSanitarioStore.setreferencia).toHaveBeenCalledWith('New Reference');
   });
 
-  it('debería limpiar los observables en ngOnDestroy', () => {
-    const destroyedSpy = jest.spyOn(component['destroyed$'], 'next');
-    const destroyNotifierSpy = jest.spyOn(component['destroyNotifier$'], 'next');
+  it('should conditionally render fields based on noRequerido', () => {
+    component.noRequerido = true;
+    fixture.detectChanges();
+
+    const referenciaField = fixture.debugElement.nativeElement.querySelector('#referencia');
+    expect(referenciaField).toBeTruthy();
+
+    component.noRequerido = false;
+    fixture.detectChanges();
+
+    const hiddenReferenciaField = fixture.debugElement.nativeElement.querySelector('#referencia');
+    expect(hiddenReferenciaField).toBeNull();
+  });
+
+  it('should load data from the service on initialization', () => {
+    expect(mockSanitarioService.getDatos).toHaveBeenCalled();
+    expect(mockSanitarioService.obtenerDatosDeSolicitud).toHaveBeenCalled();
+  });
+
+  it('should clean up subscriptions on destroy', () => {
+    const destroySpy = jest.spyOn(component['destroyNotifier$'], 'next');
+    const completeSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
+
     component.ngOnDestroy();
-    expect(destroyedSpy).toHaveBeenCalledTimes(1);
-    expect(destroyNotifierSpy).toHaveBeenCalledTimes(1);
-  });
 
-  it('debería manejar un formulario válido', () => {
-    component.derechosForm.controls['referencia'].setValue('Referencia Válida');
-    component.derechosForm.controls['importe'].setValue(500);
-    expect(component.derechosForm.valid).toBe(true);
-  });
-
-  it('debería manejar un formulario inválido', () => {
-    component.derechosForm.controls['referencia'].setValue('');
-    expect(component.derechosForm.valid).toBe(false);
+    expect(destroySpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
   });
 });

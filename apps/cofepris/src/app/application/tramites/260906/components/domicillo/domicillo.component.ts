@@ -1,49 +1,16 @@
-import {
-  Catalogo,
-  CatalogoSelectComponent,
-  ConfiguracionColumna,
-  CrossListLable,
-  CrosslistComponent,
-  InputFecha,
-  InputFechaComponent,
-  RespuestaCatalogos,
-  TablaDinamicaComponent,
-  TablaSeleccion,
-  TituloComponent,
-} from '@libs/shared/data-access-user/src';
-import {
-  Component,
-  OnDestroy,
-  OnInit,
-  QueryList,
-  ViewChildren,
-} from '@angular/core';
-import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-import {
-  MERCANCIAS_DATA,
-  MercanciasInfo,
-  NICO_TABLA,
-  NicoInfo,
-} from '@libs/shared/data-access-user/src/core/models/260906/domicilo.model';
-import {
-  Solicitud260906State,
-  Tramite260906Store,
-} from '../../../../estados/tramites/tramite260906.store';
+import { Catalogo, CatalogoSelectComponent, ConfiguracionColumna, CrossListLable, CrosslistComponent, InputFecha, InputFechaComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Component, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MERCANCIAS_DATA, MercanciasInfo, NICO_TABLA, NicoInfo } from '@libs/shared/data-access-user/src/core/models/260906/domicilo.model';
+import { Solicitud260906State, Tramite260906Store } from '../../../../estados/tramites/tramite260906.store';
 import { Subject,map, takeUntil } from 'rxjs';
 import { CROSLISTA_DE_PAISES } from '@libs/shared/data-access-user/src/core/enums/260906/domicilo.enum';
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
-import { Tramite260906Query } from '../../../../estados/queries/tramite260906.query';
 import { FECHA_DE_PAGO } from '@libs/shared/data-access-user/src/core/enums/260906/manifiestos.enum';
+import { HttpClient } from '@angular/common/http';
 import { SanitarioService } from '../../services/sanitario.service';
- 
- 
+import { Tramite260906Query } from '../../../../estados/queries/tramite260906.query';
+
 /**
  * Interfaz para la respuesta de la tabla de NICO.
  */
@@ -428,7 +395,7 @@ onAvisoCheckboxChange(
     this.domicilio.get('licenciaSanitaria')?.enable();
   }
   const VALOR = form.get(campo)?.value;
-  (this.tramite260906Store[metodoNombre] as (value: any) => void)(VALOR);
+  (this.tramite260906Store[metodoNombre] as (value: unknown) => void)(VALOR);
 }
  
 /**
@@ -460,7 +427,7 @@ mostrar_colapsableTres(): void {
    */
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite260906Store): void {
     const VALOR = form.get(campo)?.value;
-    (this.tramite260906Store[metodoNombre] as (value: any) => void)(VALOR);
+    (this.tramite260906Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
 
   /**

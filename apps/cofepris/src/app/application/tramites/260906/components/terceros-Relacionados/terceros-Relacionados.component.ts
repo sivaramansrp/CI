@@ -1,25 +1,16 @@
-import { Component } from '@angular/core';
-
-import { CommonModule } from '@angular/common';
-
 import { AbstractControl, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
-import { Catalogo } from '@libs/shared/data-access-user/src';
-
+import { AlertComponent, Catalogo, CatalogoSelectComponent, InputRadioComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { CODIGOPOSTALSELECTDATA, COLONIASELECTDATA, LOCALIDADSELECTDATA,MUNICIPIOSELECTDATA,PAISSELECTDATA, TERCEROS_RELACIONADOS_TABLE_HEADER_DATA } from '@libs/shared/data-access-user/src/core/enums/260906/permiso.enum';
-import { SanitarioService } from '../../services/sanitario.service';
-import { tablaDatos } from '@libs/shared/data-access-user/src/core/models/260906/detos.model';
-
-import { AlertComponent } from '@libs/shared/data-access-user/src';
-
-
-import { Sanitario260215Store } from '../../../../estados/tramites/sanitario.store'
-
-import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
-import { TituloComponent , InputRadioComponent} from '@libs/shared/data-access-user/src';
-import { TableComponent } from '@ng-mf/data-access-user';
+import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
 import { ModalComponent } from '../model/modal.component';
-import nacionalidadRedio from 'libs/shared/theme/assets/json/260906/nacionalidadRedio.json';
-import tipoPersonaoptions from 'libs/shared/theme/assets/json/260906/tipoPersonaoptions.json';
+import { OnInit } from '@angular/core';
+import { Sanitario260215Store } from '../../../../estados/tramites/sanitario.store'
+import { SanitarioService } from '../../services/sanitario.service';
+import { TableComponent } from '@ng-mf/data-access-user';
+import nacionalidadRedio from '@libs/shared/theme/assets/json/260906/nacionalidadRedio.json';
+import { tablaDatos } from '@libs/shared/data-access-user/src/core/models/260906/detos.model';
+import tipoPersonaoptions from '@libs/shared/theme/assets/json/260906/tipoPersonaoptions.json';
 
  /**
  * Constante que define el texto de alerta para las tablas de terceros relacionados.
@@ -37,11 +28,11 @@ const TERCEROS_TEXTO_DE_ALERTA =
   selector: 'app-terceros-relacionados',
   standalone: true,
   imports: [CommonModule,CatalogoSelectComponent,TituloComponent,TableComponent,ReactiveFormsModule,AlertComponent,FormsModule,ModalComponent,InputRadioComponent],
-  templateUrl: './terceros-Relacionados.component.html',
-  styleUrl: './terceros-Relacionados.component.scss',
+  templateUrl: './terceros-relacionados.component.html',
+  styleUrl: './terceros-relacionados.component.scss',
  
 })
-export class TercerosRelacionadoesComponent {
+export class TercerosRelacionadoesComponent implements OnInit {
 
   /**
    * Indicador de visibilidad para la sección de la tabla.
@@ -253,7 +244,7 @@ export class TercerosRelacionadoesComponent {
    * Inicializa el formulario para agregar un fabricante.
    * Configura los campos del formulario con validaciones y comportamientos específicos.
    */
-  initializeAgregarFabricanteFormGroup() {
+  initializeAgregarFabricanteFormGroup(): void {
     /**
      * Crea el formulario reactivos para agregar un fabricante.
      * Cada campo tiene sus propias validaciones.
@@ -400,7 +391,7 @@ export class TercerosRelacionadoesComponent {
    * Inicializa el formulario para agregar un destinatario.
    * Configura los campos del formulario con validaciones y comportamientos específicos.
    */
-  initializeAgregarDestinatarioFormGroup() {
+  initializeAgregarDestinatarioFormGroup(): void {
     /**
      * Crea el formulario reactivos para agregar un destinatario.
      * Cada campo tiene sus propias validaciones.
@@ -503,7 +494,7 @@ export class TercerosRelacionadoesComponent {
    * Inicializa el formulario para agregar un proveedor.
    * Configura los campos del formulario con validaciones y comportamientos específicos.
    */
-  initializeAgregarProveedorFormGroup() {
+  initializeAgregarProveedorFormGroup(): void {
     /**
      * Crea el formulario reactivos para agregar un proveedor.
      * Cada campo tiene sus propias validaciones.
@@ -594,7 +585,7 @@ export class TercerosRelacionadoesComponent {
    * Inicializa el formulario para agregar un facturador.
    * Configura los campos del formulario con validaciones y comportamientos específicos.
    */
-  initializeAgregarFacturadorFormGroup() {
+  initializeAgregarFacturadorFormGroup(): void {
     /**
      * Crea el formulario reactivos para agregar un facturador.
      * Cada campo tiene sus propias validaciones.
@@ -777,7 +768,7 @@ export class TercerosRelacionadoesComponent {
    *
    * @param checkBoxName Nombre del checkbox seleccionado (fisica o moral).
    */
-  public inputChecked(checkBoxName: string) {
+  public inputChecked(checkBoxName: string): void {
     if (checkBoxName === 'fisica') {
       this.fisica = true;
       this.moral = false;
@@ -787,7 +778,7 @@ export class TercerosRelacionadoesComponent {
     }
   }
 
-  public tercerosInputChecked(checkBoxName: string) {
+  public tercerosInputChecked(checkBoxName: string): void {
     if (checkBoxName === 'nacional') {
       this.nacional = true;
       this.extranjero = false;
@@ -801,7 +792,7 @@ export class TercerosRelacionadoesComponent {
    * Cambia la visibilidad del formulario de Fabricante.
    * Oculta la tabla principal y muestra el formulario, también resetea los valores de persona física y moral.
    */
-  toggleDivFabricante() {
+  toggleDivFabricante(): void {
     this.fisica = false;
     this.moral = false;
     this.showTableDiv = !this.showTableDiv;
@@ -812,7 +803,7 @@ export class TercerosRelacionadoesComponent {
    * Cambia la visibilidad del formulario de Destinatario.
    * Oculta la tabla principal y muestra el formulario, también resetea los valores de persona física y moral.
    */
-  toggleDivDestinatario() {
+  toggleDivDestinatario(): void {
     this.fisica = false;
     this.moral = false;
     this.showTableDiv = !this.showTableDiv;
@@ -823,7 +814,7 @@ export class TercerosRelacionadoesComponent {
    * Cambia la visibilidad del formulario de Proveedor.
    * Oculta la tabla principal y muestra el formulario, también resetea los valores de persona física y moral.
    */
-  toggleDivProveedor() {
+  toggleDivProveedor(): void {
     this.fisica = false;
     this.moral = false;
     this.showTableDiv = !this.showTableDiv;
@@ -834,7 +825,7 @@ export class TercerosRelacionadoesComponent {
    * Cambia la visibilidad del formulario de Facturador.
    * Oculta la tabla principal y muestra el formulario, también resetea los valores de persona física y moral.
    */
-  toggleDivFacturador() {
+  toggleDivFacturador(): void {
     this.fisica = false;
     this.moral = false;
     this.showTableDiv = !this.showTableDiv;
@@ -853,7 +844,7 @@ export class TercerosRelacionadoesComponent {
    *
    * @description Este método es llamado al enviar el formulario de agregar un fabricante.
    */
-  submitFabricanteForm() {
+  submitFabricanteForm(): void {
     /**
      * Obtiene el valor de la localidad seleccionada en el formulario.
      */
@@ -1006,7 +997,7 @@ export class TercerosRelacionadoesComponent {
    *
    * @description Este método es llamado al enviar el formulario de agregar un destinatario.
    */
-  submitDestinatarioForm() {
+  submitDestinatarioForm(): void {
     /**
      * Obtiene el valor de la localidad seleccionada en el formulario.
      */
@@ -1159,7 +1150,7 @@ export class TercerosRelacionadoesComponent {
    *
    * @description Este método es llamado al enviar el formulario de agregar un proveedor.
    */
-  submitProveedorForm() {
+  submitProveedorForm(): void {
     /**
      * Crea una nueva fila para la tabla con los datos del formulario.
      */
@@ -1209,7 +1200,7 @@ export class TercerosRelacionadoesComponent {
    *
    * @description Este método es llamado al enviar el formulario de agregar un facturador.
    */
-  submitFacturadorForm() {
+  submitFacturadorForm(): void {
     /**
      * Crea una nueva fila para la tabla con los datos del formulario.
      */
@@ -1287,7 +1278,7 @@ export class TercerosRelacionadoesComponent {
    *
    * @param value Valor seleccionado del radio button.
    */
-   cambiarRadio(value: string | number) {
+   cambiarRadio(value: string | number): void {
     const VALOR_SELECCIONADO = value as string;
     this.tercerosInputChecked(VALOR_SELECCIONADO);
   }
@@ -1297,7 +1288,7 @@ export class TercerosRelacionadoesComponent {
    *
    * @param value Valor seleccionado del radio button.
    */
-   cambiarRadioFisica(value: string | number) {
+   cambiarRadioFisica(value: string | number): void {
     const VALOR_SELECCIONADO = value as string;
     this.inputChecked(VALOR_SELECCIONADO);
   }

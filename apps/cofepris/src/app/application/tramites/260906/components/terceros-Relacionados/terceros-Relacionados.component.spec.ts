@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { TercerosRelacionadoesComponent } from './terceros-Relacionados.component';
+import { TercerosRelacionadoesComponent } from './terceros-relacionados.component';
 
 describe('TercerosRelacionadoesComponent', () => {
   let component: TercerosRelacionadoesComponent;

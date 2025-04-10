@@ -99,7 +99,7 @@ this.representante = this.fb.group({
     metodoNombre: keyof Tramite260906Store
   ): void {
     const VALOR = form.get(campo)?.value;
-    (this.tramite260906Store[metodoNombre] as (value: any) => void)(VALOR);
+    (this.tramite260906Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
  
   /**

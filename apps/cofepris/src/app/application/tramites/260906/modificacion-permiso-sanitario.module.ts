@@ -1,41 +1,25 @@
-
-import { CommonModule } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
-import { InputRadioComponent } from '@libs/shared/data-access-user/src';
-import {
-  AlertComponent,
-  AnexarDocumentosComponent,
-  BtnContinuarComponent,
-  CatalogosService,
-  FirmaElectronicaComponent,
-  SolicitanteComponent,
-  TituloComponent,
-  WizardComponent,
-} from '@libs/shared/data-access-user/src';
+import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, CatalogosService, FirmaElectronicaComponent, SolicitanteComponent, TituloComponent, WizardComponent } from '@libs/shared/data-access-user/src';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
-
+import { AsociadosComponent } from './components/asociados/asociados.component';
+import { CommonModule } from '@angular/common';
 import { DatosComponent } from './pages/datos/datos.component';
-
-import { DatosEstablecimientoComponent } from './components/datosEstablecimiento/datosEstablecimiento.component';
+import { DatosEstablecimientoComponent } from './components/datos-establecimiento/datos-establecimiento.component';
 import { DerechosComponent } from './components/derechos/derechos.component';
-import { SanitarioService } from './services/sanitario.service';
-
+import { HttpClientModule } from '@angular/common/http';
 import { InicioSesionService } from '@libs/shared/data-access-user/src/core/services/shared/inicio-sesion/inicio-sesion.service';
+import { InputRadioComponent } from '@libs/shared/data-access-user/src';
+import { ModificacionPermisoSanitarioRoutingModule } from './modificacion-permiso-sanitario-routing.module';
 import { NgModule } from '@angular/core';
 import { PantallasComponent } from './pages/pantallas/pantallas.component';
 import { PasoduosComponent } from './pages/pasoduos/pasoduos.component';
 import { PasotresComponent } from './pages/paso-tres/paso-tres.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { SanitarioService } from './services/sanitario.service';
 import { ServiciosPantallaService } from '@libs/shared/data-access-user/src/core/services/31601/servicios-pantalla.service';
 import { SubirDocumentoService } from '@libs/shared/data-access-user/src/core/services/shared/subir-documento/subir-documento.service';
-import { provideHttpClient } from '@angular/common/http';
-
-import { ReactiveFormsModule } from '@angular/forms';
-import { TercerosRelacionadoesComponent } from './components/terceros-Relacionados/terceros-Relacionados.component';
-import { ModificacionPermisoSanitarioRoutingModule } from './modificacion-permiso-sanitario-routing.module';
+import { TercerosRelacionadoesComponent } from './components/terceros-relacionados/terceros-relacionados.component';
 import { forwardRef } from '@angular/core';
-import { AsociadosComponent } from './components/asociados/asociados.component';
-
-
+import { provideHttpClient } from '@angular/common/http';
 
 @NgModule({
   declarations: [

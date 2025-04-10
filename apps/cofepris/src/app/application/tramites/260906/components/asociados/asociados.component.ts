@@ -1,16 +1,18 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup } from '@angular/forms';
 import { Catalogo, ConfiguracionColumna, TablaDinamicaComponent, TituloComponent } from '@ng-mf/data-access-user';
-import { ReactiveFormsModule } from '@angular/forms';
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
-import { SanitarioService } from '../../services/sanitario.service';
-import { map, Subject, takeUntil } from 'rxjs';
-import { Solicitud260906State } from '../../../../estados/tramites/sanitario260906.store';
-import { Sanitario260906Store } from '../../../../estados/tramites/sanitario260906.store';
-import { Permiso260906Query } from '../../../../estados/queries/permiso260906.query';
-import { TablaSeleccion } from '@libs/shared/data-access-user/src';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { DatosDeSolicitud, SolicitudDatos } from '../../models/solicitud-datos.model';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { CommonModule } from '@angular/common';
+import { Permiso260906Query } from '../../../../estados/queries/permiso260906.query';
+import { ReactiveFormsModule } from '@angular/forms';
+import { Sanitario260906Store } from '../../../../estados/tramites/sanitario260906.store';
+import { SanitarioService } from '../../services/sanitario.service';
+import { Solicitud260906State } from '../../../../estados/tramites/sanitario260906.store';
+import { Subject } from 'rxjs';
+import { TablaSeleccion } from '@libs/shared/data-access-user/src';
+import { map } from 'rxjs';
+import { takeUntil } from 'rxjs';
 
 /**
  * @component
@@ -124,7 +126,9 @@ export class AsociadosComponent implements OnInit, OnDestroy {
     private service: SanitarioService,
     private sanitario260906Store: Sanitario260906Store,
     private permiso260906Query: Permiso260906Query
-  ) {}
+  ) {
+    // Inicialización adicional si es necesario
+  }
 
   /**
    * Método de inicialización del componente.
@@ -163,8 +167,8 @@ export class AsociadosComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Sanitario260906Store): void {
-    const valor = form.get(campo)?.value;
-    (this.sanitario260906Store[metodoNombre] as (value: any) => void)(valor);
+    const VALOR = form.get(campo)?.value;
+    (this.sanitario260906Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
 
   /**
