@@ -40,7 +40,9 @@ import { Modal } from 'bootstrap';
 import { ServiciosExtraordinariosService } from '../../../../core/services/5701/servicios-extraordinarios.service';
 import { Tramite5701Query } from '../../../../core/queries/tramite5701.query';
 
+// eslint-disable-next-line @nx/enforce-module-boundaries
 import patentes from 'libs/shared/theme/assets/json/5701/patentes.json';
+// eslint-disable-next-line @nx/enforce-module-boundaries
 import rfcs from 'libs/shared/theme/assets/json/5701/rfcs.json';
 
 @Component({
