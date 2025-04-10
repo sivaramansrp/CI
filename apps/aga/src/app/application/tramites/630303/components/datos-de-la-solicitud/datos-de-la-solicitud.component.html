@@ -1,0 +1,27 @@
+<div class="container">
+    <ng-titulo [titulo]="'Datos de la Solicitud'"></ng-titulo>
+        <form [formGroup]="datosImportacionTemporalFormulario">
+            <div class="row mt-4">
+                <div class="col-md-4">
+                    <app-catalogo-select [catalogo]="aduanaDeingresOpciones" [label]="'Aduana de ingreso'" [required]="true"
+                    formControlName="cveAduana" ></app-catalogo-select>
+                </div>
+                <div class="col-md-4">
+                    <app-catalogo-select [catalogo]="seccionAduaneraOpciones" [label]="'Sección aduanera'" [required]="false" 
+                    formControlName="cveSeccionAduanal"></app-catalogo-select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <input-fecha [setFecha]="datosImportacionTemporalFormulario.get('fechaLimiteRetorno')?.value" [datos]="datosfecha" 
+                    (valorCambiado)="cambioFechaFinal($event)"></input-fecha>
+                </div>
+                <div class="col-md-4">
+                    <app-catalogo-select [catalogo]="prorrogaOpciones" [label]="'Cuenta con prórroga'" [required]="true" 
+                    formControlName="cuentaProrroga" (change)="onChangeTipoImportacionRetorno()"></app-catalogo-select>
+                </div>
+            </div>
+        </form>
+    </div>
+
+

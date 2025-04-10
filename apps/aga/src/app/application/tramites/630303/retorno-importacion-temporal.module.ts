@@ -14,12 +14,14 @@ import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { InicioSesionService } from '@libs/shared/data-access-user/src/core/services/shared/inicio-sesion/inicio-sesion.service';
 import { SubirDocumentoService } from '@libs/shared/data-access-user/src/core/services/shared/subir-documento/subir-documento.service';
 
+import { DatosDeLaSolicitudComponent } from "./components/datos-de-la-solicitud/datos-de-la-solicitud.component";
+
 
 
 @NgModule({
   declarations: [RetornoImportacionTemporalComponent, PasoUnoComponent],
   imports: [
-    CommonModule, 
+    CommonModule,
     RetornoImportacionTemporalRoutingModule,
     WizardComponent,
     SolicitanteComponent,
@@ -31,8 +33,9 @@ import { SubirDocumentoService } from '@libs/shared/data-access-user/src/core/se
     PasoDosComponent,
     PasoTresComponent,
     AlertComponent,
-    ToastrModule.forRoot()
-  ],
+    ToastrModule.forRoot(),
+    DatosDeLaSolicitudComponent
+],
   providers: [
     ToastrService,
     InicioSesionService,
