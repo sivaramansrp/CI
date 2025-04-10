@@ -1,10 +1,10 @@
+import { AvisocalidadStore, SolicitudState } from '../../estados/stores/aviso-calidad.store';
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { AvisocalidadStore, SolicitudState } from '../../estados/stores/aviso-calidad.store';
 import { Subject, map, takeUntil } from 'rxjs';
+import { AvisocalidadQuery } from '../../estados/queries/aviso-calidad.query';
 import { CommonModule } from '@angular/common';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
-import { AvisocalidadQuery } from '../../estados/queries/aviso-calidad.query';
 
 /**
  * @description
