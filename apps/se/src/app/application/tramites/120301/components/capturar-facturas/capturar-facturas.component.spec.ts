@@ -47,7 +47,6 @@ describe('CapturarFacturasComponent', () => {
     fixture = TestBed.createComponent(CapturarFacturasComponent);
     component = fixture.debugElement.componentInstance;
 
-    // Mock methods
     component.recuperarDatos = jest.fn(); // Mock recuperarDatos
     component.obtenerListasDesplegables = jest.fn();
     component.initActionFormBuild = jest.fn();
@@ -65,7 +64,6 @@ describe('CapturarFacturasComponent', () => {
   it('should run #recuperarDatos()', async () => {
     component.recuperarDatos();
 
-    // Verify that the mocked method is called
     expect(component.recuperarDatos).toHaveBeenCalled();
   });
 
@@ -76,7 +74,7 @@ describe('CapturarFacturasComponent', () => {
     component.ElegibilidadDeTextilesQuery.selectTextile$ = observableOf({});
     component.ngOnInit();
 
-    // Verify that mocked methods are called
+    
     expect(component.initActionFormBuild).toHaveBeenCalled();
     expect(component.obtenerListasDesplegables).toHaveBeenCalled();
     expect(component.recuperarDatos).toHaveBeenCalled();
