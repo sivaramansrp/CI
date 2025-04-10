@@ -1,7 +1,8 @@
 import { Component, ViewChild } from '@angular/core';
 import { DatosPasos, ListaPasosWizard, WizardComponent } from '@libs/shared/data-access-user/src';
-import { PASOS_EXPORTACION } from '../../constants/constants/diamante-bruto.enum';
 import { AccionBoton } from '../../enums/diamante.enum';
+import { PASOS_EXPORTACION } from '../../constants/constants/diamante-bruto.enum';
+
 
 @Component({
   selector: 'app-diamante-bruto',
