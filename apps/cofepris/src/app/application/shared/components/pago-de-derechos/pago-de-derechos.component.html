@@ -1,6 +1,5 @@
-<div class="container mt-4">
-  <h4 class="fw-bold">Pago de derechos</h4>
-  <hr />
+<div class="container">
+  <ng-titulo titulo="Pago de derechos" />
 
   <form [formGroup]="pagoDerechosForm">
     <div class="row g-3">
@@ -30,7 +29,17 @@
         />
       </div>
 
-      <!-- Estado (using <app-catalogo-select>) -->
+      @if(mostrarBanco) {
+        <div class="col-md-4">
+          <app-catalogo-select
+            [catalogo]="bancoDatos"
+            formControlName="banco"
+            [label]="'Banco'"
+            [required]="true"
+          ></app-catalogo-select>
+        </div>
+      } @else {
+     <!-- Estado (using <app-catalogo-select>) -->
       <div class="col-md-4">
         <app-catalogo-select
           [catalogo]="estadosDatos"
@@ -39,6 +48,8 @@
           [required]="true"
         ></app-catalogo-select>
       </div>
+      }
+      
     </div>
 
     <div class="row g-3 mt-2">

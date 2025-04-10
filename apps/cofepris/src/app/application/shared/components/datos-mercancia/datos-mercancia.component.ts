@@ -8,7 +8,10 @@ import {
 } from '@angular/forms';
 import {
   CROSLISTA_DE_PAISES,
+  DATOS_MERCANCIA_CAMPO,
   DATOS_MERCANCIA_CLAVE_TABLA,
+  DESCRIPCION_FRACCION_DESHABILITADO_VALOR,
+  UMT_DESHABILITADO_VALOR,
 } from '../../constantes/datos-solicitud.enum';
 import {
   Catalogo,
@@ -224,6 +227,19 @@ export class DatosMercanciaComponent implements OnInit {
   public seleccionarOrigenDelPais = CROSLISTA_DE_PAISES;
 
   /**
+   * Indica si se debe mostrar el campo de datos de mercancía en la interfaz.
+   * @type {boolean}
+   */
+  public datosMercanciaCampo = false;
+
+  /**
+   * Lista de elementos deshabilitados en el formulario.
+   * Esta propiedad almacena un arreglo de cadenas que representan
+   * los elementos que deben estar deshabilitados en el formulario.
+   */
+  public elementosDeshabilitados: string[] = [];
+
+  /**
    * @constructor
    * Inicializa el formulario de mercancía y carga catálogos desde archivos JSON.
    *
@@ -266,6 +282,12 @@ export class DatosMercanciaComponent implements OnInit {
       'cantidadUmcDatos',
       '/cofepris/cantidadUmcDatos.json'
     );
+
+    this.datosMercanciaCampo = DATOS_MERCANCIA_CAMPO.includes(
+      this.idProcedimiento
+    )
+      ? true
+      : false;
   }
 
   /**
@@ -280,24 +302,24 @@ export class DatosMercanciaComponent implements OnInit {
 
   /**
    * Lista de elementos que no son válidos.
-   * Esta propiedad almacena un arreglo de cadenas que representan 
+   * Esta propiedad almacena un arreglo de cadenas que representan
    * los elementos que no cumplen con los criterios de validación.
    */
-  public elementosNoValidos:string[] = [];
+  public elementosNoValidos: string[] = [];
   /**
    * Arreglo que almacena los elementos añadidos.
-   * 
+   *
    * Este arreglo se utiliza para guardar una lista de cadenas que representan
    * los elementos que han sido agregados en el componente.
    */
-  public elementosAnadidos:string[] = [];
+  public elementosAnadidos: string[] = [];
   /**
    * Configuración para la clave de mercancía.
-   * 
+   *
    * Esta propiedad define la configuración utilizada para la tabla de selección
    * de claves de mercancía. Incluye el tipo de selección, la configuración de la tabla
    * y los datos asociados.
-   * 
+   *
    * Propiedades:
    * - `tipoSeleccionTabla`: Define el tipo de selección en la tabla (por ejemplo, CHECKBOX).
    * - `configuracionTabla`: Configuración específica de la tabla para mostrar las claves de mercancía.
@@ -339,6 +361,13 @@ export class DatosMercanciaComponent implements OnInit {
           'fechaDeFabricacio',
           'fechaDeCaducidad',
         ];
+        break;
+      case 260208:
+        this.elementosNoValidos = ['numeroRegistroSanitario', 'fechaCaducidad'];
+        break;
+      case 260207:
+        this.elementosAnadidos = ['especifique'];
+        this.elementosDeshabilitados = ['descripcionFraccion', 'cantidadUmt'];
         break;
       default:
         if (this.detalleMercancia) {
@@ -509,14 +538,25 @@ export class DatosMercanciaComponent implements OnInit {
         Validators.required,
       ],
       descripcionFraccion: [
-        this.mercanciaFormState.descripcionFraccion,
+        {
+          value: this.mercanciaFormState.descripcionFraccion,
+          disabled: this.elementosDeshabilitados.includes(
+            'descripcionFraccion'
+          ),
+        },
         Validators.required,
       ],
       cantidadUmtValor: [
         this.mercanciaFormState.cantidadUmtValor,
         Validators.required,
       ],
-      cantidadUmt: [this.mercanciaFormState.cantidadUmt, Validators.required],
+      cantidadUmt: [
+        {
+          value: this.mercanciaFormState.cantidadUmt,
+          disabled: this.elementosDeshabilitados.includes('cantidadUmt'),
+        },
+        Validators.required,
+      ],
       cantidadUmcValor: [
         this.mercanciaFormState.cantidadUmcValor,
         Validators.required,
@@ -534,6 +574,10 @@ export class DatosMercanciaComponent implements OnInit {
       ],
       paisDeProcedenciaDatos: [
         this.mercanciaFormState.paisDeProcedenciaDatos || [],
+        Validators.required,
+      ],
+      usoEspecifico: [
+        this.mercanciaFormState.usoEspecifico || [],
         Validators.required,
       ],
     });
@@ -621,9 +665,7 @@ export class DatosMercanciaComponent implements OnInit {
    */
   usoEspesificoSeleccionadasChange(events: string[]): void {
     this.seleccionadasUsoEspesificoDatos = events;
-    this.mercanciaForm.patchValue({
-      usoEspecifico: events,
-    });
+    this.mercanciaForm.get('usoEspecifico')?.setValue(events);
   }
 
   /**
@@ -652,7 +694,17 @@ export class DatosMercanciaComponent implements OnInit {
    * @returns {void} Este método no devuelve ningún valor.
    */
   agregarMercancia(): void {
-    this.mercanciaSeleccionado.emit(this.mercanciaForm.value);
+    const VALORTABLAMERCANCIA: TablaMercanciasDatos = this.mercanciaForm.getRawValue();
+    VALORTABLAMERCANCIA.paisOrigen = this.mercanciaForm.get('paisDeOriginDatos')?.value[0];
+    VALORTABLAMERCANCIA.paisProcedencia = this.mercanciaForm.get(
+      'paisDeProcedenciaDatos'
+    )?.value[0];
+    VALORTABLAMERCANCIA.usoEspecifico = this.mercanciaForm.get('usoEspecifico')?.value[0];
+    VALORTABLAMERCANCIA.unidadMedidaComercializacion=this.mercanciaForm.get('cantidadUmcValor')?.value
+    VALORTABLAMERCANCIA.cantidadUMC=this.mercanciaForm.get('cantidadUmc')?.value
+    VALORTABLAMERCANCIA.unidadMedidaTarifa=this.mercanciaForm.get('cantidadUmtValor')?.value
+    VALORTABLAMERCANCIA.cantidadUMT=this.mercanciaForm.get('cantidadUmt')?.value
+    this.mercanciaSeleccionado.emit(VALORTABLAMERCANCIA);
     this.ubicaccion.back();
   }
 
@@ -695,5 +747,29 @@ export class DatosMercanciaComponent implements OnInit {
    */
   eliminarMercancia(datos: DetalleMercancia[]): void {
     this.eliminarMercanciaDatos.emit(datos);
+  }
+
+  /**
+   * @method cambiarFraccionArancelaria
+   * @description Actualiza los valores de los campos `descripcionFraccion` y `cantidadUmt` en el formulario reactivo `mercanciaForm`
+   * cuando el campo `fraccionArancelaria` está presente.
+   *
+   * @remarks
+   * Este método verifica si el control `fraccionArancelaria` existe en el formulario. Si es así, establece valores predeterminados
+   * para los campos `descripcionFraccion` y `cantidadUmt` utilizando las constantes `DESCRIPCION_FRACCION_DESHABILITADO_VALOR` y
+   * `UMT_DESHABILITADO_VALOR`, respectivamente.
+   *
+   * @returns {void} Este método no retorna ningún valor.
+   */
+  cambiarFraccionArancelaria(): void {
+    if (
+      this.mercanciaForm.get('fraccionArancelaria') &&
+      this.mercanciaForm.get('cantidadUmt')?.disabled
+    ) {
+      this.mercanciaForm
+        .get('descripcionFraccion')
+        ?.setValue(DESCRIPCION_FRACCION_DESHABILITADO_VALOR);
+      this.mercanciaForm.get('cantidadUmt')?.setValue(UMT_DESHABILITADO_VALOR);
+    }
   }
 }

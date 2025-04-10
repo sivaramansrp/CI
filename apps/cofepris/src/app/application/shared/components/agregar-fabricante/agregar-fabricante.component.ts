@@ -1,5 +1,9 @@
 import { Catalogo, TipoPersona } from '@ng-mf/data-access-user';
 import { Component, EventEmitter, Output } from '@angular/core';
+import {
+  PROCEDIMIENTOS_PARA_COLONIA_O_EQUIVALENTE,
+  STR_NACIONAL,
+} from '../../constantes/datos-solicitud.enum';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
@@ -11,7 +15,6 @@ import { Location } from '@angular/common';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { STR_NACIONAL } from '../../constantes/datos-solicitud.enum';
 import { Subject } from 'rxjs';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { Validators } from '@angular/forms';
@@ -135,6 +138,13 @@ export class AgregarFabricanteComponent implements OnDestroy, OnInit {
   @Input() estaOculto!: boolean;
 
   /**
+   * Indica si se debe mostrar la colonia o equivalente.
+   * @type {boolean}
+   * @input
+   */
+  mostarColoniaOEquivalente = false;
+
+  /**
    * Constructor que inyecta los servicios y crea el formulario de fabricante.
    *
    * @param {FormBuilder} fb - Servicio para la creación de formularios reactivos.
@@ -170,6 +180,7 @@ export class AgregarFabricanteComponent implements OnDestroy, OnInit {
       telefono: [''],
       correoElectronico: ['', [Validators.required, Validators.email]],
       adunasDeEntradas: ['', Validators.required],
+      coloniaOEquivalente: [{ value: '', disabled: true }],
     });
   }
 
@@ -179,6 +190,12 @@ export class AgregarFabricanteComponent implements OnDestroy, OnInit {
    */
   ngOnInit(): void {
     this.cargarDatos();
+    this.mostarColoniaOEquivalente =
+    PROCEDIMIENTOS_PARA_COLONIA_O_EQUIVALENTE.includes(
+        this.idProcedimiento
+      )
+        ? true
+        : false;
   }
 
   /**
