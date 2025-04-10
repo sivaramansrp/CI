@@ -23,7 +23,7 @@ import { TercerosRelacionadosVistaComponent } from '../../components/terceros-re
 export class PasoUnoComponent {
   indice: number = 1;
   constructor(private seccionStore: SeccionLibStore){
-    this.asignarSecciones();
+    // this.asignarSecciones();
   }
   seleccionaTab(i: number): void {
     this.indice = i;

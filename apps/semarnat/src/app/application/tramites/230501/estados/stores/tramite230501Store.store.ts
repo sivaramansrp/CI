@@ -1,19 +1,25 @@
+import { BehaviorSubject, Observable } from 'rxjs';
 import { ComposicionMaterial, DatosSolicitudFormType, PagoDerechosState, TablaNumeroCasType } from '../../models/materiales-peligrosos.model';
+import { Destinatario, Representante, Uso, UsoFinal } from '../../models/terceros-relacionados.model';
 import { Injectable } from '@angular/core';
 import { Store } from '@datorama/akita';
 import { StoreConfig } from '@datorama/akita';
-
 
 /**
  * @interface Tramite230501State
  * @description Define el estado para el trámite 230501, incluyendo datos de tablas, formularios y configuraciones.
  */
 export interface Tramite230501State {
-    pagoDerechosState: PagoDerechosState;
-    datosSolicitudFormType: DatosSolicitudFormType;
-    opcionesColapsableState: boolean;
-    numeroCasTablaDatos: TablaNumeroCasType[];
-    composicionTablaDatos: ComposicionMaterial[];
+  pagoDerechosState: PagoDerechosState;
+  datosSolicitudFormType: DatosSolicitudFormType;
+  opcionesColapsableState: boolean;
+  numeroCasTablaDatos: TablaNumeroCasType[];
+  composicionTablaDatos: ComposicionMaterial[];
+  destinatarioFinalTablaDatos: Destinatario[];
+  usuarioTablaDatos: UsoFinal[];
+  usoTablaDatos: Uso[];
+  representanteLegalTablaDatos: Representante[];
+  formaValida: { [key: string]: boolean };
 }
 
 /**
@@ -24,6 +30,10 @@ export interface Tramite230501State {
 export function createInitialState(): Tramite230501State {
   return {
     opcionesColapsableState: false,
+    destinatarioFinalTablaDatos: [],
+    usuarioTablaDatos: [],
+    usoTablaDatos: [],
+    representanteLegalTablaDatos: [],
     datosSolicitudFormType: {
       tratadoRotterdam: false,
       listadoNacional: false,
@@ -53,8 +63,16 @@ export function createInitialState(): Tramite230501State {
       llavePago: '',
       fecha: '',
       importePago: ''
+    },
+    formaValida:{
+      destinatarioFinal: false,
+      representanteLegal: false,
+      UsuarioFinal: false,
+      composicionForm: false,
+      datosSolicitudForm: false,
+      pagoDeDerechos: false,
     }
-}
+  };
 }
 
 @Injectable({
@@ -62,9 +80,15 @@ export function createInitialState(): Tramite230501State {
 })
 @StoreConfig({ name: 'Tramite230501', resettable: true })
 export class Tramite230501Store extends Store<Tramite230501State> {
+  // BehaviorSubject que almacena los datos del destinatario
+  public dataSubject = new BehaviorSubject<Destinatario>({} as Destinatario);
+  // Observable para observar los datos del destinatario
+  data$ = this.dataSubject.asObservable();
+
   constructor() {
-    super(createInitialState());
+    super(createInitialState()); // Inicializa el store con el estado inicial
   }
+
   /**
    * Establece una propiedad del estado de pago de derechos.
    *
@@ -115,7 +139,7 @@ export class Tramite230501Store extends Store<Tramite230501State> {
    * Actualiza el estado del formulario de datos de solicitud con el nuevo valor para la propiedad especificada.
    */
   public setDatosSolicitudFormTypeProperty(property: string, valueStr: string, valorBooleano?: boolean, valorNombre?: number): void {
-  const ACTIVA_VALOR = (valueStr) ? valueStr : (valorNombre) ? valorNombre : valorBooleano;
+    const ACTIVA_VALOR = (valueStr) ? valueStr : (valorNombre) ? valorNombre : valorBooleano;
     this.update((state) => ({
       ...state,
       datosSolicitudFormType: {
@@ -123,5 +147,203 @@ export class Tramite230501Store extends Store<Tramite230501State> {
         [property]: ACTIVA_VALOR,
       },
     }));
+  }
+
+  /**
+   * Actualiza la tabla de destinatarios con nuevos destinatarios.
+   *
+   * @param newDestinatarios - Lista de nuevos destinatarios que se añadirán a la tabla de destinatarios.
+   * @returns void
+   */
+  public updateDestinatarioFinalTablaDatos(newDestinatarios: Destinatario[]): void {
+    this.update((state) => ({
+      ...state,
+      destinatarioFinalTablaDatos: [
+        ...state.destinatarioFinalTablaDatos,
+        ...newDestinatarios,
+      ],
+    }));
+  }
+
+  /**
+   * Elimina un destinatario de la tabla de destinatarios.
+   *
+   * @param destinatarioFinal - El destinatario que se eliminará de la tabla de destinatarios.
+   * @returns void
+   */
+  eliminarDestinatarioFinal(destinatarioFinal: Destinatario): void {
+    this.update(state => {
+      const INDICE_A_ELIMINAR = state.destinatarioFinalTablaDatos.findIndex(ele => 
+        Object.keys(destinatarioFinal).some(key => destinatarioFinal[key as keyof Destinatario] === ele[key as keyof Destinatario])
+      );
+  
+      if (INDICE_A_ELIMINAR !== -1) {
+        state.destinatarioFinalTablaDatos.splice(INDICE_A_ELIMINAR, 1);
+      }
+  
+      return {
+        ...state,
+        destinatarioFinalTablaDatos: [...state.destinatarioFinalTablaDatos],
+      };
+    });
+  }
+
+  /**
+   * Elimina un representante legal de la tabla de representantes.
+   *
+   * @param representante - El representante legal que se eliminará de la tabla de representantes.
+   * @returns void
+   */
+  eliminarRepresentanteLegal(representante: Representante): void {
+    this.update(state => {
+      const INDICE_A_ELIMINAR = state.representanteLegalTablaDatos.findIndex(ele => 
+        Object.keys(representante).some(key => representante[key as keyof Representante] === ele[key as keyof Representante])
+      );
+  
+      if (INDICE_A_ELIMINAR !== -1) {
+        state.representanteLegalTablaDatos.splice(INDICE_A_ELIMINAR, 1);
+      }
+  
+      return {
+        ...state,
+        representanteLegalTablaDatos: [...state.representanteLegalTablaDatos],
+      };
+    });
+  }
+
+  /**
+   * Elimina un usuario final de la tabla de usuarios.
+   *
+   * @param usuarioFinals - El usuario final que se eliminará de la tabla de usuarios.
+   * @returns void
+   */
+  eliminarUsuarioFinal(usuarioFinals: UsoFinal): void {
+    this.update(state => {
+      const INDICE_A_ELIMINAR = state.usuarioTablaDatos.findIndex(ele => 
+        Object.keys(usuarioFinals).some(key => usuarioFinals[key as keyof UsoFinal] === ele[key as keyof UsoFinal])
+      );
+  
+      if (INDICE_A_ELIMINAR !== -1) {
+        state.usuarioTablaDatos.splice(INDICE_A_ELIMINAR, 1);
+      }
+  
+      return {
+        ...state,
+        usuarioTablaDatos: [...state.usuarioTablaDatos],
+      };
+    });
+  }
+
+  /**
+   * Elimina un uso final de la tabla de usos finales.
+   *
+   * @param usoFinal - El uso final que se eliminará de la tabla de usos finales.
+   * @returns void
+   */
+  eliminarUsoFinal(usoFinal: Uso): void {
+    this.update(state => {
+      const INDICE_A_ELIMINAR = state.usoTablaDatos.findIndex(ele => 
+        Object.keys(usoFinal).some(key => usoFinal[key as keyof Uso] === ele[key as keyof Uso])
+      );
+  
+      if (INDICE_A_ELIMINAR !== -1) {
+        state.usoTablaDatos.splice(INDICE_A_ELIMINAR, 1);
+      }
+  
+      return {
+        ...state,
+        usoTablaDatos: [...state.usoTablaDatos],
+      };
+    });
+  }
+
+  /**
+   * Actualiza la tabla de representantes legales con nuevos representantes.
+   *
+   * @param newRepresentante - Lista de nuevos representantes legales que se añadirán a la tabla.
+   * @returns void
+   */
+  public updateRepresentanteLegalTablaDatos(newRepresentante: Representante[]): void {
+    this.update((state) => ({
+      ...state,
+      representanteLegalTablaDatos: [...state.representanteLegalTablaDatos, ...newRepresentante],
+    }));
+  }
+
+  /**
+   * Actualiza la tabla de usuarios con nuevos usuarios.
+   *
+   * @param newUsuario - Lista de nuevos usuarios que se añadirán a la tabla de usuarios.
+   * @returns void
+   */
+  public updateUsuarioTablaDatos(newUsuario: UsoFinal[]): void {
+    this.update((state) => ({
+      ...state,
+      usuarioTablaDatos: [...state.usuarioTablaDatos, ...newUsuario],
+    }));
+  }
+
+  /**
+   * Actualiza la tabla de usos finales con nuevos usos finales.
+   *
+   * @param newUsoFinal - Lista de nuevos usos finales que se añadirán a la tabla de usos finales.
+   * @returns void
+   */
+  public updateUsoFinalTabla(newUsoFinal: Uso[]): void {
+    this.update((state) => ({
+      ...state,
+      usoTablaDatos: newUsoFinal,
+    }));
+  }
+
+  /**
+   * Obtiene los datos del destinatario almacenados en el Subject.
+   *
+   * @returns {Observable<object>} Observable con los datos del destinatario.
+   */
+  getData(): Observable<object> {
+    return this.data$;
+  }
+
+  /**
+   * Actualiza los datos del destinatario, representante o uso final.
+   *
+   * @param data - Los nuevos datos para el destinatario, representante o uso final.
+   * @param type - El tipo de datos que se actualizarán: 'destinatario', 'representante', o 'usoFinal'.
+   * @returns void
+   */
+  updateData<T extends object | object[]>(data: T, type: 'destinatario' | 'representante' | 'usoFinal'): void {
+    let updatedData: Destinatario | Representante | UsoFinal;
+
+    switch (type) {
+      case 'destinatario':
+        updatedData = Array.isArray(data) ? {} as Destinatario : (data as Destinatario);
+        break;
+      case 'representante':
+        updatedData = Array.isArray(data) ? {} as Representante : (data as Representante);
+        break;
+      case 'usoFinal':
+        updatedData = Array.isArray(data) ? {} as UsoFinal : (data as UsoFinal);
+        break;
+      default:
+        throw new Error('Tipo no válido');}
+
+    this.dataSubject.next(updatedData);
+  }
+   /**
+   * Establece el estado de validación del formulario en el almacén.
+   * 
+   * @param {Object} formaValida - Un objeto donde las claves son los nombres de los campos del formulario y los valores son booleanos que indican si el campo es válido o no.
+   * 
+   * @returns {void} - No devuelve ningún valor.
+   */
+   setFormValida(formaValida: { [key: string]: boolean }): void {
+    this.update((state) => {
+      const IS_VALID = { ...state.formaValida, ...formaValida };
+      return {
+        ...state,
+        formaValida: IS_VALID,
+      };
+    });
   }
 }

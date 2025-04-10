@@ -14,6 +14,7 @@
  * - `unidadDeMedida`: Obtiene los datos desde `unidadDeMedida.json`.
  */
 import { Catalogo, RespuestaCatalogos } from '@ng-mf/data-access-user';
+import { Observable, map } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
@@ -35,6 +36,7 @@ export class MaterialesPeligrososService {
   listoBanco: Catalogo[] = [];
 
   constructor(public httpServicios: HttpClient) {}
+  private jsonUrl = 'assets/json/230501/domicilio.json';
 
   /**
    * Inicializa el catálogo de pago de derechos.
@@ -105,4 +107,71 @@ export class MaterialesPeligrososService {
   
     return letras.trim();
   }
+
+  /**
+   * Obtiene una lista de países desde un endpoint JSON.
+   *
+   * @returns Un observable que emite un arreglo de objetos `Catalogo` representando la lista de países.
+   */
+  obtenerListaPaises(): Observable<Catalogo[]> {
+    return this.httpServicios
+      .get<{ pais: Catalogo[] }>(this.jsonUrl)
+      .pipe(map((res) => res.pais));
+  }
+
+  /**
+   * Obtiene una lista de estados desde un endpoint JSON.
+   *
+   * @returns Un `Observable` que emite un arreglo de objetos `Catalogo` representando los estados.
+   */
+  obtenerListaEstados(): Observable<Catalogo[]> {
+    return this.httpServicios
+      .get<{ estado: Catalogo[] }>(this.jsonUrl)
+      .pipe(map((res) => res.estado));
+  }
+
+  /**
+   * Obtiene una lista de municipios desde un endpoint JSON.
+   *
+   * @returns Un observable que emite un arreglo de objetos `Catalogo` representando los municipios.
+   */
+  obtenerListaMunicipios(): Observable<Catalogo[]> {
+    return this.httpServicios
+      .get<{ municipio: Catalogo[] }>(this.jsonUrl)
+      .pipe(map((res) => res.municipio));
+  }
+
+  /**
+   * Obtiene la lista de localidades desde un archivo JSON.
+   * 
+   * @returns Un observable que emite un arreglo de objetos del tipo `Catalogo`.
+   */
+  obtenerListaLocalidades(): Observable<Catalogo[]> {
+    return this.httpServicios
+      .get<{ localidad: Catalogo[] }>(this.jsonUrl)
+      .pipe(map((res) => res.localidad));
+  }
+
+  /**
+   * Obtiene una lista de códigos postales desde un servicio HTTP.
+   * 
+   * @returns Un observable que emite un arreglo de objetos de tipo `Catalogo`.
+   */
+  obtenerListaCodigosPostales(): Observable<Catalogo[]> {
+    return this.httpServicios
+      .get<{ codigo_postal: Catalogo[] }>(this.jsonUrl)
+      .pipe(map((res) => res.codigo_postal));
+  }
+
+  /**
+   * Obtiene la lista de colonias desde un servicio HTTP.
+   * 
+   * @returns Un observable que emite un arreglo de objetos de tipo `Catalogo`.
+   */
+  obtenerListaColonias(): Observable<Catalogo[]> {
+    return this.httpServicios
+      .get<{ colonia: Catalogo[] }>(this.jsonUrl)
+      .pipe(map((res) => res.colonia));
+  }
+
 }

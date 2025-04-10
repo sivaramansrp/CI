@@ -1,29 +1,103 @@
+import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ConfiguracionColumna, TablaDinamicaComponent, TablaSeleccion } from '@ng-mf/data-access-user';
+import { DESTINATARIO_ENCABEZADO_DE_TABLA, Destinatario, REPRESENTANTE_ENCABEZADO_DE_TABLA, Representante, USO_FINAL_ENCABEZADO_DE_TABLA, UsoFinal } from '../../models/terceros-relacionados.model';
 import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { TituloComponent } from '@ng-mf/data-access-user';
 import { Tramite230501Query } from '../../estados/queries/tramite230501Query.query';
 import { Tramite230501Store } from '../../estados/stores/tramite230501Store.store';
+
 /**
  * @component TercerosRelacionadosVistaComponent
  * @description Componente de solo lectura que muestra las tablas de terceros relacionados
- * (fabricantes, destinatarios finales, proveedores y facturadores).
+ * (fabricantes, destinatarios finales, representante).
  * Consume observables del store para renderizar los datos en la vista mediante el componente
  * `TercerosRelacionadosComponent`.
  */
 @Component({
   selector: 'app-terceros-relacionados-vista',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TablaDinamicaComponent, TituloComponent],
   templateUrl: './terceros-relacionados-vista.component.html',
-  styleUrl: './terceros-relacionados-vista.component.scss',
+  styleUrls: ['./terceros-relacionados-vista.component.scss'],
 })
-export class TercerosRelacionadosVistaComponent {
+export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
+  
+  /**
+   * @property {Destinatario[]} destinatarioFinalFilaSeleccionada
+   * Arreglo para almacenar los destinatarios finales seleccionados en la tabla.
+   */
+  destinatarioFinalFilaSeleccionada: Destinatario[] = [];
+
+  /**
+   * @property {Representante[]} representanteFilaSeleccionada
+   * Arreglo para almacenar los representantes seleccionados en la tabla.
+   */
+  representanteFilaSeleccionada: Representante[] = [];
+
+  /**
+   * @property {UsoFinal[]} usoDeFilaSeleccionada
+   * Arreglo para almacenar los usuarios finales seleccionados en la tabla.
+   */
+  usoDeFilaSeleccionada: UsoFinal[] = [];
+
+  /**
+   * @property {ConfiguracionColumna<Destinatario>[]} configuracionTablaDestinatarioFinal
+   * Configuración de columnas para la tabla de destinatarios finales.
+   * Define qué columnas se muestran en la tabla y cómo se deben renderizar.
+   */
+  configuracionTablaDestinatarioFinal: ConfiguracionColumna<Destinatario>[] =
+    DESTINATARIO_ENCABEZADO_DE_TABLA;
+
+  /**
+   * @property {ConfiguracionColumna<Representante>[]} configuracionTablaRepresentante
+   * Configuración de columnas para la tabla de representantes.
+   * Define qué columnas se muestran en la tabla y cómo se deben renderizar.
+   */
+  configuracionTablaRepresentante: ConfiguracionColumna<Representante>[] =
+    REPRESENTANTE_ENCABEZADO_DE_TABLA;
+
+  /**
+   * @property {Destinatario[]} destinatarioFinalTablaDatos
+   * Arreglo que almacena los datos de la tabla de destinatarios finales.
+   */
+  destinatarioFinalTablaDatos: Destinatario[] = [];
+
+  /**
+   * @property {Representante[]} representanteTablaDatos
+   * Arreglo que almacena los datos de la tabla de representantes.
+   */
+  representanteTablaDatos: Representante[] = [];
+
+  /**
+   * @property {UsoFinal[]} usuarioTablaDatos
+   * Arreglo que almacena los datos de la tabla de usuarios finales.
+   */
+  usuarioTablaDatos: UsoFinal[] = [];
+
   /**
    * @property {Subject<void>} destroy$
-   * Subject para cancelar suscripciones y evitar fugas de memoria.
+   * Subject utilizado para cancelar suscripciones activas y evitar fugas de memoria.
+   * Se completa en el hook `ngOnDestroy`.
    * @private
    */
   private destroy$ = new Subject<void>();
+
+  /**
+   * @property {ConfiguracionColumna<UsoFinal>[]} configuracionTablaFacturador
+   * Configuración de columnas para la tabla de facturadores.
+   * Define qué columnas se deben mostrar y cómo se deben renderizar.
+   */
+  configuracionTablaFacturador: ConfiguracionColumna<UsoFinal>[] =
+    USO_FINAL_ENCABEZADO_DE_TABLA;
+
+  /**
+   * @property {TablaSeleccion} tipoSeleccionTabla
+   * Tipo de selección que utiliza la tabla dinámica, en este caso `CHECKBOX`.
+   * Controla si la selección es de un solo elemento o múltiples (checkbox).
+   */
+  tipoSeleccionTabla = TablaSeleccion.CHECKBOX;
 
   /**
    * @constructor
@@ -31,9 +105,133 @@ export class TercerosRelacionadosVistaComponent {
    *
    * @param tramiteStore - Store que gestiona el estado de los datos del trámite.
    * @param tramiteQuery - Servicio de consulta que expone observables para leer los datos del store.
+   * @param router - Servicio para navegar a rutas en la aplicación.
+   * @param activatedRoute - Servicio para obtener la ruta activa y parámetros de la misma.
    */
   constructor(
     private tramiteStore: Tramite230501Store,
-    private tramiteQuery: Tramite230501Query
-  ) {}
+    private tramiteQuery: Tramite230501Query,
+    private router: Router, 
+    private activatedRoute: ActivatedRoute
+  ) { }
+
+  /**
+   * @method ngOnInit
+   * @description Hook del ciclo de vida que se ejecuta al inicializar el componente.
+   * Suscribe los observables para mostrar los datos en la vista.
+   */
+  ngOnInit(): void {
+    
+    // Obtener datos de destinatarios finales y suscribirse al observable
+    this.tramiteQuery.getDestinatarioFinalTablaDatos$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((data) => {
+        this.destinatarioFinalTablaDatos = data;
+      });
+
+    // Obtener datos de representantes y suscribirse al observable
+    this.tramiteQuery.getRepresentanteTablaDatos$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((data) => {
+        this.representanteTablaDatos = data;
+      });
+
+    // Obtener datos de usuarios finales y suscribirse al observable
+    this.tramiteQuery.getUsuarioTablaDatos$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((data) => {
+        this.usuarioTablaDatos = data;
+      });
+  }
+
+  /**
+   * @method irAAcciones
+   * @description Navega a la ruta especificada.
+   * Permite navegar dinámicamente a una ruta dada en el componente.
+   *
+   * @param {string} accionesPath - Ruta a la que se desea navegar.
+   */
+  irAAcciones(accionesPath: string): void {
+    this.router.navigate([accionesPath], {
+      relativeTo: this.activatedRoute,
+    });
+  }
+
+  /**
+   * @method modificarDestinatario
+   * @description Navega a la página de modificación de destinatario final.
+   * Si hay un destinatario final seleccionado, lo pasa al store para su edición.
+   */
+  modificarDestinatario(): void {
+    this.irAAcciones('../destinatario-final');
+    if (this.destinatarioFinalFilaSeleccionada.length) {
+      this.tramiteStore.dataSubject.next(this.destinatarioFinalFilaSeleccionada[0]);
+    }
+  }
+
+  /**
+   * @method modificarRepresentanteLegal
+   * @description Navega a la página de modificación de representante legal.
+   * Si hay un representante seleccionado, lo pasa al store para su edición.
+   */
+  modificarRepresentanteLegal(): void {
+    this.irAAcciones('../representante-legal');
+    if (this.representanteFilaSeleccionada.length) {
+      this.tramiteStore.dataSubject.next(this.representanteFilaSeleccionada[0]);
+    }
+  }
+
+  /**
+   * @method modificarUsuarioFinal
+   * @description Navega a la página de modificación de usuario final.
+   * Si hay un usuario final seleccionado, lo pasa al store para su edición.
+   */
+  modificarUsuarioFinal(): void {
+    this.irAAcciones('../uso-final');
+    if (this.usoDeFilaSeleccionada.length) {
+      this.tramiteStore.dataSubject.next(this.usoDeFilaSeleccionada[0]);
+    }
+  }
+
+  /**
+   * @method eliminarDestinatarioFinal
+   * @description Elimina el primer destinatario final de la tabla de datos.
+   * Si no hay destinatarios finales seleccionados, no realiza ninguna acción.
+   */
+  eliminarDestinatarioFinal(): void {
+    if (this.destinatarioFinalFilaSeleccionada.length) {
+      this.tramiteStore.eliminarDestinatarioFinal(this.destinatarioFinalFilaSeleccionada[0]);
+    }
+  }
+
+  /**
+   * @method eliminarRepresentanteLegal
+   * @description Elimina el primer representante legal de la tabla de datos.
+   * Si no hay representantes seleccionados, no realiza ninguna acción.
+   */
+  eliminarRepresentanteLegal(): void {
+    if (this.representanteFilaSeleccionada.length) {
+      this.tramiteStore.eliminarRepresentanteLegal(this.representanteFilaSeleccionada[0]);
+    }
+  }
+
+  /**
+   * @method eliminarUsuarioFinal
+   * @description Elimina el primer usuario final de la tabla de datos.
+   * Si no hay usuarios finales seleccionados, no realiza ninguna acción.
+   */
+  eliminarUsuarioFinal(): void {
+    if (this.usoDeFilaSeleccionada.length) {
+      this.tramiteStore.eliminarUsuarioFinal(this.usoDeFilaSeleccionada[0]);
+    }
+  }
+
+  /**
+   * @method ngOnDestroy
+   * @description Hook del ciclo de vida que se ejecuta cuando el componente es destruido.
+   * Cancela todas las suscripciones activas para evitar fugas de memoria.
+   */
+  ngOnDestroy(): void {
+    this.destroy$.next();
+  }
 }

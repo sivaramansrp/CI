@@ -54,6 +54,7 @@ export class ComposicionComponent {
         componente: this.composicionForm.get('componenteMaterial')?.value,
         porcentajeConcentracion: this.composicionForm.get('porcentajeConcentracion')?.value,
       }
+      this.setFormValida(this.composicionForm.valid);
       this.tramite230501Store.update((state) => ({
         ...state,
         composicionTablaDatos: [...state.composicionTablaDatos, IDX],
@@ -62,6 +63,16 @@ export class ComposicionComponent {
       this.ubicaccion.back();
     }
   }
+
+   /**
+ * Establece el estado de validación del formulario de destinatario.
+ * 
+ * @param valida - Un valor booleano que indica si el formulario de datos del destinatario es válido.
+ */
+ setFormValida(valida: boolean): void {
+  this.tramite230501Store.setFormValida({ composicionForm: valida });
+}
+
 
   /**
    * Cancela la operación actual, restableciendo el formulario de composición

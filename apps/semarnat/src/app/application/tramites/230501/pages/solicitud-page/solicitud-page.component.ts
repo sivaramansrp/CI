@@ -1,4 +1,5 @@
-import { AccionBoton } from '@ng-mf/data-access-user';
+import { AccionBoton, SeccionLibStore } from '@ng-mf/data-access-user';
+import { Subject, takeUntil } from 'rxjs';
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
@@ -8,6 +9,7 @@ import { PASOS } from '../../constantes/materiales-peligrosos.enum';
 import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
+import { Tramite230501Query } from '../../estados/queries/tramite230501Query.query';
 import { ViewChild } from '@angular/core';
 import { WizardComponent } from '@ng-mf/data-access-user';
 /**
@@ -66,7 +68,23 @@ export class SolicitudPageComponent {
     txtBtnAnt: 'Anterior',
     txtBtnSig: 'Continuar',
   };
-
+  /**
+   * Notificador para destruir los observables y evitar posibles fugas de memoria.
+   * @private
+   * @type {Subject<void>}
+   */
+  destroyNotifier$: Subject<void> = new Subject();
+  constructor(private seccionStore: SeccionLibStore, private tramiteQuery: Tramite230501Query,
+  ) {
+    this.tramiteQuery.FormaValida$.pipe(
+      takeUntil(this.destroyNotifier$)
+    ).subscribe((res) => {
+      console.log(res, 'res');
+      
+      this.seccionStore.establecerSeccion([true]);
+      this.seccionStore.establecerFormaValida([res]);
+    });
+  }
   /**
    * @method seleccionaTab
    * @description Cambia el índice actual del wizard manualmente.

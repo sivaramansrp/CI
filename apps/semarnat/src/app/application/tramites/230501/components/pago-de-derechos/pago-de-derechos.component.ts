@@ -90,35 +90,43 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
         })
       ).subscribe();
     this.createPagoDerechos();
-    this.seccionQuery.selectSeccionState$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((seccionState) => {
-          this.seccion = seccionState;
-        })
-      )
-      .subscribe();
-    this.pagoDerechos.statusChanges
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        delay(10),
-        tap((_value) => {
-          const SECCION: number = 2;
-          const FORMAS_VALIDADAS = this.seccion.formaValida;
-          const ES_VALIDO_EL_BANCO = this.pagoDerechos.get('banco')?.status;
-          const ES_VALIDO_EL_FECHO = this.pagoDerechos.get('fecha')?.status;
-          if (this.pagoDerechos.valid ||
-            (ES_VALIDO_EL_BANCO === 'VALID' && ES_VALIDO_EL_FECHO === 'VALID')) {
-            FORMAS_VALIDADAS[SECCION] = true;
-            this.seccionStore.establecerFormaValida(FORMAS_VALIDADAS);
-          } else {
-            FORMAS_VALIDADAS[SECCION] = false;
-            this.seccionStore.establecerFormaValida(FORMAS_VALIDADAS);
-          }
-        })
-      )
-      .subscribe();
+    // this.seccionQuery.selectSeccionState$
+    //   .pipe(
+    //     takeUntil(this.destroyNotifier$),
+    //     map((seccionState) => {
+    //       this.seccion = seccionState;
+    //     })
+    //   )
+    //   .subscribe();
+    // this.pagoDerechos.statusChanges
+    //   .pipe(
+    //     takeUntil(this.destroyNotifier$),
+    //     delay(10),
+    //     tap((_value) => {
+    //       const SECCION: number = 2;
+    //       const FORMAS_VALIDADAS = this.seccion.formaValida;
+    //       const ES_VALIDO_EL_BANCO = this.pagoDerechos.get('banco')?.status;
+    //       const ES_VALIDO_EL_FECHO = this.pagoDerechos.get('fecha')?.status;
+    //       if (this.pagoDerechos.valid ||
+    //         (ES_VALIDO_EL_BANCO === 'VALID' && ES_VALIDO_EL_FECHO === 'VALID')) {
+    //         FORMAS_VALIDADAS[SECCION] = true;
+    //         this.seccionStore.establecerFormaValida(FORMAS_VALIDADAS);
+    //       } else {
+    //         FORMAS_VALIDADAS[SECCION] = false;
+    //         this.seccionStore.establecerFormaValida(FORMAS_VALIDADAS);
+    //       }
+    //     })
+    //   )
+    //   .subscribe();
   }
+       /**
+ * Establece el estado de validación del formulario de destinatario.
+ * 
+ * @param valida - Un valor booleano que indica si el formulario de datos del destinatario es válido.
+ */
+ setFormValida(valida: boolean): void {
+  this.tramite230501Store.setFormValida({ pagoDeDerechos: valida });
+}
 
 
   /**
@@ -142,11 +150,12 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       importePago: [{ value: this.pagoDerechosState.importePago, disabled: true }],
     });
     const FETCHA_CONTROL = this.pagoDerechos.get('fecha');
-    if (FETCHA_CONTROL) {
-      FETCHA_CONTROL.valueChanges.subscribe((value) => {
+    // if (FETCHA_CONTROL) {
+      this.pagoDerechos.valueChanges.subscribe((value) => {
+        this.setFormValida(this.pagoDerechos.valid);
         this.tramite230501Store.setPagoDerechosStateProperty('fecha', value);
       });
-    }
+    
   }
 
 

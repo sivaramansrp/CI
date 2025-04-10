@@ -191,16 +191,24 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
       ).subscribe();
     this.crearDatosSolicitudForm();
 
-    this.seccionQuery.selectSeccionState$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((seccionState) => {
-          this.seccion = seccionState;
-        })
-      )
-      .subscribe();
-    this.datasolicituActualizar();
+    // this.seccionQuery.selectSeccionState$
+    //   .pipe(
+    //     takeUntil(this.destroyNotifier$),
+    //     map((seccionState) => {
+    //       this.seccion = seccionState;
+    //     })
+    //   )
+    //   .subscribe();
+    // this.datasolicituActualizar();
   }
+     /**
+ * Establece el estado de validación del formulario de destinatario.
+ * 
+ * @param valida - Un valor booleano que indica si el formulario de datos del destinatario es válido.
+ */
+ setFormValida(valida: boolean): void {
+  this.tramite230501Store.setFormValida({ datosSolicitudForm: valida });
+}
 
   /**
  * Crea y configura el formulario `datosSolicitudForm` con los campos necesarios
@@ -327,6 +335,8 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
       nombreQuimico: NOMBRE_QUMICO,
       constanciaCisen: ''
     };
+        this.setFormValida(this.datosSolicitudForm.valid);
+    
     this.tramite230501Store.update((state) => ({
       ...state,
       numeroCasTablaDatos: [...state.numeroCasTablaDatos, NUMERO_CAS_TABLA],
