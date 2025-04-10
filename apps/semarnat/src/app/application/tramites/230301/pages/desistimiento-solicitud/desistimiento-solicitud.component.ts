@@ -2,7 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { ListaPasosWizard, PASOS } from '../../models/disponsibles.model';
 
 import { AccionBoton, DatosPasos, SeccionLibStore, WizardComponent } from '@ng-mf/data-access-user';
-import { TEXTOS } from '../../enum/constants';
+import { SECCIONES_TRAMITE_230301, TEXTOS } from '../../enum/constants';
 
 @Component({
   selector: 'app-desistimiento-solicitud',
@@ -73,8 +73,7 @@ export class DesistimientoSolicitudComponent {
    * @param {SeccionLibStore} seccionStore - Almacén para gestionar el estado de las secciones.
    */
   constructor(private readonly seccionStore: SeccionLibStore) {
-    this.seccionStore.establecerFormaValida([false]);
-    this.seccionStore.establecerSeccion([true]);
+    this.asignarSecciones();
   }
 
   /**
@@ -94,5 +93,20 @@ export class DesistimientoSolicitudComponent {
         this.wizardComponent.atras();
       }
     }
+  }
+
+  private asignarSecciones(): void {
+    const SECCIONES: boolean[] = [];
+    const FORMA_VALIDA: boolean[] = [];
+    const PREDETERMINADO = SECCIONES_TRAMITE_230301
+    for (const LLAVE_SECCION in PREDETERMINADO.PASO_1) {
+      if (Object.prototype.hasOwnProperty.call(PREDETERMINADO.PASO_1, LLAVE_SECCION)) {
+        // @ts-expect-error - fix this
+        SECCIONES.push(PREDETERMINADO.PASO_1[LLAVE_SECCION]);
+        FORMA_VALIDA.push(false);
+      }
+    }
+    this.seccionStore.establecerSeccion(SECCIONES);
+    this.seccionStore.establecerFormaValida(FORMA_VALIDA);
   }
 }

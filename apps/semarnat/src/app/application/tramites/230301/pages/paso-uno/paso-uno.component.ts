@@ -12,7 +12,7 @@ export class PasoUnoComponent implements OnInit {
   /**
    * @property {number} indice - Índice actual del paso.
    */
-  indice: number = 2;
+  indice: number = 1;
   TEXTOS = TEXTOS;
 
    constructor(private seccionStore: SeccionLibStore) {

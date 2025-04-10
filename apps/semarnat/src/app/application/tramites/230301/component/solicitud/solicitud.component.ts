@@ -78,6 +78,8 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.solicitudState = seccionState;
+          console.log(seccionState, "seccionStateseccionState")
+          this.formDesistimiento.patchValue(seccionState as { [key: string]: any });
         })
       )
       .subscribe();
@@ -133,6 +135,14 @@ export class SolicitudComponent implements OnInit, OnDestroy {
           console.error(error);
         }
       );
+
+      // console.log(this.formDesistimiento.valid)
+      if (this.formDesistimiento.valid) {
+        const SECCION: number = 1;
+        const FORMAS_VALIDADAS = this.seccion.formaValida;
+        FORMAS_VALIDADAS[SECCION] = true;
+        this.seccionStore.establecerFormaValida(FORMAS_VALIDADAS);
+      }
   }
 
   /**
