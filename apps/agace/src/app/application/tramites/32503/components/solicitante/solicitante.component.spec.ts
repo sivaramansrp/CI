@@ -1,59 +1,77 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule, FormsModule, FormBuilder } from '@angular/forms';
-import { of } from 'rxjs';
 import { SolicitanteComponent } from './solicitante.component';
-import { DatosTramiteService } from '../../services/datos-tramite.service';
-import { TituloComponent } from '@ng-mf/data-access-user';
-import { Tramite11201Query } from '../../../../core/queries/tramite11201.query';
-import { Tramite11201Store } from '../../../../core/estados/tramites/tramite11201.store';
-import { provideHttpClient } from '@angular/common/http';
+import { ReactiveFormsModule } from '@angular/forms';
+import { of, Subject } from 'rxjs';
+import { Tramite32503Query } from '../../../../estados/queries/tramite32503.query';
+import { Tramite32503Store } from '../../../../estados/tramites/tramite32503.store';
+import { AvisoTrasladoService } from '../../services/aviso-traslado.service';
 
 describe('SolicitanteComponent', () => {
   let component: SolicitanteComponent;
   let fixture: ComponentFixture<SolicitanteComponent>;
-  let datosTramiteServiceMock: any;
-  let tramite11201QueryMock: any;
-  let tramite11201StoreMock: any;
+  let tramiteQueryMock: any;
+  let tramiteStoreMock: any;
+  let avisoTrasladoServiceMock: any;
 
   beforeEach(async () => {
-    datosTramiteServiceMock = {
-      getDatosSolicitante: jest.fn().mockReturnValue(of({
-        rfc: 'RFC123456',
-        denominacion: 'Denominación Ejemplo',
-        actividadEconomica: 'Actividad Económica Ejemplo',
-        correoElectronico: 'correo@ejemplo.com'
-      }))
-    };
-
-    tramite11201QueryMock = {
+    tramiteQueryMock = {
       selectSolicitud$: of({
         datosSolicitante: {
-          rfc: 'RFC123456',
-          denominacion: 'Denominación Ejemplo',
-          actividadEconomica: 'Actividad Económica Ejemplo',
-          correoElectronico: 'correo@ejemplo.com'
-        }
-      })
+          rfc: 'ABC123456789',
+          denominacion: 'Empresa S.A.',
+          actividadEconomica: 'Comercio',
+          correoElectronico: 'empresa@example.com',
+          pais: 'México',
+          codigoPostal: '12345',
+          entidadFederativa: 'Ciudad de México',
+          municipio: 'Benito Juárez',
+          localidad: 'Del Valle',
+          colonia: 'Colonia 1',
+          calle: 'Calle 1',
+          nExt: '123',
+          nInt: '456',
+          lada: '55',
+          telefono: '12345678',
+          adace: 'ADACE 1',
+        },
+      }),
     };
 
-    tramite11201StoreMock = {
-      setDatosSolicitante: jest.fn()
+    tramiteStoreMock = {
+      setDatosSolicitante: jest.fn(),
+    };
+
+    avisoTrasladoServiceMock = {
+      obtenerDatosSolicitante: jest.fn().mockReturnValue(
+        of({
+          rfc: 'ABC123456789',
+          denominacion: 'Empresa S.A.',
+          actividadEconomica: 'Comercio',
+          correoElectronico: 'empresa@example.com',
+          pais: 'México',
+          codigoPostal: '12345',
+          entidadFederativa: 'Ciudad de México',
+          municipio: 'Benito Juárez',
+          localidad: 'Del Valle',
+          colonia: 'Colonia 1',
+          calle: 'Calle 1',
+          nExt: '123',
+          nInt: '456',
+          lada: '55',
+          telefono: '12345678',
+          adace: 'ADACE 1',
+        })
+      ),
     };
 
     await TestBed.configureTestingModule({
-      imports: [
-        ReactiveFormsModule,
-        FormsModule,
-        TituloComponent,
-        SolicitanteComponent
-      ],
+      imports: [ReactiveFormsModule,SolicitanteComponent],
+      declarations: [],
       providers: [
-        provideHttpClient(),
-        FormBuilder,
-        { provide: DatosTramiteService, useValue: datosTramiteServiceMock },
-        { provide: Tramite11201Query, useValue: tramite11201QueryMock },
-        { provide: Tramite11201Store, useValue: tramite11201StoreMock }
-      ]
+        { provide: Tramite32503Query, useValue: tramiteQueryMock },
+        { provide: Tramite32503Store, useValue: tramiteStoreMock },
+        { provide: AvisoTrasladoService, useValue: avisoTrasladoServiceMock },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(SolicitanteComponent);
@@ -61,19 +79,68 @@ describe('SolicitanteComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('should create the component', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should initialize tramiteState on ngOnInit', () => {
+    component.ngOnInit();
+    expect(component.tramiteState).toEqual({
+      datosSolicitante: {
+        rfc: 'ABC123456789',
+        denominacion: 'Empresa S.A.',
+        actividadEconomica: 'Comercio',
+        correoElectronico: 'empresa@example.com',
+        pais: 'México',
+        codigoPostal: '12345',
+        entidadFederativa: 'Ciudad de México',
+        municipio: 'Benito Juárez',
+        localidad: 'Del Valle',
+        colonia: 'Colonia 1',
+        calle: 'Calle 1',
+        nExt: '123',
+        nInt: '456',
+        lada: '55',
+        telefono: '12345678',
+        adace: 'ADACE 1',
+      },
+    });
   });
 
   it('should initialize the form on ngOnInit', () => {
     component.ngOnInit();
     expect(component.solicitudForm).toBeDefined();
+    expect(component.solicitudForm.get('rfc')?.value).toBe('ABC123456789');
+    expect(component.solicitudForm.get('denominacion')?.value).toBe('Empresa S.A.');
+    expect(component.solicitudForm.get('actividadEconomica')?.value).toBe('Comercio');
+    expect(component.solicitudForm.get('correoElectronico')?.value).toBe('empresa@example.com');
   });
 
-  it('should emit continuarEvento on continuar', () => {
-    const continuarEventoSpy = jest.spyOn(component.continuarEvento, 'emit');
-    component.continuar();
-    expect(continuarEventoSpy).toHaveBeenCalledWith('');
+  it('should call avisoTrasladoService.obtenerDatosSolicitante on cargarDatosSolicitante', () => {
+    component.cargarDatosSolicitante();
+    expect(avisoTrasladoServiceMock.obtenerDatosSolicitante).toHaveBeenCalled();
+    expect(tramiteStoreMock.setDatosSolicitante).toHaveBeenCalledWith({
+      rfc: 'ABC123456789',
+      denominacion: 'Empresa S.A.',
+      actividadEconomica: 'Comercio',
+      correoElectronico: 'empresa@example.com',
+      pais: 'México',
+      codigoPostal: '12345',
+      entidadFederativa: 'Ciudad de México',
+      municipio: 'Benito Juárez',
+      localidad: 'Del Valle',
+      colonia: 'Colonia 1',
+      calle: 'Calle 1',
+      nExt: '123',
+      nInt: '456',
+      lada: '55',
+      telefono: '12345678',
+      adace: 'ADACE 1',
+    });
   });
 
   it('should complete destroyNotifier$ on ngOnDestroy', () => {

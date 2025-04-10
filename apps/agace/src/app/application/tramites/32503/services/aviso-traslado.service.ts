@@ -1,4 +1,4 @@
-import { AnexosLista, AvisoTablaDatos, CatalogoLista, DocumentosLista, MercanciaTablaDatos, RespuestaCatalogos } from '../models/aviso-traslado.model';
+import { AnexosLista, AvisoTablaDatos, CatalogoLista,DatosSolicitante, DocumentosLista, MercanciaTablaDatos } from '../models/aviso-traslado.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -33,10 +33,10 @@ export class AvisoTrasladoService {
   /**
    * Obtiene los datos del solicitante.
    * 
-   * @returns {Observable<RespuestaCatalogos[]>} Un observable con los datos del solicitante.
+   * @returns {Observable<DatosSolicitante>} Un observable con los datos del solicitante.
    */
-  obtenerDatosSolicitante(): Observable<RespuestaCatalogos[]> {
-    return this.http.get<RespuestaCatalogos[]>(`assets/json/32503/datosSolicitante.json`);
+  obtenerDatosSolicitante(): Observable<DatosSolicitante> {
+    return this.http.get<DatosSolicitante>(`assets/json/32503/datosSolicitante.json`);
   }
 
   /**

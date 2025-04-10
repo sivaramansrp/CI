@@ -32,7 +32,7 @@ export const PASOS = [
 ];
 
 /**
- * Constante que define los textos utilizados en el trámite.
+ * Textos utilizados en el trámite.
  * 
  * Esta constante contiene textos como instrucciones o mensajes que se muestran
  * en la interfaz del usuario.
@@ -54,12 +54,22 @@ export const TEXTOS = {
   TERCEROS_TEXTO_DE_ADJUNTAR: `Para poder adjuntar tu documento, deberá cumplir las siguientes características:<br> <b>&#8226;</b> Debe ser formato PDF que no contenga formularios, objetos OLE incrustrados, código JavaScript, etc.<br><b>&#8226;</b> No debe contener páginas en blanco.`,
   TERCEROS_TEXTO_DE_ADJUNTAR_ALERTA: `La carga del documento puede tardar varois segundos, este tiempo dependerá del tamaño de tu archivo y de tu velocidad de conexión`
 };
-
+/**
+ * Configuración para la fecha de ingreso.
+ * 
+ * Define las propiedades de la fecha de ingreso, como el nombre de la etiqueta, si es requerida y si está habilitada.
+ */
 export const FECHA_INGRESO = {
   labelNombre: 'Fecha de programada del traslado',
   required: true,
   habilitado: true,
 };
+
+/**
+ * Tipos de aviso disponibles.
+ * 
+ * Define los valores y etiquetas para los tipos de aviso.
+ */
 export const TIPAVI = [
   {
     valor: 'inicial',
@@ -70,6 +80,11 @@ export const TIPAVI = [
     etiqueta: 'Prórroga',
   }
 ];
+/**
+ * Tipos de carga disponibles.
+ * 
+ * Define los valores y etiquetas para los tipos de carga.
+ */
 export const TIPACA = [
   {
     valor: 'manual',
@@ -80,12 +95,24 @@ export const TIPACA = [
     etiqueta: 'Carga Masiva',
   }
 ];
+/**
+ * Configuración para los tipos de documentos.
+ * 
+ * Define las propiedades de los tipos de documentos, como el nombre de la etiqueta,
+ * si es requerido, la primera opción y los catálogos disponibles.
+ */
 export const TIPO_DOCUMENTO = {
   labelNombre: 'Tipo de documento',
   required: false,
   primerOpcion: 'Seleccion una valor',
   catalogos: [],
 }
+/**
+ * Configuración para el tamaño de los documentos.
+ * 
+ * Define las propiedades relacionadas con el tamaño de los documentos, como el nombre del archivo,
+ * el tamaño máximo permitido y la resolución mínima.
+ */
 export const TIPO_DOCUMENTO_TAMANO = {
   nombreDelArchivo: '',
   tamano: 3,

@@ -104,7 +104,9 @@ export class PasoDosComponent implements OnInit, OnDestroy, AfterViewInit {
         })
       )
       .subscribe();
-    this.tablaDatos = [...this.tramiteState.tipoTablaDatos];
+      this.tablaDatos = Array.isArray(this.tramiteState?.tipoTablaDatos)
+      ? [...this.tramiteState.tipoTablaDatos]
+      : [];
     this.inicializarFormulario();
     this.cargarTipoDocumento();
   }
