@@ -629,11 +629,11 @@ export class AvisoComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   verificaTipoAviso(): void {
-    const TIPOAVISO = this.avisoFormulario.get('datosAviso.tipoAviso')?.value;
-    this.store.setAvisoFormularioTipoAviso(TIPOAVISO);
+    const TIPO_AVISO = this.avisoFormulario.get('datosAviso.tipoAviso')?.value;
+    this.store.setAvisoFormularioTipoAviso(TIPO_AVISO);
     this.avisoFormulario.get('datosAviso.idTransaccion')?.enable();
     this.avisoFormulario.get('datosAviso.motivoProrroga')?.enable();
-    if (TIPOAVISO === TIPAVI[0].valor) {
+    if (TIPO_AVISO === TIPAVI[0].valor) {
       this.avisoFormulario.get('datosAviso.idTransaccion')?.disable();
       this.avisoFormulario.get('datosAviso.motivoProrroga')?.disable();
     }
@@ -701,7 +701,6 @@ export class AvisoComponent implements OnInit, OnDestroy {
    * @param {Event} event - Evento que contiene el valor ingresado por el usuario.
    * @returns {void}
    */
-  // eslint-disable-next-line class-methods-use-this
   sanitizeAlphanumeric(form: FormGroup, control: string, event: Event): void {
     const INPUT = event?.target as HTMLInputElement;
     const REEMPLAZAR = INPUT?.value.replace(REGEX_REEMPLAZAR, '');
@@ -718,7 +717,6 @@ export class AvisoComponent implements OnInit, OnDestroy {
    * @param {Event} event - Evento que contiene el valor ingresado por el usuario.
    * @returns {void}
    */
-  // eslint-disable-next-line class-methods-use-this
   sanitizeAlphanumericWithSpace(form: FormGroup, control: string, event: Event): void {
     const INPUT = event?.target as HTMLInputElement;
     const REEMPLAZAR = INPUT?.value.replace(REGEX_ALFANUMERICO_CON_ESPACIOS_REEMPLAZAR, '');
@@ -735,7 +733,6 @@ export class AvisoComponent implements OnInit, OnDestroy {
    * @param {Event} event - Evento que contiene el valor ingresado por el usuario.
    * @returns {void}
    */
-  // eslint-disable-next-line class-methods-use-this
   sanitizeNumeric(form: FormGroup, control: string, event: Event): void {
     const INPUT = event?.target as HTMLInputElement;
     const REEMPLAZAR = INPUT?.value.replace(REGEX_NUMEROS, '');

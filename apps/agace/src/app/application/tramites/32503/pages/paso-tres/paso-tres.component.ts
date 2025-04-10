@@ -2,7 +2,7 @@ import { AlertComponent, CatalogoSelectComponent, TablaDinamicaComponent, Titulo
 import { AnexosLista, ArchivoDocumentos, Documentos, DocumentosAnexos, DocumentosLista } from "../../models/aviso-traslado.model";
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from "@angular/core";
 import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
-import { TEXTOS, TIPO_DOCUMENTO_TAMANO } from "../../constants/aviso-traslado.enum";
+import { TEXTOS, TIPO_DOCUMENTO_TAMANO ,MENSAJE_DE_TAMANO_DE_ARCHIVO} from "../../constants/aviso-traslado.enum";
 import { Tramite32503State, Tramite32503Store } from "../../../../estados/tramites/tramite32503.store";
 import { AvisoTrasladoService } from "../../services/aviso-traslado.service";
 import { CommonModule } from "@angular/common";
@@ -82,6 +82,18 @@ export class PasoTresComponent implements OnInit, OnDestroy {
    * Indicador de si se está cargando un archivo.
    */
   cargando: boolean = false;
+  /**
+ * Constante que define el mensaje relacionado con el tamaño de los archivos.
+ * 
+ * Esta constante se utiliza para mostrar un mensaje de advertencia o información
+ * sobre el tamaño máximo permitido para los archivos que se pueden cargar en el sistema.
+ * 
+ * Ejemplo de uso:
+ * ```typescript
+ * console.log(MENSAJE_DE_TAMANO_DE_ARCHIVO);
+ * ```
+ */
+  MENSAJE_DE_TAMANO_DE_ARCHIVO=MENSAJE_DE_TAMANO_DE_ARCHIVO;
 
   /**
    * Configuración de la tabla de datos para los anexos.
@@ -232,8 +244,7 @@ export class PasoTresComponent implements OnInit, OnDestroy {
     if (FILE) {
       const SIZE_MB = FILE.size / (1024 * 1024);
       if (SIZE_MB > 3) {
-        // eslint-disable-next-line no-alert
-        alert('File size must be less than 3 MB');
+        alert(MENSAJE_DE_TAMANO_DE_ARCHIVO);
         INPUT.value = '';
         this.tamanosDeArchivos[index] = JSON.parse(JSON.stringify(TIPO_DOCUMENTO_TAMANO));
         return;
