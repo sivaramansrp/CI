@@ -38,7 +38,10 @@
     <div class="col text-end">
       <div class="btn-group">
         <button class="btn btn-primary me-2" type="button">Borrar</button>
-        <button class="btn btn-danger" type="button" (click)="navigateToPath()">Agregar</button>
+        <button class="btn btn-danger" type="button"  data-bs-toggle="modal"
+        data-bs-target="#modalAgregarMercancias"
+        (click)="agregarOperacionImp()"
+>Agregar</button>
       </div>
     </div>
   </div>
@@ -161,3 +164,18 @@
     </div>
   </div>
 </form>
+
+
+<div
+  class="modal fade"
+  id="modalAgregarMercancias"
+  tabindex="-1"
+  aria-labelledby="modalAgregarMercanciasLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+    <div class="modal-content">
+      <app-datos-residuos-peligrosos></app-datos-residuos-peligrosos>
+    </div>
+  </div>
+</div>

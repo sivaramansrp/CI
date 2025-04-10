@@ -1,11 +1,13 @@
 import { Catalogo, CatalogoSelectComponent, InputRadioComponent, TableComponent, TituloComponent } from '@libs/shared/data-access-user/src';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RadioOpcion, SolicitudJson } from '@libs/shared/data-access-user/src/core/models/231003/solicitud.model';
 import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { DatosResiduosPeligrososComponent } from '../datos-residuos-peligrosos/datos-residuos-peligrosos.component';
 import { FormularioReciclajeQuery } from '../../estados/queries/dato-solicitud.query';
 import { FormularioReciclajeStore } from '../../estados/tramites/dato-solicitud.store';
+import { Modal } from 'bootstrap';
 import { Router } from '@angular/router';
 import rawData from '@libs/shared/theme/assets/json/231003/solicitud.json';
 const RADIO_OPCIONES = rawData as SolicitudJson;
@@ -17,11 +19,13 @@ const RADIO_OPCIONES = rawData as SolicitudJson;
   imports: [CommonModule,
     CatalogoSelectComponent,
     TituloComponent,
-    ReactiveFormsModule, TableComponent, InputRadioComponent],
+    ReactiveFormsModule, TableComponent, InputRadioComponent,DatosResiduosPeligrososComponent],
   templateUrl: './datos-solicitud.component.html',
   styleUrl: './datos-solicitud.component.css',
 })
 export class DatosSolicitudComponent implements OnInit, OnDestroy {
+
+  @ViewChild('modalAgregarMercancias') modalElement!: ElementRef;
 
   solicitudForm!: FormGroup;
 
@@ -195,6 +199,14 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
       .subscribe(valor => this.formularioSolicitudStore.actualizarPrecaucionesManejo(valor));
 
   }
+
+  agregarOperacionImp(): void {
+    if (this.modalElement) {
+      const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
+      MODAL_INSTANCE.show();
+    }
+  }
+
 
 
   ngOnDestroy(): void {
