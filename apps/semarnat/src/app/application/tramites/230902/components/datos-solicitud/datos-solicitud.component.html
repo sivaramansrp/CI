@@ -66,7 +66,16 @@
         </div>
       </div>
     </div>
-
+    <lib-notificaciones 
+    *ngIf="confirmEliminarPopupAbierto"
+    [notificacionInput]="nuevaNotificacion" 
+    (confirmacionModal)="eliminarMercanciaItem()">
+    </lib-notificaciones>
+    <lib-notificaciones 
+      *ngIf="multipleSeleccionPopupAbierto"
+      [notificacionInput]="nuevaNotificacion" 
+      (confirmacionModal)="cerrarMultipleSeleccionPopup()">
+    </lib-notificaciones>
     <ng-titulo titulo="Finalidad del movimiento" />
     <div class="row mt-3">
       <div class="col-md-12 mt-3">
@@ -117,6 +126,7 @@
                   id="otraFraccion"
                   type="checkbox"
                   formControlName="otraFraccion"
+                  (change)="manejarCambioOtraFraccion()"
                   class="form-check-input"
                 />
                 <label class="form-check-label" for="otraFraccion"
@@ -128,8 +138,7 @@
             <div class="row">
               <div class="col-md-5">
                 <label
-                  class="form-label"
-                  style="text-align: left;"
+                  class="form-label text-start"
                   for="fraccionVigenteTIGIE"
                   >La Fracción debe estar vigente conforme a la TIGIE</label
                 >
@@ -308,53 +317,5 @@
     </app-modal>
   }
 
-<div class="modal" tabindex="-1" role="dialog" [ngClass]="{ show: multipleSeleccionPopupAbierto }"
-  [ngStyle]="{ display: multipleSeleccionPopupAbierto ? 'block' : 'none' }">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="model-div"></div>
-      <div class="modal-body">
-        <p>Selecciona sólo un registro para modificar. </p>
-      </div>
-      <div class="modal-footer" style="justify-content: center">
-        <button type="button" class="btn btn-primary" (click)="cerrarMultipleSeleccionPopup()">
-          Acceptar
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
-<div class="modal-backdrop fade show" *ngIf="multipleSeleccionPopupAbierto"></div>
-
-
-<div
-      class="modal"
-      tabindex="-1"
-      role="dialog"
-      [ngClass]="{ show: confirmEliminarPopupAbierto }"
-      [ngStyle]="{ display: confirmEliminarPopupAbierto ? 'block' : 'none' }"
-    >
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="model-div"></div>
-      <div class="modal-body">
-        <p>¿Estás seguro que deseas eliminar los registros marcados? </p>
-      </div>
-      <div class="modal-footer" style="justify-content: end">
-        <button type="button"
-         class="btn btn-primary"
-        (click)="cerrarEliminarConfirmationPopup()">Cancelar</button>
-        <button
-          type="button"
-          class="btn btn-primary"
-          (click)="eliminarMercanciaItem()"
-        >
-          Aceptar
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
-<div class="modal-backdrop fade show" *ngIf="confirmEliminarPopupAbierto"></div>
 
 </div>

@@ -88,18 +88,10 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroyed$))
       .subscribe(state => { this.solicitud230902State = state });
 
-      /**
-       * Crea el formulario de pago de derechos y configura el comportamiento de capitalización para el campo 'llaveDePago'.
-       */
-      
-      this.crearFormularioPagoDerechos();
-      this.formPagoDerechos.get('llaveDePago')?.valueChanges.subscribe((value: string) => {
-        if (value) {
-          const CAPITALIZED_VALUE = value.toUpperCase(); // Capitaliza la entrada
-          this.formPagoDerechos.get('llaveDePago')?.setValue(CAPITALIZED_VALUE, { emitEvent: false });
-        }
-      });
- 
+    /**
+     * Crea el formulario de pago de derechos.
+     */
+    this.crearFormularioPagoDerechos();
   }
 
   /**
@@ -150,10 +142,11 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * Maneja el cambio de la llave de pago en el formulario.
    * Actualiza la llave de pago en el almacén.
    */
-  onllavaDePagoChange(): void {
-    this.tramite230902Store.setllaveDePago(
-      this.formPagoDerechos.get('llaveDePago')?.value
-    );
+  onllavaDePagoChange(event: Event): void {
+    const INPUT_ELEMENT = event.target as HTMLInputElement;
+    const CAPITALIZED_VALUE = INPUT_ELEMENT.value.toUpperCase();
+    INPUT_ELEMENT.value = CAPITALIZED_VALUE; // Update the input field value to uppercase
+    this.tramite230902Store.setllaveDePago(CAPITALIZED_VALUE); // Update the store with the uppercase value
   }
 
   /**

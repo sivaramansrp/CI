@@ -10,10 +10,10 @@
       <app-tabla-dinamica [configuracionTabla]="configuracionTabla" [datos]="tablaDatos"
         [tipoSeleccionTabla]="TablaSeleccion" (listaDeFilaSeleccionada)="onFilaSeleccionada($event)"></app-tabla-dinamica>
     </div>
-    <div class="row" class="text-end pb-3" >
+    <div class="row text-end pb-3">
       <div>
         <button type="button" class="btn btn-default me-2">Eliminar Seleccionados</button>
-        <button type="button" class="btn btn-danger me-2">Eliminar no seleccioonados</button>
+        <button type="button" class="btn btn-danger me-2">Eliminar no seleccionados</button>
         <button type="button" class="btn btn-primary me-2" (click)="openPopup()">
           Modificar
         </button>
@@ -21,19 +21,10 @@
     </div>
   </form>
 </div>
-<div class="modal" tabindex="-1" role="dialog" [ngClass]="{ show: isPopupOpen }"
-  [ngStyle]="{ display: isPopupOpen ? 'block' : 'none' }">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="model-div"></div>
-      <div class="modal-body">
-        <p>No se pueden modificar los <br /> datos agregados por el <br> sistema agregada correctamente.</p>
-      </div>
-      <div class="modal-footer" style="justify-content: center">
-        <button type="button" class="btn btn-primary" (click)="closePopup()">
-          Acceptar
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
+
+<!-- Reusable lib-notificaciones component -->
+<lib-notificaciones 
+  *ngIf="popupAbierto"
+  [notificacionInput]="nuevaNotificacion" 
+  (confirmacionModal)="closePopup()">
+</lib-notificaciones>

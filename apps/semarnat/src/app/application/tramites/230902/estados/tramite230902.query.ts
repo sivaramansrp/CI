@@ -10,8 +10,8 @@ export class Tramite230902Query extends Query<Solicitud230902State> {
     return state;
   });
  
-  selectIsPopupOpen$ = this.select((state) => state.isPopupOpen);
-  selectIsPopupClose$ = this.select((state) => state.isPopupClose);
+  selectIsPopupOpen$ = this.select((state) => state.popupAbierto);
+  selectIsPopupClose$ = this.select((state) => state.popupCerrado);
 
   constructor(
     protected override store: Tramite230902Store) {

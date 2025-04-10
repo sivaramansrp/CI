@@ -31,7 +31,7 @@
             <label class="control-label" for="llaveDePago">Llave de pago</label>
             <input class="form-control" id="llaveDePago" type="text" formControlName="llaveDePago" [required]="true"
               [class.is-invalid]="formPagoDerechos.get('llaveDePago')?.touched && formPagoDerechos.get('llaveDePago')?.invalid"
-              (change)="onllavaDePagoChange()">
+              (input)="onllavaDePagoChange($event)">
             <div class="invalid-feedback"
               *ngIf="formPagoDerechos.get('llaveDePago')?.touched && formPagoDerechos.get('llaveDePago')?.invalid">
               <span *ngIf="formPagoDerechos.get('llaveDePago')?.hasError('required')">Este campo es

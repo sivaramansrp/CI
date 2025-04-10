@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 
-import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, CatalogoSelectComponent, CrosslistComponent, FirmaElectronicaComponent, InputCheckComponent, InputFechaComponent, SolicitanteComponent, TablaDinamicaComponent, TableComponent, TituloComponent, WizardComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, CatalogoSelectComponent, CrosslistComponent, FirmaElectronicaComponent, InputCheckComponent, InputFechaComponent, NotificacionesComponent, SolicitanteComponent, TablaDinamicaComponent, TableComponent, TituloComponent, WizardComponent } from '@ng-mf/data-access-user';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { DatosSolicitudComponent } from './components/datos-solicitud/datos-solicitud.component';
 import { ModalComponent } from './components/modal/modal.component';
@@ -33,6 +33,7 @@ import { PermisoCitesRoutingModule } from './permiso-cites-routing.module';
     AlertComponent,
     CrosslistComponent,
     TableComponent,
+    NotificacionesComponent,
     InputCheckComponent,
     InputFechaComponent,
     ToastrModule.forRoot(),

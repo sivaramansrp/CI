@@ -15,7 +15,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
-import { ConfiguracionColumna, TablaSeleccion } from '@libs/shared/data-access-user/src';
+import { CategoriaMensaje, ConfiguracionColumna, Notificacion, TablaSeleccion, TipoNotificacionEnum } from '@libs/shared/data-access-user/src';
 
 import { Subject, takeUntil } from 'rxjs';
 
@@ -47,13 +47,13 @@ export class TercerosComponent implements OnInit, OnDestroy {
    * Indica si el popup está abierto.
    * Controla la visibilidad del popup.
    */
-  isPopupOpen = false;
+  popupAbierto = false;
 
   /**
    * Indica si el popup está cerrado.
    * Controla el estado del cierre del popup.
    */
-  isPopupClose = true;
+  popupCerrado = true;
 
   /**
    * Estado de la solicitud 230902.
@@ -84,7 +84,36 @@ export class TercerosComponent implements OnInit, OnDestroy {
    * Contiene las filas de datos que se muestran en la tabla de terceros.
    */
   tablaDatos: ConfiguracionItem[] = [];
+
+  /**
+   * Indica si la opción de modificar está habilitada.
+   * Se activa cuando hay filas seleccionadas en la tabla.
+   */
   isModificarEnabled: boolean = false;
+
+  /**
+   * Identificador del modal.
+   * Define el tipo de modal que se está mostrando.
+   */
+  modal: string = '';
+
+  /**
+   * Título del modal.
+   * Contiene el texto que se muestra como título en el modal.
+   */
+  tituloModal!: string;
+
+  /**
+   * Mensaje del modal.
+   * Contiene el texto que se muestra como mensaje en el modal.
+   */
+  mensajeModal!: string;
+
+  /**
+   * Notificación actual.
+   * Configura los datos de la notificación que se muestra en el popup.
+   */
+  public nuevaNotificacion!: Notificacion;
 
   /**
    * Constructor del componente.
@@ -131,25 +160,34 @@ export class TercerosComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Abre el popup si la modificación está habilitada.
-   * Cambia el estado del popup a abierto y actualiza el almacén.
+   * Abre el popup de notificación.
+   * Configura los datos de la notificación y muestra el componente lib-notificaciones.
    */
-  openPopup():void {
-    if(this.isModificarEnabled) {
-    this.isPopupOpen = true;
-    this.tramite230902Store.setIsPopupOpen(this.isPopupOpen);
+  openPopup(): void {
+    if (this.isModificarEnabled) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: TipoNotificacionEnum.ALERTA,
+        categoria: CategoriaMensaje.ERROR,
+        modo: 'modal',
+        titulo: 'Aviso',
+        mensaje: 'No se pueden modificar los datos agregados por el sistema agregada correctamente.',
+        cerrar: false,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      this.popupAbierto = true; // Controla la visibilidad del popup
+      this.tramite230902Store.setIsPopupOpen(this.popupAbierto);
     }
   }
 
   /**
-   * Cierra el popup.
-   * Cambia el estado del popup a cerrado y actualiza el almacén.
+   * Cierra el popup de notificación.
+   * Cambia el estado del popup a cerrado.
    */
   closePopup(): void {
-    this.isPopupOpen = false;
-    this.isPopupClose = false;
-    this.tramite230902Store.setIsPopupOpen(this.isPopupOpen);
-    this.tramite230902Store.setIsPopupClose(this.isPopupClose);
+    this.popupAbierto = false; // Oculta el popup
+    this.tramite230902Store.setIsPopupOpen(this.popupAbierto);
+    this.tramite230902Store.setIsPopupClose(this.popupCerrado);
   }
 
   /**
@@ -185,4 +223,6 @@ export class TercerosComponent implements OnInit, OnDestroy {
     this.destroyed$.next();
     this.destroyed$.complete();
   }
+ 
+
 }

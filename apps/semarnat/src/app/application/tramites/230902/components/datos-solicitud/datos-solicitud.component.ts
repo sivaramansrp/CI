@@ -1,8 +1,7 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ALERTA_MERCANCIA } from '../../enum/mercancia-alert.enum';
-import { AQUANDAS_LABEL } from '../../enum/aquaandas.enum';
-
+import { AQUANDAS_LABEL } from '../../enum/aquaandas-label.enum';
 import { CROSSLIST_BOTONS } from '../../enum/crossList-botons.enum';
 
 import { Subject, takeUntil } from 'rxjs';
@@ -12,12 +11,15 @@ import { ConfiguracionItem } from '../../enum/mercancia.enum';
 import { CrosslistBoton } from '../../enum/crossList-botons.enum';
 import { MOVIMIENTO_LABEL } from '../../enum/movimiento.enum';
 
-import { Catalogo, ConfiguracionColumna, CrossListLable, CrosslistComponent, REGEX_SEPARADO_POR_COMAS, TablaSeleccion } from '@libs/shared/data-access-user/src';
+import { Catalogo, CategoriaMensaje, ConfiguracionColumna, CrossListLable, CrosslistComponent, Notificacion, REGEX_SEPARADO_POR_COMAS, TablaSeleccion, TipoNotificacionEnum } from '@libs/shared/data-access-user/src';
 
 import { PermisoCitesService } from '../../services/permiso-cites.service';
 
 import { Solicitud230902State, Tramite230902Store } from '../../estados/tramite230902.store';
 import { Tramite230902Query } from '../../estados/tramite230902.query';
+
+
+
 
 
 /**
@@ -153,6 +155,11 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    * Define el tipo de selección que se puede realizar en la tabla.
    */
   tablaSeleccion = TablaSeleccion.CHECKBOX;
+
+  /**
+   * Indicates whether a file has been selected.
+   * Used to track the state of file selection in the component.
+   */
   isFileSelected: boolean = false;
  
   /**
@@ -200,24 +207,50 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    * Se utiliza para cancelar suscripciones activas cuando el componente se destruye.
    */
   private destroyed$ = new Subject<void>();
+
+  /**
+   * Indicates whether the current operation is an update.
+   * Used to differentiate between creating a new item and updating an existing one.
+   */
   esOperacionDeActualizacion: boolean = false;
-   /**
-   * Indica si un archivo está seleccionado.
+  
+  /**
+   * Indica si el botón "Modificar" está habilitado.
+   * Se utiliza para controlar la disponibilidad del botón de modificación.
    */
-   enableModficarBoton: boolean = false;
-   enableEliminarBoton:boolean = false;
-   multipleSeleccionPopupAbierto:boolean = false;
-    /**
-   * Indica si el popup está cerrado.
+  enableModficarBoton: boolean = false;
+
+  /**
+   * Indica si el botón "Eliminar" está habilitado.
+   * Se utiliza para controlar la disponibilidad del botón de eliminación.
    */
-  multipleSeleccionPopupCerrado:boolean = true;
-  confirmEliminarPopupAbierto: boolean = false;
+  enableEliminarBoton: boolean = false;
+
+  /**
+   * Indica si el popup de selección múltiple está abierto.
+   * Controla la visibilidad del popup de selección múltiple.
+   */
+  multipleSeleccionPopupAbierto: boolean = false;
 
   /**
    * Indica si el popup está cerrado.
    */
+  multipleSeleccionPopupCerrado:boolean = true;
+  /**
+   * Indica si el popup de confirmación para eliminar está abierto.
+   * Controla la visibilidad del popup de confirmación para eliminar elementos.
+   */
+  confirmEliminarPopupAbierto: boolean = false;
+
+  /**
+   * Indica si el popup de selección múltiple está cerrado.
+   * Controla el estado del cierre del popup de selección múltiple.
+   */
   confirmEliminarPopupCerrado: boolean = true;
- 
+  modal: string = '';
+  tituloModal!: string;
+  mensajeModal!: string;
+  public nuevaNotificacion!: Notificacion;
   /**
    * Constructor del componente.
    * Inicializa los servicios y dependencias necesarias para la gestión de datos y formularios.
@@ -316,25 +349,31 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
       this.otraFraccionSeleccionada = true;
     }
     this.formMercancia.get('fraccionDescripcion')?.disable();
-
-    this.formMercancia
-      .get('otraFraccion')
-      ?.valueChanges.subscribe((checked) => {
-        if (checked) {
-          this.formMercancia.addControl(
-            'fraccionVigenteTIGIE',
-            this.formBuilder.control('')
-          );
-          this.formMercancia.get('fraccionArancelaria')?.setValue('0');
-          this.formMercancia
-            .get('fraccionDescripcion')
-            ?.reset();
-          this.otraFraccionSeleccionada = true;
-        } else {
-          this.otraFraccionSeleccionada = false;
-          this.formMercancia.removeControl('fraccionVigenteTIGIE');
-        }
-      });
+   
+  }
+  
+  /**
+   * Maneja el cambio en el campo "otraFracción".
+   * Si el campo está seleccionado, agrega un control adicional al formulario
+   * y reinicia los valores relacionados con la fracción arancelaria.
+   * Si no está seleccionado, elimina el control adicional.
+   */
+  manejarCambioOtraFraccion(): void {
+    const CHECKED = this.formMercancia.get('otraFraccion')?.value;
+    if (CHECKED) {
+      this.formMercancia.addControl(
+        'fraccionVigenteTIGIE',
+        this.formBuilder.control('')
+      );
+      this.formMercancia.get('fraccionArancelaria')?.setValue('0');
+      this.formMercancia
+        .get('fraccionDescripcion')
+        ?.reset();
+      this.otraFraccionSeleccionada = true;
+    } else {
+      this.otraFraccionSeleccionada = false;
+      this.formMercancia.removeControl('fraccionVigenteTIGIE');
+    }
   }
 
   /**
@@ -409,7 +448,9 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
  
  
   modficarMercanciaItem(): void {
+   
      if (this.listaFilaSeleccionadaMercancia.length < 2) {
+      
        const GET_INDEX = (array: Catalogo[], value: string): number =>
          array.findIndex((item) => item.descripcion === value) + 1;
        
@@ -463,6 +504,16 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
      }
   }
   abrirMultipleSeleccionPopup(): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: TipoNotificacionEnum.ALERTA,
+      categoria: CategoriaMensaje.ERROR,
+      modo: 'modal',
+      titulo: 'Aviso',
+      mensaje: 'Selecciona sólo un registro para modificar.',
+      cerrar: false,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
     if (this.enableModficarBoton) {
       this.multipleSeleccionPopupAbierto = true;
     }
@@ -485,7 +536,17 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   } 
    
   abrirElimninarConfirmationopup(): void {
-      this.confirmEliminarPopupAbierto = true;
+    this.nuevaNotificacion = {
+      tipoNotificacion: TipoNotificacionEnum.ALERTA,
+      categoria: CategoriaMensaje.ERROR,
+      modo: 'modal',
+      titulo: 'Aviso',
+      mensaje: '¿Estás seguro que deseas eliminar los registros marcados?',
+      cerrar: false,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: 'Cancelar',
+    };
+    this.confirmEliminarPopupAbierto = true;
   }
   
   cerrarEliminarConfirmationPopup(): void {
