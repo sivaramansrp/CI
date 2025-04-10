@@ -96,6 +96,12 @@ export class PagoDeDerechosComponent implements OnInit {
   estadosDatos!: Catalogo[];
 
   /**
+   * Arreglo que contiene los datos del catálogo.
+   * @type {Catalogo[]}
+   */
+  public bancoDatos!: Catalogo[];
+
+  /**
    * @constructor
    * Inicializa el formulario y las dependencias del componente.
    *
@@ -127,6 +133,7 @@ export class PagoDeDerechosComponent implements OnInit {
         Validators.required,
       ],
       estado: [this.pagoDerechoFormState?.estado || '', Validators.required],
+      banco: [this.pagoDerechoFormState?.banco || '', Validators.required],
       llavePago: [
         this.pagoDerechoFormState?.llavePago || '',
         Validators.required,
@@ -150,6 +157,7 @@ export class PagoDeDerechosComponent implements OnInit {
       : false;
 
     this.cargarDatos();
+    this.getBancoDatos();
   }
 
   /**
@@ -164,6 +172,15 @@ export class PagoDeDerechosComponent implements OnInit {
       .subscribe((data) => {
         this.estadosDatos = data;
       });
+  }
+
+  getBancoDatos(): void {
+    this.datosSolicitudService
+    .getBancoDatos()
+    .pipe(takeUntil(this.unsubscribe$))
+    .subscribe((data) => {
+      this.bancoDatos = data;
+    });
   }
 
   /**
