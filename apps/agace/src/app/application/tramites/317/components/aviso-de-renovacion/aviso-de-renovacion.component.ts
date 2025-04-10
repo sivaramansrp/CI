@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 
@@ -73,12 +73,7 @@ constructor(private fb: FormBuilder,private service:AvisoUnicoService ) {}
     );
   }
 
-
-  /**
-   * method loadLocalidad
-   * description Carga los datos de localidades desde el servicio.
-   */
-  loadLocalidad(): void {
+ loadLocalidad(): void {
     this.service.obtenerDatosLocalidad()
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data): void => {
@@ -107,18 +102,12 @@ constructor(private fb: FormBuilder,private service:AvisoUnicoService ) {}
     // this.avisocalidad260514Store.setfechaPago(nuevo_valor);
   }
 
-  /**
-   * Resets the payment data in the form.
-   */
-  resetPagoDatos(): void {
+resetPagoDatos(): void {
     this.avisoForm.patchValue({
-      claveReferencia: '',
-      numeroOperacion: '',
-      cadenaDependencia: '',
-      banco: '',
-      llavePago: '',
-      fechaPago: '',
-      importePago: '',
+     numeroOperacion: '',
+     banco: '',
+    llavePago: '',
+    fechaPago: '',
     });
   }
   ngOnDestroy(): void {
