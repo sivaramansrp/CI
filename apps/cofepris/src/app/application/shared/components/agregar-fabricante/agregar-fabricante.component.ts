@@ -1,9 +1,6 @@
 import { Catalogo, TipoPersona } from '@ng-mf/data-access-user';
 import { Component, EventEmitter, Output } from '@angular/core';
-import {
-  PROCEDIMIENTOS_PARA_COLONIA_O_EQUIVALENTE,
-  STR_NACIONAL,
-} from '../../constantes/datos-solicitud.enum';
+import { PROCEDIMIENTOS_PARA_COLONIA_O_EQUIVALENTE, STR_NACIONAL,} from '../../constantes/datos-solicitud.enum';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
@@ -14,6 +11,7 @@ import { Input } from '@angular/core';
 import { Location } from '@angular/common';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
+import { PROCEDIMIENTOS_NO_PARA_ELEMENTO_AGREGAR_FABRICANTE } from '../../constantes/agregar-fabricante.enum';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { TituloComponent } from '@ng-mf/data-access-user';
@@ -67,6 +65,18 @@ export class AgregarFabricanteComponent implements OnDestroy, OnInit {
    * @property {Catalogo[]} codigosPostalesDatos
    */
   public codigosPostalesDatos: Catalogo[] = [];
+
+  /**
+   * Indica si el campo "colonia" es obligatorio.
+   * @type {boolean}
+   */
+  public coloniaRequerido = true;
+
+  /**
+   * Indica si el campo "código postal equivalente" es obligatorio.
+   * @type {boolean}
+   */
+  public codigoPostalEquivalenteRequerido = true;
 
   /**
    * Datos de catálogo de países.
@@ -196,6 +206,20 @@ export class AgregarFabricanteComponent implements OnDestroy, OnInit {
       )
         ? true
         : false;
+
+    this.coloniaRequerido =
+      PROCEDIMIENTOS_NO_PARA_ELEMENTO_AGREGAR_FABRICANTE.includes(
+        this.idProcedimiento
+      )
+        ? false
+        : true;
+
+    this.codigoPostalEquivalenteRequerido =
+      PROCEDIMIENTOS_NO_PARA_ELEMENTO_AGREGAR_FABRICANTE.includes(
+        this.idProcedimiento
+      )
+        ? false
+        : true;
   }
 
   /**

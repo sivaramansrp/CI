@@ -35,7 +35,7 @@
             [catalogo]="bancoDatos"
             formControlName="banco"
             [label]="'Banco'"
-            [required]="true"
+            [required]="bancoRequerido"
           ></app-catalogo-select>
         </div>
       } @else {
@@ -44,7 +44,7 @@
         <app-catalogo-select
           [catalogo]="estadosDatos"
           formControlName="estado"
-          [label]="'Estado/localidad*'"
+          [label]="'Estado/localidad'"
           [required]="true"
         ></app-catalogo-select>
       </div>
