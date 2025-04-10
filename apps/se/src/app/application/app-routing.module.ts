@@ -133,6 +133,12 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'cancelacion-de-certificados-de-cupo',
+    loadChildren: () =>
+      import('./tramites/140104/cancelacion-de-certificados-de-cupo.module').then(
+        (m) => m.CancelacionDeCertificadosDeCupoModule)
+  },
+  {
     path: 'desistimiento-de-permiso',
     loadChildren: () =>
       import('./tramites/140105/desistimiento-de-permiso.module').then(
