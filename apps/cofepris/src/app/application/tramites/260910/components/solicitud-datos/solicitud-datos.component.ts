@@ -131,12 +131,18 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
    */
   selectedMercanciasDatos: Mercancia[] = [];
 
+  /**
+   * @description Lista de datos seleccionados de SCIAN.
+   * Esta propiedad almacena las entradas seleccionadas de la tabla SCIAN.
+   * 
+   * @type {SCIAN[]}
+   */
   seleccionaSCIANDatos: SCIAN[] = [];
 
   /**
    * Referencia al elemento del modal.
    */
-  @ViewChild('modalAlerta') modalAlertaElement!: ElementRef;
+  @ViewChild('modal-alerta') modalAlertaElement!: ElementRef;
 
   /**
    * @description Referencia al elemento del modal de confirmación.
@@ -144,19 +150,19 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
    * 
    * @type {ElementRef}
    */
-  @ViewChild('modalConfirmar') modalConfirmarElement!: ElementRef;
+  @ViewChild('modal-confirmar') modalConfirmarElement!: ElementRef;
 
   /**
    * Referencia al elemento del modal para agregar mercancías.
    * Utilizado para manipular el modal mediante su elemento HTML.
    */
-  @ViewChild('modalAgregarMercancias') modalElement!: ElementRef;
+  @ViewChild('modal-agregar-mercancias') modalElement!: ElementRef;
 
   /**
    * Referencia al elemento del modal para agregar SCIAN.
    * Utilizado para manipular el modal mediante su elemento HTML.
    */
-  @ViewChild('modalAgregarSCIAN') modalElementSCIAN!: ElementRef;
+  @ViewChild('modal-agregar-scian') modalElementSCIAN!: ElementRef;
 
   /**
    * @description Variable que almacena el tipo seleccionado para realizar una acción específica.
@@ -919,9 +925,9 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
    * Actualiza el indicador de aviso de funcionamiento en el Store.
    * @param evento - Evento que contiene el valor del indicador.
    */
-  setAvisoDeFuncionamiento(evento: Event): void {
-    const VALOR = (evento.target as HTMLInputElement).checked;
-    this.solicitud260910Store.setAvisoDeFuncionamiento(VALOR);
+  setAvisoDeFuncionamiento(): void {
+    const AVISO_CHECKBOX = this.solicitudForm.get('avisoDeFuncionamiento')?.value;
+    this.solicitud260910Store.setAvisoDeFuncionamiento(AVISO_CHECKBOX);
     if (this.solicitudForm.get('avisoDeFuncionamiento')?.value === true) {
       this.solicitudForm.get('licenciaSanitaria')?.disable();
     } else {
@@ -962,7 +968,6 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
       MODAL_ALERTA_INSTANCE.show();
     }
   }
-  
 
   /**
    * Método del ciclo de vida `OnDestroy`.

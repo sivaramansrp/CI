@@ -200,7 +200,11 @@ export interface Solicitud260910State {
   
   fabricanteDatos: Fabricante[];
 
+  /** Lista de proveedor relacionados con la solicitud. */
+
   proveedorDatos: Proveedor[];
+
+  /** Lista de facturador relacionados con la solicitud. */
 
   facturadorDatos:Facturador[];
 

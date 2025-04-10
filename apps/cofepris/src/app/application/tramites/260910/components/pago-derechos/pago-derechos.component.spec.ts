@@ -64,84 +64,16 @@ describe('PagoDerechosComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  // it('should initialize the form on ngOnInit', () => {
-  //   component.ngOnInit();
-  //   expect(component.pagoDeDerechosForm).toBeDefined();
-  // });
+  it('should initialize the form on ngOnInit', () => {
+    component.ngOnInit();
+    expect(component.pagoDeDerechosForm).toBeDefined();
+  });
 
-  // it('should call obtenerPagoDerechos on initialization', () => {
-  //   solicitudDatosService.obtenerPagoDerechos.mockReturnValue(
-  //     of({
-  //       labelNombre: 'Banco',
-  //       required: false,
-  //       primerOpcion: 'Selecciona un valor',
-  //       catalogos: [
-  //         { id: 1, descripcion: 'Banco 1' },
-  //         { id: 2, descripcion: 'Banco 2' },
-  //       ],
-  //     })
-  //   );
-  //   component.obtenerPagoDerechos();
-  //   expect(solicitudDatosService.obtenerPagoDerechos).toHaveBeenCalled();
-  // });
-
-  // it('should update bancoCatalogo on obtenerPagoDerechos', () => {
-  //   const catalogo = {
-  //     labelNombre: 'Banco',
-  //     required: false,
-  //     primerOpcion: 'Selecciona un valor',
-  //     catalogos: [
-  //       { id: 1, descripcion: 'Banco 1' },
-  //       { id: 2, descripcion: 'Banco 2' },
-  //     ],
-  //   };
-  //   solicitudDatosService.obtenerPagoDerechos.mockReturnValue(of(catalogo));
-  //   component.obtenerPagoDerechos();
-  //   expect(component.bancoCatalogo).toEqual(catalogo);
-  // });
-
-  // it('should update store on setClaveDeReferencia', () => {
-  //   const evento = { target: { value: 'test' } } as unknown as Event;
-  //   component.setClaveDeReferencia(evento);
-  //   expect(solicitud260910Store.setClaveDeReferencia).toHaveBeenCalledWith('test');
-  // });
-
-  // it('should update store on setCadenaDeDependencia', () => {
-  //   const evento = { target: { value: 'test' } } as unknown as Event;
-  //   component.setCadenaDeDependencia(evento);
-  //   expect(solicitud260910Store.setCadenaDeDependencia).toHaveBeenCalledWith('test');
-  // });
-
-
-
-  // it('should update store on setBanco', () => {
-  //   const catalogo = { id: 1, descripcion: 'test'} as any;
-  //   component.setBanco(catalogo);
-  //   expect(solicitud260910Store.setBanco).toHaveBeenCalledWith(1);
-  // });
-
-  // it('should update store on setLiaveDePago', () => {
-  //   const evento = { target: { value: 'test' } } as unknown as Event;
-  //   component.setLiaveDePago(evento);
-  //   expect(solicitud260910Store.setLiaveDePago).toHaveBeenCalledWith('test');
-  // });
-
-  // it('should update store on seleccionarFechaInicio', () => {
-  //   component.seleccionarFechaInicio('2023-01-01');
-  //   expect(solicitud260910Store.setFechaDePago).toHaveBeenCalledWith('2023-01-01');
-  // });
-
-  // it('should update store on setImporteDePago', () => {
-  //   const evento = { target: { value: '100' } } as unknown as Event;
-  //   component.setImporteDePago(evento);
-  //   expect(solicitud260910Store.setImporteDePago).toHaveBeenCalledWith('100');
-  // });
-
-  // it('should complete destroyNotifier$ on ngOnDestroy', () => {
-  //   const destroyNotifierSpy = jest.spyOn(component['destroyNotifier$'], 'next');
-  //   const destroyNotifierCompleteSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
-  //   component.ngOnDestroy();
-  //   expect(destroyNotifierSpy).toHaveBeenCalled();
-  //   expect(destroyNotifierCompleteSpy).toHaveBeenCalled();
-  // });
+  it('should complete destroyNotifier$ on ngOnDestroy', () => {
+    const destroyNotifierSpy = jest.spyOn(component['destroyNotifier$'], 'next');
+    const destroyNotifierCompleteSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
+    component.ngOnDestroy();
+    expect(destroyNotifierSpy).toHaveBeenCalled();
+    expect(destroyNotifierCompleteSpy).toHaveBeenCalled();
+  });
 });

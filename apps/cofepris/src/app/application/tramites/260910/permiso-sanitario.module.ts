@@ -7,11 +7,13 @@ import { CommonModule } from '@angular/common';
 import { CrosslistComponent } from '@libs/shared/data-access-user/src';
 import { FirmaElectronicaComponent } from '@libs/shared/data-access-user/src';
 import { FormsModule } from '@angular/forms';
+import { InputCheckComponent } from '@libs/shared/data-access-user/src';
 import { InputFechaComponent } from '@libs/shared/data-access-user/src';
 import { InputRadioComponent } from '@libs/shared/data-access-user/src';
 import { ModificarDestinatarioComponent } from './components/modificar-destinatario/modificar-destinatario.component';
 import { ModificarMercanciasComponent } from './components/mercancias-datos/mercancias-datos.component';
 import { NgModule } from '@angular/core';
+import { NotificacionesComponent } from '@libs/shared/data-access-user/src';
 import { PagoDerechosComponent } from './components/pago-derechos/pago-derechos.component';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
@@ -62,6 +64,8 @@ import { forwardRef } from '@angular/core';
     forwardRef(() => CrosslistComponent),
     forwardRef(() => InputFechaComponent),
     forwardRef(() => TablaDinamicaComponent),
+    forwardRef(() => NotificacionesComponent),
+    forwardRef(() => InputCheckComponent),
     ToastrModule.forRoot(),
   ],
   providers: [ToastrService, CatalogosService],

@@ -8,11 +8,6 @@
     font-weight: normal;
   }
   
-  .manifiestoDescripcion {
-    text-align: justify;
-    margin: -25px 0px 0px 25px !important;
-  }
-  
   .modal-dialog {
     max-width: 1100px !important;
   }
@@ -41,17 +36,17 @@
     height: 0% !important;
   }
   
- #modalAgregarDestinatario .modal-content {
+ #modal-agregar-destinatario .modal-content {
     padding-left: 6% !important;
     padding-right: 6% !important;
     padding-bottom: 5% !important;
   
   }
 
-  #modalConfirmar .modal-header {
+  #modal-confirmar .modal-header {
     height: 50px;
   }
 
-  #modalConfirmar .modal-dialog {
+  #modal-confirmar .modal-dialog {
     max-width: 515px !important;
   }

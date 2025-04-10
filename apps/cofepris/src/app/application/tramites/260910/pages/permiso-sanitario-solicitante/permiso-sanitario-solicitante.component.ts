@@ -1,4 +1,4 @@
-import { AVISO_PRIVACIDAD } from '../../constantes/260910-enum';
+import { AVISO } from '@libs/shared/data-access-user/src';
 import { Component } from '@angular/core';
 import { DatosPasos } from '@libs/shared/data-access-user/src';
 import { ListaPasosWizard } from '@libs/shared/data-access-user/src';
@@ -75,7 +75,7 @@ export class PermisoSanitarioSolicitanteComponent {
     /**
      * Asigna el aviso de privacidad simplificado al atributo `TEXTOS`.
      */
-    TEXTOS = AVISO_PRIVACIDAD;
+    TEXTOS = AVISO;
 
   /**
    * Constructor del componente.

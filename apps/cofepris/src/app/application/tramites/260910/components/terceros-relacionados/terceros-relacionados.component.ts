@@ -5,6 +5,7 @@ import { ElementRef } from '@angular/core';
 import { Fabricante } from '../../models/fabricante.model';
 import { Facturador } from '../../models/facturador.model';
 import { Modal } from 'bootstrap';
+import { Notificacion } from '@libs/shared/data-access-user/src';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Proveedor } from '../../models/proveedor.model';
@@ -49,12 +50,18 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
   seleccionadoTipo: string = '';
 
   /**
+   * Representa una nueva instancia de notificación asociada con el componente.
+   * Esta propiedad se utiliza para gestionar y almacenar datos de notificaciones.
+   */
+  public nuevaNotificacion!: Notificacion;
+
+  /**
    * @description Referencia al elemento del modal de confirmación.
    * Este modal se utiliza para confirmar la eliminación de mercancías o SCIAN.
    * 
    * @type {ElementRef}
    */
-  @ViewChild('modalConfirmar') modalConfirmarElement!: ElementRef;
+  @ViewChild('modal-confirmar') modalConfirmarElement!: ElementRef;
 
   /**
    * Configuración de las columnas de la tabla de destinatarios.
@@ -495,7 +502,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
   /**
    * Referencia al elemento del modal para agregar mercancías.
    */
-  @ViewChild('modalAgregarDestinatario') modalElement!: ElementRef;
+  @ViewChild('modal-agregar-destinatario') modalElement!: ElementRef;
 
   /**
    * Constructor del componente.
@@ -702,9 +709,29 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    */
   confirmarEliminar(tipo: string): void {
     this.seleccionadoTipo = tipo;
-    if (this.modalConfirmarElement) {
-      const MODAL_CONFIRMAR_INSTANCE = new Modal(this.modalConfirmarElement.nativeElement);
-      MODAL_CONFIRMAR_INSTANCE.show();
+    this.abrirModal();
+  }
+
+  /**
+   * Elimina un elemento de la lista de pedimentos en la posición especificada.
+   * 
+   * @param {number} i - El índice del elemento a eliminar.
+   * 
+   * @remarks
+   * Después de eliminar el elemento, se actualiza el título y mensaje del modal,
+   * y se abre el modal para mostrar un aviso al usuario.
+   */
+  public abrirModal(): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: 'Avisos',
+      mensaje: '¿Confirma la eliminación los registros marcados?',
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
     }
   }
 
