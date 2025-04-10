@@ -7,6 +7,16 @@ import { Proveedor } from '../../../shared/models/terceros-relacionados.model';
 import { Store } from '@datorama/akita';
 import { StoreConfig } from '@datorama/akita';
 
+/**
+ * Interfaz que representa el estado completo del trámite 240101.
+ *
+ * @property {number} [tabSeleccionado] - Pestaña actualmente activa en el flujo.
+ * @property {DestinoFinal[]} destinatarioFinalTablaDatos - Lista de destinatarios finales registrados.
+ * @property {Proveedor[]} proveedorTablaDatos - Lista de proveedores registrados.
+ * @property {PagoDerechosFormState} pagoDerechos - Información del formulario de pago de derechos.
+ * @property {MercanciaDetalle[]} merccancialTablaDatos - Lista de mercancías registradas.
+ * @property {DatosDelTramiteFormState} datosDelTramite - Información general del formulario de datos del trámite.
+ */
 export interface Tramite240101State {
   tabSeleccionado?: number;
   destinatarioFinalTablaDatos: DestinoFinal[];
@@ -19,6 +29,7 @@ export interface Tramite240101State {
 /**
  * Crea el estado inicial para el trámite 240101.
  *
+ * @function createInitialState
  * @returns {Tramite240101State} El estado inicial del store.
  */
 export function createInitialState(): Tramite240101State {
@@ -46,6 +57,7 @@ export function createInitialState(): Tramite240101State {
 
 /**
  * Store que maneja el estado del trámite 240101.
+ * Utiliza Akita para el control reactivo del estado.
  */
 @Injectable({
   providedIn: 'root',
@@ -59,7 +71,9 @@ export class Tramite240101Store extends Store<Tramite240101State> {
   /**
    * Cambia la pestaña actualmente seleccionada.
    *
-   * @param tabSeleccionado - Índice de la nueva pestaña seleccionada.
+   * @method updateTabSeleccionado
+   * @param {number} tabSeleccionado - Índice de la nueva pestaña seleccionada.
+   * @returns {void}
    */
   public updateTabSeleccionado(tabSeleccionado: number): void {
     this.update((state) => ({
@@ -68,6 +82,13 @@ export class Tramite240101Store extends Store<Tramite240101State> {
     }));
   }
 
+  /**
+   * Actualiza los datos generales del formulario de trámite.
+   *
+   * @method updateDatosDelTramiteFormState
+   * @param {DatosDelTramiteFormState} datosDelTramiteFormState - Estado actualizado del formulario.
+   * @returns {void}
+   */
   public updateDatosDelTramiteFormState(
     datosDelTramiteFormState: DatosDelTramiteFormState
   ): void {
@@ -77,6 +98,13 @@ export class Tramite240101Store extends Store<Tramite240101State> {
     }));
   }
 
+  /**
+   * Actualiza los datos del formulario de pago de derechos.
+   *
+   * @method updatePagoDerechosFormState
+   * @param {PagoDerechosFormState} pagoDerechosFormState - Estado actualizado del formulario de pago.
+   * @returns {void}
+   */
   public updatePagoDerechosFormState(
     pagoDerechosFormState: PagoDerechosFormState
   ): void {
@@ -86,6 +114,13 @@ export class Tramite240101Store extends Store<Tramite240101State> {
     }));
   }
 
+  /**
+   * Agrega nuevos registros a la tabla de destinatarios finales.
+   *
+   * @method updateDestinatarioFinalTablaDatos
+   * @param {DestinoFinal[]} newDestinatarios - Nuevos destinatarios a agregar.
+   * @returns {void}
+   */
   public updateDestinatarioFinalTablaDatos(
     newDestinatarios: DestinoFinal[]
   ): void {
@@ -98,6 +133,13 @@ export class Tramite240101Store extends Store<Tramite240101State> {
     }));
   }
 
+  /**
+   * Agrega nuevos registros a la tabla de proveedores.
+   *
+   * @method updateProveedorTablaDatos
+   * @param {Proveedor[]} newProveedores - Nuevos proveedores a agregar.
+   * @returns {void}
+   */
   public updateProveedorTablaDatos(newProveedores: Proveedor[]): void {
     this.update((state) => ({
       ...state,
@@ -105,6 +147,13 @@ export class Tramite240101Store extends Store<Tramite240101State> {
     }));
   }
 
+  /**
+   * Agrega nuevos registros a la tabla de mercancías.
+   *
+   * @method updateMercanciaTablaDatos
+   * @param {MercanciaDetalle[]} newMercancia - Nuevas mercancías a agregar.
+   * @returns {void}
+   */
   public updateMercanciaTablaDatos(newMercancia: MercanciaDetalle[]): void {
     this.update((state) => ({
       ...state,

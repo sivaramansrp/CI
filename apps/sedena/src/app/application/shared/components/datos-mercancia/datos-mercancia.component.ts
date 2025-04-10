@@ -20,6 +20,11 @@ import { Subject } from 'rxjs';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { Validators } from '@angular/forms';
 import { takeUntil } from 'rxjs';
+/**
+ * @title Datos de la Mercancía
+ * @description Componente que permite capturar y emitir la información relacionada con una mercancía específica.
+ * @summary Componente para gestionar los datos de la mercancía, incluyendo fracción arancelaria, país de origen, valores y unidades.
+ */
 
 @Component({
   selector: 'app-datos-mercancia',
@@ -35,35 +40,79 @@ import { takeUntil } from 'rxjs';
   styleUrl: './datos-mercancia.component.css',
 })
 export class DatosMercanciaComponent implements OnInit {
+  /**
+   * Observable para controlar el ciclo de vida de las suscripciones.
+   * @property {Subject<void>} unsubscribe$
+   */
   private unsubscribe$ = new Subject<void>();
 
-  irAAcciones(accionesPath: string): void {
-    this.router.navigate([accionesPath], {
-      relativeTo: this.activatedRoute,
-    });
-  }
+  /**
+   * Lista de mercancías registradas.
+   * @property {MercanciaDetalle[]} datosMercancias
+   */
   datosMercancias: MercanciaDetalle[] = [];
+
+  /**
+   * Evento que emite la lista de mercancías cuando se actualiza.
+   * @event updateMercanciaDetalle
+   */
   @Output() updateMercanciaDetalle = new EventEmitter<MercanciaDetalle[]>();
 
-  datosMercancia!: FormGroup; // Changed from datosForm
-  // Sample data for dropdowns
+  /**
+   * Formulario reactivo para capturar los datos de la mercancía.
+   * @property {FormGroup} datosMercancia
+   */
+  datosMercancia!: FormGroup;
+
+  /**
+   * Catálogo de fracciones arancelarias.
+   * @property {Catalogo[]} fraccionesCatalogo
+   */
   fraccionesCatalogo: Catalogo[] = [];
 
+  /**
+   * Catálogo de unidades de medida comercial (UMC).
+   * @property {Catalogo[]} umcCatalogo
+   */
   umcCatalogo: Catalogo[] = [];
 
+  /**
+   * Catálogo de tipos de moneda.
+   * @property {Catalogo[]} monedaCatalogo
+   */
   monedaCatalogo: Catalogo[] = [];
+
+  /**
+   * Lista de países disponibles para seleccionar el país de origen.
+   * @property {string[]} seleccionarOrigenDelPais
+   */
   public seleccionarOrigenDelPais = CROSLISTA_DE_PAISES;
+
+  /**
+   * Etiquetas para el componente Crosslist de país de origen.
+   * @property {CrossListLable} paisDeOriginLabel
+   */
   public paisDeOriginLabel: CrossListLable = {
     tituluDeLaIzquierda: 'País de origen',
     derecha: 'País(es) seleccionado(s)',
   };
+
+  /**
+   * Países seleccionados como origen de la mercancía.
+   * @property {string[]} seleccionadasPaisDeOriginDatos
+   */
   public seleccionadasPaisDeOriginDatos: string[] = [];
-  paisDeOriginSeleccionadasChange(events: string[]): void {
-    this.seleccionadasPaisDeOriginDatos = events;
-    this.datosMercancia.patchValue({
-      paisDeOriginDatos: events,
-    });
-  }
+
+  /**
+   * Constructor del componente.
+   * @method constructor
+   * @param {FormBuilder} fb - Servicio para construir formularios reactivos.
+   * @param {Router} router - Servicio para navegación.
+   * @param {ActivatedRoute} activatedRoute - Ruta activa actual.
+   * @param {Location} ubicaccion - Servicio para navegación hacia atrás.
+   * @param {DatosSolicitudService} datosSolicitudService - Servicio para obtener catálogos relacionados con la mercancía.
+   * @returns {void}
+   */
   constructor(
     private fb: FormBuilder,
     private router: Router,
@@ -73,6 +122,12 @@ export class DatosMercanciaComponent implements OnInit {
   ) {
     this.cargarDatos();
   }
+
+  /**
+   * Carga los catálogos necesarios para llenar los selectores del formulario.
+   * @method cargarDatos
+   * @returns {void}
+   */
   cargarDatos(): void {
     this.datosSolicitudService
       .obtenerFraccionesCatalogo()
@@ -96,6 +151,36 @@ export class DatosMercanciaComponent implements OnInit {
       });
   }
 
+  /**
+   * Navega hacia la ruta relativa proporcionada.
+   * @method irAAcciones
+   * @param {string} accionesPath - Ruta relativa hacia la vista de acciones.
+   * @returns {void}
+   */
+  irAAcciones(accionesPath: string): void {
+    this.router.navigate([accionesPath], {
+      relativeTo: this.activatedRoute,
+    });
+  }
+
+  /**
+   * Maneja el cambio en la selección del país de origen.
+   * @method paisDeOriginSeleccionadasChange
+   * @param {string[]} events - Lista de países seleccionados.
+   * @returns {void}
+   */
+  paisDeOriginSeleccionadasChange(events: string[]): void {
+    this.seleccionadasPaisDeOriginDatos = events;
+    this.datosMercancia.patchValue({
+      paisDeOriginDatos: events,
+    });
+  }
+
+  /**
+   * Guarda los datos de la mercancía actual, los emite al componente padre y resetea el formulario.
+   * @method guardar
+   * @returns {void}
+   */
   guardar(): void {
     const DATOS_MERCANCIA: MercanciaDetalle = {
       fraccionArancelaria: this.datosMercancia.get('fraccionArancelaria')
@@ -109,13 +194,19 @@ export class DatosMercanciaComponent implements OnInit {
       descripcion: this.datosMercancia.get('descripcion')?.value,
       paisOrigen: this.seleccionadasPaisDeOriginDatos.join(','),
     };
+
     this.datosMercancias.push(DATOS_MERCANCIA);
     this.updateMercanciaDetalle.emit(this.datosMercancias);
     this.datosMercancia.reset();
     this.ubicaccion.back();
   }
+
+  /**
+   * Inicializa el formulario reactivo con valores por defecto y validaciones.
+   * @method ngOnInit
+   * @returns {void}
+   */
   ngOnInit(): void {
-    // Build the form group
     this.datosMercancia = this.fb.group({
       descripcion: ['QAS', Validators.required],
       fraccionArancelaria: ['25030002', Validators.required],
@@ -136,14 +227,19 @@ export class DatosMercanciaComponent implements OnInit {
     });
   }
 
+  /**
+   * Limpia todos los campos del formulario.
+   * @method limpiarFormulario
+   * @returns {void}
+   */
   limpiarFormulario(): void {
     this.datosMercancia.reset();
   }
+
   /**
    * @method cancelar
    * @description Navega hacia la vista anterior utilizando el servicio de ubicación (`Location`).
-   *
-   * @returns {void} Este método no retorna ningún valor.
+   * @returns {void}
    */
   cancelar(): void {
     this.ubicaccion.back();

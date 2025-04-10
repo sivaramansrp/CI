@@ -19,6 +19,11 @@ import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { Validators } from '@angular/forms';
+/**
+ * @title Datos del Trámite
+ * @description Componente que gestiona el formulario de datos del trámite como permisos, uso final y selección de aduanas.
+ * @summary Componente utilizado para capturar y emitir los datos del trámite.
+ */
 
 @Component({
   selector: 'app-datos-del-tramite',
@@ -34,23 +39,70 @@ import { Validators } from '@angular/forms';
   styleUrl: './datos-del-tramite.component.css',
 })
 export class DatosDelTramiteComponent implements OnInit {
+  /**
+   * Lista de aduanas disponibles para mostrar en el componente Crosslist.
+   * @property {string[]} seleccionarAduanasDisponibles
+   */
   public seleccionarAduanasDisponibles = CROSLISTA_ADUANAS_DISPONIBLES;
+
+  /**
+   * Aduanas seleccionadas por el usuario desde el componente Crosslist.
+   * @property {string[]} seleccionarAduanasDisponiblesDatos
+   */
   public seleccionarAduanasDisponiblesDatos: string[] = [];
+
+  /**
+   * Etiquetas que se utilizan en el componente Crosslist para mostrar los títulos de los listados.
+   * @property {CrossListLable} aduanasDisponiblesLabel
+   */
   public aduanasDisponiblesLabel: CrossListLable = {
     tituluDeLaIzquierda: 'Aduanas disponibles',
     derecha: 'Aduanas seleccionadas',
   };
+
+  /**
+   * Grupo de formularios principal para capturar los datos del trámite.
+   * @property {FormGroup} form
+   */
   form: FormGroup;
+
+  /**
+   * Estado inicial del formulario del trámite, recibido desde el componente padre.
+   * @property {DatosDelTramiteFormState} datosDelTramiteFormState
+   */
   @Input() datosDelTramiteFormState!: DatosDelTramiteFormState;
+
+  /**
+   * Lista de datos de mercancías que se utilizan en la tabla dinámica.
+   * @property {MercanciaDetalle[]} datosMercanciaTabla
+   */
   @Input() datosMercanciaTabla: MercanciaDetalle[] = [];
+
+  /**
+   * Configuración utilizada para construir la tabla dinámica de mercancías.
+   * @property {any} mercanciaTablaConfiguracion
+   */
   public mercanciaTablaConfiguracion = {
     tipoSeleccionTabla: TablaSeleccion.CHECKBOX,
     configuracionTabla: MERCANCIA_ENCABEZADO_DE_TABLA,
     datos: [],
   };
 
+  /**
+   * Evento que emite los datos actualizados del formulario hacia el componente padre.
+   * @event updateDatosDelTramiteFormulario
+   */
   @Output() updateDatosDelTramiteFormulario =
     new EventEmitter<DatosDelTramiteFormState>();
+
+  /**
+   * Constructor del componente.
+   * @method constructor
+   * @param {FormBuilder} fb - Servicio para crear formularios reactivos.
+   * @param {ActivatedRoute} activatedRoute - Ruta activa utilizada para navegación relativa.
+   * @param {Router} router - Servicio de enrutamiento.
+   * @returns {void}
+   */
   constructor(
     private fb: FormBuilder,
     private activatedRoute: ActivatedRoute,
@@ -64,21 +116,41 @@ export class DatosDelTramiteComponent implements OnInit {
       usoFinal: ['', Validators.required],
     });
   }
+
+  /**
+   * Maneja el evento de cambio en la selección de aduanas.
+   * @method aduanasDisponiblesSeleccionadasChange
+   * @param {string[]} events - Lista de aduanas seleccionadas.
+   * @returns {void}
+   */
   aduanasDisponiblesSeleccionadasChange(events: string[]): void {
     this.seleccionarAduanasDisponiblesDatos = events;
   }
 
+  /**
+   * Navega hacia el path de acciones relativo especificado.
+   * @method irAAcciones
+   * @param {string} accionesPath - Ruta relativa hacia la sección de acciones.
+   * @returns {void}
+   */
   irAAcciones(accionesPath: string): void {
     this.router.navigate([accionesPath], {
       relativeTo: this.activatedRoute,
     });
   }
 
+  /**
+   * Inicializa el formulario con los valores actuales del estado del trámite
+   * y escucha los cambios para emitir actualizaciones.
+   * @method ngOnInit
+   * @returns {void}
+   */
   ngOnInit(): void {
     this.form.patchValue({
       permisoGeneral: this.datosDelTramiteFormState.permisoGeneral,
       usoFinal: this.datosDelTramiteFormState.usoFinal,
     });
+
     this.seleccionarAduanasDisponiblesDatos =
       this.datosDelTramiteFormState.aduanasSeleccionadas;
 

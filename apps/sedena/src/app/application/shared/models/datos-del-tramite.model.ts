@@ -1,5 +1,12 @@
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
-
+/**
+ * Interfaz que representa el estado del formulario de datos del trámite.
+ *
+ * @property {string} permisoGeneral - Permiso general seleccionado por el usuario.
+ * @property {string} usoFinal - Uso final declarado en el formulario.
+ * @property {string[]} aduanasSeleccionadas - Lista de aduanas seleccionadas.
+ * @property {string} paisDestino - País de destino de la mercancía.
+ */
 export interface DatosDelTramiteFormState {
   permisoGeneral: string;
   usoFinal: string;
@@ -7,10 +14,23 @@ export interface DatosDelTramiteFormState {
   paisDestino: string;
 }
 
+/**
+ * Interfaz que representa los datos capturados para una mercancía.
+ *
+ * @property {string} fraccionArancelaria - Clave de la fracción arancelaria.
+ * @property {string} descripcionFraccion - Descripción de la fracción arancelaria.
+ * @property {string} unidadMedidaTarifa - Unidad de medida de tarifa (UMT).
+ * @property {string} umc - Unidad de medida comercial.
+ * @property {number} cantidadUMT - Cantidad en unidad de medida de tarifa.
+ * @property {number} valorComercial - Valor comercial total de la mercancía.
+ * @property {string} tipoMoneda - Tipo de moneda utilizada.
+ * @property {string} descripcion - Descripción general del producto.
+ * @property {string} paisOrigen - País de origen de la mercancía.
+ */
 export interface MercanciaDetalle {
   fraccionArancelaria: string;
   descripcionFraccion: string;
-  unidadMedidaTarifa: string; // UMT
+  unidadMedidaTarifa: string;
   umc: string;
   cantidadUMT: number;
   valorComercial: number;
@@ -19,6 +39,12 @@ export interface MercanciaDetalle {
   paisOrigen: string;
 }
 
+/**
+ * Constante que define la configuración de columnas para la tabla dinámica de mercancías.
+ *
+ * @constant
+ * @type {ConfiguracionColumna<MercanciaDetalle>[]}
+ */
 export const MERCANCIA_ENCABEZADO_DE_TABLA: ConfiguracionColumna<MercanciaDetalle>[] =
   [
     {

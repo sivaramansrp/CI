@@ -9,6 +9,12 @@ import { Tramite240101Query } from '../../estados/tramite240101Query.query';
 import { Tramite240101Store } from '../../estados/tramite240101Store.store';
 import { takeUntil } from 'rxjs';
 
+/**
+ * @title Terceros Relacionados Contenedora
+ * @description Componente contenedor encargado de suscribirse a los datos de destinatarios finales y proveedores del trámite.
+ * @summary Conecta el estado global del store con el componente visual de terceros relacionados.
+ */
+
 @Component({
   selector: 'app-terceros-relacionados-contenedora',
   standalone: true,
@@ -17,11 +23,32 @@ import { takeUntil } from 'rxjs';
   styleUrl: './terceros-relacionados-contenedora.component.css',
 })
 export class TercerosRelacionadosContenedoraComponent implements OnInit {
+  /**
+   * Observable para limpiar las suscripciones activas al destruir el componente.
+   * @property {Subject<void>} destroy$
+   */
   private destroy$ = new Subject<void>();
+
+  /**
+   * Datos de la tabla de destinatarios finales.
+   * @property {DestinoFinal[]} destinatarioFinalTablaDatos
+   */
   destinatarioFinalTablaDatos: DestinoFinal[] = [];
 
+  /**
+   * Datos de la tabla de proveedores.
+   * @property {Proveedor[]} proveedorTablaDatos
+   */
   proveedorTablaDatos: Proveedor[] = [];
 
+  /**
+   * Constructor del componente.
+   *
+   * @method constructor
+   * @param {Tramite240101Store} tramiteStore - Store de Akita que maneja el estado del trámite.
+   * @param {Tramite240101Query} tramiteQuery - Query de Akita para obtener datos del trámite.
+   * @returns {void}
+   */
   constructor(
     private tramiteStore: Tramite240101Store,
     private tramiteQuery: Tramite240101Query
@@ -29,9 +56,11 @@ export class TercerosRelacionadosContenedoraComponent implements OnInit {
   {}
 
   /**
+   * Hook del ciclo de vida que se ejecuta al inicializar el componente.
+   * Suscribe a los observables de destinatarios y proveedores para mostrarlos en la vista.
+   *
    * @method ngOnInit
-   * @description Hook del ciclo de vida que se ejecuta al inicializar el componente.
-   * Suscribe los observables para mostrar los datos en la vista.
+   * @returns {void}
    */
   ngOnInit(): void {
     this.tramiteQuery.getDestinatarioFinalTablaDatos$

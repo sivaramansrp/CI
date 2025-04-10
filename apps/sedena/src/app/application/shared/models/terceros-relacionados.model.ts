@@ -1,5 +1,23 @@
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
-
+/**
+ * Interfaz que representa los datos de un destinatario final.
+ *
+ * @property {string} nombreRazonSocial - Nombre o razón social del destinatario.
+ * @property {string} rfc - Registro Federal de Contribuyentes.
+ * @property {string} curp - Clave Única de Registro de Población.
+ * @property {string} telefono - Número telefónico de contacto.
+ * @property {string} correoElectronico - Correo electrónico del destinatario.
+ * @property {string} calle - Calle del domicilio.
+ * @property {string} numeroExterior - Número exterior del domicilio.
+ * @property {string} numeroInterior - Número interior del domicilio.
+ * @property {string} pais - País de residencia.
+ * @property {string} colonia - Colonia del domicilio.
+ * @property {string} municipioAlcaldia - Municipio o alcaldía correspondiente.
+ * @property {string} localidad - Localidad del domicilio.
+ * @property {string} entidadFederativa - Estado o entidad federativa.
+ * @property {string} estadoLocalidad - Estado o localidad detallada.
+ * @property {string} codigoPostal - Código postal.
+ */
 export interface DestinoFinal {
   nombreRazonSocial: string;
   rfc: string;
@@ -19,8 +37,10 @@ export interface DestinoFinal {
 }
 
 /**
- * @const DESTINO_FINAL_ENCABEZADO_DE_TABLA
- * @description Columnas configuradas para mostrar los datos del destino final en una tabla.
+ * Constante que define la configuración de columnas para la tabla de destinatarios finales.
+ *
+ * @const
+ * @type {ConfiguracionColumna<DestinoFinal>[]}
  */
 export const DESTINO_FINAL_ENCABEZADO_DE_TABLA: ConfiguracionColumna<DestinoFinal>[] =
   [
@@ -73,6 +93,25 @@ export const DESTINO_FINAL_ENCABEZADO_DE_TABLA: ConfiguracionColumna<DestinoFina
     },
   ];
 
+/**
+ * Interfaz que representa los datos de un proveedor.
+ *
+ * @property {string} nombreRazonSocial - Nombre o razón social del proveedor.
+ * @property {string} rfc - Registro Federal de Contribuyentes.
+ * @property {string} curp - Clave Única de Registro de Población.
+ * @property {string} telefono - Número telefónico de contacto.
+ * @property {string} correoElectronico - Correo electrónico del proveedor.
+ * @property {string} calle - Calle del domicilio.
+ * @property {string} numeroExterior - Número exterior del domicilio.
+ * @property {string} numeroInterior - Número interior del domicilio.
+ * @property {string} pais - País de residencia.
+ * @property {string} colonia - Colonia del domicilio.
+ * @property {string} municipioAlcaldia - Municipio o alcaldía correspondiente.
+ * @property {string} localidad - Localidad del domicilio.
+ * @property {string} entidadFederativa - Estado o entidad federativa.
+ * @property {string} estadoLocalidad - Estado o localidad detallada.
+ * @property {string} codigoPostal - Código postal.
+ */
 export interface Proveedor {
   nombreRazonSocial: string;
   rfc: string;
@@ -92,8 +131,10 @@ export interface Proveedor {
 }
 
 /**
- * @const PROVEEDOR_ENCABEZADO_DE_TABLA
- * @description Columnas configuradas para mostrar los datos del proveedor en una tabla.
+ * Constante que define la configuración de columnas para la tabla de proveedores.
+ *
+ * @const
+ * @type {ConfiguracionColumna<Proveedor>[]}
  */
 export const PROVEEDOR_ENCABEZADO_DE_TABLA: ConfiguracionColumna<Proveedor>[] =
   [
@@ -146,5 +187,11 @@ export const PROVEEDOR_ENCABEZADO_DE_TABLA: ConfiguracionColumna<Proveedor>[] =
     },
   ];
 
+/**
+ * Texto de alerta mostrado cuando las tablas obligatorias no tienen registros.
+ *
+ * @const
+ * @type {string}
+ */
 export const TERCEROR_TEXTO_DE_ALERTA =
   'Las tablas con asterisco son obligatorias y debes agregar por lo menos un registro.';

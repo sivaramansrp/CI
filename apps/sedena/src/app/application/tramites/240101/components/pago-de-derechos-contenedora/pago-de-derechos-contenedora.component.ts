@@ -8,6 +8,11 @@ import { Subject } from 'rxjs';
 import { Tramite240101Query } from '../../estados/tramite240101Query.query';
 import { Tramite240101Store } from '../../estados/tramite240101Store.store';
 import { takeUntil } from 'rxjs';
+/**
+ * @title Pago de Derechos Contenedora
+ * @description Componente contenedor que se encarga de enlazar el estado de pago de derechos con el formulario correspondiente.
+ * @summary Escucha cambios en el estado y propaga las actualizaciones al store.
+ */
 
 @Component({
   selector: 'app-pago-de-derechos-contenedora',
@@ -17,10 +22,32 @@ import { takeUntil } from 'rxjs';
   styleUrl: './pago-de-derechos-contenedora.component.css',
 })
 export class PagoDeDerechosContenedoraComponent implements OnInit, OnDestroy {
+  /**
+   * Observable para liberar suscripciones al destruir el componente.
+   * @property {Subject<void>} unsubscribe$
+   */
   private unsubscribe$ = new Subject<void>();
 
+  /**
+   * Estado actual del formulario de pago de derechos.
+   * @property {PagoDerechosFormState} pagoDerechoFormState
+   */
   public pagoDerechoFormState!: PagoDerechosFormState;
+
+  /**
+   * Observable adicional para limpieza de suscripciones.
+   * @property {Subject<void>} destroy$
+   */
   private destroy$ = new Subject<void>();
+
+  /**
+   * Constructor del componente.
+   *
+   * @method constructor
+   * @param {Tramite240101Query} tramiteQuery - Query para obtener el estado actual del pago de derechos.
+   * @param {Tramite240101Store} tramiteStore - Store que administra el estado del pago de derechos.
+   * @returns {void}
+   */
   constructor(
     private tramiteQuery: Tramite240101Query,
     private tramiteStore: Tramite240101Store
@@ -28,9 +55,11 @@ export class PagoDeDerechosContenedoraComponent implements OnInit, OnDestroy {
   {}
 
   /**
+   * Hook del ciclo de vida que se ejecuta al inicializar el componente.
+   * Suscribe a los observables del query para reflejar los datos en la vista.
+   *
    * @method ngOnInit
-   * @description Hook del ciclo de vida que se ejecuta al inicializar el componente.
-   * Suscribe los observables para mostrar los datos en la vista.
+   * @returns {void}
    */
   ngOnInit(): void {
     this.tramiteQuery.getPagoDerechos$
@@ -39,10 +68,26 @@ export class PagoDeDerechosContenedoraComponent implements OnInit, OnDestroy {
         this.pagoDerechoFormState = data;
       });
   }
+
+  /**
+   * Hook del ciclo de vida que se ejecuta al destruir el componente.
+   * Libera las suscripciones para evitar fugas de memoria.
+   *
+   * @method ngOnDestroy
+   * @returns {void}
+   */
   ngOnDestroy(): void {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
   }
+
+  /**
+   * Actualiza el estado del formulario de pago de derechos en el store.
+   *
+   * @method updatePagoDerechos
+   * @param {PagoDerechosFormState} event - Estado actualizado del formulario.
+   * @returns {void}
+   */
   updatePagoDerechos(event: PagoDerechosFormState): void {
     this.tramiteStore.updatePagoDerechosFormState(event);
   }

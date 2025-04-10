@@ -12,6 +12,11 @@ import { TITULOMENSAJE } from '../../constants/importacion-armas-municiones.enum
 import { ViewChild } from '@angular/core';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
+/**
+ * @title Página de Solicitud
+ * @description Componente principal que contiene el flujo del trámite a través de un wizard dividido en pasos.
+ * @summary Administra la navegación entre pasos del trámite y organiza los componentes visuales del flujo.
+ */
 @Component({
   selector: 'app-solicitud-page',
   standalone: true,

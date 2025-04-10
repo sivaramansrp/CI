@@ -11,6 +11,11 @@ import { Tramite240101Query } from '../../estados/tramite240101Query.query';
 import { Tramite240101Store } from '../../estados/tramite240101Store.store';
 import { takeUntil } from 'rxjs';
 
+/**
+ * @title Paso Uno
+ * @description Componente que representa el primer paso del flujo de solicitud. Contiene los datos del solicitante, datos del trámite, terceros relacionados y pago de derechos.
+ * @summary Agrupa los subcomponentes necesarios para capturar la información inicial del trámite.
+ */
 @Component({
   selector: 'app-paso-uno',
   standalone: true,
@@ -48,9 +53,8 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
    */
   constructor(
     private tramite240101Query: Tramite240101Query,
-    private tramite240101Store: Tramite240101Store
-  ) // eslint-disable-next-line no-empty-function
-  {}
+    private tramite240101Store: Tramite240101Store // eslint-disable-next-line no-empty-function
+  ) {}
 
   /**
    * Angular lifecycle method that runs on component initialization.
