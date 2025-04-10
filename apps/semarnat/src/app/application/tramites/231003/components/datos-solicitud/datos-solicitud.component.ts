@@ -35,12 +35,12 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
 
   aduanas!: Catalogo[];
 
-  radioOptions: RadioOpcion[] = RADIO_OPCIONES.radioOptions;
+  radioOptions: RadioOpcion[] = RADIO_OPCIONES?.radioOptions;
 
   private destruir$ = new Subject<void>();
 
-  requiereEmpresaServicioReciclaje: RadioOpcion[] = RADIO_OPCIONES.requiereEmpresaServicioReciclaje;
-  reciclajeEnInstalaciones: RadioOpcion[] = RADIO_OPCIONES.reciclajeEnInstalaciones
+  requiereEmpresaServicioReciclaje: RadioOpcion[] = RADIO_OPCIONES?.requiereEmpresaServicioReciclaje;
+  reciclajeEnInstalaciones: RadioOpcion[] = RADIO_OPCIONES?.reciclajeEnInstalaciones
 
   public establecimientoHeaderData: string[] = [];
 
@@ -54,11 +54,11 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   // Add any methods or properties needed for the component here
 
   ngOnInit(): void {
-    this.aduanas = RADIO_OPCIONES.Immex;
-    this.establecimientoHeaderData = RADIO_OPCIONES.table[0]?.encabezadoDeTabla || [];
-    this.establecimientoBodyData = RADIO_OPCIONES.table[0]?.cuerpoTabla || [];
-    this.requiereEmpresaServicioReciclaje = RADIO_OPCIONES.requiereEmpresaServicioReciclaje;
-    this.reciclajeEnInstalaciones = RADIO_OPCIONES.reciclajeEnInstalaciones;
+    this.aduanas = RADIO_OPCIONES?.Immex;
+    this.establecimientoHeaderData = RADIO_OPCIONES?.table[0]?.encabezadoDeTabla || [];
+    this.establecimientoBodyData = RADIO_OPCIONES?.table[0]?.cuerpoTabla || [];
+    this.requiereEmpresaServicioReciclaje = RADIO_OPCIONES?.requiereEmpresaServicioReciclaje;
+    this.reciclajeEnInstalaciones = RADIO_OPCIONES?.reciclajeEnInstalaciones;
     this.inicializarSolicitudForm();
     this.inicializarFormularioEmpresaReciclaje();
     this.inicializarFormularioLugarReciclaje();
