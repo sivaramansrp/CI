@@ -1,24 +1,21 @@
+import { Catalogo } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
-import { Location } from '@angular/common';
-
-import { Component, EventEmitter, Output } from '@angular/core';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
-
+import { Component } from '@angular/core';
+import { DatosSolicitudService } from '../../services/datos-solicitud.service';
+import { EventEmitter } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
-import { ReactiveFormsModule } from '@angular/forms';
-import { Validators } from '@angular/forms';
-
-import { Catalogo, TipoPersona } from '@ng-mf/data-access-user';
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
-import { TituloComponent } from '@ng-mf/data-access-user';
-
+import { Location } from '@angular/common';
+import { OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
+import { Output } from '@angular/core';
 import { Proveedor } from '../../models/terceros-relacionados.model';
-
-import { DatosSolicitudService } from '../../services/datos-solicitud.service';
-
+import { ReactiveFormsModule } from '@angular/forms';
 import { Subject } from 'rxjs';
+import { TipoPersona } from '@ng-mf/data-access-user';
+import { TituloComponent } from '@ng-mf/data-access-user';
+import { Validators } from '@angular/forms';
 import { takeUntil } from 'rxjs';
 
 /**

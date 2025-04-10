@@ -1,22 +1,23 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { ActivatedRoute, Router } from '@angular/router';
-import {
-  Catalogo,
-  CatalogoSelectComponent,
-  CrosslistComponent,
-  CrossListLable,
-  TituloComponent,
-} from '@ng-mf/data-access-user';
-import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { CROSLISTA_DE_PAISES } from '../../constants/datos-solicitud.enum';
+import { Catalogo } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
+import { CrossListLable } from '@ng-mf/data-access-user';
+import { CrosslistComponent } from '@ng-mf/data-access-user';
+import { EventEmitter } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 import { Location } from '@angular/common';
 import { MercanciaDetalle } from '../../models/datos-del-tramite.model';
+import { OnInit } from '@angular/core';
+import { Output } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
+import { TituloComponent } from '@ng-mf/data-access-user';
+import { Validators } from '@angular/forms';
+
 @Component({
   selector: 'app-datos-mercancia',
   standalone: true,
@@ -73,7 +74,8 @@ export class DatosMercanciaComponent implements OnInit {
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private ubicaccion: Location
-  ) {}
+  ) // eslint-disable-next-line no-empty-function
+  {}
 
   guardar(): void {
     const DATOS_MERCANCIA: MercanciaDetalle = {

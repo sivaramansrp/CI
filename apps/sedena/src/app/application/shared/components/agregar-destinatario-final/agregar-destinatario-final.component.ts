@@ -1,32 +1,33 @@
-import { Catalogo, TipoPersona } from '@ng-mf/data-access-user';
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE } from '../../constants/datos-solicitud.enum';
+import { STR_NACIONAL } from '../../constants/datos-solicitud.enum';
+
+import { DestinoFinal } from '../../models/terceros-relacionados.model';
+
+import { DatosSolicitudService } from '../../services/datos-solicitud.service';
+
 import { CommonModule } from '@angular/common';
 import { Location } from '@angular/common';
 
-import {
-  Component,
-  EventEmitter,
-  Input,
-  OnChanges,
-  OnDestroy,
-  OnInit,
-  Output,
-} from '@angular/core';
-import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-import { Subject, takeUntil } from 'rxjs';
+import { Component } from '@angular/core';
+import { EventEmitter } from '@angular/core';
+import { Input } from '@angular/core';
+import { OnChanges } from '@angular/core';
+import { OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
+import { Output } from '@angular/core';
 
-import { DatosSolicitudService } from '../../services/datos-solicitud.service';
-import { DestinoFinal } from '../../models/terceros-relacionados.model';
-import {
-  PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE,
-  STR_NACIONAL,
-} from '../../constants/datos-solicitud.enum';
+import { FormBuilder } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
+import { Validators } from '@angular/forms';
+
+import { Catalogo } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { TipoPersona } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
+
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs';
 
 /**
  * Componente para agregar un destinatario final (Destinatario) al formulario y almacenarlo.
@@ -135,6 +136,12 @@ export class AgregarDestinatarioFinalComponent
   @Output() updateDestinatarioFinalTablaDatos = new EventEmitter<
     DestinoFinal[]
   >();
+
+  /**
+   * Constante que almacena el valor de "Nacional" para su uso en el formulario.
+   * @property {string} nacionalStr
+   * @default STR_NACIONAL
+   */
 
   public nacionalStr = STR_NACIONAL;
 

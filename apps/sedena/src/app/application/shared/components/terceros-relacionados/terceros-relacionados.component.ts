@@ -1,18 +1,16 @@
-import { Component, Input } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { AlertComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
-import {
-  AlertComponent,
-  TablaDinamicaComponent,
-  TablaSeleccion,
-} from '@ng-mf/data-access-user';
-import {
-  DESTINO_FINAL_ENCABEZADO_DE_TABLA,
-  DestinoFinal,
-  Proveedor,
-  PROVEEDOR_ENCABEZADO_DE_TABLA,
-  TERCEROR_TEXTO_DE_ALERTA,
-} from '../../models/terceros-relacionados.model';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component } from '@angular/core';
+import { DESTINO_FINAL_ENCABEZADO_DE_TABLA } from '../../models/terceros-relacionados.model';
+import { DestinoFinal } from '../../models/terceros-relacionados.model';
+import { Input } from '@angular/core';
+import { PROVEEDOR_ENCABEZADO_DE_TABLA } from '../../models/terceros-relacionados.model';
+import { Proveedor } from '../../models/terceros-relacionados.model';
+import { Router } from '@angular/router';
+import { TERCEROR_TEXTO_DE_ALERTA } from '../../models/terceros-relacionados.model';
+import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
+import { TablaSeleccion } from '@ng-mf/data-access-user';
 
 @Component({
   selector: 'app-terceros-relacionados',

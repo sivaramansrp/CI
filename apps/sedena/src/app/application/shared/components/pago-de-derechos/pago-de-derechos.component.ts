@@ -1,21 +1,24 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import {
-  FECHA_DE_PAGO,
-  PagoDerechosFormState,
-} from '../../models/pago-de-derechos.model';
-import { Catalogo, TituloComponent } from '@ng-mf/data-access-user';
+import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
+import { EventEmitter } from '@angular/core';
+import { FECHA_DE_PAGO } from '../../models/pago-de-derechos.model';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
+import { Input } from '@angular/core';
 import { InputFecha } from '@ng-mf/data-access-user';
 import { InputFechaComponent } from '@ng-mf/data-access-user';
 import { OnInit } from '@angular/core';
+import { Output } from '@angular/core';
+import { PagoDerechosFormState } from '../../models/pago-de-derechos.model';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Subject } from 'rxjs';
+import { TituloComponent } from '@ng-mf/data-access-user';
 import { Validators } from '@angular/forms';
 import { takeUntil } from 'rxjs';
+
 /**
  * @component PagoDeDerechosComponent
  * @description Componente responsable de capturar y gestionar la información relacionada
@@ -93,7 +96,8 @@ export class PagoDeDerechosComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private datosSolicitudService: DatosSolicitudService
-  ) {}
+  ) // eslint-disable-next-line no-empty-function
+  {}
 
   /**
    * @method ngOnInit

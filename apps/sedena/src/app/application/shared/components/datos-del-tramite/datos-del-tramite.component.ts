@@ -1,26 +1,24 @@
-import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import {
-  ConfiguracionTabla,
-  CrosslistComponent,
-  CrossListLable,
-  TablaDinamicaComponent,
-  TablaSeleccion,
-  TituloComponent,
-} from '@ng-mf/data-access-user';
+import { ActivatedRoute } from '@angular/router';
 import { CROSLISTA_ADUANAS_DISPONIBLES } from '../../constants/datos-del-tramilte.enum';
-import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-import {
-  DatosDelTramiteFormState,
-  MERCANCIA_ENCABEZADO_DE_TABLA,
-  MercanciaDetalle,
-} from '../../models/datos-del-tramite.model';
-import { ActivatedRoute, Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
+import { CrossListLable } from '@ng-mf/data-access-user';
+import { CrosslistComponent } from '@ng-mf/data-access-user';
+import { DatosDelTramiteFormState } from '../../models/datos-del-tramite.model';
+import { EventEmitter } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
+import { Input } from '@angular/core';
+import { MERCANCIA_ENCABEZADO_DE_TABLA } from '../../models/datos-del-tramite.model';
+import { MercanciaDetalle } from '../../models/datos-del-tramite.model';
+import { OnInit } from '@angular/core';
+import { Output } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
+import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
+import { TablaSeleccion } from '@ng-mf/data-access-user';
+import { TituloComponent } from '@ng-mf/data-access-user';
+import { Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-datos-del-tramite',
