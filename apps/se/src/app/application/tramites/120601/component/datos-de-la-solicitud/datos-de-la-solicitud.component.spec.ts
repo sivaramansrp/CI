@@ -4,7 +4,7 @@ import { DatosDeLaSolicitudComponent } from './datos-de-la-solicitud.component';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
-import { CatalogoSelectComponent, SelectCatalogosComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent, TituloComponent } from '@ng-mf/data-access-user';
 
 describe('DatosDeLaSolicitudComponent', () => {
   let component: DatosDeLaSolicitudComponent;
@@ -12,7 +12,7 @@ describe('DatosDeLaSolicitudComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CommonModule, ReactiveFormsModule, TituloComponent, SelectCatalogosComponent, CatalogoSelectComponent],
+      imports: [CommonModule, ReactiveFormsModule, TituloComponent, CatalogoSelectComponent],
       declarations: [DatosDeLaSolicitudComponent],
       providers: [FormBuilder]
     }).compileComponents();

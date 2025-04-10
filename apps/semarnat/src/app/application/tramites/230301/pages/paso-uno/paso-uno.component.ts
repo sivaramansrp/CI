@@ -7,7 +7,7 @@ import { SeccionLibStore } from '@libs/shared/data-access-user/src';
   templateUrl: './paso-uno.component.html',
   styleUrl: './paso-uno.component.scss',
 })
-export class PasoUnoComponent implements OnInit {
+export class PasoUnoComponent {
 
   /**
    * @property {number} indice - Índice actual del paso.
@@ -19,28 +19,6 @@ export class PasoUnoComponent implements OnInit {
         // Se puede agregar aquí la lógica del constructor si es necesario
    }
 
-   ngOnInit(): void {
-      this.asignarSecciones();
-   }
-
-    /**
- * Método para asignar las secciones existentes al stored
- */
-  private asignarSecciones(): void {
-    const SECCIONES: boolean[] = [];
-    const FORMA_VALIDA: boolean[] = [];
-    const PREDETERMINADO = SECCIONES_TRAMITE_230301
-    for (const LLAVE_SECCION in PREDETERMINADO.PASO_1) {
-      if (Object.prototype.hasOwnProperty.call(PREDETERMINADO.PASO_1, LLAVE_SECCION)) {
-        // @ts-expect-error - fix this
-        SECCIONES.push(PREDETERMINADO.PASO_1[LLAVE_SECCION]);
-        FORMA_VALIDA.push(false);
-      }
-    }
-    this.seccionStore.establecerSeccion(SECCIONES);
-    this.seccionStore.establecerFormaValida(FORMA_VALIDA);
-  }
-     
   /**
    * @method seleccionaTab
    * @description Selecciona una pestaña específica estableciendo el índice correspondiente.
