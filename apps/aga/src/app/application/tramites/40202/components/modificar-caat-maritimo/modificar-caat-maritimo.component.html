@@ -43,7 +43,7 @@
                 data-bs-toggle="modal" data-bs-target="#modalAlerta" (click)="buscarEmpresa(1)">Buscar</button>
         </div>
 
-        <div class="modal fade" id="modalAlerta" tabindex="-1" aria-labelledby="modalAlertaLabel" aria-hidden="true">
+        <div class="modal fade" #modalAlerta id="modalAlerta" tabindex="-1" aria-labelledby="modalAlertaLabel">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -112,7 +112,7 @@
 
     <!--Agregar Seleccionado Modal Popup-->
 
-    <div class="modal fade" id="modalAlertaSeleccion" tabindex="-1" aria-labelledby="modalAlertaSeleccionLabel" aria-hidden="true">
+    <div class="modal fade" #modalAlertaSeleccion id="modalAlertaSeleccion" tabindex="-1" aria-labelledby="modalAlertaSeleccionLabel">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
@@ -140,7 +140,7 @@
     </div>
 </div>
 
-<div class="modal fade" id="modalAgregarPFE" tabindex="-1" aria-labelledby="modalAgregarPFELabel" aria-hidden="true">
+<div class="modal fade" #modalAgregarPFE id="modalAgregarPFE" tabindex="-1" aria-labelledby="modalAgregarPFELabel">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-body">

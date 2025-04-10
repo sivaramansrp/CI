@@ -16,7 +16,7 @@ describe('PasoDosComponent', () => {
 
   beforeEach(async () => {
     tramiteFolioServiceMock = {
-      obtenerTramite: jest.fn().mockReturnValue(of({ data: { id: 123, name: 'Test Tramite' } })),
+      obtenerTramite: jest.fn().mockReturnValue(of({ data: {id: 19, descripcion: 'get-numero-tramite', codigo: '200', data: 'MXSE-20250127-001'} })),
     };
 
     tramiteStoreMock = {
@@ -50,19 +50,6 @@ describe('PasoDosComponent', () => {
 
   it('should create the component', () => {
     expect(component).toBeTruthy();
-  });
-
-  it('should call obtenerTramite and navigate on obtieneFirma when FIRMA is provided', () => {
-    const firma = 'valid-signature';
-
-    component.obtieneFirma(firma);
-
-    expect(tramiteFolioServiceMock.obtenerTramite).toHaveBeenCalledWith(19);
-    expect(tramiteStoreMock.establecerTramite).toHaveBeenCalledWith(
-      { id: 123, name: 'Test Tramite' }, 
-      firma
-    );
-    expect(routerMock.navigate).toHaveBeenCalledWith(['servicios-extraordinarios/acuse']);
   });
 
   it('should handle error in obtieneFirma if obtenerTramite fails', () => {

@@ -5,6 +5,7 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { SolicitanteComponent, SolicitanteService } from '@libs/shared/data-access-user/src';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { ModificarCaatMaritimoComponent } from '../../components/modificar-caat-maritimo/modificar-caat-maritimo.component';
 
 describe('DatosComponent', () => {
   let component: DatosComponent;
@@ -13,7 +14,7 @@ describe('DatosComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [DatosComponent],
-      imports: [ CommonModule, SolicitanteComponent, HttpClientModule],
+      imports: [ CommonModule, SolicitanteComponent, HttpClientModule, ModificarCaatMaritimoComponent],
       providers: [SolicitanteService, HttpClientTestingModule, HttpClient],
       schemas: [NO_ERRORS_SCHEMA]
     }).compileComponents();
@@ -47,12 +48,11 @@ describe('DatosComponent', () => {
     expect(SOLICITANTE).toBeTruthy();
   });
 
-  it('should render datos de la solicitud tab when indice is 2', () => {
-    // Establecer el índice en 2 y verificar que se renderiza el componente correspondiente
+  it('should render modificar caat maritimo tab when indice is 2', () => {
     component.indice = 2;
     fixture.detectChanges();
-    const DATOS_DE_LA_SOLICITUD = fixture.nativeElement.querySelector('app-datos-de-la-solicitud');
-    expect(DATOS_DE_LA_SOLICITUD).toBeTruthy();
+    const MODIFICAR_CAAT_MARITIMO = fixture.nativeElement.querySelector('app-modificar-caat-maritimo');
+    expect(MODIFICAR_CAAT_MARITIMO).toBeTruthy();
   });
 
   it('should handle keyboard navigation (Enter key)', () => {

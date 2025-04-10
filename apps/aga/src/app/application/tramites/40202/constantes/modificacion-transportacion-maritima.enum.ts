@@ -33,6 +33,10 @@ export const CAAT_REGISTRADO_EMPRESA_ENCABEZADO_DE_TABLA: ConfiguracionColumna<C
     { encabezado: 'País', clave: (fila) => fila.pais, orden: 6 }
 ]
 
+/**
+ * Enum para los configuración de la tabla de candidato a modificar CAAT
+ * @enum {Array<{encabezado: string, clave: (fila: CandidatoModificarCaatForm) => string, orden: number}>}
+ */
 export const CAAT_CANDIDATO_MODIFICAR_ENCABEZADO_DE_TABLA: ConfiguracionColumna<CandidatoModificarCaatForm>[] = [
     { encabezado: 'RFC/NSS', clave: (fila) => fila.rfc, orden: 1 },
     { encabezado: 'Nombre/Denominación/Razón Social', clave: (fila) => fila.nombreDenominacionRazonSocial, orden: 2 },

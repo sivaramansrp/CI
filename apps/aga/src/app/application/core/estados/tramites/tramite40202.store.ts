@@ -123,6 +123,12 @@ export interface TransportacionMaritima40202State {
      * @type {string}
      */
     numeroInteriorPFE?: string;
+
+    /**
+     * Indica si se debe mostrar el botón de agregar seleccionado.
+     * @type {boolean}
+     */
+    mostrarAgregarSeleccionado?: boolean;
 }
 
 /**
@@ -153,6 +159,8 @@ export function createInitialState(): TransportacionMaritima40202State {
         callePFE: '',
         numeroExteriorPFE: '',
         numeroInteriorPFE: '',
+
+        mostrarAgregarSeleccionado: true
     };
 }
 
@@ -412,6 +420,18 @@ export class Tramite40202Store extends Store<TransportacionMaritima40202State> {
         this.update((state) => ({
             ...state,
             numeroInteriorPFE,
+        }));
+    }
+
+    /**
+     * Establece si se debe mostrar el botón de agregar seleccionado en el estado.
+     * @param mostrarAgregarSeleccionado - Indica si se debe mostrar el botón de agregar seleccionado.
+     * @description Establece si se debe mostrar el botón de agregar seleccionado en el estado.
+     */
+    public setMostrarAgregarSeleccionado(mostrarAgregarSeleccionado: boolean): void {
+        this.update((state) => ({
+            ...state,
+            mostrarAgregarSeleccionado,
         }));
     }
 }

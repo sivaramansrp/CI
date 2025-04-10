@@ -1,7 +1,8 @@
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, merge, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { Modal } from 'bootstrap';
 
 import { CAATRegistradoEmpresaForm, CandidatoModificarCaatForm, PersonaFisicaExtranjeraForm } from '../../models/modificacion-transportacion-maritima.model';
 import { CAAT_CANDIDATO_MODIFICAR_ENCABEZADO_DE_TABLA, CAAT_REGISTRADO_EMPRESA_ENCABEZADO_DE_TABLA, OPCIONES_DE_BOTON_DE_RADIO, TEXTOS } from '../../constantes/modificacion-transportacion-maritima.enum';
@@ -9,8 +10,10 @@ import { Catalogo, CatalogoSelectComponent, InputRadioComponent, TablaDinamicaCo
 import { Tramite40202Store, TransportacionMaritima40202State } from '../../../../core/estados/tramites/tramite40202.store';
 import { ModificacionTransportacionMaritimaService } from '../../services/modificacion-transportacion-maritima/modificacion-transportacion-maritima.service';
 import { Tramite40202Query } from '../../../../core/queries/tramite40202.query';
-import { Modal } from 'bootstrap';
 
+/**
+ * Componente para modificar CAAT marítimo.
+ */
 @Component({
   selector: 'app-modificar-caat-maritimo',
   standalone: true,
@@ -26,7 +29,7 @@ import { Modal } from 'bootstrap';
   templateUrl: './modificar-caat-maritimo.component.html',
   styleUrl: './modificar-caat-maritimo.component.css',
 })
-export class ModificarCaatMaritimoComponent implements OnInit, OnDestroy {
+export class ModificarCaatMaritimoComponent implements OnInit, OnDestroy, AfterViewInit {
   /**
    * Formulario reactivo para buscar empresas CAAT.
    */
@@ -62,6 +65,9 @@ export class ModificarCaatMaritimoComponent implements OnInit, OnDestroy {
    */
   caatRegistradoEmpresaEncabezadoDeTabla = CAAT_REGISTRADO_EMPRESA_ENCABEZADO_DE_TABLA;
 
+  /**
+   * Configuración para el encabezado de la tabla de candidato a modificar CAAT.
+   */
   candidatoModificarCaatEncabezadoDeTabla = CAAT_CANDIDATO_MODIFICAR_ENCABEZADO_DE_TABLA;
 
   /**
@@ -69,6 +75,9 @@ export class ModificarCaatMaritimoComponent implements OnInit, OnDestroy {
    */
   caatRegistradoEmpresaTabla: CAATRegistradoEmpresaForm[] = [];
 
+  /**
+   * Tabla de datos de candidato a modificar CAAT.
+   */
   candidatoModificarCaatTabla: CandidatoModificarCaatForm[] = [];
 
   /**
@@ -87,6 +96,16 @@ export class ModificarCaatMaritimoComponent implements OnInit, OnDestroy {
   @ViewChild('closeModal') closeModal!: ElementRef;
 
   /**
+   * Referencia al modal de alerta de selección.
+   */
+  @ViewChild('modalAlertaSeleccion', { static: false }) modalAlertaSeleccion!: ElementRef;
+
+  /**
+   * Referencia al modal de agregar persona física extranjera.
+   */
+  @ViewChild('modalAgregarPFE', { static: false }) modalAgregarPFE!: ElementRef;
+
+  /**
    * Bandera para mostrar el botón de agregar seleccionado.
    */
   mostrarAgregarSeleccionado: boolean = true;
@@ -95,6 +114,16 @@ export class ModificarCaatMaritimoComponent implements OnInit, OnDestroy {
    * Subject para destruir notificador.
    */
   private destruirNotificador$: Subject<void> = new Subject();
+
+  /**
+   * Elemento modal para mostrar información adicional.
+   */
+  modalElement!: HTMLElement | null;
+
+  /**
+   * Instancia del modal de agregar persona física extranjera.
+   */
+  modalAgregarPFEInstance!: Modal;
 
   /**
    * Constructor del componente.
@@ -126,6 +155,7 @@ export class ModificarCaatMaritimoComponent implements OnInit, OnDestroy {
           this.transportacionMaritimaState = seccionState;
           this.caatRegistradoEmpresaTabla = seccionState.caatRegistradoEmpresaTabla ?? [];
           this.candidatoModificarCaatTabla = seccionState.candidatoModificarCaatTabla ?? [];
+          this.mostrarAgregarSeleccionado = seccionState.mostrarAgregarSeleccionado ?? true;
           if (seccionState.tipoDeEmpresaOpcion) {
             this.vista = seccionState.tipoDeEmpresaOpcion;
           }
@@ -137,6 +167,16 @@ export class ModificarCaatMaritimoComponent implements OnInit, OnDestroy {
     this.crearTipoDeEmpresaForm();
 
     this.paisSeleccion();
+  }
+
+  /**
+   * Inicializa el modal de agregar persona física extranjera después de que la vista se haya inicializado.
+   * @returns {void}
+   */
+  ngAfterViewInit(): void {
+    if (this.modalAgregarPFE?.nativeElement) {
+      this.modalAgregarPFEInstance = new Modal(this.modalAgregarPFE.nativeElement);
+    }
   }
 
   /**
@@ -337,10 +377,10 @@ export class ModificarCaatMaritimoComponent implements OnInit, OnDestroy {
    * @description Este método se ejecuta cuando el usuario hace clic en el botón de buscar empresa.
    */
   buscarEmpresa(valor: number): void {
-    if(valor === 2) {
+    if (valor === 2) {
       this.limpiarCampos();
       this.obtenerBuscarEmpresaCaat();
-    }    
+    }
   }
 
   /**
@@ -353,6 +393,8 @@ export class ModificarCaatMaritimoComponent implements OnInit, OnDestroy {
     this.tramite40202Store.setCandidatoModificarCaatTabla([]);
     this.tipoDeEmpresaExtranjera.reset();
     this.tipoDeEmpresaNacional.reset();
+    this.mostrarAgregarSeleccionado = true;
+    this.tramite40202Store.setMostrarAgregarSeleccionado(this.mostrarAgregarSeleccionado);
     this.setValoresStore(this.tipoDeEmpresaExtranjera, 'buscarPorDenominacionEx', 'setBuscarPorDenominacionEx');
     this.setValoresStore(this.tipoDeEmpresaExtranjera, 'folioCaatBusquedaEx', 'setFolioCaatBusquedaEx');
     this.setValoresStore(this.tipoDeEmpresaNacional, 'buscarPorRFCNa', 'setBuscarPorRFCNa');
@@ -395,12 +437,17 @@ export class ModificarCaatMaritimoComponent implements OnInit, OnDestroy {
       });
   }
 
+  /**
+   * Agrega la selección de una empresa CAAT registrada a la tabla de candidatos a modificar CAAT.
+   * @param caatRegistradoEmpresaTabla - La tabla de empresas CAAT registradas seleccionadas.
+   * @returns {void}
+   */
   agregarSeleccionado(caatRegistradoEmpresaTabla: CAATRegistradoEmpresaForm[]): void {
     if (!caatRegistradoEmpresaTabla || caatRegistradoEmpresaTabla.length <= 0) {
       this.mostrarModal('modalAlertaSeleccion');
       return;
     }
-    
+
     const PAIS = this.pais.find((pais) => pais.descripcion === caatRegistradoEmpresaTabla[0].pais)?.id;
     this.personaFisicaExtranjeraForm.patchValue({
       nombrePFE: caatRegistradoEmpresaTabla[0].nombrePFE,
@@ -416,14 +463,19 @@ export class ModificarCaatMaritimoComponent implements OnInit, OnDestroy {
       codigoPostalPFE: caatRegistradoEmpresaTabla[0].codigoPostalPFE,
       pais: PAIS || ''
     });
-    
+
     this.mostrarModal('modalAgregarPFE');
   }
 
+  /**
+   * Muestra un modal específico.
+   * @param id - El ID del modal que se va a mostrar.
+   * @returns {void}
+   */
   mostrarModal(id: string): void {
-    const MODAL_ELEMENT = document.getElementById(id);
-    if (MODAL_ELEMENT) {
-      const MODAL = new Modal(MODAL_ELEMENT);
+    this.modalElement = document.getElementById(id);
+    if (this.modalElement) {
+      const MODAL = Modal.getOrCreateInstance(this.modalElement);
       MODAL.show();
     }
   }
@@ -436,7 +488,7 @@ export class ModificarCaatMaritimoComponent implements OnInit, OnDestroy {
    */
   agregarPFE(personaFisicaExtranjeraFormDatos: PersonaFisicaExtranjeraForm): void {
     const PAIS = this.pais.find((pais) => pais.id === Number(personaFisicaExtranjeraFormDatos.paisPFE))?.descripcion;
-    
+
     const NUEVO_CUERPO_TABLA = [...this.candidatoModificarCaatTabla];
 
     NUEVO_CUERPO_TABLA.push({
@@ -447,10 +499,14 @@ export class ModificarCaatMaritimoComponent implements OnInit, OnDestroy {
       domicilio: `${personaFisicaExtranjeraFormDatos.callePFE} ${personaFisicaExtranjeraFormDatos.numeroExteriorPFE} ${personaFisicaExtranjeraFormDatos.ciudadPFE} ${personaFisicaExtranjeraFormDatos.estadoPFE} ${PAIS} ${personaFisicaExtranjeraFormDatos.codigoPostalPFE}`.trim(),
     });
     this.candidatoModificarCaatTabla = NUEVO_CUERPO_TABLA;
-    this.mostrarAgregarSeleccionado = false;
     this.tramite40202Store.setCandidatoModificarCaatTabla(this.candidatoModificarCaatTabla);
+    this.mostrarAgregarSeleccionado = false;
+    this.tramite40202Store.setMostrarAgregarSeleccionado(this.mostrarAgregarSeleccionado);
     this.limpiarDatosPFE();
-    this.cerrarModal();
+    
+    if (this.modalAgregarPFEInstance) {
+      this.modalAgregarPFEInstance.hide();
+    }
   }
 
   /**

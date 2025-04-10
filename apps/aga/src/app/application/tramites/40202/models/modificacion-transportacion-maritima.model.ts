@@ -124,11 +124,38 @@ export interface CAATRegistradoEmpresaForm {
     estadoPFE?: string;
 }
 
+/**
+ * CandidatoModificarCaatForm: Interface para la información del candidato a modificar CAAT
+ */
 export interface CandidatoModificarCaatForm {
+    /**
+     * RFC de la empresa CAAT
+     * @type {string}
+     */
     rfc: string;
+
+    /**
+     * Nombre o denominación o razón social de la empresa CAAT
+     * @type {string}
+     */
     nombreDenominacionRazonSocial: string;
+
+    /**
+     * Nombre de la empresa CAAT
+     * @type {string}
+     */
     correoElectronico: string;
+
+    /**
+     * Domicilio de la empresa CAAT
+     * @type {string}
+     */
     domicilio: string;
+
+    /**
+     * Nombre del director general de la empresa CAAT
+     * @type {string}
+     */
     nombreDG: string;
 }
 
