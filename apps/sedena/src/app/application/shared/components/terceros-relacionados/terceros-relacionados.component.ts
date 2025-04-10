@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   AlertComponent,
@@ -7,6 +7,8 @@ import {
 } from '@ng-mf/data-access-user';
 import {
   DESTINO_FINAL_ENCABEZADO_DE_TABLA,
+  DestinoFinal,
+  Proveedor,
   PROVEEDOR_ENCABEZADO_DE_TABLA,
   TERCEROR_TEXTO_DE_ALERTA,
 } from '../../models/terceros-relacionados.model';
@@ -22,16 +24,24 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class TercerosRelacionadosComponent {
   public tercerorTextoDeAlerta = TERCEROR_TEXTO_DE_ALERTA;
 
+  @Input() public idProcedimiento!: number;
+
+  @Input() destinatarioFinalTablaDatos: DestinoFinal[] = [];
+
+  /**
+   * @property {Proveedor[]} proveedorTablaDatos
+   * Datos de la tabla de proveedores.
+   */
+  @Input() proveedorTablaDatos: Proveedor[] = [];
+
   public destinoFinalTablaConfiguracion = {
     tipoSeleccionTabla: TablaSeleccion.CHECKBOX,
     configuracionTabla: DESTINO_FINAL_ENCABEZADO_DE_TABLA,
-    datos: [],
   };
 
   public dproveedorTablaConfiguracion = {
     tipoSeleccionTabla: TablaSeleccion.CHECKBOX,
     configuracionTabla: PROVEEDOR_ENCABEZADO_DE_TABLA,
-    datos: [],
   };
   irAAcciones(accionesPath: string): void {
     this.router.navigate([accionesPath], {
