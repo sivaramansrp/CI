@@ -1,8 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { InputFecha, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { InputFecha,  } from '@libs/shared/data-access-user/src';
+import {TituloComponent } from '../titulo/titulo.component';
 
 /**
  * Configuración para el campo de fecha inicial.
