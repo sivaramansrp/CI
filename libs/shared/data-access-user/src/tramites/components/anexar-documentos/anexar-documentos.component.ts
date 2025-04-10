@@ -1,4 +1,11 @@
 import {
+  Catalogo,
+  DocumentosCargados,
+  ModalConfirmarComponent
+} from '@libs/shared/data-access-user/src';
+
+import { BsModalRef, BsModalService, ModalModule, ModalOptions } from 'ngx-bootstrap/modal';
+import {
   ChangeDetectorRef,
   Component,
   ElementRef,
@@ -6,37 +13,31 @@ import {
   OnInit,
   QueryList,
   SimpleChanges,
-  ViewChild,
   ViewChildren
 } from '@angular/core';
-import {
-  Catalogo,
-  DocumentosCargados,
-  ModalConfirmarComponent
-} from '@libs/shared/data-access-user/src';
-import { CommonModule } from '@angular/common';
-import { ToastrModule, ToastrService } from 'ngx-toastr';
-import { MB, PDF, DPI } from '../../constantes/constantes';
-import { Login } from '../../../core/models/shared/inicio-sesion.model';
-import { InicioSesionService } from '../../../core/services/shared/inicio-sesion/inicio-sesion.service';
-import { SubirDocumentoService } from '../../../core/services/shared/subir-documento/subir-documento.service';
-import { CatalogoSelectComponent } from '../catalogo-select/catalogo-select.component';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { BsModalRef, BsModalService, ModalModule, ModalOptions } from 'ngx-bootstrap/modal';
+import { ToastrModule, ToastrService } from 'ngx-toastr';
+
+import { CommonModule } from '@angular/common';
+import { InicioSesionService } from '../../../core/services/shared/inicio-sesion/inicio-sesion.service';
+import { Login } from '../../../core/models/shared/inicio-sesion.model';
+import { MensajesDocumentos } from '@libs/shared/data-access-user/src/core/enums/mensajes-documentos.enum';
+import { NgSelectModule } from '@ng-select/ng-select';
 import {
   PreviewDocumentoComponent
 } from '@libs/shared/data-access-user/src/tramites/components/preview-documento/preview-documento.component';
-import { NgSelectModule } from '@ng-select/ng-select';
-import { Subscription } from 'rxjs';
-import { MensajesDocumentos } from '@libs/shared/data-access-user/src/core/enums/mensajes-documentos.enum';
-import { URL_PRUEBA } from '../../../core/enums/constantes-alertas.enum';
+import { map, Subject, Subscription, takeUntil } from 'rxjs';
 
-declare const bootstrap: any; // Importación para manejar Bootstrap en TS
+import { SubirDocumentoService } from '../../../core/services/shared/subir-documento/subir-documento.service';
+
+import { DPI, MB, PDF } from '../../constantes/constantes';
+import { DocumentosState, DocumentosStore } from '../../../core/estados/documentos.store';
+import { DocumentosQuery } from '../../../core/queries/documentos.query';
 
 @Component({
   selector: 'anexar-documentos',
   standalone: true,
-  imports: [CatalogoSelectComponent, CommonModule, ReactiveFormsModule, ToastrModule, ModalModule, NgSelectModule, FormsModule],
+  imports: [CommonModule, ReactiveFormsModule, ToastrModule, ModalModule, NgSelectModule, FormsModule],
   templateUrl: './anexar-documentos.component.html',
   styleUrl: './anexar-documentos.component.scss'
 })
@@ -88,14 +89,36 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
     opcionales: []
   };
 
+  private destroyNotifier$: Subject<void> = new Subject<void>();
+  private documentosState!: DocumentosState;
+
   constructor(
+    private documentosQuery: DocumentosQuery,
+    private documentosStore: DocumentosStore,
     private toastr: ToastrService,
     private inicioSesionService: InicioSesionService,
     private subirDocumentoService: SubirDocumentoService,
     private fb: FormBuilder,
     private modalService: BsModalService,
-    private cdr: ChangeDetectorRef
-  ) {
+    private cdr: ChangeDetectorRef,
+  ) { }
+
+
+  ngOnInit(): void {
+    this.documentosQuery.selectDocumentoState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((documentosState) => {
+          this.documentosState = documentosState;
+        })
+      )
+      .subscribe();
+
+    this.listDocOpcionales = (this.documentosState.catalogoDocumentos.length > 0) ? this.documentosState.catalogoDocumentos : [];
+
+    this.archivosOpcionalesOriginal = [...this.archivosOpcionales];
+    this.obtenerToken(this.datosLogin);
+    this.crearFormaDocumento();
   }
 
   /**
@@ -202,6 +225,9 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
         estatus: 'Pendiente'
       });
     }
+
+    console.log(this.listadoArchivos);
+    
   }
 
   existePreview(id: any): boolean {
@@ -283,38 +309,22 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  limpiarFile(item: any, index: number, tipo: string): void {
-    let fileInput: HTMLInputElement | null = null;
-    switch (tipo) {
-      case 'obligatorios':
-        fileInput = this.fileInputs.toArray()[index].nativeElement as HTMLInputElement;
-        break;
-      case 'adicional': {
-        console.log(this.catalogoDocumentos);
-        const INDICE_ITEM_PADRE = this.catalogoDocumentos.findIndex(doc => doc.id === item.id);
-        console.log(INDICE_ITEM_PADRE);
-        
-        
-        console.log(item);
-        console.log(index);
-        
-        // fileInput = document.getElementById(`formFile${this.catalogoDocumentos.adicionales[index]?.id}`) as HTMLInputElement;
-        
+  limpiarFile(item: any, tipo: string): void {
+    let FILE_INPUT: HTMLInputElement | null = null;
+    if (tipo === 'obligatorios') {
+      FILE_INPUT = document.getElementById(`formFile${item.id}`) as HTMLInputElement;
+    } else if (tipo === 'opcionales') {
+      FILE_INPUT = document.getElementById(`formFileOpcionales${item.id}`) as HTMLInputElement;
+    }
 
-      break;
-      }
-      default:
-        break;
+    if (FILE_INPUT) {
+      FILE_INPUT.value = ''; // Limpia el archivo seleccionado
     }
-    
-    if (fileInput) {
-      fileInput.value = ''; // Limpia el archivo seleccionado
+
+    const INDEX_ARCHIVO: number = this.listadoArchivos.findIndex(f => f.id === item.id);
+    if (INDEX_ARCHIVO !== -1) {
+      this.listadoArchivos.splice(INDEX_ARCHIVO, 1);
     }
-    
-    const indexArchivo: number = this.listadoArchivos.findIndex(f => f.id === item.id);
-    if (indexArchivo !== -1) {
-      this.listadoArchivos.splice(indexArchivo, 1);
-    }        
   }
 
   agregarParte(fileInput: HTMLInputElement, item: any, origen: string) {
@@ -380,6 +390,10 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
     });
 
     console.log(this.listDocOpcionales);
+    this.documentosStore.establecerCatalogoDocumentos(this.listDocOpcionales);
+    console.log(this.documentosState);
+
+
 
   }
 
@@ -424,11 +438,6 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  ngOnInit() {
-    this.archivosOpcionalesOriginal = [...this.archivosOpcionales];
-    this.obtenerToken(this.datosLogin);
-    this.crearFormaDocumento();
-  }
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['catalogoDocumentos']) {
@@ -443,5 +452,5 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
     this.subscription.forEach((sub: Subscription) => sub.unsubscribe());
   }
 
- 
+
 }

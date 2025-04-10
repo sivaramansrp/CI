@@ -28,7 +28,7 @@
                 <i class="bi bi-eye bi-c"></i>
               </button>
               }
-              <button type="button" class="btn btn-link" (click)="limpiarFile(item, i, 'obligatorios')">
+              <button type="button" class="btn btn-link" (click)="limpiarFile(item, 'obligatorios')">
                 <i class="bi bi-trash3 bi-c"></i>
               </button>
             </div>
@@ -49,11 +49,10 @@
                 <i class="bi bi-eye bi-c"></i>
               </button>
               }
-              <button type="button" class="btn btn-link" (click)="limpiarFile(adicional, iAdicional, 'adicional')">
+              <button type="button" class="btn btn-link" (click)="limpiarFile(adicional, 'obligatorios')">
                 <i class="bi bi-trash3 bi-c"></i>
               </button>
-              <button type="button" class="btn file-btn-add" data-bs-toggle="modal" data-bs-target="#modalConfirmacion"
-                (click)="eliminarNuevo({item,adicional},true)">
+              <button type="button" class="btn file-btn-add" (click)="eliminarNuevo({item,adicional},true)">
                 <i class="bi bi-x-circle-fill"></i>
               </button>
             </div>
@@ -83,7 +82,7 @@
               </div>
             </div>
             <div class="col-md-3 d-flex justify-content-end">
-              <button type="button" class="btn file-btn-add" (click)="agregarParte(fileInput, item, 'opcionales')">
+              <button type="button" class="btn file-btn-add" (click)="agregarParte(fileInput, item, 'obligatorios')">
                 <i class="bi bi-plus-circle-fill"></i>
               </button>
               @if (existePreview(item.id)) {
@@ -91,12 +90,10 @@
                 <i class="bi bi-eye bi-c"></i>
               </button>
               }
-              <button type="button" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#modalConfirmacion"
-                (click)="limpiarFile(fileInput,item, '')">
+              <button type="button" class="btn btn-link" (click)="limpiarFile(item, 'opcionales')">
                 <i class="bi bi-trash3 bi-c"></i>
               </button>
-              <button type="button" class="btn file-btn-add" data-bs-toggle="modal" data-bs-target="#modalConfirmacion"
-                (click)="eliminarOpcional(item)">
+              <button type="button" class="btn file-btn-add" (click)="eliminarOpcional(item)">
                 <i class="bi bi-x-circle-fill"></i>
               </button>
             </div>
@@ -117,12 +114,10 @@
                 <i class="bi bi-eye bi-c"></i>
               </button>
               }
-              <button type="button" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#modalConfirmacion"
-                (click)="limpiarFile(fileInput,adicional, '')">
+              <button type="button" class="btn btn-link" (click)="limpiarFile(adicional, 'opcionales')">
                 <i class="bi bi-trash3 bi-c"></i>
               </button>
-              <button type="button" class="btn file-btn-add" data-bs-toggle="modal" data-bs-target="#modalConfirmacion"
-                (click)="eliminarNuevo({item,adicional},true)">
+              <button type="button" class="btn file-btn-add" (click)="eliminarNuevo({item,adicional},true)">
                 <i class="bi bi-x-circle-fill"></i>
               </button>
             </div>

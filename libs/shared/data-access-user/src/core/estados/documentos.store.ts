@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { Store } from "@datorama/akita";
+import { Store, StoreConfig } from "@datorama/akita";
 
 /**
  * Estado para almacenar la información de cada documento
@@ -32,6 +32,7 @@ export function createInitialStateDocumentos(): DocumentosState {
 @Injectable({
     providedIn: 'root'
 })
+@StoreConfig({ name: 'documentos', resettable: true })
 export class DocumentosStore extends Store<DocumentosState> {
     constructor() {
         super(createInitialStateDocumentos());
