@@ -53,7 +53,7 @@ describe('DatosSolicitudComponent', () => {
 
   it('should subscribe to mostrarTabla$ and update mostrarTabla', () => {
     const mostrarTabla$ = of(true);
-    jest.spyOn(tramiteQuery, 'mostrarTabla$').mockReturnValue(mostrarTabla$);
+    jest.spyOn(tramiteQuery as any, 'mostrarTabla$', 'get').mockReturnValue(mostrarTabla$);
     component.ngOnInit();
     expect(component.mostrarTabla).toBe(true);
   });
@@ -72,7 +72,7 @@ describe('DatosSolicitudComponent', () => {
     };
 
     const selectSolicitud$ = of(mockSolicitudData);
-    jest.spyOn(tramiteQuery, 'selectSolicitud$').mockReturnValue(selectSolicitud$);
+    jest.spyOn<any, any>(tramiteQuery, 'selectSolicitud$').mockReturnValue(selectSolicitud$);
 
     component.ngOnInit();
     expect(component.formDelTramite.value.solicitud).toBe('Test Solicitud');
@@ -128,14 +128,14 @@ describe('DatosSolicitudComponent', () => {
   });
 
   it('should fetch the list of countries and update the countries array', () => {
-    const mockCountries: Catalogo[] = [{ descripcion: 'Country 1' }, { descripcion: 'Country 2' }];
+    const mockCountries: Catalogo[] = [{ id: 1, descripcion: 'Country 1' }, { id: 2, descripcion: 'Country 2' }];
     jest.spyOn(permisoService, 'getListaDePaisesDisponibles').mockReturnValue(of(mockCountries));
     component.listaDePaisesDisponibles();
     expect(component.elementosDeBloque).toEqual(mockCountries);
   });
 
   it('should call the service to fetch the federal entities', () => {
-    const mockEntities: Catalogo[] = [{ descripcion: 'Entity 1' }, { descripcion: 'Entity 2' }];
+    const mockEntities: Catalogo[] = [{ id: 1, descripcion: 'Entity 1' }, { id: 2, descripcion: 'Entity 2' }];
     jest.spyOn(permisoService, 'getEstado').mockReturnValue(of(mockEntities));
     component.fetchEntidadFederativa();
     expect(component.estado).toEqual(mockEntities);
@@ -147,19 +147,33 @@ describe('DatosSolicitudComponent', () => {
   });
 
   it('should enable the "Modify" button when a row is selected', () => {
-    component.filaSeleccionada = [{ descripcion: 'Test Row' }];
+    component.filaSeleccionada = [{
+      descripcion: 'Test Row',
+      cantidad: '1',
+      unidadDeMedida: 'Test Unidad',
+      fraccionFrancelaria: 'Test Fraccion',
+      precioUnitarioUSD: '100',
+      totalUSD: '100'
+    }];
     expect(component.disabledModificar()).toBe(false);
   });
 
   it('should fetch representation federal data correctly', () => {
-    const mockRepresentation: Catalogo[] = [{ descripcion: 'Representation 1' }];
+    const mockRepresentation: Catalogo[] = [{ id: 1, descripcion: 'Representation 1' }];
     jest.spyOn(permisoService, 'getRepresentacionFederal').mockReturnValue(of(mockRepresentation));
     component.fetchRepresentacionFederal();
     expect(component.representacionFederal).toEqual(mockRepresentation);
   });
 
   it('should navigate to modify the row when selected row exists', () => {
-    const mockRow = [{ descripcion: 'Test Row' }];
+    const mockRow = [{
+      descripcion: 'Test Row',
+      cantidad: '1',
+      unidadDeMedida: 'Test Unidad',
+      fraccionFrancelaria: 'Test Fraccion',
+      precioUnitarioUSD: '100',
+      totalUSD: '100'
+    }];
     component.filaSeleccionada = mockRow;
     jest.spyOn(tramiteStore, 'storeTableValues');
     component.navegarParaModificarPartida();
@@ -167,14 +181,14 @@ describe('DatosSolicitudComponent', () => {
   });
 
   it('should fetch PaisesPorBloque data correctly', () => {
-    const mockCountries: Catalogo[] = [{ descripcion: 'Country 1' }];
+    const mockCountries: Catalogo[] = [{ id: 1, descripcion: 'Country 1' }];
     jest.spyOn(permisoService, 'getPaisesPorBloque').mockReturnValue(of(mockCountries));
     component.fetchPaisesPorBloque(1);
     expect(component.paisesPorBloque).toEqual(mockCountries);
   });
 
   it('should call enCambioDeBloque method correctly', () => {
-    const mockCountries: Catalogo[] = [{ descripcion: 'Country 1' }];
+    const mockCountries: Catalogo[] = [{ id: 1, descripcion: 'Country 1' }];
     jest.spyOn(permisoService, 'getPaisesPorBloque').mockReturnValue(of(mockCountries));
     component.enCambioDeBloque(1);
     expect(component.paisesPorBloque).toEqual(mockCountries);
