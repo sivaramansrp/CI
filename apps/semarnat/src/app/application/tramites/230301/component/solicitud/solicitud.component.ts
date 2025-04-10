@@ -91,25 +91,36 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-
-    // Inicialización del formulario reactivo
-    this.formDesistimiento = this.fb.group({
-      desistimientoFolio: [
-        { value: this.solicitudState.desistimientoFolio, disabled: true },
-        Validators.required,
-      ],
-      solicitudTipo: [
-        { value: this.solicitudState.solicitudTipo, disabled: true },
-        [Validators.required],
-      ],
-      desistimientoMotivo: [
-        this.solicitudState.desistimientoMotivo,
-        [Validators.required],
-      ],
-    });
-
+    this.crearDesistimientoForm();
     this.getFromdata();
   }
+
+    /**
+   * @function crearDesistimientoForm
+   * @description
+   * Inicializa un formulario reactivo para manejar los datos de "desistimiento" (retiro).
+   * El formulario incluye campos para el folio de desistimiento, tipo de solicitud y motivo del desistimiento.
+   * Algunos campos están pre-rellenados y deshabilitados según el estado actual de la solicitud.
+   * 
+   * @returns {void} Esta función no retorna ningún valor.
+   */
+    crearDesistimientoForm (): void {
+      // Inicialización del formulario reactivo
+      this.formDesistimiento = this.fb.group({
+        desistimientoFolio: [
+          { value: this.solicitudState.desistimientoFolio, disabled: true },
+          Validators.required,
+        ],
+        solicitudTipo: [
+          { value: this.solicitudState.solicitudTipo, disabled: true },
+          [Validators.required],
+        ],
+        desistimientoMotivo: [
+          this.solicitudState.desistimientoMotivo,
+          [Validators.required],
+        ],
+      });
+    }
 
   /**
    * Método para obtener datos del desistimiento desde el servicio.
