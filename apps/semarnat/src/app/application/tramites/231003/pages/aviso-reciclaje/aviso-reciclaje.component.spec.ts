@@ -20,7 +20,6 @@ describe('AvisoReciclajeComponent', () => {
     // Force trigger change detection so ngOnInit runs
     fixture.detectChanges();
 
-    // ✅ Manually mock the @ViewChild component
     mockWizardComponent = {
       siguiente: jest.fn(),
       atras: jest.fn(),
