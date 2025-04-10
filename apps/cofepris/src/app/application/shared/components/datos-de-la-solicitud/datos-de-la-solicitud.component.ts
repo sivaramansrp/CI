@@ -3,11 +3,13 @@ import {
   ALERTA_OPCIONS,
   CAMPOS_ADICIONALES_POR_PROCEDIMIENTO_MAP,
   CAMPOS_REQUERIDOS_FORMULARIO_MAP,
+  CORREO_ELECTRONICO,
   PROCEDIMIENTOS_NO_PARA_ELEMENTO_CALLE,
   PROCEDIMIENTOS_NO_PARA_ELEMENTO_COLAPSABLE,
   PROCEDIMIENTOS_NO_PARA_ELEMENTO_CORREO_ELECTRONIC,
   PROCEDIMIENTOS_NO_PARA_ELEMENTO_RFC_DEL_SANITARIO,
   PROCEDIMIENTOS_PARA_DESHABILITAR_MUNICIPIO_ALCALDIA,
+  REPRESENTANTE_LEGAL,
 } from '../../constantes/datos-solicitud.enum';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
@@ -224,6 +226,11 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   public mostrarCorreoElectronico = true;
 
+  public correoElectronicoMostrar = true;
+
+  public mostrarRepresentanteLegal = true;
+  
+
   /**
    * @property {boolean} mostrarRFCSanitario
    * Controla la visibilidad del campo de RFC sanitario en el formulario.
@@ -313,6 +320,15 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     )
       ? false
       : true;
+
+    this.correoElectronicoMostrar = CORREO_ELECTRONICO.includes(this.idProcedimiento)
+      ? true
+      : false;
+
+    this.mostrarRepresentanteLegal = REPRESENTANTE_LEGAL.includes(this.idProcedimiento)
+      ? false
+      : true;
+
   }
 
   /**
@@ -421,7 +437,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     });
   }
 
-/**
+  /**
  * @method actualizarDatosFormularioSolicitud
  * @description Actualiza las validaciones de los campos del formulario `datosSolicitudForm`
  * en función de los procedimientos definidos en `CAMPOS_REQUERIDOS_FORMULARIO_MAP`.

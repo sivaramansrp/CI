@@ -69,8 +69,8 @@
           />
         </div>
       </div>
-    }
-      <div class="col-md-6">
+      }
+      <div [class.col-md-6]="!correoElectronicoMostrar" [class.col-md-8]="correoElectronicoMostrar">
         <div class="form-group">
           <label class="form-label" for="denominacionRazon"
             >Denominación o razón social</label>
@@ -87,9 +87,34 @@
           />
         </div>
       </div>
+
+      @if (correoElectronicoMostrar || mostrarCorreoElectronico) {
+        <div [class.col-md-4]="correoElectronicoMostrar" [class.col-md-12]="mostrarCorreoElectronico">
+          <div class="form-group">
+            <label class="form-label" for="correoElectronico"
+              >Correo electrónico:</label
+            >
+            <span
+              class="bi bi-question-circle-fill"
+              title="Correo electrónico"
+              data-bs-toggle="tooltip"
+            ></span>
+            <input
+              class="form-control"
+              id="correoElectronico"
+              type="text"
+              formControlName="correoElectronico"
+              [ngClass]="
+                isValid(datosSolicitudForm, 'correoElectronico') ? 'required' : ''
+              "
+            />
+          </div>
+        </div>
+      }
+      
     </div>
 
-    @if(mostrarCorreoElectronico){
+    <!-- @if(mostrarCorreoElectronico){
       <div class="row">
         <div class="col-md-12">
           <div class="form-group">
@@ -113,7 +138,7 @@
           </div>
         </div>
       </div>
-    }
+    } -->
 
     <ng-titulo titulo="Domicilio del establecimiento"></ng-titulo>
 
@@ -518,85 +543,89 @@
         </div>
       </div>
     </div>
-    <ng-titulo titulo="Representante legal" class="mt-4"></ng-titulo>
 
-    <div class="row">
-      <div class="col-md-4">
-        <div class="form-group">
-          <label class="form-label" for="representanteRfc">RFC*:</label>
-          <input
-            class="form-control"
-            id="representanteRfc"
-            type="text"
-            formControlName="representanteRfc"
-            [ngClass]="
-              isValid(datosSolicitudForm, 'representanteRfc') ? 'required' : ''
-            "
-          />
+    @if(mostrarRepresentanteLegal) {
+      <ng-titulo titulo="Representante legal" class="mt-4"></ng-titulo>
+
+      <div class="row">
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="form-label" for="representanteRfc">RFC*:</label>
+            <input
+              class="form-control"
+              id="representanteRfc"
+              type="text"
+              formControlName="representanteRfc"
+              [ngClass]="
+                isValid(datosSolicitudForm, 'representanteRfc') ? 'required' : ''
+              "
+            />
+          </div>
         </div>
-      </div>
-      <div class="col-md-2 mt-5">
-        <button
-          type="button"
-          name="representanteRfcBuscar"
-          class="btn btn-default"
-          (click)="buscarRepresentanteRfc()"
-        >
-          Buscar
-        </button>
-      </div>
-    </div>
-    <div class="row mt-2">
-      <div class="col-md-4">
-        <div class="form-group">
-          <label class="form-label" for="representanteNombre"
-            >Nombre o Razón Social*:</label
+        <div class="col-md-2 mt-5">
+          <button
+            type="button"
+            name="representanteRfcBuscar"
+            class="btn btn-default"
+            (click)="buscarRepresentanteRfc()"
           >
-          <input
-            class="form-control"
-            id="representanteNombre"
-            type="text"
-            formControlName="representanteNombre"
-            [ngClass]="
-              isValid(datosSolicitudForm, 'representanteNombre')
-                ? 'required'
-                : ''
-            "
-          />
+            Buscar
+          </button>
         </div>
       </div>
-      <div class="col-md-4">
-        <div class="form-group">
-          <label class="form-label" for="apellidoPaterno"
-            >Apellido paterno*:</label
-          >
-          <input
-            class="form-control"
-            id="apellidoPaterno"
-            type="text"
-            formControlName="apellidoPaterno"
-            [ngClass]="
-              isValid(datosSolicitudForm, 'apellidoPaterno') ? 'required' : ''
-            "
-          />
+      <div class="row mt-2">
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="form-label" for="representanteNombre"
+              >Nombre o Razón Social*:</label
+            >
+            <input
+              class="form-control"
+              id="representanteNombre"
+              type="text"
+              formControlName="representanteNombre"
+              [ngClass]="
+                isValid(datosSolicitudForm, 'representanteNombre')
+                  ? 'required'
+                  : ''
+              "
+            />
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="form-label" for="apellidoPaterno"
+              >Apellido paterno*:</label
+            >
+            <input
+              class="form-control"
+              id="apellidoPaterno"
+              type="text"
+              formControlName="apellidoPaterno"
+              [ngClass]="
+                isValid(datosSolicitudForm, 'apellidoPaterno') ? 'required' : ''
+              "
+            />
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="form-label" for="apellidoMaterno"
+              >Apellido materno:</label
+            >
+            <input
+              class="form-control"
+              id="apellidoMaterno"
+              type="text"
+              formControlName="apellidoMaterno"
+              [ngClass]="
+                isValid(datosSolicitudForm, 'apellidoMaterno') ? 'required' : ''
+              "
+            />
+          </div>
         </div>
       </div>
-      <div class="col-md-4">
-        <div class="form-group">
-          <label class="form-label" for="apellidoMaterno"
-            >Apellido materno:</label
-          >
-          <input
-            class="form-control"
-            id="apellidoMaterno"
-            type="text"
-            formControlName="apellidoMaterno"
-            [ngClass]="
-              isValid(datosSolicitudForm, 'apellidoMaterno') ? 'required' : ''
-            "
-          />
-        </div>
-      </div>
-    </div>
+    }
+
   </form>
 </div>

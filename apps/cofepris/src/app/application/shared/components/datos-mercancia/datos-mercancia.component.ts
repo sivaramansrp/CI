@@ -8,6 +8,7 @@ import {
 } from '@angular/forms';
 import {
   CROSLISTA_DE_PAISES,
+  DATOS_MERCANCIA_CAMPO,
   DATOS_MERCANCIA_CLAVE_TABLA,
 } from '../../constantes/datos-solicitud.enum';
 import {
@@ -223,6 +224,8 @@ export class DatosMercanciaComponent implements OnInit {
    */
   public seleccionarOrigenDelPais = CROSLISTA_DE_PAISES;
 
+  public datosMercanciaCampo = false;
+
   /**
    * @constructor
    * Inicializa el formulario de mercancía y carga catálogos desde archivos JSON.
@@ -266,6 +269,10 @@ export class DatosMercanciaComponent implements OnInit {
       'cantidadUmcDatos',
       '/cofepris/cantidadUmcDatos.json'
     );
+
+      this.datosMercanciaCampo = DATOS_MERCANCIA_CAMPO.includes(this.idProcedimiento)
+       ? true
+       : false;
   }
 
   /**
@@ -338,6 +345,12 @@ export class DatosMercanciaComponent implements OnInit {
           'claveDeLos',
           'fechaDeFabricacio',
           'fechaDeCaducidad',
+        ];
+        break;
+        case 260208: 
+        this.elementosNoValidos =[
+          'numeroRegistroSanitario',
+          'fechaCaducidad',
         ];
         break;
       default:
