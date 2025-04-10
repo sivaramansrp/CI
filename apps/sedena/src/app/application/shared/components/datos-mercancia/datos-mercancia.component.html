@@ -3,7 +3,7 @@
     <ng-titulo titulo="Datos mercancía"></ng-titulo>
   </div>
   <div class="row mt-5">
-    <form [formGroup]="datosMercancia" (ngSubmit)="onSubmit()">
+    <form [formGroup]="datosMercancia">
       <!-- Descripción as a textarea -->
       <div class="row mb-3">
         <div class="col-12">
@@ -13,6 +13,7 @@
             class="form-control"
             formControlName="descripcion"
             rows="3"
+            style="height: 90px"
             placeholder="Ingrese la descripción"
           ></textarea>
           <div
@@ -56,6 +57,8 @@
             type="text"
             class="form-control"
             formControlName="descFraccion"
+            style="height: 90px"
+            readonly
           ></textarea>
           <div
             *ngIf="
@@ -97,7 +100,8 @@
             type="text"
             class="form-control"
             formControlName="umt"
-            placeholder="Ej. KG"
+            placeholder="Kilogramo"
+            readonly
           />
           <div
             *ngIf="
@@ -134,7 +138,7 @@
 
       <!-- UMC, Tipo moneda -->
       <div class="row mb-3">
-        <div class="col-md-6">
+        <div class="col-md-4">
           <app-catalogo-select
             formControlName="umc"
             [catalogo]="umcCatalogo"
@@ -152,7 +156,7 @@
           </div>
         </div>
 
-        <div class="col-md-6">
+        <div class="col-md-4">
           <app-catalogo-select
             formControlName="tipoMoneda"
             [catalogo]="monedaCatalogo"

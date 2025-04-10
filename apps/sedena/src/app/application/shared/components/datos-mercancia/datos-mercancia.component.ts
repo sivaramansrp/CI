@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
@@ -16,6 +16,7 @@ import {
 } from '@angular/forms';
 import { CROSLISTA_DE_PAISES } from '../../constants/datos-solicitud.enum';
 import { Location } from '@angular/common';
+import { MercanciaDetalle } from '../../models/datos-del-tramite.model';
 @Component({
   selector: 'app-datos-mercancia',
   standalone: true,
@@ -35,6 +36,8 @@ export class DatosMercanciaComponent implements OnInit {
       relativeTo: this.activatedRoute,
     });
   }
+  datosMercancias: MercanciaDetalle[] = [];
+  @Output() updateMercanciaDetalle = new EventEmitter<MercanciaDetalle[]>();
 
   datosMercancia!: FormGroup; // Changed from datosForm
 
@@ -73,6 +76,21 @@ export class DatosMercanciaComponent implements OnInit {
   ) {}
 
   guardar(): void {
+    const DATOS_MERCANCIA: MercanciaDetalle = {
+      fraccionArancelaria: this.datosMercancia.get('fraccionArancelaria')
+        ?.value,
+      descripcionFraccion: this.datosMercancia.get('descFraccion')?.value,
+      unidadMedidaTarifa: this.datosMercancia.get('umt')?.value,
+      umc: this.datosMercancia.get('umc')?.value,
+      cantidadUMT: this.datosMercancia.get('cantidadUMT')?.value,
+      valorComercial: this.datosMercancia.get('valorComercial')?.value,
+      tipoMoneda: this.datosMercancia.get('tipoMoneda')?.value,
+      descripcion: this.datosMercancia.get('descripcion')?.value,
+      paisOrigen: this.seleccionadasPaisDeOriginDatos.join(','),
+    };
+    this.datosMercancias.push(DATOS_MERCANCIA);
+    this.updateMercanciaDetalle.emit(this.datosMercancias);
+    this.datosMercancia.reset();
     this.ubicaccion.back();
   }
   ngOnInit(): void {
@@ -80,9 +98,16 @@ export class DatosMercanciaComponent implements OnInit {
     this.datosMercancia = this.fb.group({
       descripcion: ['QAS', Validators.required],
       fraccionArancelaria: ['25030002', Validators.required],
-      descFraccion: ['Azufre de cualquier clase...', Validators.required],
+      descFraccion: [
+        {
+          value:
+            'Azufre de cualquier clase, excepto el sublimado, el precipitado y el coloidal.',
+          disabled: true,
+        },
+        Validators.required,
+      ],
       cantidadUMT: [null, Validators.required],
-      umt: [null, Validators.required],
+      umt: [{ value: 'Kilogramo', disabled: true }, Validators.required],
       valorComercial: [null, Validators.required],
       umc: [null, Validators.required],
       tipoMoneda: [null, Validators.required],
@@ -102,6 +127,4 @@ export class DatosMercanciaComponent implements OnInit {
   cancelar(): void {
     this.ubicaccion.back();
   }
-
-  onSubmit(): void {}
 }

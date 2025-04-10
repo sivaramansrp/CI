@@ -53,8 +53,9 @@
           <textarea
             id="usoFinal"
             class="form-control"
-            rows="6"
+            rows="3"
             formControlName="usoFinal"
+            style="height: 90px"
           ></textarea>
         </div>
       </form>
@@ -64,7 +65,7 @@
       <app-tabla-dinamica
         [tipoSeleccionTabla]="mercanciaTablaConfiguracion.tipoSeleccionTabla"
         [configuracionTabla]="mercanciaTablaConfiguracion.configuracionTabla"
-        [datos]="mercanciaTablaConfiguracion.datos"
+        [datos]="datosMercanciaTabla"
       ></app-tabla-dinamica>
     </div>
     <div class="row mt-3">

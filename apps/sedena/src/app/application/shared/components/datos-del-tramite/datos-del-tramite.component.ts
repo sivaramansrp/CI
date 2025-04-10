@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   ConfiguracionTabla,
@@ -15,7 +15,11 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { MERCANCIA_ENCABEZADO_DE_TABLA } from '../../models/datos-del-tramite.model';
+import {
+  DatosDelTramiteFormState,
+  MERCANCIA_ENCABEZADO_DE_TABLA,
+  MercanciaDetalle,
+} from '../../models/datos-del-tramite.model';
 import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
@@ -31,7 +35,7 @@ import { ActivatedRoute, Router } from '@angular/router';
   templateUrl: './datos-del-tramite.component.html',
   styleUrl: './datos-del-tramite.component.css',
 })
-export class DatosDelTramiteComponent {
+export class DatosDelTramiteComponent implements OnInit {
   public seleccionarAduanasDisponibles = CROSLISTA_ADUANAS_DISPONIBLES;
   public seleccionarAduanasDisponiblesDatos: string[] = [];
   public aduanasDisponiblesLabel: CrossListLable = {
@@ -39,11 +43,16 @@ export class DatosDelTramiteComponent {
     derecha: 'Aduanas seleccionadas',
   };
   form: FormGroup;
+  @Input() datosDelTramiteFormState!: DatosDelTramiteFormState;
+  @Input() datosMercanciaTabla: MercanciaDetalle[] = [];
   public mercanciaTablaConfiguracion = {
     tipoSeleccionTabla: TablaSeleccion.CHECKBOX,
     configuracionTabla: MERCANCIA_ENCABEZADO_DE_TABLA,
     datos: [],
   };
+
+  @Output() updateDatosDelTramiteFormulario =
+    new EventEmitter<DatosDelTramiteFormState>();
   constructor(
     private fb: FormBuilder,
     private activatedRoute: ActivatedRoute,
@@ -64,6 +73,25 @@ export class DatosDelTramiteComponent {
   irAAcciones(accionesPath: string): void {
     this.router.navigate([accionesPath], {
       relativeTo: this.activatedRoute,
+    });
+  }
+
+  ngOnInit(): void {
+    this.form.patchValue({
+      permisoGeneral: this.datosDelTramiteFormState.permisoGeneral,
+      usoFinal: this.datosDelTramiteFormState.usoFinal,
+    });
+    this.seleccionarAduanasDisponiblesDatos =
+      this.datosDelTramiteFormState.aduanasSeleccionadas;
+
+    this.form.valueChanges.subscribe((formValue) => {
+      const DATOS_DEL_TRAMITE: DatosDelTramiteFormState = {
+        permisoGeneral: formValue.permisoGeneral,
+        paisDestino: formValue.paisDestino,
+        usoFinal: formValue.usoFinal,
+        aduanasSeleccionadas: this.seleccionarAduanasDisponiblesDatos,
+      };
+      this.updateDatosDelTramiteFormulario.emit(DATOS_DEL_TRAMITE);
     });
   }
 }
