@@ -35,7 +35,7 @@ export interface CaatSolicitud {
 @Injectable({
   providedIn: 'root'
 })
-export class RegistroCaatNavieroService {
+export class RegistroCaatNavieroService1 {
   private baseUrl: string = '/assets/json/40301/'; 
 
   constructor(private http: HttpClient) {}

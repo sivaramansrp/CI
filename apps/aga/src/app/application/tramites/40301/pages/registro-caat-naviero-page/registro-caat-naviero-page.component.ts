@@ -75,7 +75,7 @@ export class RegistroCaatNavieroPageComponent implements OnInit {
         FORM_VALIDA.push(false);
       }
     }
-    console.log('SECCIONES:', SECCIONES);
+    console.log(FORM_VALIDA);
     this.seccionStore.establecerSeccion(SECCIONES);
     this.seccionStore.establecerFormaValida(FORM_VALIDA);
   }

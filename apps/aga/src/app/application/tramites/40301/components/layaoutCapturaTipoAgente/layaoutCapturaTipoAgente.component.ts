@@ -5,6 +5,8 @@ import { CapturarService } from '../../services/capturar.service';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 
 import { Subject, map, takeUntil } from 'rxjs';
+import { Solicitud40301Store } from '../../estados/tramite40301.store';
+import { Solicitud40301Query } from '../../estados/tramite40301.query';
 
 @Component({
   selector: 'app-layaout-captura-tipo-agente',
@@ -24,12 +26,12 @@ export class LayaoutCapturaTipoAgenteComponent implements OnInit {
   private destruirNotificador$: Subject<void> = new Subject();
 
   constructor(private fb: FormBuilder,
-    private capturarService: CapturarService
+    private capturarService: CapturarService,
+    private tramite40301Store: Solicitud40301Store,
+    private tramite40301session: Solicitud40301Query,
   ) { }
 
   ngOnInit(): void {
-
-
     this.formularioAgente = this.fb.group({
       tipoAgente: ['', Validators.required],
     });
@@ -62,7 +64,10 @@ export class LayaoutCapturaTipoAgenteComponent implements OnInit {
    * Método para obtener el valor del campo tipoAgente.
    * @returns string
    */
-  conTipooAgenteData(): Catalogo[] {
+  conTipoAgenteData(control: string): Catalogo[] {
+    console.log(`this.agentCatalog`, this.agentCatalog);
+    console.log(this.formularioAgente.get(control)?.value);
+
     return this.agentCatalog.map((item) => {
       return {
         id: item.id,

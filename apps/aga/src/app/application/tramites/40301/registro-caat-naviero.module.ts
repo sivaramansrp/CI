@@ -14,16 +14,17 @@ import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RegistroCaatNavieroPageComponent } from './pages/registro-caat-naviero-page/registro-caat-naviero-page.component';
 import { RegistroCaatNavieroRoutingModule } from './registro-caat-naviero-routing.module';
-import { RegistroCaatNavieroService } from './services/RegistroCaatNavieroController.service';
+// import { RegistroCaatNavieroService } from './services/RegistroCaatNavieroController.service';
 import { RouterModule } from '@angular/router';
 import { SelectPaisesComponent } from '@ng-mf/data-access-user';
-import { ServiciosExtraordinariosService } from './service_/servicios-extraordinarios.service';
+import { ServiciosExtraordinariosService } from './services/servicios-extraordinarios.service';
 import { SolicitanteComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { ToastrModule } from 'ngx-toastr';
 import { ToastrService } from 'ngx-toastr';
 import { WizardComponent } from '@ng-mf/data-access-user';
 import { forwardRef } from '@angular/core';
+import { Solicitud40301Store } from './estados/tramite40301.store';
 
 @NgModule({
   declarations: [
@@ -54,8 +55,9 @@ import { forwardRef } from '@angular/core';
   providers: [
     ToastrService,
     ServiciosExtraordinariosService,
-    RegistroCaatNavieroService,
-    CapturarService
+    // RegistroCaatNavieroService,
+    CapturarService,
+    Solicitud40301Store
   ]
 })
 export class RegistroCaatNavieroModule {}

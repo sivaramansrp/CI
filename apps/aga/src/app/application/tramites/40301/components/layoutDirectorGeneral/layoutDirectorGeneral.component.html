@@ -1,4 +1,4 @@
-<form [formGroup]="solicitud">
+<form [formGroup]="solicitudForm">
   <div class="row">
     <div class="col col-md-12">
       <h3>Nombre del director general</h3>
@@ -13,11 +13,12 @@
       </div>
       <div>
         <input type="text" 
-               formControlName="nombre" 
+               formControlName="directorGeneralNombre" 
                size="30" 
                id="nombreDirectorGeneral" 
                maxlength="200" 
-               class="form-control"/>
+               class="form-control"
+               (input)="actualizarDirectorGeneralNombre('directorGeneralNombre')"/>
       </div>
     </div>
     <div class="col col-md-4 form-group">
@@ -27,11 +28,12 @@
       </div>			
       <div>
         <input type="text" 
-               formControlName="apellidoPaterno" 
+               formControlName="primerApellido" 
                size="30" 
                id="apellidoPaternoDirectorGeneral" 
                maxlength="200" 
-               class="form-control"/>
+               class="form-control"
+               (input)="actualizarPrimerApellido('primerApellido')"/>
       </div>
     </div>		
     <div class="col col-md-4 form-group">
@@ -40,11 +42,12 @@
       </div>			
       <div>
         <input type="text" 
-               formControlName="apellidoMaterno" 
+               formControlName="segundoApellido" 
                size="30" 
                id="apellidoMaternoDirectorGeneral" 
                maxlength="200" 
-               class="form-control" />
+               class="form-control"
+               (input)="actualizarApellidoMaterno('segundoApellido')" />
       </div>
     </div>
   </div>
