@@ -36,8 +36,8 @@ describe('AsociadosComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      declarations: [AsociadosComponent, TablaDinamicaComponent, CatalogoSelectComponent],
-      imports: [ReactiveFormsModule],
+      declarations: [],
+      imports: [ReactiveFormsModule, AsociadosComponent, TablaDinamicaComponent, CatalogoSelectComponent],
       providers: [
         { provide: SanitarioService, useValue: mockSanitarioService },
         { provide: Sanitario260906Store, useValue: mockSanitarioStore },
@@ -59,7 +59,7 @@ describe('AsociadosComponent', () => {
     expect(component.derechosForm.value).toEqual({
       referencia: null,
       cadenaDependencia: null,
-      Llave: null,
+      llave: null,
       banco: null,
       tipoFetch: null,
       importe: null,
@@ -98,8 +98,10 @@ describe('AsociadosComponent', () => {
 
   it('should call setValoresStore when form control changes', () => {
     const referenciaInput = fixture.debugElement.nativeElement.querySelector('#referencia');
-    referenciaInput.value = 'New Reference';
-    referenciaInput.dispatchEvent(new Event('change'));
+    if (referenciaInput) {
+      referenciaInput.value = 'New Reference';
+    }
+    referenciaInput?.dispatchEvent(new Event('change'));
 
     expect(mockSanitarioStore.setreferencia).toHaveBeenCalledWith('New Reference');
   });

@@ -17,7 +17,8 @@ export interface Solicitud260906State {
     /**
      * El valor de correo.
      */
-    correo:string;    /**
+    correo:string;
+    /**
     * El valor de tipoOperacionJustificacion.
     */
     tipoOperacionJustificacion:string;
