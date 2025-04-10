@@ -13,6 +13,8 @@ import { UppercaseDirective } from '@ng-mf/data-access-user';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 
 import { TableComponent } from '@ng-mf/data-access-user';
+import { PartidasDeLaMercanciaModelo } from '../../../../shared/models/partidas-de-la-mercancia.model';
+import { PARTIDASDELAMERCANCIA_TABLA } from '../../../../shared/constantes/partidas-de-la-mercancia.enum';
 /**
  * PartidasDeLaMercanciaComponent
  * Este componente es responsable de gestionar las partidas de la mercancía.
@@ -49,16 +51,17 @@ export class PartidasDeLaMercanciaComponent {
   @Input() formForTotalCount!: FormGroup;
 
   /**
-   * tableHeaderData
    * Configuración de las columnas de la tabla dinámica.
+   * Este campo define las columnas que se mostrarán en la tabla, incluyendo encabezados y claves.
    */
-  @Input() tableHeaderData: ConfiguracionColumna<any>[] = [];
+  @Input() tableHeaderData: ConfiguracionColumna<PartidasDeLaMercanciaModelo>[] =
+    PARTIDASDELAMERCANCIA_TABLA;
 
   /**
-   * tableBodyData
-   * Datos que se mostrarán en el cuerpo de la tabla dinámica.
+   * Datos que se mostrarán en la tabla dinámica.
+   * Este campo contiene las filas de datos que se renderizarán en el cuerpo de la tabla.
    */
-  @Input() tableBodyData: any[] = [];
+  @Input() tableBodyData: PartidasDeLaMercanciaModelo[] = [];
 
   /**
    * mostrarTabla
@@ -71,6 +74,12 @@ export class PartidasDeLaMercanciaComponent {
    * Lista de elementos del catálogo de fracciones arancelarias.
    */
   @Input() fraccionDescripcionPartidasDeLaMercancia: Catalogo[] = [];
+
+  /**
+  * Bandera para deshabilitar la tabla dinámica.
+  * Si está configurada como `true`, la tabla estará deshabilitada.
+  */
+  @Input() disabled: boolean = false;
 
   /**
    * filaSeleccionadaChange

@@ -201,7 +201,7 @@
               <button class="btn btn-primary me-2" type="button">
                 Elimina Partida
               </button>
-              <button class="btn btn-danger" type="button" (click)="navegarParaModificarPartida()"
+              <button class="btn btn-danger" type="button" (click)="navegarParaModificarPartida()" [disabled]="disabled"
                 data-bs-toggle="modal" data-bs-target="#modalModificarPartida">
                 Mofificar partida
               </button>

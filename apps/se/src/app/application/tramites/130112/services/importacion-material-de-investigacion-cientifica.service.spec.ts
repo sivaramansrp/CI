@@ -33,7 +33,7 @@ describe('ImportacionMaterialDeInvestigacionCientificaService', () => {
       expect(data).toEqual(mockResponse);
     });
 
-    const req = httpMock.expectOne('/assets/json/130202/pais-procenia.json');
+    const req = httpMock.expectOne('/assets/json/130112/pais-procenia.json');
     expect(req.request.method).toBe('GET');
     req.flush(mockResponse);
   });
@@ -45,7 +45,7 @@ describe('ImportacionMaterialDeInvestigacionCientificaService', () => {
       expect(data).toEqual(mockResponse);
     });
 
-    const req = httpMock.expectOne('/assets/json/130202/paises-por-bloque.json');
+    const req = httpMock.expectOne('/assets/json/130112/paises-por-bloque.json');
     expect(req.request.method).toBe('GET');
     req.flush(mockResponse);
   });
@@ -57,7 +57,7 @@ describe('ImportacionMaterialDeInvestigacionCientificaService', () => {
       expect(data).toEqual(mockResponse);
     });
 
-    const req = httpMock.expectOne('/assets/json/130202/entidad-federativa.json');
+    const req = httpMock.expectOne('/assets/json/130112/entidad-federativa.json');
     expect(req.request.method).toBe('GET');
     req.flush(mockResponse);
   });
@@ -69,7 +69,7 @@ describe('ImportacionMaterialDeInvestigacionCientificaService', () => {
       expect(data).toEqual(mockResponse);
     });
 
-    const req = httpMock.expectOne('/assets/json/130202/representacion-federal.json');
+    const req = httpMock.expectOne('/assets/json/130112/representacion-federal.json');
     expect(req.request.method).toBe('GET');
     req.flush(mockResponse);
   });
@@ -84,7 +84,7 @@ describe('ImportacionMaterialDeInvestigacionCientificaService', () => {
       expect(data).toEqual(mockResponse);
     });
 
-    const req = httpMock.expectOne('assets/json/130202/solicitude-options.json');
+    const req = httpMock.expectOne('assets/json/130112/solicitude-options.json');
     expect(req.request.method).toBe('GET');
     req.flush(mockResponse);
   });
@@ -99,7 +99,7 @@ describe('ImportacionMaterialDeInvestigacionCientificaService', () => {
       expect(data).toEqual(mockResponse);
     });
 
-    const req = httpMock.expectOne('assets/json/130202/producto-otions.json');
+    const req = httpMock.expectOne('assets/json/130112/producto-otions.json');
     expect(req.request.method).toBe('GET');
     req.flush(mockResponse);
   });
@@ -111,7 +111,7 @@ describe('ImportacionMaterialDeInvestigacionCientificaService', () => {
       expect(data).toEqual(mockResponse);
     });
 
-    const req = httpMock.expectOne('/assets/json/130202/fraccion-descripcion-partidas-de-la-mercancia.json');
+    const req = httpMock.expectOne('/assets/json/130112/fraccion-descripcion-partidas-de-la-mercancia.json');
     expect(req.request.method).toBe('GET');
     req.flush(mockResponse);
   });

@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ProductoResponse } from '../../../shared/constantes/vehiculos-adaptados.enum';
+import { PartidasDeLaMercanciaModelo } from '../../../shared/models/partidas-de-la-mercancia.model';
 
 /**
  * @descripcion
@@ -29,7 +30,7 @@ export class ImportacionMaterialDeInvestigacionCientificaService {
    * @returns {Observable<Catalogo[]>} Observable que emite la lista de países.
    */
   getListaDePaisesDisponibles(): Observable<Catalogo[]> {
-    return this.http.get<Catalogo[]>('/assets/json/130202/pais-procenia.json');
+    return this.http.get<Catalogo[]>('/assets/json/130112/pais-procenia.json');
   }
 
   /**
@@ -40,7 +41,7 @@ export class ImportacionMaterialDeInvestigacionCientificaService {
    */
   getPaisesPorBloque(_bloqueId: number): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>(
-      '/assets/json/130202/paises-por-bloque.json'
+      '/assets/json/130112/paises-por-bloque.json'
     );
   }
 
@@ -51,7 +52,7 @@ export class ImportacionMaterialDeInvestigacionCientificaService {
    */
   getEntidadFederativa(): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>(
-      '/assets/json/130202/entidad-federativa.json'
+      '/assets/json/130112/entidad-federativa.json'
     );
   }
 
@@ -62,7 +63,7 @@ export class ImportacionMaterialDeInvestigacionCientificaService {
    */
   getRepresentacionFederal(): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>(
-      '/assets/json/130202/representacion-federal.json'
+      '/assets/json/130112/representacion-federal.json'
     );
   }
 
@@ -73,7 +74,7 @@ export class ImportacionMaterialDeInvestigacionCientificaService {
    */
   getSolicitudeOptions(): Observable<ProductoResponse> {
     return this.http.get<ProductoResponse>(
-      'assets/json/130202/solicitude-options.json'
+      'assets/json/130112/solicitude-options.json'
     );
   }
 
@@ -84,7 +85,7 @@ export class ImportacionMaterialDeInvestigacionCientificaService {
    */
   getProductoOptions(): Observable<ProductoResponse> {
     return this.http.get<ProductoResponse>(
-      'assets/json/130202/producto-otions.json'
+      'assets/json/130112/producto-otions.json'
     );
   }
 
@@ -95,7 +96,18 @@ export class ImportacionMaterialDeInvestigacionCientificaService {
    */
   getFraccionDescripcionPartidasDeLaMercancia(): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>(
-      '/assets/json/130202/fraccion-descripcion-partidas-de-la-mercancia.json'
+      '/assets/json/130112/fraccion-descripcion-partidas-de-la-mercancia.json'
     );
   }
+
+  /**
+   * @descripcion
+   * Obtiene la lista de partidas de la mercancía desde un archivo JSON.
+   * @returns {Observable<PartidasDeLaMercanciaModelo[]>} Observable que emite la lista de partidas.
+   */
+  getTablaDatos(): Observable<PartidasDeLaMercanciaModelo[]> {
+      return this.http.get<PartidasDeLaMercanciaModelo[]>(
+            'assets/json/130111/partidas-de-la.json'
+          );
+    }
 }

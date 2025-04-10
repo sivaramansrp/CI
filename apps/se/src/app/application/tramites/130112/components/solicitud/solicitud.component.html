@@ -25,6 +25,7 @@
   (filaSeleccionadaChange)="manejarlaFilaSeleccionada($event)"
   (validarYEnviarFormularioEvent)="validarYEnviarFormulario()"
   (navegarParaModificarPartidaEvent)="navegarParaModificarPartida()"
+  [disabled]="disabledModificar()"
   (setValoresStoreEvent)="setValoresStore($event)"
 ></app-partidas-de-la-mercancia>
 

@@ -1,5 +1,6 @@
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
+import { PartidasDeLaMercanciaModelo } from '../../../../shared/models/partidas-de-la-mercancia.model';
 
 /**
  * @descripcion
@@ -7,30 +8,129 @@ import { Injectable } from '@angular/core';
  * Este estado almacena toda la información relacionada con el trámite 130112.
  */
 export interface Tramite130112State {
+  /**
+   * Producto seleccionado en el formulario.
+   */
   producto: string;
+
+  /**
+   * Descripción del producto ingresada en el formulario.
+   */
   descripcion: string;
+
+  /**
+   * Fracción arancelaria seleccionada en el formulario.
+   */
   fraccion: string;
+
+  /**
+   * Cantidad del producto ingresada en el formulario.
+   */
   cantidad: string;
+
+  /**
+   * Valor en USD de la partida ingresada en el formulario.
+   */
   valorPartidaUSD: number;
+
+  /**
+   * Unidad de medida seleccionada en el formulario.
+   */
   unidadMedida: string;
+
+  /**
+   * Solicitud seleccionada en el formulario.
+   */
   solicitud: string;
+
+  /**
+   * Valor por defecto para el campo de selección de solicitud.
+   */
   defaultSelect: string;
+
+  /**
+   * Valor por defecto para el campo de selección de producto.
+   */
   defaultProducto: string;
+
+  /**
+   * Régimen seleccionado en el formulario.
+   */
   regimen: string;
+
+  /**
+   * Clasificación del régimen seleccionada en el formulario.
+   */
   clasificacion: string;
-  filaSeleccionada: null;
+
+  /**
+   * Lista de filas seleccionadas en la tabla dinámica.
+   */
+  filaSeleccionada: PartidasDeLaMercanciaModelo[];
+
+  /**
+   * Cantidad de partidas de la mercancía ingresada en el formulario.
+   */
   cantidadPartidasDeLaMercancia: string;
+
+  /**
+   * Fracción TIGIE de las partidas de la mercancía ingresada en el formulario.
+   */
   fraccionTigiePartidasDeLaMercancia: string;
+
+  /**
+   * Descripción de la fracción de las partidas de la mercancía ingresada en el formulario.
+   * */
   fraccionDescripcionPartidasDeLaMercancia: string;
+
+  /**
+   * Valor en USD de las partidas de la mercancía ingresado en el formulario.
+   */
   valorPartidaUSDPartidasDeLaMercancia: number;
+
+  /**
+   * Descripción de las partidas de la mercancía ingresada en el formulario.
+   */
   descripcionPartidasDeLaMercancia: string;
+
+  /**
+   * Valor de la factura en USD ingresado en el formulario.
+   */
   valorFacturaUSD: string;
+
+  /**
+   * Bloque seleccionado en el formulario.
+   */
   bloque: string;
+
+  /**
+   * Uso específico seleccionado en el formulario.
+   */
   usoEspecifico: string;
+
+  /**
+   * Justificación para la importación/exportación ingresada en el formulario.
+   */
   justificacionImportacionExportacion: string;
+
+  /**
+   * Observaciones ingresadas en el formulario.
+   */
   observaciones: string;
+
+  /**
+   * Entidad seleccionada en el formulario.
+   */
   entidad: string;
+
+  /**
+   * Representación seleccionada en el formulario.
+   */
   representacion: string;
+
+  /**
+   * Indica si la tabla dinámica debe mostrarse.
+   */
   mostrarTabla: boolean;
 }
 
@@ -41,7 +141,7 @@ export interface Tramite130112State {
  */
 export function createInitialState(): Tramite130112State {
   return {
-    filaSeleccionada: null,
+    filaSeleccionada: [],
     mostrarTabla: false,
     solicitud: '',
     fraccion: '',
@@ -366,11 +466,10 @@ export class Tramite130112Store extends Store<Tramite130112State> {
   }
 
   /**
-   * @descripcion
-   * Almacena los valores de la fila seleccionada en el estado.
-   * @param {null} fila - Fila seleccionada.
+   * Almacena las filas seleccionadas en la tabla dinámica en el estado.
+   * fila Lista de filas seleccionadas.
    */
-  public storeTableValues(fila: null): void {
+  public storeTableValues(fila: PartidasDeLaMercanciaModelo[]): void {
     this.update({
       filaSeleccionada: fila,
     });
