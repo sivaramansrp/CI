@@ -16,7 +16,7 @@ import {
 /** Importación de componentes reutilizables y modelos. */
 import {
   Catalogo,
-  catalogoResponse,
+  CatalogoResponse,
   CatalogoSelectComponent,
   InputRadioComponent,
 } from '@ng-mf/data-access-user';
@@ -74,7 +74,7 @@ export class DatosDelCertificadoComponent implements OnInit, OnDestroy {
   datosdelForm!: FormGroup;
   radioBoton = unidadRadioFields; // import data from Json
   public solicitudState!: solicitud220401State;
-  estadoJson: catalogoResponse[] = [];
+  estadoJson: CatalogoResponse[] = [];
   /**
    * Constructor del componente, inyecta los servicios necesarios.
    */
@@ -154,7 +154,7 @@ export class DatosDelCertificadoComponent implements OnInit, OnDestroy {
     }
   
 
-  delegacionesJson: catalogoResponse[] = [];
+  delegacionesJson: CatalogoResponse[] = [];
 
   
   formGroup1!: FormGroup;
