@@ -30,4 +30,24 @@ export class Tramite240101Query extends Query<Tramite240101State> {
    * Observable que emite la pestaña actualmente seleccionada.
    */
   public getTabSeleccionado$ = this.select((state) => state.tabSeleccionado);
+
+  /**
+   * Observable que emite los datos del trámite.
+   */
+  public getDatosDelTramite$ = this.select((state) => state.datosDelTramite);
+
+  public getPagoDerechos$ = this.select((state) => state.pagoDerechos);
+
+  //dont add docs
+
+  public getProveedorTablaDatos$ = this.select(
+    (state) => state.proveedorTablaDatos
+  );
+
+  public getDestinatarioFinalTablaDatos$ = this.select(
+    (state) => state.destinatarioFinalTablaDatos
+  );
+  public getMercanciaTablaDatos$ = this.select(
+    (state) => state.merccancialTablaDatos
+  );
 }
