@@ -19,4 +19,4 @@ export const MODIFICACION_PERMISO_ENUM = [
       }
 
 ]
-export const MODIFICACION_PERMISO_DATA='Modificación del permiso sanitario de importación de insumos para la salud por retorno'
+export const MODIFICACION_PERMISO_DATA='Modificación del permiso sanitario de importación de insumos para la salud de materias primas'
