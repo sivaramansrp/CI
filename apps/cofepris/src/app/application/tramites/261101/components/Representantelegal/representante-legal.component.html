@@ -1,0 +1,30 @@
+<h1>Representante legal</h1>
+<br>
+<form [formGroup]="domicilioEstablecimiento">
+    <div class="row">
+        <div class="col-md-4">
+            <label class="form-label" for="RFCPostal">RFC*:
+            </label>
+            <input type="text" class="form-control" id="RFCPostal" formControlName="RFC">
+        </div>
+
+        <div class="col-md-8">
+            <label class="form-label" for="Buscar :">Buscar :*</label>
+            <input type="text" class="form-control" id="Buscar " formControlName="Buscar">
+        </div>
+
+        <div class="col-md-12">
+            <label class="form-label" for="Nombre">Nombre o Razón Social*:</label>
+            <input type="text" class="form-control" id="Nombre" formControlName="Nombre">
+        </div>
+
+        <div class="col-md-4">
+            <label class="form-label" for="Apellido">Apellido paterno: </label>
+            <input type="text" class="form-control" id="Apellido" formControlName="ApellidoPaterno">
+        </div>
+        <div class="col-md-4">
+            <label class="form-label" for="Apellido">Apellido materno: </label>
+            <input type="text" class="form-control" id="Apellido" formControlName="Apellido">
+        </div>
+    </div>
+</form>

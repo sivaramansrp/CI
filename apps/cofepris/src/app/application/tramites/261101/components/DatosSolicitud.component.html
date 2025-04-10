@@ -1,0 +1,37 @@
+<p>Seleccione el tipo de operación que desea realizar*: </p>
+<h1> </h1>
+<form [formGroup]="preOperativeForm">
+<div class="col-md-4">
+    <app-input-radio
+    [radioOptions]="radioOptions"
+    formControlName="Prorroga" 
+    (change)="setValoresStore()"
+    [layout]="'horizontal'"
+  ></app-input-radio>
+</div>
+<!-- </div>[ngClass]="isValid('motivoDesistimiento') ? 'required' : ''" -->
+
+    <div class="row mt-5">
+        <div class="col-md-4 form-group">
+            <label class="form-label" for="motivoDesistimiento">Justificacion*:</label>
+            <textarea formControlName="Justificacion" id="motivoDesistimiento" name="motivoDesistimiento" rows="4"
+                cols="50"  [ngClass]="isValid('motivoDesistimiento') ? 'required' : ''"
+                (change)="setValoresStores()"   ></textarea>
+                <div *ngIf="preOperativeForm?.get('Justificacion')?.invalid && preOperativeForm?.get('Justificacion')?.touched" class="text-danger">
+                    Favor de seleccionar el Justificacion.
+                </div>
+        </div>
+    </div>
+    <br>
+</form>
+<app-datosestablecimiento></app-datosestablecimiento>
+<br>
+<app-domicilio-establecimientos></app-domicilio-establecimientos>
+<br>
+<br>
+<app-mercancias></app-mercancias>
+<br>
+<app-manifiestos></app-manifiestos>
+<br>
+<app-representante-legal></app-representante-legal>
+

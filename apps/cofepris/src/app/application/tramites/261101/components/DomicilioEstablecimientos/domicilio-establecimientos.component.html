@@ -1,0 +1,103 @@
+<form [formGroup]="domicilioEstablecimiento">
+
+
+    <!-- <ng-titulo titulo="Domicilio fiscal del solicitante" /> -->
+
+    <div class="row">
+        <div class="col-md-4">
+            <label class="form-label" for="CodigoPostal">Codigo postal:
+            </label>
+            <input type="text" class="form-control" id="CodigoPostal" formControlName="codigo"
+            (change)="setValoresStore('codigo')" >
+        </div>
+
+        <div class="col-md-8">
+            <label class="form-label" for="Estados:">Estado:*</label>
+            <input type="text" class="form-control" id="Estados" formControlName="estado"
+            (change)="setValoresStore('estado')">
+        </div>
+
+        <div class="col-md-12">
+            <label class="form-label" for="Municipio">Municipio o alcaldia*:</label>
+            <input type="text" class="form-control" id="Municipio" formControlName="municipio"
+            (change)="setValoresStore('Municipio')">
+        </div>
+
+        <div class="col-md-4">
+            <label class="form-label" for="localidad">Localidad*:</label>
+            <input type="text" class="form-control" id="localidad" formControlName="localidad"
+            (change)="setValoresStore('localidad')">
+        </div>
+        <div class="col-md-4">
+            <label class="form-label" for="Colonia">Colonia*:</label>
+            <input type="text" class="form-control" id="Colonia" formControlName="colonia"
+            (change)="setValoresStore('colonia')">
+        </div>
+        <div class="col-md-8">
+            <label class="form-label" for="calle">Calle y numero*: ?</label>
+            <input type="text" class="form-control" id="calle" formControlName="calle"
+            (change)="setValoresStore('calle')">
+        </div>
+        <div class="col-md-4">
+            <label class="form-label" for="Correo-exterior">Correo electronico*: ?</label>
+            <input type="text" class="form-control" id="Correo-exterior:" formControlName="Correo"
+            (change)="setValoresStore('Correo')">
+        </div>
+        <div class="col-md-4">
+            <label class="form-label" for="sanitario-interior:">RFC del responsable sanitario:</label>
+            <input type="text" class="form-control" id="sanitario-interior:" formControlName="sanitario"
+            (change)="setValoresStore('sanitario')">
+        </div>
+        <div class="col-md-1">
+            <label class="form-label" for="lada">Lada:</label>
+            <input type="text" class="form-control" id="lada" formControlName="lada"
+            (change)="setValoresStore('lada')">
+        </div>
+        <div class="col-md-3">
+            <label class="form-label" for="telefono">Telefono:</label>
+            <input type="text" class="form-control" id="telefono" formControlName="telefono"
+            (change)="setValoresStore('telefono')">
+        </div>
+
+    </div>
+</form>
+<br>
+<p>S. C. L.A. N *:</p>
+<app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion" [datos]="Domicilios"
+    [configuracionTabla]="configuracionTabla"></app-tabla-dinamica>
+
+<ng-container>
+    <div class="row mt-5">
+      <label>Mercancías seleccionadas</label>
+    </div>
+    <div class="table-container mt-5">
+       <div class="col-md-12 mt-5 d-flex justify-content-end">
+        <button type="button" class="btn btn-danger ms-3">Eliminar</button>
+        <button type="button" class="btn btn-primary ms-3"> Agregar </button>
+      </div>
+    </div>
+  </ng-container>
+
+<br>
+<form [formGroup]="AvisodeFuncionamiento">
+    <div class="col-md-3">
+        <label>
+            <input type="checkbox" id="funciona" formControlName="funcionamiento"
+            (change)="setValoresStore('funcionamiento')">Aviso de funcionamiento
+        </label>
+    </div>
+    <div class="col-md-3">
+        <label class="form-label" for="licencia">No. de licencia sanitaria:
+            <!-- <input type="" class="form-control" id="licencia" formControlName="licencia"> -->
+            <select  class="form-group" formControlName="licencia" id="licencia" (change)="setValoresStore('licencia')">
+                <option  [value]="">licencia</option>
+              </select>
+        </label>
+    </div>
+
+   
+    <div class="col-md-12">
+        <label class="form-label" for="Regimen"> Regimen al que se destinara la mercancia*: </label>
+        <input type="text" class="form-control" id="Regimen" formControlName="Regimen">
+    </div>
+</form>

@@ -1,0 +1,20 @@
+import { DatosProcedureState } from './datos-solicitude.store';
+import { DatosProcedureStore } from './datos-solicitude.store';
+
+import { Injectable } from '@angular/core';
+import { Query } from '@datorama/akita';
+
+@Injectable({ providedIn: 'root' })
+export class DatosProcedureQuery extends Query<DatosProcedureState> {
+
+  /**
+   * Observable to select the desistimiento property from the state.
+   */
+  selectProrroga$ = this.select((state) => {
+    return state;
+  }); 
+  constructor(
+    protected override store: DatosProcedureStore) {
+    super(store);
+  }
+}
