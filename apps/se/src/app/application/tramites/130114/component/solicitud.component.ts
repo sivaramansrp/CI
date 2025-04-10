@@ -1,4 +1,3 @@
-/* eslint-disable complexity */
 import { Catalogo, REG_X } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -590,13 +589,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         break;
       case 'setRepresentacion':
         this.Tramite130114Store.setRepresentacion(VALOR);
-        break;
-      case 'setFraccion':
-        this.Tramite130114Store.setFraccion(VALOR);
-        this.Tramite130114Store.setUnidadMedida("1");
-        break;
-      case 'setValorFacturaUSD':
-        this.Tramite130114Store.setValorFacturaUSD(VALOR);
         break;
       default:
         console.error(
