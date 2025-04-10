@@ -104,7 +104,7 @@ export const FECHA_SALIDA = {
   habilitado: true,
 };
 
-export const TXT_ALERTA_ACUSE = (folio: string) => {
+export const TXT_ALERTA_ACUSE = (folio: string): string => {
   return `Tu solicitud ha sido registrada con el siguiente número de folio:  < ${folio} >`;
 };
 
@@ -241,6 +241,10 @@ Si deseas adjuntar un nuevo documento, selecciona la opción --Adjuntar nuevo do
 export const LASTABLA = {
   Importante: `<p>Las tablas con asterisco son obligatorias y debes agregar por lo menos un registro.</p>`
 };
+
+export const TERCEROS = {
+  alerta: `<p>Las tablas con asterisco son obligatorias y debes agregar por lo menos un registro.</p>`,
+}
 
 
 export const URL_PRUEBA = 'assets/pdf/Test03.pdf';

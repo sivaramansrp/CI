@@ -10,55 +10,26 @@ import { Component } from '@angular/core';
 import { CapturarFacturasComponent } from './capturar-facturas.component';
 import { ElegibilidadTextilesService } from '../../services/elegibilidad-textiles/elegibilidad-textiles.service';
 import { HttpClient } from '@angular/common/http';
-import { FormBuilder } from '@angular/forms';
-import { ElegibilidadDeTextilesStore } from '../../estados/elegibilidad-de-textiles.store';
-import { ElegibilidadDeTextilesQuery } from '../../queries/elegibilidad-de-textiles.query';
-import { SeccionLibStore, SeccionLibQuery } from '@ng-mf/data-access-user';
-
-@Injectable()
-class MockElegibilidadTextilesService {}
-
-@Injectable()
-class MockHttpClient {
-  post() {};
-}
-
-@Injectable()
-class MockElegibilidadDeTextilesStore {}
-
-@Injectable()
-class MockElegibilidadDeTextilesQuery {}
-
-@Directive({ selector: '[myCustom]' })
-class MyCustomDirective {
-  @Input() myCustom;
-}
-
-@Pipe({name: 'translate'})
-class TranslatePipe implements PipeTransform {
-  transform(value) { return value; }
-}
-
-@Pipe({name: 'phoneNumber'})
-class PhoneNumberPipe implements PipeTransform {
-  transform(value) { return value; }
-}
-
-@Pipe({name: 'safeHtml'})
-class SafeHtmlPipe implements PipeTransform {
-  transform(value) { return value; }
-}
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { InputFechaComponent } from 'libs/shared/data-access-user/src/tramites/components/input-fecha/input-fecha.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { TableComponent } from 'libs/shared/data-access-user/src/tramites/components/table/table.component';
+import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
+import { of, throwError } from 'rxjs';
 
 describe('CapturarFacturasComponent', () => {
   let fixture;
   let component;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [FormsModule, ReactiveFormsModule],
-      declarations: [
-        TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
-        MyCustomDirective
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [
+        HttpClientTestingModule,
+        ReactiveFormsModule,
+        CapturarFacturasComponent,
+        TableComponent,
+        TituloComponent,
+        InputFechaComponent
       ],
       imports: [CapturarFacturasComponent],
       schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
@@ -82,14 +53,7 @@ describe('CapturarFacturasComponent', () => {
     component.initActionFormBuild = jest.fn();
     component.seccionStore = {
       establecerFormaValida: jest.fn(),
-      establecerSeccion: jest.fn(),
-    } as any;
-    component.ElegibilidadDeTextilesStore = {
-      setFormaValida: jest.fn(),
-    } as any;
-  });
-
-  afterEach(() => {
+    };
     component.ngOnDestroy = function () {};
     fixture.destroy();
   });
@@ -99,7 +63,6 @@ describe('CapturarFacturasComponent', () => {
   });
 
   it('should run #recuperarDatos()', async () => {
-    // Call the method explicitly
     component.recuperarDatos();
 
     // Verify that the mocked method is called

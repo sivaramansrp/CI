@@ -11,7 +11,6 @@ import { InspeccionFisicaZoosanitarioRoutingModule } from './inspeccion-fisica-z
 
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { FirmaElectronicaComponent } from '@ng-mf/data-access-user';
-import { SelectCatalogosComponent } from '@ng-mf/data-access-user';
 import { SharedModule } from '@ng-mf/data-access-user';
 import { SolicitanteComponent } from '@ng-mf/data-access-user';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
@@ -32,7 +31,6 @@ import { TituloComponent } from '@ng-mf/data-access-user';
     AlertComponent,
     CatalogoSelectComponent,
     TablaDinamicaComponent,
-    SelectCatalogosComponent,
     SolicitanteComponent,
     InspeccionFisicaComponent
   ],
