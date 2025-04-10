@@ -68,6 +68,13 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'modificar-caat-terrestre',
+    loadChildren: () =>
+      import('./tramites/40103/modificarCaatTerrestre.module').then(
+        (m) => m.ModificarCaatTerrestreModule
+      ),
+  },
+  {
     path: 'muestras-mercancias',
     loadChildren: () =>
       import('./tramites/30901/renovaciones-muestras-mercancias.module').then(
@@ -184,7 +191,15 @@ const ROUTES: Routes = [
       import('./tramites/6101/junta-tecnica.module').then(
         (m) => m.JuntaTecnicaModule
       )
+  },
+  {
+    path: 'modificarCaatTerrestre',
+    loadChildren: () =>
+      import('./tramites/40103/modificarCaatTerrestre.module').then(
+        (m) => m.ModificarCaatTerrestreModule
+      )
   }
+  
 ];
 
 @NgModule({
