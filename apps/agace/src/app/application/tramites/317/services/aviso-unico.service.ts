@@ -1,7 +1,10 @@
 import { Injectable } from '@angular/core';
-import { Observable, catchError, throwError } from 'rxjs';
+
 import { HttpClient } from '@angular/common/http';
-import { PreOperativo } from '../models/aviso.model';
+
+import { Observable, catchError, throwError } from 'rxjs';
+
+import { AvisoValor, PreOperativo } from '../models/aviso.model';
 
 /**
  * @class
@@ -44,11 +47,12 @@ export class AvisoUnicoService {
    * Obtiene los datos del solicitante desde un archivo JSON.
    * @returns {Observable<unknown>} Un observable que emite los datos del solicitante.
    */
-  getSolicitante(): Observable<unknown> {
-    return this.http.get('assets/json/317/renovacion.json');
+  getSolicitante(): Observable<AvisoValor[]> {
+    return this.http.get<AvisoValor[]>('assets/json/317/renovacion.json');
+    // return this.http.get('assets/json/317/renovacion.json');
   }
 
-  /**
+ /**
    * @method
    * @name obtenerRadio
    * @description

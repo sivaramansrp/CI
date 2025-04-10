@@ -13,10 +13,8 @@ import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { ToastrService } from 'ngx-toastr';
 import { provideHttpClient } from '@angular/common/http';
+
 import { AvisoUnicoService } from './services/aviso-unico.service';
-
-// import { AvisoUnicoService } from '../317/services/aviso-unico.service'; // Adjust the path as needed
-
 
 @NgModule({
   declarations: [ DatosComponent,PantallasComponent],
@@ -35,9 +33,9 @@ import { AvisoUnicoService } from './services/aviso-unico.service';
   providers: [
     ToastrService,
     provideHttpClient(),
-     ServiciosPantallasService,
-     InicioSesionService,
-     SubirDocumentoService,
+      ServiciosPantallasService,
+      InicioSesionService,
+      SubirDocumentoService,
      AvisoUnicoService
   ],
 })

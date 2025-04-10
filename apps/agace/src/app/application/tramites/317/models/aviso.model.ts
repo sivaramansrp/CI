@@ -63,3 +63,18 @@ export interface PreOperativo {
    */
   value: string;
 }
+
+export interface AvisoValor {
+  /**
+   * @property {string} descripcion
+   * @description Descripción del valor en español.
+   */
+  claveReferencia: number;
+
+  /**
+   * @property {number} cantidad
+   * @description Cantidad asociada al valor.
+   */
+  cadenaDependencia: number;
+  importePago: number;
+}

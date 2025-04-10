@@ -1,8 +1,8 @@
 import { Component, ViewChild } from '@angular/core';
-import { AccionBoton } from '../../models/aviso.model';
-
 import { DatosPasos, ListaPasosWizard, WizardComponent } from '@libs/shared/data-access-user/src';
 import { PANTA_PASOS } from '@libs/shared/data-access-user/src/core/enums/317/aviso-unico.enum';
+
+import { AccionBoton } from '../../models/aviso.model';
 
 @Component({
   selector: 'app-pantallas',
@@ -39,7 +39,7 @@ export class PantallasComponent {
 /**
    * Este método se utiliza para inicializar el componente.
    */
-  getValorIndice(e: AccionBoton) {
+  getValorIndice(e: AccionBoton): void {
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
       if (e.accion === 'cont') {

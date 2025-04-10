@@ -1,16 +1,10 @@
 import { NgModule } from '@angular/core';
 
 import { RouterModule, Routes } from '@angular/router';
-import { AvisoDeRenovacionComponent } from './components/aviso-de-renovacion/aviso-de-renovacion.component';
 import { PantallasComponent } from './pages/pantallas/pantallas.component';
 
 const ROUTES: Routes = [
-    // {
-    //   path: 'aviso-de-renovacion',
-    //   component: AvisoDeRenovacionComponent,
-    // },
-    
-
+   
     {
          path: 'pantallas',
         component: PantallasComponent,

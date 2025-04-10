@@ -3,12 +3,13 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 
-import { CatalogoSelectComponent, InputFecha, InputFechaComponent, TituloComponent, Catalogo, InputRadioComponent } from '@libs/shared/data-access-user/src';
-import { FECHA_DE_PAGO } from '../../models/aviso.model';
+import { Catalogo, CatalogoSelectComponent, InputFecha, InputFechaComponent, InputRadioComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { AvisoValor, FECHA_DE_PAGO } from '../../models/aviso.model';
 
 import { AvisoUnicoService } from '../../services/aviso-unico.service';
 
-import { map, Subject, takeUntil } from 'rxjs';
+import { map, takeUntil } from 'rxjs';
+import { Subject } from 'rxjs';
 
 import { PreOperativo } from '../../models/aviso.model';
 
@@ -71,7 +72,9 @@ export class AvisoDeRenovacionComponent implements OnInit, OnDestroy {
     private service: AvisoUnicoService,
     private unicoStore: UnicoStore,
     private unicoQuery: UnicoQuery
-  ) {}
+  ) {
+    // Inicializa el formulario reactivo y el estado de la solicitud.
+  }
 
   /**
    * Método que se ejecuta al inicializar el componente.
@@ -120,10 +123,11 @@ export class AvisoDeRenovacionComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data: any) => {
         this.avisoForm.patchValue({
-          claveReferencia: data.claveReferencia,
-          cadenaDependencia: data.cadenaDependencia,
-          importePago: data.importePago,
-        });
+            claveReferencia: data.claveReferencia,
+            cadenaDependencia: data.cadenaDependencia,
+            importePago: data.importePago,
+          });
+        
       });
   }
 
