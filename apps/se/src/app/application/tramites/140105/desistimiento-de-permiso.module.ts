@@ -26,7 +26,6 @@ import { ToastrService } from 'ngx-toastr';
     DesistimientoDePermisoRoutingModule,
     WizardComponent,
     BtnContinuarComponent,
-    CommonModule,
     ReactiveFormsModule,
     SharedModule,
     WizardComponent,
