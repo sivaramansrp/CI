@@ -1,0 +1,48 @@
+<div class="container">
+  <ng-titulo titulo="Desistimiento" />
+  <form [formGroup]="desisitimientoForm">
+    <div class="row">
+      <div class="col-md-8">
+        <label>Folio original: </label>
+        <input
+          type="text"
+          required="true"
+          class="form-control"
+          id="folioOriginal"
+          formControlName="folioOriginal"
+        />
+      </div>
+
+      <div class="col-md-8">
+        <label>Justificación de desistimiento*:</label>
+        <input
+          type="text"
+          required="true"
+          class="form-control"
+          id="justificacionDelDesistimiento"
+          formControlName="justificacionDelDesistimiento"
+        />
+      </div>
+    </div>
+    <div class="row" style="margin-top: 30px; margin-bottom: 30px">
+      <div class="form-group">
+        <div class="col-md-12">
+          <div
+            class="pull-left text-muted text-vertical-align-button"
+          ></div>
+          <div class="pull-right row">
+            <div class="col-md-5" id="botonGuardar">
+              <button
+                type="submit"
+                class="btn btn-primary"
+                (click)="continuar()"
+              >
+                Continuar
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
