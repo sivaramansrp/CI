@@ -305,6 +305,11 @@ const ROUTES: Routes = [
       import('./tramites/120201/cupos.module').then((m) => m.CuposModule),
   },
   {
+    path: 'solicitud-prorroga',
+    loadChildren: () =>
+      import('./tramites/130301/solicitud-prorroga.module').then((m) => m.SolicitudProrrogaModule),
+  },
+  {
     path: 'aviso-importacion-maquinas',
     loadChildren: () =>
       import('./tramites/130119/aviso-importacion-maquinas.module').then(
