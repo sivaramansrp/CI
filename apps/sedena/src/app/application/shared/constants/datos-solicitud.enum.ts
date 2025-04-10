@@ -20,3 +20,5 @@ export const CROSLISTA_DE_PAISES: string[] = [
   'BENIN (REPUBLIC OF)',
   'BHUTAN (KINGDOM OF)',
 ];
+export const PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE = [260216];
+export const STR_NACIONAL = 'Nacional';
