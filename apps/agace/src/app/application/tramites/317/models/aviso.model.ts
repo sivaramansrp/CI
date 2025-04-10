@@ -8,3 +8,16 @@ export interface AccionBoton {
     required: false,
     habilitado: true,
   };
+
+  export interface PreOperativo {
+    /**
+     * Etiqueta que describe la opción preoperativa.
+     */
+    label: string;
+  
+    /**
+     * Valor asociado a la opción preoperativa.
+     */
+    value: string;
+  }
+  

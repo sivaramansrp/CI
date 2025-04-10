@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
  
 import { Observable, catchError, throwError } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
+import { PreOperativo } from '../models/aviso.model';
  
 // import { PreOperativo } from '../models/datos-modificacion.model';
 /**
@@ -56,8 +57,8 @@ export class AvisoUnicoService {
    *   console.log(data);
    * });
    */
-//   obtenerRadio(): Observable<PreOperativo[]> {
-//     return this.http.get<PreOperativo[]>('assets/json/260604/tipoPersonaradio.json');
-//   }
+  obtenerRadio(): Observable<PreOperativo[]> {
+    return this.http.get<PreOperativo[]>('assets/json/317/tipoPersonaradio.json');
+  }
  
 }

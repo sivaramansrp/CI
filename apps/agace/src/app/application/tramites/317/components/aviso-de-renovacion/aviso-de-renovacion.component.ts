@@ -3,17 +3,19 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 
-import { CatalogoSelectComponent, InputFecha, InputFechaComponent, TituloComponent,Catalogo } from '@libs/shared/data-access-user/src';
+import { CatalogoSelectComponent, InputFecha, InputFechaComponent, TituloComponent,Catalogo, InputRadioComponent } from '@libs/shared/data-access-user/src';
 import { FECHA_DE_PAGO } from '../../models/aviso.model';
 
 import { AvisoUnicoService } from '../../services/aviso-unico.service';
 
 import { Subject, takeUntil } from 'rxjs';
 
+import { PreOperativo } from '../../models/aviso.model';
+
 @Component({
   selector: 'app-aviso-de-renovacion',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule,TituloComponent,InputFechaComponent,CatalogoSelectComponent],
+  imports: [CommonModule, ReactiveFormsModule,TituloComponent,InputFechaComponent,CatalogoSelectComponent,InputRadioComponent],
   templateUrl: './aviso-de-renovacion.component.html',
   styleUrls: ['./aviso-de-renovacion.component.scss'],
 })
@@ -21,6 +23,7 @@ export class AvisoDeRenovacionComponent implements OnInit, OnDestroy {
   fechaInicioInput: InputFecha = FECHA_DE_PAGO;
   public localidadList!: Catalogo[];
   private destroyed$ = new Subject<void>();
+  tipoPersonaOptions: PreOperativo[] = [];
   avisoForm!: FormGroup;
 
 constructor(private fb: FormBuilder,private service:AvisoUnicoService ) {}
@@ -29,6 +32,7 @@ constructor(private fb: FormBuilder,private service:AvisoUnicoService ) {}
     this.initializeForm();
     this.loadLocalidad();
     this.loadAsignacionData();
+    this.cargarRadio();
   }
 
   private initializeForm(): void {
@@ -79,6 +83,14 @@ constructor(private fb: FormBuilder,private service:AvisoUnicoService ) {}
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data): void => {
         this.localidadList = data as Catalogo[];
+      });
+  }
+
+  cargarRadio(): void {
+    this.service.obtenerRadio()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((resp) => {
+        this.tipoPersonaOptions = resp;
       });
   }
   submitForm(): void {
