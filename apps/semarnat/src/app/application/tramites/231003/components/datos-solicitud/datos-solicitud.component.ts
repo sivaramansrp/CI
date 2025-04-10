@@ -8,7 +8,6 @@ import { DatosResiduosPeligrososComponent } from '../datos-residuos-peligrosos/d
 import { FormularioReciclajeQuery } from '../../estados/queries/dato-solicitud.query';
 import { FormularioReciclajeStore } from '../../estados/tramites/dato-solicitud.store';
 import { Modal } from 'bootstrap';
-import { Router } from '@angular/router';
 import rawData from '@libs/shared/theme/assets/json/231003/solicitud.json';
 const RADIO_OPCIONES = rawData as SolicitudJson;
 
@@ -50,7 +49,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
 
   public establecimientoBodyData: unknown = [];
 
-  constructor(public fb: FormBuilder, private router: Router, private formularioSolicitudStore: FormularioReciclajeStore,
+  constructor(public fb: FormBuilder,private formularioSolicitudStore: FormularioReciclajeStore,
     private formularioSolicitudQuery: FormularioReciclajeQuery) {
     // Constructor logic if needed
   }
@@ -72,10 +71,6 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     this.suscribirCambioReciclajeInstalaciones();
     this.recuperarValoresDesdeStore();
     this.suscribirseACambiosDeFormulario();
-  }
-
-  navigateToPath(): void {
-    this.router.navigate(['pago/aviso-de-reciclaje/datos-residuos']);
   }
 
   private inicializarSolicitudForm(): void {

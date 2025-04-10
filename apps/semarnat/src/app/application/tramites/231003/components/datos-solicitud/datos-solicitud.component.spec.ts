@@ -91,11 +91,6 @@ describe('DatosSolicitudComponent', () => {
     expect(componente.formularioPrecaucionesManejo.value).toEqual(ESTADO_MOCK.precaucionesManejo);
   });
 
-  it('debería navegar a datos-residuos al llamar navigateToPath', () => {
-    componente.navigateToPath();
-    expect(routerMock.navigate).toHaveBeenCalledWith(['pago/aviso-de-reciclaje/datos-residuos']);
-  });
-
   it('debería actualizar el store al cambiar los valores del formulario', () => {
     componente.solicitudForm.patchValue({ numeroRegistroAmbiental: 'NEW-VAL' });
     componente.formularioEmpresaReciclaje.patchValue({ nombreEmpresa: 'Nueva Empresa' });
