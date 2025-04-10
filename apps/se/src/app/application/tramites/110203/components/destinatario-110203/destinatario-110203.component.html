@@ -1,0 +1,92 @@
+<div class="container" [formGroup]="destinatarioForm">
+  <ng-titulo titulo="Datos del destinatario"></ng-titulo>
+  <div>
+    <div class="row">
+      <div class="col-md-4">
+        <div class="form-group">
+          <label class="form-label" for="nombre">Nombre(s):</label>
+          <input class="form-control" id="nombre" formControlName="nombre" type="text" [placeholder]="placeholder.nombre" (change)="setValoresStore(destinatarioForm,'nombre', 'setNombre')">
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="form-group">
+          <label class="form-label" for="primer">Primer apellido:</label>
+          <input class="form-control" id="primer" formControlName="primer" type="text" [placeholder]="placeholder.primer" (change)="setValoresStore(destinatarioForm,'primer', 'setPrimer')">
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="form-group">
+          <label class="form-label" for="segundo">Segundo apellido:</label>
+          <input class="form-control" id="segundo" formControlName="segundo" type="text" [placeholder]="placeholder.segundo" (change)="setValoresStore(destinatarioForm,'segundo', 'setSegundo')">
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-4">
+        <div class="form-group">
+          <label class="form-label" for="fiscal">Número de registro fiscal*:</label>
+          <input class="form-control" id="fiscal" formControlName="fiscal" type="number" [placeholder]="placeholder.fiscal" (change)="setValoresStore(destinatarioForm,'fiscal', 'setFiscal')">
+        </div>
+      </div>
+
+      <div class="col-md-8">
+        <div class="form-group">
+          <label class="form-label" for="razon">Razón social:</label>
+          <input class="form-control" id="razon" formControlName="razon" type="text" [placeholder]="placeholder.razon" (change)="setValoresStore(destinatarioForm,'razon', 'setRazon')">
+        </div>
+      </div>
+    </div>
+
+    <ng-titulo titulo="Domicilio del destinatario"></ng-titulo>
+    <div class="row">
+      <div class="col-md-8">
+        <div class="form-group">
+          <label class="form-label" for="calle">Calle:*</label>
+          <input class="form-control" id="calle" formControlName="calle" type="text" [placeholder]="placeholder.calle" (change)="setValoresStore(destinatarioForm,'calle', 'setCalle')">
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="form-group">
+          <label class="form-label" for="letra">Número y/o letra:*</label>
+          <input class="form-control" id="letra" formControlName="letra" type="number" [placeholder]="placeholder.letra" (change)="setValoresStore(destinatarioForm,'letra', 'setLetra')">
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-8">
+        <div class="form-group">
+          <label class="form-label" for="ciudad">Ciudad (población, estado o provincia)*:</label>
+          <input class="form-control" id="ciudad" formControlName="ciudad" type="text" [placeholder]="placeholder.ciudad" (change)="setValoresStore(destinatarioForm,'ciudad', 'setCiudad')">
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="form-group">
+          <label class="form-label" for="correo">Correo electrónico:*</label>
+          <input class="form-control" id="correo" formControlName="correo" type="text" [placeholder]="placeholder.correo" (change)="setValoresStore(destinatarioForm,'razon', 'setCorreo')">
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-4">
+        <div class="form-group">
+          <label class="form-label" for="fax">Fax:</label>
+          <input class="form-control" id="fax" formControlName="fax" type="number" [placeholder]="placeholder.fax" (change)="setValoresStore(destinatarioForm,'fax', 'setFax')">
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="form-group">
+          <label class="form-label" for="telefono">Teléfono:</label>
+          <input class="form-control" id="telefono" formControlName="telefono" type="number" [placeholder]="placeholder.telefono" (change)="setValoresStore(destinatarioForm,'telefono', 'setTelefono')">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
