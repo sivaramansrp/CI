@@ -57,7 +57,7 @@ export class PasoUnoComponent implements OnInit {
 
   /**
    * Representa la lista de trámites utilizada en el componente.
-   * 
+   *
    * @property catalogos - Un arreglo de objetos de tipo `TramiteList` que contiene los catálogos relacionados con los trámites.
    * @property labelNombre - Una cadena que representa el nombre de la etiqueta asociada al trámite.
    * @property primerOpcion - Una cadena que indica la primera opción seleccionable en la lista de trámites.
@@ -79,15 +79,15 @@ export class PasoUnoComponent implements OnInit {
 
   /**
    * Configuración de las columnas para la tabla en el componente `paso-uno`.
-   * 
+   *
    * Cada objeto en el arreglo `encabezadoDeTabla` representa una columna de la tabla
    * con las siguientes propiedades:
-   * 
+   *
    * - `encabezado`: El texto que se mostrará como encabezado de la columna.
    * - `clave`: Una función que define cómo obtener el valor de la columna a partir de un objeto de datos.
    * - `orden`: El orden en el que se mostrarán las columnas en la tabla.
    * - `hiperenlace` (opcional): Indica si el contenido de la columna debe mostrarse como un hipervínculo.
-   * 
+   *
    * @type {ConfiguracionColumna<datosDeLaTabla>[]}
    */
   public encabezadoDeTabla: ConfiguracionColumna<datosDeLaTabla>[] = [
@@ -118,14 +118,14 @@ export class PasoUnoComponent implements OnInit {
 
   /**
    * Arreglo que almacena los datos de la tabla relacionados con los contenedores.
-   * 
+   *
    * @type {datosDeLaTabla[]}
    */
   public datosDelContenedor: datosDeLaTabla[] = [];
 
   /**
-  * Sujeto para notificar la destrucción del componente.
-  */
+   * Sujeto para notificar la destrucción del componente.
+   */
   public destroyNotifier$: Subject<void> = new Subject();
 
   constructor(
@@ -167,16 +167,16 @@ export class PasoUnoComponent implements OnInit {
   }
 
   /**
-   * Inicializa el formulario `solicitudForm` con los valores predeterminados 
+   * Inicializa el formulario `solicitudForm` con los valores predeterminados
    * provenientes del estado `solicitud31501State` y aplica las validaciones necesarias.
-   * 
+   *
    * Campos inicializados:
    * - `tipoBusqueda`: Campo obligatorio que se inicializa con el valor de `tipoBusqueda` en el estado.
    * - `rfc`: Campo opcional que se inicializa con el valor de `rfc` en el estado.
    * - `tipoDeTramite`: Campo obligatorio que se inicializa con el valor de `tipoDeTramite` en el estado.
    * - `folioDeTramite`: Campo obligatorio que se inicializa con el valor de `folioDeTramite` en el estado.
-   * 
-   * También llama al método `mostrarCampos` para realizar configuraciones adicionales 
+   *
+   * También llama al método `mostrarCampos` para realizar configuraciones adicionales
    * relacionadas con la visualización de los campos del formulario.
    */
   inicializarFormulario(): void {
@@ -260,22 +260,24 @@ export class PasoUnoComponent implements OnInit {
 
   /**
    * Obtiene la lista de aduanas desde el servicio de autoridad y actualiza el catálogo de trámites.
-   * 
+   *
    * @remarks
    * Este método realiza una solicitud al servicio `autoridadService` para obtener la lista de trámites
    * y actualiza la propiedad `catalogos` del objeto `tramiteList` con los datos recibidos.
-   * 
+   *
    * @returns {void} No retorna ningún valor.
    */
   public fetchAduanaList(): void {
-    this.autoridadService.getTramiteList("tramiteList").subscribe((respuesta) => {
-      this.tramiteList.catalogos = respuesta.data;
-    });
+    this.autoridadService
+      .getTramiteList('tramiteList')
+      .subscribe((respuesta) => {
+        this.tramiteList.catalogos = respuesta.data;
+      });
   }
 
   /**
    * Método que se encarga de agregar una nueva solicitud utilizando el servicio `autoridadService`.
-   * Al recibir una respuesta exitosa, actualiza los datos del contenedor, 
+   * Al recibir una respuesta exitosa, actualiza los datos del contenedor,
    * refresca el estado del formulario y sincroniza el estado en el store.
    *
    * @remarks
@@ -310,8 +312,8 @@ export class PasoUnoComponent implements OnInit {
   }
 
   /**
-   * Restablece el formulario de solicitud a su estado inicial, 
-   * preservando el valor del campo 'tipoBusqueda'. 
+   * Restablece el formulario de solicitud a su estado inicial,
+   * preservando el valor del campo 'tipoBusqueda'.
    * También limpia los datos del contenedor y los catálogos de trámites.
    *
    * @remarks
@@ -334,18 +336,28 @@ export class PasoUnoComponent implements OnInit {
 
   /**
    * Navega a una ruta específica si el objeto de la fila contiene un `folioTramite`.
-   * 
+   *
    * @param row - Objeto que representa una fila, debe contener la propiedad `folioTramite`.
-   * 
+   *
    * Este método verifica si la propiedad `folioTramite` está presente en el objeto `row`.
    * Si está presente, redirige al usuario a la ruta `/pago/autoridad/requiremento` y pasa
    * el objeto `row` como parte del estado de navegación.
-   * 
+   *
    * También registra en la consola el valor de `folioTramite` para fines de depuración.
    */
   valorDeAlternancia(row: any): void {
+    const currentUrl = this.router.url;
     if (row.folioTramite) {
-      this.router.navigate(['/pago/autoridad/requiremento'], { state: { data: row } });
+      if(currentUrl.includes('agace')){
+        this.router.navigate(['/agace/autoridad/requiremento'], {
+          state: { data: row },
+        });
+      }
+      if(currentUrl.includes('pago')){
+        this.router.navigate(['/pago/autoridad/requiremento'], {
+          state: { data: row },
+        });
+      }
     }
   }
 }

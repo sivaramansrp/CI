@@ -199,16 +199,16 @@ export class SolicitanteComponent implements OnInit {
             const DATOS_DOMICILIO_FISCAL = DATOS.domicilioFiscal;
 
             const CAMPOS_DATOS_GENERALES =
-              this.formServices.obtenerNombresCamposForm(
+              FormulariosService.obtenerNombresCamposForm(
                 this.datosGeneralesForm
               );
             const CAMPOS_DATOS_DOMICILIO_FISCAL =
-              this.formServices.obtenerNombresCamposForm(
+              FormulariosService.obtenerNombresCamposForm(
                 this.domicilioFiscalForm
               );
 
             CAMPOS_DATOS_GENERALES.forEach((campo) => {
-              this.formServices.agregarValorCampoDesactivados(
+              FormulariosService.agregarValorCampoDesactivado(
                 this.datosGeneralesForm,
                 campo,
                 DATOS_SOLICITANTE[campo]
@@ -216,7 +216,7 @@ export class SolicitanteComponent implements OnInit {
             });
 
             CAMPOS_DATOS_DOMICILIO_FISCAL.forEach((campo) => {
-              this.formServices.agregarValorCampoDesactivados(
+              FormulariosService.agregarValorCampoDesactivado(
                 this.domicilioFiscalForm,
                 campo,
                 DATOS_DOMICILIO_FISCAL[campo]
