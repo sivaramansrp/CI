@@ -7,7 +7,6 @@ import { Injectable } from '@angular/core';
  * @returns Solicitud5701
  */
 export interface Solicitud231001State {
-  //entidadFederativa: catalogoResponse | null
   numeroRegistroAmbiental: string;
   descripcionGenerica1: string;
   nombreDeLaMateriaPrima: string;

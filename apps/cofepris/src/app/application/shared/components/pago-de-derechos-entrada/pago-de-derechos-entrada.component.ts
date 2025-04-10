@@ -7,7 +7,7 @@ import { CommonModule } from '@angular/common';
 
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
-import { CatalogoSelectComponent, InputFecha, InputFechaComponent, catalogoResponse } from '@libs/shared/data-access-user/src';
+import { CatalogoResponse, CatalogoSelectComponent, InputFecha, InputFechaComponent } from '@libs/shared/data-access-user/src';
 
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 
@@ -44,14 +44,14 @@ export class PagoDeDerechosEntradaComponent implements OnInit, OnDestroy {
   /**
    * @observable selectedBanco$
    * @description Observable que representa el banco seleccionado en el contexto del componente.
-   * @type {Observable<catalogoResponse | null>}
+   * @type {Observable<CatalogoResponse | null>}
    * @remarks Este observable se suscribe al estado del query `permisoImportacionBiologicaQuery` 
-   * para obtener el banco seleccionado. Puede emitir un valor de tipo `catalogoResponse` 
+   * para obtener el banco seleccionado. Puede emitir un valor de tipo `CatalogoResponse` 
    * o `null` si no hay un banco seleccionado.
    */
-  selectedBanco$: Observable<catalogoResponse | null> =
+  selectedBanco$: Observable<CatalogoResponse | null> =
     this.permisoImportacionBiologicaQuery.selectedBanco$;
-  
+
   /**
    * @observable claveDeReferncia$
    * @description Representa un observable que emite la clave de referencia seleccionada
@@ -91,9 +91,9 @@ export class PagoDeDerechosEntradaComponent implements OnInit, OnDestroy {
 
   /**
    * @descripcion Arreglo que contiene los datos del catálogo para el componente.
-   * @tipo {catalogoResponse[]}
+   * @tipo {CatalogoResponse[]}
    */
-  dropdownData: catalogoResponse[] = [];
+  dropdownData: CatalogoResponse[] = [];
 
   /**
    * @observable fechaFinalInput
@@ -115,8 +115,8 @@ export class PagoDeDerechosEntradaComponent implements OnInit, OnDestroy {
     private permisoImportacionBiologicaStore: PermisoImportacionBiologicaStore,
     private permisoImportacionBiologicaQuery: PermisoImportacionBiologicaQuery
 
-  ) { 
-     //La lógica del constructor se puede agregar aquí si es necesario
+  ) {
+    //La lógica del constructor se puede agregar aquí si es necesario
   }
 
   /**
@@ -234,7 +234,7 @@ export class PagoDeDerechosEntradaComponent implements OnInit, OnDestroy {
     const CORREO = this.pagoDerechos.get('fechaDePago')?.value;
     this.permisoImportacionBiologicaStore.setFechaDePago(CORREO);
   }
-  
+
   /**
    * Actualiza el valor de importeDePago en el tramiteEntradaHumanaStore.
    * 
@@ -256,19 +256,19 @@ export class PagoDeDerechosEntradaComponent implements OnInit, OnDestroy {
     this.permisoImportacionBiologicaStore.setBanco(SELECTED_BANCO);
   }
 
-    /**
+  /**
 
-   * Método para cambiar la fecha final.
+ * Método para cambiar la fecha final.
 
-   * @param nuevo_valor Nuevo valor de la fecha final.
+ * @param nuevo_valor Nuevo valor de la fecha final.
 
-   */
-    cambioFechaDePago(nuevo_valor: string): void {
-      this.pagoDerechos.patchValue({
-        fechaDePago: nuevo_valor,
-      });
-      this.permisoImportacionBiologicaStore.setFechaDePago(nuevo_valor);
-    }
+ */
+  cambioFechaDePago(nuevo_valor: string): void {
+    this.pagoDerechos.patchValue({
+      fechaDePago: nuevo_valor,
+    });
+    this.permisoImportacionBiologicaStore.setFechaDePago(nuevo_valor);
+  }
 
   /*
   * Método del ciclo de vida de Angular - destruye el componente

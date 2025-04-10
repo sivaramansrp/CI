@@ -1,0 +1,28 @@
+[
+  {
+    "curp": "ABCD123456HDFLJN07",
+    "número": "001",
+    "nombre":"0022",
+    "calle": "Avenida Central",
+    "númeroExterior": "45A",
+    "númeroInterior": "2B",
+    "pais": "México",
+    "estado": "CDMX",
+    "primerApellido": "Gómez",
+    "segundoApellido": "Lopez",
+    "rfc": "GML123456XYZ",
+    "númeroDeGafete": "GAF001",
+    "vigenciaGafete": "2025-12-31",
+    "municipio": "Benito Juárez",
+    "colonia": "Del Valle",
+    "paisOrigen": "México",
+    "ciudad": "Ciudad de México",
+    "apellidoPaterno": "Gómez",
+    "apellidoMaterno": "López",
+    "gafete": "12345",
+    "país": "México",
+    "fechaFindDeVigencia": "2025-12-31",
+    "municipioAlcaldía": "Benito Juárez",
+    "PaísDeResidencia": "México"
+  }
+]
