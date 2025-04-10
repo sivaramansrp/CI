@@ -147,6 +147,7 @@
                     <span class="bi bi-question-circle-fill" title="Fracción arancelaria"
                     data-bs-toggle="tooltip"></span>
                     <input class="form-control" id="fraccionArancelaria" type="text" formControlName="fraccionArancelaria"
+                    (change)="cambiarFraccionArancelaria()"
                         [ngClass]="isValid(mercanciaForm, 'fraccionArancelaria') ? 'required' : ''">
                 </div>
             </div>

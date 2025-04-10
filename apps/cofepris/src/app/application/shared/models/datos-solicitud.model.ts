@@ -306,6 +306,7 @@ export interface MercanciaForm {
   fechaCaducidad: string;
   paisDeOriginDatos: string[];
   paisDeProcedenciaDatos: string[];
+  usoEspecifico?: string[]
   marca?: string;
   especifique?: string;
   claveDeLos?: string;
