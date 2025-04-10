@@ -5,11 +5,11 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ModalComponent } from '../model/modal.component';
 import { OnInit } from '@angular/core';
-import { Sanitario260215Store } from '../../../../estados/tramites/sanitario.store'
+import { Sanitario260906Store } from '../../../../estados/tramites/sanitario260906.store';
 import { SanitarioService } from '../../services/sanitario.service';
+import { TablaDatos } from '@libs/shared/data-access-user/src/core/models/260906/detos.model';
 import { TableComponent } from '@ng-mf/data-access-user';
 import nacionalidadRedio from '@libs/shared/theme/assets/json/260906/nacionalidadRedio.json';
-import { tablaDatos } from '@libs/shared/data-access-user/src/core/models/260906/detos.model';
 import tipoPersonaoptions from '@libs/shared/theme/assets/json/260906/tipoPersonaoptions.json';
 
  /**
@@ -207,15 +207,15 @@ export class TercerosRelacionadoesComponent implements OnInit {
    * Inyecta el FormBuilder, el store del trámite y el servicio de terceros.
    *
    * @param fb Constructor de formularios para crear los formularios reactivos.
-   * @param sanitario260215Store Store del trámite 260215.
+   * @param sanitario260906Store Store del trámite 260906.
    * @param service Servicio que proporciona datos de terceros.
    */
   constructor(
     private fb: FormBuilder,
-    private Sanitario260215Store:Sanitario260215Store,
+    private Sanitario260906Store:Sanitario260906Store,
     private service: SanitarioService
   ) {
-    // Inicializa el store del trámite 260215.
+    // Inicializa el store del trámite 260906.
   }
 
   /**
@@ -736,7 +736,7 @@ export class TercerosRelacionadoesComponent implements OnInit {
    *
    * @description Este arreglo almacena las filas que se mostrarán en la tabla de fabricantes.
    */
-  fabricanteRowData: tablaDatos[] = [];
+  fabricanteRowData: TablaDatos[] = [];
 
   /**
    * Datos de las filas para la tabla de destinatarios.
@@ -744,7 +744,7 @@ export class TercerosRelacionadoesComponent implements OnInit {
    *
    * @description Este arreglo almacena las filas que se mostrarán en la tabla de destinatarios.
    */
-  destinatarioRowData: tablaDatos[] = [];
+  destinatarioRowData: TablaDatos[] = [];
 
   /**
    * Datos de las filas para la tabla de proveedores.
@@ -752,7 +752,7 @@ export class TercerosRelacionadoesComponent implements OnInit {
    *
    * @description Este arreglo almacena las filas que se mostrarán en la tabla de proveedores.
    */
-  proveedorRowData: tablaDatos[] = [];
+  proveedorRowData: TablaDatos[] = [];
 
   /**
    * Datos de las filas para la tabla de facturadores.
@@ -760,7 +760,7 @@ export class TercerosRelacionadoesComponent implements OnInit {
    *
    * @description Este arreglo almacena las filas que se mostrarán en la tabla de facturadores.
    */
-  facturadorRowData: tablaDatos[] = [];
+  facturadorRowData: TablaDatos[] = [];
 
   /**
    * Maneja el cambio en los checkboxes para seleccionar el tipo de persona.
@@ -982,7 +982,7 @@ export class TercerosRelacionadoesComponent implements OnInit {
     /**
      * Actualiza el estado del store con los nuevos datos del fabricante.
      */
-    this.Sanitario260215Store.setFabricante(this.fabricanteRowData);
+    this.Sanitario260906Store.setFabricante(this.fabricanteRowData);
 
     /**
      * Cambia la visibilidad de las secciones del componente.
@@ -1135,7 +1135,7 @@ export class TercerosRelacionadoesComponent implements OnInit {
     /**
      * Actualiza el estado del store con los nuevos datos del destinatario.
      */
-    this.Sanitario260215Store.setDestinatario(this.destinatarioRowData);
+    this.Sanitario260906Store.setDestinatario(this.destinatarioRowData);
 
     /**
      * Cambia la visibilidad de las secciones del componente.
@@ -1185,7 +1185,7 @@ export class TercerosRelacionadoesComponent implements OnInit {
     /**
      * Actualiza el estado del store con los nuevos datos del proveedor.
      */
-    this.Sanitario260215Store.setProveedor(this.proveedorRowData);
+    this.Sanitario260906Store.setProveedor(this.proveedorRowData);
 
     /**
      * Cambia la visibilidad de las secciones del componente.
@@ -1235,7 +1235,7 @@ export class TercerosRelacionadoesComponent implements OnInit {
     /**
      * Actualiza el estado del store con los nuevos datos del facturador.
      */
-    this.Sanitario260215Store.setFacturador(this.facturadorRowData);
+    this.Sanitario260906Store.setFacturador(this.facturadorRowData);
 
     /**
      * Cambia la visibilidad de las secciones del componente.

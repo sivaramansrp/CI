@@ -1,235 +1,199 @@
+/**
+ * Importación de la interfaz TableData desde la librería compartida.
+ */
 import { TableData } from '@libs/shared/data-access-user/src';
 
 /**
- * @interface SolicitudDatos
- * @description Representa los datos de una solicitud, incluyendo detalles de mercancías y proveedores.
+ * Interfaz que define los datos de una solicitud.
  */
 export interface SolicitudDatos {
   /**
-   * @property {string} fechaCreacion
-   * @description Fecha en la que se creó la solicitud.
+   * Fecha de creación de la solicitud.
    */
   fechaCreacion: string;
 
   /**
-   * @property {string} mercancia
-   * @description Nombre de la mercancía incluida en la solicitud.
+   * Nombre de la mercancía asociada a la solicitud.
    */
   mercancia: string;
 
   /**
-   * @property {string} cantidad
-   * @description Cantidad de la mercancía solicitada.
+   * Cantidad de mercancía.
    */
   cantidad: string;
 
   /**
-   * @property {string} proovedor
-   * @description Nombre del proveedor relacionado con la mercancía.
+   * Nombre del proveedor de la mercancía.
    */
   proovedor: string;
 
   /**
-   * @property {TableData} SCIANLista
-   * @description Datos del catálogo SCIAN relacionados con la mercancía.
+   * Lista de datos SCIAN (Sistema de Clasificación Industrial de América del Norte).
    */
   SCIANLista: TableData;
 
   /**
-   * @property {TableData} [mercancias]
-   * @description Lista opcional de otras mercancías relacionadas.
+   * Lista opcional de mercancías.
    */
   mercancias?: TableData;
 }
 
 /**
- * @interface RadioOptions
- * @description Opciones para los botones de selección por radio.
+ * Interfaz que define las opciones de un radio button.
  */
 export interface RadioOptions {
   /**
-   * @property {string} label
-   * @description Etiqueta descriptiva de la opción.
+   * Etiqueta que describe la opción.
    */
   label: string;
 
   /**
-   * @property {string | number} value
-   * @description Valor asociado a la opción, que puede ser una cadena o un número.
+   * Valor asociado a la opción.
    */
   value: string | number;
 }
 
 /**
- * @interface DatosDeSolicitud
- * @description Datos relacionados con la solicitud, incluyendo encabezados de tabla y opciones de selección.
+ * Interfaz que define los datos de una solicitud en formato de tabla.
  */
 export interface DatosDeSolicitud {
   /**
-   * @property {string[]} tablaHeadData
-   * @description Encabezados de las columnas de la tabla.
+   * Encabezados de la tabla.
    */
   tablaHeadData: string[];
 
   /**
-   * @property {SolicitudDatos[]} tablaFilaDatos
-   * @description Filas de datos de la tabla, representadas como un arreglo de solicitudes.
+   * Filas de datos de la tabla, basadas en la interfaz SolicitudDatos.
    */
   tablaFilaDatos: SolicitudDatos[];
 
   /**
-   * @property {RadioOptions[]} hacerlosRadioOptions
-   * @description Opciones para los botones de selección (radio) relacionadas con la solicitud.
+   * Opciones de radio button asociadas a los datos.
    */
   hacerlosRadioOptions: RadioOptions[];
 }
 
 /**
- * @interface Solicitud
- * @description Representa los datos generales de una solicitud, incluyendo información personal y de operación.
+ * Interfaz que define los datos generales de una solicitud.
  */
 export interface Solicitud {
   /**
-   * @property {string} razonSocial
-   * @description Razón social del solicitante.
+   * Razón social de la empresa o persona.
    */
   razonSocial: string;
 
   /**
-   * @property {string} correoElectronico
-   * @description Dirección de correo electrónico del solicitante.
+   * Correo electrónico de contacto.
    */
   correoElectronico: string;
 
   /**
-   * @property {string} codigoPostal
-   * @description Código postal asociado con el domicilio.
+   * Código postal de la dirección.
    */
   codigoPostal: string;
 
   /**
-   * @property {number} estado
-   * @description Identificador del estado asociado con el domicilio.
+   * Identificador del estado (entidad federativa).
    */
   estado: number;
 
   /**
-   * @property {string} municipio
-   * @description Nombre del municipio asociado con el domicilio.
+   * Nombre del municipio.
    */
   municipio: string;
 
   /**
-   * @property {string} localidad
-   * @description Nombre de la localidad asociada con el domicilio.
+   * Nombre de la localidad.
    */
   localidad: string;
 
   /**
-   * @property {string} colonia
-   * @description Nombre de la colonia asociada con el domicilio.
+   * Nombre de la colonia.
    */
   colonia: string;
 
   /**
-   * @property {string} calle
-   * @description Nombre de la calle asociada con el domicilio.
+   * Nombre de la calle.
    */
   calle: string;
 
   /**
-   * @property {number} lada
-   * @description Código LADA asociado al número telefónico.
+   * Lada telefónica.
    */
   lada: number;
 
   /**
-   * @property {number} telefono
-   * @description Número telefónico del solicitante.
+   * Número de teléfono de contacto.
    */
   telefono: number;
 
   /**
-   * @property {string} avisoDeFuncionamiento
-   * @description Descripción del aviso de funcionamiento del solicitante.
+   * Aviso de funcionamiento relacionado con la solicitud.
    */
   avisoDeFuncionamiento: string;
 
   /**
-   * @property {string} licenciaSanitaria
-   * @description Información relacionada con la licencia sanitaria del solicitante.
+   * Licencia sanitaria asociada.
    */
   licenciaSanitaria: string;
 
   /**
-   * @property {string} liveFreshFrozen
-   * @description Información sobre si el producto es fresco, congelado o vive.
+   * Información sobre productos frescos o congelados.
    */
   liveFreshFrozen: string;
 
   /**
-   * @property {number} regimen
-   * @description Régimen al que pertenece el solicitante.
+   * Régimen fiscal de la empresa o persona.
    */
   regimen: number;
 
   /**
-   * @property {number} aduana
-   * @description Aduana asociada con el trámite.
+   * Identificador de la aduana asociada.
    */
   aduana: number;
 
   /**
-   * @property {string | number} hacerlos
-   * @description Selección del valor relacionado con la acción "hacerlos".
+   * Identificador o valor relacionado con los radio buttons.
    */
   hacerlos: string | number;
 
   /**
-   * @property {string} rfc
-   * @description Registro Federal de Contribuyentes (RFC) del solicitante.
+   * Registro Federal de Contribuyentes (RFC).
    */
   rfc: string;
 
   /**
-   * @property {string} legalRazonSocial
-   * @description Razón social del representante legal.
+   * Razón social legal de la empresa o persona.
    */
   legalRazonSocial: string;
 
   /**
-   * @property {string} apellidoPaterno
-   * @description Apellido paterno del solicitante.
+   * Apellido paterno del solicitante.
    */
   apellidoPaterno: string;
 
   /**
-   * @property {string} apellidoMeterno
-   * @description Apellido materno del solicitante.
+   * Apellido materno del solicitante.
    */
   apellidoMeterno: string;
 }
 
 /**
- * @const FECHA_DE_PAGO
- * @description Configuración del campo “Fecha de pago” en el formulario.
+ * Constante que define las propiedades relacionadas con la fecha de pago.
  */
 export const FECHA_DE_PAGO = {
   /**
-   * @property {string} labelNombre
-   * @description Etiqueta del campo “Fecha de pago”.
+   * Nombre de la etiqueta para la fecha de pago.
    */
   labelNombre: 'Fecha de pago',
 
   /**
-   * @property {boolean} required
-   * @description Indica si el campo es obligatorio.
+   * Indica si el campo es obligatorio.
    */
   required: false,
 
   /**
-   * @property {boolean} habilitado
-   * @description Indica si el campo está habilitado.
+   * Indica si el campo está habilitado.
    */
   habilitado: true,
 };

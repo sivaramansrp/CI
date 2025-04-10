@@ -1,145 +1,234 @@
+import { Catalogo, catalogoResponse } from '@libs/shared/data-access-user/src';
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
+import { TablaDatos } from '@libs/shared/data-access-user/src/core/models/260906/detos.model';
 
 /**
- * @interface Solicitud260906State
- * @description Representa el estado de la solicitud 260906, incluyendo información como referencia, banco, llave única, tipo de operación de obtención de datos y el importe asociado.
+ * Interfaz que define el estado de la tienda Sanitario260906.
  */
 export interface Solicitud260906State {
-  /**
-   * @property {string} referencia - Referencia única de la solicitud.
-   */
+  /** Referencia única asociada a la solicitud */
   referencia: string;
-
-  /**
-   * @property {string} cadenaDependencia - Cadena de dependencia asociada a la solicitud.
-   */
+  /** Cadena de dependencia asociada */
   cadenaDependencia: string;
-
-  /**
-   * @property {string} banco - Banco asociado a la solicitud.
-   */
+  /** Nombre del banco */
   banco: string;
-
-  /**
-   * @property {string} Llave - Llave única que identifica la solicitud.
-   */
-  Llave: string;
-
-  /**
-   * @property {string} tipoFetch - Tipo de operación de obtención de datos (fetch) asociada a la solicitud.
-   */
+  /** llave identificadora */
+  llave: string;
+  /** Tipo de operación de fetch */
   tipoFetch: string;
-
-  /**
-   * @property {string} importe - Importe monetario asociado a la solicitud.
-   */
+  /** Importe asociado */
   importe: string;
+  /** Estado seleccionado */
+  selectedEstado: catalogoResponse | null;
+  /** Clave seleccionada */
+  setClave: catalogoResponse | null;
+  /** Descripción seleccionada */
+  setDescripcion: catalogoResponse | null;
+  /** Clasificación específica seleccionada */
+  setDespecificarClasificacion: Catalogo | null;
+  /** Lista de fabricantes */
+  Fabricante: TablaDatos[];
+  /** Lista de destinatarios */
+  Destinatario: TablaDatos[];
+  /** Lista de proveedores */
+  Proveedor: TablaDatos[];
+  /** Lista de facturadores */
+  Facturador: TablaDatos[];
 }
 
 /**
- * @function createInitialState
- * @description Crea y devuelve el estado inicial de la solicitud 260906 con valores predeterminados.
- * @returns {Solicitud260906State} El estado inicial de la solicitud.
+ * Función que crea el estado inicial de la tienda.
+ * @returns El estado inicial de la tienda.
  */
 export function createInitialState(): Solicitud260906State {
   return {
     referencia: '',
     cadenaDependencia: '',
     banco: '',
-    Llave: '',
+    llave: '',
     tipoFetch: '',
     importe: '',
+    selectedEstado: null,
+    setClave: null,
+    setDescripcion: null,
+    setDespecificarClasificacion: null,
+    Fabricante: [],
+    Destinatario: [],
+    Proveedor: [],
+    Facturador: []
   };
 }
 
 /**
- * @class Sanitario260906Store
- * @extends {Store<Solicitud260906State>}
- * @description Clase que representa el almacén (store) para gestionar el estado de la solicitud 260906. Proporciona métodos para actualizar las propiedades del estado.
+ * Tienda que gestiona el estado de Sanitario260906.
  */
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
-@StoreConfig({ name: 'sanitario260906Store', resettable: true })
+@StoreConfig({
+  name: 'sanitario260906Store',
+  resettable: true
+})
 export class Sanitario260906Store extends Store<Solicitud260906State> {
   /**
-   * @constructor
-   * @description Constructor que inicializa el almacén con el estado inicial definido en `createInitialState`.
+   * Constructor que inicializa la tienda con el estado inicial.
    */
   constructor() {
     super(createInitialState());
   }
 
   /**
-   * @method setreferencia
-   * @description Actualiza el valor de la propiedad `referencia` en el estado.
-   * @param {string} referencia - Nuevo valor para la referencia de la solicitud.
+   * Actualiza el campo `referencia` en el estado.
+   * @param referencia Nueva referencia.
    */
   public setreferencia(referencia: string): void {
     this.update((state) => ({
       ...state,
-      referencia,
+      referencia
     }));
   }
 
   /**
-   * @method setcadenaDependencia
-   * @description Actualiza el valor de la propiedad `cadenaDependencia` en el estado.
-   * @param {string} cadenaDependencia - Nuevo valor para la cadena de dependencia.
+   * Actualiza el campo `cadenaDependencia` en el estado.
+   * @param cadenaDependencia Nueva cadena de dependencia.
    */
   public setcadenaDependencia(cadenaDependencia: string): void {
     this.update((state) => ({
       ...state,
-      cadenaDependencia,
+      cadenaDependencia
     }));
   }
 
   /**
-   * @method setbanco
-   * @description Actualiza el valor de la propiedad `banco` en el estado.
-   * @param {string} banco - Nuevo valor para el banco asociado a la solicitud.
+   * Actualiza el campo `banco` en el estado.
+   * @param banco Nuevo nombre del banco.
    */
   public setbanco(banco: string): void {
     this.update((state) => ({
       ...state,
-      banco,
+      banco
     }));
   }
 
   /**
-   * @method setLlave
-   * @description Actualiza el valor de la propiedad `Llave` en el estado.
-   * @param {string} Llave - Nuevo valor para la llave única de la solicitud.
+   * Actualiza el campo `llave` en el estado.
+   * @param llave Nueva llave identificadora.
    */
-  public setLlave(Llave: string): void {
+  public setLlave(llave: string): void {
     this.update((state) => ({
       ...state,
-      Llave,
+      llave
     }));
   }
 
   /**
-   * @method settipoFetch
-   * @description Actualiza el valor de la propiedad `tipoFetch` en el estado.
-   * @param {string} tipoFetch - Nuevo tipo de operación de obtención de datos.
+   * Actualiza el campo `tipoFetch` en el estado.
+   * @param tipoFetch Nuevo tipo de fetch.
    */
   public settipoFetch(tipoFetch: string): void {
     this.update((state) => ({
       ...state,
-      tipoFetch,
+      tipoFetch
     }));
   }
 
   /**
-   * @method setimporte
-   * @description Actualiza el valor de la propiedad `importe` en el estado.
-   * @param {string} importe - Nuevo valor para el importe asociado a la solicitud.
+   * Actualiza el campo `importe` en el estado.
+   * @param importe Nuevo importe.
    */
   public setimporte(importe: string): void {
     this.update((state) => ({
       ...state,
-      importe,
+      importe
+    }));
+  }
+
+  /**
+   * Actualiza el campo `selectedEstado` en el estado.
+   * @param selectedEstado Nuevo estado seleccionado.
+   */
+  public setSelectedEstado(selectedEstado: catalogoResponse): void {
+    this.update((state) => ({
+      ...state,
+      selectedEstado
+    }));
+  }
+
+  /**
+   * Actualiza el campo `setClave` en el estado.
+   * @param selectedClave Nueva clave seleccionada.
+   */
+  public setClave(selectedClave: catalogoResponse): void {
+    this.update((state) => ({
+      ...state,
+      setClave: selectedClave
+    }));
+  }
+
+  /**
+   * Actualiza el campo `setDescripcion` en el estado.
+   * @param selectedDescripcion Nueva descripción seleccionada.
+   */
+  public setDescripcion(selectedDescripcion: catalogoResponse): void {
+    this.update((state) => ({
+      ...state,
+      setDescripcion: selectedDescripcion
+    }));
+  }
+
+  /**
+   * Actualiza el campo `setDespecificarClasificacion` en el estado.
+   * @param selectedDespecificarClasificacion Nueva clasificación específica seleccionada.
+   */
+  public setDespecificarClasificacion(selectedDespecificarClasificacion: catalogoResponse): void {
+    this.update((state) => ({
+      ...state,
+      setDespecificarClasificacion: selectedDespecificarClasificacion
+    }));
+  }
+
+  /**
+   * Actualiza el campo `Fabricante` en el estado.
+   * @param fabricante Nueva lista de fabricantes.
+   */
+  public setFabricante(fabricante: TablaDatos[]): void {
+    this.update((state) => ({
+      ...state,
+      Fabricante: fabricante
+    }));
+  }
+
+  /**
+   * Actualiza el campo `Destinatario` en el estado.
+   * @param destinatario Nueva lista de destinatarios.
+   */
+  public setDestinatario(destinatario: TablaDatos[]): void {
+    this.update((state) => ({
+      ...state,
+      Destinatario: destinatario
+    }));
+  }
+
+  /**
+   * Actualiza el campo `Proveedor` en el estado.
+   * @param proveedor Nueva lista de proveedores.
+   */
+  public setProveedor(proveedor: TablaDatos[]): void {
+    this.update((state) => ({
+      ...state,
+      Proveedor: proveedor
+    }));
+  }
+
+  /**
+   * Actualiza el campo `Facturador` en el estado.
+   * @param facturador Nueva lista de facturadores.
+   */
+  public setFacturador(facturador: TablaDatos[]): void {
+    this.update((state) => ({
+      ...state,
+      Facturador: facturador
     }));
   }
 }

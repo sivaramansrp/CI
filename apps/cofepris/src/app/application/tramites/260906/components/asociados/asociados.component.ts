@@ -148,7 +148,7 @@ export class AsociadosComponent implements OnInit, OnDestroy {
     this.derechosForm = this.fb.group({
       referencia: [this.solicitudState?.referencia],
       cadenaDependencia: [this.solicitudState?.cadenaDependencia],
-      Llave: [this.solicitudState?.Llave],
+      llave: [this.solicitudState?.llave],
       banco: [this.solicitudState?.banco],
       tipoFetch: [this.solicitudState?.tipoFetch],
       importe: [this.solicitudState?.importe],
