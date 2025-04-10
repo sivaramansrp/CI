@@ -11,7 +11,7 @@ const ROUTES: Routes = [
   {
     path: '',
     pathMatch: 'full',
-    redirectTo: 'sanitary-permit',
+    redirectTo: 'permiso-sanitario',
   }
 ];
 
