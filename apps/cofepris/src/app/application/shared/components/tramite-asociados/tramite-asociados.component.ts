@@ -1,10 +1,10 @@
+import { Component, Input } from '@angular/core';
 import {
   ConfiguracionColumna,
   TablaDinamicaComponent,
   TituloComponent
 } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
 import { TramiteAsociados } from '../../models/tramite-asociados.model';
 
 /**
@@ -23,10 +23,10 @@ export class TramiteAsociadosComponent {
    * Configuración de las columnas de la tabla.
    * Define cómo se mostrarán los datos de los trámites asociados.
    */
-  configuracionTabla!: ConfiguracionColumna<TramiteAsociados>[];
+  @Input() configuracionTabla!: ConfiguracionColumna<TramiteAsociados>[];
 
   /**
    * Lista de trámites asociados que se mostrarán en la tabla.
    */
-  tramiteAsociados!: TramiteAsociados[];
+  @Input() tramiteAsociados!: TramiteAsociados[];
 }
