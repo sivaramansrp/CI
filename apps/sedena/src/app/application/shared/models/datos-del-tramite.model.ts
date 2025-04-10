@@ -1,5 +1,12 @@
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
 
+export interface DatosDelTramiteFormState {
+  permisoGeneral: string;
+  usoFinal: string;
+  aduanasSeleccionadas: string[];
+  paisDestino: string;
+}
+
 export interface MercanciaDetalle {
   fraccionArancelaria: string;
   descripcionFraccion: string;

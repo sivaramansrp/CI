@@ -15,7 +15,7 @@ export class DatosSolicitudService {
    * Usado para cargar información desde el frontend (assets).
    * @private
    */
-  private jsonUrl = 'assets/json/cofepris/domicilio.json';
+  private jsonUrl = 'assets/json/sedena/domicilio.json';
 
   constructor(public httpServicios: HttpClient) {}
   /**
@@ -76,5 +76,10 @@ export class DatosSolicitudService {
     return this.httpServicios
       .get<{ colonia: Catalogo[] }>(this.jsonUrl)
       .pipe(map((res) => res.colonia));
+  }
+  obtenerBancos(): Observable<Catalogo[]> {
+    return this.httpServicios
+      .get<{ banco: Catalogo[] }>(this.jsonUrl)
+      .pipe(map((res) => res.banco));
   }
 }

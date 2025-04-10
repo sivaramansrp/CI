@@ -6,7 +6,7 @@ export const FECHA_DE_PAGO = {
 export interface PagoDerechosFormState {
   claveReferencia: string;
   cadenaDependencia: string;
-  estado: string;
+  banco: string;
   llavePago: string;
   fechaPago: string;
   importePago: string;

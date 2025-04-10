@@ -4,9 +4,9 @@
   <hr />
 
   <form [formGroup]="pagoDerechosForm">
-    <div class="row g-3">
+    <div class="row">
       <!-- Clave de referencia -->
-      <div class="col-md-4">
+      <div class="col-md-8">
         <label for="claveReferencia" class="form-label"
           >Clave de referencia:</label
         >
@@ -17,9 +17,10 @@
           formControlName="claveReferencia"
         />
       </div>
-
+    </div>
+    <div class="row g-3">
       <!-- Cadena de la dependencia -->
-      <div class="col-md-4">
+      <div class="col-md-8">
         <label for="cadenaDependencia" class="form-label"
           >Cadena de la dependencia:</label
         >
@@ -34,9 +35,9 @@
       <!-- Estado (using <app-catalogo-select>) -->
       <div class="col-md-4">
         <app-catalogo-select
-          [catalogo]="estadosDatos"
-          formControlName="estado"
-          [label]="'Estado/localidad*'"
+          [catalogo]="bancoDatos"
+          formControlName="banco"
+          [label]="'Banco*'"
           [required]="true"
         ></app-catalogo-select>
       </div>

@@ -80,7 +80,7 @@ export class PagoDeDerechosComponent implements OnInit {
    * @property {Catalogo[]} estadosDatos
    * Lista de estados obtenida desde el servicio de catálogos.
    */
-  estadosDatos!: Catalogo[];
+  bancoDatos!: Catalogo[];
 
   /**
    * @constructor
@@ -111,7 +111,6 @@ export class PagoDeDerechosComponent implements OnInit {
         this.pagoDerechoFormState?.cadenaDependencia || '',
         Validators.required,
       ],
-      estado: [this.pagoDerechoFormState?.estado || '', Validators.required],
       llavePago: [
         this.pagoDerechoFormState?.llavePago || '',
         Validators.required,
@@ -124,6 +123,7 @@ export class PagoDeDerechosComponent implements OnInit {
         this.pagoDerechoFormState?.importePago || '',
         [Validators.required, Validators.pattern('^[0-9]+(\\.[0-9]{1,2})?$')],
       ],
+      banco: [this.pagoDerechoFormState?.banco || '', Validators.required],
     });
 
     this.pagoDerechosForm.valueChanges.subscribe((valores) => {
@@ -140,10 +140,10 @@ export class PagoDeDerechosComponent implements OnInit {
    */
   cargarDatos(): void {
     this.datosSolicitudService
-      .obtenerListaEstados()
+      .obtenerBancos()
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((data) => {
-        this.estadosDatos = data;
+        this.bancoDatos = data;
       });
   }
 
