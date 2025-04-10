@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { CatalogoSelectComponent, TablaDinamicaComponent, TituloComponent, catalogoResponse } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent, TablaDinamicaComponent, TituloComponent, CatalogoResponse } from '@ng-mf/data-access-user';
 
 import { AlertComponent } from '@ng-mf/data-access-user';
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
@@ -51,7 +51,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   /** Subject para destruir el componente */
   private destroy$ = new Subject<void>();
   /** Observable para el estado seleccionado */
-  selectedEstado$: Observable<catalogoResponse | null> =
+  selectedEstado$: Observable<CatalogoResponse | null> =
     this.tramite260212Query.selectedEstado$;
   /** Catálogo de estados cargado desde un archivo JSON */
 
@@ -118,7 +118,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Arreglo que almacena los estados obtenidos del catálogo.
    * Este arreglo es utilizado en el componente para gestionar la información de estados.
    */
-  estado: catalogoResponse[] = []
+  estado: CatalogoResponse[] = []
 
   /**
    * Arreglo que almacena los datos relacionados con las claves S.C.I.A.N.

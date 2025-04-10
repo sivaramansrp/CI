@@ -23,7 +23,7 @@ import {
   TituloComponent,
 } from '@ng-mf/data-access-user';
 import {
-  catalogoResponse,
+  CatalogoResponse,
 } from '@ng-mf/data-access-user';
 
 import { Subject } from 'rxjs';
@@ -54,10 +54,10 @@ export class ConsultadDomicilios90305Component implements OnInit, OnDestroy{
     /** Subject para destruir el componente */
     private destroy$ = new Subject<void>();
   /** Observable para el estado seleccionado */
-  selectedEstado$: Observable<catalogoResponse | null> =
+  selectedEstado$: Observable<CatalogoResponse | null> =
     this.tramite90305Query.selectedEstado$;
   /** Catálogo de estados cargado desde un archivo JSON */
-  estadoJson: catalogoResponse[] = [];
+  estadoJson: CatalogoResponse[] = [];
   /** Formulario reactivo para la consulta de domicilios */
   formConsulta!: FormGroup;
   /**
@@ -98,7 +98,7 @@ export class ConsultadDomicilios90305Component implements OnInit, OnDestroy{
     this.listaDomicilios
       .getEstadoData()
       .pipe(takeUntil(this.destroy$))
-      .subscribe((resp: catalogoResponse[]) => {
+      .subscribe((resp: CatalogoResponse[]) => {
         this.estadoJson = resp;
       });
   }
