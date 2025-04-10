@@ -88,7 +88,7 @@ export class DatosDelEstablecimientoRFCComponent implements OnInit, OnDestroy {
    * @method configurarGrupoForm
    * @description Configures the reactive form group for the "Datos del Establecimiento RFC" component.
    */
-  configurarGrupoForm() {
+  configurarGrupoForm(): void {
     this.datosDelForm = this.fb.group({
       rfcDel: [this.solicitudState?.rfcDel, [Validators.maxLength(254)]],
       denominacionRazonSocial: [this.solicitudState?.denominacionRazonSocial, [Validators.required, Validators.maxLength(254)]],
