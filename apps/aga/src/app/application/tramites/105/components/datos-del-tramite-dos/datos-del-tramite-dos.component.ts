@@ -193,7 +193,7 @@ export class DatosDelTramiteDosComponent implements OnInit, OnDestroy {
     private query: Tramite105Query,
     private invoCarService: InvoCarService
   ) {
-    // Initialization logic can be added here if needed
+    // // Se puede agregar lógica de inicialización aquí si es necesario
   }
 
   /**
@@ -213,7 +213,24 @@ export class DatosDelTramiteDosComponent implements OnInit, OnDestroy {
 
     this.getOperaciones();
     this.obtenerMercancia();
+    this.crearFormularios()
+    this.obtenerOperacionesDeLaTienda()
+  }
 
+  obtenerOperacionesDeLaTienda(): void {
+    this.subscriptions.push(
+      this.query.selectOperaciones$.subscribe((operacione) => {
+        this.operacione = {
+          labelNombre: 'Operaciones',
+          required: false,
+          primerOpcion: 'Selecciona un valor',
+          catalogos: operacione ?? [],
+        };
+      })
+    );
+  }
+
+  crearFormularios(): void {
     this.datosDelTramiteDos = this.fb.group({
       procedimientoCargaDescarga: [this.solicitudState?.procedimientoCargaDescarga, Validators.required],
       sistemasMedicionUbicacion: [this.solicitudState?.sistemasMedicionUbicacion, Validators.required],
@@ -228,18 +245,7 @@ export class DatosDelTramiteDosComponent implements OnInit, OnDestroy {
       numeroPatente: ['', Validators.required],
     });
 
-    this.subscriptions.push(
-      this.query.selectOperaciones$.subscribe((operacione) => {
-        this.operacione = {
-          labelNombre: 'Operaciones',
-          required: false,
-          primerOpcion: 'Selecciona un valor',
-          catalogos: operacione ?? [],
-        };
-      })
-    );
-  }
-
+   }
   /**
    * Cierra el modal.
    * 

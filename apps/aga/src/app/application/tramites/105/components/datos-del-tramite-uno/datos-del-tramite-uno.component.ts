@@ -5,6 +5,7 @@ import { Solicitud105State, Tramite105Store, } from '../../estados/tramite105.st
 import { Subject, Subscription, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { InvoCarService } from '../../services/invocar.service';
+import { RESPUESTA_OPCIONES } from '../../constantes/datos-del-tramite.enum';
 import { Tramite105Query } from '../../estados/tramite105.query';
 import mercanciaTable from 'libs/shared/theme/assets/json/105/mercancia-table.json';
 interface TableBodyData {
@@ -34,7 +35,7 @@ export class DatosDelTramiteUnoComponent implements OnInit, OnDestroy {
    */
   constructor(private fb: FormBuilder, private invoCarService: InvoCarService, private store: Tramite105Store,
     private query: Tramite105Query,) {
-    // Initialization logic can be added here if needed
+    // Se puede agregar lógica de inicialización aquí si es necesario
   }
 
   /**
@@ -88,6 +89,13 @@ export class DatosDelTramiteUnoComponent implements OnInit, OnDestroy {
   colonia!: CatalogosSelect;
 
   /**
+   * Valor seleccionado del radio.
+   */
+  valorSeleccionado!: string;
+  valorSeleccionado1!: string;
+  valorSeleccionado2!: string;
+
+  /**
    * Catálogo de aduanas.
    */
   aduana!: CatalogosSelect;
@@ -135,11 +143,42 @@ export class DatosDelTramiteUnoComponent implements OnInit, OnDestroy {
   /**
    * Opciones para los botones de radio.
    */
-  radioOpcions = [
-    { label: 'Sí', value: 'sí' },
-    { label: 'No', value: 'no' },
+  radioOpcions1 = [
+    { label: 'Sí', value: RESPUESTA_OPCIONES.Si },
+    { label: 'No', value: RESPUESTA_OPCIONES.No },
   ];
+    /**
+   * Opciones para los botones de radio.
+   */
+    radioOpcions2 = [
+      { label: 'Sí', value: RESPUESTA_OPCIONES.Si },
+      { label: 'No', value: RESPUESTA_OPCIONES.No },
+    ];
+      /**
+   * Opciones para los botones de radio.
+   */
+  radioOpcions = [
+    { label: 'Sí', value: RESPUESTA_OPCIONES.Si },
+    { label: 'No', value: RESPUESTA_OPCIONES.No },
+  ];
+/**
+   * Cambia el valor seleccionado del radio.
+   * @param value Valor seleccionado.
+   */
 
+
+cambiarRadio(value: string | number):void {
+  this.valorSeleccionado = value as string;
+  this.store.setDistribucionGas(this.valorSeleccionado);
+}
+cambiarRadio1(value: string | number):void {
+  this.valorSeleccionado1 = value as string;
+  this.store.setDistribucionGas(this.valorSeleccionado1);
+}
+cambiarRadio2(value: string | number):void {
+  this.valorSeleccionado2 = value as string;
+  this.store.setIndustriaAutomotriz(this.valorSeleccionado2);
+}
   /**
    * Suscripción activa.
    */
@@ -176,76 +215,83 @@ export class DatosDelTramiteUnoComponent implements OnInit, OnDestroy {
     this.getColonia();
     this.getFraccionArancelariae();
     this.obtenerMercancia();
-    this.agregarForm = this.fb.group({
-      fraccionArancelaria: [{ value: '' }, Validators.required],
-      descripcion: ['', Validators.required],
-      descripcionAdicional: ['']
-    });
-
-    this.subscriptions.push(
-      this.query.selectPais$.subscribe((pais) => {
-        this.pais = {
-          labelNombre: 'País',
-          required: false,
-          primerOpcion: 'Selecciona un valor',
-          catalogos: pais ?? [],
-        };
-      })
-    );
-    this.subscriptions.push(
-      this.query.selectEntidadFederativa$.subscribe((entidadFederativa) => {
-        this.entidadFederativa = {
-          labelNombre: 'Entidad Federativa',
-          required: false,
-          primerOpcion: 'Selecciona un valor',
-          catalogos: entidadFederativa ?? [],
-        };
-      })
-    );
-    this.subscriptions.push(
-      this.query.selectMunicipioDelegacion$.subscribe((municipioDelegacion) => {
-        this.municipioDelegacion = {
-          labelNombre: 'Municipio o Delegación',
-          required: false,
-          primerOpcion: 'Selecciona un valor',
-          catalogos: municipioDelegacion ?? [],
-        };
-      })
-    );
-
-    this.subscriptions.push(
-      this.query.selectColonia$.subscribe((colonia) => {
-        this.colonia = {
-          labelNombre: 'Colonia',
-          required: false,
-          primerOpcion: 'Selecciona un valor',
-          catalogos: colonia ?? [],
-        };
-      })
-    );
-
-    this.subscriptions.push(
-      this.query.selectAduana$.subscribe((aduana) => {
-        this.aduana = {
-          labelNombre: 'Aduana',
-          required: false,
-          primerOpcion: 'Selecciona un valor',
-          catalogos: aduana ?? [],
-        };
-      })
-    );
-
-    this.subscriptions.push(
-      this.query.selectFraccionarancelaria$.subscribe((fraccionarancelaria) => {
-        this.fraccionArancelaria = {
-          labelNombre: 'Fracción arancelaria',
-          required: false,
-          primerOpcion: 'Selecciona un valor',
-          catalogos: fraccionarancelaria ?? [],
-        };
-      })
-    );
+    this.obtenerJsonData()
+    this.crearFormularioAgregar();
   }
+
+  obtenerJsonData():void{
+  this.subscriptions.push(
+    this.query.selectPais$.subscribe((pais) => {
+      this.pais = {
+        labelNombre: 'País',
+        required: false,
+        primerOpcion: 'Selecciona un valor',
+        catalogos: pais ?? [],
+      };
+    })
+  );
+  this.subscriptions.push(
+    this.query.selectEntidadFederativa$.subscribe((entidadFederativa) => {
+      this.entidadFederativa = {
+        labelNombre: 'Entidad Federativa',
+        required: false,
+        primerOpcion: 'Selecciona un valor',
+        catalogos: entidadFederativa ?? [],
+      };
+    })
+  );
+  this.subscriptions.push(
+    this.query.selectMunicipioDelegacion$.subscribe((municipioDelegacion) => {
+      this.municipioDelegacion = {
+        labelNombre: 'Municipio o Delegación',
+        required: false,
+        primerOpcion: 'Selecciona un valor',
+        catalogos: municipioDelegacion ?? [],
+      };
+    })
+  );
+
+  this.subscriptions.push(
+    this.query.selectColonia$.subscribe((colonia) => {
+      this.colonia = {
+        labelNombre: 'Colonia',
+        required: false,
+        primerOpcion: 'Selecciona un valor',
+        catalogos: colonia ?? [],
+      };
+    })
+  );
+
+  this.subscriptions.push(
+    this.query.selectAduana$.subscribe((aduana) => {
+      this.aduana = {
+        labelNombre: 'Aduana',
+        required: false,
+        primerOpcion: 'Selecciona un valor',
+        catalogos: aduana ?? [],
+      };
+    })
+  );
+
+  this.subscriptions.push(
+    this.query.selectFraccionarancelaria$.subscribe((fraccionarancelaria) => {
+      this.fraccionArancelaria = {
+        labelNombre: 'Fracción arancelaria',
+        required: false,
+        primerOpcion: 'Selecciona un valor',
+        catalogos: fraccionarancelaria ?? [],
+      };
+    })
+  );
+}
+
+crearFormularioAgregar(): void {
+  this.agregarForm = this.fb.group({
+    fraccionArancelaria: [{ value: '' }, Validators.required],
+    descripcion: ['', Validators.required],
+    descripcionAdicional: ['']
+  });
+}
 
   /**
    * @method crearDatosDelTramiteForm

@@ -16,7 +16,7 @@ export interface Solicitud105State {
   depositoFiscalVehiculos: boolean;
   distribucionGas:string;
   serviciosTerceros:string;
-  industriaAutomotriz:boolean;
+  industriaAutomotriz:string;
 
   // Ubicación
   domicilio:boolean;
@@ -50,7 +50,7 @@ export function createInitialState(): Solicitud105State {
     depositoFiscalVehiculos: false,
     distribucionGas: '',
     serviciosTerceros: '',
-    industriaAutomotriz: false,
+    industriaAutomotriz: '',
     domicilio: false,
     ubicacion: false,
     pais: null,
@@ -166,7 +166,7 @@ export class Tramite105Store extends Store<Solicitud105State> {
  * @param {boolean} industriaAutomotriz - Valor de la industria automotriz.
  */
 
-  public setIndustriaAutomotriz(industriaAutomotriz: boolean): void {
+  public setIndustriaAutomotriz(industriaAutomotriz: string): void {
     this.update((state) => ({
       ...state,
       industriaAutomotriz,
