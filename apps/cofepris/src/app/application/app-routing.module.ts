@@ -52,6 +52,13 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'mod-permiso-importacion',
+    loadChildren: () =>
+      import('./tramites/260912/mod-permiso-importacion.module').then(
+        (m)=> m.ModPermisoImportacionModule
+      )
+  },
+  {
     path: 'permiso-plaguicidas',
     loadChildren: () =>
       import('./tramites/260501/permiso-plaguicidas-importacion.module').then(
