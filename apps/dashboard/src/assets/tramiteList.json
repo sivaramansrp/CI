@@ -184,8 +184,8 @@
     {
         "id": 27,
         "tramite": 80202,
-        "URL": "{{ ruta }}/agace/pago/antecesor/datosdelasolicitud",
-        "link": "/agace/pago/antecesor/datosdelasolicitud",
+        "URL": "{{ ruta }}/se/immex-ampliacion-sensibles/solicitud",
+        "link": "/se/immex-ampliacion-sensibles/solicitud",
         "department": "agace"
     },
     {
@@ -289,8 +289,8 @@
     {
         "id": 42,
         "tramite": 110204,
-        "URL": "{{ ruta }}/se/pago/pexim/certificado-origen",
-        "link": "/se/pago/pexim/certificado-origen",
+        "URL": "{{ ruta }}/se/pexim/certificado-origen",
+        "link": "/se/pexim/certificado-origen",
         "department": "se"
     },
     {
@@ -499,9 +499,9 @@
     {
         "id": 72,
         "tramite": 220102,
-        "URL": "{{ ruta }}/peticion-requisitos-fitosanitarios/invocar-modulo",
-        "link": "/peticion-requisitos-fitosanitarios/invocar-modulo",
-        "department": ""
+        "URL": "{{ ruta }}/agriculture/peticion-requisitos-fitosanitarios/invocar-modulo",
+        "link": "/agriculture/peticion-requisitos-fitosanitarios/invocar-modulo",
+        "department": "agriculture"
     },
     {
         "id": 73,
@@ -590,8 +590,8 @@
     {
         "id": 85,
         "tramite": 230401,
-        "URL": "{{ ruta }}/semarnat/pantallas",
-        "link": "/semarnat/pantallas",
+        "URL": "{{ ruta }}/pago/pantallas/action",
+        "link": "/pago/pantallas/action",
         "department": "semarnat"
     },
     {
@@ -732,7 +732,7 @@
         "tramite": 290101,
         "URL": "{{ ruta }}/cafe-exportadores/cafe-exportadores",
         "link": "/cafe-exportadores/cafe-exportadores",
-        "department": ""
+        "department": "amecafe"
     },
     {
         "id": 106,
@@ -758,15 +758,15 @@
     {
         "id": 109,
         "tramite": 260204,
-        "URL": "",
-        "link": "",
+        "URL": "{{ ruta }}/cofepris/permiso-sanitario-importacion-medicamentos",
+        "link": "/cofepris/permiso-sanitario-importacion-medicamentos",
         "department": "cofepris"
     },
     {
         "id": 110,
         "tramite": 260210,
-        "URL": "",
-        "link": "",
+        "URL": "{{ ruta }}/cofepris/permiso-sanitario-importacion-medicamentos-pruebas",
+        "link": "/cofepris/permiso-sanitario-importacion-medicamentos-pruebas",
         "department": "cofepris"
     },
     {
@@ -1017,43 +1017,43 @@
     {
         "id": 146,
         "tramite": 220403,
-        "URL": "",
-        "link": "",
-        "department": "agricultura"
+        "URL": "{{ ruta }}/pago/certificado-exportacion/acuicola",
+        "link": "/pago/certificado-exportacion/acuicola",
+        "department": "agriculture"
     },
     {
         "id": 147,
         "tramite": 260102,
-        "URL": "",
-        "link": "",
+        "URL": "{{ ruta }}/pago/consumo-personal/solicitud",
+        "link": "/pago/consumo-personal/solicitud",
         "department": "cofepris"
     },
     {
         "id": 148,
         "tramite": 260206,
-        "URL": "",
-        "link": "",
+        "URL": "{{ ruta }}/pago/maquila-materias-primas/solicitud",
+        "link": "/pago/maquila-materias-primas/solicitud",
         "department": "cofepris"
     },
     {
         "id": 149,
         "tramite": 260213,
-        "URL": "",
-        "link": "",
+        "URL": "{{ ruta }}/cofepris/permiso-sanitario-medicos-uso-personal",
+        "link": "/cofepris/permiso-sanitario-medicos-uso-personal",
         "department": "cofepris"
     },
     {
         "id": 150,
         "tramite": 260217,
-        "URL": "",
-        "link": "",
+        "URL": "{{ ruta }}/cofepris/dispositivos-medicos-sin-registrar/contenedor-de-pasos",
+        "link": "/cofepris/dispositivos-medicos-sin-registrar/contenedor-de-pasos",
         "department": "cofepris"
     },
     {
         "id": 151,
         "tramite": 260218,
-        "URL": "",
-        "link": "",
+        "URL": "{{ ruta }}/pago/dispositivos-medicos-laboratorio/contenedor-de-pasos",
+        "link": "/pago/dispositivos-medicos-laboratorio/contenedor-de-pasos",
         "department": "cofepris"
     },
     {
