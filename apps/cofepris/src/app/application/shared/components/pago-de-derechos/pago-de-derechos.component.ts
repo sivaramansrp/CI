@@ -3,6 +3,7 @@ import {
   FECHA_DE_PAGO,
   PagoDerechosFormState,
 } from '../../models/terceros-relacionados.model';
+import { BANCO } from '../../constantes/datos-solicitud.enum';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
@@ -14,6 +15,7 @@ import { InputFechaComponent } from '@ng-mf/data-access-user';
 import { OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Subject } from 'rxjs';
+import { TituloComponent } from '@ng-mf/data-access-user';
 import { Validators } from '@angular/forms';
 import { takeUntil } from 'rxjs';
 /**
@@ -30,6 +32,7 @@ import { takeUntil } from 'rxjs';
     CatalogoSelectComponent,
     ReactiveFormsModule,
     InputFechaComponent,
+    TituloComponent
   ],
   templateUrl: './pago-de-derechos.component.html',
   styleUrl: './pago-de-derechos.component.css',
@@ -44,6 +47,12 @@ export class PagoDeDerechosComponent implements OnInit {
    * @returns {void} This method does not return any value.
    */
   @Input() public pagoDerechoFormState!: PagoDerechosFormState;
+
+  /**
+  * Identificador del procedimiento recibido como entrada desde un componente padre.
+  * @type {number}
+  */
+  @Input() public idProcedimiento!: number;
 
   /**
    * @property {EventEmitter<PagoDerechosFormState>} updatePagoDerechos
@@ -61,6 +70,12 @@ export class PagoDeDerechosComponent implements OnInit {
    * @private
    */
   private unsubscribe$ = new Subject<void>();
+
+  /**
+    * Indica si se debe mostrar la sección de información bancaria en la interfaz.
+    * @type {boolean}
+  */
+  public mostrarBanco = true;
 
   /**
    * @property {InputFecha} fechaInicioInput
@@ -91,7 +106,9 @@ export class PagoDeDerechosComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private datosSolicitudService: DatosSolicitudService
-  ) {}
+  ) {
+      // No se necesita lógica de inicialización adicional.
+  }
 
   /**
    * @method ngOnInit
@@ -127,6 +144,10 @@ export class PagoDeDerechosComponent implements OnInit {
     this.pagoDerechosForm.valueChanges.subscribe((valores) => {
       this.updatePagoDerechos.emit(valores);
     });
+
+    this.mostrarBanco = BANCO.includes(this.idProcedimiento)
+      ? true
+      : false;
 
     this.cargarDatos();
   }

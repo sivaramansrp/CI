@@ -4,6 +4,7 @@ import { Tramite260208State, Tramite260208Store } from '../../estados/tramite260
 import { map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DatosMercanciaComponent } from '../../../../shared/components/datos-mercancia/datos-mercancia.component';
+import { ID_PROCEDIMIENTO } from '../../constants/medicamentos-destinados-uso.enum';
 import { Subject } from 'rxjs';
 import { TablaMercanciasDatos } from '../../../../shared/models/datos-solicitud.model';
 import { Tramite260208Query } from '../../estados/tramite260208Query.query';
@@ -40,6 +41,8 @@ export class DatosMercanciaContenedoraComponent implements OnInit, OnDestroy {
    * Estado completo del trámite, que contiene información como la tabla de mercancías.
    */
   public tramiteState!: Tramite260208State;
+
+  public readonly idProcedimiento = ID_PROCEDIMIENTO;
 
   /**
    * @constructor

@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { ID_PROCEDIMIENTO } from '../../../constants/medicamentos-destinados-uso.enum';
 import { PagoDeDerechosComponent } from '../../../../../shared/components/pago-de-derechos/pago-de-derechos.component';
 import { PagoDerechosFormState } from '../../../../../shared/models/terceros-relacionados.model';
 import { Tramite260208Store } from '../../../estados/tramite260208Store.store';
@@ -24,6 +25,9 @@ export class PagoDeDerechosContenedoraComponent {
    */
 
   public pagoDerechos: PagoDerechosFormState;
+
+  public readonly idProcedimiento = ID_PROCEDIMIENTO;
+
   /**
    * @constructor
    * @description Constructor que inyecta el store `Tramite260208Store` para gestionar el estado del trámite.

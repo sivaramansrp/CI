@@ -102,17 +102,7 @@
       </div>
     </div>
     }
-    @if(!elementosNoValidos.includes('denominacionComun')){
-        <div class="row">
-            <div class="col-md-10">
-                <div class="form-group">
-                    <label class="form-label" for="denominacionComun">Denominación o nombre científico*:</label>
-                    <input class="form-control" id="denominacionComun" type="text" formControlName="denominacionComun"
-                        [ngClass]="isValid(mercanciaForm, 'denominacionComun') ? 'required' : ''">
-                </div>
-            </div>
-        </div>
-    }
+    
         <div class="row">
             <div class="col-md-10 ml-2">
                 <app-catalogo-select [catalogo]="tipoProductoDatos" formControlName="tipoProducto" [label]="'Tipo de producto'"
@@ -214,7 +204,7 @@
             </div>
         }
 
-        <div class="row">
+          <div class="row">
             @if(!elementosNoValidos.includes('numeroRegistroSanitario')){
                 <div class="col-md-5">
                     <div class="form-group">
@@ -231,8 +221,8 @@
                     </div>
                 </div>
             }
-        </div>
-
+          </div>
+        
           <div class="row mt-5">
             <div class="col-md-12 mt-3">
               <div class="panel-group ficha-collapse" id="accordion">
