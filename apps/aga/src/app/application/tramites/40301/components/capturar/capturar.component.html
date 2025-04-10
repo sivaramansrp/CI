@@ -4,7 +4,26 @@
   <input type="hidden" formControlName="rol" />
 
   <div>
-    <app-layaout-captura-tipo-agente></app-layaout-captura-tipo-agente>
+    <ng-titulo [titulo]="titulo"></ng-titulo>
+
+    <div class="row" >
+      <div class="col-md-8">
+        <div class="form-group">
+          <label class="control-label" for="tipoAgente">Tipo de Agente</label>
+          <span class="require">*</span>
+          <label class="control-label">:</label>
+          <app-catalogo-select [catalogo]="agentCatalog" formControlName="tipoAgente"
+            [required]="true" name="tipoAgente" (change)="conTipoAgenteData('tipoAgente')"></app-catalogo-select>
+        </div>
+
+        <div class="text-end">
+          <button type="button" class="btn btn-danger" (click)="limpiarAgente()">
+            Limpiar
+          </button>
+        </div>
+      </div>
+    </div>
+    <!-- <app-layaout-captura-tipo-agente></app-layaout-captura-tipo-agente> -->
 
     @if(rolesUsuario.includes('personaMoral')) {
     <app-layout-director-general></app-layout-director-general>
