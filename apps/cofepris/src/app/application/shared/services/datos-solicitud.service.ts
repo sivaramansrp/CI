@@ -16,7 +16,9 @@ export class DatosSolicitudService {
    */
   private jsonUrl = 'assets/json/cofepris/domicilio.json';
 
-  constructor(public httpServicios: HttpClient) {}
+  constructor(public httpServicios: HttpClient) {
+    // No se necesita lógica de inicialización adicional.
+  }
   /**
    * Obtiene una respuesta desde una URL y asigna los datos a una variable.
    *
@@ -51,6 +53,12 @@ export class DatosSolicitudService {
     return this.httpServicios
       .get<{ estado: Catalogo[] }>(this.jsonUrl)
       .pipe(map((res) => res.estado));
+  }
+
+  getBancoDatos(): Observable<Catalogo[]> {
+    return this.httpServicios
+      .get<{ banco: Catalogo[] }>('assets/json/cofepris/bancoDatos.json')
+      .pipe(map((res) => res.banco));
   }
 
   obtenerListaMunicipios(): Observable<Catalogo[]> {
