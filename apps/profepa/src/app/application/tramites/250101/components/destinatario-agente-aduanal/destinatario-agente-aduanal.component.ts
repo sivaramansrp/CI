@@ -9,6 +9,15 @@ import {
   TableComponent,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
+
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+
 import { DestinatarioService } from '../../services/destinatario.service';
 import { ModalComponent } from '../modal/modal.component';
 import { TablaDatos } from '../../models/flora-fauna.models';
@@ -22,37 +31,48 @@ import { TablaDatos } from '../../models/flora-fauna.models';
     InputRadioComponent,
     TituloComponent,
     ModalComponent,
-    CatalogoSelectComponent
+    CatalogoSelectComponent,
+    ReactiveFormsModule,
   ],
   templateUrl: './destinatario-agente-aduanal.component.html',
   styleUrl: './destinatario-agente-aduanal.component.scss',
 })
 export class DestinatarioAgenteAduanalComponent implements OnInit {
-
   showTableDiv = true;
 
   showDestinatarioModal = false;
   showAgenteModal = false;
   showAceptarModal = false;
 
-   destinatarioOpcionDeBotonDeRadio = DESTINATARIO_OPCIONES_DE_BOTON_DE_RADIO;
+  destinatarioOpcionDeBotonDeRadio = DESTINATARIO_OPCIONES_DE_BOTON_DE_RADIO;
 
-  constructor(private destinatarioService: DestinatarioService) {
-    //
-  }
+  public formDestinatariosModal!: FormGroup;
+  public formAgenteAduanal!: FormGroup;
+
   paisData: Catalogo[] = [];
   estadoData: Catalogo[] = [];
   tablaDestinatarioData: string[] = [];
   tablaAgenteAduanalData: string[] = [];
 
-  ngOnInit(): void {
-    this.destinatarioService.getDestinatarioEncabezadoDeTabla().subscribe((data: any) => {
-      this.tablaDestinatarioData = data.columns;
-    });
+  constructor(
+    private fb: FormBuilder,
+    private destinatarioService: DestinatarioService
+  ) {
+    //
+  }
 
-    this.destinatarioService.getAduanalEncabezadoDeTabla().subscribe((data: any) => {
-      this.tablaAgenteAduanalData = data.columns;
-    });
+  ngOnInit(): void {
+    this.destinatarioService
+      .getDestinatarioEncabezadoDeTabla()
+      .subscribe((data: any) => {
+        this.tablaDestinatarioData = data.columns;
+      });
+
+    this.destinatarioService
+      .getAduanalEncabezadoDeTabla()
+      .subscribe((data: any) => {
+        this.tablaAgenteAduanalData = data.columns;
+      });
 
     this.destinatarioService.getPaisData().subscribe((data) => {
       this.paisData = data;
@@ -61,6 +81,9 @@ export class DestinatarioAgenteAduanalComponent implements OnInit {
     this.destinatarioService.getEstadoData().subscribe((data) => {
       this.estadoData = data;
     });
+
+    this.establecerFormDestinatariosModal();
+    this.establecerFormAgenteAduanal();
   }
 
   tablaDestinatarioRowData: TablaDatos[] = [];
@@ -74,5 +97,24 @@ export class DestinatarioAgenteAduanalComponent implements OnInit {
   cambiarAgenteAduanal(): void {
     this.showTableDiv = !this.showTableDiv;
     this.showAgenteModal = !this.showAgenteModal;
+  }
+
+  establecerFormDestinatariosModal(): void {
+    this.formDestinatariosModal = this.fb.group({
+      destinatarioRazonSocial: new FormControl('', [Validators.required]),
+      paisNacionalDestinatario: new FormControl('', [Validators.required]),
+      estadoNacionalDestinatario: new FormControl('', [Validators.required]),
+      codigoPostalDestinatario:new FormControl('', [Validators.required]),
+      domicilioDestinatario:new FormControl('', [Validators.required]),
+    });
+  }
+
+  establecerFormAgenteAduanal(): void {
+    this.formAgenteAduanal = this.fb.group({
+      nombreAgenteAduanal: new FormControl('', [Validators.required]),
+      primerApellidoAgenteAduanal: new FormControl('', [Validators.required]),
+      segundoApellidoAgenteAduanal: new FormControl('', [Validators.required]),
+      patenteAgenteAduanal:new FormControl('', [Validators.required]),
+    });
   }
 }

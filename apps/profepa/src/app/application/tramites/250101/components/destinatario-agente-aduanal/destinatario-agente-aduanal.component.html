@@ -33,13 +33,13 @@
 <app-modal [active]="showDestinatarioModal">
     <div>
         <ng-titulo titulo="Destinatario" />
-        <form>
+        <form [formGroup]="formDestinatariosModal" id="formDestinatariosModal">
             <app-input-radio [radioOptions]="destinatarioOpcionDeBotonDeRadio"
                 [layout]="'horizontal'"></app-input-radio>
 
             <div class="col-md-8 mt-5">
                 <label class="form-label" for="denominacionRSDestinatario">Denominación o razón social*:</label>
-                <input type="text" class="form-control" id="denominacionRSDestinatario" name="denominacionRSDestinatario" [required]=true>
+                <input type="text" class="form-control" id="denominacionRSDestinatario" formControlName="destinatarioRazonSocial" name="denominacionRSDestinatario" [required]=true>
             </div>
 
             <div class="clearfix"></div>
@@ -48,25 +48,25 @@
             <div class="col-md-4 mt-5 dropdown-field">
                 <div class="form-group">
                     <app-catalogo-select [catalogo]="paisData" [label]="'País'" [required]="true" name="" id="paisNacionalDestinatario1"
-                        formControlName=""></app-catalogo-select>
+                        formControlName="paisNacionalDestinatario"></app-catalogo-select>
                 </div>
             </div>
     
             <div class="col-md-4 mt-5 dropdown-field" >
                 <div class="form-group">
-                    <app-catalogo-select [catalogo]="estadoData" [label]="'Estado'" [required]="true" name="" id="estado"
-                        formControlName=""></app-catalogo-select>
+                    <app-catalogo-select [catalogo]="estadoData" [label]="'Estado'" [required]="true" name="" id="estadoNacionalDestinatario1"
+                        formControlName="estadoNacionalDestinatario"></app-catalogo-select>
                 </div>
             </div>
 
             <div class="col-md-4 mt-5 dropdown-field">
                 <label class="form-label" for="codigoPostalDestinatario">Código postal o equivalente*:</label>
-                <input type="text" class="form-control" id="codigoPostalDestinatario" name="codigoPostalDestinatario" [required]=true>
+                <input type="text" class="form-control" id="codigoPostalDestinatario" formControlName="codigoPostalDestinatario" name="codigoPostalDestinatario" [required]=true>
             </div>
 
             <div class="col-md-8 mt-4">
                 <label class="form-label" for="domicilio">Domicilio*:</label>
-                <input type="text" class="form-control" id="domicilio" name="domicilio" [required]=true>
+                <input type="text" class="form-control" id="domicilioDestinatario" formControlName="domicilioDestinatario" name="domicilio" [required]=true>
             </div>
 
             <div class="col-md-12 mt-5 d-flex justify-content-end">
@@ -81,25 +81,25 @@
 <app-modal [active]="showAgenteModal">
     <div>
         <ng-titulo titulo="Agente aduanal" />
-        <form>
+        <form [formGroup]="formAgenteAduanal">
             <div class="col-md-4 mt-5">
                 <label class="form-label" for="nombreAgente">Nombre(s)*:</label>
-                <input type="text" class="form-control" id="nombreAgente" name="nombreAgente" [required]=true>
+                <input type="text" class="form-control" id="nombreAgente"  formControlName="nombreAgenteAduanal" name="nombreAgente" [required]=true>
             </div>  
 
             <div class="col-md-4 mt-5">
                 <label class="form-label" for="apellidoPaternoAgente">Primer apellido*:</label>
-                <input type="text" class="form-control" id="apellidoPaternoAgente" name="apellidoPaternoAgente" [required]=true>
+                <input type="text" class="form-control" id="apellidoPaternoAgente" formControlName="primerApellidoAgenteAduanal" name="apellidoPaternoAgente" [required]=true>
             </div>  
 
             <div class="col-md-4 mt-5">
                 <label class="form-label" for="apellidoMaternoAgente">Segundo apellido*:</label>
-                <input type="text" class="form-control" id="apellidoMaternoAgente" name="apellidoMaternoAgente" [required]=true>
+                <input type="text" class="form-control" id="apellidoMaternoAgente" formControlName="segundoApellidoAgenteAduanal" name="apellidoMaternoAgente" [required]=true>
             </div>  
 
             <div class="col-md-8 mt-5">
                 <label class="form-label" for="patente">Número de patente de agente aduanal*:</label>
-                <input type="text" class="form-control" id="patente" name="patente" [required]=true>
+                <input type="text" class="form-control" id="patente" formControlName="patenteAgenteAduanal" name="patente" [required]=true>
             </div> 
 
             <div class="col-md-12 mt-5 d-flex justify-content-end">
@@ -109,7 +109,3 @@
         </form>
     </div>
 </app-modal>
-
-<!-- <app-modal id="aceptarModal" [active]="showAceptarModal">
-    <h1>Hello</h1>
-</app-modal> -->
