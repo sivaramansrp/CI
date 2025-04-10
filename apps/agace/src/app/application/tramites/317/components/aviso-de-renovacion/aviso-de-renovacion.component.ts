@@ -8,9 +8,14 @@ import { FECHA_DE_PAGO } from '../../models/aviso.model';
 
 import { AvisoUnicoService } from '../../services/aviso-unico.service';
 
-import { Subject, takeUntil } from 'rxjs';
+import { map, Subject, takeUntil } from 'rxjs';
 
 import { PreOperativo } from '../../models/aviso.model';
+
+import { UnicoState } from '../../estados/unico.store'; 
+import { UnicoStore } from '../../estados/unico.store'; 
+
+import { UnicoQuery } from '../../estados/queries/unico.query'; 
 
 @Component({
   selector: 'app-aviso-de-renovacion',
@@ -25,28 +30,41 @@ export class AvisoDeRenovacionComponent implements OnInit, OnDestroy {
   private destroyed$ = new Subject<void>();
   tipoPersonaOptions: PreOperativo[] = [];
   avisoForm!: FormGroup;
+  public solicitudState!: UnicoState; 
 
-constructor(private fb: FormBuilder,private service:AvisoUnicoService ) {}
+constructor(private fb: FormBuilder,private service:AvisoUnicoService , private unicoStore: UnicoStore, // Inject store for managing state.
+  private unicoQuery: UnicoQuery) {}
 
   ngOnInit(): void {
+
+    this.unicoQuery.selectSolicitud$ // Observable para obtener el estado actual de la aplicación.
+      .pipe(
+        takeUntil(this.destroyed$), // Darse de baja automáticamente cuando el componente se destruya..
+        map((seccionState) => {
+          this.solicitudState = seccionState; // Asignar el estado obtenido a solicitudState..
+        })
+      )
+      .subscribe();
+
     this.initializeForm();
     this.loadLocalidad();
     this.loadAsignacionData();
     this.cargarRadio();
+    // this.resetPagoDatos();
   }
 
   private initializeForm(): void {
     this.avisoForm = this.fb.group({
-      modalidad: [''],
-      protestaVerdad: [''],
-      envioAviso: [''],
-      numeroAviso:[''],
+      modalidad: [this.solicitudState?.modalidad],
+      protestaVerdad: [this.solicitudState?.protestaVerdad],
+      envioAviso: [this.solicitudState?.envioAviso],
+      numeroAviso:[this.solicitudState?.numeroAviso],
       claveReferencia: [{ value: '', disabled: true }],
-      numeroOperacion: [''],
+      numeroOperacion: [this.solicitudState?.numeroOperacion],
       cadenaDependencia: [{ value: '', disabled: true }],
-      banco: [''],
-      llavePago: [''],
-      fechaPago: [''],
+      banco: [this.solicitudState?.banco],
+      llavePago: [this.solicitudState?.llavePago],
+      fechaPago: [this.solicitudState?.fechaPago],
       importePago: [{ value: '', disabled: true }],
     });
   }
@@ -99,7 +117,7 @@ constructor(private fb: FormBuilder,private service:AvisoUnicoService ) {}
   public onFechaCambiada(nuevo_valor: string): void {
     this.avisoForm.get('fechaPago')?.setValue(nuevo_valor);
     this.avisoForm.get('fechaPago')?.markAsUntouched();
-    // this.avisocalidad260514Store.setfechaPago(nuevo_valor);
+    this.unicoStore.setfechaPago(nuevo_valor);
   }
 
 resetPagoDatos(): void {
@@ -110,6 +128,12 @@ resetPagoDatos(): void {
     fechaPago: '',
     });
   }
+
+  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof UnicoStore): void {
+    const VALOR = form.get(campo)?.value; 
+    (this.unicoStore[metodoNombre] as (value: any) => void)(VALOR); 
+  }
+
   ngOnDestroy(): void {
     this.destroyed$.next();
     this.destroyed$.complete();
