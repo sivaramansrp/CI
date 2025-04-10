@@ -50,8 +50,7 @@ constructor(private fb: FormBuilder,private service:AvisoUnicoService , private 
     this.loadLocalidad();
     this.loadAsignacionData();
     this.cargarRadio();
-    // this.resetPagoDatos();
-  }
+   }
 
   private initializeForm(): void {
     this.avisoForm = this.fb.group({
@@ -75,23 +74,15 @@ constructor(private fb: FormBuilder,private service:AvisoUnicoService , private 
     ).subscribe(
       (data:any) => {
         this.avisoForm.patchValue({
-          modalidad: data.modalidad,
-          protestaVerdad: data.protestaVerdad,
-          envioAviso: data.envioAviso,
-          numeroAviso: data.numeroAviso,
-          claveReferencia: data.claveReferencia,
-          numeroOperacion: data.numeroOperacion,
+        claveReferencia: data.claveReferencia,
           cadenaDependencia: data.cadenaDependencia,
-          banco: data.banco,
-          llavePago: data.llavePago,
-          fechaPago: data.fechaPago,
           importePago: data.importePago,
         });
       }
     );
   }
 
- loadLocalidad(): void {
+loadLocalidad(): void {
     this.service.obtenerDatosLocalidad()
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data): void => {
@@ -106,13 +97,7 @@ constructor(private fb: FormBuilder,private service:AvisoUnicoService , private 
         this.tipoPersonaOptions = resp;
       });
   }
-  submitForm(): void {
-    if (this.avisoForm.valid) {
-      console.log('Formulario enviado con éxito:', this.avisoForm.value);
-    } else {
-      console.error('El formulario contiene errores.');
-    }
-  }
+ 
 
   public onFechaCambiada(nuevo_valor: string): void {
     this.avisoForm.get('fechaPago')?.setValue(nuevo_valor);
