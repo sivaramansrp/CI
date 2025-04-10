@@ -1,9 +1,14 @@
 import { Component } from '@angular/core';
-
+/**
+ * Decorador que define un componente de Angular.
+ * - selector: Nombre que se utilizará en el HTML para referenciar este componente.
+ * - templateUrl: Ruta del archivo HTML asociado al componente.
+ */
 @Component({
   selector: 'app-solicitud-datos-solicitante',
   templateUrl: './solicitud-datos-solicitante.component.html',
 })
+
 export class SolicitudDatosSolicitanteComponent {
      /**
    * Índice de la pestaña seleccionada.
