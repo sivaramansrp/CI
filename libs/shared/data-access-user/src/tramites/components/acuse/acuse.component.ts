@@ -1,15 +1,14 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { ACUSE_SERVICIOS_EXTRAORDINARIOS } from '../../../core/enums/constantes-alertas.enum';
 import { AlertComponent } from '../alert/alert.component';
-import { CommonModule } from '@angular/common';
-import { TituloComponent } from '../titulo/titulo.component';
 import { BodyTablaAcuse } from '../../../core/models/shared/catalogos.model';
+import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 
 @Component({
   selector: 'lib-component-acuse',
   standalone: true,
-  imports: [CommonModule, AlertComponent, TituloComponent],
+  imports: [CommonModule, AlertComponent],
   templateUrl: './acuse.component.html',
   styleUrl: './acuse.component.scss',
 })
