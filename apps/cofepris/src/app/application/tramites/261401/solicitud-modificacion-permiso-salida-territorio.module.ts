@@ -1,7 +1,6 @@
 import { BtnContinuarComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { DatosDeLaSolicitudComponent } from './components/datos-de-la-solicitud/datos-de-la-solicitud.component';
-import { DatosParaMovilizacionNacionalComponent } from './components/datos-para-movilizaion-nacional/datos-para-movilizacion-nacional.component';
 import { NgModule } from '@angular/core';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -26,7 +25,6 @@ import { WizardComponent } from '@libs/shared/data-access-user/src';
     // PasoTresComponent,
     SolicitanteComponent,
     DatosDeLaSolicitudComponent,
-    DatosParaMovilizacionNacionalComponent
   ],
 })
 export class SolicitudModificacionPermisoSalidaTerritorioModule {}
