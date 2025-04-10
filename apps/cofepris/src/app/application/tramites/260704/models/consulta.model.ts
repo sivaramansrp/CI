@@ -61,19 +61,19 @@ export interface ClavesDeLotes {
   caducidad: string;
 }
 
-export const FECHAINICIAL = {
+export const FECHA_INICIAL = {
   labelNombre: 'Fecha de fabricación',
   required: true,
   habilitado: true,
 };
 
-export const FECHAFINAL = {
+export const FECHA_FINAL = {
   labelNombre: 'Fecha de caducidad',
   required: true,
   habilitado: true,
 };
 
-export const FECHAPAGO = {
+export const FECHA_PAGO = {
   labelNombre: 'Fecha de pago',
   required: true,
   habilitado: true,

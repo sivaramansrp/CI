@@ -8,6 +8,7 @@ import {
   CatalogosSelect,
   ConfiguracionColumna,
   TablaSeleccion,
+  ValidacionesFormularioService,
 } from "@libs/shared/data-access-user/src";
 import { Modal } from 'bootstrap';
 import { Destinatario, Fabricante } from "../../models/consulta.model";
@@ -16,7 +17,8 @@ import { ReplaySubject, takeUntil } from "rxjs";
 import { Tramite260704Store } from "../../estados/Tramite260704.store";
 import { InputRadioComponent } from "../../../../../../../../../libs/shared/data-access-user/src/tramites/components/input-radio/input-radio.component";
 import { CatalogoSelectComponent } from "../../../../../../../../../libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component";
-import { FormGroup, ReactiveFormsModule } from "@angular/forms";
+import { FormBuilder, FormGroup, ReactiveFormsModule } from "@angular/forms";
+import { Tramite260704Query } from "../../estados/Tramite260704.query";
 @Component({
   selector: "app-terceros-relacinados",
   standalone: true,
@@ -182,8 +184,11 @@ public estadoCatalogo: CatalogosSelect = {
       orden: 15,
     },
   ];
-  constructor(private consulta:ConsultaService,
-    private store:Tramite260704Store
+  constructor(private consulta: ConsultaService,
+      public store: Tramite260704Store,
+      private query: Tramite260704Query,
+      private fb: FormBuilder,
+      private validacionesService: ValidacionesFormularioService,
   ) {}
   ngOnInit(): void {
     this.getTercerosTabla();
@@ -218,6 +223,25 @@ public estadoCatalogo: CatalogosSelect = {
         MODAL_INSTANCE.show();
       }
     }
+
+     isValid(form: FormGroup, field: string): boolean {
+        return this.validacionesService.isValid(form, field) || false;
+      }
+    
+      setValoresStore(
+        form: FormGroup,
+        campo: string,
+        metodoNombre: keyof Tramite260704Store
+      ): void {
+        const VALOR = form.get(campo)?.value;
+        (this.store[metodoNombre] as (value: unknown) => void)(VALOR);
+      }
+      donanteDomicilio(): void {
+        this.tercerosForm = this.fb.group({
+          
+        });
+      }
+    
   ngOnDestroy(): void {
     
   }

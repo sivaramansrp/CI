@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { InputRadioComponent } from '../../../../../../../../../libs/shared/data-access-user/src/tramites/components/input-radio/input-radio.component';
 import {
@@ -9,8 +9,9 @@ import {
   InputFecha,
   TablaSeleccion,
   TituloComponent,
+  ValidacionesFormularioService,
 } from '@libs/shared/data-access-user/src';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Modal } from 'bootstrap';
 import { map, Observable, ReplaySubject, Subject, takeUntil } from 'rxjs';
 import { ConsultaService } from '../../service/consulta.service';
@@ -18,15 +19,18 @@ import { TablaDinamicaComponent } from '../../../../../../../../../libs/shared/d
 import {
   ColumnasTabla,
   CrossList,
-  FECHAFINAL,
-  FECHAINICIAL,
+  FECHA_FINAL,
+  
+  FECHA_INICIAL,
+  
   ListaClave,
   Mercancia,
 } from '../../models/consulta.model';
-import { Tramite260704Store } from '../../estados/Tramite260704.store';
+import { Solicitud260704State, Tramite260704Store } from '../../estados/Tramite260704.store';
 import { CrosslistComponent } from '../../../../../../../../../libs/shared/data-access-user/src/tramites/components/crosslist/crosslist.component';
 import { InputFechaComponent } from '../../../../../../../../../libs/shared/data-access-user/src/tramites/components/input-fecha/input-fecha.component';
 import { AVISO_PRIVACIDAD } from '../../constantes/consulta.enum';
+import { Tramite260704Query } from '../../estados/Tramite260704.query';
 
 @Component({
   selector: 'app-datos-de-la-solicitud',
@@ -40,15 +44,19 @@ import { AVISO_PRIVACIDAD } from '../../constantes/consulta.enum';
     TablaDinamicaComponent,
     CrosslistComponent,
     InputFechaComponent,
-    
   ],
   templateUrl: './datos-de-la-solicitud.component.html',
   styleUrl: './datos-de-la-solicitud.component.css',
 })
-export class DatosDeLaSolicitudComponent implements OnInit {
+export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
+
+  
+  @Output() filaSeleccionada: EventEmitter<any> = new EventEmitter<any>(true);
+
   valorSeleccionado: string = '';
   hercelosSeleccionados!: string;
   datosDelEstablecimientoForm!: FormGroup;
+  modificacionForm!:FormGroup;
   scianForm!: FormGroup;
   habilitarEstado: boolean = true;
   @ViewChild('modalAlerta') modalElement!: ElementRef;
@@ -56,9 +64,9 @@ export class DatosDeLaSolicitudComponent implements OnInit {
   public destroyNotifier$: Subject<void> = new Subject();
   TablaSeleccion = TablaSeleccion;
   claveScian!: Catalogo[];
-  public certificadoDisponsiblesTablaDatos: ColumnasTabla[] = [];
-  public mercanciasConfiguracionTabla: Mercancia[] = [];
-  public listaClaveTabla: ListaClave[] = [];
+  certificadoDisponsiblesTablaDatos: ColumnasTabla[] = [];
+  mercanciasConfiguracionTabla: Mercancia[] = [];
+  listaClaveTabla: ListaClave[] = [];
   selectedMercanciasDatos: Mercancia[] = [];
   paisOrigen = false;
   paisProcedencisColapsable = false;
@@ -66,15 +74,21 @@ export class DatosDeLaSolicitudComponent implements OnInit {
   paisOrigenCrossList: CrossList = {} as CrossList;
   paisProcedencisCrossList: CrossList = {} as CrossList;
   usoEspecificoCrossList: CrossList = {} as CrossList;
-  fechaInicialInput: InputFecha = FECHAINICIAL;
-  fechaFinalInput: InputFecha = FECHAFINAL;
+  fechaInicialInput: InputFecha = FECHA_INICIAL;
+  fechaFinalInput: InputFecha = FECHA_FINAL;
   AVISO_PRIVACIDAD = AVISO_PRIVACIDAD;
   descripcionScian!: Catalogo[];
   isAvisoFuncionamientoChecked: boolean = false;
   isCheckboxSelected: boolean = false;
   isDatosSCIANChecked: boolean = false;
-  
+  isTipoOperacionChecked: boolean = true;
+  public solicitudState!: Solicitud260704State;
 
+  @Input() radioOptions: {
+    label: string;
+    value: string | number;
+    hint?: string;
+  }[] = [];
 
   radioOpcions = [
     { label: 'Prórroga', value: 'prorroga' },
@@ -204,50 +218,40 @@ export class DatosDeLaSolicitudComponent implements OnInit {
   constructor(
     private consulta: ConsultaService,
     public store: Tramite260704Store,
-    public fb : FormBuilder
+    private query: Tramite260704Query,
+    private fb: FormBuilder,
+    private validacionesService: ValidacionesFormularioService,
   ) {  }
 
   ngOnInit(): void {
+    this.query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+        })
+      )
+      .subscribe();
+    this.donanteDomicilio();
 
-    this.datosDelEstablecimientoForm = this.fb.group({
-      tipoOperacion: [''],  
-      justificacion: [''],
-      establecimiento: [''],
-      razonSocial: [''],
-      correoElectronico: [''],
-      codigoPostal: [''],
-      licenciaSanitaria: [''],
-      estado: [''],
-      aduana: [''],
-      avisoDeFuncionamiento: [''],
-      regimen: [''],
-      telefono: [''],
-      lada: [''],
-      calle: [''],
-      colonia: [''],
-      localidad: [''],
-      municipio: [''],
-      scian: [false],
-      claveScian: [''],
-      descripcionScian: [''],
-      immex: [''],
-      ano: [''],
-      mercancia: [''],
-      clasificacionProducto: [''],
-      especificarClasificacionProducto: [''],
-      denominacionProducto: [''],
-      marca: [''],
-      tipoProducto: [''],
-      especifique: [''],
-      fraccionArancelaria: [''],
-      descripcionFraccionArancelaria: [''],
-      cantidadUMT: [''],
-      umt: [''],
-      cantidadUMC: [''],
-      umc: [''],
-      claveLote: [''],
-      listaClave: [''],
-    });
+    if(this.isTipoOperacionChecked == false){
+
+    this.datosDelEstablecimientoForm.get('justificacion')?.disable();
+      this.datosDelEstablecimientoForm.get('razonSocial')?.disable();
+      this.datosDelEstablecimientoForm.get('correoElectronico')?.disable();
+  }
+    this.onSelectionChange(this.datosDelEstablecimientoForm, 'tipoOperacion');
+
+    this.query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+        })
+      )
+      .subscribe();
+    this.donanteDomicilio();
+
     this.getScianTabla();
     this.obtenerDatosEstado();
     this.getMercanciasTabla();
@@ -287,20 +291,21 @@ export class DatosDeLaSolicitudComponent implements OnInit {
   limpiarDatosSCIAN(): void {
     // Implementar la lógica para limpiar datos SCIAN.
   }
-  setTipoOperacion(evento: number | string): void {
-    this.store.setTipoOperacion(evento);
-    if (this.datosDelEstablecimientoForm.get('tipoOperacion')?.value == 'PRO') {
-      this.datosDelEstablecimientoForm.get('justificacion')?.disable();
-      this.datosDelEstablecimientoForm.get('establecimiento')?.disable();
-      this.datosDelEstablecimientoForm.get('razonSocial')?.disable();
-      this.datosDelEstablecimientoForm.get('correoElectronico')?.disable();
-    } else {
-      this.datosDelEstablecimientoForm.get('justificacion')?.enable();
-      this.datosDelEstablecimientoForm.get('establecimiento')?.enable();
-      this.datosDelEstablecimientoForm.get('razonSocial')?.enable();
-      this.datosDelEstablecimientoForm.get('correoElectronico')?.enable();
-    }
-  }
+  // setTipoOperacion(evento: number | string): void {
+  //   debugger
+  //   this.store.setTipoOperacion(evento);
+  //   if (this.datosDelEstablecimientoForm.get('tipoOperacion')?.value == 'PRO') {
+  //     this.datosDelEstablecimientoForm.get('justificacion')?.disable();
+  //     this.datosDelEstablecimientoForm.get('establecimiento')?.disable();
+  //     this.datosDelEstablecimientoForm.get('razonSocial')?.disable();
+  //     this.datosDelEstablecimientoForm.get('correoElectronico')?.disable();
+  //   } else {
+  //     this.datosDelEstablecimientoForm.get('justificacion')?.enable();
+  //     this.datosDelEstablecimientoForm.get('establecimiento')?.enable();
+  //     this.datosDelEstablecimientoForm.get('razonSocial')?.enable();
+  //     this.datosDelEstablecimientoForm.get('correoElectronico')?.enable();
+  //   }
+  // }
   agregarDatosSCIAN(): void {
     // Implementar la lógica para agregar datos SCIAN.
   }
@@ -358,6 +363,22 @@ checkCheckboxSelection(event: MouseEvent): void {
   }
 
   }
+
+  onSelectionChange(form:FormGroup,campo:string): void{
+    if(form.get(campo)?.value == 'modificacion'){
+      this.isTipoOperacionChecked = true;
+      this.datosDelEstablecimientoForm.get('justificacion')?.enable();
+      this.datosDelEstablecimientoForm.get('razonSocial')?.enable();
+      this.datosDelEstablecimientoForm.get('correoElectronico')?.enable();
+    } else{
+      this.isTipoOperacionChecked = false;
+      this.datosDelEstablecimientoForm.get('justificacion')?.disable();
+      this.datosDelEstablecimientoForm.get('razonSocial')?.disable();
+      this.datosDelEstablecimientoForm.get('correoElectronico')?.disable();
+
+    }
+  }
+
   eliminarMercanciaGrid(): void {
     if (this.modalElement) {
       const MODAL_ELIMINAR_INSTANCE = new Modal(this.modalElement.nativeElement);
@@ -398,33 +419,93 @@ checkCheckboxSelection(event: MouseEvent): void {
 
   agregarMercanias(): void {
     const OBJETO_JSON = {
-      // clasificaionProductos: this.datosMercanciaForm.get('clasificaionProductos')?.value,
-      // especificarProducto: this.datosMercanciaForm.get('especificarProducto')
-      //   ?.value,
-      // nombreProductoEspecifico: this.datosMercanciaForm.get(
-      //   'nombreProductoEspecifico'
-      // )?.value,
-      // marca: this.datosMercanciaForm.get('marca')?.value,
-      // tipoProducto: this.datosMercanciaForm.get('tipoProducto')?.value,
-      // fraccionArancelaria: this.datosMercanciaForm.get('fraccionArancelaria')
-      //   ?.value,
-      // descripcionFraccionArancelaria: this.datosMercanciaForm.get(
-      //   'descripcionFraccionArancelaria'
-      // )?.value,
-      // cantidadUMT: this.datosMercanciaForm.get('cantidadUMT')?.value,
-      // umt: this.datosMercanciaForm.get('umt')?.value,
-      // cantidadUMC: this.datosMercanciaForm.get('cantidadUMC')?.value,
-      // umc: this.datosMercanciaForm.get('umc')?.value,
-      // paisDeOrigen: 'paisDeOrigen',
-      // paisDeProcedencia: 'paisDeProcedencia',
-      // usoEspecifico: 'usoEspecifico',
+      clasificaionProductos: this.datosDelEstablecimientoForm.get('clasificaionProductos')?.value,
+      especificarProducto: this.datosDelEstablecimientoForm.get('especificarProducto')
+        ?.value,
+      nombreProductoEspecifico: this.datosDelEstablecimientoForm.get(
+        'nombreProductoEspecifico'
+      )?.value,
+      marca: this.datosDelEstablecimientoForm.get('marca')?.value,
+      tipoProducto: this.datosDelEstablecimientoForm.get('tipoProducto')?.value,
+      fraccionArancelaria: this.datosDelEstablecimientoForm.get('fraccionArancelaria')
+        ?.value,
+      descripcionFraccionArancelaria: this.datosDelEstablecimientoForm.get(
+        'descripcionFraccionArancelaria'
+      )?.value,
+      cantidadUMT: this.datosDelEstablecimientoForm.get('cantidadUMT')?.value,
+      umt: this.datosDelEstablecimientoForm.get('umt')?.value,
+      cantidadUMC: this.datosDelEstablecimientoForm.get('cantidadUMC')?.value,
+      umc: this.datosDelEstablecimientoForm.get('umc')?.value,
+      paisDeOrigen: 'paisDeOrigen',
+      paisDeProcedencia: 'paisDeProcedencia',
+      usoEspecifico: 'usoEspecifico',
     };
-    // this.store.addMercanciasDatos(OBJETO_JSON);
+    this.store.addMercanciasDatos(OBJETO_JSON);
   }
 
   AcceptarEliminarScian(){
     
     this.isDatosSCIANChecked = true;
+  }
+  isValid(form: FormGroup, field: string): boolean {
+    return this.validacionesService.isValid(form, field) || false;
+  }
+
+  setValoresStore(
+    form: FormGroup,
+    campo: string,
+    metodoNombre: keyof Tramite260704Store
+  ): void {
+    const VALOR = form.get(campo)?.value;
+    (this.store[metodoNombre] as (value: unknown) => void)(VALOR);
+    this.onSelectionChange(form,campo);
+  }
+  donanteDomicilio(): void {
+    this.datosDelEstablecimientoForm = this.fb.group({
+      tipoOperacion: [this.solicitudState?.tipoOperacion, [Validators.required]],
+      justificacion: [this.solicitudState?.justificacion, [Validators.required]],
+      establecimiento: [this.solicitudState?.establecimiento, [Validators.required]],
+      razonSocial: [this.solicitudState?.razonSocial, [Validators.required]],
+      correoElectronico: [this.solicitudState?.correoElectronico, [Validators.required]],
+      codigoPostal: [this.solicitudState?.codigoPostal, [Validators.required]],
+      estado: [this.solicitudState?.estado, [Validators.required]],
+      municipio: [this.solicitudState?.municipio, [Validators.required]],
+      localidad: [this.solicitudState?.localidad, [Validators.required]],
+      colonia: [this.solicitudState?.colonia, [Validators.required]],
+      calle: [this.solicitudState?.calle, [Validators.required]],
+      lada: [this.solicitudState?.lada, [Validators.required]],
+      telefono: [this.solicitudState?.telefono, [Validators.required]],
+      scian: [this.solicitudState?.scian, [Validators.required]],
+      claveScian: [this.solicitudState?.claveScian, [Validators.required]],
+      descripcionScian: [this.solicitudState?.descripcionScian, [Validators.required]],
+      immex: [this.solicitudState?.immex, [Validators.required]],
+      avisoDeFuncionamiento: [this.solicitudState?.avisoDeFuncionamiento, [Validators.required]],
+      licenciaSanitaria: [this.solicitudState?.licenciaSanitaria, [Validators.required]],
+      regimen: [this.solicitudState?.regimen, [Validators.required]],
+      aduana: [this.solicitudState?.aduana, [Validators.required]],
+      ano: [this.solicitudState?.ano, [Validators.required]],
+      mercancia: [this.solicitudState?.mercancia, [Validators.required]],
+      clasificacionProducto: [this.solicitudState?.clasificacionProducto, [Validators.required]],
+      especificarClasificacionProducto: [this.solicitudState?.especificarClasificacionProducto, [Validators.required]],
+      denominacionProducto: [this.solicitudState?.denominacionProducto, [Validators.required]],
+      marca: [this.solicitudState?.marca, [Validators.required]],
+      tipoProducto: [this.solicitudState?.tipoProducto, [Validators.required]],
+      especifique: [this.solicitudState?.especifique, [Validators.required]],
+      fraccionArancelaria: [this.solicitudState?.fraccionArancelaria, [Validators.required]],
+      cantidadUMT: [this.solicitudState?.cantidadUMT, [Validators.required]],
+      cantidadUMC: [this.solicitudState?.cantidadUMC, [Validators.required]],
+      umt: [this.solicitudState?.umt, [Validators.required]],
+      claveLote: [this.solicitudState?.claveLote, [Validators.required]],
+      listaClave: [this.solicitudState?.listaClave, [Validators.required]],
+      manfestosYDeclaraciones: [this.solicitudState?.manfestosYDeclaraciones, [Validators.required]],
+      hacerlosPublicos: [this.solicitudState?.hacerlosPublicos, [Validators.required]],
+      rfc: [this.solicitudState?.rfc, [Validators.required]],
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.destroyed$.next(true);
+    this.destroyed$.complete();
   }
 
 }
