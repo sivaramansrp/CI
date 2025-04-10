@@ -5,7 +5,7 @@ import { Solicitud105State, Tramite105Store, } from '../../estados/tramite105.st
 import { Subject, Subscription, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { InvoCarService } from '../../services/invocar.service';
-import { RESPUESTA_OPCIONES } from '../../constantes/datos-del-tramite.enum';
+import { OPCIONES_DE_BOTON_DE_RADIO } from '../../constantes/datos-del-tramite.enum';
 import { Tramite105Query } from '../../estados/tramite105.query';
 import mercanciaTable from 'libs/shared/theme/assets/json/105/mercancia-table.json';
 interface TableBodyData {
@@ -140,27 +140,10 @@ export class DatosDelTramiteUnoComponent implements OnInit, OnDestroy {
    */
   @ViewChild('closeModal') closeModal!: ElementRef;
 
-  /**
-   * Opciones para los botones de radio.
+/**
+   * Opciones de botón de radio.
    */
-  radioOpcions1 = [
-    { label: 'Sí', value: RESPUESTA_OPCIONES.Si },
-    { label: 'No', value: RESPUESTA_OPCIONES.No },
-  ];
-    /**
-   * Opciones para los botones de radio.
-   */
-    radioOpcions2 = [
-      { label: 'Sí', value: RESPUESTA_OPCIONES.Si },
-      { label: 'No', value: RESPUESTA_OPCIONES.No },
-    ];
-      /**
-   * Opciones para los botones de radio.
-   */
-  radioOpcions = [
-    { label: 'Sí', value: RESPUESTA_OPCIONES.Si },
-    { label: 'No', value: RESPUESTA_OPCIONES.No },
-  ];
+  opcionDeBotonDeRadio = OPCIONES_DE_BOTON_DE_RADIO;
 /**
    * Cambia el valor seleccionado del radio.
    * @param value Valor seleccionado.

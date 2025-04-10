@@ -30,7 +30,7 @@
       <div class="row mt-3">
         <p>Indique si la empresa prestará servicios a terceros*</p>
         <app-input-radio
-        [radioOptions]="radioOpcions"
+        [radioOptions]="opcionDeBotonDeRadio"
         [selectedValue]="valorSeleccionado"
         (valueChange)="cambiarRadio($event)"
         id="serviciosTerceros"
@@ -48,7 +48,7 @@
         <p>Indique si se trata de una empresa cuya actividad sea la distribución, comercialización y almacenamiento de
           gas licuado de petróleo o de gas natural.*</p>
           <app-input-radio
-          [radioOptions]="radioOpcions1"
+          [radioOptions]="opcionDeBotonDeRadio"
           [selectedValue]="valorSeleccionado1"
           (valueChange)="cambiarRadio($event)"
           id="distribucionGas"
@@ -67,7 +67,7 @@
           autotransporte.*</p>
 
           <app-input-radio
-          [radioOptions]="radioOpcions2"
+          [radioOptions]="opcionDeBotonDeRadio"
           [selectedValue]="valorSeleccionado2"
           (valueChange)="cambiarRadio($event)"
           id="industriaAutomotriz"
