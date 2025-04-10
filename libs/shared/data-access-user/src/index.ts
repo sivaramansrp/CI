@@ -116,6 +116,3 @@ export * from './core/estados/terceros.store';
 export * from './core/models/shared/agregar-trasnporte.model'
 export * from './core/queries/terceros.query';
 export * from './core/services/shared/modal-aviso/modal-aviso.service';
-
-
-
