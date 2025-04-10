@@ -239,14 +239,22 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
       modoCantidad: [this.tramiteState?.datosSolicitudFormType?.modoCantidad || false]
     });
 
-    this.datosSolicitudForm.get('cantidad')?.valueChanges.subscribe(value => {
-      const CANTIDAD_LETRA = this.materialesPeligrososService.convertirNumeroALetras(value);
+    this.datosSolicitudForm.get('cantidad')?.valueChanges.pipe(
+      takeUntil(this.destroyNotifier$),
+      map((value) => {
+        const CANTIDAD_LETRA = this.materialesPeligrososService.convertirNumeroALetras(value);
       this.datosSolicitudForm.get('cantidadLetra')?.setValue(CANTIDAD_LETRA);
       this.actualizarElValorDeLaTienda('cantidadLetra', 'text')
-    });
-    this.datosSolicitudForm.valueChanges.subscribe(() => {
-      this.pestanaValidar();
-    });
+      })
+    ).subscribe();
+
+    this.datosSolicitudForm.valueChanges.pipe(
+      takeUntil(this.destroyNotifier$),
+      map(() => {
+        this.pestanaValidar();
+      })
+    ).subscribe();
+
   }
 
   /**
