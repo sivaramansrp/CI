@@ -7,26 +7,25 @@
 
         <ng-titulo titulo="Lugar de inspección" />
 
-        <div class="col-md-4">
+        <div class="col-md-4 dropdown-field">
             <div class="form-group">
-                <app-catalogo-select [label]="'Aduana'" [required]="true" name="" id="aduana"
+                <app-catalogo-select [catalogo]="aduanaData" [label]="'Aduana'" [required]="true" for="" name="" id="aduana"
                     formControlName=""></app-catalogo-select>
             </div>
         </div>
 
-        <div class="col-md-4">
+        <div class="col-md-4 dropdown-field">
             <div class="form-group">
-                <app-catalogo-select [label]="'Inspectoría de PROFEPA'" [required]="true" name="" id="aduana"
+                <app-catalogo-select [catalogo]="inspectoriaData" [label]="'Inspectoría de PROFEPA'" [required]="true" for="" name="" id="aduana"
                     formControlName=""></app-catalogo-select>
             </div>
         </div>
 
         <div class="col-md-8 mt-3">
             <div class="form-group">
-                <app-catalogo-select [label]="'Municipio o alcaldía de la PROFEPA en el estado de'" [required]="true"
+                <app-catalogo-select [catalogo]="municipioData" [label]="'Municipio o alcaldía de la PROFEPA en el estado de'" [required]="true" for=""
                     name="" id="aduana" formControlName=""></app-catalogo-select>
             </div>
         </div>
-
     </form>
 </div>

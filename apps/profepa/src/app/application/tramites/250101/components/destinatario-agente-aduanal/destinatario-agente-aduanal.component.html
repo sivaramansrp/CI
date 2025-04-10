@@ -4,7 +4,7 @@
             <ng-titulo titulo="Datos del destinatario*" />
             <div class="datos-table">
                 <div class="table-responsive mt-5">
-                    <ng-table [commonTableHeader]="tablaDestinatarioData" [commonTableBody]=""></ng-table>
+                    <ng-table [commonTableHeader]="tablaDestinatarioData" [commonTableBody]="tablaDestinatarioRowData"></ng-table>
                 </div>
             </div>
             <div class="col-md-12 mt-5 d-flex justify-content-end">
@@ -15,10 +15,10 @@
         </div>
 
         <div class="row">
-            <ng-titulo titulo="Datos del agente aduanal*" />
+            <ng-titulo titulo="Datos del agente aduanal" />
             <div class="datos-table">
                 <div class="table-responsive mt-5">
-                    <ng-table [commonTableHeader]="tablaAgenteAduanalData" [commonTableBody]=""></ng-table>
+                    <ng-table [commonTableHeader]="tablaAgenteAduanalData" [commonTableBody]="tablaAgenteAduanaRowData"></ng-table>
                 </div>
             </div>
 
@@ -45,21 +45,21 @@
             <div class="clearfix"></div>
             
 
-            <div class="col-md-4 mt-5 destinatario-field">
+            <div class="col-md-4 mt-5 dropdown-field">
                 <div class="form-group">
-                    <app-catalogo-select [label]="'País'" [required]="true" name="" id="paisNacionalDestinatario1"
+                    <app-catalogo-select [catalogo]="paisData" [label]="'País'" [required]="true" name="" id="paisNacionalDestinatario1"
                         formControlName=""></app-catalogo-select>
                 </div>
             </div>
     
-            <div class="col-md-4 mt-5 destinatario-field" >
+            <div class="col-md-4 mt-5 dropdown-field" >
                 <div class="form-group">
-                    <app-catalogo-select [label]="'Estado'" [required]="true" name="" id="estado"
+                    <app-catalogo-select [catalogo]="estadoData" [label]="'Estado'" [required]="true" name="" id="estado"
                         formControlName=""></app-catalogo-select>
                 </div>
             </div>
 
-            <div class="col-md-4 mt-5 destinatario-field">
+            <div class="col-md-4 mt-5 dropdown-field">
                 <label class="form-label" for="codigoPostalDestinatario">Código postal o equivalente*:</label>
                 <input type="text" class="form-control" id="codigoPostalDestinatario" name="codigoPostalDestinatario" [required]=true>
             </div>
@@ -109,3 +109,7 @@
         </form>
     </div>
 </app-modal>
+
+<!-- <app-modal id="aceptarModal" [active]="showAceptarModal">
+    <h1>Hello</h1>
+</app-modal> -->

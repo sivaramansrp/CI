@@ -18,9 +18,9 @@ import { NgModule } from '@angular/core';
 import { SolicitanteService } from '@ng-mf/data-access-user';
 import { SubirDocumentoService } from '@libs/shared/data-access-user/src/core/services/shared/subir-documento/subir-documento.service';
 import { TipoMovimientoComponent } from './components/tipo-movimiento/tipo-movimiento.component';
+import { TipoMovimientoService } from './services/tipo-movimiento.service';
 import { ToastrService } from 'ngx-toastr';
 import { provideHttpClient } from '@angular/common/http';
-
 
 @NgModule({
   declarations: [FloraFaunaComponent, Datos250101Component],
@@ -38,6 +38,7 @@ import { provideHttpClient } from '@angular/common/http';
   providers: [
     provideHttpClient(),
     ToastrService,
+    TipoMovimientoService,
     CertificadosService,
     DestinatarioService,
     SolicitanteService,

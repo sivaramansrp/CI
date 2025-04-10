@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { DESTINATARIO_OPCIONES_DE_BOTON_DE_RADIO } from '../../constantes/flora-fauna.enum';
 
 import {
+  Catalogo,
   CatalogoSelectComponent,
   InputRadioComponent,
   TableComponent,
@@ -10,6 +11,7 @@ import {
 } from '@libs/shared/data-access-user/src';
 import { DestinatarioService } from '../../services/destinatario.service';
 import { ModalComponent } from '../modal/modal.component';
+import { TablaDatos } from '../../models/flora-fauna.models';
 
 @Component({
   selector: 'app-destinatario-agente-aduanal',
@@ -31,12 +33,17 @@ export class DestinatarioAgenteAduanalComponent implements OnInit {
 
   showDestinatarioModal = false;
   showAgenteModal = false;
+  showAceptarModal = false;
 
    destinatarioOpcionDeBotonDeRadio = DESTINATARIO_OPCIONES_DE_BOTON_DE_RADIO;
 
   constructor(private destinatarioService: DestinatarioService) {
     //
   }
+  paisData: Catalogo[] = [];
+  estadoData: Catalogo[] = [];
+  tablaDestinatarioData: string[] = [];
+  tablaAgenteAduanalData: string[] = [];
 
   ngOnInit(): void {
     this.destinatarioService.getDestinatarioEncabezadoDeTabla().subscribe((data: any) => {
@@ -46,10 +53,18 @@ export class DestinatarioAgenteAduanalComponent implements OnInit {
     this.destinatarioService.getAduanalEncabezadoDeTabla().subscribe((data: any) => {
       this.tablaAgenteAduanalData = data.columns;
     });
+
+    this.destinatarioService.getPaisData().subscribe((data) => {
+      this.paisData = data;
+    });
+
+    this.destinatarioService.getEstadoData().subscribe((data) => {
+      this.estadoData = data;
+    });
   }
 
-  tablaDestinatarioData: string[] = [];
-  tablaAgenteAduanalData: string[] = [];
+  tablaDestinatarioRowData: TablaDatos[] = [];
+  tablaAgenteAduanaRowData: TablaDatos[] = [];
 
   cambiarDestinatario(): void {
     this.showTableDiv = !this.showTableDiv;

@@ -1,7 +1,7 @@
 .datos-table {
     ::ng-deep ng-table{
       th:not(:first-child), td:not(:first-child) {
-        min-width: 190px;
+        min-width: 210px;
         text-align: center;
         vertical-align: middle;
       }
