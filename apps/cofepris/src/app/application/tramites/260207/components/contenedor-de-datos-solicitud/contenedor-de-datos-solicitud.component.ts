@@ -13,21 +13,21 @@ import {
   SCIAN_TABLA,
 } from '../../../../shared/constantes/datos-solicitud.enum';
 import {
-  Tramite260216State,
-  Tramite260216Store,
-} from '../../estados/tramite260216Store.store';
+  Tramite260207State,
+  Tramite260207Store,
+} from '../../estados/tramite260207Store.store';
 import { map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DatosDeLaSolicitudComponent } from '../../../../shared/components/datos-de-la-solicitud/datos-de-la-solicitud.component';
 import { ID_PROCEDIMIENTO } from '../../constants/tratamientos-especiales.enum';
 import { Subject } from 'rxjs';
-import { Tramite260216Query } from '../../estados/tramite260216Query.query';
+import { Tramite260207Query } from '../../estados/tramite260207Query.query';
 
 /**
  * @component
  * @name ContenedorDeDatosSolicitudComponent
  * @description
- * Componente que actúa como contenedor para manejar los datos de la solicitud del trámite 260216.
+ * Componente que actúa como contenedor para manejar los datos de la solicitud del trámite 260207.
  * Permite la selección y actualización de datos relacionados con opciones, SCIAN y mercancías.
  *
  * @selector app-contenedor-de-datos-solicitud
@@ -52,11 +52,11 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
   private destroyNotifier$: Subject<void> = new Subject();
 
   /**
-   * @property {Tramite260216State} tramiteState
+   * @property {Tramite260207State} tramiteState
    * @description
-   * Estado actual del trámite 260216.
+   * Estado actual del trámite 260207.
    */
-  public tramiteState!: Tramite260216State;
+  public tramiteState!: Tramite260207State;
 
   /**
    * @property {object} opcionConfig
@@ -138,12 +138,12 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
    * @description
    * Inicializa el componente con las dependencias necesarias.
    *
-   * @param {Tramite260216Query} tramite260216Query - Consulta para acceder al estado del trámite.
-   * @param {Tramite260216Store} tramite260216Store - Tienda para actualizar el estado del trámite.
+   * @param {Tramite260207Query} tramite260207Query - Consulta para acceder al estado del trámite.
+   * @param {Tramite260207Store} tramite260207Store - Tienda para actualizar el estado del trámite.
    */
   constructor(
-    private tramite260216Query: Tramite260216Query,
-    private tramite260216Store: Tramite260216Store
+    private tramite260207Query: Tramite260207Query,
+    private tramite260207Store: Tramite260207Store
   ) {
     // Constructor vacío, se inyectan las dependencias para su uso en el componente.
   }
@@ -155,7 +155,7 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
    * Suscribe al estado del trámite y actualiza las configuraciones de las tablas.
    */
   ngOnInit(): void {
-    this.tramite260216Query.selectTramiteState$
+    this.tramite260207Query.selectTramiteState$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
@@ -175,11 +175,11 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
    * @param event - Un arreglo de configuraciones de opciones de la tabla (`TablaOpcionConfig[]`)
    *                que representa las opciones seleccionadas.
    *
-   * Actualiza la configuración de datos en el store `tramite260216Store`
+   * Actualiza la configuración de datos en el store `tramite260207Store`
    * con las opciones seleccionadas.
    */
   opcionSeleccionado(event: TablaOpcionConfig[]): void {
-    this.tramite260216Store.updateOpcionConfigDatos(event);
+    this.tramite260207Store.updateOpcionConfigDatos(event);
   }
 
   /**
@@ -187,11 +187,11 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
    *
    * @param event - Arreglo de configuraciones seleccionadas de la tabla SCIAN.
    *
-   * Este método actualiza los datos de configuración SCIAN en el estado del trámite 260216
+   * Este método actualiza los datos de configuración SCIAN en el estado del trámite 260207
    * utilizando el evento proporcionado.
    */
   scianSeleccionado(event: TablaScianConfig[]): void {
-    this.tramite260216Store.updateScianConfigDatos(event);
+    this.tramite260207Store.updateScianConfigDatos(event);
   }
 
   /**
@@ -202,7 +202,7 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
    * @param {TablaMercanciasDatos[]} event - Datos seleccionados en la tabla de mercancías.
    */
   mercanciasSeleccionado(event: TablaMercanciasDatos[]): void {
-    this.tramite260216Store.updateTablaMercanciasConfigDatos(event);
+    this.tramite260207Store.updateTablaMercanciasConfigDatos(event);
   }
 
   /**
@@ -213,7 +213,7 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
    * @param {DatosSolicitudFormState} event - Nuevo estado del formulario.
    */
   datasolicituActualizar(event: DatosSolicitudFormState): void {
-    this.tramite260216Store.updateDatosSolicitudFormState(event);
+    this.tramite260207Store.updateDatosSolicitudFormState(event);
   }
 
   /**
@@ -224,7 +224,7 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
    * @param {DatosDeTablaSeleccionados} event - Datos seleccionados de las tablas.
    */
   datosDeTablaSeleccionados(event: DatosDeTablaSeleccionados): void {
-    this.tramite260216Store.update((state) => ({
+    this.tramite260207Store.update((state) => ({
       ...state,
       seleccionadoopcionDatos: event.opcionSeleccionados,
       seleccionadoScianDatos: event.scianSeleccionados,

@@ -14,12 +14,12 @@ import { TablaOpcionConfig } from '../../../shared/models/datos-solicitud.model'
 import { TablaScianConfig } from '../../../shared/models/datos-solicitud.model';
 /**
  * @interface
- * @name Tramite260216State
+ * @name Tramite260207State
  * @description
- * Representa el estado de la tienda para el trámite 260216. Contiene datos relacionados
+ * Representa el estado de la tienda para el trámite 260207. Contiene datos relacionados
  * con destinatarios, facturadores, proveedores, fabricantes, formularios y configuraciones.
  */
-export interface Tramite260216State {
+export interface Tramite260207State {
   destinatarioFinalTablaDatos: Destinatario[];
   facturadorTablaDatos: Facturador[];
   proveedorTablaDatos: Proveedor[];
@@ -41,10 +41,10 @@ export interface Tramite260216State {
  * @function
  * @name createInitialState
  * @description
- * Crea el estado inicial para la tienda del trámite 260216.
- * @returns {Tramite260216State} Estado inicial.
+ * Crea el estado inicial para la tienda del trámite 260207.
+ * @returns {Tramite260207State} Estado inicial.
  */
-export function createInitialState(): Tramite260216State {
+export function createInitialState(): Tramite260207State {
   return {
     destinatarioFinalTablaDatos: [],
     facturadorTablaDatos: [],
@@ -116,16 +116,16 @@ export function createInitialState(): Tramite260216State {
 @Injectable({
   providedIn: 'root',
 })
-@StoreConfig({ name: 'tramite260216', resettable: true })
+@StoreConfig({ name: 'tramite260207', resettable: true })
 /**
  * @class
- * @name Tramite260216Store
+ * @name Tramite260207Store
  * @description
- * Tienda para manejar el estado del trámite 260216. Proporciona métodos para actualizar
+ * Tienda para manejar el estado del trámite 260207. Proporciona métodos para actualizar
  * diferentes partes del estado.
- * @extends {Store<Tramite260216State>}
+ * @extends {Store<Tramite260207State>}
  */
-export class Tramite260216Store extends Store<Tramite260216State> {
+export class Tramite260207Store extends Store<Tramite260207State> {
   constructor() {
     super(createInitialState());
   }

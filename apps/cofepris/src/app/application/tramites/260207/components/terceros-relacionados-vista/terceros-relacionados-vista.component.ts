@@ -8,8 +8,8 @@ import {
 import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
-import { Tramite260216Query } from '../../estados/tramite260216Query.query';
-import { Tramite260216Store } from '../../estados/tramite260216Store.store';
+import { Tramite260207Query } from '../../estados/tramite260207Query.query';
+import { Tramite260207Store } from '../../estados/tramite260207Store.store';
 
 /**
  * @component TercerosRelacionadosVistaComponent
@@ -65,8 +65,8 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
    * @param tramiteQuery - Servicio de consulta que expone observables para leer los datos del store.
    */
   constructor(
-    private tramiteStore: Tramite260216Store,
-    private tramiteQuery: Tramite260216Query
+    private tramiteStore: Tramite260207Store,
+    private tramiteQuery: Tramite260207Query
   ) {
     // Constructor vacío, se inyectan los servicios necesarios para el funcionamiento del componente.
   }

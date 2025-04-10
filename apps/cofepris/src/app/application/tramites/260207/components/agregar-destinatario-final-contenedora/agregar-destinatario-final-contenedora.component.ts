@@ -3,13 +3,13 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { Destinatario } from '../../../../shared/models/terceros-relacionados.model';
 import { ID_PROCEDIMIENTO } from '../../constants/tratamientos-especiales.enum';
-import { Tramite260216Store } from '../../estados/tramite260216Store.store';
+import { Tramite260207Store } from '../../estados/tramite260207Store.store';
 
 /**
  * @component AgregarDestinatarioFinalContenedoraComponent
  * @description Componente contenedor que utiliza el componente `AgregarDestinatarioFinalComponent` 
  * para gestionar la funcionalidad relacionada con los destinatarios finales. 
- * Este componente interactúa con el estado del trámite a través del store `Tramite260216Store`.
+ * Este componente interactúa con el estado del trámite a través del store `Tramite260207Store`.
  */
 
 @Component({
@@ -28,11 +28,11 @@ export class AgregarDestinatarioFinalContenedoraComponent {
 
     /**
    * @constructor
-   * @description Constructor que inyecta el store `Tramite260216Store` para gestionar el estado del trámite.
+   * @description Constructor que inyecta el store `Tramite260207Store` para gestionar el estado del trámite.
    * 
-   * @param tramiteStore - Store que administra el estado del trámite 260216.
+   * @param tramiteStore - Store que administra el estado del trámite 260207.
    */
-  constructor(public tramiteStore: Tramite260216Store) {
+  constructor(public tramiteStore: Tramite260207Store) {
     // Constructor vacío, se inyecta el store para su uso en el componente.
   }
 

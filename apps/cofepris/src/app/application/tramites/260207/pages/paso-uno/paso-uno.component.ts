@@ -5,8 +5,8 @@ import { ContenedorDeDatosSolicitudComponent } from '../../components/contenedor
 import { PagoDeDerechosContenedoraComponent } from '../../components/pago-de-derechos-contenedora/pago-de-derechos-contenedora/pago-de-derechos-contenedora.component';
 import { SolicitanteComponent } from '@ng-mf/data-access-user';
 import { TercerosRelacionadosVistaComponent } from '../../components/terceros-relacionados-vista/terceros-relacionados-vista.component';
-import { Tramite260216Query } from '../../estados/tramite260216Query.query';
-import { Tramite260216Store } from '../../estados/tramite260216Store.store';
+import { Tramite260207Query } from '../../estados/tramite260207Query.query';
+import { Tramite260207Store } from '../../estados/tramite260207Store.store';
 
 @Component({
   selector: 'app-paso-uno',
@@ -27,12 +27,14 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
   private destroyNotifier$: Subject<void> = new Subject();
 
   constructor(
-    private tramite260216Query: Tramite260216Query,
-    private tramite260216Store: Tramite260216Store
-  ) {}
+    private tramite260207Query: Tramite260207Query,
+    private tramite260207Store: Tramite260207Store
+  ) {
+    //El constructor necesita inyectar las dependencias.
+  }
 
   ngOnInit(): void {
-    this.tramite260216Query.getTabSeleccionado$
+    this.tramite260207Query.getTabSeleccionado$
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((tab) => {
         this.indice = tab;
@@ -40,7 +42,7 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
   }
 
   seleccionaTab(i: number): void {
-    this.tramite260216Store.updateTabSeleccionado(i);
+    this.tramite260207Store.updateTabSeleccionado(i);
   }
 
   /**
