@@ -225,6 +225,13 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'importacion-vehiculos-nuevos',
+    loadChildren: () =>
+      import('./tramites/130115/importacion-vehiculos-nuevos.module').then(
+        (m) => m.ImportacionVehiculosNuevosModule
+      )
+  },
+  {
     path: 'cancelaciones-ministerio',
     loadChildren: () =>
       import('./tramites/140201/cancelaciones.module').then(
