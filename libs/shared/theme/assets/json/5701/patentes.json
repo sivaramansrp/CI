@@ -1,0 +1,17 @@
+ {
+    "patentes" : [
+        {
+          "label": "I.V.A e I.E.P.S Certificación A",
+          "value": "a"
+        },
+        {
+          "label": "I.V.A e I.E.P.S Certificación AA",
+          "value": "aa"
+        }, 
+        {
+          "label": "I.V.A e I.E.P.S Certificación AAA",
+          "value": "aaa"
+        } 
+    ]
+ }
+  

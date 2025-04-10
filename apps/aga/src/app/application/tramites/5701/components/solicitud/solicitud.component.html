@@ -21,7 +21,11 @@
             extraordinario
           </h6>
         </div>
-        @for (patente of patentes; track $index ) {
+        <app-input-radio [radioOptions]="radioPatentes"
+          (change)="setValoresStore(datosImportadorExportador,'tipoEmpresaCertificada', 'setTipoEmpresaCertificada')"
+          id="tipoEmpresaCertificada" formControlName="tipoEmpresaCertificada">
+        </app-input-radio>
+        <!--  @for (patente of patentes; track $index ) {
         <div class="col-md-4">
           <div class="form-check">
             <input class="form-check-input" type="radio" name="apoderadoPatente" [value]="patente"
@@ -31,7 +35,7 @@
               }}</label>
           </div>
         </div>
-        }
+        } -->
       </div>
 
       <!-- Sección RFC y Nombre  -->
@@ -191,8 +195,7 @@
         <div class="col-md-4">
           <label for="fechaFinal" class="form-label">Fecha final*:</label>
           <input class="form-control" type="date" name="fechaFinal" id="fechaFinal" formControlName="fechaFinal"
-            [ngClass]="isValid(datosServicio, 'fechaFinal') ? 'required' : ''" 
-            (change)="changeFechaFinal()" />
+            [ngClass]="isValid(datosServicio, 'fechaFinal') ? 'required' : ''" (change)="changeFechaFinal()" />
 
           @if (isValid(datosServicio,'fechaFinal')) {
           <div class="mensaje-error">Fecha no válida</div>

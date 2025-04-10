@@ -40,6 +40,8 @@ import { Modal } from 'bootstrap';
 import { ServiciosExtraordinariosService } from '../../../../core/services/5701/servicios-extraordinarios.service';
 import { Tramite5701Query } from '../../../../core/queries/tramite5701.query';
 
+import patentes from 'libs/shared/theme/assets/json/5701/patentes.json';
+
 @Component({
   selector: 'app-solicitud',
   templateUrl: './solicitud.component.html',
@@ -168,7 +170,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
   /**
    * Arrelgo de patentes de la empresa
    */
-  patentes: string[] = ['3061', '3062', '3063'];
+  patentes = patentes;
 
   /**
    * Pedimento -crea una señal para validar
@@ -216,6 +218,8 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    */
   radioOpciones = EMPRESAS_CERTIFICADAS;
 
+  radioPatentes: any = patentes;
+
   /**
    * Notificador para gestionar la destrucción de suscripciones y evitar fugas de memoria.
    * @private
@@ -237,9 +241,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
     private seccionStore: SeccionLibStore,
     private tramite5701Store: Tramite5701Store,
     private tramite5701Query: Tramite5701Query,
-    private fechaService: FechasService,
     private fb: FormBuilder,
-    private formulariosService: FormulariosService,
     private catalogosServices: CatalogosService,
     private validacionesService: ValidacionesFormularioService,
     private serviciosExtraordinariosService: ServiciosExtraordinariosService
