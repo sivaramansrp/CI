@@ -1,7 +1,15 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PasoUnoComponent } from './paso-uno.component';
-
-import { Component, NO_ERRORS_SCHEMA } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { NO_ERRORS_SCHEMA, Component } from '@angular/core';
+import { SolicitudPermisoService } from '../../services/solicitud-permiso.service';
+import { of, Subject } from 'rxjs';
+import { Tramite260703Store } from '../../estados/store/tramite260703.store';
+import { Tramite260703Query } from '../../estados/query/tramite260703.query';
+import { DatosSolitudeComponent } from '../../components/datos-solicitud/datos-solitude.component';
+import { TramiteAsociadosComponent } from '../../../../shared/components/tramite-asociados/tramite-asociados.component';
+import { PagoDeDerechosComponent } from '../../../../shared/components/pago-de-derechos-new/pago-de-derechos.component';
+import { TercerosRelacionadosComponent } from '../../components/terceros-relacionados/terceros-relacionados.component';
 
 /**
  * Mock component for 'solicitante' to avoid dependency errors
@@ -15,10 +23,47 @@ class MockSolicitanteComponent {}
 describe('PasoUnoComponent', () => {
   let component: PasoUnoComponent;
   let fixture: ComponentFixture<PasoUnoComponent>;
+  let solicitudPermisoServiceMock: any;
+  let tramite260703StoreMock: any;
+  let tramite260703QueryMock: any;
 
   beforeEach(async () => {
+    // Mock services
+    solicitudPermisoServiceMock = {
+      obtenerTramitesAsociados: jest.fn().mockReturnValue(of([])),
+      inicializaPagoDeDerechosDatosCatalogos: jest.fn(),
+      banco: [{ id: 1, descripcion: 'Banco 1' }],
+    };
+
+    tramite260703StoreMock = {
+      setClaveDeReferencia: jest.fn(),
+      setCadenaPagoDependencia: jest.fn(),
+      setBancoseleccionado: jest.fn(),
+      setLlaveDePago: jest.fn(),
+      setFecPago: jest.fn(),
+      setImpPago: jest.fn(),
+    };
+
+    tramite260703QueryMock = {
+      selectSolicitudPermiso$: of({
+        claveDeReferencia: '12345',
+        cadenaPagoDependencia: 'DEPENDENCIA',
+        bancoseleccionado: 1,
+        llaveDePago: 'LLAVE123',
+        fecPago: '2025-04-10',
+        impPago: 1000,
+      }),
+    };
+
     await TestBed.configureTestingModule({
-      declarations: [PasoUnoComponent, MockSolicitanteComponent], // Declare the mock
+      declarations: [PasoUnoComponent, MockSolicitanteComponent, DatosSolitudeComponent, TercerosRelacionadosComponent],
+      imports: [ReactiveFormsModule,  TramiteAsociadosComponent, PagoDeDerechosComponent],
+      providers: [
+        FormBuilder,
+        { provide: SolicitudPermisoService, useValue: solicitudPermisoServiceMock },
+        { provide: Tramite260703Store, useValue: tramite260703StoreMock },
+        { provide: Tramite260703Query, useValue: tramite260703QueryMock },
+      ],
       schemas: [NO_ERRORS_SCHEMA], // Ignore unknown elements
     }).compileComponents();
 
@@ -29,5 +74,68 @@ describe('PasoUnoComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should initialize tramiteAsociados on ngOnInit', () => {
+    const tramiteAsociadosMock = [
+      { id: 1, folioTramite: '12345', tipoTramite: 'Tipo A', estatus: 'Activo', fetchaAltaDeRegistro: '2025-04-10' },
+    ];
+    solicitudPermisoServiceMock.obtenerTramitesAsociados.mockReturnValue(of(tramiteAsociadosMock));
+
+    component.ngOnInit();
+    expect(component.tramiteAsociados).toEqual(tramiteAsociadosMock);
+  });
+
+  it('should initialize form on crearformularioPagoDerechos', () => {
+    component.crearformularioPagoDerechos();
+    expect(component.formularioPagoDerechos).toBeDefined();
+    expect(component.formularioPagoDerechos.get('claveDeReferencia')?.value).toBe('12345');
+    expect(component.formularioPagoDerechos.get('cadenaPagoDependencia')?.value).toBe('DEPENDENCIA');
+    expect(component.formularioPagoDerechos.get('banco')?.value).toBe(1);
+    expect(component.formularioPagoDerechos.get('llaveDePago')?.value).toBe('LLAVE123');
+    expect(component.formularioPagoDerechos.get('fecPago')?.value).toBe('2025-04-10');
+    expect(component.formularioPagoDerechos.get('impPago')?.value).toBe(1000);
+  });
+
+  it('should call setValoresStore and update store correctly', () => {
+    const form = new FormGroup({
+      llaveDePago: new FormControl('LLAVE123'),
+    });
+
+    component.setValoresStore({
+      formularioPagoDerechos: form,
+      campo: 'llaveDePago',
+      metodoNombre: 'setLlaveDePago',
+    });
+
+    expect(tramite260703StoreMock.setLlaveDePago).toHaveBeenCalledWith('LLAVE123');
+  });
+
+  it('should select a tab and initialize banco on seleccionaTab', () => {
+    component.seleccionaTab(4);
+    expect(component.indice).toBe(4);
+    expect(component.banco).toEqual([{ id: 1, descripcion: 'Banco 1' }]);
+  });
+
+  it('should clean up subscriptions on ngOnDestroy', () => {
+    const destroySpy = jest.spyOn(component['notificadorDestruccion$'], 'next');
+    const completeSpy = jest.spyOn(component['notificadorDestruccion$'], 'complete');
+
+    component.ngOnDestroy();
+
+    expect(destroySpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
+  });
+
+  it('should handle invalid metodoNombre in setValoresStore', () => {
+    const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
+
+    component.setValoresStore({
+      formularioPagoDerechos: new FormGroup({}),
+      campo: 'invalidCampo',
+      metodoNombre: 'invalidMetodo',
+    });
+
+    expect(consoleSpy).toHaveBeenCalledWith('Método invalidMetodo no existe en Tramite260703Store');
   });
 });

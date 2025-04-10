@@ -1,1 +1,28 @@
-<p>terceros-relacionados works!</p>
+<div class="container">
+  <ng-titulo titulo="Terceros relacionados" />
+
+  <ng-alert
+    [CONTENIDO]="
+      'Las tablas con asterisco son obligatorias y debes agregar por lo menos un registro.'
+    "
+    [CUSTOMECLASS]="'info-alert'"
+  ></ng-alert>
+
+  <div class="row">
+    <h6>Destinatario (Destino final)*:</h6>
+    <app-tabla-dinamica
+      [tipoSeleccionTabla]="tipoSeleccionTabla"
+      [datos]="datosTablaDestinatario"
+      [configuracionTabla]="configuiracionTablaDestinatario"
+    ></app-tabla-dinamica>
+  </div>
+
+  <div class="row">
+    <h6>Fabricante*:</h6>
+    <app-tabla-dinamica
+      [tipoSeleccionTabla]="tipoSeleccionTabla"
+      [datos]="datosTablaFabricante"
+      [configuracionTabla]="configuiracionTablaFabricante"
+    ></app-tabla-dinamica>
+  </div>
+</div>

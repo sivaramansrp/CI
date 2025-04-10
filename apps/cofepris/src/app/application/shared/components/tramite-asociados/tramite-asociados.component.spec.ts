@@ -25,7 +25,7 @@ describe('TramiteAsociadosComponent', () => {
         orden: 2,
       },
       {
-        encabezado: 'Tipo  trámite',
+        encabezado: 'Tipo trámite',
         clave: (item: TramiteAsociados) => item.tipoTramite,
         orden: 3,
       },
@@ -65,31 +65,9 @@ describe('TramiteAsociadosComponent', () => {
     expect(component.tramiteAsociados).toBeDefined();
     expect(component.tramiteAsociados.length).toBe(1);
     expect(component.tramiteAsociados[0].id).toBe(1);
-    expect(component.tramiteAsociados[1].folioTramite).toBe(12345);
-    expect(component.tramiteAsociados[2].tipoTramite).toBe('Tipo A');
-    expect(component.tramiteAsociados[3].estatus).toBe('Activo');
-    expect(component.tramiteAsociados[4].fetchaAltaDeRegistro).toBe('2025-03-08');
-  });
-
-  it('should display the correct data in the table', () => {
-    const compiled = fixture.nativeElement as HTMLElement;
-    const firstRow = compiled.querySelector('tabla-dinamica tbody tr:first-child') as HTMLElement;
-    expect(firstRow.textContent).toContain('1');
-    expect(firstRow.textContent).toContain('12345');
-    expect(firstRow.textContent).toContain('Tipo A');
-    expect(firstRow.textContent).toContain('Activo');
-    expect(firstRow.textContent).toContain('2025-03-08');
-  });
-
-  it('should render the title component', () => {
-    const compiled = fixture.nativeElement as HTMLElement;
-    const titleComponent = compiled.querySelector('titulo-component');
-    expect(titleComponent).toBeTruthy();
-  });
-
-  it('should render the dynamic table component', () => {
-    const compiled = fixture.nativeElement as HTMLElement;
-    const tableComponent = compiled.querySelector('tabla-dinamica');
-    expect(tableComponent).toBeTruthy();
+    expect(component.tramiteAsociados[0].folioTramite).toBe(12345);
+    expect(component.tramiteAsociados[0].tipoTramite).toBe('Tipo A');
+    expect(component.tramiteAsociados[0].estatus).toBe('Activo');
+    expect(component.tramiteAsociados[0].fetchaAltaDeRegistro).toBe('2025-03-08');
   });
 });

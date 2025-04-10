@@ -31,13 +31,25 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    */
   indice: number = 1;
 
+  /**
+   * Formulario reactivo para capturar los datos del pago de derechos.
+   */
   formularioPagoDerechos!: FormGroup;
 
+  /**
+   * Estado actual de la solicitud de permiso.
+   */
   estadoSolicitudPermiso!: SolicitudPermisoState;
 
+  /**
+   * Lista de trámites asociados que se mostrarán en la tabla.
+   */
   tramiteAsociados!: TramiteAsociados[];
 
-  /** Configuración para las columnas de la tabla */
+  /**
+   * Configuración para las columnas de la tabla.
+   * Define cómo se mostrarán los datos de los trámites asociados.
+   */
   configuracionTabla: ConfiguracionColumna<TramiteAsociados>[] = [
     { encabezado: '', clave: (item: TramiteAsociados) => item.id, orden: 1 },
     {
@@ -46,7 +58,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
       orden: 2,
     },
     {
-      encabezado: 'Tipo  trámite',
+      encabezado: 'Tipo trámite',
       clave: (item: TramiteAsociados) => item.tipoTramite,
       orden: 3,
     },
@@ -62,6 +74,9 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     },
   ];
 
+  /**
+   * Lista de bancos disponibles para seleccionar.
+   */
   banco!: Catalogo[];
 
   /**
@@ -70,15 +85,23 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    */
   private notificadorDestruccion$: Subject<void> = new Subject();
 
+  /**
+   * Constructor del componente.
+   * Inicializa los servicios y dependencias necesarias.
+   */
   constructor(
     private formBuilder: FormBuilder,
     private solicitudPermisoService: SolicitudPermisoService,
     private tramite260703Store: Tramite260703Store,
     private tramite260703Query: Tramite260703Query
   ) {
-    //
+    //no hacer nada
   }
 
+  /**
+   * Método del ciclo de vida que se ejecuta al inicializar el componente.
+   * Configura las suscripciones necesarias y carga los datos iniciales.
+   */
   ngOnInit(): void {
     this.tramite260703Query.selectSolicitudPermiso$
       .pipe(takeUntil(this.notificadorDestruccion$))
@@ -87,14 +110,13 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
       });
 
     this.solicitudPermisoService
-      .getTramiteAsociados()
+      .obtenerTramitesAsociados()
       .pipe(takeUntil(this.notificadorDestruccion$))
       .subscribe(tramiteAsociados => {
         this.tramiteAsociados = tramiteAsociados;
       });
 
     this.solicitudPermisoService.inicializaPagoDeDerechosDatosCatalogos();
-
   }
 
   /**
@@ -131,6 +153,10 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Establece valores en el store según el campo y el método proporcionados.
+   * @param $event Objeto que contiene el formulario, el campo y el nombre del método.
+   */
   setValoresStore($event: {
     formularioPagoDerechos: FormGroup;
     campo: string;
@@ -164,7 +190,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
 
   /**
    * Selecciona una pestaña estableciendo su índice.
-   * El índice de la pestaña a seleccionar.
+   * @param i El índice de la pestaña a seleccionar.
    */
   seleccionaTab(i: number): void {
     if (i === 4) {

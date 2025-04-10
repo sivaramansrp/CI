@@ -1,7 +1,9 @@
 import {
   Catalogo,
+  Destinatario,
   RespuestaCatalogos,
 } from '@libs/shared/data-access-user/src';
+import { Fabricante } from '../model/solicitud-permiso.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -22,10 +24,35 @@ export class SolicitudPermisoService {
     // No se necesita lógica de inicialización adicional.
   }
 
-  getTramiteAsociados(): Observable<TramiteAsociados[]> {
+  /**
+   * Obtiene los trámites asociados desde un archivo JSON.
+   *
+   * {Observable<TramiteAsociados[]>} Un observable con la lista de trámites asociados.
+   */
+  obtenerTramitesAsociados(): Observable<TramiteAsociados[]> {
     return this.http.get<TramiteAsociados[]>(
       'assets/json/260703/tramite-asociados.json'
     );
+  }
+
+  /**
+   * Obtiene los datos de los destinatarios desde un archivo JSON.
+   *
+   * {Observable<Destinatario[]>} Un observable con la lista de destinatarios.
+   */
+  obtenerDatosDestinatarios(): Observable<Destinatario[]> {
+    return this.http.get<Destinatario[]>(
+      'assets/json/260703/destinatario.json'
+    );
+  }
+
+  /**
+   * Obtiene los datos de los fabricantes desde un archivo JSON.
+   *
+   * {Observable<Fabricante[]>} Un observable con la lista de fabricantes.
+   */
+  obtenerDatosFabricantes(): Observable<Fabricante[]> {
+    return this.http.get<Fabricante[]>('assets/json/260703/fabricante.json');
   }
 
   /**
