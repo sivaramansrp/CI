@@ -1,4 +1,4 @@
-import { Catalogo, catalogoResponse } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoResponse } from '@libs/shared/data-access-user/src';
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
 import { TablaDatos } from '@libs/shared/data-access-user/src/core/models/260906/detos.model';
@@ -20,11 +20,11 @@ export interface Solicitud260906State {
   /** Importe asociado */
   importe: string;
   /** Estado seleccionado */
-  selectedEstado: catalogoResponse | null;
+  selectedEstado: CatalogoResponse | null;
   /** Clave seleccionada */
-  setClave: catalogoResponse | null;
+  setClave: CatalogoResponse | null;
   /** Descripción seleccionada */
-  setDescripcion: catalogoResponse | null;
+  setDescripcion: CatalogoResponse | null;
   /** Clasificación específica seleccionada */
   setDespecificarClasificacion: Catalogo | null;
   /** Lista de fabricantes */
@@ -148,7 +148,7 @@ export class Sanitario260906Store extends Store<Solicitud260906State> {
    * Actualiza el campo `selectedEstado` en el estado.
    * @param selectedEstado Nuevo estado seleccionado.
    */
-  public setSelectedEstado(selectedEstado: catalogoResponse): void {
+  public setSelectedEstado(selectedEstado: CatalogoResponse): void {
     this.update((state) => ({
       ...state,
       selectedEstado
@@ -159,7 +159,7 @@ export class Sanitario260906Store extends Store<Solicitud260906State> {
    * Actualiza el campo `setClave` en el estado.
    * @param selectedClave Nueva clave seleccionada.
    */
-  public setClave(selectedClave: catalogoResponse): void {
+  public setClave(selectedClave: CatalogoResponse): void {
     this.update((state) => ({
       ...state,
       setClave: selectedClave
@@ -170,7 +170,7 @@ export class Sanitario260906Store extends Store<Solicitud260906State> {
    * Actualiza el campo `setDescripcion` en el estado.
    * @param selectedDescripcion Nueva descripción seleccionada.
    */
-  public setDescripcion(selectedDescripcion: catalogoResponse): void {
+  public setDescripcion(selectedDescripcion: CatalogoResponse): void {
     this.update((state) => ({
       ...state,
       setDescripcion: selectedDescripcion
@@ -181,7 +181,7 @@ export class Sanitario260906Store extends Store<Solicitud260906State> {
    * Actualiza el campo `setDespecificarClasificacion` en el estado.
    * @param selectedDespecificarClasificacion Nueva clasificación específica seleccionada.
    */
-  public setDespecificarClasificacion(selectedDespecificarClasificacion: catalogoResponse): void {
+  public setDespecificarClasificacion(selectedDespecificarClasificacion: CatalogoResponse): void {
     this.update((state) => ({
       ...state,
       setDespecificarClasificacion: selectedDespecificarClasificacion
