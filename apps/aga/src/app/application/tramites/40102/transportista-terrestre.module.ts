@@ -10,7 +10,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { AlertComponent } from '@ng-mf/data-access-user';
 import { FirmaElectronicaComponent } from '@ng-mf/data-access-user';
-import { SelectCatalogosComponent } from '@ng-mf/data-access-user';
 import { AnexarDocumentosComponent } from '@ng-mf/data-access-user';
 import { SharedModule } from '@ng-mf/data-access-user';
 import { InputCheckComponent } from '@ng-mf/data-access-user';
@@ -53,7 +52,6 @@ import {SubirDocumentoService} from '@libs/shared/data-access-user/src/core/serv
     ReactiveFormsModule,
     forwardRef(() => AlertComponent),
     forwardRef(() => FirmaElectronicaComponent),
-    forwardRef(() => SelectCatalogosComponent),
     forwardRef(() => AnexarDocumentosComponent),
     forwardRef(() => InputCheckComponent),
     forwardRef(() => InputFechaComponent),
