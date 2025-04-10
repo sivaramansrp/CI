@@ -1,24 +1,12 @@
-import {
-  BtnContinuarComponent,
-  DatosPasos,
-} from '@ng-mf/data-access-user';
+import { AlertComponent, BtnContinuarComponent, DatosPasos, ListaPasosWizard, PASOS, WizardComponent } from '@ng-mf/data-access-user';
 import { Component, ViewChild } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { AVISO_PRIVACIDAD } from '../../constantes/consulta.enum';
 import { CommonModule } from '@angular/common';
-import { ListaPasosWizard } from '@ng-mf/data-access-user';
-import { PASOS } from '@ng-mf/data-access-user';
 import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
-import { WizardComponent } from '@ng-mf/data-access-user';
-import { AlertComponent } from "../../../../../../../../../libs/shared/data-access-user/src/tramites/components/alert/alert.component";
-import { AVISO_PRIVACIDAD } from '../../constantes/consulta.enum';
 
-/**
- * Texto de alerta para terceros.
- */
-const TERCEROS_TEXTO_DE_ALERTA =
-  'La solicitud ha quedado registrada con el número temporal 202757598 Éste no tiene validez legal y sirve solamente para efectos de identificar tu solicitud. Un folio oficial le será asignado a la solicitud al momento en que ésta sea firmada.';
 /**
  * Interfaz que define la estructura de una acción de botón.
  */
@@ -50,7 +38,7 @@ interface AccionBoton {
     PasoUnoComponent,
     ReactiveFormsModule,
     AlertComponent
-],
+  ],
 })
 /**
  * Componente que representa la página de solicitud.
@@ -95,7 +83,7 @@ export class SolicitudPageComponent {
    * Obtiene el valor del índice de la acción del botón.
    * @param e Acción del botón.
    */
-  getValorIndice(e: AccionBoton) {
+  getValorIndice(e: AccionBoton): void {
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
       if (e.accion === 'cont') {

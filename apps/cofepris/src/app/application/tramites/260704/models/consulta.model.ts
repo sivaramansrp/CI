@@ -1,5 +1,4 @@
 import { CatalogosSelect } from '@libs/shared/data-access-user/src';
-import exp from 'constants';
 
 export interface ColumnasTabla {
   claveScian: string;
@@ -53,12 +52,6 @@ export interface MercanciaCrossList {
   paisOrigenCrossList: CrossList;
   paisProcedencisCrossList: CrossList;
   usoEspecificoCrossList: CrossList;
-}
-
-export interface ClavesDeLotes {
-  lotes: string;
-  fabricacion: string;
-  caducidad: string;
 }
 
 export const FECHA_INICIAL = {

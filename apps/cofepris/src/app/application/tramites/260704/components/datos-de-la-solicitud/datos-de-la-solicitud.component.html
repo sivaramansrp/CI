@@ -1,20 +1,21 @@
 <form [formGroup]="datosDelEstablecimientoForm">
+ <ng-container formGroupName="validacionForm">
   <div class="row mt-5">
     <label>Seleccione el tipo de operación que desea realizar*:</label>
   </div>
   <div class="row mt-5 radios">
-    <app-input-radio [radioOptions]="radioOpcions" [selectedValue]="valorSeleccionado" [isRequired]="true" [layout]="'horizontal'" formControlName="tipoOperacion" (change)="setValoresStore(datosDelEstablecimientoForm,'tipoOperacion', 'setTipoOperacion')"></app-input-radio>
+    <app-input-radio [radioOptions]="radioOpcions" [selectedValue]="valorSeleccionado" [isRequired]="true" [layout]="'horizontal'" formControlName="tipoOperacion" (change)="setValoresStore(validacionForm,'tipoOperacion', 'setTipoOperacion')"></app-input-radio>
   </div>
   <div class="row mt-5">
     <div class="col-md-6">
       <label>Justificación*:</label>
-      <textarea cols="80" rows="5" formControlName="justificacion" [disabled]="true" (change)="setValoresStore(datosDelEstablecimientoForm,'justificacion', 'setJustificacion')"></textarea>
+      <textarea  cols="80" rows="5" formControlName="justificacion" [disabled]="true" (change)="setValoresStore(validacionForm,'justificacion', 'setJustificacion')"></textarea>
     </div>
   </div>
   <!--Datos del establecimiento-->
   <ng-titulo titulo="Datos del establecimiento" />
   <div>
-    <div class="text-end" *ngIf="!isTipoOperacionChecked">
+    <div class="text-end" *ngIf="esTipoOperacionSeleccionado">
       <button type="button" class="btn btn-primary" title="Selecciona para habilitar los campos del establecimiento" data-bs-toggle="modal" data-bs-target="#modalAlerta" (click)="seleccionarEstablecimiento()" formControlName="establecimiento"> Seleccionar establecimiento </button>
     </div>
     <div class="modal fade" id="modalAlerta" tabindex="-1" aria-labelledby="modalAlertaLabel" aria-hidden="true">
@@ -33,28 +34,30 @@
     <div class="row mt-5">
       <div class="col-md-8">
         <label for="razonSocial" class="form-label">Denominación o razón social*:</label>
-        <input type="text" class="form-control" size="68" formControlName="razonSocial" (change)="setValoresStore(datosDelEstablecimientoForm,'razonSocial', 'setRazonSocial')" />
+        <input type="text" class="form-control" size="68" formControlName="razonSocial" (change)="setValoresStore(validacionForm,'razonSocial', 'setRazonSocial')" />
       </div>
       <div class="col-md-4">
         <label for="correoElectronico" class="form-label">Correo electrónico: <span class="bi bi-question-circle-fill" title="ejemplo@dominio.com" data-bs-toggle="tooltip"></span>
         </label>
-        <input type="text" class="form-control" maxlength="320" formControlName="correoElectronico" (change)="setValoresStore(datosDelEstablecimientoForm,'correoElectronico', 'setCorreoElectronico')" />
+        <input type="text" class="form-control" maxlength="320" formControlName="correoElectronico" (change)="setValoresStore(validacionForm,'correoElectronico', 'setCorreoElectronico')" />
       </div>
     </div>
   </div>
+  </ng-container>
   <!--Domicillo del establecimiento-->
+  <ng-container formGroupName="validacionMercanciaForm">
   <ng-titulo titulo="Domicillo del establecimiento"></ng-titulo>
   <div class="row">
     <div class="col-md-4">
       <label for="codigoPostal" class="form-label">Código postal*:</label>
-      <input type="text" name="codigoPostal" class="form-control" maxlength="12" formControlName="codigoPostal" (change)="setValoresStore(datosDelEstablecimientoForm,'codigoPostal', 'setCodigoPostal')" />
+      <input type="text" name="codigoPostal" class="form-control" maxlength="12" formControlName="codigoPostal" (change)="setValoresStore(validacionMercanciaForm,'codigoPostal', 'setCodigoPostal')" />
     </div>
     <div class="col-md-4">
-      <app-catalogo-select [catalogo]="estadoCatalogo.catalogos" [label]="'Estado'" [required]="true" formControlName="estado" (change)="setValoresStore(datosDelEstablecimientoForm,'estado', 'setEstado')"></app-catalogo-select>
+      <app-catalogo-select [catalogo]="estadoCatalogo.catalogos" [label]="'Estado'" [required]="true" formControlName="estado" (change)="setValoresStore(validacionMercanciaForm,'estado', 'setEstado')"></app-catalogo-select>
     </div>
     <div class="col-md-4">
       <label for="descripcionMunicipio" class="form-label">Municipio o alcaldía*:</label>
-      <input type="text" class="form-control" maxlength="120" formControlName="municipio" (change)="setValoresStore(datosDelEstablecimientoForm,'municipio', 'setMunicipio')" />
+      <input type="text" class="form-control" maxlength="120" formControlName="municipio" (change)="setValoresStore(validacionMercanciaForm,'municipio', 'setMunicipio')" />
     </div>
   </div>
   <div class="row mt-5">
@@ -65,38 +68,40 @@
   <div class="row">
     <div class="col-md-4">
       <label for="informacionExtra" class="form-label">Localidad:</label>
-      <input type="text" class="form-control" formControlName="localidad" maxlength="120" (change)="setValoresStore(datosDelEstablecimientoForm,'localidad', 'setLocalidad')" />
+      <input type="text" class="form-control" formControlName="localidad" maxlength="120" (change)="setValoresStore(validacionMercanciaForm,'localidad', 'setLocalidad')" />
     </div>
     <div class="col-md-4">
       <label for="descripcionColonia" class="form-label">Colonia:</label>
-      <input type="text" class="form-control" formControlName="colonia" maxlength="120" (change)="setValoresStore(datosDelEstablecimientoForm,'colonia', 'setColonia')" />
+      <input type="text" class="form-control" formControlName="colonia" maxlength="120" (change)="setValoresStore(validacionMercanciaForm,'colonia', 'setColonia')" />
     </div>
   </div>
   <div class="row">
     <div class="col-md-8">
       <label for="calle" class="form-label">Calle*: <span class="bi bi-question-circle-fill" title="Domicilio, calle, n&uacute;mero interior, n&uacute;mero exterior, lote" data-bs-toggle="tooltip"></span>
       </label>
-      <input type="text" class="form-control" formControlName="calle" maxlength="90" (change)="setValoresStore(datosDelEstablecimientoForm,'calle', 'setCalle')" />
+      <input type="text" class="form-control" formControlName="calle" maxlength="90" (change)="setValoresStore(validacionMercanciaForm,'calle', 'setCalle')" />
     </div>
   </div>
   <div class="row">
     <div class="col-md-1">
       <label for="lada" class="form-label">Lada:</label>
-      <input type="text" class="form-control" formControlName="lada" (change)="setValoresStore(datosDelEstablecimientoForm,'lada', 'setLada')" />
+      <input type="text" class="form-control" formControlName="lada" (change)="setValoresStore(validacionMercanciaForm,'lada', 'setLada')" />
     </div>
     <div class="col-md-3">
       <label for="telefono" class="form-label">Teléfono*:</label>
-      <input type="text" class="form-control" formControlName="telefono" required="required" (change)="setValoresStore(datosDelEstablecimientoForm,'telefono', 'setTelefono')" />
+      <input type="text" class="form-control" formControlName="telefono" required="required" (change)="setValoresStore(validacionMercanciaForm,'telefono', 'setTelefono')" />
     </div>
   </div>
+  </ng-container>
+  <ng-container formGroupName="validacionScionForm">
   <div class="col-md-12 mt-5">
     <label class="form-label mb-5" for="">S.C.I.A.N.*:</label>
-    <ng-container *ngIf="!isDatosSCIANChecked">
-      <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="headers" [datos]="certificadoDisponsiblesTablaDatos" (click)="checkCheckboxSelection($event)" formControlName="scian" (change)="setValoresStore(datosDelEstablecimientoForm,'scian', 'setScian')"></app-tabla-dinamica>
-    </ng-container>
-    <ng-container *ngIf="isDatosSCIANChecked">
-      <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="headers" (click)="checkCheckboxSelection($event)" formControlName="scian" (change)="setValoresStore(datosDelEstablecimientoForm,'scian', 'setScian')"></app-tabla-dinamica>
-    </ng-container>
+    <div *ngIf="!esDatosSCIANSeleccionado">
+      <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="encabezados" [datos]="certificadoDisponsiblesTablaDatos" (click)="verificarSeleccionCheckbox($event)"  (change)="setValoresStore(validacionScionForm,'scian', 'setScian')"></app-tabla-dinamica>
+    </div>
+    <div *ngIf="esDatosSCIANSeleccionado">
+      <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="encabezados" (click)="verificarSeleccionCheckbox($event)"  (change)="setValoresStore(validacionScionForm,'scian', 'setScian')"></app-tabla-dinamica>
+    </div>
   </div>
   <div class="row">
     <div class="col-md-12 text-end">
@@ -113,9 +118,9 @@
         </div>
         <div class="modal-body">
           <div class="row">
-            <app-catalogo-select [catalogo]="claveCatalogo.catalogos" [label]="'Clave S.C.I.A.N.'" [required]="true" formControlName="claveScian" (change)="setValoresStore(datosDelEstablecimientoForm,'claveScian', 'setClaveScian')"></app-catalogo-select>
+            <app-catalogo-select [catalogo]="catalogoClave.catalogos" [label]="'Clave S.C.I.A.N.'" [required]="true" formControlName="claveScian" (change)="setValoresStore(validacionScionForm,'claveScian', 'setClaveScian')"></app-catalogo-select>
             <div class="row">
-              <app-catalogo-select [catalogo]="claveCatalogo.catalogos" [label]="'Descripción del S.C.I.A.N.'" [required]="false" formControlName="descripcionScian" (change)="setValoresStore(datosDelEstablecimientoForm,'descripcionScian', 'setDescripcionScian')"></app-catalogo-select>
+              <app-catalogo-select [catalogo]="catalogoClave.catalogos" [label]="'Descripción del S.C.I.A.N.'" [required]="false" formControlName="descripcionScian" (change)="setValoresStore(validacionScionForm,'descripcionScian', 'setDescripcionScian')"></app-catalogo-select>
             </div>
           </div>
         </div>
@@ -140,18 +145,18 @@
       <div class="modal-content">
         <div class="modal-header"></div>
         <div class="modal-body text-center">
-          <ng-container *ngIf="isCheckboxSelected"> ¿Estás seguro que deseas eliminar los registros marcados? </ng-container>
-          <ng-container *ngIf="!isCheckboxSelected"> Selecciona un registro. </ng-container>
+          <ng-container *ngIf="esCheckboxSeleccionado"> ¿Estás seguro que deseas eliminar los registros marcados? </ng-container>
+          <ng-container *ngIf="!esCheckboxSeleccionado"> Selecciona un registro. </ng-container>
         </div>
         <div class="modal-footer custom-footer">
           <div class="row">
             <div class="col-md-12">
               <div class="pull-right">
-                <button type="button" name="cancelar" class="btn btn-default ms-2" data-bs-dismiss="modal" #closeModal *ngIf="isCheckboxSelected"> Cancelar </button>
-                <ng-container *ngIf="!isCheckboxSelected">
+                <button type="button" name="cancelar" class="btn btn-default ms-2" data-bs-dismiss="modal" #closeModal *ngIf="esCheckboxSeleccionado"> Cancelar </button>
+                <ng-container *ngIf="!esCheckboxSeleccionado">
                   <button type="button" name="cancelar" class="btn btn-default ms-2" data-bs-dismiss="modal" #closeModal> Aceptar </button>
                 </ng-container>
-                <ng-container *ngIf="isCheckboxSelected">
+                <ng-container *ngIf="esCheckboxSeleccionado">
                   <button type="button" name="agregar" class="btn btn-primary ms-2" data-bs-dismiss="modal" (click)="AcceptarEliminarScian()"> Acceptar </button>
                 </ng-container>
               </div>
@@ -161,26 +166,28 @@
       </div>
     </div>
   </div>
+  </ng-container>
   <!-- eliminar alert screen end -->
+   <ng-container formGroupName="validacionAduanaMercanciaForm">
   <div class="row mt-5">
     <div class="col-md-4 mt-4">
       <div class="form-check mt-3">
-        <input class="form-check-input" type="checkbox" formControlName="avisoDeFuncionamiento" (change)="setAvisoDeFuncionamiento($event)" aria-label="Aviso de funcionamiento" (change)="setValoresStore(datosDelEstablecimientoForm,'avisoDeFuncionamiento', 'setAvisoDeFuncionamiento')" />
+        <input class="form-check-input" type="checkbox" formControlName="avisoDeFuncionamiento" (change)="establecerAvisoDeFuncionamiento($event)" aria-label="Aviso de funcionamiento" (change)="setValoresStore(validacionAduanaMercanciaForm,'avisoDeFuncionamiento', 'setAvisoDeFuncionamiento')" />
         <label class="control-label" for="avisoDeFuncionamiento"> Aviso de funcionamiento </label>
       </div>
     </div>
     <div class="col-md-4 mt-4">
-      <label class="form-label" for="licenciaSanitaria">No. de licencia sanitaria <span *ngIf="isAvisoFuncionamientoChecked" class="black-asterisk">*</span>: <span class="bi bi-question-circle-fill" title="Ni¿1⁄2mero de la autorizaciï¿1⁄2n indicado en el documento emitido por la autoridad sanitaria competente" data-bs-toggle="tooltip"></span>
+      <label class="form-label" for="licenciaSanitaria">No. de licencia sanitaria <span *ngIf="esAvisoFuncionamientoSeleccionado" class="black-asterisk">*</span>: <span class="bi bi-question-circle-fill" title="Ni¿1⁄2mero de la autorizaciï¿1⁄2n indicado en el documento emitido por la autoridad sanitaria competente" data-bs-toggle="tooltip"></span>
       </label>
-      <input class="form-control" type="text" formControlName="licenciaSanitaria" (change)="setLicenciaSanitaria($event)" (change)="setValoresStore(datosDelEstablecimientoForm,'licenciaSanitaria', 'setLicenciaSanitaria')" />
+      <input class="form-control" type="text" formControlName="licenciaSanitaria" (change)="establecerLicenciaSanitaria($event)" (change)="setValoresStore(validacionAduanaMercanciaForm,'licenciaSanitaria', 'setLicenciaSanitaria')" />
     </div>
   </div>
   <div class="row mt-5">
     <div class="col-md-8">
-      <app-catalogo-select [catalogo]="claveCatalogo.catalogos" [label]="'Régimen al que se destinarán la mercancías'" [required]="true" [tooltipQuestionCircle]="true" formControlName="regimen" (change)="setValoresStore(datosDelEstablecimientoForm,'regimen', 'setRegimen')"></app-catalogo-select>
+      <app-catalogo-select [catalogo]="catalogoClave.catalogos" [label]="'Régimen al que se destinarán la mercancías'" [required]="true" [tooltipQuestionCircle]="true" formControlName="regimen" (change)="setValoresStore(validacionAduanaMercanciaForm,'regimen', 'setRegimen')"></app-catalogo-select>
     </div>
     <div class="col-md-4">
-      <app-catalogo-select [catalogo]="claveCatalogo.catalogos" [label]="'Aduana'" [required]="true" formControlName="aduana" (change)="setValoresStore(datosDelEstablecimientoForm,'aduana', 'setAduana')"></app-catalogo-select>
+      <app-catalogo-select [catalogo]="catalogoClave.catalogos" [label]="'Aduana'" [required]="true" formControlName="aduana" (change)="setValoresStore(validacionAduanaMercanciaForm,'aduana', 'setAduana')"></app-catalogo-select>
     </div>
   </div>
   <div class="row mt-5">
@@ -189,16 +196,18 @@
   <div class="row mt-5">
     <div class="col-md-4">
       <label>No. Programa IMMEX:</label>
-      <input type="text" class="form-control" formControlName="immex" (change)="setValoresStore(datosDelEstablecimientoForm,'immex', 'setImmex')" />
+      <input type="text" class="form-control" formControlName="immex" (change)="setValoresStore(validacionAduanaMercanciaForm,'immex', 'setImmex')" />
     </div>
     <div class="col-md-2">
       <label>Año:</label>
-      <input type="text" class="form-control" formControlName="ano" (change)="setValoresStore(datosDelEstablecimientoForm,'ano', 'setAno')" />
+      <input type="text" class="form-control" formControlName="ano" (change)="setValoresStore(validacionAduanaMercanciaForm,'ano', 'setAno')" />
     </div>
   </div>
+  </ng-container>
+  <ng-container formGroupName="validacionDatosMercanciaForm">
   <div class="col-md-12 mt-4">
     <label class="form-label mb-5" for="">mercancías*:</label>
-    <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="mercanciasDatos" [datos]="mercanciasConfiguracionTabla" formControlName="mercancia" (change)="setValoresStore(datosDelEstablecimientoForm,'mercancia', 'setMercancia')"></app-tabla-dinamica>
+    <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="mercanciasDatos" [datos]="mercanciasConfiguracionTabla" (change)="setValoresStore(validacionDatosMercanciaForm,'mercancia', 'setMercancia')"></app-tabla-dinamica>
   </div>
   <div class="row mt-5">
     <div class="col-md-12 mt-5 d-flex justify-content-end">
@@ -215,42 +224,42 @@
         <div class="modal-body">
           <div class="row mt-5">
             <div class="col-md-8">
-              <app-catalogo-select [catalogo]="estadoCatalogo.catalogos" [label]="'Clasificación del producto'" [required]="true" formControlName="clasificacionProducto" (change)="setValoresStore(datosDelEstablecimientoForm,'clasificacionProducto', 'setClasificacionProducto')"></app-catalogo-select>
+              <app-catalogo-select [catalogo]="estadoCatalogo.catalogos" [label]="'Clasificación del producto'" [required]="true" formControlName="clasificacionProducto" (change)="setValoresStore(validacionDatosMercanciaForm,'clasificacionProducto', 'setClasificacionProducto')"></app-catalogo-select>
             </div>
           </div>
           <div class="row mt-5">
             <div class="col-md-8">
-              <app-catalogo-select [catalogo]="estadoCatalogo.catalogos" [label]="'Especificar clasificación del producto'" [required]="true" formControlName="especificarClasificacionProducto" (change)="setValoresStore(datosDelEstablecimientoForm,'especificarClasificacionProducto', 'setEspecificarClasificacionProducto')"></app-catalogo-select>
+              <app-catalogo-select [catalogo]="estadoCatalogo.catalogos" [label]="'Especificar clasificación del producto'" [required]="true" formControlName="especificarClasificacionProducto" (change)="setValoresStore(validacionDatosMercanciaForm,'especificarClasificacionProducto', 'setEspecificarClasificacionProducto')"></app-catalogo-select>
             </div>
           </div>
           <div class="row mt-5">
             <div class="col-md-8">
               <label class="form-label" for="denominacionProducto">Denominación especifica del producto*:</label>
-              <input class="form-control" placeholder="" type="text" formControlName="denominacionProducto" (change)="setValoresStore(datosDelEstablecimientoForm,'denominacionProducto', 'setDenominacionProducto')" />
+              <input class="form-control" placeholder="" type="text" formControlName="denominacionProducto" (change)="setValoresStore(validacionDatosMercanciaForm,'denominacionProducto', 'setDenominacionProducto')" />
             </div>
           </div>
           <div class="row mt-5">
             <div class="col-md-8">
               <label class="form-label">Marca*:</label>
-              <input class="form-control" placeholder="" type="text" formControlName="marca" (change)="setValoresStore(datosDelEstablecimientoForm,'marca', 'setMarca')" />
+              <input class="form-control" placeholder="" type="text" formControlName="marca" (change)="setValoresStore(validacionDatosMercanciaForm,'marca', 'setMarca')" />
             </div>
           </div>
           <div class="row mt-5">
             <div class="col-md-8">
-              <app-catalogo-select [catalogo]="estadoCatalogo.catalogos" [label]="'Tipo de producto'" [required]="true" formControlName="tipoProducto" (change)="setValoresStore(datosDelEstablecimientoForm,'tipoProducto', 'setTipoProducto')"></app-catalogo-select>
+              <app-catalogo-select [catalogo]="estadoCatalogo.catalogos" [label]="'Tipo de producto'" [required]="true" formControlName="tipoProducto" (change)="setValoresStore(validacionDatosMercanciaForm,'tipoProducto', 'setTipoProducto')"></app-catalogo-select>
             </div>
           </div>
           <div class="row mt-5">
             <div class="col-md-8">
               <label class="form-label">Especifique*:</label>
-              <input class="form-control" type="text" formControlName="especifique" (change)="setValoresStore(datosDelEstablecimientoForm,'especifique', 'setEspecifique')" />
+              <input class="form-control" type="text" formControlName="especifique" (change)="setValoresStore(validacionDatosMercanciaForm,'especifique', 'setEspecifique')" />
             </div>
           </div>
           <div class="row mt-5">
             <div class="col-md-8">
               <label class="form-label">Fracción arancelaria*: <span class="bi bi-question-circle-fill" title="Fracción arancelaria" data-bs-toggle="tooltip"></span>
               </label>
-              <input class="form-control" type="text" formControlName="fraccionArancelaria" (change)="setValoresStore(datosDelEstablecimientoForm,'fraccionArancelaria', 'setFraccionArancelaria')" />
+              <input class="form-control" type="text" formControlName="fraccionArancelaria" (change)="setValoresStore(validacionDatosMercanciaForm,'fraccionArancelaria', 'setFraccionArancelaria')" />
             </div>
           </div>
           <div class="row mt-5">
@@ -262,7 +271,7 @@
           <div class="row mt-5">
             <div class="col-md-4">
               <label class="form-label">Cantidad UMT*:</label>
-              <input class="form-control" type="text" formControlName="cantidadUMT" (change)="setValoresStore(datosDelEstablecimientoForm,'cantidadUMT', 'setCantidadUMT')" />
+              <input class="form-control" type="text" formControlName="cantidadUMT" (change)="setValoresStore(validacionDatosMercanciaForm,'cantidadUMT', 'setCantidadUMT')" />
             </div>
             <div class="col-md-4">
               <label class="form-label">UMT*: <span class="bi bi-question-circle-fill" title="UMT" data-bs-toggle="tooltip"></span>
@@ -273,10 +282,10 @@
           <div class="row mt-5">
             <div class="col-md-4">
               <label class="form-label">Cantidad UMC*:</label>
-              <input class="form-control" type="text" formControlName="cantidadUMC" (change)="setValoresStore(datosDelEstablecimientoForm,'cantidadUMC', 'setCantidadUMC')" />
+              <input class="form-control" type="text" formControlName="cantidadUMC" (change)="setValoresStore(validacionDatosMercanciaForm,'cantidadUMC', 'setCantidadUMC')" />
             </div>
             <div class="col-md-4">
-              <app-catalogo-select [catalogo]="estadoCatalogo.catalogos" [label]="'UMC'" [tooltipQuestionCircle]="true" [required]="true" formControlName="umc" (change)="setValoresStore(datosDelEstablecimientoForm,'umc', 'setUMC')"></app-catalogo-select>
+              <app-catalogo-select [catalogo]="estadoCatalogo.catalogos" [label]="'UMC'" [tooltipQuestionCircle]="true" [required]="true" formControlName="umc" (change)="setValoresStore(validacionDatosMercanciaForm,'umc', 'setUMC')"></app-catalogo-select>
             </div>
           </div>
           <!-- collapsed crosslist -->
@@ -312,7 +321,7 @@
           <div class="row mt-5">
             <div class="col-md-8 mt-3">
               <label class="form-label">Clave de los lotes*:</label>
-              <input class="form-control" type="text" formControlName="claveLote" (change)="setValoresStore(datosDelEstablecimientoForm,'claveLote', 'setClaveLote')" />
+              <input class="form-control" type="text" formControlName="claveLote" (change)="setValoresStore(validacionDatosMercanciaForm,'claveLote', 'setClaveLote')" />
             </div>
           </div>
           <div class="row mt-5">
@@ -329,7 +338,7 @@
             <label class="form-label" for="">Lista Claves de los lotes*:</label>
           </div>
           <div class="col-md-8 mt-3" style="margin-left: 155px">
-            <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="listaClave" [datos]="listaClaveTabla" formControlName="listaClave" (change)="setValoresStore(datosDelEstablecimientoForm,'listaClave', 'setListaClave')"></app-tabla-dinamica>
+            <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="listaClave" [datos]="listaClaveTabla" (change)="setValoresStore(validacionDatosMercanciaForm,'listaClave', 'setListaClave')"></app-tabla-dinamica>
           </div>
           <div class="col-md-12 d-flex justify-content-end align-items-end">
             <div class="btn-group">
@@ -363,6 +372,7 @@
       </div>
     </div>
   </div>
+  </ng-container>
   <!-- Datos mercancia popup screen end -->
   <div class="row">
     <ng-titulo titulo="Manifiestos y declaraciones" />
@@ -378,7 +388,7 @@
   </div>
   <div class="col-md-12 mt-4">
     <label class="form-label" for="">Los datos o anexos pueden contener información confidencial ¿Está de acuerdo en hacerlos públicos?*:</label>
-    <app-input-radio [radioOptions]="hacerlosRadioOptions" [selectedValue]="hercelosSeleccionados" [layout]="'horizontal'" formControlName="hacerlosPublicos" (change)="setValoresStore(datosDelEstablecimientoForm,'hacerlosPublicos', 'setHacerlosPublicos')"></app-input-radio>
+    <app-input-radio [radioOptions]="opcionesRadioHacerlos" [selectedValue]="hercelosSeleccionados" [layout]="'horizontal'" formControlName="hacerlosPublicos" (change)="setValoresStore(datosDelEstablecimientoForm,'hacerlosPublicos', 'setHacerlosPublicos')"></app-input-radio>
   </div>
   <ng-titulo titulo="Representante legal" />
   <div class="row mt-5">

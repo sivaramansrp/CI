@@ -1,13 +1,10 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import {
-  ConfiguracionColumna,
-  TablaSeleccion,
-} from '@libs/shared/data-access-user/src';
-import { TablaDinamicaComponent } from '../../../../../../../../../libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
-import { Asociados } from '../../models/consulta.model';
-import { ConsultaService } from '../../service/consulta.service';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ConfiguracionColumna, TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { ReplaySubject, takeUntil } from 'rxjs';
+import { Asociados } from '../../models/consulta.model';
+import { CommonModule } from '@angular/common';
+import { ConsultaService } from '../../service/consulta.service';
+import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 
 @Component({
   selector: 'app-tramites-asociados',
@@ -16,10 +13,12 @@ import { ReplaySubject, takeUntil } from 'rxjs';
   templateUrl: './tramites-asociados.component.html',
   styleUrl: './tramites-asociados.component.css',
 })
-export class TramitesAsociadosComponent implements OnInit {
-  TablaSeleccion = TablaSeleccion;
-  public destinatarioDatos: Asociados[] = [];
+export class TramitesAsociadosComponent implements OnInit, OnDestroy {
+
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+  public datosDestinatario: Asociados[] = [];
+  TablaSeleccion = TablaSeleccion;
+
   destinatarioConfiguracionTabla: ConfiguracionColumna<Asociados>[] = [
     {
       encabezado: 'Folio trámite',
@@ -43,17 +42,25 @@ export class TramitesAsociadosComponent implements OnInit {
     },
   ];
 
-  constructor(private consulta: ConsultaService) {}
+  constructor(private consulta: ConsultaService) {
+     // Constructor vacío, no requiere inicialización adicional.
+   }
+
   ngOnInit(): void {
-    this.getTramitesTabla();
+    this.obtenerTablaTramites();
   }
 
-  public getTramitesTabla(): void {
+  public obtenerTablaTramites(): void {
     this.consulta
-      .getTramitesTabla()
+      .obtenerTablaTramites()
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data) => {
-        this.destinatarioDatos = data;
+        this.datosDestinatario = data;
       });
   }
+  ngOnDestroy(): void {
+    this.destroyed$.next(true);
+    this.destroyed$.complete();
+  }
+
 }

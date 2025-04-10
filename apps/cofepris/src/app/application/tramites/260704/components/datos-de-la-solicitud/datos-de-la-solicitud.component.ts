@@ -1,90 +1,64 @@
-import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { InputRadioComponent } from '../../../../../../../../../libs/shared/data-access-user/src/tramites/components/input-radio/input-radio.component';
-import {
-  Catalogo,
-  CatalogoSelectComponent,
-  CatalogosSelect,
-  ConfiguracionColumna,
-  InputFecha,
-  TablaSeleccion,
-  TituloComponent,
-  ValidacionesFormularioService,
-} from '@libs/shared/data-access-user/src';
-import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Modal } from 'bootstrap';
-import { map, Observable, ReplaySubject, Subject, takeUntil } from 'rxjs';
-import { ConsultaService } from '../../service/consulta.service';
-import { TablaDinamicaComponent } from '../../../../../../../../../libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
-import {
-  ColumnasTabla,
-  CrossList,
-  FECHA_FINAL,
-  
-  FECHA_INICIAL,
-  
-  ListaClave,
-  Mercancia,
-} from '../../models/consulta.model';
+import { Catalogo, CatalogoSelectComponent, CatalogosSelect, ConfiguracionColumna, InputFecha, TablaSeleccion, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
+import { ColumnasTabla, CrossList, FECHA_FINAL, FECHA_INICIAL, ListaClave, Mercancia } from '../../models/consulta.model';
+import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { CrosslistComponent, InputFechaComponent, InputRadioComponent, TablaDinamicaComponent } from '@ng-mf/data-access-user';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ReplaySubject, map, takeUntil } from 'rxjs';
 import { Solicitud260704State, Tramite260704Store } from '../../estados/Tramite260704.store';
-import { CrosslistComponent } from '../../../../../../../../../libs/shared/data-access-user/src/tramites/components/crosslist/crosslist.component';
-import { InputFechaComponent } from '../../../../../../../../../libs/shared/data-access-user/src/tramites/components/input-fecha/input-fecha.component';
 import { AVISO_PRIVACIDAD } from '../../constantes/consulta.enum';
+import { CommonModule } from '@angular/common';
+import { ConsultaService } from '../../service/consulta.service';
+import { Modal } from 'bootstrap';
 import { Tramite260704Query } from '../../estados/Tramite260704.query';
 
 @Component({
   selector: 'app-datos-de-la-solicitud',
   standalone: true,
   imports: [
-    CommonModule,
-    InputRadioComponent,
-    TituloComponent,
-    ReactiveFormsModule,
     CatalogoSelectComponent,
     TablaDinamicaComponent,
-    CrosslistComponent,
     InputFechaComponent,
+    InputRadioComponent,
+    ReactiveFormsModule,
+    CrosslistComponent,
+    TituloComponent,
+    CommonModule,
   ],
   templateUrl: './datos-de-la-solicitud.component.html',
   styleUrl: './datos-de-la-solicitud.component.css',
 })
 export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
 
-  
-  @Output() filaSeleccionada: EventEmitter<any> = new EventEmitter<any>(true);
-
-  valorSeleccionado: string = '';
-  hercelosSeleccionados!: string;
-  datosDelEstablecimientoForm!: FormGroup;
-  modificacionForm!:FormGroup;
-  scianForm!: FormGroup;
-  habilitarEstado: boolean = true;
   @ViewChild('modalAlerta') modalElement!: ElementRef;
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
-  public destroyNotifier$: Subject<void> = new Subject();
-  TablaSeleccion = TablaSeleccion;
-  claveScian!: Catalogo[];
-  certificadoDisponsiblesTablaDatos: ColumnasTabla[] = [];
-  mercanciasConfiguracionTabla: Mercancia[] = [];
-  listaClaveTabla: ListaClave[] = [];
-  selectedMercanciasDatos: Mercancia[] = [];
+  datosDelEstablecimientoForm!: FormGroup;
+  modificacionForm!: FormGroup;
+  scianForm!: FormGroup;
+  valorSeleccionado: string = '';
+  hercelosSeleccionados!: string;
   paisOrigen = false;
   paisProcedencisColapsable = false;
   usoEspecifico = false;
+  habilitarEstado: boolean = true;
+  esAvisoFuncionamientoSeleccionado: boolean = false;
+  esCheckboxSeleccionado: boolean = false;
+  esDatosSCIANSeleccionado: boolean = false;
+  esTipoOperacionSeleccionado: boolean = true;
   paisOrigenCrossList: CrossList = {} as CrossList;
   paisProcedencisCrossList: CrossList = {} as CrossList;
   usoEspecificoCrossList: CrossList = {} as CrossList;
   fechaInicialInput: InputFecha = FECHA_INICIAL;
   fechaFinalInput: InputFecha = FECHA_FINAL;
   AVISO_PRIVACIDAD = AVISO_PRIVACIDAD;
-  descripcionScian!: Catalogo[];
-  isAvisoFuncionamientoChecked: boolean = false;
-  isCheckboxSelected: boolean = false;
-  isDatosSCIANChecked: boolean = false;
-  isTipoOperacionChecked: boolean = true;
+  certificadoDisponsiblesTablaDatos: ColumnasTabla[] = [];
+  mercanciasConfiguracionTabla: Mercancia[] = [];
+  listaClaveTabla: ListaClave[] = [];
   public solicitudState!: Solicitud260704State;
+  TablaSeleccion = TablaSeleccion;
+  descripcionScian!: Catalogo[];
+  claveScian!: Catalogo[];
 
-  @Input() radioOptions: {
+  @Input() radioOpions: {
     label: string;
     value: string | number;
     hint?: string;
@@ -96,24 +70,26 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     { label: 'Modificación y prórroga', value: 'modificacionYProrroga' },
   ];
 
-  hacerlosRadioOptions = [
+  opcionesRadioHacerlos = [
     { label: 'No', value: 'no' },
     { label: 'Sí', value: 'si' },
   ];
+
   public estadoCatalogo: CatalogosSelect = {
     labelNombre: 'Estado',
     required: true,
     primerOpcion: 'Selecciona un valor',
     catalogos: [],
   };
-  public claveCatalogo: CatalogosSelect = {
+
+  public catalogoClave: CatalogosSelect = {
     labelNombre: 'Estado',
     required: true,
     primerOpcion: 'Selecciona un valor',
     catalogos: [],
   };
 
-  public headers: ConfiguracionColumna<ColumnasTabla>[] = [
+  public encabezados: ConfiguracionColumna<ColumnasTabla>[] = [
     {
       encabezado: 'Clave S.C.I.A.N.',
       clave: (ele: ColumnasTabla) => ele.claveScian,
@@ -125,6 +101,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       orden: 2,
     },
   ];
+
   public mercanciasDatos: ConfiguracionColumna<Mercancia>[] = [
     {
       encabezado: 'Clasificación del producto',
@@ -215,13 +192,15 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       orden: 3,
     },
   ];
+
   constructor(
     private consulta: ConsultaService,
     public store: Tramite260704Store,
     private query: Tramite260704Query,
-    private fb: FormBuilder,
+    public fb: FormBuilder,
     private validacionesService: ValidacionesFormularioService,
-  ) {  }
+  ) { // Constructor vacío, no requiere inicialización adicional.
+    }
 
   ngOnInit(): void {
     this.query.selectSolicitud$
@@ -234,83 +213,42 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       .subscribe();
     this.donanteDomicilio();
 
-    if(this.isTipoOperacionChecked == false){
-
-    this.datosDelEstablecimientoForm.get('justificacion')?.disable();
-      this.datosDelEstablecimientoForm.get('razonSocial')?.disable();
-      this.datosDelEstablecimientoForm.get('correoElectronico')?.disable();
-  }
-    this.onSelectionChange(this.datosDelEstablecimientoForm, 'tipoOperacion');
-
-    this.query.selectSolicitud$
-      .pipe(
-        takeUntil(this.destroyed$),
-        map((seccionState) => {
-          this.solicitudState = seccionState;
-        })
-      )
-      .subscribe();
-    this.donanteDomicilio();
-
-    this.getScianTabla();
+    this.obtenerTablaScian();
     this.obtenerDatosEstado();
-    this.getMercanciasTabla();
+    this.obtenerTablaMercancias();
     this.obtenerDatosClave();
-    this.getListaClaveTabla();
+    this.obtenerTablaListaClave();
   }
-  public getScianTabla(): void {
+  public obtenerTablaScian(): void {
     this.consulta
-      .getScianTabla()
+      .obtenerTablaScian()
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data) => {
         this.certificadoDisponsiblesTablaDatos = data;
       });
   }
-  public getMercanciasTabla(): void {
+  public obtenerTablaMercancias(): void {
     this.consulta
-      .getMercanciasTabla()
+      .obtenerTablaMercancias()
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data) => {
         this.mercanciasConfiguracionTabla = data;
       });
   }
 
-  public getListaClaveTabla(): void {
+  public obtenerTablaListaClave(): void {
     this.consulta
-      .getListaClaveTabla()
+      .obtenerTablaListaClave()
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data) => {
         this.listaClaveTabla = data;
       });
   }
-  aceptar(): void {
+  public aceptar(): void {
     this.datosDelEstablecimientoForm.enable();
     this.habilitarEstado = false;
   }
-
-  limpiarDatosSCIAN(): void {
-    // Implementar la lógica para limpiar datos SCIAN.
-  }
-  // setTipoOperacion(evento: number | string): void {
-  //   debugger
-  //   this.store.setTipoOperacion(evento);
-  //   if (this.datosDelEstablecimientoForm.get('tipoOperacion')?.value == 'PRO') {
-  //     this.datosDelEstablecimientoForm.get('justificacion')?.disable();
-  //     this.datosDelEstablecimientoForm.get('establecimiento')?.disable();
-  //     this.datosDelEstablecimientoForm.get('razonSocial')?.disable();
-  //     this.datosDelEstablecimientoForm.get('correoElectronico')?.disable();
-  //   } else {
-  //     this.datosDelEstablecimientoForm.get('justificacion')?.enable();
-  //     this.datosDelEstablecimientoForm.get('establecimiento')?.enable();
-  //     this.datosDelEstablecimientoForm.get('razonSocial')?.enable();
-  //     this.datosDelEstablecimientoForm.get('correoElectronico')?.enable();
-  //   }
-  // }
-  agregarDatosSCIAN(): void {
-    // Implementar la lógica para agregar datos SCIAN.
-  }
-  
-  claveScianSeleccion(): void {
+  public claveScianSeleccion(): void {
     const CLAVE_SCIAN = this.scianForm.get('cveSCIAN')?.value;
     this.consulta.getDescripcionScian()
       .pipe(takeUntil(this.destroyed$))
@@ -323,14 +261,14 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       })
     this.store.setClaveScian(CLAVE_SCIAN);
   }
-  seleccionarEstablecimiento(): void {
+  public seleccionarEstablecimiento(): void {
     if (this.modalElement) {
       const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
       MODAL_INSTANCE.show();
     }
   }
 
-  obtenerDatosEstado(): void {
+  public obtenerDatosEstado(): void {
     this.consulta
       .obtenerDatosEstado()
       .pipe(takeUntil(this.destroyed$))
@@ -343,38 +281,58 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       .obtenerDatosClave()
       .pipe(takeUntil(this.destroyed$))
       .subscribe((resp): void => {
-        this.claveCatalogo.catalogos = resp as Catalogo[];
+        this.catalogoClave.catalogos = resp as Catalogo[];
       });
   }
 
-  agregarMercanciaGrid(): void {
-     if (this.modalElement) {
+  public agregarMercanciaGrid(): void {
+    if (this.modalElement) {
       const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
       MODAL_INSTANCE.show();
     }
   }
-checkCheckboxSelection(event: MouseEvent): void {
+  verificarSeleccionCheckbox(event: MouseEvent): void {
 
-  const checkbox = (event.target as HTMLInputElement).closest('input[type="checkbox"]');
-  if (checkbox) {
-    this.isCheckboxSelected = (checkbox as HTMLInputElement).checked;
-  } else {
-    this.isCheckboxSelected = false;
+    const CHECKBOX = (event.target as HTMLInputElement).closest('input[type="checkbox"]');
+    if (CHECKBOX) {
+      this.esCheckboxSeleccionado = (CHECKBOX as HTMLInputElement).checked;
+    } else {
+      this.esCheckboxSeleccionado = false;
+    }
+
   }
 
+  get validacionForm(): FormGroup {
+    return this.datosDelEstablecimientoForm.get('validacionForm') as FormGroup;
   }
 
-  onSelectionChange(form:FormGroup,campo:string): void{
-    if(form.get(campo)?.value == 'modificacion'){
-      this.isTipoOperacionChecked = true;
-      this.datosDelEstablecimientoForm.get('justificacion')?.enable();
-      this.datosDelEstablecimientoForm.get('razonSocial')?.enable();
-      this.datosDelEstablecimientoForm.get('correoElectronico')?.enable();
-    } else{
-      this.isTipoOperacionChecked = false;
-      this.datosDelEstablecimientoForm.get('justificacion')?.disable();
-      this.datosDelEstablecimientoForm.get('razonSocial')?.disable();
-      this.datosDelEstablecimientoForm.get('correoElectronico')?.disable();
+  get validacionMercanciaForm(): FormGroup {
+    return this.datosDelEstablecimientoForm.get('validacionMercanciaForm') as FormGroup;
+  }
+
+  get validacionScionForm(): FormGroup {
+    return this.datosDelEstablecimientoForm.get('validacionScionForm') as FormGroup;
+  }
+
+  get validacionAduanaMercanciaForm(): FormGroup {
+    return this.datosDelEstablecimientoForm.get('validacionAduanaMercanciaForm') as FormGroup;
+  }
+
+  get validacionDatosMercanciaForm(): FormGroup {
+    return this.datosDelEstablecimientoForm.get('validacionDatosMercanciaForm') as FormGroup;
+  }
+
+  alCambiarSeleccion(form: FormGroup, campo: string): void {
+    if (form.get(campo)?.value === 'modificacion') {
+      this.esTipoOperacionSeleccionado = true;
+      this.datosDelEstablecimientoForm.get('validacionForm.justificacion')?.enable();
+      this.datosDelEstablecimientoForm.get('validacionForm.razonSocial')?.enable();
+      this.datosDelEstablecimientoForm.get('validacionForm.correoElectronico')?.enable();
+    } else if(form.get(campo)?.value === 'modificacionYProrroga' || form.get(campo)?.value === 'prorroga') {
+      this.esTipoOperacionSeleccionado = false;
+      this.datosDelEstablecimientoForm.get('validacionForm.justificacion')?.disable();
+      this.datosDelEstablecimientoForm.get('validacionForm.razonSocial')?.disable();
+      this.datosDelEstablecimientoForm.get('validacionForm.correoElectronico')?.disable();
 
     }
   }
@@ -384,23 +342,18 @@ checkCheckboxSelection(event: MouseEvent): void {
       const MODAL_ELIMINAR_INSTANCE = new Modal(this.modalElement.nativeElement);
       MODAL_ELIMINAR_INSTANCE.show();
     }
-    }
- 
-  abrirDialogoAgregarDatosSCIAN(): void {
-    // Implementar la lógica para abrir dialogo agregar datos SCIAN.
   }
-  setAvisoDeFuncionamiento(evento: Event): void {
+
+  establecerAvisoDeFuncionamiento(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).checked;
-    this.isAvisoFuncionamientoChecked = VALOR;
+    this.esAvisoFuncionamientoSeleccionado = VALOR;
     this.store.setAvisoDeFuncionamiento(VALOR);
   }
-  setLicenciaSanitaria(evento: Event): void {
+  establecerLicenciaSanitaria(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
     this.store.setLicenciaSanitaria(VALOR);
   }
-  getMercanciasDatos(evento: Mercancia[]): void {
-    this.selectedMercanciasDatos = evento;
-  }
+
   paisOrigenColapsable(): void {
     this.paisOrigen = !this.paisOrigen;
   }
@@ -408,7 +361,7 @@ checkCheckboxSelection(event: MouseEvent): void {
   paisProcedencis_colapsable(): void {
     this.paisProcedencisColapsable = !this.paisProcedencisColapsable;
   }
-  setClaveDeDeLosLotes(evento: Event): void {
+  establecerClaveDeLosLotes(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
     this.store.setClaveDeLosLotes(VALOR);
   }
@@ -443,9 +396,9 @@ checkCheckboxSelection(event: MouseEvent): void {
     this.store.addMercanciasDatos(OBJETO_JSON);
   }
 
-  AcceptarEliminarScian(){
-    
-    this.isDatosSCIANChecked = true;
+  AcceptarEliminarScian():void {
+
+    this.esDatosSCIANSeleccionado = true;
   }
   isValid(form: FormGroup, field: string): boolean {
     return this.validacionesService.isValid(form, field) || false;
@@ -458,45 +411,64 @@ checkCheckboxSelection(event: MouseEvent): void {
   ): void {
     const VALOR = form.get(campo)?.value;
     (this.store[metodoNombre] as (value: unknown) => void)(VALOR);
-    this.onSelectionChange(form,campo);
+    this.alCambiarSeleccion(form, campo);
   }
   donanteDomicilio(): void {
     this.datosDelEstablecimientoForm = this.fb.group({
-      tipoOperacion: [this.solicitudState?.tipoOperacion, [Validators.required]],
-      justificacion: [this.solicitudState?.justificacion, [Validators.required]],
-      establecimiento: [this.solicitudState?.establecimiento, [Validators.required]],
-      razonSocial: [this.solicitudState?.razonSocial, [Validators.required]],
-      correoElectronico: [this.solicitudState?.correoElectronico, [Validators.required]],
-      codigoPostal: [this.solicitudState?.codigoPostal, [Validators.required]],
-      estado: [this.solicitudState?.estado, [Validators.required]],
-      municipio: [this.solicitudState?.municipio, [Validators.required]],
-      localidad: [this.solicitudState?.localidad, [Validators.required]],
-      colonia: [this.solicitudState?.colonia, [Validators.required]],
-      calle: [this.solicitudState?.calle, [Validators.required]],
-      lada: [this.solicitudState?.lada, [Validators.required]],
-      telefono: [this.solicitudState?.telefono, [Validators.required]],
-      scian: [this.solicitudState?.scian, [Validators.required]],
-      claveScian: [this.solicitudState?.claveScian, [Validators.required]],
-      descripcionScian: [this.solicitudState?.descripcionScian, [Validators.required]],
-      immex: [this.solicitudState?.immex, [Validators.required]],
-      avisoDeFuncionamiento: [this.solicitudState?.avisoDeFuncionamiento, [Validators.required]],
-      licenciaSanitaria: [this.solicitudState?.licenciaSanitaria, [Validators.required]],
-      regimen: [this.solicitudState?.regimen, [Validators.required]],
-      aduana: [this.solicitudState?.aduana, [Validators.required]],
-      ano: [this.solicitudState?.ano, [Validators.required]],
-      mercancia: [this.solicitudState?.mercancia, [Validators.required]],
-      clasificacionProducto: [this.solicitudState?.clasificacionProducto, [Validators.required]],
-      especificarClasificacionProducto: [this.solicitudState?.especificarClasificacionProducto, [Validators.required]],
-      denominacionProducto: [this.solicitudState?.denominacionProducto, [Validators.required]],
-      marca: [this.solicitudState?.marca, [Validators.required]],
-      tipoProducto: [this.solicitudState?.tipoProducto, [Validators.required]],
-      especifique: [this.solicitudState?.especifique, [Validators.required]],
-      fraccionArancelaria: [this.solicitudState?.fraccionArancelaria, [Validators.required]],
-      cantidadUMT: [this.solicitudState?.cantidadUMT, [Validators.required]],
-      cantidadUMC: [this.solicitudState?.cantidadUMC, [Validators.required]],
-      umt: [this.solicitudState?.umt, [Validators.required]],
-      claveLote: [this.solicitudState?.claveLote, [Validators.required]],
-      listaClave: [this.solicitudState?.listaClave, [Validators.required]],
+      validacionForm: this.fb.group({
+        tipoOperacion: [this.solicitudState?.tipoOperacion, [Validators.required]],
+        justificacion: [this.solicitudState?.justificacion, [Validators.required]],
+        establecimiento: [this.solicitudState?.establecimiento, [Validators.required]],
+        razonSocial: [this.solicitudState?.razonSocial, [Validators.required]],
+        correoElectronico: [this.solicitudState?.correoElectronico, [Validators.required]],
+
+      }),
+      validacionMercanciaForm: this.fb.group({
+        codigoPostal: [this.solicitudState?.codigoPostal, [Validators.required]],
+        estado: [this.solicitudState?.estado, [Validators.required]],
+        municipio: [this.solicitudState?.municipio, [Validators.required]],
+        localidad: [this.solicitudState?.localidad, [Validators.required]],
+        colonia: [this.solicitudState?.colonia, [Validators.required]],
+        calle: [this.solicitudState?.calle, [Validators.required]],
+        lada: [this.solicitudState?.lada, [Validators.required]],
+        telefono: [this.solicitudState?.telefono, [Validators.required]],
+
+      }),
+      validacionScionForm: this.fb.group({
+        scian: [this.solicitudState?.scian, [Validators.required]],
+        scianDatos: [this.solicitudState?.scianDatos, [Validators.required]],
+        claveScian: [this.solicitudState?.claveScian, [Validators.required]],
+        descripcionScian: [this.solicitudState?.descripcionScian, [Validators.required]],
+
+      }),
+      validacionAduanaMercanciaForm: this.fb.group({
+        avisoDeFuncionamiento: [this.solicitudState?.avisoDeFuncionamiento, [Validators.required]],
+        licenciaSanitaria: [this.solicitudState?.licenciaSanitaria, [Validators.required]],
+        regimen: [this.solicitudState?.regimen, [Validators.required]],
+        aduana: [this.solicitudState?.aduana, [Validators.required]],
+        immex: [this.solicitudState?.immex, [Validators.required]],
+        ano: [this.solicitudState?.ano, [Validators.required]],
+
+      }),
+      validacionDatosMercanciaForm: this.fb.group({
+        // mercancia: [this.solicitudState?.mercancia, [Validators.required]],
+        clasificacionProducto: [this.solicitudState?.clasificacionProducto, [Validators.required]],
+        especificarClasificacionProducto: [this.solicitudState?.especificarClasificacionProducto, [Validators.required]],
+        denominacionProducto: [this.solicitudState?.denominacionProducto, [Validators.required]],
+        marca: [this.solicitudState?.marca, [Validators.required]],
+        tipoProducto: [this.solicitudState?.tipoProducto, [Validators.required]],
+        especifique: [this.solicitudState?.especifique, [Validators.required]],
+        fraccionArancelaria: [this.solicitudState?.fraccionArancelaria, [Validators.required]],
+        descripcionFraccionArancelaria: [this.solicitudState?.descripcionFraccionArancelaria, [Validators.required]],
+        cantidadUMT: [this.solicitudState?.cantidadUMT, [Validators.required]],
+        umt: [this.solicitudState?.umt, [Validators.required]],
+        cantidadUMC: [this.solicitudState?.cantidadUMC, [Validators.required]],
+        umc: [this.solicitudState?.umc, [Validators.required]],
+        claveLote: [this.solicitudState?.claveLote, [Validators.required]],
+        listaClave: [this.solicitudState?.listaClave, [Validators.required]],
+
+
+      }),
       manfestosYDeclaraciones: [this.solicitudState?.manfestosYDeclaraciones, [Validators.required]],
       hacerlosPublicos: [this.solicitudState?.hacerlosPublicos, [Validators.required]],
       rfc: [this.solicitudState?.rfc, [Validators.required]],

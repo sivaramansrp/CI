@@ -1,24 +1,16 @@
+import { AlertComponent, CatalogoSelectComponent, InputRadioComponent, TablaDinamicaComponent, TituloComponent } from "@ng-mf/data-access-user";
+import { CatalogosSelect, ConfiguracionColumna, TablaSeleccion, ValidacionesFormularioService } from "@libs/shared/data-access-user/src";
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from "@angular/core";
-import { CommonModule } from "@angular/common";
-import { TituloComponent } from "../../../../../../../../../libs/shared/data-access-user/src/tramites/components/titulo/titulo.component";
-import { AlertComponent } from "../../../../../../../../../libs/shared/data-access-user/src/tramites/components/alert/alert.component";
-import { AVISO_PRIVACIDAD } from "../../constantes/consulta.enum";
-import { TablaDinamicaComponent } from "../../../../../../../../../libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component";
-import {
-  CatalogosSelect,
-  ConfiguracionColumna,
-  TablaSeleccion,
-  ValidacionesFormularioService,
-} from "@libs/shared/data-access-user/src";
-import { Modal } from 'bootstrap';
 import { Destinatario, Fabricante } from "../../models/consulta.model";
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
+import { ReplaySubject, map, takeUntil } from "rxjs";
+import { Solicitud260704State, Tramite260704Store } from "../../estados/Tramite260704.store";
+import { AVISO_PRIVACIDAD } from "../../constantes/consulta.enum";
+import { CommonModule } from "@angular/common";
 import { ConsultaService } from "../../service/consulta.service";
-import { ReplaySubject, takeUntil } from "rxjs";
-import { Tramite260704Store } from "../../estados/Tramite260704.store";
-import { InputRadioComponent } from "../../../../../../../../../libs/shared/data-access-user/src/tramites/components/input-radio/input-radio.component";
-import { CatalogoSelectComponent } from "../../../../../../../../../libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component";
-import { FormBuilder, FormGroup, ReactiveFormsModule } from "@angular/forms";
+import { Modal } from 'bootstrap';
 import { Tramite260704Query } from "../../estados/Tramite260704.query";
+
 @Component({
   selector: "app-terceros-relacinados",
   standalone: true,
@@ -30,7 +22,7 @@ import { Tramite260704Query } from "../../estados/Tramite260704.query";
     InputRadioComponent,
     CatalogoSelectComponent,
     ReactiveFormsModule,
-],
+  ],
   templateUrl: "./terceros-relacinados.component.html",
   styleUrl: "./terceros-relacinados.component.css",
 })
@@ -41,23 +33,24 @@ export class TercerosRelacinadosComponent implements OnInit, OnDestroy {
   selectedDestinatario: Fabricante[] = [];
   public destinatarioDatos: Destinatario[] = [];
   fabricanteDatos: Fabricante[] = [];
- @ViewChild('modalAgregarMercancias') modalElement!: ElementRef;
- private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
- tipoPublicos: string = '';
- tipoPersonaSeleccionada: string = '';
+  @ViewChild('modalAgregarMercancias') modalElement!: ElementRef;
+  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+  tipoDePublicos: string = '';
+  tipoPersonaSeleccionada: string = '';
+  public solicitudState!: Solicitud260704State;
 
- tipoPersonaRadioOptions = [
-  { label: 'Física', value: 'fisica' },
-  { label: 'Moral', value: 'moral' },
-];
- 
-public estadoCatalogo: CatalogosSelect = {
+  tipoPersonaRadioOptions = [
+    { label: 'Física', value: 'fisica' },
+    { label: 'Moral', value: 'moral' },
+  ];
+
+  public estadoCatalogo: CatalogosSelect = {
     labelNombre: 'Estado',
     required: true,
     primerOpcion: 'Selecciona un valor',
     catalogos: [],
   };
-  
+
   public destinatarioConfiguracionTabla: ConfiguracionColumna<Destinatario>[] = [
     {
       encabezado: "Nombre/denominación o razón social",
@@ -185,28 +178,39 @@ public estadoCatalogo: CatalogosSelect = {
     },
   ];
   constructor(private consulta: ConsultaService,
-      public store: Tramite260704Store,
-      private query: Tramite260704Query,
-      private fb: FormBuilder,
-      private validacionesService: ValidacionesFormularioService,
-  ) {}
+    public store: Tramite260704Store,
+    private query: Tramite260704Query,
+    private fb: FormBuilder,
+    private validacionesService: ValidacionesFormularioService) {
+     // Constructor vacío, no requiere inicialización adicional.
+    }
   ngOnInit(): void {
-    this.getTercerosTabla();
+    this.query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+        })
+      )
+      .subscribe();
+    this.donanteDomicilio();
+
+    this.obtenerTablaTerceros();
   }
 
-  public getTercerosTabla(): void {
+  public obtenerTablaTerceros(): void {
     this.consulta
-      .getTercerosTabla()
+      .obtenerTablaTerceros()
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data) => {
         this.destinatarioDatos = data;
       });
   }
   setTipoPersona(value: string | number): void {
-    this.tipoPersonaSeleccionada = value.toString(); 
-    }
+    this.tipoPersonaSeleccionada = value.toString();
+  }
 
-  getDestinatarioDatos(evento: Fabricante[]) {
+  obtenerDatosDestinatario(evento: Fabricante[]): void {
     this.selectedDestinatario = evento;
   }
 
@@ -217,32 +221,48 @@ public estadoCatalogo: CatalogosSelect = {
       );
     }
   }
-  openModificarMercancias(): void {
-      if (this.modalElement) {
-        const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
-        MODAL_INSTANCE.show();
-      }
+  abrirModificarProductos(): void {
+    if (this.modalElement) {
+      const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
+      MODAL_INSTANCE.show();
     }
+  }
 
-     isValid(form: FormGroup, field: string): boolean {
-        return this.validacionesService.isValid(form, field) || false;
-      }
-    
-      setValoresStore(
-        form: FormGroup,
-        campo: string,
-        metodoNombre: keyof Tramite260704Store
-      ): void {
-        const VALOR = form.get(campo)?.value;
-        (this.store[metodoNombre] as (value: unknown) => void)(VALOR);
-      }
-      donanteDomicilio(): void {
-        this.tercerosForm = this.fb.group({
-          
-        });
-      }
-    
+  isValid(form: FormGroup, field: string): boolean {
+    return this.validacionesService.isValid(form, field) || false;
+  }
+
+  setValoresStore(
+    form: FormGroup,
+    campo: string,
+    metodoNombre: keyof Tramite260704Store
+  ): void {
+    const VALOR = form.get(campo)?.value;
+    (this.store[metodoNombre] as (value: unknown) => void)(VALOR);
+  }
+  donanteDomicilio(): void {
+    this.tercerosForm = this.fb.group({
+      destinatario: [this.solicitudState?.destinatario, [Validators.required]],
+      fabricante: [this.solicitudState?.fabricante, [Validators.required]],
+      tipoPersona: [this.solicitudState?.tipoPersona, [Validators.required]],
+      nombre: [this.solicitudState?.nombre, [Validators.required]],
+      primerApellido: [this.solicitudState?.primerApellido, [Validators.required]],
+      segundoApellido: [this.solicitudState?.segundoApellido, [Validators.required]],
+      denominacion: [this.solicitudState?.denominacion, [Validators.required]],
+      pais: [this.solicitudState?.pais, [Validators.required]],
+      estados: [this.solicitudState?.estados, [Validators.required]],
+      codigoDeZip: [this.solicitudState?.codigoDeZip, [Validators.required]],
+      camino: [this.solicitudState?.camino, [Validators.required]],
+      numeroExterior: [this.solicitudState?.numeroExterior, [Validators.required]],
+      numeroInterior: [this.solicitudState?.numeroInterior, [Validators.required]],
+      ladaDeTerceros: [this.solicitudState?.ladaDeTerceros, [Validators.required]],
+      fon: [this.solicitudState?.fon, [Validators.required]],
+      email: [this.solicitudState?.email, [Validators.required]],
+    });
+  }
+
   ngOnDestroy(): void {
-    
+    this.destroyed$.next(true);
+    this.destroyed$.complete();
   }
 }

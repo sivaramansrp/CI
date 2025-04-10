@@ -1,10 +1,9 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-
-import { ConsultaRoutingModule } from './consulta-routing.module';
-import { ReactiveFormsModule } from '@angular/forms';
-import { ConsultaService } from './service/consulta.service';
 import { CatalogosService, SharedModule, TramiteFolioService } from '@libs/shared/data-access-user/src';
+import { CommonModule } from '@angular/common';
+import { ConsultaRoutingModule } from './consulta-routing.module';
+import { ConsultaService } from './service/consulta.service';
+import { NgModule } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 
 

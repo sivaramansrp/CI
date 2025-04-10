@@ -1,9 +1,9 @@
-import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
 import { AcusePageComponent } from '@ng-mf/data-access-user';
-import { PaginaUnoAcusesYResolucionesBusquedaComponent } from './pages/pagina-uno-acuses-y-resoluciones-busqueda/pagina-uno-acuses-y-resoluciones-busqueda.component';
+import { NgModule } from '@angular/core';
 import { PaginaDosAcusesYResolucionesDetallesComponent } from './pages/pagina-dos-acuses-y-resoluciones-detalles/pagina-dos-acuses-y-resoluciones-detalles.component';
+import { PaginaUnoAcusesYResolucionesBusquedaComponent } from './pages/pagina-uno-acuses-y-resoluciones-busqueda/pagina-uno-acuses-y-resoluciones-busqueda.component';
+import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
 
 const ROUTES: Routes = [
   {

@@ -1,23 +1,16 @@
+import { Asociados, ColumnasTabla, Destinatario, ListaClave, Mercancia} from '../models/consulta.model';
+import { Catalogo, RespuestaCatalogos} from '@libs/shared/data-access-user/src';
+import { Observable, catchError, throwError } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import {
-  Catalogo,
-  RespuestaCatalogos,
-} from '@libs/shared/data-access-user/src';
-import { catchError, Observable, throwError } from 'rxjs';
-import {
-  Asociados,
-  ColumnasTabla,
-  Destinatario,
-  ListaClave,
-  Mercancia,
-} from '../models/consulta.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ConsultaService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+     // Constructor vacío, no requiere inicialización adicional.
+  }
 
   obtenerDatosEstado(): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>('assets/json/260704/estado.json');
@@ -25,7 +18,7 @@ export class ConsultaService {
   obtenerDatosClave(): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>('assets/json/260704/clave.json');
   }
-  getScianTabla(): Observable<ColumnasTabla[]> {
+  obtenerTablaScian(): Observable<ColumnasTabla[]> {
     return this.http
       .get<ColumnasTabla[]>('assets/json/260704/clave-scian.json')
       .pipe(
@@ -35,7 +28,7 @@ export class ConsultaService {
         })
       );
   }
-  getMercanciasTabla(): Observable<Mercancia[]> {
+  obtenerTablaMercancias(): Observable<Mercancia[]> {
     return this.http
       .get<Mercancia[]>('assets/json/260704/mercancia-tabla.json')
       .pipe(
@@ -45,7 +38,7 @@ export class ConsultaService {
         })
       );
   }
-  getListaClaveTabla(): Observable<ListaClave[]> {
+  obtenerTablaListaClave(): Observable<ListaClave[]> {
     return this.http
       .get<ListaClave[]>('assets/json/260704/lista-clave-tabla.json')
       .pipe(
@@ -55,7 +48,7 @@ export class ConsultaService {
         })
       );
   }
-  getTramitesTabla(): Observable<Asociados[]> {
+  obtenerTablaTramites(): Observable<Asociados[]> {
     return this.http
       .get<Asociados[]>('assets/json/260704/asociados-tabla.json')
       .pipe(
@@ -65,7 +58,7 @@ export class ConsultaService {
         })
       );
   }
-  getTercerosTabla(): Observable<Destinatario[]> {
+  obtenerTablaTerceros(): Observable<Destinatario[]> {
     return this.http
       .get<Destinatario[]>('assets/json/260704/terceros-tabla.json')
       .pipe(
