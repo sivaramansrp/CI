@@ -197,6 +197,13 @@ const ROUTES: Routes = [
         (m) => m.MuestrasPlaguicidasModule
       ),
   },
+  {
+        path: 'importacion-materias-primas-estupefacientes',
+        loadChildren: () =>
+          import(
+            './tramites/260301/importacion-materias-primas-estupefacientes.module'
+          ).then((m) => m.ImportacionMateriasPrimasEstupefacientesModule),
+  }
 ];
 
 @NgModule({
