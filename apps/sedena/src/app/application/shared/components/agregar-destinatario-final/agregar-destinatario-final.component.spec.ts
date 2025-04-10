@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AgregarDestinatarioFinalComponent } from './agregar-destinatario-final.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 
 describe('AgregarDestinatarioFinalComponent', () => {
   let component: AgregarDestinatarioFinalComponent;
@@ -9,6 +10,7 @@ describe('AgregarDestinatarioFinalComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [AgregarDestinatarioFinalComponent, HttpClientTestingModule],
+      providers: [DatosSolicitudService],
     }).compileComponents();
 
     fixture = TestBed.createComponent(AgregarDestinatarioFinalComponent);
@@ -24,7 +26,7 @@ describe('AgregarDestinatarioFinalComponent', () => {
       tipoPersona: 'Física',
       rfc: 'XAXX010101000',
       nombres: 'Juan',
-      denominacionRazon:'123',
+      denominacionRazon: '123',
       primerApellido: 'Pérez',
       segundoApellido: 'Gómez',
       estado: 'Estado1',
@@ -39,6 +41,7 @@ describe('AgregarDestinatarioFinalComponent', () => {
       telefono: '',
       pais: '',
       correoElectronico: 'juan.perez@example.com',
+      nacionalidad: 'Mexicana',
     });
     expect(component.agregarDestinatarioFinal.valid).toBe(false);
   });
@@ -48,7 +51,7 @@ describe('AgregarDestinatarioFinalComponent', () => {
       tipoPersona: '',
       rfc: '',
       nombres: '',
-      denominacionRazon:'',
+      denominacionRazon: '',
       primerApellido: '',
       segundoApellido: '',
       estado: '',
@@ -63,52 +66,83 @@ describe('AgregarDestinatarioFinalComponent', () => {
       lada: '',
       telefono: '',
       correoElectronico: '',
+      nacionalidad: '',
     });
     expect(component.agregarDestinatarioFinal.invalid).toBe(true);
   });
 
   it('should mark correoElectronico as invalid if email format is incorrect', () => {
-    component.agregarDestinatarioFinal.controls['correoElectronico'].setValue('invalid-email');
-    expect(component.agregarDestinatarioFinal.controls['correoElectronico'].invalid).toBe(true);
+    component.agregarDestinatarioFinal.controls['correoElectronico'].setValue(
+      'invalid-email'
+    );
+    expect(
+      component.agregarDestinatarioFinal.controls['correoElectronico'].invalid
+    ).toBe(true);
   });
 
   it('should mark rfc as required', () => {
     component.agregarDestinatarioFinal.controls['rfc'].setValue('');
-    expect(component.agregarDestinatarioFinal.controls['rfc'].hasError('required')).toBe(true);
+    expect(
+      component.agregarDestinatarioFinal.controls['rfc'].hasError('required')
+    ).toBe(true);
   });
 
   it('should mark nombres as required', () => {
     component.agregarDestinatarioFinal.controls['nombres'].setValue('');
-    expect(component.agregarDestinatarioFinal.controls['nombres'].hasError('required')).toBe(true);
+    expect(
+      component.agregarDestinatarioFinal.controls['nombres'].hasError(
+        'required'
+      )
+    ).toBe(true);
   });
 
   it('should mark primerApellido as required', () => {
     component.agregarDestinatarioFinal.controls['primerApellido'].setValue('');
-    expect(component.agregarDestinatarioFinal.controls['primerApellido'].hasError('required')).toBe(true);
+    expect(
+      component.agregarDestinatarioFinal.controls['primerApellido'].hasError(
+        'required'
+      )
+    ).toBe(true);
   });
 
   it('should mark estado as required', () => {
     component.agregarDestinatarioFinal.controls['estado'].setValue('');
-    expect(component.agregarDestinatarioFinal.controls['estado'].hasError('required')).toBe(true);
+    expect(
+      component.agregarDestinatarioFinal.controls['estado'].hasError('required')
+    ).toBe(true);
   });
 
   it('should mark municipio as required', () => {
     component.agregarDestinatarioFinal.controls['municipio'].setValue('');
-    expect(component.agregarDestinatarioFinal.controls['municipio'].hasError('required')).toBe(true);
+    expect(
+      component.agregarDestinatarioFinal.controls['municipio'].hasError(
+        'required'
+      )
+    ).toBe(true);
   });
 
   it('should mark codigoPostal as required', () => {
     component.agregarDestinatarioFinal.controls['codigoPostal'].setValue('');
-    expect(component.agregarDestinatarioFinal.controls['codigoPostal'].hasError('required')).toBe(true);
+    expect(
+      component.agregarDestinatarioFinal.controls['codigoPostal'].hasError(
+        'required'
+      )
+    ).toBe(true);
   });
 
   it('should mark calle as required', () => {
     component.agregarDestinatarioFinal.controls['calle'].setValue('');
-    expect(component.agregarDestinatarioFinal.controls['calle'].hasError('required')).toBe(true);
+    expect(
+      component.agregarDestinatarioFinal.controls['calle'].hasError('required')
+    ).toBe(true);
   });
 
   it('should mark numeroExterior as required', () => {
     component.agregarDestinatarioFinal.controls['numeroExterior'].setValue('');
-    expect(component.agregarDestinatarioFinal.controls['numeroExterior'].hasError('required')).toBe(true);
+    expect(
+      component.agregarDestinatarioFinal.controls['numeroExterior'].hasError(
+        'required'
+      )
+    ).toBe(true);
   });
 });
