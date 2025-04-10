@@ -197,7 +197,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
 
   agregarOperacionImp(): void {
     if (this.modalElement) {
-      const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
+      const MODAL_INSTANCE = new Modal(this.modalElement?.nativeElement);
       MODAL_INSTANCE.show();
     }
   }

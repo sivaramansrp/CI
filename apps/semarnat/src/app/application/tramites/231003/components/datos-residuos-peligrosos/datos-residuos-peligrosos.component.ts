@@ -44,8 +44,8 @@ export class DatosResiduosPeligrososComponent implements OnInit, OnDestroy {
   tipoContenedor!: Catalogo[];
 
 
-  radioOptions: RadioOpcion[] = RADIO_OPCIONES.radioOptions;
-  clasificacionRadioOptions: RadioOpcion[] = RADIO_OPCIONES.clasificacionRadioOptions;
+  radioOptions: RadioOpcion[] = RADIO_OPCIONES?.radioOptions;
+  clasificacionRadioOptions: RadioOpcion[] = RADIO_OPCIONES?.clasificacionRadioOptions;
 
   constructor(public fb: FormBuilder, private formularioStore: FormularioResiduoStore,
     private formularioQuery: FormularioResiduoQuery) {
@@ -53,18 +53,18 @@ export class DatosResiduosPeligrososComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.nombre = RADIO_OPCIONES.nombre;
-    this.establecimientoHeaderData = RADIO_OPCIONES.PrimasRelacionadas[0]?.encabezadoDeTabla || [];
-    this.establecimientoBodyData = RADIO_OPCIONES.PrimasRelacionadas[0]?.cuerpoTabla || [];
-    this.fraccion = RADIO_OPCIONES.arancelaria;
-    this.nico = RADIO_OPCIONES.nico;
-    this.unidad = RADIO_OPCIONES.unidad;
-    this.residuo = RADIO_OPCIONES.residuo;
-    this.tipoNombre = RADIO_OPCIONES.tipoNombre;
-    this.descripcion = RADIO_OPCIONES.descripcion;
-    this.creti = RADIO_OPCIONES.creti;
-    this.estadoFisico = RADIO_OPCIONES.estadoFisico;
-    this.tipoContenedor = RADIO_OPCIONES.tipoContenedor;
+    this.nombre = RADIO_OPCIONES?.nombre;
+    this.establecimientoHeaderData = RADIO_OPCIONES?.PrimasRelacionadas[0]?.encabezadoDeTabla || [];
+    this.establecimientoBodyData = RADIO_OPCIONES?.PrimasRelacionadas[0]?.cuerpoTabla || [];
+    this.fraccion = RADIO_OPCIONES?.arancelaria;
+    this.nico = RADIO_OPCIONES?.nico;
+    this.unidad = RADIO_OPCIONES?.unidad;
+    this.residuo = RADIO_OPCIONES?.residuo;
+    this.tipoNombre = RADIO_OPCIONES?.tipoNombre;
+    this.descripcion = RADIO_OPCIONES?.descripcion;
+    this.creti = RADIO_OPCIONES?.creti;
+    this.estadoFisico = RADIO_OPCIONES?.estadoFisico;
+    this.tipoContenedor = RADIO_OPCIONES?.tipoContenedor;
     this.inicializarFormulario();
     this.crearFormularioResiduo();
     this.recuperarValoresDesdeStore();
