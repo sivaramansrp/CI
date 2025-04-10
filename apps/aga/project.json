@@ -44,8 +44,7 @@
         "allowedCommonJsDependencies": [
           "node-forge",
           "moment"
-       ],
-       "watchDependencies": false
+       ]
       },
       "configurations": {
         "production": {
@@ -81,8 +80,7 @@
       "executor": "@nx/angular:dev-server",
       "options": {
         "port": 4202,
-        "publicHost": "http://localhost:4202",
-        "watchDependencies": false
+        "publicHost": "http://localhost:4202"
       },
       "configurations": {
         "production": {
