@@ -9,8 +9,12 @@ import { FormularioReciclajeQuery } from '../../estados/queries/dato-solicitud.q
 import { FormularioReciclajeStore } from '../../estados/tramites/dato-solicitud.store';
 import { Modal } from 'bootstrap';
 import rawData from '@libs/shared/theme/assets/json/231003/solicitud.json';
-const RADIO_OPCIONES = rawData as SolicitudJson;
 
+/**
+ * Constante que contiene las opciones de radio y demás datos del archivo JSON.
+ * Se hace un cast del JSON importado al tipo `SolicitudJson`.
+ */
+const RADIO_OPCIONES = rawData as SolicitudJson;
 /**
  * Componente que representa la sección de datos de la solicitud.
  */
