@@ -3,8 +3,22 @@ import { Injectable } from '@angular/core';
 import { Store } from '@datorama/akita';
 import { StoreConfig } from '@datorama/akita';
 
+/**
+ * @interface Tramite32503State
+ * @description Representa el estado de la gestión del trámite 32503.
+ *
+ * @property {number} pasoActivo - Indica el paso activo en el flujo del trámite.
+ * @property {number} pestanaActiva - Indica la pestaña activa en la interfaz del trámite.
+ * @property {DatosSolicitante} datosSolicitante - Contiene los datos del solicitante.
+ * @property {MercanciaFormulario} mercanciaFormulario - Contiene los datos del formulario de mercancía.
+ * @property {DomicilioFormulario} domicilioFormulario - Contiene los datos del formulario de domicilio.
+ * @property {AvisoFormulario} avisoFormulario - Contiene los datos del formulario de aviso.
+ * @property {TipoDocumento[]} tipoTablaDatos - Lista de tipos de documentos disponibles.
+ * @property {string} tipoDocumento - Tipo de documento seleccionado.
+ * @property {ArchivoDocumentos[]} documentosDesplegable - Lista de documentos disponibles en el desplegable.
+ * @property {string[]} valorSeleccionado - Valores seleccionados en el formulario.
+ */
 export interface Tramite32503State {
-
   pasoActivo: number;
   pestanaActiva: number;
   datosSolicitante: DatosSolicitante;
@@ -13,9 +27,8 @@ export interface Tramite32503State {
   avisoFormulario: AvisoFormulario;
   tipoTablaDatos: TipoDocumento[];
   tipoDocumento: string;
-  documentosDesplegable: ArchivoDocumentos[],
-  valorSeleccionado: string[],
-
+  documentosDesplegable: ArchivoDocumentos[];
+  valorSeleccionado: string[];
 }
 /**
  * Estado inicial del trámite 32503.

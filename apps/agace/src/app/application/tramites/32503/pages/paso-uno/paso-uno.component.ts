@@ -10,11 +10,10 @@ import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
 
 /**
- * Componente para gestionar el paso uno del trámite.
+ * Componente para gestionar el paso uno del trámite 32503.
  * 
- * Este componente permite al usuario navegar entre diferentes pestañas y gestionar
- * las secciones relacionadas con el trámite, como solicitante, destinatario, histórico
- * de productores y datos del certificado.
+ * Este componente permite al usuario navegar entre las pestañas del trámite y gestionar
+ * los datos del solicitante y del aviso.
  */
 @Component({
   selector: 'app-paso-uno',
@@ -24,23 +23,24 @@ import { takeUntil } from 'rxjs';
   imports: [CommonModule, SolicitanteComponent, AvisoComponent]
 })
 export class PasoUnoComponent implements OnInit, OnDestroy {
+
   /**
    * Referencia al componente `SolicitanteComponent`.
    * 
    * Esta propiedad utiliza `@ViewChild` para obtener una referencia al componente
-   * de solicitante dentro de la plantilla.
+   * del solicitante dentro de la plantilla.
    */
   @ViewChild(SolicitanteComponent) solicitante!: SolicitanteComponent;
 
   /**
    * Índice de la pestaña activa.
    * 
-   * Esta propiedad indica cuál pestaña está activa actualmente.
+   * Esta propiedad indica la pestaña actual seleccionada en el componente.
    */
   indice: number = 1;
 
   /**
-   * Estado actual del trámite.
+   * Estado actual del trámite 32503.
    * 
    * Esta propiedad almacena el estado del trámite obtenido desde el store.
    */
@@ -70,8 +70,8 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   /**
    * Método que se ejecuta al inicializar el componente.
    * 
-   * Este método suscribe al estado del trámite y establece la pestaña activa
-   * según el estado almacenado.
+   * Este método suscribe al estado del trámite y actualiza la propiedad `tramiteState`
+   * con los datos obtenidos. También inicializa el índice de la pestaña activa.
    */
   ngOnInit(): void {
     this.tramiteQuery.selectSolicitud$
@@ -86,12 +86,12 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Método para seleccionar una pestaña específica.
+   * Cambia la pestaña activa.
    * 
-   * Este método actualiza el índice de la pestaña activa y almacena el valor
-   * en el store.
+   * Este método actualiza el índice de la pestaña activa y llama al método correspondiente
+   * del store para actualizar el estado.
    * 
-   * @param {number} i - El índice de la pestaña a seleccionar.
+   * @param {number} i - Índice de la pestaña seleccionada.
    */
   seleccionaTab(i: number): void {
     this.indice = i;
