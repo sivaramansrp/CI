@@ -1,3 +1,11 @@
+/**
+ * Constante que define los pasos del proceso de trámite.
+ * Cada paso contiene las siguientes propiedades:
+ * - `indice`: Número que identifica el orden del paso.
+ * - `titulo`: Descripción del paso.
+ * - `activo`: Indica si el paso está activo actualmente.
+ * - `completado`: Indica si el paso ha sido completado.
+ */
 export const PASOS1 = [
     {
       indice: 1,
@@ -23,4 +31,4 @@ export const PASOS1 = [
         activo: false,
         completado: false,
     },
-  ];
+];
