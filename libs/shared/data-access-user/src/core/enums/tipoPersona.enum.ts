@@ -4,4 +4,5 @@
 export enum TipoPersona {
     FISICA = 'Fisica',
     MORAL = 'Moral',
+    NO_CONTRIBUYENTE= 'No Contribuyente'
 }
