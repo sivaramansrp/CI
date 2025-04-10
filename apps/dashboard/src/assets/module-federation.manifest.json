@@ -9,5 +9,7 @@
   "cofepris": "http://localhost:4211",
   "sener": "http://localhost:4217",
   "amecafe":"http://localhost:4212",
-  "inbal": "http://localhost:4218"
+  "inbal": "http://localhost:4218",
+  "sedena": "http://localhost:4219",
+  "profepa": "http://localhost:4220"
 }

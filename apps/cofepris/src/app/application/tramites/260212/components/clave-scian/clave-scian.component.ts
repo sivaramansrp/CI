@@ -1,7 +1,7 @@
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { CatalogoSelectComponent, TablaDinamicaComponent, TituloComponent, catalogoResponse } from '@ng-mf/data-access-user';
+import { CatalogoResponse, CatalogoSelectComponent, TablaDinamicaComponent, TituloComponent, } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { SolicitudService } from '../../services/solicitud.service';
 
@@ -39,13 +39,13 @@ export class ClaveScianComponent implements OnInit, OnDestroy {
   /**
    * Observable for the currently selected "clave" (key) value from the store.
    */
-  selectedClave$: Observable<catalogoResponse | null> =
+  selectedClave$: Observable<CatalogoResponse | null> =
     this.tramite260212Query.selectedClave$;
 
   /**
    * Observable for the currently selected "descripcion" (description) value from the store.
    */
-  selectedDescripcion$: Observable<catalogoResponse | null> =
+  selectedDescripcion$: Observable<CatalogoResponse | null> =
     this.tramite260212Query.selectedDescripcion$;
 
   /**
@@ -56,7 +56,7 @@ export class ClaveScianComponent implements OnInit, OnDestroy {
   /**
    * Array to store the list of "clave" options fetched from the service.
    */
-  clave: catalogoResponse[] = [];
+  clave: CatalogoResponse[] = [];
 
   /**
    * Constructor to initialize dependencies and services.
@@ -66,10 +66,10 @@ export class ClaveScianComponent implements OnInit, OnDestroy {
    * @param tramite260212Query Query for retrieving state from Tramite260212.
    */
   constructor(private fb: FormBuilder,
-              private solicitudService: SolicitudService,
-              private tramite260212Store: Tramite260212Store,
-              // eslint-disable-next-line no-empty-function
-              private tramite260212Query: Tramite260212Query) {}
+    private solicitudService: SolicitudService,
+    private tramite260212Store: Tramite260212Store,
+    // eslint-disable-next-line no-empty-function
+    private tramite260212Query: Tramite260212Query) { }
 
   /**
    * Angular lifecycle hook invoked on component initialization.
@@ -98,17 +98,17 @@ export class ClaveScianComponent implements OnInit, OnDestroy {
   /**
    * Configures the reactive form with "clave" and "descripcion" fields.
    */
-  claveScianForm():void {
+  claveScianForm(): void {
     this.claveForm = this.fb.group({
       clave: ['', Validators.required],
-      descripcion: [''] 
+      descripcion: ['']
     });
   }
 
   /**
    * Emits the cancel event to notify parent components about the action.
    */
-  cancelar():void {
+  cancelar(): void {
     this.cancel.emit();
   }
 

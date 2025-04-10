@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { CatalogoSelectComponent, catalogoResponse } from '@libs/shared/data-access-user/src';
+import { CatalogoResponse, CatalogoSelectComponent, } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { SolicitudService } from '../../services/solicitud.service';
 import { Tramite260212Store } from '../../estados/tramite260212.store';
@@ -29,16 +29,16 @@ export class FormularioOperacionComercialComponent implements OnInit, OnDestroy 
   /** Subject para destruir el componente */
   private destroy$ = new Subject<void>();
   /** Observable para el estado seleccionado */
-  selectedRegimen$: Observable<catalogoResponse | null> =
+  selectedRegimen$: Observable<CatalogoResponse | null> =
     this.tramite260212Query.selectedRegimen$;
   /** Catálogo de estados cargado desde un archivo JSON */
 
-  selectedEntradas$: Observable<catalogoResponse | null> =
+  selectedEntradas$: Observable<CatalogoResponse | null> =
     this.tramite260212Query.selectedEntradas$;
   /**
  * Arreglo que almacena las claves del catálogo.
  */
-  clave: catalogoResponse[] = [];
+  clave: CatalogoResponse[] = [];
 
   /**
     * Variable que controla si los campos del formulario están en estado de solo lectura.
@@ -60,7 +60,7 @@ export class FormularioOperacionComercialComponent implements OnInit, OnDestroy 
   constructor(private fb: FormBuilder, private solicitudService: SolicitudService,
     private tramite260212Store: Tramite260212Store,
     private tramite260212Query: Tramite260212Query
-  ) { 
+  ) {
     // Se puede agregar lógica de inicialización aquí si es necesario
   }
 

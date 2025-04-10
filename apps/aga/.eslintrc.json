@@ -1,8 +1,6 @@
 {
   "extends": ["../../.eslintrc.json"],
-
-  "ignorePatterns": ["!**/*","**/*.spec.ts", "**/*.scss"],
-
+  "ignorePatterns": ["!**/*", "**/*.spec.ts", "**/*.scss"],
   "overrides": [
     {
       "files": ["*.ts"],
@@ -16,6 +14,7 @@
           { "varsIgnorePattern": "^_", "argsIgnorePattern": "^_" }
         ],
         "@typescript-eslint/no-explicit-any": "error",
+        "@angular-eslint/no-empty-lifecycle-method" : ["error"],
         "@angular-eslint/directive-selector": [
           "off",
           {
@@ -67,7 +66,6 @@
         "no-constructor-return": "error",
         "no-div-regex": "error",
         "no-else-return": "error",
-        "no-empty-function": "error",
         "no-eq-null": "error",
         "no-eval": "error",
         "no-extend-native": "error",
