@@ -13,6 +13,7 @@ import { FormGroup } from '@angular/forms';
 import { InputFecha } from '@ng-mf/data-access-user';
 import { InputFechaComponent } from '@ng-mf/data-access-user';
 import { OnInit } from '@angular/core';
+import { PROCEDIMIENTOS_NO_PARA_ELEMENTO_BANCO } from '../../constantes/pago-banco.enum';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { TituloComponent } from '@ng-mf/data-access-user';
@@ -102,6 +103,12 @@ export class PagoDeDerechosComponent implements OnInit {
   public bancoDatos!: Catalogo[];
 
   /**
+ * Indica si el campo "banco" es obligatorio.
+ * @type {boolean}
+ */
+  public bancoRequerido = true;
+
+  /**
    * @constructor
    * Inicializa el formulario y las dependencias del componente.
    *
@@ -113,7 +120,7 @@ export class PagoDeDerechosComponent implements OnInit {
     private fb: FormBuilder,
     private datosSolicitudService: DatosSolicitudService
   ) {
-      // No se necesita lógica de inicialización adicional.
+    // No se necesita lógica de inicialización adicional.
   }
 
   /**
@@ -156,6 +163,13 @@ export class PagoDeDerechosComponent implements OnInit {
       ? true
       : false;
 
+    this.bancoRequerido =
+      PROCEDIMIENTOS_NO_PARA_ELEMENTO_BANCO.includes(
+        this.idProcedimiento
+      )
+        ? false
+        : true;
+
     this.cargarDatos();
     this.getBancoDatos();
   }
@@ -174,13 +188,18 @@ export class PagoDeDerechosComponent implements OnInit {
       });
   }
 
+  /**
+  * @method getBancoDatos
+  * Recupera los datos del banco desde el servicio `datosSolicitudService`
+  * y los asigna a la propiedad `bancoDatos`.
+  */
   getBancoDatos(): void {
     this.datosSolicitudService
-    .getBancoDatos()
-    .pipe(takeUntil(this.unsubscribe$))
-    .subscribe((data) => {
-      this.bancoDatos = data;
-    });
+      .getBancoDatos()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((data) => {
+        this.bancoDatos = data;
+      });
   }
 
   /**

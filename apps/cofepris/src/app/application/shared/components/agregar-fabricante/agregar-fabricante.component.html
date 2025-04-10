@@ -166,7 +166,7 @@
           [catalogo]="codigosPostalesDatos"
           formControlName="codigoPostal"
           [label]="'Código postal o equivalente'"
-          [required]="true"
+          [required]="codigoPostalEquivalenteRequerido"
         ></app-catalogo-select>
       </div>
       <div class="col-md-4">
@@ -174,7 +174,7 @@
           [catalogo]="coloniasDatos"
           formControlName="colonia"
           [label]="'Colonia'"
-          [required]="true"
+          [required]="coloniaRequerido"
         ></app-catalogo-select>
       </div>
     </div>
@@ -222,7 +222,12 @@
         <input type="text" class="form-control" formControlName="telefono" />
       </div>
       <div class="col-md-4">
-        <label class="form-label">Correo electrónico*:</label>
+        <label class="form-label mx-1">Correo electrónico</label>
+        <span
+          class="bi bi-question-circle-fill"
+          title="Correo electrónico"
+          data-bs-toggle="tooltip"
+        ></span>
         <input
           type="email"
           class="form-control"

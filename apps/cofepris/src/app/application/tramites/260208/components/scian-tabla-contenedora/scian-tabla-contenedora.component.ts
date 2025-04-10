@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { ID_PROCEDIMIENTO } from '../../constants/medicamentos-destinados-uso.enum';
 import { ScianTablaComponent } from '../../../../shared/components/scian-tabla/scian-tabla.component';
 import { TablaScianConfig } from '../../../../shared/models/datos-solicitud.model';
 import { Tramite260208Store } from '../../estados/tramite260208Store.store';
@@ -13,6 +14,8 @@ import { Tramite260208Store } from '../../estados/tramite260208Store.store';
   styleUrl: './scian-tabla-contenedora.component.scss',
 })
 export class ScianTablaContenedoraComponent {
+
+  public readonly idProcedimiento = ID_PROCEDIMIENTO;
   
   /**
    * Constructor que inyecta el store del trámite 260208.

@@ -364,8 +364,9 @@ export const STR_NACIONAL = 'Nacional';
 export const CAMPOS_REQUERIDOS_FORMULARIO_MAP: Map<string, number[]> = new Map([
   ['colonia', [260301]],
   ['localidad', [260301]],
-  ['denominacionRazon',[260301]],
-  ['scian', [260301]],
+  ['denominacionRazon',[260301, 260208]],
+  ['scian', [260301, 260208]],
+  ['correoElectronico', [260208]]
 ]);
 
 export const CAMPOS_ADICIONALES_POR_PROCEDIMIENTO_MAP: Map<string, number[]> = new Map([
@@ -373,7 +374,9 @@ export const CAMPOS_ADICIONALES_POR_PROCEDIMIENTO_MAP: Map<string, number[]> = n
   ['correoElectronico', [260301]],
   ['rfcSanitario', [260301]],
   ['regimenLaMercancia',[260301]],
-  ['aduana',[260301]]
+  ['aduana',[260301]],
+  ['regimen', [260208]],
+  ['adunasDeEntradas', [260208]],
 ]);
 
 export const DESCRIPCION_FRACCION_DESHABILITADO_VALOR="Algodón absorbente o gasas, con sustancias medicinales";

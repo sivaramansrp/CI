@@ -2,6 +2,7 @@ import { AgregarFabricanteComponent } from '../../../../shared/components/agrega
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { Fabricante } from '../../../../shared/models/terceros-relacionados.model';
+import { ID_PROCEDIMIENTO } from '../../constants/medicamentos-destinados-uso.enum';
 import { Tramite260208Store } from '../../estados/tramite260208Store.store';
 /**
  * @component AgregarFabricanteContenedoraComponent
@@ -17,6 +18,8 @@ import { Tramite260208Store } from '../../estados/tramite260208Store.store';
   styleUrl: './agregar-fabricante-contenedora.component.scss',
 })
 export class AgregarFabricanteContenedoraComponent {
+
+    public readonly idProcedimiento = ID_PROCEDIMIENTO;
 
     /**
    * @property {boolean} estaOculto
