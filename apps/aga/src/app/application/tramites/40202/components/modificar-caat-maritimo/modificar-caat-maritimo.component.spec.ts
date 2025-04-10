@@ -108,11 +108,11 @@ describe('ModificarCaatMaritimoComponent', () => {
   });
 
   it('should show modal when mostrarModal is called', () => {
-    const modalElement = document.createElement('div');
-    modalElement.id = 'testModal';
-    document.body.appendChild(modalElement);
+    const modalElemento = document.createElement('div');
+    modalElemento.id = 'testModal';
+    document.body.appendChild(modalElemento);
 
-    const spy = jest.spyOn(document, 'getElementById').mockReturnValue(modalElement);
+    const spy = jest.spyOn(document, 'getElementById').mockReturnValue(modalElemento);
     const modalShowSpy = jest.fn();
     jest.spyOn(Modal.prototype, 'show').mockImplementation(modalShowSpy);
 
@@ -120,7 +120,7 @@ describe('ModificarCaatMaritimoComponent', () => {
     expect(spy).toHaveBeenCalledWith('testModal');
     expect(modalShowSpy).toHaveBeenCalled();
 
-    document.body.removeChild(modalElement);
+    document.body.removeChild(modalElemento);
   });
 
   it('should call setCandidatoModificarCaatTabla when agregarPFE is called', () => {

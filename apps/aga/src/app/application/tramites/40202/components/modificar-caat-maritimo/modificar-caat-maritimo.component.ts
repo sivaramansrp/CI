@@ -118,7 +118,7 @@ export class ModificarCaatMaritimoComponent implements OnInit, OnDestroy, AfterV
   /**
    * Elemento modal para mostrar información adicional.
    */
-  modalElement!: HTMLElement | null;
+  modalElemento!: HTMLElement | null;
 
   /**
    * Instancia del modal de agregar persona física extranjera.
@@ -473,9 +473,9 @@ export class ModificarCaatMaritimoComponent implements OnInit, OnDestroy, AfterV
    * @returns {void}
    */
   mostrarModal(id: string): void {
-    this.modalElement = document.getElementById(id);
-    if (this.modalElement) {
-      const MODAL = Modal.getOrCreateInstance(this.modalElement);
+    this.modalElemento = document.getElementById(id);
+    if (this.modalElemento) {
+      const MODAL = Modal.getOrCreateInstance(this.modalElemento);
       MODAL.show();
     }
   }
