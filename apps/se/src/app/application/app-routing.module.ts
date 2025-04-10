@@ -279,6 +279,13 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'previos-exportacion',
+    loadChildren: () =>
+      import('./tramites/130217/control-permisos-previos-exportacion.module').then(
+        (m) => m.ControlPermisosPreviosExportacionModule
+      )
+  },
+  {
     path: 'inicialmente-certificado-origen',
     loadChildren: () =>
       import('./tramites/110216/inicialmente-certificado-origen.module').then(
