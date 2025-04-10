@@ -31,4 +31,20 @@ export class ComercioExteriorService {
         })
       );
     }
+
+    getEmpresasTablaDatos(): Observable<JSONResponse> {
+      return this.http.get<JSONResponse>('./assets/json/31602/empresas-del-grupo-tabla.json').pipe(
+        catchError((error) => {
+          return throwError(() => error);
+        })
+      );
+    }
+
+    getBancoDatos(): Observable<JSONResponse> {
+      return this.http.get<JSONResponse>('assets/json/31602/banco-catalog.json').pipe(
+        catchError((error) => {
+          return throwError(() => error);
+        })
+      );
+    }
 }

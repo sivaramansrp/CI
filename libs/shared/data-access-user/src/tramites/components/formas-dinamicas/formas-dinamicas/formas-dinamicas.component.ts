@@ -225,7 +225,7 @@ export class FormasDinamicasComponent implements ControlValueAccessor, OnInit {
       if (!this.forma?.contains(campo.campo)) {
         const VALIDADORES = FormasDinamicasComponent.obtenerValidadores(campo.validadores ?? []);
         FORMGROUP[campo.campo] = this.fb.control(
-          { value: campo.valor_predeterminado || this.estado[campo.campo], disabled: campo.desactivado },
+          { value: this.estado && this.estado[campo.campo] ? this.estado[campo.campo] : campo.valor_predeterminado, disabled: campo.desactivado },
           { validators: VALIDADORES }
         );
       }

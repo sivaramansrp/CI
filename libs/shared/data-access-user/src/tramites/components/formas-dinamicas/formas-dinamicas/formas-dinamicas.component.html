@@ -133,6 +133,7 @@
                           item.label_nombre
                         }}</label>
                         <app-input-radio
+                          [layout]="item.layout ? item.layout : 'vertical'"
                           [radioOptions]="item.opciones || []"
                           [selectedValue]="valorSeleccionado"
                           (valueChange)="cambiarRadio($event)"

@@ -112,3 +112,4 @@ export { TablaConEntradaComponent } from './tramites/components/tabla-con-entrad
 export { AcusesYResolucionesFolioDelTramiteBusquedaComponent } from './tramites/components/acuses-y-resoluciones-folio-del-tramite-busqueda/acuses-y-resoluciones-folio-del-tramite-busqueda.component';
 export { AcusesYResolucionesFolioDelTramiteDetallesComponent } from './tramites/components/acuses-y-resoluciones-folio-del-tramite-detalles/acuses-y-resoluciones-folio-del-tramite-detalles.component';
 export * from './tramites/components/select-catalogos/select-catalogos.component';
+export * from './core/models/31602/comercio-exterior.model';

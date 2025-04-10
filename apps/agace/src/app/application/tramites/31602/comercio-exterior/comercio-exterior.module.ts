@@ -12,6 +12,7 @@ import { provideHttpClient } from '@angular/common/http';
 import { ComercioExteriorService } from '../services/comercio-exterior.service';
 import { IvaeiepsComponent } from '../components/ivaeieps/ivaeieps.component';
 import { DatosPorRegimenComponent } from '../components/datos-por-regimen/datos-por-regimen.component';
+import { BsModalService } from 'ngx-bootstrap/modal';
 
 
 @NgModule({
@@ -36,7 +37,8 @@ import { DatosPorRegimenComponent } from '../components/datos-por-regimen/datos-
     CatalogosService,
     InicioSesionService,
     SubirDocumentoService,
-    ComercioExteriorService
+    ComercioExteriorService,
+    BsModalService 
   ],
 })
 export class ComercioExteriorModule { }
