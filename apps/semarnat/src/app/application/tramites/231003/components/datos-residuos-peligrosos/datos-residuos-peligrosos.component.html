@@ -28,24 +28,22 @@
                         formControlName="nombreMateriaPrima">
                     </app-catalogo-select>
                 </div>
-            </div>
-
-            <div class="row mb-3">
                 <div class="col-md-6">
                     <div class="form-group mb-3">
                         <label for="cantidad" class="form-label">Cantidad</label>
                         <input type="text" class="form-control" id="cantidad" formControlName="cantidad" readonly>
                     </div>
                 </div>
+            </div>
+
+            <div class="row mb-3">
+
                 <div class="col-md-6">
                     <div class="form-group mb-3">
                         <label for="cantidadLetra" class="form-label">Cantidad (letra)</label>
                         <input type="text" class="form-control" id="cantidadLetra" formControlName="cantidadLetra">
                     </div>
                 </div>
-            </div>
-
-            <div class="row mb-3">
                 <div class="col-md-6">
                     <div class="form-group mb-3">
                         <label for="unidadDeMedida" class="form-label">Unidad de medida</label>
@@ -94,24 +92,20 @@
         <ng-titulo titulo="Datos de los residuos peligrosos a reciclar" />
         <form [formGroup]="formularioResiduo">
             <div class="row mb-3">
-                <div class="col-md-3">
+                <div class="col-md-6">
                     <app-catalogo-select [catalogo]="fraccion" [label]="'Fracción arancelaria'" [required]="true"
                         formControlName="fraccionArancelaria"></app-catalogo-select>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-6">
                     <app-catalogo-select [catalogo]="nico" [label]="'NICO'" [required]="true"
                         formControlName="nico"></app-catalogo-select>
                 </div>
             </div>
-
             <div class="row mb-3">
                 <div class="col-md-6">
                     <label class="form-label">Acotación*:</label>
                     <textarea class="form-control textarea-auto-height" rows="2" formControlName="acotacion"></textarea>
                 </div>
-            </div>
-
-            <div class="row mb-3">
                 <div class="col-md-6">
                     <label for="peligroso" class="form-label">Nombre del residuo peligroso generado*:</label>
                     <input type="text" class="form-control" id="peligroso" formControlName="residuoPeligroso">
@@ -123,15 +117,11 @@
                     <label for="cantidad" class="form-label">Cantidad*:</label>
                     <input type="text" class="form-control" id="cantidad" formControlName="cantidad">
                 </div>
-            </div>
-
-            <div class="row mb-3">
                 <div class="col-md-6">
                     <label for="cantidadletra" class="form-label">Cantidad (letra):</label>
                     <input type="text" class="form-control" id="cantidadletra" formControlName="cantidadLetra" readonly>
                 </div>
             </div>
-
             <div class="row mb-3">
                 <div class="col-md-6">
                     <app-catalogo-select [catalogo]="unidad" [label]="'Unidad de medida'" [required]="true"
@@ -152,9 +142,6 @@
                     <app-catalogo-select [catalogo]="residuo" [label]="'Clave de residuo'" [required]="true"
                         formControlName="claveResiduo"></app-catalogo-select>
                 </div>
-            </div>
-
-            <div class="row mb-3">
                 <div class="col-md-6">
                     <app-catalogo-select [catalogo]="tipoNombre" [label]="'Nombre'" [required]="true"
                         formControlName="nombre"></app-catalogo-select>
@@ -166,9 +153,6 @@
                     <app-catalogo-select [catalogo]="descripcion" [label]="'Descripción'" [required]="true"
                         formControlName="descripcion"></app-catalogo-select>
                 </div>
-            </div>
-
-            <div class="row mb-3">
                 <div class="col-md-6">
                     <app-catalogo-select [catalogo]="creti" [label]="'CRETI'" [required]="true"
                         formControlName="creti"></app-catalogo-select>
@@ -180,22 +164,17 @@
                     <app-catalogo-select [catalogo]="estadoFisico" [label]="'Estado físico'" [required]="true"
                         formControlName="estadoFisico"></app-catalogo-select>
                 </div>
-            </div>
-
-            <div class="row mb-3">
                 <div class="col-md-6">
                     <app-catalogo-select [catalogo]="tipoContenedor" [label]="'Tipo de Contenedor'" [required]="true"
                         formControlName="tipoContenedor"></app-catalogo-select>
                 </div>
             </div>
-
             <div class="row mb-3">
                 <div class="col-md-6">
                     <label for="capacidad" class="form-label">Capacidad*:</label>
                     <input type="text" class="form-control" id="capacidad" formControlName="capacidad">
                 </div>
             </div>
-
             <div class="row mt-3">
                 <div class="col-md-12 text-end">
                     <button type="button" id="cancelarDatosOperacionImp" class="mid btn btn-default me-3"
