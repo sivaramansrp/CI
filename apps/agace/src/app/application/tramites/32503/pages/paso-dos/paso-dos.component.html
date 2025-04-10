@@ -1,0 +1,45 @@
+<div class="container">
+  <form [formGroup]="requisitosOpcionalesFormulario" (ngSubmit)="validarRequisitosOpcionalesFormulario()">
+    <ng-titulo titulo="Requisitos opcionales" />
+    <ng-alert [CONTENIDO]="TEXTOS.REQUISITOS_OPCIONALES_INSTRUCCIONES" [CUSTOMECLASS]="infoAlert"></ng-alert>
+    <div class="col-md-6">
+      <app-catalogo-select [catalogo]="tipoDocumento.catalogos" [label]="tipoDocumento.labelNombre"
+        [placeholder]="tipoDocumento.primerOpcion" [required]="false" id="tipoDocumento" formControlName="tipoDocumento"
+        (change)="setValoresStore(requisitosOpcionalesFormulario, 'tipoDocumento', 'setTipoDocumento')"></app-catalogo-select>
+    </div>
+    <div class="col-md-6">
+      <table class="table mt-3" style="overflow-x: scroll">
+        <thead class="table-light">
+          <tr class="border-0">
+            <th class="border-0 bg-transparent w-15"></th>
+            <th class="border-0 bg-transparent"> <input type="checkbox" id="tableCheck" #controlarCajaTodo
+                (change)="seleccionarFilaTodo($event)" /></th>
+            <th class="border-0 bg-transparent">Tipo de documento</th>
+          </tr>
+        <tbody>
+          @for (el of tablaDatos; let i = $index;track el.id) {
+          <tr>
+            <td class="grey-column w-15">{{i+1}}</td>
+            <td>
+              <input type="checkbox" id="donacion" [checked]="el.controlarCaja" (change)="seleccionarFila(el)" />
+            </td>
+            <td>
+              {{el?.descripcion}}
+            </td>
+          </tr>
+          }
+        </tbody>
+      </table>
+      <div class="d-flex justify-content-end">
+        <button type="button" class="btn btn-danger ms-3" (click)="eliminarFilaSeleccionada()">
+          Elimiar
+        </button>
+        <button type="button" class="btn btn-primary ms-3" (click)="agregarFila()">
+          Agregar nuevo
+        </button>
+      </div>
+
+    </div>
+
+  </form>
+</div>
