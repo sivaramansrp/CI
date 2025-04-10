@@ -158,41 +158,12 @@ const ROUTES: Routes = [
       ),
   },
   {
-    path: 'registro-transportista',
+    path: 'invoCar-modulo',
     loadChildren: () =>
-      import('./tramites/40302/registro-transportista.module').then(
-        (m) => m.RegistroTransportistaModule
+      import('./tramites/105/invocar.module').then(
+        (m) => m.InvocarModule
       ),
-  },
-  {
-    path: 'attention-Of-Renewal',
-    loadChildren: () =>
-      import('./tramites/40403/attentionOfRenewal.module').then(
-        (m) => m.AttentionOfRenewalModule
-      ),
-  },
-  {
-    path: 'retirada-de-la-autorizacion-de-donaciones',
-    loadChildren: () =>
-      import('./tramites/11105/retirada-de-la-autorizacion-de-donaciones.module').then(
-        (m) => m.RetiradaDeLaAutorizacionDeDonacioneModule
-      )
-  },
-  {
-    path: 'deposito-fiscal',
-    loadChildren: () =>
-      import('./tramites/104/deposito-fiscal-manufactura-vehiculos/deposito-fiscal-manufactura-vehiculos.module').then(
-        (m) => m.DepositoFiscalManufacturaVehiculosModule
-      )
-  },
-  {
-    path: 'modificarCaatTerrestre',
-    loadChildren: () =>
-      import('./tramites/40103/modificarCaatTerrestre.module').then(
-        (m) => m.ModificarCaatTerrestreModule
-      )
   }
-  
 ];
 
 @NgModule({
