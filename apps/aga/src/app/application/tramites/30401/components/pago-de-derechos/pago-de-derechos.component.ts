@@ -5,15 +5,16 @@
  */
 
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
+import { AlertComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject, distinctUntilChanged, map, takeUntil } from 'rxjs';
-import { dropdownList } from '../../modelos/registro-empresas-transporte.model';
 import { CommonModule } from '@angular/common';
 import {NOTA} from '../../enums/registro-empresas-transporte.enum';
 import { RegistroEmpresasTransporteService } from '../../services/registro-empresas-transporte.service';
-import { AlertComponent, TituloComponent } from '@libs/shared/data-access-user/src';
-import { Tramite30401Store } from '../../estados/tramites30401.store';
 import { Tramite30401Query } from '../../estados/tramites30401.query';
+import { Tramite30401Store } from '../../estados/tramites30401.store';
+import { dropdownList } from '../../modelos/registro-empresas-transporte.model';
+
 
 /**
  * Selector del componente

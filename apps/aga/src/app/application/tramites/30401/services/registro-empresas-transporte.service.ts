@@ -1,3 +1,4 @@
+import { Catalogo } from '@libs/shared/data-access-user/src';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -24,22 +25,26 @@ export class RegistroEmpresasTransporteService {
   }
 
   onBancoList(): Observable<dropdownList[]> {
-    return this.http.get<dropdownList[]>('assets/json/30401/bancoList.json');
+    return this.http.get<dropdownList[]>('assets/json/30401/banco-list.json');
   }
 
-  tipodeTransitoList(): Observable<dropdownList[]> {
-    return this.http.get<dropdownList[]>('assets/json/30401/tipodeTransitoList.json');
+  tipoTransitoList(): Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>('assets/json/30401/tipode-transito-list.json');
   }
 
-  entidadFederativaList(): Observable<dropdownList[]> {
-    return this.http.get<dropdownList[]>('assets/json/30401/entidadFederativaList.json');
+  entidadFederativaList(): Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>('assets/json/30401/entidad-federativa-list.json');
   }
-  municipioDelegacionList(): Observable<dropdownList[]> {
-    return this.http.get<dropdownList[]>('assets/json/30401/municipioDelegacionList.json');
+  delegacionMunicipioList(): Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>('assets/json/30401/municipio-delegacion-list.json');
   }
 
-  coloniaList(): Observable<dropdownList[]> {
-    return this.http.get<dropdownList[]>('assets/json/30401/coloniaList.json');
+  coloniaList(): Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>('assets/json/30401/colonia-list.json');
+  }
+
+  cveFolioCaat(): Observable<{id?:number; value: string}> {
+    return this.http.get<{id?:number; value: string}>('assets/json/30401/numero-caat.json');
   }
 
 }

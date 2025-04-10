@@ -81,11 +81,11 @@ describe('PagoDeDerechosComponent', () => {
 
   it('should validate fechaLimValidator correctly', () => {
     const control = { value: '2050-01-01' } as any;
-    const result = PagoDeDerechosComponent.fechaLimValidator()(control);
+    const result = PagoDeDerechosComponent.fechaExpedicionLimValidator()(control);
     expect(result).toEqual({ fechaLim: true });
 
     const validControl = { value: '2020-01-01' } as any;
-    const validResult = PagoDeDerechosComponent.fechaLimValidator()(validControl);
+    const validResult = PagoDeDerechosComponent.fechaExpedicionLimValidator()(validControl);
     expect(validResult).toBeNull();
   });
 

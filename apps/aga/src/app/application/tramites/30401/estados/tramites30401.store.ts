@@ -16,21 +16,21 @@ export interface Tramites30401State {
   impPago: string;
   efectuarElPago:boolean;
 
-  numeroCaat:string;
-  tipodeTransito:string;
-  calle:string;
-  numeroExterior: number;
-  numeroInterior: number;
-  entidadFederativa:string;
-  municipioDelegacion:string;
-  colonia:string;
-  localidad:string;
-  codigoPostal:string;
-  capitalSocial: number;
-  numero:number;
-  fecha:string;
-  capitalSocialCheck:boolean;
-  miRepresentadaCheck:boolean;
+  cveFolioCaat: string;
+  tipoTransito: string;
+  calle: string;
+  numeroExterior: string;
+  numeroInterior: string;
+  entidadFederativa: string;
+  delegacionMunicipio: string;
+  colonia: string;
+  localidad: string;
+  codigoPostal: string;
+  capitalSocial: string;
+  numeroFolioPermiso: string;
+  fechaExpedicion: string;
+  elCapitalSocial: boolean;
+  miRepresentada: boolean;
 
 }
 
@@ -46,21 +46,21 @@ export function createInitialState(): Tramites30401State {
     impPago: '',
     efectuarElPago:false,
 
-    numeroCaat:'',
-    tipodeTransito:'',
-    calle:'',
-    numeroExterior: 0,
-    numeroInterior: 0,
-    entidadFederativa:'',
-    municipioDelegacion:'',
-    colonia:'',
-    localidad:'',
-    codigoPostal:'',
-    capitalSocial: 0,
-    numero:0,
-    fecha:'',
-    capitalSocialCheck: false,
-    miRepresentadaCheck: false,
+    cveFolioCaat: '',
+    tipoTransito: '',
+    calle: '',
+    numeroExterior: '',
+    numeroInterior: '',
+    entidadFederativa: '',
+    delegacionMunicipio: '',
+    colonia: '',
+    localidad: '',
+    codigoPostal: '',
+    capitalSocial: '',
+    numeroFolioPermiso: '',
+    fechaExpedicion: '',
+    elCapitalSocial: false,
+    miRepresentada: false,
   };
 }
 
@@ -72,6 +72,29 @@ export class Tramite30401Store extends Store<Tramites30401State> {
   constructor() {
     super(createInitialState());
   }
+
+  // public establecerDatos(datos: Tramites30401State):void {
+  //   this.update((state) => ({
+  //     ...state,
+  //     ...datos,
+  //   }));
+  // }
+  
+  public establecerDatos(values: Partial<Tramites30401State>): void {    
+    this.update((state) => ({
+      ...state,
+      ...values,
+    }));
+  }
+
+
+  public setEfectuarElPago(efectuarElPago: boolean) {
+    this.update((state) => ({
+      ...state,
+      efectuarElPago,
+    }));
+  }
+
 
   public setClaveDeReferencia(claveDeReferencia: string) {
     this.update((state) => ({
@@ -115,119 +138,113 @@ export class Tramite30401Store extends Store<Tramites30401State> {
     }));
   }
 
-  public setEfectuarElPago(efectuarElPago: boolean) {
-    this.update((state) => ({
-      ...state,
-      efectuarElPago,
-    }));
-  }
+
 
 
 
 // new start
   
-  public SetnumeroCaat(numeroCaat: string) {
-    this.update((state) => ({
-      ...state,
-      numeroCaat,
-    }));
-  }
+  // public SetcveFolioCaat(cveFolioCaat: string) {
+  //   this.update((state) => ({
+  //     ...state,
+  //     cveFolioCaat,
+  //   }));
+  // }
 
-  public setTipodeTransito(tipodeTransito: string) {
-    this.update((state) => ({
-      ...state,
-      tipodeTransito,
-    }));
-  }
+  // public setTipodeTransito(tipoTransito: string) {
+  //   this.update((state) => ({
+  //     ...state,
+  //     tipoTransito,
+  //   }));
+  // }
 
-  public setCalle(calle: string) {
-    this.update((state) => ({
-      ...state,
-      calle,
-    }));
-  }
-  public setNumeroExterior(numeroExterior: number) {
-    this.update((state) => ({
-      ...state,
-      numeroExterior,
-    }));
-  }
-  public setNumeroInterior(numeroInterior: number) {
-    this.update((state) => ({
-      ...state,
-      numeroInterior,
-    }));
-  }
+  // public setCalle(calle: string) {
+  //   this.update((state) => ({
+  //     ...state,
+  //     calle,
+  //   }));
+  // }
+  // public setNumeroExterior(numeroExterior: number) {
+  //   this.update((state) => ({
+  //     ...state,
+  //     numeroExterior,
+  //   }));
+  // }
+  // public setNumeroInterior(numeroInterior: number) {
+  //   this.update((state) => ({
+  //     ...state,
+  //     numeroInterior,
+  //   }));
+  // }
 
-  public setEntidadFederativa(entidadFederativa: string) {
-    this.update((state) => ({
-      ...state,
-      entidadFederativa,
-    }));
-  }
+  // public setEntidadFederativa(entidadFederativa: string) {
+  //   this.update((state) => ({
+  //     ...state,
+  //     entidadFederativa,
+  //   }));
+  // }
 
-  public setMunicipioDelegacion(municipioDelegacion: string) {
-    this.update((state) => ({
-      ...state,
-      municipioDelegacion,
-    }));
-  } 
+  // public setMunicipioDelegacion(delegacionMunicipio: string) {
+  //   this.update((state) => ({
+  //     ...state,
+  //     delegacionMunicipio,
+  //   }));
+  // } 
 
-  public setColonia(colonia: string) {
-    this.update((state) => ({
-      ...state,
-      colonia,
-    }));
-  }
+  // public setColonia(colonia: string) {
+  //   this.update((state) => ({
+  //     ...state,
+  //     colonia,
+  //   }));
+  // }
   
-  public setLocalidad(localidad: string) {
-    this.update((state) => ({
-      ...state,
-      localidad,
-    }));
-  }
+  // public setLocalidad(localidad: string) {
+  //   this.update((state) => ({
+  //     ...state,
+  //     localidad,
+  //   }));
+  // }
 
-  public setCodigoPostal(codigoPostal: string) {
-    this.update((state) => ({
-      ...state,
-      codigoPostal,
-    }));
-  }
+  // public setCodigoPostal(codigoPostal: string) {
+  //   this.update((state) => ({
+  //     ...state,
+  //     codigoPostal,
+  //   }));
+  // }
 
-  public setCapitalSocial(capitalSocial: number) {
-    this.update((state) => ({
-      ...state,
-      capitalSocial,
-    }));
-  }
+  // public setCapitalSocial(capitalSocial: number) {
+  //   this.update((state) => ({
+  //     ...state,
+  //     capitalSocial,
+  //   }));
+  // }
   
-  public setNumero(numero: number) {
-    this.update((state) => ({
-      ...state,
-      numero,
-    }));
-  }
+  // public setNumero(numeroFolioPermiso: number) {
+  //   this.update((state) => ({
+  //     ...state,
+  //     numero,
+  //   }));
+  // }
 
-  public setFecha(fecha: string) {
-    this.update((state) => ({
-      ...state,
-      fecha,
-    }));
-  }
+  // public setFecha(fechaExpedicion: string) {
+  //   this.update((state) => ({
+  //     ...state,
+  //     fecha,
+  //   }));
+  // }
 
-  public setCapitalSocialCheck(capitalSocialCheck: boolean) {
-    this.update((state) => ({
-      ...state,
-      capitalSocialCheck,
-    }));
-  }
+  // public setCapitalSocialCheck(capitalSocialCheck: boolean) {
+  //   this.update((state) => ({
+  //     ...state,
+  //     capitalSocialCheck,
+  //   }));
+  // }
   
-  public setMiRepresentadaCheck(miRepresentadaCheck: boolean) {
-    this.update((state) => ({
-      ...state,
-      miRepresentadaCheck,
-    }));
-  }
-  
+  // public setMiRepresentadaCheck(miRepresentadaCheck: boolean) {
+  //   this.update((state) => ({
+  //     ...state,
+  //     miRepresentadaCheck,
+  //   }));
+  // }
   
 }

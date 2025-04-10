@@ -3,81 +3,52 @@
  * @packageDocumentation
  * @module PagoDeDerechosComponent
  */
-
-import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Component, Input, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
+import { Catalogo, CrosslistComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Observable, Subject, map, takeUntil } from 'rxjs';
-import { dropdownList } from '../../modelos/registro-empresas-transporte.model';
+import { CROSLISTA_ENTRADA } from '../../enums/croslista.enums';
+import { CapitalSocialComponent } from '../capital-social/capital-social.component';
 import { CommonModule } from '@angular/common';
+import { DatosGeneralesComponent } from '../datos-generales/datos-generales.component';
+import { DireccionEmpresaComponent } from '../direccion-empresa/direccion-empresa.component';
 import {NOTA} from '../../enums/registro-empresas-transporte.enum';
 import { RegistroEmpresasTransporteService } from '../../services/registro-empresas-transporte.service';
-import { CrosslistComponent, CrossListLable, REGEX_SOLO_NUMEROS, TituloComponent } from '@libs/shared/data-access-user/src';
-import { Tramite30401Store } from '../../estados/tramites30401.store';
 import { Tramite30401Query } from '../../estados/tramites30401.query';
-import { CROSLISTA_ENTRADA } from '../../enums/croslista.enums';
+import { Tramites30401State } from '../../estados/tramites30401.store';
+import { dropdownList } from '../../modelos/registro-empresas-transporte.model';
+import { permisoComponent } from '../permiso-expedido/permiso-expedido.component';
 
 @Component({
   selector: 'app-empresas-transportistas',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, TituloComponent, CrosslistComponent],
+  imports: [CommonModule, ReactiveFormsModule, TituloComponent, CrosslistComponent, DatosGeneralesComponent, DireccionEmpresaComponent, CapitalSocialComponent, permisoComponent],
   providers: [RegistroEmpresasTransporteService],
   templateUrl: './empresas-transportistas.component.html',
   styleUrl: './empresas-transportistas.component.scss',
 })
 export class EmpresasTransportistasComponent implements OnInit, OnDestroy {
-  
-  /**
-   * Formulario reactivo para manejar los campos de entrada del usuario.
-   */
+
   public empresasForm!: FormGroup;
-
-  /**
-   * Subject para manejar la destrucción del componente y evitar fugas de memoria.
-   */
   public destroyed$ = new Subject<void>();
-
-  /**
-   * Lista de datos relacionados con bancos obtenidos desde el servicio.
-   */
   public bancoList!: dropdownList[];
-  public tipodeTransitoList!: Observable<dropdownList[]>;
-  public entidadFederativaList!: Observable<dropdownList[]>;
-  public municipioDelegacionList!: Observable<dropdownList[]>;
-  public coloniaList!: Observable<dropdownList[]>;
+  public tipoTransitoList$!: Observable<Catalogo[]>;
+  public entidadFederativaList$!: Observable<Catalogo[]>;
+  public delegacionMunicipioList$!: Observable<Catalogo[]>;
+  public cveFolioCaat$!: Observable<string>;
+  public coloniaList$!: Observable<Catalogo[]>;
 
   public CAPITAL_SOCIAL_NOTA = NOTA.CAPITAL_SOCIAL_NOTA;
   
   public MI_REPRESENTADA_NOTA = NOTA.MI_REPRESENTADA_NOTA;
 
-
-  /**
-   * Referencia a los componentes de la lista de fechas.
-   */
   @ViewChildren(CrosslistComponent) crossList!: QueryList<CrosslistComponent>;
 
-   /**
-   * Lista de países disponibles para la selección de procedencia.
-   */
    public aduanasAutorizadas = CROSLISTA_ENTRADA;
-   /**
-     * Lista de países disponibles para la selección de origen.
-     */
    public seleccionarAduanasEntrada = CROSLISTA_ENTRADA;
-
-    /**
-       * Lista de países seleccionados como origen.
-       */
-    public seleccionadasAduanasEntradaDatos: string[] = [];
- 
-   /**
-   * Control de formulario para la aduanasDeEntradaFecha.
-   */
-  //  aduanasDeEntradaFecha: FormControl = new FormControl('');
-
-
-   /**
-   * Botones para gestionar la lista cruzada de países de origen.
-   */
+   public seleccionadasAduanasEntradaDatos: string[] = [];
+  private seccionState!: Tramites30401State;
+  
    aduanasEntradaBotons = [
     {
       btnNombre: 'Agregar',
@@ -110,9 +81,9 @@ export class EmpresasTransportistasComponent implements OnInit, OnDestroy {
    */
   constructor(
     public fb: FormBuilder,
-    private tramite30401Store: Tramite30401Store,
     private tramite30401Query: Tramite30401Query,
-    private Servicio: RegistroEmpresasTransporteService
+    private Servicio: RegistroEmpresasTransporteService,
+    private cdr: ChangeDetectorRef,
   ) {
      // No se necesita lógica de inicialización adicional.
   }
@@ -142,42 +113,44 @@ export class EmpresasTransportistasComponent implements OnInit, OnDestroy {
    */
   crearForm(): void {
     this.empresasForm = this.fb.group({
-      numeroCaat: ['', Validators.required],
-      tipodeTransito: ['', Validators.required],
-      calle: ['', Validators.required],
-      numeroExterior: ['', [Validators.required, Validators.pattern(REGEX_SOLO_NUMEROS)]],
-      numeroInterior: [''],
-      entidadFederativa: ['', Validators.required],
-      municipioDelegacion: ['', Validators.required],
-      colonia: ['', Validators.required],
-      localidad: ['', Validators.required],
-      codigoPostal: ['', Validators.required],
-      capitalSocial: ['', Validators.required],
-      numero: ['', Validators.required],
-      fecha: ['', Validators.required],
-      capitalSocialCheck: [false, Validators.requiredTrue],
-      miRepresentadaCheck: [false, Validators.requiredTrue],
+      numeroCaat: this.fb.group({
+        cveFolioCaat: [{ value: '', disabled: true }, Validators.required],
+        tipoTransito: [this.seccionState?.tipoTransito, Validators.required],
+      }),
+      domicilio: this.fb.group({
+        calle: [this.seccionState?.calle, [Validators.required, Validators.maxLength(100)]],
+        numeroExterior: [this.seccionState?.numeroExterior, [Validators.required, Validators.maxLength(55)]],
+        numeroInterior: [this.seccionState?.numeroInterior, [Validators.maxLength(55)]],
+        entidadFederativa: [this.seccionState?.entidadFederativa, Validators.required],
+        delegacionMunicipio: [this.seccionState?.delegacionMunicipio, Validators.required],
+        colonia: [this.seccionState?.colonia, Validators.required],
+        localidad: [this.seccionState?.localidad, Validators.required],
+        codigoPostal: [this.seccionState?.codigoPostal, [Validators.required, Validators.maxLength(6)]],
+      }),
+      empresasCapitalSocial: this.fb.group({
+        capitalSocial: [this.seccionState?.capitalSocial, Validators.required],
+      }),
+      permiso: this.fb.group({
+        numeroFolioPermiso: [this.seccionState?.numeroFolioPermiso, [Validators.required, Validators.maxLength(20)]],
+        fechaExpedicion: [this.seccionState?.fechaExpedicion, Validators.required],
+        elCapitalSocial: [this.seccionState?.elCapitalSocial, Validators.requiredTrue],
+        miRepresentada: [this.seccionState?.miRepresentada, Validators.requiredTrue],
+      })
     });
-  }
-
+}
 
 
   obtenerlistadescargable(): void {
-    this.tipodeTransitoList = this.Servicio.tipodeTransitoList();
-    this.entidadFederativaList = this.Servicio.entidadFederativaList();
-    this.municipioDelegacionList = this.Servicio.municipioDelegacionList();
-    this.coloniaList = this.Servicio.coloniaList();
-  }
-
-  /**
-   * Pasa el valor de un campo del formulario a la tienda para la gestión del estado.
-   * @param form - El formulario reactivo.
-   * @param campo - El nombre del campo en el formulario.
-   * @param metodoNombre - El método en la tienda para actualizar el estado.
-   */
-  public setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite30401Store): void {
-    const VALOR = form.get(campo)?.value;
-    (this.tramite30401Store[metodoNombre] as (value: unknown) => void)(VALOR);
+    this.tipoTransitoList$ = this.Servicio.tipoTransitoList();
+    this.entidadFederativaList$ = this.Servicio.entidadFederativaList();
+    this.delegacionMunicipioList$ = this.Servicio.delegacionMunicipioList();
+    this.coloniaList$ = this.Servicio.coloniaList();
+    this.cveFolioCaat$ = this.Servicio.cveFolioCaat().pipe(
+      map((datos:{id?:number; value: string}) => {
+      return datos.value
+      })
+    );
+    this.cdr.detectChanges()
   }
 
   /**
@@ -186,19 +159,10 @@ export class EmpresasTransportistasComponent implements OnInit, OnDestroy {
   public enPatchStoredFormData(): void {
     this.tramite30401Query.selectTramite30401$
       .pipe(
-        takeUntil(this.destroyed$),
-        map((seccionState) => {
-          this.empresasForm.patchValue({
-            claveDeReferencia: seccionState.claveDeReferencia,
-            cadenaPagoDependencia: seccionState.cadenaPagoDependencia,
-            clave: seccionState.clave,
-            llaveDePago: seccionState.llaveDePago,
-            fecPago: seccionState.fecPago,
-            impPago: seccionState.impPago,
-          });
-        })
-      )
-      .subscribe();
+        takeUntil(this.destroyed$)
+      ).subscribe((datos: Tramites30401State) => {
+        this.seccionState = datos;
+      });
   }
 
   /**
