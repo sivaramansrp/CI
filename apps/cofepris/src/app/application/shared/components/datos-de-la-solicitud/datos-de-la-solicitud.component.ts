@@ -3,12 +3,12 @@ import {
   ALERTA_OPCIONS,
   CAMPOS_ADICIONALES_POR_PROCEDIMIENTO_MAP,
   CAMPOS_REQUERIDOS_FORMULARIO_MAP,
-  CORREO_ELECTRONICO,
   NUMERO_TRAMITE,
   PROCEDIMIENTOS_NO_PARA_ELEMENTO_CALLE,
   PROCEDIMIENTOS_NO_PARA_ELEMENTO_COLAPSABLE,
   PROCEDIMIENTOS_NO_PARA_ELEMENTO_CORREO_ELECTRONIC,
   PROCEDIMIENTOS_NO_PARA_ELEMENTO_RFC_DEL_SANITARIO,
+  PROCEDIMIENTOS_PARA_CORREO_ELECTRONICO_EN_MISMA_FILA,
   PROCEDIMIENTOS_PARA_DESHABILITAR_APELLIDO_MATERNO,
   PROCEDIMIENTOS_PARA_DESHABILITAR_APELLIDO_PATERNO,
   PROCEDIMIENTOS_PARA_DESHABILITAR_MUNICIPIO_ALCALDIA,
@@ -234,7 +234,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Indica si se debe mostrar el campo de correo electrónico en la interfaz.
    * @type {boolean}
    */
-  public mostrarCorreoElectronicoRevision = true;
+  public mostrarCorreoElectronicoenMismaFila = true;
 
   /**
    * Indica si se debe mostrar la sección del representante legal en la interfaz.
@@ -365,7 +365,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       ? false
       : true;
 
-    this.mostrarCorreoElectronicoRevision = CORREO_ELECTRONICO.includes(this.idProcedimiento)
+    this.mostrarCorreoElectronicoenMismaFila = PROCEDIMIENTOS_PARA_CORREO_ELECTRONICO_EN_MISMA_FILA.includes(this.idProcedimiento)
       ? true
       : false;
 
