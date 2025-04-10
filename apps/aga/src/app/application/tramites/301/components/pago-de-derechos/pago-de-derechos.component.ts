@@ -13,7 +13,6 @@ import {
   Tramite301Store,
 } from '../../../../core/estados/tramites/tramite301.store';
 import { Subject, Subscription, map, takeUntil } from 'rxjs';
-import { SelectCatalogosComponent } from 'libs/shared/data-access-user/src/tramites/components/select-catalogos/select-catalogos.component';
 import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
 import { Tramite301Query } from '../../../../core/queries/tramite301.query';
 
@@ -33,7 +32,7 @@ import { Tramite301Query } from '../../../../core/queries/tramite301.query';
   templateUrl: './pago-de-derechos.component.html',
   styleUrls: ['./pago-de-derechos.component.scss'],
   standalone: true,
-  imports: [TituloComponent, SelectCatalogosComponent, ReactiveFormsModule],
+  imports: [TituloComponent, ReactiveFormsModule],
 })
 export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   /**

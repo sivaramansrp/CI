@@ -87,6 +87,12 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'permiso-certificados',
+    loadChildren: () =>
+      import('./tramites/260701/certificados/certificados.module').then(
+        (m) => m.CertificadosModule),
+  },
+  {
     path: 'permiso-importacion-biologica',
     loadChildren: () =>
       import('./tramites/260402/permiso-importacion-biologica.module').then(
@@ -178,6 +184,13 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/261702/retiros-cofepris.module').then(
         (m) => m.RetirosCofeprisModule
+      ),
+  },
+  {
+    path: 'muestras-plaguicidas',
+    loadChildren: () =>
+      import('./tramites/260502/muestras-plaguicidas.module').then(
+        (m) => m.MuestrasPlaguicidasModule
       ),
   },
 ];
