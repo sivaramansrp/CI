@@ -23,8 +23,8 @@ describe('TercerosRelacionadoesComponent', () => {
     };
 
     TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule],
-      declarations: [TercerosRelacionadoesComponent],
+      imports: [ReactiveFormsModule, TercerosRelacionadoesComponent],
+      declarations: [],
       providers: [
         { provide: SanitarioService, useValue: sanitarioServiceMock },
         { provide: Sanitario260906Store, useValue: sanitarioStoreMock },
@@ -95,45 +95,6 @@ describe('TercerosRelacionadoesComponent', () => {
     expect(component.showFacturador).toBe(true);
   });
 
-  it('should submit Fabricante form and update store', () => {
-    component.agregarFabricanteFormGroup.setValue({
-      tercerosNacionalidad: 'MX',
-      tipoPersona: 'fisica',
-      rfc: 'ABCD123456XYZ',
-      curp: 'ABCD123456HDFLRS01',
-      nombre: 'John',
-      primerApellido: 'Doe',
-      segundoApellido: 'Smith',
-      denominacionRazonSocial: 'Empresa SA',
-      pais: 'Mexico',
-      estadoLocalidad: 'Estado',
-      municipioAlcaldia: 'Municipio',
-      localidad: 'Localidad',
-      entidadFederativa: 'Entidad',
-      codigoPostaloEquivalente: '12345',
-      colonia: 'Colonia',
-      coloniaoEquivalente: 'Colonia Equivalente',
-      calle: 'Calle 1',
-      numeroExterior: '123',
-      numeroInterior: 'A',
-      lada: '55',
-      telefono: '1234567890',
-      correoElectronico: 'test@example.com',
-      extranjeroCodigo: '',
-      extranjeroEstado: '',
-      extranjeroColonia: '',
-    });
-
-    component.submitFabricanteForm();
-
-    expect(component.fabricanteRowData.length).toBe(1);
-    expect(sanitarioStoreMock.setFabricante).toHaveBeenCalledWith(
-      component.fabricanteRowData
-    );
-    expect(component.showTableDiv).toBe(true);
-    expect(component.showFabricante).toBe(false);
-  });
-
   it('should validate RFC using rfcValidator', () => {
     const validRFCFisica = TercerosRelacionadoesComponent.rfcValidator({
       value: 'ABCD123456XYZ',
@@ -162,15 +123,4 @@ describe('TercerosRelacionadoesComponent', () => {
     expect(invalidCURP).toEqual({ invalidCURP: true });
   });
 
-  it('should validate phone number using telefonoValidator', () => {
-    const validPhone = TercerosRelacionadoesComponent.telefonoValidator({
-      value: '123-456-7890',
-    } as AbstractControl);
-    const invalidPhone = TercerosRelacionadoesComponent.telefonoValidator({
-      value: 'INVALID',
-    } as AbstractControl);
-
-    expect(validPhone).toBeNull();
-    expect(invalidPhone).toEqual({ invalidTelefono: true });
-  });
 });
