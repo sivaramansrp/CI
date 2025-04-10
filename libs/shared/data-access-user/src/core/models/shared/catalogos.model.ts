@@ -1,4 +1,4 @@
-export interface catalogoResponse {
+export interface CatalogoResponse {
   id: number;
   descripcion: string;
 }

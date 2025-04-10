@@ -1,7 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { PagoDeDerechosComponent } from './pago-de-derechos.component';
-import { SelectCatalogosComponent } from '../../../../shared/components/select-catalogos/select-catalogos.component';
 import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
 
 describe('PagoDeDerechosComponent', () => {
@@ -11,7 +10,7 @@ describe('PagoDeDerechosComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule, PagoDeDerechosComponent, TituloComponent, SelectCatalogosComponent],
+      imports: [ReactiveFormsModule, PagoDeDerechosComponent, TituloComponent],
       providers: [FormBuilder],
     }).compileComponents();
   });
