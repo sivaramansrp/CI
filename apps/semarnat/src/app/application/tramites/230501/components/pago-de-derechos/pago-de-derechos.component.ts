@@ -1,17 +1,14 @@
-import { CatalogoSelectComponent, SeccionLibQuery, TituloComponent } from '@libs/shared/data-access-user/src';
+import { CatalogoSelectComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import {
-  delay,
   map,
   takeUntil,
-  tap,
 } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { MaterialesPeligrososService } from '../../services/materiales-peligrosos.service';
 import { PagoDerechosState } from '../../models/materiales-peligrosos.model';
 import { SeccionLibState } from '@libs/shared/data-access-user/src/core/estados/seccion.store';
-import { SeccionLibStore } from '@libs/shared/data-access-user/src/core/estados/seccion.store';
 import { Subject } from 'rxjs';
 import { Tramite230501Query } from "../../estados/queries/tramite230501Query.query";
 import { Tramite230501Store } from '../../estados/stores/tramite230501Store.store';
@@ -70,8 +67,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * para inicializar el catálogo de pago de derechos.
    */
   constructor(public materialesPeligrososService: MaterialesPeligrososService, private fb: FormBuilder,
-    public tramite230501Store: Tramite230501Store, public tramite230501Query: Tramite230501Query,
-    private seccionQuery: SeccionLibQuery, private seccionStore: SeccionLibStore
+    public tramite230501Store: Tramite230501Store, public tramite230501Query: Tramite230501Query
   ) {
     this.materialesPeligrososService.inicializaPagoDerechosCatalogo();
   }
@@ -90,34 +86,6 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
         })
       ).subscribe();
     this.createPagoDerechos();
-    // this.seccionQuery.selectSeccionState$
-    //   .pipe(
-    //     takeUntil(this.destroyNotifier$),
-    //     map((seccionState) => {
-    //       this.seccion = seccionState;
-    //     })
-    //   )
-    //   .subscribe();
-    // this.pagoDerechos.statusChanges
-    //   .pipe(
-    //     takeUntil(this.destroyNotifier$),
-    //     delay(10),
-    //     tap((_value) => {
-    //       const SECCION: number = 2;
-    //       const FORMAS_VALIDADAS = this.seccion.formaValida;
-    //       const ES_VALIDO_EL_BANCO = this.pagoDerechos.get('banco')?.status;
-    //       const ES_VALIDO_EL_FECHO = this.pagoDerechos.get('fecha')?.status;
-    //       if (this.pagoDerechos.valid ||
-    //         (ES_VALIDO_EL_BANCO === 'VALID' && ES_VALIDO_EL_FECHO === 'VALID')) {
-    //         FORMAS_VALIDADAS[SECCION] = true;
-    //         this.seccionStore.establecerFormaValida(FORMAS_VALIDADAS);
-    //       } else {
-    //         FORMAS_VALIDADAS[SECCION] = false;
-    //         this.seccionStore.establecerFormaValida(FORMAS_VALIDADAS);
-    //       }
-    //     })
-    //   )
-    //   .subscribe();
   }
        /**
  * Establece el estado de validación del formulario de destinatario.
@@ -149,11 +117,9 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       fecha: [this.pagoDerechosState.fecha, [Validators.required]],
       importePago: [{ value: this.pagoDerechosState.importePago, disabled: true }],
     });
-    const FETCHA_CONTROL = this.pagoDerechos.get('fecha');
-    // if (FETCHA_CONTROL) {
       this.pagoDerechos.valueChanges.subscribe((value) => {
         this.setFormValida(this.pagoDerechos.valid);
-        this.tramite230501Store.setPagoDerechosStateProperty('fecha', value);
+        this.tramite230501Store.setPagoDerechosStateProperty('fecha', value.fecha);
       });
     
   }

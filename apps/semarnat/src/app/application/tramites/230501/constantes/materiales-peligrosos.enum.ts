@@ -123,3 +123,46 @@ export const FECHA_FACTURA = {
   required: false,
   habilitado: true,
 };
+
+/**
+ * @constant
+ * @description Lista de claves que representan los datos específicos relacionados con materiales peligrosos.
+ * Cada clave en esta lista corresponde a un atributo que debe ser proporcionado o manejado
+ * en el contexto de la aplicación para tramitar información sobre materiales peligrosos.
+ * 
+ * Claves incluidas:
+ * - `nombreComun`: Nombre común del material.
+ * - `nombreComercial`: Nombre comercial del material.
+ * - `estadoFisico`: Estado físico del material (sólido, líquido, gas, etc.).
+ * - `cantidad`: Cantidad del material.
+ * - `unidadMedida`: Unidad de medida utilizada para la cantidad.
+ * - `licenciaSanitaria`: Información sobre la licencia sanitaria asociada.
+ * - `usoEspecifico`: Uso específico del material.
+ * - `fechaExportacion`: Fecha de exportación del material.
+ * - `modoCantidad`: Modo en que se mide o calcula la cantidad.
+ */
+export const DATOS_ESPECIFICOS_VALIDO_CONTROL = [
+  'nombreComun',
+  'nombreComercial',
+  'estadoFisico',
+  'cantidad',
+  'unidadMedida',
+  'licenciaSanitaria',
+  'usoEspecifico',
+  'fechaExportacion',
+  'modoCantidad'
+];
+
+/**
+ * Lista de claves válidas para el control de información general.
+ * 
+ * Esta constante define las propiedades que son consideradas válidas 
+ * para el control de información general en el contexto de materiales peligrosos.
+ * 
+ * @const INFO_GENERAL_VALIDO_CONTROL
+ * @type {string[]}
+ */
+export const INFO_GENERAL_VALIDO_CONTROL = [
+  'fraccionArancelaria',
+  'numeroCas',
+  ];

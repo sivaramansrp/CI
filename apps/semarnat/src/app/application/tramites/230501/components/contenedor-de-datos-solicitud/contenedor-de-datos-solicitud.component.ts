@@ -1,9 +1,9 @@
 import { ActivatedRoute, Router } from '@angular/router';
-import { COMPOSICION_TABLA, FECHA_FACTURA, NUMERO_CAS_TABLA } from '../../constantes/materiales-peligrosos.enum';
+import { COMPOSICION_TABLA, DATOS_ESPECIFICOS_VALIDO_CONTROL, FECHA_FACTURA, INFO_GENERAL_VALIDO_CONTROL, NUMERO_CAS_TABLA } from '../../constantes/materiales-peligrosos.enum';
 import { Catalogo, CatalogoSelectComponent, InputFechaComponent, SeccionLibQuery, SeccionLibState, SeccionLibStore, TablaDinamicaComponent, TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ComposicionMaterial, InputFecha, TablaNumeroCasType } from '../../models/materiales-peligrosos.model';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Tramite230501State, Tramite230501Store } from '../../estados/stores/tramite230501Store.store';
 import { map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
@@ -190,16 +190,7 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
         })
       ).subscribe();
     this.crearDatosSolicitudForm();
-
-    // this.seccionQuery.selectSeccionState$
-    //   .pipe(
-    //     takeUntil(this.destroyNotifier$),
-    //     map((seccionState) => {
-    //       this.seccion = seccionState;
-    //     })
-    //   )
-    //   .subscribe();
-    // this.datasolicituActualizar();
+    this.pestanaValidar();
   }
      /**
  * Establece el estado de validación del formulario de destinatario.
@@ -229,17 +220,18 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
     this.datosSolicitudForm = this.fb.group({
       tratadoRotterdam: [this.tramiteState.datosSolicitudFormType.tratadoRotterdam || false],
       listadoNacional: [this.tramiteState?.datosSolicitudFormType?.listadoNacional || false],
-      fraccionArancelaria: [this.tramiteState?.datosSolicitudFormType?.fraccionArancelaria || ''],
+      fraccionArancelaria: [this.tramiteState?.datosSolicitudFormType?.fraccionArancelaria || '', [Validators.required]],
       descripcionFraccion: [{ value: this.tramiteState?.datosSolicitudFormType?.descripcionFraccion || '', disabled: true }],
       convenioMinamata: [this.tramiteState?.datosSolicitudFormType?.convenioMinamata || false],
       numeroCas: [this.tramiteState?.datosSolicitudFormType?.numeroCas || ''],
       descripcionNoArancelaria: [{ value: this.tramiteState?.datosSolicitudFormType?.descripcionNoArancelaria || '', disabled: true }],
       nombreQuimico: [{ value: this.tramiteState?.datosSolicitudFormType?.nombreQuimico || '', disabled: true }],
+      
       nombreComun: [this.tramiteState.datosSolicitudFormType.nombreComun || ''],
       nombreComercial: [this.tramiteState?.datosSolicitudFormType?.nombreComercial || ''],
       estadoFisico: [this.tramiteState?.datosSolicitudFormType?.estadoFisico || ''],
       cantidad: [this.tramiteState?.datosSolicitudFormType?.cantidad || null],
-      cantidadLetra: [this.tramiteState?.datosSolicitudFormType?.cantidadLetra || ''],
+      cantidadLetra: [{value: this.tramiteState?.datosSolicitudFormType?.cantidadLetra || '', disabled: true }],
       unidadMedida: [this.tramiteState?.datosSolicitudFormType?.unidadMedida || ''],
       licenciaSanitaria: [this.tramiteState?.datosSolicitudFormType?.licenciaSanitaria || ''],
       usoEspecifico: [this.tramiteState?.datosSolicitudFormType?.usoEspecifico || ''],
@@ -250,10 +242,57 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
     this.datosSolicitudForm.get('cantidad')?.valueChanges.subscribe(value => {
       const CANTIDAD_LETRA = this.materialesPeligrososService.convertirNumeroALetras(value);
       this.datosSolicitudForm.get('cantidadLetra')?.setValue(CANTIDAD_LETRA);
+      this.actualizarElValorDeLaTienda('cantidadLetra', 'text')
+    });
+    this.datosSolicitudForm.valueChanges.subscribe(() => {
+      this.pestanaValidar();
     });
   }
 
+  /**
+   * Método que valida si la pestaña actual del formulario es válida.
+   * 
+   * Se considera válida si:
+   * - Los campos específicos del formulario pasan la validación (`isDatosEspecificosValid()`).
+   * - Existen elementos en la tabla de números CAS.
+   * - Existen elementos en la tabla de composición.
+   * 
+   * En base a esa validación, se actualiza el estado del formulario mediante `setFormValida`.
+   */
+  pestanaValidar(): void {
+    const IS_VALIDA = this.isDatosEspecificosValid() &&
+      this.tramiteState.numeroCasTablaDatos.length &&
+      this.tramiteState.composicionTablaDatos.length;
+    this.setFormValida(IS_VALIDA ? true : false);
+  }
 
+  /**
+ * Checks if the specified CONTROLS in the form are valid.
+ * 
+ * @returns {boolean} True if all specified CONTROLS are valid, otherwise false.
+ */
+  areSpecificControlsValid(): boolean {
+    const CONTROLS_TO_CHECK = INFO_GENERAL_VALIDO_CONTROL;
+    return CONTROLS_TO_CHECK.every(controlName => {
+      const CONTROLS = this.datosSolicitudForm.get(controlName);
+      return CONTROLS && CONTROLS.valid;
+    });
+  }
+
+  /**
+   * Verifica si todos los controles específicos de datos en el formulario son válidos.
+   *
+   * @returns {boolean} - Devuelve `true` si todos los controles especificados en `DATOS_ESPECIFICOS_VALIDO_CONTROL` 
+   * son válidos, de lo contrario devuelve `false`.
+   */
+  isDatosEspecificosValid(): boolean {
+    const CONTROLS_TO_CHECK = DATOS_ESPECIFICOS_VALIDO_CONTROL;
+    return CONTROLS_TO_CHECK.every(controlName => {
+      const CONTROLS = this.datosSolicitudForm.get(controlName);
+      return CONTROLS && CONTROLS.valid;
+    });
+  }
+      
   /**
    * Actualiza el valor de una propiedad en la tienda según el tipo de dato especificado.
    *
@@ -288,7 +327,7 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
   onFechaCambiada(fecha: string): void {
     if (fecha) {
       this.datosSolicitudForm.patchValue({ fechaExportacion: fecha });
-      this.actualizarElValorDeLaTienda('fechaExportacion', 'text')
+      this.actualizarElValorDeLaTienda('fechaExportacion', 'text');
     }
   }
 
@@ -298,7 +337,7 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
    * en la tienda utilizando el tipo de dato 'text'.
    */
   estadoFisicoSeleccione(): void {
-    this.actualizarElValorDeLaTienda('estadoFisico', 'text')
+    this.actualizarElValorDeLaTienda('estadoFisico', 'text');
   }
 
   /**
@@ -307,7 +346,7 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
    * utilizando el valor proporcionado como 'text'.
    */
   unidadMedidaSeleccione(): void {
-    this.actualizarElValorDeLaTienda('unidadMedida', 'text')
+    this.actualizarElValorDeLaTienda('unidadMedida', 'text');
   }
 
   /**
@@ -335,13 +374,16 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
       nombreQuimico: NOMBRE_QUMICO,
       constanciaCisen: ''
     };
-        this.setFormValida(this.datosSolicitudForm.valid);
-    
     this.tramite230501Store.update((state) => ({
       ...state,
       numeroCasTablaDatos: [...state.numeroCasTablaDatos, NUMERO_CAS_TABLA],
     }));
     this.datosSolicitudForm.reset();
+    this.actualizarElValorDeLaTienda('fraccionArancelaria', 'text');
+    this.actualizarElValorDeLaTienda('descripcionNoArancelaria', 'text');
+    this.actualizarElValorDeLaTienda('numeroCas', 'text');
+    this.actualizarElValorDeLaTienda('descripcionFraccion', 'text');
+    this.actualizarElValorDeLaTienda('nombreQuimico', 'text');
   }
 
   /**
@@ -367,6 +409,7 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
         ...state,
         numeroCasTablaDatos: LISTA_FILTRADA,
       }));
+      this.numeroCasSellecionLista = [];
     }
   }
 
@@ -478,6 +521,7 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
         ...state,
         composicionTablaDatos: LISTA_FILTRADA,
       }));
+      this.composicionSeleccionLista = [];
     }
   }
 
