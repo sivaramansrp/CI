@@ -1,8 +1,8 @@
+import { AlertComponent, InputCheckComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy } from '@angular/core';
 import { Observable, Subject, takeUntil } from 'rxjs';
 import { Tramite260912Store, Tramites260912State } from '../../estados/tramite-260912.store';
 import { ALERT } from '../../enums/domicilio-del-establecimiento.enum';
-import { AlertComponent } from '@libs/shared/data-access-user/src';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
@@ -10,7 +10,6 @@ import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
 import { DomicilioDelEstablecimientoService } from '../../services/domicilio-del-establecimiento.service';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
 import { InputRadioComponent } from '@libs/shared/data-access-user/src';
 import { MERCANCIAS_DATA } from '../../modelos/modificación-del-permiso-sanitario-de-importación-de-insumo.model';
 import { MercanciasInfo } from '../../modelos/modificación-del-permiso-sanitario-de-importación-de-insumo.model';
@@ -53,6 +52,7 @@ import { Validators } from '@angular/forms';
     AlertComponent,
     TablaDinamicaComponent,
     InputRadioComponent,
+    InputCheckComponent
   ],
   providers: [DomicilioDelEstablecimientoService],
   templateUrl: './domicilio-del-establecimiento.component.html',
