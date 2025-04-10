@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { HttpClient } from '@angular/common/http';
 
-import { catalogoResponse } from '@ng-mf/data-access-user';
+import { CatalogoResponse } from '@ng-mf/data-access-user';
 
 import { Observable } from 'rxjs';
 
@@ -38,8 +38,8 @@ export class ProsecModificacionServiceTsService {
   getModoficacionInfo(): Observable<ModificacionInfo > {
     return this.http.get<ModificacionInfo >('assets/json/90305/modificacionInfo.json')
   }
-  getEstadoData(): Observable<catalogoResponse[]> {
-    return this.http.get<catalogoResponse[]>('assets/json/90305/estado.json');
+  getEstadoData(): Observable<CatalogoResponse[]> {
+    return this.http.get<CatalogoResponse[]>('assets/json/90305/estado.json');
   }
   
 }

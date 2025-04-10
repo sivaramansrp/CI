@@ -35,12 +35,8 @@ export class AgregaPersonasComponent {
   tituloModal!: string;
   mensajeModal!: string;
 
-  constructor(private fb: FormBuilder, 
-              private validacionesService: ValidacionesFormularioService) 
-  // eslint-disable-next-line no-empty-function
-  {
-    
-  }
+  constructor(private fb: FormBuilder,
+    private validacionesService: ValidacionesFormularioService) { }
 
   /**
    * Verifica si un campo específico en el formulario de persona es válido.

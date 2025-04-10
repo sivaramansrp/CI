@@ -68,6 +68,13 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'modificar-caat-terrestre',
+    loadChildren: () =>
+      import('./tramites/40103/modificarCaatTerrestre.module').then(
+        (m) => m.ModificarCaatTerrestreModule
+      ),
+  },
+  {
     path: 'muestras-mercancias',
     loadChildren: () =>
       import('./tramites/30901/renovaciones-muestras-mercancias.module').then(
@@ -151,6 +158,13 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'registro-transportista',
+    loadChildren: () =>
+      import('./tramites/40302/registro-transportista.module').then(
+        (m) => m.RegistroTransportistaModule
+      ),
+  },
+  {
     path: 'attention-Of-Renewal',
     loadChildren: () =>
       import('./tramites/40403/attentionOfRenewal.module').then(
@@ -170,7 +184,15 @@ const ROUTES: Routes = [
       import('./tramites/104/deposito-fiscal-manufactura-vehiculos/deposito-fiscal-manufactura-vehiculos.module').then(
         (m) => m.DepositoFiscalManufacturaVehiculosModule
       )
+  },
+  {
+    path: 'modificarCaatTerrestre',
+    loadChildren: () =>
+      import('./tramites/40103/modificarCaatTerrestre.module').then(
+        (m) => m.ModificarCaatTerrestreModule
+      )
   }
+  
 ];
 
 @NgModule({
