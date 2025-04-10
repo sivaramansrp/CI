@@ -72,6 +72,10 @@ export const TRANSPORTE = [
   'Otro'
 ]
 
+/**
+ * Constante para el endpoint de la API de la consulta de las patentes en data dummy
+ * se va a eliminar
+ */
 export const PATENTES_ID = 33;
 
 /**
@@ -86,12 +90,10 @@ export const EMPRESAS_CERTIFICADAS = [
   {
     label: 'I.V.A e I.E.P.S Certificación AA',
     value: 'aa',
-  }, 
+  },
   {
     label: 'I.V.A e I.E.P.S Certificación AAA',
     value: 'aaa',
-  } 
+  }
 ]
-
-
 

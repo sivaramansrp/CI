@@ -21,44 +21,24 @@
             extraordinario
           </h6>
         </div>
-        <app-input-radio [radioOptions]="radioPatentes"
-          (change)="setValoresStore(datosImportadorExportador,'tipoEmpresaCertificada', 'setTipoEmpresaCertificada')"
-          id="tipoEmpresaCertificada" formControlName="tipoEmpresaCertificada">
+        <app-input-radio [radioOptions]="radioPatentes" [layout]="'horizontal'" (change)="patenteApoderado()"
+          id="apoderadoPatente" formControlName="apoderadoPatente">
         </app-input-radio>
-        <!--  @for (patente of patentes; track $index ) {
-        <div class="col-md-4">
-          <div class="form-check">
-            <input class="form-check-input" type="radio" name="apoderadoPatente" [value]="patente"
-              id="apoderadoPatente_{{ $index + 1 }}" formControlName="apoderadoPatente" (change)="patenteApoderado()" />
-            <label class="form-check-label" for="apoderadoPatente_{{ $index + 1 }}">{{
-              patente
-              }}</label>
-          </div>
-        </div>
-        } -->
       </div>
 
       <!-- Sección RFC y Nombre  -->
       <div class="row">
         <div class="col-md-4">
-          <label for="empresaApoderado" id="RFCempresa">RFC</label>
-          <span class="require">*</span>
-          <select id="empresaApoderado" formControlName="empresaApoderado" class="form-control">
-            <option value="-1" selected>Seleccione una opción</option>
-            <!-- Add options as needed -->
-          </select>
+          <app-catalogo-select [catalogo]="rfcs" formControlName="empresaApoderado" [label]="'RFC'"
+            [id]="'empresaApoderado'" [required]="true" name="empresaApoderado"></app-catalogo-select>
         </div>
 
         @if (isApoderado && masDeUnaEmpresa) {
         <div class="col-md-4">
-          <label for="empresasApoderado" id="RFCEmpresas">RFC</label>
-          <span class="require">*</span>
-          <select formControlName="empresasApoderado" id="empresasApoderado" class="form-control">
-            <option value="-1" selected>Seleccione una opción</option>
-          </select>
+          <app-catalogo-select [catalogo]="rfcs" formControlName="empresasApoderado" [label]="'RFC'"
+            [id]="'empresasApoderado'" [required]="true" name="empresasApoderado"></app-catalogo-select>
           <span id="errorEmpresasApoderado" name="errorEmpresasApoderado" class="text-danger"></span>
         </div>
-
         }
       </div>
 
