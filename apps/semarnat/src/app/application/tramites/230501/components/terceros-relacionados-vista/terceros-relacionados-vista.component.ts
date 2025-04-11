@@ -120,7 +120,9 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
     private tramiteQuery: Tramite230501Query,
     private router: Router,
     private activatedRoute: ActivatedRoute
-  ) { }
+  ) { 
+    // No hacer nada 
+  }
 
   /**
    * @method ngOnInit
@@ -286,11 +288,11 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
   }
 
   /**
-* Establece el estado de validación del formulario de allForm.
+* Establece el estado de validación del formulario de formularioTotal.
 * 
-* @param valida - Un valor booleano que indica si el formulario de datos del allForm es válido.
+* @param valida - Un valor booleano que indica si el formulario de datos del formularioTotal es válido.
 */
   setFormValida(valida: boolean): void {
-    this.tramiteStore.setFormValida({ allForm: valida });
+    this.tramiteStore.setFormValida({ formularioTotal: valida });
   }
 }

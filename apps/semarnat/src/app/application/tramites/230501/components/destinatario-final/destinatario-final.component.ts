@@ -210,6 +210,12 @@ export class DestinatarioFinalComponent implements OnDestroy, OnInit {
     this.tramiteStore.addDestinatarioFinalTablaDatos(newDestinatarios);
   }
 
+  /**
+   * Actualiza un destinatario existente en la tabla de destinatarios finales.
+   * @method updateDestinatarios
+   * @param newDestinatarios - Objeto `Destinatario` a actualizar.
+   * @returns {void}
+   */
   updateDestinatarios(newDestinatarios: Destinatario): void {
     this.tramiteStore.updateDestinatarioFinalTablaDatos(newDestinatarios);
   }
@@ -223,6 +229,7 @@ export class DestinatarioFinalComponent implements OnDestroy, OnInit {
     this.onTipoPersonaChange();
 
     this.cargarDatos();
+    // Suscribirse a los cambios en la lista de destinatarios finales
     this.tramiteStore.destinatarioSujeto
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(destinatario => {
@@ -231,6 +238,7 @@ export class DestinatarioFinalComponent implements OnDestroy, OnInit {
       }
     });
 
+    // Suscribirse a los cambios en el estado del modo de edición
     this.tramiteQuery.esDestinatarioFinalElModoDeEdicion$.pipe(takeUntil(this.unsubscribe$))
       .subscribe(modo => {
         this.esElModoDeEdicion = modo;

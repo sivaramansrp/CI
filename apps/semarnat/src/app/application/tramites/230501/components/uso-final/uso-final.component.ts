@@ -197,7 +197,8 @@ export class UsoFinalComponent implements OnDestroy, OnInit {
         this.usuarioFinalForm.patchValue(usuario);
       }
     });
-
+    
+    // Suscripción para obtener el estado de edición del usuario final
     this.tramiteQuery.esUsuarioElModoDeEdicion$.pipe(takeUntil(this.unsubscribe$))
     .subscribe(modo => {
       this.esElModoDeEdicion = modo;

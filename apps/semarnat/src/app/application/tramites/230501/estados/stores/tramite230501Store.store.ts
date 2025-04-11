@@ -76,7 +76,7 @@ export function createInitialState(): Tramite230501State {
       composicionForm: false,
       datosSolicitudForm: false,
       pagoDeDerechos: false,
-      allForm: false,
+      formularioTotal : false,
     }
   };
 }
@@ -193,6 +193,18 @@ export class Tramite230501Store extends Store<Tramite230501State> {
     }));
   }
 
+  
+  
+  /**
+   * Actualiza la lista de destinatarios finales en la tabla de datos.
+   * 
+   * Este método reemplaza cualquier destinatario existente con el mismo número 
+   * de teléfono que el nuevo destinatario proporcionado. Si no existe un destinatario 
+   * con el mismo número de teléfono, el nuevo destinatario se agrega a la lista.
+   * 
+   * @param newDestinatarios - El nuevo destinatario que se agregará o reemplazará 
+   * en la lista de destinatarios finales.
+   */
   public updateDestinatarioFinalTablaDatos(newDestinatarios: Destinatario): void {
     this.update((state) => ({
       ...state,
