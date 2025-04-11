@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ALERTA_MERCANCIA } from '../../enum/mercancia-alert.enum';
-import { AQUANDAS_LABEL } from '../../enum/aquaandas-label.enum';
+import { AQUANDAS_LABEL } from '../../enum/adnuana-botons.enum';
 import { CROSSLIST_BOTONS } from '../../enum/crossList-botons.enum';
 
 import { Subject, takeUntil } from 'rxjs';
@@ -17,6 +17,7 @@ import { PermisoCitesService } from '../../services/permiso-cites.service';
 
 import { Solicitud230902State, Tramite230902Store } from '../../estados/tramite230902.store';
 import { Tramite230902Query } from '../../estados/tramite230902.query';
+
 
 
 
@@ -157,8 +158,8 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   tablaSeleccion = TablaSeleccion.CHECKBOX;
 
   /**
-   * Indicates whether a file has been selected.
-   * Used to track the state of file selection in the component.
+   * Indica si se ha seleccionado un archivo.
+   * Se utiliza para rastrear el estado de la selección de archivos en el componente.
    */
   isFileSelected: boolean = false;
  
@@ -208,9 +209,10 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    */
   private destroyed$ = new Subject<void>();
 
+  
   /**
-   * Indicates whether the current operation is an update.
-   * Used to differentiate between creating a new item and updating an existing one.
+   * Indica si la operación actual es una actualización.
+   * Se utiliza para diferenciar entre crear un nuevo elemento y actualizar uno existente.
    */
   esOperacionDeActualizacion: boolean = false;
   
@@ -411,7 +413,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    * Verifica si un control del formulario es inválido.
    * Devuelve verdadero si el control es inválido y ha sido tocado o modificado.
    * 
-   * formControlName Nombre del control en el formulario.
+   * @param formControlName Nombre del control en el formulario.
    */
   esInvalido(formControlName: string): boolean {
     const CONTROL = this.formMercancia.get(formControlName);
@@ -432,7 +434,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    * Maneja la fila seleccionada en la tabla de mercancías.
    * Actualiza el formulario con los datos de la fila seleccionada.
    *
-   * fila Fila seleccionada en la tabla.
+   * @param fila Fila seleccionada en la tabla.
    */
   hadleFilaSeleccionada(fila: ConfiguracionItem[]): void {
     this.listaFilaSeleccionadaMercancia = fila;
@@ -447,6 +449,10 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   }
  
  
+  /**
+   * Modifica un elemento de mercancía en la tabla.
+   * Actualiza los datos del formulario con los valores de la fila seleccionada.
+   */
   modficarMercanciaItem(): void {
    
      if (this.listaFilaSeleccionadaMercancia.length < 2) {
@@ -503,6 +509,11 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
       this.abrirMultipleSeleccionPopup();
      }
   }
+
+  /**
+   * Abre el popup de selección múltiple.
+   * Muestra un mensaje de error si se seleccionan múltiples registros para modificar.
+   */
   abrirMultipleSeleccionPopup(): void {
     this.nuevaNotificacion = {
       tipoNotificacion: TipoNotificacionEnum.ALERTA,
@@ -518,11 +529,19 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
       this.multipleSeleccionPopupAbierto = true;
     }
   }
+
+  /**
+   * Cierra el popup de selección múltiple.
+   */
   cerrarMultipleSeleccionPopup(): void {
     this.multipleSeleccionPopupAbierto = false;
     this.multipleSeleccionPopupCerrado = false;
   }
  
+  /**
+   * Elimina los elementos seleccionados de la tabla de mercancías.
+   * Actualiza el estado global con los datos restantes.
+   */
   eliminarMercanciaItem():void{
     const IDS_TO_DELETE = this.listaFilaSeleccionadaMercancia.map(item => item.id);
   
@@ -535,6 +554,10 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     this.cerrarEliminarConfirmationPopup()
   } 
    
+  /**
+   * Abre el popup de confirmación para eliminar elementos.
+   * Muestra un mensaje de confirmación antes de eliminar los registros seleccionados.
+   */
   abrirElimninarConfirmationopup(): void {
     this.nuevaNotificacion = {
       tipoNotificacion: TipoNotificacionEnum.ALERTA,
@@ -549,16 +572,25 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     this.confirmEliminarPopupAbierto = true;
   }
   
+  /**
+   * Cierra el popup de confirmación para eliminar elementos.
+   */
   cerrarEliminarConfirmationPopup(): void {
     this.confirmEliminarPopupAbierto = false;
     this.confirmEliminarPopupCerrado = false;
   }
+
+  /**
+   * Confirma la eliminación de los elementos seleccionados.
+   * Abre el popup de confirmación si hay elementos seleccionados.
+   */
   confirmEliminarMercanciaItem(): void {
     if (this.listaFilaSeleccionadaMercancia.length === 0) {
       return;
     }
     this.abrirElimninarConfirmationopup();
   }
+
   /**
    * Alterna la visibilidad del modal de datos de mercancía.
    * Muestra u oculta el modal según el estado actual.
@@ -578,6 +610,12 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     this.alternarVisibilidadModalMercancia();
   }
 
+  /**
+   * Maneja el cambio en la fracción arancelaria seleccionada.
+   * Actualiza la descripción de la fracción en el formulario.
+   * 
+   * @param $event Evento que contiene la fracción seleccionada.
+   */
   manejarCambioFraccionArancelaria($event: Catalogo): void {
     const FRACCION_DESCRIPCION =
       this.permisoCitesService.fraccionArancelariaDescripcion.find(

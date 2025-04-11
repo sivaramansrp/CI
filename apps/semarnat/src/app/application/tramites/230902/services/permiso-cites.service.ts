@@ -17,19 +17,83 @@ import { ConfiguracionItem } from '../enum/mercancia.enum';
 
 export class PermisoCitesService {
 
+  /**
+   * Catálogo de tipos de movimiento.
+   * Contiene las opciones disponibles para el tipo de movimiento.
+   */
   tipodeMovimiento: Catalogo[] = [];
+
+  /**
+   * Catálogo de tipos de régimen.
+   * Contiene las opciones disponibles para el tipo de régimen.
+   */
   tipoRegimen: Catalogo[] = [];
+
+  /**
+   * Catálogo de fracciones arancelarias.
+   * Contiene las opciones disponibles para las fracciones arancelarias.
+   */
   fraccionArancelaria: Catalogo[] = [];
+
+  /**
+   * Catálogo de descripciones de fracciones arancelarias.
+   * Contiene las descripciones asociadas a las fracciones arancelarias.
+   */
   fraccionArancelariaDescripcion: Catalogo[] = [];
+
+  /**
+   * Catálogo de clasificaciones taxonómicas.
+   * Contiene las opciones disponibles para clasificaciones taxonómicas.
+   */
   clasificacionTaxonomica: Catalogo[] = [];
+
+  /**
+   * Catálogo de nombres científicos.
+   * Contiene las opciones disponibles para nombres científicos.
+   */
   nombreCientifico: Catalogo[] = [];
+
+  /**
+   * Catálogo de nombres comunes.
+   * Contiene las opciones disponibles para nombres comunes.
+   */
   nombreComun: Catalogo[] = [];
+
+  /**
+   * Catálogo de unidades de medida.
+   * Contiene las opciones disponibles para unidades de medida.
+   */
   unidadMedida: Catalogo[] = [];
+
+  /**
+   * Catálogo de países de origen.
+   * Contiene las opciones disponibles para países de origen.
+   */
   paisOrigen: Catalogo[] = [];
+
+  /**
+   * Catálogo de países de procedencia.
+   * Contiene las opciones disponibles para países de procedencia.
+   */
   paisProcedencia: Catalogo[] = [];
+
+  /**
+   * Catálogo de entidades federativas.
+   * Contiene las opciones disponibles para entidades federativas.
+   */
   entidadFederativa: Catalogo[] = [];
+
+  /**
+   * Catálogo de bancos.
+   * Contiene las opciones disponibles para bancos.
+   */
   banco: Catalogo[] = [];
 
+  /**
+   * URL del archivo JSON que contiene los datos de la tabla.
+   * Se utiliza para cargar los datos de la tabla desde un archivo local.
+   */
+  private jsonUrl = 'assets/json/230902/tablaDatos.json';
 
   /**
    * Constructor del servicio.
@@ -40,7 +104,6 @@ export class PermisoCitesService {
   constructor(private http: HttpClient) {
     // No se necesita lógica de inicialización adicional.
   }
-  private jsonUrl = 'assets/json/230902/tablaDatos.json';
 
   /**
    * Inicializa los catálogos relacionados con los datos de la solicitud.
