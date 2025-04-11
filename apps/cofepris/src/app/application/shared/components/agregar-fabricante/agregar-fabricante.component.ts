@@ -203,8 +203,8 @@ export class AgregarFabricanteComponent implements OnDestroy, OnInit {
       tipoPersona: ['', Validators.required],
       rfc: ['', Validators.required],
       curp: ['', Validators.required],
-      nombres: ['', Validators.required],
-      primerApellido: ['', Validators.required],
+      nombres: ['',[Validators.required, Validators.maxLength(200)]],
+      primerApellido: ['',Validators.required],
       segundoApellido: [''],
       razonSocial: ['', Validators.required],
       pais: [{

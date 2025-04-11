@@ -282,9 +282,9 @@ export class AgregarDestinatarioFinalComponent
           Validators.maxLength(13),
         ],
       ],
-      nombres: ['', Validators.required],
+      nombres: ['',[Validators.required, Validators.maxLength(200)]],
       denominacionRazon: ['', Validators.required],
-      primerApellido: ['', Validators.required],
+      primerApellido: ['',[Validators.required]],
       segundoApellido: [''],
       pais: [{
         value:this.elementosDeshabilitados.includes('pais')?'1':'',
