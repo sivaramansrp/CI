@@ -364,9 +364,9 @@ export const STR_NACIONAL = 'Nacional';
 export const CAMPOS_REQUERIDOS_FORMULARIO_MAP: Map<string, number[]> = new Map([
   ['colonia', [260301]],
   ['localidad', [260301]],
-  ['denominacionRazon',[260301, 260208]],
+  ['denominacionRazon',[260301, 260208,260207]],
   ['scian', [260301, 260208]],
-  ['correoElectronico', [260208]]
+  ['correoElectronico', [260208,260207]]
 ]);
 
 export const CAMPOS_ADICIONALES_POR_PROCEDIMIENTO_MAP: Map<string, number[]> = new Map([

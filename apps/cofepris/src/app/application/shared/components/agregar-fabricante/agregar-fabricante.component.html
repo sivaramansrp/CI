@@ -35,6 +35,11 @@
             [value]="tipoPersona.FISICA"
           />
           Física
+          <span
+          class="bi bi-question-circle-fill"
+          title="Física"
+          data-bs-toggle="tooltip"
+        ></span>
         </div>
         <div class="form-check">
           <input
@@ -44,6 +49,11 @@
             [value]="tipoPersona.MORAL"
           />
           Moral
+          <span
+          class="bi bi-question-circle-fill"
+          title="Moral"
+          data-bs-toggle="tooltip"
+        ></span>
         </div>
       </div>
     </div>
@@ -132,6 +142,7 @@
           formControlName="pais"
           [label]="'País'"
           [required]="true"
+          [isDisabled]="elementosDeshabilitados.includes('pais')"
         ></app-catalogo-select>
       </div>
       <div class="col-md-4">
