@@ -39,6 +39,10 @@ const routes: Routes = [
         path: 'consulta',
         component: ConsultaComponent,
     },
+    {
+      path: 'observaciones-dictamen',
+      component: ObservacionesDictamenComponent,
+      },
 
 ];
 

@@ -1,4 +1,4 @@
-import { BodyTablaDictamenes, BodyTablaDocumentos, BodyTablaEnvioDigital, BodyTablaOpinion, BodyTablaRequerimiento, BodyTablaTareasTramite } from "../models/shared/consulta-generica.model";
+import { BodyTablaDictamenes, BodyTablaDocumentos, BodyTablaEnvioDigital, BodyTablaOpinion, BodyTablaOpiniones, BodyTablaRequerimiento, BodyTablaTareasTramite } from "../models/shared/consulta-generica.model";
 
 export const TITULO_ACUSES = 'Acuse(s)';
 export const TXT_ALERTA_ACUSES = (folio: string) => {
@@ -137,11 +137,11 @@ export const CONSULTA_ACUSES = {
       },
       {
         key: 'nombreUsuarioAsignado' as keyof BodyTablaTareasTramite,
-        valor: 'Nombre del usuario al que se le asignó la tarea',
+        valor: 'Usuario asignado',
       },
       {
         key: 'claveUsuarioAsignado' as keyof BodyTablaTareasTramite,
-        valor: 'Clave de usuario al que se le asignó la tarea',
+        valor: 'Clave asignada',
       },
       {
         key: 'fechaAsignacion' as keyof BodyTablaTareasTramite,
@@ -167,7 +167,7 @@ export const CONSULTA_ACUSES = {
         nombreUsuarioAsignado: 'María López',
         claveUsuarioAsignado: 'ML456',
         fechaAsignacion: '2025-03-03',
-        fechaAtencion: '2025-03-04'
+        fechaAtencion: null
       },
       {
         id: 3,
@@ -298,12 +298,8 @@ export const CONSULTA_ACUSES = {
   export const CONSULTA_DOCUMENTOS = {
     encabezadoTablaDocumento: [
       {
-        key: 'id' as keyof BodyTablaDocumentos,
-        valor: 'No.',
-      },
-      {
         key: 'tipoDocumento' as keyof BodyTablaDocumentos,
-        valor: 'Tipo de documento',
+        valor: 'Tipo de Documento',
       },
       {
         key: 'estatus' as keyof BodyTablaDocumentos,
@@ -311,16 +307,15 @@ export const CONSULTA_ACUSES = {
       },
       {
         key: 'fechaAdjunto' as keyof BodyTablaDocumentos,
-        valor: 'Fecha en que adjuntó',
+        valor: 'Fecha adjunto',
       },
       {
         key: 'nombreArchivo' as keyof BodyTablaDocumentos,
-        valor: 'Nombre del archivo',
+        valor: 'Nombre del documento',
       },
     ],
     datosTablaDocumento: [
       {
-        id:1,
         tipoDocumento: 'Contrato de maquila',
         estatus: 'Autorizado',
         fechaAdjunto: '2025-03-02',
@@ -328,31 +323,27 @@ export const CONSULTA_ACUSES = {
         urlPdf: 'assets/pdf/Test03.pdf',
       },
       {
-        id:2,
         tipoDocumento: 'Para acreditar el requisito de inversión',
-        estatus: 'Guardado',
+        estatus: 'Autorizado',
         fechaAdjunto: '2025-03-02',
         nombreArchivo: 'titulo.pdf',
         urlPdf: 'assets/pdf/Test03.pdf',
       },
       {
-        id:3,
         tipoDocumento: 'Comprobante de pago',
-        estatus: 'en proceso',
+        estatus: 'Autorizado',
         fechaAdjunto: '2025-03-02',
         nombreArchivo: 'salario.pdf',
         urlPdf: 'assets/pdf/Test03.pdf',
       },
       {
-        id:4,
         tipoDocumento: 'Diagrama de flujo con una descripción de los procesos',
-        estatus: 'eliminado',
+        estatus: 'Autorizado',
         fechaAdjunto: '2025-03-02',
         nombreArchivo: 'solicitud.pdf',
         urlPdf: 'assets/pdf/Test03.pdf',
       },
       {
-        id:5,
         tipoDocumento: 'Ultimo comprobante de pago',
         estatus: 'Pendiente',
         fechaAdjunto: '2025-03-02',
@@ -362,8 +353,8 @@ export const CONSULTA_ACUSES = {
     ],
     accionesTablaDocumento: [
       {
-        tipo: 'Ver',
-        label: 'Ver',
+        tipo: 'Acciones',
+        label: 'Acciones',
         icono: 'bi-arrow-bar-down',
       },
     ],
@@ -419,7 +410,7 @@ export const CONSULTA_ACUSES = {
     ]
   };
 
-  export const CONSULTA_OPINIONES = {
+  export const CONSULTA_DETALLEOPINIONES = {
     encabezadoTablaOpinion: [
       {
         key: 'id' as keyof BodyTablaOpinion,
@@ -441,6 +432,70 @@ export const CONSULTA_ACUSES = {
       {
         tipo: 'descargar',
         label: 'Descargar',
+        icono: 'bi-arrow-bar-down',
+      },
+    ],
+  };
+
+  /**
+   * Constantes para la consulta de opiniones.
+   * Se utiliza para mostrar la tabla de opiniones en el componente opinion.
+   * 
+   */
+
+  export const CONSULTA_OPINIONES = {
+    encabezadoTablaOpinion: [
+      {
+        key: 'id' as keyof BodyTablaOpiniones,
+        valor: 'No.',
+      },
+      {
+        key: 'fechaSolicitud' as keyof BodyTablaOpiniones,
+        valor: 'Fecha de solicitud',
+      },
+      {
+        key: 'areaSolicitante' as keyof BodyTablaOpiniones,
+        valor: 'Área solicitante',
+      },
+      {
+        key: 'areaResponsable' as keyof BodyTablaOpiniones,
+        valor: 'Área responsable',
+      },
+      {
+        key: 'estatus' as keyof BodyTablaOpiniones,
+        valor: 'Estatus',
+      },
+    ],
+    datosTablaOpinion: [
+      {
+        id: 1,
+        fechaSolicitud: '2025-03-01',
+        areaSolicitante: 'Área de Finanzas',
+        areaResponsable: 'Área de Recursos Humanos',
+        estatus: 'Pendiente',
+        urlPdf: 'assets/pdf/Test03.pdf'
+      },
+      {
+        id: 2,
+        fechaSolicitud: '2025-03-01',
+        areaSolicitante: 'Aeropuerto Internacional',
+        areaResponsable: 'Aeropuesto Internacional de Cancún',
+        estatus: 'Pendiente',
+        urlPdf: 'assets/pdf/Test03.pdf',
+      },
+      {
+        id:3,
+        fechaSolicitud: '2025-03-01',
+        areaSolicitante: 'Aeropuesto Internacional de Los Cabos',
+        areaResponsable: 'Aeropuerto Internacional de san José del Cabo',
+        estatus: 'Pendiente',
+        urlPdf: 'assets/pdf/Test03.pdf',
+      }
+    ],
+    accionesTablaOpinion: [
+      {
+        tipo: 'detalle',
+        label: 'Detalle',
         icono: 'bi-arrow-bar-down',
       },
     ],

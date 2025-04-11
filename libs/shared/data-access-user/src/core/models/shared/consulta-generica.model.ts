@@ -40,7 +40,7 @@ export interface BodyTablaTareasTramite {
   nombreUsuarioAsignado: string;
   claveUsuarioAsignado: string;
   fechaAsignacion: string;
-  fechaAtencion: string;
+  fechaAtencion: string|null;
 }
 
 export interface HeaderTablaDictamenes {
@@ -63,7 +63,6 @@ export interface HeaderTablaDocumentos {
   valor: string;
 }
 export interface BodyTablaDocumentos {
-  id: number;
   tipoDocumento: string;
   estatus: string;
   fechaAdjunto: string;
@@ -91,4 +90,39 @@ export interface BodyTablaOpinion {
   id: number;
   documento: string;
   urlPdf: string;
+}
+
+/*
+* Tabla de opiniones
+* Se utiliza para mostrar la tabla de opiniones en el componente opinion.  
+* Es la primera pestaña que se muestra al abrir el componente.
+*/ 
+export interface HeaderTablaOpiniones {
+  key: keyof BodyTablaOpiniones;
+  valor: string;
+}
+export interface BodyTablaOpiniones {
+  id: number;
+  fechaSolicitud: string;
+  areaSolicitante: string;
+  areaResponsable: string;
+  estatus: string;
+  urlPdf: string;
+}
+
+export interface SolicitudDetalleOpiniones {
+  id: number;
+  areaSolicitante: string;
+  estatus: string;
+  fechaCreacion: string;
+  fechaSolicitud: string;
+  justificacionOpinion: string;  
+}
+export interface OpinionDetalleOpiniones {
+  id: number;
+  areaResponsable: string;
+  sentido: string;
+  generadoPor: string;
+  fechaGeneracion: string;
+  opinion: string;  
 }
