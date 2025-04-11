@@ -1,23 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
-import { CommonModule } from '@angular/common';
-import { ContenedorDeDatosSolicitudComponent } from '../../components/contenedor-de-datos-solicitud/contenedor-de-datos-solicitud.component';
-import { PagoDeDerechosContenedoraComponent } from '../../components/pago-de-derechos-contenedora/pago-de-derechos-contenedora/pago-de-derechos-contenedora.component';
-import { SolicitanteComponent } from '@ng-mf/data-access-user';
-import { TercerosRelacionadosVistaComponent } from '../../components/terceros-relacionados-vista/terceros-relacionados-vista.component';
 import { Tramite260207Query } from '../../estados/tramite260207Query.query';
 import { Tramite260207Store } from '../../estados/tramite260207Store.store';
 
 @Component({
   selector: 'app-paso-uno',
-  standalone: true,
-  imports: [
-    CommonModule,
-    SolicitanteComponent,
-    ContenedorDeDatosSolicitudComponent,
-    TercerosRelacionadosVistaComponent,
-    PagoDeDerechosContenedoraComponent
-  ],
   templateUrl: './paso-uno.component.html',
   styleUrl: './paso-uno.component.css',
 })
