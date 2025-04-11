@@ -46,6 +46,11 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'tramites-disponibles',
+    loadChildren: () =>
+      import('./tramites/110210/tramites-disponibles.module').then((m) => m.TramitesDisponiblesModule),
+  },
+  {
     path: 'empresa-frontera',
     loadChildren: () =>
       import('./tramites/120602/empresa-frontera-solicitud.module').then(
@@ -225,6 +230,13 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'importacion-material-de-investigacion-cientifica',
+    loadChildren: () =>
+      import('./tramites/130112/importacion-material-de-investigacion-cientifica.module').then(
+        (m) => m.ImportacionMaterialDeInvestigacionCientificaModule
+      ),
+  },
+  {
     path: 'importacion-vehiculos-nuevos',
     loadChildren: () =>
       import('./tramites/130115/importacion-vehiculos-nuevos.module').then(
@@ -351,11 +363,25 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path:'importacion-vehiculos-usados-donacion',
+    loadChildren: () =>
+      import('./tramites/130105/importacion-vehiculos-usados-donacion.module').then(
+        (m) => m.ImportacionVehiculosUsadosDonacionModule
+      )
+  },
+  {
     path: 'importacion',
       loadChildren: () =>
         import('./tramites/130110/importacion-neumaticos-comercializar.module').then(
           (m) => m.ImportacionNeumaticosComercializarModule
         ),
+  },
+  {
+    path: 'importacion-de',
+    loadChildren: () =>
+      import('./tramites/130109/vehiculos-usados-adaptados.module').then(
+        (m) => m.VehiculosUsadosAdaptadosModule
+      ),
   }
 ];
 

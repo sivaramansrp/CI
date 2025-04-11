@@ -1,0 +1,75 @@
+table,
+th,
+td {
+  text-align: center;
+  vertical-align: middle;
+}
+
+.alert {
+  text-align: left !important;
+}
+
+.alert label {
+  font-weight: normal;
+}
+
+#modal-agregar-mercancias .modal-dialog {
+  max-width: 1100px !important;
+}
+
+#modal-agregar-scian .modal-dialog {
+  max-width: 800px !important;
+}
+
+::ng-deep p {
+  font-size: 15px !important;
+}
+
+.mt-20 {
+  margin-top: 15px;
+}
+
+.mr-5px {
+  margin-right: 5px;
+}
+
+#modal-agregar-mercancias .modal-body {
+  margin: 25px 25px 0px 25px;
+}
+
+#modal-agregar-mercancias .modal-footer {
+  margin: 0px 25px 25px 0px;
+}
+
+textarea.form-control {
+  height: 0% !important;
+}
+
+#modal-agregar-mercancias .modal-content {
+  padding-left: 6% !important;
+  padding-right: 6% !important;
+  padding-bottom: 5% !important;
+
+}
+
+.buscar-btn {
+  position: relative;
+  top: 15px;
+}
+
+#modal-alerta .modal-footer {
+  justify-content: center;
+}
+
+#modal-alerta .modal-header, #modal-confirmar .modal-header {
+  height: 50px;
+}
+
+#modal-alerta .modal-dialog {
+  max-width: 315px !important;
+}
+
+.black {
+  background-color: black;
+  color: white;
+}
