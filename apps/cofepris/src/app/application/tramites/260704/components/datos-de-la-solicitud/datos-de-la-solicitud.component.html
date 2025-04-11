@@ -82,12 +82,10 @@
   <ng-container formGroupName="validacionScionForm">
     <div class="col-md-12 mt-5">
       <label class="form-label mb-5" for="">S.C.I.A.N.*:</label>
-      <div *ngIf="!esDatosSCIANSeleccionado">
-        <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="encabezados" [datos]="certificadoDisponsiblesTablaDatos" (click)="verificarSeleccionCheckbox($event)" (change)="setValoresStore(validacionScionForm,'scian', 'setScian')"></app-tabla-dinamica>
+      <div >
+        <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="encabezados" (listaDeFilaSeleccionada)="setTablaSeleccionFabricante($event)" [datos]="certificadoDisponsiblesTablaDatos" (click)="verificarSeleccionCheckbox($event)" (change)="setValoresStore(validacionScionForm,'scian', 'setScian')"></app-tabla-dinamica>
       </div>
-      <div *ngIf="esDatosSCIANSeleccionado">
-        <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="encabezados" (click)="verificarSeleccionCheckbox($event)" (change)="setValoresStore(validacionScionForm,'scian', 'setScian')"></app-tabla-dinamica>
-      </div>
+     
     </div>
     <div class="row">
       <div class="col-md-12 text-end">
@@ -95,12 +93,12 @@
         <button type="button" class="btn btn-primary ms-2" data-bs-toggle="modal" data-bs-target="#modalClaveScian" (click)="agregarMercanciaGrid()"> Agregar </button>
       </div>
     </div>
-    <ng-container *ngIf="esCheckboxSeleccionado"> @if (nuevaNotificacion) { <section>
-        <lib-notificaciones [notificacionInput]="nuevaNotificacion" (confirmacionModal)="eliminarMercanciaChecked($event)"></lib-notificaciones>
-      </section> } </ng-container>
-    <ng-container *ngIf="!esCheckboxSeleccionado"> @if (nuevaNotificacion) { <section>
-        <lib-notificaciones [notificacionInput]="nuevaNotificacion" (confirmacionModal)="eliminarMercancia($event)"></lib-notificaciones>
-      </section> } </ng-container>
+  
+      @if (nuevaNotificacion2 ) { <section>
+        <lib-notificaciones [notificacionInput]="nuevaNotificacion2" (confirmacionModal)="eliminarPedimentoMercancia($event)"></lib-notificaciones>
+      </section> } 
+    
+      
     <div class="modal fade" id="modalClaveScian" tabindex="-1" aria-labelledby="modalClaveScianLabel" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">

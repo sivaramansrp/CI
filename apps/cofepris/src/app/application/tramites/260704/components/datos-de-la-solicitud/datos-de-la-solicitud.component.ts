@@ -49,6 +49,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   // Notificación utilizada para mostrar mensajes o alertas en la interfaz.
   public nuevaNotificacion!: Notificacion;
 
+  public nuevaNotificacion2!: Notificacion;
+
   // Índice del pedimento marcado para eliminación.
   public elementoParaEliminar!: number;
 
@@ -193,6 +195,9 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Array de catálogo para la clave SCIAN.
    */
   claveScian!: Catalogo[];
+
+  public tieneFilaSeleccionadaFabricante: boolean = false;
+
 
   /**
    * Opciones de radio recibidas como @Input.
@@ -568,17 +573,13 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Muestra el modal para eliminar mercancías del grid.
    */
   eliminarMercanciaGrid(): void {
-    if (this.modalElement) {
-      const MODAL_ELIMINAR_INSTANCE = new Modal(this.modalElement.nativeElement);
-      MODAL_ELIMINAR_INSTANCE.show();
-    }
+    
     if (this.esCheckboxSeleccionado === false) {
       this.abrirModalmercancia();
-    } else if (this.esCheckboxSeleccionado !== true) {
+    } else if (this.esCheckboxSeleccionado === true) {
       this.abrirModalmercanciaChecked();
     }
-    // this.abrirModalmercancia();
-    // this.abrirModalmercanciaChecked();
+ 
 
   }
 
@@ -659,12 +660,24 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   AcceptarEliminarScian(): void {
     this.esDatosSCIANSeleccionado = true;
   }
+ 
+
+ /**
+     * Actualiza el estado que indica si hay filas seleccionadas en la tabla de "Fabricante".
+     */
+ public setTablaSeleccionFabricante(rowSeleccion: ColumnasTabla[]): void {
+  this.tieneFilaSeleccionadaFabricante = rowSeleccion.length > 0 ? true : false;
+}
+
   // Elimina un pedimento si se confirma la acción.
   eliminarPedimento(borrar: boolean): void {
     if (borrar) {
       this.pedimentos.splice(this.elementoParaEliminar, 1);
     }
+  
   }
+
+ 
 
   // Abre el modal y configura la notificación para eliminar un pedimento.
   abrirModal(i: number = 0): void {
@@ -682,16 +695,11 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     this.elementoParaEliminar = i;
   }
 
-  // Elimina la mercancía si se confirma la acción.
-  eliminarMercancia(borrar: boolean): void {
-    if (borrar) {
-      this.pedimentos.splice(this.elementoParaEliminar, 1);
-    }
-  }
+ 
 
   // Abre el modal y configura la notificación para seleccionar un registro de mercancía.
   abrirModalmercancia(i: number = 0): void {
-    this.nuevaNotificacion = {
+    this.nuevaNotificacion2 = {
       tipoNotificacion: 'alert',
       categoria: 'danger',
       modo: 'action',
@@ -714,7 +722,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
 
   // Abre el modal y configura la notificación para confirmar la eliminación de registros marcados.
   abrirModalmercanciaChecked(i: number = 0): void {
-    this.nuevaNotificacion = {
+    this.nuevaNotificacion2 = {
       tipoNotificacion: 'alert',
       categoria: 'danger',
       modo: 'action',
@@ -810,6 +818,18 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       rfc: [this.solicitudState?.rfc, [Validators.required]],
     });
   }
+
+  // Elimina la mercancía marcada si se confirma la acción.
+ eliminarPedimentoMercancia(borrar: boolean): void {
+    if (borrar) {
+      this.pedimentos.splice(this.elementoParaEliminar, 1);
+    }
+  
+
+  if(this.tieneFilaSeleccionadaFabricante  && this.esCheckboxSeleccionado === true) {
+    this.certificadoDisponsiblesTablaDatos.pop();
+  }
+}
 
   /**
    * Método del ciclo de vida que limpia las suscripciones para evitar fugas de memoria.

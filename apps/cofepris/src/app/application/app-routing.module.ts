@@ -198,7 +198,7 @@ const ROUTES: Routes = [
       ).then((m) => m.PermisoExperimentalesPlaguicidasModule),
   },
   {
-    path:'retiros-cofepris',
+    path: 'retiros-cofepris',
     loadChildren: () =>
       import('./tramites/261702/retiros-cofepris.module').then(
         (m) => m.RetirosCofeprisModule
@@ -221,6 +221,13 @@ const ROUTES: Routes = [
           import(
             './tramites/260301/importacion-materias-primas-estupefacientes.module'
           ).then((m) => m.ImportacionMateriasPrimasEstupefacientesModule),
+  },
+  {
+    path: 'modificacion-permiso-sanitario',
+    loadChildren: () =>
+      import('./tramites/260906/modificacion-permiso-sanitario.module').then(
+        (m) => m.ModificacionPermisoSanitarioModule
+      )
   }
 ];
 
