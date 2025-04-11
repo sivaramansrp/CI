@@ -52,6 +52,13 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'mod-permiso-importacion',
+    loadChildren: () =>
+      import('./tramites/260912/mod-permiso-importacion.module').then(
+        (m)=> m.ModPermisoImportacionModule
+      )
+  },
+  {
     path: 'permiso-plaguicidas',
     loadChildren: () =>
       import('./tramites/260501/permiso-plaguicidas-importacion.module').then(
@@ -157,7 +164,13 @@ const ROUTES: Routes = [
         './tramites/260216/importacion-dispositivos-medicos-donacion.module'
       ).then((m) => m.ImportacionDispositivosMedicosDonacionModule),
   },
-
+  {
+    path: 'modificacion-permiso-sanitario',
+    loadChildren: () =>
+      import(
+        './tramites/260910/permiso-sanitario.module'
+      ).then((m) => m.PermisoSanitarioModule),
+  },
   {
     path: 'territorio-nacional',
     loadChildren: () =>

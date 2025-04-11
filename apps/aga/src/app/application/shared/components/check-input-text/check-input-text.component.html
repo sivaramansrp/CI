@@ -9,8 +9,15 @@
     </div>
   </div>
 
+
   @if(!hidden) {
-  <input type="text" class="form-control" formControlName="texto" name="texto" [id]="idInputTexto" placeholder=""
-    title="Texto">
+  @if (labelText) {
+  <label class="form-check-label" [for]="idInputTexto">
+    {{ labelText }}
+  </label>
   }
+  <input type="text" class="form-control" formControlName="texto" name="texto" [id]="idInputTexto" placeholder=""
+    title="Texto" (change)="enviarValoresCheckboxInput()">
+  }
+
 </div>
