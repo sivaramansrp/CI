@@ -1,8 +1,8 @@
-
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { Catalogo, ConfiguracionColumna } from '@ng-mf/data-access-user';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { ConfiguracionColumna } from '@ng-mf/data-access-user';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
 
 import { AlertComponent } from '@ng-mf/data-access-user';
@@ -13,10 +13,8 @@ import { UppercaseDirective } from '@ng-mf/data-access-user';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 
 import { TableComponent } from '@ng-mf/data-access-user';
-
-import { PartidasDeLaMercanciaModelo } from '../../models/partidas-de-la-mercancia.model';
-
-import { PARTIDASDELAMERCANCIA_TABLA } from '../../constantes/partidas-de-la-mercancia.enum';
+import { PartidasDeLaMercanciaModelo } from '../../../../shared/models/partidas-de-la-mercancia.model';
+import { PARTIDASDELAMERCANCIA_TABLA } from '../../../../shared/constantes/partidas-de-la-mercancia.enum';
 /**
  * PartidasDeLaMercanciaComponent
  * Este componente es responsable de gestionar las partidas de la mercancía.
@@ -53,16 +51,41 @@ export class PartidasDeLaMercanciaComponent {
   @Input() formForTotalCount!: FormGroup;
 
   /**
+   * Configuración de las columnas de la tabla dinámica.
+   * Este campo define las columnas que se mostrarán en la tabla, incluyendo encabezados y claves.
+   */
+  @Input() tableHeaderData: ConfiguracionColumna<PartidasDeLaMercanciaModelo>[] =
+    PARTIDASDELAMERCANCIA_TABLA;
+
+  /**
+   * Datos que se mostrarán en la tabla dinámica.
+   * Este campo contiene las filas de datos que se renderizarán en el cuerpo de la tabla.
+   */
+  @Input() tableBodyData: PartidasDeLaMercanciaModelo[] = [];
+
+  /**
    * mostrarTabla
    * Bandera para mostrar u ocultar la tabla dinámica.
    */
   @Input() mostrarTabla = false;
 
+  
+  /**
+   * Lista de elementos del catálogo de fracciones arancelarias.
+   */
+  @Input() fraccionDescripcionPartidasDeLaMercancia: Catalogo[] = [];
+
+  /**
+  * Bandera para deshabilitar la tabla dinámica.
+  * Si está configurada como `true`, la tabla estará deshabilitada.
+  */
+  @Input() disabled: boolean = false;
+
   /**
    * filaSeleccionadaChange
    * Evento que emite las filas seleccionadas en la tabla dinámica.
    */
-  @Output() filaSeleccionadaChange = new EventEmitter<PartidasDeLaMercanciaModelo[]>();
+  @Output() filaSeleccionadaChange = new EventEmitter<any[]>();
 
   /**
    * validarYEnviarFormularioEvent
@@ -85,30 +108,11 @@ export class PartidasDeLaMercanciaComponent {
    */
   @Output() setValoresStoreEvent = new EventEmitter<{ form: FormGroup; campo: string; metodoNombre: string }>();
 
-    /**
-   * Tipo de selección de la tabla dinámica.
-   * Define el tipo de selección que se utilizará en la tabla dinámica (por ejemplo, checkbox).
-   */
-    CHECKBOX: TablaSeleccion = TablaSeleccion.CHECKBOX;
-
   /**
-   * Configuración de las columnas de la tabla dinámica.
-   * Este campo define las columnas que se mostrarán en la tabla, incluyendo encabezados y claves.
+   * Tipo de selección de la tabla dinámica (checkbox).
    */
-  @Input() tableHeaderData: ConfiguracionColumna<PartidasDeLaMercanciaModelo>[] =
-    PARTIDASDELAMERCANCIA_TABLA;
+  CHECKBOX = TablaSeleccion.CHECKBOX;
 
-  /**
-   * Datos que se mostrarán en la tabla dinámica.
-   * Este campo contiene las filas de datos que se renderizarán en el cuerpo de la tabla.
-   */
-  @Input() tableBodyData: PartidasDeLaMercanciaModelo[] = [];
-
-  /**
-   * Bandera para deshabilitar la tabla dinámica.
-   * Si está configurada como `true`, la tabla estará deshabilitada.
-   */
-  @Input() disabled: boolean = false;
   /**
    * Constructor para inicializar el componente e inyectar dependencias.
    * FormBuilder para crear formularios reactivos.
@@ -131,8 +135,8 @@ export class PartidasDeLaMercanciaComponent {
    * Maneja las filas seleccionadas en la tabla dinámica y emite un evento.
    * Lista de filas seleccionadas.
    */
-  handleListaDeFilaSeleccionada(event: PartidasDeLaMercanciaModelo[]): void {
-    this.filaSeleccionadaChange.emit(event);
+  handleListaDeFilaSeleccionada(filasSeleccionadas: any[]): void {
+    this.filaSeleccionadaChange.emit(filasSeleccionadas);
   }
 
   /**

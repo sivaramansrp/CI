@@ -230,6 +230,13 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'importacion-material-de-investigacion-cientifica',
+    loadChildren: () =>
+      import('./tramites/130112/importacion-material-de-investigacion-cientifica.module').then(
+        (m) => m.ImportacionMaterialDeInvestigacionCientificaModule
+      ),
+  },
+  {
     path: 'importacion-vehiculos-nuevos',
     loadChildren: () =>
       import('./tramites/130115/importacion-vehiculos-nuevos.module').then(
@@ -354,6 +361,13 @@ const ROUTES: Routes = [
       import('./tramites/110211/validar-certificado.module').then(
         (m) => m.ValidarCertificadoModule
       ),
+  },
+  {
+    path:'importacion-vehiculos-usados-donacion',
+    loadChildren: () =>
+      import('./tramites/130105/importacion-vehiculos-usados-donacion.module').then(
+        (m) => m.ImportacionVehiculosUsadosDonacionModule
+      )
   },
   {
     path: 'importacion',
