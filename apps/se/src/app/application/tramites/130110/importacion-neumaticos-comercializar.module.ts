@@ -2,12 +2,11 @@ import { BtnContinuarComponent, CrosslistComponent, InputRadioComponent, Solicit
 import { CommonModule } from '@angular/common';
 import { DatosDeLaMercanciaComponent } from '../../shared/components/datos-de-la-mercancia/datos-de-la-mercancia.component';
 import { DatosDelTramiteComponent } from '../../shared/components/datos-del-tramite/datos-del-tramite.component';
-import { ImportacionEquipoAnticontaminanteComponent } from './pages/importacion-equipo-anticontaminante/importacion-equipo-anticontaminante';
-import { ImportacionEquipoAnticontaminanteRoutingModule } from './importacion-equipo-anticontaminante-routing.module';
+import { ImportacionNeumaticosComercializarComponent } from './pages/importacion-neumaticos-comercializar/importacion-neumaticos-comercializar.component';
+import { ImportacionNeumaticosComercializarRoutingModule } from './importacion-neumaticos-comercializar-routing.module';
 import { NgModule } from '@angular/core';
-import { PartidasDeLaMercanciaComponent } from './components/partidas-de-la-mercancia/partidas-de-la-mercancia.component';
-
 import { PaisProcendenciaComponent } from '../../shared/components/pais-procendencia/pais-procendencia.component';
+import { PartidasDeLaMercanciaComponent } from '../../shared/components/partidas-de-la-mercancia/partidas-de-la-mercancia.component';
 import { PasoDosComponent } from '../120402/components/paso-dos/paso-dos.component';
 import { PasoTresComponent } from '../120402/components/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
@@ -15,16 +14,16 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { RepresentacionComponent } from '../../shared/components/representacion/representacion.component';
 import { SolicitudComponent } from './components/solicitud/solicitud.component';
 
+
 @NgModule({
   declarations: [
-    ImportacionEquipoAnticontaminanteComponent,
+    ImportacionNeumaticosComercializarComponent,
     PasoUnoComponent,
-    SolicitudComponent,
-   
+    SolicitudComponent
   ],
   imports: [
     CommonModule,
-    ImportacionEquipoAnticontaminanteRoutingModule,
+    ImportacionNeumaticosComercializarRoutingModule,
     ReactiveFormsModule,
     WizardComponent,
     BtnContinuarComponent,
@@ -35,12 +34,11 @@ import { SolicitudComponent } from './components/solicitud/solicitud.component';
     PasoDosComponent,
     DatosDelTramiteComponent,
     DatosDeLaMercanciaComponent,
+    PartidasDeLaMercanciaComponent ,
     TablaDinamicaComponent,
     PaisProcendenciaComponent,
     RepresentacionComponent,
-    CrosslistComponent,
-    PartidasDeLaMercanciaComponent
-   
+    CrosslistComponent
   ]
 })
-export class ImportacionEquipoAnticontaminanteModule { }
+export class ImportacionNeumaticosComercializarModule { }

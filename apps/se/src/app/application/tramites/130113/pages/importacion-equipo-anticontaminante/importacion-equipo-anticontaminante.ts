@@ -2,6 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { DatosPasos, ListaPasosWizard, WizardComponent } from '@libs/shared/data-access-user/src';
 import { AccionBoton } from '../../enums/accion-botton.enum';
 import { PASOS } from '../../constants/pasos.enum';
+import { PASOS_IMPORTACION } from '../../constants/importacion-equipo-anticontaminante.enum';
 
 /**
  * Componente para gestionar el asistente de importación de equipo anticontaminante.
@@ -16,8 +17,12 @@ import { PASOS } from '../../constants/pasos.enum';
   styleUrl: './importacion-equipo-anticontaminante.component.scss',
 })
 export class ImportacionEquipoAnticontaminanteComponent {
-  // Lista de pasos del asistente.
-  pasos: ListaPasosWizard[] = PASOS;
+    /**
+   * @descripcion
+   * Lista de pasos del asistente para el trámite.
+   * @type {ListaPasosWizard[]}
+   */
+    pasosSolicitar: ListaPasosWizard[] = PASOS_IMPORTACION;
 
   // Índice del paso actual en el asistente.
   indice: number = 1;
@@ -30,7 +35,7 @@ export class ImportacionEquipoAnticontaminanteComponent {
 
   // Datos relacionados con los pasos del asistente.
   datosPasos: DatosPasos = {
-    nroPasos: this.pasos.length,
+    nroPasos: this.pasosSolicitar.length,
     indice: this.indice,
     txtBtnAnt: 'Anterior',
     txtBtnSig: 'Continuar',

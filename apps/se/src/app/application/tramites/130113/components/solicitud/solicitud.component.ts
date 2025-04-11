@@ -441,7 +441,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       this.mostrarTabla = true;
     }
   }
-
+ 
   /**
    * navegarParaModificarPartida
    * Navega para modificar una partida específica y actualiza el estado global.
