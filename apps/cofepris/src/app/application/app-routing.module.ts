@@ -52,6 +52,13 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'mod-permiso-importacion',
+    loadChildren: () =>
+      import('./tramites/260912/mod-permiso-importacion.module').then(
+        (m)=> m.ModPermisoImportacionModule
+      )
+  },
+  {
     path: 'permiso-plaguicidas',
     loadChildren: () =>
       import('./tramites/260501/permiso-plaguicidas-importacion.module').then(
@@ -87,14 +94,19 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'permiso-certificados',
+    loadChildren: () =>
+      import('./tramites/260701/certificados/certificados.module').then(
+        (m) => m.CertificadosModule),
+  },
+  {
     path: 'permiso-importacion-biologica',
     loadChildren: () =>
       import('./tramites/260402/permiso-importacion-biologica.module').then(
         (m) => m.EntradaHumanaModule
-
       ),
-    },
-    {
+  },
+  {
     path: 'permiso-sanitario-medicos-uso-personal',
     loadChildren: () =>
       import(
@@ -157,7 +169,13 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/260704/consulta.module').then((m) => m.ConsultaModule),
   },
-
+{
+    path: 'modificacion-permiso-sanitario',
+    loadChildren: () =>
+      import(
+        './tramites/260910/permiso-sanitario.module'
+      ).then((m) => m.PermisoSanitarioModule),
+  },
   {
     path: 'territorio-nacional',
     loadChildren: () =>
@@ -173,11 +191,34 @@ const ROUTES: Routes = [
       ).then((m) => m.PermisoSanitarioImportacion260203Module),
   },
   {
-    path: 'retiros-cofepris',
+    loadChildren: () =>
+      import(
+        './tramites/260503/permiso-experimentales-plaguicidas.module'
+      ).then((m) => m.PermisoExperimentalesPlaguicidasModule),
+  },
+  {
     loadChildren: () =>
       import('./tramites/261702/retiros-cofepris.module').then(
         (m) => m.RetirosCofeprisModule
       ),
+  },
+  {
+    path: 'aviso-de-importacion',
+    loadChildren: () => import('./tramites/260603/aviso-de-importacion.module').then(m => m.AvisoDeImportacionModule) 
+  },
+  {
+    path: 'muestras-plaguicidas',
+    loadChildren: () =>
+      import('./tramites/260502/muestras-plaguicidas.module').then(
+        (m) => m.MuestrasPlaguicidasModule
+      ),
+  },
+  {
+        path: 'importacion-materias-primas-estupefacientes',
+        loadChildren: () =>
+          import(
+            './tramites/260301/importacion-materias-primas-estupefacientes.module'
+          ).then((m) => m.ImportacionMateriasPrimasEstupefacientesModule),
   }
 ];
 
