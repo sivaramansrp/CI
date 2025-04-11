@@ -5,7 +5,7 @@ import { CommonModule } from '@angular/common';
 
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 
-import {CatalogoSelectComponent ,TituloComponent , catalogoResponse } from '@ng-mf/data-access-user';
+import {CatalogoSelectComponent ,TituloComponent , CatalogoResponse } from '@ng-mf/data-access-user';
 
 import { of } from 'rxjs';
 import { ProsecModificacionServiceTsService } from '../../services/prosec-modificacion.service.ts.service';
@@ -61,7 +61,7 @@ describe('ConsultadDomicilios90305Component', () => {
   });
 
   it('should populate estadoJson when loadEstado() is called', () => {
-    const MOCK_DATA: catalogoResponse[] = [
+    const MOCK_DATA: CatalogoResponse[] = [
       { id: 1, descripcion: 'Estado 1' },
       { id: 2, descripcion: 'Estado 2' },
     ];
@@ -91,7 +91,7 @@ describe('ConsultadDomicilios90305Component', () => {
   });
 
   it('should subscribe to getEstadoData() when loadEstado() is called', () => {
-    const MOCK_DATA: catalogoResponse[] = [{ id: 1, descripcion: 'Test' }];
+    const MOCK_DATA: CatalogoResponse[] = [{ id: 1, descripcion: 'Test' }];
     mockService.getEstadoData.mockReturnValue(of(MOCK_DATA));
 
     component.loadEstado();
