@@ -5,7 +5,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RegistroCuentasBancariasService } from '../../services/registro-cuentas-bancarias.service';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
-import { TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { TablaAcciones, TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { RegistroDeSolicitudesTabla, Sociedad } from '../../models/registro-cuentas-bancarias.model';
 
@@ -21,7 +21,7 @@ import { RegistroDeSolicitudesTabla, Sociedad } from '../../models/registro-cuen
 @Component({
   selector: 'app-datos-generales',
   standalone: true,
-  imports: [CommonModule,TituloComponent,TablaDinamicaComponent,ReactiveFormsModule],
+  imports: [CommonModule, TituloComponent, TablaDinamicaComponent, ReactiveFormsModule],
   templateUrl: './datos-generales.component.html',
   styleUrl: './datos-generales.component.scss',
 })
@@ -66,10 +66,10 @@ export class DatosGeneralesComponent implements OnInit {
   constructor(
     private _registroCuentasBancariasSvc: RegistroCuentasBancariasService,
     private fb: FormBuilder,
-  ) { 
+  ) {
     //
   }
-
+  public accionesTramite: TablaAcciones[] = [];
 
   /**
    * Gancho de ciclo de vida que se llama después de que se inicializan las propiedades enlazadas a datos de una directiva.
@@ -79,6 +79,7 @@ export class DatosGeneralesComponent implements OnInit {
    * @memberof DatosGeneralesComponent
    */
   ngOnInit(): void {
+    this.accionesTramite=[TablaAcciones.EDITAR, TablaAcciones.DESCARGAR, TablaAcciones.ELIMINAR, TablaAcciones.VER]
     this.crearFormDatosGenerales();
     this.getSolicitudesTabla();
     this.getSociedadTabla();
@@ -86,19 +87,19 @@ export class DatosGeneralesComponent implements OnInit {
   }
 
 
-    /**
-   * Crea una copia profunda del objeto proporcionado.
-   * 
-   * Este método serializa el objeto a una cadena JSON y luego lo analiza de nuevo a un nuevo objeto,
-   * creando efectivamente una copia profunda. Tenga en cuenta que este enfoque puede no manejar funciones,
-   * valores indefinidos o referencias circulares correctamente.
-   * 
-   * @param obj - El objeto que se va a copiar profundamente. Por defecto es un objeto vacío.
-   * @returns Una copia profunda del objeto proporcionado.
-   */
-    public deepCopy(obj = {}) {
-      return JSON.parse(JSON.stringify(obj));
-    }
+  /**
+ * Crea una copia profunda del objeto proporcionado.
+ * 
+ * Este método serializa el objeto a una cadena JSON y luego lo analiza de nuevo a un nuevo objeto,
+ * creando efectivamente una copia profunda. Tenga en cuenta que este enfoque puede no manejar funciones,
+ * valores indefinidos o referencias circulares correctamente.
+ * 
+ * @param obj - El objeto que se va a copiar profundamente. Por defecto es un objeto vacío.
+ * @returns Una copia profunda del objeto proporcionado.
+ */
+  public deepCopy(obj = {}) {
+    return JSON.parse(JSON.stringify(obj));
+  }
 
   /**
    * Verifica si el valor proporcionado es un objeto.
@@ -130,7 +131,7 @@ export class DatosGeneralesComponent implements OnInit {
    *
    * @returns {void} Este método no devuelve ningún valor.
    */
-  public crearFormDatosGenerales():void {
+  public crearFormDatosGenerales(): void {
     this.formDatosGenerales = this.fb.group({
       aduanaAdicional: [{ value: '', disabled: true }],
       nombre: [{ value: '', disabled: true }],
@@ -165,7 +166,7 @@ export class DatosGeneralesComponent implements OnInit {
    */
   public obtenerFormDatosGeneralesDatos(): void {
     this._registroCuentasBancariasSvc.obtenerDatosDeFormularioDeAPI().subscribe((response) => {
-      if(this.isObject(response) && this.isValidArray(response.data)) {
+      if (this.isObject(response) && this.isValidArray(response.data)) {
         const API_RESPONSE_DATOS = response.data[0];
         this.formDatosGenerales.get('aduanaAdicional')?.setValue(API_RESPONSE_DATOS.aduanaAdicional);
         this.formDatosGenerales.get('nombre')?.setValue(API_RESPONSE_DATOS.nombre);
