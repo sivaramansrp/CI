@@ -4,7 +4,6 @@ import { HttpClient } from '@angular/common/http';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { InputFechaComponent } from 'libs/shared/data-access-user/src/tramites/components/input-fecha/input-fecha.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import { SelectCatalogosComponent } from 'libs/shared/data-access-user/src/tramites/components/select-catalogos/select-catalogos.component';
 import { TableComponent } from 'libs/shared/data-access-user/src/tramites/components/table/table.component';
 import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
 import { of, throwError } from 'rxjs';
@@ -22,7 +21,6 @@ describe('CapturarFacturasComponent', () => {
         CapturarFacturasComponent,
         TableComponent,
         TituloComponent,
-        SelectCatalogosComponent,
         InputFechaComponent
       ],
     }).compileComponents();
