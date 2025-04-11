@@ -258,7 +258,7 @@ export class AvisoComponent implements OnInit, OnDestroy {
    * 
    * @default false
    */
-  cuadroDeAlerta: boolean = true;
+  cuadroDeAlerta: boolean = false;
 
   /**
    * Constructor del componente.
