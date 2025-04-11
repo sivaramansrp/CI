@@ -8,15 +8,15 @@ import { Observable, of as observableOf, throwError } from 'rxjs';
 
 import { Component } from '@angular/core';
 import { PasoUnoComponent } from './paso-uno.component';
-import { Tramite260207Query } from '../../estados/tramite260207Query.query';
-import { Tramite260207Store } from '../../estados/tramite260207Store.store';
+import { Tramite260201Query } from '../../estados/tramite260201Query.query';
+import { Tramite260201Store } from '../../estados/tramite260201Store.store';
 import { HttpClientModule } from '@angular/common/http';
 
 @Injectable()
-class MockTramite260207Query {}
+class MockTramite260201Query {}
 
 @Injectable()
-class MockTramite260207Store {}
+class MockTramite260201Store {}
 
 
 describe('PasoUnoComponent', () => {
@@ -31,8 +31,8 @@ describe('PasoUnoComponent', () => {
       ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
-        { provide: Tramite260207Query, useClass: MockTramite260207Query },
-        { provide: Tramite260207Store, useClass: MockTramite260207Store }
+        { provide: Tramite260201Query, useClass: MockTramite260201Query },
+        { provide: Tramite260201Store, useClass: MockTramite260201Store }
       ]
     }).overrideComponent(PasoUnoComponent, {
 
@@ -47,17 +47,17 @@ describe('PasoUnoComponent', () => {
   });
 
   it('should run #ngOnInit()', async () => {
-    component.tramite260207Query = component.tramite260207Query || {};
-    component.tramite260207Query.getTabSeleccionado$ = observableOf({});
+    component.tramite260201Query = component.tramite260201Query || {};
+    component.tramite260201Query.getTabSeleccionado$ = observableOf({});
     component.ngOnInit();
 
   });
 
   it('should run #seleccionaTab()', async () => {
-    component.tramite260207Store = component.tramite260207Store || {};
-    component.tramite260207Store.updateTabSeleccionado = jest.fn();
+    component.tramite260201Store = component.tramite260201Store || {};
+    component.tramite260201Store.updateTabSeleccionado = jest.fn();
     component.seleccionaTab({});
-    expect(component.tramite260207Store.updateTabSeleccionado).toHaveBeenCalled();
+    expect(component.tramite260201Store.updateTabSeleccionado).toHaveBeenCalled();
   });
 
   it('should run #ngOnDestroy()', async () => {
