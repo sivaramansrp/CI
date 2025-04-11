@@ -329,3 +329,13 @@ export const REGEX_LLAVE_DE_PAGO = '/^[A-Z0-9]{10}$/';
  * Permite dígitos y el punto decimal.
  */
 export const REGEX_SIN_DIGITOS = /\D/g;
+
+/**
+ * Expresión regular para validar un número de teléfono de 10 dígitos.
+ */
+export const REGEX_TELEFONO_DIGITOS = '/^\d{10}$/';
+
+/**
+ * Expresión regular para validar un código postal de 5 dígitos.
+ */
+export const REGEX_POSTAL = '/^\d{5}$/';

@@ -18,6 +18,8 @@ import { map, merge, Subject, takeUntil } from 'rxjs';
 import {
   AlertComponent,
   CatalogoSelectComponent,
+  REGEX_POSTAL,
+  REGEX_TELEFONO_DIGITOS,
   TableComponent,
   TituloComponent,
   ValidacionesFormularioService,
@@ -294,7 +296,7 @@ export class DatosTramiteComponent implements OnInit, OnDestroy {
         telefono: [
           { value: '', disabled: true },
           this.solicitudState?.telefono,
-          [Validators.required, Validators.pattern(/^\d{10}$/)],
+          [Validators.required, Validators.pattern(REGEX_TELEFONO_DIGITOS)],
         ],
         correoElectronico: [
           { value: '', disabled: true },
@@ -306,7 +308,7 @@ export class DatosTramiteComponent implements OnInit, OnDestroy {
           this.solicitudState?.codigoPostal,
           [
             Validators.required,
-            Validators.pattern(/^\d{5}$/),
+            Validators.pattern(REGEX_POSTAL),
             Validators.maxLength(8),
           ],
         ],
