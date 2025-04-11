@@ -1,0 +1,247 @@
+import { Asociados } from '../models/asociados.model';
+import { CatalogosSelect } from '@libs/shared/data-access-user/src';
+import { ClavesDeLotes } from '../models/claves-de-lotes.model';
+import { DatosDeSolicitud } from '../models/solicitud-datos.model';
+import { Destinatario } from '../models/destinatario.model';
+import { DestinatarioCatalogos } from '../models/destinatario.model';
+import { DestinatarioImitar } from '../models/mercancia.model';
+import { Fabricante } from '../models/fabricante.model';
+import { Facturador } from '../models/facturador.model';
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Mercancia } from '../models/mercancia.model';
+import { MercanciaCatalogos } from '../models/mercancia.model';
+import { MercanciaCrossList } from '../models/mercancia.model';
+import { Observable } from 'rxjs';
+import { Proveedor } from '../models/proveedor.model';
+import { SCIAN } from '../models/SCIAN.model';
+import { Solicitud } from '../models/solicitud-datos.model';
+/**
+ * Servicio `SolicitudDatosService`.
+ * Este servicio se encarga de gestionar las operaciones relacionadas con los datos de la solicitud 260910.
+ * Realiza llamadas HTTP para obtener catálogos, datos de mercancías, destinatarios, pagos y más.
+ */
+@Injectable({
+  providedIn: 'root',
+})
+export class SolicitudDatosService {
+  /**
+   * Constructor del servicio.
+   * @param http - Cliente HTTP para realizar solicitudes al servidor.
+   */
+  constructor(public http: HttpClient) {
+    // Constructor vacío, no requiere inicialización adicional.
+  }
+
+  /**
+   * Obtiene los datos generales de la solicitud.
+   * @returns Observable con los datos de la solicitud.
+   */
+  obtenerDatosDeSolicitud(): Observable<DatosDeSolicitud> {
+    return this.http
+      .get<DatosDeSolicitud>('../../../assets/json/260910/solicitud-datos.json')
+      .pipe();
+  }
+
+  /**
+   * Obtiene los datos de la solicitud específica.
+   * @returns Observable con la solicitud.
+   */
+  obtenerSolicitud(): Observable<Solicitud> {
+    return this.http
+      .get<Solicitud>('../../../assets/json/260910/solicitud.json')
+      .pipe();
+  }
+
+  /**
+   * Obtiene el catálogo de regímenes disponibles.
+   * @returns Observable con el catálogo de regímenes.
+   */
+  obtenerRegimenDestinaraListo(): Observable<CatalogosSelect> {
+    return this.http
+      .get<CatalogosSelect>(
+        '../../../assets/json/260910/regimen-destinaran.json'
+      )
+      .pipe();
+  }
+
+  /**
+   * Obtiene el catálogo de aduanas disponibles.
+   * @returns Observable con el catálogo de aduanas.
+   */
+  obtenerAduanaListo(): Observable<CatalogosSelect> {
+    return this.http
+      .get<CatalogosSelect>('../../../assets/json/260910/aduana.json')
+      .pipe();
+  }
+
+  /**
+   * Obtiene el catálogo de estados disponibles.
+   * @returns Observable con el catálogo de estados.
+   */
+  obtenerEstadoCatalogo(): Observable<CatalogosSelect> {
+    return this.http
+      .get<CatalogosSelect>('../../../assets/json/260910/estado-catalogo.json')
+      .pipe();
+  }
+
+  /**
+   * Obtiene la lista de mercancías disponibles.
+   * @returns Observable con la lista de mercancías.
+   */
+  obtenerMercanciaListo(): Observable<Mercancia[]> {
+    return this.http
+      .get<Mercancia[]>('../../../assets/json/260910/mercancia.json')
+      .pipe();
+  }
+
+  /**
+   * Obtiene la lista de mercancías disponibles.
+   * @returns Observable con la lista de mercancías.
+   */
+  obtenerSCIANMesa(): Observable<SCIAN[]> {
+    return this.http
+      .get<SCIAN[]>('../../../assets/json/260910/SCIAN.json')
+      .pipe();
+  }
+
+  /**
+   * Obtiene la lista de claves de lotes disponibles.
+   * @returns Observable con las claves de lotes.
+   */
+  obtenerClavesDeLotesListo(): Observable<ClavesDeLotes[]> {
+    return this.http
+      .get<ClavesDeLotes[]>('../../../assets/json/260910/claves-de-lotes.json')
+      .pipe();
+  }
+
+  /**
+   * Obtiene la lista de destinatarios disponibles.
+   * @returns Observable con los destinatarios.
+   */
+  obtenerDestinatarioListo(): Observable<Destinatario[]> {
+    return this.http
+      .get<Destinatario[]>('../../../assets/json/260910/destinatario.json')
+      .pipe();
+  }
+
+  /**
+   * Obtiene la lista de fabricantes disponibles.
+   * @returns Observable con los fabricantes.
+   */
+  obtenerFabricanteListo(): Observable<Fabricante[]> {
+    return this.http
+      .get<Fabricante[]>('../../../assets/json/260910/fabricante.json')
+      .pipe();
+  }
+
+  obtenerProveedorListo(): Observable<Proveedor[]> {
+    return this.http
+      .get<Proveedor[]>('../../../assets/json/260910/proveedor.json')
+      .pipe();
+  }
+
+  obtenerFacturadorListo(): Observable<Facturador[]> {
+    return this.http
+      .get<Proveedor[]>('../../../assets/json/260910/facturador.json')
+      .pipe();
+  }
+
+  obtenerTramitesAsociadosListo(): Observable<Asociados[]> {
+    return this.http
+      .get<Asociados[]>('../../../assets/json/260910/asociados.json')
+      .pipe();
+  }
+  /**
+   * Obtiene los catálogos relacionados con los destinatarios.
+   * @returns Observable con los catálogos de destinatarios.
+   */
+  obtenerDestinatarioCatalogos(): Observable<DestinatarioCatalogos> {
+    return this.http
+      .get<DestinatarioCatalogos>(
+        '../../../assets/json/260910/destinatario-catalogos.json'
+      )
+      .pipe();
+  }
+
+  /**
+   * Obtiene las opciones de selección de tipo de persona (radio).
+   * @returns Observable con las opciones de tipo de persona.
+   */
+  obtenerDestinatarioRadio(): Observable<
+    { label: string; value: string | number }[]
+  > {
+    return this.http
+      .get<{ label: string; value: string | number }[]>(
+        '../../../assets/json/260910/destinatario-radio.json'
+      )
+      .pipe();
+  }
+
+  /**
+   * Obtiene los catálogos relacionados con las mercancías.
+   * @returns Observable con los catálogos de mercancías.
+   */
+  obtenerMercanciaCatalogos(): Observable<MercanciaCatalogos> {
+    return this.http
+      .get<MercanciaCatalogos>(
+        '../../../assets/json/260910/mercancia-catalogos.json'
+      )
+      .pipe();
+  }
+
+  /**
+   * Obtiene las listas cruzadas relacionadas con la mercancía.
+   * @returns Observable con las listas cruzadas de la mercancía.
+   */
+  obtenerCrosslisto(): Observable<MercanciaCrossList> {
+    return this.http
+      .get<MercanciaCrossList>(
+        '../../../assets/json/260910/mercancia-cross-list.json'
+      )
+      .pipe();
+  }
+
+  /**
+   * Obtiene los datos relacionados con el pago de derechos.
+   * @returns Observable con los datos de pago de derechos.
+   */
+  obtenerPagoDerechos(): Observable<CatalogosSelect> {
+    return this.http
+      .get<CatalogosSelect>('../../../assets/json/260910/pago-derechos.json')
+      .pipe();
+  }
+
+  /**
+   * Obtiene un destinatario basado en datos de ejemplo (mock).
+   * @returns Observable con un destinatario de ejemplo.
+   */
+  obtenerDestinatarioImitar(): Observable<DestinatarioImitar> {
+    return this.http
+      .get<DestinatarioImitar>(
+        '../../../assets/json/260910/destinatario-mock.json'
+      )
+      .pipe();
+  }
+
+  /**
+   * Obtiene el catálogo de SCIAN.
+   * @returns Observable con el catálogo de SCIAN.
+   */
+  obtenerSCIANListo(): Observable<CatalogosSelect> {
+    return this.http
+      .get<CatalogosSelect>('../../../assets/json/260910/clave-SCIAN.json')
+      .pipe();
+  }
+
+  /**
+   * Obtiene el catálogo de descripcion del SCIAN.
+   * @returns Observable con el catálogo de de descripcion del SCIAN.
+   */
+  obtenerSCIANDescListo(): Observable<CatalogosSelect> {
+    return this.http
+      .get<CatalogosSelect>('../../../assets/json/260910/clave-SCIAN-descripcion.json')
+      .pipe();
+  }
+
+}
