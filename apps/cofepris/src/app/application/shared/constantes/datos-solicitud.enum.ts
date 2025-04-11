@@ -289,6 +289,8 @@ export const PROCEDIMIENTOS_NO_PARA_ELEMENTO_RFC_DEL_SANITARIO = [260301, 260208
 
 export const PROCEDIMIENTOS_NO_PARA_ELEMENTO_CALLE = [260301]
 
+export const PROCEDIMIENTOS_NO_PARA_ELEMENTO_REGIMEN_Y_ADUNADEENTRADAS = [260301]
+
 export const PROCEDIMIENTOS_PARA_DESHABILITAR_MUNICIPIO_ALCALDIA=[260301]
 
 export const PROCEDIMIENTOS_PARA_CORREO_ELECTRONICO_EN_MISMA_FILA = [260208];
@@ -374,9 +376,7 @@ export const CAMPOS_ADICIONALES_POR_PROCEDIMIENTO_MAP: Map<string, number[]> = n
   ['correoElectronico', [260301]],
   ['rfcSanitario', [260301]],
   ['regimenLaMercancia',[260301]],
-  ['aduana',[260301]],
-  ['regimen', [260208]],
-  ['adunasDeEntradas', [260208]],
+  ['aduana',[260301]]
 ]);
 
 export const DESCRIPCION_FRACCION_DESHABILITADO_VALOR="Algodón absorbente o gasas, con sustancias medicinales";
