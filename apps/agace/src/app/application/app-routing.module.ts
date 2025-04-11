@@ -42,6 +42,13 @@ const ROUTES: Routes = [
         (m) => m.MercanciasDesmontadasOSinMontarModule
       ),
   },
+  {
+    path: 'anexo-veintiocho',
+    loadChildren: () =>
+      import('./tramites/32201/anexo-veintiocho.module').then(
+        (m) => m.AnexoVeintiochoModule
+      ),
+  },
 ];
 
 @NgModule({
