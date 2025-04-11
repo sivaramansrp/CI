@@ -32,7 +32,7 @@ export interface DatosDeLaTabla {
   tipoTramite: string;
   rfc: string;
   razonSocial: string;
-  estadoDelTramite: number;
+  estadoDelTramite: string;
 }
 
 export interface FolioTramite {

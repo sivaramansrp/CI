@@ -1,10 +1,10 @@
 import { CapturarElTextoLibreComponent } from './components/capturar-el-texto-libre/capturar-el-texto-libre.component';
+import { FirmarComponent } from './components/firmar/firmar.component';
 import { NgModule } from '@angular/core';
 import { RequirementoComponent } from './components/requiremento/requiremento.component';
 import { RouterModule } from '@angular/router';
 import { Routes } from '@angular/router';
 import { SolicitarRequerimientoComponent } from './pages/solicitar-requerimiento/solicitar-requerimiento.component';
-import { FirmarComponent } from './components/firmar/firmar.component';
 
 const ROUTES: Routes = [
   {

@@ -1,109 +1,64 @@
-// @ts-nocheck
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { By } from '@angular/platform-browser';
-import { Observable, of as observableOf, throwError } from 'rxjs';
-
-import { Component } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { Router } from '@angular/router';
 import { RequirementoComponent } from './requiremento.component';
-import { ActivatedRoute, Router } from '@angular/router';
-import { FormBuilder } from '@angular/forms';
-
-@Injectable()
-class MockRouter {
-  navigate() {};
-}
-
-@Directive({ selector: '[myCustom]' })
-class MyCustomDirective {
-  @Input() myCustom;
-}
-
-@Pipe({name: 'translate'})
-class TranslatePipe implements PipeTransform {
-  transform(value) { return value; }
-}
-
-@Pipe({name: 'phoneNumber'})
-class PhoneNumberPipe implements PipeTransform {
-  transform(value) { return value; }
-}
-
-@Pipe({name: 'safeHtml'})
-class SafeHtmlPipe implements PipeTransform {
-  transform(value) { return value; }
-}
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { CapturarRequerimientoComponent } from '../capturar-requerimiento/capturar-requerimiento.component';
+import { SeleccionarDocumentosComponent } from '../seleccionar-documentos/seleccionar-documentos.component';
 
 describe('RequirementoComponent', () => {
-  let fixture;
-  let component;
+  let component: RequirementoComponent;
+  let fixture: ComponentFixture<RequirementoComponent>;
+  let routerSpy: jest.Mocked<Router>;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule, RequirementoComponent ],
-      declarations: [
-        
-        TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
-        MyCustomDirective
+  beforeEach(async () => {
+    routerSpy = {
+      navigate: jest.fn(),
+    } as unknown as jest.Mocked<Router>;
+
+    await TestBed.configureTestingModule({
+      imports: [
+        FormsModule,
+        ReactiveFormsModule,
+        CommonModule,
+        CapturarRequerimientoComponent,
+        SeleccionarDocumentosComponent,
+        RequirementoComponent
       ],
-      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
-      providers: [
-        {
-          provide: ActivatedRoute,
-          useValue: {
-            snapshot: {url: 'url', params: {}, queryParams: {}, data: {}},
-            url: observableOf('url'),
-            params: observableOf({}),
-            queryParams: observableOf({}),
-            fragment: observableOf('fragment'),
-            data: observableOf({})
-          }
-        },
-        FormBuilder,
-        { provide: Router, useClass: MockRouter }
-      ]
-    }).overrideComponent(RequirementoComponent, {
-
+      declarations: [],
+      providers: [{ provide: Router, useValue: routerSpy }],
     }).compileComponents();
+
     fixture = TestBed.createComponent(RequirementoComponent);
-    component = fixture.debugElement.componentInstance;
+    component = fixture.componentInstance;
+    fixture.detectChanges();
   });
 
-  afterEach(() => {
-    component.ngOnDestroy = function() {};
-    fixture.destroy();
-  });
-
-  it('should run #constructor()', async () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  // it('should run #ngOnInit()', async () => {
+  it('should initialize folioTramite from history state on ngOnInit', () => {
+    const mockData = { id: 123, name: 'Test' };
+    jest.spyOn(history, 'state', 'get').mockReturnValue({ data: mockData });
 
-  //   component.ngOnInit();
+    component.ngOnInit();
 
-  // });
-
-  it('should run #seleccionaTab()', async () => {
-
-    component.seleccionaTab({});
-
+    expect(component.folioTramite).toEqual(mockData);
   });
 
-  it('should run #continuar()', async () => {
-    component.continuarEvento = component.continuarEvento || {};
-    component.continuarEvento.emit = jest.fn();
+  it('should set indice when seleccionaTab is called', () => {
+    component.seleccionaTab(2);
+    expect(component.indice).toBe(2);
+  });
+
+  it('should navigate to the correct route on continuar', () => {
     component.continuar();
-    // expect(component.continuarEvento.emit).toHaveBeenCalled();
+    expect(routerSpy.navigate).toHaveBeenCalledWith(['/pago/manifiesto-aereo/capturar-el-texto-libre']);
   });
 
-  it('should run #cancelar()', async () => {
-    component.router = component.router || {};
-    component.router.navigate = jest.fn();
+  it('should navigate to the correct route on cancelar', () => {
     component.cancelar();
-    // expect(component.router.navigate).toHaveBeenCalled();
+    expect(routerSpy.navigate).toHaveBeenCalledWith(['/pago/manifiesto-aereo/main']);
   });
-
 });

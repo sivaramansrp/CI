@@ -1,8 +1,8 @@
+import { CatalogosSelect } from '@libs/shared/data-access-user/src';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { RespuestaContenedor } from '../models/datos-tramite.model';
-import { CatalogosSelect } from '@libs/shared/data-access-user/src';
 
 @Injectable({
   providedIn: 'root'

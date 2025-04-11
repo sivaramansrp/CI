@@ -10,7 +10,6 @@ import { OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
 import { TEXTOS } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
-import documentList from '@libs/shared/theme/assets/json/32502/document-list.json';
 import { takeUntil } from 'rxjs';
 
 @Component({
@@ -30,7 +29,6 @@ export class SeleccionarDocumentosComponent implements OnInit, OnDestroy {
   tiposDocumentos: Catalogo[] = [];
   infoAlert = 'alert-info';
   catalogoDocumentos: Catalogo[] = [];
-  documentosSeleccionados = documentList.documentosSeleccionados;
   private destroy$: Subject<void> = new Subject<void>();
   constructor(private catalogosServices: CatalogosService) {
     // Constructor
