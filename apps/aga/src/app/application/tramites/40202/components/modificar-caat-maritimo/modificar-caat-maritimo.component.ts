@@ -28,7 +28,7 @@ import { Tramite40202Query } from '../../../../core/queries/tramite40202.query';
     NotificacionesComponent
   ],
   templateUrl: './modificar-caat-maritimo.component.html',
-  styleUrl: './modificar-caat-maritimo.component.css',
+  styleUrl: './modificar-caat-maritimo.component.scss',
 })
 export class ModificarCaatMaritimoComponent implements OnInit, OnDestroy {
   /**
