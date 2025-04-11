@@ -956,13 +956,13 @@
     {
         "id": 160,
         "tramite": 110210,
-        "link": "",
+        "link": "/se/tramites-disponibles/solicitud",
         "department": "se"
     },
     {
         "id": 161,
         "tramite": 130112,
-        "link": "",
+        "link": "/se/importacion-material-de-investigacion-cientifica",
         "department": "se"
     },
     {
@@ -974,7 +974,7 @@
     {
         "id": 163,
         "tramite": 130115,
-        "link": "",
+        "link": "/se/importacion-vehiculos-nuevos/solicitud",
         "department": "se"
     },
     {
@@ -1082,7 +1082,7 @@
     {
         "id": 181,
         "tramite": 260910,
-        "link": "",
+        "link": "/cofepris/modificacion-permiso-sanitario/solicitante",
         "department": "cofepris"
     },
     {
@@ -1130,7 +1130,7 @@
     {
         "id": 189,
         "tramite": 6101,
-        "link": "",
+        "link": "/aga/junta-tecnica/solicitud",
         "department": "aga"
     },
     {
@@ -1142,7 +1142,7 @@
     {
         "id": 191,
         "tramite": 11106,
-        "link": "",
+        "link": "/aga/cancelacion-donaciones/pagina-uno-acuses-y-resoluciones-busqueda",
         "department": "aga"
     },
     {
@@ -1496,7 +1496,7 @@
     {
         "id": 250,
         "tramite": 130105,
-        "link": "",
+        "link": "/se/importacion-vehiculos-usados-donacion/solicitud",
         "department": "se"
     },
     {
