@@ -38,12 +38,7 @@ export class TransporteComponent implements OnDestroy, OnInit {
   private destroyNotifier$: Subject<void> = new Subject();
   public solicitudState!: solicitud220401State;
 
-  public tiposDocumentos: CatalogosSelect = {
-    labelNombre: 'Medio de transporte',
-    required: true,
-    primerOpcion: 'Selecciona un medio de transporte',
-    catalogos: [],
-  }
+  public tiposTransporte: Catalogo[] = [];
   /**
    * constructor de la clase
    * Fetch the fetchtiposDocumentos datos
@@ -124,7 +119,7 @@ export class TransporteComponent implements OnDestroy, OnInit {
       takeUntil(this.destroyed$)
     ).subscribe((data): void => {
       // eslint-disable-next-line dot-notation
-      this.tiposDocumentos['catalogos'] = data as Catalogo[];
+      this.tiposTransporte = data as Catalogo[];
     });
   }
   /**
