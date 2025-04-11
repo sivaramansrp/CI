@@ -18,6 +18,7 @@ import { map, merge, Subject, takeUntil } from 'rxjs';
 import {
   AlertComponent,
   CatalogoSelectComponent,
+  InputCheckComponent,
   REGEX_POSTAL,
   REGEX_TELEFONO_DIGITOS,
   TableComponent,
@@ -48,6 +49,7 @@ import { Tramite10302Query } from '../estados/tramite10302.query';
     FormsModule,
     ReactiveFormsModule,
     AlertComponent,
+    InputCheckComponent
   ],
   templateUrl: './datosTramite.component.html',
   styleUrl: './datosTramite.component.scss',
@@ -413,6 +415,14 @@ export class DatosTramiteComponent implements OnInit, OnDestroy {
     this.store.setPais(PAIS);
   }
 
+  /**
+   * Actualiza el indicador de aviso de funcionamiento en el Store.
+   * @param evento - Evento que contiene el valor del indicador.
+   */
+  organismoPublico(): void {
+    const ORGANISMOPUBLICO = this.tramiteForm.get('exencionImpuestos.organismoPublico')?.value;
+    this.store.setOrganismoPublico(ORGANISMOPUBLICO);
+  }
   /**
    * Valida el formulario de destinatario.
    */

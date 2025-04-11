@@ -20,22 +20,13 @@
           </div>
 
           <div class="col-md-4" style="margin-top: 35px">
-            <div class="form-group form-check">
-              <input
-                type="checkbox"
-                class="form-check-input"
-                formControlName="organismoPublico"
-                id="organismoPublico"
-                (change)="
-                  setValoresStore(
-                    exencionImpuestos,
-                    'organismoPublico',
-                    'setOrganismoPublico')"
-              />
-              <label class="form-check-label" for="organismoPublico"
-                >Organismo público</label
-              >
-            </div>
+            <lib-input-check
+              [id]="'organismoPublico'"
+              [label]="'Organismo público'"
+              [required]="true"
+              formControlName="organismoPublico"
+              (change)="organismoPublico()"
+            ></lib-input-check>
           </div>
         </div>
         <ng-titulo titulo="Mercancía" />
