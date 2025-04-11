@@ -1,5 +1,11 @@
-import { Catalogo, REGEX_PATRON_DECIMAL_2, REGEX_SOLO_NUMEROS} from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Catalogo } from '@ng-mf/data-access-user';
+import { REGEX_NUMERO_DECIMAL_ENTERO } from '@ng-mf/data-access-user';
+import { REG_X } from '@ng-mf/data-access-user';
+
+import { REGEX_PATRON_DECIMAL_2} from '@ng-mf/data-access-user';
+import { REGEX_SOLO_NUMEROS } from '@ng-mf/data-access-user';
+
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
@@ -264,7 +270,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         '',
         [
           Validators.required,
-          Validators.pattern('^[0-9]+$'),
+          Validators.pattern(REG_X.SOLO_NUMEROS),
           Validators.maxLength(18),
         ],
       ],
@@ -284,7 +290,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         [
           Validators.required,
           Validators.min(0),
-          Validators.pattern('^[0-9]+(\\.[0-9]{1,2})?$'),
+          Validators.pattern(REGEX_NUMERO_DECIMAL_ENTERO),
           Validators.maxLength(20),
         ],
       ],
@@ -452,16 +458,19 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   fetchEntidadFederativa(): void {
     this.importacionEquipoAnticontaminanteService
       .getEntidadFederativa()
+      .pipe(takeUntil(this.destroyed$))
       .subscribe((data) => {
         this.entidadFederativa = data;
       });
   }
+ 
   /**
   * Método para obtener la lista de representaciones federales.
   */
   fetchRepresentacionFederal(): void {
     this.importacionEquipoAnticontaminanteService
       .getRepresentacionFederal()
+      .pipe(takeUntil(this.destroyed$))
       .subscribe((data) => {
         this.representacionFederal = data;
       });
@@ -472,6 +481,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   listaDePaisesDisponibles(): void {
     this.importacionEquipoAnticontaminanteService
       .getListaDePaisesDisponibles()
+      .pipe(takeUntil(this.destroyed$))
       .subscribe((data) => {
         this.elementosDeBloque = data;
       });
@@ -483,6 +493,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   listaDeFraccionDescripcion(): void {
     this.importacionEquipoAnticontaminanteService
       .getFraccionDescripcionPartidasDeLaMercancia()
+      .pipe(takeUntil(this.destroyed$))
       .subscribe((data) => {
         this.fraccionDescription = data;
       });
@@ -495,6 +506,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   fetchPaisesPorBloque(_bloqueId: number): void {
     this.importacionEquipoAnticontaminanteService
       .getPaisesPorBloque(_bloqueId)
+      .pipe(takeUntil(this.destroyed$))
       .subscribe((data) => {
         this.paisesPorBloque = data;
         this.selectRangoDias = this.paisesPorBloque.map(

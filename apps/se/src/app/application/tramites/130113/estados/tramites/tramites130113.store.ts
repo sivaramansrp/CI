@@ -230,10 +230,10 @@ export class Tramite130113Store extends Store<Tramite130113State> {
   }
 
   /**
- * @descripcion
- * Actualiza la descripción de las partidas de la mercancía en el estado.
- * @param {string} descripcionPartidasDeLaMercancia - Nueva descripción de las partidas de la mercancía.
- */
+   * @descripcion
+   * Actualiza la descripción de las partidas de la mercancía en el estado.
+   * @param {string} descripcionPartidasDeLaMercancia - Nueva descripción de las partidas de la mercancía.
+   */
   public setDescripcionPartidasDeLaMercancia(
     descripcionPartidasDeLaMercancia: string
   ): void {
@@ -370,7 +370,7 @@ export class Tramite130113Store extends Store<Tramite130113State> {
   /**
    * @descripcion
    * Almacena los valores de la fila seleccionada en el estado.
-   * @param {null} fila - Fila seleccionada.
+   * @param {PartidasDeLaMercanciaModelo[]} fila - Fila seleccionada.
    */
   public storeTableValues(fila: PartidasDeLaMercanciaModelo[]): void {
     this.update({
