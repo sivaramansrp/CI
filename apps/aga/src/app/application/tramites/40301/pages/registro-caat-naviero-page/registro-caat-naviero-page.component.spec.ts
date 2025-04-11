@@ -1,97 +1,88 @@
-/* eslint-disable dot-notation */
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { CancelacionExtraordinariosPageComponent } from './cancelacion-extraordinarios-page.component';
-import { BtnContinuarComponent, SolicitanteComponent, SolicitanteService, WizardComponent } from '@ng-mf/data-access-user';
-import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
-import { ElementRef } from '@angular/core';
-import { Modal } from 'bootstrap';
-import { PasoDosComponent } from '../paso-dos/paso-dos.component';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { RegistroCaatNavieroPageComponent } from './registro-caat-naviero-page.component';
+import { SeccionLibQuery, SeccionLibStore, WizardComponent } from '@ng-mf/data-access-user';
+import { of } from 'rxjs';
 
-jest.mock('bootstrap', () => ({
-  Modal: jest.fn().mockImplementation(() => ({
-    show: jest.fn(),
-    hide: jest.fn(),
-  })),
-}));
-
-describe('CancelacionExtraordinariosPageComponent', () => {
-  let component: CancelacionExtraordinariosPageComponent;
-  let fixture: ComponentFixture<CancelacionExtraordinariosPageComponent>;
+describe('RegistroCaatNavieroPageComponent', () => {
+  let component: RegistroCaatNavieroPageComponent;
+  let fixture: ComponentFixture<RegistroCaatNavieroPageComponent>;
+  let mockSeccionQuery: jest.Mocked<SeccionLibQuery>;
+  let mockSeccionStore: jest.Mocked<SeccionLibStore>;
 
   beforeEach(async () => {
+    mockSeccionQuery = {
+      selectSeccionState$: jest.fn().mockReturnValue(of({ seccion: { paso1: true, paso2: false } })),
+    } as unknown as jest.Mocked<SeccionLibQuery>;
+
+    mockSeccionStore = {
+      establecerSeccion: jest.fn(),
+      establecerFormaValida: jest.fn(),
+    } as unknown as jest.Mocked<SeccionLibStore>;
+
     await TestBed.configureTestingModule({
-      declarations: [CancelacionExtraordinariosPageComponent, PasoUnoComponent, PasoDosComponent],
-      imports: [WizardComponent, BtnContinuarComponent,SolicitanteComponent,HttpClientTestingModule],
-      providers: [SolicitanteService]
+      declarations: [RegistroCaatNavieroPageComponent],
+      providers: [
+        { provide: SeccionLibQuery, useValue: mockSeccionQuery },
+        { provide: SeccionLibStore, useValue: mockSeccionStore },
+      ],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(CancelacionExtraordinariosPageComponent);
+    fixture = TestBed.createComponent(RegistroCaatNavieroPageComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize modal instance in ngAfterViewInit', () => {
-    const modalElementMock = {
-      nativeElement: document.createElement('div')
-    } as ElementRef;
-    component.cancelarModal = modalElementMock;
-
-    component.ngAfterViewInit();
-
-    expect(component.cancelarModelInstance).toBeDefined();
+  it('should initialize seccion state on ngOnInit', () => {
+    jest.spyOn(component, 'asignarSecciones');
+    component.ngOnInit();
+    expect(component.asignarSecciones).toHaveBeenCalled();
   });
 
-  it('should update step index in seleccionaTab()', () => {
-    component.seleccionaTab(3);
-    expect(component.indice).toBe(3);
+  it('should assign sections to the store', () => {
+    component['asignarSecciones']();
+    expect(mockSeccionStore.establecerSeccion).toHaveBeenCalled();
+    expect(mockSeccionStore.establecerFormaValida).toHaveBeenCalled();
   });
 
-  it('should update index on getValorIndice() with "cont"', () => {
-    const wizardMock = {
+  it('should change the active tab index', () => {
+    component.seleccionaTab(2);
+    expect(component.indice).toBe(2);
+  });
+
+  it('should update the index and navigate forward in the wizard', () => {
+    component.wizardComponent = {
       siguiente: jest.fn(),
       atras: jest.fn(),
     } as unknown as WizardComponent;
-    component.wizardComponent = wizardMock;
 
-    component.getValorIndice({ valor: 2, accion: 'cont' });
+    const accionBoton = { accion: 'cont', valor: 3 };
+    component.getValorIndice(accionBoton);
+
+    expect(component.indice).toBe(3);
+    expect(component.wizardComponent.siguiente).toHaveBeenCalled();
+  });
+
+  it('should update the index and navigate backward in the wizard', () => {
+    component.wizardComponent = {
+      siguiente: jest.fn(),
+      atras: jest.fn(),
+    } as unknown as WizardComponent;
+
+    const accionBoton = { accion: 'back', valor: 2 };
+    component.getValorIndice(accionBoton);
 
     expect(component.indice).toBe(2);
-    expect(wizardMock.siguiente).toHaveBeenCalled();
+    expect(component.wizardComponent.atras).toHaveBeenCalled();
   });
 
-  it('should open modal if form is valid', () => {
-    const pasoUnoMock = { isFormValid: jest.fn().mockReturnValue(true) } as unknown as PasoUnoComponent;
-    component.pasoUnoComponent = pasoUnoMock;
-    component.cancelarModelInstance = new Modal(document.createElement('div'));
+  it('should toggle modal button visibility based on the current tab', () => {
+    component.pestanaCambiado(2);
+    expect(component.mostrarBotonParaModal).toBeTruthy();
 
-    component.abrirModal();
-
-    expect(component.cancelarModelInstance.show).toHaveBeenCalled();
+    component.pestanaCambiado(1);
+    expect(component.mostrarBotonParaModal).toBeFalsy();
   });
-
-  it('should close modal when crearerModal() is called', () => {
-    component.cancelarModelInstance = new Modal(document.createElement('div'));
-
-    component.crearerModal();
-
-    expect(component.cancelarModelInstance.hide).toHaveBeenCalled();
-  });
-
-  it('should handle encendidoSi() to proceed to next step and close modal', () => {
-    const wizardMock = { siguiente: jest.fn() } as unknown as WizardComponent;
-    component.wizardComponent = wizardMock;
-    component.cancelarModelInstance = new Modal(document.createElement('div'));
-
-    component.encendidoSi();
-
-    expect(component.indice).toBe(2);
-    expect(wizardMock.siguiente).toHaveBeenCalled();
-    expect(component.cancelarModelInstance.hide).toHaveBeenCalled();
-  });
-
 });

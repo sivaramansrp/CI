@@ -14,45 +14,45 @@ import { Solicitud40301Store } from '../../estados/tramite40301.store';
 })
 export class CapturarComponent implements OnInit, OnDestroy {
   /**
-   * A FormGroup instance used to manage the state and validation of the form
-   * in the Capturar component. This form is likely associated with capturing
-   * data for a specific "solicitud" (request or application) process.
+   * Una instancia de FormGroup utilizada para gestionar el estado y la validación del formulario
+   * en el componente Capturar. Este formulario probablemente está asociado con la captura
+   * de datos para un proceso específico de "solicitud".
    */
   solicitudForm!: FormGroup;
   /**
-   * Represents the title of the component.
-   * This property is expected to be initialized later and holds a string value.
+   * Representa el título del componente.
+   * Se espera que esta propiedad se inicialice más tarde y contenga un valor de tipo cadena.
    */
   titulo!: string;
 
   /**
-   * Represents the label for the type of agent.
-   * This property is used to store a descriptive label
-   * associated with the agent type in the application.
+   * Representa la etiqueta para el tipo de agente.
+   * Esta propiedad se utiliza para almacenar una etiqueta descriptiva
+   * asociada con el tipo de agente en la aplicación.
    */
   tipoAgenteLabel!: string;
 
   /**
-   * Represents the unique identifier for the current trámite (procedure or process).
-   * This property is expected to be assigned a string value that uniquely identifies
-   * a specific trámite within the application.
+   * Representa el identificador único para el trámite actual (procedimiento o proceso).
+   * Se espera que esta propiedad se asigne con un valor de tipo cadena que identifique
+   * de manera única un trámite específico dentro de la aplicación.
    */
   idTramite!: string;
   /**
-   * An array of strings representing the roles assigned to the user.
-   * This can be used to determine the user's permissions or access levels
-   * within the application.
+   * Un arreglo de cadenas que representa los roles asignados al usuario.
+   * Esto puede ser utilizado para determinar los permisos o niveles de acceso
+   * del usuario dentro de la aplicación.
    */
   rolesUsuario: string[] = [];
   /**
-   * Represents a catalog of agents.
-   * This array holds a list of `Catalogo` objects, which can be used
-   * to store and manage agent-related data within the component.
+   * Representa un catálogo de agentes.
+   * Este arreglo contiene una lista de objetos `Catalogo`, que pueden ser utilizados
+   * para almacenar y gestionar datos relacionados con agentes dentro del componente.
    */
   agentCatalog: Catalogo[] = [];
 
   /**
-   * Subject para destruir notificador.
+   * Subject para destruir el notificador.
    */
   private destruirNotificador$: Subject<void> = new Subject();
 
@@ -91,16 +91,16 @@ export class CapturarComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Reads and initializes metadata information required for the component.
+   * Lee e inicializa la información de metadatos requerida para el componente.
    * 
-   * This method performs the following actions:
-   * 1. Retrieves metadata information such as the title and agent type label
-   *    from the `capturarService` and assigns them to the respective component properties.
-   * 2. Fetches the roles of the current user and stores them in the `rolesUsuario` property.
-   * 3. Retrieves the agent catalog and assigns it to the `agentCatalog` property.
+   * Este método realiza las siguientes acciones:
+   * 1. Recupera información de metadatos como el título y la etiqueta del tipo de agente
+   *    desde el `capturarService` y los asigna a las propiedades respectivas del componente.
+   * 2. Obtiene los roles del usuario actual y los almacena en la propiedad `rolesUsuario`.
+   * 3. Recupera el catálogo de agentes y lo asigna a la propiedad `agentCatalog`.
    * 
-   * All subscriptions are automatically unsubscribed when the component is destroyed
-   * using the `destruirNotificador$` notifier.
+   * Todas las suscripciones se cancelan automáticamente cuando el componente se destruye
+   * utilizando el notificador `destruirNotificador$`.
    */
   public readMetaInfo(): void {
     // Obtener el título desde el servicio
@@ -113,7 +113,6 @@ export class CapturarComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-
 
     // Obtener roles del usuario
     this.capturarService.obtenerRolesUsuario()
@@ -139,7 +138,7 @@ export class CapturarComponent implements OnInit, OnDestroy {
   /**
    * ## suscribirseAlEstado
    * 
-   * Suscribe al estado de la solicitud para actualizar el formulario automáticamente.
+   * Se suscribe al estado de la solicitud para actualizar el formulario automáticamente.
    * 
    * ### Funcionalidad
    * Utiliza el servicio para obtener el estado actual de la solicitud y parchea los valores en el formulario.
@@ -158,7 +157,7 @@ export class CapturarComponent implements OnInit, OnDestroy {
   /**
    * @method isFormValid
    * @description
-   * Verifica si el formulario dentro del componente `CancelarSolicitudComponent` es válido.
+   * Verifica si el formulario dentro del componente `CapturarComponent` es válido.
    * @returns {boolean} `true` si el formulario es válido, `false` en caso contrario.
    */
   isFormValid(): boolean {
@@ -166,8 +165,7 @@ export class CapturarComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Método para obtener el valor del campo tipoAgente.
-   * @returns string
+   * Método para limpiar el formulario de agente.
    */
   limpiarAgente(): void {
     this.solicitudForm.reset();
@@ -184,47 +182,51 @@ export class CapturarComponent implements OnInit, OnDestroy {
   }
 
   /**
-  * Actualiza el nombre del Director General en el store.
-  *
-  * Este método obtiene el valor actual del campo `directorGeneralNombre` del formulario `solicitudForm`
-  * y lo envía al store `solicitud40301Store` mediante el método `setDirectorGeneralNombre`.
-  */
+   * Actualiza el nombre del Director General en el store.
+   *
+   * Este método obtiene el valor actual del campo `directorGeneralNombre` del formulario `solicitudForm`
+   * y lo envía al store `solicitud40301Store` mediante el método `setDirectorGeneralNombre`.
+   */
   public actualizarDirectorGeneralNombre(control: string): void {
     const DIRECTOR_GENERAL_NOMBRE = this.solicitudForm.get(control)?.value;
     this.solicitud40301Store.setDirectorGeneralNombre(DIRECTOR_GENERAL_NOMBRE);
   }
 
   /**
- * Actualiza el primer apellido en el store.
- *
- * Este método obtiene el valor actual del campo `primerApellido` del formulario `solicitudForm`
- * y lo envía al store `solicitud40301Store` mediante el método `setDirectorGeneralNombre`.
- */
+   * Actualiza el primer apellido en el store.
+   *
+   * Este método obtiene el valor actual del campo `primerApellido` del formulario `solicitudForm`
+   * y lo envía al store `solicitud40301Store` mediante el método `setPrimerApellido`.
+   */
   public actualizarPrimerApellido(control: string): void {
     const PRIMER_APELLIDO = this.solicitudForm.get(control)?.value;
     this.solicitud40301Store.setPrimerApellido(PRIMER_APELLIDO);
   }
 
   /**
- * Actualiza el segundo apellido en el store.
- *
- * Este método obtiene el valor actual del campo `segundoApellido` del formulario `solicitudForm`
- * y lo envía al store `solicitud40301Store` mediante el método `setDirectorGeneralNombre`.
- */
+   * Actualiza el segundo apellido en el store.
+   *
+   * Este método obtiene el valor actual del campo `segundoApellido` del formulario `solicitudForm`
+   * y lo envía al store `solicitud40301Store` mediante el método `setSegundoApellido`.
+   */
   public actualizarApellidoMaterno(control: string): void {
     const SEGUNDO_APELLIDO = this.solicitudForm.get(control)?.value;
     this.solicitud40301Store.setSegundoApellido(SEGUNDO_APELLIDO);
   }
 
-
+  /**
+   * Maneja el envío del formulario.
+   */
   onSubmit(): void {
     if (this.solicitudForm.valid) {
       // Aquí puedes manejar el envío del formulario, como enviar los datos a un servicio o API
     }
   }
 
+  /**
+   * Se ejecuta al destruir el componente para evitar fugas de memoria.
+   */
   ngOnDestroy(): void {
-    // Destruir el notificador para evitar fugas de memoria
     this.destruirNotificador$.next();
     this.destruirNotificador$.complete();
   }

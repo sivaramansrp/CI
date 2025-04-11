@@ -101,7 +101,7 @@ export class RegistroCaatNavieroPageComponent implements OnInit {
    /**
      * Método para asignar las secciones existentes al stored
      */
-   private asignarSecciones(): void {
+   asignarSecciones(): void {
     const SECCIONES: boolean[] = Object.values(SECCIONES_TRAMITE_40301.PASO_1);
     const FORM_VALIDA: boolean[] = [];
     
