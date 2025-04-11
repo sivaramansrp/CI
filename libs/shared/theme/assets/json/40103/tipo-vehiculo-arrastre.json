@@ -1,0 +1,10 @@
+[
+    { "clave": "TR1", "descripcion": "Trailer" },
+    { "clave": "SR2", "descripcion": "Semi-Trailer" },
+    { "clave": "FL3", "descripcion": "Flatbed" },
+    { "clave": "CN4", "descripcion": "Container Carrier" },
+    { "clave": "TN5", "descripcion": "Tanker" },
+    { "clave": "DB6", "descripcion": "Double Trailer" },
+    { "clave": "FR7", "descripcion": "Fridge Trailer" }
+  ]
+  
