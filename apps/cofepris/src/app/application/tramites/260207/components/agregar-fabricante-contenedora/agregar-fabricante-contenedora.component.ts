@@ -2,6 +2,7 @@ import { AgregarFabricanteComponent } from '../../../../shared/components/agrega
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { Fabricante } from '../../../../shared/models/terceros-relacionados.model';
+import { ID_PROCEDIMIENTO } from '../../constants/tratamientos-especiales.enum';
 import { Tramite260207Store } from '../../estados/tramite260207Store.store';
 /**
  * @component AgregarFabricanteContenedoraComponent
@@ -17,6 +18,21 @@ import { Tramite260207Store } from '../../estados/tramite260207Store.store';
   styleUrl: './agregar-fabricante-contenedora.component.scss',
 })
 export class AgregarFabricanteContenedoraComponent {
+  /**
+   * @property {boolean} estaOculto
+   * Variable booleana que indica si el componente o sección relacionada con el 
+   * formulario de agregar fabricante está visible o está oculta en la interfaz.
+   * Se utiliza para controlar la visibilidad de ciertos elementos en la UI.
+   */
+  estaOculto: boolean = true;
+
+  /**
+     * @property {string} idProcedimiento
+     * @description
+     * Identificador del procedimiento.
+     */
+    public readonly idProcedimiento = ID_PROCEDIMIENTO;
+
  /**
    * @constructor
    * @description Constructor que inyecta el store `Tramite260207Store` para gestionar el estado del trámite.
