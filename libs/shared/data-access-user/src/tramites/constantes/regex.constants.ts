@@ -276,8 +276,27 @@ export const REGEX_SOLO_NUMEROS = /^[0-9]*$/;
  */
 export const REGEX_CURP =
   /^([a-zA-Z]{4})([0-9]{6})([HhMm][a-zA-Z]{5})([0-9]{2})$/;
-
-
+/**
+ * Expresión regular para validar RFC sanitario.
+ * 
+ * Esta expresión regular valida un RFC (Registro Federal de Contribuyentes) en el contexto sanitario.
+ * El formato del RFC sanitario consta de las siguientes partes:
+ * - 4 letras mayúsculas (A-Z).
+ * - 6 dígitos que representan la fecha de nacimiento o constitución (AAMMDD).
+ * - 3 caracteres alfanuméricos (letras mayúsculas o dígitos).
+ * 
+ * Ejemplo de RFC sanitario válido:
+ * - ABCD123456XYZ
+ * 
+ * Desglose de la expresión regular:
+ * - `^[A-Z]{4}`: Coincide con exactamente 4 letras mayúsculas al inicio.
+ * - `\d{6}`: Coincide con exactamente 6 dígitos que representan la fecha.
+ * - `[A-Z\d]{3}$`: Coincide con exactamente 3 caracteres alfanuméricos al final.
+ * 
+ * Propósito:
+ * - Garantizar que el RFC sanitario cumpla con el formato requerido.
+ * - Validar entradas en formularios o sistemas que requieran un RFC sanitario.
+ */
   export const REGEX_RFC_SANITARIO =/^[A-Z]{4}\d{6}[A-Z\d]{3}$/;   
 /** 
  * Expresión regular para validar números en formato USD. 

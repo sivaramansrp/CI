@@ -74,7 +74,7 @@
           <button
             type="button"
             class="btn btn-primary"
-            (click)="openEstablecimientoModal()"
+            (click)="abrirModal()"
           >
             Seleccionar establecimiento
           </button>
@@ -291,18 +291,13 @@
   <form [formGroup]="solicitudEstablecimientoForm">
     <div class="row align-item-center">
       <div class="col-md-4 mt-5">
-        <div class="form-check">
-          <input
-            class="form-check-input"
-            type="checkbox"
-            id="avisoCheckbox"
-            formControlName="avisoCheckbox"
-            (change)="toggleNoLicenciaSanitaria($event); onControlChangeForm('avisoCheckbox')"
-          />
-          <label class="form-check-label" for="avisoCheckbox">
-            <span>Aviso de funcionamiento</span>
-          </label>
-        </div>
+        <lib-input-check
+        [label]="'Aviso de funcionamiento'"
+        [id]="'avisoCheckbox'"
+        [required]="true"
+        formControlName="avisoCheckbox"
+        (change)="toggleNoLicenciaSanitaria($event); onControlChangeForm('avisoCheckbox')"
+      ></lib-input-check>
       </div>
       <div class="col-md-4">
         <div class="form-group">
@@ -353,25 +348,14 @@
       <div class="col-md-4"></div>
       <div class="col-md-4"></div>
       <div class="col-md-4">
-        <div class="form-check">
-          <input
-            class="form-check-input"
-            type="checkbox"
-            id="aifaCheckbox"
-            formControlName="aifaCheckbox"
-            (change)="onControlChangeForm('aifaCheckbox')"
-          />
-          <label class="form-check-label" for="aifaCheckbox">
-            <span
-              >Aeropuerto Internacional Felipe Ángeles (AIFA).
-              <span
-                class="bi bi-question-circle-fill"
-                title="Aeropuerto Internacional Felipe Ángeles (AIFA)."
-                data-bs-toggle="tooltip"
-              ></span>
-            </span>
-          </label>
-        </div>
+       
+        <lib-input-check
+        [label]="'Aeropuerto Internacional Felipe Ángeles (AIFA)'"
+        [id]="'aifaCheckbox'"
+        [required]="true"
+        formControlName="aifaCheckbox"
+        (change)="onControlChangeForm('aifaCheckbox')"
+      ></lib-input-check>
       </div>
     </div>
     <div class="row">
@@ -402,8 +386,13 @@
   
   </form>
 </div>
-
-<div class="modal fade" #establecimientoModalButton>
+@if (nuevaNotificacion) {
+  <section>
+  <lib-notificaciones [notificacionInput]="nuevaNotificacion" (confirmacionModal)="eliminarPedimento($event)">
+  </lib-notificaciones>
+  </section>
+  }
+<!-- <div class="modal fade" #establecimientoModalButton>
   <div class="modal-dialog modal-sm">
     <div class="modal-content">
       <form>
@@ -419,7 +408,7 @@
       </form>
     </div>
   </div>
-</div>
+</div> -->
 
 <div class="modal fade" #establecimientoModal>
   <div class="modal-dialog modal-lg">

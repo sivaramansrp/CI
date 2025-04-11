@@ -14,9 +14,13 @@ import {
   ConfiguracionColumna,
   CrossListLable,
   CrosslistComponent,
+  InputCheckComponent,
   InputFecha,
   InputFechaComponent,
   InputRadioComponent,
+  Notificacion,
+  NotificacionesComponent,
+  Pedimento,
   REGEX_RFC_SANITARIO,
   REGEX_SOLO_DIGITOS,
   TablaDinamicaComponent,
@@ -67,6 +71,9 @@ import { ManifiestosRepresentanteSeccionComponent } from '../manifiestos-represe
     CatalogoSelectComponent,
     TablaDinamicaComponent,
     AlertComponent,
+    InputCheckComponent,
+    NotificacionesComponent,
+    
   ],
 
   templateUrl: './datos-del-solicitud-modificacion.component.html',
@@ -75,6 +82,30 @@ import { ManifiestosRepresentanteSeccionComponent } from '../manifiestos-represe
 export class DatosDelSolicitudModificacionComponent
   implements OnInit, OnDestroy ,AfterViewInit
 {
+  public nuevaNotificacion!: Notificacion;
+elementoParaEliminar!: number;
+pedimentos: Array<Pedimento> = [];
+abrirModal(i: number = 0): void {
+  this.nuevaNotificacion = {
+    tipoNotificacion: 'alert',
+    categoria: 'danger',
+    modo: 'action',
+    titulo: '',
+    mensaje: 'Por el momento no hay comunicación con el Sistema de COFEPRIS, favorde capturar su establecimiento. Acerar',
+    cerrar: false,
+    tiempoDeEspera: 2000,
+    txtBtnAceptar: 'Aceptar',
+    txtBtnCancelar: 'Cancelar',
+  }
+
+  this.elementoParaEliminar = i;
+}
+
+eliminarPedimento(borrar: boolean): void {
+  if (borrar) {
+    this.pedimentos.splice(this.elementoParaEliminar, 1);
+  }
+}
   /**
    * @input showPreFillingOptions
    * Indica si se deben mostrar las opciones de prellenado.
@@ -340,6 +371,7 @@ export class DatosDelSolicitudModificacionComponent
    */
   openEstablecimientoModal(): void {
     this.establecimientoModalInstance.show();
+    this.abrirModal();
   }
   /**
    * Ciclo de vida `AfterViewInit`.
@@ -409,7 +441,7 @@ export class DatosDelSolicitudModificacionComponent
     this.loadScian();
     this.loadEstadoData();
     this.crearFormulario();
-   
+  
     this.domicilioEstablecimiento = this.fb.group({
       ideGenerica1: ['', Validators.required],
       observaciones: ['', [Validators.required, Validators.maxLength(2000)]],

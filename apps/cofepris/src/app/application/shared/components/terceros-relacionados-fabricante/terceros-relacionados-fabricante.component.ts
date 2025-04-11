@@ -94,6 +94,11 @@ export class TercerosRelacionadosFabricanteComponent {
    * @type {ConfiguracionColumna<Fabricante>[]} - Arreglo de configuraciones de columnas para la tabla.
    */
   public configuracionCertificadoAnaliticoTabla: ConfiguracionColumna<Fabricante>[] = this.generateConfiguracionTabla(this.configuracionFabricante);
+   /**
+   * Configuración de la tabla para los datos de "Otros".
+   * 
+   * @type {ConfiguracionColumna<Otros>[]} Configuración de las columnas de la tabla.
+   */
   public configuracionOtrosTabla: ConfiguracionColumna<Otros>[] = this.generateConfiguracionTabla(this.configuracionOtros);
 
   /* eslint-disable @typescript-eslint/no-explicit-any */
