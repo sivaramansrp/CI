@@ -9,8 +9,8 @@ import { Subject, takeUntil } from 'rxjs';
  * y visualizarlos en una lista de documentos seleccionados.
  */
 @Component({
-  selector: 'app-pasoduos',
-  templateUrl: './pasoduos.component.html',
+  selector: 'app-paso-dos',
+  templateUrl: './paso-dos.component.html',
 })
 export class PasoduosComponent implements OnInit,OnDestroy {
   /**

@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { PasoduosComponent } from './pasoduos.component';
+import { PasoduosComponent } from './paso-dos.component';
 import { CatalogosService } from '@ng-mf/data-access-user';
 import { of, throwError } from 'rxjs';
 import { By } from '@angular/platform-browser';

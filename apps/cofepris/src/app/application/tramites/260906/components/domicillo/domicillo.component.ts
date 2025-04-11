@@ -16,9 +16,9 @@ import { Tramite260906Query } from '../../../../estados/queries/tramite260906.qu
  */
 export interface RespuestaTabla {
   /**
-   * Código de respuesta.
+   * Codigo de respuesta.
    */
-  código: number;
+  codigo: number;
   /**
    * Datos de la tabla NICO.
    */
@@ -34,9 +34,9 @@ export interface RespuestaTabla {
  */
 export interface MercanciasTabla {
   /**
-   * Código de respuesta.
+   * Codigo de respuesta.
    */
-  código: number;
+  codigo: number;
   /**
    * Datos de la tabla de mercancías.
    */
@@ -244,8 +244,11 @@ ngOnInit(): void {
   this.obtenerEstadoList();
   this.obtenerTablaDatos();
   this.obtenerMercanciasDatos();
- 
-  /**
+ this.inicializarFormGroup();
+}
+
+inicializarFormGroup(): void {
+      /**
    * Inicialización del formulario de domicilio.
    */
   this.domicilio = this.fb.group({
@@ -296,7 +299,7 @@ ngOnInit(): void {
     numeroRegistro: [this.solicitudState?.numeroRegistro, Validators.required],
     fechaCaducidad: [this.solicitudState?.fechaCaducidad],
   });
-}
+  }
  
 /**
  * Botones de acción para gestionar listas de países en la primera sección.

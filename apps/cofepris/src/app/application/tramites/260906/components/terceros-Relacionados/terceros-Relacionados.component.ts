@@ -1,6 +1,6 @@
 import { AbstractControl, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
-import { AlertComponent, Catalogo, CatalogoSelectComponent, InputRadioComponent, TituloComponent } from '@libs/shared/data-access-user/src';
-import { CODIGOPOSTALSELECTDATA, COLONIASELECTDATA, LOCALIDADSELECTDATA,MUNICIPIOSELECTDATA,PAISSELECTDATA, TERCEROS_RELACIONADOS_TABLE_HEADER_DATA } from '@libs/shared/data-access-user/src/core/enums/260906/permiso.enum';
+import { AlertComponent, Catalogo, CatalogoSelectComponent, InputRadioComponent, REGEX_CURP, REGEX_RFC_FISICA, REGEX_RFC_MORAL, REGEX_TELEFONO, TituloComponent } from '@libs/shared/data-access-user/src';
+import { CODIGOPOSTALSELECTDATA, COLONIASELECTDATA, LOCALIDADSELECTDATA, MUNICIPIOSELECTDATA, PAISSELECTDATA, TERCEROS_RELACIONADOS_TABLE_HEADER_DATA } from '@libs/shared/data-access-user/src/core/enums/260906/permiso.enum';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ModalComponent } from '../model/modal.component';
@@ -12,14 +12,14 @@ import { TableComponent } from '@ng-mf/data-access-user';
 import nacionalidadRedio from '@libs/shared/theme/assets/json/260906/nacionalidadRedio.json';
 import tipoPersonaoptions from '@libs/shared/theme/assets/json/260906/tipoPersonaoptions.json';
 
- /**
- * Constante que define el texto de alerta para las tablas de terceros relacionados.
- * Este texto indica que las tablas con asterisco son obligatorias.
- */
+/**
+* Constante que define el texto de alerta para las tablas de terceros relacionados.
+* Este texto indica que las tablas con asterisco son obligatorias.
+*/
 const TERCEROS_TEXTO_DE_ALERTA =
   'Las tablas con asterisco son obligatorias y debes agregar por lo menos un registro.';
 
-  
+
 /**
  * Componente que gestiona la funcionalidad de terceros relacionados.
  * Permite agregar, editar y visualizar información de fabricantes, destinatarios, proveedores y facturadores.
@@ -27,10 +27,10 @@ const TERCEROS_TEXTO_DE_ALERTA =
 @Component({
   selector: 'app-terceros-relacionados',
   standalone: true,
-  imports: [CommonModule,CatalogoSelectComponent,TituloComponent,TableComponent,ReactiveFormsModule,AlertComponent,FormsModule,ModalComponent,InputRadioComponent],
+  imports: [CommonModule, CatalogoSelectComponent, TituloComponent, TableComponent, ReactiveFormsModule, AlertComponent, FormsModule, ModalComponent, InputRadioComponent],
   templateUrl: './terceros-relacionados.component.html',
   styleUrl: './terceros-relacionados.component.scss',
- 
+
 })
 export class TercerosRelacionadoesComponent implements OnInit {
 
@@ -175,7 +175,7 @@ export class TercerosRelacionadoesComponent implements OnInit {
    *
    * @description Este arreglo almacena las opciones para el selector de tipo de persona.
    */
- tipoPersonaOptions = tipoPersonaoptions;
+  tipoPersonaOptions = tipoPersonaoptions;
 
 
   /**
@@ -212,7 +212,7 @@ export class TercerosRelacionadoesComponent implements OnInit {
    */
   constructor(
     private fb: FormBuilder,
-    private Sanitario260906Store:Sanitario260906Store,
+    private Sanitario260906Store: Sanitario260906Store,
     private service: SanitarioService
   ) {
     // Inicializa el store del trámite 260906.
@@ -375,16 +375,6 @@ export class TercerosRelacionadoesComponent implements OnInit {
     this.agregarFabricanteFormGroup.get('curp')?.disable();
     this.agregarFabricanteFormGroup.get('denominacionRazonSocial')?.disable();
 
-    // Habilita campos al cambiar el tipo de persona
-    this.agregarFabricanteFormGroup
-      .get('tipoPersona')
-      ?.valueChanges.subscribe(() => {
-        this.agregarFabricanteFormGroup.get('rfc')?.enable();
-        this.agregarFabricanteFormGroup.get('curp')?.enable();
-        this.agregarFabricanteFormGroup
-          .get('denominacionRazonSocial')
-          ?.enable();
-      });
   }
 
   /**
@@ -478,16 +468,6 @@ export class TercerosRelacionadoesComponent implements OnInit {
     this.agregarDestinatarioFormGroup.get('curp')?.disable();
     this.agregarDestinatarioFormGroup.get('denominacionRazonSocial')?.disable();
 
-    // Habilita campos al cambiar el tipo de persona
-    this.agregarDestinatarioFormGroup
-      .get('tipoPersona')
-      ?.valueChanges.subscribe(() => {
-        this.agregarDestinatarioFormGroup.get('rfc')?.enable();
-        this.agregarDestinatarioFormGroup.get('curp')?.enable();
-        this.agregarDestinatarioFormGroup
-          .get('denominacionRazonSocial')
-          ?.enable();
-      });
   }
 
   /**
@@ -570,15 +550,6 @@ export class TercerosRelacionadoesComponent implements OnInit {
     this.agregarProveedorFormGroup.get('primerApellido')?.disable();
     this.agregarProveedorFormGroup.get('denominacionRazonSocial')?.disable();
 
-    // Habilita campos al cambiar el tipo de persona
-    this.agregarProveedorFormGroup
-      .get('tipoPersona')
-      ?.valueChanges.subscribe(() => {
-        this.agregarProveedorFormGroup.get('nombre')?.enable();
-        this.agregarProveedorFormGroup.get('primerApellido')?.enable();
-        this.agregarProveedorFormGroup.get('segundoApellido')?.enable();
-        this.agregarProveedorFormGroup.get('denominacionRazonSocial')?.enable();
-      });
   }
 
   /**
@@ -665,17 +636,6 @@ export class TercerosRelacionadoesComponent implements OnInit {
     this.agregarFacturadorFormGroup.get('primerApellido')?.disable();
     this.agregarFacturadorFormGroup.get('denominacionRazonSocial')?.disable();
 
-    // Habilita campos al cambiar el tipo de persona
-    this.agregarFacturadorFormGroup
-      .get('tipoPersona')
-      ?.valueChanges.subscribe(() => {
-        this.agregarFacturadorFormGroup.get('nombre')?.enable();
-        this.agregarFacturadorFormGroup.get('primerApellido')?.enable();
-        this.agregarFacturadorFormGroup.get('segundoApellido')?.enable();
-        this.agregarFacturadorFormGroup
-          .get('denominacionRazonSocial')
-          ?.enable();
-      });
   }
 
   /**
@@ -909,8 +869,8 @@ export class TercerosRelacionadoesComponent implements OnInit {
          * Teléfono del fabricante, incluyendo lada.
          */
         this.agregarFabricanteFormGroup.value.lada +
-          '-' +
-          this.agregarFabricanteFormGroup.value.telefono,
+        '-' +
+        this.agregarFabricanteFormGroup.value.telefono,
 
         /**
          * Correo electrónico del fabricante.
@@ -1062,8 +1022,8 @@ export class TercerosRelacionadoesComponent implements OnInit {
          * Teléfono del destinatario, incluyendo lada.
          */
         this.agregarDestinatarioFormGroup.value.lada +
-          '-' +
-          this.agregarDestinatarioFormGroup.value.telefono,
+        '-' +
+        this.agregarDestinatarioFormGroup.value.telefono,
 
         /**
          * Correo electrónico del destinatario.
@@ -1160,8 +1120,8 @@ export class TercerosRelacionadoesComponent implements OnInit {
         this.agregarProveedorFormGroup.value.rfc,
         this.agregarProveedorFormGroup.value.curp,
         this.agregarProveedorFormGroup.value.lada +
-          '-' +
-          this.agregarProveedorFormGroup.value.telefono,
+        '-' +
+        this.agregarProveedorFormGroup.value.telefono,
         this.agregarProveedorFormGroup.value.correoElectronico,
         this.agregarProveedorFormGroup.value.calle,
         this.agregarProveedorFormGroup.value.numeroExterior,
@@ -1210,8 +1170,8 @@ export class TercerosRelacionadoesComponent implements OnInit {
         this.agregarFacturadorFormGroup.value.rfc,
         this.agregarFacturadorFormGroup.value.curp,
         this.agregarFacturadorFormGroup.value.lada +
-          '-' +
-          this.agregarFacturadorFormGroup.value.telefono,
+        '-' +
+        this.agregarFacturadorFormGroup.value.telefono,
         this.agregarFacturadorFormGroup.value.correoElectronico,
         this.agregarFacturadorFormGroup.value.calle,
         this.agregarFacturadorFormGroup.value.numeroExterior,
@@ -1266,31 +1226,57 @@ export class TercerosRelacionadoesComponent implements OnInit {
    * @returns Nulo si el RFC es válido, de lo contrario devuelve un objeto con la propiedad `invalidRFC`.
    */
   static rfcValidator(control: AbstractControl): ValidationErrors | null {
-    const RFC_FISICA = /^([a-zñA-ZÑ]{4})(\d{6})(([a-zA-Z]|\d){3})$/;
-    const RFC_MORAL = /^([a-zñA-ZÑ&]{3})(\d{6})(([a-zA-Z]|\d){3})$/;
+    const RFC_FISICA = REGEX_RFC_FISICA;
+    const RFC_MORAL = REGEX_RFC_MORAL;
     return RFC_FISICA.test(control.value) || RFC_MORAL.test(control.value)
       ? null
       : { invalidRFC: true };
   }
 
-   /**
-   * Cambia el valor del radio button seleccionado.
-   *
-   * @param value Valor seleccionado del radio button.
-   */
-   cambiarRadio(value: string | number): void {
+  /**
+  * Cambia el valor del radio button seleccionado.
+  *
+  * @param value Valor seleccionado del radio button.
+  */
+  cambiarRadio(value: string | number): void {
     const VALOR_SELECCIONADO = value as string;
     this.tercerosInputChecked(VALOR_SELECCIONADO);
   }
 
-   /**
-   * Cambia el valor del radio button seleccionado.
-   *
-   * @param value Valor seleccionado del radio button.
-   */
-   cambiarRadioFisica(value: string | number): void {
+  /**
+  * Cambia el valor del radio button seleccionado.
+  *
+  * @param value Valor seleccionado del radio button.
+  */
+  cambiarRadioFisica(value: string | number, form: number): void {
     const VALOR_SELECCIONADO = value as string;
     this.inputChecked(VALOR_SELECCIONADO);
+    // Habilita campos al cambiar el tipo de persona
+    if (form == 1) {
+      this.agregarFacturadorFormGroup.get('nombre')?.enable();
+      this.agregarFacturadorFormGroup.get('primerApellido')?.enable();
+      this.agregarFacturadorFormGroup.get('segundoApellido')?.enable();
+      this.agregarFacturadorFormGroup
+        .get('denominacionRazonSocial')
+        ?.enable();
+    } else if (form == 2) {
+      this.agregarFabricanteFormGroup.get('rfc')?.enable();
+      this.agregarFabricanteFormGroup.get('curp')?.enable();
+      this.agregarFabricanteFormGroup
+        .get('denominacionRazonSocial')
+        ?.enable();
+    } else if (form === 3) {
+      this.agregarProveedorFormGroup.get('nombre')?.enable();
+      this.agregarProveedorFormGroup.get('primerApellido')?.enable();
+      this.agregarProveedorFormGroup.get('segundoApellido')?.enable();
+      this.agregarProveedorFormGroup.get('denominacionRazonSocial')?.enable();
+    } else if (form === 4) {
+      this.agregarDestinatarioFormGroup.get('rfc')?.enable();
+      this.agregarDestinatarioFormGroup.get('curp')?.enable();
+      this.agregarDestinatarioFormGroup
+        .get('denominacionRazonSocial')
+        ?.enable();
+    }
   }
 
   /**
@@ -1301,7 +1287,7 @@ export class TercerosRelacionadoesComponent implements OnInit {
    * @returns Nulo si la CURP es válida, de lo contrario devuelve un objeto con la propiedad `invalidCURP`.
    */
   static curpValidator(control: AbstractControl): ValidationErrors | null {
-    const PATTERN = /^([a-zA-Z]{4})([0-9]{6})([HhMm][a-zA-Z]{5})([0-9]{2})$/;
+    const PATTERN = REGEX_CURP;
     return PATTERN.test(control.value) ? null : { invalidCURP: true };
   }
 
@@ -1313,7 +1299,7 @@ export class TercerosRelacionadoesComponent implements OnInit {
    * @returns Nulo si el teléfono es válido, de lo contrario devuelve un objeto con la propiedad `invalidTelefono`.
    */
   static telefonoValidator(control: AbstractControl): ValidationErrors | null {
-    const PATTERN = /^([0-9A-Za-z\-() ])*$/;
+    const PATTERN = REGEX_TELEFONO;
     return PATTERN.test(control.value) ? null : { invalidTelefono: true };
   }
 }

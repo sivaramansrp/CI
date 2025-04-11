@@ -84,7 +84,7 @@
           <div>
             <h6>Tipo persona*:</h6>
             <div class="mt-2">
-              <app-input-radio [radioOptions]="tipoPersonaOptions" [isRequired]="true" formControlName="tipoPersona" [layout]="'vertical'" (valueChange)="cambiarRadioFisica($event)"></app-input-radio>
+              <app-input-radio [radioOptions]="tipoPersonaOptions" [isRequired]="true" formControlName="tipoPersona" [layout]="'vertical'" (valueChange)="cambiarRadioFisica($event, 2)"></app-input-radio>
             </div>
           </div>
         </div>
@@ -312,7 +312,7 @@
           <div>
             <h6>Tipo persona*:</h6>
             <div class="mt-2">
-              <app-input-radio [radioOptions]="tipoPersonaOptions" [isRequired]="true" formControlName="tipoPersona" [layout]="'vertical'" (valueChange)="cambiarRadioFisica($event)"></app-input-radio>
+              <app-input-radio [radioOptions]="tipoPersonaOptions" [isRequired]="true" formControlName="tipoPersona" [layout]="'vertical'" (valueChange)="cambiarRadioFisica($event, 4)"></app-input-radio>
             </div>
           </div>
         </div>
@@ -451,7 +451,7 @@
           <div>
             <h6>Tipo persona*:</h6>
             <div class="mt-2">
-              <app-input-radio [radioOptions]="tipoPersonaOptions" [isRequired]="true" formControlName="tipoPersona" [layout]="'vertical'" (valueChange)="cambiarRadioFisica($event)"></app-input-radio>
+              <app-input-radio [radioOptions]="tipoPersonaOptions" [isRequired]="true" formControlName="tipoPersona" [layout]="'vertical'" (valueChange)="cambiarRadioFisica($event, 3)"></app-input-radio>
             </div>
           </div>
         </div>
@@ -581,7 +581,7 @@
         <div class="col-md-6 offset-md-6">
           <div>
             <h6>Tipo persona*:</h6>
-            <app-input-radio [radioOptions]="tipoPersonaOptions" [isRequired]="true" formControlName="tipoPersona" [layout]="'vertical'" (valueChange)="cambiarRadioFisica($event)"></app-input-radio>
+            <app-input-radio [radioOptions]="tipoPersonaOptions" [isRequired]="true" formControlName="tipoPersona" [layout]="'vertical'" (valueChange)="cambiarRadioFisica($event, 1)"></app-input-radio>
           </div>
         </div>
       </div>

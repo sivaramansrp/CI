@@ -114,6 +114,10 @@ export class DatosEstablecimientoComponent implements OnInit, OnDestroy {
       )
       .subscribe();
 
+      this.inicializarFormGroup();
+  }
+
+  inicializarFormGroup(): void {
     this.forma = this.fb.group({
       /**
        * Indicador de selección "tipoOperacion".

@@ -11,7 +11,7 @@ import { InputRadioComponent } from '@libs/shared/data-access-user/src';
 import { ModificacionPermisoSanitarioRoutingModule } from './modificacion-permiso-sanitario-routing.module';
 import { NgModule } from '@angular/core';
 import { PantallasComponent } from './pages/pantallas/pantallas.component';
-import { PasoduosComponent } from './pages/pasoduos/pasoduos.component';
+import { PasoduosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasotresComponent } from './pages/paso-tres/paso-tres.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { SanitarioService } from './services/sanitario.service';
