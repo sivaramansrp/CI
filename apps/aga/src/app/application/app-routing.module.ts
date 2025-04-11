@@ -186,13 +186,33 @@ const ROUTES: Routes = [
       )
   },
   {
+    path: 'transportacion-maritima',
+    loadChildren: () =>
+      import('./tramites/40201/transportacion-maritima.module').then(
+        (m) => m.TransportacionMaritimaModule
+      ),
+  },
+  {
+    path: 'junta-tecnica',
+    loadChildren: () =>
+      import('./tramites/6101/junta-tecnica.module').then(
+        (m) => m.JuntaTecnicaModule
+      )
+  },
+  {
     path: 'modificarCaatTerrestre',
     loadChildren: () =>
       import('./tramites/40103/modificarCaatTerrestre.module').then(
         (m) => m.ModificarCaatTerrestreModule
       )
-  }
-  
+  },
+  {
+    path: 'cancelacion-donaciones',
+    loadChildren: () =>
+      import('./tramites/11106/cancelacion-donaciones.module').then(
+        (m) => m.CancelacionDonacionesModule
+      ),
+  }  
 ];
 
 @NgModule({

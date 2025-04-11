@@ -1,5 +1,5 @@
-import { AgregarTransporteComponent, CatalogosService, NotificacionesComponent, UppercaseDirective } from '@ng-mf/data-access-user';
-import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, CatalogoSelectComponent, CrosslistComponent, FirmaElectronicaComponent, InputCheckComponent, InputFechaComponent, InputHoraComponent, NavComponent, RepresentanteFiscalComponent, SelectCatalogosComponent, SelectPaisesComponent, SolicitanteComponent, TercerosComponent, TituloComponent, WizardComponent } from '@ng-mf/data-access-user';
+import { AgregarTransporteComponent, CatalogosService, InputRadioComponent, NotificacionesComponent, UppercaseDirective } from '@ng-mf/data-access-user';
+import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, CatalogoSelectComponent, CrosslistComponent, FirmaElectronicaComponent, InputCheckComponent, InputFechaComponent, InputHoraComponent, NavComponent, RepresentanteFiscalComponent, SelectPaisesComponent, SolicitanteComponent, TercerosComponent, TituloComponent, WizardComponent } from '@ng-mf/data-access-user';
 import { NgModule, forwardRef } from '@angular/core';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
 
@@ -46,13 +46,13 @@ import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.co
     ReactiveFormsModule,
     forwardRef(() => RepresentanteFiscalComponent),
     RouterModule,
-    forwardRef(() => SelectCatalogosComponent),
     forwardRef(() => SelectPaisesComponent),
     ServiciosExtraordinariosRoutingModule,
     forwardRef(() => SolicitanteComponent),
     forwardRef(() => TituloComponent),
     forwardRef(() => WizardComponent),
     forwardRef(() => UppercaseDirective),
+    forwardRef(() => InputRadioComponent),
     ToastrModule.forRoot()
   ],
   exports: [
