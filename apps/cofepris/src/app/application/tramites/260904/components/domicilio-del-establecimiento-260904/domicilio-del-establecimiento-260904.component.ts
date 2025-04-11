@@ -41,7 +41,8 @@ import { Validators } from '@angular/forms';
  *   CatalogoSelectComponent,
  *   AlertComponent,
  *   TablaDinamicaComponent,
- *   InputRadioComponent
+ *   InputRadioComponent,
+ *   InputCheckComponent
  * ]
  * @templateUrl ./domicilio-del-establecimiento-260904.component.html
  * @styleUrl ./domicilio-del-establecimiento-260904.component.scss
