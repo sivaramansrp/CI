@@ -62,3 +62,9 @@
   <app-manifiestos></app-manifiestos>
   <app-representante-legal></app-representante-legal>
 </div>
+@if (nuevaNotificacion) {
+  <section>
+    <lib-notificaciones [notificacionInput]="nuevaNotificacion">
+    </lib-notificaciones>
+  </section>
+  }

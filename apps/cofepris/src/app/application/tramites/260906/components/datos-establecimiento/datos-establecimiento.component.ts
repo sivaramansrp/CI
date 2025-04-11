@@ -1,4 +1,4 @@
-import { AlDar, AlertComponent, InputRadioComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { AlDar, AlertComponent, InputRadioComponent, Notificacion, NotificacionesComponent, Pedimento, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitud260906State, Tramite260906Store } from '../../../../estados/tramites/tramite260906.store';
@@ -29,12 +29,18 @@ import tipoOperacion from '@libs/shared/theme/assets/json/260906/tipoOperacion.j
     DomicilloComponent,
     ManifiestosComponent,
     RepresentanteLegalComponent,
-    InputRadioComponent
+    InputRadioComponent,
+    NotificacionesComponent
   ],
   templateUrl: './datos-establecimiento.component.html',
   styleUrls: ['./datos-establecimiento.component.css'],
 })
 export class DatosEstablecimientoComponent implements OnInit, OnDestroy {
+
+  pedimentos: Array<Pedimento> = [];
+  elementoParaEliminar!: number;
+  public nuevaNotificacion!: Notificacion;
+
   /**
    * Indica si un campo es requerido o no.
    * @type {boolean}
@@ -114,7 +120,7 @@ export class DatosEstablecimientoComponent implements OnInit, OnDestroy {
       )
       .subscribe();
 
-      this.inicializarFormGroup();
+    this.inicializarFormGroup();
   }
 
   inicializarFormGroup(): void {
@@ -152,7 +158,7 @@ export class DatosEstablecimientoComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   public toggleFormControls(): void {
-    alert('Por el momento no hay comunicación con el Sistema de COFEPRIS, favor de capturar su establecimiento.');
+    this.abrirModal();
     Object.keys(this.forma.controls).forEach((controlName) => {
       const CONTROL = this.forma.get(controlName);
       if (CONTROL?.disabled) {
@@ -196,4 +202,28 @@ export class DatosEstablecimientoComponent implements OnInit, OnDestroy {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
+
+  /**
+ * Elimina un elemento de la lista de pedimentos en la posición especificada.
+ * 
+ * @param {number} i - El índice del elemento a eliminar.
+ * 
+ * @remarks
+ * Después de eliminar el elemento, se actualiza el título y mensaje del modal,
+ * y se abre el modal para mostrar un aviso al usuario.
+ */
+  abrirModal(): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'Por el momento no hay comunicación con el Sistema de COFEPRIS, favor de capturar su establecimiento.',
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    }
+  }
+
 }
