@@ -9,37 +9,143 @@ export interface Catalogo {
  * Creacion del estado inicial para la interfaz de tramite 10301
  * @returns Solicitud10301
  */
+/**
+ * Represents the state for Solicitud 105.
+ */
 export interface Solicitud105State {
-  importacion:boolean;
+  /**
+   * Indicates if the operation involves importation.
+   */
+  importacion: boolean;
+
+  /**
+   * Indicates if the operation involves exportation.
+   */
   exportacion: boolean;
-  depositoFiscalGas:boolean;
+
+  /**
+   * Indicates if the operation involves fiscal deposit for gas.
+   */
+  depositoFiscalGas: boolean;
+
+  /**
+   * Indicates if the operation involves fiscal deposit for vehicles.
+   */
   depositoFiscalVehiculos: boolean;
-  distribucionGas:string;
-  serviciosTerceros:string;
-  industriaAutomotriz:string;
+
+  /**
+   * Specifies the gas distribution details.
+   */
+  distribucionGas: string;
+
+  /**
+   * Specifies the services provided by third parties.
+   */
+  serviciosTerceros: string;
+
+  /**
+   * Specifies the details related to the automotive industry.
+   */
+  industriaAutomotriz: string;
 
   // Ubicación
-  domicilio:boolean;
+
+  /**
+   * Indicates if the operation involves a domicile.
+   */
+  domicilio: boolean;
+
+  /**
+   * Indicates if the operation involves a specific location.
+   */
   ubicacion: boolean;
 
   // Inputs importación
+
+  /**
+   * List of countries involved in the operation.
+   */
   pais: Catalogo[] | null;
+
+  /**
+   * Postal code of the location.
+   */
   codigoPostal: string | number | null;
+
+  /**
+   * List of federal entities involved in the operation.
+   */
   entidadFederativa: Catalogo[] | null;
-  municipioDelegacion:Catalogo[] | null;
+
+  /**
+   * List of municipalities or delegations involved in the operation.
+   */
+  municipioDelegacion: Catalogo[] | null;
+
+  /**
+   * Name of the locality.
+   */
   localidad: string;
+
+  /**
+   * List of colonies involved in the operation.
+   */
   colonia: Catalogo[] | null;
+
+  /**
+   * Name of the second federal entity, if applicable.
+   */
   entidadFederativaDos: string | null;
+
+  /**
+   * Name of the street.
+   */
   calle: string;
+
+  /**
+   * Exterior number of the location.
+   */
   numeroExterior: string | number | null;
+
+  /**
+   * Interior number of the location.
+   */
   numeroInterior: string | number | null;
+
+  /**
+   * Description of the location.
+   */
   ubicacionDescripcion: string;
+
+  /**
+   * List of customs offices involved in the operation.
+   */
   aduana: Catalogo[] | null;
+
+  /**
+   * List of tariff fractions involved in the operation.
+   */
   fraccionarancelaria: Catalogo[] | null;
+
+  /**
+   * Description of the loading and unloading procedure.
+   */
   procedimientoCargaDescarga: string;
-  sistemasMedicionUbicacion: string ;
+
+  /**
+   * Description of the measurement systems used at the location.
+   */
+  sistemasMedicionUbicacion: string;
+
+  /**
+   * Reason for not dispatching at customs.
+   */
   motivoNoDespachoAduana: string;
-  operaciones:Catalogo[] | null;
+
+  /**
+   * List of operations involved in the process.
+   */
+  operaciones: Catalogo[] | null;
 }
 
 export function createInitialState(): Solicitud105State {
