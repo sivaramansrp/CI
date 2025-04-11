@@ -161,6 +161,7 @@ export class RepresentanteLegalComponent implements OnDestroy, OnInit {
       }
     });
 
+    // Suscripción al estado del modo de edición del representante legal
     this.tramiteQuery.esRepresentanteLegalElModoDeEdicion$.pipe(takeUntil(this.unsubscribe$))
     .subscribe(modo => {
       this.esElModoDeEdicion = modo;
