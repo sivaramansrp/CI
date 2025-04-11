@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
 import { TEXTOS } from '../../constants/constantes.enum';
-import { AlertComponent } from '@libs/shared/data-access-user/src';
+import { AlertComponent, Notificacion, NotificacionesComponent, Pedimento } from '@libs/shared/data-access-user/src';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src';
@@ -22,6 +22,7 @@ import {
   Solicitud260702Store,
 } from '../../estados/tramites260702.store';
 
+
 /**
  * Componente para gestionar los terceros relacionados en el trámite.
  */
@@ -36,6 +37,7 @@ import {
     TablaDinamicaComponent,
     ReactiveFormsModule,
     CatalogoSelectComponent,
+    NotificacionesComponent
   ],
   templateUrl: './terceros-relacionados.component.html',
   styleUrl: './terceros-relacionados.component.css',
@@ -76,6 +78,20 @@ export class TercerosrelacionadosComponent implements OnInit, OnDestroy {
     catalogos: [],
   };
 
+/** 
+ * Notificación actual que se mostrará en el componente.
+ */
+public nuevaNotificacion!: Notificacion;
+
+/** 
+ * Índice del elemento que se eliminará de la lista.
+ */
+elementoParaEliminar!: number;
+
+/** 
+ * Lista de pedimentos gestionados en el componente.
+ */
+pedimentos: Array<Pedimento> = [];
   /** Datos de la tabla de destinatarios */
   tableData: Destinatario[] = [];
 
@@ -237,11 +253,57 @@ export class TercerosrelacionadosComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-
     this.crearFormTransporte();
     this.getPaisData();
   }
+/**
+ * Elimina un pedimento de la lista.
+ * @param borrar Indica si se debe proceder con la eliminación.
+ */
+  eliminarPedimento(borrar: boolean): void {
+    if (borrar) {
+      this.pedimentos.splice(this.elementoParaEliminar, 1);
+      this.eliminarMercancias(); // Call the deletion logic
+      this.abrirModal(0, true);
 
+    }
+  }
+/**
+ * Abre un modal para mostrar una notificación.
+ * @param i Índice del elemento seleccionado (por defecto 0).
+ * @param isDeleted Indica si se debe mostrar la notificación de éxito tras la eliminación.
+ */
+  abrirModal(i: number = 0, isDeleted: boolean = false): void {
+    console.log('abrirModal called with isDeleted:', isDeleted);
+    if (isDeleted) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'success',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'Datos eliminados correctamente',
+        cerrar: false,
+        tiempoDeEspera: 0,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      
+    } else if (this.selectedRows && this.selectedRows.size > 0) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: '',
+        mensaje: '¿Confirma la eliminación?',
+        cerrar: false,
+        tiempoDeEspera: 0,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: 'Cancelar',
+      };
+      this.elementoParaEliminar = i;
+    }
+  }
+ 
   /**
    * Obtiene los datos del catálogo de países.
    */
@@ -385,6 +447,7 @@ export class TercerosrelacionadosComponent implements OnInit, OnDestroy {
       const datosEliminadosModal = new Modal(modalElement);
       datosEliminadosModal.show();
     }
+    this.abrirModal();
   }
 
   /**
@@ -392,6 +455,13 @@ export class TercerosrelacionadosComponent implements OnInit, OnDestroy {
    */
   limpiarFormulario() {
     this.destinatarioForm.reset();
+    
+  }
+
+  onDEL(): void {
+    if (this.selectedRows.size > 0) {
+      this.abrirModal(); // Call abrirModal to set up the notification
+    }
   }
 
   /**
