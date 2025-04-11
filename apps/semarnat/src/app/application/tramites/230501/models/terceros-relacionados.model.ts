@@ -30,8 +30,13 @@ export interface Destinatario {
   estadoLocalidad: string;
   codigoPostal: string;
   coloniaEquivalente: string;
-  id?:string
+  id?:string,
+  lada?: string,
+  nombres?: string,
   tipoPersona?: string;
+  segundoApellido?: string;
+  primerApellido?: string;
+  
 }
 
 /**
@@ -119,6 +124,11 @@ export interface Representante {
   estadoLocalidad: string;
   codigoPostal: string;
   coloniaEquivalente: string;
+  segundoApellido?: string;
+  primerApellido?: string;
+  nombres?: string;
+  lada?: string;
+  tipoPersona?: string;
 }
 
 /**
@@ -207,6 +217,11 @@ export interface UsoFinal {
   codigoPostal: string;
   coloniaEquivalente: string;
   descripcion?: string;
+  segundoApellido?: string;
+  primerApellido?: string;
+  nombres?: string;
+  lada?: string;
+  tipoPersona?: string;
 }
 
 /**

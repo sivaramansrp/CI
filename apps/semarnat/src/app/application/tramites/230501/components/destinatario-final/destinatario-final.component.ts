@@ -136,7 +136,7 @@ export class DestinatarioFinalComponent implements OnDestroy, OnInit {
       primerApellido: [''],
       segundoApellido: [''],
       pais: ['', Validators.required],
-      estado: ['', Validators.required],
+      estadoLocalidad: ['', Validators.required],
       municipio: [''],
       localidad: [''],
       codigoPostal: ['', Validators.required],
@@ -158,13 +158,16 @@ export class DestinatarioFinalComponent implements OnDestroy, OnInit {
    */
   guardarDestinatario(): void {
     const NUEVO_DESTINATARIO: Destinatario = {
+      segundoApellido: this.agregarDestinatarioFinal.value.segundoApellido,
+      primerApellido: this.agregarDestinatarioFinal.value.primerApellido,
+      nombres: this.agregarDestinatarioFinal.value.nombres,
       nombreRazonSocial: `${this.agregarDestinatarioFinal.value.nombres} ${
         this.agregarDestinatarioFinal.value.primerApellido
       } ${this.agregarDestinatarioFinal.value.segundoApellido || ''}`.trim(),
       rfc: this.agregarDestinatarioFinal.value.rfc,
       curp: '',
-      telefono:
-        `${this.agregarDestinatarioFinal.value.lada} ${this.agregarDestinatarioFinal.value.telefono}`.trim(),
+      lada:this.agregarDestinatarioFinal.value.lada,
+      telefono:this.agregarDestinatarioFinal.value.telefono,
       correoElectronico: this.agregarDestinatarioFinal.value.correoElectronico,
       calle: this.agregarDestinatarioFinal.value.calle,
       numeroExterior: this.agregarDestinatarioFinal.value.numeroExterior,
@@ -174,9 +177,9 @@ export class DestinatarioFinalComponent implements OnDestroy, OnInit {
       municipioAlcaldia: this.agregarDestinatarioFinal.value.municipio,
       localidad: this.agregarDestinatarioFinal.value.localidad,
       entidadFederativa: '',
-      estadoLocalidad: this.agregarDestinatarioFinal.value.estado,
+      estadoLocalidad: this.agregarDestinatarioFinal.value.estadoLocalidad,
       codigoPostal: this.agregarDestinatarioFinal.value.codigoPostal,
-      coloniaEquivalente: this.agregarDestinatarioFinal.value.codigoPostal,
+      coloniaEquivalente: this.agregarDestinatarioFinal.value.codie,
       tipoPersona: this.agregarDestinatarioFinal.value.tipoPersona,
     };
     
@@ -210,13 +213,13 @@ export class DestinatarioFinalComponent implements OnDestroy, OnInit {
     this.onTipoPersonaChange();
 
     this.cargarDatos();
-    this.tramiteStore.getData()
+    this.tramiteStore.destinatarioSujeto
       .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(data => {
-        if (data) {
-          this.agregarDestinatarioFinal.patchValue(data);
-        }
-      });
+      .subscribe(destinatario => {
+      if (destinatario) {
+        this.agregarDestinatarioFinal.patchValue(destinatario);
+      }
+    });
   }
 
   /**

@@ -27,7 +27,7 @@ import { Tramite230501Store } from '../../estados/stores/tramite230501Store.stor
   styleUrls: ['./representante-legal.component.scss'],
 })
 export class RepresentanteLegalComponent implements OnDestroy, OnInit {
-  
+
   /**
    * @property tipoPersona
    * @description Proporciona acceso al enum `TipoPersona` para su uso en la clase.
@@ -108,14 +108,14 @@ export class RepresentanteLegalComponent implements OnDestroy, OnInit {
    * @method onTipoPersonaChange
    * @returns {void}
    */
-  onTipoPersonaChange() : void{
+  onTipoPersonaChange(): void {
     this.representanteLegalForm.get('tipoPersona')?.valueChanges.subscribe(value => {
       const IS_FISICA = value === 'FISICA' || value === this.tipoPersona.FISICA;
       const NOMBRES = this.representanteLegalForm.get('nombres');
       const PRIMER_APELLIDO = this.representanteLegalForm.get('primerApellido');
       const SEGUNDO_APELLIDO = this.representanteLegalForm.get('segundoApellido');
       const DENOMINACION_RAZON = this.representanteLegalForm.get('denominacionRazon');
-        
+
       if (IS_FISICA) {
         NOMBRES?.setValidators([Validators.required]);
         PRIMER_APELLIDO?.setValidators([Validators.required]);
@@ -127,7 +127,7 @@ export class RepresentanteLegalComponent implements OnDestroy, OnInit {
         SEGUNDO_APELLIDO?.clearValidators();
         DENOMINACION_RAZON?.setValidators([Validators.required]);
       }
-  
+
       NOMBRES?.updateValueAndValidity();
       PRIMER_APELLIDO?.updateValueAndValidity();
       SEGUNDO_APELLIDO?.updateValueAndValidity();
@@ -143,15 +143,14 @@ export class RepresentanteLegalComponent implements OnDestroy, OnInit {
   ngOnInit(): void {
     this.onTipoPersonaChange();
     this.cargarDatos();
-    // Suscripción al store para cargar datos previos de un trámite
-    this.tramiteStore.getData()
+    // Suscripción a los datos del store para cargar el representante legal
+    this.tramiteStore.representanteSujeto
       .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(data => {
-        if (data) {
-          // Si hay datos, los asigna al formulario reactivo
-          this.representanteLegalForm.patchValue(data);
-        }
-      });
+      .subscribe(representante => {
+      if (representante) {
+        this.representanteLegalForm.patchValue(representante);
+      }
+    });
   }
 
   /**
@@ -175,25 +174,28 @@ export class RepresentanteLegalComponent implements OnDestroy, OnInit {
    */
   guardarRepresentante(): void {
     const NUEVO_REPRESENTANTE: Representante = {
-      nombreRazonSocial: `${this.representanteLegalForm.value.nombres} ${
-        this.representanteLegalForm.value.primerApellido
-      } ${this.representanteLegalForm.value.segundoApellido || ''}`.trim(),
-      rfc: '',
+      segundoApellido: this.representanteLegalForm.value.segundoApellido,
+      primerApellido: this.representanteLegalForm.value.primerApellido,
+      nombres: this.representanteLegalForm.value.nombres,
+      nombreRazonSocial: `${this.representanteLegalForm.value.nombres} ${this.representanteLegalForm.value.primerApellido
+        } ${this.representanteLegalForm.value.segundoApellido || ''}`.trim(),
+      rfc: this.representanteLegalForm.value.rfc,
       curp: '',
-      telefono: this.representanteLegalForm.value.telefono || '',
-      correoElectronico:
-        this.representanteLegalForm.value.correoElectronico || '',
-      calle: this.representanteLegalForm.value.calle || '',
-      numeroExterior: this.representanteLegalForm.value.numeroExterior || '',
+      lada: this.representanteLegalForm.value.lada,
+      telefono: this.representanteLegalForm.value.telefono,
+      correoElectronico: this.representanteLegalForm.value.correoElectronico,
+      calle: this.representanteLegalForm.value.calle,
+      numeroExterior: this.representanteLegalForm.value.numeroExterior,
       numeroInterior: this.representanteLegalForm.value.numeroInterior || '',
-      pais: this.representanteLegalForm.value.pais || '',
-      colonia: this.representanteLegalForm.value.colonia || '',
-      municipioAlcaldia: '',
-      localidad: '',
-      entidadFederativa: this.representanteLegalForm.value.estado || '',
-      estadoLocalidad: '',
-      codigoPostal: this.representanteLegalForm.value.codigoPostal || '',
-      coloniaEquivalente: '',
+      pais: this.representanteLegalForm.value.pais,
+      colonia: this.representanteLegalForm.value.colonia,
+      municipioAlcaldia: this.representanteLegalForm.value.municipio,
+      localidad: this.representanteLegalForm.value.localidad,
+      entidadFederativa: '',
+      estadoLocalidad: this.representanteLegalForm.value.estadoLocalidad,
+      codigoPostal: this.representanteLegalForm.value.codigoPostal,
+      coloniaEquivalente: this.representanteLegalForm.value.codie,
+      tipoPersona: this.representanteLegalForm.value.tipoPersona,
     };
 
     if (this.representanteLegalForm.valid) {
@@ -223,14 +225,14 @@ export class RepresentanteLegalComponent implements OnDestroy, OnInit {
     this.ubicaccion.back();
   }
 
-   /**
- * Establece el estado de validación del formulario de representanteLegal.
- * 
- * @param valida - Un valor booleano que indica si el formulario de datos del representante es válido.
- */
- setFormValida(valida: boolean): void {
-  this.tramiteStore.setFormValida({ representanteLegal: valida });
-}
+  /**
+* Establece el estado de validación del formulario de representanteLegal.
+* 
+* @param valida - Un valor booleano que indica si el formulario de datos del representante es válido.
+*/
+  setFormValida(valida: boolean): void {
+    this.tramiteStore.setFormValida({ representanteLegal: valida });
+  }
 
   /**
    * @method addRepresentanteLegal

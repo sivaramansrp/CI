@@ -164,8 +164,10 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
    */
   modificarDestinatario(): void {
     this.irAAcciones('../destinatario-final');
-    if (this.destinatarioFinalFilaSeleccionada.length) {
-      this.tramiteStore.dataSubject.next(this.destinatarioFinalFilaSeleccionada[0]);
+    if (this.destinatarioFinalFilaSeleccionada.length) {      
+      this.representanteFilaSeleccionada = [];
+      this.usoDeFilaSeleccionada = [];
+      this.tramiteStore.destinatarioSujeto.next(this.destinatarioFinalFilaSeleccionada[0]);
     }
   }
 
@@ -177,7 +179,7 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
   modificarRepresentanteLegal(): void {
     this.irAAcciones('../representante-legal');
     if (this.representanteFilaSeleccionada.length) {
-      this.tramiteStore.dataSubject.next(this.representanteFilaSeleccionada[0]);
+      this.tramiteStore.representanteSujeto.next(this.representanteFilaSeleccionada[0]);
     }
   }
 
@@ -189,7 +191,7 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
   modificarUsuarioFinal(): void {
     this.irAAcciones('../uso-final');
     if (this.usoDeFilaSeleccionada.length) {
-      this.tramiteStore.dataSubject.next(this.usoDeFilaSeleccionada[0]);
+      this.tramiteStore.usuarioSujeto.next(this.usoDeFilaSeleccionada[0]);
     }
   }
 

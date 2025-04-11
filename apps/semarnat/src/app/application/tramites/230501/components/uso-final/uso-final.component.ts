@@ -186,13 +186,13 @@ export class UsoFinalComponent implements OnDestroy, OnInit {
       });
 
     // Suscripción para cargar datos existentes del usuario final en el formulario
-    this.tramiteStore.getData()
+    this.tramiteStore.usuarioSujeto
       .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(data => {
-        if (data) {
-          this.usuarioFinalForm.patchValue(data);
-        }
-      });
+      .subscribe(usuario => {
+      if (usuario) {
+        this.usuarioFinalForm.patchValue(usuario);
+      }
+    });
   }
 
   /**
@@ -213,25 +213,29 @@ export class UsoFinalComponent implements OnDestroy, OnInit {
    */
   guardarUsuarioFinal(): void {
     const NUEVO_USUARIOFINAL: UsoFinal = {
-      nombreRazonSocial: `${this.usuarioFinalForm.value.nombres} ${this.usuarioFinalForm.value.primerApellido
-        } ${this.usuarioFinalForm.value.segundoApellido || ''}`.trim(),
-      rfc: '',
+      segundoApellido: this.usuarioFinalForm.value.segundoApellido,
+      primerApellido: this.usuarioFinalForm.value.primerApellido,
+      nombres: this.usuarioFinalForm.value.nombres,
+      nombreRazonSocial: `${this.usuarioFinalForm.value.nombres} ${
+        this.usuarioFinalForm.value.primerApellido
+      } ${this.usuarioFinalForm.value.segundoApellido || ''}`.trim(),
+      rfc: this.usuarioFinalForm.value.rfc,
       curp: '',
-      telefono: this.usuarioFinalForm.value.telefono || '',
-      correoElectronico:
-        this.usuarioFinalForm.value.correoElectronico || '',
-      calle: this.usuarioFinalForm.value.calle || '',
-      numeroExterior: this.usuarioFinalForm.value.numeroExterior || '',
+      lada:this.usuarioFinalForm.value.lada,
+      telefono:this.usuarioFinalForm.value.telefono,
+      correoElectronico: this.usuarioFinalForm.value.correoElectronico,
+      calle: this.usuarioFinalForm.value.calle,
+      numeroExterior: this.usuarioFinalForm.value.numeroExterior,
       numeroInterior: this.usuarioFinalForm.value.numeroInterior || '',
-      pais: this.usuarioFinalForm.value.pais || '',
-      colonia: this.usuarioFinalForm.value.colonia || '',
-      municipioAlcaldia: '',
-      localidad: '',
-      entidadFederativa: this.usuarioFinalForm.value.estado || '',
-      estadoLocalidad: '',
-      codigoPostal: this.usuarioFinalForm.value.codigoPostal || '',
-      coloniaEquivalente: '',
-      descripcion: this.usoFinalForm.value.descripcion || '',
+      pais: this.usuarioFinalForm.value.pais,
+      colonia: this.usuarioFinalForm.value.colonia,
+      municipioAlcaldia: this.usuarioFinalForm.value.municipio,
+      localidad: this.usuarioFinalForm.value.localidad,
+      entidadFederativa: '',
+      estadoLocalidad: this.usuarioFinalForm.value.estadoLocalidad,
+      codigoPostal: this.usuarioFinalForm.value.codigoPostal,
+      coloniaEquivalente: this.usuarioFinalForm.value.codie,
+      tipoPersona: this.usuarioFinalForm.value.tipoPersona,
     };
 
     if (this.usuarioFinalForm.valid) {

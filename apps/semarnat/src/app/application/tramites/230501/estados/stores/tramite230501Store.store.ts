@@ -80,10 +80,32 @@ export function createInitialState(): Tramite230501State {
 })
 @StoreConfig({ name: 'Tramite230501', resettable: true })
 export class Tramite230501Store extends Store<Tramite230501State> {
-  // BehaviorSubject que almacena los datos del destinatario
-  public dataSubject = new BehaviorSubject<Destinatario>({} as Destinatario);
-  // Observable para observar los datos del destinatario
-  data$ = this.dataSubject.asObservable();
+
+  /**
+   * Sujeto destinatario representado como un BehaviorSubject.
+   * Este objeto permite manejar el estado reactivo del destinatario en el flujo de trabajo.
+   * 
+   * @type {BehaviorSubject<Destinatario>}
+   */
+  public destinatarioSujeto = new BehaviorSubject<Destinatario>({} as Destinatario);
+  
+  /**
+   * Sujeto de comportamiento que mantiene el estado del representante.
+   * 
+   * @type {BehaviorSubject<Representante | null>}
+   * Inicialmente se establece en `null` y puede ser actualizado con un objeto de tipo `Representante`.
+   * Este observable permite suscribirse para recibir actualizaciones sobre el representante actual.
+   */
+  public representanteSujeto = new BehaviorSubject<Representante | null>(null);
+  
+  /**
+   * Sujeto observable que almacena información del usuario relacionada con el uso final.
+   * Este BehaviorSubject se inicializa con un objeto vacío del tipo `UsoFinal`.
+   * 
+   * @type {BehaviorSubject<UsoFinal>}
+   */
+  public usuarioSujeto = new BehaviorSubject<UsoFinal>({} as UsoFinal);
+
 
   constructor() {
     super(createInitialState()); // Inicializa el store con el estado inicial
@@ -295,41 +317,55 @@ export class Tramite230501Store extends Store<Tramite230501State> {
       usoTablaDatos: newUsoFinal,
     }));
   }
-
+  
   /**
-   * Obtiene los datos del destinatario almacenados en el Subject.
-   *
-   * @returns {Observable<object>} Observable con los datos del destinatario.
+   * Actualiza los datos del destinatario en el estado del store.
+   * 
+   * @template T - Tipo genérico que puede ser un objeto o un arreglo de objetos.
+   * @param data - Los datos que se utilizarán para actualizar el destinatario.
+   *               Si es un arreglo, se inicializará un objeto vacío como destinatario.
+   * 
+   * @remarks
+   * Este método utiliza un Subject (`destinatarioSujeto`) para emitir los datos actualizados
+   * del destinatario. Si el parámetro `data` es un arreglo, se inicializa un objeto vacío
+   * como destinatario; de lo contrario, se utiliza el objeto proporcionado como destinatario.
    */
-  getData(): Observable<object> {
-    return this.data$;
+  actualizarDatosDestinatario<T extends object | object[]>(data: T): void {
+    const DATOS_ACTUALIZADOS: Destinatario = Array.isArray(data) ? {} as Destinatario : (data as Destinatario);
+    this.destinatarioSujeto.next(DATOS_ACTUALIZADOS);
   }
 
   /**
-   * Actualiza los datos del destinatario, representante o uso final.
+   * Actualiza los datos del representante y emite el valor actualizado al observable `usuarioSujeto`.
    *
-   * @param data - Los nuevos datos para el destinatario, representante o uso final.
-   * @param type - El tipo de datos que se actualizarán: 'destinatario', 'representante', o 'usoFinal'.
-   * @returns void
+   * @template T - El tipo de los datos que se están actualizando, que puede ser un objeto o un arreglo de objetos.
+   * @param {Object} param - El objeto de parámetros.
+   * @param {T} param.data - Los datos a actualizar. Si es un arreglo, se utiliza un objeto vacío de tipo `Representante`.
+   *                          De lo contrario, los datos se convierten al tipo `Representante`.
+   * @returns {void} Este método no devuelve un valor.
    */
-  updateData<T extends object | object[]>(data: T, type: 'destinatario' | 'representante' | 'usoFinal'): void {
-    let updatedData: Destinatario | Representante | UsoFinal;
-
-    switch (type) {
-      case 'destinatario':
-        updatedData = Array.isArray(data) ? {} as Destinatario : (data as Destinatario);
-        break;
-      case 'representante':
-        updatedData = Array.isArray(data) ? {} as Representante : (data as Representante);
-        break;
-      case 'usoFinal':
-        updatedData = Array.isArray(data) ? {} as UsoFinal : (data as UsoFinal);
-        break;
-      default:
-        throw new Error('Tipo no válido');}
-
-    this.dataSubject.next(updatedData);
+  actualizarDatoRepresentante<T extends object | object[]>({ data }: { data: T; }): void {
+    const DATOS_ACTUALIZADOS: Representante = Array.isArray(data) ? {} as Representante : (data as Representante);
+    this.usuarioSujeto.next(DATOS_ACTUALIZADOS);
   }
+
+  /**
+   * Actualiza los datos del usuario y emite el valor actualizado al observable `representanteSujeto`.
+   *
+   * @template T - El tipo de los datos que se están actualizando, que puede ser un objeto o un arreglo de objetos.
+   * @param {Object} params - Los parámetros para la operación de actualización.
+   * @param {T} params.data - Los datos a actualizar. Si es un arreglo, se utiliza un objeto vacío de tipo `UsoFinal`.
+   * 
+   * @remarks
+   * Este método determina si los datos proporcionados son un arreglo. Si lo son, se crea un objeto vacío de tipo `UsoFinal`.
+   * De lo contrario, los datos proporcionados se convierten al tipo `UsoFinal`. El valor resultante se emite
+   * al observable `representanteSujeto`.
+   */
+  actualizarDatoUsuario<T extends object | object[]>({ data }: { data: T; }): void {
+    const DATOS_ACTUALIZADOS: UsoFinal = Array.isArray(data) ? {} as UsoFinal : (data as UsoFinal);
+    this.representanteSujeto.next(DATOS_ACTUALIZADOS);
+  }
+
    /**
    * Establece el estado de validación del formulario en el almacén.
    * 

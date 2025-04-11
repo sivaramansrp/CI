@@ -5,7 +5,7 @@
     <div class="row">
       <div class="col-md-6"></div>
       <div class="col-md-6 offset-md-6">
-        <label class="form-label">Tipo persona:</label>
+        <label class="form-label">Tipo persona*:</label>
         <div class="form-check">
           <input type="radio" class="form-check-input" formControlName="tipoPersona" [value]="tipoPersona.FISICA" />
           Física
@@ -32,17 +32,17 @@
     @if(representanteLegalForm.get('tipoPersona')?.value ===
     tipoPersona.FISICA) {
     <div class="row mt-3">
-      <h4 class="mt-5">Datos personales</h4>
+      <h4 class="mt-5">Datos personales*</h4>
       <div class="col-md-4">
-        <label class="form-label">Nombre(s):</label>
+        <label class="form-label">Nombre(s)*:</label>
         <input type="text" class="form-control" formControlName="nombres" />
       </div>
       <div class="col-md-4">
-        <label class="form-label">Primer apellido:</label>
+        <label class="form-label">Primer apellido*:</label>
         <input type="text" class="form-control" formControlName="primerApellido" />
       </div>
       <div class="col-md-4">
-        <label class="form-label">Segundo apellido:</label>
+        <label class="form-label">Segundo apellido*:</label>
         <input type="text" class="form-control" formControlName="segundoApellido" />
       </div>
     </div>
@@ -54,41 +54,41 @@
           [required]="true"></app-catalogo-select>
       </div>
       <div class="col-md-4 px-5">
-        <label class="form-label">Código postal o equivalente</label>
+        <label class="form-label">Código postal o equivalente*:</label>
         <input type="text" class="form-control" formControlName="codigoPostal" />
       </div>
       <div class="col-md-4 px-5">
 
-        <label class="form-label">Estado/localidad</label>
-        <input type="text" class="form-control" formControlName="estado" />
+        <label class="form-label">Estado/localidad*:</label>
+        <input type="text" class="form-control" formControlName="estadoLocalidad" />
       </div>
     </div>
     <div class="row mt-3">
       <div class="col-md-9">
-        <label class="form-label">Calle:</label>
+        <label class="form-label">Calle*:</label>
         <input type="text" class="form-control" formControlName="calle" />
       </div>
       <div class="col-md-3">
-        <label class="form-label">Número exterior:</label>
+        <label class="form-label">Número exterior*:</label>
         <input type="text" class="form-control" formControlName="numeroExterior" />
       </div>
     </div>
 
     <div class="row mt-3">
       <div class="col-md-4">
-        <label class="form-label">Número interior:</label>
+        <label class="form-label">Número interior*:</label>
         <input type="text" class="form-control" formControlName="numeroInterior" />
       </div>
       <div class="col-md-1">
-        <label class="form-label">Lada:</label>
+        <label class="form-label">Lada*:</label>
         <input type="text" class="form-control" formControlName="lada" />
       </div>
       <div class="col-md-3">
-        <label class="form-label">Teléfono:</label>
+        <label class="form-label">Teléfono*:</label>
         <input type="text" class="form-control" formControlName="telefono" />
       </div>
       <div class="col-md-4">
-        <label class="form-label">Correo electrónico:</label>
+        <label class="form-label">Correo electrónico*:</label>
         <input type="email" class="form-control" formControlName="correoElectronico" />
       </div>
     </div>
