@@ -146,11 +146,6 @@ export class DomicilioDelEstablecimientoComponent implements OnInit , OnDestroy 
     this.tramite260911Query.municipioOAlcaldia$;
 
   /**
-   * Observable para la localidad.
-   */
-  localidad$: Observable<string | null> = this.tramite260911Query.localidad$;
-
-  /**
    * Observable para las colonias.
    */
   colonias$: Observable<string | null> = this.tramite260911Query.colonias$;
