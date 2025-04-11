@@ -1,14 +1,14 @@
-#modalAgregarPFE .modal-dialog {
+#modal-agregar-pfe .modal-dialog {
     max-width: 1100px !important;
 }
 
-#modalAgregarPFE .custom-footer {
+#modal-agregar-pfe .custom-footer {
     display: block;
     margin: 25px;
     line-height: 2;
 }
 
-#modalAlerta .modal-dialog-centered, #modalAlertaSeleccion .modal-dialog-centered {
+#modal-alerta .modal-dialog-centered, #modal-alerta-seleccion .modal-dialog-centered {
     justify-content: center;
     max-width: 320px;
 }

@@ -3,6 +3,10 @@ import { Injectable } from '@angular/core';
 
 import { CAATRegistradoEmpresaForm, CandidatoModificarCaatForm } from '../../../tramites/40202/models/modificacion-transportacion-maritima.model';
 
+/**
+ * Interfaz que define el estado del trámite 40202.
+ * @interface TransportacionMaritima40202State
+ */
 export interface TransportacionMaritima40202State {
     /**
      * Tipo de empresa seleccionada.

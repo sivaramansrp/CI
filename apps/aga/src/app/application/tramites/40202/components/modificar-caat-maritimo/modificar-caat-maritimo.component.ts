@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, merge, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
@@ -6,7 +6,7 @@ import { Modal } from 'bootstrap';
 
 import { CAATRegistradoEmpresaForm, CandidatoModificarCaatForm, PersonaFisicaExtranjeraForm } from '../../models/modificacion-transportacion-maritima.model';
 import { CAAT_CANDIDATO_MODIFICAR_ENCABEZADO_DE_TABLA, CAAT_REGISTRADO_EMPRESA_ENCABEZADO_DE_TABLA, OPCIONES_DE_BOTON_DE_RADIO, TEXTOS } from '../../constantes/modificacion-transportacion-maritima.enum';
-import { Catalogo, CatalogoSelectComponent, InputRadioComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, InputRadioComponent, Notificacion, NotificacionesComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Tramite40202Store, TransportacionMaritima40202State } from '../../../../core/estados/tramites/tramite40202.store';
 import { ModificacionTransportacionMaritimaService } from '../../services/modificacion-transportacion-maritima/modificacion-transportacion-maritima.service';
 import { Tramite40202Query } from '../../../../core/queries/tramite40202.query';
@@ -24,12 +24,13 @@ import { Tramite40202Query } from '../../../../core/queries/tramite40202.query';
     TituloComponent,
     InputRadioComponent,
     TablaDinamicaComponent,
-    CatalogoSelectComponent
+    CatalogoSelectComponent,
+    NotificacionesComponent
   ],
   templateUrl: './modificar-caat-maritimo.component.html',
   styleUrl: './modificar-caat-maritimo.component.css',
 })
-export class ModificarCaatMaritimoComponent implements OnInit, OnDestroy, AfterViewInit {
+export class ModificarCaatMaritimoComponent implements OnInit, OnDestroy {
   /**
    * Formulario reactivo para buscar empresas CAAT.
    */
@@ -96,14 +97,9 @@ export class ModificarCaatMaritimoComponent implements OnInit, OnDestroy, AfterV
   @ViewChild('closeModal') closeModal!: ElementRef;
 
   /**
-   * Referencia al modal de alerta de selección.
-   */
-  @ViewChild('modalAlertaSeleccion', { static: false }) modalAlertaSeleccion!: ElementRef;
-
-  /**
    * Referencia al modal de agregar persona física extranjera.
    */
-  @ViewChild('modalAgregarPFE', { static: false }) modalAgregarPFE!: ElementRef;
+  @ViewChild('modal-agregar-pfe', { static: false }) modalAgregarPFE!: ElementRef;
 
   /**
    * Bandera para mostrar el botón de agregar seleccionado.
@@ -124,6 +120,16 @@ export class ModificarCaatMaritimoComponent implements OnInit, OnDestroy, AfterV
    * Instancia del modal de agregar persona física extranjera.
    */
   modalAgregarPFEInstance!: Modal;
+
+  /**
+   * Notificación para mostrar mensajes al usuario.
+   */
+  public nuevaAlertaNotificacion!: Notificacion;  
+
+  /**
+   * Notificación para mostrar mensajes de selección al usuario.
+   */
+  public nuevaAlertaSeleccionNotificacion!: Notificacion;
 
   /**
    * Constructor del componente.
@@ -167,16 +173,6 @@ export class ModificarCaatMaritimoComponent implements OnInit, OnDestroy, AfterV
     this.crearTipoDeEmpresaForm();
 
     this.paisSeleccion();
-  }
-
-  /**
-   * Inicializa el modal de agregar persona física extranjera después de que la vista se haya inicializado.
-   * @returns {void}
-   */
-  ngAfterViewInit(): void {
-    if (this.modalAgregarPFE?.nativeElement) {
-      this.modalAgregarPFEInstance = new Modal(this.modalAgregarPFE.nativeElement);
-    }
   }
 
   /**
@@ -377,6 +373,9 @@ export class ModificarCaatMaritimoComponent implements OnInit, OnDestroy, AfterV
    * @description Este método se ejecuta cuando el usuario hace clic en el botón de buscar empresa.
    */
   buscarEmpresa(valor: number): void {
+    if(valor === 1) {
+      this.abrirAlertaModal();
+    }
     if (valor === 2) {
       this.limpiarCampos();
       this.obtenerBuscarEmpresaCaat();
@@ -444,7 +443,7 @@ export class ModificarCaatMaritimoComponent implements OnInit, OnDestroy, AfterV
    */
   agregarSeleccionado(caatRegistradoEmpresaTabla: CAATRegistradoEmpresaForm[]): void {
     if (!caatRegistradoEmpresaTabla || caatRegistradoEmpresaTabla.length <= 0) {
-      this.mostrarModal('modalAlertaSeleccion');
+      this.abrirAlertaSeleccionModal();
       return;
     }
 
@@ -464,7 +463,49 @@ export class ModificarCaatMaritimoComponent implements OnInit, OnDestroy, AfterV
       pais: PAIS || ''
     });
 
-    this.mostrarModal('modalAgregarPFE');
+    this.mostrarModal('modal-agregar-pfe');
+  }
+
+  /**
+   * Elimina un elemento de la lista de pedimentos en la posición especificada.
+   * 
+   * @param {number} i - El índice del elemento a eliminar.
+   * 
+   * @remarks
+   * Después de eliminar el elemento, se actualiza el título y mensaje del modal,
+   * y se abre el modal para mostrar un aviso al usuario.
+   */
+  abrirAlertaModal(): void {
+    this.nuevaAlertaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: 'Alerta',
+      mensaje: 'No hay resultados para el criterio de la busqueda.',
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    }
+  }
+
+  /**
+   * Muestra una alerta de selección de elemento.
+   * @description Este método se ejecuta cuando no se selecciona ningún elemento en la tabla de empresas CAAT registradas.
+   * @returns {void}
+   */
+  abrirAlertaSeleccionModal(): void {
+    this.nuevaAlertaSeleccionNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: 'Alerta',
+      mensaje: 'Selecciona un elemento.',
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    }
   }
 
   /**
@@ -503,10 +544,7 @@ export class ModificarCaatMaritimoComponent implements OnInit, OnDestroy, AfterV
     this.mostrarAgregarSeleccionado = false;
     this.tramite40202Store.setMostrarAgregarSeleccionado(this.mostrarAgregarSeleccionado);
     this.limpiarDatosPFE();
-    
-    if (this.modalAgregarPFEInstance) {
-      this.modalAgregarPFEInstance.hide();
-    }
+    this.cerrarModal();
   }
 
   /**
