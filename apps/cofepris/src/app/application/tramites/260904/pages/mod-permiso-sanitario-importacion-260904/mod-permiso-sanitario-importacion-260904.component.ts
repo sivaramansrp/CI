@@ -1,9 +1,9 @@
 import { Component, ViewChild } from '@angular/core';
+import { AVISO } from '@libs/shared/data-access-user/src/tramites/constantes/aviso-privacidad.enum';
 import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS } from '@ng-mf/data-access-user';
 import { WizardComponent } from '@ng-mf/data-access-user';
-
 /**
  * Interfaz que representa la acción de un botón.
  */
@@ -22,10 +22,14 @@ interface AccionBoton {
  * Componente que representa los pasos de datos en un proceso de múltiples pasos.
  */
 @Component({
+
   selector: 'app-mod-permiso-sanitario-importacion-260904',
   templateUrl: './mod-permiso-sanitario-importacion-260904.component.html',
 })
 export class ModPermisoSanitarioImportacion260904Component {
+
+
+
   /**
    * Lista de pasos en el asistente.
    */
@@ -55,6 +59,9 @@ export class ModPermisoSanitarioImportacion260904Component {
     txtBtnAnt: 'Anterior',
     txtBtnSig: 'Continuar',
   };
+
+  // contiene el aviso de privacidad y lo asigna al valor correspondiente
+  AVISO_DE_PRIVACIDAD = AVISO.Aviso;
 
   /**
    * Actualiza el valor del índice según el evento del botón de acción.
