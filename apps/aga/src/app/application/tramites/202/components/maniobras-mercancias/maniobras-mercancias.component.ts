@@ -23,7 +23,7 @@ import { Tramite202Query } from '../../../../core/queries/tramite202.query';
     CatalogoSelectComponent
   ],
   templateUrl: './maniobras-mercancias.component.html',
-  styleUrl: './maniobras-mercancias.component.css',
+  styleUrl: './maniobras-mercancias.component.scss',
 })
 export class ManiobrasMercanciasComponent implements OnInit, OnDestroy {
   /**
