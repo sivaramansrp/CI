@@ -13,7 +13,8 @@ import { InicioSesionService } from '@libs/shared/data-access-user/src/core/serv
 import { SubirDocumentoService } from '@libs/shared/data-access-user/src/core/services/shared/subir-documento/subir-documento.service';
 import { SolicitudComponent } from './pages/solicitud/solicitud.component';
 import { TercerosRelacionadosComponent } from './pages/terceros-relacionados/terceros-relacionados.component';
-import { PagoDeDerechosComponent } from './pages/pago-de-derechos/pago-de-derechos.component';
+import { PagoDeDerechosComponent } from './components/pago-de-derechos/pago-de-derechos.component';
+import { DerechosComponent } from './pages/derechos/derechos.component';
 // import { DatosDelSolicitanteComponent } from './components/datos-del-solicitante/datos-del-solicitante.component';
 
 
@@ -24,7 +25,7 @@ import { PagoDeDerechosComponent } from './pages/pago-de-derechos/pago-de-derech
     PasoUnoComponent, 
     SolicitudComponent,
     TercerosRelacionadosComponent,
-    PagoDeDerechosComponent,
+    DerechosComponent,
   ],
   imports: [
     CommonModule, 
@@ -39,6 +40,7 @@ import { PagoDeDerechosComponent } from './pages/pago-de-derechos/pago-de-derech
     PasoDosComponent,
     PasoTresComponent,
     // DatosDelSolicitanteComponent,
+    PagoDeDerechosComponent,
     AlertComponent,
     ToastrModule.forRoot()
   ],

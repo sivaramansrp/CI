@@ -9,7 +9,7 @@ import { Catalogo } from '@libs/shared/data-access-user/src/core/models/shared/c
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CatalogosSelect } from '@libs/shared/data-access-user/src/core/models/shared/components.model';
 import { CommonModule } from '@angular/common';
-// import { INPUT_FECHA_CONFIG } from '../../enum/permiso.enum';
+import { INPUT_FECHA_CONFIG } from '../../enum/permiso.enum';
 import { InputFechaComponent } from '@libs/shared/data-access-user/src/tramites/components/input-fecha/input-fecha.component';
 import { AutorizacionDeRayosXService } from '../../services/autorizacion-de-rayos-x.service';
 import { TituloComponent } from '@libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
@@ -38,7 +38,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   formSolicitud!: FormGroup;
 
   /**
-   * Estado de la solicitud de la sección 301.
+   * Estado de la solicitud de la sección 300105.
    */
   public solicitudState!: Tramite300105State;
 
@@ -56,10 +56,10 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    */
   constructor(
     private fb: FormBuilder,
-    private tramite301Store: Tramite300105Store,
-    private tramite301Query: Tramite300105Query,
-    @Inject(ServiciosPermisoSanitarioService)
-    private serviciosPermisoSanitarioService: ServiciosPermisoSanitarioService
+    private tramite300105Store: Tramite300105Store,
+    private tramite300105Query: Tramite300105Query,
+    @Inject(AutorizacionDeRayosXService)
+    private autorizacionDeRayosXService: AutorizacionDeRayosXService
   ) {
     this.fetchBancoData();
   }
@@ -79,7 +79,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * @param e {Catalogo} Banco seleccionado.
    */
   ngOnInit(): void {
-    this.tramite301Query.selectSolicitud$
+    this.tramite300105Query.selectTramite300105$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
@@ -105,7 +105,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * @param e {Catalogo} Banco seleccionado.
    */
   fetchBancoData(): void {
-    this.serviciosPermisoSanitarioService
+    this.autorizacionDeRayosXService
       .getBancoData()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data): void => {
@@ -124,7 +124,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   ): void {
     const VALOR = form.get(campo)?.value;
     (
-      this.tramite301Store[metodoNombre] as (
+      this.tramite300105Store[metodoNombre] as (
         value: string | number | null
       ) => void
     )(VALOR);
