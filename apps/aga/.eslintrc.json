@@ -1,8 +1,6 @@
 {
   "extends": ["../../.eslintrc.json"],
-
-  "ignorePatterns": ["!**/*","**/*.spec.ts", "**/*.scss"],
-
+  "ignorePatterns": ["!**/*", "**/*.spec.ts", "**/*.scss"],
   "overrides": [
     {
       "files": ["*.ts"],
@@ -68,7 +66,6 @@
         "no-constructor-return": "error",
         "no-div-regex": "error",
         "no-else-return": "error",
-        "no-empty-function": "error",
         "no-eq-null": "error",
         "no-eval": "error",
         "no-extend-native": "error",
