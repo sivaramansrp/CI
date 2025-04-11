@@ -22,7 +22,12 @@ export class PasoTresComponent implements OnDestroy {
     * Tipo de persona.
     */
    tipoPersona!: number;
- 
+ /**
+   * @constructor
+   * Inyecta el servicio de catálogos para obtener información dinámica relacionada a documentos.
+   *
+   * @param {CatalogosService} catalogosServices - Servicio de catálogos para cargar tipos de documentos.
+   */
   constructor(
     private router: Router,
     private serviciosExtraordinariosServices: TramiteFolioService,
