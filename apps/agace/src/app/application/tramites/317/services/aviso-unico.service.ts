@@ -47,10 +47,9 @@ export class AvisoUnicoService {
    * Obtiene los datos del solicitante desde un archivo JSON.
    * @returns {Observable<unknown>} Un observable que emite los datos del solicitante.
    */
-  getSolicitante(): Observable<AvisoValor[]> {
-    return this.http.get<AvisoValor[]>('assets/json/317/renovacion.json');
-    // return this.http.get('assets/json/317/renovacion.json');
-  }
+  getSolicitante(): Observable<AvisoValor> {
+    return this.http.get<AvisoValor>('assets/json/317/renovacion.json');
+    }
 
  /**
    * @method

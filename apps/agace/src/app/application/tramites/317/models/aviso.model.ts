@@ -66,15 +66,21 @@ export interface PreOperativo {
 
 export interface AvisoValor {
   /**
-   * @property {string} descripcion
-   * @description Descripción del valor en español.
+   * @property {string} claveReferencia
+   * @description claveReferencia del valor en español.
    */
-  claveReferencia: number;
+  claveReferencia: string;
 
   /**
-   * @property {number} cantidad
-   * @description Cantidad asociada al valor.
+   * @property {number} cadenaDependencia
+   * @description cadenaDependencia asociada al valor.
    */
-  cadenaDependencia: number;
-  importePago: number;
+
+  cadenaDependencia: string;
+
+  /**
+   * @property {number} importePago
+   * @description Importe de pago asociado al valor.
+   */
+  importePago: string;
 }

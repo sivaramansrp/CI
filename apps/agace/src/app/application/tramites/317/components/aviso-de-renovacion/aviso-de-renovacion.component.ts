@@ -4,7 +4,8 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { Catalogo, CatalogoSelectComponent, InputCheckComponent, InputFecha, InputFechaComponent, InputRadioComponent, TituloComponent } from '@libs/shared/data-access-user/src';
-import { AvisoValor, FECHA_DE_PAGO } from '../../models/aviso.model';
+
+import {AvisoValor, FECHA_DE_PAGO } from '../../models/aviso.model';
 
 import { AvisoUnicoService } from '../../services/aviso-unico.service';
 
@@ -121,7 +122,7 @@ export class AvisoDeRenovacionComponent implements OnInit, OnDestroy {
   loadAsignacionData(): void {
     this.service.getSolicitante()
       .pipe(takeUntil(this.destroyed$))
-      .subscribe((data: any) => {
+      .subscribe((data: AvisoValor) => {
         this.avisoForm.patchValue({
             claveReferencia: data.claveReferencia,
             cadenaDependencia: data.cadenaDependencia,
@@ -183,9 +184,9 @@ export class AvisoDeRenovacionComponent implements OnInit, OnDestroy {
    */
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof UnicoStore): void {
     const VALOR = form.get(campo)?.value;
-    (this.unicoStore[metodoNombre] as (value: any) => void)(VALOR);
+    (this.unicoStore[metodoNombre] as (value: string) => void)(VALOR);
   }
-
+ 
   /**
    * Método que se ejecuta al destruir el componente.
    * Libera recursos y cancela suscripciones.
