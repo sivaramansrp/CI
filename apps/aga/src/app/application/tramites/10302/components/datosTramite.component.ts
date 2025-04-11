@@ -1,6 +1,18 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
+import {
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { Modal } from 'bootstrap';
 import { map, merge, Subject, takeUntil } from 'rxjs';
 import {
@@ -13,7 +25,11 @@ import {
 import mercanciaTable from 'libs/shared/theme/assets/json/10302/mercancia-table.json';
 import { datosDelMercancia } from '../models/exencion-impuestos.model';
 import { ExencionImpuestosService } from '../services/exencion-impuestos.service';
-import { Catalogo, Solicitud10302State, Tramite10302Store } from '../estados/tramite10302.store';
+import {
+  Catalogo,
+  Solicitud10302State,
+  Tramite10302Store,
+} from '../estados/tramite10302.store';
 import { Tramite10302Query } from '../estados/tramite10302.query';
 
 /**
@@ -72,13 +88,44 @@ export class DatosTramiteComponent implements OnInit, OnDestroy {
 
   /**
    * Catálogos seleccionados.
+   * @type {Catalogo[]}
    */
   fechasSeleccionadas: Catalogo[] = [];
+
+  /**
+   * Lista de tipos de mercancía disponibles.
+   * @type {Catalogo[]}
+   */
   tipoDeMercancia!: Catalogo[];
+
+  /**
+   * Lista de condiciones de mercancía disponibles.
+   * @type {Catalogo[]}
+   */
   condicionMercancia!: Catalogo[];
+
+  /**
+   * Lista de unidades de medida disponibles.
+   * @type {Catalogo[]}
+   */
   unidadMedida!: Catalogo[];
+
+  /**
+   * Lista de años disponibles.
+   * @type {Catalogo[]}
+   */
   ano!: Catalogo[];
+
+  /**
+   * Lista de países disponibles.
+   * @type {Catalogo[]}
+   */
   pais!: Catalogo[];
+
+  /**
+   * Lista de aduanas disponibles.
+   * @type {Catalogo[]}
+   */
   aduana!: Catalogo[];
 
   /**
@@ -421,9 +468,9 @@ export class DatosTramiteComponent implements OnInit, OnDestroy {
           if (respuesta?.success) {
             respuesta.datos.id = this.datosDelMercancia.length + 1;
             this.datosDelMercancia.push(respuesta.datos);
-            (this.store.setDelMercancia as (
-              valor: datosDelMercancia[]
-            ) => void)(this.datosDelMercancia);
+            (
+              this.store.setDelMercancia as (valor: datosDelMercancia[]) => void
+            )(this.datosDelMercancia);
             const DATOS = {
               tbodyData: [
                 respuesta.datos.tipoDeMercancia,

@@ -1,5 +1,15 @@
 import { Component, OnInit } from '@angular/core';
-import { AlertComponent, AnexarDocumentosComponent, CATALOGOS_ID, Catalogo, CatalogosService, TEXTOS, TituloComponent } from '@ng-mf/data-access-user';
+import {
+  AlertComponent,
+  AnexarDocumentosComponent,
+  CATALOGOS_ID,
+  Catalogo,
+  CatalogosService,
+  TEXTOS,
+  TituloComponent,
+} from '@ng-mf/data-access-user';
+import { Subject, takeUntil } from 'rxjs';
+import documentList from '@libs/shared/theme/assets/json/10302/document-list.json';
 
 /**
  * Componente que representa el paso dos del trámite.
@@ -36,11 +46,11 @@ export class PasoDosComponent implements OnInit {
    */
   catalogoDocumentos: Catalogo[] = [];
 
-  /**
-   * Lista de documentos seleccionados por el usuario.
-   * @type {Catalogo[]}
-   */
-  documentosSeleccionados: Catalogo[] = [];
+  /** Lista de documentos preseleccionados, cargados desde un archivo JSON */
+  documentosSeleccionados = documentList.documentosSeleccionados;
+
+  /** Observable para manejar la destrucción de suscripciones */
+  private destroy$: Subject<void> = new Subject<void>();
 
   /**
    * Constructor del componente.
@@ -56,17 +66,6 @@ export class PasoDosComponent implements OnInit {
    */
   ngOnInit(): void {
     this.getTiposDocumentos();
-    this.documentosSeleccionados = [
-      {
-        id: 1,
-        descripcion: 'Documentos que ampare el valor de la mercancía',
-      },
-      {
-        id: 2,
-        descripcion:
-          'Documentos del medio de transporte (Guías, BL o carta porte según corresponda)',
-      },
-    ];
   }
 
   /**
@@ -76,6 +75,7 @@ export class PasoDosComponent implements OnInit {
   getTiposDocumentos(): void {
     this.catalogosServices
       .getCatalogo(CATALOGOS_ID.CAT_TIPO_DOCUMENTO)
+      .pipe(takeUntil(this.destroy$))
       .subscribe({
         /**
          * Callback que se ejecuta cuando la solicitud es exitosa.
@@ -94,5 +94,15 @@ export class PasoDosComponent implements OnInit {
           return _error;
         },
       });
+  }
+
+  /**
+   * Método que se llama cuando el componente es destruido.
+   * Libera las suscripciones activas para evitar fugas de memoria.
+   * @returns void
+   */
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }
