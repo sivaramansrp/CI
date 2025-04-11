@@ -7,46 +7,124 @@ import { PartidasDeLaMercanciaModelo } from '../../../../shared/models/partidas-
  * @description Define la estructura del estado para el trámite 130203.
  */
 export interface Tramite130203State {
+  /** Nombre del producto. */
   producto: string;
+
+  /** Descripción del producto. */
   descripcion: string;
+
+  /** Fracción arancelaria del producto. */
   fraccion: string;
+
+  /** Cantidad del producto. */
   cantidad: string;
+
+  /** Valor de la partida en dólares estadounidenses. */
   valorPartidaUSD: number;
+
+  /** Unidad de medida del producto. */
   unidadMedida: string;
+
+  /** Información de la solicitud. */
   solicitud: string;
+
+  /** Valor predeterminado del campo de selección. */
   defaultSelect: string;
+
+  /** Producto predeterminado. */
   defaultProducto: string;
+
+  /** Régimen relacionado con el trámite. */
   regimen: string;
+
+  /** Clasificación del producto. */
   clasificacion: string;
+
+  /** Fila seleccionada en la tabla de partidas de la mercancía. */
   filaSeleccionada: PartidasDeLaMercanciaModelo[];
+
+  /** Cantidad de partidas de la mercancía. */
   cantidadPartidasDeLaMercancia: string;
+
+  /** Valor de la partida en dólares estadounidenses para las partidas de la mercancía. */
   valorPartidaUSDPartidasDeLaMercancia: number;
+
+  /** Descripción de las partidas de la mercancía. */
   descripcionPartidasDeLaMercancia: string;
+
+  /** Valor de la factura en dólares estadounidenses. */
   valorFacturaUSD: string;
+
+  /** Bloque relacionado con el trámite. */
   bloque: string;
+
+  /** Uso específico del producto. */
   usoEspecifico: string;
+
+  /** Justificación para la importación o exportación. */
   justificacionImportacionExportacion: string;
+
+  /** Observaciones adicionales. */
   observaciones: string;
+
+  /** Entidad relacionada con el trámite. */
   entidad: string;
+
+  /** Representación relacionada con el trámite. */
   representacion: string;
+
+  /** Indica si se debe mostrar la tabla. */
   mostrarTabla: boolean;
+
+  /** Nombre del exportador. */
   nombreExportador: string;
+
+  /** Dirección del exportador. */
   direccionExportador: string;
+
+  /** Nombre del importador. */
   nombreImportador: string;
+
+  /** Dirección del importador. */
   direccionImportador: string;
+
+  /** Número en letra de los lotes. */
   numeroEnLetraDeLosLotes: string;
+
+  /** Número en letra de los lotes en inglés. */
   numeroEnLetraDeLosLotesEnIngles: string;
+
+  /** Número de la factura. */
   numeroDeFactura: string;
+
+  /** Cantidad en quilates. */
   cantidadEnQuilates: string;
+
+  /** Valor de los diamantes. */
   valorDeLosDiamantes: string;
 
+  /** Estado relacionado con el trámite. */
   state: string;
+
+  /** Indica si el producto es mixto. */
   mixed: boolean;
+
+  /** País de origen del producto. */
   paisOrigen: number | null;
+
+  /** Valor adicional para especificar detalles. */
   especifique: number;
+
+  /** Número relacionado con el trámite. */
   numero: string;
+
+  /** Tipo de empresa relacionada con el trámite. */
   tipoEmpresa: string;
+
+  /** Valor del checkbox de línea. */
   lineaCheckbox: boolean;
+
+  /** Nombre relacionado con el trámite. */
   nombre: string;
 }
 
