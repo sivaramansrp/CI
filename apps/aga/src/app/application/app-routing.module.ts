@@ -193,6 +193,13 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'junta-tecnica',
+    loadChildren: () =>
+      import('./tramites/6101/junta-tecnica.module').then(
+        (m) => m.JuntaTecnicaModule
+      )
+  },
+  {
     path: 'modificarCaatTerrestre',
     loadChildren: () =>
       import('./tramites/40103/modificarCaatTerrestre.module').then(

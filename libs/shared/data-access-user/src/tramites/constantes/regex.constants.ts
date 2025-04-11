@@ -323,3 +323,9 @@ export const REGEX_IMPORTE_PAGO = '/^[a-zA-Z0-9]*$/';
  * La llave debe consistir en exactamente 10 caracteres alfanuméricos (letras mayúsculas y dígitos).
  */
 export const REGEX_LLAVE_DE_PAGO = '/^[A-Z0-9]{10}$/';
+
+/**
+ * Expresión regular para validar números en formato de pesos mexicanos (MXN).
+ * Permite dígitos y el punto decimal.
+ */
+export const REGEX_SIN_DIGITOS = /\D/g;
