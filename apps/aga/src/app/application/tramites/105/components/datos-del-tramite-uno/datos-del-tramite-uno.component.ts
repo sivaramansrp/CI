@@ -1,4 +1,4 @@
-import { AlertComponent, CatalogoSelectComponent, CatalogosSelect, InputCheckComponent,InputRadioComponent, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, CatalogoSelectComponent, CatalogosSelect,InputRadioComponent, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitud105State, Tramite105Store, } from '../../estados/tramite105.store';
@@ -17,7 +17,7 @@ interface TableBodyData {
   imports: [CommonModule, AlertComponent,
     InputRadioComponent,
     TableComponent,
-    TituloComponent, CatalogoSelectComponent, ReactiveFormsModule,InputCheckComponent],
+    TituloComponent, CatalogoSelectComponent, ReactiveFormsModule],
   templateUrl: './datos-del-tramite-uno.component.html',
   styleUrl: './datos-del-tramite-uno.component.scss',
 })
