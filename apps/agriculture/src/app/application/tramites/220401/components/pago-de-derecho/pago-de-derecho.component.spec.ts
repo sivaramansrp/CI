@@ -3,7 +3,6 @@ import { FormBuilder,FormsModule,ReactiveFormsModule} from '@angular/forms';
 import { CatalogoSelectComponent } from '../../../../shared/components/catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
 import { PagoDeDerechoComponent } from './pago-de-derecho.component';
-import { SelectCatalogosComponent } from '../../../../shared/components/select-catalogos/select-catalogos.component';
 import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
 
 
@@ -19,7 +18,7 @@ describe('PagoDeDerechoComponent', () => {
         CommonModule,
         TituloComponent,
         CatalogoSelectComponent,
-        SelectCatalogosComponent,PagoDeDerechoComponent
+        PagoDeDerechoComponent
       ],
       declarations: [],
       providers: [FormBuilder],
