@@ -28,7 +28,6 @@ export class DomicilioDelDestinatarioComponent implements OnInit, OnDestroy {
   constructor(private fb: FormBuilder,
     private tramite110210Store: Tramite110210Store,
     private tramite110210Query: Tramite110210Query
-    // eslint-disable-next-line no-empty-function
   ) { }
 
   /**
