@@ -15,12 +15,11 @@
             <div class="form-group">
                 <label class="form-label" for="justificacion">Justificación y beneficio que se obtiene: </label>
                 <textarea 
-                class="form-control" 
+                class="form-control min-height" 
                 id="justificacion" 
                 name="justificacion"
                 formControlName="justificacion"
                 rows="5"
-                style="height: 100px !important"
                 (change)="eventoDeCambioDeValor($event, 'justificacion')"
             ></textarea>
 
@@ -33,12 +32,11 @@
             <div class="form-group">
                 <label class="form-label" for="observaciones">Observaciones: </label>
                 <textarea 
-                    class="form-control" 
+                    class="form-control min-height" 
                     id="observaciones" 
                     name="observaciones"
                     formControlName="observaciones"
                     rows="5"
-                    style="height: 100px !important"
                     (change)="eventoDeCambioDeValor($event, 'observaciones')"
                 ></textarea>
             </div>

@@ -85,7 +85,8 @@
                         [catalogo]="item?.opciones || []" 
                         [formControlName]="item.campo" 
                         [label]="item.label_nombre" 
-                        [required]="seRequiere(item.campo)" 
+                        [required]="seRequiere(item.campo)"
+                        [placeholder]="item.marcador_de_posicion || ''" 
                         name=""
                         (selectionChange)="eventoDeCambioDeValor($event, item.campo)"
                       ></app-catalogo-select>
@@ -106,11 +107,12 @@
                         type="checkbox"
                         [id]="item.id"
                         [formControlName]="item.campo"
+                        [required]="seRequiere(item.campo) ? '*:' : ':'"
                         (change)="eventoDeCambioDeValor($event, item.campo)"
                       />
                       <label class="form-label" [for]="item.id" style="margin-left: 10px;">{{
                         item.label_nombre
-                      }}</label>
+                      }} {{seRequiere(item.campo) ? '*:' : ':'}}</label>
                     </div>
                     </div>
                   } @case ('button') {
@@ -130,12 +132,13 @@
                       <div class="form-group">
                         <label class="form-label" [for]="item.id">{{
                           item.label_nombre
-                        }}</label>
+                        }} {{seRequiere(item.campo) ? '*:' : ':'}}</label>
                         <app-input-radio
                           [radioOptions]="item.opciones || []"
                           id="{{item.id}}"
                           formControlName="{{item.campo}}"
                           [layout]="item.layout ? item.layout : 'vertical'"
+                          [isRequired]="seRequiere(item.campo)"
                           (valueChange)="eventoDeCambioDeValor($event, item.campo)"
                         ></app-input-radio>
                         
