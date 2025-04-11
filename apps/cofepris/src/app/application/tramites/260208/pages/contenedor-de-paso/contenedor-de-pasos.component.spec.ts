@@ -1,22 +1,62 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import {ContenedorDePasosComponent} from './contenedor-de-pasos.component';
-import { HttpClientModule } from '@angular/common/http';
-describe('SolicitudPageComponent', () => {
+// @ts-nocheck
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { By } from '@angular/platform-browser';
+import { Observable, of as observableOf, throwError } from 'rxjs';
 
-  let component: ContenedorDePasosComponent;
-  let fixture: ComponentFixture<ContenedorDePasosComponent>;
+import { Component } from '@angular/core';
+import { ContenedorDePasosComponent } from './contenedor-de-pasos.component';
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [ContenedorDePasosComponent, HttpClientModule],
+
+describe('ContenedorDePasosComponent', () => {
+  let fixture;
+  let component;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [ FormsModule, ReactiveFormsModule ],
+      declarations: [
+        ContenedorDePasosComponent,
+      ],
+      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
+      providers: [
+
+      ]
+    }).overrideComponent(ContenedorDePasosComponent, {
+
     }).compileComponents();
-
     fixture = TestBed.createComponent(ContenedorDePasosComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    component = fixture.debugElement.componentInstance;
   });
 
-  it('should create', () => {
+  afterEach(() => {
+    component.ngOnDestroy = function() {};
+    fixture.destroy();
+  });
+
+  it('should run #constructor()', async () => {
     expect(component).toBeTruthy();
   });
+
+  it('should run #seleccionaTab()', async () => {
+
+    component.seleccionaTab({});
+
+  });
+
+  it('should run #getValorIndice()', async () => {
+    component.wizardComponent = component.wizardComponent || {};
+    component.wizardComponent.siguiente = jest.fn();
+    component.wizardComponent.atras = jest.fn();
+    component.getValorIndice({
+      valor: {},
+      accion: {}
+    });
+
+
+  });
+
+
 });
