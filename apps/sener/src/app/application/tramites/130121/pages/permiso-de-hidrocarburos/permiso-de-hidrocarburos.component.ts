@@ -9,8 +9,9 @@
  * <app-permiso-de-hidrocarburos></app-permiso-de-hidrocarburos>
  */
 
+import { CategoriaMensaje, DatosPasos, ListaPasosWizard, Notificacion, TipoNotificacionEnum, WizardComponent } from '@libs/shared/data-access-user/src';
 import { Component, ViewChild } from '@angular/core';
-import { DatosPasos, ListaPasosWizard, WizardComponent } from '@libs/shared/data-access-user/src';
+import { AVISO } from '@libs/shared/data-access-user/src/tramites/constantes/aviso-privacidad.enum';
 import { AccionBoton } from '../../enums/accion-botton.enum';
 
 import { PASOS_EXPORTACION } from '../../constants/permiso-de-hidrocarburos.enum';
@@ -77,4 +78,29 @@ export class PermisoDeHidrocarburosComponent {
       }
     }
   }
+  
+  /**
+ * @description
+ * Configuración de la notificación de privacidad que se muestra como un banner informativo.
+ * Esta notificación contiene información sobre el aviso de privacidad y no permite ser cerrada.
+ *
+ * @property {TipoNotificacionEnum} tipoNotificacion - Tipo de notificación, en este caso un banner.
+ * @property {CategoriaMensaje} categoria - Categoría de la notificación, en este caso informativa.
+ * @property {string} modo - Modo de la notificación (vacío en este caso).
+ * @property {string} titulo - Título de la notificación (vacío en este caso).
+ * @property {string} mensaje - Mensaje de la notificación, que contiene el aviso de privacidad.
+ * @property {boolean} cerrar - Indica si la notificación puede ser cerrada (falso en este caso).
+ * @property {string} txtBtnAceptar - Texto del botón de aceptar (vacío en este caso).
+ * @property {string} txtBtnCancelar - Texto del botón de cancelar (vacío en este caso).
+ */
+  public notificacionPrivacidad: Notificacion = {
+    tipoNotificacion: TipoNotificacionEnum.BANNER, 
+    categoria: CategoriaMensaje.INFORMACION, 
+    modo: '', 
+    titulo: '',
+    mensaje: AVISO.Aviso,
+    cerrar: false,
+    txtBtnAceptar: '',
+    txtBtnCancelar: ''
+  };
 }

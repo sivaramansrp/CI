@@ -47,11 +47,23 @@ export class PaisDeOrigenComponent implements OnChanges {
    * @tipo {CrosslistComponent}
    */
   @ViewChild(CrosslistComponent) crosslistComponent!: CrosslistComponent;
+
+  /**
+ * @evento
+ * @nombre eventoAlHacerClicEnTodasLasCiudades
+ * @descripcion Evento que se emite cuando se hace clic en el botón para obtener todas las ciudades.
+ * @tipo {EventEmitter<void>}
+ */
   @Output() eventoAlHacerClicEnTodasLasCiudades = new EventEmitter<void>();
 
+  /**
+ * @metodo
+ * @nombre onObtenerCiudades
+ * @descripcion Método que emite el evento `eventoAlHacerClicEnTodasLasCiudades` para notificar que se ha solicitado obtener todas las ciudades.
+ * @returns {void}
+ */
   onObtenerCiudades(): void {
     this.eventoAlHacerClicEnTodasLasCiudades.emit();
-
   }
  
   /**

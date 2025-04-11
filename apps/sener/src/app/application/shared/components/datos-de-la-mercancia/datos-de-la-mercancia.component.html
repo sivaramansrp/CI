@@ -3,7 +3,7 @@
     <ng-titulo titulo="Datos de la mercancía"></ng-titulo>
     <div class="row">
       <div class="col-md-12">
-        <div class="form-group radioOpciones">
+        <div class="form-group radio-opciones">
           <label class="mb-5" for="plazo">Plazo*:</label>
           <app-input-radio [radioOptions]="productoOpciones" formControlName="plazo" [isRequired]="true"
             (change)="setValoresStore(form, 'plazo', 'setProducto')" [layout]="'vertical'"></app-input-radio>

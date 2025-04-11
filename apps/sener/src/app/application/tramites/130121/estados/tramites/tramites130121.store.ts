@@ -178,19 +178,31 @@ export class Tramite130121Store extends Store<Tramite130121State> {
     }));
   }
 
+  /**
+ * Actualiza la acotación en el estado.
+ *
+ * @param {string} actacion - La acotación a establecer.
+ * @memberof Tramite130121Store
+ */
   public setAcotacion(actacion: string): void {
     this.update((state) => ({
       ...state,
       actacion,
     }));
   }
+
+/**
+ * Actualiza la descripción del NICO en el estado.
+ *
+ * @param {string} descripcionNico - La descripción del NICO a establecer.
+ * @memberof Tramite130121Store
+ */
   public setDescripcionNico(descripcionNico: string): void {
     this.update((state) => ({
       ...state,
       descripcionNico,
     }));
   }
-  
 
   /**
    * Actualiza la unidad de medida UMT en el estado.
@@ -484,7 +496,7 @@ export class Tramite130121Store extends Store<Tramite130121State> {
    * @param {null} fila - La fila seleccionada (valor nulo en este caso).
    * @memberof Tramite130121Store
    */
- 
+
   public storeTableValues(fila: PartidasDeLaMercanciaModelo[]): void {
     this.update({
       filaSeleccionada: fila,

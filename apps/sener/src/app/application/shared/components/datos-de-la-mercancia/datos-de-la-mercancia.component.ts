@@ -57,9 +57,11 @@ export class DatosDeLaMercanciaComponent {
    * @description Catálogo que contiene opciones de unidad.
    */
   @Input() unidadCatalogo: Catalogo[] = [];
-  @Input() acotacionCatalogo: Catalogo[] = [];
 
-  
+   /**
+   * @description Catálogo que contiene opciones de acotación.
+   */
+  @Input() acotacionCatalogo: Catalogo[] = []; 
 
   /**
    * @description Catálogo que contiene opciones de NICO.
