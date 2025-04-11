@@ -513,16 +513,9 @@
     </div>
   </div>
 </div>
-<div class="modal-backdrop" *ngIf="cuadroDeAlerta">
-  <div class="modal-content custom-modal p-0">
-    <div class="title w-100 p-0 m-0">
-      <h5> </h5>
-    </div>
-    <div class="modal-body p-4">
-      <p class="mb-5 text-left"> El registro fue agregado correctamente.</p>
-      <div>
-        <button type="submit" class="btn btn-primary"> Aceptar </button>
-      </div>
-    </div>
-  </div>
-</div>
+@if (nuevaNotificacion) {
+<section>
+  <lib-notificaciones [notificacionInput]="nuevaNotificacion">
+  </lib-notificaciones>
+</section>
+}

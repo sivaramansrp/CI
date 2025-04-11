@@ -8,6 +8,8 @@ import { ElementRef } from "@angular/core";
 import { FormBuilder } from "@angular/forms";
 import { FormGroup } from "@angular/forms";
 import { Modal } from 'bootstrap';
+import { Notificacion } from '@libs/shared/data-access-user/src';
+import { NotificacionesComponent } from '@libs/shared/data-access-user/src';
 import { OnDestroy } from "@angular/core";
 import { OnInit } from "@angular/core";
 import { ReactiveFormsModule } from "@angular/forms";
@@ -31,7 +33,7 @@ import { takeUntil } from "rxjs";
   templateUrl: './aviso.component.html',
   styleUrl: './aviso.component.scss',
   imports: [CommonModule, ReactiveFormsModule, TituloComponent, InputFechaComponent,
-    CatalogoSelectComponent, TablaDinamicaComponent, AlertComponent
+    CatalogoSelectComponent, TablaDinamicaComponent, AlertComponent, NotificacionesComponent
   ],
   standalone: true,
 })
@@ -247,18 +249,10 @@ export class AvisoComponent implements OnInit, OnDestroy {
    */
   TEXTOS = TEXTOS;
   /**
-   * @property {boolean} cuadroDeAlerta
-   * @description Bandera que indica si se debe mostrar un cuadro de alerta en el componente.
-   * 
-   * Esta propiedad se utiliza para controlar la visibilidad de un cuadro de alerta
-   * que informa al usuario sobre el resultado de una acción o proceso.
-   * 
-   * - `true`: El cuadro de alerta está visible.
-   * - `false`: El cuadro de alerta está oculto.
-   * 
-   * @default false
+   * Representa una nueva instancia de notificación asociada con el componente.
+   * Esta propiedad se utiliza para gestionar y almacenar datos de notificaciones.
    */
-  cuadroDeAlerta: boolean = false;
+  public nuevaNotificacion!: Notificacion;
 
   /**
    * Constructor del componente.
@@ -702,6 +696,7 @@ export class AvisoComponent implements OnInit, OnDestroy {
   agregarDomicilio(): void {
     this.cargarAvisoTabla();
     this.closeDomicilio.nativeElement.click();
+    this.abrirModal()
   }
   /**
    * @method sanitizeAlphanumeric
@@ -778,6 +773,38 @@ export class AvisoComponent implements OnInit, OnDestroy {
     if (INPUT?.files?.length) {
       const FILE = INPUT.files[0];
       this.avisoFormulario.get('archivoMasivo')?.setValue(FILE);
+    }
+  }
+  /**
+   * @method abrirModal
+   * @description Método para abrir un modal de notificación.
+   * 
+   * Este método configura una nueva notificación con los siguientes parámetros:
+   * - `tipoNotificacion`: Tipo de notificación (en este caso, "alerta").
+   * - `categoria`: Categoría de la notificación (en este caso, "peligro").
+   * - `modo`: Modo de la notificación (en este caso, "acción").
+   * - `titulo`: Título de la notificación (en este caso, vacío).
+   * - `mensaje`: Mensaje de la notificación (en este caso, "El registro fue agregado correctamente.").
+   * - `cerrar`: Indica si la notificación se puede cerrar manualmente (en este caso, `false`).
+   * - `tiempoDeEspera`: Tiempo en milisegundos antes de que la notificación desaparezca automáticamente (en este caso, 2000 ms).
+   * - `txtBtnAceptar`: Texto del botón de aceptación (en este caso, "Aceptar").
+   * - `txtBtnCancelar`: Texto del botón de cancelación (en este caso, vacío).
+   * 
+   * @example
+   * // Llamar al método para abrir el modal de notificación
+   * this.abrirModal();
+   */
+  public abrirModal(): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'El registro fue agregado correctamente.',
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
     }
   }
   /**

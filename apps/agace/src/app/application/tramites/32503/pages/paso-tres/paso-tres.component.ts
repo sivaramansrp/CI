@@ -2,11 +2,13 @@ import { AlertComponent, CatalogoSelectComponent, TablaDinamicaComponent, Titulo
 import { AnexosLista, ArchivoDocumentos, Documentos, DocumentosAnexos, DocumentosLista } from "../../models/aviso-traslado.model";
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from "@angular/core";
 import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
-import { TEXTOS, TIPO_DOCUMENTO_TAMANO ,MENSAJE_DE_TAMANO_DE_ARCHIVO} from "../../constants/aviso-traslado.enum";
+import {MENSAJE_DE_TAMANO_DE_ARCHIVO, TEXTOS, TIPO_DOCUMENTO_TAMANO } from "../../constants/aviso-traslado.enum";
 import { Tramite32503State, Tramite32503Store } from "../../../../estados/tramites/tramite32503.store";
 import { AvisoTrasladoService } from "../../services/aviso-traslado.service";
 import { CommonModule } from "@angular/common";
 import { Modal } from "bootstrap";
+import { Notificacion } from '@libs/shared/data-access-user/src';
+import { NotificacionesComponent } from '@libs/shared/data-access-user/src';
 import { Subject } from "rxjs";
 import { Tramite32503Query } from "../../../../estados/queries/tramite32503.query";
 import { map } from "rxjs";
@@ -22,7 +24,7 @@ import { takeUntil } from "rxjs";
   selector: 'app-paso-tres',
   standalone: true,
   imports: [CommonModule, AlertComponent, CatalogoSelectComponent, TituloComponent, FormsModule, ReactiveFormsModule,
-    TablaDinamicaComponent
+    TablaDinamicaComponent,NotificacionesComponent
   ],
   templateUrl: './paso-tres.component.html',
   styleUrl: './paso-tres.component.scss',
@@ -121,7 +123,11 @@ export class PasoTresComponent implements OnInit, OnDestroy {
       ],
       datos: []
     };
-
+  /**
+     * Representa una nueva instancia de notificación asociada con el componente.
+     * Esta propiedad se utiliza para gestionar y almacenar datos de notificaciones.
+     */
+  public nuevaNotificacion!: Notificacion;
   /**
    * Constructor del componente.
    * 
@@ -231,6 +237,38 @@ export class PasoTresComponent implements OnInit, OnDestroy {
   valorSeleccion(): void {
     this.store.setValorSeleccionado(this.tipoDocumentoFormulario.value.documentos);
   }
+  /**
+   * @method abrirModal
+   * @description Método para abrir un modal de notificación.
+   * 
+   * Este método configura una nueva notificación con los siguientes parámetros:
+   * - `tipoNotificacion`: Tipo de notificación (en este caso, "alerta").
+   * - `categoria`: Categoría de la notificación (en este caso, "peligro").
+   * - `modo`: Modo de la notificación (en este caso, "acción").
+   * - `titulo`: Título de la notificación (en este caso, "Tamaño Del Archivo").
+   * - `mensaje`: Mensaje de la notificación (en este caso, el mensaje definido en `MENSAJE_DE_TAMANO_DE_ARCHIVO`).
+   * - `cerrar`: Indica si la notificación se puede cerrar manualmente (en este caso, `false`).
+   * - `tiempoDeEspera`: Tiempo en milisegundos antes de que la notificación desaparezca automáticamente (en este caso, 2000 ms).
+   * - `txtBtnAceptar`: Texto del botón de aceptación (en este caso, "Aceptar").
+   * - `txtBtnCancelar`: Texto del botón de cancelación (en este caso, vacío).
+   * 
+   * @example
+   * // Llamar al método para abrir el modal de notificación
+   * this.abrirModal();
+   */
+  public abrirModal(): void {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: 'Tamaño Del Archivo',
+        mensaje: MENSAJE_DE_TAMANO_DE_ARCHIVO,
+        cerrar: false,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      }
+    }
 
   /**
    * Maneja el cambio de archivo en el formulario.
@@ -244,7 +282,7 @@ export class PasoTresComponent implements OnInit, OnDestroy {
     if (FILE) {
       const SIZE_MB = FILE.size / (1024 * 1024);
       if (SIZE_MB > 3) {
-        alert(MENSAJE_DE_TAMANO_DE_ARCHIVO);
+        this.abrirModal();
         INPUT.value = '';
         this.tamanosDeArchivos[index] = JSON.parse(JSON.stringify(TIPO_DOCUMENTO_TAMANO));
         return;
