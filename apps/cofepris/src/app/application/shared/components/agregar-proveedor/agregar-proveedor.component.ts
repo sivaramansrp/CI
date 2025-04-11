@@ -109,14 +109,14 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
       segundoApellido: [''],
       pais: ['', Validators.required],
       estado: ['', Validators.required],
-      codigoPostal: ['', Validators.required],
+      codigoPostal: [''],
       colonia: [''],
       calle: ['', Validators.required],
       numeroExterior: ['', Validators.required],
       numeroInterior: [''],
       lada: [''],
       telefono: [''],
-      correoElectronico: ['', [Validators.required, Validators.email]],
+      correoElectronico: ['', [Validators.email]],
     });
   }
 

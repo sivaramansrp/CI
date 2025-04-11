@@ -130,5 +130,11 @@ export const SCIAN_DATA = [
       orden: 18,
     }
   ];
+
+/**
+ * Códigos de procedimientos que no aplican para elementos SCIAN.
+ * @type {number[]}
+ */
+export const PROCEDIMIENTOS_NO_PARA_ELEMENTO_SCIAN = [260208, 260209];
    
 

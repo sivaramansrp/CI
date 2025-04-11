@@ -7,11 +7,14 @@ import {
   PROCEDIMIENTOS_NO_PARA_ELEMENTO_CALLE,
   PROCEDIMIENTOS_NO_PARA_ELEMENTO_COLAPSABLE,
   PROCEDIMIENTOS_NO_PARA_ELEMENTO_CORREO_ELECTRONIC,
+  PROCEDIMIENTOS_NO_PARA_ELEMENTO_REGIMEN_Y_ADUNADEENTRADAS,
   PROCEDIMIENTOS_NO_PARA_ELEMENTO_RFC_DEL_SANITARIO,
+  PROCEDIMIENTOS_PARA_CORREO_ELECTRONICO_EN_MISMA_FILA,
   PROCEDIMIENTOS_PARA_DESHABILITAR_APELLIDO_MATERNO,
   PROCEDIMIENTOS_PARA_DESHABILITAR_APELLIDO_PATERNO,
   PROCEDIMIENTOS_PARA_DESHABILITAR_MUNICIPIO_ALCALDIA,
   PROCEDIMIENTOS_PARA_DESHABILITAR_NOMBRE_RAZON_SOCIAL,
+  REPRESENTANTE_LEGAL,
 } from '../../constantes/datos-solicitud.enum';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
@@ -229,6 +232,19 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   public mostrarCorreoElectronico = true;
 
   /**
+   * Indica si se debe mostrar el campo de correo electrónico en la interfaz.
+   * @type {boolean}
+   */
+  public mostrarCorreoElectronicoenMismaFila = true;
+
+  /**
+   * Indica si se debe mostrar la sección del representante legal en la interfaz.
+   * @type {boolean}
+   */
+  public mostrarRepresentanteLegal = true;
+  
+
+  /**
    * @property {boolean} mostrarRFCSanitario
    * Controla la visibilidad del campo de RFC sanitario en el formulario.
    *
@@ -267,6 +283,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * que son seleccionadas por el usuario en el formulario.
    */
   public aduanaDatos: Catalogo[] = [];
+
+  public mostrarRegimenYAdunasDeEntradasDatos:boolean=true;
 
   /**
    * @constructor
@@ -349,6 +367,18 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     )
       ? false
       : true;
+
+    this.mostrarCorreoElectronicoenMismaFila = PROCEDIMIENTOS_PARA_CORREO_ELECTRONICO_EN_MISMA_FILA.includes(this.idProcedimiento)
+      ? true
+      : false;
+
+    this.mostrarRepresentanteLegal = REPRESENTANTE_LEGAL.includes(this.idProcedimiento)
+      ? false
+      : true;
+
+    this.mostrarRegimenYAdunasDeEntradasDatos=PROCEDIMIENTOS_NO_PARA_ELEMENTO_REGIMEN_Y_ADUNADEENTRADAS.includes(this.idProcedimiento)
+    ? false
+    : true;
   }
 
   /**
@@ -387,6 +417,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
           Validators.required,
           Validators.minLength(2),
           Validators.maxLength(150),
+          Validators.pattern('^[0-9]*$')
         ],
       ],
       estado: [

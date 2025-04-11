@@ -15,7 +15,13 @@
               value="Fisica"
               id="personaFisica"
             />
-            <label class="form-check-label" for="personaFisica">Física</label>
+            <label class="form-check-label" for="personaFisica">Física
+              <span
+              class="bi bi-question-circle-fill"
+              title="Física"
+              data-bs-toggle="tooltip"
+            ></span>
+            </label>
           </div>
           <div class="form-check">
             <input
@@ -25,7 +31,13 @@
               value="Moral"
               id="personaMoral"
             />
-            <label class="form-check-label" for="personaMoral">Moral</label>
+            <label class="form-check-label" for="personaMoral">Moral
+              <span
+              class="bi bi-question-circle-fill"
+              title="Moral"
+              data-bs-toggle="tooltip"
+            ></span>
+            </label>
           </div>
         </div>
       </div>
@@ -55,11 +67,11 @@
     <div class="row mt-5">
       <h4 class="mt-4">Datos personales</h4>
       <div class="col-md-4">
-        <label class="form-label">Nombre(s):</label>
+        <label class="form-label">Nombre(s)*:</label>
         <input type="text" class="form-control" formControlName="nombres" />
       </div>
       <div class="col-md-4">
-        <label class="form-label">Primer apellido:</label>
+        <label class="form-label">Primer apellido*:</label>
         <input
           type="text"
           class="form-control"
@@ -80,7 +92,7 @@
     <!-- Domicilio -->
     <h4 class="mt-5">Domicilio</h4>
     <div class="row mt-3">
-      <div class="col-md-4 px-5">
+      <div class="col-md-4">
         <app-catalogo-select
           [catalogo]="paisesDatos"
           formControlName="pais"
@@ -89,7 +101,7 @@
         ></app-catalogo-select>
       </div>
       <div class="col-md-4">
-        <label class="form-label">Estado:</label>
+        <label class="form-label">Estado*:</label>
         <input type="text" class="form-control" formControlName="estado" />
       </div>
       <div class="col-md-4">
@@ -108,11 +120,16 @@
         <input type="text" class="form-control" formControlName="colonia" />
       </div>
       <div class="col-md-4">
-        <label class="form-label">Calle:</label>
+        <label class="form-label">Calle*:</label>
+        <span
+        class="bi bi-question-circle-fill"
+        title="Calle"
+        data-bs-toggle="tooltip"
+      ></span>
         <input type="text" class="form-control" formControlName="calle" />
       </div>
       <div class="col-md-4">
-        <label class="form-label">Número exterior:</label>
+        <label class="form-label">Número exterior*:</label>
         <input
           type="text"
           class="form-control"
@@ -139,7 +156,13 @@
         <input type="text" class="form-control" formControlName="telefono" />
       </div>
       <div class="col-md-4">
-        <label class="form-label">Correo electrónico:</label>
+        <label class="form-label">Correo electrónico:
+          <span
+          class="bi bi-question-circle-fill"
+          title="Correo electrónico"
+          data-bs-toggle="tooltip"
+        ></span>
+        </label>
         <input
           type="email"
           class="form-control"
