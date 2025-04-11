@@ -12,18 +12,7 @@
                 <div class="col-md-12">
                     <div class="col-md-5">
                         <div class="radio">
-                            <label>
-                                <input type="radio" id="idRadioContenedor" formControlName="tipoBusqueda" value="Requerimiento" class="form-check-input" (change)="setValoresStore(solicitudForm, 'tipoBusqueda', 'setTipoBusqueda')">
-                                Requerimiento por parte de la autoridad
-                            </label>
-                        </div>
-                    </div>
-                    <div class="col-md-5">
-                        <div class="radio">
-                            <label>
-                                <input type="radio" id="idRadioContenedor" value="Inicio" formControlName="tipoBusqueda" class="form-check-input" (change)="setValoresStore(solicitudForm, 'tipoBusqueda', 'setTipoBusqueda')">
-                                Inicio de cancalecíon
-                            </label>
+                            <app-input-radio [radioOptions]="radioOpcions" [selectedValue]="valorSeleccionado" (valueChange)="cambiarRadio($event)" id="idRadioContenedor" [layout]="'horizontal'" formControlName="tipoBusqueda" (change)="setValoresStore(solicitudForm, 'tipoBusqueda', 'setTipoBusqueda')"></app-input-radio>
                         </div>
                     </div>
                 </div>
@@ -55,8 +44,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-12" id="IdGridContenedoresITC"
-            *ngIf="!solicitud31501State?.tipoBusqueda || solicitud31501State?.tipoBusqueda === 'Requerimiento'">
+            <div class="col-md-12" id="IdGridContenedoresITC">
             <br>
             <div class="table-responsive">
                 <div class="innercontainer">

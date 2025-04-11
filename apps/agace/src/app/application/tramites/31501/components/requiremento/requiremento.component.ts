@@ -1,8 +1,9 @@
 import { ActivatedRoute, Router } from '@angular/router';
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CapturarRequerimientoComponent } from '../capturar-requerimiento/capturar-requerimiento.component';
 import { CommonModule } from '@angular/common';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-requiremento',
@@ -11,7 +12,7 @@ import { CommonModule } from '@angular/common';
   templateUrl: './requiremento.component.html',
   styleUrl: './requiremento.component.css'
 })
-export class RequirementoComponent implements OnInit {
+export class RequirementoComponent implements OnInit, OnDestroy {
 
   /**
    * Representa el folio asociado al trámite.
@@ -33,6 +34,13 @@ export class RequirementoComponent implements OnInit {
    * Esta propiedad utiliza `@Output` para emitir un evento `continuarEvento` con una cadena como valor.
    */
   @Output() continuarEvento = new EventEmitter<string>();
+
+    /**
+     * @private
+     * @description Sujeto utilizado para manejar la destrucción de suscripciones y evitar fugas de memoria.
+     * Se emite un valor cuando el componente se destruye, lo que permite completar las suscripciones activas.
+     */
+    private destroy$: Subject<void> = new Subject<void>();
 
   constructor(
     private route: ActivatedRoute,
@@ -75,6 +83,16 @@ export class RequirementoComponent implements OnInit {
    */
   cancelar(): void {
     this.router.navigate(['/pago/autoridad/main']);
+  }
+
+    /**
+   * Método del ciclo de vida de Angular que se ejecuta cuando el componente se destruye.
+   * Aquí se utiliza para emitir un valor en el observable `destroy$` y completar su emisión,
+   * asegurando la limpieza de suscripciones y evitando posibles fugas de memoria.
+   */
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
 }

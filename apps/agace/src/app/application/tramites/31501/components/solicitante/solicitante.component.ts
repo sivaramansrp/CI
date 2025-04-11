@@ -6,12 +6,12 @@ import { CommonModule } from '@angular/common';
 
 import { CATALOGOS_ID, TIPO_PERSONA } from '@libs/shared/data-access-user/src/tramites/constantes/constantes';
 import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_EXTRANJERA, DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL, PERSONA_FISICA_EXTRANJERO, PERSONA_FISICA_NACIONAL, PERSONA_MORAL_EXTRANJERO, PERSONA_MORAL_NACIONAL } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
+import { Subject, takeUntil, tap } from 'rxjs';
 import { FormularioDinamico } from '@libs/shared/data-access-user/src/core/models/shared/forms-model';
 import { FormulariosService } from '@libs/shared/data-access-user/src/core/services/shared/formularios/formularios.service';
 import { SolicitanteService } from '@libs/shared/data-access-user/src/core/services/shared/solicitante/solicitante.service';
 import { TituloComponent } from '@libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
 import { UppercaseDirective } from '@libs/shared/data-access-user/src/tramites/directives/Uppercase/uppercase.directive';
-import { tap } from 'rxjs';
 
 @Component({
   selector: 'solicitante',
@@ -24,7 +24,7 @@ import { tap } from 'rxjs';
   ],
   templateUrl: './solicitante.component.html',
   styleUrl: './solicitante.component.scss',
-  host: {}
+  host: {},
 })
 export class SolicitanteComponent implements OnInit {
   /**
@@ -40,7 +40,7 @@ export class SolicitanteComponent implements OnInit {
 
   /**
    * Representa el tipo de persona asociado.
-   * 
+   *
    * @type {number}
    * - Puede ser utilizado para identificar si la persona es física o moral.
    */
@@ -67,7 +67,7 @@ export class SolicitanteComponent implements OnInit {
 
   /**
    * Representa el folio del trámite asociado.
-   * 
+   *
    * @type {any} - Tipo genérico, se recomienda especificar un tipo más concreto si es posible.
    */
   folioTramite: any;
@@ -77,6 +77,13 @@ export class SolicitanteComponent implements OnInit {
    * Se obtiene utilizando el método `toISOString()` de la clase `Date` y dividiendo la cadena resultante.
    */
   fechaInicioTramite = new Date().toISOString().split('T')[0];
+
+  /**
+   * @private
+   * @description Sujeto utilizado para manejar la destrucción de suscripciones y evitar fugas de memoria.
+   * Se emite un valor cuando el componente se destruye, lo que permite completar las suscripciones activas.
+   */
+  private destroy$: Subject<void> = new Subject<void>();
 
   constructor(
     private solicitanteServicio: SolicitanteService,
@@ -192,6 +199,7 @@ export class SolicitanteComponent implements OnInit {
     this.solicitanteServicio
       .getDatosGenerales(CATALOGOS_ID.DATOS_PERSONA_FISICA)
       .pipe(
+        takeUntil(this.destroy$),
         tap((response) => {
           if (response) {
             const DATOS = JSON.parse(response.data);

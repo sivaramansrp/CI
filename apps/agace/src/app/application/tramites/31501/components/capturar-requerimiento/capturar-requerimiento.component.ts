@@ -1,5 +1,5 @@
 import { Catalogo, CatalogoSelectComponent, TituloComponent } from '@libs/shared/data-access-user/src';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitud31501State, Tramite31501Store } from '../../../../estados/tramites/tramite31501.store';
 import { Subject, map, takeUntil } from 'rxjs';
@@ -23,7 +23,7 @@ import { TramiteList } from '../../models/datos-tramite.model';
   templateUrl: './capturar-requerimiento.component.html',
   styleUrl: './capturar-requerimiento.component.css',
 })
-export class CapturarRequerimientoComponent implements OnInit {
+export class CapturarRequerimientoComponent implements OnInit, OnDestroy {
   tramiteList: {
     catalogos: TramiteList[];
     labelNombre: string;
@@ -134,7 +134,7 @@ export class CapturarRequerimientoComponent implements OnInit {
    */
   public fetchAduanaList(): void {
     this.autoridadService
-      .getTramiteList('menuDesplegable')
+      .getTramiteList('menuDesplegable').pipe(takeUntil(this.destroyNotifier$))
       .subscribe((respuesta) => {
         this.tramiteList.catalogos = respuesta.data;
       });
@@ -161,5 +161,15 @@ export class CapturarRequerimientoComponent implements OnInit {
    */
   seleccionaTab(i: number): void {
     this.indice = i;
+  }
+
+      /**
+   * Método del ciclo de vida de Angular que se ejecuta cuando el componente se destruye.
+   * Aquí se utiliza para emitir un valor en el observable `destroy$` y completar su emisión,
+   * asegurando la limpieza de suscripciones y evitando posibles fugas de memoria.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

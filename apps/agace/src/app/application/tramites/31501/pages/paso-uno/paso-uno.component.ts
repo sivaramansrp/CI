@@ -1,5 +1,5 @@
 import { ActivatedRoute,Router } from '@angular/router';
-import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna,TEXTOS, TablaDinamicaComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
+import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna,InputRadioComponent,TEXTOS, TablaDinamicaComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup,FormsModule,ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitud31501State, Tramite31501Store } from '../../../../estados/tramites/tramite31501.store';
@@ -20,6 +20,7 @@ import { Tramite31501Query } from '../../../../estados/queries/tramite31501.quer
     FormsModule,
     CatalogoSelectComponent,
     TablaDinamicaComponent,
+    InputRadioComponent
   ],
   providers: [BsModalService],
   templateUrl: './paso-uno.component.html',
@@ -124,6 +125,19 @@ export class PasoUnoComponent implements OnInit {
   public datosDelContenedor: datosDeLaTabla[] = [];
 
   /**
+  * Opciones de radio.
+  */
+   public radioOpcions = [
+     { label: 'Requerimiento por parte de la autoridad', value: 'Requerimiento' },
+     { label: 'Inicio de cancalecíon', value: 'Inicio' }
+   ];
+
+  /**
+  * Valor seleccionado del radio.
+  */
+  public valorSeleccionado!: string;
+
+  /**
    * Sujeto para notificar la destrucción del componente.
    */
   public destroyNotifier$: Subject<void> = new Subject();
@@ -162,7 +176,6 @@ export class PasoUnoComponent implements OnInit {
       )
       .subscribe();
     this.inicializarFormulario();
-    this.mostrarCampos();
     this.fetchAduanaList();
   }
 
@@ -176,7 +189,6 @@ export class PasoUnoComponent implements OnInit {
    * - `tipoDeTramite`: Campo obligatorio que se inicializa con el valor de `tipoDeTramite` en el estado.
    * - `folioDeTramite`: Campo obligatorio que se inicializa con el valor de `folioDeTramite` en el estado.
    *
-   * También llama al método `mostrarCampos` para realizar configuraciones adicionales
    * relacionadas con la visualización de los campos del formulario.
    */
   inicializarFormulario(): void {
@@ -195,42 +207,6 @@ export class PasoUnoComponent implements OnInit {
         Validators.required,
       ],
     });
-    this.mostrarCampos();
-  }
-
-  /**
-   * Método que controla la visibilidad de diferentes secciones en función del valor seleccionado
-   * en el campo 'tipoBusqueda' del formulario `solicitudForm`.
-   *
-   * - Si el valor es 'Requerimiento', se muestra la sección relacionada con aduana y fecha.
-   * - Si el valor es 'Inicio', no se realiza ninguna acción visible actualmente.
-   * - En cualquier otro caso, no se realiza ninguna acción.
-   *
-   * @remarks
-   * Este método utiliza un `switch` para determinar qué secciones deben mostrarse
-   * o permanecer ocultas según el tipo de búsqueda seleccionado.
-   *
-   * @returns {void} Este método no retorna ningún valor.
-   */
-  mostrarCampos(): void {
-    const TIPO_BUSQUEDA = this.solicitudForm.get('tipoBusqueda')?.value;
-    // this.mostrarAdjuntarArchivo = false;
-    this.mostrarSeccionAduanaaFecha = false;
-    // this.mostrarSeccionContenedor = false;
-    // this.mostrarSeccionNoManifiesto = false;
-    // this.mostrarSeccionExcel = false;
-
-    switch (TIPO_BUSQUEDA) {
-      case 'Requerimiento':
-        // this.mostrarSeccionContenedor = true;
-        this.mostrarSeccionAduanaaFecha = true;
-        break;
-      case 'Inicio':
-        // this.mostrarSeccionNoManifiesto = true;
-        break;
-      default:
-        break;
-    }
   }
 
   /**
@@ -269,7 +245,7 @@ export class PasoUnoComponent implements OnInit {
    */
   public fetchAduanaList(): void {
     this.autoridadService
-      .getTramiteList('tramiteList')
+      .getTramiteList('tramiteList').pipe(takeUntil(this.destroyNotifier$))
       .subscribe((respuesta) => {
         this.tramiteList.catalogos = respuesta.data;
       });
@@ -287,7 +263,7 @@ export class PasoUnoComponent implements OnInit {
    * @returns {void} Este método no retorna ningún valor.
    */
   obtenerTablaPoblada(): void {
-    this.autoridadService.agregarSolicitud().subscribe((respuesta) => {
+    this.autoridadService.agregarSolicitud().pipe(takeUntil(this.destroyNotifier$)).subscribe((respuesta) => {
       // Manejar éxito, posiblemente refrescar la grilla o mostrar mensaje
       if (respuesta?.success) {
         respuesta.datos.id = this.datosDelContenedor.length + 1;
@@ -346,18 +322,26 @@ export class PasoUnoComponent implements OnInit {
    * También registra en la consola el valor de `folioTramite` para fines de depuración.
    */
   valorDeAlternancia(row: any): void {
-    const currentUrl = this.router.url;
+    const CURRENT_URL = this.router.url;
     if (row.folioTramite) {
-      if(currentUrl.includes('agace')){
+      if(CURRENT_URL.includes('agace')){
         this.router.navigate(['/agace/autoridad/requiremento'], {
           state: { data: row },
         });
       }
-      if(currentUrl.includes('pago')){
+      if(CURRENT_URL.includes('pago')){
         this.router.navigate(['/pago/autoridad/requiremento'], {
           state: { data: row },
         });
       }
     }
+  }
+
+  /**
+  * Cambia el valor seleccionado del radio.
+  * @param value Valor seleccionado.
+  */
+  public cambiarRadio(value: string | number): void {
+    this.valorSeleccionado = value as string;
   }
 }
