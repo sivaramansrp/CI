@@ -1,6 +1,6 @@
 import { ActivatedRoute,Router } from '@angular/router';
 import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna,InputRadioComponent,TEXTOS, TablaDinamicaComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup,FormsModule,ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitud31501State, Tramite31501Store } from '../../../../estados/tramites/tramite31501.store';
 import { Subject, map, takeUntil } from 'rxjs';
@@ -26,7 +26,7 @@ import { Tramite31501Query } from '../../../../estados/queries/tramite31501.quer
   templateUrl: './paso-uno.component.html',
   styleUrl: './paso-uno.component.css',
 })
-export class PasoUnoComponent implements OnInit {
+export class PasoUnoComponent implements OnInit, OnDestroy {
   /**
    * Constante que referencia el objeto `TEXTOS`.
    *
@@ -343,5 +343,10 @@ export class PasoUnoComponent implements OnInit {
   */
   public cambiarRadio(value: string | number): void {
     this.valorSeleccionado = value as string;
+  }
+
+    ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }
