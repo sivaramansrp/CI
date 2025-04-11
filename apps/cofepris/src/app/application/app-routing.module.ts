@@ -191,12 +191,14 @@ const ROUTES: Routes = [
       ).then((m) => m.PermisoSanitarioImportacion260203Module),
   },
   {
+    path: 'permiso-experimentales-plaguicidas',
     loadChildren: () =>
       import(
         './tramites/260503/permiso-experimentales-plaguicidas.module'
       ).then((m) => m.PermisoExperimentalesPlaguicidasModule),
   },
   {
+    path:'retiros-cofepris',
     loadChildren: () =>
       import('./tramites/261702/retiros-cofepris.module').then(
         (m) => m.RetirosCofeprisModule

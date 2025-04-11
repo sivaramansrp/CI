@@ -18,19 +18,12 @@
     <div class="text-end" *ngIf="esTipoOperacionSeleccionado">
       <button type="button" class="btn btn-primary" title="Selecciona para habilitar los campos del establecimiento" data-bs-toggle="modal" data-bs-target="#modalAlerta" (click)="seleccionarEstablecimiento()" > Seleccionar establecimiento </button>
     </div>
-    <div class="modal fade" id="modalAlerta" tabindex="-1" aria-labelledby="modalAlertaLabel" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered" style="width: 300px">
-        <div class="modal-content">
-          <div class="modal-header"></div>
-          <div class="modal-body">
-            <p> Por el momento no hay comunicación con el Sistema de COFEPRIS, favor de capturar su establecimiento. </p>
-          </div>
-          <div class="modal-footer custom-footer">
-            <button type="button" class="btn btn-primary" data-bs-dismiss="modal" #closeModal (click)="aceptar()"> Aceptar </button>
-          </div>
-        </div>
-      </div>
-    </div>
+    @if (nuevaNotificacion) {
+      <section>
+      <lib-notificaciones [notificacionInput]="nuevaNotificacion" (confirmacionModal)="eliminarPedimento($event)">
+      </lib-notificaciones>
+      </section>
+      }
     <div class="row mt-5">
       <div class="col-md-8">
         <label for="razonSocial" class="form-label">Denominación o razón social*:</label>
@@ -109,6 +102,21 @@
       <button type="button" class="btn btn-primary ms-2" data-bs-toggle="modal" data-bs-target="#modalClaveScian" (click)="agregarMercanciaGrid()"> Agregar </button>
     </div>
   </div>
+  <ng-container *ngIf="esCheckboxSeleccionado">
+  @if (nuevaNotificacion) {
+    <section>
+    <lib-notificaciones [notificacionInput]="nuevaNotificacion" (confirmacionModal)="eliminarMercanciaChecked($event)">
+    </lib-notificaciones>
+    </section>
+    }</ng-container>
+    <ng-container *ngIf="!esCheckboxSeleccionado">
+    @if (nuevaNotificacion) {
+      <section>
+      <lib-notificaciones [notificacionInput]="nuevaNotificacion" (confirmacionModal)="eliminarMercancia($event)">
+      </lib-notificaciones>
+      </section>
+      }</ng-container>
+      
   <!-- Scian popup -->
   <div class="modal fade" id="modalClaveScian" tabindex="-1" aria-labelledby="modalClaveScianLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -140,7 +148,7 @@
   </div>
   <!-- Scian popup screen end -->
   <!-- eliminar alert screen start -->
-  <div class="modal fade" id="modalEliminarScian" tabindex="-1" aria-labelledby="modalEliminarScianLabel" aria-hidden="true">
+  <!-- <div class="modal fade" id="modalEliminarScian" tabindex="-1" aria-labelledby="modalEliminarScianLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header"></div>
@@ -165,15 +173,20 @@
         </div>
       </div>
     </div>
-  </div>
+  </div> -->
   </ng-container>
   <!-- eliminar alert screen end -->
    <ng-container formGroupName="validacionAduanaMercanciaForm">
   <div class="row mt-5">
     <div class="col-md-4 mt-4">
       <div class="form-check mt-3">
-        <input class="form-check-input" type="checkbox" formControlName="avisoDeFuncionamiento" (change)="establecerAvisoDeFuncionamiento($event)" aria-label="Aviso de funcionamiento" (change)="setValoresStore(validacionAduanaMercanciaForm,'avisoDeFuncionamiento', 'setAvisoDeFuncionamiento')" />
-        <label class="control-label" for="avisoDeFuncionamiento"> Aviso de funcionamiento </label>
+        <lib-input-check
+        [id]="'avisoDeFuncionamiento'"
+        [label]="'Aviso de funcionamiento'"
+        [required]="false"
+        formControlName="avisoDeFuncionamiento"
+        (change)="establecerAvisoDeFuncionamiento($event)"
+    ></lib-input-check>
       </div>
     </div>
     <div class="col-md-4 mt-4">
