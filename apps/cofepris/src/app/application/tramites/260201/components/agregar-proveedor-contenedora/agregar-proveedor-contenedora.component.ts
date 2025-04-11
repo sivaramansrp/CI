@@ -1,6 +1,7 @@
 import { AgregarProveedorComponent } from '../../../../shared/components/agregar-proveedor/agregar-proveedor.component';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { ID_PROCEDIMIENTO } from '../../constants/psicotropicos-poretorno.enum';
 import { Proveedor } from '../../../../shared/models/terceros-relacionados.model';
 import { Tramite260201Store } from '../../estados/tramite260201Store.store';
 
@@ -19,6 +20,12 @@ import { Tramite260201Store } from '../../estados/tramite260201Store.store';
   styleUrl: './agregar-proveedor-contenedora.component.scss',
 })
 export class AgregarProveedorContenedoraComponent {
+  /**
+   * @property {string} idProcedimiento
+   * @description
+   * Identificador del procedimiento.
+   */
+  public readonly idProcedimiento = ID_PROCEDIMIENTO;
   /**
    * @constructor
    * @description Constructor que inyecta el store `Tramite260201Store` para gestionar el estado del trámite.
