@@ -193,6 +193,13 @@ const ROUTES: Routes = [
         (m) => m.MuestrasPlaguicidasModule
       ),
   },
+  {
+    path: 'registrar-solicitud-mcp',
+    loadChildren: () =>
+      import('./tramites/260702/registrar-solicitud-mcp.module').then(
+        (m) => m.RegistrarSolicitudMCPModule
+      ), 
+  },
 ];
 
 @NgModule({

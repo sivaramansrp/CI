@@ -1,0 +1,49 @@
+<ng-titulo titulo="Trámites Asociados:*"></ng-titulo>
+<app-tabla-dinamica
+  [configuracionTabla]="destinatarioConfiguracionTabla"
+  [datos]="tablaFilaDatos"
+></app-tabla-dinamica>
+
+<div class="d-flex justify-content-end mt-3">
+  <button
+    type="button"
+    class="btn btn-primary"
+    (click)="mostrarModal()" 
+  >
+    Continuar
+  </button>
+</div>
+
+<div
+  class="modal fade"
+  id="modalAlerta"
+  tabindex="-1"
+  aria-labelledby="modalAlertaLabel"
+  [class.show]="esModalVisible"
+  [style.display]="esModalVisible ? 'block' : 'none'"
+  [attr.aria-hidden]="!esModalVisible ? 'true' : null"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header"></div>
+      <div class="modal-body">
+        <p>¿Está seguro que su solicitud no requiere los datos del pago de derechos?</p>
+      </div>
+      <div class="modal-footer custom-footer">
+        <button
+          type="button"
+          class="btn btn-primary"        
+        >
+          No
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="ocultarModal()" 
+        >
+          Sí
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
