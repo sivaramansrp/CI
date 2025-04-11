@@ -1,5 +1,5 @@
 import { CatalogoSelectComponent, MenuConfig, Props, SeccionLibQuery, SeccionLibState, SeccionLibStore } from "@ng-mf/data-access-user";
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { DATOS_EXPORTACION, DATOS_EXPORTADOR, DATOS_MERCANCIA, DATOS_PRODUCTOR, DATOS_REALIZAR } from '../../constants/permiso-importacion-modification.enum';
 import { FormBuilder, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
@@ -20,7 +20,7 @@ import { TituloComponent } from "@ng-mf/data-access-user";
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, TituloComponent, InputFechaComponent, InputRadioComponent, CatalogoSelectComponent],
 })
-export class DatosDeLaSolicitudComponent implements OnInit {
+export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   
   configuracion: InputConfig[] = [
     {
@@ -451,6 +451,7 @@ export class DatosDeLaSolicitudComponent implements OnInit {
     this.catalogosServicios
       .getCatalogo(clave)
       .pipe(
+        takeUntil(this.destroyNotifier$),
         map((resp) => {
           if (resp.length > 0) {
             this.configuracion[indiceGrupo].menu[indiceMenu].props.catalogos = resp;
@@ -507,4 +508,10 @@ export class DatosDeLaSolicitudComponent implements OnInit {
   cambioValorRadio(claveRadio: string, groupIndex: number, menuIndex: number, evento: string | number): void {
     this.configuracion[groupIndex].menu[menuIndex].props.radioSelectedValue = evento;
   }
+
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  }
+
 }
