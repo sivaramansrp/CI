@@ -15,19 +15,22 @@ export interface Solicitud5701State {
   idSolicitud: string;
   tipoSolicitud: string;
 
-  RFCImpExp: string;
+  RFCImportadorExportador: string;
   nombre: string;
-  desNumeroRegistro: string;
+  descripcionNumeroRegistro: string;
 
   programa: boolean;
-  desProgramaFomento: string;
+  descripcionProgramaFomento: string;
 
 
+  /**
+   * @description IMMEX: Industria Manufacturera, Maquiladora y de Servicios de Exportación
+   */
   checkIMMEX: boolean;
-  desImmex: string;
+  descripcionImmex: string;
 
   industriaAutomotriz: boolean;
-  desIndustrialAutomotriz: string;
+  descripcionIndustrialAutomotriz: string;
 
   tipoEmpresaCertificada: string;
   idSocioComercial: string;
@@ -42,12 +45,16 @@ export interface Solicitud5701State {
   fechasSeleccionadas: string[];
 
   despacho: string;
+
+  /**
+   * @description LDA: Autrización para operar por un Ligar Distinto a la Aduana.
+   */
   lda: boolean;
   autorizacionLDA: string;
+
   dd: boolean;
   autorizacionDDEX: string;
 
-  ddexAutorizacion: string;
   idAduanaDespacho: string;
   aduanaDespacho: string;
   idSeccionDespacho: string;
@@ -102,15 +109,15 @@ export function createInitialState(): Solicitud5701State {
   return {
     idSolicitud: '',
     tipoSolicitud: '',
-    RFCImpExp: '',
+    RFCImportadorExportador: '',
     nombre: '',
-    desNumeroRegistro: '',
+    descripcionNumeroRegistro: '',
     programa: false,
-    desProgramaFomento: '',
+    descripcionProgramaFomento: '',
     checkIMMEX: false,
-    desImmex: '',
+    descripcionImmex: '',
     industriaAutomotriz: false,
-    desIndustrialAutomotriz: '',
+    descripcionIndustrialAutomotriz: '',
     tipoEmpresaCertificada: '',
     idSocioComercial: '',
     socioComercial: false,
@@ -126,7 +133,6 @@ export function createInitialState(): Solicitud5701State {
     autorizacionLDA: '',
     dd: false,
     autorizacionDDEX: '',
-    ddexAutorizacion: '',
     idAduanaDespacho: '',
     aduanaDespacho: '',
     idSeccionDespacho: '',
@@ -198,10 +204,10 @@ export class Tramite5701Store extends Store<Solicitud5701State> {
     }));
   }
 
-  public setRFCImpExp(RFCImpExp: string): void {
+  public setRFCImportadorExportador(RFCImportadorExportador: string): void {
     this.update((state) => ({
       ...state,
-      RFCImpExp,
+      RFCImportadorExportador,
     }));
   }
 
@@ -212,10 +218,10 @@ export class Tramite5701Store extends Store<Solicitud5701State> {
     }));
   }
 
-  public setdesNumeroRegistro(desNumeroRegistro: string): void {
+  public setDescripcionNumeroRegistro(descripcionNumeroRegistro: string): void {
     this.update((state) => ({
       ...state,
-      desNumeroRegistro,
+      descripcionNumeroRegistro,
     }));
   }
 
@@ -226,10 +232,10 @@ export class Tramite5701Store extends Store<Solicitud5701State> {
     }));
   }
 
-  public setDesProgramaFomento(desProgramaFomento: string): void {
+  public setDescripcionProgramaFomento(descripcionProgramaFomento: string): void {
     this.update((state) => ({
       ...state,
-      desProgramaFomento,
+      descripcionProgramaFomento,
     }));
   }
 
@@ -240,10 +246,10 @@ export class Tramite5701Store extends Store<Solicitud5701State> {
     }));
   }
 
-  public setDesImmex(desImmex: string): void {
+  public setDescripcionImmex(descripcionImmex: string): void {
     this.update((state) => ({
       ...state,
-      desImmex,
+      descripcionImmex,
     }));
   }
 
@@ -254,10 +260,10 @@ export class Tramite5701Store extends Store<Solicitud5701State> {
     }));
   }
 
-  public setDesIndustriaAutomotriz(desIndustrialAutomotriz: string): void {
+  public setDescripcionIndustriaAutomotriz(descripcionIndustrialAutomotriz: string): void {
     this.update((state) => ({
       ...state,
-      desIndustrialAutomotriz,
+      descripcionIndustrialAutomotriz,
     }));
   }
 
@@ -363,13 +369,6 @@ export class Tramite5701Store extends Store<Solicitud5701State> {
     this.update((state) => ({
       ...state,
       autorizacionDDEX,
-    }));
-  }
-
-  public setDdexAutorizacion(ddexAutorizacion: string): void {
-    this.update((state) => ({
-      ...state,
-      ddexAutorizacion,
     }));
   }
 

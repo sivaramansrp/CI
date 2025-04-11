@@ -629,7 +629,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
         empresasApoderado: [],
 
         RFCImpExp: [
-          this.solicitudState?.RFCImpExp,
+          this.solicitudState?.RFCImportadorExportador,
           [
             Validators.required,
             Validators.pattern(REGEX_RFC),
@@ -639,18 +639,18 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
           { value: this.solicitudState?.nombre, disabled: true },
         ],
         desNumeroRegistro: [
-          this.solicitudState?.desNumeroRegistro,
+          this.solicitudState?.descripcionNumeroRegistro,
           [Validators.maxLength(25)],
         ],
 
         programa: [this.solicitudState?.programa],
-        desProgramaFomento: [{ value: this.solicitudState?.desProgramaFomento, disabled: true }, [Validators.maxLength(300)]],
+        desProgramaFomento: [{ value: this.solicitudState?.descripcionProgramaFomento, disabled: true }, [Validators.maxLength(300)]],
 
         checkIMMEX: [this.solicitudState?.checkIMMEX],
-        desImmex: [this.solicitudState?.desImmex],
+        desImmex: [this.solicitudState?.descripcionImmex],
 
         industriaAutomotriz: [this.solicitudState?.industriaAutomotriz],
-        desIndustrialAutomotriz: [{ value: this.solicitudState?.desIndustrialAutomotriz, disabled: true }, [Validators.maxLength(25)]],
+        desIndustrialAutomotriz: [{ value: this.solicitudState?.descripcionIndustrialAutomotriz, disabled: true }, [Validators.maxLength(25)]],
 
         tipoEmpresaCertificada: [this.solicitudState?.tipoEmpresaCertificada],
         socioComercial: [this.solicitudState?.socioComercial],
@@ -851,7 +851,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
 
       const NOMBRE =
         this.datosImportadorExportador.get('nombre')?.value;
-      this.tramite5701Store.setRFCImpExp(RFC_IMP_EXP);
+      this.tramite5701Store.setRFCImportadorExportador(RFC_IMP_EXP);
       this.tramite5701Store.setNombre(NOMBRE);
     }
   }
@@ -1283,7 +1283,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
     this.datosImportadorExportador.get('programa')?.setValue(valores.checkbox);
     this.datosImportadorExportador.get('desProgramaFomento')?.setValue(valores.texto);
     this.setValoresStore(this.datosImportadorExportador, 'programa', 'setPrograma');
-    this.setValoresStore(this.datosImportadorExportador, 'desProgramaFomento', 'setDesProgramaFomento');
+    this.setValoresStore(this.datosImportadorExportador, 'desProgramaFomento', 'setDescripcionProgramaFomento');
   }
 
   /**
@@ -1295,7 +1295,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
     this.datosImportadorExportador.get('checkIMMEX')?.setValue(valores.checkbox);
     this.datosImportadorExportador.get('desImmex')?.setValue(valores.texto);
     this.setValoresStore(this.datosImportadorExportador, 'checkIMMEX', 'setCheckIMMEX');
-    this.setValoresStore(this.datosImportadorExportador, 'desImmex', 'setDesImmex');
+    this.setValoresStore(this.datosImportadorExportador, 'desImmex', 'setDescripcionImmex');
   }
 
   /**
@@ -1308,7 +1308,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
     this.datosImportadorExportador.get('industriaAutomotriz')?.setValue(valores.checkbox);
     this.datosImportadorExportador.get('desIndustrialAutomotriz')?.setValue(valores.texto);
     this.setValoresStore(this.datosImportadorExportador, 'industriaAutomotriz', 'setIndustriaAutomotriz');
-    this.setValoresStore(this.datosImportadorExportador, 'desIndustrialAutomotriz', 'setDesIndustriaAutomotriz');
+    this.setValoresStore(this.datosImportadorExportador, 'desIndustrialAutomotriz', 'setDescripcionIndustriaAutomotriz');
   }
 
   /**
@@ -1383,7 +1383,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
     if (this.solicitudState.programa) {
       const DATOS_PROGRAMA: DatosCheckInputText = {
         checkbox: this.solicitudState.programa,
-        texto: this.solicitudState.desProgramaFomento,
+        texto: this.solicitudState.descripcionProgramaFomento,
       }
       this.checkPrograma(DATOS_PROGRAMA)
     }
@@ -1392,7 +1392,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
     if (this.solicitudState.checkIMMEX) {
       const DATOS_IMMEX: DatosCheckInputText = {
         checkbox: this.solicitudState.checkIMMEX,
-        texto: this.solicitudState.desImmex,
+        texto: this.solicitudState.descripcionImmex,
       }
       this.checkImmex(DATOS_IMMEX)
     }
@@ -1401,7 +1401,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
     if (this.solicitudState.industriaAutomotriz) {
       const DATOS_AUTOMOTRIZ: DatosCheckInputText = {
         checkbox: this.solicitudState.industriaAutomotriz,
-        texto: this.solicitudState.desIndustrialAutomotriz,
+        texto: this.solicitudState.descripcionIndustrialAutomotriz,
       }
       this.checkAutomotriz(DATOS_AUTOMOTRIZ);
     }

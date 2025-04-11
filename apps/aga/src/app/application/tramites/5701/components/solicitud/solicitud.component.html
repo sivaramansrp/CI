@@ -78,7 +78,7 @@
                 setValoresStore(
                   datosImportadorExportador,
                   'desNumeroRegistro',
-                  'setdesNumeroRegistro'
+                  'setDescripcionNumeroRegistro'
                 )
               " />
           </div>
@@ -88,14 +88,14 @@
       <div class="row">
         <div class="col-md-4">
           <lib-check-input-text [checkboxValor]="solicitudState.programa"
-            [textoValor]="solicitudState.desProgramaFomento" [idCheckbox]="'programa'"
+            [textoValor]="solicitudState.descripcionProgramaFomento" [idCheckbox]="'programa'"
             [idInputTexto]="'desProgramaFomento'" [label]="'Programa de fomento:'" [required]="false" [reverse]="true"
             [hidden]="false" [maxLengthValidacion]="300"
             (checkboxChange)="checkPrograma($event)"></lib-check-input-text>
         </div>
 
         <div class="col-md-4">
-          <lib-check-input-text [checkboxValor]="solicitudState.checkIMMEX" [textoValor]="solicitudState.desImmex"
+          <lib-check-input-text [checkboxValor]="solicitudState.checkIMMEX" [textoValor]="solicitudState.descripcionImmex"
             [idCheckbox]="'checkIMMEX'" [idInputTexto]="'desImmex'" [label]="'Immex (Número/aaaa):'" [required]="false"
             [reverse]="true" [hidden]="false" [maxLengthValidacion]="300"
             (checkboxChange)="checkImmex($event)"></lib-check-input-text>
@@ -103,7 +103,7 @@
 
         <div class="col-md-4">
           <lib-check-input-text [checkboxValor]="solicitudState.industriaAutomotriz"
-            [textoValor]="solicitudState.desIndustrialAutomotriz" [idCheckbox]="'industriaAutomotriz'"
+            [textoValor]="solicitudState.descripcionIndustrialAutomotriz" [idCheckbox]="'industriaAutomotriz'"
             [idInputTexto]="'desIndustrialAutomotriz'" [label]="'Industria Automotriz:'" [required]="false"
             [reverse]="true" [hidden]="false" [maxLengthValidacion]="25"
             (checkboxChange)="checkAutomotriz($event)"></lib-check-input-text>
