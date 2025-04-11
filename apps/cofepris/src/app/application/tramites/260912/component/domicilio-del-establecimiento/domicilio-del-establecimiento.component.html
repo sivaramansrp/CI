@@ -1,4 +1,4 @@
-<div class="container">
+<div class="col-md-12">
   <form [formGroup]="form">
     <div>
       <ng-titulo titulo="Domicilio del establecimiento"></ng-titulo>
@@ -91,14 +91,7 @@
       <div class="row">
         <div class="col-md-8">
           <div class="form-group">
-            <label class="form-label" for="calle"
-              >Calle*:
-              <span
-                class="bi bi-question-circle-fill"
-                title="Calle"
-                data-bs-toggle="tooltip"
-              ></span
-            ></label>
+            <label class="form-label" for="calle">Calle*:</label>
             <input
               class="form-control"
               type="text"
@@ -129,7 +122,7 @@
         </div>
         <div class="col-md-3">
           <div class="form-group">
-            <label class="form-label" for="telefono">Teléfono*:</label>
+            <label class="form-label" for="telefono">Teléfono:</label>
             <input
               class="form-control"
               type="text"
@@ -168,18 +161,14 @@
   <form [formGroup]="domicilio">
     <div class="row align-item-center">
       <div class="col-md-4 mt-5">
-        <div class="form-check">
-          <input
-            class="form-check-input"
-            type="checkbox"
-            id="avisoCheckbox"
-            formControlName="avisoCheckbox"
-            (change)="getAvisoCheckbox()"
-          />
-          <label class="form-check-label" for="avisoCheckbox">
-            <span>Aviso de funcionamiento</span>
-          </label>
-        </div>
+        <lib-input-check
+          [id]="'avisoCheckbox'"
+          [label]="'Aviso de funcionamiento'"
+          [required]="true"
+          formControlName="avisoCheckbox"
+          (change)="getAvisoCheckbox()"
+      ></lib-input-check>
+
       </div>
       <div class="col-md-4">
         <div class="form-group">
@@ -240,7 +229,6 @@
       </div>
     </div>
 
-
     <div>
       <div class="row">
         <div class="col-md-12 mt-5">
@@ -272,12 +260,13 @@
         <ng-titulo titulo="Manifiesto bajo protesta" />
         <div class="form-check bg-light p-0">
           <div class="alert alert-info content-with-checkbox py-6">
-            <input
-              formControlName="manifests"
-              type="checkbox"
-              id="manifiesto"
-              (change)="getManifests()"
-            />
+            <lib-input-check
+          [id]="'manifiesto'"
+          [label]="''"
+          [required]="true"
+          formControlName="manifests"
+          (change)="getManifests()"
+      ></lib-input-check>
             <span class="fw-bold align-middle"> *</span>
             <div>{{ manifests }}</div>
           </div>

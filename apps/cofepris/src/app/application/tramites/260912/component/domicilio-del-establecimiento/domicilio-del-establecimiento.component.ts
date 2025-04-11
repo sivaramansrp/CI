@@ -1,38 +1,33 @@
 import { AlertComponent, InputCheckComponent } from '@libs/shared/data-access-user/src';
-import { ALERT } from '../../enums/domicilio-del-establecimiento-260904.enum';
+import { Component, OnDestroy } from '@angular/core';
+import { Observable, Subject, takeUntil } from 'rxjs';
+import { Tramite260912Store, Tramites260912State } from '../../estados/tramite-260912.store';
+import { ALERT } from '../../enums/domicilio-del-establecimiento.enum';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
-import { DomicilioDelEstablecimientoService } from '../../services/domicilio-del-establecimiento/domicilio-del-establecimiento.service';
+import { DomicilioDelEstablecimientoService } from '../../services/domicilio-del-establecimiento.service';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
 import { InputRadioComponent } from '@libs/shared/data-access-user/src';
 import { MERCANCIAS_DATA } from '../../modelos/modificación-del-permiso-sanitario-de-importación-de-insumo.model';
 import { MercanciasInfo } from '../../modelos/modificación-del-permiso-sanitario-de-importación-de-insumo.model';
 import { NICO_TABLA } from '../../modelos/modificación-del-permiso-sanitario-de-importación-de-insumo.model';
 import { NicoInfo } from '../../modelos/modificación-del-permiso-sanitario-de-importación-de-insumo.model';
-import { OPCIONES_DE_BOTON_DE_RADIO } from '../../enums/domicilio-del-establecimiento-260904.enum';
-import { Observable } from 'rxjs';
-import { OnDestroy } from '@angular/core';
+import { OPCIONES_DE_BOTON_DE_RADIO } from '../../enums/domicilio-del-establecimiento.enum';
 import { OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs';
-
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
-import { Tramite260904Query } from '../../estados/queries/tramite260904.query';
-import { Tramite260904Store } from '../../estados/tramites/tramite260904.store';
+import { Tramite260912Query } from '../../estados/tramite-260912.query';
 import { Validators } from '@angular/forms';
 
 /**
- * Componente para gestionar el domicilio del establecimiento 260904.
- *
- * @selector app-domicilio-del-establecimiento-260904
+ * Componente para gestionar el domicilio del establecimiento.
+ * 
+ * @selector app-domicilio-del-establecimiento
  * @standalone true
  * @imports [
  *   CommonModule,
@@ -43,11 +38,11 @@ import { Validators } from '@angular/forms';
  *   TablaDinamicaComponent,
  *   InputRadioComponent
  * ]
- * @templateUrl ./domicilio-del-establecimiento-260904.component.html
- * @styleUrl ./domicilio-del-establecimiento-260904.component.scss
+ * @templateUrl ./domicilio-del-establecimiento.component.html
+ * @styleUrl ./domicilio-del-establecimiento.component.scss
  */
 @Component({
-  selector: 'app-domicilio-del-establecimiento-260904',
+  selector: 'app-domicilio-del-establecimiento',
   standalone: true,
   imports: [
     CommonModule,
@@ -59,16 +54,20 @@ import { Validators } from '@angular/forms';
     InputRadioComponent,
     InputCheckComponent
   ],
-  templateUrl: './domicilio-del-establecimiento-260904.component.html',
-  styleUrl: './domicilio-del-establecimiento-260904.component.scss',
+  providers: [DomicilioDelEstablecimientoService],
+  templateUrl: './domicilio-del-establecimiento.component.html',
+  styleUrl: './domicilio-del-establecimiento.component.scss',
 })
-export class DomicilioDelEstablecimiento260904Component
-  implements OnInit, OnDestroy
-{
+export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
   /**
    * Formulario principal.
    */
   form!: FormGroup;
+
+  /**
+   * Subject para manejar la destrucción del componente y evitar fugas de memoria.
+   */
+  public destroyed$ = new Subject<void>();
 
   /**
    * Lista de estados.
@@ -134,97 +133,92 @@ export class DomicilioDelEstablecimiento260904Component
    * Observable para el código postal.
    */
   codigoPostal$: Observable<string | null> =
-    this.tramite260904Query.codigoPostal$;
+    this.Tramite260912Query.codigoPostal$;
 
   /**
    * Observable para el estado.
    */
-  estado$: Observable<Catalogo | null> = this.tramite260904Query.estado$;
+  estado$: Observable<Catalogo | null> = this.Tramite260912Query.estado$;
 
   /**
    * Observable para el municipio o alcaldía.
    */
   municipioOAlcaldia$: Observable<string | null> =
-    this.tramite260904Query.municipioOAlcaldia$;
-    
+    this.Tramite260912Query.municipioOAlcaldia$;
+
+  /**
+   * Observable para la localidad.
+   */
+  localidad$: Observable<string | null> = this.Tramite260912Query.localidad$;
+
   /**
    * Observable para las colonias.
    */
-  colonias$: Observable<string | null> = this.tramite260904Query.colonias$;
+  colonias$: Observable<string | null> = this.Tramite260912Query.colonias$;
 
   /**
    * Observable para la calle.
    */
-  calle$: Observable<string | null> = this.tramite260904Query.calle$;
+  calle$: Observable<string | null> = this.Tramite260912Query.calle$;
 
   /**
    * Observable para la lada.
    */
-  lada$: Observable<string | null> = this.tramite260904Query.lada$;
+  lada$: Observable<string | null> = this.Tramite260912Query.lada$;
 
   /**
    * Observable para el teléfono.
    */
-  telefono$: Observable<string | null> = this.tramite260904Query.telefono$;
+  telefono$: Observable<string | null> = this.Tramite260912Query.telefono$;
 
   /**
    * Observable para el checkbox de aviso.
    */
-  avisoCheckbox$: Observable<string | null> =
-    this.tramite260904Query.avisoCheckbox$;
+  avisoCheckbox$: Observable<string | null> = this.Tramite260912Query.avisoCheckbox$;
 
   /**
    * Observable para el régimen.
    */
-  regimen$: Observable<Catalogo | null> = this.tramite260904Query.regimen$;
+  regimen$: Observable<Catalogo | null> = this.Tramite260912Query.regimen$;
 
   /**
    * Observable para las aduanas de entrada.
    */
-  aduanasEntradas$: Observable<Catalogo | null> =
-    this.tramite260904Query.aduanasEntradas$;
+  aduanasEntradas$: Observable<Catalogo | null> = this.Tramite260912Query.aduanasEntradas$;
 
   /**
    * Observable para el checkbox de AIFA.
    */
-  aifaCheckbox$: Observable<string | null> =
-    this.tramite260904Query.aifaCheckbox$;
+  aifaCheckbox$: Observable<string | null> = this.Tramite260912Query.aifaCheckbox$;
 
   /**
    * Observable para los manifiestos.
    */
-  manifests$: Observable<string | null> = this.tramite260904Query.manifests$;
+  manifests$: Observable<string | null> = this.Tramite260912Query.manifests$;
 
   /**
    * Observable para el acuerdo público.
    */
-  acuerdoPublico$: Observable<string | null> =
-    this.tramite260904Query.acuerdoPublico$;
+  acuerdoPublico$: Observable<string | null> = this.Tramite260912Query.acuerdoPublico$;
 
   /**
    * Observable para el RFC.
    */
-  rfc$: Observable<string | null> = this.tramite260904Query.rfc$;
-
-  /**
-   * Subject para manejar la destrucción del componente y evitar fugas de memoria.
-   */
-  private destroy$ = new Subject<void>();
+  rfc$: Observable<string | null> = this.Tramite260912Query.rfc$;
 
   /**
    * Constructor del componente.
-   *
+   * 
    * @param fb FormBuilder para crear formularios.
-   * @param httpServicios Servicio HTTP para realizar peticiones.
-   * @param tramite260904Query Consulta de datos del trámite.
-   * @param tramite260904Store Almacenamiento de datos del trámite.
+   * @param domicilioService Servicio HTTP para realizar peticiones.
+   * @param Tramite260912Query Consulta de datos del trámite.
+   * @param Tramite260912Store Almacenamiento de datos del trámite.
    */
   constructor(
     private fb: FormBuilder,
-    private httpServicios: HttpClient,
-    private tramite260904Query: Tramite260904Query,
-    private tramite260904Store: Tramite260904Store,
-    private domicilioService: DomicilioDelEstablecimientoService
+    private Tramite260912Query: Tramite260912Query,
+    private Tramite260912Store: Tramite260912Store,
+    private domicilioService:DomicilioDelEstablecimientoService
   ) {
     // Constructor
   }
@@ -237,42 +231,34 @@ export class DomicilioDelEstablecimiento260904Component
     this.obtenerTablaDatos();
     this.obtenerEstadoList();
     this.obtenerMercanciasDatos();
-
-    this.tramite260904Query.selectTramite260904$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((data) => {
-        this.form.patchValue({
-          codigoPostal: data.codigoPostal,
-          estado: data.estado,
-          municipioOAlcaldia: data.municipioOAlcaldia,
-          localidad: data.localidad,
-          colonias: data.colonias,
-          calle: data.calle,
-          lada: data.lada,
-          telefono: data.telefono,
-        });
-
-        this.domicilio.patchValue({
-          avisoCheckbox: data.avisoCheckbox,
-          regimen: data.regimen,
-          aduanasEntradas: data.aduanasEntradas,
-          aifaCheckbox: data.aifaCheckbox,
-          manifests: data.manifests,
-        });
-
-        this.representanteLegal.patchValue({
-          acuerdoPublico: data.acuerdoPublico,
-          rfc: data.rfc,
-        });
+ 
+    this.Tramite260912Query.selectTramite260912$
+    .pipe(takeUntil(this.destroyed$))
+    .subscribe((data:Tramites260912State) => {
+      this.form.patchValue({
+        codigoPostal: data.codigoPostal,
+        estado: data.estado,
+        municipioOAlcaldia: data.municipioOAlcaldia,
+        localidad: data.localidad,
+        colonias: data.colonias,
+        calle: data.calle,
+        lada: data.lada,
+        telefono: data.telefono,
       });
-  }
-
-  /**
-   * Método de ciclo de vida de Angular que se ejecuta al destruir el componente.
-   */
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
+ 
+      this.domicilio.patchValue({
+        avisoCheckbox: data.avisoCheckbox,
+        regimen: data.regimen,
+        aduanasEntradas: data.aduanasEntradas,
+        aifaCheckbox: data.aifaCheckbox,
+        manifests: data.manifests,
+      });
+ 
+      this.representanteLegal.patchValue({
+        acuerdoPublico: data.acuerdoPublico,
+        rfc: data.rfc,
+      });
+    });
   }
 
   /**
@@ -286,7 +272,7 @@ export class DomicilioDelEstablecimiento260904Component
       localidad: [''],
       colonias: [''],
       calle: ['', [Validators.required]],
-      lada: [''],
+      lada: ['', [Validators.required]],
       telefono: ['', [Validators.required]],
     });
 
@@ -302,52 +288,40 @@ export class DomicilioDelEstablecimiento260904Component
     this.representanteLegal = this.fb.group({
       acuerdoPublico: [],
       rfc: ['', [Validators.required]],
-      nombre: [
-        { value: 'LUIS AMBROSIO', disabled: true },
-        [Validators.required],
-      ],
-      apellidoPaterno: [
-        { value: 'MARTINEZ', disabled: true },
-        [Validators.required],
-      ],
-      apellidoMaterno: [
-        { value: 'VALENZUELA', disabled: true },
-        [Validators.required],
-      ],
+      nombre: [{ value: 'LUIS AMBROSIO', disabled: true }, [Validators.required]],
+      apellidoPaterno: [{ value: 'MARTINEZ', disabled: true }, [Validators.required]],
+      apellidoMaterno: [{ value: 'VALENZUELA', disabled: true }, [Validators.required]],
     });
   }
 
-  /**
-   * Método para obtener los datos de la tabla.
-   */
   obtenerTablaDatos(): void {
     this.domicilioService
       .obtenerTablaDatos()
-      .pipe(takeUntil(this.destroy$))
+      .pipe(takeUntil(this.destroyed$))
       .subscribe((data) => {
         this.nicoTablaDatos = data?.data;
       });
   }
-
+ 
   /**
    * Método para obtener la lista de estados.
    */
   obtenerEstadoList(): void {
     this.domicilioService
       .obtenerEstadoList()
-      .pipe(takeUntil(this.destroy$))
+      .pipe(takeUntil(this.destroyed$))
       .subscribe((data) => {
         this.estado = data?.data || [];
       });
   }
-
+ 
   /**
    * Método para obtener los datos de mercancías.
    */
   obtenerMercanciasDatos(): void {
     this.domicilioService
       .obtenerMercanciasDatos()
-      .pipe(takeUntil(this.destroy$))
+      .pipe(takeUntil(this.destroyed$))
       .subscribe((data) => {
         this.mercanciasTablaDatos = data?.data || [];
       });
@@ -358,7 +332,7 @@ export class DomicilioDelEstablecimiento260904Component
    */
   getCodigoPostal(): void {
     const CODING_POSTAL = this.form.get('codigoPostal')?.value;
-    this.tramite260904Store.setCodigoPostal(CODING_POSTAL);
+    this.Tramite260912Store.setCodigoPostal(CODING_POSTAL);
   }
 
   /**
@@ -366,7 +340,7 @@ export class DomicilioDelEstablecimiento260904Component
    */
   getEstado(): void {
     const ESTADO = this.form.get('estado')?.value;
-    this.tramite260904Store.setEstado(ESTADO);
+    this.Tramite260912Store.setEstado(ESTADO);
   }
 
   /**
@@ -374,7 +348,7 @@ export class DomicilioDelEstablecimiento260904Component
    */
   getMunicipioOAlcaldia(): void {
     const MUNICIPIO_OALCALDIA = this.form.get('municipioOAlcaldia')?.value;
-    this.tramite260904Store.setMunicipioOAlcaldia(MUNICIPIO_OALCALDIA);
+    this.Tramite260912Store.setMunicipioOAlcaldia(MUNICIPIO_OALCALDIA);
   }
 
   /**
@@ -382,7 +356,7 @@ export class DomicilioDelEstablecimiento260904Component
    */
   getLocalidad(): void {
     const LOCALIDAD = this.form.get('localidad')?.value;
-    this.tramite260904Store.setLocalidad(LOCALIDAD);
+    this.Tramite260912Store.setLocalidad(LOCALIDAD);
   }
 
   /**
@@ -390,7 +364,7 @@ export class DomicilioDelEstablecimiento260904Component
    */
   getColonias(): void {
     const COLONIAS = this.form.get('colonias')?.value;
-    this.tramite260904Store.setColonias(COLONIAS);
+    this.Tramite260912Store.setColonias(COLONIAS);
   }
 
   /**
@@ -398,7 +372,7 @@ export class DomicilioDelEstablecimiento260904Component
    */
   getCalle(): void {
     const CALLE = this.form.get('calle')?.value;
-    this.tramite260904Store.setCalle(CALLE);
+    this.Tramite260912Store.setCalle(CALLE);
   }
 
   /**
@@ -406,7 +380,7 @@ export class DomicilioDelEstablecimiento260904Component
    */
   getLada(): void {
     const LADA = this.form.get('lada')?.value;
-    this.tramite260904Store.setLada(LADA);
+    this.Tramite260912Store.setLada(LADA);
   }
 
   /**
@@ -414,7 +388,7 @@ export class DomicilioDelEstablecimiento260904Component
    */
   getTelefono(): void {
     const TELEFONO = this.form.get('telefono')?.value;
-    this.tramite260904Store.setTelefono(TELEFONO);
+    this.Tramite260912Store.setTelefono(TELEFONO);
   }
 
   /**
@@ -422,7 +396,7 @@ export class DomicilioDelEstablecimiento260904Component
    */
   getAvisoCheckbox(): void {
     const AVISO_CHECKBOX = this.domicilio.get('avisoCheckbox')?.value;
-    this.tramite260904Store.setAvisoCheckbox(AVISO_CHECKBOX);
+    this.Tramite260912Store.setAvisoCheckbox(AVISO_CHECKBOX);
   }
 
   /**
@@ -430,7 +404,7 @@ export class DomicilioDelEstablecimiento260904Component
    */
   getRegimen(): void {
     const REGIMEN = this.domicilio.get('regimen')?.value;
-    this.tramite260904Store.setRegimen(REGIMEN);
+    this.Tramite260912Store.setRegimen(REGIMEN);
   }
 
   /**
@@ -438,7 +412,7 @@ export class DomicilioDelEstablecimiento260904Component
    */
   getAduanasEntradas(): void {
     const ADUANAS_ENTRADAS = this.domicilio.get('aduanasEntradas')?.value;
-    this.tramite260904Store.setAduanasEntradas(ADUANAS_ENTRADAS);
+    this.Tramite260912Store.setAduanasEntradas(ADUANAS_ENTRADAS);
   }
 
   /**
@@ -446,7 +420,7 @@ export class DomicilioDelEstablecimiento260904Component
    */
   getAifaCheckbox(): void {
     const AIFA_CHECKBOX = this.domicilio.get('aifaCheckbox')?.value;
-    this.tramite260904Store.setAifaCheckbox(AIFA_CHECKBOX);
+    this.Tramite260912Store.setAifaCheckbox(AIFA_CHECKBOX);
   }
 
   /**
@@ -454,16 +428,15 @@ export class DomicilioDelEstablecimiento260904Component
    */
   getManifests(): void {
     const MANIFESTS = this.domicilio.get('manifests')?.value;
-    this.tramite260904Store.setManifests(MANIFESTS);
+    this.Tramite260912Store.setManifests(MANIFESTS);
   }
 
   /**
    * Método para obtener el valor del acuerdo público.
    */
   getAcuerdoPublico(): void {
-    const ACUERDO_PUBLICO =
-      this.representanteLegal.get('acuerdoPublico')?.value;
-    this.tramite260904Store.setAcuerdoPublico(ACUERDO_PUBLICO);
+    const ACUERDO_PUBLICO = this.representanteLegal.get('acuerdoPublico')?.value;
+    this.Tramite260912Store.setAcuerdoPublico(ACUERDO_PUBLICO);
   }
 
   /**
@@ -471,6 +444,14 @@ export class DomicilioDelEstablecimiento260904Component
    */
   getRfc(): void {
     const RFC = this.representanteLegal.get('rfc')?.value;
-    this.tramite260904Store.setRFC(RFC);
+    this.Tramite260912Store.setRFC(RFC);
+  }
+
+  /**
+   * Método de ciclo de vida de Angular que se ejecuta al destruir el componente.
+   */
+  ngOnDestroy(): void {
+    this.destroyed$.next();
+    this.destroyed$.complete();
   }
 }

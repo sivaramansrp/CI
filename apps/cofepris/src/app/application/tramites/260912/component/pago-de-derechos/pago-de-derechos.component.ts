@@ -4,22 +4,14 @@
  * @module PagoDeDerechosComponent
  */
 
-import {
-  AbstractControl,
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  ValidatorFn,
-  Validators,
-} from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
+import { Catalogo, CatalogoSelectComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject, map, takeUntil } from 'rxjs';
-import { BancoList } from '../../modelos/pago-de-derechos.model';
 import { CommonModule } from '@angular/common';
 import { PagoDeDerechosService } from '../../services/pago-de-derechos.service';
-import { TituloComponent } from '@libs/shared/data-access-user/src';
-import { Tramite260904Query } from '../../estados/queries/tramite260904.query';
-import { Tramite260904Store } from '../../estados/tramites/tramite260904.store';
+import { Tramite260912Query } from '../../estados/tramite-260912.query';
+import { Tramite260912Store } from '../../estados/tramite-260912.store';
 
 /**
  * Selector del componente
@@ -32,12 +24,13 @@ import { Tramite260904Store } from '../../estados/tramites/tramite260904.store';
 @Component({
   selector: 'app-pago-de-derechos',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, TituloComponent],
+  imports: [CommonModule, ReactiveFormsModule, TituloComponent, CatalogoSelectComponent],
   providers: [PagoDeDerechosService],
   templateUrl: './pago-de-derechos.component.html',
   styleUrl: './pago-de-derechos.component.scss',
 })
 export class PagoDeDerechosComponent implements OnInit, OnDestroy {
+
   /**
    * Formulario reactivo para manejar los campos de entrada del usuario.
    */
@@ -51,22 +44,22 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   /**
    * Lista de datos relacionados con bancos obtenidos desde el servicio.
    */
-  public bancoList!: BancoList[];
+  public bancoList!: Catalogo[];
 
   /**
    * Constructor para inyectar los servicios y las tiendas necesarias.
    * @param fb - FormBuilder para formularios reactivos.
-   * @param tramite260904Store - Tienda para gestionar el estado del formulario.
-   * @param tramite260904Query - Servicio de consulta para acceder a los datos del store.
+   * @param tramite260912Store - Tienda para gestionar el estado del formulario.
+   * @param tramite260912Query - Servicio de consulta para acceder a los datos del store.
    * @param Servicio - Servicio para obtener la lista de bancos.
    */
   constructor(
     public fb: FormBuilder,
-    private tramite260904Query: Tramite260904Query,
-    private tramite260904Store: Tramite260904Store,
+    private tramite260912Store: Tramite260912Store,
+    private tramite260912Query: Tramite260912Query,
     private Servicio: PagoDeDerechosService
   ) {
-    // No se necesita lógica de inicialización adicional.
+     // No se necesita lógica de inicialización adicional.
   }
 
   /**
@@ -75,7 +68,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.crearForm();
     this.enPatchStoredFormData();
-    this.getBancoList();
+    this.obtenerBancoList();
   }
 
   /**
@@ -86,44 +79,32 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       claveDeReferencia: ['', [Validators.maxLength(50)]],
       cadenaPagoDependencia: ['', [Validators.maxLength(50)]],
       clave: ['', Validators.required],
-      llaveDePago: [
-        '',
-        [Validators.required, Validators.pattern('^[A-Z0-9]{10}$')],
-      ],
-      fecPago: [
-        '',
-        [Validators.required, PagoDeDerechosComponent.fechaLimValidator()],
-      ],
-      impPago: [
-        '',
-        [Validators.maxLength(16), PagoDeDerechosComponent.noComaValidator()],
-      ],
+      llaveDePago: ['', [Validators.required, Validators.pattern('^[A-Z0-9]{10}$')]],
+      fecPago: ['', [Validators.required, PagoDeDerechosComponent.fechaLimValidator()]],
+      impPago: ['', [Validators.maxLength(16), PagoDeDerechosComponent.noComaValidator()]],
     });
-}
+  }
 
-/**
+  /**
  * Método para validar que el campo de un formulario no contenga comas.
  * Actualiza el estado de validez del campo especificado sin emitir eventos adicionales.
  *
- * @param {string} impPago - El nombre del campo de formulario que se validará.
+ * @param {string} compo - El nombre del campo de formulario que se validará.
  */
-public validarSinComas(impPago:string): void {
-  this.pagoDeDerechosForm.get(impPago)?.updateValueAndValidity({ emitEvent: false });
-}
+  public validarSinComas(compo:string): void {
+    this.pagoDeDerechosForm.get(compo)?.updateValueAndValidity({ emitEvent: false });
+  }
 
-
-/**
+  /**
  * Método para validar cambios en un campo de formulario relacionado con fechas futuras.
  * Monitorea los cambios de valor del campo especificado y actualiza su estado de validación sin emitir eventos adicionales.
  * Utiliza operadores de RxJS como distinctUntilChanged y takeUntil para manejar suscripciones de forma eficiente y evitar fugas de memoria.
  *
- * @param {string} fecPago - El nombre del campo de formulario que se validará.
+ * @param {string} compo - El nombre del campo de formulario que se validará.
  */
-public validarFechaFutura(fecPago:string): void {
-  this.pagoDeDerechosForm.get(fecPago)?.updateValueAndValidity({ emitEvent: false });
-}
-
-
+  public validarFechaFutura(compo:string): void {
+    this.pagoDeDerechosForm.get(compo)?.updateValueAndValidity({ emitEvent: false });
+  }
 
   /**
    * Validador para asegurar que la fecha seleccionada no sea en el futuro.
@@ -157,12 +138,12 @@ public validarFechaFutura(fecPago:string): void {
   }
 
   /**
-   * Obtiene la lista de bancos del servicio y la asigna a `bancoList`.
+   * Obtiene la lista de bancos del servicio y la asigna a `obtenerBancoList`.
    */
-  getBancoList(): void {
+  obtenerBancoList(): void {
     this.Servicio.onBancoList()
       .pipe(takeUntil(this.destroyed$))
-      .subscribe((data: BancoList[]) => {
+      .subscribe((data: Catalogo[]) => {
         this.bancoList = data;
       });
   }
@@ -173,20 +154,16 @@ public validarFechaFutura(fecPago:string): void {
    * @param campo - El nombre del campo en el formulario.
    * @param metodoNombre - El método en la tienda para actualizar el estado.
    */
-  public setValoresStore(
-    form: FormGroup,
-    campo: string,
-    metodoNombre: keyof Tramite260904Store
-  ): void {
+  public setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite260912Store): void {
     const VALOR = form.get(campo)?.value;
-    (this.tramite260904Store[metodoNombre] as (value: unknown) => void)(VALOR);
+    (this.tramite260912Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
 
   /**
    * Actualiza el formulario con datos obtenidos desde la tienda.
    */
   public enPatchStoredFormData(): void {
-    this.tramite260904Query.selectTramite260904$
+    this.tramite260912Query.selectTramite260912$
       .pipe(
         takeUntil(this.destroyed$),
         map((seccionState) => {
@@ -215,10 +192,10 @@ public validarFechaFutura(fecPago:string): void {
       : false;
   }
 
-  /**
+   /**
    * Método de ciclo de vida de Angular que se ejecuta al destruir el componente.
    */
-  ngOnDestroy(): void {
+   ngOnDestroy(): void {
     this.destroyed$.next();
     this.destroyed$.complete();
   }

@@ -2,25 +2,25 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { PagoDeDerechosComponent } from './pago-de-derechos.component';
 import { PagoDeDerechosService } from '../../services/pago-de-derechos.service';
+import { Tramite260912Query } from '../../estados/tramite-260912.query';
+import { Tramite260912Store } from '../../estados/tramite-260912.store';
 import { of, Subject } from 'rxjs';
 import { HttpClientModule } from '@angular/common/http';
 import { BancoList } from '../../modelos/pago-de-derechos.model';
-import { Tramite260904Query } from '../../estados/queries/tramite260904.query';
-import { Tramite260904Store } from '../../estados/tramites/tramite260904.store';
- 
+
 describe('PagoDeDerechosComponent', () => {
   let component: PagoDeDerechosComponent;
   let fixture: ComponentFixture<PagoDeDerechosComponent>;
   let mockPagoDeDerechosService: Partial<PagoDeDerechosService>;
-  let mockTramite260904Query: Partial<Tramite260904Query>;
-  let mockTramite260904Store: Partial<Tramite260904Store>;
+  let mockTramite260912Query: Partial<Tramite260912Query>;
+  let mockTramite260912Store: Partial<Tramite260912Store>;
 
   beforeEach(async () => {
     mockPagoDeDerechosService = {
       onBancoList: jest.fn().mockReturnValue(of([{ id: 1, name: 'Mock Banco' }] as BancoList[])),
     };
-    mockTramite260904Query = {
-      selectTramite260904$: of({
+    mockTramite260912Query = {
+      selectTramite260912$: of({
         claveDeReferencia: '',
         cadenaPagoDependencia: '',
         clave: '',
@@ -49,14 +49,14 @@ describe('PagoDeDerechosComponent', () => {
         rfc: '',
       }),
     };
-    mockTramite260904Store = {};
+    mockTramite260912Store = {};
 
     await TestBed.configureTestingModule({
       imports: [ReactiveFormsModule, HttpClientModule, PagoDeDerechosComponent],
       providers: [
         { provide: PagoDeDerechosService, useValue: mockPagoDeDerechosService },
-        { provide: Tramite260904Query, useValue: mockTramite260904Query },
-        { provide: Tramite260904Store, useValue: mockTramite260904Store },
+        { provide: Tramite260912Query, useValue: mockTramite260912Query },
+        { provide: Tramite260912Store, useValue: mockTramite260912Store },
       ],
     }).compileComponents();
 
@@ -107,7 +107,7 @@ describe('PagoDeDerechosComponent', () => {
     // Recreate the component to trigger ngOnInit
     fixture = TestBed.createComponent(PagoDeDerechosComponent);
     component = fixture.componentInstance;
-  
+    component.bancoList = mockBancoList;
     component.ngOnInit();
     // expect(mockPagoDeDerechosService.onBancoList).toHaveBeenCalled();
     fixture.detectChanges(); // Trigger change detection
@@ -137,7 +137,7 @@ describe('PagoDeDerechosComponent', () => {
   it('should call the correct store method with the correct value in setValoresStore', () => {
     // Arrange: Mock the store method
     const mockMethod = jest.fn();
-    mockTramite260904Store['setClave'] = mockMethod; // Replace 'updateClave' with the actual method name in your store
+    mockTramite260912Store['setClave'] = mockMethod; // Replace 'updateClave' with the actual method name in your store
   
     // Set up the form control with a value
     component.pagoDeDerechosForm = component.fb.group({
@@ -152,4 +152,3 @@ describe('PagoDeDerechosComponent', () => {
   });
   
 });
- 
