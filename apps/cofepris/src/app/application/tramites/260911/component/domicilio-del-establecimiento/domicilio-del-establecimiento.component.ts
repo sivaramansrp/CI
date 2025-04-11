@@ -1,7 +1,7 @@
+import { AlertComponent, InputCheckComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy } from '@angular/core';
 import { Observable, Subject, takeUntil } from 'rxjs';
 import { ALERT } from '../../enums/domicilio-del-establecimiento.enum';
-import { AlertComponent } from '@libs/shared/data-access-user/src';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
@@ -13,7 +13,7 @@ import { HttpClient } from '@angular/common/http';
 import { InputRadioComponent } from '@libs/shared/data-access-user/src';
 import { MERCANCIAS_DATA } from '../../models/modificación-del-permiso-sanitario-de-importación-de-insumo.model';
 import { MercanciasInfo } from '../../models/modificación-del-permiso-sanitario-de-importación-de-insumo.model';
-import { MercanciasTabla } from '../../models/modificación-del-permiso-sanitario-de-importación-de-insumo.model';
+
 import { NICO_TABLA } from '../../models/modificación-del-permiso-sanitario-de-importación-de-insumo.model';
 import { NicoInfo } from '../../models/modificación-del-permiso-sanitario-de-importación-de-insumo.model';
 import { OPCIONES_DE_BOTON_DE_RADIO } from '../../enums/domicilio-del-establecimiento.enum';
@@ -57,6 +57,7 @@ import { Validators } from '@angular/forms';
     AlertComponent,
     TablaDinamicaComponent,
     InputRadioComponent,
+    InputCheckComponent
   ],
   templateUrl: './domicilio-del-establecimiento.component.html',
   styleUrl: './domicilio-del-establecimiento.component.scss',
