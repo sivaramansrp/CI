@@ -6,7 +6,7 @@ import { FormGroup } from '@angular/forms';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { Subject } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 
 import { Observable } from 'rxjs';
 
@@ -193,7 +193,9 @@ export class CertificadoKimberleyComponent implements OnInit, OnDestroy {
    * Se suscribe al estado del store y actualiza los formularios con los valores del estado.
    */
   private subscribeToState(): void {
-    this.tramite130203Query.select().subscribe((state) => {
+    this.tramite130203Query.select()
+    .pipe(takeUntil(this.destroyed$))
+    .subscribe((state) => {
       this.solicitudState = state;
       if (this.formularioEmpresa) {
         this.formularioEmpresa.patchValue({
@@ -205,7 +207,7 @@ export class CertificadoKimberleyComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.tramite130203Query.select().subscribe((state) => {
+    this.tramite130203Query.select().pipe(takeUntil(this.destroyed$)).subscribe((state) => {
       this.solicitudState = state;
 
       // Set values for datosDelExportador
@@ -252,24 +254,18 @@ export class CertificadoKimberleyComponent implements OnInit, OnDestroy {
   private loadData(): void {
     this.exportacionDeDiamantesEnBrutoService
       .getPaisesEmisores()
+      .pipe(takeUntil(this.destroyed$))
       .subscribe((paises) => {
         this.paisesEmisores = paises;
       });
 
     this.exportacionDeDiamantesEnBrutoService
       .getNombresIngles()
+      .pipe(takeUntil(this.destroyed$))
       .subscribe((nombres) => {
         this.nombresIngles = nombres;
       });
   }
-
-  /**
-   * @description
-   * Se suscribe al estado del store y actualiza el estado local.
-   */
-  // private subscribeToState(): void {
-
-  // }
 
   /**
    * @description
