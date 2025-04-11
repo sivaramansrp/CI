@@ -110,7 +110,7 @@ export class DatosdelasolicitudComponent implements OnInit,OnDestroy {
     habilitado: true,
   };
  /** Índice de la fila en edición */
- edicióndeíndicedefila: number | null = null;
+ ediciondeindicedefila: number | null = null;
 
   /** Indica si el uso específico es colapsable */
   usoEspecifico = false;
@@ -119,7 +119,7 @@ export class DatosdelasolicitudComponent implements OnInit,OnDestroy {
   usoEspecificoCrossList: CrossList = {} as CrossList;
 
   /** Índice de la fila seleccionada */
-  índiceFilaSeleccionada: number | null = null;
+  indiceFilaSeleccionada: number | null = null;
 
   /** Fecha inicial seleccionada */
   fechaInicialSeleccionada: string = '';
@@ -782,9 +782,9 @@ onModificar(): void {
     return;
   }
 
-  const índiceFilaSeleccionada = Array.from(this.filasSeleccionadas)[0];
+  const indiceFilaSeleccionada = Array.from(this.filasSeleccionadas)[0];
   const rowIndex = this.listaClaveTabla.findIndex(
-    (row) => Number(row.claveDeLosLotes) === índiceFilaSeleccionada
+    (row) => Number(row.claveDeLosLotes) === indiceFilaSeleccionada
   );
 
   if (rowIndex === -1) {
