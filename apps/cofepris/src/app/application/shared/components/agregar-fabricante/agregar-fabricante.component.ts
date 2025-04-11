@@ -203,8 +203,8 @@ export class AgregarFabricanteComponent implements OnDestroy, OnInit {
       tipoPersona: ['', Validators.required],
       rfc: ['', Validators.required],
       curp: ['', Validators.required],
-      nombres: ['', Validators.required],
-      primerApellido: ['', Validators.required],
+      nombres: ['',[Validators.required, Validators.maxLength(200)]],
+      primerApellido: ['',Validators.required],
       segundoApellido: [''],
       razonSocial: ['', Validators.required],
       pais: [{
@@ -235,12 +235,11 @@ export class AgregarFabricanteComponent implements OnDestroy, OnInit {
   validarElementos(): void {
     switch (this.idProcedimiento) {
       case 260207:
+      case 260209:
+      case 260208:
         this.elementosDeshabilitados = ['pais'];
         this.elementosNoRequeridos=['codigoPostal','colonia']
         break;
-        case 260208:
-          this.elementosNoRequeridos=['codigoPostal','colonia']
-          break;
       default:
         this.elementosDeshabilitados = [];
         this.elementosNoRequeridos=[];

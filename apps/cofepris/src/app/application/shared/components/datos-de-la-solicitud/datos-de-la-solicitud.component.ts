@@ -417,6 +417,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
           Validators.required,
           Validators.minLength(2),
           Validators.maxLength(150),
+          Validators.pattern('^[0-9]*$')
         ],
       ],
       estado: [
