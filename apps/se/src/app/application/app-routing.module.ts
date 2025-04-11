@@ -382,7 +382,15 @@ const ROUTES: Routes = [
       import('./tramites/130109/vehiculos-usados-adaptados.module').then(
         (m) => m.VehiculosUsadosAdaptadosModule
       ),
-  }
+  },
+  {
+    path: 'modalidad-ampliacion',
+    loadChildren: () =>
+      import('./tramites/80206/modalidad-ampliacion.module').then(
+        (m) => m.ModalidadAmpliacionModule
+      ),
+  },
+  
 ];
 
 @NgModule({
