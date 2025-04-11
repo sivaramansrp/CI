@@ -8,7 +8,7 @@ import { CommonModule } from '@angular/common';
 import { DatosMercanciaStore } from '../../estados/tramites/datos-mercancia110101.store';
 import { DatosMercanciaQuery } from '../../estados/queries/datos-mercancia110101.query';
 import { AlertComponent } from '@ng-mf/data-access-user';
-import { ELVALORALERTA } from '@ng-mf/data-access-user';
+import { ELVALORALERTA, REGEX_SOLO_NUMEROS } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
 import { INTRODUZCA_NUMERO, REQUERIDO } from 'libs/shared/data-access-user/src/tramites/constantes/mensajes-error-formularios';
@@ -114,7 +114,7 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
     this.formMercancia = this.fb.group({
       nombreComercial: ['', Validators.required],
       nombreIngles: ['', Validators.required],
-      fraccionArancelaria: ['', [Validators.maxLength(8), Validators.pattern(this.validacionesService.patronDeNumero)]],
+      fraccionArancelaria: ['', [Validators.maxLength(8), Validators.pattern(REGEX_SOLO_NUMEROS)]],
       descripcion: [''],
       valorTransaccion: ['', Validators.maxLength(20)]
     });
