@@ -3,10 +3,10 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ConfiguracionColumna, TablaDinamicaComponent, TablaSeleccion } from '@ng-mf/data-access-user';
 import { DESTINATARIO_ENCABEZADO_DE_TABLA, Destinatario, REPRESENTANTE_ENCABEZADO_DE_TABLA, Representante, USO_FINAL_ENCABEZADO_DE_TABLA, UsoFinal } from '../../models/terceros-relacionados.model';
 import { Subject, takeUntil } from 'rxjs';
+import { Tramite230501State, Tramite230501Store } from '../../estados/stores/tramite230501Store.store';
 import { CommonModule } from '@angular/common';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { Tramite230501Query } from '../../estados/queries/tramite230501Query.query';
-import { Tramite230501Store } from '../../estados/stores/tramite230501Store.store';
 
 /**
  * @component TercerosRelacionadosVistaComponent
@@ -23,7 +23,7 @@ import { Tramite230501Store } from '../../estados/stores/tramite230501Store.stor
   styleUrls: ['./terceros-relacionados-vista.component.scss'],
 })
 export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
-  
+
   /**
    * @property {Destinatario[]} destinatarioFinalFilaSeleccionada
    * Arreglo para almacenar los destinatarios finales seleccionados en la tabla.
@@ -65,10 +65,10 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
   destinatarioFinalTablaDatos: Destinatario[] = [];
 
   /**
-   * @property {Representante[]} representanteTablaDatos
+   * @property {Representante[]} representanteLegalTablaDatos
    * Arreglo que almacena los datos de la tabla de representantes.
    */
-  representanteTablaDatos: Representante[] = [];
+  representanteLegalTablaDatos: Representante[] = [];
 
   /**
    * @property {UsoFinal[]} usuarioTablaDatos
@@ -83,6 +83,14 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
    * @private
    */
   private destroy$ = new Subject<void>();
+
+  /**
+  * @public
+  * @type {Tramite230501State}
+  * @description Representa el estado actual del trámite 230501.
+  */
+  public tramiteState!: Tramite230501State;
+
 
   /**
    * @property {ConfiguracionColumna<UsoFinal>[]} configuracionTablaFacturador
@@ -111,7 +119,7 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
   constructor(
     private tramiteStore: Tramite230501Store,
     private tramiteQuery: Tramite230501Query,
-    private router: Router, 
+    private router: Router,
     private activatedRoute: ActivatedRoute
   ) { }
 
@@ -121,7 +129,12 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
    * Suscribe los observables para mostrar los datos en la vista.
    */
   ngOnInit(): void {
-    
+    // Obtener el estado del trámite y suscribirse al observable
+    this.tramiteQuery.selectTramiteState$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((tramiteState) => {
+        this.tramiteState = tramiteState;
+      });
     // Obtener datos de destinatarios finales y suscribirse al observable
     this.tramiteQuery.getDestinatarioFinalTablaDatos$
       .pipe(takeUntil(this.destroy$))
@@ -133,7 +146,7 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
     this.tramiteQuery.getRepresentanteTablaDatos$
       .pipe(takeUntil(this.destroy$))
       .subscribe((data) => {
-        this.representanteTablaDatos = data;
+        this.representanteLegalTablaDatos = data;
       });
 
     // Obtener datos de usuarios finales y suscribirse al observable
@@ -142,6 +155,7 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
       .subscribe((data) => {
         this.usuarioTablaDatos = data;
       });
+    this.pestanaValidar();
   }
 
   /**
@@ -164,7 +178,7 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
    */
   modificarDestinatario(): void {
     this.irAAcciones('../destinatario-final');
-    if (this.destinatarioFinalFilaSeleccionada.length) {      
+    if (this.destinatarioFinalFilaSeleccionada.length) {
       this.representanteFilaSeleccionada = [];
       this.usoDeFilaSeleccionada = [];
       this.tramiteStore.destinatarioSujeto.next(this.destinatarioFinalFilaSeleccionada[0]);
@@ -204,6 +218,7 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
     if (this.destinatarioFinalFilaSeleccionada.length) {
       this.tramiteStore.eliminarDestinatarioFinal(this.destinatarioFinalFilaSeleccionada[0]);
     }
+    this.pestanaValidar();
   }
 
   /**
@@ -215,6 +230,7 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
     if (this.representanteFilaSeleccionada.length) {
       this.tramiteStore.eliminarRepresentanteLegal(this.representanteFilaSeleccionada[0]);
     }
+    this.pestanaValidar();
   }
 
   /**
@@ -226,6 +242,7 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
     if (this.usoDeFilaSeleccionada.length) {
       this.tramiteStore.eliminarUsuarioFinal(this.usoDeFilaSeleccionada[0]);
     }
+    this.pestanaValidar();
   }
 
   /**
@@ -235,5 +252,34 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
    */
   ngOnDestroy(): void {
     this.destroy$.next();
+  }
+
+  /**
+   * Valida si las tablas de datos relacionadas con el trámite contienen información.
+   * 
+   * Este método verifica si las tablas de datos `destinatarioFinalTablaDatos`, 
+   * `representanteLegalTablaDatos` y `usuarioTablaDatos` tienen contenido. 
+   * Si todas contienen datos, se considera que el formulario es válido y 
+   * se actualiza el estado correspondiente.
+   * 
+   * @returns {void} No retorna ningún valor.
+   */
+  pestanaValidar(): void {
+    const IS_VALIDA = Boolean(
+      this.tramiteState?.destinatarioFinalTablaDatos?.length &&
+      this.tramiteState?.representanteLegalTablaDatos?.length &&
+      this.tramiteState?.usuarioTablaDatos?.length
+    );
+
+    this.setFormValida(IS_VALIDA);
+  }
+
+  /**
+* Establece el estado de validación del formulario de allForm.
+* 
+* @param valida - Un valor booleano que indica si el formulario de datos del allForm es válido.
+*/
+  setFormValida(valida: boolean): void {
+    this.tramiteStore.setFormValida({ allForm: valida });
   }
 }

@@ -79,8 +79,6 @@ export class SolicitudPageComponent {
     this.tramiteQuery.FormaValida$.pipe(
       takeUntil(this.destroyNotifier$)
     ).subscribe((res) => {
-      console.log(res, 'res');
-      
       this.seccionStore.establecerSeccion([true]);
       this.seccionStore.establecerFormaValida([res]);
     });
