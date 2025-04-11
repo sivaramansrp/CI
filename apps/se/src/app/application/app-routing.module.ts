@@ -230,6 +230,13 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'importacion-material-de-investigacion-cientifica',
+    loadChildren: () =>
+      import('./tramites/130112/importacion-material-de-investigacion-cientifica.module').then(
+        (m) => m.ImportacionMaterialDeInvestigacionCientificaModule
+      ),
+  },
+  {
     path: 'importacion-vehiculos-nuevos',
     loadChildren: () =>
       import('./tramites/130115/importacion-vehiculos-nuevos.module').then(
