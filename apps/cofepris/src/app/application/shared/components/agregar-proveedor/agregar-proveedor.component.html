@@ -13,7 +13,12 @@
             formControlName="tipoPersona"
             value="Física"
           />
-          Física <i class="fas fa-info-circle"></i>
+          Física 
+          <span
+          class="bi bi-question-circle-fill"
+          title="Física"
+          data-bs-toggle="tooltip"
+        ></span>
         </div>
         <div class="form-check">
           <input
@@ -22,7 +27,12 @@
             formControlName="tipoPersona"
             [value]="tipoPersona.MORAL"
           />
-          Moral <i class="fas fa-info-circle"></i>
+          Moral
+          <span
+          class="bi bi-question-circle-fill"
+          title="Moral"
+          data-bs-toggle="tooltip"
+        ></span>
         </div>
       </div>
     </div>
@@ -74,7 +84,7 @@
     <!-- Domicilio -->
     <div class="row">
       <h4 class="mt-4">Domicilio</h4>
-      <div class="col-md-4 px-5">
+      <div class="col-md-4">
         <app-catalogo-select
           [catalogo]="paisesDatos"
           formControlName="pais"
@@ -134,13 +144,18 @@
         <input type="text" class="form-control" formControlName="telefono" />
       </div>
       <div class="col-md-4">
-        <label class="form-label">Correo electrónico:</label>
+        <label class="form-label">Correo electrónico:
+          <span
+            class="bi bi-question-circle-fill"
+            title="Correo electrónico"
+            data-bs-toggle="tooltip"
+          ></span>
+        </label>
         <input
           type="email"
           class="form-control"
           formControlName="correoElectronico"
         />
-        <i class="fas fa-info-circle"></i>
       </div>
     </div>
 
