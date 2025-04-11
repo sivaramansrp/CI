@@ -914,11 +914,10 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
 
   /**
    * Actualiza el estado del producto como fresco, congelado o vivo en el Store.
-   * @param evento - Evento que contiene el estado seleccionado.
    */
-  setLiveFreshFrozen(evento: Event): void {
-    const VALOR = (evento.target as HTMLInputElement).checked;
-    this.solicitud260910Store.setLiveFreshFrozen(VALOR);
+  setLiveFreshFrozen(): void {
+    const FROZEN_CHECKBOX = this.solicitudForm.get('liveFreshFrozen')?.value;
+    this.solicitud260910Store.setLiveFreshFrozen(FROZEN_CHECKBOX);
   }
 
   /**

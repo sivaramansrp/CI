@@ -171,11 +171,14 @@
 
     <div class="col-md-6 mt-4">
       <div class="form-check mt-3">
-        <input class="form-check-input" type="checkbox" id="flexCheckDefault" aria-label="Aviso de funcionamiento"
-          formControlName="liveFreshFrozen" (change)="setLiveFreshFrozen($event)" />
-        <label class="control-label" for="flexCheckDefault">
-          Marcar en caso de que sea VIVO/FRESCO/ENHIELADO
-        </label>
+        <lib-input-check
+          [id]="'liveFreshFrozen'"
+          [label]="'Marcar en caso de que sea VIVO/FRESCO/ENHIELADO'"
+          [required]="true"
+          formControlName="liveFreshFrozen"
+          (change)="setLiveFreshFrozen()"
+      ></lib-input-check>
+        
       </div>
     </div>
 
