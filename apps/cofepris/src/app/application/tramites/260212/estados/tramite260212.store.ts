@@ -2,14 +2,14 @@ import { Injectable } from '@angular/core';
 
 import { Store, StoreConfig } from '@datorama/akita';
 
-import { Catalogo, catalogoResponse } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoResponse } from '@libs/shared/data-access-user/src';
 
 export interface Tramite260212State {
-  selectedEstado: catalogoResponse | null;
-  setClave: catalogoResponse | null,
-  setDescripcion: catalogoResponse | null,
+  selectedEstado: CatalogoResponse | null;
+  setClave: CatalogoResponse | null,
+  setDescripcion: CatalogoResponse | null,
   setDespecificarClasificacion:Catalogo |null
-  setBanco:catalogoResponse|null,
+  setBanco:CatalogoResponse|null,
   setRfcDelResponsableSanitario:string,
   setDenominacionRazonSocial:string,
   setCorreoElectronico:string,
@@ -20,8 +20,8 @@ export interface Tramite260212State {
   setLada:string,
   setTelefono:string,
   setCodigoPostal:string,
-  setRegimen:catalogoResponse|null,
-  setEntradas:catalogoResponse|null,
+  setRegimen:CatalogoResponse|null,
+  setEntradas:CatalogoResponse|null,
   setClaveDeReferncia:string,
   setCadenaDeLaDependencia:string,
   setLlaveDePago:string,
@@ -64,35 +64,35 @@ export class Tramite260212Store extends Store<Tramite260212State> {
     super(createInitialState());
   }
 
-  public setSelectedEstado(selectedEstado: catalogoResponse): void {
+  public setSelectedEstado(selectedEstado: CatalogoResponse): void {
     this.update((state) => ({
       ...state,
       selectedEstado,
     }));
   }
 
-  public setClave(selectedClave: catalogoResponse): void {
+  public setClave(selectedClave: CatalogoResponse): void {
     this.update((state) => ({
       ...state,
       selectedClave,
     }));
   }
 
-  public setDescripcion(selectedDescripcion: catalogoResponse): void {
+  public setDescripcion(selectedDescripcion: CatalogoResponse): void {
     this.update((state) => ({
       ...state,
       selectedDescripcion,
     }));
   }
 
-  public setDespecificarClasificacion(selectedDespecificarClasificacion: catalogoResponse): void {
+  public setDespecificarClasificacion(selectedDespecificarClasificacion: CatalogoResponse): void {
     this.update((state) => ({
       ...state,
       selectedDespecificarClasificacion,
     }));
   }
 
-  public setBanco(setBanco: catalogoResponse): void {
+  public setBanco(setBanco: CatalogoResponse): void {
     this.update((state) => ({
       ...state,
       setBanco,
@@ -169,14 +169,14 @@ export class Tramite260212Store extends Store<Tramite260212State> {
     }));
   }
 
-  public setRegimen(setRegimen: catalogoResponse):void {
+  public setRegimen(setRegimen: CatalogoResponse):void {
     this.update((state) => ({
       ...state,
       setRegimen,
     }));
   }
 
-  public setEntradas(setEntradas: catalogoResponse):void {
+  public setEntradas(setEntradas: CatalogoResponse):void {
     this.update((state) => ({
       ...state,
       setEntradas,
