@@ -50,7 +50,6 @@ export class PagoDeDerechosComponent {
   @Output() setValoresStoreEvent = new EventEmitter<{
     formularioPagoDerechos: FormGroup;
     campo: string;
-    metodoNombre: string;
   }>();
 
   /**
@@ -70,7 +69,7 @@ export class PagoDeDerechosComponent {
     const ELEMENTO_INPUT = evento.target as HTMLInputElement;
     const VALOR_CAPITALIZADO = ELEMENTO_INPUT.value.toUpperCase();
     this.formularioPagoDerechos.get(campo)?.setValue(VALOR_CAPITALIZADO);
-    this.setValoresStore(this.formularioPagoDerechos, campo, nombreMetodo);
+    this.setValoresStore(this.formularioPagoDerechos, campo);
   }
 
   /**
@@ -81,13 +80,11 @@ export class PagoDeDerechosComponent {
    */
   setValoresStore(
     formularioPagoDerechos: FormGroup,
-    campo: string,
-    metodoNombre: string
+    campo: string
   ): void {
     this.setValoresStoreEvent.emit({
       formularioPagoDerechos,
-      campo,
-      metodoNombre,
+      campo
     });
   }
 }

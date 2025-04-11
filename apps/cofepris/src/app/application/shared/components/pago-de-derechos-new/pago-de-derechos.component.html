@@ -96,8 +96,7 @@
               (change)="
                 setValoresStore(
                   formularioPagoDerechos,
-                  'banco',
-                  'setBancoseleccionado'
+                  'banco'
                 )
               "
             ></app-catalogo-select>
@@ -148,7 +147,7 @@
             [setFecha]="formularioPagoDerechos.get('fecPago')?.value"
             [datos]="configuracionFechaFinal"
             (valorCambiado)="
-              setValoresStore(formularioPagoDerechos, 'fecPago', 'setFecPago')
+              setValoresStore(formularioPagoDerechos, 'fecPago')
             "
             [class.is-invalid]="
               formularioPagoDerechos.get('fecPago')?.touched &&
@@ -180,7 +179,7 @@
               type="number"
               formControlName="impPago"
               (change)="
-                setValoresStore(formularioPagoDerechos, 'impPago', 'setImpPago')
+                setValoresStore(formularioPagoDerechos, 'impPago')
               "
               [required]="true"
               [class.is-invalid]="

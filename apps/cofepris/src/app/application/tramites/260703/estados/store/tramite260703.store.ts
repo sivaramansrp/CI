@@ -9,7 +9,7 @@ import { Injectable } from '@angular/core';
 export interface SolicitudPermisoState {
   claveDeReferencia?: string;
   cadenaPagoDependencia?: string;
-  bancoseleccionado?: string;
+  banco?: string;
   llaveDePago?: string;
   fecPago?: string;
   impPago?: string;
@@ -19,7 +19,7 @@ export function createInitialState(): SolicitudPermisoState {
   return {
     claveDeReferencia: '',
     cadenaPagoDependencia: '',
-    bancoseleccionado: '',
+    banco: '',
     llaveDePago: '',
     fecPago: '',
     impPago: '',
@@ -31,67 +31,22 @@ export function createInitialState(): SolicitudPermisoState {
 })
 @StoreConfig({ name: 'refprocedure', resettable: true })
 export class Tramite260703Store extends Store<SolicitudPermisoState> {
+  /**
+   * Constructor de la clase Tramite260703Store.
+   * Inicializa el estado del store con el estado inicial definido.
+   */
   constructor() {
     super(createInitialState());
   }
 
-  public setClaveDeReferencia(claveDeReferencia: string): void {
-    this.update((state) => ({
-      ...state,
-      claveDeReferencia,
-    }));
-  }
-
-  public setCadenaPagoDependencia(cadenaPagoDependencia: string): void {
-    this.update((state) => ({
-      ...state,
-      cadenaPagoDependencia,
-    }));
-  }
-
   /**
-   * 
-   * Actualiza el estado con el banco seleccionado.
-   *
-   * {string} bancoseleccionado - El banco seleccionado.
+   * Actualiza el estado del store con los valores proporcionados.
+   * valores Un objeto parcial de SolicitudPermisoState con los valores a actualizar.
    */
-  public setBancoseleccionado(bancoseleccionado: string): void {
+  public actualizarEstado(valores: Partial<SolicitudPermisoState>): void {
     this.update((state) => ({
       ...state,
-      bancoseleccionado,
-    }));
-  }
-
-  /**
-   * 
-   * Actualiza el estado con la llave de pago proporcionada.
-   *
-   * {string} llaveDePago - La llave de pago.
-   */
-  public setLlaveDePago(llaveDePago: string): void {
-    this.update((state) => ({
-      ...state,
-      llaveDePago,
-    }));
-  }
-
-  /**
-   * 
-   * Actualiza el estado con la fecha de pago proporcionada.
-   *
-   *  {string} fechaDePago - La fecha de pago.
-   */
-  public setFecPago(fecPago: string): void {
-    this.update((state) => ({
-      ...state,
-      fecPago,
-    }));
-  }
-
-  public setImpPago(impPago: string): void {
-    this.update((state) => ({
-      ...state,
-      impPago,
+      ...valores
     }));
   }
 

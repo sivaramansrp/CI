@@ -64,7 +64,7 @@ describe('PasoUnoComponent', () => {
         { provide: Tramite260703Store, useValue: tramite260703StoreMock },
         { provide: Tramite260703Query, useValue: tramite260703QueryMock },
       ],
-      schemas: [NO_ERRORS_SCHEMA], // Ignore unknown elements
+      schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
 
     fixture = TestBed.createComponent(PasoUnoComponent);
@@ -97,20 +97,6 @@ describe('PasoUnoComponent', () => {
     expect(component.formularioPagoDerechos.get('impPago')?.value).toBe(1000);
   });
 
-  it('should call setValoresStore and update store correctly', () => {
-    const form = new FormGroup({
-      llaveDePago: new FormControl('LLAVE123'),
-    });
-
-    component.setValoresStore({
-      formularioPagoDerechos: form,
-      campo: 'llaveDePago',
-      metodoNombre: 'setLlaveDePago',
-    });
-
-    expect(tramite260703StoreMock.setLlaveDePago).toHaveBeenCalledWith('LLAVE123');
-  });
-
   it('should select a tab and initialize banco on seleccionaTab', () => {
     component.seleccionaTab(4);
     expect(component.indice).toBe(4);
@@ -127,15 +113,4 @@ describe('PasoUnoComponent', () => {
     expect(completeSpy).toHaveBeenCalled();
   });
 
-  it('should handle invalid metodoNombre in setValoresStore', () => {
-    const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
-
-    component.setValoresStore({
-      formularioPagoDerechos: new FormGroup({}),
-      campo: 'invalidCampo',
-      metodoNombre: 'invalidMetodo',
-    });
-
-    expect(consoleSpy).toHaveBeenCalledWith('Método invalidMetodo no existe en Tramite260703Store');
-  });
 });

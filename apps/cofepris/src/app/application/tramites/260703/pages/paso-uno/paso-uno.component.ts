@@ -135,7 +135,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
         Validators.required
       ),
       banco: new FormControl(
-        this.estadoSolicitudPermiso.bancoseleccionado,
+        this.estadoSolicitudPermiso.banco,
         Validators.required
       ),
       llaveDePago: new FormControl(
@@ -148,7 +148,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
       ),
       impPago: new FormControl(
         this.estadoSolicitudPermiso.impPago,
-        Validators.required
+        [Validators.required, Validators.min(0)]
       ),
     });
   }
@@ -160,32 +160,9 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   setValoresStore($event: {
     formularioPagoDerechos: FormGroup;
     campo: string;
-    metodoNombre: string;
   }): void {
     const VALOR = $event.formularioPagoDerechos.get($event.campo)?.value;
-    const METODO = $event.metodoNombre;
-    switch (METODO) {
-      case 'setClaveDeReferencia':
-        this.tramite260703Store.setClaveDeReferencia(VALOR);
-        break;
-      case 'setCadenaPagoDependencia':
-        this.tramite260703Store.setCadenaPagoDependencia(VALOR);
-        break;
-      case 'setBancoseleccionado':
-        this.tramite260703Store.setBancoseleccionado(VALOR);
-        break;
-      case 'setLlaveDePago':
-        this.tramite260703Store.setLlaveDePago(VALOR);
-        break;
-      case 'setFecPago':
-        this.tramite260703Store.setFecPago(VALOR);
-        break;
-      case 'setImpPago':
-        this.tramite260703Store.setImpPago(VALOR);
-        break;
-      default:
-        console.error(`Método ${METODO} no existe en Tramite260703Store`);
-    }
+    this.tramite260703Store.actualizarEstado({[$event.campo]: VALOR});
   }
 
   /**
