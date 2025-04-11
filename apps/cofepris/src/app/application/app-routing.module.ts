@@ -167,6 +167,15 @@ const ROUTES: Routes = [
     path: 'modificacion-permiso-sanitario',
     loadChildren: () =>
       import(
+        './tramites/260902/modificacion-permiso-sanitario.module'
+      ).then((m) => m.ModificacionPermisoSanitarioModule),
+      
+  },
+ 
+  {
+    path: 'modificacion-permiso-sanitario',
+    loadChildren: () =>
+      import(
         './tramites/260910/permiso-sanitario.module'
       ).then((m) => m.PermisoSanitarioModule),
   },
@@ -210,18 +219,24 @@ const ROUTES: Routes = [
       ),
   },
   {
+        path: 'importacion-materias-primas-estupefacientes',
+        loadChildren: () =>
+          import(
+            './tramites/260301/importacion-materias-primas-estupefacientes.module'
+          ).then((m) => m.ImportacionMateriasPrimasEstupefacientesModule),
+  },
+  {
+    path: 'modificacion-permiso-sanitario',
+    loadChildren: () =>
+      import('./tramites/260906/modificacion-permiso-sanitario.module').then(
+        (m) => m.ModificacionPermisoSanitarioModule
+      )
+  },
+  {
     path: 'Permiso-de-importacion',
     loadChildren: () =>
       import('./tramites/260512/permiso-de-importacion.module').then(
-        (m) => m.PermisoDeImportacionModule),
-
-  },
-  {
-    path: 'importacion-materias-primas-estupefacientes',
-    loadChildren: () =>
-      import(
-        './tramites/260301/importacion-materias-primas-estupefacientes.module'
-      ).then((m) => m.ImportacionMateriasPrimasEstupefacientesModule),
+        (m) => m.PermisoDeImportacionModule)
   }
 ];
 
