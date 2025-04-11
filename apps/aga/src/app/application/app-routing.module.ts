@@ -191,8 +191,14 @@ const ROUTES: Routes = [
       import('./tramites/40103/modificarCaatTerrestre.module').then(
         (m) => m.ModificarCaatTerrestreModule
       )
-  }
-  
+  },
+  {
+    path: 'prestadores-servicio',
+    loadChildren: () =>
+      import('./tramites/202/prestadores-servicio.module').then(
+        (m) => m.PrestadoresServicioModule
+      ),
+  },  
 ];
 
 @NgModule({
