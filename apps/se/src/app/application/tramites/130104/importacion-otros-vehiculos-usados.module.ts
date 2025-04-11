@@ -2,9 +2,9 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 
-import { BtnContinuarComponent, CrosslistComponent, InputRadioComponent, SolicitanteComponent, TablaDinamicaComponent, TituloComponent, WizardComponent} from '@ng-mf/data-access-user';
-import { PasoDosComponent } from './components/paso-dos/paso-dos.component';
-import { PasoTresComponent } from './components/paso-tres/paso-tres.component';
+import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, CrosslistComponent, FirmaElectronicaComponent, InputRadioComponent, SolicitanteComponent, TablaDinamicaComponent, TituloComponent, WizardComponent } from '@ng-mf/data-access-user';
+import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
+import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 
 import { ToastrService } from 'ngx-toastr';
@@ -24,28 +24,30 @@ import { SolicitudComponent } from './components/solicitud/solicitud.component';
 
 
 @NgModule({
-  declarations: [ImportacionOtrosVehiculosUsadosPageComponent,PasoUnoComponent,SolicitudComponent],
+  declarations: [ImportacionOtrosVehiculosUsadosPageComponent, PasoUnoComponent, SolicitudComponent, PasoTresComponent,
+    PasoDosComponent,],
   imports: [
     CommonModule,
     ImportacionOtrosVehiculosUsadosRoutingModule,
-        WizardComponent,
-        BtnContinuarComponent,
-        TituloComponent,
-        InputRadioComponent,
-        SolicitanteComponent,
-        ReactiveFormsModule,
-        PasoTresComponent,
-        PasoDosComponent,
-        DatosDelTramiteComponent,
-        DatosDeLaMercanciaComponent,
-        PartidasDeLaMercanciaComponent ,
-        TablaDinamicaComponent,
-        PaisProcendenciaComponent,
-        RepresentacionComponent,
-        CrosslistComponent
+    WizardComponent,
+    BtnContinuarComponent,
+    TituloComponent,
+    InputRadioComponent,
+    SolicitanteComponent,
+    ReactiveFormsModule,
+    DatosDelTramiteComponent,
+    DatosDeLaMercanciaComponent,
+    PartidasDeLaMercanciaComponent,
+    TablaDinamicaComponent,
+    PaisProcendenciaComponent,
+    RepresentacionComponent,
+    CrosslistComponent,
+    FirmaElectronicaComponent, 
+    AnexarDocumentosComponent,
+    AlertComponent
   ],
   providers: [
     ToastrService
   ]
 })
-export class ImportacionOtrosVehiculosUsadosModule {}
+export class ImportacionOtrosVehiculosUsadosModule { }

@@ -1,8 +1,6 @@
 /**
  * paso-dos.component.ts
  * */
-import { AlertComponent, AnexarDocumentosComponent, TituloComponent } from '@ng-mf/data-access-user';
-import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { TEXTOS } from '@ng-mf/data-access-user';
 
@@ -16,21 +14,12 @@ import { TEXTOS } from '@ng-mf/data-access-user';
  * @license MIT
  *
  * @selector app-paso-dos
- * @standalone true
- * @requires CommonModule
- * @requires AnexarDocumentosComponent
- * @requires AlertComponent
- * @requires TituloComponent
- *
  * @templateUrl ./paso-dos.component.html
- * @styleUrl ./paso-dos.component.scss
  */
 @Component({
   selector: 'app-paso-dos',
-  standalone: true,
-  imports: [CommonModule, AnexarDocumentosComponent, AlertComponent, TituloComponent],
-  templateUrl: './paso-dos.component.html',
-  styleUrl: './paso-dos.component.scss',
+  standalone: false,
+  templateUrl: './paso-dos.component.html'
 })
 export class PasoDosComponent {
   /**
