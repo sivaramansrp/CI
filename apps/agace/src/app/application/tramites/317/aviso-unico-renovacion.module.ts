@@ -9,12 +9,13 @@ import { PantallasComponent } from './pages/pantallas/pantallas.component';
 import { AvisoDeRenovacionComponent } from './components/aviso-de-renovacion/aviso-de-renovacion.component';
 
 import { AlertComponent, BtnContinuarComponent, InicioSesionService, ServiciosPantallasService, SolicitanteComponent, SubirDocumentoService, TituloComponent, WizardComponent } from '@libs/shared/data-access-user/src';
-import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
-import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
+
 import { ToastrService } from 'ngx-toastr';
 import { provideHttpClient } from '@angular/common/http';
 
 import { AvisoUnicoService } from './services/aviso-unico.service';
+import { PasoDosComponent } from './components/paso-dos/paso-dos.component';
+import { PasoTresComponent } from './components/paso-tres/paso-tres.component';
 
 @NgModule({
   declarations: [ DatosComponent,PantallasComponent],
