@@ -1,4 +1,5 @@
 import {
+  CROSLISTA_DE_ADUANAS_ENTRADA,
   CROSLISTA_DE_PAISES,
   INPUT_FECHA_CADUCIDAD_CONFIG,
 } from '../../constantes/datos-domicilio-legal.enum';
@@ -14,6 +15,7 @@ import {
 } from '@libs/shared/data-access-user/src';
 import {
   Component,
+  Input,
   OnDestroy,
   OnInit,
   QueryList,
@@ -72,6 +74,16 @@ export interface MercanciasTabla {
 })
 export class DomicilioComponent implements OnInit, OnDestroy {
   /**
+   * Indica si el campo RFC del solicitante es visible.
+   */
+  @Input() isAvisoLicenciaVisible: boolean = true;
+
+  /**
+   * Indica si el campo RFC del solicitante es visible.
+   */
+  @Input() isAduanasEntradaVisible: boolean = false;
+
+  /**
    * Referencia a los componentes de la lista de fechas.
    */
   @ViewChildren(CrosslistComponent) crossList!: QueryList<CrosslistComponent>;
@@ -111,6 +123,61 @@ export class DomicilioComponent implements OnInit, OnDestroy {
    * @property {FormGroup} domicilio
    */
   domicilio!: FormGroup;
+
+  /**
+   * Lista de países disponibles para la selección de origen.
+   */
+  public seleccionarAduanasEntrada = CROSLISTA_DE_ADUANAS_ENTRADA;
+
+  /**
+   * Botones para gestionar la lista cruzada de países de origen.
+   */
+  aduanasEntradaBotons = [
+    {
+      btnNombre: 'Agregar todos',
+      class: 'btn-primary',
+      funcion: (): void => this.crossList.toArray()[0].agregar('t'),
+    },
+    {
+      btnNombre: 'Agregar selección',
+      class: 'btn-default',
+      funcion: (): void => this.crossList.toArray()[0].agregar(''),
+    },
+    {
+      btnNombre: 'Restar selección',
+      class: 'btn-danger',
+      funcion: (): void => this.crossList.toArray()[0].quitar(''),
+    },
+    {
+      btnNombre: 'Restar todos',
+      class: 'btn-default',
+      funcion: (): void => this.crossList.toArray()[0].quitar('t'),
+    },
+  ];
+
+  /**
+   * Etiquetas para la lista cruzada de países de origen.
+   */
+  public aduanasEntradaLabel: CrossListLable = {
+    tituluDeLaIzquierda: 'Aduanas de entrada disponibles',
+    derecha: 'Aduanas de entrada seleccionadas',
+  };
+
+  /**
+   * Lista de países seleccionados como origen.
+   */
+  public seleccionadasAduanasEntradaDatos: string[] = [];
+
+  /**
+   * Maneja el cambio de selección de países de origen.
+   * @param events Lista de países seleccionados.
+   */
+  aduanasEntradaSeleccionadasChange(events: string[]): void {
+    this.seleccionadasAduanasEntradaDatos = events;
+    this.domicilio.patchValue({
+      paisDeOriginDatos: events,
+    });
+  }
 
   /**
    * Grupo de formularios para el agente aduanal.
@@ -226,7 +293,7 @@ export class DomicilioComponent implements OnInit, OnDestroy {
   /**
    * Etiqueta de la lista de fechas.
    * */
-  ngOnInit() {
+  ngOnInit(): void {
     this.DatosDomicilioLegalQuery.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -451,7 +518,7 @@ export class DomicilioComponent implements OnInit, OnDestroy {
    * Alterna el estado colapsable de la sección del formulario.
    * @method mostrar_colapsable
    */
-  mostrar_colapsable() {
+  mostrar_colapsable(): void {
     this.colapsable = !this.colapsable;
   }
 
@@ -459,7 +526,7 @@ export class DomicilioComponent implements OnInit, OnDestroy {
    * Alterna el estado colapsable de la sección del formulario.
    * @method mostrar_colapsableDuos
    */
-  mostrar_colapsableDuos() {
+  mostrar_colapsableDuos(): void {
     this.colapsableDuos = !this.colapsableDuos;
   }
 
@@ -467,7 +534,7 @@ export class DomicilioComponent implements OnInit, OnDestroy {
    * Alterna el estado colapsable de la sección del formulario.
    * @method mostrar_colapsableTres
    */
-  mostrar_colapsableTres() {
+  mostrar_colapsableTres(): void {
     this.colapsableTres = !this.colapsableTres;
   }
   /**

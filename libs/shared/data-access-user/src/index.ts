@@ -12,14 +12,14 @@ export * from './core/models/shared/configuracion-columna.model';
 export * from './core/models/shared/forms-model';
 export * from './core/models/usuario/perfilUsuario.model';
 export * from './core/models/usuario/rol.model';
-
-export * from './core/queries/seccion.query';
-
 export * from './core/queries/seccion.query';
 export * from './core/services/110102/datos-tratados-acuerdos/datosTratadosacuerdos.service';
 export * from './core/services/110102/exportador-autorizado/exportadorAutorizado.service';
 export * from './core/services/110102/mercancia-asociada/mercanciaAsociada.service';
 export * from './core/services/110102/representacion-federal/representacionFederal.service';
+export * from './core/services/110210/certificado-disponibles/certificadoDisponibles.service';
+export * from './core/services/110210/domicilio-tabla/domicilioTabla.service';
+export * from './core/services/110210/buscar-certificado-de-origen/buscarCertificadoDeOrigen.service'
 export * from './core/services/120402/asignacion-directa-de-cupo.enum';
 export * from './core/services/120402/descripcion-del-cupo/descripcionDelCupo.service';
 export * from './core/services/120402/representacionFederal/representacion-federal.service';
@@ -29,11 +29,9 @@ export * from './core/services/130118/pexim/pexim.service';
 export { PANTAPASOS } from './core/services/220471/servicios-pantallas.enum';
 export * from './core/services/220471/servicios-pantallas.service';
 export * from './tramites/constantes/constantes';
-
 export * from './tramites/components/crosslist/crosslist.component';
 export * from './tramites/components/firma-electronica/firma-electronica.component';
 export * from './tramites/components/informacion-usuario/informacion-usuario.component';
-export * from './tramites/components/modal-confirmar/modal-confirmar.component';
 export * from './tramites/components/nav/nav.component';
 export * from './tramites/components/representante-fiscal/representante-fiscal.component';
 export * from './tramites/components/select-paises/select-paises.component';
@@ -52,10 +50,6 @@ export * from './core/services/shared/wizard/wizard.service';
 export * from './core/services/shared/documento/documento.service';
 export * from './core/services/shared/inicio-sesion/inicio-sesion.service';
 export * from './core/services/shared/subir-documento/subir-documento.service';
-
-export * from './lib/data-access-user/data-access-user.component';
-export * from './lib/user.service';
-
 export * from './lib/data-access-user/data-access-user.component';
 export * from './lib/user.service';
 export * from './tramites/components/acuse/acuse.component';
@@ -68,105 +62,60 @@ export * from './tramites/components/breadcrumb/breadcrumb.component';
 export * from './tramites/components/btn-continuar/btn-continuar.component';
 export * from './tramites/components/catalogo-select/catalogo-select.component';
 export * from './tramites/components/encabezado-requerimiento/encabezado-requerimiento.component';
-export * from './tramites/components/firma-electronica/firma-electronica.component';
 export * from './tramites/components/footer/footer.component';
 export * from './tramites/components/header/header.component';
-export * from './tramites/components/informacion-usuario/informacion-usuario.component';
 export * from './tramites/components/input-check/input-check.component';
 export * from './tramites/components/input-fecha/input-fecha.component';
 export * from './tramites/components/input-hora/input-hora.component';
 export * from './tramites/components/input-radio/input-radio.component';
-export * from './tramites/components/modal-confirmar/modal-confirmar.component';
-export * from './tramites/components/nav/nav.component';
-export * from './tramites/components/representante-fiscal/representante-fiscal.component';
 export * from './tramites/components/requerimiento-informacion/requerimiento-informacion.component';
-export * from './tramites/components/select-catalogos/select-catalogos.component';
-export * from './tramites/components/select-paises/select-paises.component';
-export * from './tramites/components/solicitante/solicitante.component';
-export * from './tramites/components/tabla-dinamica/tabla-dinamica.component';
-export * from './tramites/components/table/table.component';
-export * from './tramites/components/terceros/terceros.component';
-export * from './tramites/components/titulo/titulo.component';
 export * from './tramites/components/wizard/wizard.component';
 export * from './tramites/constantes/110102/datos-tratados-acuerdos.enum';
+export * from './tramites/constantes/110210/certificado-disponibles.enum';
+export * from './tramites/constantes/110210/domicilio-tabla.enum';
 export * from './tramites/constantes/120602/datos-empresa.enum';
 export { PASOS as PASOS_303 } from './tramites/constantes/303/pasos.enums';
 export { TEXTOS as TEXTOS_303 } from './tramites/constantes/303/texto.enum';
-
 export { ConfiguracionColumna } from './core/models/shared/configuracion-columna.model';
 export { TablaSeleccion } from './core/enums/tabla-seleccion.enum';
 export { TablaDinamicaComponent } from './tramites/components/tabla-dinamica/tabla-dinamica.component';
 export { TituloComponent } from './tramites/components/titulo/titulo.component';
 export { ASIGNACION_REGISTRO } from './tramites/constantes/120404/entidad.enum';
-export * from './core/models/shared/configuracion-columna.model';
-
-export * from './core/enums/tabla-seleccion.enum';
-export * from './tramites/constantes/110102/datos-tratados-acuerdos.enum';
-export * from './core/services/110102/datos-tratados-acuerdos/datosTratadosacuerdos.service';
-export * from './core/services/110102/mercancia-asociada/mercanciaAsociada.service';
-export * from './core/services/110102/representacion-federal/representacionFederal.service';
-export * from './core/services/110102/exportador-autorizado/exportadorAutorizado.service';
 export * from './tramites/constantes/120501/licitaciones-disponibles-table-data.enum';
 export { TablePaginationComponent } from './tramites/components/table-pagination/table-pagination.component';
 export * from './core/enums/solicitar-transferencia.enum';
-export * from './tramites/components/tabla-dinamica/tabla-dinamica.component';
-export * from './core/enums/tabla-seleccion.enum';
 export * from './core/services/120501/licitacionesDisponibles.service';
-export * from './core/models/shared/configuracion-columna.model';
-
-export * from './tramites/constantes/120602/datos-empresa.enum';
 export * from './core/services/110218/validar-certificado-tecnico.enum';
-
-export * from './core/services/120602/empresa-frontera-solicitud.enum';
-
 export * from './core/estados/seccion.store';
 export * from './tramites/pages/firma-page/firma-page.component';
-export * from './tramites/components/encabezado-requerimiento/encabezado-requerimiento.component';
-export * from './tramites/components/requerimiento-informacion/requerimiento-informacion.component';
-export * from './tramites/components/acuse/acuse.component';
-
-export * from './core/models/shared/configuracion-columna.model';
-export * from './tramites/components/tabla-dinamica/tabla-dinamica.component';
-export * from './core/enums/tabla-seleccion.enum';
 export * from './tramites/directives/Uppercase/uppercase.directive';
-export * from './tramites/constantes/constantes';
 export { PASOS as PASOS_CUATRO_STEPS } from './tramites/constantes/paso-cuatro-steps.enum';
 export { PASOS as PASOS_TRES_STEPS } from './tramites/constantes/paso-tres-steps.enum';
 export * from './tramites/constantes/regex.constants';
 export * from './tramites/constantes/seccionesTramites';
-
-export * from './tramites/directives/Uppercase/uppercase.directive';
 export * from './tramites/constantes/solicitante-constantes.enum';
 export * from './tramites/constantes/120601/datos-generales-socios-tabledata.enum';
-
 export * from './tramites/pages/acuse-page/acuse-page.component';
-export * from './tramites/pages/firma-page/firma-page.component';
 export * from './tramites/pipes/booleanoSiNo/booleano-si-no.pipe';
 export * from './tramites/shared.module';
-
 export { TramiteFolioQueries } from './core/queries/tramiteFolio.queries';
 export { TramiteFolioState, TramiteFolioStore } from './core/estados/tramiteFolio.store'
-
 export * from './core/models/shared/datos-generales.model';
 export * from './core/enums/constantes-alertas.enum';
 export * from './tramites/directives/solo-numeros/solo-numeros.directive'
-
 export { ValidacionesFormularioService } from './core/services/shared/validaciones-formulario/validaciones-formulario.service';
-export * from './tramites/directives/Uppercase/uppercase.directive';
 export { RespuestaCatalogos } from './core/models/shared/catalogos.model';
-export * from './tramites/components/tabla-dinamica/tabla-dinamica.component';
-export * from './core/models/shared/configuracion-columna.model';
-export * from './core/enums/tabla-seleccion.enum';
-
 export * from './core/services/231001/materia-prima-formservice.service';
 export * from './core/services/231001/administrar-residuos.service';
-
 export * from './core/services/shared/tramite-folio/tramite-folio.service';
 export {TramiteStore} from './core/estados/tramite.store';
 export * from './core/models/260303/certificados-licencias-permisos.model';
-
+export * from './core/models/260701/certificados-licencias.model';
 export * from './tramites/components/notificaciones/notificaciones.component';
 
 export { TablaConEntradaComponent } from './tramites/components/tabla-con-entrada/tabla-con-entrada.component';
 export { AcusesYResolucionesFolioDelTramiteBusquedaComponent } from './tramites/components/acuses-y-resoluciones-folio-del-tramite-busqueda/acuses-y-resoluciones-folio-del-tramite-busqueda.component';
 export { AcusesYResolucionesFolioDelTramiteDetallesComponent } from './tramites/components/acuses-y-resoluciones-folio-del-tramite-detalles/acuses-y-resoluciones-folio-del-tramite-detalles.component';
+export * from './tramites/components/select-catalogos/select-catalogos.component';
+
+export * from './tramites/constantes/aviso-privacidad.enum';

@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 
-import { CatalogoSelectComponent, SelectCatalogosComponent, TablaDinamicaComponent, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent, TablaDinamicaComponent, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { RepresentacionFederalComponent } from './representacion-federal.component';
 
 describe('RepresentacionFederalComponent', () => {
@@ -16,7 +16,6 @@ describe('RepresentacionFederalComponent', () => {
         CommonModule,
         ReactiveFormsModule,
         TituloComponent,
-        SelectCatalogosComponent,
         CatalogoSelectComponent,
         TableComponent,
         TablaDinamicaComponent
