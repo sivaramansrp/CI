@@ -389,6 +389,13 @@ const ROUTES: Routes = [
       import('./tramites/130109/vehiculos-usados-adaptados.module').then(
         (m) => m.VehiculosUsadosAdaptadosModule
       ),
+  },
+  {
+    path: 'exportar-diamantes',
+    loadChildren: () => 
+      import('./tramites/130203/exportación-de-diamantes-en-bruto.module').then(
+        (m) => m.ExportaciónDeDiamantesEnBrutoModule
+      )
   }
   
 ];
