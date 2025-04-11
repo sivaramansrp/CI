@@ -186,6 +186,13 @@ const ROUTES: Routes = [
       )
   },
   {
+    path: 'transportacion-maritima',
+    loadChildren: () =>
+      import('./tramites/40201/transportacion-maritima.module').then(
+        (m) => m.TransportacionMaritimaModule
+      ),
+  },
+  {
     path: 'modificarCaatTerrestre',
     loadChildren: () =>
       import('./tramites/40103/modificarCaatTerrestre.module').then(

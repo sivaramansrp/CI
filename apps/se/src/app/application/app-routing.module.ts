@@ -225,6 +225,13 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'importacion-vehiculos-nuevos',
+    loadChildren: () =>
+      import('./tramites/130115/importacion-vehiculos-nuevos.module').then(
+        (m) => m.ImportacionVehiculosNuevosModule
+      )
+  },
+  {
     path: 'cancelaciones-ministerio',
     loadChildren: () =>
       import('./tramites/140201/cancelaciones.module').then(
@@ -277,6 +284,13 @@ const ROUTES: Routes = [
       import('./tramites/110203/tecnicos.module').then(
         (m) => m.TecnicosModule
       ),
+  },
+  {
+    path: 'previos-exportacion',
+    loadChildren: () =>
+      import('./tramites/130217/control-permisos-previos-exportacion.module').then(
+        (m) => m.ControlPermisosPreviosExportacionModule
+      )
   },
   {
     path: 'inicialmente-certificado-origen',
@@ -334,6 +348,20 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/110211/validar-certificado.module').then(
         (m) => m.ValidarCertificadoModule
+      ),
+  },
+  {
+    path: 'importacion',
+      loadChildren: () =>
+        import('./tramites/130110/importacion-neumaticos-comercializar.module').then(
+          (m) => m.ImportacionNeumaticosComercializarModule
+        ),
+  },
+  {
+    path: 'importacion-de',
+    loadChildren: () =>
+      import('./tramites/130109/vehiculos-usados-adaptados.module').then(
+        (m) => m.VehiculosUsadosAdaptadosModule
       ),
   }
 ];
