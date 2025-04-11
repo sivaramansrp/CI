@@ -22,4 +22,12 @@ export class AutorizacionDeRayosXService {
   getBancoData(): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>('./assets/json/300105/banco-options.json');
   }
+
+  getTipoOperacion() : Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>('./assets/json/300105/tipo-operacion.json');
+  }
+
+  getFinalidad() : Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>('./assets/json/300105/finalidad.json');
+  }
 }

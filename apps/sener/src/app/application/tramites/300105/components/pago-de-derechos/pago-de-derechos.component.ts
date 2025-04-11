@@ -1,18 +1,14 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import {
   Tramite300105State,
   Tramite300105Store,
 } from '../../estados/tramite300105.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { Catalogo } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
-import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CatalogosSelect } from '@libs/shared/data-access-user/src/core/models/shared/components.model';
-import { CommonModule } from '@angular/common';
 import { INPUT_FECHA_CONFIG } from '../../enum/permiso.enum';
-import { InputFechaComponent } from '@libs/shared/data-access-user/src/tramites/components/input-fecha/input-fecha.component';
 import { AutorizacionDeRayosXService } from '../../services/autorizacion-de-rayos-x.service';
-import { TituloComponent } from '@libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
 import { Tramite300105Query } from '../../estados/tramite300105.query';
 
 /**

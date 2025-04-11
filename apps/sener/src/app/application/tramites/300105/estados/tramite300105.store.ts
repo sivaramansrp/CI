@@ -43,6 +43,25 @@ export interface Tramite300105State {
    * @type {string}
    */
   importePago: string;
+
+  numeroExpediente?: string;
+  /**
+   * tipoOperacion
+   * @type {string}
+   */
+  tipoOperacion?: string;
+
+  /**
+   * finalidad
+   * @type {string}
+   */
+  finalidad?: string;
+
+  isExento?: boolean;
+  isAutorizacion?: boolean;
+  numAutorizacion1?: string;
+  numAutorizacion2?: string;
+  numAutorizacion3?: string;
 }
 
 export function createInitialState(): Tramite300105State {
@@ -85,6 +104,30 @@ export function createInitialState(): Tramite300105State {
      * @type {string}
      */
     importePago: '',
+
+    /**
+     * numeroExpediente
+     * @type {string}
+     */
+    numeroExpediente: '',
+
+    /**
+     * tipoOperacion
+     * @type {string}
+     */
+    tipoOperacion: '',
+
+    /**
+     * finalidad
+     * @type {string}
+     * */
+    finalidad: '',
+
+    isExento: false,
+    isAutorizacion: false,
+    numAutorizacion1: '',
+    numAutorizacion2: '',
+    numAutorizacion3: '',
   };
 }
 
@@ -167,6 +210,94 @@ export class Tramite300105Store extends Store<Tramite300105State> {
     this.update((state) => ({
       ...state,
       importePago,
+    }));
+  }
+
+  /**
+   * Guarda el numero de expediente en el estado.
+   * @param numeroExpediente
+   */
+  public setNumeroExpediente(numeroExpediente: string) {
+    this.update((state) => ({
+      ...state,
+      numeroExpediente,
+    }));
+  }
+
+  /**
+   * Guarda el tipo de operacion en el estado.
+   * @param tipoOperacion
+   */
+  public setTipoOperacion(tipoOperacion: string) {
+    this.update((state) => ({
+      ...state,
+      tipoOperacion,
+    }));
+  }
+
+  /**
+   * Guarda la finalidad en el estado.
+   * @param finalidad
+   */
+  public setFinalidad(finalidad: string) {  
+    this.update((state) => ({
+      ...state,
+      finalidad,
+    }));
+  }
+
+  /**
+   * Guarda el valor de isExento en el estado.
+   * @param isExento
+   */
+  public setIsExento(isExento: boolean) {
+    this.update((state) => ({
+      ...state,
+      isExento,
+    }));
+  }
+
+  /**
+   * Guarda el valor de isAutorizacion en el estado.
+   * @param isAutorizacion
+   */
+  public setIsAutorizacion(isAutorizacion: boolean) {
+    this.update((state) => ({
+      ...state,
+      isAutorizacion,
+    }));
+  }
+
+  /**
+   * Guarda el valor de numAutorizacion1 en el estado.
+   * @param numAutorizacion1
+   */
+  public setNumAutorizacion1(numAutorizacion1: string) {
+    this.update((state) => ({
+      ...state,
+      numAutorizacion1,
+    }));
+  }
+  
+  /**
+   * Guarda el valor de numAutorizacion2 en el estado.
+   * @param numAutorizacion2
+   */
+  public setNumAutorizacion2(numAutorizacion2: string) {
+    this.update((state) => ({
+      ...state,
+      numAutorizacion2,
+    }));
+  }
+
+  /**
+   * Guarda el valor de numAutorizacion3 en el estado.
+   * @param numAutorizacion3
+   */
+  public setNumAutorizacion3(numAutorizacion3: string) {
+    this.update((state) => ({
+      ...state,
+      numAutorizacion3,
     }));
   }
 }

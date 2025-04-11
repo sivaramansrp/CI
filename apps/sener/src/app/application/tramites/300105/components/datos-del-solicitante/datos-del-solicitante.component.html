@@ -1,0 +1,89 @@
+<div class="container form-container">
+  <ng-titulo titulo="Datos del soliciante" />
+  <div>
+    <form [formGroup]="formSolicitud">
+      <ng-container formGroupName="datosSolicitante">
+        <div class="row">
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="form-label" for="numeroExpediente">No. Expediente*</label>
+              <input class="form-control" id="numeroExpediente" formControlName="numeroExpediente" type="text" (change)="
+                  setValoresStore(
+                    datosSolicitante,
+                    'numeroExpediente',
+                    'setNumeroExpediente'
+                  )
+                " />
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <app-catalogo-select [catalogo]="tipoOperacionCatalogo.catalogos"
+                [placeholder]="tipoOperacionCatalogo.primerOpcion" formControlName="tipoOperacion"
+                [label]="tipoOperacionCatalogo.labelNombre" [required]="true" (change)="
+                    setValoresStore(
+                      datosSolicitante,
+                      'tipoOperacion',
+                      'setTipoOperacion'
+                    )
+                  "></app-catalogo-select>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <app-catalogo-select [catalogo]="finalidadCatalogo.catalogos"
+                [placeholder]="finalidadCatalogo.primerOpcion" formControlName="finalidad"
+                [label]="finalidadCatalogo.labelNombre" [required]="true" (change)="
+                    setValoresStore(
+                      datosSolicitante,
+                      'finalidad',
+                      'setFinalidad'
+                    )
+                  "></app-catalogo-select>
+            </div>
+          </div>
+        </div>
+        <div class="row"  style="margin-top: 20px; margin-bottom: 10px">
+          <div class="col-md-2">
+            <div class="form-group">
+              <label>
+                <input type="radio" [value]="true" [checked]="datosSolicitante.get('isExento')?.value === true"
+                  (click)="onRadioClick('isExento', true)" />
+                Exento
+              </label>
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="form-group"><label>
+                <input type="radio" [value]="false" [checked]="datosSolicitante.get('isAutorizacion')?.value === true"
+                  (click)="onRadioClick('isAutorizacion', true)" />
+                Autorización
+              </label>
+            </div>
+          </div>
+          <div class="col-md-1">
+            A00.
+          </div>
+          <div class="col-md-1">
+            <div class="form-group"> <input type="text" id="numAutorizacion1" formControlName="numAutorizacion1"  maxlength="3" style="width: 50px"
+              (keyup)="onKeyUpNumAutorizacion($event, 'numAutorizacion1', 'setNumAutorizacion1')" /></div>
+          </div>
+          <div class="col-md-1 text-center">
+            /
+          </div>
+          <div class="col-md-1">
+            <div class="form-group"> <input type="text" id="numAutorizacion2" formControlName="numAutorizacion2"  maxlength="4" style="width: 50px"
+              (keyup)="onKeyUpNumAutorizacion($event, 'numAutorizacion2', 'setNumAutorizacion2')" /></div>   
+          </div>
+          <div class="col-md-1 text-center">
+            /
+          </div>
+          <div class="col-md-1">
+            <div class="form-group"> <input type="text" id="numAutorizacion3" formControlName="numAutorizacion3"  maxlength="3" style="width: 50px"
+              (keyup)="onKeyUpNumAutorizacion($event, 'numAutorizacion3', 'setNumAutorizacion3')" /></div> 
+          </div>
+        </div>
+      </ng-container>
+    </form>
+  </div>
+</div>

@@ -15,6 +15,8 @@ import { SolicitudComponent } from './pages/solicitud/solicitud.component';
 import { TercerosRelacionadosComponent } from './pages/terceros-relacionados/terceros-relacionados.component';
 import { PagoDeDerechosComponent } from './components/pago-de-derechos/pago-de-derechos.component';
 import { DerechosComponent } from './pages/derechos/derechos.component';
+import { DatosDelSolicitanteComponent } from './components/datos-del-solicitante/datos-del-solicitante.component';
+import { InputRadioComponent } from "../../../../../../../libs/shared/data-access-user/src/tramites/components/input-radio/input-radio.component";
 
 @NgModule({
   declarations: [
@@ -24,9 +26,10 @@ import { DerechosComponent } from './pages/derechos/derechos.component';
     TercerosRelacionadosComponent,
     DerechosComponent,
     PagoDeDerechosComponent,
+    DatosDelSolicitanteComponent,
   ],
   imports: [
-    CommonModule, 
+    CommonModule,
     AutorizacionDeRayosXRoutingModule,
     WizardComponent,
     SolicitanteComponent,
@@ -37,11 +40,11 @@ import { DerechosComponent } from './pages/derechos/derechos.component';
     TablaDinamicaComponent,
     PasoDosComponent,
     PasoTresComponent,
-    // DatosDelSolicitanteComponent,
     InputFechaComponent,
     AlertComponent,
-    ToastrModule.forRoot()
-  ],
+    ToastrModule.forRoot(),
+    InputRadioComponent,
+],
   providers: [
     ToastrService,
     InicioSesionService,
