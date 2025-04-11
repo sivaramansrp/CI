@@ -20,16 +20,7 @@ import { Tramite300105Query } from '../../estados/tramite300105.query';
  */
 @Component({
   selector: 'app-pago-de-derechos',
-  standalone: true,
   templateUrl: './pago-de-derechos.component.html',
-  styleUrls: ['./pago-de-derechos.component.scss'],
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    InputFechaComponent,
-    TituloComponent,
-    CatalogoSelectComponent,
-  ],
 })
 export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   /**
@@ -111,6 +102,14 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       .subscribe((data): void => {
         this.bancoCatalogo.catalogos = data as Catalogo[];
       });
+  }
+
+  manejarCambioLlavePago(): void {
+    const CAPITALIZED_VALUE = this.datosImportadorExportador.get('llaveDePago')?.value.toUpperCase();
+    this.datosImportadorExportador.get('llaveDePago')?.setValue(CAPITALIZED_VALUE);
+    this.tramite300105Store.setllaveDePago(
+      CAPITALIZED_VALUE
+    );
   }
 
   /**

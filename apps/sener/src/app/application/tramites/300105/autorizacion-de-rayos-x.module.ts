@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 
-import { AlertComponent, BtnContinuarComponent, CatalogoSelectComponent, SolicitanteComponent, TablaDinamicaComponent, TituloComponent, WizardComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, BtnContinuarComponent, CatalogoSelectComponent, InputFechaComponent, SolicitanteComponent, TablaDinamicaComponent, TituloComponent, WizardComponent } from '@ng-mf/data-access-user';
 import { PageComponent } from './pages/page/page.component';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
@@ -15,9 +15,6 @@ import { SolicitudComponent } from './pages/solicitud/solicitud.component';
 import { TercerosRelacionadosComponent } from './pages/terceros-relacionados/terceros-relacionados.component';
 import { PagoDeDerechosComponent } from './components/pago-de-derechos/pago-de-derechos.component';
 import { DerechosComponent } from './pages/derechos/derechos.component';
-// import { DatosDelSolicitanteComponent } from './components/datos-del-solicitante/datos-del-solicitante.component';
-
-
 
 @NgModule({
   declarations: [
@@ -26,6 +23,7 @@ import { DerechosComponent } from './pages/derechos/derechos.component';
     SolicitudComponent,
     TercerosRelacionadosComponent,
     DerechosComponent,
+    PagoDeDerechosComponent,
   ],
   imports: [
     CommonModule, 
@@ -40,7 +38,7 @@ import { DerechosComponent } from './pages/derechos/derechos.component';
     PasoDosComponent,
     PasoTresComponent,
     // DatosDelSolicitanteComponent,
-    PagoDeDerechosComponent,
+    InputFechaComponent,
     AlertComponent,
     ToastrModule.forRoot()
   ],
