@@ -1,11 +1,22 @@
-import { AlertComponent, ConfiguracionColumna, Fabricante, LASTABLA, Otros, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import {
+  AlertComponent,
+  ConfiguracionColumna,
+  Fabricante,
+  LASTABLA,
+  Otros,
+  TablaSeleccion,
+  TituloComponent,
+} from '@libs/shared/data-access-user/src';
 import { Component } from '@angular/core';
 
 import { CommonModule } from '@angular/common';
 
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
 
-import { FABRICANTE_TABLA, OTROS_TABLA } from '../../constantes/terceros-relacionados-fabricante.enum';
+import {
+  FABRICANTE_TABLA,
+  OTROS_TABLA,
+} from '../../constantes/terceros-relacionados-fabricante.enum';
 
 /**
  * TercerosRelacionadosComponent es responsable de manejar el primer paso del proceso.
@@ -14,7 +25,12 @@ import { FABRICANTE_TABLA, OTROS_TABLA } from '../../constantes/terceros-relacio
 @Component({
   selector: 'app-terceros-relacionados-fabricante',
   standalone: true,
-  imports: [CommonModule, TituloComponent, AlertComponent, TablaDinamicaComponent],
+  imports: [
+    CommonModule,
+    TituloComponent,
+    AlertComponent,
+    TablaDinamicaComponent,
+  ],
   templateUrl: './terceros-relacionados-fabricante.component.html',
   styleUrl: './terceros-relacionados-fabricante.component.scss',
 })
@@ -32,10 +48,10 @@ export class TercerosRelacionadosFabricanteComponent {
    */
   public checkbox = TablaSeleccion.CHECKBOX;
   /**
-* Un arreglo de objetos `Fabricante` que representa los datos para la tabla "facturador".
-* Esta propiedad se utiliza para almacenar y gestionar la lista de fabricantes o entidades relacionadas
-* que se muestran en la tabla dentro del componente.
-*/
+   * Un arreglo de objetos `Fabricante` que representa los datos para la tabla "facturador".
+   * Esta propiedad se utiliza para almacenar y gestionar la lista de fabricantes o entidades relacionadas
+   * que se muestran en la tabla dentro del componente.
+   */
   public facturadorTablaDatos: Fabricante[] = [];
 
   /**
@@ -66,64 +82,69 @@ export class TercerosRelacionadosFabricanteComponent {
 
   /**
    * Configuración de la tabla para los fabricantes relacionados.
-   * 
+   *
    * @type {ConfiguracionColumna<Fabricante>[]} Configuración de las columnas de la tabla.
    */
-  public configuracionTabla: ConfiguracionColumna<Fabricante>[] = this.generateConfiguracionTabla(this.configuracionFabricante);
+  public configuracionTabla: ConfiguracionColumna<Fabricante>[] =
+    this.generateConfiguracionTabla(this.configuracionFabricante);
   /**
    * @public
    * @property {ConfiguracionColumna<Fabricante>[]} configuracionFacturadorTabla
-   * 
-   * Configuración de la tabla para los fabricantes relacionados. 
-   * Este arreglo se genera dinámicamente utilizando la configuración proporcionada 
+   *
+   * Configuración de la tabla para los fabricantes relacionados.
+   * Este arreglo se genera dinámicamente utilizando la configuración proporcionada
    * por `configuracionFabricante` a través del método `generateConfiguracionTabla`.
    */
-  public configuracionFacturadorTabla: ConfiguracionColumna<Fabricante>[] = this.generateConfiguracionTabla(this.configuracionFabricante);
+  public configuracionFacturadorTabla: ConfiguracionColumna<Fabricante>[] =
+    this.generateConfiguracionTabla(this.configuracionFabricante);
   /**
-   * Configuration for the "Proveedor" table.
-   * This is dynamically generated using the `configuracionFabricante` configuration
-   * through the `generateConfiguracionTabla` method.
+   * Configuración de la tabla para "Proveedor".
+   *
+   * Esta configuración se genera dinámicamente utilizando la configuración `configuracionFabricante`
+   * a través del método `generateConfiguracionTabla`.
    */
-  public configuracionProveedorTabla: ConfiguracionColumna<Fabricante>[] = this.generateConfiguracionTabla(this.configuracionFabricante);
+  public configuracionProveedorTabla: ConfiguracionColumna<Fabricante>[] =
+    this.generateConfiguracionTabla(this.configuracionFabricante);
   /**
    * Configuración de la tabla para el certificado analítico relacionado con los fabricantes.
-   * 
-   * Esta propiedad utiliza la configuración proporcionada por `configuracionFabricante` 
+   *
+   * Esta propiedad utiliza la configuración proporcionada por `configuracionFabricante`
    * para generar las columnas necesarias en la tabla.
-   * 
+   *
    * @type {ConfiguracionColumna<Fabricante>[]} - Arreglo de configuraciones de columnas para la tabla.
    */
-  public configuracionCertificadoAnaliticoTabla: ConfiguracionColumna<Fabricante>[] = this.generateConfiguracionTabla(this.configuracionFabricante);
-   /**
+  public configuracionCertificadoAnaliticoTabla: ConfiguracionColumna<Fabricante>[] =
+    this.generateConfiguracionTabla(this.configuracionFabricante);
+  /**
    * Configuración de la tabla para los datos de "Otros".
-   * 
+   *
    * @type {ConfiguracionColumna<Otros>[]} Configuración de las columnas de la tabla.
    */
-  public configuracionOtrosTabla: ConfiguracionColumna<Otros>[] = this.generateConfiguracionTabla(this.configuracionOtros);
+  public configuracionOtrosTabla: ConfiguracionColumna<Otros>[] =
+    this.generateConfiguracionTabla(this.configuracionOtros);
 
   /* eslint-disable @typescript-eslint/no-explicit-any */
   /* eslint-disable class-methods-use-this */
   /**
- * Genera un arreglo de configuración para una tabla basado en el arreglo de datos proporcionado.
- *
- * @template T - El tipo de los objetos en la tabla.
- * @param datosArray - Un arreglo de objetos que contiene la configuración de las columnas de la tabla.
- * Cada objeto debe tener las siguientes propiedades:
- *   - `encabezado`: El texto del encabezado para la columna.
- *   - `clave`: La clave de la propiedad en el objeto de datos que se mostrará en la columna.
- * @returns Un arreglo de configuraciones de columnas, donde cada configuración incluye:
- *   - `encabezado`: El texto del encabezado para la columna.
- *   - `clave`: Una función que obtiene el valor de la clave especificada de un objeto de datos.
- *   - `orden`: El orden de la columna, comenzando desde 1.
- */
+   * Genera un arreglo de configuración para una tabla basado en el arreglo de datos proporcionado.
+   *
+   * @template T - El tipo de los objetos en la tabla.
+   * @param datosArray - Un arreglo de objetos que contiene la configuración de las columnas de la tabla.
+   * Cada objeto debe tener las siguientes propiedades:
+   *   - `encabezado`: El texto del encabezado para la columna.
+   *   - `clave`: La clave de la propiedad en el objeto de datos que se mostrará en la columna.
+   * @returns Un arreglo de configuraciones de columnas, donde cada configuración incluye:
+   *   - `encabezado`: El texto del encabezado para la columna.
+   *   - `clave`: Una función que obtiene el valor de la clave especificada de un objeto de datos.
+   *   - `orden`: El orden de la columna, comenzando desde 1.
+   */
   generateConfiguracionTabla(datosArray: any): ConfiguracionColumna<any>[] {
-    const FIELDS: Array<{ encabezado: string, clave: keyof Fabricante }> = datosArray;
+    const FIELDS: Array<{ encabezado: string; clave: keyof Fabricante }> =
+      datosArray;
     return FIELDS.map((field, index) => ({
       encabezado: field.encabezado,
       clave: (item: any) => item[field.clave],
-      orden: index + 1
+      orden: index + 1,
     }));
   }
-
-
 }
