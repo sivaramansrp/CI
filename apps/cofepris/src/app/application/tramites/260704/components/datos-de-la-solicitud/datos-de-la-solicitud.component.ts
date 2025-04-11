@@ -423,6 +423,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
         correoElectronico: [this.solicitudState?.correoElectronico, [Validators.required]],
 
       }),
+
       validacionMercanciaForm: this.fb.group({
         codigoPostal: [this.solicitudState?.codigoPostal, [Validators.required]],
         estado: [this.solicitudState?.estado, [Validators.required]],

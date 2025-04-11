@@ -180,7 +180,7 @@ export class TercerosRelacinadosComponent implements OnInit, OnDestroy {
   constructor(private consulta: ConsultaService,
     public store: Tramite260704Store,
     private query: Tramite260704Query,
-    private fb: FormBuilder,
+    public fb: FormBuilder,
     private validacionesService: ValidacionesFormularioService) {
      // Constructor vacío, no requiere inicialización adicional.
     }
