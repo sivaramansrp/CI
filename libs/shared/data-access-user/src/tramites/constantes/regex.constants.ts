@@ -313,3 +313,9 @@ export const HORA_PATTERN = /^([01]\d|2[0-3]):[0-5]\d$/;
  * Expresión regular que valida cadenas alfanuméricas con espacios y guiones.
  */
 export const ALFANUMERICO_ESPACIO = /^([0-9a-zA-Z -]+)$/;
+
+/**
+ * Expresión regular para validar números en formato de pesos mexicanos (MXN).
+ * Permite dígitos y el punto decimal.
+ */
+export const REGEX_SIN_DIGITOS = /\D/g;
