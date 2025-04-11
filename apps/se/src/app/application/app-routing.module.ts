@@ -324,7 +324,14 @@ const ROUTES: Routes = [
       import('./tramites/110211/validar-certificado.module').then(
         (m) => m.ValidarCertificadoModule
       ),
-  }
+  },
+  {
+    path: 'solicitud-importacion-ambulancia',
+    loadChildren: () =>
+      import('./tramites/130116/solicitud-importacion-ambulancia.module').then(
+        (m) => m.SolicitudImportacionAmbulanciaModule
+      ),
+  }, 
 ];
 
 @NgModule({
