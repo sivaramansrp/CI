@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 
-import { Catalogo, CatalogoSelectComponent, InputFecha, InputFechaComponent, InputRadioComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, InputCheckComponent, InputFecha, InputFechaComponent, InputRadioComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { AvisoValor, FECHA_DE_PAGO } from '../../models/aviso.model';
 
 import { AvisoUnicoService } from '../../services/aviso-unico.service';
@@ -25,7 +25,7 @@ import { UnicoQuery } from '../../estados/queries/unico.query';
 @Component({
   selector: 'app-aviso-de-renovacion',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, TituloComponent, InputFechaComponent, CatalogoSelectComponent, InputRadioComponent],
+  imports: [CommonModule, ReactiveFormsModule, TituloComponent, InputFechaComponent, CatalogoSelectComponent, InputRadioComponent,InputCheckComponent],
   templateUrl: './aviso-de-renovacion.component.html',
   styleUrls: ['./aviso-de-renovacion.component.scss'],
 })
