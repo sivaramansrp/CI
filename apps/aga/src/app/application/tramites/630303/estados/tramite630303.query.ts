@@ -3,9 +3,9 @@ import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
 
 @Injectable({ providedIn: 'root' })
-export class RefProcedureQuery extends Query<Tramite630303State> {
+export class Tramite630303Query extends Query<Tramite630303State> {
 
-
+selectTramite630303State$ = this.select((state) => state);
   constructor(
     protected override store: Tramite630303Store) {
     super(store);

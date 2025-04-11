@@ -7,12 +7,34 @@ import { Injectable } from '@angular/core';
  * @returns RefProcedureState
  */
 export interface Tramite630303State {
-  rfc: string;
+  cveAduana: string;
+  cveSeccionAduanal: string;
+  fechaLimiteRetorno: string;
+  cuentaProrroga: string;
+  folioInformacionGeneralProrroga: string;
+  fechaInicioProrroga: string;
+  fechaVencimientoProrroga: string;
+  folioInformacionGeneralAutorizacion: string;
+  aduanaIngreso: string;
+  seccionAduanera: string;
+  fechaIngreso: string;
+  fechaVencimiento: string;
 }
 
 export function createInitialState(): Tramite630303State {
   return {
-    rfc: '',
+    cveAduana: '',
+    cveSeccionAduanal: '',
+    fechaLimiteRetorno: '',
+    cuentaProrroga: '',
+    folioInformacionGeneralProrroga: '',
+    fechaInicioProrroga: '',
+    fechaVencimientoProrroga: '',
+    folioInformacionGeneralAutorizacion: '',
+    aduanaIngreso: '',
+    seccionAduanera: '',
+    fechaIngreso: '',
+    fechaVencimiento: ''
   };
 }
 
@@ -25,4 +47,10 @@ export class Tramite630303Store extends Store<Tramite630303State> {
     super(createInitialState());
   }
 
+  setTramite630303State(values: Partial<Tramite630303State>): void {
+    this.update((state => ({
+      ...state,
+      ...values,
+    })));
+  }
 }
