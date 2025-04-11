@@ -46,4 +46,12 @@ export class PrestadoresServicioService {
   getAduana(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>('assets/json/202/aduana.json');
   }
+
+  /**
+   * Obtiene los datos del documentos seleccionados.
+   * @returns Observable con los datos del documentos seleccionados.
+   */
+  obtenerDocumentosSeleccionados(): Observable<RespuestaCatalogos> {
+    return this.http.get<RespuestaCatalogos>('assets/json/202/documentos-seleccionados.json');
+  }
 }
