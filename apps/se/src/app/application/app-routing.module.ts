@@ -363,6 +363,13 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path:'importacion-vehiculos-usados-donacion',
+    loadChildren: () =>
+      import('./tramites/130105/importacion-vehiculos-usados-donacion.module').then(
+        (m) => m.ImportacionVehiculosUsadosDonacionModule
+      )
+  },
+  {
     path: 'importacion',
       loadChildren: () =>
         import('./tramites/130110/importacion-neumaticos-comercializar.module').then(
