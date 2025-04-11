@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Location } from '@angular/common';
 
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 
@@ -40,6 +40,14 @@ import { takeUntil } from 'rxjs';
   styleUrl: './agregar-proveedor.component.css',
 })
 export class AgregarProveedorComponent implements OnDestroy, OnInit {
+   /**
+     * Identificador del procedimiento actual.
+     * Utilizado para controlar el flujo de la vista dependiendo del tipo de procedimiento.
+     *
+     * @input idProcedimiento - Cadena que representa el ID del procedimiento (por ejemplo: '260102').
+     */
+    @Input()
+    idProcedimiento!: number;
   /**
    * @property tipoPersona
    * @description Proporciona acceso al enum `TipoPersona` para su uso en la clase.
@@ -64,7 +72,7 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
    * @property {FormGroup} agregarProveedorForm
    * Formulario reactivo utilizado para capturar los datos del proveedor.
    */
-  agregarProveedorForm: FormGroup;
+  agregarProveedorForm!: FormGroup;
 
   /**
    * @property {Catalogo[]} paisesDatos
@@ -88,12 +96,40 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
    * @param tramiteStore - Store que administra el estado del trámite actual.
    * @param tramiteQuery - Servicio para consultar el estado del trámite.
    * @param ubicaccion - Servicio de Angular para navegación de retroceso.
+   */  
+  
+  /**
+   * Lista de elementos deshabilitados en el formulario.
+   * Esta propiedad almacena un arreglo de cadenas que representan
+   * los elementos que deben estar deshabilitados en el formulario.
    */
+  public elementosDeshabilitados: string[] = [];
+
+
+
   constructor(
     private fb: FormBuilder,
     private datosSolicitudService: DatosSolicitudService,
     private ubicaccion: Location
   ) {
+  // Constructor vacío, se inyectan las dependencias para su uso en el componente.
+  }
+
+  /**
+   * @method ngOnInit
+   * @description Hook de inicialización del componente. Llama a `cargarDatos()` para obtener catálogos.
+   */
+  ngOnInit(): void {
+    this.cargarDatos();
+    this.validarElementos();
+    this.crearAgregarFormularioProveedor();
+  }
+
+  /**
+   * @method crearAgregarFormularioProveedor
+   * @description Crea el formulario reactivo `agregarProveedorForm` con sus respectivos controles y validaciones.
+   */
+  crearAgregarFormularioProveedor():void{
     this.agregarProveedorForm = this.fb.group({
       tipoPersona: ['', Validators.required],
       denominacionRazon: [
@@ -115,18 +151,44 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
       numeroExterior: ['', Validators.required],
       numeroInterior: [''],
       lada: [''],
-      telefono: [''],
-      correoElectronico: ['', [Validators.email]],
+      telefono: [
+        {
+          value: this.elementosDeshabilitados.includes('telefono')
+            ? '3461235'
+            : '',
+          disabled: this.elementosDeshabilitados.includes('telefono'),
+        },
+      ],
+      correoElectronico: [
+        {
+          value: this.elementosDeshabilitados.includes('correoElectronico')
+            ? 'abc@njk.com'
+            : '',
+          disabled: this.elementosDeshabilitados.includes('correoElectronico'),
+        },
+        [Validators.email],
+      ],
     });
   }
 
-  /**
-   * @method ngOnInit
-   * @description Hook de inicialización del componente. Llama a `cargarDatos()` para obtener catálogos.
+    /**
+   * Valida elementos según el `idProcedimiento` y establece
+   * las listas de elementos no válidos y añadidos.
+   * @returns {void} Lista de elementos no válidos.
    */
-  ngOnInit(): void {
-    this.cargarDatos();
-  }
+    validarElementos(): void {
+      switch (this.idProcedimiento) {
+        case 260201:
+          this.elementosDeshabilitados = [
+            'telefono',
+            'correoElectronico'
+          ];
+        
+          break;
+        default:
+          this.elementosDeshabilitados = [];
+      }
+    }
 
   /**
    * @method cargarDatos

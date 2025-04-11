@@ -156,7 +156,7 @@ export class AgregarFabricanteComponent implements OnDestroy, OnInit {
    * Esta propiedad almacena un arreglo de cadenas que representan
    * los elementos que deben ser obligatorios en el formulario.
    */
-  public elementosNoRequeridos:string[]=[]
+  public elementosNoRequeridos: string[] = [];
 
   /**
    * Constructor que inyecta los servicios y crea el formulario de fabricante.
@@ -187,9 +187,7 @@ export class AgregarFabricanteComponent implements OnDestroy, OnInit {
       PROCEDIMIENTOS_PARA_COLONIA_O_EQUIVALENTE.includes(this.idProcedimiento)
         ? true
         : false;
-
   }
-
 
   /**
    * Método para inicializar el formulario reactivo `agregarFacturadorForm`.
@@ -197,35 +195,80 @@ export class AgregarFabricanteComponent implements OnDestroy, OnInit {
    *
    * @returns {void} Este método no retorna ningún valor.
    */
-  crearAgregarFormularioFabricante():void{
+  crearAgregarFormularioFabricante(): void {
     this.agregarFabricanteForm = this.fb.group({
       nacionalidad: [this.nacionalStr, Validators.required],
       tipoPersona: ['', Validators.required],
       rfc: ['', Validators.required],
       curp: ['', Validators.required],
-      nombres: ['',[Validators.required, Validators.maxLength(200)]],
-      primerApellido: ['',Validators.required],
+      nombres: ['', [Validators.required, Validators.maxLength(200)]],
+      primerApellido: ['', Validators.required],
       segundoApellido: [''],
       razonSocial: ['', Validators.required],
-      pais: [{
-        value:this.elementosDeshabilitados.includes('pais')?'1':'',
-        disabled: this.elementosDeshabilitados.includes('pais'),
-      }, Validators.required],
-      estado: ['', Validators.required],
-      municipio: ['', Validators.required],
-      localidad: ['', Validators.required],
-      codigoPostal: ['', !this.elementosNoRequeridos.includes('codigoPostal')?[Validators.required]:[]],
-      colonia: ['', !this.elementosNoRequeridos.includes('colonia')?[Validators.required]:[]],
+      pais: [
+        {
+          value: this.elementosDeshabilitados.includes('pais') ? '1' : '',
+          disabled: this.elementosDeshabilitados.includes('pais'),
+        },
+        Validators.required,
+      ],
+      estado: [
+        {
+          value: this.elementosDeshabilitados.includes('estado') ? '1' : '',
+          disabled: this.elementosDeshabilitados.includes('estado'),
+        },
+        Validators.required,
+      ],
+      municipio: [
+        {
+          value: this.elementosDeshabilitados.includes('municipio') ? '1' : '',
+          disabled: this.elementosDeshabilitados.includes('municipio'),
+        },
+        Validators.required,
+      ],
+      localidad: [
+        '',
+        !this.elementosNoRequeridos.includes('localidad')
+          ? [Validators.required]
+          : [],
+      ],
+      codigoPostal: [
+        '',
+        !this.elementosNoRequeridos.includes('codigoPostal')
+          ? [Validators.required]
+          : [],
+      ],
+      colonia: [
+        '',
+        !this.elementosNoRequeridos.includes('colonia')
+          ? [Validators.required]
+          : [],
+      ],
       calle: ['', Validators.required],
       numeroExterior: ['', Validators.required],
       numeroInterior: [''],
       lada: [''],
-      telefono: [''],
-      correoElectronico: ['', [Validators.required, Validators.email]],
+      telefono: [
+        {
+          value: this.elementosDeshabilitados.includes('telefono')
+            ? '3461235'
+            : '',
+          disabled: this.elementosDeshabilitados.includes('telefono'),
+        },
+      ],
+      correoElectronico: [
+        {
+          value: this.elementosDeshabilitados.includes('correoElectronico')
+            ? 'abc@njk.com'
+            : '',
+          disabled: this.elementosDeshabilitados.includes('correoElectronico'),
+        },
+        [Validators.email],
+      ],
       adunasDeEntradas: ['', Validators.required],
       coloniaOEquivalente: [{ value: '', disabled: true }],
     });
-}
+  }
 
   /**
    * Valida elementos según el `idProcedimiento` y establece
@@ -238,11 +281,21 @@ export class AgregarFabricanteComponent implements OnDestroy, OnInit {
       case 260209:
       case 260208:
         this.elementosDeshabilitados = ['pais'];
-        this.elementosNoRequeridos=['codigoPostal','colonia']
+        this.elementosNoRequeridos = ['codigoPostal', 'colonia'];
+        break;
+      case 260201:
+        this.elementosDeshabilitados = ['pais','estado',
+          'municipio',
+          'telefono',
+          'correoElectronico'];
+        this.elementosNoRequeridos = [
+          'localidad',
+          'colonia',
+        ];
         break;
       default:
         this.elementosDeshabilitados = [];
-        this.elementosNoRequeridos=[];
+        this.elementosNoRequeridos = [];
     }
   }
 

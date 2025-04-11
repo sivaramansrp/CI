@@ -372,6 +372,9 @@ export class DatosMercanciaComponent implements OnInit {
         this.elementosAnadidos = ['especifique'];
         this.elementosDeshabilitados = ['descripcionFraccion', 'cantidadUmt'];
         break;
+      case 260201:
+        this.elementosDeshabilitados = ['descripcionFraccion', 'cantidadUmt'];
+        break
       default:
         if (this.detalleMercancia) {
           this.elementosNoValidos = [
