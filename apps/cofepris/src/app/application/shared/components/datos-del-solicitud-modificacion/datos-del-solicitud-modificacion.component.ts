@@ -73,34 +73,72 @@ import { ManifiestosRepresentanteSeccionComponent } from '../manifiestos-represe
     AlertComponent,
     InputCheckComponent,
     NotificacionesComponent,
-    
   ],
 
   templateUrl: './datos-del-solicitud-modificacion.component.html',
   styleUrl: './datos-del-solicitud-modificacion.component.scss',
 })
+
 export class DatosDelSolicitudModificacionComponent
   implements OnInit, OnDestroy ,AfterViewInit
 {
-  public nuevaNotificacion!: Notificacion;
+  /**
+ * Notificación actual que se muestra en el componente.
+ * 
+ * Esta propiedad almacena los datos de la notificación que se mostrará al usuario.
+ * Se utiliza para configurar el tipo, categoría, mensaje y otros detalles de la notificación.
+ */
+public nuevaNotificacion!: Notificacion;
+
+/**
+ * Índice del elemento que se desea eliminar.
+ * 
+ * Esta propiedad almacena el índice del elemento seleccionado para su eliminación
+ * en la lista de pedimentos.
+ */
 elementoParaEliminar!: number;
+
+/**
+ * Lista de pedimentos.
+ * 
+ * Esta propiedad almacena un arreglo de objetos de tipo `Pedimento`, que representan
+ * los pedimentos gestionados en el componente.
+ */
 pedimentos: Array<Pedimento> = [];
+
+/**
+ * Abre el modal de confirmación para eliminar un pedimento.
+ * 
+ * Este método configura los datos de la notificación que se mostrará en el modal
+ * de confirmación. También almacena el índice del elemento que se desea eliminar.
+ * 
+ * @param i - Índice del pedimento que se desea eliminar. Por defecto, es 0.
+ */
 abrirModal(i: number = 0): void {
   this.nuevaNotificacion = {
     tipoNotificacion: 'alert',
     categoria: 'danger',
     modo: 'action',
     titulo: '',
-    mensaje: 'Por el momento no hay comunicación con el Sistema de COFEPRIS, favorde capturar su establecimiento. Acerar',
+    mensaje: 'Por el momento no hay comunicación con el Sistema de COFEPRIS, favor de capturar su establecimiento.',
     cerrar: false,
     tiempoDeEspera: 2000,
     txtBtnAceptar: 'Aceptar',
     txtBtnCancelar: 'Cancelar',
-  }
+  };
 
   this.elementoParaEliminar = i;
 }
 
+/**
+ * Elimina un pedimento de la lista.
+ * 
+ * Este método elimina el pedimento seleccionado de la lista de pedimentos si
+ * el usuario confirma la acción en el modal de confirmación.
+ * 
+ * @param borrar - Indica si se debe proceder con la eliminación. Si es `true`,
+ * se elimina el pedimento correspondiente.
+ */
 eliminarPedimento(borrar: boolean): void {
   if (borrar) {
     this.pedimentos.splice(this.elementoParaEliminar, 1);
@@ -510,7 +548,16 @@ eliminarPedimento(borrar: boolean): void {
       });
   }
 
-  
+  /**
+ * Alterna el estado colapsable de la sección "Uno".
+ * 
+ * Este método cambia el valor de la propiedad `colapsable1` entre `true` y `false`.
+ * Se utiliza para mostrar u ocultar dinámicamente el contenido de una sección en la interfaz de usuario.
+ * 
+ * Comportamiento:
+ * - Si `colapsable1` es `true`, se establece en `false` y la sección se oculta.
+ * - Si `colapsable1` es `false`, se establece en `true` y la sección se muestra.
+ */
   mostrarColapsable(): void {
     this.colapsable1 = !this.colapsable1;
   }
