@@ -57,10 +57,8 @@
         <td *ngFor="let col of obtenerConfiguracionOrdenada()">
           {{ col.clave(fila) || ' ' }}
         </td>
-       
-        <td style="text-align: justify; vertical-align: middle;">
+        <td class="align-icon">
           @if(acciones.length > 0){
-          <!-- <div class="float-xxl-start mx-xxl-3" *ngFor="let accion of acciones"> -->
             @for(accion of acciones; track $index){
               @switch(accion){
                 @case(accionesEnum.VER){
@@ -77,12 +75,8 @@
                 }
                 }
             }
-         
-          <!-- </div> -->
         }
-
         </td>
-       
       </tr>
     </tbody>
   </table>
