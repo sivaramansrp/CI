@@ -1,4 +1,4 @@
-import { AlertComponent, CatalogoSelectComponent, CatalogosSelect, InputRadioComponent, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, CatalogoSelectComponent, CatalogosSelect, InputCheckComponent,InputRadioComponent, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitud105State, Tramite105Store, } from '../../estados/tramite105.store';
@@ -17,7 +17,7 @@ interface TableBodyData {
   imports: [CommonModule, AlertComponent,
     InputRadioComponent,
     TableComponent,
-    TituloComponent, CatalogoSelectComponent, ReactiveFormsModule],
+    TituloComponent, CatalogoSelectComponent, ReactiveFormsModule,InputCheckComponent],
   templateUrl: './datos-del-tramite-uno.component.html',
   styleUrl: './datos-del-tramite-uno.component.scss',
 })
@@ -187,6 +187,7 @@ cambiarRadio2(value: string | number):void {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.solicitudState = seccionState;
+          this.obtenerJsonData();
         })
       )
       .subscribe();
@@ -198,12 +199,10 @@ cambiarRadio2(value: string | number):void {
     this.getColonia();
     this.getFraccionArancelariae();
     this.obtenerMercancia();
-    this.obtenerJsonData()
     this.crearFormularioAgregar();
   }
 
   obtenerJsonData():void{
-  this.subscriptions.push(
     this.query.selectPais$.subscribe((pais) => {
       this.pais = {
         labelNombre: 'País',
@@ -212,8 +211,6 @@ cambiarRadio2(value: string | number):void {
         catalogos: pais ?? [],
       };
     })
-  );
-  this.subscriptions.push(
     this.query.selectEntidadFederativa$.subscribe((entidadFederativa) => {
       this.entidadFederativa = {
         labelNombre: 'Entidad Federativa',
@@ -222,8 +219,6 @@ cambiarRadio2(value: string | number):void {
         catalogos: entidadFederativa ?? [],
       };
     })
-  );
-  this.subscriptions.push(
     this.query.selectMunicipioDelegacion$.subscribe((municipioDelegacion) => {
       this.municipioDelegacion = {
         labelNombre: 'Municipio o Delegación',
@@ -232,9 +227,7 @@ cambiarRadio2(value: string | number):void {
         catalogos: municipioDelegacion ?? [],
       };
     })
-  );
 
-  this.subscriptions.push(
     this.query.selectColonia$.subscribe((colonia) => {
       this.colonia = {
         labelNombre: 'Colonia',
@@ -243,9 +236,7 @@ cambiarRadio2(value: string | number):void {
         catalogos: colonia ?? [],
       };
     })
-  );
 
-  this.subscriptions.push(
     this.query.selectAduana$.subscribe((aduana) => {
       this.aduana = {
         labelNombre: 'Aduana',
@@ -254,9 +245,6 @@ cambiarRadio2(value: string | number):void {
         catalogos: aduana ?? [],
       };
     })
-  );
-
-  this.subscriptions.push(
     this.query.selectFraccionarancelaria$.subscribe((fraccionarancelaria) => {
       this.fraccionArancelaria = {
         labelNombre: 'Fracción arancelaria',
@@ -265,7 +253,6 @@ cambiarRadio2(value: string | number):void {
         catalogos: fraccionarancelaria ?? [],
       };
     })
-  );
 }
 
 crearFormularioAgregar(): void {
@@ -364,11 +351,11 @@ crearFormularioAgregar(): void {
   opcionSeleccionada: string = '';
 
   /**
-   * @method onCheckboxChange
+   * @method alCambioDeCheckbox
    * @description Maneja el cambio de estado de los checkboxes y habilita/deshabilita controles del formulario.
    * @param opcion - La opción seleccionada.
    */
-  onCheckboxChange(opcion: string): void {
+  alCambioDeCheckbox(opcion: string): void {
     const CONTROLS_TO_DISABLE = ['pais', 'codigoPostal', 'entidadFederativa', 'localidad', 'municipioDelegacion', 'colonia', 'entidadFederativaDos', 'calle', 'numeroExterior', 'numeroInterior'];
     if (this.opcionSeleccionada === opcion) {
       this.opcionSeleccionada = '';

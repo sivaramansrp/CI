@@ -158,7 +158,7 @@ const ROUTES: Routes = [
       ),
   },
   {
-    path: 'invoCar-modulo',
+    path: 'invocar-modulo',
     loadChildren: () =>
       import('./tramites/105/invocar.module').then(
         (m) => m.InvocarModule

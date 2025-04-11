@@ -92,7 +92,7 @@
             id="domicilio"
             name="locationOption"
             [checked]="opcionSeleccionada === 'domicilio'"
-            (change)="onCheckboxChange('domicilio')" />
+            (change)="alCambioDeCheckbox('domicilio')" />
             <label class="fw-normal" for="domicilio">Domicilio:</label>
           </div>
           <div class="checkbox ms-4">
@@ -100,7 +100,7 @@
             id="ubicacion"
             name="locationOption"
             [checked]="opcionSeleccionada === 'ubicacion'"
-            (change)="onCheckboxChange('ubicacion')" />
+            (change)="alCambioDeCheckbox('ubicacion')" />
             <label class="fw-normal" for="ubicacion">Ubicación</label>
           </div>
         </div>

@@ -207,27 +207,27 @@ export class DatosDelTramiteDosComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.solicitudState = seccionState;
+          this.obtenerOperacionesDeLaTienda()
         })
+       
       )
       .subscribe();
 
     this.getOperaciones();
     this.obtenerMercancia();
     this.crearFormularios()
-    this.obtenerOperacionesDeLaTienda()
+    
   }
 
   obtenerOperacionesDeLaTienda(): void {
-    this.subscriptions.push(
-      this.query.selectOperaciones$.subscribe((operacione) => {
-        this.operacione = {
-          labelNombre: 'Operaciones',
-          required: false,
-          primerOpcion: 'Selecciona un valor',
-          catalogos: operacione ?? [],
-        };
-      })
-    );
+    this.query.selectOperaciones$.subscribe((operacione) => {
+      this.operacione = {
+        labelNombre: 'Operaciones',
+        required: false,
+        primerOpcion: 'Selecciona un valor',
+        catalogos: operacione ?? [],
+      };
+    })
   }
 
   crearFormularios(): void {
