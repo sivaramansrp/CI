@@ -356,6 +356,13 @@ const ROUTES: Routes = [
         import('./tramites/130110/importacion-neumaticos-comercializar.module').then(
           (m) => m.ImportacionNeumaticosComercializarModule
         ),
+  },
+  {
+    path: 'importacion-de',
+    loadChildren: () =>
+      import('./tramites/130109/vehiculos-usados-adaptados.module').then(
+        (m) => m.VehiculosUsadosAdaptadosModule
+      ),
   }
 ];
 
