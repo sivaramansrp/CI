@@ -674,7 +674,7 @@
     {
         "id": 113,
         "tramite": 260912,
-        "link": "",
+        "link": "/cofepris/mod-permiso-importacion/permiso-sanitario",
         "department": "cofepris"
     },
     {
@@ -764,13 +764,13 @@
     {
         "id": 128,
         "tramite": 130109,
-        "link": "",
+        "link": "/se/importacion-de/vehiculos-usados-adaptados",
         "department": "se"
     },
     {
         "id": 129,
         "tramite": 130110,
-        "link": "",
+        "link": "/se/pago/importacion/neumaticos-comercializar",
         "department": "se"
     },
     {
@@ -788,7 +788,7 @@
     {
         "id": 132,
         "tramite": 40201,
-        "link": "",
+        "link": "/aga/transportacion-maritima/asignar-caat-maritimo",
         "department": "aga"
     },
     {
@@ -1106,7 +1106,7 @@
     {
         "id": 185,
         "tramite": 130301,
-        "link": "",
+        "link": "/se/solicitud-prorroga/solicitud",
         "department": "se"
     },
     {
