@@ -1,1 +1,6 @@
-<p>criterio-de-dictamen works!</p>
+<form [formGroup]="forma">
+    <div class="row">
+        <formas-dinamicas formularioTitulo="Criterio de dictamen de regla octava" [forma]="ninoFormGroup" [formularioDatos]="criterioDeDictamenFormData"
+        [estado]="importacionstate" (emitirCambioDeValor)="establecerCambioDeValor($event)"></formas-dinamicas>
+    </div>
+</form>

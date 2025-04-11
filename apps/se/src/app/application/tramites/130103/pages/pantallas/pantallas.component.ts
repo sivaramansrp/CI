@@ -1,5 +1,6 @@
 import { AccionBoton, DatosPasos, ListaPasosWizard, WizardComponent } from '@libs/shared/data-access-user/src';
 import { Component, ViewChild } from '@angular/core';
+import { AVISO } from '@libs/shared/data-access-user/src/tramites/constantes/aviso-privacidad.enum';
 import { PANTA_PASOS } from '@libs/shared/data-access-user/src/core/services/31601/servicios-pantallas.enum';
 /**
  * @component
@@ -39,6 +40,22 @@ export class PantallasComponent {
     txtBtnSig: 'Continuar',
   };
 
+  /**
+  * compo doc
+  * variable para contener el índice de la pestaña seleccionada
+  * @type {number}
+  */
+  public indiceDePestanaSeleccionada: number = 1;
+
+   /**
+  * compo doc
+  * Mensaje relacionado con el aviso de privacidad simplificado.
+  * 
+  * @type {string}
+  * @memberof PantallasComponent
+  */
+   public avisoPrivacidadAlert: string = AVISO.Aviso;
+
    /**
   * compo doc
   * Referencia al componente Wizard para controlar la navegación entre pasos.
@@ -63,6 +80,23 @@ export class PantallasComponent {
       } else {
         this.wizardComponent.atras();
       }
+      if (e.valor!==1) {
+        this.indiceDePestanaSeleccionada=1;
+      }
+    }
+  }
+
+  /**
+   * compo doc
+   * Función que obtiene el índice de la pestaña seleccionada
+   * @param {number} event - evento de numero
+   * @returns {void}
+   */
+  pestanaCambiado(event: number): void {
+    if (event !== undefined && event !== null && !isNaN(event)) {
+      this.indiceDePestanaSeleccionada = event;
+    } else {
+      this.indiceDePestanaSeleccionada = 1;
     }
   }
 }

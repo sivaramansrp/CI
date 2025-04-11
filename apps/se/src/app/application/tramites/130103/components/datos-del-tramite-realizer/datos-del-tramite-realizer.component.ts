@@ -1,23 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { ImportacionDefinitiva130103State, Tramite130103Store } from '../../../../estados/tramites/tramite130103.store';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DATOS_DEL_TRAMITE_REALIZER } from '../../constantes/importacion-definitiva.enum';
-import { FormGroup } from '@angular/forms';
+import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
 import { ImportacionDefinitivaService } from '@libs/shared/data-access-user/src/core/services/130103/importacion-definitiva.service'
-
-interface DatosDelTramite {
-  id: string;
-  label_nombre: string;
-  campo: string;
-  clase: string;
-  tipo_input: string;
-  desactivado: boolean;
-  solo_lectura: boolean;
-  validadores: { tipo: string }[];
-  marcador_de_posicion: string;
-  margin_top?: number;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  opciones?: any[];
-}
+import { ModeloDeFormaDinamica } from '@libs/shared/data-access-user/src';
+import { Tramite130103Query } from '../../../../estados/queries/tramite130103.query';
 
 /**
   * compo doc
@@ -50,17 +40,20 @@ interface DatosDelTramite {
 @Component({
   selector: 'app-datos-del-tramite-realizer',
   standalone: true,
-  imports: [CommonModule],
+  imports: [
+    CommonModule,
+    FormasDinamicasComponent,
+    ReactiveFormsModule
+  ],
   templateUrl: './datos-del-tramite-realizer.component.html',
   styleUrl: './datos-del-tramite-realizer.component.scss',
 })
  
-export class DatosDelTramiteRealizerComponent implements OnInit {
+export class DatosDelTramiteRealizerComponent implements OnInit, OnDestroy {
 
   /**
   * compo doc
   * @property datosDelTramiteFormData
-  * @type {DatosDelTramite[]}
   * @description
   * Esta propiedad contiene la configuración de los campos del formulario dinámico 
   * utilizado en el componente. La configuración está basada en la constante 
@@ -75,7 +68,7 @@ export class DatosDelTramiteRealizerComponent implements OnInit {
   * const campo = this.datosDelTramiteFormData.find((datos) => datos.campo === 'regimen');
   * console.log(campo.label_nombre); // Muestra: "Régimen al que se destinará la mercancía"
   */
-  public datosDelTramiteFormData:DatosDelTramite[] = DATOS_DEL_TRAMITE_REALIZER;
+  public datosDelTramiteFormData = DATOS_DEL_TRAMITE_REALIZER;
 
   /**
      * compo doc
@@ -107,6 +100,18 @@ export class DatosDelTramiteRealizerComponent implements OnInit {
       return this.forma.get('ninoFormGroup') as FormGroup;
     }
 
+    /**
+   * Subject para notificar la destrucción del componente.
+   */
+    private destroyNotifier$: Subject<void> = new Subject();
+
+    /**
+   * Estado de la solicitud de la sección 301.
+   * @type {ImportacionDefinitiva130103State}
+   * @memberof DatosDelTramiteRealizerComponent
+   */
+    public importacionstate!: ImportacionDefinitiva130103State;
+
   /**
   * compo doc
   * @constructor
@@ -117,10 +122,12 @@ export class DatosDelTramiteRealizerComponent implements OnInit {
   * Este constructor inicializa el componente e inyecta el servicio `ImportacionDefinitivaService`, 
   * que es necesario para realizar solicitudes y obtener datos dinámicos que se utilizan en el formulario.
   */
-constructor(
-  public importacionDefinitivaService: ImportacionDefinitivaService
-// eslint-disable-next-line no-empty-function
-) {}
+  constructor(
+    public importacionDefinitivaService: ImportacionDefinitivaService,
+    private tramite130103Store: Tramite130103Store,
+    private tramite130103Query: Tramite130103Query
+    // eslint-disable-next-line no-empty-function
+  ) {}
 
   /**
   * compo doc
@@ -142,11 +149,18 @@ constructor(
   *   this.obtenerRegimenClasificacion();
   * }
   */
-ngOnInit(): void {
-  this.obtenerRegimenDestinara();
-  this.obtenerRegimenClasificacion();
-  console.log('datosDelTramiteFormData', this.datosDelTramiteFormData)
-}
+  ngOnInit(): void {
+    this.tramite130103Query.selectImportacion$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.importacionstate = seccionState;
+        })
+      )
+      .subscribe();
+    this.obtenerRegimenDestinara();
+    this.obtenerRegimenClasificacion();
+  }
 
   /**
   * compo doc
@@ -173,7 +187,7 @@ ngOnInit(): void {
       if (resp.code === 200) {
         const RESPONSE = resp.data;
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const REGIMEN_FIELD: any = this.datosDelTramiteFormData.find((datos: DatosDelTramite) => datos.campo === 'regimen');
+        const REGIMEN_FIELD: any = this.datosDelTramiteFormData.find((datos: ModeloDeFormaDinamica) => datos.campo === 'regimen');
         if (REGIMEN_FIELD) {
           if (!REGIMEN_FIELD.opciones) {
             REGIMEN_FIELD.opciones = RESPONSE.map((item: { id: number; descripcion: string }) => ({
@@ -211,7 +225,7 @@ ngOnInit(): void {
       if (resp.code === 200) {
         const RESPONSE = resp.data;
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const REGIMEN_FIELD: any = this.datosDelTramiteFormData.find((datos: DatosDelTramite) => datos.campo === 'clasificacion');
+        const REGIMEN_FIELD: any = this.datosDelTramiteFormData.find((datos: ModeloDeFormaDinamica) => datos.campo === 'clasificacion');
         if (REGIMEN_FIELD) {
           if (!REGIMEN_FIELD.opciones) {
             REGIMEN_FIELD.opciones = RESPONSE.map((item: { id: number; descripcion: string }) => ({
@@ -222,5 +236,62 @@ ngOnInit(): void {
         }
       }
     });
+  }
+
+  /**
+  * compo doc
+  * @method establecerCambioDeValor
+  * @description
+  * Este método se utiliza para manejar los cambios en los valores de los campos del formulario dinámico. 
+  * Si el valor del evento es un objeto que contiene un identificador (`id`), actualiza el estado dinámico 
+  * del campo correspondiente en el store con dicho identificador. Si el valor no es un objeto, actualiza 
+  * el estado dinámico del campo con el valor proporcionado.
+  * 
+  * Funcionalidad:
+  * - Verifica si el valor del evento contiene un identificador (`id`) y actualiza el estado dinámico.
+  * - Si el valor no es un objeto, actualiza el estado dinámico con el valor directamente.
+  * 
+  * @param {Object} event - Objeto que contiene el campo modificado y su nuevo valor.
+  * @param {string} event.campo - Nombre del campo modificado.
+  * @param {any} event.valor - Nuevo valor del campo, que puede ser un objeto con un identificador o un valor directo.
+  * 
+  * @example
+  * this.establecerCambioDeValor({ campo: 'clasificacion', valor: { id: 1, descripcion: 'Clasificación A' } });
+  * // Actualiza el estado dinámico del campo "clasificacion" con el identificador 1.
+  * 
+  * this.establecerCambioDeValor({ campo: 'regimen', valor: 'Régimen B' });
+  * // Actualiza el estado dinámico del campo "regimen" con el valor "Régimen B".
+  */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  establecerCambioDeValor(event: { campo: string; valor: any }): void {
+    if (event && typeof event.valor === 'object' && event.valor !== null && 'id' in event.valor) {
+      const VALOR = event.valor.id;
+      this.tramite130103Store.setDynamicFieldValue(event.campo, VALOR);
+    } else if (event) {
+      this.tramite130103Store.setDynamicFieldValue(event.campo, event.valor);
+    }
+  }
+
+  /**
+  * compo doc
+  * @method ngOnDestroy
+  * @description
+  * Este método es parte del ciclo de vida del componente y se ejecuta automáticamente 
+  * cuando el componente está a punto de ser destruido. Se utiliza para limpiar las suscripciones 
+  * activas y evitar fugas de memoria en la aplicación.
+  * 
+  * Funcionalidad:
+  * - Notifica a través del `Subject` `destroyNotifier$` que el componente será destruido.
+  * - Completa el `Subject` para liberar los recursos asociados.
+  * 
+  * @example
+  * ngOnDestroy(): void {
+  *   this.destroyNotifier$.next();
+  *   this.destroyNotifier$.complete();
+  * }
+  */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

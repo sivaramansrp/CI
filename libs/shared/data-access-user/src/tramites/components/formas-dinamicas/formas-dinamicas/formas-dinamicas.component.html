@@ -5,7 +5,7 @@
     @for (item of formularioDatos; track item.campo; let i = $index) {
             @switch(item.tipo_input) {
                 @case ('text') {
-                    <div [ngClass]="[obtenerClaseResponsiva(item.clase), 'mt-' + item.margin_top]" class="min-height">
+                    <div [ngClass]="[obtenerClaseResponsiva(item.clase), 'mt-' + item.margin_top]">
                         <div class="form-group">
                           <label class="form-label" [for]="item.id">{{
                             item.label_nombre
@@ -31,7 +31,7 @@
                         </div>
                       </div>
                 }  @case ('number') {
-                    <div [ngClass]="[obtenerClaseResponsiva(item.clase), 'mt-' + item.margin_top]" class="min-height">
+                    <div [ngClass]="[obtenerClaseResponsiva(item.clase), 'mt-' + item.margin_top]">
                         <div class="form-group">
                           <label class="form-label" [for]="item.id">{{
                             item.label_nombre
@@ -56,7 +56,7 @@
                         </div>
                       </div>
                 } @case ('textarea') {
-                    <div [ngClass]="[obtenerClaseResponsiva(item.clase), 'mt-' + item.margin_top]" class="min-height">
+                    <div [ngClass]="[obtenerClaseResponsiva(item.clase), 'mt-' + item.margin_top]">
                         <label for="{{ item.id }}">{{ item.label_nombre }} {{seRequiere(item.campo) ? '*:' : ':'}}</label>
 
                         <textarea
@@ -79,8 +79,9 @@
                           ></validadores-de-formularios>
                       </div>
                   } @case ('select-catalogos') {
-                    <div [ngClass]="[obtenerClaseResponsiva(item.clase), 'mt-' + item.margin_top]" class="min-height">
+                    <div [ngClass]="[obtenerClaseResponsiva(item.clase), 'mt-' + item.margin_top]">
                       <app-catalogo-select
+                        id="{{item.id}}"
                         [catalogo]="item?.opciones || []" 
                         [formControlName]="item.campo" 
                         [label]="item.label_nombre" 
@@ -99,23 +100,21 @@
                   } @case ('checkbox') {
                     <div
                     [ngClass]="[obtenerClaseResponsiva(item.clase), 'mt-' + item.margin_top]"
-                      class="formas-checkbox min-height">
-                    <div class="form-group w-100">
+                      class="formas-checkbox">
+                    <div class="form-group checkbox-group w-100">
                       <input
                         type="checkbox"
                         [id]="item.id"
                         [formControlName]="item.campo"
                         (change)="eventoDeCambioDeValor($event, item.campo)"
                       />
-                      
-                      
                       <label class="form-label" [for]="item.id" style="margin-left: 10px;">{{
                         item.label_nombre
                       }}</label>
                     </div>
                     </div>
                   } @case ('button') {
-                    <div [ngClass]="[obtenerClaseResponsiva(item.clase), 'mt-' + item.margin_top]" class="min-height">
+                    <div [ngClass]="[obtenerClaseResponsiva(item.clase), 'mt-' + item.margin_top]">
                       <div class="form-group">
                         <input 
                           [id]="item.id"
@@ -127,21 +126,23 @@
                       </div>
                     </div>
                   } @case ('radio') {
-                    <div [ngClass]="[obtenerClaseResponsiva(item.clase), 'mt-' + item.margin_top]" class="min-height">
+                    <div [ngClass]="[obtenerClaseResponsiva(item.clase), 'mt-' + item.margin_top]">
                       <div class="form-group">
                         <label class="form-label" [for]="item.id">{{
                           item.label_nombre
                         }}</label>
                         <app-input-radio
                           [radioOptions]="item.opciones || []"
-                          [selectedValue]="valorSeleccionado"
-                          (valueChange)="cambiarRadio($event)"
                           id="{{item.id}}"
                           formControlName="{{item.campo}}"
+                          [layout]="item.layout ? item.layout : 'vertical'"
                           (valueChange)="eventoDeCambioDeValor($event, item.campo)"
                         ></app-input-radio>
                         
                       </div>
+                    </div>
+                  } @case ('') {
+                    <div [ngClass]="[obtenerClaseResponsiva(item.clase), 'mt-' + item.margin_top]">
                     </div>
                   }
             }

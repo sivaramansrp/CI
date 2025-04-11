@@ -43,6 +43,8 @@ export interface ModeloDeFormaDinamica {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   opciones?: any[]; // opciones for select dropdown, radio
   margin_top?: number; // margin-top
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  layout?: any; // layout for radio options
 }
 
 export interface Validadores {

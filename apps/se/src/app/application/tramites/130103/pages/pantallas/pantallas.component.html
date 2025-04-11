@@ -8,13 +8,13 @@
       <div class="row">
         @switch (indice) { 
         @case (1) {
-          <app-paso-uno></app-paso-uno>
+          <app-paso-uno (pestanaCambiado)="pestanaCambiado($event)"></app-paso-uno>
         }
-         <!-- @case (2) {
-          <app-pasoduos></app-pasoduos>
+         @case (2) {
+          <app-paso-dos></app-paso-dos>
         } @case (3) {
           <app-paso-tres></app-paso-tres>
-        } -->
+        }
        }
       </div>
       <btn-continuar
@@ -23,9 +23,9 @@
     >
     </btn-continuar>
 
-    <!-- @if (indiceDePestanaSeleccionada===2) {
+    @if (indiceDePestanaSeleccionada===2) {
       <div class="mt-5">
         <ng-alert [CONTENIDO]="avisoPrivacidadAlert"></ng-alert>
       </div>
-    } -->
+    }
 </div>

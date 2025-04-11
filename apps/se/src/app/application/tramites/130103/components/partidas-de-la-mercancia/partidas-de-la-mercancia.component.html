@@ -6,6 +6,10 @@
         <div class="row">
             <ng-alert [CONTENIDO]="instrucciones"></ng-alert>
         </div>
+        <div class="row">
+            <formas-dinamicas [forma]="ninoFormGroup" [formularioDatos]="partidasDeLaMercanciaFormData"
+            [estado]="importacionstate" (emitirCambioDeValor)="establecerCambioDeValor($event)"></formas-dinamicas>
+        </div>
         <div class="row mt-5">
             <div class="col-md-8"></div>
             <div class="col-md-4 text-end">
@@ -57,6 +61,12 @@
                       formControlName="valor_total"
                     />
                   </div>
+            </div>
+        </div>
+        <div class="row mt-5" style="text-align: right;">
+            <div>
+                <button type="button" class="btn btn-danger me-2 btn-space" >Eliminar partida</button>
+                <button type="button" class="btn btn-primary btn-space" >Modificar partida</button>
             </div>
         </div>
     </form>

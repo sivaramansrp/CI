@@ -4,6 +4,8 @@ import { DatosDeLaSolicitudComponent } from './components/datos-de-la-solicitud/
 import { ImportacionDefinitivaRoutingModule } from './importacion-definitiva-routing.module';
 import { NgModule } from '@angular/core';
 import { PantallasComponent } from './pages/pantallas/pantallas.component';
+import { PasoDosComponent } from '../120402/components/paso-dos/paso-dos.component';
+import { PasoTresComponent } from '../120402/components/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 
 
@@ -20,7 +22,9 @@ import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
     SolicitanteComponent,
     TituloComponent,
     AlertComponent,
-    DatosDeLaSolicitudComponent
+    DatosDeLaSolicitudComponent,
+    PasoTresComponent,
+    PasoDosComponent,
   ]
 })
 export class ImportacionDefinitivaModule { }

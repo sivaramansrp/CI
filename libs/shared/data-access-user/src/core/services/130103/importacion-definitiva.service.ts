@@ -30,4 +30,9 @@ export class ImportacionDefinitivaService {
   getUnidadDeMedida(): Observable<any> {
     return this.http.get<RespuestaCatalogos>('assets/json/110209/unidad.json');
   }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  getSolicitudMercancia(): Observable<any> {
+    return this.http.get<RespuestaCatalogos>('assets/json/130102/solicitud_mercancia.json');
+  }
 }
