@@ -1,0 +1,7 @@
+{
+    "opciones": [
+      { "label": "Nuevo", "value": "Nuevo" },
+      { "label": "Unado", "value": "Unado" }
+    ],
+    "predeterminadoSeleccionar": "Nuevo"
+  }
