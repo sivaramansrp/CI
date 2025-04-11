@@ -1,10 +1,11 @@
 import { AvisocalidadStore, SolicitudState } from '../../estados/stores/aviso-calidad.store';
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { NotificacionesComponent, Pedimento, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Subject, map, takeUntil } from 'rxjs';
 import { AvisocalidadQuery } from '../../estados/queries/aviso-calidad.query';
 import { CommonModule } from '@angular/common';
-import { TituloComponent } from '@libs/shared/data-access-user/src';
+import { Notificacion } from '@ng-mf/data-access-user';
 
 /**
  * @description
@@ -15,11 +16,39 @@ import { TituloComponent } from '@libs/shared/data-access-user/src';
 @Component({
   selector: 'app-datos-del-establecimiento-rfc',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, TituloComponent],
+  imports: [CommonModule, ReactiveFormsModule, TituloComponent, NotificacionesComponent ],
   templateUrl: './datos-del-establecimiento-rfc.component.html',
   styleUrl: './datos-del-establecimiento-rfc.component.scss',
 })
+/**
+ * @var elementoParaEliminar
+ * @type {number}
+ * @memberof DatosDelEstablecimientoRFCComponent
+ * @description
+ * Variable que almacena el índice del elemento que se desea eliminar de la lista de pedimentos.
+ * Utilizada para realizar operaciones de eliminación en el arreglo `pedimentos`.
+ */
 export class DatosDelEstablecimientoRFCComponent implements OnInit, OnDestroy {
+/**
+ * @description
+ * Variable que almacena el índice del elemento que se desea eliminar de la lista de pedimentos.
+ * Utilizada para realizar operaciones de eliminación en el arreglo `pedimentos`.
+ */
+elementoParaEliminar!: number;
+
+/**
+ * @description
+ * Objeto que representa una nueva notificación.
+ * Se utiliza para mostrar mensajes de alerta o información al usuario.
+ */
+public nuevaNotificacion!: Notificacion;
+
+/**
+ * @description
+ * Arreglo que almacena los pedimentos asociados al establecimiento.
+ * Cada pedimento contiene información relevante para el trámite.
+ */
+pedimentos: Array<Pedimento> = [];
   /**
    * @description
    * Formulario reactivo para capturar los datos del establecimiento.
@@ -81,9 +110,30 @@ export class DatosDelEstablecimientoRFCComponent implements OnInit, OnDestroy {
       .subscribe();
 
     this.configurarGrupoForm(); // Configura el grupo de formularios con los valores iniciales.
+    //this.abrirModal();
 
   }
+  abrirModal(i: number = 0): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'Por el momento no hay comunicación con el Sistema de COFEPRIS, favor de capturar su establecimiento.',
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    }
 
+    this.elementoParaEliminar = i;
+  }
+
+  eliminarPedimento(borrar: boolean): void {
+    if (borrar) {
+      this.pedimentos.splice(this.elementoParaEliminar, 1);
+    }
+  }
   /**
    * @method configurarGrupoForm
    * @description Configures the reactive form group for the "Datos del Establecimiento RFC" component.
@@ -111,9 +161,9 @@ export class DatosDelEstablecimientoRFCComponent implements OnInit, OnDestroy {
    * @description
    * Método que abre el modal y carga el formulario con los datos predefinidos del representante.
    */
-  public abrirModal(): void {
-    this.modal = 'show'; // Muestra el modal
-  }
+  // public abrirModal(): void {
+  //   this.modal = 'show'; // Muestra el modal
+  // }
 
   /**
    * @description

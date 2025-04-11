@@ -8,6 +8,7 @@ import { Subject, map, takeUntil } from 'rxjs';
 import { AvisocalidadQuery } from '../../estados/queries/aviso-calidad.query';
 import { CommonModule } from '@angular/common';
 import { DatosDomicilioLegalService } from '../../services/datos-domicilio-legal.service';
+import { InputCheckComponent } from '@libs/shared/data-access-user/src';
 /**
  * Representa la estructura de la respuesta de una tabla.
  */
@@ -67,6 +68,7 @@ export interface MercanciasTabla {
     CatalogoSelectComponent,
     TablaDinamicaComponent,
     CrosslistComponent,
+    InputCheckComponent
   ],
   templateUrl: './domicilio-establecimiento-aduanas.component.html',
   styleUrls: ['./domicilio-establecimiento-aduanas.component.css'],

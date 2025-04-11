@@ -63,23 +63,10 @@
   </form>
 </div>
 
-<div class="container mt-4">
-  <div class="modal fade" id="modalAgregar" tabindex="-1" aria-labelledby="modalAgregarLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title"></h5>
-        </div>
-        <div class="modal-body">
-          Por el momento no hay comunicación con el
-          Sistema de COFEPRIS, favor
-          de capturar su establecimiento.
-        </div>
 
-        <div class="modal-footer custom-footer justify-content-center">
-          <button type="button" class="btn btn-primary" data-bs-dismiss="modal" #closeModal>Agregar</button>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+@if (nuevaNotificacion) {
+  <section>
+    <lib-notificaciones [notificacionInput]="nuevaNotificacion" (confirmacionModal)="eliminarPedimento($event)">
+    </lib-notificaciones>
+  </section>
+  }
