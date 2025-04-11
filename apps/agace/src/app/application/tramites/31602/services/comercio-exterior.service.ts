@@ -47,4 +47,12 @@ export class ComercioExteriorService {
         })
       );
     }
+
+    getAnterioresDatos(): Observable<JSONResponse> {
+      return this.http.get<JSONResponse>('assets/json/31602/anteriores-tabla.json').pipe(
+        catchError((error) => {
+          return throwError(() => error);
+        })
+      );
+    }
 }

@@ -1,0 +1,21 @@
+<div class="row mt-3">
+    <div class="col-md-12">
+      <p class="fw-bold">
+        Número de empleados que le proveen en los últimos tres bimestres
+        anteriores a su solicitud
+      </p>
+      <app-tabla-dinamica
+            [configuracionTabla]="configuracionTabla"
+            [datos]="numeroDeEmpleadosDatos">
+        </app-tabla-dinamica>
+      <div class="d-flex justify-content-end">
+        <button type="button" class="btn btn-primary me-2" (click)="abrirModal()">
+            Agregar
+        </button>
+      <button class="btn btn-default me-2" type="button">
+        Modificar
+      </button>
+      <button class="btn btn-default" type="button">Eliminar</button>
+      </div>
+    </div>
+  </div>

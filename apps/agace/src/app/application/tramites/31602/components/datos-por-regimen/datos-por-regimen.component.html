@@ -1,1 +1,36 @@
-<p>datos-por-regimen works!</p>
+<div class="container mt-4">
+    <form [formGroup]="importacionesForm">
+        <div class="row mb-3">
+            <p class="fw-bold">
+                Indique si realiza o realizará
+                importaciones temporales de mercancías de las fracciones arancelarias
+                listadas en el Anexo II del Decreto IMMEX y/o de las fracciones
+                arancelarias listadas en el Anexo 28.
+              </p>
+              <div class="col-md-12">
+                <app-input-radio
+                    [radioOptions]="radioOpcions"
+                    [selectedValue]="valorSeleccionado"
+                    (valueChange)="onImportacionesCambio($event)"
+                    id="cumplimiento"
+                    [isRequired]="true"
+                    formControlName="importaciones"
+                    [layout]="'horizontal'">
+                </app-input-radio>
+              </div>
+        </div>
+    </form>
+    @if(valorSeleccionado !== '') {
+        <form [formGroup]="indiqueSiForma">
+            <div class="row mb-3">  
+                <formas-dinamicas 
+                    [formularioTitulo]="'Importación temporal bajo la modalidad del programa IMMEX (sensibles)'"
+                    [forma]="importacionTemporalFormGroup" 
+                    [formularioDatos]="importacionTemporalDatos"
+                    >
+                </formas-dinamicas>
+            </div>
+        </form>
+        <app-conceptos></app-conceptos>
+    }
+</div>
