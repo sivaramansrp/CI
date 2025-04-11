@@ -40,4 +40,4 @@ import { WizardComponent } from '@ng-mf/data-access-user';
   ],
   providers: [ToastrService],
 })
-export class ImportacionDispositivosMedicosSinRegistrarModule {}
+export class ImportacionMedicamentosDestinadosUsoModule {}

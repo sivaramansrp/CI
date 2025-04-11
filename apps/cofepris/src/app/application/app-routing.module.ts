@@ -202,9 +202,10 @@ const ROUTES: Routes = [
     path: 'medicamentos-destinados-uso',
     loadChildren: () =>
       import('./tramites/260208/importacion-medicamentos-destinados-uso.module').then(
-        (m) => m.ImportacionDispositivosMedicosSinRegistrarModule
+        (m) => m.ImportacionMedicamentosDestinadosUsoModule
       ),
   },
+  
   {
         path: 'importacion-materias-primas-estupefacientes',
         loadChildren: () =>
