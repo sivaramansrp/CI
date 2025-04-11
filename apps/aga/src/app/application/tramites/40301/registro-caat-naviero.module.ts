@@ -14,7 +14,6 @@ import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RegistroCaatNavieroPageComponent } from './pages/registro-caat-naviero-page/registro-caat-naviero-page.component';
 import { RegistroCaatNavieroRoutingModule } from './registro-caat-naviero-routing.module';
-// import { RegistroCaatNavieroService } from './services/RegistroCaatNavieroController.service';
 import { RouterModule } from '@angular/router';
 import { SelectPaisesComponent } from '@ng-mf/data-access-user';
 import { ServiciosExtraordinariosService } from './services/servicios-extraordinarios.service';
@@ -55,7 +54,6 @@ import { Solicitud40301Store } from './estados/tramite40301.store';
   providers: [
     ToastrService,
     ServiciosExtraordinariosService,
-    // RegistroCaatNavieroService,
     CapturarService,
     Solicitud40301Store
   ]

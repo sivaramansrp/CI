@@ -30,6 +30,6 @@ export const SECCIONES_TRAMITE_40301 = {
 
 export const CATALOGOS_40301_ID = {
   TRAMITE: '40301',
-  OBTENER_TITULO: "obtenerTitulo",
+  OBTENER_META_INFO: "obtenerMetaInfo",
   AGENT_CATALOG: "tipoAgente"
 }

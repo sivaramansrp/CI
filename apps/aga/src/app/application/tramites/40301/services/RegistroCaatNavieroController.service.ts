@@ -32,6 +32,10 @@ export interface CaatSolicitud {
   fechaFinVigencia: string;
 }
 
+export interface CaatNaviroMetaInfo {
+  tutilo: string;
+  tipoAgenteLabel: string;
+}
 @Injectable({
   providedIn: 'root'
 })

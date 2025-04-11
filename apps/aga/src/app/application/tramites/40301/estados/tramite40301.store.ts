@@ -15,18 +15,18 @@ export interface Solicitud40301State {
   cveFolioCaat: string;
 
   /**
-   * ## descTipoCaat
+   * ## rol
    * 
-   * Descripción del tipo de CAAT.
+   * Descripción del user role.
    */
-  descTipoCaat: string;
+  rol: string;
 
   /**
    * ## descTipoAgente
    * 
    * Descripción del tipo de agente.
    */
-  descTipoAgente: string;
+  tipoAgente: string;
 
   /**
    * ## directorGeneralNombre
@@ -61,8 +61,8 @@ export interface Solicitud40301State {
 export function createInitialState(): Solicitud40301State {
   return {
     cveFolioCaat: '',
-    descTipoCaat: '',
-    descTipoAgente: '',
+    rol: '',
+    tipoAgente: '',
     directorGeneralNombre: '',
     primerApellido: '',
     segundoApellido: '',
@@ -164,6 +164,13 @@ export class Solicitud40301Store extends Store<Solicitud40301State> {
    * Actualiza el estado manteniendo los demás campos intactos.
    */
   public setSegundoApellido(segundoApellido: string): void {
+    this.update((state) => ({
+      ...state,
+      segundoApellido,
+    }));
+  }
+
+  public setRol(segundoApellido: string): void {
     this.update((state) => ({
       ...state,
       segundoApellido,
