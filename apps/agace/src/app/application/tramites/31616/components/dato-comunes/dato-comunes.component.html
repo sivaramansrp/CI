@@ -1,0 +1,76 @@
+<div class="container">
+    <form [formGroup]="datosComunesForma">
+        <div class="row mt-5">
+            <div class="col-md-12">
+                <label class="form-label fw-bold mb-3" for="">
+                    Señale el sector productivo o servicio al que pertenece
+                </label>
+            </div>
+        </div>
+        <div class="row mt-5">
+            <div class="col-md-6">
+              <app-catalogo-select
+                [label]="'Sector Productivo'"
+                [placeholder]="'Seleccione un valor'"
+                [catalogo]="sectorProductivoAgace"
+                formControlName="sectorProductivo"
+                (change)="setValoresStore(datosComunesForma,'sectorProductivo', 'setSectorProductivo')"
+              >
+              </app-catalogo-select>
+            </div>
+            <div class="col-md-6">
+              <app-catalogo-select
+                [label]="'Servicio'"
+                [placeholder]="'Seleccione un valor'"
+                [catalogo]="serviciosAgace"
+                formControlName="servicio"
+                (change)="setValoresStore(datosComunesForma,'servicio', 'setServicio')"
+              >
+              </app-catalogo-select>
+            </div>
+        </div>
+        <div class="row mt-5">
+            <div class="col-md-12">
+                <ng-alert [CONTENIDO]="alerta.inst"></ng-alert>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <label for="solicituddeInspección"><span class="danger">*</span>Señale si al momento de ingresar su solicitud si se encuentra al corriente en el cumplimiento de sus obligaciones fiscales y aduaneras</label>
+                <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'" formControlName="solicitudDeInspeccion" (change)="setValoresStore(datosComunesForma,'solicitudDeInspeccion', 'setSolicitudDeInspeccion',true,0)" (valueChange)="enCambioDeValor()" class="gap"></app-input-radio>
+            </div>
+        </div>
+        <div class="row mt-5">
+            <div class="col-md-12">
+                <label for="solicituddeInspección"><span class="danger">*</span>Indique si autorizó al S A T hacer pública su opinión positiva sobre el cumplimiento de obligaciones fiscales</label>
+                <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'" formControlName="indiqueAutorizo" (change)="setValoresStore(datosComunesForma,'indiqueAutorizo', 'setIndiqueAutorizo',true,0)" (valueChange)="enCambioDeValor()" class="gap"></app-input-radio>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div
+  class="modal fade"
+  #confirmModal
+  tabindex="-1"
+  aria-labelledby="confirmModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-12">
+            <div class="form-group">
+              <p>Es un requisito obligatorio para acceder al Registro en el Esquema de Certificación de Empresas, de conformidad con la regla 7.1.1. de las RGCE.</p>
+            </div>
+          </div>
+        </div>
+        
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" (click)="closeConfirmModal()">Aceptar</button>
+      </div>
+    </div>
+  </div>
+</div>

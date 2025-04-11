@@ -1,0 +1,14 @@
+.danger{
+    color:red;
+    margin-right:5px;
+}
+
+.gap .form-group form{
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.gap .form-group form div{
+    width:50%;
+}
