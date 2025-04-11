@@ -362,13 +362,7 @@ const ROUTES: Routes = [
         (m) => m.ValidarCertificadoModule
       ),
   },
-  {
-    path: 'importacion-otros-vehiculos-usados',
-    loadChildren: () =>
-      import('./tramites/130104/importacion-otros-vehiculos-usados.module').then(
-        (m) => m.ImportacionOtrosVehiculosUsadosModule
-      )
-  }, 
+  
    {
      path:'importacion-vehiculos-usados-donacion',
      loadChildren: () =>
@@ -388,7 +382,14 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/130109/vehiculos-usados-adaptados.module').then(
         (m) => m.VehiculosUsadosAdaptadosModule
-      ),
+      )
+  },
+  {
+    path: 'importacion-otros-vehiculos-usados',
+    loadChildren: () =>
+      import('./tramites/130104/importacion-otros-vehiculos-usados.module').then(
+        (m) => m.ImportacionOtrosVehiculosUsadosModule
+      )
   },
   {
     path: 'exportar-diamantes',
