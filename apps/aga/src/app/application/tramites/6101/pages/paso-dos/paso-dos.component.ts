@@ -2,8 +2,12 @@ import { CATALOGOS_ID } from '@libs/shared/data-access-user/src';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { CatalogosService } from '@libs/shared/data-access-user/src';
 import { Component } from '@angular/core';
+import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
+import { Subject } from 'rxjs';
 import { TEXTOS } from '@ng-mf/data-access-user';
+import { takeUntil } from 'rxjs';
+
 /**
  * Componente PasoDosComponent que representa el segundo paso del trámite 6101.
  */
@@ -15,7 +19,7 @@ import { TEXTOS } from '@ng-mf/data-access-user';
 /**
  * Clase PasoDosComponent encargada de manejar la lógica y vista del segundo paso del trámite 6101.
  */
-export class PasoDosComponent implements OnInit {
+export class PasoDosComponent implements OnInit, OnDestroy {
   /**
    * @description Constante que contiene los textos utilizados en el componente.
    */
@@ -26,6 +30,9 @@ export class PasoDosComponent implements OnInit {
    * Cada elemento es de tipo `Catalogo`, representando un ítem del catálogo disponible.
    */
   catalogoDocumentos: Catalogo[] = [];
+
+  /** Sujeto para manejar la destrucción del componente y cancelar suscripciones */
+  private destroyNotifier$: Subject<void> = new Subject();
 
   /**
    * @description Constructor del componente.
@@ -52,7 +59,7 @@ export class PasoDosComponent implements OnInit {
    */
   getTiposDocumentos(): void {
     this.catalogosServices
-      .getCatalogo(CATALOGOS_ID.CAT_TIPO_DOCUMENTO)
+      .getCatalogo(CATALOGOS_ID.CAT_TIPO_DOCUMENTO).pipe(takeUntil(this.destroyNotifier$))
       .subscribe({
         next: (resp): void => {
           if (resp.length > 0) {
@@ -61,4 +68,13 @@ export class PasoDosComponent implements OnInit {
         },
       });
   }
+
+    /**
+   * Método de ciclo de vida que se ejecuta al destruir el componente
+   * Se encarga de completar el subject y cancelar las suscripciones activas
+   */
+    ngOnDestroy(): void {
+      this.destroyNotifier$.next();
+      this.destroyNotifier$.complete();
+    }
 }
