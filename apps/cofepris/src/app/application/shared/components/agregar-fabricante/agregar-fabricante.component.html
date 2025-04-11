@@ -156,6 +156,7 @@
           formControlName="estado"
           [label]="'Estado/localidad'"
           [required]="true"
+          [isDisabled]="this.elementosDeshabilitados.includes('estado')"
         ></app-catalogo-select>
       </div>
       <div class="col-md-4">
@@ -164,6 +165,7 @@
           formControlName="municipio"
           [label]="'Municipio/alcaldía'"
           [required]="true"
+          [isDisabled]="this.elementosDeshabilitados.includes('municipio')"
         ></app-catalogo-select>
       </div>
     </div>
@@ -174,7 +176,7 @@
           [catalogo]="localidadesDatos"
           formControlName="localidad"
           [label]="'Localidad'"
-          [required]="true"
+          [required]="!elementosNoRequeridos.includes('localidad')"
         ></app-catalogo-select>
       </div>
       <div class="col-md-4">
@@ -208,6 +210,11 @@
     <div class="row mt-3">
       <div class="col-md-9">
         <label class="form-label">Calle*:</label>
+        <span
+        class="bi bi-question-circle-fill"
+        title="Calle"
+        data-bs-toggle="tooltip"
+      ></span>
         <input type="text" class="form-control" formControlName="calle" />
       </div>
       <div class="col-md-3">
