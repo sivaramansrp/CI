@@ -170,10 +170,10 @@ export class Solicitud40301Store extends Store<Solicitud40301State> {
     }));
   }
 
-  public setRol(segundoApellido: string): void {
+  public setRol(rol: string): void {
     this.update((state) => ({
       ...state,
-      segundoApellido,
+      rol: rol,
     }));
   }
 

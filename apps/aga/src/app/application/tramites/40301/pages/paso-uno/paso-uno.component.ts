@@ -1,6 +1,4 @@
 import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
-import { LayaoutCapturaTipoAgenteComponent } from '../../components/layaoutCapturaTipoAgente/layaoutCapturaTipoAgente.component';
-import { LayoutDirectorGeneralComponent } from '../../components/layoutDirectorGeneral/layoutDirectorGeneral.component';
 import { CapturarComponent } from '../../components/capturar/capturar.component';
 
 @Component({

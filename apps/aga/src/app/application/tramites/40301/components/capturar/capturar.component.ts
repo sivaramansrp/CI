@@ -1,10 +1,9 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { CaatNaviroMetaInfo, CapturarService } from '../../services/capturar.service';
-import { map, Subject, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CATALOGOS_40301_ID } from '../../enum/caat-naviero.enum';
-import { LayaoutCapturaTipoAgenteComponent } from '../layaoutCapturaTipoAgente/layaoutCapturaTipoAgente.component';
-import { LayoutDirectorGeneralComponent } from '../layoutDirectorGeneral/layoutDirectorGeneral.component';
+import { CaatNaviroMetaInfo } from '../../modelos/caat-naviero.modalidad.model';
+import { CapturarService } from '../../services/capturar.service';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { Solicitud40301Store } from '../../estados/tramite40301.store';
 
@@ -52,9 +51,6 @@ export class CapturarComponent implements OnInit, OnDestroy {
    */
   agentCatalog: Catalogo[] = [];
 
-  @ViewChild(LayaoutCapturaTipoAgenteComponent) tipoAgentsComponent!: LayaoutCapturaTipoAgenteComponent
-  @ViewChild(LayoutDirectorGeneralComponent) layoutDirectorGeneral!: LayoutDirectorGeneralComponent
-
   /**
    * Subject para destruir notificador.
    */
@@ -69,11 +65,9 @@ export class CapturarComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-
     this.capturarService.setInitialValues();
     this.readMetaInfo();
     this.suscribirseAlEstado();
-
   }
 
   /**
@@ -168,7 +162,7 @@ export class CapturarComponent implements OnInit, OnDestroy {
    * @returns {boolean} `true` si el formulario es válido, `false` en caso contrario.
    */
   isFormValid(): boolean {
-    return this.tipoAgentsComponent?.formularioAgente.valid && this.layoutDirectorGeneral?.solicitudForm.valid;
+    return this.solicitudForm?.valid;
   }
 
   /**
@@ -186,26 +180,15 @@ export class CapturarComponent implements OnInit, OnDestroy {
   conTipoAgenteData(control: string): void {
     // Obtener el valor del control tipoAgente desde el formulario
     const AGENT = this.solicitudForm.get(control)?.value;
-    //TODO: need to save the state of this drop down.
-    // this.
-
-    // return this.agentCatalog.map((item) => {
-    //   return {
-    //     id: item.id,
-    //     clave: item.clave,
-    //     descripcion: item.descripcion,
-    //   };
-    // });
+    this.solicitud40301Store.setRol(AGENT);
   }
 
-
-
   /**
- * Actualiza el nombre del Director General en el store.
- *
- * Este método obtiene el valor actual del campo `directorGeneralNombre` del formulario `solicitudForm`
- * y lo envía al store `solicitud40301Store` mediante el método `setDirectorGeneralNombre`.
- */
+  * Actualiza el nombre del Director General en el store.
+  *
+  * Este método obtiene el valor actual del campo `directorGeneralNombre` del formulario `solicitudForm`
+  * y lo envía al store `solicitud40301Store` mediante el método `setDirectorGeneralNombre`.
+  */
   public actualizarDirectorGeneralNombre(control: string): void {
     const DIRECTOR_GENERAL_NOMBRE = this.solicitudForm.get(control)?.value;
     this.solicitud40301Store.setDirectorGeneralNombre(DIRECTOR_GENERAL_NOMBRE);
@@ -235,13 +218,12 @@ export class CapturarComponent implements OnInit, OnDestroy {
 
 
   onSubmit(): void {
-    if (this.tipoAgentsComponent?.formularioAgente.valid && this.layoutDirectorGeneral?.solicitudForm.valid) {
-
+    if (this.solicitudForm.valid) {
+      // Aquí puedes manejar el envío del formulario, como enviar los datos a un servicio o API
     }
   }
 
   ngOnDestroy(): void {
-
     // Destruir el notificador para evitar fugas de memoria
     this.destruirNotificador$.next();
     this.destruirNotificador$.complete();

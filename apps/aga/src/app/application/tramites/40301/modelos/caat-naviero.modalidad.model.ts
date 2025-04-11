@@ -1,7 +1,5 @@
-interface DirectorGeneralForm {
-    directorGeneral: {
-        nombre: string;
-        apellidoPaterno: string;
-        apellidoMaterno?: string;
-    };
+
+export interface CaatNaviroMetaInfo {
+  tutilo: string;
+  tipoAgenteLabel: string;
 }

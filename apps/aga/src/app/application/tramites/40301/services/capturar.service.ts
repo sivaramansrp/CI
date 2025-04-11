@@ -1,15 +1,11 @@
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { Catalogo } from '@libs/shared/data-access-user/src';
-import { Observable, of } from 'rxjs';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Solicitud40301State, Solicitud40301Store } from '../estados/tramite40301.store';
+import { CaatNaviroMetaInfo } from '../modelos/caat-naviero.modalidad.model';
+import { Catalogo } from '@libs/shared/data-access-user/src';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 import { Solicitud40301Query } from '../estados/tramite40301.query';
 
-
-export interface CaatNaviroMetaInfo {
-  tutilo: string;
-  tipoAgenteLabel: string;
-}
 
 @Injectable({
   providedIn: 'root'
@@ -32,14 +28,16 @@ export class CapturarService {
    * Actualiza el estado del almacén con los valores predeterminados.
    */
     setInitialValues(): void {
-    //   this.solicitudStore.update({
-    //     cveFolioCaat: '3L6V',
-    //     descTipoCaat: 'Naviero',
-    //     TipoAgente: 'Agente Naviero',
-    //     directorGeneralNombre: 'HAZEL',
-    //     primerApellido: 'NAVA',
-    //     segundoApellido: 'AVILA',
-    //   });
+      this.solicitudStore.update((state) => ({
+        ...state,
+          cveFolioCaat: '3L6V',
+          descTipoCaat: 'Naviero',
+          tipoAgente: 'Agente Naviero',
+          directorGeneralNombre: 'HAZEL',
+          primerApellido: 'NAVA',
+          segundoApellido: 'AVILA',
+          rol: 'Agente Naviero',
+        }));
     }
     
       /**
@@ -84,37 +82,5 @@ export class CapturarService {
    */
   obtenerIdTramite(): Observable<string> {
     return this.http.get<string>(`${this.baseUrl}/obtenerIdTramite`);
-  }
-
-  /**
-   * Retrieves metadata for form fields.
-   * @returns Observable<any>
-   */
-  obtenerCamposMetadata(): Observable<any> {
-    return this.http.get<any>(`${this.baseUrl}/obtenerCamposMetadata`);
-  }
-
-
-  /**
-   * Validates form fields using metadata.
-   * @param formId string
-   * @param metadata any
-   */
-  stripesValidation(formId: string, metadata: any): void {
-    // Implement validation logic here
-    console.log(`Validating form ${formId} with metadata`, metadata);
-  }
-
-  /**
-   * Sends the form data to the backend.
-   * @param formData any
-   * @returns Observable<any>
-   */
-  enviarFormulario(formData: any): Observable<any> {
-    return this.http.post(`${this.baseUrl}/enviarFormulario`, formData, {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json'
-      })
-    });
   }
 }
