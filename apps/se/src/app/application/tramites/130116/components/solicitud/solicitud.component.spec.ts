@@ -1,15 +1,14 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SolicitudComponent } from './solicitud.component';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Tramite130111Store } from '../../../../estados/tramites/tramites130111.store';
-import { Tramite130111Query } from '../../../../estados/queries/tramite130111.query';
+import { Tramite130116Store } from '../../../../estados/tramites/tramites130116.store';
+import { Tramite130116Query } from '../../../../estados/queries/tramite130116.query';
 import { of, Subject } from 'rxjs';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { ProductoOpción } from '../../../../shared/constantes/vehiculos-adaptados.enum';
 import { Component, Input } from '@angular/core';
-import { ImportacionDeVehiculosService } from '../../services/solicitud-importacion-ambulancia.service';
 import { HttpClientModule } from '@angular/common/http';
-
+import { SolicitudImportacionAmbulanciaService } from '../../services/solicitud-importacion-ambulancia.service';
 
 @Component({ selector: 'app-partidas-de-la-mercancia', template: '' })
 class PartidasDeLaMercanciaStubComponent {}
@@ -41,10 +40,10 @@ const mockPartidasdelaTable = {
 describe('SolicitudComponent', () => {
   let component: SolicitudComponent;
   let fixture: ComponentFixture<SolicitudComponent>;
-  let mockStore: jest.Mocked<Tramite130111Store>;
-  let mockQuery: jest.Mocked<Tramite130111Query>;
+  let mockStore: jest.Mocked<Tramite130116Store>;
+  let mockQuery: jest.Mocked<Tramite130116Query>;
   let mockService: jest.Mocked<any>;
-  let mockImportacionDeVehiculosService: Partial<ImportacionDeVehiculosService>;
+  let mockSolicitudImportacionAmbulanciaService: Partial<SolicitudImportacionAmbulanciaService>;
 
   const mockProductoOptions: ProductoOpción[] = [
     { label: 'Nuevo', value: 'Nuevo' },
@@ -123,18 +122,18 @@ describe('SolicitudComponent', () => {
         PaisProcendenciaStubComponent,
         RepresentacionStubComponent,
       ],
-      imports: [ReactiveFormsModule,HttpClientModule],
+      imports: [ReactiveFormsModule, HttpClientModule],
       providers: [
         FormBuilder,
-        { provide: Tramite130111Store, useValue: mockStore },
-        { provide: Tramite130111Query, useValue: mockQuery },
-        { provide: ImportacionDeVehiculosService, useValue: mockImportacionDeVehiculosService },
+        { provide: Tramite130116Store, useValue: mockStore },
+        { provide: Tramite130116Query, useValue: mockQuery },
+        { provide: SolicitudImportacionAmbulanciaService, useValue: mockSolicitudImportacionAmbulanciaService },
       ],
     }).compileComponents();
   });
 
   beforeEach(async () => {
-    mockImportacionDeVehiculosService = {
+    mockSolicitudImportacionAmbulanciaService = {
       getEntidadFederativa: jest.fn().mockReturnValue(of(mockCatalogo)),
       getRepresentacionFederal: jest.fn().mockReturnValue(of(mockCatalogo)),
       getListaDePaisesDisponibles: jest.fn().mockReturnValue(of(mockCatalogo)),
@@ -156,7 +155,7 @@ describe('SolicitudComponent', () => {
     await TestBed.configureTestingModule({
       declarations: [SolicitudComponent],
       providers: [
-        { provide: ImportacionDeVehiculosService, useValue: mockImportacionDeVehiculosService },
+        { provide: SolicitudImportacionAmbulanciaService, useValue: mockSolicitudImportacionAmbulanciaService },
       ],
     }).compileComponents();
   });
@@ -225,12 +224,12 @@ describe('SolicitudComponent', () => {
     it('Debería obtener las opciones de solicitud y producto', () => {
       component.opcionesDeBusqueda();
 
-      expect(mockImportacionDeVehiculosService.getSolicitudeOptions).toHaveBeenCalled();
+      expect(mockSolicitudImportacionAmbulanciaService.getSolicitudeOptions).toHaveBeenCalled();
       expect(mockStore.updateState).toHaveBeenCalledWith({
         solicitud: 'Nuevo',
         defaultSelect: 'Inicial',
       });
-      expect(mockImportacionDeVehiculosService.getProductoOptions).toHaveBeenCalled();
+      expect(mockSolicitudImportacionAmbulanciaService.getProductoOptions).toHaveBeenCalled();
       expect(mockStore.updateState).toHaveBeenCalledWith({
         producto: 'Nuevo',
         defaultProducto: 'Nuevo',
@@ -281,7 +280,7 @@ describe('SolicitudComponent', () => {
     it('Debería obtener la lista de entidades federativas', () => {
       component.fetchEntidadFederativa(); // Explicitly call the method
     
-      expect(mockImportacionDeVehiculosService.getEntidadFederativa).toHaveBeenCalled(); // Correct the mock service reference
+      expect(mockSolicitudImportacionAmbulanciaService.getEntidadFederativa).toHaveBeenCalled(); // Correct the mock service reference
       expect(component.entidadFederativa).toEqual(mockCatalogo);
     });
   });
@@ -290,7 +289,7 @@ describe('SolicitudComponent', () => {
     it('Debería obtener la lista de representaciones federales', () => {
       component.fetchRepresentacionFederal();
 
-      expect(mockImportacionDeVehiculosService.getRepresentacionFederal).toHaveBeenCalled();
+      expect(mockSolicitudImportacionAmbulanciaService.getRepresentacionFederal).toHaveBeenCalled();
       expect(component.representacionFederal).toEqual(mockCatalogo);
     });
   });
@@ -299,7 +298,7 @@ describe('SolicitudComponent', () => {
     it('Debería obtener la lista de países disponibles', () => {
       component.listaDePaisesDisponibles();
 
-      expect(mockImportacionDeVehiculosService.getListaDePaisesDisponibles).toHaveBeenCalled();
+      expect(mockSolicitudImportacionAmbulanciaService.getListaDePaisesDisponibles).toHaveBeenCalled();
       expect(component.elementosDeBloque).toEqual(mockCatalogo);
     });
   });
@@ -308,7 +307,7 @@ describe('SolicitudComponent', () => {
     it('Debería obtener países por bloque y actualizar selectRangoDias', () => {
       component.fetchPaisesPorBloque(1);
 
-      expect(mockImportacionDeVehiculosService.getPaisesPorBloque).toHaveBeenCalledWith(1);
+      expect(mockSolicitudImportacionAmbulanciaService.getPaisesPorBloque).toHaveBeenCalledWith(1);
       expect(component.paisesPorBloque).toEqual(mockCatalogo);
       expect(component.selectRangoDias).toEqual(['Option 1', 'Option 2']);
     });

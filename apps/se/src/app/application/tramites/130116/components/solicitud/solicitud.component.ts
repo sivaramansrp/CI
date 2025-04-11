@@ -193,9 +193,9 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   }
  
   /**
-   * jest.spyOnInicializa los formularios reactivos `formDelTramite` y `mercanciaForm`.
+   * Inicializa los formularios reactivos del componente.
+   * Configura los formularios principales para capturar datos de la solicitud, mercancía y otros detalles.
    */
-  
      inicializarFormularios(): void {
     this.formDelTramite = this.fb.group({
       solicitud: ['', Validators.required],
@@ -270,7 +270,8 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     });
   }
   /**
-   * jest.spyOnConfigura las suscripciones para actualizar formularios y almacenar estados.
+   * Configura las suscripciones para sincronizar los formularios con el estado global.
+   * Actualiza los valores de los formularios reactivos en función de los cambios en el estado.
    */
   configuracionFormularioSuscripciones(): void {
     this.tramite130116Query.selectSolicitud$
@@ -321,8 +322,8 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   }
  
   /**
-   * formularioTotalCount
    * Crea el formulario reactivo para capturar los totales de las partidas.
+   * Este formulario incluye campos deshabilitados para mostrar los valores calculados.
    */
   formularioTotalCount(): void {
     this.formForTotalCount = this.fb.group({
@@ -332,7 +333,8 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   }
  
   /**
-   * jest.spyOnSolicita opciones configurables para los formularios desde archivos JSON.
+   * Solicita opciones configurables para los formularios desde archivos JSON.
+   * Actualiza las opciones de solicitud y producto en el estado global.
    */
   opcionesDeBusqueda(): void {
     this.solicitudImportacionAmbulanciaService
@@ -364,9 +366,8 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       });
   }
   /**
-   * manejarlaFilaSeleccionada
-   * Maneja la selección de filas en la tabla dinámica y actualiza el estado global.
-   * Lista de filas seleccionadas.
+   * Maneja la selección de filas en la tabla dinámica.
+   * Actualiza el estado global con las filas seleccionadas.
    */
   manejarlaFilaSeleccionada(filasSeleccionadas: PartidasDeLaMercanciaModelo[]): void {
     this.filaSeleccionada = filasSeleccionadas.length
@@ -377,14 +378,8 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     }
   }
 /**
- * Método para obtener los datos de la tabla dinámica.
- * Este método realiza una solicitud al servicio `solicitudImportacionAmbulanciaService` para obtener los datos
- * de la tabla y actualiza las propiedades relacionadas con la tabla dinámica.
- * 
- * - Actualiza `tableBodyData` con los datos obtenidos.
- * - Asigna valores a las propiedades `cantidad` y `descripcion` del primer elemento de la tabla.
- * - Actualiza el formulario `formForTotalCount` con los valores totales de cantidad y valor en USD.
- * 
+ * Obtiene los datos de la tabla dinámica desde el servicio.
+ * Actualiza los datos del cuerpo de la tabla y los totales en el formulario.
  */
   obtenerTablaDatos(): void {
       this.solicitudImportacionAmbulanciaService.getTablaDatos().pipe(takeUntil(this.destroyed$)).subscribe((data) => {
@@ -397,8 +392,8 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   }
  
   /**
-   * validarYEnviarFormulario
-   * Valida el formulario y muestra la tabla dinámica si es válido.
+   * Valida el formulario de partidas de la mercancía.
+   * Si es válido, muestra la tabla dinámica y actualiza el estado global.
    */
   validarYEnviarFormulario(): void {
     if (this.partidasDelaMercanciaForm.invalid) {
@@ -411,8 +406,8 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   }
  
   /**
-   * navegarParaModificarPartida
-   * Navega para modificar una partida específica y actualiza el estado global.
+   * Navega para modificar una partida específica.
+   * Actualiza el estado global con las filas seleccionadas.
    */
   navegarParaModificarPartida(): void {
     if (this.filaSeleccionada) {
@@ -421,7 +416,8 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     }
   }
 /**
- * Método para obtener la lista de entidades federativas.
+ * Obtiene la lista de entidades federativas desde el servicio.
+ * Actualiza el catálogo de entidades federativas en el componente.
  */
 fetchEntidadFederativa(): void {
   this.solicitudImportacionAmbulanciaService
@@ -432,7 +428,8 @@ fetchEntidadFederativa(): void {
     });
 }
 /**
-* Método para obtener la lista de representaciones federales.
+* Obtiene la lista de representaciones federales desde el servicio.
+* Actualiza el catálogo de representaciones federales en el componente.
 */
 fetchRepresentacionFederal(): void {
   this.solicitudImportacionAmbulanciaService
@@ -443,7 +440,8 @@ fetchRepresentacionFederal(): void {
     });
 }
 /**
-* Método para obtener la lista de países disponibles.
+* Obtiene la lista de países disponibles desde el servicio.
+* Actualiza el catálogo de elementos de bloque en el componente.
 */
 listaDePaisesDisponibles(): void {
   this.solicitudImportacionAmbulanciaService
@@ -454,8 +452,8 @@ listaDePaisesDisponibles(): void {
     });
 }
 /**
-* Método para obtener la lista de países por bloque.
-* Identificador del bloque.
+* Obtiene la lista de países por bloque desde el servicio.
+* Actualiza el catálogo de países y los rangos de días seleccionables.
 */
 fetchPaisesPorBloque(_bloqueId: number): void {
   this.solicitudImportacionAmbulanciaService
@@ -470,14 +468,14 @@ fetchPaisesPorBloque(_bloqueId: number): void {
 }
 /**
 * Maneja el cambio de bloque seleccionado.
-* Identificador del bloque seleccionado.
+* Llama al método para obtener los países por bloque.
 */
 enCambioDeBloque(bloqueId: number): void {
   this.fetchPaisesPorBloque(bloqueId);
 }
   /**
-   * jest.spyOnActualiza el almacén con nuevos valores basados en eventos de formulario.
-   * jest.spyOnEvento que incluye el formulario, el campo y el método a ejecutar.
+   * Actualiza el estado global con nuevos valores basados en eventos de formulario.
+   * Determina el método a ejecutar en función del evento recibido.
    */
   // eslint-disable-next-line complexity
   setValoresStore(event: { form: FormGroup;campo: string;metodoNombre: string;}): void {
@@ -550,8 +548,7 @@ enCambioDeBloque(bloqueId: number): void {
  
 /**
  * Determina si el botón "Modificar" debe estar deshabilitado.
- * Este método verifica si no hay filas seleccionadas en la tabla dinámica.
- * 
+ * Devuelve verdadero si no hay filas seleccionadas en la tabla dinámica.
  */
   disabledModificar() : boolean {
     let disabled = false;
@@ -561,11 +558,11 @@ enCambioDeBloque(bloqueId: number): void {
     return disabled;
   }
   /**
-   * jest.spyOnCiclo de vida de Angular: limpia las suscripciones al destruir el componente.
+   * Limpia las suscripciones activas al destruir el componente.
+   * Evita fugas de memoria al completar el sujeto de destrucción.
    */
   ngOnDestroy(): void {
     this.destroyed$.next();
     this.destroyed$.complete();
   }
 }
- 

@@ -1,3 +1,7 @@
+/**
+ * Define los pasos del proceso de exportación.
+ * Cada paso incluye un índice, un título descriptivo, y estados de actividad y completitud.
+ */
 export const PASOS_EXPORTACION = [
     {
         indice: 1,
