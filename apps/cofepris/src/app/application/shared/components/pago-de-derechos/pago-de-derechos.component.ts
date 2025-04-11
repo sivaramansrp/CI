@@ -13,7 +13,6 @@ import { FormGroup } from '@angular/forms';
 import { InputFecha } from '@ng-mf/data-access-user';
 import { InputFechaComponent } from '@ng-mf/data-access-user';
 import { OnInit } from '@angular/core';
-import { PROCEDIMIENTOS_NO_PARA_ELEMENTO_BANCO } from '../../constantes/pago-banco.enum';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { TituloComponent } from '@ng-mf/data-access-user';
@@ -162,13 +161,6 @@ export class PagoDeDerechosComponent implements OnInit {
     this.mostrarBanco = BANCO.includes(this.idProcedimiento)
       ? true
       : false;
-
-    this.bancoRequerido =
-      PROCEDIMIENTOS_NO_PARA_ELEMENTO_BANCO.includes(
-        this.idProcedimiento
-      )
-        ? false
-        : true;
 
     this.cargarDatos();
     this.getBancoDatos();

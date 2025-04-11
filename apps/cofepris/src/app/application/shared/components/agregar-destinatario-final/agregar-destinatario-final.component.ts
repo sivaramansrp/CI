@@ -282,9 +282,9 @@ export class AgregarDestinatarioFinalComponent
           Validators.maxLength(13),
         ],
       ],
-      nombres: ['', Validators.required],
+      nombres: ['',[Validators.required, Validators.maxLength(200)]],
       denominacionRazon: ['', Validators.required],
-      primerApellido: ['', Validators.required],
+      primerApellido: ['',[Validators.required]],
       segundoApellido: [''],
       pais: [{
         value:this.elementosDeshabilitados.includes('pais')?'1':'',
@@ -312,12 +312,11 @@ export class AgregarDestinatarioFinalComponent
     validarElementos(): void {
       switch (this.idProcedimiento) {
         case 260207:
+          case 260209:
+          case 260208:
           this.elementosDeshabilitados = ['pais'];
           this.elementosNoRequeridos=['colonia'];
           break;
-          case 260208:
-            this.elementosNoRequeridos=['colonia'];
-            break;
         default:
           this.elementosDeshabilitados = [];
           this.elementosNoRequeridos=[];
