@@ -19,7 +19,7 @@ export class TramitesAsociadosComponent implements OnInit, OnDestroy {
   tablaFilaDatos: TramitesAsociados[] = [];
 
   /** Variable que controla la visibilidad del modal */
-  isModalVisible = false;
+  esModalVisible = false;
 
   /** Sujeto que se utiliza para manejar la destrucción de suscripciones */
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
@@ -80,13 +80,13 @@ export class TramitesAsociadosComponent implements OnInit, OnDestroy {
   }
 
   /** Método para mostrar el modal */
-  showModal(): void {
-    this.isModalVisible = true;
+  mostrarModal(): void {
+    this.esModalVisible = true;
   }
 
   /** Método para ocultar el modal */
-  hideModal(): void {
-    this.isModalVisible = false;
+  ocultarModal(): void {
+    this.esModalVisible = false;
   }
 
   /** Método que se ejecuta al destruir el componente */

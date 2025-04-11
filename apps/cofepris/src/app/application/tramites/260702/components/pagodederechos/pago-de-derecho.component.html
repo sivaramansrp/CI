@@ -33,9 +33,6 @@
                 (change)="setValoresStore(pagoDeDerechos,'llavedepago', 'setLlavedoPago')"/>
               </div>
               <div class="col-md-4 mb-3">
-                <!-- <label class="form-label" for="fechadepago">Fecha de pago:</label>
-                <input class="form-control" id="fechadepago" type="date" formControlName="fechadepago"
-                (change)="setValoresStore(pagoDeDerechos,'fechadepago', 'setFechadePago')"/> -->
                 <input-fecha
                 [datos]="fechaPago"
                 [setFecha]="pagoDeDerechosForm.get('fechaDePago')?.value"

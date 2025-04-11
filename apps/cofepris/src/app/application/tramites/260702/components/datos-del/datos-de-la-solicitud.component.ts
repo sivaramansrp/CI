@@ -1,6 +1,5 @@
-
 import { ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { Catalogo, CatalogosSelect, ConfiguracionColumna, InputFecha, InputRadioComponent, TablaSeleccion } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogosSelect, ConfiguracionColumna, InputFecha, InputRadioComponent, Notificacion, NotificacionesComponent, Pedimento, TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FilaData, FilaData2, ListaClave } from '../../models/fila-modal';
 import { CommonModule } from '@angular/common';
@@ -20,6 +19,8 @@ import { Solicitud260702State, Solicitud260702Store } from '../../estados/tramit
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 import { TEXTOS } from '../../constants/constantes.enum';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
+import { InputCheckComponent } from '@libs/shared/data-access-user/src';
+
 
 /**
  * Componente para gestionar los datos de la solicitud.
@@ -27,7 +28,7 @@ import { TituloComponent } from '@libs/shared/data-access-user/src';
 @Component({
   selector: 'app-datos-de-la-solicitud',
   standalone: true,
-  imports: [CommonModule,ReactiveFormsModule,InputRadioComponent,TituloComponent,CatalogoSelectComponent,TablaDinamicaComponent,InputRadioComponent,InputFechaComponent,CrosslistComponent],
+  imports: [CommonModule,ReactiveFormsModule,InputRadioComponent,TituloComponent,CatalogoSelectComponent,TablaDinamicaComponent,InputRadioComponent,InputFechaComponent,CrosslistComponent,InputCheckComponent,NotificacionesComponent],
   templateUrl: './datos-de-la-solicitud.component.html',
   styleUrls: ['./datos-de-la-solicitud.component.css'],
 })
@@ -78,6 +79,21 @@ export class DatosdelasolicitudComponent implements OnInit,OnDestroy {
   /** Referencia al modal de alerta */
   @ViewChild('modalAlerta') modalElement!: ElementRef;
 
+/** 
+ * Configuración para la notificación actual.
+ */
+  public nuevaNotificacion: Notificacion | null = null;
+
+  /** 
+ * Índice del elemento que se desea eliminar.
+ */
+  elementoParaEliminar!: number;
+
+  /** 
+ * Lista de pedimentos asociados a la solicitud.
+ */
+  pedimentos: Array<Pedimento> = [];
+
  /** Configuración para el campo de fecha de fabricación */
  fechaFabricacionDatos: InputFecha = {
   labelNombre: 'Fecha de fabricación',
@@ -94,7 +110,7 @@ export class DatosdelasolicitudComponent implements OnInit,OnDestroy {
     habilitado: true,
   };
  /** Índice de la fila en edición */
-  editingRowIndex: number | null = null;
+ edicióndeíndicedefila: number | null = null;
 
   /** Indica si el uso específico es colapsable */
   usoEspecifico = false;
@@ -103,7 +119,7 @@ export class DatosdelasolicitudComponent implements OnInit,OnDestroy {
   usoEspecificoCrossList: CrossList = {} as CrossList;
 
   /** Índice de la fila seleccionada */
-  selectedRowIndex: number | null = null;
+  índiceFilaSeleccionada: number | null = null;
 
   /** Fecha inicial seleccionada */
   fechaInicialSeleccionada: string = '';
@@ -154,6 +170,9 @@ public estadoData: CatalogosSelect = {
     primerOpcion: 'Selecciona un medio de transporte',
     catalogos: [],
   };
+/** 
+ * Configuración para el campo de selección de clasificación del producto.
+ */
   public delProducto: CatalogosSelect = {
     labelNombre: 'Clasificacion del producto*:',
     required: true,
@@ -168,6 +187,10 @@ public estadoData: CatalogosSelect = {
     primerOpcion: 'Selecciona un medio de transporte',
     catalogos: [],
   };
+
+  /** 
+ * Configuración para el campo de selección del tipo de producto.
+ */
   public tipoProductoData: CatalogosSelect = {
     labelNombre: 'Tipo de producto*:',
     required: true,
@@ -182,7 +205,7 @@ public estadoData: CatalogosSelect = {
   tableData: FilaData[] = [];
 
   /** Conjunto de filas seleccionadas */
-  selectedRows: Set<number> = new Set();
+  filasSeleccionadas: Set<number> = new Set();
 
   /** Opciones para el botón de radio de hacerlos */
   hacerlosRadioOptions = [
@@ -369,6 +392,92 @@ public listaClave: ConfiguracionColumna<ListaClave>[] = [
     this.getListaClaveData();
     this.getMercanciaCrosslistData();
   }
+
+/**
+ * Método para limpiar la notificación actual.
+ * Establece el valor de `nuevaNotificacion` a `null` para eliminar cualquier notificación activa.
+ */
+clearNotificacion(): void {
+  this.nuevaNotificacion = null;
+}
+
+/**
+ * Método para cerrar el modal de agregar mercancía.
+ * Busca el elemento del modal en el DOM, lo oculta y limpia cualquier notificación activa.
+ */
+closeModal(): void {
+  const modalElement = document.getElementById('modalAgregarMercancia');
+  if (modalElement) {
+    const modal = new Modal(modalElement);
+    modal.hide();
+    this.clearNotificacion(); // Limpia la notificación cuando el modal se cierra programáticamente
+  }
+}
+
+/**
+ * Método para eliminar un pedimento de la lista.
+ * @param borrar Indica si se debe proceder con la eliminación del pedimento.
+ */
+eliminarPedimento(borrar: boolean): void {
+  if (borrar) {
+    this.pedimentos.splice(this.elementoParaEliminar, 1);
+    this.nuevaNotificacion = null; // Limpia la notificación
+  }
+}
+
+ /**
+ * Método para abrir un modal y configurar la notificación correspondiente.
+ * Dependiendo de los parámetros, muestra un mensaje de alerta para seleccionar un establecimiento,
+ * notifica que no hay registros seleccionados o confirma la eliminación de registros seleccionados.
+ * 
+ * @param i Índice del elemento que se desea eliminar (por defecto 0).
+ * @param isSeleccionarEstablecimiento Indica si se debe mostrar el mensaje para seleccionar un establecimiento.
+ */
+abrirModal(i: number = 0, isSeleccionarEstablecimiento: boolean = false): void {
+  if (isSeleccionarEstablecimiento) {
+    // Condición específica para "Seleccionar establecimiento"
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'Por el momento no hay comunicación con el Sistema de COFEPRIS, favor de capturar su establecimiento.',
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: 'Cancelar',
+    };
+  } else if (!this.filasSeleccionadas || this.filasSeleccionadas.size === 0) {
+    // No hay filas seleccionadas
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'Selecciona un registro',
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: 'Cancelar',
+    };
+  } else {
+    // Hay filas seleccionadas
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'warning',
+      modo: 'action',
+      titulo: '',
+      mensaje: '¿Estás seguro que deseas eliminar los registros marcados?',
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: 'Cancelar',
+    };
+  }
+
+  this.elementoParaEliminar = i;
+}
+  
  /**
  * Método para crear el formulario de clave SCIAN.
  * Inicializa un formulario reactivo con los campos `claveScian` y `descripcionDelScian`,
@@ -532,10 +641,7 @@ usoEspecificoColapsable(): void {
   /** Muestra el modal de selección de establecimiento */
 
   seleccionarEstablecimiento(): void {
-    if (this.modalElement) {
-      const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
-      MODAL_INSTANCE.show();
-    }
+    this.abrirModal(0, true);
   }
   
     /** Maneja el evento de envío del formulario */
@@ -555,22 +661,21 @@ usoEspecificoColapsable(): void {
   }
   
     /** Maneja la selección de filas */
-  onSelectedRows(selectedRows: FilaData[] | ListaClave[]): void {
-    if (selectedRows.length > 0 && 'claveDeLosLotes' in selectedRows[0]) {
-      this.selectedRows = new Set((selectedRows as ListaClave[]).map((row) => Number(row.claveDeLosLotes)));
-    } else if (selectedRows.length > 0 && 'id' in selectedRows[0]) {
-      this.selectedRows = new Set((selectedRows as FilaData[]).map((row) => Number(row.id)));
-    } else if (selectedRows[0] && 'claveScianG' in selectedRows[0] && 'claveScian' in selectedRows[0].claveScianG) {   
-      this.selectedRows = new Set((selectedRows as FilaData[]).map((row) => Number(row.claveScianG.claveScian)));
+  onfilasSeleccionadas(filasSeleccionadas: FilaData[] | ListaClave[]): void {
+    if (filasSeleccionadas.length > 0 && 'claveDeLosLotes' in filasSeleccionadas[0]) {
+      this.filasSeleccionadas = new Set((filasSeleccionadas as ListaClave[]).map((row) => Number(row.claveDeLosLotes)));
+    } else if (filasSeleccionadas.length > 0 && 'id' in filasSeleccionadas[0]) {
+      this.filasSeleccionadas = new Set((filasSeleccionadas as FilaData[]).map((row) => Number(row.id)));
+    } else if (filasSeleccionadas[0] && 'claveScianG' in filasSeleccionadas[0] && 'claveScian' in filasSeleccionadas[0].claveScianG) {   
+      this.filasSeleccionadas = new Set((filasSeleccionadas as FilaData[]).map((row) => Number(row.claveScianG.claveScian)));
     }
     else {
-      console.error('Selected rows do not contain expected properties:', selectedRows[0]);
-      this.selectedRows.clear(); 
+      this.filasSeleccionadas.clear(); 
      }
     }
     /** Elimina las filas seleccionadas */
   onEliminar(){
-    if (!this.selectedRows || this.selectedRows.size === 0) {
+    if (!this.filasSeleccionadas || this.filasSeleccionadas.size === 0) {
       const modalElement = document.getElementById('seleccionaRegistroModal');
       if (modalElement) {
         const modal = new Modal(modalElement);
@@ -583,19 +688,19 @@ usoEspecificoColapsable(): void {
       modal.show();
     }
     }
+    this.clavaScianForm.reset(); 
+    this.abrirModal();
   }
   
     /** Confirma la eliminación de las filas seleccionadas */
-  confirmarEliminar() {
+  confirmarEliminar(): void {
     this.listaClaveTabla = this.listaClaveTabla.filter(
-      (row) => !this.selectedRows.has(Number(row.claveDeLosLotes))
+      (row) => !this.filasSeleccionadas.has(Number(row.claveDeLosLotes))
     );
-      this.selectedRows.clear(); 
-    const modalElement = document.getElementById('confirmarEliminarModal');
-    if (modalElement) {
-      const modal = Modal.getInstance(modalElement);
-      modal?.hide();
-    }
+      this.filasSeleccionadas.clear(); 
+      this.dataDeLaSolicitudForm.reset();
+     this.abrirModal();
+
   }
     /** Limpia el formulario de clave SCIAN */
   onLimpiar() {
@@ -607,16 +712,16 @@ usoEspecificoColapsable(): void {
     this.showClavaScianForm = true; 
   }
   onDelete(): void {
-    if (!this.selectedRows || this.selectedRows.size === 0) {
+    if (!this.filasSeleccionadas || this.filasSeleccionadas.size === 0) {
       console.warn('No rows selected for deletion.');
       return;
     }
 
     this.tableData = this.tableData.filter((row) => {
       const rowId = row.id || (row.claveScianG && row.claveScianG.claveScian); 
-      return !this.selectedRows.has(Number(rowId));
+      return !this.filasSeleccionadas.has(Number(rowId));
     });
-    this.selectedRows.clear();
+    this.filasSeleccionadas.clear();
   }
   
     /** Cancela la acción de agregar clave SCIAN */
@@ -673,13 +778,13 @@ onAgregarListaClave(): void {
 
 onModificar(): void {
 
-  if (this.selectedRows.size === 0) {
+  if (this.filasSeleccionadas.size === 0) {
     return;
   }
 
-  const selectedRowIndex = Array.from(this.selectedRows)[0];
+  const índiceFilaSeleccionada = Array.from(this.filasSeleccionadas)[0];
   const rowIndex = this.listaClaveTabla.findIndex(
-    (row) => Number(row.claveDeLosLotes) === selectedRowIndex
+    (row) => Number(row.claveDeLosLotes) === índiceFilaSeleccionada
   );
 
   if (rowIndex === -1) {
@@ -694,7 +799,7 @@ onModificar(): void {
     fechaDeCaducidad: selectedRow.fechaDeCaducidad || '',
   });
 
-  this.dataDeLaSolicitudForm.valueChanges.subscribe((formData) => {
+  this.dataDeLaSolicitudForm.valueChanges.pipe(takeUntil(this.destroyed$)).subscribe((formData) => {
     this.listaClaveTabla[rowIndex] = {
       ...this.listaClaveTabla[rowIndex],
       claveDeLosLotes: formData.claveDeLosLotes,
@@ -702,6 +807,7 @@ onModificar(): void {
       fechaDeCaducidad: formData.fechaDeCaducidad,
     };
   });
+  
 }
   /** Obtiene el formulario de datos del trámite a realizar */
 

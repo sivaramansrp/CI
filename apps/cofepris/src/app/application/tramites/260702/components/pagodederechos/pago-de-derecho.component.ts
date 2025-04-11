@@ -72,7 +72,7 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
       )
       .subscribe();
 
-    this.createForm();
+    this.crearFormulario();
     this.getBancoData();
   }
 
@@ -91,7 +91,7 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
   /**
    * Crea el formulario reactivo para gestionar los datos del pago de derechos.
    */
-  createForm(): void {
+  crearFormulario(): void {
     this.pagoDeDerechosForm = this.fb.group({
       pagoDeDerechos: this.fb.group({
         clavedereferencia: [this.pagoDeDerechosState?.clavedereferencia, Validators.required],

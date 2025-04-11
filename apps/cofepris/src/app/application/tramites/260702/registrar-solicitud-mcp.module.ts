@@ -8,7 +8,6 @@ import { FirmaElectronicaComponent } from '@libs/shared/data-access-user/src';
 import { InputFechaComponent } from '@libs/shared/data-access-user/src';
 import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
-import { TramiteFolioService } from '@libs/shared/data-access-user/src';
 import { WizardComponent } from '@libs/shared/data-access-user/src';
 
 import { DatosdelasolicitudComponent } from './components/datos-del/datos-de-la-solicitud.component';
@@ -50,6 +49,6 @@ import { PasoUnoComponent } from '../260702/pages/paso-uno/paso-uno.component';
     WizardComponent,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
-  providers: [ToastrService, RegistrarSolicitudMcpService, TramiteFolioService],
+  providers: [ToastrService, RegistrarSolicitudMcpService],
 })
 export class RegistrarSolicitudMCPModule {}
