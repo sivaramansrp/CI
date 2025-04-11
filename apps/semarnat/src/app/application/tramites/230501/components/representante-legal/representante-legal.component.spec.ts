@@ -1,12 +1,3 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
-/* eslint-disable no-empty-function */
-/* eslint-disable require-await */
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
-/* eslint-disable class-methods-use-this */
-/* eslint-disable sort-imports */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable max-classes-per-file */
-/* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-nocheck
 import { ComponentFixture, TestBed, async } from '@angular/core/testing';
 import { CUSTOM_ELEMENTS_SCHEMA, Injectable, Input, NO_ERRORS_SCHEMA, Output } from '@angular/core';
@@ -15,7 +6,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { Observable, of as observableOf, throwError } from 'rxjs';
 import { Component } from '@angular/core';
-import { RepresentanteLegalComponent } from './destinatario-final.component';
+import { RepresentanteLegalComponent } from './representante-legal.component';
 import { FormBuilder } from '@angular/forms';
 import { Location } from '@angular/common';
 import { MaterialesPeligrososService } from '../../services/materiales-peligrosos.service';
@@ -86,9 +77,29 @@ describe('RepresentanteLegalComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should run #guardarDestinatario()', async () => {
-    component.agregarDestinatarioFinal = component.agregarDestinatarioFinal || {};
-    component.agregarDestinatarioFinal.value = {
+
+
+  it('should run #ngOnInit()', async () => {
+    component.onTipoPersonaChange = jest.fn();
+    component.cargarDatos = jest.fn();
+    component.tramiteStore = component.tramiteStore || {};
+    component.tramiteStore.representanteSujeto = observableOf({});
+    component.representanteLegalForm = component.representanteLegalForm || {};
+    component.representanteLegalForm.patchValue = jest.fn();
+    component.tramiteQuery = component.tramiteQuery || {};
+    component.tramiteQuery.esRepresentanteLegalElModoDeEdicion$ = observableOf({});
+    component.ngOnInit();
+  });
+
+  it('should run #cargarDatos()', async () => {
+    component.materialesPeligrososService = component.materialesPeligrososService || {};
+    component.materialesPeligrososService.obtenerListaPaises = jest.fn().mockReturnValue(observableOf({}));
+    component.cargarDatos();
+  });
+
+  it('should run #guardarRepresentante()', async () => {
+    component.representanteLegalForm = component.representanteLegalForm || {};
+    component.representanteLegalForm.value = {
       nombres: {},
       primerApellido: {},
       segundoApellido: {},
@@ -106,44 +117,20 @@ describe('RepresentanteLegalComponent', () => {
       estado: {},
       codigoPostal: {}
     };
-    component.agregarDestinatarioFinal.reset = jest.fn();
-    component.destinatarios = component.destinatarios || {};
-    component.destinatarios.push = jest.fn();
-    component.addDestinatarios = jest.fn();
+    component.representanteLegalForm.reset = jest.fn();
+    component.setFormValida = jest.fn();
+    component.representantes = component.representantes || {};
+    component.representantes.push = jest.fn();
+    component.updateRepresentanteLegal = jest.fn();
+    component.addRepresentanteLegal = jest.fn();
     component.ubicaccion = component.ubicaccion || {};
     component.ubicaccion.back = jest.fn();
-    component.guardarDestinatario();
-  });
-
-  it('should run #addDestinatarios()', async () => {
-    component.tramiteStore = component.tramiteStore || {};
-    component.tramiteStore.updateDestinatarioFinalTablaDatos = jest.fn();
-    component.addDestinatarios({});
-  });
-
-  it('should run #ngOnInit()', async () => {
-    component.cargarDatos = jest.fn();
-    component.tramiteStore = component.tramiteStore || {};
-    component.tramiteStore.getData = jest.fn().mockReturnValue(observableOf({}));
-    component.agregarDestinatarioFinal = component.agregarDestinatarioFinal || {};
-    component.agregarDestinatarioFinal.patchValue = jest.fn();
-    component.ngOnInit()
-  });
-
-  it('should run #cargarDatos()', async () => {
-    component.materialesPeligrososService = component.materialesPeligrososService || {};
-    component.materialesPeligrososService.obtenerListaCodigosPostales = jest.fn().mockReturnValue(observableOf({}));
-    component.materialesPeligrososService.obtenerListaPaises = jest.fn().mockReturnValue(observableOf({}));
-    component.materialesPeligrososService.obtenerListaEstados = jest.fn().mockReturnValue(observableOf({}));
-    component.materialesPeligrososService.obtenerListaMunicipios = jest.fn().mockReturnValue(observableOf({}));
-    component.materialesPeligrososService.obtenerListaLocalidades = jest.fn().mockReturnValue(observableOf({}));
-    component.materialesPeligrososService.obtenerListaColonias = jest.fn().mockReturnValue(observableOf({}));
-    component.cargarDatos();
+    component.guardarRepresentante();
   });
 
   it('should run #limpiarFormulario()', async () => {
-    component.agregarDestinatarioFinal = component.agregarDestinatarioFinal || {};
-    component.agregarDestinatarioFinal.reset = jest.fn();
+    component.representanteLegalForm = component.representanteLegalForm || {};
+    component.representanteLegalForm.reset = jest.fn();
     component.limpiarFormulario();
   });
 
@@ -151,6 +138,24 @@ describe('RepresentanteLegalComponent', () => {
     component.ubicaccion = component.ubicaccion || {};
     component.ubicaccion.back = jest.fn();
     component.cancelar();
+  });
+
+  it('should run #setFormValida()', async () => {
+    component.tramiteStore = component.tramiteStore || {};
+    component.tramiteStore.setFormValida = jest.fn();
+    component.setFormValida({});
+  });
+
+  it('should run #addRepresentanteLegal()', async () => {
+    component.tramiteStore = component.tramiteStore || {};
+    component.tramiteStore.addRepresentanteLegalTablaDatos = jest.fn();
+    component.addRepresentanteLegal({});
+  });
+
+  it('should run #updateRepresentanteLegal()', async () => {
+    component.tramiteStore = component.tramiteStore || {};
+    component.tramiteStore.updateRepresentanteLegalTablaDatos = jest.fn();
+    component.updateRepresentanteLegal({});
   });
 
   it('should run #ngOnDestroy()', async () => {

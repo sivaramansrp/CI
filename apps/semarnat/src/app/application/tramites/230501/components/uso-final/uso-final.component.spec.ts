@@ -1,6 +1,6 @@
 // @ts-nocheck
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Input, Output } from '@angular/core';
+import { ComponentFixture, TestBed, async } from '@angular/core/testing';
+import { CUSTOM_ELEMENTS_SCHEMA, Injectable, Input, NO_ERRORS_SCHEMA, Output } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -8,14 +8,16 @@ import { Observable, of as observableOf, throwError } from 'rxjs';
 import { Component } from '@angular/core';
 import { UsoFinalComponent } from './uso-final.component';
 import { FormBuilder } from '@angular/forms';
-import { MaterialesPeligrososService } from '../../services/materiales-peligrosos.service';
 import { Location } from '@angular/common';
+import { MaterialesPeligrososService } from '../../services/materiales-peligrosos.service';
 import { Tramite230501Store } from '../../estados/stores/tramite230501Store.store';
 import { Tramite230501Query } from '../../estados/queries/tramite230501Query.query';
+import { SeccionLibQuery, SeccionLibStore } from '@libs/shared/data-access-user/src';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Injectable()
 class MockMaterialesPeligrososService {
-  obtenerRespuestaPorUrl = function() {};
+  obtenerRespuestaPorUrl = function () { };
   obtenerListaCodigosPostales = jest.fn().mockReturnValue(observableOf({}));
   obtenerListaPaises = jest.fn().mockReturnValue(observableOf({}));
   obtenerListaEstados = jest.fn().mockReturnValue(observableOf({}));
@@ -25,43 +27,43 @@ class MockMaterialesPeligrososService {
 }
 
 @Injectable()
-class MockTramite230501Store {}
+class MockTramite230501Store { }
 
 @Injectable()
-class MockTramite230501Query {}
+class MockTramite230501Query { }
 @Injectable()
 class MockRouter {
-  navigate() {};
+  navigate() { }
 }
-
 describe('UsoFinalComponent', () => {
   let fixture;
   let component;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-    declarations: [],
-          schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
-          providers: [
-            { provide: Tramite230501Query, useClass: MockTramite230501Query },
-            { provide: Tramite230501Store, useClass: MockTramite230501Store },
-            { provide: MaterialesPeligrososService, useClass: MockMaterialesPeligrososService },
-            SeccionLibStore,
-            SeccionLibQuery,
-            FormBuilder,
-            { provide: Router, useClass: MockRouter },
-            {
-              provide: ActivatedRoute,
-              useValue: {
-                snapshot: {url: 'url', params: {}, queryParams: {}, data: {}},
-                url: observableOf('url'),
-                params: observableOf({}),
-                queryParams: observableOf({}),
-                fragment: observableOf('fragment'),
-                data: observableOf({})
-              }
-            }
-          ]
+    imports: [FormsModule, ReactiveFormsModule],
+      declarations: [],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
+      providers: [
+        { provide: Tramite230501Query, useClass: MockTramite230501Query },
+        { provide: Tramite230501Store, useClass: MockTramite230501Store },
+        { provide: MaterialesPeligrososService, useClass: MockMaterialesPeligrososService },
+        SeccionLibStore,
+        SeccionLibQuery,
+        FormBuilder,
+        { provide: Router, useClass: MockRouter },
+        {
+          provide: ActivatedRoute,
+          useValue: {
+            snapshot: { url: 'url', params: {}, queryParams: {}, data: {} },
+            url: observableOf('url'),
+            params: observableOf({}),
+            queryParams: observableOf({}),
+            fragment: observableOf('fragment'),
+            data: observableOf({})
+          }
+        }
+      ]
     }).overrideComponent(UsoFinalComponent, {
 
       set: { providers: [{ provide: MaterialesPeligrososService, useClass: MockMaterialesPeligrososService }] }    
@@ -76,14 +78,19 @@ describe('UsoFinalComponent', () => {
   });
 
   it('should run #ngOnInit()', async () => {
+    component.onTipoPersonaChange = jest.fn();
     component.cargarDatos = jest.fn();
     component.tramiteQuery = component.tramiteQuery || {};
     component.tramiteQuery.getusoTablaDatos$ = observableOf({});
+    component.tramiteQuery.esUsuarioElModoDeEdicion$ = observableOf({});
     component.tramiteStore = component.tramiteStore || {};
-    component.tramiteStore.getData = jest.fn().mockReturnValue(observableOf({}));
+    component.tramiteStore.usuarioSujeto = observableOf({});
     component.usuarioFinalForm = component.usuarioFinalForm || {};
     component.usuarioFinalForm.patchValue = jest.fn();
     component.ngOnInit();
+    expect(component.onTipoPersonaChange).toHaveBeenCalled();
+    expect(component.cargarDatos).toHaveBeenCalled();
+    expect(component.usuarioFinalForm.patchValue).toHaveBeenCalled();
   });
 
   it('should run #cargarDatos()', async () => {
@@ -136,6 +143,7 @@ describe('UsoFinalComponent', () => {
 
   it('should run #addUsuario()', async () => {
     component.tramiteStore = component.tramiteStore || {};
+    component.tramiteStore.addUsuarioTablaDatos = jest.fn();
     component.tramiteStore.updateUsuarioTablaDatos = jest.fn();
     component.addUsuario({});
   });

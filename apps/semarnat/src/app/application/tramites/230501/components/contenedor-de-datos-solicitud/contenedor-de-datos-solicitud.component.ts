@@ -295,7 +295,7 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
   isDatosEspecificosValid(): boolean {
     const CONTROLS_TO_CHECK = DATOS_ESPECIFICOS_VALIDO_CONTROL;
     return CONTROLS_TO_CHECK.every(controlName => {
-      const CONTROLS = this.datosSolicitudForm.get(controlName);
+      const CONTROLS = this.datosSolicitudForm?.get(controlName);
       return CONTROLS && CONTROLS.valid;
     });
   }

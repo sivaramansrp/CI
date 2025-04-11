@@ -76,15 +76,20 @@ describe('ContenedorDeDatosSolicitudComponent', () => {
     component.tramite230501Query = component.tramite230501Query || {};
     component.tramite230501Query.selectTramiteState$ = observableOf({});
     component.crearDatosSolicitudForm = jest.fn();
-    component.seccionQuery = component.seccionQuery || {};
-    component.seccionQuery.selectSeccionState$ = observableOf({});
-    component.datasolicituActualizar = jest.fn();
+    component.pestanaValidar = jest.fn();
     component.ngOnInit();
+  });
+
+  it('should run #setFormValida()', async () => {
+    component.tramite230501Store = component.tramite230501Store || {};
+    component.tramite230501Store.setFormValida = jest.fn();
+    component.setFormValida({});
   });
 
   it('should run #crearDatosSolicitudForm()', async () => {
     component.fb = component.fb || {};
     component.fb.group = jest.fn().mockReturnValue({
+      valueChanges: observableOf({}),
       get: function() {}
     });
     component.tramiteState = component.tramiteState || {};
@@ -95,7 +100,37 @@ describe('ContenedorDeDatosSolicitudComponent', () => {
     component.tramiteState.setValue = jest.fn();
     component.materialesPeligrososService = component.materialesPeligrososService || {};
     component.materialesPeligrososService.convertirNumeroALetras = jest.fn();
+    component.actualizarElValorDeLaTienda = jest.fn();
+    component.pestanaValidar = jest.fn();
     component.crearDatosSolicitudForm();
+  });
+
+  it('should run #pestanaValidar()', async () => {
+    component.isDatosEspecificosValid = jest.fn();
+    component.tramiteState = component.tramiteState || {};
+    component.tramiteState.numeroCasTablaDatos = {
+      length: {}
+    };
+    component.tramiteState.composicionTablaDatos = {
+      length: {}
+    };
+    component.setFormValida = jest.fn();
+    component.pestanaValidar();
+
+  });
+
+  it('should run #areSpecificControlsValid()', async () => {
+    component.datosSolicitudForm = component.datosSolicitudForm || {};
+    component.datosSolicitudForm.get = jest.fn().mockReturnValue({
+      valid: {}
+    });
+    component.areSpecificControlsValid();
+  });
+
+  it('should run #isDatosEspecificosValid()', async () => {
+    component.datosSolicitudForm = component.datosSolicitudForm || {};
+    component.datosSolicitudForm.get = jest.fn();
+    component.isDatosEspecificosValid();
   });
 
   it('should run #actualizarElValorDeLaTienda()', async () => {
@@ -137,10 +172,12 @@ describe('ContenedorDeDatosSolicitudComponent', () => {
         "numeroCasTablaDatos": {}
       }
     ]);
+    component.actualizarElValorDeLaTienda = jest.fn();
+    component.pestanaValidar = jest.fn();
     component.agregarNumero();
   });
 
-  it('should run #eliminarnumeroCas()', async () => {
+  it('should run #eliminarNumeroCas()', async () => {
     component.numeroCasSellecionLista = component.numeroCasSellecionLista || {};
     component.numeroCasSellecionLista.some = jest.fn().mockReturnValue([
       {
@@ -157,7 +194,8 @@ describe('ContenedorDeDatosSolicitudComponent', () => {
     component.tramite230501Store.update = jest.fn().mockReturnValue([
       null
     ]);
-    component.eliminarnumeroCas();
+    component.pestanaValidar = jest.fn();
+    component.eliminarNumeroCas();
   });
 
   it('should run #fraccionArancelariaSeleccione()', async () => {
@@ -224,6 +262,7 @@ describe('ContenedorDeDatosSolicitudComponent', () => {
     component.tramite230501Store.update = jest.fn().mockReturnValue([
       null
     ]);
+    component.pestanaValidar = jest.fn();
     component.eliminarComposicion();
   });
 
@@ -232,6 +271,7 @@ describe('ContenedorDeDatosSolicitudComponent', () => {
     component.destroyNotifier$.next = jest.fn();
     component.destroyNotifier$.complete = jest.fn();
     component.ngOnDestroy();
+    expect(component.destroyNotifier$.next).toHaveBeenCalled();
+    expect(component.destroyNotifier$.complete).toHaveBeenCalled();
   });
-
 });

@@ -63,6 +63,7 @@ describe('PagoDeDerechosComponent', () => {
     component.seccionQuery.selectSeccionState$ = observableOf({});
     component.pagoDerechos = component.pagoDerechos || {};
     component.pagoDerechos.statusChanges = observableOf({});
+    component.pagoDerechos.valueChanges = observableOf({});
     component.pagoDerechos.get = jest.fn().mockReturnValue({
       status: {}
     });
@@ -75,7 +76,10 @@ describe('PagoDeDerechosComponent', () => {
   it('should run #createPagoDerechos()', async () => {
     component.fb = component.fb || {};
     component.fb.group = jest.fn().mockReturnValue({
-      get: function() {}
+      valid: {},
+      valueChanges: observableOf({
+        fecha: {}
+      })
     });
     component.pagoDerechosState = component.pagoDerechosState || {};
     component.pagoDerechosState.clave = 'clave';
@@ -84,6 +88,7 @@ describe('PagoDeDerechosComponent', () => {
     component.pagoDerechosState.llavePago = 'llavePago';
     component.pagoDerechosState.fecha = 'fecha';
     component.pagoDerechosState.importePago = 'importePago';
+    component.setFormValida = jest.fn();
     component.tramite230501Store = component.tramite230501Store || {};
     component.tramite230501Store.setPagoDerechosStateProperty = jest.fn();
     component.createPagoDerechos();

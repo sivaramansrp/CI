@@ -38,9 +38,9 @@ describe('ComposicionComponent', () => {
     });
     component.agregar();
     expect(mockStoreUpdate).toHaveBeenCalledWith(expect.any(Function));
-    expect(mockStoreUpdate).toHaveBeenCalledTimes(1);
+    expect(mockStoreUpdate).toHaveBeenCalledTimes(2);
     expect(mockBack).toHaveBeenCalled();
-    expect(component.composicionForm.valid).toBe(false); // Form should be reset
+    expect(component.composicionForm.valid).toBe(false);
   });
 
   it('should not add a new item or reset the form when agregar is called with invalid form', () => {
@@ -49,12 +49,12 @@ describe('ComposicionComponent', () => {
 
     component.composicionForm.setValue({
       componenteMaterial: '',
-      porcentajeConcentracion: 150, // Invalid value
+      porcentajeConcentracion: 150,
     });
     component.agregar();
     expect(mockStoreUpdate).not.toHaveBeenCalled();
     expect(mockBack).not.toHaveBeenCalled();
-    expect(component.composicionForm.valid).toBe(false); // Form should remain invalid
+    expect(component.composicionForm.valid).toBe(false);
   });
 
   it('should reset the form and navigate back when cancelar is called', () => {

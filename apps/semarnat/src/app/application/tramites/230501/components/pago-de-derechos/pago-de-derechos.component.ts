@@ -117,7 +117,9 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       fecha: [this.pagoDerechosState.fecha, [Validators.required]],
       importePago: [{ value: this.pagoDerechosState.importePago, disabled: true }],
     });
-      this.pagoDerechos.valueChanges.subscribe((value) => {
+      this.pagoDerechos.valueChanges
+        .pipe(takeUntil(this.destroyNotifier$))
+        .subscribe((value) => {
         this.setFormValida(this.pagoDerechos.valid);
         this.tramite230501Store.setPagoDerechosStateProperty('fecha', value.fecha);
       });

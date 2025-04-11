@@ -74,11 +74,6 @@ declarations: [],
     component = fixture.debugElement.componentInstance;
   });
 
-  afterEach(() => {
-    component.ngOnDestroy = function() {};
-    fixture.destroy();
-  });
-
   it('should run #constructor()', async () => {
     expect(component).toBeTruthy();
   });
@@ -110,29 +105,33 @@ declarations: [],
     component.ubicaccion = component.ubicaccion || {};
     component.ubicaccion.back = jest.fn();
     component.guardarDestinatario();
-    // expect(component.agregarDestinatarioFinal.reset).toHaveBeenCalled();
-    // expect(component.destinatarios.push).toHaveBeenCalled();
-    // expect(component.addDestinatarios).toHaveBeenCalled();
-    // expect(component.ubicaccion.back).toHaveBeenCalled();
   });
 
   it('should run #addDestinatarios()', async () => {
     component.tramiteStore = component.tramiteStore || {};
-    component.tramiteStore.updateDestinatarioFinalTablaDatos = jest.fn();
+    component.tramiteStore.addDestinatarioFinalTablaDatos = jest.fn();
     component.addDestinatarios({});
-    // expect(component.tramiteStore.updateDestinatarioFinalTablaDatos).toHaveBeenCalled();
   });
 
   it('should run #ngOnInit()', async () => {
+    component.onTipoPersonaChange = jest.fn();
     component.cargarDatos = jest.fn();
     component.tramiteStore = component.tramiteStore || {};
-    component.tramiteStore.getData = jest.fn().mockReturnValue(observableOf({}));
+    component.tramiteStore.destinatarioSujeto = observableOf({});
     component.agregarDestinatarioFinal = component.agregarDestinatarioFinal || {};
     component.agregarDestinatarioFinal.patchValue = jest.fn();
+    component.tramiteQuery = component.tramiteQuery || {};
+    component.tramiteQuery.esDestinatarioFinalElModoDeEdicion$ = observableOf({});
     component.ngOnInit();
-    // expect(component.cargarDatos).toHaveBeenCalled();
-    // expect(component.tramiteStore.getData).toHaveBeenCalled();
-    // expect(component.agregarDestinatarioFinal.patchValue).toHaveBeenCalled();
+    expect(component.onTipoPersonaChange).toHaveBeenCalled();
+    expect(component.cargarDatos).toHaveBeenCalled();
+    expect(component.agregarDestinatarioFinal.patchValue).toHaveBeenCalled();
+  });
+  it('should run #addDestinatarios()', async () => {
+    component.tramiteStore = component.tramiteStore || {};
+    component.tramiteStore.addDestinatarioFinalTablaDatos = jest.fn();
+    component.addDestinatarios({});
+    expect(component.tramiteStore.addDestinatarioFinalTablaDatos).toHaveBeenCalled();
   });
 
   it('should run #cargarDatos()', async () => {
@@ -144,26 +143,18 @@ declarations: [],
     component.materialesPeligrososService.obtenerListaLocalidades = jest.fn().mockReturnValue(observableOf({}));
     component.materialesPeligrososService.obtenerListaColonias = jest.fn().mockReturnValue(observableOf({}));
     component.cargarDatos();
-    // expect(component.materialesPeligrososService.obtenerListaCodigosPostales).toHaveBeenCalled();
-    // expect(component.materialesPeligrososService.obtenerListaPaises).toHaveBeenCalled();
-    // expect(component.materialesPeligrososService.obtenerListaEstados).toHaveBeenCalled();
-    // expect(component.materialesPeligrososService.obtenerListaMunicipios).toHaveBeenCalled();
-    // expect(component.materialesPeligrososService.obtenerListaLocalidades).toHaveBeenCalled();
-    // expect(component.materialesPeligrososService.obtenerListaColonias).toHaveBeenCalled();
   });
 
   it('should run #limpiarFormulario()', async () => {
     component.agregarDestinatarioFinal = component.agregarDestinatarioFinal || {};
     component.agregarDestinatarioFinal.reset = jest.fn();
     component.limpiarFormulario();
-    // expect(component.agregarDestinatarioFinal.reset).toHaveBeenCalled();
   });
 
   it('should run #cancelar()', async () => {
     component.ubicaccion = component.ubicaccion || {};
     component.ubicaccion.back = jest.fn();
     component.cancelar();
-    // expect(component.ubicaccion.back).toHaveBeenCalled();
   });
 
   it('should run #ngOnDestroy()', async () => {
@@ -171,8 +162,6 @@ declarations: [],
     component.unsubscribe$.next = jest.fn();
     component.unsubscribe$.complete = jest.fn();
     component.ngOnDestroy();
-    // expect(component.unsubscribe$.next).toHaveBeenCalled();
-    // expect(component.unsubscribe$.complete).toHaveBeenCalled();
   });
 
 });
