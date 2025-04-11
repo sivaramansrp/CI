@@ -95,6 +95,13 @@ export class UsoFinalComponent implements OnDestroy, OnInit {
   usoFinalFilaSeleccionada: Uso[] = [];
 
   /**
+   * Indica si el componente está en modo de edición.
+   * Cuando es verdadero, permite modificar los datos existentes.
+   * Cuando es falso, el componente opera en modo de solo lectura.
+   */
+  public esElModoDeEdicion = false;
+
+  /**
    * Constructor que inicializa el formulario y servicios necesarios.
    *
    * @param {FormBuilder} fb - FormBuilder para construir el formulario reactivo.
@@ -108,7 +115,7 @@ export class UsoFinalComponent implements OnDestroy, OnInit {
     private materialesPeligrososService: MaterialesPeligrososService,
     private ubicaccion: Location,
     private tramiteStore: Tramite230501Store,
-    private tramiteQuery: Tramite230501Query,
+    public tramiteQuery: Tramite230501Query,
   ) {
     // Inicialización del formulario para usuario final
     this.usuarioFinalForm = this.fb.group({
@@ -193,6 +200,11 @@ export class UsoFinalComponent implements OnDestroy, OnInit {
         this.usuarioFinalForm.patchValue(usuario);
       }
     });
+
+    this.tramiteQuery.esUsuarioElModoDeEdicion$.pipe(takeUntil(this.unsubscribe$))
+    .subscribe(modo => {
+      this.esElModoDeEdicion = modo;
+    });
   }
 
   /**
@@ -241,7 +253,11 @@ export class UsoFinalComponent implements OnDestroy, OnInit {
     if (this.usuarioFinalForm.valid) {
       this.setFormValida(this.usuarioFinalForm.valid);
       this.usuarioFinal.push(NUEVO_USUARIOFINAL);
-      this.addUsuario(this.usuarioFinal);
+      if (this.esElModoDeEdicion) {
+        this.updateUsuario(NUEVO_USUARIOFINAL);
+      } else {
+        this.addUsuario(this.usuarioFinal);
+      }
       this.usuarioFinalForm.reset();
       this.ubicaccion.back();
     }
@@ -268,6 +284,19 @@ export class UsoFinalComponent implements OnDestroy, OnInit {
    * @param newUsuario - Lista de objetos `UsoFinal` a agregar.
    */
   addUsuario(newUsuario: UsoFinal[]): void {
+    this.tramiteStore.addUsuarioTablaDatos(newUsuario);
+  }
+
+  /**
+   * Actualiza la información del usuario en la tabla de datos del trámite.
+   * 
+   * @param newUsuario - Objeto de tipo `UsoFinal` que contiene los datos actualizados del usuario.
+   * 
+   * @remarks
+   * Este método utiliza el servicio `tramiteStore` para actualizar los datos del usuario
+   * en la tabla correspondiente dentro del flujo del trámite.
+   */
+  updateUsuario(newUsuario: UsoFinal): void {
     this.tramiteStore.updateUsuarioTablaDatos(newUsuario);
   }
 
@@ -325,5 +354,6 @@ export class UsoFinalComponent implements OnDestroy, OnInit {
   ngOnDestroy(): void {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
+    this.esElModoDeEdicion = false;
   }
 }

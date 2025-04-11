@@ -161,7 +161,7 @@ export class RepresentanteLegalComponent implements OnDestroy, OnInit {
       }
     });
 
-    this.tramiteQuery.esDestinatarioFinalElModoDeEdicion$.pipe(takeUntil(this.unsubscribe$))
+    this.tramiteQuery.esRepresentanteLegalElModoDeEdicion$.pipe(takeUntil(this.unsubscribe$))
     .subscribe(modo => {
       this.esElModoDeEdicion = modo;
     });

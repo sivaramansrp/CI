@@ -93,7 +93,25 @@ export class Tramite230501Query extends Query<Tramite230501State> {
     (state) => state.esDestinatarioFinalElModoDeEdicion
   );
 
-  public esrepResentanteLegalElModoDeEdicion$ = this.select(
-    (state) => state.esDestinatarioFinalElModoDeEdicion
+  /**
+   * Observable que indica si el modo de edición actual corresponde al representante legal.
+   * 
+   * @returns Un observable que emite un valor booleano indicando si el representante legal 
+   *          es el modo de edición activo en el estado.
+   */
+  public esRepresentanteLegalElModoDeEdicion$ = this.select(
+    (state) => state.esRepresentanteLegalElModoDeEdicion
+  );
+
+  /**
+   * Observable que selecciona el estado `esUsuarioElModoDeEdicion` del store.
+   * 
+   * Este observable se utiliza para determinar si el usuario está en modo de edición.
+   * 
+   * @type {Observable<boolean>} - Devuelve un observable que emite un valor booleano indicando 
+   * si el usuario está en modo de edición.
+   */
+  public esUsuarioElModoDeEdicion$ = this.select(
+    (state) => state.esUsuarioElModoDeEdicion
   );
 }

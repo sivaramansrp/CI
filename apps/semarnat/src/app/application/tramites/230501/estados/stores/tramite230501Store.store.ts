@@ -18,9 +18,10 @@ export interface Tramite230501State {
   destinatarioFinalTablaDatos: Destinatario[];
   esDestinatarioFinalElModoDeEdicion: boolean;
   usuarioTablaDatos: UsoFinal[];
+  esUsuarioElModoDeEdicion: boolean;
   usoTablaDatos: Uso[];
   representanteLegalTablaDatos: Representante[];
-  esrepResentanteLegalElModoDeEdicion: boolean;
+  esRepresentanteLegalElModoDeEdicion: boolean;
   formaValida: { [key: string]: boolean };
 }
 
@@ -35,9 +36,10 @@ export function createInitialState(): Tramite230501State {
     destinatarioFinalTablaDatos: [],
     esDestinatarioFinalElModoDeEdicion: false,
     usuarioTablaDatos: [],
+    esUsuarioElModoDeEdicion: false,
     usoTablaDatos: [],
     representanteLegalTablaDatos: [],
-    esrepResentanteLegalElModoDeEdicion: false,
+    esRepresentanteLegalElModoDeEdicion: false,
     datosSolicitudFormType: {
       tratadoRotterdam: false,
       listadoNacional: false,
@@ -331,12 +333,28 @@ export class Tramite230501Store extends Store<Tramite230501State> {
    * @param newUsuario - Lista de nuevos usuarios que se añadirán a la tabla de usuarios.
    * @returns void
    */
-  public updateUsuarioTablaDatos(newUsuario: UsoFinal[]): void {
+  public updateUsuarioTablaDatos(newUsuario: UsoFinal): void {
     this.update((state) => ({
       ...state,
-      usuarioTablaDatos: [...state.usuarioTablaDatos, ...newUsuario],
+      usuarioTablaDatos: [
+        ...state.usuarioTablaDatos.filter(ele => ele.telefono !== newUsuario.telefono),
+         newUsuario
+      ],
     }));
   }
+
+    /**
+   * Actualiza la tabla de usuarios con nuevos usuarios.
+   *
+   * @param newUsuario - Lista de nuevos usuarios que se añadirán a la tabla de usuarios.
+   * @returns void
+   */
+    public addUsuarioTablaDatos(newUsuario: UsoFinal[]): void {
+      this.update((state) => ({
+        ...state,
+        usuarioTablaDatos: [...state.usuarioTablaDatos, ...newUsuario],
+      }));
+    }
 
   /**
    * Actualiza la tabla de usos finales con nuevos usos finales.

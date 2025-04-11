@@ -199,7 +199,7 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
     if (this.representanteFilaSeleccionada.length) {
       this.tramiteStore.update((state) => ({
         ...state,
-        esrepResentanteLegalElModoDeEdicion: true
+        esRepresentanteLegalElModoDeEdicion: true
         }));
       this.tramiteStore.representanteSujeto.next(this.representanteFilaSeleccionada[0]);
     }
@@ -213,6 +213,10 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
   modificarUsuarioFinal(): void {
     this.irAAcciones('../uso-final');
     if (this.usoDeFilaSeleccionada.length) {
+      this.tramiteStore.update((state) => ({
+        ...state,
+        esUsuarioElModoDeEdicion: true
+        }));
       this.tramiteStore.usuarioSujeto.next(this.usoDeFilaSeleccionada[0]);
     }
   }
