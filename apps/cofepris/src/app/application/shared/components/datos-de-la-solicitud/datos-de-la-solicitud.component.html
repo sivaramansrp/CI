@@ -385,7 +385,7 @@
     </div>
 
     <div class="row mt-2">
-      <div class="col-md-4" *ngIf="mostrarCamposDelProcedimiento('regimen')">
+      <div class="col-md-4" *ngIf="mostrarRegimenYAdunasDeEntradasDatos">
         <div class="form-group">
           <app-catalogo-select
             [catalogo]="regimenDatos"
@@ -398,8 +398,7 @@
         </div>
       </div>
       <div
-        class="col-md-8"
-        *ngIf="mostrarCamposDelProcedimiento('adunasDeEntradas')"
+        class="col-md-8" *ngIf="mostrarRegimenYAdunasDeEntradasDatos"
       >
         <div class="form-group form-check">
           <app-catalogo-select

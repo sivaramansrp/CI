@@ -14,7 +14,6 @@ import { Input } from '@angular/core';
 import { Location } from '@angular/common';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
-import { PROCEDIMIENTOS_NO_PARA_ELEMENTO_AGREGAR_FABRICANTE } from '../../constantes/agregar-fabricante.enum';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { TituloComponent } from '@ng-mf/data-access-user';
@@ -68,18 +67,6 @@ export class AgregarFabricanteComponent implements OnDestroy, OnInit {
    * @property {Catalogo[]} codigosPostalesDatos
    */
   public codigosPostalesDatos: Catalogo[] = [];
-
-  /**
-   * Indica si el campo "colonia" es obligatorio.
-   * @type {boolean}
-   */
-  public coloniaRequerido = true;
-
-  /**
-   * Indica si el campo "código postal equivalente" es obligatorio.
-   * @type {boolean}
-   */
-  public codigoPostalEquivalenteRequerido = true;
 
   /**
    * Datos de catálogo de países.
@@ -165,6 +152,13 @@ export class AgregarFabricanteComponent implements OnDestroy, OnInit {
   public elementosDeshabilitados: string[] = [];
 
   /**
+   * Lista de elementos requeridos en el formulario.
+   * Esta propiedad almacena un arreglo de cadenas que representan
+   * los elementos que deben ser obligatorios en el formulario.
+   */
+  public elementosNoRequeridos:string[]=[]
+
+  /**
    * Constructor que inyecta los servicios y crea el formulario de fabricante.
    *
    * @param {FormBuilder} fb - Servicio para la creación de formularios reactivos.
@@ -194,19 +188,6 @@ export class AgregarFabricanteComponent implements OnDestroy, OnInit {
         ? true
         : false;
 
-    this.coloniaRequerido =
-      PROCEDIMIENTOS_NO_PARA_ELEMENTO_AGREGAR_FABRICANTE.includes(
-        this.idProcedimiento
-      )
-        ? false
-        : true;
-
-    this.codigoPostalEquivalenteRequerido =
-      PROCEDIMIENTOS_NO_PARA_ELEMENTO_AGREGAR_FABRICANTE.includes(
-        this.idProcedimiento
-      )
-        ? false
-        : true;
   }
 
 
@@ -233,8 +214,8 @@ export class AgregarFabricanteComponent implements OnDestroy, OnInit {
       estado: ['', Validators.required],
       municipio: ['', Validators.required],
       localidad: ['', Validators.required],
-      codigoPostal: ['', Validators.required],
-      colonia: ['', Validators.required],
+      codigoPostal: ['', !this.elementosNoRequeridos.includes('codigoPostal')?[Validators.required]:[]],
+      colonia: ['', !this.elementosNoRequeridos.includes('colonia')?[Validators.required]:[]],
       calle: ['', Validators.required],
       numeroExterior: ['', Validators.required],
       numeroInterior: [''],
@@ -255,9 +236,14 @@ export class AgregarFabricanteComponent implements OnDestroy, OnInit {
     switch (this.idProcedimiento) {
       case 260207:
         this.elementosDeshabilitados = ['pais'];
+        this.elementosNoRequeridos=['codigoPostal','colonia']
         break;
+        case 260208:
+          this.elementosNoRequeridos=['codigoPostal','colonia']
+          break;
       default:
-        this.elementosDeshabilitados = [''];
+        this.elementosDeshabilitados = [];
+        this.elementosNoRequeridos=[];
     }
   }
 

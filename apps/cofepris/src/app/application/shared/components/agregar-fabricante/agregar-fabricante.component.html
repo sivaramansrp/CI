@@ -62,6 +62,11 @@
     <div class="row mt-3">
       <div class="col-md-6">
         <label class="form-label">R.F.C.*:</label>
+        <span
+        class="bi bi-question-circle-fill"
+        title="R.F.C"
+        data-bs-toggle="tooltip"
+      ></span>
         <input type="text" class="form-control" formControlName="rfc" />
       </div>
       @if (!estaOculto) {
@@ -177,7 +182,7 @@
           [catalogo]="codigosPostalesDatos"
           formControlName="codigoPostal"
           [label]="'Código postal o equivalente'"
-          [required]="codigoPostalEquivalenteRequerido"
+          [required]="!elementosNoRequeridos.includes('codigoPostal')"
         ></app-catalogo-select>
       </div>
       <div class="col-md-4">
@@ -185,7 +190,7 @@
           [catalogo]="coloniasDatos"
           formControlName="colonia"
           [label]="'Colonia'"
-          [required]="coloniaRequerido"
+          [required]="!elementosNoRequeridos.includes('colonia')"
         ></app-catalogo-select>
       </div>
     </div>

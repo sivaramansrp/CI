@@ -51,7 +51,12 @@
 
     <div class="row mt-5">
       <div class="col-md-6">
-        <label class="form-label">R.F.C.:</label>
+        <label class="form-label">R.F.C*:</label>
+        <span
+        class="bi bi-question-circle-fill"
+        title="R.F.C"
+        data-bs-toggle="tooltip"
+      ></span>
         <input type="text" class="form-control" formControlName="rfc" />
       </div>
     </div>
@@ -138,6 +143,7 @@
           formControlName="pais"
           [label]="'País'"
           [required]="true"
+          [isDisabled]="elementosDeshabilitados.includes('pais')"
         ></app-catalogo-select>
       </div>
       <div class="col-md-4">
@@ -180,7 +186,7 @@
           [catalogo]="coloniasDatos"
           formControlName="colonia"
           [label]="'Colonia'"
-          [required]="true"
+          [required]="!elementosNoRequeridos.includes('colonia')"
         ></app-catalogo-select>
       </div>
     </div>
