@@ -49,6 +49,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   // Notificación utilizada para mostrar mensajes o alertas en la interfaz.
   public nuevaNotificacion!: Notificacion;
 
+  public nuevaNotificacion2!: Notificacion;
+
   // Índice del pedimento marcado para eliminación.
   public elementoParaEliminar!: number;
 
@@ -571,17 +573,13 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Muestra el modal para eliminar mercancías del grid.
    */
   eliminarMercanciaGrid(): void {
-    // if (this.modalElement) {
-    //   const MODAL_ELIMINAR_INSTANCE = new Modal(this.modalElement.nativeElement);
-    //   MODAL_ELIMINAR_INSTANCE.show();
-    // }
+    
     if (this.esCheckboxSeleccionado === false) {
       this.abrirModalmercancia();
     } else if (this.esCheckboxSeleccionado === true) {
       this.abrirModalmercanciaChecked();
     }
-    // this.abrirModalmercancia();
-    // this.abrirModalmercanciaChecked();
+ 
 
   }
 
@@ -696,16 +694,11 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     this.elementoParaEliminar = i;
   }
 
-  // Elimina la mercancía si se confirma la acción.
-  eliminarMercancia(borrar: boolean): void {
-    if (borrar) {
-      this.pedimentos.splice(this.elementoParaEliminar, 1);
-    }
-  }
+ 
 
   // Abre el modal y configura la notificación para seleccionar un registro de mercancía.
   abrirModalmercancia(i: number = 0): void {
-    this.nuevaNotificacion = {
+    this.nuevaNotificacion2 = {
       tipoNotificacion: 'alert',
       categoria: 'danger',
       modo: 'action',
@@ -728,7 +721,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
 
   // Abre el modal y configura la notificación para confirmar la eliminación de registros marcados.
   abrirModalmercanciaChecked(i: number = 0): void {
-    this.nuevaNotificacion = {
+    this.nuevaNotificacion2 = {
       tipoNotificacion: 'alert',
       categoria: 'danger',
       modo: 'action',
@@ -828,6 +821,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   // Elimina la mercancía marcada si se confirma la acción.
  eliminarPedimentoMercancia(borrar: boolean): void {
     if (borrar) {
+      this.pedimentos;
       this.pedimentos.splice(this.elementoParaEliminar, 1);
     }
   
