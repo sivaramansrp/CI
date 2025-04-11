@@ -17,6 +17,9 @@ export * from './core/services/110102/datos-tratados-acuerdos/datosTratadosacuer
 export * from './core/services/110102/exportador-autorizado/exportadorAutorizado.service';
 export * from './core/services/110102/mercancia-asociada/mercanciaAsociada.service';
 export * from './core/services/110102/representacion-federal/representacionFederal.service';
+export * from './core/services/110210/certificado-disponibles/certificadoDisponibles.service';
+export * from './core/services/110210/domicilio-tabla/domicilioTabla.service';
+export * from './core/services/110210/buscar-certificado-de-origen/buscarCertificadoDeOrigen.service'
 export * from './core/services/120402/asignacion-directa-de-cupo.enum';
 export * from './core/services/120402/descripcion-del-cupo/descripcionDelCupo.service';
 export * from './core/services/120402/representacionFederal/representacion-federal.service';
@@ -68,6 +71,8 @@ export * from './tramites/components/input-radio/input-radio.component';
 export * from './tramites/components/requerimiento-informacion/requerimiento-informacion.component';
 export * from './tramites/components/wizard/wizard.component';
 export * from './tramites/constantes/110102/datos-tratados-acuerdos.enum';
+export * from './tramites/constantes/110210/certificado-disponibles.enum';
+export * from './tramites/constantes/110210/domicilio-tabla.enum';
 export * from './tramites/constantes/120602/datos-empresa.enum';
 export { PASOS as PASOS_303 } from './tramites/constantes/303/pasos.enums';
 export { TEXTOS as TEXTOS_303 } from './tramites/constantes/303/texto.enum';
@@ -112,3 +117,5 @@ export { TablaConEntradaComponent } from './tramites/components/tabla-con-entrad
 export { AcusesYResolucionesFolioDelTramiteBusquedaComponent } from './tramites/components/acuses-y-resoluciones-folio-del-tramite-busqueda/acuses-y-resoluciones-folio-del-tramite-busqueda.component';
 export { AcusesYResolucionesFolioDelTramiteDetallesComponent } from './tramites/components/acuses-y-resoluciones-folio-del-tramite-detalles/acuses-y-resoluciones-folio-del-tramite-detalles.component';
 export * from './tramites/components/select-catalogos/select-catalogos.component';
+
+export * from './tramites/constantes/aviso-privacidad.enum';
