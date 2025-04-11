@@ -168,6 +168,15 @@ const ROUTES: Routes = [
     path: 'modificacion-permiso-sanitario',
     loadChildren: () =>
       import(
+        './tramites/260902/modificacion-permiso-sanitario.module'
+      ).then((m) => m.ModificacionPermisoSanitarioModule),
+      
+  },
+ 
+  {
+    path: 'modificacion-permiso-sanitario',
+    loadChildren: () =>
+      import(
         './tramites/260910/permiso-sanitario.module'
       ).then((m) => m.PermisoSanitarioModule),
   },
@@ -218,12 +227,19 @@ const ROUTES: Routes = [
           ).then((m) => m.ImportacionMateriasPrimasEstupefacientesModule),
   },
   {
-    path: 'importacion-psicotropicos-poretorno',
+    path: 'modificacion-permiso-sanitario',
     loadChildren: () =>
-      import(
-        './tramites/260201/importacion-psicotropicos-poretorno.module'
-      ).then((m) => m.ImportacionPsicotropicosPoretornoModule),
-}
+      import('./tramites/260906/modificacion-permiso-sanitario.module').then(
+        (m) => m.ModificacionPermisoSanitarioModule
+      )
+  },
+  {
+        path: 'importacion-psicotropicos-poretorno',
+        loadChildren: () =>
+          import(
+            './tramites/260201/importacion-psicotropicos-poretorno.module'
+          ).then((m) => m.ImportacionPsicotropicosPoretornoModule),
+    }
 ];
 
 @NgModule({

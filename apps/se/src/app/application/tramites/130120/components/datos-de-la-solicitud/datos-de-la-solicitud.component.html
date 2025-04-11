@@ -13,7 +13,7 @@
               [required]="true" name="tipoSolicitud" (change)="seleccionCatalogo(item.props.labelNombre, $event)"></app-catalogo-select>
               } @case(inputTypes.TEXT) {
                 @if((!item.props.availableRadioOptions) || (item.props.availableRadioOptions && configuracion[groupIndex].menu[0].props && configuracion[groupIndex].menu[0].props.radioSelectedValue && item.props.availableRadioOptions.includes(configuracion[groupIndex].menu[0].props.radioSelectedValue))) {
-                  <label class="form-label" [for]="item.props.campo">{{
+                  <label class="mt-5" [for]="item.props.campo">{{
                     item.props.labelNombre
                   }}</label>
                   <input
@@ -24,6 +24,25 @@
                     [formControlName]="item.props.campo"
                     libUppercase
                   />
+                  <div *ngIf="formulario.get(fieldGroup.formGroupName)?.get(item.props.campo)?.touched && formulario.get(fieldGroup.formGroupName)?.get(item.props.campo)?.invalid">
+                    <small *ngIf="formulario.get(fieldGroup.formGroupName)?.get(item.props.campo)?.errors?.['required']" class="text-danger">Este campo es obligatorio</small>
+                  </div>
+                }
+              } @case(inputTypes.TEXTAREA){
+                @if((!item.props.availableRadioOptions) || (item.props.availableRadioOptions && configuracion[groupIndex].menu[0].props && configuracion[groupIndex].menu[0].props.radioSelectedValue && item.props.availableRadioOptions.includes(configuracion[groupIndex].menu[0].props.radioSelectedValue))) {
+                  <label class="form-label" [for]="item.props.campo">{{
+                    item.props.labelNombre
+                  }}</label>
+                  <textarea
+                    class="form-control"
+                    [id]="item.props.campo"
+                    [formControlName]="item.props.campo"
+                    row="3"
+                    style="height: 20%;"
+                  ></textarea>
+                  <div *ngIf="formulario.get(fieldGroup.formGroupName)?.get(item.props.campo)?.touched && formulario.get(fieldGroup.formGroupName)?.get(item.props.campo)?.invalid">
+                    <small *ngIf="formulario.get(fieldGroup.formGroupName)?.get(item.props.campo)?.errors?.['required']" class="text-danger">Este campo es obligatorio</small>
+                  </div>
                 }
               } @case(inputTypes.BREAK_CONTENT) {
               <div class="w-100"></div>
@@ -35,7 +54,7 @@
               } @case (inputTypes.RADIO) {
               <label class="form-label" [for]="item.props.campo">{{
                 item.props.labelNombre
-              }}</label>@if(item.props.required){<span>*</span>}:
+              }}</label>@if(item.props.required){<b><span>*</span></b>}:
               <app-input-radio
                 [radioOptions]="item.props.radioOptions"
                 [selectedValue]="item.props.radioSelectedValue"
