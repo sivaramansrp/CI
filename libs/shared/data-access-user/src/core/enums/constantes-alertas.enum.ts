@@ -38,6 +38,8 @@ export const TEXTOS = {
   <p>- De acuerdo al caso particular, algunos documentos podrían ser obligatorios</p>
   <p>- En caso de que no requieras algún documento, selecciónalo y elimínalo</p>
   <p>- Si necesitas anexar más de un documento del mismo tipo selecciónalo de la lista y presiona "Agregar nuevo"</p>`,
+  REQUISITOS_GUARDADOS_CORRECTAMENTE: `Requisitos guardados correctamente`,
+  SELECCION_UN_CRITERIO_DE_BUSQUEDA: `Selecciona un criterio de búsqueda`,
 };
 
 export const MESES = [

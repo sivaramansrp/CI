@@ -14,6 +14,9 @@ export interface ConfiguracionColumna<T> {
 
   /** Orden en el que se mostrará la columna dentro de la tabla */
   orden: number;
+
+  /** Orden en el que se mostrará la columna dentro de la tabla */
+  hiperenlace?: boolean; // Indica si la columna es un enlace (opcional)
 }
 
 /**
