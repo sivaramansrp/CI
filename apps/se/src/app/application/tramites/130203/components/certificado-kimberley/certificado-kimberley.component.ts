@@ -186,77 +186,53 @@ export class CertificadoKimberleyComponent implements OnInit, OnDestroy {
     this.subscribeToState();
     this.inicializarFormulario();
     this.loadData();
+  }
 
-    this.nombreExportador$.subscribe((nombreExportador) => {
-      if (nombreExportador) {
-        this.datosDelExportador
-          .get('nombreExportador')
-          ?.setValue(nombreExportador);
+  /**
+   * @description
+   * Se suscribe al estado del store y actualiza los formularios con los valores del estado.
+   */
+  private subscribeToState(): void {
+    this.tramite130203Query.select().subscribe((state) => {
+      this.solicitudState = state;
+      if (this.formularioEmpresa) {
+        this.formularioEmpresa.patchValue({
+          especifique: state.especifique,
+          numero: state.numero,
+          nombre: state.nombre,
+          tipoEmpresa: state.tipoEmpresa,
+        });
       }
     });
 
-    this.direccionExportador$.subscribe((direccionExportador) => {
-      if (direccionExportador) {
-        this.datosDelExportador
-          .get('direccionExportador')
-          ?.setValue(direccionExportador);
-      }
-    });
+    this.tramite130203Query.select().subscribe((state) => {
+      this.solicitudState = state;
 
-    this.nombreImportador$.subscribe((nombreImportador) => {
-      if (nombreImportador) {
-        this.datosDelImportador
-          .get('nombreImportador')
-          ?.setValue(nombreImportador);
-      }
-    });
+      // Set values for datosDelExportador
+      this.datosDelExportador.patchValue({
+        nombreExportador: state.nombreExportador || '',
+        direccionExportador: state.direccionExportador || '',
+      });
 
-    this.direccionImportador$.subscribe((direccionImportador) => {
-      if (direccionImportador) {
-        this.datosDelImportador
-          .get('direccionImportador')
-          ?.setValue(direccionImportador);
-      }
-    });
+      // Set values for datosDelImportador
+      this.datosDelImportador.patchValue({
+        nombreImportador: state.nombreImportador || '',
+        direccionImportador: state.direccionImportador || '',
+      });
 
-    this.numeroEnLetraDeLosLotes$.subscribe((numeroEnLetraDeLosLotes) => {
-      if (numeroEnLetraDeLosLotes) {
-        this.datosDeLaRemesa
-          .get('numeroEnLetraDeLosLotes')
-          ?.setValue(numeroEnLetraDeLosLotes);
-      }
-    });
+      // Set values for datosDeLaRemesa
+      this.datosDeLaRemesa.patchValue({
+        numeroEnLetraDeLosLotes: state.numeroEnLetraDeLosLotes || '',
+        numeroEnLetraDeLosLotesEnIngles:
+          state.numeroEnLetraDeLosLotesEnIngles || '',
+        numeroDeFactura: state.numeroDeFactura || '',
+      });
 
-    this.numeroEnLetraDeLosLotesEnIngles$.subscribe(
-      (numeroEnLetraDeLosLotesEnIngles) => {
-        if (numeroEnLetraDeLosLotesEnIngles) {
-          this.datosDeLaRemesa
-            .get('numeroEnLetraDeLosLotesEnIngles')
-            ?.setValue(numeroEnLetraDeLosLotesEnIngles);
-        }
-      }
-    );
-
-    this.numeroDeFactura$.subscribe((numeroDeFactura) => {
-      if (numeroDeFactura) {
-        this.datosDeLaRemesa.get('numeroDeFactura')?.setValue(numeroDeFactura);
-      }
-    });
-
-    this.cantidadEnQuilates$.subscribe((cantidadEnQuilates) => {
-      if (cantidadEnQuilates) {
-        this.datosDeLosDiamantes
-          .get('cantidadEnQuilates')
-          ?.setValue(cantidadEnQuilates);
-      }
-    });
-
-    this.valorDeLosDiamantes$.subscribe((valorDeLosDiamantes) => {
-      if (valorDeLosDiamantes) {
-        this.datosDeLosDiamantes
-          .get('valorDeLosDiamantes')
-          ?.setValue(valorDeLosDiamantes);
-      }
+      // Set values for datosDeLosDiamantes
+      this.datosDeLosDiamantes.patchValue({
+        cantidadEnQuilates: state.cantidadEnQuilates || '',
+        valorDeLosDiamantes: state.valorDeLosDiamantes || '',
+      });
     });
   }
 
@@ -291,19 +267,9 @@ export class CertificadoKimberleyComponent implements OnInit, OnDestroy {
    * @description
    * Se suscribe al estado del store y actualiza el estado local.
    */
-  private subscribeToState(): void {
-    this.tramite130203Query.select().subscribe((state) => {
-      this.solicitudState = state;
-      if (this.formularioEmpresa) {
-        this.formularioEmpresa.patchValue({
-          especifique: state.especifique,
-          numero: state.numero,
-          nombre: state.nombre,
-          tipoEmpresa: state.tipoEmpresa,
-        });
-      }
-    });
-  }
+  // private subscribeToState(): void {
+
+  // }
 
   /**
    * @description
@@ -327,22 +293,31 @@ export class CertificadoKimberleyComponent implements OnInit, OnDestroy {
         Validators.required,
       ],
     });
+  }
 
-    this.formularioEmpresa
-      .get('tipoEmpresa')
-      ?.valueChanges.subscribe((value) => {
-        this.updateNombreIngles(value);
-      });
+  /**
+   * @description
+   * Método que se ejecuta cuando cambia el valor de 'lineaCheckbox'.
+   * @param value Nuevo valor de 'lineaCheckbox'.
+   */
+  public onLineaCheckboxChange(event: Event): void {
+    const CHECKED = (event.target as HTMLInputElement).checked;
+    this.setValoresStore(this.formularioEmpresa, 'lineaCheckbox', 'setLineaCheckbox');
+  }
 
-    this.formularioEmpresa
-      .get('lineaCheckbox')
-      ?.valueChanges.subscribe((value) => {
-        this.setValoresStore(
-          this.formularioEmpresa,
-          'lineaCheckbox',
-          'setLineaCheckbox'
-        );
-      });
+  /**
+   * @description
+   * Método que se ejecuta cuando cambia el valor de 'tipoEmpresa'.
+   * @param event Evento de cambio.
+   */
+  public onTipoEmpresaChange(event: Event): void {
+    const VALUE = (event.target as HTMLSelectElement).value;
+    this.setValoresStore(
+      this.formularioEmpresa,
+      'tipoEmpresa',
+      'setTipoEmpresa'
+    );
+    this.updateNombreIngles(Number(VALUE));
   }
 
   /**

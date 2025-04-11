@@ -2,6 +2,7 @@ import { Catalogo } from '@libs/shared/data-access-user/src';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { PartidasDeLaMercanciaModelo } from '../../../shared/models/partidas-de-la-mercancia.model';
 import { ProductoResponse } from '../../../shared/constantes/vehiculos-adaptados.enum';
 
 @Injectable({
@@ -73,5 +74,11 @@ export class ExportacionDeDiamantesEnBrutoService {
 
   getNombresIngles(): Observable<any[]> {
     return this.http.get<any[]>('assets/json/130203/nomber-en-ingles-del.json');
+  }
+
+  getTablaDatos(): Observable<PartidasDeLaMercanciaModelo[]> {
+    return this.http.get<PartidasDeLaMercanciaModelo[]>(
+      'assets/json/130111/partidas-de-la.json'
+    );
   }
 }

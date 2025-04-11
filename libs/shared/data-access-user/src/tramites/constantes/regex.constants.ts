@@ -305,6 +305,7 @@ export const REGEX_CURP =
  */
 export const REGEX_VALORES_NUMERICOS = /^[0-9]+(\\.[0-9]{1,2})?$/;
 
+export const REGEX_NUMERO_DECIMAL_2_DIGITOS = /^\d+(\.\d{1,2})?$/;
 /** 
  * Expresión regular para validar números en formato USD. 
  * Permite dígitos y el punto decimal. 
