@@ -1,5 +1,8 @@
 <div class="container">
+  @if (!cargaRealizada) {
   <lib-notificaciones [notificacionInput]="alertaNotificacion"></lib-notificaciones>
+  }
 
-  <anexar-documentos [catalogoDocumentos]='catalogoDocumentos'></anexar-documentos>
+  <anexar-documentos [catalogoDocumentos]='catalogoDocumentos'
+    (cargaRealizada)="documentosCargados($event)"></anexar-documentos>
 </div>

@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
 import { CATALOGOS_ID, Notificacion } from '@ng-mf/data-access-user';
+import { Component, OnInit } from '@angular/core';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogosService } from '@ng-mf/data-access-user';
 import { TEXTOS } from '@ng-mf/data-access-user';
+
 
 @Component({
   selector: 'paso-dos',
@@ -13,9 +14,12 @@ export class PasoDosComponent implements OnInit {
   TEXTOS = TEXTOS;
 
   tiposDocumentos: Catalogo[] = [];
+
   infoAlert = 'alert-info';
   catalogoDocumentos: Catalogo[] = [];
+  catalogoDocumentosOpcionales: Catalogo[] = [];
   documentosSeleccionados: Catalogo[] = [];
+  cargaRealizada = false;
 
   public alertaNotificacion: Notificacion = {
     tipoNotificacion: 'banner',
@@ -64,5 +68,9 @@ export class PasoDosComponent implements OnInit {
         },
         error: (_error): void => { return _error; },
       });
+  }
+
+  documentosCargados(cargaRealizada: boolean) : void {
+    this.cargaRealizada = cargaRealizada;
   }
 }

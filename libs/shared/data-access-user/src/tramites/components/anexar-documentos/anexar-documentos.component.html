@@ -1,158 +1,161 @@
 <div class="container">
-  <div class="row mt-5">
-    <span class="h3">Documentos obligatorios</span>
-    <div class="col-md-12 border rounded bg-file-container px-4">
-      @for (item of catalogoDocumentos; track item.id; let i = $index) {
-      <div class="row py-3">
-        <div class="col-md-5 d-flex flex-column">
-          <span>Documento {{ item.descripcion }}</span>
-          <small>Tamaño(MB): {{ convertKbToMb(item.tam) }} {{ MB }}, Resolución(dpi) minima para
-            imagenes: {{ item.dpi }} {{ DPI }}</small>
-        </div>
-        <div class="col-md-7">
-          <div class="row">
-            <div class="col-md-9">
-              <div class="d-flex">
-                <label for="formFile{{item.id}}" class="form-label"></label>
-                <input class="form-control custom-file-label" type="file" [id]="'formFile' + item.id" #fileInput
-                  (change)="cargarDoc($event, fileInput,item.id,'obligatorio')">
+  @if (!cargarDocumentos) {
+    <div class="row mt-5">
+      <span class="h3">Documentos obligatorios</span>
+      <div class="col-md-12 border rounded bg-file-container px-4">
+        @for (item of catalogoDocumentos; track item.id; let i = $index) {
+        <div class="row py-3">
+          <div class="col-md-5 d-flex flex-column">
+            <span>Documento {{ item.descripcion }}</span>
+            <small>Tamaño(MB): {{ convertKbToMb(item.tam) }} {{ MB }}, Resolución(dpi) minima para
+              imagenes: {{ item.dpi }} {{ DPI }}</small>
+          </div>
+          <div class="col-md-7">
+            <div class="row">
+              <div class="col-md-9">
+                <div class="d-flex">
+                  <label for="formFile{{item.id}}" class="form-label"></label>
+                  <input class="form-control custom-file-label" type="file" [id]="'formFile' + item.id" #fileInput
+                    (change)="cargarDoc($event, fileInput,item.id,'obligatorio')">
+                </div>
+              </div>
+  
+              <div class="col-md-3 d-flex justify-content-end">
+                <button type="button" class="btn file-btn-add" (click)="agregarParte(fileInput, item, 'obligatorios')">
+                  <i class="bi bi-plus-circle-fill"></i>
+                </button>
+                @if (existePreview(item.id)) {
+                <button type="button" class="btn btn-link" (click)="verPdf(item.id)">
+                  <i class="bi bi-eye bi-c"></i>
+                </button>
+                }
+                <button type="button" class="btn btn-link" (click)="limpiarFile(item, 'obligatorios')">
+                  <i class="bi bi-trash3 bi-c"></i>
+                </button>
               </div>
             </div>
-
-            <div class="col-md-3 d-flex justify-content-end">
-              <button type="button" class="btn file-btn-add" (click)="agregarParte(fileInput, item, 'obligatorios')">
-                <i class="bi bi-plus-circle-fill"></i>
-              </button>
-              @if (existePreview(item.id)) {
-              <button type="button" class="btn btn-link" (click)="verPdf(item.id)">
-                <i class="bi bi-eye bi-c"></i>
-              </button>
-              }
-              <button type="button" class="btn btn-link" (click)="limpiarFile(item, 'obligatorios')">
-                <i class="bi bi-trash3 bi-c"></i>
-              </button>
-            </div>
-          </div>
-          <div class="row">
-            @for (adicional of item.adicionales; let iAdicional = $index; track adicional.id) {
-            <div class="col-md-9 mt-2">
-              <div class="d-flex">
-                <label for="formFile{{adicional.id}}" class="form-label"></label>
-                <input class="form-control custom-file-label" type="file" id="formFile{{adicional.id}}" #fileInput
-                  (change)="cargarDoc($event, fileInput,adicional.id,'obligatorio')">
+            <div class="row">
+              @for (adicional of item.adicionales; let iAdicional = $index; track adicional.id) {
+              <div class="col-md-9 mt-2">
+                <div class="d-flex">
+                  <label for="formFile{{adicional.id}}" class="form-label"></label>
+                  <input class="form-control custom-file-label" type="file" id="formFile{{adicional.id}}" #fileInput
+                    (change)="cargarDoc($event, fileInput,adicional.id,'obligatorio')">
+                </div>
               </div>
-            </div>
-
-            <div class="col-md-3 mt-2 d-flex justify-content-end">
-              @if (existePreview(adicional.id)) {
-              <button type="button" class="btn btn-link" (click)="verPdf(adicional.id)">
-                <i class="bi bi-eye bi-c"></i>
-              </button>
+  
+              <div class="col-md-3 mt-2 d-flex justify-content-end">
+                @if (existePreview(adicional.id)) {
+                <button type="button" class="btn btn-link" (click)="verPdf(adicional.id)">
+                  <i class="bi bi-eye bi-c"></i>
+                </button>
+                }
+                <button type="button" class="btn btn-link" (click)="limpiarFile(adicional, 'obligatorios')">
+                  <i class="bi bi-trash3 bi-c"></i>
+                </button>
+                <button type="button" class="btn file-btn-add" (click)="eliminarNuevo({item,adicional},true)">
+                  <i class="bi bi-x-circle-fill"></i>
+                </button>
+              </div>
               }
-              <button type="button" class="btn btn-link" (click)="limpiarFile(adicional, 'obligatorios')">
-                <i class="bi bi-trash3 bi-c"></i>
-              </button>
-              <button type="button" class="btn file-btn-add" (click)="eliminarNuevo({item,adicional},true)">
-                <i class="bi bi-x-circle-fill"></i>
-              </button>
             </div>
-            }
           </div>
         </div>
-      </div>
-      }
-
-      @if (listDocOpcionales.length > 0) {
-      <span class="h3">Documentos opcionales</span>
-
-      @for (item of listDocOpcionales; track item.id; let i = $index) {
-      <div class="row py-3">
-        <div class="col-md-5 d-flex flex-column">
-          <span>Documento {{ item.descripcion }}</span>
-          <small>Tamaño(MB): {{ convertKbToMb(item.tam) }} {{ MB }}, Resolución(dpi) minima para
-            imagenes: {{ item.dpi }} {{ DPI }}</small>
-        </div>
-        <div class="col-md-7">
-          <div class="row">
-            <div class="col-md-9">
-              <div class="d-flex">
-                <label for="formFileOpcionales{{item.id}}" class="form-label"></label>
-                <input class="form-control custom-file-label" type="file" id="formFileOpcionales{{item.id}}" #fileInput
-                  (change)="cargarDoc($event, fileInput,item.id,'opcional')">
+        }
+  
+        @if (listDocOpcionales.length > 0) {
+        <span class="h3">Documentos opcionales</span>
+  
+        @for (item of listDocOpcionales; track item.id; let i = $index) {
+        <div class="row py-3">
+          <div class="col-md-5 d-flex flex-column">
+            <span>Documento {{ item.descripcion }}</span>
+            <small>Tamaño(MB): {{ convertKbToMb(item.tam) }} {{ MB }}, Resolución(dpi) minima para
+              imagenes: {{ item.dpi }} {{ DPI }}</small>
+          </div>
+          <div class="col-md-7">
+            <div class="row">
+              <div class="col-md-9">
+                <div class="d-flex">
+                  <label for="formFileOpcionales{{item.id}}" class="form-label"></label>
+                  <input class="form-control custom-file-label" type="file" id="formFileOpcionales{{item.id}}" #fileInput
+                    (change)="cargarDoc($event, fileInput,item.id,'opcional')">
+                </div>
+              </div>
+              <div class="col-md-3 d-flex justify-content-end">
+                <button type="button" class="btn file-btn-add" (click)="agregarParte(fileInput, item, 'obligatorios')">
+                  <i class="bi bi-plus-circle-fill"></i>
+                </button>
+                @if (existePreview(item.id)) {
+                <button type="button" class="btn btn-link" (click)="verPdf(item.id)">
+                  <i class="bi bi-eye bi-c"></i>
+                </button>
+                }
+                <button type="button" class="btn btn-link" (click)="limpiarFile(item, 'opcionales')">
+                  <i class="bi bi-trash3 bi-c"></i>
+                </button>
+                <button type="button" class="btn file-btn-add" (click)="eliminarOpcional(item)">
+                  <i class="bi bi-x-circle-fill"></i>
+                </button>
               </div>
             </div>
-            <div class="col-md-3 d-flex justify-content-end">
-              <button type="button" class="btn file-btn-add" (click)="agregarParte(fileInput, item, 'obligatorios')">
-                <i class="bi bi-plus-circle-fill"></i>
-              </button>
-              @if (existePreview(item.id)) {
-              <button type="button" class="btn btn-link" (click)="verPdf(item.id)">
-                <i class="bi bi-eye bi-c"></i>
-              </button>
-              }
-              <button type="button" class="btn btn-link" (click)="limpiarFile(item, 'opcionales')">
-                <i class="bi bi-trash3 bi-c"></i>
-              </button>
-              <button type="button" class="btn file-btn-add" (click)="eliminarOpcional(item)">
-                <i class="bi bi-x-circle-fill"></i>
-              </button>
-            </div>
-          </div>
-
-          <div class="row">
-            @for (adicional of item.adicionales; track adicional.id) {
-            <div class="col-md-9 mt-2">
-              <div class="d-flex">
-                <label for="formFileOpcionales{{adicional.id}}" class="form-label"></label>
-                <input class="form-control custom-file-label" type="file" id="formFileOpcionales{{adicional.id}}"
-                  #fileInput (change)="cargarDoc($event, fileInput,adicional.id,'opcional')">
+  
+            <div class="row">
+              @for (adicional of item.adicionales; track adicional.id) {
+              <div class="col-md-9 mt-2">
+                <div class="d-flex">
+                  <label for="formFileOpcionales{{adicional.id}}" class="form-label"></label>
+                  <input class="form-control custom-file-label" type="file" id="formFileOpcionales{{adicional.id}}"
+                    #fileInput (change)="cargarDoc($event, fileInput,adicional.id,'opcional')">
+                </div>
               </div>
-            </div>
-            <div class="col-md-3 mt-2 d-flex justify-content-end">
-              @if (existePreview(adicional.id)) {
-              <button type="button" class="btn btn-link" (click)="verPdf(adicional.id)">
-                <i class="bi bi-eye bi-c"></i>
-              </button>
+              <div class="col-md-3 mt-2 d-flex justify-content-end">
+                @if (existePreview(adicional.id)) {
+                <button type="button" class="btn btn-link" (click)="verPdf(adicional.id)">
+                  <i class="bi bi-eye bi-c"></i>
+                </button>
+                }
+                <button type="button" class="btn btn-link" (click)="limpiarFile(adicional, 'opcionales')">
+                  <i class="bi bi-trash3 bi-c"></i>
+                </button>
+                <button type="button" class="btn file-btn-add" (click)="eliminarNuevo({item,adicional},true)">
+                  <i class="bi bi-x-circle-fill"></i>
+                </button>
+              </div>
               }
-              <button type="button" class="btn btn-link" (click)="limpiarFile(adicional, 'opcionales')">
-                <i class="bi bi-trash3 bi-c"></i>
-              </button>
-              <button type="button" class="btn file-btn-add" (click)="eliminarNuevo({item,adicional},true)">
-                <i class="bi bi-x-circle-fill"></i>
-              </button>
             </div>
-            }
           </div>
         </div>
-      </div>
-      }
-      }
-
-      <div class="d-flex justify-content-end w-100 mb-4">
-        <button class="btn-primary rounded" (click)="confirmUpload()">Cargar archivos</button>
+        }
+        }
+  
+        <div class="d-flex justify-content-end w-100 mb-4">
+          <button class="btn-primary rounded" (click)="confirmUpload()">Cargar archivos</button>
+        </div>
       </div>
     </div>
-  </div>
-
-  <div class="row mt-5">
-    <span class="h3 mt-3">Documentos opcionales</span>
-    <div class="col-md-12 border rounded bg-file-container px-4" style="min-height: 15rem">
-      <div class="form-group py-3">
-        <ng-select [items]="archivosOpcionales" [multiple]="true" bindLabel="descripcion" [closeOnSelect]="false"
-          bindValue="id" [(ngModel)]="listDocOpcionalesAgregar" >
-          <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
-            <div [class.disabled-option]="item.disabled">
-              <input id="item-{{ index }}" type="checkbox" [ngModel]="item$.selected" [disabled]="item.disabled" /> {{
-              item.descripcion }}
-            </div>
-          </ng-template>
-        </ng-select>
-      </div>
-      <div class="d-flex justify-content-end w-100 mb-4 my-3">
-        <button class="btn-primary rounded" (click)="agregarOpcionales()">Agregar</button>
+  
+    <div class="row mt-5">
+      <span class="h3 mt-3">Documentos opcionales</span>
+      <div class="col-md-12 border rounded bg-file-container px-4" style="min-height: 15rem">
+        <div class="form-group py-3">
+          <ng-select [items]="archivosOpcionales" [multiple]="true" bindLabel="descripcion" [closeOnSelect]="false"
+            bindValue="id" [(ngModel)]="listDocOpcionalesAgregar" >
+            <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+              <div [class.disabled-option]="item.disabled">
+                <input id="item-{{ index }}" type="checkbox" [ngModel]="item$.selected" [disabled]="item.disabled" /> {{
+                item.descripcion }}
+              </div>
+            </ng-template>
+          </ng-select>
+        </div>
+        <div class="d-flex justify-content-end w-100 mb-4 my-3">
+          <button class="btn-primary rounded" (click)="agregarOpcionales()">Agregar</button>
+        </div>
       </div>
     </div>
-  </div>
+
+  }
 
   @if (cargarDocumentos) {
   <div class="row">
