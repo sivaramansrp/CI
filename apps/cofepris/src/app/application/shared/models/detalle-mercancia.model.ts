@@ -5,3 +5,10 @@ export interface DetalleMercancia {
     tipoDeEnvase: string;
     id?: string
 }
+
+export interface DetalleMercanciaEstupefacientes {
+    presentacion: string;
+    numeroDePiezasAFabricar: string;
+    descripcionNumeroDePiezas: string;
+    numeroRegistroSanitario: string;
+}
