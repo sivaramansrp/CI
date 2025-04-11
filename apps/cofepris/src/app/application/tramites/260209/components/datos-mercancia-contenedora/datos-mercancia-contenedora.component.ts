@@ -47,7 +47,6 @@ export class DatosMercanciaContenedoraComponent implements OnInit, OnDestroy {
   /**
    * @constructor
    * Inyecta los servicios necesarios para consultar y modificar el estado del trámite.
-   *
    * @param tramite260209Query - Servicio para observar el estado actual del trámite.
    * @param tramite260209Store - Store que permite actualizar el estado del trámite.
    */

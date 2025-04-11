@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PagoDeDerechosContenedoraComponent } from './pago-de-derechos-contenedora.component';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('PagoDeDerechosContenedoraComponent', () => {
   let component: PagoDeDerechosContenedoraComponent;

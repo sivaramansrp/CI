@@ -22,7 +22,6 @@ export class AgregarProveedorContenedoraComponent {
   /**
    * @constructor
    * @description Constructor que inyecta el store `Tramite260209Store` para gestionar el estado del trámite.
-   *
    * @param tramite260209Store - Store que administra el estado del trámite 260209.
    */
   constructor(public tramite260209Store: Tramite260209Store) {

@@ -14,7 +14,11 @@ import { Tramite260209Store } from '../../estados/tramite260209Store.store';
   styleUrl: './scian-tabla-contenedora.component.scss',
 })
 export class ScianTablaContenedoraComponent {
-
+  
+  /**
+   * Identificador único del procedimiento.
+   * Esta propiedad es de solo lectura y se inicializa con el valor constante `ID_PROCEDIMIENTO`.
+   */
   public readonly idProcedimiento = ID_PROCEDIMIENTO;
   
   /**

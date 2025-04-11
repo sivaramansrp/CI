@@ -137,7 +137,6 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
    * @constructor
    * @description
    * Inicializa el componente con las dependencias necesarias.
-   *
    * @param {Tramite260209Query} tramite260209Query - Consulta para acceder al estado del trámite.
    * @param {Tramite260209Store} tramite260209Store - Tienda para actualizar el estado del trámite.
    */
@@ -171,10 +170,8 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
 
   /**
    * Maneja el evento cuando se selecciona una opción en la tabla.
-   *
    * @param event - Un arreglo de configuraciones de opciones de la tabla (`TablaOpcionConfig[]`)
    *                que representa las opciones seleccionadas.
-   *
    * Actualiza la configuración de datos en el store `tramite260209Store`
    * con las opciones seleccionadas.
    */
@@ -184,9 +181,7 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
 
   /**
    * Maneja el evento cuando se selecciona un elemento en la tabla SCIAN.
-   *
    * @param event - Arreglo de configuraciones seleccionadas de la tabla SCIAN.
-   *
    * Este método actualiza los datos de configuración SCIAN en el estado del trámite 260209
    * utilizando el evento proporcionado.
    */
