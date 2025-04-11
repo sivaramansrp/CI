@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, forwardRef } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, forwardRef } from '@angular/core';
 
 import {FormBuilder,FormGroup,ReactiveFormsModule,ValidatorFn,Validators} from '@angular/forms';
 
@@ -26,7 +26,7 @@ import { UppercaseDirective } from '@libs/shared/data-access-user/src/tramites/d
   styleUrl: './solicitante.component.scss',
   host: {},
 })
-export class SolicitanteComponent implements OnInit {
+export class SolicitanteComponent implements OnInit, OnDestroy {
   /**
    * @input tabindex
    *
@@ -99,6 +99,11 @@ export class SolicitanteComponent implements OnInit {
   ngOnInit(): void {
     this.folioTramite = history?.state?.data;
     this.getDatosGenerales();
+  }
+
+    ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   /**
