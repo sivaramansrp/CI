@@ -178,6 +178,11 @@ export interface Solicitud260906State {
       /** Acción relacionada con la solicitud ("tipoOperacion"). */
   tipoOperacion: string | number;
 
+      /**
+    * El valor de informacionConfidencial.
+    */
+      informacionConfidencial:string | number;
+
   /** Indicador sobre si se ha presentado un manifiesto. */
   manifesto: boolean;
 }
@@ -358,6 +363,12 @@ export function createInitialState(): Solicitud260906State {
         apellidoMaterno: '',
             /** Acción relacionada con la solicitud ("tipoOperacion"). */
     tipoOperacion: '',
+
+            /**
+        * El valor de informacionConfidencial.
+        */
+            informacionConfidencial:'',
+
     /** Indicador de si se ha presentado un manifiesto. */
     manifesto: false
 
@@ -426,8 +437,7 @@ export class Tramite260906Store extends Store<Solicitud260906State>{
             ...state,
             tipoOperacionJustificacion,
         }));
-    }
-    
+    }    
 
     /**
      * Establece el estado de codigoPostal.
@@ -822,6 +832,16 @@ export class Tramite260906Store extends Store<Solicitud260906State>{
       tipoOperacion,
     }));
   }
+    /**
+     * Establece el estado de informacionConfidencial.
+     * @param informacionConfidencial - El valor de informacionConfidencial.
+     */
+       public setInformacionConfidencial(informacionConfidencial: string | number): void {
+        this.update((state) => ({
+            ...state,
+            informacionConfidencial,
+        }));
+    }
 
     /**
    * Actualiza el estado del manifiesto en el estado.
