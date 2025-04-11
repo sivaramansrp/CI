@@ -3,10 +3,10 @@ import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
 import { Subject, of } from 'rxjs';
 import { DatosDomicilioLegalStore } from '../../estados/stores/datos-domicilio-legal.store';
 import { DatosDomicilioLegalQuery } from '../../estados/queries/datos-domicilio-legal.query';
-import { RepresentanteLegalComponent } from './representante-legal-rfc.component';
+import { RepresentanteLegalRfcComponent } from './representante-legal-rfc.component';
 
-describe('RepresentanteLegalComponent', () => {
-  let component: RepresentanteLegalComponent;
+describe('RepresentanteLegalRfcComponent', () => {
+  let component: RepresentanteLegalRfcComponent;
   let mockStore: jest.Mocked<DatosDomicilioLegalStore>;
   let mockQuery: jest.Mocked<DatosDomicilioLegalQuery>;
 
@@ -33,7 +33,7 @@ describe('RepresentanteLegalComponent', () => {
     });
 
     const fb = TestBed.inject(FormBuilder);
-    component = new RepresentanteLegalComponent(fb, mockStore, mockQuery);
+    component = new RepresentanteLegalRfcComponent(fb, mockStore, mockQuery);
   });
 
   it('should create the component', () => {
