@@ -21,7 +21,7 @@ import {
   Notificacion,
   NotificacionesComponent,
   Pedimento,
-  REGEX_RFC_SANITARIO,
+  REGEX_RFC_FISICA,
   REGEX_SOLO_DIGITOS,
   TablaDinamicaComponent,
   TablaSeleccion,
@@ -483,7 +483,7 @@ eliminarPedimento(borrar: boolean): void {
     this.domicilioEstablecimiento = this.fb.group({
       ideGenerica1: ['', Validators.required],
       observaciones: ['', [Validators.required, Validators.maxLength(2000)]],
-      establecimientoRFCResponsableSanitario: ['', Validators.pattern(REGEX_RFC_SANITARIO)],
+      establecimientoRFCResponsableSanitario: ['', Validators.pattern(REGEX_RFC_FISICA)],
       establecimientoRazonSocial:['', Validators.required],
       establecimientoCorreoElectronico :['', [Validators.required, Validators.email]],
       establecimientoEstados :['', Validators.required],
