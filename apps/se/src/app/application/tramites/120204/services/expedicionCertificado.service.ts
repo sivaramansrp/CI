@@ -57,7 +57,7 @@ export class ExpedicionCertificadoService {
    * Obtiene los datos de la tabla de licitaciones disponibles.
    * @returns Un observable que emite los datos de la tabla de licitaciones disponibles.
    */
-  getTableData(): Observable<licitacionesDisponibles> {
+  obtenerDatosTabla(): Observable<licitacionesDisponibles> {
     return this.http.get<licitacionesDisponibles>('assets/json/120204/datos-de-la-tabla.json');
   }
 }

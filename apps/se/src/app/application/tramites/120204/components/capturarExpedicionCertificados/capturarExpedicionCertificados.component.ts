@@ -146,15 +146,15 @@ export class CapturarExpedicionCertificadosComponent implements OnInit, OnDestro
       representacionFederal: ["", Validators.required],
     });
     this.detalledelaLicitacionForm = this.fb.group({
-      numeraDelicitacion: ["", Validators.required],
-      fechaDelEventoDelicitacion: ["", Validators.required],
-      descripcionDelProducto:["", Validators.required],
+      numeraDelicitacion: [{value:"",disabled: true}, Validators.required],
+      fechaDelEventoDelicitacion: [{value:"",disabled: true}, Validators.required],
+      descripcionDelProducto:[{value:"",disabled: true}, Validators.required],
     })
     this.distribucionSaldoForm = this.fb.group({
-      montoDisponible: ["", Validators.required],
+      montoDisponible: [{value:"",disabled: true}, Validators.required],
       montoAExpedir: ["", [Validators.required,Validators.pattern('^[0-9]*.?[0-9]+$')],],
       montoAExpedirCheck: ["", Validators.required],
-      totalAExpedir:["", [Validators.required,
+      totalAExpedir:[{value:"",disabled: true}, [Validators.required,
         Validators.pattern('^[0-9]*.?[0-9]+$')],]
     })
 
@@ -167,7 +167,14 @@ export class CapturarExpedicionCertificadosComponent implements OnInit, OnDestro
     this.getRepresentacionFederal();
     this.getDetallesDelalicitacion();
     this.getDistribucionSaldo();
-    this.getTabledatas();
+    this.obtenerDatosTabla();
+    this.inicializarFormulario();
+  }
+
+  /**
+   * Inicializa el formulario con datos del estado.
+   */
+    inicializarFormulario():void{
 
     this.entidadFederativa$.subscribe((entidadFederativa) => {
       if (entidadFederativa) {
@@ -229,11 +236,13 @@ getRepresentacionFederal(): void {
   );
 }
 
+
 /**
- * Verifica si un control del formulario 'adquiriente' es inválido.
+ * Verifica si un control de formulario es inválido y ha sido tocado.
  *
- * @param id El nombre del control a verificar.
- * @returns `true` si el control es inválido y ha sido tocado, `null` en caso contrario.
+ * @param id - El identificador del control dentro del formulario `distribucionSaldoForm`.
+ * @returns `true` si el control es inválido y ha sido tocado, `false` si es válido o no ha sido tocado, 
+ *          o `null` si el control no existe.
  */
 isInvalid(id: string): boolean | null {
   const CONTROL = this.distribucionSaldoForm.get(id);
@@ -273,17 +282,16 @@ getDetallesDelalicitacion():void{
    * Obtiene los datos de la tabla desde el servicio y los asigna a la propiedad `datos`.
    * 
    * @remarks
-   * Este método realiza una suscripción al servicio `getTableData` para obtener los datos
+   * Este método realiza una suscripción al servicio `obtenerDatosTabla` para obtener los datos
    * correspondientes y los almacena en un arreglo con un único elemento.
    * 
    * @returns {void} No retorna ningún valor.
    */
-  getTabledatas():void{
-    this.service.getTableData().subscribe(
-        (data: licitacionesDisponibles) => {
-            this.datos = Array.isArray(data) ? data : [data];
-  
-        }
+  obtenerDatosTabla(): void {
+    this.service.obtenerDatosTabla().subscribe(
+      (datos: licitacionesDisponibles) => {
+        this.datos = Array.isArray(datos) ? datos : [datos];
+      }
     );
   }
 
@@ -316,7 +324,7 @@ getDistribucionSaldo():void{
  *
  * @returns {void} No retorna ningún valor.
  */
-onChangeEntiadFederative(): void {
+onCambiarEntiadFederative(): void {
   const ENTITAD_FEDERATIVA = this.formulario.get('entidadFederativa')?.value;
   this.expedicion120204Store.setEntidadFederativa(ENTITAD_FEDERATIVA);
 }
@@ -329,7 +337,7 @@ onChangeEntiadFederative(): void {
  *
  * @returns {void} Esta función no retorna ningún valor.
  */
-onChangeRepresentacionFederal(): void {
+onCambiarRepresentacionFederal(): void {
   const REPRESENTACION_FEDERAL = this.formulario.get('representacionFederal')?.value;
   this.expedicion120204Store.setRepresentacionFederal(REPRESENTACION_FEDERAL);
 }
@@ -340,7 +348,7 @@ onChangeRepresentacionFederal(): void {
  *
  * @returns {void} No retorna ningún valor.
  */
-onChangeMontoAExpedir():void{
+onCambiarMontoAExpedir():void{
   const MONTOAEXPEDIR = this.distribucionSaldoForm.get('montoAExpedir')?.value;
   this.expedicion120204Store.setMontoExpedir(MONTOAEXPEDIR);
 }
@@ -352,7 +360,7 @@ onChangeMontoAExpedir():void{
  *
  * @returns {void} No retorna ningún valor.
  */
-onChangeMontoAExpedirCheck():void{
+onCambiarMontoAExpedirCheck():void{
   const MONTOAEXPEDIRCHECK = this.distribucionSaldoForm.get('montoAExpedirCheck')?.value;
   this.expedicion120204Store.setMontoExpedirCheck(MONTOAEXPEDIRCHECK);
 }
