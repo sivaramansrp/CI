@@ -216,7 +216,14 @@ const ROUTES: Routes = [
           import(
             './tramites/260301/importacion-materias-primas-estupefacientes.module'
           ).then((m) => m.ImportacionMateriasPrimasEstupefacientesModule),
-  }
+  },
+  {
+    path: 'permiso-sujetos',
+    loadChildren: () =>
+      import('./tramites/260504/permiso-sujetos.module').then(
+        (m) => m.PermisoSujetosModule
+      ),
+  },
 ];
 
 @NgModule({
