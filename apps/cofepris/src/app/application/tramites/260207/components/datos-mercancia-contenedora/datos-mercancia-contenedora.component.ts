@@ -4,6 +4,7 @@ import { Tramite260207State, Tramite260207Store } from '../../estados/tramite260
 import { map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DatosMercanciaComponent } from '../../../../shared/components/datos-mercancia/datos-mercancia.component';
+import { ID_PROCEDIMIENTO } from '../../constants/tratamientos-especiales.enum';
 import { Subject } from 'rxjs';
 import { TablaMercanciasDatos } from '../../../../shared/models/datos-solicitud.model';
 import { Tramite260207Query } from '../../estados/tramite260207Query.query';
@@ -40,6 +41,13 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
    * Estado completo del trámite, que contiene información como la tabla de mercancías.
    */
   public tramiteState!: Tramite260207State;
+
+    /**
+   * @property {string} idProcedimiento
+   * @description
+   * Identificador del procedimiento.
+   */
+    public readonly idProcedimiento = ID_PROCEDIMIENTO;
 
   /**
    * @constructor

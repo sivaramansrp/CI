@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { ID_PROCEDIMIENTO } from '../../../constants/tratamientos-especiales.enum';
 import { PagoDeDerechosComponent } from '../../../../../shared/components/pago-de-derechos/pago-de-derechos.component';
 import { PagoDerechosFormState } from '../../../../../shared/models/terceros-relacionados.model';
 import { Tramite260207Store } from '../../../estados/tramite260207Store.store';
@@ -31,6 +32,14 @@ export class PagoDeDerechosContenedoraComponent {
    *
    * @param tramiteStore - Store que administra el estado del trámite 260207.
    */
+
+  /**
+   * @property {string} idProcedimiento
+   * @description
+   * Identificador del procedimiento.
+   */
+  public readonly idProcedimiento = ID_PROCEDIMIENTO;
+
   constructor(public tramiteStore: Tramite260207Store) {
     this.pagoDerechos = this.tramiteStore.getValue().pagoDerechos;
   }
