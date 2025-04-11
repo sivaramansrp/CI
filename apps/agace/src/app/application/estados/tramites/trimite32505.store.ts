@@ -7,9 +7,6 @@ import { Injectable } from '@angular/core';
  */
 export interface Solicitud32502State {
   
- 
-  
-  
   numeroSerie: string;
   folioTipo: string;
   tipoBusquedaAviso: string;
@@ -40,6 +37,23 @@ export interface Solicitud32502State {
   procedencia: string;
   vehiculoImportado: string;
   exportacion: string;
+  
+
+//Datos de la importación /**
+  aduanaImportacion: string;
+  patenteImportacion: string;
+  pedimentoImportacion: string;
+  valorAduana: string;
+  kilometraje:string;
+  montoIGI:string;
+  formaPagoIGI:string;
+  montoDTA:string;
+  montoIVA:string;
+  valorDolares:string;
+  folioCFDI:string;
+  folioVenta:string;
+  valorVenta:string;
+  
 }
 
 export function createInitialState(): Solicitud32502State {
@@ -66,6 +80,20 @@ export function createInitialState(): Solicitud32502State {
     procedencia: '',
     vehiculoImportado: '',
     exportacion: '',
+    aduanaImportacion: '',
+    patenteImportacion: '',
+    pedimentoImportacion :'',
+    valorAduana:'',
+    kilometraje:'',
+    montoIGI:'',
+    formaPagoIGI:'',
+    montoDTA:'',
+    montoIVA:'',
+    valorDolares:'',
+    folioCFDI:'',
+    folioVenta:'',
+    valorVenta:'',
+
   };
 }
 
@@ -213,6 +241,97 @@ export class tramite32505Store extends Store<Solicitud32502State> {
     this.update((state) => ({
       ...state,
       exportacion,
+    }));
+  }
+
+  public setAduanaImportacion(aduanaImportacion: string) {
+    this.update((state) => ({
+      ...state,
+      aduanaImportacion,
+    }));
+  }     
+
+  public setPatenteImportacion(patenteImportacion:string){
+    this.update((state) => ({
+      ...state,
+      patenteImportacion,
+    }));
+
+  }
+
+ public setPedimentoImportacion(pedimentoImportacion:string){
+    this.update((state) => ({
+      ...state,
+      pedimentoImportacion,
+    }));
+
+  }
+
+  public setKilometraje(kilometraje:string){
+    this.update((state) => ({
+      ...state,
+      kilometraje,
+    }));
+  }
+  
+  public setValorAduana(valorAduana:string){
+    this.update((state) => ({
+      ...state,
+      valorAduana,
+    }));
+  }
+  
+  public setMontoIGI(montoIGI:string){
+    this.update((state) => ({
+      ...state,
+      montoIGI,
+    }));
+  }
+  public setFormaPagoIGI(formaPagoIGI:string){
+    this.update((state) => ({
+      ...state,
+      formaPagoIGI,
+    }));
+  }
+  public setMontoDTA(montoDTA:string){
+    this.update((state) => ({
+      ...state,
+      montoDTA,
+    }));
+  }
+
+  public setMontoIVA(montoIVA:string){
+    this.update((state) => ({
+      ...state,
+      montoIVA,
+    }));
+  }
+
+  public setValorDolares(valorDolares:string){
+    this.update((state) => ({
+      ...state,
+      valorDolares,
+    }));
+  }
+
+  public setFolioCFDI(folioCFDI:string){
+    this.update((state) => ({
+      ...state,
+      folioCFDI,
+    }));
+  }
+
+  public setFolioVenta(folioVenta:string){
+    this.update((state) => ({
+      ...state,
+      folioVenta,
+    }));
+  }
+
+  public setValorVenta(valorVenta:string){
+    this.update((state) => ({
+      ...state,
+      valorVenta,
     }));
   }
 }

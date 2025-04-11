@@ -3,8 +3,8 @@ import { SolicitantePageComponent } from './solicitante-page.component';
 import { WizardComponent } from '@ng-mf/data-access-user';
 import { of } from 'rxjs';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { SeccionQuery } from '../../../../core/queries/seccion.query';
-import { SeccionStore } from '../../../../core/estados/seccion.store';
+import { HttpClientModule } from '@angular/common/http';
+
 
 describe('SolicitantePageComponent', () => {
   let component: SolicitantePageComponent;
@@ -23,10 +23,11 @@ describe('SolicitantePageComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      declarations: [SolicitantePageComponent],
+      declarations: [],
+      imports:[SolicitantePageComponent,HttpClientModule],
       providers: [
-        { provide: SeccionQuery, useValue: mockSeccionQuery },
-        { provide: SeccionStore, useValue: mockSeccionStore },
+        {  useValue: mockSeccionQuery },
+        {  useValue: mockSeccionStore },
       ],
       schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();

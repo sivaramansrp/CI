@@ -13,6 +13,18 @@ export interface Catalogo {
     descripcion: string;
   }
 
+/**
+ * Representa los datos de la tabla de avisos.
+ */
+export interface AvisoTablaDatos {
+  /**
+   * Lista de avisos en la tabla.
+   */
+  datos: ColumnasTabla[];
+}
+
+
+
   export interface ColumnasTabla {
     
     headerPropiedad: string;

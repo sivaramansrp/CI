@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AlertComponent } from '@ng-mf/data-access-user';
 import { CargaMasivaComponent } from './carga-masiva.component';
-import { TEXTOS } from '../../constants/aviso.enum';
+import { TEXTOS } from '../../constants/avios-procesos.enum';
 import { TituloComponent } from '@ng-mf/data-access-user';
 
 describe('CargaMasivaComponent', () => {

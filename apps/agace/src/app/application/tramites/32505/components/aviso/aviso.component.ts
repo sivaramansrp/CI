@@ -1,34 +1,40 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Modal } from 'bootstrap';
+import { map, Subject, takeUntil } from 'rxjs';
+import { TituloComponent } from '@libs/shared/data-access-user/src';
 import {
   BotonAccionesTipos,
   Catalogo,
   CatalogoSelectComponent,
-  InputRadioComponent,
   TablaDinamicaComponent,
   TablaSeleccion,
   ValidacionesFormularioService,
 } from '@libs/shared/data-access-user/src';
+import { AvisoService } from '../../services/aviso.service';
+import { CargaMasivaComponent } from '../carga-masiva/carga-masiva.component';
+import {
+  AvisoTablaDatos,
+  CatalogoLista,
+  ColumnasTabla,
+} from '../../models/avios-model';
 import {
   Solicitud32502State,
   tramite32505Store,
 } from '../../../../estados/tramites/trimite32505.store';
-import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { Tramite32505Query } from '../../../../estados/queries/tramite32505.query';
-import { map, Subject, takeUntil } from 'rxjs';
-import { AvisoService } from '../../services/aviso.service';
-import { CatalogoLista } from '../../models/avios-model';
 
-import { TABLE_DATA } from '../../constants/avios-procesos.enum';
-import { CargaMasivaComponent } from '../carga-masiva/carga-masiva.component';
-import { DatosAvisoService } from '../datosAviso/datosAviso.component';
-import { Modal } from 'bootstrap';
+/**
+ * @component AvisoComponent
+ * @description Componente encargado de gestionar la interfaz de usuario para el manejo de avisos relacionados con trámites.
+ * Proporciona formularios, tablas dinámicas y modales para capturar, visualizar y gestionar datos de avisos.
+ * 
+ * @selector app-aviso
+ * @templateUrl ./aviso.component.html
+ * @styleUrl ./aviso.component.scss
+ * @standalone true
+ */
 @Component({
   selector: 'app-aviso',
   templateUrl: './aviso.component.html',
@@ -43,21 +49,218 @@ import { Modal } from 'bootstrap';
   ],
   standalone: true,
 })
-export class AvisoComponent implements OnInit {
-  isPopupOpen: boolean = false;
-  datosDelVehiculo: boolean = false;
+export class AvisoComponent implements OnInit,OnDestroy {
+/**
+   * @property {boolean} isPopupOpen
+   * Indica si el popup está abierto.
+   */
+isPopupOpen: boolean = false;
 
-  openPopup() {
+/**
+ * @property {boolean} datosDelVehiculo
+ * Indica si se deben mostrar los datos del vehículo.
+ */
+datosDelVehiculo: boolean = false;
+
+/**
+ * @property {boolean} datosDelImportacion
+ * Indica si se deben mostrar los datos de importación.
+ */
+datosDelImportacion: boolean = false;
+
+/**
+ * @property {boolean} datosFolioVUCEM
+ * Indica si se deben mostrar los datos relacionados con el folio VUCEM.
+ */
+datosFolioVUCEM: boolean = false;
+
+/**
+ * @property {boolean} datosDelVenta
+ * Indica si se deben mostrar los datos de la venta.
+ */
+datosDelVenta: boolean = false;
+
+/**
+ * @property {boolean} datosNIVNumeroSerie
+ * Indica si se deben mostrar los datos del NIV o número de serie.
+ */
+datosNIVNumeroSerie: boolean = false;
+
+/**
+ * @property {boolean} isPopupOpen
+ * Indica si el popup está abierto.
+ * */
+  openPopup() :void{
     this.isPopupOpen = true;
   }
+  /**
+   * @property {boolean} esManualAsivoAgregarClicked
+   * Indica si se ha hecho clic en el botón para agregar manualmente un aviso.
+   */
   esManualAsivoAgregarClicked = false;
 
+  /**
+   * @property {TablaSeleccion} TablaSeleccion
+   * Referencia a la clase TablaSeleccion para gestionar tablas dinámicas.
+   */
   TablaSeleccion = TablaSeleccion;
 
+  /**
+   * @property {BotonAccionesTipos} botonAccionesTipos
+   * Referencia a las acciones disponibles para los botones.
+   */
   botonAccionesTipos = BotonAccionesTipos;
+  
+  /**
+   * @property {boolean} datosDelAvisoVisible
+   * Indica si se deben mostrar los datos del aviso.
+   */
+  tablaDeDatos: {
+    encabezadas: {
+      encabezado: string;
+      clave: (ele: ColumnasTabla) => string;
+      orden: number;
+    }[];
+    datos: ColumnasTabla[];
+  } = {
+    encabezadas: [
+      {
+        encabezado: 'Datos del tipo de registro',
+        clave: (ele: ColumnasTabla) => ele.headerTipoRegistro,
+        orden: 1,
+      },
+      {
+        encabezado: 'NIV o número de serie',
+        clave: (ele: ColumnasTabla) => ele.headerNIV,
+        orden: 2,
+      },
+      {
+        encabezado: 'Año modelo',
+        clave: (ele: ColumnasTabla) => ele.headerAnioModelo,
+        orden: 3,
+      },
+      {
+        encabezado: 'Marca',
+        clave: (ele: ColumnasTabla) => ele.headerMarca,
+        orden: 4,
+      },
+      {
+        encabezado: 'Modelo',
+        clave: (ele: ColumnasTabla) => ele.headerModelo,
+        orden: 5,
+      },
+      {
+        encabezado: 'Tipo/Variante',
+        clave: (ele: ColumnasTabla) => ele.headerTVV,
+        orden: 5,
+      },
+      {
+        encabezado:
+          'Nombre en el título de propiedad extranjero o en su caso, nombre de la persona a la que se haya concedido la propiedad',
+        clave: (ele: ColumnasTabla) => ele.headerNombreTitulo,
+        orden: 6,
+      },
+      {
+        encabezado: 'No. del título de propiedad',
+        clave: (ele: ColumnasTabla) => ele.headerNoTitulo,
+        orden: 7,
+      },
+      {
+        encabezado: 'País que emitió el título de propiedad',
+        clave: (ele: ColumnasTabla) => ele.headerPais,
+        orden: 8,
+      },
+      {
+        encabezado: 'Estado o provincia de emisión del titulo de propiedad',
+        clave: (ele: ColumnasTabla) => ele.headerEstado,
+        orden: 9,
+      },
+      {
+        encabezado: 'No. de placas de circulación en el país de procedencia',
+        clave: (ele: ColumnasTabla) => ele.headerPlacas,
+        orden: 10,
+      },
+      {
+        encabezado: 'Forma de adquisición del vehículo importado',
+        clave: (ele: ColumnasTabla) => ele.headerAdquisicion,
+        orden: 12,
+      },
+      {
+        encabezado: 'No. de documento de exportación',
+        clave: (ele: ColumnasTabla) => ele.headerDocumentoExportacion,
+        orden: 13,
+      },
+      {
+        encabezado: 'Aduana de importación',
+        clave: (ele: ColumnasTabla) => ele.headerAduana,
+        orden: 14,
+      },
 
-  tableData = TABLE_DATA;
+      {
+        encabezado: 'Patente de importación',
+        clave: (ele: ColumnasTabla) => ele.headerPatente,
+        orden: 15,
+      },
+      {
+        encabezado: 'Pedimento de importación',
+        clave: (ele: ColumnasTabla) => ele.headerPedimento,
+        orden: 16,
+      },
+      {
+        encabezado: 'Kilometraje a la fecha de la importación',
+        clave: (ele: ColumnasTabla) => ele.headerKilometraje,
+        orden: 17,
+      },
+      {
+        encabezado: 'Valor en dólares',
+        clave: (ele: ColumnasTabla) => ele.headerValorDolares,
+        orden: 18,
+      },
+      {
+        encabezado: 'Valor en la aduana',
+        clave: (ele: ColumnasTabla) => ele.headerValorAduana,
+        orden: 19,
+      },
+      {
+        encabezado: 'Monto de IGI pagado',
+        clave: (ele: ColumnasTabla) => ele.headerMontoIGI,
+        orden: 20,
+      },
+      {
+        encabezado: 'Forma de pago del IGI',
+        clave: (ele: ColumnasTabla) => ele.headerFormaPago,
+        orden: 21,
+      },
+      {
+        encabezado: 'Monto de DTA pagado',
+        clave: (ele: ColumnasTabla) => ele.headerMontoDTA,
+        orden: 22,
+      },
+      {
+        encabezado: 'Folio del CFDI por el servicio de importación',
+        clave: (ele: ColumnasTabla) => ele.headerFolioCFDI,
+        orden: 23,
+      },
+      {
+        encabezado: 'Valor de venta en territorio nacional sin IVA',
+        clave: (ele: ColumnasTabla) => ele.headerFolioCFDI,
+        orden: 24,
+      },
+      {
+        encabezado: 'Folio del CFDI por la venta en territorio nacional',
+        clave: (ele: ColumnasTabla) => ele.headerFolioCFDI,
+        orden: 25,
+      },
 
+      {
+        encabezado:
+          'Identificador de transacción de VUCEM correspondiente al aviso de importación previa relacionado',
+        clave: (ele: ColumnasTabla) => ele.headerFolioCFDI,
+        orden: 26,
+      },
+    ],
+    datos: [],
+  };
   /**
    * Referencia al elemento del modal para buscar mercancías.
    *
@@ -117,14 +320,42 @@ export class AvisoComponent implements OnInit {
    *
    * Contiene una lista de países que el usuario puede seleccionar.
    */
+  /**
+   * @property {Catalogo[]} optionsPais
+   * Opciones disponibles para los países.
+   */
   optionsPais!: Catalogo[];
 
+  /**
+   * @property {Catalogo[]} optionsAnio
+   * Opciones disponibles para los años.
+   */
   optionsAnio!: Catalogo[];
 
+  /**
+   * @property {Catalogo[]} optionCilindros
+   * Opciones disponibles para los cilindros.
+   */
   optionCilindros!: Catalogo[];
+
+  /**
+   * @property {Catalogo[]} optionCombustible
+   * Opciones disponibles para los tipos de combustible.
+   */
   optionCombustible!: Catalogo[];
 
-  paisIssued!:Catalogo[] ;
+  /**
+   * @property {Catalogo[]} optionAduana
+   * Opciones disponibles para las aduanas.
+   */
+  optionAduana!: Catalogo[];
+
+  /**
+   * @property {Catalogo[]} paisIssued
+   * Opciones de países que emitieron el título de propiedad.
+   */
+  paisIssued!: Catalogo[];
+
 
   /**
    * @property {boolean} seccionContenedorVisible
@@ -132,8 +363,22 @@ export class AvisoComponent implements OnInit {
    */
   datosDelAvisoVisible: boolean = false;
 
+  /**
+   * @property {boolean} datosDelAvisoVisible
+   * Indicates whether the vehicle data is visible.
+   */
   datosCargaMasiva: boolean = false;
 
+  
+   /**
+   * @constructor
+   * @description Constructor del componente. Inicializa servicios y dependencias necesarias.
+   * @param {FormBuilder} fb - Servicio para construir formularios reactivos.
+   * @param {tramite32505Store} store - Store para gestionar el estado del trámite.
+   * @param {Tramite32505Query} tramiteQuery - Servicio para realizar consultas relacionadas con el trámite.
+   * @param {AvisoService} avisoService - Servicio para gestionar datos relacionados con avisos.
+   * @param {ValidacionesFormularioService} validacionesService - Servicio para validar formularios.
+   */
   constructor(
     private fb: FormBuilder,
     public store: tramite32505Store,
@@ -151,10 +396,10 @@ export class AvisoComponent implements OnInit {
     return this.validacionesService.isValid(form, field);
   }
 
+ 
   /**
-   * Inicializa el componente.
-   *
-   * Este método configura los formularios y carga los datos iniciales necesarios para el Certificado de Origen.
+   * @method ngOnInit
+   * @description Método de inicialización del componente. Configura formularios, carga datos iniciales y suscribe observables.
    */
   ngOnInit(): void {
     this.tramiteQuery.selectSolicitud$
@@ -172,7 +417,10 @@ export class AvisoComponent implements OnInit {
     this.mostrarCamposAviso();
     this.cargarCilindros();
     this.cargarCombustible();
-   this.cargarPaisIssued();
+    this.cargarPaisIssued();
+    this.cargarAduana();
+    this.openModalCancelarTramite();
+   
   }
 
   /**
@@ -190,27 +438,47 @@ export class AvisoComponent implements OnInit {
   get adace(): FormGroup {
     return this.aviosForm.get('adaceForm.adace') as FormGroup;
   }
-
+/**
+   * Obtiene el campo 'pais' del formulario 'adaceForm'.
+   * @returns {FormGroup} El campo 'pais' del formulario 'adaceForm'.
+   * */
   get pais(): FormGroup {
     return this.aviosForm.get('adaceForm.pais') as FormGroup;
   }
 
-  get anio(): FormGroup {
+  /**
+   * Obtiene el campo 'anio' del formulario 'adaceForm'.
+   * @returns {FormGroup} El campo 'anio' del formulario 'adaceForm'.
+   */
+    get anio(): FormGroup {
     return this.aviosForm.get('adaceForm.anio') as FormGroup;
   }
 
+  /**
+   * Obtiene el campo 'tipoBusqueda' del formulario 'adaceForm'.
+   * @returns {FormGroup} El campo 'tipoBusqueda' del formulario 'adaceForm'.
+   */
   get tipoBusqueda(): FormGroup {
     return this.aviosForm.get('adaceForm.tipoBusqueda') as FormGroup;
   }
-
+  /**
+   * Obtiene el campo 'tipoBusquedaAviso' del formulario 'adaceForm'.
+   * @returns {FormGroup} El campo 'tipoBusquedaAviso' del formulario 'adaceForm'.
+   */
   get tipoBusquedaAviso(): FormGroup {
     return this.aviosForm.get('adaceForm.tipoBusquedaAviso') as FormGroup;
   }
-
+  /**
+   * Obtiene el campo 'numeroSerie' del formulario 'adaceForm'.
+   * @returns {FormGroup} El campo 'numeroSerie' del formulario 'adaceForm'.
+   */
   get folioTipo(): FormGroup {
     return this.aviosForm.get('adaceForm.folioTipo') as FormGroup;
   }
-
+  /**
+   * Obtiene el campo 'numeroSerie' del formulario 'adaceForm'.
+   * @returns {FormGroup} El campo 'numeroSerie' del formulario 'adaceForm'.
+   */
   get cilindros(): FormGroup {
     return this.aviosForm.get('adaceForm.cilindros') as FormGroup;
   }
@@ -220,7 +488,10 @@ export class AvisoComponent implements OnInit {
   crearFormSolicitud(): void {
     this.aviosForm = this.fb.group({
       adaceForm: this.fb.group({
-        adace: [this.solicitudState?.adace],
+        adace: [
+          { value: this.solicitudState?.adace, disabled: true },
+          [Validators.required],
+        ],
         pais: [this.solicitudState?.pais, [Validators.required]],
         anio: [this.solicitudState?.anio, [Validators.required]],
         tipoBusqueda: [this.solicitudState?.tipoBusqueda, Validators.required],
@@ -229,8 +500,14 @@ export class AvisoComponent implements OnInit {
           Validators.required,
         ],
         folioTipo: [this.solicitudState?.folioTipo, Validators.required],
-        numeroSerie: [this.solicitudState?.numeroSerie, [Validators.required]],
-        numeroNIV: [this.solicitudState?.numeroNIV, [Validators.required]],
+        numeroSerie: [
+          this.solicitudState?.numeroSerie,
+          [Validators.required, Validators.pattern(/^[a-zA-Z0-9]*$/)],
+        ],
+        numeroNIV: [
+          this.solicitudState?.numeroNIV,
+          [Validators.required, Validators.pattern(/^[a-zA-Z0-9]*$/)],
+        ],
         anoModelo: [this.solicitudState?.anoModelo, [Validators.required]],
         marca: [this.solicitudState?.marca, [Validators.required]],
         modelo: [this.solicitudState?.modelo, [Validators.required]],
@@ -241,17 +518,61 @@ export class AvisoComponent implements OnInit {
         cilindros: [this.solicitudState?.cilindros, [Validators.required]],
         puertas: [this.solicitudState?.puertas, [Validators.required]],
         combustible: [this.solicitudState?.combustible, [Validators.required]],
-        propiedad: [this.solicitudState?.propiedad, [Validators.required]],
-        nombreTitulo:[this.solicitudState?.nombreTitulo, [Validators.required]],
-        paisEmitio:[this.solicitudState?.paisEmitio, [Validators.required]],
-        provinciaEmision:[this.solicitudState?.provinciaEmision, [Validators.required]],
-        procedencia:[this.solicitudState?.procedencia, [Validators.required]],
-        vehiculoImportado:[this.solicitudState?.vehiculoImportado, [Validators.required]],
-        exportacion:[this.solicitudState?.exportacion, [Validators.required]],
-          
+        propiedad: [
+          this.solicitudState?.propiedad,
+          [Validators.required, Validators.pattern(/^[a-zA-Z0-9]*$/)],
+        ],
+        nombreTitulo: [
+          this.solicitudState?.nombreTitulo,
+          [Validators.required],
+        ],
+        paisEmitio: [this.solicitudState?.paisEmitio, [Validators.required]],
+        provinciaEmision: [
+          this.solicitudState?.provinciaEmision,
+          [Validators.required],
+        ],
+        procedencia: [this.solicitudState?.procedencia, [Validators.required]],
+        vehiculoImportado: [
+          this.solicitudState?.vehiculoImportado,
+          [Validators.required],
+        ],
+        exportacion: [this.solicitudState?.exportacion, [Validators.required]],
+        aduanaImportacion: [
+          this.solicitudState?.aduanaImportacion,
+          [Validators.required],
+        ],
+        patenteImportacion: [
+          this.solicitudState?.patenteImportacion,
+          [Validators.required],
+        ],
+        pedimentoImportacion: [
+          this.solicitudState?.pedimentoImportacion,
+          [Validators.required],
+        ],
+        valorAduana: [this.solicitudState?.valorAduana, [Validators.required]],
+        kilometraje: [this.solicitudState?.kilometraje, [Validators.required]],
+        montoIGI: [this.solicitudState?.montoIGI, [Validators.required]],
+        formaPagoIGI: [
+          this.solicitudState?.formaPagoIGI,
+          [Validators.required],
+        ],
+        montoDTA: [this.solicitudState?.montoDTA, [Validators.required]],
+        montoIVA: [this.solicitudState?.montoIVA, [Validators.required]],
+        valorDolares: [
+          this.solicitudState?.valorDolares,
+          [Validators.required],
+        ],
+        folioCFDI: [
+          this.solicitudState?.folioCFDI,
+          [Validators.required, Validators.pattern(/^[a-zA-Z0-9]*$/)],
+        ],
+        folioVenta: [
+          this.solicitudState?.folioVenta,
+          [Validators.required, Validators.pattern(/^[a-zA-Z0-9]*$/)],
+        ],
+        valorVenta: [this.solicitudState?.valorVenta, [Validators.required]],
       }),
-
-      datos: this.fb.group({}),
+     
     });
 
     this.mostrarCampos();
@@ -268,6 +589,11 @@ export class AvisoComponent implements OnInit {
       );
       this.mostrarCamposAviso();
     });
+
+    this.adaceForm.get('folioTipo')?.valueChanges.subscribe((value) => {
+      this.setValoresStore(this.adaceForm, 'folioTipo', 'setFolioTipo');
+      this.mostrarCamposAviso();
+    });
   }
 
   /**
@@ -275,13 +601,39 @@ export class AvisoComponent implements OnInit {
    */
   mostrarCamposAviso(): void {
     const AVISO_TIPO_BUSQUEDA = this.adaceForm.get('tipoBusquedaAviso')?.value;
-    console.log('Tipo de busqueda:', AVISO_TIPO_BUSQUEDA);
+    const FOLIO_TIPO = this.adaceForm.get('folioTipo')?.value;
     if (AVISO_TIPO_BUSQUEDA === 'Importación') {
       this.datosDelVehiculo = true;
+      this.datosFolioVUCEM = false;
+      this.datosDelImportacion = true;
+      this.datosDelVenta = false;
+      this.datosNIVNumeroSerie = false;
     } else if (AVISO_TIPO_BUSQUEDA === 'Venta') {
+      this.datosFolioVUCEM = true;
+      this.datosDelVehiculo = false;
+      this.datosDelImportacion = false;
+      this.datosDelVenta = true;
+      this.datosNIVNumeroSerie = false;
+
+      if (FOLIO_TIPO === 'Si') {
+        this.datosDelVenta = true;
+        this.datosDelVehiculo = false;
+        this.datosDelImportacion = false;
+        this.datosFolioVUCEM = true;
+        this.datosNIVNumeroSerie = true;
+      } else if (FOLIO_TIPO === 'No') {
+        this.datosDelVenta = true;
+        this.datosDelVehiculo = true;
+        this.datosDelImportacion = true;
+        this.datosFolioVUCEM = false;
+        this.datosNIVNumeroSerie = false;
+      }
     } else if (AVISO_TIPO_BUSQUEDA === 'Importación y venta') {
-    } else {
-    }
+      this.datosDelVehiculo = true;
+      this.datosFolioVUCEM = false;
+      this.datosDelImportacion = true;
+      this.datosDelVenta = true;
+    } 
   }
 
   /**
@@ -289,7 +641,7 @@ export class AvisoComponent implements OnInit {
    */
   mostrarCampos(): void {
     const TIPO_BUSQUEDA = this.adaceForm.get('tipoBusqueda')?.value;
-    console.log('Tipo de busqueda:', TIPO_BUSQUEDA);
+    
     if (TIPO_BUSQUEDA === 'Manual') {
       this.datosDelAvisoVisible = true;
       this.datosCargaMasiva = false;
@@ -329,10 +681,15 @@ export class AvisoComponent implements OnInit {
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((datos: CatalogoLista) => {
         this.optionsPais = datos.datos;
-        console.log(this.optionsPais);
+        
       });
   }
 
+  /**
+   * Carga las opciones disponibles para los años.
+   *
+   * Este método obtiene las opciones de años desde el servicio `avisoService` y las asigna a `optionsAnio`.
+   */
   cargarAnio(): void {
     this.avisoService
       .obtenerAnio()
@@ -342,6 +699,11 @@ export class AvisoComponent implements OnInit {
       });
   }
 
+  /**
+   * Carga las opciones disponibles para los cilindros.
+   *
+   * Este método obtiene las opciones de cilindros desde el servicio `avisoService` y las asigna a `optionCilindros`.
+   */
   cargarCilindros(): void {
     this.avisoService
       .obtenerCilindros()
@@ -351,7 +713,12 @@ export class AvisoComponent implements OnInit {
       });
   }
 
-  cargarPaisIssued():void{
+  /**
+   * Carga las opciones disponibles para los países que emitieron el título de propiedad.
+   *
+   * Este método obtiene las opciones de países desde el servicio `avisoService` y las asigna a `paisIssued`.
+   */
+  cargarPaisIssued(): void {
     this.avisoService
       .obtenerPaisIssued()
       .pipe(takeUntil(this.destroyNotifier$))
@@ -359,7 +726,11 @@ export class AvisoComponent implements OnInit {
         this.paisIssued = datos.datos;
       });
   }
-
+  /**
+   * Carga las opciones disponibles para los tipos de combustible.
+   *
+   * Este método obtiene las opciones de combustible desde el servicio `avisoService` y las asigna a `optionCombustible`.
+   */
   cargarCombustible(): void {
     this.avisoService
       .obtenerCombustible()
@@ -369,7 +740,83 @@ export class AvisoComponent implements OnInit {
       });
   }
 
+  /**
+   * Carga las opciones disponibles para las aduanas.
+   *
+   * Este método obtiene las opciones de aduanas desde el servicio `avisoService` y las asigna a `optionAduana`.
+   */
+  cargarAduana(): void {
+    this.avisoService
+      .obtenerAduana()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((datos: CatalogoLista) => {
+        this.optionAduana = datos.datos;
+      });
+  }
+
+  /**
+   * @method cargarAvisoTabla
+   * @description Método para cargar los datos de la tabla de avisos desde el servicio `avisoTrasladoService`.
+   * Los datos obtenidos se asignan a la propiedad `tablaDeDatos.datos`.
+   *
+   * @returns {void}
+   */
+  public cargarAvisoTabla(): void {
   
+    this.avisoService
+      .obtenerAvisoTabla()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((datos: AvisoTablaDatos) => {
+        this.tablaDeDatos.datos = datos.datos;
+      });
+  }
+
+  /**
+   * @property {ElementRef} closeDomicilio
+   * @description Referencia al botón o elemento que cierra el modal de domicilio.
+   * Utilizado para cerrar el modal de manera programática.
+   */
+  @ViewChild('closeDomicilio') public closeDomicilio!: ElementRef;
+  /**
+   * @method agregarDomicilio
+   * @description Método para agregar domicilios a la tabla de avisos.
+   *
+   * - Carga los datos de la tabla de avisos y cierra el modal de domicilio.
+   *
+   * @returns {void}
+   */
+  agregarDomicilio(): void {
+      this.cargarAvisoTabla();
+    this.closeDomicilio.nativeElement.click();
+  }
+
+  /**
+   * @property {AvisoTabla[]} filaSeleccionadaLista
+   * @description Lista de filas seleccionadas en la tabla de avisos.
+   * Contiene los datos de las filas seleccionadas por el usuario.
+   */
+  filaSeleccionadaLista: ColumnasTabla[] = [];
+
+  /**
+   * @method filaSeleccionada
+   * @description Método para manejar las filas seleccionadas en la tabla de avisos.
+   *
+   * - Actualiza la propiedad `filaSeleccionadaLista` con las filas seleccionadas.
+   *
+   * @param {AvisoTabla[]} evento - Lista de filas seleccionadas en la tabla de avisos.
+   * @returns {void}
+   */
+  filaSeleccionada(evento: ColumnasTabla[]): void {
+    this.filaSeleccionadaLista = evento;
+  }
+
+  /**
+   * Abre el modal para cancelar el trámite.
+   */
+  openModalCancelarTramite(): void {
+    this.adaceForm.reset();
+    this.optionsPais = [];
+  }
 
   /**
    * Limpia los observables al destruir el componente.
