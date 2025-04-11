@@ -304,6 +304,12 @@ export const REGEX_SOLO_NUMEROS = /^[0-9]*$/;
 export const REGEX_CURP =
   /^([a-zA-Z]{4})([0-9]{6})([HhMm][a-zA-Z]{5})([0-9]{2})$/;
 
+/**
+ * Regular expression to validate numeric values with optional decimal points.
+ * Allows whole numbers and numbers with up to two decimal places.
+ */
+export const REGEX_VALORES_NUMERICOS = /^[0-9]+(\\.[0-9]{1,2})?$/;
+
 /** 
  * Expresión regular para validar números en formato USD. 
  * Permite dígitos y el punto decimal. 
@@ -322,3 +328,9 @@ export const REGEX_IMPORTE_PAGO = '/^[a-zA-Z0-9]*$/';
  * La llave debe consistir en exactamente 10 caracteres alfanuméricos (letras mayúsculas y dígitos).
  */
 export const REGEX_LLAVE_DE_PAGO = '/^[A-Z0-9]{10}$/';
+
+/**
+ * Expresión regular para validar números en formato de pesos mexicanos (MXN).
+ * Permite dígitos y el punto decimal.
+ */
+export const REGEX_SIN_DIGITOS = /\D/g;
