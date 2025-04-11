@@ -216,7 +216,14 @@ const ROUTES: Routes = [
           import(
             './tramites/260301/importacion-materias-primas-estupefacientes.module'
           ).then((m) => m.ImportacionMateriasPrimasEstupefacientesModule),
-  }
+  },
+  {
+    path: 'registrar-solicitud-mcp',
+        loadChildren: () =>
+          import('./tramites/260702/registrar-solicitud-mcp.module').then(
+            (m) => m.RegistrarSolicitudMCPModule
+          ), 
+      },
 ];
 
 @NgModule({
