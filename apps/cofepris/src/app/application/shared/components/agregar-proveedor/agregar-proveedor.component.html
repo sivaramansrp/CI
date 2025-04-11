@@ -11,7 +11,7 @@
             type="radio"
             class="form-check-input"
             formControlName="tipoPersona"
-            value="Física"
+            value="Fisica"
           />
           Física 
           <span
@@ -60,11 +60,11 @@
     <h4 class="mt-4">Datos personales</h4>
     <div class="row">
       <div class="col-md-4">
-        <label class="form-label">Nombre(s):</label>
+        <label class="form-label">Nombre(s)*:</label>
         <input type="text" class="form-control" formControlName="nombres" />
       </div>
       <div class="col-md-4">
-        <label class="form-label">Primer apellido:</label>
+        <label class="form-label">Primer apellido*:</label>
         <input
           type="text"
           class="form-control"
@@ -112,12 +112,17 @@
         <input type="text" class="form-control" formControlName="colonia" />
       </div>
       <div class="col-md-4">
-        <label class="form-label">Calle:</label>
+        <label class="form-label">Calle*:</label>
+        <span
+        class="bi bi-question-circle-fill"
+        title="Calle"
+        data-bs-toggle="tooltip"
+      ></span>
         <input type="text" class="form-control" formControlName="calle" />
         <i class="fas fa-info-circle"></i>
       </div>
       <div class="col-md-4">
-        <label class="form-label">Número exterior:</label>
+        <label class="form-label">Número exterior*:</label>
         <input
           type="text"
           class="form-control"
