@@ -253,7 +253,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    
+
     // Peticiones a las apis
     this.inicializaCatalogos();
 
@@ -593,7 +593,11 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       RECINTO$,
       CAT_DESPACHO_LDA$,
       CAT_DESPACHO_DD$
-    ).subscribe();
+    )
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+      )
+      .subscribe();
   }
 
   /**
