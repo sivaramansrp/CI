@@ -50,12 +50,12 @@ export class SelectCatalogosComponent {
   }
 
   seleccion() {
-    const opcionSeleccionada = parseInt(this.itemSeleccionado.value);
+    const opcionSeleccionada = this.itemSeleccionado.value;
 
     let seleccion: Catalogo;
 
     this.catalogosDatos.catalogos.forEach((el: Catalogo) => {
-      el.id = (typeof (el.id) === 'string') ? parseInt(el.id) : el.id;
+      el.id = (typeof (el.id) === 'string') ? el.id : el.id;
       if (el.id === opcionSeleccionada) {
         seleccion = el;
         this.valorSeleccion.emit(seleccion);

@@ -4,6 +4,8 @@ import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogosService } from '@ng-mf/data-access-user';
 import { TEXTOS } from '@ng-mf/data-access-user';
 
+// eslint-disable-next-line @nx/enforce-module-boundaries
+import documentosOpcionales from 'libs/shared/theme/assets/json/shared/documentosOpcionales.json';
 
 @Component({
   selector: 'paso-dos',
@@ -17,7 +19,7 @@ export class PasoDosComponent implements OnInit {
 
   infoAlert = 'alert-info';
   catalogoDocumentos: Catalogo[] = [];
-  catalogoDocumentosOpcionales: Catalogo[] = [];
+  catalogoDocumentosOpcionales: Catalogo[] = documentosOpcionales.documentosOpcionales
   documentosSeleccionados: Catalogo[] = [];
   cargaRealizada = false;
 
@@ -70,7 +72,7 @@ export class PasoDosComponent implements OnInit {
       });
   }
 
-  documentosCargados(cargaRealizada: boolean) : void {
+  documentosCargados(cargaRealizada: boolean): void {
     this.cargaRealizada = cargaRealizada;
   }
 }

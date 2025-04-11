@@ -32,6 +32,17 @@ import { DPI, MB, PDF } from '../../constantes/constantes';
 import { DocumentosState, DocumentosStore } from '../../../core/estados/documentos.store';
 import { DocumentosQuery } from '../../../core/queries/documentos.query';
 
+interface DocumentosParaCargar {
+  name: string;
+  id: number;
+  archivo?: File;
+  ruta: string;
+  cargado: boolean;
+  tipo: string;
+  mensaje: string;
+  estatus: string;
+}
+
 @Component({
   selector: 'anexar-documentos',
   standalone: true,
@@ -64,20 +75,10 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
     password: 'clave1'
   };
   token!: string;
-  listDocOpcionalesAgregar: any[] = [];
-  listadoArchivos: any[] = [];
-  archivosOpcionales: any[] = [
-    { descripcion: 'Documento_opcional_01', dpi: '300', id: '11', tam: '10000' },
-    { descripcion: 'Documento_opcional_02', dpi: '301', id: '12', tam: '11000' },
-    { descripcion: 'Documento_opcional_03', dpi: '302', id: '13', tam: '12000' },
-    { descripcion: 'Documento_opcional_04', dpi: '303', id: '14', tam: '13000' },
-    { descripcion: 'Documento_opcional_05', dpi: '304', id: '15', tam: '14000' },
-    { descripcion: 'Documento_opcional_06', dpi: '305', id: '16', tam: '15000' },
-    { descripcion: 'Documento_opcional_07', dpi: '306', id: '17', tam: '16000' },
-    { descripcion: 'Documento_opcional_08', dpi: '307', id: '18', tam: '17000' },
-    { descripcion: 'Documento_opcional_09', dpi: '308', id: '19', tam: '18000' },
-    { descripcion: 'Documento_opcional_10', dpi: '309', id: '20', tam: '19000' }
-  ];
+  listDocOpcionalesAgregar: number[] = [];
+  listadoArchivos: DocumentosParaCargar[] = [];
+  archivosOpcionales: Catalogo[] = [];
+  
   archivosOpcionalesOriginal: any[] = [];
   listDocOpcionales: any[] = [];
   listDocOpcionalesDuplicado: any[] = [];
@@ -195,7 +196,7 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
    * @param id del catalog de documentos a cargar
    * @param tipo de documento que se está agregando obligatorio u opcional
    */
-  cargarDoc(event: Event, fileInput: HTMLInputElement, id: any, tipo: string): void {
+  cargarDoc(event: Event, fileInput: HTMLInputElement, id: number, tipo: string): void {
     const ARCHIVO = event.target as HTMLInputElement;
     const INFORMACION_ARCHIVO = (ARCHIVO.files as FileList)[0];
 
@@ -225,9 +226,6 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
         estatus: 'Pendiente'
       });
     }
-
-    console.log(this.listadoArchivos);
-
   }
 
   existePreview(id: any): boolean {
@@ -259,11 +257,11 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
    * @returns {void}
    * @param id
    */
-  verPdf(id: any): void {
+  verPdf(id: number): void {
     const RUTA = this.listadoArchivos.find(f => f.id === id)?.ruta;
     const ESTADO_INICIAL: ModalOptions = {
       initialState: {
-        ruta: RUTA.toString(),
+        ruta: RUTA ? RUTA.toString() : '',
         title: 'Vista previa documento'
       }
     };
@@ -298,7 +296,6 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
       this.subscription.push(
         this.modalRef.onHide.subscribe((response: boolean | string) => {
           if (typeof response === 'boolean' && response) {
-            console.log('cargando documentos');
             this.cargarDocumentos = true;
             this.archivosCargando.obligatorios = this.listadoArchivos.filter(f => f.tipo === 'obligatorio');
             this.archivosCargando.opcionales = this.listadoArchivos.filter(f => f.tipo === 'opcional');
@@ -311,7 +308,7 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  limpiarFile(item: any, tipo: string): void {
+  limpiarFile(item: Catalogo, tipo: string): void {
     let FILE_INPUT: HTMLInputElement | null = null;
     if (tipo === 'obligatorios') {
       FILE_INPUT = document.getElementById(`formFile${item.id}`) as HTMLInputElement;
@@ -329,7 +326,7 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  agregarParte(fileInput: HTMLInputElement, item: any, origen: string): void {
+  agregarParte(item: Catalogo, origen: string): void {
     if (origen === 'obligatorios') {
       const INDICE: number = this.catalogoDocumentos.findIndex(doc => doc.id === item.id);
       if (INDICE !== -1) {
@@ -371,9 +368,10 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
     return String((parseInt(size, 10) / 1000).toFixed(2));
   }
 
-  agregarOpcionales(): void {
-    this.listDocOpcionalesAgregar.forEach((doc: any) => {
-      const INDICE = this.listDocOpcionales.findIndex((f: any) => f.id === doc);
+  agregarOpcionales(): void {    
+    this.listDocOpcionalesAgregar.forEach((doc: number) => {
+     
+      const INDICE = this.listDocOpcionales.findIndex((f: Catalogo) => f.id === doc);
       if (INDICE === -1) {
         const OPCIONAL = {
           ...this.archivosOpcionales.find(f => f.id === doc),
@@ -402,7 +400,7 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  eliminarOpcional(item: any): void {
+  eliminarOpcional(item: Catalogo): void {
     const INDICE: number = this.listDocOpcionales.findIndex(f => f.id === item.id);
     if (INDICE !== -1) {
       if (this.listDocOpcionales[INDICE].adicionales?.length > 0) {
@@ -434,9 +432,16 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
+  ngOnChanges(changes: SimpleChanges): void {    
     if (changes['catalogoDocumentos']) {
       this.catalogoDocumentos = this.catalogoDocumentos.map(item => ({
+        ...item,
+        adicionales: []
+      }));
+    }
+
+    if (changes['catalogoDocumentosOpcionales']) {     
+      this.archivosOpcionales = this.catalogoDocumentosOpcionales.map(item => ({
         ...item,
         adicionales: []
       }));

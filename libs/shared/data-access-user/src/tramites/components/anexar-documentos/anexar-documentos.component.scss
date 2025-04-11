@@ -12,21 +12,14 @@
   }
 }
 
-
-.custom-file-label::after {
-  /*left: 0;
-  right: auto;
-  border-left-width: 0;
-  border-right: inherit;
-  */
-  //content: "Seleccionar archivo";
-  //background-color: #1d1d26;
-}
-
 .file-btn-add {
   color: #9e7f3c
 }
 
 .bg-file-container{
   background-color: #f5f5f5;
+}
+
+.min-height {
+  min-height: 15rem
 }
