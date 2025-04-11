@@ -83,7 +83,7 @@
                     [CUSTOMECLASS]="'alert-warning'"></ng-alert>
 
             </div>
-            <div class="modal-footer custom-footer mt-4">
+            <div class="modal-footer custom-footer mt-4 justify-content-end">
                 <button type="button" class="btn btn-default" data-bs-dismiss="modal" #closeModal> Cerrar </button>
                 <button type="submit" class="btn btn-primary" #closeModal (click)="adjuntarArchivos()"> Adjuntar
                 </button>
@@ -109,7 +109,7 @@
                 <app-tabla-dinamica [configuracionTabla]="tablaDeDatos.encabezadas"
                     [datos]="tablaDeDatos.datos"></app-tabla-dinamica>
             </div>
-            <div class="modal-footer custom-footer mt-4">
+            <div class="modal-footer custom-footer mt-4 justify-content-end">
                 <button type="button" class="btn btn-default" data-bs-dismiss="modal" #closeModal> Cerrar </button>
             </div>
         </div>
