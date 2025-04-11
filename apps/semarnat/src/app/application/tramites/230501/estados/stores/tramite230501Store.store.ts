@@ -75,6 +75,7 @@ export function createInitialState(): Tramite230501State {
       composicionForm: false,
       datosSolicitudForm: false,
       pagoDeDerechos: false,
+      allForm: false,
     }
   };
 }

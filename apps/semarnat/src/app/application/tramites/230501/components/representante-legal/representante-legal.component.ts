@@ -98,7 +98,7 @@ export class RepresentanteLegalComponent implements OnDestroy, OnInit {
       primerApellido: [''],
       segundoApellido: [''],
       pais: ['', Validators.required],
-      estado: ['', Validators.required],
+      estadoLocalidad: ['', Validators.required],
       municipio: [''],
       localidad: [''],
       codigoPostal: ['', Validators.required],
