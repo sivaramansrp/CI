@@ -235,12 +235,11 @@ export class AgregarFabricanteComponent implements OnDestroy, OnInit {
   validarElementos(): void {
     switch (this.idProcedimiento) {
       case 260207:
+      case 260209:
+      case 260208:
         this.elementosDeshabilitados = ['pais'];
         this.elementosNoRequeridos=['codigoPostal','colonia']
         break;
-        case 260208:
-          this.elementosNoRequeridos=['codigoPostal','colonia']
-          break;
       default:
         this.elementosDeshabilitados = [];
         this.elementosNoRequeridos=[];
