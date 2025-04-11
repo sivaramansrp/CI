@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -62,7 +62,7 @@ export class PartidasDeLaMercanciaComponent {
    * filaSeleccionadaChange
    * Evento que emite las filas seleccionadas en la tabla dinámica.
    */
-  @Output() filaSeleccionadaChange = new EventEmitter<any[]>();
+  @Output() filaSeleccionadaChange = new EventEmitter<PartidasDeLaMercanciaModelo[]>();
 
   /**
    * validarYEnviarFormularioEvent
