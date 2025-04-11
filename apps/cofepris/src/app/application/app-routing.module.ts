@@ -193,6 +193,13 @@ const ROUTES: Routes = [
         (m) => m.MuestrasPlaguicidasModule
       ),
   },
+  {
+    path: 'modificacion-del-permiso',
+    loadChildren: () =>
+      import(
+        './tramites/260913/modificacion-del-permiso.module'
+      ).then((m) => m.ModificacionDelPermisoModule),
+  }
 ];
 
 @NgModule({
