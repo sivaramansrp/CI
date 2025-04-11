@@ -4,9 +4,6 @@ import { CommonModule } from '@angular/common';
 
 import { SolicitudImportacionAmbulanciaRoutingModule } from './solicitud-importacion-ambulancia-routing.module';
 
-// import { SolicitudImportacionAmbulanciaComponent } from './pages/importacion-de-vehiculos-usados/solicitud-importacion-ambulancia.component';
-// import { PasoTresComponent } from '../120402/components/paso-tres/paso-tres.component';
-
 import { BtnContinuarComponent, CrosslistComponent, InputRadioComponent, SolicitanteComponent, TablaDinamicaComponent, TituloComponent, WizardComponent } from '@libs/shared/data-access-user/src';
 import { DatosDeLaMercanciaComponent } from '../../shared/components/datos-de-la-mercancia/datos-de-la-mercancia.component';
 import { DatosDelTramiteComponent } from '../../shared/components/datos-del-tramite/datos-del-tramite.component';
