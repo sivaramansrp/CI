@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
 import {
   FECHA_DE_PAGO,
   PagoDerechosFormState,
@@ -13,7 +13,6 @@ import { FormGroup } from '@angular/forms';
 import { InputFecha } from '@ng-mf/data-access-user';
 import { InputFechaComponent } from '@ng-mf/data-access-user';
 import { OnInit } from '@angular/core';
-import { PROCEDIMIENTOS_NO_PARA_ELEMENTO_BANCO } from '../../constantes/pago-banco.enum';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { TituloComponent } from '@ng-mf/data-access-user';
@@ -38,7 +37,7 @@ import { takeUntil } from 'rxjs';
   templateUrl: './pago-de-derechos.component.html',
   styleUrl: './pago-de-derechos.component.css',
 })
-export class PagoDeDerechosComponent implements OnInit {
+export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   /**
    * @method eliminarMercancia
    * @description Emits an event to delete one or more merchandise items.
@@ -147,7 +146,6 @@ export class PagoDeDerechosComponent implements OnInit {
       ],
       fechaPago: [
         this.pagoDerechoFormState?.fechaPago || '',
-        Validators.required,
       ],
       importePago: [
         this.pagoDerechoFormState?.importePago || '',
@@ -162,13 +160,6 @@ export class PagoDeDerechosComponent implements OnInit {
     this.mostrarBanco = BANCO.includes(this.idProcedimiento)
       ? true
       : false;
-
-    this.bancoRequerido =
-      PROCEDIMIENTOS_NO_PARA_ELEMENTO_BANCO.includes(
-        this.idProcedimiento
-      )
-        ? false
-        : true;
 
     this.cargarDatos();
     this.getBancoDatos();
@@ -218,5 +209,14 @@ export class PagoDeDerechosComponent implements OnInit {
    */
   onFechaCambiada(fecha: string): void {
     this.pagoDerechosForm.patchValue({ fechaPago: fecha });
+  }
+
+  /**
+   * Método que se ejecuta al destruir el componente.
+   * Se encarga de liberar las suscripciones para evitar fugas de memoria.
+   */
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.unsubscribe();
   }
 }

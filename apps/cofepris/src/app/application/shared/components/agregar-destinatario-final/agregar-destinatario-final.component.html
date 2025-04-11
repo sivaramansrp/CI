@@ -15,6 +15,11 @@
             [value]="tipoPersona.FISICA"
           />
           Física
+          <span
+          class="bi bi-question-circle-fill"
+          title="Física"
+          data-bs-toggle="tooltip"
+        ></span>
         </div>
         <div class="form-check">
           <input
@@ -24,6 +29,11 @@
             value="Moral"
           />
           Moral
+          <span
+          class="bi bi-question-circle-fill"
+          title="Física"
+          data-bs-toggle="tooltip"
+        ></span>
         </div>
         @if(mostrarCamposNoContribuyente){
         <div class="form-check">
@@ -41,7 +51,12 @@
 
     <div class="row mt-5">
       <div class="col-md-6">
-        <label class="form-label">R.F.C.:</label>
+        <label class="form-label">R.F.C*:</label>
+        <span
+        class="bi bi-question-circle-fill"
+        title="R.F.C"
+        data-bs-toggle="tooltip"
+      ></span>
         <input type="text" class="form-control" formControlName="rfc" />
       </div>
     </div>
@@ -71,11 +86,11 @@
     <div class="row mt-3">
       <h4 class="mt-5">Datos personales</h4>
       <div class="col-md-4">
-        <label class="form-label">Nombre(s):</label>
+        <label class="form-label">Nombre(s)*:</label>
         <input type="text" class="form-control" formControlName="nombres" />
       </div>
       <div class="col-md-4">
-        <label class="form-label">Primer apellido:</label>
+        <label class="form-label">Primer apellido*:</label>
         <input
           type="text"
           class="form-control"
@@ -122,15 +137,16 @@
     @else{
     <h4 class="mt-5">Domicilio</h4>
     <div class="row mt-5">
-      <div class="col-md-4 px-5">
+      <div class="col-md-4">
         <app-catalogo-select
           [catalogo]="paisesDatos"
           formControlName="pais"
           [label]="'País'"
           [required]="true"
+          [isDisabled]="elementosDeshabilitados.includes('pais')"
         ></app-catalogo-select>
       </div>
-      <div class="col-md-4 px-5">
+      <div class="col-md-4">
         <app-catalogo-select
           [catalogo]="estadosDatos"
           formControlName="estado"
@@ -138,7 +154,7 @@
           [required]="true"
         ></app-catalogo-select>
       </div>
-      <div class="col-md-4 px-5">
+      <div class="col-md-4">
         <app-catalogo-select
           [catalogo]="municipiosDatos"
           formControlName="municipio"
@@ -149,7 +165,7 @@
     </div>
 
     <div class="row mt-3">
-      <div class="col-md-4 px-5">
+      <div class="col-md-4">
         <app-catalogo-select
           [catalogo]="localidadesDatos"
           formControlName="localidad"
@@ -157,7 +173,7 @@
           [required]="true"
         ></app-catalogo-select>
       </div>
-      <div class="col-md-4 px-5">
+      <div class="col-md-4">
         <app-catalogo-select
           [catalogo]="codigosPostalesDatos"
           formControlName="codigoPostal"
@@ -165,12 +181,12 @@
           [required]="true"
         ></app-catalogo-select>
       </div>
-      <div class="col-md-4 px-5">
+      <div class="col-md-4">
         <app-catalogo-select
           [catalogo]="coloniasDatos"
           formControlName="colonia"
           [label]="'Colonia'"
-          [required]="true"
+          [required]="!elementosNoRequeridos.includes('colonia')"
         ></app-catalogo-select>
       </div>
     </div>
@@ -210,6 +226,11 @@
       </div>
       <div class="col-md-4">
         <label class="form-label">Correo electrónico:</label>
+        <span
+        class="bi bi-question-circle-fill"
+        title="Física"
+        data-bs-toggle="tooltip"
+      ></span>
         <input
           type="email"
           class="form-control"

@@ -1,6 +1,9 @@
 import { Catalogo, TipoPersona } from '@ng-mf/data-access-user';
 import { Component, EventEmitter, Output } from '@angular/core';
-import { PROCEDIMIENTOS_PARA_COLONIA_O_EQUIVALENTE, STR_NACIONAL,} from '../../constantes/datos-solicitud.enum';
+import {
+  PROCEDIMIENTOS_PARA_COLONIA_O_EQUIVALENTE,
+  STR_NACIONAL,
+} from '../../constantes/datos-solicitud.enum';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
@@ -11,7 +14,6 @@ import { Input } from '@angular/core';
 import { Location } from '@angular/common';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
-import { PROCEDIMIENTOS_NO_PARA_ELEMENTO_AGREGAR_FABRICANTE } from '../../constantes/agregar-fabricante.enum';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { TituloComponent } from '@ng-mf/data-access-user';
@@ -58,25 +60,13 @@ export class AgregarFabricanteComponent implements OnDestroy, OnInit {
    * FormGroup para el formulario de agregar fabricante.
    * @property {FormGroup} agregarFabricanteForm
    */
-  agregarFabricanteForm: FormGroup;
+  agregarFabricanteForm!: FormGroup;
 
   /**
    * Datos de catálogo de códigos postales.
    * @property {Catalogo[]} codigosPostalesDatos
    */
   public codigosPostalesDatos: Catalogo[] = [];
-
-  /**
-   * Indica si el campo "colonia" es obligatorio.
-   * @type {boolean}
-   */
-  public coloniaRequerido = true;
-
-  /**
-   * Indica si el campo "código postal equivalente" es obligatorio.
-   * @type {boolean}
-   */
-  public codigoPostalEquivalenteRequerido = true;
 
   /**
    * Datos de catálogo de países.
@@ -155,6 +145,20 @@ export class AgregarFabricanteComponent implements OnDestroy, OnInit {
   mostarColoniaOEquivalente = false;
 
   /**
+   * Lista de elementos deshabilitados en el formulario.
+   * Esta propiedad almacena un arreglo de cadenas que representan
+   * los elementos que deben estar deshabilitados en el formulario.
+   */
+  public elementosDeshabilitados: string[] = [];
+
+  /**
+   * Lista de elementos requeridos en el formulario.
+   * Esta propiedad almacena un arreglo de cadenas que representan
+   * los elementos que deben ser obligatorios en el formulario.
+   */
+  public elementosNoRequeridos:string[]=[]
+
+  /**
    * Constructor que inyecta los servicios y crea el formulario de fabricante.
    *
    * @param {FormBuilder} fb - Servicio para la creación de formularios reactivos.
@@ -168,21 +172,50 @@ export class AgregarFabricanteComponent implements OnDestroy, OnInit {
     private ubicaccion: Location,
     private datosSolicitudService: DatosSolicitudService
   ) {
+    //constructor necesario para inyectar el servicio
+  }
+
+  /**
+   * Hook que se ejecuta al inicializar el componente.
+   * Llama a la función para cargar los datos de los catálogos.
+   */
+  ngOnInit(): void {
+    this.cargarDatos();
+    this.validarElementos();
+    this.crearAgregarFormularioFabricante();
+    this.mostarColoniaOEquivalente =
+      PROCEDIMIENTOS_PARA_COLONIA_O_EQUIVALENTE.includes(this.idProcedimiento)
+        ? true
+        : false;
+
+  }
+
+
+  /**
+   * Método para inicializar el formulario reactivo `agregarFacturadorForm`.
+   * Define los campos y sus validaciones.
+   *
+   * @returns {void} Este método no retorna ningún valor.
+   */
+  crearAgregarFormularioFabricante():void{
     this.agregarFabricanteForm = this.fb.group({
       nacionalidad: [this.nacionalStr, Validators.required],
       tipoPersona: ['', Validators.required],
       rfc: ['', Validators.required],
       curp: ['', Validators.required],
-      nombres: ['', Validators.required],
-      primerApellido: ['', Validators.required],
+      nombres: ['',[Validators.required, Validators.maxLength(200)]],
+      primerApellido: ['',Validators.required],
       segundoApellido: [''],
       razonSocial: ['', Validators.required],
-      pais: ['', Validators.required],
+      pais: [{
+        value:this.elementosDeshabilitados.includes('pais')?'1':'',
+        disabled: this.elementosDeshabilitados.includes('pais'),
+      }, Validators.required],
       estado: ['', Validators.required],
       municipio: ['', Validators.required],
       localidad: ['', Validators.required],
-      codigoPostal: ['', Validators.required],
-      colonia: ['', Validators.required],
+      codigoPostal: ['', !this.elementosNoRequeridos.includes('codigoPostal')?[Validators.required]:[]],
+      colonia: ['', !this.elementosNoRequeridos.includes('colonia')?[Validators.required]:[]],
       calle: ['', Validators.required],
       numeroExterior: ['', Validators.required],
       numeroInterior: [''],
@@ -192,34 +225,25 @@ export class AgregarFabricanteComponent implements OnDestroy, OnInit {
       adunasDeEntradas: ['', Validators.required],
       coloniaOEquivalente: [{ value: '', disabled: true }],
     });
-  }
+}
 
   /**
-   * Hook que se ejecuta al inicializar el componente.
-   * Llama a la función para cargar los datos de los catálogos.
+   * Valida elementos según el `idProcedimiento` y establece
+   * las listas de elementos no válidos y añadidos.
+   * @returns {void} Lista de elementos no válidos.
    */
-  ngOnInit(): void {
-    this.cargarDatos();
-    this.mostarColoniaOEquivalente =
-    PROCEDIMIENTOS_PARA_COLONIA_O_EQUIVALENTE.includes(
-        this.idProcedimiento
-      )
-        ? true
-        : false;
-
-    this.coloniaRequerido =
-      PROCEDIMIENTOS_NO_PARA_ELEMENTO_AGREGAR_FABRICANTE.includes(
-        this.idProcedimiento
-      )
-        ? false
-        : true;
-
-    this.codigoPostalEquivalenteRequerido =
-      PROCEDIMIENTOS_NO_PARA_ELEMENTO_AGREGAR_FABRICANTE.includes(
-        this.idProcedimiento
-      )
-        ? false
-        : true;
+  validarElementos(): void {
+    switch (this.idProcedimiento) {
+      case 260207:
+      case 260209:
+      case 260208:
+        this.elementosDeshabilitados = ['pais'];
+        this.elementosNoRequeridos=['codigoPostal','colonia']
+        break;
+      default:
+        this.elementosDeshabilitados = [];
+        this.elementosNoRequeridos=[];
+    }
   }
 
   /**

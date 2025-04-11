@@ -7,6 +7,7 @@ import {
   PROCEDIMIENTOS_NO_PARA_ELEMENTO_CALLE,
   PROCEDIMIENTOS_NO_PARA_ELEMENTO_COLAPSABLE,
   PROCEDIMIENTOS_NO_PARA_ELEMENTO_CORREO_ELECTRONIC,
+  PROCEDIMIENTOS_NO_PARA_ELEMENTO_REGIMEN_Y_ADUNADEENTRADAS,
   PROCEDIMIENTOS_NO_PARA_ELEMENTO_RFC_DEL_SANITARIO,
   PROCEDIMIENTOS_PARA_CORREO_ELECTRONICO_EN_MISMA_FILA,
   PROCEDIMIENTOS_PARA_DESHABILITAR_APELLIDO_MATERNO,
@@ -283,6 +284,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   public aduanaDatos: Catalogo[] = [];
 
+  public mostrarRegimenYAdunasDeEntradasDatos:boolean=true;
+
   /**
    * @constructor
    * Inyecta los servicios necesarios para el enrutamiento y construcción del formulario.
@@ -373,6 +376,9 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       ? false
       : true;
 
+    this.mostrarRegimenYAdunasDeEntradasDatos=PROCEDIMIENTOS_NO_PARA_ELEMENTO_REGIMEN_Y_ADUNADEENTRADAS.includes(this.idProcedimiento)
+    ? false
+    : true;
   }
 
   /**
@@ -411,6 +417,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
           Validators.required,
           Validators.minLength(2),
           Validators.maxLength(150),
+          Validators.pattern('^[0-9]*$')
         ],
       ],
       estado: [
