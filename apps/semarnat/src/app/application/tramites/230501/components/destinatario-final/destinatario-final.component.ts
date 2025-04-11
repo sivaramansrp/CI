@@ -114,6 +114,13 @@ export class DestinatarioFinalComponent implements OnDestroy, OnInit {
   @Output() updateDestinatarioFinalTablaDatos = new EventEmitter<Destinatario[]>();
 
   /**
+   * Indica si el componente está en modo de edición.
+   * Cuando es verdadero, permite modificar los datos existentes.
+   * Cuando es falso, el componente opera en modo de solo lectura.
+   */
+  public esElModoDeEdicion = false;
+
+  /**
    * Crea el componente e inicializa el grupo de formulario.
    *
    * @param {FormBuilder} fb - Inyector de FormBuilder para crear formularios reactivos.
@@ -186,7 +193,11 @@ export class DestinatarioFinalComponent implements OnDestroy, OnInit {
     if (this.agregarDestinatarioFinal.valid) {
       this.setFormValida(this.agregarDestinatarioFinal.valid);
       this.destinatarios.push(NUEVO_DESTINATARIO);
-      this.addDestinatarios(this.destinatarios);
+      if (this.esElModoDeEdicion) {
+        this.updateDestinatarios(NUEVO_DESTINATARIO);
+      } else {
+        this.addDestinatarios(this.destinatarios);
+      }
       this.agregarDestinatarioFinal.reset();
       this.ubicaccion.back();
     }
@@ -200,9 +211,12 @@ export class DestinatarioFinalComponent implements OnDestroy, OnInit {
    * @returns {void}
    */
   addDestinatarios(newDestinatarios: Destinatario[]): void {
-    this.tramiteStore.updateDestinatarioFinalTablaDatos(newDestinatarios);
+    this.tramiteStore.addDestinatarioFinalTablaDatos(newDestinatarios);
   }
 
+  updateDestinatarios(newDestinatarios: Destinatario): void {
+    this.tramiteStore.updateDestinatarioFinalTablaDatos(newDestinatarios);
+  }
   /**
    * Método del ciclo de vida de Angular que se invoca cuando el componente es inicializado.
    * Llama a `cargarDatos()` y suscribe a los datos del estado.
@@ -220,6 +234,11 @@ export class DestinatarioFinalComponent implements OnDestroy, OnInit {
         this.agregarDestinatarioFinal.patchValue(destinatario);
       }
     });
+
+    this.tramiteQuery.esDestinatarioFinalElModoDeEdicion$.pipe(takeUntil(this.unsubscribe$))
+      .subscribe(modo => {
+        this.esElModoDeEdicion = modo;
+      });
   }
 
   /**
@@ -343,5 +362,6 @@ export class DestinatarioFinalComponent implements OnDestroy, OnInit {
   ngOnDestroy(): void {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
+    this.esElModoDeEdicion = false;
   }
 }

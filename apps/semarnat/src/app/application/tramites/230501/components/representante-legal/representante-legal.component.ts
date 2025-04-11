@@ -5,6 +5,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Subject, takeUntil } from 'rxjs';
 import { MaterialesPeligrososService } from '../../services/materiales-peligrosos.service';
 import { Representante } from '../../models/terceros-relacionados.model';
+import { Tramite230501Query } from '../../estados/queries/tramite230501Query.query';
 import { Tramite230501Store } from '../../estados/stores/tramite230501Store.store';
 
 /**
@@ -65,6 +66,13 @@ export class RepresentanteLegalComponent implements OnDestroy, OnInit {
   public paisesDatos: Catalogo[] = [];
 
   /**
+   * Indica si el componente está en modo de edición.
+   * Cuando es verdadero, permite modificar los datos existentes.
+   * Cuando es falso, el componente opera en modo de solo lectura.
+   */
+  public esElModoDeEdicion = false;
+
+  /**
    * @constructor
    * Inicializa el formulario reactivo y los servicios necesarios para el componente.
    * Realiza la configuración del formulario y las dependencias necesarias.
@@ -80,6 +88,7 @@ export class RepresentanteLegalComponent implements OnDestroy, OnInit {
     private materialesPeligrososService: MaterialesPeligrososService,
     private ubicaccion: Location,
     private tramiteStore: Tramite230501Store,
+    public tramiteQuery: Tramite230501Query,
   ) {
     // Creación del formulario reactivo con validaciones
     this.representanteLegalForm = this.fb.group({
@@ -151,6 +160,11 @@ export class RepresentanteLegalComponent implements OnDestroy, OnInit {
         this.representanteLegalForm.patchValue(representante);
       }
     });
+
+    this.tramiteQuery.esDestinatarioFinalElModoDeEdicion$.pipe(takeUntil(this.unsubscribe$))
+    .subscribe(modo => {
+      this.esElModoDeEdicion = modo;
+    });
   }
 
   /**
@@ -201,7 +215,11 @@ export class RepresentanteLegalComponent implements OnDestroy, OnInit {
     if (this.representanteLegalForm.valid) {
       this.setFormValida(this.representanteLegalForm.valid);
       this.representantes.push(NUEVO_REPRESENTANTE);
-      this.addRepresentanteLegal(this.representantes);
+      if (this.esElModoDeEdicion) {
+        this.updateRepresentanteLegal(NUEVO_REPRESENTANTE);
+      } else {
+        this.addRepresentanteLegal(this.representantes);
+      }
       this.representanteLegalForm.reset();
       this.ubicaccion.back();
     }
@@ -242,6 +260,15 @@ export class RepresentanteLegalComponent implements OnDestroy, OnInit {
    * @param newRepresentante - Lista de objetos `Representante` a agregar.
    */
   addRepresentanteLegal(newRepresentante: Representante[]): void {
+    this.tramiteStore.addRepresentanteLegalTablaDatos(newRepresentante);
+  }
+
+  /**
+   * Actualiza la información del representante legal en el almacenamiento del trámite.
+   * 
+   * @param newRepresentante - Objeto que contiene los datos actualizados del representante legal.
+   */
+  updateRepresentanteLegal(newRepresentante: Representante): void {
     this.tramiteStore.updateRepresentanteLegalTablaDatos(newRepresentante);
   }
 
@@ -253,5 +280,6 @@ export class RepresentanteLegalComponent implements OnDestroy, OnInit {
   ngOnDestroy(): void {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
+    this.esElModoDeEdicion = false;
   }
 }

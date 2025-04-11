@@ -80,4 +80,20 @@ export class Tramite230501Query extends Query<Tramite230501State> {
   public getusoTablaDatos$ = this.select(
     (state) => state.usoTablaDatos
   );
+
+  /**
+   * Observable que indica si el destinatario final está en modo de edición.
+   * 
+   * Este observable selecciona el estado `esDestinatarioFinalElModoDeEdicion` 
+   * del store para determinar si el destinatario final se encuentra en modo de edición.
+   * 
+   * @returns Un observable que emite un valor booleano indicando el estado del modo de edición.
+   */
+  public esDestinatarioFinalElModoDeEdicion$ = this.select(
+    (state) => state.esDestinatarioFinalElModoDeEdicion
+  );
+
+  public esrepResentanteLegalElModoDeEdicion$ = this.select(
+    (state) => state.esDestinatarioFinalElModoDeEdicion
+  );
 }

@@ -16,9 +16,11 @@ export interface Tramite230501State {
   numeroCasTablaDatos: TablaNumeroCasType[];
   composicionTablaDatos: ComposicionMaterial[];
   destinatarioFinalTablaDatos: Destinatario[];
+  esDestinatarioFinalElModoDeEdicion: boolean;
   usuarioTablaDatos: UsoFinal[];
   usoTablaDatos: Uso[];
   representanteLegalTablaDatos: Representante[];
+  esrepResentanteLegalElModoDeEdicion: boolean;
   formaValida: { [key: string]: boolean };
 }
 
@@ -31,9 +33,11 @@ export function createInitialState(): Tramite230501State {
   return {
     opcionesColapsableState: false,
     destinatarioFinalTablaDatos: [],
+    esDestinatarioFinalElModoDeEdicion: false,
     usuarioTablaDatos: [],
     usoTablaDatos: [],
     representanteLegalTablaDatos: [],
+    esrepResentanteLegalElModoDeEdicion: false,
     datosSolicitudFormType: {
       tratadoRotterdam: false,
       listadoNacional: false,
@@ -177,12 +181,22 @@ export class Tramite230501Store extends Store<Tramite230501State> {
    * @param newDestinatarios - Lista de nuevos destinatarios que se añadirán a la tabla de destinatarios.
    * @returns void
    */
-  public updateDestinatarioFinalTablaDatos(newDestinatarios: Destinatario[]): void {
+  public addDestinatarioFinalTablaDatos(newDestinatarios: Destinatario[]): void {
     this.update((state) => ({
       ...state,
       destinatarioFinalTablaDatos: [
         ...state.destinatarioFinalTablaDatos,
         ...newDestinatarios,
+      ],
+    }));
+  }
+
+  public updateDestinatarioFinalTablaDatos(newDestinatarios: Destinatario): void {
+    this.update((state) => ({
+      ...state,
+      destinatarioFinalTablaDatos: [
+        ...state.destinatarioFinalTablaDatos.filter(ele => ele.telefono !== newDestinatarios.telefono),
+        newDestinatarios,
       ],
     }));
   }
@@ -285,7 +299,25 @@ export class Tramite230501Store extends Store<Tramite230501State> {
    * @param newRepresentante - Lista de nuevos representantes legales que se añadirán a la tabla.
    * @returns void
    */
-  public updateRepresentanteLegalTablaDatos(newRepresentante: Representante[]): void {
+  public updateRepresentanteLegalTablaDatos(newRepresentante: Representante): void {
+    this.update((state) => ({
+      ...state,
+      representanteLegalTablaDatos: [
+        ...state.representanteLegalTablaDatos.filter(ele => ele.telefono !== newRepresentante.telefono),
+         newRepresentante],
+    }));
+  }
+
+  /**
+   * Agrega nuevos representantes legales a la tabla de datos existente.
+   *
+   * @param newRepresentante - Una lista de objetos de tipo `Representante` que se agregarán
+   * a la propiedad `representanteLegalTablaDatos` del estado actual.
+   *
+   * Este método actualiza el estado añadiendo los nuevos representantes legales
+   * a la lista existente en `representanteLegalTablaDatos`.
+   */
+  public addRepresentanteLegalTablaDatos(newRepresentante: Representante[]): void {
     this.update((state) => ({
       ...state,
       representanteLegalTablaDatos: [...state.representanteLegalTablaDatos, ...newRepresentante],

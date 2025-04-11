@@ -83,9 +83,9 @@
         <label class="form-label">Lada*:</label>
         <input type="text" class="form-control" formControlName="lada" />
       </div>
-      <div class="col-md-3">
+      <div class="col-md-3" >
         <label class="form-label">Teléfono*:</label>
-        <input type="text" class="form-control" formControlName="telefono" />
+        <input type="text" class="form-control" formControlName="telefono" [readonly]="(tramiteQuery.esDestinatarioFinalElModoDeEdicion$ | async)"/>
       </div>
       <div class="col-md-4">
         <label class="form-label">Correo electrónico*:</label>

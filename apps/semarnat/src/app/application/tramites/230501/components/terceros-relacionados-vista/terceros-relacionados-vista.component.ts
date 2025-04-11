@@ -167,6 +167,10 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
     if (this.destinatarioFinalFilaSeleccionada.length) {      
       this.representanteFilaSeleccionada = [];
       this.usoDeFilaSeleccionada = [];
+      this.tramiteStore.update((state) => ({
+      ...state,
+      esDestinatarioFinalElModoDeEdicion: true
+      }));
       this.tramiteStore.destinatarioSujeto.next(this.destinatarioFinalFilaSeleccionada[0]);
     }
   }
@@ -179,6 +183,10 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
   modificarRepresentanteLegal(): void {
     this.irAAcciones('../representante-legal');
     if (this.representanteFilaSeleccionada.length) {
+      this.tramiteStore.update((state) => ({
+        ...state,
+        esrepResentanteLegalElModoDeEdicion: true
+        }));
       this.tramiteStore.representanteSujeto.next(this.representanteFilaSeleccionada[0]);
     }
   }
