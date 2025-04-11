@@ -130,5 +130,7 @@ export const SCIAN_DATA = [
       orden: 18,
     }
   ];
+
+  export const PROCEDIMIENTOS_NO_PARA_ELEMENTO_SCIAN = [260208]
    
 

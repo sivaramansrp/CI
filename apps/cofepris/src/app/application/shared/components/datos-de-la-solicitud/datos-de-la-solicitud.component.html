@@ -310,7 +310,7 @@
     <div class="row mt-5">
       <div class="col-md-3 my-3">
         <div class="form-group">
-          <label class="form-label" for="telefono">S.C.I.A.N:</label>
+          <label class="form-label" for="telefono">S.C.I.A.N</label>
           <span class="form-label" *ngIf="esCampoRequerido('scian')">*</span>
           <span class="form-label">:</span>
         </div>
@@ -646,8 +646,10 @@
     <ng-template #campoCorreoElectronico>
       <div class="form-group">
         <label class="form-label" for="correoElectronico"
-          >Correo electrónico:</label
+          >Correo electrónico</label
         >
+        <span class="form-label" *ngIf="esCampoRequerido('correoElectronico')">*</span>
+        <span class="form-label mx-1">:</span>
         <span
           class="bi bi-question-circle-fill"
           title="Correo electrónico"
