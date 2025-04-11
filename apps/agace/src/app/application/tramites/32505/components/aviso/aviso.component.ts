@@ -24,6 +24,7 @@ import {
   tramite32505Store,
 } from '../../../../estados/tramites/trimite32505.store';
 import { Tramite32505Query } from '../../../../estados/queries/tramite32505.query';
+import{ALPHANUMERIC_PATTERN} from '../../constants/avios-procesos.enum';
 
 /**
  * @component AvisoComponent
@@ -50,11 +51,13 @@ import { Tramite32505Query } from '../../../../estados/queries/tramite32505.quer
   standalone: true,
 })
 export class AvisoComponent implements OnInit,OnDestroy {
+
+
 /**
-   * @property {boolean} isPopupOpen
+   * @property {boolean} esPopupAbierto
    * Indica si el popup está abierto.
    */
-isPopupOpen: boolean = false;
+esPopupAbierto: boolean = false;
 
 /**
  * @property {boolean} datosDelVehiculo
@@ -87,11 +90,11 @@ datosDelVenta: boolean = false;
 datosNIVNumeroSerie: boolean = false;
 
 /**
- * @property {boolean} isPopupOpen
+ * @property {boolean} abrirPopup
  * Indica si el popup está abierto.
  * */
-  openPopup() :void{
-    this.isPopupOpen = true;
+  abrirPopup() :void{
+    this.esPopupAbierto = true;
   }
   /**
    * @property {boolean} esManualAsivoAgregarClicked
@@ -274,7 +277,7 @@ datosNIVNumeroSerie: boolean = false;
    * Este método utiliza el modal de Bootstrap para mostrar el modal de carga de archivos.
    */
   datosDelAviso(): void {
-    this.isPopupOpen = true;
+    this.esPopupAbierto = true;
     if (this.datosAviso) {
       const MODAL_INSTANCE = new Modal(this.datosAviso.nativeElement);
       MODAL_INSTANCE.show();
@@ -502,11 +505,11 @@ datosNIVNumeroSerie: boolean = false;
         folioTipo: [this.solicitudState?.folioTipo, Validators.required],
         numeroSerie: [
           this.solicitudState?.numeroSerie,
-          [Validators.required, Validators.pattern(/^[a-zA-Z0-9]*$/)],
+          [Validators.required, Validators.pattern(ALPHANUMERIC_PATTERN)],
         ],
         numeroNIV: [
           this.solicitudState?.numeroNIV,
-          [Validators.required, Validators.pattern(/^[a-zA-Z0-9]*$/)],
+          [Validators.required, Validators.pattern(ALPHANUMERIC_PATTERN)],
         ],
         anoModelo: [this.solicitudState?.anoModelo, [Validators.required]],
         marca: [this.solicitudState?.marca, [Validators.required]],
@@ -520,7 +523,7 @@ datosNIVNumeroSerie: boolean = false;
         combustible: [this.solicitudState?.combustible, [Validators.required]],
         propiedad: [
           this.solicitudState?.propiedad,
-          [Validators.required, Validators.pattern(/^[a-zA-Z0-9]*$/)],
+          [Validators.required, Validators.pattern(ALPHANUMERIC_PATTERN)],
         ],
         nombreTitulo: [
           this.solicitudState?.nombreTitulo,
@@ -564,11 +567,11 @@ datosNIVNumeroSerie: boolean = false;
         ],
         folioCFDI: [
           this.solicitudState?.folioCFDI,
-          [Validators.required, Validators.pattern(/^[a-zA-Z0-9]*$/)],
+          [Validators.required, Validators.pattern(ALPHANUMERIC_PATTERN)],
         ],
         folioVenta: [
           this.solicitudState?.folioVenta,
-          [Validators.required, Validators.pattern(/^[a-zA-Z0-9]*$/)],
+          [Validators.required, Validators.pattern(ALPHANUMERIC_PATTERN)],
         ],
         valorVenta: [this.solicitudState?.valorVenta, [Validators.required]],
       }),

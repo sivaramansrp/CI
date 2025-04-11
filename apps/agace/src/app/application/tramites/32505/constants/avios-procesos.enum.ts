@@ -31,3 +31,5 @@ export const TEXTOS = {
   CARGA_DE_ARCHIVO_DE_TEXTO: `Sin archivos seleccionados`,
   CARGA_DE_ARCHIVO_DE_TEXTO_EXITOSO: `El formato del archivo es correcto. Se enviará un correo de notificación con el resultado.`,
 };
+
+export const ALPHANUMERIC_PATTERN = '^[a-zA-Z0-9]*$';

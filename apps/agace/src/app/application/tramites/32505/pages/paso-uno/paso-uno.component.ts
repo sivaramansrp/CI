@@ -4,7 +4,16 @@ import { Component } from '@angular/core';
 import { SolicitanteComponent } from "@ng-mf/data-access-user";
 import { AvisoComponent } from '../../components/aviso/aviso.component';
 
-
+/**
+ * Componente PasoUnoComponent
+ * 
+ * Este componente representa el primer paso de un flujo o formulario.
+ * Incluye la lógica para cambiar entre pestañas o secciones mediante un índice.
+ * 
+ * Componentes utilizados:
+ * - SolicitanteComponent: Componente que permite capturar o mostrar datos del solicitante.
+ * - AvisoComponent: Componente que muestra avisos o notificaciones relevantes.
+ */
 @Component({
   selector: 'paso-uno',
   templateUrl: './paso-uno.component.html',
@@ -13,9 +22,19 @@ import { AvisoComponent } from '../../components/aviso/aviso.component';
   standalone: true,
 })
 export class PasoUnoComponent {
-  indice: number = 1;
+    /**
+   * Método para cambiar el índice actual.
+   * Permite navegar entre diferentes pestañas o secciones.
+   * 
+   * @param i - Nuevo índice seleccionado.
+   */
+    indice: number = 1;
 
-  seleccionaTab(i: number): void {
+  /**
+   * Índice actual del paso o pestaña seleccionada.
+   * Se usa para mostrar u ocultar secciones del componente.
+   */
+   seleccionaTab(i: number): void {
     this.indice = i;
   }
 }
