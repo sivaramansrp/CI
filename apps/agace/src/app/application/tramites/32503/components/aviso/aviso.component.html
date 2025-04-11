@@ -381,7 +381,7 @@
         </form>
 
       </div>
-      <div class="modal-footer custom-footer mt-4">
+      <div class="modal-footer custom-footer mt-4 justify-content-end">
         <button type="button" class="btn btn-danger" data-bs-dismiss="modal" #closeDomicilio> Cancelar </button>
         <button type="submit" class="btn btn-primary" (click)="agregarDomicilio()"> Agregar </button>
       </div>
@@ -506,9 +506,22 @@
           </ng-container>
         </form>
       </div>
-      <div class="modal-footer custom-footer mt-4">
+      <div class="modal-footer custom-footer mt-4 justify-content-end">
         <button type="button" class="btn btn-danger" data-bs-dismiss="modal" #closeMercancia> Cancelar </button>
         <button type="submit" class="btn btn-primary" (click)="agregarMercancia()"> Agregar </button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal-backdrop" *ngIf="cuadroDeAlerta">
+  <div class="modal-content custom-modal p-0">
+    <div class="title w-100 p-0 m-0">
+      <h5> </h5>
+    </div>
+    <div class="modal-body p-4">
+      <p class="mb-5 text-left"> El registro fue agregado correctamente.</p>
+      <div>
+        <button type="submit" class="btn btn-primary"> Aceptar </button>
       </div>
     </div>
   </div>

@@ -133,7 +133,7 @@ export class AvisoComponent implements OnInit, OnDestroy {
    * Utilizado para cerrar el modal de manera programática.
   */
   @ViewChild('closeDomicilio') public closeDomicilio!: ElementRef;
-  
+
   /**
    * @property {ElementRef} modalMercancia
    * @description Referencia al elemento del modal de mercancía en la plantilla HTML.
@@ -246,6 +246,19 @@ export class AvisoComponent implements OnInit, OnDestroy {
    * @description Constante que contiene textos o mensajes utilizados en el componente.
    */
   TEXTOS = TEXTOS;
+  /**
+   * @property {boolean} cuadroDeAlerta
+   * @description Bandera que indica si se debe mostrar un cuadro de alerta en el componente.
+   * 
+   * Esta propiedad se utiliza para controlar la visibilidad de un cuadro de alerta
+   * que informa al usuario sobre el resultado de una acción o proceso.
+   * 
+   * - `true`: El cuadro de alerta está visible.
+   * - `false`: El cuadro de alerta está oculto.
+   * 
+   * @default false
+   */
+  cuadroDeAlerta: boolean = true;
 
   /**
    * Constructor del componente.
