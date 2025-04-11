@@ -15,12 +15,12 @@ import { InputRadioComponent } from '@libs/shared/data-access-user/src';
 import { OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Solicitud31501State } from '../../estados/tramite31501.store';
+import { Solicitud32401State } from '../../estados/tramite32401.store';
 import { Subject } from 'rxjs';
 import { TEXTOS } from '@libs/shared/data-access-user/src';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
-import { Tramite31501Query } from '../../estados/tramite31501.query';
-import { Tramite31501Store } from '../../estados/tramite31501.store';
+import { Tramite32401Query } from '../../estados/tramite32401.query';
+import { Tramite32401Store } from '../../estados/tramite32401.store';
 import { ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { Validators } from '@angular/forms';
 import { map } from 'rxjs/operators';
@@ -45,7 +45,7 @@ export class SolicitarRequerimientoComponent implements OnInit {
   TEXTOS = TEXTOS;
   infoAlert = 'alert-info';
   solicitarForm!: FormGroup;
-  public solicitud31501State!: Solicitud31501State;
+  public solicitud32401State!: Solicitud32401State;
   mostrarSeccionAduanaaFecha: boolean = false;
   mostrarSeccionNoManifiesto: boolean = false;
   requerimientoOpcions = [
@@ -91,8 +91,8 @@ export class SolicitarRequerimientoComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    public tramite31501Store: Tramite31501Store,
-    private tramite31501Query: Tramite31501Query,
+    public tramite32401Store: Tramite32401Store,
+    private tramite32401Query: Tramite32401Query,
     private validacionesService: ValidacionesFormularioService,
     private autoridadService: AutoridadService,
     private router: Router,
@@ -102,40 +102,47 @@ export class SolicitarRequerimientoComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.tramite31501Query.selectSolicitud$
+    this.inicializarFormulario();
+    this.obtenerAduanaLista();
+    this.tramite32401Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
-        map((seccionState) => {
-          this.solicitud31501State = {
-            ...this.solicitud31501State,
+        map((seccionState: Solicitud32401State) => {
+          this.solicitud32401State = {
+            ...this.solicitud32401State,
             ...seccionState,
           };
+          this.solicitarForm.patchValue({
+            tipoBusqueda: this.solicitud32401State.tipoBusqueda,
+            rfc: this.solicitud32401State.rfc,
+            tipoDeTramite: this.solicitud32401State.tipoDeTramite,
+            folioDeTramite: this.solicitud32401State.folioDeTramite,
+          });
         })
       )
       .subscribe();
-    this.inicializarFormulario();
-    this.obtenerAduanaLista();
   }
 
   inicializarFormulario(): void {
     this.solicitarForm = this.fb.group({
       tipoBusqueda: [
-        this.solicitud31501State?.tipoBusqueda,
+        this.solicitud32401State?.tipoBusqueda,
         Validators.required,
       ],
-      rfc: [this.solicitud31501State?.rfc],
+      rfc: [this.solicitud32401State?.rfc],
       tipoDeTramite: [
-        this.solicitud31501State?.tipoDeTramite,
+        this.solicitud32401State?.tipoDeTramite,
         Validators.required,
       ],
       folioDeTramite: [
-        this.solicitud31501State?.folioDeTramite,
+        this.solicitud32401State?.folioDeTramite,
         Validators.required,
       ],
     });
   }
 
   cambiarRequerimiento(evento: string | number): void {
+    this.tramite32401Store.setTipoBusqueda(evento);
     const TIPO_BUSQUEDA = evento;
     this.mostrarSeccionAduanaaFecha = false;
     this.mostrarSeccionNoManifiesto = false;
@@ -154,10 +161,10 @@ export class SolicitarRequerimientoComponent implements OnInit {
   setValoresStore(
     form: FormGroup,
     campo: string,
-    metodoNombre: keyof Tramite31501Store
+    metodoNombre: keyof Tramite32401Store
   ): void {
     const VALOR = form.get(campo)?.value;
-    (this.tramite31501Store[metodoNombre] as (valor: unknown) => void)(VALOR);
+    (this.tramite32401Store[metodoNombre] as (valor: unknown) => void)(VALOR);
   }
 
   isValid(form: FormGroup, field: string): boolean | null {
@@ -179,18 +186,10 @@ export class SolicitarRequerimientoComponent implements OnInit {
         respuesta.datos.id = this.datosDelContenedor.length + 1;
         this.datosDelContenedor.push(respuesta.datos);
         (
-          this.tramite31501Store.setDelContenedor as (
+          this.tramite32401Store.setDelContenedor as (
             valor: DatosDeLaTabla[]
           ) => void
         )(this.datosDelContenedor);
-        this.solicitarForm.patchValue({
-          aduana: '',
-          fechaIngreso: '',
-          digitoDeControl: '',
-          inicialesContenedor: '',
-          numeroContenedor: '',
-          contenedores: '',
-        });
         this.solicitarForm.markAsUntouched();
         this.solicitarForm.markAsPristine();
       }

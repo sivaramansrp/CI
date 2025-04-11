@@ -9,11 +9,11 @@ import { FormsModule } from '@angular/forms';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { Solicitud31501State } from '../../estados/tramite31501.store';
+import { Solicitud32401State } from '../../estados/tramite32401.store';
 import { Subject } from 'rxjs';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
-import { Tramite31501Query } from '../../estados/tramite31501.query';
-import { Tramite31501Store } from '../../estados/tramite31501.store';
+import { Tramite32401Query } from '../../estados/tramite32401.query';
+import { Tramite32401Store } from '../../estados/tramite32401.store';
 import { Validators } from '@angular/forms';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
@@ -34,41 +34,45 @@ import { takeUntil } from 'rxjs';
 export class CapturarRequerimientoComponent implements OnInit, OnDestroy {
   aduanaLista: CatalogosSelect = {} as CatalogosSelect;
   capturarRequirementoForm!: FormGroup;
-  public solicitud31501State!: Solicitud31501State;
+  public solicitud32401State!: Solicitud32401State;
   private destroyNotifier$: Subject<void> = new Subject();
-  public solicitudState!: Solicitud31501State;
+  public solicitudState!: Solicitud32401State;
   indice: number = 1;
 
   constructor(
     private autoridadService: AutoridadService,
     private fb: FormBuilder,
-    public tramite31501Store: Tramite31501Store,
-    private tramite31501Query: Tramite31501Query
+    public tramite32401Store: Tramite32401Store,
+    private tramite32401Query: Tramite32401Query
   ) {
     //
   }
 
   ngOnInit(): void {
-    this.tramite31501Query.selectSolicitud$
+    this.inicializarFormulario();
+    this.buscarAduanaLista();
+    this.tramite32401Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.solicitudState = seccionState;
+          this.capturarRequirementoForm.patchValue({
+            motivoCancelacion: this.solicitudState.motivoCancelacion,
+            tipoDeRequerimiento: this.solicitudState.tipoDeRequerimiento,
+          });
         })
       )
       .subscribe();
-    this.inicializarFormulario();
-    this.buscarAduanaLista();
   }
 
   inicializarFormulario(): void {
     this.capturarRequirementoForm = this.fb.group({
       motivoCancelacion: [
-        this.solicitud31501State?.motivoCancelacion,
+        this.solicitud32401State?.motivoCancelacion,
         Validators.required,
       ],
       tipoDeRequerimiento: [
-        this.solicitud31501State?.tipoDeRequerimiento,
+        this.solicitud32401State?.tipoDeRequerimiento,
         Validators.required,
       ],
     });
@@ -86,10 +90,10 @@ export class CapturarRequerimientoComponent implements OnInit, OnDestroy {
   setValoresStore(
     form: FormGroup,
     campo: string,
-    metodoNombre: keyof Tramite31501Store
+    metodoNombre: keyof Tramite32401Store
   ): void {
     const VALOR = form.get(campo)?.value;
-    (this.tramite31501Store[metodoNombre] as (valor: unknown) => void)(VALOR);
+    (this.tramite32401Store[metodoNombre] as (valor: unknown) => void)(VALOR);
   }
 
   seleccionaTab(i: number): void {
