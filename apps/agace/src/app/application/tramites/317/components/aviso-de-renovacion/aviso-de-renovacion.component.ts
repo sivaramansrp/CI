@@ -102,8 +102,8 @@ export class AvisoDeRenovacionComponent implements OnInit, OnDestroy {
    */
   private initializeForm(): void {
     this.avisoForm = this.fb.group({
-      modalidad: [this.solicitudState?.modalidad],
-      protestaVerdad: [this.solicitudState?.protestaVerdad],
+      mapTipoTramite: [this.solicitudState?.mapTipoTramite],
+      mapDeclaracionSolicitud: [this.solicitudState?.mapDeclaracionSolicitud],
       envioAviso: [this.solicitudState?.envioAviso],
       numeroAviso: [this.solicitudState?.numeroAviso],
       claveReferencia: [{ value: '', disabled: true }],

@@ -7,16 +7,16 @@
         </p>
         <div>
             <label>
-                <app-input-radio [radioOptions]="tipoPersonaOptions" [isRequired]="true" formControlName="modalidad"
+                <app-input-radio [radioOptions]="tipoPersonaOptions" [isRequired]="true" formControlName="mapTipoTramite"
                     [layout]="'vertical'"
-                    (change)="setValoresStore(avisoForm,'modalidad', 'setmodalidad')"></app-input-radio>
+                    (change)="setValoresStore(avisoForm,'mapTipoTramite', 'setmapTipoTramite')"></app-input-radio>
             </label>
         </div>
         <div class="mt-3">
             <lib-input-check [label]="'* Bajo protesta de decir verdad, manifiesto que los datos asentados en el presente documento son ciertos
         y que las facultades que me fueron otorgadas para representar a la solicitante no me han sido
-        modificadas y/o revocadas.'" [id]="'protestaVerdad'" [required]="true" formControlName="protestaVerdad"
-                (change)="setValoresStore(avisoForm,'protestaVerdad', 'setprotestaVerdad')"></lib-input-check>
+        modificadas y/o revocadas.'" [id]="'acepto3061'" [required]="true" formControlName="mapDeclaracionSolicitud"
+                (change)="setValoresStore(avisoForm,'mapDeclaracionSolicitud', 'setmapDeclaracionSolicitud')"></lib-input-check>
         </div>
         <div class="mt-3">
             <lib-input-check [label]="'* Con el envío del presente aviso, me doy por enterado que en caso de que se presente fuera de los
@@ -39,7 +39,7 @@
         <div class="row mt-5">
             <div class="col-md-6">
                 <label for="claveReferencia">Clave de referencia:</label>
-                <input id="claveReferencia" type="text" class="form-control" formControlName="claveReferencia"
+                <input id="claveReferencia" type="text" class="form-control" formControlName="claveReferencia" 
                     (change)="setValoresStore(avisoForm,'claveReferencia', 'setclaveReferencia')" />
             </div>
             <div class="col-md-6">

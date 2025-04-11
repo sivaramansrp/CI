@@ -9,16 +9,16 @@ import { Injectable } from '@angular/core';
  */
 export interface UnicoState {
   /**
-   * @property {string} modalidad
+   * @property {string} mapTipoTramite
    * @description Modalidad de la solicitud.
    */
-  modalidad: string;
+  mapTipoTramite: string;
 
   /**
-   * @property {string} protestaVerdad
+   * @property {string} mapDeclaracionSolicitud
    * @description Declaración de protesta de verdad.
    */
-  protestaVerdad: string;
+  mapDeclaracionSolicitud: string;
 
   /**
    * @property {string} envioAviso
@@ -85,8 +85,8 @@ export interface UnicoState {
  */
 export function createInitialState(): UnicoState {
   return {
-    modalidad: '',
-    protestaVerdad: '',
+    mapTipoTramite: '',
+    mapDeclaracionSolicitud: '',
     envioAviso: '',
     numeroAviso: '',
     claveReferencia: '',
@@ -124,10 +124,10 @@ export class UnicoStore extends Store<UnicoState> {
    * @description Actualiza el campo `modalidad` en el estado.
    * @param {string} modalidad Nueva modalidad.
    */
-  public setmodalidad(modalidad: string): void {
+  public setmapTipoTramite(mapTipoTramite: string): void {
     this.update((state) => ({
       ...state,
-      modalidad,
+      mapTipoTramite,
     }));
   }
 
@@ -137,10 +137,10 @@ export class UnicoStore extends Store<UnicoState> {
    * @description Actualiza el campo `protestaVerdad` en el estado.
    * @param {string} protestaVerdad Nueva protesta de verdad.
    */
-  public setprotestaVerdad(protestaVerdad: string): void {
+  public setmapDeclaracionSolicitud(mapDeclaracionSolicitud: string): void {
     this.update((state) => ({
       ...state,
-      protestaVerdad,
+      mapDeclaracionSolicitud,
     }));
   }
 
