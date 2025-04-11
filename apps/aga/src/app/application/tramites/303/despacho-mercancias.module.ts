@@ -28,7 +28,6 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { RegistroPageComponent } from './pages/registro-page/registro-page.component';
 import { RepresentanteFiscalComponent } from '@ng-mf/data-access-user';
 import { RouterModule } from '@angular/router';
-import { SelectCatalogosComponent } from '@ng-mf/data-access-user';
 import { SelectPaisesComponent } from '@ng-mf/data-access-user';
 import { SolicitanteComponent } from '@ng-mf/data-access-user';
 import { TestPageComponent } from './pages/test-page/test-page.component';
@@ -65,7 +64,6 @@ import { ToastrModule, ToastrService } from 'ngx-toastr';
     ReactiveFormsModule,
     AlertComponent,
     FirmaElectronicaComponent,
-    SelectCatalogosComponent,
     SolicitanteComponent,
     InputCheckComponent,
     InputHoraComponent,

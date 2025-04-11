@@ -32,6 +32,20 @@ export const SECCIONES_TRAMITE_220402 = {
     },
   };
 
+  export const SECCIONES_TRAMITE_40103 = {
+    PASO_1: {
+        VALIDACION_SECCION_1: false,
+        VALIDACION_SECCION_2: true,
+        VALIDACION_SECCION_3: false,
+    },
+    PASO_2: {
+        VALIDACION_SECCION: true,
+    },
+    PASO_3: {
+        requiereValidacion: true,
+    },
+};
+
   /**
  * Secciones a mostrar dentro de cada Paso de acuerdo al trámite
  */
