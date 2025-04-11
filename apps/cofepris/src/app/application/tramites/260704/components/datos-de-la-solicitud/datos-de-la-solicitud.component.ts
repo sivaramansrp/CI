@@ -1,16 +1,18 @@
-import { 
-  Catalogo, 
-  CatalogoSelectComponent, 
-  CatalogosSelect, 
-  ConfiguracionColumna, 
-  InputFecha, 
-  TablaSeleccion, 
-  TituloComponent, 
-  ValidacionesFormularioService 
+import {
+  Catalogo,
+  CatalogoSelectComponent,
+  CatalogosSelect,
+  ConfiguracionColumna,
+  InputCheckComponent,
+  InputFecha,
+  Pedimento,
+  TablaSeleccion,
+  TituloComponent,
+  ValidacionesFormularioService
 } from '@libs/shared/data-access-user/src';
 import { ColumnasTabla, CrossList, FECHA_FINAL, FECHA_INICIAL, ListaClave, Mercancia } from '../../models/consulta.model';
 import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { CrosslistComponent, InputFechaComponent, InputRadioComponent, TablaDinamicaComponent } from '@ng-mf/data-access-user';
+import { CrosslistComponent, InputFechaComponent, InputRadioComponent, Notificacion, NotificacionesComponent, TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ReplaySubject, map, takeUntil } from 'rxjs';
 import { Solicitud260704State, Tramite260704Store } from '../../estados/Tramite260704.store';
@@ -19,7 +21,6 @@ import { CommonModule } from '@angular/common';
 import { ConsultaService } from '../../service/consulta.service';
 import { Modal } from 'bootstrap';
 import { Tramite260704Query } from '../../estados/Tramite260704.query';
-
 /**
  * Componente que gestiona los datos de la solicitud.
  *
@@ -38,12 +39,21 @@ import { Tramite260704Query } from '../../estados/Tramite260704.query';
     CrosslistComponent,
     TituloComponent,
     CommonModule,
+    NotificacionesComponent,
+    InputCheckComponent
   ],
   templateUrl: './datos-de-la-solicitud.component.html',
   styleUrls: ['./datos-de-la-solicitud.component.css'],
 })
 export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
+  // Notificación utilizada para mostrar mensajes o alertas en la interfaz.
+  public nuevaNotificacion!: Notificacion;
 
+  // Índice del pedimento marcado para eliminación.
+  public elementoParaEliminar!: number;
+
+  // Arreglo que contiene los pedimentos registrados.
+  public pedimentos: Array<Pedimento> = [];
   /**
    * Referencia al elemento modal de alerta.
    */
@@ -183,6 +193,9 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Array de catálogo para la clave SCIAN.
    */
   claveScian!: Catalogo[];
+
+  public tieneFilaSeleccionadaFabricante: boolean = false;
+
 
   /**
    * Opciones de radio recibidas como @Input.
@@ -357,7 +370,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     private query: Tramite260704Query,
     public fb: FormBuilder,
     private validacionesService: ValidacionesFormularioService,
-  ) { 
+  ) {
     // Constructor vacío, no requiere inicialización adicional.
   }
 
@@ -450,6 +463,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
       MODAL_INSTANCE.show();
     }
+    this.abrirModal();
   }
 
   /**
@@ -557,10 +571,18 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Muestra el modal para eliminar mercancías del grid.
    */
   eliminarMercanciaGrid(): void {
-    if (this.modalElement) {
-      const MODAL_ELIMINAR_INSTANCE = new Modal(this.modalElement.nativeElement);
-      MODAL_ELIMINAR_INSTANCE.show();
+    // if (this.modalElement) {
+    //   const MODAL_ELIMINAR_INSTANCE = new Modal(this.modalElement.nativeElement);
+    //   MODAL_ELIMINAR_INSTANCE.show();
+    // }
+    if (this.esCheckboxSeleccionado === false) {
+      this.abrirModalmercancia();
+    } else if (this.esCheckboxSeleccionado === true) {
+      this.abrirModalmercanciaChecked();
     }
+    // this.abrirModalmercancia();
+    // this.abrirModalmercanciaChecked();
+
   }
 
   /**
@@ -634,14 +656,91 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     };
     this.store.addMercanciasDatos(OBJETO_JSON);
   }
-
   /**
-   * Marca que los datos SCIAN han sido seleccionados.
-   */
+  * Marca que los datos SCIAN han sido seleccionados.
+  */
   AcceptarEliminarScian(): void {
     this.esDatosSCIANSeleccionado = true;
   }
 
+ /**
+     * Actualiza el estado que indica si hay filas seleccionadas en la tabla de "Fabricante".
+     */
+ public setTablaSeleccionFabricante(rowSeleccion: ColumnasTabla[]): void {
+  this.tieneFilaSeleccionadaFabricante = rowSeleccion.length > 0 ? true : false;
+}
+
+  // Elimina un pedimento si se confirma la acción.
+  eliminarPedimento(borrar: boolean): void {
+    if (borrar) {
+      this.pedimentos.splice(this.elementoParaEliminar, 1);
+    }
+  
+  }
+
+ 
+
+  // Abre el modal y configura la notificación para eliminar un pedimento.
+  abrirModal(i: number = 0): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'Por el momento no hay comunicación con el Sistema de COFEPRIS, favorde capturar su establecimiento. Acerar',
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: 'Cancelar',
+    }
+    this.elementoParaEliminar = i;
+  }
+
+  // Elimina la mercancía si se confirma la acción.
+  eliminarMercancia(borrar: boolean): void {
+    if (borrar) {
+      this.pedimentos.splice(this.elementoParaEliminar, 1);
+    }
+  }
+
+  // Abre el modal y configura la notificación para seleccionar un registro de mercancía.
+  abrirModalmercancia(i: number = 0): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'Selecciona un registro.',
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    }
+    this.elementoParaEliminar = i;
+  }
+
+  // Elimina la mercancía marcada si se confirma la acción.
+  eliminarMercanciaChecked(borrar: boolean): void {
+    if (borrar) {
+      this.pedimentos.splice(this.elementoParaEliminar, 1);
+    }
+  }
+
+  // Abre el modal y configura la notificación para confirmar la eliminación de registros marcados.
+  abrirModalmercanciaChecked(i: number = 0): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: '¿Estás seguro que deseas eliminar los registros marcados?',
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: 'Cancelar',
+    }
+    this.elementoParaEliminar = i;
+  }
   /**
    * Valida un campo del formulario usando el servicio de validaciones.
    * @param form Formulario a validar.
@@ -725,6 +824,18 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       rfc: [this.solicitudState?.rfc, [Validators.required]],
     });
   }
+
+  // Elimina la mercancía marcada si se confirma la acción.
+ eliminarPedimentoMercancia(borrar: boolean): void {
+    if (borrar) {
+      this.pedimentos.splice(this.elementoParaEliminar, 1);
+    }
+  
+
+  if(this.tieneFilaSeleccionadaFabricante  && this.esCheckboxSeleccionado === true) {
+    this.certificadoDisponsiblesTablaDatos.pop();
+  }
+}
 
   /**
    * Método del ciclo de vida que limpia las suscripciones para evitar fugas de memoria.
