@@ -12,7 +12,7 @@ import {
 } from '@libs/shared/data-access-user/src';
 import { ColumnasTabla, CrossList, FECHA_FINAL, FECHA_INICIAL, ListaClave, Mercancia } from '../../models/consulta.model';
 import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { CrosslistComponent, InputFechaComponent, InputRadioComponent,Notificacion, NotificacionesComponent, TablaDinamicaComponent } from '@ng-mf/data-access-user';
+import { CrosslistComponent, InputFechaComponent, InputRadioComponent, Notificacion, NotificacionesComponent, TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ReplaySubject, map, takeUntil } from 'rxjs';
 import { Solicitud260704State, Tramite260704Store } from '../../estados/Tramite260704.store';
@@ -572,14 +572,14 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       const MODAL_ELIMINAR_INSTANCE = new Modal(this.modalElement.nativeElement);
       MODAL_ELIMINAR_INSTANCE.show();
     }
-    if(this.esCheckboxSeleccionado === false){
+    if (this.esCheckboxSeleccionado === false) {
       this.abrirModalmercancia();
-    }else if(this.esCheckboxSeleccionado !== true){
+    } else if (this.esCheckboxSeleccionado !== true) {
       this.abrirModalmercanciaChecked();
     }
     // this.abrirModalmercancia();
     // this.abrirModalmercanciaChecked();
-      
+
   }
 
   /**
@@ -659,13 +659,14 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   AcceptarEliminarScian(): void {
     this.esDatosSCIANSeleccionado = true;
   }
- //for seleccionar estableishmento
+  // Elimina un pedimento si se confirma la acción.
   eliminarPedimento(borrar: boolean): void {
     if (borrar) {
       this.pedimentos.splice(this.elementoParaEliminar, 1);
     }
   }
- 
+
+  // Abre el modal y configura la notificación para eliminar un pedimento.
   abrirModal(i: number = 0): void {
     this.nuevaNotificacion = {
       tipoNotificacion: 'alert',
@@ -678,16 +679,17 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       txtBtnAceptar: 'Aceptar',
       txtBtnCancelar: 'Cancelar',
     }
-
     this.elementoParaEliminar = i;
   }
-  //for eliminar button 1
+
+  // Elimina la mercancía si se confirma la acción.
   eliminarMercancia(borrar: boolean): void {
     if (borrar) {
       this.pedimentos.splice(this.elementoParaEliminar, 1);
     }
   }
- 
+
+  // Abre el modal y configura la notificación para seleccionar un registro de mercancía.
   abrirModalmercancia(i: number = 0): void {
     this.nuevaNotificacion = {
       tipoNotificacion: 'alert',
@@ -700,16 +702,17 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       txtBtnAceptar: 'Aceptar',
       txtBtnCancelar: '',
     }
-
     this.elementoParaEliminar = i;
   }
-  //for eliminar button 2
+
+  // Elimina la mercancía marcada si se confirma la acción.
   eliminarMercanciaChecked(borrar: boolean): void {
     if (borrar) {
       this.pedimentos.splice(this.elementoParaEliminar, 1);
     }
   }
- 
+
+  // Abre el modal y configura la notificación para confirmar la eliminación de registros marcados.
   abrirModalmercanciaChecked(i: number = 0): void {
     this.nuevaNotificacion = {
       tipoNotificacion: 'alert',
@@ -722,7 +725,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       txtBtnAceptar: 'Aceptar',
       txtBtnCancelar: 'Cancelar',
     }
-
     this.elementoParaEliminar = i;
   }
   /**
