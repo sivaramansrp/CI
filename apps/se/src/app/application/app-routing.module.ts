@@ -46,6 +46,11 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'tramites-disponibles',
+    loadChildren: () =>
+      import('./tramites/110210/tramites-disponibles.module').then((m) => m.TramitesDisponiblesModule),
+  },
+  {
     path: 'empresa-frontera',
     loadChildren: () =>
       import('./tramites/120602/empresa-frontera-solicitud.module').then(
