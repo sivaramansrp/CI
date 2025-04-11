@@ -4,11 +4,10 @@ import { Catalogo, CatalogoSelectComponent, InputFechaComponent, SeccionLibQuery
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ComposicionMaterial, InputFecha, TablaNumeroCasType } from '../../models/materiales-peligrosos.model';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Subject, map, takeUntil } from 'rxjs';
 import { Tramite230501State, Tramite230501Store } from '../../estados/stores/tramite230501Store.store';
-import { map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { MaterialesPeligrososService } from '../../services/materiales-peligrosos.service';
-import { Subject } from 'rxjs';
 import { Tramite230501Query } from '../../estados/queries/tramite230501Query.query';
 
 @Component({
@@ -392,6 +391,7 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
     this.actualizarElValorDeLaTienda('numeroCas', 'text');
     this.actualizarElValorDeLaTienda('descripcionFraccion', 'text');
     this.actualizarElValorDeLaTienda('nombreQuimico', 'text');
+    this.pestanaValidar();
   }
 
   /**
@@ -405,7 +405,7 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
    * los elementos seleccionados en `numeroCasSellecionLista` y actualiza 
    * el estado del store con la lista filtrada.
    */
-  eliminarnumeroCas(): void {
+  eliminarNumeroCas(): void {
     if (this.numeroCasSellecionLista.length === 0) {
       return;
     }
@@ -418,6 +418,7 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
         numeroCasTablaDatos: LISTA_FILTRADA,
       }));
       this.numeroCasSellecionLista = [];
+      this.pestanaValidar();
     }
   }
 
@@ -530,6 +531,7 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
         composicionTablaDatos: LISTA_FILTRADA,
       }));
       this.composicionSeleccionLista = [];
+      this.pestanaValidar();
     }
   }
 

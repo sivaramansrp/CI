@@ -1,17 +1,13 @@
-import { AccionBoton, SeccionLibStore } from '@ng-mf/data-access-user';
+import { AccionBoton, BtnContinuarComponent, DatosPasos, ListaPasosWizard, SeccionLibStore, WizardComponent } from '@ng-mf/data-access-user';
+import { Component, ViewChild } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
-import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { DatosPasos } from '@ng-mf/data-access-user';
-import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS } from '../../constantes/materiales-peligrosos.enum';
 import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { Tramite230501Query } from '../../estados/queries/tramite230501Query.query';
-import { ViewChild } from '@angular/core';
-import { WizardComponent } from '@ng-mf/data-access-user';
+
 /**
  * @component SolicitudPageComponent
  * @description Componente principal de la página de solicitud. Controla la navegación

@@ -1,11 +1,10 @@
 import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ConfiguracionColumna, TablaDinamicaComponent, TablaSeleccion } from '@ng-mf/data-access-user';
+import { ConfiguracionColumna, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@ng-mf/data-access-user';
 import { DESTINATARIO_ENCABEZADO_DE_TABLA, Destinatario, REPRESENTANTE_ENCABEZADO_DE_TABLA, Representante, USO_FINAL_ENCABEZADO_DE_TABLA, UsoFinal } from '../../models/terceros-relacionados.model';
 import { Subject, takeUntil } from 'rxjs';
 import { Tramite230501State, Tramite230501Store } from '../../estados/stores/tramite230501Store.store';
 import { CommonModule } from '@angular/common';
-import { TituloComponent } from '@ng-mf/data-access-user';
 import { Tramite230501Query } from '../../estados/queries/tramite230501Query.query';
 
 /**

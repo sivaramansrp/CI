@@ -1,8 +1,5 @@
-import { Catalogo, TipoPersona } from '@ng-mf/data-access-user';
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
-import { CommonModule } from '@angular/common';
-import { Location } from '@angular/common';
-
+import { Catalogo, CatalogoSelectComponent, TipoPersona, TituloComponent } from '@ng-mf/data-access-user';
+import { CommonModule, Location } from '@angular/common';
 import {
   Component,
   EventEmitter,
@@ -19,7 +16,6 @@ import {
 import { Subject, takeUntil } from 'rxjs';
 import { Destinatario } from '../../models/terceros-relacionados.model';
 import { MaterialesPeligrososService } from '../../services/materiales-peligrosos.service';
-import { TituloComponent } from '@ng-mf/data-access-user';
 import { Tramite230501Query } from '../../estados/queries/tramite230501Query.query';
 import { Tramite230501Store } from '../../estados/stores/tramite230501Store.store';
 

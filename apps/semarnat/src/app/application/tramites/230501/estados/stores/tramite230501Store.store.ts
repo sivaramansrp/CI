@@ -1,9 +1,8 @@
-import { BehaviorSubject, Observable } from 'rxjs';
 import { ComposicionMaterial, DatosSolicitudFormType, PagoDerechosState, TablaNumeroCasType } from '../../models/materiales-peligrosos.model';
 import { Destinatario, Representante, Uso, UsoFinal } from '../../models/terceros-relacionados.model';
+import { Store, StoreConfig } from '@datorama/akita';
+import { BehaviorSubject } from 'rxjs';
 import { Injectable } from '@angular/core';
-import { Store } from '@datorama/akita';
-import { StoreConfig } from '@datorama/akita';
 
 /**
  * @interface Tramite230501State

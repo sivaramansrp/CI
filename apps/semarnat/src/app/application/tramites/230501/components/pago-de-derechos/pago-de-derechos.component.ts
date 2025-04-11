@@ -2,6 +2,7 @@ import { CatalogoSelectComponent, TituloComponent } from '@libs/shared/data-acce
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import {
+  Subject,
   map,
   takeUntil,
 } from 'rxjs';
@@ -9,7 +10,6 @@ import { CommonModule } from '@angular/common';
 import { MaterialesPeligrososService } from '../../services/materiales-peligrosos.service';
 import { PagoDerechosState } from '../../models/materiales-peligrosos.model';
 import { SeccionLibState } from '@libs/shared/data-access-user/src/core/estados/seccion.store';
-import { Subject } from 'rxjs';
 import { Tramite230501Query } from "../../estados/queries/tramite230501Query.query";
 import { Tramite230501Store } from '../../estados/stores/tramite230501Store.store';
 

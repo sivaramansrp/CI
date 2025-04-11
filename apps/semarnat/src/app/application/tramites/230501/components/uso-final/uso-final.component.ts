@@ -1,13 +1,10 @@
-import { Catalogo, ConfiguracionColumna, TablaSeleccion, TipoPersona } from '@ng-mf/data-access-user';
+import { Catalogo, CatalogoSelectComponent, ConfiguracionColumna, TablaDinamicaComponent, TablaSeleccion, TipoPersona, TituloComponent } from '@ng-mf/data-access-user';
 import { CommonModule, Location } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 import { USO_TABLA, Uso, UsoFinal } from '../../models/terceros-relacionados.model';
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { MaterialesPeligrososService } from '../../services/materiales-peligrosos.service';
-import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
-import { TituloComponent } from '@ng-mf/data-access-user';
 import { Tramite230501Query } from '../../estados/queries/tramite230501Query.query';
 import { Tramite230501Store } from '../../estados/stores/tramite230501Store.store';
 
