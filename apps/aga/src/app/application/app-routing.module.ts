@@ -205,8 +205,14 @@ const ROUTES: Routes = [
       import('./tramites/40103/modificarCaatTerrestre.module').then(
         (m) => m.ModificarCaatTerrestreModule
       )
-  }
-  
+  },
+  {
+    path: 'cancelacion-donaciones',
+    loadChildren: () =>
+      import('./tramites/11106/cancelacion-donaciones.module').then(
+        (m) => m.CancelacionDonacionesModule
+      ),
+  }  
 ];
 
 @NgModule({
