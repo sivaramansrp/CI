@@ -216,7 +216,14 @@ const ROUTES: Routes = [
           import(
             './tramites/260301/importacion-materias-primas-estupefacientes.module'
           ).then((m) => m.ImportacionMateriasPrimasEstupefacientesModule),
-  }
+  },
+  {
+    path: 'importacion-psicotropicos-poretorno',
+    loadChildren: () =>
+      import(
+        './tramites/260201/importacion-psicotropicos-poretorno.module'
+      ).then((m) => m.ImportacionPsicotropicosPoretornoModule),
+}
 ];
 
 @NgModule({
