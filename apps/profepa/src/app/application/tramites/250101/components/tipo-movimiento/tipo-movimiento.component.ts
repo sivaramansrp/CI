@@ -65,7 +65,7 @@ export class TipoMovimientoComponent implements OnInit {
     this.tipoMovimientoForm = this.fb.group({
       tipoAduana: new FormControl('', [Validators.required]),
       tipoInspectoria: new FormControl('', [Validators.required]),
-      tipoMuncipio: new FormControl('', [Validators.required]),
+      tipoMunicipio: new FormControl('', [Validators.required]),
     });
   }
 }

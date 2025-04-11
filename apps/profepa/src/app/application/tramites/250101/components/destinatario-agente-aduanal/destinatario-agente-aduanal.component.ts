@@ -21,6 +21,7 @@ import {
 import { DestinatarioService } from '../../services/destinatario.service';
 import { ModalComponent } from '../modal/modal.component';
 import { TablaDatos } from '../../models/flora-fauna.models';
+import { Tramite250101Store } from '../../estados/tramite250101.store';
 
 @Component({
   selector: 'app-destinatario-agente-aduanal',
@@ -56,7 +57,8 @@ export class DestinatarioAgenteAduanalComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private destinatarioService: DestinatarioService
+    private destinatarioService: DestinatarioService,
+    private tramite250101Store: Tramite250101Store
   ) {
     //
   }
@@ -86,8 +88,8 @@ export class DestinatarioAgenteAduanalComponent implements OnInit {
     this.establecerFormAgenteAduanal();
   }
 
-  tablaDestinatarioRowData: TablaDatos[] = [];
-  tablaAgenteAduanaRowData: TablaDatos[] = [];
+  tablaDestinatarioFilaDatos: TablaDatos[] = [];
+  tablaAgenteAduanaFilaDatos: TablaDatos[] = [];
 
   cambiarDestinatario(): void {
     this.showTableDiv = !this.showTableDiv;
@@ -104,8 +106,8 @@ export class DestinatarioAgenteAduanalComponent implements OnInit {
       destinatarioRazonSocial: new FormControl('', [Validators.required]),
       paisNacionalDestinatario: new FormControl('', [Validators.required]),
       estadoNacionalDestinatario: new FormControl('', [Validators.required]),
-      codigoPostalDestinatario:new FormControl('', [Validators.required]),
-      domicilioDestinatario:new FormControl('', [Validators.required]),
+      codigoPostalDestinatario: new FormControl('', [Validators.required]),
+      domicilioDestinatario: new FormControl('', [Validators.required]),
     });
   }
 
@@ -114,7 +116,58 @@ export class DestinatarioAgenteAduanalComponent implements OnInit {
       nombreAgenteAduanal: new FormControl('', [Validators.required]),
       primerApellidoAgenteAduanal: new FormControl('', [Validators.required]),
       segundoApellidoAgenteAduanal: new FormControl('', [Validators.required]),
-      patenteAgenteAduanal:new FormControl('', [Validators.required]),
+      patenteAgenteAduanal: new FormControl('', [Validators.required]),
     });
+  }
+
+  enviarDestinatarioFormulario(): void {
+const PAIS_VALOR = this.paisData.find(
+  (item: Catalogo) => 
+    item.id === this.formDestinatariosModal.value.paisNacionalDestinatario)?.descripcion;
+
+const ESTADO_VALOR = this.estadoData.find(
+  (item: Catalogo) => 
+    item.id === this.formDestinatariosModal.value.estadoNacionalDestinatario)?.descripcion;
+
+
+
+    const DESTINATARIO_FILA = {
+      tbodyData: [
+        this.formDestinatariosModal.value.destinatarioRazonSocial,
+        PAIS_VALOR,
+        ESTADO_VALOR,
+        this.formDestinatariosModal.value.codigoPostalDestinatario,
+        this.formDestinatariosModal.value.domicilioDestinatario,
+      ],
+    };
+
+    this.tablaDestinatarioFilaDatos.push(DESTINATARIO_FILA);
+
+    this.tramite250101Store.establecerDestinatario(
+      this.tablaDestinatarioFilaDatos
+    );
+
+    this.showTableDiv = !this.showTableDiv;
+    this.showDestinatarioModal = !this.showDestinatarioModal;
+  }
+
+  enviarAgenteAduanalFormulario(): void {
+    const AGENTE_ADUANAL_FILA = {
+      tbodyData: [
+        this.formAgenteAduanal.value.nombreAgenteAduanal,
+        this.formAgenteAduanal.value.primerApellidoAgenteAduanal,
+        this.formAgenteAduanal.value.segundoApellidoAgenteAduanal,
+        this.formAgenteAduanal.value.patenteAgenteAduanal,
+      ],
+    };
+
+    this.tablaAgenteAduanaFilaDatos.push(AGENTE_ADUANAL_FILA);
+
+    this.tramite250101Store.establecerAgenteAduanal(
+      this.tablaAgenteAduanaFilaDatos
+    );
+
+    this.showTableDiv = !this.showTableDiv;
+    this.showAgenteModal = !this.showAgenteModal;
   }
 }
