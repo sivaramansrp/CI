@@ -38,7 +38,7 @@ import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
 import { tap } from 'rxjs';
 
-import { EXPEDICION_FACTURA_FECHA } from '../../constantes/elegibilidad-de-textiles.enums';
+import { EXPEDICION_FACTURA_FECHA, VALIDO } from '../../constantes/elegibilidad-de-textiles.enums';
 
 import { ElegibilidadDeTextilesStore } from '../../estados/elegibilidad-de-textiles.store';
 import { TextilesState } from '../../estados/elegibilidad-de-textiles.store';
@@ -203,7 +203,7 @@ export class CapturarFacturasComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-  if(this.capturarState.formaValida && this.capturarState.formaValida[0] && this.capturarState.formaValida[0].descripcion === 'AllValida'){
+  if(this.capturarState.formaValida && this.capturarState.formaValida[0] && this.capturarState.formaValida[0].descripcion === VALIDO){
     this.seccionStore.establecerSeccion([true]);
     this.seccionStore.establecerFormaValida([true])
   }

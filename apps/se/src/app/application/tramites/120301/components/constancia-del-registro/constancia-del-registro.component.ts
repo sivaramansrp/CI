@@ -12,6 +12,7 @@ import { OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
+import { VALIDO } from '../../constantes/elegibilidad-de-textiles.enums';
 
 import radioOptionsData from '@libs/shared/theme/assets/json/120301/mostrar.json';
 
@@ -31,6 +32,7 @@ import { TextilesState } from '../../estados/elegibilidad-de-textiles.store';
 import { ElegibilidadDeTextilesQuery } from '../../queries/elegibilidad-de-textiles.query';
 
 import { ElegibilidadTextilesService } from '../../services/elegibilidad-textiles/elegibilidad-textiles.service';
+
 
 /**
  * @component ConstanciaDelRegistroComponent
@@ -157,7 +159,7 @@ export class ConstanciaDelRegistroComponent implements OnInit {
     if (
       this.constanciaState.formaValida &&
       this.constanciaState.formaValida[0] &&
-      this.constanciaState.formaValida[0].descripcion === 'AllValida'
+      this.constanciaState.formaValida[0].descripcion === VALIDO
     ) {
       this.seccionStore.establecerSeccion([true]);
       this.seccionStore.establecerFormaValida([true]);

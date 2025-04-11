@@ -29,6 +29,7 @@ import { ElegibilidadDeTextilesQuery } from '../../queries/elegibilidad-de-texti
 import { ElegibilidadTextilesService } from '../../services/elegibilidad-textiles/elegibilidad-textiles.service';
 import { TableComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
+import { VALIDO } from '../../constantes/elegibilidad-de-textiles.enums';
 
 @Component({
   selector: 'app-facturas-asociadas',
@@ -240,7 +241,7 @@ export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
           )
           .subscribe();
       this.seccionStore.establecerFormaValida([false]);
-      if(this.facturasState.formaValida && this.facturasState.formaValida[0] && this.facturasState.formaValida[0].descripcion === 'AllValida'){
+      if(this.facturasState.formaValida && this.facturasState.formaValida[0] && this.facturasState.formaValida[0].descripcion === VALIDO){
         this.seccionStore.establecerSeccion([true]);
         this.seccionStore.establecerFormaValida([true])
       }

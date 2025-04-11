@@ -49,7 +49,7 @@ import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
 import { tap } from 'rxjs';
 
-import { CATALOGOS } from '../../constantes/elegibilidad-de-textiles.enums';
+import { CATALOGOS, VALIDO } from '../../constantes/elegibilidad-de-textiles.enums';
 
 import { ElegibilidadDeTextilesStore } from '../../estados/elegibilidad-de-textiles.store';
 import { TextilesState } from '../../estados/elegibilidad-de-textiles.store';
@@ -211,7 +211,7 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
           if (this.historicoFabricantesForm.valid) {
             this.ElegibilidadDeTextilesStore.setFormaValida([
               ...this.historicoState.formaValida,
-              { id: 3, descripcion: "AllValida" }])
+              { id: 3, descripcion: "TodoValido" }])
           }
         })
       )
@@ -219,7 +219,7 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
 
     this.seccionStore.establecerFormaValida([false]);
 
-    if(this.historicoState.formaValida && this.historicoState.formaValida[0] && this.historicoState.formaValida[0].descripcion === 'AllValida'){
+    if(this.historicoState.formaValida && this.historicoState.formaValida[0] && this.historicoState.formaValida[0].descripcion === VALIDO){
       this.seccionStore.establecerSeccion([true]);
       this.seccionStore.establecerFormaValida([true]);
     } else {
