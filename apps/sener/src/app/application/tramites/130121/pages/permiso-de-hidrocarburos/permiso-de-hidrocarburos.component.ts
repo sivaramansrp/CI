@@ -11,7 +11,7 @@
 
 import { CategoriaMensaje, DatosPasos, ListaPasosWizard, Notificacion, TipoNotificacionEnum, WizardComponent } from '@libs/shared/data-access-user/src';
 import { Component, ViewChild } from '@angular/core';
-import { ADVERTENCIA } from '@libs/shared/data-access-user/src/tramites/constantes/aviso-privacidad.enum';
+import { AVISO } from '@libs/shared/data-access-user/src/tramites/constantes/aviso-privacidad.enum';
 import { AccionBoton } from '../../enums/accion-botton.enum';
 
 import { PASOS_EXPORTACION } from '../../constants/permiso-de-hidrocarburos.enum';
@@ -98,7 +98,7 @@ export class PermisoDeHidrocarburosComponent {
     categoria: CategoriaMensaje.INFORMACION, 
     modo: '', 
     titulo: '',
-    mensaje: ADVERTENCIA.Advertencia,
+    mensaje: AVISO.Aviso,
     cerrar: false,
     txtBtnAceptar: '',
     txtBtnCancelar: ''
