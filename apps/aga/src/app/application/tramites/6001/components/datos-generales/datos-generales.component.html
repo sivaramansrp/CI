@@ -8,8 +8,8 @@
                     <input class="form-control" type="text" formControlName="aduanaAdicional">
                 </div>
             </div>
-         </div>
-    
+        </div>
+
         <div class="row mb-3">
             <div class="titulo-seccion">
                 <h4 class="mb-5">Datos generales del solicitante</h4>
@@ -27,7 +27,7 @@
                 </div>
             </div>
         </div>
-    
+
         <div class="row mb-3">
             <div class="col-md-8">
                 <div class="form-group">
@@ -52,10 +52,10 @@
                 </thead>
                 <tbody>
                     @for (datos of sociedadDatos; let i = $index; track i) {
-                        <tr>
-                            <td>{{datos?.id}}</td>
-                            <td>{{datos?.descripcion}}</td>
-                        </tr>
+                    <tr>
+                        <td>{{datos?.id}}</td>
+                        <td>{{datos?.descripcion}}</td>
+                    </tr>
                     }
                 </tbody>
             </table>
@@ -68,10 +68,8 @@
 
     <div class="row mb-4">
         <div class="col-md-12">
-            <app-tabla-dinamica
-                [configuracionTabla]="configuracionTabla"
-                [datos]="registroDeSolicitudesTablaDatos"
-                [acciones]="accionesTramite">
+            <app-tabla-dinamica [configuracionTabla]="configuracionTabla"
+                                [datos]="registroDeSolicitudesTablaDatos">
             </app-tabla-dinamica>
             <ul class="pagination d-flex justify-content-center">
                 <li class="page-item"><a class="page-link" href="#">1</a></li>
