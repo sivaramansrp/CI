@@ -31,7 +31,6 @@ import { CommonModule } from '@angular/common';
 })
 
 export class InputCheckComponent implements OnChanges, ControlValueAccessor {
-
   /**
    * Identificador único requerido para el checkbox del componente.
    * @required
@@ -53,8 +52,17 @@ export class InputCheckComponent implements OnChanges, ControlValueAccessor {
    */
   @Input({ required: true }) required!: boolean;
 
-  forma: FormGroup;
+  /**
+   * Indica si el checkbox está deshabilitado.
+   * @required
+   * @type {boolean}
+   */
+  @Input() isDisabled: boolean = false;
 
+  /**
+   * Control de formulario que contiene el estado del checkbox.
+   */
+  forma: FormGroup;
 
   constructor() {
     this.forma = new FormGroup({
@@ -92,6 +100,16 @@ export class InputCheckComponent implements OnChanges, ControlValueAccessor {
         ]);
       } else {
         CONTROL?.clearValidators();
+      }
+      CONTROL?.updateValueAndValidity();
+    }
+
+    if (changes['isDisabled']) {
+      const CONTROL = this.forma.get('check');
+      if (this.isDisabled) {
+        CONTROL?.disable(); // Desactiva el control
+      } else {
+        CONTROL?.enable(); // Activa el control
       }
       CONTROL?.updateValueAndValidity();
     }
