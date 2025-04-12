@@ -47,7 +47,7 @@ export class RegistroPageComponent implements OnInit, OnDestroy {
    * Título del mensaje principal.
    * @property {string | null} tituloMensaje - Título que se muestra en la parte superior del formulario.
    */
-  tituloMensaje: string | null = 'Registro de solicitud IMMEX modalidad ampliación servicios ';
+  tituloMensaje: string | null = "Registro de solicitud IMMEX modalidad ampliación 3R's  ";
   Alert = ALERT;
   dangerClass= 'alert-danger';
 

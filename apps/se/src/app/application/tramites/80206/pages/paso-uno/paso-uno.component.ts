@@ -39,8 +39,5 @@ export class PasoUnoComponent {
    */
   seleccionaTab(i: number): void {
     this.indice = i;
-    if (this.indice === 1 || this.indice === 2) {
-      this.ampliacionServiciosService.enviarDeberiaMostrar(true);
-    }
   }
 }

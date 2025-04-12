@@ -1,10 +1,10 @@
 // @ts-nocheck
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
+import { Pipe,PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { Observable, of as observableOf, throwError } from 'rxjs';
+import { Observable, of as observableOf,Subject, throwError } from 'rxjs';
 
 import { Component } from '@angular/core';
 import { AmpliacionAnexoComponent } from './ampliacion-anexo.component';
@@ -54,8 +54,9 @@ describe('AmpliacionAnexoComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule ,AmpliacionAnexoComponent, ],
+      imports: [ FormsModule, ReactiveFormsModule, AmpliacionAnexoComponent ],
       declarations: [
+       
         TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
         MyCustomDirective
       ],
@@ -72,11 +73,12 @@ describe('AmpliacionAnexoComponent', () => {
     }).compileComponents();
     fixture = TestBed.createComponent(AmpliacionAnexoComponent);
     component = fixture.debugElement.componentInstance;
+    component.destroyNotifier$= new Subject<void>();
   });
 
   afterEach(() => {
-    component.ngOnDestroy = function() {};
-    fixture.destroy();
+    fixture.destroy(); 
+    TestBed.resetTestingModule(); 
   });
 
   it('should run #constructor()', async () => {
@@ -84,20 +86,15 @@ describe('AmpliacionAnexoComponent', () => {
   });
 
   it('should run #ngOnInit()', async () => {
-    component.obtenerIngresoSelectList = jest.fn();
     component.getDatos = jest.fn();
     component.suscribirseADatosImmex = jest.fn();
     component.suscribirseADatos = jest.fn();
     component.suscribirseAFields = jest.fn();
-    component.ampliacionServiciosService = component.ampliacionServiciosService || {};
-    component.ampliacionServiciosService.enviarDeberiaMostrar = jest.fn();
     component.ngOnInit();
-    // expect(component.obtenerIngresoSelectList).toHaveBeenCalled();
     // expect(component.getDatos).toHaveBeenCalled();
     // expect(component.suscribirseADatosImmex).toHaveBeenCalled();
     // expect(component.suscribirseADatos).toHaveBeenCalled();
     // expect(component.suscribirseAFields).toHaveBeenCalled();
-    // expect(component.ampliacionServiciosService.enviarDeberiaMostrar).toHaveBeenCalled();
   });
 
   it('should run #activarModal()', async () => {
@@ -148,16 +145,14 @@ describe('AmpliacionAnexoComponent', () => {
         importacion: {},
         valor: {}
       },
-      subscribe: function() {
-        return [
-          {
-            "fraccion": {},
-            "cantidad": {},
-            "fraccionArancelaria": {},
-            "importacion": {},
-            "valor": {}
-          }
-        ];
+      pipe: function() {
+        return observableOf({
+          fraccion: {},
+          cantidad: {},
+          fraccionArancelaria: {},
+          importacion: {},
+          valor: {}
+        });
       }
     });
     component.suscribirseAFields();
@@ -207,10 +202,8 @@ describe('AmpliacionAnexoComponent', () => {
     component.fb = component.fb || {};
     component.fb.group = jest.fn();
     component.inicializarFormularioInfoRegistro();
-    
+    // expect(component.fb.group).toHaveBeenCalled();
   });
-
-  
 
   it('should run #eliminarServiciosGrid()', async () => {
     component.datosImmex = component.datosImmex || {};
@@ -224,7 +217,9 @@ describe('AmpliacionAnexoComponent', () => {
     component.ampliacionServiciosStore = component.ampliacionServiciosStore || {};
     component.ampliacionServiciosStore.setDatosImmex = jest.fn();
     component.eliminarServiciosGrid();
-   });
+    // expect(component.datosImmex.findIndex).toHaveBeenCalled();
+    // expect(component.ampliacionServiciosStore.setDatosImmex).toHaveBeenCalled();
+  });
 
   it('should run #eliminarImportacion()', async () => {
     component.datosImportacion = component.datosImportacion || {};
@@ -238,7 +233,8 @@ describe('AmpliacionAnexoComponent', () => {
     component.ampliacionServiciosStore = component.ampliacionServiciosStore || {};
     component.ampliacionServiciosStore.setDatosImportacion = jest.fn();
     component.eliminarImportacion();
-    
+    // expect(component.datosImportacion.findIndex).toHaveBeenCalled();
+    // expect(component.ampliacionServiciosStore.setDatosImportacion).toHaveBeenCalled();
   });
 
   it('should run #actualizaGridEmpresasNacionales()', async () => {
@@ -256,7 +252,7 @@ describe('AmpliacionAnexoComponent', () => {
 
   it('should run #agregarImportacion()', async () => {
     component.domiciliosSeleccionados = component.domiciliosSeleccionados || {};
-    component.domiciliosSeleccionados = {
+    component.domiciliosSeleccionados= {
       fraccion: {},
       fraccionArancelaria: {},
       descripcionComercial: {},
@@ -278,10 +274,12 @@ describe('AmpliacionAnexoComponent', () => {
   });
 
   it('should run #ngOnDestroy()', async () => {
-    component.subscription = component.subscription || {};
-    component.subscription.unsubscribe = jest.fn();
+    component.destroyNotifier$ = component.destroyNotifier$ || {};
+    component.destroyNotifier$.next = jest.fn();
+    component.destroyNotifier$.complete = jest.fn();
     component.ngOnDestroy();
-    // expect(component.subscription.unsubscribe).toHaveBeenCalled();
+    // expect(component.destroyNotifier$.next).toHaveBeenCalled();
+    // expect(component.destroyNotifier$.complete).toHaveBeenCalled();
   });
 
   it('should run #procesarDatosDelHijo()', async () => {
@@ -296,7 +294,5 @@ describe('AmpliacionAnexoComponent', () => {
     component.seleccionarDomicilios({});
 
   });
-
- 
 
 });

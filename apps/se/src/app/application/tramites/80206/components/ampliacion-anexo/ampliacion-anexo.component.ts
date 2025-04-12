@@ -233,10 +233,6 @@ export class AmpliacionAnexoComponent implements OnInit, OnDestroy {
     this.suscribirseADatosImmex();
     this.suscribirseADatos();
     this.suscribirseAFields();
-    this.ampliacionServiciosService.enviarDeberiaMostrar(true);
-    
-    
-    
   }
   /**
    * Activa el modal de alerta.
@@ -294,7 +290,7 @@ export class AmpliacionAnexoComponent implements OnInit, OnDestroy {
    */
   suscribirseADatos(): void {
     this.subscription.add(
-      this.ampliacionServiciosQuery.selectDatos$.subscribe((datos) => {
+      this.ampliacionServiciosQuery.selectDatos$.pipe(takeUntil(this.destroyNotifier$)).subscribe((datos) => {
         this.datos = datos; // Update local `datos` array when store data changes
       })
     );
@@ -313,7 +309,7 @@ export class AmpliacionAnexoComponent implements OnInit, OnDestroy {
         importacion: state.importacion,
 
         valor: state.valor
-      })).subscribe((fields) => {
+      })).pipe(takeUntil(this.destroyNotifier$)).subscribe((fields) => {
         
         this.fraccion = fields.fraccion;
         this.cantidad = fields.cantidad;
@@ -345,7 +341,7 @@ export class AmpliacionAnexoComponent implements OnInit, OnDestroy {
  */
   suscribirseADatosImmex(): void {
     
-    this.ampliacionServiciosQuery.selectSolicitudTramite$.subscribe((datos) => {
+    this.ampliacionServiciosQuery.selectSolicitudTramite$.pipe(takeUntil(this.destroyNotifier$)).subscribe((datos) => {
       this.datosImmex = datos.datosImmex;
       this.datosImportacion = datos.datosImportacion;
      
@@ -357,7 +353,7 @@ export class AmpliacionAnexoComponent implements OnInit, OnDestroy {
    * @method inicializarFormularioDesdeAlmacen
    */
   inicializarFormularioDesdeAlmacen(): void {
-    this.ampliacionServiciosQuery.selectInfoRegistro$.subscribe((infoRegistro) => {
+    this.ampliacionServiciosQuery.selectInfoRegistro$.pipe(takeUntil(this.destroyNotifier$)).subscribe((infoRegistro) => {
     
       this.formularioInfoRegistro = this.fb.group({
         seleccionaLaModalidad: [{ value: infoRegistro.seleccionaLaModalidad, disabled: true }],
@@ -479,7 +475,8 @@ export class AmpliacionAnexoComponent implements OnInit, OnDestroy {
    * @method ngOnDestroy
    */
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 
  /**

@@ -286,6 +286,7 @@ export class Ampliacion3RsComponent implements OnInit, OnDestroy {
    * @method ngOnDestroy
    */
   ngOnDestroy(): void {
+    this.ampliacionServiciosService.enviarDeberiaMostrar(true);
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
