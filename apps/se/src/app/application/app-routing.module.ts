@@ -395,8 +395,8 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/130104/importacion-otros-vehiculos-usados.module').then(
         (m) => m.ImportacionOtrosVehiculosUsadosModule
-      ),
-  }
+      )
+    }
 ];
 
 @NgModule({
