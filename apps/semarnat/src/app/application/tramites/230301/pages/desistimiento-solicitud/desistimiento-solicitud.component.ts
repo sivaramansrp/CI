@@ -2,7 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { ListaPasosWizard, PASOS } from '../../models/disponsibles.model';
 
 import { AccionBoton, DatosPasos, SeccionLibStore, WizardComponent } from '@ng-mf/data-access-user';
-import { SECCIONES_TRAMITE_230301, TEXTOS } from '../../enum/constants';
+import { SECCIONES_TRAMITE_230301 } from '../../enum/constants';
 
 @Component({
   selector: 'app-desistimiento-solicitud',
@@ -40,15 +40,6 @@ export class DesistimientoSolicitudComponent {
     txtBtnAnt: 'Anterior',
     txtBtnSig: 'Continuar',
   };
-
-  /**
-   * Textos utilizados en el componente.
-   * 
-   * Esta propiedad contiene textos como instrucciones o mensajes que se muestran
-   * en la interfaz del usuario.
-   * @type {typeof TEXTOS}
-   */
-  TEXTOS = TEXTOS;
 
   /**
    * Clase CSS para una alerta de información.
