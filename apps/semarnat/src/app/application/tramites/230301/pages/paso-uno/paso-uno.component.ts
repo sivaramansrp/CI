@@ -1,6 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { SECCIONES_TRAMITE_230301, TEXTOS } from '../../enum/constants';
-import { SeccionLibStore } from '@libs/shared/data-access-user/src';
+import { AVISO, SeccionLibStore } from '@libs/shared/data-access-user/src';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-paso-uno',
@@ -13,7 +12,10 @@ export class PasoUnoComponent {
    * @property {number} indice - Índice actual del paso.
    */
   indice: number = 1;
-  TEXTOS = TEXTOS;
+  /**
+   * Asigna el aviso de privacidad simplificado al atributo `TEXTOS`.
+   */
+  TEXTOS = AVISO.Aviso;
 
    constructor(private seccionStore: SeccionLibStore) {
         // Se puede agregar aquí la lógica del constructor si es necesario
