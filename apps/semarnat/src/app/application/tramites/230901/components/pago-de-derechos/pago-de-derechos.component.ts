@@ -83,13 +83,6 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       });
 
     this.crearformularioPagoDerechos();
-
-    this.formularioPagoDerechos.get('llaveDePago')?.valueChanges.subscribe((value: string) => {
-      if (value) {
-        const CAPITALIZED_VALUE = value.toUpperCase();
-        this.formularioPagoDerechos.get('llaveDePago')?.setValue(CAPITALIZED_VALUE, { emitEvent: false });
-      }
-    });
   }
 
   /**
@@ -129,6 +122,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    */
   manejarCambioLlavePago(): void {
     const CAPITALIZED_VALUE = this.formularioPagoDerechos.get('llaveDePago')?.value.toUpperCase();
+    this.formularioPagoDerechos.get('llaveDePago')?.setValue(CAPITALIZED_VALUE);
     this.tramite230901Store.setLlaveDePago(
       CAPITALIZED_VALUE
     );
@@ -136,7 +130,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
 
   /**
    * Maneja los cambios en el campo "Fecha de Pago".
-   * Actualiza el estado del almacén con la fecha de pago proporcionada.
+   * Actualiza el estado del almacén con la fecha de pago proporcionada.  
    */
   cambioFechaFinal(nuevo_valor: string): void {
     this.formularioPagoDerechos.patchValue({
