@@ -4,6 +4,7 @@ import { DatosComponent } from './pages/datos/datos.component';
 //import { InicioSesionService } from '@libs/shared/data-access-user/src';
 import { ModificacionDelPermisoRoutingModule } from './modificacion-del-permiso-routing.module';
 import { NgModule } from '@angular/core';
+import { PagoDeDerechosBancoComponent } from '../../shared/components/pago-de-derechos-banco/pago-de-derechos-banco.component';
 import { PantallasComponent } from './pages/pantallas/pantallas.component';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
@@ -25,7 +26,8 @@ import { WizardComponent } from '@libs/shared/data-access-user/src';
     WizardComponent,
     PasoDosComponent,
     PasoTresComponent,
-    SolicitanteComponent
+    SolicitanteComponent,
+    PagoDeDerechosBancoComponent
   ],
   providers: [
     //InicioSesionService,
