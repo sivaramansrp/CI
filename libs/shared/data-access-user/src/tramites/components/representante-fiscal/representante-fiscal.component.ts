@@ -7,8 +7,12 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import {
+  CORREO_INVALIDO,
+  REQUERIDO,
+  RFC_INVALIDO
+} from '../../constantes/mensajes-error-formularios';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-
 import {
   DatosRepresentanteLegal,
   DatosRfcResponse,
@@ -16,14 +20,9 @@ import {
 import { CommonModule } from '@angular/common';
 import { FormulariosService } from '../../../core/services/shared/formularios/formularios.service';
 import { NumeroTelefonicoDirective } from '../../directives/numeroTelefonico/numero-telefonico.directive';
+import { REGEX_RFC } from '../../constantes/regex.constants';
 import { UppercaseDirective } from '../../directives/Uppercase/uppercase.directive';
 import { ValidacionesFormularioService } from '../../../core/services/shared/validaciones-formulario/validaciones-formulario.service';
-
-import {
-  CORREO_INVALIDO, REQUERIDO,
-  RFC_INVALIDO
-} from '../../constantes/mensajes-error-formularios';
-import { REGEX_RFC } from '../../constantes/regex.constants';
 @Component({
   selector: 'representante-fiscal',
   standalone: true,
