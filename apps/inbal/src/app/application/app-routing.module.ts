@@ -15,6 +15,13 @@ const ROUTES: Routes = [
         (m) => m.AvisoSiglosModule
       ),
   },
+  {
+    path: 'aviso-importacion-plastica',
+    loadChildren: () =>
+      import('./tramites/270301/aviso-importacion-plastica.module').then(
+        (m) => m.AvisoImportacionPlasticaModule
+      ),
+  },
 ];
 
 @NgModule({
