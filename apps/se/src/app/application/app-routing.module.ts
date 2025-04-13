@@ -396,7 +396,14 @@ const ROUTES: Routes = [
       import('./tramites/130203/exportación-de-diamantes-en-bruto.module').then(
         (m) => m.ExportaciónDeDiamantesEnBrutoModule
       )
-  }
+  },
+  {
+    path: 'importacion-otros-vehiculos-usados',
+    loadChildren: () =>
+      import('./tramites/130104/importacion-otros-vehiculos-usados.module').then(
+        (m) => m.ImportacionOtrosVehiculosUsadosModule
+      )
+    }
 ];
 
 @NgModule({
