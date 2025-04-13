@@ -14,9 +14,9 @@ import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
     FormsModule,
     AnexoVeintiochoRoutingModule,
     SolicitudPageComponent,
-    // PasoUnoComponent,
-    // PasoTresComponent,
-    // PasoDosComponent
+    PasoUnoComponent,
+    PasoTresComponent,
+    PasoDosComponent
   ]
 })
 export class AnexoVeintiochoModule { }

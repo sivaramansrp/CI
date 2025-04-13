@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { BtnContinuarComponent, DatosPasos, FormularioDinamico, ListaPasosWizard, PASOS, SolicitanteComponent, WizardComponent } from '@ng-mf/data-access-user';
+import { BtnContinuarComponent, DatosPasos, FormularioDinamico, ListaPasosWizard, PASOS, SolicitanteComponent, TituloComponent, WizardComponent } from '@ng-mf/data-access-user';
 import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL, PERSONA_MORAL_NACIONAL } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
 
 /**
@@ -17,7 +17,7 @@ interface AccionBoton {
   templateUrl: './paso-uno.component.html',
   styleUrls: ['./paso-uno.component.scss'],
   standalone: true,
-  imports: [SolicitanteComponent, CommonModule, BtnContinuarComponent]
+  imports: [SolicitanteComponent, CommonModule, BtnContinuarComponent, TituloComponent]
 })
 export class PasoUnoComponent implements AfterViewInit {
   /**

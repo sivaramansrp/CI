@@ -1,4 +1,4 @@
-import { CATALOGOS_ID, TEXTOS, Catalogo, CatalogosService } from '@ng-mf/data-access-user';
+import { CATALOGOS_ID, TEXTOS, Catalogo, CatalogosService, TituloComponent, AlertComponent, AnexarDocumentosComponent } from '@ng-mf/data-access-user';
 import { Component, OnInit } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 
@@ -7,7 +7,7 @@ import { Subject, takeUntil } from 'rxjs';
   templateUrl: './paso-dos.component.html',
   styleUrls: ['./paso-dos.component.scss'],
   standalone: true,
-  imports: []
+  imports: [TituloComponent, AlertComponent, AnexarDocumentosComponent]
 })
 export class PasoDosComponent implements OnInit {
   /**

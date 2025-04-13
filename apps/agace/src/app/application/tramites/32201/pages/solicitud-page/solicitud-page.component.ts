@@ -1,6 +1,7 @@
 import {
   BtnContinuarComponent,
   DatosPasos,
+  SolicitanteComponent,
 } from '@ng-mf/data-access-user';
 import { Component, ViewChild } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -9,8 +10,8 @@ import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS } from '@ng-mf/data-access-user';
 import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
-import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { WizardComponent } from '@ng-mf/data-access-user';
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 
 /**
  * Texto de alerta para terceros.
@@ -43,10 +44,11 @@ interface AccionBoton {
     CommonModule,
     BtnContinuarComponent,
     FormsModule,
+    PasoUnoComponent,     
+    SolicitanteComponent,   
     PasoDosComponent,
     PasoTresComponent,
-    PasoUnoComponent,
-    ReactiveFormsModule,
+    ReactiveFormsModule
   ],
 })
 /**
