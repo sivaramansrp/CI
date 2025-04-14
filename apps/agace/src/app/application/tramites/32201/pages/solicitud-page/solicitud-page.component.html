@@ -12,21 +12,23 @@
     </div>
     <div class="row">
       @switch (indice) { 
-        @case (1) { 
-          <paso-uno></paso-uno> 
+        @case (1) {
+          <paso-uno></paso-uno>
         } 
         @case (2) {
-          <paso-dos></paso-dos> 
+          <paso-dos></paso-dos>
         } 
         @case (3) {
-          <paso-tres></paso-tres> 
+          <paso-tres></paso-tres>
         } 
       }
       <btn-continuar
         [datos]="datosPasos"
         (continuarEvento)="getValorIndice($event)"
       ></btn-continuar>
-      <ng-alert [CONTENIDO]="TEXTOS" [CUSTOMECLASS]="infoAlert"></ng-alert>
+      @if (indice === 1) {
+        <ng-alert [CONTENIDO]="TEXTOS" [CUSTOMECLASS]="infoAlert"></ng-alert>
+      }
     </div>
   </div>
 </div>
