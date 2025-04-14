@@ -35,6 +35,7 @@ import { takeUntil } from 'rxjs';
   selector: 'app-solicitud-datos',
   templateUrl: './solicitud-datos.component.html',
   styleUrl: './solicitud-datos.component.scss',
+  
 })
 /**
  * Componente que representa los datos de la solicitud

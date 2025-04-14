@@ -160,6 +160,66 @@ const ROUTES: Routes = [
   {
     path: 'invocar-modulo',
     loadChildren: () =>
+      import('./tramites/40302/registro-transportista.module').then(
+        (m) => m.RegistroTransportistaModule
+      ),
+  },
+  {
+    path: 'attention-Of-Renewal',
+    loadChildren: () =>
+      import('./tramites/40403/attentionOfRenewal.module').then(
+        (m) => m.AttentionOfRenewalModule
+      ),
+  },
+  {
+    path: 'retirada-de-la-autorizacion-de-donaciones',
+    loadChildren: () =>
+      import('./tramites/11105/retirada-de-la-autorizacion-de-donaciones.module').then(
+        (m) => m.RetiradaDeLaAutorizacionDeDonacioneModule
+      )
+  },
+  {
+    path: 'deposito-fiscal',
+    loadChildren: () =>
+      import('./tramites/104/deposito-fiscal-manufactura-vehiculos/deposito-fiscal-manufactura-vehiculos.module').then(
+        (m) => m.DepositoFiscalManufacturaVehiculosModule
+      )
+  },
+  {
+    path: 'transportacion-maritima',
+    loadChildren: () =>
+      import('./tramites/40201/transportacion-maritima.module').then(
+        (m) => m.TransportacionMaritimaModule
+      ),
+  },
+  {
+    path: 'junta-tecnica',
+    loadChildren: () =>
+      import('./tramites/6101/junta-tecnica.module').then(
+        (m) => m.JuntaTecnicaModule
+      )
+  },
+  {
+    path: 'modificacion-transportacion-maritima',
+    loadChildren: () =>
+      import('./tramites/40202/modificacion-transportacion-maritima.module').then(
+        (m) => m.ModificacionTransportacionMaritimaModule
+      ),
+  },
+  {
+    path: 'modificarCaatTerrestre',
+    loadChildren: () =>
+      import('./tramites/40103/modificarCaatTerrestre.module').then(
+        (m) => m.ModificarCaatTerrestreModule
+      )
+  },
+  {
+    path: 'cancelacion-donaciones',
+    loadChildren: () =>
+      import('./tramites/11106/cancelacion-donaciones.module').then(
+        (m) => m.CancelacionDonacionesModule
+      ),
+  }  
       import('./tramites/105/invocar.module').then(
         (m) => m.InvocarModule
       ),

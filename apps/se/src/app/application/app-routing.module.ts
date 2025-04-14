@@ -46,6 +46,11 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'tramites-disponibles',
+    loadChildren: () =>
+      import('./tramites/110210/tramites-disponibles.module').then((m) => m.TramitesDisponiblesModule),
+  },
+  {
     path: 'empresa-frontera',
     loadChildren: () =>
       import('./tramites/120602/empresa-frontera-solicitud.module').then(
@@ -126,6 +131,12 @@ const ROUTES: Routes = [
       import('./tramites/130106/desmantelar.module').then(
         (m) => m.DesmantelarModule
       ),
+  },
+  {
+    path: 'cancelacion-de-certificados-de-cupo',
+    loadChildren: () =>
+      import('./tramites/140104/cancelacion-de-certificados-de-cupo.module').then(
+        (m) => m.CancelacionDeCertificadosDeCupoModule)
   },
   {
     path: 'desistimiento-de-permiso',
@@ -219,6 +230,20 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'importacion-material-de-investigacion-cientifica',
+    loadChildren: () =>
+      import('./tramites/130112/importacion-material-de-investigacion-cientifica.module').then(
+        (m) => m.ImportacionMaterialDeInvestigacionCientificaModule
+      ),
+  },
+  {
+    path: 'importacion-vehiculos-nuevos',
+    loadChildren: () =>
+      import('./tramites/130115/importacion-vehiculos-nuevos.module').then(
+        (m) => m.ImportacionVehiculosNuevosModule
+      )
+  },
+  {
     path: 'cancelaciones-ministerio',
     loadChildren: () =>
       import('./tramites/140201/cancelaciones.module').then(
@@ -273,11 +298,18 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'previos-exportacion',
+    loadChildren: () =>
+      import('./tramites/130217/control-permisos-previos-exportacion.module').then(
+        (m) => m.ControlPermisosPreviosExportacionModule
+      )
+  },
+  {
     path: 'inicialmente-certificado-origen',
     loadChildren: () =>
       import('./tramites/110216/inicialmente-certificado-origen.module').then(
         (m) => m.InicialmenteCertificadoOrigenModule
-      ),
+      )
   },
   {
     path: 'validador-certificado-cam',
@@ -297,6 +329,11 @@ const ROUTES: Routes = [
     path: 'cupos',
     loadChildren: () =>
       import('./tramites/120201/cupos.module').then((m) => m.CuposModule),
+  },
+  {
+    path: 'solicitud-prorroga',
+    loadChildren: () =>
+      import('./tramites/130301/solicitud-prorroga.module').then((m) => m.SolicitudProrrogaModule),
   },
   {
     path: 'aviso-importacion-maquinas',
@@ -324,7 +361,49 @@ const ROUTES: Routes = [
       import('./tramites/110211/validar-certificado.module').then(
         (m) => m.ValidarCertificadoModule
       ),
-  }
+  },
+  {
+    path: 'solicitud-importacion-ambulancia',
+    loadChildren: () =>
+      import('./tramites/130116/solicitud-importacion-ambulancia.module').then(
+        (m) => m.SolicitudImportacionAmbulanciaModule
+      ),
+  },
+  {
+    path:'importacion-vehiculos-usados-donacion',
+    loadChildren: () =>
+      import('./tramites/130105/importacion-vehiculos-usados-donacion.module').then(
+        (m) => m.ImportacionVehiculosUsadosDonacionModule
+      )
+  },
+  {
+    path: 'importacion',
+      loadChildren: () =>
+        import('./tramites/130110/importacion-neumaticos-comercializar.module').then(
+          (m) => m.ImportacionNeumaticosComercializarModule
+        ),
+  },
+  {
+    path: 'importacion-de',
+    loadChildren: () =>
+      import('./tramites/130109/vehiculos-usados-adaptados.module').then(
+        (m) => m.VehiculosUsadosAdaptadosModule
+      ),
+  },
+  {
+    path: 'exportar-diamantes',
+    loadChildren: () => 
+      import('./tramites/130203/exportación-de-diamantes-en-bruto.module').then(
+        (m) => m.ExportaciónDeDiamantesEnBrutoModule
+      )
+  },
+  {
+    path: 'importacion-otros-vehiculos-usados',
+    loadChildren: () =>
+      import('./tramites/130104/importacion-otros-vehiculos-usados.module').then(
+        (m) => m.ImportacionOtrosVehiculosUsadosModule
+      )
+    }
 ];
 
 @NgModule({
