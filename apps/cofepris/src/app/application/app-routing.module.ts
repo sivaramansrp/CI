@@ -168,6 +168,14 @@ const ROUTES: Routes = [
   {
     path: 'modificacion-permiso-sanitario',
     loadChildren: () =>
+      import('./tramites/260902/modificacion-permiso-sanitario.module').then(
+        (m) => m.ModificacionPermisoSanitarioModule
+      ),
+  },
+
+  {
+    path: 'modificacion-permiso-sanitario',
+    loadChildren: () =>
       import('./tramites/260910/permiso-sanitario.module').then(
         (m) => m.PermisoSanitarioModule
       ),
@@ -222,10 +230,17 @@ const ROUTES: Routes = [
       ).then((m) => m.ImportacionMateriasPrimasEstupefacientesModule),
   },
   {
-    path: 'permiso-transformacion-maquila',
+    path: 'modificacion-permiso-sanitario',
     loadChildren: () =>
-      import('./tramites/260505/permiso-transformacion-maquila.module').then(
-        (m) => m.PermisoTransformacionMaquilaModule
+      import('./tramites/260906/modificacion-permiso-sanitario.module').then(
+        (m) => m.ModificacionPermisoSanitarioModule
+      ),
+  },
+  {
+    path: 'Permiso-de-importacion',
+    loadChildren: () =>
+      import('./tramites/260512/permiso-de-importacion.module').then(
+        (m) => m.PermisoDeImportacionModule
       ),
   },
 ];
