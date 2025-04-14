@@ -1,4 +1,4 @@
-import { Catalogo, CatalogoSelectComponent, InputRadioComponent, TableComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { CatalogoSelectComponent, InputRadioComponent, TableComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RadioOpcion, SolicitudJson } from '@libs/shared/data-access-user/src/core/models/231003/solicitud.model'
@@ -44,67 +44,6 @@ export class DatosResiduosPeligrososComponent implements OnInit, OnDestroy {
    */
   private destruir$ = new Subject<void>();
 
-  /** 
-   * Catálogo con las opciones disponibles para el campo de nombre del residuo. 
-   */
-  nombre!: Catalogo[];
-
-  /** 
-   * Catálogo con las unidades de medida disponibles para los formularios.
-   */
-  unidad!: Catalogo[];
-
-
-  /** 
-   * Encabezados de tabla para el establecimiento, utilizados en la visualización de datos.
-   */
-  public establecimientoHeaderData: string[] = [];
-
-  /** 
-   * Datos del cuerpo de la tabla del establecimiento.
-   */
-  public establecimientoBodyData: unknown = [];
-
-  /** 
-   * Catálogo de fracciones arancelarias disponibles.
-   */
-  fraccion!: Catalogo[];
-
-  /** 
-   * Catálogo de códigos NICO asociados a las fracciones arancelarias.
-   */
-  nico!: Catalogo[];
-
-  /** 
-   * Catálogo de residuos peligrosos disponibles.
-   */
-  residuo!: Catalogo[];
-
-  /** 
-   * Catálogo con los tipos de nombre del residuo.
-   */
-  tipoNombre!: Catalogo[];
-
-  /** 
-   * Catálogo con descripciones posibles para el residuo.
-   */
-  descripcion!: Catalogo[];
-
-  /** 
-   * Catálogo con clasificaciones CRETI del residuo.
-   */
-  creti!: Catalogo[];
-
-  /** 
-   * Catálogo con los estados físicos del residuo.
-   */
-  estadoFisico!: Catalogo[];
-
-  /** 
-   * Catálogo con los tipos de contenedor disponibles para el residuo.
-   */
-  tipoContenedor!: Catalogo[];
-
 
 /**
  * Opciones de radio generales utilizadas en el formulario de residuos peligrosos.
@@ -115,6 +54,8 @@ radioOptions: RadioOpcion[] = RADIO_OPCIONES?.radioOptions;
  * Opciones de radio para la clasificación del residuo.
  */
 clasificacionRadioOptions: RadioOpcion[] = RADIO_OPCIONES?.clasificacionRadioOptions;
+
+public etiquetasForm = RADIO_OPCIONES;
 
 /**
  * Constructor del componente. Inicializa el formulario reactivo y conecta con el store y query de Akita.
@@ -136,41 +77,6 @@ constructor(
  * Carga los catálogos desde el archivo JSON y configura los formularios.
  */
 ngOnInit(): void {
-  /** Catálogo de nombres de materia prima */
-  this.nombre = RADIO_OPCIONES?.nombre;
-
-  /** Encabezados para la tabla de establecimiento (primas relacionadas) */
-  this.establecimientoHeaderData = RADIO_OPCIONES?.PrimasRelacionadas[0]?.encabezadoDeTabla || [];
-
-  /** Datos del cuerpo de la tabla de establecimiento (primas relacionadas) */
-  this.establecimientoBodyData = RADIO_OPCIONES?.PrimasRelacionadas[0]?.cuerpoTabla || [];
-
-  /** Catálogo de fracciones arancelarias */
-  this.fraccion = RADIO_OPCIONES?.arancelaria;
-
-  /** Catálogo de códigos NICO */
-  this.nico = RADIO_OPCIONES?.nico;
-
-  /** Catálogo de unidades de medida */
-  this.unidad = RADIO_OPCIONES?.unidad;
-
-  /** Catálogo de residuos */
-  this.residuo = RADIO_OPCIONES?.residuo;
-
-  /** Catálogo de tipos de nombre */
-  this.tipoNombre = RADIO_OPCIONES?.tipoNombre;
-
-  /** Catálogo de descripciones de residuos */
-  this.descripcion = RADIO_OPCIONES?.descripcion;
-
-  /** Catálogo de clasificaciones CRETI */
-  this.creti = RADIO_OPCIONES?.creti;
-
-  /** Catálogo de estados físicos del residuo */
-  this.estadoFisico = RADIO_OPCIONES?.estadoFisico;
-
-  /** Catálogo de tipos de contenedor */
-  this.tipoContenedor = RADIO_OPCIONES?.tipoContenedor;
 
   /** Inicializa el formulario con datos de materia prima */
   this.inicializarFormulario();

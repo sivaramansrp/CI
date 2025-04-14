@@ -96,11 +96,12 @@ describe('DatosResiduosPeligrososComponent', () => {
   });
 
   it('debería inicializar catálogos desde el archivo JSON', () => {
-    expect(component.nombre.length).toBeGreaterThan(0);
-    expect(component.fraccion.length).toBeGreaterThan(0);
-    expect(component.nico.length).toBeGreaterThan(0);
-    expect(component.tipoContenedor[0]?.descripcion).toBe('Tambor');
+    expect(component.etiquetasForm.nombre.length).toBeGreaterThan(0);
+    expect(component.etiquetasForm.arancelaria.length).toBeGreaterThan(0);
+    expect(component.etiquetasForm.nico.length).toBeGreaterThan(0);
+    expect(component.etiquetasForm.tipoContenedor[0]?.descripcion).toBe('Tambor');
   });
+  
 
   it('debería inicializar los formularios con datos del store', () => {
     expect(component.formularioDatos.value.numero).toBe('001');
@@ -118,8 +119,8 @@ describe('DatosResiduosPeligrososComponent', () => {
   });
 
   it('debería tener los encabezados y cuerpo de tabla establecidos', () => {
-    expect(component.establecimientoHeaderData).toEqual(['Columna1', 'Columna2']);
-    expect(component.establecimientoBodyData).toEqual([{ tbodyData: ['Valor1', 'Valor2'] }]);
+    expect(component.etiquetasForm.PrimasRelacionadas[0].encabezadoDeTabla).toEqual(['Columna1', 'Columna2']);
+    expect(component.etiquetasForm.PrimasRelacionadas[0].cuerpoTabla).toEqual([{ tbodyData: ['Valor1', 'Valor2'] }]);
   });
 
   it('debería limpiar el subject en ngOnDestroy', () => {
