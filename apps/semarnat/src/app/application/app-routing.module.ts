@@ -24,10 +24,10 @@ const ROUTES: Routes = [
       import('./tramites/230101/tramites-disponsibles.module').then((m) => m.TramitesDisponiblesModule),
   },
   {
-    path: 'aviso-de-reciclaje',
+    path: 'desistimiento',
     loadChildren: () =>
-      import('./tramites/231003/aviso-de-reciclaje.module').then((m) => m.AvisoDeReciclajeModule),
-  }
+      import('./tramites/230301/desistimiento.module').then((m) => m.DesistimientoModule),
+  },
 ];
 
 @NgModule({
