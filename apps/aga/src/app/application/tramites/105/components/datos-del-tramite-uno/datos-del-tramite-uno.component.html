@@ -83,24 +83,11 @@
             <lib-input-check [id]="'domicilio'" [label]="'Domicilio'" [required]="false"
             formControlName="domicilio"
             (change)="setValoresStore(datosDelTramite, 'domicilio', 'setDomicilio');onCambioCheckbox($event,'domicilio')"></lib-input-check>
-
-            <!-- <input type="checkbox"
-            id="domicilio"
-            name="locationOption"
-            [checked]="opcionSeleccionada === 'domicilio'"
-            (change)="alCambioDeCheckbox('domicilio')" />
-            <label class="fw-normal" for="domicilio">Domicilio:</label> -->
           </div>
           <div class="checkbox ms-4">
             <lib-input-check [id]="'ubicacion'" [label]="'Ubicación:'" [required]="false"
             formControlName="ubicacion"
             (change)="setValoresStore(datosDelTramite, 'ubicacion', 'setUbicacion');onCambioCheckbox($event,'ubicacion')"></lib-input-check>
-            <!-- <input  type="checkbox"
-            id="ubicacion"
-            name="locationOption"
-            [checked]="opcionSeleccionada === 'ubicacion'"
-            (change)="alCambioDeCheckbox('ubicacion')" />
-            <label class="fw-normal" for="ubicacion">Ubicación</label> -->
           </div>
         </div>
       </div>
