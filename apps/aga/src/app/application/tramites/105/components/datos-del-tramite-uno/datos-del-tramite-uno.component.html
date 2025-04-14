@@ -4,26 +4,23 @@
       <ng-titulo titulo="Datos del trámite" />
       <div class="checkbox-container">
         <p class="checkbox-header mb-4 fw-bold">Indique el(los) régimen(es) al (los) que se destinará la mercancía*</p>
-        <div class="checkbox">
-          <input type="checkbox" id="importacion" formControlName="importacion"
-            (change)="setValoresStore(datosDelTramite, 'importacion', 'setImportacion')" />
-          <label class="fw-normal" for="importacion">Importación</label>
-        </div>
-        <div class="checkbox">
-          <input type="checkbox" id="exportacion" formControlName="exportacion"
-            (change)="setValoresStore(datosDelTramite, 'exportacion', 'setExportacion')" />
-          <label class="fw-normal" for="exportacion">Exportación</label>
-        </div>
-        <div class="checkbox">
-          <input type="checkbox" id="depositoFiscalGas" formControlName="depositoFiscalGas" (change)="setValoresStore(datosDelTramite, 'depositoFiscalGas', 'setDepositoFiscalGas')" />
-          <label class="fw-normal" for="depositoFiscalGas">Depósito Fiscal de gas licuado de petróleo o de gas
-            natural</label>
-        </div>
-        <div class="checkbox">
-          <input type="checkbox" id="depositoFiscalVehiculos" formControlName="depositoFiscalVehiculos"
-          (change)="setValoresStore(datosDelTramite, 'depositoFiscalVehiculos', 'setDepositoFiscalVehiculos')" />
-          <label class="fw-normal" for="depositoFiscalVehiculos">Depósito Fiscal de Vehículos</label>
-        </div>
+
+        <lib-input-check [id]="'importación'" [label]="'Importación'" [required]="false"
+            formControlName="importacion"
+            (change)="setValoresStore(datosDelTramite, 'importacion', 'setImportacion')"></lib-input-check>
+
+            <lib-input-check [id]="'exportacion'" [label]="'Exportación'" [required]="false"
+            formControlName="exportacion"
+            (change)="setValoresStore(datosDelTramite, 'exportacion', 'setExportacion')"></lib-input-check>
+
+            <lib-input-check [id]="'depositoFiscalGas'" [label]="'Depósito Fiscal de gas licuado de petróleo o de gas
+            natural'" [required]="false"
+            formControlName="depositoFiscalGas"
+            (change)="setValoresStore(datosDelTramite, 'depositoFiscalGas', 'setDepositoFiscalGas')"></lib-input-check>
+
+            <lib-input-check [id]="'depositoFiscalVehiculos'" [label]="'Depósito Fiscal de Vehículos'" [required]="false"
+            formControlName="depositoFiscalVehiculos"
+            (change)="setValoresStore(datosDelTramite, 'depositoFiscalVehiculos', 'setDepositoFiscalVehiculos')"></lib-input-check>
       </div>
 
       <!-- Servicios a terceros -->
@@ -31,8 +28,6 @@
         <p>Indique si la empresa prestará servicios a terceros*</p>
         <app-input-radio
         [radioOptions]="opcionDeBotonDeRadio"
-        [selectedValue]="valorSeleccionado"
-        (valueChange)="cambiarRadio($event)"
         id="serviciosTerceros"
         formControlName="serviciosTerceros"
         [layout]="'horizontal'"
@@ -49,15 +44,13 @@
           gas licuado de petróleo o de gas natural.*</p>
           <app-input-radio
           [radioOptions]="opcionDeBotonDeRadio"
-          [selectedValue]="valorSeleccionado1"
-          (valueChange)="cambiarRadio($event)"
+
           id="distribucionGas"
           formControlName="distribucionGas"
           [layout]="'horizontal'"
           (change)="
             setValoresStore(datosDelTramite, 'distribucionGas', 'setDistribucionGas')
-          "
-        >
+          " >
         </app-input-radio>
       </div>
 
@@ -68,8 +61,7 @@
 
           <app-input-radio
           [radioOptions]="opcionDeBotonDeRadio"
-          [selectedValue]="valorSeleccionado2"
-          (valueChange)="cambiarRadio($event)"
+
           id="industriaAutomotriz"
           formControlName="industriaAutomotriz"
           [layout]="'horizontal'"
@@ -88,20 +80,27 @@
         <p class="fw-bold">Seleccione las opciones que desea capturar*</p>
         <div class="checkbox-container d-flex flex-row">
           <div class="checkbox">
-            <input type="checkbox"
+            <lib-input-check [id]="'domicilio'" [label]="'Domicilio'" [required]="false"
+            formControlName="domicilio"
+            (change)="setValoresStore(datosDelTramite, 'domicilio', 'setDomicilio');onCambioCheckbox($event,'domicilio')"></lib-input-check>
+
+            <!-- <input type="checkbox"
             id="domicilio"
             name="locationOption"
             [checked]="opcionSeleccionada === 'domicilio'"
             (change)="alCambioDeCheckbox('domicilio')" />
-            <label class="fw-normal" for="domicilio">Domicilio:</label>
+            <label class="fw-normal" for="domicilio">Domicilio:</label> -->
           </div>
           <div class="checkbox ms-4">
-            <input  type="checkbox"
+            <lib-input-check [id]="'ubicacion'" [label]="'Ubicación:'" [required]="false"
+            formControlName="ubicacion"
+            (change)="setValoresStore(datosDelTramite, 'ubicacion', 'setUbicacion');onCambioCheckbox($event,'ubicacion')"></lib-input-check>
+            <!-- <input  type="checkbox"
             id="ubicacion"
             name="locationOption"
             [checked]="opcionSeleccionada === 'ubicacion'"
             (change)="alCambioDeCheckbox('ubicacion')" />
-            <label class="fw-normal" for="ubicacion">Ubicación</label>
+            <label class="fw-normal" for="ubicacion">Ubicación</label> -->
           </div>
         </div>
       </div>
@@ -111,7 +110,7 @@
     <div class="form-input">
       <div class="row mb-3">
         <div class="col-md-4">
-          <app-catalogo-select [isDisabled]="disableSelection" [catalogo]="pais.catalogos" formControlName="pais" [label]="'País'" [required]="false"
+          <app-catalogo-select [isDisabled]="deshabilitarSeleccion" [catalogo]="pais.catalogos" formControlName="pais" [label]="'País'" [required]="false"
             (change)="
                 setValoresStore(datosDelTramite, 'pais', 'setPais')
               "></app-catalogo-select>
@@ -123,11 +122,11 @@
         " />
         </div>
         <div class="col-md-4">
-          <app-catalogo-select [isDisabled]="disableSelection" [catalogo]="entidadFederativa.catalogos" formControlName="entidadFederativa"
+          <app-catalogo-select [isDisabled]="deshabilitarSeleccion" [catalogo]="entidadFederativa.catalogos" formControlName="entidadFederativa"
             [label]="'Entidad federativa'"  [required]="true" (change)="setValoresStore(datosDelTramite, 'entidadFederativa', 'setEntidadFederativa')"></app-catalogo-select>
         </div>
         <div class="col-md-4">
-          <app-catalogo-select [isDisabled]="disableSelection" [catalogo]="municipioDelegacion.catalogos" formControlName="municipioDelegacion"
+          <app-catalogo-select [isDisabled]="deshabilitarSeleccion" [catalogo]="municipioDelegacion.catalogos" formControlName="municipioDelegacion"
             [label]="'Municipio o delegación'" (change)="setValoresStore(datosDelTramite, 'municipioDelegacion', 'setMunicipioDelegacion')"[required]="true"></app-catalogo-select>
         </div>
         <div class="col-md-4">
@@ -135,7 +134,7 @@
           <input type="text" class="form-control" id="localidad" formControlName="localidad" (change)="setValoresStore(datosDelTramite, 'localidad', 'setlocalidad')"/>
         </div>
         <div class="col-md-4">
-          <app-catalogo-select [isDisabled]="disableSelection" [catalogo]="colonia.catalogos" formControlName="colonia"
+          <app-catalogo-select [isDisabled]="deshabilitarSeleccion" [catalogo]="colonia.catalogos" formControlName="colonia"
             [label]="'Colonia'" [required]="true" (change)="setValoresStore(datosDelTramite, 'colonia', 'setColonia')"></app-catalogo-select>
         </div>
       </div>

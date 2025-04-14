@@ -1,4 +1,4 @@
-import { AlertComponent, CatalogoSelectComponent, CatalogosSelect,InputRadioComponent, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, CatalogoSelectComponent, CatalogosSelect,InputCheckComponent, InputRadioComponent, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitud105State, Tramite105Store, } from '../../estados/tramite105.store';
@@ -17,7 +17,7 @@ interface TableBodyData {
   imports: [CommonModule, AlertComponent,
     InputRadioComponent,
     TableComponent,
-    TituloComponent, CatalogoSelectComponent, ReactiveFormsModule],
+    TituloComponent, CatalogoSelectComponent, ReactiveFormsModule, InputCheckComponent],
   templateUrl: './datos-del-tramite-uno.component.html',
   styleUrl: './datos-del-tramite-uno.component.scss',
 })
@@ -126,9 +126,9 @@ export class DatosDelTramiteUnoComponent implements OnInit, OnDestroy {
   public mercanciaBodyData: TableBodyData[] = [];
 
   /**
-   * Indica si la selección está deshabilitada.
+   * Indica si la selección está deshabilitarSeleccion.
    */
-  disableSelection: boolean = true;
+  deshabilitarSeleccion: boolean = true;
 
   /**
    * Referencia al elemento del modal en la plantilla.
@@ -140,28 +140,11 @@ export class DatosDelTramiteUnoComponent implements OnInit, OnDestroy {
    */
   @ViewChild('closeModal') closeModal!: ElementRef;
 
-/**
-   * Opciones de botón de radio.
-   */
+  /**
+     * Opciones de botón de radio.
+     */
   opcionDeBotonDeRadio = OPCIONES_DE_BOTON_DE_RADIO;
-/**
-   * Cambia el valor seleccionado del radio.
-   * @param value Valor seleccionado.
-   */
 
-
-cambiarRadio(value: string | number):void {
-  this.valorSeleccionado = value as string;
-  this.store.setDistribucionGas(this.valorSeleccionado);
-}
-cambiarRadio1(value: string | number):void {
-  this.valorSeleccionado1 = value as string;
-  this.store.setDistribucionGas(this.valorSeleccionado1);
-}
-cambiarRadio2(value: string | number):void {
-  this.valorSeleccionado2 = value as string;
-  this.store.setIndustriaAutomotriz(this.valorSeleccionado2);
-}
   /**
    * Suscripción activa.
    */
@@ -170,7 +153,7 @@ cambiarRadio2(value: string | number):void {
   /**
    * Suscripción para manejar múltiples observables.
    */
-   subscriptionS: Subscription = new Subscription();
+  subscriptionS: Subscription = new Subscription();
 
   /**
    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
@@ -202,7 +185,7 @@ cambiarRadio2(value: string | number):void {
     this.crearFormularioAgregar();
   }
 
-  obtenerJsonData():void{
+  obtenerJsonData(): void {
     this.query.selectPais$.subscribe((pais) => {
       this.pais = {
         labelNombre: 'País',
@@ -253,15 +236,15 @@ cambiarRadio2(value: string | number):void {
         catalogos: fraccionarancelaria ?? [],
       };
     })
-}
+  }
 
-crearFormularioAgregar(): void {
-  this.agregarForm = this.fb.group({
-    fraccionArancelaria: [{ value: '' }, Validators.required],
-    descripcion: ['', Validators.required],
-    descripcionAdicional: ['']
-  });
-}
+  crearFormularioAgregar(): void {
+    this.agregarForm = this.fb.group({
+      fraccionArancelaria: [{ value: '' }, Validators.required],
+      descripcion: ['', Validators.required],
+      descripcionAdicional: ['']
+    });
+  }
 
   /**
    * @method crearDatosDelTramiteForm
@@ -351,29 +334,68 @@ crearFormularioAgregar(): void {
   opcionSeleccionada: string = '';
 
   /**
-   * @method alCambioDeCheckbox
-   * @description Maneja el cambio de estado de los checkboxes y habilita/deshabilita controles del formulario.
-   * @param opcion - La opción seleccionada.
+   * Lista de nombres de controles que se deben alternar (toggle) en el formulario.
+   * 
+   * Estos controles representan campos relacionados con la dirección, como país, 
+   * código postal, entidad federativa, localidad, municipio o delegación, colonia, 
+   * calle, y números de exterior e interior. 
+   * 
+   * @constant
+   * @readonly
    */
-  alCambioDeCheckbox(opcion: string): void {
-    const CONTROLS_TO_DISABLE = ['pais', 'codigoPostal', 'entidadFederativa', 'localidad', 'municipioDelegacion', 'colonia', 'entidadFederativaDos', 'calle', 'numeroExterior', 'numeroInterior'];
-    if (this.opcionSeleccionada === opcion) {
-      this.opcionSeleccionada = '';
-      this.datosDelTramite.get('domicilio')?.setValue(null);
-      CONTROLS_TO_DISABLE.forEach(control => {
-        this.datosDelTramite.get(control)?.disable();
-      });
-      this.disableSelection = true;
-    } else {
-      this.opcionSeleccionada = opcion;
-      this.datosDelTramite.get('domicilio')?.setValue(opcion);
-      CONTROLS_TO_DISABLE.forEach(control => {
-        this.datosDelTramite.get(control)?.enable();
-      });
-      this.disableSelection = false;
+  private readonly CONTROLES_A_TOGGLE: string[] = [
+    'pais', 'codigoPostal', 'entidadFederativa', 'localidad', 'municipioDelegacion',
+    'colonia', 'entidadFederativaDos', 'calle', 'numeroExterior', 'numeroInterior'
+  ];
+  
+  /**
+   * Maneja el evento de cambio en un checkbox y asegura la exclusividad entre las opciones
+   * 'domicilio' y 'ubicacion'.
+   *
+   * @param evento - El evento de cambio del checkbox.
+   * @param opcion - La opción seleccionada, puede ser 'domicilio' o 'ubicacion'.
+   *
+   * Realiza las siguientes acciones:
+   * - Determina si el checkbox está seleccionado o no.
+   * - Alterna los controles relacionados según el estado del checkbox.
+   * - Deshabilita o habilita la selección de otras opciones.
+   * - Asegura que solo una de las opciones ('domicilio' o 'ubicacion') esté seleccionada
+   *   al mismo tiempo, desmarcando la otra.
+   */
+  onCambioCheckbox(evento: Event, opcion: 'domicilio' | 'ubicacion'): void {
+    const ELEMENTO_INPUT = evento.target as HTMLInputElement;
+    const ESTA_SELECCIONADO = ELEMENTO_INPUT?.checked ?? false;
+  
+    this.alternarControles(ESTA_SELECCIONADO);
+    this.deshabilitarSeleccion = !ESTA_SELECCIONADO;
+  
+    // Asegurar exclusividad entre las opciones
+    if (opcion === 'domicilio') {
+      this.datosDelTramite.get('ubicacion')?.setValue(false);
+    } else if (opcion === 'ubicacion') {
+      this.datosDelTramite.get('domicilio')?.setValue(false);
     }
   }
-
+  
+  /**
+   * Alterna el estado de habilitación de un conjunto de controles en un formulario.
+   *
+   * @param habilitar - Indica si los controles deben ser habilitados (`true`) o deshabilitados (`false`).
+   * 
+   * Este método recorre los nombres de los controles definidos en `CONTROLES_A_TOGGLE`
+   * y cambia su estado de habilitación en función del valor del parámetro `habilitar`.
+   * Si `habilitar` es `true`, los controles serán habilitados; de lo contrario, serán deshabilitados.
+   */
+  private alternarControles(habilitar: boolean): void {
+    this.CONTROLES_A_TOGGLE.forEach(NOMBRE_CONTROL => {
+      const CONTROL = this.datosDelTramite.get(NOMBRE_CONTROL);
+      if (habilitar) {
+        CONTROL?.enable();
+      } else {
+        CONTROL?.disable();
+      }
+    });
+  }
   /**
    * @method obtenerMercancia
    * @description Obtiene los datos de la tabla de mercancías y los asigna a las propiedades correspondientes.
