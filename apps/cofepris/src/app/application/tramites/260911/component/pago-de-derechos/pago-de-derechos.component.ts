@@ -87,20 +87,30 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       impPago: ['', [Validators.maxLength(16), PagoDeDerechosComponent.noComaValidator()]],
     });
 
-    // Actualiza y valida el campo 'fecPago' cuando cambia su valor
-    this.pagoDeDerechosForm.get('fecPago')?.valueChanges
-      .pipe(distinctUntilChanged())
-      .subscribe(() => {
-        this.pagoDeDerechosForm.get('fecPago')?.updateValueAndValidity({ emitEvent: false });
-      });
-
-    // Actualiza y valida el campo 'impPago' cuando cambia su valor
-    this.pagoDeDerechosForm.get('impPago')?.valueChanges
-      .pipe(distinctUntilChanged())
-      .subscribe(() => {
-        this.pagoDeDerechosForm.get('impPago')?.updateValueAndValidity({ emitEvent: false });
-      });
   }
+
+     /**
+ * Método para validar cambios en un campo de formulario relacionado con fechas futuras.
+ * Monitorea los cambios de valor del campo especificado y actualiza su estado de validación sin emitir eventos adicionales.
+ * Utiliza operadores de RxJS como distinctUntilChanged y takeUntil para manejar suscripciones de forma eficiente y evitar fugas de memoria.
+ *
+ * @param {string} compo - El nombre del campo de formulario que se validará.
+ */
+
+     public validarFechaFutura(fecPago: string): void {
+      this.pagoDeDerechosForm.get(fecPago)?.updateValueAndValidity({ emitEvent: false });
+    }
+  
+    
+    /**
+   * Método para validar que el campo de un formulario no contenga comas.
+   * Actualiza el estado de validez del campo especificado sin emitir eventos adicionales.
+   *
+   * @param {string} impPago - El nombre del campo de formulario que se validará.
+   */
+    public validarSinComas(impPago:string): void {
+      this.pagoDeDerechosForm.get(impPago)?.updateValueAndValidity({ emitEvent: false });
+    }
 
   /**
    * Validador para asegurar que la fecha seleccionada no sea en el futuro.
@@ -176,28 +186,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   }
 
 
-    /**
- * Método para validar cambios en un campo de formulario relacionado con fechas futuras.
- * Monitorea los cambios de valor del campo especificado y actualiza su estado de validación sin emitir eventos adicionales.
- * Utiliza operadores de RxJS como distinctUntilChanged y takeUntil para manejar suscripciones de forma eficiente y evitar fugas de memoria.
- *
- * @param {string} compo - El nombre del campo de formulario que se validará.
- */
-
-  public validarFechaFutura(fecPago: string): void {
-    this.pagoDeDerechosForm.get(fecPago)?.updateValueAndValidity({ emitEvent: false });
-  }
-
-  
-  /**
- * Método para validar que el campo de un formulario no contenga comas.
- * Actualiza el estado de validez del campo especificado sin emitir eventos adicionales.
- *
- * @param {string} impPago - El nombre del campo de formulario que se validará.
- */
-  public validarSinComas(impPago:string): void {
-    this.pagoDeDerechosForm.get(impPago)?.updateValueAndValidity({ emitEvent: false });
-  }
+ 
 
   /**
    * Verifica si un control del formulario es inválido, tocado o modificado.
