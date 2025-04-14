@@ -4,9 +4,8 @@ import {
   Fabricante,
   Facturador,
   Proveedor,
-  TercerosRelacionadosDatos,
 } from '../../../../shared/models/terceros-relacionados.model';
-import { Observable, Subject} from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
 import { Tramite260208Query } from '../../estados/tramite260208Query.query';
@@ -59,13 +58,6 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
     private destroy$ = new Subject<void>();
 
   /**
-   * Observable de datos de terceros relacionados.
-   * 
-   * @type {Observable<TercerosRelacionadosDatos>}
-   */
-  public tercerosDatos$!: Observable<TercerosRelacionadosDatos>;
-
-  /**
    * @constructor
    * Inyecta los servicios necesarios para consultar y actualizar el estado del trámite.
    *
@@ -85,7 +77,29 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
    * Suscribe los observables para mostrar los datos en la vista.
    */
   ngOnInit(): void {
-    this.tercerosDatos$ = this.tramiteQuery.getTercerosDatos$;
+    this.tramiteQuery.getFabricanteTablaDatos$
+         .pipe(takeUntil(this.destroy$))
+         .subscribe((data) => {
+           this.fabricanteTablaDatos = data;
+         });
+   
+       this.tramiteQuery.getDestinatarioFinalTablaDatos$
+         .pipe(takeUntil(this.destroy$))
+         .subscribe((data) => {
+           this.destinatarioFinalTablaDatos = data;
+         });
+   
+       this.tramiteQuery.getProveedorTablaDatos$
+         .pipe(takeUntil(this.destroy$))
+         .subscribe((data) => {
+           this.proveedorTablaDatos = data;
+         });
+   
+       this.tramiteQuery.getFacturadorTablaDatos$
+         .pipe(takeUntil(this.destroy$))
+         .subscribe((data) => {
+           this.facturadorTablaDatos = data;
+         });
   }
 
   /**
