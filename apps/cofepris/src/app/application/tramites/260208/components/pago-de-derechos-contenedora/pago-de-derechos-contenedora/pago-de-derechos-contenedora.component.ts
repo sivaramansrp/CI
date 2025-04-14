@@ -26,6 +26,10 @@ export class PagoDeDerechosContenedoraComponent {
 
   public pagoDerechos: PagoDerechosFormState;
 
+  /**
+   * Identificador constante del procedimiento.
+   * Esta propiedad es de solo lectura y se asigna desde la constante `ID_PROCEDIMIENTO`.
+   */
   public readonly idProcedimiento = ID_PROCEDIMIENTO;
 
   /**

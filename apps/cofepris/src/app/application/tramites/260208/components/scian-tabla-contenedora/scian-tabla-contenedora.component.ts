@@ -15,6 +15,10 @@ import { Tramite260208Store } from '../../estados/tramite260208Store.store';
 })
 export class ScianTablaContenedoraComponent {
 
+  /**
+   * Identificador constante del procedimiento.
+   * Esta propiedad es de solo lectura y se asigna desde la constante `ID_PROCEDIMIENTO`.
+   */
   public readonly idProcedimiento = ID_PROCEDIMIENTO;
   
   /**
