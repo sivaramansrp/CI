@@ -1,13 +1,11 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL, PERSONA_MORAL_NACIONAL, } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
-import { FormularioDinamico, InputCheckComponent, TIPO_PERSONA, TituloComponent, ValidacionesFormularioService } from '@ng-mf/data-access-user';
-import { SharedModule, SolicitanteComponent, } from '@libs/shared/data-access-user/src';
-import { CommonModule } from '@angular/common';
-import { SolicitudComponent } from "../../components/Solicitud.component";
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormularioDinamico, TIPO_PERSONA, ValidacionesFormularioService } from '@ng-mf/data-access-user';
+import { ReplaySubject, map, takeUntil } from 'rxjs';
 import { Solicitud31802State, Tramite31802Store } from '../../state/Tramite31802.store';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { SolicitanteComponent, } from '@libs/shared/data-access-user/src';
 import { Tramite31802Query } from '../../state/Tramite31802.query';
-import { map, ReplaySubject, takeUntil } from 'rxjs';
 
 /**
  * Componente que representa el primer paso del trámite.
