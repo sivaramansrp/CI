@@ -156,9 +156,7 @@ export class CertificadoOrigenComponent implements AfterViewInit, OnDestroy, OnI
       takeUntil(this.destroyNotifier$),
       delay(100)
     ).subscribe(estado => {
-      this.formCertificadoValues = estado;
-      console.log(this.formCertificadoValues,'formCertificadoValues');
-      
+      this.formCertificadoValues = estado;      
     });
 
     // Suscripción al estado de la sección para obtener y actualizar el estado
@@ -248,9 +246,22 @@ export class CertificadoOrigenComponent implements AfterViewInit, OnDestroy, OnI
     this.store.setBloqueSeleccion(estado);
   }
 
+  /**
+   * Establece valores en el estado de la tienda para un formulario genérico de certificado.
+   * 
+   * @param event - Objeto que contiene los datos necesarios para actualizar el estado.
+   * @param event.formGroupName - Nombre del grupo de formulario (no utilizado en esta implementación).
+   * @param event.campo - Nombre del campo que se actualizará en el estado.
+   * @param event.valor - Valor que se asignará al campo especificado.
+   * @param event.storeStateName - Nombre del estado de la tienda (no utilizado en esta implementación).
+   * 
+   * @returns void
+   * 
+   * @command Este método actualiza el estado de la tienda con los valores proporcionados.
+   */
   setValoresStore(event: { formGroupName: string, campo: string, valor: undefined, storeStateName: string }) :void{
-    const { campo, valor } = event;
-    this.store.setFormCertificadoGenric({ [campo]: valor });
+    const { campo: CAMPO, valor: VALOR } = event;
+    this.store.setFormCertificadoGenric({ [CAMPO]: VALOR });
   }
   /**
    * Método del ciclo de vida ngOnDestroy. Se utiliza para cancelar las suscripciones y evitar fugas de memoria.
