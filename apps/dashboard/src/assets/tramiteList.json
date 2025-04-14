@@ -818,7 +818,7 @@
     {
         "id": 137,
         "tramite": 31501,
-        "link": "",
+        "link": "/agace/autoridad/solicitud",
         "department": "agace"
     },
     {
@@ -932,7 +932,7 @@
     {
         "id": 156,
         "tramite": 260902,
-        "link": "",
+        "link": "/cofepris/modificacion-permiso-sanitario/solicitante",
         "department": "cofepris"
     },
     {
@@ -1076,7 +1076,7 @@
     {
         "id": 180,
         "tramite": 260906,
-        "link": "",
+        "link": "/cofepris/modificacion-permiso-sanitario",
         "department": "cofepris"
     },
     {
@@ -1172,7 +1172,7 @@
     {
         "id": 196,
         "tramite": 40202,
-        "link": "",
+        "link": "/aga/modificacion-transportacion-maritima/modificar-caat-maritimo",
         "department": "aga"
     },
     {
@@ -1490,7 +1490,7 @@
     {
         "id": 249,
         "tramite": 130104,
-        "link": "",
+        "link": "/se/importacion-otros-vehiculos-usados/solicitud",
         "department": "se"
     },
     {
@@ -1508,7 +1508,7 @@
     {
         "id": 252,
         "tramite": 130116,
-        "link": "",
+        "link": "/se/solicitud-importacion-ambulancia/reconstruccion-reacondicionamiento",
         "department": "se"
     },
     {
@@ -1652,7 +1652,7 @@
     {
         "id": 276,
         "tramite": 230301,
-        "link": "",
+        "link": "/semarnat/desistimiento/solicitud",
         "department": "semarnat"
     },
     {
