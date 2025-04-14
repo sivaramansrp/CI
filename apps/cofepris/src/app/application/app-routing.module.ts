@@ -237,7 +237,14 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/260512/permiso-de-importacion.module').then(
         (m) => m.PermisoDeImportacionModule)
-  }
+  },
+  {
+    path: 'registrar-solicitud-mcp',
+        loadChildren: () =>
+            import('./tramites/260702/registrar-solicitud-mcp.module').then(
+                (m) => m.RegistrarSolicitudMCPModule
+              ), 
+          },
 ];
 
 @NgModule({
