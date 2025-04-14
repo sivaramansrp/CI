@@ -37,6 +37,13 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'autoridad',
+    loadChildren: () =>
+      import('./tramites/31501/autoridad.module').then(
+        (m) => m.AutoridadModule
+      ),
+  },
+  {
     path: 'registro-solicitud',
     loadChildren: () =>
       import('./tramites/31803/registro-solicitud.module').then(
