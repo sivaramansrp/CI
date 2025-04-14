@@ -169,13 +169,13 @@
     <div class="row align-item-center">
       <div class="col-md-4 mt-5">
         <div class="form-check">
-          <input
-            class="form-check-input"
-            type="checkbox"
-            id="avisoCheckbox"
-            formControlName="avisoCheckbox"
-            (change)="getAvisoCheckbox()"
-          />
+          <lib-input-check
+          [id]="'avisoCheckbox'"
+          [label]="'Aviso de funcionamiento'"
+          [required]="true"
+          formControlName="avisoCheckbox"
+          (change)="getAvisoCheckbox()"
+      ></lib-input-check>
           <label class="form-check-label" for="avisoCheckbox">
             <span>Aviso de funcionamiento</span>
           </label>
