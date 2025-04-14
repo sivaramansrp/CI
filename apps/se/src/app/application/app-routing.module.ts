@@ -403,7 +403,14 @@ const ROUTES: Routes = [
       import('./tramites/130104/importacion-otros-vehiculos-usados.module').then(
         (m) => m.ImportacionOtrosVehiculosUsadosModule
       )
-    }
+  },
+  {
+    path: 'modificacion-descripcion',
+    loadChildren: () =>
+      import('./tramites/130401/modificacion-descripcion.module').then(
+        (m) => m.ModificacionDescripcionModule
+      )
+  }
 ];
 
 @NgModule({
