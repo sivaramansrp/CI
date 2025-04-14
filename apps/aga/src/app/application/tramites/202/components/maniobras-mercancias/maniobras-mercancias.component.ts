@@ -149,7 +149,9 @@ export class ManiobrasMercanciasComponent implements OnInit, OnDestroy {
    * Inicializa `manifiestosSeleccionados` con valores `false`.
    */
   obtenerManifiestos(): void {
-    this.prestadoresServicioService.getManifiestos().subscribe({
+    this.prestadoresServicioService.getManifiestos()
+    .pipe(takeUntil(this.destruirNotificador$))
+    .subscribe({
       next: (result: ManifiestosRespuesta) => {
         this.manifiestos = result?.data;
       }
