@@ -31,7 +31,26 @@ const ROUTES: Routes = [
     path: 'registro-solicitud',
     loadChildren: () =>
       import('./tramites/31802/registro-solicitud.module').then(
-        (m) => m.RegistroSolicitudModule
+        (m) => m.RegistroSolicitudModule),
+   },
+  {
+    path: 'autoridad',
+    loadChildren: () =>
+      import('./tramites/31501/autoridad.module').then(
+        (m) => m.AutoridadModule
+      ),
+  },
+  {
+    path: 'registro-solicitud',
+    loadChildren: () =>
+      import('./tramites/31803/registro-solicitud.module').then(
+        (m) => m.RegistroSolicitudModule),
+      },{
+        
+    path: 'mercancias-desmontadas-o-sin-montar',
+    loadChildren: () =>
+      import('./tramites/32501/mercancias-desmontadas-o-sin-montar.module').then(
+        (m) => m.MercanciasDesmontadasOSinMontarModule
       ),
   },
 ];

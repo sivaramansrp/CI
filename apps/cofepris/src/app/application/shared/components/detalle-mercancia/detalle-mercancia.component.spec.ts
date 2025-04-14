@@ -1,6 +1,15 @@
 // @ts-nocheck
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
+import {
+  Pipe,
+  PipeTransform,
+  Injectable,
+  CUSTOM_ELEMENTS_SCHEMA,
+  NO_ERRORS_SCHEMA,
+  Directive,
+  Input,
+  Output,
+} from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -9,6 +18,7 @@ import { Observable, of as observableOf, throwError } from 'rxjs';
 import { Component } from '@angular/core';
 import { DetalleMercanciaComponent } from './detalle-mercancia.component';
 import { FormBuilder } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('DetalleMercanciaComponent', () => {
   let fixture;
@@ -16,18 +26,15 @@ describe('DetalleMercanciaComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule ],
-      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
-      providers: [
-        FormBuilder
-      ]
-    }).overrideComponent(DetalleMercanciaComponent, {
-
-    }).compileComponents();
+      imports: [FormsModule, ReactiveFormsModule, HttpClientModule],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
+      providers: [FormBuilder],
+    })
+      .overrideComponent(DetalleMercanciaComponent, {})
+      .compileComponents();
     fixture = TestBed.createComponent(DetalleMercanciaComponent);
     component = fixture.debugElement.componentInstance;
   });
-
 
   it('should run #constructor()', async () => {
     expect(component).toBeTruthy();
@@ -40,18 +47,19 @@ describe('DetalleMercanciaComponent', () => {
   });
 
   it('should run #isValid()', async () => {
-
-    component.isValid({
-      controls: {
-        campo: {
-          errors: {},
-          touched: {}
-        }
+    component.isValid(
+      {
+        controls: {
+          campo: {
+            errors: {},
+            touched: {},
+          },
+        },
+        errors: {},
+        touched: {},
       },
-      errors: {},
-      touched: {}
-    }, {});
-
+      {}
+    );
   });
 
   it('should run #eliminarMercancias()', async () => {
@@ -65,19 +73,17 @@ describe('DetalleMercanciaComponent', () => {
   it('should run #agregarMercancias()', async () => {
     component.formaDetalleMercancia = component.formaDetalleMercancia || {};
     component.formaDetalleMercancia.value = {
-      formaFormaceutica: {}
+      formaFormaceutica: {},
     };
     component.formaDetalleMercancia.reset = jest.fn();
     component.datosFormFormaceutica = component.datosFormFormaceutica || {};
     component.datosFormFormaceutica.find = jest.fn().mockReturnValue([
       {
-        "id": '1'
-      }
+        id: '1',
+      },
     ]);
-    component.aggregarMercancia = component.aggregarMercancia || {};
-    component.aggregarMercancia.emit = jest.fn();
+    component.agregarMercancia = component.agregarMercancia || {};
+    component.agregarMercancia.emit = jest.fn();
     component.agregarMercancias();
- 
   });
-
 });

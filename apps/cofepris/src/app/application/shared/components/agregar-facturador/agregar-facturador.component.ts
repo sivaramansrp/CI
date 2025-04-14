@@ -1,16 +1,19 @@
-import { Component, EventEmitter, Output } from '@angular/core';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
+import { EventEmitter } from '@angular/core';
 import { Facturador } from '../../models/terceros-relacionados.model';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { Location } from '@angular/common';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
+import { Output } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Subject } from 'rxjs';
+import { TipoPersona } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { Validators } from '@angular/forms';
 import { takeUntil } from 'rxjs';
@@ -31,6 +34,12 @@ import { takeUntil } from 'rxjs';
   styleUrl: './agregar-facturador.component.css',
 })
 export class AgregarFacturadorComponent implements OnInit, OnDestroy {
+  /**
+   * @property tipoPersona
+   * @description Proporciona acceso al enum `TipoPersona` para su uso en la clase.
+   * @type {TipoPersona}
+   */
+  public tipoPersona = TipoPersona;
   /**
    * Formulario reactivo para capturar los datos del facturador.
    * @property {FormGroup} agregarFacturadorForm
@@ -102,14 +111,6 @@ export class AgregarFacturadorComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Hook de destrucción del componente. Libera recursos y detiene suscripciones.
-   */
-  ngOnDestroy(): void {
-    this.unsubscribe$.next();
-    this.unsubscribe$.complete();
-  }
-
-  /**
    * Carga los países desde el servicio y los almacena en `paisesDatos`.
    */
   cargarDatos(): void {
@@ -150,26 +151,34 @@ export class AgregarFacturadorComponent implements OnInit, OnDestroy {
     };
 
     this.facturadores.push(NUEVO_FACTURADOR);
-   this.updateFacturadorTablaDatos.emit(this.facturadores);
+    this.updateFacturadorTablaDatos.emit(this.facturadores);
     this.agregarFacturadorForm.reset();
     this.ubicaccion.back();
   }
   /**
- * @method limpiarFormulario
- * @description Resetea el formulario reactivo `agregarProveedorForm` para limpiar todos los campos.
- * 
- * @returns {void} Este método no retorna ningún valor.
- */
+   * @method limpiarFormulario
+   * @description Resetea el formulario reactivo `agregarProveedorForm` para limpiar todos los campos.
+   *
+   * @returns {void} Este método no retorna ningún valor.
+   */
   limpiarFormulario(): void {
     this.agregarFacturadorForm.reset();
   }
-/**
- * @method cancelar
- * @description Navega hacia la vista anterior utilizando el servicio de ubicación (`Location`).
- * 
- * @returns {void} Este método no retorna ningún valor.
- */
-  cancelar():void{
+  /**
+   * @method cancelar
+   * @description Navega hacia la vista anterior utilizando el servicio de ubicación (`Location`).
+   *
+   * @returns {void} Este método no retorna ningún valor.
+   */
+  cancelar(): void {
     this.ubicaccion.back();
+  }
+
+  /**
+   * Hook de destrucción del componente. Libera recursos y detiene suscripciones.
+   */
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 }
