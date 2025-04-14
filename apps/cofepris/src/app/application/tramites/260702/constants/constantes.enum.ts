@@ -12,3 +12,7 @@ export const TEXTOS = {
     TEXTOS_TERCEROS: 'Las tables con asterisco son obligatorias y debes agregar por lo menos un registro.'
   };
   
+  export const TIPO_PERSONA_RADIO_OPTIONS = [
+    { label: 'Física', value: 'fisica' },
+    { label: 'Moral', value: 'moral' },
+  ];

@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
-import { TEXTOS } from '../../constants/constantes.enum';
+import { TEXTOS, TIPO_PERSONA_RADIO_OPTIONS } from '../../constants/constantes.enum';
 import { AlertComponent, Notificacion, NotificacionesComponent, Pedimento } from '@libs/shared/data-access-user/src';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
@@ -21,6 +21,8 @@ import {
   Solicitud260702State,
   Solicitud260702Store,
 } from '../../estados/tramites260702.store';
+import{ InputRadioComponent} from '@libs/shared/data-access-user/src';
+import { DESTINATARIO_CONFIGURACION_TABLA } from '../../constants/column-config.enum';
 
 
 /**
@@ -37,7 +39,8 @@ import {
     TablaDinamicaComponent,
     ReactiveFormsModule,
     CatalogoSelectComponent,
-    NotificacionesComponent
+    NotificacionesComponent,
+    InputRadioComponent
   ],
   templateUrl: './terceros-relacionados.component.html',
   styleUrl: './terceros-relacionados.component.css',
@@ -77,7 +80,21 @@ export class TercerosrelacionadosComponent implements OnInit, OnDestroy {
     primerOpcion: 'Selecciona un medio de transporte',
     catalogos: [],
   };
+  
+  /**
+   * Variable para almacenar el tipo de persona seleccionada (por ejemplo, 'fisica' o 'moral').
+   */
+  tipoPersonaSeleccionada: string = '';
 
+
+    /**
+   * Variable para almacenar el tipo de público.
+   */
+    tipoDePublicos: string = '';
+   /**
+   * Opciones de radio para seleccionar el tipo de persona.
+   */
+   tipoPersonaRadioOptions = TIPO_PERSONA_RADIO_OPTIONS;
 /** 
  * Notificación actual que se mostrará en el componente.
  */
@@ -95,84 +112,8 @@ pedimentos: Array<Pedimento> = [];
   /** Datos de la tabla de destinatarios */
   tableData: Destinatario[] = [];
 
-  /** Configuración de las columnas de la tabla */
-  destinatarioConfiguracionTabla: ConfiguracionColumna<Destinatario>[] = [
-    {
-      encabezado: 'Nombre/denominación o razón social',
-      clave: (fila) => fila?.nombre || 'N/A',
-      orden: 1,
-    },
-    {
-      encabezado: 'R.F.C.',
-      clave: (fila) => fila?.rfc || '---',
-      orden: 2,
-    },
-    {
-      encabezado: 'CURP',
-      clave: (fila) => fila?.curp || '---',
-      orden: 3,
-    },
-    {
-      encabezado: 'Teléfono',
-      clave: (fila) => fila?.telefono || 'N/A',
-      orden: 4,
-    },
-    {
-      encabezado: 'Correo electrónico',
-      clave: (fila) => fila?.correoElectronico || 'N/A',
-      orden: 5,
-    },
-    {
-      encabezado: 'Calle',
-      clave: (fila) => fila?.calle || 'N/A',
-      orden: 6,
-    },
-    {
-      encabezado: 'Número exterior',
-      clave: (fila) => fila?.numeroExterior || 'N/A',
-      orden: 7,
-    },
-    {
-      encabezado: 'Número interior',
-      clave: (fila) => fila?.numeroInterior || 'N/A',
-      orden: 8,
-    },
-    {
-      encabezado: 'País',
-      clave: (fila) => fila?.pais || 'N/A',
-      orden: 9,
-    },
-    {
-      encabezado: 'Colonia',
-      clave: (fila) => fila?.colonia || '---',
-      orden: 10,
-    },
-    {
-      encabezado: 'Municipio o alcaldía',
-      clave: (fila) => fila?.municipio || '---',
-      orden: 11,
-    },
-    {
-      encabezado: 'Localidad',
-      clave: (fila) => fila?.localidad || '---',
-      orden: 12,
-    },
-    {
-      encabezado: 'Estado',
-      clave: (fila) => fila?.estado || '---',
-      orden: 13,
-    },
-    {
-      encabezado: 'Estado',
-      clave: (fila) => fila?.estado2 || '---',
-      orden: 14,
-    },
-    {
-      encabezado: 'Código postal',
-      clave: (fila) => fila?.codigopostal || 'N/A',
-      orden: 15,
-    },
-  ];
+   /** Configuración de las columnas de la tabla */
+   destinatarioConfiguracionTabla = DESTINATARIO_CONFIGURACION_TABLA;
 
   /**
    * Constructor del componente.
@@ -274,7 +215,6 @@ pedimentos: Array<Pedimento> = [];
  * @param isDeleted Indica si se debe mostrar la notificación de éxito tras la eliminación.
  */
   abrirModal(i: number = 0, isDeleted: boolean = false): void {
-    console.log('abrirModal called with isDeleted:', isDeleted);
     if (isDeleted) {
       this.nuevaNotificacion = {
         tipoNotificacion: 'alert',
@@ -458,9 +398,13 @@ pedimentos: Array<Pedimento> = [];
     
   }
 
-  onDEL(): void {
+  /**
+ * Maneja la acción de eliminación de las filas seleccionadas.
+ * Si hay filas seleccionadas, abre un modal para confirmar la eliminación.
+ */
+  onDeleted(): void {
     if (this.selectedRows.size > 0) {
-      this.abrirModal(); // Call abrirModal to set up the notification
+      this.abrirModal(); 
     }
   }
 
@@ -477,6 +421,14 @@ pedimentos: Array<Pedimento> = [];
   ): void {
     const VALOR = form.get(campo)?.value;
     (this.solicitud260702Store[metodoNombre] as (value: any) => void)(VALOR);
+  }
+
+  /**
+   * Establece el tipo de persona seleccionado.
+   * @param value Valor seleccionado (cadena o número).
+   */
+  setTipoPersona(value: string | number): void {
+    this.tipoPersonaSeleccionada = value.toString();
   }
 
   /**

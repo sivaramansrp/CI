@@ -3,16 +3,17 @@ import { ReplaySubject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { RegistrarSolicitudMcpService } from '../../services/registrar-solicitud-mcp.service';
 import { TramitesAsociados } from '../../models/destinatario.model';
-import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
+import { ConfiguracionColumna, Notificacion, NotificacionesComponent, Pedimento } from '@libs/shared/data-access-user/src';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
+import { DESTINATARIO_CONFIGURACION_TABLA2 } from '../../constants/column-config.enum';
 
 @Component({
   selector: 'app-tramites-asociados',
   templateUrl: './tramites-asociados.component.html',
   styleUrls: ['./tramites-asociados.component.css'],
   standalone: true,
-  imports: [TablaDinamicaComponent, TituloComponent],
+  imports: [TablaDinamicaComponent, TituloComponent,NotificacionesComponent],
 })
 export class TramitesAsociadosComponent implements OnInit, OnDestroy {
   /** Arreglo que contiene los datos de las filas de la tabla */
@@ -24,39 +25,23 @@ export class TramitesAsociadosComponent implements OnInit, OnDestroy {
   /** Sujeto que se utiliza para manejar la destrucción de suscripciones */
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
-  /** Configuración de las columnas de la tabla para los trámites asociados */
-  destinatarioConfiguracionTabla: ConfiguracionColumna<TramitesAsociados>[] = [
-    {
-      /** Configuración de la columna para el número */
-      encabezado: 'No.',
-      clave: (fila) => fila?.No,
-      orden: 1,
-    },
-    {
-      /** Configuración de la columna para el folio del trámite */
-      encabezado: 'Folio tramite',
-      clave: (fila) => fila?.folioTramite,
-      orden: 2,
-    },
-    {
-      /** Configuración de la columna para el tipo de trámite */
-      encabezado: 'Tipo tramite',
-      clave: (fila) => fila?.tipoTramite,
-      orden: 3,
-    },
-    {
-      /** Configuración de la columna para el estatus */
-      encabezado: 'Estatus',
-      clave: (fila) => fila?.estatus,
-      orden: 4,
-    },
-    {
-      /** Configuración de la columna para la fecha de alta del registro */
-      encabezado: 'Fecha alta de registro',
-      clave: (fila) => fila?.fechaaltaderegistro,
-      orden: 5,
-    },
-  ];
+   /** Configuración de las columnas de la tabla para los trámites asociados */
+   destinatarioConfiguracionTabla = DESTINATARIO_CONFIGURACION_TABLA2;
+   
+/** 
+ * Configuración para la notificación actual.
+ */
+  public nuevaNotificacion: Notificacion | null = null;
+
+  /** 
+ * Índice del elemento que se desea eliminar.
+ */
+  elementoParaEliminar!: number;
+
+  /** 
+ * Lista de pedimentos asociados a la solicitud.
+ */
+  pedimentos: Array<Pedimento> = [];
 
   /**
    * Constructor de la clase
@@ -82,13 +67,36 @@ export class TramitesAsociadosComponent implements OnInit, OnDestroy {
   /** Método para mostrar el modal */
   mostrarModal(): void {
     this.esModalVisible = true;
+    this.abrirModal();
   }
 
   /** Método para ocultar el modal */
   ocultarModal(): void {
     this.esModalVisible = false;
   }
-
+  /** Método para agregar un nuevo pedimento */
+  eliminarPedimento(borrar: boolean): void {
+    if (borrar) {
+      this.pedimentos.splice(this.elementoParaEliminar, 1);
+    }
+  }
+  /** Método para cerrar el modal */ 
+  abrirModal(i: number = 0): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: '¿Está seguro que su solicitud no requiere los datos del pago de derechos?',
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: 'Cancelar',
+    }
+   
+    this.elementoParaEliminar = i;
+  }
+  
   /** Método que se ejecuta al destruir el componente */
   ngOnDestroy(): void {
     this.destroyed$.next(true);

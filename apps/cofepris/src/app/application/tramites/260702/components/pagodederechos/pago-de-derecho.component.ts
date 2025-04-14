@@ -9,6 +9,7 @@ import { Solicitud260702Query } from '../../estados/tramites260702.query';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { Solicitud260702State, Solicitud260702Store } from '../../estados/tramites260702.store';
 import { InputFechaComponent } from '@libs/shared/data-access-user/src';
+import { BANCO_DATA } from '../../constants/catalogs.enum';
 /**
  * Componente para gestionar el pago de derechos en el trámite.
  */
@@ -29,14 +30,11 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
   /** Estado del pago de derechos que se está gestionando */
   pagoDeDerechosState!: Solicitud260702State;
 
-  /** Datos del catálogo de bancos */
-  public bancoData: CatalogosSelect = {
-    labelNombre: 'Banco',
-    required: true,
-    primerOpcion: 'seleccione una opción',
-    catalogos: [],
-  };
+ public bancoData = BANCO_DATA;
 
+  /**
+ * Configuración para el campo de selección de la fecha de pago.
+ */
   fechaPago: InputFecha = {
     labelNombre: 'Fecha de pago',
     required: false,

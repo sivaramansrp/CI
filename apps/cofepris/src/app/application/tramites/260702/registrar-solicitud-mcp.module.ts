@@ -19,7 +19,6 @@ import { TercerosrelacionadosComponent } from './components/terceros relacionado
 import { ToastrService } from 'ngx-toastr';
 import { TramitesAsociadosComponent } from './components/tramitesasociados/tramites-asociados.component';
 
-import { PasoCuatroComponent } from './pages/paso-cuatro/paso-cuatro.component';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from '../260702/pages/paso-uno/paso-uno.component';
@@ -29,7 +28,6 @@ import { PasoUnoComponent } from '../260702/pages/paso-uno/paso-uno.component';
     PasoUnoComponent,
     PasoDosComponent,
     PasoTresComponent,
-    PasoCuatroComponent,
     RegistroPageComponent,
   ],
   imports: [

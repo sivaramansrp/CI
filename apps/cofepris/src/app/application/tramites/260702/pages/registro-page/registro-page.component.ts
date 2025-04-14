@@ -1,9 +1,10 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { DatosPasos, SeccionLibQuery, SeccionLibState, SeccionLibStore } from '@ng-mf/data-access-user';
+import { DatosPasos, PASOS, SeccionLibQuery, SeccionLibState, SeccionLibStore } from '@ng-mf/data-access-user';
 import { map, ReplaySubject, takeUntil } from 'rxjs';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { WizardComponent } from '@ng-mf/data-access-user';
-import { PASOS1 } from '../../constants/retorno.contenedores.enum';
+
+
 
 /**
  * Interfaz que representa una acción de botón en el wizard.
@@ -23,10 +24,11 @@ interface AccionBoton {
 @Component({
   templateUrl: './registro-page.component.html',
   styles: ``,
+ 
 })
 export class RegistroPageComponent implements OnDestroy, OnInit {
   /** Lista de pasos del wizard. */
-  pasos: Array<ListaPasosWizard> = PASOS1;
+  pasos: Array<ListaPasosWizard> = PASOS;
 
   /** Índice del paso actual en el wizard. */
   indice: number = 1;

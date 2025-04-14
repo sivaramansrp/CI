@@ -351,8 +351,10 @@
                <div class="row">
                 <div class="col-md-8">
                   <label class="form-label" for="claveDeLosLotes">Clave de los lotes*:</label>
-                  <input class="form-control"  type="text" formControlName="claveDeLosLotes"
-                  (change)="setValoresStore(datosDelTramiteRealizar,'claveDeLosLotes', 'setClaveDeLosLotes')">
+                  <input class="form-control"  type="text" formControlName="claveDeLosLotes"                 
+                  (change)="setValoresStore(datosDelTramiteRealizar,'claveDeLosLotes', 'setClaveDeLosLotes')"
+                  (change)="onClaveDeLosLotesChange($event)"
+                  >
                 </div>
                </div>
               <div class="row">
@@ -363,7 +365,7 @@
                     class="disabled-input-fecha" 
                     [setFecha]="dataDeLaSolicitudForm.get('fechaDeFabricacion')?.value"
                     (valorCambiado)="onFechaDeFabricacionChange($event)">
-                    ></input-fecha> 
+                    </input-fecha> 
 
                   </div>
                 <div class="col-md-4">
@@ -373,7 +375,7 @@
                   [setFecha]="dataDeLaSolicitudForm.get('fechaDeCaducidad')?.value"
                   (valorCambiado)="onFechaDeCaducidadChange($event)">
 
-                  ></input-fecha>                
+                  </input-fecha>                
                 </div>
               </div>
               <div class="col-md-12 mt-3">

@@ -22,7 +22,7 @@
               class="btn btn-default 3"
               type="button"
               data-bs-toggle="modal"
-             (click)="onDEL()"
+             (click)="onDeleted()"
             >
               Eliminar
             </button>
@@ -46,8 +46,7 @@
             >
               Agregar
             </button>
-          </div>
-        
+          </div>  
       </div>
         <div class="col-md-12 mt-5">
           <label class="form-label" for="">Destinatario(destino final)*:</label>
@@ -68,7 +67,6 @@
     </lib-notificaciones>
     </section>
     }
-  
   <div class="container" *ngIf="esFormularioVisible">
       <form [formGroup]="destinatarioForm" (ngSubmit)="onGuardar()">
         <ng-titulo titulo="Agregar destinatario (destino final)" />
@@ -77,18 +75,14 @@
             <div class="col-md-12">
               <label class="form-label" for="tipoPersona">Tipo persona*:</label>
             </div>
-            <div class="col-md-12">
-              <input class="form-check-input me-2" type="radio" name="tipoPersona" formControlName="tipoPersona"
-                value="fisica" id="fisica" 
-                (change)="setValoresStore(agregarDestinatario,'tipoPersona', 'setTipoPersona')" />
-              <label for="fisica">Física</label>
-            </div>
-            <div class="col-md-12">
-              <input class="form-check-input me-2" type="radio" name="tipoPersona" formControlName="tipoPersona"
-                value="moral" id="moral" 
-                (change)="setValoresStore(agregarDestinatario,'tipoPersona', 'setTipoPersona')"/>
-              <label for="moral">Moral</label>
-            </div>
+            <app-input-radio 
+            [radioOptions]="tipoPersonaRadioOptions" 
+            [selectedValue]="tipoDePublicos" 
+            [isRequired]="true" 
+            (valueChange)="setTipoPersona($event)" 
+            formControlName="tipoPersona" 
+            (change)="setValoresStore(agregarDestinatario,'tipoPersona', 'setTipoPersona')">
+          </app-input-radio>
           </div>
         </ng-container>
         <ng-titulo titulo="Datos personales" />
@@ -119,14 +113,12 @@
             <div class="col-md-8 mb-3">
               <label class="form-label" for="nombre">Denominación/razón social*:</label>
               <input class="form-control" id="nombre" type="text" formControlName="nombre"
-              (change)="setValoresStore(agregarDestinatario,'nombre', 'setNombre')"
-  
+              (change)="setValoresStore(agregarDestinatario,'nombre', 'setNombre')" 
                  />
             </div>
           </div>
           }
-          <ng-titulo titulo="Domicilio" />
-    
+          <ng-titulo titulo="Domicilio" />    
           <div class="row">
             <div class="col-md-4 mb-3">
               <app-catalogo-select 
@@ -142,14 +134,12 @@
               <label class="form-label" for="estado">Estado*:</label>
               <input class="form-control" id="estado" type="text" formControlName="estado"
               (change)="setValoresStore(agregarDestinatario,'estado', 'setEstado')"
-  
                  />
             </div>
             <div class="col-md-4 mb-3">
               <label class="form-label" for="codigopostal">Codigo postal o equivalente:</label>
               <input class="form-control" id="codigopostal" type="text" formControlName="codigopostal"
-              (change)="setValoresStore(agregarDestinatario,'codigopostal', 'setCodigoPostal')"
-  
+              (change)="setValoresStore(agregarDestinatario,'codigopostal', 'setCodigoPostal')" 
                  />
             </div>
           </div>
@@ -157,19 +147,16 @@
               <div class="col-md-8">
                   <label class="form-label" for="calle">Calle*:</label>
                   <input class="form-control" id="calle" type="text" formControlName="calle"
-                  (change)="setValoresStore(agregarDestinatario,'calle', 'setCalle')"
-  
+                  (change)="setValoresStore(agregarDestinatario,'calle', 'setCalle')" 
                      />
               </div>
               <div class="col-md-4">
                   <label class="form-label" for="numeroexterior">Numero exterior*:</label>
                   <input class="form-control" id="numeroexterior" type="text" formControlName="numeroExterior"
-                  (change)="setValoresStore(agregarDestinatario,'numeroExterior', 'setNumeroExterior')"
-  
+                  (change)="setValoresStore(agregarDestinatario,'numeroExterior', 'setNumeroExterior')"  
                      />
               </div>
-          </div>
-    
+          </div>    
           <div class="row">
               <div class="col-md-4">
                   <label class="form-label" for="numerointerior">Numero interior*:</label>
@@ -180,23 +167,20 @@
             <div class="col-md-1 mb-3">
               <label class="form-label" for="lada">Lada:</label>
               <input class="form-control" id="lada" type="number" formControlName="lada"
-              (change)="setValoresStore(agregarDestinatario,'lada', 'setLada')"
-  
+              (change)="setValoresStore(agregarDestinatario,'lada', 'setLada')" 
                  />
             </div>
             <div class="col-md-3 mb-3">
               <label class="form-label" for="telefono">Teléfono:</label>
               <input class="form-control" id="telefono" type="number" formControlName="telefono"
               (change)="setValoresStore(agregarDestinatario,'telefono', 'setTelefono')"
-  
                />
             </div>
             <div class="col-md-4 mb-3">
               <label class="form-label" for="correoElectronico">Correo electrónico:</label>
               <div class="input-group">
                <input class="form-control" id="correoElectronico" type="email" formControlName="correoElectronico"
-               (change)="setValoresStore(agregarDestinatario,'correoElectronico', 'setCorreoElectronico')"
-  
+               (change)="setValoresStore(agregarDestinatario,'correoElectronico', 'setCorreoElectronico')" 
                  />
               </div>
             </div>

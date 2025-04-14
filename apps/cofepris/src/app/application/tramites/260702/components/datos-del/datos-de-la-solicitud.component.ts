@@ -20,7 +20,21 @@ import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 import { TEXTOS } from '../../constants/constantes.enum';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { InputCheckComponent } from '@libs/shared/data-access-user/src';
-
+import {
+  ESTADO_DATA,
+  CLAVE_SCIAN_DATA,
+  DESCRIPCION_SCIAN_DATA,
+  REGIMEN_AL_QUE_DATA,
+  ADUANA_DATA,
+  CLASIFICACION_PRODUCTO_DATA,
+  ESPECIFICAR_DATA,
+  TIPO_PRODUCTO_DATA,
+} from '../../constants/catalogs.enum';
+import {
+  CONFIGURACION_COLUMNAS_SOLI,
+  CONFIGURACION_COLUMNAS_MERCANCIAS,
+  CONFIGURACION_COLUMNAS_LISTA_CLAVE,
+} from '../../constants/column-config.enum';
 
 /**
  * Componente para gestionar los datos de la solicitud.
@@ -133,70 +147,6 @@ opcionDeBotonDeRadio = [
   { label: 'Modificación y prórroga', value: 'modificacion_prorroga' },
 ];
 
-/** Configuración de datos del estado */
-public estadoData: CatalogosSelect = {
-  labelNombre: 'Estado',
-  required: true,
-  primerOpcion: 'Selecciona un medio de transporte',
-  catalogos: [],
-};
-  /** Configuración de datos de clave SCIAN */
-  public claveScianData: CatalogosSelect = {
-    labelNombre: 'Cave S.C.I.A.N.*:',
-    required: true,
-    primerOpcion: 'Selecciona un medio de transporte',
-    catalogos: [],
-  };
-
-  /** Configuración de descripción del SCIAN */
-  public descripcionDelScianData: CatalogosSelect = {
-    labelNombre: 'Descripcion del S.C.I.A.N',
-    required: true,
-    primerOpcion: 'Selecciona un medio de transporte',
-    catalogos: [],
-  };
-  /** Configuración de datos del régimen */
-  public regimenalqueData: CatalogosSelect = {
-    labelNombre: 'Régimen al que se destinarán la mercancías',
-    required: true,
-    primerOpcion: 'Selecciona un medio de transporte',
-    catalogos: [],
-  };
-
-  /** Configuración de datos de la aduana */
-  public aduanaData: CatalogosSelect = {
-    labelNombre: 'Aduana',
-    required: true,
-    primerOpcion: 'Selecciona un medio de transporte',
-    catalogos: [],
-  };
-/** 
- * Configuración para el campo de selección de clasificación del producto.
- */
-  public delProducto: CatalogosSelect = {
-    labelNombre: 'Clasificacion del producto*:',
-    required: true,
-    primerOpcion: 'Selecciona un medio de transporte',
-    catalogos: [],
-  };
-
-  /** Configuración para especificar clasificación del producto */
-  public especificarData: CatalogosSelect = {
-    labelNombre: 'Especificar clasificación del producto:',
-    required: true,
-    primerOpcion: 'Selecciona un medio de transporte',
-    catalogos: [],
-  };
-
-  /** 
- * Configuración para el campo de selección del tipo de producto.
- */
-  public tipoProductoData: CatalogosSelect = {
-    labelNombre: 'Tipo de producto*:',
-    required: true,
-    primerOpcion: 'Selecciona un medio de transporte',
-    catalogos: [],
-  };
 
   /** Tipo de selección para las mercancias */
   tipoSeleccionsoliMercancias: TablaSeleccion = TablaSeleccion.CHECKBOX;
@@ -216,119 +166,45 @@ public estadoData: CatalogosSelect = {
   /** Fila seleccionada */
   selectedRow: any;
 
+  /** Configuración de datos del estado */
+  public estadoData = ESTADO_DATA;
+
+  /** Configuración de datos de clave SCIAN */
+  public claveScianData = CLAVE_SCIAN_DATA;
+
+  /** Configuración de descripción del SCIAN */
+  public descripcionDelScianData = DESCRIPCION_SCIAN_DATA;
+
+  /** Configuración de datos del régimen */
+  public regimenalqueData = REGIMEN_AL_QUE_DATA;
+
+  /** Configuración de datos de la aduana */
+  public aduanaData = ADUANA_DATA;
+
+  /** Configuración para el campo de selección de clasificación del producto */
+  public delProducto = CLASIFICACION_PRODUCTO_DATA;
+
+  /** Configuración para especificar clasificación del producto */
+  public especificarData = ESPECIFICAR_DATA;
+
+  /** Configuración para el campo de selección del tipo de producto */
+  public tipoProductoData = TIPO_PRODUCTO_DATA;
+
   constructor(private fb: FormBuilder, 
     private registrarsolicitudmcp: RegistrarSolicitudMcpService,
      private cdr: ChangeDetectorRef,
      private solicitud260702Store: Solicitud260702Store,
      private solicitud260702Query: Solicitud260702Query) {}
 
-     /** Configuración de columnas para la tabla de solicitud */
-  configuracionColumnasoli: ConfiguracionColumna<FilaData>[] = [
-    {
-      encabezado: 'Clave S.C.I.A.N.',
-      clave: (fila) => fila.claveScianG.claveScian,
-      orden: 1,
-    },
-    {
-      encabezado: 'Description del S.C.I.A.N',
-      clave: (fila) => fila.claveScianG.descripcionDelScian,
-      orden: 2,
-    },
-]
+ /** Configuración de columnas para la tabla de solicitud */
+ configuracionColumnasoli = CONFIGURACION_COLUMNAS_SOLI;
 
-  /** Configuración de columnas para la tabla de mercancias */
-mercanciasDatos : ConfiguracionColumna<FilaData2>[] = [
-  {
-    encabezado: 'Clasificación del producto',
-    clave: (fila) => fila.clasificaionProductos,
-    orden: 1,
-  },
-  {
-    encabezado: 'Especificar Clasificación del producto',
-    clave: (fila) => fila.especificarProducto,
-    orden: 2,
-  },
-  {
-    encabezado: 'Denominación específico del producto',
-    clave: (fila) => fila.nombreProductoEspecifico,
-    orden: 3,
-  },
-  {
-    encabezado: 'Marca',
-    clave: (fila) => fila.marca,
-    orden: 4,
-  },
-  {
-    encabezado: 'Tipo de producto',
-    clave: (fila) => fila.tipoProducto,
-    orden: 5,
-  },
-  {
-    encabezado: 'Fracción arancelaria',
-    clave: (fila) => fila.fraccionArancelaria,
-    orden: 6,
-  },
-  {
-    encabezado: 'Descripción de la fracción arancelaria',
-    clave: (fila) => fila.descripcionFraccionArancelaria,
-    orden: 7,
-  },
-  {
-    encabezado: 'Unidad de medida de comercialización (UMC)',
-    clave: (fila) => fila.umc,
-    orden: 8,
-  },
-  {
-    encabezado: 'Cantidad UMC',
-    clave: (fila) => fila.cantidadUMC,
-    orden: 9,
-  },
-  {
-    encabezado: 'Unidad de medida de tarifa (UMT)',
-    clave: (fila) => fila.umt,
-    orden: 10,
-  },
-  {
-    encabezado: 'Cantidad UMT',
-    clave: (fila) => fila.cantidadUMT,
-    orden: 11,
-  },
-  {
-    encabezado: 'País de origen',
-    clave: (fila) => fila.paisDeOrigen,
-    orden: 12,
-  },
-  {
-    encabezado: 'País de procedencia',
-    clave: (fila) => fila.paisDeProcedencia,
-    orden: 13,
-  },
-  
-  {
-    encabezado: 'Uso específico',
-    clave: (fila) => fila.usoEspecifico,
-    orden: 14,
-  },
-];
-  /** Configuración de columnas para la lista de claves */
+ /** Configuración de columnas para la tabla de mercancias */
+ mercanciasDatos = CONFIGURACION_COLUMNAS_MERCANCIAS;
 
-public listaClave: ConfiguracionColumna<ListaClave>[] = [
-  {
-    encabezado: 'Clave de los lotes',
-    clave: (fila) => fila.claveDeLosLotes,
-    orden: 1,
-  },
-  {
-    encabezado: 'Fecha de fabricación',
-    clave: (fila) => fila.fechaDeFabricacion,
-    orden: 2,
-  },
-  {
-    encabezado: 'Fecha de caducidad',
-    clave: (fila) => fila.fechaDeCaducidad,
-    orden: 3,
-  },
-];
+ /** Configuración de columnas para la lista de claves */
+ listaClave = CONFIGURACION_COLUMNAS_LISTA_CLAVE;
+
 
 /** Inicialización del componente */
   ngOnInit(): void {
@@ -340,45 +216,8 @@ public listaClave: ConfiguracionColumna<ListaClave>[] = [
           })
         )
         .subscribe();
-    this.dataDeLaSolicitudForm = this.fb.group({
-      claveDeLosLotes: [this.dataDeLaSolicitudState?.claveDeLosLotes, Validators.required],
-      fechaDeFabricacion: [this.dataDeLaSolicitudState?.fechaDeFabricacion,Validators.required],
-      fechaDeCaducidad: [this.dataDeLaSolicitudState?.fechaDeCaducidad,Validators.required],
-      descripcionFraccionArancelaria: [this.dataDeLaSolicitudState?.descripcionFraccionArancelaria, Validators.required],
-        cantidadUMT:[this.dataDeLaSolicitudState?.cantidadUMT, Validators.required],
-        umt:[this.dataDeLaSolicitudState?.descripcionFraccionArancelaria, Validators.required],
-        cantidadUMC:[this.dataDeLaSolicitudState?.cantidadUMC, Validators.required],
-        umc:[this.dataDeLaSolicitudState?.umc, Validators.required],
-        tipoProducto: [this.dataDeLaSolicitudState?.tipoProducto, Validators.required],
-        clasificaionProductos: [this.dataDeLaSolicitudState?.clasificaionProductos, Validators.required], 
-        especificarProducto: [this.dataDeLaSolicitudState?.especificarProducto, Validators.required],
-        nombreProductoEspecifico: [this.dataDeLaSolicitudState?.nombreProductoEspecifico, Validators.required],
-        marca:[this.dataDeLaSolicitudState?.marca, Validators.required],
-        fraccionArancelaria:[this.dataDeLaSolicitudState?.fraccionArancelaria, Validators.required],
-      datosDelTramiteRealizar: this.fb.group({
-        justification: [this.dataDeLaSolicitudState?.justification, Validators.required],
-        denominacion: [this.dataDeLaSolicitudState?.denominacion, Validators.required],
-        correoElectronico: [this.dataDeLaSolicitudState?.correoElectronico, Validators.required],
-        codigopostal: [this.dataDeLaSolicitudState?.codigopostal, Validators.required],
-        estado: [this.dataDeLaSolicitudState?.estado, Validators.required],
-        municipoyalcaldia: [this.dataDeLaSolicitudState?.municipoyalcaldia, Validators.required],
-        localidad: [this.dataDeLaSolicitudState?.localidad, Validators.required],
-        colonia: [this.dataDeLaSolicitudState?.colonia, Validators.required],
-        calle: [this.dataDeLaSolicitudState?.calle, Validators.required],
-        lada: [this.dataDeLaSolicitudState?.lada, Validators.required],
-        telefono: [this.dataDeLaSolicitudState?.telefono, Validators.required],
-        avisoDeFuncionamiento: [this.dataDeLaSolicitudState?.avisoDeFuncionamiento, Validators.required],
-        licenciaSanitaria: [this.dataDeLaSolicitudState?.licenciaSanitaria, Validators.required],
-        regimenalque: [this.dataDeLaSolicitudState?.regimenalque, Validators.required],
-        aduana: [this.dataDeLaSolicitudState?.aduana, Validators.required],
-        rfc: [this.dataDeLaSolicitudState?.rfc, Validators.required],
-        legalRazonSocial: [this.dataDeLaSolicitudState?.legalRazonSocial, Validators.required],
-        apellidoPaterno: [this.dataDeLaSolicitudState?.apellidoPaterno, Validators.required],
-        apellidoMaterno: [this.dataDeLaSolicitudState?.apellidoMaterno,Validators.required],
-      }),
-     
-    });
     
+    this.createForm();
     this.getEstadosData();
     this.getClaveScianData();
     this.createclaveScianForm();
@@ -392,6 +231,48 @@ public listaClave: ConfiguracionColumna<ListaClave>[] = [
     this.getListaClaveData();
     this.getMercanciaCrosslistData();
   }
+
+
+createForm(){
+  this.dataDeLaSolicitudForm = this.fb.group({
+    claveDeLosLotes: [this.dataDeLaSolicitudState?.claveDeLosLotes, Validators.required],
+    fechaDeFabricacion: [this.dataDeLaSolicitudState?.fechaDeFabricacion,Validators.required],
+    fechaDeCaducidad: [this.dataDeLaSolicitudState?.fechaDeCaducidad,Validators.required],
+    descripcionFraccionArancelaria: [this.dataDeLaSolicitudState?.descripcionFraccionArancelaria, Validators.required],
+      cantidadUMT:[this.dataDeLaSolicitudState?.cantidadUMT, Validators.required],
+      umt:[this.dataDeLaSolicitudState?.descripcionFraccionArancelaria, Validators.required],
+      cantidadUMC:[this.dataDeLaSolicitudState?.cantidadUMC, Validators.required],
+      umc:[this.dataDeLaSolicitudState?.umc, Validators.required],
+      tipoProducto: [this.dataDeLaSolicitudState?.tipoProducto, Validators.required],
+      clasificaionProductos: [this.dataDeLaSolicitudState?.clasificaionProductos, Validators.required], 
+      especificarProducto: [this.dataDeLaSolicitudState?.especificarProducto, Validators.required],
+      nombreProductoEspecifico: [this.dataDeLaSolicitudState?.nombreProductoEspecifico, Validators.required],
+      marca:[this.dataDeLaSolicitudState?.marca, Validators.required],
+      fraccionArancelaria:[this.dataDeLaSolicitudState?.fraccionArancelaria, Validators.required],
+    datosDelTramiteRealizar: this.fb.group({
+      justification: [this.dataDeLaSolicitudState?.justification, Validators.required],
+      denominacion: [this.dataDeLaSolicitudState?.denominacion, Validators.required],
+      correoElectronico: [this.dataDeLaSolicitudState?.correoElectronico, Validators.required],
+      codigopostal: [this.dataDeLaSolicitudState?.codigopostal, Validators.required],
+      estado: [this.dataDeLaSolicitudState?.estado, Validators.required],
+      municipoyalcaldia: [this.dataDeLaSolicitudState?.municipoyalcaldia, Validators.required],
+      localidad: [this.dataDeLaSolicitudState?.localidad, Validators.required],
+      colonia: [this.dataDeLaSolicitudState?.colonia, Validators.required],
+      calle: [this.dataDeLaSolicitudState?.calle, Validators.required],
+      lada: [this.dataDeLaSolicitudState?.lada, Validators.required],
+      telefono: [this.dataDeLaSolicitudState?.telefono, Validators.required],
+      avisoDeFuncionamiento: [this.dataDeLaSolicitudState?.avisoDeFuncionamiento, Validators.required],
+      licenciaSanitaria: [this.dataDeLaSolicitudState?.licenciaSanitaria, Validators.required],
+      regimenalque: [this.dataDeLaSolicitudState?.regimenalque, Validators.required],
+      aduana: [this.dataDeLaSolicitudState?.aduana, Validators.required],
+      rfc: [this.dataDeLaSolicitudState?.rfc, Validators.required],
+      legalRazonSocial: [this.dataDeLaSolicitudState?.legalRazonSocial, Validators.required],
+      apellidoPaterno: [this.dataDeLaSolicitudState?.apellidoPaterno, Validators.required],
+      apellidoMaterno: [this.dataDeLaSolicitudState?.apellidoMaterno,Validators.required],
+    }),
+   
+  });
+}
 
 /**
  * Método para limpiar la notificación actual.
@@ -706,11 +587,18 @@ usoEspecificoColapsable(): void {
   onLimpiar() {
     this.clavaScianForm.reset();
   }
-    /** Muestra el formulario para agregar clave SCIAN */
 
-  onAgregar(){
+/**
+ * Muestra el formulario para agregar una nueva clave SCIAN.
+ */  
+onAgregar(){
     this.showClavaScianForm = true; 
   }
+
+  /**
+ * Elimina las filas seleccionadas de la tabla.
+ * Si no hay filas seleccionadas, muestra un mensaje de advertencia en la consola.
+ */
   onDelete(): void {
     if (!this.filasSeleccionadas || this.filasSeleccionadas.size === 0) {
       console.warn('No rows selected for deletion.');
@@ -738,18 +626,47 @@ usoEspecificoColapsable(): void {
      MODAL_INSTANCE.show();
    }
  }
+ /**
+ * Maneja el cambio en el campo "Clave de los lotes".
+ * Actualiza el valor de la clave en la fila seleccionada de la tabla.
+ * 
+ * @param event Evento que contiene el valor ingresado en el campo.
+ */
+ onClaveDeLosLotesChange(event: Event): void {
+  const target = event.target as HTMLInputElement; // Cast EventTarget to HTMLInputElement
+
+  if (target && this.ediciondeindicedefila !== null) {
+    const value = target.value;
+
+    this.listaClaveTabla[this.ediciondeindicedefila] = {
+      ...this.listaClaveTabla[this.ediciondeindicedefila],
+      claveDeLosLotes: value,
+    };
+  } else { /* empty */ }
+}
    /** Maneja el cambio de la fecha de fabricación */
 
- onFechaDeFabricacionChange(event: any): void {
-  this.dataDeLaSolicitudForm.patchValue({ fechaDeFabricacion: event });
-}
+   onFechaDeFabricacionChange(value: string | null): void {
+    this.dataDeLaSolicitudForm.get('fechaDeFabricacion')?.setValue(value);
+    if ( value && this.ediciondeindicedefila !== null) {
+      this.listaClaveTabla[this.ediciondeindicedefila] = {
+        ...this.listaClaveTabla[this.ediciondeindicedefila],
+        fechaDeFabricacion: value,
+      };
+    }
+  }
 
   /** Maneja el cambio de la fecha de caducidad */
 
-onFechaDeCaducidadChange(event: any): void {
-  this.dataDeLaSolicitudForm.patchValue({ fechaDeCaducidad: event });
-}
-
+  onFechaDeCaducidadChange(value: string): void {
+    this.dataDeLaSolicitudForm.get('fechaDeCaducidad')?.setValue(value);
+    if (this.ediciondeindicedefila !== null) {
+      this.listaClaveTabla[this.ediciondeindicedefila] = {
+        ...this.listaClaveTabla[this.ediciondeindicedefila],
+        fechaDeCaducidad: value,
+      };
+    }
+  }
   /** Agrega una nueva fila a la lista de claves */
 
 onAgregarListaClave(): void {
@@ -770,7 +687,6 @@ onAgregarListaClave(): void {
   };
 
   this.listaClaveTabla.push(newRow);
-
   this.dataDeLaSolicitudForm.reset();
 }
 
@@ -791,21 +707,14 @@ onModificar(): void {
     return;
   }
 
+  this.ediciondeindicedefila = rowIndex; // Set the index of the row being edited
+
   const selectedRow = this.listaClaveTabla[rowIndex];
 
   this.dataDeLaSolicitudForm.patchValue({
     claveDeLosLotes: selectedRow.claveDeLosLotes || '',
     fechaDeFabricacion: selectedRow.fechaDeFabricacion || '',
     fechaDeCaducidad: selectedRow.fechaDeCaducidad || '',
-  });
-
-  this.dataDeLaSolicitudForm.valueChanges.pipe(takeUntil(this.destroyed$)).subscribe((formData) => {
-    this.listaClaveTabla[rowIndex] = {
-      ...this.listaClaveTabla[rowIndex],
-      claveDeLosLotes: formData.claveDeLosLotes,
-      fechaDeFabricacion: formData.fechaDeFabricacion,
-      fechaDeCaducidad: formData.fechaDeCaducidad,
-    };
   });
   
 }
