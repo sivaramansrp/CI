@@ -1,4 +1,6 @@
 import {
+  AlertComponent,
+  AVISO,
   BtnContinuarComponent,
   DatosPasos,
   SolicitanteComponent,
@@ -48,6 +50,7 @@ interface AccionBoton {
     SolicitanteComponent,   
     PasoDosComponent,
     PasoTresComponent,
+    AlertComponent,
     ReactiveFormsModule
   ],
 })
@@ -70,6 +73,18 @@ export class SolicitudPageComponent {
    * Referencia al componente del asistente.
    */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
+
+  /**
+   * Asigna el aviso de privacidad simplificado al atributo `TEXTOS`.
+   */
+  TEXTOS = AVISO.Aviso;  
+
+  /**
+   * 
+   * Una cadena que representa la clase CSS para una alerta de información.
+   * Esta clase se utiliza para aplicar estilo a los mensajes de información en el componente.
+   */
+  public infoAlert = 'alert-info';
 
   /**
    * Datos de los pasos del asistente.
