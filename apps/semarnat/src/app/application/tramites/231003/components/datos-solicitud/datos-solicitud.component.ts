@@ -60,11 +60,6 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    */
   formularioPrecaucionesManejo!: FormGroup;
 
-  /** 
-   * Catálogo de aduanas disponibles para selección.
-   */
-  aduanas!: Catalogo[];
-
 
   /** 
   * Opciones de radio generales para el formulario.
@@ -76,25 +71,8 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    */
   private destruir$ = new Subject<void>();
 
-  /** 
-   * Opciones para indicar si se requiere empresa de servicio de reciclaje.
-   */
-  requiereEmpresaServicioReciclaje: RadioOpcion[] = RADIO_OPCIONES?.requiereEmpresaServicioReciclaje;
 
-  /** 
-   * Opciones para indicar si el reciclaje se realiza en las propias instalaciones.
-   */
-  reciclajeEnInstalaciones: RadioOpcion[] = RADIO_OPCIONES?.reciclajeEnInstalaciones;
-
-  /** 
-   * Encabezados de la tabla de establecimiento.
-   */
-  public establecimientoHeaderData: string[] = [];
-
-  /** 
-   * Datos del cuerpo de la tabla de establecimiento.
-   */
-  public establecimientoBodyData: unknown = [];
+  public etiquetasForm = RADIO_OPCIONES;
 
   /**
    * Constructor del componente. Inyecta el FormBuilder, el store y el query de Akita.
@@ -109,30 +87,6 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
 
 
   ngOnInit(): void {
-    /** 
-     * Carga el catálogo de aduanas desde las opciones predefinidas.
-     */
-    this.aduanas = RADIO_OPCIONES?.Immex;
-
-    /** 
-     * Establece los encabezados de la tabla del establecimiento.
-     */
-    this.establecimientoHeaderData = RADIO_OPCIONES?.table[0]?.encabezadoDeTabla || [];
-
-    /** 
-     * Establece los datos del cuerpo de la tabla del establecimiento.
-     */
-    this.establecimientoBodyData = RADIO_OPCIONES?.table[0]?.cuerpoTabla || [];
-
-    /** 
-     * Inicializa las opciones del radio button para "requiere empresa de reciclaje".
-     */
-    this.requiereEmpresaServicioReciclaje = RADIO_OPCIONES?.requiereEmpresaServicioReciclaje;
-
-    /** 
-     * Inicializa las opciones del radio button para "reciclaje en instalaciones".
-     */
-    this.reciclajeEnInstalaciones = RADIO_OPCIONES?.reciclajeEnInstalaciones;
 
     /** 
      * Inicializa el formulario principal de solicitud.

@@ -17,7 +17,7 @@
     </div>
     <div class="row mb-3">
       <div class="col-md-5 form-group">
-        <app-catalogo-select [catalogo]='aduanas' formControlName="numeroProgramaImmex"
+        <app-catalogo-select [catalogo]='etiquetasForm.Immex' formControlName="numeroProgramaImmex"
           [label]="'Número de autorización Immex'" [required]="true"></app-catalogo-select>
       </div>
     </div>
@@ -26,7 +26,7 @@
   <h6>Datos de los residuos peligrosos a reciclar*:</h6>
   <div class="row mb-3">
     <div class="col-md-12">
-      <ng-table [commonTableHeader]="establecimientoHeaderData" [commonTableBody]="establecimientoBodyData"></ng-table>
+      <ng-table [commonTableHeader]=" etiquetasForm.table[0].encabezadoDeTabla" [commonTableBody]="etiquetasForm.table[0].cuerpoTabla"></ng-table>
       <nav aria-label="Page navigation example">
         <ul class="pagination d-flex justify-content-center">
           <li class="page-item"><a class="page-link">1</a></li>
@@ -77,7 +77,7 @@
     <div class="row mb-3">
       <div class="col-md-8">
         <label required="true">¿Requiere de una empresa de servicio para realizar el reciclaje?*:</label>
-        <app-input-radio [radioOptions]="requiereEmpresaServicioReciclaje" [isRequired]="true" [layout]="'horizontal'"
+        <app-input-radio [radioOptions]="etiquetasForm.requiereEmpresaServicioReciclaje" [isRequired]="true" [layout]="'horizontal'"
           formControlName="requiereEmpresa">
         </app-input-radio>
       </div>
@@ -137,7 +137,7 @@
       <label required="true">
         ¿El reciclaje se realizará dentro de las instalaciones donde se generaron los residuos?*:
       </label>
-      <app-input-radio [radioOptions]="reciclajeEnInstalaciones" [isRequired]="true" [layout]="'horizontal'"
+      <app-input-radio [radioOptions]=" etiquetasForm.reciclajeEnInstalaciones" [isRequired]="true" [layout]="'horizontal'"
         formControlName="reciclajeInstalaciones">
       </app-input-radio>
     </div>

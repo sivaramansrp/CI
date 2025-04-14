@@ -2,7 +2,6 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DatosSolicitudComponent } from './datos-solicitud.component';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { of, Subject } from 'rxjs';
 import { FormularioReciclajeStore } from '../../estados/tramites/dato-solicitud.store';
 import { FormularioReciclajeQuery } from '../../estados/queries/dato-solicitud.query';
 import { CUSTOM_ELEMENTS_SCHEMA, ElementRef } from '@angular/core';
