@@ -1,21 +1,22 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { InputRadioComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { AlertComponent, InputRadioComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import preOperativo from 'libs/shared/theme/assets/json/32201/preOperativo.json';
 import prejson from 'libs/shared/theme/assets/json/32201/prejson.json';
 import { Tramite31601Query } from '../../estados/tramite31601.query';
 import { Solicitud31601State, Tramite31601Store } from '../../estados/tramite31601.store';
 import { map, Subject, takeUntil } from 'rxjs';
+import { Solicitud32201Enum } from '../../constantes/anexo';
 
 @Component({
   selector: 'app-solicitud',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, TituloComponent, InputRadioComponent],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, TituloComponent, InputRadioComponent, AlertComponent],
   templateUrl: './solicitud.component.html',
   styleUrl: './solicitud.component.scss',
 })
-export class SolicitudComponent implements OnInit{
+export class SolicitudComponent implements OnInit {
 
   /**
    * Formulario reactivo para datos preoperativos.
@@ -41,6 +42,8 @@ export class SolicitudComponent implements OnInit{
    * Notificador para destruir observables.
    */
    private destroyNotifier$: Subject<void> = new Subject();
+
+   TEXTOS = Solicitud32201Enum;
   
   /**
    * Constructor del componente.
