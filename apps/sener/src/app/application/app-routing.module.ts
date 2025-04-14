@@ -9,6 +9,7 @@ const ROUTES: Routes = [
     component: SeleccionTramiteComponent
   },
   {
+    
     path: 'hidrocarburos-de-petroleo',
     loadChildren: () =>
       import('./tramites/140112/retiro-importacion-exportacion-permiso.module').then(
@@ -22,6 +23,13 @@ const ROUTES: Routes = [
         (m) => m.RenunciaDeDerechosDeModule
       ),
   },
+  {
+    path: 'permiso-de-hidrocarburos',
+    loadChildren: () =>
+      import('./tramites/130121/permiso-de-hidrocarburos.module').then(
+        (m) => m.PermisoDeHidrocarburosModule
+      )
+  }
 ];
 
 @NgModule({

@@ -6,20 +6,23 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { HEADER_TABLA_AEREO, HEADER_TABLA_CARRETERO, HEADER_TABLA_FERROVIARIO, HEADER_TABLA_MARITIMO, HEADER_TABLA_OTRO, HEADER_TABLA_PEATONAL, LABEL_HORA_ARRIBO, } from '../../../core/enums/transporte-componente.enum';
-import { ItemTransporte, TransporteAereo, TransporteCarretero, TransporteFerroviario, TransporteMaritimo, TransporteOtro, TransportePeatonal } from '../../../core/models/shared/agregar-transporte.model';
-
-import { CampoForm } from '../../../core/models/shared/forms-model';
+import { HEADER_TABLA_AEREO, HEADER_TABLA_CARRETERO, HEADER_TABLA_FERROVIARIO, HEADER_TABLA_MARITIMO, HEADER_TABLA_OTRO, HEADER_TABLA_PEATONAL, LABEL_HORA_ARRIBO, } from '../../../core/enums/transporte-componente.enums';
+import { ItemTransporte, TransporteAereo, TransporteCarretero, TransporteFerroviario, TransporteMaritimo, TransporteOtro, TransportePeatonal } from '../../../core/models/shared/agregar-trasnporte.model';
 import { Catalogo } from '../../../core/models/shared/catalogos.model';
-import { CatalogosSelect } from '../../../core/models/shared/components.model';
+import { CatalogoSelectComponent } from '../catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
+import { InputCheckComponent } from '../input-check/input-check.component';
 import { InputHoraComponent } from '../input-hora/input-hora.component';
 import { Modal } from 'bootstrap';
+import { Subject } from 'rxjs';
+
 @Component({
   selector: 'lib-agregar-transporte',
   standalone: true,
   imports: [
+    CatalogoSelectComponent,
     CommonModule,
+    InputCheckComponent,
     ReactiveFormsModule,
     InputHoraComponent,
   ],
@@ -27,44 +30,122 @@ import { Modal } from 'bootstrap';
   styleUrl: './agregar-transporte.component.scss',
 })
 export class AgregarTransporteComponent implements OnChanges {
+
+  /**
+   * Tipo de trasnporte seleccionado.
+   * @type {string}
+   */
   @Input() tipo!: string;
+
+  /**
+   * Datos de la tabla de transporte.
+   * @type {any[]}
+   */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   @Input() tablaTransporte!: any[];
+
+  /**
+   * Emisor de eventos para enviar los datos de la tabla.
+   */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   @Output() datosTabla: EventEmitter<any[]> = new EventEmitter<(TransporteAereo | TransporteCarretero | TransporteFerroviario | TransporteMaritimo | TransporteOtro | TransportePeatonal)[]>();
+
   @ViewChild('agregarTransporte') agregarTransporte!: ElementRef;
   @ViewChild('btnCerrarModal') btnCerrarModal!: ElementRef;
 
+  /**
+   * Cabecera de la tabla para el transporte ferroviario.
+   */
   readonly HEADER_TABLA_FERROVIARIO: ItemTransporte[] = HEADER_TABLA_FERROVIARIO;
+
+  /**
+   * Cabecera de la tabla para el transporte carretero.
+   */
   readonly HEADER_TABLA_CARRETERO: ItemTransporte[] = HEADER_TABLA_CARRETERO;
+
+  /**
+   * Cabecera de la tabla para el transporte peatonal.
+   */
   readonly HEADER_TABLA_PEATONAL: ItemTransporte[] = HEADER_TABLA_PEATONAL
+
+  /**
+   * Cabecera de la tabla para el transporte otro.
+   */
   readonly HEADER_TABLA_OTRO: ItemTransporte[] = HEADER_TABLA_OTRO;
+
+  /**
+   * Cabecera de la tabla para el transporte aereo.
+   */
   readonly HEADER_TABLA_AEREO: ItemTransporte[] = HEADER_TABLA_AEREO;
+
+  /**
+   * Cabecera de la tabla para el transporte maritimo.
+   */
   readonly HEADER_TABLA_MARITIMO: ItemTransporte[] = HEADER_TABLA_MARITIMO;
+
+  /**
+   * Etiqueta para la hora de arribo.
+   */
   readonly LABEL_HORA_ARRIBO: string = LABEL_HORA_ARRIBO;
 
   tituloModal!: string;
   mensajeModal!: string;
 
-  datosTiposTransporte!: CatalogosSelect;
-
-  FormTransporte!: FormGroup;
-  tipoTransporteSeleccionado!: Catalogo;
-  camposFormulario!: CampoForm[];
+  /**
+   * Cabecera de la tabla.
+   */
   headerTabla!: ItemTransporte[];
 
+  /**
+   * Contenido de la tabla.
+   */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   bodyTabla: any[] = [];
 
+  /**
+   * Formulario para el transporte carretero.
+   */
   carreteroForma!: FormGroup;
+
+  /**
+   * Formulario para el transporte ferroviario.
+   */
   ferroviarioForma!: FormGroup;
+
+  /**
+   * Formulario para el transporte peatonal.
+   */
   peatonalForma!: FormGroup;
+
+  /**
+   * Formulario para el transporte otro.
+   */
   otroForma!: FormGroup;
+
+  /**
+   * Formulario para el transporte maritimo.
+   */
   maritimoForma!: FormGroup;
+
+  /**
+   * Formulario para el transporte aereo.
+   */
   aereoForma!: FormGroup;
 
+  /**
+   * Forma seleccionada para el transporte.
+   */
   formaSeleccionada!: string;
 
+  /**
+   * Control para las observaciones.
+   */
   public observaciones: FormControl = new FormControl('', [Validators.maxLength(500)]);
-  anios!: number[];
+  anios!: Catalogo[];
+
+
+  private destroyNotifier$: Subject<void> = new Subject();
+
 
   constructor(
     private fb: FormBuilder,
@@ -250,9 +331,7 @@ export class AgregarTransporteComponent implements OnChanges {
       case 1: {
         const TRANSPORTE: TransporteCarretero = this.carreteroForma.value;
         TRANSPORTE.observaciones = this.observaciones.value;
-
         this.bodyTabla.push(TRANSPORTE);
-
         break;
       }
 
@@ -299,10 +378,11 @@ export class AgregarTransporteComponent implements OnChanges {
 
   /**
    * Selecciona o deselecciona todos los checkboxes con la clase 'check-transporte'.
-   * 
+   *
    * @param event - Evento que contiene el estado del checkbox principal.
    * @returns void
    */
+  // eslint-disable-next-line class-methods-use-this
   seleccionarTodos(event: Event): void {
     const CHECKBOXES = document.querySelectorAll('.check-transporte');
     CHECKBOXES.forEach((checkbox) => {
@@ -311,25 +391,33 @@ export class AgregarTransporteComponent implements OnChanges {
   }
 
   /**
-   * Genera un arreglo con los años desde 1980 hasta el año actual.
-   *
-   * @returns {number[]} Arreglo de números representando los años.
+   * @description Esta función genera un array de años desde 1980 hasta el año actual.
+   * @returns {Catalogo[]} - Devuelve un array de años desde 1980 hasta el año actual.
    */
-  static obtenerAniosModelo(): number[] {
+  static obtenerAniosModelo(): Catalogo[] {
     const ANIO_ACTUAL = new Date().getFullYear();
-    const ANIOS: number[] = [];
+    const ANIOS: Catalogo[] = [];
     for (let i = 1980; i <= ANIO_ACTUAL; i++) {
-      ANIOS.push(i);
+      const ANIO: Catalogo = {
+        id: i,
+        descripcion: i.toString(),
+      }
+
+      ANIOS.push(ANIO);
     }
+
     return ANIOS;
   }
 
+
   /**
    * Emite los datos de transporte a la tabla.
-   *
+   * 
    * @returns {void} No retorna ningún valor.
    */
   enviarTransporteTabla(): void {
     this.datosTabla.emit(this.bodyTabla);
   }
+
+
 }

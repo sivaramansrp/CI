@@ -24,6 +24,7 @@ export interface FormularioDinamico {
   readonly?: boolean;
   validators: string[];
   tooltip?: string;
+  tooltipTxt?: string;
   placeholder?: string;
   AvailableRadioOptions?: string[];
   listaDesplegable?: Catalogo[];
