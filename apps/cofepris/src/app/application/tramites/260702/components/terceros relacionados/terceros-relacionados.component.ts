@@ -43,7 +43,7 @@ import { DESTINATARIO_CONFIGURACION_TABLA } from '../../constants/column-config.
     InputRadioComponent
   ],
   templateUrl: './terceros-relacionados.component.html',
-  styleUrl: './terceros-relacionados.component.sass',
+  styleUrl: './terceros-relacionados.component.scss',
 })
 export class TercerosrelacionadosComponent implements OnInit, OnDestroy {
   /** Constantes de texto utilizadas en el componente */

@@ -44,7 +44,7 @@ import {
   standalone: true,
   imports: [CommonModule,ReactiveFormsModule,InputRadioComponent,TituloComponent,CatalogoSelectComponent,TablaDinamicaComponent,InputRadioComponent,InputFechaComponent,CrosslistComponent,InputCheckComponent,NotificacionesComponent],
   templateUrl: './datos-de-la-solicitud.component.html',
-  styleUrls: ['./datos-de-la-solicitud.component.sass'],
+  styleUrls: ['./datos-de-la-solicitud.component.scss'],
 })
 export class DatosdelasolicitudComponent implements OnInit,OnDestroy {
    /** Formulario principal para los datos de la solicitud */

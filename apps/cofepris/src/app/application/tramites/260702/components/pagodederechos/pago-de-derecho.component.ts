@@ -18,7 +18,7 @@ import { BANCO_DATA } from '../../constants/catalogs.enum';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, TituloComponent, CatalogoSelectComponent,InputFechaComponent],
   templateUrl: './pago-de-derecho.component.html',
-  styleUrls: ['./pago-de-derecho.component.sass'],
+  styleUrls: ['./pago-de-derecho.component.scss'],
 })
 export class PagoDeDerechoComponent implements OnInit, OnDestroy {
   /** Formulario reactivo para gestionar los datos del pago de derechos */
