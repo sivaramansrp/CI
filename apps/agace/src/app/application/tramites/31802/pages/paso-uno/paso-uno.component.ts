@@ -55,7 +55,14 @@ export class PasoUnoComponent implements AfterViewInit,OnInit, OnDestroy {
  * Contiene los valores actuales del trámite, como renovación, homologación, y otros datos relevantes.
  */
   public solicitudState!: Solicitud31802State;
-
+/**
+ * Constructor del componente PasoUnoComponent.
+ * 
+ * @param fb - Servicio FormBuilder utilizado para construir formularios reactivos.
+ * @param store - Almacén de estado para gestionar y almacenar datos relacionados con el trámite 31802.
+ * @param query - Consulta para obtener datos del estado global del trámite 31802.
+ * @param validacionesService - Servicio para realizar validaciones personalizadas en los formularios.
+ */
   constructor(
     public fb: FormBuilder,
     private store: Tramite31802Store,

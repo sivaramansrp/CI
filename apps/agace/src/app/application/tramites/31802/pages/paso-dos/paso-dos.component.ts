@@ -1,9 +1,6 @@
-import {
-    CATALOGOS_ID,
-  } from '@ng-mf/data-access-user';
-  import { Catalogo, CatalogosService, TEXTOS } from '@ng-mf/data-access-user';
+  import { CATALOGOS_ID,Catalogo, CatalogosService, TEXTOS } from '@ng-mf/data-access-user';
   import { Component, OnDestroy, OnInit } from '@angular/core';
-  import { Subscription } from 'rxjs';
+  import { ReplaySubject, Subscription, takeUntil } from 'rxjs';
   
   /**
    * Componente que representa el segundo paso del trámite.
@@ -15,6 +12,11 @@ import {
     styleUrl: './paso-dos.component.scss',
   })
   export class PasoDosComponent implements OnInit,OnDestroy {
+      /**
+       * Observable para manejar la destrucción del componente.
+       * Se utiliza para cancelar suscripciones activas.
+       */
+      public destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
     /**
      * Textos utilizados en el componente.
      */
@@ -60,6 +62,7 @@ import {
     getTiposDocumentos(): void {
       this.catalogosServices
         .getCatalogo(CATALOGOS_ID.CAT_TIPO_DOCUMENTO)
+        .pipe(takeUntil(this.destroyed$))
         .subscribe({
           next: (resp): void => {
             if (resp.length > 0) {
@@ -75,9 +78,8 @@ import {
      * Método de limpieza que se ejecuta cuando el componente se destruye.
      */
     ngOnDestroy(): void {
-      if (this.getTiposDocumentosSubscription) {
-        this.getTiposDocumentosSubscription.unsubscribe();
-      }
+      this.destroyed$.next(true);
+      this.destroyed$.complete();
     }
   
   }

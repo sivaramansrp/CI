@@ -1,7 +1,5 @@
 import {
-  Catalogo,
   CatalogoSelectComponent,
-  CatalogosSelect,
   InputFecha,
   InputFechaComponent,
   TituloComponent,
@@ -15,7 +13,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { ReplaySubject, Subject, map, takeUntil } from 'rxjs';
+import { ReplaySubject, map, takeUntil } from 'rxjs';
 import {
   Solicitud31802State,
   Tramite31802Store,
@@ -171,7 +169,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     form: FormGroup,
     campo: string,
     metodoNombre: keyof Tramite31802Store
-    
   ): void {
     const VALOR = form.get(campo)?.value;
     (this.store[metodoNombre] as (value: unknown) => void)(VALOR);

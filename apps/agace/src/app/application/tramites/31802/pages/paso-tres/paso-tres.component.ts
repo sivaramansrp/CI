@@ -1,5 +1,5 @@
 import { Component, OnDestroy } from '@angular/core';
-import { FirmaElectronicaComponent, TramiteFolioService} from '@ng-mf/data-access-user';
+import { FirmaElectronicaComponent, TramiteFolioService, TramiteStore} from '@ng-mf/data-access-user';
 import { Subscription,catchError, map } from 'rxjs';
 import { Router } from '@angular/router';
 // import { TramiteStore } from '@ng-mf/data-access-user'; 
@@ -20,11 +20,17 @@ export class PasoTresComponent implements OnDestroy {
     * Tipo de persona.
     */
    tipoPersona!: number;
- 
+ /**
+ * Constructor del componente PasoTresComponent.
+ * 
+ * @param router - Servicio de Angular Router utilizado para la navegación entre rutas.
+ * @param serviciosExtraordinariosServices - Servicio para gestionar operaciones relacionadas con el trámite, como obtener información del trámite.
+ * @param tramiteStore - Almacén de estado para gestionar y almacenar datos relacionados con el trámite.
+ */
   constructor(
     private router: Router,
     private serviciosExtraordinariosServices: TramiteFolioService,
-    // private tramiteStore: TramiteStore
+    private tramiteStore: TramiteStore
   ) {
     // El constructor se utiliza para la inyección de dependencias.
   }
@@ -47,7 +53,7 @@ export class PasoTresComponent implements OnDestroy {
         .obtenerTramite(19)
         .pipe(
           map((tramite) => {
-            // this.tramiteStore.establecerTramite(tramite.data, FIRMA);
+            this.tramiteStore.establecerTramite(tramite.data, FIRMA);
             this.router.navigate(['pago/registro-solicitud/acuse']);
           }),
           catchError((_error) => {

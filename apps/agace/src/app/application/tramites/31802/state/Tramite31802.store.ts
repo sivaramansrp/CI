@@ -27,12 +27,12 @@ export interface Solicitud31802State {
   manifiesto3: string;
   /** Fecha de pago asociada a la solicitud. */
   fechaPago: string;
- /** Moneda nacional asociada a la solicitud. */
-monedaNacional: string;
-/** Indica si la solicitud es una renovación (`true` o `false`). */
-renovacion: boolean;
-/** Indica si la solicitud es una homologación (`true` o `false`). */
-homologacion: boolean;
+  /** Moneda nacional asociada a la solicitud. */
+  monedaNacional: string;
+  /** Indica si la solicitud es una renovación (`true` o `false`). */
+  renovacion: boolean;
+  /** Indica si la solicitud es una homologación (`true` o `false`). */
+  homologacion: boolean;
 }
 
 /**
@@ -115,10 +115,10 @@ export class Tramite31802Store extends Store<Solicitud31802State> {
   public setFechaPago(fechaPago: string) {
     this.update((state) => ({ ...state, fechaPago }));
   }
-/**
- * Actualiza el valor de renovación en el estado.
- * @param renovacion Indica si la solicitud es una renovación (`true` o `false`).
- */
+  /**
+   * Actualiza el valor de renovación en el estado.
+   * @param renovacion Indica si la solicitud es una renovación (`true` o `false`).
+   */
   setRenovacion(renovacion: boolean): void {
     this.update((state) => ({
       ...state,
