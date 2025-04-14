@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RegistroCaatNavieroPageComponent } from './registro-caat-naviero-page.component';
 import { SeccionLibQuery, SeccionLibStore, WizardComponent } from '@ng-mf/data-access-user';
 import { of, Subject } from 'rxjs';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 describe('RegistroCaatNavieroPageComponent', () => {
   let component: RegistroCaatNavieroPageComponent;
@@ -21,6 +22,7 @@ describe('RegistroCaatNavieroPageComponent', () => {
 
     await TestBed.configureTestingModule({
       declarations: [RegistroCaatNavieroPageComponent],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
       providers: [
         { provide: SeccionLibQuery, useValue: mockSeccionQuery },
         { provide: SeccionLibStore, useValue: mockSeccionStore },

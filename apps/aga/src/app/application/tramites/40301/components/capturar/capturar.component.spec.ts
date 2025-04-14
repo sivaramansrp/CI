@@ -5,7 +5,7 @@ import { CapturarService } from '../../services/capturar.service';
 import { Solicitud40301Store } from '../../estados/tramite40301.store';
 import { of } from 'rxjs';
 import { CaatNaviroMetaInfo } from '../../modelos/caat-naviero.modalidad.model';
-import { Catalogo } from '@libs/shared/data-access-user/src';
+import { Catalogo, TituloComponent, WizardComponent } from '@libs/shared/data-access-user/src';
 
 describe('CapturarComponent', () => {
   let component: CapturarComponent;
@@ -31,7 +31,7 @@ describe('CapturarComponent', () => {
 
     await TestBed.configureTestingModule({
       declarations: [CapturarComponent],
-      imports: [ReactiveFormsModule],
+      imports: [ReactiveFormsModule, TituloComponent, WizardComponent],
       providers: [
         FormBuilder,
         { provide: CapturarService, useValue: mockCapturarService },

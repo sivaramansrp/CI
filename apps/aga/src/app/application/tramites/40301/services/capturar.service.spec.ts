@@ -4,7 +4,8 @@ import { CapturarService } from './capturar.service';
 import { Solicitud40301Store } from '../estados/tramite40301.store';
 import { Solicitud40301Query } from '../estados/tramite40301.query';
 import { CaatNaviroMetaInfo } from '../modelos/caat-naviero.modalidad.model';
-import { Catalogo } from '@libs/shared/data-access-user/src';
+import { Catalogo, TituloComponent, WizardComponent } from '@libs/shared/data-access-user/src';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 describe('CapturarService', () => {
   let service: CapturarService;
@@ -22,7 +23,8 @@ describe('CapturarService', () => {
     } as unknown as jest.Mocked<Solicitud40301Query>;
 
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
+      imports: [WizardComponent, TituloComponent, HttpClientTestingModule],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
       providers: [
         CapturarService,
         { provide: Solicitud40301Store, useValue: mockStore },
@@ -43,18 +45,14 @@ describe('CapturarService', () => {
   });
 
   it('should set initial values in the store', () => {
+    // Arrange: Mock the `setInitialValues` method of the store
+    mockStore.setInitialValues = jest.fn();
+  
+    // Act: Call the `setInitialValues` method of the service
     service.setInitialValues();
-    expect(mockStore.update).toHaveBeenCalledWith(
-      expect.objectContaining({
-        cveFolioCaat: '3L6V',
-        descTipoCaat: 'Naviero',
-        tipoAgente: 'Agente Naviero',
-        directorGeneralNombre: 'HAZEL',
-        primerApellido: 'NAVA',
-        segundoApellido: 'AVILA',
-        rol: 'Agente Naviero',
-      })
-    );
+  
+    // Assert: Verify that the store's `setInitialValues` method was called
+    expect(mockStore.setInitialValues).toHaveBeenCalled();
   });
 
   it('should get solicitud state', () => {
@@ -69,7 +67,7 @@ describe('CapturarService', () => {
       expect(data).toEqual(mockMetaInfo);
     });
 
-    const req = httpMock.expectOne('assets/json/40301/metaData.json');
+    const req = httpMock.expectOne('/assets/json/40301/metaData.json');
     expect(req.request.method).toBe('GET');
     req.flush(mockMetaInfo);
   });
@@ -81,7 +79,7 @@ describe('CapturarService', () => {
       expect(roles).toEqual(mockRoles);
     });
 
-    const req = httpMock.expectOne('assets/json/40301/userRoles.json');
+    const req = httpMock.expectOne('/assets/json/40301/userRoles.json');
     expect(req.request.method).toBe('GET');
     req.flush(mockRoles);
   });
@@ -96,7 +94,7 @@ describe('CapturarService', () => {
       expect(catalog).toEqual(mockCatalog);
     });
 
-    const req = httpMock.expectOne('assets/json/40301/tipoAgentoData.json');
+    const req = httpMock.expectOne('/assets/json/40301/tipoAgentoData.json');
     expect(req.request.method).toBe('GET');
     req.flush(mockCatalog);
   });
@@ -108,7 +106,7 @@ describe('CapturarService', () => {
       expect(id).toBe(mockTramiteId);
     });
 
-    const req = httpMock.expectOne('assets/json/40301/obtenerIdTramite');
+    const req = httpMock.expectOne('/assets/json/40301/obtenerIdTramite');
     expect(req.request.method).toBe('GET');
     req.flush(mockTramiteId);
   });

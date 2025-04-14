@@ -2,7 +2,7 @@ import { CAAT_NAVIERO_PASOS } from '../../enum/caat-naviero.enum';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { SECCIONES_TRAMITE_40301 } from '../../enum/caat-naviero.enum';
 
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { DatosPasos, 
   ListaPasosWizard, 
   SeccionLibQuery, 
@@ -21,7 +21,7 @@ interface AccionBoton {
   styles: ``,
 })
 
-export class RegistroCaatNavieroPageComponent implements OnInit {
+export class RegistroCaatNavieroPageComponent implements OnInit, OnDestroy {
   /**
    * Un arreglo de pasos (`ListaPasosWizard[]`) utilizado en el proceso de CAAT Naviero.
    * Este se inicializa con pasos predefinidos de `CAAT_NAVIERO_PASOS`.
@@ -176,5 +176,17 @@ export class RegistroCaatNavieroPageComponent implements OnInit {
    */
   pestanaCambiado(event: number): void {
     this.mostrarBotonParaModal = event === 2 ? true : false;
+  }
+
+  
+  /**
+   * Gancho del ciclo de vida que se llama cuando el componente es destruido.
+   * Este método emite un valor al subject `destroyNotifier$` y lo completa,
+   * asegurando que cualquier suscripción vinculada a este notificador se limpie
+   * adecuadamente para prevenir fugas de memoria.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }
