@@ -44,7 +44,7 @@ import {
   standalone: true,
   imports: [CommonModule,ReactiveFormsModule,InputRadioComponent,TituloComponent,CatalogoSelectComponent,TablaDinamicaComponent,InputRadioComponent,InputFechaComponent,CrosslistComponent,InputCheckComponent,NotificacionesComponent],
   templateUrl: './datos-de-la-solicitud.component.html',
-  styleUrls: ['./datos-de-la-solicitud.component.css'],
+  styleUrls: ['./datos-de-la-solicitud.component.sass'],
 })
 export class DatosdelasolicitudComponent implements OnInit,OnDestroy {
    /** Formulario principal para los datos de la solicitud */
@@ -232,7 +232,10 @@ opcionDeBotonDeRadio = [
     this.getMercanciaCrosslistData();
   }
 
-
+/**
+ * Método para crear el formulario principal de datos de la solicitud.
+ * Inicializa un formulario reactivo con todos los campos necesarios y sus validaciones.
+ */
 createForm(){
   this.dataDeLaSolicitudForm = this.fb.group({
     claveDeLosLotes: [this.dataDeLaSolicitudState?.claveDeLosLotes, Validators.required],

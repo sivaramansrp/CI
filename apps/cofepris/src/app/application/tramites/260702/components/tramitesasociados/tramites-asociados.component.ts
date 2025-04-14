@@ -11,7 +11,7 @@ import { DESTINATARIO_CONFIGURACION_TABLA2 } from '../../constants/column-config
 @Component({
   selector: 'app-tramites-asociados',
   templateUrl: './tramites-asociados.component.html',
-  styleUrls: ['./tramites-asociados.component.css'],
+  styleUrls: ['./tramites-asociados.component.sass'],
   standalone: true,
   imports: [TablaDinamicaComponent, TituloComponent,NotificacionesComponent],
 })

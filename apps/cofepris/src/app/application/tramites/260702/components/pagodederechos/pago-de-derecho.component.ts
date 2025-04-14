@@ -18,7 +18,7 @@ import { BANCO_DATA } from '../../constants/catalogs.enum';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, TituloComponent, CatalogoSelectComponent,InputFechaComponent],
   templateUrl: './pago-de-derecho.component.html',
-  styleUrls: ['./pago-de-derecho.component.css'],
+  styleUrls: ['./pago-de-derecho.component.sass'],
 })
 export class PagoDeDerechoComponent implements OnInit, OnDestroy {
   /** Formulario reactivo para gestionar los datos del pago de derechos */
@@ -30,8 +30,8 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
   /** Estado del pago de derechos que se está gestionando */
   pagoDeDerechosState!: Solicitud260702State;
 
- public bancoData = BANCO_DATA;
-
+/** Datos del catálogo de bancos disponibles */
+public bancoData = BANCO_DATA;
   /**
  * Configuración para el campo de selección de la fecha de pago.
  */
