@@ -78,6 +78,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
     },
   ];
   datosTablaDestinatario!: Destinatario[];
+  destinatarioTablaSeleccion: boolean = false;
 
   configuiracionTablaFabricante: ConfiguracionColumna<Fabricante>[] = [
     {
@@ -137,6 +138,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
     },
   ];
   datosTablaFabricante!: Fabricante[];
+  fabricanteTablaSeleccion: boolean = false;
 
   /**
    * Observable utilizado para limpiar las suscripciones al destruir el componente.
@@ -160,6 +162,14 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
     .subscribe((fabricante: Fabricante[]) => {
       this.datosTablaFabricante = fabricante
     });
+  }
+
+  manejarFilaSeleccionadaDestinatario(filaSeleccionada: Destinatario[]): void {
+    this.destinatarioTablaSeleccion = filaSeleccionada.length > 0;
+  }
+
+  manejarFilaSeleccionadaFabricante(filaSeleccionada: Fabricante[]): void {
+    this.fabricanteTablaSeleccion = filaSeleccionada.length > 0;
   }
 
   /**
