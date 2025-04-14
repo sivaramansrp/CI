@@ -1,5 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
-import { DatosPasos, PERMISO_CITE} from '@ng-mf/data-access-user';
+import { AVISO} from '@ng-mf/data-access-user';
+import { DatosPasos} from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS_REGISTRO } from '@ng-mf/data-access-user';
 import { WizardComponent } from '@ng-mf/data-access-user';
@@ -51,7 +52,7 @@ export class DatosComponent {
    * Mensaje de alerta utilizado en el componente.
    * Puede ser asignado a cualquiera de las claves definidas en TEXTOS.
    */
-  public alert_message: string = PERMISO_CITE;
+  public alert_message: string = AVISO.Aviso;
 
   /**
    * Datos para los pasos en el asistente.
