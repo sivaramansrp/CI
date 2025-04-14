@@ -64,11 +64,10 @@ export class FirmaElectronicaComponent {
     if (INPUT.files) {
       const ARCHIVO_ORIGINAL = INPUT.files[0];
       const READER = new FileReader();
-      // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-      READER.onload = async (E: ProgressEvent<FileReader>) => {
-        if (E.target && E.target.result) {
+      READER.onload = async (e: ProgressEvent<FileReader>): Promise<void> => {
+        if (e.target && e.target.result) {
           if (type === 'cer') {
-            const RESULT = (await E.target.result) as ArrayBuffer;
+            const RESULT = (await e.target.result) as ArrayBuffer;
             const DER = new Uint8Array(RESULT);
             const BUFF = forge.util.createBuffer(DER);
             const ASN1 = forge.asn1.fromDer(BUFF);
@@ -77,7 +76,7 @@ export class FirmaElectronicaComponent {
             this.certFile = PEM;
           }
           if (type === 'key') {
-            this.datosBinarios = (await E.target.result) as ArrayBuffer;
+            this.datosBinarios = (await e.target.result) as ArrayBuffer;
           }
         }
       };
@@ -95,9 +94,9 @@ export class FirmaElectronicaComponent {
       return;
     }
 
-    const PASSWORD= this.FormCertificado.get('password')?.value;
+    const PASSWORD = this.FormCertificado.get('password')?.value;
     this.contrasenia =
-    PASSWORD !== undefined && PASSWORD !== null ? PASSWORD : '';
+      PASSWORD !== undefined && PASSWORD !== null ? PASSWORD : '';
 
     this.validateFilesBase(this.certFile, this.datosBinarios, this.contrasenia);
   }
@@ -115,21 +114,21 @@ export class FirmaElectronicaComponent {
     password: string
   ): void {
     try {
-      const CERT = forge.pki.certificateFromPem(certeile);
-      const CERTPUBLICKEY = CERT.publicKey as forge.pki.rsa.PublicKey;
+      const CERT = forge.pki.certificateFromPem(certFile);
+      const CERT_PUBLIC_KEY = CERT.publicKey as forge.pki.rsa.PublicKey;
 
-      const PADDINGSTART = PADDING.INICIO;
-      const PADDINGEND = PADDING.FIN;
+      const PADDING_START = PADDING.INICIO;
+      const PADDING_END = PADDING.FIN;
       const DER = new Uint8Array(binaryData);
-      const BINARYSTRING = String.fromCharCode(...DER);
-      const CONTENT = PADDINGSTART + btoa(BINARYSTRING) + PADDINGEND; // añadir paddings al string del certificado, para poder desencriptarlo.
-      const PRIVATEKEY = forge.pki.decryptRsaPrivateKey(CONTENT, password);
+      const BINARY_STRING = String.fromCharCode(...DER);
+      const CONTENT = PADDING_START + btoa(BINARY_STRING) + PADDING_END; // añadir paddings al string del certificado, para poder desencriptarlo.
+      const PRIVATE_KEY = forge.pki.decryptRsaPrivateKey(CONTENT, password);
 
       const VALIDACIONES =
-        PRIVATEKEY &&
-        CERTPUBLICKEY &&
-        CERTPUBLICKEY.n.t === PRIVATEKEY.n.t &&
-        CERTPUBLICKEY.e.t === PRIVATEKEY.e.t;
+        PRIVATE_KEY &&
+        CERT_PUBLIC_KEY &&
+        CERT_PUBLIC_KEY.n.t === PRIVATE_KEY.n.t &&
+        CERT_PUBLIC_KEY.e.t === PRIVATE_KEY.e.t;
 
       if (VALIDACIONES) {
         this.toastrService.success(
@@ -137,7 +136,7 @@ export class FirmaElectronicaComponent {
         );
         this.valido.emit(true);
         if (!this.login) {
-          const FIRMA = this.firmar('hola', PRIVATEKEY);
+          const FIRMA = FirmaElectronicaComponent.firmar('hola', PRIVATE_KEY);
           this.firma.emit(FIRMA);
         }
       } else {
@@ -157,7 +156,7 @@ export class FirmaElectronicaComponent {
    * @param privateKey Llave privada en formato RSA.
    * @returns {string} Regresa la cadena encriptada.
    */
-  firmar(cadena: string, privateKey: forge.pki.rsa.PrivateKey): string {
+  static firmar(cadena: string, privateKey: forge.pki.rsa.PrivateKey): string {
     const MD = forge.md.sha256.create();
     MD.update(cadena, 'utf8');
     return forge.util.encode64(privateKey.sign(MD));

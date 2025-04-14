@@ -33,7 +33,7 @@ export class SeccionLibStore extends Store<SeccionLibState> {
    * Guarda un elemento por cada sección que se encuentre
    * @param seccion validacion
    */
-  public establecerSeccion(seccion: boolean[]):void {
+  public establecerSeccion(seccion: boolean[]): void {
     this.update(state => ({
       ...state,
       seccion,
@@ -54,7 +54,7 @@ export class SeccionLibStore extends Store<SeccionLibState> {
   /**
    * Limpia los datos de la sección
    */
-  public limpiarSeccion():void {
+  public limpiarSeccion(): void {
     this.reset();
   }
 }

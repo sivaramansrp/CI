@@ -4,7 +4,7 @@ import {
   Input,
   OnInit,
   Output,
-  forwardRef  
+  forwardRef,
 } from '@angular/core';
 import {
   FormBuilder,
@@ -34,6 +34,7 @@ import { CommonModule } from '@angular/common';
     },
   ],
 })
+
 export class InputRadioComponent implements OnInit {
   @Input() description!: string; // Optional description
   @Input() showDescription: boolean = false;
@@ -92,17 +93,14 @@ export class InputRadioComponent implements OnInit {
       seleccion: [this.selectedValue || '', VALIDATORS],
     });
   }
-  private onChange: (value: string | number | null) => void = () => {
-    // Lógica de inicialización si es necesario
-  };
-  private onTouched: () => void = () => {
-       // Lógica de inicialización si es necesario
-  };
+  
+  private onChange: (value: string | number | null) => void = () => { };
+  private onTouched: () => void = () => { };
   /**
    * Maneja el evento de cambio de selección y emite el nuevo valor.
    * @param value - El nuevo valor seleccionado.
    */
-  onSelectionChange(value: string | number): void {
+  onSelectionChange(value: string | number) : void {
     this.selectedValue = value;
     this.valueChange.emit(value);
     this.onChange(value);
@@ -117,7 +115,7 @@ export class InputRadioComponent implements OnInit {
     }
   }
 
-  registerOnChange(fn: () => void): void {
+  registerOnChange(fn: (value: string | number | null) => void): void {
     this.onChange = fn;
   }
 

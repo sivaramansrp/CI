@@ -6,7 +6,7 @@ import {
   Output,
   inject,
 } from '@angular/core';
-import {Subject, map, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { DatosPasos } from '../../../core/models/shared/components.model';
 import { SeccionLibQuery } from '../../../core/queries/seccion.query';
 import { SeccionLibState } from '../../../core/estados/seccion.store';
@@ -54,31 +54,50 @@ export class BtnContinuarComponent implements OnInit {
       .subscribe();
   }
 
+  /**
+   * Determina la visibilidad del botón "Anterior".
+   * @returns {string} 'hidden' si el índice es 1, de lo contrario 'visible'.
+   */
   get btnAntVisible(): string {
     return this.datos.indice === 1 ? 'hidden' : 'visible';
   }
 
-  get btnContVisible(): string | boolean{
+  /**
+   * Determina si el botón "Continuar" debe ser visible.
+   *
+   * @returns {boolean} `true` si el índice actual no es igual al número de pasos, de lo contrario `false`.
+   */
+  get btnContVisible(): boolean {
     return this.datos.indice === this.datos.nroPasos ? false : true;
   }
 
+  /**
+   * Avanza al siguiente paso del asistente si la condición se cumple.
+   * 
+   * @returns {void} No retorna ningún valor.
+   */
   continuar(): void {
-    const CONDICION=
+    const CONDICION =
       this.datos.indice > 0 && this.datos.indice < this.datos.nroPasos;
     if (CONDICION) {
       this.wizardService.cambio_indice(this.datos.indice);
-      const DATAOS_CONTINUAR: AccionBoton = {
+      const DATOS_CONTINUAR: AccionBoton = {
         accion: 'cont',
         valor: (this.datos.indice += 1),
       };
-      this.continuarEvento.emit(DATAOS_CONTINUAR);
+      this.continuarEvento.emit(DATOS_CONTINUAR);
     }
   }
 
+  /**
+   * Retrocede al paso anterior si el índice actual está dentro del rango permitido.
+   * 
+   * @returns {void} No retorna ningún valor.
+   */
   anterior(): void {
-    const CONSDICION=
+    const CONDICION =
       this.datos.indice > 1 && this.datos.indice < this.datos.nroPasos + 1;
-    if (CONSDICION) {
+    if (CONDICION) {
       const DATOS_ANTERIOR: AccionBoton = {
         accion: 'ant',
         valor: (this.datos.indice -= 1),
@@ -87,6 +106,11 @@ export class BtnContinuarComponent implements OnInit {
       this.continuarEvento.emit(DATOS_ANTERIOR);
     }
   }
+
+  /**
+   * Emite un evento al hacer clic en el botón guardar.
+   * @returns {void} No retorna ningún valor.
+   */
   guardar(): void {
     this.btnGuardarClicked.emit();
   }

@@ -1,0 +1,114 @@
+<div class="col-md-12">
+    <form [formGroup]="pagoDeDerechosForm">
+      <ng-titulo titulo="Pago de derechos" />
+      <div class="row mt-2">
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="form-label">Clave de referencia:</label>
+            <input
+              class="form-control"
+              placeholder=""
+              type="text"
+              name="claveDeReferencia"
+              formControlName="claveDeReferencia"
+              (change)="setValoresStore(pagoDeDerechosForm,'claveDeReferencia','setClaveDeReferencia')"
+            />
+            <div *ngIf="esInvalido('claveDeReferencia')" class="text-danger">
+              <small *ngIf="pagoDeDerechosForm.controls['claveDeReferencia'].hasError('maxlength')">Máximo 50 caracteres.</small>
+          </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="form-label">Cadena de la dependencia:</label>
+            <input
+              class="form-control"
+              placeholder=""
+              type="text"
+              name="cadenaPagoDependencia"
+              formControlName="cadenaPagoDependencia"
+              (change)="setValoresStore(pagoDeDerechosForm,'cadenaPagoDependencia','setCadenaPagoDependencia')"
+            />
+            <div *ngIf="esInvalido('cadenaPagoDependencia')" class="text-danger">
+              <small *ngIf="pagoDeDerechosForm.controls['cadenaPagoDependencia'].hasError('maxlength')">Máximo 50 caracteres.</small>
+          </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+              <app-catalogo-select
+              [catalogo]="bancoList"
+              [label]="'Banco:'"
+              [required]="true"
+              id="clave"
+              formControlName="clave"
+              (change)="setValoresStore(pagoDeDerechosForm, 'clave', 'setClave')"
+            >
+            </app-catalogo-select>
+
+            <div *ngIf="esInvalido('clave')" class="text-danger">
+              <small *ngIf="pagoDeDerechosForm.controls['clave'].hasError('required')">Banco es obligatoria.</small>
+          </div>
+          </div>
+        </div>
+      </div>
+  
+      <div class="row mt-2">
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="form-label">Llave de pago:</label>
+            <input
+              class="form-control"
+              placeholder=""
+              type="text"
+              name="llaveDePago"
+              formControlName="llaveDePago"
+              (change)="setValoresStore(pagoDeDerechosForm,'llaveDePago','setLlaveDePago')"
+            />
+            <div *ngIf="esInvalido('llaveDePago')" class="text-danger">
+              <small *ngIf="pagoDeDerechosForm.controls['llaveDePago'].hasError('required')">Llave de pago es obligatoria.</small>
+              <small *ngIf="pagoDeDerechosForm.controls['llaveDePago'].hasError('pattern')">Solo se permiten 10 caracteres en mayúsculas y números.</small>
+          </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="form-label">Fecha de pago:</label>
+            <input
+              class="form-control"
+              placeholder=""
+              type="date"
+              name="fecPago"
+              formControlName="fecPago"
+              (change)="setValoresStore(pagoDeDerechosForm,'fecPago','setFecPago'); validarFechaFutura('fecPago')"
+            />
+            <div *ngIf="esInvalido('fecPago')" class="text-danger">
+              <small *ngIf="pagoDeDerechosForm.controls['fecPago'].hasError('required')">Fecha de pago es obligatoria.</small>
+              <small *ngIf="pagoDeDerechosForm.get('fecPago')?.hasError('fechaLim')">La fecha de pago debe ser menor o igual a la fecha actual</small>
+          </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+              <label class="form-label">Importe de pago:</label>
+              <input
+                class="form-control"
+                placeholder=""
+                type="text"
+                name="impPago"
+                formControlName="impPago"
+                (change)="setValoresStore(pagoDeDerechosForm,'impPago','setImpPago'); validarSinComas('impPago')"
+              />
+              <div *ngIf="esInvalido('impPago')" class="text-danger">
+                <small *ngIf="pagoDeDerechosForm.controls['impPago'].hasError('maxlength')">Máximo 16 caracteres.</small>
+                <small *ngIf="pagoDeDerechosForm.get('impPago')?.hasError('noComa')">El campo no debe contener comas.</small>
+            </div>
+            </div>
+          </div>
+      </div>
+  
+      <div class="d-flex justify-content-end mt-5">
+        <button type="button" class="btn btn-primary ms-2 d-flex">Borrar datos del pago</button>
+      </div>
+    </form>
+  </div>

@@ -1,6 +1,13 @@
-import { CatalogosSelect, DocumentosCargados } from '../../../core/models/shared/components.model';
-import { Component, ElementRef, Input,OnInit, ViewChild} from '@angular/core';
-import { DPI, MB, PDF } from '../../constantes/constantes';
+import {
+  CatalogosSelect,
+  DocumentosCargados,
+} from '../../../core/models/shared/components.model';
+import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import {
+  DPI,
+  MB,
+  PDF
+} from '../../constantes/constantes';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { Catalogo } from '../../../core/models/shared/catalogos.model';
@@ -62,7 +69,7 @@ export class AnexarDocumentosComponent implements OnInit {
     // Lógica de inicialización si es necesario
   }
 
-  ngOnInit():void {
+  ngOnInit(): void {
     this.obtenerToken(this.datosLogin);
     this.crearFormaDocumento();
   }

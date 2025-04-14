@@ -1,12 +1,12 @@
-import { Catalogo, catalogoResponse } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoResponse } from '@libs/shared/data-access-user/src';
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
 import { TablaDatos } from '../../models/terceros-fabricante.model';
 
 export interface TercerosFabricanteState {
-  selectedEstado: catalogoResponse | null;
-  setClave: catalogoResponse | null;
-  setDescripcion: catalogoResponse | null;
+  selectedEstado: CatalogoResponse | null;
+  setClave: CatalogoResponse | null;
+  setDescripcion: CatalogoResponse | null;
   setDespecificarClasificacion: Catalogo | null;
   /**
    * Datos del fabricante.
@@ -42,21 +42,21 @@ export class TercerosFabricanteStore extends Store<TercerosFabricanteState> {
     super(createInitialState());
   }
 
-  public setSelectedEstado(selectedEstado: catalogoResponse): void {
+  public setSelectedEstado(selectedEstado: CatalogoResponse): void {
     this.update((state) => ({
       ...state,
       selectedEstado,
     }));
   }
 
-  public setClave(selectedClave: catalogoResponse): void {
+  public setClave(selectedClave: CatalogoResponse): void {
     this.update((state) => ({
       ...state,
       selectedClave,
     }));
   }
 
-  public setDescripcion(selectedDescripcion: catalogoResponse): void {
+  public setDescripcion(selectedDescripcion: CatalogoResponse): void {
     this.update((state) => ({
       ...state,
       selectedDescripcion,
@@ -64,7 +64,7 @@ export class TercerosFabricanteStore extends Store<TercerosFabricanteState> {
   }
 
   public setDespecificarClasificacion(
-    selectedDespecificarClasificacion: catalogoResponse
+    selectedDespecificarClasificacion: CatalogoResponse
   ): void {
     this.update((state) => ({
       ...state,
@@ -76,7 +76,7 @@ export class TercerosFabricanteStore extends Store<TercerosFabricanteState> {
    *
    * @param fabricante Arreglo de datos del fabricante.
    */
-  public setFabricante(fabricante: TablaDatos[]) {
+  public setFabricante(fabricante: TablaDatos[]): void {
     this.update((state) => ({
       ...state,
       Fabricante: fabricante,
@@ -88,7 +88,7 @@ export class TercerosFabricanteStore extends Store<TercerosFabricanteState> {
    *
    * @param formulador Arreglo de datos del formulador.
    */
-  public setFormulador(formulador: TablaDatos[]) {
+  public setFormulador(formulador: TablaDatos[]): void {
     this.update((state) => ({
       ...state,
       Formulador: formulador,
@@ -100,7 +100,7 @@ export class TercerosFabricanteStore extends Store<TercerosFabricanteState> {
    *
    * @param proveedor Arreglo de datos del proveedor.
    */
-  public setProveedor(proveedor: TablaDatos[]) {
+  public setProveedor(proveedor: TablaDatos[]): void {
     this.update((state) => ({
       ...state,
       Proveedor: proveedor,

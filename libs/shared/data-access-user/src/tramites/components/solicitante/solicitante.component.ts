@@ -56,6 +56,12 @@ export class SolicitanteComponent implements OnInit {
     this.inicializarFormGroup(this.domicilioFiscal, 'domicilioFiscal');
   }
 
+  /**
+   * @inheritdoc
+   * @description Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Llama a la función `getDatosGenerales` para obtener datos iniciales.
+   * @returns {void} No retorna ningún valor.
+   */
   ngOnInit(): void {
     this.getDatosGenerales();
   }
@@ -122,7 +128,7 @@ export class SolicitanteComponent implements OnInit {
   ): void {
     const GRUPO = this.form.get(grupoNombre) as FormGroup;
     config.forEach((campo) => {
-      const VALIDATORS = this.getValidators(campo.validators);
+      const VALIDATORS = SolicitanteComponent.getValidators(campo.validators);
       GRUPO.addControl(
         campo.campo,
         this.fb.control({ value: '', disabled: campo.disabled }, VALIDATORS)
@@ -135,20 +141,20 @@ export class SolicitanteComponent implements OnInit {
    * @param validators - Validadores de los campos de los formularios.
    * @returns ValidatorFn[]
    */
-   getValidators(validators: string[]): ValidatorFn[] {
-    const FROM_VALIDATORS: ValidatorFn[] = [];
+  static getValidators(validators: string[]): ValidatorFn[] {
+    const FORM_VALIDATOR: ValidatorFn[] = [];
     validators.forEach((validator) => {
       if (validator === 'required') {
-        FROM_VALIDATORS.push(Validators.required);
+        FORM_VALIDATOR.push(Validators.required);
       } else if (validator.includes('maxLength')) {
         const MAX = validator.split(':')[1];
-        FROM_VALIDATORS.push(Validators.maxLength(Number(MAX)));
+        FORM_VALIDATOR.push(Validators.maxLength(Number(MAX)));
       } else if (validator.includes('pattern')) {
         const PATTERN = validator.split(':')[1];
-        FROM_VALIDATORS.push(Validators.pattern(PATTERN));
+        FORM_VALIDATOR.push(Validators.pattern(PATTERN));
       }
     });
-    return FROM_VALIDATORS;
+    return FORM_VALIDATOR;
   }
 
   /**
@@ -159,34 +165,34 @@ export class SolicitanteComponent implements OnInit {
     this.solicitanteServicio
       .getDatosGenerales(CATALOGOS_ID.DATOS_PERSONA_FISICA)
       .pipe(
-        tap((RESPONSE) => {
-          if (RESPONSE) {
-            const DATOS = JSON.parse(RESPONSE.data);
+        tap((response) => {
+          if (response) {
+            const DATOS = JSON.parse(response.data);
             const DATOS_SOLICITANTE = DATOS.datosGenerales;
             const DATOS_DOMICILIO_FISCAL = DATOS.domicilioFiscal;
 
             const CAMPOS_DATOS_GENERALES =
-              this.formServices.obtenerNombresCamposForm(
+            FormulariosService.obtenerNombresCamposForm(
                 this.datosGeneralesForm
               );
             const CAMPOS_DATOS_DOMICILIO_FISCAL =
-              this.formServices.obtenerNombresCamposForm(
+            FormulariosService.obtenerNombresCamposForm(
                 this.domicilioFiscalForm
               );
 
-            CAMPOS_DATOS_GENERALES.forEach((CAMPO) => {
-              this.formServices.agregarValorCampoDesactivados(
+            CAMPOS_DATOS_GENERALES.forEach((campo) => {
+              FormulariosService.agregarValorCampoDesactivado(
                 this.datosGeneralesForm,
-                CAMPO,
-                DATOS_SOLICITANTE[CAMPO]
+                campo,
+                DATOS_SOLICITANTE[campo]
               );
             });
 
-            CAMPOS_DATOS_DOMICILIO_FISCAL.forEach((CAMPO) => {
-              this.formServices.agregarValorCampoDesactivados(
+            CAMPOS_DATOS_DOMICILIO_FISCAL.forEach((campo) => {
+              FormulariosService.agregarValorCampoDesactivado(
                 this.domicilioFiscalForm,
-                CAMPO,
-                DATOS_DOMICILIO_FISCAL[CAMPO]
+                campo,
+                DATOS_DOMICILIO_FISCAL[campo]
               );
             });
           }

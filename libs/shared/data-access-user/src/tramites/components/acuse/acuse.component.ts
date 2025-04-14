@@ -9,7 +9,7 @@ import { TituloComponent } from '../titulo/titulo.component';
 @Component({
   selector: 'lib-component-acuse',
   standalone: true,
-  imports: [CommonModule, AlertComponent, TituloComponent],
+  imports: [CommonModule, AlertComponent],
   templateUrl: './acuse.component.html',
   styleUrl: './acuse.component.scss',
 })

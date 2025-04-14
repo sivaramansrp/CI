@@ -14,9 +14,9 @@ import {
   Validators,
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { HORA_PATTERN } from '../../constantes/regex.constants';
 import { HoraFormatoDirective } from '../../directives/hora-formato/hora-formato.directive';
 import { ValidacionesFormularioService } from '../../../core/services/shared/validaciones-formulario/validaciones-formulario.service';
-
 @Component({
   selector: 'input-hora',
   standalone: true,
@@ -32,28 +32,51 @@ import { ValidacionesFormularioService } from '../../../core/services/shared/val
   ],
 })
 export class InputHoraComponent implements OnChanges, ControlValueAccessor {
+
+  /**
+   * Etiqueta para mostrar junto al componente.
+   */
   @Input() label: string = '';
+
+  /**
+   * Identificador único requerido para el input del componente.
+   */
   @Input() inputId: string = '';
+
+  /**
+   * Indica si el input es obligatorio.
+   */
   @Input() required!: boolean;
 
+  /**
+   * Formulario reactivo que contiene el control 'hora'.
+   */
   forma: FormGroup;
+
+  /**
+   * Valor del input 'hora'.
+   */
   value: string = '';
 
-  private onChange: (value: string) => void = () => {
-    // Lógica de inicialización si es necesario
-  };
-  private onTouched: () => void = () => {
-    // Lógica de inicialización si es necesario
-  };
+  // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-empty-function
+  private onChange: (value: string) => void = () => { };
+  // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-empty-function
+  private onTouched: () => void = () => { };
 
   constructor(private validacionesService: ValidacionesFormularioService) {
     this.forma = new FormGroup({
       hora: new FormControl('', [
-        Validators.pattern(this.validacionesService.horaPattern),
+        Validators.pattern(HORA_PATTERN),
       ]),
     });
   }
 
+  /**
+   * Detecta cambios en las propiedades de entrada y actualiza las validaciones del campo 'hora'.
+   * 
+   * @param changes - Cambios detectados en las propiedades de entrada.
+   * @returns void
+   */
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['required']) {
       if (this.required) {
@@ -61,7 +84,7 @@ export class InputHoraComponent implements OnChanges, ControlValueAccessor {
           .get('hora')
           ?.setValidators([
             Validators.required,
-            Validators.pattern(this.validacionesService.horaPattern),
+            Validators.pattern(HORA_PATTERN),
           ]);
       } else {
         this.forma.get('hora')?.clearValidators();
@@ -70,24 +93,52 @@ export class InputHoraComponent implements OnChanges, ControlValueAccessor {
     }
   }
 
+  /**
+  * Maneja el evento de cambio de un input tipo text.
+  * 
+  * @param event - Evento de cambio del text.
+  * @returns void
+  */
+  // ✅ Implement `ControlValueAccessor`
   handleChange(event: Event): void {
     const VALUE = (event.target as HTMLSelectElement).value;
     this.onChange(VALUE);
   }
+
+  /**
+   * Escribe un valor string en el control de formulario 'hora'.
+   * 
+   * @param value - Valor string a establecer en el control.
+   * @returns void
+   */
   writeValue(value: string): void {
     this.forma.controls['hora'].setValue(value);
   }
 
+  /**
+   * Registra una función que se ejecutará cuando el valor del control cambie.
+   * @param fn - Función que se invoca al cambiar el valor del control.
+   * @returns void
+   */
   registerOnChange(fn: (value: string) => void): void {
     this.onChange = fn;
     this.forma.get('hora')?.valueChanges.subscribe(fn);
   }
 
+  /**
+   * Registra una función que se ejecutará cuando el control sea marcado como "tocado".
+   * @param fn - Función que se ejecutará al marcar el control como tocado.
+   * @returns void
+   */
   registerOnTouched(fn: () => void): void {
     this.onTouched = fn;
   }
 
-  get isValid(): boolean | null | undefined{
+  /**
+   * Verifica si el campo 'hora' del formulario tiene errores y ha sido tocado.
+   * @returns {boolean | null | undefined} `true` si tiene errores y ha sido tocado, de lo contrario `false`, `null` o `undefined`.
+   */
+  get isValid(): boolean | null | undefined {
     return this.forma.get('hora')?.errors && this.forma.get('hora')?.touched;
   }
-}
+} 

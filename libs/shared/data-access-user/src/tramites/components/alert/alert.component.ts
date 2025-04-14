@@ -16,9 +16,9 @@ export class AlertComponent implements OnInit {
 
   textoHTML: SafeHtml = '';
 
-  constructor(private sanitizer: DomSanitizer) {
-    // Lógica de inicialización si es necesario
-   }
+  constructor(private sanitizer: DomSanitizer) { 
+    // EL construtor inyecta dependencias necesarias para el componente.
+  }
 
   /**
    * Método del ciclo de vida de Angular que se llama una vez que el componente ha sido inicializado.

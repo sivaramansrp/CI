@@ -1,4 +1,4 @@
-export interface catalogoResponse {
+export interface CatalogoResponse {
   id: number;
   descripcion: string;
 }
@@ -40,6 +40,14 @@ export interface BodyTablaAcuse {
   idDocumento: string;
   documento: string;
   urlPdf: string;
+}
+
+export interface RespuestaDocuemntosRequeridos {
+  id: number;
+  requerido: boolean;
+  tipoDocumento: string;
+  nombreArchivo: string;
+  estatus: string;
 }
 
 

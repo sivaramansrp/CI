@@ -6,22 +6,22 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import {
+  CORREO_INVALIDO,
+  REQUERIDO,
+  RFC_INVALIDO
+} from '../../constantes/mensajes-error-formularios';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import {
   DatosRepresentanteLegal,
   DatosRfcResponse,
 } from '../../../core/models/shared/components.model';
-import {
-  REQUERIDO,
-  RFC_INVALIDO,
-} from '../../constantes/mensajes-error-formularios';
-import { CORREO_INVALIDO } from '../../constantes/mensajes-error-formularios';
 import { CommonModule } from '@angular/common';
 import { FormulariosService } from '../../../core/services/shared/formularios/formularios.service';
 import { NumeroTelefonicoDirective } from '../../directives/numeroTelefonico/numero-telefonico.directive';
+import { REGEX_RFC } from '../../constantes/regex.constants';
 import { UppercaseDirective } from '../../directives/Uppercase/uppercase.directive';
 import { ValidacionesFormularioService } from '../../../core/services/shared/validaciones-formulario/validaciones-formulario.service';
-
 @Component({
   selector: 'representante-fiscal',
   standalone: true,
@@ -43,7 +43,7 @@ export class RepresentanteFiscalComponent implements OnInit {
 
   rfcBusqueda: FormControl = new FormControl('', [
     Validators.required,
-    Validators.pattern(this.validacionesService.rfcPattern),
+    Validators.pattern(REGEX_RFC),
   ]);
 
   representanteLegalForm!: FormGroup;
@@ -59,6 +59,11 @@ export class RepresentanteFiscalComponent implements OnInit {
     // Lógica de inicialización si es
   }
 
+  /**
+   * @inheritdoc
+   * @description Inicializa el componente creando el formulario de representante legal.
+   * @returns {void} No retorna ningún valor.
+   */
   ngOnInit(): void {
     this.crearRepresentanteLegalForm();
   }
@@ -101,12 +106,12 @@ export class RepresentanteFiscalComponent implements OnInit {
    */
   crearRepresentanteLegalForm(): void {
     this.representanteLegalForm = this.fb.group({
-      rfc: [
+      RFC: [
         { value: '', disabled: true },
         [
           Validators.required,
           Validators.maxLength(13),
-          Validators.pattern(this.validacionesService.rfcPattern),
+          Validators.pattern(REGEX_RFC),
         ],
       ],
       nombre: [
@@ -143,14 +148,14 @@ export class RepresentanteFiscalComponent implements OnInit {
     };
 
     // Obtenemos los campos deactivados de la formulario para el Representante Legal por RFC
-    const COMPOS_DESABLED = this.formServices.obtenerCamposDisabled(
+    const CAMPOS_DISABLED = FormulariosService.obtenerCamposDisabled(
       this.representanteLegalForm
     );
     if (RFC) {
       //Agregamos los valores a los campos desactivados
-      COMPOS_DESABLED.forEach((campo) => {
+      CAMPOS_DISABLED.forEach((campo) => {
         if (campo in DATOS_REPRESENTANTE) {
-          this.formServices.agregarValorCampoDesactivados(
+          FormulariosService.agregarValorCampoDesactivado(
             this.representanteLegalForm,
             campo,
             DATOS_REPRESENTANTE[campo as keyof DatosRfcResponse]
@@ -159,7 +164,7 @@ export class RepresentanteFiscalComponent implements OnInit {
       });
     } else {
       // Activamos los campos desactivados en el formulario para que se pueda ingresar la información.
-      COMPOS_DESABLED.forEach((campo) => {
+      CAMPOS_DISABLED.forEach((campo) => {
         this.representanteLegalForm.controls[campo].enable();
         this.representanteLegalForm.controls[campo].setValidators([
           Validators.required,
