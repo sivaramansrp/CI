@@ -6,7 +6,7 @@ import {
   Proveedor,
   TercerosRelacionadosDatos,
 } from '../../../../shared/models/terceros-relacionados.model';
-import { Observable, Subject, takeUntil } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
 import { Tramite260207Query } from '../../estados/tramite260207Query.query';
