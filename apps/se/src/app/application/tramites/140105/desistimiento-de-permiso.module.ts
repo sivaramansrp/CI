@@ -1,4 +1,4 @@
-import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, CatalogoSelectComponent, CrosslistComponent, FirmaElectronicaComponent, InputCheckComponent, InputFechaComponent, InputRadioComponent, SelectCatalogosComponent, SharedModule, SolicitanteComponent, TablaDinamicaComponent, TableComponent, TercerosComponent, TituloComponent, WizardComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, CatalogoSelectComponent, CrosslistComponent, FirmaElectronicaComponent, InputCheckComponent, InputFechaComponent, InputRadioComponent, SharedModule, SolicitanteComponent, TablaDinamicaComponent, TableComponent, TercerosComponent, TituloComponent, WizardComponent } from '@ng-mf/data-access-user';
 import { BusquedaFolioComponent } from './pages/busqueda-folio/busqueda-folio.component';
 import { CancelacionDeSolicitudComponent } from './components/cancelacion-de-solicitud/cancelacion-de-solicitud.component';
 import { CommonModule } from '@angular/common';
@@ -26,7 +26,6 @@ import { ToastrService } from 'ngx-toastr';
     DesistimientoDePermisoRoutingModule,
     WizardComponent,
     BtnContinuarComponent,
-    CommonModule,
     ReactiveFormsModule,
     SharedModule,
     WizardComponent,
@@ -34,7 +33,6 @@ import { ToastrService } from 'ngx-toastr';
     BtnContinuarComponent,
     CrosslistComponent,
     InputCheckComponent,
-    SelectCatalogosComponent,
     AlertComponent,
     InputFechaComponent,
     AnexarDocumentosComponent,

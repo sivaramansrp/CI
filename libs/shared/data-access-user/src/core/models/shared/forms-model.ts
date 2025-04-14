@@ -8,7 +8,7 @@ export interface CampoForm {
   tipo_input: string;
 }
 
-export interface datosAgregarFormulario {
+export interface DatosAgregarFormulario {
   form: FormGroup;
   field: string;
   valor: string;
@@ -24,6 +24,7 @@ export interface FormularioDinamico {
   readonly?: boolean;
   validators: string[];
   tooltip?: string;
+  tooltipTxt?: string;
   placeholder?: string;
   AvailableRadioOptions?: string[];
   listaDesplegable?: Catalogo[];

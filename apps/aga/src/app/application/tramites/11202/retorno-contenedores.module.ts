@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { AnexarDocumentosComponent, AlertComponent, BtnContinuarComponent, CatalogoSelectComponent, CatalogosService, CrosslistComponent, FirmaElectronicaComponent, InputCheckComponent, InputFechaComponent, InputHoraComponent, InputRadioComponent, RepresentanteFiscalComponent, SelectCatalogosComponent, SelectPaisesComponent, SharedModule, TituloComponent, WizardComponent } from '@ng-mf/data-access-user';
+import { AnexarDocumentosComponent, AlertComponent, BtnContinuarComponent, CatalogoSelectComponent, CatalogosService, CrosslistComponent, FirmaElectronicaComponent, InputCheckComponent, InputFechaComponent, InputHoraComponent, InputRadioComponent, RepresentanteFiscalComponent, SelectPaisesComponent, SharedModule, TituloComponent, WizardComponent } from '@ng-mf/data-access-user';
 import { ContenedorComponent } from './components/contenedor/contenedor.component';
 import { SolicitanteComponent } from './components/solicitante/solicitante.component';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
@@ -34,7 +34,6 @@ import  {TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
     FirmaElectronicaComponent,
     AlertComponent,
     AnexarDocumentosComponent,
-    SelectCatalogosComponent,
     InputFechaComponent,
     InputCheckComponent,
     InputHoraComponent,
