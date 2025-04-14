@@ -11,6 +11,7 @@
         <ng-titulo titulo="Datos generales de la empresa" />
         <h5>Aduanas autorizadas*:</h5>
         <crosslist
+          [id]="'cboAduanasActuar'"
           [fechas]="seleccionarAduanasEntrada"
           [fechasSeleccionadas]="seleccionadasAduanasEntradaDatos"
           [botones]="aduanasEntradaBotons"

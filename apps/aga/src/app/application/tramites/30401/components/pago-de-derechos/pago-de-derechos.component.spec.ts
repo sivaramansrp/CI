@@ -1,65 +1,60 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { PagoDeDerechosComponent } from './pago-de-derechos.component';
-import { PagoDeDerechosService } from '../../services/pago-de-derechos.service';
-import { Tramite260912Query } from '../../estados/tramite-260912.query';
-import { Tramite260912Store } from '../../estados/tramite-260912.store';
-import { of, Subject } from 'rxjs';
+import { RegistroEmpresasTransporteService } from '../../services/registro-empresas-transporte.service';
+import { Tramite30401Query } from '../../estados/tramites30401.query';
+import { Tramite30401Store } from '../../estados/tramites30401.store';
+import { of } from 'rxjs';
 import { HttpClientModule } from '@angular/common/http';
-import { BancoList } from '../../modelos/pago-de-derechos.model';
+import { Catalogo } from '@libs/shared/data-access-user/src';
 
 describe('PagoDeDerechosComponent', () => {
   let component: PagoDeDerechosComponent;
   let fixture: ComponentFixture<PagoDeDerechosComponent>;
-  let mockPagoDeDerechosService: Partial<PagoDeDerechosService>;
-  let mockTramite260912Query: Partial<Tramite260912Query>;
-  let mockTramite260912Store: Partial<Tramite260912Store>;
+  let mockRegistroEmpresasTransporteService: Partial<RegistroEmpresasTransporteService>;
+  let mockTramite30401Query: Partial<Tramite30401Query>;
+  let mockTramite30401Store: Partial<Tramite30401Store>;
 
   beforeEach(async () => {
-    // mockPagoDeDerechosService = {
-    //   onBancoList: jest.fn().mockReturnValue(of([])),
-    // };
-    mockPagoDeDerechosService = {
-      onBancoList: jest.fn().mockReturnValue(of([{ id: 1, name: 'Mock Banco' }] as BancoList[])),
+    mockRegistroEmpresasTransporteService = {
+      onBancoList: jest.fn().mockReturnValue(of([{ id: 1, descripcion: 'Mock Banco' }] as Catalogo[])),
     };
-    mockTramite260912Query = {
-      selectTramite260912$: of({
+    mockTramite30401Query = {
+      selectTramite30401$: of({
         claveDeReferencia: '',
-        cadenaPagoDependencia: '',
-        clave: '',
-        llaveDePago: '',
-        fecPago: '',
-        impPago: '',
-        btonDeRadio: '',
-        justificación: '',
-        rfcDel: '',
-        denominacion: '',
-        correo: '',
-        códigoPostal: '',
-        estado: null,
-        municipioOAlcaldía: '',
-        localidad: '',
-        colonias: '',
-        calle: '',
-        lada: '',
-        telefono: '',
-        avisoCheckbox: '',
-        regimen: null,
-        aduanasEntradas: null,
-        aifaCheckbox: '',
-        manifests: '',
-        acuerdoPublico: '',
-        rfc: '',
+    cadenaPagoDependencia: '',
+    clave: '',
+    llaveDePago: '',
+    fecPago: '',
+    impPago: '',
+    efectuarElPago:false,
+
+    cveFolioCaat: '',
+    tipoTransito: '',
+    cboAduanasActuarSeleccionadas: [],
+    calle: '',
+    numeroExterior: '',
+    numeroInterior: '',
+    entidadFederativa: '',
+    delegacionMunicipio: '',
+    colonia: '',
+    localidad: '',
+    codigoPostal: '',
+    capitalSocial: '',
+    numeroFolioPermiso: '',
+    fechaExpedicion: '',
+    elCapitalSocial: false,
+    miRepresentada: false,
       }),
     };
-    mockTramite260912Store = {};
+    mockTramite30401Store = {};
 
     await TestBed.configureTestingModule({
       imports: [ReactiveFormsModule, HttpClientModule, PagoDeDerechosComponent],
       providers: [
-        { provide: PagoDeDerechosService, useValue: mockPagoDeDerechosService },
-        { provide: Tramite260912Query, useValue: mockTramite260912Query },
-        { provide: Tramite260912Store, useValue: mockTramite260912Store },
+        { provide: RegistroEmpresasTransporteService, useValue: mockRegistroEmpresasTransporteService },
+        { provide: Tramite30401Query, useValue: mockTramite30401Query },
+        { provide: Tramite30401Store, useValue: mockTramite30401Store },
       ],
     }).compileComponents();
 
@@ -81,11 +76,11 @@ describe('PagoDeDerechosComponent', () => {
 
   it('should validate fechaLimValidator correctly', () => {
     const control = { value: '2050-01-01' } as any;
-    const result = PagoDeDerechosComponent.fechaExpedicionLimValidator()(control);
+    const result = PagoDeDerechosComponent.fechaLimValidator()(control);
     expect(result).toEqual({ fechaLim: true });
 
     const validControl = { value: '2020-01-01' } as any;
-    const validResult = PagoDeDerechosComponent.fechaExpedicionLimValidator()(validControl);
+    const validResult = PagoDeDerechosComponent.fechaLimValidator()(validControl);
     expect(validResult).toBeNull();
   });
 
@@ -100,19 +95,19 @@ describe('PagoDeDerechosComponent', () => {
   });
 
   
-  it('should fetch bancoList on getBancoList call', () => {
+  it('should fetch bancoList on obtenerBancoList call', () => {
     
-    const mockBancoList = [{ id: 1, name: 'Banco 1' }];
+    const mockBancoList = [{ id: 1, descripcion: 'Banco 1' }];
 
     // Ensure the mock is set up before the component is initialized
-    (mockPagoDeDerechosService.onBancoList as jest.Mock).mockReturnValue(of(mockBancoList));
+    (mockRegistroEmpresasTransporteService.onBancoList as jest.Mock).mockReturnValue(of(mockBancoList));
   
     // Recreate the component to trigger ngOnInit
     fixture = TestBed.createComponent(PagoDeDerechosComponent);
     component = fixture.componentInstance;
     component.bancoList = mockBancoList;
     component.ngOnInit();
-    // expect(mockPagoDeDerechosService.onBancoList).toHaveBeenCalled();
+    // expect(mockRegistroEmpresasTransporteService.onBancoList).toHaveBeenCalled();
     fixture.detectChanges(); // Trigger change detection
     expect(component.bancoList).toEqual(mockBancoList); // Verify the component's state
   });
@@ -140,7 +135,7 @@ describe('PagoDeDerechosComponent', () => {
   it('should call the correct store method with the correct value in setValoresStore', () => {
     // Arrange: Mock the store method
     const mockMethod = jest.fn();
-    mockTramite260912Store['setClave'] = mockMethod; // Replace 'updateClave' with the actual method name in your store
+    mockTramite30401Store['setClave'] = mockMethod; // Replace 'updateClave' with the actual method name in your store
   
     // Set up the form control with a value
     component.pagoDeDerechosForm = component.fb.group({

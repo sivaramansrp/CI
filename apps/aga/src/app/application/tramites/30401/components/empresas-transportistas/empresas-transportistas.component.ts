@@ -16,7 +16,6 @@ import {NOTA} from '../../enums/registro-empresas-transporte.enum';
 import { RegistroEmpresasTransporteService } from '../../services/registro-empresas-transporte.service';
 import { Tramite30401Query } from '../../estados/tramites30401.query';
 import { Tramites30401State } from '../../estados/tramites30401.store';
-import { dropdownList } from '../../modelos/registro-empresas-transporte.model';
 import { permisoComponent } from '../permiso-expedido/permiso-expedido.component';
 
 @Component({
@@ -31,15 +30,12 @@ export class EmpresasTransportistasComponent implements OnInit, OnDestroy {
 
   public empresasForm!: FormGroup;
   public destroyed$ = new Subject<void>();
-  public bancoList!: dropdownList[];
   public tipoTransitoList$!: Observable<Catalogo[]>;
   public entidadFederativaList$!: Observable<Catalogo[]>;
   public delegacionMunicipioList$!: Observable<Catalogo[]>;
   public cveFolioCaat$!: Observable<string>;
   public coloniaList$!: Observable<Catalogo[]>;
-
   public CAPITAL_SOCIAL_NOTA = NOTA.CAPITAL_SOCIAL_NOTA;
-  
   public MI_REPRESENTADA_NOTA = NOTA.MI_REPRESENTADA_NOTA;
 
   @ViewChildren(CrosslistComponent) crossList!: QueryList<CrosslistComponent>;
@@ -47,7 +43,7 @@ export class EmpresasTransportistasComponent implements OnInit, OnDestroy {
    public aduanasAutorizadas = CROSLISTA_ENTRADA;
    public seleccionarAduanasEntrada = CROSLISTA_ENTRADA;
    public seleccionadasAduanasEntradaDatos: string[] = [];
-  private seccionState!: Tramites30401State;
+   public seccionState!: Tramites30401State;
   
    aduanasEntradaBotons = [
     {
@@ -95,7 +91,7 @@ export class EmpresasTransportistasComponent implements OnInit, OnDestroy {
   aduanasEntradaSeleccionadasChange(events: string[]): void {
     this.seleccionadasAduanasEntradaDatos = events;
     this.empresasForm.patchValue({
-      paisDeOriginDatos: events,
+      cboAduanasActuarSeleccionadas: events,
     });
   }
 
@@ -103,8 +99,8 @@ export class EmpresasTransportistasComponent implements OnInit, OnDestroy {
    * Hook de ciclo de vida para inicializar la lógica del componente y cargar datos.
    */
   ngOnInit(): void {
-    this.crearForm();
     this.enPatchStoredFormData();
+    this.crearForm();
     this.obtenerlistadescargable();
   }
 
@@ -117,6 +113,7 @@ export class EmpresasTransportistasComponent implements OnInit, OnDestroy {
         cveFolioCaat: [{ value: '', disabled: true }, Validators.required],
         tipoTransito: [this.seccionState?.tipoTransito, Validators.required],
       }),
+      cboAduanasActuarSeleccionadas: [this.seccionState.cboAduanasActuarSeleccionadas, Validators.required],
       domicilio: this.fb.group({
         calle: [this.seccionState?.calle, [Validators.required, Validators.maxLength(100)]],
         numeroExterior: [this.seccionState?.numeroExterior, [Validators.required, Validators.maxLength(55)]],

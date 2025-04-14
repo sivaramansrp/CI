@@ -5,7 +5,7 @@
  */
 
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
-import { AlertComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { AlertComponent, Catalogo, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject, distinctUntilChanged, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
@@ -13,7 +13,6 @@ import {NOTA} from '../../enums/registro-empresas-transporte.enum';
 import { RegistroEmpresasTransporteService } from '../../services/registro-empresas-transporte.service';
 import { Tramite30401Query } from '../../estados/tramites30401.query';
 import { Tramite30401Store } from '../../estados/tramites30401.store';
-import { dropdownList } from '../../modelos/registro-empresas-transporte.model';
 
 
 /**
@@ -47,7 +46,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   /**
    * Lista de datos relacionados con bancos obtenidos desde el servicio.
    */
-  public bancoList!: dropdownList[];
+  public bancoList!: Catalogo[];
 
      /**
    * Declaración bajo protesta de decir verdad.
@@ -151,7 +150,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   getBancoList(): void {
     this.Servicio.onBancoList()
       .pipe(takeUntil(this.destroyed$))
-      .subscribe((data: dropdownList[]) => {
+      .subscribe((data: Catalogo[]) => {
         this.bancoList = data;
       });
   }

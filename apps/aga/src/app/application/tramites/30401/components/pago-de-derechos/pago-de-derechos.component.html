@@ -40,8 +40,8 @@
               <label class="form-label">Banco:</label>
                <select name="clave" class="form-control form-select" formControlName="clave" (change)="setValoresStore(pagoDeDerechosForm,'clave','setClave')">
                 <option value="" selected>Seleccione un valor</option>
-                @for (banco of bancoList; track banco.name) {
-                  <option value={{banco.name}}>{{banco.name}}</option>
+                @for (banco of bancoList; track banco.descripcion) {
+                  <option value={{banco.descripcion}}>{{banco.descripcion}}</option>
                 }
 
                </select>

@@ -1,7 +1,7 @@
+import { NOTA, PASOS } from '../../enums/registro-empresas-transporte.enum';
 import { Component } from '@angular/core';
 import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
-import { NOTA, PASOS } from '../../enums/registro-empresas-transporte.enum';
 import { ViewChild } from '@angular/core';
 import { WizardComponent } from '@ng-mf/data-access-user';
 

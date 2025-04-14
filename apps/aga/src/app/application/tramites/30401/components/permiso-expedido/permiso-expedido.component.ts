@@ -34,9 +34,14 @@ export class permisoComponent implements OnInit {
      * @param form - El formulario reactivo.
      * @param campo - El nombre del campo en el formulario.
      */
-  setValoresStore(form: FormGroup, campo: string) :void{
-    const VALOR = form.get(campo)?.value;
-    this.tramite30401Store.establecerDatos({ [campo]: VALOR });
+  setValoresStore(form: FormGroup | null, campo: string): void {
+    if (!form) {
+      return;
+    }
+    const CONTROL = form.get(campo);
+    if (CONTROL && CONTROL.value !== null && CONTROL.value !== undefined) {
+      this.tramite30401Store.establecerDatos({ [campo]: CONTROL.value });
+    }
   }
   /**
    * Verifica si un control del formulario es inválido, tocado o modificado.

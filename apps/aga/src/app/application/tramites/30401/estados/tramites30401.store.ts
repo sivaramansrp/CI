@@ -18,6 +18,7 @@ export interface Tramites30401State {
 
   cveFolioCaat: string;
   tipoTransito: string;
+  cboAduanasActuarSeleccionadas: string[];
   calle: string;
   numeroExterior: string;
   numeroInterior: string;
@@ -48,6 +49,7 @@ export function createInitialState(): Tramites30401State {
 
     cveFolioCaat: '',
     tipoTransito: '',
+    cboAduanasActuarSeleccionadas: [],
     calle: '',
     numeroExterior: '',
     numeroInterior: '',
@@ -72,13 +74,6 @@ export class Tramite30401Store extends Store<Tramites30401State> {
   constructor() {
     super(createInitialState());
   }
-
-  // public establecerDatos(datos: Tramites30401State):void {
-  //   this.update((state) => ({
-  //     ...state,
-  //     ...datos,
-  //   }));
-  // }
   
   public establecerDatos(values: Partial<Tramites30401State>): void {    
     this.update((state) => ({
@@ -137,114 +132,5 @@ export class Tramite30401Store extends Store<Tramites30401State> {
       impPago,
     }));
   }
-
-
-
-
-
-// new start
-  
-  // public SetcveFolioCaat(cveFolioCaat: string) {
-  //   this.update((state) => ({
-  //     ...state,
-  //     cveFolioCaat,
-  //   }));
-  // }
-
-  // public setTipodeTransito(tipoTransito: string) {
-  //   this.update((state) => ({
-  //     ...state,
-  //     tipoTransito,
-  //   }));
-  // }
-
-  // public setCalle(calle: string) {
-  //   this.update((state) => ({
-  //     ...state,
-  //     calle,
-  //   }));
-  // }
-  // public setNumeroExterior(numeroExterior: number) {
-  //   this.update((state) => ({
-  //     ...state,
-  //     numeroExterior,
-  //   }));
-  // }
-  // public setNumeroInterior(numeroInterior: number) {
-  //   this.update((state) => ({
-  //     ...state,
-  //     numeroInterior,
-  //   }));
-  // }
-
-  // public setEntidadFederativa(entidadFederativa: string) {
-  //   this.update((state) => ({
-  //     ...state,
-  //     entidadFederativa,
-  //   }));
-  // }
-
-  // public setMunicipioDelegacion(delegacionMunicipio: string) {
-  //   this.update((state) => ({
-  //     ...state,
-  //     delegacionMunicipio,
-  //   }));
-  // } 
-
-  // public setColonia(colonia: string) {
-  //   this.update((state) => ({
-  //     ...state,
-  //     colonia,
-  //   }));
-  // }
-  
-  // public setLocalidad(localidad: string) {
-  //   this.update((state) => ({
-  //     ...state,
-  //     localidad,
-  //   }));
-  // }
-
-  // public setCodigoPostal(codigoPostal: string) {
-  //   this.update((state) => ({
-  //     ...state,
-  //     codigoPostal,
-  //   }));
-  // }
-
-  // public setCapitalSocial(capitalSocial: number) {
-  //   this.update((state) => ({
-  //     ...state,
-  //     capitalSocial,
-  //   }));
-  // }
-  
-  // public setNumero(numeroFolioPermiso: number) {
-  //   this.update((state) => ({
-  //     ...state,
-  //     numero,
-  //   }));
-  // }
-
-  // public setFecha(fechaExpedicion: string) {
-  //   this.update((state) => ({
-  //     ...state,
-  //     fecha,
-  //   }));
-  // }
-
-  // public setCapitalSocialCheck(capitalSocialCheck: boolean) {
-  //   this.update((state) => ({
-  //     ...state,
-  //     capitalSocialCheck,
-  //   }));
-  // }
-  
-  // public setMiRepresentadaCheck(miRepresentadaCheck: boolean) {
-  //   this.update((state) => ({
-  //     ...state,
-  //     miRepresentadaCheck,
-  //   }));
-  // }
   
 }
