@@ -47,14 +47,6 @@ export class Tramite260207Query extends Query<Tramite260207State> {
     facturadorTablaDatos: state.facturadorTablaDatos,
   })); 
   /**
-   * @property {Observable<Facturador[]>} getFacturadorTablaDatos$
-   * @description
-   * Selecciona la lista de facturadores del estado.
-   */
-  public getFacturadorTablaDatos$ = this.select(
-    (state) => state.facturadorTablaDatos
-  );
-  /**
    * @property {Observable<number | undefined>} getTabSeleccionado$
    * @description
    * Selecciona el índice de la pestaña actualmente seleccionada en el estado.
