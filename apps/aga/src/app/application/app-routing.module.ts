@@ -191,7 +191,14 @@ const ROUTES: Routes = [
       import('./tramites/40103/modificarCaatTerrestre.module').then(
         (m) => m.ModificarCaatTerrestreModule
       )
-  }
+  },
+  {
+    path: 'equipo-e-instrumentos-musicales',
+    loadChildren: () =>
+      import('./tramites/630104/equipo-e-instrumentos-musicales.module').then((m)=>
+        m.EquipoEInstrumentosMusicalesModule)
+  
+  },
   
 ];
 
