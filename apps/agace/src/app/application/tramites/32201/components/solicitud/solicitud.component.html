@@ -1,0 +1,112 @@
+<div class="mt-4">
+  <form [formGroup]="solicitudForm">
+    <ng-titulo titulo="Régimen aduanero"></ng-titulo>
+    <div class="col-md-12">
+      <div class="form-check">
+        <input
+          class="form-check-input"
+          type="checkbox"
+          id="regimen_0"
+          value=""
+          name="regimen_0"
+          formControlName="regimen_0"
+          (change)="
+            setValoresStore(solicitudForm, 'regimen_0', 'setRegimen_0')
+          "
+        />
+        <label class="form-check-label" for="regimen_0">
+          Importación temporal para la elaboración, transformación o reparación
+          en programas de maquila o de exportación (IMMEX)
+        </label>
+        <div class="d-none">
+          <input
+            type="checkbox"
+            id="regimen_0Def"
+            name="mapDeclaracionSolicitud['3027'].acepto"
+            value="0"
+          />
+        </div>
+      </div>
+
+      <div class="form-check">
+        <input
+          class="form-check-input"
+          type="checkbox"
+          id="regimen_1"
+          value=""
+          name="regimen_1"
+          formControlName="regimen_1"
+          (change)="
+            setValoresStore(solicitudForm, 'regimen_1', 'setRegimen_1')
+          "
+        />
+        <label class="form-check-label" for="regimen_1">
+          Depósito fiscal para someterse al proceso de ensamble y fabricación de
+          vehículo a empresas de la industria automotriz terminal
+        </label>
+        <div class="d-none">
+          <input
+            type="checkbox"
+            id="regimen_1Def"
+            name="mapDeclaracionSolicitud['3028'].acepto"
+            value="0"
+          />
+        </div>
+      </div>
+
+      <div class="form-check">
+        <input
+          class="form-check-input"
+          type="checkbox"
+          id="regimen_2"
+          value=""
+          name="regimen_2"
+          formControlName="regimen_2"
+          (change)="
+            setValoresStore(solicitudForm, 'regimen_2', 'setRegimen_2')
+          "
+        />
+        <label class="form-check-label" for="regimen_2">
+          Elaboración, transformación o reparación en recinto fiscalizado
+        </label>
+        <div class="d-none">
+          <input
+            type="checkbox"
+            id="regimen_2Def"
+            name="mapDeclaracionSolicitud['3029'].acepto"
+            value="0"
+          />
+        </div>
+      </div>
+
+      <div class="form-check">
+        <input
+          class="form-check-input"
+          type="checkbox"
+          id="regimen_3"
+          value=""
+          name="regimen_3"
+          formControlName="regimen_3"
+          (change)="
+            setValoresStore(solicitudForm, 'regimen_3', 'setRegimen_3')
+          "
+        />
+        <label class="form-check-label" for="regimen_3">
+          Recinto Fiscalizado Estratégico
+        </label>
+        <div class="d-none">
+          <input
+            type="checkbox"
+            id="regimen_3Def"
+            name="mapDeclaracionSolicitud['3030'].acepto"
+            value="0"
+          />
+        </div>
+      </div>
+    </div>
+    <ng-titulo titulo="Operaciones virtuales"></ng-titulo>
+    <div class="col-md-12">
+
+    </div>
+  </form>
+</div>
