@@ -55,7 +55,7 @@ const ROUTES: Routes = [
     path: 'mod-permiso-importacion',
     loadChildren: () =>
       import('./tramites/260912/mod-permiso-importacion.module').then(
-        (m)=> m.ModPermisoImportacionModule
+        (m) => m.ModPermisoImportacionModule
       )
   },
   {
@@ -154,8 +154,7 @@ const ROUTES: Routes = [
     path: 'materias-primas-destinados',
     loadChildren: () =>
       import('./tramites/260205/materias-primas-destinados.module').then(
-        (m) => m.MateriasPrimasDestinadosModule
-      ),
+        (m) => m.MateriasPrimasDestinadosModule)
   },
   {
     path: 'importacion-dispositivos-medicos-donacion',
@@ -164,6 +163,15 @@ const ROUTES: Routes = [
         './tramites/260216/importacion-dispositivos-medicos-donacion.module'
       ).then((m) => m.ImportacionDispositivosMedicosDonacionModule),
   },
+  {
+    path: 'modificacion-permiso-sanitario',
+    loadChildren: () =>
+      import(
+        './tramites/260902/modificacion-permiso-sanitario.module'
+      ).then((m) => m.ModificacionPermisoSanitarioModule),
+      
+  },
+ 
   {
     path: 'modificacion-permiso-sanitario',
     loadChildren: () =>
@@ -201,7 +209,7 @@ const ROUTES: Routes = [
   },
   {
     path: 'aviso-de-importacion',
-    loadChildren: () => import('./tramites/260603/aviso-de-importacion.module').then(m => m.AvisoDeImportacionModule) 
+    loadChildren: () => import('./tramites/260603/aviso-de-importacion.module').then(m => m.AvisoDeImportacionModule)
   },
   {
     path: 'muestras-plaguicidas',
@@ -218,11 +226,24 @@ const ROUTES: Routes = [
           ).then((m) => m.ImportacionMateriasPrimasEstupefacientesModule),
   },
   {
-        path: 'importacion-tratamientos-especiales',
-        loadChildren: () =>
-          import('./tramites/260207/importacion-tratamientos-especiales.module').then(
-            (m) => m.ImportacionTratamientosEspecialesModule
-          ),
+    path: 'modificacion-permiso-sanitario',
+    loadChildren: () =>
+      import('./tramites/260906/modificacion-permiso-sanitario.module').then(
+        (m) => m.ModificacionPermisoSanitarioModule
+      )
+  },
+  {
+    path: 'Permiso-de-importacion',
+    loadChildren: () =>
+      import('./tramites/260512/permiso-de-importacion.module').then(
+        (m) => m.PermisoDeImportacionModule)
+  },
+  {
+            path: 'importacion-tratamientos-especiales',
+            loadChildren: () =>
+              import('./tramites/260207/importacion-tratamientos-especiales.module').then(
+                (m) => m.ImportacionTratamientosEspecialesModule
+              ),
   }
 ];
 
@@ -230,4 +251,4 @@ const ROUTES: Routes = [
   imports: [RouterModule.forChild(ROUTES)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }
