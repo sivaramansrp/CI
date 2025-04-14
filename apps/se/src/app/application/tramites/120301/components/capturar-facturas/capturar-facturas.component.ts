@@ -49,6 +49,8 @@ import { ElegibilidadDeTextilesQuery } from '../../queries/elegibilidad-de-texti
 
 import { ElegibilidadTextilesService } from '../../services/elegibilidad-textiles/elegibilidad-textiles.service';
 
+import { REGEX_PATRON_DECIMAL_2} from '@libs/shared/data-access-user/src/tramites/constantes/regex.constants';
+import { REGEX_SOLO_DIGITOS} from '@libs/shared/data-access-user/src/tramites/constantes/regex.constants';
 
 /**
  * @component CapturarFacturasComponent
@@ -219,15 +221,15 @@ export class CapturarFacturasComponent implements OnInit, OnDestroy {
   initActionFormBuild(): void {
     this.facturaForm = this.fb.group({
       numeroFactura: [this.capturarState.numeroFactura, Validators.required],
-      cantidadTotal: [this.capturarState.cantidadTotal, [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)]],
+      cantidadTotal: [this.capturarState.cantidadTotal, [Validators.required, Validators.pattern(REGEX_PATRON_DECIMAL_2)]],
       unidadDeMedida: [this.capturarState.unidadDeMedida, Validators.required],
       fechaInicioInput: [''],
-      valorDolares: [this.capturarState.valorDolares, [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)]],
+      valorDolares: [this.capturarState.valorDolares, [Validators.required, Validators.pattern(REGEX_PATRON_DECIMAL_2)]],
       taxId: [this.capturarState.taxId],
       razonSocial: [this.capturarState.razonSocial, Validators.required],
       calle: [this.capturarState.calle, Validators.required],
       ciudad: [this.capturarState.ciudad, Validators.required],
-      cp: [this.capturarState.cp, [Validators.required, Validators.pattern(/^\d{5}$/)]], // Assuming CP is a 5-digit postal code
+      cp: [this.capturarState.cp, [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS)]],
       pais: [{value:this.capturarState.pais,disabled:true},[ Validators.required]],
       fechaExpedicionFactura: ['2025-04-30'], 
     });
