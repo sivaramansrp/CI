@@ -12,6 +12,7 @@
               [isRequired]="true"
               formControlName="cumplimiento"
               [layout]="'horizontal'"
+              (change)="setValoresStore(manifiestos,'cumplimiento', 'setCumplimiento')"
             ></app-input-radio>
             </div>
           </div>
