@@ -43,42 +43,77 @@ export class DatosSolicitudService {
     }
   }
 
+  /**
+   * @name obtenerListaPaises
+   * @description Obtiene una lista de países desde un archivo JSON ubicado en la ruta especificada por `jsonUrl`.
+   * @returns {Observable<Catalogo[]>} Un observable que emite un arreglo de objetos de tipo `Catalogo` representando los países.
+   */
   obtenerListaPaises(): Observable<Catalogo[]> {
     return this.httpServicios
       .get<{ pais: Catalogo[] }>(this.jsonUrl)
       .pipe(map((res) => res.pais));
   }
 
+  /**
+   * @name obtenerListaEstados
+   * @description Obtiene una lista de estados desde un archivo JSON ubicado en la ruta especificada por `jsonUrl`.
+   * @returns {Observable<Catalogo[]>} Un observable que emite un arreglo de objetos de tipo `Catalogo` representando los estados.
+   */
   obtenerListaEstados(): Observable<Catalogo[]> {
     return this.httpServicios
       .get<{ estado: Catalogo[] }>(this.jsonUrl)
       .pipe(map((res) => res.estado));
   }
 
+  /**
+   * @name getBancoDatos
+   * @description Obtiene una lista de bancos desde un archivo JSON específico ubicado en `assets/json/cofepris/bancoDatos.json`.
+   * @returns {Observable<Catalogo[]>} Un observable que emite un arreglo de objetos de tipo `Catalogo` representando los bancos.
+   */
   getBancoDatos(): Observable<Catalogo[]> {
     return this.httpServicios
       .get<{ banco: Catalogo[] }>('assets/json/cofepris/bancoDatos.json')
       .pipe(map((res) => res.banco));
   }
 
+  /**
+   * @name obtenerListaMunicipios
+   * @description Obtiene una lista de municipios desde un archivo JSON ubicado en la ruta especificada por `jsonUrl`.
+   * @returns {Observable<Catalogo[]>} Un observable que emite un arreglo de objetos de tipo `Catalogo` representando los municipios.
+   */
   obtenerListaMunicipios(): Observable<Catalogo[]> {
     return this.httpServicios
       .get<{ municipio: Catalogo[] }>(this.jsonUrl)
       .pipe(map((res) => res.municipio));
   }
 
+  /**
+   * @name obtenerListaLocalidades
+   * @description Obtiene una lista de localidades desde un archivo JSON ubicado en la ruta especificada por `jsonUrl`.
+   * @returns {Observable<Catalogo[]>} Un observable que emite un arreglo de objetos de tipo `Catalogo` representando las localidades.
+   */
   obtenerListaLocalidades(): Observable<Catalogo[]> {
     return this.httpServicios
       .get<{ localidad: Catalogo[] }>(this.jsonUrl)
       .pipe(map((res) => res.localidad));
   }
 
+  /**
+   * @name obtenerListaCodigosPostales
+   * @description Obtiene una lista de códigos postales desde un archivo JSON ubicado en la ruta especificada por `jsonUrl`.
+   * @returns {Observable<Catalogo[]>} Un observable que emite un arreglo de objetos de tipo `Catalogo` representando los códigos postales.
+   */
   obtenerListaCodigosPostales(): Observable<Catalogo[]> {
     return this.httpServicios
       .get<{ codigo_postal: Catalogo[] }>(this.jsonUrl)
       .pipe(map((res) => res.codigo_postal));
   }
 
+  /**
+   * @name obtenerListaColonias
+   * @description Obtiene una lista de colonias desde un archivo JSON ubicado en la ruta especificada por `jsonUrl`.
+   * @returns {Observable<Catalogo[]>} Un observable que emite un arreglo de objetos de tipo `Catalogo` representando las colonias.
+   **/
   obtenerListaColonias(): Observable<Catalogo[]> {
     return this.httpServicios
       .get<{ colonia: Catalogo[] }>(this.jsonUrl)

@@ -363,3 +363,11 @@ export const FECHA_DE_PAGO = {
   required: false,
   habilitado: true,
 };
+
+export interface TercerosRelacionadosDatos {
+  fabricanteTablaDatos: Fabricante[];
+  destinatarioFinalTablaDatos: Destinatario[];
+  proveedorTablaDatos: Proveedor[];
+  facturadorTablaDatos: Facturador[];
+}
+ 
