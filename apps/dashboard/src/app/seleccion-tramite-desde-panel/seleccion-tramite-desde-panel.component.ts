@@ -7,14 +7,15 @@ import { TituloComponent } from "@ng-mf/data-access-user";
 import { Subject, takeUntil } from 'rxjs';
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
+
 /**
- * Represents the details of a "Tramite" (procedure or process).
+ * Representa los detalles de un "Trámite" (procedimiento o proceso).
  *
  * @interface TramiteDetails
- * @property {number} id - The unique identifier for the tramite.
- * @property {number} tramite - The specific tramite number or code.
- * @property {string} link - A hyperlink related to the tramite.
- * @property {string} department - The department responsible for the tramite.
+ * @property {number} id - El identificador único para el trámite.
+ * @property {number} tramite - El número o código específico del trámite.
+ * @property {string} link - Un hipervínculo relacionado con el trámite.
+ * @property {string} department - El departamento responsable del trámite.
  */
 interface TramiteDetails {
   id: number;
