@@ -138,6 +138,27 @@ export const REGEX_PATRON_DECIMAL_15_4 = /^\d{0,15}(\.\d{1,4})?$/;
  * - "Hola@123" (contiene un carácter especial)
  */
 export const REGEX_PATRON_ALFANUMERICO = /^[A-Za-z0-9Ññ]+$/;
+
+/**
+ * Expresión regular para validar números enteros o decimales con hasta dos decimales.
+ *
+ * Desglose de la expresión regular:
+ * - ^: Aserción para el inicio de la cadena.
+ * - [0-9]+: Coincide con uno o más dígitos enteros.
+ * - (\\.[0-9]{1,2})?: Coincide con un punto seguido de entre 1 y 2 dígitos decimales, opcional.
+ * - $: Aserción para el final de la cadena.
+ *
+ * Ejemplos de cadenas válidas:
+ * - "123" (número entero)
+ * - "123.45" (número decimal con dos decimales)
+ * - "0.5" (número decimal con un decimal)
+ *
+ * Ejemplos de cadenas no válidas:
+ * - "123." (falta un decimal después del punto)
+ * - "123.456" (más de dos decimales)
+ * - "abc" (contiene caracteres no numéricos)
+ */
+export const REGEX_NUMERO_DECIMAL_ENTERO = /^[0-9]+(\\.[0-9]{1,2})?$/;
 /**
  * Expresión regular para encontrar caracteres que no sean números.
  *
@@ -262,3 +283,48 @@ export const REGEX_CURP =
  * Ejemplo válido: 123, 456, 789
  */
 export const REGEX_SEPARADO_POR_COMAS = /^\d+(,\s*\d+)*$/;
+
+
+/**
+ * Regular expression to validate numeric values with optional decimal points.
+ * Allows whole numbers and numbers with up to two decimal places.
+ */
+export const REGEX_VALORES_NUMERICOS = /^[0-9]+(\\.[0-9]{1,2})?$/;
+
+export const REGEX_NUMERO_DECIMAL_2_DIGITOS = /^\d+(\.\d{1,2})?$/;
+/** 
+ * Expresión regular para validar números en formato USD. 
+ * Permite dígitos y el punto decimal. 
+ */
+export const REGEX_NUMEROS_USD = '^[0-9.]{1,}$';
+
+/**
+ * Constante de expresión regular utilizada para validar cadenas alfanuméricas.
+ * Esta expresión regular asegura que la entrada contenga solo letras (a-z, A-Z) y dígitos (0-9).
+ * @constant
+ */
+export const REGEX_IMPORTE_PAGO = '/^[a-zA-Z0-9]*$/';
+
+/**
+ * Expresión regular para validar una llave de pago.
+ * La llave debe consistir en exactamente 10 caracteres alfanuméricos (letras mayúsculas y dígitos).
+ */
+export const REGEX_LLAVE_DE_PAGO = '/^[A-Z0-9]{10}$/';
+
+/**
+ * Expresión regular para validar una hora en formato 24 horas (HH:mm).
+ * - HH: Horas (00-23).
+ * - mm: Minutos (00-59).
+ */
+export const HORA_PATTERN = /^([01]\d|2[0-3]):[0-5]\d$/;
+
+/**
+ * Expresión regular que valida cadenas alfanuméricas con espacios y guiones.
+ */
+export const ALFANUMERICO_ESPACIO = /^([0-9a-zA-Z -]+)$/;
+
+/**
+ * Expresión regular para validar números en formato de pesos mexicanos (MXN).
+ * Permite dígitos y el punto decimal.
+ */
+export const REGEX_SIN_DIGITOS = /\D/g;
