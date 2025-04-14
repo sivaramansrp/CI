@@ -42,6 +42,13 @@ export class DatosMercanciaContenedoraComponent implements OnInit, OnDestroy {
    */
   public tramiteState!: Tramite260208State;
 
+  /**
+   * Identificador único del procedimiento.
+   * Esta propiedad es de solo lectura y contiene el valor constante `ID_PROCEDIMIENTO`.
+   * Es utilizada para identificar de forma única un procedimiento dentro del sistema.
+   * @readonly
+   * @type {string | number}
+   */
   public readonly idProcedimiento = ID_PROCEDIMIENTO;
 
   /**
