@@ -2,7 +2,7 @@ import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
 import { TablaDatos } from '../../models/aviso-siglos.models';
 
-import { catalogoResponse } from '@libs/shared/data-access-user/src';
+import { CatalogoResponse } from '@libs/shared/data-access-user/src';
 
 /**
  * Interfaz que define el estado del trámite 270201.
@@ -15,33 +15,33 @@ export interface Tramite270201State {
    * Representa la operación seleccionada del catálogo.
    * Puede ser nulo si no se ha seleccionado una operación.
    * 
-   * @property {catalogoResponse | null} operacion
+   * @property {CatalogoResponse | null} operacion
    */
-  operacion: catalogoResponse | null;
+  operacion: CatalogoResponse | null;
 
   /**
    * Representa el movimiento seleccionado del catálogo.
    * Puede ser nulo si no se ha seleccionado un movimiento.
    * 
-   * @property {catalogoResponse | null} movimiento
+   * @property {CatalogoResponse | null} movimiento
    */
-  movimiento: catalogoResponse | null;
+  movimiento: CatalogoResponse | null;
 
   /**
    * Representa el motivo seleccionado del catálogo.
    * Puede ser nulo si no se ha seleccionado un motivo.
    * 
-   * @property {catalogoResponse | null} motivo
+   * @property {CatalogoResponse | null} motivo
    */
-  motivo: catalogoResponse | null;
+  motivo: CatalogoResponse | null;
 
   /**
    * Representa el país seleccionado del catálogo.
    * Puede ser nulo si no se ha seleccionado un país.
    * 
-   * @property {catalogoResponse | null} pais
+   * @property {CatalogoResponse | null} pais
    */
-  pais: catalogoResponse | null;
+  pais: CatalogoResponse | null;
 
   /**
    * Representa la ciudad donde se realiza el trámite.
@@ -54,17 +54,17 @@ export interface Tramite270201State {
    * Representa el medio de transporte seleccionado del catálogo.
    * Puede ser nulo si no se ha seleccionado un medio de transporte.
    * 
-   * @property {catalogoResponse | null} transporte
+   * @property {CatalogoResponse | null} transporte
    */
-  transporte: catalogoResponse | null;
+  transporte: CatalogoResponse | null;
 
   /**
    * Representa la aduana seleccionada del catálogo.
    * Puede ser nulo si no se ha seleccionado una aduana.
    * 
-   * @property {catalogoResponse | null} aduana
+   * @property {CatalogoResponse | null} aduana
    */
-  aduana: catalogoResponse | null;
+  aduana: CatalogoResponse | null;
 
   /**
    * Representa el autor de la obra de arte.
@@ -140,9 +140,9 @@ export interface Tramite270201State {
    * Representa la moneda seleccionada del catálogo para el avalúo.
    * Puede ser nulo si no se ha seleccionado una moneda.
    * 
-   * @property {catalogoResponse | null} moneda
+   * @property {CatalogoResponse | null} moneda
    */
-  moneda: catalogoResponse | null;
+  moneda: CatalogoResponse | null;
 
   /**
    * Representa el propietario de la obra de arte.
@@ -155,9 +155,9 @@ export interface Tramite270201State {
    * Representa la fracción arancelaria seleccionada del catálogo.
    * Puede ser nulo si no se ha seleccionado una fracción arancelaria.
    * 
-   * @property {catalogoResponse | null} fraccionArancelaria
+   * @property {CatalogoResponse | null} fraccionArancelaria
    */
-  fraccionArancelaria: catalogoResponse | null;
+  fraccionArancelaria: CatalogoResponse | null;
 
   /**
    * Representa la descripción de la fracción arancelaria.
@@ -308,9 +308,9 @@ export class Tramite270201Store extends Store<Tramite270201State> {
  * @method setOperacion
  * @description
  * Actualiza el estado con la operación seleccionada.
- * @param {catalogoResponse} selectedOperacion - La operación seleccionada.
+ * @param {CatalogoResponse} selectedOperacion - La operación seleccionada.
  */
-public setOperacion(selectedOperacion: catalogoResponse): void {
+public setOperacion(selectedOperacion: CatalogoResponse): void {
   this.update((state) => ({
     ...state,
     selectedOperacion,
@@ -321,9 +321,9 @@ public setOperacion(selectedOperacion: catalogoResponse): void {
  * @method setMovimiento
  * @description
  * Actualiza el estado con el movimiento seleccionado.
- * @param {catalogoResponse} selectedMovimiento - El movimiento seleccionado.
+ * @param {CatalogoResponse} selectedMovimiento - El movimiento seleccionado.
  */
-public setMovimiento(selectedMovimiento: catalogoResponse): void {
+public setMovimiento(selectedMovimiento: CatalogoResponse): void {
   this.update((state) => ({
     ...state,
     selectedMovimiento,
@@ -334,9 +334,9 @@ public setMovimiento(selectedMovimiento: catalogoResponse): void {
  * @method setMotivo
  * @description
  * Actualiza el estado con el motivo seleccionado.
- * @param {catalogoResponse} selectedMotivo - El motivo seleccionado.
+ * @param {CatalogoResponse} selectedMotivo - El motivo seleccionado.
  */
-public setMotivo(selectedMotivo: catalogoResponse): void {
+public setMotivo(selectedMotivo: CatalogoResponse): void {
   this.update((state) => ({
     ...state,
     selectedMotivo,
@@ -347,9 +347,9 @@ public setMotivo(selectedMotivo: catalogoResponse): void {
  * @method setPais
  * @description
  * Actualiza el estado con el país seleccionado.
- * @param {catalogoResponse} selectedPais - El país seleccionado.
+ * @param {CatalogoResponse} selectedPais - El país seleccionado.
  */
-public setPais(selectedPais: catalogoResponse): void {
+public setPais(selectedPais: CatalogoResponse): void {
   this.update((state) => ({
     ...state,
     selectedPais,
@@ -373,9 +373,9 @@ public setCiudad(selectedCiudad: string): void {
  * @method setTransporte
  * @description
  * Actualiza el estado con el medio de transporte seleccionado.
- * @param {catalogoResponse} selectedTransporte - El transporte seleccionado.
+ * @param {CatalogoResponse} selectedTransporte - El transporte seleccionado.
  */
-public setTransporte(selectedTransporte: catalogoResponse): void {
+public setTransporte(selectedTransporte: CatalogoResponse): void {
   this.update((state) => ({
     ...state,
     selectedTransporte,
@@ -386,9 +386,9 @@ public setTransporte(selectedTransporte: catalogoResponse): void {
  * @method setAduana
  * @description
  * Actualiza el estado con la aduana seleccionada.
- * @param {catalogoResponse} selectedAduana - La aduana seleccionada.
+ * @param {CatalogoResponse} selectedAduana - La aduana seleccionada.
  */
-public setAduana(selectedAduana: catalogoResponse): void {
+public setAduana(selectedAduana: CatalogoResponse): void {
   this.update((state) => ({
     ...state,
     selectedAduana,
@@ -529,9 +529,9 @@ public setAvaluo(selectedAvaluo: string): void {
  * @method setMoneda
  * @description
  * Actualiza el estado con la moneda asociada al avalúo de la obra de arte seleccionada.
- * @param {catalogoResponse} selectedMoneda - La moneda seleccionada.
+ * @param {CatalogoResponse} selectedMoneda - La moneda seleccionada.
  */
-public setMoneda(selectedMoneda: catalogoResponse): void {
+public setMoneda(selectedMoneda: CatalogoResponse): void {
   this.update((state) => ({
     ...state,
     selectedMoneda,
@@ -555,10 +555,10 @@ public setPropietario(selectedPropietario: string): void {
  * @method setFraccionArancelaria
  * @description
  * Actualiza el estado con la fracción arancelaria asociada.
- * @param {catalogoResponse} selectedFraccionArancelaria - La fracción arancelaria seleccionada.
+ * @param {CatalogoResponse} selectedFraccionArancelaria - La fracción arancelaria seleccionada.
  */
 public setFraccionArancelaria(
-  selectedFraccionArancelaria: catalogoResponse
+  selectedFraccionArancelaria: CatalogoResponse
 ): void {
   this.update((state) => ({
     ...state,

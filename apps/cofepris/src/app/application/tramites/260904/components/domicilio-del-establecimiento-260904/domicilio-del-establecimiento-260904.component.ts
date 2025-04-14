@@ -1,5 +1,5 @@
+import { AlertComponent, InputCheckComponent } from '@libs/shared/data-access-user/src';
 import { ALERT } from '../../enums/domicilio-del-establecimiento-260904.enum';
-import { AlertComponent } from '@libs/shared/data-access-user/src';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
@@ -41,7 +41,8 @@ import { Validators } from '@angular/forms';
  *   CatalogoSelectComponent,
  *   AlertComponent,
  *   TablaDinamicaComponent,
- *   InputRadioComponent
+ *   InputRadioComponent,
+ *   InputCheckComponent
  * ]
  * @templateUrl ./domicilio-del-establecimiento-260904.component.html
  * @styleUrl ./domicilio-del-establecimiento-260904.component.scss
@@ -57,6 +58,7 @@ import { Validators } from '@angular/forms';
     AlertComponent,
     TablaDinamicaComponent,
     InputRadioComponent,
+    InputCheckComponent
   ],
   templateUrl: './domicilio-del-establecimiento-260904.component.html',
   styleUrl: './domicilio-del-establecimiento-260904.component.scss',
@@ -145,12 +147,7 @@ export class DomicilioDelEstablecimiento260904Component
    */
   municipioOAlcaldia$: Observable<string | null> =
     this.tramite260904Query.municipioOAlcaldia$;
-
-  /**
-   * Observable para la localidad.
-   */
-  localidad$: Observable<string | null> = this.tramite260904Query.localidad$;
-
+    
   /**
    * Observable para las colonias.
    */

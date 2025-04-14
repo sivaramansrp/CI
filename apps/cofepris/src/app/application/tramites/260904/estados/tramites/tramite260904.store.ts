@@ -13,33 +13,58 @@ import { Catalogo } from '@libs/shared/data-access-user/src';
  * @description Define la estructura del estado para el trámite 260904.
  */
 export interface Tramite260904State {
+   /** Botón de radio seleccionado */
   btonDeRadio: string;
+  /** Texto de justificación */
   justificacion: string;
+  /** RFC del delegado */
   rfcDel: string;
+  /** Denominación de la entidad */
   denominacion: string;
+  /** Dirección de correo electrónico */
   correo: string;
+  /** Código postal */
   codigoPostal: string;
+  /** Catálogo del estado */
   estado: Catalogo | null;
+  /** Municipio o alcaldía */
   municipioOAlcaldia: string;
+  /** Localidad */
   localidad: string;
+  /** Colonias */
   colonias: string;
+  /** Calle */
   calle: string;
+  /** Lada telefónica */
   lada: string;
+  /** Teléfono */
   telefono: string;
+  /** Checkbox de aviso */
   avisoCheckbox: string;
+  /** Catálogo de régimen */
   regimen: Catalogo | null;
+  /** Catálogo de aduanas de entrada */
   aduanasEntradas: Catalogo | null;
+  /** Checkbox de AIFA */
   aifaCheckbox: string;
+  /** Manifiestos */
   manifests: string;
+  /** Acuerdo público */
   acuerdoPublico: string;
+  /** RFC */
   rfc: string;
-
-  claveDeReferencia: string;
-  cadenaPagoDependencia: string;
-  clave: string;
-  llaveDePago: string;
-  fecPago: string;
-  impPago: string;
+ /** Clave de referencia del trámite */
+ claveDeReferencia: string;
+ /** Cadena de pago de la dependencia */
+ cadenaPagoDependencia: string;
+ /** Clave del trámite */
+ clave: string;
+ /** Llave de pago */
+ llaveDePago: string;
+ /** Fecha de pago */
+ fecPago: string;
+ /** Importe del pago */
+ impPago: string;
 }
 
 /**
