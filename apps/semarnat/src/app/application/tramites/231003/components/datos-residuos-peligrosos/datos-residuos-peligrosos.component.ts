@@ -195,16 +195,200 @@ private recuperarValoresDesdeStore(): void {
  * La suscripción se mantiene activa hasta que se destruye el componente.
  */
 private suscribirseACambiosDeFormulario(): void {
-  /** Escucha cambios en el formulario de datos y actualiza el estado */
-  this.formularioDatos.valueChanges
-    .pipe(takeUntil(this.destruir$))
-    .subscribe(valores => this.formularioStore.actualizarFormularioDatos(valores));
+  /** Escucha cambios individuales en los controles de formularioDatos */
 
-  /** Escucha cambios en el formulario del residuo y actualiza el estado */
-  this.formularioResiduo.valueChanges
+  this.formularioDatos.get('numero')?.valueChanges
     .pipe(takeUntil(this.destruir$))
-    .subscribe(valores => this.formularioStore.actualizarFormularioResiduo(valores));
+    .subscribe(valor => {
+      this.formularioStore.actualizarFormularioDatos({
+        ...this.formularioDatos.getRawValue(),
+        numero: valor
+      });
+    });
+
+  this.formularioDatos.get('nombreMateriaPrima')?.valueChanges
+    .pipe(takeUntil(this.destruir$))
+    .subscribe(valor => {
+      this.formularioStore.actualizarFormularioDatos({
+        ...this.formularioDatos.getRawValue(),
+        nombreMateriaPrima: valor
+      });
+    });
+
+  this.formularioDatos.get('cantidad')?.valueChanges
+    .pipe(takeUntil(this.destruir$))
+    .subscribe(valor => {
+      this.formularioStore.actualizarFormularioDatos({
+        ...this.formularioDatos.getRawValue(),
+        cantidad: valor
+      });
+    });
+
+  this.formularioDatos.get('cantidadLetra')?.valueChanges
+    .pipe(takeUntil(this.destruir$))
+    .subscribe(valor => {
+      this.formularioStore.actualizarFormularioDatos({
+        ...this.formularioDatos.getRawValue(),
+        cantidadLetra: valor
+      });
+    });
+
+  this.formularioDatos.get('unidadDeMedida')?.valueChanges
+    .pipe(takeUntil(this.destruir$))
+    .subscribe(valor => {
+      this.formularioStore.actualizarFormularioDatos({
+        ...this.formularioDatos.getRawValue(),
+        unidadDeMedida: valor
+      });
+    });
+
+  this.formularioDatos.get('fraccionArancelaria')?.valueChanges
+    .pipe(takeUntil(this.destruir$))
+    .subscribe(valor => {
+      this.formularioStore.actualizarFormularioDatos({
+        ...this.formularioDatos.getRawValue(),
+        fraccionArancelaria: valor
+      });
+    });
+
+  /** Escucha cambios individuales en los controles de formularioResiduo */
+
+  this.formularioResiduo.get('fraccionArancelaria')?.valueChanges
+    .pipe(takeUntil(this.destruir$))
+    .subscribe(valor => {
+      this.formularioStore.actualizarFormularioResiduo({
+        ...this.formularioResiduo.getRawValue(),
+        fraccionArancelaria: valor
+      });
+    });
+
+  this.formularioResiduo.get('nico')?.valueChanges
+    .pipe(takeUntil(this.destruir$))
+    .subscribe(valor => {
+      this.formularioStore.actualizarFormularioResiduo({
+        ...this.formularioResiduo.getRawValue(),
+        nico: valor
+      });
+    });
+
+  this.formularioResiduo.get('acotacion')?.valueChanges
+    .pipe(takeUntil(this.destruir$))
+    .subscribe(valor => {
+      this.formularioStore.actualizarFormularioResiduo({
+        ...this.formularioResiduo.getRawValue(),
+        acotacion: valor
+      });
+    });
+
+  this.formularioResiduo.get('residuoPeligroso')?.valueChanges
+    .pipe(takeUntil(this.destruir$))
+    .subscribe(valor => {
+      this.formularioStore.actualizarFormularioResiduo({
+        ...this.formularioResiduo.getRawValue(),
+        residuoPeligroso: valor
+      });
+    });
+
+  this.formularioResiduo.get('cantidad')?.valueChanges
+    .pipe(takeUntil(this.destruir$))
+    .subscribe(valor => {
+      this.formularioStore.actualizarFormularioResiduo({
+        ...this.formularioResiduo.getRawValue(),
+        cantidad: valor
+      });
+    });
+
+  this.formularioResiduo.get('cantidadLetra')?.valueChanges
+    .pipe(takeUntil(this.destruir$))
+    .subscribe(valor => {
+      this.formularioStore.actualizarFormularioResiduo({
+        ...this.formularioResiduo.getRawValue(),
+        cantidadLetra: valor
+      });
+    });
+
+  this.formularioResiduo.get('unidadMedida')?.valueChanges
+    .pipe(takeUntil(this.destruir$))
+    .subscribe(valor => {
+      this.formularioStore.actualizarFormularioResiduo({
+        ...this.formularioResiduo.getRawValue(),
+        unidadMedida: valor
+      });
+    });
+
+  this.formularioResiduo.get('clasificacion')?.valueChanges
+    .pipe(takeUntil(this.destruir$))
+    .subscribe(valor => {
+      this.formularioStore.actualizarFormularioResiduo({
+        ...this.formularioResiduo.getRawValue(),
+        clasificacion: valor
+      });
+    });
+
+  this.formularioResiduo.get('claveResiduo')?.valueChanges
+    .pipe(takeUntil(this.destruir$))
+    .subscribe(valor => {
+      this.formularioStore.actualizarFormularioResiduo({
+        ...this.formularioResiduo.getRawValue(),
+        claveResiduo: valor
+      });
+    });
+
+  this.formularioResiduo.get('nombre')?.valueChanges
+    .pipe(takeUntil(this.destruir$))
+    .subscribe(valor => {
+      this.formularioStore.actualizarFormularioResiduo({
+        ...this.formularioResiduo.getRawValue(),
+        nombre: valor
+      });
+    });
+
+  this.formularioResiduo.get('descripcion')?.valueChanges
+    .pipe(takeUntil(this.destruir$))
+    .subscribe(valor => {
+      this.formularioStore.actualizarFormularioResiduo({
+        ...this.formularioResiduo.getRawValue(),
+        descripcion: valor
+      });
+    });
+
+  this.formularioResiduo.get('creti')?.valueChanges
+    .pipe(takeUntil(this.destruir$))
+    .subscribe(valor => {
+      this.formularioStore.actualizarFormularioResiduo({
+        ...this.formularioResiduo.getRawValue(),
+        creti: valor
+      });
+    });
+
+  this.formularioResiduo.get('estadoFisico')?.valueChanges
+    .pipe(takeUntil(this.destruir$))
+    .subscribe(valor => {
+      this.formularioStore.actualizarFormularioResiduo({
+        ...this.formularioResiduo.getRawValue(),
+        estadoFisico: valor
+      });
+    });
+
+  this.formularioResiduo.get('tipoContenedor')?.valueChanges
+    .pipe(takeUntil(this.destruir$))
+    .subscribe(valor => {
+      this.formularioStore.actualizarFormularioResiduo({
+        ...this.formularioResiduo.getRawValue(),
+        tipoContenedor: valor
+      });
+    });
+
+  this.formularioResiduo.get('capacidad')?.valueChanges
+    .pipe(takeUntil(this.destruir$))
+    .subscribe(valor => {
+      this.formularioStore.actualizarFormularioResiduo({
+        ...this.formularioResiduo.getRawValue(),
+        capacidad: valor
+      });
+    });
 }
+
 
 
 /**
