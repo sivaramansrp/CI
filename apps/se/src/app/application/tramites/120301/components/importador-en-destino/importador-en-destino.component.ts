@@ -37,6 +37,7 @@ import { ElegibilidadDeTextilesQuery } from '../../queries/elegibilidad-de-texti
 
 import { ElegibilidadTextilesService } from '../../services/elegibilidad-textiles/elegibilidad-textiles.service';
 
+import { REG_X} from '@libs/shared/data-access-user/src/tramites/constantes/regex.constants';
 
 /**
  * @component ImportadorEnDestinoComponent
@@ -157,7 +158,7 @@ export class ImportadorEnDestinoComponent implements OnInit, OnDestroy {
       tipo: [this.importadorState.tipo, Validators.required],
       cantidadTotalImportador: [
         this.importadorState.cantidadTotalImportador,
-        [Validators.required, Validators.pattern('^[0-9]+$')],
+        [Validators.required, Validators.pattern(REG_X.SOLO_NUMEROS)],
       ],
       razonSocialImportador: [
         this.importadorState.razonSocialImportador,
@@ -170,7 +171,7 @@ export class ImportadorEnDestinoComponent implements OnInit, OnDestroy {
       ],
       cpImportador: [
         this.importadorState.cpImportador,
-        [Validators.required, Validators.pattern('^[0-9]{5}$')],
+        [Validators.required, Validators.pattern(REG_X.SOLO_NUMEROS)],
       ],
       PaisImportador: [
         { value: this.importadorState.PaisImportador, disabled: true },
