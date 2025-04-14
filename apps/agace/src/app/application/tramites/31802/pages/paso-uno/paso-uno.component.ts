@@ -30,7 +30,7 @@ export class PasoUnoComponent implements AfterViewInit,OnInit, OnDestroy {
     * Observable para manejar la destrucción del componente.
     * Se utiliza para cancelar suscripciones activas.
     */
-  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+  public destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   /**
    * Configuración del formulario dinámico para la persona.
    */

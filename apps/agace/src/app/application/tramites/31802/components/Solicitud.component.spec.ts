@@ -1,78 +1,64 @@
-// @ts-nocheck
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { By } from '@angular/platform-browser';
-import { Observable, of as observableOf, throwError } from 'rxjs';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
+import { ReplaySubject, of } from 'rxjs'; // Import `of` here
 
-import { Component } from '@angular/core';
 import { SolicitudComponent } from './solicitud.component';
-import { RegistroSolicitudService } from '../services/registro-solicitud-service.service';
+import { RegistroSolicitudService } from './../services/registro-solicitud-service.service';
 import { FormBuilder } from '@angular/forms';
-import { Tramite31803Store } from '../state/Tramite31803.store';
-import { Tramite31803Query } from '../state/Tramite31803.query';
+import { Tramite31802Store } from '../state/Tramite31802.store';
+import { Tramite31802Query } from '../state/Tramite31802.query';
 import { ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
+import { FECHAINICIAL, FECHAFINAL, FECHAPAGO } from '../model/registro.model';
+import { Solicitud31802Enum } from '../constants/solicitud31802.enum';
 
-@Injectable()
-class MockRegistroSolicitudService {}
-
-@Injectable()
-class MockTramite31803Store {}
-
-@Injectable()
-class MockTramite31803Query {}
-
-@Directive({ selector: '[myCustom]' })
-class MyCustomDirective {
-  @Input() myCustom;
+// Mock implementations
+class MockRegistroSolicitudService {
+  getBancoData = jest.fn(() => of({})); // Mock method returning an observable
 }
 
-@Pipe({name: 'translate'})
-class TranslatePipe implements PipeTransform {
-  transform(value) { return value; }
+class MockTramite31802Store {
+  setValoresStore = jest.fn();
+  limpiarSolicitud = jest.fn();
 }
 
-@Pipe({name: 'phoneNumber'})
-class PhoneNumberPipe implements PipeTransform {
-  transform(value) { return value; }
+class MockTramite31802Query {
+  selectSolicitud$ = of({});
 }
-
-@Pipe({name: 'safeHtml'})
-class SafeHtmlPipe implements PipeTransform {
-  transform(value) { return value; }
+type Tramite31802StoreMethods = {
+  setValoresStore: (value: unknown) => void;
+  limpiarSolicitud: () => void;
+};
+class MockValidacionesFormularioService {
+  isValid = jest.fn(); 
 }
-
 describe('SolicitudComponent', () => {
-  let fixture;
-  let component;
+  let fixture: ComponentFixture<SolicitudComponent>;
+  let component: SolicitudComponent;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule ,SolicitudComponent],
-      declarations: [
-        
-        TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
-        MyCustomDirective
-      ],
-      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
+      imports: [FormsModule, ReactiveFormsModule,SolicitudComponent],
+      declarations: [],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
       providers: [
         { provide: RegistroSolicitudService, useClass: MockRegistroSolicitudService },
         FormBuilder,
-        { provide: Tramite31803Store, useClass: MockTramite31803Store },
-        { provide: Tramite31803Query, useClass: MockTramite31803Query },
-        ValidacionesFormularioService
-      ]
-    }).overrideComponent(SolicitudComponent, {
-
-      set: { providers: [{ provide: RegistroSolicitudService, useClass: MockRegistroSolicitudService }] }    
-    }).compileComponents();
+        { provide: Tramite31802Store, useClass: MockTramite31802Store },
+        { provide: Tramite31802Query, useClass: MockTramite31802Query },
+        { provide: ValidacionesFormularioService, useClass: MockValidacionesFormularioService }, // Mock service
+      ],
+    })
+      .overrideComponent(SolicitudComponent, {
+        set: { providers: [{ provide: RegistroSolicitudService, useClass: MockRegistroSolicitudService }] },
+      })
+      .compileComponents();
+  
     fixture = TestBed.createComponent(SolicitudComponent);
     component = fixture.debugElement.componentInstance;
   });
 
   afterEach(() => {
-    component.ngOnDestroy = function() {};
     fixture.destroy();
   });
 
@@ -80,89 +66,101 @@ describe('SolicitudComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should run #ngOnInit()', async () => {
-    component.getBancoData = jest.fn();
-    component.query = component.query || {};
-    component.query.selectSolicitud$ = observableOf({});
-    component.donanteDomicilio = jest.fn();
-    component.ngOnInit();
-    // expect(component.getBancoData).toHaveBeenCalled();
-    // expect(component.donanteDomicilio).toHaveBeenCalled();
+  it('should run #ngOnDestroy()', () => {
+    jest.spyOn(component.destroyed$, 'next');
+    jest.spyOn(component.destroyed$, 'complete');
+    component.ngOnDestroy();
+    expect(component.destroyed$.next).toHaveBeenCalledWith(true);
+    expect(component.destroyed$.complete).toHaveBeenCalled();
   });
 
-  it('should run #cambioFechaFactura()', async () => {
-    component.registroForm = component.registroForm || {};
-    component.registroForm.patchValue = jest.fn();
+  it('should initialize destroyed$ as a ReplaySubject', () => {
+    expect(component.destroyed$).toBeInstanceOf(ReplaySubject);
+  });
+
+  it('should initialize fechaInicialInput with FECHAINICIAL', () => {
+    expect(component.fechaInicialInput).toEqual(FECHAINICIAL);
+  });
+
+  it('should initialize fechaFinalInput with FECHAFINAL', () => {
+    expect(component.fechaFinalInput).toEqual(FECHAFINAL);
+  });
+
+  it('should initialize fechaPagoInput with FECHAPAGO', () => {
+    expect(component.fechaPagoInput).toEqual(FECHAPAGO);
+  });
+
+  it('should initialize solicitudEnum with Solicitud31802Enum', () => {
+    expect(component.solicitudEnum).toEqual(Solicitud31802Enum);
+  });
+
+  it('should run #cambioFechaPago()', async () => {
+    component.registroForm = component.fb.group({
+      fechaPago: [''],
+    });
+  
+    jest.spyOn(component.registroForm, 'patchValue');
     component.setValoresStore = jest.fn();
-    component.cambioFechaFactura({});
-    // expect(component.registroForm.patchValue).toHaveBeenCalled();
-    // expect(component.setValoresStore).toHaveBeenCalled();
+  
+    const mockEvent = '2025-01-01'; 
+    component.cambioFechaPago(mockEvent);
+  
+    expect(component.registroForm.patchValue).toHaveBeenCalled();
+    expect(component.setValoresStore).toHaveBeenCalled();
   });
 
-  it('should run #getBancoData()', async () => {
-    component.registroSolicitud = component.registroSolicitud || {};
-    component.registroSolicitud.getBancoData = jest.fn().mockReturnValue(observableOf({}));
-    component.bancoCatalogo = component.bancoCatalogo || {};
-    component.bancoCatalogo.catalogos = 'catalogos';
-    component.getBancoData();
-    // expect(component.registroSolicitud.getBancoData).toHaveBeenCalled();
+  it('should run #enviarFormulario()', async () => {
+    component.registroForm = component.fb.group({
+      testField: ['', Validators.required], 
+    });
+  
+    jest.spyOn(component, 'validarDestinatarioFormulario');
+    component.enviarFormulario();
+    expect(component.validarDestinatarioFormulario).toHaveBeenCalled();
   });
-
-  it('should run #onSubmit()', async () => {
-    component.registroForm = component.registroForm || {};
-    component.registroForm.valid = 'valid';
-    component.onSubmit();
-
+  it('should run #esValido()', async () => {
+    const mockForm = component.fb.group({
+      testField: ['', Validators.required], // Add a required control
+    });
+  
+    const mockField = 'testField';
+  
+    jest.spyOn(component.validacionesService, 'isValid');
+    component.esValido(mockForm, mockField);
+    expect(component.validacionesService.isValid).toHaveBeenCalledWith(mockForm, mockField);
   });
-
-  it('should run #isValid()', async () => {
-    component.validacionesService = component.validacionesService || {};
-    component.validacionesService.isValid = jest.fn();
-    component.isValid({}, {});
-    // expect(component.validacionesService.isValid).toHaveBeenCalled();
-  });
-
   it('should run #validarDestinatarioFormulario()', async () => {
-    component.registroForm = component.registroForm || {};
-    component.registroForm.invalid = 'invalid';
-    component.registroForm.markAllAsTouched = jest.fn();
+    component.registroForm = component.fb.group({
+      testField: ['', Validators.required], 
+    });
+  
+    jest.spyOn(component.registroForm, 'markAllAsTouched');
     component.validarDestinatarioFormulario();
-    // expect(component.registroForm.markAllAsTouched).toHaveBeenCalled();
+    expect(component.registroForm.markAllAsTouched).toHaveBeenCalled();
   });
-
+  
   it('should run #setValoresStore()', async () => {
-    component.store = component.store || {};
-    component.store.metodoNombre = jest.fn();
-    component.setValoresStore({
-      get: function() {
-        return {
-          value: {}
-        };
-      }
-    }, {}, {});
-    // expect(component.store.metodoNombre).toHaveBeenCalled();
+    const form = {
+      get: jest.fn().mockReturnValue({ value: 'testValue' }),
+    };
+    const field = 'testField';
+    jest.spyOn(component.store, 'setFechaPago');
+    component.setValoresStore(form as any, field, 'setFechaPago');
+    expect(component.store.setFechaPago).toHaveBeenCalledWith('testValue');
   });
 
   it('should run #donanteDomicilio()', async () => {
-    component.fb = component.fb || {};
-    component.fb.group = jest.fn();
-    component.solicitudState = component.solicitudState || {};
-    component.solicitudState.banco = 'banco';
-    component.solicitudState.llave = 'llave';
-    component.solicitudState.manifiesto1 = 'manifiesto1';
-    component.solicitudState.manifiesto2 = 'manifiesto2';
-    component.solicitudState.numeroOperacion = 'numeroOperacion';
+    jest.spyOn(component.fb, 'group');
+    component.solicitudState = {
+      llave: 'testLlave',
+      manifiesto1: 'testManifiesto1',
+      manifiesto2: 'testManifiesto2',
+      manifiesto3: 'testManifiesto3',
+      numeroOperacion: 12345,
+      fechaPago: '2025-01-01',
+      monedaNacional: 'MXN',
+    } as any;
     component.donanteDomicilio();
-    // expect(component.fb.group).toHaveBeenCalled();
+    expect(component.fb.group).toHaveBeenCalled();
   });
-
-  it('should run #ngOnDestroy()', async () => {
-    component.destroyed$ = component.destroyed$ || {};
-    component.destroyed$.next = jest.fn();
-    component.destroyed$.complete = jest.fn();
-    component.ngOnDestroy();
-    // expect(component.destroyed$.next).toHaveBeenCalled();
-    // expect(component.destroyed$.complete).toHaveBeenCalled();
-  });
-
 });

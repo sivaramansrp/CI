@@ -48,7 +48,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * Observable para manejar la destrucción del componente.
    * Se utiliza para cancelar suscripciones activas.
    */
-  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+  public destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
   /**
    * Estado actual de la solicitud.
@@ -91,11 +91,10 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * @param validacionesService Servicio para validar campos del formulario.
    */
   constructor(
-    private registroSolicitud: RegistroSolicitudService,
     public fb: FormBuilder,
-    private store: Tramite31802Store,
+    public store: Tramite31802Store,
     private query: Tramite31802Query,
-    private validacionesService: ValidacionesFormularioService
+    public validacionesService: ValidacionesFormularioService
   ) {
     // El constructor se utiliza para la inyección de dependencias.
   }
@@ -136,6 +135,8 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   enviarFormulario(): void {
     if (this.registroForm.valid) {
       // Aquí se implementará la lógica para manejar el envío del formulario.
+    }else {
+      this.validarDestinatarioFormulario();
     }
   }
 
@@ -170,6 +171,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     form: FormGroup,
     campo: string,
     metodoNombre: keyof Tramite31802Store
+    
   ): void {
     const VALOR = form.get(campo)?.value;
     (this.store[metodoNombre] as (value: unknown) => void)(VALOR);

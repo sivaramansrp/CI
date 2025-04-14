@@ -1,12 +1,8 @@
 import {
-    AlertComponent,
-    AnexarDocumentosComponent,
     CATALOGOS_ID,
-    TituloComponent,
   } from '@ng-mf/data-access-user';
   import { Catalogo, CatalogosService, TEXTOS } from '@ng-mf/data-access-user';
   import { Component, OnDestroy, OnInit } from '@angular/core';
-  import { CommonModule } from '@angular/common';
   import { Subscription } from 'rxjs';
   
   /**
