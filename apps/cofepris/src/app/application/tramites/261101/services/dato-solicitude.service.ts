@@ -31,6 +31,12 @@ export class DatosSolicitudService {
    * @param {string} campo  : si el control es un FormGroup
    * @returns {boolean | null} : Retorna true si el campo contiene errores y ha sido tocado, de lo contrario retorna false
    */
+  /**
+   * Valida si el campo de un formulario no contiene errores
+   * @param {AbstractControl} control  : Control del formulario
+   * @param {string} campo  : si el control es un FormGroup
+   * @returns {boolean | null} : Retorna true si el campo contiene errores y ha sido tocado, de lo contrario retorna false
+   */
    static isValid(control: AbstractControl, campo?: string): boolean | null {
     if (control instanceof FormGroup && campo) {
       return control?.controls[campo]?.errors && control?.controls[campo]?.touched;

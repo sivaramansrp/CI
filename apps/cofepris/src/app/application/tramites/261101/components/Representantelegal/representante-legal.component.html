@@ -3,28 +3,37 @@
 <form [formGroup]="domicilioEstablecimiento">
     <div class="row">
         <div class="col-md-4">
-            <label class="form-label" for="RFCPostal">RFC*:
+            <label class="form-label" for="representanteLegalRFCPostal">representanteLegalRFC*:
             </label>
-            <input type="text" class="form-control" id="RFCPostal" formControlName="RFC">
+            <input [ngClass]="isValid('representanteLegalRFC') ? 'required' : ''" type="text" class="form-control" id="representanteLegalRFCPostal" formControlName="representanteLegalRFC" (change)="setValoresStore(domicilioEstablecimiento,'representanteLegalRFC')">
+            <div  *ngIf="domicilioEstablecimiento?.get('representanteLegalRFC')?.invalid && domicilioEstablecimiento?.get('representanteLegalRFC')?.touched" class="text-danger">
+                Favor de seleccionar el representanteLegalRFC.
+            </div>
         </div>
 
         <div class="col-md-8">
-            <label class="form-label" for="Buscar :">Buscar :*</label>
-            <input type="text" class="form-control" id="Buscar " formControlName="Buscar">
+            <label class="form-label" for="buscar :">Buscar :*</label>
+            <input [ngClass]="isValid('buscar') ? 'required' : ''" type="text" class="form-control" id="buscar " formControlName="buscar" (change)="setValoresStore(domicilioEstablecimiento,'buscar')">
+            <div  *ngIf="domicilioEstablecimiento?.get('buscar')?.invalid && domicilioEstablecimiento?.get('buscar')?.touched" class="text-danger">
+                Favor de seleccionar el buscar.
+            </div>
         </div>
 
         <div class="col-md-12">
-            <label class="form-label" for="Nombre">Nombre o Razón Social*:</label>
-            <input type="text" class="form-control" id="Nombre" formControlName="Nombre">
+            <label class="form-label" for="representanteLegalNombre">Nombre o Razón Social*:</label>
+            <input  [ngClass]="isValid('representanteLegalNombre') ? 'required' : ''" type="text" class="form-control" id="representanteLegalNombre" formControlName="representanteLegalrepresentanteLegalNombre" (change)="setValoresStore(domicilioEstablecimiento,'representanteLegalrepresentanteLegalNombre')">
+            <div  *ngIf="domicilioEstablecimiento?.get('representanteLegalrepresentanteLegalNombre')?.invalid && domicilioEstablecimiento?.get('representanteLegalrepresentanteLegalNombre')?.touched" class="text-danger">
+                Favor de seleccionar el representanteLegalNombre.
+            </div>
         </div>
 
         <div class="col-md-4">
-            <label class="form-label" for="Apellido">Apellido paterno: </label>
-            <input type="text" class="form-control" id="Apellido" formControlName="ApellidoPaterno">
+            <label class="form-label" for="apellidoPaterno">Apellido paterno: </label>
+            <input type="text" class="form-control" id="apellidoPaterno" formControlName="representanteLegalApPaterno" (change)="setValoresStore(domicilioEstablecimiento,'apellidoPaterno')">
         </div>
         <div class="col-md-4">
-            <label class="form-label" for="Apellido">Apellido materno: </label>
-            <input type="text" class="form-control" id="Apellido" formControlName="Apellido">
+            <label class="form-label" for="apellidoMaterno">Apellido materno: </label>
+            <input type="text" class="form-control" id="apellidoMaterno" formControlName="representanteLegalApMaterno" (change)="setValoresStore(domicilioEstablecimiento,'representanteLegalApMaterno')">
         </div>
     </div>
 </form>

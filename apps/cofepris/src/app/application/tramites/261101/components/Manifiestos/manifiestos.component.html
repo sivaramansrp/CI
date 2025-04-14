@@ -1,31 +1,13 @@
-<form  [formGroup]="Aduana">
-    <div class="alert alert-info">
-        <label for="filaSeleccion">
-            <input  formControlName="Aduan" id="filaSeleccion" class="cursor-pointer" type="checkbox" aria-label="Seleccionar"
-                 [checked]="declaracionEstaMarcado"/>{{manifestoDeVeracidad}}
-        </label>
-        <!-- <div *ngIf="Aduana?.get('Aduan')?.invalid && Aduana?.get('Aduan')?.touched" class="text-danger">
-            Favor de seleccionar el Manifiesto.
-        </div> -->
-    </div>
-    <div class="col-md-4">
-        <div class="radio">
-            <label>
-                <input type="radio"  id="idRadioManifiesto" formControlName="No"
-                    value="No. de Manifiesto" class="form-check-input">
-                    No
-            </label>
-        </div>
-    </div>
-    
-    <div class="col-md-4">
-        <div class="radio">
-            <label>
-                <input type="radio"  id="idRadioManifiesto" formControlName="Si"
-                    value="No. de Manifiesto" class="form-check-input">
-                    Si
-            </label>
-        </div>
-    </div>
+<form [formGroup]="Aduana">
+  <div class="alert alert-info">
+    <label for="filaSeleccion">
+      <input formControlName="aduanas" id="filaSeleccion" class="cursor-pointer" type="checkbox"
+        aria-label="Seleccionar" [checked]="declaracionEstaMarcado" />{{manifestoDeVeracidad}}
+    </label>
+  </div>
+
+
+  <app-input-radio [radioOptions]="radioOptions" formControlName="informacionConfidencial"
+    (change)="setValoresStore(Aduana,'informacionConfidencial')" [layout]="'horizontal'"></app-input-radio>
 
 </form>

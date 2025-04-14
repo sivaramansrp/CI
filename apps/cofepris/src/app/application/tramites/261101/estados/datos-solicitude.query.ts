@@ -1,6 +1,5 @@
 import { DatosProcedureState } from './datos-solicitude.store';
 import { DatosProcedureStore } from './datos-solicitude.store';
-
 import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
 

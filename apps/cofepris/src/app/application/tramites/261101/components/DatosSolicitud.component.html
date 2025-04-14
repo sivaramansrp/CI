@@ -4,34 +4,38 @@
 <div class="col-md-4">
     <app-input-radio
     [radioOptions]="radioOptions"
-    formControlName="Prorroga" 
-    (change)="setValoresStore()"
+    formControlName="ideGenerica1" 
+    (change)="setValoresStore(preOperativeForm,'ideGenerica1')"
     [layout]="'horizontal'"
   ></app-input-radio>
 </div>
-<!-- </div>[ngClass]="isValid('motivoDesistimiento') ? 'required' : ''" -->
 
     <div class="row mt-5">
-        <div class="col-md-4 form-group">
-            <label class="form-label" for="motivoDesistimiento">Justificacion*:</label>
-            <textarea formControlName="Justificacion" id="motivoDesistimiento" name="motivoDesistimiento" rows="4"
-                cols="50"  [ngClass]="isValid('motivoDesistimiento') ? 'required' : ''"
-                (change)="setValoresStores()"   ></textarea>
-                <div *ngIf="preOperativeForm?.get('Justificacion')?.invalid && preOperativeForm?.get('Justificacion')?.touched" class="text-danger">
-                    Favor de seleccionar el Justificacion.
-                </div>
-        </div>
-    </div>
+      <div class="col-md-4 form-group">
+          <label class="form-label" for="motivoDesistimiento">justificacion*:</label>
+          <textarea formControlName="observaciones" id="motivoDesistimiento" name="motivoDesistimiento" rows="4"
+              cols="50" [ngClass]="isValid('motivoDesistimiento') ? 'required' : ''"
+              (change)="setValoresStore(preOperativeForm,'observaciones')"></textarea>
+              <div *ngIf="preOperativeForm?.get('observaciones')?.invalid && preOperativeForm?.get('observaciones')?.touched" class="text-danger">
+                  Favor de seleccionar el Motivo observaciones.
+              </div>
+      </div>
+  </div>
     <br>
 </form>
+<br>
 <app-datosestablecimiento></app-datosestablecimiento>
 <br>
 <app-domicilio-establecimientos></app-domicilio-establecimientos>
-<br>
 <br>
 <app-mercancias></app-mercancias>
 <br>
 <app-manifiestos></app-manifiestos>
 <br>
 <app-representante-legal></app-representante-legal>
+<br>
+  <ng-alert
+    [CONTENIDO]= "TEXTO_DE_ADJUNTAR"
+    [CUSTOMECLASS]="'info-alert'"
+  ></ng-alert>
 

@@ -1,21 +1,109 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { DatosSolicitudComponent } from './DatosSolicitud.component';
+import { DatosSolicitudService } from '../services/dato-solicitude.service';
+import { DatosProcedureStore } from '../estados/datos-solicitude.store';
+import { DatosProcedureQuery } from '../estados/datos-solicitude.query';
+import { of } from 'rxjs';
 
 describe('DatosSolicitudComponent', () => {
   let component: DatosSolicitudComponent;
-  let fixture: ComponentFixture<DatosSolicitudComponent>;
+  let mockDatosSolicitudService: any;
+  let mockDatosProcedureStore: any;
+  let mockDatosProcedureQuery: any;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [DatosSolicitudComponent],
+  beforeEach(() => {
+    mockDatosSolicitudService = {
+      isValid: jest.fn(),
+    };
+
+    mockDatosProcedureStore = {
+      establecerDatos: jest.fn(),
+    };
+
+    mockDatosProcedureQuery = {
+      selectideGenerica1$: of({
+        ideGenerica1: 'ideGenerica1',
+        observaciones: 'Alguna justificación',
+      }),
+    };
+
+    TestBed.configureTestingModule({
+      imports: [ReactiveFormsModule, DatosSolicitudComponent],
+      providers: [
+        FormBuilder,
+        { provide: DatosSolicitudService, useValue: mockDatosSolicitudService },
+        { provide: DatosProcedureStore, useValue: mockDatosProcedureStore },
+        { provide: DatosProcedureQuery, useValue: mockDatosProcedureQuery },
+      ],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(DatosSolicitudComponent);
+    const fixture = TestBed.createComponent(DatosSolicitudComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('debería crear el componente', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('debería inicializar el formulario en ngOnInit', () => {
+    jest.spyOn(component, 'crearFormulario');
+    component.ngOnInit();
+    expect(component.crearFormulario).toHaveBeenCalled();
+    expect(component.preOperativeForm).toBeDefined();
+  });
+
+  it('debería suscribirse a selectideGenerica1$ en ngOnInit', () => {
+    const spy = jest.spyOn(mockDatosProcedureQuery.selectideGenerica1$, 'subscribe');
+    component.ngOnInit();
+    expect(spy).toHaveBeenCalled();
+  });
+
+  it('debería validar un campo del formulario usando isValid', () => {
+    // Simula el valor de retorno del método isValid en el servicio
+    mockDatosSolicitudService.isValid.mockReturnValue(true);
+
+    // Inicializa el formulario con un control
+    component.preOperativeForm = new FormBuilder().group({
+      ideGenerica1: ['ideGenerica1'], // Establece un valor inicial
+    });
+
+    // Llama al método isValid con el nombre del campo
+    const result = component.isValid('ideGenerica1');
+
+    // Verifica que el método isValid del servicio se haya llamado con los argumentos correctos
+    expect(mockDatosSolicitudService.isValid).toHaveBeenCalledWith(component.preOperativeForm, 'ideGenerica1');
+
+    // Verifica que el resultado sea true (según el mock)
+    expect(result).toBe(true);
+  });
+
+  it('debería llamar a establecerDatos en el store cuando se llama setValoresStore', () => {
+    const form = new FormBuilder().group({
+      ideGenerica1: ['ideGenerica1'],
+    });
+    component.setValoresStore(form, 'ideGenerica1');
+    expect(mockDatosProcedureStore.establecerDatos).toHaveBeenCalledWith({ ideGenerica1: 'ideGenerica1' });
+  });
+
+  it('debería emitir setValoresStoreEvent cuando se llama setValoresStore', () => {
+    const emitSpy = jest.spyOn(component.setValoresStoreEvent, 'emit');
+    const form = new FormBuilder().group({
+      observaciones: ['Alguna justificación'],
+    });
+    component.setValoresStoreEvent.emit({ form, campo: 'observaciones', metodoNombre: 'setValoresStore' });
+    expect(emitSpy).toHaveBeenCalledWith({
+      form,
+      campo: 'observaciones',
+      metodoNombre: 'setValoresStore',
+    });
+  });
+
+  it('debería limpiar las suscripciones en ngOnDestroy', () => {
+    const destroySpy = jest.spyOn(component['destroy$'], 'next');
+    const completeSpy = jest.spyOn(component['destroy$'], 'complete');
+    component.ngOnDestroy();
+    expect(destroySpy).toHaveBeenCalledWith();
+    expect(completeSpy).toHaveBeenCalled();
   });
 });

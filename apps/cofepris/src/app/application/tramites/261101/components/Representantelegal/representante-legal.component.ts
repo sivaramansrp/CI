@@ -1,64 +1,77 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
+import { DatosProcedureQuery } from '../../estados/datos-solicitude.query';
+import { DatosProcedureState } from '../../estados/datos-solicitude.store';
+import { DatosProcedureStore } from '../../estados/datos-solicitude.store';
+import { DatosSolicitudService} from '../../services/dato-solicitude.service'
 import { Domicilio } from '../../modelos/domicilio-establecimientos.model';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
+import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
+import { Validators } from '@angular/forms';
+import { takeUntil } from 'rxjs';
 @Component({
   selector: 'app-representante-legal',
   standalone: true,
-  imports: [CommonModule,ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './representante-legal.component.html',
   styleUrl: './representante-legal.component.css',
 })
-export class RepresentanteLegalComponent implements OnInit {
+export class RepresentanteLegalComponent implements OnInit, OnDestroy {
   /**
  * Formulario reactivo para datos preoperativos.
  */
   domicilioEstablecimiento!: FormGroup;
-    /**
- * Formulario reactivo para datos preoperativos.
- */
-    AvisodeFuncionamiento!: FormGroup;
+  /**
+* Formulario reactivo para datos preoperativos.
+*/
+  AvisodeFuncionamiento!: FormGroup;
   /** Enum para el tipo de selección de tabla */
   public TablaSeleccion: TablaSeleccion = TablaSeleccion.CHECKBOX;
 
-    /** Array para almacenar la respuesta de permisos cancelar */
-    Domicilios: Domicilio[] = [];
+  /** Array para almacenar la respuesta de permisos cancelar */
+  Domicilios: Domicilio[] = [];
 
-    /** Subject para notificar la destrucción del componente */
-    private destroy$ = new Subject<void>();
+  /** Subject para notificar la destrucción del componente */
+  private destroy$ = new Subject<void>();
   /** Configuración para las columnas de la tabla */
   configuracionTabla: ConfiguracionColumna<Domicilio>[] = [
-    { encabezado: 'Clave S.C.I.A.Ν.' , clave: (item:Domicilio) => item.id, orden: 1 },
+    { encabezado: 'Clave S.C.I.A.Ν.', clave: (item: Domicilio) => item.id, orden: 1 },
     { encabezado: 'Descripcion del S.C.I.A.N. ', clave: (item: Domicilio) => item.Descripcion, orden: 2 },
 
   ];
+    private seccionState!: DatosProcedureState;
+  
+  /**
+   * Constructor para SolicitanteComponent.
+   * 
+   * @param fb - Una instancia de FormBuilder utilizada para crear y gestionar formularios.
+   */
+  constructor(private fb: FormBuilder,
+    private store: DatosProcedureStore,
+    private query: DatosProcedureQuery,
+    private DatosSolicitudService: DatosSolicitudService,
+  ) {
+  }
 
+  /**
+   * Gancho de ciclo de vida que se llama después de que se inicializan las propiedades enlazadas a datos de una directiva.
+   * Inicializa el componente configurando los valores del formulario.
+   * 
+   */
+  ngOnInit(): void {
+    this.query.selectProrroga$?.pipe(takeUntil(this.destroy$))
+        .subscribe((data:DatosProcedureState) => {
+          this.seccionState = data;
+        });
+    this.establecerdomicilioEstablecimiento();
 
-
-/**
- * Constructor para SolicitanteComponent.
- * 
- * @param fb - Una instancia de FormBuilder utilizada para crear y gestionar formularios.
- */
-constructor(private fb: FormBuilder) {
-  this.establecerdomicilioEstablecimiento();
-}
-
-/**
- * Gancho de ciclo de vida que se llama después de que se inicializan las propiedades enlazadas a datos de una directiva.
- * Inicializa el componente configurando los valores del formulario.
- * 
- */
-ngOnInit(): void {
-  this.establecerValoresDeFormulario();
-
-}
+  }
 
   /**
  * Inicializa el domicilioEstablecimiento con un conjunto de controles de formulario.
@@ -67,32 +80,38 @@ ngOnInit(): void {
  */
   public establecerdomicilioEstablecimiento(): void {
     this.domicilioEstablecimiento = this.fb.group({
-      RFC:[{ value: '', disabled: false }],
-      Buscar : [{ value: '', disabled: false }],
-      Nombre: [{ value: '', disabled: false }],
-      ApellidoPaterno: [{ value: '', disabled: false }],
-      Apellido: [{ value: '', disabled: false }], 
+      representanteLegalRFC: [{ value: this.seccionState?.representanteLegalRFC,disabled:false},[Validators.required]],
+      buscar: [{ value: this.seccionState?.buscar,disabled:false },[Validators.required]],
+      representanteLegalNombre: [{ value: this.seccionState?.representanteLegalNombre,disabled:false },[Validators.required]],
+      representanteLegalApPaterno: [{ value: this.seccionState?.representanteLegalApPaterno ,disabled:false},[Validators.required]],
+      representanteLegalApMaterno: [{ value: this.seccionState?.representanteLegalApMaterno,disabled:false },[Validators.required]],
     });
   }
-  
-/**
- * Establece valores predeterminados para los campos del formulario en el domicilioEstablecimiento.
- * 
- * Este metodo asigna valores predefinidos a los siguientes controles del formulario:
- * - 'rfc': Establece el valor a 'AALM87326'.
- * - 'denominacion': Establece el valor a 'SVHGSA ASCV 332'.
- * - 'actividadEconomica': Establece el valor a 'SIMa gsys'.
- * - 'correoElectronico': Establece el valor a 'SV US'.
- * 
- * @returns {void}
- */
-public establecerValoresDeFormulario(): void {
-    this.domicilioEstablecimiento.get('Codigo')?.setValue('');
-    this.domicilioEstablecimiento.get('codigoPostal')?.setValue('');
-    this.domicilioEstablecimiento.get('estado')?.setValue('');
-    this.domicilioEstablecimiento.get('Municipio')?.setValue('');
-    this.domicilioEstablecimiento.get('localidad')?.setValue('');
-}
-}
 
+   /**
+     * Pasa el valor de un campo del formulario a la tienda para la gestión del estado.
+     * @param form - El formulario reactivo.
+     * @param campo - El representanteLegalNombre del campo en el formulario.
+     */
+   setValoresStore(form: FormGroup, campo: string) :void{
+    const VALOR = form.get(campo)?.value;
+    this.store.establecerDatos({ [campo]: VALOR });
+  }
+
+    /**
+* Gancho de ciclo de vida OnDestroy
+*/
+ngOnDestroy(): void {
+  this.destroy$.next();
+  this.destroy$.complete();
+}
+  /**
+   * Validar campo del formulario
+   * @param field representanteLegalNombre del campo
+   * @returns Booleano que indica si el campo es válido
+   */
+  isValid(field: string): boolean {
+    return Boolean(DatosSolicitudService.isValid(this.domicilioEstablecimiento, field));
+  }
+}
 

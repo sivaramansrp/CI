@@ -2,11 +2,10 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
 import { DatosProcedureQuery } from '../../estados/datos-solicitude.query';
+import { DatosProcedureState } from '../../estados/datos-solicitude.store';
 import { DatosProcedureStore } from '../../estados/datos-solicitude.store';
 import { DatosSolicitudService } from '../../../261101/services/dato-solicitude.service'
 import { Domicilio } from '../../modelos/domicilio-establecimientos.model';
-
-
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { OnDestroy } from '@angular/core';
@@ -15,6 +14,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src'
 import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
+import { Validators } from '@angular/forms';
 import { takeUntil } from 'rxjs';
 
 
@@ -25,7 +25,7 @@ import { takeUntil } from 'rxjs';
   templateUrl: './domicilio-establecimientos.component.html',
   styleUrl: './domicilio-establecimientos.component.css',
 })
-export class DomicilioEstablecimientosComponent implements OnInit {
+export class DomicilioEstablecimientosComponent implements OnInit,OnDestroy {
   /**
  * Formulario reactivo para datos preoperativos.
  */
@@ -49,7 +49,7 @@ export class DomicilioEstablecimientosComponent implements OnInit {
 
   ];
 
-
+  private seccionState!: DatosProcedureState;
 
   /**
    * Constructor para SolicitanteComponent.
@@ -60,7 +60,6 @@ export class DomicilioEstablecimientosComponent implements OnInit {
     private DatosSolicitudService: DatosSolicitudService,
     private store: DatosProcedureStore,
     private query: DatosProcedureQuery,) {
-    this.establecerdomicilioEstablecimiento();
   }
 
   /**
@@ -69,30 +68,12 @@ export class DomicilioEstablecimientosComponent implements OnInit {
    * 
    */
   ngOnInit(): void {
-    this.domicilioEstablecimientos();
-    this.establecerValoresDeFormulario();
-    this.AvisodeFuncionamientomiento();
     this.query.selectProrroga$?.pipe(takeUntil(this.destroy$))
-      .subscribe((data) => {
-        console.log('data', data);
-        this.domicilioEstablecimiento?.patchValue({
-          codigo: data.prorrogaData.Codigo,
-          estado: data.prorrogaData.Estado,
-          municipio: data.prorrogaData.Municipio,
-          localidad: data.prorrogaData.Localidad,
-          colonia: data.prorrogaData.Colonia,
-          calle: data.prorrogaData.Calle,
-          Correo: data.prorrogaData.Correo,
-          sanitario: data.prorrogaData.Sanitario,
-          lada: data.prorrogaData.Lada,
-          telefono: data.prorrogaData.Telefono
-        });
-        this.AvisodeFuncionamiento?.patchValue({
-          codfuncionamientoigo: data.prorrogaData.Funcionamiento,
-          licencia:data.prorrogaData.Licencia,
-        })
+      .subscribe((data:DatosProcedureState) => {
+        this.seccionState = data;
       });
-
+      this.establecerdomicilioEstablecimiento();
+      this.AvisodeFuncionamientomiento()
   }
 
   /**
@@ -112,23 +93,23 @@ export class DomicilioEstablecimientosComponent implements OnInit {
  */
   public establecerdomicilioEstablecimiento(): void {
     this.domicilioEstablecimiento = this.fb.group({
-      codigo: [{ value: '', disabled: false }],
-      estado: [{ value: '', disabled: false }],
-      municipio: [{ value: '', disabled: false }],
-      localidad: [{ value: '', disabled: false }],
-      colonia: [{ value: '', disabled: false }],
-      calle: [{ value: '', disabled: false }],
-      Correo: [{ value: '', disabled: false }],
-      sanitario: [{ value: '', disabled: false }],
-      lada: [{ value: '', disabled: false }],
-      telefono: [{ value: '', disabled: false }]
+      codigo: [this.seccionState?.codigo,],
+      estado: [{ value: this.seccionState.estado,disabled:false},[Validators.required]],
+      municipio: [{ value: this.seccionState?.municipio,disabled:false},[Validators.required]],
+      localidad: [{ value: this.seccionState?.localidad,disabled:false},[Validators.required]],
+      colonia: [{ value: this.seccionState?.colonia,disabled:false},[Validators.required]],
+      calle: [{ value: this.seccionState?.calle,disabled:false},[Validators.required]],
+      correo: [{ value: this.seccionState?.correo,disabled:false},[Validators.required]],
+      sanitario: [{ value: this.seccionState?.sanitario,disabled:false}],
+      lada: [{ value: this.seccionState?.lada,disabled:false}],
+      telefono: [{ value: this.seccionState?.telefono,disabled:false}]
     });
   }
   public AvisodeFuncionamientomiento(): void {
     this.AvisodeFuncionamiento = this.fb.group({
-      funcionamiento: [{ value: '', disabled: false }],
-      licencia: [{ value: '', disabled: false }],
-      Regimen: [{ value: '', disabled: false }],
+      funcionamiento: [{ value: this.seccionState?.funcionamiento,disabled:false}],
+      licencia: [{ value: this.seccionState?.licencia,disabled:false}],
+      regimen: [{ value: this.seccionState?.regimen,disabled:false}],
     });
   }
 
@@ -154,42 +135,31 @@ export class DomicilioEstablecimientosComponent implements OnInit {
     this.domicilioEstablecimiento.get('numeroExterior')?.setValue('')
   }
 
-  /**
- * Establecer valores en DatosProcedureStore
-   */
-  setValoresStore(data: string): void {
-    if (data === 'estado') {
-      this.store.setEstado(this.domicilioEstablecimiento.get('estado')?.value);
-    } else if (data === 'codigo') {
-      this.store.setCodigo(this.domicilioEstablecimiento.get('codigo')?.value);
-    } else if (data ==='Municipio') {
-      this.store.setCodigo(this.domicilioEstablecimiento.get('municipio')?.value);
-    } else if (data === 'localidad') {
-      this.store.setLocalidad(this.domicilioEstablecimiento.get('localidad')?.value);
-    } else if (data === 'colonia') {
-      this.store.setColonia(this.domicilioEstablecimiento.get('colonia')?.value);
-    } else if (data === 'calle') {
-      this.store.setCalle(this.domicilioEstablecimiento.get('calle')?.value);
-    } else if (data === 'Correo') {
-      this.store.setCorreo(this.domicilioEstablecimiento.get('Correo')?.value);
-    } else if (data === 'sanitario') {
-      this.store.setSanitario(this.domicilioEstablecimiento.get('sanitario')?.value);
-    } else if (data === 'lada') {
-      this.store.setLada(this.domicilioEstablecimiento.get('lada')?.value);
-    } else if (data === 'telefono') {
-      this.store.setTelefono(this.domicilioEstablecimiento.get('telefono')?.value);
-    } 
-    else if (data === 'funcionamiento') {
-      this.store.setFuncionamiento(this.AvisodeFuncionamiento.get('funcionamiento')?.value);
-    } else if (data === 'licencia') {
-      this.store.setLicencia(this.AvisodeFuncionamiento.get('licencia')?.value);
-    }
+ 
+   /**
+     * Pasa el valor de un campo del formulario a la tienda para la gestión del estado.
+     * @param form - El formulario reactivo.
+     * @param campo - El nombre del campo en el formulario.
+     */
+   setValoresStore(form: FormGroup, campo: string) :void{
+    const VALOR = form.get(campo)?.value;
+    this.store.establecerDatos({ [campo]: VALOR });
   }
+
+      /**
+* Gancho de ciclo de vida OnDestroy
+*/
+ngOnDestroy(): void {
+  this.destroy$.next();
+  this.destroy$.complete();
+}
   /**
- * Establecer valores en DatosProcedureStore
+   * Validar campo del formulario
+   * @param field Nombre del campo
+   * @returns Booleano que indica si el campo es válido
    */
-  // setValoresStores(): void {
-  //   this.store.setJustificacion(this.preOperativeForm.get('Justificacion')?.value);
-  // }
+  isValid(field: string): boolean {
+    return Boolean(DatosSolicitudService.isValid(this.domicilioEstablecimiento, field));
+  }
 }
 
