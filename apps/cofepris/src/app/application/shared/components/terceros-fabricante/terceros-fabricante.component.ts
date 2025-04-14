@@ -19,7 +19,7 @@ import {
   REGEX_SOLO_NUMEROS,
   TituloComponent,
 } from '@ng-mf/data-access-user';
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, Inject, Input, OnDestroy, OnInit } from '@angular/core';
 import {
   REGEX_CURP,
   REGEX_RFC_FISICA,
@@ -30,7 +30,7 @@ import { CommonModule } from '@angular/common';
 import { ModalComponent } from '../modal/modal.component';
 import NacionalidadRadioOptions from '@libs/shared/theme/assets/json/260501/nacionalidad-options.json';
 import SELECT_OPTIONS_DATA from '@libs/shared/theme/assets/json/260501/fabricante-select-options-data.json';
-import { TERCEROS_RELACIONADOS_TABLE_HEADER_DATA } from '../../constantes/terceros-fabricante.enum';
+import { DEFAULT_TABLE_ORDER, TERCEROS_RELACIONADOS_TABLE_HEADER_DATA } from '../../constantes/terceros-fabricante.enum';
 import { TablaDatos } from '../../models/terceros-fabricante.model';
 import { TableComponent } from '@ng-mf/data-access-user';
 import { TercerosFabricanteService } from '../../services/terceros-fabricante.service';
@@ -72,6 +72,14 @@ const TERCEROS_TEXTO_DE_ALERTA =
  * Utiliza formularios reactivos y componentes personalizados para mostrar datos.
  */
 export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
+  @Input() tableOrder: { name: string; order: number; isVisible: boolean }[] = DEFAULT_TABLE_ORDER;
+  
+  // Update the getSortedTables method to filter by isVisible
+  getSortedTables() {
+    return this.tableOrder
+      .filter(table => table.isVisible) // Only include visible tables
+      .sort((a, b) => a.order - b.order);
+  }
   /**
    * Indicador de visibilidad para la sección de la tabla.
    * Inicialmente visible (`true`).

@@ -58,3 +58,9 @@ export const TERCEROS_RELACIONADOS_TABLE_HEADER_DATA = [
   'Estado/localidad',
   'Código postal',
 ];
+
+export const DEFAULT_TABLE_ORDER = [
+  { name: 'Fabricante', order: 1, isVisible: true },
+  { name: 'Formulador', order: 2, isVisible: true },
+  { name: 'Proveedor', order: 3, isVisible: true },
+];
