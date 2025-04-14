@@ -22,7 +22,12 @@ const ROUTES: Routes = [
     path: 'tramites-disponibles',
     loadChildren: () =>
       import('./tramites/230101/tramites-disponsibles.module').then((m) => m.TramitesDisponiblesModule),
-  }
+  },
+  {
+    path: 'desistimiento',
+    loadChildren: () =>
+      import('./tramites/230301/desistimiento.module').then((m) => m.DesistimientoModule),
+  },
 ];
 
 @NgModule({

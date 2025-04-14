@@ -1,0 +1,413 @@
+import { AvisocalidadStore, SolicitudState } from '../../estados/stores/aviso-calidad.store';
+import { CROSLISTA_DE_PAISES, INPUT_FECHA_CADUCIDAD_CONFIG, } from '../../constantes/datos-domicilio-legal.enum';
+import { Catalogo, CatalogoSelectComponent, ConfiguracionColumna, CrossListLable, CrosslistComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Component, OnDestroy, OnInit, QueryList, ViewChildren, } from '@angular/core';
+import { DATOS_MERCANCIAS, MercanciasInfo, NICO_TABLA, NicoInfo, } from '../../models/datos-domicilio-legal.model';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators, } from '@angular/forms';
+import { Subject, map, takeUntil } from 'rxjs';
+import { AvisocalidadQuery } from '../../estados/queries/aviso-calidad.query';
+import { CommonModule } from '@angular/common';
+import { DatosDomicilioLegalService } from '../../services/datos-domicilio-legal.service';
+import { InputCheckComponent } from '@libs/shared/data-access-user/src';
+/**
+ * Representa la estructura de la respuesta de una tabla.
+ */
+export interface RespuestaTabla {
+  /**
+   * Código de estado de la respuesta.
+   * @type {number}
+   */
+  code: number;
+
+  /**
+   * Datos de tipo NicoInfo que contiene la respuesta.
+   * @type {NicoInfo[]}
+   */
+  data: NicoInfo[];
+
+  /**
+   * Mensaje descriptivo de la respuesta.
+   * @type {string}
+   */
+  message: string;
+}
+
+/**
+ * Interfaz que representa la estructura de datos para la tabla de mercancías.
+ */
+export interface MercanciasTabla {
+  /**
+   * Código de estado que indica el resultado de la operación.
+   * @type {number}
+   */
+  code: number;
+
+  /**
+   * Lista de información detallada sobre las mercancías.
+   * @type {MercanciasInfo[]}
+   */
+  data: MercanciasInfo[];
+
+  /**
+   * Mensaje descriptivo relacionado con el resultado de la operación.
+   * @type {string}
+   */
+  message: string;
+}
+
+/**
+ * Componente para el domicilio del establecimiento.
+ */
+@Component({
+  selector: 'app-domicillo-establecimiento-aduanas',
+  standalone: true,
+  imports: [
+    CommonModule,
+    TituloComponent,
+    ReactiveFormsModule,
+    CatalogoSelectComponent,
+    TablaDinamicaComponent,
+    CrosslistComponent,
+    InputCheckComponent
+  ],
+  templateUrl: './domicilio-establecimiento-aduanas.component.html',
+  styleUrls: ['./domicilio-establecimiento-aduanas.component.css'],
+})
+export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestroy {
+  /**
+   * Referencia a los componentes de la lista de fechas.
+   */
+  @ViewChildren(CrosslistComponent) crossList!: QueryList<CrosslistComponent>;
+
+  /**
+   * Estado de la solicitud.
+   */
+  public solicitudState!: SolicitudState;
+
+  /**
+   * Notificador para destruir observables.
+   */
+  private destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+   * Constante para el mensaje de alerta.
+   */
+  INPUT_FECHA_CADUCIDAD_CONFIG = INPUT_FECHA_CADUCIDAD_CONFIG;
+  /**
+   * Constructor del componente.
+   * @param fb
+   * @param DatosDomicilioLegalStore
+   * @param DatosDomicilioLegalQuery
+   * @param service
+   */
+  constructor(
+    public readonly fb: FormBuilder,
+    private avisocalidadStore: AvisocalidadStore,
+    private avisocalidadQuery: AvisocalidadQuery,
+    private service: DatosDomicilioLegalService
+  ) {
+    // Reservado para futuras inyecciones de dependencias o inicializaciones.
+  }
+
+  /**
+   * Grupo de formularios principal.
+   * @property {FormGroup} domicilio
+   */
+  domicilio!: FormGroup;
+
+  /**
+   * Grupo de formularios para el agente aduanal.
+   */
+  formAgente!: FormGroup;
+
+  /**
+   * Grupo de formularios para las mercancias.
+   */
+  formMercancias!: FormGroup;
+
+  /**
+   * Control de formulario para la aduanasDeEntradaFecha.
+   */
+  aduanasDeEntradaFecha: FormControl = new FormControl('');
+
+  /**
+   * Control de formulario para la fecha aduanasDeEntradaFechaSeleccionada.
+   */
+  aduanasDeEntradaFechaSeleccionada: FormControl = new FormControl('');
+
+  /**
+   * Control de formulario para la aduanasDeEntradaFechaSeleccionada.
+   */
+  estado: Catalogo[] = [];
+
+  /**
+   * Lista de paises.
+   */
+  public crosListaDePaises = CROSLISTA_DE_PAISES;
+
+  /**
+   * Tabla de selección de checkbox.
+   */
+  tablaSeleccionCheckbox: TablaSeleccion = TablaSeleccion.CHECKBOX;
+
+  /**
+   * Tabla de selección de radio.
+   */
+  nicoTabla: ConfiguracionColumna<NicoInfo>[] = NICO_TABLA;
+
+  /**
+   * Datos de la tabla de selección de radio.
+   */
+  nicoTablaDatos: NicoInfo[] = [];
+
+  /**
+   * Tabla de selección de checkbox.
+   */
+  mercanciasTabla: ConfiguracionColumna<MercanciasInfo>[] = DATOS_MERCANCIAS;
+
+  /**
+   * Datos de la tabla de selección de checkbox.
+   */
+  mercanciasTablaDatos: MercanciasInfo[] = [];
+
+  /**
+   * Lista de aduanas de entrada seleccionadas.
+   */
+  aduanasDeEntradaSeleccionadas: string[] = [];
+
+  /**
+   * Lista de aduanas de entrada seleccionadas.
+   */
+  aduanasDeEntradaDatos: string[] = [];
+
+  /**
+   * Indica si la sección es colapsable.
+   * @property {boolean} colapsable
+   */
+  colapsable: boolean = false;
+
+  /**
+   * Indica si la sección es colapsableDuos.
+   * @property {boolean} colapsableDuos
+   */
+  colapsableDuos: boolean = false;
+
+  /**
+   * Indica si la sección es colapsableTres.
+   * @property {boolean} colapsableTres
+   */
+  colapsableTres: boolean = false;
+
+  /**
+   * Lista de rangos de días seleccionarOrigenDelPais.
+   */
+  seleccionarOrigenDelPais: string[] = this.crosListaDePaises;
+
+  /**
+   * Lista de rangos de días seleccionarOrigenDelPaisDuos.
+   */
+  seleccionarOrigenDelPaisDuos: string[] = this.crosListaDePaises;
+
+  /**
+   * Lista de rangos de días seleccionarOrigenDelPaisTres.
+   */
+  seleccionarOrigenDelPaisTres: string[] = this.crosListaDePaises;
+
+  /**
+   * Lista de rangos de días seleccionarOrigenDelPaisCuatro.
+   */
+  seleccionarOrigenDelPaisCuatro: string[] = this.crosListaDePaises;
+
+  /**
+   * Etiqueta de la lista de fechas.
+   * */
+  public aduanasDeLabel: CrossListLable = {
+    tituluDeLaIzquierda: 'Aduanas de entrada disponibles:',
+    derecha: 'Aduanas de entrada seleccionadas*:',
+  };
+
+  /**
+  * Etiqueta de la lista de fechas.
+  * */
+  public paisDeOrigenLabel: CrossListLable = {
+    tituluDeLaIzquierda: 'País de origen:',
+    derecha: 'País(es) seleccionado(s)*:',
+  };
+
+  /**
+    * Etiqueta de la lista de fechas.
+    * */
+  public paisDeProcedenciaLabel: CrossListLable = {
+    tituluDeLaIzquierda: 'País de procedencia:',
+    derecha: 'País(es) seleccionado(s)*:',
+  };
+
+
+  /**
+   * Etiqueta de la lista de fechas.
+   * */
+  ngOnInit(): void {
+    this.avisocalidadQuery.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+        })
+      )
+      .subscribe();
+    this.obtenerEstadoList();
+    this.obtenerTablaDatos();
+    this.obtenerMercanciasDatos();
+    this.configurarGrupoForm(); // Configura el grupo de formularios con los valores iniciales.
+
+  }
+
+  /**
+   * @method configurarGrupoForm
+   * @description Configures the reactive form group for the "Datos del Establecimiento RFC" component.
+   * This method initializes the form group with default values and validation rules for the fields:
+   * - `rfcDel`: Optional field with a maximum length of 254 characters.
+   * - `denominacionRazonSocial`: Required field with a maximum length of 254 characters.
+   * - `correoElectronico`: Required field with a valid email format and a maximum length of 320 characters.
+   * 
+   * @memberof DatosDelEstablecimientoRfcComponent
+   */
+  configurarGrupoForm(): void {
+    this.domicilio = this.fb.group({
+      codigoPostal: [this.solicitudState?.codigoPostal, [Validators.required, Validators.maxLength(12)]],
+      estado: [this.solicitudState?.estado, Validators.required],
+      muncipio: [this.solicitudState?.muncipio, Validators.required],
+      localidad: [this.solicitudState?.localidad],
+      colonia: [this.solicitudState?.colonia],
+      calle: [this.solicitudState?.calle, [Validators.required]],
+      lada: [this.solicitudState?.lada],
+      telefono: [this.solicitudState?.telefono, [Validators.required, Validators.maxLength(30)]],
+      avisoCheckbox: [this.solicitudState?.avisoCheckbox, Validators.required],
+      licenciaSanitaria: [
+        { value: this.solicitudState?.licenciaSanitaria, disabled: false }, [Validators.required]],
+    });
+
+    this.formAgente = this.fb.group({
+      claveScianModal: ['', Validators.required],
+      claveDescripcionModal: [''],
+    });
+    this.formMercancias = this.fb.group({
+      nombreComercial: ['', Validators.required],
+      nombreComun: ['', Validators.required],
+      nombreCientifico: ['', Validators.required],
+      usoEspecifico: ['', Validators.required],
+      estadofisico: ['', Validators.required],
+      fraccionArancelaria: ['', Validators.required],
+      descripcionFraccion: [{ value: '', disabled: true }, Validators.required],
+      cantidadUMT: ['', Validators.required],
+      UMT: [{ value: '', disabled: true }, Validators.required],
+      cantidadUMC: ['', Validators.required],
+      UMC: ['', Validators.required],
+      numerocas: ['', Validators.required],
+      porcentajeConcentracion: ['', Validators.required],
+      numeroRegistro: ['', Validators.required],
+      clasificacionToxicologica: ['', Validators.required],
+      objetoImportacion: ['', Validators.required],
+    });
+  }
+  /**
+   * Botones de acción disponibles para gestionar las listas de fechas.
+   */
+  readonly paisDeProcedenciaBotones = [
+    {
+      btnNombre: 'Agregar todos',
+      class: 'btn-primary',
+      funcion: (): void => this.crossList.toArray()[0].agregar('t'),
+    },
+    {
+      btnNombre: 'Agregar selección',
+      class: 'btn-default',
+      funcion: (): void => this.crossList.toArray()[0].agregar(''),
+    },
+    {
+      btnNombre: 'Restar selección',
+      class: 'btn-danger',
+      funcion: (): void => this.crossList.toArray()[0].quitar(''),
+    },
+    {
+      btnNombre: 'Restar todos',
+      class: 'btn-default',
+      funcion: (): void => this.crossList.toArray()[0].quitar('t'),
+    },
+  ];
+
+
+  /**
+   * Método para obtener el valor de la fecha seleccionada.
+   * @param event
+   */
+  obtenerEstadoList(): void {
+    this.service
+      .getObtenerEstadoList()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data): void => {
+        this.estado = data?.data;
+      });
+  }
+
+  /**
+   * Método para obtener el valor de la fecha seleccionada.
+   */
+  obtenerTablaDatos(): void {
+    this.service
+      .getObtenerTablaDatos()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data): void => {
+        this.nicoTablaDatos = data?.data;
+      });
+  }
+
+  /**
+   * Método para obtener el valor de la fecha seleccionada.
+   */
+  obtenerMercanciasDatos(): void {
+    this.service
+      .getObtenerMercanciasDatos()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data): void => {
+        this.mercanciasTablaDatos = data?.data;
+      });
+  }
+
+  /**
+   * Alterna el estado colapsable de la sección del formulario.
+   * @method mostrar_colapsableDuos
+   */
+  mostrar_colapsableDuos(): void {
+    this.colapsableDuos = !this.colapsableDuos;
+  }
+
+  /**
+   * Alterna el estado colapsable de la sección del formulario.
+   * @method mostrar_colapsableTres
+   */
+  mostrar_colapsableTres(): void {
+    this.colapsableTres = !this.colapsableTres;
+  }
+
+  /**
+ * @description
+ * Método que actualiza el estado del store con los valores del formulario.
+ * @param form Formulario reactivo.
+ * @param campo Campo del formulario que se desea actualizar.
+ * @param metodoNombre Nombre del método del store que se invocará.
+ */
+  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof AvisocalidadStore): void {
+    const VALOR = form.get(campo)?.value;
+    (this.avisocalidadStore[metodoNombre] as (value: string | number) => void)(VALOR);
+  }
+
+  /**
+   * Método del ciclo de vida de Angular que se llama cuando el componente se destruye.
+   * Este método completa el observable destroyNotifier$ para cancelar las suscripciones activas.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  }
+}
