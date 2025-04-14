@@ -1,0 +1,33 @@
+<div class="container">
+    <ng-titulo titulo="Certificado a desistir" />
+    <form [formGroup]="formDesistimiento">
+      <div class="form">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="form-group">
+              <label class="control-label" for="desistimientoFolio">Folio:</label>
+              <input [disabled]="true" class="form-control mb-4" id="desistimientoFolio" placeholder="" type="text" formControlName="desistimientoFolio">
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <div class="form-group my-4">
+              <label class="control-label" for="solicitudTipo">Tipo de solicitud:</label>
+              <textarea [disabled]="true" rows="6"  class="mb-4 h-20 w-100" name="solicitudTipo" id="solicitudTipo"  placeholder="" formControlName="solicitudTipo">
+              </textarea>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+             <div class="col-md-12">
+                <div class="form-group my-4" >
+                    <label class="control-label" for="desistimientoMotivo">Motivo de desistimiento*:</label>
+                    <textarea (change)="onDescripcionChange()" rows="6" class="mb-4 h-20 w-100" name="desistimientoMotivo" id="desistimientoMotivo"  placeholder="" formControlName="desistimientoMotivo">
+                    </textarea>
+                </div>
+            </div>
+        </div>
+      </div>
+    </form>
+  </div>
