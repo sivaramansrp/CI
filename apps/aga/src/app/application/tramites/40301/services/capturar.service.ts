@@ -1,7 +1,7 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Solicitud40301State, Solicitud40301Store } from '../estados/tramite40301.store';
 import { CaatNaviroMetaInfo } from '../modelos/caat-naviero.modalidad.model';
 import { Catalogo } from '@libs/shared/data-access-user/src';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Solicitud40301Query } from '../estados/tramite40301.query';
@@ -27,16 +27,7 @@ export class CapturarService {
    * Actualiza el estado del almacén con los valores predeterminados.
    */
   setInitialValues(): void {
-    this.solicitudStore.update((state) => ({
-      ...state,
-      cveFolioCaat: '3L6V',
-      descTipoCaat: 'Naviero',
-      tipoAgente: 'Agente Naviero',
-      directorGeneralNombre: 'HAZEL',
-      primerApellido: 'NAVA',
-      segundoApellido: 'AVILA',
-      rol: 'Agente Naviero',
-    }));
+    this.solicitudStore.setInitialValues();
   }
 
   /**

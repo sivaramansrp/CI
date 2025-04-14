@@ -36,6 +36,13 @@ export class PasoDosComponent implements OnDestroy{
   */
   private destroy$ = new Subject<void>();
 
+  /**
+   * Maneja el proceso de obtención de una firma y recuperación de un trámite específico.
+   * Si se proporciona una firma válida, obtiene el trámite con un ID predefinido, actualiza el store de trámite,
+   * y navega a la ruta "servicios-extraordinarios/acuse".
+   *
+   * @param ev - La cadena de texto que representa la firma obtenida del evento.
+   */
   obtieneFirma(ev: string): void {
     const FIRMA: string = ev;
     if (FIRMA) {

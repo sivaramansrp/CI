@@ -113,6 +113,35 @@ export class Solicitud40301Store extends Store<Solicitud40301State> {
     super(createInitialState());
   }
 
+  
+  /**
+   * Establece los valores iniciales para el estado de `Solicitud40301Store`.
+   *
+   * @param store - La instancia del almacén de tipo `Solicitud40301Store` a actualizar.
+   * @returns El estado actualizado de tipo `Solicitud40301State` con valores iniciales predefinidos.
+   *
+   * La función inicializa las siguientes propiedades en el estado:
+   * - `cveFolioCaat`: Una cadena que representa el código de folio CAAT, inicializado a '3L6V'.
+   * - `descTipoCaat`: Una cadena que describe el tipo de CAAT, inicializado a 'Naviero'.
+   * - `tipoAgente`: Una cadena que representa el tipo de agente, inicializado a 'Agente Naviero'.
+   * - `directorGeneralNombre`: Una cadena que representa el nombre del director general, inicializado a 'HAZEL'.
+   * - `primerApellido`: Una cadena que representa el primer apellido del director general, inicializado a 'NAVA'.
+   * - `segundoApellido`: Una cadena que representa el segundo apellido del director general, inicializado a 'AVILA'.
+   * - `rol`: Una cadena que representa el rol, inicializado a 'Agente Naviero'.
+   */
+  public setInitialValues(): Solicitud40301State {
+    return this.update((state) => ({
+      ...state,
+      cveFolioCaat: '3L6V',
+      descTipoCaat: 'Naviero',
+      tipoAgente: 'Agente Naviero',
+      directorGeneralNombre: 'HAZEL',
+      primerApellido: 'NAVA',
+      segundoApellido: 'AVILA',
+      rol: 'Agente Naviero',
+    }));
+  }
+
   /**
    * ## setDirectorGeneralNombre
    * 

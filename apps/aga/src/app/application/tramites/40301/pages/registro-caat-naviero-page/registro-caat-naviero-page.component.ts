@@ -9,7 +9,7 @@ import { DatosPasos,
   SeccionLibState, 
   SeccionLibStore, 
   WizardComponent } from '@ng-mf/data-access-user';
-  import { Subject, map, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 
 interface AccionBoton {
   accion: string;
@@ -27,11 +27,19 @@ export class RegistroCaatNavieroPageComponent implements OnInit {
    * Este se inicializa con pasos predefinidos de `CAAT_NAVIERO_PASOS`.
    */
   pasos: ListaPasosWizard[] = CAAT_NAVIERO_PASOS;
+
+  /**
+   * Representa el índice o posición actual dentro de una secuencia o colección.
+   * Inicializado en 1 por defecto.
+   */
   indice: number = 1;
+
   /**
    * Indica si se debe mostrar el botón para abrir el modal.
+   * 
+   * @type {boolean}
    */
-  mostrarBotonParaModal:boolean = false;
+  mostrarBotonParaModal: boolean = false;
 
   /**
    * Representa la estructura de datos para gestionar los pasos en un proceso de navegación.
@@ -54,6 +62,7 @@ export class RegistroCaatNavieroPageComponent implements OnInit {
    * el comportamiento o funcionalidad específica que se activa al presionar el botón.
    */
   accionBoton!: AccionBoton;
+
   /**
    * Representa el estado de una sección dentro de la aplicación.
    * Esta propiedad se utiliza para gestionar y rastrear el estado de una sección específica
@@ -62,6 +71,7 @@ export class RegistroCaatNavieroPageComponent implements OnInit {
    * @type {SeccionLibState}
    */
   public seccion!: SeccionLibState;
+
   /**
    * Notificador utilizado para gestionar la destrucción de suscripciones en el componente.
    * Es un Subject que emite un valor cuando el componente se destruye, permitiendo
@@ -71,22 +81,40 @@ export class RegistroCaatNavieroPageComponent implements OnInit {
    */
   private destroyNotifier$: Subject<void> = new Subject();
 
+  /**
+   * Referencia al componente `WizardComponent` hijo.
+   * Se utiliza para interactuar con el componente wizard desde este componente.
+   * 
+   * @type {WizardComponent}
+   */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
-  @ViewChild(PasoUnoComponent) pasoUnoComponent!: PasoUnoComponent
 
   /**
-   * @property {Modal} cancelarModalInstance
-   *  Instancia del modal de Bootstrap.
+   * Referencia al componente `PasoUnoComponent` hijo.
+   * Se utiliza para interactuar con el componente paso uno desde este componente.
+   * 
+   * @type {PasoUnoComponent}
    */
+  @ViewChild(PasoUnoComponent) pasoUnoComponent!: PasoUnoComponent;
 
+  /**
+   * Constructor del componente.
+   * 
+   * @param {SeccionLibQuery} seccionQuery - Servicio para consultar el estado de las secciones.
+   * @param {SeccionLibStore} seccionStore - Servicio para gestionar el estado de las secciones.
+   */
   constructor(
     private seccionQuery: SeccionLibQuery,
     private seccionStore: SeccionLibStore
   ) {
     // El constructor está intencionalmente vacío para la inyección de dependencias 
-   }
+  }
 
-  ngOnInit():void {
+  /**
+   * Método que se ejecuta al inicializar el componente.
+   * Se suscribe al estado de las secciones y asigna las secciones iniciales.
+   */
+  ngOnInit(): void {
     this.seccionQuery.selectSeccionState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -98,15 +126,17 @@ export class RegistroCaatNavieroPageComponent implements OnInit {
 
     this.asignarSecciones();
   }
-   /**
-     * Método para asignar las secciones existentes al stored
-     */
-   asignarSecciones(): void {
+
+  /**
+   * Método para asignar las secciones existentes al store.
+   * Inicializa las secciones y las valida como no válidas por defecto.
+   */
+  asignarSecciones(): void {
     const SECCIONES: boolean[] = Object.values(SECCIONES_TRAMITE_40301.PASO_1);
     const FORM_VALIDA: boolean[] = [];
     
     for (const LLAVE_SECCIONE in SECCIONES_TRAMITE_40301.PASO_1) {
-      if(LLAVE_SECCIONE) {
+      if (LLAVE_SECCIONE) {
         FORM_VALIDA.push(false);
       }
     }
@@ -114,13 +144,21 @@ export class RegistroCaatNavieroPageComponent implements OnInit {
     this.seccionStore.establecerFormaValida(FORM_VALIDA);
   }
 
-  // Cambia la pestaña activa al índice proporcionado
+  /**
+   * Cambia la pestaña activa al índice proporcionado.
+   * 
+   * @param {number} i - Índice de la pestaña seleccionada.
+   */
   seleccionaTab(i: number): void {
     this.indice = i;
   }
 
-  // Actualiza el índice en base al valor y ejecuta acciones de navegación
-  getValorIndice(e: AccionBoton):void {
+  /**
+   * Actualiza el índice en base al valor y ejecuta acciones de navegación.
+   * 
+   * @param {AccionBoton} e - Objeto que contiene la acción y el valor del botón.
+   */
+  getValorIndice(e: AccionBoton): void {
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
       if (e.accion === 'cont') {
@@ -131,8 +169,12 @@ export class RegistroCaatNavieroPageComponent implements OnInit {
     }
   }
 
-  // Cambia la visibilidad del botón del modal dependiendo del paso actual
-  pestanaCambiado(event: number):void{
+  /**
+   * Cambia la visibilidad del botón del modal dependiendo del paso actual.
+   * 
+   * @param {number} event - Índice del paso actual.
+   */
+  pestanaCambiado(event: number): void {
     this.mostrarBotonParaModal = event === 2 ? true : false;
   }
 }
