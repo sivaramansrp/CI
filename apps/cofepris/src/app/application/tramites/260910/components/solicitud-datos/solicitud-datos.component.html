@@ -1,0 +1,371 @@
+<form [formGroup]="solicitudForm">
+  <div class="row mt-5">
+    <div class="col-md-12">
+      <div class="panel-group ficha-collapse" id="accordion">
+        <div class="panel panel-default">
+          <div class="panel-heading" (click)="mostrarColapsable()" (keyup.enter)="mostrarColapsable()" tabindex="0">
+            <h6 class="panel-title">
+
+              <h6> <a aria-label="Repeat"><i class="bi bi-clipboard2-fill" aria-hidden="true"></i></a> Opciones de
+                pre-llenado de Solicitud</h6>
+            </h6>
+            <button type="button" class="collpase-button {{(!colapsable) ? 'collapsed' : '' }}"
+              (keydown)="mostrarColapsable()"></button>
+          </div>
+          @if(colapsable){
+          <div class="panel-collapse collapse in" id="panel-01">
+            <div class="panel-body">
+              <ng-alert [CONTENIDO]="TEXTOS.TEXTOS_SOLICITUD"></ng-alert>
+              <div class="col-md-12 mr-0">
+                <label for="solicitud">Solicitud</label>
+              </div>
+              <div class="col-md-12">
+                <app-tabla-dinamica [tipoSeleccionTabla]="solicitudSeleccionTabla" [datos]="solicitudDatos"
+                  [configuracionTabla]="solicitudConfiguracionTabla">
+                </app-tabla-dinamica>
+              </div>
+              @if(solicitud260910State.tipoOperacion === 'MOD' || solicitud260910State.tipoOperacion === 'MYP') {
+              <div class="col-md-12 mt-4 d-flex justify-content-end align-items-end">
+                <div class="btn-group">
+                  <button class="btn btn-primary ms-2" type="button">
+                    Copiar datos en una Nueva Solcitud
+                  </button>
+                </div>
+              </div>
+              }
+            </div>
+          </div>
+          }
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-12">
+      <label class="form-label" for="tipoOperacion">Seleccione el tipo de operaci&oacute;n que desea realizar*:</label>
+      <app-input-radio [radioOptions]="tipoOperacionRadioOptions"
+        [selectedValue]="solicitudForm.get('tipoOperacion')?.value" [isRequired]="true" [layout]="'horizontal'"
+        fromControlName="tipoOperacion" (valueChange)="setTipoOperacion($event)">
+      </app-input-radio>
+    </div>
+    <div class="col-md-12">
+      <div class="form-group">
+        <label class="form-label" for="observaciones">Justificación*:</label>
+        <textarea class="form-control cstm-ht" id="observaciones" formControlName="observaciones"
+          (change)="setValoresStore(solicitudForm,'observaciones', 'setObservaciones')" rows="5" cols="70"></textarea>
+      </div>
+    </div>
+
+    <div class="col-md-12">
+      <ng-titulo titulo="Datos del establecimiento" />
+    </div>
+    <div class="col-md-12">
+      <div class="text-end">
+        <button type="button" class="btn btn-primary" name="seleccionarEstablecimiento" id="btnEstablecimiento"
+          title="Selecciona para habilitar los campos del establecimiento" data-bs-toggle="modal"
+          data-bs-target="#modal-alerta" (click)="seleccionarEstablecimiento()">Seleccionar establecimiento</button>
+      </div>
+    </div>
+
+    <div class="col-md-4 mt-4">
+      <label class="form-label" for="rfcSanitario">RFC del responsable sanitario*:</label>
+      <input class="form-control" id="rfcSanitario" placeholder="" type="text" formControlName="rfcSanitario" />
+    </div>
+
+    <div class="col-md-8 mt-4">
+      <label class="form-label" for="razonSocial">Denominación o razón social*:</label>
+      <input class="form-control" id="razonSocial" placeholder="" type="text" formControlName="razonSocial" />
+    </div>
+
+    <div class="col-md-4 mt-4">
+      <label class="form-label" for="correoElectronico">Correo electrónico*:</label>
+      <input class="form-control" id="correoElectronico" placeholder="" type="text"
+        formControlName="correoElectronico" />
+    </div>
+
+    <div class="col-md-12">
+      <ng-titulo titulo="Domicilio del establecimiento" />
+    </div>
+
+    <div class="col-md-4 mt-4">
+      <label class="form-label" for="codigoPostal">Código postal*:</label>
+      <input class="form-control" id="codigoPostal" placeholder="" type="number" formControlName="codigoPostal" />
+    </div>
+
+    <div class="col-md-4 mt-4">
+      <app-catalogo-select [id]="'estado'" [catalogo]="estadoCatalogo.catalogos" [label]="estadoCatalogo.labelNombre"
+        [placeholder]="estadoCatalogo.primerOpcion" [required]="estadoCatalogo.required" formControlName="estado"
+        (selectionChange)="setEstado($event)">
+      </app-catalogo-select>
+    </div>
+
+    <div class="col-md-4 mt-4">
+      <label class="form-label" for="municipio">Municipio y alcaldía*:</label>
+      <input class="form-control" id="municipio" placeholder="" type="text" formControlName="municipio" />
+    </div>
+
+    <div class="col-md-4 mt-4">
+      <label class="form-label" for="localidad">Localidad:</label>
+      <input class="form-control" id="Localidad" placeholder="" type="text" formControlName="localidad" />
+    </div>
+
+    <div class="col-md-4 mt-4">
+      <label class="form-label" for="colonia">Colonia*:</label>
+      <input class="form-control" id="colonia" placeholder="" type="text" formControlName="colonia" />
+    </div>
+
+    <div class="col-md-8 mt-4">
+      <label class="form-label" for="calle">Calle*: <span class="bi bi-question-circle-fill" title=""
+          data-bs-toggle="tooltip"></span></label>
+      <input class="form-control" id="calle" placeholder="" type="text" formControlName="calle" />
+    </div>
+
+    <div class="row">
+      <div class="col-md-1 mt-4">
+        <label class="form-label" for="lada">Lada:</label>
+        <input class="form-control" id="lada" placeholder="" type="number" formControlName="lada" />
+      </div>
+      <div class="col-md-3 mt-4">
+        <label class="form-label" for="telefono">Teléfono*:</label>
+        <input class="form-control" id="telefono" placeholder="" type="number" formControlName="telefono" />
+      </div>
+    </div>
+
+    <div class="col-md-12 mt-5">
+      <label class="form-label mb-5" for="">S.C.I.A.N.*:</label>
+      <app-tabla-dinamica [tipoSeleccionTabla]="SCIANSeleccionTabla" [datos]="SCIANDatos"
+        (listaDeFilaSeleccionada)="getSCIANDatos($event)" [configuracionTabla]="SCIANConfiguracionTabla">
+      </app-tabla-dinamica>
+    </div>
+
+    <div class="col-md-12 mt-5 d-flex justify-content-end align-items-end">
+      <div class="btn-group">
+        <button class="btn btn-default ms-3" type="button" name="eliminar" id="eliminarSCIAN"
+          data-bs-toggle="modal" data-bs-target="#modal-confirmar" (click)="confirmarEliminarMercancias('SCIAN')">
+          Eliminar
+        </button>
+        <button type="button" class="btn btn-primary ms-3" data-bs-toggle="modal" data-bs-target="#modal-agregar-scian"
+          (click)="openAgregarSCIAN()">
+          Agregar
+        </button>
+      </div>
+    </div>
+    <div class="col-md-4 mt-4">
+      <div class="form-check mt-3">
+        <lib-input-check
+          [id]="'avisoDeFuncionamiento'"
+          [label]="'Aviso de funcionamiento'"
+          [required]="true"
+          formControlName="avisoDeFuncionamiento"
+          (change)="setAvisoDeFuncionamiento()"
+      ></lib-input-check>
+      </div>
+    </div>
+
+    <div class="col-md-4 mt-4">
+      <label class="form-label" for="licenciaSanitaria">No. de licencia sanitaria: <span
+          class="bi bi-question-circle-fill" title="" data-bs-toggle="tooltip"></span>
+      </label>
+      <input class="form-control" id="licenciaSanitaria" placeholder="" type="text" formControlName="licenciaSanitaria"
+        (change)="setLicenciaSanitaria($event)" />
+    </div>
+
+    <div class="col-md-6 mt-4">
+      <div class="form-check mt-3">
+        <lib-input-check
+          [id]="'liveFreshFrozen'"
+          [label]="'Marcar en caso de que sea VIVO/FRESCO/ENHIELADO'"
+          [required]="true"
+          formControlName="liveFreshFrozen"
+          (change)="setLiveFreshFrozen()"
+      ></lib-input-check>
+        
+      </div>
+    </div>
+
+    <div class="col-md-8 mt-4">
+      <app-catalogo-select [id]="'regimenCatalogo'" [catalogo]="regimenCatalogo.catalogos"
+        [label]="regimenCatalogo.labelNombre" [placeholder]="regimenCatalogo.primerOpcion"
+        [required]="regimenCatalogo.required" formControlName="regimen" (selectionChange)="setRegimen($event)">
+      </app-catalogo-select>
+    </div>
+
+    <div class="col-md-4 mt-4">
+      <app-catalogo-select [id]="'aduana'" [catalogo]="aduanaCatalogo.catalogos" [label]="aduanaCatalogo.labelNombre"
+        [placeholder]="aduanaCatalogo.primerOpcion" [required]="aduanaCatalogo.required" formControlName="aduana"
+        (selectionChange)="setAduana($event)">
+      </app-catalogo-select>
+    </div>
+
+    <div class="col-md-12 mt-4">
+      <label class="form-label mb-5" for="">Mercancías*:</label>
+      <app-tabla-dinamica [tipoSeleccionTabla]="mercanciasSeleccionTabla" [datos]="mercanciasDatos"
+        (listaDeFilaSeleccionada)="getMercanciasDatos($event)" [configuracionTabla]="mercanciasConfiguracionTabla">
+      </app-tabla-dinamica>
+    </div>
+
+    <div class="col-md-12 mt-5 d-flex justify-content-end align-items-end">
+      <div class="btn-group">
+        <button type="button" class="btn btn-default btn-space" data-bs-toggle="modal"
+          data-bs-target="#modal-agregar-mercancias" (click)="openModificarMercancias()">
+          Modificar
+        </button>
+        <button class="btn btn-default ms-3" type="button" name="eliminar" id="eliminarMercancias"
+          data-bs-toggle="modal" data-bs-target="#modal-confirmar" (click)="confirmarEliminarMercancias('Mercancias')">
+          Eliminar
+        </button>
+        <button type="button" class="btn btn-primary ms-3" data-bs-toggle="modal"
+          data-bs-target="#modal-agregar-mercancias" (click)="openAgregarMercancias()">
+          Agregar
+        </button>
+      </div>
+    </div>
+
+    <div class="col-md-12 mt-4">
+      <ng-titulo titulo="Manifiestos y declaraciones" />
+      <div class="alert alert-info">
+        <label style="font-weight: normal">
+          <div class="col-md-1 mt-5">
+            <input type="checkbox" class="mt-5" formControlName="manifesto" (change)="setManifesto($event)"
+              id="manifesto" />
+            <b> *</b>
+          </div>
+          <div class="col-md-11 mt-4">
+            Cumplo con los requisitos y normatividad aplicable, sin que me
+            eximan de que la autoridad sanitaria verifique su cumplimiento, esto
+            sin perjuicio de las sanciones en que puedo incurrir por falsedad de
+            declaraciones dadas a una autoridad. Asimismo acepto que la
+            notificación de este trámite, sea a través de la Ventanilla Única de
+            Comercio Exterior por los mecanismos de la misma.
+          </div>
+        </label>
+      </div>
+    </div>
+
+    <div class="col-md-12 mt-4">
+      <label class="form-label" for="">Los datos o anexos pueden contener información confidencial ¿Está de acuerdo en
+        hacerlos públicos?*:</label>
+      <app-input-radio [radioOptions]="hacerlosRadioOptions" [selectedValue]="solicitudForm.get('hacerlos')?.value"
+        [isRequired]="true" [layout]="'horizontal'" fromControlName="hacerlos" (valueChange)="setHacerlos($event)">
+      </app-input-radio>
+    </div>
+
+    <div class="col-md-12">
+      <ng-titulo titulo="Representante legal" />
+    </div>
+
+    <div class="col-md-4 mt-2">
+      <label class="form-label" for="rfc">RFC*:</label>
+      <input class="form-control" id="rfc" placeholder="" type="text" formControlName="rfc" (change)="setRFC($event)" />
+    </div>
+
+    <div class="col-md-2 mt-4 buscar-btn">
+      <button type="button" class="btn btn-default btn-space">Buscar</button>
+    </div>
+
+    <div class="col-md-6 mt-4"></div>
+
+    <div class="col-md-4 mt-4">
+      <label class="form-label" for="legalRazonSocial">Nombre o Razón Social*:</label>
+      <input class="form-control" id="legalRazonSocial" placeholder="" type="text" formControlName="legalRazonSocial" />
+    </div>
+
+    <div class="col-md-4 mt-4">
+      <label class="form-label" for="apellidoPaterno">Apellido paterno*:</label>
+      <input class="form-control" id="apellidoPaterno" placeholder="" type="text" formControlName="apellidoPaterno" />
+    </div>
+
+    <div class="col-md-4 mt-4">
+      <label class="form-label" for="apellidoMaterno">Apellido materno:</label>
+      <input class="form-control" id="apellidoMaterno" placeholder="" type="text" formControlName="apellidoMeterno" />
+    </div>
+  </div>
+  <div class="modal fade" id="modal-alerta" tabindex="-1" aria-labelledby="modal-alertaLabel">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header black">
+        </div>
+        <div class="modal-body">
+          <p>Por el momento no hay comunicación con el Sistema de COFEPRIS, favor de capturar su
+            establecimiento.</p>
+        </div>
+        <div class="modal-footer custom-footer">
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal" #closeModal>Aceptar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="modal-confirmar" tabindex="-1" aria-labelledby="modal-confirmarLabel">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header black">
+        </div>
+        <div class="modal-body">
+          <p>¿Estás seguro que deseas eliminar los registros marcados?</p>
+        </div>
+        <div class="modal-footer custom-footer">
+          <div class="btn-group">
+            <button class="btn btn-danger ms-3" type="button" name="eliminar" id="cancelarConfirmar"
+              data-bs-dismiss="modal">
+              Cancelar
+            </button>
+            <button type="button" class="btn btn-primary ms-3" data-bs-dismiss="modal" #closeModal
+              (click)="seleccionaTipo(seleccionadoTipo);">Aceptar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-12">
+    <div class="modal fade" id="modal-agregar-mercancias" tabindex="-1" aria-labelledby="modalAgregarMercanciasLabel">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <app-mercancias-datos></app-mercancias-datos>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+<div class="modal fade" id="modal-agregar-scian" tabindex="-1" aria-labelledby="SCIANLabel">
+  <form [formGroup]="claveSCIANForm">
+    <div class="col-md-12">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="col-md-12">
+            <ng-titulo titulo="Clave S.C.I.A.N." />
+          </div>
+          <div class="col-md-6 mt-4">
+            <app-catalogo-select [id]="'claveSCIAN'" [catalogo]="SCIANCatalogo.catalogos"
+              [label]="SCIANCatalogo.labelNombre" [placeholder]="SCIANCatalogo.primerOpcion"
+              [required]="SCIANCatalogo.required" formControlName="claveSCIAN"
+              (selectionChange)="setClaveSCIAN($event)">
+            </app-catalogo-select>
+          </div>
+          <div class="col-md-6 mt-4">
+            <app-catalogo-select [id]="'descSCIAN'" [catalogo]="SCIANDescCatalogo.catalogos"
+              [label]="SCIANDescCatalogo.labelNombre" [placeholder]="SCIANDescCatalogo.primerOpcion"
+              [required]="SCIANDescCatalogo.required" formControlName="claveSCIANDesc"
+              (selectionChange)="setClaveSCIANDesc($event)">
+            </app-catalogo-select>
+          </div>
+          <div class="col-md-12 mt-5 mb-5 ml-5 text-end">
+            <div class="btn-group">
+              <button class="btn btn-default ms-3" type="button" name="limpiar" id="limpiarSCIANModal"
+                data-bs-dismiss="modal">
+                Limpiar
+              </button>
+              <button class="btn btn-danger ms-3" type="button" name="eliminar" id="cancelarSCIANModal"
+                data-bs-dismiss="modal">
+                Cancelar
+              </button>
+              <button type="button" class="btn btn-primary ms-3" name="agregar" id="agregarSCIANModal"
+                data-bs-dismiss="modal" (click)="agregarSCIAN();">
+                Agregar
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </form>
+</div>

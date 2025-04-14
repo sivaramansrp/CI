@@ -91,13 +91,13 @@
             <div class="form-group">
               <label class="form-label">Importe de pago:</label>
               <input
-                class="form-control"
-                placeholder=""
-                type="text"
-                name="impPago"
-                formControlName="impPago"
-                (change)="setValoresStore(pagoDeDerechosForm,'impPago','setImpPago')"
-              />
+              class="form-control"
+              placeholder=""
+              type="text"
+              name="impPago"
+              formControlName="impPago"
+              (change)="setValoresStore(pagoDeDerechosForm,'impPago','setImpPago'); validarSinComas('impPago')"
+            />
               <div *ngIf="esInvalido('impPago')" class="text-danger">
                 <small *ngIf="pagoDeDerechosForm.controls['impPago'].hasError('maxlength')">Máximo 16 caracteres.</small>
                 <small *ngIf="pagoDeDerechosForm.get('impPago')?.hasError('noComa')">El campo no debe contener comas.</small>

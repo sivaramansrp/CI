@@ -120,7 +120,7 @@ export class Tramite260911Query extends Query<Tramite260911State> {
    * Constructor del servicio de consulta.
    * @param tramiteStore Instancia del store de Tramite260911.
    */
-  constructor(private tramiteStore: Tramite260911Store) {
-    super(tramiteStore);
+  constructor(protected override store: Tramite260911Store) {
+    super(store);
   }
 }

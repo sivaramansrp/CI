@@ -15,41 +15,11 @@ describe('PagoDeDerechosComponent', () => {
   let mockTramite260911Query: Partial<Tramite260911Query>;
   let mockTramite260911Store: Partial<Tramite260911Store>;
 
+
   beforeEach(async () => {
-    // mockPagoDeDerechosService = {
-    //   onBancoList: jest.fn().mockReturnValue(of([])),
-    // };
     mockPagoDeDerechosService = {
       onBancoList: jest.fn().mockReturnValue(of([{ id: 1, name: 'Mock Banco' }] as BancoList[])),
     };
-    // selectTramite260911$: of({
-    //   claveDeReferencia: '',
-    //   cadenaPagoDependencia: '',
-    //   clave: '',
-    //   llaveDePago: '',
-    //   fecPago: '',
-    //   impPago: '',
-    //   btonDeRadio: '',
-    //   justificación: '',
-    //   rfcDel: '',
-    //   denominacion: '',
-    //   correo: '',
-    //   códigoPostal: '',
-    //   estado: null,
-    //   municipioOAlcaldía: '',
-    //   localidad: '',
-    //   colonias: '',
-    //   calle: '',
-    //   lada: '',
-    //   telefono: '',
-    //   avisoCheckbox: '',
-    //   regimen: null,
-    //   aduanasEntradas: null,
-    //   aifaCheckbox: '',
-    //   manifests: '',
-    //   acuerdoPublico: '',
-    //   rfc: '',
-    // }),
     mockTramite260911Query = {
       selectTramite260911$: of({
         claveDeReferencia: '',
@@ -60,15 +30,12 @@ describe('PagoDeDerechosComponent', () => {
         impPago: '',
         btonDeRadio: '',
         justificacion: '',
-        justificación: '',
         rfcDel: '',
         denominacion: '',
         correo: '',
         codigoPostal: '',
-        códigoPostal: '',
         estado: null,
         municipioOAlcaldia: '',
-        municipioOAlcaldía: '',
         localidad: '',
         colonias: '',
         calle: '',
@@ -132,8 +99,8 @@ describe('PagoDeDerechosComponent', () => {
 
   
   it('should fetch bancoList on obtenerBancoList call', () => {
-     
-    const mockBancoList = [{ id: 1, name: 'Banco 1' }];
+    
+    const mockBancoList = [{ id: 1, descripcion: 'Banco 1' }];
 
     // Ensure the mock is set up before the component is initialized
     (mockPagoDeDerechosService.onBancoList as jest.Mock).mockReturnValue(of(mockBancoList));
@@ -141,11 +108,11 @@ describe('PagoDeDerechosComponent', () => {
     // Recreate the component to trigger ngOnInit
     fixture = TestBed.createComponent(PagoDeDerechosComponent);
     component = fixture.componentInstance;
-    component.bancoList = mockBancoList.map(banco => ({ id: banco.id, descripcion: banco.name }));
+    component.bancoList = mockBancoList;
     component.ngOnInit();
     // expect(mockPagoDeDerechosService.onBancoList).toHaveBeenCalled();
     fixture.detectChanges(); // Trigger change detection
-    expect(component.bancoList).toEqual(mockBancoList.map(banco => ({ id: banco.id, descripcion: banco.name }))); // Verify the component's state
+    expect(component.bancoList).toEqual(mockBancoList); // Verify the component's state
   });
 
   it('should patch form data on enPatchStoredFormData call', () => {
@@ -186,3 +153,4 @@ describe('PagoDeDerechosComponent', () => {
   });
   
 });
+

@@ -1,5 +1,4 @@
 export interface DestinatarioCapturarColumns {
-
   nombreDenominacionORazonSocial: string;
     rfc: string;
     curp: string;
