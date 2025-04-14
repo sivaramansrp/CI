@@ -1,9 +1,9 @@
-import { EstadoFormularioReciclaje,FormularioReciclajeStore} from '../tramites/dato-solicitud.store';
+import {DatoSolicitudStore,EstadoDatoSolicitud} from '../tramites/dato-solicitud.store';
 import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
 
 @Injectable({ providedIn: 'root' })
-export class FormularioReciclajeQuery extends Query<EstadoFormularioReciclaje> {
+export class DatoSolicitudQuery extends Query<EstadoDatoSolicitud> {
 
  /** 
  * Observable del estado completo del formulario de reciclaje.
@@ -14,7 +14,7 @@ estadoFormulario$ = this.select();
  * Constructor del query que inyecta el store correspondiente.
  * @param store - Store que contiene el estado del formulario de reciclaje.
  */
-constructor(protected override store: FormularioReciclajeStore) {
+constructor(protected override store: DatoSolicitudStore) {
   super(store);
 }
 

@@ -4,9 +4,9 @@ import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } 
 import { RadioOpcion, SolicitudJson } from '@libs/shared/data-access-user/src/core/models/231003/solicitud.model';
 import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { DatoSolicitudQuery } from '../../estados/queries/dato-solicitud.query';
+import { DatoSolicitudStore } from '../../estados/tramites/dato-solicitud.store';
 import { DatosResiduosPeligrososComponent } from '../datos-residuos-peligrosos/datos-residuos-peligrosos.component';
-import { FormularioReciclajeQuery } from '../../estados/queries/dato-solicitud.query';
-import { FormularioReciclajeStore } from '../../estados/tramites/dato-solicitud.store';
 import { Modal } from 'bootstrap';
 import rawData from '@libs/shared/theme/assets/json/231003/solicitud.json';
 
@@ -79,8 +79,8 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    */
   constructor(
     public fb: FormBuilder,
-    private formularioSolicitudStore: FormularioReciclajeStore,
-    private formularioSolicitudQuery: FormularioReciclajeQuery
+    private datoSolicitudStore: DatoSolicitudStore,
+    private datoSolicitudQuery: DatoSolicitudQuery
   ) {
     // Lógica del constructor si se necesita
   }
@@ -88,6 +88,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
 
+    this.etiquetasForm = RADIO_OPCIONES;
     /** 
      * Inicializa el formulario principal de solicitud.
      */
@@ -296,7 +297,7 @@ private suscribirCambioReciclajeInstalaciones(): void {
  * o se navega entre pantallas sin perder la información ingresada.
  */
 private recuperarValoresDesdeStore(): void {
-  const ESTADO = this.formularioSolicitudQuery.getValue();
+  const ESTADO = this.datoSolicitudQuery.getValue();
 
   this.solicitudForm.patchValue(ESTADO.solicitudForm, { emitEvent: false });
   this.formularioEmpresaReciclaje.patchValue(ESTADO.empresaReciclaje, { emitEvent: false });
@@ -319,7 +320,7 @@ private suscribirseACambiosDeFormulario(): void {
     this.solicitudForm.get(campo)?.valueChanges
       .pipe(takeUntil(this.destruir$))
       .subscribe(valor => {
-        this.formularioSolicitudStore.actualizarSolicitudForm({
+        this.datoSolicitudStore.actualizarSolicitudForm({
           ...this.solicitudForm.getRawValue(),
           [campo]: valor
         });
@@ -331,7 +332,7 @@ private suscribirseACambiosDeFormulario(): void {
     this.formularioEmpresaReciclaje.get(campo)?.valueChanges
       .pipe(takeUntil(this.destruir$))
       .subscribe(valor => {
-        this.formularioSolicitudStore.actualizarEmpresaReciclaje({
+        this.datoSolicitudStore.actualizarEmpresaReciclaje({
           ...this.formularioEmpresaReciclaje.getRawValue(),
           [campo]: valor
         });
@@ -343,7 +344,7 @@ private suscribirseACambiosDeFormulario(): void {
     this.formularioLugarReciclaje.get(campo)?.valueChanges
       .pipe(takeUntil(this.destruir$))
       .subscribe(valor => {
-        this.formularioSolicitudStore.actualizarLugarReciclaje({
+        this.datoSolicitudStore.actualizarLugarReciclaje({
           ...this.formularioLugarReciclaje.getRawValue(),
           [campo]: valor
         });
@@ -355,7 +356,7 @@ private suscribirseACambiosDeFormulario(): void {
     this.formularioEmpresaTransportista.get(campo)?.valueChanges
       .pipe(takeUntil(this.destruir$))
       .subscribe(valor => {
-        this.formularioSolicitudStore.actualizarEmpresaTransportista({
+        this.datoSolicitudStore.actualizarEmpresaTransportista({
           ...this.formularioEmpresaTransportista.getRawValue(),
           [campo]: valor
         });
@@ -367,7 +368,7 @@ private suscribirseACambiosDeFormulario(): void {
     this.formularioPrecaucionesManejo.get(campo)?.valueChanges
       .pipe(takeUntil(this.destruir$))
       .subscribe(valor => {
-        this.formularioSolicitudStore.actualizarPrecaucionesManejo({
+        this.datoSolicitudStore.actualizarPrecaucionesManejo({
           ...this.formularioPrecaucionesManejo.getRawValue(),
           [campo]: valor
         });

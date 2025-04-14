@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 /**
  * Estado que representa los valores del formulario de reciclaje.
  */
-export interface EstadoFormularioReciclaje {
+export interface EstadoDatoSolicitud {
 
     /** Sección de datos de la solicitud */
     solicitudForm: {
@@ -68,7 +68,7 @@ export interface EstadoFormularioReciclaje {
 /**
  * Función que retorna el estado inicial para el formulario de reciclaje.
  */
-export function crearEstadoInicialFormularioReciclaje(): EstadoFormularioReciclaje {
+export function crearEstadoInicialFormularioReciclaje(): EstadoDatoSolicitud {
     return {
         // Datos generales de la solicitud
         solicitudForm: {
@@ -130,8 +130,8 @@ export function crearEstadoInicialFormularioReciclaje(): EstadoFormularioRecicla
 
 
 @Injectable({ providedIn: 'root' })
-@StoreConfig({ name: 'formulario-reciclaje', resettable: true })
-export class FormularioReciclajeStore extends Store<EstadoFormularioReciclaje> {
+@StoreConfig({ name: 'dato-solicitud', resettable: true })
+export class DatoSolicitudStore extends Store<EstadoDatoSolicitud> {
     /**
     * Constructor del store que inicializa el estado con los valores predeterminados
     * definidos en la función crearEstadoInicialFormularioReciclaje().
@@ -144,7 +144,7 @@ export class FormularioReciclajeStore extends Store<EstadoFormularioReciclaje> {
      * Actualiza los valores del formulario de solicitud en el estado.
      * @param valores - Objeto con los nuevos valores del formulario de solicitud.
      */
-    actualizarSolicitudForm(valores: EstadoFormularioReciclaje['solicitudForm']): void {
+    actualizarSolicitudForm(valores: EstadoDatoSolicitud['solicitudForm']): void {
         this.update(state => ({
             ...state,
             solicitudForm: { ...valores }
@@ -155,7 +155,7 @@ export class FormularioReciclajeStore extends Store<EstadoFormularioReciclaje> {
      * Actualiza los valores del formulario de la empresa recicladora en el estado.
      * @param valores - Objeto con los nuevos valores del formulario de empresa reciclaje.
      */
-    actualizarEmpresaReciclaje(valores: EstadoFormularioReciclaje['empresaReciclaje']): void {
+    actualizarEmpresaReciclaje(valores: EstadoDatoSolicitud['empresaReciclaje']): void {
         this.update(state => ({
             ...state,
             empresaReciclaje: { ...valores }
@@ -167,7 +167,7 @@ export class FormularioReciclajeStore extends Store<EstadoFormularioReciclaje> {
   * Actualiza los valores del formulario del lugar de reciclaje en el estado.
   * @param valores - Objeto con los nuevos valores del formulario de lugar de reciclaje.
   */
-    actualizarLugarReciclaje(valores: EstadoFormularioReciclaje['lugarReciclaje']): void {
+    actualizarLugarReciclaje(valores: EstadoDatoSolicitud['lugarReciclaje']): void {
         this.update(state => ({
             ...state,
             lugarReciclaje: { ...valores }
@@ -178,7 +178,7 @@ export class FormularioReciclajeStore extends Store<EstadoFormularioReciclaje> {
      * Actualiza los valores del formulario de la empresa transportista en el estado.
      * @param valores - Objeto con los nuevos valores del formulario de empresa transportista.
      */
-    actualizarEmpresaTransportista(valores: EstadoFormularioReciclaje['empresaTransportista']): void {
+    actualizarEmpresaTransportista(valores: EstadoDatoSolicitud['empresaTransportista']): void {
         this.update(state => ({
             ...state,
             empresaTransportista: { ...valores }
@@ -190,7 +190,7 @@ export class FormularioReciclajeStore extends Store<EstadoFormularioReciclaje> {
   * Actualiza los valores del formulario de precauciones de manejo en el estado.
   * @param valores - Objeto con los nuevos valores del formulario de precauciones de manejo.
   */
-    actualizarPrecaucionesManejo(valores: EstadoFormularioReciclaje['precaucionesManejo']): void {
+    actualizarPrecaucionesManejo(valores: EstadoDatoSolicitud['precaucionesManejo']): void {
         this.update(state => ({
             ...state,
             precaucionesManejo: { ...valores }

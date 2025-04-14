@@ -2,8 +2,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DatosSolicitudComponent } from './datos-solicitud.component';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { FormularioReciclajeStore } from '../../estados/tramites/dato-solicitud.store';
-import { FormularioReciclajeQuery } from '../../estados/queries/dato-solicitud.query';
+import { DatoSolicitudStore } from '../../estados/tramites/dato-solicitud.store';
+import { DatoSolicitudQuery } from '../../estados/queries/dato-solicitud.query';
 import { CUSTOM_ELEMENTS_SCHEMA, ElementRef } from '@angular/core';
 
 jest.mock('bootstrap', () => ({
@@ -15,8 +15,8 @@ jest.mock('bootstrap', () => ({
 describe('DatosSolicitudComponent', () => {
   let component: DatosSolicitudComponent;
   let fixture: ComponentFixture<DatosSolicitudComponent>;
-  let mockStore: jest.Mocked<FormularioReciclajeStore>;
-  let mockQuery: jest.Mocked<FormularioReciclajeQuery>;
+  let mockStore: jest.Mocked<DatoSolicitudStore>;
+  let mockQuery: jest.Mocked<DatoSolicitudQuery>;
 
   const initialState = {
     solicitudForm: {
@@ -48,7 +48,7 @@ describe('DatosSolicitudComponent', () => {
   beforeEach(async () => {
     mockQuery = {
       getValue: jest.fn().mockReturnValue(initialState)
-    } as unknown as jest.Mocked<FormularioReciclajeQuery>;
+    } as unknown as jest.Mocked<DatoSolicitudQuery>;
 
     mockStore = {
       actualizarSolicitudForm: jest.fn(),
@@ -56,14 +56,14 @@ describe('DatosSolicitudComponent', () => {
       actualizarLugarReciclaje: jest.fn(),
       actualizarEmpresaTransportista: jest.fn(),
       actualizarPrecaucionesManejo: jest.fn()
-    } as unknown as jest.Mocked<FormularioReciclajeStore>;
+    } as unknown as jest.Mocked<DatoSolicitudStore>;
 
     await TestBed.configureTestingModule({
       imports: [CommonModule, ReactiveFormsModule, DatosSolicitudComponent],
       providers: [
         FormBuilder,
-        { provide: FormularioReciclajeStore, useValue: mockStore },
-        { provide: FormularioReciclajeQuery, useValue: mockQuery },
+        { provide: DatoSolicitudStore, useValue: mockStore },
+        { provide: DatoSolicitudQuery, useValue: mockQuery },
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
     }).compileComponents();
