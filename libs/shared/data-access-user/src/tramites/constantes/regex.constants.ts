@@ -276,18 +276,6 @@ export const REGEX_SOLO_NUMEROS = /^[0-9]*$/;
  */
 export const REGEX_CURP =
   /^([a-zA-Z]{4})([0-9]{6})([HhMm][a-zA-Z]{5})([0-9]{2})$/;
-<<<<<<< HEAD
-
-/**
- * Expresión regular para validar una cadena que contenga solo números enteros
- * separados por comas y espacios opcionales.
- * Ejemplo válido: 123, 456, 789
- */
-export const REGEX_SEPARADO_POR_COMAS = /^\d+(,\s*\d+)*$/;
-
-=======
-  
->>>>>>> fba0c7eaa45f3b48dddd8613226ce5408307c774
 
 /**
  * Regular expression to validate numeric values with optional decimal points.
