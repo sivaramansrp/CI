@@ -20,7 +20,7 @@
               </div>
         </div>
     </form>
-    @if(valorSeleccionado !== '') {
+    @if(valorSeleccionado === 'Si') {
         <form [formGroup]="indiqueSiForma">
             <div class="row mb-3">  
                 <formas-dinamicas 
@@ -33,4 +33,37 @@
         </form>
         <app-conceptos></app-conceptos>
     }
+    <form [formGroup]="depositoFiscalForma">
+        <div class="row mb-3">  
+            <formas-dinamicas 
+                [formularioTitulo]="'Depósito fiscal para someterse al proceso de ensamble y fabricación de vehículos'"
+                [formularioSubtitulo]="'Deberá anexar una copia simple de la autorización para el establecimiento del depósito fiscal para someterse al proceso de ensamble y fabricación de vehículos a empresas de la industria terminal vigente.'"
+                [forma]="depositoFiscalFormGroup" 
+                [formularioDatos]="depositoFiscalDatos"
+                >
+            </formas-dinamicas>
+        </div>
+    </form>
+    <form [formGroup]="elaboracionForma">
+        <div class="row mb-3">  
+            <formas-dinamicas 
+                [formularioTitulo]="'Elaboración, transformación o reparación en recinto fiscalizado'"
+                [formularioSubtitulo]="'Deberá anexar copia simple de la autorización vigente emitida por el SAT para la elaboración, transformación o reparación en recinto fiscalizado.'"
+                [forma]="elaboracionFormGroup" 
+                [formularioDatos]="elaboracionDatos"
+                >
+            </formas-dinamicas>
+        </div>
+    </form>
+    <form [formGroup]="recintoForma">
+        <div class="row mb-3">  
+            <formas-dinamicas 
+                [formularioTitulo]="'Recinto fiscalizado estratégico'"
+                [formularioSubtitulo]="'Deberá anexar copia simple de la autorización vigente emitida por el SAT para la elaboración, transformación o reparación en recinto fiscalizado estratégico.'"
+                [forma]="recintoFiscalizadoFormGroup" 
+                [formularioDatos]="recintoFiscalizadoDatos"
+                >
+            </formas-dinamicas>
+        </div>
+    </form>
 </div>

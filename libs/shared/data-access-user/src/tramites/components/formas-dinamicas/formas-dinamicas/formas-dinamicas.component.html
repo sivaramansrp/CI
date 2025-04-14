@@ -1,6 +1,9 @@
 @if (formularioTitulo) {
   <ng-titulo [titulo]="formularioTitulo"></ng-titulo>
 }
+@if(formularioSubtitulo) {
+  <p class="fw-bold m-0">{{formularioSubtitulo}}</p>
+}
 <form [formGroup]="forma">
     @for (item of formularioDatos; track item.campo; let i = $index) {
             @switch(item.tipo_input) {

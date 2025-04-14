@@ -13,6 +13,9 @@ import { ComercioExteriorService } from '../services/comercio-exterior.service';
 import { IvaeiepsComponent } from '../components/ivaeieps/ivaeieps.component';
 import { DatosPorRegimenComponent } from '../components/datos-por-regimen/datos-por-regimen.component';
 import { BsModalService } from 'ngx-bootstrap/modal';
+import { TercerosRelacionadosComponent } from '../../../shared/components/terceros-relacionados/terceros-relacionados.component';
+import { DatosComunesComponent } from '../../../shared/components/datos-comunes/datos-comunes.component';
+import { TercerosRelacionadosService } from '../../../shared/services/terceros-relacionados.service';
 
 
 @NgModule({
@@ -29,6 +32,8 @@ import { BsModalService } from 'ngx-bootstrap/modal';
     SolicitanteComponent,
     IvaeiepsComponent,
     DatosPorRegimenComponent,
+    TercerosRelacionadosComponent,
+    DatosComunesComponent,
     ToastrModule.forRoot()
   ],
   providers: [
@@ -38,7 +43,8 @@ import { BsModalService } from 'ngx-bootstrap/modal';
     InicioSesionService,
     SubirDocumentoService,
     ComercioExteriorService,
-    BsModalService 
+    BsModalService,
+    TercerosRelacionadosService 
   ],
 })
 export class ComercioExteriorModule { }

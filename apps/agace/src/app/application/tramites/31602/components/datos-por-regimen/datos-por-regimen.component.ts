@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { IMPORTACION_TEMPORAL, INDIQUE_SI_REALIZA } from '../../constantes/datos-por-regimen.enum';
+import { DEPOSITO_FISCAL, ELABORACION, IMPORTACION_TEMPORAL, INDIQUE_SI_REALIZA, RECINTO_FISCALIZADO } from '../../constantes/datos-por-regimen.enum';
 import radio_si_no from 'libs/shared/theme/assets/json/31601/radio_si_no.json';
 import { InputRadioComponent } from '@libs/shared/data-access-user/src';
 import { ConceptosComponent } from '../conceptos/conceptos.component';
@@ -30,8 +30,20 @@ export class DatosPorRegimenComponent implements OnInit {
   public indiqueSiForma: FormGroup = new FormGroup({
     importacionTemporalFormGroup: new FormGroup({})
   });
+  public depositoFiscalForma: FormGroup = new FormGroup({
+    depositoFiscalFormGroup: new FormGroup({})
+  });
+  public elaboracionForma: FormGroup = new FormGroup({
+    elaboracionFormGroup: new FormGroup({})
+  });
+  public recintoForma: FormGroup = new FormGroup({
+    recintoFiscalizadoFormGroup: new FormGroup({})
+  });
   public indiqueSiFormDatos = INDIQUE_SI_REALIZA;
   public importacionTemporalDatos = IMPORTACION_TEMPORAL;
+  public depositoFiscalDatos = DEPOSITO_FISCAL;
+  public elaboracionDatos = ELABORACION;
+  public recintoFiscalizadoDatos = RECINTO_FISCALIZADO;
 
   constructor(
     private fb: FormBuilder
@@ -47,6 +59,18 @@ export class DatosPorRegimenComponent implements OnInit {
 
   get importacionTemporalFormGroup(): FormGroup {
     return this.indiqueSiForma.get('importacionTemporalFormGroup') as FormGroup;
+  }
+
+  get depositoFiscalFormGroup(): FormGroup {
+    return this.depositoFiscalForma.get('depositoFiscalFormGroup') as FormGroup;
+  }
+
+  get elaboracionFormGroup(): FormGroup {
+    return this.elaboracionForma.get('elaboracionFormGroup') as FormGroup;
+  }
+
+  get recintoFiscalizadoFormGroup(): FormGroup {
+    return this.recintoForma.get('recintoFiscalizadoFormGroup') as FormGroup;
   }
 
   public onImportacionesCambio(value: string | number): void {
