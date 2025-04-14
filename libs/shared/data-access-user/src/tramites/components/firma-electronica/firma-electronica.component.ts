@@ -114,7 +114,7 @@ export class FirmaElectronicaComponent {
     password: string
   ): void {
     try {
-      const CERT = forge.pki.certificateFromPem(certFile);
+      const CERT = forge.pki.certificateFromPem(this.certFile);
       const CERT_PUBLIC_KEY = CERT.publicKey as forge.pki.rsa.PublicKey;
 
       const PADDING_START = PADDING.INICIO;

@@ -1,7 +1,6 @@
 import {
   CatalogoPaises,
   CatalogoResponse,
-  JSONResponse,
   RespuestaCatalogos,
 } from '../../../models/shared/catalogos.model';
 import { HttpClient } from '@angular/common/http';
@@ -17,7 +16,9 @@ export class CatalogosService {
   urlServer = enviroment.URL_SERVER;
   urlServerCatalogos = enviroment.URL_SERVER_JSON_AUXILIAR;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) { 
+    // Lógica de inicialización si es necesario
+  }
 
   /**
    * Obtiene un catálogo desde el servidor.
