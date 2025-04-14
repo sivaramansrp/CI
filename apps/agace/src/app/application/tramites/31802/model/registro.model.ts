@@ -24,6 +24,6 @@ export const FECHAINICIAL = {
  */
  export const FECHAPAGO = {
     labelNombre: 'Fecha de pago', 
-    required: false,
+    required: true,
     habilitado: true, 
  };

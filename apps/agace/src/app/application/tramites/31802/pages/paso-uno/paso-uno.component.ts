@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ViewChild } from '@angular/core'; 
 import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL, PERSONA_MORAL_NACIONAL, } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum'; 
-import { FormularioDinamico, TIPO_PERSONA } from '@ng-mf/data-access-user';
+import { FormularioDinamico, InputCheckComponent, TIPO_PERSONA, TituloComponent } from '@ng-mf/data-access-user';
  import { SharedModule, SolicitanteComponent, } from '@libs/shared/data-access-user/src'; 
  import { CommonModule } from '@angular/common'; 
  import { SolicitudComponent } from "../../components/Solicitud.component";
@@ -13,7 +13,7 @@ import { FormularioDinamico, TIPO_PERSONA } from '@ng-mf/data-access-user';
   templateUrl: './paso-uno.component.html',
   styles: ``,
   standalone: true,
-  imports: [SharedModule, CommonModule, SolicitanteComponent, SolicitudComponent],
+  imports: [SharedModule, CommonModule, SolicitanteComponent, SolicitudComponent,TituloComponent,InputCheckComponent],
 })
 export class PasoUnoComponent implements AfterViewInit{
   constructor() {

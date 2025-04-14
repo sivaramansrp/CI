@@ -8,7 +8,7 @@ import {
   ValidacionesFormularioService,
 } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FECHAFINAL, FECHAINICIAL, FECHAPAGO } from '../modles/registro.model';
+import { FECHAFINAL, FECHAINICIAL, FECHAPAGO } from '../model/registro.model';
 import {
   FormBuilder,
   FormGroup,

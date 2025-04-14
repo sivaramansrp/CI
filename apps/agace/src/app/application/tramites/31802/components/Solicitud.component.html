@@ -1,20 +1,18 @@
 <form [formGroup]="registroForm" (ngSubmit)="validarDestinatarioFormulario()">
     <ng-container>
+      <div class="mt-5">
+  <label class="label-spacing">{{solicitudEnum.MODALIDAD_SOCIO_COMERCIAL}}</label>
+  <label class="label-spacing">{{ solicitudEnum.RUBRO_MENSAJERIA }}</label></div>
   <ng-titulo titulo="Aviso Único de Renovación en el Registro en el Esquema de Certificación de Empresas" />
-  <label>{{solicitudEnum.MODALIDAD_SOCIO_COMERCIAL}}</label>
-  <br />
-  <br />
-  <label>{{ solicitudEnum.RUBRO_MENSAJERIA }}</label>
-  <br />
-  <br />
-  <label>{{ solicitudEnum.DATOS_REGISTRO }}</label>
+  <div class="row">
+    <label class="label-spacing">{{solicitudEnum.DATOS_REGISTRO}}</label></div>
   <div class="row mt-5">
     <div class="col-md-8">
       <label>Número de oficio*:</label>
       <input type="text" class="form-control gris-color" readonly required />
     </div>
   </div>
-  <div class="row mt-5">
+  <div class="row mt-5 mb-5">
     <div class="col-md-4">
       <input-fecha [datos]="fechaInicialInput" class="disabled-input-fecha"></input-fecha>
     </div>
@@ -22,47 +20,30 @@
       <input-fecha [datos]="fechaFinalInput" class="disabled-input-fecha"></input-fecha>
     </div>
   </div>
-  <ng-titulo titulo="Pago de derechos" />
+  <div class="row mt-5"></div>
+  <div class="row mt-5"></div>
   <div class="row mt-5">
-    <div class="col-md-6">
-      <label>Clave de referencia:</label>
-      <input type="text" class="form-control gris-color" readonly required />
-    </div>
-    <div class="col-md-6">
-      <label>Número de operación:</label>
-      <input type="text" class="form-control" formControlName="numeroOperacion"
-      (change)=" setValoresStore(registroForm, 'numeroOperacion', 'setNumeroOperacion')"/>
-    </div>
+  <div class="col-md-4">
+    <input-fecha [datos]="fechaPagoInput" (valorCambiado)="cambioFechaPago($event)"></input-fecha>
   </div>
-  <div class="row mt-5">
-    <div class="col-md-6">
-      <label>Cadena de la dependencia:</label>
-      <input type="text" class="form-control gris-color" readonly required />
-    </div>
-    <div class="col-md-6">
-      <app-catalogo-select [catalogo]="bancoCatalogo.catalogos" [label]="'Banco'" formControlName="banco"
-      (change)=" setValoresStore(registroForm, 'Banco', 'setBanco')"></app-catalogo-select>
-    </div>
+  <div class="col-md-4">
+    <label>Monto en moneda nacional*:</label>
+    <input type="text" class="form-control" required />
   </div>
-  <div class="row mt-5">
-    <div class="col-md-4">
-      <label>Llave de pago:</label>
-      <input type="text" class="form-control" formControlName="llave"
-      (change)=" setValoresStore(registroForm, 'llave', 'setLlave')"/>
-    </div>
-    <div class="col-md-4">
-      <input-fecha [datos]="fechaPagoInput" (valorCambiado)="cambioFechaPago($event)"></input-fecha>
-    </div>
-    <div class="col-md-4">
-      <label>Importe de pago:</label>
-      <input type="text" class="form-control gris-color" readonly />
-    </div>
+</div>
+<div class="row mt-5">
+  <div class="col-md-4">
+    <label>Número de operación bancaria*:</label>
+    <input type="number" class="form-control" formControlName="numeroOperacion" 
+    (change)=" setValoresStore(registroForm, 'numeroOperacion', 'setNumeroOperacion')"/>
   </div>
-  <div class="row mt-5">
-    <div class="col-md-12 mt-5 d-flex justify-content-end">
-      <button type="button" class="btn btn-danger">Borrar datos del pago</button>
-    </div>
+  <div class="col-md-4">
+    <label>Llave de pago*:</label>
+    <input type="text" class="form-control" formControlName="llave"
+    (change)=" setValoresStore(registroForm, 'llave', 'setLlave')"/>
   </div>
+</div>
+  
   <div class="row mt-5">
     <div class="alert alert-info">
       <label style="font-weight: normal">
@@ -75,6 +56,13 @@
       <label style="font-weight: normal">
         <input type="checkbox" formControlName="manifiesto2"
         (change)=" setValoresStore(registroForm, 'manifiesto2', 'setManifiesto2')">{{ solicitudEnum.MANIFIESTO_2 }}</label>
+    </div>
+  </div>
+  <div class="row mt-5">
+    <div class="alert alert-info">
+      <label style="font-weight: normal">
+        <input type="checkbox" formControlName="manifiesto3"
+        (change)=" setValoresStore(registroForm, 'manifiesto3', 'setManifiesto3')">{{ solicitudEnum.MANIFIESTO_3 }}</label>
     </div>
   </div>
   </ng-container>

@@ -13,3 +13,6 @@
     pointer-events: none;
     opacity: 1;
   }
+  .label-spacing{
+    display: block; 
+}

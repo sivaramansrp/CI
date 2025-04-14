@@ -16,7 +16,7 @@ export interface Catalogo {
  */
 export interface Solicitud31802State {
   /** Número de operación asociado a la solicitud. */
-  numeroOperacion: string;
+  numeroOperacion: number;
   /** Lista de bancos asociados a la solicitud. */
   banco: Catalogo[] | null;
   /** Llave única asociada a la solicitud. */
@@ -25,6 +25,8 @@ export interface Solicitud31802State {
   manifiesto1: string;
   /** Segundo manifiesto asociado a la solicitud. */
   manifiesto2: string;
+  /** Segundo manifiesto asociado a la solicitud. */
+  manifiesto3: string;
   /** Fecha de pago asociada a la solicitud. */
   fechaPago: string;
 }
@@ -35,11 +37,12 @@ export interface Solicitud31802State {
  */
 export function createInitialState(): Solicitud31802State {
   return {
-    numeroOperacion: '',
+    numeroOperacion: 0,
     banco: null,
     llave: '',
     manifiesto1: '',
     manifiesto2: '',
+    manifiesto3: '',
     fechaPago: '',
   };
 }
@@ -73,7 +76,7 @@ export class Tramite31802Store extends Store<Solicitud31802State> {
    * Actualiza el número de operación en el estado.
    * @param numeroOperacion Número de operación de tipo `string`.
    */
-  public setNumeroOperacion(numeroOperacion: string) {
+  public setNumeroOperacion(numeroOperacion: number) {
     this.update((state) => ({ ...state, numeroOperacion }));
   }
 
@@ -100,7 +103,13 @@ export class Tramite31802Store extends Store<Solicitud31802State> {
   public setManifiesto2(manifiesto2: string) {
     this.update((state) => ({ ...state, manifiesto2 }));
   }
-
+    /**
+   * Actualiza el segundo manifiesto en el estado.
+   * @param manifiesto3 Segundo manifiesto de tipo `string`.
+   */
+  public setManifiesto3(manifiesto3: string) {
+    this.update((state) => ({ ...state, manifiesto3 }));
+  }
   /**
    * Actualiza la fecha de pago en el estado.
    * @param fechaPago Fecha de pago de tipo `string`.
@@ -108,7 +117,7 @@ export class Tramite31802Store extends Store<Solicitud31802State> {
   public setFechaPago(fechaPago: string) {
     this.update((state) => ({ ...state, fechaPago }));
   }
-
+  
   /**
    * Restaura el estado al valor inicial.
    */
