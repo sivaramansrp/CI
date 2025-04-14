@@ -6,14 +6,14 @@ const ROUTES: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'seleccion-tramite' },
   {
     path: 'seleccion-tramite',
-    component: SeleccionTramiteComponent
+    component: SeleccionTramiteComponent,
   },
   {
     path: 'dispositivos-medicos-laboratorio',
     loadChildren: () =>
-      import('./tramites/260218/importacion-dispositivos-mediocos-laboratorio.module').then(
-        (m) => m.ImportacionDispositivosMedicosLaboratorioModule
-      )
+      import(
+        './tramites/260218/importacion-dispositivos-mediocos-laboratorio.module'
+      ).then((m) => m.ImportacionDispositivosMedicosLaboratorioModule),
   },
   {
     path: 'permiso-maquila',
@@ -55,8 +55,8 @@ const ROUTES: Routes = [
     path: 'mod-permiso-importacion',
     loadChildren: () =>
       import('./tramites/260912/mod-permiso-importacion.module').then(
-        (m)=> m.ModPermisoImportacionModule
-      )
+        (m) => m.ModPermisoImportacionModule
+      ),
   },
   {
     path: 'permiso-plaguicidas',
@@ -97,7 +97,8 @@ const ROUTES: Routes = [
     path: 'permiso-certificados',
     loadChildren: () =>
       import('./tramites/260701/certificados/certificados.module').then(
-        (m) => m.CertificadosModule),
+        (m) => m.CertificadosModule
+      ),
   },
   {
     path: 'permiso-importacion-biologica',
@@ -145,9 +146,9 @@ const ROUTES: Routes = [
   {
     path: 'dispositivos-medicos-sin-registrar',
     loadChildren: () =>
-      import('./tramites/260217/importacion-dispositivos-medicos-sin-registrar.module').then(
-        (m) => m.ImportacionDispositivosMedicosSinRegistrarModule
-      ),
+      import(
+        './tramites/260217/importacion-dispositivos-medicos-sin-registrar.module'
+      ).then((m) => m.ImportacionDispositivosMedicosSinRegistrarModule),
   },
 
   {
@@ -167,9 +168,17 @@ const ROUTES: Routes = [
   {
     path: 'modificacion-permiso-sanitario',
     loadChildren: () =>
-      import(
-        './tramites/260910/permiso-sanitario.module'
-      ).then((m) => m.PermisoSanitarioModule),
+      import('./tramites/260902/modificacion-permiso-sanitario.module').then(
+        (m) => m.ModificacionPermisoSanitarioModule
+      ),
+  },
+
+  {
+    path: 'modificacion-permiso-sanitario',
+    loadChildren: () =>
+      import('./tramites/260910/permiso-sanitario.module').then(
+        (m) => m.PermisoSanitarioModule
+      ),
   },
   {
     path: 'territorio-nacional',
@@ -201,7 +210,10 @@ const ROUTES: Routes = [
   },
   {
     path: 'aviso-de-importacion',
-    loadChildren: () => import('./tramites/260603/aviso-de-importacion.module').then(m => m.AvisoDeImportacionModule) 
+    loadChildren: () =>
+      import('./tramites/260603/aviso-de-importacion.module').then(
+        (m) => m.AvisoDeImportacionModule
+      ),
   },
   {
     path: 'muestras-plaguicidas',
@@ -211,11 +223,11 @@ const ROUTES: Routes = [
       ),
   },
   {
-        path: 'importacion-materias-primas-estupefacientes',
-        loadChildren: () =>
-          import(
-            './tramites/260301/importacion-materias-primas-estupefacientes.module'
-          ).then((m) => m.ImportacionMateriasPrimasEstupefacientesModule),
+    path: 'importacion-materias-primas-estupefacientes',
+    loadChildren: () =>
+      import(
+        './tramites/260301/importacion-materias-primas-estupefacientes.module'
+      ).then((m) => m.ImportacionMateriasPrimasEstupefacientesModule),
   },
   {
     path: 'solicitud-permiso',
@@ -223,7 +235,21 @@ const ROUTES: Routes = [
       import('./tramites/260703/solicitud-permiso.module').then(
         (m) => m.SolicitudPermisoModule
       ),
-    }
+  },
+  {
+    path: 'modificacion-permiso-sanitario',
+    loadChildren: () =>
+      import('./tramites/260906/modificacion-permiso-sanitario.module').then(
+        (m) => m.ModificacionPermisoSanitarioModule
+      ),
+  },
+  {
+    path: 'Permiso-de-importacion',
+    loadChildren: () =>
+      import('./tramites/260512/permiso-de-importacion.module').then(
+        (m) => m.PermisoDeImportacionModule
+      ),
+  },
 ];
 
 @NgModule({
