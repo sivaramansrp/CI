@@ -138,7 +138,7 @@ export class ImportadorEnDestinoComponent implements OnInit, OnDestroy {
           if (this.importadorForm.valid) {
             this.ElegibilidadDeTextilesStore.setFormaValida([
               ...this.importadorState.formaValida,
-              { id: 4, descripcion: 'AllValida' },
+              { id: 4, descripcion: 'TodoValido' },
             ]);
           }
           this.seccionStore.establecerSeccion([true]);

@@ -173,3 +173,5 @@ export const CATALOGOS = [
     { id: 2, descripcion: 'Option 2' },
     { id: 3, descripcion: 'Option 3' }
 ];
+
+export const VALIDO = 'TodoValido'
