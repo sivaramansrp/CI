@@ -154,8 +154,7 @@ const ROUTES: Routes = [
     path: 'materias-primas-destinados',
     loadChildren: () =>
       import('./tramites/260205/materias-primas-destinados.module').then(
-        (m) => m.MateriasPrimasDestinadosModule
-      ),
+        (m) => m.MateriasPrimasDestinadosModule)
   },
   {
     path: 'importacion-dispositivos-medicos-donacion',
@@ -246,6 +245,12 @@ const ROUTES: Routes = [
       import('./tramites/260906/modificacion-permiso-sanitario.module').then(
         (m) => m.ModificacionPermisoSanitarioModule
       )
+  },
+  {
+    path: 'Permiso-de-importacion',
+    loadChildren: () =>
+      import('./tramites/260512/permiso-de-importacion.module').then(
+        (m) => m.PermisoDeImportacionModule)
   }
 ];
 
