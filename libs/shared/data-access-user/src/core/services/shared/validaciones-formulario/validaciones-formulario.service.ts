@@ -10,12 +10,6 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class ValidacionesFormularioService {
-  public rfcPattern =
-    /^([A-ZÑ&]{3,4})?(?:\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01]))?[A-Z\d]{2}[A\d]$/;
-  public horaPattern = /^([01]\d|2[0-3]):[0-5]\d$/;
-  public patronDeNumero = /^[0-9]\d*$/;
-  public llavePagoPattern= /^[a-zA-Z0-9]*$/
-
   /**
    * Valida si el campo de un formulario no contiene errores
    * @param {AbstractControl} control  : Control del formulario
@@ -67,11 +61,10 @@ export class ValidacionesFormularioService {
     campo?: string
   ): boolean | null {
     if (control instanceof FormGroup && campo) {
-      const campoControl = control.controls[campo];
-      return campoControl?.errors?.['email'] && campoControl.touched;
-    } else {
-      return control.errors && control.errors['email'] && control.touched;
+      const CAMPO_CONTROL = control.controls[campo];
+      return CAMPO_CONTROL?.errors?.['email'] && CAMPO_CONTROL.touched;
     }
+    return control.errors && control.errors['email'] && control.touched;
   }
 
   /**
@@ -91,15 +84,17 @@ export class ValidacionesFormularioService {
     return control.errors && control.errors['pattern'] && control.touched;
   }
 
+
   /**
-   * Validacion personalizada para el input fecha, compara la fecha seleccionada con la fecha actual y devuelve un error de validación si la fecha es igual o anterior a hoy.
-   * @param {AbstractControl} control: Este es el control del formulario que contiene el valor de la fecha seleccionada a validar.
-   * @returns {ValidationErrors} | null: La función devuelve un objeto ValidationErrors si la validación falla (es decir, si la fecha es igual o anterior a hoy), o null si la validación es exitosa.
+   * Valida que la fecha seleccionada no sea anterior o igual a hoy.
+   * 
+   * @param control - Control del formulario que contiene la fecha a validar.
+   * @returns Un objeto con el error `minDate` si la fecha es inválida, o `null` si es válida.
    */
-  validaFechaNoHoy(control: AbstractControl): ValidationErrors | null {
-    const hoy = new Date();
-    hoy.setHours(0, 0, 0, 0);
-    const diaSeleccionado = new Date(control.value);
-    return diaSeleccionado > hoy ? null : { minDate: true };
+  static validaFechaNoHoy(control: AbstractControl): ValidationErrors | null {
+    const HOY = new Date();
+    HOY.setHours(0, 0, 0, 0);
+    const DIA_SELECCIONADO = new Date(control.value);
+    return DIA_SELECCIONADO > HOY ? null : { minDate: true };
   }
 }
