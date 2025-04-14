@@ -8,7 +8,6 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ProductoOpción } from '../../constantes/vehiculos-adaptados.enum';
-
 /**
  * @description Componente para manejar los detalles del trámite.
  * Este componente proporciona entradas dinámicas para configurar un formulario

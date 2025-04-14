@@ -8,7 +8,6 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Catalogo } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 import { CommonModule } from '@angular/common';
 import { ProductoOpción } from '../../constantes/vehiculos-adaptados.enum';
-
 /**
  * @description Componente para manejar los detalles de la mercancía.
  * Proporciona entradas para configurar un formulario y opciones para productos, fracciones y unidades.
@@ -161,7 +160,6 @@ export class DatosDeLaMercanciaComponent {
   onNicoChange(selected: { id: string | number }): void {
     this.form.get('nico')?.setValue(selected.id);
     this.setValoresStore(this.form, 'nico', 'setNico');
-
     const RAW = this.form.get('fraccion')?.value;
     if (!RAW) {
       return;
@@ -169,7 +167,6 @@ export class DatosDeLaMercanciaComponent {
     const FRACCION_ID = typeof RAW === 'string'
       ? parseInt(RAW, 10)
       : RAW;
-
     const FRACCION_OPTION = this.mercanciaCatalogoArray[0]
       .find(c => c.id === FRACCION_ID);
       if (FRACCION_OPTION) {        
