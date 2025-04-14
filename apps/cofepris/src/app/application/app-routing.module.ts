@@ -237,6 +237,12 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/260512/permiso-de-importacion.module').then(
         (m) => m.PermisoDeImportacionModule)
+  },
+  {
+    path: 'Permiso-importacion-calidad',
+    loadChildren: () =>
+      import('./tramites/260514/parmiso-importacion-calidad.module').then(
+        (m) => m.ParmisoImportacionCalidadModule)
   }
 ];
 
