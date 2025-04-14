@@ -44,7 +44,7 @@ export class Tramite260208Query extends Query<Tramite260208State> {
 
   /**
    * Observable que selecciona y retorna datos de terceros desde el estado.
-   * @returns {Observable<{fabricanteTablaDatos: any, destinatarioFinalTablaDatos: any,        proveedorTablaDatos: any, facturadorTablaDatos: any}>} 
+   * @returns {Observable<TercerosRelacionadosDatos>} 
    * Un observable con los datos de fabricante, destinatario final, proveedor y facturador.
    */
   public getTercerosDatos$ = this.select((state) => ({
