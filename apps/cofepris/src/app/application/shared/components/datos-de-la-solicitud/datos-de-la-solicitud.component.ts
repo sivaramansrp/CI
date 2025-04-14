@@ -17,6 +17,7 @@ import {
   REPRESENTANTE_LEGAL,
 } from '../../constantes/datos-solicitud.enum';
 import { ActivatedRoute, Router } from '@angular/router';
+import { AlertComponent, REGEX_SOLO_NUMEROS } from '@libs/shared/data-access-user/src';
 import {
   Catalogo,
   DatosDeTablaSeleccionados,
@@ -36,7 +37,6 @@ import {
 } from '@angular/forms';
 import { delay, takeUntil } from 'rxjs';
 import { AbstractControl } from '@angular/forms';
-import { AlertComponent } from '@libs/shared/data-access-user/src';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
@@ -284,7 +284,16 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   public aduanaDatos: Catalogo[] = [];
 
-  public mostrarRegimenYAdunasDeEntradasDatos:boolean=true;
+
+  /**
+   * @property {boolean} mostrarRegimenYAdunasDeEntradasDatos
+   * Controla la visibilidad de los campos de régimen y aduanas de entrada en el formulario.
+   *
+   * @description
+   * Este valor se utiliza para determinar si los campos relacionados con el régimen y las aduanas de entrada
+   * deben ser visibles o no, dependiendo de la lógica implementada en el componente.
+   */
+  public mostrarRegimenYAdunasDeEntradasDatos: boolean = true;
 
   /**
    * @constructor
@@ -417,7 +426,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
           Validators.required,
           Validators.minLength(2),
           Validators.maxLength(150),
-          Validators.pattern('^[0-9]*$')
+          Validators.pattern(REGEX_SOLO_NUMEROS)
         ],
       ],
       estado: [
