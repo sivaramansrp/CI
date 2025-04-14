@@ -50,13 +50,9 @@
           </div>
           <div class="radio">
             <div class="col-md-4">
-              @for (el of TIPAVI; track el.valor) {
-              <label class="ms-5">
-                <input type="radio" value="{{el.valor}}" name="tipoAviso" id="{{el.valor}}" formControlName="tipoAviso"
-                  (change)="verificaTipoAviso()" />
-                {{el.etiqueta}}
-              </label>
-              }
+              <app-input-radio [radioOptions]="TIPAVI" id="tipoAviso" formControlName="tipoAviso"
+                (change)="verificaTipoAviso()">
+              </app-input-radio>
             </div>
           </div>
         </div>
@@ -189,18 +185,14 @@
         </div>
         <div class="radio">
           <div class="col-md-4">
-            @for (el of TIPACA; track el.valor) {
-            <label class="ms-5">
-              <input type="radio" value="{{el.valor}}" name="tipoCarga" id="{{el.valor}}" formControlName="tipoCarga"
-                (change)="setValoresStore(avisoFormulario, 'tipoCarga', 'setAvisoFormularioTipoCarga')" />
-              {{el.etiqueta}}
-            </label>
-            }
+            <app-input-radio [radioOptions]="TIPACA" id="tipoCarga" formControlName="tipoCarga"
+              (change)="setValoresStore(avisoFormulario, 'tipoCarga', 'setAvisoFormularioTipoCarga')">
+            </app-input-radio>
           </div>
         </div>
       </div>
     </div>
-    @if(avisoFormulario.get('tipoCarga')?.value===TIPACA[1].valor){
+    @if(avisoFormulario.get('tipoCarga')?.value===TIPACA[1].value){
     <div id="divCargaMasiva">
       <div class="row">
         <ng-titulo titulo="Plantilla de Carga Masiva" />

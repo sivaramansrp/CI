@@ -68,12 +68,12 @@ export const FECHA_INGRESO = {
  */
 export const TIPAVI = [
   {
-    valor: 'inicial',
-    etiqueta: 'Inicial',
+    value: 'inicial',
+    label: 'Inicial',
   },
   {
-    valor: 'prorroga',
-    etiqueta: 'Prórroga',
+    value: 'prorroga',
+    label: 'Prórroga',
   }
 ];
 /**
@@ -83,12 +83,12 @@ export const TIPAVI = [
  */
 export const TIPACA = [
   {
-    valor: 'manual',
-    etiqueta: 'Manual',
+    value: 'manual',
+    label: 'Manual',
   },
   {
-    valor: 'carga_masiva',
-    etiqueta: 'Carga Masiva',
+    value: 'carga_masiva',
+    label: 'Carga Masiva',
   }
 ];
 /**
@@ -119,12 +119,5 @@ export const TIPO_DOCUMENTO_TAMANO = {
  * 
  * Esta constante se utiliza para mostrar un mensaje de advertencia o información
  * cuando el tamaño del archivo excede el límite permitido.
- * 
- * Ejemplo de uso:
- * ```typescript
- * if (archivo.size > 3 * 1024 * 1024) {
- *   console.log(MENSAJE_DE_TAMANO_DE_ARCHIVO);
- * }
- * ```
  */
 export const MENSAJE_DE_TAMANO_DE_ARCHIVO = 'El tamaño del archivo debe ser inferior a 3 MB';

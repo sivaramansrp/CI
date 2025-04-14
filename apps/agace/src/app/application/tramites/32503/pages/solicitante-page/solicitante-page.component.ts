@@ -57,7 +57,6 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
    * 
    * @example
    * // Uso de la constante AVISO
-   * console.log(this.AVISO);
    */
   AVISO = AVISO;
 

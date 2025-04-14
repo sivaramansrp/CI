@@ -3,6 +3,7 @@ AlertComponent,
 CatalogoSelectComponent,
 InputFecha,
 InputFechaComponent,
+InputRadioComponent,
 REGEX_ALFANUMERICO_CON_ESPACIOS,
 REGEX_ALFANUMERICO_CON_ESPACIOS_REEMPLAZAR,
 REGEX_IMPORTE_PAGO,
@@ -49,7 +50,8 @@ import { takeUntil } from "rxjs";
   templateUrl: './aviso.component.html',
   styleUrl: './aviso.component.scss',
   imports: [CommonModule, ReactiveFormsModule, TituloComponent, InputFechaComponent,
-    CatalogoSelectComponent, TablaDinamicaComponent, AlertComponent, NotificacionesComponent
+    CatalogoSelectComponent, TablaDinamicaComponent, AlertComponent, NotificacionesComponent,
+    InputRadioComponent
   ],
   standalone: true,
 })
@@ -656,7 +658,7 @@ export class AvisoComponent implements OnInit, OnDestroy {
     this.store.setAvisoFormularioTipoAviso(TIPO_AVISO);
     this.avisoFormulario.get('datosAviso.idTransaccion')?.enable();
     this.avisoFormulario.get('datosAviso.motivoProrroga')?.enable();
-    if (TIPO_AVISO === TIPAVI[0].valor) {
+    if (TIPO_AVISO === TIPAVI[0].value) {
       this.avisoFormulario.get('datosAviso.idTransaccion')?.disable();
       this.avisoFormulario.get('datosAviso.motivoProrroga')?.disable();
     }

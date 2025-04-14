@@ -91,9 +91,6 @@ export class PasoTresComponent implements OnInit, OnDestroy {
  * sobre el tamaño máximo permitido para los archivos que se pueden cargar en el sistema.
  * 
  * Ejemplo de uso:
- * ```typescript
- * console.log(MENSAJE_DE_TAMANO_DE_ARCHIVO);
- * ```
  */
   MENSAJE_DE_TAMANO_DE_ARCHIVO=MENSAJE_DE_TAMANO_DE_ARCHIVO;
 
