@@ -51,11 +51,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
   /**
-   * Notificador para manejar eventos de destrucción.
-   */
-  public destroyNotifier$: Subject<void> = new Subject();
-
-  /**
    * Estado actual de la solicitud.
    */
   public solicitudState!: Solicitud31802State;
@@ -85,17 +80,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   registroForm!: FormGroup;
 
-  /**
-   * Configuración para el catálogo de bancos.
-   */
-  public bancoCatalogo: CatalogosSelect = {
-    labelNombre: 'Banco',
-    required: false,
-    primerOpcion: 'Selecciona un valor',
-    catalogos: [],
-  };
-
-  /**
+   /**
    * Constructor del componente.
    * Se utiliza para la inyección de dependencias.
    *
@@ -120,11 +105,10 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * Configura el formulario, obtiene datos iniciales y suscribe al estado global.
    */
   ngOnInit(): void {
-    this.obtenerDatosBanco();
 
     this.query.selectSolicitud$
       .pipe(
-        takeUntil(this.destroyNotifier$),
+        takeUntil(this.destroyed$),
         map((seccionState) => {
           this.solicitudState = seccionState;
         })
@@ -143,18 +127,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       fechaPago: nuevo_fechaPago,
     });
     this.setValoresStore(this.registroForm, 'fechaPago', 'setFechaPago');
-  }
-
-  /**
-   * Obtiene los datos del catálogo de bancos desde el servicio.
-   */
-  obtenerDatosBanco(): void {
-    this.registroSolicitud
-      .obtenerDatosBanco()
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((resp): void => {
-        this.bancoCatalogo.catalogos = resp as Catalogo[];
-      });
   }
 
   /**
@@ -208,15 +180,13 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   donanteDomicilio(): void {
     this.registroForm = this.fb.group({
-      banco: [this.solicitudState?.banco, [Validators.required]],
       llave: [this.solicitudState?.llave, [Validators.required]],
       manifiesto1: [this.solicitudState?.manifiesto1, [Validators.required]],
       manifiesto2: [this.solicitudState?.manifiesto2, [Validators.required]],
-      numeroOperacion: [
-        this.solicitudState?.numeroOperacion,
-        [Validators.required],
-      ],
+      manifiesto3: [this.solicitudState?.manifiesto3, [Validators.required]],
+      numeroOperacion: [this.solicitudState?.numeroOperacion, [Validators.required],],
       fechaPago: [this.solicitudState?.fechaPago, [Validators.required]],
+      monedaNacional: [this.solicitudState?.monedaNacional, [Validators.required]],
     });
   }
 

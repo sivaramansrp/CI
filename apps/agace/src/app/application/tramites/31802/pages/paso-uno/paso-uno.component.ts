@@ -1,9 +1,13 @@
-import { AfterViewInit, Component, ViewChild } from '@angular/core'; 
-import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL, PERSONA_MORAL_NACIONAL, } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum'; 
-import { FormularioDinamico, InputCheckComponent, TIPO_PERSONA, TituloComponent } from '@ng-mf/data-access-user';
- import { SharedModule, SolicitanteComponent, } from '@libs/shared/data-access-user/src'; 
- import { CommonModule } from '@angular/common'; 
- import { SolicitudComponent } from "../../components/Solicitud.component";
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL, PERSONA_MORAL_NACIONAL, } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
+import { FormularioDinamico, InputCheckComponent, TIPO_PERSONA, TituloComponent, ValidacionesFormularioService } from '@ng-mf/data-access-user';
+import { SharedModule, SolicitanteComponent, } from '@libs/shared/data-access-user/src';
+import { CommonModule } from '@angular/common';
+import { SolicitudComponent } from "../../components/Solicitud.component";
+import { Solicitud31802State, Tramite31802Store } from '../../state/Tramite31802.store';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Tramite31802Query } from '../../state/Tramite31802.query';
+import { map, ReplaySubject, takeUntil } from 'rxjs';
 
 /**
  * Componente que representa el primer paso del trámite.
@@ -13,23 +17,24 @@ import { FormularioDinamico, InputCheckComponent, TIPO_PERSONA, TituloComponent 
   templateUrl: './paso-uno.component.html',
   styles: ``,
   standalone: true,
-  imports: [SharedModule, CommonModule, SolicitanteComponent, SolicitudComponent,TituloComponent,InputCheckComponent],
+  imports: [SharedModule, CommonModule, SolicitanteComponent, SolicitudComponent, TituloComponent, ReactiveFormsModule, InputCheckComponent],
 })
-export class PasoUnoComponent implements AfterViewInit{
-  constructor() {
-    // El constructor se utiliza para la inyección de dependencias.
-  }
+export class PasoUnoComponent implements AfterViewInit,OnInit, OnDestroy {
 
-    /**
-   * Referencia al componente de solicitante.
-   */
+  /**
+  * Referencia al componente de solicitante.
+  */
   @ViewChild(SolicitanteComponent) solicitante!: SolicitanteComponent;
 
   /**
    * Tipo de persona seleccionada.
    */
   tipoPersona!: number;
-
+  /**
+    * Observable para manejar la destrucción del componente.
+    * Se utiliza para cancelar suscripciones activas.
+    */
+  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   /**
    * Configuración del formulario dinámico para la persona.
    */
@@ -44,6 +49,42 @@ export class PasoUnoComponent implements AfterViewInit{
    * Índice del paso actual.
    */
   indice: number = 1;
+  /**
+ * Formulario reactivo que contiene los campos del paso uno del trámite.
+ * Este formulario se utiliza para capturar y validar los datos ingresados por el usuario.
+ */
+  registroForm!: FormGroup;
+  /**
+ * Estado global de la solicitud 31802.
+ * Contiene los valores actuales del trámite, como renovación, homologación, y otros datos relevantes.
+ */
+  public solicitudState!: Solicitud31802State;
+
+  constructor(
+    public fb: FormBuilder,
+    private store: Tramite31802Store,
+    private query: Tramite31802Query,
+    private validacionesService: ValidacionesFormularioService
+  ) {
+    // El constructor se utiliza para la inyección de dependencias.
+  }
+ 
+  /**
+    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+    * Configura el formulario, obtiene datos iniciales y suscribe al estado global.
+    */
+  ngOnInit(): void {
+    this.query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+        })
+      )
+      .subscribe();
+    this.donanteDomicilio();
+  }
+
 
   /**
    * Método que se ejecuta después de que las vistas del componente han sido inicializadas.
@@ -54,12 +95,80 @@ export class PasoUnoComponent implements AfterViewInit{
     this.domicilioFiscal = DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL;
     this.solicitante.obtenerTipoPersona(TIPO_PERSONA.MORAL_NACIONAL);
   }
-
+  /**
+ * Establece el valor de renovación en el estado global.
+ * @param evento Evento del tipo `Event` que contiene el valor del checkbox.
+ */
+  establecerRenovacion(evento: Event): void {
+    const VALOR = (evento.target as HTMLInputElement).checked;
+    this.store.setRenovacion(VALOR);
+  }
+  /**
+ * Establece el valor de homologación en el estado global.
+ * @param evento Evento del tipo `Event` que contiene el valor del checkbox.
+ */
+  establecerHomologacion(evento: Event): void {
+    const VALOR = (evento.target as HTMLInputElement).checked;
+    this.store.setHomologacion(VALOR);
+  }
   /**
    * Selecciona una pestaña del asistente.
    * @param i Índice de la pestaña a seleccionar.
    */
   seleccionaTab(i: number): void {
     this.indice = i;
+  }
+  /**
+     * Verifica si un campo del formulario es válido.
+     *
+     * @param form Formulario reactivo.
+     * @param field Nombre del campo a validar.
+     * @returns `true` si el campo es válido, de lo contrario `false`.
+     */
+  esValido(form: FormGroup, field: string): boolean {
+    return this.validacionesService.isValid(form, field) || false;
+  }
+
+  /**
+   * Marca todos los campos del formulario como tocados si es inválido.
+   */
+  validarDestinatarioFormulario(): void {
+    if (this.registroForm.invalid) {
+      this.registroForm.markAllAsTouched();
+    }
+  }
+
+  /**
+   * Actualiza un valor en el estado global utilizando el almacén.
+   *
+   * @param form Formulario reactivo.
+   * @param campo Nombre del campo en el formulario.
+   * @param metodoNombre Nombre del método en el almacén para actualizar el valor.
+   */
+  setValoresStore(
+    form: FormGroup,
+    campo: string,
+    metodoNombre: keyof Tramite31802Store
+  ): void {
+    const VALOR = form.get(campo)?.value;
+    (this.store[metodoNombre] as (value: unknown) => void)(VALOR);
+  }
+
+  /**
+   * Inicializa el formulario con los valores actuales del estado.
+   */
+  donanteDomicilio(): void {
+    this.registroForm = this.fb.group({
+      renovacion: [this.solicitudState?.renovacion, [Validators.required]],
+      homologacion: [this.solicitudState?.homologacion, [Validators.required]],
+    });
+  }
+    /**
+   * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
+   * Cancela todas las suscripciones activas.
+   */
+  ngOnDestroy(): void {
+    this.destroyed$.next(true);
+    this.destroyed$.complete();
   }
 }

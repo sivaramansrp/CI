@@ -17,8 +17,6 @@ export interface Catalogo {
 export interface Solicitud31802State {
   /** Número de operación asociado a la solicitud. */
   numeroOperacion: number;
-  /** Lista de bancos asociados a la solicitud. */
-  banco: Catalogo[] | null;
   /** Llave única asociada a la solicitud. */
   llave: string;
   /** Primer manifiesto asociado a la solicitud. */
@@ -29,6 +27,12 @@ export interface Solicitud31802State {
   manifiesto3: string;
   /** Fecha de pago asociada a la solicitud. */
   fechaPago: string;
+ /** Moneda nacional asociada a la solicitud. */
+monedaNacional: string;
+/** Indica si la solicitud es una renovación (`true` o `false`). */
+renovacion: boolean;
+/** Indica si la solicitud es una homologación (`true` o `false`). */
+homologacion: boolean;
 }
 
 /**
@@ -38,12 +42,14 @@ export interface Solicitud31802State {
 export function createInitialState(): Solicitud31802State {
   return {
     numeroOperacion: 0,
-    banco: null,
     llave: '',
     manifiesto1: '',
     manifiesto2: '',
     manifiesto3: '',
     fechaPago: '',
+    monedaNacional: '',
+    renovacion: false,
+    homologacion: false,
   };
 }
 
@@ -62,14 +68,6 @@ export class Tramite31802Store extends Store<Solicitud31802State> {
    */
   constructor() {
     super(createInitialState());
-  }
-
-  /**
-   * Actualiza la lista de bancos en el estado.
-   * @param banco Lista de bancos de tipo `Catalogo[]`.
-   */
-  public setBanco(banco: Catalogo[]) {
-    this.update((state) => ({ ...state, banco }));
   }
 
   /**
@@ -103,10 +101,10 @@ export class Tramite31802Store extends Store<Solicitud31802State> {
   public setManifiesto2(manifiesto2: string) {
     this.update((state) => ({ ...state, manifiesto2 }));
   }
-    /**
-   * Actualiza el segundo manifiesto en el estado.
-   * @param manifiesto3 Segundo manifiesto de tipo `string`.
-   */
+  /**
+ * Actualiza el segundo manifiesto en el estado.
+ * @param manifiesto3 Segundo manifiesto de tipo `string`.
+ */
   public setManifiesto3(manifiesto3: string) {
     this.update((state) => ({ ...state, manifiesto3 }));
   }
@@ -117,7 +115,33 @@ export class Tramite31802Store extends Store<Solicitud31802State> {
   public setFechaPago(fechaPago: string) {
     this.update((state) => ({ ...state, fechaPago }));
   }
-  
+/**
+ * Actualiza el valor de renovación en el estado.
+ * @param renovacion Indica si la solicitud es una renovación (`true` o `false`).
+ */
+  setRenovacion(renovacion: boolean): void {
+    this.update((state) => ({
+      ...state,
+      renovacion,
+    }));
+  }
+  /**
+ * Actualiza el valor de homologación en el estado.
+ * @param homologacion Indica si la solicitud es una homologación (`true` o `false`).
+ */
+  setHomologacion(homologacion: boolean): void {
+    this.update((state) => ({
+      ...state,
+      homologacion,
+    }));
+  }
+  /**
+ * Actualiza la moneda nacional en el estado.
+ * @param monedaNacional Moneda nacional de tipo `string`.
+ */
+  public setMonedaNacional(monedaNacional: string) {
+    this.update((state) => ({ ...state, monedaNacional }));
+  }
   /**
    * Restaura el estado al valor inicial.
    */
