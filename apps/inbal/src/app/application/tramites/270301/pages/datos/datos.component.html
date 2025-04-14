@@ -15,7 +15,8 @@
         <ng-container>
           @switch (indice) {
           @case (1) {
-          <solicitante></solicitante>
+          <!-- <solicitante></solicitante> -->
+          <solicitante [tabindex]="1"></solicitante>
           }
           @case (2) {
           <app-datos-de-la-solicitud-plastica></app-datos-de-la-solicitud-plastica>

@@ -96,7 +96,7 @@
 
 <app-modal [active]="showObraDeArteModal">
     <div class="row">
-        <ng-titulo titulo="Informacion de la obra de arte que se pretende importar/exportar" />
+        <ng-titulo titulo="Informacion de la obra de arte que se pretende importar" />
         <form [formGroup]="obraDeArteFormgroup">
             <div class="row">
                 <div class="col-md-4">
@@ -105,17 +105,28 @@
                         placeholder="Inserta autor" [required]=true>
                 </div>
 
-                <div class="col-md-4">
+                <!-- <div class="col-md-4">
                     <label class="form-label" for="titulo">Título*:</label>
                     <input type="text" class="form-control" id="titulo" formControlName="titulo" name="titulo" (input)="actualizarTitulo()"
                         placeholder="Inserta titulo">
-                </div>
+                </div> -->
 
                 <div class="col-md-4">
                     <label class="form-label" for="tecnicaDeRealizacion">Técnica de realización*:</label>
                     <input type="text" class="form-control" id="tecnicaDeRealizacion"
                         formControlName="tecnicaDeRealizacion" name="tecnicaDeRealizacion" (input)="actualizarTecnica()"
                         placeholder="Inserta tecnica de realizacion">
+                </div>
+                <div class="col-md-8">
+                    <label class="form-label" for="titulo">Título*:</label>
+                    <input type="text" class="form-control" id="titulo" formControlName="titulo" name="titulo" (input)="actualizarTitulo()"
+                        placeholder="Inserta titulo">
+                </div>
+                <div>
+                    <ng-titulo titulo="Medidas" />
+                    <div class="mt-5">
+                        <ng-alert [CONTENIDO]="TEXTO_OBRA_ALERT"></ng-alert>
+                    </div> 
                 </div>
 
                 <div class="col-md-12 mt-5">
@@ -135,7 +146,8 @@
                     <input type="text" class="form-control" id="ancho" formControlName="ancho" name="ancho" (input)="actualizarAncho()"
                         placeholder="0.00">
                 </div>
-
+                
+              <div class="row">
                 <div class="col-md-4">
                     <label class="form-label" for="profundidad">Profundidad (centímetros):</label>
                     <input type="text" class="form-control" id="profundidad" formControlName="profundidad"
@@ -154,10 +166,10 @@
                         placeholder="Inserta variables">
                 </div>
 
-                <div class="mt-5">
+                <!-- <div class="mt-5">
                     <ng-alert [CONTENIDO]="TEXTO_OBRA_ALERT"></ng-alert>
-                </div>
-
+                </div> -->
+            </div>
                 <div class="col-md-4">
                     <label class="form-label" for="anoDeCreacion">Año de creación*:</label>
                     <input type="text" class="form-control" id="anoDeCreacion" formControlName="anoDeCreacion"
@@ -177,7 +189,7 @@
                     </div>
                 </div>
 
-                <div class="col-md-4">
+                <div class="col-md-8">
                     <label class="form-label" for="propietario">Propietario*:</label>
                     <input type="text" class="form-control" id="propietario" formControlName="propietario"
                         name="propietario" (input)="actualizarPropietario()" placeholder="Inserta propietario">

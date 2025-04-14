@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import {
   BtnContinuarComponent,
   SolicitanteComponent,
+  SolicitanteService,
   TituloComponent,
   WizardComponent,
 } from '@ng-mf/data-access-user';
@@ -47,6 +48,7 @@ import { SolicitudService } from './services/solicitud.service';
     ToastrService,
     InicioSesionService,
     SubirDocumentoService,
+    SolicitanteService
   ],
 })
 export class AvisoImportacionPlasticaModule {}
