@@ -314,32 +314,66 @@ private recuperarValoresDesdeStore(): void {
  * y limpiar las suscripciones cuando el componente se destruye.
  */
 private suscribirseACambiosDeFormulario(): void {
-  // Actualiza el estado cuando cambian los valores del formulario principal de solicitud
-  this.solicitudForm.valueChanges
-    .pipe(takeUntil(this.destruir$))
-    .subscribe(valor => this.formularioSolicitudStore.actualizarSolicitudForm(valor));
+  // Escucha y actualiza cambios por campo en solicitudForm
+  Object.keys(this.solicitudForm.controls).forEach(campo => {
+    this.solicitudForm.get(campo)?.valueChanges
+      .pipe(takeUntil(this.destruir$))
+      .subscribe(valor => {
+        this.formularioSolicitudStore.actualizarSolicitudForm({
+          ...this.solicitudForm.getRawValue(),
+          [campo]: valor
+        });
+      });
+  });
 
-  // Actualiza el estado cuando cambian los valores del formulario de empresa recicladora
-  this.formularioEmpresaReciclaje.valueChanges
-    .pipe(takeUntil(this.destruir$))
-    .subscribe(valor => this.formularioSolicitudStore.actualizarEmpresaReciclaje(valor));
+  // Escucha y actualiza cambios por campo en formularioEmpresaReciclaje
+  Object.keys(this.formularioEmpresaReciclaje.controls).forEach(campo => {
+    this.formularioEmpresaReciclaje.get(campo)?.valueChanges
+      .pipe(takeUntil(this.destruir$))
+      .subscribe(valor => {
+        this.formularioSolicitudStore.actualizarEmpresaReciclaje({
+          ...this.formularioEmpresaReciclaje.getRawValue(),
+          [campo]: valor
+        });
+      });
+  });
 
-  // Actualiza el estado cuando cambian los valores del formulario de lugar de reciclaje
-  this.formularioLugarReciclaje.valueChanges
-    .pipe(takeUntil(this.destruir$))
-    .subscribe(valor => this.formularioSolicitudStore.actualizarLugarReciclaje(valor));
+  // Escucha y actualiza cambios por campo en formularioLugarReciclaje
+  Object.keys(this.formularioLugarReciclaje.controls).forEach(campo => {
+    this.formularioLugarReciclaje.get(campo)?.valueChanges
+      .pipe(takeUntil(this.destruir$))
+      .subscribe(valor => {
+        this.formularioSolicitudStore.actualizarLugarReciclaje({
+          ...this.formularioLugarReciclaje.getRawValue(),
+          [campo]: valor
+        });
+      });
+  });
 
-  // Actualiza el estado cuando cambian los valores del formulario de empresa transportista
-  this.formularioEmpresaTransportista.valueChanges
-    .pipe(takeUntil(this.destruir$))
-    .subscribe(valor => this.formularioSolicitudStore.actualizarEmpresaTransportista(valor));
+  // Escucha y actualiza cambios por campo en formularioEmpresaTransportista
+  Object.keys(this.formularioEmpresaTransportista.controls).forEach(campo => {
+    this.formularioEmpresaTransportista.get(campo)?.valueChanges
+      .pipe(takeUntil(this.destruir$))
+      .subscribe(valor => {
+        this.formularioSolicitudStore.actualizarEmpresaTransportista({
+          ...this.formularioEmpresaTransportista.getRawValue(),
+          [campo]: valor
+        });
+      });
+  });
 
-  // Actualiza el estado cuando cambian los valores del formulario de precauciones de manejo
-  this.formularioPrecaucionesManejo.valueChanges
-    .pipe(takeUntil(this.destruir$))
-    .subscribe(valor => this.formularioSolicitudStore.actualizarPrecaucionesManejo(valor));
+  // Escucha y actualiza cambios por campo en formularioPrecaucionesManejo
+  Object.keys(this.formularioPrecaucionesManejo.controls).forEach(campo => {
+    this.formularioPrecaucionesManejo.get(campo)?.valueChanges
+      .pipe(takeUntil(this.destruir$))
+      .subscribe(valor => {
+        this.formularioSolicitudStore.actualizarPrecaucionesManejo({
+          ...this.formularioPrecaucionesManejo.getRawValue(),
+          [campo]: valor
+        });
+      });
+  });
 }
-
 
 /**
  * Muestra el modal para agregar una operación de importación.
