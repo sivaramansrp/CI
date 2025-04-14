@@ -197,14 +197,9 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   showDatosMercanciaModal: boolean = false;
   
 
-  /**
-   * Indica si el popup está cerrado.
-   * Controla el estado del cierre del popup.
-   */
   
-
   /**
-   * Observable para manejar la destrucción del componente y evitar fugas de memoria.
+   * Observable utilizado para manejar la destrucción del componente y evitar fugas de memoria.
    * Se utiliza para cancelar suscripciones activas cuando el componente se destruye.
    */
   private destroyed$ = new Subject<void>();

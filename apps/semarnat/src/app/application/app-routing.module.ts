@@ -19,7 +19,7 @@ const ROUTES: Routes = [
       import('./tramites/231001/aviso-de-materiales.module').then((m)=>m.AvisodematerialesModule)
   },
   {
-    path: 'trámites-cites-importación-exportación-reexportación',
+    path: 'tramites-cites-importacion-exportacion-reexportacion',
     loadChildren: ()=>
       import('./tramites/230902/permiso-cites.module').then((m)=>m.PermisoCitesModule)
   },
