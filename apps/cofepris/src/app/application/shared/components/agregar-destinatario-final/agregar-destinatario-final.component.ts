@@ -268,6 +268,15 @@ export class AgregarDestinatarioFinalComponent
       });
   }
 
+
+  /**
+   * @method crearAgregarFormularioAgregarDestinatarioFinal
+   * @description
+   * This method initializes the `FormGroup` for the "Agregar Destinatario Final" component. 
+   * It sets up the form controls with their default values, validation rules, and disabled states 
+   * based on the `elementosDeshabilitados` and `elementosNoRequeridos` arrays.
+   * @returns {void} This method does not return any value.
+   */
   crearAgregarFormularioAgregarDestinatarioFinal(): void {
     this.agregarDestinatarioFinal = this.fb.group({
       tipoPersona: ['', Validators.required],
