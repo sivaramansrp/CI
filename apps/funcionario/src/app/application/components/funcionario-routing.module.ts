@@ -1,15 +1,18 @@
-import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { SeleccionModuloComponent } from '../seleccion-modulo/seleccion-modulo.component';
-import { ConfirmarNotificacionComponent } from './confirmar-notificacion/confirmar-notificacion.component';
 import { AtenderRequerimientoComponent } from './atender-requerimiento/atender-requerimiento.component';
-import { BandejaPendientesComponent } from './bandeja-pendientes/bandeja-pendientes.component';
+import { AutorizacionMasivaComponent } from './autorizacion-masiva/autorizacion-masiva.component';
 import { AutorizarDictamenComponent } from './autorizar/autorizar-dictamen/autorizar-dictamen.component';
-import { SolicitudPageComponent } from './evaluar-solicitud/solicitud-page/solicitud-page.component';
-import { GenerarDictamenComponent } from './evaluar-solicitud/generar-dictamen/generar-dictamen.component';
+import { BandejaPendientesComponent } from './bandeja-pendientes/bandeja-pendientes.component';
+import { BandejaSolicitudesComponent } from './bandeja-solicitudes/bandeja-solicitudes.component';
+import { ConfirmarNotificacionComponent } from './confirmar-notificacion/confirmar-notificacion.component';
+import { NgModule } from '@angular/core';
 import { ObservacionesDictamenComponent } from './autorizar/observaciones/observaciones-dictamen.component';
+import { SeleccionModuloComponent } from './seleccion-modulo/seleccion-modulo.component';
+import { SolicitudPageComponent } from './evaluar-solicitud/solicitud-page/solicitud-page.component';
+import { TableroSeguimientoComponent } from './tablero-seguimiento/tablero-seguimiento.component';
 
-const routes: Routes = [
+
+const ROUTES: Routes = [
   {
     path: 'bandeja',
     component: BandejaPendientesComponent,
@@ -38,11 +41,23 @@ const routes: Routes = [
     path: 'observaciones-dictamen',
     component: ObservacionesDictamenComponent,
   },
+  {
+    path: 'bandeja-solicitudes',
+    component: BandejaSolicitudesComponent,
+  },
+  {
+    path: 'autorizacion-masiva',
+    component: AutorizacionMasivaComponent
+  },
+  {
+    path: 'tablero-seguimiento',
+    component: TableroSeguimientoComponent
+  }
 
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
+  imports: [RouterModule.forChild(ROUTES)],
   exports: [RouterModule]
 })
 export class FuncionarioRoutingModule { }

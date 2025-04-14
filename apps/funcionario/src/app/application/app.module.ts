@@ -1,14 +1,14 @@
+import { BreadcrumbComponent, FooterComponent, HeaderComponent, NavComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { ToastrModule, ToastrService, provideToastr } from 'ngx-toastr';
-
 import { AkitaNgDevtools } from '@datorama/akita-ngdevtools';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
-import { BreadcrumbComponent, FooterComponent, HeaderComponent, InformacionUsuarioComponent, NavComponent, SolicitanteService, TituloComponent } from '@ng-mf/data-access-user';
+import { BandejaTareasPendientesComponent } from './bandejaPendientes/bandeja-tareas-pendientes.component';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { provideHttpClient } from '@angular/common/http';
 import { SeleccionModuloComponent } from './seleccion-modulo/seleccion-modulo.component';
-import { BandejaTareasPendientesComponent } from './bandejaPendientes/bandeja-tareas-pendientes.component';
+import { provideHttpClient } from '@angular/common/http';
+
 
 
 @NgModule({
@@ -28,6 +28,7 @@ import { BandejaTareasPendientesComponent } from './bandejaPendientes/bandeja-ta
     TituloComponent,
     ToastrModule.forRoot(),
     BandejaTareasPendientesComponent,
+    FooterComponent
 ],
   providers: [
     ToastrService,
