@@ -1,9 +1,10 @@
-import { Catalogo, CatalogoSelectComponent, TipoPersona, TituloComponent } from '@ng-mf/data-access-user';
+import { Catalogo, CatalogoSelectComponent, InputRadioComponent, TipoPersona, TituloComponent } from '@ng-mf/data-access-user';
 import { CommonModule, Location } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 import { MaterialesPeligrososService } from '../../services/materiales-peligrosos.service';
+import { OPCIONES_DE_BOTON_DE_RADIO } from '../../constantes/materiales-peligrosos.enum';
 import { Representante } from '../../models/terceros-relacionados.model';
 import { Tramite230501Query } from '../../estados/queries/tramite230501Query.query';
 import { Tramite230501Store } from '../../estados/stores/tramite230501Store.store';
@@ -21,6 +22,7 @@ import { Tramite230501Store } from '../../estados/stores/tramite230501Store.stor
     CommonModule,
     CatalogoSelectComponent,
     ReactiveFormsModule,
+    InputRadioComponent,
     TituloComponent,
   ],
   providers: [MaterialesPeligrososService],
@@ -56,7 +58,13 @@ export class RepresentanteLegalComponent implements OnDestroy, OnInit {
    * Formulario reactivo utilizado para capturar los datos del representante.
    * Este formulario contiene validaciones para los campos requeridos.
    */
-  representanteLegalForm: FormGroup;
+  representanteLegalForm!: FormGroup;
+  /**
+   * @public
+   * @description Propiedad que almacena las opciones para el botón de radio.
+   * @command Opciones definidas en la constante OPCIONES_DE_BOTON_DE_RADIO.
+   */
+  public radioOpcions = OPCIONES_DE_BOTON_DE_RADIO;
 
   /**
    * @property {Catalogo[]} paisesDatos
@@ -90,26 +98,7 @@ export class RepresentanteLegalComponent implements OnDestroy, OnInit {
     private tramiteStore: Tramite230501Store,
     public tramiteQuery: Tramite230501Query,
   ) {
-    // Creación del formulario reactivo con validaciones
-    this.representanteLegalForm = this.fb.group({
-      tipoPersona: ['Fisica', Validators.required],
-      nombres: ['', Validators.required],
-      denominacionRazon: [''],
-      primerApellido: [''],
-      segundoApellido: [''],
-      pais: ['', Validators.required],
-      estadoLocalidad: ['', Validators.required],
-      municipio: [''],
-      localidad: [''],
-      codigoPostal: ['', Validators.required],
-      colonia: [''],
-      calle: ['', Validators.required],
-      numeroExterior: ['', Validators.required],
-      numeroInterior: [''],
-      lada: ['', Validators.required],
-      telefono: ['', Validators.required],
-      correoElectronico: ['', [Validators.required, Validators.email]],
-    });
+    //No hacer nada
   }
   /**
    * Método que se suscribe a los cambios en el campo `tipoPersona` del formulario.
@@ -117,31 +106,28 @@ export class RepresentanteLegalComponent implements OnDestroy, OnInit {
    * @method onTipoPersonaChange
    * @returns {void}
    */
-  onTipoPersonaChange(): void {
-    this.representanteLegalForm.get('tipoPersona')?.valueChanges.subscribe(value => {
-      const IS_FISICA = value === 'FISICA' || value === this.tipoPersona.FISICA;
-      const NOMBRES = this.representanteLegalForm.get('nombres');
-      const PRIMER_APELLIDO = this.representanteLegalForm.get('primerApellido');
-      const SEGUNDO_APELLIDO = this.representanteLegalForm.get('segundoApellido');
-      const DENOMINACION_RAZON = this.representanteLegalForm.get('denominacionRazon');
+  onTipoPersonaChange(value: string): void {
+    const IS_FISICA = value === 'FISICA' || value === this.tipoPersona.FISICA;
+    const NOMBRES = this.representanteLegalForm.get('nombres');
+    const PRIMER_APELLIDO = this.representanteLegalForm.get('primerApellido');
+    const SEGUNDO_APELLIDO = this.representanteLegalForm.get('segundoApellido');
+    const DENOMINACION_RAZON = this.representanteLegalForm.get('denominacionRazon');
+    if (IS_FISICA) {
+      NOMBRES?.setValidators([Validators.required]);
+      PRIMER_APELLIDO?.setValidators([Validators.required]);
+      SEGUNDO_APELLIDO?.setValidators([Validators.required]);
+      DENOMINACION_RAZON?.clearValidators();
+    } else {
+      NOMBRES?.clearValidators();
+      PRIMER_APELLIDO?.clearValidators();
+      SEGUNDO_APELLIDO?.clearValidators();
+      DENOMINACION_RAZON?.setValidators([Validators.required]);
+    }
 
-      if (IS_FISICA) {
-        NOMBRES?.setValidators([Validators.required]);
-        PRIMER_APELLIDO?.setValidators([Validators.required]);
-        SEGUNDO_APELLIDO?.setValidators([Validators.required]);
-        DENOMINACION_RAZON?.clearValidators();
-      } else {
-        NOMBRES?.clearValidators();
-        PRIMER_APELLIDO?.clearValidators();
-        SEGUNDO_APELLIDO?.clearValidators();
-        DENOMINACION_RAZON?.setValidators([Validators.required]);
-      }
-
-      NOMBRES?.updateValueAndValidity();
-      PRIMER_APELLIDO?.updateValueAndValidity();
-      SEGUNDO_APELLIDO?.updateValueAndValidity();
-      DENOMINACION_RAZON?.updateValueAndValidity();
-    });
+    NOMBRES?.updateValueAndValidity();
+    PRIMER_APELLIDO?.updateValueAndValidity();
+    SEGUNDO_APELLIDO?.updateValueAndValidity();
+    DENOMINACION_RAZON?.updateValueAndValidity();
   }
 
   /**
@@ -150,22 +136,23 @@ export class RepresentanteLegalComponent implements OnDestroy, OnInit {
    * También suscribe a los datos del store para cargar la información del trámite.
    */
   ngOnInit(): void {
-    this.onTipoPersonaChange();
+    this.createRepresentForm();
+    this.onTipoPersonaChange(this.tipoPersona.FISICA);
     this.cargarDatos();
     // Suscripción a los datos del store para cargar el representante legal
     this.tramiteStore.representanteSujeto
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(representante => {
-      if (representante) {
-        this.representanteLegalForm.patchValue(representante);
-      }
-    });
+        if (representante) {
+          this.representanteLegalForm.patchValue(representante);
+        }
+      });
 
     // Suscripción al estado del modo de edición del representante legal
     this.tramiteQuery.esRepresentanteLegalElModoDeEdicion$.pipe(takeUntil(this.unsubscribe$))
-    .subscribe(modo => {
-      this.esElModoDeEdicion = modo;
-    });
+      .subscribe(modo => {
+        this.esElModoDeEdicion = modo;
+      });
   }
 
   /**
@@ -271,6 +258,34 @@ export class RepresentanteLegalComponent implements OnDestroy, OnInit {
    */
   updateRepresentanteLegal(newRepresentante: Representante): void {
     this.tramiteStore.updateRepresentanteLegalTablaDatos(newRepresentante);
+  }
+
+  /**
+   * Crea el formulario reactivo para agregar un representanteLegal.
+   * Define los campos y sus validaciones iniciales.
+   * @method createRepresentForm
+   * @returns {void}
+   */
+  createRepresentForm(): void {
+    this.representanteLegalForm = this.fb.group({
+      tipoPersona: ['Fisica', Validators.required],
+      nombres: ['', Validators.required],
+      denominacionRazon: [''],
+      primerApellido: [''],
+      segundoApellido: [''],
+      pais: ['', Validators.required],
+      estadoLocalidad: ['', Validators.required],
+      municipio: [''],
+      localidad: [''],
+      codigoPostal: ['', Validators.required],
+      colonia: [''],
+      calle: ['', Validators.required],
+      numeroExterior: ['', Validators.required],
+      numeroInterior: [''],
+      lada: ['', Validators.required],
+      telefono: ['', Validators.required],
+      correoElectronico: ['', [Validators.required, Validators.email]],
+    });
   }
 
   /**

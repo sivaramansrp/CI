@@ -1,17 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /**
- * Inicializa los datos de los catálogos para el primer paso.
+ * MaterialesPeligrososService
  *
- * Este método realiza solicitudes HTTP para obtener varios catálogos desde archivos JSON locales y asigna los datos recibidos a las propiedades correspondientes de la clase.
- * 
- * - `tiposSolicitud`: Obtiene los tipos de solicitud desde `tiposDeSolicitud.json`.
- * - `noDePermisocoferprise`: Obtiene los datos desde `noDePermisocoferprise.json`.
- * - `fraccionArancelaria`: Obtiene los datos desde `fraccionArancelaria.json`.
- * - `numeroCas`: Obtiene los datos desde `numeroCas.json`.
- * - `clasificacion`: Obtiene los datos desde `clasificacion.json`.
- * - `estadoFisico`: Obtiene los datos desde `estadoFisico.json`.
- * - `datosObjecto`: Obtiene los datos desde `datosObjecto.json`.
- * - `unidadDeMedida`: Obtiene los datos desde `unidadDeMedida.json`.
+ * Este servicio gestiona la obtención de catálogos desde archivos JSON locales y realiza tareas relacionadas
+ * con materiales peligrosos, como la inicialización de catálogos de pago de derechos y la conversión de números a letras.
  */
 import { Catalogo, RespuestaCatalogos } from '@ng-mf/data-access-user';
 import { Observable, map } from 'rxjs';
@@ -22,47 +14,77 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class MaterialesPeligrososService {
-  // Las siguientes variables se utilizan en el componente paso uno datos solicitud
+  /**
+   * Arreglo de objetos `Catalogo` que contiene los tipos de solicitud obtenidos desde `tiposDeSolicitud.json`.
+   */
   tiposSolicitud: Catalogo[] = [];
+
+  /**
+   * Arreglo de objetos `Catalogo` que contiene los datos de permisos obtenidos desde `noDePermisocoferprise.json`.
+   */
   noDePermisocoferprise: Catalogo[] = [];
+
+  /**
+   * Arreglo de objetos `Catalogo` que contiene la fracción arancelaria obtenida desde `fraccionArancelaria.json`.
+   */
   fraccionArancelaria: Catalogo[] = [];
+
+  /**
+   * Arreglo de objetos `Catalogo` que contiene los números CAS obtenidos desde `numeroCas.json`.
+   */
   numeroCas: Catalogo[] = [];
+
+  /**
+   * Arreglo de objetos `Catalogo` que contiene la clasificación obtenida desde `clasificacion.json`.
+   */
   clasificacion: Catalogo[] = [];
+
+  /**
+   * Arreglo de objetos `Catalogo` que contiene los estados físicos obtenidos desde `estadoFisico.json`.
+   */
   estadoFisico: Catalogo[] = [];
+
+  /**
+   * Arreglo de objetos `Catalogo` que contiene los datos del objeto obtenidos desde `datosObjecto.json`.
+   */
   datosObjecto: Catalogo[] = [];
+
+  /**
+   * Arreglo de objetos `Catalogo` que contiene las unidades de medida obtenidas desde `unidadDeMedida.json`.
+   */
   unidadDeMedida: Catalogo[] = [];
- 
-  // Las siguientes variables se utilizan en el componente pago de derechos
+
+  /**
+   * Arreglo de objetos `Catalogo` que contiene la lista de bancos para el pago de derechos obtenida desde `pagoDerechosBanco.json`.
+   */
   listoBanco: Catalogo[] = [];
 
-  constructor(public httpServicios: HttpClient) {}
+  constructor(public httpServicios: HttpClient) {
+    // No hacer nada
+  }
   private jsonUrl = 'assets/json/230501/domicilio.json';
 
   /**
    * Inicializa el catálogo de pago de derechos.
-   * 
-   * Este método obtiene la respuesta desde una URL específica y la asigna a la propiedad 'listoBanco'.
-   * 
+   * Este método obtiene la respuesta desde una URL específica y la asigna a la propiedad `listoBanco`.
    * @returns {void}
    */
-  inicializaPagoDerechosCatalogo():void {
+  inicializaPagoDerechosCatalogo(): void {
     this.obtenerRespuestaPorUrl(this, 'listoBanco', '/230501/pagoDerechosBanco.json');
   }
 
   /**
    * Obtiene una respuesta desde una URL y asigna los datos a una variable.
    *
+   * @param {any} self - El objeto que contiene la variable donde se almacenarán los datos de la respuesta.
    * @param {string} variable - El nombre de la variable donde se almacenarán los datos de la respuesta.
    * @param {string} url - La URL desde la cual se obtendrá la respuesta.
-   * @param {Object} self - El objeto que contiene la variable donde se almacenarán los datos de la respuesta.
    * @returns {void}
-   * @author Muneez
-   * @remarks
-   * Si la variable y la URL son válidas, se realiza una solicitud HTTP GET a la URL especificada.
+   * @remarks Si la variable y la URL son válidas, se realiza una solicitud HTTP GET a la URL especificada.
    * Si la respuesta tiene un código 200 y contiene datos, estos se asignan a la variable especificada.
    * Si la variable o la URL no son válidas, se asigna un arreglo vacío a la variable.
    */
-  obtenerRespuestaPorUrl(self: any, variable: string, url: string) :void {
+  obtenerRespuestaPorUrl(self: any, variable: string, url: string): void {
     if (self && variable && url) {
       this.httpServicios.get<RespuestaCatalogos>(`assets/json${url}`).subscribe((resp): void => {
         self[variable] = resp?.code === 200 && resp.data ? resp.data : [];
@@ -70,7 +92,14 @@ export class MaterialesPeligrososService {
     }
   }
 
-
+  /**
+   * Convierte un número a su equivalente en letras.
+   * 
+   * @param {number} num - El número que se desea convertir a letras.
+   * @returns {string} - El número convertido a palabras.
+   * @example
+   * convertirNumeroALetras(123) -> 'ciento veintitrés'
+   */
   // eslint-disable-next-line class-methods-use-this
   convertirNumeroALetras(num: number): string {
     const UNIDADES = ['cero', 'uno', 'dos', 'tres', 'cuatro', 'cinco', 'seis', 'siete', 'ocho', 'nueve'];
@@ -111,7 +140,7 @@ export class MaterialesPeligrososService {
   /**
    * Obtiene una lista de países desde un endpoint JSON.
    *
-   * @returns Un observable que emite un arreglo de objetos `Catalogo` representando la lista de países.
+   * @returns {Observable<Catalogo[]>} - Un observable que emite un arreglo de objetos `Catalogo` representando la lista de países.
    */
   obtenerListaPaises(): Observable<Catalogo[]> {
     return this.httpServicios
@@ -122,7 +151,7 @@ export class MaterialesPeligrososService {
   /**
    * Obtiene una lista de estados desde un endpoint JSON.
    *
-   * @returns Un `Observable` que emite un arreglo de objetos `Catalogo` representando los estados.
+   * @returns {Observable<Catalogo[]>} - Un `Observable` que emite un arreglo de objetos `Catalogo` representando los estados.
    */
   obtenerListaEstados(): Observable<Catalogo[]> {
     return this.httpServicios
@@ -133,7 +162,7 @@ export class MaterialesPeligrososService {
   /**
    * Obtiene una lista de municipios desde un endpoint JSON.
    *
-   * @returns Un observable que emite un arreglo de objetos `Catalogo` representando los municipios.
+   * @returns {Observable<Catalogo[]>} - Un observable que emite un arreglo de objetos `Catalogo` representando los municipios.
    */
   obtenerListaMunicipios(): Observable<Catalogo[]> {
     return this.httpServicios
@@ -144,7 +173,7 @@ export class MaterialesPeligrososService {
   /**
    * Obtiene la lista de localidades desde un archivo JSON.
    * 
-   * @returns Un observable que emite un arreglo de objetos del tipo `Catalogo`.
+   * @returns {Observable<Catalogo[]>} - Un observable que emite un arreglo de objetos del tipo `Catalogo`.
    */
   obtenerListaLocalidades(): Observable<Catalogo[]> {
     return this.httpServicios
@@ -155,7 +184,7 @@ export class MaterialesPeligrososService {
   /**
    * Obtiene una lista de códigos postales desde un servicio HTTP.
    * 
-   * @returns Un observable que emite un arreglo de objetos de tipo `Catalogo`.
+   * @returns {Observable<Catalogo[]>} - Un observable que emite un arreglo de objetos de tipo `Catalogo`.
    */
   obtenerListaCodigosPostales(): Observable<Catalogo[]> {
     return this.httpServicios
@@ -166,7 +195,7 @@ export class MaterialesPeligrososService {
   /**
    * Obtiene la lista de colonias desde un servicio HTTP.
    * 
-   * @returns Un observable que emite un arreglo de objetos de tipo `Catalogo`.
+   * @returns {Observable<Catalogo[]>} - Un observable que emite un arreglo de objetos de tipo `Catalogo`.
    */
   obtenerListaColonias(): Observable<Catalogo[]> {
     return this.httpServicios

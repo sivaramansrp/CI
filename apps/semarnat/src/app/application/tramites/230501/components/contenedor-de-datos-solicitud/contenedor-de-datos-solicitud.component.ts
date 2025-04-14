@@ -1,6 +1,6 @@
 import { ActivatedRoute, Router } from '@angular/router';
-import { COMPOSICION_TABLA, DATOS_ESPECIFICOS_VALIDO_CONTROL, FECHA_FACTURA, INFO_GENERAL_VALIDO_CONTROL, NUMERO_CAS_TABLA } from '../../constantes/materiales-peligrosos.enum';
-import { Catalogo, CatalogoSelectComponent, InputFechaComponent, SeccionLibQuery, SeccionLibState, SeccionLibStore, TablaDinamicaComponent, TablaSeleccion } from '@libs/shared/data-access-user/src';
+import { COMPOSICION_TABLA, DATOS_ESPECIFICOS_VALIDO_CONTROL, FECHA_FACTURA, INFO_GENERAL_VALIDO_CONTROL, NUMERO_CAS_TABLA, OPCIONES_DE_BOTON_DE_RADIO_CONTENEDOR } from '../../constantes/materiales-peligrosos.enum';
+import { Catalogo, CatalogoSelectComponent, InputCheckComponent, InputFechaComponent, InputRadioComponent, SeccionLibQuery, SeccionLibState, SeccionLibStore, TablaDinamicaComponent, TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ComposicionMaterial, InputFecha, TablaNumeroCasType } from '../../models/materiales-peligrosos.model';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -13,7 +13,7 @@ import { Tramite230501Query } from '../../estados/queries/tramite230501Query.que
 @Component({
   selector: 'app-contenedor-de-datos-solicitud',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, CatalogoSelectComponent, TablaDinamicaComponent, InputFechaComponent],
+  imports: [CommonModule, ReactiveFormsModule, CatalogoSelectComponent, TablaDinamicaComponent, InputFechaComponent,InputCheckComponent,InputRadioComponent],
   templateUrl: './contenedor-de-datos-solicitud.component.html',
   styleUrl: './contenedor-de-datos-solicitud.component.scss',
   providers: [MaterialesPeligrososService],
@@ -142,6 +142,13 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
   public composicionSeleccionLista: ComposicionMaterial[] = [];
 
   /**
+   * @method radioOpcions
+   * @description Contiene las opciones para el botón de radio en el contenedor de datos de la solicitud.
+   * Estas opciones son definidas por la constante `OPCIONES_DE_BOTON_DE_RADIO_CONTENEDOR`.
+   */
+  radioOpcions = OPCIONES_DE_BOTON_DE_RADIO_CONTENEDOR;
+
+  /**
    * Constructor de la clase ContenedorDeDatosSolicitudComponent.
    * 
    * @param tramite230501Query - Servicio para realizar consultas relacionadas con el trámite 230501.
@@ -188,17 +195,18 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
           this.tramiteState = seccionState;
         })
       ).subscribe();
-    this.crearDatosSolicitudForm();
     this.pestanaValidar();
+    this.crearDatosSolicitudForm();
+
   }
-     /**
- * Establece el estado de validación del formulario de destinatario.
- * 
- * @param valida - Un valor booleano que indica si el formulario de datos del destinatario es válido.
- */
- setFormValida(valida: boolean): void {
-  this.tramite230501Store.setFormValida({ datosSolicitudForm: valida });
-}
+  /**
+* Establece el estado de validación del formulario de destinatario.
+* 
+* @param valida - Un valor booleano que indica si el formulario de datos del destinatario es válido.
+*/
+  setFormValida(valida: boolean): void {
+    this.tramite230501Store.setFormValida({ datosSolicitudForm: valida });
+  }
 
   /**
  * Crea y configura el formulario `datosSolicitudForm` con los campos necesarios
@@ -217,7 +225,7 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
  */
   crearDatosSolicitudForm(): void {
     this.datosSolicitudForm = this.fb.group({
-      tratadoRotterdam: [this.tramiteState.datosSolicitudFormType.tratadoRotterdam || false],
+      tratadoRotterdam: [this.tramiteState?.datosSolicitudFormType?.tratadoRotterdam || false],
       listadoNacional: [this.tramiteState?.datosSolicitudFormType?.listadoNacional || false],
       fraccionArancelaria: [this.tramiteState?.datosSolicitudFormType?.fraccionArancelaria || '', [Validators.required]],
       descripcionFraccion: [{ value: this.tramiteState?.datosSolicitudFormType?.descripcionFraccion || '', disabled: true }],
@@ -225,35 +233,39 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
       numeroCas: [this.tramiteState?.datosSolicitudFormType?.numeroCas || '', [Validators.required]],
       descripcionNoArancelaria: [{ value: this.tramiteState?.datosSolicitudFormType?.descripcionNoArancelaria || '', disabled: true }],
       nombreQuimico: [{ value: this.tramiteState?.datosSolicitudFormType?.nombreQuimico || '', disabled: true }],
-      
-      nombreComun: [this.tramiteState.datosSolicitudFormType.nombreComun || '', [Validators.required]],
+      nombreComun: [this.tramiteState.datosSolicitudFormType?.nombreComun || '', [Validators.required]],
       nombreComercial: [this.tramiteState?.datosSolicitudFormType?.nombreComercial || '', [Validators.required]],
       estadoFisico: [this.tramiteState?.datosSolicitudFormType?.estadoFisico || '', [Validators.required]],
       cantidad: [this.tramiteState?.datosSolicitudFormType?.cantidad || null, [Validators.required]],
-      cantidadLetra: [{value: this.tramiteState?.datosSolicitudFormType?.cantidadLetra || '', disabled: true }],
+      cantidadLetra: [{ value: this.tramiteState?.datosSolicitudFormType?.cantidadLetra || '', disabled: true }],
       unidadMedida: [this.tramiteState?.datosSolicitudFormType?.unidadMedida || '', [Validators.required]],
       licenciaSanitaria: [this.tramiteState?.datosSolicitudFormType?.licenciaSanitaria || ''],
       usoEspecifico: [this.tramiteState?.datosSolicitudFormType?.usoEspecifico || '', [Validators.required]],
       fechaExportacion: [this.tramiteState?.datosSolicitudFormType?.fechaExportacion || ''],
       modoCantidad: [this.tramiteState?.datosSolicitudFormType?.modoCantidad || false]
     });
+  }
 
-    this.datosSolicitudForm.get('cantidad')?.valueChanges.pipe(
-      takeUntil(this.destroyNotifier$),
-      map((value) => {
-        const CANTIDAD_LETRA = this.materialesPeligrososService.convertirNumeroALetras(value);
+  /**
+   * Maneja el cambio de tiempo y actualiza los valores relacionados en el formulario y la tienda.
+   * 
+   * @param value - El valor seleccionado, que puede ser un string o un número.
+   * 
+   * @remarks
+   * Convierte el valor numérico a su representación en letras utilizando el servicio `materialesPeligrososService`.
+   * Luego, actualiza el campo `cantidadLetra` en el formulario y sincroniza el valor en la tienda.
+   * 
+   * @comando
+   * - Convierte el número a letras si el valor es válido.
+   * - Actualiza el formulario y la tienda con el valor convertido.
+   */
+  onCambioDeTiempo(value: string | number): void {    
+    const VALOR_SELECCIONADO = value as string;
+    if (VALOR_SELECCIONADO) {
+      const CANTIDAD_LETRA = this.materialesPeligrososService.convertirNumeroALetras(typeof VALOR_SELECCIONADO === 'number' ? VALOR_SELECCIONADO : parseFloat(VALOR_SELECCIONADO));
       this.datosSolicitudForm.get('cantidadLetra')?.setValue(CANTIDAD_LETRA);
-      this.actualizarElValorDeLaTienda('cantidadLetra', 'text')
-      })
-    ).subscribe();
-
-    this.datosSolicitudForm.valueChanges.pipe(
-      takeUntil(this.destroyNotifier$),
-      map(() => {
-        this.pestanaValidar();
-      })
-    ).subscribe();
-
+      this.actualizarElValorDeLaTienda('cantidadLetra', 'text');
+    }
   }
 
   /**
@@ -299,7 +311,7 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
       return CONTROLS && CONTROLS.valid;
     });
   }
-      
+
   /**
    * Actualiza el valor de una propiedad en la tienda según el tipo de dato especificado.
    *
@@ -321,6 +333,7 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
     } else if (valorCode === 'number') {
       this.tramite230501Store.setDatosSolicitudFormTypeProperty(property, '', undefined, ACTIVA_VALOR);
     }
+    this.pestanaValidar()
   }
 
 

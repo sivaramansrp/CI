@@ -59,7 +59,9 @@ export class PasoDosComponent implements OnDestroy, OnInit {
    *
    * @param {CatalogosService} catalogosServices - Servicio de catálogos para cargar tipos de documentos.
    */
-  constructor(public catalogosServices: CatalogosService) {}
+  constructor(public catalogosServices: CatalogosService) {
+     // No hacer nada
+  }
 
   /**
    * @method ngOnInit

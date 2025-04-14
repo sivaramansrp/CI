@@ -36,7 +36,7 @@
                 <div class="col-md-4">
                     <div class="form-group ">
                         <label class="control-label" for="fecha">Fecha de pago:</label>
-                        <input class="form-control" id="fecha" placeholder="Fecha de pago" type="date"
+                        <input class="form-control" id="fecha" (ngModelChange)="onCambioDeTiempo($event)" placeholder="Fecha de pago" type="date"
                             formControlName="fecha">
                     </div>
                 </div>

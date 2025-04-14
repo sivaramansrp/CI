@@ -140,6 +140,7 @@ describe('ContenedorDeDatosSolicitudComponent', () => {
     });
     component.tramite230501Store = component.tramite230501Store || {};
     component.tramite230501Store.setDatosSolicitudFormTypeProperty = jest.fn();
+    component.pestanaValidar = jest.fn();
     component.actualizarElValorDeLaTienda({}, {});
   });
 

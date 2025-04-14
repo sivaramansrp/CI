@@ -87,15 +87,15 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       ).subscribe();
     this.createPagoDerechos();
   }
-       /**
- * Establece el estado de validación del formulario de destinatario.
- * 
- * @param valida - Un valor booleano que indica si el formulario de datos del destinatario es válido.
- */
- setFormValida(valida: boolean): void {
-  this.tramite230501Store.setFormValida({ pagoDeDerechos: valida });
-}
-
+  
+  /**
+* Establece el estado de validación del formulario de destinatario.
+* 
+* @param valida - Un valor booleano que indica si el formulario de datos del destinatario es válido.
+*/
+  setFormValida(valida: boolean): void {
+    this.tramite230501Store.setFormValida({ pagoDeDerechos: valida });
+  }
 
   /**
    * Este método inicializa el formulario `pagoDerechos` con varios campos predefinidos
@@ -117,21 +117,40 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       fecha: [this.pagoDerechosState.fecha, [Validators.required]],
       importePago: [{ value: this.pagoDerechosState.importePago, disabled: true }],
     });
-      this.pagoDerechos.valueChanges
-        .pipe(takeUntil(this.destroyNotifier$))
-        .subscribe((value) => {
-        this.setFormValida(this.pagoDerechos.valid);
-        this.tramite230501Store.setPagoDerechosStateProperty('fecha', value.fecha);
-      });
-    
+
+  }
+
+  /**
+   * Maneja el cambio de tiempo seleccionado por el usuario.
+   * 
+   * @param value - El valor seleccionado, que puede ser una cadena o un número.
+   * 
+   * @remarks
+   * Este método actualiza el estado del formulario y establece la propiedad 
+   * 'fecha' en el estado de `tramite230501Store` con el valor seleccionado.
+   */
+  onCambioDeTiempo(value: string | number): void {
+    const VALOR_SELECCIONADO = value as string;
+    this.setFormValida(this.pagoDerechos.valid);
+    this.tramite230501Store.setPagoDerechosStateProperty('fecha', VALOR_SELECCIONADO);
   }
 
 
   /**
-   * Método para manejar la selección de clasificación.
+   * Maneja la selección de una clasificación actualizando la propiedad `clasificacion`
+   * con el valor del campo 'banco' del formulario `pagoDerechos`. También valida
+   * el formulario y actualiza el estado del `tramite230501Store` con la clasificación seleccionada.
+   *
+   * @remarks
+   * Este método realiza las siguientes acciones:
+   * - Recupera el valor del campo 'banco' del formulario `pagoDerechos`.
+   * - Actualiza la propiedad `clasificacion` con el valor recuperado.
+   * - Llama a `setFormValida` para validar el formulario.
+   * - Actualiza el estado del `tramite230501Store` con la clasificación seleccionada.
    */
   clasificacionSeleccione(): void {
-    this.clasificacion = this.pagoDerechos.get('banco')?.value;
+    this.clasificacion = this.pagoDerechos.get('banco')?.value
+    this.setFormValida(this.pagoDerechos.valid);
     this.tramite230501Store.setPagoDerechosStateProperty('banco', this.clasificacion);
   }
 

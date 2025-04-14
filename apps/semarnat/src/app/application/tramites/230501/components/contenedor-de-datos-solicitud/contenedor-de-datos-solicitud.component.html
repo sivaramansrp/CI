@@ -11,19 +11,16 @@
         <div class="row mt-4">
             <div class="col-md-12">
                 <div class="form-check">
-                    <input class="form-check-input" type="checkbox" formControlName="tratadoRotterdam"
-                        id="tratadoRotterdam" (change)="actualizarElValorDeLaTienda('tratadoRotterdam', 'boolean')" />
-                    <label class="form-check-label" for="tratadoRotterdam">
-                        El material peligroso está contenido en el Tratado de Rotterdam
-                    </label>
+                    <lib-input-check [id]="'tratadoRotterdam'"
+                        [label]="'El material peligroso está contenido en el Tratado de Rotterdam'" [required]="false"
+                        formControlName="tratadoRotterdam"
+                        (change)="actualizarElValorDeLaTienda('tratadoRotterdam', 'boolean')"></lib-input-check>
                 </div>
                 <div class="form-check">
-                    <input class="form-check-input" type="checkbox" formControlName="listadoNacional"
-                        id="listadoNacional" (change)="actualizarElValorDeLaTienda('listadoNacional', 'boolean')" />
-                    <label class="form-check-label" for="listadoNacional">
-                        El material peligroso está incluido en el Listado Nacional de la Ley Federal para el Control de
-                        Sustancias Químicas Susceptibles de desvío para la fabricación de armas químicas
-                    </label>
+                    <lib-input-check [id]="'listadoNacional'"
+                        [label]="'El material peligroso está incluido en el Listado Nacional de la Ley Federal para el Control de Sustancias Químicas Susceptibles de desvío para la fabricación de armas químicas'"
+                        [required]="false" formControlName="listadoNacional"
+                        (change)="actualizarElValorDeLaTienda('listadoNacional', 'boolean')"></lib-input-check>
                 </div>
             </div>
         </div>
@@ -49,12 +46,11 @@
 
         <div class="row mt-3 justify-content-end">
             <div class="col-md-6 text-end">
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" formControlName="convenioMinamata"
-                        id="convenioMinamata" (change)="actualizarElValorDeLaTienda('convenioMinamata', 'boolean')" />
-                    <label class="form-check-label" for="convenioMinamata">
-                        El material está contenido en el convenio de Minamata
-                    </label>
+                <div class="">
+                    <lib-input-check [id]="'convenioMinamata'"
+                    [label]="'El material está contenido en el convenio de Minamata'" [required]="false"
+                    formControlName="tratadoRotterdam"
+                    (change)="actualizarElValorDeLaTienda('convenioMinamata', 'boolean')"></lib-input-check>
                 </div>
             </div>
         </div>
@@ -137,6 +133,7 @@
             <div class="col-md-4">
                 <label class="form-label">Cantidad:*</label>
                 <input type="number" class="form-control" formControlName="cantidad"
+                    (ngModelChange)="onCambioDeTiempo($event)"
                     (change)="actualizarElValorDeLaTienda('cantidad', 'number')" />
             </div>
 
@@ -180,16 +177,10 @@
 
         <div class="row mt-5">
             <div class="col-md-6 d-flex align-items-center">
-                <div class="form-check me-3">
-                    <input type="radio" class="form-check-input" [value]="true" formControlName="modoCantidad"
-                        (change)="actualizarElValorDeLaTienda('usoEspecifico', 'boolean')" />
-                    <label class="form-check-label">Numérico</label>
-                </div>
-                <div class="form-check">
-                    <input type="radio" class="form-check-input" [value]="false" formControlName="modoCantidad"
-                        (change)="actualizarElValorDeLaTienda('usoEspecifico', 'boolean')" />
-                    <label class="form-check-label">Rangos</label>
-                </div>
+                <app-input-radio [radioOptions]="radioOpcions"
+                    (valueChange)="actualizarElValorDeLaTienda('usoEspecifico', 'boolean')" id="modoCantidad"
+                    [layout]="'horizontal'" formControlName="modoCantidad" [isRequired]="true">
+                </app-input-radio>
             </div>
         </div>
 

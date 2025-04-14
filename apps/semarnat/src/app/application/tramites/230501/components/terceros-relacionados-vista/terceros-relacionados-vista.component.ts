@@ -135,26 +135,9 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe((tramiteState) => {
         this.tramiteState = tramiteState;
-      });
-    // Obtener datos de destinatarios finales y suscribirse al observable
-    this.tramiteQuery.getDestinatarioFinalTablaDatos$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((data) => {
-        this.destinatarioFinalTablaDatos = data;
-      });
-
-    // Obtener datos de representantes y suscribirse al observable
-    this.tramiteQuery.getRepresentanteTablaDatos$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((data) => {
-        this.representanteLegalTablaDatos = data;
-      });
-
-    // Obtener datos de usuarios finales y suscribirse al observable
-    this.tramiteQuery.getUsuarioTablaDatos$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((data) => {
-        this.usuarioTablaDatos = data;
+        this.destinatarioFinalTablaDatos = tramiteState.destinatarioFinalTablaDatos;
+        this.representanteLegalTablaDatos = tramiteState.representanteLegalTablaDatos;
+        this.usuarioTablaDatos = tramiteState.usuarioTablaDatos;
       });
     this.pestanaValidar();
   }
@@ -265,6 +248,7 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
    */
   ngOnDestroy(): void {
     this.destroy$.next();
+    this.destroy$.complete();
   }
 
   /**

@@ -1,10 +1,11 @@
-import { Catalogo, CatalogoSelectComponent, ConfiguracionColumna, TablaDinamicaComponent, TablaSeleccion, TipoPersona, TituloComponent } from '@ng-mf/data-access-user';
+import { Catalogo, CatalogoSelectComponent, ConfiguracionColumna, InputRadioComponent, TablaDinamicaComponent, TablaSeleccion, TipoPersona, TituloComponent } from '@ng-mf/data-access-user';
 import { CommonModule, Location } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 import { USO_TABLA, Uso, UsoFinal } from '../../models/terceros-relacionados.model';
 import { MaterialesPeligrososService } from '../../services/materiales-peligrosos.service';
+import { OPCIONES_DE_BOTON_DE_RADIO } from '../../constantes/materiales-peligrosos.enum';
 import { Tramite230501Query } from '../../estados/queries/tramite230501Query.query';
 import { Tramite230501Store } from '../../estados/stores/tramite230501Store.store';
 
@@ -16,6 +17,7 @@ import { Tramite230501Store } from '../../estados/stores/tramite230501Store.stor
     ReactiveFormsModule,
     CatalogoSelectComponent,
     TituloComponent,
+    InputRadioComponent,
     TablaDinamicaComponent
   ],
   providers: [MaterialesPeligrososService],
@@ -23,7 +25,7 @@ import { Tramite230501Store } from '../../estados/stores/tramite230501Store.stor
   styleUrl: './uso-final.component.scss',
 })
 export class UsoFinalComponent implements OnDestroy, OnInit {
-  
+
   /**
    * Enum TipoPersona utilizado para seleccionar el tipo de persona (Física o Moral).
    * @property {TipoPersona} tipoPersona
@@ -34,13 +36,13 @@ export class UsoFinalComponent implements OnDestroy, OnInit {
    * Formulario reactivo para capturar los datos del usuario final.
    * @property {FormGroup} usuarioFinalForm
    */
-  usuarioFinalForm: FormGroup;
+  usuarioFinalForm!: FormGroup;
 
   /**
    * Formulario reactivo para capturar los datos del uso final.
    * @property {FormGroup} usoFinalForm
    */
-  usoFinalForm: FormGroup;
+  usoFinalForm!: FormGroup;
 
   /**
    * Subject utilizado para desuscribirse automáticamente de observables al destruir el componente.
@@ -99,6 +101,13 @@ export class UsoFinalComponent implements OnDestroy, OnInit {
   public esElModoDeEdicion = false;
 
   /**
+   * @public
+   * @description Propiedad que almacena las opciones para el botón de radio.
+   * @command Opciones definidas en la constante OPCIONES_DE_BOTON_DE_RADIO.
+   */
+  public radioOpcions = OPCIONES_DE_BOTON_DE_RADIO;
+
+  /**
    * Constructor que inicializa el formulario y servicios necesarios.
    *
    * @param {FormBuilder} fb - FormBuilder para construir el formulario reactivo.
@@ -114,72 +123,48 @@ export class UsoFinalComponent implements OnDestroy, OnInit {
     private tramiteStore: Tramite230501Store,
     public tramiteQuery: Tramite230501Query,
   ) {
-    // Inicialización del formulario para usuario final
-    this.usuarioFinalForm = this.fb.group({
-      tipoPersona: ['Fisica', Validators.required],
-      nombres: ['', Validators.required],
-      denominacionRazon: [''],
-      primerApellido: [''],
-      segundoApellido: [''],
-      pais: ['', Validators.required],
-      estadoLocalidad: ['', Validators.required],
-      municipio: [''],
-      localidad: [''],
-      codigoPostal: ['', Validators.required],
-      colonia: [''],
-      calle: ['', Validators.required],
-      numeroExterior: ['', Validators.required],
-      numeroInterior: [''],
-      lada: ['', Validators.required],
-      telefono: ['', Validators.required],
-      correoElectronico: ['', [Validators.required, Validators.email]],
-    });
 
-    // Inicialización del formulario para uso final
-    this.usoFinalForm = this.fb.group({
-      descripcion: ['', Validators.required],
-      pais: ['', Validators.required],
-    });
+    //No hacer nada
+
   }
-    /**
-   * Método que se suscribe a los cambios en el campo `tipoPersona` del formulario.
-   * Dependiendo del valor seleccionado, establece o elimina las validaciones de otros campos.
-   * @method onTipoPersonaChange
-   * @returns {void}
-   */
-    onTipoPersonaChange() : void{
-      this.usuarioFinalForm.get('tipoPersona')?.valueChanges.subscribe(value => {
-        const IS_FISICA = value === 'FISICA' || value === this.tipoPersona.FISICA;
-        const NOMBRES = this.usuarioFinalForm.get('nombres');
-        const PRIMER_APELLIDO = this.usuarioFinalForm.get('primerApellido');
-        const SEGUNDO_APELLIDO = this.usuarioFinalForm.get('segundoApellido');
-        const DENOMINACION_RAZON = this.usuarioFinalForm.get('denominacionRazon');
-          
-        if (IS_FISICA) {
-          NOMBRES?.setValidators([Validators.required]);
-          PRIMER_APELLIDO?.setValidators([Validators.required]);
-          SEGUNDO_APELLIDO?.setValidators([Validators.required]);
-          DENOMINACION_RAZON?.clearValidators();
-        } else {
-          NOMBRES?.clearValidators();
-          PRIMER_APELLIDO?.clearValidators();
-          SEGUNDO_APELLIDO?.clearValidators();
-          DENOMINACION_RAZON?.setValidators([Validators.required]);
-        }
-    
-        NOMBRES?.updateValueAndValidity();
-        PRIMER_APELLIDO?.updateValueAndValidity();
-        SEGUNDO_APELLIDO?.updateValueAndValidity();
-        DENOMINACION_RAZON?.updateValueAndValidity();
-      });
+  /**
+ * Método que se suscribe a los cambios en el campo `tipoPersona` del formulario.
+ * Dependiendo del valor seleccionado, establece o elimina las validaciones de otros campos.
+ * @method usuarioFinalForm
+ * @returns {void}
+ */
+  onTipoPersonaChange(value: string): void {
+    const IS_FISICA = value === 'FISICA' || value === this.tipoPersona.FISICA;
+    const NOMBRES = this.usuarioFinalForm.get('nombres');
+    const PRIMER_APELLIDO = this.usuarioFinalForm.get('primerApellido');
+    const SEGUNDO_APELLIDO = this.usuarioFinalForm.get('segundoApellido');
+    const DENOMINACION_RAZON = this.usuarioFinalForm.get('denominacionRazon');
+    if (IS_FISICA) {
+      NOMBRES?.setValidators([Validators.required]);
+      PRIMER_APELLIDO?.setValidators([Validators.required]);
+      SEGUNDO_APELLIDO?.setValidators([Validators.required]);
+      DENOMINACION_RAZON?.clearValidators();
+    } else {
+      NOMBRES?.clearValidators();
+      PRIMER_APELLIDO?.clearValidators();
+      SEGUNDO_APELLIDO?.clearValidators();
+      DENOMINACION_RAZON?.setValidators([Validators.required]);
     }
-  
+
+    NOMBRES?.updateValueAndValidity();
+    PRIMER_APELLIDO?.updateValueAndValidity();
+    SEGUNDO_APELLIDO?.updateValueAndValidity();
+    DENOMINACION_RAZON?.updateValueAndValidity();
+  }
+
 
   /**
    * Hook de inicialización del componente. Carga los catálogos necesarios.
    */
   ngOnInit(): void {
-    this.onTipoPersonaChange();
+    this.createUsuarioFinalForm();
+    this.createUsoFinalForm()
+    this.onTipoPersonaChange(this.tipoPersona.FISICA);
     this.cargarDatos();
 
     // Suscripción a datos de uso final desde el store
@@ -193,16 +178,16 @@ export class UsoFinalComponent implements OnDestroy, OnInit {
     this.tramiteStore.usuarioSujeto
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(usuario => {
-      if (usuario) {
-        this.usuarioFinalForm.patchValue(usuario);
-      }
-    });
-    
+        if (usuario) {
+          this.usuarioFinalForm.patchValue(usuario);
+        }
+      });
+
     // Suscripción para obtener el estado de edición del usuario final
     this.tramiteQuery.esUsuarioElModoDeEdicion$.pipe(takeUntil(this.unsubscribe$))
-    .subscribe(modo => {
-      this.esElModoDeEdicion = modo;
-    });
+      .subscribe(modo => {
+        this.esElModoDeEdicion = modo;
+      });
   }
 
   /**
@@ -226,13 +211,12 @@ export class UsoFinalComponent implements OnDestroy, OnInit {
       segundoApellido: this.usuarioFinalForm.value.segundoApellido,
       primerApellido: this.usuarioFinalForm.value.primerApellido,
       nombres: this.usuarioFinalForm.value.nombres,
-      nombreRazonSocial: `${this.usuarioFinalForm.value.nombres} ${
-        this.usuarioFinalForm.value.primerApellido
-      } ${this.usuarioFinalForm.value.segundoApellido || ''}`.trim(),
+      nombreRazonSocial: `${this.usuarioFinalForm.value.nombres} ${this.usuarioFinalForm.value.primerApellido
+        } ${this.usuarioFinalForm.value.segundoApellido || ''}`.trim(),
       rfc: this.usuarioFinalForm.value.rfc,
       curp: '',
-      lada:this.usuarioFinalForm.value.lada,
-      telefono:this.usuarioFinalForm.value.telefono,
+      lada: this.usuarioFinalForm.value.lada,
+      telefono: this.usuarioFinalForm.value.telefono,
       correoElectronico: this.usuarioFinalForm.value.correoElectronico,
       calle: this.usuarioFinalForm.value.calle,
       numeroExterior: this.usuarioFinalForm.value.numeroExterior,
@@ -259,6 +243,43 @@ export class UsoFinalComponent implements OnDestroy, OnInit {
       this.usuarioFinalForm.reset();
       this.ubicaccion.back();
     }
+  }
+
+  /**
+   * Crea el formulario reactivo `usuarioFinalForm` con los campos necesarios y sus validaciones.
+   * @returns {void}
+   */
+  createUsuarioFinalForm(): void {
+    this.usuarioFinalForm = this.fb.group({
+      tipoPersona: ['Fisica', Validators.required],
+      nombres: ['', Validators.required],
+      denominacionRazon: [''],
+      primerApellido: [''],
+      segundoApellido: [''],
+      pais: ['', Validators.required],
+      estadoLocalidad: ['', Validators.required],
+      municipio: [''],
+      localidad: [''],
+      codigoPostal: ['', Validators.required],
+      colonia: [''],
+      calle: ['', Validators.required],
+      numeroExterior: ['', Validators.required],
+      numeroInterior: [''],
+      lada: ['', Validators.required],
+      telefono: ['', Validators.required],
+      correoElectronico: ['', [Validators.required, Validators.email]],
+    });
+  }
+
+  /**
+ * Crea el formulario reactivo `usoFinalForm` con los campos necesarios y sus validaciones.
+ * @returns {void}
+ */
+  createUsoFinalForm(): void {
+    this.usoFinalForm = this.fb.group({
+      descripcion: ['', Validators.required],
+      pais: ['', Validators.required],
+    });
   }
 
   /**
@@ -337,14 +358,14 @@ export class UsoFinalComponent implements OnDestroy, OnInit {
     this.tramiteStore.updateUsoFinalTabla(newUso);
   }
 
-    /**
- * Establece el estado de validación del formulario de representanteLegal.
- * 
- * @param valida - Un valor booleano que indica si el formulario de datos del representante es válido.
- */
- setFormValida(valida: boolean): void {
-  this.tramiteStore.setFormValida({ UsuarioFinal: valida });
-}
+  /**
+* Establece el estado de validación del formulario de representanteLegal.
+* 
+* @param valida - Un valor booleano que indica si el formulario de datos del representante es válido.
+*/
+  setFormValida(valida: boolean): void {
+    this.tramiteStore.setFormValida({ UsuarioFinal: valida });
+  }
 
   /**
    * Hook de destrucción del componente. Libera recursos y detiene suscripciones.

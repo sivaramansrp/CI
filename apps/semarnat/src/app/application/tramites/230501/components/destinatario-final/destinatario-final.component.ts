@@ -1,4 +1,4 @@
-import { Catalogo, CatalogoSelectComponent, TipoPersona, TituloComponent } from '@ng-mf/data-access-user';
+import { Catalogo, CatalogoSelectComponent, InputRadioComponent, TipoPersona, TituloComponent } from '@ng-mf/data-access-user';
 import { CommonModule, Location } from '@angular/common';
 import {
   Component,
@@ -16,9 +16,9 @@ import {
 import { Subject, takeUntil } from 'rxjs';
 import { Destinatario } from '../../models/terceros-relacionados.model';
 import { MaterialesPeligrososService } from '../../services/materiales-peligrosos.service';
+import { OPCIONES_DE_BOTON_DE_RADIO } from '../../constantes/materiales-peligrosos.enum';
 import { Tramite230501Query } from '../../estados/queries/tramite230501Query.query';
 import { Tramite230501Store } from '../../estados/stores/tramite230501Store.store';
-
 /**
  * Componente para agregar un destinatario final (Destinatario) al formulario y almacenarlo.
  *
@@ -33,12 +33,14 @@ import { Tramite230501Store } from '../../estados/stores/tramite230501Store.stor
     ReactiveFormsModule,
     CatalogoSelectComponent,
     TituloComponent,
+    InputRadioComponent,
   ],
   providers: [MaterialesPeligrososService],
   templateUrl: './destinatario-final.component.html',
   styleUrl: './destinatario-final.component.scss',
 })
 export class DestinatarioFinalComponent implements OnDestroy, OnInit {
+
 
   /**
    * Subject utilizado para gestionar la desuscripción de observables.
@@ -52,7 +54,7 @@ export class DestinatarioFinalComponent implements OnDestroy, OnInit {
    * Grupo de formulario reactivo para recopilar los datos del destinatario final.
    * @property {FormGroup} agregarDestinatarioFinal
    */
-  agregarDestinatarioFinal: FormGroup;
+  agregarDestinatarioFinal!: FormGroup;
 
   /**
    * Datos de catálogo de países.
@@ -98,6 +100,13 @@ export class DestinatarioFinalComponent implements OnDestroy, OnInit {
   public tipoPersona = TipoPersona;
 
   /**
+   * @public
+   * @description Propiedad que almacena las opciones para el botón de radio.
+   * @command Opciones definidas en la constante OPCIONES_DE_BOTON_DE_RADIO.
+   */
+  public radioOpcions = OPCIONES_DE_BOTON_DE_RADIO;
+
+  /**
    * Arreglo que almacena la lista de destinatarios.
    * @property {Destinatario[]} destinatarios
    */
@@ -132,25 +141,7 @@ export class DestinatarioFinalComponent implements OnDestroy, OnInit {
     public tramiteStore: Tramite230501Store,
     public tramiteQuery: Tramite230501Query,
   ) {
-    this.agregarDestinatarioFinal = this.fb.group({
-      tipoPersona: ['Fisica', Validators.required],
-      nombres: ['', Validators.required],
-      denominacionRazon: [''],
-      primerApellido: [''],
-      segundoApellido: [''],
-      pais: ['', Validators.required],
-      estadoLocalidad: ['', Validators.required],
-      municipio: [''],
-      localidad: [''],
-      codigoPostal: ['', Validators.required],
-      colonia: [''],
-      calle: ['', Validators.required],
-      numeroExterior: ['', Validators.required],
-      numeroInterior: [''],
-      lada: ['', Validators.required],
-      telefono: ['', Validators.required],
-      correoElectronico: ['', [Validators.required, Validators.email]],
-    });
+    // No hacer nada
   }
 
   /**
@@ -164,13 +155,12 @@ export class DestinatarioFinalComponent implements OnDestroy, OnInit {
       segundoApellido: this.agregarDestinatarioFinal.value.segundoApellido,
       primerApellido: this.agregarDestinatarioFinal.value.primerApellido,
       nombres: this.agregarDestinatarioFinal.value.nombres,
-      nombreRazonSocial: `${this.agregarDestinatarioFinal.value.nombres} ${
-        this.agregarDestinatarioFinal.value.primerApellido
-      } ${this.agregarDestinatarioFinal.value.segundoApellido || ''}`.trim(),
+      nombreRazonSocial: `${this.agregarDestinatarioFinal.value.nombres} ${this.agregarDestinatarioFinal.value.primerApellido
+        } ${this.agregarDestinatarioFinal.value.segundoApellido || ''}`.trim(),
       rfc: this.agregarDestinatarioFinal.value.rfc,
       curp: '',
-      lada:this.agregarDestinatarioFinal.value.lada,
-      telefono:this.agregarDestinatarioFinal.value.telefono,
+      lada: this.agregarDestinatarioFinal.value.lada,
+      telefono: this.agregarDestinatarioFinal.value.telefono,
       correoElectronico: this.agregarDestinatarioFinal.value.correoElectronico,
       calle: this.agregarDestinatarioFinal.value.calle,
       numeroExterior: this.agregarDestinatarioFinal.value.numeroExterior,
@@ -185,7 +175,7 @@ export class DestinatarioFinalComponent implements OnDestroy, OnInit {
       coloniaEquivalente: this.agregarDestinatarioFinal.value.codie,
       tipoPersona: this.agregarDestinatarioFinal.value.tipoPersona,
     };
-    
+
     if (this.agregarDestinatarioFinal.valid) {
       this.setFormValida(this.agregarDestinatarioFinal.valid);
       this.destinatarios.push(NUEVO_DESTINATARIO);
@@ -226,17 +216,17 @@ export class DestinatarioFinalComponent implements OnDestroy, OnInit {
    * @returns {void}
    */
   ngOnInit(): void {
-    this.onTipoPersonaChange();
-
+    this.createrDestinatrioForm();
+    this.onTipoPersonaChange(this.tipoPersona.FISICA);
     this.cargarDatos();
     // Suscribirse a los cambios en la lista de destinatarios finales
     this.tramiteStore.destinatarioSujeto
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(destinatario => {
-      if (destinatario) {
-        this.agregarDestinatarioFinal.patchValue(destinatario);
-      }
-    });
+        if (destinatario) {
+          this.agregarDestinatarioFinal.patchValue(destinatario);
+        }
+      });
 
     // Suscribirse a los cambios en el estado del modo de edición
     this.tramiteQuery.esDestinatarioFinalElModoDeEdicion$.pipe(takeUntil(this.unsubscribe$))
@@ -251,31 +241,28 @@ export class DestinatarioFinalComponent implements OnDestroy, OnInit {
    * @method onTipoPersonaChange
    * @returns {void}
    */
-  onTipoPersonaChange() : void{
-    this.agregarDestinatarioFinal.get('tipoPersona')?.valueChanges.subscribe(value => {
-      const IS_FISICA = value === 'FISICA' || value === this.tipoPersona.FISICA;
-      const NOMBRES = this.agregarDestinatarioFinal.get('nombres');
-      const PRIMER_APELLIDO = this.agregarDestinatarioFinal.get('primerApellido');
-      const SEGUNDO_APELLIDO = this.agregarDestinatarioFinal.get('segundoApellido');
-      const DENOMINACION_RAZON = this.agregarDestinatarioFinal.get('denominacionRazon');
-        
-      if (IS_FISICA) {
-        NOMBRES?.setValidators([Validators.required]);
-        PRIMER_APELLIDO?.setValidators([Validators.required]);
-        SEGUNDO_APELLIDO?.setValidators([Validators.required]);
-        DENOMINACION_RAZON?.clearValidators();
-      } else {
-        NOMBRES?.clearValidators();
-        PRIMER_APELLIDO?.clearValidators();
-        SEGUNDO_APELLIDO?.clearValidators();
-        DENOMINACION_RAZON?.setValidators([Validators.required]);
-      }
-  
-      NOMBRES?.updateValueAndValidity();
-      PRIMER_APELLIDO?.updateValueAndValidity();
-      SEGUNDO_APELLIDO?.updateValueAndValidity();
-      DENOMINACION_RAZON?.updateValueAndValidity();
-    });
+  onTipoPersonaChange(value: string): void {
+    const IS_FISICA = value === 'FISICA' || value === this.tipoPersona.FISICA;
+    const NOMBRES = this.agregarDestinatarioFinal.get('nombres');
+    const PRIMER_APELLIDO = this.agregarDestinatarioFinal.get('primerApellido');
+    const SEGUNDO_APELLIDO = this.agregarDestinatarioFinal.get('segundoApellido');
+    const DENOMINACION_RAZON = this.agregarDestinatarioFinal.get('denominacionRazon');
+    if (IS_FISICA) {
+      NOMBRES?.setValidators([Validators.required]);
+      PRIMER_APELLIDO?.setValidators([Validators.required]);
+      SEGUNDO_APELLIDO?.setValidators([Validators.required]);
+      DENOMINACION_RAZON?.clearValidators();
+    } else {
+      NOMBRES?.clearValidators();
+      PRIMER_APELLIDO?.clearValidators();
+      SEGUNDO_APELLIDO?.clearValidators();
+      DENOMINACION_RAZON?.setValidators([Validators.required]);
+    }
+
+    NOMBRES?.updateValueAndValidity();
+    PRIMER_APELLIDO?.updateValueAndValidity();
+    SEGUNDO_APELLIDO?.updateValueAndValidity();
+    DENOMINACION_RAZON?.updateValueAndValidity();
   }
 
   /**
@@ -347,15 +334,42 @@ export class DestinatarioFinalComponent implements OnDestroy, OnInit {
     this.ubicaccion.back();
   }
 
- /**
- * Establece el estado de validación del formulario de destinatario.
- * 
- * @param valida - Un valor booleano que indica si el formulario de datos del destinatario es válido.
- */
- setFormValida(valida: boolean): void {
-  this.tramiteStore.setFormValida({ destinatarioFinal: valida });
-}
+  /**
+  * Establece el estado de validación del formulario de destinatario.
+  * 
+  * @param valida - Un valor booleano que indica si el formulario de datos del destinatario es válido.
+  */
+  setFormValida(valida: boolean): void {
+    this.tramiteStore.setFormValida({ destinatarioFinal: valida });
+  }
 
+  /**
+   * Crea el formulario reactivo para agregar un destinatario final.
+   * Define los campos y sus validaciones iniciales.
+   * @method createrDestinatrioForm
+   * @returns {void}
+   */
+  createrDestinatrioForm(): void {
+    this.agregarDestinatarioFinal = this.fb.group({
+      tipoPersona: ['Fisica', Validators.required],
+      nombres: ['', Validators.required],
+      denominacionRazon: [''],
+      primerApellido: [''],
+      segundoApellido: [''],
+      pais: ['', Validators.required],
+      estadoLocalidad: ['', Validators.required],
+      municipio: [''],
+      localidad: [''],
+      codigoPostal: ['', Validators.required],
+      colonia: [''],
+      calle: ['', Validators.required],
+      numeroExterior: ['', Validators.required],
+      numeroInterior: [''],
+      lada: ['', Validators.required],
+      telefono: ['', Validators.required],
+      correoElectronico: ['', [Validators.required, Validators.email]],
+    });
+  }
 
   /**
    * Método del ciclo de vida de Angular que se llama justo antes de que el componente sea destruido.

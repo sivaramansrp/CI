@@ -166,3 +166,35 @@ export const INFO_GENERAL_VALIDO_CONTROL = [
   'fraccionArancelaria',
   'numeroCas',
   ];
+
+  /**
+   * @constant OPCIONES_DE_BOTON_DE_RADIO
+   * 
+   * @description
+   * Contiene las opciones para un botón de radio, representadas como un arreglo de objetos.
+   * Cada objeto incluye una etiqueta (`label`) y un valor (`value`).
+   * 
+   * @comando
+   * Utilizar esta constante para inicializar o configurar componentes de botones de radio
+   * en la interfaz de usuario.
+   */
+  export const OPCIONES_DE_BOTON_DE_RADIO = [
+    {
+      label: 'Fisica',
+      value: 'Fisica',
+    },
+    {
+      label: 'Moral',
+      value: 'Moral',
+    }
+  ];
+export const OPCIONES_DE_BOTON_DE_RADIO_CONTENEDOR = [
+  {
+    label: 'Numérico',
+    value: 'Numérico',
+  },
+  {
+    label: 'Rangos',
+    value: 'Rangos',
+  }
+]

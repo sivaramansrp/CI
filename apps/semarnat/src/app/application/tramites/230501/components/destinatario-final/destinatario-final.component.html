@@ -7,13 +7,16 @@
       <div class="col-md-6 offset-md-6">
         <label class="form-label">Tipo persona*:</label>
         <div class="form-check">
-          <input type="radio" class="form-check-input" formControlName="tipoPersona" [value]="tipoPersona.FISICA" />
-          Física
-        </div>
-        <div class="form-check">
-          <input type="radio" class="form-check-input" formControlName="tipoPersona" value="Moral" />
-          Moral
-        </div>
+          <app-input-radio
+            [radioOptions]="radioOpcions"
+            (valueChange)="onTipoPersonaChange('tipoPersona')"
+            id="tipoPersona"
+            [layout]="'vertical'"
+            formControlName="tipoPersona"
+            [isRequired]="true"
+          >
+          </app-input-radio>
+          </div>
       </div>
     </div>
 

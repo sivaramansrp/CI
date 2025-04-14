@@ -99,6 +99,8 @@ describe('PagoDeDerechosComponent', () => {
     component.pagoDerechos.get = jest.fn().mockReturnValue({
       value: {}
     });
+    component.pagoDerechos.valid = 'valid';
+    component.setFormValida = jest.fn();
     component.tramite230501Store = component.tramite230501Store || {};
     component.tramite230501Store.setPagoDerechosStateProperty = jest.fn();
     component.clasificacionSeleccione();

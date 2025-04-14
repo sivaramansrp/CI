@@ -78,7 +78,11 @@ describe('UsoFinalComponent', () => {
   });
 
   it('should run #ngOnInit()', async () => {
+    component.createUsuarioFinalForm = jest.fn();
+    component.createUsoFinalForm = jest.fn();
     component.onTipoPersonaChange = jest.fn();
+    component.tipoPersona = component.tipoPersona || {};
+    component.tipoPersona.FISICA = 'FISICA';
     component.cargarDatos = jest.fn();
     component.tramiteQuery = component.tramiteQuery || {};
     component.tramiteQuery.getusoTablaDatos$ = observableOf({});

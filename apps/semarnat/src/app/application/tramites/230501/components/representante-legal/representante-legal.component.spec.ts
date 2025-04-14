@@ -81,6 +81,8 @@ describe('RepresentanteLegalComponent', () => {
 
   it('should run #ngOnInit()', async () => {
     component.onTipoPersonaChange = jest.fn();
+    component.tipoPersona = component.tipoPersona || {};
+    component.tipoPersona.FISICA = 'FISICA';
     component.cargarDatos = jest.fn();
     component.tramiteStore = component.tramiteStore || {};
     component.tramiteStore.representanteSujeto = observableOf({});

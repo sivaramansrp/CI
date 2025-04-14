@@ -114,7 +114,10 @@ declarations: [],
   });
 
   it('should run #ngOnInit()', async () => {
+    component.createrDestinatrioForm = jest.fn();
     component.onTipoPersonaChange = jest.fn();
+    component.tipoPersona = component.tipoPersona || {};
+    component.tipoPersona.FISICA = 'FISICA';
     component.cargarDatos = jest.fn();
     component.tramiteStore = component.tramiteStore || {};
     component.tramiteStore.destinatarioSujeto = observableOf({});
@@ -123,6 +126,7 @@ declarations: [],
     component.tramiteQuery = component.tramiteQuery || {};
     component.tramiteQuery.esDestinatarioFinalElModoDeEdicion$ = observableOf({});
     component.ngOnInit();
+    expect(component.createrDestinatrioForm).toHaveBeenCalled();
     expect(component.onTipoPersonaChange).toHaveBeenCalled();
     expect(component.cargarDatos).toHaveBeenCalled();
     expect(component.agregarDestinatarioFinal.patchValue).toHaveBeenCalled();

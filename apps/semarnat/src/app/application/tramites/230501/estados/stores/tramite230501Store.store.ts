@@ -9,18 +9,84 @@ import { Injectable } from '@angular/core';
  * @description Define el estado para el trámite 230501, incluyendo datos de tablas, formularios y configuraciones.
  */
 export interface Tramite230501State {
+  /**
+   * @property pagoDerechosState
+   * @description Estado que contiene los datos relacionados con el pago de derechos del trámite.
+   */
   pagoDerechosState: PagoDerechosState;
+
+  /**
+   * @property datosSolicitudFormType
+   * @description Contiene los datos capturados en el formulario principal de solicitud.
+   */
   datosSolicitudFormType: DatosSolicitudFormType;
+
+  /**
+   * @property opcionesColapsableState
+   * @description Determina si el panel de opciones colapsables se encuentra abierto o cerrado.
+   */
   opcionesColapsableState: boolean;
+
+  /**
+   * @property numeroCasTablaDatos
+   * @description Lista de datos relacionados con los números CAS (Chemical Abstracts Service).
+   */
   numeroCasTablaDatos: TablaNumeroCasType[];
+
+  /**
+   * @property composicionTablaDatos
+   * @description Lista que representa la composición química del material peligroso.
+   */
   composicionTablaDatos: ComposicionMaterial[];
+
+  /**
+   * @property destinatarioFinalTablaDatos
+   * @description Lista de destinatarios finales del material peligroso.
+   */
   destinatarioFinalTablaDatos: Destinatario[];
+
+  /**
+   * @property esDestinatarioFinalElModoDeEdicion
+   * @description Indica si el formulario de destinatario final está en modo edición.
+   */
   esDestinatarioFinalElModoDeEdicion: boolean;
+
+  /**
+   * @property usuarioTablaDatos
+   * @description Lista de usuarios finales del material peligroso.
+   */
   usuarioTablaDatos: UsoFinal[];
+
+  /**
+   * @property esUsuarioElModoDeEdicion
+   * @description Indica si el formulario de usuario final está en modo edición.
+   */
   esUsuarioElModoDeEdicion: boolean;
+
+  /**
+   * @property usoTablaDatos
+   * @description Lista de usos específicos asignados al material peligroso.
+   */
   usoTablaDatos: Uso[];
+
+  /**
+   * @property representanteLegalTablaDatos
+   * @description Lista de representantes legales involucrados en el trámite.
+   */
   representanteLegalTablaDatos: Representante[];
+
+  /**
+   * @property esRepresentanteLegalElModoDeEdicion
+   * @description Indica si el formulario de representante legal está en modo edición.
+   */
   esRepresentanteLegalElModoDeEdicion: boolean;
+
+  /**
+   * @property formaValida
+   * @description Mapa de validaciones que indica el estado de validez de diferentes secciones del formulario.
+   * Las claves representan las secciones y los valores son booleanos que indican si esa sección es válida.
+   * Ejemplos de claves: `destinatarioFinal`, `representanteLegal`, `UsuarioFinal`, `composicionForm`, `datosSolicitudForm`, `pagoDeDerechos`, `formularioTotal`.
+   */
   formaValida: { [key: string]: boolean };
 }
 
