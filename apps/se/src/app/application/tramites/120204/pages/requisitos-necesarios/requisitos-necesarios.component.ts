@@ -11,11 +11,11 @@ import { Component } from '@angular/core';
  * @style ./requisitos-necessarios.component.scss
  */
 @Component({
-  selector: 'app-requisitos-necessarios',
-  templateUrl: './requisitos-necessarios.component.html',
-  styleUrl: './requisitos-necessarios.component.scss',
+  selector: 'app-requisitos-necesarios',
+  templateUrl: './requisitos-necesarios.component.html',
+  styleUrl: './requisitos-necesarios.component.scss',
 })
-export class RequisitosNecessariosComponent {
+export class RequisitosNecesariosComponent {
 
 
 }

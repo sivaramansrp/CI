@@ -1,8 +1,8 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { ExpedicionCertificadoService } from './expedicionCertificado.service';
+import { ExpedicionCertificadoService } from './expedicion-certificado.service';
 import { Catalogo } from '@libs/shared/data-access-user/src';
-import { detalledelaLicitacion, distribucionSaldo, licitacionesDisponibles } from '../../../shared/models/ExpedicionCertificado.model';
+import { DetalledelaLicitacion, DistribucionSaldo, LicitacionesDisponibles } from '../../../shared/models/expedicion-certificado.model';
 
 describe('ExpedicionCertificadoService', () => {
   let service: ExpedicionCertificadoService;
@@ -51,7 +51,7 @@ describe('ExpedicionCertificadoService', () => {
   });
 
   it('should fetch detalles de la licitacion data', () => {
-    const mockResponse: detalledelaLicitacion = {
+    const mockResponse: DetalledelaLicitacion = {
       "numeraDelicitacion":"002/2024",
       "fechaDelEventoDelicitacion":"2024-03-22",
       "descripcionDelProducto":"PANTALONES CON PETO Y TIRANTI 100% ALGODON"    
@@ -67,7 +67,7 @@ describe('ExpedicionCertificadoService', () => {
   });
 
   it('should fetch distribucion saldo data', () => {
-    const mockResponse: distribucionSaldo = {
+    const mockResponse: DistribucionSaldo = {
       "montoAExpedir":"",
       "montoAExpedirCheck":false,
       "montoDisponible":"9985",
@@ -84,16 +84,16 @@ describe('ExpedicionCertificadoService', () => {
   });
 
   it('should fetch table data', () => {
-    const mockResponse: licitacionesDisponibles = {
-      "numerodelicitacion":"002/2024 ",
-      "fechadelicitacion":"2024-03-22 ",
+    const mockResponse: LicitacionesDisponibles = {
+      "numeroDeLicitacion":"002/2024 ",
+      "fechaDeLicitacion":"2024-03-22 ",
       "descripcion":"",
-      "montoadjudicado":"9985",
-      "fechainiciovigencia":"2024-03-01",
-      "fechafinvigencia":"2024-12-31"
+      "montoAdjudicado":"9985",
+      "fechaInicioVigencia":"2024-03-01",
+      "fechaFinVigencia":"2024-12-31"
   };
 
-    service.getTableData().subscribe((data) => {
+    service.obtenerDatosTabla().subscribe((data) => {
       expect(data).toEqual(mockResponse);
     });
 

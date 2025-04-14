@@ -1,10 +1,10 @@
  [
     {
-      "numerodelicitacion":"002/2024 ",
-      "fechadelicitacion":"2024-03-22 ",
+      "numeroDeLicitacion":"002/2024 ",
+      "fechaDeLicitacion":"2024-03-22 ",
       "descripcion":"test",
-      "montoadjudicado":"9985",
-      "fechainiciovigencia":"2024-03-01",
-      "fechafinvigencia":"2024-12-31"
+      "montoAdjudicado":"9985",
+      "fechaInicioVigencia":"2024-03-01",
+      "fechaFinVigencia":"2024-12-31"
     }
   ]

@@ -1,9 +1,9 @@
 
 import { TestBed } from '@angular/core/testing';
-import { CapturarExpedicionCertificadosComponent } from './capturarExpedicionCertificados.component';
+import { CapturarExpedicionCertificadosComponent } from './capturar-expedicion-certificados.component';
 import { FormBuilder } from '@angular/forms';
 import { of, Subject } from 'rxjs';
-import { ExpedicionCertificadoService } from '../../services/expedicionCertificado.service';
+import { ExpedicionCertificadoService } from '../../services/expedicion-certificado.service';
 import { Expedicion120204Store } from '../../estados/tramites/expedicion120204.store';
 import { Expedicion120204Query } from '../../estados/queries/expedicion120204.query';
 
@@ -80,7 +80,7 @@ describe('CapturarExpedicionCertificadosComponent', () => {
     jest.spyOn(component, 'getRepresentacionFederal');
     jest.spyOn(component, 'getDetallesDelalicitacion');
     jest.spyOn(component, 'getDistribucionSaldo');
-    jest.spyOn(component, 'getTabledatas');
+    jest.spyOn(component, 'obtenerDatosTabla');
 
     component.ngOnInit();
 
@@ -88,30 +88,30 @@ describe('CapturarExpedicionCertificadosComponent', () => {
     expect(component.getRepresentacionFederal).toHaveBeenCalled();
     expect(component.getDetallesDelalicitacion).toHaveBeenCalled();
     expect(component.getDistribucionSaldo).toHaveBeenCalled();
-    expect(component.getTabledatas).toHaveBeenCalled();
+    expect(component.obtenerDatosTabla).toHaveBeenCalled();
   });
 
   it('should call setEntidadFederativa on onChangeEntiadFederative', () => {
     component.formulario.get('entidadFederativa')?.setValue('Entidad 1');
-    component.onChangeEntiadFederative();
+    component.onCambiarEntiadFederative();
     expect(expedicion120204StoreMock.setEntidadFederativa).toHaveBeenCalledWith('Entidad 1');
   });
 
   it('should call setRepresentacionFederal on onChangeRepresentacionFederal', () => {
     component.formulario.get('representacionFederal')?.setValue('Representación 1');
-    component.onChangeRepresentacionFederal();
+    component.onCambiarRepresentacionFederal();
     expect(expedicion120204StoreMock.setRepresentacionFederal).toHaveBeenCalledWith('Representación 1');
   });
 
   it('should call setMontoExpedir on onChangeMontoAExpedir', () => {
     component.distribucionSaldoForm.get('montoAExpedir')?.setValue('500');
-    component.onChangeMontoAExpedir();
+    component.onCambiarMontoAExpedir();
     expect(expedicion120204StoreMock.setMontoExpedir).toHaveBeenCalledWith('500');
   });
 
   it('should call setMontoExpedirCheck on onChangeMontoAExpedirCheck', () => {
     component.distribucionSaldoForm.get('montoAExpedirCheck')?.setValue(true);
-    component.onChangeMontoAExpedirCheck();
+    component.onCambiarMontoAExpedirCheck();
     expect(expedicion120204StoreMock.setMontoExpedirCheck).toHaveBeenCalledWith(true);
   });
 

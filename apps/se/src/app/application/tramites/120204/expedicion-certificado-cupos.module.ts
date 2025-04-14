@@ -3,15 +3,13 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-
-import { AnexarRequisitosComponent } from './pages/anexar-requisitos/anexar-requisitos.component';
-import { CapturarExpedicionCertificadosComponent } from './components/capturarExpedicionCertificados/capturarExpedicionCertificados.component';
+import { CapturarExpedicionCertificadosComponent } from './components/capturar-expedicion-certificados/capturar-expedicion-certificados.component';
 import { DatosComponent } from './pages/datos/datos.component';
 import { ExpedicionCertificadoRoutingModule } from './expedicion-certificado-cupos-routing.module';
 import { FirmarSolicitudComponent } from './pages/firmar-solicitud/firmar-solicitud.component';
-import { RequisitosNecessariosComponent } from './pages/requisitos-necessarios/requisitos-necessarios.component';
+import { RequisitosNecesariosComponent } from './pages/requisitos-necesarios/requisitos-necesarios.component';
 import { SolicitanteComponent } from '../../tramites/110101/components/solicitante/solicitante.component';
-import { SolicitudExpedicionPageComponent } from './pages/solicitudExpedicion-page/solicitudExpedicion-page.component';
+import { SolicitudExpedicionPageComponent } from './pages/solicitud-expedicion-page/solicitud-expedicion-page.component';
 
 
 /**
@@ -60,8 +58,7 @@ import { SolicitudExpedicionPageComponent } from './pages/solicitudExpedicion-pa
     DatosComponent,
     FirmarSolicitudComponent,
     SolicitudExpedicionPageComponent,
-    RequisitosNecessariosComponent,
-    AnexarRequisitosComponent
+    RequisitosNecesariosComponent,
 
   ],
   // Importaciones de otros módulos y componentes necesarios para este módulo

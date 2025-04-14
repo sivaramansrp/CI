@@ -13,7 +13,7 @@ import { REQUISITOS } from '../../constantes/expedicion-certificado.enum';
  */
 @Component({
   selector: 'app-solicitud-expedicion',
-  templateUrl: './solicitudExpedicion-page.component.html',
+  templateUrl: './solicitud-expedicion-page.component.html',
 })
 export class SolicitudExpedicionPageComponent {
 

@@ -24,7 +24,7 @@
   <div>
       <h6>Licitaciones disponibles</h6>
       <app-tabla-dinamica [configuracionTabla]="configTableArray"
-      [datos] = "datos"></app-tabla-dinamica>
+      [datos]="datos"></app-tabla-dinamica>
       <div class="col-md-12">
         <!-- Navegación para la paginación -->
         <nav aria-label="Page navigation example">
@@ -97,14 +97,9 @@
             <div class="row">
               <div class="col-md-12">
                   <div class="form-check monto-a-expedir">
-                    <input
-                      type="checkbox"
-                      id="montoAExpedirCheck"
-                      formControlName="montoAExpedirCheck"
-                      class="form-check-input"
-                      (change)="onCambiarMontoAExpedirCheck()"            
-                    />
-                    <label id="montoExpedir" for="montoAExpedirCheck" class="form-check-label">Monto a expedir</label>
+                    <lib-input-check [id]="'montoAExpedirCheck'" [label]="'Monto a expedir'" [required]="false"
+                      formControlName="montoAExpedirCheck" (change)="onCambiarMontoAExpedirCheck()">
+                    </lib-input-check>
                   </div>
                 </div>
                 <div class="text-end">

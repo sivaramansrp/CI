@@ -2,15 +2,16 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder,FormGroup,ReactiveFormsModule,Validators } from '@angular/forms';
 
-import { Observable,Subject,takeUntil } from 'rxjs';
+import {Observable,Subject,map,takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 
-import { AlertComponent,CONFIGURACION_ACCIONISTAS_TABLA,Catalogo,CatalogoSelectComponent,TablaDinamicaComponent,TableComponent,TableData,TituloComponent } from '@ng-mf/data-access-user';
-import {detalledelaLicitacion, distribucionSaldo, licitacionesDisponibles} from '../../../../shared/models/ExpedicionCertificado.model';
+import { AlertComponent,Catalogo,CatalogoSelectComponent,InputCheckComponent,TablaDinamicaComponent,TableComponent,TableData,TituloComponent } from '@ng-mf/data-access-user';
+import {CONFIGURACION_ACCIONISTAS_TABLA,DetalledelaLicitacion, DistribucionSaldo, LicitacionesDisponibles} from '../../../../shared/models/expedicion-certificado.model';
 import { Expedicion120204Query } from '../../estados/queries/expedicion120204.query';
 import { Expedicion120204Store } from '../../estados/tramites/expedicion120204.store';
-import { ExpedicionCertificadoService } from '../../services/expedicionCertificado.service';
-
+import { ExpedicionCertificadoService } from '../../services/expedicion-certificado.service';
+import {REGEX_ALTO} from '@ng-mf/data-access-user'
+ 
 /**
  * Componente para mostrar las licitaciones vigentes.
  *
@@ -20,9 +21,9 @@ import { ExpedicionCertificadoService } from '../../services/expedicionCertifica
 @Component({
   selector: 'app-capturar-expedicion',
   standalone: true,
-  imports: [AlertComponent,CatalogoSelectComponent,CommonModule, ReactiveFormsModule,TablaDinamicaComponent,TableComponent,TituloComponent],
-  templateUrl: './capturarExpedicionCertificados.component.html',
-  styleUrls: ['./capturarExpedicionCertificados.component.scss'],
+  imports: [AlertComponent,CatalogoSelectComponent,CommonModule,InputCheckComponent,ReactiveFormsModule,TablaDinamicaComponent,TableComponent,TituloComponent],
+  templateUrl: './capturar-expedicion-certificados.component.html',
+  styleUrls: ['./capturar-expedicion-certificados.component.scss'],
 })
 export class CapturarExpedicionCertificadosComponent implements OnInit, OnDestroy {
 
@@ -33,7 +34,8 @@ export class CapturarExpedicionCertificadosComponent implements OnInit, OnDestro
   /**
    * Datos de ejemplo para la tabla.
    */
-  datos:licitacionesDisponibles[]=[];
+  
+  datos:LicitacionesDisponibles[]=[];
 
   /**
    * Formulario principal.
@@ -137,6 +139,26 @@ export class CapturarExpedicionCertificadosComponent implements OnInit, OnDestro
    * @param service Servicio para obtener datos de licitaciones disponibles.
    * @param fb Constructor de formularios.
    */
+
+   /**
+   * Notificador utilizado para destruir suscripciones activas en el componente.
+   * Se utiliza comúnmente en el patrón de diseño para evitar fugas de memoria
+   * al desuscribirse de observables cuando el componente se destruye.
+   *
+   * @example
+   * ```typescript
+   * this.someObservable.pipe(
+   *   takeUntil(this.destroyNotifier$)
+   * ).subscribe(data => {
+   *   // Manejo de datos
+   * });
+   * ```
+   *
+   * @see {@link Subject}
+   */
+   public destroyNotifier$: Subject<void> = new Subject();
+
+   
   constructor(private service:ExpedicionCertificadoService,private fb: FormBuilder,
     private expedicion120204Store: Expedicion120204Store, 
     private expedicion120204Query: Expedicion120204Query
@@ -152,10 +174,10 @@ export class CapturarExpedicionCertificadosComponent implements OnInit, OnDestro
     })
     this.distribucionSaldoForm = this.fb.group({
       montoDisponible: [{value:"",disabled: true}, Validators.required],
-      montoAExpedir: ["", [Validators.required,Validators.pattern('^[0-9]*.?[0-9]+$')],],
+      montoAExpedir: ["", [Validators.required,Validators.pattern(REGEX_ALTO)],],
       montoAExpedirCheck: ["", Validators.required],
       totalAExpedir:[{value:"",disabled: true}, [Validators.required,
-        Validators.pattern('^[0-9]*.?[0-9]+$')],]
+        Validators.pattern(REGEX_ALTO)],]
     })
 
   }
@@ -174,40 +196,50 @@ export class CapturarExpedicionCertificadosComponent implements OnInit, OnDestro
   /**
    * Inicializa el formulario con datos del estado.
    */
-    inicializarFormulario():void{
+    inicializarFormulario(){
 
-    this.entidadFederativa$.subscribe((entidadFederativa) => {
+    this.entidadFederativa$.pipe(
+              takeUntil(this.destroyNotifier$),
+              map((entidadFederativa) => {
       if (entidadFederativa) {
         this.formulario.get('entidadFederativa')?.setValue(entidadFederativa);
       }
-    });
+    })).subscribe();
 
-    this.representacionFederal$.subscribe((representacionFederal) => {
+    this.representacionFederal$.pipe(
+      takeUntil(this.destroyNotifier$),
+      map((representacionFederal) => {
       if (representacionFederal) {
         this.formulario.get('representacionFederal')?.setValue(representacionFederal);
       }
-    });
+    })).subscribe();
 
-    this.montoAExpedir$.subscribe((montoAExpedir) => {
+    this.montoAExpedir$.pipe(
+      takeUntil(this.destroyNotifier$),
+      map((montoAExpedir) => {
       if (montoAExpedir) {
         this.distribucionSaldoForm.get('montoAExpedir')?.setValue(montoAExpedir);
       }
 
-    });
+    })).subscribe();
 
-    this.montoAExpedirCheck$.subscribe((montoAExpedirCheck) => {
+    this.montoAExpedirCheck$.pipe(
+      takeUntil(this.destroyNotifier$),
+      map((montoAExpedirCheck) => {
       if (montoAExpedirCheck) {
         this.distribucionSaldoForm.get('montoAExpedirCheck')?.setValue(montoAExpedirCheck);
       }
 
-    });
+    })).subscribe();
 
-    this.totalAExpedir$.subscribe((totalAExpedir) => {
+    this.totalAExpedir$.pipe(
+      takeUntil(this.destroyNotifier$),
+      map((totalAExpedir) => {
       if (totalAExpedir) {
         this.distribucionSaldoForm.get('totalAExpedir')?.setValue(totalAExpedir);
       }
 
-    });
+    })).subscribe();
   }
 
   /**
@@ -268,8 +300,10 @@ ngOnDestroy(): void {
  * @returns {void} No retorna ningún valor.
  */
 getDetallesDelalicitacion():void{
-  this.service.getDetallesDelalicitacion().subscribe(
-    (data:detalledelaLicitacion)=>{
+  this.service.getDetallesDelalicitacion().pipe(
+    takeUntil(this.destroyed$)
+  ).subscribe(
+    (data:DetalledelaLicitacion)=>{
       this.detalledelaLicitacionForm.patchValue({
         numeraDelicitacion:data.numeraDelicitacion,
         fechaDelEventoDelicitacion:data.fechaDelEventoDelicitacion,
@@ -287,9 +321,11 @@ getDetallesDelalicitacion():void{
    * 
    * @returns {void} No retorna ningún valor.
    */
-  obtenerDatosTabla(): void {
-    this.service.obtenerDatosTabla().subscribe(
-      (datos: licitacionesDisponibles) => {
+  obtenerDatosTabla():void {
+    this.service.obtenerDatosTabla().pipe(
+      takeUntil(this.destroyed$)
+    ).subscribe(
+      (datos:LicitacionesDisponibles) => {
         this.datos = Array.isArray(datos) ? datos : [datos];
       }
     );
@@ -308,8 +344,10 @@ getDetallesDelalicitacion():void{
  * @returns {void} Este método no retorna ningún valor.
  */
 getDistribucionSaldo():void{
-  this.service.getDistribucionSaldo().subscribe(
-          (data:distribucionSaldo) => {
+  this.service.getDistribucionSaldo().pipe(
+    takeUntil(this.destroyed$)
+  ).subscribe(
+          (data:DistribucionSaldo) => {
       this.distribucionSaldoForm.patchValue({
         montoDisponible: data.montoDisponible,
     })

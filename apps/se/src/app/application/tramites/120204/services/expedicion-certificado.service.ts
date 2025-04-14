@@ -1,4 +1,4 @@
-import { detalledelaLicitacion, distribucionSaldo, licitacionesDisponibles } from '../../../shared/models/ExpedicionCertificado.model';
+import { DetalledelaLicitacion, DistribucionSaldo, LicitacionesDisponibles } from '../../../shared/models/expedicion-certificado.model';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -41,23 +41,23 @@ export class ExpedicionCertificadoService {
    * Obtiene los detalles de la licitación.
    * @returns Un observable que emite los datos de los detalles de la licitación.
    */
-  getDetallesDelalicitacion(): Observable<detalledelaLicitacion> {
-    return this.http.get<detalledelaLicitacion>('assets/json/120204/detalles-licitacion.json');
+  getDetallesDelalicitacion(): Observable<DetalledelaLicitacion> {
+    return this.http.get<DetalledelaLicitacion>('assets/json/120204/detalles-licitacion.json');
   }
 
   /**
    * Obtiene la distribución del saldo.
    * @returns Un observable que emite los datos de la distribución del saldo.
    */
-  getDistribucionSaldo(): Observable<distribucionSaldo> {
-    return this.http.get<distribucionSaldo>('assets/json/120204/distribucion-saldo.json');
+  getDistribucionSaldo(): Observable<DistribucionSaldo> {
+    return this.http.get<DistribucionSaldo>('assets/json/120204/distribucion-saldo.json');
   }
 
   /**
    * Obtiene los datos de la tabla de licitaciones disponibles.
    * @returns Un observable que emite los datos de la tabla de licitaciones disponibles.
    */
-  obtenerDatosTabla(): Observable<licitacionesDisponibles> {
-    return this.http.get<licitacionesDisponibles>('assets/json/120204/datos-de-la-tabla.json');
+  obtenerDatosTabla(): Observable<LicitacionesDisponibles> {
+    return this.http.get<LicitacionesDisponibles>('assets/json/120204/datos-de-la-tabla.json');
   }
 }

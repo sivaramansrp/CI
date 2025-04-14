@@ -1,24 +1,24 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { RequisitosNecessariosComponent } from './requisitos-necessarios.component';
+import { RequisitosNecesariosComponent } from './requisitos-necesarios.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 describe('RequisitosNecessariosComponent', () => {
-  let component: RequisitosNecessariosComponent;
+  let component: RequisitosNecesariosComponent;
   /**
    * Fijación para la prueba unitaria del componente RequisitosNecessariosComponent.
    * Proporciona acceso al componente renderizado y permite interactuar con su estado y DOM.
    */
-  let fixture: ComponentFixture<RequisitosNecessariosComponent>;
+  let fixture: ComponentFixture<RequisitosNecesariosComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [
-        RequisitosNecessariosComponent, // Add the component here
+        RequisitosNecesariosComponent, // Add the component here
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA], // To handle custom elements like <ng-titulo> and <app-tabla-dinamica>
     }).compileComponents();
 
-    fixture = TestBed.createComponent(RequisitosNecessariosComponent);
+    fixture = TestBed.createComponent(RequisitosNecesariosComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
