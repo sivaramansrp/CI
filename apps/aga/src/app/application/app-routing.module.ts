@@ -160,8 +160,8 @@ const ROUTES: Routes = [
   {
     path: 'invocar-modulo',
     loadChildren: () =>
-      import('./tramites/40302/registro-transportista.module').then(
-        (m) => m.RegistroTransportistaModule
+      import('./tramites/105/invocar.module').then(
+        (m) => m.InvocarModule
       ),
   },
   {
@@ -220,10 +220,6 @@ const ROUTES: Routes = [
         (m) => m.CancelacionDonacionesModule
       ),
   }  
-      import('./tramites/105/invocar.module').then(
-        (m) => m.InvocarModule
-      ),
-  }
 ];
 
 @NgModule({
