@@ -9,7 +9,7 @@ import { Injectable } from '@angular/core';
 export interface SolicitudPermisoState {
   claveDeReferencia?: string;
   cadenaPagoDependencia?: string;
-  banco?: string;
+  bancoClave?: string;
   llaveDePago?: string;
   fecPago?: string;
   impPago?: string;
@@ -19,7 +19,7 @@ export function createInitialState(): SolicitudPermisoState {
   return {
     claveDeReferencia: '',
     cadenaPagoDependencia: '',
-    banco: '',
+    bancoClave: '',
     llaveDePago: '',
     fecPago: '',
     impPago: '',

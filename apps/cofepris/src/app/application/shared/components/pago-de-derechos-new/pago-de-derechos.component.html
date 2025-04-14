@@ -88,15 +88,15 @@
         <div class="col-md-4">
           <div class="form-group">
             <app-catalogo-select
-              formControlName="banco"
-              name="banco"
+              formControlName="bancoClave"
+              name="bancoClave"
               [catalogo]="banco"
               [label]="'Banco'"
               [required]="true"
               (change)="
                 setValoresStore(
                   formularioPagoDerechos,
-                  'banco'
+                  'bancoClave'
                 )
               "
             ></app-catalogo-select>

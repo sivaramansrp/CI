@@ -134,8 +134,8 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
         this.estadoSolicitudPermiso.cadenaPagoDependencia,
         Validators.required
       ),
-      banco: new FormControl(
-        this.estadoSolicitudPermiso.banco,
+      bancoClave: new FormControl(
+        this.estadoSolicitudPermiso.bancoClave,
         Validators.required
       ),
       llaveDePago: new FormControl(
