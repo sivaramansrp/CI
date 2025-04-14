@@ -133,20 +133,19 @@ export class AgregarDestinatarioFinalComponent
     Destinatario[]
   >();
 
-    /**
+  /**
    * Lista de elementos deshabilitados en el formulario.
    * Esta propiedad almacena un arreglo de cadenas que representan
    * los elementos que deben estar deshabilitados en el formulario.
    */
-    public elementosDeshabilitados: string[] = [];
+  public elementosDeshabilitados: string[] = [];
 
-
-      /**
+  /**
    * Lista de elementos requeridos en el formulario.
    * Esta propiedad almacena un arreglo de cadenas que representan
    * los elementos que deben ser obligatorios en el formulario.
    */
-  public elementosNoRequeridos:string[]=[]
+  public elementosNoRequeridos: string[] = [];
 
   /**
    * Crea el componente e inicializa el grupo de formulario.
@@ -217,8 +216,7 @@ export class AgregarDestinatarioFinalComponent
     this.validarElementos();
     this.crearAgregarFormularioAgregarDestinatarioFinal();
     this.mostrarCamposNoContribuyente =
-    PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE.includes(this.idProcedimiento);
-
+      PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE.includes(this.idProcedimiento);
   }
 
   /**
@@ -270,8 +268,16 @@ export class AgregarDestinatarioFinalComponent
       });
   }
 
-  crearAgregarFormularioAgregarDestinatarioFinal():void
-  {
+
+  /**
+   * @method crearAgregarFormularioAgregarDestinatarioFinal
+   * @description
+   * This method initializes the `FormGroup` for the "Agregar Destinatario Final" component. 
+   * It sets up the form controls with their default values, validation rules, and disabled states 
+   * based on the `elementosDeshabilitados` and `elementosNoRequeridos` arrays.
+   * @returns {void} This method does not return any value.
+   */
+  crearAgregarFormularioAgregarDestinatarioFinal(): void {
     this.agregarDestinatarioFinal = this.fb.group({
       tipoPersona: ['', Validators.required],
       rfc: [
@@ -282,46 +288,105 @@ export class AgregarDestinatarioFinalComponent
           Validators.maxLength(13),
         ],
       ],
-      nombres: ['',[Validators.required, Validators.maxLength(200)]],
+      nombres: [
+        {
+          value: this.elementosDeshabilitados.includes('nombres')
+            ? 'EUROFOODZDEMEXICO'
+            : '',
+          disabled: this.elementosDeshabilitados.includes('nombres'),
+        },
+        [Validators.required, Validators.maxLength(200)],
+      ],
       denominacionRazon: ['', Validators.required],
-      primerApellido: ['',[Validators.required]],
-      segundoApellido: [''],
-      pais: [{
-        value:this.elementosDeshabilitados.includes('pais')?'1':'',
-        disabled: this.elementosDeshabilitados.includes('pais'),
-      }, Validators.required],
+      primerApellido: [
+        {
+          value: this.elementosDeshabilitados.includes('pais')
+            ? 'GONZALES'
+            : '',
+          disabled: this.elementosDeshabilitados.includes('pais'),
+        },
+        [Validators.required],
+      ],
+      segundoApellido: [
+        {
+          value: this.elementosDeshabilitados.includes('segundoApellido')
+            ? 'PINAL'
+            : '',
+          disabled: this.elementosDeshabilitados.includes('segundoApellido'),
+        },
+      ],
+      pais: [
+        {
+          value: this.elementosDeshabilitados.includes('pais') ? '1' : '',
+          disabled: this.elementosDeshabilitados.includes('pais'),
+        },
+        Validators.required,
+      ],
       estado: ['', Validators.required],
       municipio: ['', Validators.required],
       localidad: ['', Validators.required],
       codigoPostal: ['', Validators.required],
-      colonia: ['',!this.elementosNoRequeridos.includes('colonia')?[Validators.required]:[] ],
+      colonia: [
+        '',
+        !this.elementosNoRequeridos.includes('colonia')
+          ? [Validators.required]
+          : [],
+      ],
       calle: ['', Validators.required],
       numeroExterior: ['', Validators.required],
       numeroInterior: [''],
       lada: ['', Validators.required],
-      telefono: ['', Validators.required],
-      correoElectronico: ['', [Validators.required, Validators.email]],
+      telefono: [
+        {
+          value: this.elementosDeshabilitados.includes('telefono')
+            ? '3461235'
+            : '',
+          disabled: this.elementosDeshabilitados.includes('telefono'),
+        },
+      ],
+      correoElectronico: [
+        {
+          value: this.elementosDeshabilitados.includes('correoElectronico')
+            ? 'abc@njk.com'
+            : '',
+          disabled: this.elementosDeshabilitados.includes('correoElectronico'),
+        },
+        [Validators.required, Validators.email],
+      ],
     });
   }
 
-    /**
+  /**
    * Valida elementos según el `idProcedimiento` y establece
    * las listas de elementos no válidos y añadidos.
    * @returns {void} Lista de elementos no válidos.
    */
-    validarElementos(): void {
-      switch (this.idProcedimiento) {
-        case 260207:
-          case 260209:
-          case 260208:
-          this.elementosDeshabilitados = ['pais'];
-          this.elementosNoRequeridos=['colonia'];
-          break;
-        default:
-          this.elementosDeshabilitados = [];
-          this.elementosNoRequeridos=[];
-      }
+  validarElementos(): void {
+    switch (this.idProcedimiento) {
+      case 260207:
+      case 260209:
+      case 260208:
+        this.elementosDeshabilitados = ['pais'];
+        this.elementosNoRequeridos = ['colonia'];
+        break;
+      case 260201:
+        this.elementosDeshabilitados = [
+          'pais',
+          'estado',
+          'municipio',
+          'telefono',
+          'correoElectronico',
+          'nombres',
+          'primerApellido',
+          'segundoApellido',
+        ];
+        this.elementosNoRequeridos = ['localidad', 'colonia'];
+        break;
+      default:
+        this.elementosDeshabilitados = [];
+        this.elementosNoRequeridos = [];
     }
+  }
 
   /**
    * @method limpiarFormulario
