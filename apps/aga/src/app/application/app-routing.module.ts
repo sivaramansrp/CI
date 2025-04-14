@@ -219,7 +219,14 @@ const ROUTES: Routes = [
       import('./tramites/11106/cancelacion-donaciones.module').then(
         (m) => m.CancelacionDonacionesModule
       ),
-  }  
+  },
+  {
+    path: 'prestadores-servicio',
+    loadChildren: () =>
+      import('./tramites/202/prestadores-servicio.module').then(
+        (m) => m.PrestadoresServicioModule
+      ),
+  },  
 ];
 
 @NgModule({
