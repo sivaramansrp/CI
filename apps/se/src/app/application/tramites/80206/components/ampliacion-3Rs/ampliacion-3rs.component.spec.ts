@@ -4,14 +4,14 @@ import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHE
 import { isPlatformBrowser } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { Observable, of as observableOf, Subject,throwError } from 'rxjs';
+import { Observable, of as observableOf,Subject, throwError } from 'rxjs';
 
 import { Component } from '@angular/core';
 import { Ampliacion3RsComponent } from './ampliacion-3rs.component';
 import { FormBuilder } from '@angular/forms';
 import { AmpliacionServiciosService } from '../../services/ampliacion-servicios.service';
 import { AmpliacionServiciosQuery } from '../../estados/tramite80206.query';
-import { AmpliacionServiciosStore } from '../../estados/tramite80206.store';
+import { Tramite80206Store } from '../../estados/tramite80206.store';
 import { HttpClient } from '@angular/common/http';
 
 @Injectable()
@@ -21,7 +21,7 @@ class MockAmpliacionServiciosService {}
 class MockAmpliacionServiciosQuery {}
 
 @Injectable()
-class MockAmpliacionServiciosStore {}
+class MockTramite80206Store {}
 
 @Injectable()
 class MockHttpClient {
@@ -54,9 +54,9 @@ describe('Ampliacion3RsComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule,Ampliacion3RsComponent],
+      imports: [ FormsModule, ReactiveFormsModule,  ],
       declarations: [
-        
+        Ampliacion3RsComponent,
         TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
         MyCustomDirective
       ],
@@ -65,7 +65,7 @@ describe('Ampliacion3RsComponent', () => {
         FormBuilder,
         { provide: AmpliacionServiciosService, useClass: MockAmpliacionServiciosService },
         { provide: AmpliacionServiciosQuery, useClass: MockAmpliacionServiciosQuery },
-        { provide: AmpliacionServiciosStore, useClass: MockAmpliacionServiciosStore },
+        { provide: Tramite80206Store, useClass: MockTramite80206Store },
         { provide: HttpClient, useClass: MockHttpClient }
       ]
     }).overrideComponent(Ampliacion3RsComponent, {
@@ -82,30 +82,18 @@ describe('Ampliacion3RsComponent', () => {
     TestBed.resetTestingModule(); 
   });
 
-
   it('should run #constructor()', async () => {
     expect(component).toBeTruthy();
   });
 
   it('should run #ngOnInit()', async () => {
     component.obtenerReglaSelectList = jest.fn();
-    component.suscribirseADatosImmex = jest.fn();
     component.inicializarFormularioDesdeAlmacen = jest.fn();
     component.obtenerSectorSelectList = jest.fn();
     component.ngOnInit();
     // expect(component.obtenerReglaSelectList).toHaveBeenCalled();
-    // expect(component.suscribirseADatosImmex).toHaveBeenCalled();
     // expect(component.inicializarFormularioDesdeAlmacen).toHaveBeenCalled();
     // expect(component.obtenerSectorSelectList).toHaveBeenCalled();
-  });
-
-  it('should run #suscribirseADatosImmex()', async () => {
-    component.ampliacionServiciosQuery = component.ampliacionServiciosQuery || {};
-    component.ampliacionServiciosQuery.selectSolicitudTramite$ = observableOf({
-      datosSector: {}
-    });
-    component.suscribirseADatosImmex();
-
   });
 
   it('should run #inicializarFormularioDesdeAlmacen()', async () => {
@@ -134,8 +122,8 @@ describe('Ampliacion3RsComponent', () => {
     component.ampliacionServiciosService.obtenerReglaSelectList = jest.fn().mockReturnValue(observableOf({
       data: {}
     }));
-    component.ampliacionServiciosStore = component.ampliacionServiciosStore || {};
-    component.ampliacionServiciosStore.setReglaSeleccionada = jest.fn();
+    component.tramite80206Store = component.tramite80206Store || {};
+    component.tramite80206Store.setReglaSeleccionada = jest.fn();
     component.ampliacionServiciosQuery = component.ampliacionServiciosQuery || {};
     component.ampliacionServiciosQuery.selectSolicitudTramite$ = observableOf({
       reglaSeleccionada: {}
@@ -143,7 +131,7 @@ describe('Ampliacion3RsComponent', () => {
     component.obtenerReglaSelectList();
     // expect(component.subscription.add).toHaveBeenCalled();
     // expect(component.ampliacionServiciosService.obtenerReglaSelectList).toHaveBeenCalled();
-    // expect(component.ampliacionServiciosStore.setReglaSeleccionada).toHaveBeenCalled();
+    // expect(component.tramite80206Store.setReglaSeleccionada).toHaveBeenCalled();
   });
 
   it('should run #obtenerSectorSelectList()', async () => {
@@ -153,8 +141,8 @@ describe('Ampliacion3RsComponent', () => {
     component.ampliacionServiciosService.obtenerSectorSelectList = jest.fn().mockReturnValue(observableOf({
       data: {}
     }));
-    component.ampliacionServiciosStore = component.ampliacionServiciosStore || {};
-    component.ampliacionServiciosStore.setSectorDesplegable = jest.fn();
+    component.tramite80206Store = component.tramite80206Store || {};
+    component.tramite80206Store.setSectorDesplegable = jest.fn();
     component.ampliacionServiciosQuery = component.ampliacionServiciosQuery || {};
     component.ampliacionServiciosQuery.selectSolicitudTramite$ = observableOf({
       sectorDesplegable: {}
@@ -162,28 +150,28 @@ describe('Ampliacion3RsComponent', () => {
     component.obtenerSectorSelectList();
     // expect(component.subscription.add).toHaveBeenCalled();
     // expect(component.ampliacionServiciosService.obtenerSectorSelectList).toHaveBeenCalled();
-    // expect(component.ampliacionServiciosStore.setSectorDesplegable).toHaveBeenCalled();
+    // expect(component.tramite80206Store.setSectorDesplegable).toHaveBeenCalled();
   });
 
   it('should run #eliminarServiciosGrid()', async () => {
     component.domiciliosSeleccionados = component.domiciliosSeleccionados || {};
     component.domiciliosSeleccionados = ['domiciliosSeleccionados'];
-    component.ampliacionServiciosStore = component.ampliacionServiciosStore || {};
-    component.ampliacionServiciosStore.setDatosSector = jest.fn();
+    component.tramite80206Store = component.tramite80206Store || {};
+    component.tramite80206Store.setDatosSector = jest.fn();
     component.eliminarServiciosGrid();
-    // expect(component.ampliacionServiciosStore.setDatosSector).toHaveBeenCalled();
+    // expect(component.tramite80206Store.setDatosSector).toHaveBeenCalled();
   });
 
   it('should run #agregarServiciosAmpliacion()', async () => {
     component.recibioSector = component.recibioSector || {};
-    component.recibioSector = {
+    component.recibioSector= {
       descripcion: {},
       descripcionSector: {}
     };
-    component.ampliacionServiciosStore = component.ampliacionServiciosStore || {};
-    component.ampliacionServiciosStore.setDatosSector = jest.fn();
+    component.tramite80206Store = component.tramite80206Store || {};
+    component.tramite80206Store.setDatosSector = jest.fn();
     component.agregarServiciosAmpliacion();
-    // expect(component.ampliacionServiciosStore.setDatosSector).toHaveBeenCalled();
+    // expect(component.tramite80206Store.setDatosSector).toHaveBeenCalled();
   });
 
   it('should run #ngOnDestroy()', async () => {
@@ -201,20 +189,20 @@ describe('Ampliacion3RsComponent', () => {
   it('should run #procesarDatosDelHijo()', async () => {
     component.ampliacionServiciosService = component.ampliacionServiciosService || {};
     component.ampliacionServiciosService.enviarDeberiaMostrar = jest.fn();
-    component.ampliacionServiciosStore = component.ampliacionServiciosStore || {};
-    component.ampliacionServiciosStore.setIsSelectedRegla = jest.fn();
-    component.ampliacionServiciosStore.setAduanaDeIngresoSeleccion = jest.fn();
+    component.tramite80206Store = component.tramite80206Store || {};
+    component.tramite80206Store.setIsSelectedRegla = jest.fn();
+    component.tramite80206Store.setAduanaDeIngresoSeleccion = jest.fn();
     component.procesarDatosDelHijo({});
     // expect(component.ampliacionServiciosService.enviarDeberiaMostrar).toHaveBeenCalled();
-    // expect(component.ampliacionServiciosStore.setIsSelectedRegla).toHaveBeenCalled();
-    // expect(component.ampliacionServiciosStore.setAduanaDeIngresoSeleccion).toHaveBeenCalled();
+    // expect(component.tramite80206Store.setIsSelectedRegla).toHaveBeenCalled();
+    // expect(component.tramite80206Store.setAduanaDeIngresoSeleccion).toHaveBeenCalled();
   });
 
   it('should run #cambioDeSector()', async () => {
-    component.ampliacionServiciosStore = component.ampliacionServiciosStore || {};
-    component.ampliacionServiciosStore.setSectorSeleccion = jest.fn();
+    component.tramite80206Store = component.tramite80206Store || {};
+    component.tramite80206Store.setSectorSeleccion = jest.fn();
     component.cambioDeSector({});
-    // expect(component.ampliacionServiciosStore.setSectorSeleccion).toHaveBeenCalled();
+    // expect(component.tramite80206Store.setSectorSeleccion).toHaveBeenCalled();
   });
 
   it('should run #seleccionarDomicilios()', async () => {

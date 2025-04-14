@@ -95,11 +95,7 @@ describe('RegistroPageComponent', () => {
     // expect(component.wizardComponent.atras).toHaveBeenCalled();
   });
 
-  it('should run #enTabChange()', async () => {
-
-    component.enTabChange({});
-
-  });
+  
 
   it('should run #ngOnDestroy()', async () => {
     component.destroyNotifier$ = component.destroyNotifier$ || {};

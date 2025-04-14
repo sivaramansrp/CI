@@ -9,9 +9,9 @@
  */
 
 import { AmpliacionServiciosState } from './tramite80206.store';
-import { AmpliacionServiciosStore } from './tramite80206.store';
 import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
+import { Tramite80206Store } from './tramite80206.store';
 
 @Injectable({ providedIn: 'root' })
 export class AmpliacionServiciosQuery extends Query<AmpliacionServiciosState> {
@@ -50,9 +50,9 @@ export class AmpliacionServiciosQuery extends Query<AmpliacionServiciosState> {
   /**
    * Constructor de la clase `AmpliacionServiciosQuery`.
    * @constructor
-   * @param {AmpliacionServiciosStore} store - Instancia del store de ampliación de servicios.
+   * @param {Tramite80206Store} store - Instancia del store de ampliación de servicios.
    */
-  constructor(protected override store: AmpliacionServiciosStore) {
+  constructor(protected override store: Tramite80206Store) {
     super(store);
   }
 

@@ -1,7 +1,7 @@
 /**
  * @fileoverview
  * El `Ampliacion3RsComponent` es un componente de Angular diseñado para gestionar la funcionalidad del módulo "Ampliación de Servicios".
- * Maneja formularios reactivos, catálogos, y la interacción con el estado para la gestión de datos relacionados con sectores y servicios.
+ * Maneja formularios reactivos, catálogos y la interacción con el estado para la gestión de datos relacionados con sectores y servicios.
  * 
  * @module Ampliacion3RsComponent
  * @description
@@ -11,52 +11,32 @@
 
 import {
   Catalogo,
-  CatalogoSelectComponent,
-  TablaDinamicaComponent,
   TablaSeleccion,
-  UppercaseDirective
 } from '@ng-mf/data-access-user';
 
 import {
   FormBuilder,
   FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
 } from '@angular/forms';
 import { OnDestroy, OnInit } from '@angular/core';
 import { map, takeUntil } from 'rxjs/operators';
 import { AmpliacionServiciosQuery } from '../../estados/tramite80206.query';
 import { AmpliacionServiciosService } from '../../services/ampliacion-servicios.service';
 import { AmpliacionServiciosState } from '../../estados/tramite80206.store';
-import { AmpliacionServiciosStore } from '../../estados/tramite80206.store';
-import { CONFIGURACION_SECTOR } from "../../constantes/modificacion.enum";
-import { ConfiguracionColumna } from '../../models/configuracion-columna.model';
-
-import { Sector } from "../../models/datos-info.model";
-
-import { CommonModule } from '@angular/common';
+import { CONFIGURACION_SECTOR } from "../../constantes/modificacion.constants";
 import { Component } from '@angular/core';
+import { ConfiguracionColumna } from '../../models/configuracion-columna.model';
 import { HttpClient } from '@angular/common/http';
+import { Sector } from "../../models/datos-info.model";
 import { Subject } from 'rxjs';
-import { Subscription } from 'rxjs';
+import { Tramite80206Store } from '../../estados/tramite80206.store';
 
 @Component({
   selector: 'app-ampliacion-3rs',
-  standalone: true,
-  imports: [
-    ReactiveFormsModule,
-    CommonModule,
-    UppercaseDirective,
-    CatalogoSelectComponent,
-    FormsModule,
-    TablaDinamicaComponent
-  ],
   templateUrl: './ampliacion-3rs.component.html',
   styleUrl: './ampliacion-3rs.component.scss',
 })
 export class Ampliacion3RsComponent implements OnInit, OnDestroy {
-
-  private subscription: Subscription = new Subscription();
   /**
    * Indica si una regla ha sido seleccionada.
    * @property {boolean} isSelectedRegla
@@ -99,14 +79,11 @@ export class Ampliacion3RsComponent implements OnInit, OnDestroy {
    */
   domiciliosSeleccionados: Sector[] = [];
 
- 
-
   /**
    * Formulario reactivo para datos adicionales.
    * @property {FormGroup} forma
    */
   forma!: FormGroup;
-
 
   /**
    * Lista de reglas seleccionadas.
@@ -120,7 +97,6 @@ export class Ampliacion3RsComponent implements OnInit, OnDestroy {
    */
   sectorDesplegable!: Catalogo[];
 
- 
   /**
    * Estado actual del trámite.
    * @property {AmpliacionServiciosState} tramiteState
@@ -144,7 +120,7 @@ export class Ampliacion3RsComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private ampliacionServiciosService: AmpliacionServiciosService,
     private ampliacionServiciosQuery: AmpliacionServiciosQuery,
-    private ampliacionServiciosStore: AmpliacionServiciosStore,
+    private tramite80206Store: Tramite80206Store,
     private readonly httpServicios: HttpClient
   ) {
     this.inicializarFormularioInfoRegistro();
@@ -156,21 +132,8 @@ export class Ampliacion3RsComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.obtenerReglaSelectList();
-    this.suscribirseADatosImmex();
     this.inicializarFormularioDesdeAlmacen();
     this.obtenerSectorSelectList();
-  }
-
-  /**
-   * Se suscribe a los datos de IMMEX desde el store para mantener el componente actualizado.
-   * @method suscribirseADatosImmex
-   */
-  suscribirseADatosImmex(): void {
-    this.ampliacionServiciosQuery.selectSolicitudTramite$
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((sector: AmpliacionServiciosState) => {
-        this.datosSector = sector.datosSector;
-      });
   }
 
   /**
@@ -183,6 +146,7 @@ export class Ampliacion3RsComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((datos: AmpliacionServiciosState) => {
           this.tramiteState = datos;
+          this.datosSector = datos.datosSector;
           this.isSelectedRegla = datos.isSelectedRegla;
           this.ampliacionServiciosService.enviarDeberiaMostrar(this.isSelectedRegla);
 
@@ -213,20 +177,18 @@ export class Ampliacion3RsComponent implements OnInit, OnDestroy {
    * @method obtenerReglaSelectList
    */
   obtenerReglaSelectList(): void {
-    this.subscription.add(
-      this.ampliacionServiciosService
-        .obtenerReglaSelectList()
-        .pipe(takeUntil(this.destroyNotifier$))
-        .subscribe((data) => {
-          const DATOS = data.data;
-          this.ampliacionServiciosStore.setReglaSeleccionada(DATOS);
-          this.ampliacionServiciosQuery.selectSolicitudTramite$
-            .pipe(takeUntil(this.destroyNotifier$))
-            .subscribe((sector: AmpliacionServiciosState) => {
-              this.reglaSeleccionada = sector.reglaSeleccionada;
-            });
-        })
-    );
+    this.ampliacionServiciosService
+      .obtenerReglaSelectList()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data) => {
+        const DATOS = data.data;
+        this.tramite80206Store.setReglaSeleccionada(DATOS);
+        this.ampliacionServiciosQuery.selectSolicitudTramite$
+          .pipe(takeUntil(this.destroyNotifier$))
+          .subscribe((sector: AmpliacionServiciosState) => {
+            this.reglaSeleccionada = sector.reglaSeleccionada;
+          });
+      });
   }
 
   /**
@@ -234,20 +196,18 @@ export class Ampliacion3RsComponent implements OnInit, OnDestroy {
    * @method obtenerSectorSelectList
    */
   obtenerSectorSelectList(): void {
-    this.subscription.add(
-      this.ampliacionServiciosService
-        .obtenerSectorSelectList()
-        .pipe(takeUntil(this.destroyNotifier$))
-        .subscribe((data) => {
-          const DATOS = data.data;
-          this.ampliacionServiciosStore.setSectorDesplegable(DATOS);
-          this.ampliacionServiciosQuery.selectSolicitudTramite$
-            .pipe(takeUntil(this.destroyNotifier$))
-            .subscribe((sector: AmpliacionServiciosState) => {
-              this.sectorDesplegable = sector.sectorDesplegable;
-            });
-        })
-    );
+    this.ampliacionServiciosService
+      .obtenerSectorSelectList()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data) => {
+        const DATOS = data.data;
+        this.tramite80206Store.setSectorDesplegable(DATOS);
+        this.ampliacionServiciosQuery.selectSolicitudTramite$
+          .pipe(takeUntil(this.destroyNotifier$))
+          .subscribe((sector: AmpliacionServiciosState) => {
+            this.sectorDesplegable = sector.sectorDesplegable;
+          });
+      });
   }
 
   /**
@@ -264,7 +224,7 @@ export class Ampliacion3RsComponent implements OnInit, OnDestroy {
         DATOS_IMMEX_ACTUALIZADOS.splice(INDICE, 1);
       }
     });
-    this.ampliacionServiciosStore.setDatosSector(DATOS_IMMEX_ACTUALIZADOS);
+    this.tramite80206Store.setDatosSector(DATOS_IMMEX_ACTUALIZADOS);
     this.domiciliosSeleccionados = [];
   }
 
@@ -277,7 +237,7 @@ export class Ampliacion3RsComponent implements OnInit, OnDestroy {
       descripcion: this.recibioSector[0]?.descripcion,
       descripcionSector: this.recibioSector[0]?.descripcionSector,
     };
-    this.ampliacionServiciosStore.setDatosSector([...this.datosSector, CUERPODATOS]);
+    this.tramite80206Store.setDatosSector([...this.datosSector, CUERPODATOS]);
   }
 
   /**
@@ -299,8 +259,8 @@ export class Ampliacion3RsComponent implements OnInit, OnDestroy {
   procesarDatosDelHijo(data: Catalogo | Catalogo[]): void {
     this.isSelectedRegla = true;
     this.ampliacionServiciosService.enviarDeberiaMostrar(this.isSelectedRegla);
-    this.ampliacionServiciosStore.setIsSelectedRegla(this.isSelectedRegla);
-    this.ampliacionServiciosStore.setAduanaDeIngresoSeleccion(data as Catalogo);
+    this.tramite80206Store.setIsSelectedRegla(this.isSelectedRegla);
+    this.tramite80206Store.setAduanaDeIngresoSeleccion(data as Catalogo);
   }
 
   /**
@@ -310,7 +270,7 @@ export class Ampliacion3RsComponent implements OnInit, OnDestroy {
    */
   cambioDeSector(data: Catalogo | Catalogo[]): void {
     this.recibioSector = Array.isArray(data) ? data : [data];
-    this.ampliacionServiciosStore.setSectorSeleccion(data as Catalogo);
+    this.tramite80206Store.setSectorSeleccion(data as Catalogo);
   }
 
   /**

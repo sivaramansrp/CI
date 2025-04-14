@@ -8,12 +8,14 @@ import { CertificadoRegistro } from './certificado-registro-routing.module';
 import { CommonModule } from '@angular/common';
 import { CrosslistComponent } from '@ng-mf/data-access-user';
 import { FirmaElectronicaComponent } from '@ng-mf/data-access-user';
+import { FormsModule} from '@angular/forms';
 import { InputCheckComponent } from '@ng-mf/data-access-user';
 import { InputFechaComponent } from '@ng-mf/data-access-user';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from '@ng-mf/data-access-user';
 import { SolicitanteComponent } from '@ng-mf/data-access-user';
+import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
@@ -41,11 +43,12 @@ import { ToastrService } from 'ngx-toastr';
     PasoTresComponent,
     PasoUnoComponent,
     RegistroPageComponent,
+    Ampliacion3RsComponent,
+    AmpliacionAnexoComponent,
+
   ],
   imports: [
     AlertComponent,
-    AmpliacionAnexoComponent,
-    Ampliacion3RsComponent,
     AnexarDocumentosComponent,
     BtnContinuarComponent,
     CatalogoSelectComponent,
@@ -53,11 +56,13 @@ import { ToastrService } from 'ngx-toastr';
     CommonModule,
     CrosslistComponent,
     FirmaElectronicaComponent,
+    FormsModule,
     InputCheckComponent,
     InputFechaComponent,
     ReactiveFormsModule,
     SharedModule,
     SolicitanteComponent,
+    TablaDinamicaComponent,
     TituloComponent,
     WizardComponent,
   ],

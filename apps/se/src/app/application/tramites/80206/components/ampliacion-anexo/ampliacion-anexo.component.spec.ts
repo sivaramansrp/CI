@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Pipe,PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
+import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -11,7 +11,7 @@ import { AmpliacionAnexoComponent } from './ampliacion-anexo.component';
 import { FormBuilder } from '@angular/forms';
 import { AmpliacionServiciosService } from '../../services/ampliacion-servicios.service';
 import { AmpliacionServiciosQuery } from '../../estados/tramite80206.query';
-import { AmpliacionServiciosStore } from '../../estados/tramite80206.store';
+import { Tramite80206Store } from '../../estados/tramite80206.store';
 import { HttpClient } from '@angular/common/http';
 
 @Injectable()
@@ -21,7 +21,7 @@ class MockAmpliacionServiciosService {}
 class MockAmpliacionServiciosQuery {}
 
 @Injectable()
-class MockAmpliacionServiciosStore {}
+class MockTramite80206Store {}
 
 @Injectable()
 class MockHttpClient {
@@ -54,9 +54,9 @@ describe('AmpliacionAnexoComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule, AmpliacionAnexoComponent ],
+      imports: [ FormsModule, ReactiveFormsModule, ],
       declarations: [
-       
+        AmpliacionAnexoComponent ,
         TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
         MyCustomDirective
       ],
@@ -65,7 +65,7 @@ describe('AmpliacionAnexoComponent', () => {
         FormBuilder,
         { provide: AmpliacionServiciosService, useClass: MockAmpliacionServiciosService },
         { provide: AmpliacionServiciosQuery, useClass: MockAmpliacionServiciosQuery },
-        { provide: AmpliacionServiciosStore, useClass: MockAmpliacionServiciosStore },
+        { provide: Tramite80206Store, useClass: MockTramite80206Store },
         { provide: HttpClient, useClass: MockHttpClient }
       ]
     }).overrideComponent(AmpliacionAnexoComponent, {
@@ -88,12 +88,10 @@ describe('AmpliacionAnexoComponent', () => {
   it('should run #ngOnInit()', async () => {
     component.getDatos = jest.fn();
     component.suscribirseADatosImmex = jest.fn();
-    component.suscribirseADatos = jest.fn();
     component.suscribirseAFields = jest.fn();
     component.ngOnInit();
     // expect(component.getDatos).toHaveBeenCalled();
     // expect(component.suscribirseADatosImmex).toHaveBeenCalled();
-    // expect(component.suscribirseADatos).toHaveBeenCalled();
     // expect(component.suscribirseAFields).toHaveBeenCalled();
   });
 
@@ -110,68 +108,36 @@ describe('AmpliacionAnexoComponent', () => {
   });
 
   it('should run #enCambioDeCampo()', async () => {
-    component.ampliacionServiciosStore = component.ampliacionServiciosStore || {};
-    component.ampliacionServiciosStore.setFraccionArancelaria = jest.fn();
-    component.ampliacionServiciosStore.setRfcEmpresa = jest.fn();
-    component.ampliacionServiciosStore.setCantidad = jest.fn();
-    component.ampliacionServiciosStore.setValor = jest.fn();
-    component.ampliacionServiciosStore.setImportacion = jest.fn();
+    component.tramite80206Store = component.tramite80206Store || {};
+    component.tramite80206Store.setFraccionArancelaria = jest.fn();
+    component.tramite80206Store.setRfcEmpresa = jest.fn();
+    component.tramite80206Store.setCantidad = jest.fn();
+    component.tramite80206Store.setValor = jest.fn();
+    component.tramite80206Store.setImportacion = jest.fn();
     component.enCambioDeCampo({}, {});
-    // expect(component.ampliacionServiciosStore.setFraccionArancelaria).toHaveBeenCalled();
-    // expect(component.ampliacionServiciosStore.setRfcEmpresa).toHaveBeenCalled();
-    // expect(component.ampliacionServiciosStore.setCantidad).toHaveBeenCalled();
-    // expect(component.ampliacionServiciosStore.setValor).toHaveBeenCalled();
-    // expect(component.ampliacionServiciosStore.setImportacion).toHaveBeenCalled();
-  });
-
-  it('should run #suscribirseADatos()', async () => {
-    component.subscription = component.subscription || {};
-    component.subscription.add = jest.fn();
-    component.ampliacionServiciosQuery = component.ampliacionServiciosQuery || {};
-    component.ampliacionServiciosQuery.selectDatos$ = observableOf({});
-    component.suscribirseADatos();
-    // expect(component.subscription.add).toHaveBeenCalled();
+    // expect(component.tramite80206Store.setFraccionArancelaria).toHaveBeenCalled();
+    // expect(component.tramite80206Store.setRfcEmpresa).toHaveBeenCalled();
+    // expect(component.tramite80206Store.setCantidad).toHaveBeenCalled();
+    // expect(component.tramite80206Store.setValor).toHaveBeenCalled();
+    // expect(component.tramite80206Store.setImportacion).toHaveBeenCalled();
   });
 
   it('should run #suscribirseAFields()', async () => {
-    component.subscription = component.subscription || {};
-    component.subscription.add = jest.fn();
     component.ampliacionServiciosQuery = component.ampliacionServiciosQuery || {};
-    component.ampliacionServiciosQuery.select = jest.fn().mockReturnValue({
-      0: {
-        fraccion: {},
-        cantidad: {},
-        fraccionArancelaria: {},
-        importacion: {},
-        valor: {}
-      },
-      pipe: function() {
-        return observableOf({
-          fraccion: {},
-          cantidad: {},
-          fraccionArancelaria: {},
-          importacion: {},
-          valor: {}
-        });
-      }
-    });
+    component.ampliacionServiciosQuery.selectSolicitudTramite$ = observableOf({});
     component.suscribirseAFields();
-    // expect(component.subscription.add).toHaveBeenCalled();
-    // expect(component.ampliacionServiciosQuery.select).toHaveBeenCalled();
+
   });
 
   it('should run #getDatos()', async () => {
-    component.subscription = component.subscription || {};
-    component.subscription.add = jest.fn();
     component.ampliacionServiciosService = component.ampliacionServiciosService || {};
     component.ampliacionServiciosService.getDatos = jest.fn().mockReturnValue(observableOf({}));
-    component.ampliacionServiciosStore = component.ampliacionServiciosStore || {};
-    component.ampliacionServiciosStore.setInfoRegistro = jest.fn();
+    component.tramite80206Store = component.tramite80206Store || {};
+    component.tramite80206Store.setInfoRegistro = jest.fn();
     component.inicializarFormularioDesdeAlmacen = jest.fn();
     component.getDatos();
-    // expect(component.subscription.add).toHaveBeenCalled();
     // expect(component.ampliacionServiciosService.getDatos).toHaveBeenCalled();
-    // expect(component.ampliacionServiciosStore.setInfoRegistro).toHaveBeenCalled();
+    // expect(component.tramite80206Store.setInfoRegistro).toHaveBeenCalled();
     // expect(component.inicializarFormularioDesdeAlmacen).toHaveBeenCalled();
   });
 
@@ -186,14 +152,14 @@ describe('AmpliacionAnexoComponent', () => {
   });
 
   it('should run #inicializarFormularioDesdeAlmacen()', async () => {
-    component.ampliacionServiciosQuery = component.ampliacionServiciosQuery || {};
-    component.ampliacionServiciosQuery.selectInfoRegistro$ = observableOf({
+    component.fb = component.fb || {};
+    component.fb.group = jest.fn();
+    component.tramiteState = component.tramiteState || {};
+    component.tramiteState.infoRegistro = {
       seleccionaLaModalidad: {},
       folio: {},
       ano: {}
-    });
-    component.fb = component.fb || {};
-    component.fb.group = jest.fn();
+    };
     component.inicializarFormularioDesdeAlmacen();
     // expect(component.fb.group).toHaveBeenCalled();
   });
@@ -213,12 +179,12 @@ describe('AmpliacionAnexoComponent', () => {
       }
     ]);
     component.domiciliosSeleccionados = component.domiciliosSeleccionados || {};
-    component.domiciliosSeleccionados = '0';
-    component.ampliacionServiciosStore = component.ampliacionServiciosStore || {};
-    component.ampliacionServiciosStore.setDatosImmex = jest.fn();
+    component.domiciliosSeleccionados= '0';
+    component.tramite80206Store = component.tramite80206Store || {};
+    component.tramite80206Store.setDatosImmex = jest.fn();
     component.eliminarServiciosGrid();
     // expect(component.datosImmex.findIndex).toHaveBeenCalled();
-    // expect(component.ampliacionServiciosStore.setDatosImmex).toHaveBeenCalled();
+    // expect(component.tramite80206Store.setDatosImmex).toHaveBeenCalled();
   });
 
   it('should run #eliminarImportacion()', async () => {
@@ -230,18 +196,18 @@ describe('AmpliacionAnexoComponent', () => {
     ]);
     component.domiciliosSeleccionados = component.domiciliosSeleccionados || {};
     component.domiciliosSeleccionados = '0';
-    component.ampliacionServiciosStore = component.ampliacionServiciosStore || {};
-    component.ampliacionServiciosStore.setDatosImportacion = jest.fn();
+    component.tramite80206Store = component.tramite80206Store || {};
+    component.tramite80206Store.setDatosImportacion = jest.fn();
     component.eliminarImportacion();
     // expect(component.datosImportacion.findIndex).toHaveBeenCalled();
-    // expect(component.ampliacionServiciosStore.setDatosImportacion).toHaveBeenCalled();
+    // expect(component.tramite80206Store.setDatosImportacion).toHaveBeenCalled();
   });
 
   it('should run #actualizaGridEmpresasNacionales()', async () => {
-    component.ampliacionServiciosStore = component.ampliacionServiciosStore || {};
-    component.ampliacionServiciosStore.setDatosImmex = jest.fn();
+    component.tramite80206Store = component.tramite80206Store || {};
+    component.tramite80206Store.setDatosImmex = jest.fn();
     component.actualizaGridEmpresasNacionales();
-    // expect(component.ampliacionServiciosStore.setDatosImmex).toHaveBeenCalled();
+    // expect(component.tramite80206Store.setDatosImmex).toHaveBeenCalled();
   });
 
   it('should run #cerrarModal()', async () => {
@@ -252,7 +218,7 @@ describe('AmpliacionAnexoComponent', () => {
 
   it('should run #agregarImportacion()', async () => {
     component.domiciliosSeleccionados = component.domiciliosSeleccionados || {};
-    component.domiciliosSeleccionados= {
+    component.domiciliosSeleccionados = {
       fraccion: {},
       fraccionArancelaria: {},
       descripcionComercial: {},
@@ -266,11 +232,11 @@ describe('AmpliacionAnexoComponent', () => {
       volumenAnual: {}
     };
     component.activarModal = jest.fn();
-    component.ampliacionServiciosStore = component.ampliacionServiciosStore || {};
-    component.ampliacionServiciosStore.setDatosImportacion = jest.fn();
+    component.tramite80206Store = component.tramite80206Store || {};
+    component.tramite80206Store.setDatosImportacion = jest.fn();
     component.agregarImportacion();
     // expect(component.activarModal).toHaveBeenCalled();
-    // expect(component.ampliacionServiciosStore.setDatosImportacion).toHaveBeenCalled();
+    // expect(component.tramite80206Store.setDatosImportacion).toHaveBeenCalled();
   });
 
   it('should run #ngOnDestroy()', async () => {
@@ -283,15 +249,15 @@ describe('AmpliacionAnexoComponent', () => {
   });
 
   it('should run #procesarDatosDelHijo()', async () => {
-    component.ampliacionServiciosStore = component.ampliacionServiciosStore || {};
-    component.ampliacionServiciosStore.setAduanaDeIngresoSeleccion = jest.fn();
+    component.tramite80206Store = component.tramite80206Store || {};
+    component.tramite80206Store.setAduanaDeIngresoSeleccion = jest.fn();
     component.procesarDatosDelHijo({});
-    // expect(component.ampliacionServiciosStore.setAduanaDeIngresoSeleccion).toHaveBeenCalled();
+    // expect(component.tramite80206Store.setAduanaDeIngresoSeleccion).toHaveBeenCalled();
   });
 
   it('should run #seleccionarDomicilios()', async () => {
 
-    component.seleccionarDomicilios({});
+    component.seleccionarDomicilios([]);
 
   });
 

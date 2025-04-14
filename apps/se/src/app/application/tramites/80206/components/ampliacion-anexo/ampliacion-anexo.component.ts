@@ -11,12 +11,8 @@
  */
 
 import {
-  AlertComponent,
   Catalogo,
-  CatalogoSelectComponent,
-  TablaDinamicaComponent,
   TablaSeleccion,
-  UppercaseDirective
 } from '@ng-mf/data-access-user';
 
 import {
@@ -28,42 +24,29 @@ import {
 import {
   FormBuilder,
   FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
 } from '@angular/forms';
 
 import {
   CONFIGURACION_ARANCELARIAS,
   CONFIGURACION_ARANCELARIASIMPORTACION,
   TEXTOS_80206
-} from "../../constantes/modificacion.enum";
+} from "../../constantes/modificacion.constants";
 
 import { OnDestroy, OnInit } from '@angular/core';
-import { Subject, Subscription } from 'rxjs';
+import { map,takeUntil} from 'rxjs/operators';
 import { AmpliacionServiciosQuery } from '../../estados/tramite80206.query';
 import { AmpliacionServiciosService } from '../../services/ampliacion-servicios.service';
-import { AmpliacionServiciosStore } from '../../estados/tramite80206.store';
+import { AmpliacionServiciosState } from '../../estados/tramite80206.store';
 import { ApiResponse } from "../../models/datos-info.model";
-import { ConfiguracionColumna } from '../../models/configuracion-columna.model';
-
-import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { ConfiguracionColumna } from '../../models/configuracion-columna.model';
 import { HttpClient } from '@angular/common/http';
+import { Subject } from 'rxjs';
+import { Tramite80206Store } from '../../estados/tramite80206.store';
 
-import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-ampliacion-servicios',
-  standalone: true,
-  imports: [
-    ReactiveFormsModule,
-    CommonModule,
-    UppercaseDirective,
-    CatalogoSelectComponent,
-    FormsModule,
-    TablaDinamicaComponent,
-    AlertComponent,
-  ],
   templateUrl: './ampliacion-anexo.component.html',
   styleUrl: './ampliacion-anexo.component.scss',
 })
@@ -82,8 +65,13 @@ export class AmpliacionAnexoComponent implements OnInit, OnDestroy {
    * @property {string} mensajeDeAlerta
    */
   mensajeDeAlerta: string = 'Debe seleccionar una fracción de exportación';
-
-  private subscription: Subscription = new Subscription();
+  
+    /**
+     * Estado actual del trámite.
+     * @property {AmpliacionServiciosState} tramiteState
+     */
+    tramiteState: AmpliacionServiciosState = {} as AmpliacionServiciosState;
+  
 
   /**
    * Formulario reactivo para la información de registro.
@@ -216,7 +204,7 @@ export class AmpliacionAnexoComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private ampliacionServiciosService: AmpliacionServiciosService,
     private ampliacionServiciosQuery: AmpliacionServiciosQuery, 
-    private ampliacionServiciosStore: AmpliacionServiciosStore,
+    private tramite80206Store: Tramite80206Store,
     private readonly httpServicios: HttpClient
   ) {
    
@@ -229,9 +217,9 @@ export class AmpliacionAnexoComponent implements OnInit, OnDestroy {
    * @method ngOnInit
    */
   ngOnInit():void {
-    this.getDatos();
+   this.getDatos();
     this.suscribirseADatosImmex();
-    this.suscribirseADatos();
+   // this.suscribirseADatos();
     this.suscribirseAFields();
   }
   /**
@@ -259,21 +247,21 @@ export class AmpliacionAnexoComponent implements OnInit, OnDestroy {
   enCambioDeCampo(fieldName: string, newValue: string): void {
     switch (fieldName) {
       case 'fraccionArancelaria':
-        this.ampliacionServiciosStore.setFraccionArancelaria(newValue);
+        this.tramite80206Store.setFraccionArancelaria(newValue);
         break;
       
       case 'fraccion':
-        this.ampliacionServiciosStore.setRfcEmpresa(newValue);
+        this.tramite80206Store.setRfcEmpresa(newValue);
         break;
       case 'cantidad':
-        this.ampliacionServiciosStore.setCantidad(newValue);
+        this.tramite80206Store.setCantidad(newValue);
         break;
       
       case 'valor':
-        this.ampliacionServiciosStore.setValor(newValue);
+        this.tramite80206Store.setValor(newValue);
         break;
       case 'importacion':
-          this.ampliacionServiciosStore.setImportacion(newValue);
+          this.tramite80206Store.setImportacion(newValue);
           break;
       default:
         break;
@@ -282,58 +270,46 @@ export class AmpliacionAnexoComponent implements OnInit, OnDestroy {
 
   
 
-  
-
   /**
-   * Obtiene los datos del servicio.
-   * @method getDatos
-   */
-  suscribirseADatos(): void {
-    this.subscription.add(
-      this.ampliacionServiciosQuery.selectDatos$.pipe(takeUntil(this.destroyNotifier$)).subscribe((datos) => {
-        this.datos = datos; // Update local `datos` array when store data changes
-      })
-    );
-  }
-  /**
- * Se suscribe a los cambios en los campos del estado y actualiza las propiedades locales.
+ * Se suscribe a los suscribirseAFields cambios en los campos del estado y actualiza las propiedades locales.
  * @method suscribirseAFields
  */
-  suscribirseAFields(): void {
-    
-    this.subscription.add(
-      this.ampliacionServiciosQuery.select(state => ({
-        fraccion: state.fraccion,
-        cantidad: state.cantidad,
-        fraccionArancelaria: state.fraccionArancelaria,
-        importacion: state.importacion,
 
-        valor: state.valor
-      })).pipe(takeUntil(this.destroyNotifier$)).subscribe((fields) => {
-        
-        this.fraccion = fields.fraccion;
-        this.cantidad = fields.cantidad;
-        this.fraccionArancelaria = fields.fraccionArancelaria;
-        this.importacion = fields.importacion;
-        this.valor = fields.valor;
-      })
-    );
+  suscribirseAFields(): void {
+   
+    this.ampliacionServiciosQuery.selectSolicitudTramite$
+         .pipe(
+           takeUntil(this.destroyNotifier$),
+           map((todosDatos: AmpliacionServiciosState) => {
+             this.tramiteState = todosDatos;
+             this.fraccion = todosDatos.fraccion;
+             this.cantidad = todosDatos.cantidad;
+             this.fraccionArancelaria = todosDatos.fraccionArancelaria;
+             this.importacion = todosDatos.importacion;
+             this.valor = todosDatos.valor;
+             this.datos=this.tramiteState.datos;
+          
+           })
+         )
+         .subscribe();
   
   }
+    
   
   /**
    * Obtiene los datos del servicio y actualiza el estado del formulario.
    * @method getDatos
    */
-  getDatos(): void { this.subscription.add(
+  getDatos(): void {
+    
     this.ampliacionServiciosService.getDatos().pipe(takeUntil(this.destroyNotifier$)).subscribe((respuesta) => {
        const RESPONSE = respuesta as unknown as ApiResponse;
       if (RESPONSE) {
-        this.ampliacionServiciosStore.setInfoRegistro(RESPONSE.data.infoServicios);
+        this.tramite80206Store.setInfoRegistro(RESPONSE.data.infoServicios);
         this.inicializarFormularioDesdeAlmacen();
       }
     })
-  );
+  
   }
   /**
  * Se suscribe a los datos de IMMEX desde el store para mantener el componente actualizado.
@@ -353,14 +329,12 @@ export class AmpliacionAnexoComponent implements OnInit, OnDestroy {
    * @method inicializarFormularioDesdeAlmacen
    */
   inicializarFormularioDesdeAlmacen(): void {
-    this.ampliacionServiciosQuery.selectInfoRegistro$.pipe(takeUntil(this.destroyNotifier$)).subscribe((infoRegistro) => {
-    
       this.formularioInfoRegistro = this.fb.group({
-        seleccionaLaModalidad: [{ value: infoRegistro.seleccionaLaModalidad, disabled: true }],
-        folio: [{ value: infoRegistro.folio, disabled: true }],
-        ano: [{ value: infoRegistro.ano, disabled: true }],
-      });
-    });
+        seleccionaLaModalidad: [{ value: this.tramiteState.infoRegistro.seleccionaLaModalidad, disabled: true }],
+        folio: [{ value: this.tramiteState.infoRegistro.folio, disabled: true }],
+        ano: [{ value: this.tramiteState.infoRegistro.ano, disabled: true }],
+      })
+   
   }
   
   
@@ -392,7 +366,7 @@ export class AmpliacionAnexoComponent implements OnInit, OnDestroy {
     if (INDICE !== -1) {
       const DATOS_IMMEX_ACTUALIZADOS = [...this.datosImmex];
       DATOS_IMMEX_ACTUALIZADOS.splice(INDICE, 1); 
-      this.ampliacionServiciosStore.setDatosImmex(DATOS_IMMEX_ACTUALIZADOS); 
+      this.tramite80206Store.setDatosImmex(DATOS_IMMEX_ACTUALIZADOS); 
       this.domiciliosSeleccionados = [];
     }
   }
@@ -405,7 +379,7 @@ export class AmpliacionAnexoComponent implements OnInit, OnDestroy {
     if (INDICE !== -1) {
       const DATOS_IMPORTACION_ACTUALIZADOS = [...this.datosImportacion];
       DATOS_IMPORTACION_ACTUALIZADOS.splice(INDICE, 1); 
-      this.ampliacionServiciosStore.setDatosImportacion(DATOS_IMPORTACION_ACTUALIZADOS); 
+      this.tramite80206Store.setDatosImportacion(DATOS_IMPORTACION_ACTUALIZADOS); 
       this.domiciliosSeleccionados = [];
     }
   }
@@ -428,7 +402,7 @@ export class AmpliacionAnexoComponent implements OnInit, OnDestroy {
       volumenAnual: "",
     };
 
-    this.ampliacionServiciosStore.setDatosImmex([...this.datosImmex, CUERPODATOS]);
+    this.tramite80206Store.setDatosImmex([...this.datosImmex, CUERPODATOS]);
 
   }
   
@@ -464,7 +438,7 @@ export class AmpliacionAnexoComponent implements OnInit, OnDestroy {
       volumenrMensual: this.domiciliosSeleccionados[0]?.volumenrMensual,
       volumenAnual: this.domiciliosSeleccionados[0]?.volumenAnual,
     }
-    this.ampliacionServiciosStore.setDatosImportacion([...this.datosImportacion, CUERPODATOS]);
+    this.tramite80206Store.setDatosImportacion([...this.datosImportacion, CUERPODATOS]);
 
   }
 }
@@ -486,7 +460,7 @@ export class AmpliacionAnexoComponent implements OnInit, OnDestroy {
    */
   procesarDatosDelHijo(data: Catalogo | Catalogo[]): void {
     
-    this.ampliacionServiciosStore.setAduanaDeIngresoSeleccion(data as Catalogo);
+    this.tramite80206Store.setAduanaDeIngresoSeleccion(data as Catalogo);
   }
   
 
