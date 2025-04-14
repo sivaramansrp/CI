@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { AvisoTrasladoService } from './aviso-traslado.service';
-import { CatalogoLista, RespuestaCatalogos, AvisoTablaDatos, MercanciaTablaDatos, DocumentosLista, AnexosLista, DatosSolicitante } from '../models/aviso-traslado.model';
+import { CatalogoLista, AvisoTablaDatos, MercanciaTablaDatos, DatosSolicitante } from '../models/aviso-traslado.model';
 
 describe('AvisoTrasladoService', () => {
     let service: AvisoTrasladoService;
@@ -24,18 +24,7 @@ describe('AvisoTrasladoService', () => {
     it('debería crearse el servicio', () => {
         expect(service).toBeTruthy();
     });
-
-    it('debería obtener la lista de idiomas', () => {
-        const mockResponse: CatalogoLista = { datos: [{ id: 1, descripcion: 'Español' }] };
-
-        service.obtenerIdioma().subscribe((response) => {
-            expect(response).toEqual(mockResponse);
-        });
-
-        const req = httpMock.expectOne('assets/json/32503/idioma.json');
-        expect(req.request.method).toBe('GET');
-        req.flush(mockResponse);
-    });
+    
 
     it('debería obtener los datos del solicitante', () => {
         const mockResponse: DatosSolicitante = {
@@ -168,64 +157,6 @@ describe('AvisoTrasladoService', () => {
         });
 
         const req = httpMock.expectOne('assets/json/32503/entidad-federativa.json');
-        expect(req.request.method).toBe('GET');
-        req.flush(mockResponse);
-    });
-
-    it('debería obtener la lista de tipos de documentos', () => {
-        const mockResponse: CatalogoLista = {
-            datos: [{
-                "id": 1,
-                "descripcion": "Manifiesto"
-            }]
-        };
-
-        service.obtenerTipoDocumento().subscribe((response) => {
-            expect(response).toEqual(mockResponse);
-        });
-
-        const req = httpMock.expectOne('assets/json/32503/tipo-documento.json');
-        expect(req.request.method).toBe('GET');
-        req.flush(mockResponse);
-    });
-
-    it('debería obtener los tipos de documentos seleccionados', () => {
-        const mockResponse: DocumentosLista = {
-            datos: [{
-                "id": 1,
-                "descripcion": "ID Oficial",
-                "archivoDisponible": [
-                    {
-                        "id": 1,
-                        "descripcion": ""
-                    }
-                ]
-            }]
-        };
-
-        service.obtenerTipoDocumentoSeleccionado().subscribe((response) => {
-            expect(response).toEqual(mockResponse);
-        });
-
-        const req = httpMock.expectOne('assets/json/32503/tipo-documento-seleccionado.json');
-        expect(req.request.method).toBe('GET');
-        req.flush(mockResponse);
-    });
-
-    it('debería obtener la lista de anexos', () => {
-        const mockResponse: AnexosLista = {
-            datos: [{
-                "estatus": "Correcto",
-                "documentos": "32503.pdf",
-                "mensajes": "OK"
-            }]
-        };
-
-        service.obtenerAnexos().subscribe((response) => {
-            expect(response).toEqual(mockResponse);
-        });
-
-        const req = httpMock.expectOne('assets/json/32503/anexos.json');
         expect(req.request.method).toBe('GET');
         req.flush(mockResponse);
     });

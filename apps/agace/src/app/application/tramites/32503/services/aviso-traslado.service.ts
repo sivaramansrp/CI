@@ -1,4 +1,4 @@
-import { AnexosLista, AvisoTablaDatos, CatalogoLista,DatosSolicitante, DocumentosLista, MercanciaTablaDatos } from '../models/aviso-traslado.model';
+import { AvisoTablaDatos, CatalogoLista,DatosSolicitante, MercanciaTablaDatos } from '../models/aviso-traslado.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -20,16 +20,6 @@ export class AvisoTrasladoService {
   constructor(private http: HttpClient) {
     // Constructor
   }
-
-  /**
-   * Obtiene la lista de idiomas disponibles.
-   * 
-   * @returns {Observable<CatalogoLista>} Un observable con la lista de idiomas.
-   */
-  obtenerIdioma(): Observable<CatalogoLista> {
-    return this.http.get<CatalogoLista>('assets/json/32503/idioma.json');
-  }
-
   /**
    * Obtiene los datos del solicitante.
    * 
@@ -38,43 +28,6 @@ export class AvisoTrasladoService {
   obtenerDatosSolicitante(): Observable<DatosSolicitante> {
     return this.http.get<DatosSolicitante>(`assets/json/32503/datosSolicitante.json`);
   }
-
-  /**
-   * Obtiene la lista de entidades federativas.
-   * 
-   * @returns {Observable<CatalogoLista>} Un observable con la lista de entidades federativas.
-   */
-  obtenerFederativa(): Observable<CatalogoLista> {
-    return this.http.get<CatalogoLista>(`assets/json/32503/entidad-federativa.json`);
-  }
-
-  /**
-   * Obtiene la lista de municipios.
-   * 
-   * @returns {Observable<CatalogoLista>} Un observable con la lista de municipios.
-   */
-  obtenerMunicipio(): Observable<CatalogoLista> {
-    return this.http.get<CatalogoLista>(`assets/json/32503/entidad-federativa.json`);
-  }
-
-  /**
-   * Obtiene la lista de colonias.
-   * 
-   * @returns {Observable<CatalogoLista>} Un observable con la lista de colonias.
-   */
-  obtenerColonias(): Observable<CatalogoLista> {
-    return this.http.get<CatalogoLista>(`assets/json/32503/entidad-federativa.json`);
-  }
-
-  /**
-   * Obtiene los datos de la tabla de aviso.
-   * 
-   * @returns {Observable<AvisoTablaDatos>} Un observable con los datos de la tabla de aviso.
-   */
-  obtenerAvisoTabla(): Observable<AvisoTablaDatos> {
-    return this.http.get<AvisoTablaDatos>(`assets/json/32503/aviso-tabla.json`);
-  }
-
   /**
    * Obtiene los datos de la tabla de mercancías.
    * 
@@ -83,16 +36,38 @@ export class AvisoTrasladoService {
   obtenerMercanciaTabla(): Observable<MercanciaTablaDatos> {
     return this.http.get<MercanciaTablaDatos>(`assets/json/32503/mercancia-tabla.json`);
   }
-
   /**
-   * Obtiene la lista de fracciones arancelarias.
+   * Obtiene los datos de la tabla de aviso.
    * 
-   * @returns {Observable<CatalogoLista>} Un observable con la lista de fracciones arancelarias.
+   * @returns {Observable<AvisoTablaDatos>} Un observable con los datos de la tabla de aviso.
    */
-  obtenerFraccionArancelaria(): Observable<CatalogoLista> {
+  obtenerAvisoTabla(): Observable<AvisoTablaDatos> {
+    return this.http.get<AvisoTablaDatos>(`assets/json/32503/aviso-tabla.json`);
+  }
+  /**
+   * Obtiene la lista de colonias.
+   * 
+   * @returns {Observable<CatalogoLista>} Un observable con la lista de colonias.
+   */
+  obtenerColonias(): Observable<CatalogoLista> {
     return this.http.get<CatalogoLista>(`assets/json/32503/entidad-federativa.json`);
   }
-
+  /**
+   * Obtiene la lista de municipios.
+   * 
+   * @returns {Observable<CatalogoLista>} Un observable con la lista de municipios.
+   */
+  obtenerMunicipio(): Observable<CatalogoLista> {
+    return this.http.get<CatalogoLista>(`assets/json/32503/entidad-federativa.json`);
+  }
+  /**
+   * Obtiene la lista de entidades federativas.
+   * 
+   * @returns {Observable<CatalogoLista>} Un observable con la lista de entidades federativas.
+   */
+  obtenerFederativa(): Observable<CatalogoLista> {
+    return this.http.get<CatalogoLista>(`assets/json/32503/entidad-federativa.json`);
+  }
   /**
    * Obtiene la lista de unidades de medida.
    * 
@@ -101,31 +76,13 @@ export class AvisoTrasladoService {
   obtenerUnidadMedida(): Observable<CatalogoLista> {
     return this.http.get<CatalogoLista>(`assets/json/32503/entidad-federativa.json`);
   }
-
   /**
-   * Obtiene la lista de tipos de documentos.
+   * Obtiene la lista de fracciones arancelarias.
    * 
-   * @returns {Observable<CatalogoLista>} Un observable con la lista de tipos de documentos.
+   * @returns {Observable<CatalogoLista>} Un observable con la lista de fracciones arancelarias.
    */
-  obtenerTipoDocumento(): Observable<CatalogoLista> {
-    return this.http.get<CatalogoLista>(`assets/json/32503/tipo-documento.json`);
+  obtenerFraccionArancelaria(): Observable<CatalogoLista> {
+    return this.http.get<CatalogoLista>(`assets/json/32503/entidad-federativa.json`);
   }
-
-  /**
-   * Obtiene los tipos de documentos seleccionados.
-   * 
-   * @returns {Observable<DocumentosLista>} Un observable con los tipos de documentos seleccionados.
-   */
-  obtenerTipoDocumentoSeleccionado(): Observable<DocumentosLista> {
-    return this.http.get<DocumentosLista>(`assets/json/32503/tipo-documento-seleccionado.json`);
-  }
-
-  /**
-   * Obtiene la lista de anexos.
-   * 
-   * @returns {Observable<AnexosLista>} Un observable con la lista de anexos.
-   */
-  obtenerAnexos(): Observable<AnexosLista> {
-    return this.http.get<AnexosLista>(`assets/json/32503/anexos.json`);
-  }
+ 
 }

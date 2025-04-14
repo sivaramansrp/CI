@@ -1,125 +1,75 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { PasoDosComponent } from './paso-dos.component';
-import { ReactiveFormsModule } from '@angular/forms';
 import { of } from 'rxjs';
-import { Tramite32503Query } from '../../../../estados/queries/tramite32503.query';
-import { Tramite32503Store } from '../../../../estados/tramites/tramite32503.store';
-import { AvisoTrasladoService } from '../../services/aviso-traslado.service';
-import { TipoDocumento } from '../../models/aviso-traslado.model';
+import { PasoDosComponent } from './paso-dos.component';
+import { CatalogosService } from '@ng-mf/data-access-user';
+import { Catalogo } from '@ng-mf/data-access-user';
+import { provideToastr, ToastrService } from 'ngx-toastr';
+import { provideHttpClient } from '@angular/common/http';
 
 describe('PasoDosComponent', () => {
-    let component: PasoDosComponent;
-    let fixture: ComponentFixture<PasoDosComponent>;
-    let tramiteQueryMock: any;
-    let tramiteStoreMock: any;
-    let avisoTrasladoServiceMock: any;
+  let component: PasoDosComponent;
+  let fixture: ComponentFixture<PasoDosComponent>;
+  let catalogosServiceMock: any;
 
-    beforeEach(async () => {
-        tramiteQueryMock = {
-            selectSolicitud$: of({
-                tipoTablaDatos: [],
-                tipoDocumento: '',
-            }),
-        };
+  beforeEach(async () => {
+    catalogosServiceMock = {
+      getCatalogo: jest.fn().mockReturnValue(of([]))
+    };
 
-        tramiteStoreMock = {
-            setTipoTablaDatos: jest.fn(),
-            setTipoDocumento: jest.fn(),
-        };
+    await TestBed.configureTestingModule({
+      imports: [PasoDosComponent],
+      providers: [
+        ToastrService,
+        provideToastr({
+          positionClass: 'toast-top-right',
+        }),
+        provideHttpClient(),
+        { provide: CatalogosService, useValue: catalogosServiceMock }
+      ]
+    }).compileComponents();
+  });
 
-        avisoTrasladoServiceMock = {
-            obtenerTipoDocumento: jest.fn().mockReturnValue(of({ datos: [{ id: 1, descripcion: 'Documento 1' }] })),
-        };
+  beforeEach(() => {
+    fixture = TestBed.createComponent(PasoDosComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
 
-        await TestBed.configureTestingModule({
-            imports: [ReactiveFormsModule, PasoDosComponent],
-            declarations: [],
-            providers: [
-                { provide: Tramite32503Query, useValue: tramiteQueryMock },
-                { provide: Tramite32503Store, useValue: tramiteStoreMock },
-                { provide: AvisoTrasladoService, useValue: avisoTrasladoServiceMock },
-            ],
-        }).compileComponents();
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
 
-        fixture = TestBed.createComponent(PasoDosComponent);
-        component = fixture.componentInstance;
-        fixture.detectChanges();
-    });
+  it('should initialize TEXTOS', () => {
+    expect(component.TEXTOS).toBeDefined();
+  });
 
-    afterEach(() => {
-        jest.clearAllMocks();
-    });
+  it('should call getTiposDocumentos on component initialization', () => {
+    const spy = jest.spyOn(component, 'getTiposDocumentos');
+    component.ngOnInit();
+    expect(spy).toHaveBeenCalled();
+  });
 
-    it('should create the component', () => {
-        expect(component).toBeTruthy();
-    });
+  it('should update catalogoDocumentos when getTiposDocumentos is called', () => {
+    const mockCatalogo: Catalogo[] = [
+      { id: 1, descripcion: 'Tipo Documento 1' },
+      { id: 2, descripcion: 'Tipo Documento 2' }
+    ];
+    catalogosServiceMock.getCatalogo.mockReturnValue(of(mockCatalogo));
+    component.getTiposDocumentos();
+    expect(component.catalogoDocumentos).toEqual(mockCatalogo);
+  });
 
-    it('should initialize the form on ngOnInit', () => {
-        component.ngOnInit();
-        expect(component.requisitosOpcionalesFormulario).toBeDefined();
-        expect(component.requisitosOpcionalesFormulario.get('tipoDocumento')).toBeDefined();
-    });
+  it('should handle empty response in getTiposDocumentos', () => {
+    catalogosServiceMock.getCatalogo.mockReturnValue(of([]));
+    component.getTiposDocumentos();
+    expect(component.catalogoDocumentos).toEqual([]);
+  });
 
-    it('should call cargarTipoDocumento on ngOnInit', () => {
-        const cargarTipoDocumentoSpy = jest.spyOn(component, 'cargarTipoDocumento');
-        component.ngOnInit();
-        expect(cargarTipoDocumentoSpy).toHaveBeenCalled();
-    });
-
-    it('should call avisoTrasladoService.obtenerTipoDocumento when cargarTipoDocumento is called', () => {
-        component.cargarTipoDocumento();
-        expect(avisoTrasladoServiceMock.obtenerTipoDocumento).toHaveBeenCalled();
-        expect(component.tipoDocumento.catalogos).toEqual([{ id: 1, descripcion: 'Documento 1' }]);
-    });
-
-    it('should call setTipoTablaDatos when seleccionarFila is called', () => {
-        const setTipoTablaDatosSpy = jest.spyOn(component, 'setTipoTablaDatos');
-        const mockTipoDocumento: TipoDocumento = { id: 1, descripcion: 'Documento 1', controlarCaja: false };
-        component.tablaDatos = [mockTipoDocumento];
-        component.seleccionarFila(mockTipoDocumento);
-        expect(mockTipoDocumento.controlarCaja).toBe(true);
-        expect(setTipoTablaDatosSpy).toHaveBeenCalled();
-    });
-
-    it('should call setTipoTablaDatos when seleccionarFilaTodo is called', () => {
-        const setTipoTablaDatosSpy = jest.spyOn(component, 'setTipoTablaDatos');
-        const mockEvent = { target: { checked: true } } as unknown as Event;
-        component.tablaDatos = [
-            { id: 1, descripcion: 'Documento 1', controlarCaja: false },
-            { id: 2, descripcion: 'Documento 2', controlarCaja: false },
-        ];
-        component.seleccionarFilaTodo(mockEvent);
-        expect(component.tablaDatos.every((el) => el.controlarCaja)).toBe(true);
-        expect(setTipoTablaDatosSpy).toHaveBeenCalled();
-    });
-
-    it('should remove selected rows when eliminarFilaSeleccionada is called', () => {
-        component.tablaDatos = [
-            { id: 1, descripcion: 'Documento 1', controlarCaja: true },
-            { id: 2, descripcion: 'Documento 2', controlarCaja: false },
-        ];
-        component.eliminarFilaSeleccionada();
-        expect(component.tablaDatos).toEqual([{ id: 2, descripcion: 'Documento 2', controlarCaja: false }]);
-    });
-
-    it('should add a new row when agregarFila is called', () => {
-        component.tipoDocumento.catalogos = [{ id: 1, descripcion: 'Documento 1' }];
-        component.requisitosOpcionalesFormulario.get('tipoDocumento')?.setValue('1');
-        component.agregarFila();
-        expect(component.tablaDatos).toEqual([{ id: 1, descripcion: 'Documento 1', controlarCaja: false }]);
-    });
-
-    it('should validate the form when validarRequisitosOpcionalesFormulario is called', () => {
-        const markAllAsTouchedSpy = jest.spyOn(component.requisitosOpcionalesFormulario, 'markAllAsTouched');
-        component.validarRequisitosOpcionalesFormulario();
-        expect(markAllAsTouchedSpy).toHaveBeenCalled();
-    });
-
-    it('should complete destroyNotifier$ on ngOnDestroy', () => {
-        const nextSpy = jest.spyOn(component.destroyNotifier$, 'next');
-        const completeSpy = jest.spyOn(component.destroyNotifier$, 'complete');
-        component.ngOnDestroy();
-        expect(nextSpy).toHaveBeenCalled();
-        expect(completeSpy).toHaveBeenCalled();
-    });
+  it('should complete destroy$ on ngOnDestroy', () => {
+    const destroySpy = jest.spyOn(component['destroy$'], 'next');
+    const completeSpy = jest.spyOn(component['destroy$'], 'complete');
+    component.ngOnDestroy();
+    expect(destroySpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
+  });
 });
