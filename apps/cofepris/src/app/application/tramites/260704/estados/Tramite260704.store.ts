@@ -16,70 +16,199 @@ export interface Catalogo {
  * Interfaz que define el estado de la solicitud 260704.
  */
 export interface Solicitud260704State {
+  /** Lista de datos de mercancías. */
   mercanciasDatos: Mercancia[];
+
+  /** Lista de datos de destinatarios. */
   destinatarioDatos: Destinatario[];
+
+  /** Tipo de operación (puede ser cadena o número). */
   tipoOperacion: string | number;
+
+  /** Justificación proporcionada por el usuario. */
   justificacion: string;
+
+  /** Nombre del establecimiento. */
   establecimiento: string;
+
+  /** Razón social del establecimiento. */
   razonSocial: string;
+
+  /** Correo electrónico del solicitante. */
   correoElectronico: string;
+
+  /** Código postal del establecimiento. */
   codigoPostal: string;
+
+  /** Estado (entidad federativa) del establecimiento. */
   estado: string;
+
+  /** Municipio del establecimiento. */
   municipio: string;
+
+  /** Localidad del establecimiento. */
   localidad: string;
+
+  /** Colonia del establecimiento. */
   colonia: string;
+
+  /** Calle del establecimiento. */
   calle: string;
+
+  /** Lada telefónica del establecimiento. */
   lada: string;
+
+  /** Teléfono del establecimiento. */
   telefono: string;
+
+  /** Indica si se utiliza SCIAN. */
   scian: boolean;
+
+  /** Indica si los datos SCIAN están disponibles. */
   scianDatos: boolean;
+
+  /** Clave SCIAN seleccionada. */
   claveScian: string;
+
+  /** Descripción de la clave SCIAN seleccionada. */
   descripcionScian: string;
+
+  /** Indica si se cuenta con aviso de funcionamiento. */
   avisoDeFuncionamiento: boolean;
+
+  /** Licencia sanitaria del establecimiento. */
   licenciaSanitaria: string;
+
+  /** Régimen del establecimiento. */
   regimen: string;
+
+  /** Aduana relacionada con la operación. */
   aduana: string;
+
+  /** Valor IMMEX relacionado con la operación. */
   immex: string;
+
+  /** Año relacionado con la operación. */
   ano: string;
+
+  /** Descripción de la mercancía. */
   mercancia: string;
+
+  /** Clasificación del producto. */
   clasificacionProducto: string;
+
+  /** Especificación de la clasificación del producto. */
   especificarClasificacionProducto: string;
+
+  /** Denominación del producto. */
   denominacionProducto: string;
+
+  /** Marca del producto. */
   marca: string;
+
+  /** Tipo de producto. */
   tipoProducto: string;
+
+  /** Especificación adicional del producto. */
   especifique: string;
+
+  /** Fracción arancelaria del producto. */
   fraccionArancelaria: string;
+
+  /** Descripción de la fracción arancelaria. */
   descripcionFraccionArancelaria: string;
+
+  /** Cantidad en la unidad de medida de tarifa (UMT). */
   cantidadUMT: string;
+
+  /** Unidad de medida de tarifa (UMT). */
   umt: string;
+
+  /** Cantidad en la unidad de medida de comercialización (UMC). */
   cantidadUMC: string;
+
+  /** Unidad de medida de comercialización (UMC). */
   umc: string;
+
+  /** Clave del lote relacionado con la mercancía. */
   claveLote: string;
+
+  /** Lista de claves relacionadas con la mercancía. */
   listaClave: string;
+
+  /** Indica si se incluyen manifiestos y declaraciones. */
   manfestosYDeclaraciones: boolean;
+
+  /** Indica si los datos deben hacerse públicos. */
   hacerlosPublicos: string;
+
+  /** RFC del solicitante o establecimiento. */
   rfc: string;
+
+  /** Clave de referencia de la operación. */
   claveDeReferencia: string;
+
+  /** Cadena de dependencia relacionada con la operación. */
   cadenaDependecia: string;
+
+  /** Banco relacionado con el pago. */
   banco: string;
+
+  /** Llave de pago de la operación. */
   liaveDePago: string;
+
+  /** Importe del pago realizado. */
   importeDePago: string;
+
+  /** Nombre del destinatario. */
   destinatario: string;
+
+  /** Nombre del fabricante. */
   fabricante: string;
+
+  /** Tipo de persona (física o moral). */
   tipoPersona: string;
+
+  /** Nombre del solicitante. */
   nombre: string;
+
+  /** Primer apellido del solicitante. */
   primerApellido: string;
+
+  /** Segundo apellido del solicitante. */
   segundoApellido: string;
+
+  /** Denominación del solicitante o establecimiento. */
   denominacion: string;
+
+  /** País relacionado con la operación. */
   pais: string;
+
+  /** Estado (entidad federativa) relacionado con la operación. */
   estados: string;
+
+  /** Código postal relacionado con la operación. */
   codigoDeZip: string;
+
+  /** Camino o dirección relacionada con la operación. */
   camino: string;
+
+  /** Número exterior del domicilio relacionado. */
   numeroExterior: string;
+
+  /** Número interior del domicilio relacionado. */
   numeroInterior: string;
+
+  /** Lada telefónica de terceros. */
   ladaDeTerceros: string;
+
+  /** Teléfono de terceros. */
   fon: string;
+
+  /** Correo electrónico de terceros. */
   email: string;
+
+  /** Fecha de pago de la operación. */
   fechaPago: string;
 }
 
@@ -90,70 +219,199 @@ export interface Solicitud260704State {
  */
 export function createInitialState(): Solicitud260704State {
   return {
+    /** Lista de datos de mercancías. */
     mercanciasDatos: [],
+
+    /** Lista de datos de destinatarios. */
     destinatarioDatos: [],
+
+    /** Tipo de operación (puede ser cadena o número). */
     tipoOperacion: '',
+
+    /** Justificación proporcionada por el usuario. */
     justificacion: '',
+
+    /** Nombre del establecimiento. */
     establecimiento: '',
+
+    /** Razón social del establecimiento. */
     razonSocial: '',
+
+    /** Correo electrónico del solicitante. */
     correoElectronico: '',
+
+    /** Código postal del establecimiento. */
     codigoPostal: '',
+
+    /** Estado (entidad federativa) del establecimiento. */
     estado: '',
+
+    /** Municipio del establecimiento. */
     municipio: '',
+
+    /** Localidad del establecimiento. */
     localidad: '',
+
+    /** Colonia del establecimiento. */
     colonia: '',
+
+    /** Calle del establecimiento. */
     calle: '',
+
+    /** Lada telefónica del establecimiento. */
     lada: '',
+
+    /** Teléfono del establecimiento. */
     telefono: '',
+
+    /** Indica si se utiliza SCIAN. */
     scian: false,
+
+    /** Indica si los datos SCIAN están disponibles. */
     scianDatos: false,
+
+    /** Clave SCIAN seleccionada. */
     claveScian: '',
+
+    /** Descripción de la clave SCIAN seleccionada. */
     descripcionScian: '',
+
+    /** Indica si se cuenta con aviso de funcionamiento. */
     avisoDeFuncionamiento: false,
+
+    /** Licencia sanitaria del establecimiento. */
     licenciaSanitaria: '',
+
+    /** Régimen del establecimiento. */
     regimen: '',
+
+    /** Aduana relacionada con la operación. */
     aduana: '',
+
+    /** Valor IMMEX relacionado con la operación. */
     immex: '',
+
+    /** Año relacionado con la operación. */
     ano: '',
+
+    /** Descripción de la mercancía. */
     mercancia: '',
+
+    /** Clasificación del producto. */
     clasificacionProducto: '',
+
+    /** Especificación de la clasificación del producto. */
     especificarClasificacionProducto: '',
+
+    /** Denominación del producto. */
     denominacionProducto: '',
+
+    /** Marca del producto. */
     marca: '',
+
+    /** Tipo de producto. */
     tipoProducto: '',
+
+    /** Especificación adicional del producto. */
     especifique: '',
+
+    /** Fracción arancelaria del producto. */
     fraccionArancelaria: '',
+
+    /** Descripción de la fracción arancelaria. */
     descripcionFraccionArancelaria: '',
+
+    /** Cantidad en la unidad de medida de tarifa (UMT). */
     cantidadUMT: '',
+
+    /** Unidad de medida de tarifa (UMT). */
     umt: '',
+
+    /** Cantidad en la unidad de medida de comercialización (UMC). */
     cantidadUMC: '',
+
+    /** Unidad de medida de comercialización (UMC). */
     umc: '',
+
+    /** Clave del lote relacionado con la mercancía. */
     claveLote: '',
+
+    /** Lista de claves relacionadas con la mercancía. */
     listaClave: '',
+
+    /** Indica si se incluyen manifiestos y declaraciones. */
     manfestosYDeclaraciones: false,
+
+    /** Indica si los datos deben hacerse públicos. */
     hacerlosPublicos: '',
+
+    /** RFC del solicitante o establecimiento. */
     rfc: '',
+
+    /** Clave de referencia de la operación. */
     claveDeReferencia: '',
+
+    /** Cadena de dependencia relacionada con la operación. */
     cadenaDependecia: '',
+
+    /** Banco relacionado con el pago. */
     banco: '',
+
+    /** Llave de pago de la operación. */
     liaveDePago: '',
+
+    /** Importe del pago realizado. */
     importeDePago: '',
+
+    /** Nombre del destinatario. */
     destinatario: '',
+
+    /** Nombre del fabricante. */
     fabricante: '',
+
+    /** Tipo de persona (física o moral). */
     tipoPersona: '',
+
+    /** Nombre del solicitante. */
     nombre: '',
+
+    /** Primer apellido del solicitante. */
     primerApellido: '',
+
+    /** Segundo apellido del solicitante. */
     segundoApellido: '',
+
+    /** Denominación del solicitante o establecimiento. */
     denominacion: '',
+
+    /** País relacionado con la operación. */
     pais: '',
+
+    /** Estado (entidad federativa) relacionado con la operación. */
     estados: '',
+
+    /** Código postal relacionado con la operación. */
     codigoDeZip: '',
+
+    /** Camino o dirección relacionada con la operación. */
     camino: '',
+
+    /** Número exterior del domicilio relacionado. */
     numeroExterior: '',
+
+    /** Número interior del domicilio relacionado. */
     numeroInterior: '',
+
+    /** Lada telefónica de terceros. */
     ladaDeTerceros: '',
+
+    /** Teléfono de terceros. */
     fon: '',
+
+    /** Correo electrónico de terceros. */
     email: '',
+
+    /** Fecha de pago de la operación. */
     fechaPago: '',
   };
 }

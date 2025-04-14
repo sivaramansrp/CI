@@ -16,7 +16,7 @@ import { CrosslistComponent, InputFechaComponent, InputRadioComponent, Notificac
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ReplaySubject, map, takeUntil } from 'rxjs';
 import { Solicitud260704State, Tramite260704Store } from '../../estados/Tramite260704.store';
-import { AVISO_PRIVACIDAD } from '../../constantes/consulta.enum';
+import { AVISO_PRIVACIDAD, CATALOGO_CLAVE, ENCABEZADOS_SCIAN, ESTADO_CATALOGO, LISTA_CLAVE, MERCANCIAS_DATOS, OPCIONES_RADIO_HACERLOS, RADIO_OPCIONS } from '../../constantes/consulta.enum';
 import { CommonModule } from '@angular/common';
 import { ConsultaService } from '../../service/consulta.service';
 import { Modal } from 'bootstrap';
@@ -195,7 +195,9 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Array de catálogo para la clave SCIAN.
    */
   claveScian!: Catalogo[];
-
+/**
+ * Bandera que indica si hay una fila seleccionada en la tabla de fabricantes.
+ */
   public tieneFilaSeleccionadaFabricante: boolean = false;
 
 
@@ -211,152 +213,36 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   /**
    * Opciones de radio internas del componente.
    */
-  radioOpcions = [
-    { label: 'Prórroga', value: 'prorroga' },
-    { label: 'Modificación', value: 'modificacion' },
-    { label: 'Modificación y prórroga', value: 'modificacionYProrroga' },
-  ];
+  radioOpcions = RADIO_OPCIONS;
 
   /**
    * Opciones de radio para hacerlos.
    */
-  opcionesRadioHacerlos = [
-    { label: 'No', value: 'no' },
-    { label: 'Sí', value: 'si' },
-  ];
+  opcionesRadioHacerlos = OPCIONES_RADIO_HACERLOS;
 
   /**
    * Configuración del catálogo para el estado.
    */
-  public estadoCatalogo: CatalogosSelect = {
-    labelNombre: 'Estado',
-    required: true,
-    primerOpcion: 'Selecciona un valor',
-    catalogos: [],
-  };
+  public estadoCatalogo = ESTADO_CATALOGO;
 
   /**
    * Configuración del catálogo para la clave.
    */
-  public catalogoClave: CatalogosSelect = {
-    labelNombre: 'Estado',
-    required: true,
-    primerOpcion: 'Selecciona un valor',
-    catalogos: [],
-  };
+  public catalogoClave = CATALOGO_CLAVE;
 
   /**
    * Encabezados para la tabla de SCIAN.
    */
-  public encabezados: ConfiguracionColumna<ColumnasTabla>[] = [
-    {
-      encabezado: 'Clave S.C.I.A.N.',
-      clave: (ele: ColumnasTabla) => ele.claveScian,
-      orden: 1,
-    },
-    {
-      encabezado: 'Descripción del S.C.I.A.N.',
-      clave: (ele: ColumnasTabla) => ele.descripcionScian,
-      orden: 2,
-    },
-  ];
-
+  public encabezados = ENCABEZADOS_SCIAN;
   /**
    * Encabezados para la tabla de mercancías.
    */
-  public mercanciasDatos: ConfiguracionColumna<Mercancia>[] = [
-    {
-      encabezado: 'Clasificación del producto',
-      clave: (item: Mercancia) => item.clasificaionProductos,
-      orden: 1,
-    },
-    {
-      encabezado: 'Especificar Clasificación del producto',
-      clave: (item: Mercancia) => item.especificarProducto,
-      orden: 2,
-    },
-    {
-      encabezado: 'Denominación específico del producto',
-      clave: (item: Mercancia) => item.nombreProductoEspecifico,
-      orden: 3,
-    },
-    {
-      encabezado: 'Marca',
-      clave: (item: Mercancia) => item.marca,
-      orden: 4,
-    },
-    {
-      encabezado: 'Fracción arancelaria',
-      clave: (item: Mercancia) => item.fraccionArancelaria,
-      orden: 5,
-    },
-    {
-      encabezado: 'Descripción de la fracción arancelaria',
-      clave: (item: Mercancia) => item.descripcionFraccionArancelaria,
-      orden: 6,
-    },
-    {
-      encabezado: 'Unidad de medida de comercialización (UMC)',
-      clave: (item: Mercancia) => item.umc,
-      orden: 7,
-    },
-    {
-      encabezado: 'Cantidad UMC',
-      clave: (item: Mercancia) => item.cantidadUMC,
-      orden: 8,
-    },
-    {
-      encabezado: 'Unidad de medida de tarifa (UMT)',
-      clave: (item: Mercancia) => item.umt,
-      orden: 9,
-    },
-    {
-      encabezado: 'Cantidad UMT',
-      clave: (item: Mercancia) => item.cantidadUMT,
-      orden: 10,
-    },
-    {
-      encabezado: 'País de origen',
-      clave: (item: Mercancia) => item.paisDeOrigen,
-      orden: 11,
-    },
-    {
-      encabezado: 'País de procedencia',
-      clave: (item: Mercancia) => item.paisDeProcedencia,
-      orden: 12,
-    },
-    {
-      encabezado: 'Tipo de producto',
-      clave: (item: Mercancia) => item.tipoProducto,
-      orden: 13,
-    },
-    {
-      encabezado: 'Uso específico',
-      clave: (item: Mercancia) => item.usoEspecifico,
-      orden: 14,
-    },
-  ];
+  public mercanciasDatos = MERCANCIAS_DATOS;
 
   /**
    * Encabezados para la tabla de clave.
    */
-  public listaClave: ConfiguracionColumna<ListaClave>[] = [
-    {
-      encabezado: 'Clave de los lotes',
-      clave: (ele: ListaClave) => ele.claveDeLosLotes,
-      orden: 1,
-    },
-    {
-      encabezado: 'Fecha de fabricación',
-      clave: (ele: ListaClave) => ele.fechaDeFabricacion,
-      orden: 2,
-    },
-    {
-      encabezado: 'Fecha de caducidad',
-      clave: (ele: ListaClave) => ele.fechaDeCaducidad,
-      orden: 3,
-    },
-  ];
+  public listaClave = LISTA_CLAVE;
 
   /**
    * Constructor del componente que inyecta los servicios necesarios.

@@ -1,14 +1,14 @@
 import { AlertComponent, BtnContinuarComponent, DatosPasos, ListaPasosWizard, PASOS, WizardComponent } from '@ng-mf/data-access-user';
 import { Component, ViewChild } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { AVISO_PRIVACIDAD } from '../../constantes/consulta.enum';
+import { AVISO } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 
 /**
- * Interfaz que define la estructura de una acción de botón.
+ * Interfaz que define la estructura de una acción de botón
  */
 interface AccionBoton {
   /**
@@ -27,18 +27,7 @@ interface AccionBoton {
 @Component({
   templateUrl: './solicitud-page.component.html',
   styles: ``,
-  standalone: true,
-  imports: [
-    WizardComponent,
-    CommonModule,
-    BtnContinuarComponent,
-    FormsModule,
-    PasoDosComponent,
-    PasoTresComponent,
-    PasoUnoComponent,
-    ReactiveFormsModule,
-    AlertComponent
-  ],
+  
 })
 /**
  * Componente que representa la página de solicitud.
@@ -55,7 +44,7 @@ export class SolicitudPageComponent {
    */
   indice: number = 1;
   public infoAlert = 'alert-info';
-  TEXTOS = AVISO_PRIVACIDAD;
+  TEXTOS = AVISO;
   /**
    * Referencia al componente del asistente.
    */

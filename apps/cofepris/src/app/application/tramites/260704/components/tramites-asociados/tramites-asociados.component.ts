@@ -5,6 +5,7 @@ import { Asociados } from '../../models/consulta.model';
 import { CommonModule } from '@angular/common';
 import { ConsultaService } from '../../service/consulta.service';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
+import { DESTINATARIO_TABLA } from '../../constantes/consulta.enum';
 
 /**
  * Componente para mostrar y administrar los trámites asociados.
@@ -41,28 +42,7 @@ export class TramitesAsociadosComponent implements OnInit, OnDestroy {
   /**
    * Configuración de las columnas para la tabla de trámites asociados.
    */
-  destinatarioConfiguracionTabla: ConfiguracionColumna<Asociados>[] = [
-    {
-      encabezado: 'Folio trámite',
-      clave: (item: Asociados) => item.folioTramite,
-      orden: 1,
-    },
-    {
-      encabezado: 'Tipo trámite',
-      clave: (item: Asociados) => item.tipoTramite,
-      orden: 2,
-    },
-    {
-      encabezado: 'Estatus',
-      clave: (item: Asociados) => item.estatus,
-      orden: 3,
-    },
-    {
-      encabezado: 'Fecha alta de registro',
-      clave: (item: Asociados) => item.fechaRegistro,
-      orden: 4,
-    },
-  ];
+  destinatarioConfiguracionTabla = DESTINATARIO_TABLA;
 
   /**
    * Constructor del componente.

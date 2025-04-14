@@ -10,8 +10,7 @@ import { TramiteStore } from '@ng-mf/data-access-user';
   selector: 'app-paso-tres',
   templateUrl: './paso-tres.component.html',
   styleUrl: './paso-tres.component.scss',
-  standalone: true,
-  imports: [FirmaElectronicaComponent],
+
 })
 export class PasoTresComponent implements OnDestroy {
    /**

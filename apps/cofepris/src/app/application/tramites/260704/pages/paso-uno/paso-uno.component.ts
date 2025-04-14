@@ -19,17 +19,6 @@ import { TramitesAsociadosComponent } from '../../components/tramites-asociados/
   selector: 'app-paso-uno',
   templateUrl: './paso-uno.component.html',
   styles: ``,
-  standalone: true,
-  imports: [
-    SharedModule,
-    CommonModule,
-    SolicitanteComponent,
-    DatosDeLaSolicitudComponent,
-    PagoDeDerechosComponent,
-    TercerosRelacinadosComponent,
-    TramitesAsociadosComponent,
-    TituloComponent,
-  ],
 })
 export class PasoUnoComponent implements AfterViewInit {
 

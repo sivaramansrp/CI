@@ -1,16 +1,10 @@
-
+import { CatalogosSelect, ConfiguracionColumna } from '@libs/shared/data-access-user/src';
+import { Asociados, ColumnasTabla, Destinatario, Fabricante, ListaClave, Mercancia } from '../models/consulta.model';
 /**
  * Constante que contiene textos relacionados con el aviso de privacidad y alertas.
  */
 export const AVISO_PRIVACIDAD = {
   /**
-   * Texto HTML que representa el aviso de privacidad simplificado.
-   * Incluye información sobre el tratamiento de datos personales por parte del SAT
-   * a través de la Ventanilla Digital Mexicana de Comercio Exterior (VUCEM).
-   */
-    ADJUNTAR: `<h5>Aviso de privacidad simplificado</h5>
-      <p style="text-align: justify">El Servicio de Administración Tributaria (SAT), es el sujeto obligado y responsable del tratamiento de los datos personales que se recaban a través de la Ventanilla Digital Mexicana de Comercio Exterior (VUCEM), los datos personales podrán ser utilizados y transferidos a la autoridades competentes, con la finalidad de llevar a cabo cualquier trámite relacionado con importaciones, exportaciones y tránsito de mercancías de comercio exterior, incluyendo las regulaciones y restricciones no arancelarias que, conforme a la legislación aplicable, sea exigido por las autoridades competentes en materia de comercio exterior y/o consultar información sobre los procedimientos para la importación, exportación y tránsito de mercancías de comercio exterior, incluyendo las regulaciones y restricciones no arancelarias, así como las notificaciones que se deriven de dichos trámites y serán protegidos, incorporados y tratados en el Sistema de datos personales de la VUCEM, asimismo podrán ser transmitidos a las autoridades competentes establecidad en el Decreto por el que se establece la Ventanilla Digital Mexicana de Comercio Exterior, publicado en el Diario Oficial de la Federaciónel 14 de enero de 2011, así como al propio titular de la información. El titular, en su caso, podrá manifestar su negativa para el tratamiento de sus datos personales para finalidades y transferencias de los mismos que requieran el consentimiento del titular. Si desea conocer nuestro aviso de privacidad integral, lo podrá consultar en el portal.</p><a href="">Aviso de privacidad integral</a>`,
-      /**
    * Texto que indica que las tablas con asterisco son obligatorias y deben contener al menos un registro.
    */
     TEXTOS_TERCEROS: 'Las tables con asterisco son obligatorias y debes agregar por lo menos un registro.',
@@ -150,5 +144,315 @@ export const BOTONS = [
   {
     btnNombre: 'Restar todos',
     class: 'btn-default'
+  },
+
+];
+/**
+ * Configuración de columnas para la tabla de fabricantes.
+ */
+export const FABRICANTE_CONFIGURACION_TABLA: ConfiguracionColumna<Fabricante>[] = [
+  {
+    encabezado: "Nombre/denominación o razón social",
+    clave: (item: Fabricante) => item.nombre,
+    orden: 1,
+  },
+  { encabezado: "R.F.C.", clave: (item: Fabricante) => item.rfc, orden: 2 },
+  { encabezado: "CURP", clave: (item: Fabricante) => item.curp, orden: 3 },
+  {
+    encabezado: "Teléfono",
+    clave: (item: Fabricante) => item.telefono,
+    orden: 4,
+  },
+  {
+    encabezado: "Correo electrónico",
+    clave: (item: Fabricante) => item.correoElectronico,
+    orden: 5,
+  },
+  { encabezado: "Calle", clave: (item: Fabricante) => item.calle, orden: 6 },
+  {
+    encabezado: "Número exterior",
+    clave: (item: Fabricante) => item.numeroExterior,
+    orden: 7,
+  },
+  {
+    encabezado: "Número interior",
+    clave: (item: Fabricante) => item.numeroInterior,
+    orden: 8,
+  },
+  { encabezado: "País", clave: (item: Fabricante) => item.pais, orden: 9 },
+  {
+    encabezado: "Colonia",
+    clave: (item: Fabricante) => item.colonia,
+    orden: 10,
+  },
+  {
+    encabezado: "Municipio o alcaldía",
+    clave: (item: Fabricante) => item.municipio,
+    orden: 11,
+  },
+  {
+    encabezado: "Localidad",
+    clave: (item: Fabricante) => item.localidad,
+    orden: 12,
+  },
+  {
+    encabezado: "Estado",
+    clave: (item: Fabricante) => item.estado,
+    orden: 13,
+  },
+  {
+    encabezado: "Estado",
+    clave: (item: Fabricante) => item.estado2,
+    orden: 14,
+  },
+  {
+    encabezado: "Código postal",
+    clave: (item: Fabricante) => item.codigo,
+    orden: 15,
+  },
+];
+  
+/**
+ * Configuración de columnas para la tabla de destinatarios.
+ */
+export const DESTINATARIO_CONFIGURACION_TABLA: ConfiguracionColumna<Destinatario>[] = [
+  {
+    encabezado: "Nombre/denominación o razón social",
+    clave: (item: Destinatario) => item.nombre,
+    orden: 1,
+  },
+  { encabezado: "R.F.C.", clave: (item: Destinatario) => item.rfc, orden: 2 },
+  { encabezado: "CURP", clave: (item: Destinatario) => item.curp, orden: 3 },
+  {
+    encabezado: "Teléfono",
+    clave: (item: Destinatario) => item.telefono,
+    orden: 4,
+  },
+  {
+    encabezado: "Correo electrónico",
+    clave: (item: Destinatario) => item.correoElectronico,
+    orden: 5,
+  },
+  {
+    encabezado: "Calle",
+    clave: (item: Destinatario) => item.calle,
+    orden: 6,
+  },
+  {
+    encabezado: "Número exterior",
+    clave: (item: Destinatario) => item.numeroExterior,
+    orden: 7,
+  },
+  {
+    encabezado: "Número interior",
+    clave: (item: Destinatario) => item.numeroInterior,
+    orden: 8,
+  },
+  { encabezado: "País", clave: (item: Destinatario) => item.pais, orden: 9 },
+  {
+    encabezado: "Colonia",
+    clave: (item: Destinatario) => item.colonia,
+    orden: 10,
+  },
+  {
+    encabezado: "Municipio o alcaldía",
+    clave: (item: Destinatario) => item.municipio,
+    orden: 11,
+  },
+  {
+    encabezado: "Localidad",
+    clave: (item: Destinatario) => item.localidad,
+    orden: 12,
+  },
+  {
+    encabezado: "Estado",
+    clave: (item: Destinatario) => item.estado,
+    orden: 13,
+  },
+  {
+    encabezado: "Estado",
+    clave: (item: Destinatario) => item.estado2,
+    orden: 14,
+  },
+  {
+    encabezado: "Código postal",
+    clave: (item: Destinatario) => item.codigo,
+    orden: 15,
+  },
+];
+
+/**
+ * Opciones de radio internas del componente.
+ */
+export const RADIO_OPCIONS = [
+  { label: 'Prórroga', value: 'prorroga' },
+  { label: 'Modificación', value: 'modificacion' },
+  { label: 'Modificación y prórroga', value: 'modificacionYProrroga' },
+];
+
+/**
+ * Opciones de radio para hacerlos.
+ */
+export const OPCIONES_RADIO_HACERLOS = [
+  { label: 'No', value: 'no' },
+  { label: 'Sí', value: 'si' },
+];
+
+/**
+ * Configuración del catálogo para el estado.
+ */
+export const ESTADO_CATALOGO: CatalogosSelect = {
+  labelNombre: 'Estado',
+  required: true,
+  primerOpcion: 'Selecciona un valor',
+  catalogos: [],
+};
+
+/**
+ * Configuración del catálogo para la clave.
+ */
+export const CATALOGO_CLAVE: CatalogosSelect = {
+  labelNombre: 'Estado',
+  required: true,
+  primerOpcion: 'Selecciona un valor',
+  catalogos: [],
+};
+
+/**
+ * Encabezados para la tabla de SCIAN.
+ */
+export const ENCABEZADOS_SCIAN: ConfiguracionColumna<ColumnasTabla>[] = [
+  {
+    encabezado: 'Clave S.C.I.A.N.',
+    clave: (ele: ColumnasTabla) => ele.claveScian,
+    orden: 1,
+  },
+  {
+    encabezado: 'Descripción del S.C.I.A.N.',
+    clave: (ele: ColumnasTabla) => ele.descripcionScian,
+    orden: 2,
+  },
+];
+
+/**
+ * Encabezados para la tabla de mercancías.
+ */
+export const MERCANCIAS_DATOS: ConfiguracionColumna<Mercancia>[] = [
+  {
+    encabezado: 'Clasificación del producto',
+    clave: (item: Mercancia) => item.clasificaionProductos,
+    orden: 1,
+  },
+  {
+    encabezado: 'Especificar Clasificación del producto',
+    clave: (item: Mercancia) => item.especificarProducto,
+    orden: 2,
+  },
+  {
+    encabezado: 'Denominación específico del producto',
+    clave: (item: Mercancia) => item.nombreProductoEspecifico,
+    orden: 3,
+  },
+  {
+    encabezado: 'Marca',
+    clave: (item: Mercancia) => item.marca,
+    orden: 4,
+  },
+  {
+    encabezado: 'Fracción arancelaria',
+    clave: (item: Mercancia) => item.fraccionArancelaria,
+    orden: 5,
+  },
+  {
+    encabezado: 'Descripción de la fracción arancelaria',
+    clave: (item: Mercancia) => item.descripcionFraccionArancelaria,
+    orden: 6,
+  },
+  {
+    encabezado: 'Unidad de medida de comercialización (UMC)',
+    clave: (item: Mercancia) => item.umc,
+    orden: 7,
+  },
+  {
+    encabezado: 'Cantidad UMC',
+    clave: (item: Mercancia) => item.cantidadUMC,
+    orden: 8,
+  },
+  {
+    encabezado: 'Unidad de medida de tarifa (UMT)',
+    clave: (item: Mercancia) => item.umt,
+    orden: 9,
+  },
+  {
+    encabezado: 'Cantidad UMT',
+    clave: (item: Mercancia) => item.cantidadUMT,
+    orden: 10,
+  },
+  {
+    encabezado: 'País de origen',
+    clave: (item: Mercancia) => item.paisDeOrigen,
+    orden: 11,
+  },
+  {
+    encabezado: 'País de procedencia',
+    clave: (item: Mercancia) => item.paisDeProcedencia,
+    orden: 12,
+  },
+  {
+    encabezado: 'Tipo de producto',
+    clave: (item: Mercancia) => item.tipoProducto,
+    orden: 13,
+  },
+  {
+    encabezado: 'Uso específico',
+    clave: (item: Mercancia) => item.usoEspecifico,
+    orden: 14,
+  },
+];
+
+/**
+ * Encabezados para la tabla de clave.
+ */
+export const LISTA_CLAVE: ConfiguracionColumna<ListaClave>[] = [
+  {
+    encabezado: 'Clave de los lotes',
+    clave: (ele: ListaClave) => ele.claveDeLosLotes,
+    orden: 1,
+  },
+  {
+    encabezado: 'Fecha de fabricación',
+    clave: (ele: ListaClave) => ele.fechaDeFabricacion,
+    orden: 2,
+  },
+  {
+    encabezado: 'Fecha de caducidad',
+    clave: (ele: ListaClave) => ele.fechaDeCaducidad,
+    orden: 3,
+  },
+];
+
+/**
+ * Configuración de columnas para la tabla de trámites asociados.
+ */
+export const DESTINATARIO_TABLA: ConfiguracionColumna<Asociados>[] = [
+  {
+    encabezado: 'Folio trámite',
+    clave: (item: Asociados) => item.folioTramite,
+    orden: 1,
+  },
+  {
+    encabezado: 'Tipo trámite',
+    clave: (item: Asociados) => item.tipoTramite,
+    orden: 2,
+  },
+  {
+    encabezado: 'Estatus',
+    clave: (item: Asociados) => item.estatus,
+    orden: 3,
+  },
+  {
+    encabezado: 'Fecha alta de registro',
+    clave: (item: Asociados) => item.fechaRegistro,
+    orden: 4,
   },
 ];
