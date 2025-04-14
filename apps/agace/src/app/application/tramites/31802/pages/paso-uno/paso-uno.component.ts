@@ -16,8 +16,6 @@ import { map, ReplaySubject, takeUntil } from 'rxjs';
   selector: 'app-paso-uno',
   templateUrl: './paso-uno.component.html',
   styles: ``,
-  standalone: true,
-  imports: [SharedModule, CommonModule, SolicitanteComponent, SolicitudComponent, TituloComponent, ReactiveFormsModule, InputCheckComponent],
 })
 export class PasoUnoComponent implements AfterViewInit,OnInit, OnDestroy {
 
