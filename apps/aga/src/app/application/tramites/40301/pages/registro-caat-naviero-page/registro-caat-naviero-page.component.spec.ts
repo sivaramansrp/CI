@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RegistroCaatNavieroPageComponent } from './registro-caat-naviero-page.component';
 import { SeccionLibQuery, SeccionLibStore, WizardComponent } from '@ng-mf/data-access-user';
-import { of } from 'rxjs';
+import { of, Subject } from 'rxjs';
 
 describe('RegistroCaatNavieroPageComponent', () => {
   let component: RegistroCaatNavieroPageComponent;
@@ -11,7 +11,7 @@ describe('RegistroCaatNavieroPageComponent', () => {
 
   beforeEach(async () => {
     mockSeccionQuery = {
-      selectSeccionState$: jest.fn().mockReturnValue(of({ seccion: { paso1: true, paso2: false } })),
+      selectSeccionState$: jest.fn().mockReturnValue(of({ paso1: true, paso2: false })),
     } as unknown as jest.Mocked<SeccionLibQuery>;
 
     mockSeccionStore = {
@@ -38,13 +38,14 @@ describe('RegistroCaatNavieroPageComponent', () => {
   it('should initialize seccion state on ngOnInit', () => {
     jest.spyOn(component, 'asignarSecciones');
     component.ngOnInit();
+    expect(mockSeccionQuery.selectSeccionState$).toHaveBeenCalled();
     expect(component.asignarSecciones).toHaveBeenCalled();
   });
 
   it('should assign sections to the store', () => {
-    component['asignarSecciones']();
-    expect(mockSeccionStore.establecerSeccion).toHaveBeenCalled();
-    expect(mockSeccionStore.establecerFormaValida).toHaveBeenCalled();
+    component.asignarSecciones();
+    expect(mockSeccionStore.establecerSeccion).toHaveBeenCalledWith([true, false]);
+    expect(mockSeccionStore.establecerFormaValida).toHaveBeenCalledWith([false, false]);
   });
 
   it('should change the active tab index', () => {
@@ -84,5 +85,15 @@ describe('RegistroCaatNavieroPageComponent', () => {
 
     component.pestanaCambiado(1);
     expect(component.mostrarBotonParaModal).toBeFalsy();
+  });
+
+  it('should unsubscribe from observables on component destruction', () => {
+    const destroyNotifierSpy = jest.spyOn(component['destroyNotifier$'], 'next');
+    const destroyCompleteSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
+
+    // component.ngOnDestroy();
+
+    expect(destroyNotifierSpy).toHaveBeenCalled();
+    expect(destroyCompleteSpy).toHaveBeenCalled();
   });
 });
