@@ -309,7 +309,7 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/110216/inicialmente-certificado-origen.module').then(
         (m) => m.InicialmenteCertificadoOrigenModule
-      ),
+      )
   },
   {
     path: 'validador-certificado-cam',
@@ -363,6 +363,13 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'solicitud-importacion-ambulancia',
+    loadChildren: () =>
+      import('./tramites/130116/solicitud-importacion-ambulancia.module').then(
+        (m) => m.SolicitudImportacionAmbulanciaModule
+      ),
+  },
+  {
     path:'importacion-vehiculos-usados-donacion',
     loadChildren: () =>
       import('./tramites/130105/importacion-vehiculos-usados-donacion.module').then(
@@ -389,6 +396,20 @@ const ROUTES: Routes = [
       import('./tramites/120204/expedicion-certificado-cupos.module').then(
         (m) => m.ExpedicionCertificadoModule),
   },
+  {
+    path: 'exportar-diamantes',
+    loadChildren: () => 
+      import('./tramites/130203/exportación-de-diamantes-en-bruto.module').then(
+        (m) => m.ExportaciónDeDiamantesEnBrutoModule
+      )
+  },
+  {
+    path: 'importacion-otros-vehiculos-usados',
+    loadChildren: () =>
+      import('./tramites/130104/importacion-otros-vehiculos-usados.module').then(
+        (m) => m.ImportacionOtrosVehiculosUsadosModule
+      )
+    }
 ];
 
 @NgModule({

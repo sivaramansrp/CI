@@ -1,5 +1,5 @@
+import { TransporteAereo, TransporteCarretero, TransporteFerroviario, TransporteMaritimo, TransporteOtro, TransportePeatonal } from '@ng-mf/data-access-user';
 import {
-  Personas,
   ResponsablesDespacho,
 } from '../../models/5701/tramite5701.model';
 
@@ -15,18 +15,28 @@ export interface Solicitud5701State {
   idSolicitud: string;
   tipoSolicitud: string;
 
-  rfcImportExport: string;
-  nombreImportExport: string;
-  nroRegistro: string;
-  programaFomento: string;
-  immex: string;
-  immexValue: string;
-  industriaAutomotriz: string;
+  RFCImportadorExportador: string;
+  nombre: string;
+  descripcionNumeroRegistro: string;
+
+  programa: boolean;
+  descripcionProgramaFomento: string;
+
+
+  /**
+   * @description IMMEX: Industria Manufacturera, Maquiladora y de Servicios de Exportación
+   */
+  checkIMMEX: boolean;
+  descripcionImmex: string;
+
+  industriaAutomotriz: boolean;
+  descripcionIndustrialAutomotriz: string;
+
   tipoEmpresaCertificada: string;
   idSocioComercial: string;
   socioComercial: boolean;
-  opEconomicoAut: boolean;
-  revisionOrigen: boolean;
+  certificacionOEA: boolean;
+  revision: boolean;
 
   fechaInicio: string;
   horaInicio: string;
@@ -35,11 +45,19 @@ export interface Solicitud5701State {
   fechasSeleccionadas: string[];
 
   despacho: string;
-  rfcAutorizacion: string;
-  ddexAutorizacion: string;
-  idAduana: string;
-  descripcionAduana: string;
-  idSeccionAduanera: string;
+
+  /**
+   * @description LDA: Autrización para operar por un Ligar Distinto a la Aduana.
+   */
+  lda: boolean;
+  autorizacionLDA: string;
+
+  dd: boolean;
+  autorizacionDDEX: string;
+
+  idAduanaDespacho: string;
+  aduanaDespacho: string;
+  idSeccionDespacho: string;
   seccionAduanera: string;
   nombreRecinto: string;
   tipoDespacho: string;
@@ -47,11 +65,11 @@ export interface Solicitud5701State {
   patente: string;
   relacionSociedad: boolean;
   encargoConferido: boolean;
-  domicilio: string;
+  domicilioDespacho: string;
 
   paisOrigen: number;
   paisProcedencia: number;
-  descripcion: string;
+  descripcionGenerica: string;
   justificacion: string;
 
   idPedimento: number;
@@ -65,42 +83,59 @@ export interface Solicitud5701State {
 
   personasResponsablesDespacho: ResponsablesDespacho[];
 
-  transporte: string[];
+  tipoTransporte: string;
+  transporte: TransporteAereo[] | TransporteCarretero[] | TransporteFerroviario[] | TransporteMaritimo[] | TransporteOtro[] | TransportePeatonal[];
+
+  tipoTransporteArriboSalida: string;
+  transporteArriboDatos: TransporteAereo[] | TransporteCarretero[] | TransporteFerroviario[] | TransporteMaritimo[] | TransporteOtro[] | TransportePeatonal[];
 
   montoPagar: string;
   lineaCaptura: string;
-  montoModal: string;
+  monto: string;
 
-  tercerosRelacionados: Personas[];
+  rangoFechas: boolean;
+  selectRangoDias: string[];
+}
+
+export interface Tercero5701State {
+  nombreTercero: string;
+  correoTercero: string;
+}
+export interface Terceros5701State {
+  terceros: Tercero5701State[];
 }
 
 export function createInitialState(): Solicitud5701State {
   return {
     idSolicitud: '',
     tipoSolicitud: '',
-    rfcImportExport: '',
-    nombreImportExport: '',
-    nroRegistro: '',
-    programaFomento: '',
-    immex: '',
-    immexValue: '',
-    industriaAutomotriz: '',
+    RFCImportadorExportador: '',
+    nombre: '',
+    descripcionNumeroRegistro: '',
+    programa: false,
+    descripcionProgramaFomento: '',
+    checkIMMEX: false,
+    descripcionImmex: '',
+    industriaAutomotriz: false,
+    descripcionIndustrialAutomotriz: '',
     tipoEmpresaCertificada: '',
     idSocioComercial: '',
     socioComercial: false,
-    opEconomicoAut: false,
-    revisionOrigen: false,
+    certificacionOEA: false,
+    revision: false,
     fechaInicio: '',
     horaInicio: '',
     fechaFinal: '',
     horaFinal: '',
     fechasSeleccionadas: [],
     despacho: '',
-    rfcAutorizacion: '',
-    ddexAutorizacion: '',
-    idAduana: '',
-    descripcionAduana: '',
-    idSeccionAduanera: '',
+    lda: false,
+    autorizacionLDA: '',
+    dd: false,
+    autorizacionDDEX: '',
+    idAduanaDespacho: '',
+    aduanaDespacho: '',
+    idSeccionDespacho: '',
     seccionAduanera: '',
     nombreRecinto: '',
     tipoDespacho: '',
@@ -108,10 +143,10 @@ export function createInitialState(): Solicitud5701State {
     patente: '',
     relacionSociedad: false,
     encargoConferido: false,
-    domicilio: '',
+    domicilioDespacho: '',
     paisOrigen: 0,
     paisProcedencia: 0,
-    descripcion: '',
+    descripcionGenerica: '',
     justificacion: '',
     idPedimento: 0,
     patentePedimento: 0,
@@ -122,11 +157,15 @@ export function createInitialState(): Solicitud5701State {
     comprobanteValor: '',
     pedimentoValidado: false,
     personasResponsablesDespacho: [],
+    tipoTransporte: '',
     transporte: [],
+    tipoTransporteArriboSalida: '',
+    transporteArriboDatos: [],
     montoPagar: '',
     lineaCaptura: '',
-    montoModal: '',
-    tercerosRelacionados: [],
+    monto: '',
+    rangoFechas: false,
+    selectRangoDias: [],
   };
 }
 
@@ -137,6 +176,20 @@ export function createInitialState(): Solicitud5701State {
 export class Tramite5701Store extends Store<Solicitud5701State> {
   constructor() {
     super(createInitialState());
+  }
+
+  public setRangoFechas(rangoFechas: boolean): void {
+    this.update((state) => ({
+      ...state,
+      rangoFechas,
+    }));
+  }
+
+  public setRangoDias(selectRangoDias: string[]): void {
+    this.update((state) => ({
+      ...state,
+      selectRangoDias,
+    }));
   }
 
   /**
@@ -151,52 +204,66 @@ export class Tramite5701Store extends Store<Solicitud5701State> {
     }));
   }
 
-  public setRfcImportExport(rfcImportExport: string): void {
+  public setRFCImportadorExportador(RFCImportadorExportador: string): void {
     this.update((state) => ({
       ...state,
-      rfcImportExport,
+      RFCImportadorExportador,
     }));
   }
 
-  public setNombreImportExport(nombreImportExport: string): void {
+  public setNombre(nombre: string): void {
     this.update((state) => ({
       ...state,
-      nombreImportExport,
+      nombre,
     }));
   }
 
-  public setNroRegistro(nroRegistro: string): void {
+  public setDescripcionNumeroRegistro(descripcionNumeroRegistro: string): void {
     this.update((state) => ({
       ...state,
-      nroRegistro,
+      descripcionNumeroRegistro,
     }));
   }
 
-  public setProgramaFomento(programaFomento: string): void {
+  public setPrograma(programa: boolean): void {
     this.update((state) => ({
       ...state,
-      programaFomento,
+      programa,
     }));
   }
 
-  public setImmex(immex: string): void {
+  public setDescripcionProgramaFomento(descripcionProgramaFomento: string): void {
     this.update((state) => ({
       ...state,
-      immex,
+      descripcionProgramaFomento,
     }));
   }
 
-  public setImmexValue(immexValue: string): void {
+  public setCheckIMMEX(checkIMMEX: boolean): void {
     this.update((state) => ({
       ...state,
-      immexValue,
+      checkIMMEX,
     }));
   }
 
-  public setIndustriaAutomotriz(industriaAutomotriz: string): void {
+  public setDescripcionImmex(descripcionImmex: string): void {
+    this.update((state) => ({
+      ...state,
+      descripcionImmex,
+    }));
+  }
+
+  public setIndustriaAutomotriz(industriaAutomotriz: boolean): void {
     this.update((state) => ({
       ...state,
       industriaAutomotriz,
+    }));
+  }
+
+  public setDescripcionIndustriaAutomotriz(descripcionIndustrialAutomotriz: string): void {
+    this.update((state) => ({
+      ...state,
+      descripcionIndustrialAutomotriz,
     }));
   }
 
@@ -221,17 +288,17 @@ export class Tramite5701Store extends Store<Solicitud5701State> {
     }));
   }
 
-  public setOpEconomicoAut(opEconomicoAut: boolean): void {
+  public setCertificacionOEA(certificacionOEA: boolean): void {
     this.update((state) => ({
       ...state,
-      opEconomicoAut,
+      certificacionOEA,
     }));
   }
 
-  public setRevisionOrigen(revisionOrigen: boolean): void {
+  public setRevision(revision: boolean): void {
     this.update((state) => ({
       ...state,
-      revisionOrigen,
+      revision,
     }));
   }
 
@@ -277,38 +344,52 @@ export class Tramite5701Store extends Store<Solicitud5701State> {
     }));
   }
 
-  public setRfcAutorizacion(rfcAutorizacion: string): void {
+  public setLDA(lda: boolean): void {
     this.update((state) => ({
       ...state,
-      rfcAutorizacion,
+      lda,
     }));
   }
 
-  public setDdexAutorizacion(ddexAutorizacion: string): void {
+  public setAutorizacionLDA(autorizacionLDA: string): void {
     this.update((state) => ({
       ...state,
-      ddexAutorizacion,
+      autorizacionLDA,
     }));
   }
 
-  public setIdAduana(idAduana: string): void {
+  public setDD(dd: boolean): void {
     this.update((state) => ({
       ...state,
-      idAduana,
+      dd,
     }));
   }
 
-  public setDescripcionAduana(descripcionAduana: string): void {
+  public setAutorizacionDDEX(autorizacionDDEX: string): void {
     this.update((state) => ({
       ...state,
-      descripcionAduana,
+      autorizacionDDEX,
     }));
   }
 
-  public setIdSeccionAduanera(idSeccionAduanera: string): void {
+  public setIdAduanaDespacho(idAduanaDespacho: string): void {
     this.update((state) => ({
       ...state,
-      idSeccionAduanera,
+      idAduanaDespacho,
+    }));
+  }
+
+  public setAduanaDespacho(aduanaDespacho: string): void {
+    this.update((state) => ({
+      ...state,
+      aduanaDespacho,
+    }));
+  }
+
+  public setIdSeccionDespacho(idSeccionDespacho: string): void {
+    this.update((state) => ({
+      ...state,
+      idSeccionDespacho,
     }));
   }
 
@@ -361,10 +442,10 @@ export class Tramite5701Store extends Store<Solicitud5701State> {
     }));
   }
 
-  public setDomicilio(domicilio: string): void {
+  public setDomicilioDespacho(domicilioDespacho: string): void {
     this.update((state) => ({
       ...state,
-      domicilio,
+      domicilioDespacho,
     }));
   }
 
@@ -382,10 +463,10 @@ export class Tramite5701Store extends Store<Solicitud5701State> {
     }));
   }
 
-  public setDescripcion(descripcion: string): void {
+  public setDescripcionGenerica(descripcionGenerica: string): void {
     this.update((state) => ({
       ...state,
-      descripcion,
+      descripcionGenerica,
     }));
   }
 
@@ -461,10 +542,31 @@ export class Tramite5701Store extends Store<Solicitud5701State> {
     }));
   }
 
-  public setTransporte(transporte: string[]): void {
+  public setTipoTransporte(tipoTransporte: string): void {
     this.update((state) => ({
       ...state,
-      transporte,
+      tipoTransporte,
+    }));
+  }
+
+  public setTransporte(transporte: TransporteAereo[] | TransporteCarretero[] | TransporteFerroviario[] | TransporteMaritimo[] | TransporteOtro[] | TransportePeatonal[]): void {
+    this.update((state) => ({
+      ...state,
+      transporte: Array.isArray(transporte) ? transporte : [transporte],
+    }));
+  }
+
+  public setTipoTransporteArriboSalida(tipoTransporteArriboSalida: string): void {
+    this.update((state) => ({
+      ...state,
+      tipoTransporteArriboSalida,
+    }));
+  }
+
+  public setTransporteArriboDatos(transporteArriboDatos: TransporteAereo[] | TransporteCarretero[] | TransporteFerroviario[] | TransporteMaritimo[] | TransporteOtro[] | TransportePeatonal[]): void {
+    this.update((state) => ({
+      ...state,
+      transporteArriboDatos: Array.isArray(transporteArriboDatos) ? transporteArriboDatos : [transporteArriboDatos],
     }));
   }
 
@@ -482,19 +584,14 @@ export class Tramite5701Store extends Store<Solicitud5701State> {
     }));
   }
 
-  public setMonto(montoModal: string): void {
+  public setMonto(monto: string): void {
     this.update((state) => ({
       ...state,
-      montoModal,
+      monto,
     }));
   }
 
-  public setTercerosRelacionados(tercerosRelacionados: Personas[]): void {
-    this.update((state) => ({
-      ...state,
-      tercerosRelacionados,
-    }));
-  }
+
 
   /**
    * Limpia los datos de la solicitud
