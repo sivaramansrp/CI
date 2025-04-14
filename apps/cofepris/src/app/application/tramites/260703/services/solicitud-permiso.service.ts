@@ -18,7 +18,7 @@ export class SolicitudPermisoService {
   /**
    * Constructor del servicio.
    *
-   * @param {HttpClient} http - Cliente HTTP para realizar solicitudes.
+   * {HttpClient} http - Cliente HTTP para realizar solicitudes.
    */
   constructor(private http: HttpClient) {
     // No se necesita lógica de inicialización adicional.

@@ -76,7 +76,6 @@ export class PagoDeDerechosComponent {
    * Establece valores en el store.
    * formularioPagoDerechos - El formulario reactivo.
    * campo - El campo a actualizar.
-   * metodoNombre - El nombre del método.
    */
   setValoresStore(
     formularioPagoDerechos: FormGroup,

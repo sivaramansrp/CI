@@ -4,18 +4,25 @@ import { Destinatario, Fabricante } from '../../model/solicitud-permiso.model';
 import { Subject, takeUntil } from 'rxjs';
 import { SolicitudPermisoService } from '../../services/solicitud-permiso.service';
 
+/**
+ * Componente que representa la gestión de terceros relacionados.
+ * Permite mostrar y gestionar tablas de destinatarios y fabricantes relacionados con el trámite.
+ */
 @Component({
   selector: 'app-terceros-relacionados',
   templateUrl: './terceros-relacionados.component.html',
   styleUrl: './terceros-relacionados.component.css',
 })
 export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
-
   /**
    * Tipo de selección de la tabla (por ejemplo, selección por checkbox).
    */
   tipoSeleccionTabla: TablaSeleccion = TablaSeleccion.CHECKBOX;
 
+  /**
+   * Configuración de las columnas de la tabla de destinatarios.
+   * Define cómo se mostrarán los datos de los destinatarios.
+   */
   configuiracionTablaDestinatario: ConfiguracionColumna<Destinatario>[] = [
     {
       encabezado: 'Nombre/denominación o razón social',
@@ -77,9 +84,21 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       orden: 15,
     },
   ];
+
+  /**
+   * Datos de la tabla de destinatarios.
+   */
   datosTablaDestinatario!: Destinatario[];
+
+  /**
+   * Indica si hay filas seleccionadas en la tabla de destinatarios.
+   */
   destinatarioTablaSeleccion: boolean = false;
 
+  /**
+   * Configuración de las columnas de la tabla de fabricantes.
+   * Define cómo se mostrarán los datos de los fabricantes.
+   */
   configuiracionTablaFabricante: ConfiguracionColumna<Fabricante>[] = [
     {
       encabezado: 'Nombre/denominación o razón social',
@@ -137,7 +156,15 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       orden: 15,
     },
   ];
+
+  /**
+   * Datos de la tabla de fabricantes.
+   */
   datosTablaFabricante!: Fabricante[];
+
+  /**
+   * Indica si hay filas seleccionadas en la tabla de fabricantes.
+   */
   fabricanteTablaSeleccion: boolean = false;
 
   /**
@@ -146,28 +173,46 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    */
   private notificadorDestruccion$: Subject<void> = new Subject();
 
+  /**
+   * Constructor del componente.
+   * solicitudPermisoService Servicio para obtener los datos de destinatarios y fabricantes.
+   */
   constructor(private solicitudPermisoService: SolicitudPermisoService) {
     //
   }
 
+  /**
+   * Método del ciclo de vida que se ejecuta al inicializar el componente.
+   * Configura las suscripciones necesarias y carga los datos iniciales.
+   */
   ngOnInit(): void {
-    this.solicitudPermisoService.obtenerDatosDestinatarios()
-    .pipe(takeUntil(this.notificadorDestruccion$))
-    .subscribe((destinatario: Destinatario[]) => {
-      this.datosTablaDestinatario = destinatario
-    });
+    this.solicitudPermisoService
+      .obtenerDatosDestinatarios()
+      .pipe(takeUntil(this.notificadorDestruccion$))
+      .subscribe((destinatario: Destinatario[]) => {
+        this.datosTablaDestinatario = destinatario;
+      });
 
-    this.solicitudPermisoService.obtenerDatosFabricantes()
-    .pipe(takeUntil(this.notificadorDestruccion$))
-    .subscribe((fabricante: Fabricante[]) => {
-      this.datosTablaFabricante = fabricante
-    });
+    this.solicitudPermisoService
+      .obtenerDatosFabricantes()
+      .pipe(takeUntil(this.notificadorDestruccion$))
+      .subscribe((fabricante: Fabricante[]) => {
+        this.datosTablaFabricante = fabricante;
+      });
   }
 
+  /**
+   * Maneja la selección de filas en la tabla de destinatarios.
+   * filaSeleccionada Lista de destinatarios seleccionados.
+   */
   manejarFilaSeleccionadaDestinatario(filaSeleccionada: Destinatario[]): void {
     this.destinatarioTablaSeleccion = filaSeleccionada.length > 0;
   }
 
+  /**
+   * Maneja la selección de filas en la tabla de fabricantes.
+   * filaSeleccionada Lista de fabricantes seleccionados.
+   */
   manejarFilaSeleccionadaFabricante(filaSeleccionada: Fabricante[]): void {
     this.fabricanteTablaSeleccion = filaSeleccionada.length > 0;
   }

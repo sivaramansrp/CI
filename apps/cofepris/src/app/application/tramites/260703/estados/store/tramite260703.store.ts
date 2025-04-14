@@ -4,14 +4,33 @@ import { Injectable } from '@angular/core';
 
 /**
  * Creacion del estado inicial para la interfaz de tramite
- * @returns RefProcedureState
+ * @returns SolicitudPermisoState
  */
+
 export interface SolicitudPermisoState {
+  /**
+   * La clave de referencia asociada con la solicitud.
+   */
   claveDeReferencia?: string;
+  /**
+   * La cadena de pago proporcionada por la dependencia.
+   */
   cadenaPagoDependencia?: string;
+  /**
+   * La clave del banco utilizada para el pago.
+   */
   bancoClave?: string;
+  /**
+   * La llave de pago única asociada con la transacción.
+   */
   llaveDePago?: string;
+  /**
+   * La fecha en que se realizó el pago.
+   */
   fecPago?: string;
+  /**
+   * El importe del pago realizado.
+   */
   impPago?: string;
 }
 
@@ -29,7 +48,7 @@ export function createInitialState(): SolicitudPermisoState {
 @Injectable({
   providedIn: 'root',
 })
-@StoreConfig({ name: 'refprocedure', resettable: true })
+@StoreConfig({ name: 'solicitudpermisoprocedure', resettable: true })
 export class Tramite260703Store extends Store<SolicitudPermisoState> {
   /**
    * Constructor de la clase Tramite260703Store.

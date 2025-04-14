@@ -155,7 +155,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
 
   /**
    * Establece valores en el store según el campo y el método proporcionados.
-   * @param $event Objeto que contiene el formulario, el campo y el nombre del método.
+   * $event Objeto que contiene el formulario, el campo y el nombre del método.
    */
   setValoresStore($event: {
     formularioPagoDerechos: FormGroup;
@@ -167,7 +167,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
 
   /**
    * Selecciona una pestaña estableciendo su índice.
-   * @param i El índice de la pestaña a seleccionar.
+   * i El índice de la pestaña a seleccionar.
    */
   seleccionaTab(i: number): void {
     if (i === 4) {
