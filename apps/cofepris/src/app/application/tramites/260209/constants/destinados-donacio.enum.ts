@@ -7,7 +7,7 @@ export const PASOS = [
   },
   {
     indice: 2,
-    titulo: 'Anexar necesarios',
+    titulo: 'Anexar requisitos',
     activo: false,
     completado: false,
   },
@@ -24,7 +24,7 @@ export const PASOS = [
  * @type {string}
  * @constant
  */
-export const TITULOMENSAJE = 
+export const TITULO_MENSAJE = 
   'Permiso sanitario de importación de medicamentos destinados a donación';
 
 /**

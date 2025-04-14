@@ -5,7 +5,7 @@ import {
 } from '@ng-mf/data-access-user';
 import { Component, ViewChild } from '@angular/core';
 
-import { PASOS, TITULOMENSAJE } from '../../constants/destinados-donacio.enum';
+import { PASOS, TITULO_MENSAJE } from '../../constants/destinados-donacio.enum';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
 @Component({
@@ -19,7 +19,7 @@ export class ContenedorDePasosComponent {
    * Puede ser nulo si no está definido.
    * @type {string | null}
    */
-  tituloMensaje: string | null = TITULOMENSAJE;
+  tituloMensaje: string | null = TITULO_MENSAJE;
 
   /**
    * Lista de pasos para el componente wizard.
@@ -87,13 +87,13 @@ export class ContenedorDePasosComponent {
   static obtenerNombreDelTítulo(valor: number): string {
     switch (valor) {
       case 1:
-        return TITULOMENSAJE;
+        return TITULO_MENSAJE;
       case 2:
         return 'Cargar archivos';
       case 3:
         return 'Firmar';
       default:
-        return TITULOMENSAJE;
+        return TITULO_MENSAJE;
     }
   }
 }
