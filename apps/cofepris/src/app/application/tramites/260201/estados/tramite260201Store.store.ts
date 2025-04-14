@@ -19,21 +19,83 @@ import { TablaScianConfig } from '../../../shared/models/datos-solicitud.model';
  * Representa el estado de la tienda para el trámite 260201. Contiene datos relacionados
  * con destinatarios, facturadores, proveedores, fabricantes, formularios y configuraciones.
  */
+/**
+ * Representa el estado de la gestión del trámite 260201.
+ */
 export interface Tramite260201State {
+  /**
+   * Lista de destinatarios finales en la tabla de datos.
+   */
   destinatarioFinalTablaDatos: Destinatario[];
+
+  /**
+   * Lista de facturadores en la tabla de datos.
+   */
   facturadorTablaDatos: Facturador[];
+
+  /**
+   * Lista de proveedores en la tabla de datos.
+   */
   proveedorTablaDatos: Proveedor[];
+
+  /**
+   * Lista de fabricantes en la tabla de datos.
+   */
   fabricanteTablaDatos: Fabricante[];
+
+  /**
+   * Estado del formulario de datos de la solicitud.
+   */
   datosSolicitudFormState: DatosSolicitudFormState;
+
+  /**
+   * Información del formulario de mercancías.
+   */
   mercanciaForm: MercanciaForm;
+
+  /**
+   * Configuración de opciones para la tabla.
+   */
   opcionConfigDatos: TablaOpcionConfig[];
+
+  /**
+   * Configuración de SCIAN para la tabla.
+   */
   scianConfigDatos: TablaScianConfig[];
+
+  /**
+   * Configuración de datos de la tabla de mercancías.
+   */
   tablaMercanciasConfigDatos: TablaMercanciasDatos[];
+
+  /**
+   * Opciones seleccionadas en la tabla de configuración.
+   */
   seleccionadoopcionDatos: TablaOpcionConfig[];
+
+  /**
+   * Datos seleccionados de SCIAN en la tabla.
+   */
   seleccionadoScianDatos: TablaScianConfig[];
+
+  /**
+   * Datos seleccionados de la tabla de mercancías.
+   */
   seleccionadoTablaMercanciasDatos: TablaMercanciasDatos[];
+
+  /**
+   * Estado de colapsabilidad de las opciones.
+   */
   opcionesColapsableState: boolean;
+
+  /**
+   * Estado del formulario de pago de derechos.
+   */
   pagoDerechos: PagoDerechosFormState;
+
+  /**
+   * Identificador de la pestaña seleccionada (opcional).
+   */
   tabSeleccionado?: number;
 }
 
