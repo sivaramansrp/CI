@@ -87,8 +87,6 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
 
 
   ngOnInit(): void {
-
-    this.etiquetasForm = RADIO_OPCIONES;
     /** 
      * Inicializa el formulario principal de solicitud.
      */

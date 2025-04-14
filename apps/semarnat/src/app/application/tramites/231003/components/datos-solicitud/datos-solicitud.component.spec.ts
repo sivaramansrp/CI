@@ -12,6 +12,37 @@ jest.mock('bootstrap', () => ({
   })),
 }));
 
+jest.mock('@libs/shared/theme/assets/json/231003/solicitud.json', () => ({
+  __esModule: true,
+  default: {
+    radioOptions: [{ label: 'Sí', value: 'si' }],
+    clasificacionRadioOptions: [{ label: 'Tipo A', value: 'A' }],
+    nombre: [{ id: 1, descripcion: 'Nombre 1' }],
+    arancelaria: [{ id: 1, descripcion: 'Fracción 1' }],
+    nico: [{ id: 1, descripcion: 'Nico 1' }],
+    unidad: [{ id: 1, descripcion: 'Unidad 1' }],
+    residuo: [{ id: 1, descripcion: 'Residuo 1' }],
+    tipoNombre: [{ id: 1, descripcion: 'Tipo Nombre' }],
+    descripcion: [{ id: 1, descripcion: 'Descripción' }],
+    creti: [{ id: 1, descripcion: 'CRETIB' }],
+    estadoFisico: [{ id: 1, descripcion: 'Líquido' }],
+    tipoContenedor: [{ id: 1, descripcion: 'Tambor' }],
+    PrimasRelacionadas: [
+      {
+        encabezadoDeTabla: ['Columna1', 'Columna2'],
+        cuerpoTabla: [{ tbodyData: ['Valor1', 'Valor2'] }]
+      }
+    ],
+    Immex: [],
+    table: [
+      {
+        encabezadoDeTabla: ['Columna1', 'Columna2'],
+        cuerpoTabla: [{ tbodyData: ['Valor1', 'Valor2'] }]
+      }
+    ]
+  }
+}));
+
 describe('DatosSolicitudComponent', () => {
   let component: DatosSolicitudComponent;
   let fixture: ComponentFixture<DatosSolicitudComponent>;
