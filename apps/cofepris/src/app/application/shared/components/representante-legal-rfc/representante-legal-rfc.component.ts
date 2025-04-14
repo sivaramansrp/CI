@@ -1,14 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import {
-  DatosDomicilioLegalState,
-  DatosDomicilioLegalStore,
-} from '../../estados/stores/datos-domicilio-legal.store';
-import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import {DatosDomicilioLegalState,DatosDomicilioLegalStore,} from '../../estados/stores/datos-domicilio-legal.store';
+import {FormBuilder,FormGroup,ReactiveFormsModule,Validators,} from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DatosDomicilioLegalQuery } from '../../estados/queries/datos-domicilio-legal.query';
@@ -46,7 +38,7 @@ export class RepresentanteLegalRfcComponent implements OnInit, OnDestroy {
     private DatosDomicilioLegalStore: DatosDomicilioLegalStore,
     private DatosDomicilioLegalQuery: DatosDomicilioLegalQuery
   ) {
-    // Inicializa el estado de la solicitud.
+    //Reservado para futuras inyecciones de dependencias o inicializaciones.
   }
 
   /**
@@ -67,6 +59,15 @@ export class RepresentanteLegalRfcComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
+      this.configurarGrupoForm(); // Configura el formulario reactivo.
+  
+  }
+  /**
+   * Configura el formulario reactivo.
+   * @description Configura el formulario reactivo para el componente.
+   */
+  configurarGrupoForm(): void // Configura el formulario reactivo.
+  {
     this.representante = this.fb.group({
       rfc: [this.solicitudState?.rfc, Validators.required],
       nombre: [{ value: '', disabled: true }, Validators.required],
@@ -74,7 +75,6 @@ export class RepresentanteLegalRfcComponent implements OnInit, OnDestroy {
       apellidoMaterno: [{ value: '', disabled: true }],
     });
   }
-
   /**
    * Obtiene el valor de un campo en el store de Tramite31601.
    */
