@@ -9,8 +9,22 @@ import { Tramite260207Store } from '../../estados/tramite260207Store.store';
   styleUrl: './paso-uno.component.css',
 })
 export class PasoUnoComponent implements OnDestroy, OnInit {
+
+  /**
+   * The index of the currently selected tab.
+   * 
+   * @type {number | undefined}
+   * @default 1
+   */
   indice: number | undefined = 1;
 
+  /**
+   * A `Subject` used as a notifier to signal the destruction of the component.
+   * This is typically used to unsubscribe from observables to prevent memory leaks.
+   * 
+   * @private
+   * @type {Subject<void>}
+   */
   private destroyNotifier$: Subject<void> = new Subject();
 
   constructor(
@@ -20,6 +34,15 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
     //El constructor necesita inyectar las dependencias.
   }
 
+  /**
+   * Lifecycle hook that is called after Angular has initialized all data-bound properties of a directive.
+   * Subscribes to the `getTabSeleccionado$` observable from the `tramite260207Query` service to track the selected tab index.
+   * The subscription is automatically unsubscribed when the component is destroyed to prevent memory leaks.
+   *
+   * @remarks
+   * - The `takeUntil` operator is used to manage the subscription lifecycle.
+   * - Updates the `indice` property with the value of the selected tab.
+   */
   ngOnInit(): void {
     this.tramite260207Query.getTabSeleccionado$
       .pipe(takeUntil(this.destroyNotifier$))
@@ -28,6 +51,11 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
       });
   }
 
+  /**
+   * Updates the currently selected tab in the store.
+   *
+   * @param i - The index of the tab to select.
+   */
   seleccionaTab(i: number): void {
     this.tramite260207Store.updateTabSeleccionado(i);
   }

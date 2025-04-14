@@ -1,11 +1,12 @@
-import { Component, OnDestroy,OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   Destinatario,
   Fabricante,
   Facturador,
   Proveedor,
+  TercerosRelacionadosDatos,
 } from '../../../../shared/models/terceros-relacionados.model';
-import { Subject, takeUntil } from 'rxjs';
+import { Observable, Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
 import { Tramite260207Query } from '../../estados/tramite260207Query.query';
@@ -50,12 +51,18 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
    */
   facturadorTablaDatos: Facturador[] = [];
 
-    /**
-     * @property {Subject<void>} destroy$
-     * Subject para cancelar suscripciones y evitar fugas de memoria.
-     * @private
-     */
-    private destroy$ = new Subject<void>();
+  /**
+   * @property {Subject<void>} destroy$
+   * Subject para cancelar suscripciones y evitar fugas de memoria.
+   * @private
+   */
+  private destroy$ = new Subject<void>();
+
+  /**
+   * Observable de datos de terceros relacionados.
+   * @type {Observable<TercerosRelacionadosDatos>}
+   */
+  public tercerosDatos$!: Observable<TercerosRelacionadosDatos>;
 
   /**
    * @constructor
@@ -76,30 +83,9 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
    * @description Hook del ciclo de vida que se ejecuta al inicializar el componente.
    * Suscribe los observables para mostrar los datos en la vista.
    */
+
   ngOnInit(): void {
-    this.tramiteQuery.getFabricanteTablaDatos$
-         .pipe(takeUntil(this.destroy$))
-         .subscribe((data) => {
-           this.fabricanteTablaDatos = data;
-         });
-   
-       this.tramiteQuery.getDestinatarioFinalTablaDatos$
-         .pipe(takeUntil(this.destroy$))
-         .subscribe((data) => {
-           this.destinatarioFinalTablaDatos = data;
-         });
-   
-       this.tramiteQuery.getProveedorTablaDatos$
-         .pipe(takeUntil(this.destroy$))
-         .subscribe((data) => {
-           this.proveedorTablaDatos = data;
-         });
-   
-       this.tramiteQuery.getFacturadorTablaDatos$
-         .pipe(takeUntil(this.destroy$))
-         .subscribe((data) => {
-           this.facturadorTablaDatos = data;
-         });
+    this.tercerosDatos$ = this.tramiteQuery.getTercerosDatos$;
   }
 
   /**
@@ -142,7 +128,7 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
     this.tramiteStore.updateFacturadorTablaDatos(newFacturadores);
   }
 
-   /**
+  /**
    * Método del ciclo de vida de Angular que se llama justo antes de que el componente sea destruido.
    *
    * Este método emite un valor a través del observable `destroyNotifier$` para notificar a los suscriptores
@@ -150,7 +136,7 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
    *
    * @returns {void} No retorna ningún valor.
    */
-   ngOnDestroy(): void {
+  ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
   }

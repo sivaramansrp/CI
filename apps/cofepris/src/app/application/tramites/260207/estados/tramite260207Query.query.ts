@@ -36,29 +36,16 @@ export class Tramite260207Query extends Query<Tramite260207State> {
   });
 
   /**
-   * @property {Observable<Fabricante[]>} getFabricanteTablaDatos$
-   * @description
-   * Selecciona la lista de fabricantes del estado.
+   * Observable que selecciona y retorna datos de terceros desde el estado.
+   * @returns {Observable<TercerosRelacionadosDatos>}
+   * Un observable con los datos de fabricante, destinatario final, proveedor y facturador.
    */
-  public getFabricanteTablaDatos$ = this.select(
-    (state) => state.fabricanteTablaDatos
-  );
-  /**
-   * @property {Observable<Destinatario[]>} getDestinatarioFinalTablaDatos$
-   * @description
-   * Selecciona la lista de destinatarios finales del estado.
-   */
-  public getDestinatarioFinalTablaDatos$ = this.select(
-    (state) => state.destinatarioFinalTablaDatos
-  );
-  /**
-   * @property {Observable<Proveedor[]>} getProveedorTablaDatos$
-   * @description
-   * Selecciona la lista de proveedores del estado.
-   */
-  public getProveedorTablaDatos$ = this.select(
-    (state) => state.proveedorTablaDatos
-  );
+  public getTercerosDatos$ = this.select((state) => ({
+    fabricanteTablaDatos: state.fabricanteTablaDatos,
+    destinatarioFinalTablaDatos: state.destinatarioFinalTablaDatos,
+    proveedorTablaDatos: state.proveedorTablaDatos,
+    facturadorTablaDatos: state.facturadorTablaDatos,
+  })); 
   /**
    * @property {Observable<Facturador[]>} getFacturadorTablaDatos$
    * @description

@@ -19,21 +19,83 @@ import { TablaScianConfig } from '../../../shared/models/datos-solicitud.model';
  * Representa el estado de la tienda para el trámite 260207. Contiene datos relacionados
  * con destinatarios, facturadores, proveedores, fabricantes, formularios y configuraciones.
  */
+/**
+ * Representa el estado de la aplicación para el trámite 260207.
+ */
 export interface Tramite260207State {
+  /**
+   * Datos de la tabla de destinatarios finales.
+   */
   destinatarioFinalTablaDatos: Destinatario[];
+
+  /**
+   * Datos de la tabla de facturadores.
+   */
   facturadorTablaDatos: Facturador[];
+
+  /**
+   * Datos de la tabla de proveedores.
+   */
   proveedorTablaDatos: Proveedor[];
+
+  /**
+   * Datos de la tabla de fabricantes.
+   */
   fabricanteTablaDatos: Fabricante[];
+
+  /**
+   * Estado del formulario de datos de la solicitud.
+   */
   datosSolicitudFormState: DatosSolicitudFormState;
+
+  /**
+   * Datos del formulario de mercancías.
+   */
   mercanciaForm: MercanciaForm;
+
+  /**
+   * Configuración de opciones para la tabla.
+   */
   opcionConfigDatos: TablaOpcionConfig[];
+
+  /**
+   * Configuración de SCIAN para la tabla.
+   */
   scianConfigDatos: TablaScianConfig[];
+
+  /**
+   * Configuración de datos para la tabla de mercancías.
+   */
   tablaMercanciasConfigDatos: TablaMercanciasDatos[];
+
+  /**
+   * Opciones seleccionadas de la tabla de configuración.
+   */
   seleccionadoopcionDatos: TablaOpcionConfig[];
+
+  /**
+   * Datos seleccionados de la configuración SCIAN.
+   */
   seleccionadoScianDatos: TablaScianConfig[];
+
+  /**
+   * Datos seleccionados de la tabla de mercancías.
+   */
   seleccionadoTablaMercanciasDatos: TablaMercanciasDatos[];
+
+  /**
+   * Estado de las opciones colapsables.
+   */
   opcionesColapsableState: boolean;
+
+  /**
+   * Estado del formulario de pago de derechos.
+   */
   pagoDerechos: PagoDerechosFormState;
+
+  /**
+   * Pestaña seleccionada actualmente (opcional).
+   */
   tabSeleccionado?: number;
 }
 
