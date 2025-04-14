@@ -1,6 +1,6 @@
+import { AVISO, DatosPasos } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { AccionBoton } from '../../models/aviso-traslado.model';
-import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS } from '../../constants/aviso-traslado.enum';
 import { Subject } from 'rxjs';
@@ -47,6 +47,19 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
    * en la interfaz del usuario.
    */
   TEXTOS = TEXTOS;
+
+  /**
+   * @property {any} AVISO
+   * @description Constante que contiene información o configuraciones relacionadas con el aviso de traslado.
+   * 
+   * Esta propiedad se utiliza para acceder a valores predefinidos o configuraciones específicas
+   * relacionadas con el aviso dentro del componente.
+   * 
+   * @example
+   * // Uso de la constante AVISO
+   * console.log(this.AVISO);
+   */
+  AVISO = AVISO;
 
   /**
    * Notificador para destruir las suscripciones y evitar fugas de memoria.

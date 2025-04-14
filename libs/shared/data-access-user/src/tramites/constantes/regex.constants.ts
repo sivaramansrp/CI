@@ -322,22 +322,6 @@ export const ALFANUMERICO_ESPACIO = /^([0-9a-zA-Z -]+)$/;
  */
 export const REGEX_SIN_DIGITOS = /\D/g;
 /**
- * Expresión regular para validar cadenas alfanuméricas sin espacios.
- * 
- * Esta expresión regular permite únicamente letras (mayúsculas y minúsculas) y números.
- * No se permiten espacios ni caracteres especiales.
- * 
- * Ejemplos válidos:
- * - "Hola123"
- * - "Codigo456"
- * 
- * Ejemplos no válidos:
- * - "Hola 123" (contiene un espacio)
- * - "Hola@123" (contiene un carácter especial)
- */
-export const SOLO_ALFANUMERICO = /^[a-zA-Z0-9]*$/;
-
-/**
  * Expresión regular para validar cadenas alfanuméricas con espacios.
  * 
  * Esta expresión regular permite letras (mayúsculas y minúsculas), números y espacios.
@@ -366,18 +350,3 @@ export const REGEX_ALFANUMERICO_CON_ESPACIOS = /^[a-zA-Z0-9 ]*$/;
  * ```
  */
 export const REGEX_ALFANUMERICO_CON_ESPACIOS_REEMPLAZAR = /[^a-zA-Z0-9 ]/g;
-
-/**
- * Expresión regular para validar números con punto decimal.
- * 
- * Esta expresión regular permite únicamente números y el carácter de punto (`.`).
- * 
- * Ejemplos válidos:
- * - "123"
- * - "123.45"
- * 
- * Ejemplos no válidos:
- * - "123,45" (usa una coma en lugar de un punto)
- * - "123a" (contiene un carácter no numérico)
- */
-export const REGEX_NUMERICO_CON_PUNTO = /^[0-9.]*$/;

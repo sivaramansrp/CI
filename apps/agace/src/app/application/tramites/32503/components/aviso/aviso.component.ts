@@ -1,4 +1,20 @@
-import { AlertComponent, CatalogoSelectComponent, InputFecha, InputFechaComponent, REGEX_ALFANUMERICO_CON_ESPACIOS, REGEX_ALFANUMERICO_CON_ESPACIOS_REEMPLAZAR, REGEX_NUMERICO_CON_PUNTO, REGEX_NUMEROS, REGEX_REEMPLAZAR, REGEX_SOLO_NUMEROS, SOLO_ALFANUMERICO, TablaDinamicaComponent, TablaSeleccion, TituloComponent, ValidacionesFormularioService } from "@libs/shared/data-access-user/src";
+import { 
+AlertComponent,
+CatalogoSelectComponent,
+InputFecha,
+InputFechaComponent,
+REGEX_ALFANUMERICO_CON_ESPACIOS,
+REGEX_ALFANUMERICO_CON_ESPACIOS_REEMPLAZAR,
+REGEX_IMPORTE_PAGO,
+REGEX_NUMEROS,
+REGEX_NUMEROS_USD,
+REGEX_REEMPLAZAR,
+REGEX_SOLO_NUMEROS,
+TablaDinamicaComponent,
+TablaSeleccion,
+TituloComponent,
+ValidacionesFormularioService
+ } from "@libs/shared/data-access-user/src";
 import { AvisoTabla, AvisoTablaDatos, Catalogo, CatalogoLista, MercanciaTabla, MercanciaTablaDatos } from "../../models/aviso-traslado.model";
 import { FECHA_INGRESO, TEXTOS, TIPACA, TIPAVI } from "../../constants/aviso-traslado.enum";
 import { AvisoTrasladoService } from "../../services/aviso-traslado.service";
@@ -443,12 +459,12 @@ export class AvisoComponent implements OnInit, OnDestroy {
         adace: [{ value: this.tramiteState?.avisoFormulario?.adace, disabled: true }, [Validators.required]]
       }),
       datosEmpresa: this.fb.group({
-        valorProgramaImmex: [this.tramiteState?.avisoFormulario?.valorProgramaImmex, [Validators.required, Validators.maxLength(9), Validators.pattern(SOLO_ALFANUMERICO)]],
-        valorAnioProgramaImmex: [this.tramiteState?.avisoFormulario?.valorAnioProgramaImmex, [Validators.required, Validators.maxLength(4), Validators.pattern(SOLO_ALFANUMERICO)]],
+        valorProgramaImmex: [this.tramiteState?.avisoFormulario?.valorProgramaImmex, [Validators.required, Validators.maxLength(9), Validators.pattern(REGEX_IMPORTE_PAGO)]],
+        valorAnioProgramaImmex: [this.tramiteState?.avisoFormulario?.valorAnioProgramaImmex, [Validators.required, Validators.maxLength(4), Validators.pattern(REGEX_IMPORTE_PAGO)]],
       }),
       datosAviso: this.fb.group({
         tipoAviso: [this.tramiteState?.avisoFormulario?.tipoAviso, [Validators.required]],
-        idTransaccion: [this.tramiteState?.avisoFormulario?.idTransaccion, [Validators.maxLength(25), Validators.pattern(SOLO_ALFANUMERICO)]],
+        idTransaccion: [this.tramiteState?.avisoFormulario?.idTransaccion, [Validators.maxLength(25), Validators.pattern(REGEX_IMPORTE_PAGO)]],
         motivoProrroga: [this.tramiteState?.avisoFormulario?.motivoProrroga, [Validators.required, Validators.maxLength(250)]],
         fechaTranslado: [{ value: this.tramiteState?.avisoFormulario?.fechaTranslado, disabled: true }, Validators.required],
       }),
@@ -520,8 +536,8 @@ export class AvisoComponent implements OnInit, OnDestroy {
       claveDelegacionMunicipio: [this.tramiteState?.domicilioFormulario?.claveDelegacionMunicipio, [Validators.required]],
       claveColonia: [this.tramiteState?.domicilioFormulario?.claveColonia, [Validators.required]],
       calle: [this.tramiteState?.domicilioFormulario?.calle, [Validators.required, Validators.maxLength(250)]],
-      numeroExterior: [this.tramiteState?.domicilioFormulario?.numeroExterior, [Validators.required, Validators.maxLength(15), Validators.pattern(SOLO_ALFANUMERICO)]],
-      numeroInterior: [this.tramiteState?.domicilioFormulario?.numeroInterior, [Validators.maxLength(15), Validators.pattern(SOLO_ALFANUMERICO)]],
+      numeroExterior: [this.tramiteState?.domicilioFormulario?.numeroExterior, [Validators.required, Validators.maxLength(15), Validators.pattern(REGEX_IMPORTE_PAGO)]],
+      numeroInterior: [this.tramiteState?.domicilioFormulario?.numeroInterior, [Validators.maxLength(15), Validators.pattern(REGEX_IMPORTE_PAGO)]],
       codigoPostal: [this.tramiteState?.domicilioFormulario?.codigoPostal, [Validators.required, Validators.maxLength(5), Validators.pattern(REGEX_SOLO_NUMEROS)]],
       rfc: [this.tramiteState?.domicilioFormulario?.rfc, [Validators.required]],
     });
@@ -539,9 +555,9 @@ export class AvisoComponent implements OnInit, OnDestroy {
     this.mercanciaFormulario = this.fb.group({
       claveFraccionArancelaria: [this.tramiteState?.mercanciaFormulario?.claveFraccionArancelaria, Validators.required],
       nico: [this.tramiteState?.mercanciaFormulario?.nico, [Validators.required, Validators.maxLength(2), Validators.pattern(REGEX_SOLO_NUMEROS)]],
-      cantidad: [this.tramiteState?.mercanciaFormulario?.cantidad, [Validators.required, Validators.pattern(REGEX_NUMERICO_CON_PUNTO)]],
+      cantidad: [this.tramiteState?.mercanciaFormulario?.cantidad, [Validators.required, Validators.pattern(REGEX_NUMEROS_USD)]],
       claveUnidadMedida: [this.tramiteState?.mercanciaFormulario?.claveUnidadMedida, Validators.required],
-      valorUSD: [this.tramiteState?.mercanciaFormulario?.valorUSD, [Validators.required, Validators.pattern(REGEX_NUMERICO_CON_PUNTO)]],
+      valorUSD: [this.tramiteState?.mercanciaFormulario?.valorUSD, [Validators.required, Validators.pattern(REGEX_NUMEROS_USD)]],
       descripcionMercancia: [this.tramiteState?.mercanciaFormulario?.descripcionMercancia, [Validators.required, Validators.maxLength(250)]],
       descripcionProceso: [this.tramiteState?.mercanciaFormulario?.descripcionProceso, [Validators.required, Validators.maxLength(250)]],
       numPedimentoExportacion: [this.tramiteState?.mercanciaFormulario?.numPedimentoExportacion, [Validators.required, Validators.maxLength(15)]],
