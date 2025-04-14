@@ -1,6 +1,6 @@
 <app-terceros-relacionados
-[fabricanteTablaDatos]="fabricanteTablaDatos"
-[destinatarioFinalTablaDatos]="destinatarioFinalTablaDatos"
-[proveedorTablaDatos]="proveedorTablaDatos"
-[facturadorTablaDatos]="facturadorTablaDatos"
+[fabricanteTablaDatos]="(tercerosDatos$ | async)?.fabricanteTablaDatos || []"
+[destinatarioFinalTablaDatos]="(tercerosDatos$ | async)?.destinatarioFinalTablaDatos || []"
+[proveedorTablaDatos]="(tercerosDatos$ | async)?.proveedorTablaDatos || []"
+[facturadorTablaDatos]="(tercerosDatos$ | async)?.facturadorTablaDatos || []"
 ></app-terceros-relacionados>
