@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Catalogo, CatalogoSelectComponent, InputRadioComponent } from '@libs/shared/data-access-user/src';
@@ -20,7 +20,7 @@ import { NumeroDeEmpleadosComponent } from '../numero-de-empleados/numero-de-emp
   templateUrl: './conceptos.component.html',
   styleUrl: './conceptos.component.scss',
 })
-export class ConceptosComponent implements OnInit {
+export class ConceptosComponent implements OnInit,OnDestroy {
 
   public conceptosForm!: FormGroup;
   public radioOpcions = radio_si_no;
@@ -82,4 +82,9 @@ export class ConceptosComponent implements OnInit {
         this.bimestreTresCatalogo = API_DATOS.data;
       });
     }
+
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  }
 }

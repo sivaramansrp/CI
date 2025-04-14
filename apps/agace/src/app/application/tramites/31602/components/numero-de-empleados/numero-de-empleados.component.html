@@ -9,7 +9,7 @@
             [datos]="numeroDeEmpleadosDatos">
         </app-tabla-dinamica>
       <div class="d-flex justify-content-end">
-        <button type="button" class="btn btn-primary me-2" (click)="abrirModal()">
+        <button type="button" class="btn btn-primary me-2" (click)="abrirModal(template)">
             Agregar
         </button>
       <button class="btn btn-default me-2" type="button">
@@ -19,3 +19,128 @@
       </div>
     </div>
   </div>
+
+  <ng-template #template>
+    <div class="modal-header">
+      <h4 class="modal-title pull-left">Agregar</h4>
+    </div>
+    <div class="modal-body">
+      <form [formGroup]="agregarForm">
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="rfcInput" class="form-label">RFC</label>
+              <div class="d-flex">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="rfcInput"
+                  formControlName="rfc"
+                  placeholder="Ingrese RFC"
+                />
+                <button class="btn btn-secondary ms-2" type="button">
+                  Buscar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="registroInput" class="form-label text-left"
+                >Registro Federal de Contribuyentes</label
+              >
+              <input
+                type="text"
+                class="form-control"
+                id="registroInput"
+                formControlName="registroInput"
+                readonly="true"
+                placeholder="Ingrese Registro"
+              />
+            </div>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="razonSocialInput" class="form-label"
+                >Razón Social</label
+              >
+              <input
+                type="text"
+                class="form-control"
+                id="razonSocialInput"
+                formControlName="razonSocialInput"
+                placeholder="Ingrese Razón Social"
+              />
+            </div>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="form-label" for="empleados1"
+                >Número de empleados</label
+              >
+              <input
+                type="number"
+                class="form-control mb-2"
+                formControlName="numeroUno"
+                placeholder="1er Bimestre"
+              />
+              <label class="form-label" for="empleados1"
+                >Número de empleados</label
+              >
+              <input
+                type="number"
+                class="form-control mb-2"
+                formControlName="numeroDos"
+                placeholder="2do Bimestre"
+              />
+              <label class="form-label" for="empleados1"
+                >Número de empleados</label
+              >
+              <input
+                type="number"
+                class="form-control"
+                formControlName="numeroTres"
+                placeholder="3er Bimestre"
+              />
+            </div>
+          </div>
+          <div class="col-md-6">
+            <app-catalogo-select
+            [catalogo]="bimestreUnoCatalogo"
+            formControlName="agregarCatalogoUno"
+            [label]="'Bimestre'"
+            [required]="true"
+          >
+          </app-catalogo-select>
+          <app-catalogo-select
+            [catalogo]="bimestreDosCatalogo"
+            formControlName="agregarCatalogoDos"
+            [label]="'Bimestre'"
+            [required]="true"
+          >
+          </app-catalogo-select>
+          <app-catalogo-select
+            [catalogo]="bimestreTresCatalogo"
+            formControlName="agregarCatalogoTres"
+            [label]="'Bimestre'"
+            [required]="true"
+          >
+          </app-catalogo-select>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-primary" (click)="modalRef?.hide()">Aceptar</button>
+      <button type="button" class="btn btn-default" (click)="modalRef?.hide()">Cancelar</button>
+    </div>
+  </ng-template>

@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef } from '@angular/core';
+import { Component, OnDestroy, OnInit, TemplateRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -8,6 +8,7 @@ import radio_si_no from 'libs/shared/theme/assets/json/31601/radio_si_no.json';
 import { ComercioExteriorService } from '../../services/comercio-exterior.service';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { IvaeiepsDosComponent } from '../ivaeieps-dos/ivaeieps-dos.component';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-ivaeieps',
@@ -24,7 +25,7 @@ import { IvaeiepsDosComponent } from '../ivaeieps-dos/ivaeieps-dos.component';
   templateUrl: './ivaeieps.component.html',
   styleUrl: './ivaeieps.component.scss',
 })
-export class IvaeiepsComponent implements OnInit {
+export class IvaeiepsComponent implements OnInit,OnDestroy {
 
   public ivaEiepsFormGroup!: FormGroup;
   modalRef?: BsModalRef;
@@ -39,6 +40,7 @@ export class IvaeiepsComponent implements OnInit {
   public permisoDesistirFormDatos = PERMISO_A_DESISTIR;
   public empresasDelGrupoDatos: EmpresasDelGrupo[] = [];
   public configuracionTabla: ConfiguracionColumna<EmpresasDelGrupo>[] = EMPRESAS_TABLA;
+  private destroyNotifier$: Subject<void> = new Subject();
 
 
   constructor(
@@ -82,7 +84,7 @@ export class IvaeiepsComponent implements OnInit {
   }
 
   public getEmpresasDelGrupoDatos():void {
-    this.comercioExteriorSvc.getEmpresasTablaDatos().subscribe((response) => {
+    this.comercioExteriorSvc.getEmpresasTablaDatos().pipe(takeUntil(this.destroyNotifier$)).subscribe((response) => {
       const DATOS = JSON.parse(JSON.stringify(response));
       this.empresasDelGrupoDatos = DATOS;
     })
@@ -90,6 +92,11 @@ export class IvaeiepsComponent implements OnInit {
 
   public abrirModal(template: TemplateRef<void>): void {
     this.modalRef = this.modalService.show(template);
+  }
+
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 
 
