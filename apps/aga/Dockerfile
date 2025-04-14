@@ -2,6 +2,20 @@
 FROM node:20-alpine AS node
 WORKDIR /app
 
+# Instalar glibc en Alpine
+RUN apk add --no-cache ca-certificates wget && \
+    wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub && \
+    wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.35-r0/glibc-2.35-r0.apk && \
+    apk add --allow-untrusted --force-overwrite glibc-2.35-r0.apk && \
+    rm glibc-2.35-r0.apk
+ENV LD_LIBRARY_PATH=/usr/glibc-compat/lib
+
+# Configurar variables de entorno para evitar la instalación de bindings nativos
+ENV NX_SKIP_NX_CACHE=true
+ENV NX_NATIVE_BINDINGS=false
+ENV NX_VERBOSE_LOGGING=true
+ENV NX_SKIP_POSTINSTALL=1
+
 # Install necessary dependencies for compilation
 RUN apk add --no-cache python3 make g++ git
 
@@ -31,14 +45,14 @@ COPY apps/aga/project.json apps/aga/
 RUN npm install -g nx@16.10.0
 
 # Install dependencies with options to avoid common problems
-RUN npm install --legacy-peer-deps --no-package-lock
+# RUN npm install --legacy-peer-deps --no-package-lock
 
 # Copy the rest of the codebase
 COPY . .
 
 # Ensure NX cache is clean and reset properly
 RUN rm -rf .nx/cache || true
-RUN npx nx reset
+RUN npx nx reset || true
 
 # Try multiple build approaches
 RUN mkdir -p /app/dist/apps/aga || true

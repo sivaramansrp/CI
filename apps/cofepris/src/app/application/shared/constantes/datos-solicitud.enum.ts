@@ -1,9 +1,10 @@
+import { DetalleMercancia, DetalleMercanciaEstupefacientes } from '../models/detalle-mercancia.model';
 import {
+  TablaMercanciaClaveConfig,
   TablaMercanciasDatos,
   TablaOpcionConfig,
   TablaScianConfig,
 } from '../models/datos-solicitud.model';
-import { DetalleMercancia } from '../models/detalle-mercancia.model';
 
 export const OPCION_TABLA = [
   {
@@ -40,6 +41,25 @@ export const SCIAN_TABLA = [
     orden: 1,
   },
 ];
+
+export const DATOS_MERCANCIA_CLAVE_TABLA = [
+  {
+    encabezado: 'Clave de los lotes',
+    clave: (ele: TablaMercanciaClaveConfig): string => ele.clave,
+    orden: 1,
+  },
+  {
+    encabezado: 'Fecha de fabricacio',
+    clave: (ele: TablaMercanciaClaveConfig): string => ele.fabricacion,
+    orden: 1,
+  },
+  {
+    encabezado: 'Fecha de caducidad',
+    clave: (ele: TablaMercanciaClaveConfig): string => ele.caducidad,
+    orden: 1,
+  },
+];
+
 export const SCIAN_TABLA_DATA: TablaScianConfig[] = [
   { clave: '001', descripcion: 'Descripción 1' },
   { clave: '002', descripcion: 'Descripción 2' },
@@ -87,18 +107,18 @@ export const PRODUCTO_TABLA = [
   },
   {
     encabezado: 'Denominación específica del producto',
-    clave: (ele: TablaMercanciasDatos): string =>
+    clave: (ele: TablaMercanciasDatos): string |undefined =>
       ele.denominacionEspecificaProducto, // Reemplaza 'ele.denominacionEspecificaProducto' con la clave correcta
     orden: 3,
   },
   {
     encabezado: 'Denominación distintiva',
-    clave: (ele: TablaMercanciasDatos): string => ele.denominacionDistintiva, // Reemplaza 'ele.denominacionDistintiva' con la clave correcta
+    clave: (ele: TablaMercanciasDatos): string |undefined => ele.denominacionDistintiva, // Reemplaza 'ele.denominacionDistintiva' con la clave correcta
     orden: 4,
   },
   {
     encabezado: 'Denominación común, nombre común o nombre científico',
-    clave: (ele: TablaMercanciasDatos): string => ele.denominacionComun, // Reemplaza 'ele.denominacionComun' con la clave correcta
+    clave: (ele: TablaMercanciasDatos): string |undefined => ele.denominacionComun, // Reemplaza 'ele.denominacionComun' con la clave correcta
     orden: 5,
   },
   {
@@ -118,12 +138,12 @@ export const PRODUCTO_TABLA = [
   },
   {
     encabezado: 'Descripción de la fracción',
-    clave: (ele: TablaMercanciasDatos): string => ele.descripcionFraccion, // Reemplaza 'ele.descripcionFraccion' con la clave correcta
+    clave: (ele: TablaMercanciasDatos): string |undefined => ele.descripcionFraccion, // Reemplaza 'ele.descripcionFraccion' con la clave correcta
     orden: 9,
   },
   {
     encabezado: 'Unidad de medida de comercialización (UMC)',
-    clave: (ele: TablaMercanciasDatos): string =>
+    clave: (ele: TablaMercanciasDatos): string |undefined=>
       ele.unidadMedidaComercializacion, // Reemplaza 'ele.unidadMedidaComercializacion' con la clave correcta
     orden: 10,
   },
@@ -189,7 +209,7 @@ export const PRODUCTO_TABLA_DATA: TablaMercanciasDatos[] = [
     cantidadUMC: '',
     unidadMedidaTarifa: '',
     cantidadUMT: '',
-    presentacion:'',
+    presentacion: '',
     numeroRegistroSanitario: '',
     paisOrigen: '',
     paisProcedencia: '',
@@ -224,6 +244,16 @@ export const CROSLISTA_DE_PAISES: string[] = [
   'BHUTAN (KINGDOM OF)',
 ];
 
+export const CROSLISTA_DE_FORMAS_FARMACEUTICAS: string[] = [
+  
+    "AEROSOL",
+    "CAPSULAS",
+    "COMPRIMIDOS",
+    "CREMA",
+    "EMULSIÓN"
+  
+]
+
 export const TABLA_OPCION_DATA: TablaOpcionConfig[] = [
   {
     fechaCreacion: '2025-02-19 11:26:55.0',
@@ -241,12 +271,33 @@ export const TABLA_OPCION_DATA: TablaOpcionConfig[] = [
   },
 ];
 
-export const PROCEDIMIENTOS_NO_PARA_ELEMENTO_COLAPSABLE=[260214,260216, 260205,260217,260218]
+export const PROCEDIMIENTOS_NO_PARA_ELEMENTO_COLAPSABLE = [
+  260214, 260216, 260205, 260217, 260218, 260102,260301
+];
 
-export const PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE=[260216]
+export const OCULTAR_PROVEEDOR = [260102];
+
+export const OCULTAR_FACTURADOR = [260102];
+
+export const PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE = [260216];
+
+export const PROCEDIMIENTOS_NO_PARA_ELEMENTO_CORREO_ELECTRONIC = [260102,260301];
+
+export const PROCEDIMIENTOS_NO_PARA_ELEMENTO_RFC_DEL_SANITARIO = [260301]
+
+export const PROCEDIMIENTOS_NO_PARA_ELEMENTO_CALLE = [260301]
+
+export const PROCEDIMIENTOS_PARA_DESHABILITAR_MUNICIPIO_ALCALDIA=[260301]
+
+export const PROCEDIMIENTOS_PARA_DESHABILITAR_APELLIDO_MATERNO=[260301]
+
+export const PROCEDIMIENTOS_PARA_DESHABILITAR_APELLIDO_PATERNO=[260301]
+
+export const PROCEDIMIENTOS_PARA_DESHABILITAR_NOMBRE_RAZON_SOCIAL=[260301]
 
 export enum NUMERO_TRAMITE {
-  TRAMITE_260205 = 260205
+  TRAMITE_260205 = 260205,
+  TRAMITE_260301 = 260301
 }
 
 export const DETALLE_MERCANCIA_TABLA = [
@@ -272,4 +323,43 @@ export const DETALLE_MERCANCIA_TABLA = [
   },
 ];
 
-export const STR_NACIONAL = "Nacional";
+export const DETALLE_MERCANCIA_TABLA_ESTUPEFACIENTES = [
+  {
+    encabezado: 'Presentación',
+    clave: (ele: DetalleMercanciaEstupefacientes): string => ele.presentacion,
+    orden: 1,
+  },
+  {
+    encabezado: 'Número de piezas',
+    clave: (ele: DetalleMercanciaEstupefacientes): string => ele.numeroDePiezasAFabricar,
+    orden: 2,
+  },
+  {
+    encabezado: 'Descripción del número de piezas a fabricar',
+    clave: (ele: DetalleMercanciaEstupefacientes): string => ele.descripcionNumeroDePiezas,
+    orden: 3,
+  },
+  {
+    encabezado: 'Registro Sanitario',
+    clave: (ele: DetalleMercanciaEstupefacientes): string => ele.numeroRegistroSanitario,
+    orden: 4,
+  },
+ 
+];
+
+export const STR_NACIONAL = 'Nacional';
+
+export const CAMPOS_REQUERIDOS_FORMULARIO_MAP: Map<string, number[]> = new Map([
+  ['colonia', [260301]],
+  ['localidad', [260301]],
+  ['denominacionRazon',[260301]],
+  ['scian', [260301]],
+]);
+
+export const CAMPOS_ADICIONALES_POR_PROCEDIMIENTO_MAP: Map<string, number[]> = new Map([
+  ['calleYNumero', [260301]],
+  ['correoElectronico', [260301]],
+  ['rfcSanitario', [260301]],
+  ['regimenLaMercancia',[260301]],
+  ['aduana',[260301]]
+]);
