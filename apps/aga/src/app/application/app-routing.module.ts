@@ -226,8 +226,7 @@ const ROUTES: Routes = [
       import('./tramites/202/prestadores-servicio.module').then(
         (m) => m.PrestadoresServicioModule
       ),
-  },  
-  },  
+  },
   {
     path: 'exencion-impuestos',
     loadChildren: () =>
