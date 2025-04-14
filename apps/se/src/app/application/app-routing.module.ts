@@ -309,7 +309,7 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/110216/inicialmente-certificado-origen.module').then(
         (m) => m.InicialmenteCertificadoOrigenModule
-      ),
+      )
   },
   {
     path: 'validador-certificado-cam',
@@ -360,6 +360,13 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/110211/validar-certificado.module').then(
         (m) => m.ValidarCertificadoModule
+      ),
+  },
+  {
+    path: 'solicitud-importacion-ambulancia',
+    loadChildren: () =>
+      import('./tramites/130116/solicitud-importacion-ambulancia.module').then(
+        (m) => m.SolicitudImportacionAmbulanciaModule
       ),
   },
   {
