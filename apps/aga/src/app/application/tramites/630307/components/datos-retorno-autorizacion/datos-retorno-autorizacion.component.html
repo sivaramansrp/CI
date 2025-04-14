@@ -1,0 +1,51 @@
+<div class="container">
+    <ng-titulo [titulo]="'Información general de la autorización (formato en papel)'"></ng-titulo>
+    <form [formGroup]="datosImportacionRetornoAutorizacionGeneralFormulario">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="form-group">
+                    <label for="folioInformacionGeneralAutorizacion" class="form-label">Folio de autorización de importación temporal
+                        formato en papel *:</label>
+                    <input id="folioInformacionGeneralAutorizacion"
+                        formControlName="folioInformacionGeneralAutorizacion" type="text" class="form-control" />
+                    <div *ngIf="datosImportacionRetornoAutorizacionGeneralFormulario.get('folioInformacionGeneralAutorizacion')?.invalid
+                    && datosImportacionRetornoAutorizacionGeneralFormulario.get('folioInformacionGeneralAutorizacion')?.touched"
+                        class="text-danger">
+                        <small
+                            *ngIf="datosImportacionRetornoAutorizacionGeneralFormulario.get('folioInformacionGeneralAutorizacion')?.hasError('required')">
+                            Este campo es obligatorio.
+                        </small>
+                        <small
+                            *ngIf="datosImportacionRetornoAutorizacionGeneralFormulario.get('folioInformacionGeneralAutorizacion')?.hasError('pattern')">
+                            Por favor, corrija el folio de autorización de importación temporal formato en papel.
+                        </small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <app-catalogo-select [catalogo]="aduanaDeingresOpciones" [label]="'Aduana de ingreso'"
+                        [required]="true" formControlName="aduanaIngreso"></app-catalogo-select>
+                    <input type="hidden" id="hidAduanaRetorno" formControlName="aduanaIngreso" />
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <app-catalogo-select [catalogo]="seccionAduaneraOpciones" [label]="'Sección aduanera'"
+                    [required]="false" formControlName="seccionAduanera"></app-catalogo-select>
+                <input type="hidden" id="hidSeccionAduanalRetorno" formControlName="seccionAduanera" />
+            </div>
+            <div class="col-md-4">
+                <input-fecha
+                    [setFecha]="datosImportacionRetornoAutorizacionGeneralFormulario.get('fechaIngreso')?.value"
+                    [datos]="inputFechaIngreso" (valorCambiado)="cambioFechaIngreso($event)"></input-fecha>
+            </div>
+            <div class="col-md-4">
+                <input-fecha
+                    [setFecha]="datosImportacionRetornoAutorizacionGeneralFormulario.get('fechaVencimiento')?.value"
+                    [datos]="inputFechaVencimiento" (valorCambiado)="cambioFechaVencimiento($event)"></input-fecha>
+            </div>
+        </div>
+    </form>
+</div>

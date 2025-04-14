@@ -219,7 +219,14 @@ const ROUTES: Routes = [
       import('./tramites/11106/cancelacion-donaciones.module').then(
         (m) => m.CancelacionDonacionesModule
       ),
-  }  
+  },
+  {
+    path: 'aeronaves-en-retorno-temporal',
+    loadChildren: () =>
+      import('./tramites/630307/retorno-importacion-temporal.module').then(
+        (m) => m.RetornoImportacionTemporalModule
+      )
+  }, 
 ];
 
 @NgModule({
