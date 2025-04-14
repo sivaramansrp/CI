@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
+import { Aviso } from '@ng-mf/data-access-user';
 import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
-import { MENSAJE_DE_ALERTA_AVISO_PRIVACIDAD } from '../../enum/autorizaciones.enum';
 import { PASOS_REGISTRO } from '@ng-mf/data-access-user';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
@@ -32,7 +32,7 @@ export class DatosComponent {
    */
   pasos: ListaPasosWizard[] = PASOS_REGISTRO;
 
-  mensajeAlertaAvisoPrivacidad: string = MENSAJE_DE_ALERTA_AVISO_PRIVACIDAD;
+  mensajeAlertaAvisoPrivacidad: string = Aviso.Aviso;
 
   /**
    * Referencia al componente WizardComponent.

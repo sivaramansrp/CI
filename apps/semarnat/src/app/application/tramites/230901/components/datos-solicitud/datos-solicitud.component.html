@@ -91,6 +91,7 @@
     </div>
 
     <ng-titulo titulo="Finalidad del movimiento" />
+
     <div class="row mt-3">
       <div class="col-md-12 mt-3">
         <crosslist
@@ -101,7 +102,7 @@
         ></crosslist>
       </div>
     </div>
-    
+
     <div
       class="modal"
       tabindex="-1"
@@ -111,14 +112,12 @@
     >
       <div class="modal-dialog" role="document">
         <div
-          class="modal-content"
-          style="width: fit-content; margin-left: 115px"
-        >
-          <div style="background-color: black; height: 55px"></div>
+          class="modal-content">
+          <div class="modal-div"></div>
           <div class="modal-body">
             <p>Selecciona sólo un registro para modificar. </p>
           </div>
-          <div class="modal-footer" style="justify-content: center">
+          <div class="modal-footer">
             <button
               type="button"
               class="btn btn-primary"
@@ -141,14 +140,12 @@
     >
       <div class="modal-dialog" role="document">
         <div
-          class="modal-content"
-          style="width: fit-content; margin-left: 115px"
-        >
-          <div style="background-color: black; height: 55px"></div>
+          class="modal-content">
+          <div class="modal-div"></div>
           <div class="modal-body">
             <p>¿Estás seguro que deseas eliminar los registros marcados? </p>
           </div>
-          <div class="modal-footer" style="justify-content: end">
+          <div class="modal-footer">
             <button type="button"
             class="btn btn-primary"
             (click)="cerrarEliminarConfirmationPopup()">Cancelar</button>
@@ -208,6 +205,7 @@
                 type="checkbox"
                 formControlName="otraFraccion"
                 class="form-check-input"
+                (change)="manejarCambioOtraFraccion()"
               />
               <label class="form-check-label" for="otraFraccion"
                 >Otra fracción
