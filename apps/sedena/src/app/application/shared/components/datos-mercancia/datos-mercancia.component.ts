@@ -118,10 +118,8 @@ export class DatosMercanciaComponent implements OnInit {
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private ubicaccion: Location,
-    private datosSolicitudService: DatosSolicitudService
-  ) {
-    this.cargarDatos();
-  }
+    private datosSolicitudService: DatosSolicitudService // eslint-disable-next-line no-empty-function
+  ) {}
 
   /**
    * Carga los catálogos necesarios para llenar los selectores del formulario.
@@ -207,6 +205,7 @@ export class DatosMercanciaComponent implements OnInit {
    * @returns {void}
    */
   ngOnInit(): void {
+    this.cargarDatos();
     this.datosMercancia = this.fb.group({
       descripcion: ['QAS', Validators.required],
       fraccionArancelaria: ['25030002', Validators.required],
