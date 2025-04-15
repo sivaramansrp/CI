@@ -245,10 +245,7 @@ export const REGEX_CORREO_ELECTRONICO =
  */
 export const REGEX_TELEFONO = /^([0-9A-Za-z\-() ])*$/;
 
-/**
- * Expresión regular para validar números separados por comas.
- */
-export const REGEX_SEPARADO_POR_COMAS = /^\d+(,\s*\d+)*$/;
+
 /**
  * Expresión regular para validar números decimales con hasta 2 decimales.
  * 
