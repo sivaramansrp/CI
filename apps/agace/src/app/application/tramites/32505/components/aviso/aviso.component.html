@@ -48,7 +48,7 @@
                             <label>
                                 <input type="radio" id="idRadioAviso" formControlName="tipoBusqueda" value="Manual"
                                     class="form-check-input"
-                                    (change)="setValoresStore(adaceForm, 'tipoBusqueda', 'setTipoBusqueda')">
+                                    (change)="setValoresStore(adaceForm, 'tipoBusqueda', 'setTipoBusqueda');mostrarCampos()">
                                 Manual
                             </label>
                         </div>
@@ -58,7 +58,7 @@
                             <label>
                                 <input type="radio" id="idRadioAviso" value="Carga masiva"
                                     formControlName="tipoBusqueda" class="form-check-input"
-                                    (change)="setValoresStore(adaceForm, 'tipoBusqueda', 'setTipoBusqueda')">
+                                    (change)="setValoresStore(adaceForm, 'tipoBusqueda', 'setTipoBusqueda');mostrarCampos();">
                                 Carga masiva
                             </label>
                         </div>
@@ -119,7 +119,7 @@
                                                     <input type="radio" id="idRadioAviso"
                                                         formControlName="tipoBusquedaAviso" value="Importación"
                                                         class="form-check-input"
-                                                        (change)="setValoresStore(adaceForm, 'tipoBusquedaAviso', 'setTipoBusquedaAviso')">
+                                                        (change)="setValoresStore(adaceForm, 'tipoBusquedaAviso', 'setTipoBusquedaAviso');mostrarCamposAviso()">
                                                     Importación
                                                 </label>
                                             </div>
@@ -129,7 +129,7 @@
                                                 <label>
                                                     <input type="radio" id="idRadioAviso" value="Venta"
                                                         formControlName="tipoBusquedaAviso" class="form-check-input"
-                                                        (change)="setValoresStore(adaceForm, 'tipoBusquedaAviso', 'setTipoBusquedaAviso')">
+                                                        (change)="setValoresStore(adaceForm, 'tipoBusquedaAviso', 'setTipoBusquedaAviso');mostrarCamposAviso()">
                                                     Venta
                                                 </label>
                                             </div>
@@ -139,7 +139,7 @@
                                                 <label>
                                                     <input type="radio" id="idRadioAviso" value="Importación y venta"
                                                         formControlName="tipoBusquedaAviso" class="form-check-input"
-                                                        (change)="setValoresStore(adaceForm, 'tipoBusquedaAviso', 'setTipoBusquedaAviso')">
+                                                        (change)="setValoresStore(adaceForm, 'tipoBusquedaAviso', 'setTipoBusquedaAviso');mostrarCamposAviso()">
                                                     Importación y venta
                                                 </label>
                                             </div>
@@ -160,7 +160,7 @@
                                                         <input type="radio" id="idRadioAviso"
                                                             formControlName="folioTipo" value="Si"
                                                             class="form-check-input"
-                                                            (change)="setValoresStore(adaceForm, 'folioTipo', 'setFolioTipo')">
+                                                            (change)="setValoresStore(adaceForm, 'folioTipo', 'setFolioTipo');mostrarCamposAviso()">
                                                         Si
                                                     </label>
                                                 </div>
@@ -172,7 +172,7 @@
                                                         <input type="radio" id="idRadioAviso"
                                                             formControlName="folioTipo" value="No"
                                                             class="form-check-input"
-                                                            (change)="setValoresStore(adaceForm, 'folioTipo', 'setFolioTipo')">
+                                                            (change)="setValoresStore(adaceForm, 'folioTipo', 'setFolioTipo');mostrarCamposAviso()">
                                                         No
                                                     </label>
                                                 </div>

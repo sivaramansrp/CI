@@ -579,26 +579,10 @@ datosNIVNumeroSerie: boolean = false;
     });
 
     this.mostrarCampos();
-    this.adaceForm.get('tipoBusqueda')?.valueChanges.subscribe((value) => {
-      this.setValoresStore(this.adaceForm, 'tipoBusqueda', 'setTipoBusqueda');
-      this.mostrarCampos();
-    });
-
-    this.adaceForm.get('tipoBusquedaAviso')?.valueChanges.subscribe((value) => {
-      this.setValoresStore(
-        this.adaceForm,
-        'tipoBusquedaAviso',
-        'setTipoBusquedaAviso'
-      );
-      this.mostrarCamposAviso();
-    });
-
-    this.adaceForm.get('folioTipo')?.valueChanges.subscribe((value) => {
-      this.setValoresStore(this.adaceForm, 'folioTipo', 'setFolioTipo');
-      this.mostrarCamposAviso();
-    });
+    this.mostrarCamposAviso();
+    this.mostrarCamposAviso();
+ 
   }
-
   /**
    * Muestra los campos según el tipo de búsqueda seleccionado.
    */
