@@ -201,6 +201,13 @@ const ROUTES: Routes = [
         './tramites/260503/permiso-experimentales-plaguicidas.module'
       ).then((m) => m.PermisoExperimentalesPlaguicidasModule),
   },
+  { 
+    path:'modificacion-de-dispositivos',
+    loadChildren: () => 
+      import('./tramites/260911/modificacion-de-dispositivos.module').then(
+        (m) => m.ModificacionDeDispositivosModule
+      )
+    },
   {
     path: 'retiros-cofepris',
     loadChildren: () =>
@@ -222,6 +229,15 @@ const ROUTES: Routes = [
         (m) => m.MuestrasPlaguicidasModule
       ),
   },
+
+  {
+    path: 'medicamentos-destinados-uso',
+    loadChildren: () =>
+      import('./tramites/260208/importacion-medicamentos-destinados-uso.module').then(
+        (m) => m.ImportacionMedicamentosDestinadosUsoModule
+      ),
+  },
+  
   {
     path: 'importacion-materias-primas-estupefacientes',
     loadChildren: () =>
@@ -236,6 +252,15 @@ const ROUTES: Routes = [
         (m) => m.SolicitudPermisoModule
       ),
   },
+
+  {
+    path: 'importacion-destinados-donacio',
+    loadChildren: () =>
+      import('./tramites/260209/importacion-destinados-donacio.module').then(
+        (m) => m.ImportacionDestinadosDonacioModule
+      ),
+  },
+  
   {
     path: 'modificacion-permiso-sanitario',
     loadChildren: () =>
@@ -263,4 +288,4 @@ const ROUTES: Routes = [
   imports: [RouterModule.forChild(ROUTES)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

@@ -25,12 +25,19 @@ interface AccionBoton {
   valor: number;
 }
 
+/**
+ * @component ElegibilidadTextilesComponent
+ * @description Este componente es responsable de manejar el flujo de pasos para la elegibilidad de textiles.
+ * Incluye la lógica para la navegación entre pasos y la obtención de títulos.
+ */
 @Component({
   selector: 'app-elegibilidad-textiles',
   templateUrl: './elegibilidad-textiles.component.html',
 })
 export class ElegibilidadTextilesComponent {
-
+  /**
+   * @property {FormGroup} formGroup - Grupo de formularios para manejar los datos del formulario.
+   */
   formGroup: FormGroup;
 
   /**
@@ -39,19 +46,22 @@ export class ElegibilidadTextilesComponent {
   pasos: Array<ListaPasosWizard> = PASOS;
 
   /**
-   * @property {string | null} tituloMensaje - El título del mensaje.
+   * @property {string | null} tituloMensaje - El título del mensaje mostrado en el wizard.
    */
   tituloMensaje: string | null = 'Zoosanitario para importación';
 
+  /**
+   * @property {WizardComponent} wizardComponent - Referencia al componente del wizard.
+   */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
 
   /**
-   * @property {number} indice - El índice del paso actual.
+   * @property {number} indice - Índice del paso actual en el wizard.
    */
   indice: number = 1;
 
   /**
-   * @property {DatosPasos} datosPasos - Datos de los pasos del wizard.
+   * @property {DatosPasos} datosPasos - Datos relacionados con los pasos del wizard.
    */
   datosPasos: DatosPasos = {
     nroPasos: this.pasos.length,
@@ -60,26 +70,23 @@ export class ElegibilidadTextilesComponent {
     txtBtnSig: 'Continuar',
   };
 
+  /**
+   * @constructor
+   * @description Constructor del componente. Inicializa el grupo de formularios.
+   */
   constructor() {
-
     this.formGroup = new FormGroup({
-
       campo1: new FormControl(''),
-
-      campo2: new FormControl('')
-
+      campo2: new FormControl(''),
     });
-
   }
 
   /**
-   * Maneja la acción del botón y determina la navegación (siguiente o anterior).
-   *
-   * @param e - Objeto de acción que contiene la acción y el valor a manejar.
-   * El `valor` representa el índice del paso al que ir.
-   * La `accion` determina si avanzar (cont) o retroceder (atras).  --120301
+   * @method getValorIndice
+   * @description Maneja la acción del botón y determina la navegación (siguiente o anterior).
+   * @param {AccionBoton} e - Objeto que contiene la acción y el valor del índice del paso.
    */
-  getValorIndice(e: AccionBoton) {
+  getValorIndice(e: AccionBoton): void {
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
       if (e.accion === 'cont') {
@@ -91,10 +98,12 @@ export class ElegibilidadTextilesComponent {
   }
 
   /**
-   * Obtener un título para todas las páginas.
-   * @param valor - valor del índice de página. --120301
+   * @method obtenerNombreDelTítulo
+   * @description Obtiene un título para todas las páginas del wizard.
+   * @param {number} _valor - Índice del paso para el cual se desea obtener el título.
+   * @returns {string} Título del paso.
    */
-  static obtenerNombreDelTítulo(valor: number): string {
+  static obtenerNombreDelTítulo(_valor: number): string {
     return new Error('Método no implementado.').toString();
   }
 }
