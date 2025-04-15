@@ -384,6 +384,13 @@ const ROUTES: Routes = [
         ),
   },
   {
+    path: 'importacion',
+      loadChildren: () =>
+        import('./tramites/130113/importacion-equipo-anticontaminante.module').then(
+          (m) => m.ImportacionEquipoAnticontaminanteModule
+        ),
+  },
+  {
     path: 'importacion-de',
     loadChildren: () =>
       import('./tramites/130109/vehiculos-usados-adaptados.module').then(

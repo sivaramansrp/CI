@@ -34,6 +34,11 @@ const ROUTES: Routes = [
       import('./tramites/230101/tramites-disponsibles.module').then((m) => m.TramitesDisponiblesModule),
   },
   {
+    path: 'materiales-peligrosos',
+    loadChildren: () =>
+      import('./tramites/230501/materiales-peligrosos.module').then((m) => m.MaterialesPeligrososModule),
+  },
+  {
     path: 'desistimiento',
     loadChildren: () =>
       import('./tramites/230301/desistimiento.module').then((m) => m.DesistimientoModule),
