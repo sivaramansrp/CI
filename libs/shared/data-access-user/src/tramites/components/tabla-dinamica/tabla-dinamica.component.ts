@@ -128,12 +128,7 @@ export class TablaDinamicaComponent<T> {
   filasSeleccionadas: number[] = [];
 
   /**
-   * Almacena un array de los indices de las acciones para la tabla
-   * Las acciones agregadas son: 
-   * Ver
-   * Editar
-   * Eliminar
-   * Descargar
+   * Almacena un array de los indices de las acciones para la tabla definidos en el enum TablaAcciones
    */
   public accionesEnum = TablaAcciones;
   /**
