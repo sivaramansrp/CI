@@ -261,6 +261,9 @@ export class AgregarDestinatarioFinalComponent
       correoElectronico: ['', [Validators.required, Validators.email]],
       nacionalidad: [],
     });
+    this.agregarDestinatarioFinal.disable();
+    this.agregarDestinatarioFinal.get('tipoPersona')?.enable();
+    this.agregarDestinatarioFinal.get('nacionalidad')?.enable();
   }
 
   /**
@@ -337,6 +340,8 @@ export class AgregarDestinatarioFinalComponent
    * * @returns {void} No retorna ningún valor.
    */
   tipoPersonaCambioDeValor(event: string | number): void {
+    this.agregarDestinatarioFinal.enable();
+
     this.agregarDestinatarioFinal.patchValue({
       tipoPersona: event,
     });

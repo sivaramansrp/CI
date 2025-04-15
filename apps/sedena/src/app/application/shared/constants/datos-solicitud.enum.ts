@@ -20,7 +20,7 @@ export const CROSLISTA_DE_PAISES: string[] = [
   'BENIN (REPUBLIC OF)',
   'BHUTAN (KINGDOM OF)',
 ];
-export const PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE = [260216,260118];
+export const PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE = [260216];
 export const STR_NACIONAL = 'Nacional';
 
 export const TIPO_PERSONA_OPCIONES = [
@@ -29,8 +29,8 @@ export const TIPO_PERSONA_OPCIONES = [
 ];
 export const TERCEROS_NACIONALIDAD_OPCIONES = [
   {
-    label: 'Nacional',
-    value: 'Nacional',
+    label: 'Mexicana',
+    value: 'Mexicana',
   },
   {
     label: 'Extranjero',

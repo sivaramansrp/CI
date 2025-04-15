@@ -291,3 +291,4 @@ export const FECHA_FINAL = {
 };
 
 export const PRECAUCION = '<strong>¡Precaución!</strong> Lorem ipsum dolor sit amet, consectetur adipiscing elit.';
+

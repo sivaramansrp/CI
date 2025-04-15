@@ -1,0 +1,124 @@
+<!-- 
+  Componente: capturarExpedicionCertificados.component.html
+  Descripción: Este componente permite capturar información relacionada con la expedición de certificados, incluyendo detalles de licitaciones, representación federal, distribución de saldo, y otros datos relevantes.
+
+  Estructura:
+  - Contenedor principal: Contiene toda la estructura del componente.
+  - Licitaciones disponibles: Muestra una tabla dinámica con las licitaciones disponibles.
+  - Paginación: Navegación para cambiar entre páginas de la tabla.
+  - Representación federal: Formulario para seleccionar la entidad federativa y la representación federal.
+  - Detalle de la licitación y monto adjudicado: Formulario que muestra información detallada de la licitación seleccionada.
+  - Distribución de saldo: Formulario para gestionar el saldo disponible, monto a expedir y total a expedir.
+
+  Elementos destacados:
+  - app-tabla-dinamica: Componente reutilizable para mostrar tablas dinámicas.
+  - app-catalogo-select: Componente reutilizable para desplegar catálogos en formato de lista desplegable.
+  - Formularios reactivos: Utiliza [formGroup] para manejar los datos de los formularios.
+  - Botones de acción: Incluye botones para agregar y eliminar montos, así como para continuar con el proceso.
+
+  Notas:
+  - Algunos elementos están comentados, como la sección de "Nota: Campos obligatorios".
+  - Se incluye un TODO para agregar el componente de aviso de privacidad.
+-->
+<div class="container">
+  <div>
+      <h6>Licitaciones disponibles</h6>
+      <app-tabla-dinamica [configuracionTabla]="configTableArray"
+      [datos]="datos"></app-tabla-dinamica>
+      <div class="col-md-12">
+        <!-- Navegación para la paginación -->
+        <nav aria-label="Page navigation example">
+          <ul class="pagination d-flex justify-content-center">
+              <!-- Elementos de paginación (actualmente comentados) -->
+              <li class="page-item"><a class="page-link" href="#">1</a></li>
+          </ul>
+        </nav>
+      </div>
+
+      <!-- Representación federal  -->
+      <div class="container">
+        <ng-titulo titulo="Representación federal" />
+        <form [formGroup]="formulario">
+          <div class="row">
+            <div class="col-md-4">
+              <app-catalogo-select [catalogo]="entidadFederativaOptions" formControlName="entidadFederativa" [label]="'Entidad federativa'"
+                [required]="true" name="federalent" (change)="onCambiarEntiadFederative()"></app-catalogo-select>
+            </div>
+            <div class="col-md-4">
+              <app-catalogo-select [catalogo]="representacionFederalOptions" formControlName="representacionFederal" [label]="'Representación federal'"
+                [required]="true" name="representfederal" (change)="onCambiarRepresentacionFederal()"></app-catalogo-select>
+            </div>
+          </div>
+          </form>
+      </div>
+    
+      <!-- Detalle de la licitación y monto adjudicado  -->
+      <div class="container">
+        <ng-titulo titulo="Detalle de la licitación y monto adjudicado" />
+          <form [formGroup]="detalledelaLicitacionForm">
+          <div class="row">
+              <div class="col-md-4">
+                  <label class="form-label" for="numeraDelicitacion">Número de licitación:</label>
+                  <input type="text" class="form-control" id="numeraDelicitacion" formControlName="numeraDelicitacion" size="30">
+              </div>
+      
+              <div class="col-md-4">
+                  <label class="form-label" for="fechaDelEventoDelicitacion">Fecha de evento de licitación pública: </label>
+                  <input type="text" class="form-control" id="fechaDelEventoDelicitacion" formControlName="fechaDelEventoDelicitacion" size="30">
+              </div>
+              <div class="col-md-4">
+                <label class="form-label" for="descripcionDelProducto">Descripción del producto:</label>
+                <input type="text" class="form-control" id="descripcionDelProducto" formControlName="descripcionDelProducto" size="30">
+            </div>
+            </div>
+          </form>             
+          </div>
+
+          <div class="container">
+            <ng-titulo titulo="Distribución de saldo" />
+          <form [formGroup]="distribucionSaldoForm">  
+          <div class="row">
+            <div class="col-md-4">
+              <label class="form-label" for="montoDisponible">Monto disponible: </label>
+              <input type="text" class="form-control" id="montoDisponible" formControlName="montoDisponible">
+              <span>(Tonelada)</span>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label" for="montoAExpedir">Monto a expedir*: </label>
+              <input type="text" class="form-control" id="montoAExpedir" formControlName="montoAExpedir" [ngClass]="isInvalid('montoAExpedir') ? 'required' : ''"
+                (change)="onCambiarMontoAExpedir()">
+            </div>
+            <div class="col-md-4 text-end">
+            <button type="submit" name="" id="" class="mid btn btn-primary custom-agregar-monto" (click)="AgregarMontoExpedir()">
+            Agregar
+            </button>
+            </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                  <div class="form-check monto-a-expedir">
+                    <lib-input-check [id]="'montoAExpedirCheck'" [label]="'Monto a expedir'" [required]="false"
+                      formControlName="montoAExpedirCheck" (change)="onCambiarMontoAExpedirCheck()">
+                    </lib-input-check>
+                  </div>
+                </div>
+                <div class="text-end">
+                  <button type="submit" name="" id="" class="mid btn btn-primary custom-eliminar-monto">
+                    Eliminar seleccionado
+                  </button>
+              </div>
+              </div>
+
+            <div class="row">
+              <div class="col-md-4">
+                <label class="form-label" for="totalAExpedir">Total a expedir: </label>
+                <input type="text" class="form-control" id="totalAExpedir" formControlName="totalAExpedir">
+                <span>(Tonelada)</span>
+              </div>
+              
+          </div>
+      </form>     
+      </div>
+
+
+  
