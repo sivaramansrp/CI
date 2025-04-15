@@ -1,9 +1,9 @@
 import { CatalogoSelectComponent, InputRadioComponent, TableComponent, TituloComponent } from '@libs/shared/data-access-user/src';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component,OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RadioOpcion, SolicitudJson } from '@libs/shared/data-access-user/src/core/models/231003/solicitud.model'
-import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { EstadoFormularioResiduo } from '../../models/datos-residuos.model';
 import { FormularioResiduoQuery } from '../../estados/queries/datos-residuos.query';
 import { FormularioResiduoStore } from '../../estados/tramites/datos-residuos.store';
 import rawData from '@libs/shared/theme/assets/json/231003/solicitud.json';
@@ -28,7 +28,7 @@ const RADIO_OPCIONES = rawData as SolicitudJson;
   templateUrl: './datos-residuos-peligrosos.component.html',
   styleUrl: './datos-residuos-peligrosos.component.css',
 })
-export class DatosResiduosPeligrososComponent implements OnInit, OnDestroy {
+export class DatosResiduosPeligrososComponent implements OnInit{
   /** 
   * Formulario reactivo que contiene los datos generales del residuo. 
   */
@@ -38,11 +38,6 @@ export class DatosResiduosPeligrososComponent implements OnInit, OnDestroy {
    * Formulario reactivo que contiene la información detallada del residuo peligroso.
    */
   formularioResiduo!: FormGroup;
-
-  /** 
-   * Subject utilizado para cancelar las suscripciones al destruir el componente.
-   */
-  private destruir$ = new Subject<void>();
 
 
   /**
@@ -86,9 +81,6 @@ export class DatosResiduosPeligrososComponent implements OnInit, OnDestroy {
 
     /** Restaura valores guardados en el store de Akita */
     this.recuperarValoresDesdeStore();
-
-    /** Se suscribe a los cambios del formulario para guardar en el store */
-    this.suscribirseACambiosDeFormulario();
   }
 
 
@@ -188,236 +180,21 @@ export class DatosResiduosPeligrososComponent implements OnInit, OnDestroy {
     this.formularioResiduo.patchValue(ESTADO.formularioResiduo, { emitEvent: false });
   }
 
-  /**
-   * Se suscribe a los cambios de los formularios y actualiza el estado
-   * del store de Akita con los nuevos valores ingresados por el usuario.
-   * 
-   * La suscripción se mantiene activa hasta que se destruye el componente.
-   */
-  private suscribirseACambiosDeFormulario(): void {
-    /** Escucha cambios en el campo "numero" y actualiza el estado */
-    this.formularioDatos.get('numero')?.valueChanges
-      .pipe(takeUntil(this.destruir$))
-      .subscribe(valor => {
-        this.formularioStore.actualizarFormularioDatos({
-          ...this.formularioDatos.getRawValue(),
-          numero: valor
-        });
-      });
 
-    /** Escucha cambios en el campo "nombreMateriaPrima" y actualiza el estado */
-    this.formularioDatos.get('nombreMateriaPrima')?.valueChanges
-      .pipe(takeUntil(this.destruir$))
-      .subscribe(valor => {
-        this.formularioStore.actualizarFormularioDatos({
-          ...this.formularioDatos.getRawValue(),
-          nombreMateriaPrima: valor
-        });
-      });
-
-    /** Escucha cambios en el campo "cantidad" y actualiza el estado */
-    this.formularioDatos.get('cantidad')?.valueChanges
-      .pipe(takeUntil(this.destruir$))
-      .subscribe(valor => {
-        this.formularioStore.actualizarFormularioDatos({
-          ...this.formularioDatos.getRawValue(),
-          cantidad: valor
-        });
-      });
-
-    /** Escucha cambios en el campo "cantidadLetra" y actualiza el estado */
-    this.formularioDatos.get('cantidadLetra')?.valueChanges
-      .pipe(takeUntil(this.destruir$))
-      .subscribe(valor => {
-        this.formularioStore.actualizarFormularioDatos({
-          ...this.formularioDatos.getRawValue(),
-          cantidadLetra: valor
-        });
-      });
-
-    /** Escucha cambios en el campo "unidadDeMedida" y actualiza el estado */
-    this.formularioDatos.get('unidadDeMedida')?.valueChanges
-      .pipe(takeUntil(this.destruir$))
-      .subscribe(valor => {
-        this.formularioStore.actualizarFormularioDatos({
-          ...this.formularioDatos.getRawValue(),
-          unidadDeMedida: valor
-        });
-      });
-
-    /** Escucha cambios en el campo "fraccionArancelaria" y actualiza el estado */
-    this.formularioDatos.get('fraccionArancelaria')?.valueChanges
-      .pipe(takeUntil(this.destruir$))
-      .subscribe(valor => {
-        this.formularioStore.actualizarFormularioDatos({
-          ...this.formularioDatos.getRawValue(),
-          fraccionArancelaria: valor
-        });
-      });
-
-    /** Escucha cambios en el campo "fraccionArancelaria" del residuo y actualiza el estado */
-    this.formularioResiduo.get('fraccionArancelaria')?.valueChanges
-      .pipe(takeUntil(this.destruir$))
-      .subscribe(valor => {
-        this.formularioStore.actualizarFormularioResiduo({
-          ...this.formularioResiduo.getRawValue(),
-          fraccionArancelaria: valor
-        });
-      });
-
-    /** Escucha cambios en el campo "nico" del residuo y actualiza el estado */
-    this.formularioResiduo.get('nico')?.valueChanges
-      .pipe(takeUntil(this.destruir$))
-      .subscribe(valor => {
-        this.formularioStore.actualizarFormularioResiduo({
-          ...this.formularioResiduo.getRawValue(),
-          nico: valor
-        });
-      });
-
-    /** Escucha cambios en el campo "acotacion" del residuo y actualiza el estado */
-    this.formularioResiduo.get('acotacion')?.valueChanges
-      .pipe(takeUntil(this.destruir$))
-      .subscribe(valor => {
-        this.formularioStore.actualizarFormularioResiduo({
-          ...this.formularioResiduo.getRawValue(),
-          acotacion: valor
-        });
-      });
-
-    /** Escucha cambios en el campo "residuoPeligroso" del residuo y actualiza el estado */
-    this.formularioResiduo.get('residuoPeligroso')?.valueChanges
-      .pipe(takeUntil(this.destruir$))
-      .subscribe(valor => {
-        this.formularioStore.actualizarFormularioResiduo({
-          ...this.formularioResiduo.getRawValue(),
-          residuoPeligroso: valor
-        });
-      });
-
-    /** Escucha cambios en el campo "cantidad" del residuo y actualiza el estado */
-    this.formularioResiduo.get('cantidad')?.valueChanges
-      .pipe(takeUntil(this.destruir$))
-      .subscribe(valor => {
-        this.formularioStore.actualizarFormularioResiduo({
-          ...this.formularioResiduo.getRawValue(),
-          cantidad: valor
-        });
-      });
-
-    /** Escucha cambios en el campo "cantidadLetra" del residuo y actualiza el estado */
-    this.formularioResiduo.get('cantidadLetra')?.valueChanges
-      .pipe(takeUntil(this.destruir$))
-      .subscribe(valor => {
-        this.formularioStore.actualizarFormularioResiduo({
-          ...this.formularioResiduo.getRawValue(),
-          cantidadLetra: valor
-        });
-      });
-
-    /** Escucha cambios en el campo "unidadMedida" del residuo y actualiza el estado */
-    this.formularioResiduo.get('unidadMedida')?.valueChanges
-      .pipe(takeUntil(this.destruir$))
-      .subscribe(valor => {
-        this.formularioStore.actualizarFormularioResiduo({
-          ...this.formularioResiduo.getRawValue(),
-          unidadMedida: valor
-        });
-      });
-
-    /** Escucha cambios en el campo "clasificacion" del residuo y actualiza el estado */
-    this.formularioResiduo.get('clasificacion')?.valueChanges
-      .pipe(takeUntil(this.destruir$))
-      .subscribe(valor => {
-        this.formularioStore.actualizarFormularioResiduo({
-          ...this.formularioResiduo.getRawValue(),
-          clasificacion: valor
-        });
-      });
-
-    /** Escucha cambios en el campo "claveResiduo" del residuo y actualiza el estado */
-    this.formularioResiduo.get('claveResiduo')?.valueChanges
-      .pipe(takeUntil(this.destruir$))
-      .subscribe(valor => {
-        this.formularioStore.actualizarFormularioResiduo({
-          ...this.formularioResiduo.getRawValue(),
-          claveResiduo: valor
-        });
-      });
-
-    /** Escucha cambios en el campo "nombre" del residuo y actualiza el estado */
-    this.formularioResiduo.get('nombre')?.valueChanges
-      .pipe(takeUntil(this.destruir$))
-      .subscribe(valor => {
-        this.formularioStore.actualizarFormularioResiduo({
-          ...this.formularioResiduo.getRawValue(),
-          nombre: valor
-        });
-      });
-
-    /** Escucha cambios en el campo "descripcion" del residuo y actualiza el estado */
-    this.formularioResiduo.get('descripcion')?.valueChanges
-      .pipe(takeUntil(this.destruir$))
-      .subscribe(valor => {
-        this.formularioStore.actualizarFormularioResiduo({
-          ...this.formularioResiduo.getRawValue(),
-          descripcion: valor
-        });
-      });
-
-    /** Escucha cambios en el campo "creti" del residuo y actualiza el estado */
-    this.formularioResiduo.get('creti')?.valueChanges
-      .pipe(takeUntil(this.destruir$))
-      .subscribe(valor => {
-        this.formularioStore.actualizarFormularioResiduo({
-          ...this.formularioResiduo.getRawValue(),
-          creti: valor
-        });
-      });
-
-    /** Escucha cambios en el campo "estadoFisico" del residuo y actualiza el estado */
-    this.formularioResiduo.get('estadoFisico')?.valueChanges
-      .pipe(takeUntil(this.destruir$))
-      .subscribe(valor => {
-        this.formularioStore.actualizarFormularioResiduo({
-          ...this.formularioResiduo.getRawValue(),
-          estadoFisico: valor
-        });
-      });
-
-    /** Escucha cambios en el campo "tipoContenedor" del residuo y actualiza el estado */
-    this.formularioResiduo.get('tipoContenedor')?.valueChanges
-      .pipe(takeUntil(this.destruir$))
-      .subscribe(valor => {
-        this.formularioStore.actualizarFormularioResiduo({
-          ...this.formularioResiduo.getRawValue(),
-          tipoContenedor: valor
-        });
-      });
-
-    /** Escucha cambios en el campo "capacidad" del residuo y actualiza el estado */
-    this.formularioResiduo.get('capacidad')?.valueChanges
-      .pipe(takeUntil(this.destruir$))
-      .subscribe(valor => {
-        this.formularioStore.actualizarFormularioResiduo({
-          ...this.formularioResiduo.getRawValue(),
-          capacidad: valor
-        });
-      });
+  actualizarCampoFormularioDatos(field: keyof EstadoFormularioResiduo['formularioDatos']): void {
+    const VALOR = this.formularioDatos.get(field)?.value;
+    this.formularioStore.actualizarFormularioDatos({
+      ...this.formularioDatos.getRawValue(),
+      [field]: VALOR,
+    });
   }
-
-
-
-
-  /**
-   * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
-   * 
-   * Se utiliza para finalizar las suscripciones activas y prevenir fugas de memoria.
-   */
-  ngOnDestroy(): void {
-    this.destruir$.next(); // Emite un valor para completar todas las suscripciones pendientes
-    this.destruir$.complete(); // Completa el Subject para liberar recursos
+  
+  actualizarCampoFormularioResiduo(field: keyof EstadoFormularioResiduo['formularioResiduo']): void {
+    const VALOR = this.formularioResiduo.get(field)?.value;
+    this.formularioStore.actualizarFormularioResiduo({
+      ...this.formularioResiduo.getRawValue(),
+      [field]: VALOR,
+    });
   }
-
 
 }

@@ -1,4 +1,5 @@
-import { EstadoFormularioResiduo, FormularioResiduoStore } from '../tramites/datos-residuos.store';
+import { EstadoFormularioResiduo } from '../../models/datos-residuos.model';
+import {FormularioResiduoStore } from '../tramites/datos-residuos.store';
 import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
 /**

@@ -14,7 +14,7 @@
                 <div class="col-md-6">
                     <div class="form-group mb-3">
                         <label for="numero" class="form-label">Número de bitácora*:</label>
-                        <input type="text" class="form-control" id="numero" formControlName="numero">
+                        <input type="text" class="form-control" id="numero" formControlName="numero" (change)="actualizarCampoFormularioDatos('numero')">
                     </div>
                 </div>
                 <div class="col-md-6 d-flex justify-content-start">
@@ -25,13 +25,13 @@
             <div class="row mb-3">
                 <div class="col-md-6">
                     <app-catalogo-select [catalogo]="etiquetasForm.nombre" [label]="'Nombre de la materia prima'" [required]="true"
-                        formControlName="nombreMateriaPrima">
+                        formControlName="nombreMateriaPrima" (change)="actualizarCampoFormularioDatos('nombreMateriaPrima')" >
                     </app-catalogo-select>
                 </div>
                 <div class="col-md-6">
                     <div class="form-group mb-3">
                         <label for="cantidad" class="form-label">Cantidad</label>
-                        <input type="text" class="form-control" id="cantidad" formControlName="cantidad" readonly>
+                        <input type="text" class="form-control" id="cantidad" formControlName="cantidad" (change)="actualizarCampoFormularioDatos('cantidad')" readonly>
                     </div>
                 </div>
             </div>
@@ -41,13 +41,13 @@
                 <div class="col-md-6">
                     <div class="form-group mb-3">
                         <label for="cantidadLetra" class="form-label">Cantidad (letra)</label>
-                        <input type="text" class="form-control" id="cantidadLetra" formControlName="cantidadLetra">
+                        <input type="text" class="form-control" id="cantidadLetra" formControlName="cantidadLetra" (change)="actualizarCampoFormularioDatos('cantidadLetra')" readonly>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-group mb-3">
                         <label for="unidadDeMedida" class="form-label">Unidad de medida</label>
-                        <input type="text" class="form-control" id="unidadDeMedida" formControlName="unidadDeMedida">
+                        <input type="text" class="form-control" id="unidadDeMedida" formControlName="unidadDeMedida" (change)="actualizarCampoFormularioDatos('unidadDeMedida')" readonly>
                     </div>
                 </div>
             </div>
@@ -57,7 +57,7 @@
                     <div class="form-group mb-3">
                         <label for="fraccionArancelaria" class="form-label">Fracción arancelaria</label>
                         <input type="text" class="form-control" id="fraccionArancelaria"
-                            formControlName="fraccionArancelaria">
+                            formControlName="fraccionArancelaria" (change)="actualizarCampoFormularioDatos('fraccionArancelaria')" readonly>
                     </div>
                 </div>
             </div>
@@ -94,38 +94,38 @@
             <div class="row mb-3">
                 <div class="col-md-6">
                     <app-catalogo-select [catalogo]="etiquetasForm.arancelaria" [label]="'Fracción arancelaria'" [required]="true"
-                        formControlName="fraccionArancelaria"></app-catalogo-select>
+                        formControlName="fraccionArancelaria" (change)="actualizarCampoFormularioResiduo('fraccionArancelaria')"></app-catalogo-select>
                 </div>
                 <div class="col-md-6">
                     <app-catalogo-select [catalogo]="etiquetasForm.nico" [label]="'NICO'" [required]="true"
-                        formControlName="nico"></app-catalogo-select>
+                        formControlName="nico" (change)="actualizarCampoFormularioResiduo('nico')"></app-catalogo-select>
                 </div>
             </div>
             <div class="row mb-3">
                 <div class="col-md-6">
                     <label class="form-label">Acotación*:</label>
-                    <textarea class="form-control textarea-auto-height" rows="2" formControlName="acotacion"></textarea>
+                    <textarea class="form-control textarea-auto-height" rows="2" formControlName="acotacion" (change)="actualizarCampoFormularioResiduo('acotacion')"></textarea>
                 </div>
                 <div class="col-md-6">
                     <label for="peligroso" class="form-label">Nombre del residuo peligroso generado*:</label>
-                    <input type="text" class="form-control" id="peligroso" formControlName="residuoPeligroso">
+                    <input type="text" class="form-control" id="peligroso" formControlName="residuoPeligroso" (change)="actualizarCampoFormularioResiduo('residuoPeligroso')">
                 </div>
             </div>
 
             <div class="row mb-3">
                 <div class="col-md-6">
                     <label for="cantidad" class="form-label">Cantidad*:</label>
-                    <input type="text" class="form-control" id="cantidad" formControlName="cantidad">
+                    <input type="text" class="form-control" id="cantidad" formControlName="cantidad" (change)="actualizarCampoFormularioResiduo('cantidad')">
                 </div>
                 <div class="col-md-6">
                     <label for="cantidadletra" class="form-label">Cantidad (letra):</label>
-                    <input type="text" class="form-control" id="cantidadletra" formControlName="cantidadLetra" readonly>
+                    <input type="text" class="form-control" id="cantidadletra" formControlName="cantidadLetra" (change)="actualizarCampoFormularioResiduo('cantidadLetra')" readonly>
                 </div>
             </div>
             <div class="row mb-3">
                 <div class="col-md-6">
                     <app-catalogo-select [catalogo]="etiquetasForm.unidad" [label]="'Unidad de medida'" [required]="true"
-                        formControlName="unidadMedida"></app-catalogo-select>
+                        formControlName="unidadMedida" (change)="actualizarCampoFormularioResiduo('unidadMedida')"></app-catalogo-select>
                 </div>
             </div>
 
@@ -133,46 +133,46 @@
                 <div class="col-md-8">
                     <label>Clasificación / Tipo*:</label>
                     <app-input-radio [radioOptions]="clasificacionRadioOptions" [isRequired]="true"
-                        [layout]="'horizontal'" formControlName="clasificacion"></app-input-radio>
+                        [layout]="'horizontal'" formControlName="clasificacion" (change)="actualizarCampoFormularioResiduo('clasificacion')"></app-input-radio>
                 </div>
             </div>
 
             <div class="row mb-3">
                 <div class="col-md-6">
                     <app-catalogo-select [catalogo]="etiquetasForm.residuo" [label]="'Clave de residuo'" [required]="true"
-                        formControlName="claveResiduo"></app-catalogo-select>
+                        formControlName="claveResiduo" (change)="actualizarCampoFormularioResiduo('claveResiduo')"></app-catalogo-select>
                 </div>
                 <div class="col-md-6">
                     <app-catalogo-select [catalogo]="etiquetasForm.tipoNombre" [label]="'Nombre'" [required]="true"
-                        formControlName="nombre"></app-catalogo-select>
+                        formControlName="nombre" (change)="actualizarCampoFormularioResiduo('nombre')"></app-catalogo-select>
                 </div>
             </div>
 
             <div class="row mb-3">
                 <div class="col-md-6">
                     <app-catalogo-select [catalogo]="etiquetasForm.descripcion" [label]="'Descripción'" [required]="true"
-                        formControlName="descripcion"></app-catalogo-select>
+                        formControlName="descripcion" (change)="actualizarCampoFormularioResiduo('descripcion')"></app-catalogo-select>
                 </div>
                 <div class="col-md-6">
                     <app-catalogo-select [catalogo]="etiquetasForm.creti" [label]="'CRETI'" [required]="true"
-                        formControlName="creti"></app-catalogo-select>
+                        formControlName="creti" (change)="actualizarCampoFormularioResiduo('creti')"></app-catalogo-select>
                 </div>
             </div>
 
             <div class="row mb-3">
                 <div class="col-md-6">
                     <app-catalogo-select [catalogo]="etiquetasForm.estadoFisico" [label]="'Estado físico'" [required]="true"
-                        formControlName="estadoFisico"></app-catalogo-select>
+                        formControlName="estadoFisico" (change)="actualizarCampoFormularioResiduo('estadoFisico')"></app-catalogo-select>
                 </div>
                 <div class="col-md-6">
                     <app-catalogo-select [catalogo]="etiquetasForm.tipoContenedor" [label]="'Tipo de Contenedor'" [required]="true"
-                        formControlName="tipoContenedor"></app-catalogo-select>
+                        formControlName="tipoContenedor"  (change)="actualizarCampoFormularioResiduo('tipoContenedor')"></app-catalogo-select>
                 </div>
             </div>
             <div class="row mb-3">
                 <div class="col-md-6">
                     <label for="capacidad" class="form-label">Capacidad*:</label>
-                    <input type="text" class="form-control" id="capacidad" formControlName="capacidad">
+                    <input type="text" class="form-control" id="capacidad" formControlName="capacidad" (change)="actualizarCampoFormularioResiduo('capacidad')">
                 </div>
             </div>
             <div class="row mt-3">
