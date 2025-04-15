@@ -384,11 +384,24 @@ const ROUTES: Routes = [
         ),
   },
   {
+    path: 'importacion',
+      loadChildren: () =>
+        import('./tramites/130113/importacion-equipo-anticontaminante.module').then(
+          (m) => m.ImportacionEquipoAnticontaminanteModule
+        ),
+  },
+  {
     path: 'importacion-de',
     loadChildren: () =>
       import('./tramites/130109/vehiculos-usados-adaptados.module').then(
         (m) => m.VehiculosUsadosAdaptadosModule
       ),
+  },
+    {
+    path: 'expedicion-certificado-cupos',
+    loadChildren: () =>
+      import('./tramites/120204/expedicion-certificado-cupos.module').then(
+        (m) => m.ExpedicionCertificadoModule),
   },
   {
     path: 'exportar-diamantes',
@@ -403,7 +416,15 @@ const ROUTES: Routes = [
       import('./tramites/130104/importacion-otros-vehiculos-usados.module').then(
         (m) => m.ImportacionOtrosVehiculosUsadosModule
       )
-    }
+    },
+  {
+    path: 'modalidad-ampliacion',
+    loadChildren: () =>
+      import('./tramites/80206/modalidad-ampliacion.module').then(
+        (m) => m.ModalidadAmpliacionModule
+      ),
+  },
+  
 ];
 
 @NgModule({
