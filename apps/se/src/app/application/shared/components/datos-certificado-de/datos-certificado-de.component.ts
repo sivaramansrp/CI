@@ -148,6 +148,7 @@ export class DatosCertificadoDeComponent implements OnDestroy {
 
     });
 
+    // La función se ejecutará después de un segundo.
     setTimeout(() => {
       if (this.datosFormCertificado) {
         this.formDatosCertificado.patchValue(this.datosFormCertificado);

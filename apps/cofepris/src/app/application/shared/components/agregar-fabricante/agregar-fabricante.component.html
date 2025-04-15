@@ -35,15 +35,25 @@
             [value]="tipoPersona.FISICA"
           />
           Física
+          <span
+          class="bi bi-question-circle-fill"
+          title="Física"
+          data-bs-toggle="tooltip"
+        ></span>
         </div>
         <div class="form-check">
           <input
             type="radio"
             class="form-check-input"
             formControlName="tipoPersona"
-            value="Moral"
+            [value]="tipoPersona.MORAL"
           />
           Moral
+          <span
+          class="bi bi-question-circle-fill"
+          title="Moral"
+          data-bs-toggle="tooltip"
+        ></span>
         </div>
       </div>
     </div>
@@ -52,6 +62,11 @@
     <div class="row mt-3">
       <div class="col-md-6">
         <label class="form-label">R.F.C.*:</label>
+        <span
+        class="bi bi-question-circle-fill"
+        title="R.F.C"
+        data-bs-toggle="tooltip"
+      ></span>
         <input type="text" class="form-control" formControlName="rfc" />
       </div>
       @if (!estaOculto) {
@@ -59,7 +74,7 @@
         <label class="form-label">C.U.R.P.*:</label>
         <input type="text" class="form-control" formControlName="curp" />
       </div>
-    }
+      }
     </div>
     }
 
@@ -88,16 +103,14 @@
         />
       </div>
     </div>
-    } @if(agregarFabricanteForm.get('tipoPersona')?.value === 'Moral') {
+    } @if(agregarFabricanteForm.get('tipoPersona')?.value === tipoPersona.MORAL) {
     <div class="row mt-3">
       <div class="col-md-12">
         <label class="form-label">Denominación/razón social*:</label>
         <input type="text" class="form-control" formControlName="razonSocial" />
       </div>
     </div>
-    }
-
-    <!-- Domicilio -->
+    } @if (idProcedimiento === 260102) {
     <h4 class="mt-5">Domicilio</h4>
     <div class="row mt-5">
       <div class="col-md-4 px-5">
@@ -109,53 +122,99 @@
         ></app-catalogo-select>
       </div>
       <div class="col-md-4 px-5">
+        <label class="form-label">Estado:</label>
+        <input type="text" class="form-control" formControlName="estado" />
+      </div>
+
+      <div class="col-md-4 px-5">
+        <label class="form-label">Código postal o equivalente:</label>
+        <input
+          type="text"
+          class="form-control"
+          formControlName="codigoPostal"
+        />
+      </div>
+    </div>
+    }
+
+    <!-- Domicilio -->
+    @else{
+    <h4 class="mt-5">Domicilio</h4>
+    <div class="row mt-5">
+      <div class="col-md-4">
+        <app-catalogo-select
+          [catalogo]="paisesDatos"
+          formControlName="pais"
+          [label]="'País'"
+          [required]="true"
+          [isDisabled]="elementosDeshabilitados.includes('pais')"
+        ></app-catalogo-select>
+      </div>
+      <div class="col-md-4">
         <app-catalogo-select
           [catalogo]="estadosDatos"
           formControlName="estado"
           [label]="'Estado/localidad'"
           [required]="true"
+          [isDisabled]="this.elementosDeshabilitados.includes('estado')"
         ></app-catalogo-select>
       </div>
-      <div class="col-md-4 px-5">
+      <div class="col-md-4">
         <app-catalogo-select
           [catalogo]="municipiosDatos"
           formControlName="municipio"
           [label]="'Municipio/alcaldía'"
           [required]="true"
+          [isDisabled]="this.elementosDeshabilitados.includes('municipio')"
         ></app-catalogo-select>
       </div>
     </div>
 
     <div class="row mt-3">
-      <div class="col-md-4 px-5">
+      <div class="col-md-4">
         <app-catalogo-select
           [catalogo]="localidadesDatos"
           formControlName="localidad"
           [label]="'Localidad'"
-          [required]="true"
+          [required]="!elementosNoRequeridos.includes('localidad')"
         ></app-catalogo-select>
       </div>
-      <div class="col-md-4 px-5">
+      <div class="col-md-4">
         <app-catalogo-select
           [catalogo]="codigosPostalesDatos"
           formControlName="codigoPostal"
           [label]="'Código postal o equivalente'"
-          [required]="true"
+          [required]="!elementosNoRequeridos.includes('codigoPostal')"
         ></app-catalogo-select>
       </div>
-      <div class="col-md-4 px-5">
+      <div class="col-md-4">
         <app-catalogo-select
           [catalogo]="coloniasDatos"
           formControlName="colonia"
           [label]="'Colonia'"
-          [required]="true"
+          [required]="!elementosNoRequeridos.includes('colonia')"
         ></app-catalogo-select>
       </div>
     </div>
+    }
+    
+    @if(mostarColoniaOEquivalente){
+    <div class="row mt-3">
+      <div class="col-md-4 mx-auto">
+        <label class="form-label">Colonia o equivalente:</label>
+        <input type="text" class="form-control" formControlName="coloniaOEquivalente" />
+      </div>
+      </div>
+    }
 
     <div class="row mt-3">
       <div class="col-md-9">
         <label class="form-label">Calle*:</label>
+        <span
+        class="bi bi-question-circle-fill"
+        title="Calle"
+        data-bs-toggle="tooltip"
+      ></span>
         <input type="text" class="form-control" formControlName="calle" />
       </div>
       <div class="col-md-3">
@@ -186,7 +245,12 @@
         <input type="text" class="form-control" formControlName="telefono" />
       </div>
       <div class="col-md-4">
-        <label class="form-label">Correo electrónico*:</label>
+        <label class="form-label mx-1">Correo electrónico</label>
+        <span
+          class="bi bi-question-circle-fill"
+          title="Correo electrónico"
+          data-bs-toggle="tooltip"
+        ></span>
         <input
           type="email"
           class="form-control"

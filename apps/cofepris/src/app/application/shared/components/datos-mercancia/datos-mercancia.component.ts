@@ -1,24 +1,34 @@
 import {
   AbstractControl,
   FormBuilder,
+  FormControl,
   FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
 import {
+  CROSLISTA_DE_PAISES,
+  DATOS_MERCANCIA_CAMPO,
+  DATOS_MERCANCIA_CLAVE_TABLA,
+  DESCRIPCION_FRACCION_DESHABILITADO_VALOR,
+  UMT_DESHABILITADO_VALOR,
+} from '../../constantes/datos-solicitud.enum';
+import {
   Catalogo,
   CrossListLable,
   MercanciaForm,
+  TablaMercanciaClaveConfig,
   TablaMercanciasDatos,
 } from '../../models/datos-solicitud.model';
 import {
   CatalogoSelectComponent,
   CrosslistComponent,
+  TablaDinamicaComponent,
+  TablaSeleccion,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
 import { CommonModule, Location } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { CROSLISTA_DE_PAISES } from '../../constantes/datos-solicitud.enum';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 import { DetalleMercancia } from '../../models/detalle-mercancia.model';
 import { DetalleMercanciaComponent } from '../detalle-mercancia/detalle-mercancia.component';
@@ -38,12 +48,21 @@ import { Observable } from 'rxjs';
     CatalogoSelectComponent,
     CrosslistComponent,
     DetalleMercanciaComponent,
+    TablaDinamicaComponent,
   ],
   templateUrl: './datos-mercancia.component.html',
   styleUrl: './datos-mercancia.component.scss',
   providers: [DatosSolicitudService],
 })
 export class DatosMercanciaComponent implements OnInit {
+  /**
+   * @property {number} idProcedimiento
+   * Identificador único del procedimiento asociado a la solicitud.
+   * Este valor es recibido como un input desde el componente padre.
+   *
+   * @decorador @Input
+   */
+  @Input() public idProcedimiento!: number;
   /**
    * @property {boolean} detalleMercancia
    * Indica si el componente debe mostrar detalles de mercancía.
@@ -76,11 +95,11 @@ export class DatosMercanciaComponent implements OnInit {
     new EventEmitter<TablaMercanciasDatos>();
 
   /**
-   * @event aggregarMercanciaDatos
+   * @event agregarMercanciaDatos
    * @description EventEmitter that emits a single merchandise item to be added.
    * This is used to notify the parent component about the addition of a new merchandise item.
    */
-  @Output() aggregarMercanciaDatos: EventEmitter<DetalleMercancia> =
+  @Output() agregarMercanciaDatos: EventEmitter<DetalleMercancia> =
     new EventEmitter<DetalleMercancia>(true);
 
   /**
@@ -208,6 +227,19 @@ export class DatosMercanciaComponent implements OnInit {
   public seleccionarOrigenDelPais = CROSLISTA_DE_PAISES;
 
   /**
+   * Indica si se debe mostrar el campo de datos de mercancía en la interfaz.
+   * @type {boolean}
+   */
+  public datosMercanciaCampo = false;
+
+  /**
+   * Lista de elementos deshabilitados en el formulario.
+   * Esta propiedad almacena un arreglo de cadenas que representan
+   * los elementos que deben estar deshabilitados en el formulario.
+   */
+  public elementosDeshabilitados: string[] = [];
+
+  /**
    * @constructor
    * Inicializa el formulario de mercancía y carga catálogos desde archivos JSON.
    *
@@ -250,6 +282,12 @@ export class DatosMercanciaComponent implements OnInit {
       'cantidadUmcDatos',
       '/cofepris/cantidadUmcDatos.json'
     );
+
+    this.datosMercanciaCampo = DATOS_MERCANCIA_CAMPO.includes(
+      this.idProcedimiento
+    )
+      ? true
+      : false;
   }
 
   /**
@@ -258,7 +296,190 @@ export class DatosMercanciaComponent implements OnInit {
    * Llama al método `crearMercanciaForm` para construir el formulario.
    */
   ngOnInit(): void {
+    this.validarElementos();
     this.crearMercanciaForm();
+  }
+
+  /**
+   * Lista de elementos que no son válidos.
+   * Esta propiedad almacena un arreglo de cadenas que representan
+   * los elementos que no cumplen con los criterios de validación.
+   */
+  public elementosNoValidos: string[] = [];
+  /**
+   * Arreglo que almacena los elementos añadidos.
+   *
+   * Este arreglo se utiliza para guardar una lista de cadenas que representan
+   * los elementos que han sido agregados en el componente.
+   */
+  public elementosAnadidos: string[] = [];
+  /**
+   * Configuración para la clave de mercancía.
+   *
+   * Esta propiedad define la configuración utilizada para la tabla de selección
+   * de claves de mercancía. Incluye el tipo de selección, la configuración de la tabla
+   * y los datos asociados.
+   *
+   * Propiedades:
+   * - `tipoSeleccionTabla`: Define el tipo de selección en la tabla (por ejemplo, CHECKBOX).
+   * - `configuracionTabla`: Configuración específica de la tabla para mostrar las claves de mercancía.
+   * - `datos`: Arreglo que contiene los datos de configuración de las claves de mercancía.
+   */
+  public claveConfig = {
+    tipoSeleccionTabla: TablaSeleccion.CHECKBOX,
+    configuracionTabla: DATOS_MERCANCIA_CLAVE_TABLA,
+    datos: [] as TablaMercanciaClaveConfig[],
+  };
+  /**
+   * @property {TablaMercanciaClaveConfig[]} scianLista
+   * Lista de registros Clave seleccionados.
+   */
+  public claveLista: TablaMercanciaClaveConfig[] = [];
+  /**
+   * Valida elementos según el `idProcedimiento` y establece
+   * las listas de elementos no válidos y añadidos.
+   * @returns {void} Lista de elementos no válidos.
+   */
+  validarElementos(): void {
+    this.elementosNoValidos = [];
+    this.elementosAnadidos = [];
+    switch (this.idProcedimiento) {
+      case 260102:
+        this.elementosNoValidos = [
+          'denominacionDistintiva',
+          'denominacionComun',
+          'formaFarmaceutica',
+          'estadoFisico',
+          'presentacion',
+          'numeroRegistroSanitario',
+          'fechaCaducidad',
+        ];
+        this.elementosAnadidos = [
+          'marca',
+          'especifique',
+          'claveDeLos',
+          'fechaDeFabricacio',
+          'fechaDeCaducidad',
+        ];
+        break;
+      case 260208:
+      case 260209:
+        this.elementosNoValidos = ['numeroRegistroSanitario', 'fechaCaducidad'];
+        this.elementosAnadidos = ['especifique'];
+        this.elementosDeshabilitados = ['descripcionFraccion', 'cantidadUmt'];
+        break;
+      case 260207:
+        this.elementosAnadidos = ['especifique'];
+        this.elementosDeshabilitados = ['descripcionFraccion', 'cantidadUmt'];
+        break;
+      case 260201:
+        this.elementosDeshabilitados = ['descripcionFraccion', 'cantidadUmt'];
+        break
+      default:
+        if (this.detalleMercancia) {
+          this.elementosNoValidos = [
+            'denominacionDistintiva',
+            'formaFarmaceutica',
+          ];
+        }
+        break;
+    }
+  }
+
+  /**
+   * Restablece los valores de los campos clave en el formulario.
+   */
+  modificarClave(): void {
+    if (!this.claveLista.length) {
+      return;
+    }
+    const CLAVES_A_ELIMINAR = new Set(
+      this.claveLista.map((item) => item.clave)
+    );
+    const CLAVE = this.mercanciaForm.get('claveDeLos')?.value;
+    const FABRICACION = this.mercanciaForm.get('fechaDeFabricacio')?.value;
+    const CADUCIDAD = this.mercanciaForm.get('fechaDeCaducidad')?.value;
+    for (let i = 0; i < this.claveConfig.datos.length; i++) {
+      const ITEM = this.claveConfig.datos[i];
+      if (CLAVES_A_ELIMINAR.has(ITEM.clave)) {
+        this.claveConfig.datos[i] = {
+          clave: CLAVE,
+          fabricacion: FABRICACION,
+          caducidad: CADUCIDAD,
+        };
+        break;
+      }
+    }
+  }
+
+  /**
+   * Actualiza la lista de claves y ajusta los valores del formulario de mercancía
+   * según la fila seleccionada en la configuración de claves.
+   *
+   * @param event - Arreglo de configuraciones de claves de mercancía (`TablaMercanciaClaveConfig[]`).
+   *                Contiene las claves que se utilizarán para actualizar la lista.
+   *
+   * - Si la lista de claves está vacía, la función no realiza ninguna acción.
+   * - Busca en los datos de configuración de claves una fila que coincida con las claves proporcionadas.
+   * - Si se encuentra una fila coincidente, actualiza los valores del formulario de mercancía
+   *   con los datos de la fila seleccionada, incluyendo la clave, la fecha de fabricación
+   *   y la fecha de caducidad.
+   */
+  claveListaFn(event: TablaMercanciaClaveConfig[]): void {
+    this.claveLista = event;
+    if (!this.claveLista.length) {
+      return;
+    }
+    const CLAVES_A_ELIMINAR = new Set(
+      this.claveLista.map((item) => item.clave)
+    );
+    const FILA_SELECCIONADA = this.claveConfig.datos.find((item) =>
+      CLAVES_A_ELIMINAR.has(item.clave)
+    );
+    if (FILA_SELECCIONADA) {
+      this.mercanciaForm.patchValue({
+        claveDeLos: FILA_SELECCIONADA.clave,
+        fechaDeFabricacio: FILA_SELECCIONADA.fabricacion,
+        fechaDeCaducidad: FILA_SELECCIONADA.caducidad,
+      });
+    }
+  }
+  /**
+   * Agrega una nueva clave a la lista `claveConfig.datos`
+   * solo si los valores de los campos no están vacíos.
+   */
+  agregarClave(): void {
+    const CLAVE = this.mercanciaForm.get('claveDeLos')?.value;
+    const FABRICACION = this.mercanciaForm.get('fechaDeFabricacio')?.value;
+    const CADUCIDAD = this.mercanciaForm.get('fechaDeCaducidad')?.value;
+    if (CLAVE && FABRICACION && CADUCIDAD) {
+      this.claveConfig.datos.push({
+        clave: CLAVE,
+        fabricacion: FABRICACION,
+        caducidad: CADUCIDAD,
+      });
+      this.mercanciaForm.patchValue({
+        claveDeLos: '',
+        fechaDeFabricacio: '',
+        fechaDeCaducidad: '',
+      });
+    }
+  }
+
+  /**
+   * Elimina las claves seleccionadas en `claveLista` de `claveConfig.datos`.
+   * Si la lista de claves a eliminar está vacía, no hace nada.
+   */
+  eliminarClave(): void {
+    if (!this.claveLista.length) {
+      return;
+    }
+    const CLAVES_A_ELIMINAR = new Set(
+      this.claveLista.map((item) => item.clave)
+    );
+    this.claveConfig.datos = this.claveConfig.datos.filter(
+      (item) => !CLAVES_A_ELIMINAR.has(item.clave)
+    );
   }
 
   /**
@@ -323,14 +544,25 @@ export class DatosMercanciaComponent implements OnInit {
         Validators.required,
       ],
       descripcionFraccion: [
-        this.mercanciaFormState.descripcionFraccion,
+        {
+          value: this.mercanciaFormState.descripcionFraccion,
+          disabled: this.elementosDeshabilitados.includes(
+            'descripcionFraccion'
+          ),
+        },
         Validators.required,
       ],
       cantidadUmtValor: [
         this.mercanciaFormState.cantidadUmtValor,
         Validators.required,
       ],
-      cantidadUmt: [this.mercanciaFormState.cantidadUmt, Validators.required],
+      cantidadUmt: [
+        {
+          value: this.mercanciaFormState.cantidadUmt,
+          disabled: this.elementosDeshabilitados.includes('cantidadUmt'),
+        },
+        Validators.required,
+      ],
       cantidadUmcValor: [
         this.mercanciaFormState.cantidadUmcValor,
         Validators.required,
@@ -350,15 +582,39 @@ export class DatosMercanciaComponent implements OnInit {
         this.mercanciaFormState.paisDeProcedenciaDatos || [],
         Validators.required,
       ],
+      usoEspecifico: [
+        this.mercanciaFormState.usoEspecifico || [],
+        Validators.required,
+      ],
     });
 
+    const CONTROLS_A_ELIMINAR = [...this.elementosNoValidos];
     if (this.detalleMercancia) {
-      this.mercanciaForm.removeControl('formaFarmaceutica', {
-        emitEvent: false,
-      });
-      this.mercanciaForm.removeControl('denominacionDistintiva', {
-        emitEvent: false,
-      });
+      CONTROLS_A_ELIMINAR.push('formaFarmaceutica', 'denominacionDistintiva');
+    }
+    if (this.elementosNoValidos.length) {
+      for (const NOMBRE_DEL_CONTROL of CONTROLS_A_ELIMINAR) {
+        if (this.mercanciaForm.contains(NOMBRE_DEL_CONTROL)) {
+          this.mercanciaForm.removeControl(NOMBRE_DEL_CONTROL, {
+            emitEvent: false,
+          });
+        }
+      }
+    }
+    if (this.elementosAnadidos.length) {
+      for (const NOMBRE_DEL_CONTROL of this.elementosAnadidos) {
+        if (!this.mercanciaForm.contains(NOMBRE_DEL_CONTROL)) {
+          this.mercanciaForm.addControl(
+            NOMBRE_DEL_CONTROL,
+            new FormControl(
+              this.mercanciaFormState[
+                NOMBRE_DEL_CONTROL as keyof MercanciaForm
+              ],
+              { validators: [Validators.required] }
+            )
+          );
+        }
+      }
     }
   }
 
@@ -415,9 +671,7 @@ export class DatosMercanciaComponent implements OnInit {
    */
   usoEspesificoSeleccionadasChange(events: string[]): void {
     this.seleccionadasUsoEspesificoDatos = events;
-    this.mercanciaForm.patchValue({
-      usoEspecifico: events,
-    });
+    this.mercanciaForm.get('usoEspecifico')?.setValue(events);
   }
 
   /**
@@ -446,7 +700,17 @@ export class DatosMercanciaComponent implements OnInit {
    * @returns {void} Este método no devuelve ningún valor.
    */
   agregarMercancia(): void {
-    this.mercanciaSeleccionado.emit(this.mercanciaForm.value);
+    const VALORTABLAMERCANCIA: TablaMercanciasDatos = this.mercanciaForm.getRawValue();
+    VALORTABLAMERCANCIA.paisOrigen = this.mercanciaForm.get('paisDeOriginDatos')?.value[0];
+    VALORTABLAMERCANCIA.paisProcedencia = this.mercanciaForm.get(
+      'paisDeProcedenciaDatos'
+    )?.value[0];
+    VALORTABLAMERCANCIA.usoEspecifico = this.mercanciaForm.get('usoEspecifico')?.value[0];
+    VALORTABLAMERCANCIA.unidadMedidaComercializacion=this.mercanciaForm.get('cantidadUmcValor')?.value
+    VALORTABLAMERCANCIA.cantidadUMC=this.mercanciaForm.get('cantidadUmc')?.value
+    VALORTABLAMERCANCIA.unidadMedidaTarifa=this.mercanciaForm.get('cantidadUmtValor')?.value
+    VALORTABLAMERCANCIA.cantidadUMT=this.mercanciaForm.get('cantidadUmt')?.value
+    this.mercanciaSeleccionado.emit(VALORTABLAMERCANCIA);
     this.ubicaccion.back();
   }
 
@@ -467,7 +731,7 @@ export class DatosMercanciaComponent implements OnInit {
     this.ubicaccion.back();
   }
   /**
-   * @method aggregarMercancia
+   * @method agregarMercancia
    * @description Emits an event to add a new merchandise item.
    * This method is used to notify the parent component about the addition of a new merchandise item.
    *
@@ -475,8 +739,8 @@ export class DatosMercanciaComponent implements OnInit {
    * @returns {void} This method does not return any value.
    */
 
-  aggregarMercancia(datos: DetalleMercancia): void {
-    this.aggregarMercanciaDatos.emit(datos);
+  agregarMercanciaSellecion(datos: DetalleMercancia): void {
+    this.agregarMercanciaDatos.emit(datos);
   }
 
   /**
@@ -489,5 +753,29 @@ export class DatosMercanciaComponent implements OnInit {
    */
   eliminarMercancia(datos: DetalleMercancia[]): void {
     this.eliminarMercanciaDatos.emit(datos);
+  }
+
+  /**
+   * @method cambiarFraccionArancelaria
+   * @description Actualiza los valores de los campos `descripcionFraccion` y `cantidadUmt` en el formulario reactivo `mercanciaForm`
+   * cuando el campo `fraccionArancelaria` está presente.
+   *
+   * @remarks
+   * Este método verifica si el control `fraccionArancelaria` existe en el formulario. Si es así, establece valores predeterminados
+   * para los campos `descripcionFraccion` y `cantidadUmt` utilizando las constantes `DESCRIPCION_FRACCION_DESHABILITADO_VALOR` y
+   * `UMT_DESHABILITADO_VALOR`, respectivamente.
+   *
+   * @returns {void} Este método no retorna ningún valor.
+   */
+  cambiarFraccionArancelaria(): void {
+    if (
+      this.mercanciaForm.get('fraccionArancelaria') &&
+      this.mercanciaForm.get('cantidadUmt')?.disabled
+    ) {
+      this.mercanciaForm
+        .get('descripcionFraccion')
+        ?.setValue(DESCRIPCION_FRACCION_DESHABILITADO_VALOR);
+      this.mercanciaForm.get('cantidadUmt')?.setValue(UMT_DESHABILITADO_VALOR);
+    }
   }
 }

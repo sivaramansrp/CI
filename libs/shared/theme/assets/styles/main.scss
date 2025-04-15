@@ -5,7 +5,6 @@
 @import "_gobmxstyles.scss";
 @import "_fonts.scss";
 @import "_titulos.scss";
-@import "_gobmx.scss";
 
 .bi-c {
     color: $color-primario;
@@ -37,4 +36,8 @@
 
 .modal-body {
     padding: 30px 30px 0px 30px;
+}
+
+.modal-footer {
+    justify-content: center;
 }

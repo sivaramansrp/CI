@@ -35,7 +35,9 @@ const ROUTES: Routes = [
   {
     path: 'registro-cuentas-bancarias',
     loadChildren: () =>
-      import('./tramites/6001/registro-cuentas-bancarias/registro-cuentas-bancarias.module').then((m) => m.RegistroCuentasBancariasModule),
+      import(
+        './tramites/6001/registro-cuentas-bancarias/registro-cuentas-bancarias.module'
+      ).then((m) => m.RegistroCuentasBancariasModule),
   },
   {
     path: 'importante',
@@ -57,12 +59,20 @@ const ROUTES: Routes = [
       import('./tramites/10301/importador-exportador.module').then(
         (m) => m.ImportadorExportadorModule
       ),
-    },
-    {
+  },
+  {
     path: 'donaciones-extranjeras',
     loadChildren: () =>
       import('./tramites/10303/donaciones-extranjeras.module').then(
-        (m) => m.DonacionesExtranjerasModule)
+        (m) => m.DonacionesExtranjerasModule
+      ),
+  },
+  {
+    path: 'modificar-caat-terrestre',
+    loadChildren: () =>
+      import('./tramites/40103/modificarCaatTerrestre.module').then(
+        (m) => m.ModificarCaatTerrestreModule
+      ),
   },
   {
     path: 'muestras-mercancias',
@@ -73,9 +83,10 @@ const ROUTES: Routes = [
   },
   {
     path: 'atender-requerimientos',
-    loadChildren: () => import('./atencion-requerimientos/atencion-requerimientos.module').then(
-      (m) => m.AtencionRequerimientosModule
-    ),
+    loadChildren: () =>
+      import('./atencion-requerimientos/atencion-requerimientos.module').then(
+        (m) => m.AtencionRequerimientosModule
+      ),
   },
   {
     path: 'transportista-terrestre',
@@ -86,35 +97,35 @@ const ROUTES: Routes = [
   },
   {
     path: 'temporal-contenedores',
-    loadChildren: () => import('./tramites/11201/temporal-contenedores.module').then(
-      (m) => m.TemporalContenedoresModule
-    ),
+    loadChildren: () =>
+      import('./tramites/11201/temporal-contenedores.module').then(
+        (m) => m.TemporalContenedoresModule
+      ),
   },
   {
     path: 'notificacion',
-    component: NotificacionPageComponent
+    component: NotificacionPageComponent,
   },
   {
     path: 'firmar',
-    component: FirmaPageComponent
+    component: FirmaPageComponent,
   },
   {
     path: 'acuse',
-    component: AcusePageComponent
+    component: AcusePageComponent,
   },
   {
     path: 'cancelacion-servicios-extraordinarios',
     loadChildren: () =>
-      import('./tramites/570101/cancelacion-servicios-extraordinarios.module').then((m) => m.CancelacionServiciosExtraordinariosModule),
+      import(
+        './tramites/570101/cancelacion-servicios-extraordinarios.module'
+      ).then((m) => m.CancelacionServiciosExtraordinariosModule),
   },
-  
-{
-  path: 'registro-digitalizar-documentos',
-  loadChildren: () =>
-    import('./tramites/701/registro-digitalizar-documentos.module').then(
-      (m) => m.RegistroDigitalizarDocumentosModule
-    ),
-},
+  {
+    path: 'registro-caat-naviero',
+    loadChildren: () =>
+      import('./tramites/40301/registro-caat-naviero.module').then((m) => m.RegistroCaatNavieroModule),
+  },
 {
   path: 'transferencia-contenedores',
   loadChildren: () =>
@@ -131,14 +142,93 @@ const ROUTES: Routes = [
   },
   {
     path: 'certi-registro',
-      loadChildren: () =>
-        import('./tramites/302/certi-registro.module').then((m) => m.CertiRegistroModule),
+    loadChildren: () =>
+      import('./tramites/302/certi-registro.module').then(
+        (m) => m.CertiRegistroModule
+      ),
   },
   {
     path: 'transportista-terrestre',
     loadChildren: () =>
       import('./tramites/40101/transportista-terrestre.module').then(
         (m) => m.TransportistaTerrestreModule
+      ),
+  },
+  {
+    path: 'registro-transportista',
+    loadChildren: () =>
+      import('./tramites/40302/registro-transportista.module').then(
+        (m) => m.RegistroTransportistaModule
+      ),
+  },
+  {
+    path: 'attention-Of-Renewal',
+    loadChildren: () =>
+      import('./tramites/40403/attentionOfRenewal.module').then(
+        (m) => m.AttentionOfRenewalModule
+      ),
+  },
+  {
+    path: 'retirada-de-la-autorizacion-de-donaciones',
+    loadChildren: () =>
+      import('./tramites/11105/retirada-de-la-autorizacion-de-donaciones.module').then(
+        (m) => m.RetiradaDeLaAutorizacionDeDonacioneModule
+      )
+  },
+  {
+    path: 'deposito-fiscal',
+    loadChildren: () =>
+      import('./tramites/104/deposito-fiscal-manufactura-vehiculos/deposito-fiscal-manufactura-vehiculos.module').then(
+        (m) => m.DepositoFiscalManufacturaVehiculosModule
+      )
+  },
+  {
+    path: 'transportacion-maritima',
+    loadChildren: () =>
+      import('./tramites/40201/transportacion-maritima.module').then(
+        (m) => m.TransportacionMaritimaModule
+      ),
+  },
+  {
+    path: 'junta-tecnica',
+    loadChildren: () =>
+      import('./tramites/6101/junta-tecnica.module').then(
+        (m) => m.JuntaTecnicaModule
+      )
+  },
+  {
+    path: 'modificacion-transportacion-maritima',
+    loadChildren: () =>
+      import('./tramites/40202/modificacion-transportacion-maritima.module').then(
+        (m) => m.ModificacionTransportacionMaritimaModule
+      ),
+  },
+  {
+    path: 'modificarCaatTerrestre',
+    loadChildren: () =>
+      import('./tramites/40103/modificarCaatTerrestre.module').then(
+        (m) => m.ModificarCaatTerrestreModule
+      )
+  },
+  {
+    path: 'cancelacion-donaciones',
+    loadChildren: () =>
+      import('./tramites/11106/cancelacion-donaciones.module').then(
+        (m) => m.CancelacionDonacionesModule
+      ),
+  },
+  {
+    path: 'prestadores-servicio',
+    loadChildren: () =>
+      import('./tramites/202/prestadores-servicio.module').then(
+        (m) => m.PrestadoresServicioModule
+      ),
+  },
+  {
+    path: 'exencion-impuestos',
+    loadChildren: () =>
+      import('./tramites/10302/exencion-impuestos.module').then(
+        (m) => m.ExencionImpuestosModule
       ),
   }
 ];
