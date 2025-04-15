@@ -10,4 +10,10 @@ selectTramite630307State$ = this.select((state) => state);
     protected override store: Tramite630307Store) {
     super(store);
   }
+  marca$ = this.select((state) => state.marca);
+  modelo$ = this.select((state) => state.modelo);
+  numeroDeSerie$ = this.select((state) => state.numeroDeSerie);
+  numeroDeMotor$ = this.select((state) => state.numeroDeMotor);
+  descripcionAdicionalDeLaMercancia$ = this.select((state) => state.descripcionAdicionalDeLaMercancia);
+  motivooJustificacionDeLaImportacionTemporal$ = this.select((state) => state.motivooJustificacionDeLaImportacionTemporal);
 }

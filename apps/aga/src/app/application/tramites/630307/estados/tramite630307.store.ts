@@ -19,6 +19,12 @@ export interface Tramite630307State {
   seccionAduanera: string;
   fechaIngreso: string;
   fechaVencimiento: string;
+  marca: string;
+  modelo: string;
+  numeroDeSerie: string;
+  numeroDeMotor: string;
+  descripcionAdicionalDeLaMercancia: string;
+  motivooJustificacionDeLaImportacionTemporal: string;
 }
 
 export function createInitialState(): Tramite630307State {
@@ -34,7 +40,13 @@ export function createInitialState(): Tramite630307State {
     aduanaIngreso: '',
     seccionAduanera: '',
     fechaIngreso: '',
-    fechaVencimiento: ''
+    fechaVencimiento: '',
+    marca: '',
+    modelo: '',
+    numeroDeSerie: '',
+    numeroDeMotor: '',
+    descripcionAdicionalDeLaMercancia: '',
+    motivooJustificacionDeLaImportacionTemporal: '',
   };
 }
 
@@ -52,5 +64,41 @@ export class Tramite630307Store extends Store<Tramite630307State> {
       ...state,
       ...values,
     })));
+  }
+  establecerMarca(marca : string):void{
+    this.update((state) => ({
+      ...state,
+      marca,
+    }));
+  }
+  establecerModelo(modelo : string):void{
+    this.update((state) => ({
+      ...state,
+      modelo,
+    }));
+  }
+  establecerNumeroDeSerie(numeroDeSerie : string):void{
+    this.update((state) => ({
+      ...state,
+      numeroDeSerie,
+    }));
+  }
+  establecerNumeroDeMotor(numeroDeMotor : string):void{
+    this.update((state) => ({
+      ...state,
+      numeroDeMotor,
+    }));
+  }
+  establecerDescripcionAdicionalDeLaMercancia(descripcionAdicionalDeLaMercancia : string):void{
+    this.update((state) => ({
+      ...state,
+      descripcionAdicionalDeLaMercancia,
+    }));
+  }
+  establecerMotivooJustificacionDeLaImportacionTemporal(motivooJustificacionDeLaImportacionTemporal : string):void{
+    this.update((state) => ({
+      ...state,
+      motivooJustificacionDeLaImportacionTemporal,
+    }));
   }
 }
