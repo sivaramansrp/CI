@@ -17,7 +17,7 @@ export class DatosSolicitudComponent {
   /**
    * Indica si se debe mostrar la sección de Aviso de Licencia
    */
-  IsAvisoLicenciaVisible: boolean = false;
+  isAvisoLicenciaVisible: boolean = false;
 
   /**
    * Indica si se debe mostrar la sección de Aduanas de Entrada
