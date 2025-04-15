@@ -1,5 +1,5 @@
-import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { NgModule } from '@angular/core';
 import { SeleccionTramiteComponent } from './seleccion-tramite/seleccion-tramite.component';
 
 const ROUTES: Routes = [
@@ -7,6 +7,13 @@ const ROUTES: Routes = [
   {
     path: 'seleccion-tramite',
     component: SeleccionTramiteComponent,
+  },
+  {
+    path: 'artefactos-pirotecnicos-ordinarios',
+    loadChildren: () =>
+      import(
+        './tramites/240119/artefactos-pirotecnicos-ordinarios.module'
+      ).then((m) => m.ArtefactosPirotecnicosOrdinariosModule),
   },
 ];
 
