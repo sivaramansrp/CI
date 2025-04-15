@@ -38,13 +38,13 @@
     <div>
         <ng-titulo titulo="Destinatario" />
         <form [formGroup]="formDestinatariosModal" id="formDestinatariosModal">
-            <app-input-radio [radioOptions]="destinatarioOpcionDeBotonDeRadio"
-                [layout]="'horizontal'"></app-input-radio>
+            <app-input-radio [radioOptions]="destinatarioOpcionDeBotonDeRadio" [isRequired]="true"
+                [layout]="'horizontal'" id="destinatarioRadio" formControlName="destinatarioRadio" name="destinatarioRadio"></app-input-radio>
 
             <div class="col-md-8 mt-5">
                 <label class="form-label" for="denominacionRSDestinatario">Denominación o razón social*:</label>
                 <input type="text" class="form-control" id="denominacionRSDestinatario"
-                    formControlName="destinatarioRazonSocial" name="denominacionRSDestinatario" [required]=true>
+                    formControlName="destinatarioRazonSocial" name="denominacionRSDestinatario" (input)="actualizarDenominacion()" [required]=true>
             </div>
 
             <div class="clearfix"></div>
@@ -53,7 +53,7 @@
             <div class="col-md-4 mt-5 dropdown-field">
                 <div class="form-group">
                     <app-catalogo-select [catalogo]="paisData" [label]="'País'" [required]="true" name=""
-                        id="paisNacionalDestinatario1" formControlName="paisNacionalDestinatario"></app-catalogo-select>
+                        id="paisNacionalDestinatario1" formControlName="paisNacionalDestinatario" (change)="actualizarDestinatarioPais()"></app-catalogo-select>
                 </div>
             </div>
 
@@ -61,20 +61,20 @@
                 <div class="form-group">
                     <app-catalogo-select [catalogo]="estadoData" [label]="'Estado'" [required]="true" name=""
                         id="estadoNacionalDestinatario1"
-                        formControlName="estadoNacionalDestinatario"></app-catalogo-select>
+                        formControlName="estadoNacionalDestinatario" (change)="actualizarDestinatarioEstado()"></app-catalogo-select>
                 </div>
             </div>
 
             <div class="col-md-4 mt-5 dropdown-field">
                 <label class="form-label" for="codigoPostalDestinatario">Código postal o equivalente*:</label>
                 <input type="text" class="form-control" id="codigoPostalDestinatario"
-                    formControlName="codigoPostalDestinatario" name="codigoPostalDestinatario" [required]=true>
+                    formControlName="codigoPostalDestinatario" name="codigoPostalDestinatario" (input)="actualizarCodigoPostal()" [required]=true>
             </div>
 
             <div class="col-md-8 mt-4">
                 <label class="form-label" for="domicilio">Domicilio*:</label>
                 <input type="text" class="form-control" id="domicilioDestinatario"
-                    formControlName="domicilioDestinatario" name="domicilio" [required]=true>
+                    formControlName="domicilioDestinatario" name="domicilio" (input)="actualizarDomicilio()" [required]=true>
             </div>
 
             <div class="col-md-12 mt-5 d-flex justify-content-end">
@@ -95,25 +95,25 @@
             <div class="col-md-4 mt-5">
                 <label class="form-label" for="nombreAgente">Nombre(s)*:</label>
                 <input type="text" class="form-control" id="nombreAgente" formControlName="nombreAgenteAduanal"
-                    name="nombreAgente" [required]=true>
+                    name="nombreAgente" (input)="actualizarAgenteNombre()" [required]=true>
             </div>
 
             <div class="col-md-4 mt-5">
                 <label class="form-label" for="apellidoPaternoAgente">Primer apellido*:</label>
                 <input type="text" class="form-control" id="apellidoPaternoAgente"
-                    formControlName="primerApellidoAgenteAduanal" name="apellidoPaternoAgente" [required]=true>
+                    formControlName="primerApellidoAgenteAduanal" name="apellidoPaternoAgente" (input)="actualizarAgentePrimerApellido()" [required]=true>
             </div>
 
             <div class="col-md-4 mt-5">
                 <label class="form-label" for="apellidoMaternoAgente">Segundo apellido*:</label>
                 <input type="text" class="form-control" id="apellidoMaternoAgente"
-                    formControlName="segundoApellidoAgenteAduanal" name="apellidoMaternoAgente" [required]=true>
+                    formControlName="segundoApellidoAgenteAduanal" name="apellidoMaternoAgente" (input)="actualizarAgenteSegundoApellido()" [required]=true>
             </div>
 
             <div class="col-md-8 mt-5">
                 <label class="form-label" for="patente">Número de patente de agente aduanal*:</label>
                 <input type="text" class="form-control" id="patente" formControlName="patenteAgenteAduanal"
-                    name="patente" [required]=true>
+                    name="patente" (input)="actualizarAgentePatente()" [required]=true>
             </div>
 
             <div class="col-md-12 mt-5 d-flex justify-content-end">

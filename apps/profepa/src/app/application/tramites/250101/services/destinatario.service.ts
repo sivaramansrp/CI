@@ -1,8 +1,8 @@
 import { Catalogo } from '@libs/shared/data-access-user/src';
+import { DestinatarioTablaDatos } from '../components/destinatario-agente-aduanal/destinatario-agente-aduanal.component';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-
 @Injectable({
   providedIn: 'root'
 })
@@ -12,12 +12,12 @@ export class DestinatarioService {
     //
   }
 
-  getDestinatarioEncabezadoDeTabla(): Observable<string[]> {
-    return this.http.get<string[]>('assets/json/250101/datos-destinatario.json');
+  getDestinatarioEncabezadoDeTabla(): Observable<DestinatarioTablaDatos> {
+    return this.http.get<DestinatarioTablaDatos>('assets/json/250101/datos-destinatario.json');
   }
 
-  getAduanalEncabezadoDeTabla(): Observable<string[]> {
-    return this.http.get<string[]>('assets/json/250101/datos-agente-aduanal.json');
+  getAduanalEncabezadoDeTabla(): Observable<DestinatarioTablaDatos> {
+    return this.http.get<DestinatarioTablaDatos>('assets/json/250101/datos-agente-aduanal.json');
   }
  
   getPaisData(): Observable<Catalogo[]> {

@@ -1,33 +1,68 @@
 import { Component, OnInit } from '@angular/core';
-import { TableComponent,TituloComponent } from '@libs/shared/data-access-user/src';
+import { CommonModule } from '@angular/common';
+
+import {
+  TableComponent,
+  TituloComponent,
+} from '@libs/shared/data-access-user/src';
 import { CertificadosService } from '../../services/certificados.service';
+import { ModalComponent } from '../modal/modal.component';
+
+export interface CertificadosTablaDatos {
+  columns: string[];
+}
 
 @Component({
   selector: 'app-certificados',
   standalone: true,
-  imports: [
-    TituloComponent,
-    TableComponent
-  ],
+  imports: [CommonModule, TituloComponent, TableComponent, ModalComponent],
   templateUrl: './certificados.component.html',
-  styleUrl: './certificados.component.scss'
+  styleUrl: './certificados.component.scss',
 })
-export class CertificadosComponent implements OnInit{
+export class CertificadosComponent implements OnInit {
+  showTableDiv = true;
 
-constructor(private certificadosService: CertificadosService ){
-  //
-}
+  showFitosanitariosModal = false;
+  showAutorizacionesModal = false;
+
+  tablaCertificadosData: string[] = [];
+
+
+  constructor(private certificadosService: CertificadosService) {
+    //
+  }
 
   ngOnInit(): void {
-    this.certificadosService.getFitosanitoriosEncabezadoDeTabla().subscribe((data: any) => {
-      this.tablaFitosanitoriosData = data.columns;
-    });
 
-    this.certificadosService.getPermisoCertificadosDeTabla().subscribe((data: any) => {
-      this.tablaPermisoCertificadosData = data.columns;
-    });
+    this.certificadosService
+      .getFitosanitoriosEncabezadoDeTabla()
+      .subscribe((data: CertificadosTablaDatos) => {
+        this.tablaFitosanitoriosData = data.columns;
+      });
+
+    this.certificadosService
+      .getPermisoCertificadosDeTabla()
+      .subscribe((data: CertificadosTablaDatos) => {
+        this.tablaPermisoCertificadosData = data.columns;
+      });
+
+      this.certificadosService
+      .getCertificadosDeTabla()
+      .subscribe((data: CertificadosTablaDatos) => {
+        this.tablaCertificadosData = data.columns;
+      });
   }
 
   tablaFitosanitoriosData: string[] = [];
   tablaPermisoCertificadosData: string[] = [];
+
+  cambiarCertificadosFitosanitarios(): void {
+    this.showTableDiv = !this.showTableDiv;
+    this.showFitosanitariosModal = !this.showFitosanitariosModal;
+  }
+
+  cambiarCertificadosAutorizaciones(): void {
+    this.showTableDiv = !this.showTableDiv;
+    this.showAutorizacionesModal = !this.showAutorizacionesModal;
+  }
 }

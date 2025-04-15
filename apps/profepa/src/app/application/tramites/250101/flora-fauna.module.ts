@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 
 import {
+  AlertComponent,
   BtnContinuarComponent,
   SolicitanteComponent,
   TituloComponent,
@@ -26,6 +27,7 @@ import { provideHttpClient } from '@angular/common/http';
   declarations: [FloraFaunaComponent, Datos250101Component],
   imports: [
     CommonModule,
+    AlertComponent,
     FloraFaunaRoutingModule,
     WizardComponent,
     TituloComponent,

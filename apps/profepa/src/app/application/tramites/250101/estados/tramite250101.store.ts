@@ -158,4 +158,8 @@ export class Tramite250101Store extends Store<Tramite250101State> {
       agenteAduanalRowData,
     }));
   }
+
+  resetStore():void{
+    this.reset();
+  }
 }

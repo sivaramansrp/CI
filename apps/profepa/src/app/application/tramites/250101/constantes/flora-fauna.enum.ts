@@ -22,25 +22,25 @@ export const FLORA_FAUNA = [
 export const MOVIMIENTO_OPCIONES_DE_BOTON_DE_RADIO = [
   {
     label: 'Importación',
-    value: '0',
-  },
-  {
-    label: 'Exportación',
     value: '1',
   },
   {
-    label: 'Reexportación',
+    label: 'Exportación',
     value: '2',
+  },
+  {
+    label: 'Reexportación',
+    value: '3',
   },
 ];
 
 export const DESTINATARIO_OPCIONES_DE_BOTON_DE_RADIO = [
   {
     label: 'Nacional',
-    value: '0',
+    value: '1',
   },
   {
     label: 'Extranjero',
-    value: '1',
+    value: '2',
   }
 ];

@@ -2,6 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
+import { CertificadosTablaDatos } from '../components/certificados/certificados.component';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -11,11 +13,15 @@ export class CertificadosService {
     //
   }
 
-  getFitosanitoriosEncabezadoDeTabla(): Observable<string[]> {
-    return this.http.get<string[]>('assets/json/250101/certificados-fitosanitorios.json');
+  getFitosanitoriosEncabezadoDeTabla(): Observable<CertificadosTablaDatos> {
+    return this.http.get<CertificadosTablaDatos>('assets/json/250101/certificados-fitosanitorios.json');
   }
 
-  getPermisoCertificadosDeTabla(): Observable<string[]> {
-    return this.http.get<string[]>('assets/json/250101/permisos-certificados.json');
+  getPermisoCertificadosDeTabla(): Observable<CertificadosTablaDatos> {
+    return this.http.get<CertificadosTablaDatos>('assets/json/250101/permisos-certificados.json');
+  }
+
+  getCertificadosDeTabla(): Observable<CertificadosTablaDatos> {
+    return this.http.get<CertificadosTablaDatos>('assets/json/250101/certificados.json');
   }
 }
