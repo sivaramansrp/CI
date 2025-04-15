@@ -5,7 +5,6 @@ import { CrosslistComponent } from '@libs/shared/data-access-user/src/tramites/c
 import { TituloComponent } from '@libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
 import { CommonModule } from '@angular/common';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
-import { By } from '@angular/platform-browser';
  
 describe('PaisProcendenciaComponent', () => {
   let component: PaisProcendenciaComponent;
