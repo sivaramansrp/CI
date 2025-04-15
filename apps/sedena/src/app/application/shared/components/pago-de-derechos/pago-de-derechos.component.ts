@@ -10,6 +10,7 @@ import { FormGroup } from '@angular/forms';
 import { Input } from '@angular/core';
 import { InputFecha } from '@ng-mf/data-access-user';
 import { InputFechaComponent } from '@ng-mf/data-access-user';
+import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Output } from '@angular/core';
 import { PagoDerechosFormState } from '../../models/pago-de-derechos.model';
@@ -39,7 +40,7 @@ import { takeUntil } from 'rxjs';
   templateUrl: './pago-de-derechos.component.html',
   styleUrl: './pago-de-derechos.component.css',
 })
-export class PagoDeDerechosComponent implements OnInit {
+export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   /**
    * @method eliminarMercancia
    * @description Emits an event to delete one or more merchandise items.
@@ -95,9 +96,8 @@ export class PagoDeDerechosComponent implements OnInit {
    */
   constructor(
     private fb: FormBuilder,
-    private datosSolicitudService: DatosSolicitudService
-  ) // eslint-disable-next-line no-empty-function
-  {}
+    private datosSolicitudService: DatosSolicitudService // eslint-disable-next-line no-empty-function
+  ) {}
 
   /**
    * @method ngOnInit
@@ -167,5 +167,17 @@ export class PagoDeDerechosComponent implements OnInit {
    */
   onFechaCambiada(fecha: string): void {
     this.pagoDerechosForm.patchValue({ fechaPago: fecha });
+  }
+
+  /**
+   * Hook del ciclo de vida que se ejecuta al destruir el componente.
+   * Libera las suscripciones activas para evitar fugas de memoria.
+   *
+   * @method ngOnDestroy
+   * @returns {void}
+   */
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 }
