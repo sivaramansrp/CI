@@ -201,6 +201,13 @@ const ROUTES: Routes = [
         './tramites/260503/permiso-experimentales-plaguicidas.module'
       ).then((m) => m.PermisoExperimentalesPlaguicidasModule),
   },
+  { 
+    path:'modificacion-de-dispositivos',
+    loadChildren: () => 
+      import('./tramites/260911/modificacion-de-dispositivos.module').then(
+        (m) => m.ModificacionDeDispositivosModule
+      )
+    },
   {
     path: 'retiros-cofepris',
     loadChildren: () =>
@@ -263,4 +270,4 @@ const ROUTES: Routes = [
   imports: [RouterModule.forChild(ROUTES)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }
