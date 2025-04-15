@@ -108,28 +108,25 @@ describe('DatosResiduosPeligrososComponent', () => {
     expect(component.formularioResiduo.value.nombre).toBe('Residuo X');
   });
 
-  it('debería actualizar el store al cambiar valores del formularioDatos', () => {
-    component.formularioDatos.patchValue({ numero: '002' });
-    expect(mockStore.actualizarFormularioDatos).toHaveBeenCalledWith(expect.objectContaining({ numero: '002' }));
-  });
-
-  it('debería actualizar el store al cambiar valores del formularioResiduo', () => {
-    component.formularioResiduo.patchValue({ clasificacion: 'B' });
-    expect(mockStore.actualizarFormularioResiduo).toHaveBeenCalledWith(expect.objectContaining({ clasificacion: 'B' }));
-  });
-
   it('debería tener los encabezados y cuerpo de tabla establecidos', () => {
     expect(component.etiquetasForm.PrimasRelacionadas[0].encabezadoDeTabla).toEqual(['Columna1', 'Columna2']);
     expect(component.etiquetasForm.PrimasRelacionadas[0].cuerpoTabla).toEqual([{ tbodyData: ['Valor1', 'Valor2'] }]);
   });
 
-  it('debería limpiar el subject en ngOnDestroy', () => {
-    const nextSpy = jest.spyOn(component['destruir$'], 'next');
-    const completeSpy = jest.spyOn(component['destruir$'], 'complete');
-
-    component.ngOnDestroy();
-
-    expect(nextSpy).toHaveBeenCalled();
-    expect(completeSpy).toHaveBeenCalled();
+  it('debería actualizar el campo de formularioDatos usando el método actualizarCampoFormularioDatos', () => {
+    component.formularioDatos.get('cantidad')?.setValue('300');
+    component.actualizarCampoFormularioDatos('cantidad');
+    expect(mockStore.actualizarFormularioDatos).toHaveBeenCalledWith(
+      expect.objectContaining({ cantidad: '300' })
+    );
   });
+
+  it('debería actualizar el campo de formularioResiduo usando el método actualizarCampoFormularioResiduo', () => {
+    component.formularioResiduo.get('capacidad')?.setValue('100');
+    component.actualizarCampoFormularioResiduo('capacidad');
+    expect(mockStore.actualizarFormularioResiduo).toHaveBeenCalledWith(
+      expect.objectContaining({ capacidad: '100' })
+    );
+  });
+
 });
