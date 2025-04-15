@@ -8,6 +8,14 @@ const ROUTES: Routes = [
     path: 'seleccion-tramite',
     component: SeleccionTramiteComponent,
   },
+  {
+    path: 'permiso-ordinario-importacion-armas-municiones',
+    loadChildren: () =>
+      import(
+        './tramites/240120/permiso-exportacion-pirotecnia.module'
+      ).then((m) => m.PermisoExportacionPirotecniaModule),
+  },
+
 ];
 
 @NgModule({
