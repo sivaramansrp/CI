@@ -782,7 +782,7 @@
     {
         "id": 131,
         "tramite": 10302,
-        "link": "",
+        "link": "/aga/exencion-impuestos/solicitud",
         "department": "aga"
     },
     {
@@ -830,7 +830,7 @@
     {
         "id": 139,
         "tramite": 31802,
-        "link": "",
+        "link": "/agace/registro-solicitud/solicitud",
         "department": "agace"
     },
     {
@@ -842,7 +842,7 @@
     {
         "id": 141,
         "tramite": 32503,
-        "link": "",
+        "link": "/pago/aviso-traslado/solicitante",
         "department": "agace"
     },
     {
@@ -992,13 +992,13 @@
     {
         "id": 166,
         "tramite": 230901,
-        "link": "",
+        "link": "/semarnat/autorizaciones-de-vida-silvestre/datos",
         "department": "semarnat"
     },
     {
         "id": 167,
         "tramite": 230902,
-        "link": "",
+        "link": "/semarnat/tramites-cites-importacion-exportacion-reexportacion/datos",
         "department": "semarnat"
     },
     {
@@ -1064,7 +1064,7 @@
     {
         "id": 178,
         "tramite": 260702,
-        "link": "",
+        "link": "/cofepris/registrar-solicitud-mcp/registro",
         "department": "cofepris"
     },
     {
@@ -1124,7 +1124,7 @@
     {
         "id": 188,
         "tramite": 202,
-        "link": "",
+        "link": "/aga/prestadores-servicio/maniobras-mercancias",
         "department": "aga"
     },
     {
@@ -1268,13 +1268,13 @@
     {
         "id": 212,
         "tramite": 260201,
-        "link": "",
+        "link": "/cofepris/importacion-psicotropicos-poretorno/contenedor-de-pasos",
         "department": "cofepris"
     },
     {
         "id": 213,
         "tramite": 260207,
-        "link": "",
+        "link": "/cofepris/importacion-tratamientos-especiales/contenedor-de-pasos",
         "department": "cofepris"
     },
     {
@@ -1478,7 +1478,7 @@
     {
         "id": 247,
         "tramite": 80206,
-        "link": "",
+        "link": "/se/modalidad-ampliacion/registro",
         "department": "se"
     },
     {
@@ -1502,7 +1502,7 @@
     {
         "id": 251,
         "tramite": 130113,
-        "link": "",
+        "link": "/se/importacion/equipo-anticontaminante",
         "department": "se"
     },
     {
