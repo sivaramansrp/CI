@@ -134,3 +134,4 @@ export * from './tramites/pipes/booleanoSiNo/booleano-si-no.pipe';
 export * from './tramites/shared.module';
 
 export {TramiteDetails} from './core/models/tramiteDetails'
+export {AVISO} from './tramites/constantes/aviso-privacidad.enum';

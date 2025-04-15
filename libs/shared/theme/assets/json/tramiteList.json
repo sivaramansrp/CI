@@ -772,8 +772,8 @@
     {
         "id": 111,
         "tramite": 260904,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "/pago/modificación-del-permiso-sanitario-de-importación-de-insumos/sanitary-permit",
+        "linkDepartment": "/pago/modificación-del-permiso-sanitario-de-importación-de-insumos/sanitary-permit",
         "department": "cofepris"
     },
     {
@@ -926,8 +926,8 @@
     {
         "id": 133,
         "tramite": 40301,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "/aga/pago/registro-caat-naviero/caat-naviero",
+        "linkDepartment": "/pago/registro-caat-naviero/caat-naviero",
         "department": "aga"
     },
     {
@@ -1080,8 +1080,8 @@
     {
         "id": 155,
         "tramite": 260514,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "/cofepris/permiso-importacion-calidad/pantallas",
+        "linkDepartment": "/cofepris/permiso-importacion-calidad/pantallas",
         "department": "cofepris"
     },
     {
