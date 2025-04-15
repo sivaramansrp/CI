@@ -1,5 +1,4 @@
-
-import { AcusePageComponent } from '@libs/shared/data-access-user/src';
+import { InvocarPageComponent } from './pages/invocar-page/invocar-page.component';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { Routes } from '@angular/router';
@@ -10,13 +9,13 @@ const ROUTES_CONTENEDOR: Routes = [
     component: SolicitantePageComponent,
   },
   {
-    path: 'acuse',
-    component: AcusePageComponent,
+    path: 'invocar-modulo',
+    component: InvocarPageComponent,
   },
   {
     path: '',
     pathMatch: 'full',
-    redirectTo: 'solicitante',
+    redirectTo: 'invocar-modulo',
   },
 ];
 

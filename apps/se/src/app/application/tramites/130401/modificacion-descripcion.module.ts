@@ -1,5 +1,7 @@
 import { AlertComponent, BtnContinuarComponent, WizardComponent } from "@libs/shared/data-access-user/src";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { CommonModule } from "@angular/common";
+import { InvocarPageComponent } from "./pages/invocar-page/invocar-page.component";
 import { ModificacionDescripcionRoutingModule } from "./modificacion-descripcion-routing.module";
 import { NgModule } from "@angular/core";
 import { PasoDosComponent } from "./pages/paso-dos/paso-dos.component";
@@ -12,6 +14,7 @@ import { ToastrService } from "ngx-toastr";
 @NgModule({
   declarations: [
     SolicitantePageComponent,
+    InvocarPageComponent
   ],
   imports: [
     CommonModule,
@@ -22,7 +25,9 @@ import { ToastrService } from "ngx-toastr";
     PasoUnoComponent,
     PasoTresComponent,
     PasoDosComponent,
-    AlertComponent
+    AlertComponent,
+    FormsModule,
+    ReactiveFormsModule
   ],
   exports: [],
   providers: [ToastrService]

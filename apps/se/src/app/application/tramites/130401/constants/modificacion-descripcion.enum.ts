@@ -7,7 +7,7 @@ export const PASOS = [
   },
   {
     indice: 2,
-    titulo: 'Requisitos necesarios',
+    titulo: 'Anexar requisitos',
     activo: false,
     completado: false,
   },
@@ -42,3 +42,20 @@ export const FECHAFACTURA = {
   required: false,
   habilitado: true,
 };
+
+export const SOLICITUD_OPCION_RADIO = [
+  {
+    label: 'Modificación',
+    value: '1',
+  }
+];
+export const PRODUCTO_OPCION_RADIO = [
+  {
+    label: 'Nuevo',
+    value: '0',
+  },
+  {
+    label: 'Usado',
+    value: '1',
+  }
+];

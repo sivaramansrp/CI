@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SolicitanteComponent } from '@ng-mf/data-access-user';
+import { SolicitudComponent } from '../../components/solicitud/solicitud.component';
 import { Subject } from 'rxjs';
 import { Tramite130401Query } from '../../../../estados/queries/tramite130401.query';
 import { Tramite130401State } from '../../../../estados/tramites/tramite130401.store';
@@ -20,7 +21,7 @@ import { takeUntil } from 'rxjs';
   templateUrl: './paso-uno.component.html',
   styleUrl: './paso-uno.component.scss',
   standalone: true,
-  imports: [CommonModule, SolicitanteComponent]
+  imports: [CommonModule, SolicitanteComponent, SolicitudComponent]
 })
 export class PasoUnoComponent implements OnInit, OnDestroy {
   /**
