@@ -28,7 +28,7 @@ const RADIO_OPCIONES = rawData as SolicitudJson;
   templateUrl: './datos-solicitud.component.html',
   styleUrl: './datos-solicitud.component.css',
 })
-export class DatosSolicitudComponent implements OnInit{
+export class DatosSolicitudComponent implements OnInit {
 
   /** 
    * Referencia al elemento del DOM del modal para agregar mercancías.
@@ -108,16 +108,6 @@ export class DatosSolicitudComponent implements OnInit{
     this.inicializarFormularioPrecaucionesManejo();
 
     /** 
-     * Suscribe a los cambios del radio "requiere empresa de reciclaje" para habilitar o deshabilitar campos.
-     */
-    this.suscribirCambioRequiereEmpresa();
-
-    /** 
-     * Suscribe a los cambios del radio "reciclaje en instalaciones" para habilitar o deshabilitar campos.
-     */
-    this.suscribirCambioReciclajeInstalaciones();
-
-    /** 
      * Recupera valores almacenados en el store para rellenar los formularios.
      */
     this.recuperarValoresDesdeStore();
@@ -188,16 +178,9 @@ export class DatosSolicitudComponent implements OnInit{
   }
 
 
-  /**
-   * Se suscribe a los cambios del campo 'requiereEmpresa' en el formulario de empresa reciclaje.
-   * Habilita o deshabilita los campos relacionados con los datos de la empresa
-   * según si se requiere o no una empresa de reciclaje.
-   */
-  private suscribirCambioRequiereEmpresa(): void {
-    /** Nombre del campo que controla si se requiere una empresa de reciclaje */
-    const CAMPO_REQUIERE_EMPRESA: string = 'requiereEmpresa';
+  onRequiereEmpresaChange(valor: string): void {
+    const DEBE_HABILITAR: boolean = valor === 'Si';
 
-    /** Lista de campos que se deben habilitar o deshabilitar según el valor del campo principal */
     const CAMPOS_A_CONTROLAR: string[] = [
       'nombreEmpresa',
       'representanteLegal',
@@ -205,26 +188,15 @@ export class DatosSolicitudComponent implements OnInit{
       'correoElectronico'
     ];
 
-    /** Control del campo 'requiereEmpresa' */
-    const CONTROL_REQUIERE_EMPRESA: FormControl<string> =
-      this.formularioEmpresaReciclaje.get(CAMPO_REQUIERE_EMPRESA) as FormControl<string>;
-
-    CONTROL_REQUIERE_EMPRESA.valueChanges.subscribe((valor: string): void => {
-      /** Determina si los campos deben estar habilitados */
-      const DEBE_HABILITAR: boolean = valor === 'Si';
-
-      /** Habilita o deshabilita los campos según el valor seleccionado */
-      CAMPOS_A_CONTROLAR.forEach((CAMPO: string): void => {
-        const CONTROL_CAMPO: FormControl<string> =
-          this.formularioEmpresaReciclaje.get(CAMPO) as FormControl<string>;
-        if (CONTROL_CAMPO) {
-          if (DEBE_HABILITAR) {
-            CONTROL_CAMPO.enable();
-          } else {
-            CONTROL_CAMPO.disable();
-          }
+    CAMPOS_A_CONTROLAR.forEach((campo: string): void => {
+      const CONTROL_CAMPO = this.formularioEmpresaReciclaje.get(campo);
+      if (CONTROL_CAMPO) {
+        if (DEBE_HABILITAR) {
+          CONTROL_CAMPO.enable();
+        } else {
+          CONTROL_CAMPO.disable();
         }
-      });
+      }
     });
   }
 
@@ -244,38 +216,6 @@ export class DatosSolicitudComponent implements OnInit{
       numeroAutorizacionEmpresaReciclaje: ['', Validators.required],
     });
   }
-
-
-  /**
-   * Se suscribe a los cambios del campo "reciclajeInstalaciones" en el formulario de lugar de reciclaje.
-   * 
-   * Si el valor es 'Si', se habilitan los campos:
-   * - lugarReciclaje
-   * - numeroAutorizacionEmpresaReciclaje
-   * 
-   * Si el valor es diferente, se deshabilitan dichos campos.
-   */
-  private suscribirCambioReciclajeInstalaciones(): void {
-    const CAMPO_RADIO: string = 'reciclajeInstalaciones';
-    const CAMPOS_A_CONTROLAR: string[] = [
-      'lugarReciclaje',
-      'numeroAutorizacionEmpresaReciclaje'
-    ];
-
-    this.formularioLugarReciclaje.get(CAMPO_RADIO)?.valueChanges.subscribe((valor: string): void => {
-      const DEBE_HABILITAR: boolean = valor === 'Si';
-
-      CAMPOS_A_CONTROLAR.forEach((campo: string): void => {
-        const CONTROL_CAMPO: FormControl<string> = this.formularioLugarReciclaje.get(campo) as FormControl<string>;
-        if (DEBE_HABILITAR) {
-          CONTROL_CAMPO.enable();
-        } else {
-          CONTROL_CAMPO.disable();
-        }
-      });
-    });
-  }
-
 
   /**
    * Recupera los valores almacenados en el estado de Akita mediante el query
@@ -308,30 +248,66 @@ export class DatosSolicitudComponent implements OnInit{
   }
 
   /**
-   * Actualiza un campo específico del formulario de empresa reciclaje en el store.
+   * Actualiza un campo específico del formulario de empresa de reciclaje en el store.
+   * Si el campo actualizado es 'requiereEmpresa', se habilitan o deshabilitan dinámicamente
+   * los campos relacionados según el valor seleccionado.
    *
    * @param campo - Nombre del campo del formulario de empresa reciclaje a actualizar.
    */
   actualizarCampoEmpresaReciclaje(campo: keyof EstadoDatoSolicitud['empresaReciclaje']): void {
     const VALOR = this.formularioEmpresaReciclaje.get(campo)?.value;
+
+    // Si el campo actualizado es 'requiereEmpresa', se evalúa si se deben habilitar o deshabilitar otros campos
+    if (campo === 'requiereEmpresa') {
+      const DEBE_HABILITAR = VALOR === 'Si';
+      const CAMPOS = ['nombreEmpresa', 'representanteLegal', 'telefono', 'correoElectronico'];
+
+      CAMPOS.forEach((campoExtra): void => {
+        const CONTROL = this.formularioEmpresaReciclaje.get(campoExtra);
+        if (CONTROL) {
+          DEBE_HABILITAR ? CONTROL.enable() : CONTROL.disable();
+        }
+      });
+    }
+
+    // Actualiza el estado del formulario de empresa reciclaje en el store
     this.datoSolicitudStore.actualizarEmpresaReciclaje({
       ...this.formularioEmpresaReciclaje.getRawValue(),
       [campo]: VALOR,
     });
   }
 
-  /**
-   * Actualiza un campo específico del formulario de lugar de reciclaje en el store.
-   *
-   * @param campo - Nombre del campo del formulario de lugar de reciclaje a actualizar.
-   */
-  actualizarCampoLugarReciclaje(campo: keyof EstadoDatoSolicitud['lugarReciclaje']): void {
-    const VALOR = this.formularioLugarReciclaje.get(campo)?.value;
-    this.datoSolicitudStore.actualizarLugarReciclaje({
-      ...this.formularioLugarReciclaje.getRawValue(),
-      [campo]: VALOR,
+/**
+ * Actualiza un campo específico del formulario de lugar de reciclaje en el store.
+ * Si el campo actualizado es 'reciclajeInstalaciones', se habilitan o deshabilitan dinámicamente
+ * los campos adicionales dependiendo de si se seleccionó "Sí" o "No".
+ *
+ * @param campo - Nombre del campo del formulario de lugar de reciclaje a actualizar.
+ */
+actualizarCampoLugarReciclaje(campo: keyof EstadoDatoSolicitud['lugarReciclaje']): void {
+  const VALOR = this.formularioLugarReciclaje.get(campo)?.value;
+
+  // Si el campo actualizado es 'reciclajeInstalaciones', controla la habilitación de campos relacionados
+  if (campo === 'reciclajeInstalaciones') {
+    const DEBE_HABILITAR = VALOR === 'Si';
+    const CAMPOS_A_CONTROLAR = ['lugarReciclaje', 'numeroAutorizacionEmpresaReciclaje'];
+
+    CAMPOS_A_CONTROLAR.forEach((campoExtra: string): void => {
+      const CONTROL = this.formularioLugarReciclaje.get(campoExtra);
+      if (CONTROL) {
+        DEBE_HABILITAR ? CONTROL.enable() : CONTROL.disable();
+      }
     });
   }
+
+  // Actualiza el estado del formulario de lugar de reciclaje en el store
+  this.datoSolicitudStore.actualizarLugarReciclaje({
+    ...this.formularioLugarReciclaje.getRawValue(),
+    [campo]: VALOR,
+  });
+}
+
+  
 
   /**
    * Actualiza un campo específico del formulario de empresa transportista en el store.
