@@ -24,6 +24,11 @@ export interface Solicitud31601State {
    * El valor de regimen_3.
    */
   regimen_3: boolean;
+
+  /**
+   * El valor de manifiesto.
+   */
+  manifiesto: boolean;
 }
 /**
  * Función para crear el estado inicial de Solicitud31601.
@@ -46,10 +51,15 @@ export function createInitialState(): Solicitud31601State {
      */
     regimen_2: false,
 
-    /**
+     /**
      * El valor de regimen_3.
      */
-    regimen_3: false,
+     regimen_3: false,
+
+    /**
+     * El valor de manifiesto.
+     */
+    manifiesto: false
   };
 }
 
@@ -116,6 +126,17 @@ export class Tramite31601Store extends Store<Solicitud31601State> {
     this.update((state) => ({
       ...state,
       regimen_3,
+    }));
+  }
+
+  /**
+   * Establece el estado de regimen_3.
+   * @param manifiesto - El valor de regimen_3.
+   */
+  public setManifiesto(manifiesto: boolean) {
+    this.update((state) => ({
+      ...state,
+      manifiesto,
     }));
   }
 

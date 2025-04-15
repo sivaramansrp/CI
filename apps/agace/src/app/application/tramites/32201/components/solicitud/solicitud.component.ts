@@ -103,9 +103,24 @@ export class SolicitudComponent implements OnInit {
       regimen_1: [this.solicitudState?.regimen_1],
       regimen_2: [this.solicitudState?.regimen_2],
       regimen_3: [this.solicitudState?.regimen_3],
+      manifiesto: [this.solicitudState?.manifiesto],
     });
   }
 
+  cargarProveedores(): void {
+    const FILE_INPUT = document.getElementById(
+      'cargarProveedores'
+    ) as HTMLInputElement;
+    const FILE = FILE_INPUT.files?.[0];
+    if (FILE) {
+      const READER = new FileReader();
+      READER.onload = (e): void => {
+        const TEXT = e.target?.result as string;
+      };
+      READER.readAsText(FILE);
+    }
+  }
+  
   /**
    * Establece el valor de un campo en el store de Tramite31601.
    * @param form - El grupo de formularios que contiene el campo.
