@@ -129,6 +129,8 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
       telefono: [''],
       correoElectronico: ['', [Validators.required, Validators.email]],
     });
+    this.agregarProveedorForm.disable();
+    this.agregarProveedorForm.get('tipoPersona')?.enable();
   }
   /**
    * @method ngOnInit
@@ -208,6 +210,7 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
    * * @returns {void} No retorna ningún valor.
    */
   tipoPersonaCambioDeValor(event: string | number): void {
+    this.agregarProveedorForm.enable();
     this.agregarProveedorForm.patchValue({
       tipoPersona: event,
     });

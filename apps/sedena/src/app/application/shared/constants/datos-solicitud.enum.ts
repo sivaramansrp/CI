@@ -29,8 +29,8 @@ export const TIPO_PERSONA_OPCIONES = [
 ];
 export const TERCEROS_NACIONALIDAD_OPCIONES = [
   {
-    label: 'Nacional',
-    value: 'Nacional',
+    label: 'Mexicana',
+    value: 'Mexicana',
   },
   {
     label: 'Extranjero',
