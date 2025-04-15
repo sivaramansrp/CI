@@ -1,5 +1,5 @@
 import { CatalogoSelectComponent, InputRadioComponent, TableComponent, TituloComponent } from '@libs/shared/data-access-user/src';
-import { Component,OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RadioOpcion, SolicitudJson } from '@libs/shared/data-access-user/src/core/models/231003/solicitud.model'
 import { CommonModule } from '@angular/common';
@@ -28,7 +28,7 @@ const RADIO_OPCIONES = rawData as SolicitudJson;
   templateUrl: './datos-residuos-peligrosos.component.html',
   styleUrl: './datos-residuos-peligrosos.component.css',
 })
-export class DatosResiduosPeligrososComponent implements OnInit{
+export class DatosResiduosPeligrososComponent implements OnInit {
   /** 
   * Formulario reactivo que contiene los datos generales del residuo. 
   */
@@ -50,7 +50,11 @@ export class DatosResiduosPeligrososComponent implements OnInit{
    */
   clasificacionRadioOptions: RadioOpcion[] = RADIO_OPCIONES?.clasificacionRadioOptions;
 
+  /**
+ * Opciones de radio utilizadas en el formulario para etiquetar residuos.
+ */
   public etiquetasForm = RADIO_OPCIONES;
+
 
   /**
    * Constructor del componente. Inicializa el formulario reactivo y conecta con el store y query de Akita.
@@ -181,31 +185,31 @@ export class DatosResiduosPeligrososComponent implements OnInit{
   }
 
 
-/**
- * Actualiza un campo específico del formulario de datos de materia prima en el store.
- *
- * @param field - Nombre del campo del formulario de datos a actualizar.
- */
-actualizarCampoFormularioDatos(field: keyof EstadoFormularioResiduo['formularioDatos']): void {
-  const VALOR = this.formularioDatos.get(field)?.value;
-  this.formularioStore.actualizarFormularioDatos({
-    ...this.formularioDatos.getRawValue(),
-    [field]: VALOR,
-  });
-}
+  /**
+   * Actualiza un campo específico del formulario de datos de materia prima en el store.
+   *
+   * @param field - Nombre del campo del formulario de datos a actualizar.
+   */
+  actualizarCampoFormularioDatos(field: keyof EstadoFormularioResiduo['formularioDatos']): void {
+    const VALOR = this.formularioDatos.get(field)?.value;
+    this.formularioStore.actualizarFormularioDatos({
+      ...this.formularioDatos.getRawValue(),
+      [field]: VALOR,
+    });
+  }
 
-/**
- * Actualiza un campo específico del formulario de residuos en el store.
- *
- * @param field - Nombre del campo del formulario de residuos a actualizar.
- */
-actualizarCampoFormularioResiduo(field: keyof EstadoFormularioResiduo['formularioResiduo']): void {
-  const VALOR = this.formularioResiduo.get(field)?.value;
-  this.formularioStore.actualizarFormularioResiduo({
-    ...this.formularioResiduo.getRawValue(),
-    [field]: VALOR,
-  });
-}
+  /**
+   * Actualiza un campo específico del formulario de residuos en el store.
+   *
+   * @param field - Nombre del campo del formulario de residuos a actualizar.
+   */
+  actualizarCampoFormularioResiduo(field: keyof EstadoFormularioResiduo['formularioResiduo']): void {
+    const VALOR = this.formularioResiduo.get(field)?.value;
+    this.formularioStore.actualizarFormularioResiduo({
+      ...this.formularioResiduo.getRawValue(),
+      [field]: VALOR,
+    });
+  }
 
 
 }

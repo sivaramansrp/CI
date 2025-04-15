@@ -1,6 +1,6 @@
 import { CatalogoSelectComponent, InputRadioComponent, TableComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RadioOpcion, SolicitudJson } from '@libs/shared/data-access-user/src/core/models/231003/solicitud.model';
 import { CommonModule } from '@angular/common';
 import { DatoSolicitudQuery } from '../../estados/queries/dato-solicitud.query';
@@ -66,7 +66,9 @@ export class DatosSolicitudComponent implements OnInit {
   */
   radioOptions: RadioOpcion[] = RADIO_OPCIONES?.radioOptions;
 
-
+  /**
+   * Opciones de radio utilizadas en el formulario para etiquetar residuos.
+   */
   public etiquetasForm = RADIO_OPCIONES;
 
   /**
@@ -178,6 +180,12 @@ export class DatosSolicitudComponent implements OnInit {
   }
 
 
+  /**
+   * Habilita o deshabilita los campos del formulario de empresa de reciclaje
+   * dependiendo del valor seleccionado en el campo "requiereEmpresa".
+   *
+   * @param valor Valor seleccionado, debe ser "Si" o "No".
+   */
   onRequiereEmpresaChange(valor: string): void {
     const DEBE_HABILITAR: boolean = valor === 'Si';
 
@@ -277,37 +285,37 @@ export class DatosSolicitudComponent implements OnInit {
     });
   }
 
-/**
- * Actualiza un campo específico del formulario de lugar de reciclaje en el store.
- * Si el campo actualizado es 'reciclajeInstalaciones', se habilitan o deshabilitan dinámicamente
- * los campos adicionales dependiendo de si se seleccionó "Sí" o "No".
- *
- * @param campo - Nombre del campo del formulario de lugar de reciclaje a actualizar.
- */
-actualizarCampoLugarReciclaje(campo: keyof EstadoDatoSolicitud['lugarReciclaje']): void {
-  const VALOR = this.formularioLugarReciclaje.get(campo)?.value;
+  /**
+   * Actualiza un campo específico del formulario de lugar de reciclaje en el store.
+   * Si el campo actualizado es 'reciclajeInstalaciones', se habilitan o deshabilitan dinámicamente
+   * los campos adicionales dependiendo de si se seleccionó "Sí" o "No".
+   *
+   * @param campo - Nombre del campo del formulario de lugar de reciclaje a actualizar.
+   */
+  actualizarCampoLugarReciclaje(campo: keyof EstadoDatoSolicitud['lugarReciclaje']): void {
+    const VALOR = this.formularioLugarReciclaje.get(campo)?.value;
 
-  // Si el campo actualizado es 'reciclajeInstalaciones', controla la habilitación de campos relacionados
-  if (campo === 'reciclajeInstalaciones') {
-    const DEBE_HABILITAR = VALOR === 'Si';
-    const CAMPOS_A_CONTROLAR = ['lugarReciclaje', 'numeroAutorizacionEmpresaReciclaje'];
+    // Si el campo actualizado es 'reciclajeInstalaciones', controla la habilitación de campos relacionados
+    if (campo === 'reciclajeInstalaciones') {
+      const DEBE_HABILITAR = VALOR === 'Si';
+      const CAMPOS_A_CONTROLAR = ['lugarReciclaje', 'numeroAutorizacionEmpresaReciclaje'];
 
-    CAMPOS_A_CONTROLAR.forEach((campoExtra: string): void => {
-      const CONTROL = this.formularioLugarReciclaje.get(campoExtra);
-      if (CONTROL) {
-        DEBE_HABILITAR ? CONTROL.enable() : CONTROL.disable();
-      }
+      CAMPOS_A_CONTROLAR.forEach((campoExtra: string): void => {
+        const CONTROL = this.formularioLugarReciclaje.get(campoExtra);
+        if (CONTROL) {
+          DEBE_HABILITAR ? CONTROL.enable() : CONTROL.disable();
+        }
+      });
+    }
+
+    // Actualiza el estado del formulario de lugar de reciclaje en el store
+    this.datoSolicitudStore.actualizarLugarReciclaje({
+      ...this.formularioLugarReciclaje.getRawValue(),
+      [campo]: VALOR,
     });
   }
 
-  // Actualiza el estado del formulario de lugar de reciclaje en el store
-  this.datoSolicitudStore.actualizarLugarReciclaje({
-    ...this.formularioLugarReciclaje.getRawValue(),
-    [campo]: VALOR,
-  });
-}
 
-  
 
   /**
    * Actualiza un campo específico del formulario de empresa transportista en el store.
