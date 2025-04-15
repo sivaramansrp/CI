@@ -18,13 +18,6 @@ import { TEXTOS_REQUISITOS } from '../../constants/importacion-armas-municiones.
  */
 @Component({
   selector: 'app-paso-dos',
-  standalone: true,
-  imports: [
-    CommonModule,
-    AlertComponent,
-    TituloComponent,
-    AnexarDocumentosComponent,
-  ],
   templateUrl: './paso-dos.component.html',
   styleUrl: './paso-dos.component.css',
 })

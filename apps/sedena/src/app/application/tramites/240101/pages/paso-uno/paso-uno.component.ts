@@ -18,14 +18,6 @@ import { takeUntil } from 'rxjs';
  */
 @Component({
   selector: 'app-paso-uno',
-  standalone: true,
-  imports: [
-    CommonModule,
-    SolicitanteComponent,
-    DatosDelTramiteContenedoraComponent,
-    TercerosRelacionadosContenedoraComponent,
-    PagoDeDerechosContenedoraComponent,
-  ],
   templateUrl: './paso-uno.component.html',
   styleUrl: './paso-uno.component.css',
 })
