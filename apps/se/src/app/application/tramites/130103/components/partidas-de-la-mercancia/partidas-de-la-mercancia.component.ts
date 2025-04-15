@@ -212,8 +212,7 @@ export class PartidasDeLaMercanciaComponent implements OnInit, OnDestroy {
             'producto' in this.importacionstate
           ) {
             const PRODUCTO = this.importacionstate['producto'];
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const IS_ALREADY_ADDED = this.datosTabla.some((item: any) => item.id === PRODUCTO.id);
+            const IS_ALREADY_ADDED = this.datosTabla.some((item: {id: number}) => item.id === PRODUCTO.id);
           
             if (!IS_ALREADY_ADDED) {
               this.datosTabla.push(PRODUCTO);

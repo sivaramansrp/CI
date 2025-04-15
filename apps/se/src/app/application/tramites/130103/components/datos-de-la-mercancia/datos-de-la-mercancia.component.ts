@@ -179,12 +179,15 @@ export class DatosDeLaMercanciaComponent implements OnInit, OnDestroy {
     * // Actualiza las opciones del campo "Fracción Arancelaria" en el formulario dinámico.
     */
     public obtenerFraccionArancelaria(): void {
-      this.importacionDefinitivaService.getFraccionArancelaria().subscribe((resp) => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const REGIMEN_FIELD: any = this.datosDeLaMercanciaFormData.find((datos: ModeloDeFormaDinamica) => datos.campo === 'fraccion_arancelaria');
-        if (REGIMEN_FIELD) {
-          if (!REGIMEN_FIELD.opciones) {
-            REGIMEN_FIELD.opciones = resp.map((item: { id: number; descripcion: string }) => ({
+      this.importacionDefinitivaService.getFraccionArancelaria()
+      .pipe(
+        takeUntil(this.destroyNotifier$)
+      )
+      .subscribe((resp) => {
+        const FRACCION_ARANCELARIA_FIELD = this.datosDeLaMercanciaFormData.find((datos: ModeloDeFormaDinamica) => datos.campo === 'fraccion_arancelaria') as ModeloDeFormaDinamica;
+        if (FRACCION_ARANCELARIA_FIELD) {
+          if (!FRACCION_ARANCELARIA_FIELD.opciones) {
+            FRACCION_ARANCELARIA_FIELD.opciones = resp.map((item: { id: number; descripcion: string }) => ({
               descripcion: item.descripcion,
               id: item.id,
             }));
@@ -211,9 +214,13 @@ export class DatosDeLaMercanciaComponent implements OnInit, OnDestroy {
     * // Actualiza las opciones del campo "Unidad de medida" en el formulario dinámico.
     */
     public obtenerUnidadDeMedida(): void {
-      this.importacionDefinitivaService.getUnidadDeMedida().subscribe((resp) => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const UNIDAD_FIELD: any = this.datosDeLaMercanciaFormData.find((datos: ModeloDeFormaDinamica) => datos.campo === 'unidad_de_medida');
+      this.importacionDefinitivaService.getUnidadDeMedida()
+      .pipe(
+        takeUntil(
+          this.destroyNotifier$
+        )
+      ).subscribe((resp) => {
+        const UNIDAD_FIELD = this.datosDeLaMercanciaFormData.find((datos: ModeloDeFormaDinamica) => datos.campo === 'unidad_de_medida') as ModeloDeFormaDinamica;
         if (UNIDAD_FIELD) {
           if (!UNIDAD_FIELD.opciones) {
             UNIDAD_FIELD.opciones = resp.map((item: { id: number; descripcion: string }) => ({

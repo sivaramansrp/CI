@@ -183,11 +183,13 @@ export class DatosDelTramiteRealizerComponent implements OnInit, OnDestroy {
   * // Actualiza las opciones del campo "régimen" en el formulario dinámico.
   */
   public obtenerRegimenDestinara(): void {
-    this.importacionDefinitivaService.getRegimenMercancia().subscribe((resp) => {
+    this.importacionDefinitivaService.getRegimenMercancia()
+    .pipe(
+      takeUntil(this.destroyNotifier$)
+    ).subscribe((resp) => {
       if (resp.code === 200) {
         const RESPONSE = resp.data;
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const REGIMEN_FIELD: any = this.datosDelTramiteFormData.find((datos: ModeloDeFormaDinamica) => datos.campo === 'regimen');
+        const REGIMEN_FIELD = this.datosDelTramiteFormData.find((datos: ModeloDeFormaDinamica) => datos.campo === 'regimen') as ModeloDeFormaDinamica;
         if (REGIMEN_FIELD) {
           if (!REGIMEN_FIELD.opciones) {
             REGIMEN_FIELD.opciones = RESPONSE.map((item: { id: number; descripcion: string }) => ({
@@ -221,14 +223,16 @@ export class DatosDelTramiteRealizerComponent implements OnInit, OnDestroy {
   * // Actualiza las opciones del campo "clasificación" en el formulario dinámico.
   */
   public obtenerRegimenClasificacion(): void {
-    this.importacionDefinitivaService.getClasifiRegimen().subscribe((resp) => {
+    this.importacionDefinitivaService.getClasifiRegimen()
+    .pipe(
+      takeUntil(this.destroyNotifier$)
+    ).subscribe((resp) => {
       if (resp.code === 200) {
         const RESPONSE = resp.data;
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const REGIMEN_FIELD: any = this.datosDelTramiteFormData.find((datos: ModeloDeFormaDinamica) => datos.campo === 'clasificacion');
-        if (REGIMEN_FIELD) {
-          if (!REGIMEN_FIELD.opciones) {
-            REGIMEN_FIELD.opciones = RESPONSE.map((item: { id: number; descripcion: string }) => ({
+        const CLASIFICACION_FIELD = this.datosDelTramiteFormData.find((datos: ModeloDeFormaDinamica) => datos.campo === 'clasificacion') as ModeloDeFormaDinamica;
+        if (CLASIFICACION_FIELD) {
+          if (!CLASIFICACION_FIELD.opciones) {
+            CLASIFICACION_FIELD.opciones = RESPONSE.map((item: { id: number; descripcion: string }) => ({
               descripcion: item.descripcion,
               id: item.id,
             }));

@@ -249,13 +249,12 @@ export class PaisProcedenciaComponent implements OnInit, OnDestroy {
       )
       .subscribe();
   
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const REGIMEN_FIELD: any = this.paisProcedenciaFormData.find(
+    const BLOQUE_FIELD = this.paisProcedenciaFormData.find(
       (datos: ModeloDeFormaDinamica) => datos.campo === 'bloque'
-    );
+    ) as ModeloDeFormaDinamica;
   
-    if (REGIMEN_FIELD && !REGIMEN_FIELD.opciones) {
-      REGIMEN_FIELD.opciones = this.bloque.map((item: { id: number; descripcion: string }) => ({
+    if (BLOQUE_FIELD && !BLOQUE_FIELD.opciones) {
+      BLOQUE_FIELD.opciones = this.bloque.map((item: { id: number; descripcion: string }) => ({
         descripcion: item.descripcion,
         id: item.id,
       }));

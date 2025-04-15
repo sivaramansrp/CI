@@ -184,12 +184,14 @@ export class CriterioDeDictamenComponent implements OnInit, OnDestroy {
   * // Actualiza las opciones del campo "Solicitud de mercancía" en el formulario dinámico.
   */
   public obtenerSolictudMercancia(): void {
-    this.importacionDefinitivaService.getSolicitudMercancia().subscribe((resp) => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const FRACCION_FIELD: any = this.criterioDeDictamenFormData.find((datos: ModeloDeFormaDinamica) => datos.campo === 'solicitud_mercancia');
-      if (FRACCION_FIELD) {
-        if (!FRACCION_FIELD.opciones) {
-          FRACCION_FIELD.opciones = resp.map((item: { id: number; descripcion: string }) => ({
+    this.importacionDefinitivaService.getSolicitudMercancia()
+    .pipe(
+      takeUntil(this.destroyNotifier$)
+    ).subscribe((resp) => {
+      const SOLICITUD_MERCANCIA_FIELD = this.criterioDeDictamenFormData.find((datos: ModeloDeFormaDinamica) => datos.campo === 'solicitud_mercancia') as ModeloDeFormaDinamica;
+      if (SOLICITUD_MERCANCIA_FIELD) {
+        if (!SOLICITUD_MERCANCIA_FIELD.opciones) {
+          SOLICITUD_MERCANCIA_FIELD.opciones = resp.map((item: { id: number; descripcion: string }) => ({
             descripcion: item.descripcion,
             id: item.id,
           }));
