@@ -1,4 +1,10 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   FormBuilder,
@@ -20,6 +26,8 @@ import {
 } from '../../estados/tramite31601.store';
 import { map, Subject, takeUntil } from 'rxjs';
 import { Solicitud32201Enum } from '../../constantes/anexo';
+import * as XLSX from 'xlsx'; // Import XLSX for reading Excel files
+import { Modal } from 'bootstrap';
 
 @Component({
   selector: 'app-solicitud',
@@ -74,6 +82,21 @@ export class SolicitudComponent implements OnInit {
   public infoAlert = 'alert-info';
 
   /**
+   * Referencia al modal de confirmación.
+   */
+  @ViewChild('confirmarModal') confirmarModalElement!: ElementRef;
+
+  /**
+   * Referencia al modal de confirmación.
+   */
+  @ViewChild('errorModal') errorModalElement!: ElementRef;
+
+  /**
+   * Referencia al botón para cerrar el modal.
+   */
+  @ViewChild('closeModal') closeModal!: ElementRef;
+
+  /**
    * Constructor del componente.
    * @param fb - FormBuilder para crear formularios reactivos.
    * @param tramite31601Store - Store para manejar el estado del trámite.
@@ -113,14 +136,60 @@ export class SolicitudComponent implements OnInit {
     ) as HTMLInputElement;
     const FILE = FILE_INPUT.files?.[0];
     if (FILE) {
+      const VALID_FILE_REGEX = /\.(xls|xlsx)$/i;
+      if (!VALID_FILE_REGEX.test(FILE.name)) {
+        alert('Por favor, cargue un archivo en formato Excel (.xlsx o .xls).');
+        return;
+      }
+
       const READER = new FileReader();
       READER.onload = (e): void => {
-        const TEXT = e.target?.result as string;
+        const DATA = new Uint8Array(e.target?.result as ArrayBuffer);
+        const WORKBOOK = XLSX.read(DATA, { type: 'array' });
+        const JSON_DATA = XLSX.utils.sheet_to_json(
+          WORKBOOK.Sheets[WORKBOOK.SheetNames[0]],
+          { header: 1 }
+        );
+
+        const EXPECTED_COLUMNS = 5;
+        const FIRST_ROW = JSON_DATA[0] as string[];
+        if (FIRST_ROW.length !== EXPECTED_COLUMNS) {
+          console.log('El número de columnas del archivo es incorrecto.');
+          if (this.errorModalElement) {
+            const MODAL_INSTANCE = new Modal(
+              this.errorModalElement.nativeElement
+            );
+            // this.cerrarModal();
+            MODAL_INSTANCE.show();
+          }
+        }
+
+        console.log('Los registros se realizaron correctamente', JSON_DATA);
+        if (this.confirmarModalElement) {
+          const MODAL_INSTANCE = new Modal(
+            this.confirmarModalElement.nativeElement
+          );
+          // this.cerrarModal();
+          MODAL_INSTANCE.show();
+        }
+        // alert('Los registros se realizaron correctamente.');
       };
-      READER.readAsText(FILE);
+
+      READER.readAsArrayBuffer(FILE);
+    } else {
+      alert('Por favor, seleccione un archivo para cargar.');
     }
   }
-  
+
+  /**
+   * Cierra el modal actual.
+   */
+  cerrarModal(): void {
+    if (this.closeModal) {
+      this.closeModal.nativeElement.click();
+    }
+  }
+
   /**
    * Establece el valor de un campo en el store de Tramite31601.
    * @param form - El grupo de formularios que contiene el campo.

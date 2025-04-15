@@ -121,7 +121,7 @@
             <input class="form-control" type="file" name="cargarProveedores" id="cargarProveedores" required>
           </div>
           <div class="col-md-4 d-flex justify-content-end cargarbtn">
-              <button type="button" class="btn btn-default" (click)="cargarProveedores()">Cargar
+              <button type="button" class="btn btn-default" >Cargar
                   Proveedores</button>
           </div>
         </div>
@@ -137,4 +137,60 @@
         </div>
     </div>
   </form>
+</div>
+
+<div
+  id="confirmarModal"
+  aria-labelledby="confirmarModalLabel"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-hidden="true"
+  #confirmarModal
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content modalsm">
+      <div class="modal-body">
+        <label>Los registros se realizaron correctamente</label>
+      </div>
+      <div class="modal-footer" style="justify-content: center">
+        <button
+          type="button"
+          class="btn btn-primary"
+          data-bs-dismiss="modal"
+          #closeModal
+        >
+          Acceptar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  id="errorModal"
+  aria-labelledby="errorModalLabel"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-hidden="true"
+  #errorModal
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content modalsm">
+      <div class="modal-body">
+        <label>El número de columnas del archivo es incorrecto</label>
+      </div>
+      <div class="modal-footer" style="justify-content: center">
+        <button
+          type="button"
+          class="btn btn-primary"
+          data-bs-dismiss="modal"
+          #closeModal
+        >
+          Acceptar
+        </button>
+      </div>
+    </div>
+  </div>
 </div>
