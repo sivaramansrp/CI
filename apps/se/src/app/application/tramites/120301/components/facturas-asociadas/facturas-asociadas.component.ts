@@ -1,13 +1,7 @@
 /**
- * @component formularioAsociacionFactura
+ * @component FormularioAsociacionFacturaComponent
  * @description Este componente es responsable de manejar las facturas asociadas.
  * Incluye un formulario para capturar los datos de las facturas y tablas para mostrar las facturas disponibles y asociadas.
- * 
- * @import { Component, OnInit } from '@angular/core';
- * @import { CommonModule } from '@angular/common';
- * @import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
- * @import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
- * @import { TableComponent } from '../../../../shared/components/table/table.component';
  */
 
 import { AsociadasTableColumns, CapturarColumns } from '../../models/elegibilidad-de-textiles.model';
@@ -35,7 +29,7 @@ import { ElegibilidadDeTextilesQuery } from '../../queries/elegibilidad-de-texti
 import { ElegibilidadTextilesService } from '../../services/elegibilidad-textiles/elegibilidad-textiles.service';
 import { TableComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
-
+import { VALIDO } from '../../constantes/elegibilidad-de-textiles.enums';
 
 @Component({
   selector: 'app-facturas-asociadas',
@@ -51,8 +45,14 @@ import { TituloComponent } from '@ng-mf/data-access-user';
   ]
 })
 export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
-  
+  /**
+   * @property {FormGroup} formularioAsociacionFactura - El grupo de formularios para capturar los datos de las facturas asociadas.
+   */
   formularioAsociacionFactura!: FormGroup;
+
+  /**
+   * @property {string[]} selectRangoDias - Array de rangos de días seleccionables.
+   */
   selectRangoDias: string[] = [];
 
   /**
@@ -65,16 +65,28 @@ export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
    */
   ConstanciaDelRegistro!: FormGroup;
 
+  /**
+   * @property {Subject<void>} destroyNotifier$ - Sujeto para manejar la destrucción de suscripciones.
+   */
   private destroyNotifier$: Subject<void> = new Subject();
-  
-  private facturasState!: TextilesState;
-  
-  private seccionState!: SeccionLibState
 
+  /**
+   * @property {TextilesState} facturasState - Estado actual de las facturas.
+   */
+  private facturasState!: TextilesState;
+
+  /**
+   * @property {SeccionLibState} seccionState - Estado actual de la sección.
+   */
+  private seccionState!: SeccionLibState;
+
+  /**
+   * @property {TablaSeleccion} TablaSeleccion - Configuración para la selección de tablas.
+   */
   TablaSeleccion = TablaSeleccion;
 
   /**
-   * @property {string[]} tableColumns - Array de encabezados de columnas de la tabla.
+   * @property {ConfiguracionColumna<CapturarColumns>[]} tableColumns - Configuración de las columnas de la tabla de facturas disponibles.
    */
   tableColumns: ConfiguracionColumna<CapturarColumns>[] = [
         { encabezado: 'Número de la factura', 
@@ -118,9 +130,8 @@ export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
       ];
 
   /**
-   * @property {string[]} asociadastableColumns - Array de encabezados de columnas de la tabla de facturas asociadas.
+   * @property {ConfiguracionColumna<AsociadasTableColumns>[]} asociadastableColumns - Configuración de las columnas de la tabla de facturas asociadas.
    */
-
   asociadastableColumns: ConfiguracionColumna<AsociadasTableColumns>[] = [
     { 
       encabezado: 'Candidad asociada', 
@@ -160,15 +171,25 @@ export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
   ];
 
   /**
-   * @property {any[]} facturasDisponible - Array de datos de facturas disponibles.
+   * @property {CapturarColumns[]} facturasDisponible - Array de datos de facturas disponibles.
    */
   facturasDisponible: CapturarColumns[] = [];
 
   /**
-   * @property {any[]} facturasAsociadas - Array de datos de facturas asociadas.
+   * @property {AsociadasTableColumns[]} facturasAsociadas - Array de datos de facturas asociadas.
    */
   facturasAsociadas: AsociadasTableColumns[] = [];
 
+  /**
+   * @constructor
+   * @description Constructor del componente. Inicializa los servicios necesarios.
+   * @param {FormBuilder} fb - Servicio para la creación de formularios reactivos.
+   * @param {ElegibilidadDeTextilesStore} ElegibilidadDeTextilesStore - Store para manejar el estado de elegibilidad de textiles.
+   * @param {ElegibilidadDeTextilesQuery} ElegibilidadDeTextilesQuery - Query para consultar el estado de elegibilidad de textiles.
+   * @param {SeccionLibStore} seccionStore - Store para manejar el estado de la sección.
+   * @param {SeccionLibQuery} seccionQuery - Query para consultar el estado de la sección.
+   * @param {ElegibilidadTextilesService} elegibilidadTextilesService - Servicio para manejar la lógica de elegibilidad de textiles.
+   */
   constructor(
     private fb: FormBuilder,
     private ElegibilidadDeTextilesStore: ElegibilidadDeTextilesStore,
@@ -177,8 +198,8 @@ export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
     private seccionQuery: SeccionLibQuery,
     private elegibilidadTextilesService: ElegibilidadTextilesService
   ) {
-    // Constructor logic can be added here if needed
-   }
+    // Se puede agregar aquí la lógica del constructor si es necesario
+  }
 
   /**
    * @method ngOnInit
@@ -220,7 +241,7 @@ export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
           )
           .subscribe();
       this.seccionStore.establecerFormaValida([false]);
-      if(this.facturasState.formaValida && this.facturasState.formaValida[0] && this.facturasState.formaValida[0].descripcion === 'AllValida'){
+      if(this.facturasState.formaValida && this.facturasState.formaValida[0] && this.facturasState.formaValida[0].descripcion === VALIDO){
         this.seccionStore.establecerSeccion([true]);
         this.seccionStore.establecerFormaValida([true])
       }
@@ -228,15 +249,22 @@ export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
         this.seccionStore.establecerFormaValida([false]);
       }
   }
+
+  /**
+   * @method initActionFormBuild
+   * @description Inicializa el formulario reactivo para capturar los datos de las facturas asociadas.
+   */
   initActionFormBuild(): void {
     this.formularioAsociacionFactura = this.fb.group({
       cantidadFacturas: [this.facturasState.cantidadFacturas, [Validators.required]],
+      cantidadFacturasTotal:[{value:this.facturasState.cantidadFacturasTotal,disabled:true}],
+      metrosCuadradosEquivalentes:[{value:this.facturasState.metrosCuadradosEquivalentes,disabled:true}]
     });
   }
 
   /**
-   * @method fetchData
-   * @description Obtiene los datos de las facturas disponibles y asociadas desde el servicio.
+   * @method recuperarDatos
+   * @description Obtiene los datos de las facturas disponibles desde el servicio.
    */
   recuperarDatos(): void {
     this.elegibilidadTextilesService.obtenerTablaDatos<CapturarColumns>('facturasDisponible.json')
@@ -250,6 +278,11 @@ export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
       }}
     );
   }
+
+  /**
+   * @method recuperarDatosAsociadas
+   * @description Obtiene los datos de las facturas asociadas desde el servicio.
+   */
   recuperarDatosAsociadas(): void {
     this.elegibilidadTextilesService.obtenerTablaDatos<AsociadasTableColumns>('facturas-asociadas.json')
     .pipe(takeUntil(this.destroyNotifier$))
@@ -263,6 +296,13 @@ export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
     );
   }
 
+  /**
+   * @method setValoresStore
+   * @description Establece los valores en el store de textiles.
+   * @param {FormGroup} form - El formulario reactivo.
+   * @param {string} campo - El nombre del campo.
+   * @param {keyof ElegibilidadDeTextilesStore} metodoNombre - El método del store a invocar.
+   */
   setValoresStore(
     form: FormGroup,
     campo: string,
@@ -275,11 +315,11 @@ export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * @method ngOnDestroy
    * @description Método que se ejecuta cuando el componente es destruido.
    */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
-  
 }
