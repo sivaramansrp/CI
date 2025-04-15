@@ -6,7 +6,6 @@ describe('ActualizacionImportacionSanitariaComponent', () => {
   let component: ActualizacionImportacionSanitariaComponent;
   let fixture: ComponentFixture<ActualizacionImportacionSanitariaComponent>;
 
-  // Mock WizardComponent with spies
   class MockWizardComponent {
     siguiente = jasmine.createSpy('siguiente');
     atras = jasmine.createSpy('atras');
