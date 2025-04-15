@@ -1,0 +1,55 @@
+<div class="page">
+    <div class="container">
+
+        <ng-titulo [titulo]="'Terceros relacionados'"></ng-titulo>
+        <!-- <form [formGroup]="tercerosRelacionadosForm">
+        </form> -->
+        <ng-alert [CONTENIDO]="TEXTOS.INSTRUCCIONES_DEL_CAMPO_DE_TABLA"></ng-alert>
+        <!-- TERCERO_TEXTO_DE_ALERTA -->
+        <div class="row">
+            <div class="col-md-12">
+                <label for="Fabricante" class="control-label">Fabricante:</label>
+                <span class="require">*</span>
+            </div>
+
+            <div class="col-md-12">
+                <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX"
+                    [configuracionTabla]="fabricanteTableColumns" [datos]="fabricantedatosTabla"></app-tabla-dinamica>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 mt-5 d-flex justify-content-end">
+
+                <button type="button" class="btn btn-primary ms-3">
+                    Agregar
+                </button>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-md-12">
+                <label for="Fabricante" class="control-label">Destinatario (destino final):</label>
+                <span class="require">*</span>
+            </div>
+
+            <div class="col-md-12">
+                <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX"
+                    [configuracionTabla]="destinatarioTableColumns"
+                    [datos]="destinatarioDatosTabla"></app-tabla-dinamica>
+
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12 mt-5 d-flex justify-content-end">
+
+                <button type="button" class="btn btn-primary ms-3">
+                    Agregar
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+</div>

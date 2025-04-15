@@ -30,14 +30,16 @@
         <app-solicitante></app-solicitante>
         }
         @case (2) {
-       
+          <app-datos-del-solicitud-modificacion [showPreFillingOptions]="showPreFillingOptions"></app-datos-del-solicitud-modificacion>
         }
         @case (3) {
+          <app-terceros-relacionados-fabricante></app-terceros-relacionados-fabricante>
         }
         @case (4) {
+          <app-pago-de-derechos-entrada></app-pago-de-derechos-entrada>
         }
         @case (5) {
-          
+          <app-tramites-asociados-seccion></app-tramites-asociados-seccion>       
         }
         }
       </ng-container>

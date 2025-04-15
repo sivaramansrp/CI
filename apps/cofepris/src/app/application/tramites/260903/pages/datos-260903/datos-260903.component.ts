@@ -11,6 +11,13 @@ import { Component } from '@angular/core';
   templateUrl: './datos-260903.component.html',
 })
 export class Datos260903Component {
+
+   /**
+     * showPreFillingOptions
+     * Indica si se deben mostrar las opciones de prellenado.
+     */
+ showPreFillingOptions: boolean = false; 
+
   /**
  * Índice de la pestaña actualmente seleccionada.
  * Inicializado a 1 por defecto.

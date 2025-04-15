@@ -20,6 +20,13 @@ import { SubirDocumentoService } from '@libs/shared/data-access-user/src/core/se
 import { ActualizacionImportacionSanitariaRoutingModule } from './actualizacion-importacion-sanitaria-routing.module';
 import { PagoDeDerechosBancoComponent } from '../../shared/components/pago-de-derechos-banco/pago-de-derechos-banco.component';
 
+import { DatosDelSolicitudModificacionComponent } from '../../shared/components/datos-del-solicitud-modificacion/datos-del-solicitud-modificacion.component';
+import { TramitesAsociadosSeccionComponent } from '../../shared/components/tramites-asociados-seccion/tramites-asociados-seccion.component';
+
+import { TercerosRelacionadosFabricanteComponent } from '../../shared/components/terceros-relacionados-fabricante/terceros-relacionados-fabricante.component';
+
+import { PagoDeDerechosEntradaComponent } from '../../shared/components/pago-de-derechos-entrada/pago-de-derechos-entrada.component';
+
 
 @NgModule({
   declarations: [ActualizacionImportacionSanitariaComponent,
@@ -34,7 +41,11 @@ import { PagoDeDerechosBancoComponent } from '../../shared/components/pago-de-de
     PasoDosComponent,
     PasoTresComponent,
     BtnContinuarComponent,
-    PagoDeDerechosBancoComponent
+    PagoDeDerechosBancoComponent,
+    DatosDelSolicitudModificacionComponent,
+    TramitesAsociadosSeccionComponent,
+    TercerosRelacionadosFabricanteComponent,
+    PagoDeDerechosEntradaComponent
   ],
   providers: [provideHttpClient(), ToastrService,InicioSesionService,SubirDocumentoService ],
 })
