@@ -63,3 +63,12 @@ export const BANCO_DATA: CatalogosSelect = {
     catalogos: [],
   };
 
+export const ESTADO_FISICO_DATA: CatalogosSelect = {
+  labelNombre: 'Estado fisico',
+  required: true,
+  primerOpcion: 'seleccione una opción',
+  catalogos: [],
+};
+
+
+

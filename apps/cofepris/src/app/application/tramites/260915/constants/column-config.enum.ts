@@ -109,59 +109,74 @@ export const CONFIGURACION_COLUMNAS_MERCANCIAS: ConfiguracionColumna<FilaData2>[
     orden: 3,
   },
   {
-    encabezado: 'Marca',
-    clave: (fila) => fila.marca,
+    encabezado: 'Denominación distintiva',
+    clave: (fila) => fila.denominacionDistintiva,
     orden: 4,
+  },
+  {
+    encabezado: 'Denominación o nombre cientifico*',
+    clave: (fila) => fila.denominacionNombre,
+    orden: 5,
   },
   {
     encabezado: 'Tipo de producto',
     clave: (fila) => fila.tipoProducto,
-    orden: 5,
+    orden: 6,
+  },
+  {
+    encabezado: 'Estado fisico',
+    clave: (fila) => fila.estadoFisico,
+    orden: 7,
   },
   {
     encabezado: 'Fracción arancelaria',
     clave: (fila) => fila.fraccionArancelaria,
-    orden: 6,
+    orden: 8,
   },
   {
     encabezado: 'Descripción de la fracción arancelaria',
     clave: (fila) => fila.descripcionFraccionArancelaria,
-    orden: 7,
+    orden: 9,
   },
   {
     encabezado: 'Unidad de medida de comercialización (UMC)',
     clave: (fila) => fila.umc,
-    orden: 8,
+    orden: 10,
   },
   {
     encabezado: 'Cantidad UMC',
     clave: (fila) => fila.cantidadUMC,
-    orden: 9,
+    orden: 11,
   },
   {
     encabezado: 'Unidad de medida de tarifa (UMT)',
     clave: (fila) => fila.umt,
-    orden: 10,
+    orden: 12,
   },
   {
     encabezado: 'Cantidad UMT',
     clave: (fila) => fila.cantidadUMT,
-    orden: 11,
+    orden: 13,
+  },
+  {
+    encabezado: 'presentacion farmaceutica o tipo de envase',
+    clave: (fila) => fila.presentacionFarmaceutica,
+    orden: 14,
   },
   {
     encabezado: 'País de origen',
     clave: (fila) => fila.paisDeOrigen,
-    orden: 12,
+    orden: 15,
   },
   {
     encabezado: 'País de procedencia',
     clave: (fila) => fila.paisDeProcedencia,
-    orden: 13,
+    orden: 16,
   },
   {
     encabezado: 'Uso específico',
     clave: (fila) => fila.usoEspecifico,
-    orden: 14,
+    orden: 17,
   },
 ];
 

@@ -28,6 +28,7 @@ import {
   CLASIFICACION_PRODUCTO_DATA,
   ESPECIFICAR_DATA,
   TIPO_PRODUCTO_DATA,
+  ESTADO_FISICO_DATA,
 } from '../../constants/catalogs.enum';
 import {
   CONFIGURACION_COLUMNAS_SOLI,
@@ -35,6 +36,7 @@ import {
 
 } from '../../constants/column-config.enum';
 import { PermisoSanitarioDispositivosMedicosService } from '../../services/permiso-sanitario-dispositivos-medicos.service';
+import { DatosEmpresaComponent } from '../datos-empresa/datos-empresa.component';
 
 /**
  * Componente para gestionar los datos de la solicitud.
@@ -42,7 +44,7 @@ import { PermisoSanitarioDispositivosMedicosService } from '../../services/permi
 @Component({
   selector: 'app-datos-de-la-solicitud',
   standalone: true,
-  imports: [CommonModule,ReactiveFormsModule,InputRadioComponent,TituloComponent,CatalogoSelectComponent,TablaDinamicaComponent,InputRadioComponent,InputFechaComponent,CrosslistComponent,InputCheckComponent,NotificacionesComponent],
+  imports: [CommonModule,ReactiveFormsModule,InputRadioComponent,TituloComponent,CatalogoSelectComponent,TablaDinamicaComponent,InputRadioComponent,InputFechaComponent,CrosslistComponent,InputCheckComponent,NotificacionesComponent,DatosEmpresaComponent],
   templateUrl: './datos-de-la-solicitud.component.html',
   styleUrls: ['./datos-de-la-solicitud.component.css'],
 })
@@ -154,6 +156,8 @@ opcionDeBotonDeRadio = [
   /** Datos de la tabla */
   tableData: FilaData[] = [];
 
+  mercanciasData: FilaData2[] = [];
+
   /** Conjunto de filas seleccionadas */
   filasSeleccionadas: Set<number> = new Set();
 
@@ -162,6 +166,8 @@ opcionDeBotonDeRadio = [
     { label: 'No', value: 'no' },
     { label: 'Sí', value: 'si' },
   ];
+
+
 
   /** Fila seleccionada */
   selectedRow: any;
@@ -189,6 +195,8 @@ opcionDeBotonDeRadio = [
 
   /** Configuración para el campo de selección del tipo de producto */
   public tipoProductoData = TIPO_PRODUCTO_DATA;
+
+  public estadoFisicoData = ESTADO_FISICO_DATA;
 
   constructor(private fb: FormBuilder, 
     private permisosanitariodisposivos: PermisoSanitarioDispositivosMedicosService,
@@ -219,12 +227,12 @@ opcionDeBotonDeRadio = [
     this.getClaveDescripcionDelData();
     this.getRegimenalqueData();
     this.getAduanaData();
-    this. getMercanciasData();
     this.getEspificarData();
     this.getClasificacionDelProductoData();
     this.getTipoProductoData();
     this.getMercanciaCrosslistData();
     this.createclaveScianForm();
+    this.getEstadoFisicoData();
   }
  
  /**
@@ -242,7 +250,8 @@ opcionDeBotonDeRadio = [
   }
 createForm(){
   this.dataDeLaSolicitudForm = this.fb.group({
-    descripcionFraccionArancelaria: [this.dataDeLaSolicitudState?.descripcionFraccionArancelaria, Validators.required],
+   
+      descripcionFraccionArancelaria: [this.dataDeLaSolicitudState?.descripcionFraccionArancelaria, Validators.required],
       cantidadUMT:[this.dataDeLaSolicitudState?.cantidadUMT, Validators.required],
       umt:[this.dataDeLaSolicitudState?.descripcionFraccionArancelaria, Validators.required],
       cantidadUMC:[this.dataDeLaSolicitudState?.cantidadUMC, Validators.required],
@@ -251,7 +260,10 @@ createForm(){
       clasificaionProductos: [this.dataDeLaSolicitudState?.clasificaionProductos, Validators.required], 
       especificarProducto: [this.dataDeLaSolicitudState?.especificarProducto, Validators.required],
       nombreProductoEspecifico: [this.dataDeLaSolicitudState?.nombreProductoEspecifico, Validators.required],
-      marca:[this.dataDeLaSolicitudState?.marca, Validators.required],
+      denominacionDistintiva:[this.dataDeLaSolicitudState?.denominacionDistintiva, Validators.required],
+      denominacionNombre:[this.dataDeLaSolicitudState?.denominacionNombre, Validators.required],
+      estadoFisico:[this.dataDeLaSolicitudState?.estadoFisico, Validators.required],
+      presentacionFarmaceutica:[this.dataDeLaSolicitudState?.presentacionFarmaceutica, Validators.required],
       fraccionArancelaria:[this.dataDeLaSolicitudState?.fraccionArancelaria, Validators.required],
     datosDelTramiteRealizar: this.fb.group({
       justification: [this.dataDeLaSolicitudState?.justification, Validators.required],
@@ -265,8 +277,11 @@ createForm(){
       calle: [this.dataDeLaSolicitudState?.calle, Validators.required],
       lada: [this.dataDeLaSolicitudState?.lada, Validators.required],
       telefono: [this.dataDeLaSolicitudState?.telefono, Validators.required],
-      avisoDeFuncionamiento: [this.dataDeLaSolicitudState?.avisoDeFuncionamiento, Validators.required],
-      licenciaSanitaria: [this.dataDeLaSolicitudState?.licenciaSanitaria, Validators.required],
+      avisoDeFuncionamiento: [this.dataDeLaSolicitudState?.avisoDeFuncionamiento || false, Validators.required],
+      licenciaSanitaria: [
+        { value: this.dataDeLaSolicitudState?.licenciaSanitaria || '', disabled: !this.dataDeLaSolicitudState?.avisoDeFuncionamiento },
+        Validators.required,
+      ],
       regimenalque: [this.dataDeLaSolicitudState?.regimenalque, Validators.required],
       aduana: [this.dataDeLaSolicitudState?.aduana, Validators.required],
       rfc: [this.dataDeLaSolicitudState?.rfc, Validators.required],
@@ -305,8 +320,15 @@ closeModal(): void {
  */
 eliminarPedimento(borrar: boolean): void {
   if (borrar) {
-    this.pedimentos.splice(this.elementoParaEliminar, 1);
-    this.nuevaNotificacion = null; // Limpia la notificación
+    // Filter out the selected rows
+    this.tableData = this.tableData.filter((row) => {
+      const rowId = row.id || (row.claveScianG && row.claveScianG.claveScian);
+      return !this.filasSeleccionadas.has(Number(rowId));
+    });
+
+    // Clear the selection and notification
+    this.filasSeleccionadas.clear();
+    this.nuevaNotificacion = null;
   }
 }
 
@@ -318,50 +340,24 @@ eliminarPedimento(borrar: boolean): void {
  * @param i Índice del elemento que se desea eliminar (por defecto 0).
  * @param isSeleccionarEstablecimiento Indica si se debe mostrar el mensaje para seleccionar un establecimiento.
  */
-abrirModal(i: number = 0, isSeleccionarEstablecimiento: boolean = false): void {
-  if (isSeleccionarEstablecimiento) {
-    // Condición específica para "Seleccionar establecimiento"
-    this.nuevaNotificacion = {
-      tipoNotificacion: 'alert',
-      categoria: 'danger',
-      modo: 'action',
-      titulo: '',
-      mensaje: 'Por el momento no hay comunicación con el Sistema de COFEPRIS, favor de capturar su establecimiento.',
-      cerrar: false,
-      tiempoDeEspera: 2000,
-      txtBtnAceptar: 'Aceptar',
-      txtBtnCancelar: 'Cancelar',
-    };
-  } else if (!this.filasSeleccionadas || this.filasSeleccionadas.size === 0) {
-    // No hay filas seleccionadas
-    this.nuevaNotificacion = {
-      tipoNotificacion: 'alert',
-      categoria: 'danger',
-      modo: 'action',
-      titulo: '',
-      mensaje: 'Selecciona un registro',
-      cerrar: false,
-      tiempoDeEspera: 2000,
-      txtBtnAceptar: 'Aceptar',
-      txtBtnCancelar: 'Cancelar',
-    };
-  } else {
-    // Hay filas seleccionadas
-    this.nuevaNotificacion = {
-      tipoNotificacion: 'alert',
-      categoria: 'warning',
-      modo: 'action',
-      titulo: '',
-      mensaje: '¿Estás seguro que deseas eliminar los registros marcados?',
-      cerrar: false,
-      tiempoDeEspera: 2000,
-      txtBtnAceptar: 'Aceptar',
-      txtBtnCancelar: 'Cancelar',
-    };
+ abrirModal(i: number = 0): void {
+  if(this.filasSeleccionadas && this.filasSeleccionadas.size > 0){
+  this.nuevaNotificacion = {
+    tipoNotificacion: 'alert',
+    categoria: 'danger',
+    modo: 'action',
+    titulo: '',
+    mensaje: '¿Estás seguro que deseas eliminar los registros marcados?',
+    cerrar: false,
+    tiempoDeEspera: 0,
+    txtBtnAceptar: 'Aceptar',
+    txtBtnCancelar: 'Cancelar',
   }
-
+}
+ 
   this.elementoParaEliminar = i;
 }
+
 
   /**
  * Método para obtener los datos del crosslist de mercancías.
@@ -454,6 +450,14 @@ usoEspecificoColapsable(): void {
         this.aduanaData.catalogos = data as Catalogo[];
       });
   }
+  getEstadoFisicoData(){
+    this.permisosanitariodisposivos.getEstadoFisicoData()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((data) => {
+        this.estadoFisicoData.catalogos = data as Catalogo[];
+      });
+  }
+
   /**
  * Método para habilitar el formulario de datos de la solicitud.
  * Cambia el estado de `habilitarEstado` a falso y habilita todos los campos del formulario.
@@ -464,15 +468,8 @@ usoEspecificoColapsable(): void {
     this.habilitarEstado = false;
   }
 
-    /** Obtiene los datos de mercancias */
+   
 
-  getMercanciasData(){
-    this.permisosanitariodisposivos.getMercanciasData()
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((data) => {
-        this.mercanciasConfiguracionTabla = data as unknown as FilaData2[];
-      });
-  }
     /** Obtiene los datos de clasificación del producto */
   getClasificacionDelProductoData(){
     this.permisosanitariodisposivos.getClasificacionDelProductoData()
@@ -503,7 +500,7 @@ usoEspecificoColapsable(): void {
   /** Muestra el modal de selección de establecimiento */
 
   seleccionarEstablecimiento(): void {
-    this.abrirModal(0, true);
+    this.abrirModal();
   }
 
     /** Limpia el formulario de clave SCIAN */
@@ -516,6 +513,7 @@ usoEspecificoColapsable(): void {
  */  
 onAgregar(){
     this.showClavaScianForm = true; 
+    
   }
 
   /**
@@ -527,13 +525,9 @@ onAgregar(){
       console.warn('No rows selected for deletion.');
       return;
     }
-
-    this.tableData = this.tableData.filter((row) => {
-      const rowId = row.id || (row.claveScianG && row.claveScianG.claveScian); 
-      return !this.filasSeleccionadas.has(Number(rowId));
-    });
-    this.filasSeleccionadas.clear();
+    this.abrirModal();
   }
+  
   
     /** Cancela la acción de agregar clave SCIAN */
 
@@ -549,39 +543,22 @@ onAgregar(){
      MODAL_INSTANCE.show();
    }
  }
- /**
- * Maneja el cambio en el campo "Clave de los lotes".
- * Actualiza el valor de la clave en la fila seleccionada de la tabla.
- * 
- * @param event Evento que contiene el valor ingresado en el campo.
- */
- onClaveDeLosLotesChange(event: Event): void {
-  const target = event.target as HTMLInputElement; // Cast EventTarget to HTMLInputElement
-
-  if (target && this.ediciondeindicedefila !== null) {
-    const value = target.value;
-
-    this.listaClaveTabla[this.ediciondeindicedefila] = {
-      ...this.listaClaveTabla[this.ediciondeindicedefila],
-      claveDeLosLotes: value,
-    };
-  } else { /* empty */ }
-}
-  
+ 
 
     /** Maneja la selección de filas */
-    onfilasSeleccionadas(filasSeleccionadas: FilaData[] | ListaClave[]): void {
-      if (filasSeleccionadas.length > 0 && 'claveDeLosLotes' in filasSeleccionadas[0]) {
-        this.filasSeleccionadas = new Set((filasSeleccionadas as ListaClave[]).map((row) => Number(row.claveDeLosLotes)));
-      } else if (filasSeleccionadas.length > 0 && 'id' in filasSeleccionadas[0]) {
-        this.filasSeleccionadas = new Set((filasSeleccionadas as FilaData[]).map((row) => Number(row.id)));
-      } else if (filasSeleccionadas[0] && 'claveScianG' in filasSeleccionadas[0] && 'claveScian' in filasSeleccionadas[0].claveScianG) {   
+    onfilasSeleccionadas(filasSeleccionadas: FilaData[] | FilaData2[]): void {
+      console.log('onfilasSeleccionadas triggered with:', filasSeleccionadas);
+    
+      if (filasSeleccionadas.length > 0 && 'id' in filasSeleccionadas[0]) {
+        this.filasSeleccionadas = new Set(filasSeleccionadas.map((row) => Number(row.id)));
+      } else if (filasSeleccionadas.length > 0 && 'claveScianG' in filasSeleccionadas[0] && 'claveScian' in filasSeleccionadas[0].claveScianG) {
         this.filasSeleccionadas = new Set((filasSeleccionadas as FilaData[]).map((row) => Number(row.claveScianG.claveScian)));
+      } else {
+        this.filasSeleccionadas.clear();
       }
-      else {
-        this.filasSeleccionadas.clear(); 
-       }
-      }
+    
+      console.log('Updated selected rows set:', Array.from(this.filasSeleccionadas));
+    }
 
   onSubmit() {
     const formData = { ...this.clavaScianForm.value };
@@ -602,7 +579,60 @@ onAgregar(){
 get datosDelTramiteRealizar(): FormGroup {
   return this.dataDeLaSolicitudForm.get('datosDelTramiteRealizar') as FormGroup;
 }
-  /** Establece valores en el store */
+
+toggleLicenciaSanitaria(): void {
+  const avisoDeFuncionamiento = this.dataDeLaSolicitudForm.get('datosDelTramiteRealizar.avisoDeFuncionamiento')?.value;
+  const licenciaSanitariaControl = this.dataDeLaSolicitudForm.get('datosDelTramiteRealizar.licenciaSanitaria');
+  
+  if (avisoDeFuncionamiento) {
+    licenciaSanitariaControl?.disable();
+  } else {
+    licenciaSanitariaControl?.enable();
+  }
+}
+onSave() {
+    const formData = { ...this.dataDeLaSolicitudForm.value };
+    formData.tipoProducto = this.tipoProductoData.catalogos.find(
+      (item: Catalogo) => String(item.id) === String(formData.tipoProducto)
+    )?.descripcion || formData.tipoProducto;
+  
+    formData.clasificaionProductos = this.delProducto.catalogos.find(
+      (item: Catalogo) => String(item.id) === String(formData.clasificaionProductos)
+    )?.descripcion || formData.clasificaionProductos;
+  
+    formData.especificarProducto = this.especificarData.catalogos.find(
+      (item: Catalogo) => String(item.id) === String(formData.especificarProducto)
+    )?.descripcion || formData.especificarProducto;
+  
+    formData.estadoFisico = this.estadoFisicoData.catalogos.find(
+      (item: Catalogo) => String(item.id) === String(formData.estadoFisico)
+    )?.descripcion || formData.estadoFisico;
+  
+    
+    // Add the extracted data to the tableData2 array
+    this.mercanciasData.push(formData);
+
+    // Reset the form
+    this.dataDeLaSolicitudForm.reset();
+  
+}
+onDeleted(){
+  // if (!this.filasSeleccionadas || this.filasSeleccionadas.size === 0) {
+  //   console.warn('No rows selected for deletion.');
+  //   return;
+  // }
+
+  console.log('Rows selected for deletion:', Array.from(this.filasSeleccionadas));
+  console.log('Data before deletion:', this.mercanciasData);
+
+  this.mercanciasData = this.mercanciasData.filter((row) => {
+    const rowId = row.id; // Assuming each row in mercanciasData has a unique 'id'
+    return !this.filasSeleccionadas.has(Number(rowId));
+  });
+
+  // Clear the selection
+  this.filasSeleccionadas.clear();
+}
 
 setValoresStore(
   form: FormGroup,

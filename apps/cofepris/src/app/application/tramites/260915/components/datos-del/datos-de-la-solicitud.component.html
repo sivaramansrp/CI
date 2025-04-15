@@ -1,6 +1,8 @@
+
+<app-datos-empresa></app-datos-empresa>
 <div class="container">
     <form [formGroup]="dataDeLaSolicitudForm">
-        <ng-container formGroupName="datosDelTramiteRealizar"> 
+    <ng-container formGroupName="datosDelTramiteRealizar"> 
         <h5>seleccione el tipo operacion que desea realizer</h5>
        <app-input-radio
             [radioOptions]="opcionDeBotonDeRadio"
@@ -16,10 +18,8 @@
             (change)="setValoresStore(datosDelTramiteRealizar,'justification', 'setJustification')"></textarea>
           </div>
         </div>
-        </div>
-    
+        </div>   
     <ng-titulo titulo="Datos del establecimiento" />
-    
         <div class="text-end">
           <button type="button" class="btn btn-primary" name="seleccionarEstablecimiento" id="btnEstablecimiento" title="Selecciona para habilitar los campos del establecimiento" (click)="seleccionarEstablecimiento()" >Seleccionar establecimiento</button>
         </div>
@@ -118,6 +118,13 @@
             type="submit" (click)="onAgregar()">Agregar</button>
         </div>
     </div>
+    @if (nuevaNotificacion) {
+      <section>
+      <lib-notificaciones 
+      [notificacionInput]="nuevaNotificacion" (confirmacionModal)="eliminarPedimento($event)">
+      </lib-notificaciones>
+      </section>
+      }
     <div *ngIf="showClavaScianForm">
       <ng-titulo titulo="Clave S.C.I.A.N" />
   <form [formGroup]="clavaScianForm" (ngSubmit)="onSubmit()">
@@ -163,7 +170,7 @@
       </div>
       </form>
   </div>
-    <ng-container formGroupName="datosDelTramiteRealizar"> 
+<ng-container formGroupName="datosDelTramiteRealizar"> 
       <div class="row mt-5">
         <div class="col-md-4 mt-4">
           <lib-input-check
@@ -171,6 +178,7 @@
           [label]="'Aviso de funcionamiento'"
           [required]="true"
           formControlName="avisoDeFuncionamiento"
+          (change)="toggleLicenciaSanitaria()"
           (change)="setValoresStore(datosDelTramiteRealizar,'avisoDeFuncionamiento', 'setAvisoDeFuncionamiento')"
           ></lib-input-check>
         </div>
@@ -182,21 +190,21 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-md-8">
+        <div class="col-md-4">
             <app-catalogo-select 
             id="regimenalqueData"
             formControlName="regimenalque"
             [catalogo]="regimenalqueData.catalogos" 
-            [label]="'Régimen al que se destinarán la mercancías'" 
+            [label]="'Régimen'" 
             [required]="true"
             (change)="setValoresStore(datosDelTramiteRealizar,'regimenalque', 'setRegimenalque')"></app-catalogo-select>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-8">
             <app-catalogo-select 
             id="aduanaData"
             formControlName="aduana"
             [catalogo]="aduanaData.catalogos" 
-            [label]="'Aduana'" 
+            [label]="'Aduana de entradas'" 
             [required]="false"
             (change)="setValoresStore(datosDelTramiteRealizar,'aduana', 'setAduana')">
         </app-catalogo-select>
@@ -208,8 +216,8 @@
         <app-tabla-dinamica 
          [tipoSeleccionTabla]="tipoSeleccionsoliMercancias"
           [configuracionTabla]="mercanciasDatos"
-          [datos]="mercanciasConfiguracionTabla"
-          >
+          [datos]="mercanciasData"
+          (listaDeFilaSeleccionada)="onfilasSeleccionadas($event)">
           </app-tabla-dinamica>
       </div>
      
@@ -252,9 +260,16 @@
               </div>
               <div class="row mt-5">
                 <div class="col-md-6">
-                  <label class="form-label">Marca*:</label>
-                  <input class="form-control" formControlName="marca" placeholder="" type="text"
-                  (change)="setValoresStore(datosDelTramiteRealizar,'marca', 'setMarca')"/>
+                  <label class="form-label">Denominación distintiva*:</label>
+                  <input class="form-control" formControlName="denominacionDistintiva" placeholder="" type="text"
+                  (change)="setValoresStore(datosDelTramiteRealizar,'denominacionDistintiva', 'setDenominacionDistintiva')"/>
+                </div>
+              </div>
+              <div class="row mt-5">
+                <div class="col-md-6">
+                  <label class="form-label">Denominación o nombre cientifico*:</label>
+                  <input class="form-control" formControlName="denominacionNombre" placeholder="" type="text"
+                  (change)="setValoresStore(datosDelTramiteRealizar,'denominacionNombre', 'setDenominacionNombre')"/>
                 </div>
               </div>
               <div class="row mt-5">
@@ -268,6 +283,18 @@
                    (change)="setValoresStore(datosDelTramiteRealizar,'tipoProducto', 'setTipoProducto')"></app-catalogo-select>
                 </div>
               </div>
+              <div class="row mt-5">
+                <div class="col-md-6">
+                  <app-catalogo-select 
+                  id="estadoFisicoData"
+                  formControlName="estadoFisico"
+                  [catalogo]="estadoFisicoData.catalogos"
+                   [label]="'Estado fisico'" 
+                   [required]="true"
+                   (change)="setValoresStore(datosDelTramiteRealizar,'estadoFisico', 'setEstadoFisico')"></app-catalogo-select>
+                </div>
+              </div>
+              
               <div class="row mt-5">
                 <div class="col-md-6">
                   <label class="form-label">Fracción arancelaria*: <span class="bi bi-question-circle-fill" title="Fracción arancelaria" data-bs-toggle="tooltip"></span>
@@ -309,6 +336,16 @@
                   (change)="setValoresStore(datosDelTramiteRealizar,'umc', 'setUMC')"/>
                 </div>
               </div>
+              <div class="row">
+                <div class="col-md-6">
+                 <div class="form-group">
+                   <label class="form-label" for="presentacionFarmaceutica">Presentación farmacéutica o tipo de envase*:</label>
+                   <textarea class="form-control" id="presentacionFarmaceutica" rows="2" height="50"
+                   placeholder="" style="height: 100px" formControlName="presentacionFarmaceutica"
+                   (change)="setValoresStore(datosDelTramiteRealizar,'presentacionFarmaceutica','setPresentacionFarmaceutica')"></textarea>
+                 </div>
+               </div>
+           </div>
               <!-- collapsed crosslist -->
               <div class="col-md-12 mt-4">
                 <div class="panel-group ficha-collapse" id="accordion">
@@ -341,63 +378,6 @@
                   </div>
                 </div>
               </div>
-              <!-- Clave de los lotes -->
-              
-               <!-- <div class="row">
-                <div class="col-md-8">
-                  <label class="form-label" for="claveDeLosLotes">Clave de los lotes*:</label>
-                  <input class="form-control"  type="text" formControlName="claveDeLosLotes"                 
-                  (change)="setValoresStore(datosDelTramiteRealizar,'claveDeLosLotes', 'setClaveDeLosLotes')"
-                  (change)="onClaveDeLosLotesChange($event)"
-                  >
-                </div>
-               </div>
-              <div class="row">
-                <div class="col-md-4">
-                   <input-fecha 
-                   class="form-control" 
-                    [datos]="fechaFabricacionDatos"  
-                    class="disabled-input-fecha" 
-                    [setFecha]="dataDeLaSolicitudForm.get('fechaDeFabricacion')?.value"
-                    (valorCambiado)="onFechaDeFabricacionChange($event)">
-                    </input-fecha> 
-
-                  </div>
-                <div class="col-md-4">
-                  <input-fecha class="form-control" 
-                  [datos]="fechaCaducidad" 
-                  class="disabled-input-fecha"
-                  [setFecha]="dataDeLaSolicitudForm.get('fechaDeCaducidad')?.value"
-                  (valorCambiado)="onFechaDeCaducidadChange($event)">
-
-                  </input-fecha>                
-                </div>
-              </div>
-              <div class="col-md-12 mt-3">
-                <label class="form-label" for="">Lista Claves de los lotes*:</label>
-              </div>
-              <div class="col-md-8 mt-3 justify-content-centre align-items-centre">
-                <app-tabla-dinamica 
-                [tipoSeleccionTabla]="tipoSeleccionsoliMercancias" 
-                [configuracionTabla]="listaClave"
-                 [datos]="listaClaveTabla"
-                 (listaDeFilaSeleccionada)="onfilasSeleccionadas($event)"
-                 ></app-tabla-dinamica>
-              </div>
-              <div class="col-md-12 d-flex justify-content-end align-items-end">
-                <div class="btn-group">
-                    <button type="button" class="btn btn-default btn-space" (click)="onModificar()" >Modificar</button>          
-                  <button class="btn btn-default ms-3" type="button"  (click)="onEliminar()"> Eliminar </button>
-                  <button type="button" class="btn btn-primary ms-3"  (click)="onAgregarListaClave()"> Agregar </button>
-                </div>
-              </div>
-              @if (nuevaNotificacion) {
-                <section>
-                <lib-notificaciones [notificacionInput]="nuevaNotificacion" (confirmacionModal)="confirmarEliminar()">
-                </lib-notificaciones>
-                </section>
-                }
-           -->
               <!-- udospecifico crosslist -->
               <div class="col-md-12 mt-4">
                 <div class="panel-group ficha-collapse" id="accordion">
@@ -415,8 +395,8 @@
               </div>
               <div class="col-md-12 d-flex justify-content-end align-items-end">
                 <div class="btn-group">
-                  <button class="btn btn-default ms-3" type="button" data-bs-dismiss="modal" (click)="clearNotificacion()">Cancelar</button>
-                  <button type="button" class="btn btn-primary ms-3" >Modificar </button>
+                  <button class="btn btn-default ms-3" type="button" data-bs-dismiss="modal" >Cancelar</button>
+                  <button class="btn btn-primary ms-3" type="button" data-bs-dismiss="modal" (click)="onSave()">Agregar</button>
                 </div>
               </div>
             </div>
@@ -424,10 +404,10 @@
         </div>
    </div>
       
-
-
 <div class="col-md-12 d-flex justify-content-end">
-  <button type="button" class="btn btn-primary" name="agregarAduana" id="btnagregarAduana" data-bs-toggle="modal" data-bs-target="#modalAgregarMercancia" (click)="agregarMercanciaGrid()"> Modificar </button>
+  <button type="button" class="btn btn-primary" name="eliminar" id="btneliminar" (click)="onDeleted()">Eliminar</button>
+  <button type="button" class="btn btn-primary" name="modificar" id="btnmodificar">Modificar</button>
+  <button type="button" class="btn btn-primary" name="agregarAduana" id="btnagregarAduana" data-bs-toggle="modal" data-bs-target="#modalAgregarMercancia" (click)="agregarMercanciaGrid()">Agregar</button>
 </div>
   <ng-titulo titulo="Manifiestos y declaraciones" />
   <div class="alert alert-info">
@@ -477,6 +457,6 @@
     (change)="setValoresStore(datosDelTramiteRealizar,'apellidoMaterno', 'setApellidoMaterno')"/>
   </div>
 </div>
-  </ng-container>
+</ng-container>
 
       

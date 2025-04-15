@@ -152,10 +152,16 @@ export interface Solicitud260915State {
   nombreProductoEspecifico: string;
 
   /** Marca del producto */
-  marca: string;
+  denominacionDistintiva: string;
 
   /** Fracción arancelaria del producto */
   fraccionArancelaria: string;
+
+  denominacionNombre: string;
+
+  estadoFisico: string;
+
+  presentacionFarmaceutica: string;
 }
 
 /**
@@ -313,10 +319,17 @@ export function createInitialSolicitudState(): Solicitud260915State {
     nombreProductoEspecifico: '',
 
     /** Marca del producto */
-    marca: '',
+    denominacionDistintiva: '',
 
     /** Fracción arancelaria del producto */
     fraccionArancelaria: '',
+
+
+    denominacionNombre: '',
+
+    estadoFisico: '',
+
+    presentacionFarmaceutica:'',
   };
 }
 /**
@@ -864,10 +877,10 @@ export class Solicitud260915Store extends Store<Solicitud260915State> {
    * Método para actualizar la marca en el estado.
    * @param marca Marca a establecer.
    */
-  public setMarca(marca: string): void {
+  public setDenominacionDistintiva(denominacionDistintiva: string): void {
     this.update((state) => ({
       ...state,
-      marca,
+      denominacionDistintiva,
     }));
   }
 
@@ -879,6 +892,24 @@ export class Solicitud260915Store extends Store<Solicitud260915State> {
     this.update((state) => ({
       ...state,
       fraccionArancelaria,
+    }));
+  }
+  public setDenominacionNombre(denominacionNombre: string): void {
+    this.update((state) => ({
+      ...state,
+      denominacionNombre,
+    }));
+  }
+  public setEstadoFisico(estadoFisico: string): void {
+    this.update((state) => ({
+      ...state,
+      estadoFisico,
+    }));
+  }
+  public setPresentacionFarmaceutica(presentacionFarmaceutica: string): void {
+    this.update((state) => ({
+      ...state,
+      presentacionFarmaceutica,
     }));
   }
 }

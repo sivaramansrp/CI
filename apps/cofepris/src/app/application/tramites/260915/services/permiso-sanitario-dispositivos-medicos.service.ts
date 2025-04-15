@@ -132,4 +132,9 @@ export class PermisoSanitarioDispositivosMedicosService {
   getMercanciaCrosslistData(): Observable<MercanciaCrossList[]> {
     return this.http.get<MercanciaCrossList[]>('./assets/json/260915/mercancia-crosslist.json');
   }
+
+  getEstadoFisicoData(): Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>('./assets/json/260915/estadofisico.json');
+  }
+
 }

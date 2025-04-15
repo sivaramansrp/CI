@@ -27,6 +27,7 @@ import { PagoDeDerechoComponent } from './components/pagodederechos/pago-de-dere
 import { TramitesAsociadosComponent } from './components/tramitesasociados/tramites-asociados.component';
 import { TercerosrelacionadosComponent } from './components/terceros relacionados/terceros-relacionados.component';
 import { DatosdelasolicitudComponent } from './components/datos-del/datos-de-la-solicitud.component';
+import { DatosEmpresaComponent } from './components/datos-empresa/datos-empresa.component';
 
 @NgModule({
     declarations: [
@@ -41,6 +42,7 @@ import { DatosdelasolicitudComponent } from './components/datos-del/datos-de-la-
     AlertComponent,
     AnexarDocumentosComponent,
     BtnContinuarComponent,
+    DatosEmpresaComponent,
     CommonModule,
     PagoDeDerechoComponent,
     TramitesAsociadosComponent,

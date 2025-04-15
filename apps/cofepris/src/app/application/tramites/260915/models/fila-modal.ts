@@ -20,7 +20,7 @@ export interface FilaData {
  */
 export interface FilaData2 {
   /** Identificador único de la fila. */
-  id: any;
+  id: number;
 
   /** Clasificación de los productos. */
   clasificaionProductos: string;
@@ -31,17 +31,22 @@ export interface FilaData2 {
   /** Nombre específico del producto. */
   nombreProductoEspecifico: string;
 
-  /** Marca del producto. */
-  marca: string;
+  /** denominacionDistintiva del producto. */
+  denominacionDistintiva: string;
+
+  denominacionNombre: string;
 
   /** Tipo de producto. */
   tipoProducto: string;
 
+  estadoFisico: string;
   /** Fracción arancelaria del producto. */
   fraccionArancelaria: string;
 
   /** Descripción de la fracción arancelaria. */
   descripcionFraccionArancelaria: string;
+
+  presentacionFarmaceutica:string;
 
   /** Cantidad en la unidad de medida de tarifa (UMT). */
   cantidadUMT: string;
