@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 
-import { AlertComponent, BtnContinuarComponent, CatalogoSelectComponent, CrosslistComponent, InputFechaComponent, InputRadioComponent, SolicitanteComponent, TablaDinamicaComponent, TituloComponent, WizardComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, BtnContinuarComponent, CatalogoSelectComponent, CrosslistComponent, InputFechaComponent, InputRadioComponent, NotificacionesComponent, SolicitanteComponent, TablaDinamicaComponent, TituloComponent, WizardComponent } from '@ng-mf/data-access-user';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { AutorizacionDeRayosXRoutingModule } from './autorizacion-de-rayos-x-routing.module';
 import { DatosDelSolicitanteComponent } from './components/datos-del-solicitante/datos-del-solicitante.component';
@@ -51,6 +51,7 @@ import { TercerosRelacionadosComponent } from './pages/terceros-relacionados/ter
     InputRadioComponent,
     TablaDinamicaComponent,
     CrosslistComponent,
+    NotificacionesComponent
 ],
   providers: [
     ToastrService,

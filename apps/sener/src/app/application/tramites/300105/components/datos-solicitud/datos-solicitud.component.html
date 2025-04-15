@@ -47,42 +47,17 @@
       </div>
     </div>
 
-    <div class="modal" tabindex="-1" role="dialog" [ngClass]="{ show: multipleSeleccionPopupAbierto }"
-      [ngStyle]="{ display: multipleSeleccionPopupAbierto ? 'block' : 'none' }">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-div"></div>
-          <div class="modal-body">
-            <p>Selecciona sólo un registro para modificar. </p>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-primary" (click)="cerrarMultipleSeleccionPopup()">
-              Aceptar
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="modal-backdrop fade show" *ngIf="multipleSeleccionPopupAbierto"></div>
+    <lib-notificaciones 
+      *ngIf="confirmEliminarPopupAbierto"
+      [notificacionInput]="nuevaNotificacion" 
+      (confirmacionModal)="eliminarMercanciaItem()">
+    </lib-notificaciones>
 
-    <div class="modal" tabindex="-1" role="dialog" [ngClass]="{ show: confirmEliminarPopupAbierto }"
-      [ngStyle]="{ display: confirmEliminarPopupAbierto ? 'block' : 'none' }">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-div"></div>
-          <div class="modal-body">
-            <p>¿Estás seguro que deseas eliminar los registros marcados? </p>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-primary" (click)="cerrarEliminarConfirmationPopup()">Cancelar</button>
-            <button type="button" class="btn btn-primary" (click)="eliminarMercanciaItem()">
-              Aceptar
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="modal-backdrop fade show" *ngIf="confirmEliminarPopupAbierto"></div>
+    <lib-notificaciones 
+      *ngIf="multipleSeleccionPopupAbierto"
+      [notificacionInput]="nuevaNotificacion" 
+      (confirmacionModal)="cerrarMultipleSeleccionPopup()">
+    </lib-notificaciones>
   </form>
 
   @if(mostrarModalDatosMercancia){
@@ -150,17 +125,17 @@
         <div class="row">
           <div class="col-md-5">
             <div class="form-group">
-              <label class="form-label" for="modelo">Corriente máxima del tubo de R-X*:</label>
-              <input id="modelo" type="text" class="form-control" formControlName="modelo" [required]="true"
-                [class.is-invalid]="formularioMercancia.get('modelo')?.touched && formularioMercancia.get('modelo')?.invalid" />
+              <label class="form-label" for="corriente">Corriente máxima del tubo de R-X*:</label>
+              <input id="corriente" type="text" class="form-control" formControlName="corriente" [required]="true"
+                [class.is-invalid]="formularioMercancia.get('corriente')?.touched && formularioMercancia.get('corriente')?.invalid" />
             </div>
-            <div *ngIf="esControlInvalido('modelo')" class="text-danger">
-              <small *ngIf="formularioMercancia.controls['modelo'].hasError('required')">Este campo es
+            <div *ngIf="esControlInvalido('corriente')" class="text-danger">
+              <small *ngIf="formularioMercancia.controls['corriente'].hasError('required')">Este campo es
                 obligatorio.</small>
             </div>
           </div>
           <div class="col-md-5">
-            <app-catalogo-select name="unidadMedida" formControlName="unidadMedida"
+            <app-catalogo-select name="unidadMedidaCorriente" formControlName="unidadMedidaCorriente"
               [catalogo]="autorizacionDeRayosXService.unidadMedidaCorriente" [label]="'Unidad de medida'"
               [required]="true"></app-catalogo-select>
           </div>

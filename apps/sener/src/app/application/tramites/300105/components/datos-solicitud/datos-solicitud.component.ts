@@ -1,8 +1,11 @@
 import {
   Catalogo,
+  CategoriaMensaje,
   ConfiguracionColumna,
   CrosslistComponent,
+  Notificacion,
   TablaSeleccion,
+  TipoNotificacionEnum,
 } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import {
@@ -164,6 +167,11 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    * Indica si el botón de eliminar está habilitado.
    */
   enableEliminarBoton: boolean = false;
+
+  /**
+   * Notificación que se muestra al usuario.
+   */
+  public nuevaNotificacion!: Notificacion;
 
   /**
    * Observable para manejar la destrucción del componente y evitar fugas de memoria.
@@ -380,6 +388,16 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
  * Abre el popup de selección múltiple si el botón de modificar está habilitado.
  */
   abrirMultipleSeleccionPopup(): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: TipoNotificacionEnum.ALERTA,
+      categoria: CategoriaMensaje.ERROR,
+      modo: 'modal',
+      titulo: 'Aviso',
+      mensaje: 'Selecciona sólo un registro para modificar.',
+      cerrar: false,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
     if (this.enableModficarBoton) {
       this.multipleSeleccionPopupAbierto = true;
     }
@@ -397,6 +415,16 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
  * Abre el popup de confirmación de eliminación.
  */
   abrirElimninarConfirmationopup(): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: TipoNotificacionEnum.ALERTA,
+      categoria: CategoriaMensaje.ERROR,
+      modo: 'modal',
+      titulo: 'Aviso',
+      mensaje: '¿Estás seguro que deseas eliminar los registros marcados?',
+      cerrar: false,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: 'Cancelar',
+    };
     this.confirmEliminarPopupAbierto = true;
   }
 
@@ -443,10 +471,6 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    * y actualiza el estado del almacén correspondiente.
    */
   enviarFormularioMercancia(): void {
-    if (this.formularioMercancia.invalid || (!this.otraFraccionSeleccionada && this.formularioMercancia.get('fraccionArancelaria')?.value === '0')) {
-      return;
-    }
-    
     const GET_DESCRIPTION = (array: Catalogo[], index: number): string => array[index - 1]?.descripcion || '';
   
     const TABLA_ROW: ConfiguracionItem = {
