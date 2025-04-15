@@ -219,6 +219,12 @@ const ROUTES: Routes = [
       import('./tramites/11106/cancelacion-donaciones.module').then(
         (m) => m.CancelacionDonacionesModule
       ),
+  },
+  {
+    path: 'registro-del-codigo',
+      loadChildren: () =>
+        import('./tramites/40401/tramite40401.module').then(
+          (m) => m.Tramite40401Module),
   }  
 ];
 
