@@ -2,8 +2,8 @@ import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { DomicilioEstablecimientosComponent } from './domicilio-establecimientos.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { DatosSolicitudService } from '../../../261101/services/dato-solicitude.service';
-import { DatosProcedureQuery } from '../../estados/datos-solicitude.query';
-import { DatosProcedureStore } from '../../estados/datos-solicitude.store';
+import { DatosProcedureQuery } from '../../../../estados/queries/tramites261101.query';
+import { DatosProcedureStore } from '../../../../estados/tramites/tramites261101.store';
 import { of } from 'rxjs';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
 

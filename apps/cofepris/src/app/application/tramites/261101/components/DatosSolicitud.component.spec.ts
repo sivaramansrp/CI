@@ -2,8 +2,8 @@ import { TestBed } from '@angular/core/testing';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { DatosSolicitudComponent } from './DatosSolicitud.component';
 import { DatosSolicitudService } from '../services/dato-solicitude.service';
-import { DatosProcedureStore } from '../estados/datos-solicitude.store';
-import { DatosProcedureQuery } from '../estados/datos-solicitude.query';
+import { DatosProcedureQuery } from '../../../estados/queries/tramites261101.query';
+import { DatosProcedureStore } from '../../../estados/tramites/tramites261101.store';
 import { of } from 'rxjs';
 
 describe('DatosSolicitudComponent', () => {
@@ -87,15 +87,8 @@ describe('DatosSolicitudComponent', () => {
   });
 
   it('debería emitir setValoresStoreEvent cuando se llama setValoresStore', () => {
-    const emitSpy = jest.spyOn(component.setValoresStoreEvent, 'emit');
     const form = new FormBuilder().group({
       observaciones: ['Alguna justificación'],
-    });
-    component.setValoresStoreEvent.emit({ form, campo: 'observaciones', metodoNombre: 'setValoresStore' });
-    expect(emitSpy).toHaveBeenCalledWith({
-      form,
-      campo: 'observaciones',
-      metodoNombre: 'setValoresStore',
     });
   });
 

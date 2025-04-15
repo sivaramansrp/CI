@@ -1,8 +1,8 @@
 import { TestBed } from '@angular/core/testing';
 import { MercanciasComponent } from './mercancias.component';
 import { DatosSolicitudService } from '../../../261101/services/dato-solicitude.service';
-import { DatosProcedureStore } from '../../estados/datos-solicitude.store';
-import { DatosProcedureQuery } from '../../estados/datos-solicitude.query';
+import { DatosProcedureQuery } from '../../../../estados/queries/tramites261101.query';
+import { DatosProcedureStore } from '../../../../estados/tramites/tramites261101.store';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { of } from 'rxjs';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';

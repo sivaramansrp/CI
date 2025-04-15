@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { DatosProcedureQuery } from '../../estados/datos-solicitude.query';
-import { DatosProcedureState } from '../../estados/datos-solicitude.store';
-import { DatosProcedureStore } from '../../estados/datos-solicitude.store';
+import { DatosProcedureQuery } from '../../../../estados/queries/tramites261101.query';
+import { DatosProcedureState } from '../../../../estados/tramites/tramites261101.store';
+import { DatosProcedureStore } from '../../../../estados/tramites/tramites261101.store';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { InputRadioComponent } from '@libs/shared/data-access-user/src';
@@ -11,17 +11,6 @@ import { OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs';
-
-// import { CommonModule } from '@angular/common';
-// import { Component, OnInit, OnDestroy } from '@angular/core';
-// import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-// import { Subject } from 'rxjs';
-// import { takeUntil } from 'rxjs/operators';
-// import { InputRadioComponent } from '@libs/shared/data-access-user/src';
-// import { DatosProcedureStore } from '../../estados/datos-solicitude.store';
-// import { DatosProcedureQuery } from '../../estados/datos-solicitude.query';
-// import { DatosProcedureState } from '../../estados/datos-solicitude.store';
-
 @Component({
   selector: 'app-manifiestos',
   standalone: true,
@@ -98,20 +87,16 @@ export class ManifiestosComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private store: DatosProcedureStore,
     private query: DatosProcedureQuery
-  ) {}
+  ) {
+    //constructor
+  }
 
   /**
    * Hook de inicialización del componente.
    * Se suscribe al observable `selectProrroga$` y configura el formulario.
    */
   public ngOnInit(): void {
-    this.query.selectProrroga$
-      ?.pipe(takeUntil(this.destroy$))
-      .subscribe((data: DatosProcedureState) => {
-        this.seccionState = data;
-        this.declaracionEstaMarcado = Boolean(this.seccionState?.aduanas);
-        this.mercanciasData();
-      });
+    this.obtenerDatosFormulario();
   }
 
   /**
@@ -155,5 +140,18 @@ export class ManifiestosComponent implements OnInit, OnDestroy {
   public ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+  }
+
+  /**
+* Gancho de ciclo de vida obtenerDatosFormulario
+*/
+  obtenerDatosFormulario(): void {
+    this.query.selectProrroga$
+      ?.pipe(takeUntil(this.destroy$))
+      .subscribe((data: DatosProcedureState) => {
+        this.seccionState = data;
+        this.declaracionEstaMarcado = Boolean(this.seccionState?.aduanas);
+        this.mercanciasData();
+      });
   }
 }

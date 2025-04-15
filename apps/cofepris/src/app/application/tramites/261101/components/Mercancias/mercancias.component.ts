@@ -2,9 +2,9 @@ import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
-import { DatosProcedureQuery } from '../../estados/datos-solicitude.query';
-import { DatosProcedureState } from '../../estados/datos-solicitude.store';
-import { DatosProcedureStore } from '../../estados/datos-solicitude.store';
+import { DatosProcedureQuery } from '../../../../estados/queries/tramites261101.query';
+import { DatosProcedureState } from '../../../../estados/tramites/tramites261101.store';
+import { DatosProcedureStore } from '../../../../estados/tramites/tramites261101.store';
 import { DatosSolicitudService } from '../../../261101/services/dato-solicitude.service'
 import { FormBuilder } from '@angular/forms';
 import { FormControl } from '@angular/forms';
@@ -15,11 +15,12 @@ import { OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src'
 import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
+import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { takeUntil } from 'rxjs';
 @Component({
   selector: 'app-mercancias',
   standalone: true,
-  imports: [CommonModule, TablaDinamicaComponent, CatalogoSelectComponent],
+  imports: [CommonModule, TablaDinamicaComponent, CatalogoSelectComponent,TituloComponent],
   templateUrl: './mercancias.component.html',
   styleUrl: './mercancias.component.css',
 })
@@ -63,7 +64,7 @@ export class MercanciasComponent implements OnInit, OnDestroy {
     private store: DatosProcedureStore,
     private query: DatosProcedureQuery,
   ) {
-
+    //constructor
   }
 
   /**
@@ -73,10 +74,7 @@ export class MercanciasComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.mercanciasData();
-    this.query.selectProrroga$?.pipe(takeUntil(this.destroy$))
-      .subscribe((data: DatosProcedureState) => {
-        this.seccionState = data;
-      });
+    this.obtenerDatosFormulario();
     this.crearFormulario();
   }
 
@@ -103,6 +101,16 @@ export class MercanciasComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+  }
+
+  /**
+* Gancho de ciclo de vida obtenerDatosFormulario
+*/
+  obtenerDatosFormulario(): void {
+    this.query.selectProrroga$?.pipe(takeUntil(this.destroy$))
+      .subscribe((data: DatosProcedureState) => {
+        this.seccionState = data;
+      });
   }
 }
 

@@ -11,7 +11,7 @@
         </li>
         <li [ngClass]="indice === 3 ? 'active' : ''">
           <a data-toggle="tab" (click)="seleccionaTab(3)" (keydown.enter)="seleccionaTab(3)"
-            (keydown.space)="seleccionaTab(3)" role="button" tabindex="4">Three</a>
+            (keydown.space)="seleccionaTab(3)" role="button" tabindex="4">Terceros relacionados</a>
         </li>
         <li [ngClass]="indice === 4 ? 'active' : ''">
           <a data-toggle="tab" (click)="seleccionaTab(4)" (keydown.enter)="seleccionaTab(4)"
@@ -33,7 +33,8 @@
           <app-datos-solicitud></app-datos-solicitud>
         }
         @case (3) {
-          <!-- <app-datos-empresa [tabindex]="2"></app-datos-empresa> -->
+          <app-terceros-relacionados-fabricante></app-terceros-relacionados-fabricante>
+          <!-- <app-terceros-relacionados-fabricante [ocultarBoton]="true"></app-terceros-relacionados-fabricante> -->
           }
           @case (4) {
             <!-- <app-datos-empresa [tabindex]="2"></app-datos-empresa> -->

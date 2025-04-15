@@ -1,5 +1,5 @@
-import { DatosProcedureState } from './datos-solicitude.store';
-import { DatosProcedureStore } from './datos-solicitude.store';
+import { DatosProcedureState } from '../../estados/tramites/tramites261101.store';
+import { DatosProcedureStore } from '../../estados/tramites/tramites261101.store';
 import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
 

@@ -1,9 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
-import { DatosProcedureQuery } from '../../estados/datos-solicitude.query';
-import { DatosProcedureState } from '../../estados/datos-solicitude.store';
-import { DatosProcedureStore } from '../../estados/datos-solicitude.store';
+import { DatosProcedureQuery } from '../../../../estados/queries/tramites261101.query';
+import { DatosProcedureState } from '../../../../estados/tramites/tramites261101.store';
+import { DatosProcedureStore } from '../../../../estados/tramites/tramites261101.store';
 import { DatosSolicitudService} from '../../services/dato-solicitude.service'
 import { Domicilio } from '../../modelos/domicilio-establecimientos.model';
 import { FormBuilder } from '@angular/forms';
@@ -13,12 +12,13 @@ import { OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
+import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { Validators } from '@angular/forms';
 import { takeUntil } from 'rxjs';
 @Component({
   selector: 'app-representante-legal',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule,TituloComponent],
   templateUrl: './representante-legal.component.html',
   styleUrl: './representante-legal.component.css',
 })
@@ -39,13 +39,7 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
 
   /** Subject para notificar la destrucción del componente */
   private destroy$ = new Subject<void>();
-  /** Configuración para las columnas de la tabla */
-  configuracionTabla: ConfiguracionColumna<Domicilio>[] = [
-    { encabezado: 'Clave S.C.I.A.Ν.', clave: (item: Domicilio) => item.id, orden: 1 },
-    { encabezado: 'Descripcion del S.C.I.A.N. ', clave: (item: Domicilio) => item.Descripcion, orden: 2 },
-
-  ];
-    private seccionState!: DatosProcedureState;
+  private seccionState!: DatosProcedureState;
   
   /**
    * Constructor para SolicitanteComponent.
@@ -55,8 +49,8 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
   constructor(private fb: FormBuilder,
     private store: DatosProcedureStore,
     private query: DatosProcedureQuery,
-    private DatosSolicitudService: DatosSolicitudService,
   ) {
+    //constructor
   }
 
   /**
@@ -65,10 +59,7 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
    * 
    */
   ngOnInit(): void {
-    this.query.selectProrroga$?.pipe(takeUntil(this.destroy$))
-        .subscribe((data:DatosProcedureState) => {
-          this.seccionState = data;
-        });
+    this.obtenerDatosFormulario();
     this.establecerdomicilioEstablecimiento();
 
   }
@@ -113,5 +104,14 @@ ngOnDestroy(): void {
   isValid(field: string): boolean {
     return Boolean(DatosSolicitudService.isValid(this.domicilioEstablecimiento, field));
   }
+    /**
+* Gancho de ciclo de vida obtenerDatosFormulario
+*/
+obtenerDatosFormulario():void{
+  this.query.selectProrroga$?.pipe(takeUntil(this.destroy$))
+  .subscribe((data:DatosProcedureState) => {
+    this.seccionState = data;
+  });
+}
 }
 

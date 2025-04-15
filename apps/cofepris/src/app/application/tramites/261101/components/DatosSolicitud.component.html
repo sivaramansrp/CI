@@ -1,7 +1,8 @@
-<p>Seleccione el tipo de operación que desea realizar*: </p>
-<h1> </h1>
 <form [formGroup]="preOperativeForm">
 <div class="col-md-4">
+  <label class="mt-5 mb-3">
+    Seleccione el tipo de operación que desea realizar*:
+  </label>
     <app-input-radio
     [radioOptions]="radioOptions"
     formControlName="ideGenerica1" 
@@ -13,7 +14,7 @@
     <div class="row mt-5">
       <div class="col-md-4 form-group">
           <label class="form-label" for="motivoDesistimiento">justificacion*:</label>
-          <textarea formControlName="observaciones" id="motivoDesistimiento" name="motivoDesistimiento" rows="4"
+          <textarea  formControlName="observaciones" id="motivoDesistimiento" name="motivoDesistimiento" rows="4"
               cols="50" [ngClass]="isValid('motivoDesistimiento') ? 'required' : ''"
               (change)="setValoresStore(preOperativeForm,'observaciones')"></textarea>
               <div *ngIf="preOperativeForm?.get('observaciones')?.invalid && preOperativeForm?.get('observaciones')?.touched" class="text-danger">

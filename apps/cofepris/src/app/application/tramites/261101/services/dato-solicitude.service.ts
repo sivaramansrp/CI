@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Mercancias } from '../modelos/mercancias.model';
 import { Observable } from 'rxjs';
+import { ScianData } from '../../../shared/models/datos-modificacion.model';
 
 
 @Injectable({
@@ -51,4 +52,12 @@ export class DatosSolicitudService {
   getMercanciasData(): Observable<Mercancias[]> {
     return this.http.get<Mercancias[]>('assets/json/261101/mercancias.json');
   }
+
+    /**
+     * Obtiene los datos de la tabla SCIAN desde un archivo JSON.
+     * @returns Un observable que emite una lista de objetos `ScianData` con los datos de la tabla SCIAN.
+     */
+    obternerDatosData(): Observable<ScianData[]> {
+      return this.http.get<ScianData[]>('assets/json/261101/datos-scian-tabla.json');
+    }
 }

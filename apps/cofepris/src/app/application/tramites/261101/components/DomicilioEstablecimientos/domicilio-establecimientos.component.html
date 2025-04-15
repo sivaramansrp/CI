@@ -83,10 +83,16 @@
 
     </div>
 </form>
-<br>
-<p>S. C. L.A. N *:</p>
-<app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion" [datos]="Domicilios"
-    [configuracionTabla]="configuracionTabla"></app-tabla-dinamica>
+    <div class="row" class="mt-5">
+        <div class="form-group">
+          <label class="form-label" for="scian">S.C.I.A.N.*:</label>
+          <app-tabla-dinamica
+            [configuracionTabla]="configuracionTabla"
+            [datos]="datosData"
+            [tipoSeleccionTabla]="tipoSeleccionTabla.CHECKBOX">
+          </app-tabla-dinamica>
+        </div>
+      </div>
 
 <ng-container>
     <div class="row mt-5">
@@ -109,8 +115,9 @@
         </label>
     </div>
     <div class="col-md-5">
+        
         <label class="form-label" for="licencia">No. de licencia sanitaria:
-            <select class="form-group" formControlName="licencia" id="licencia"
+            <select  class="form-select" formControlName="licencia" id="licencia"
                 (change)="setValoresStore(domicilioEstablecimiento,'licencia')">
                 <option [value]="">licencia</option>
             </select>

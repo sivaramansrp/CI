@@ -1,4 +1,4 @@
-<h1>Representante legal</h1>
+<ng-titulo titulo="Representante legal"></ng-titulo>
 <br>
 <form [formGroup]="domicilioEstablecimiento">
     <div class="row">
@@ -21,8 +21,9 @@
 
         <div class="col-md-12">
             <label class="form-label" for="representanteLegalNombre">Nombre o Razón Social*:</label>
-            <input  [ngClass]="isValid('representanteLegalNombre') ? 'required' : ''" type="text" class="form-control" id="representanteLegalNombre" formControlName="representanteLegalrepresentanteLegalNombre" (change)="setValoresStore(domicilioEstablecimiento,'representanteLegalrepresentanteLegalNombre')">
-            <div  *ngIf="domicilioEstablecimiento?.get('representanteLegalrepresentanteLegalNombre')?.invalid && domicilioEstablecimiento?.get('representanteLegalrepresentanteLegalNombre')?.touched" class="text-danger">
+            <input  [ngClass]="isValid('representanteLegalNombre') ? 'required' : ''" type="text" class="form-control" id="representanteLegalNombre"
+             formControlName="representanteLegalNombre" (change)="setValoresStore(domicilioEstablecimiento,'representanteLegalNombre')">
+            <div  *ngIf="domicilioEstablecimiento?.get('representanteLegalNombre')?.invalid && domicilioEstablecimiento?.get('representanteLegalNombre')?.touched" class="text-danger">
                 Favor de seleccionar el representanteLegalNombre.
             </div>
         </div>
