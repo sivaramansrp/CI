@@ -2,6 +2,10 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { DatosDeLaComponent } from '../../../../shared/components/datos-solicitud/datos-solicitud.component';
 
+/**
+ * Componente que muestra la sección de Datos de la Solicitud.
+ * Esta sección es común para todos los trámites.
+ */
 @Component({
   selector: 'app-datos-solicitud',
   standalone: true,
