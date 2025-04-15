@@ -12,7 +12,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { Solicitud105State, Tramite105Store } from '../../estados/tramite105.store';
-import { Subject, Subscription, map, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { InvoCarService } from '../../services/invocar.service';
 import { Tramite105Query } from '../../estados/tramite105.query';
@@ -136,23 +136,7 @@ export class DatosDelTramiteDosComponent implements OnInit, OnDestroy {
    */
   operacione!: CatalogosSelect;
 
-  /**
-   * Suscripciones activas.
-   * 
-   * @private
-   * @type {Subscription[]}
-   * @memberof DatosDelTramiteDosComponent
-   */
-   subscriptions: Subscription[] = [];
 
-  /**
-   * Suscripción única para operaciones.
-   * 
-   * @private
-   * @type {Subscription}
-   * @memberof DatosDelTramiteDosComponent
-   */
-   subscriptionS: Subscription = new Subscription();
 
   /**
    * Datos de la tabla de mercancías.
@@ -299,13 +283,12 @@ export class DatosDelTramiteDosComponent implements OnInit, OnDestroy {
    * @memberof DatosDelTramiteDosComponent
    */
   getOperaciones(): void {
-    const SUB = this.invoCarService.getPais().subscribe((resp) => {
+   this.invoCarService.getPais().pipe( takeUntil(this.destroyNotifier$)).subscribe((resp) => {
       if (resp.code === 200) {
         const RESPONSE = resp.data;
         this.store.setOperaciones(RESPONSE);
       }
     });
-    this.subscriptionS.add(SUB);
   }
 
   /**
@@ -329,8 +312,8 @@ export class DatosDelTramiteDosComponent implements OnInit, OnDestroy {
    * @memberof DatosDelTramiteDosComponent
    */
   ngOnDestroy(): void {
-    this.subscriptionS.unsubscribe();
-    this.subscriptions.forEach((sub) => sub.unsubscribe());
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
     this.modal = 'modal';
   }
 }
