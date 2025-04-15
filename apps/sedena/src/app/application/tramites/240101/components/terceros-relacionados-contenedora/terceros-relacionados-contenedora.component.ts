@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { DestinoFinal } from '../../../../shared/models/terceros-relacionados.model';
+import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Proveedor } from '../../../../shared/models/terceros-relacionados.model';
 import { Subject } from 'rxjs';
@@ -22,12 +23,14 @@ import { takeUntil } from 'rxjs';
   templateUrl: './terceros-relacionados-contenedora.component.html',
   styleUrl: './terceros-relacionados-contenedora.component.css',
 })
-export class TercerosRelacionadosContenedoraComponent implements OnInit {
+export class TercerosRelacionadosContenedoraComponent
+  implements OnInit, OnDestroy
+{
   /**
    * Observable para limpiar las suscripciones activas al destruir el componente.
    * @property {Subject<void>} destroy$
    */
-  private destroy$ = new Subject<void>();
+  private unsubscribe$ = new Subject<void>();
 
   /**
    * Datos de la tabla de destinatarios finales.
@@ -51,9 +54,8 @@ export class TercerosRelacionadosContenedoraComponent implements OnInit {
    */
   constructor(
     private tramiteStore: Tramite240101Store,
-    private tramiteQuery: Tramite240101Query
-  ) // eslint-disable-next-line no-empty-function
-  {}
+    private tramiteQuery: Tramite240101Query // eslint-disable-next-line no-empty-function
+  ) {}
 
   /**
    * Hook del ciclo de vida que se ejecuta al inicializar el componente.
@@ -64,15 +66,23 @@ export class TercerosRelacionadosContenedoraComponent implements OnInit {
    */
   ngOnInit(): void {
     this.tramiteQuery.getDestinatarioFinalTablaDatos$
-      .pipe(takeUntil(this.destroy$))
+      .pipe(takeUntil(this.unsubscribe$))
       .subscribe((data) => {
         this.destinatarioFinalTablaDatos = data;
       });
 
     this.tramiteQuery.getProveedorTablaDatos$
-      .pipe(takeUntil(this.destroy$))
+      .pipe(takeUntil(this.unsubscribe$))
       .subscribe((data) => {
         this.proveedorTablaDatos = data;
       });
+  }
+  /**
+   * Hook que se ejecuta al destruir el componente.
+   * Envía un valor al Subject `unsubscribe$` y lo completa para liberar suscripciones.
+   */
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 }
