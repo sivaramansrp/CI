@@ -16,6 +16,15 @@ const ROUTES: Routes = [
       ).then((m) => m.ImportacionDispositivosMedicosLaboratorioModule),
   },
   {
+    path: 'modificación-del-permiso-sanitario-de-importación-de-insumos',
+    loadChildren: () =>
+      import(
+        './tramites/260904/modificación-del-permiso-sanitario-de-importación-de-insumos.module'
+      ).then(
+        (m) => m.ModificaciónDelPermisoSanitarioDeImportaciónDeInsumosModule
+      ),
+  },
+  {
     path: 'permiso-maquila',
     loadChildren: () =>
       import('./tramites/260212/permiso-maquila.module').then(
@@ -39,9 +48,15 @@ const ROUTES: Routes = [
 
   {
     path: 'aviso-exportacion',
+    loadChildren: () => import('./tramites/260604/aviso-exportacion.module').then(m => m.AvisoExportacionModule)  
+  },
+  {
+    path: 'modificación-del-permiso-sanitario-de-importación-de-insumos',
     loadChildren: () =>
-      import('./tramites/260604/aviso-exportacion.module').then(
-        (m) => m.AvisoExportacionModule
+      import(
+        './tramites/260904/modificación-del-permiso-sanitario-de-importación-de-insumos.module'
+      ).then(
+        (m) => m.ModificaciónDelPermisoSanitarioDeImportaciónDeInsumosModule
       ),
   },
   {
@@ -49,7 +64,7 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/260206/maquila-materias-primas.module').then(
         (m) => m.MaquilaMateriasPrimasModule
-      ),
+      )
   },
   {
     path: 'mod-permiso-importacion',
@@ -166,6 +181,11 @@ const ROUTES: Routes = [
       ).then((m) => m.ImportacionDispositivosMedicosDonacionModule),
   },
   {
+    path: 'consulta',
+    loadChildren: () =>
+      import('./tramites/260704/consulta.module').then((m) => m.ConsultaModule),
+  },
+{
     path: 'modificacion-permiso-sanitario',
     loadChildren: () =>
       import('./tramites/260902/modificacion-permiso-sanitario.module').then(
@@ -272,9 +292,15 @@ const ROUTES: Routes = [
     path: 'Permiso-de-importacion',
     loadChildren: () =>
       import('./tramites/260512/permiso-de-importacion.module').then(
-        (m) => m.PermisoDeImportacionModule
-      ),
+        (m) => m.PermisoDeImportacionModule)
   },
+  {
+    path: 'permiso-importacion-calidad',
+    loadChildren: () =>
+      import('./tramites/260514/parmiso-importacion-calidad.module').then(
+        (m) => m.ParmisoImportacionCalidadModule)
+  },
+        
   {
     path: 'registrar-solicitud-mcp',
     loadChildren: () =>
