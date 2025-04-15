@@ -13,7 +13,7 @@ import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { SolicitanteComponent } from '@ng-mf/data-access-user';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
-import { TercerosRelacionadosFabricanteComponent } from '../261101/components/terceros-relacionados-fabricante/terceros-relacionados-fabricante.component'
+import { TercerosRelacionadosFabricanteComponent } from './components/Terceros-relacionados-fabricante/terceros-relacionados-fabricante.component'
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
