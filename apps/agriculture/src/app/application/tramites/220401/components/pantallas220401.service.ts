@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { HttpClient } from '@angular/common/http';
 
-import { Catalogo, catalogoResponse } from '@ng-mf/data-access-user';
+import { Catalogo, CatalogoResponse } from '@ng-mf/data-access-user';
 
 import { BehaviorSubject, Observable } from 'rxjs';
 
@@ -25,8 +25,8 @@ export class Pantallas220401Service {
     currentState[key] = value;
     this.dropdownState.next(currentState);
   }
-   getDelegacionesData(): Observable<catalogoResponse[]> {
-    return this.http.get<catalogoResponse[]>('assets/json/220401/delegaciones.json');
+   getDelegacionesData(): Observable<CatalogoResponse[]> {
+    return this.http.get<CatalogoResponse[]>('assets/json/220401/delegaciones.json');
   }
   getEspecieData(): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>('assets/json/220401/delegaciones.json');

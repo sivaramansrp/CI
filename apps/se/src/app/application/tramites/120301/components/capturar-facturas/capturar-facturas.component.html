@@ -62,7 +62,7 @@
                     <app-catalogo-select
                     [catalogo]="unidadDeMedida"
                     formControlName="unidadDeMedida"
-                    [label]="'Unidad De Medida*'"
+                    [label]="'Unidad De Medida'"
                     [required]="true"
                     name="unidadDeMedida"
                     (change)="
@@ -74,8 +74,12 @@
                   ></app-catalogo-select>
               </div>
               <div class="col-md-4">
-                <div class="form-group">
-                    <input-fecha [datos]="fechaInicioInputs" ></input-fecha>
+                <div class="form-group capturar-factura-datepicker">
+                     <input-fecha 
+                     [setFecha]="facturaForm.get('fechaExpedicionFactura')?.value" 
+                     [datos]="fechaInicioInputs" 
+                     formControlName="fechaExpedicionFactura">
+                     </input-fecha>
                 </div>
               </div>
               <div class="col-md-4">
