@@ -9,16 +9,23 @@ const ROUTES: Routes = [
     component: SeleccionTramiteComponent,
   },
   {
-    path: 'artefactos-pirotecnicos-ordinarios',
+       path: 'permiso-extraordinario-para',
     loadChildren: () =>
       import(
-        './tramites/240119/artefactos-pirotecnicos-ordinarios.module'
-      ).then((m) => m.ArtefactosPirotecnicosOrdinariosModule),
+        './tramites/240118/permiso-extraordinario-para-module'
+      ).then((m) => m.PermisoExtraordinarioParaModule),
+  },
+  {
+    path: 'permiso-extraordinario-para',
+    loadChildren: () =>
+      import(
+        './tramites/240118/permiso-extraordinario-para-module'
+      ).then((m) => m.PermisoExtraordinarioParaModule),
   },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(ROUTES)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}
