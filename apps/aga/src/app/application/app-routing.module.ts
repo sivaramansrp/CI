@@ -216,7 +216,21 @@ const ROUTES: Routes = [
       import('./tramites/11106/cancelacion-donaciones.module').then(
         (m) => m.CancelacionDonacionesModule
       ),
-  }  
+  },
+  {
+    path: 'prestadores-servicio',
+    loadChildren: () =>
+      import('./tramites/202/prestadores-servicio.module').then(
+        (m) => m.PrestadoresServicioModule
+      ),
+  },
+  {
+    path: 'exencion-impuestos',
+    loadChildren: () =>
+      import('./tramites/10302/exencion-impuestos.module').then(
+        (m) => m.ExencionImpuestosModule
+      ),
+  }
 ];
 
 @NgModule({
