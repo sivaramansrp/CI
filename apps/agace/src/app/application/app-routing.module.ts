@@ -42,6 +42,16 @@ const ROUTES: Routes = [
         (m) => m.MercanciasDesmontadasOSinMontarModule
       ),
   },
+
+  {
+        
+    path: 'entrega-acta-solicitante',
+    loadChildren: () =>
+      import('./tramites/32507/entrega-acta.module').then(
+        (m) => m.EntregaActaModule
+      ),
+  },
+
 ];
 
 @NgModule({
