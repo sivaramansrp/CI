@@ -62,7 +62,7 @@ export class AgregarDestinatarioFinalComponent
    * Grupo de formulario reactivo para recopilar los datos del destinatario final.
    * @property {FormGroup} agregarDestinatarioFinal
    */
-  agregarDestinatarioFinal: FormGroup;
+  agregarDestinatarioFinal!: FormGroup;
 
   /**
    * Datos de catálogo de países.
@@ -159,34 +159,6 @@ export class AgregarDestinatarioFinalComponent
     private ubicaccion: Location,
     private datosSolicitudService: DatosSolicitudService
   ) {
-    this.agregarDestinatarioFinal = this.fb.group({
-      tipoPersona: ['', Validators.required],
-      rfc: [
-        '',
-        [
-          Validators.required,
-          Validators.minLength(12),
-          Validators.maxLength(13),
-        ],
-      ],
-      nombres: ['', Validators.required],
-      denominacionRazon: ['', Validators.required],
-      primerApellido: ['', Validators.required],
-      segundoApellido: [''],
-      pais: ['', Validators.required],
-      estado: ['', Validators.required],
-      municipio: ['', Validators.required],
-      localidad: ['', Validators.required],
-      codigoPostal: ['', Validators.required],
-      colonia: ['', Validators.required],
-      calle: ['', Validators.required],
-      numeroExterior: ['', Validators.required],
-      numeroInterior: [''],
-      lada: ['', Validators.required],
-      telefono: ['', Validators.required],
-      correoElectronico: ['', [Validators.required, Validators.email]],
-      nacionalidad: [],
-    });
     this.mostrarCamposNoContribuyente =
       PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE.includes(this.idProcedimiento);
   }
@@ -238,6 +210,34 @@ export class AgregarDestinatarioFinalComponent
    * Llama al método `cargarDatos()`.
    */
   ngOnInit(): void {
+    this.agregarDestinatarioFinal = this.fb.group({
+      tipoPersona: ['', Validators.required],
+      rfc: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(12),
+          Validators.maxLength(13),
+        ],
+      ],
+      nombres: ['', Validators.required],
+      denominacionRazon: ['', Validators.required],
+      primerApellido: ['', Validators.required],
+      segundoApellido: [''],
+      pais: ['', Validators.required],
+      estado: ['', Validators.required],
+      municipio: ['', Validators.required],
+      localidad: ['', Validators.required],
+      codigoPostal: ['', Validators.required],
+      colonia: ['', Validators.required],
+      calle: ['', Validators.required],
+      numeroExterior: ['', Validators.required],
+      numeroInterior: [''],
+      lada: ['', Validators.required],
+      telefono: ['', Validators.required],
+      correoElectronico: ['', [Validators.required, Validators.email]],
+      nacionalidad: [],
+    });
     this.cargarDatos();
   }
 
