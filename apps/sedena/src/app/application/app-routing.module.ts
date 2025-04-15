@@ -8,6 +8,13 @@ const ROUTES: Routes = [
     path: 'seleccion-tramite',
     component: SeleccionTramiteComponent,
   },
+  {
+    path: 'importacion-de-material-explosivo',
+    loadChildren: () =>
+      import(
+        './tramites/240111/importacion-de-material-explosivo.module'
+      ).then((m) => m.ImportacionDeMaterialExplosivoModule),
+  },
 ];
 
 @NgModule({
