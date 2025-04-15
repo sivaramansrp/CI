@@ -11,7 +11,7 @@ export class ElegibilidadTextilesService {
   url = '../../../../../assets/json/120301/';
 
   constructor(private readonly http: HttpClient,private elegibilidadDeTextilesStore: ElegibilidadDeTextilesStore) { 
-    // Constructor logic can be added here if needed
+    // Se puede agregar aquí la lógica del constructor si es necesario
   }
   /**
    * Obtiene la lista de bancos.
