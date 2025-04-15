@@ -14,12 +14,12 @@ import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Output } from '@angular/core';
 import { PagoDerechosFormState } from '../../models/pago-de-derechos.model';
+import { REGEX_VALORES_NUMERICOS } from '@ng-mf/data-access-user';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { Validators } from '@angular/forms';
 import { takeUntil } from 'rxjs';
-
 /**
  * @component PagoDeDerechosComponent
  * @description Componente responsable de capturar y gestionar la información relacionada
@@ -135,7 +135,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       ],
       importePago: [
         this.pagoDerechoFormState?.importePago || '',
-        [Validators.required, Validators.pattern('^[0-9]+(\\.[0-9]{1,2})?$')],
+        [Validators.required, Validators.pattern(REGEX_VALORES_NUMERICOS)],
       ],
       banco: [this.pagoDerechoFormState?.banco || '', Validators.required],
     });
