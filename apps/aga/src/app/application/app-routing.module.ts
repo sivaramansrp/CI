@@ -121,20 +121,17 @@ const ROUTES: Routes = [
         './tramites/570101/cancelacion-servicios-extraordinarios.module'
       ).then((m) => m.CancelacionServiciosExtraordinariosModule),
   },
-
   {
-    path: 'registro-digitalizar-documentos',
+    path: 'registro-caat-naviero',
     loadChildren: () =>
-      import('./tramites/701/registro-digitalizar-documentos.module').then(
-        (m) => m.RegistroDigitalizarDocumentosModule
-      ),
+      import('./tramites/40301/registro-caat-naviero.module').then((m) => m.RegistroCaatNavieroModule),
   },
-  {
-    path: 'transferencia-contenedores',
-    loadChildren: () =>
-      import('./tramites/11204/temporal-contenedores.module').then(
-        (m) => m.TemporalContenedoresModule
-      ),
+{
+  path: 'transferencia-contenedores',
+  loadChildren: () =>
+    import('./tramites/11204/temporal-contenedores.module').then(
+      (m) => m.TemporalContenedoresModule
+    ),
   },
   {
     path: 'registro-digitalizar-documentos',
@@ -200,6 +197,13 @@ const ROUTES: Routes = [
       )
   },
   {
+    path: 'modificacion-transportacion-maritima',
+    loadChildren: () =>
+      import('./tramites/40202/modificacion-transportacion-maritima.module').then(
+        (m) => m.ModificacionTransportacionMaritimaModule
+      ),
+  },
+  {
     path: 'modificarCaatTerrestre',
     loadChildren: () =>
       import('./tramites/40103/modificarCaatTerrestre.module').then(
@@ -212,7 +216,21 @@ const ROUTES: Routes = [
       import('./tramites/11106/cancelacion-donaciones.module').then(
         (m) => m.CancelacionDonacionesModule
       ),
-  }  
+  },
+  {
+    path: 'prestadores-servicio',
+    loadChildren: () =>
+      import('./tramites/202/prestadores-servicio.module').then(
+        (m) => m.PrestadoresServicioModule
+      ),
+  },
+  {
+    path: 'exencion-impuestos',
+    loadChildren: () =>
+      import('./tramites/10302/exencion-impuestos.module').then(
+        (m) => m.ExencionImpuestosModule
+      ),
+  }
 ];
 
 @NgModule({
