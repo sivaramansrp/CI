@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Modal } from 'bootstrap';
 import { map, Subject, takeUntil } from 'rxjs';
@@ -18,7 +18,7 @@ import { ProveedorExtranjero } from '../../models/avisomodify.model';
   imports: [CommonModule, ReactiveFormsModule, TituloComponent, AlertComponent],
   templateUrl: './adicionProcesos.component.html',
 })
-export class AdicionProcesosComponent {
+export class AdicionProcesosComponent implements OnInit, OnDestroy {
   private destroy$: Subject<void> = new Subject<void>();
   CargaExtranjeroModelInstance!:Modal;
 
@@ -85,5 +85,9 @@ export class AdicionProcesosComponent {
     if (this.CargaExtranjeroModelInstance) {
       this.CargaExtranjeroModelInstance.hide();
     }
+  }
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

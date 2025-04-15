@@ -247,12 +247,16 @@ export class Tramite32301Store extends Store<FormularioGrupo> {
     }));
   }
   
-  // public setFechasSeleccionadas(fechasSeleccionadas: FechasSeleccionadas[]) {
-  //   this.update((state) => ({
-  //     ...state,
-  //     fechasSeleccionadas,
-  //   }));
-  // }
+  public setFechasSeleccionadas(fechasSeleccionadas: FechasSeleccionadas[]) {
+    this.update((state) => ({
+      ...state,
+      fechasSeleccionadas: {
+        ...state.fechasSeleccionadas,
+        fechasSeleccionadas
+      }
+      
+    }));
+  }
 
   /**
    * Establece los datos de modificación en el estado.

@@ -1,4 +1,4 @@
-import { Component,ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component,ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormControl } from '@angular/forms';
 
@@ -13,7 +13,12 @@ import { AvisoModifyService } from '../../services/aviso-modify.service';
 import { Modal } from 'bootstrap';
 import adicianFraccionOption from 'libs/shared/theme/assets/json/32301/adicianFraccionOption.json';
 import { Subject, Subscription, takeUntil } from 'rxjs';
-import { SELECCION } from '../../constantes/importador-exportador.enum';
+
+import {
+  CONTINUAR,
+  CROSLISTA_DE_PAISES,
+  LISTA_DE_ENTRADA_PERSONALIZADA,
+} from '../../enums/pantallas-constante.enum'
 
 import { Tramite32301Store } from '../../estados/tramite32301.store';
 import { Tramite32301Query } from '../../estados/tramite32301.query';
@@ -24,7 +29,7 @@ import { Tramite32301Query } from '../../estados/tramite32301.query';
   imports: [CommonModule, ReactiveFormsModule, TituloComponent, AlertComponent, InputRadioComponent, TableComponent, TablePaginationComponent, CatalogoSelectComponent, CrosslistComponent],
   templateUrl: './adicionFraccion.component.html',
 })
-export class AdicionFraccionComponent {
+export class AdicionFraccionComponent implements OnInit, OnDestroy {
   declaracionForm!: FormGroup;
   declaracionFormModel!: FormGroup;
   cargaManualForm!: FormGroup;
@@ -33,30 +38,37 @@ export class AdicionFraccionComponent {
   radioOptions = adicianFraccionOption;
   gridFraccionesHeader = ['Fracción declarada', 'Actividad relacionada', 'Correlación fracción actual', 'Descripción fracción actual', 'NICO', 'Descripción del NICO', 'UMT', 'Pa&iacute;s de origen']
 
-  selectRangoDias: any[] = [];
+ 
 
+  fechasSeleccionadas: string[] = [];
+
+  fechasDatos: string[] = [];
+
+  public crosListaDePaises = CROSLISTA_DE_PAISES;
+  selectRangoDias: string[] = this.crosListaDePaises;
   botonField = [
     {
-      btnNombre: 'Agregar',
+      btnNombre: 'Agregar todos',
       class: 'btn-primary',
       funcion: () => this.agregar(''),
     },
     {
-      btnNombre: 'Agregar todo',
+      btnNombre: 'Agregar selección',
       class: 'btn-default',
-      funcion: () => this.agregar(SELECCION.SELECT_ALL),
+      funcion: () => this.agregar('t'),
     },
     {
-      btnNombre: 'Remover',
+      btnNombre: 'Restar selección',
       class: 'btn-danger',
       funcion: () => this.quitar(''),
     },
     {
-      btnNombre: 'Remover todo',
+      btnNombre: 'Restar todos',
       class: 'btn-default',
-      funcion: () => this.quitar(SELECCION.SELECT_ALL),
+      funcion: () => this.quitar('t'),
     },
   ];
+
   
   cveNicoModOptions =[
     {
@@ -110,14 +122,10 @@ export class AdicionFraccionComponent {
   itemsPerPage: number = 1;
   currentPage: number = 1;
 
-  fechasSeleccionadas: Catalogo[] = [];
-
-  fechasDatos: Catalogo[] = [];
 
   fecha: FormControl = new FormControl('');
 
   fechaSeleccionada: FormControl = new FormControl('');
-  private subscriptions: Subscription[] = [];
   
   cveNicoMod: Catalogo[] = this.cveNicoModOptions;
   unidadMedidaMod: Catalogo[] = this.unidadMedidaModOption;
@@ -164,50 +172,30 @@ export class AdicionFraccionComponent {
       sPaisBloqueOrigen:[[], Validators.required],
       sPaisBloqueDestino:[[],Validators.required]
     })
-  
-    this.subscriptions.push(
-      this.query.selectFechasSeleccionadas$.subscribe((fechas) => {
-        // this.fechasSeleccionadas = fechas ?? [];
-      })
-    );
+    // this.rango_fechas();
+   
   }
   
   agregar(tipo: string) {
-    if (tipo === SELECCION.SELECT_ALL) {
+    if (tipo === 't') {
       this.fechasSeleccionadas = [...this.selectRangoDias];
       this.fechasDatos = [];
     } else {
-      const FECHA_VALOR = this.fecha.value;
-      const SELECTEDFECHA = this.fechasDatos.find(
-        (fecha) => fecha.id === FECHA_VALOR
-      );
-      if (SELECTEDFECHA) {
-        this.fechasSeleccionadas.push(SELECTEDFECHA);
-        this.fechasDatos = this.fechasDatos.filter(
-          (fecha) => fecha.id !== FECHA_VALOR
-        );
-      }
+      const FECHA_VALOR = this.fecha.value.map(Number);
+      this.fechasSeleccionadas.push(this.fechasDatos[FECHA_VALOR]);
+      this.fechasDatos.splice(FECHA_VALOR, 1);
     }
-    // this.store.setFechasSeleccionadas(this.fechasSeleccionadas);
   }
 
   quitar(tipo: string = '') {
-    if (tipo === SELECCION.SELECT_ALL) {
+    if (tipo === 't') {
       this.fechasDatos = [...this.fechasSeleccionadas];
       this.fechasSeleccionadas = [];
     } else {
-      const FECHA_VALOR = this.fechaSeleccionada.value;
-      const SELECTEDFECHA = this.fechasSeleccionadas.find(
-        (fecha) => fecha.id === FECHA_VALOR
-      );
-      if (SELECTEDFECHA) {
-        this.fechasDatos.push(SELECTEDFECHA);
-        this.fechasSeleccionadas = this.fechasSeleccionadas.filter(
-          (fecha) => fecha.id !== FECHA_VALOR
-        );
-      }
+      const FECHA_VALOR = this.fechaSeleccionada.value.map(Number);
+      this.fechasDatos.push(this.fechasSeleccionadas[FECHA_VALOR]);
+      this.fechasSeleccionadas.splice(FECHA_VALOR, 1);
     }
-    // this.store.setFechasSeleccionadas(this.fechasSeleccionadas);
   }
 
   ngAfterViewInit(): void {
@@ -221,6 +209,7 @@ export class AdicionFraccionComponent {
 
         if (this.fraccionesModel?.nativeElement) {
           this.fraccionesModelInstance = new Modal(this.fraccionesModel.nativeElement);
+         
         }  
 
 
@@ -230,15 +219,16 @@ export class AdicionFraccionComponent {
   }
   
 
-  rango_fechas(): void {
-    this.AvisoModifyService.getSelectRangoDias()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((data) => {
-        console.log(data)
-        // Actualizamos los valores del formulario con los datos obtenidos
-        this.selectRangoDias = data;
-      });
-  }
+  // rango_fechas(): void {
+  //   this.AvisoModifyService.getSelectRangoDias()
+  //     .pipe(takeUntil(this.destroy$))
+  //     .subscribe((data) => {
+      
+  //       // Actualizamos los valores del formulario con los datos obtenidos
+  //       this.selectRangoDias = data;
+  //       console.log(this.selectRangoDias)
+  //     });
+  // }
 
   valorSeleccionadoTipoCarga(): void {
     const selectedValue = this.declaracionForm.get('idCarga')?.value;
@@ -358,7 +348,7 @@ export class AdicionFraccionComponent {
   openfraccionesModelModel(){
     if (this.fraccionesModelInstance) {
       this.fraccionesModelInstance.show();
-      this.rango_fechas();
+     
     }
   }
 
@@ -367,6 +357,10 @@ export class AdicionFraccionComponent {
     if (this.fraccionesModelInstance) {
       this.fraccionesModelInstance.hide();
     }
+  }
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
 }

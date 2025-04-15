@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import fusionOEscision from 'libs/shared/theme/assets/json/32301/fusionOEscision.json';
@@ -21,7 +21,7 @@ import { map, Subject, takeUntil } from 'rxjs';
   imports: [CommonModule, ReactiveFormsModule, AlertComponent, TituloComponent, InputRadioComponent, TableComponent, TablePaginationComponent],
   templateUrl: './fusionOEscision.component.html',
 })
-export class FusionOEscisionComponent implements OnInit {
+export class FusionOEscisionComponent implements OnInit, OnDestroy {
   formulario!: FormGroup;
   modelFormulario!: FormGroup;
   fusionOescisionTitulo!:string
@@ -32,6 +32,7 @@ export class FusionOEscisionComponent implements OnInit {
   sinCertificacionPrincipalVisible: boolean = true;
   ModificarFusionEscisionInstance!:Modal;
   correctamenteModelInstance!:Modal;
+  fechasSeleccionadas = []
     fusionradioOptions = [
       {
         "label": "Fusión",
@@ -43,6 +44,7 @@ export class FusionOEscisionComponent implements OnInit {
       }
      
     ]
+   
     cantidadBienesOption = [
       {
         "label": "Sí",
@@ -273,5 +275,9 @@ export class FusionOEscisionComponent implements OnInit {
       }
     }
     
+    ngOnDestroy(): void {
+      this.destroy$.next();
+      this.destroy$.complete();
+    }
 
 }
