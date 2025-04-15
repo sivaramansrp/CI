@@ -1965,5 +1965,14 @@
         "linkDashboard": "",
         "linkDepartment": "",
         "department": "sener"
+    },
+    {
+        "id": 282,
+        "tramite": 105,
+        "linkDashboard": "/aga/invocar-modulo/solicitante",
+        "linkDepartment": "/pago/invocar-modulo/solicitante",
+        "department": "aga"
     }
+
+    
 ]

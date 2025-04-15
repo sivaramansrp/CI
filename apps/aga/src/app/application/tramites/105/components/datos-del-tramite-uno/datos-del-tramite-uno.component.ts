@@ -176,56 +176,46 @@ export class DatosDelTramiteUnoComponent implements OnInit, OnDestroy {
   }
 
   obtenerJsonData(): void {
-    this.query.selectPais$.subscribe((pais) => {
+    this.query.selectSolicitud$.pipe(
+      takeUntil(this.destroyNotifier$)
+    ).subscribe((solicitudState) => {
       this.pais = {
         labelNombre: 'País',
         required: false,
         primerOpcion: 'Selecciona un valor',
-        catalogos: pais ?? [],
+        catalogos: solicitudState.pais ?? [],
       };
-    })
-    this.query.selectEntidadFederativa$.subscribe((entidadFederativa) => {
       this.entidadFederativa = {
         labelNombre: 'Entidad Federativa',
         required: false,
         primerOpcion: 'Selecciona un valor',
-        catalogos: entidadFederativa ?? [],
+        catalogos: solicitudState.entidadFederativa ?? [],
       };
-    })
-    this.query.selectMunicipioDelegacion$.subscribe((municipioDelegacion) => {
       this.municipioDelegacion = {
         labelNombre: 'Municipio o Delegación',
         required: false,
         primerOpcion: 'Selecciona un valor',
-        catalogos: municipioDelegacion ?? [],
+        catalogos: solicitudState.municipioDelegacion ?? [],
       };
-    })
-
-    this.query.selectColonia$.subscribe((colonia) => {
       this.colonia = {
         labelNombre: 'Colonia',
         required: false,
         primerOpcion: 'Selecciona un valor',
-        catalogos: colonia ?? [],
+        catalogos: solicitudState.colonia ?? [],
       };
-    })
-
-    this.query.selectAduana$.subscribe((aduana) => {
       this.aduana = {
         labelNombre: 'Aduana',
         required: false,
         primerOpcion: 'Selecciona un valor',
-        catalogos: aduana ?? [],
+        catalogos: solicitudState.aduana ?? [],
       };
-    })
-    this.query.selectFraccionarancelaria$.subscribe((fraccionarancelaria) => {
       this.fraccionArancelaria = {
         labelNombre: 'Fracción arancelaria',
         required: false,
         primerOpcion: 'Selecciona un valor',
-        catalogos: fraccionarancelaria ?? [],
+        catalogos: solicitudState.fraccionarancelaria ?? [],
       };
-    })
+    });
   }
 
   crearFormularioAgregar(): void {
