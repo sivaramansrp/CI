@@ -29,18 +29,24 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * @property {number} indice - Índice de la pestaña actualmente seleccionada.
    * @default 1
    */
-  indice: number = 1;
-
-  constructor(private route: ActivatedRoute, private seccionStore: SeccionLibStore) {
+  public indice: number | undefined = 1;
+  /**
+   * Initializes the component with required query and store for state management.
+   *
+   * @param Tramite260210Query Query to access procedure state.
+   * @param tramite260214Store Store to update procedure state.
+   */
+  constructor(
+    private route: ActivatedRoute, private seccionStore: SeccionLibStore,
+  ) {
 // Se puede agregar aquí la lógica del constructor si es necesario
   }
 
   ngOnInit(): void {
     this.route.queryParams
       .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe(params => {
-        const TAB_INDEX = Number(params['tab']);
-        this.indice = TAB_INDEX && TAB_INDEX > 0 && TAB_INDEX <= this.seccionesDeLaSolicitud.length ? TAB_INDEX : 1; 
+      .subscribe((tab) => {
+        this.indice = Number(tab['indice'] || 1);
       });
   }
 
@@ -54,10 +60,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * @property {Array<{ index: number; title: string; component: string; }>} seccionesDeLaSolicitud
    * - Lista de pasos dentro del formulario con sus respectivos componentes.
    */
-  seccionesDeLaSolicitud = [
-    { index: 1, title: 'Solicitante', component: 'solicitante' },
-    { index: 2, title: 'Datos de la solicitud', component: 'app-datos-de-la-solicitud' },
-  ];
+
 
   /**
    * Evento emitido al cambiar de pestaña.
