@@ -1,40 +1,26 @@
-import { Component,ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormControl } from '@angular/forms';
-
-import { AlertComponent } from "@ng-mf/data-access-user";
-import { TituloComponent } from "@ng-mf/data-access-user";
-import { InputRadioComponent } from '@ng-mf/data-access-user';
-import { TableComponent } from '@ng-mf/data-access-user';
-import { TablePaginationComponent } from '@ng-mf/data-access-user';
-import { CatalogoSelectComponent, Catalogo, CrosslistComponent } from '@ng-mf/data-access-user';
-
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AlertComponent, Catalogo, CatalogoSelectComponent, CrosslistComponent, InputRadioComponent, TableComponent, TablePaginationComponent, TituloComponent } from "@ng-mf/data-access-user";
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AvisoModifyService } from '../../services/aviso-modify.service';
+import { CROSLISTA_DE_PAISES } from '../../enums/pantallas-constante.enum'
+import { CommonModule } from '@angular/common';
 import { Modal } from 'bootstrap';
-import adicianFraccionOption from 'libs/shared/theme/assets/json/32301/adicianFraccionOption.json';
-import { Subject, Subscription, takeUntil } from 'rxjs';
-
-import {
-  CONTINUAR,
-  CROSLISTA_DE_PAISES,
-  LISTA_DE_ENTRADA_PERSONALIZADA,
-} from '../../enums/pantallas-constante.enum'
-
-import { Tramite32301Store } from '../../estados/tramite32301.store';
+import { Subject} from 'rxjs';
 import { Tramite32301Query } from '../../estados/tramite32301.query';
-
+import { Tramite32301Store } from '../../estados/tramite32301.store';
+import adicianFraccionOption from 'libs/shared/theme/assets/json/32301/adicianFraccionOption.json';
 @Component({
   selector: 'app-adicion-fraccion',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, TituloComponent, AlertComponent, InputRadioComponent, TableComponent, TablePaginationComponent, CatalogoSelectComponent, CrosslistComponent],
   templateUrl: './adicionFraccion.component.html',
 })
-export class AdicionFraccionComponent implements OnInit, OnDestroy {
+export class AdicionFraccionComponent implements OnInit, OnDestroy, AfterViewInit {
   declaracionForm!: FormGroup;
   declaracionFormModel!: FormGroup;
   cargaManualForm!: FormGroup;
   divBtnCargaMVisible: boolean = false;
-  messageFraccion: string =  'Deberás adjuntar el listado de fracciones arancelarias señaladas en la descripción de las actividades relacionadas con los procesos productivos o presentación de servicios, exhibido en tu solicitud de inscripción.'
+  messageFraccion: string = 'Deberás adjuntar el listado de fracciones arancelarias señaladas en la descripción de las actividades relacionadas con los procesos productivos o presentación de servicios, exhibido en tu solicitud de inscripción.'
   radioOptions = adicianFraccionOption;
   gridFraccionesHeader = ['Fracción declarada', 'Actividad relacionada', 'Correlación fracción actual', 'Descripción fracción actual', 'NICO', 'Descripción del NICO', 'UMT', 'Pa&iacute;s de origen']
 
@@ -50,22 +36,22 @@ export class AdicionFraccionComponent implements OnInit, OnDestroy {
     {
       btnNombre: 'Agregar todos',
       class: 'btn-primary',
-      funcion: () => this.agregar(''),
+      funcion: (): void => this.agregar(''),
     },
     {
       btnNombre: 'Agregar selección',
       class: 'btn-default',
-      funcion: () => this.agregar('t'),
+      funcion: (): void => this.agregar('t'),
     },
     {
       btnNombre: 'Restar selección',
       class: 'btn-danger',
-      funcion: () => this.quitar(''),
+      funcion: (): void => this.quitar(''),
     },
     {
       btnNombre: 'Restar todos',
       class: 'btn-default',
-      funcion: () => this.quitar('t'),
+      funcion: (): void => this.quitar('t'),
     },
   ];
 
@@ -176,7 +162,7 @@ export class AdicionFraccionComponent implements OnInit, OnDestroy {
    
   }
   
-  agregar(tipo: string) {
+  agregar(tipo: string):void {
     if (tipo === 't') {
       this.fechasSeleccionadas = [...this.selectRangoDias];
       this.fechasDatos = [];
@@ -187,7 +173,7 @@ export class AdicionFraccionComponent implements OnInit, OnDestroy {
     }
   }
 
-  quitar(tipo: string = '') {
+  quitar(tipo: string = ''):void {
     if (tipo === 't') {
       this.fechasDatos = [...this.fechasSeleccionadas];
       this.fechasSeleccionadas = [];
@@ -231,12 +217,12 @@ export class AdicionFraccionComponent implements OnInit, OnDestroy {
   // }
 
   valorSeleccionadoTipoCarga(): void {
-    const selectedValue = this.declaracionForm.get('idCarga')?.value;
-    console.log('Valor seleccionado:', selectedValue);
-    if (selectedValue === 'TIPCAR.MA') {
+    const SELECTED_VALUE = this.declaracionForm.get('idCarga')?.value;
+  
+    if (SELECTED_VALUE === 'TIPCAR.MA') {
       this.divBtnCargaMVisible = false;
     }
-    else if (selectedValue === 'TIPCAR.CM'){
+    else if (SELECTED_VALUE === 'TIPCAR.CM'){
       this.divBtnCargaMVisible = true;
     }
     // if (selectedValue === 'TIPCAR.MA') {
@@ -249,41 +235,41 @@ export class AdicionFraccionComponent implements OnInit, OnDestroy {
     //   this.gridMasivaVisible = true;
     // }
   }
-  onItemsPerPageChange(itemsPerPage: any): void {
+  onItemsPerPageChange(itemsPerPage: number): void {
     this.itemsPerPage = itemsPerPage;
     this.currentPage = 1;
     this.updatePagination();
   }
 
-  onPageChange(page: any): void {
+  onPageChange(page: number): void {
     this.currentPage = page;
     this.updatePagination();
   }
   updatePagination(): void {
-    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    const START_INDEX = (this.currentPage - 1) * this.itemsPerPage;
     this.miembroDeLaEmpresaBodyData = this.miembroDeLaEmpresaBodyData.slice(
-      startIndex,
-      startIndex + this.itemsPerPage
+      START_INDEX,
+      START_INDEX + this.itemsPerPage
     );
   }
 
-  vistaPreviaArchivoFraccionAjax(): void {
-    // Implement the logic to view the preview of the fraction file
-    // Currently commented out as per instructions
-    // this.adicionFraccionService.viewPreviaArchivoFraccion();
-  }
+  // vistaPreviaArchivoFraccionAjax(): void {
+  //   // Implement the logic to view the preview of the fraction file
+  //   // Currently commented out as per instructions
+  //   // this.adicionFraccionService.viewPreviaArchivoFraccion();
+  // }
 
-  eliminarFracciones(): void {
-    // Implement the logic to delete fractions
-    // Currently commented out as per instructions
-    // this.adicionFraccionService.eliminarFracciones();
-  }
+  // eliminarFracciones(): void {
+  //   // Implement the logic to delete fractions
+  //   // Currently commented out as per instructions
+  //   // this.adicionFraccionService.eliminarFracciones();
+  // }
 
-  modificarFracciones(): void {
-    // Implement the logic to modify fractions
-    // Currently commented out as per instructions
-    // this.adicionFraccionService.modificarFracciones();
-  }
+  // modificarFracciones(): void {
+  //   // Implement the logic to modify fractions
+  //   // Currently commented out as per instructions
+  //   // this.adicionFraccionService.modificarFracciones();
+  // }
 
   modalAgregaCarga(): void {
     this.openfraccionesModelModel();
@@ -296,64 +282,54 @@ export class AdicionFraccionComponent implements OnInit, OnDestroy {
   }
 
   cargarArchivoProcesosAjax(): void {
-    this.openCargaMasivaFralertaModel()
-    // TODO: Implementar la funcionalidad de cargarArchivoProcesosAjax
-    // this.adicionProcesosService.cargarArchivo(this.form.get('archivoProceso')?.value).subscribe(
-    //   response => {
-    //     // Manejar éxito
-    //   },
-    //   error => {
-    //     // Manejar error
-    //   }
-    // );
+    this.openCargaMasivaFralertaModel();
   }
 
-  vistaPreviaArchivoProcesosAjax(): void {
-    // TODO: Implementar la funcionalidad de vistaPreviaArchivoProcesosAjax
-    // this.adicionProcesosService.vistaPrevia(this.form.get('archivoProceso')?.value).subscribe(
-    //   response => {
-    //     // Manejar éxito
-    //   },
-    //   error => {
-    //     // Manejar error
-    //   }
-    // );
-  }
+  // vistaPreviaArchivoProcesosAjax(): void {
+  //   // TODO: Implementar la funcionalidad de vistaPreviaArchivoProcesosAjax
+  //   // this.adicionProcesosService.vistaPrevia(this.form.get('archivoProceso')?.value).subscribe(
+  //   //   response => {
+  //   //     // Manejar éxito
+  //   //   },
+  //   //   error => {
+  //   //     // Manejar error
+  //   //   }
+  //   // );
+  // }
 
 
-  openCargaMasivaFrModal(){
+  openCargaMasivaFrModal():void{
     if (this.cargaMasivaFrModalInstance) {
       this.cargaMasivaFrModalInstance.show();
     }
   }
 
-  closeCargaMasivaFrModal(){
+  closeCargaMasivaFrModal():void{
     if (this.cargaMasivaFrModalInstance) {
       this.cargaMasivaFrModalInstance.hide();
     }
   }
 
-  openCargaMasivaFralertaModel(){
+  openCargaMasivaFralertaModel():void{
     if (this.CargaMasivaFralertaModelInstance) {
       this.CargaMasivaFralertaModelInstance.show();
     }
   }
 
-  closeCargaMasivaFralertaModel(){
+  closeCargaMasivaFralertaModel():void{
     if (this.CargaMasivaFralertaModelInstance) {
       this.CargaMasivaFralertaModelInstance.hide();
     }
   }
 
-  openfraccionesModelModel(){
+  openfraccionesModelModel():void{
     if (this.fraccionesModelInstance) {
       this.fraccionesModelInstance.show();
      
     }
   }
 
-  closefraccionesModelModel(){
-    console.log(this.cargaManualForm.value)
+  closefraccionesModelModel():void{
     if (this.fraccionesModelInstance) {
       this.fraccionesModelInstance.hide();
     }
