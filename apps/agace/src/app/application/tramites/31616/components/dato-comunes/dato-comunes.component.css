@@ -12,3 +12,8 @@
 .gap .form-group form div{
     width:50%;
 }
+
+.dis-flex-end{
+    display: flex;
+    align-items: end;
+}

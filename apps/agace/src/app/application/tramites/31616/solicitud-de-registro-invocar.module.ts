@@ -11,6 +11,8 @@ import {
 } from '@libs/shared/data-access-user/src';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { DatoComunesComponent } from './components/dato-comunes/dato-comunes.component';
+import { SolicitudDeRegistroInvocarService } from './services/solicitudDeRegistroInvocar/solicitud-de-registro-invocar.service';
+import { ReprestantanteComponent } from './components/represtantante/represtantante.component';
 
 @NgModule({
   declarations: [SolicitudPasoComponent, PasoUnoComponent],
@@ -21,7 +23,11 @@ import { DatoComunesComponent } from './components/dato-comunes/dato-comunes.com
     BtnContinuarComponent,
     SolicitanteComponent,
     DatoComunesComponent,
-    AlertComponent
+    AlertComponent,
+    ReprestantanteComponent
   ],
+  providers: [
+    SolicitudDeRegistroInvocarService
+  ]
 })
 export class SolicitudDeRegistroInvocarModule {}
