@@ -5,8 +5,8 @@ import { OnInit } from '@angular/core';
 import { PagoDeDerechosComponent } from '../../../../shared/components/pago-de-derechos/pago-de-derechos.component';
 import { PagoDerechosFormState } from '../../../../shared/models/pago-de-derechos.model';
 import { Subject } from 'rxjs';
-import { Tramite240101Query } from '../../estados/tramite240101Query.query';
-import { Tramite240101Store } from '../../estados/tramite240101Store.store';
+import { Tramite240101Query } from '../../estados/tramite240120Query.query';
+import { Tramite240101Store } from '../../estados/tramite240120Store.store';
 import { takeUntil } from 'rxjs';
 /**
  * @title Pago de Derechos Contenedora

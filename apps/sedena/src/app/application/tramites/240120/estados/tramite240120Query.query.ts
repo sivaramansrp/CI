@@ -1,30 +1,30 @@
 import {
-  Tramite240101State,
-  Tramite240101Store,
-} from './tramite240101Store.store';
+  Tramite240120State,
+  Tramite240120Store,
+} from './tramite240120Store.store';
 import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
 
 /**
- * Servicio que permite consultar (leer) el estado del Trámite 240101
+ * Servicio que permite consultar (leer) el estado del Trámite 240120
  * usando el patrón de Akita para manejo de estado.
  */
 
 @Injectable({ providedIn: 'root' })
-export class Tramite240101Query extends Query<Tramite240101State> {
+export class Tramite240120Query extends Query<Tramite240120State> {
   /**
    * Constructor que inicializa el query con el store correspondiente.
    *
-   * @param {Tramite240101Store} store - Instancia del store para el Trámite 240101.
+   * @param {Tramite240120Store} store - Instancia del store para el Trámite 240120.
    */
-  constructor(protected override store: Tramite240101Store) {
+  constructor(protected override store: Tramite240120Store) {
     super(store);
   }
 
   /**
    * Observable que emite el estado completo del trámite.
    *
-   * @property {Observable<Tramite240101State>} selectTramiteState$
+   * @property {Observable<Tramite240120State>} selectTramiteState$
    */
   public selectTramiteState$ = this.select((state) => {
     return state;
