@@ -6,7 +6,7 @@ const ROUTES: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'seleccion-tramite' },
   {
     path: 'seleccion-tramite',
-    component: SeleccionTramiteComponent
+    component: SeleccionTramiteComponent,
   },
   {
     path: 'antecesor',
@@ -18,15 +18,26 @@ const ROUTES: Routes = [
   {
     path: 'aviso',
     loadChildren: () =>
-      import('./tramites/32502/aviso.module').then(
-        (m) => m.AvisoModule
-      ),
+      import('./tramites/32502/aviso.module').then((m) => m.AvisoModule),
   },
   {
     path: 'aviso-procesos',
     loadChildren: () =>
       import('./tramites/32504/aviso-procesos.module').then(
         (m) => m.AvisoProcesosModule
+      ),
+  },
+  {
+    path: 'registro-solicitud',
+    loadChildren: () =>
+      import('./tramites/31802/registro-solicitud.module').then(
+        (m) => m.RegistroSolicitudModule),
+   },
+  {
+    path: 'autoridad',
+    loadChildren: () =>
+      import('./tramites/31501/autoridad.module').then(
+        (m) => m.AutoridadModule
       ),
   },
   {
@@ -43,6 +54,13 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'aviso-traslado',
+    loadChildren: () =>
+      import('./tramites/32503/aviso-traslado.module').then(
+        (m) => m.AvisoTrasladoModule
+      ),
+  },
+  {
     path: 'anexo-veintiocho',
     loadChildren: () =>
       import('./tramites/32201/anexo-veintiocho.module').then(
@@ -53,6 +71,6 @@ const ROUTES: Routes = [
 
 @NgModule({
   imports: [RouterModule.forChild(ROUTES)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

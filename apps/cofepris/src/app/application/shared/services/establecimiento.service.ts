@@ -8,9 +8,9 @@ import { Injectable } from '@angular/core';
 
 import { Observable ,map} from 'rxjs';
 
-import { Catalogo } from '@libs/shared/data-access-user/src';
+import { Catalogo, JSONResponse } from '@libs/shared/data-access-user/src';
 
-import { Manifiestistos, PropietarioRadio, PropietarioTipoPersona, Representante } from '../models/datos-de-la-solicitud.model';
+import { Asociados, Manifiestistos, PropietarioRadio, PropietarioTipoPersona, Representante } from '../models/datos-de-la-solicitud.model';
 /**
  * @class EstablecimientoService
  * @description
@@ -24,7 +24,9 @@ export class EstablecimientoService {
    * Constructor del servicio.
    * @param http Cliente HTTP para realizar solicitudes.
    */
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+    //constructor
+  }
 
   /**
    * Obtiene los datos del catálogo de estados.
@@ -130,4 +132,43 @@ export class EstablecimientoService {
   getInformacionConfidencialRadioOptions(): Observable<PropietarioTipoPersona[]> {
     return this.http.get<PropietarioTipoPersona[]>('assets/json/260401/radioSiNo.json');
   }
+  /**
+   * Obtiene los datos de justificación.
+   * @returns {Observable<PropietarioTipoPersona[]>} Un observable con los datos de justificación.
+   */
+  getJustificationData(): Observable<PropietarioTipoPersona[]> {
+    return this.http.get<PropietarioTipoPersona[]>('assets/json/cofepris/justificacion.json');
+  }
+  /**
+   * Obtiene los datos de un establecimiento por su ID.
+   * @param id ID del establecimiento.
+   * @returns {Observable<Catalogo[]>} Un observable con los datos del establecimiento.
+   */
+  getEstadodata(): Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>('assets/json/260401/scianda.json');
+  }
+
+  /**
+   * Obtiene la lista de asociados desde un archivo JSON.
+   * @returns {Observable<Asociados[]>} Un observable con la lista de asociados.
+   */
+  enListaDeAsociados(): Observable<Asociados[]> {
+    return this.http.get<Asociados[]>('assets/json/cofepris/asociadosJson.json');
+  }
+  /**
+     * Recupera los datos del destinatario desde un archivo JSON local.
+     * @returns Un `Observable` que emite un `JSONResponse` que contiene los datos del destinatario.
+     */
+    getDestinatarioDatos(): Observable<JSONResponse> {
+      return this.http.get<JSONResponse>('./assets/json/260701/destinatario-tabla.json');
+    }
+    /**
+   * Recupera los datos del fabricante desde un archivo JSON local.
+   * @returns {Observable<JSONResponse>} Un observable que contiene la respuesta JSON
+   * con los datos del fabricante.
+   */
+  getFabricanteDatos(): Observable<JSONResponse> {
+    return this.http.get<JSONResponse>('./assets/json/260701/fabricante-tabla.json');
+  }
 }
+
