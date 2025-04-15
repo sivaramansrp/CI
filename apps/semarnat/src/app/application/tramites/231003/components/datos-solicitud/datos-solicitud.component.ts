@@ -26,7 +26,7 @@ const RADIO_OPCIONES = rawData as SolicitudJson;
     TituloComponent,
     ReactiveFormsModule, TableComponent, InputRadioComponent, DatosResiduosPeligrososComponent],
   templateUrl: './datos-solicitud.component.html',
-  styleUrl: './datos-solicitud.component.scss',
+  styleUrl: './datos-solicitud.component.sass',
 })
 export class DatosSolicitudComponent implements OnInit {
 
