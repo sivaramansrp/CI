@@ -123,17 +123,16 @@ export class InputFechaComponent implements OnChanges {
     const END_DATE = START_DATE.clone().endOf('month');
     const DIFF_DAYS = END_DATE.diff(START_DATE, 'days', true);
     const NUMBER_DAYS = Math.round(DIFF_DAYS);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const ARRAY_DAYS = Object.keys([...Array(NUMBER_DAYS)]).map((a: any) => {
+    const ARRAY_DAYS = Object.keys([...Array(NUMBER_DAYS)]).map((a: string) => {
       // eslint-disable-next-line radix, no-param-reassign
-      a = parseInt(a) + 1;
-      const DIA_FORMATO = a > 9 ? a : '0' + a;
+      const IN = parseInt(a) + 1;
+      const DIA_FORMATO = IN > 9 ? IN : '0' + IN;
       const DAY_OBJECT = moment(
       `${year}-${mount.toString().padStart(2, '0')}-${DIA_FORMATO}`,
       );
       return {
       name: DAY_OBJECT.format('dddd'),
-      value: a,
+      value: IN,
       indexWeek: DAY_OBJECT.isoWeekday(),
       };
     });
