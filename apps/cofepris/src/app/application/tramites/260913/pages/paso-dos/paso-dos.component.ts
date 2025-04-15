@@ -1,15 +1,11 @@
-
-
 /**
  * compo doc
  * @component PasoDosComponent
  * @description
 */
-import { Component } from '@angular/core';
-
-import { CommonModule } from '@angular/common';
-
 import { AlertComponent, AnexarDocumentosComponent, TEXTOS, TituloComponent } from '@libs/shared/data-access-user/src';
+import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
 
 /**
  * @nombre PasoDosComponent

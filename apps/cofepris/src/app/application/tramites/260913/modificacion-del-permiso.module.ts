@@ -1,6 +1,7 @@
 import { BtnContinuarComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { DatosComponent } from './pages/datos/datos.component';
+import { DatosDeLaSolicitudModificacionComponent } from '../../shared/components/datos-de-la-solicitud-modificacion/datos-de-la-solicitud-modificacion.component';
 import { InputCheckComponent } from '@libs/shared/data-access-user/src';
 import { ModificacionDelPermisoRoutingModule } from './modificacion-del-permiso-routing.module';
 import { NgModule } from '@angular/core';
@@ -30,11 +31,10 @@ import { WizardComponent } from '@libs/shared/data-access-user/src';
     PagoDeDerechosEntradaComponent,
     TramitesAsociadosSeccionComponent,
     TercerosRelacionadosFabricanteComponent,
-    InputCheckComponent
+    InputCheckComponent,
+    DatosDeLaSolicitudModificacionComponent
   ],
   providers: [
-    //InicioSesionService,
-    //SubirDocumentoService,
     ToastrService
   ],
 })
