@@ -16,6 +16,7 @@ import { BsModalService } from 'ngx-bootstrap/modal';
 import { TercerosRelacionadosComponent } from '../../../shared/components/terceros-relacionados/terceros-relacionados.component';
 import { DatosComunesComponent } from '../../../shared/components/datos-comunes/datos-comunes.component';
 import { TercerosRelacionadosService } from '../../../shared/services/terceros-relacionados.service';
+import { DatosComunesService } from '../../../shared/services/datos-comunes.service';
 
 
 @NgModule({
@@ -44,7 +45,8 @@ import { TercerosRelacionadosService } from '../../../shared/services/terceros-r
     SubirDocumentoService,
     ComercioExteriorService,
     BsModalService,
-    TercerosRelacionadosService 
+    TercerosRelacionadosService,
+    DatosComunesService
   ],
 })
 export class ComercioExteriorModule { }

@@ -1,1 +1,250 @@
-<p>datos-comunes works!</p>
+<div class="conatiner">
+    <div class="row mb-3">
+        <div class="w-100 p-3 mt-3">
+        <div class="form-group">
+            <label for="autorizacionIVAIEPS">{{dinamicaRadio.radio1.descripcion}}</label>
+              <app-input-radio
+                [radioOptions]="radioOptions"
+                [isRequired]="true"
+                [layout]="'horizontal'"
+                [gap]="'493px'"
+                [isBold]="true"
+                [labelMargin]="'0px'"
+                [showDescription]="true"
+              ></app-input-radio>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-4">
+        <div class="d-flex align-items-center mt-4">
+          <div class="col-12 col-md-4 d-flex justify-content-center">
+            <fieldset class="border p-3 text-center">
+              <div class="w-auto">
+                Indique los regimenes aduaneros a los que pertenece
+              </div>
+            </fieldset>
+          </div>
+  
+          <div class="col-12 col-md-8">
+            <fieldset class="border p-3">
+              <legend class="w-auto">Régimen aduanero:</legend>
+
+              <lib-input-check 
+                [id]="'regimen_0'" 
+                [label]="'Importación temporal para la elaboración, transformación o reparación en programas de maquila o de exportación (IMMEX)'" 
+                [required]="false">
+            </lib-input-check>
+
+            <lib-input-check 
+                [id]="'regimen_1'" 
+                [label]="'Depósito fiscal para someterse al proceso de ensamble y fabricación de vehículo a empresas de la industria automotriz terminal'" 
+                [required]="false">
+            </lib-input-check>
+
+            <lib-input-check 
+                [id]="'regimen_2'" 
+                [label]="'Elaboración, transformación o reparación en recinto fiscalizado'" 
+                [required]="false">
+            </lib-input-check>
+  
+            <lib-input-check 
+                [id]="'regimen_3'" 
+                [label]="'Recinto Fiscalizado Estratégico'" 
+                [required]="false">
+            </lib-input-check>
+            </fieldset>
+          </div>
+        </div>
+      </div>
+      <div class="w-100 p-3 mt-4">
+        <label class="form-label fw-bold mb-3" for="">
+          Se&ntilde;ale el sector productivo o servicio al que pertenece
+        </label>
+        <div class="row mb-5">
+          <div class="col-md-6">
+            <app-catalogo-select
+              [label]="'Sector Productivo'"
+              [placeholder]="'Seleccione un valor'"
+              [catalogo]="sectorProductivoAgace"
+            >
+            </app-catalogo-select>
+          </div>
+          <div class="col-md-6">
+            <app-catalogo-select
+              [label]="'Servicio'"
+              [placeholder]="'Seleccione un valor'"
+              [catalogo]="serviciosAgace"
+            >
+            </app-catalogo-select>
+          </div>
+        </div>
+        <ng-alert [CONTENIDO]="TEXTOS.alerta"></ng-alert>
+      </div>
+      <div class="row mb-3">
+        <div class="col-md-12">
+            <div class="form-group">
+                <label for="preOperativo">{{dinamicaRadio.radio2.descripcion}}</label>
+                  <app-input-radio
+                    [radioOptions]="radioOptions"
+                    [isRequired]="true"
+                    [layout]="'horizontal'"
+                    [gap]="'493px'"
+                    [isBold]="true"
+                    [labelMargin]="'0px'"
+                    [showDescription]="true"
+                  ></app-input-radio>
+                </div>
+            </div>
+      </div>
+      <div class="row mb-3">
+        <div class="col-md-12">
+            <div class="form-group">
+                <label for="indiqueSi">{{dinamicaRadio.radio3.descripcion}}</label>
+                  <app-input-radio
+                    [radioOptions]="radioOptions"
+                    [isRequired]="true"
+                    [layout]="'horizontal'"
+                    [gap]="'493px'"
+                    [isBold]="true"
+                    [labelMargin]="'0px'"
+                    [showDescription]="true"
+                  ></app-input-radio>
+                </div>
+            </div>
+      </div>
+      <div class="row mb-3">
+        <div class="col-md-12">
+            <div class="form-group">
+                <label for="senale">{{dinamicaRadio.radio4.descripcion}}</label>
+                  <app-input-radio
+                    [radioOptions]="radioOptions"
+                    [isRequired]="true"
+                    [layout]="'horizontal'"
+                    (valueChange)="onRadioCambio($event,'empleadosPropios')"
+                    [gap]="'493px'"
+                    [isBold]="true"
+                    [labelMargin]="'0px'"
+                    [showDescription]="true"
+                  ></app-input-radio>
+                </div>
+            </div>
+      </div>
+      @if(cambioObj.empleadosPropios) {
+        <ng-alert [CONTENIDO]="TEXTOSDOS.alerta" [CUSTOMECLASS]="infoAlert"></ng-alert>
+        <p class="fw-bold mb-5">
+            Cual es el número de empleados propios con los que contó en el último
+            bimestre anterior a su solicitud
+        </p>
+        <div class="row mb-5">
+            <div class="col-md-1"></div>
+            <div class="col-md-5">
+              <div class="form-group">
+                <label for="empPropios" class="form-label"
+                  >Número de empleados</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="empPropios"
+                  name="empPropios"
+                  maxlength="8"
+                />
+              </div>
+            </div>
+            <div class="col-md-5">
+              <app-catalogo-select
+                [label]="'Bimestre'"
+                [placeholder]="'Seleccione un valor'"
+                [catalogo]="comboBimestresIDC"
+              >
+              </app-catalogo-select>
+            </div>
+            <div class="col-md-1"></div>
+          </div>
+      }
+      <div class="row mb-3">
+        <div class="col-md-12">
+            <div class="form-group">
+                <label for="senaleSi">{{dinamicaRadio.radio5.descripcion}}</label>
+                  <app-input-radio
+                    [radioOptions]="radioOptions"
+                    [isRequired]="true"
+                    [layout]="'horizontal'"
+                    (valueChange)="onRadioCambio($event,'deTrabajao')"
+                    [gap]="'493px'"
+                    [isBold]="true"
+                    [labelMargin]="'0px'"
+                    [showDescription]="true"
+                  ></app-input-radio>
+                </div>
+            </div>
+      </div>
+      @if(cambioObj.deTrabajao) {
+        <app-federal-de-trabajao></app-federal-de-trabajao>
+      }
+      <div class="row mb-3">
+        <div class="col-md-12">
+            <div class="form-group">
+                <label for="senaleSi">{{dinamicaRadio.radio9.descripcion}}</label>
+                  <app-input-radio
+                    [radioOptions]="radioOptions"
+                    [isRequired]="true"
+                    [layout]="'horizontal'"
+                    [gap]="'493px'"
+                    [isBold]="true"
+                    [labelMargin]="'0px'"
+                    [showDescription]="true"
+                  ></app-input-radio>
+                </div>
+            </div>
+      </div>
+      <div class="row mb-3">
+        <div class="col-md-12">
+            <div class="form-group">
+                <label for="senaleSi">{{dinamicaRadio.radio10.descripcion}}</label>
+                  <app-input-radio
+                    [radioOptions]="radioOptions"
+                    [isRequired]="true"
+                    [layout]="'horizontal'"
+                    [gap]="'493px'"
+                    [isBold]="true"
+                    [labelMargin]="'0px'"
+                    [showDescription]="true"
+                  ></app-input-radio>
+                </div>
+            </div>
+      </div>
+      <div class="row mb-3">
+        <div class="col-md-12">
+            <div class="form-group">
+                <label for="senaleSi">{{dinamicaRadio.radio11.descripcion}}</label>
+                  <app-input-radio
+                    [radioOptions]="radioOptions"
+                    [isRequired]="true"
+                    [layout]="'horizontal'"
+                    [gap]="'493px'"
+                    [isBold]="true"
+                    [labelMargin]="'0px'"
+                    [showDescription]="true"
+                  ></app-input-radio>
+                </div>
+            </div>
+      </div>
+      <div class="row mb-3">
+        <div class="col-md-12">
+            <div class="form-group">
+                <label for="senaleSi">{{dinamicaRadio.radio12.descripcion}}</label>
+                  <app-input-radio
+                    [radioOptions]="radioOptions"
+                    [isRequired]="true"
+                    [layout]="'horizontal'"
+                    [gap]="'493px'"
+                    [isBold]="true"
+                    [labelMargin]="'0px'"
+                    [showDescription]="true"
+                  ></app-input-radio>
+                </div>
+            </div>
+      </div>
+</div>
+<app-datos-comunes-dos></app-datos-comunes-dos>
