@@ -42,6 +42,6 @@ export class CapturarElTextoLibreComponent {
    * Navega a la ruta de la página para firmar el manifiesto aéreo
    */
   guardarYFirmar(): void {
-    this.router.navigate(['/pago/manifiesto-aereo/firmar']);
+    this.router.navigate(['/agace/manifiesto-aereo/firmar']);
   }
 }

@@ -12,6 +12,7 @@ import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import { InputRadioComponent } from '@libs/shared/data-access-user/src';
+import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -60,7 +61,7 @@ import { takeUntil } from 'rxjs/operators';
  * Incluye lógica para inicialización de formularios, manejo de estados,
  * y generación de tablas dinámicas.
  */
-export class SolicitarRequerimientoComponent implements OnInit {
+export class SolicitarRequerimientoComponent implements OnInit, OnDestroy {
   /** Textos compartidos utilizados en el componente */
   TEXTOS = TEXTOS;
 
@@ -249,7 +250,7 @@ export class SolicitarRequerimientoComponent implements OnInit {
   public obtenerAduanaLista(): void {
     this.autoridadService
       .obtenerTramiteLista()
-      .pipe()
+      .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((respuesta: CatalogosSelect) => {
         this.tramiteList = respuesta;
       });
@@ -259,19 +260,22 @@ export class SolicitarRequerimientoComponent implements OnInit {
    * Población de la tabla con los datos obtenidos desde el servicio.
    */
   obtenerTablaPoblada(): void {
-    this.autoridadService.agregarSolicitud().subscribe((respuesta) => {
-      if (respuesta?.success) {
-        respuesta.datos.id = this.datosDelContenedor.length + 1;
-        this.datosDelContenedor.push(respuesta.datos);
-        (
-          this.tramite32401Store.setDelContenedor as (
-            valor: DatosDeLaTabla[]
-          ) => void
-        )(this.datosDelContenedor);
-        this.solicitarForm.markAsUntouched();
-        this.solicitarForm.markAsPristine();
-      }
-    });
+    this.autoridadService
+      .agregarSolicitud()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((respuesta) => {
+        if (respuesta?.success) {
+          respuesta.datos.id = this.datosDelContenedor.length + 1;
+          this.datosDelContenedor.push(respuesta.datos);
+          (
+            this.tramite32401Store.setDelContenedor as (
+              valor: DatosDeLaTabla[]
+            ) => void
+          )(this.datosDelContenedor);
+          this.solicitarForm.markAsUntouched();
+          this.solicitarForm.markAsPristine();
+        }
+      });
   }
 
   /**
@@ -294,9 +298,18 @@ export class SolicitarRequerimientoComponent implements OnInit {
    */
   valorDeAlternancia(row: any): void {
     if (row.folioTramite) {
-      this.router.navigate(['pago/manifiesto-aereo/requiremento'], {
+      this.router.navigate(['agace/manifiesto-aereo/requiremento'], {
         state: { data: row },
       });
     }
+  }
+
+  /**
+   * Método del ciclo de vida que se ejecuta al destruir el componente.
+   * Libera recursos y finaliza observables.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

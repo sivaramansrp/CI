@@ -68,13 +68,13 @@ export class RequirementoComponent implements OnInit {
    * Navega a la página para capturar el texto libre
    */
   continuar(): void {
-    this.router.navigate(['/pago/manifiesto-aereo/capturar-el-texto-libre']);
+    this.router.navigate(['/agace/manifiesto-aereo/capturar-el-texto-libre']);
   }
 
   /**
    * Navega de regreso a la página principal del manifiesto aéreo
    */
   cancelar(): void {
-    this.router.navigate(['/pago/manifiesto-aereo/main']);
+    this.router.navigate(['/agace/manifiesto-aereo/main']);
   }
 }
