@@ -35,12 +35,6 @@ export class PagoDeDerechosContenedoraComponent implements OnInit, OnDestroy {
   public pagoDerechoFormState!: PagoDerechosFormState;
 
   /**
-   * Observable adicional para limpieza de suscripciones.
-   * @property {Subject<void>} destroy$
-   */
-  private destroy$ = new Subject<void>();
-
-  /**
    * Constructor del componente.
    *
    * @method constructor
@@ -50,9 +44,8 @@ export class PagoDeDerechosContenedoraComponent implements OnInit, OnDestroy {
    */
   constructor(
     private tramiteQuery: Tramite240101Query,
-    private tramiteStore: Tramite240101Store
-  ) // eslint-disable-next-line no-empty-function
-  {}
+    private tramiteStore: Tramite240101Store // eslint-disable-next-line no-empty-function
+  ) {}
 
   /**
    * Hook del ciclo de vida que se ejecuta al inicializar el componente.
@@ -63,7 +56,7 @@ export class PagoDeDerechosContenedoraComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.tramiteQuery.getPagoDerechos$
-      .pipe(takeUntil(this.destroy$))
+      .pipe(takeUntil(this.unsubscribe$))
       .subscribe((data) => {
         this.pagoDerechoFormState = data;
       });
