@@ -6,6 +6,7 @@ import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 import { EventEmitter } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
+import { InputRadioComponent } from '@ng-mf/data-access-user';
 import { Location } from '@angular/common';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
@@ -13,11 +14,11 @@ import { Output } from '@angular/core';
 import { Proveedor } from '../../models/terceros-relacionados.model';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Subject } from 'rxjs';
+import { TIPO_PERSONA_OPCIONES } from '../../constants/datos-solicitud.enum';
 import { TipoPersona } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { Validators } from '@angular/forms';
 import { takeUntil } from 'rxjs';
-
 /**
  * @component AgregarProveedorComponent
  * @description Componente responsable de manejar el formulario para agregar proveedores.
@@ -32,6 +33,7 @@ import { takeUntil } from 'rxjs';
     CatalogoSelectComponent,
     ReactiveFormsModule,
     TituloComponent,
+    InputRadioComponent,
   ],
   templateUrl: './agregar-proveedor.component.html',
   styleUrl: './agregar-proveedor.component.css',
@@ -76,6 +78,12 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
    * @type {EventEmitter<Proveedor[]>}
    */
   @Output() updateProveedorTablaDatos = new EventEmitter<Proveedor[]>();
+
+  /**
+   * Opciones de radio para seleccionar el tipo de persona.
+   */
+  tipoPersonaRadioOpciones = TIPO_PERSONA_OPCIONES;
+
   /**
    * @constructor
    * Inicializa el formulario y los servicios necesarios para el componente.
@@ -193,6 +201,16 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
    */
   cancelar(): void {
     this.ubicaccion.back();
+  }
+  /**
+   * * Método que se ejecuta cuando se selecciona un país en el formulario.
+   * * @param {string} event - El país seleccionado.
+   * * @returns {void} No retorna ningún valor.
+   */
+  tipoPersonaCambioDeValor(event: string | number): void {
+    this.agregarProveedorForm.patchValue({
+      tipoPersona: event,
+    });
   }
 
   /**

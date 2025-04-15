@@ -1,9 +1,7 @@
-import {
-  PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE,
-  TERCEROS_NACIONALIDAD_OPCIONES,
-  TIPO_PERSONA_OPCIONES,
-} from '../../constants/datos-solicitud.enum';
+import { PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE } from '../../constants/datos-solicitud.enum';
 import { STR_NACIONAL } from '../../constants/datos-solicitud.enum';
+import { TERCEROS_NACIONALIDAD_OPCIONES } from '../../constants/datos-solicitud.enum';
+import { TIPO_PERSONA_OPCIONES } from '../../constants/datos-solicitud.enum';
 
 import { DestinoFinal } from '../../models/terceros-relacionados.model';
 
@@ -25,14 +23,14 @@ import { FormGroup } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Validators } from '@angular/forms';
 
-import { Catalogo, InputRadioComponent } from '@ng-mf/data-access-user';
+import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { InputRadioComponent } from '@ng-mf/data-access-user';
 import { TipoPersona } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs';
-
 /**
  * Componente para agregar un destinatario final (Destinatario) al formulario y almacenarlo.
  *
