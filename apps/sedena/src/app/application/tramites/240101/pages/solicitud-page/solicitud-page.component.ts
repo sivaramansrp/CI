@@ -125,7 +125,7 @@ export class SolicitudPageComponent {
       case 1:
         return TITULOMENSAJE;
       case 2:
-        return 'Cargar requisitos';
+        return 'Anexar requisitos';
       case 3:
         return 'Firmar';
       default:
