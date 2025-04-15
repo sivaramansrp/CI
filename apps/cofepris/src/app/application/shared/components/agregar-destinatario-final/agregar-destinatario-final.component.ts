@@ -145,7 +145,7 @@ export class AgregarDestinatarioFinalComponent
    * Esta propiedad almacena un arreglo de cadenas que representan
    * los elementos que deben ser obligatorios en el formulario.
    */
-  public elementosNoRequeridos: string[] = [];
+  public elementosNoRequeridos:string[]=[]
 
   /**
    * Crea el componente e inicializa el grupo de formulario.
