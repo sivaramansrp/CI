@@ -7,7 +7,6 @@ import { CapturarExpedicionCertificadosComponent } from './components/capturar-e
 import { DatosComponent } from './pages/datos/datos.component';
 import { ExpedicionCertificadoRoutingModule } from './expedicion-certificado-cupos-routing.module';
 import { FirmarSolicitudComponent } from './pages/firmar-solicitud/firmar-solicitud.component';
-import { RequisitosNecesariosComponent } from './pages/requisitos-necesarios/requisitos-necesarios.component';
 import { SolicitanteComponent } from '../../tramites/110101/components/solicitante/solicitante.component';
 import { SolicitudExpedicionPageComponent } from './pages/solicitud-expedicion-page/solicitud-expedicion-page.component';
 
@@ -57,8 +56,7 @@ import { SolicitudExpedicionPageComponent } from './pages/solicitud-expedicion-p
   declarations: [
     DatosComponent,
     FirmarSolicitudComponent,
-    SolicitudExpedicionPageComponent,
-    RequisitosNecesariosComponent,
+    SolicitudExpedicionPageComponent
 
   ],
   // Importaciones de otros módulos y componentes necesarios para este módulo

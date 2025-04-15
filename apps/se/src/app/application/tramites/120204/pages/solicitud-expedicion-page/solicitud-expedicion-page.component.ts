@@ -1,10 +1,9 @@
 import { Component, ViewChild } from '@angular/core';
 import { DatosPasos,WizardComponent } from '@libs/shared/data-access-user/src';
 import { AccionBoton } from '@libs/shared/data-access-user/src/core/models/140103/cancelacion.model';
-import { Entidad } from '@libs/shared/data-access-user/src/core/enums/120404/solicitante.enum';
 import { ListaPasosWizard } from '@libs/shared/data-access-user/src';
+import { PASOS } from '@libs/shared/data-access-user/src/tramites/constantes/303/pasos.enums';
 import { REQUISITOS } from '../../constantes/expedicion-certificado.enum';
-
 
 /**
  * Componente para la página de solicitud de expedición.
@@ -21,7 +20,7 @@ export class SolicitudExpedicionPageComponent {
    * Lista de pantallas o pasos del asistente.
    * Se inicializa con la entidad correspondiente.
    */
-  pantallasPasos: ListaPasosWizard[] = Entidad;
+  pantallasPasos: ListaPasosWizard[] = PASOS;
 
   /**
    * Índice actual del paso en el asistente.
