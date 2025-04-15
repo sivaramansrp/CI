@@ -277,9 +277,15 @@ const ROUTES: Routes = [
     path: 'Permiso-de-importacion',
     loadChildren: () =>
       import('./tramites/260512/permiso-de-importacion.module').then(
-        (m) => m.PermisoDeImportacionModule
-      ),
+        (m) => m.PermisoDeImportacionModule)
   },
+  {
+    path: 'permiso-importacion-calidad',
+    loadChildren: () =>
+      import('./tramites/260514/parmiso-importacion-calidad.module').then(
+        (m) => m.ParmisoImportacionCalidadModule)
+  },
+        
   {
     path: 'registrar-solicitud-mcp',
     loadChildren: () =>
