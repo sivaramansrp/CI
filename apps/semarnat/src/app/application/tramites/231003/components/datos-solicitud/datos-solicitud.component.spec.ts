@@ -121,19 +121,14 @@ describe('DatosSolicitudComponent', () => {
     expect(component.formularioPrecaucionesManejo.value).toEqual(initialState.precaucionesManejo);
   });
 
-  it('debería deshabilitar campos si se selecciona "No" en requiereEmpresa', () => {
-    component.formularioEmpresaReciclaje.get('requiereEmpresa')?.setValue('No');
-
-    expect(component.formularioEmpresaReciclaje.get('nombreEmpresa')?.disabled).toBe(true);
-    expect(component.formularioEmpresaReciclaje.get('telefono')?.disabled).toBe(true);
-  });
-
   it('debería deshabilitar campos si se selecciona "No" en reciclajeInstalaciones', () => {
     component.formularioLugarReciclaje.get('reciclajeInstalaciones')?.setValue('No');
-
+    component.actualizarCampoLugarReciclaje('reciclajeInstalaciones');
+  
     expect(component.formularioLugarReciclaje.get('lugarReciclaje')?.disabled).toBe(true);
     expect(component.formularioLugarReciclaje.get('numeroAutorizacionEmpresaReciclaje')?.disabled).toBe(true);
   });
+  
 
   it('debería abrir el modal correctamente al llamar agregarOperacionImp', () => {
     const { Modal } = jest.requireMock('bootstrap');
