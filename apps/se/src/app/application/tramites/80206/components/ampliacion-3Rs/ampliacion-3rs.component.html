@@ -1,0 +1,69 @@
+<div class="container my-4">
+
+    <!-- Formulario dinamico de tipo de personas -->
+    <form [formGroup]="formularioInfoRegistro">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="form-label clase-sin-ajuste">Selecciona la modalidad</label>
+                    <input type="text" id="seleccionaLaModalidad" name="seleccionaLaModalidad" size="30" maxlength="13"
+                        class="form-control" formControlName="seleccionaLaModalidad" />
+                </div>
+            </div>
+            <div class="col-md-6">
+
+                <div class="form-group">
+
+                    <app-catalogo-select [catalogo]="reglaSeleccionada" [label]="'Seleccionar regla'" [required]="false"
+                        name="seleccionarRegla" formControlName="seleccionarRegla"
+                        (selectionChange)="procesarDatosDelHijo($event)"></app-catalogo-select>
+
+                </div>
+
+            </div>
+            <div class="col-md-6 mt-5" *ngIf="isSelectedRegla">
+
+                <div class="form-group">
+
+                    <app-catalogo-select [catalogo]="sectorDesplegable" [label]="'Sector'" [required]="false"
+                        name="sector" formControlName="sector"
+                        (selectionChange)="cambioDeSector($event)"></app-catalogo-select>
+
+                </div>
+
+            </div>
+
+
+
+        </div>
+    </form>
+
+    <div class="row" *ngIf="isSelectedRegla">
+        <div class="col-md-12">
+            <div class="pull-right">
+                <button name="agregarServicio" (click)="agregarServiciosAmpliacion()" class="btn btn-primary mx-2">
+                    Agregar
+                </button>
+                <button name="eliminarServicio" (click)="eliminarServiciosGrid()" class="btn btn-danger">
+                    Eliminar
+                </button>
+
+            </div>
+        </div>
+    </div>
+    <div class="row" *ngIf="isSelectedRegla">
+        <div class="col-md-8">
+            <div class="form-group">
+                <label for="serviciosImmexServ">Sectores IMMEX:</label>
+            </div>
+        </div>
+    </div>
+    <div class="my-4">
+        <div *ngIf="isSelectedRegla">
+            <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion"
+                (listaDeFilaSeleccionada)="seleccionarDomicilios($event)"
+                [configuracionTabla]="configuracionTablaSector" [datos]="datosSector"></app-tabla-dinamica>
+        </div>
+
+
+    </div>
