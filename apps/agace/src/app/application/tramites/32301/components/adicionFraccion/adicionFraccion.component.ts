@@ -5,10 +5,14 @@ import { AvisoModifyService } from '../../services/aviso-modify.service';
 import { CROSLISTA_DE_PAISES } from '../../enums/pantallas-constante.enum'
 import { CommonModule } from '@angular/common';
 import { Modal } from 'bootstrap';
-import { Subject} from 'rxjs';
+import { Subject } from 'rxjs';
 import { Tramite32301Query } from '../../estados/tramite32301.query';
 import { Tramite32301Store } from '../../estados/tramite32301.store';
-import adicianFraccionOption from 'libs/shared/theme/assets/json/32301/adicianFraccionOption.json';
+
+interface RatioOption {
+  label: string;
+  value: string | number;
+}
 @Component({
   selector: 'app-adicion-fraccion',
   standalone: true,
@@ -21,10 +25,9 @@ export class AdicionFraccionComponent implements OnInit, OnDestroy, AfterViewIni
   cargaManualForm!: FormGroup;
   divBtnCargaMVisible: boolean = false;
   messageFraccion: string = 'Deberás adjuntar el listado de fracciones arancelarias señaladas en la descripción de las actividades relacionadas con los procesos productivos o presentación de servicios, exhibido en tu solicitud de inscripción.'
-  radioOptions = adicianFraccionOption;
+  radioOptions!: RatioOption[];
+  
   gridFraccionesHeader = ['Fracción declarada', 'Actividad relacionada', 'Correlación fracción actual', 'Descripción fracción actual', 'NICO', 'Descripción del NICO', 'UMT', 'Pa&iacute;s de origen']
-
- 
 
   fechasSeleccionadas: string[] = [];
 
@@ -159,7 +162,16 @@ export class AdicionFraccionComponent implements OnInit, OnDestroy, AfterViewIni
       sPaisBloqueDestino:[[],Validators.required]
     })
     // this.rango_fechas();
-   
+   this.getAdicianFraccionOption();
+  }
+
+  getAdicianFraccionOption():void{
+   this.AvisoModifyService
+               .getAdicianFraccionOption()
+               .subscribe((resp) =>{
+                this.radioOptions = Object.assign([], resp);
+               });
+              
   }
   
   agregar(tipo: string):void {
@@ -197,11 +209,6 @@ export class AdicionFraccionComponent implements OnInit, OnDestroy, AfterViewIni
           this.fraccionesModelInstance = new Modal(this.fraccionesModel.nativeElement);
          
         }  
-
-
-        
-
-        
   }
   
 
@@ -215,6 +222,7 @@ export class AdicionFraccionComponent implements OnInit, OnDestroy, AfterViewIni
   //       console.log(this.selectRangoDias)
   //     });
   // }
+  
 
   valorSeleccionadoTipoCarga(): void {
     const SELECTED_VALUE = this.declaracionForm.get('idCarga')?.value;

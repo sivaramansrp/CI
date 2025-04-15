@@ -2,15 +2,12 @@ import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } fr
 import { AlertComponent, Catalogo, CatalogoSelectComponent, InputRadioComponent, TableComponent, TituloComponent } from "@ng-mf/data-access-user";
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
+import { AvisoModifyService } from '../../services/aviso-modify.service';
 import { CommonModule } from '@angular/common';
 import { Modal } from 'bootstrap';
 import { ModificacionGoceInmueble } from '../../models/avisomodify.model';
 import { Tramite32301Query } from '../../estados/tramite32301.query';
 import { Tramite32301Store } from '../../estados/tramite32301.store';
-import entidadFederativa from 'libs/shared/theme/assets/json/31601/entidadFederative.json';
-import gridDomiciliosModificados from 'libs/shared/theme/assets/json/32301/gridDomiciliosModificados.json';
-import gridMostrarGridModificado from 'libs/shared/theme/assets/json/32301/gridMostrarGridModificado.json';
-import tipoDomicilio from 'libs/shared/theme/assets/json/32301/tipoDomicilio.json';
 
 @Component({
   selector: 'app-modificacion-goce-inmueble',
@@ -20,7 +17,17 @@ import tipoDomicilio from 'libs/shared/theme/assets/json/32301/tipoDomicilio.jso
 })
 export class ModificacionGoceInmuebleComponent implements OnInit, AfterViewInit, OnDestroy {
   modificacionGoceForm!: FormGroup;
-  radioOptions = tipoDomicilio;
+  radioOptions = [
+    {
+      "label": "Domicilio nuevo",
+      "value": "DomicilioNuevo"
+    },
+    {
+      "label": "Modificar domicilio",
+      "value": "ModificarDomicilio"
+    }
+   
+  ];
   messageNac= `En caso de modificar las partes contratantes en la documentación con la que acreditó el legal uso y goce del domicilio, se tendrá que incluir un escrito libre en el apartado de Anexar requisitos, mediante el tipo de documento "Otros" que detalle los cambios realizados.`
 
   mostrarGridNuevo: boolean = false;
@@ -30,9 +37,9 @@ export class ModificacionGoceInmuebleComponent implements OnInit, AfterViewInit,
   ModificarRecordModelInstance!: Modal;
   modalDomiciliosInmuebleNuevoInstance!:Modal
 
-  public gridDomiciliosModificados = gridDomiciliosModificados
+  public gridDomiciliosModificados!: object;
 
-  public gridMostrarGridModificado = gridMostrarGridModificado
+  public gridMostrarGridModificado: { tableHeader: string[]; tableBody: string[] } | undefined;
 
   gridDomiciliosModificadosHeader = [
     'Numero de aviso', 
@@ -64,7 +71,7 @@ export class ModificacionGoceInmuebleComponent implements OnInit, AfterViewInit,
   
   mostrarGridNuevoHeaderData:{ tbodyData: string[] }[] = [{ tbodyData: [],},];
 
-  entidadFederativa: Catalogo[] = entidadFederativa;
+  entidadFederativa!: Catalogo[];
 
   fraccionArancelaria: Catalogo[] = this.fraccionArancelariaData;
 
@@ -83,6 +90,7 @@ export class ModificacionGoceInmuebleComponent implements OnInit, AfterViewInit,
    modificacionGoceInmueble!: ModificacionGoceInmueble;
 
   constructor(private fb: FormBuilder,
+    private AvisoModifyService: AvisoModifyService,
     private store: Tramite32301Store,
     private Tramite32301Query:Tramite32301Query
   ) { 
@@ -94,19 +102,50 @@ export class ModificacionGoceInmuebleComponent implements OnInit, AfterViewInit,
     });
 
     this.initializeForm();
-    this.getgridDomiciliosModificados();
-    this.getgridMostrarGridModificado();
+    this.getEntidadFederativa();
+    this.getGridDomiciliosModificados()
+    this.getGridMostrarGridModificado()
   }
+  getEntidadFederativa():void
+  {
+    this.AvisoModifyService
+    .getEntidadFederativa()
+    .subscribe((resp) =>{
+    this.entidadFederativa = Object.assign([], resp);
+    });
+   }
+   getGridDomiciliosModificados():void
+   {
+     this.AvisoModifyService
+     .getGridDomiciliosModificados()
+     .subscribe((resp) =>{
+      
+     this.gridDomiciliosModificados = Object.assign({}, resp);
+     //this.gridDomiciliosModificadosHeader = this.gridDomiciliosModificados.tableHeader;
+    // this.gridDomiciliosModificadosData = this.gridDomiciliosModificados.tableBody;
+     
+     });
+    }
+    getGridMostrarGridModificado():void
+    {
+      this.AvisoModifyService
+      .getGridMostrarGridModificado()
+      .subscribe((resp) =>{
+       this.gridMostrarGridModificado = {
+         tableHeader: resp, // Assuming `resp` is the header array
+         tableBody: [] // Initialize with an empty array or transform `resp` into the required structure
+       };
+      //  this.mostrarGridNuevoHeader = this.gridMostrarGridModificado.tableHeader;
+      //        this.mostrarGridNuevoHeaderData = this.gridMostrarGridModificado.tableBody
+      
+      });
+     }
 
-  public getgridDomiciliosModificados():void {
-    this.gridDomiciliosModificadosHeader = this.gridDomiciliosModificados.tableHeader;
-    this.gridDomiciliosModificadosData = this.gridDomiciliosModificados.tableBody;
-  }
-  public getgridMostrarGridModificado():void{
-    this.mostrarGridNuevoHeader = this.gridMostrarGridModificado.tableHeader;
-    this.mostrarGridNuevoHeaderData = this.gridMostrarGridModificado.tableBody;
+  // public getgridDomiciliosModificados():void {
+  //   //this.gridDomiciliosModificadosHeader = this.gridDomiciliosModificados.tableHeader;
+  //   // this.gridDomiciliosModificadosData = this.gridDomiciliosModificados.tableBody;
+  // }
 
-  }
 
     ngAfterViewInit(): void {
       if (this.ModificarModel?.nativeElement) {

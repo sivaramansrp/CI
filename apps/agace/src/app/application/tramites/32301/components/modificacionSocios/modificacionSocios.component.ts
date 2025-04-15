@@ -1,4 +1,5 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import { AlertComponent, Catalogo, CatalogoSelectComponent, InputRadioComponent, TableComponent, TablePaginationComponent, TituloComponent } from "@ng-mf/data-access-user";
 import {
   FormBuilder,
   FormGroup,
@@ -6,24 +7,25 @@ import {
   Validators,
 } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
-import { AlertComponent } from "@ng-mf/data-access-user";
-import { Catalogo } from '@ng-mf/data-access-user';
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { AvisoModifyService } from '../../services/aviso-modify.service';
 import { CommonModule } from '@angular/common';
-import { InputRadioComponent } from '@ng-mf/data-access-user';
 import { Modal } from 'bootstrap';
 import { ModificacionSocios } from '../../models/avisomodify.model';
-import { TableComponent } from '@ng-mf/data-access-user';
-import { TablePaginationComponent } from '@ng-mf/data-access-user';
-import { TituloComponent } from "@ng-mf/data-access-user";
 import { Tramite32301Query } from '../../estados/tramite32301.query';
 import { Tramite32301Store } from '../../estados/tramite32301.store';
-import enSuCaracterDe from 'libs/shared/theme/assets/json/31601/enSuCaracterDe.json';
-import gridMiembrosEmpresas from 'libs/shared/theme/assets/json/32301/gridMiembrosEmpresas.json';
-import nacionalidad from 'libs/shared/theme/assets/json/31601/nacionalidad.json';
-import preOperativo from 'libs/shared/theme/assets/json/31601/preOperativo.json';
-import seccionMiembrosRevocados from 'libs/shared/theme/assets/json/32301/seccionMiembrosRevocados.json';
 
+interface PreOperativoIn{
+    label: string,
+    value: string
+}
+// interface TableData {
+//   tableHeader: string[];
+//   tableBody: TableBodyItem[];
+// }
+
+// interface TableBodyItem {
+//   tbodyData: string[];
+// }
 @Component({
   selector: 'app-modificacion-socios',
   standalone: true,
@@ -45,9 +47,9 @@ export class ModificacionSociosComponent implements OnInit, AfterViewInit, OnDes
   itemsPerPage: number = 1;
   currentPage: number = 1;
 
-  public seccionMiembrosRevocados = seccionMiembrosRevocados
+  public seccionMiembrosRevocados:{ tbodyData: string[] }[] = [{ tbodyData: [],},];
 
-  public gridMiembrosEmpresas = gridMiembrosEmpresas
+  public gridMiembrosEmpresas:{ tbodyData: string[] }[] = [{ tbodyData: [],},];
 
   public miembroDeLaEmpresaBodyData: unknown[] = [];
 
@@ -61,11 +63,11 @@ export class ModificacionSociosComponent implements OnInit, AfterViewInit, OnDes
   
   modificacionSocios!:ModificacionSocios
 
-  nacionalidadOptions: Catalogo[] = nacionalidad;
+  nacionalidadOptions!: Catalogo[];
 
-  radioOptions = preOperativo;
+  radioOptions!:PreOperativoIn[]
 
-  enSuCaracterDeOptions: Catalogo[] = enSuCaracterDe;
+  enSuCaracterDeOptions!: Catalogo[];
 
   @ViewChild('Agregar', { static: false }) AgregarMOdel!: ElementRef;
 
@@ -92,7 +94,7 @@ export class ModificacionSociosComponent implements OnInit, AfterViewInit, OnDes
         private destroy$: Subject<void> = new Subject<void>();
 
         
-  constructor(private fb: FormBuilder, private store: Tramite32301Store,
+  constructor(private fb: FormBuilder, private AvisoModifyService: AvisoModifyService, private store: Tramite32301Store,
     private Tramite32301Query:Tramite32301Query) {
     //constructor
   }
@@ -114,8 +116,11 @@ export class ModificacionSociosComponent implements OnInit, AfterViewInit, OnDes
     });
 
     this.getSeccionMiembrosRevocados();
-    this.getgridMiembrosEmpresas();
-
+    // this.getgridMiembrosEmpresas();
+    this.getEnSuCaracterDe();
+    this.getNacionalidad();
+    this.getPreOperativo();
+    this.getGridMiembrosEmpresas();
   }
   setValoresStore(
     form: FormGroup,
@@ -138,6 +143,42 @@ export class ModificacionSociosComponent implements OnInit, AfterViewInit, OnDes
             this.closeAgregarModal();
   }
 
+  getEnSuCaracterDe():void
+  {
+    this.AvisoModifyService
+    .getEnSuCaracterDe()
+    .subscribe((resp) =>{
+      this.enSuCaracterDeOptions = Object.assign([], resp);
+    //this.entidadFederativa = resp
+    });
+   }
+
+   getNacionalidad():void
+   {
+     this.AvisoModifyService
+     .getNacionalidad()
+     .subscribe((resp) =>{
+     this.nacionalidadOptions = Object.assign([], resp);
+     });
+    }
+    getPreOperativo():void { this.AvisoModifyService.getPreOperativo().subscribe((resp) =>{
+        this.radioOptions = Object.assign([], resp);
+      //this.entidadFederativa = resp
+      });
+     }
+
+     getGridMiembrosEmpresas():void { this.AvisoModifyService.getGridMiembrosEmpresas().subscribe((resp) =>{
+
+    this.gridMiembrosEmpresas = Object.assign([], resp);
+    });
+   }
+   getSeccionMiembrosRevocados():void { this.AvisoModifyService.getSeccionMiembrosRevocados().subscribe((resp) =>{
+
+    this.seccionMiembrosRevocados = Object.assign([], resp);
+    });
+   }
+     
+    
 
   updatePagination(): void {
     const START_INDEX = (this.currentPage - 1) * this.itemsPerPage;
@@ -146,15 +187,12 @@ export class ModificacionSociosComponent implements OnInit, AfterViewInit, OnDes
       START_INDEX + this.itemsPerPage
     );
   }
-  public getSeccionMiembrosRevocados():void {
-    this.tableColumns = this.seccionMiembrosRevocados.tableHeader;
-    // this.declareData = this.seccionMiembrosRevocados.tableBody;
-  }
+ 
 
-  public getgridMiembrosEmpresas():void {
-    this.declaretableColumns = this.gridMiembrosEmpresas.tableHeader;
-    this.declareData = this.gridMiembrosEmpresas.tableBody;
-  }
+  // public getgridMiembrosEmpresas():void {
+  //   this.declaretableColumns = this.gridMiembrosEmpresas.tableHeader;
+  //   this.declareData = this.gridMiembrosEmpresas.tableBody;
+  // }
 
   onItemsPerPageChange(itemsPerPage: number): void {
     this.itemsPerPage = itemsPerPage;

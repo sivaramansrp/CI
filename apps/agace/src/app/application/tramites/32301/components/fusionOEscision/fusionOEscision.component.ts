@@ -8,8 +8,10 @@ import { Modal } from 'bootstrap';
 import { PersonaFusionEscisionDTO } from '../../models/avisomodify.model';
 import { Tramite32301Query } from '../../estados/tramite32301.query';
 import { Tramite32301Store } from '../../estados/tramite32301.store';
-import fusionOEscision from 'libs/shared/theme/assets/json/32301/fusionOEscision.json';
-
+interface RatioOption {
+  label: string;
+  value: string | number;
+}
 @Component({
   selector: 'app-fusion-oescision',
   standalone: true,
@@ -22,7 +24,7 @@ export class FusionOEscisionComponent implements OnInit, OnDestroy, AfterViewIni
   fusionOescisionTitulo!:string
   subFusionOescisionTitulo!:string
   labelFechaFusionOscision!:string
-    radioOptions = fusionOEscision;
+  radioOptions!: RatioOption[];
     conCertificacionPrincipalVisible: boolean = true;
   sinCertificacionPrincipalVisible: boolean = true;
   ModificarFusionEscisionInstance!:Modal;
@@ -82,7 +84,16 @@ export class FusionOEscisionComponent implements OnInit, OnDestroy, AfterViewIni
     ngOnInit(): void {
 
       this.initializeForm();
+this.getCapacidadAlmacenamiento();
+       
     }
+    getCapacidadAlmacenamiento():void{
+      this.AvisoModifyService
+                  .getCapacidadAlmacenamiento()
+                  .subscribe((resp) =>{
+                   this.radioOptions = Object.assign([], resp);
+                  });
+     }
 
     ngAfterViewInit(): void {
   if (this.ModificarFusionEscisionModel?.nativeElement) {
@@ -211,9 +222,8 @@ export class FusionOEscisionComponent implements OnInit, OnDestroy, AfterViewIni
       );
     }
 
-    // eliminarPersona(): void {
-    //   // this.fusionOEscisionService.eliminarPersona();
-    //   // Placeholder implementation
+    // static eliminarPersona(): void {
+    // //eliminarPersona
     // }
 
     abrirModalFusionEscision(): void {

@@ -13,9 +13,21 @@ export class AvisoModifyService {
     // El constructor se utiliza para la inyección de dependencias.
   }
   private jsonUrl = 'assets/json/32301';
+  private jsonLkURl = 'assets/json/31601'
   private fileName = 'tipoDeAviso.json'
    private personaFusionEscision = 'personaFusionEscision.json'
    private selectRangoDias = 'selectRangoDias.json'
+   private adicianFraccionOption= 'adicianFraccionOption.json'
+   private capacidadAlmacenamiento= 'fusionOEscision.json'
+   private entidadFederativa= 'entidadFederative.json'
+   private gridDomiciliosModificados = 'gridDomiciliosModificados.json'
+   private gridMostrarGridModificado = 'gridMostrarGridModificado.json'
+   private enSuCaracterDe = 'enSuCaracterDe.json'
+  private nacionalidad = 'nacionalidad.json'
+  private preOperativo = 'preOperativo.json'
+  private gridMiembrosEmpresas = 'gridMiembrosEmpresas.json'
+  private seccionMiembrosRevocados = 'seccionMiembrosRevocados.json'
+
 
     getAvisoModify(): Observable<catalogoResponse> {
         return this.http.get<catalogoResponse>(`${this.jsonUrl}/${this.fileName}`).pipe(
@@ -39,4 +51,43 @@ export class AvisoModifyService {
         return this.http.get<string[]>(`${this.jsonUrl}/${this.selectRangoDias}`);
       }
   
-}
+      getAdicianFraccionOption():Observable<string[]> {
+        return this.http.get<string[]>(`${this.jsonUrl}/${this.adicianFraccionOption}`);
+      }
+
+      getCapacidadAlmacenamiento():Observable<string[]> {
+        return this.http.get<string[]>(`${this.jsonUrl}/${this.capacidadAlmacenamiento}`);
+      }
+
+      getEntidadFederativa():Observable<string[]> {
+        return this.http.get<string[]>(`${this.jsonLkURl}/${this.entidadFederativa}`);
+      }
+
+      getGridDomiciliosModificados():Observable<string[]> {
+        return this.http.get<string[]>(`${this.jsonUrl}/${this.gridDomiciliosModificados}`);
+      }
+      getGridMostrarGridModificado():Observable<string[]> {
+        return this.http.get<string[]>(`${this.jsonUrl}/${this.gridMostrarGridModificado}`);
+      }
+
+      getEnSuCaracterDe():Observable<string[]> {
+        return this.http.get<string[]>(`${this.jsonLkURl}/${this.enSuCaracterDe}`);
+      }
+      
+      getNacionalidad():Observable<string[]> {
+        return this.http.get<string[]>(`${this.jsonLkURl}/${this.nacionalidad}`);
+      }
+      getPreOperativo():Observable<string[]> {
+        return this.http.get<string[]>(`${this.jsonLkURl}/${this.preOperativo}`);
+      }
+    
+      getGridMiembrosEmpresas():Observable<string[]> {
+        return this.http.get<string[]>(`${this.jsonUrl}/${this.gridMiembrosEmpresas}`);
+      }
+
+      getSeccionMiembrosRevocados():Observable<string[]> {
+        return this.http.get<string[]>(`${this.jsonUrl}/${this.seccionMiembrosRevocados}`);
+      }
+    
+
+    }
