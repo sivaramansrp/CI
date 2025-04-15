@@ -23,6 +23,7 @@ import { PlaguicidasComponent } from './pages/plaguicidas/plaguicidas.component'
 import { DatosSolicitudComponent } from "./components/datos-solicitud/datos-solicitud.component";
 import { TercerosRelacionadosFabricanteComponent } from "./components/terceros-relacionados-fabricante/terceros-relacionados-fabricante.component";
 import { PagoDerechosComponent } from "./components/pago-derechos/pago-derechos.component";
+import { AvisoDePrivacidadComponent } from "../../shared/components/aviso-de-privacidad/aviso-de-privacidad.component";
 
 
 @NgModule({
@@ -44,7 +45,8 @@ import { PagoDerechosComponent } from "./components/pago-derechos/pago-derechos.
     PermisoSujetosRoutingModule,
     DatosSolicitudComponent,
     TercerosRelacionadosFabricanteComponent,
-    PagoDerechosComponent
+    PagoDerechosComponent,
+    AvisoDePrivacidadComponent
 ],
    providers: [
       ToastrService,
