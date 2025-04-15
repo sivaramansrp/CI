@@ -21,6 +21,10 @@ import {
 } from '@ng-mf/data-access-user';
 import { Component, Inject, Input, OnDestroy, OnInit } from '@angular/core';
 import {
+  DEFAULT_TABLA_ORDEN,
+  TERCEROS_RELACIONADOS_TABLE_HEADER_DATA,
+} from '../../constantes/terceros-fabricante.enum';
+import {
   REGEX_CURP,
   REGEX_RFC_FISICA,
   REGEX_RFC_MORAL,
@@ -30,7 +34,6 @@ import { CommonModule } from '@angular/common';
 import { ModalComponent } from '../modal/modal.component';
 import NacionalidadRadioOptions from '@libs/shared/theme/assets/json/260501/nacionalidad-options.json';
 import SELECT_OPTIONS_DATA from '@libs/shared/theme/assets/json/260501/fabricante-select-options-data.json';
-import { DEFAULT_TABLE_ORDER, TERCEROS_RELACIONADOS_TABLE_HEADER_DATA } from '../../constantes/terceros-fabricante.enum';
 import { TablaDatos } from '../../models/terceros-fabricante.model';
 import { TableComponent } from '@ng-mf/data-access-user';
 import { TercerosFabricanteService } from '../../services/terceros-fabricante.service';
@@ -72,14 +75,25 @@ const TERCEROS_TEXTO_DE_ALERTA =
  * Utiliza formularios reactivos y componentes personalizados para mostrar datos.
  */
 export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
-  @Input() tableOrder: { name: string; order: number; isVisible: boolean }[] = DEFAULT_TABLE_ORDER;
-  
-  // Update the getSortedTables method to filter by isVisible
-  getSortedTables() {
-    return this.tableOrder
-      .filter(table => table.isVisible) // Only include visible tables
-      .sort((a, b) => a.order - b.order);
+  /**
+   * Expresión regular para validar el RFC de personas físicas.
+   * @description Utiliza una expresión regular para verificar el formato del RFC.
+   */
+  @Input() tablaOrden: { nombre: string; orden: number; esVisible: boolean }[] =
+    DEFAULT_TABLA_ORDEN;
+
+  /**
+   *  Método para validar el RFC del tercero.
+   * @param control Control del formulario que contiene el RFC.
+   * @returns Un objeto de error si el RFC es inválido, o `null` si es válido.
+   * @description Valida el RFC del tercero utilizando expresiones regulares.
+   */
+  getSortedTablas(): { nombre: string; orden: number; esVisible: boolean }[] {
+    return this.tablaOrden
+      .filter((tabla) => tabla.esVisible) // Only include visible tables
+      .sort((a, b) => a.orden - b.orden);
   }
+
   /**
    * Indicador de visibilidad para la sección de la tabla.
    * Inicialmente visible (`true`).
