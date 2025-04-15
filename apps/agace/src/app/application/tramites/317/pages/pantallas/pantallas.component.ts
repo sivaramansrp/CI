@@ -4,31 +4,45 @@ import { PANTA_PASOS } from '@libs/shared/data-access-user/src/core/enums/317/av
 
 import { AccionBoton } from '../../models/aviso.model';
 
+/**
+ * @component
+ * @name PantallasComponent
+ * @description
+ * Componente que gestiona las pantallas del flujo del trámite. 
+ * Controla los pasos del wizard y la navegación entre ellos.
+ */
 @Component({
   selector: 'app-pantallas',
   templateUrl: './pantallas.component.html',
   styleUrl: './pantallas.component.scss',
 })
 export class PantallasComponent {
-
-  pantallasPasos: ListaPasosWizard[] = PANTA_PASOS;
   /**
-   * Esta variable se utiliza para almacenar el índice del paso.
+   * @property {ListaPasosWizard[]} pantallasPasos
+   * @description
+   * Lista de pasos del wizard que se muestran en el flujo del trámite.
+   */
+  pantallasPasos: ListaPasosWizard[] = PANTA_PASOS;
+
+  /**
+   * @property {number} indice
+   * @description
+   * Índice actual del paso en el wizard.
+   * Inicialmente se establece en 1.
    */
   indice: number = 1;
-/**
-   * Esta variable se utiliza para almacenar el componente wizard.
-   * @param wizardComponent - El componente wizard.
+
+  /**
+   * @property {WizardComponent} wizardComponent
+   * @description
+   * Referencia al componente del wizard para controlar la navegación entre pasos.
    */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
 
   /**
-   * Esta variable se utiliza para almacenar los datos de los pasos.
-   * @param datosPasos - Los datos de los pasos.
-   * @param nroPasos - El número de pasos.
-   * @param indice - El índice.
-   * @param txtBtnAnt - El texto del botón anterior.
-   * @param txtBtnSig - El texto del botón siguiente.
+   * @property {DatosPasos} datosPasos
+   * @description
+   * Datos relacionados con los pasos del wizard, como el número total de pasos, el índice actual y los textos de los botones.
    */
   datosPasos: DatosPasos = {
     nroPasos: this.pantallasPasos.length,
@@ -36,8 +50,13 @@ export class PantallasComponent {
     txtBtnAnt: 'Anterior',
     txtBtnSig: 'Continuar',
   };
-/**
-   * Este método se utiliza para inicializar el componente.
+
+  /**
+   * @method
+   * @name getValorIndice
+   * @description
+   * Método que actualiza el índice del paso actual y controla la navegación en el wizard.
+   * @param {AccionBoton} e - Objeto que contiene el valor del índice y la acción a realizar (continuar o retroceder).
    */
   getValorIndice(e: AccionBoton): void {
     if (e.valor > 0 && e.valor < 5) {
