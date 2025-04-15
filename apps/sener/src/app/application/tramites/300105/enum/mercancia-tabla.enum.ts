@@ -1,40 +1,117 @@
+/**
+ * Interfaz SerieConfiguracionItem
+ * Descripción: Representa la configuración de un elemento de serie.
+ */
 export interface SerieConfiguracionItem {
+  /**
+   * Propiedad serie
+   * Descripción: Número de serie del elemento.
+   */
   serie: string;
 }
 
+/**
+ * Interfaz ConfiguracionItem
+ * Descripción: Representa la configuración de un elemento de mercancía.
+ */
 export interface ConfiguracionItem {
-
+  /**
+   * Propiedad id
+   * Descripción: Identificador único del elemento.
+   */
   id: number;
 
-    marca: string;
+  /**
+   * Propiedad marca
+   * Descripción: Marca del equipo.
+   */
+  marca: string;
 
-    modelo: string;
+  /**
+   * Propiedad modelo
+   * Descripción: Modelo del equipo.
+   */
+  modelo: string;
 
-    serie: string;
+  /**
+   * Propiedad serie
+   * Descripción: Número de serie del equipo.
+   */
+  serie: string;
 
-    voltaje: string;
+  /**
+   * Propiedad voltaje
+   * Descripción: Voltaje máximo del tubo de rayos X.
+   */
+  voltaje: string;
 
-    unidadMedidaVoltaje: string;
+  /**
+   * Propiedad unidadMedidaVoltaje
+   * Descripción: Unidad de medida del voltaje.
+   */
+  unidadMedidaVoltaje: string;
 
-    corriente: string;
+  /**
+   * Propiedad corriente
+   * Descripción: Corriente máxima del tubo de rayos X.
+   */
+  corriente: string;
 
-    unidadMedidaCorriente: string;
+  /**
+   * Propiedad unidadMedidaCorriente
+   * Descripción: Unidad de medida de la corriente.
+   */
+  unidadMedidaCorriente: string;
 
-    numEquipos: string;
+  /**
+   * Propiedad numEquipos
+   * Descripción: Número de equipos.
+   */
+  numEquipos: string;
 
+  /**
+   * Propiedad fraccionArancelaria
+   * Descripción: Fracción arancelaria asociada al equipo.
+   */
   fraccionArancelaria: string;
 
+  /**
+   * Propiedad fraccionDescripcion
+   * Descripción: Descripción de la fracción arancelaria.
+   */
   fraccionDescripcion: string;
 }
 
+/**
+ * Constante SERIE_TABLA_CONFIGURACION
+ * Descripción: Configuración de la tabla para los elementos de serie.
+ */
 export const SERIE_TABLA_CONFIGURACION = [
   {
+    /**
+     * Propiedad encabezado
+     * Descripción: Título de la columna en la tabla.
+     */
     encabezado: 'Serie',
-    clave: (item: SerieConfiguracionItem): string => item.serie,
-    orden: 1,
-  }
-]
 
+    /**
+     * Propiedad clave
+     * Descripción: Función que devuelve el valor de la clave para un elemento de serie.
+     */
+    clave: (item: SerieConfiguracionItem): string => item.serie,
+
+    /**
+     * Propiedad orden
+     * Descripción: Orden de la columna en la tabla.
+     */
+    orden: 1,
+  },
+];
+
+/**
+ * Constante TABLA_CONFIGURACION
+ * Descripción: Configuración de la tabla para los elementos de mercancía.
+ */
 export const TABLA_CONFIGURACION = [
   {
     encabezado: 'Marca',
@@ -85,5 +162,5 @@ export const TABLA_CONFIGURACION = [
     encabezado: 'Descripción de la fracción arancelaria',
     clave: (item: ConfiguracionItem): string => item.fraccionDescripcion,
     orden: 10,
-  }
-]
+  },
+];

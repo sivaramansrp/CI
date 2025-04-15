@@ -136,6 +136,9 @@ export class DatosDelSolicitanteComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Método para manejar el evento de entrada de texto en el campo de autorización.
+   */
   onKeyUpNumAutorizacion(event:any ,nombreControl:string ,  metodoNombre: keyof Tramite300105Store): void {
     const VALOR = event.target.value;
     (this.tramite300105Store[metodoNombre] as (value: unknown) => void)(VALOR);

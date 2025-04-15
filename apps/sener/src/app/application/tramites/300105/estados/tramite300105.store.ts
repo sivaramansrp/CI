@@ -4,145 +4,93 @@ import { ConfiguracionItem } from '../enum/mercancia-tabla.enum';
 import { DestinatarioConfiguracionItem } from '../enum/destinatario-tabla.enum';
 
 /**
- * Creacion del estado inicial para la interfaz de tramite 300105
- * @returns Tramite300105
+ * interface Tramite300105State
+ * description Define la estructura del estado para el trámite 300105.
  */
 export interface Tramite300105State {
+  /** description Motivo de renuncia de derechos. */
   motivoRenunciaDeDerechos: string;
-  mercacniaSolicitudControlar:boolean;
+
+  /** description Indica si se debe controlar la mercancía en la solicitud. */
+  mercacniaSolicitudControlar: boolean;
+
+  /** description Observaciones relacionadas con el trámite. */
   observaciones: string;
+
+  /** description Estado del popup de terceros relacionados. */
   tercerosPopupState: boolean;
 
-  /**
-   * Datos de la tabla de mercancías asociadas al trámite.
-   */
-  
+  /** description Datos de la tabla de mercancías asociadas al trámite. */
   mercanciaTablaDatos: ConfiguracionItem[];
-    /**
-   * Datos de la tabla de mercancías asociadas al trámite.
-   */
-    destinatarioTablaDatos: DestinatarioConfiguracionItem[];
 
-  /**
-   * claveDeReferencia
-   * @type {string}
-   */
+  /** description Datos de la tabla de destinatarios asociados al trámite. */
+  destinatarioTablaDatos: DestinatarioConfiguracionItem[];
+
+  /** description Clave de referencia del trámite. */
   claveDeReferencia: string;
 
-  /**
-   * cadenaDependencia
-   * @type {string}
-   */
+  /** description Cadena de dependencia asociada al trámite. */
   cadenaDependencia: string;
 
-  /**
-   * banco
-   * @type {string}
-   */
+  /** description Banco relacionado con el trámite. */
   banco: string;
 
-  /**
-   * llaveDePago
-   * @type {string}
-   */
+  /** description Llave de pago asociada al trámite. */
   llaveDePago: string;
 
-  /**
-   * fechaPago
-   * @type {string}
-   */
+  /** description Fecha de pago asociada al trámite. */
   fechaPago: string;
 
-  /**
-   * importePago
-   * @type {string}
-   */
+  /** description Importe del pago asociado al trámite. */
   importePago: string;
 
+  /** description Número de expediente del trámite. */
   numeroExpediente?: string;
-  /**
-   * tipoOperacion
-   * @type {string}
-   */
+
+  /** description Tipo de operación asociada al trámite. */
   tipoOperacion?: string;
 
-  /**
-   * finalidad
-   * @type {string}
-   */
+  /** description Finalidad del trámite. */
   finalidad?: string;
 
+  /** description Indica si el trámite está exento. */
   isExento?: boolean;
+
+  /** description Indica si el trámite tiene autorización. */
   isAutorizacion?: boolean;
+
+  /** description Número de autorización 1. */
   numAutorizacion1?: string;
+
+  /** description Número de autorización 2. */
   numAutorizacion2?: string;
+
+  /** description Número de autorización 3. */
   numAutorizacion3?: string;
 }
 
+/**
+ * function createInitialState
+ * description Crea el estado inicial para el trámite 300105.
+ * returns {Tramite300105State} Estado inicial del trámite.
+ */
 export function createInitialState(): Tramite300105State {
   return {
     motivoRenunciaDeDerechos: '',
-    mercacniaSolicitudControlar:true,
-
+    mercacniaSolicitudControlar: true,
     mercanciaTablaDatos: [],
     destinatarioTablaDatos: [],
     observaciones: '',
     tercerosPopupState: false,
-
-    /**
-     * claveDeReferencia
-     * @type {string}
-     */
     claveDeReferencia: '',
-
-    /**
-     * cadenaDependencia
-     * @type {string}
-     * */
     cadenaDependencia: '',
-
-    /**
-     * banco
-     * @type {string}
-     */
     banco: '',
-
-    /**
-     * llaveDePago
-     * @type {string}
-     */
     llaveDePago: '',
-
-    /**
-     * fechaPago
-     * @type {string}
-     */
     fechaPago: '',
-
-    /**
-     * importePago
-     * @type {string}
-     */
     importePago: '',
-
-    /**
-     * numeroExpediente
-     * @type {string}
-     */
     numeroExpediente: '',
-
-    /**
-     * tipoOperacion
-     * @type {string}
-     */
     tipoOperacion: '',
-
-    /**
-     * finalidad
-     * @type {string}
-     * */
     finalidad: '',
-
     isExento: false,
     isAutorizacion: false,
     numAutorizacion1: '',
@@ -151,6 +99,10 @@ export function createInitialState(): Tramite300105State {
   };
 }
 
+/**
+ * class Tramite300105Store
+ * description Clase que representa el estado del trámite 300105.
+ */
 @Injectable({
   providedIn: 'root',
 })
@@ -160,6 +112,11 @@ export class Tramite300105Store extends Store<Tramite300105State> {
     super(createInitialState());
   }
 
+  /**
+   * method setMotivoRenunciaDeDerechos
+   * description Actualiza el motivo de renuncia de derechos en el estado.
+   * param {string} motivoRenunciaDeDerechos Motivo de renuncia de derechos.
+   */
   setMotivoRenunciaDeDerechos(motivoRenunciaDeDerechos: string): void {
     this.update((state) => ({
       ...state,
@@ -167,19 +124,23 @@ export class Tramite300105Store extends Store<Tramite300105State> {
     }));
   }
 
-   /**
-   * 
-   * Actualiza el estado con los datos de la tabla de mercancía proporcionados.
-   *
-   * {ConfiguracionItem[]} mercanciaTablaDatos - Los datos de la tabla de mercancía.
+  /**
+   * method setMercanciaTablaDatos
+   * description Actualiza los datos de la tabla de mercancías en el estado.
+   * param {ConfiguracionItem[]} mercanciaTablaDatos Datos de la tabla de mercancías.
    */
-   public setMercanciaTablaDatos(mercanciaTablaDatos: ConfiguracionItem[]): void {
+  public setMercanciaTablaDatos(mercanciaTablaDatos: ConfiguracionItem[]): void {
     this.update((state) => ({
       ...state,
       mercanciaTablaDatos,
     }));
   }
 
+  /**
+   * method setDestinatarioTablaDatos
+   * description Actualiza los datos de la tabla de destinatarios en el estado.
+   * param {DestinatarioConfiguracionItem[]} destinatarioTablaDatos Datos de la tabla de destinatarios.
+   */
   public setDestinatarioTablaDatos(destinatarioTablaDatos: DestinatarioConfiguracionItem[]): void {
     this.update((state) => ({
       ...state,
@@ -187,6 +148,11 @@ export class Tramite300105Store extends Store<Tramite300105State> {
     }));
   }
 
+  /**
+   * method setObservaciones
+   * description Actualiza las observaciones en el estado.
+   * param {string} observaciones Observaciones relacionadas con el trámite.
+   */
   public setObservaciones(observaciones: string): void {
     this.update((state) => ({
       ...state,
@@ -194,25 +160,24 @@ export class Tramite300105Store extends Store<Tramite300105State> {
     }));
   }
 
-    /**
-   * 
-   * Actualiza el estado con el estado del popup de terceros.
-   *
-   * {boolean} tercerosPopupState - El estado del popup de terceros.
+  /**
+   * method setTercerosPopupState
+   * description Actualiza el estado del popup de terceros relacionados.
+   * param {boolean} tercerosPopupState Estado del popup de terceros.
    */
-
-    public setTercerosPopupState(tercerosPopupState: boolean): void {
-      this.update((state) => ({
-        ...state,
-        tercerosPopupState,
-      }));
-    }
+  public setTercerosPopupState(tercerosPopupState: boolean): void {
+    this.update((state) => ({
+      ...state,
+      tercerosPopupState,
+    }));
+  }
 
   /**
-   * Guarda la clave de referencia en el estado.
-   * @param claveDeReferencia
+   * method setClaveDeReferencia
+   * description Actualiza la clave de referencia en el estado.
+   * param {string} claveDeReferencia Clave de referencia.
    */
-  public setClaveDeReferencia(claveDeReferencia: string) {
+  public setClaveDeReferencia(claveDeReferencia: string): void {
     this.update((state) => ({
       ...state,
       claveDeReferencia,
@@ -220,10 +185,11 @@ export class Tramite300105Store extends Store<Tramite300105State> {
   }
 
   /**
-   * Guarda la cadena de dependencia en el estado.
-   * @param cadenaDependencia
+   * method setCadenaDependencia
+   * description Actualiza la cadena de dependencia en el estado.
+   * param {string} cadenaDependencia Cadena de dependencia.
    */
-  public setCadenaDependencia(cadenaDependencia: string) {
+  public setCadenaDependencia(cadenaDependencia: string): void {
     this.update((state) => ({
       ...state,
       cadenaDependencia,
@@ -231,10 +197,11 @@ export class Tramite300105Store extends Store<Tramite300105State> {
   }
 
   /**
-   * Guarda el banco en el estado.
-   * @param banco
+   * method setBanco
+   * description Actualiza el banco en el estado.
+   * param {string} banco Banco relacionado con el trámite.
    */
-  public setBanco(banco: string) {
+  public setBanco(banco: string): void {
     this.update((state) => ({
       ...state,
       banco,
@@ -242,10 +209,11 @@ export class Tramite300105Store extends Store<Tramite300105State> {
   }
 
   /**
-   * Guarda la llave de pago en el estado.
-   * @param llaveDePago
+   * method setllaveDePago
+   * description Actualiza la llave de pago en el estado.
+   * param {string} llaveDePago Llave de pago.
    */
-  public setllaveDePago(llaveDePago: string) {
+  public setllaveDePago(llaveDePago: string): void {
     this.update((state) => ({
       ...state,
       llaveDePago,
@@ -253,10 +221,11 @@ export class Tramite300105Store extends Store<Tramite300105State> {
   }
 
   /**
-   * Guarda la fecha de pago en el estado.
-   * @param fechaPago
+   * method setFechaPago
+   * description Actualiza la fecha de pago en el estado.
+   * param {string} fechaPago Fecha de pago.
    */
-  public setFechaPago(fechaPago: string) {
+  public setFechaPago(fechaPago: string): void {
     this.update((state) => ({
       ...state,
       fechaPago,
@@ -264,10 +233,11 @@ export class Tramite300105Store extends Store<Tramite300105State> {
   }
 
   /**
-   * Guarda el importe de pago en el estado.
-   * @param importePago
-   * */
-  public setImportePago(importePago: string) {
+   * method setImportePago
+   * description Actualiza el importe de pago en el estado.
+   * param {string} importePago Importe de pago.
+   */
+  public setImportePago(importePago: string): void {
     this.update((state) => ({
       ...state,
       importePago,
@@ -275,10 +245,11 @@ export class Tramite300105Store extends Store<Tramite300105State> {
   }
 
   /**
-   * Guarda el numero de expediente en el estado.
-   * @param numeroExpediente
+   * method setNumeroExpediente
+   * description Actualiza el número de expediente en el estado.
+   * param {string} numeroExpediente Número de expediente.
    */
-  public setNumeroExpediente(numeroExpediente: string) {
+  public setNumeroExpediente(numeroExpediente: string): void {
     this.update((state) => ({
       ...state,
       numeroExpediente,
@@ -286,10 +257,11 @@ export class Tramite300105Store extends Store<Tramite300105State> {
   }
 
   /**
-   * Guarda el tipo de operacion en el estado.
-   * @param tipoOperacion
+   * method setTipoOperacion
+   * description Actualiza el tipo de operación en el estado.
+   * param {string} tipoOperacion Tipo de operación.
    */
-  public setTipoOperacion(tipoOperacion: string) {
+  public setTipoOperacion(tipoOperacion: string): void {
     this.update((state) => ({
       ...state,
       tipoOperacion,
@@ -297,10 +269,11 @@ export class Tramite300105Store extends Store<Tramite300105State> {
   }
 
   /**
-   * Guarda la finalidad en el estado.
-   * @param finalidad
+   * method setFinalidad
+   * description Actualiza la finalidad en el estado.
+   * param {string} finalidad Finalidad del trámite.
    */
-  public setFinalidad(finalidad: string) {  
+  public setFinalidad(finalidad: string): void {
     this.update((state) => ({
       ...state,
       finalidad,
@@ -308,10 +281,11 @@ export class Tramite300105Store extends Store<Tramite300105State> {
   }
 
   /**
-   * Guarda el valor de isExento en el estado.
-   * @param isExento
+   * method setIsExento
+   * description Actualiza el valor de isExento en el estado.
+   * param {boolean} isExento Indica si el trámite está exento.
    */
-  public setIsExento(isExento: boolean) {
+  public setIsExento(isExento: boolean): void {
     this.update((state) => ({
       ...state,
       isExento,
@@ -319,10 +293,11 @@ export class Tramite300105Store extends Store<Tramite300105State> {
   }
 
   /**
-   * Guarda el valor de isAutorizacion en el estado.
-   * @param isAutorizacion
+   * method setIsAutorizacion
+   * description Actualiza el valor de isAutorizacion en el estado.
+   * param {boolean} isAutorizacion Indica si el trámite tiene autorización.
    */
-  public setIsAutorizacion(isAutorizacion: boolean) {
+  public setIsAutorizacion(isAutorizacion: boolean): void {
     this.update((state) => ({
       ...state,
       isAutorizacion,
@@ -330,21 +305,23 @@ export class Tramite300105Store extends Store<Tramite300105State> {
   }
 
   /**
-   * Guarda el valor de numAutorizacion1 en el estado.
-   * @param numAutorizacion1
+   * method setNumAutorizacion1
+   * description Actualiza el valor de numAutorizacion1 en el estado.
+   * param {string} numAutorizacion1 Número de autorización 1.
    */
-  public setNumAutorizacion1(numAutorizacion1: string) {
+  public setNumAutorizacion1(numAutorizacion1: string): void {
     this.update((state) => ({
       ...state,
       numAutorizacion1,
     }));
   }
-  
+
   /**
-   * Guarda el valor de numAutorizacion2 en el estado.
-   * @param numAutorizacion2
+   * method setNumAutorizacion2
+   * description Actualiza el valor de numAutorizacion2 en el estado.
+   * param {string} numAutorizacion2 Número de autorización 2.
    */
-  public setNumAutorizacion2(numAutorizacion2: string) {
+  public setNumAutorizacion2(numAutorizacion2: string): void {
     this.update((state) => ({
       ...state,
       numAutorizacion2,
@@ -352,10 +329,11 @@ export class Tramite300105Store extends Store<Tramite300105State> {
   }
 
   /**
-   * Guarda el valor de numAutorizacion3 en el estado.
-   * @param numAutorizacion3
+   * method setNumAutorizacion3
+   * description Actualiza el valor de numAutorizacion3 en el estado.
+   * param {string} numAutorizacion3 Número de autorización 3.
    */
-  public setNumAutorizacion3(numAutorizacion3: string) {
+  public setNumAutorizacion3(numAutorizacion3: string): void {
     this.update((state) => ({
       ...state,
       numAutorizacion3,

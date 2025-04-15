@@ -111,6 +111,9 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    */
   datosTablaMercancia!: ConfiguracionItem[];
 
+  /**
+   * Datos de la tabla de mercancías para la selección múltiple.
+   */
   datosSerieTablaMercancia!: SerieConfiguracionItem[];
 
   /**
@@ -185,9 +188,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     private tramite300105Store: Tramite300105Store,
     private tramite300105Query: Tramite300105Query,
     private formBuilder: FormBuilder
-  ) {
-    // No se realiza ninguna acción aquí en el constructor.
-  }
+  ) {}
 
   /**
    * Método del ciclo de vida de Angu131lar que se ejecuta al inicializar el componente.
@@ -206,6 +207,10 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     this.datosTablaMercancia = this.estadoSolicitud300105.mercanciaTablaDatos;
   }
 
+  /**
+   * Método para inicializar el formulario de la solicitud.
+   * Crea un nuevo formulario reactivo con los campos necesarios.
+   */
   crearNuevoFormularioMercancia(data?: ConfiguracionItem): void {
     const DEFAULT_DATA: ConfiguracionItem = {
       id: 0,

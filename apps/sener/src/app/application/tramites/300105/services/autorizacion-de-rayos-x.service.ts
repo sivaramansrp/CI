@@ -3,53 +3,90 @@ import { Injectable } from '@angular/core';
 import { Catalogo, RespuestaCatalogos } from '@libs/shared/data-access-user/src';
 import { Observable } from 'rxjs';
 
+/**
+ * Servicio AutorizacionDeRayosXService
+ * Descripción: Servicio encargado de gestionar los datos relacionados con los catálogos y configuraciones de mercancías y rayos X.
+ */
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
-
 export class AutorizacionDeRayosXService {
-
   /**
    * Catálogo de fracciones arancelarias.
+   * Contiene las fracciones arancelarias disponibles.
    */
   fraccionArancelaria: Catalogo[] = [];
 
   /**
    * Catálogo de descripciones de fracciones arancelarias.
+   * Contiene las descripciones asociadas a las fracciones arancelarias.
    */
   fraccionArancelariaDescripcion: Catalogo[] = [];
 
+  /**
+   * Catálogo de unidades de medida de voltaje.
+   * Contiene las unidades de medida disponibles para el voltaje.
+   */
   unidadMedidaVoltaje: Catalogo[] = [];
 
+  /**
+   * Catálogo de unidades de medida de corriente.
+   * Contiene las unidades de medida disponibles para la corriente.
+   */
   unidadMedidaCorriente: Catalogo[] = [];
 
+  /**
+   * Catálogo de países.
+   * Contiene la lista de países disponibles.
+   */
   pais: Catalogo[] = [];
+
+  /**
+   * Catálogo de tipos de mercancía.
+   * Contiene los tipos de mercancía disponibles.
+   */
   tipoMercancia: Catalogo[] = [];
 
   /**
    * Constructor del servicio.
-   * 
-   * @param {HttpClient} http - Cliente HTTP para realizar solicitudes.
+   * Inicializa el servicio con el cliente HTTP.
+   * Parámetros:
+   *   - http: Cliente HTTP para realizar solicitudes a los catálogos.
    */
-  constructor(private http: HttpClient) {
-    // No se necesita lógica de inicialización adicional.
-  }
+  constructor(private http: HttpClient) {}
 
+  /**
+   * Método getBancoData
+   * Descripción: Obtiene los datos del catálogo de bancos.
+   * Devuelve un observable con la lista de bancos disponibles.
+   */
   getBancoData(): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>('./assets/json/300105/banco-options.json');
   }
 
+  /**
+   * Método getTipoOperacion
+   * Descripción: Obtiene los datos del catálogo de tipos de operación.
+   * Devuelve un observable con la lista de tipos de operación disponibles.
+   */
   getTipoOperacion(): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>('./assets/json/300105/tipo-operacion.json');
   }
 
+  /**
+   * Método getFinalidad
+   * Descripción: Obtiene los datos del catálogo de finalidades.
+   * Devuelve un observable con la lista de finalidades disponibles.
+   */
   getFinalidad(): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>('./assets/json/300105/finalidad.json');
   }
 
   /**
- * Inicializa los datos de los catálogos relacionados con mercancías.
- */
+   * Método inicializaMercanciaDatosCatalogos
+   * Descripción: Inicializa los datos de los catálogos relacionados con mercancías.
+   * Realiza solicitudes HTTP para obtener los datos de los catálogos y los almacena en las propiedades correspondientes.
+   */
   public inicializaMercanciaDatosCatalogos(): void {
     this.obtenerRespuestaPorUrl(this, 'fraccionArancelaria', '/300105/fraccion-arancelaria.json');
     this.obtenerRespuestaPorUrl(this, 'fraccionArancelariaDescripcion', '/300105/fraccion-arancelaria-descripcion.json');
@@ -60,10 +97,13 @@ export class AutorizacionDeRayosXService {
   }
 
   /**
- * Si la variable y la URL son válidas, se realiza una solicitud HTTP GET a la URL especificada.
- * Si la respuesta tiene un código 200 y contiene datos, estos se asignan a la variable especificada.
- * Si la variable o la URL no son válidas, se asigna un arreglo vacío a la variable.
- */
+   * Método obtenerRespuestaPorUrl
+   * Descripción: Realiza una solicitud HTTP para obtener los datos de un catálogo y los almacena en la propiedad correspondiente.
+   * Parámetros:
+   *   - self: Instancia del servicio AutorizacionDeRayosXService.
+   *   - variable: Nombre de la propiedad donde se almacenarán los datos del catálogo.
+   *   - url: URL del archivo JSON que contiene los datos del catálogo.
+   */
   obtenerRespuestaPorUrl(
     self: AutorizacionDeRayosXService,
     variable: keyof AutorizacionDeRayosXService,
@@ -75,5 +115,4 @@ export class AutorizacionDeRayosXService {
       });
     }
   }
-
 }

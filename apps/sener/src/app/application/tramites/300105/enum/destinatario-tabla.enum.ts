@@ -1,61 +1,119 @@
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
 
+/**
+ * Interfaz MercanciaConfiguracionItem
+ * Descripción: Representa la configuración de un elemento de mercancía.
+ */
 export interface MercanciaConfiguracionItem {
+  /**
+   * Propiedad tipoMercancia
+   * Descripción: Tipo de mercancía asociada al elemento.
+   */
   tipoMercancia: string;
 }
 
 /**
- * Interfaz que define la estructura de un elemento de configuración para la tabla de terceros.
- * Representa los datos asociados a un destinatario, como país, ciudad, entidad federativa, domicilio y código postal.
+ * Interfaz DestinatarioConfiguracionItem
+ * Descripción: Representa los datos asociados a un destinatario, como país, ciudad, entidad federativa, domicilio y código postal.
  */
 export interface DestinatarioConfiguracionItem {
-  id?: number;
-  denominacionRazonRem?: string;
-  denominacionRazon: string;
-    /**
-   * Domicilio del destinatario.
+  /**
+   * Propiedad id
+   * Descripción: Identificador único del destinatario.
    */
-    domicilio: string;
+  id?: number;
 
   /**
-   * País del destinatario.
+   * Propiedad denominacionRazonRem
+   * Descripción: Denominación o razón social del remitente.
+   */
+  denominacionRazonRem?: string;
+
+  /**
+   * Propiedad denominacionRazon
+   * Descripción: Denominación o razón social del destinatario.
+   */
+  denominacionRazon: string;
+
+  /**
+   * Propiedad domicilio
+   * Descripción: Domicilio del destinatario.
+   */
+  domicilio: string;
+
+  /**
+   * Propiedad pais
+   * Descripción: País del destinatario.
    */
   pais: string;
 
   /**
-   * Correo del destinatario.
+   * Propiedad correo
+   * Descripción: Correo electrónico del destinatario.
    */
   correo: string;
 
+  /**
+   * Propiedad paginaWeb
+   * Descripción: Página web del destinatario.
+   */
   paginaWeb: string;
 
+  /**
+   * Propiedad tipoMercancia
+   * Descripción: Tipo de mercancía asociada al destinatario.
+   */
   tipoMercancia: string;
 }
 
+/**
+ * Constante MERCANCIA_TABLA_CONFIGURACION
+ * Descripción: Configuración de la tabla para los elementos de mercancía.
+ */
 export const MERCANCIA_TABLA_CONFIGURACION = [
   {
+    /**
+     * Propiedad encabezado
+     * Descripción: Título de la columna en la tabla.
+     */
     encabezado: 'Mercancia',
+
+    /**
+     * Propiedad clave
+     * Descripción: Función que devuelve el valor de la clave para un elemento de mercancía.
+     */
     clave: (item: MercanciaConfiguracionItem): string => item.tipoMercancia,
+
+    /**
+     * Propiedad orden
+     * Descripción: Orden de la columna en la tabla.
+     */
     orden: 1,
-  }
-]
+  },
+];
 
 /**
- * Configuración de las columnas para la tabla de terceros.
+ * Constante DESTINATARIO_TABLA_CONFIGURACION
+ * Descripción: Configuración de las columnas para la tabla de destinatarios.
  * Define cómo se mostrarán los datos de los destinatarios en la tabla, incluyendo encabezados, claves y orden.
  */
 export const DESTINATARIO_TABLA_CONFIGURACION: ConfiguracionColumna<DestinatarioConfiguracionItem>[] = [
   {
     /**
-     * Encabezado de la columna para la denominación o razón social.
+     * Propiedad encabezado
+     * Descripción: Encabezado de la columna para la denominación o razón social.
      */
     encabezado: 'Nombre / Razón social',
+
     /**
-     * Clave que define cómo obtener el valor de la denominación o razón social de un elemento.
+     * Propiedad clave
+     * Descripción: Clave que define cómo obtener el valor de la denominación o razón social de un elemento.
      */
     clave: (item: DestinatarioConfiguracionItem) => item.denominacionRazon,
+
     /**
-     * Orden de la columna en la tabla.
+     * Propiedad orden
+     * Descripción: Orden de la columna en la tabla.
      */
     orden: 1,
   },
@@ -68,36 +126,5 @@ export const DESTINATARIO_TABLA_CONFIGURACION: ConfiguracionColumna<Destinatario
     encabezado: 'País',
     clave: (item: DestinatarioConfiguracionItem) => item.pais,
     orden: 3,
-  }
+  },
 ];
-
-/**
- * Entrada predeterminada para la tabla de destinatarios.
- * Proporciona valores iniciales para los datos de un destinatario.
- */
-export const DESTINATARIO_TABLE_ENTRY = {
-  /**
-   * País del destinatario.
-   */
-  pais: 'MEXICO (ESTADOS UNIDOS MEXICANOS)',
-
-  /**
-   * Ciudad del destinatario.
-   */
-  ciudad: '---',
-
-  /**
-   * Entidad federativa del destinatario.
-   */
-  entidadFederativa: 'MORELOS',
-
-  /**
-   * Domicilio del destinatario.
-   */
-  domicilio: 'prueba',
-
-  /**
-   * Código postal del destinatario.
-   */
-  codigoPostal: 96533,
-};

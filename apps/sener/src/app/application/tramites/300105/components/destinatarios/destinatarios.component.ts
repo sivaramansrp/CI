@@ -102,10 +102,13 @@ export class DestinatariosComponent implements OnInit, OnDestroy {
   tipoSeleccionTabla = TablaSeleccion.CHECKBOX;
 
   /**
-   * Datos de la tabla de mercancías.
+   * Datos de la tabla de destinatario.
    */
   datosTablaDestinatario!: DestinatarioConfiguracionItem[];
 
+  /**
+   * Datos de la tabla de mercancías.
+    */
   datosMercanciaTablaMercancia!: MercanciaConfiguracionItem[];
 
   /**
@@ -180,9 +183,7 @@ export class DestinatariosComponent implements OnInit, OnDestroy {
     private tramite300105Store: Tramite300105Store,
     private tramite300105Query: Tramite300105Query,
     private formBuilder: FormBuilder
-  ) {
-    // No se realiza ninguna acción aquí en el constructor.
-  }
+  ) {}
 
   /**
    * Método del ciclo de vida de Angu131lar que se ejecuta al inicializar el componente.
@@ -201,6 +202,11 @@ export class DestinatariosComponent implements OnInit, OnDestroy {
     this.datosTablaDestinatario = this.estadoSolicitud300105.destinatarioTablaDatos;
   }
 
+  /**
+   * Crea un nuevo formulario para la mercancía.
+   * Datos opcionales para inicializar el formulario.
+    * Si no se proporciona, se utilizarán valores predeterminados.
+    */
   crearNuevoFormularioMercancia(data?: DestinatarioConfiguracionItem): void {
     const DEFAULT_DATA: DestinatarioConfiguracionItem = {
       id: 0,
@@ -248,7 +254,7 @@ export class DestinatariosComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Maneja la fila seleccionada en la tabla de mercancías.
+   * Maneja la fila seleccionada en la tabla de destinatarios.
    * fila Fila seleccionada.
    */
   manejarFilaSeleccionada(fila: DestinatarioConfiguracionItem[]): void {
@@ -277,7 +283,7 @@ export class DestinatariosComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Modifica los datos de una fila seleccionada en la tabla de mercancías.
+   * Modifica los datos de una fila seleccionada en la tabla de destinatarios.
    * Actualiza el formulario de mercancía con los datos de la fila seleccionada
    * y abre el modal para editar los datos.
    */
@@ -308,7 +314,7 @@ export class DestinatariosComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Confirma la eliminación de los elementos seleccionados en la tabla de mercancías.
+   * Confirma la eliminación de los elementos seleccionados en la tabla de destinatarios.
    * Si no hay elementos seleccionados, no realiza ninguna acción.
    * Si hay elementos seleccionados, abre el popup de confirmación de eliminación.
    */
@@ -320,7 +326,7 @@ export class DestinatariosComponent implements OnInit, OnDestroy {
   }
 
   /**
- * Filtra y elimina los elementos seleccionados de la tabla de mercancías.
+ * Filtra y elimina los elementos seleccionados de la tabla de destinatarios.
  * Actualiza el estado del almacén y cierra el popup de confirmación de eliminación.
  */
   eliminarMercanciaItem(): void {

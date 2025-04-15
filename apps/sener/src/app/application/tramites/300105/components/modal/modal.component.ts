@@ -14,7 +14,5 @@ export class ModalComponent {
    * Constructor del componente ModalComponent.
    * Actualmente no realiza ninguna acción.
    */
-  constructor() {
-    // No se realiza ninguna acción aquí.
-  }
+  constructor() {}
 }
