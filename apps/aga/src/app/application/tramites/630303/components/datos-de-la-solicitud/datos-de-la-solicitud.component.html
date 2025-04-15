@@ -4,12 +4,14 @@
         <div class="row mt-4">
             <div class="col-md-4">
                 <app-catalogo-select [catalogo]="aduanaDeingresOpciones" [label]="'Aduana de ingreso'" [required]="true"
-                    formControlName="cveAduana" (change)="setValorStore(datosImportacionTemporalFormulario,'cveAduana')"></app-catalogo-select>
+                    formControlName="cveAduana"
+                    (change)="setValorStore(datosImportacionTemporalFormulario,'cveAduana')"></app-catalogo-select>
                 <input type="hidden" id="hidAduana" formControlName="cveAduana" />
             </div>
             <div class="col-md-4">
                 <app-catalogo-select [catalogo]="seccionAduaneraOpciones" [label]="'Sección aduanera'"
-                    [required]="false" formControlName="cveSeccionAduanal" (change)="setValorStore(datosImportacionTemporalFormulario,'cveSeccionAduanal')"></app-catalogo-select>
+                    [required]="false" formControlName="cveSeccionAduanal"
+                    (change)="setValorStore(datosImportacionTemporalFormulario,'cveSeccionAduanal')"></app-catalogo-select>
                 <input type="hidden" id="hidSeccionAduanal" formControlName="cveSeccionAduanal" />
             </div>
         </div>
@@ -20,7 +22,7 @@
             </div>
             <div class="col-md-4">
                 <app-catalogo-select [catalogo]="prorrogaOpciones" [label]="'Cuenta con prórroga'" [required]="true"
-                    formControlName="cuentaProrroga" (change)="onChangeTipoImportacionRetorno()" ></app-catalogo-select>
+                    formControlName="cuentaProrroga" (change)="onChangeTipoImportacionRetorno()"></app-catalogo-select>
                 <input type="hidden" id="hidMostrarSeccionRetorno" formControlName="cuentaProrroga" />
             </div>
         </div>
