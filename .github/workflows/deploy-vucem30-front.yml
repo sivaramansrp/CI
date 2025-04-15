@@ -68,7 +68,7 @@ jobs:
           context: ./
           file: apps/dashboard/Dockerfile
           tags: |
-            ghcr.io/vucem30/dockerized-front-dashboard-vucem30:latest
+            ghcr.io/vucem30/dockerized-front-vucem30:latest
           push: ${{ github.ref == 'refs/heads/develop' }}
 
       - name: Execute remote command (last one)
@@ -80,4 +80,4 @@ jobs:
           port: 22
           script: |
             cd /home/ubuntu/v30
-            microk8s kubectl rollout restart deployment front-dashboard-vucem30-deployment-dev
+            microk8s kubectl rollout restart deployment front-vucem30-deployment-dev
