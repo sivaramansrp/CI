@@ -57,12 +57,6 @@ export class DatosDelTramiteUnoComponent implements OnInit, OnDestroy {
    * Formulario reactivo para la fracción arancelaria.
    */
   fraccionForm!: FormGroup;
-
-  /**
-   * Lista de suscripciones activas para evitar fugas de memoria.
-   */
-  private subscriptions: Subscription[] = [];
-
   /**
    * Estado actual de la solicitud.
    */
@@ -150,10 +144,6 @@ export class DatosDelTramiteUnoComponent implements OnInit, OnDestroy {
    */
   subscription!: Subscription;
 
-  /**
-   * Suscripción para manejar múltiples observables.
-   */
-  subscriptionS: Subscription = new Subscription();
 
   /**
    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
@@ -447,15 +437,16 @@ export class DatosDelTramiteUnoComponent implements OnInit, OnDestroy {
    * @description Obtiene el catálogo de países desde el servicio y lo almacena en el store.
    */
   getPais(): void {
-    const SUB = this.invoCarService
+    this.invoCarService
       .getPais()
+      .pipe(
+        takeUntil(this.destroyNotifier$))
       .subscribe((resp) => {
         if (resp.code === 200) {
           const RESPONSE = resp.data;
           this.store.setPais(RESPONSE);
         }
       });
-    this.subscriptionS.add(SUB);
   }
 
   /**
@@ -463,13 +454,13 @@ export class DatosDelTramiteUnoComponent implements OnInit, OnDestroy {
    * @description Obtiene el catálogo de entidades federativas desde el servicio y lo almacena en el store.
    */
   getEntidadFederativa(): void {
-    const SUB = this.invoCarService.getEntidadFederativa().subscribe((resp) => {
+    this.invoCarService.getEntidadFederativa().pipe(
+      takeUntil(this.destroyNotifier$)).subscribe((resp) => {
       if (resp.code === 200) {
         const RESPONSE = resp.data;
         this.store.setEntidadFederativa(RESPONSE);
       }
     });
-    this.subscriptionS.add(SUB);
   }
 
   /**
@@ -477,13 +468,13 @@ export class DatosDelTramiteUnoComponent implements OnInit, OnDestroy {
    * @description Obtiene el catálogo de municipios o delegaciones desde el servicio y lo almacena en el store.
    */
   getMunicipioDelegacion(): void {
-    const SUB = this.invoCarService.getMunicipioDelegacion().subscribe((resp) => {
+    this.invoCarService.getMunicipioDelegacion().pipe(
+      takeUntil(this.destroyNotifier$)).subscribe((resp) => {
       if (resp.code === 200) {
         const RESPONSE = resp.data;
         this.store.setMunicipioDelegacion(RESPONSE);
       }
     });
-    this.subscriptionS.add(SUB);
   }
 
   /**
@@ -491,13 +482,13 @@ export class DatosDelTramiteUnoComponent implements OnInit, OnDestroy {
    * @description Obtiene el catálogo de colonias desde el servicio y lo almacena en el store.
    */
   getColonia(): void {
-    const SUB = this.invoCarService.getColonia().subscribe((resp) => {
+    this.invoCarService.getColonia().pipe(
+      takeUntil(this.destroyNotifier$)).subscribe((resp) => {
       if (resp.code === 200) {
         const RESPONSE = resp.data;
         this.store.setColonia(RESPONSE);
       }
     });
-    this.subscriptionS.add(SUB);
   }
 
   /**
@@ -505,13 +496,13 @@ export class DatosDelTramiteUnoComponent implements OnInit, OnDestroy {
    * @description Obtiene el catálogo de aduanas desde el servicio y lo almacena en el store.
    */
   getAduana(): void {
-    const SUB = this.invoCarService.getAduana().subscribe((resp) => {
+   this.invoCarService.getAduana().pipe(
+      takeUntil(this.destroyNotifier$)).subscribe((resp) => {
       if (resp.code === 200) {
         const RESPONSE = resp.data;
         this.store.setAduana(RESPONSE);
       }
     });
-    this.subscriptionS.add(SUB);
   }
 
   /**
@@ -519,13 +510,13 @@ export class DatosDelTramiteUnoComponent implements OnInit, OnDestroy {
    * @description Obtiene el catálogo de fracciones arancelarias desde el servicio y lo almacena en el store.
    */
   getFraccionArancelariae(): void {
-    const SUB = this.invoCarService.getFraccionArancelariaOptions().subscribe((resp) => {
+    this.invoCarService.getFraccionArancelariaOptions().pipe(
+      takeUntil(this.destroyNotifier$)).subscribe((resp) => {
       if (resp.code === 200) {
         const RESPONSE = resp.data;
         this.store.setFraccionarancelaria(RESPONSE);
       }
     });
-    this.subscriptionS.add(SUB);
   }
 
   /**
@@ -547,8 +538,8 @@ export class DatosDelTramiteUnoComponent implements OnInit, OnDestroy {
    * @description Limpia las suscripciones activas y restablece el estado del modal al destruir el componente.
    */
   ngOnDestroy(): void {
-    this.subscriptionS.unsubscribe();
-    this.subscriptions.forEach((sub) => sub.unsubscribe());
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
     this.modal = 'modal';
   }
 }
