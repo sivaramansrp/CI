@@ -282,6 +282,13 @@ const ROUTES: Routes = [
         (m) => m.RegistrarSolicitudMCPModule
       ),
   },
+  {
+    path: 'importacion-tratamientos-especiales',
+    loadChildren: () =>
+      import('./tramites/260207/importacion-tratamientos-especiales.module').then(
+        (m) => m.ImportacionTratamientosEspecialesModule
+      ),
+}
 ];
 
 @NgModule({
