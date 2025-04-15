@@ -8,9 +8,6 @@ import { Injectable } from '@angular/core';
  * description Define la estructura del estado para el trámite 300105.
  */
 export interface Tramite300105State {
-  /** description Motivo de renuncia de derechos. */
-  motivoRenunciaDeDerechos: string;
-
   /** description Indica si se debe controlar la mercancía en la solicitud. */
   mercacniaSolicitudControlar: boolean;
 
@@ -76,7 +73,6 @@ export interface Tramite300105State {
  */
 export function createInitialState(): Tramite300105State {
   return {
-    motivoRenunciaDeDerechos: '',
     mercacniaSolicitudControlar: true,
     mercanciaTablaDatos: [],
     destinatarioTablaDatos: [],
@@ -110,18 +106,6 @@ export function createInitialState(): Tramite300105State {
 export class Tramite300105Store extends Store<Tramite300105State> {
   constructor() {
     super(createInitialState());
-  }
-
-  /**
-   * method setMotivoRenunciaDeDerechos
-   * description Actualiza el motivo de renuncia de derechos en el estado.
-   * param {string} motivoRenunciaDeDerechos Motivo de renuncia de derechos.
-   */
-  setMotivoRenunciaDeDerechos(motivoRenunciaDeDerechos: string): void {
-    this.update((state) => ({
-      ...state,
-      motivoRenunciaDeDerechos,
-    }));
   }
 
   /**

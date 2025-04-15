@@ -45,11 +45,6 @@ export class DestinatariosComponent implements OnInit, OnDestroy {
   formularioMercancia!: FormGroup;
 
   /**
-   * Indica si se seleccionó otra fracción en el formulario de mercancía.
-   */
-  otraFraccionSeleccionada!: boolean;
-
-  /**
    * Estado actual de la solicitud.
    */
   estadoSolicitud300105!: Tramite300105State;
@@ -413,10 +408,6 @@ export class DestinatariosComponent implements OnInit, OnDestroy {
    * y actualiza el estado del almacén correspondiente.
    */
   enviarFormularioMercancia(): void {
-    if (this.formularioMercancia.invalid || (!this.otraFraccionSeleccionada && this.formularioMercancia.get('fraccionArancelaria')?.value === '0')) {
-      return;
-    }
-    
     const GET_DESCRIPTION = (array: Catalogo[], index: number): string => array[index - 1]?.descripcion || '';
   
     const TABLA_ROW: DestinatarioConfiguracionItem = {

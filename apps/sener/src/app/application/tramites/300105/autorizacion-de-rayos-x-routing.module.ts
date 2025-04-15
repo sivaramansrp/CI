@@ -5,14 +5,13 @@ import { PageComponent } from './pages/page/page.component';
 
 const ROUTES: Routes = [
   {
-    path: 'page',
+    path: 'solicitud',
     component: PageComponent,
-
   },
   {
     path: '',
     pathMatch: 'full',
-    redirectTo: 'datos',
+    redirectTo: 'solicitud',
   }
 ];
 
