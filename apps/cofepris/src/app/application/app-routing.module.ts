@@ -320,6 +320,13 @@ const ROUTES: Routes = [
       loadChildren: () =>
       import('./tramites/260201/importacion-psicotropicos-poretorno.module').then(
         (m) => m.ImportacionPsicotropicosPoretornoModule),
+},
+{
+  path: 'permiso-transformacion-maquila',
+  loadChildren: () =>
+    import('./tramites/260505/permiso-transformacion-maquila.module').then(
+      (m) => m.PermisoTransformacionMaquilaModule
+    ),
 }
 
 ];
