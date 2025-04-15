@@ -205,7 +205,6 @@ export class DatosMercanciaComponent implements OnInit {
    * @returns {void}
    */
   ngOnInit(): void {
-    this.cargarDatos();
     this.datosMercancia = this.fb.group({
       descripcion: ['QAS', Validators.required],
       fraccionArancelaria: ['25030002', Validators.required],
@@ -224,6 +223,7 @@ export class DatosMercanciaComponent implements OnInit {
       tipoMoneda: [null, Validators.required],
       paisDeOriginDatos: [null],
     });
+    this.cargarDatos();
   }
 
   /**
