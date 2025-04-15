@@ -18,4 +18,14 @@ describe('DatosComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should have a default index value of 1', () => {
+    expect(component.indice).toBe(1);
+  });
+
+  it('should update the index when seleccionaTab is called', () => {
+    const newIndex = 3;
+    component.seleccionaTab(newIndex);
+    expect(component.indice).toBe(newIndex);
+  });
 });

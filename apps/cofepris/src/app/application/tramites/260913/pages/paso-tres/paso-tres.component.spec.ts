@@ -18,4 +18,11 @@ describe('PasoTresComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should create the component', () => {
+    // Verify that the component is created successfully
+    expect(component).toBeTruthy();
+  });
+
+  // Add additional test cases here if the component has properties or methods to test
 });

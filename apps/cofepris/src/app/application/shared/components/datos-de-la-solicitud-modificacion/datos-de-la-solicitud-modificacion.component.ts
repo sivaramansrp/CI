@@ -186,6 +186,29 @@ export class DatosDeLaSolicitudModificacionComponent implements OnInit, AfterVie
    */
   public solicitudState!: DatosSolicitudState;
 
+    /**
+* Abre el modal de confirmación para eliminar un pedimento.
+* 
+* Este método configura los datos de la notificación que se mostrará en el modal
+* de confirmación. También almacena el índice del elemento que se desea eliminar.
+* 
+* @param i - Índice del pedimento que se desea eliminar. Por defecto, es 0.
+*/
+abrirModal(i: number = 0): void {
+  this.nuevaNotificacion = {
+    tipoNotificacion: 'alert',
+    categoria: 'danger',
+    modo: 'action',
+    titulo: '',
+    mensaje: 'Por el momento no hay comunicación con el Sistema de COFEPRIS, favor de capturar su establecimiento.',
+    cerrar: false,
+    tiempoDeEspera: 2000,
+    txtBtnAceptar: 'Aceptar',
+    txtBtnCancelar: 'Cancelar',
+  };
+
+  this.elementoParaEliminar = i;
+}
   /**
    * @description
    * Constructor del componente.
