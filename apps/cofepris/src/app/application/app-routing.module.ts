@@ -166,6 +166,11 @@ const ROUTES: Routes = [
       ).then((m) => m.ImportacionDispositivosMedicosDonacionModule),
   },
   {
+    path: 'consulta',
+    loadChildren: () =>
+      import('./tramites/260704/consulta.module').then((m) => m.ConsultaModule),
+  },
+{
     path: 'modificacion-permiso-sanitario',
     loadChildren: () =>
       import('./tramites/260902/modificacion-permiso-sanitario.module').then(
