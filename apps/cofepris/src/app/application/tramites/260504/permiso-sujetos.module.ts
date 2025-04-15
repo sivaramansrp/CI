@@ -1,4 +1,3 @@
-import { NgModule } from '@angular/core';
 import {
   AlertComponent,
   AnexarDocumentosComponent,
@@ -11,8 +10,8 @@ import {
   TituloComponent,
   WizardComponent,
 } from '@libs/shared/data-access-user/src';
+import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
 import { PermisoSujetosRoutingModule } from './permiso-sujetos-routing.module';
 import { ToastrService } from 'ngx-toastr';
 import { provideHttpClient } from '@angular/common/http';

@@ -2,6 +2,13 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { DatosDeLaComponent } from '../../../../shared/components/datos-solicitud/datos-solicitud.component';
 
+/**
+ * Componente `DatosSolicitudComponent`
+ *
+ * Este componente es responsable de gestionar y mostrar las secciones relacionadas con los datos de la solicitud
+ * en el trámite correspondiente. Es un componente independiente (standalone) que utiliza otros módulos y componentes
+ * compartidos para su funcionalidad.
+ */
 @Component({
   selector: 'app-datos-solicitud',
   standalone: true,
