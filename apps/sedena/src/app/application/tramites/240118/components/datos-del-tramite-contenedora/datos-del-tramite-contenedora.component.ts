@@ -26,11 +26,11 @@ import { takeUntil } from 'rxjs';
 export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
   
   /**
-   * @property {boolean} estaOculto - Indica si el elemento está oculto o visible.
+   * @property {number} idProcedimiento - Indica si el elemento está oculto o visible.
    * @remarks Este valor determina la visibilidad del componente en la interfaz de usuario.
    * @command Cambiar el valor de esta propiedad para alternar la visibilidad.
    */
-  estaOculto:boolean = true;
+  public readonly idProcedimiento:number = 240118;
   /**
    * Datos de la tabla de mercancías que se muestran en el formulario.
    * @property {MercanciaDetalle[]} datosMercanciaTabla
