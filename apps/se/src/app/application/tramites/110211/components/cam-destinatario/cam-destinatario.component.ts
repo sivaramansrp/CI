@@ -137,6 +137,16 @@ export class CamDestinatarioComponent implements OnInit, OnDestroy {
     this.store.setFormDatosDelDestinatario(e as FormValues);
   }
 
+  setValoresStoreDatos(event: { formGroupName: string, campo: string, valor: undefined, storeStateName: string }) :void{
+    const { campo: CAMPO, valor: VALOR } = event;
+    this.store.setFormDatosDelDestinatario({ [CAMPO]: VALOR });
+  }
+
+  setValoresStoreDe(event: { formGroupName: string, campo: string, valor: undefined, storeStateName: string }) :void{
+    const { campo: CAMPO, valor: VALOR } = event;
+    this.store.setFormDestinatario({ [CAMPO]: VALOR });
+  }
+
   /**
    * @descripcion
    * Actualiza el almacén con el estado de validación del formulario de destinatario.
