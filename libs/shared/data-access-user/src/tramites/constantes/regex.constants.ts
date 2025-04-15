@@ -244,6 +244,8 @@ export const REGEX_CORREO_ELECTRONICO =
  * Ejemplo válido: (123) 456-7890
  */
 export const REGEX_TELEFONO = /^([0-9A-Za-z\-() ])*$/;
+
+
 /**
  * Expresión regular para validar números decimales con hasta 2 decimales.
  * 
