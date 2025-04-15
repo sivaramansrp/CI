@@ -1,11 +1,9 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ConfiguracionColumna, TablaAcciones } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
-import { ConfiguracionColumna } from '../../../core/models/shared/configuracion-columna.model';
 import { FormsModule } from '@angular/forms';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
 
-import { TablaSeleccion } from '../../../core/enums/tabla-seleccion.enum';
 @Component({
   selector: 'app-tabla-dinamica',
   templateUrl: './tabla-dinamica.component.html',
