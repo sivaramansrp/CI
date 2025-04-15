@@ -181,20 +181,31 @@ export class DatosResiduosPeligrososComponent implements OnInit{
   }
 
 
-  actualizarCampoFormularioDatos(field: keyof EstadoFormularioResiduo['formularioDatos']): void {
-    const VALOR = this.formularioDatos.get(field)?.value;
-    this.formularioStore.actualizarFormularioDatos({
-      ...this.formularioDatos.getRawValue(),
-      [field]: VALOR,
-    });
-  }
-  
-  actualizarCampoFormularioResiduo(field: keyof EstadoFormularioResiduo['formularioResiduo']): void {
-    const VALOR = this.formularioResiduo.get(field)?.value;
-    this.formularioStore.actualizarFormularioResiduo({
-      ...this.formularioResiduo.getRawValue(),
-      [field]: VALOR,
-    });
-  }
+/**
+ * Actualiza un campo específico del formulario de datos de materia prima en el store.
+ *
+ * @param field - Nombre del campo del formulario de datos a actualizar.
+ */
+actualizarCampoFormularioDatos(field: keyof EstadoFormularioResiduo['formularioDatos']): void {
+  const VALOR = this.formularioDatos.get(field)?.value;
+  this.formularioStore.actualizarFormularioDatos({
+    ...this.formularioDatos.getRawValue(),
+    [field]: VALOR,
+  });
+}
+
+/**
+ * Actualiza un campo específico del formulario de residuos en el store.
+ *
+ * @param field - Nombre del campo del formulario de residuos a actualizar.
+ */
+actualizarCampoFormularioResiduo(field: keyof EstadoFormularioResiduo['formularioResiduo']): void {
+  const VALOR = this.formularioResiduo.get(field)?.value;
+  this.formularioStore.actualizarFormularioResiduo({
+    ...this.formularioResiduo.getRawValue(),
+    [field]: VALOR,
+  });
+}
+
 
 }
