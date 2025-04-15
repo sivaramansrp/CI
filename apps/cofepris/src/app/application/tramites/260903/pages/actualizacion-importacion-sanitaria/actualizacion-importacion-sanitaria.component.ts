@@ -21,7 +21,6 @@ interface AccionBoton {
 
 @Component({
   selector: 'app-actualizacion-importacion-sanitaria',
-  standalone: false,
   templateUrl: './actualizacion-importacion-sanitaria.component.html',
 })
 export class ActualizacionImportacionSanitariaComponent {

@@ -7,7 +7,6 @@ import { Component } from '@angular/core';
  */
 @Component({
   selector: 'app-datos-260903',
-  standalone: false,
   templateUrl: './datos-260903.component.html',
 })
 export class Datos260903Component {
