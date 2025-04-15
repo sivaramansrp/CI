@@ -13,5 +13,6 @@
   "sedena": "http://localhost:4219",
   "profepa": "http://localhost:4220",
   "inah":"http://localhost:4221",
-  "crt":"http://localhost:4222"
+  "crt":"http://localhost:4222",
+  "stps":"http://localhost:4223"
 }

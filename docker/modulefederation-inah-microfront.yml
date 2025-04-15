@@ -10,9 +10,9 @@ services:
     container_name: modulefederation-inah-microfront
     restart: unless-stopped
     expose:
-      - '4202'
+      - '4221'
     ports:
-      - "4202:80"
+      - "4221:80"
     networks:
       - modulefederation-network
     healthcheck:
