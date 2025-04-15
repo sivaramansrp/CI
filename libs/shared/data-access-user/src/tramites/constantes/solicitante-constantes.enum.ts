@@ -88,7 +88,7 @@ export const DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL = [
     placeholder: '',
   },
   {
-    labelNombre: 'Código Postal',
+    labelNombre: 'Código postal',
     campo: 'codigoPostal',
     class: 'col-md-4',
     tipo_input: 'text',
@@ -309,7 +309,7 @@ export const DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_EXTRANJERA = [
     placeholder: '',
   },
   {
-    labelNombre: 'Código Postal',
+    labelNombre: 'Código postal',
     campo: 'codigoPostal',
     class: 'col-md-4',
     tipo_input: 'text',

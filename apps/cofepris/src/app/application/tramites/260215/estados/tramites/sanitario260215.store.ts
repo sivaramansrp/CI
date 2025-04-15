@@ -1,12 +1,12 @@
-import { Catalogo, catalogoResponse } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoResponse } from '@libs/shared/data-access-user/src';
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
 import { TablaDatos } from '../../models/permiso-sanitario.model';
 
 export interface Sanitario260215State {
-  selectedEstado: catalogoResponse | null;
-  setClave: catalogoResponse | null;
-  setDescripcion: catalogoResponse | null;
+  selectedEstado: CatalogoResponse | null;
+  setClave: CatalogoResponse | null;
+  setDescripcion: CatalogoResponse | null;
   setDespecificarClasificacion: Catalogo | null;
   /**
    * Datos del fabricante.
@@ -47,21 +47,21 @@ export class Sanitario260215Store extends Store<Sanitario260215State> {
     super(createInitialState());
   }
 
-  public setSelectedEstado(selectedEstado: catalogoResponse): void {
+  public setSelectedEstado(selectedEstado: CatalogoResponse): void {
     this.update((state) => ({
       ...state,
       selectedEstado,
     }));
   }
 
-  public setClave(selectedClave: catalogoResponse): void {
+  public setClave(selectedClave: CatalogoResponse): void {
     this.update((state) => ({
       ...state,
       selectedClave,
     }));
   }
 
-  public setDescripcion(selectedDescripcion: catalogoResponse): void {
+  public setDescripcion(selectedDescripcion: CatalogoResponse): void {
     this.update((state) => ({
       ...state,
       selectedDescripcion,
@@ -69,7 +69,7 @@ export class Sanitario260215Store extends Store<Sanitario260215State> {
   }
 
   public setDespecificarClasificacion(
-    selectedDespecificarClasificacion: catalogoResponse
+    selectedDespecificarClasificacion: CatalogoResponse
   ): void {
     this.update((state) => ({
       ...state,
