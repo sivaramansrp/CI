@@ -43,12 +43,6 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
   public datosDelTramiteFormState!: DatosDelTramiteFormState;
 
   /**
-   * Observable adicional para limpieza de suscripciones.
-   * @property {Subject<void>} destroy$
-   */
-  private destroy$ = new Subject<void>();
-
-  /**
    * Constructor del componente.
    *
    * @method constructor
@@ -58,9 +52,8 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
    */
   constructor(
     private tramiteQuery: Tramite240101Query,
-    private tramiteStore: Tramite240101Store
-  ) // eslint-disable-next-line no-empty-function
-  {}
+    private tramiteStore: Tramite240101Store // eslint-disable-next-line no-empty-function
+  ) {}
 
   /**
    * Hook del ciclo de vida que se ejecuta al inicializar el componente.
@@ -71,13 +64,13 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.tramiteQuery.getMercanciaTablaDatos$
-      .pipe(takeUntil(this.destroy$))
+      .pipe(takeUntil(this.unsubscribe$))
       .subscribe((data) => {
         this.datosMercanciaTabla = data;
       });
 
     this.tramiteQuery.getDatosDelTramite$
-      .pipe(takeUntil(this.destroy$))
+      .pipe(takeUntil(this.unsubscribe$))
       .subscribe((data) => {
         this.datosDelTramiteFormState = data;
       });
