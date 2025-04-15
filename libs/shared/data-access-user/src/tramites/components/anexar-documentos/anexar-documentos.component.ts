@@ -1,24 +1,21 @@
-import { Component, ElementRef, Input, Renderer2, ViewChild } from '@angular/core';
-import { SelectCatalogosComponent } from '../select-catalogos/select-catalogos.component';
 import {
   CatalogosSelect,
   DocumentosCargados,
 } from '../../../core/models/shared/components.model';
-import { Catalogo } from '../../../core/models/shared/catalogos.model';
-import { CommonModule } from '@angular/common';
-import { ToastrModule, ToastrService } from 'ngx-toastr';
+import { Component, ElementRef, Input, ViewChild } from '@angular/core';
 import {
-  CATALOGOS_ID,
-  MB,
-  PDF,
   DPI,
+  MB,
+  PDF
 } from '../../constantes/constantes';
-import { Login } from '../../../core/models/shared/inicio-sesion.model';
-import { InicioSesionService } from '../../../core/services/shared/inicio-sesion/inicio-sesion.service';
-import { SubirDocumentoService } from '../../../core/services/shared/subir-documento/subir-documento.service';
-import { CatalogosService } from '../../../core/services/shared/catalogos/catalogos.service';
-import { CatalogoSelectComponent } from '../catalogo-select/catalogo-select.component';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ToastrModule, ToastrService } from 'ngx-toastr';
+import { Catalogo } from '../../../core/models/shared/catalogos.model';
+import { CatalogoSelectComponent } from '../catalogo-select/catalogo-select.component';
+import { CommonModule } from '@angular/common';
+import { InicioSesionService } from '../../../core/services/shared/inicio-sesion/inicio-sesion.service';
+import { Login } from '../../../core/models/shared/inicio-sesion.model';
+import { SubirDocumentoService } from '../../../core/services/shared/subir-documento/subir-documento.service';
 import { URL_PRUEBA } from '../../../core/enums/constantes-alertas.enum';
 
 declare const bootstrap: any; // Importación para manejar Bootstrap en TS
@@ -67,7 +64,7 @@ export class AnexarDocumentosComponent {
     private fb: FormBuilder,
   ) { }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.obtenerToken(this.datosLogin);
     this.crearFormaDocumento();
   }

@@ -1,0 +1,84 @@
+<div class="container">
+  <ng-titulo titulo="Destinatarios" />
+  <form [formGroup]="formularioDestinatario">
+    <div class="row">
+      <app-catalogo-select
+        [catalogo]="autorizacionesDeVidaSilvestreService.entidadFederativa"
+        formControlName="entidadFederativa"
+        class="col-md-4"
+        [label]="'Entidad federativa'"
+        (change)="manejarCambioEntidadFederativa()"
+      ></app-catalogo-select>
+    </div>
+    <label class="row mt-5">Destinatarios*:</label>
+    <div class="row mt-4">
+      <app-tabla-dinamica
+        [configuracionTabla]="configuracionColumnas"
+        [datos]="datosTabla"
+        [tipoSeleccionTabla]="tipoSeleccionTabla"
+        (listaDeFilaSeleccionada)="manejarFilaSeleccionada($event)"
+      ></app-tabla-dinamica>
+    </div>
+
+    <div
+      class="row"
+      style="padding-bottom: 20px; text-align: right"
+      *ngIf="datosTabla.length > 0"
+    >
+      <div>
+        <button type="button" class="btn btn-default me-2">
+          Eliminar Seleccionados
+        </button>
+        <button type="button" class="btn btn-danger me-2">
+          Eliminar no seleccionados
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary me-2"
+          (click)="abrirPopup()"
+        >
+          Modificar
+        </button>
+      </div>
+    </div>
+
+    <div
+      class="row justify-content-end"
+      style="padding-bottom: 20px; text-align: right"
+      *ngIf="datosTabla.length === 0"
+    >
+      <div class="col-md-6">
+        <button type="button" class="btn btn-primary">Agregar</button>
+      </div>
+    </div>
+    <div
+      class="modal"
+      tabindex="-1"
+      role="dialog"
+      [ngClass]="{ show: popupAbierto }"
+      [ngStyle]="{ display: popupAbierto ? 'block' : 'none' }"
+    >
+      <div class="modal-dialog" role="document">
+        <div
+          class="modal-content"
+          style="width: fit-content; margin-left: 115px"
+        >
+          <div style="background-color: black; height: 55px"></div>
+          <div class="modal-body">
+            <p>No se pueden modificar los datos agregados por el sistema</p>
+          </div>
+          <div class="modal-footer" style="justify-content: center">
+            <button
+              type="button"
+              class="btn btn-primary"
+              (click)="cerrarPopup()"
+            >
+              Aceptar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-backdrop fade show" *ngIf="popupAbierto"></div>
+  </form>
+</div>

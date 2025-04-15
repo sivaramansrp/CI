@@ -21,6 +21,7 @@ import { Tramite630303State, Tramite630303Store } from '../../estados/tramite630
 import { Tramite630303Query } from '../../estados/tramite630303.query';
 
 import { DatosMercanciaComponent } from "../datos-mercancia/datos-mercancia.component";
+import { ManifiestoComponent } from "../manifiesto/manifiesto.component";
 
 /**
  * Componente que gestiona los datos de la solicitud para el trámite 630303.
@@ -29,7 +30,7 @@ import { DatosMercanciaComponent } from "../datos-mercancia/datos-mercancia.comp
 @Component({
   selector: 'app-datos-de-la-solicitud',
   standalone: true,
-  imports: [CommonModule, TituloComponent, ReactiveFormsModule, CatalogoSelectComponent, InputFechaComponent, DatosRetornoProrrogaComponent, DatosRetornoAutorizacionComponent, DatosMercanciaComponent],
+  imports: [CommonModule, TituloComponent, ReactiveFormsModule, CatalogoSelectComponent, InputFechaComponent, DatosRetornoProrrogaComponent, DatosRetornoAutorizacionComponent, DatosMercanciaComponent, ManifiestoComponent],
   templateUrl: './datos-de-la-solicitud.component.html',
   styleUrl: './datos-de-la-solicitud.component.scss',
 })

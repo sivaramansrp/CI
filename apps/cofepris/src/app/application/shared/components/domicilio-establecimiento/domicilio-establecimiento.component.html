@@ -133,7 +133,7 @@
       </button>
     </div>
   </div>
-  <div class="row align-item-center">
+  <div *ngIf="isAvisoLicenciaVisible" class="row align-item-center">
     <div class="col-md-4">
       <div class="form-check">
         <input
@@ -171,6 +171,19 @@
           "
         />
       </div>
+    </div>
+  </div>
+  <div *ngIf="isAduanasEntradaVisible" class="row">
+    <div class="panel-body">
+      <crosslist
+      [fechas]="seleccionarAduanasEntrada"
+      [label]="aduanasEntradaLabel"
+      [fechasSeleccionadas]="seleccionadasAduanasEntradaDatos"
+      [botones]="aduanasEntradaBotons"
+      (fechasSeleccionadasChange)="
+        aduanasEntradaSeleccionadasChange($event)
+      "
+    ></crosslist>
     </div>
   </div>
   <div class="row">
@@ -211,7 +224,7 @@
   aria-labelledby="modalAddAgentLabel"
   aria-hidden="true"
 >
-  <div class="modal-dialog modal-dialog-centered">
+  <div class="modal-dialog modal-dialog-centered modal-xl">
     <div class="modal-content overflow-auto">
       <div class="modal-header">
         <h4 class="modal-title">Clave S.C.I.A.N.</h4>

@@ -1,0 +1,30 @@
+<div class="container">
+  <ng-titulo titulo="Destinatarios" />
+  <form [formGroup]="destinatarioForm">
+    <div class="row">
+      <app-catalogo-select [catalogo]="permisoCitesService.entidadFederativa" formControlName="entidadFederativa"
+        class="col-md-4" [label]="'Entidad federativa'" (change)="onEntidadFederativaChange()"></app-catalogo-select>
+    </div>
+    <label class="row mt-5">destinatarios*:</label>
+    <div class="row mt-4">
+      <app-tabla-dinamica [configuracionTabla]="configuracionTabla" [datos]="tablaDatos"
+        [tipoSeleccionTabla]="TablaSeleccion" (listaDeFilaSeleccionada)="onFilaSeleccionada($event)"></app-tabla-dinamica>
+    </div>
+    <div class="row text-end pb-3">
+      <div>
+        <button type="button" class="btn btn-default me-2">Eliminar Seleccionados</button>
+        <button type="button" class="btn btn-danger me-2">Eliminar no seleccionados</button>
+        <button type="button" class="btn btn-primary me-2" (click)="openPopup()">
+          Modificar
+        </button>
+      </div>
+    </div>
+  </form>
+</div>
+
+<!-- Reusable lib-notificaciones component -->
+<lib-notificaciones 
+  *ngIf="popupAbierto"
+  [notificacionInput]="nuevaNotificacion" 
+  (confirmacionModal)="closePopup()">
+</lib-notificaciones>

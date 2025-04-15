@@ -1,5 +1,9 @@
 import { Catalogo, TipoPersona } from '@ng-mf/data-access-user';
 import { Component, EventEmitter, Output } from '@angular/core';
+import {
+  PROCEDIMIENTOS_PARA_COLONIA_O_EQUIVALENTE,
+  STR_NACIONAL,
+} from '../../constantes/datos-solicitud.enum';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
@@ -11,7 +15,6 @@ import { Location } from '@angular/common';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { STR_NACIONAL } from '../../constantes/datos-solicitud.enum';
 import { Subject } from 'rxjs';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { Validators } from '@angular/forms';
@@ -45,10 +48,19 @@ export class AgregarFabricanteComponent implements OnDestroy, OnInit {
   guardarFabricanteForm!: (value: Fabricante[]) => void;
 
   /**
+   * Identificador del procedimiento actual.
+   * Utilizado para controlar el flujo de la vista dependiendo del tipo de procedimiento.
+   *
+   * @input idProcedimiento - Cadena que representa el ID del procedimiento (por ejemplo: '260102').
+   */
+  @Input()
+  idProcedimiento!: number;
+
+  /**
    * FormGroup para el formulario de agregar fabricante.
    * @property {FormGroup} agregarFabricanteForm
    */
-  agregarFabricanteForm: FormGroup;
+  agregarFabricanteForm!: FormGroup;
 
   /**
    * Datos de catálogo de códigos postales.
@@ -118,12 +130,33 @@ export class AgregarFabricanteComponent implements OnDestroy, OnInit {
    * @property {EventEmitter<Fabricante[]>} updateFabricanteTablaDatos
    */
   @Output() updateFabricanteTablaDatos = new EventEmitter<Fabricante[]>();
-    /**
+  /**
    * Indica si el componente debe estar oculto o visible.
    * @type {boolean}
    * @input
    */
-    @Input() estaOculto!:boolean;
+  @Input() estaOculto!: boolean;
+
+  /**
+   * Indica si se debe mostrar la colonia o equivalente.
+   * @type {boolean}
+   * @input
+   */
+  mostarColoniaOEquivalente = false;
+
+  /**
+   * Lista de elementos deshabilitados en el formulario.
+   * Esta propiedad almacena un arreglo de cadenas que representan
+   * los elementos que deben estar deshabilitados en el formulario.
+   */
+  public elementosDeshabilitados: string[] = [];
+
+  /**
+   * Lista de elementos requeridos en el formulario.
+   * Esta propiedad almacena un arreglo de cadenas que representan
+   * los elementos que deben ser obligatorios en el formulario.
+   */
+  public elementosNoRequeridos: string[] = [];
 
   /**
    * Constructor que inyecta los servicios y crea el formulario de fabricante.
@@ -139,29 +172,7 @@ export class AgregarFabricanteComponent implements OnDestroy, OnInit {
     private ubicaccion: Location,
     private datosSolicitudService: DatosSolicitudService
   ) {
-    this.agregarFabricanteForm = this.fb.group({
-      nacionalidad: [this.nacionalStr, Validators.required],
-      tipoPersona: ['', Validators.required],
-      rfc: ['', Validators.required],
-      curp: ['', Validators.required],
-      nombres: ['', Validators.required],
-      primerApellido: ['', Validators.required],
-      segundoApellido: [''],
-      razonSocial: ['', Validators.required],
-      pais: ['', Validators.required],
-      estado: ['', Validators.required],
-      municipio: ['', Validators.required],
-      localidad: ['', Validators.required],
-      codigoPostal: ['', Validators.required],
-      colonia: ['', Validators.required],
-      calle: ['', Validators.required],
-      numeroExterior: ['', Validators.required],
-      numeroInterior: [''],
-      lada: [''],
-      telefono: [''],
-      correoElectronico: ['', [Validators.required, Validators.email]],
-      adunasDeEntradas: ['', Validators.required],
-    });
+    //constructor necesario para inyectar el servicio
   }
 
   /**
@@ -170,6 +181,122 @@ export class AgregarFabricanteComponent implements OnDestroy, OnInit {
    */
   ngOnInit(): void {
     this.cargarDatos();
+    this.validarElementos();
+    this.crearAgregarFormularioFabricante();
+    this.mostarColoniaOEquivalente =
+      PROCEDIMIENTOS_PARA_COLONIA_O_EQUIVALENTE.includes(this.idProcedimiento)
+        ? true
+        : false;
+  }
+
+  /**
+   * Método para inicializar el formulario reactivo `agregarFacturadorForm`.
+   * Define los campos y sus validaciones.
+   *
+   * @returns {void} Este método no retorna ningún valor.
+   */
+  crearAgregarFormularioFabricante(): void {
+    this.agregarFabricanteForm = this.fb.group({
+      nacionalidad: [this.nacionalStr, Validators.required],
+      tipoPersona: ['', Validators.required],
+      rfc: ['', Validators.required],
+      curp: ['', Validators.required],
+      nombres: ['', [Validators.required, Validators.maxLength(200)]],
+      primerApellido: ['', Validators.required],
+      segundoApellido: [''],
+      razonSocial: ['', Validators.required],
+      pais: [
+        {
+          value: this.elementosDeshabilitados.includes('pais') ? '1' : '',
+          disabled: this.elementosDeshabilitados.includes('pais'),
+        },
+        Validators.required,
+      ],
+      estado: [
+        {
+          value: this.elementosDeshabilitados.includes('estado') ? '1' : '',
+          disabled: this.elementosDeshabilitados.includes('estado'),
+        },
+        Validators.required,
+      ],
+      municipio: [
+        {
+          value: this.elementosDeshabilitados.includes('municipio') ? '1' : '',
+          disabled: this.elementosDeshabilitados.includes('municipio'),
+        },
+        Validators.required,
+      ],
+      localidad: [
+        '',
+        !this.elementosNoRequeridos.includes('localidad')
+          ? [Validators.required]
+          : [],
+      ],
+      codigoPostal: [
+        '',
+        !this.elementosNoRequeridos.includes('codigoPostal')
+          ? [Validators.required]
+          : [],
+      ],
+      colonia: [
+        '',
+        !this.elementosNoRequeridos.includes('colonia')
+          ? [Validators.required]
+          : [],
+      ],
+      calle: ['', Validators.required],
+      numeroExterior: ['', Validators.required],
+      numeroInterior: [''],
+      lada: [''],
+      telefono: [
+        {
+          value: this.elementosDeshabilitados.includes('telefono')
+            ? '3461235'
+            : '',
+          disabled: this.elementosDeshabilitados.includes('telefono'),
+        },
+      ],
+      correoElectronico: [
+        {
+          value: this.elementosDeshabilitados.includes('correoElectronico')
+            ? 'abc@njk.com'
+            : '',
+          disabled: this.elementosDeshabilitados.includes('correoElectronico'),
+        },
+        [Validators.email],
+      ],
+      adunasDeEntradas: ['', Validators.required],
+      coloniaOEquivalente: [{ value: '', disabled: true }],
+    });
+  }
+
+  /**
+   * Valida elementos según el `idProcedimiento` y establece
+   * las listas de elementos no válidos y añadidos.
+   * @returns {void} Lista de elementos no válidos.
+   */
+  validarElementos(): void {
+    switch (this.idProcedimiento) {
+      case 260207:
+      case 260209:
+      case 260208:
+        this.elementosDeshabilitados = ['pais'];
+        this.elementosNoRequeridos = ['codigoPostal', 'colonia'];
+        break;
+      case 260201:
+        this.elementosDeshabilitados = ['pais','estado',
+          'municipio',
+          'telefono',
+          'correoElectronico'];
+        this.elementosNoRequeridos = [
+          'localidad',
+          'colonia',
+        ];
+        break;
+      default:
+        this.elementosDeshabilitados = [];
+        this.elementosNoRequeridos = [];
+    }
   }
 
   /**

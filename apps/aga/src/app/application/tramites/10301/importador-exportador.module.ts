@@ -15,7 +15,7 @@ import { ToastrService } from 'ngx-toastr';
 
 @NgModule({
   declarations: [
-    
+
   ],
   imports: [
     CommonModule,
@@ -32,7 +32,7 @@ import { ToastrService } from 'ngx-toastr';
     TableComponent,
     InputRadioComponent,
     CrosslistComponent,
-    ReactiveFormsModule ,
+    ReactiveFormsModule,
     PasoUnoComponent,
     SolicitudPageComponent,
     PasoTresComponent,
@@ -49,4 +49,4 @@ providers: [
 ],
 schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
-export class ImportadorExportadorModule {}
+export class ImportadorExportadorModule { }

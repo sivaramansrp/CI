@@ -81,6 +81,10 @@ export interface Tramite630303State {
    * Lista de mercancías asociadas.
    */
   listaMercancia: string;
+  /**
+   * Indica si se ha realizado la declaración.
+   */
+  declaracion:boolean;
 }
 
 /**
@@ -104,7 +108,8 @@ export function createInitialState(): Tramite630303State {
     fechaVencimiento: '',
     descripcionMercancia: '',
     motivo: '',
-    listaMercancia: ''
+    listaMercancia: '',
+    declaracion:false,
   };
 }
 

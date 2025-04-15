@@ -41,6 +41,18 @@ export interface TablaScianConfig {
 }
 
 /**
+ * Interfaz que representa una fila en la tabla SCIAN.
+ *
+ * @property {string} clave - Clave SCIAN.
+ * @property {string} descripcion - Descripción del SCIAN.
+ */
+export interface TablaMercanciaClaveConfig {
+  clave: string;
+  fabricacion: string;
+  caducidad: string;
+}
+
+/**
  * Interfaz que representa la configuración de una tabla de opciones.
  *
  * @property {string} fechaCreacion - Fecha en que se creó la opción.
@@ -151,14 +163,14 @@ export enum TablaSeleccion {
 export interface TablaMercanciasDatos {
   clasificacionProducto: string;
   especificarClasificacionProducto: string;
-  denominacionEspecificaProducto: string;
-  denominacionDistintiva: string;
-  denominacionComun: string;
+  denominacionEspecificaProducto?: string;
+  denominacionDistintiva?: string;
+  denominacionComun?: string;
   formaFarmaceutica: string;
   estadoFisico: string;
   fraccionArancelaria: string;
-  descripcionFraccion: string;
-  unidadMedidaComercializacion: string;
+  descripcionFraccion?: string;
+  unidadMedidaComercializacion?: string;
   cantidadUMC: string;
   unidadMedidaTarifa: string;
   cantidadUMT: string;
@@ -168,6 +180,16 @@ export interface TablaMercanciasDatos {
   paisProcedencia: string;
   tipoProducto: string;
   usoEspecifico: string;
+  detallarUsoEspecifico?:string,
+  numeroDePiezasAFabricar?:string,
+  descripcionNumeroDePiezas?:string,
+  numeroCAS?:string;
+  cantidadDeLotes?:string
+  kgPorLote?:string,
+  paisDeDestino?:string,
+  denominacionCumonInternacional?:string;
+  marcaComercialDenominacion?:string;
+
 }
 
 /**
@@ -230,6 +252,7 @@ export interface DatosSolicitudFormState {
   municipioAlcaldia: string;
   localidad: string;
   colonia: string;
+  calleYNumero?: string;
   calle: string;
   lada: string;
   telefono: string;
@@ -243,6 +266,13 @@ export interface DatosSolicitudFormState {
   representanteNombre: string;
   apellidoPaterno: string;
   apellidoMaterno: string;
+  marca?: string;
+  especifique?: string;
+  claveDeLos?: string;
+  fechaDeFabricacio?: string;
+  fechaDeCaducidad?: string;
+  regimenLaMercancia?:string
+  aduana?:string
 }
 
 /**
@@ -288,4 +318,62 @@ export interface MercanciaForm {
   fechaCaducidad: string;
   paisDeOriginDatos: string[];
   paisDeProcedenciaDatos: string[];
+  usoEspecifico?: string[]
+  marca?: string;
+  especifique?: string;
+  claveDeLos?: string;
+  fechaDeFabricacio?: string;
+  fechaDeCaducidad?: string;
 }
+
+/**
+ * Interfaz que representa una mercancía dentro del formulario de estupefacientes.
+ *
+ * @property {string} clasificacionProducto - Clasificación del producto.
+ * @property {string} especificarClasificacionProducto - Especificación adicional de la clasificación.
+ * @property {string} denominacionEspecificaProducto - Nombre específico del producto.
+ * @property {string} denominacionDistintiva - Denominación distintiva.
+ * @property {string} denominacionComun - Nombre común del producto.
+ * @property {string} tipoProducto - Tipo del producto.
+ * @property {string} formaFarmaceutica - Forma farmacéutica.
+ * @property {string} estadoFisico - Estado físico.
+ * @property {string} fraccionArancelaria - Fracción arancelaria.
+ * @property {string} descripcionFraccion - Descripción de la fracción.
+ * @property {string} cantidadUmtValor - Valor en UMT.
+ * @property {string} cantidadUmt - Unidad de medida tarifaria.
+ * @property {string} cantidadUmcValor - Valor en UMC.
+ * @property {string} cantidadUmc - Unidad de medida de comercialización.
+ * @property {string} presentacion - Presentación del producto.
+ * @property {string} numeroRegistroSanitario - Registro sanitario.
+ * @property {string} fechaCaducidad - Fecha de caducidad.
+ * @property {string[]} paisDeOriginDatos - Países de origen.
+ * @property {string[]} paisDeProcedenciaDatos - Países de procedencia.
+ */
+export interface MercanciaFormEstupefacientes {
+  clasificacionProducto: string;
+  especificarClasificacionProducto: string;
+  denominacionCumonInternacional:string;
+  marcaComercialDenominacion:string;
+  tipoProducto: string;
+  formaFarmaceutica: string;
+  estadoFisico: string;
+  fraccionArancelaria: string;
+  descripcionFraccion: string;
+  cantidadUmtValor: string;
+  cantidadUmt: string;
+  cantidadUmcValor: string;
+  cantidadUmc: string;
+  numeroCAS:string;
+  cantidadDeLotes:string
+  kgPorLote:string,
+  paisDeDestino:string,
+  paisDeProcedencia:string,
+  detallarUsoEspecifico:string,
+  numeroDePiezasAFabricar:string,
+  descripcionNumeroDePiezas:string,
+  presentacion: string;
+  numeroRegistroSanitario: string;
+  usoEspecifico:string
+  paisOrigen:string
+}
+
