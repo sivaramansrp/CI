@@ -243,6 +243,13 @@ const ROUTES: Routes = [
         (m) => m.PermisoDeImportacionModule
       ),
   },
+  {
+    path: 'permiso-transformacion-maquila',
+    loadChildren: () =>
+      import('./tramites/260505/permiso-transformacion-maquila.module').then(
+        (m) => m.PermisoTransformacionMaquilaModule
+      ),
+  },
 ];
 
 @NgModule({
