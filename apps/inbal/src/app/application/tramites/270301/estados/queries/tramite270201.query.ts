@@ -61,6 +61,8 @@ export class Tramite270201Query extends Query<Tramite270201State> {
    */
   selectedCiudad$ = this.select((state) => state.ciudad); // Corregido
 
+  selectedemprsaTransportista$ = this.select((state) => state.emprsaTransportista); // Corregido
+
   /**
    * Observable que selecciona el transporte actual del estado del trámite.
    * **Nota:** Actualmente está configurado para seleccionar la operación en lugar del transporte.

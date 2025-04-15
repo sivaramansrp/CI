@@ -68,6 +68,38 @@
                                 formControlname="medioTransporte" (change)="actualizarTransporte()"></app-catalogo-select>
                         </div>
                     </div>
+
+                    <div class="col-md-8">
+                        <label class="form-label" for="emprsaTransportista">Empresa transportista*:</label>
+                        <input type="text" class="form-control" id="emprsaTransportista" fromControlName="emprsaTransportista" name="emprsaTransportista"
+                            [required]="true">
+                    </div>
+                </div>
+            </div>
+
+            <div class="clearfix"></div>
+
+            <div class="destino-container ">
+                <ng-titulo titulo="Destino" />
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <app-catalogo-select [catalogo]="aduanaData" [label]="'Ubicacion final'" [required]="true"
+                            for="destinofinal" id="destinofinal"
+                            formControlname="destinofinal" name="destinofinal" (change)="actualizarAduana()"></app-catalogo-select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="clearfix"></div>
+
+            <div class="Periodo-container">
+                <ng-titulo titulo="Periodo de estancia en el pais" />
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <app-catalogo-select [catalogo]="aduanaData" [label]="'Periodo'" [required]="true"
+                            for="periodoEstancia" id="periodoEstancia"
+                            formControlname="periodoEstancia" name="periodoEstancia" (change)="actualizarAduana()"></app-catalogo-select>
+                    </div>
                 </div>
             </div>
 
@@ -105,12 +137,6 @@
                         placeholder="Inserta autor" [required]=true>
                 </div>
 
-                <!-- <div class="col-md-4">
-                    <label class="form-label" for="titulo">Título*:</label>
-                    <input type="text" class="form-control" id="titulo" formControlName="titulo" name="titulo" (input)="actualizarTitulo()"
-                        placeholder="Inserta titulo">
-                </div> -->
-
                 <div class="col-md-4">
                     <label class="form-label" for="tecnicaDeRealizacion">Técnica de realización*:</label>
                     <input type="text" class="form-control" id="tecnicaDeRealizacion"
@@ -132,7 +158,7 @@
                 <div class="col-md-12 mt-5">
                     <label class="form-label" for="medidas">Medidas*:</label>
                     <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true"
-                        [layout]="'vertical'" id="medidas" formControlName="medidas" name="medidas"></app-input-radio>
+                        [layout]="'horizontal'" id="medidas" formControlName="medidas" name="medidas"></app-input-radio>
                 </div>
 
                 <div class="col-md-4">
@@ -165,10 +191,6 @@
                     <input type="text" class="form-control" id="variables" formControlName="variables" name="variables" (input)="actualizarVariables()"
                         placeholder="Inserta variables">
                 </div>
-
-                <!-- <div class="mt-5">
-                    <ng-alert [CONTENIDO]="TEXTO_OBRA_ALERT"></ng-alert>
-                </div> -->
             </div>
                 <div class="col-md-4">
                     <label class="form-label" for="anoDeCreacion">Año de creación*:</label>

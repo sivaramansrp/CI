@@ -49,6 +49,7 @@ export interface Tramite270201State {
    * @property {string} ciudad
    */
   ciudad: string;
+  emprsaTransportista: string;
 
   /**
    * Representa el medio de transporte seleccionado del catálogo.
@@ -207,6 +208,7 @@ export function createInitialState(): Tramite270201State {
      * Ciudad donde se realiza el trámite. Inicialmente está vacío.
      */
     ciudad: '',
+    emprsaTransportista: '',
 
     /**
      * Medio de transporte seleccionado del catálogo. Inicialmente es nulo.
@@ -366,6 +368,20 @@ public setCiudad(selectedCiudad: string): void {
   this.update((state) => ({
     ...state,
     selectedCiudad,
+  }));
+}
+
+/**
+ * @method setemprsaTransportista
+ * @description
+ * Actualiza el estado con el transportista seleccionado.
+ * @param {string} selectedemprsaTransportista - El transportista seleccionado.
+ */
+
+public setemprsaTransportista(selectedemprsaTransportista: string): void {
+  this.update((state) => ({
+    ...state,
+    selectedemprsaTransportista,
   }));
 }
 

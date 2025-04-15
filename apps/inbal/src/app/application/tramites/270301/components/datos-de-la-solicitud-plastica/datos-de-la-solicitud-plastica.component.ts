@@ -440,6 +440,8 @@ export class DatosDeLaSolicitudPlasticaComponent implements OnInit, OnDestroy {
         Validators.maxLength(250),
       ]),
 
+      emprsaTransportista: new FormControl('', [Validators.required]),
+
       /**
        * @control medioTransporte
        * @description
@@ -448,6 +450,10 @@ export class DatosDeLaSolicitudPlasticaComponent implements OnInit, OnDestroy {
        * @default ''
        */
       medioTransporte: new FormControl('', [Validators.required]),
+
+      destinofinal: new FormControl('', [Validators.required]),
+
+      periodoEstancia: new FormControl('', [Validators.required]),
 
       /**
        * @control aduanaEntrada
