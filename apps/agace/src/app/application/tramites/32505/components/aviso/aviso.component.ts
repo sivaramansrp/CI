@@ -580,7 +580,7 @@ datosNIVNumeroSerie: boolean = false;
 
     this.mostrarCampos();
     this.mostrarCamposAviso();
-    this.mostrarCamposAviso();
+   
  
   }
   /**
