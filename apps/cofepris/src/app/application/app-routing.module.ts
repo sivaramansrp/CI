@@ -283,11 +283,19 @@ const ROUTES: Routes = [
       ),
   },
   {
-    path: 'importacion-psicotropicos-poretorno',
+    path: 'importacion-tratamientos-especiales',
     loadChildren: () =>
-    import('./tramites/260201/importacion-psicotropicos-poretorno.module').then(
-      (m) => m.ImportacionPsicotropicosPoretornoModule),
+      import('./tramites/260207/importacion-tratamientos-especiales.module').then(
+        (m) => m.ImportacionTratamientosEspecialesModule
+      ),
+},
+{
+      path: 'importacion-psicotropicos-poretorno',
+      loadChildren: () =>
+      import('./tramites/260201/importacion-psicotropicos-poretorno.module').then(
+        (m) => m.ImportacionPsicotropicosPoretornoModule),
 }
+
 ];
 
 @NgModule({
