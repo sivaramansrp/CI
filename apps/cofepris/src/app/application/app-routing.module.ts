@@ -166,6 +166,11 @@ const ROUTES: Routes = [
       ).then((m) => m.ImportacionDispositivosMedicosDonacionModule),
   },
   {
+    path: 'consulta',
+    loadChildren: () =>
+      import('./tramites/260704/consulta.module').then((m) => m.ConsultaModule),
+  },
+{
     path: 'modificacion-permiso-sanitario',
     loadChildren: () =>
       import('./tramites/260902/modificacion-permiso-sanitario.module').then(
@@ -288,7 +293,14 @@ const ROUTES: Routes = [
       import('./tramites/260207/importacion-tratamientos-especiales.module').then(
         (m) => m.ImportacionTratamientosEspecialesModule
       ),
+},
+{
+      path: 'importacion-psicotropicos-poretorno',
+      loadChildren: () =>
+      import('./tramites/260201/importacion-psicotropicos-poretorno.module').then(
+        (m) => m.ImportacionPsicotropicosPoretornoModule),
 }
+
 ];
 
 @NgModule({
