@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { RouterModule } from '@angular/router';
+import { Routes } from '@angular/router';
 import { SeleccionTramiteComponent } from './seleccion-tramite/seleccion-tramite.component';
 
 const ROUTES: Routes = [
@@ -7,6 +8,13 @@ const ROUTES: Routes = [
   {
     path: 'seleccion-tramite',
     component: SeleccionTramiteComponent,
+  },
+  {
+    path: 'sustancias-quimicas',
+    loadChildren: () =>
+      import('./tramites/240107/aviso-importacion-sustancias-quimicas.module').then(
+        (m) => m.AvisoImportacionSustanciasQuimicasModule
+      )
   },
 ];
 
