@@ -16,6 +16,15 @@ const ROUTES: Routes = [
       ).then((m) => m.ImportacionDispositivosMedicosLaboratorioModule),
   },
   {
+    path: 'modificación-del-permiso-sanitario-de-importación-de-insumos',
+    loadChildren: () =>
+      import(
+        './tramites/260904/modificación-del-permiso-sanitario-de-importación-de-insumos.module'
+      ).then(
+        (m) => m.ModificaciónDelPermisoSanitarioDeImportaciónDeInsumosModule
+      ),
+  },
+  {
     path: 'permiso-maquila',
     loadChildren: () =>
       import('./tramites/260212/permiso-maquila.module').then(
@@ -39,9 +48,15 @@ const ROUTES: Routes = [
 
   {
     path: 'aviso-exportacion',
+    loadChildren: () => import('./tramites/260604/aviso-exportacion.module').then(m => m.AvisoExportacionModule)  
+  },
+  {
+    path: 'modificación-del-permiso-sanitario-de-importación-de-insumos',
     loadChildren: () =>
-      import('./tramites/260604/aviso-exportacion.module').then(
-        (m) => m.AvisoExportacionModule
+      import(
+        './tramites/260904/modificación-del-permiso-sanitario-de-importación-de-insumos.module'
+      ).then(
+        (m) => m.ModificaciónDelPermisoSanitarioDeImportaciónDeInsumosModule
       ),
   },
   {
@@ -49,7 +64,7 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/260206/maquila-materias-primas.module').then(
         (m) => m.MaquilaMateriasPrimasModule
-      ),
+      )
   },
   {
     path: 'mod-permiso-importacion',
