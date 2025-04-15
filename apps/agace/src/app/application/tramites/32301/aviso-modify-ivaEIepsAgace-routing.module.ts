@@ -1,5 +1,5 @@
-import { NgModule } from '@angular/core';
 import { AvisoModifyIvaEIepsComponent } from './pages/AvisoModifyIvaEIeps/AvisoModifyIvaEIeps.component';
+import { NgModule } from '@angular/core';
 
 import { RouterModule, Routes } from '@angular/router';
 

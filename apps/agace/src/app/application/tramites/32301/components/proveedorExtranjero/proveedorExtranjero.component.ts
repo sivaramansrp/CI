@@ -1,16 +1,12 @@
-import { Component, ElementRef, Input, input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import { AlertComponent, TituloComponent } from "@ng-mf/data-access-user";
+import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { TituloComponent } from "@ng-mf/data-access-user";
-import { AlertComponent } from "@ng-mf/data-access-user";
-import { map, Subject, takeUntil } from 'rxjs';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ProveedorExtranjero } from '../../models/avisomodify.model';
-
-
-import { Tramite32301Store } from '../../estados/tramite32301.store';
-import { Tramite32301Query } from '../../estados/tramite32301.query';
-
 import { Modal } from 'bootstrap';
+import { ProveedorExtranjero } from '../../models/avisomodify.model';
+import { Tramite32301Query } from '../../estados/tramite32301.query';
+import { Tramite32301Store } from '../../estados/tramite32301.store';
 @Component({
   selector: 'app-proveedor-extranjero',
   standalone: true,
@@ -32,10 +28,11 @@ export class ProveedorExtranjeroComponent implements OnInit, OnDestroy {
   constructor(private fb: FormBuilder,
       private store: Tramite32301Store,
       private Tramite32301Query:Tramite32301Query
-    ) { }
+    ) { // constructor
+      }
       
   ngOnInit(): void {
-    this.ProveedoresTitulo = this.proveedortype == 'extranjero' ? 'Aviso de modificaciones de clientes y proveedores extranjeros' : 'Aviso de modificaciones de clientes y proveedores nacionales'
+    this.ProveedoresTitulo = this.proveedortype === 'extranjero' ? 'Aviso de modificaciones de clientes y proveedores extranjeros' : 'Aviso de modificaciones de clientes y proveedores nacionales'
        this.inicializaProveedorExtranjer();
         this.Tramite32301Query.select()
           .pipe(takeUntil(this.destroy$))
@@ -46,30 +43,32 @@ export class ProveedorExtranjeroComponent implements OnInit, OnDestroy {
       
     
         }
-        inicializaProveedorExtranjer(){
+        inicializaProveedorExtranjer():void{
           this.store.setRegistrosProveedoresExtranjeros({ archivoExtranjero: [], registrosProveedoresExtranjeros: '0' });
         }
-        crearFormProveedorExtranjer(){
+        crearFormProveedorExtranjer():void{
   
           this.proveedorXtranjForm = this.fb.group({
             archivoExtranjero: [ this.proveedorExtranjero?.archivoExtranjero, Validators.required],
             registrosProveedoresExtranjeros: [{ value: this.proveedorExtranjero?.registrosProveedoresExtranjeros, disabled: true }]
           });
         }
-  fileValidator(control: any) {
-    const file = control.value;
-    if (file && file.name.endsWith('.xlsx')) {
+ 
+        static fileValidator(control: AbstractControl): { [key: string]: boolean } | null {
+    const FILE = control.value;
+    if (FILE && FILE.name.endsWith('.xlsx')) {
       return null; // File is valid
     } 
     return { invalidFileType: true }; // Invalid file type
   }
 
 
-  onFileSelected(event: any) {
-    const file = event.target.files[0];
+  onFileSelected(event: Event):void {
+    const INPUT = event.target as HTMLInputElement;
+    const FILET = INPUT?.files?.[0];
 
-    if (file) {
-      this.proveedorXtranjForm.patchValue({ archivoExtranjero: file });
+    if (FILET) {
+      this.proveedorXtranjForm.patchValue({ archivoExtranjero: FILET });
       this.proveedorXtranjForm.get('archivoExtranjero')?.updateValueAndValidity();
   
     }
@@ -80,11 +79,9 @@ export class ProveedorExtranjeroComponent implements OnInit, OnDestroy {
  
     }
 
-    cargarArchivoAjax() {
+    cargarArchivoAjax():void {
       if (this.proveedorXtranjForm.valid) {
-        console.log('File uploaded successfully:', this.proveedorXtranjForm.value.archivoExtranjero);
         this.store.setRegistrosProveedoresExtranjeros(this.proveedorXtranjForm.value);
-
       } else {
         this.openCargaExtranjeroModel()
       }
@@ -95,15 +92,13 @@ export class ProveedorExtranjeroComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
   
-  
-
-  openCargaExtranjeroModel(){
+  openCargaExtranjeroModel():void{
     if (this.CargaExtranjeroModelInstance) {
       this.CargaExtranjeroModelInstance.show();
     }
   }
 
-  closeCargaExtranjeroModel(){
+  closeCargaExtranjeroModel():void{
     if (this.CargaExtranjeroModelInstance) {
       this.CargaExtranjeroModelInstance.hide();
     }

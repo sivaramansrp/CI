@@ -1,4 +1,4 @@
-import { TipoDevAviso, ProveedorExtranjero, ModificacionSocios, ModificacionGoceInmueble, PersonaFusionEscisionDTO, CargaTipo,FechasSeleccionadas,  DatosDomicilioLugar, DatosEmpresa, DatosMercanciaSubmanufactura, DatosQuienRecibe, FormularioGrupo } from '../models/avisomodify.model';
+import { CargaTipo, DatosDomicilioLugar, DatosEmpresa, DatosMercanciaSubmanufactura, DatosQuienRecibe, FormularioGrupo, ModificacionGoceInmueble,PersonaFusionEscisionDTO, ProveedorExtranjero, TipoDevAviso } from '../models/avisomodify.model';
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
 
@@ -55,7 +55,7 @@ export const INITIAL_STATE: FormularioGrupo = {
     fechaFinVigencia: ''
   },
   fechasSeleccionadas:{
-    fechasSeleccionadas:''
+    fechasSeleccionadas: []
   },
 
     datosEmpresa: {
@@ -106,7 +106,7 @@ export class Tramite32301Store extends Store<FormularioGrupo> {
     super(INITIAL_STATE);
   }
   
-  setModalidadCertificacion(EV: String): void {
+  setModalidadCertificacion(EV: string): void {
 
     this.update((state) => ({
       ...state,
@@ -175,7 +175,7 @@ export class Tramite32301Store extends Store<FormularioGrupo> {
   }
   
 
-  setSnsucarácterde(ensucarácterde: Number): void {
+  setSnsucarácterde(ensucarácterde: number): void {
     this.update((state) => ({
       ...state,
       modificacionSocios:{
@@ -205,7 +205,7 @@ export class Tramite32301Store extends Store<FormularioGrupo> {
     }));
   }
 
-  setNacionalidad(nacionalidad: Number): void {
+  setNacionalidad(nacionalidad: number): void {
     this.update((state) => ({
       ...state,
       modificacionSocios: {
@@ -215,7 +215,7 @@ export class Tramite32301Store extends Store<FormularioGrupo> {
     }));
   }
   
-  setRegistroFederaldeContribuyentes(registroFederaldeContribuyentes: Number): void {
+  setRegistroFederaldeContribuyentes(registroFederaldeContribuyentes: []): void {
     this.update((state) => ({
       ...state,
       modificacionSocios: {
@@ -226,13 +226,13 @@ export class Tramite32301Store extends Store<FormularioGrupo> {
   }
   
   setModificacionGoceInmueble(modificacionGoceInmueble: ModificacionGoceInmueble): void {
-    this.update((state) => ({
+    this.update(() => ({
       modificacionGoceInmueble
     }))
   }
 
   SetpersonaFusionEscisionDTO(personaFusionEscisionDTO:PersonaFusionEscisionDTO):void{
-    this.update((state) => ({
+    this.update(() => ({
       personaFusionEscisionDTO
     }))
   }
@@ -247,16 +247,16 @@ export class Tramite32301Store extends Store<FormularioGrupo> {
     }));
   }
   
-  public setFechasSeleccionadas(fechasSeleccionadas: FechasSeleccionadas[]) {
-    this.update((state) => ({
-      ...state,
-      fechasSeleccionadas: {
-        ...state.fechasSeleccionadas,
-        fechasSeleccionadas
-      }
+  // public setFechasSeleccionadas(fechasSeleccionadas: FechasSeleccionadas[]) {
+  //   this.update((state) => ({
+  //     ...state,
+  //     fechasSeleccionadas: {
+  //       ...state.fechasSeleccionadas,
+  //       fechasSeleccionadas
+  //     }
       
-    }));
-  }
+  //   }));
+  // }
 
   /**
    * Establece los datos de modificación en el estado.

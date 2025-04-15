@@ -1,25 +1,16 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AlertComponent, Catalogo, CatalogoSelectComponent, InputRadioComponent, TableComponent, TituloComponent } from "@ng-mf/data-access-user";
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { Modal } from 'bootstrap';
-
-import { AlertComponent } from "@ng-mf/data-access-user";
-import { TituloComponent } from "@ng-mf/data-access-user";
-import { TableComponent } from '@ng-mf/data-access-user';
-import { InputRadioComponent } from '@ng-mf/data-access-user';
-import { CatalogoSelectComponent, Catalogo } from '@ng-mf/data-access-user';
-
 import { ModificacionGoceInmueble } from '../../models/avisomodify.model';
-
+import { Tramite32301Query } from '../../estados/tramite32301.query';
+import { Tramite32301Store } from '../../estados/tramite32301.store';
+import entidadFederativa from 'libs/shared/theme/assets/json/31601/entidadFederative.json';
 import gridDomiciliosModificados from 'libs/shared/theme/assets/json/32301/gridDomiciliosModificados.json';
 import gridMostrarGridModificado from 'libs/shared/theme/assets/json/32301/gridMostrarGridModificado.json';
-
 import tipoDomicilio from 'libs/shared/theme/assets/json/32301/tipoDomicilio.json';
-import entidadFederativa from 'libs/shared/theme/assets/json/31601/entidadFederative.json';
-
-import { Tramite32301Store } from '../../estados/tramite32301.store';
-import { Tramite32301Query } from '../../estados/tramite32301.query';
-import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-modificacion-goce-inmueble',
@@ -27,7 +18,7 @@ import { Subject, takeUntil } from 'rxjs';
   imports: [CommonModule,ReactiveFormsModule, TituloComponent, InputRadioComponent, AlertComponent, TableComponent, CatalogoSelectComponent],
   templateUrl: './modificacionGoceInmueble.component.html',
 })
-export class ModificacionGoceInmuebleComponent implements OnInit {
+export class ModificacionGoceInmuebleComponent implements OnInit, AfterViewInit, OnDestroy {
   modificacionGoceForm!: FormGroup;
   radioOptions = tipoDomicilio;
   messageNac= `En caso de modificar las partes contratantes en la documentación con la que acreditó el legal uso y goce del domicilio, se tendrá que incluir un escrito libre en el apartado de Anexar requisitos, mediante el tipo de documento "Otros" que detalle los cambios realizados.`
@@ -94,7 +85,9 @@ export class ModificacionGoceInmuebleComponent implements OnInit {
   constructor(private fb: FormBuilder,
     private store: Tramite32301Store,
     private Tramite32301Query:Tramite32301Query
-  ) {}
+  ) { 
+    // Initialize the form here if needed
+    }
   ngOnInit(): void {
     this.modificacionGoceForm = this.fb.group({
       ideGenerica2: ['', Validators.required]
@@ -105,11 +98,11 @@ export class ModificacionGoceInmuebleComponent implements OnInit {
     this.getgridMostrarGridModificado();
   }
 
-  public getgridDomiciliosModificados() {
+  public getgridDomiciliosModificados():void {
     this.gridDomiciliosModificadosHeader = this.gridDomiciliosModificados.tableHeader;
     this.gridDomiciliosModificadosData = this.gridDomiciliosModificados.tableBody;
   }
-  public getgridMostrarGridModificado(){
+  public getgridMostrarGridModificado():void{
     this.mostrarGridNuevoHeader = this.gridMostrarGridModificado.tableHeader;
     this.mostrarGridNuevoHeaderData = this.gridMostrarGridModificado.tableBody;
 
@@ -149,14 +142,14 @@ export class ModificacionGoceInmuebleComponent implements OnInit {
       });
     }
   verificaRadioTipoSem(): void {
-    const valor = this.modificacionGoceForm.get('ideGenerica2')?.value;
+    const VALOR = this.modificacionGoceForm.get('ideGenerica2')?.value;
     this.openModificarModel();
-    if (valor === 'ModificarDomicilio') {
+    if (VALOR === 'ModificarDomicilio') {
       this.openModificarModel();
       this.mostrarGridNuevo = false;
       this.mostrarGridModificado = true;
       // No 'required' class manipulation needed as Angular handles form validations
-    } else if (valor === 'DomicilioNuevo') {
+    } else if (VALOR === 'DomicilioNuevo') {
      
       this.mostrarGridNuevo = true;
       this.mostrarGridModificado = false;
@@ -167,14 +160,14 @@ export class ModificacionGoceInmuebleComponent implements OnInit {
     }
   }
 
-  abrirModalDomiciliosNvo(){
+  abrirModalDomiciliosNvo():void{
     this.openModalDomiciliosInmuebleNuevoModel()
   }
 
-  cargarDatosRfcPartesC(){
-    const rfcPartesC = this.direccionGrid.get('rfcPartesC')?.value;
+  cargarDatosRfcPartesC(): void {
+    const RFC_PARTES_C = this.direccionGrid.get('rfcPartesC')?.value;
     this.direccionGrid.patchValue({
-      rfcPartesCons: rfcPartesC,
+      rfcPartesCons: RFC_PARTES_C,
       nombrePartesCons: "EuroFoods De Maxico Gonza",
     });
   }
@@ -186,21 +179,21 @@ export class ModificacionGoceInmuebleComponent implements OnInit {
       caracterDeCons: ''
     });
   }
-  agregarParteC(tipo: string): void {
-    const nuevoParte = {
+  agregarParteC(): void {
+    const NUEVO_PARTE = {
       rfc: this.direccionGrid.get('rfcPartesCons')?.value,
       nombre: this.direccionGrid.get('nombrePartesCons')?.value,
       caracter: this.direccionGrid.get('caracterDeCons')?.value
     };
-    if (nuevoParte.rfc && nuevoParte.nombre && nuevoParte.caracter) {
-      this.modificacionPartes = [...Object.values(nuevoParte)]
-      this.modificacionPartesData[0].tbodyData.push(...Object.values(nuevoParte))
+    if (NUEVO_PARTE.rfc && NUEVO_PARTE.nombre && NUEVO_PARTE.caracter) {
+      this.modificacionPartes = [...Object.values(NUEVO_PARTE)]
+      this.modificacionPartesData[0].tbodyData.push(...Object.values(NUEVO_PARTE))
       this.limpiaCamposParteC();
     } else {
       // Handle validation errors, possibly display a message to the user
     }
   }
-  eliminarParteC(){
+  eliminarParteC():void{
     if (this.modificacionPartes.length > 0) {
       this.modificacionPartesData[0].tbodyData.pop();
     }
@@ -208,50 +201,43 @@ export class ModificacionGoceInmuebleComponent implements OnInit {
 
   setValoresStore(
     form: FormGroup,
-    campo: any,
+    campo: string,
     metodoNombre: keyof Tramite32301Store
   ): void {
     const VALOR = form.get(campo)?.value;
     (this.store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
 
-    getValorStore(){
+    getValorStore():void{
             this.Tramite32301Query.selectModificacionGoceInmueble$
               .pipe(takeUntil(this.destroy$))
               .subscribe(state => {
               this.modificacionGoceInmueble = state as unknown as ModificacionGoceInmueble;
-                const newDatu = Object.values(this.modificacionGoceInmueble)
-                const tbodyData = { tbodyData: newDatu.map(String) }
-                this.mostrarGridNuevoHeaderData.push(tbodyData)
+                const NEW_DATU = Object.values(this.modificacionGoceInmueble)
+                const TBODY_DATA = { tbodyData: NEW_DATU.map(String) }
+                this.mostrarGridNuevoHeaderData.push(TBODY_DATA)
               });
             
     }
   
 
-  guardarDomInmuebleNvo(){
-    console.log('Modificación de domicilio guardada:', this.direccionGrid.value);
+  guardarDomInmuebleNvo():void{
     this.store.setModificacionGoceInmueble(this.direccionGrid.value);
     // selectModificacionGoceInmueble
           this.Tramite32301Query.select()
             .pipe(takeUntil(this.destroy$))
-            .subscribe(state => {
-              console.log(state)
-              // this.tipoDevAviso = state as unknown as TipoDevAviso;
-             
-            });
+            .subscribe();
     if (this.direccionGrid.valid) {
-      const formData = this.direccionGrid.value;
-      console.log('Modificación de domicilio guardada:', formData);
+     // this.store.setModificacionGoceInmueble(this.direccionGrid.value);
     } else {
       this.direccionGrid.markAllAsTouched();
     }
     this.closeModalDomiciliosInmuebleNuevoModel();
   }
 
-  cerrarDialogoDomInmuebleNvo(){
+  cerrarDialogoDomInmuebleNvo():void{
    this.closeModalDomiciliosInmuebleNuevoModel();
   }
-
   openModificarModel(): void {
     if (this.ModificarModelInstance) {
       this.ModificarModelInstance.show();
@@ -274,12 +260,12 @@ export class ModificacionGoceInmuebleComponent implements OnInit {
       this.ModificarRecordModelInstance.show();
     }
   }
-  closeModificarModel(){
+  closeModificarModel():void{
     if (this.ModificarModelInstance) {
       this.ModificarModelInstance.hide();
     }
   }
-  closeModificarRecordModel(){
+  closeModificarRecordModel():void{
     if (this.ModificarRecordModelInstance) {
       this.ModificarRecordModelInstance.hide();
     }

@@ -1,26 +1,12 @@
+import { AlertComponent, InputCheckComponent,TituloComponent } from "@ng-mf/data-access-user";
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { TituloComponent } from "@ng-mf/data-access-user";
-import { AlertComponent } from "@ng-mf/data-access-user";
-import { InputCheckComponent, } from "@ng-mf/data-access-user";
-import { ReactiveFormsModule,FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { InputFechaComponent } from '@ng-mf/data-access-user';
-import { TipoDevAviso } from '../../models/avisomodify.model';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Subject, map, takeUntil } from 'rxjs';
 import { AvisoModifyService } from '../../services/aviso-modify.service';
-import { catalogoResponse } from '@ng-mf/data-access-user';
-
-import { Tramite32301Store } from '../../estados/tramite32301.store';
+import { CommonModule } from '@angular/common';
+import { TipoDevAviso } from '../../models/avisomodify.model';
 import { Tramite32301Query } from '../../estados/tramite32301.query';
-
-  import {
-    DatosInputCheck,
-    InputCheck,
-  } from 'libs/shared/data-access-user/src/core/models/shared/components.model';
-import { map, Subject, takeUntil } from 'rxjs';
-
-  
-
-
+import { Tramite32301Store } from '../../estados/tramite32301.store';
 @Component({
   selector: 'app-tipo-de-aviso',
   standalone: true,
@@ -54,19 +40,18 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy{
         });
     }
 
-    inicializamiFormulario(){
-      const MODALIDAD_CERTIFICACION$ = this.AvisoModifyService
+    inicializamiFormulario():void{
+     this.AvisoModifyService
             .getAvisoModify()
             .pipe(
               map((resp) => {
-                console.log(resp.data)
                 this.store.setModalidadCertificacion(resp.descripcion);
               })
             ).subscribe();
             
 
     }
-    crearFormMiFormulario(){
+    crearFormMiFormulario():void{
       this.miFormulario = this.fb.group({
         modalidadCertificacion: [{ value: this.tipoDevAviso?.modalidadCertificacion, disabled: true }],
         foreignClientsSuppliers: [this.tipoDevAviso?.foreignClientsSuppliers],
@@ -78,10 +63,10 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy{
         acepto253:[this.tipoDevAviso?.acepto253, Validators.required]
       });
     }
-  onSubmit() {
+  onSubmit():void {
     this.tabEnabledData.emit(this.miFormulario.value)
   }  
-  
+
   setforeignClientsSuppliers(): void {
     const FRACCION_ARANCELATIA = this.miFormulario.get('foreignClientsSuppliers')?.value;
     this.store.setforeignClientsSuppliers(FRACCION_ARANCELATIA);
@@ -118,7 +103,7 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy{
   
 
 
-  handleValores(event: DatosInputCheck) {
+  handleValores():void {
     this.tabEnabledData.emit()
   }
   ngOnDestroy(): void {

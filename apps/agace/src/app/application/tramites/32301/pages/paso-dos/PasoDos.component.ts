@@ -1,15 +1,13 @@
+import { AlertComponent, TEXTOS, TituloComponent } from "@ng-mf/data-access-user";
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { Subject, takeUntil } from 'rxjs';
+import { AnexarDocumentosComponent } from '@ng-mf/data-access-user';
 import { CATALOGOS_ID } from '@ng-mf/data-access-user';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogosService } from '@ng-mf/data-access-user';
-import { TEXTOS } from '@ng-mf/data-access-user';
-import documentList from '@libs/shared/theme/assets/json/32502/document-list.json';
-import { AnexarDocumentosComponent } from '@ng-mf/data-access-user';
+import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
-import { TituloComponent } from "@ng-mf/data-access-user";
-import { AlertComponent } from "@ng-mf/data-access-user";
+import documentList from '@libs/shared/theme/assets/json/32502/document-list.json';
 
 @Component({
   selector: 'app-paso-dos',

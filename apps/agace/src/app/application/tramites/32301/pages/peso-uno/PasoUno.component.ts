@@ -1,13 +1,13 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { SolicitanteComponent } from "@ng-mf/data-access-user";
-import { TipoDeAvisoComponent } from "../../components/tipoDeAviso/tipoDeAviso.component"
-import { ProveedorExtranjeroComponent } from '../../components/proveedorExtranjero/proveedorExtranjero.component'
-import { ModificacionSociosComponent } from '../../components/modificacionSocios/modificacionSocios.component'
-import { ModificacionGoceInmuebleComponent } from '../../components/modificacionGoceInmueble/modificacionGoceInmueble.component'
-import { FusionOEscisionComponent } from '../../components/fusionOEscision/fusionOEscision.component'
 import { AdicionFraccionComponent } from '../../components/adicionFraccion/adicionFraccion.component'
 import {AdicionProcesosComponent} from '../../components/adicionProcesos/adicionProcesos.component'
+import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
+import { FusionOEscisionComponent } from '../../components/fusionOEscision/fusionOEscision.component'
+import { ModificacionGoceInmuebleComponent } from '../../components/modificacionGoceInmueble/modificacionGoceInmueble.component'
+import { ModificacionSociosComponent } from '../../components/modificacionSocios/modificacionSocios.component'
+import { ProveedorExtranjeroComponent } from '../../components/proveedorExtranjero/proveedorExtranjero.component'
+import { SolicitanteComponent } from "@ng-mf/data-access-user";
+import { TipoDeAvisoComponent } from "../../components/tipoDeAviso/tipoDeAviso.component"
 export interface TipoDevAviso {
   foreignClientsSuppliers: boolean,
   nationalSuppliers: boolean,

@@ -24,45 +24,45 @@ export interface FormularioGrupo {
   }
 
   export interface ProveedorExtranjero {
-    archivoExtranjero:Object | null,
+    archivoExtranjero:object | null,
     registrosProveedoresExtranjeros:string
     
   }
 
   export interface ModificacionSocios {
-    ensucarácterde:Number,
+    ensucarácterde:number,
     obligadoaTributarenMéxico:boolean,
-    nacionalidad:Number,
-    registroFederaldeContribuyentes:Object | null,
-    rfc:String,
-    nombreCompleto:String
+    nacionalidad:number,
+    registroFederaldeContribuyentes:object | null,
+    rfc:string,
+    nombreCompleto:string
     
   }
 
   export interface ModificacionGoceInmueble{
-    idAviInmueble:String,
-    direccion: String,
-    codigoPostal:String,
-    cveEntidad: String,
-    cveMunicipio: String,
-   cveTipoDoc: String,
-   fechaInicioAnterior: String,
-   fechaFinAnterior: String,
-   fechaInicioActual: String,
-   fechaFinActual:String,
-   rfcPartesC: String,
-   rfcPartesCons: String,
-   nombrePartesCons: String,
-   caracterDeCons: String,
-   observaciones: String
+    idAviInmueble:string,
+    direccion: string,
+    codigoPostal:string,
+    cveEntidad: string,
+    cveMunicipio: string,
+   cveTipoDoc: string,
+   fechaInicioAnterior: string,
+   fechaFinAnterior: string,
+   fechaInicioActual: string,
+   fechaFinActual:string,
+   rfcPartesC: string,
+   rfcPartesCons: string,
+   nombrePartesCons: string,
+   caracterDeCons: string,
+   observaciones: string
  }
 
  export interface PersonaFusionEscisionDTO{
-  rfc: String,
-  razonSocial: String,
-  numFolioTramite: String,
-  fechaInicioVigencia: String,
-  fechaFinVigencia: String
+  rfc: string,
+  razonSocial: string,
+  numFolioTramite: string,
+  fechaInicioVigencia: string,
+  fechaFinVigencia: string
  }
 
 
@@ -79,7 +79,7 @@ export interface CargaTipo {
 }
 
 export interface FechasSeleccionadas{
-  fechasSeleccionadas:any
+  fechasSeleccionadas: string[] // Assuming it's an array of strings; adjust as needed
 }
 
 export interface DatosQuienRecibe {

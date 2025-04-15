@@ -1,10 +1,10 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, OnDestroy } from '@angular/core';
+import { Subject, catchError, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { catchError, map, Subject, takeUntil } from 'rxjs';
-import { Router } from '@angular/router';
-import { TramiteFolioService } from '@libs/shared/data-access-user/src';
-import { TramiteAgaceStore } from '../../../../estados/tramite.store';
 import { FirmaElectronicaComponent } from '@ng-mf/data-access-user';
+import { Router } from '@angular/router';
+import { TramiteAgaceStore } from '../../../../estados/tramite.store';
+import { TramiteFolioService } from '@libs/shared/data-access-user/src';
 @Component({
   selector: 'app-paso-tres',
   standalone: true,
@@ -12,7 +12,8 @@ import { FirmaElectronicaComponent } from '@ng-mf/data-access-user';
   templateUrl: './PasoTres.component.html',
   styleUrl: './PasoTres.component.css',
 })
-export class PasoTresComponent {
+export class PasoTresComponent implements OnDestroy {
+
    /**
      * Tipo de persona.
      */

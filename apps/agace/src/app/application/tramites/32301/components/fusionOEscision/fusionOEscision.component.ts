@@ -1,19 +1,14 @@
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
-import fusionOEscision from 'libs/shared/theme/assets/json/32301/fusionOEscision.json';
-import { AlertComponent } from "@ng-mf/data-access-user";
-import { TituloComponent } from "@ng-mf/data-access-user";
-import { TableComponent } from '@ng-mf/data-access-user';
-import { TablePaginationComponent } from '@ng-mf/data-access-user';
-import { InputRadioComponent } from '@ng-mf/data-access-user';
-import { Modal } from 'bootstrap';
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AlertComponent, InputRadioComponent, TableComponent, TablePaginationComponent, TituloComponent } from "@ng-mf/data-access-user";
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import { Subject, map, takeUntil } from 'rxjs';
 import { AvisoModifyService } from '../../services/aviso-modify.service';
-
+import { CommonModule } from '@angular/common';
+import { Modal } from 'bootstrap';
 import { PersonaFusionEscisionDTO } from '../../models/avisomodify.model';
-import { Tramite32301Store } from '../../estados/tramite32301.store';
 import { Tramite32301Query } from '../../estados/tramite32301.query';
-import { map, Subject, takeUntil } from 'rxjs';
+import { Tramite32301Store } from '../../estados/tramite32301.store';
+import fusionOEscision from 'libs/shared/theme/assets/json/32301/fusionOEscision.json';
 
 @Component({
   selector: 'app-fusion-oescision',
@@ -21,7 +16,7 @@ import { map, Subject, takeUntil } from 'rxjs';
   imports: [CommonModule, ReactiveFormsModule, AlertComponent, TituloComponent, InputRadioComponent, TableComponent, TablePaginationComponent],
   templateUrl: './fusionOEscision.component.html',
 })
-export class FusionOEscisionComponent implements OnInit, OnDestroy {
+export class FusionOEscisionComponent implements OnInit, OnDestroy, AfterViewInit {
   formulario!: FormGroup;
   modelFormulario!: FormGroup;
   fusionOescisionTitulo!:string
@@ -80,7 +75,9 @@ export class FusionOEscisionComponent implements OnInit, OnDestroy {
     constructor(private fb: FormBuilder, 
       private AvisoModifyService: AvisoModifyService,
       private store: Tramite32301Store,
-      private Tramite32301Query:Tramite32301Query) {}
+      private Tramite32301Query:Tramite32301Query) {
+        //constructor
+      }
       private destroy$: Subject<void> = new Subject<void>();
     ngOnInit(): void {
 
@@ -98,7 +95,7 @@ export class FusionOEscisionComponent implements OnInit, OnDestroy {
       
     }
 
-    initializeForm(){
+    initializeForm():void{
       this.formulario = this.fb.group({
         capacidadAlmacenamiento: [null, Validators.required],
         numeroTotalCarros: [null, Validators.required],
@@ -130,12 +127,10 @@ export class FusionOEscisionComponent implements OnInit, OnDestroy {
     }
  
     ocultarEscicion(): void {
-      
-      const valor = this.formulario.get('capacidadAlmacenamiento')?.value;
-     if(valor == 'fusion2')
+      const VALOR = this.formulario.get('capacidadAlmacenamiento')?.value;
+     if(VALOR === 'fusion2')
      {
-      this.fusionradioOptions.pop()
-     
+      this.fusionradioOptions.pop();
      }
      else{
       this.fusionradioOptions = [
@@ -154,33 +149,25 @@ export class FusionOEscisionComponent implements OnInit, OnDestroy {
       
     }
 
-    mostrarFusionOEscision(){
-      const valor = this.formulario.get('numeroTotalCarros')?.value;
-    this.divCompletoVisible = valor === '1' || valor === '0';
-      this.fusionOescisionTitulo = valor == 1 ? 'Datos de las empresas fusionadas' : 'Datos de las empresas escindidas';
-      this.subFusionOescisionTitulo = valor == 1 ? 'Datos de las empresas fusionadas':'Datos de las empresas escindidas';
-      this.labelFechaFusionOscision = valor == 1 ? 'Fecha en que surte efecto la fusión' : 'Fecha en que surte efecto la escisión'
-      console.log(valor,":eve")
+    mostrarFusionOEscision():void{
+      const VALOR = this.formulario.get('numeroTotalCarros')?.value;
+    this.divCompletoVisible = VALOR === '1' || VALOR === '0';
+      this.fusionOescisionTitulo = VALOR === 1 ? 'Datos de las empresas fusionadas' : 'Datos de las empresas escindidas';
+      this.subFusionOescisionTitulo = VALOR === 1 ? 'Datos de las empresas fusionadas':'Datos de las empresas escindidas';
+      this.labelFechaFusionOscision = VALOR === 1 ? 'Fecha en que surte efecto la fusión' : 'Fecha en que surte efecto la escisión'
     }
     
     mostrarCertificacionFusionada(ismodel?:string): void {
       // Implement logic to show certification-related sections
-      const cantidadBienes = this.formulario.get('cantidadBienes')?.value;
-      this.conCertificacionPrincipalVisible = cantidadBienes === '1' ? true : false;
-  if(ismodel =='isModel'){
-    const modelcantidadBienes = this.modelFormulario.get('mCantidadBienes')?.value;
-    this.sinCertificacionPrincipalVisible = modelcantidadBienes === '1' ? true : false ;
+      const CANTIDAD_BIENES = this.formulario.get('cantidadBienes')?.value;
+      this.conCertificacionPrincipalVisible = CANTIDAD_BIENES === '1' ? true : false;
+  if(ismodel ==='isModel'){
+    const MODELCANTIDAD_BIENES = this.modelFormulario.get('mCantidadBienes')?.value;
+    this.sinCertificacionPrincipalVisible = MODELCANTIDAD_BIENES === '1' ? true : false ;
+  }   
   }
-      
-    }
-
-  
-    
-    // Removed duplicate initializeForm method
-
     cargarDatosPersonaFusion(): void {
-
-      this.AvisoModifyService
+    this.AvisoModifyService
                   .cargarDatosPersonaFusion()
                   .pipe(
                     map((resp) => {
@@ -195,11 +182,8 @@ export class FusionOEscisionComponent implements OnInit, OnDestroy {
               .pipe(takeUntil(this.destroy$))
               .subscribe(state => {
                 this.PersonaFusionEscisionDTO = state as unknown as PersonaFusionEscisionDTO;
-                console.log(this.PersonaFusionEscisionDTO)
                 this.mpersonaFusionEscisionDTO.patchValue(this.PersonaFusionEscisionDTO)
               })
-        
-                 
     }
 
     get personaFusionEscisionDTO(): FormGroup {
@@ -209,28 +193,28 @@ export class FusionOEscisionComponent implements OnInit, OnDestroy {
       return this.modelFormulario.get('personaFusionEscisionDTO') as FormGroup;
     }
 
-    onItemsPerPageChange(itemsPerPage: any): void {
+    onItemsPerPageChange(itemsPerPage: number): void {
       this.itemsPerPage = itemsPerPage;
       this.currentPage = 1;
       this.updatePagination();
     }
   
-    onPageChange(page: any): void {
+    onPageChange(page: number): void {
       this.currentPage = page;
       this.updatePagination();
     }
     updatePagination(): void {
-      const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+      const START_INDEX = (this.currentPage - 1) * this.itemsPerPage;
       this.miembroDeLaEmpresaBodyData = this.miembroDeLaEmpresaBodyData.slice(
-        startIndex,
-        startIndex + this.itemsPerPage
+        START_INDEX,
+        START_INDEX + this.itemsPerPage
       );
     }
 
-    eliminarPersona(): void {
-      // this.fusionOEscisionService.eliminarPersona();
-      // Placeholder implementation
-    }
+    // eliminarPersona(): void {
+    //   // this.fusionOEscisionService.eliminarPersona();
+    //   // Placeholder implementation
+    // }
 
     abrirModalFusionEscision(): void {
 
@@ -241,35 +225,31 @@ export class FusionOEscisionComponent implements OnInit, OnDestroy {
       // Placeholder implementation
     }
 
-    abrirModalModificarFusionEscision(): void {
+    // abrirModalModificarFusionEscision(): void {
 
-      // this.fusionOEscisionService.abrirModalModificarFusionEscision();
-      // Placeholder implementation
-    }
-    closeFusionEscisionModal(){
+    //   // this.fusionOEscisionService.abrirModalModificarFusionEscision();
+    //   // Placeholder implementation
+    // }
+    closeFusionEscisionModal():void{
       if (this.ModificarFusionEscisionInstance) {
         this.ModificarFusionEscisionInstance.hide();
         this.Tramite32301Query.selectpersonaFusionEscisionDTO$
         .pipe(takeUntil(this.destroy$))
         .subscribe(state => {
           this.PersonaFusionEscisionDTO = state as unknown as PersonaFusionEscisionDTO;
-          console.log(state)
-          // const tbodyData = { tbodyData: }
-          //this.gridFusionEscisionData = tbodyData
-          const newDatu = Object.values(state)
-          const tbodyData = { tbodyData: newDatu.map(String) }
+          const NEW_DATU = Object.values(state)
+          const TBODY_DATA = { tbodyData: NEW_DATU.map(String) }
           this.gridFusionEscisionData.pop()
-          this.gridFusionEscisionData.push(tbodyData)
-          console.log(this.gridFusionEscisionData)
+          this.gridFusionEscisionData.push(TBODY_DATA)
         })
       }
     }
-    closeCorrectamenteModel(){
+    closeCorrectamenteModel():void{
       if (this.correctamenteModelInstance) {
         this.correctamenteModelInstance.hide();
       }
     }
-    openCorrectamenteModel(){
+    openCorrectamenteModel():void{
       if (this.correctamenteModelInstance) {
         this.correctamenteModelInstance.show();
       }

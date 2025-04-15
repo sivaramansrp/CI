@@ -1,14 +1,13 @@
 import { Component, ViewChild } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { ListaPasosWizard } from '@ng-mf/data-access-user';
-import { WizardComponent } from '@ng-mf/data-access-user';
 import { AccionBoton } from '@ng-mf/data-access-user';
 import { BtnContinuarComponent } from "@ng-mf/data-access-user";
+import { CommonModule } from '@angular/common';
 import { DatosPasos } from '@ng-mf/data-access-user';
-
-import { PasoUnoComponent } from '../peso-uno/PasoUno.component';
+import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PasoDosComponent } from '../paso-dos/PasoDos.component';
 import { PasoTresComponent } from '../paso-tres/PasoTres.component';
+import { PasoUnoComponent } from '../peso-uno/PasoUno.component';
+import { WizardComponent } from '@ng-mf/data-access-user';
 
 export const PASOS = [
   {
@@ -53,7 +52,7 @@ export class AvisoModifyIvaEIepsComponent {
 
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
 
-  getValorIndice(e: AccionBoton) {
+  getValorIndice(e: AccionBoton):void {
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
       if (e.accion === 'cont') {

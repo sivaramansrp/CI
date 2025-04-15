@@ -1,15 +1,17 @@
+import { Observable,catchError, of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { catalogoResponse } from '@ng-mf/data-access-user';
-import { catchError, Observable, of } from 'rxjs';
 import { PersonaFusionEscisionDTO } from '../models/avisomodify.model';
+import { catalogoResponse } from '@ng-mf/data-access-user';
 
 @Injectable({
   providedIn: 'any'
 })
 export class AvisoModifyService {
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+    // El constructor se utiliza para la inyección de dependencias.
+  }
   private jsonUrl = 'assets/json/32301';
   private fileName = 'tipoDeAviso.json'
    private personaFusionEscision = 'personaFusionEscision.json'
