@@ -12,7 +12,11 @@
                     <div class="col">
                         <div class="form-check">
                           <input class="form-check-input" type="checkbox" value="" id="si"
-                            formControlName="si" >
+                            formControlName="si"
+                            (change)="setValoresStore(
+                                'formCertificado',
+                            'si',
+                            'setFormCertificadoGenric')" >
                           <label class="form-check-label" for="si">SI</label>
                         </div>
                     </div>

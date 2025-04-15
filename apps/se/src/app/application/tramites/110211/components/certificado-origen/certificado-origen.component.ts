@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { CamState, camCertificadoStore } from '../../estados/cam-certificado.store';
 import { Catalogo, SeccionLibQuery, SeccionLibState, SeccionLibStore } from '@libs/shared/data-access-user/src';
-import { Observable, Subject, delay, map, takeUntil } from 'rxjs';
+import { Observable, Subject, delay, of, map, takeUntil } from 'rxjs';
 import { CamCertificadoService } from '../../services/cam-certificado.service';
 import { FormBuilder } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -66,7 +66,7 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
    * @descripcion
    * Observable para los datos de la tabla.
    */
-  datosTabla$: Observable<Mercancia[]> | undefined;
+  datosTabla$: Observable<Mercancia[]> = of([]);
 
   /**
    * @descripcion
@@ -149,13 +149,12 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
 
     this.estadoOpcion();
     this.paisOpcion();
-    this.query.selectmercanciaTabla$
-    .pipe(
-      takeUntil(this.destroyNotifier$),
-    )
-    .subscribe((data) => {
-      this.datosTabla$ = data as unknown as Observable<Mercancia[]>;
-    });
+    this.datosTabla$ = this.query.selectmercanciaTabla$
+  }
+
+  setValoresStore(event: { formGroupName: string, campo: string, valor: undefined, storeStateName: string }) :void{
+    const { campo: CAMPO, valor: VALOR } = event;
+    this.store.setFormCertificadoGenric({ [CAMPO]: VALOR });
   }
 
   /**

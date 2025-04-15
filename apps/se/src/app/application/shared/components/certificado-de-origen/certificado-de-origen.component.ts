@@ -205,6 +205,7 @@ export class CertificadoDeOrigenComponent implements OnDestroy {
   constructor(private fb: FormBuilder) {
     // Inicializa el formulario reactivo con los campos y validaciones necesarias.
     this.formCertificado = this.fb.group({
+      si: [false],
       entidadFederativa: ['', [Validators.required, Validators.min(0)]],
       bloque: ['', [Validators.required, Validators.min(0)]],
       fraccionArancelariaForm: [''],

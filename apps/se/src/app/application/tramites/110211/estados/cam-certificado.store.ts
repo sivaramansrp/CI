@@ -41,6 +41,7 @@ export interface CamState {
 export function createInitialState(): CamState {
     return {
         formCertificado: {
+            si: false,
             entidadFederativa: '',
             bloque: '',
             nombreComercialForm: '',
@@ -365,6 +366,15 @@ export class camCertificadoStore extends Store<CamState> {
         this.update((state) => ({
           formDestinatario: {
             ...state.formDestinatario,
+            ...values,
+          },
+        }));
+      }
+
+      setFormCertificadoGenric(values: { [key: string]: undefined | boolean | string | number | object }): void {    
+        this.update((state) => ({
+          formCertificado: {
+            ...state.formCertificado,
             ...values,
           },
         }));

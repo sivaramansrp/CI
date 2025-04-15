@@ -81,6 +81,11 @@ export class CamDatosCertificadoComponent implements OnInit, OnDestroy {
     this.representacionFederalOpcion();
   }
 
+  setValoresStore(event: { formGroupName: string, campo: string, valor: undefined, storeStateName: string }) :void{
+    const { campo: CAMPO, valor: VALOR } = event;
+    this.store.setFormCertificadoGenric({ [CAMPO]: VALOR });
+  }
+
   /**
    * @descripcion
    * Obtiene la lista de idiomas disponibles.
