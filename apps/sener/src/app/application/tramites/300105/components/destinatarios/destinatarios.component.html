@@ -2,7 +2,7 @@
   <ng-titulo titulo="Destinatarios" />
   <form [formGroup]="formularioSolicitud">
     <div class="row mt-5">
-      <div class="table-container">
+      <div class="contenedor-de-mesa">
         <app-tabla-dinamica [configuracionTabla]="configuracionTabla" [datos]="datosTablaDestinatario"
           [tipoSeleccionTabla]="tipoSeleccionTabla"
           (listaDeFilaSeleccionada)="manejarFilaSeleccionada($event)"></app-tabla-dinamica>
@@ -132,7 +132,7 @@
         </div>
         <div class="row">
           <div class="col-md-8 mt-3">
-            <div class="table-container">
+            <div class="contenedor-de-mesa">
               <app-tabla-dinamica [configuracionTabla]="mercanciaTabla" [datos]="datosTablaDestinatario"
                 [tipoSeleccionTabla]="tipoSeleccionTabla"
                 (listaDeFilaSeleccionada)="manejarFilaSeleccionada($event)"></app-tabla-dinamica>

@@ -2,7 +2,7 @@
   <ng-titulo titulo="Información de los equipos Rayos X" />
   <form [formGroup]="formularioSolicitud">
     <div class="row mt-5">
-      <div class="table-container">
+      <div class="contenedor-de-mesa">
         <app-tabla-dinamica [configuracionTabla]="configuracionTabla" [datos]="datosTablaMercancia"
           [tipoSeleccionTabla]="tipoSeleccionTabla"
           (listaDeFilaSeleccionada)="manejarFilaSeleccionada($event)"></app-tabla-dinamica>
@@ -203,7 +203,7 @@
         </div>
         <div class="row">
           <div class="col-md-8 mt-3">
-            <div class="table-container">
+            <div class="contenedor-de-mesa">
               <app-tabla-dinamica [configuracionTabla]="serieTabla" [datos]="datosTablaMercancia"
                 [tipoSeleccionTabla]="tipoSeleccionTabla"
                 (listaDeFilaSeleccionada)="manejarFilaSeleccionada($event)"></app-tabla-dinamica>
