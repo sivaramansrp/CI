@@ -118,7 +118,6 @@ export class SolicitudPageComponent implements OnInit, OnDestroy {
    * @param {AccionBoton} e - El objeto que contiene la acción y el valor del índice.
    */
   getValorIndice(e: AccionBoton): void {
-    // this.alEventoHijo(this.nombre);
     if (e.valor > 0 && e.valor < 5) {
       if (this.transportacion && e.valor === 2) {
         this.nombre = true;
@@ -127,7 +126,6 @@ export class SolicitudPageComponent implements OnInit, OnDestroy {
         this.nombre = false;
         this.indice = e.valor;
         if (e.accion === 'cont') {
-          // this.nombre = 1;
           this.wizardComponent.siguiente();
         } else {
           this.wizardComponent.atras();
@@ -136,10 +134,6 @@ export class SolicitudPageComponent implements OnInit, OnDestroy {
       this.store.setPasoActivo(this.indice);
     }
   }
-
-  // alEventoHijo(event: number): void{
-  //   this.nombre = event;
-  // }
 
   /**
    * Método para continuar al siguiente paso en el wizard.
