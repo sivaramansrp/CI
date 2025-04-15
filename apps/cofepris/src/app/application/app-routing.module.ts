@@ -252,6 +252,15 @@ const ROUTES: Routes = [
         (m) => m.SolicitudPermisoModule
       ),
   },
+
+  {
+    path: 'importacion-destinados-donacio',
+    loadChildren: () =>
+      import('./tramites/260209/importacion-destinados-donacio.module').then(
+        (m) => m.ImportacionDestinadosDonacioModule
+      ),
+  },
+  
   {
     path: 'modificacion-permiso-sanitario',
     loadChildren: () =>
