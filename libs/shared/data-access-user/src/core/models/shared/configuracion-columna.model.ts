@@ -6,8 +6,8 @@ export interface ConfiguracionColumna<T> {
   /** Encabezado o título de la columna */
   encabezado: string;
 
-  /** 
-   * Función que devuelve el valor de la columna para cada fila. 
+  /**
+   * Función que devuelve el valor de la columna para cada fila.
    * Puede retornar un valor de tipo string, number, undefined o boolean.
    */
   clave: (ele: T) => string | number | undefined | boolean;

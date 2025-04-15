@@ -2,18 +2,18 @@ import { Injectable } from '@angular/core';
 
 import { Store, StoreConfig } from '@datorama/akita';
 
-import { catalogoResponse } from '@libs/shared/data-access-user/src';
+import { CatalogoResponse } from '@libs/shared/data-access-user/src';
 
 export interface PermisoImportacionBiologicaState {
-  selectedEstado: catalogoResponse | null;
+  selectedEstado: CatalogoResponse | null;
   /**
    * Clave seleccionada del catálogo de respuestas.
    */
-  setClave: catalogoResponse | null,
+  setClave: CatalogoResponse | null,
   /**
    * Banco seleccionado del catálogo de respuestas.
    */
-  setBanco: catalogoResponse | null,
+  setBanco: CatalogoResponse | null,
   /**
    * Clave de referencia seleccionada del catálogo de respuestas.
    */
@@ -65,9 +65,9 @@ export class PermisoImportacionBiologicaStore extends Store<PermisoImportacionBi
   /**
    * Establece el estado seleccionado en el estado de la tienda.
    *
-   * @param {catalogoResponse} selectedEstado - El estado seleccionado del catálogo de respuestas.
+   * @param {CatalogoResponse} selectedEstado - El estado seleccionado del catálogo de respuestas.
    */
-  public setSelectedEstado(selectedEstado: catalogoResponse): void {
+  public setSelectedEstado(selectedEstado: CatalogoResponse): void {
     this.update((state) => ({
       ...state,
       selectedEstado,
@@ -79,7 +79,7 @@ export class PermisoImportacionBiologicaStore extends Store<PermisoImportacionBi
    *
    * @param selectedClave - El objeto de respuesta del catálogo que representa la clave seleccionada.
    */
-  public setClave(selectedClave: catalogoResponse): void {
+  public setClave(selectedClave: CatalogoResponse): void {
     this.update((state) => ({
       ...state,
       selectedClave,
@@ -90,11 +90,11 @@ export class PermisoImportacionBiologicaStore extends Store<PermisoImportacionBi
   /**
    * Establece el valor de `setBanco` en el estado de la tienda.
    *
-   * @param setBanco - Un objeto de tipo `catalogoResponse` que representa el banco a establecer.
+   * @param setBanco - Un objeto de tipo `CatalogoResponse` que representa el banco a establecer.
    * 
    * Actualiza el estado de la tienda con el nuevo valor de `setBanco`.
    */
-  public setBanco(setBanco: catalogoResponse): void {
+  public setBanco(setBanco: CatalogoResponse): void {
     this.update((state) => ({
       ...state,
       setBanco,

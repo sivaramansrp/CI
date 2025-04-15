@@ -30,6 +30,19 @@ const ROUTES: Routes = [
   {
     path: 'registro-solicitud',
     loadChildren: () =>
+      import('./tramites/31802/registro-solicitud.module').then(
+        (m) => m.RegistroSolicitudModule),
+   },
+  {
+    path: 'autoridad',
+    loadChildren: () =>
+      import('./tramites/31501/autoridad.module').then(
+        (m) => m.AutoridadModule
+      ),
+  },
+  {
+    path: 'registro-solicitud',
+    loadChildren: () =>
       import('./tramites/31803/registro-solicitud.module').then(
         (m) => m.RegistroSolicitudModule
       ),
@@ -48,7 +61,13 @@ const ROUTES: Routes = [
         './tramites/32401/manifiesto-aereo.module'
       ).then((m) => m.ManifiestoAereoModule),
   },
-  
+  {
+    path: 'aviso-traslado',
+    loadChildren: () =>
+      import('./tramites/32503/aviso-traslado.module').then(
+        (m) => m.AvisoTrasladoModule
+      ),
+  },
 ];
 
 @NgModule({
