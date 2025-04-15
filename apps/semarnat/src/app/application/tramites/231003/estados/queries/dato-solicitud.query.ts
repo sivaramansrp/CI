@@ -1,4 +1,5 @@
-import {DatoSolicitudStore,EstadoDatoSolicitud} from '../tramites/dato-solicitud.store';
+import {DatoSolicitudStore} from '../tramites/dato-solicitud.store';
+import { EstadoDatoSolicitud } from '../../models/datos-solicitud.model';
 import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
 

@@ -2,12 +2,13 @@ import { CatalogoSelectComponent, InputRadioComponent, TableComponent, TituloCom
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RadioOpcion, SolicitudJson } from '@libs/shared/data-access-user/src/core/models/231003/solicitud.model';
-import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DatoSolicitudQuery } from '../../estados/queries/dato-solicitud.query';
 import { DatoSolicitudStore } from '../../estados/tramites/dato-solicitud.store';
 import { DatosResiduosPeligrososComponent } from '../datos-residuos-peligrosos/datos-residuos-peligrosos.component';
+import {EstadoDatoSolicitud} from '../../models/datos-solicitud.model';
 import { Modal } from 'bootstrap';
+import { Subject} from 'rxjs';
 import rawData from '@libs/shared/theme/assets/json/231003/solicitud.json';
 
 /**
@@ -126,11 +127,6 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
      * Recupera valores almacenados en el store para rellenar los formularios.
      */
     this.recuperarValoresDesdeStore();
-
-    /** 
-     * Se suscribe a los cambios de todos los formularios para actualizar el estado en el store.
-     */
-    this.suscribirseACambiosDeFormulario();
   }
 
   /** 
@@ -305,72 +301,43 @@ private recuperarValoresDesdeStore(): void {
 }
 
 
-/**
- * Se suscribe a los cambios de valor en cada uno de los formularios,
- * y actualiza el estado correspondiente en el store de Akita.
- * 
- * Se utiliza `takeUntil(this.destruir$)` para evitar fugas de memoria 
- * y limpiar las suscripciones cuando el componente se destruye.
- */
-private suscribirseACambiosDeFormulario(): void {
-  // Escucha y actualiza cambios por campo en solicitudForm
-  Object.keys(this.solicitudForm.controls).forEach(campo => {
-    this.solicitudForm.get(campo)?.valueChanges
-      .pipe(takeUntil(this.destruir$))
-      .subscribe(valor => {
-        this.datoSolicitudStore.actualizarSolicitudForm({
-          ...this.solicitudForm.getRawValue(),
-          [campo]: valor
-        });
-      });
+actualizarCampoSolicitudForm(campo: keyof EstadoDatoSolicitud['solicitudForm']): void {
+  const VALOR = this.solicitudForm.get(campo)?.value;
+  this.datoSolicitudStore.actualizarSolicitudForm({
+    ...this.solicitudForm.getRawValue(),
+    [campo]: VALOR,
   });
+}
 
-  // Escucha y actualiza cambios por campo en formularioEmpresaReciclaje
-  Object.keys(this.formularioEmpresaReciclaje.controls).forEach(campo => {
-    this.formularioEmpresaReciclaje.get(campo)?.valueChanges
-      .pipe(takeUntil(this.destruir$))
-      .subscribe(valor => {
-        this.datoSolicitudStore.actualizarEmpresaReciclaje({
-          ...this.formularioEmpresaReciclaje.getRawValue(),
-          [campo]: valor
-        });
-      });
+actualizarCampoEmpresaReciclaje(campo: keyof EstadoDatoSolicitud['empresaReciclaje']): void {
+  const VALOR = this.formularioEmpresaReciclaje.get(campo)?.value;
+  this.datoSolicitudStore.actualizarEmpresaReciclaje({
+    ...this.formularioEmpresaReciclaje.getRawValue(),
+    [campo]: VALOR,
   });
+}
 
-  // Escucha y actualiza cambios por campo en formularioLugarReciclaje
-  Object.keys(this.formularioLugarReciclaje.controls).forEach(campo => {
-    this.formularioLugarReciclaje.get(campo)?.valueChanges
-      .pipe(takeUntil(this.destruir$))
-      .subscribe(valor => {
-        this.datoSolicitudStore.actualizarLugarReciclaje({
-          ...this.formularioLugarReciclaje.getRawValue(),
-          [campo]: valor
-        });
-      });
+actualizarCampoLugarReciclaje(campo: keyof EstadoDatoSolicitud['lugarReciclaje']): void {
+  const VALOR = this.formularioLugarReciclaje.get(campo)?.value;
+  this.datoSolicitudStore.actualizarLugarReciclaje({
+    ...this.formularioLugarReciclaje.getRawValue(),
+    [campo]: VALOR,
   });
+}
 
-  // Escucha y actualiza cambios por campo en formularioEmpresaTransportista
-  Object.keys(this.formularioEmpresaTransportista.controls).forEach(campo => {
-    this.formularioEmpresaTransportista.get(campo)?.valueChanges
-      .pipe(takeUntil(this.destruir$))
-      .subscribe(valor => {
-        this.datoSolicitudStore.actualizarEmpresaTransportista({
-          ...this.formularioEmpresaTransportista.getRawValue(),
-          [campo]: valor
-        });
-      });
+actualizarCampoEmpresaTransportista(campo: keyof EstadoDatoSolicitud['empresaTransportista']): void {
+  const VALOR = this.formularioEmpresaTransportista.get(campo)?.value;
+  this.datoSolicitudStore.actualizarEmpresaTransportista({
+    ...this.formularioEmpresaTransportista.getRawValue(),
+    [campo]: VALOR,
   });
+}
 
-  // Escucha y actualiza cambios por campo en formularioPrecaucionesManejo
-  Object.keys(this.formularioPrecaucionesManejo.controls).forEach(campo => {
-    this.formularioPrecaucionesManejo.get(campo)?.valueChanges
-      .pipe(takeUntil(this.destruir$))
-      .subscribe(valor => {
-        this.datoSolicitudStore.actualizarPrecaucionesManejo({
-          ...this.formularioPrecaucionesManejo.getRawValue(),
-          [campo]: valor
-        });
-      });
+actualizarCampoPrecaucionesManejo(campo: keyof EstadoDatoSolicitud['precaucionesManejo']): void {
+  const VALOR = this.formularioPrecaucionesManejo.get(campo)?.value;
+  this.datoSolicitudStore.actualizarPrecaucionesManejo({
+    ...this.formularioPrecaucionesManejo.getRawValue(),
+    [campo]: VALOR,
   });
 }
 

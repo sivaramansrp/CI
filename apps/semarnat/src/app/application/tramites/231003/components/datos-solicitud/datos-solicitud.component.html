@@ -5,20 +5,20 @@
       <div class="col-md-4 mb-3 form-group">
         <label for="numeroRegistroAmbiental">Número de Registro Ambiental*:</label>
         <input type="text" class="form-control" placeholder="123123" formControlName="numeroRegistroAmbiental"
-          id="numeroRegistroAmbiental" maxlength="13" size="30" />
+          id="numeroRegistroAmbiental" maxlength="13" size="30" (change)="actualizarCampoSolicitudForm('numeroRegistroAmbiental')" />
       </div>
     </div>
     <div class="row mb-3">
       <div class="col-md-6 mb-3 form-group">
         <label for="descripcionGenerica1">Giro industrial del importador*: </label>
         <input type="text" class="form-control" placeholder="Giro industrial del importador"
-          formControlName="descripcionGenerica1" id="descripcionGenerica1" maxlength="150" size="105" />
+          formControlName="descripcionGenerica1" id="descripcionGenerica1" maxlength="150" size="105" (change)="actualizarCampoSolicitudForm('descripcionGenerica1')" />
       </div>
     </div>
     <div class="row mb-3">
       <div class="col-md-5 form-group">
         <app-catalogo-select [catalogo]='etiquetasForm.Immex' formControlName="numeroProgramaImmex"
-          [label]="'Número de autorización Immex'" [required]="true"></app-catalogo-select>
+          [label]="'Número de autorización Immex'" [required]="true" (change)="actualizarCampoSolicitudForm('numeroProgramaImmex')"></app-catalogo-select>
       </div>
     </div>
   </form>
