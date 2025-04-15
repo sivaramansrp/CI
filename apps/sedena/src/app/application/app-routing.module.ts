@@ -9,11 +9,11 @@ const ROUTES: Routes = [
     component: SeleccionTramiteComponent,
   },
   {
-       path: 'permiso-extraordinario-para',
+    path: 'artefactos-pirotecnicos-ordinarios',
     loadChildren: () =>
       import(
-        './tramites/240118/permiso-extraordinario-para-module'
-      ).then((m) => m.PermisoExtraordinarioParaModule),
+        './tramites/240119/artefactos-pirotecnicos-ordinarios.module'
+      ).then((m) => m.ArtefactosPirotecnicosOrdinariosModule),
   },
   {
     path: 'permiso-extraordinario-para',
