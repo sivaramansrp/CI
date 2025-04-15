@@ -482,7 +482,7 @@ eliminarPedimento(borrar: boolean): void {
   
     this.domicilioEstablecimiento = this.fb.group({
       ideGenerica1: ['', Validators.required],
-      observaciones: ['', [Validators.required, Validators.maxLength(2000)]],
+      observaciones: [{ value: '', disabled: true }, [Validators.required, Validators.maxLength(2000)]],
       establecimientoRFCResponsableSanitario: ['', Validators.pattern(REGEX_RFC_FISICA)],
       establecimientoRazonSocial:['', Validators.required],
       establecimientoCorreoElectronico :['', [Validators.required, Validators.email]],
@@ -528,6 +528,7 @@ eliminarPedimento(borrar: boolean): void {
       fechaCaducidad: [''],
       
     });
+   this.setDisabled();
     this.establecimientoService
       .getJustificationData()
       .pipe(takeUntil(this.destroy$))
@@ -547,7 +548,19 @@ eliminarPedimento(borrar: boolean): void {
         this.solicitudEstablecimientoForm.patchValue(state, { emitEvent: false });
       });
   }
+/**
+ * Deshabilita el campo "observaciones" del formulario de domicilio
+ */
+  setDisabled(): void {
+ this.domicilioEstablecimiento.get('ideGenerica1')?.valueChanges.subscribe((value) => {
+  if (value === 'modificacion') {
+    this.domicilioEstablecimiento.get('observaciones')?.enable();
+  } else {
+    this.domicilioEstablecimiento.get('observaciones')?.disable();
+  }
+});
 
+  }
   /**
  * Alterna el estado colapsable de la sección "Uno".
  * 
@@ -580,7 +593,11 @@ eliminarPedimento(borrar: boolean): void {
         this.estado = resp;
       });
   }
-
+  cerrarModal(): void {
+    if (this.modalInstance) {
+      this.modalInstance.hide();
+    }
+  }
   /**
    * Carga los datos del catálogo de justificación.
    */

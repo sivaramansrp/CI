@@ -394,7 +394,13 @@
   }
 
 
-<div class="modal fade" #establecimientoModal>
+<div 
+class="modal fade" 
+#establecimientoModal
+tabindex="-1"
+aria-labelledby="establecimientoModalLabel"
+aria-hidden="true"
+>
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <form [formGroup]="scianForm">
@@ -432,7 +438,7 @@
           >
             Limpiar
           </button>
-          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">
+          <button type="button" class="btn btn-primary" (click)="cerrarModal()" >
             Cancelar
           </button>
           <button

@@ -237,7 +237,16 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/260512/permiso-de-importacion.module').then(
         (m) => m.PermisoDeImportacionModule)
-  }
+  },
+
+  {
+    path: 'modificacion-permiso-sanitario-la-salud',
+    loadChildren: () =>
+      import(
+        './tramites/260901/modificacion-permiso-sanitario-la-salud.module'
+      ).then((m) => m.ModificacionPermisoSanitarioLaSaludModule),
+      
+  },
 ];
 
 @NgModule({
