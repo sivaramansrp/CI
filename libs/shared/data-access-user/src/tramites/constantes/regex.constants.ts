@@ -244,6 +244,8 @@ export const REGEX_CORREO_ELECTRONICO =
  * Ejemplo válido: (123) 456-7890
  */
 export const REGEX_TELEFONO = /^([0-9A-Za-z\-() ])*$/;
+
+
 /**
  * Expresión regular para validar números decimales con hasta 2 decimales.
  * 
@@ -337,3 +339,32 @@ export const REGEX_TELEFONO_DIGITOS = '/^\d{10}$/';
  * Expresión regular para validar un código postal de 5 dígitos.
  */
 export const REGEX_POSTAL = '/^\d{5}$/';
+/**
+ * Expresión regular para validar cadenas alfanuméricas con espacios.
+ * 
+ * Esta expresión regular permite letras (mayúsculas y minúsculas), números y espacios.
+ * No se permiten caracteres especiales.
+ * 
+ * Ejemplos válidos:
+ * - "Hola 123"
+ * - "Codigo con espacios"
+ * 
+ * Ejemplos no válidos:
+ * - "Hola@123" (contiene un carácter especial)
+ */
+export const REGEX_ALFANUMERICO_CON_ESPACIOS = /^[a-zA-Z0-9 ]*$/;
+
+/**
+ * Expresión regular para reemplazar caracteres no alfanuméricos ni espacios.
+ * 
+ * Esta expresión regular identifica cualquier carácter que no sea una letra (mayúscula o minúscula),
+ * un número o un espacio, y lo reemplaza.
+ * 
+ * Ejemplo de uso:
+ * ```typescript
+ * const cadena = "Hola@123!";
+ * const resultado = cadena.replace(REGEX_ALFANUMERICO_CON_ESPACIOS_REEMPLAZAR, '');
+ * console.log(resultado); // "Hola123"
+ * ```
+ */
+export const REGEX_ALFANUMERICO_CON_ESPACIOS_REEMPLAZAR = /[^a-zA-Z0-9 ]/g;

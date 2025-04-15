@@ -8,37 +8,63 @@
  * @import { TableComponent } from '../../../../shared/components/table/table.component';
  */
 
+import { HttpClient } from '@angular/common/http';
+import { HttpErrorResponse } from '@angular/common/http';
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ConfiguracionColumna, SeccionLibQuery, SeccionLibState, SeccionLibStore, TablaSeleccion } from '@ng-mf/data-access-user';
-import { ElegibilidadDeTextilesStore, TextilesState } from '../../estados/elegibilidad-de-textiles.store';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Subject, delay, map, takeUntil, tap} from 'rxjs';
-import { CapturarColumns } from '../../models/elegibilidad-de-textiles.model';
-import { Catalogo} from '@ng-mf/data-access-user';
+import { Component } from '@angular/core';
+import { OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
+
+import { FormBuilder } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
+import { Validators } from '@angular/forms';
+
+import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
-import { EXPEDICION_FACTURA_FECHA } from '../../constantes/elegibilidad-de-textiles.enums';
-import { ElegibilidadDeTextilesQuery } from '../../queries/elegibilidad-de-textiles.query';
-import { ElegibilidadTextilesService } from '../../services/elegibilidad-textiles/elegibilidad-textiles.service';
-
+import { ConfiguracionColumna } from '@ng-mf/data-access-user';
 import { InputFecha } from '@ng-mf/data-access-user';
 import { InputFechaComponent } from '@ng-mf/data-access-user';
-import { SelectCatalogosComponent } from '@ng-mf/data-access-user';
+import { SeccionLibQuery } from '@ng-mf/data-access-user';
+import { SeccionLibState } from '@ng-mf/data-access-user';
+import { SeccionLibStore } from '@ng-mf/data-access-user';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
-import { TableComponent } from '@ng-mf/data-access-user';
+import { TablaSeleccion } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 
+import { Subject } from 'rxjs';
+import { delay } from 'rxjs';
+import { map } from 'rxjs';
+import { takeUntil } from 'rxjs';
+import { tap } from 'rxjs';
+
+import { EXPEDICION_FACTURA_FECHA, VALIDO } from '../../constantes/elegibilidad-de-textiles.enums';
+
+import { ElegibilidadDeTextilesStore } from '../../estados/elegibilidad-de-textiles.store';
+import { TextilesState } from '../../estados/elegibilidad-de-textiles.store';
+
+import { CapturarColumns } from '../../models/elegibilidad-de-textiles.model';
+
+import { ElegibilidadDeTextilesQuery } from '../../queries/elegibilidad-de-textiles.query';
+
+import { ElegibilidadTextilesService } from '../../services/elegibilidad-textiles/elegibilidad-textiles.service';
+
+import { REGEX_PATRON_DECIMAL_2} from '@libs/shared/data-access-user/src/tramites/constantes/regex.constants';
+import { REGEX_SOLO_DIGITOS} from '@libs/shared/data-access-user/src/tramites/constantes/regex.constants';
+
+/**
+ * @component CapturarFacturasComponent
+ * @description Este componente es responsable de capturar los detalles de las facturas.
+ * Incluye un formulario para capturar los datos de las facturas y una tabla para mostrar las facturas capturadas.
+ */
 @Component({
   selector: 'app-capturar-facturas',
   templateUrl: './capturar-facturas.component.html',
   styleUrl: './capturar-facturas.component.scss',
   standalone: true,
   imports: [
-    TableComponent,
     TituloComponent,
     ReactiveFormsModule,
-    SelectCatalogosComponent,
     InputFechaComponent,
     CatalogoSelectComponent,
     TablaDinamicaComponent
@@ -46,7 +72,7 @@ import { TituloComponent } from '@ng-mf/data-access-user';
 })
 export class CapturarFacturasComponent implements OnInit, OnDestroy {
   /**
-   * @property {FormGroup} forma - El grupo de formularios para capturar los datos de las facturas.
+   * @property {FormGroup} facturaForm - El grupo de formularios para capturar los datos de las facturas.
    */
   facturaForm!: FormGroup;
 
@@ -66,10 +92,8 @@ export class CapturarFacturasComponent implements OnInit, OnDestroy {
   ConstanciaDelRegistro!: FormGroup;
 
   /**
-    * @property {Array} facturas - Array de datos de facturas para mostrar en la tabla.
-    *    * @param {FormBuilder} fb - Servicio para la creación de formularios.
-    * @param {HttpClient} httpServicios - Cliente HTTP para realizar solicitudes.--120301
-    */
+   * @property {Array} facturas - Array de datos de facturas para mostrar en la tabla.
+   */
   facturas: CapturarColumns[] = [];
 
   private destroyNotifier$: Subject<void> = new Subject();
@@ -124,6 +148,10 @@ export class CapturarFacturasComponent implements OnInit, OnDestroy {
     ];
   
 
+  /**
+   * @constructor
+   * @description Constructor del componente. Inicializa los servicios necesarios.
+   */
   constructor(
     private ElegibilidadTextilesService: ElegibilidadTextilesService,
     private readonly httpServicios: HttpClient,
@@ -133,10 +161,15 @@ export class CapturarFacturasComponent implements OnInit, OnDestroy {
     private seccionStore: SeccionLibStore,
     private seccionQuery: SeccionLibQuery
   ) {
-    // Constructor logic can be added here if needed
+    // Se puede agregar aquí la lógica del constructor si es necesario
    }
 
+  /**
+   * @method ngOnInit
+   * @description Método que se ejecuta al inicializar el componente.
+   */
   ngOnInit(): void {
+
     this.seccionQuery.selectSeccionState$
         .pipe(
           takeUntil(this.destroyNotifier$),
@@ -172,7 +205,7 @@ export class CapturarFacturasComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-  if(this.capturarState.formaValida && this.capturarState.formaValida[0] && this.capturarState.formaValida[0].descripcion === 'AllValida'){
+  if(this.capturarState.formaValida && this.capturarState.formaValida[0] && this.capturarState.formaValida[0].descripcion === VALIDO){
     this.seccionStore.establecerSeccion([true]);
     this.seccionStore.establecerFormaValida([true])
   }
@@ -181,40 +214,46 @@ export class CapturarFacturasComponent implements OnInit, OnDestroy {
   }
   }
 
+  /**
+   * @method initActionFormBuild
+   * @description Inicializa el formulario reactivo para capturar los datos de las facturas.
+   */
   initActionFormBuild(): void {
     this.facturaForm = this.fb.group({
       numeroFactura: [this.capturarState.numeroFactura, Validators.required],
-      cantidadTotal: [this.capturarState.cantidadTotal, [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)]],
+      cantidadTotal: [this.capturarState.cantidadTotal, [Validators.required, Validators.pattern(REGEX_PATRON_DECIMAL_2)]],
       unidadDeMedida: [this.capturarState.unidadDeMedida, Validators.required],
       fechaInicioInput: [''],
-      valorDolares: [this.capturarState.valorDolares, [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)]],
+      valorDolares: [this.capturarState.valorDolares, [Validators.required, Validators.pattern(REGEX_PATRON_DECIMAL_2)]],
       taxId: [this.capturarState.taxId],
       razonSocial: [this.capturarState.razonSocial, Validators.required],
       calle: [this.capturarState.calle, Validators.required],
       ciudad: [this.capturarState.ciudad, Validators.required],
-      cp: [this.capturarState.cp, [Validators.required, Validators.pattern(/^\d{5}$/)]], // Assuming CP is a 5-digit postal code
-      pais: [this.capturarState.pais, Validators.required],
+      cp: [this.capturarState.cp, [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS)]],
+      pais: [{value:this.capturarState.pais,disabled:true},[ Validators.required]],
+      fechaExpedicionFactura: ['2025-04-30'], 
     });
   }
   /**
- * Configuración para el select de unidad de medida.
- * @property {CatalogosSelect} unidadDeMedida
- */
+   * @property {Catalogo[]} unidadDeMedida - Configuración para el select de unidad de medida.
+   */
   unidadDeMedida: Catalogo[] = [];
   /**
-  /**
-   * Configuración para el input de fecha de pago.
-   * @property {InputFecha} fechaInicioInputs
+   * @property {InputFecha} fechaInicioInputs - Configuración para el input de fecha de pago.
    */
   fechaInicioInputs: InputFecha = EXPEDICION_FACTURA_FECHA;
   /**
-* Obtiene las listas desplegables.
-* @method obtenerListasDesplegables
-*/
-  obtenerListasDesplegables() {
+   * @method obtenerListasDesplegables
+   * @description Obtiene las listas desplegables necesarias para el formulario.
+   */
+  obtenerListasDesplegables(): void {
     this.obtenerIngresoSelectList();
   }
 
+  /**
+   * @method setValoresStore
+   * @description Establece los valores en el store de textiles.
+   */
   setValoresStore(
       form: FormGroup,
       campo: string,
@@ -227,11 +266,10 @@ export class CapturarFacturasComponent implements OnInit, OnDestroy {
     }
 
   /**
-   * Obtiene la lista para el select de unidad de medida.
    * @method obtenerIngresoSelectList
+   * @description Obtiene la lista para el select de unidad de medida.
    */
-
-  obtenerIngresoSelectList() {
+  obtenerIngresoSelectList():void {
     this.ElegibilidadTextilesService.obtenerMenuDesplegable('unidad-de-medida.json')
     .pipe(takeUntil(this.destroyNotifier$))
     .subscribe({
@@ -239,11 +277,15 @@ export class CapturarFacturasComponent implements OnInit, OnDestroy {
         this.unidadDeMedida = data as Catalogo[];
       },
       error: (error: HttpErrorResponse) => {
-        console.log('Error al obtener los datos:', error)
+        console.error('Error al obtener los datos:', error)
       }
     })
   }
 
+  /**
+   * @method recuperarDatos
+   * @description Obtiene los datos de las facturas desde el servicio.
+   */
   recuperarDatos(): void {
     this.ElegibilidadTextilesService.obtenerTablaDatos<CapturarColumns>('capturar-facturas.json')
     .pipe(takeUntil(this.destroyNotifier$))
@@ -260,6 +302,7 @@ export class CapturarFacturasComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * @method ngOnDestroy
    * @description Método que se ejecuta cuando el componente es destruido.
    */
   ngOnDestroy(): void {
