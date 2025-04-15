@@ -6,7 +6,7 @@ import {
   ValidacionesFormularioService,
 } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FECHAFINAL, FECHAINICIAL, FECHAPAGO } from '../model/registro.model';
+import { FECHA_FINAL, FECHA_INICIAL, FECHA_PAGO } from '../model/registro.model';
 import {
   FormBuilder,
   FormGroup,
@@ -56,17 +56,17 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   /**
    * Configuración para el campo de fecha inicial.
    */
-  fechaInicialInput: InputFecha = FECHAINICIAL;
+  fechaInicialInput: InputFecha = FECHA_INICIAL;
 
   /**
    * Configuración para el campo de fecha final.
    */
-  fechaFinalInput: InputFecha = FECHAFINAL;
+  fechaFinalInput: InputFecha = FECHA_FINAL;
 
   /**
    * Configuración para el campo de fecha de pago.
    */
-  fechaPagoInput: InputFecha = FECHAPAGO;
+  fechaPagoInput: InputFecha = FECHA_PAGO;
 
   /**
    * Enumeración que contiene los textos utilizados en el componente.

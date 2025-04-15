@@ -1,6 +1,6 @@
 import { Component, OnDestroy } from '@angular/core';
 import { FirmaElectronicaComponent, TramiteFolioService, TramiteStore} from '@ng-mf/data-access-user';
-import { Subscription,catchError, map } from 'rxjs';
+import { ReplaySubject, Subscription,catchError, map, takeUntil } from 'rxjs';
 import { Router } from '@angular/router';
 // import { TramiteStore } from '@ng-mf/data-access-user'; 
 /**
@@ -13,10 +13,11 @@ import { Router } from '@angular/router';
 })
 export class PasoTresComponent implements OnDestroy {
    /**
-   * Suscripción para obtener el trámite.
-   */
-   obtienerTramiteSubscriber!: Subscription;
-   /**
+     * Observable para manejar la destrucción del componente.
+     * Se utiliza para cancelar suscripciones activas.
+     */
+    public destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+     /**
     * Tipo de persona.
     */
    tipoPersona!: number;
@@ -51,7 +52,7 @@ export class PasoTresComponent implements OnDestroy {
       // Obtiene el número de trámite
       this.serviciosExtraordinariosServices
         .obtenerTramite(19)
-        .pipe(
+        .pipe(takeUntil(this.destroyed$),
           map((tramite) => {
             this.tramiteStore.establecerTramite(tramite.data, FIRMA);
             this.router.navigate(['pago/registro-solicitud/acuse']);
@@ -67,9 +68,8 @@ export class PasoTresComponent implements OnDestroy {
    * Método de limpieza que se ejecuta cuando el componente se destruye.
    */
    ngOnDestroy(): void {
-    if (this.obtienerTramiteSubscriber) {
-      this.obtienerTramiteSubscriber.unsubscribe();
-    }
+    this.destroyed$.next(true);
+    this.destroyed$.complete();
   }
 
 }
