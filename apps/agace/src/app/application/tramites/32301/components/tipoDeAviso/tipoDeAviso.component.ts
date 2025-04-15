@@ -1,0 +1,129 @@
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { TituloComponent } from "@ng-mf/data-access-user";
+import { AlertComponent } from "@ng-mf/data-access-user";
+import { InputCheckComponent, } from "@ng-mf/data-access-user";
+import { ReactiveFormsModule,FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { InputFechaComponent } from '@ng-mf/data-access-user';
+import { TipoDevAviso } from '../../models/avisomodify.model';
+import { AvisoModifyService } from '../../services/aviso-modify.service';
+import { catalogoResponse } from '@ng-mf/data-access-user';
+
+import { Tramite32301Store } from '../../estados/tramite32301.store';
+import { Tramite32301Query } from '../../estados/tramite32301.query';
+
+  import {
+    DatosInputCheck,
+    InputCheck,
+  } from 'libs/shared/data-access-user/src/core/models/shared/components.model';
+import { map, Subject, takeUntil } from 'rxjs';
+
+  
+
+
+@Component({
+  selector: 'app-tipo-de-aviso',
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule, TituloComponent, AlertComponent, InputCheckComponent],
+  templateUrl: './tipoDeAviso.component.html',
+})
+export class TipoDeAvisoComponent implements OnInit, OnDestroy{
+  miFormulario!: FormGroup;
+  tipoDevAviso!:TipoDevAviso
+  @Output() tabEnabledData = new EventEmitter<TipoDevAviso>();
+  isDisabled:boolean = false
+
+  modalidadCertificacion!:TipoDevAviso
+  private destroy$: Subject<void> = new Subject<void>();
+  
+  constructor(private fb: FormBuilder,
+    private AvisoModifyService: AvisoModifyService,
+    private store: Tramite32301Store,
+    private Tramite32301Query:Tramite32301Query
+  ) {
+   this.crearFormMiFormulario();
+  }
+
+  ngOnInit(): void {
+      this.inicializamiFormulario();
+      this.Tramite32301Query.select()
+        .pipe(takeUntil(this.destroy$))
+        .subscribe(state => {
+          this.tipoDevAviso = state as unknown as TipoDevAviso;
+          this.crearFormMiFormulario();
+        });
+    }
+
+    inicializamiFormulario(){
+      const MODALIDAD_CERTIFICACION$ = this.AvisoModifyService
+            .getAvisoModify()
+            .pipe(
+              map((resp) => {
+                console.log(resp.data)
+                this.store.setModalidadCertificacion(resp.descripcion);
+              })
+            ).subscribe();
+            
+
+    }
+    crearFormMiFormulario(){
+      this.miFormulario = this.fb.group({
+        modalidadCertificacion: [{ value: this.tipoDevAviso?.modalidadCertificacion, disabled: true }],
+        foreignClientsSuppliers: [this.tipoDevAviso?.foreignClientsSuppliers],
+        nationalSuppliers: [this.tipoDevAviso?.nationalSuppliers],
+        modificationsMembers: [this.tipoDevAviso?.modificationsMembers],
+        changesToLegalDocuments: [this.tipoDevAviso?.changesToLegalDocuments],
+        mergerOrSplitNotice: [this.tipoDevAviso?.mergerOrSplitNotice],
+        additionFractions: [this.tipoDevAviso?.additionFractions],
+        acepto253:[this.tipoDevAviso?.acepto253, Validators.required]
+      });
+    }
+  onSubmit() {
+    this.tabEnabledData.emit(this.miFormulario.value)
+  }  
+  
+  setforeignClientsSuppliers(): void {
+    const FRACCION_ARANCELATIA = this.miFormulario.get('foreignClientsSuppliers')?.value;
+    this.store.setforeignClientsSuppliers(FRACCION_ARANCELATIA);
+  }
+
+  setNationalSuppliers(): void {
+    const FRACCION_ARANCELATIA = this.miFormulario.get('nationalSuppliers')?.value;
+    this.store.setNationalSuppliers(FRACCION_ARANCELATIA);
+  }
+
+  setModificationsMembers(): void {
+    const FRACCION_ARANCELATIA = this.miFormulario.get('modificationsMembers')?.value;
+    this.store.setModificationsMembers(FRACCION_ARANCELATIA);
+  }
+
+  setChangesToLegalDocuments(): void {
+    const FRACCION_ARANCELATIA = this.miFormulario.get('changesToLegalDocuments')?.value;
+    this.store.setChangesToLegalDocuments(FRACCION_ARANCELATIA);
+  }
+
+  setMergerOrSplitNotice(): void {
+    const FRACCION_ARANCELATIA = this.miFormulario.get('mergerOrSplitNotice')?.value;
+    this.store.setMergerOrSplitNotice(FRACCION_ARANCELATIA);
+  }
+
+  setAdditionFractions(): void {
+    const FRACCION_ARANCELATIA = this.miFormulario.get('additionFractions')?.value;
+    this.store.setAdditionFractions(FRACCION_ARANCELATIA);
+  }
+  setAcepto253(): void {
+    const FRACCION_ARANCELATIA = this.miFormulario.get('acepto253')?.value;
+    this.store.setAcepto253(FRACCION_ARANCELATIA);
+  }
+  
+
+
+  handleValores(event: DatosInputCheck) {
+    this.tabEnabledData.emit()
+  }
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+}

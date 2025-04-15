@@ -1,0 +1,71 @@
+import { Component, Inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { catchError, map, Subject, takeUntil } from 'rxjs';
+import { Router } from '@angular/router';
+import { TramiteFolioService } from '@libs/shared/data-access-user/src';
+import { TramiteAgaceStore } from '../../../../estados/tramite.store';
+import { FirmaElectronicaComponent } from '@ng-mf/data-access-user';
+@Component({
+  selector: 'app-paso-tres',
+  standalone: true,
+  imports: [CommonModule, FirmaElectronicaComponent],
+  templateUrl: './PasoTres.component.html',
+  styleUrl: './PasoTres.component.css',
+})
+export class PasoTresComponent {
+   /**
+     * Tipo de persona.
+     */
+    tipoPersona!: number;
+    private destroy$: Subject<void> = new Subject<void>();
+  
+    /**
+     * Constructor que se utiliza para la inyección de dependencias.
+     * @param router Servicio de enrutamiento.
+     * @param serviciosExtraordinariosServices Servicio de servicios extraordinarios.
+     * @param tramiteStore Almacén de trámites.
+     */
+    constructor(
+      private router: Router,
+      private serviciosExtraordinariosServices: TramiteFolioService,
+      @Inject(TramiteAgaceStore) private tramiteStore: TramiteAgaceStore
+    ) {
+      // El constructor se utiliza para la inyección de dependencias.
+    }
+  
+    /**
+     * Obtiene el tipo de persona.
+     * @param tipo Tipo de persona.
+     */
+    obtenerTipoPersona(tipo: number): void {
+      this.tipoPersona = tipo;
+    }
+  
+    /**
+     * Maneja el evento para obtener la firma y realiza acciones adicionales.
+     * @param ev La cadena de texto que representa la firma obtenida.
+     */
+    obtieneFirma(ev: string): void {
+      const FIRMA: string = ev;
+      if (FIRMA) {
+        this.serviciosExtraordinariosServices
+          .obtenerTramite(19)
+          .pipe(
+            map((tramite) => {
+              this.tramiteStore.establecerTramite(tramite.data, FIRMA);
+              this.router.navigate(['servicios-extraordinarios/acuse']);
+            }),
+            catchError((_error) => {
+              return _error;
+            }),
+            takeUntil(this.destroy$)
+          )
+          .subscribe();
+      }
+    }
+  
+    ngOnDestroy(): void {
+      this.destroy$.next();
+      this.destroy$.complete();
+    }
+}
