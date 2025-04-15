@@ -1972,5 +1972,14 @@
         "linkDashboard": "/se/importacion-definitiva/pantallas",
         "linkDepartment": "/pago/importacion-definitiva/pantallas",
         "department": "se"
+    },
+    {
+        "id": 283,
+        "tramite": 105,
+        "linkDashboard": "/aga/invocar-modulo/solicitante",
+        "linkDepartment": "/pago/invocar-modulo/solicitante",
+        "department": "aga"
     }
+
+    
 ]
