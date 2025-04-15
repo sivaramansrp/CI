@@ -205,6 +205,16 @@ export class DatosMercanciaComponent implements OnInit {
    * @returns {void}
    */
   ngOnInit(): void {
+    this.crearFormaulario();
+    this.cargarDatos();
+  }
+
+  /**
+   * Crea el formulario reactivo `agregarDestinatarioFinal` utilizando `FormBuilder`.
+   * Define los campos y sus validaciones.
+   *
+   */
+  crearFormaulario(): void {
     this.datosMercancia = this.fb.group({
       descripcion: ['QAS', Validators.required],
       fraccionArancelaria: ['25030002', Validators.required],
@@ -223,7 +233,6 @@ export class DatosMercanciaComponent implements OnInit {
       tipoMoneda: [null, Validators.required],
       paisDeOriginDatos: [null],
     });
-    this.cargarDatos();
   }
 
   /**

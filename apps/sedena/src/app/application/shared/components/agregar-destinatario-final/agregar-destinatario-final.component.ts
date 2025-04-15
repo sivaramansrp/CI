@@ -210,6 +210,16 @@ export class AgregarDestinatarioFinalComponent
    * Llama al método `cargarDatos()`.
    */
   ngOnInit(): void {
+    this.crearFormaulario();
+    this.cargarDatos();
+  }
+
+  /**
+   * Crea el formulario reactivo `agregarDestinatarioFinal` utilizando `FormBuilder`.
+   * Define los campos y sus validaciones.
+   *
+   */
+  crearFormaulario(): void {
     this.agregarDestinatarioFinal = this.fb.group({
       tipoPersona: ['', Validators.required],
       rfc: [
@@ -238,7 +248,6 @@ export class AgregarDestinatarioFinalComponent
       correoElectronico: ['', [Validators.required, Validators.email]],
       nacionalidad: [],
     });
-    this.cargarDatos();
   }
 
   /**

@@ -61,7 +61,7 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
    * @property {FormGroup} agregarProveedorForm
    * Formulario reactivo utilizado para capturar los datos del proveedor.
    */
-  agregarProveedorForm: FormGroup;
+  agregarProveedorForm!: FormGroup;
 
   /**
    * @property {Catalogo[]} paisesDatos
@@ -89,8 +89,14 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
   constructor(
     private fb: FormBuilder,
     private datosSolicitudService: DatosSolicitudService,
-    private ubicaccion: Location
-  ) {
+    private ubicaccion: Location // eslint-disable-next-line no-empty-function
+  ) {}
+  /**
+   * Crea el formulario reactivo `agregarDestinatarioFinal` utilizando `FormBuilder`.
+   * Define los campos y sus validaciones.
+   *
+   */
+  crearFormaulario(): void {
     this.agregarProveedorForm = this.fb.group({
       tipoPersona: ['', Validators.required],
       denominacionRazon: [
@@ -116,12 +122,12 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
       correoElectronico: ['', [Validators.required, Validators.email]],
     });
   }
-
   /**
    * @method ngOnInit
    * @description Hook de inicialización del componente. Llama a `cargarDatos()` para obtener catálogos.
    */
   ngOnInit(): void {
+    this.crearFormaulario();
     this.cargarDatos();
   }
 

@@ -106,6 +106,16 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * con esos valores y suscribe a cambios para mantener el estado sincronizado.
    */
   ngOnInit(): void {
+    this.crearFormaulario();
+    this.cargarDatos();
+  }
+
+  /**
+   * Crea el formulario reactivo `agregarDestinatarioFinal` utilizando `FormBuilder`.
+   * Define los campos y sus validaciones.
+   *
+   */
+  crearFormaulario(): void {
     this.pagoDerechosForm = this.fb.group({
       claveReferencia: [
         this.pagoDerechoFormState?.claveReferencia || '',
@@ -133,8 +143,6 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     this.pagoDerechosForm.valueChanges.subscribe((valores) => {
       this.updatePagoDerechos.emit(valores);
     });
-
-    this.cargarDatos();
   }
 
   /**
