@@ -2,1687 +2,1968 @@
     {
         "id": 1,
         "tramite": 104,
-        "link": "/pago/deposito-fiscal/solicitud",
+        "linkDashboard": "/pago/deposito-fiscal/solicitud",
+        "linkDepartment": "/pago/deposito-fiscal/solicitud",
         "department": "aga"
     },
     {
         "id": 2,
         "tramite": 301,
-        "link": "/aga/importante/datosdelasolicitud",
+        "linkDashboard": "/aga/importante/datosdelasolicitud",
+        "linkDepartment": "/aga/importante/datosdelasolicitud",
         "department": "aga "
     },
     {
         "id": 3,
         "tramite": 303,
-        "link": "/aga/despacho-mercancias/registro/registro",
+        "linkDashboard": "/aga/despacho-mercancias/registro/registro",
+        "linkDepartment": "/aga/despacho-mercancias/registro/registro",
         "department": "agace"
     },
     {
         "id": 4,
         "tramite": 701,
-        "link": "/aga/registro-digitalizar-documentos/solicitud",
+        "linkDashboard": "/aga/registro-digitalizar-documentos/solicitud",
+        "linkDepartment": "/aga/registro-digitalizar-documentos/solicitud",
         "department": "agadig"
     },
     {
         "id": 5,
         "tramite": 5701,
-        "link": "/aga/servicios-extraordinarios/solicitud",
+        "linkDashboard": "/aga/servicios-extraordinarios/solicitud",
+        "linkDepartment": "/aga/servicios-extraordinarios/solicitud",
         "department": "aga"
     },
     {
         "id": 6,
         "tramite": 5701,
-        "link": "/aga/atender-requerimientos",
+        "linkDashboard": "/aga/atender-requerimientos",
+        "linkDepartment": "/aga/atender-requerimientos",
         "department": "aga"
     },
     {
         "id": 7,
         "tramite": 5701,
-        "link": "/aga/notificacion",
+        "linkDashboard": "/aga/notificacion",
+        "linkDepartment": "/aga/notificacion",
         "department": "aga"
     },
     {
         "id": 8,
         "tramite": 6001,
-        "link": "/aga/registro-cuentas-bancarias/todospasos",
+        "linkDashboard": "/aga/registro-cuentas-bancarias/todospasos",
+        "linkDepartment": "/aga/registro-cuentas-bancarias/todospasos",
         "department": "aga"
     },
     {
         "id": 9,
         "tramite": 10301,
-        "link": "/aga/importador-exportador/solicitud",
+        "linkDashboard": "/aga/importador-exportador/solicitud",
+        "linkDepartment": "/aga/importador-exportador/solicitud",
         "department": "aga"
     },
     {
         "id": 10,
         "tramite": 10303,
-        "link": "/aga/donaciones-extranjeras/solicitud",
+        "linkDashboard": "/aga/donaciones-extranjeras/solicitud",
+        "linkDepartment": "/aga/donaciones-extranjeras/solicitud",
         "department": "aga"
     },
     {
         "id": 11,
         "tramite": 11105,
-        "link": "/aga/retirada-de-la-autorizacion-de-donaciones/pagina-uno-acuses-y-resoluciones-busqueda",
+        "linkDashboard": "/aga/retirada-de-la-autorizacion-de-donaciones/pagina-uno-acuses-y-resoluciones-busqueda",
+        "linkDepartment": "/aga/retirada-de-la-autorizacion-de-donaciones/pagina-uno-acuses-y-resoluciones-busqueda",
         "department": "aga"
     },
     {
         "id": 12,
         "tramite": 11201,
-        "link": "/aga/temporal-contenedores/solicitante",
+        "linkDashboard": "/aga/temporal-contenedores/solicitante",
+        "linkDepartment": "/aga/temporal-contenedores/solicitante",
         "department": "aga"
     },
     {
         "id": 13,
         "tramite": 11202,
-        "link": "/aga/retorno-contenedores/solicitante",
+        "linkDashboard": "/aga/retorno-contenedores/solicitante",
+        "linkDepartment": "/aga/retorno-contenedores/solicitante",
         "department": "aga"
     },
     {
         "id": 14,
         "tramite": 11204,
-        "link": "/pago/transferencia-contenedores/solicitud",
+        "linkDashboard": "/pago/transferencia-contenedores/solicitud",
+        "linkDepartment": "/pago/transferencia-contenedores/solicitud",
         "department": ""
     },
     {
         "id": 15,
         "tramite": 30901,
-        "link": "/aga/muestras-mercancias/renovaciones",
+        "linkDashboard": "/aga/muestras-mercancias/renovaciones",
+        "linkDepartment": "/aga/muestras-mercancias/renovaciones",
         "department": "aga"
     },
     {
         "id": 16,
         "tramite": 31601,
-        "link": "/agace/pago/antecesor/datosdelasolicitud",
+        "linkDashboard": "/agace/pago/antecesor/datosdelasolicitud",
+        "linkDepartment": "/agace/pago/antecesor/datosdelasolicitud",
         "department": "agace"
     },
     {
         "id": 17,
         "tramite": 31803,
-        "link": "gace/registro-solicitud/pagina-uno-acuses-y-resoluciones-busqueda",
+        "linkDashboard": "gace/registro-solicitud/pagina-uno-acuses-y-resoluciones-busqueda",
+        "linkDepartment": "gace/registro-solicitud/pagina-uno-acuses-y-resoluciones-busqueda",
         "department": "agace"
     },
     {
         "id": 18,
         "tramite": 32501,
-        "link": "/agace/mercancias-desmontadas-o-sin-montar/solicitud",
+        "linkDashboard": "/agace/mercancias-desmontadas-o-sin-montar/solicitud",
+        "linkDepartment": "/agace/mercancias-desmontadas-o-sin-montar/solicitud",
         "department": "agace"
     },
     {
         "id": 19,
         "tramite": 32502,
-        "link": "/agace/aviso",
+        "linkDashboard": "/agace/aviso",
+        "linkDepartment": "/agace/aviso",
         "department": "agace"
     },
     {
         "id": 20,
         "tramite": 32504,
-        "link": "/agace/aviso/aviso-procesos",
+        "linkDashboard": "/agace/aviso/aviso-procesos",
+        "linkDepartment": "/agace/aviso/aviso-procesos",
         "department": "agace"
     },
     {
         "id": 21,
         "tramite": 40101,
-        "link": "/aga/transportista-terrestre/solicitante",
+        "linkDashboard": "/aga/transportista-terrestre/solicitante",
+        "linkDepartment": "/aga/transportista-terrestre/solicitante",
         "department": "aga"
     },
     {
         "id": 22,
         "tramite": 40102,
-        "link": "/aga/transportista-terrestre/solicitante",
+        "linkDashboard": "/aga/transportista-terrestre/solicitante",
+        "linkDepartment": "/aga/transportista-terrestre/solicitante",
         "department": "aga"
     },
     {
         "id": 23,
         "tramite": 40103,
-        "link": "/aga/modificar-caat-terrestre/solicitante",
+        "linkDashboard": "/aga/modificar-caat-terrestre/solicitante",
+        "linkDepartment": "/aga/modificar-caat-terrestre/solicitante",
         "department": "aga"
     },
     {
         "id": 24,
         "tramite": 40302,
-        "link": "/aga/registro-transportista/solicitante",
+        "linkDashboard": "/aga/registro-transportista/solicitante",
+        "linkDepartment": "/aga/registro-transportista/solicitante",
         "department": "aga"
     },
     {
         "id": 25,
         "tramite": 80101,
-        "link": "/se/pago/nuevo-programa-industrial/action",
+        "linkDashboard": "/se/pago/nuevo-programa-industrial/action",
+        "linkDepartment": "/se/pago/nuevo-programa-industrial/action",
         "department": "se"
     },
     {
         "id": 26,
         "tramite": 80102,
-        "link": "/se/autorizacion-programa-nuevo/solicitud",
+        "linkDashboard": "/se/autorizacion-programa-nuevo/solicitud",
+        "linkDepartment": "/se/autorizacion-programa-nuevo/solicitud",
         "department": "se"
     },
     {
         "id": 27,
         "tramite": 80202,
-        "link": "/se/immex-ampliacion-sensibles/solicitud",
+        "linkDashboard": "/se/immex-ampliacion-sensibles/solicitud",
+        "linkDepartment": "/se/immex-ampliacion-sensibles/solicitud",
         "department": "agace"
     },
     {
         "id": 28,
         "tramite": 80203,
-        "link": "/se/immex-registro-solicitud-modality/immex-registro",
+        "linkDashboard": "/se/immex-registro-solicitud-modality/immex-registro",
+        "linkDepartment": "/se/immex-registro-solicitud-modality/immex-registro",
         "department": "se"
     },
     {
         "id": 29,
         "tramite": 80205,
-        "link": "/se/certificado-registro/registro",
+        "linkDashboard": "/se/certificado-registro/registro",
+        "linkDepartment": "/se/certificado-registro/registro",
         "department": "se"
     },
     {
         "id": 30,
         "tramite": 80207,
-        "link": "/se/subfabricante-immex/contenedor-de-pasos",
+        "linkDashboard": "/se/subfabricante-immex/contenedor-de-pasos",
+        "linkDepartment": "/se/subfabricante-immex/contenedor-de-pasos",
         "department": "se"
     },
     {
         "id": 31,
         "tramite": 80208,
-        "link": "/se/pago/solicitud-modalidad/modalidad",
+        "linkDashboard": "/se/pago/solicitud-modalidad/modalidad",
+        "linkDepartment": "/se/pago/solicitud-modalidad/modalidad",
         "department": "se"
     },
     {
         "id": 32,
         "tramite": 80302,
-        "link": "/se/solicitud-modificacion",
+        "linkDashboard": "/se/solicitud-modificacion",
+        "linkDepartment": "/se/solicitud-modificacion",
         "department": "se"
     },
     {
         "id": 33,
         "tramite": 80308,
-        "link": "/se/modificacion/solicitud",
+        "linkDashboard": "/se/modificacion/solicitud",
+        "linkDepartment": "/se/modificacion/solicitud",
         "department": "se"
     },
     {
         "id": 34,
         "tramite": 90101,
-        "link": "/se/autorizacion-prosec/prosec",
+        "linkDashboard": "/se/autorizacion-prosec/prosec",
+        "linkDepartment": "/se/autorizacion-prosec/prosec",
         "department": "se"
     },
     {
         "id": 35,
         "tramite": 90201,
-        "link": "/se/expansion-de-productores/registrar-solicitud",
+        "linkDashboard": "/se/expansion-de-productores/registrar-solicitud",
+        "linkDepartment": "/se/expansion-de-productores/registrar-solicitud",
         "department": "se"
     },
     {
         "id": 36,
         "tramite": 90305,
-        "link": "/se/prosec-modificacion/solicitante",
+        "linkDashboard": "/se/prosec-modificacion/solicitante",
+        "linkDepartment": "/se/prosec-modificacion/solicitante",
         "department": "se"
     },
     {
         "id": 37,
         "tramite": 110101,
-        "link": "/se/pantallas/datosdecomponentes",
+        "linkDashboard": "/se/pantallas/datosdecomponentes",
+        "linkDepartment": "/se/pantallas/datosdecomponentes",
         "department": "se"
     },
     {
         "id": 38,
         "tramite": 110102,
-        "link": "/se/exportador-autorizado/registrar-solicitud",
+        "linkDashboard": "/se/exportador-autorizado/registrar-solicitud",
+        "linkDepartment": "/se/exportador-autorizado/registrar-solicitud",
         "department": "se"
     },
     {
         "id": 39,
         "tramite": 110201,
-        "link": "/se/registro/solicitud",
+        "linkDashboard": "/se/registro/solicitud",
+        "linkDepartment": "/se/registro/solicitud",
         "department": "se"
     },
     {
         "id": 40,
         "tramite": 110202,
-        "link": "/se/certificado-validacion/validacion",
+        "linkDashboard": "/se/certificado-validacion/validacion",
+        "linkDepartment": "/se/certificado-validacion/validacion",
         "department": "se"
     },
     {
         "id": 41,
         "tramite": 110203,
-        "link": "/se/tecnicos/solicitante",
+        "linkDashboard": "/se/tecnicos/solicitante",
+        "linkDepartment": "/se/tecnicos/solicitante",
         "department": "se"
     },
     {
         "id": 42,
         "tramite": 110204,
-        "link": "/se/pexim/certificado-origen",
+        "linkDashboard": "/se/pexim/certificado-origen",
+        "linkDepartment": "/se/pexim/certificado-origen",
         "department": "se"
     },
     {
         "id": 43,
         "tramite": 110208,
-        "link": "/se/validar-inicialmente/certificado-origen",
+        "linkDashboard": "/se/validar-inicialmente/certificado-origen",
+        "linkDepartment": "/se/validar-inicialmente/certificado-origen",
         "department": "se"
     },
     {
         "id": 44,
         "tramite": 110209,
-        "link": "/se/certificado-sgp/solicitud",
+        "linkDashboard": "/se/certificado-sgp/solicitud",
+        "linkDepartment": "/se/certificado-sgp/solicitud",
         "department": "se"
     },
     {
         "id": 45,
         "tramite": 110211,
-        "link": "/se/validar-certificado/cam",
+        "linkDashboard": "/se/validar-certificado/cam",
+        "linkDepartment": "/se/validar-certificado/cam",
         "department": "se"
     },
     {
         "id": 46,
         "tramite": 110216,
-        "link": "/se/inicialmente-certificado-origen/solicitante",
+        "linkDashboard": "/se/inicialmente-certificado-origen/solicitante",
+        "linkDepartment": "/se/inicialmente-certificado-origen/solicitante",
         "department": "se"
     },
     {
         "id": 47,
         "tramite": 110217,
-        "link": "/se/certificado-origen/solicitante",
+        "linkDashboard": "/se/certificado-origen/solicitante",
+        "linkDepartment": "/se/certificado-origen/solicitante",
         "department": "se"
     },
     {
         "id": 48,
         "tramite": 110218,
-        "link": "/se/certificado-tecnico-japon/validar-certificado-tecnico-japon",
+        "linkDashboard": "/se/certificado-tecnico-japon/validar-certificado-tecnico-japon",
+        "linkDepartment": "/se/certificado-tecnico-japon/validar-certificado-tecnico-japon",
         "department": "se"
     },
     {
         "id": 49,
         "tramite": 110219,
-        "link": "/se/certificado/solicitud",
+        "linkDashboard": "/se/certificado/solicitud",
+        "linkDepartment": "/se/certificado/solicitud",
         "department": "se"
     },
     {
         "id": 50,
         "tramite": 110221,
-        "link": "/se/validador-certificado-cam",
+        "linkDashboard": "/se/validador-certificado-cam",
+        "linkDepartment": "/se/validador-certificado-cam",
         "department": "se"
     },
     {
         "id": 51,
         "tramite": 120201,
-        "link": "/pago/cupos/consultar-cupo",
+        "linkDashboard": "/pago/cupos/consultar-cupo",
+        "linkDepartment": "/pago/cupos/consultar-cupo",
         "department": ""
     },
     {
         "id": 52,
         "tramite": 120301,
-        "link": "/se/elegibilidad-de-textiles/elegibilidad-textiles",
+        "linkDashboard": "/se/elegibilidad-de-textiles/elegibilidad-textiles",
+        "linkDepartment": "/se/elegibilidad-de-textiles/elegibilidad-textiles",
         "department": "se"
     },
     {
         "id": 53,
         "tramite": 120402,
-        "link": "/se/asignacion-directa-de-cupo/solicitante",
+        "linkDashboard": "/se/asignacion-directa-de-cupo/solicitante",
+        "linkDepartment": "/se/asignacion-directa-de-cupo/solicitante",
         "department": "se"
     },
     {
         "id": 54,
         "tramite": 120402,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "se"
     },
     {
         "id": 55,
         "tramite": 120404,
-        "link": "/se/entidad-legal/soliciante",
+        "linkDashboard": "/se/entidad-legal/soliciante",
+        "linkDepartment": "/se/entidad-legal/soliciante",
         "department": "se"
     },
     {
         "id": 56,
         "tramite": 120501,
-        "link": "/se/solicitartransferencia/cupos-solicitud-transferencia",
+        "linkDashboard": "/se/solicitartransferencia/cupos-solicitud-transferencia",
+        "linkDepartment": "/se/solicitartransferencia/cupos-solicitud-transferencia",
         "department": "se"
     },
     {
         "id": 57,
         "tramite": 120601,
-        "link": "/se/registro-como-empresa/datos",
+        "linkDashboard": "/se/registro-como-empresa/datos",
+        "linkDepartment": "/se/registro-como-empresa/datos",
         "department": "se"
     },
     {
         "id": 58,
         "tramite": 120602,
-        "link": "/se/empresa-frontera/datos-empresad",
+        "linkDashboard": "/se/empresa-frontera/datos-empresad",
+        "linkDepartment": "/se/empresa-frontera/datos-empresad",
         "department": "se"
     },
     {
         "id": 59,
         "tramite": 120602,
-        "link": "/se/pago/empresa-frontera/datos-empresad",
+        "linkDashboard": "/se/pago/empresa-frontera/datos-empresad",
+        "linkDepartment": "/se/pago/empresa-frontera/datos-empresad",
         "department": "se"
     },
     {
         "id": 60,
         "tramite": 130102,
-        "link": "/se/octava-temporal/solicitante",
+        "linkDashboard": "/se/octava-temporal/solicitante",
+        "linkDepartment": "/se/octava-temporal/solicitante",
         "department": "se"
     },
     {
         "id": 61,
         "tramite": 130106,
-        "link": "/desmantelar/solicitante",
+        "linkDashboard": "/desmantelar/solicitante",
+        "linkDepartment": "/desmantelar/solicitante",
         "department": ""
     },
     {
         "id": 62,
         "tramite": 130111,
-        "link": "/se/importacion-de-vehiculos-usados/importacion-de-vehiculos",
+        "linkDashboard": "/se/importacion-de-vehiculos-usados/importacion-de-vehiculos",
+        "linkDepartment": "/se/importacion-de-vehiculos-usados/importacion-de-vehiculos",
         "department": "se"
     },
     {
         "id": 63,
         "tramite": 130118,
-        "link": "/se/pexim/solicitud",
+        "linkDashboard": "/se/pexim/solicitud",
+        "linkDepartment": "/se/pexim/solicitud",
         "department": "se"
     },
     {
         "id": 64,
         "tramite": 130119,
-        "link": "/se/aviso-importacion-maquinas/registrar-solicitud",
+        "linkDashboard": "/se/aviso-importacion-maquinas/registrar-solicitud",
+        "linkDepartment": "/se/aviso-importacion-maquinas/registrar-solicitud",
         "department": "se"
     },
     {
         "id": 65,
         "tramite": 130120,
-        "link": "/se/permiso-importacion/intro-permiso",
+        "linkDashboard": "/se/permiso-importacion/intro-permiso",
+        "linkDepartment": "/se/permiso-importacion/intro-permiso",
         "department": "se"
     },
     {
         "id": 66,
         "tramite": 130202,
-        "link": "/se/exportacion-minerales/exportacion-mineralesde-hierro",
+        "linkDashboard": "/se/exportacion-minerales/exportacion-mineralesde-hierro",
+        "linkDepartment": "/se/exportacion-minerales/exportacion-mineralesde-hierro",
         "department": "se"
     },
     {
         "id": 67,
         "tramite": 140103,
-        "link": "/se/pago/cancelacion-de/solicitante",
+        "linkDashboard": "/se/pago/cancelacion-de/solicitante",
+        "linkDepartment": "/se/pago/cancelacion-de/solicitante",
         "department": "se"
     },
     {
         "id": 68,
         "tramite": 140105,
-        "link": "/se/pago/desistimiento-de-permiso/solicitante",
+        "linkDashboard": "/se/pago/desistimiento-de-permiso/solicitante",
+        "linkDepartment": "/se/pago/desistimiento-de-permiso/solicitante",
         "department": "se"
     },
     {
         "id": 69,
         "tramite": 140201,
-        "link": "/se/cancelaciones-ministerio/solicitud",
+        "linkDashboard": "/se/cancelaciones-ministerio/solicitud",
+        "linkDepartment": "/se/cancelaciones-ministerio/solicitud",
         "department": "se"
     },
     {
         "id": 70,
         "tramite": 150101,
-        "link": "/se/registro-solicitud-anual/solicitud",
+        "linkDashboard": "/se/registro-solicitud-anual/solicitud",
+        "linkDepartment": "/se/registro-solicitud-anual/solicitud",
         "department": "se"
     },
     {
         "id": 71,
         "tramite": 150102,
-        "link": "/se/reporte-anual/solicitud",
+        "linkDashboard": "/se/reporte-anual/solicitud",
+        "linkDepartment": "/se/reporte-anual/solicitud",
         "department": "se"
     },
     {
         "id": 72,
         "tramite": 220102,
-        "link": "/agriculture/peticion-requisitos-fitosanitarios/invocar-modulo",
+        "linkDashboard": "/agriculture/peticion-requisitos-fitosanitarios/invocar-modulo",
+        "linkDepartment": "/agriculture/peticion-requisitos-fitosanitarios/invocar-modulo",
         "department": "agriculture"
     },
     {
         "id": 73,
         "tramite": 220201,
-        "link": "/agriculture/certificado-zoosanitario/zoosanitario",
+        "linkDashboard": "/agriculture/certificado-zoosanitario/zoosanitario",
+        "linkDepartment": "/agriculture/certificado-zoosanitario/zoosanitario",
         "department": "agriculture"
     },
     {
         "id": 74,
         "tramite": 220202,
-        "link": "/agriculture/certificado-fitosanitario/agriculture",
+        "linkDashboard": "/agriculture/certificado-fitosanitario/agriculture",
+        "linkDepartment": "/agriculture/certificado-fitosanitario/agriculture",
         "department": "agriculture"
     },
     {
         "id": 75,
         "tramite": 220203,
-        "link": "/agriculture/importacion-acuacultura/sanidad",
+        "linkDashboard": "/agriculture/importacion-acuacultura/sanidad",
+        "linkDepartment": "/agriculture/importacion-acuacultura/sanidad",
         "department": "agriculture"
     },
     {
         "id": 76,
         "tramite": 220401,
-        "link": "/agriculture/pantallas-extraordinarios",
+        "linkDashboard": "/agriculture/pantallas-extraordinarios",
+        "linkDepartment": "/agriculture/pantallas-extraordinarios",
         "department": "agriculture"
     },
     {
         "id": 77,
         "tramite": 220402,
-        "link": "/pantallas-captura/solicitud",
+        "linkDashboard": "/pantallas-captura/solicitud",
+        "linkDepartment": "/pantallas-captura/solicitud",
         "department": ""
     },
     {
         "id": 78,
         "tramite": 220404,
-        "link": "/agriculture/pago/desistimiento/desistimiento-page",
+        "linkDashboard": "/agriculture/pago/desistimiento/desistimiento-page",
+        "linkDepartment": "/agriculture/pago/desistimiento/desistimiento-page",
         "department": "agriculture"
     },
     {
         "id": 79,
         "tramite": 220501,
-        "link": "/agriculture/sagarpa/datosdelasolicitud",
+        "linkDashboard": "/agriculture/sagarpa/datosdelasolicitud",
+        "linkDepartment": "/agriculture/sagarpa/datosdelasolicitud",
         "department": "agriculture"
     },
     {
         "id": 80,
         "tramite": 220502,
-        "link": "/agriculture/inspeccion-fisica/pantallas",
+        "linkDashboard": "/agriculture/inspeccion-fisica/pantallas",
+        "linkDepartment": "/agriculture/inspeccion-fisica/pantallas",
         "department": "agriculture"
     },
     {
         "id": 81,
         "tramite": 220701,
-        "link": "/agriculture/inspeccion-fisica/inspeccion-fisica-zoosanitario",
+        "linkDashboard": "/agriculture/inspeccion-fisica/inspeccion-fisica-zoosanitario",
+        "linkDepartment": "/agriculture/inspeccion-fisica/inspeccion-fisica-zoosanitario",
         "department": "agriculture"
     },
     {
         "id": 82,
         "tramite": 220702,
-        "link": "/agriculture/inspeccion-fitosanitario/fitosanitario",
+        "linkDashboard": "/agriculture/inspeccion-fitosanitario/fitosanitario",
+        "linkDepartment": "/agriculture/inspeccion-fitosanitario/fitosanitario",
         "department": "agriculture"
     },
     {
         "id": 83,
         "tramite": 220703,
-        "link": "/agriculture/acuicola-fisica/acuicola",
+        "linkDashboard": "/agriculture/acuicola-fisica/acuicola",
+        "linkDepartment": "/agriculture/acuicola-fisica/acuicola",
         "department": "agriculture"
     },
     {
         "id": 84,
         "tramite": 230101,
-        "link": "/tramites-disponibles/solicitud",
+        "linkDashboard": "/tramites-disponibles/solicitud",
+        "linkDepartment": "/tramites-disponibles/solicitud",
         "department": ""
     },
     {
         "id": 85,
         "tramite": 230401,
-        "link": "/pago/pantallas/action",
+        "linkDashboard": "/pago/pantallas/action",
+        "linkDepartment": "/pago/pantallas/action",
         "department": "semarnat"
     },
     {
         "id": 86,
         "tramite": 231001,
-        "link": "/aviso-de-materiales/datos",
+        "linkDashboard": "/aviso-de-materiales/datos",
+        "linkDepartment": "/aviso-de-materiales/datos",
         "department": ""
     },
     {
         "id": 87,
         "tramite": 260101,
-        "link": "/cofepris/importacion-productos/productos",
+        "linkDashboard": "/cofepris/importacion-productos/productos",
+        "linkDepartment": "/cofepris/importacion-productos/productos",
         "department": "cofepris"
     },
     {
         "id": 88,
         "tramite": 260203,
-        "link": "/cofepris/medicamentos-registro-sanitario/solicitud",
+        "linkDashboard": "/cofepris/medicamentos-registro-sanitario/solicitud",
+        "linkDepartment": "/cofepris/medicamentos-registro-sanitario/solicitud",
         "department": "cofepris"
     },
     {
         "id": 89,
         "tramite": 260205,
-        "link": "/cofepris/materias-primas-destinados/solicitud",
+        "linkDashboard": "/cofepris/materias-primas-destinados/solicitud",
+        "linkDepartment": "/cofepris/materias-primas-destinados/solicitud",
         "department": "cofepris"
     },
     {
         "id": 90,
         "tramite": 260211,
-        "link": "/permiso-sanitario/pantallas",
+        "linkDashboard": "/permiso-sanitario/pantallas",
+        "linkDepartment": "/permiso-sanitario/pantallas",
         "department": ""
     },
     {
         "id": 91,
         "tramite": 260212,
-        "link": "/cofepris/permiso-maquila/solictud",
+        "linkDashboard": "/cofepris/permiso-maquila/solictud",
+        "linkDepartment": "/cofepris/permiso-maquila/solictud",
         "department": "cofepris"
     },
     {
         "id": 92,
         "tramite": 260214,
-        "link": "/cofepris/importacion-dispositivos-medicos-uso/contenedor-de-pasos",
+        "linkDashboard": "/cofepris/importacion-dispositivos-medicos-uso/contenedor-de-pasos",
+        "linkDepartment": "/cofepris/importacion-dispositivos-medicos-uso/contenedor-de-pasos",
         "department": "cofepris"
     },
     {
         "id": 93,
         "tramite": 260215,
-        "link": "/cofepris/permiso-sanitario-importacion/sanitario",
+        "linkDashboard": "/cofepris/permiso-sanitario-importacion/sanitario",
+        "linkDepartment": "/cofepris/permiso-sanitario-importacion/sanitario",
         "department": "cofepris"
     },
     {
         "id": 94,
         "tramite": 260216,
-        "link": "/cofepris/importacion-dispositivos-medicos-donacion/contenedor-de-pasos",
+        "linkDashboard": "/cofepris/importacion-dispositivos-medicos-donacion/contenedor-de-pasos",
+        "linkDepartment": "/cofepris/importacion-dispositivos-medicos-donacion/contenedor-de-pasos",
         "department": "cofepris"
     },
     {
         "id": 95,
         "tramite": 260401,
-        "link": "/cofepris/territorio-nacional/solicitante",
+        "linkDashboard": "/cofepris/territorio-nacional/solicitante",
+        "linkDepartment": "/cofepris/territorio-nacional/solicitante",
         "department": "cofepris"
     },
     {
         "id": 96,
         "tramite": 260402,
-        "link": "/cofepris/permiso-importacion-biologica/solictud",
+        "linkDashboard": "/cofepris/permiso-importacion-biologica/solictud",
+        "linkDepartment": "/cofepris/permiso-importacion-biologica/solictud",
         "department": "cofepris"
     },
     {
         "id": 97,
         "tramite": 260501,
-        "link": "/cofepris/permiso-plaguicidas/plaguicidas",
+        "linkDashboard": "/cofepris/permiso-plaguicidas/plaguicidas",
+        "linkDepartment": "/cofepris/permiso-plaguicidas/plaguicidas",
         "department": "cofepris"
     },
     {
         "id": 98,
         "tramite": 260502,
-        "link": "/pago/muestras-plaguicidas/plaguicidas",
+        "linkDashboard": "/pago/muestras-plaguicidas/plaguicidas",
+        "linkDepartment": "/pago/muestras-plaguicidas/plaguicidas",
         "department": ""
     },
     {
         "id": 99,
         "tramite": 260503,
-        "link": "/cofepris/permiso-experimentales-plaguicidas/plaguicidas",
+        "linkDashboard": "/cofepris/permiso-experimentales-plaguicidas/plaguicidas",
+        "linkDepartment": "/cofepris/permiso-experimentales-plaguicidas/plaguicidas",
         "department": "cofepris"
     },
     {
         "id": 100,
         "tramite": 260601,
-        "link": "/cofepris/aviso-sanitario/datosde-la-solicitud",
+        "linkDashboard": "/cofepris/aviso-sanitario/datosde-la-solicitud",
+        "linkDepartment": "/cofepris/aviso-sanitario/datosde-la-solicitud",
         "department": "cofepris"
     },
     {
         "id": 101,
         "tramite": 260603,
-        "link": "/cofepris/aviso-de-importacion/SolicitudePage",
+        "linkDashboard": "/cofepris/aviso-de-importacion/SolicitudePage",
+        "linkDepartment": "/cofepris/aviso-de-importacion/SolicitudePage",
         "department": "cofepris"
     },
     {
         "id": 102,
         "tramite": 260604,
-        "link": "/cofepris/aviso-exportacion/pantallas",
+        "linkDashboard": "/cofepris/aviso-exportacion/pantallas",
+        "linkDepartment": "/cofepris/aviso-exportacion/pantallas",
         "department": "cofepris"
     },
     {
         "id": 103,
         "tramite": 260605,
-        "link": "/pago/aviso-de-modificacion-module/datos-de-la-solicitud",
+        "linkDashboard": "/pago/aviso-de-modificacion-module/datos-de-la-solicitud",
+        "linkDepartment": "/pago/aviso-de-modificacion-module/datos-de-la-solicitud",
         "department": ""
     },
     {
         "id": 104,
         "tramite": 260701,
-        "link": "/cofepris/permiso-certificados/registrarSolicitudIP",
+        "linkDashboard": "/cofepris/permiso-certificados/registrarSolicitudIP",
+        "linkDepartment": "/cofepris/permiso-certificados/registrarSolicitudIP",
         "department": "cofepris"
     },
     {
         "id": 105,
         "tramite": 290101,
-        "link": "/cafe-exportadores/cafe-exportadores",
+        "linkDashboard": "/cafe-exportadores/cafe-exportadores",
+        "linkDepartment": "/cafe-exportadores/cafe-exportadores",
         "department": "amecafe"
     },
     {
         "id": 106,
         "tramite": 290201,
-        "link": "/amecafe/registrar-solicitud/solicitud",
+        "linkDashboard": "/amecafe/registrar-solicitud/solicitud",
+        "linkDepartment": "/amecafe/registrar-solicitud/solicitud",
         "department": "amecafe"
     },
     {
         "id": 107,
         "tramite": 570101,
-        "link": "/aga/pago/cancelacion-servicios-extraordinarios/cancelacion-extraordinarios",
+        "linkDashboard": "/aga/pago/cancelacion-servicios-extraordinarios/cancelacion-extraordinarios",
+        "linkDepartment": "/aga/pago/cancelacion-servicios-extraordinarios/cancelacion-extraordinarios",
         "department": "aga"
     },
     {
         "id": 108,
         "tramite": 140104,
-        "link": "/se/cancelacion-de-certificados-de-cupo/solicitante",
+        "linkDashboard": "/se/cancelacion-de-certificados-de-cupo/solicitante",
+        "linkDepartment": "/se/cancelacion-de-certificados-de-cupo/solicitante",
         "department": "se"
     },
     {
         "id": 109,
         "tramite": 260204,
-        "link": "/cofepris/permiso-sanitario-importacion-medicamentos",
+        "linkDashboard": "/cofepris/permiso-sanitario-importacion-medicamentos",
+        "linkDepartment": "/cofepris/permiso-sanitario-importacion-medicamentos",
         "department": "cofepris"
     },
     {
         "id": 110,
         "tramite": 260210,
-        "link": "/cofepris/permiso-sanitario-importacion-medicamentos-pruebas",
+        "linkDashboard": "/cofepris/permiso-sanitario-importacion-medicamentos-pruebas",
+        "linkDepartment": "/cofepris/permiso-sanitario-importacion-medicamentos-pruebas",
         "department": "cofepris"
     },
     {
         "id": 111,
         "tramite": 260904,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "cofepris"
     },
     {
         "id": 112,
         "tramite": 260911,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "cofepris"
     },
     {
         "id": 113,
         "tramite": 260912,
-        "link": "/cofepris/mod-permiso-importacion/permiso-sanitario",
+        "linkDashboard": "/cofepris/mod-permiso-importacion/permiso-sanitario",
+        "linkDepartment": "/cofepris/mod-permiso-importacion/permiso-sanitario",
         "department": "cofepris"
     },
     {
         "id": 114,
         "tramite": 40403,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "aga"
     },
     {
         "id": 115,
         "tramite": 32301,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "agace"
     },
     {
         "id": 116,
         "tramite": 260202,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "cofepris"
     },
     {
         "id": 117,
         "tramite": 110207,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "se"
     },
     {
         "id": 118,
         "tramite": 110212,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "se"
     },
     {
         "id": 119,
         "tramite": 110214,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "se"
     },
     {
         "id": 120,
         "tramite": 110223,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "se"
     },
     {
         "id": 121,
         "tramite": 120101,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "se"
     },
     {
         "id": 122,
         "tramite": 120202,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "se"
     },
     {
         "id": 123,
         "tramite": 120203,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "se"
     },
     {
         "id": 124,
         "tramite": 150103,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "se"
     },
     {
         "id": 125,
         "tramite": 190101,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "se"
     },
     {
         "id": 126,
         "tramite": 220503,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "agricultura"
     },
     {
         "id": 127,
         "tramite": 221601,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "agricultura"
     },
     {
         "id": 128,
         "tramite": 130109,
-        "link": "/se/importacion-de/vehiculos-usados-adaptados",
+        "linkDashboard": "/se/importacion-de/vehiculos-usados-adaptados",
+        "linkDepartment": "/se/importacion-de/vehiculos-usados-adaptados",
         "department": "se"
     },
     {
         "id": 129,
         "tramite": 130110,
-        "link": "/se/pago/importacion/neumaticos-comercializar",
+        "linkDashboard": "/se/pago/importacion/neumaticos-comercializar",
+        "linkDepartment": "/se/pago/importacion/neumaticos-comercializar",
         "department": "se"
     },
     {
         "id": 130,
         "tramite": 302,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "aga"
     },
     {
         "id": 131,
         "tramite": 10302,
-        "link": "/aga/exencion-impuestos/solicitud",
+        "linkDashboard": "/aga/exencion-impuestos/solicitud",
+        "linkDepartment": "/aga/exencion-impuestos/solicitud",
         "department": "aga"
     },
     {
         "id": 132,
         "tramite": 40201,
-        "link": "/aga/transportacion-maritima/asignar-caat-maritimo",
+        "linkDashboard": "/aga/transportacion-maritima/asignar-caat-maritimo",
+        "linkDepartment": "/aga/transportacion-maritima/asignar-caat-maritimo",
         "department": "aga"
     },
     {
         "id": 133,
         "tramite": 40301,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "aga"
     },
     {
         "id": 134,
         "tramite": 40401,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "aga"
     },
     {
         "id": 135,
         "tramite": 40402,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "aga"
     },
     {
         "id": 136,
         "tramite": 570102,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "aga"
     },
     {
         "id": 137,
         "tramite": 31501,
-        "link": "/agace/autoridad/solicitud",
+        "linkDashboard": "/agace/autoridad/solicitud",
+        "linkDepartment": "/agace/autoridad/solicitud",
         "department": "agace"
     },
     {
         "id": 138,
         "tramite": 32605,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "agace"
     },
     {
         "id": 139,
         "tramite": 31802,
-        "link": "/agace/registro-solicitud/solicitud",
+        "linkDashboard": "/agace/registro-solicitud/solicitud",
+        "linkDepartment": "/agace/registro-solicitud/solicitud",
         "department": "agace"
     },
     {
         "id": 140,
         "tramite": 32401,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "agace"
     },
     {
         "id": 141,
         "tramite": 32503,
-        "link": "/pago/aviso-traslado/solicitante",
+        "linkDashboard": "/pago/aviso-traslado/solicitante",
+        "linkDepartment": "/pago/aviso-traslado/solicitante",
         "department": "agace"
     },
     {
         "id": 142,
         "tramite": 32505,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "agace"
     },
     {
         "id": 143,
         "tramite": 32506,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "agace"
     },
     {
         "id": 144,
         "tramite": 32507,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "agace"
     },
     {
         "id": 145,
         "tramite": 32508,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "agace"
     },
     {
         "id": 146,
         "tramite": 220403,
-        "link": "/pago/certificado-exportacion/acuicola",
+        "linkDashboard": "/pago/certificado-exportacion/acuicola",
+        "linkDepartment": "/pago/certificado-exportacion/acuicola",
         "department": "agriculture"
     },
     {
         "id": 147,
         "tramite": 260102,
-        "link": "/pago/consumo-personal/solicitud",
+        "linkDashboard": "/pago/consumo-personal/solicitud",
+        "linkDepartment": "/pago/consumo-personal/solicitud",
         "department": "cofepris"
     },
     {
         "id": 148,
         "tramite": 260206,
-        "link": "/pago/maquila-materias-primas/solicitud",
+        "linkDashboard": "/pago/maquila-materias-primas/solicitud",
+        "linkDepartment": "/pago/maquila-materias-primas/solicitud",
         "department": "cofepris"
     },
     {
         "id": 149,
         "tramite": 260213,
-        "link": "/cofepris/permiso-sanitario-medicos-uso-personal",
+        "linkDashboard": "/cofepris/permiso-sanitario-medicos-uso-personal",
+        "linkDepartment": "/cofepris/permiso-sanitario-medicos-uso-personal",
         "department": "cofepris"
     },
     {
         "id": 150,
         "tramite": 260217,
-        "link": "/cofepris/dispositivos-medicos-sin-registrar/contenedor-de-pasos",
+        "linkDashboard": "/cofepris/dispositivos-medicos-sin-registrar/contenedor-de-pasos",
+        "linkDepartment": "/cofepris/dispositivos-medicos-sin-registrar/contenedor-de-pasos",
         "department": "cofepris"
     },
     {
         "id": 151,
         "tramite": 260218,
-        "link": "/pago/dispositivos-medicos-laboratorio/contenedor-de-pasos",
+        "linkDashboard": "/pago/dispositivos-medicos-laboratorio/contenedor-de-pasos",
+        "linkDepartment": "/pago/dispositivos-medicos-laboratorio/contenedor-de-pasos",
         "department": "cofepris"
     },
     {
         "id": 152,
         "tramite": 260301,
-        "link": "/cofepris/importacion-materias-primas-estupefacientes/contenedor-de-pasos",
+        "linkDashboard": "/cofepris/importacion-materias-primas-estupefacientes/contenedor-de-pasos",
+        "linkDepartment": "/cofepris/importacion-materias-primas-estupefacientes/contenedor-de-pasos",
         "department": "cofepris"
     },
     {
         "id": 153,
         "tramite": 260303,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "cofepris"
     },
     {
         "id": 154,
         "tramite": 260512,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "cofepris"
     },
     {
         "id": 155,
         "tramite": 260514,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "cofepris"
     },
     {
         "id": 156,
         "tramite": 260902,
-        "link": "/cofepris/modificacion-permiso-sanitario/solicitante",
+        "linkDashboard": "/cofepris/modificacion-permiso-sanitario/solicitante",
+        "linkDepartment": "/cofepris/modificacion-permiso-sanitario/solicitante",
         "department": "cofepris"
     },
     {
         "id": 157,
         "tramite": 260903,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "cofepris"
     },
     {
         "id": 158,
         "tramite": 261702,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "cofepris"
     },
     {
         "id": 159,
         "tramite": 270201,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "inbal"
     },
     {
         "id": 160,
         "tramite": 110210,
-        "link": "/se/tramites-disponibles/solicitud",
+        "linkDashboard": "/se/tramites-disponibles/solicitud",
+        "linkDepartment": "/se/tramites-disponibles/solicitud",
         "department": "se"
     },
     {
         "id": 161,
         "tramite": 130112,
-        "link": "/se/importacion-material-de-investigacion-cientifica",
+        "linkDashboard": "/se/importacion-material-de-investigacion-cientifica",
+        "linkDepartment": "/se/importacion-material-de-investigacion-cientifica",
         "department": "se"
     },
     {
         "id": 162,
         "tramite": 130114,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "se"
     },
     {
         "id": 163,
         "tramite": 130115,
-        "link": "/se/importacion-vehiculos-nuevos/solicitud",
+        "linkDashboard": "/se/importacion-vehiculos-nuevos/solicitud",
+        "linkDepartment": "/se/importacion-vehiculos-nuevos/solicitud",
         "department": "se"
     },
     {
         "id": 164,
         "tramite": 130203,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "se"
     },
     {
         "id": 165,
         "tramite": 130217,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "se"
     },
     {
         "id": 166,
         "tramite": 230901,
-        "link": "/semarnat/autorizaciones-de-vida-silvestre/datos",
+        "linkDashboard": "/semarnat/autorizaciones-de-vida-silvestre/datos",
+        "linkDepartment": "/semarnat/autorizaciones-de-vida-silvestre/datos",
         "department": "semarnat"
     },
     {
         "id": 167,
         "tramite": 230902,
-        "link": "/semarnat/tramites-cites-importacion-exportacion-reexportacion/datos",
+        "linkDashboard": "/semarnat/tramites-cites-importacion-exportacion-reexportacion/datos",
+        "linkDepartment": "/semarnat/tramites-cites-importacion-exportacion-reexportacion/datos",
         "department": "semarnat"
     },
     {
         "id": 168,
         "tramite": 130108,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "sener"
     },
     {
         "id": 169,
         "tramite": 130121,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "sener"
     },
     {
         "id": 170,
         "tramite": 140111,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "sener"
     },
     {
         "id": 171,
         "tramite": 140112,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "sener"
     },
     {
         "id": 172,
         "tramite": 120204,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "se"
     },
     {
         "id": 173,
         "tramite": 130103,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "se"
     },
     {
         "id": 174,
         "tramite": 105,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "aga"
     },
     {
         "id": 175,
         "tramite": 31201,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "aga"
     },
     {
         "id": 176,
         "tramite": 317,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "agace"
     },
     {
         "id": 177,
         "tramite": 221602,
-        "link": "/agriculture/fitosanitario/solicitante",
+        "linkDashboard": "/agriculture/fitosanitario/solicitante",
+        "linkDepartment": "/agriculture/fitosanitario/solicitante",
         "department": "agricultura"
     },
     {
         "id": 178,
         "tramite": 260702,
-        "link": "/cofepris/registrar-solicitud-mcp/registro",
+        "linkDashboard": "/cofepris/registrar-solicitud-mcp/registro",
+        "linkDepartment": "/cofepris/registrar-solicitud-mcp/registro",
         "department": "cofepris"
     },
     {
         "id": 179,
         "tramite": 260704,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "cofepris"
     },
     {
         "id": 180,
         "tramite": 260906,
-        "link": "/cofepris/modificacion-permiso-sanitario",
+        "linkDashboard": "/cofepris/modificacion-permiso-sanitario",
+        "linkDepartment": "/cofepris/modificacion-permiso-sanitario",
         "department": "cofepris"
     },
     {
         "id": 181,
         "tramite": 260910,
-        "link": "/cofepris/modificacion-permiso-sanitario/solicitante",
+        "linkDashboard": "/cofepris/modificacion-permiso-sanitario/solicitante",
+        "linkDepartment": "/cofepris/modificacion-permiso-sanitario/solicitante",
         "department": "cofepris"
     },
     {
         "id": 182,
         "tramite": 260915,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "cofepris"
     },
     {
         "id": 183,
         "tramite": 260918,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "cofepris"
     },
     {
         "id": 184,
         "tramite": 261601,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "cofepris"
     },
     {
         "id": 185,
         "tramite": 130301,
-        "link": "/se/solicitud-prorroga/solicitud",
+        "linkDashboard": "/se/solicitud-prorroga/solicitud",
+        "linkDepartment": "/se/solicitud-prorroga/solicitud",
         "department": "se"
     },
     {
         "id": 186,
         "tramite": 140101,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "se"
     },
     {
         "id": 187,
         "tramite": 231003,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "semarnat"
     },
     {
         "id": 188,
         "tramite": 202,
-        "link": "/aga/prestadores-servicio/maniobras-mercancias",
+        "linkDashboard": "/aga/prestadores-servicio/maniobras-mercancias",
+        "linkDepartment": "/aga/prestadores-servicio/maniobras-mercancias",
         "department": "aga"
     },
     {
         "id": 189,
         "tramite": 6101,
-        "link": "/aga/junta-tecnica/solicitud",
+        "linkDashboard": "/aga/junta-tecnica/solicitud",
+        "linkDepartment": "/aga/junta-tecnica/solicitud",
         "department": "aga"
     },
     {
         "id": 190,
         "tramite": 11102,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "aga"
     },
     {
         "id": 191,
         "tramite": 11106,
-        "link": "/aga/cancelacion-donaciones/pagina-uno-acuses-y-resoluciones-busqueda",
+        "linkDashboard": "/aga/cancelacion-donaciones/pagina-uno-acuses-y-resoluciones-busqueda",
+        "linkDepartment": "/aga/cancelacion-donaciones/pagina-uno-acuses-y-resoluciones-busqueda",
         "department": "aga"
     },
     {
         "id": 192,
         "tramite": 30401,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "aga"
     },
     {
         "id": 193,
         "tramite": 30503,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "aga"
     },
     {
         "id": 194,
         "tramite": 31202,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "aga"
     },
     {
         "id": 195,
         "tramite": 31203,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "aga"
     },
     {
         "id": 196,
         "tramite": 40202,
-        "link": "/aga/modificacion-transportacion-maritima/modificar-caat-maritimo",
+        "linkDashboard": "/aga/modificacion-transportacion-maritima/modificar-caat-maritimo",
+        "linkDepartment": "/aga/modificacion-transportacion-maritima/modificar-caat-maritimo",
         "department": "aga"
     },
     {
         "id": 197,
         "tramite": 630104,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "aga"
     },
     {
         "id": 198,
         "tramite": 630303,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "aga"
     },
     {
         "id": 199,
         "tramite": 630307,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "aga"
     },
     {
         "id": 200,
         "tramite": 31101,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "agace"
     },
     {
         "id": 201,
         "tramite": 31301,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "agace"
     },
     {
         "id": 202,
         "tramite": 31602,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "agace"
     },
     {
         "id": 203,
         "tramite": 31603,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "agace"
     },
     {
         "id": 204,
         "tramite": 31604,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "agace"
     },
     {
         "id": 205,
         "tramite": 31608,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "agace"
     },
     {
         "id": 206,
         "tramite": 31616,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "agace"
     },
     {
         "id": 207,
         "tramite": 32101,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "agace"
     },
     {
         "id": 208,
         "tramite": 32102,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "agace"
     },
     {
         "id": 209,
         "tramite": 32201,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "agace"
     },
     {
         "id": 210,
         "tramite": 221603,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "agricultura"
     },
     {
         "id": 211,
         "tramite": 260103,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "cofepris"
     },
     {
         "id": 212,
         "tramite": 260201,
-        "link": "/cofepris/importacion-psicotropicos-poretorno/contenedor-de-pasos",
+        "linkDashboard": "/cofepris/importacion-psicotropicos-poretorno/contenedor-de-pasos",
+        "linkDepartment": "/cofepris/importacion-psicotropicos-poretorno/contenedor-de-pasos",
         "department": "cofepris"
     },
     {
         "id": 213,
         "tramite": 260207,
-        "link": "/cofepris/importacion-tratamientos-especiales/contenedor-de-pasos",
+        "linkDashboard": "/cofepris/importacion-tratamientos-especiales/contenedor-de-pasos",
+        "linkDepartment": "/cofepris/importacion-tratamientos-especiales/contenedor-de-pasos",
         "department": "cofepris"
     },
     {
         "id": 214,
         "tramite": 260208,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "cofepris"
     },
     {
         "id": 215,
         "tramite": 260209,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "cofepris"
     },
     {
         "id": 216,
         "tramite": 260219,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "cofepris"
     },
     {
         "id": 217,
         "tramite": 260302,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "cofepris"
     },
     {
         "id": 218,
         "tramite": 260304,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "cofepris"
     },
     {
         "id": 219,
         "tramite": 260504,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "cofepris"
     },
     {
         "id": 220,
         "tramite": 260505,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "cofepris"
     },
     {
         "id": 221,
         "tramite": 260508,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "cofepris"
     },
     {
         "id": 222,
         "tramite": 260509,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "cofepris"
     },
     {
         "id": 223,
         "tramite": 260510,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "cofepris"
     },
     {
         "id": 224,
         "tramite": 260511,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "cofepris"
     },
     {
         "id": 225,
         "tramite": 260513,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "cofepris"
     },
     {
         "id": 226,
         "tramite": 260515,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "cofepris"
     },
     {
         "id": 227,
         "tramite": 260516,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "cofepris"
     },
     {
         "id": 228,
         "tramite": 260703,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "cofepris"
     },
     {
         "id": 229,
         "tramite": 260901,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "cofepris"
     },
     {
         "id": 230,
         "tramite": 260905,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "cofepris"
     },
     {
         "id": 231,
         "tramite": 260907,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "cofepris"
     },
     {
         "id": 232,
         "tramite": 260908,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "cofepris"
     },
     {
         "id": 233,
         "tramite": 260909,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "cofepris"
     },
     {
         "id": 234,
         "tramite": 260913,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "cofepris"
     },
     {
         "id": 235,
         "tramite": 260914,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "cofepris"
     },
     {
         "id": 236,
         "tramite": 260916,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "cofepris"
     },
     {
         "id": 237,
         "tramite": 260917,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "cofepris"
     },
     {
         "id": 238,
         "tramite": 261101,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "cofepris"
     },
     {
         "id": 239,
         "tramite": 261103,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "cofepris"
     },
     {
         "id": 240,
         "tramite": 261401,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "cofepris"
     },
     {
         "id": 241,
         "tramite": 261402,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "cofepris"
     },
     {
         "id": 242,
         "tramite": 261701,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "cofepris"
     },
     {
         "id": 243,
         "tramite": 280101,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "inah"
     },
     {
         "id": 244,
         "tramite": 270101,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "inbal"
     },
     {
         "id": 245,
         "tramite": 270301,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "inbal"
     },
     {
         "id": 246,
         "tramite": 250101,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "profepa"
     },
     {
         "id": 247,
         "tramite": 80206,
-        "link": "/se/modalidad-ampliacion/registro",
+        "linkDashboard": "/se/modalidad-ampliacion/registro",
+        "linkDepartment": "/se/modalidad-ampliacion/registro",
         "department": "se"
     },
     {
         "id": 248,
         "tramite": 80301,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "se"
     },
     {
         "id": 249,
         "tramite": 130104,
-        "link": "/se/importacion-otros-vehiculos-usados/solicitud",
+        "linkDashboard": "/se/importacion-otros-vehiculos-usados/solicitud",
+        "linkDepartment": "/se/importacion-otros-vehiculos-usados/solicitud",
         "department": "se"
     },
     {
         "id": 250,
         "tramite": 130105,
-        "link": "/se/importacion-vehiculos-usados-donacion/solicitud",
+        "linkDashboard": "/se/importacion-vehiculos-usados-donacion/solicitud",
+        "linkDepartment": "/se/importacion-vehiculos-usados-donacion/solicitud",
         "department": "se"
     },
     {
         "id": 251,
         "tramite": 130113,
-        "link": "/se/importacion/equipo-anticontaminante",
+        "linkDashboard": "/se/importacion/equipo-anticontaminante",
+        "linkDepartment": "/se/importacion/equipo-anticontaminante",
         "department": "se"
     },
     {
         "id": 252,
         "tramite": 130116,
-        "link": "/se/solicitud-importacion-ambulancia/reconstruccion-reacondicionamiento",
+        "linkDashboard": "/se/solicitud-importacion-ambulancia/reconstruccion-reacondicionamiento",
+        "linkDepartment": "/se/solicitud-importacion-ambulancia/reconstruccion-reacondicionamiento",
         "department": "se"
     },
     {
         "id": 253,
         "tramite": 130401,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "se"
     },
     {
         "id": 254,
         "tramite": 240101,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "sedena"
     },
     {
         "id": 255,
         "tramite": 240102,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "sedena"
     },
     {
         "id": 256,
         "tramite": 240105,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "sedena"
     },
     {
         "id": 257,
         "tramite": 240106,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "sedena"
     },
     {
         "id": 258,
         "tramite": 240107,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "sedena"
     },
     {
         "id": 259,
         "tramite": 240108,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "sedena"
     },
     {
         "id": 260,
         "tramite": 240111,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "sedena"
     },
     {
         "id": 261,
         "tramite": 240114,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "sedena"
     },
     {
         "id": 262,
         "tramite": 240117,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "sedena"
     },
     {
         "id": 263,
         "tramite": 240118,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "sedena"
     },
     {
         "id": 264,
         "tramite": 240119,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "sedena"
     },
     {
         "id": 265,
         "tramite": 240120,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "sedena"
     },
     {
         "id": 266,
         "tramite": 240121,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "sedena"
     },
     {
         "id": 267,
         "tramite": 240122,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "sedena"
     },
     {
         "id": 268,
         "tramite": 240305,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "sedena"
     },
     {
         "id": 269,
         "tramite": 240308,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "sedena"
     },
     {
         "id": 270,
         "tramite": 240311,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "sedena"
     },
     {
         "id": 271,
         "tramite": 240405,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "sedena"
     },
     {
         "id": 272,
         "tramite": 240407,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "sedena"
     },
     {
         "id": 273,
         "tramite": 240411,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "sedena"
     },
     {
         "id": 274,
         "tramite": 230201,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "semarnat"
     },
     {
         "id": 275,
         "tramite": 230202,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "semarnat"
     },
     {
         "id": 276,
         "tramite": 230301,
-        "link": "/semarnat/desistimiento/solicitud",
+        "linkDashboard": "/semarnat/desistimiento/solicitud",
+        "linkDepartment": "/semarnat/desistimiento/solicitud",
         "department": "semarnat"
     },
     {
         "id": 277,
         "tramite": 230501,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "semarnat"
     },
     {
         "id": 278,
         "tramite": 130201,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "sener"
     },
     {
         "id": 279,
         "tramite": 130204,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "sener"
     },
     {
         "id": 280,
         "tramite": 140216,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "sener"
     },
     {
         "id": 281,
         "tramite": 300105,
-        "link": "",
+        "linkDashboard": "",
+        "linkDepartment": "",
         "department": "sener"
     }
 ]

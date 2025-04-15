@@ -14,12 +14,12 @@
           </thead>
           <tbody>
             @for(item of tramiteData; track item?.id) {
-              @if(item?.link) {
+              @if(item?.linkDashboard) {
                 <tr>
                   <td> {{item?.id}}</td>
                   <td> {{item?.department}}</td>
                   <td> {{item?.tramite}}</td>
-                  <td> <a [routerLink]=item.link>{{ ruta }}{{item.link}}</a>
+                  <td> <a [routerLink]=item.linkDashboard>{{ ruta }}{{item.linkDashboard}}</a>
                   </td>
                 </tr>
               }

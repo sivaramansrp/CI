@@ -1,28 +1,10 @@
-import { AMBIENTES } from '@ng-mf/data-access-user';
+import { AMBIENTES, TramiteDetails } from '@ng-mf/data-access-user';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { TituloComponent } from "@ng-mf/data-access-user";
+import tramiteDetailsData from '@libs/shared/theme/assets/json/tramiteList.json'
 
-import { Subject, takeUntil } from 'rxjs';
-
-import { Component, OnDestroy, OnInit } from '@angular/core';
-
-/**
- * Representa los detalles de un "Trámite" (procedimiento o proceso).
- *
- * @interface TramiteDetails
- * @property {number} id - El identificador único para el trámite.
- * @property {number} tramite - El número o código específico del trámite.
- * @property {string} link - Un hipervínculo relacionado con el trámite.
- * @property {string} department - El departamento responsable del trámite.
- */
-interface TramiteDetails {
-  id: number;
-  tramite: number;
-  link: string;
-  department: string;
-}
 
 @Component({
   selector: 'seleccion-tramite-desde-panel',
@@ -31,7 +13,7 @@ interface TramiteDetails {
   imports: [TituloComponent,RouterModule, CommonModule],
   standalone: true
 })
-export class SeleccionTramiteDesdePanelComponent implements OnInit, OnDestroy {
+export class SeleccionTramiteDesdePanelComponent implements OnInit {
 
   /**
    * Variable para asingar el endpoint de la ruta
@@ -45,22 +27,6 @@ export class SeleccionTramiteDesdePanelComponent implements OnInit, OnDestroy {
    */
   
   public tramiteData: TramiteDetails[] = [];
-  /**
-   * Un Subject que emite un valor `void` para señalar la finalización de las suscripciones.
-   * Se utiliza para gestionar y limpiar observables, evitando fugas de memoria.
-   * Normalmente se completa en el hook de ciclo de vida `ngOnDestroy`.
-   */
-  private destroy$ = new Subject<void>();
-
-  /**
-   * Una instancia de HttpClient utilizada para realizar solicitudes HTTP.
-   * Este servicio se utiliza típicamente para comunicarse con APIs de backend.
-   */
-  private http: HttpClient;
-  
-  constructor(http: HttpClient) {
-    this.http = http;
-  }
 
   ngOnInit(): void {
     if (window.location.host.indexOf('localhost') !== -1) {
@@ -69,17 +35,6 @@ export class SeleccionTramiteDesdePanelComponent implements OnInit, OnDestroy {
       this.ruta = AMBIENTES.DESARROLLO
     }
 
-    this.http.get<TramiteDetails[]>('../../assets/tramiteList.json')
-    .pipe(takeUntil(this.destroy$))
-    .subscribe((data) => {
-      this.tramiteData = data;
-    });
+    this.tramiteData = tramiteDetailsData as TramiteDetails[];
   }
-
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-    this.tramiteData = [];
-  }
-  
 }
