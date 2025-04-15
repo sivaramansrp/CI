@@ -7,13 +7,17 @@ import {
   PROCEDIMIENTOS_NO_PARA_ELEMENTO_CALLE,
   PROCEDIMIENTOS_NO_PARA_ELEMENTO_COLAPSABLE,
   PROCEDIMIENTOS_NO_PARA_ELEMENTO_CORREO_ELECTRONIC,
+  PROCEDIMIENTOS_NO_PARA_ELEMENTO_REGIMEN_Y_ADUNADEENTRADAS,
   PROCEDIMIENTOS_NO_PARA_ELEMENTO_RFC_DEL_SANITARIO,
+  PROCEDIMIENTOS_PARA_CORREO_ELECTRONICO_EN_MISMA_FILA,
   PROCEDIMIENTOS_PARA_DESHABILITAR_APELLIDO_MATERNO,
   PROCEDIMIENTOS_PARA_DESHABILITAR_APELLIDO_PATERNO,
   PROCEDIMIENTOS_PARA_DESHABILITAR_MUNICIPIO_ALCALDIA,
   PROCEDIMIENTOS_PARA_DESHABILITAR_NOMBRE_RAZON_SOCIAL,
+  REPRESENTANTE_LEGAL,
 } from '../../constantes/datos-solicitud.enum';
 import { ActivatedRoute, Router } from '@angular/router';
+import { AlertComponent, REGEX_SOLO_NUMEROS } from '@libs/shared/data-access-user/src';
 import {
   Catalogo,
   DatosDeTablaSeleccionados,
@@ -33,7 +37,6 @@ import {
 } from '@angular/forms';
 import { delay, takeUntil } from 'rxjs';
 import { AbstractControl } from '@angular/forms';
-import { AlertComponent } from '@libs/shared/data-access-user/src';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
@@ -229,6 +232,19 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   public mostrarCorreoElectronico = true;
 
   /**
+   * Indica si se debe mostrar el campo de correo electrónico en la interfaz.
+   * @type {boolean}
+   */
+  public mostrarCorreoElectronicoenMismaFila = true;
+
+  /**
+   * Indica si se debe mostrar la sección del representante legal en la interfaz.
+   * @type {boolean}
+   */
+  public mostrarRepresentanteLegal = true;
+  
+
+  /**
    * @property {boolean} mostrarRFCSanitario
    * Controla la visibilidad del campo de RFC sanitario en el formulario.
    *
@@ -267,6 +283,17 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * que son seleccionadas por el usuario en el formulario.
    */
   public aduanaDatos: Catalogo[] = [];
+
+
+  /**
+   * @property {boolean} mostrarRegimenYAdunasDeEntradasDatos
+   * Controla la visibilidad de los campos de régimen y aduanas de entrada en el formulario.
+   *
+   * @description
+   * Este valor se utiliza para determinar si los campos relacionados con el régimen y las aduanas de entrada
+   * deben ser visibles o no, dependiendo de la lógica implementada en el componente.
+   */
+  public mostrarRegimenYAdunasDeEntradasDatos: boolean = true;
 
   /**
    * @constructor
@@ -349,6 +376,18 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     )
       ? false
       : true;
+
+    this.mostrarCorreoElectronicoenMismaFila = PROCEDIMIENTOS_PARA_CORREO_ELECTRONICO_EN_MISMA_FILA.includes(this.idProcedimiento)
+      ? true
+      : false;
+
+    this.mostrarRepresentanteLegal = REPRESENTANTE_LEGAL.includes(this.idProcedimiento)
+      ? false
+      : true;
+
+    this.mostrarRegimenYAdunasDeEntradasDatos=PROCEDIMIENTOS_NO_PARA_ELEMENTO_REGIMEN_Y_ADUNADEENTRADAS.includes(this.idProcedimiento)
+    ? false
+    : true;
   }
 
   /**
@@ -387,6 +426,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
           Validators.required,
           Validators.minLength(2),
           Validators.maxLength(150),
+          Validators.pattern(REGEX_SOLO_NUMEROS)
         ],
       ],
       estado: [
