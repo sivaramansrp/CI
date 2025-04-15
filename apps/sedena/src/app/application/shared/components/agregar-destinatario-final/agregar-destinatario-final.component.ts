@@ -1,4 +1,8 @@
-import { PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE } from '../../constants/datos-solicitud.enum';
+import {
+  PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE,
+  TERCEROS_NACIONALIDAD_OPCIONES,
+  TIPO_PERSONA_OPCIONES,
+} from '../../constants/datos-solicitud.enum';
 import { STR_NACIONAL } from '../../constants/datos-solicitud.enum';
 
 import { DestinoFinal } from '../../models/terceros-relacionados.model';
@@ -21,7 +25,7 @@ import { FormGroup } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Validators } from '@angular/forms';
 
-import { Catalogo } from '@ng-mf/data-access-user';
+import { Catalogo, InputRadioComponent } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { TipoPersona } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
@@ -43,6 +47,7 @@ import { takeUntil } from 'rxjs';
     ReactiveFormsModule,
     CatalogoSelectComponent,
     TituloComponent,
+    InputRadioComponent,
   ],
   templateUrl: './agregar-destinatario-final.component.html',
   styleUrl: './agregar-destinatario-final.component.css',
@@ -145,6 +150,16 @@ export class AgregarDestinatarioFinalComponent
 
   public nacionalStr = STR_NACIONAL;
 
+  /**
+   * Opciones de radio para seleccionar el tipo de persona.
+   */
+  tipoPersonaRadioOpciones = TIPO_PERSONA_OPCIONES;
+
+  /*
+   * Opciones de nacionalidad para el formulario.
+   */
+
+  tercerosNacionalidadOpciones = TERCEROS_NACIONALIDAD_OPCIONES;
   /**
    * Crea el componente e inicializa el grupo de formulario.
    *
@@ -316,6 +331,29 @@ export class AgregarDestinatarioFinalComponent
    */
   cancelar(): void {
     this.ubicaccion.back();
+  }
+
+  /**
+   * * Método que se ejecuta cuando se selecciona un país en el formulario.
+   * * @param {string} event - El país seleccionado.
+   * * @returns {void} No retorna ningún valor.
+   */
+  tipoPersonaCambioDeValor(event: string | number): void {
+    this.agregarDestinatarioFinal.patchValue({
+      tipoPersona: event,
+    });
+  }
+
+  /**
+   * * Método que se ejecuta cuando se selecciona un país en el formulario.
+   * * @param {string} event - El país seleccionado.
+   * * @returns {void} No retorna ningún valor.
+   */
+
+  terecerosNacionalidadCambioDeValor(event: string | number): void {
+    this.agregarDestinatarioFinal.patchValue({
+      nacionalidad: event,
+    });
   }
 
   /**
