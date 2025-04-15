@@ -229,6 +229,15 @@ const ROUTES: Routes = [
         (m) => m.MuestrasPlaguicidasModule
       ),
   },
+
+  {
+    path: 'medicamentos-destinados-uso',
+    loadChildren: () =>
+      import('./tramites/260208/importacion-medicamentos-destinados-uso.module').then(
+        (m) => m.ImportacionMedicamentosDestinadosUsoModule
+      ),
+  },
+  
   {
     path: 'importacion-materias-primas-estupefacientes',
     loadChildren: () =>
@@ -243,6 +252,15 @@ const ROUTES: Routes = [
         (m) => m.SolicitudPermisoModule
       ),
   },
+
+  {
+    path: 'importacion-destinados-donacio',
+    loadChildren: () =>
+      import('./tramites/260209/importacion-destinados-donacio.module').then(
+        (m) => m.ImportacionDestinadosDonacioModule
+      ),
+  },
+  
   {
     path: 'modificacion-permiso-sanitario',
     loadChildren: () =>
