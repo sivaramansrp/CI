@@ -8,7 +8,7 @@ import { Store } from '@datorama/akita';
 import { StoreConfig } from '@datorama/akita';
 
 /**
- * Interfaz que representa el estado completo del trámite 240101.
+ * Interfaz que representa el estado completo del trámite 240120.
  *
  * @property {number} [tabSeleccionado] - Pestaña actualmente activa en el flujo.
  * @property {DestinoFinal[]} destinatarioFinalTablaDatos - Lista de destinatarios finales registrados.
@@ -17,7 +17,7 @@ import { StoreConfig } from '@datorama/akita';
  * @property {MercanciaDetalle[]} merccancialTablaDatos - Lista de mercancías registradas.
  * @property {DatosDelTramiteFormState} datosDelTramite - Información general del formulario de datos del trámite.
  */
-export interface Tramite240101State {
+export interface Tramite240120State {
   tabSeleccionado?: number;
   destinatarioFinalTablaDatos: DestinoFinal[];
   proveedorTablaDatos: Proveedor[];
@@ -27,12 +27,12 @@ export interface Tramite240101State {
 }
 
 /**
- * Crea el estado inicial para el trámite 240101.
+ * Crea el estado inicial para el trámite 240120.
  *
  * @function createInitialState
- * @returns {Tramite240101State} El estado inicial del store.
+ * @returns {Tramite240120State} El estado inicial del store.
  */
-export function createInitialState(): Tramite240101State {
+export function createInitialState(): Tramite240120State {
   return {
     tabSeleccionado: 1,
     destinatarioFinalTablaDatos: [],
@@ -56,14 +56,14 @@ export function createInitialState(): Tramite240101State {
 }
 
 /**
- * Store que maneja el estado del trámite 240101.
+ * Store que maneja el estado del trámite 240120.
  * Utiliza Akita para el control reactivo del estado.
  */
 @Injectable({
   providedIn: 'root',
 })
-@StoreConfig({ name: 'tramite240101', resettable: true })
-export class Tramite240101Store extends Store<Tramite240101State> {
+@StoreConfig({ name: 'tramite240120', resettable: true })
+export class Tramite240120Store extends Store<Tramite240120State> {
   constructor() {
     super(createInitialState());
   }

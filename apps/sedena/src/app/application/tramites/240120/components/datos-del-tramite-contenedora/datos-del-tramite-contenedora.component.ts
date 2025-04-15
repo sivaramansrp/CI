@@ -6,8 +6,8 @@ import { MercanciaDetalle } from '../../../../shared/models/datos-del-tramite.mo
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
-import { Tramite240101Query } from '../../estados/tramite240120Query.query';
-import { Tramite240101Store } from '../../estados/tramite240120Store.store';
+import { Tramite240120Query } from '../../estados/tramite240120Query.query';
+import { Tramite240120Store } from '../../estados/tramite240120Store.store';
 import { takeUntil } from 'rxjs';
 
 /**
@@ -52,13 +52,13 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
    * Constructor del componente.
    *
    * @method constructor
-   * @param {Tramite240101Query} tramiteQuery - Query de Akita para obtener el estado actual del trámite.
-   * @param {Tramite240101Store} tramiteStore - Store de Akita para actualizar el estado del trámite.
+   * @param {Tramite240120Query} tramiteQuery - Query de Akita para obtener el estado actual del trámite.
+   * @param {Tramite240120Store} tramiteStore - Store de Akita para actualizar el estado del trámite.
    * @returns {void}
    */
   constructor(
-    private tramiteQuery: Tramite240101Query,
-    private tramiteStore: Tramite240101Store
+    private tramiteQuery: Tramite240120Query,
+    private tramiteStore: Tramite240120Store
   ) // eslint-disable-next-line no-empty-function
   {}
 

@@ -5,8 +5,8 @@ import { OnInit } from '@angular/core';
 import { PagoDeDerechosComponent } from '../../../../shared/components/pago-de-derechos/pago-de-derechos.component';
 import { PagoDerechosFormState } from '../../../../shared/models/pago-de-derechos.model';
 import { Subject } from 'rxjs';
-import { Tramite240101Query } from '../../estados/tramite240120Query.query';
-import { Tramite240101Store } from '../../estados/tramite240120Store.store';
+import { Tramite240120Query } from '../../estados/tramite240120Query.query';
+import { Tramite240120Store } from '../../estados/tramite240120Store.store';
 import { takeUntil } from 'rxjs';
 /**
  * @title Pago de Derechos Contenedora
@@ -44,13 +44,13 @@ export class PagoDeDerechosContenedoraComponent implements OnInit, OnDestroy {
    * Constructor del componente.
    *
    * @method constructor
-   * @param {Tramite240101Query} tramiteQuery - Query para obtener el estado actual del pago de derechos.
-   * @param {Tramite240101Store} tramiteStore - Store que administra el estado del pago de derechos.
+   * @param {Tramite240120Query} tramiteQuery - Query para obtener el estado actual del pago de derechos.
+   * @param {Tramite240120Store} tramiteStore - Store que administra el estado del pago de derechos.
    * @returns {void}
    */
   constructor(
-    private tramiteQuery: Tramite240101Query,
-    private tramiteStore: Tramite240101Store
+    private tramiteQuery: Tramite240120Query,
+    private tramiteStore: Tramite240120Store
   ) // eslint-disable-next-line no-empty-function
   {}
 
