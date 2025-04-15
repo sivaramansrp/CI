@@ -222,7 +222,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    * Crea un nuevo formulario reactivo con los campos necesarios.
    */
   crearNuevoFormularioMercancia(data?: ConfiguracionItem): void {
-    const DEFAULT_DATA: ConfiguracionItem = {
+    const DATOS_PREDETERMINADOS: ConfiguracionItem = {
       id: 0,
       marca: '',
       modelo: '',
@@ -238,27 +238,27 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     };
 
     this.formularioMercancia = this.formBuilder.group({
-      id: [DEFAULT_DATA.id],
-      marca: [DEFAULT_DATA.marca, Validators.required],
-      modelo: [DEFAULT_DATA.modelo, Validators.required],
-      serie: [DEFAULT_DATA.serie, Validators.required],
-      voltaje: [DEFAULT_DATA.voltaje, Validators.required],
+      id: [DATOS_PREDETERMINADOS.id],
+      marca: [DATOS_PREDETERMINADOS.marca, Validators.required],
+      modelo: [DATOS_PREDETERMINADOS.modelo, Validators.required],
+      serie: [DATOS_PREDETERMINADOS.serie, Validators.required],
+      voltaje: [DATOS_PREDETERMINADOS.voltaje, Validators.required],
       unidadMedidaVoltaje: [
-        DEFAULT_DATA.unidadMedidaVoltaje,
+        DATOS_PREDETERMINADOS.unidadMedidaVoltaje,
         Validators.required,
       ],
-      corriente: [DEFAULT_DATA.corriente, Validators.required],
+      corriente: [DATOS_PREDETERMINADOS.corriente, Validators.required],
       unidadMedidaCorriente: [
-        DEFAULT_DATA.unidadMedidaCorriente,
+        DATOS_PREDETERMINADOS.unidadMedidaCorriente,
         Validators.required,
       ],
-      numEquipos: [DEFAULT_DATA.numEquipos, Validators.required],
+      numEquipos: [DATOS_PREDETERMINADOS.numEquipos, Validators.required],
       fraccionArancelaria: [
-        DEFAULT_DATA.fraccionArancelaria,
+        DATOS_PREDETERMINADOS.fraccionArancelaria,
         Validators.required,
       ],
       fraccionDescripcion: [
-        DEFAULT_DATA.fraccionDescripcion,
+        DATOS_PREDETERMINADOS.fraccionDescripcion,
         Validators.required,
       ],
     });
@@ -299,12 +299,12 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    * Actualiza la fila seleccionada con los datos más recientes de la tabla.
    */
   actualizarFilaSeleccionada(): void {
-    const UPDATED_DATA = this.datosTablaMercancia.find(
+    const DATOS_ACTUALIZADOS = this.datosTablaMercancia.find(
       (item) => item.id === this.filaSeleccionadaMercancia.id
     );
 
-    if (UPDATED_DATA) {
-      this.filaSeleccionadaMercancia = { ...UPDATED_DATA };
+    if (DATOS_ACTUALIZADOS) {
+      this.filaSeleccionadaMercancia = { ...DATOS_ACTUALIZADOS };
     }
   }
 
@@ -315,7 +315,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    */
   modificarItemMercancia(): void {
     if (this.listaFilaSeleccionadaMercancia.length < 2) {
-      const GET_INDEX = (array: Catalogo[], value: string): number =>
+      const OBTENER_INDICE = (array: Catalogo[], value: string): number =>
         array.findIndex((item) => item.descripcion === value) + 1;
       
       this.actualizarFilaSeleccionada();
@@ -329,16 +329,16 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
         modelo: this.filaSeleccionadaMercancia.modelo,
         serie: this.filaSeleccionadaMercancia.serie,
         voltaje: this.filaSeleccionadaMercancia.voltaje,
-        unidadMedidaVoltaje: GET_INDEX(
+        unidadMedidaVoltaje: OBTENER_INDICE(
           this.autorizacionDeRayosXService.unidadMedidaVoltaje,
           this.filaSeleccionadaMercancia.unidadMedidaVoltaje
         ).toString(),
         corriente: this.filaSeleccionadaMercancia.corriente,
-        unidadMedidaCorriente: GET_INDEX(
+        unidadMedidaCorriente: OBTENER_INDICE(
           this.autorizacionDeRayosXService.unidadMedidaCorriente,
           this.filaSeleccionadaMercancia.unidadMedidaCorriente
         ).toString(),        
-        fraccionArancelaria: GET_INDEX(
+        fraccionArancelaria: OBTENER_INDICE(
           this.autorizacionDeRayosXService.fraccionArancelaria,
           this.filaSeleccionadaMercancia.fraccionArancelaria
         ).toString(),
@@ -471,7 +471,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    * y actualiza el estado del almacén correspondiente.
    */
   enviarFormularioMercancia(): void {
-    const GET_DESCRIPTION = (array: Catalogo[], index: number): string => array[index - 1]?.descripcion || '';
+    const OBTENER_DESCRIPCION = (array: Catalogo[], index: number): string => array[index - 1]?.descripcion || '';
   
     const TABLA_ROW: ConfiguracionItem = {
       id: this.esOperacionDeActualizacion
@@ -481,16 +481,16 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
       modelo: this.formularioMercancia.get('modelo')?.value,
       serie: this.formularioMercancia.get('serie')?.value,
       voltaje: this.formularioMercancia.get('voltaje')?.value,
-      unidadMedidaVoltaje: GET_DESCRIPTION(
+      unidadMedidaVoltaje: OBTENER_DESCRIPCION(
         this.autorizacionDeRayosXService.unidadMedidaVoltaje,
         this.formularioMercancia.get('unidadMedidaVoltaje')?.value
       ),
       corriente: this.formularioMercancia.get('corriente')?.value,
-      unidadMedidaCorriente: GET_DESCRIPTION(
+      unidadMedidaCorriente: OBTENER_DESCRIPCION(
         this.autorizacionDeRayosXService.unidadMedidaCorriente,
         this.formularioMercancia.get('unidadMedidaCorriente')?.value
       ),
-      fraccionArancelaria: GET_DESCRIPTION(
+      fraccionArancelaria: OBTENER_DESCRIPCION(
         this.autorizacionDeRayosXService.fraccionArancelaria,
         this.formularioMercancia.get('fraccionArancelaria')?.value
       ),

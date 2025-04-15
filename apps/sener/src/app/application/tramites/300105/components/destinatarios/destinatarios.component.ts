@@ -205,7 +205,7 @@ export class DestinatariosComponent implements OnInit, OnDestroy {
     * Si no se proporciona, se utilizarán valores predeterminados.
     */
   crearNuevoFormularioMercancia(data?: DestinatarioConfiguracionItem): void {
-    const DEFAULT_DATA: DestinatarioConfiguracionItem = {
+    const DATOS_PREDETERMINADOS: DestinatarioConfiguracionItem = {
       id: 0,
       denominacionRazon: '',
       domicilio: '',
@@ -217,20 +217,20 @@ export class DestinatariosComponent implements OnInit, OnDestroy {
     };
 
     this.formularioMercancia = this.formBuilder.group({
-      id: [DEFAULT_DATA.id],
+      id: [DATOS_PREDETERMINADOS.id],
       denominacionRazon: [
-        DEFAULT_DATA.denominacionRazon,
+        DATOS_PREDETERMINADOS.denominacionRazon,
         [Validators.required],
       ],
-      domicilio: [DEFAULT_DATA.domicilio, [Validators.required]],
-      pais: [DEFAULT_DATA.pais, [Validators.required]],
+      domicilio: [DATOS_PREDETERMINADOS.domicilio, [Validators.required]],
+      pais: [DATOS_PREDETERMINADOS.pais, [Validators.required]],
       correo: [
-        DEFAULT_DATA.correo,
+        DATOS_PREDETERMINADOS.correo,
         [Validators.required],
       ],
-      paginaWeb: [DEFAULT_DATA.paginaWeb, [Validators.required]],
+      paginaWeb: [DATOS_PREDETERMINADOS.paginaWeb, [Validators.required]],
       tipoMercancia: [
-        DEFAULT_DATA.tipoMercancia,
+        DATOS_PREDETERMINADOS.tipoMercancia,
         [Validators.required],
       ]
     });
@@ -270,12 +270,12 @@ export class DestinatariosComponent implements OnInit, OnDestroy {
    * Actualiza la fila seleccionada con los datos más recientes de la tabla.
    */
   actualizarFilaSeleccionada(): void {
-    const UPDATED_DATA = this.datosTablaDestinatario.find(
+    const DATOS_ACTUALIZADOS = this.datosTablaDestinatario.find(
       (item) => item.id === this.filaSeleccionadaMercancia.id
     );
 
-    if (UPDATED_DATA) {
-      this.filaSeleccionadaMercancia = { ...UPDATED_DATA };
+    if (DATOS_ACTUALIZADOS) {
+      this.filaSeleccionadaMercancia = { ...DATOS_ACTUALIZADOS };
     }
   }
 
@@ -286,7 +286,7 @@ export class DestinatariosComponent implements OnInit, OnDestroy {
    */
   modificarItemMercancia(): void {
     if (this.listaFilaSeleccionadaMercancia.length < 2) {
-      const GET_INDEX = (array: Catalogo[], value: string): number =>
+      const OBTENER_INDICE = (array: Catalogo[], value: string): number =>
         array.findIndex((item) => item.descripcion === value) + 1;
       
       this.actualizarFilaSeleccionada();
@@ -294,7 +294,7 @@ export class DestinatariosComponent implements OnInit, OnDestroy {
         const DESTINATARIO_CONFIGURACION_ITEM: DestinatarioConfiguracionItem = {
         denominacionRazon: this.filaSeleccionadaMercancia.denominacionRazon,
         domicilio: this.filaSeleccionadaMercancia.domicilio,
-        pais: GET_INDEX(
+        pais: OBTENER_INDICE(
           this.autorizacionDeRayosXService.pais,
           this.filaSeleccionadaMercancia.pais
         ).toString(),
@@ -327,12 +327,12 @@ export class DestinatariosComponent implements OnInit, OnDestroy {
  * Actualiza el estado del almacén y cierra el popup de confirmación de eliminación.
  */
   eliminarMercanciaItem(): void {
-    const IDS_TO_DELETE = this.listaFilaSeleccionadaMercancia.map(
+    const IDS_A_BORRAR = this.listaFilaSeleccionadaMercancia.map(
       (item) => item.id
     );
 
     this.datosTablaDestinatario = this.datosTablaDestinatario.filter(
-      (item) => !IDS_TO_DELETE.includes(item.id)
+      (item) => !IDS_A_BORRAR.includes(item.id)
     );
 
     this.listaFilaSeleccionadaMercancia = [];
@@ -408,7 +408,7 @@ export class DestinatariosComponent implements OnInit, OnDestroy {
    * y actualiza el estado del almacén correspondiente.
    */
   enviarFormularioMercancia(): void {
-    const GET_DESCRIPTION = (array: Catalogo[], index: number): string => array[index - 1]?.descripcion || '';
+    const OBTENER_DESCRIPCION = (array: Catalogo[], index: number): string => array[index - 1]?.descripcion || '';
   
     const TABLA_ROW: DestinatarioConfiguracionItem = {
       id: this.esOperacionDeActualizacion
@@ -416,13 +416,13 @@ export class DestinatariosComponent implements OnInit, OnDestroy {
         : this.datosTablaDestinatario.length + 1,
       denominacionRazon: this.formularioMercancia.get('denominacionRazon')?.value,
       domicilio: this.formularioMercancia.get('domicilio')?.value,
-      pais: GET_DESCRIPTION(
+      pais: OBTENER_DESCRIPCION(
         this.autorizacionDeRayosXService.pais,
         this.formularioMercancia.get('pais')?.value
       ),
       correo: this.formularioMercancia.get('correo')?.value,
       paginaWeb: this.formularioMercancia.get('paginaWeb')?.value,
-      tipoMercancia: GET_DESCRIPTION(
+      tipoMercancia: OBTENER_DESCRIPCION(
         this.autorizacionDeRayosXService.tipoMercancia,
         this.formularioMercancia.get('tipoMercancia')?.value
       ),
