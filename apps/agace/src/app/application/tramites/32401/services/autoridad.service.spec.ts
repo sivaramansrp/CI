@@ -5,7 +5,7 @@ import {
 } from '@angular/common/http/testing';
 import { AutoridadService } from './autoridad.service';
 import { CatalogosSelect } from '@libs/shared/data-access-user/src';
-import { RespuestaContenedor } from '../models/datos-tramite.model';
+import { CapturarElTextoLibre, RespuestaContenedor } from '../models/datos-tramite.model';
 
 describe('AutoridadService', () => {
   let service: AutoridadService;
@@ -113,6 +113,35 @@ describe('AutoridadService', () => {
     });
 
     const req = httpMock.expectOne('assets/json/32401/contenedorLista.json');
+    expect(req.request.method).toBe('GET');
+    req.flush(mockResponse);
+  });
+
+  it('should fetch CapturarElTextoLibre data', (done) => {
+    const mockResponse: CapturarElTextoLibre = {
+      detalles_de_administracion_1:
+        'Administración General de Auditoría de Comercio Exterior',
+      detalles_de_administracion_2:
+        'Administración central de Certificacion y Asintos Internacionales de Auditoria de',
+      detalles_de_administracion_3:
+        ' Administración de Certificacion y Asintos Internacionales de Auditoria de Camerdo',
+      exterior: "Exterior '2'",
+      officio: 'Officio',
+      ciudad_de_mexico: 'Ciudad de Mexico, a',
+      direccion_1: 'HOTEL Y RESAURANT RITZ DE TAB SA DE CV',
+      direccion_2:
+        'CALZADA DE MARISOLES LT1 47, COL.FRACC. INDUSTRVANERA, CP. 76900, CORREGIDORA, QUERÉTARO',
+      identificacion: 'COR8002198KA',
+    };
+
+    service.agregarCapturarElTextoLibre().subscribe((response) => {
+      expect(response).toEqual(mockResponse);
+      done();
+    });
+
+    const req = httpMock.expectOne(
+      'assets/json/32401/capturar-el-texto-libre.json'
+    );
     expect(req.request.method).toBe('GET');
     req.flush(mockResponse);
   });

@@ -5,7 +5,7 @@
 export interface TramiteList {
   /** Descripción del trámite. */
   descripcion: string;
-  
+
   /** Identificador único del trámite. */
   id: number;
 }
@@ -17,10 +17,10 @@ export interface TramiteList {
 export interface RespuestaTramite {
   /** Código de estado de la respuesta. */
   code: number;
-  
+
   /** Lista de trámites obtenida de la API. */
   data: TramiteList[];
-  
+
   /** Mensaje adicional proporcionado en la respuesta. */
   message: string;
 }
@@ -31,7 +31,7 @@ export interface RespuestaTramite {
 export interface Contenedores {
   /** Tipo del contenedor. */
   tipo: string;
-  
+
   /** Identificador único del contenedor. */
   id: string;
 }
@@ -43,10 +43,10 @@ export interface Contenedores {
 export interface RespuestaContenedor {
   /** Indica si la operación fue exitosa. */
   success: boolean;
-  
+
   /** Datos de la tabla asociados al contenedor. */
   datos: DatosDeLaTabla;
-  
+
   /** Mensaje adicional proporcionado en la respuesta. */
   message: string;
 }
@@ -58,10 +58,10 @@ export interface RespuestaContenedor {
 export interface RespuestaContenedores {
   /** Código de estado de la respuesta. */
   code: number;
-  
+
   /** Lista de contenedores obtenida de la API. */
   data: Contenedores[];
-  
+
   /** Mensaje adicional proporcionado en la respuesta. */
   message: string;
 }
@@ -73,19 +73,19 @@ export interface RespuestaContenedores {
 export interface DatosDeLaTabla {
   /** Identificador único del registro de la tabla. */
   id: number;
-  
+
   /** Folio del trámite asociado. */
   folioTramite: string;
-  
+
   /** Tipo de trámite realizado. */
   tipoTramite: string;
-  
+
   /** RFC del usuario asociado al trámite. */
   rfc: string;
-  
+
   /** Razón social asociada al trámite. */
   razonSocial: string;
-  
+
   /** Estado actual del trámite. */
   estadoDelTramite: string;
 }
@@ -96,7 +96,41 @@ export interface DatosDeLaTabla {
 export interface FolioTramite {
   /** Folio único del trámite. */
   folioTramite: string;
-  
+
   /** Tipo de trámite realizado. */
   tipoTramite: string;
 }
+
+/**
+ * Interfaz que representa los datos para capturar el texto libre.
+ * Contiene detalles administrativos, dirección y otros campos relevantes.
+ */
+export interface CapturarElTextoLibre {
+  /** Detalles administrativos, primera sección. */
+  detalles_de_administracion_1: string;
+
+  /** Detalles administrativos, segunda sección. */
+  detalles_de_administracion_2: string;
+
+  /** Detalles administrativos, tercera sección. */
+  detalles_de_administracion_3: string;
+
+  /** Campo para datos relacionados con el exterior. */
+  exterior: string;
+
+  /** Campo para datos del oficio. */
+  officio: string;
+
+  /** Ubicación en la Ciudad de México. */
+  ciudad_de_mexico: string;
+
+  /** Primera dirección proporcionada. */
+  direccion_1: string;
+
+  /** Segunda dirección proporcionada. */
+  direccion_2: string;
+
+  /** Identificación del texto libre. */
+  identificacion: string;
+}
+

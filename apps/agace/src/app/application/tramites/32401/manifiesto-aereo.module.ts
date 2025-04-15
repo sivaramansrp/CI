@@ -25,7 +25,6 @@ import { provideHttpClient } from '@angular/common/http';
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    FormsModule,
     ManifiestoAereoRoutingModule,
     WizardComponent,
     FirmaElectronicaComponent,
@@ -37,7 +36,7 @@ import { provideHttpClient } from '@angular/common/http';
     InputRadioComponent,
     SolicitarRequerimientoComponent,
     RequirementoComponent,
-    SeleccionarDocumentosComponent
+    SeleccionarDocumentosComponent,
   ],
   providers: [
     AutoridadService,
@@ -48,7 +47,7 @@ import { provideHttpClient } from '@angular/common/http';
 })
 
 /**
- * Este módulo se utiliza para configurar los componentes del módulo 31601.
+ * Este módulo se utiliza para configurar los componentes del módulo 32401.
  * Importar los componentes del módulo.
  */
 export class ManifiestoAereoModule {}

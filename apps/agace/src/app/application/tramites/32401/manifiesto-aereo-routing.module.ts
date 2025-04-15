@@ -31,7 +31,7 @@ const ROUTES: Routes = [
 })
 
 /**
- * Este módulo se utiliza para configurar las rutas del módulo 31601.
+ * Este módulo se utiliza para configurar las rutas del módulo 32401.
  * Importar las rutas del módulo.
  */
 export class ManifiestoAereoRoutingModule {}
