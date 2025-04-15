@@ -33,13 +33,6 @@ describe('PartidasDeLaMercanciaComponent', () => {
 
     fixture = TestBed.createComponent(PartidasDeLaMercanciaComponent);
     component = fixture.componentInstance;
-    // component.ninoFormGroup = new FormGroup({
-    //   cantidad: new FormControl(10),
-    //   fraccion_arancelaria_tigie: new FormControl('1234.56.78'),
-    //   descripcion: new FormControl('Producto de prueba'),
-    //   valor_partida_usd: new FormControl(100)
-    // });
-
     component.datosTabla = [];
   });
 
@@ -64,9 +57,9 @@ describe('PartidasDeLaMercanciaComponent', () => {
   it('should push product to datosTabla and call store when form is valid', () => {
     const mockFormGroup = new FormGroup({
       cantidad: new FormControl(10),
-      fraccion_arancelaria_tigie: new FormControl('1234.56.78'),
+      fraccionArancelariaTigie: new FormControl('1234.56.78'),
       descripcion: new FormControl('Producto de prueba'),
-      valor_partida_usd: new FormControl(100)
+      valorPartidaUsd: new FormControl(100)
     });
   
     jest.spyOn(component as any, 'ninoFormGroup', 'get').mockReturnValue(mockFormGroup);
@@ -75,11 +68,11 @@ describe('PartidasDeLaMercanciaComponent', () => {
     expect(component.datosTabla[0]).toEqual({
       id: 1,
       cantidad: 10,
-      unidad_de_medida: 'Caja',
-      fraccion_arancelaria_tigie: '1234.56.78',
+      unidadDeMedida: 'Caja',
+      fraccionArancelariaTigie: '1234.56.78',
       descripcion: 'Producto de prueba',
-      precio_unitario: '1.000',
-      total_usd: 100
+      precioUnitario: '1.000',
+      totalUsd: 100
     });
     expect(tramite130103StoreMock.setDynamicFieldValue).toHaveBeenCalledWith(
       'producto',

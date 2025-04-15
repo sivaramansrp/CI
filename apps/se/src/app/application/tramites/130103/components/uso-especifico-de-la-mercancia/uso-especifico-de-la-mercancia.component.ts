@@ -106,7 +106,7 @@ export class UsoEspecificoDeLaMercanciaComponent implements OnInit, OnDestroy {
     { encabezado: '', clave: (artículo) => artículo.id, orden: 1 },
     {
       encabezado: 'Fracción Arancelaria',
-      clave: (artículo) => artículo.fraccion_arancelaria_prosec,
+      clave: (artículo) => artículo.fraccionArancelariaProsec,
       orden: 2,
     },
     {

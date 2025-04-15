@@ -14,10 +14,10 @@ describe('UsoEspecificoDeLaMercanciaComponent', () => {
     especifico: {
       id: 1,
       descripcion: 'Producto de prueba',
-      fraccion_arancelaria_tigie: '1234.56.78',
+      fraccionArancelariaTigie: '1234.56.78',
       cantidad: 10,
-      total_usd: 100,
-      unidad_de_medida: 'Caja'
+      totalUsd: 100,
+      unidadDeMedida: 'Caja'
     }
   };
   const tramite130103QueryMock = {
@@ -89,7 +89,7 @@ describe('UsoEspecificoDeLaMercanciaComponent', () => {
   it('should push ESPECIFICO to datosTabla and call store when form is valid', () => {
     component.ninoFormGroup.patchValue({
       descripcion: 'Producto agregado',
-      fraccion_arancelaria: 'dummy'
+      fraccionArancelaria: 'dummy'
     });
     component.prosec = 'PROSEC Sample';
     component.datosTabla = [];
@@ -106,10 +106,10 @@ describe('UsoEspecificoDeLaMercanciaComponent', () => {
     const producto = {
       id: 1,
       descripcion: 'Producto de prueba',
-      fraccion_arancelaria_tigie: '1234.56.78',
+      fraccionArancelariaTigie: '1234.56.78',
       cantidad: 10,
-      total_usd: 100,
-      unidad_de_medida: 'Caja'
+      totalUsd: 100,
+      unidadDeMedida: 'Caja'
     };
     tramite130103QueryMock.selectImportacion$ = of({ 
       some: 'state', 
@@ -129,7 +129,5 @@ describe('UsoEspecificoDeLaMercanciaComponent', () => {
     expect(nextSpy).toHaveBeenCalled();
     expect(completeSpy).toHaveBeenCalled();
   });
-  
-  
   
 });

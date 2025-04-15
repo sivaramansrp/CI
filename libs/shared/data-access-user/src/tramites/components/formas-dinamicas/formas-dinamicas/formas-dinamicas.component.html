@@ -3,22 +3,22 @@
 }
 <form [formGroup]="forma">
     @for (item of formularioDatos; track item.campo; let i = $index) {
-            @switch(item.tipo_input) {
+            @switch(item.tipoInput) {
                 @case ('text') {
-                    <div [ngClass]="[obtenerClaseResponsiva(item.clase), 'mt-' + item.margin_top]">
+                    <div [ngClass]="[obtenerClaseResponsiva(item.clase), 'mt-' + item.marginTop]">
                         <div class="form-group">
                           <label class="form-label" [for]="item.id">{{
-                            item.label_nombre
+                            item.labelNombre
                           }} {{seRequiere(item.campo) ? '*:' : ':'}}</label>
 
                           <input
                             class="form-control"
                             type="text"
                             [id]="item.id"
-                            [placeholder]="item.marcador_de_posicion"
+                            [placeholder]="item.marcadorDePosicion"
                             [formControlName]="item.campo"
                             [required]="seRequiere(item.campo)"
-                            [readonly]="item.solo_lectura"
+                            [readonly]="item.soloLectura"
                             [ngClass]="esValido(item.campo) ? 'required' : ''"
                             (change)="eventoDeCambioDeValor($event, item.campo)"
                           />
@@ -31,20 +31,20 @@
                         </div>
                       </div>
                 }  @case ('number') {
-                    <div [ngClass]="[obtenerClaseResponsiva(item.clase), 'mt-' + item.margin_top]">
+                    <div [ngClass]="[obtenerClaseResponsiva(item.clase), 'mt-' + item.marginTop]">
                         <div class="form-group">
                           <label class="form-label" [for]="item.id">{{
-                            item.label_nombre
+                            item.labelNombre
                           }} {{seRequiere(item.campo) ? '*:' : ':'}}</label>
 
                           <input
                             class="form-control"
                             type="number"
                             [id]="item.id"
-                            [placeholder]="item.marcador_de_posicion"
+                            [placeholder]="item.marcadorDePosicion"
                             [formControlName]="item.campo"
                             [required]="seRequiere(item.campo)"
-                            [readonly]="item.solo_lectura"
+                            [readonly]="item.soloLectura"
                             [ngClass]="esValido(item.campo) ? 'required' : ''"
                             (change)="eventoDeCambioDeValor($event, item.campo)"
                           />
@@ -56,18 +56,18 @@
                         </div>
                       </div>
                 } @case ('textarea') {
-                    <div [ngClass]="[obtenerClaseResponsiva(item.clase), 'mt-' + item.margin_top]">
-                        <label for="{{ item.id }}">{{ item.label_nombre }} {{seRequiere(item.campo) ? '*:' : ':'}}</label>
+                    <div [ngClass]="[obtenerClaseResponsiva(item.clase), 'mt-' + item.marginTop]">
+                        <label for="{{ item.id }}">{{ item.labelNombre }} {{seRequiere(item.campo) ? '*:' : ':'}}</label>
 
                         <textarea
                           class="form-control"
-                          name="{{ item.label_nombre }}"
+                          name="{{ item.labelNombre }}"
                           id="{{ item.id }}"
                           rows="5"
                           style="height: 100px !important"
                           [formControlName]="item.campo"
                           [required]="seRequiere(item.campo)"
-                          [readonly]="item.solo_lectura"
+                          [readonly]="item.soloLectura"
                           [ngClass]="esValido(item.campo) ? 'required' : ''"
                           (change)="eventoDeCambioDeValor($event, item.campo)"
                         ></textarea>
@@ -79,14 +79,14 @@
                           ></validadores-de-formularios>
                       </div>
                   } @case ('select-catalogos') {
-                    <div [ngClass]="[obtenerClaseResponsiva(item.clase), 'mt-' + item.margin_top]">
+                    <div [ngClass]="[obtenerClaseResponsiva(item.clase), 'mt-' + item.marginTop]">
                       <app-catalogo-select
                         id="{{item.id}}"
                         [catalogo]="item?.opciones || []" 
                         [formControlName]="item.campo" 
-                        [label]="item.label_nombre" 
+                        [label]="item.labelNombre" 
                         [required]="seRequiere(item.campo)"
-                        [placeholder]="item.marcador_de_posicion || ''" 
+                        [placeholder]="item.marcadorDePosicion || ''" 
                         name=""
                         (selectionChange)="eventoDeCambioDeValor($event, item.campo)"
                       ></app-catalogo-select>
@@ -100,7 +100,7 @@
                     </div>
                   } @case ('checkbox') {
                     <div
-                    [ngClass]="[obtenerClaseResponsiva(item.clase), 'mt-' + item.margin_top]"
+                    [ngClass]="[obtenerClaseResponsiva(item.clase), 'mt-' + item.marginTop]"
                       class="formas-checkbox">
                     <div class="form-group checkbox-group w-100">
                       <input
@@ -111,27 +111,27 @@
                         (change)="eventoDeCambioDeValor($event, item.campo)"
                       />
                       <label class="form-label" [for]="item.id" style="margin-left: 10px;">{{
-                        item.label_nombre
+                        item.labelNombre
                       }} {{seRequiere(item.campo) ? '*:' : ':'}}</label>
                     </div>
                     </div>
                   } @case ('button') {
-                    <div [ngClass]="[obtenerClaseResponsiva(item.clase), 'mt-' + item.margin_top]">
+                    <div [ngClass]="[obtenerClaseResponsiva(item.clase), 'mt-' + item.marginTop]">
                       <div class="form-group">
                         <input 
                           [id]="item.id"
                           type="button" 
                           class="btn btn-primary" 
-                          [value]="item.label_nombre" 
+                          [value]="item.labelNombre" 
                           (click)="alHacerClicEnElBoton(item)" 
                         />
                       </div>
                     </div>
                   } @case ('radio') {
-                    <div [ngClass]="[obtenerClaseResponsiva(item.clase), 'mt-' + item.margin_top]">
+                    <div [ngClass]="[obtenerClaseResponsiva(item.clase), 'mt-' + item.marginTop]">
                       <div class="form-group">
                         <label class="form-label" [for]="item.id">{{
-                          item.label_nombre
+                          item.labelNombre
                         }} {{seRequiere(item.campo) ? '*:' : ':'}}</label>
                         <app-input-radio
                           [radioOptions]="item.opciones || []"
@@ -145,7 +145,7 @@
                       </div>
                     </div>
                   } @case ('') {
-                    <div [ngClass]="[obtenerClaseResponsiva(item.clase), 'mt-' + item.margin_top]">
+                    <div [ngClass]="[obtenerClaseResponsiva(item.clase), 'mt-' + item.marginTop]">
                     </div>
                   }
             }

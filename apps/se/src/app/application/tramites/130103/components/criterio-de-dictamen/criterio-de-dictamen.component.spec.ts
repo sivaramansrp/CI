@@ -45,15 +45,15 @@ describe('CriterioDeDictamenComponent', () => {
     ];
     const mockField = {
       id: '1',
-      label_nombre: 'Label 1',
+      labelNombre: 'Label 1',
       campo: 'solicitud_mercancia',
       clase: 'clase-1',
-      tipo_input: 'text',
+      tipoInput: 'text',
       desactivado: false,
-      solo_lectura: false,
+      soloLectura: false,
       validadores: [{ tipo: 'required' }],
-      marcador_de_posicion: 'Placeholder',
-      margin_top: 10,
+      marcadorDePosicion: 'Placeholder',
+      marginTop: 10,
       opciones: undefined,
     };
     component.criterioDeDictamenFormData = [mockField];
@@ -69,15 +69,15 @@ describe('CriterioDeDictamenComponent', () => {
   it('should do nothing if campo does not exist', () => {
     const nonMatchingField = {
       id: '2',
-      label_nombre: 'Label 2',
+      labelNombre: 'Label 2',
       campo: 'otro_campo',
       clase: 'clase-2',
-      tipo_input: 'text',
+      tipoInput: 'text',
       desactivado: false,
-      solo_lectura: false,
+      soloLectura: false,
       validadores: [{ tipo: 'required' }],
-      marcador_de_posicion: 'Placeholder 2',
-      margin_top: 5,
+      marcadorDePosicion: 'Placeholder 2',
+      marginTop: 5,
       opciones: undefined,
     };
     component.criterioDeDictamenFormData = [nonMatchingField];
@@ -90,15 +90,15 @@ describe('CriterioDeDictamenComponent', () => {
     const existingOptions = [{ id: 999, descripcion: 'Existente' }];
     const mockField = {
       id: '1',
-      label_nombre: 'Label 1',
+      labelNombre: 'Label 1',
       campo: 'solicitud_mercancia',
       clase: 'clase-1',
-      tipo_input: 'text',
+      tipoInput: 'text',
       desactivado: false,
-      solo_lectura: false,
+      soloLectura: false,
       validadores: [{ tipo: 'required' }],
-      marcador_de_posicion: 'Placeholder',
-      margin_top: 10,
+      marcadorDePosicion: 'Placeholder',
+      marginTop: 10,
       opciones: existingOptions,
     };
     component.criterioDeDictamenFormData = [mockField];

@@ -47,17 +47,17 @@ describe('PaisProcedenciaComponent - ngOnInit', () => {
     component.paisProcedenciaFormData = [
       {
         id: 'bloque',
-        label_nombre: 'Bloque',
+        labelNombre: 'Bloque',
         campo: 'bloque',
         clase: 'col-md-4',
-        tipo_input: 'select-catalogos',
+        tipoInput: 'select-catalogos',
         desactivado: false,
-        solo_lectura: false,
+        soloLectura: false,
         validadores: [
           { tipo: '' }
         ],
-        marcador_de_posicion: 'Selecciona un valor',
-        margin_top: 0
+        marcadorDePosicion: 'Selecciona un valor',
+        marginTop: 0
       } as any
     ];
   });

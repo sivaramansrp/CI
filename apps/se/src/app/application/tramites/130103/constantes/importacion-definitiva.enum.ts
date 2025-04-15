@@ -1,7 +1,7 @@
 /**
-  * @constant DATOS_DEL_TRAMITE_REALIZER
+  * @constant DATOS_DEL_TRAMITE_REALIZAR
   * @description
-  * Este objeto define la configuración de los campos del formulario para los datos del trámite realizer 
+  * Este objeto define la configuración de los campos del formulario para los datos del trámite realizar 
   * en el proceso de importación definitiva. Cada campo incluye propiedades como el identificador, 
   * nombre del campo, tipo de entrada, validadores, y opciones dinámicas.
   * 
@@ -15,24 +15,24 @@
   * - `clasificacion`: Campo de tipo select-catalogos para seleccionar la clasificación del régimen.
   * 
   * @example
-  * const solicitudField = DATOS_DEL_TRAMITE_REALIZER.find(field => field.id === 'solicitud');
-  * console.log(solicitudField.label_nombre); // "Solicitud"
+  * const solicitudField = DATOS_DEL_TRAMITE_REALIZAR.find(field => field.id === 'solicitud');
+  * console.log(solicitudField.labelNombre); // "Solicitud"
   */
-export const DATOS_DEL_TRAMITE_REALIZER = [
+export const DATOS_DEL_TRAMITE_REALIZAR = [
   {
       id: 'solicitud',
-      label_nombre: 'Solicitud',
+      labelNombre: 'Solicitud',
       campo: 'solicitud',
       clase: 'col-md-4',
-      tipo_input: 'radio',
+      tipoInput: 'radio',
       desactivado: false,
-      solo_lectura: false,
+      soloLectura: false,
       validadores: [
         { tipo: 'required' }
       ],
-      valor_predeterminado: 'inicial',
-      marcador_de_posicion: '',
-      margin_top: 0,
+      valorPredeterminado: 'inicial',
+      marcadorDePosicion: '',
+      marginTop: 0,
       opciones: [
           {
           "label": "Inicial", 
@@ -42,46 +42,46 @@ export const DATOS_DEL_TRAMITE_REALIZER = [
   },
   {
       id: 'regimen',
-      label_nombre: 'Régimen al que se destinará la mercancía',
+      labelNombre: 'Régimen al que se destinará la mercancía',
       campo: 'regimen',
       clase: 'col-md-8',
-      tipo_input: 'select-catalogos',
+      tipoInput: 'select-catalogos',
       desactivado: false,
-      solo_lectura: false,
+      soloLectura: false,
       validadores: [
           { tipo: 'required' }
         ],
-      marcador_de_posicion: 'Selecciona un valor',
-      valor_predeterminado: '',
-      margin_top: 0
+      marcadorDePosicion: 'Selecciona un valor',
+      valorPredeterminado: '',
+      marginTop: 0
   },
   {
     id: '',
-    label_nombre: '',
+    labelNombre: '',
     campo: '',
     clase: 'col-md-4',
-    tipo_input: '',
+    tipoInput: '',
     desactivado: false,
-    solo_lectura: false,
+    soloLectura: false,
     validadores: [],
-    marcador_de_posicion: '',
-    valor_predeterminado: '',
-    margin_top: 0
+    marcadorDePosicion: '',
+    valorPredeterminado: '',
+    marginTop: 0
 },
 {
   id: 'clasificacion',
-  label_nombre: 'Clasificación del régimen',
+  labelNombre: 'Clasificación del régimen',
   campo: 'clasificacion',
   clase: 'col-md-8',
-  tipo_input: 'select-catalogos',
+  tipoInput: 'select-catalogos',
   desactivado: false,
-  solo_lectura: false,
+  soloLectura: false,
   validadores: [
       { tipo: 'required' }
     ],
-  marcador_de_posicion: 'Selecciona un valor',
-  valor_predeterminado: '',
-  margin_top: 0
+  marcadorDePosicion: 'Selecciona un valor',
+  valorPredeterminado: '',
+  marginTop: 0
 },
 ];
 
@@ -106,23 +106,23 @@ export const DATOS_DEL_TRAMITE_REALIZER = [
   * 
   * @example
   * const productoField = DATOS_DE_LA_MERCANCIA.find(field => field.id === 'producto');
-  * console.log(productoField.label_nombre); // "Producto"
+  * console.log(productoField.labelNombre); // "Producto"
   */
 export const DATOS_DE_LA_MERCANCIA = [
   {
     id: 'producto',
-    label_nombre: 'Producto',
+    labelNombre: 'Producto',
     campo: 'producto',
     clase: 'col-md-4',
-    tipo_input: 'radio',
+    tipoInput: 'radio',
     desactivado: false,
-    solo_lectura: false,
+    soloLectura: false,
     validadores: [
       { tipo: 'required' }
     ],
-    marcador_de_posicion: '',
-    valor_predeterminado: 'nuevo',
-    margin_top: 0,
+    marcadorDePosicion: '',
+    valorPredeterminado: 'nuevo',
+    marginTop: 0,
     layout: 'vertical',
     opciones: [
       {
@@ -137,76 +137,76 @@ export const DATOS_DE_LA_MERCANCIA = [
   },
   {
     id: 'descripcion',
-    label_nombre: 'Descripción de la mercancía',
+    labelNombre: 'Descripción de la mercancía',
     campo: 'descripcion',
     clase: 'col-md-8',
-    tipo_input: 'textarea',
+    tipoInput: 'textarea',
     desactivado: false,
-    solo_lectura: false,
+    soloLectura: false,
     validadores: [
       {
         tipo: 'required',
         mensaje: ''
       }
     ],
-    marcador_de_posicion: '',
-    margin_top: 0
+    marcadorDePosicion: '',
+    marginTop: 0
   },
   {
     id: 'fraccion_arancelaria',
-    label_nombre: 'Fracción Arancelaria',
+    labelNombre: 'Fracción Arancelaria',
     campo: 'fraccion_arancelaria',
     clase: 'col-md-12',
-    tipo_input: 'select-catalogos',
+    tipoInput: 'select-catalogos',
     desactivado: false,
-    solo_lectura: false,
+    soloLectura: false,
     validadores: [
       { tipo: 'required' }
     ],
-    margin_top: 0,
-    marcador_de_posicion: 'Selecciona un valor'
+    marginTop: 0,
+    marcadorDePosicion: 'Selecciona un valor'
   },
   {
     id: 'unidad_de_medida',
-    label_nombre: 'Unidad de medida',
+    labelNombre: 'Unidad de medida',
     campo: 'unidad_de_medida',
     clase: 'col-md-4',
-    tipo_input: 'select-catalogos',
+    tipoInput: 'select-catalogos',
     desactivado: false,
-    solo_lectura: false,
+    soloLectura: false,
     validadores: [
       { tipo: 'required' }
     ],
-    marcador_de_posicion: 'Selecciona un valor',
-    margin_top: 0
+    marcadorDePosicion: 'Selecciona un valor',
+    marginTop: 0
   },
   {
     id: 'cantidad',
-    label_nombre: 'Cantidad',
+    labelNombre: 'Cantidad',
     campo: 'cantidad',
     clase: 'col-md-4',
-    tipo_input: 'number',
+    tipoInput: 'number',
     desactivado: false,
-    solo_lectura: false,
+    soloLectura: false,
     validadores: [
       { tipo: 'required' }
     ],
-    marcador_de_posicion: '',
-    margin_top: 0
+    marcadorDePosicion: '',
+    marginTop: 0
   },
   {
     id: 'valor_factura_USD',
-    label_nombre: 'Valor factura USD',
+    labelNombre: 'Valor factura USD',
     campo: 'valor_factura_USD',
     clase: 'col-md-4',
-    tipo_input: 'number',
+    tipoInput: 'number',
     desactivado: false,
-    solo_lectura: false,
+    soloLectura: false,
     validadores: [
       { tipo: 'required' }
     ],
-    marcador_de_posicion: '',
-    margin_top: 0
+    marcadorDePosicion: '',
+    marginTop: 0
   }
 ];
 
@@ -230,87 +230,87 @@ export const DATOS_DE_LA_MERCANCIA = [
   * 
   * @example
   * const cantidadField = PARTIDAS_DE_LA_MERCANCIA.find(field => field.id === 'cantidad');
-  * console.log(cantidadField.label_nombre); // "Cantidad"
+  * console.log(cantidadField.labelNombre); // "Cantidad"
   */
 export const PARTIDAS_DE_LA_MERCANCIA = [
   {
     id: 'cantidad',
-    label_nombre: 'Cantidad',
+    labelNombre: 'Cantidad',
     campo: 'cantidad',
     clase: 'col-md-4',
-    tipo_input: 'number',
+    tipoInput: 'number',
     desactivado: false,
-    solo_lectura: false,
+    soloLectura: false,
     validadores: [
       { tipo: 'required' }
     ],
-    marcador_de_posicion: '',
-    margin_top: 0
+    marcadorDePosicion: '',
+    marginTop: 0
   },
   {
     id: 'fraccion_arancelaria_tigie',
-    label_nombre: 'Fracción Arancelaria TIGIE',
+    labelNombre: 'Fracción Arancelaria TIGIE',
     campo: 'fraccion_arancelaria_tigie',
     clase: 'col-md-4',
-    tipo_input: 'number',
+    tipoInput: 'number',
     desactivado: false,
-    solo_lectura: false,
+    soloLectura: false,
     validadores: [
       { tipo: 'required' }
     ],
-    marcador_de_posicion: '',
-    margin_top: 0
+    marcadorDePosicion: '',
+    marginTop: 0
   },
   {
     id: '',
-    label_nombre: '',
+    labelNombre: '',
     campo: 'seleccion_fraccion',
     clase: 'col-md-4',
-    tipo_input: 'select-catalogos',
+    tipoInput: 'select-catalogos',
     desactivado: false,
-    solo_lectura: false,
+    soloLectura: false,
     validadores: [
       { tipo: '' }
     ],
-    marcador_de_posicion: 'Selecciona una fracción',
+    marcadorDePosicion: 'Selecciona una fracción',
     opciones: [
       {
         id: 1,
         descripcion: '87033302 Usados.'
       }
     ],
-    margin_top: 0
+    marginTop: 0
   },
   {
     id: 'descripcion',
-    label_nombre: 'Descripción',
+    labelNombre: 'Descripción',
     campo: 'descripcion',
     clase: 'col-md-8',
-    tipo_input: 'textarea',
+    tipoInput: 'textarea',
     desactivado: false,
-    solo_lectura: false,
+    soloLectura: false,
     validadores: [
       {
         tipo: 'required',
         mensaje: ''
       }
     ],
-    marcador_de_posicion: '',
-    margin_top: 0
+    marcadorDePosicion: '',
+    marginTop: 0
   },
   {
     id: 'valor_partida_usd',
-    label_nombre: 'Valor partida USD',
+    labelNombre: 'Valor partida USD',
     campo: 'valor_partida_usd',
     clase: 'col-md-4',
-    tipo_input: 'number',
+    tipoInput: 'number',
     desactivado: false,
-    solo_lectura: false,
+    soloLectura: false,
     validadores: [
       { tipo: 'required' }
     ],
-    marcador_de_posicion: '',
-    margin_top: 0
+    marcadorDePosicion: '',
+    marginTop: 0
   }
 ];
 
@@ -331,36 +331,36 @@ export const PARTIDAS_DE_LA_MERCANCIA = [
   * 
   * @example
   * const fraccionField = USO_ESPECIFICO_DE_LA_MERCANCIA.find(field => field.id === 'fraccion_arancelaria');
-  * console.log(fraccionField.label_nombre); // "Fracción arancelaria PROSEC"
+  * console.log(fraccionField.labelNombre); // "Fracción arancelaria PROSEC"
   */
 export const USO_ESPECIFICO_DE_LA_MERCANCIA = [
   {
     id: 'fraccion_arancelaria',
-    label_nombre: 'Fracción arancelaria PROSEC (Especificar la fracción arancelaria del producto en el que se utilizará la mercancía a importar)',
+    labelNombre: 'Fracción arancelaria PROSEC (Especificar la fracción arancelaria del producto en el que se utilizará la mercancía a importar)',
     campo: 'fraccion_arancelaria',
     clase: 'col-md-8',
-    tipo_input: 'select-catalogos',
+    tipoInput: 'select-catalogos',
     desactivado: false,
-    solo_lectura: false,
+    soloLectura: false,
     validadores: [
       { tipo: 'required' }
     ],
-    marcador_de_posicion: 'Selecciona un valor',
-    margin_top: 0,
+    marcadorDePosicion: 'Selecciona un valor',
+    marginTop: 0,
   },
   {
     id: 'descripcion',
-    label_nombre: 'Descripción fracción PROSEC (Especificar el nombre comercial o técnico del producto en el que se utilizará la mercancía a importar)',
+    labelNombre: 'Descripción fracción PROSEC (Especificar el nombre comercial o técnico del producto en el que se utilizará la mercancía a importar)',
     campo: 'descripcion',
     clase: 'col-md-8',
-    tipo_input: 'textarea',
+    tipoInput: 'textarea',
     desactivado: false,
-    solo_lectura: false,
+    soloLectura: false,
     validadores: [
       { tipo: 'required' }
     ],
-    marcador_de_posicion: '',
-    margin_top: 0
+    marcadorDePosicion: '',
+    marginTop: 0
   },
 ];
 
@@ -381,36 +381,36 @@ export const USO_ESPECIFICO_DE_LA_MERCANCIA = [
   * 
   * @example
   * const solicitudField = CRITERIO_DE_DICTAMEN_DE_REGLA_OCTAVA.find(field => field.id === 'solicitud_mercancia');
-  * console.log(solicitudField.label_nombre); // "Solicitud mercancia esquema regla octava clave"
+  * console.log(solicitudField.labelNombre); // "Solicitud mercancia esquema regla octava clave"
   */
 export const CRITERIO_DE_DICTAMEN_DE_REGLA_OCTAVA = [
   {
     id: 'solicitud_mercancia',
-    label_nombre: 'Solicitud mercancia esquema regla octava clave',
+    labelNombre: 'Solicitud mercancia esquema regla octava clave',
     campo: 'solicitud_mercancia',
     clase: 'col-md-8',
-    tipo_input: 'select-catalogos',
+    tipoInput: 'select-catalogos',
     desactivado: false,
-    solo_lectura: false,
+    soloLectura: false,
     validadores: [
       { tipo: 'required' }
     ],
-    marcador_de_posicion: 'Selecciona un valor',
-    margin_top: 0,
+    marcadorDePosicion: 'Selecciona un valor',
+    marginTop: 0,
   },
   {
     id: 'criterio_de_dictamen',
-    label_nombre: 'Criterio de dictamen de regla octava seleccionado',
+    labelNombre: 'Criterio de dictamen de regla octava seleccionado',
     campo: 'criterio_de_dictamen',
     clase: 'col-md-8',
-    tipo_input: 'textarea',
+    tipoInput: 'textarea',
     desactivado: true,
-    solo_lectura: false,
+    soloLectura: false,
     validadores: [
       { tipo: '' }
     ],
-    marcador_de_posicion: '',
-    margin_top: 0
+    marcadorDePosicion: '',
+    marginTop: 0
   },
 ];
 
@@ -469,31 +469,31 @@ export const CROSLISTA_DE_PAISES: string[] = [
   * 
   * @example
   * const bloqueField = PAIS_PROCEDENCIA.find(field => field.id === 'bloque');
-  * console.log(bloqueField.label_nombre); // "Bloque"
+  * console.log(bloqueField.labelNombre); // "Bloque"
   */
 export const PAIS_PROCEDENCIA = [
   {
     id: 'bloque',
-    label_nombre: 'Bloque',
+    labelNombre: 'Bloque',
     campo: 'bloque',
     clase: 'col-md-4',
-    tipo_input: 'select-catalogos',
+    tipoInput: 'select-catalogos',
     desactivado: false,
-    solo_lectura: false,
+    soloLectura: false,
     validadores: [
       { tipo: '' }
     ],
-    marcador_de_posicion: 'Selecciona un valor',
-    margin_top: 0
+    marcadorDePosicion: 'Selecciona un valor',
+    marginTop: 0
   },
   {
     id: 'todos_los_paises',
-    label_nombre: 'Todos los países',
+    labelNombre: 'Todos los países',
     campo: 'todos_los_paises',
     clase: 'col-md-8',
-    tipo_input: 'button',
+    tipoInput: 'button',
     desactivado: false,
-    margin_top: 5
+    marginTop: 5
   },
 ];
 
@@ -514,36 +514,36 @@ export const PAIS_PROCEDENCIA = [
   * 
   * @example
   * const entidadField = REPRESENTACION_FEDERAL.find(field => field.id === 'entidad');
-  * console.log(entidadField.label_nombre); // "Entidad federativa"
+  * console.log(entidadField.labelNombre); // "Entidad federativa"
   */
 export const REPRESENTACION_FEDERAL = [
   {
     id: 'entidad',
-    label_nombre: 'Entidad federativa',
+    labelNombre: 'Entidad federativa',
     campo: 'entidad',
     clase: 'col-md-4',
-    tipo_input: 'select-catalogos',
+    tipoInput: 'select-catalogos',
     desactivado: false,
-    solo_lectura: false,
+    soloLectura: false,
     validadores: [
       { tipo: 'required' }
     ],
-    marcador_de_posicion: 'Selecciona un valor',
-    margin_top: 0
+    marcadorDePosicion: 'Selecciona un valor',
+    marginTop: 0
   },
   {
     id: 'reprsentation_federal',
-    label_nombre: 'Representación federal',
+    labelNombre: 'Representación federal',
     campo: 'reprsentation_federal',
     clase: 'col-md-4',
-    tipo_input: 'select-catalogos',
+    tipoInput: 'select-catalogos',
     desactivado: false,
-    solo_lectura: false,
+    soloLectura: false,
     validadores: [
       { tipo: 'required' }
     ],
-    marcador_de_posicion: 'Selecciona una opcion',
-    margin_top: 0
+    marcadorDePosicion: 'Selecciona una opcion',
+    marginTop: 0
   },
 ];
   

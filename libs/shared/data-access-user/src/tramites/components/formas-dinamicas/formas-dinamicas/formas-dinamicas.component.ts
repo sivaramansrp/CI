@@ -210,14 +210,14 @@ export class FormasDinamicasComponent implements ControlValueAccessor, OnInit {
   
     const FORMGROUP: { [key: string]: ReturnType<FormBuilder['control']> } = {};
     this.formularioDatos.forEach(campo => {
-      if (!campo || !campo.campo || campo.tipo_input === 'button' || campo.tipo_input === '') {
+      if (!campo || !campo.campo || campo.tipoInput === 'button' || campo.tipoInput === '') {
         return;
       }
   
       if (!this.forma?.contains(campo.campo)) {
         const VALIDADORES = FormasDinamicasComponent.obtenerValidadores(campo.validadores ?? []);
         FORMGROUP[campo.campo] = this.fb.control(
-          { value: this.estado && this.estado[campo.campo] ? this.estado[campo.campo] : campo.valor_predeterminado, disabled: campo.desactivado },
+          { value: this.estado && this.estado[campo.campo] ? this.estado[campo.campo] : campo.valorPredeterminado, disabled: campo.desactivado },
           { validators: VALIDADORES }
         );
       }

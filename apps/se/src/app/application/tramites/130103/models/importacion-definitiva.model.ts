@@ -19,11 +19,11 @@
 export interface Partidas {
   id: number;
   cantidad?: number;
-  unidad_de_medida?: string;
-  fraccion_arancelaria_tigie?: number;
+  unidadDeMedida?: string;
+  fraccionArancelariaTigie?: number;
   descripcion?: string;
-  precio_unitario?: string;
-  total_usd?: number;
-  fraccion_arancelaria_prosec?: string;
-  fraccion_arancelaria?: string;
+  precioUnitario?: string;
+  totalUsd?: number;
+  fraccionArancelariaProsec?: string;
+  fraccionArancelaria?: string;
 }

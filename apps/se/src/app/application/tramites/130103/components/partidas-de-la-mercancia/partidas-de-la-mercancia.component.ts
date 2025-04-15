@@ -137,11 +137,11 @@ export class PartidasDeLaMercanciaComponent implements OnInit, OnDestroy {
   public encabezadoDeTabla: ConfiguracionColumna<Partidas>[] = [
     { encabezado: '', clave: (artículo) => artículo.id, orden: 1 },
     { encabezado: 'Cantidad', clave: (artículo) => artículo.cantidad, orden: 1 },
-    { encabezado: 'Unidad de medida', clave: (artículo) => artículo.unidad_de_medida, orden: 2 },
-    { encabezado: 'Fracción Arancelaria', clave: (artículo) => artículo.fraccion_arancelaria_tigie, orden: 3 },
+    { encabezado: 'Unidad de medida', clave: (artículo) => artículo.unidadDeMedida, orden: 2 },
+    { encabezado: 'Fracción Arancelaria', clave: (artículo) => artículo.fraccionArancelariaTigie, orden: 3 },
     { encabezado: 'Descripción', clave: (artículo) => artículo.descripcion, orden: 4 },
-    { encabezado: 'Precio unitario USD', clave: (artículo) => artículo.precio_unitario, orden: 5 },
-    { encabezado: 'Total USD', clave: (artículo) => artículo.total_usd, orden: 6 }
+    { encabezado: 'Precio unitario USD', clave: (artículo) => artículo.precioUnitario, orden: 5 },
+    { encabezado: 'Total USD', clave: (artículo) => artículo.totalUsd, orden: 6 }
   ];
 
   /**

@@ -3,7 +3,7 @@ import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ImportacionDefinitiva130103State, Tramite130103Store } from '../../../../estados/tramites/tramite130103.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { DATOS_DEL_TRAMITE_REALIZER } from '../../constantes/importacion-definitiva.enum';
+import { DATOS_DEL_TRAMITE_REALIZAR } from '../../constantes/importacion-definitiva.enum';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
 import { ImportacionDefinitivaService } from '@libs/shared/data-access-user/src/core/services/130103/importacion-definitiva.service'
 import { ModeloDeFormaDinamica } from '@libs/shared/data-access-user/src';
@@ -68,7 +68,7 @@ export class DatosDelTramiteRealizerComponent implements OnInit, OnDestroy {
   * const campo = this.datosDelTramiteFormData.find((datos) => datos.campo === 'regimen');
   * console.log(campo.label_nombre); // Muestra: "Régimen al que se destinará la mercancía"
   */
-  public datosDelTramiteFormData = DATOS_DEL_TRAMITE_REALIZER;
+  public datosDelTramiteFormData = DATOS_DEL_TRAMITE_REALIZAR;
 
   /**
      * compo doc
