@@ -266,8 +266,7 @@ export class DatosDelTramiteRealizerComponent implements OnInit, OnDestroy {
   * this.establecerCambioDeValor({ campo: 'regimen', valor: 'Régimen B' });
   * // Actualiza el estado dinámico del campo "regimen" con el valor "Régimen B".
   */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  establecerCambioDeValor(event: { campo: string; valor: any }): void {
+  establecerCambioDeValor(event: { campo: string; valor?: object }): void {
     if (event && typeof event.valor === 'object' && event.valor !== null && 'id' in event.valor) {
       const VALOR = event.valor.id;
       this.tramite130103Store.setDynamicFieldValue(event.campo, VALOR);
