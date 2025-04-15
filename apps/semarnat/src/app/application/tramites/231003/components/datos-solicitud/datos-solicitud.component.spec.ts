@@ -150,4 +150,51 @@ describe('DatosSolicitudComponent', () => {
     expect(Modal).toHaveBeenCalledWith(component.modalElement.nativeElement);
     expect(mockShow).toHaveBeenCalled();
   });
+
+  describe('actualizarCampo...()', () => {
+    const NUEVO_VALOR = 'nuevo valor';
+
+    beforeEach(() => {
+      component.solicitudForm.get('numeroRegistroAmbiental')?.setValue(NUEVO_VALOR);
+      component.formularioEmpresaReciclaje.get('nombreEmpresa')?.setValue(NUEVO_VALOR);
+      component.formularioLugarReciclaje.get('lugarReciclaje')?.setValue(NUEVO_VALOR);
+      component.formularioEmpresaTransportista.get('nombreEmpresaTransportistaResiduos')?.setValue(NUEVO_VALOR);
+      component.formularioPrecaucionesManejo.get('precaucionesManejo')?.setValue(NUEVO_VALOR);
+    });
+
+    it('debería actualizar el campo del formulario de solicitud en el store', () => {
+      component.actualizarCampoSolicitudForm('numeroRegistroAmbiental');
+      expect(mockStore.actualizarSolicitudForm).toHaveBeenCalledWith(
+        expect.objectContaining({ numeroRegistroAmbiental: NUEVO_VALOR })
+      );
+    });
+
+    it('debería actualizar el campo del formulario de empresa reciclaje en el store', () => {
+      component.actualizarCampoEmpresaReciclaje('nombreEmpresa');
+      expect(mockStore.actualizarEmpresaReciclaje).toHaveBeenCalledWith(
+        expect.objectContaining({ nombreEmpresa: NUEVO_VALOR })
+      );
+    });
+
+    it('debería actualizar el campo del formulario de lugar de reciclaje en el store', () => {
+      component.actualizarCampoLugarReciclaje('lugarReciclaje');
+      expect(mockStore.actualizarLugarReciclaje).toHaveBeenCalledWith(
+        expect.objectContaining({ lugarReciclaje: NUEVO_VALOR })
+      );
+    });
+
+    it('debería actualizar el campo del formulario de empresa transportista en el store', () => {
+      component.actualizarCampoEmpresaTransportista('nombreEmpresaTransportistaResiduos');
+      expect(mockStore.actualizarEmpresaTransportista).toHaveBeenCalledWith(
+        expect.objectContaining({ nombreEmpresaTransportistaResiduos: NUEVO_VALOR })
+      );
+    });
+
+    it('debería actualizar el campo del formulario de precauciones de manejo en el store', () => {
+      component.actualizarCampoPrecaucionesManejo('precaucionesManejo');
+      expect(mockStore.actualizarPrecaucionesManejo).toHaveBeenCalledWith(
+        expect.objectContaining({ precaucionesManejo: NUEVO_VALOR })
+      );
+    });
+  });
 });
