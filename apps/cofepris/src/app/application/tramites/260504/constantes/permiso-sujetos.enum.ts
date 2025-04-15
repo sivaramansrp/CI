@@ -1,5 +1,5 @@
-export const TABLE_ORDER = [
-    { name: 'Fabricante', order: 2, isVisible: true },
-    { name: 'Formulador', order: 3, isVisible: true },
-    { name: 'Proveedor', order: 1, isVisible: true },
+export const TABLA_ORDEN = [
+    { nombre: 'Fabricante', orden: 2, esVisible: true },
+    { nombre: 'Formulador', orden: 3, esVisible: true },
+    { nombre: 'Proveedor', orden: 1, esVisible: true },
   ];
