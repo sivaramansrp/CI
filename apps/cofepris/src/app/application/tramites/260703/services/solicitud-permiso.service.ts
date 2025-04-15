@@ -3,7 +3,7 @@ import {
   Destinatario,
   RespuestaCatalogos,
 } from '@libs/shared/data-access-user/src';
-import { Fabricante } from '../model/solicitud-permiso.model';
+import { Fabricante, Manifiestos, ManifiestosRespuesta } from '../model/solicitud-permiso.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -60,6 +60,12 @@ export class SolicitudPermisoService {
    */
   inicializaPagoDeDerechosDatosCatalogos(): void {
     this.obtenerRespuestaPorUrl(this, 'banco', '/260703/banco.json');
+  }
+
+  getManifiestos(): Observable<ManifiestosRespuesta> {
+    return this.http.get<ManifiestosRespuesta>(
+      'assets/json/260703/manifiestos.json'
+    );
   }
 
   /**

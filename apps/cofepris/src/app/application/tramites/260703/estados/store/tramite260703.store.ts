@@ -1,5 +1,6 @@
 import { Store, StoreConfig } from '@datorama/akita';
 
+import { DatosDelEstablecimientoFormState, ManiFiestosFormState, PreOperativeFormState, RepresentanteLegalFormState } from '../../model/solicitud-permiso.model';
 import { Injectable } from '@angular/core';
 
 /**
@@ -32,6 +33,11 @@ export interface SolicitudPermisoState {
    * El importe del pago realizado.
    */
   impPago?: string;
+
+  preOperativFormState: PreOperativeFormState; 
+  datosDelEstablecimientoFormState: DatosDelEstablecimientoFormState;
+  manifiestosFormState: ManiFiestosFormState;
+  representanteLegalFormState: RepresentanteLegalFormState;
 }
 
 export function createInitialState(): SolicitudPermisoState {
@@ -42,6 +48,24 @@ export function createInitialState(): SolicitudPermisoState {
     llaveDePago: '',
     fecPago: '',
     impPago: '',
+    preOperativFormState: {
+      ideGenerica1:'',
+      observaciones:'',
+    },
+    datosDelEstablecimientoFormState:{
+      razonSocial:'',
+      correoElectronico:'',
+    },
+    manifiestosFormState:{
+      seleccionadaManifiesto:[false],
+      informacionConfidencial: '',
+    },
+    representanteLegalFormState:{
+      rfc:'',
+      nombreOrazonsocial:'',
+      apellidoPaterno:'',
+      apellidoMaterno:'',
+    }
   };
 }
 
@@ -56,6 +80,46 @@ export class Tramite260703Store extends Store<SolicitudPermisoState> {
    */
   constructor() {
     super(createInitialState());
+  }
+
+  updatePreOperativeFormState(valores: Partial<SolicitudPermisoState['preOperativFormState']>): void{
+    this.update((state)=>({
+      ...state,
+      preOperativFormState:{
+        ...state.preOperativFormState,
+        ...valores
+      }
+    }))
+  }
+
+  updateDatosDelEstablecimientoFormState(valores: Partial<SolicitudPermisoState['datosDelEstablecimientoFormState']>): void{
+    this.update((state)=>({
+      ...state,
+      datosDelEstablecimientoFormState:{
+        ...state.datosDelEstablecimientoFormState,
+        ...valores
+      }
+    }))
+  }
+
+  updateManifiestosFormState(valores: Partial<SolicitudPermisoState['manifiestosFormState']>): void{
+    this.update((state)=>({
+      ...state,
+      manifiestosFormState:{
+        ...state.manifiestosFormState,
+        ...valores
+      }
+    }))
+  }
+
+  updateRepresentanteLegalFormState(valores: Partial<SolicitudPermisoState['representanteLegalFormState']>): void{
+    this.update((state)=>({
+      ...state,
+      representanteLegalFormState:{
+        ...state.representanteLegalFormState,
+        ...valores
+      }
+    }))
   }
 
   /**
