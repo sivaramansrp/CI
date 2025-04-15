@@ -13,7 +13,7 @@ export const PASOS = [
   },
   {
     indice: 2,
-    titulo: 'Requisitos necesarios',
+    titulo: 'Anexar requisitos',
     activo: false,
     completado: false,
   },
@@ -35,7 +35,7 @@ export const TEXTOS = {
   TIPO_CARGO: ` Datos de la Plantilla de Carga Masiva<span class="">*</span><br />
      <label><a href="javascript:;" target="_blank"> Descargar plantilla</a></label>
         `,
- TERCEROS_TEXTO_DE_ALERTA: 'La solicitud ha quedado registrada con el número temporal 202767903 Éste no tiene validez legal y sirve solamente para efectos de identificar tu solicitud. Un folio oficial le será asignado a la solicitud al momento en que ésta sea firmada.',
+  TERCEROS_TEXTO_DE_ALERTA: 'La solicitud ha quedado registrada con el número temporal 202767903 Éste no tiene validez legal y sirve solamente para efectos de identificar tu solicitud. Un folio oficial le será asignado a la solicitud al momento en que ésta sea firmada.',
 };
 /**
  * Configuración para la fecha de ingreso.
