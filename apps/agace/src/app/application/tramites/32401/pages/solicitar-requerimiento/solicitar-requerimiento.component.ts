@@ -25,9 +25,20 @@ import { ValidacionesFormularioService } from '@libs/shared/data-access-user/src
 import { Validators } from '@angular/forms';
 import { map } from 'rxjs/operators';
 import { takeUntil } from 'rxjs/operators';
+/**
+ * Componente que gestiona la solicitud de requerimientos.
+ * Incluye lógica para inicialización de formularios, manejo de estados,
+ * y generación de tablas dinámicas.
+ */
 @Component({
+  /** Selector utilizado para identificar el componente en el HTML */
   selector: 'app-solicitar-requerimiento',
+  /** Define el componente como autónomo (standalone) */
   standalone: true,
+  /**
+   * Importa los módulos, servicios y componentes necesarios para el funcionamiento.
+   * Incluye formularios reactivos, componentes personalizados y servicios auxiliares.
+   */
   imports: [
     ReactiveFormsModule,
     CommonModule,
@@ -37,17 +48,38 @@ import { takeUntil } from 'rxjs/operators';
     TablaDinamicaComponent,
     InputRadioComponent,
   ],
+  /** Proveedores de servicios necesarios para el componente */
   providers: [BsModalService],
+  /** Ruta del archivo HTML que define la estructura del componente */
   templateUrl: './solicitar-requerimiento.component.html',
+  /** Ruta del archivo SCSS que define los estilos del componente */
   styleUrl: './solicitar-requerimiento.component.scss',
 })
+/**
+ * Componente que gestiona la solicitud de requerimientos.
+ * Incluye lógica para inicialización de formularios, manejo de estados,
+ * y generación de tablas dinámicas.
+ */
 export class SolicitarRequerimientoComponent implements OnInit {
+  /** Textos compartidos utilizados en el componente */
   TEXTOS = TEXTOS;
+
+  /** Clase CSS utilizada para mostrar una alerta informativa */
   infoAlert = 'alert-info';
+
+  /** Formulario reactivo para gestionar la solicitud */
   solicitarForm!: FormGroup;
+
+  /** Estado actual de la solicitud 32401 */
   public solicitud32401State!: Solicitud32401State;
+
+  /** Indicador para mostrar/ocultar sección de aduana y fecha */
   mostrarSeccionAduanaaFecha: boolean = false;
+
+  /** Indicador para mostrar/ocultar sección de no manifiesto */
   mostrarSeccionNoManifiesto: boolean = false;
+
+  /** Opciones disponibles para el tipo de requerimiento */
   requerimientoOpcions = [
     {
       label: 'Requerimiento por parte de la autoridad',
@@ -58,7 +90,11 @@ export class SolicitarRequerimientoComponent implements OnInit {
       value: 2,
     },
   ];
+
+  /** Lista de trámites obtenida desde el catálogo */
   tramiteList: CatalogosSelect = {} as CatalogosSelect;
+
+  /** Configuración de las columnas de la tabla dinámica */
   public encabezadoDeTabla: ConfiguracionColumna<DatosDeLaTabla>[] = [
     { encabezado: '', clave: (artículo) => artículo.id, orden: 0 },
     {
@@ -85,10 +121,23 @@ export class SolicitarRequerimientoComponent implements OnInit {
     },
   ];
 
+  /** Datos utilizados para la tabla dinámica */
   public datosDelContenedor: DatosDeLaTabla[] = [];
 
+  /** Subject para manejar la destrucción del componente y evitar fugas de memoria */
   public destroyNotifier$: Subject<void> = new Subject();
 
+  /**
+   * Constructor del componente
+   * Inyecta servicios necesarios para el manejo de formularios, estados y navegación.
+   * @param fb FormBuilder para construir formularios reactivos.
+   * @param tramite32401Store Store que gestiona el estado del trámite 32401.
+   * @param tramite32401Query Query para seleccionar estados del store.
+   * @param validacionesService Servicio para validar formularios.
+   * @param autoridadService Servicio para interactuar con la API de autoridad.
+   * @param router Servicio para gestionar la navegación entre rutas.
+   * @param route ActivatedRoute para obtener información de la ruta activa.
+   */
   constructor(
     private fb: FormBuilder,
     public tramite32401Store: Tramite32401Store,
@@ -98,9 +147,13 @@ export class SolicitarRequerimientoComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute
   ) {
-    //
+    // Constructor vacío
   }
 
+  /**
+   * Método del ciclo de vida que se ejecuta al inicializar el componente.
+   * Configura los formularios y suscribe los cambios en el estado.
+   */
   ngOnInit(): void {
     this.inicializarFormulario();
     this.obtenerAduanaLista();
@@ -123,6 +176,9 @@ export class SolicitarRequerimientoComponent implements OnInit {
       .subscribe();
   }
 
+  /**
+   * Inicializa el formulario reactivo con campos requeridos.
+   */
   inicializarFormulario(): void {
     this.solicitarForm = this.fb.group({
       tipoBusqueda: [
@@ -141,6 +197,10 @@ export class SolicitarRequerimientoComponent implements OnInit {
     });
   }
 
+  /**
+   * Cambia la sección visible en función del tipo de requerimiento seleccionado.
+   * @param evento Valor del tipo de búsqueda seleccionado.
+   */
   cambiarRequerimiento(evento: string | number): void {
     this.tramite32401Store.setTipoBusqueda(evento);
     const TIPO_BUSQUEDA = evento;
@@ -158,6 +218,12 @@ export class SolicitarRequerimientoComponent implements OnInit {
     }
   }
 
+  /**
+   * Establece valores en el store a partir del formulario.
+   * @param form Formulario reactivo con los datos.
+   * @param campo Campo del formulario a actualizar.
+   * @param metodoNombre Método correspondiente en el store.
+   */
   setValoresStore(
     form: FormGroup,
     campo: string,
@@ -167,10 +233,19 @@ export class SolicitarRequerimientoComponent implements OnInit {
     (this.tramite32401Store[metodoNombre] as (valor: unknown) => void)(VALOR);
   }
 
+  /**
+   * Valida un campo específico en el formulario.
+   * @param form Formulario reactivo.
+   * @param field Campo a validar.
+   * @returns `true` si es válido, de lo contrario `false`.
+   */
   isValid(form: FormGroup, field: string): boolean | null {
     return this.validacionesService.isValid(form, field);
   }
 
+  /**
+   * Obtiene la lista de aduanas desde el servicio de autoridad.
+   */
   public obtenerAduanaLista(): void {
     this.autoridadService
       .obtenerTramiteLista()
@@ -180,6 +255,9 @@ export class SolicitarRequerimientoComponent implements OnInit {
       });
   }
 
+  /**
+   * Población de la tabla con los datos obtenidos desde el servicio.
+   */
   obtenerTablaPoblada(): void {
     this.autoridadService.agregarSolicitud().subscribe((respuesta) => {
       if (respuesta?.success) {
@@ -196,6 +274,9 @@ export class SolicitarRequerimientoComponent implements OnInit {
     });
   }
 
+  /**
+   * Limpia el formulario y restablece los valores predeterminados.
+   */
   limpiarFormulario(): void {
     const TIPO_BUSQUEDA_VALUE = this.solicitarForm.get('tipoBusqueda')?.value;
     this.solicitarForm.reset({
@@ -208,6 +289,9 @@ export class SolicitarRequerimientoComponent implements OnInit {
     this.tramiteList.catalogos = [];
   }
 
+  /**
+   * Maneja la selección de una fila en la tabla y
+   */
   valorDeAlternancia(row: any): void {
     if (row.folioTramite) {
       this.router.navigate(['pago/manifiesto-aereo/requiremento'], {

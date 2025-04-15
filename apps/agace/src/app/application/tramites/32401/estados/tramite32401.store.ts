@@ -1,34 +1,76 @@
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
-
+/**
+ * Interfaz que representa el estado de la solicitud 32401.
+ * Incluye información sobre el tipo de búsqueda, RFC, y detalles del trámite.
+ */
 export interface Solicitud32401State {
+  /** Tipo de búsqueda: puede ser un número o una cadena. */
   tipoBusqueda: string | number;
+
+  /** RFC del usuario asociado al trámite. */
   rfc: string;
+
+  /** Tipo de trámite realizado. */
   tipoDeTramite: string;
+
+  /** Tipo de requerimiento en el trámite. */
   tipoDeRequerimiento: string;
+
+  /** Folio del trámite. */
   folioDeTramite: string;
+
+  /** Datos del contenedor relacionados con el trámite. */
   datosDelContenedor: [];
+
+  /** Motivo opcional de cancelación del trámite. */
   motivoCancelacion?: string;
 }
 
+/**
+ * Función para crear el estado inicial de la solicitud 32401.
+ * Retorna los valores predeterminados para cada propiedad.
+ */
 export function createInitialState(): Solicitud32401State {
   return {
+    /** Tipo de búsqueda predeterminado: número 0. */
     tipoBusqueda: 0,
+
+    /** RFC inicial vacío. */
     rfc: '',
+
+    /** Tipo de trámite inicial vacío. */
     tipoDeTramite: '',
+
+    /** Tipo de requerimiento inicial vacío. */
     tipoDeRequerimiento: '',
+
+    /** Folio del trámite inicial vacío. */
     folioDeTramite: '',
+
+    /** Datos del contenedor inicial como una lista vacía. */
     datosDelContenedor: [],
+
+    /** Motivo de cancelación inicial vacío. */
     motivoCancelacion: '',
   };
 }
 
+/**
+ * Servicio de inyección para gestionar el estado del trámite 32401.
+ * Configurado como parte del sistema de inyección de dependencias en Angular.
+ */
 @Injectable({
+  /** Define el ámbito del servicio como raíz. */
   providedIn: 'root',
 })
+/** Configuración del store para manejar el estado del trámite 32401. */
 @StoreConfig({ name: 'tramite32401', resettable: true })
 export class Tramite32401Store extends Store<Solicitud32401State> {
-
+  /**
+   * Constructor del store.
+   * Inicializa el estado con los valores predeterminados.
+   */
   constructor() {
     super(createInitialState());
   }
@@ -74,7 +116,7 @@ export class Tramite32401Store extends Store<Solicitud32401State> {
    *
    * @param tipoDeRequerimiento - El tipo de requerimiento que se desea establecer.
    */
-  public setTipoDeRequerimiento(tipoDeRequerimiento: string) : void{
+  public setTipoDeRequerimiento(tipoDeRequerimiento: string): void {
     this.update((state) => ({
       ...state,
       tipoDeRequerimiento,
@@ -86,7 +128,7 @@ export class Tramite32401Store extends Store<Solicitud32401State> {
    *
    * @param folioDeTramite - El folio del trámite que se desea establecer.
    */
-  public setFolioDeTramite(folioDeTramite: string) : void{
+  public setFolioDeTramite(folioDeTramite: string): void {
     this.update((state) => ({
       ...state,
       folioDeTramite,
@@ -97,7 +139,7 @@ export class Tramite32401Store extends Store<Solicitud32401State> {
    * Establece los datos del contenedor en el estado de la tienda.
    *
    * @param datosDelContenedor - Un arreglo que contiene los datos del contenedor a establecer.
-   * 
+   *
    * Este método actualiza el estado de la tienda con los datos proporcionados.
    */
   public setDelContenedor(datosDelContenedor: []): void {
@@ -119,6 +161,10 @@ export class Tramite32401Store extends Store<Solicitud32401State> {
     }));
   }
 
+  /**
+   * Método para limpiar la solicitud.
+   * Reinicia el estado de la solicitud utilizando el método `reset()`.
+   */
   public limpiarSolicitud(): void {
     this.reset();
   }

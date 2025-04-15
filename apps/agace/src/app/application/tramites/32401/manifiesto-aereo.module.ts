@@ -1,47 +1,34 @@
-/* eslint-disable @nx/enforce-module-boundaries */
-/* eslint-disable sort-imports */
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { AlertComponent, AnexarDocumentosComponent, FirmaElectronicaComponent, InputRadioComponent, TituloComponent, WizardComponent } from '@ng-mf/data-access-user';
-import { BtnContinuarComponent } from '@ng-mf/data-access-user';
-import { ServiciosPantallaService } from '@libs/shared/data-access-user/src/core/services/31601/servicios-pantalla.service';
-import { provideHttpClient } from '@angular/common/http';
-import { ToastrModule, ToastrService } from 'ngx-toastr';
-import { BsModalService } from 'ngx-bootstrap/modal';
-import { ManifiestoAereoRoutingModule } from './manifiesto-aereo-routing.module';
-// import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
-// import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
+import { AlertComponent } from '@ng-mf/data-access-user';
+import { AnexarDocumentosComponent } from '@ng-mf/data-access-user';
 import { AutoridadService } from './services/autoridad.service';
-import { SolicitarRequerimientoComponent } from './pages/solicitar-requerimiento/solicitar-requerimiento.component';
+import { BsModalService } from 'ngx-bootstrap/modal';
+import { BtnContinuarComponent } from '@ng-mf/data-access-user';
+import { CommonModule } from '@angular/common';
+import { FirmaElectronicaComponent } from '@ng-mf/data-access-user';
+import { FormsModule } from '@angular/forms';
+import { InputRadioComponent } from '@ng-mf/data-access-user';
+import { ManifiestoAereoRoutingModule } from './manifiesto-aereo-routing.module';
+import { NgModule } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
 import { RequirementoComponent } from './components/requiremento/requiremento.component';
 import { SeleccionarDocumentosComponent } from './components/seleccionar-documentos/seleccionar-documentos.component';
-// import { RequirementoComponent } from './components/requiremento/requiremento.component';
-// import { SolicitanteComponent } from './components/solicitante/solicitante.component';
-// import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
-// import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
-// import { CapturarElTextoLibreComponent } from './pages/capturar-el-texto-libre/capturar-el-texto-libre.component';
-
+import { SolicitarRequerimientoComponent } from './pages/solicitar-requerimiento/solicitar-requerimiento.component';
+import { TituloComponent } from '@ng-mf/data-access-user';
+import { ToastrModule } from 'ngx-toastr';
+import { ToastrService } from 'ngx-toastr';
+import { WizardComponent } from '@ng-mf/data-access-user';
+import { provideHttpClient } from '@angular/common/http';
 @NgModule({
   declarations: [
-    // PasoDosComponent,
-    // PasoTresComponent,
-    // SolicitudPageComponent
-    
     ],
   imports: [
-    // CapturarElTextoLibreComponent,
     CommonModule,
-    // SolicitanteComponent,
     FormsModule,
     ReactiveFormsModule,
     FormsModule,
-    // PasoUnoComponent,
-    // RequirementoComponent,
     ManifiestoAereoRoutingModule,
     WizardComponent,
     FirmaElectronicaComponent,
-    // RequirementoComponent,
     TituloComponent,
     AnexarDocumentosComponent,
     AlertComponent,
@@ -54,7 +41,6 @@ import { SeleccionarDocumentosComponent } from './components/seleccionar-documen
   ],
   providers: [
     AutoridadService,
-    ServiciosPantallaService,
     provideHttpClient(),
     ToastrService,
     BsModalService
