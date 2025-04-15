@@ -18,8 +18,6 @@ import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { TercerosRelacionadosContenedoraComponent } from './components/terceros-relacionados-contenedora/terceros-relacionados-contenedora.component';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { ToastrService } from 'ngx-toastr';
-import { Tramite240101Query } from './estados/tramite240107Query.query';
-import { Tramite240101Store } from './estados/tramite240107Store.store';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
 import { AvisoImportacionSustanciasQuimicasRoutingModule } from './aviso-importacion-sustancias-quimicas-routing.module';
