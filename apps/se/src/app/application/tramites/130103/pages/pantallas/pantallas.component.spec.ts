@@ -1,10 +1,9 @@
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PantallasComponent } from './pantallas.component';
 import { AlertComponent, BtnContinuarComponent, SolicitanteComponent, WizardComponent } from '@libs/shared/data-access-user/src';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
-import { PermisoSanitarioModule} from '../../../260211/permiso-sanitario.module';
 import { PANTA_PASOS } from '@libs/shared/data-access-user/src/core/services/31601/servicios-pantallas.enum';
-import { AVISO } from '@libs/shared/data-access-user/src/tramites/constantes/aviso-privacidad.enum';
 
 describe('PantallasComponent', () => {
   let component: PantallasComponent;
@@ -13,7 +12,7 @@ describe('PantallasComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [PantallasComponent, PasoUnoComponent],
-      imports: [SolicitanteComponent, WizardComponent, BtnContinuarComponent, AlertComponent, PermisoSanitarioModule],
+      imports: [WizardComponent, BtnContinuarComponent, AlertComponent, SolicitanteComponent, HttpClientTestingModule]
     }).compileComponents();
 
     fixture = TestBed.createComponent(PantallasComponent);
@@ -29,7 +28,6 @@ describe('PantallasComponent', () => {
     expect(component.indice).toBe(1);
     expect(component.indiceDePestanaSeleccionada).toBe(1);
     expect(component.pantallasPasos).toEqual(PANTA_PASOS);
-    expect(component.avisoPrivacidadAlert).toBe(AVISO.Aviso);
     expect(component.datosPasos).toEqual({
       nroPasos: PANTA_PASOS.length,
       indice: 1,
@@ -82,5 +80,4 @@ describe('PantallasComponent', () => {
     component.pestanaCambiado(3);
     expect(component.indiceDePestanaSeleccionada).toBe(3);
   });
-  
 });

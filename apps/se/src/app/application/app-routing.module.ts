@@ -350,6 +350,13 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'importacion-definitiva',
+    loadChildren: () =>
+      import('./tramites/130103/importacion-definitiva.module').then(
+        (m) => m.ImportacionDefinitivaModule
+      ),
+  },
+  {
     path: 'solicitud-de-cancelacion',
     loadChildren: () =>
       import('./tramites/140101/solicitud-de-cancelacion.module').then(

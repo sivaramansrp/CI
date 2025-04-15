@@ -1965,5 +1965,12 @@
         "linkDashboard": "",
         "linkDepartment": "",
         "department": "sener"
+    },
+    {
+        "id": 282,
+        "tramite": 130103,
+        "linkDashboard": "/se/importacion-definitiva/pantallas",
+        "linkDepartment": "/pago/importacion-definitiva/pantallas",
+        "department": "se"
     }
 ]
