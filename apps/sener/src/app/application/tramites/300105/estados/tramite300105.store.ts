@@ -1,5 +1,7 @@
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
+import { ConfiguracionItem } from '../enum/mercancia-tabla.enum';
+import { DestinatarioConfiguracionItem } from '../enum/destinatario-tabla.enum';
 
 /**
  * Creacion del estado inicial para la interfaz de tramite 300105
@@ -8,6 +10,19 @@ import { Injectable } from '@angular/core';
 export interface Tramite300105State {
   motivoRenunciaDeDerechos: string;
   mercacniaSolicitudControlar:boolean;
+  observaciones: string;
+  tercerosPopupState: boolean;
+
+  /**
+   * Datos de la tabla de mercancías asociadas al trámite.
+   */
+  
+  mercanciaTablaDatos: ConfiguracionItem[];
+    /**
+   * Datos de la tabla de mercancías asociadas al trámite.
+   */
+    destinatarioTablaDatos: DestinatarioConfiguracionItem[];
+
   /**
    * claveDeReferencia
    * @type {string}
@@ -68,6 +83,11 @@ export function createInitialState(): Tramite300105State {
   return {
     motivoRenunciaDeDerechos: '',
     mercacniaSolicitudControlar:true,
+
+    mercanciaTablaDatos: [],
+    destinatarioTablaDatos: [],
+    observaciones: '',
+    tercerosPopupState: false,
 
     /**
      * claveDeReferencia
@@ -146,6 +166,47 @@ export class Tramite300105Store extends Store<Tramite300105State> {
       motivoRenunciaDeDerechos,
     }));
   }
+
+   /**
+   * 
+   * Actualiza el estado con los datos de la tabla de mercancía proporcionados.
+   *
+   * {ConfiguracionItem[]} mercanciaTablaDatos - Los datos de la tabla de mercancía.
+   */
+   public setMercanciaTablaDatos(mercanciaTablaDatos: ConfiguracionItem[]): void {
+    this.update((state) => ({
+      ...state,
+      mercanciaTablaDatos,
+    }));
+  }
+
+  public setDestinatarioTablaDatos(destinatarioTablaDatos: DestinatarioConfiguracionItem[]): void {
+    this.update((state) => ({
+      ...state,
+      destinatarioTablaDatos,
+    }));
+  }
+
+  public setObservaciones(observaciones: string): void {
+    this.update((state) => ({
+      ...state,
+      observaciones,
+    }));
+  }
+
+    /**
+   * 
+   * Actualiza el estado con el estado del popup de terceros.
+   *
+   * {boolean} tercerosPopupState - El estado del popup de terceros.
+   */
+
+    public setTercerosPopupState(tercerosPopupState: boolean): void {
+      this.update((state) => ({
+        ...state,
+        tercerosPopupState,
+      }));
+    }
 
   /**
    * Guarda la clave de referencia en el estado.
