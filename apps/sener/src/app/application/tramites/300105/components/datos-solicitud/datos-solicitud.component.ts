@@ -6,23 +6,23 @@ import {
 } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import {
+  ConfiguracionItem,
+  SERIE_TABLA_CONFIGURACION,
+  SerieConfiguracionItem,
+  TABLA_CONFIGURACION,
+} from '../../enum/mercancia-tabla.enum';
+import {
   CrosslistBoton,
   OBTENER_BOTONES_CROSSLIST,
 } from '../../enum/crosslist-botons.enum';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import {
-  TABLA_CONFIGURACION,
-  ConfiguracionItem,
-  SerieConfiguracionItem,
-  SERIE_TABLA_CONFIGURACION,
-} from '../../enum/mercancia-tabla.enum';
+import { Subject, takeUntil } from 'rxjs';
 import {
   Tramite300105State,
   Tramite300105Store,
 } from '../../estados/tramite300105.store';
-import { Subject, takeUntil } from 'rxjs';
-import { Tramite300105Query } from '../../estados/tramite300105.query';
 import { AutorizacionDeRayosXService } from '../../services/autorizacion-de-rayos-x.service';
+import { Tramite300105Query } from '../../estados/tramite300105.query';
 
 /*
  * Componente que gestiona los datos de la solicitud, incluyendo la configuración de formularios,
@@ -188,7 +188,9 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     private tramite300105Store: Tramite300105Store,
     private tramite300105Query: Tramite300105Query,
     private formBuilder: FormBuilder
-  ) {}
+  ) {
+    // No se realiza ninguna acción aquí.
+  }
 
   /**
    * Método del ciclo de vida de Angu131lar que se ejecuta al inicializar el componente.

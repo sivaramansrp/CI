@@ -9,15 +9,15 @@ import {
   CrosslistBoton,
   OBTENER_BOTONES_CROSSLIST,
 } from '../../enum/crosslist-botons.enum';
+import { DESTINATARIO_TABLA_CONFIGURACION, DestinatarioConfiguracionItem, MERCANCIA_TABLA_CONFIGURACION, MercanciaConfiguracionItem } from '../../enum/destinatario-tabla.enum';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Subject, takeUntil } from 'rxjs';
 import {
   Tramite300105State,
   Tramite300105Store,
 } from '../../estados/tramite300105.store';
-import { Subject, takeUntil } from 'rxjs';
-import { Tramite300105Query } from '../../estados/tramite300105.query';
 import { AutorizacionDeRayosXService } from '../../services/autorizacion-de-rayos-x.service';
-import { DESTINATARIO_TABLA_CONFIGURACION, DestinatarioConfiguracionItem, MERCANCIA_TABLA_CONFIGURACION, MercanciaConfiguracionItem } from '../../enum/destinatario-tabla.enum';
+import { Tramite300105Query } from '../../estados/tramite300105.query';
 
 /*
  * Componente que gestiona los datos de la solicitud, incluyendo la configuración de formularios,
@@ -183,7 +183,9 @@ export class DestinatariosComponent implements OnInit, OnDestroy {
     private tramite300105Store: Tramite300105Store,
     private tramite300105Query: Tramite300105Query,
     private formBuilder: FormBuilder
-  ) {}
+  ) {
+    // No se realiza ninguna acción aquí.
+  }
 
   /**
    * Método del ciclo de vida de Angu131lar que se ejecuta al inicializar el componente.

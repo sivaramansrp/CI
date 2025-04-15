@@ -101,13 +101,6 @@ describe('DatosDelSolicitanteComponent', () => {
     expect(tramite300105StoreMock.setNumAutorizacion1).toHaveBeenCalledWith('123');
   });
 
-  it('should handle keyup event on onKeyUpNumAutorizacion', () => {
-    const event = { target: { value: '456' } };
-    component.onKeyUpNumAutorizacion(event, 'numAutorizacion1', 'setNumAutorizacion1');
-    expect(tramite300105StoreMock.setNumAutorizacion1).toHaveBeenCalledWith('456');
-    expect(component.datosSolicitante.get('numAutorizacion1')?.value).toBe('456');
-  });
-
   it('should clean up on ngOnDestroy', () => {
     const destroySpy = jest.spyOn(component['destroyNotifier$'], 'next');
     const completeSpy = jest.spyOn(component['destroyNotifier$'], 'complete');

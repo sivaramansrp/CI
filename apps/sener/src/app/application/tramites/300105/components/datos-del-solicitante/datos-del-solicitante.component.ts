@@ -1,13 +1,13 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Subject, map, takeUntil } from 'rxjs';
 import {
   Tramite300105State,
   Tramite300105Store,
 } from '../../estados/tramite300105.store';
-import { Subject, map, takeUntil } from 'rxjs';
+import { AutorizacionDeRayosXService } from '../../services/autorizacion-de-rayos-x.service';
 import { Catalogo } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 import { CatalogosSelect } from '@libs/shared/data-access-user/src/core/models/shared/components.model';
-import { AutorizacionDeRayosXService } from '../../services/autorizacion-de-rayos-x.service';
 import { Tramite300105Query } from '../../estados/tramite300105.query';
 
 /**
@@ -43,6 +43,7 @@ export class DatosDelSolicitanteComponent implements OnInit, OnDestroy {
     @Inject(AutorizacionDeRayosXService)
     private autorizacionDeRayosXService: AutorizacionDeRayosXService
   ) {
+    // No se realiza ninguna acción aquí.
   }
 
   /**
@@ -126,24 +127,14 @@ export class DatosDelSolicitanteComponent implements OnInit, OnDestroy {
    * Maneja el evento de clic en un botón de radio.
    */
   onRadioClick(nombreControl: string, value: boolean): void {
-    const currentValue = this.datosSolicitante.get(nombreControl)?.value;
-    if (currentValue === value) {
+    const CURRENT_VALUE = this.datosSolicitante.get(nombreControl)?.value;
+    if (CURRENT_VALUE === value) {
       // Si se hace clic en el mismo valor, desmarcarlo
       this.datosSolicitante.get(nombreControl)?.setValue(false);
     } else {
       // De lo contrario, seleccionar el nuevo valor
       this.datosSolicitante.get(nombreControl)?.setValue(value);
     }
-  }
-
-  /**
-   * Método para manejar el evento de entrada de texto en el campo de autorización.
-   */
-  onKeyUpNumAutorizacion(event:any ,nombreControl:string ,  metodoNombre: keyof Tramite300105Store): void {
-    const VALOR = event.target.value;
-    (this.tramite300105Store[metodoNombre] as (value: unknown) => void)(VALOR);
-    this.datosSolicitante.get(nombreControl)?.setValue(VALOR);
-    console.log(`${nombreControl}: ${VALOR} , set to ${this.datosSolicitante.get(nombreControl)?.value}`);
   }
 
   /**

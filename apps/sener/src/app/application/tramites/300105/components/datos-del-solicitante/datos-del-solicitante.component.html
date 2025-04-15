@@ -66,21 +66,39 @@
           </div>
           <div class="col-md-1">
             <div class="form-group"> <input type="text" id="numAutorizacion1" formControlName="numAutorizacion1"  maxlength="3" style="width: 50px"
-              (keyup)="onKeyUpNumAutorizacion($event, 'numAutorizacion1', 'setNumAutorizacion1')" /></div>
+              (change)="
+                  setValoresStore(
+                    datosSolicitante,
+                    'numAutorizacion1',
+                    'setNumAutorizacion1'
+                  )
+                "/></div>
           </div>
           <div class="col-md-1 text-center">
             /
           </div>
           <div class="col-md-1">
             <div class="form-group"> <input type="text" id="numAutorizacion2" formControlName="numAutorizacion2"  maxlength="4" style="width: 50px"
-              (keyup)="onKeyUpNumAutorizacion($event, 'numAutorizacion2', 'setNumAutorizacion2')" /></div>   
+              (change)="
+                  setValoresStore(
+                    datosSolicitante,
+                    'numAutorizacion2',
+                    'setNumAutorizacion2'
+                  )
+                "/></div>   
           </div>
           <div class="col-md-1 text-center">
             /
           </div>
           <div class="col-md-1">
             <div class="form-group"> <input type="text" id="numAutorizacion3" formControlName="numAutorizacion3"  maxlength="3" style="width: 50px"
-              (keyup)="onKeyUpNumAutorizacion($event, 'numAutorizacion3', 'setNumAutorizacion3')" /></div> 
+              (change)="
+                  setValoresStore(
+                    datosSolicitante,
+                    'numAutorizacion3',
+                    'setNumAutorizacion3'
+                  )
+                "/></div> 
           </div>
         </div>
       </ng-container>

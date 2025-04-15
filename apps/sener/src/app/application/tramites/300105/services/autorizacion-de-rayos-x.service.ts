@@ -1,6 +1,6 @@
+import { Catalogo, RespuestaCatalogos } from '@libs/shared/data-access-user/src';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Catalogo, RespuestaCatalogos } from '@libs/shared/data-access-user/src';
 import { Observable } from 'rxjs';
 
 /**
@@ -53,7 +53,9 @@ export class AutorizacionDeRayosXService {
    * Parámetros:
    *   - http: Cliente HTTP para realizar solicitudes a los catálogos.
    */
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+    // No se realiza ninguna acción aquí.
+  }
 
   /**
    * Método getBancoData

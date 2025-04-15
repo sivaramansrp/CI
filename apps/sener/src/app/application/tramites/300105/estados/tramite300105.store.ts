@@ -1,7 +1,7 @@
 import { Store, StoreConfig } from '@datorama/akita';
-import { Injectable } from '@angular/core';
 import { ConfiguracionItem } from '../enum/mercancia-tabla.enum';
 import { DestinatarioConfiguracionItem } from '../enum/destinatario-tabla.enum';
+import { Injectable } from '@angular/core';
 
 /**
  * interface Tramite300105State
