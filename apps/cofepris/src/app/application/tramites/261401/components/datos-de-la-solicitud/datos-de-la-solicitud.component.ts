@@ -6,8 +6,12 @@ import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { PropietarioComponent } from '../../../../shared/components/propietario/propietario.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import { Subject } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
+import { Tramite261401Query } from '../../../../estados/queries/tramite261401.query';
+import { Solicitud261401State, Tramite261401Store } from '../../../../estados/tramites/tramite261401.store';
 import { Validators } from '@angular/forms';
+import { SolicitudModificacionPermisoSalidaTerritorioService } from '../../services/solicitud-modificacion-permiso-salida-territorio.service';
+
 @Component({
   selector: 'app-datos-de-la-solicitud',
   standalone: true,
@@ -19,30 +23,38 @@ import { Validators } from '@angular/forms';
   styleUrl: './datos-de-la-solicitud.component.scss',
 })
 export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
-  form!: FormGroup;
+  formulario!: FormGroup;
   private destroy$ = new Subject<void>();
-
+  private seccionState!: Solicitud261401State;
 
   constructor(
     private fb: FormBuilder,
-    // private tramite260904Query: Tramite260904Query,
-    // private tramite260904Store: Tramite260904Store
+    private tramite261401Store: Tramite261401Store,
+    private tramite261401Query: Tramite261401Query,
+    private service: SolicitudModificacionPermisoSalidaTerritorioService
   ) {
     // Constructor
   }
 
   ngOnInit(): void {
-    this.crearFormulario();
+    this.tramite261401Query.selectSolicitud$?.pipe(takeUntil(this.destroy$))
+        .subscribe((data:Solicitud261401State) => {
+          this.seccionState = data;    
+        });
+        this.crearFormulario();
+
   }
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
   }
-
+  setValoresStore(form: FormGroup, campo: string) :void{
+    const VALOR = form.get(campo)?.value;
+    this.tramite261401Store.establecerDatos({ [campo]: VALOR });
+  }
   crearFormulario(): void {
-    this.form = this.fb.group({
-      justificación: ['', [Validators.required]],
+    this.formulario = this.fb.group({
+      observaciones: [this.seccionState?.observaciones, [Validators.required]],
     });
-
   }
 }

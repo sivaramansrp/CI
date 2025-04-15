@@ -22,6 +22,12 @@ export class SolicitudModificacionPermisoSalidaTerritorioComponent {
 
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
 
+   /**
+   * Mensaje de alerta utilizado en el componente.
+   * Puede ser asignado a cualquiera de las claves definidas en TEXTOS.
+   */
+   //public alert_message: string = AVISO.Aviso;
+
   datosPasos: DatosPasos = {
     nroPasos: this.pasosSolicitar.length,
     indice: this.indice,
