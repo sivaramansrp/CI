@@ -24,12 +24,13 @@ import { TRAMITES_ASOCIADOS } from '../../constantes/aviso-de-funcionamiento.enu
   styleUrl: './tramites-asociados-seccion.component.scss',
 })
 export class TramitesAsociadosSeccionComponent implements OnInit, OnDestroy {
+
   // Subject utilizado para manejar la destrucción de suscripciones y evitar fugas de memoria.
   private destroy$: Subject<void> = new Subject();
 
   /**
    * Constructor del componente.
-   * @param establecimientoService Servicio para interactuar con los datos de trámites asociados.
+   * establecimientoService Servicio para interactuar con los datos de trámites asociados.
    */
   constructor(private establecimientoService: EstablecimientoService) {
     //constructor
