@@ -559,7 +559,7 @@ eliminarPedimento(borrar: boolean): void {
     this.domicilioEstablecimiento.get('observaciones')?.disable();
   }
 });
-
+console.log(this.domicilioEstablecimiento.get('ideGenerica1')?.value);
   }
   /**
  * Alterna el estado colapsable de la sección "Uno".

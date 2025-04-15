@@ -1,14 +1,17 @@
 import { Component, ViewChild } from '@angular/core';
 
 import { AccionBoton, DatosPasos, ListaPasosWizard, WizardComponent } from '@libs/shared/data-access-user/src';
+
 import { AVISO_PRIVACIDAD, MODIFICACION_PERMISO_DATA, MODIFICACION_PERMISO_ENUM } from '../../constantes/mod-permiso.enum';
+import { PasoUnoPagesComponent } from '../paso-uno-pages/paso-uno-pages.component';
 
 @Component({
   selector: 'app-modificacion-permiso-sanitario-la-salud',
   templateUrl: './modificacion-permiso-sanitario-la-salud.component.html',
 })
 export class ModificacionPermisoSanitarioLaSaludComponent {
-   /**
+  @ViewChild(PasoUnoPagesComponent) pasoUnoComponent!: PasoUnoPagesComponent;
+  /**
      * 
      * Una cadena que representa la clase CSS para una alerta de información.
      * Esta clase se utiliza para aplicar estilo a los mensajes de información en el componente.
@@ -69,7 +72,16 @@ export class ModificacionPermisoSanitarioLaSaludComponent {
    * - Si la acción es 'cont', avanza al siguiente paso utilizando el método `siguiente` del componente `WizardComponent`.
    * - Si la acción no es 'cont', retrocede al paso anterior utilizando el método `atras` del componente `WizardComponent`.
    */
+  payload: any = {}; // Object to store all form values
   getValorIndice(e: AccionBoton): void {
+    if (this.pasoUnoComponent) {
+      // Call collectFormValues() from PasoUnoPagesComponent
+      this.payload = this.pasoUnoComponent.collectFormValues();
+      console.log('Payload with All Tabs Values:', this.payload);
+    } else {
+      console.error('PasoUnoPagesComponent is not initialized.');
+    }
+  
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
       if (e.accion === 'cont') {
@@ -78,5 +90,19 @@ export class ModificacionPermisoSanitarioLaSaludComponent {
         this.wizardComponent.atras();
       }
     }
+  }
+
+  collectAllFormValues(): any {
+    const allFormValues: any = {};
+  
+   
+    if (this.pasoUnoComponent) {
+      const pasoUnoValues = this.pasoUnoComponent.collectFormValues();
+      allFormValues.pasoUno = pasoUnoValues;
+    }
+  
+   
+  
+    return allFormValues;
   }
 }
