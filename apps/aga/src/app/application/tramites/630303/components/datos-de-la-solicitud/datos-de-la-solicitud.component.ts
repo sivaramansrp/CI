@@ -20,6 +20,8 @@ import { RetornoImportacionTemporalService } from '../../services/retorno-import
 import { Tramite630303State, Tramite630303Store } from '../../estados/tramite630303.store';
 import { Tramite630303Query } from '../../estados/tramite630303.query';
 
+import { DatosMercanciaComponent } from "../datos-mercancia/datos-mercancia.component";
+
 /**
  * Componente que gestiona los datos de la solicitud para el trámite 630303.
  * Permite inicializar formularios, obtener datos de catálogos y manejar el estado del formulario.
@@ -27,7 +29,7 @@ import { Tramite630303Query } from '../../estados/tramite630303.query';
 @Component({
   selector: 'app-datos-de-la-solicitud',
   standalone: true,
-  imports: [CommonModule, TituloComponent, ReactiveFormsModule, CatalogoSelectComponent, InputFechaComponent, DatosRetornoProrrogaComponent, DatosRetornoAutorizacionComponent],
+  imports: [CommonModule, TituloComponent, ReactiveFormsModule, CatalogoSelectComponent, InputFechaComponent, DatosRetornoProrrogaComponent, DatosRetornoAutorizacionComponent, DatosMercanciaComponent],
   templateUrl: './datos-de-la-solicitud.component.html',
   styleUrl: './datos-de-la-solicitud.component.scss',
 })

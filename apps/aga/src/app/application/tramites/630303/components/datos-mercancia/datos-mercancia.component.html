@@ -1,0 +1,48 @@
+<div class="container">
+    <ng-titulo [titulo]="'Datos de la mercancía que se importará al país temporalmente'"></ng-titulo>
+    <form [formGroup]="datosMercancia">
+        <div class="row">
+            <div class="col-md-12">
+            <label for="descripcionMercancia" class="form-label">Descripción general de la mercancía *:</label>
+            <textarea id="descripcionMercancia" formControlName="descripcionMercancia" class="form-control"
+            (change)="setValorStore(datosMercancia,'descripcionMercancia')"></textarea>
+            <div
+                *ngIf="datosMercancia.get('descripcionMercancia')?.invalid && datosMercancia.get('descripcionMercancia')?.touched">
+                <small *ngIf="datosMercancia.get('descripcionMercancia')?.errors?.['required']" class="text-danger">Este campo es
+                    obligatorio.</small>
+                <small *ngIf="datosMercancia.get('descripcionMercancia')?.errors?.['pattern']" class="text-danger">
+                    Por favor, corrija la descripción general de la mercancía
+                </small>.
+            </div>
+        </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <label for="motivo" class="form-label">Motivo o justificación de la importación temporal *:</label>
+            <textarea id="motivo" formControlName="motivo" class="form-control"
+            (change)="setValorStore(datosMercancia,'motivo')"></textarea>
+            <div *ngIf="datosMercancia.get('motivo')?.invalid && datosMercancia.get('motivo')?.touched">
+                <small *ngIf="datosMercancia.get('motivo')?.errors?.['required']" class="text-danger">Este campo es obligatorio.</small>
+                <small *ngIf="datosMercancia.get('motivo')?.errors?.['pattern']" class="text-danger">
+                    Por favor, corrija el motivo o justificación de la importación temporal.
+                </small>
+            </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <label for="listaMercancia" class="form-label">Lista detallada de la mercancía *:</label>
+            <textarea id="listaMercancia" formControlName="listaMercancia" class="form-control"
+            (change)="setValorStore(datosMercancia,'listaMercancia')"></textarea>
+            <div *ngIf="datosMercancia.get('listaMercancia')?.invalid && datosMercancia.get('listaMercancia')?.touched">
+                <small *ngIf="datosMercancia.get('listaMercancia')?.errors?.['required']" class="text-danger">Este campo es
+                    obligatorio.</small>
+                <small *ngIf="datosMercancia.get('listaMercancia')?.errors?.['pattern']" class="text-danger">Por favor, corrija la lista
+                    detallada de la mercancía.</small>
+            </div>
+            </div>
+        </div>
+    </form>
+</div>

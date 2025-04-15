@@ -24,6 +24,7 @@ interface AccionBoton {
 @Component({
   selector: 'app-retorno-importacion-temporal',
   templateUrl:'./retorno-importacion-temporal-page.component.html',
+  standalone:false
 })
 export class RetornoImportacionTemporalComponent {
   /**

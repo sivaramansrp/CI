@@ -66,6 +66,21 @@ export interface Tramite630303State {
    * Fecha de vencimiento.
    */
   fechaVencimiento: string;
+
+  /**
+   * Descripción de la mercancía.
+   */
+  descripcionMercancia: string;
+
+  /**
+   * Motivo relacionado con el trámite.
+   */
+  motivo: string;
+
+  /**
+   * Lista de mercancías asociadas.
+   */
+  listaMercancia: string;
 }
 
 /**
@@ -86,7 +101,10 @@ export function createInitialState(): Tramite630303State {
     aduanaIngreso: '',
     seccionAduanera: '',
     fechaIngreso: '',
-    fechaVencimiento: ''
+    fechaVencimiento: '',
+    descripcionMercancia: '',
+    motivo: '',
+    listaMercancia: ''
   };
 }
 
