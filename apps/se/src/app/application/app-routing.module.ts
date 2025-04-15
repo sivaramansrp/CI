@@ -404,6 +404,12 @@ const ROUTES: Routes = [
         (m) => m.VehiculosUsadosAdaptadosModule
       ),
   },
+    {
+    path: 'expedicion-certificado-cupos',
+    loadChildren: () =>
+      import('./tramites/120204/expedicion-certificado-cupos.module').then(
+        (m) => m.ExpedicionCertificadoModule),
+  },
   {
     path: 'exportar-diamantes',
     loadChildren: () => 
