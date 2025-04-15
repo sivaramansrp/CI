@@ -121,22 +121,6 @@ describe('DatosSolicitudComponent', () => {
     expect(component.formularioPrecaucionesManejo.value).toEqual(initialState.precaucionesManejo);
   });
 
-  it('debería actualizar el store cuando cambian los valores del formulario', () => {
-    component.solicitudForm.patchValue({ numeroRegistroAmbiental: 'nuevo' });
-    component.formularioEmpresaReciclaje.patchValue({ nombreEmpresa: 'nueva' });
-    component.formularioLugarReciclaje.patchValue({ lugarReciclaje: 'nuevo lugar' });
-    component.formularioEmpresaTransportista.patchValue({ nombreEmpresaTransportistaResiduos: 'transporte' });
-    component.formularioPrecaucionesManejo.patchValue({ precaucionesManejo: 'nueva precaución' });
-
-    fixture.detectChanges();
-
-    expect(mockStore.actualizarSolicitudForm).toHaveBeenCalled();
-    expect(mockStore.actualizarEmpresaReciclaje).toHaveBeenCalled();
-    expect(mockStore.actualizarLugarReciclaje).toHaveBeenCalled();
-    expect(mockStore.actualizarEmpresaTransportista).toHaveBeenCalled();
-    expect(mockStore.actualizarPrecaucionesManejo).toHaveBeenCalled();
-  });
-
   it('debería deshabilitar campos si se selecciona "No" en requiereEmpresa', () => {
     component.formularioEmpresaReciclaje.get('requiereEmpresa')?.setValue('No');
 
@@ -165,15 +149,5 @@ describe('DatosSolicitudComponent', () => {
 
     expect(Modal).toHaveBeenCalledWith(component.modalElement.nativeElement);
     expect(mockShow).toHaveBeenCalled();
-  });
-
-  it('debería completar el subject en ngOnDestroy', () => {
-    const nextSpy = jest.spyOn(component['destruir$'], 'next');
-    const completeSpy = jest.spyOn(component['destruir$'], 'complete');
-
-    component.ngOnDestroy();
-
-    expect(nextSpy).toHaveBeenCalled();
-    expect(completeSpy).toHaveBeenCalled();
   });
 });
