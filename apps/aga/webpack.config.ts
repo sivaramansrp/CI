@@ -47,12 +47,5 @@ module.exports = {
   ],
   watchOptions: {
     ignored: 'node_modules'
-  },
-  devServer: {
-    static: {
-      watch: {
-        ignored: /node_modules/,
-      },
-    },
   }
 };
