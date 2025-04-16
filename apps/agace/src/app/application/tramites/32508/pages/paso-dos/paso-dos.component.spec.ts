@@ -2,11 +2,9 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { of, throwError } from 'rxjs';
 import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
-
 import { PasoDosComponent } from './paso-dos.component';
 import { Catalogo, CatalogosService } from '@ng-mf/data-access-user';
 import { CATALOGOS_ID } from '@ng-mf/data-access-user';
-import { Toast } from 'bootstrap';
 import { ToastrService } from 'ngx-toastr';
 
 describe('PasoDosComponent', () => {
@@ -17,25 +15,26 @@ describe('PasoDosComponent', () => {
 
   beforeEach(async () => {
     mockCatalogosService = {
-      getCatalogo: jest.fn(),
+      getCatalogo: jest.fn(() => of([])),
     };
-
+  
     mockToastrService = {
       success: jest.fn(),
       error: jest.fn(),
       warning: jest.fn(),
       info: jest.fn(),
     };
-
+  
     await TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, PasoDosComponent],
+      imports: [HttpClientTestingModule],
+      declarations: [PasoDosComponent], 
       providers: [
-        { provide: CatalogosService, useValue: mockCatalogosService},
+        { provide: CatalogosService, useValue: mockCatalogosService },
         { provide: ToastrService, useValue: mockToastrService },
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
     }).compileComponents();
-
+  
     fixture = TestBed.createComponent(PasoDosComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

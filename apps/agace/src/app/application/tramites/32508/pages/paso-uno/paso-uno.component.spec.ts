@@ -1,100 +1,58 @@
-// @ts-nocheck
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import {
-  Pipe,
-  PipeTransform,
-  Injectable,
-  CUSTOM_ELEMENTS_SCHEMA,
-  NO_ERRORS_SCHEMA,
-  Directive,
-  Input,
-  Output,
-} from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { By } from '@angular/platform-browser';
-import { Observable, of as observableOf, throwError } from 'rxjs';
-import { Component } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { Router } from '@angular/router';
 import { PasoUnoComponent } from './paso-uno.component';
-import { RegistroService } from '@ng-mf/data-access-user';
-
-@Injectable()
-class MockRegistroService {}
-
-@Directive({ selector: '[myCustom]' })
-class MyCustomDirective {
-  @Input() myCustom;
-}
-
-@Pipe({ name: 'translate' })
-class TranslatePipe implements PipeTransform {
-  transform(value) {
-    return value;
-  }
-}
-
-@Pipe({ name: 'phoneNumber' })
-class PhoneNumberPipe implements PipeTransform {
-  transform(value) {
-    return value;
-  }
-}
-
-@Pipe({ name: 'safeHtml' })
-class SafeHtmlPipe implements PipeTransform {
-  transform(value) {
-    return value;
-  }
-}
+import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
+import { PERSONA_MORAL_NACIONAL, DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
+import { TIPO_PERSONA } from '@ng-mf/data-access-user';
+import { By } from '@angular/platform-browser';
 
 describe('PasoUnoComponent', () => {
-  let fixture;
-  let component;
+  let component: PasoUnoComponent;
+  let fixture: ComponentFixture<PasoUnoComponent>;
+  let router: Router;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [FormsModule, ReactiveFormsModule, PasoUnoComponent],
-      declarations: [
-        TranslatePipe,
-        PhoneNumberPipe,
-        SafeHtmlPipe,
-        MyCustomDirective,
-      ],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
-      providers: [{ provide: RegistroService, useClass: MockRegistroService }],
-    })
-      .overrideComponent(PasoUnoComponent, {})
-      .compileComponents();
+  beforeEach(async () => {
+    const mockRouter = {
+      navigate: jest.fn(),
+    };
+
+    await TestBed.configureTestingModule({
+      imports: [SolicitanteComponent],
+      declarations: [PasoUnoComponent],
+      providers: [{ provide: Router, useValue: mockRouter }],
+    }).compileComponents();
+
     fixture = TestBed.createComponent(PasoUnoComponent);
-    component = fixture.debugElement.componentInstance;
+    component = fixture.componentInstance;
+    router = TestBed.inject(Router);
+    fixture.detectChanges();
   });
 
-  afterEach(() => {
-    component.ngOnDestroy = function () {};
-    fixture.destroy();
-  });
-
-  it('should run #constructor()', async () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should run #ngOnInit()', async () => {
-    component.registro = component.registro || {};
-    component.registro.getCatalogoById = jest
-      .fn()
-      .mockReturnValue(observableOf({}));
-    component.ngOnInit();
-    expect(component.registro.getCatalogoById).toHaveBeenCalled();
-  });
-
-  it('should run #ngAfterViewInit()', async () => {
-    component.solicitante = component.solicitante || {};
-    component.solicitante.obtenerTipoPersona = jest.fn();
+  it('should initialize persona and domicilioFiscal in ngAfterViewInit', () => {
+    const solicitanteSpy = jest.spyOn(component.solicitante, 'obtenerTipoPersona');
     component.ngAfterViewInit();
-    expect(component.solicitante.obtenerTipoPersona).toHaveBeenCalled();
+    expect(component.persona).toEqual(PERSONA_MORAL_NACIONAL);
+    expect(component.domicilioFiscal).toEqual(DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL);
+    expect(solicitanteSpy).toHaveBeenCalledWith(TIPO_PERSONA.MORAL_NACIONAL);
   });
 
-  it('should run #seleccionaTab()', async () => {
-    component.seleccionaTab({});
+  it('should update indice in seleccionaTab', () => {
+    component.seleccionaTab(2);
+    expect(component.indice).toBe(2);
+  });
+
+  it('should call obtenerTipoPersona on solicitante in ngAfterViewInit', () => {
+    const solicitanteSpy = jest.spyOn(component.solicitante, 'obtenerTipoPersona');
+    component.ngAfterViewInit();
+    expect(solicitanteSpy).toHaveBeenCalledWith(TIPO_PERSONA.MORAL_NACIONAL);
+  });
+
+  it('should render the SolicitanteComponent', () => {
+    const solicitanteElement = fixture.debugElement.query(By.directive(SolicitanteComponent));
+    expect(solicitanteElement).toBeTruthy();
   });
 });

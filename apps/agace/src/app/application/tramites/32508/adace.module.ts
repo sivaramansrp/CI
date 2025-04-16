@@ -10,6 +10,8 @@ import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
+import { AdaceService } from './services/adace.service';
+import { ToastrService } from 'ngx-toastr';
 
 
 @NgModule({
@@ -30,7 +32,8 @@ import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.co
     FormsModule,
     ReactiveFormsModule,
     AlertComponent,
-  ],
+   ],
+  providers: [ToastrService],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class AdaceModule { }

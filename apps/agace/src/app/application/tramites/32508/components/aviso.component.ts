@@ -22,6 +22,7 @@ import { Tramite32508Query } from '../state/Tramite32508.query';
   providers: [AdaceService],
   templateUrl: './aviso.component.html',
   styleUrl: './aviso.component.css',
+  
 })
 export class AvisoComponent implements OnInit, OnDestroy {
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);

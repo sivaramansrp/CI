@@ -37,7 +37,6 @@ interface AccionBoton {
 @Component({
   templateUrl: './solicitud-page.component.html',
   styles: ``,
- 
 })
 /**
  * Componente que representa la página de solicitud.
