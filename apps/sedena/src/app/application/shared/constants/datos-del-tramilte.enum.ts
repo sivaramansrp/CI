@@ -1,3 +1,10 @@
+/**
+ * Lista de aduanas disponibles para la lista cruzada.
+ * 
+ * @constant
+ * @type {string[]}
+ * @description Contiene un arreglo de nombres de aduanas disponibles para la lista cruzada.
+ */
 export const CROSLISTA_ADUANAS_DISPONIBLES: string[] = [
   'ACAPULCO, PUERTO Y AEROPUERT',
   'ADUANA DE PANTACO',
@@ -14,21 +21,29 @@ export const CROSLISTA_ADUANAS_DISPONIBLES: string[] = [
 ];
 
 /**
- * @constant PERMISO_DEFINITIVO_TITULO
- * @description Constante que contiene un arreglo de identificadores numéricos
- * relacionados con los permisos definitivos. Estos valores representan códigos
- * específicos utilizados en el sistema para identificar tipos de permisos.
- */
-export const PERMISO_DEFINITIVO_TITULO = [240119, 240118];
-
-/**
- * Constante que representa un conjunto de identificadores numéricos 
- * asociados a etiquetas específicas de países dentro del sistema.
+ * Identificadores numéricos relacionados con permisos definitivos.
  * 
  * @constant
- * @type {Map{number, string}}
- * @description Utilizado para identificar y manejar etiquetas relacionadas 
- * con países en el flujo de trabajo de la aplicación.
+ * @type {number[]}
+ * @description Representa códigos específicos utilizados en el sistema para identificar tipos de permisos definitivos.
+ */
+export const PERMISO_DEFINITIVO_TITULO = [240119, 240118, 240107];
+
+/**
+ * Identificadores numéricos relacionados con permisos aduaneros.
+ * 
+ * @constant
+ * @type {number[]}
+ * @description Representa códigos específicos utilizados en el sistema para identificar permisos aduaneros.
+ */
+export const PERMISO_ADUNA_TITULO = [240119, 240118, 240108];
+
+/**
+ * Mapa de etiquetas asociadas a países.
+ * 
+ * @constant
+ * @type {Map<number, string>}
+ * @description Contiene un mapa que asocia identificadores numéricos con etiquetas descriptivas de países.
  */
 export const PAISE_DENTINO_EITIQUETA: Map<number, string> = new Map<number, string>([
   [240119, 'País de procedencia'],
@@ -37,41 +52,48 @@ export const PAISE_DENTINO_EITIQUETA: Map<number, string> = new Map<number, stri
 ]);
  
 /**
- * Constante que define los códigos de mercancía que pueden mostrar la lista cruzada.
+ * Códigos de mercancía que pueden mostrar la lista cruzada.
  * 
  * @constant
  * @type {number[]}
- * @description Esta constante contiene un arreglo de identificadores numéricos que 
- * representan mercancías específicas para las cuales se permite mostrar la lista cruzada.
- * 
- * @example
- * // Uso de la constante
- * if (PUEDE_MOSTRAR_LA_LISTA_CRUZADA_FOR_MERCANCIA.includes(codigoMercancia)) {
- *   // Lógica para mostrar la lista cruzada
- * }
+ * @description Contiene un arreglo de identificadores numéricos que representan mercancías específicas para las cuales se permite mostrar la lista cruzada.
  */
 export const PUEDE_MOSTRAR_LA_LISTA_CRUZADA_FOR_MERCANCIA = [240108];
 
 /**
- * Constante que representa el período del semestre habilitado.
+ * Período del semestre habilitado.
  * 
  * @constant
  * @type {number[]}
- * @description Contiene un arreglo de números que identifican el semestre habilitado.
- * Este valor puede ser utilizado para validar o configurar funcionalidades relacionadas
- * con el período académico activo.
+ * @description Contiene un arreglo de números que identifican el semestre habilitado. Este valor puede ser utilizado para validar o configurar funcionalidades relacionadas con el período académico activo.
  */
-export const PERIODO_SEMESTRE_HABILITADO = [240119, 240108];
+export const PERIODO_SEMESTRE_HABILITADO = [240119, 240108, 240107];
 
 /**
- * Constante que representa el período del primer semestre.
+ * Identificadores numéricos relacionados con manifiestos y declaraciones.
  * 
- * Contiene un arreglo de objetos con las siguientes propiedades:
- * - `label`: Etiqueta descriptiva del período (por ejemplo, "1° semestre").
- * - `value`: Valor asociado al período (por ejemplo, "unoSemestre").
+ * @constant
+ * @type {number[]}
+ * @description Contiene un arreglo de identificadores numéricos relacionados con manifiestos y declaraciones en el sistema.
+ */
+
+export const MANIFIESTOS_DECLARACIONES = [240107];
+
+/**
+ * Identificadores numéricos relacionados con fechas de pago.
  * 
- * Esta constante puede ser utilizada para desplegar opciones en un formulario
- * o para manejar datos relacionados con el primer semestre en la aplicación.
+ * @constant
+ * @type {number[]}
+ * @description Contiene un arreglo de identificadores numéricos relacionados con fechas de pago en el sistema.
+ */
+export const FETCHA_PAGO = [240107];
+
+/**
+ * Período del primer semestre.
+ * 
+ * @constant
+ * @type {Array<{label: string, value: string}>}
+ * @description Contiene un arreglo de objetos que representan el primer semestre, con propiedades `label` y `value`.
  */
 export const PERIODO_UNO_SEMESTRE = [
   {
@@ -81,10 +103,11 @@ export const PERIODO_UNO_SEMESTRE = [
 ];
 
 /**
- * Constante que representa el período del segundo semestre.
- * Contiene un arreglo de objetos con las propiedades:
- * - `label`: Etiqueta descriptiva del período (en este caso, '2° semestre').
- * - `value`: Valor asociado al período (en este caso, 'dosSemestre').
+ * Período del segundo semestre.
+ * 
+ * @constant
+ * @type {Array<{label: string, value: string}>}
+ * @description Contiene un arreglo de objetos que representan el segundo semestre, con propiedades `label` y `value`.
  */
 export const PERIODO_DOS_SEMESTRE = [
   {
@@ -94,22 +117,11 @@ export const PERIODO_DOS_SEMESTRE = [
 ];
 
 /**
- * Mapa que asocia claves de tipo string con arreglos de números.
+ * Mapa de datos relacionados con trámites específicos.
  * 
- * Este mapa se utiliza para representar datos relacionados con un trámite específico.
- * Cada clave representa un identificador único del trámite, mientras que el valor asociado
- * es un arreglo de números que contiene información relevante para ese trámite.
- * 
- * Claves disponibles:
- * - 'unoSemestre': Representa datos del primer semestre.
- * - 'dosSemestre': Representa datos del segundo semestre.
- * - 'anoEnCurso': Representa datos del año en curso.
- * 
- * Ejemplo de uso:
- * ```typescript
- * const datos = DATOS_DEL_TRAMITE_MAP.get('unoSemestre');
- * console.log(datos); // [240119]
- * ```
+ * @constant
+ * @type {Map<string, number[]>}
+ * @description Este mapa asocia claves de tipo string con arreglos de números. Cada clave representa un identificador único del trámite, mientras que el valor asociado es un arreglo de números que contiene información relevante para ese trámite.
  */
 export const DATOS_DEL_TRAMITE_MAP: Map<string, number[]> = new Map([
   ['unoSemestre', [240119]],
@@ -118,9 +130,10 @@ export const DATOS_DEL_TRAMITE_MAP: Map<string, number[]> = new Map([
 ]);
 
 /**
- * Lista de IDs de países en los que se debe ocultar la opción "Agregar mercancía"
+ * Lista de IDs de países en los que se debe ocultar la opción "Agregar mercancía".
  * 
  * @constant
  * @type {number[]}
+ * @description Contiene un arreglo de identificadores numéricos de países donde se debe ocultar la opción "Agregar mercancía".
  */
 export const AGGREGAR_MERCANCIA_PAISE_OCULTAR = [240108];
