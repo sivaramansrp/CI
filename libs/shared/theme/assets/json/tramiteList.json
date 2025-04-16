@@ -1979,6 +1979,13 @@
         "linkDashboard": "/aga/invocar-modulo/solicitante",
         "linkDepartment": "/pago/invocar-modulo/solicitante",
         "department": "aga"
+    },
+    {
+        "id": 284,
+        "tramite": 260913,
+        "linkDashboard": "/cofepris/modificacion-del-permiso/pantallas",
+        "linkDepartment": "/pago/modificacion-del-permiso/pantallas",
+        "department": "cofepris"
     }
 
     
