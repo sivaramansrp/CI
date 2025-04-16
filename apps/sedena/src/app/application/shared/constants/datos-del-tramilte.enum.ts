@@ -36,7 +36,7 @@ export const PERMISO_DEFINITIVO_TITULO = [240119, 240118, 240107];
  * @type {number[]}
  * @description Representa códigos específicos utilizados en el sistema para identificar permisos aduaneros.
  */
-export const PERMISO_ADUNA_TITULO = [240119, 240118, 240108];
+export const PERMISO_ADUNA_TITULO = [240119, 240118];
 
 /**
  * Mapa de etiquetas asociadas a países.
@@ -58,7 +58,7 @@ export const PAISE_DENTINO_EITIQUETA: Map<number, string> = new Map<number, stri
  * @type {number[]}
  * @description Contiene un arreglo de identificadores numéricos que representan mercancías específicas para las cuales se permite mostrar la lista cruzada.
  */
-export const PUEDE_MOSTRAR_LA_LISTA_CRUZADA_FOR_MERCANCIA = [240108];
+export const PUEDE_MOSTRAR_LA_LISTA_CRUZADA_FOR_MERCANCIA = [240108, 240107];
 
 /**
  * Período del semestre habilitado.
@@ -87,6 +87,15 @@ export const MANIFIESTOS_DECLARACIONES = [240107];
  * @description Contiene un arreglo de identificadores numéricos relacionados con fechas de pago en el sistema.
  */
 export const FETCHA_PAGO = [240107];
+
+/**
+ * Identificadores numéricos relacionados con CURP.
+ * 
+ * @constant
+ * @type {number[]}
+ * @description Contiene un arreglo de identificadores numéricos relacionados con CURP en el sistema.
+ */
+export const ES_CURP = [240107];
 
 /**
  * Período del primer semestre.

@@ -19,6 +19,7 @@ import { TipoPersona } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { Validators } from '@angular/forms';
 import { takeUntil } from 'rxjs';
+
 /**
  * @component AgregarProveedorComponent
  * @description Componente responsable de manejar el formulario para agregar proveedores.
@@ -100,7 +101,7 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
     private ubicaccion: Location // eslint-disable-next-line no-empty-function
   ) {}
   /**
-   * Crea el formulario reactivo `agregarDestinatarioFinal` utilizando `FormBuilder`.
+   * Crea el formulario reactivo `agregarProveedorForm` utilizando `FormBuilder`.
    * Define los campos y sus validaciones.
    *
    */
