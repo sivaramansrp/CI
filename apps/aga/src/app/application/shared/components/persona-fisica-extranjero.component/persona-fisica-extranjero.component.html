@@ -1,1 +1,84 @@
-<p>persona-fisica-extranjero works!</p>
+<form [formGroup]="datosDelFabricanteForm">
+    @if(personaFisicaExtranjero) {
+    <div class="row mt-3">
+
+        <div class="col-md-4">
+            <label class="form-label" for="nombre">Nombre: </label>
+            <input type="text" class="form-control" id="nombre" name="nombre" formControlName="nombre"
+                (change)="setValoresStore(datosDelFabricanteForm,'nombre')">
+        </div>
+        <div class="col-md-4">
+            <label class="form-label" for="apellidoPaterno">Apellido Paterno: </label>
+            <input type="text" class="form-control" id="apellidoPaterno" name="apellidoPaterno"
+                formControlName="apellidoPaterno" (change)="setValoresStore(datosDelFabricanteForm,'apellidoPaterno')">
+        </div>
+        <div class="col-md-4">
+            <label class="form-label" for="apellidoMaterno">Apellido Materno: </label>
+            <input type="text" class="form-control" id="apellidoMaterno" name="apellidoMaterno"
+                formControlName="apellidoMaterno" (change)="setValoresStore(datosDelFabricanteForm,'apellidoMaterno')">
+        </div>
+    </div>
+    } @else if (personaFisicaExtranjero === false) {
+    <div class="row mt-3">
+        <div class="col-md-12">
+            <label class="form-label" for="razonSocial">Denominacion o razon social :</label>
+            <span class="require">*</span>
+            <input type="text" class="form-control" id="razonSocial" name="razonSocial" formControlName="razonSocial"
+                (change)="setValoresStore(datosDelFabricanteForm,'razonSocial')">
+        </div>
+    </div>
+    }
+
+    <div class="row">
+        <div class="col-md-4">
+            <label class="form-label" for="calle">Calle: </label>
+            <input type="text" class="form-control" id="calle" name="calle" formControlName="calle"
+                (change)="setValoresStore(datosDelFabricanteForm,'calle')"/>
+                
+        </div>
+        <div class="col-md-4">
+            <label class="form-label" for="numeroExterior">Número exterior: </label>
+            <input type="text" class="form-control" id="numeroExterior" name="numeroExterior"
+                formControlName="numeroExterior" (change)="setValoresStore(datosDelFabricanteForm,'numeroExterior')">
+        </div>
+        <div class="col-md-4">
+            <label class="form-label" for="numeroInterior">Número interior: </label>
+            <input type="text" class="form-control" id="numeroInterior" name="numeroInterior"
+                formControlName="numeroInterior" (change)="setValoresStore(datosDelFabricanteForm,'numeroInterior')">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <app-catalogo-select id="pais" [catalogo]="tiposSolicitudNoOptions" formControlName="pais" [label]="'País:'"
+                [required]="true" name="pais" (change)="paisSeleccion()"></app-catalogo-select>
+        </div>
+
+
+
+        <div class="col-md-4">
+            <label class="form-label" for="estadoLocalidad">Estado y Localidad: </label>
+            <input type="text" class="form-control" id="estadoLocalidad" name="estadoLocalidad"
+                formControlName="estadoLocalidad" (change)="setValoresStore(datosDelFabricanteForm,'estadoLocalidad')">
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4">
+            <label class="form-label" for="correoElectronico">Correo Electronico: </label>
+            <input type="text" class="form-control" id="correoElectronico" name="correoElectronico"
+                formControlName="correoElectronico"
+                (change)="setValoresStore(datosDelFabricanteForm,'correoElectronico')">
+        </div>
+        <div class="col-md-4">
+            <label class="form-label" for="telefono">Correo Electronico: </label>
+            <input type="text" class="form-control" id="telefono" name="telefono" formControlName="telefono"
+                (change)="setValoresStore(datosDelFabricanteForm,'telefono')">
+        </div>
+        <div class="col-md-4">
+            <label class="form-label" for="codigoPostal">Código postal: </label>
+            <input type="text" class="form-control" id="codigoPostal" name="codigoPostal" formControlName="codigoPostal"
+                (change)="setValoresStore(datosDelFabricanteForm,'codigoPostal')">
+        </div>
+
+    </div>
+</form>

@@ -12,13 +12,14 @@ import { PasoDosComponent} from './pages/paso-dos/paso-dos.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
-
+import { PersonaFisicaExtranjeroComponent } from '../../shared/components/persona-fisica-extranjero.component/persona-fisica-extranjero.component';
 import {TipoDePropietarioComponent}from '../../shared/components/tipo-de-propietario/tipo-de-propietario.component';
 
 
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { SolicitudComponent } from './components/solicitud/solicitud.component';
+
 
 
 @NgModule({
@@ -36,6 +37,7 @@ import { SolicitudComponent } from './components/solicitud/solicitud.component';
     PasoDosComponent,
     TituloComponent,
     TipoDePropietarioComponent,
+    PersonaFisicaExtranjeroComponent,
     InputRadioComponent,
     SolicitanteComponent,
     ReactiveFormsModule,

@@ -28,12 +28,8 @@
     <div class="row">
       <div class="col-md-12">
         @if(propietarioOptionsNoForm) {
-        <app-persona-fisica-extranjero></app-persona-fisica-extranjero>
-        } @else if (propietarioOptionsNoForm === false) {
-
-        <div>Working</div>
-
-        }
+        <app-persona-fisica-extranjero [personaFisicaExtranjero] = personaFisicaExtranjero></app-persona-fisica-extranjero>
+        } 
       </div>
     </div>
 

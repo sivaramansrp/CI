@@ -2,12 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 
 import { Subject, takeUntil } from 'rxjs';
-
+import { Tramite630104State, Tramite630104Store } from '../../estados/tramites/tramite630104.store';
 import { EquipoEInstrumentosMusicalesService } from '../../services/equipo-e-instrumentos-musicales.service';
-
 import { FormGroup } from '@angular/forms';
-
-import { Tramite630104State, Tramite630104Store, } from '../../estados/tramites/tramite630104.store'; // Adjusted the path to the correct location
 
 import { Tramite630104Query } from '../../estados/queries/tramite630104.query';
 
@@ -20,13 +17,16 @@ import { Tramite630104Query } from '../../estados/queries/tramite630104.query';
   styleUrl: './solicitud.component.scss',
 })
 export class SolicitudComponent implements OnInit {
-
   /**
    * Opciones disponibles para el tipo de solicitud.
    * @type {Catalogo[]}
    */
   tiposSolicitudOptions: Catalogo[] = [];
 
+  /**
+   * Opciones disponibles para el tipo de solicitud sin opciones adicionales.
+   * @type {Catalogo[]}
+   */
   tiposSolicitudNoOptions: Catalogo[] = [];
 
   /**
@@ -52,7 +52,7 @@ export class SolicitudComponent implements OnInit {
     private equipoEInstrumentosMusicalesService: EquipoEInstrumentosMusicalesService,
     private tramite630104Store: Tramite630104Store,
     private tramite630104Query: Tramite630104Query
-  ) { }
+  ) {}
 
   /**
    * Método que se ejecuta al inicializar el componente.
@@ -82,9 +82,8 @@ export class SolicitudComponent implements OnInit {
   }
 
   /**
-   * Obtiene las opciones de propietario desde el servicio.
+   * Obtiene las opciones de propietario sin opciones adicionales desde el servicio.
    */
-
   fetchPropietarioNoOptions(): void {
     this.equipoEInstrumentosMusicalesService
       .getPropietarioNoOptions()
@@ -93,7 +92,6 @@ export class SolicitudComponent implements OnInit {
         this.tiposSolicitudNoOptions = data;
       });
   }
-
 
   /**
    * Establece valores en el almacén del estado del trámite.
