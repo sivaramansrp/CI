@@ -295,6 +295,13 @@ const ROUTES: Routes = [
         (m) => m.PermisoDeImportacionModule)
   },
   {
+    path: 'permiso-sujetos',
+    loadChildren: () =>
+      import(
+        './tramites/260504/permiso-sujetos.module'
+      ).then((m) => m.PermisoSujetosModule),
+  },
+  {
     path: 'permiso-importacion-calidad',
     loadChildren: () =>
       import('./tramites/260514/parmiso-importacion-calidad.module').then(

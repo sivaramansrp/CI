@@ -1528,8 +1528,8 @@
     {
         "id": 219,
         "tramite": 260504,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "/cofepris/permiso-sujetos/plaguicidas",
+        "linkDepartment": "/pago/permiso-sujetos/plaguicidas",
         "department": "cofepris"
     },
     {
