@@ -51,12 +51,12 @@ describe('RepresentanteLegalComponent', () => {
   it('should update form controls and call store on button click', () => {
     const event: ModeloDeFormaDinamica = {
       id: 'consultarIDC',
-      label_nombre: 'Buscar',
+      labelNombre: 'Buscar',
       campo: 'buscar',
       clase: 'col-md-8',
-      tipo_input: 'button',
+      tipoInput: 'button',
       desactivado: false,
-      margin_top: 5,
+      marginTop: 5,
     };
   
     component.alHacerClicEnElBoton(event);
