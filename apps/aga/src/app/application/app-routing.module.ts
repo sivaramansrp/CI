@@ -219,7 +219,14 @@ const ROUTES: Routes = [
       import('./tramites/11106/cancelacion-donaciones.module').then(
         (m) => m.CancelacionDonacionesModule
       ),
-  }  
+  },
+  {
+    path: 'codigo-transportista',
+    loadChildren: () =>
+      import('./tramites/40402/codigo-transportista.module').then(
+        (m) => m.CodigoTransportistaModule
+      ),
+  },
 ];
 
 @NgModule({
