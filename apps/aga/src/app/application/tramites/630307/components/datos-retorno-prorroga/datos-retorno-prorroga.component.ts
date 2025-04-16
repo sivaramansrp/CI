@@ -14,24 +14,26 @@ import { FECHA_INICIO_PRORROGA, FECHA_VENCIMIENTO_PRORROGA } from '../../enum/re
   templateUrl: './datos-retorno-prorroga.component.html',
   styleUrl: './datos-retorno-prorroga.component.scss',
 })
-export class DatosRetornoProrrogaComponent{
+export class DatosRetornoProrrogaComponent {
+  /**
+   * Configuración para el campo de fecha de inicio de la prórroga.
+   */
+  inputFechaInicioProrroga: InputFecha = FECHA_INICIO_PRORROGA;
 
-  inputFechaInicioProrroga: InputFecha = FECHA_INICIO_PRORROGA
-  inputFechaVencimientoProrroga: InputFecha = FECHA_VENCIMIENTO_PRORROGA
+  /**
+   * Configuración para el campo de fecha de vencimiento de la prórroga.
+   */
+  inputFechaVencimientoProrroga: InputFecha = FECHA_VENCIMIENTO_PRORROGA;
 
-  cambioFechaVencimientoProrroga(nuevo_valor: string): void {
-    this.datosImportacionRetornoProrrogaGeneralFormulario.patchValue({
-      fechaVencimientoProrroga: nuevo_valor,
-    });
-  }
-  cambioFechaInicioProrroga(nuevo_valor: string): void {
-    this.datosImportacionRetornoProrrogaGeneralFormulario.patchValue({
-      fechaInicioProrroga: nuevo_valor,
-    });
-  }
-
+  /**
+   * Formulario reactivo para capturar los datos generales de la prórroga.
+   */
   datosImportacionRetornoProrrogaGeneralFormulario!: FormGroup;
 
+  /**
+   * Constructor del componente.
+   * Inicializa el formulario reactivo con validaciones para los campos requeridos.
+   */
   constructor(private fb: FormBuilder) {
     this.datosImportacionRetornoProrrogaGeneralFormulario = this.fb.group({
       folioInformacionGeneralProrroga: [
@@ -40,6 +42,26 @@ export class DatosRetornoProrrogaComponent{
       ],
       fechaInicioProrroga: ['', Validators.required],
       fechaVencimientoProrroga: ['', Validators.required],
+    });
+  }
+
+  /**
+   * Maneja el cambio en la fecha de vencimiento de la prórroga.
+   * Actualiza el valor del campo `fechaVencimientoProrroga` en el formulario.
+   */
+  cambioFechaVencimientoProrroga(nuevo_valor: string): void {
+    this.datosImportacionRetornoProrrogaGeneralFormulario.patchValue({
+      fechaVencimientoProrroga: nuevo_valor,
+    });
+  }
+
+  /**
+   * Maneja el cambio en la fecha de inicio de la prórroga.
+   * Actualiza el valor del campo `fechaInicioProrroga` en el formulario.
+   */
+  cambioFechaInicioProrroga(nuevo_valor: string): void {
+    this.datosImportacionRetornoProrrogaGeneralFormulario.patchValue({
+      fechaInicioProrroga: nuevo_valor,
     });
   }
 }

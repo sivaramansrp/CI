@@ -30,6 +30,7 @@ export class DatosRetornoAutorizacionComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder, private retornoImportacionTemporalService: RetornoImportacionTemporalService
   ) {
+    // Inicializa el formulario reactivo con validaciones para los campos requeridos.
     this.datosImportacionRetornoAutorizacionGeneralFormulario = this.fb.group({
       folioInformacionGeneralAutorizacion: ['', [Validators.required, Validators.pattern(REGEX_PATRON_ALFANUMERICO)]],
       aduanaIngreso: ['', Validators.required],
@@ -39,11 +40,19 @@ export class DatosRetornoAutorizacionComponent implements OnInit, OnDestroy {
     })
   }
 
+  /**
+   * Método que se ejecuta al inicializar el componente.
+   * Obtiene las opciones de aduana de ingreso y sección aduanera desde el servicio.
+   */
   ngOnInit(): void {
     this.getAduanaDeIngreso();
     this.getSeccionAduanera();
   }
 
+  /**
+   * Obtiene las opciones de aduana de ingreso desde el servicio.
+   * Actualiza el catálogo de opciones de aduana en el componente.
+   */
   getAduanaDeIngreso(): void {
     this.retornoImportacionTemporalService.getAduanaDeIngreso()
       .pipe(takeUntil(this.destroyed$))
@@ -52,6 +61,11 @@ export class DatosRetornoAutorizacionComponent implements OnInit, OnDestroy {
       }
       );
   }
+
+  /**
+   * Obtiene las opciones de sección aduanera desde el servicio.
+   * Actualiza el catálogo de opciones de sección aduanera en el componente.
+   */
   getSeccionAduanera(): void {
     this.retornoImportacionTemporalService.getSeccionAduanera()
       .pipe(takeUntil(this.destroyed$))
@@ -59,18 +73,31 @@ export class DatosRetornoAutorizacionComponent implements OnInit, OnDestroy {
         this.seccionAduaneraOpciones = data;
       });
   }
+
+  /**
+   * Maneja el cambio en la fecha de ingreso.
+   * Actualiza el valor de la fecha de vencimiento en el formulario.
+   */
   cambioFechaIngreso(nuevo_valor: string): void {
     this.datosImportacionRetornoAutorizacionGeneralFormulario.patchValue({
       fechaVencimientoProrroga: nuevo_valor,
     });
   }
 
+  /**
+   * Maneja el cambio en la fecha de vencimiento.
+   * Actualiza el valor de la fecha de vencimiento en el formulario.
+   */
   cambioFechaVencimiento(nuevo_valor: string): void {
     this.datosImportacionRetornoAutorizacionGeneralFormulario.patchValue({
       fechaVencimiento: nuevo_valor,
     });
   }
 
+  /**
+   * Método que se ejecuta al destruir el componente.
+   * Completa el observable `destroyed$` para evitar fugas de memoria.
+   */
   ngOnDestroy(): void {
     this.destroyed$.next();
     this.destroyed$.complete();

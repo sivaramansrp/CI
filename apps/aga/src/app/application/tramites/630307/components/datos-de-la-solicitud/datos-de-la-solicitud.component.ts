@@ -6,12 +6,11 @@ import { Subject, takeUntil } from 'rxjs';
 
 import { Catalogo, InputFecha, TituloComponent } from "@ng-mf/data-access-user";
 import { CatalogoSelectComponent } from "@ng-mf/data-access-user";
-import { DatosMercanciaImportacionTemporalComponent } from '../datos-mercancia-importacion-temporal/datos-mercancia-importacion-temporal.component';
+import { DatosMercanciaComponent } from '../datos-mercancia/datos-mercancia.component';
 import { InputFechaComponent } from "@ng-mf/data-access-user";
 
 import { DatosRetornoAutorizacionComponent } from "../datos-retorno-autorizacion/datos-retorno-autorizacion.component";
 import { DatosRetornoProrrogaComponent } from "../datos-retorno-prorroga/datos-retorno-prorroga.component";
-
 import { ESTIMADA_RETORNO } from '../../enum/retorno-importacion-temporal.enum';
 import { RetornoImportacionTemporalService } from '../../services/retorno-importacion-temporal.service';
 
@@ -19,11 +18,10 @@ import { Tramite630307State, Tramite630307Store } from '../../estados/tramite630
 import { Tramite630307Query } from '../../estados/tramite630307.query';
 
 
-
 @Component({
   selector: 'app-datos-de-la-solicitud',
   standalone: true,
-  imports: [CommonModule, TituloComponent, ReactiveFormsModule, CatalogoSelectComponent, InputFechaComponent, DatosRetornoProrrogaComponent, DatosRetornoAutorizacionComponent, DatosMercanciaImportacionTemporalComponent],
+  imports: [CommonModule, TituloComponent, ReactiveFormsModule, CatalogoSelectComponent, InputFechaComponent, DatosRetornoProrrogaComponent, DatosRetornoAutorizacionComponent, DatosMercanciaComponent],
   templateUrl: './datos-de-la-solicitud.component.html',
   styleUrl: './datos-de-la-solicitud.component.scss',
 })

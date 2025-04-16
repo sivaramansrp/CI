@@ -3,12 +3,12 @@
     <form [formGroup]="datosImportacionTemporalFormulario">
         <div class="row mt-4">
             <div class="col-md-4">
-                <app-catalogo-select [catalogo]="aduanaDeingresOpciones" [label]="'Aduana de ingreso'" [required]="true"
+                <app-catalogo-select [catalogo]="aduanaDeingresOpciones" [label]="'Aduana de retorno *'" [required]="true"
                     formControlName="cveAduana" (change)="setValorStore(datosImportacionTemporalFormulario,'cveAduana')"></app-catalogo-select>
                 <input type="hidden" id="hidAduana" formControlName="cveAduana" />
             </div>
             <div class="col-md-4">
-                <app-catalogo-select [catalogo]="seccionAduaneraOpciones" [label]="'Sección aduanera'"
+                <app-catalogo-select [catalogo]="seccionAduaneraOpciones" [label]="'Sección aduanera de retorno:'"
                     [required]="false" formControlName="cveSeccionAduanal" (change)="setValorStore(datosImportacionTemporalFormulario,'cveSeccionAduanal')"></app-catalogo-select>
                 <input type="hidden" id="hidSeccionAduanal" formControlName="cveSeccionAduanal" />
             </div>
@@ -31,5 +31,5 @@
         <app-datos-retorno-prorroga></app-datos-retorno-prorroga>
     </div>
     <app-datos-retorno-autorizacion></app-datos-retorno-autorizacion>
-    <app-datos-mercancia-importacion-temporal></app-datos-mercancia-importacion-temporal>
+    <app-datos-mercancia></app-datos-mercancia>
 </div>

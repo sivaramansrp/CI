@@ -21,7 +21,7 @@ export const PASOS_REGISTRO = [
 
 export const ESTIMADA_RETORNO =
 {
-    labelNombre: 'Fecha límite estimada de retorno',
+    labelNombre: 'Fecha límite estimada de retorno *',
     required: true,
     habilitado: true
 };
