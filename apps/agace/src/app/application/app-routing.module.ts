@@ -28,6 +28,12 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'aviso-unico-renovacion',
+    loadChildren: () =>
+      import('./tramites/317/aviso-unico-renovacion.module').then(
+        (m) => m.AvisoUnicoRenovacionModule)
+      },
+      {
     path: 'registro-solicitud',
     loadChildren: () =>
       import('./tramites/31802/registro-solicitud.module').then(
