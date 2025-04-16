@@ -4,7 +4,8 @@ import { AlertComponent, BtnContinuarComponent, SolicitanteComponent, WizardComp
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { PermisoSanitarioModule} from '../../../260211/permiso-sanitario.module';
 import { PANTA_PASOS } from '@libs/shared/data-access-user/src/core/services/31601/servicios-pantallas.enum';
-import { AVISO_DE_PRIVACIDAD_SIMPLIFICADO } from '../../constantes/retiros-cofepris.enum';
+import { AVISO } from '@libs/shared/data-access-user/src/tramites/constantes/aviso-privacidad.enum';
+
 describe('PantallasComponent', () => {
   let component: PantallasComponent;
   let fixture: ComponentFixture<PantallasComponent>;
@@ -28,7 +29,7 @@ describe('PantallasComponent', () => {
     expect(component.indice).toBe(1);
     expect(component.indiceDePestanaSeleccionada).toBe(1);
     expect(component.pantallasPasos).toEqual(PANTA_PASOS);
-    expect(component.avisoPrivacidadAlert).toBe(AVISO_DE_PRIVACIDAD_SIMPLIFICADO.message);
+    expect(component.avisoPrivacidadAlert).toBe(AVISO.Aviso);
     expect(component.datosPasos).toEqual({
       nroPasos: PANTA_PASOS.length,
       indice: 1,

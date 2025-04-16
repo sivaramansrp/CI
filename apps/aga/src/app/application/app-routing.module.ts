@@ -155,10 +155,10 @@ const ROUTES: Routes = [
       ),
   },
   {
-    path: 'registro-transportista',
+    path: 'invocar-modulo',
     loadChildren: () =>
-      import('./tramites/40302/registro-transportista.module').then(
-        (m) => m.RegistroTransportistaModule
+      import('./tramites/105/invocar.module').then(
+        (m) => m.InvocarModule
       ),
   },
   {
