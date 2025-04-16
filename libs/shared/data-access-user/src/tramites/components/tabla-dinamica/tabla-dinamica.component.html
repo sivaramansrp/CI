@@ -52,7 +52,7 @@
               type="checkbox" 
               name="filaSeleccionada" 
               [value]="i" 
-              (change)="cambiarEstadoCheckbox($event,i )"
+              (change)="cambiarEstadoCheckbox($event,i, fila)"
               [checked]="filasSeleccionadas.includes(i)"
               aria-label="Seleccionar"
             />

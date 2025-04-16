@@ -6,7 +6,7 @@ const ROUTES: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'seleccion-tramite' },
   {
     path: 'seleccion-tramite',
-    component: SeleccionTramiteComponent
+    component: SeleccionTramiteComponent,
   },
   {
     path: 'antecesor',
@@ -18,9 +18,7 @@ const ROUTES: Routes = [
   {
     path: 'aviso',
     loadChildren: () =>
-      import('./tramites/32502/aviso.module').then(
-        (m) => m.AvisoModule
-      ),
+      import('./tramites/32502/aviso.module').then((m) => m.AvisoModule),
   },
   {
     path: 'aviso-procesos',
@@ -33,19 +31,27 @@ const ROUTES: Routes = [
     path: 'registro-solicitud',
     loadChildren: () =>
       import('./tramites/31803/registro-solicitud.module').then(
-        (m) => m.RegistroSolicitudModule),
-      },{
-        
+        (m) => m.RegistroSolicitudModule
+      ),
+  },
+  {
     path: 'mercancias-desmontadas-o-sin-montar',
     loadChildren: () =>
-      import('./tramites/32501/mercancias-desmontadas-o-sin-montar.module').then(
-        (m) => m.MercanciasDesmontadasOSinMontarModule
-      ),
+      import(
+        './tramites/32501/mercancias-desmontadas-o-sin-montar.module'
+      ).then((m) => m.MercanciasDesmontadasOSinMontarModule),
+  },
+  {
+    path: 'consulta-aviso-acreditacion',
+    loadChildren: () =>
+      import(
+        './tramites/32101/Consulta-Aviso-Acreditacion.module'
+      ).then((m) => m.ConsultaAvisoAcreditacionModule),
   },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(ROUTES)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}
