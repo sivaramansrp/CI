@@ -350,6 +350,13 @@ const ROUTES: Routes = [
         (m) => m.ImportacionPsicotropicosPoretornoModule),
 },
 {
+  path: 'permiso-transformacion-maquila',
+  loadChildren: () =>
+    import('./tramites/260505/permiso-transformacion-maquila.module').then(
+      (m) => m.PermisoTransformacionMaquilaModule
+    ),
+},
+{
       path: 'actualizacion-importacion',
       loadChildren: () =>
         import('./tramites/260903/actualizacion-importacion-sanitaria.module').then(
