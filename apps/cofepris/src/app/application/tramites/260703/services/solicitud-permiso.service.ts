@@ -3,10 +3,11 @@ import {
   Destinatario,
   RespuestaCatalogos,
 } from '@libs/shared/data-access-user/src';
-import { Fabricante, Manifiestos, ManifiestosRespuesta } from '../model/solicitud-permiso.model';
+import { Fabricante, ManifiestosRespuesta } from '../model/solicitud-permiso.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { ScianData } from '../../../shared/models/datos-modificacion.model';
 import { TramiteAsociados } from '../../../shared/models/tramite-asociados.model';
 
 @Injectable({
@@ -65,6 +66,12 @@ export class SolicitudPermisoService {
   getManifiestos(): Observable<ManifiestosRespuesta> {
     return this.http.get<ManifiestosRespuesta>(
       'assets/json/260703/manifiestos.json'
+    );
+  }
+
+  obtenerScianData():Observable<ScianData[]>{
+    return this.http.get<ScianData[]>(
+      'assets/json/260703/scian.json'
     );
   }
 

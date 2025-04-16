@@ -37,7 +37,7 @@ export class DatosSolitudeComponent implements OnInit, OnDestroy {
   constructor(
     private formBuilder: FormBuilder,
     private tramite260703Store: Tramite260703Store,
-    private tramite260703Query: Tramite260703Query
+    private tramite260703Query: Tramite260703Query,
   ) {
     // Constructor logic here
   }
@@ -54,7 +54,7 @@ export class DatosSolitudeComponent implements OnInit, OnDestroy {
 
   createOperatieForm(): void {
     this.preOperativeForm = this.formBuilder.group({
-      idGenerica1: [
+      ideGenerica1: [
         this.solicitudPermisoState.preOperativFormState.ideGenerica1,
       ],
       observaciones: [
@@ -64,6 +64,7 @@ export class DatosSolitudeComponent implements OnInit, OnDestroy {
     });
   }
 
+  
   setValoresStore(campo: string): void{
     const VALOR = this.preOperativeForm.get(campo)?.value;
     this.tramite260703Store.updatePreOperativeFormState({[campo]:VALOR});

@@ -205,3 +205,18 @@ export interface RepresentanteLegalFormState {
   apellidoPaterno: string;
   apellidoMaterno: string;
 }
+
+export interface DomicilioDelEstablecimientoFormState{
+  codigoPostal: string;
+  estado:string;
+  descripcionMunicipio: string;
+  informacionExtra: string;
+  descripcionColonia: string;
+  calle: string;
+  lada:string;
+  telefono:string;
+  funcionamiento: string;
+  licencia: string;
+  regimen: string;
+  aduana: string;
+}

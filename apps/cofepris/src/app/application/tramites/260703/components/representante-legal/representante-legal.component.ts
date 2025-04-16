@@ -83,16 +83,6 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy{
     }
   
     /**
-     * Almacena los valores del formulario del representante legal en el store.
-     */
-    tiendaCampoRepresentanteLegal(): void {
-      this.setValoresStore('nombreOrazonsocial');
-      this.setValoresStore('apellidoPaterno');
-      this.setValoresStore('apellidoMaterno');
-      this.setValoresStore('rfc');
-    }
-  
-    /**
     * Establece los valores en el store de tramite260703.
     *
     * @param {FormGroup} form - El formulario del cual se obtiene el valor.
