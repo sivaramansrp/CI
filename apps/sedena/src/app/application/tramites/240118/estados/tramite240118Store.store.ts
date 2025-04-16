@@ -160,4 +160,19 @@ export class Tramite240118Store extends Store<Tramite240118State> {
       merccancialTablaDatos: [...state.merccancialTablaDatos, ...newMercancia],
     }));
   }
+  public actualizarDatosDestinatario(datos: DestinoFinal): void {
+    this.update((state) => ({
+      ...state,
+      modificarDestinarioDatos: datos,
+      modificarProveedorDatos: null
+    }));
+  }
+
+  public actualizarDatosProveedor(datos: Proveedor): void {
+    this.update((state) => ({
+      ...state,
+      modificarProveedorDatos: datos,
+      modificarDestinarioDatos: null
+    }));
+  }
 }

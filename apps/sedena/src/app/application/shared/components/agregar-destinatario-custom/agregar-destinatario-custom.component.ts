@@ -3,7 +3,7 @@ import { STR_NACIONAL } from '../../constants/datos-solicitud.enum';
 import { TERCEROS_NACIONALIDAD_OPCIONES } from '../../constants/datos-solicitud.enum';
 import { TIPO_PERSONA_OPCIONES } from '../../constants/datos-solicitud.enum';
 
-import { DestinoFinal } from '../../models/terceros-relacionados.model';
+import { DestinoFinal, Proveedor } from '../../models/terceros-relacionados.model';
 
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 
@@ -46,8 +46,16 @@ import { takeUntil } from 'rxjs';
   styleUrl: './agregar-destinatario-custom.component.scss',
 })
 export class AgregarDestinatarioCustomComponent
-  implements OnDestroy, OnInit, OnChanges
-{
+  implements OnDestroy, OnInit, OnChanges {
+  /**
+    * Datos del formulario que pueden ser de tipo `DestinoFinal`, `Proveedor`, `null` o `undefined`.
+    * Este input se utiliza para recibir la información necesaria desde el componente padre.
+    *
+    * @type {DestinoFinal | Proveedor | null | undefined}
+    */
+  @Input() formaDatos!: DestinoFinal | Proveedor
+    | null | undefined;
+
   /**
    * Subject utilizado para gestionar la desuscripción de observables.
    * Se completa en `ngOnDestroy()` para prevenir fugas de memoria.
@@ -187,9 +195,8 @@ export class AgregarDestinatarioCustomComponent
    */
   guardarDestinatario(): void {
     const NUEVO_DESTINATARIO: DestinoFinal = {
-      nombreRazonSocial: `${this.agregarDestinatarioFinal.value.nombres} ${
-        this.agregarDestinatarioFinal.value.primerApellido
-      } ${this.agregarDestinatarioFinal.value.segundoApellido || ''}`.trim(),
+      nombreRazonSocial: `${this.agregarDestinatarioFinal.value.nombres} ${this.agregarDestinatarioFinal.value.primerApellido
+        } ${this.agregarDestinatarioFinal.value.segundoApellido || ''}`.trim(),
       rfc: this.agregarDestinatarioFinal.value.rfc,
       curp: '',
       telefono:

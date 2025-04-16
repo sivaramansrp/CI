@@ -1,3 +1,4 @@
+import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { DestinoFinal } from '../../../../shared/models/terceros-relacionados.model';
@@ -50,12 +51,12 @@ export class TercerosRelacionadosContenedoraComponent implements OnInit {
    * @returns {void}
    */
   constructor(
+    private tramiteQuery: Tramite240118Query,
     private tramiteStore: Tramite240118Store,
-    private tramiteQuery: Tramite240118Query
-  )
-  {
-    // No hacer nada
-  }
+    private router: Router,
+    private activatedRoute: ActivatedRoute
+  ) // eslint-disable-next-line no-empty-function
+  {}
 
   /**
    * Hook del ciclo de vida que se ejecuta al inicializar el componente.
@@ -76,5 +77,27 @@ export class TercerosRelacionadosContenedoraComponent implements OnInit {
       .subscribe((data) => {
         this.proveedorTablaDatos = data;
       });
+  }
+
+  modificarDestinarioDatos(datos: DestinoFinal): void {
+    this.tramiteStore.actualizarDatosDestinatario(datos);
+    this.irAAcciones();
+  }
+
+  modificarProveedorDatos(datos: Proveedor): void {
+    this.tramiteStore.actualizarDatosProveedor(datos);
+    this.irAAcciones();
+  }
+
+  /**
+   * Navega a una ruta relativa dentro del flujo actual.
+   * @method irAAcciones
+   * @param {string} accionesPath - Ruta relativa a la que se desea navegar.
+   * @returns {void}
+   */
+  irAAcciones(): void {
+    this.router.navigate(['../agregar-destino-final'], {
+      relativeTo: this.activatedRoute,
+    });
   }
 }

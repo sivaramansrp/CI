@@ -1,7 +1,8 @@
-import { AgregarDestinatarioFinalComponent } from '../../../../shared/components/agregar-destinatario-final/agregar-destinatario-final.component';
+import { DestinoFinal, Proveedor } from '../../../../shared/models/terceros-relacionados.model';
+import { AgregarDestinatarioCustomComponent } from "../../../../shared/components/agregar-destinatario-custom/agregar-destinatario-custom.component";
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { DestinoFinal } from '../../../../shared/models/terceros-relacionados.model';
+import { Observable } from "rxjs";
 import { Tramite240118Store } from '../../estados/tramite240118Store.store';
 
 /**
@@ -13,11 +14,19 @@ import { Tramite240118Store } from '../../estados/tramite240118Store.store';
 @Component({
   selector: 'app-agregar-destinatario-final-contenedora',
   standalone: true,
-  imports: [CommonModule, AgregarDestinatarioFinalComponent],
+  imports: [CommonModule, AgregarDestinatarioCustomComponent],
   templateUrl: './agregar-destinatario-final-contenedora.component.html',
   styleUrl: './agregar-destinatario-final-contenedora.component.scss',
 })
 export class AgregarDestinatarioFinalContenedoraComponent {
+    /**
+     * @property terechosDatos$
+     * @type {Observable<DestinoFinal | Proveedor | null | undefined>}
+     * @description Observable que emite datos relacionados con el destino final o proveedor.
+     * Puede ser un objeto de tipo `DestinoFinal`, `Proveedor`, `null` o `undefined`.
+     * @command Este observable se utiliza para gestionar y observar los datos de los proveedores o destinos finales en el componente.
+     */
+    terechosDatos$!: Observable<DestinoFinal | Proveedor | null | undefined>;
   /**
    * Constructor del componente.
    *
