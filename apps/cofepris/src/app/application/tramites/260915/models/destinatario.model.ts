@@ -92,7 +92,7 @@ export interface TramitesAsociados {
 /**
  * Configuración para la fecha inicial (fecha de fabricación).
  */
-export const FECHAINICIAL = {
+export const FECHA_INICIAL = {
   /** Nombre de la etiqueta para la fecha inicial. */
   labelNombre: 'Fecha de fabricación',
 
@@ -106,7 +106,7 @@ export const FECHAINICIAL = {
 /**
  * Configuración para la fecha final (fecha de caducidad).
  */
-export const FECHAFINAL = {
+export const FECHA_FINAL = {
   /** Nombre de la etiqueta para la fecha final. */
   labelNombre: 'Fecha de caducidad',
 

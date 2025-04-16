@@ -1,31 +1,21 @@
-import { catchError, map } from 'rxjs';
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { TramiteFolioService } from '@ng-mf/data-access-user';
+import { TramiteFolioService } from '@libs/shared/data-access-user/src/core/services/shared/tramite-folio/tramite-folio.service';
+import { Subject } from 'rxjs';
+import { takeUntil, catchError, map } from 'rxjs';
 
-/**
- * Componente PasoTresComponent.
- * Este componente gestiona el tercer paso en el flujo de servicios extraordinarios, permitiendo la obtención de firma y la navegación al acuse.
- */
 @Component({
   selector: 'app-paso-tres',
   templateUrl: './paso-tres.component.html',
   styleUrl: './paso-tres.component.scss'
 })
-export class PasoTresComponent {
+export class PasoTresComponent implements OnDestroy {
+  private destroyed$ = new Subject<void>(); // Subject to signal unsubscription
 
-  /**
-   * Constructor de PasoTresComponent.
-   * Inicializa servicios necesarios para la navegación y la gestión de trámites extraordinarios.
-   * @param router - Servicio para la navegación entre rutas.
-   * @param serviciosExtraordinariosServices - Servicio para interactuar con la lógica de trámites extraordinarios.
-   */
   constructor(
     private router: Router,
     private serviciosExtraordinariosServices: TramiteFolioService,
-  ) { 
-    // Inicialización
-  }
+  ) {}
 
   /**
    * Maneja el evento de obtención de firma y realiza la navegación al acuse si la firma es válida.
@@ -38,6 +28,7 @@ export class PasoTresComponent {
       this.serviciosExtraordinariosServices
         .obtenerTramite(19) // ID de trámite
         .pipe(
+          takeUntil(this.destroyed$), // Automatically unsubscribe on destroy
           map(() => {
             // Navegación al acuse si el trámite es exitoso
             this.router.navigate(['servicios-extraordinarios/acuse']);
@@ -49,5 +40,14 @@ export class PasoTresComponent {
         )
         .subscribe(); // Suscripción al observable para ejecutar la lógica
     }
+  }
+
+  /**
+   * Método que se ejecuta al destruir el componente.
+   * Emite un valor para completar las suscripciones activas.
+   */
+  ngOnDestroy(): void {
+    this.destroyed$.next(); // Emit a value to complete all subscriptions
+    this.destroyed$.complete(); // Complete the Subject
   }
 }

@@ -365,10 +365,10 @@
                 <div class="panel-group ficha-collapse" id="accordion">
                   <div class="panel panel-default">
                     <div class="panel-heading" (click)="paisOrigenColapsable()" tabindex="0">
-                      <h4 class="panel-title">País de origen</h4>
+                      <h4 class="panel-title">País de procedencia</h4>
                       <button type="button" class="collpase-button collapsed"></button>
                     </div>
-                    @if(paisOrigen){
+                    @if(paisProcedencisColapsable){
                     <div class="panel-collapse collapse in" id="panel-01" *ngIf="paisOrigenCrossList">
                       <div class="panel-body">
                         <crosslist [label]="paisOrigenCrossList.label" [fechas]="paisOrigenCrossList.fechas"></crosslist>

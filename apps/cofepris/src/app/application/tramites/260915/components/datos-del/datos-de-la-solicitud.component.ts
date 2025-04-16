@@ -366,7 +366,7 @@ getMercanciaCrosslistData(): void {
           this.paisOrigenCrossList = firstItem.paisOrigenCrossList;
           this.paisProcedencisCrossList = firstItem.paisProcedencisCrossList;
           this.usoEspecificoCrossList = firstItem.usoEspecificoCrossList;
-        } else { /* vacío */ }
+        } 
       },
       error: (err) => {
         console.error('Error al obtener los datos de MercanciaCrosslist:', err);
