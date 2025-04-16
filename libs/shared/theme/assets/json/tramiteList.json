@@ -1094,8 +1094,8 @@
     {
         "id": 157,
         "tramite": 260903,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "/cofepris/actualizacion-importacion/solictud",
+        "linkDepartment": "/pago/actualizacion-importacion/solictud",
         "department": "cofepris"
     },
     {
