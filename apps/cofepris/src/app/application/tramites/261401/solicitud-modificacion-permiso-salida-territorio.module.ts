@@ -1,4 +1,4 @@
-import { BtnContinuarComponent } from '@libs/shared/data-access-user/src';
+import { AlertComponent, BtnContinuarComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { DatosDeLaSolicitudComponent } from './components/datos-de-la-solicitud/datos-de-la-solicitud.component';
 import { NgModule } from '@angular/core';
@@ -8,6 +8,7 @@ import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
 import { SolicitudModificacionPermisoSalidaTerritorioComponent } from './pages/solicitud-modificacion-permiso-salida-territorio/solicitud-modificacion-permiso-salida-territorio.component';
 import { SolicitudModificacionPermisoSalidaTerritorioRoutingModule } from './solicitud-modificacion-permiso-salida-territorio-routing.module';
 import { WizardComponent } from '@libs/shared/data-access-user/src';
+import { TercerosRelacionadosComponent } from './components/terceros-relacionados/terceros-relacionados.component';
 
 
 @NgModule({
@@ -25,6 +26,8 @@ import { WizardComponent } from '@libs/shared/data-access-user/src';
     // PasoTresComponent,
     SolicitanteComponent,
     DatosDeLaSolicitudComponent,
+    AlertComponent,
+    TercerosRelacionadosComponent
   ],
 })
 export class SolicitudModificacionPermisoSalidaTerritorioModule {}

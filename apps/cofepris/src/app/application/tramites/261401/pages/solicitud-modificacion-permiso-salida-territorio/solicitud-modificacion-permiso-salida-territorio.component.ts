@@ -1,3 +1,4 @@
+import { AVISO } from '@libs/shared/data-access-user/src';
 import { AccionBoton } from '../../enums/accion-botton.enum';
 import { Component } from '@angular/core';
 import { DatosPasos } from '@libs/shared/data-access-user/src';
@@ -26,7 +27,7 @@ export class SolicitudModificacionPermisoSalidaTerritorioComponent {
    * Mensaje de alerta utilizado en el componente.
    * Puede ser asignado a cualquiera de las claves definidas en TEXTOS.
    */
-   //public alert_message: string = AVISO.Aviso;
+   public alert_message: string = AVISO.Aviso;
 
   datosPasos: DatosPasos = {
     nroPasos: this.pasosSolicitar.length,
