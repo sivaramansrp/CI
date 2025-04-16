@@ -121,20 +121,17 @@ const ROUTES: Routes = [
         './tramites/570101/cancelacion-servicios-extraordinarios.module'
       ).then((m) => m.CancelacionServiciosExtraordinariosModule),
   },
-
   {
-    path: 'registro-digitalizar-documentos',
+    path: 'registro-caat-naviero',
     loadChildren: () =>
-      import('./tramites/701/registro-digitalizar-documentos.module').then(
-        (m) => m.RegistroDigitalizarDocumentosModule
-      ),
+      import('./tramites/40301/registro-caat-naviero.module').then((m) => m.RegistroCaatNavieroModule),
   },
-  {
-    path: 'transferencia-contenedores',
-    loadChildren: () =>
-      import('./tramites/11204/temporal-contenedores.module').then(
-        (m) => m.TemporalContenedoresModule
-      ),
+{
+  path: 'transferencia-contenedores',
+  loadChildren: () =>
+    import('./tramites/11204/temporal-contenedores.module').then(
+      (m) => m.TemporalContenedoresModule
+    ),
   },
   {
     path: 'registro-digitalizar-documentos',
@@ -158,10 +155,10 @@ const ROUTES: Routes = [
       ),
   },
   {
-    path: 'registro-transportista',
+    path: 'invocar-modulo',
     loadChildren: () =>
-      import('./tramites/40302/registro-transportista.module').then(
-        (m) => m.RegistroTransportistaModule
+      import('./tramites/105/invocar.module').then(
+        (m) => m.InvocarModule
       ),
   },
   {

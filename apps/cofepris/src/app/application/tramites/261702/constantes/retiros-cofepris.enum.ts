@@ -6,7 +6,7 @@
  * - `labelNombre`: Etiqueta que describe el campo.
  * - `campo`: Nombre del campo utilizado como identificador.
  * - `class`: Clase CSS aplicada al campo para definir su diseño.
- * - `tipo_input`: Tipo de entrada del campo (por ejemplo, número, texto, área de texto).
+ * - `tipoInput`: Tipo de entrada del campo (por ejemplo, número, texto, área de texto).
  * - `disabled`: Indica si el campo está deshabilitado.
  * - `validators`: Validaciones aplicadas al campo (por ejemplo, requerido).
  * - `placeholder`: Texto de marcador de posición para el campo.
@@ -15,51 +15,51 @@
 export const PERMISO_A_DESISTIR = [
   {
     id: 'acuseResolucion.folio',
-    label_nombre: 'Folio',
+    labelNombre: 'Folio',
     campo: 'folio',
     clase: 'col-md-12',
-    tipo_input: 'number',
+    tipoInput: 'number',
     desactivado: true,
-    solo_lectura: false,
+    soloLectura: false,
     validadores: [
       {
         tipo: '', mensaje: ''
       }
     ],
-    marcador_de_posicion: '',
-    valor_predeterminado: '0402600201020254006000001',
-    margin_top: 0
+    marcadorDePosicion: '',
+    valorPredeterminado: '0402600201020254006000001',
+    marginTop: 0
   },
   {
     id: 'tipoDeSolicitud',
-    label_nombre: 'Tipo de solicitud',
+    labelNombre: 'Tipo de solicitud',
     campo: 'tipoDeSolicitud',
     clase: 'col-md-12',
-    tipo_input: 'textarea',
+    tipoInput: 'textarea',
     desactivado: true,
-    solo_lectura: false,
+    soloLectura: false,
     validadores:[
       {
         tipo: '', mensaje: ''
       }
     ],
-    marcador_de_posicion: '',
-    valor_predeterminado: 'Permiso Sanitario de Importación de Medicamentos y Materias Primas Destinados a Pruebas de Laboratorio',
-    margin_top: 3
+    marcadorDePosicion: '',
+    valorPredeterminado: 'Permiso Sanitario de Importación de Medicamentos y Materias Primas Destinados a Pruebas de Laboratorio',
+    marginTop: 3
   },
   {
     id: 'motivo',
-    label_nombre: 'Motivo de desistimiento',
+    labelNombre: 'Motivo de desistimiento',
     campo: 'motivoDesistimiento',
     clase: 'col-md-12',
-    tipo_input: 'textarea',
+    tipoInput: 'textarea',
     desactivado: false,
-    solo_lectura: false,
+    soloLectura: false,
     validadores: [
       { tipo: 'required' }
     ],
-    marcador_de_posicion: '',
-    margin_top: 3
+    marcadorDePosicion: '',
+    marginTop: 3
   }
 ];
 
@@ -71,7 +71,7 @@ export const PERMISO_A_DESISTIR = [
  * - `labelNombre`: Etiqueta que describe el campo.
  * - `campo`: Nombre del campo utilizado como identificador.
  * - `class`: Clase CSS aplicada al campo para definir su diseño.
- * - `tipo_input`: Tipo de entrada del campo (por ejemplo, número, texto, área de texto).
+ * - `tipoInput`: Tipo de entrada del campo (por ejemplo, número, texto, área de texto).
  * - `disabled`: Indica si el campo está deshabilitado.
  * - `validators`: Validaciones aplicadas al campo (por ejemplo, requerido).
  * - `placeholder`: Texto de marcador de posición para el campo.
@@ -80,73 +80,73 @@ export const PERMISO_A_DESISTIR = [
 export const REPRESENTANTE_LEGAL = [
   {
     id: 'representanteLegalRFC',
-    label_nombre: 'RFC',
+    labelNombre: 'RFC',
     campo: 'rfc',
     clase: 'col-md-4',
-    tipo_input: 'text',
+    tipoInput: 'text',
     desactivado: false,
-    solo_lectura: false,
+    soloLectura: false,
     validadores: [
       {
         tipo: 'required'
       }
     ],
-    marcador_de_posicion: '',
-    valor_predeterminado: '',
-    margin_top: 0
+    marcadorDePosicion: '',
+    valorPredeterminado: '',
+    marginTop: 0
   },
   {
     id: 'consultarIDC',
-    label_nombre: 'Buscar',
+    labelNombre: 'Buscar',
     campo: 'buscar',
     clase: 'col-md-8',
-    tipo_input: 'button',
+    tipoInput: 'button',
     desactivado: false,
-    margin_top: 5,
+    marginTop: 5,
   },
   {
     id: 'representanteLegalNombre',
-    label_nombre: 'Nombre o Razón Social',
+    labelNombre: 'Nombre o Razón Social',
     campo: 'nombre',
     clase: 'col-md-4',
-    tipo_input: 'number',
+    tipoInput: 'number',
     desactivado: true,
-    solo_lectura: false,
+    soloLectura: false,
     validadores:[
       {
         tipo: 'required'
       }
     ],
-    marcador_de_posicion: '',
-    margin_top: 3
+    marcadorDePosicion: '',
+    marginTop: 3
   },
   {
     id: 'representanteLegalApPaterno',
-    label_nombre: 'Apellido paterno',
+    labelNombre: 'Apellido paterno',
     campo: 'apellidoPaterno',
     clase: 'col-md-4',
-    tipo_input: 'text',
+    tipoInput: 'text',
     desactivado: true,
-    solo_lectura: false,
+    soloLectura: false,
     validadores: [
       { tipo: 'required' }
     ],
-    marcador_de_posicion: '',
-    margin_top: 3
+    marcadorDePosicion: '',
+    marginTop: 3
   },
   {
     id: 'representanteLegalApMaterno',
-    label_nombre: 'Apellido materno',
+    labelNombre: 'Apellido materno',
     campo: 'apellidoMaterno',
     clase: 'col-md-4',
-    tipo_input: 'text',
+    tipoInput: 'text',
     desactivado: true,
-    solo_lectura: false,
+    soloLectura: false,
     validadores: [
       { tipo: '' }
     ],
-    marcador_de_posicion: '',
-    margin_top: 3
+    marcadorDePosicion: '',
+    marginTop: 3
   }
 ];
 
