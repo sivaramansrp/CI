@@ -11,9 +11,14 @@
                     </div>
                     <div class="col">
                         <div class="form-check">
-                          <input class="form-check-input" type="checkbox" value="" id="si"
-                            formControlName="si" >
-                          <label class="form-check-label" for="si">SI</label>
+                          <lib-input-check [id]="'si'"
+                          [label]="'SI'" [required]="false"
+                          formControlName="si"
+                          (change)="setValoresStore(
+                            'formCertificado',
+                        'si',
+                        'setFormCertificadoGenric')"
+                          ></lib-input-check>
                         </div>
                     </div>
                 </div>
@@ -24,29 +29,49 @@
             <div class="col-md-6">
                 <app-catalogo-select [catalogo]="tratadoAcuerdo || []" [label]="'Tratado / Acuerdo'"
                     [required]="true" name="estado" formControlName="entidadFederativa"
-                    (selectionChange)="tipoEstadoSeleccion($event)"></app-catalogo-select>
+                    (selectionChange)="tipoEstadoSeleccion($event)"
+                    (change)="setValoresStore(
+                        'formCertificado',
+                      'entidadFederativa',
+                      'setFormCertificadoGenric')"
+                    ></app-catalogo-select>
             </div>
 
             <div class="col-md-6">
                 <app-catalogo-select [catalogo]="paisBloqu || []" [label]="'País / Bloque'" [required]="true"
                     name="estado" formControlName="bloque"
-                    (selectionChange)="tipoSeleccion($event)"></app-catalogo-select>
+                    (selectionChange)="tipoSeleccion($event)"
+                    (change)="setValoresStore(
+                    'formCertificado',
+                  'bloque',
+                  'setFormCertificadoGenric')"
+                    ></app-catalogo-select>
             </div>
         </div>
         <div class="row mb-3">
             <div class="col-md-4">
                 <label for="fracciónArancelaria" class="form-label">Fracción arancelaria:</label>
                 <input type="text" class="form-control" formControlName="fraccionArancelariaForm"
+                (change)="setValoresStore(
+                    'formCertificado',
+                  'fraccionArancelariaForm',
+                  'setFormCertificadoGenric')"
                     id="fracciónArancelaria">
             </div>
 
             <div class="col-md-4">
                 <label for="registroProducto" class="form-label"># Registro producto:</label>
-                <input type="text" class="form-control" formControlName="registroProductoForm" id="registroProducto">
+                <input type="text" class="form-control" formControlName="registroProductoForm"   (change)="setValoresStore(
+                    'formCertificado',
+                  'registroProductoForm',
+                  'setFormCertificadoGenric')" id="registroProducto">
             </div>
             <div class="col-md-4">
                 <label for="nombreComercial" class="form-label">Nombre comercial:</label>
-                <input type="text" class="form-control" formControlName="nombreComercialForm" id="nombreComercial">
+                <input type="text" class="form-control" formControlName="nombreComercialForm" (change)="setValoresStore(
+                    'formCertificado',
+                  'nombreComercialForm',
+                  'setFormCertificadoGenric')" id="nombreComercial">
             </div>
         </div>
 
@@ -57,11 +82,12 @@
         </div>
 
         <div class="col-md-4 form-field">
-            <input-fecha [datos]="fechaInicioInput" [setFecha]="formCertificado.get('fechaInicio')?.value"
-            (valorCambiado)="cambioFechaInicio($event)"></input-fecha>
+            <input-fecha [datos]="fechaInicioInput" [setFecha]="formCertificado.get('fechaInicioInput')?.value"
+            (valorCambiado)="cambioFechaInicio($event)" (change)="setValoresStore('formCertificado','fechaInicioInput','setFormCertificadoGenric')"></input-fecha>
         </div>
         <div class="col-md-4 form-field">
-            <input-fecha [datos]="fechaFinalInput" [setFecha]="formCertificado.get('fechaFinal')?.value" (valorCambiado)="cambioFechaFinal($event)"></input-fecha>
+            <input-fecha [datos]="fechaFinalInput" [setFecha]="formCertificado.get('fechaFinalInput')?.value" (valorCambiado)="cambioFechaFinal($event)"
+             (change)="setValoresStore('formCertificado','fechaFinalInput','setFormCertificadoGenric')"></input-fecha>
         </div>
 
         <div class="row w-100">
