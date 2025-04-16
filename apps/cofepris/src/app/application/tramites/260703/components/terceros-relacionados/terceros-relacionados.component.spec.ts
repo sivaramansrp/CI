@@ -11,7 +11,7 @@ describe('TercerosRelacionadosComponent', () => {
   let solicitudPermisoServiceMock: any;
 
   beforeEach(async () => {
-
+    // Mock the SolicitudPermisoService
     solicitudPermisoServiceMock = {
       obtenerDatosDestinatarios: jest.fn().mockReturnValue(of([
         { nombre: 'Destinatario 1', rfc: 'RFC1', curp: 'CURP1', telefono: '1234567890', correoElectronico: 'email1@test.com', calle: 'Calle 1', numeroExterior: '1', numeroInterior: 'A', pais: 'México', colonia: 'Colonia 1', municipio: 'Municipio 1', localidad: 'Localidad 1', estado: 'Estado 1', codigoPostal: '12345' },
@@ -26,7 +26,7 @@ describe('TercerosRelacionadosComponent', () => {
       providers: [
         { provide: SolicitudPermisoService, useValue: solicitudPermisoServiceMock },
       ],
-      schemas: [NO_ERRORS_SCHEMA],
+      schemas: [NO_ERRORS_SCHEMA], // Ignore unknown elements
     }).compileComponents();
 
     fixture = TestBed.createComponent(TercerosRelacionadosComponent);
