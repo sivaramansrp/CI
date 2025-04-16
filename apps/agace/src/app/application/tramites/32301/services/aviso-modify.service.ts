@@ -2,8 +2,8 @@ import { Observable,catchError, of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { PersonaFusionEscisionDTO } from '../models/avisomodify.model';
+import { TableDataNgTable } from '../models/avisomodify.model';
 import { catalogoResponse } from '@ng-mf/data-access-user';
-
 @Injectable({
   providedIn: 'any'
 })
@@ -63,11 +63,11 @@ export class AvisoModifyService {
         return this.http.get<string[]>(`${this.jsonLkURl}/${this.entidadFederativa}`);
       }
 
-      getGridDomiciliosModificados():Observable<string[]> {
-        return this.http.get<string[]>(`${this.jsonUrl}/${this.gridDomiciliosModificados}`);
+      getGridDomiciliosModificados():Observable<TableDataNgTable> {
+        return this.http.get<TableDataNgTable>(`${this.jsonUrl}/${this.gridDomiciliosModificados}`);
       }
-      getGridMostrarGridModificado():Observable<string[]> {
-        return this.http.get<string[]>(`${this.jsonUrl}/${this.gridMostrarGridModificado}`);
+      getGridMostrarGridModificado():Observable<TableDataNgTable> {
+        return this.http.get<TableDataNgTable>(`${this.jsonUrl}/${this.gridMostrarGridModificado}`);
       }
 
       getEnSuCaracterDe():Observable<string[]> {
@@ -81,12 +81,12 @@ export class AvisoModifyService {
         return this.http.get<string[]>(`${this.jsonLkURl}/${this.preOperativo}`);
       }
     
-      getGridMiembrosEmpresas():Observable<string[]> {
-        return this.http.get<string[]>(`${this.jsonUrl}/${this.gridMiembrosEmpresas}`);
+      getGridMiembrosEmpresas():Observable<TableDataNgTable> {
+        return this.http.get<TableDataNgTable>(`${this.jsonUrl}/${this.gridMiembrosEmpresas}`);
       }
 
-      getSeccionMiembrosRevocados():Observable<string[]> {
-        return this.http.get<string[]>(`${this.jsonUrl}/${this.seccionMiembrosRevocados}`);
+      getSeccionMiembrosRevocados():Observable<TableDataNgTable> {
+        return this.http.get<TableDataNgTable>(`${this.jsonUrl}/${this.seccionMiembrosRevocados}`);
       }
     
 

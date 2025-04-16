@@ -6,11 +6,11 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { ModificacionSocios, TableDataNgTable } from '../../models/avisomodify.model';
 import { Subject, takeUntil } from 'rxjs';
 import { AvisoModifyService } from '../../services/aviso-modify.service';
 import { CommonModule } from '@angular/common';
 import { Modal } from 'bootstrap';
-import { ModificacionSocios } from '../../models/avisomodify.model';
 import { Tramite32301Query } from '../../estados/tramite32301.query';
 import { Tramite32301Store } from '../../estados/tramite32301.store';
 
@@ -36,11 +36,7 @@ export class ModificacionSociosComponent implements OnInit, AfterViewInit, OnDes
   tableColumns: string[] = [];
   declaretableColumns: string[] = [];
 
-  mercanciasData = [
-    {
-      tbodyData: [],
-    },
-  ];
+  mercanciasData: { tbodyData: string[] }[] = [{ tbodyData: [],},];
   declareData: { tbodyData: string[] }[] = [{ tbodyData: [],},];
   
   totalItems: number = 0;
@@ -116,7 +112,6 @@ export class ModificacionSociosComponent implements OnInit, AfterViewInit, OnDes
     });
 
     this.getSeccionMiembrosRevocados();
-    // this.getgridMiembrosEmpresas();
     this.getEnSuCaracterDe();
     this.getNacionalidad();
     this.getPreOperativo();
@@ -167,14 +162,14 @@ export class ModificacionSociosComponent implements OnInit, AfterViewInit, OnDes
       });
      }
 
-     getGridMiembrosEmpresas():void { this.AvisoModifyService.getGridMiembrosEmpresas().subscribe((resp) =>{
-
-    this.gridMiembrosEmpresas = Object.assign([], resp);
+     getGridMiembrosEmpresas():void { this.AvisoModifyService.getGridMiembrosEmpresas().subscribe((resp:TableDataNgTable) =>{
+    this.tableColumns = resp.tableHeader
+    this.mercanciasData = resp.tableBody
+    
     });
    }
-   getSeccionMiembrosRevocados():void { this.AvisoModifyService.getSeccionMiembrosRevocados().subscribe((resp) =>{
-
-    this.seccionMiembrosRevocados = Object.assign([], resp);
+   getSeccionMiembrosRevocados():void { this.AvisoModifyService.getSeccionMiembrosRevocados().subscribe((resp:TableDataNgTable) =>{
+    this.declaretableColumns = resp.tableHeader
     });
    }
      
@@ -188,11 +183,6 @@ export class ModificacionSociosComponent implements OnInit, AfterViewInit, OnDes
     );
   }
  
-
-  // public getgridMiembrosEmpresas():void {
-  //   this.declaretableColumns = this.gridMiembrosEmpresas.tableHeader;
-  //   this.declareData = this.gridMiembrosEmpresas.tableBody;
-  // }
 
   onItemsPerPageChange(itemsPerPage: number): void {
     this.itemsPerPage = itemsPerPage;

@@ -1,15 +1,15 @@
 {
     "tableHeader": [
-        "Numero de aviso", 
+        "Numero de aviso",
         "Fecha de aviso",
         "Domicilio",
         "En su carácter de",
         "Código Postal",
-     "Entidad federativa"
+        "Entidad federativa"
     ],
-"tableBody": [
-    {
-        "tbodyData": []
-    }
-]
+    "tableBody": [
+        {
+            "tbodyData": []
+        }
+    ]
 }
