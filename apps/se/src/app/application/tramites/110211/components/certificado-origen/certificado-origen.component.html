@@ -11,7 +11,8 @@
     [tablaSeleccionEvent]="tablaSeleccionEvent"
     [guardarClicado]="(datosTabla$ | async) ||  []"
     (formaValida)="setFormValida($event)"
-    [datosForm]="formCertificadoValues" >
+    [datosForm]="formCertificadoValues"
+    (formCertificadoEvent)="setValoresStore($event)" >
 </app-certificado-de-origen>
 
 <div class="modal fade" #modifyModal tabindex="-1" aria-labelledby="modifyModalLabel" aria-hidden="true">
