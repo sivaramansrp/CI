@@ -179,6 +179,10 @@ export class AgregarProveedorCustomComponent implements OnDestroy, OnInit, OnCha
       numeroInterior: [''],
       lada: [''],
       telefono: [''],
+      nacionalidad:[''],
+      rfc:[''],
+      municipio:[''],
+      localidad:[''],
       correoElectronico: ['', [Validators.required, Validators.email]],
     });
     this.agregarProveedorForm.disable();

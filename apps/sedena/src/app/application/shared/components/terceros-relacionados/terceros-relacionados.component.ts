@@ -1,7 +1,7 @@
+import { Component, EventEmitter, Output } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AlertComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
 import { DESTINO_FINAL_ENCABEZADO_DE_TABLA } from '../../models/terceros-relacionados.model';
 import { DestinoFinal } from '../../models/terceros-relacionados.model';
 import { Input } from '@angular/core';
@@ -51,6 +51,22 @@ export class TercerosRelacionadosComponent {
   @Input() proveedorTablaDatos: Proveedor[] = [];
 
   /**
+   * Emite un evento cuando se modifican los datos del destinatario.
+   * El evento contiene un objeto de tipo `DestinoFinal`.
+   *
+   * @type {EventEmitter<DestinoFinal>}
+   */
+  @Output() modificarDestinarioDatos: EventEmitter<DestinoFinal> = new EventEmitter<DestinoFinal>(true);
+  
+  /**
+   * Emite un evento cuando se modifican los datos del proveedor.
+   * El evento contiene un objeto de tipo `Proveedor`.
+   *
+   * @type {EventEmitter<Proveedor>}
+   */
+  @Output() modificarProveedorDatos: EventEmitter<Proveedor> = new EventEmitter<Proveedor>(true);
+
+  /**
    * Configuración de la tabla de destinatarios finales.
    * @property {any} destinoFinalTablaConfiguracion
    */
@@ -67,6 +83,22 @@ export class TercerosRelacionadosComponent {
     tipoSeleccionTabla: TablaSeleccion.CHECKBOX,
     configuracionTabla: PROVEEDOR_ENCABEZADO_DE_TABLA,
   };
+
+  /**
+   * Lista de destinatarios seleccionados en la tabla.
+   * Contiene objetos del tipo `DestinoFinal`.
+   *
+   * @type {DestinoFinal[]}
+   */
+  destinarioTablaSeleccionada: DestinoFinal[] = [];
+  
+  /**
+   * Lista de proveedores seleccionados en la tabla.
+   * Contiene objetos del tipo `Proveedor`.
+   *
+   * @type {Proveedor[]}
+   */
+  proveedorTablaSeleccionada: Proveedor[] = [];
 
   /**
    * Navega a una ruta relativa dentro del flujo actual.
@@ -89,4 +121,24 @@ export class TercerosRelacionadosComponent {
    */
   // eslint-disable-next-line no-empty-function
   constructor(private router: Router, private activatedRoute: ActivatedRoute) {}
+
+  /**
+   * Emite el primer destinatario seleccionado para su modificación.
+   * Utiliza el `EventEmitter` modificarDestinarioDatos para enviar el dato al componente padre.
+   *
+   * @returns {void}
+   */
+  modificarDestinatario(): void {
+    this.modificarDestinarioDatos.emit(this.destinarioTablaSeleccionada[0])
+  }
+
+  /**
+   * Emite el primer proveedor seleccionado para su modificación.
+   * Utiliza el `EventEmitter` modificarProveedorDatos para enviar el dato al componente padre.
+   *
+   * @returns {void}
+   */
+  modificarProveedor(): void {
+    this.modificarProveedorDatos.emit(this.proveedorTablaSeleccionada[0])
+  }
 }
