@@ -48,12 +48,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
  * @type {FormGroup} Formulario que contiene los campos relacionados con las partidas de la mercancía.
  */
   partidasDelaMercanciaForm!: FormGroup;
-
-  /**
-   * Componente de País de Origen.
-   * Referencia al componente de selección del país de origen de la mercancía.
-   */
-
+ 
   /**
    * Formulario del trámite.
    * @type {FormGroup} Formulario que contiene los campos relacionados con el trámite.
@@ -132,6 +127,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
      * @type {Catalogo[]} Arreglo que contiene las opciones de acotación.
      */
   acotacionCatalogo: Catalogo[] = acotacionOptions;
+
   /**
    * Datos de los campos de entrada del formulario.
    * @type {Array<{label: string, placeholder: string, required: boolean, controlName: string}>} Arreglo que contiene los datos de los campos del formulario de mercancía.
@@ -216,12 +212,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * @type {Catalogo[]} Arreglo que contiene los elementos del catálogo para el bloque.
    */
   elementosDeBloque: Catalogo[] = [];
-
-  /**
-   * Lista de todas las ciudades disponibles.
-   * @type {Catalogo[]} Arreglo que contiene las ciudades disponibles en el catálogo.
-   */
-
+  
 /**
  * @public
  * @property {PaisDeOrigenComponent} paisDeOrigenComponent
@@ -639,7 +630,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * Realiza una llamada al servicio `getProductoOptions` para obtener las opciones disponibles para el producto.
    * Al igual que la llamada anterior, una vez obtenidos los datos, se actualiza el estado de la tienda `tramite130108Store`.
    * 
-   * @observable {Observable<any>} Observa el resultado de la llamada a `getProductoOptions` del servicio `permisodehidrocarburosService`.
+   * @observable {Observable<any>} Observa el resultado de la llamada a `getProductoOptions` del servicio `exportacionMineralesDeHierroService`.
    * @param {data} datos que contienen las opciones de producto.
    * @returns {void}
    */
@@ -863,7 +854,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         this.elementosDeBloque = data;
       });
   }
-
 
   /**
   * Método que realiza una solicitud al servicio de exportación de minerales

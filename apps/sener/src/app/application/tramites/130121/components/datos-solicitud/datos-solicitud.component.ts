@@ -68,7 +68,6 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    */
   paisForm!: FormGroup;
 
-
   /**
    * Formulario de representación.
    * @type {FormGroup} Formulario utilizado para representar los datos de la mercancía.
@@ -80,11 +79,13 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    * Configuración de las columnas de la tabla dinámica.
    */
   tableHeaderData: ConfiguracionColumna<PartidasDeLaMercanciaModelo>[] = PARTIDASDELAMERCANCIA_TABLA;
+
   /**
    * tableBodyData
    * Datos que se mostrarán en el cuerpo de la tabla dinámica.
    */
   tableBodyData: PartidasDeLaMercanciaModelo[] = [];
+
   /**
    * mostrarTabla
    * Bandera para mostrar u ocultar la tabla dinámica.
@@ -114,12 +115,12 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    * @type {Catalogo[]} Arreglo que contiene los valores disponibles en el catálogo de unidades.
    */
   unidadCatalogo: Catalogo[] = unidadOptions;
+
   /**
    * Catálogo de acotación disponible.
    * @type {Catalogo[]} Arreglo que contiene las opciones de acotación.
    */
   acotacionCatalogo: Catalogo[] = acotacionOptions;
-
 
   /**
    * Datos de los campos de entrada del formulario.
@@ -180,6 +181,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
       controlName: 'nico',
     },
   ];
+
   /**
  * Array de catálogos.
  * @type {Catalogo[][]} Arreglo bidimensional de catálogos que contiene los valores para las solicitudes.
@@ -216,7 +218,6 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     * @type {Catalogo[]} Arreglo que contiene los países disponibles para cada bloque.
     */
   paisesPorBloque: Catalogo[] = [];
-
 
   /**
    * Estado catalogado.
@@ -417,18 +418,19 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
        * Es obligatorio.
        */
       nico: [this.seccionState?.nico, Validators.required],
+
       /**
        * Campo para la acotación de la mercancía.
        * Este campo está deshabilitado por defecto.
        * @type {Array<{ value: string, disabled: boolean }>} Arreglo que contiene un valor vacío y deshabilitado.
        */
       acotacion: [{ value: this.seccionState?.acotacion, disabled: true }],
+
       /**
        * Campo para la descripción del NICO (Número de Identificación de la Carga).
        * Este campo está deshabilitado por defecto.
        * @type {Array<{ value: string, disabled: boolean }>} Arreglo que contiene un valor vacío y deshabilitado.
        */
-
       descripcionNico: [{ value: this.seccionState?.descripcionNico, disabled: true }],
     });
 
@@ -455,6 +457,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
         this.seccionState?.descripcionModificar,
         [Validators.required, Validators.maxLength(255)],
       ],
+      
       /**
        * Valor en USD de cada partida de la mercancía.
        * Es obligatorio, debe ser un número con hasta dos decimales y no puede ser negativo.

@@ -68,14 +68,6 @@ export class RepresentacionComponent {
   @Output() setValoresStoreEvent = new EventEmitter<{ form: FormGroup; campo: string }>();
 
   /**
-   * Constructor del componente.
-   * @constructor
-   */
-  constructor() {
-    // Constructor vacío
-  }
-
-  /**
    * Establece valores en el store.
    * @method setValoresStore
    * @param {FormGroup} form - El formulario reactivo.
