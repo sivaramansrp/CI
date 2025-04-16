@@ -1,21 +1,49 @@
-<form [formGroup]="profileForm">
-  <div>
-    <h4>Informacion General</h4>
+<form [formGroup]="profileForm" class="form-container">
+  <h4>Información General</h4>
+  <div class="row">
     <label for="domicilio">* Domicilio de la Instalación:</label>
-    <!-- <input id="domicilio" formControlName="domicilio" type="textarea" /> -->
+    <textarea class="custom-textarea" rows="6" cols="100" id="domicilio" formControlName="domicilio"></textarea>
   </div>
-  <textarea class="custom-textarea" rows="6" cols="100"
-    id="domicilio" formControlName="domicilio">
-   </textarea>
-</form>
 
-<p>
-  El objetivo de este Perfil, es asegurar que las empresas de mensajería y paquetería, cuenten con prácticas y procesos de seguridad implementados en sus instalaciones, enfocados a fortalecer la cadena de suministro y a mitigar el riesgo de contaminación de los embarques con productos ilícitos.
-</p>
-<p>
-  Las empresas de mensajería y paquetería interesadas en obtener la autorización a que se refiere la regla 7.1.5., de las RGCE vigentes deberán demostrar que cuentan con procesos documentados y verificables; así mismo, deberán integrar los criterios exigidos en el presente documento de acuerdo al modelo o diseño empresarial que tengan establecido, buscando durante la implementación de los estándares en materia de seguridad, la aplicación de una cultura de análisis de riesgos soportada en la toma de decisiones acorde a los valores, la misión, visión, los códigos de ética y conducta de la propia empresa.
-</p>
-<p>
-  En caso de que la empresa de mensajería y paquetería cuente con autorización de "Recinto Fiscalizado, Recinto Fiscalizado Estratégico; Depósito Fiscal; elaboración, transformación o reparación en Recinto Fiscalizado", además de cumplir con lo dispuesto en el presente documento, deberá de acreditar los requisitos y lineamientos establecidos para el control, vigilancia, vías de acceso, infraestructura, equipamiento y de seguridad de las mercancías de comercio exterior establecidos por la AGA y podrá comprobar su cumplimiento con aquello que sea coincidente con lo establecido en el presente perfile.
-</p>
+  <p>
+    El objetivo de este Perfil, es asegurar que las empresas de mensajería y paquetería, cuenten con prácticas y procesos de seguridad implementados en sus instalaciones, enfocados a fortalecer la cadena de suministro y a mitigar el riesgo de contaminación de los embarques con productos ilícitos.
+  </p>
+  <p>
+    Las empresas de mensajería y paquetería interesadas en obtener la autorización a que se refiere la regla 7.1.5., de las RGCE vigentes deberán demostrar que cuentan con procesos documentados y verificables; así mismo, deberán integrar los criterios exigidos en el presente documento de acuerdo al modelo o diseño empresarial que tengan establecido, buscando durante la implementación de los estándares en materia de seguridad, la aplicación de una cultura de análisis de riesgos soportada en la toma de decisiones acorde a los valores, la misión, visión, los códigos de ética y conducta de la propia empresa.
+  </p>
+  <p>
+    En caso de que la empresa de mensajería y paquetería cuente con autorización de "Recinto Fiscalizado, Recinto Fiscalizado Estratégico; Depósito Fiscal; elaboración, transformación o reparación en Recinto Fiscalizado", además de cumplir con lo dispuesto en el presente documento, deberá de acreditar los requisitos y lineamientos establecidos para el control, vigilancia, vías de acceso, infraestructura, equipamiento y de seguridad de las mercancías de comercio exterior establecidos por la AGA y podrá comprobar su cumplimiento con aquello que sea coincidente con lo establecido en el presente perfile.
+  </p>
+  <p> *Conforme a la regla 7.1.5. fracción VI, inciso e)"Perfil de Mansajeria y Paqueteria"establecido en el Anexo 1 de las RGCE declare los siguiente</p>
+  
+  <h6>Indique la siguiente información de la instalación:</h6>
+  <div class="form-row">
+    <label class="custom-label" for="antiguedad">Antigüedad de la instalación (años de operación):</label>
+    <input class="custom-input" id="antiguedad" formControlName="antiguedad" type="number" />
+  </div>
+  <div class="form-row">
+    <label class="custom-label" for="productos">Productos preponderantes que manejan en la instalación:</label>
+    <input class="custom-input"  id="productos" formControlName="productos" type="text" />
+  </div>
+  <div class="form-row">
+    <label class="custom-label" for="embarquesExp">No. de embarques promedio mensual (EXP):</label>
+    <input class="custom-input" id="embarquesExp" formControlName="embarquesExp" type="number" />
+  </div>
+  <div class="form-row">
+    <label class="custom-label" for="embarquesImp">No. de embarques promedio mensual (IMP):</label>
+    <input class="custom-input" id="embarquesImp" formControlName="embarquesImp" type="number" />
+  </div>
+  <div class="form-row">
+    <label class="custom-label" for="empleados">Número de empleados total de esta instalación:</label>
+    <input class="custom-input" id="empleados" formControlName="empleados" type="number" />
+  </div>
+  <div class="form-row">
+    <label class="custom-label" for="superficie">Superficie de la instalación (m²):</label>
+    <input class="custom-input" id="superficie" formControlName="superficie" type="number" />
+  </div>
+  <p><strong>Indique si cuenta con certificaciones que consideren que impactan en el proceso de su cadena de suministros, por ejemplo: ISO 9000; Procesos Logísticos Confiables, entre otros.</strong></p>
+  <div class="form-row">
+    <p><strong>Otras Certificaciones:</strong></p>
+  </div>
+</form>
 
