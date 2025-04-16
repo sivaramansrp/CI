@@ -50,7 +50,8 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   /**
    * Configuración de las columnas de la tabla para mostrar los trámites asociados.
    */
-  configuracionTabla: ConfiguracionColumna<TramiteAsociados>[] = CONFIGURACIONCOLUMNA;
+  configuracionTabla: ConfiguracionColumna<TramiteAsociados>[] =
+    CONFIGURACIONCOLUMNA;
 
   /**
    * Lista de bancos disponibles para seleccionar.
@@ -90,7 +91,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     this.solicitudPermisoService
       .obtenerTramitesAsociados()
       .pipe(takeUntil(this.notificadorDestruccion$))
-      .subscribe(tramiteAsociados => {
+      .subscribe((tramiteAsociados) => {
         this.tramiteAsociados = tramiteAsociados;
       });
 
@@ -105,28 +106,17 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   crearformularioPagoDerechos(): void {
     this.formularioPagoDerechos = this.formBuilder.group({
       claveDeReferencia: new FormControl(
-        this.estadoSolicitudPermiso.claveDeReferencia,
-        Validators.required
+        this.estadoSolicitudPermiso.claveDeReferencia
       ),
       cadenaPagoDependencia: new FormControl(
-        this.estadoSolicitudPermiso.cadenaPagoDependencia,
-        Validators.required
+        this.estadoSolicitudPermiso.cadenaPagoDependencia
       ),
-      bancoClave: new FormControl(
-        this.estadoSolicitudPermiso.bancoClave,
-        Validators.required
-      ),
-      llaveDePago: new FormControl(
-        this.estadoSolicitudPermiso.llaveDePago,
-        Validators.required
-      ),
-      fecPago: new FormControl(
-        this.estadoSolicitudPermiso.fecPago,
-        Validators.required
-      ),
+      bancoClave: new FormControl(this.estadoSolicitudPermiso.bancoClave),
+      llaveDePago: new FormControl(this.estadoSolicitudPermiso.llaveDePago),
+      fecPago: new FormControl(this.estadoSolicitudPermiso.fecPago),
       impPago: new FormControl(
         this.estadoSolicitudPermiso.impPago,
-        [Validators.required, Validators.min(0)]
+        Validators.min(0)
       ),
     });
   }
@@ -140,7 +130,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     campo: string;
   }): void {
     const VALOR = $event.formularioPagoDerechos.get($event.campo)?.value;
-    this.tramite260703Store.actualizarEstado({[$event.campo]: VALOR});
+    this.tramite260703Store.actualizarEstado({ [$event.campo]: VALOR });
   }
 
   /**
