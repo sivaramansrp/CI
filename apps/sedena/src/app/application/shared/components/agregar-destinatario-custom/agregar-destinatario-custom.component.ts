@@ -3,7 +3,7 @@ import { STR_NACIONAL } from '../../constants/datos-solicitud.enum';
 import { TERCEROS_NACIONALIDAD_OPCIONES } from '../../constants/datos-solicitud.enum';
 import { TIPO_PERSONA_OPCIONES } from '../../constants/datos-solicitud.enum';
 
-import { DestinoFinal, Proveedor } from '../../models/terceros-relacionados.model';
+import { DestinoFinal } from '../../models/terceros-relacionados.model';
 
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 
@@ -31,14 +31,9 @@ import { TituloComponent } from '@ng-mf/data-access-user';
 
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs';
-/**
- * Componente para agregar un destinatario final (Destinatario) al formulario y almacenarlo.
- *
- * @example
- * <app-agregar-destinatario-final></app-agregar-destinatario-final>
- */
+
 @Component({
-  selector: 'app-agregar-destinatario-final',
+  selector: 'app-agregar-destinatario-custom',
   standalone: true,
   imports: [
     CommonModule,
@@ -47,10 +42,10 @@ import { takeUntil } from 'rxjs';
     TituloComponent,
     InputRadioComponent,
   ],
-  templateUrl: './agregar-destinatario-final.component.html',
-  styleUrl: './agregar-destinatario-final.component.css',
+  templateUrl: './agregar-destinatario-custom.component.html',
+  styleUrl: './agregar-destinatario-custom.component.scss',
 })
-export class AgregarDestinatarioFinalComponent
+export class AgregarDestinatarioCustomComponent
   implements OnDestroy, OnInit, OnChanges
 {
   /**
@@ -158,15 +153,6 @@ export class AgregarDestinatarioFinalComponent
    */
 
   tercerosNacionalidadOpciones = TERCEROS_NACIONALIDAD_OPCIONES;
-
-  /**
-   * Datos del formulario que pueden ser de tipo `DestinoFinal`, `Proveedor`, `null` o `undefined`.
-   * Este input se utiliza para recibir la información necesaria desde el componente padre.
-   *
-   * @type {DestinoFinal | Proveedor | null | undefined}
-   */
-  @Input() formaDatos!: DestinoFinal | Proveedor| null | undefined;
-
   /**
    * Crea el componente e inicializa el grupo de formulario.
    *
@@ -273,9 +259,6 @@ export class AgregarDestinatarioFinalComponent
     this.agregarDestinatarioFinal.disable();
     this.agregarDestinatarioFinal.get('tipoPersona')?.enable();
     this.agregarDestinatarioFinal.get('nacionalidad')?.enable();
-    if(this.formaDatos) {
-      this.agregarDestinatarioFinal.patchValue(this.formaDatos);
-    }
   }
 
   /**
