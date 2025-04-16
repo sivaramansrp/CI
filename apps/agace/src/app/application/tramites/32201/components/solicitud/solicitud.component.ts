@@ -10,8 +10,6 @@ import {
   TituloComponent,
   VALID_FILE_REGEX,
 } from '@libs/shared/data-access-user/src';
-import preOperativo from 'libs/shared/theme/assets/json/32201/preOperativo.json';
-import prejson from 'libs/shared/theme/assets/json/32201/prejson.json';
 import { Tramite32201Query } from '../../estados/tramite32201.query';
 import { Solicitud32201State, Tramite32201Store } from '../../estados/tramite32201.store';
 import { SOLICITUD_32201_ENUM } from '../../constantes/anexo';
@@ -35,19 +33,9 @@ import { SOLICITUD_32201_ENUM } from '../../constantes/anexo';
 })
 export class SolicitudComponent implements OnInit {
   /**
-   * Formulario reactivo para datos preoperativos.
+   * Formulario reactivo para datos.
    */
   solicitudForm!: FormGroup;
-
-  /**
-   * Opciones para los radio buttons, cargadas desde un archivo JSON.
-   */
-  radioOptions = preOperativo;
-
-  /**
-   * Almacena los datos de descripción en un formato predefinido.
-   */
-  descriptionData = prejson;
 
   /**
    * Estado de la solicitud.
