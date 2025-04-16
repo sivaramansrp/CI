@@ -1,3 +1,7 @@
+/**
+ * Componente que representa el asistente para la solicitud de modificación de permiso de salida del territorio.
+ * Este componente gestiona los pasos del asistente, la navegación entre ellos y los datos relacionados con cada paso.
+ */
 import { AVISO } from '@libs/shared/data-access-user/src';
 import { AccionBoton } from '../../enums/accion-botton.enum';
 import { Component } from '@angular/core';
@@ -6,12 +10,24 @@ import { ListaPasosWizard } from '@libs/shared/data-access-user/src';
 import { PASOS_EXPORTACION } from '../../constants/solicitud-modificacion-permiso-salida-territorio.enum';
 import { ViewChild } from '@angular/core';
 import { WizardComponent } from '@libs/shared/data-access-user/src';
+
+/**
+ * Decorador que define el componente Angular para la solicitud de modificación de permiso de salida del territorio.
+ * Incluye el selector del componente y la ruta de su plantilla HTML.
+ */
 @Component({
   selector: 'app-solicitud-modificacion-permiso-salida-territorio',
   templateUrl:
     './solicitud-modificacion-permiso-salida-territorio.component.html',
 })
+/**
+ * Clase que representa el componente Angular para la solicitud de modificación de permiso de salida del territorio.
+ * Gestiona los pasos del asistente, la navegación entre ellos y los datos relacionados con cada paso.
+ */
 export class SolicitudModificacionPermisoSalidaTerritorioComponent {
+  /**
+   * Lista de pasos del asistente para la solicitud de modificación de permiso.
+   */
   pasosSolicitar: ListaPasosWizard[] = PASOS_EXPORTACION;
 
   /**
@@ -19,16 +35,26 @@ export class SolicitudModificacionPermisoSalidaTerritorioComponent {
    */
   indice: number = 1;
 
+  /**
+   * Índice de la pestaña seleccionada.
+   */
   tabIndex: number = 1;
 
+  /**
+   * Referencia al componente del asistente (wizard).
+   */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
 
-   /**
+  /**
    * Mensaje de alerta utilizado en el componente.
    * Puede ser asignado a cualquiera de las claves definidas en TEXTOS.
    */
-   public alert_message: string = AVISO.Aviso;
+  public alert_message: string = AVISO.Aviso;
 
+  /**
+   * Datos relacionados con los pasos del asistente.
+   * Incluye el número total de pasos, el índice actual y los textos de los botones.
+   */
   datosPasos: DatosPasos = {
     nroPasos: this.pasosSolicitar.length,
     indice: this.indice,
@@ -36,6 +62,13 @@ export class SolicitudModificacionPermisoSalidaTerritorioComponent {
     txtBtnSig: 'Continuar',
   };
 
+  /**
+   * Cambia el índice del paso actual en el asistente.
+   * Si la acción es "cont", avanza al siguiente paso.
+   * Si la acción no es "cont", retrocede al paso anterior.
+   * 
+   * Param e Objeto que contiene la acción y el valor del índice.
+   */
   getValorIndice(e: AccionBoton): void {
     if (e.valor > 0 && e.valor < 4) {
       this.indice = e.valor;

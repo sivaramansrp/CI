@@ -78,4 +78,8 @@ describe('DatosDeLaSolicitudComponent', () => {
     expect(component.formulario).toBeDefined();
     expect(component.formulario.get('observaciones')).toBeTruthy();
   });
+
+  beforeEach(() => {
+    jest.spyOn(console, 'log').mockImplementation(() => {});
+  });
 });

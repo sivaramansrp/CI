@@ -1,52 +1,60 @@
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
 
+/**
+ * Interfaz que representa la información de un destinatario.
+ * Contiene los datos personales y de contacto del destinatario, así como su dirección.
+ */
 export interface Destinatario {
-   /** Nombre completo del destinatario. */
-   nombre: string;
+  /** Nombre completo del destinatario. */
+  nombre: string;
 
-   /** Registro Federal de Contribuyentes (RFC) del destinatario. */
-   rfc: string;
- 
-   /** Clave Única de Registro de Población (CURP) del destinatario. */
-   curp: string;
- 
-   /** Número telefónico de contacto del destinatario. */
-   telefono: string;
- 
-   /** Correo electrónico del destinatario. */
-   correoElectronico: string;
- 
-   /** Calle correspondiente al domicilio del destinatario. */
-   calle: string;
- 
-   /** Número exterior del domicilio del destinatario. */
-   numeroExterior: string;
- 
-   /** Número interior del domicilio del destinatario, si aplica. */
-   numeroInterior: string;
- 
-   /** País donde reside el destinatario. */
-   pais: string;
- 
-   /** Colonia del domicilio del destinatario. */
-   colonia: string;
- 
-   /** Municipio donde reside el destinatario. */
-   municipio: string;
- 
-   /** Localidad específica del domicilio del destinatario. */
-   localidad: string;
- 
-   /** Estado asociado al domicilio del destinatario. */
-   estado: string;
- 
-   /** Estado alternativo (o subdivisión administrativa) asociado al domicilio del destinatario, si aplica. */
-   estado2: string;
- 
-   /** Código postal del domicilio del destinatario. */
-   codigo: string;
+  /** Registro Federal de Contribuyentes (RFC) del destinatario. */
+  rfc: string;
+
+  /** Clave Única de Registro de Población (CURP) del destinatario. */
+  curp: string;
+
+  /** Número telefónico de contacto del destinatario. */
+  telefono: string;
+
+  /** Correo electrónico del destinatario. */
+  correoElectronico: string;
+
+  /** Calle correspondiente al domicilio del destinatario. */
+  calle: string;
+
+  /** Número exterior del domicilio del destinatario. */
+  numeroExterior: string;
+
+  /** Número interior del domicilio del destinatario, si aplica. */
+  numeroInterior: string;
+
+  /** País donde reside el destinatario. */
+  pais: string;
+
+  /** Colonia del domicilio del destinatario. */
+  colonia: string;
+
+  /** Municipio donde reside el destinatario. */
+  municipio: string;
+
+  /** Localidad específica del domicilio del destinatario. */
+  localidad: string;
+
+  /** Estado asociado al domicilio del destinatario. */
+  estado: string;
+
+  /** Estado alternativo (o subdivisión administrativa) asociado al domicilio del destinatario, si aplica. */
+  estado2: string;
+
+  /** Código postal del domicilio del destinatario. */
+  codigo: string;
 }
 
+/**
+ * Configuración de las columnas para mostrar la información de los destinatarios en una tabla.
+ * Define los encabezados, claves y el orden de las columnas.
+ */
 export const DESTINATARIO_ENCABEZADO_DE_TABLA: ConfiguracionColumna<Destinatario>[] = [
   {
     encabezado: 'Nombre/denominación o razón social',
@@ -123,4 +131,4 @@ export const DESTINATARIO_ENCABEZADO_DE_TABLA: ConfiguracionColumna<Destinatario
     clave: (item: Destinatario) => item.codigo,
     orden: 15,
   },
-  ];
+];
