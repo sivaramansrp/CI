@@ -11,5 +11,9 @@
   "amecafe":"http://localhost:4212",
   "inbal": "http://localhost:4218",
   "sedena": "http://localhost:4219",
-  "profepa": "http://localhost:4220"
+  "profepa": "http://localhost:4220",
+  "inah":"http://localhost:4221",
+  "crt":"http://localhost:4222",
+  "stps":"http://localhost:4223",
+  "bandejas":"http://localhost:4224"
 }

@@ -11,7 +11,6 @@ import { DatosPasos } from '../../../core/models/shared/components.model';
 import { SeccionLibQuery } from '../../../core/queries/seccion.query';
 import { SeccionLibState } from '../../../core/estados/seccion.store';
 import { WizardService } from '../../../core/services/shared/wizard/wizard.service';
-
 interface AccionBoton {
   accion: string;
   valor: number;
@@ -38,16 +37,10 @@ export class BtnContinuarComponent implements OnInit {
   public habilitarBoton: boolean = false;
 
   constructor(private seccionQuery: SeccionLibQuery) {
-    // El constructor se utiliza para inyectar dependencias que necesitamos en el componente.
+    // Lógica de inicialización si es necesario
    }
 
-  /**
-   * Inicializa el componente suscribiéndose al estado de la sección.
-   * Evalúa si el botón debe habilitarse comparando las propiedades `formaValida` y `seccion`.
-   *
-   * @returns {void} No retorna ningún valor.
-   */
-  ngOnInit(): void {
+  ngOnInit():void {
     this.seccionQuery.selectSeccionState$
       .pipe(
         takeUntil(this.destroyNotifier$),

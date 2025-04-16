@@ -1,0 +1,217 @@
+<div class="container">
+  <ng-titulo titulo="Pago de derechos" />
+  <form [formGroup]="formularioPagoDerechos">
+    <div class="form">
+      <div class="row">
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="control-label" for="claveDeReferencia"
+              >Clave de referencia*:</label
+            >
+            <input
+              id="claveDeReferencia"
+              type="text"
+              class="form-control"
+              formControlName="claveDeReferencia"
+              (input)="
+                capitalizarYGuardar(
+                  'claveDeReferencia',
+                  'setClaveDeReferencia',
+                  $event
+                )
+              "
+              [required]="true"
+              [class.is-invalid]="
+              formularioPagoDerechos.get('claveDeReferencia')?.touched &&
+              formularioPagoDerechos.get('claveDeReferencia')?.invalid
+            "
+            />
+            <div
+              class="invalid-feedback"
+              *ngIf="
+                formularioPagoDerechos.get('claveDeReferencia')?.touched &&
+                formularioPagoDerechos.get('claveDeReferencia')?.invalid
+              "
+            >
+              <span
+                *ngIf="
+                  formularioPagoDerechos
+                    .get('claveDeReferencia')
+                    ?.hasError('required')
+                "
+                >Este campo es obligatorio.</span
+              >
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="control-label" for="cadenaPagoDependencia"
+              >Cadena de la dependencia*:</label
+            >
+            <input
+              id="cadenaPagoDependencia"
+              type="text"
+              class="form-control"
+              formControlName="cadenaPagoDependencia"
+              (input)="
+                capitalizarYGuardar(
+                  'cadenaPagoDependencia',
+                  'setCadenaPagoDependencia',
+                  $event
+                )
+              "
+              [required]="true"
+              [class.is-invalid]="
+              formularioPagoDerechos.get('cadenaPagoDependencia')?.touched &&
+              formularioPagoDerechos.get('cadenaPagoDependencia')?.invalid
+            "
+            />
+            <div
+              class="invalid-feedback"
+              *ngIf="
+                formularioPagoDerechos.get('cadenaPagoDependencia')?.touched &&
+                formularioPagoDerechos.get('cadenaPagoDependencia')?.invalid
+              "
+            >
+              <span
+                *ngIf="
+                  formularioPagoDerechos
+                    .get('cadenaPagoDependencia')
+                    ?.hasError('required')
+                "
+                >Este campo es obligatorio.</span
+              >
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <app-catalogo-select
+              formControlName="bancoClave"
+              name="bancoClave"
+              [catalogo]="banco"
+              [label]="'Banco'"
+              [required]="true"
+              (change)="
+                setValoresStore(
+                  formularioPagoDerechos,
+                  'bancoClave'
+                )
+              "
+            ></app-catalogo-select>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="control-label" for="llaveDePago"
+              >Llave de pago*:</label
+            >
+            <input
+              class="form-control"
+              id="llaveDePago"
+              type="text"
+              formControlName="llaveDePago"
+              [required]="true"
+              (input)="
+                capitalizarYGuardar('llaveDePago', 'setLlaveDePago', $event)
+                "
+                [class.is-invalid]="
+                  formularioPagoDerechos.get('llaveDePago')?.touched &&
+                  formularioPagoDerechos.get('llaveDePago')?.invalid
+                "
+            />
+            <div
+              class="invalid-feedback"
+              *ngIf="
+                formularioPagoDerechos.get('llaveDePago')?.touched &&
+                formularioPagoDerechos.get('llaveDePago')?.invalid
+              "
+            >
+              <span
+                *ngIf="
+                  formularioPagoDerechos
+                    .get('llaveDePago')
+                    ?.hasError('required')
+                "
+                >Este campo es obligatorio.</span
+              >
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <input-fecha
+            [setFecha]="formularioPagoDerechos.get('fecPago')?.value"
+            [datos]="configuracionFechaFinal"
+            (valorCambiado)="
+              setValoresStore(formularioPagoDerechos, 'fecPago')
+            "
+            [class.is-invalid]="
+              formularioPagoDerechos.get('fecPago')?.touched &&
+              formularioPagoDerechos.get('fecPago')?.invalid
+            "
+          >
+          </input-fecha>
+          <div
+            class="invalid-feedback"
+            *ngIf="
+              formularioPagoDerechos.get('fecPago')?.touched &&
+              formularioPagoDerechos.get('fecPago')?.invalid
+            "
+          >
+            <span
+              *ngIf="
+                formularioPagoDerechos.get('fecPago')?.hasError('required')
+              "
+              >Este campo es obligatorio.</span
+            >
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="control-label" for="impPago">Importe de pago*:</label>
+            <input
+              class="form-control"
+              id="impPago"
+              type="number"
+              formControlName="impPago"
+              (change)="
+                setValoresStore(formularioPagoDerechos, 'impPago')
+              "
+              [required]="true"
+              [class.is-invalid]="
+              formularioPagoDerechos.get('impPago')?.touched &&
+              formularioPagoDerechos.get('impPago')?.invalid
+            "
+            />
+            <div
+              class="invalid-feedback"
+              *ngIf="
+                formularioPagoDerechos.get('impPago')?.touched &&
+                formularioPagoDerechos.get('impPago')?.invalid
+              "
+            >
+              <span
+                *ngIf="
+                  formularioPagoDerechos
+                    .get('impPago')
+                    ?.hasError('required')
+                "
+                >Este campo es obligatorio.</span
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+
+    <div class="row mt-3 justify-content-end">
+      <div class="col-md-4 d-flex justify-content-end">
+        <button class="btn btn-danger">Borrar datos del pago</button>
+      </div>
+    </div>
+    </div>
+  </form>
+</div>
