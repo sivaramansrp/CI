@@ -1,5 +1,5 @@
 import { CATALOGOS_ID, TIPO_PERSONA } from '../../constantes/constantes';
-
+import { Component, Input, OnInit,forwardRef } from '@angular/core';
 import {
   DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_EXTRANJERA,
   DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL,
@@ -8,9 +8,6 @@ import {
   PERSONA_MORAL_EXTRANJERO,
   PERSONA_MORAL_NACIONAL,
 } from '../../constantes/solicitante-constantes.enum';
-
-import { Component, Input, OnInit, forwardRef } from '@angular/core';
-
 import {
   FormBuilder,
   FormGroup,
@@ -18,13 +15,11 @@ import {
   ValidatorFn,
   Validators,
 } from '@angular/forms';
-
 import { CommonModule } from '@angular/common';
-import { SolicitanteService } from '../../../core/services/shared/solicitante/solicitante.service';
-import { TituloComponent } from '../titulo/titulo.component';
-
 import { FormularioDinamico } from '../../../core/models/shared/forms-model';
 import { FormulariosService } from '../../../core/services/shared/formularios/formularios.service';
+import { SolicitanteService } from '../../../core/services/shared/solicitante/solicitante.service';
+import { TituloComponent } from '../titulo/titulo.component';
 import { UppercaseDirective } from '../../directives/Uppercase/uppercase.directive';
 import { tap } from 'rxjs';
 
