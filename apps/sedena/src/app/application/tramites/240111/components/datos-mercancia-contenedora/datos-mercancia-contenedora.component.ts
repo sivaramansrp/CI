@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { DatosMercanciaComponent } from '../../../../../shared/components/datos-mercancia/datos-mercancia.component';
-import { MercanciaDetalle } from '../../../../../shared/models/datos-del-tramite.model';
+import { DatosMercanciaComponent } from '../../../../shared/components/datos-mercancia/datos-mercancia.component';
+import { MercanciaDetalle } from '../../../../shared/models/datos-del-tramite.model';
 import { Tramite240101Store } from '../../estados/tramite240101Store.store';
 
 /**

@@ -1,10 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { DestinoFinal } from '../../../../../shared/models/terceros-relacionados.model';
+import { DestinoFinal } from '../../../../shared/models/terceros-relacionados.model';
 import { OnInit } from '@angular/core';
-import { Proveedor } from '../../../../../shared/models/terceros-relacionados.model';
+import { Proveedor } from '../../../../shared/models/terceros-relacionados.model';
 import { Subject } from 'rxjs';
-import { TercerosRelacionadosComponent } from '../../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
+import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
 import { Tramite240101Query } from '../../estados/tramite240101Query.query';
 import { Tramite240101Store } from '../../estados/tramite240101Store.store';
 import { takeUntil } from 'rxjs';

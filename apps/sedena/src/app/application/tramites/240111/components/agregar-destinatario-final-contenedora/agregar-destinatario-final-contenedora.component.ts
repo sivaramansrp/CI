@@ -1,7 +1,7 @@
-import { AgregarDestinatarioFinalComponent } from '../../../../../shared/components/agregar-destinatario-final/agregar-destinatario-final.component';
+import { AgregarDestinatarioFinalComponent } from '../../../../shared/components/agregar-destinatario-final/agregar-destinatario-final.component';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { DestinoFinal } from '../../../../../shared/models/terceros-relacionados.model';
+import { DestinoFinal } from '../../../../shared/models/terceros-relacionados.model';
 import { Tramite240101Store } from '../../estados/tramite240101Store.store';
 
 /**

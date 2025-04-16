@@ -1,7 +1,7 @@
-import { AgregarProveedorComponent } from '../../../../../shared/components/agregar-proveedor/agregar-proveedor.component';
+import { AgregarProveedorComponent } from '../../../../shared/components/agregar-proveedor/agregar-proveedor.component';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { Proveedor } from '../../../../../shared/models/terceros-relacionados.model';
+import { Proveedor } from '../../../../shared/models/terceros-relacionados.model';
 import { Tramite240101Store } from '../../estados/tramite240101Store.store';
 
 @Component({
