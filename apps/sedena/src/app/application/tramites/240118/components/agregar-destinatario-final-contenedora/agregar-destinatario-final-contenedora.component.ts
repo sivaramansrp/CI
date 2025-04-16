@@ -1,10 +1,10 @@
+import { Component, OnInit } from '@angular/core';
 import { DestinoFinal, Proveedor } from '../../../../shared/models/terceros-relacionados.model';
 import { AgregarDestinatarioCustomComponent } from "../../../../shared/components/agregar-destinatario-custom/agregar-destinatario-custom.component";
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
 import { Observable } from "rxjs";
-import { Tramite240118Store } from '../../estados/tramite240118Store.store';
 import { Tramite240118Query } from '../../estados/tramite240118Query.query';
+import { Tramite240118Store } from '../../estados/tramite240118Store.store';
 
 /**
  * @title Agregar Destinatario Final Contenedora
@@ -39,6 +39,12 @@ export class AgregarDestinatarioFinalContenedoraComponent implements OnInit {
     this.terechosDatos$ = this.tramiteQuery.obtenerTercerosDatos$;
   }
 
+  /**
+   * @method ngOnInit
+   * @description Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Asigna un observable para obtener los datos de terceros desde la consulta del trámite.
+   * @command Inicializa los datos necesarios para el componente.
+   */
   ngOnInit(): void {
     this.terechosDatos$ = this.tramiteQuery.obtenerTercerosDatos$;
   }

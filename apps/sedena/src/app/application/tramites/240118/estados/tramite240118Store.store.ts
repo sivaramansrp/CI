@@ -8,14 +8,21 @@ import { Store } from '@datorama/akita';
 import { StoreConfig } from '@datorama/akita';
 
 /**
- * Interfaz que representa el estado completo del trámite 240118.
- *
- * @property {number} [tabSeleccionado] - Pestaña actualmente activa en el flujo.
- * @property {DestinoFinal[]} destinatarioFinalTablaDatos - Lista de destinatarios finales registrados.
- * @property {Proveedor[]} proveedorTablaDatos - Lista de proveedores registrados.
+ * @interface Tramite240118State
+ * @description Representa el estado de la aplicación para el trámite 240118.
+ * Contiene información sobre las pestañas seleccionadas, datos de destinatarios,
+ * proveedores, pagos, mercancías y otros detalles relacionados con el trámite.
+ * 
+ * @property {number} [tabSeleccionado] - Número de la pestaña actualmente seleccionada.
+ * @property {DestinoFinal[]} destinatarioFinalTablaDatos - Lista de datos de destinatarios finales.
+ * @property {Proveedor[]} proveedorTablaDatos - Lista de datos de proveedores.
  * @property {PagoDerechosFormState} pagoDerechos - Información del formulario de pago de derechos.
- * @property {MercanciaDetalle[]} merccancialTablaDatos - Lista de mercancías registradas.
- * @property {DatosDelTramiteFormState} datosDelTramite - Información general del formulario de datos del trámite.
+ * @property {MercanciaDetalle[]} merccancialTablaDatos - Lista de detalles de mercancías.
+ * @property {DatosDelTramiteFormState} datosDelTramite - Información del formulario de datos del trámite.
+ * @property {DestinoFinal | null} [modificarDestinarioDatos] - Datos del destinatario a modificar (opcional).
+ * @property {Proveedor | null} [modificarProveedorDatos] - Datos del proveedor a modificar (opcional).
+ * 
+ * @command Este estado se utiliza para gestionar y almacenar los datos relacionados con el trámite 240118.
  */
 export interface Tramite240118State {
   tabSeleccionado?: number;
@@ -162,6 +169,14 @@ export class Tramite240118Store extends Store<Tramite240118State> {
       merccancialTablaDatos: [...state.merccancialTablaDatos, ...newMercancia],
     }));
   }
+  
+  /**
+   * Actualiza los datos de un destinatario final específico.
+   *
+   * @method actualizarDatosDestinatario
+   * @param {DestinoFinal} datos - Datos del destinatario final a modificar.
+   * @returns {void}
+   */
   public actualizarDatosDestinatario(datos: DestinoFinal): void {
     this.update((state) => ({
       ...state,
@@ -170,6 +185,13 @@ export class Tramite240118Store extends Store<Tramite240118State> {
     }));
   }
 
+  /**
+   * Actualiza los datos de un proveedor específico.
+   *
+   * @method actualizarDatosProveedor
+   * @param {Proveedor} datos - Datos del proveedor a modificar.
+   * @returns {void}
+   */
   public actualizarDatosProveedor(datos: Proveedor): void {
     this.update((state) => ({
       ...state,
@@ -177,4 +199,49 @@ export class Tramite240118Store extends Store<Tramite240118State> {
       modificarDestinarioDatos: null
     }));
   }
+    /**
+   * Elimina un destinatario de la tabla de destinatarios.
+   *
+   * @param destinatarioFinal - El destinatario que se eliminará de la tabla de destinatarios.
+   * @returns void
+   */
+    eliminarDestinatarioFinal(destinatarioFinal: DestinoFinal): void {
+      this.update(state => {
+        const INDICE_A_ELIMINAR = state.destinatarioFinalTablaDatos.findIndex(ele => 
+          Object.keys(destinatarioFinal).some(key => destinatarioFinal[key as keyof DestinoFinal] === ele[key as keyof DestinoFinal])
+        );
+    
+        if (INDICE_A_ELIMINAR !== -1) {
+          state.destinatarioFinalTablaDatos.splice(INDICE_A_ELIMINAR, 1);
+        }
+    
+        return {
+          ...state,
+          destinatarioFinalTablaDatos: [...state.destinatarioFinalTablaDatos],
+        };
+      });
+    }
+
+     /**
+   * Elimina un Proveedor de la tabla de Proveedor.
+   *
+   * @param proveedorFinal - El Proveedor que se eliminará de la tabla de Proveedor.
+   * @returns void
+   */
+     eliminareliminarProveedorFinal(proveedorFinal: Proveedor): void {
+      this.update(state => {
+        const INDICE_A_ELIMINAR = state.proveedorTablaDatos.findIndex(ele => 
+          Object.keys(proveedorFinal).some(key => proveedorFinal[key as keyof Proveedor] === ele[key as keyof Proveedor])
+        );
+    
+        if (INDICE_A_ELIMINAR !== -1) {
+          state.proveedorTablaDatos.splice(INDICE_A_ELIMINAR, 1);
+        }
+    
+        return {
+          ...state,
+          proveedorTablaDatos: [...state.proveedorTablaDatos],
+        };
+      });
+    }
 }

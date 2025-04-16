@@ -1,10 +1,10 @@
+import { Component, OnInit } from '@angular/core';
 import { DestinoFinal, Proveedor } from '../../../../shared/models/terceros-relacionados.model';
 import { AgregarProveedorCustomComponent } from "../../../../shared/components/agregar-proveedor-custom/agregar-proveedor-custom.component";
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
 import { Observable } from "rxjs";
-import { Tramite240118Store } from '../../estados/tramite240118Store.store';
 import { Tramite240118Query } from '../../estados/tramite240118Query.query';
+import { Tramite240118Store } from '../../estados/tramite240118Store.store';
 
 @Component({
   selector: 'app-agregar-proveedor-contenedora',
@@ -35,6 +35,11 @@ export class AgregarProveedorContenedoraComponent implements OnInit {
   this.terechosDatos$ = this.tramiteQuery.obtenerTercerosDatos$;
   }
 
+  /**
+   * @method ngOnInit
+   * @description Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * @command Este método asigna un observable `terechosDatos$` con los datos obtenidos desde `tramiteQuery`.
+   */
   ngOnInit(): void {
     this.terechosDatos$ = this.tramiteQuery.obtenerTercerosDatos$;
   }

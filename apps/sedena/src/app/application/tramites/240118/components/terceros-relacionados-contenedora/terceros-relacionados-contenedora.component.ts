@@ -100,4 +100,24 @@ export class TercerosRelacionadosContenedoraComponent implements OnInit {
       relativeTo: this.activatedRoute,
     });
   }
+  /**
+   * @method eliminarDestinatarioFinal
+   * @description Elimina el primer DestinoFinal final de la tabla de datos.
+   * Si no hay DestinoFinal finales seleccionados, no realiza ninguna acción.
+   */
+  eliminarDestinatarioFinal(datos:DestinoFinal): void {    
+    if (datos) {
+      this.tramiteStore.eliminarDestinatarioFinal(datos);
+    }
+  }
+    /**
+   * @method eliminarProveedor
+   * @description Elimina el primer Proveedor final de la tabla de datos.
+   * Si no hay Proveedor finales seleccionados, no realiza ninguna acción.
+   */
+  eliminarProveedor(datos:Proveedor): void {
+    if (datos) {
+      this.tramiteStore.eliminareliminarProveedorFinal(datos);
+    }
+  }
 }
