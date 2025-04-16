@@ -1,25 +1,12 @@
+import { ANO_CATALOGO, AprovechamientoTextos, FECHA_INICIAL, FECHA_PAGO, MES_CATALOGO, RADIO_OPCIONS, RADIO_PARCIAL, RADIO_TOTAL } from '../constantes/adace32508.enum';
+import { Catalogo, CatalogoSelectComponent, InputFecha, InputFechaComponent, InputRadioComponent, Notificacion, NotificacionesComponent, Pedimento, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import {
-  Catalogo,
-  CatalogoSelectComponent,
-  CatalogosSelect,
-  InputFecha,
-  InputFechaComponent,
-  InputRadioComponent,
-  Notificacion,
-  NotificacionesComponent,
-  Pedimento,
-  TituloComponent,
-  ValidacionesFormularioService,
-} from '@libs/shared/data-access-user/src';
-import { AprovechamientoTextos, FECHA_INICIAL, FECHA_PAGO, RADIO_OPCIONS, RADIO_PARCIAL, RADIO_TOTAL } from '../constantes/adace32508.enum';
-import { AdaceService } from '../services/adace.service';
-import { map, ReplaySubject, takeUntil } from 'rxjs';
+import { ReplaySubject, map, takeUntil } from 'rxjs';
 import { Solicitud32508State, Tramite32508Store } from '../state/Tramite32508.store';
+import { AdaceService } from '../services/adace.service';
+import { CommonModule } from '@angular/common';
 import { Tramite32508Query } from '../state/Tramite32508.query';
-
 @Component({
   selector: 'app-aviso',
   standalone: true,
@@ -36,60 +23,49 @@ import { Tramite32508Query } from '../state/Tramite32508.query';
   templateUrl: './aviso.component.html',
   styleUrl: './aviso.component.css',
 })
-export class AvisoComponent implements OnInit ,OnDestroy {
+export class AvisoComponent implements OnInit, OnDestroy {
+  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   avisoForm!: FormGroup;
   radioOpcions = RADIO_OPCIONS;
   radioPartial = RADIO_PARCIAL;
   radioTotal = RADIO_TOTAL;
-  valorSeleccionado: string = '';
   fechaInitialInput: InputFecha = FECHA_INICIAL;
   fechaPagoInput: InputFecha = FECHA_PAGO;
-  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   textoParcial = AprovechamientoTextos.PARCIAL;
   textoTotal = AprovechamientoTextos.TOTAL;
+  public anoCatalogo = ANO_CATALOGO;
+  public mesCatalogo = MES_CATALOGO;
+  public solicitudState!: Solicitud32508State;
+  public pedimentos: Array<Pedimento> = [];
   public nuevaNotificacion!: Notificacion;
   public elementoParaEliminar!: number;
-  public pedimentos: Array<Pedimento> = [];
   cargarArchivo: boolean = false;
+  valorSeleccionado: string = '';
   nombreArchivo: string = '';
-public solicitudState!: Solicitud32508State;
-
-  public anoCatalogo: CatalogosSelect = {
-    labelNombre: 'Año del periodo reportado',
-    required: true,
-    primerOpcion: 'Selecciona un valor',
-    catalogos: [],
-  };
-  public mesCatalogo: CatalogosSelect = {
-    labelNombre: 'Mes del periodo reportado',
-    required: true,
-    primerOpcion: 'Selecciona un valor',
-    catalogos: [],
-  };
+  
 
   constructor(private adace: AdaceService,
     public fb: FormBuilder,
     private store: Tramite32508Store,
     private query: Tramite32508Query,
     private validacionesService: ValidacionesFormularioService
-  ) { 
+  ) {
     // Constructor utilizado para la creación de objetos requeridos en el componente
   }
 
   ngOnInit(): void {
-   
-     this.query.selectSolicitud$
-          .pipe(
-            takeUntil(this.destroyed$),
-            map((seccionState) => {
-              this.solicitudState = seccionState;
-            })
-          )
-          .subscribe();
-        this.donanteDomicilio();
+    this.query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+        })
+      )
+      .subscribe();
+    this.donanteDomicilio();
 
-        this.obtenerDatosAnoPeriodo();
-        this.obtenerDatosMesPeriodo();
+    this.obtenerDatosAnoPeriodo();
+    this.obtenerDatosMesPeriodo();
   }
 
   obtenerDatosAnoPeriodo(): void {
@@ -108,9 +84,13 @@ public solicitudState!: Solicitud32508State;
         this.mesCatalogo.catalogos = resp as Catalogo[];
       });
   }
-  alSeleccionarArchivo(event: any) {
-    const FILE = event.target.files[0];
+  alSeleccionarArchivo(event: Event) {
+    const TARGET = event.target as HTMLInputElement;
+    const FILE = TARGET?.files ? TARGET.files[0] : null;
     this.nombreArchivo = FILE ? FILE.name : 'Sin archivos seleccionados';
+    this.avisoForm.patchValue({
+      archivo: FILE,
+    });
   }
   cargaArchivo() {
     this.cargarArchivo = true;
@@ -186,7 +166,7 @@ public solicitudState!: Solicitud32508State;
       llaveDePago: [this.solicitudState?.llaveDePago, [Validators.required]],
       fechaElaboracion: [this.solicitudState?.fechaElaboracion, [Validators.required]],
       fechaPago: [this.solicitudState?.fechaPago, [Validators.required]],
-      archivo: [this.solicitudState?.archivo, [Validators.required]],
+      archivo: [null, [Validators.required]],
     });
   }
 

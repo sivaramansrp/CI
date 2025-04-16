@@ -1,9 +1,11 @@
-import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
 import { AcusePageComponent } from '@libs/shared/data-access-user/src';
+import { NgModule } from '@angular/core';
+import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
 
-const routes: Routes = [
+
+
+const ROUTES: Routes = [
    {
       path: 'solicitud',
       component: SolicitudPageComponent,
@@ -20,7 +22,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
+  imports: [RouterModule.forChild(ROUTES)],
   exports: [RouterModule]
 })
 export class AdaceRoutingModule { }

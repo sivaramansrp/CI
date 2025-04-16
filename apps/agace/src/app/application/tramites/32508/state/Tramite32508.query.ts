@@ -1,6 +1,6 @@
+import { Solicitud32508State, Tramite32508Store } from './Tramite32508.store';
 import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
-import { Solicitud32508State, Tramite32508Store } from './Tramite32508.store';
 
 /**
  * Clase que proporciona consultas reactivas para el estado del trámite 32508.

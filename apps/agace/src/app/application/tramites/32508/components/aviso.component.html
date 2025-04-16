@@ -139,7 +139,7 @@
                     </div>
                 </div>
                 <div class="col-md-4 mt-5 d-flex justify-content-end">
-                    <button type="button" class="btn btn-primary ms-3" (click)="cargaArchivo()">
+                    <button type="button" class="btn btn-primary ms-3" (click)="cargaArchivo()" [disabled]="!avisoForm.get('archivo')?.value">
                         Cargar archivo
                     </button>
                 </div>

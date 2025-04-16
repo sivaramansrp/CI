@@ -1,13 +1,7 @@
-import {
-  AlertComponent,
-  AnexarDocumentosComponent,
-  CATALOGOS_ID,
-  TituloComponent,
-} from '@ng-mf/data-access-user';
 import { Catalogo, CatalogosService, TEXTOS } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { ReplaySubject, Subscription, takeUntil } from 'rxjs';
+import { ReplaySubject, takeUntil } from 'rxjs';
+import { CATALOGOS_ID } from '@ng-mf/data-access-user';
 
 /**
  * Componente que representa el segundo paso del trámite.
@@ -17,13 +11,7 @@ import { ReplaySubject, Subscription, takeUntil } from 'rxjs';
   selector: 'app-paso-dos',
   templateUrl: './paso-dos.component.html',
   styleUrl: './paso-dos.component.scss',
-  standalone: true,
-  imports: [
-    CommonModule,
-    TituloComponent,
-    AlertComponent,
-    AnexarDocumentosComponent,
-  ],
+ 
 })
 export class PasoDosComponent implements OnInit, OnDestroy {
   /**
