@@ -106,9 +106,14 @@ public bancoData = BANCO_DATA;
       }),
     });
   }
-  seleccionarFechaInicio(evento: string): void {
-    this.solicitud260915Store.setFechadePago(evento);
-  }
+ /**
+ * Método para seleccionar la fecha de inicio.
+ * Actualiza la fecha de pago en el store con el evento recibido.
+ * @param evento Fecha seleccionada en formato de cadena.
+ */
+seleccionarFechaInicio(evento: string): void {
+  this.solicitud260915Store.setFechadePago(evento);
+}
 
   /**
    * Limpia los datos del formulario.

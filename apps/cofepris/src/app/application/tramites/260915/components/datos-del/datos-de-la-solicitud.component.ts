@@ -14,7 +14,7 @@ import { TituloComponent } from '@libs/shared/data-access-user/src';
 
 import { CLASIFICACION_PRODUCTO_DATA, CLAVE_SCIAN_DATA, DESCRIPCION_SCIAN_DATA, ESTADO_DATA, ESTADO_FISICO_DATA, ESPECIFICAR_DATA, REGIMEN_AL_QUE_DATA, TIPO_PRODUCTO_DATA, ADUANA_DATA } from '../../constants/catalogs.enum';
 import { CONFIGURACION_COLUMNAS_MERCANCIAS, CONFIGURACION_COLUMNAS_SOLI } from '../../constants/column-config.enum';
-import { TEXTOS } from '../../constants/constantes.enum';
+import { HACERLOS_RADIO_OPTIONS, OPCION_DE_BOTON_DE_RADIO, TEXTOS } from '../../constants/constantes.enum';
 import { FilaData, FilaData2, ListaClave } from '../../models/fila-modal';
 import { MercanciaCrossList, CrossList, CrossListLable } from '../../models/mercancia.model';
 import { Modal } from 'bootstrap';
@@ -127,12 +127,9 @@ export class DatosdelasolicitudComponent implements OnInit,OnDestroy {
 
   /** Fecha final seleccionada */
   fechaFinalSeleccionada: string = '';
+  
 /** Opciones para el botón de radio */
-opcionDeBotonDeRadio = [
-  { label: 'Prórroga', value: 'prorroga' },
-  { label: 'Modificación', value: 'modificacion' },
-  { label: 'Modificación y prórroga', value: 'modificacion_prorroga' },
-];
+opcionDeBotonDeRadio = OPCION_DE_BOTON_DE_RADIO;
 
 
   /** Tipo de selección para las mercancias */
@@ -148,10 +145,7 @@ mercanciasData: FilaData2[] = [];
   filasSeleccionadas: Set<number> = new Set();
 
   /** Opciones para el botón de radio de hacerlos */
-  hacerlosRadioOptions = [
-    { label: 'No', value: 'no' },
-    { label: 'Sí', value: 'si' },
-  ];
+  hacerlosRadioOptions = HACERLOS_RADIO_OPTIONS;
 
   /** Fila seleccionada */
   selectedRow: any;
