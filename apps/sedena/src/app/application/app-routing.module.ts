@@ -8,6 +8,13 @@ const ROUTES: Routes = [
     path: 'seleccion-tramite',
     component: SeleccionTramiteComponent,
   },
+  {
+    path: 'aviso-importacion-sustancias-quimicas',
+    loadChildren: () =>
+      import(
+        './tramites/240106/aviso-importacion-sustancias-quimicas.module'
+      ).then((m) => m.AvisoImportacionSustanciasQuimicasModule),
+  },
 ];
 
 @NgModule({
