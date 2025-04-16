@@ -1,3 +1,7 @@
+/**
+ * @const CROSLISTA_DE_PAISES
+ * @description Lista de países con sus nombres oficiales y descripciones adicionales.
+ */
 export const CROSLISTA_DE_PAISES: string[] = [
   'AFGANISTÁN (EMIRATO ISLÁMICO)',
   'ALBANIA (REPÚBLICA DE)',
@@ -21,16 +25,33 @@ export const CROSLISTA_DE_PAISES: string[] = [
   'BHUTAN (KINGDOM OF)',
 ];
 
+/**
+ * @const CONTINUAR
+ * @description Constante que representa un valor genérico para continuar con un proceso.
+ */
 export const CONTINUAR: string = 't';
+
+/**
+ * @const MENSAJE_DE_ALERTA
+ * @description Mensaje de alerta sobre el cumplimiento de normativas y posibles sanciones.
+ */
 export const MENSAJE_DE_ALERTA: string =
   'Cumplo con los requisitos y normatividad aplicable, sin que me eximan de que la autoridad sanitaria verifique su cumplimiento, esto sin perjuicio de las sanciones en que puedo incurrir por falsedad de declaraciones dadas a una autoridad. Asimismo acepto que la notificación de este trámite, sea a través de la Ventanilla Única de Comercio Exterior por los mecanismos de la misma.';
 
+/**
+ * @const INPUT_FECHA_CONFIG
+ * @description Configuración para un campo de entrada relacionado con la fecha de pago.
+ */
 export const INPUT_FECHA_CONFIG = {
   labelNombre: 'Fecha de pago',
   required: true,
   habilitado: true,
 };
 
+/**
+ * @const INPUT_FECHA_CADUCIDAD_CONFIG
+ * @description Configuración para un campo de entrada relacionado con la fecha de caducidad.
+ */
 export const INPUT_FECHA_CADUCIDAD_CONFIG = {
   labelNombre: 'Fecha de caducidad',
   required: false,
@@ -38,8 +59,8 @@ export const INPUT_FECHA_CADUCIDAD_CONFIG = {
 };
 
 /**
- * Encabezados para la tabla de terceros relacionados.
- * Cada cadena representa una columna en la tabla.
+ * @const TERCEROS_RELACIONADOS_TABLE_HEADER_DATA
+ * @description Encabezados para la tabla de terceros relacionados.
  */
 export const TERCEROS_RELACIONADOS_TABLE_HEADER_DATA = [
   'Nombre/denominación o razón social',
@@ -59,6 +80,10 @@ export const TERCEROS_RELACIONADOS_TABLE_HEADER_DATA = [
   'Código postal',
 ];
 
+/**
+ * @const DEFAULT_TABLA_ORDEN
+ * @description Orden y visibilidad de los sujetos en la tabla.
+ */
 export const DEFAULT_TABLA_ORDEN = [
   { nombre: 'Fabricante', orden: 1, esVisible: true },
   { nombre: 'Formulador', orden: 2, esVisible: true },
