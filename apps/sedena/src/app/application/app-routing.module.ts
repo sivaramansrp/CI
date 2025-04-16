@@ -16,7 +16,7 @@ const ROUTES: Routes = [
       ).then((m) => m.PermisoOrdinarioImportacionArmasMunicionesModule),
   },
   {
-    path: 'permiso-ordinario-importacion-armas-municiones',
+    path: 'permiso-exportacion-pirotecnia',
     loadChildren: () =>
       import(
         './tramites/240120/permiso-exportacion-pirotecnia.module'
