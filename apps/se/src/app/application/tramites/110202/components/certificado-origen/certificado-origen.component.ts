@@ -156,7 +156,7 @@ export class CertificadoOrigenComponent implements AfterViewInit, OnDestroy, OnI
       takeUntil(this.destroyNotifier$),
       delay(100)
     ).subscribe(estado => {
-      this.formCertificadoValues = estado;      
+      this.formCertificadoValues = estado;
     });
 
     // Suscripción al estado de la sección para obtener y actualizar el estado
