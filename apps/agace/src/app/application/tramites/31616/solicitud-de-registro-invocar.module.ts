@@ -14,6 +14,8 @@ import { DatoComunesComponent } from './components/dato-comunes/dato-comunes.com
 import { SolicitudDeRegistroInvocarService } from './services/solicitudDeRegistroInvocar/solicitud-de-registro-invocar.service';
 import { ReprestantanteComponent } from './components/represtantante/represtantante.component';
 
+import { ProfilesMansajeriaComponent } from './components/profiles-mansajeria/profiles-mansajeria.component';
+
 @NgModule({
   declarations: [SolicitudPasoComponent, PasoUnoComponent],
   imports: [
@@ -23,8 +25,9 @@ import { ReprestantanteComponent } from './components/represtantante/represtanta
     BtnContinuarComponent,
     SolicitanteComponent,
     DatoComunesComponent,
-    AlertComponent,
-    ReprestantanteComponent
+    ReprestantanteComponent,
+    ProfilesMansajeriaComponent
+    
   ],
   providers: [
     SolicitudDeRegistroInvocarService
