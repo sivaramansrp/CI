@@ -1,8 +1,8 @@
-import { catchError, map, Subject, takeUntil } from 'rxjs';
 import { Component, OnDestroy } from '@angular/core';
+import { Subject, catchError, map, takeUntil } from 'rxjs';
+import { FirmaElectronicaComponent } from '../../components/firma-electronica/firma-electronica.component';
 import { Router } from '@angular/router';
 import { TramiteFolioService } from '../../../core/services/shared/tramite-folio/tramite-folio.service';
-import { FirmaElectronicaComponent } from '../../components/firma-electronica/firma-electronica.component';
 
 @Component({
   selector: 'lib-firma-page',
@@ -18,15 +18,17 @@ export class FirmaPageComponent implements OnDestroy {
   constructor(
     private router: Router,
     private TramiteFolioServices: TramiteFolioService,
-  ) { }
+  ) { 
+    // Lógica de inicialización si es necesario
+  }
 
   /**
   * Maneja el evento para obtener la firma y realiza acciones adicionales.
   * @param ev - La cadena de texto que representa la firma obtenida.
   */
   obtieneFirma(ev: string): void {
-    const rutaActual = this.router.url;
-    this.ruta = rutaActual.split('/')[1];
+    const RUTA_ACTUAL = this.router.url;
+    this.ruta = RUTA_ACTUAL.split('/')[1];
 
     const FIRMA: string = ev;
     if (FIRMA) {
