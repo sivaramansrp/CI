@@ -47,10 +47,21 @@ export class DatosSolicitudService {
     return control?.errors && control?.touched;
   }
 
+  
+  /**
+   * Obtiene los datos de los domicilios de los establecimientos desde un archivo JSON.
+   * 
+   * @returns {Observable<Domicilio[]>} Un observable que emite una lista de objetos `Domicilio` con los datos de los domicilios.
+   */
   getDomicilioData(): Observable<Domicilio[]> {
     return this.http.get<Domicilio[]>('assets/json/261101/domicilio-establecimientos.json');
   }
   
+  /**
+   * Obtiene los datos de las mercancías desde un archivo JSON.
+   * 
+   * @returns {Observable<Mercancias[]>} Un observable que emite una lista de objetos `Mercancias` con los datos de las mercancías.
+   */
   getMercanciasData(): Observable<Mercancias[]> {
     return this.http.get<Mercancias[]>('assets/json/261101/mercancias.json');
   }

@@ -103,6 +103,17 @@ export class DomicilioEstablecimientosComponent implements OnInit, OnDestroy {
       telefono: [{ value: this.seccionState?.telefono, disabled: false }]
     });
   }
+
+    /**
+   * Inicializa el formulario reactivo para el Aviso de Funcionamiento.
+   * 
+   * Este método crea un grupo de controles de formulario con los siguientes campos:
+   * - 'funcionamiento': Campo que representa el estado de funcionamiento, inicializado con el valor de `seccionState?.funcionamiento` y habilitado.
+   * - 'licencia': Campo que representa la licencia, inicializado con el valor de `seccionState?.licencia` y habilitado.
+   * - 'regimen': Campo que representa el régimen, inicializado con el valor de `seccionState?.regimen` y habilitado.
+   * 
+   * @returns {void}
+   */
   public AvisodeFuncionamientomiento(): void {
     this.AvisodeFuncionamiento = this.fb.group({
       funcionamiento: [{ value: this.seccionState?.funcionamiento, disabled: false }],
