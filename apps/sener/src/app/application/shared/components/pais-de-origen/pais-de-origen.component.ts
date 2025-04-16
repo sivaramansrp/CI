@@ -178,14 +178,6 @@ export class PaisDeOrigenComponent implements OnChanges {
   ];
  
   /**
-   * @constructor
-   * @descripcion Constructor del componente.
-   */
-  constructor() {
-    // Constructor del componente
-  }
- 
-  /**
    * @metodo
    * @nombre ngOnChanges
    * @descripcion Método que se ejecuta cuando hay cambios en las propiedades de entrada del componente.
