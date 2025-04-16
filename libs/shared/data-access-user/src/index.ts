@@ -145,3 +145,5 @@ export * from './tramites/components/notificaciones/notificaciones.component';
 export * from './tramites/components/select-catalogos/select-catalogos.component';
 export * from './core/models/31602/comercio-exterior.model';
 export {AVISO} from './tramites/constantes/aviso-privacidad.enum';
+
+export {TramiteDetails} from './core/models/tramiteDetails'

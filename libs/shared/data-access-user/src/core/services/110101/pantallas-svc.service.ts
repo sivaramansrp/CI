@@ -1,7 +1,7 @@
+import { Observable, catchError, throwError } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {JSONResponse} from '../../models/shared/catalogos.model';
-import { catchError, Observable, throwError } from 'rxjs';
 import { enviroment } from '../../../enviroments/enviroment';
 @Injectable({
   providedIn: 'root'
@@ -18,7 +18,9 @@ export class PantallasSvcService {
   * constructor de la clase
   * @param http: constructor de HttpClient
   */
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+    // Lógica de inicialización si es necesario
+   }
 
     /**
      * @description Función para obtener el trámite

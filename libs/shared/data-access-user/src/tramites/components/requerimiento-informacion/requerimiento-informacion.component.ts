@@ -11,5 +11,7 @@ export class RequerimientoInformacionComponent {
     @Input() fechaRequerimiento!: string;
     @Input() justificacionRequerimiento!: string;
 
-    constructor() {}
+    constructor() {
+        // Lógica de inicialización si es necesario
+    }
 }
