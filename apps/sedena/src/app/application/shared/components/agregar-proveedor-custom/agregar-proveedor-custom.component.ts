@@ -2,11 +2,11 @@ import { Catalogo, CatalogoSelectComponent, InputRadioComponent, TipoPersona, Ti
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output } from '@angular/core';
 
 import { CommonModule, Location } from '@angular/common';
+import { DestinoFinal, Proveedor } from '../../models/terceros-relacionados.model';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE, TERCEROS_NACIONALIDAD_OPCIONES, TIPO_PERSONA_OPCIONES } from '../../constants/datos-solicitud.enum';
 import { Subject, takeUntil } from 'rxjs';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
-import { Proveedor } from '../../models/terceros-relacionados.model';
 
 /**
  * @component AgregarProveedorComponent
@@ -68,6 +68,15 @@ export class AgregarProveedorCustomComponent implements OnDestroy, OnInit, OnCha
    * @type {EventEmitter<Proveedor[]>}
    */
   @Output() updateProveedorTablaDatos = new EventEmitter<Proveedor[]>();
+
+    /**
+   * Datos del formulario que pueden ser de tipo `DestinoFinal`, `Proveedor`, `null` o `undefined`.
+   * Este input se utiliza para recibir la información necesaria desde el componente padre.
+   *
+   * @type {DestinoFinal | Proveedor | null | undefined}
+   */
+    @Input() formaDatos!: DestinoFinal | Proveedor | null | undefined;
+
 
   /**
    * Opciones de radio para seleccionar el tipo de persona.
@@ -195,6 +204,9 @@ export class AgregarProveedorCustomComponent implements OnDestroy, OnInit, OnCha
   ngOnInit(): void {
     this.crearFormaulario();
     this.cargarDatos();
+    if(this.formaDatos) {
+      this.agregarProveedorForm.patchValue(this.formaDatos);
+    }
   }
 
   /**
