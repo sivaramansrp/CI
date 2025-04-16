@@ -1,4 +1,4 @@
-import { forwardRef, NgModule } from '@angular/core';
+import { NgModule,forwardRef } from '@angular/core';
 import { InputCheckComponent } from './components/input-check/input-check.component';
 
 @NgModule({

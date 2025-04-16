@@ -1,5 +1,3 @@
-import { CommonModule } from '@angular/common';
-
 import {
   Component,
   EventEmitter,
@@ -8,7 +6,6 @@ import {
   Output,
   forwardRef,
 } from '@angular/core';
-
 import {
   FormBuilder,
   FormGroup,
@@ -16,6 +13,8 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+
 
 /**
  * InputRadioComponent es un componente reutilizable que renderiza un grupo de botones de radio.

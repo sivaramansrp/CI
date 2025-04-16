@@ -1,0 +1,14 @@
+{
+    "code": 200,
+    "message": "Tipo de movimiento",
+      "data": [
+        {
+          "id": 1,
+          "descripcion": "Definitivos"
+        },
+        {
+          "id": 2,
+          "descripcion": "Temporales"
+        }
+      ]
+    }
