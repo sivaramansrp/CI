@@ -103,7 +103,7 @@ export class Tramite260703Store extends Store<SolicitudPermisoState> {
     super(createInitialState());
   }
 
-  updatePreOperativeFormState(
+  actualizarEstadoFormularioPreOperativo(
     valores: Partial<SolicitudPermisoState['preOperativFormState']>
   ): void {
     this.update((state) => ({

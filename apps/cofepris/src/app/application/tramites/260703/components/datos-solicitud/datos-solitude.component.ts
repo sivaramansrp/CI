@@ -7,18 +7,35 @@ import {
 import { Subject, takeUntil } from 'rxjs';
 import { Tramite260703Query } from '../../estados/query/tramite260703.query';
 
+/**
+ * Componente que representa la sección de datos de la solicitud.
+ * Permite capturar y gestionar información relacionada con la solicitud.
+ */
 @Component({
   selector: 'app-datos-solitude',
   templateUrl: './datos-solitude.component.html',
   styleUrl: './datos-solitude.component.css',
 })
 export class DatosSolitudeComponent implements OnInit, OnDestroy {
+  /**
+   * Formulario reactivo para capturar los datos preoperativos de la solicitud.
+   */
   preOperativeForm!: FormGroup;
 
+  /**
+   * Estado actual de la solicitud de permiso.
+   */
   solicitudPermisoState!: SolicitudPermisoState;
 
-  destroy$ = new Subject<void>();
+  /**
+   * Observable utilizado para limpiar las suscripciones al destruir el componente.
+   * Esto ayuda a evitar fugas de memoria.
+   */
+  destruirNotificacion$: Subject<void> = new Subject<void>();
 
+  /**
+   * Opciones de radio para seleccionar el tipo de solicitud.
+   */
   radioOptions = [
     {
       label: 'Prórroga',
@@ -34,25 +51,37 @@ export class DatosSolitudeComponent implements OnInit, OnDestroy {
     },
   ];
 
+  /**
+   * Constructor del componente.
+   * formBuilder Servicio para construir formularios reactivos.
+   * tramite260703Store Servicio para gestionar el estado del trámite.
+   * tramite260703Query Servicio para consultar el estado del trámite.
+   */
   constructor(
     private formBuilder: FormBuilder,
     private tramite260703Store: Tramite260703Store,
-    private tramite260703Query: Tramite260703Query,
-  ) {
-    // Constructor logic here
-  }
+    private tramite260703Query: Tramite260703Query
+  ) {}
 
+  /**
+   * Método del ciclo de vida que se ejecuta al inicializar el componente.
+   * Configura las suscripciones necesarias y crea el formulario inicial.
+   */
   ngOnInit(): void {
     this.tramite260703Query.selectSolicitudPermiso$
-      .pipe(takeUntil(this.destroy$))
+      .pipe(takeUntil(this.destruirNotificacion$))
       .subscribe((state) => {
         this.solicitudPermisoState = state;
       });
 
-    this.createOperatieForm();
+    this.crearFormularioOperativo();
   }
 
-  createOperatieForm(): void {
+  /**
+   * Crea el formulario reactivo para capturar los datos preoperativos.
+   * Inicializa los valores del formulario con el estado actual de la solicitud.
+   */
+  crearFormularioOperativo(): void {
     this.preOperativeForm = this.formBuilder.group({
       ideGenerica1: [
         this.solicitudPermisoState.preOperativFormState.ideGenerica1,
@@ -64,14 +93,23 @@ export class DatosSolitudeComponent implements OnInit, OnDestroy {
     });
   }
 
-  
-  setValoresStore(campo: string): void{
+  /**
+   * Actualiza el estado del formulario preoperativo en el store.
+   * campo Nombre del campo del formulario a actualizar.
+   */
+  setValoresStore(campo: string): void {
     const VALOR = this.preOperativeForm.get(campo)?.value;
-    this.tramite260703Store.updatePreOperativeFormState({[campo]:VALOR});
+    this.tramite260703Store.actualizarEstadoFormularioPreOperativo({
+      [campo]: VALOR,
+    });
   }
 
+  /**
+   * Método del ciclo de vida que se ejecuta al destruir el componente.
+   * Limpia las suscripciones para evitar fugas de memoria.
+   */
   ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
+    this.destruirNotificacion$.next();
+    this.destruirNotificacion$.complete();
   }
 }
