@@ -4,9 +4,9 @@
  * @module SolicitanteasigncionserviceService
  */
 
-import { Injectable } from '@angular/core';
+import { Observable,catchError, throwError } from 'rxjs';
 import { HttpCoreService } from '../shared/http/http.service';
-import { catchError, Observable, throwError } from 'rxjs';
+import { Injectable } from '@angular/core';
 
 /**
  * Servicio para la gestión de asignaciones de solicitantes.
@@ -21,7 +21,9 @@ export class SolicitanteasigncionserviceService {
    * Constructor del servicio.
    * @param http Servicio HTTP para realizar peticiones.
    */
-  constructor(private http: HttpCoreService) { }
+  constructor(private http: HttpCoreService) {
+    // Lógica de inicialización si es necesario
+   }
 
   /**
    * Obtiene los datos de asignación.
