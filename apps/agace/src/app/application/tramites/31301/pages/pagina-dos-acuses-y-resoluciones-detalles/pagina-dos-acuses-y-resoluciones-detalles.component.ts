@@ -1,7 +1,8 @@
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { AcusesYResolucionesFolioDelTramiteDetallesComponent } from '@libs/shared/data-access-user/src/tramites/components/acuses-y-resoluciones-folio-del-tramite-detalles/acuses-y-resoluciones-folio-del-tramite-detalles.component';
+import { AcusesYResolucionesFolioDelTramiteDetallesComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 
 /**
  * Componente para gestionar los detalles de acuses y resoluciones del trámite 11105.

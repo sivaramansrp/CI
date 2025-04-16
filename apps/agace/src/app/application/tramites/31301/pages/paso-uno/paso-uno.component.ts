@@ -1,7 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { DatosGeneralesDeLaSolicitudComponent } from '../../components/datos-generales-de-la-solicitud/datos-generales-de-la-solicitud.component';
+import { DatosPorGarantiaComponent } from '../../components/datos-por-garantia/datos-por-garantia.component';
+import { ModificacionDeDenominacionORazorsSocialComponent } from '../../components/modificacion-de-denominacion-o-razors-social/modificacion-de-denominacion-o-razors-social.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
+import { TercerosRelacionadosComponent } from '../../components/terceros-relacionados/terceros-relacionados.component';
 
 /**
  * Componente que representa el primer paso de un trámite.
@@ -9,7 +13,15 @@ import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
 @Component({
   selector: 'app-paso-uno',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, SolicitanteComponent],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    SolicitanteComponent,
+    DatosGeneralesDeLaSolicitudComponent,
+    DatosPorGarantiaComponent,
+    ModificacionDeDenominacionORazorsSocialComponent,
+    TercerosRelacionadosComponent,
+  ],
   templateUrl: './paso-uno.component.html',
   styleUrls: ['./paso-uno.component.scss'],
 })

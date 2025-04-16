@@ -23,7 +23,7 @@ export const ROUTES_SOLICITUDES: Routes = [
   {
     path: '',
     pathMatch: 'full',
-    redirectTo: 'pagina-uno-acuses-y-resoluciones-busqueda',
+    redirectTo: 'pagina-dos-acuses-y-resoluciones-detalles',
   },
 ];
 
