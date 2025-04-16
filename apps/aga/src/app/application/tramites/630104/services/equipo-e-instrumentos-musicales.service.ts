@@ -11,7 +11,7 @@ import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root',
 })
-export class ImportacionDeVehiculosService {
+export class EquipoEInstrumentosMusicalesService {
   /**
    * Constructor del servicio.
    * Servicio HttpClient para realizar solicitudes HTTP.
@@ -20,42 +20,22 @@ export class ImportacionDeVehiculosService {
     //
   }
 
-  /**
-   * Obtiene la lista de países disponibles desde un archivo JSON.
-   * Un observable que emite una lista de países.
-   */
-  getListaDePaisesDisponibles(): Observable<Catalogo[]> {
-    return this.http.get<Catalogo[]>('/assets/json/130111/pais-procenia.json');
-  }
 
   /**
    * Obtiene la lista de países por bloque desde un archivo JSON.
    * El ID del bloque.
    * Un observable que emite una lista de países agrupados por bloque.
    */
-  getPaisesPorBloque(_bloqueId: number): Observable<Catalogo[]> {
+  getPropietarioOptions(): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>(
-      '/assets/json/130111/paises-por-bloque.json'
+      '/assets/json/630104/propietario-options.json'
     );
   }
 
-  /**
-   * Obtiene la lista de entidades federativas desde un archivo JSON.
-   * Un observable que emite una lista de entidades federativas.
-   */
-  getEntidadFederativa(): Observable<Catalogo[]> {
+  getPropietarioNoOptions(): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>(
-      '/assets/json/130111/entidad-federativa.json'
+      '/assets/json/630104/propietario-no-options.json'
     );
   }
 
-  /**
-   * Obtiene la lista de representaciones federales desde un archivo JSON.
-   * Un observable que emite una lista de representaciones federales.
-   */
-  getRepresentacionFederal(): Observable<Catalogo[]> {
-    return this.http.get<Catalogo[]>(
-      '/assets/json/130111/representacion-federal.json'
-    );
   }
-}

@@ -12,3 +12,10 @@ export const PASOS_EXPORTACION = [
         completado: false,
     }
 ];
+
+
+export const FECHA_FINAL = {
+    labelNombre: 'Fecha de pago',
+    required: true,
+    habilitado: true,
+  };

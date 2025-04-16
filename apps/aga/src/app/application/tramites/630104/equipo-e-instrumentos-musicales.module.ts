@@ -8,17 +8,18 @@ import { EquipoEInstrumentosMusicalesComponent } from './pages/equipo-e-instrume
 
 
 import { BtnContinuarComponent, CrosslistComponent, InputRadioComponent, SolicitanteComponent, TablaDinamicaComponent, TituloComponent, WizardComponent } from '@libs/shared/data-access-user/src';
-import { PasoDosComponent} from '../../tramites/630104/pages/paso-dos/paso-dos.component';
+import { PasoDosComponent} from './pages/paso-dos/paso-dos.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 
-import { PasoTresComponent } from '../../tramites/630104/pages/paso-tres/paso-tres.component';
+import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 
-
+import {TipoDePropietarioComponent}from '../../shared/components/tipo-de-propietario/tipo-de-propietario.component';
 
 
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { SolicitudComponent } from './components/solicitud/solicitud.component';
+
 
 @NgModule({
   declarations: [
@@ -34,6 +35,7 @@ import { SolicitudComponent } from './components/solicitud/solicitud.component';
     PasoTresComponent,
     PasoDosComponent,
     TituloComponent,
+    TipoDePropietarioComponent,
     InputRadioComponent,
     SolicitanteComponent,
     ReactiveFormsModule,
