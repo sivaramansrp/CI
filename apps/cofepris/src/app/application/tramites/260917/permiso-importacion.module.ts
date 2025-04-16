@@ -1,4 +1,4 @@
-import { BtnContinuarComponent, WizardComponent } from '@libs/shared/data-access-user/src';
+import { BtnContinuarComponent, SolicitanteComponent, WizardComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { ModificacionPermisoImportacionComponent } from './pages/modificacion-permiso-importacion/modificacion-permiso-importacion.component';
 import { NgModule } from '@angular/core';
@@ -12,8 +12,8 @@ import { PermisoImportacionRoutingModule } from './permiso-importacion-routing.m
     ModificacionPermisoImportacionComponent,
     PasoUnoComponent,
     PasoDosComponent,
-    PasoTresComponent,
+    PasoTresComponent
   ],
-  imports: [CommonModule, PermisoImportacionRoutingModule,BtnContinuarComponent,WizardComponent],
+  imports: [CommonModule, PermisoImportacionRoutingModule,BtnContinuarComponent,WizardComponent,SolicitanteComponent],
 })
 export class PermisoImportacionModule {}
