@@ -1,5 +1,5 @@
-import { Injectable } from '@angular/core';
 import { HttpCoreService } from '../../shared/http/http.service';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -7,7 +7,9 @@ import { Observable } from 'rxjs';
 })
 export class ExportadorAutorizadoService {
 
-  constructor(private http: HttpCoreService) { }
+  constructor(private http: HttpCoreService) { 
+    // Lógica de inicialización si es necesario
+  }
 
 
   getExportadorAutorizado(): Observable<any> {
