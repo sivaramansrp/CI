@@ -58,8 +58,13 @@ export class AvisoComponent implements OnInit,OnDestroy {
    */
     radioOpcions = RADIO_OPCIONS;
 
+    /**
+     * Opciones de radio.
+     */
     radioTipoAviso = RADIO_TIPO_AVISO;
-  
+   /**
+     * Opciones de radio.
+     */
     radioOpcionsAviso = RADIO_OPCIONS_AVISO;
 
 /**
@@ -123,10 +128,16 @@ datosNIVNumeroSerie: boolean = false;
    */
   botonAccionesTipos = BotonAccionesTipos;
   
-  /**
-   * @property {boolean} datosDelAvisoVisible
-   * Indica si se deben mostrar los datos del aviso.
-   */
+/**
+ * @property {Object} tablaDeDatos
+ * @description Propiedad que contiene la configuración de la tabla de datos utilizada en el componente.
+ * Incluye las encabezadas y los datos que se mostrarán en la tabla.
+ * 
+ * @property {typeof ENCABEZADAS_CONSTANT[]} encabezadas - Arreglo que define las columnas o encabezados de la tabla.
+ * @property {ColumnasTabla[]} datos - Arreglo que contiene los datos que se mostrarán en las filas de la tabla.
+ * 
+ * @default TABLA_DE_DATOS_AVISO
+ */
   tablaDeDatos: {
     encabezadas: typeof ENCABEZADAS_CONSTANT[];
     datos: ColumnasTabla[];
