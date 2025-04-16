@@ -27,7 +27,7 @@ export class SeleccionTramiteComponent implements OnInit {
     } else {
       this.ruta = AMBIENTES.DESARROLLO
     }
+    this.tramiteData = tramiteDetailsData.filter((v) => v.department === "amecafe") ;
   }
 
-  this.tramiteData = tramiteDetailsData.filter((v) => v.department === "amecafe") ;
 }
