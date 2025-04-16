@@ -36,12 +36,12 @@ export interface DatosProcedureState {
   regimen: string;
   informacionConfidencial: string,
   aduanas: string,
-  claveDeReferencia?: string;
-  cadenaPagoDependencia?: string;
-  bancoClave?: string;
-  llaveDePago?: string;
-  fecPago?: string;
-  impPago?: string;
+  claveDeReferencia: string;
+  cadenaPagoDependencia: string;
+  bancoClave: string;
+  llaveDePago: string;
+  fecPago: string;
+  impPago: string;
 }
 
 export function createInitialState(): DatosProcedureState {
