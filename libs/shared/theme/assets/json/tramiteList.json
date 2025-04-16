@@ -1979,6 +1979,13 @@
         "linkDashboard": "/aga/invocar-modulo/solicitante",
         "linkDepartment": "/pago/invocar-modulo/solicitante",
         "department": "aga"
+    },
+    {
+        "id": 284,
+        "tramite": 317,
+        "linkDashboard": "/agace/aviso-unico-renovacion/pantallas",
+        "linkDepartment": "/pago/aviso-unico-renovacion/pantallas",
+        "department": "agace"
     }
 
     
