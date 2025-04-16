@@ -320,7 +320,14 @@ const ROUTES: Routes = [
       loadChildren: () =>
       import('./tramites/260201/importacion-psicotropicos-poretorno.module').then(
         (m) => m.ImportacionPsicotropicosPoretornoModule),
-}
+},
+{
+  path: 'permiso-sanitario-dispositivos-medicos',
+  loadChildren: () =>
+    import('./tramites/260915/permiso-sanitario-dispositivos-medicos.module').then(
+      (m) => m.PermisoSanitarioDispositivosMedicosModule)
+},
+
 
 ];
 
