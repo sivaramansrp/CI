@@ -3,7 +3,7 @@ import { STR_NACIONAL } from '../../constants/datos-solicitud.enum';
 import { TERCEROS_NACIONALIDAD_OPCIONES } from '../../constants/datos-solicitud.enum';
 import { TIPO_PERSONA_OPCIONES } from '../../constants/datos-solicitud.enum';
 
-import { DestinoFinal } from '../../models/terceros-relacionados.model';
+import { DestinoFinal, Proveedor } from '../../models/terceros-relacionados.model';
 
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 
@@ -118,6 +118,15 @@ export class AgregarDestinatarioCustomComponent
    */
   @Input() idProcedimiento!: number;
 
+    /**
+   * Datos del formulario que pueden ser de tipo `DestinoFinal`, `Proveedor`, `null` o `undefined`.
+   * Este input se utiliza para recibir la información necesaria desde el componente padre.
+   *
+   * @type {DestinoFinal | Proveedor | null | undefined}
+   */
+    @Input() formaDatos!: DestinoFinal | Proveedor | null | undefined;
+
+
   /**
    * @property mostrarCamposNoContribuyente
    * @description Controla la visibilidad de los campos específicos para no contribuyentes.
@@ -220,6 +229,9 @@ export class AgregarDestinatarioCustomComponent
   ngOnInit(): void {
     this.crearFormaulario();
     this.cargarDatos();
+    if(this.formaDatos) {
+      this.agregarDestinatarioFinal.patchValue(this.formaDatos);
+    }
   }
 
   /**
