@@ -12,6 +12,9 @@ export interface DatosDelTramiteFormState {
   usoFinal: string;
   aduanasSeleccionadas: string[];
   paisDestino: string;
+  anoEnCurso?: boolean;
+  dosSemestre?: string;
+  unoSemestre?: string;
 }
 
 /**
