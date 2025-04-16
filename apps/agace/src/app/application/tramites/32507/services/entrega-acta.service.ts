@@ -22,6 +22,15 @@ export class EntregaActaService {
   }
 
   /**
+   * Obtiene los datos de la tabla de aviso.
+   * 
+   * @returns {Observable<AvisoTablaDatos>} Un observable con los datos de la tabla de aviso.
+   */
+  obtenerAvisoTabla(): Observable<AvisoTablaDatos> {
+    return this.http.get<AvisoTablaDatos>(`assets/json/32503/aviso-tabla.json`);
+  }
+
+  /**
    * Obtiene la lista de idiomas disponibles.
    * 
    * @returns {Observable<CatalogoLista>} Un observable con la lista de idiomas.
@@ -37,6 +46,15 @@ export class EntregaActaService {
    */
   obtenerDatosSolicitante(): Observable<DatosSolicitante> {
     return this.http.get<DatosSolicitante>(`assets/json/32507/datosSolicitante.json`);
+  }
+
+   /**
+   * Obtiene los datos de la tabla de mercancías.
+   * 
+   * @returns {Observable<MercanciaTablaDatos>} Un observable con los datos de la tabla de mercancías.
+   */
+   obtenerMercanciaTabla(): Observable<MercanciaTablaDatos> {
+    return this.http.get<MercanciaTablaDatos>(`assets/json/32503/mercancia-tabla.json`);
   }
 
   

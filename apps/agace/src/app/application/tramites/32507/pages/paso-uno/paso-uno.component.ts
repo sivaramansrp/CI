@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Component, ViewChild } from '@angular/core';
 import { SolicitanteComponent } from "../../components/solicitante/solicitante.component";
 import { ReactiveFormsModule } from '@angular/forms';
+import { AvisoComponent } from '../../components/aviso/aviso.component';
 //import { AvisoComponent } from '../../components/aviso/aviso.component';
 
 /**
@@ -19,7 +20,7 @@ import { ReactiveFormsModule } from '@angular/forms';
   selector: 'paso-uno',
   templateUrl: './paso-uno.component.html',
   styleUrl: './paso-uno.component.scss',
-  imports: [CommonModule, SolicitanteComponent,ReactiveFormsModule],
+  imports: [CommonModule, SolicitanteComponent,ReactiveFormsModule,AvisoComponent],
   standalone: true,
 })
 export class PasoUnoComponent {

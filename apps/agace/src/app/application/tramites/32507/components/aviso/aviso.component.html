@@ -1,0 +1,62 @@
+<div class="container">
+  <form [formGroup]="avisoFormulario">
+    <ng-container formGroupName="adaceFormulario">
+      <div class="row mb-3">
+        <div class="col-md-4">
+          <label for="adace" class="form-label">ADACE:</label>
+          <input class="form-control" [ngClass]="isValid(adaceFormulario, 'adace') ? 'required' : ''" type="text"
+            formControlName="adace" name="adace" id="adace"
+            (change)="setValoresStore(avisoFormulario, 'adace', 'setAvisoFormularioAdace')" />
+        </div>
+      </div>
+    </ng-container>
+
+    <!-- second section -->
+    <ng-titulo titulo="Datos de la empresa IMMEX que transfiere y presenta el aviso" />
+    <ng-container formGroupName="datosEmpresa">
+      <div class="row">
+        <div class="col-md-6">
+          <label for="valorProgramaImmex">
+            Número de programa IMMEX
+          </label>
+          <span class="require">*</span>
+          <label for="puntos">:</label>
+          <input id="valorProgramaImmex" name="valorProgramaImmex" class="form-control"
+            [ngClass]="isValid(datosEmpresa, 'valorProgramaImmex') ? 'required' : ''" type="text" maxlength="9"
+            formControlName="valorProgramaImmex"
+            (keyup)="sanitizeAlphanumeric(datosEmpresa,'valorProgramaImmex',$event)"
+            (change)="setValoresStore(datosEmpresa, 'valorProgramaImmex', 'setAvisoFormularioValorProgramaImmex')" />
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="valorAnioProgramaImmex">Año de programa IMMEX</label>
+            <span class="require">*</span>
+            <label for="puntos">:</label>
+            <input id="valorAnioProgramaImmex" name="valorAnioProgramaImmex" class="form-control" type="text"
+              maxlength="4" formControlName="valorAnioProgramaImmex"
+              [ngClass]="isValid(datosEmpresa, 'valorAnioProgramaImmex') ? 'required' : ''"
+              (keyup)="sanitizeAlphanumeric(datosEmpresa,'valorAnioProgramaImmex',$event)"
+              (change)="setValoresStore(datosEmpresa, 'valorAnioProgramaImmex', 'setAvisoFormularioValorAnioProgramaImmex')" />
+          </div>
+        </div>
+      </div>
+    </ng-container>
+    <!-- Third section -->
+    <ng-titulo titulo="Datos de la ADACE que asistió a la destrucción" />
+    <ng-container formGroupName="datosEmpresa">
+
+      <div class="row">
+        <div class="col-md-12">
+            <div class="col-md-6">
+                <app-input-radio [radioOptions]="radioOpcions" formControlName="tipoBusqueda"
+                    [layout]="'horizontal'"
+                    (change)="setValoresStore(datosEmpresa, 'tipoBusqueda', 'setTipoBusqueda')"></app-input-radio>
+            </div>
+        </div>
+    </div>
+    </ng-container>
+    </form>
+
+</div>

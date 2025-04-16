@@ -1,4 +1,10 @@
 
+/**
+ * Constante que define los pasos del wizard en el trámite.
+ * 
+ * Esta constante contiene un array de objetos que representan los pasos del wizard,
+ * incluyendo su índice, título, y estado (activo o completado).
+ */
 export const PASOS = [
   {
     indice: 1,
@@ -8,10 +14,16 @@ export const PASOS = [
   },
   {
     indice: 2,
+    titulo: 'Anexar requisitos',
+    activo: false,
+    completado: false,
+  },
+  {
+    indice: 4,
     titulo: 'Firmar solicitud',
     activo: false,
     completado: false,
-  }
+  },
 ];
 
 export const TEXTOS_REQUISITOS = {
@@ -33,3 +45,58 @@ export const TEXTOS = {
 };
 
 export const ALPHANUMERIC_PATTERN = '^[a-zA-Z0-9]*$';
+
+/**
+ * Configuración para la fecha de ingreso.
+ * 
+ * Define las propiedades de la fecha de ingreso, como el nombre de la etiqueta, si es requerida y si está habilitada.
+ */
+export const FECHA_INGRESO = {
+  labelNombre: 'Fecha de programada del traslado',
+  required: true,
+  habilitado: true,
+};
+
+/**
+ * Tipos de aviso disponibles.
+ * 
+ * Define los valores y etiquetas para los tipos de aviso.
+ */
+export const TIPAVI = [
+  {
+    value: 'inicial',
+    label: 'Inicial',
+  },
+  {
+    value: 'prorroga',
+    label: 'Prórroga',
+  }
+];
+/**
+ * Tipos de carga disponibles.
+ * 
+ * Define los valores y etiquetas para los tipos de carga.
+ */
+export const TIPACA = [
+  {
+    value: 'manual',
+    label: 'Manual',
+  },
+  {
+    value: 'carga_masiva',
+    label: 'Carga Masiva',
+  }
+];
+
+/**
+ * @constant RADIO_OPCIONS
+ * @description Opciones de radio para seleccionar "Sí" o "No".
+ */
+export const RADIO_OPCIONS = [
+  { label: 'Sí', value: 'Si' },
+  { label: 'No', value: 'No' },
+];
+
+
+
+export const REGEX_ALFANUMERICO_CON_ESPACIOS_REEMPLAZAR = /[^a-zA-Z0-9 ]/g;
