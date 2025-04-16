@@ -11,5 +11,7 @@ export class EncabezadoRequerimientoComponent {
     @Input() numFolioTramite!: string;
     @Input() tipoTramite!: string;
 
-    constructor() { }
+    constructor() {
+        // Lógica de inicialización si es necesario
+     }
 }
