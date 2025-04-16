@@ -16,7 +16,6 @@
       <li [ngClass]="indice === 5 ? 'active' : ''">
         <a data-toggle="tab" (keyup)="seleccionaTab(1)" (click)="seleccionaTab(5)">Tramites Asociados</a>
       </li>
-
     </ul>
 
     <ng-container>
@@ -31,15 +30,12 @@
       <app-terceros-relacionados-fabricante></app-terceros-relacionados-fabricante>
       }
       @case (4){
-        <app-pago-de-derechos
-        [formularioPagoDerechos]="formularioPagoDerechos"
-        [banco]="banco"
-        (setValoresStoreEvent)="setValoresStore($event)"
-        ></app-pago-de-derechos>
-        } @case (5){
-          <app-tramite-asociados
-          [configuracionTabla]="configuracionTabla" [tramiteAsociados]="tramiteAsociados"></app-tramite-asociados>
-        } }
+      <app-pago-de-derechos [formularioPagoDerechos]="formularioPagoDerechos" [banco]="banco"
+        (setValoresStoreEvent)="setValoresStore($event)"></app-pago-de-derechos>
+      } @case (5){
+      <app-tramite-asociados [configuracionTabla]="configuracionTabla"
+        [tramiteAsociados]="tramiteAsociados"></app-tramite-asociados>
+      } }
 
     </ng-container>
   </div>

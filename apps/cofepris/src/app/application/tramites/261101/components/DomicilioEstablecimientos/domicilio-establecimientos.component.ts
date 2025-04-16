@@ -85,16 +85,6 @@ export class DomicilioEstablecimientosComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Cargar datos de domicilioEstablecimiento
-   */
-  domicilioEstablecimientos(): void {
-    this.DatosSolicitudService.getDomicilioData()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(response => {
-        this.Domicilios = response;
-      });
-  }
-  /**
  * Inicializa el domicilioEstablecimiento con un conjunto de controles de formulario.
  * Cada control se inicializa con un valor de cadena vacío y está deshabilitado.
  * Los controles del formulario incluyen:

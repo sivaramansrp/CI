@@ -6,5 +6,5 @@ export interface DomicilioData {
 
   export interface Domicilio {
     id:number
-    Descripcion : string;
+    descripcion : string;
   }
