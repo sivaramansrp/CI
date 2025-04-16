@@ -125,6 +125,15 @@ export class AgregarDestinatarioCustomComponent
    */
   @Input() idProcedimiento!: number;
 
+    /**
+   * Datos del formulario que pueden ser de tipo `DestinoFinal`, `Proveedor`, `null` o `undefined`.
+   * Este input se utiliza para recibir la información necesaria desde el componente padre.
+   *
+   * @type {DestinoFinal | Proveedor | null | undefined}
+   */
+    @Input() formaDatos!: DestinoFinal | Proveedor | null | undefined;
+
+
   /**
    * @property mostrarCamposNoContribuyente
    * @description Controla la visibilidad de los campos específicos para no contribuyentes.
@@ -229,6 +238,9 @@ export class AgregarDestinatarioCustomComponent
   ngOnInit(): void {
     this.crearFormaulario();
     this.cargarDatos();
+    if(this.formaDatos) {
+      this.agregarDestinatarioFinal.patchValue(this.formaDatos);
+    }
   }
 
   /**

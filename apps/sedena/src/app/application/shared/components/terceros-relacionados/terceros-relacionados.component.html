@@ -62,7 +62,9 @@
           type="button"
           name="modificarMercancias"
           class="btn btn-default"
-          (click)="modificarProveedor()">
+          [disabled]="proveedorTablaSeleccionada.length > 1"
+          (click)="modificarProveedor()"
+        >
           Modificar
         </button>
         <button
