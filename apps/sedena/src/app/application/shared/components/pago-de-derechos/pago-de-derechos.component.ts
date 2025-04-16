@@ -14,6 +14,7 @@ import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Output } from '@angular/core';
 import { PagoDerechosFormState } from '../../models/pago-de-derechos.model';
+import { REGEX_VALORES_NUMERICOS } from '@ng-mf/data-access-user';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { TituloComponent } from '@ng-mf/data-access-user';
@@ -106,6 +107,16 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * con esos valores y suscribe a cambios para mantener el estado sincronizado.
    */
   ngOnInit(): void {
+    this.crearFormaulario();
+    this.cargarDatos();
+  }
+
+  /**
+   * Crea el formulario reactivo `agregarDestinatarioFinal` utilizando `FormBuilder`.
+   * Define los campos y sus validaciones.
+   *
+   */
+  crearFormaulario(): void {
     this.pagoDerechosForm = this.fb.group({
       claveReferencia: [
         this.pagoDerechoFormState?.claveReferencia || '',
@@ -126,6 +137,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       importePago: [
         this.pagoDerechoFormState?.importePago || '',
         [Validators.required, Validators.pattern('^[0-9]+(\\.[0-9]{1,2})?$')],
+        [Validators.required, Validators.pattern(REGEX_VALORES_NUMERICOS)],
       ],
       banco: [this.pagoDerechoFormState?.banco || '', Validators.required],
     });

@@ -1,5 +1,7 @@
 import { PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE } from '../../constants/datos-solicitud.enum';
 import { STR_NACIONAL } from '../../constants/datos-solicitud.enum';
+import { TERCEROS_NACIONALIDAD_OPCIONES } from '../../constants/datos-solicitud.enum';
+import { TIPO_PERSONA_OPCIONES } from '../../constants/datos-solicitud.enum';
 
 import { DestinoFinal } from '../../models/terceros-relacionados.model';
 
@@ -23,6 +25,7 @@ import { Validators } from '@angular/forms';
 
 import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { InputRadioComponent } from '@ng-mf/data-access-user';
 import { TipoPersona } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 
@@ -43,6 +46,7 @@ import { takeUntil } from 'rxjs';
     ReactiveFormsModule,
     CatalogoSelectComponent,
     TituloComponent,
+    InputRadioComponent,
   ],
   templateUrl: './agregar-destinatario-final.component.html',
   styleUrl: './agregar-destinatario-final.component.css',
@@ -146,6 +150,16 @@ export class AgregarDestinatarioFinalComponent
   public nacionalStr = STR_NACIONAL;
 
   /**
+   * Opciones de radio para seleccionar el tipo de persona.
+   */
+  tipoPersonaRadioOpciones = TIPO_PERSONA_OPCIONES;
+
+  /*
+   * Opciones de nacionalidad para el formulario.
+   */
+
+  tercerosNacionalidadOpciones = TERCEROS_NACIONALIDAD_OPCIONES;
+  /**
    * Crea el componente e inicializa el grupo de formulario.
    *
    * @param {FormBuilder} fb - Inyector de FormBuilder para crear formularios reactivos.
@@ -210,6 +224,16 @@ export class AgregarDestinatarioFinalComponent
    * Llama al método `cargarDatos()`.
    */
   ngOnInit(): void {
+    this.crearFormaulario();
+    this.cargarDatos();
+  }
+
+  /**
+   * Crea el formulario reactivo `agregarDestinatarioFinal` utilizando `FormBuilder`.
+   * Define los campos y sus validaciones.
+   *
+   */
+  crearFormaulario(): void {
     this.agregarDestinatarioFinal = this.fb.group({
       tipoPersona: ['', Validators.required],
       rfc: [
@@ -239,6 +263,9 @@ export class AgregarDestinatarioFinalComponent
       nacionalidad: [],
     });
     this.cargarDatos();
+    this.agregarDestinatarioFinal.disable();
+    this.agregarDestinatarioFinal.get('tipoPersona')?.enable();
+    this.agregarDestinatarioFinal.get('nacionalidad')?.enable();
   }
 
   /**
@@ -307,6 +334,31 @@ export class AgregarDestinatarioFinalComponent
    */
   cancelar(): void {
     this.ubicaccion.back();
+  }
+
+  /**
+   * * Método que se ejecuta cuando se selecciona un país en el formulario.
+   * * @param {string} event - El país seleccionado.
+   * * @returns {void} No retorna ningún valor.
+   */
+  tipoPersonaCambioDeValor(event: string | number): void {
+    this.agregarDestinatarioFinal.enable();
+
+    this.agregarDestinatarioFinal.patchValue({
+      tipoPersona: event,
+    });
+  }
+
+  /**
+   * * Método que se ejecuta cuando se selecciona un país en el formulario.
+   * * @param {string} event - El país seleccionado.
+   * * @returns {void} No retorna ningún valor.
+   */
+
+  terecerosNacionalidadCambioDeValor(event: string | number): void {
+    this.agregarDestinatarioFinal.patchValue({
+      nacionalidad: event,
+    });
   }
 
   /**

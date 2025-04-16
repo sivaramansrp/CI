@@ -11,14 +11,17 @@ import { FormGroup } from '@angular/forms';
 import { Input } from '@angular/core';
 import { MERCANCIA_ENCABEZADO_DE_TABLA } from '../../models/datos-del-tramite.model';
 import { MercanciaDetalle } from '../../models/datos-del-tramite.model';
+import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Output } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Subject } from 'rxjs';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { Validators } from '@angular/forms';
+import { takeUntil } from 'rxjs';
 /**
  * @title Datos del Trámite
  * @description Componente que gestiona el formulario de datos del trámite como permisos, uso final y selección de aduanas.
@@ -38,7 +41,14 @@ import { Validators } from '@angular/forms';
   templateUrl: './datos-del-tramite.component.html',
   styleUrl: './datos-del-tramite.component.css',
 })
-export class DatosDelTramiteComponent implements OnInit {
+export class DatosDelTramiteComponent implements OnInit, OnDestroy {
+  /**
+   * @property {Subject<void>} unsubscribe$
+   * Subject para cancelar suscripciones activas y evitar fugas de memoria.
+   * Se completa en el hook `ngOnDestroy`.
+   * @private
+   */
+  private unsubscribe$ = new Subject<void>();
   /**
    * Lista de aduanas disponibles para mostrar en el componente Crosslist.
    * @property {string[]} seleccionarAduanasDisponibles
@@ -64,7 +74,7 @@ export class DatosDelTramiteComponent implements OnInit {
    * Grupo de formularios principal para capturar los datos del trámite.
    * @property {FormGroup} form
    */
-  form: FormGroup;
+  form!: FormGroup;
 
   /**
    * Estado inicial del formulario del trámite, recibido desde el componente padre.
@@ -106,8 +116,14 @@ export class DatosDelTramiteComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private activatedRoute: ActivatedRoute,
-    private router: Router
-  ) {
+    private router: Router // eslint-disable-next-line no-empty-function
+  ) {}
+  /**
+   * Crea el formulario reactivo `agregarDestinatarioFinal` utilizando `FormBuilder`.
+   * Define los campos y sus validaciones.
+   *
+   */
+  crearFormaulario(): void {
     this.form = this.fb.group({
       permisoGeneral: ['', Validators.required],
       paisDestino: [
@@ -146,6 +162,7 @@ export class DatosDelTramiteComponent implements OnInit {
    * @returns {void}
    */
   ngOnInit(): void {
+    this.crearFormaulario();
     this.form.patchValue({
       permisoGeneral: this.datosDelTramiteFormState.permisoGeneral,
       usoFinal: this.datosDelTramiteFormState.usoFinal,
@@ -154,14 +171,24 @@ export class DatosDelTramiteComponent implements OnInit {
     this.seleccionarAduanasDisponiblesDatos =
       this.datosDelTramiteFormState.aduanasSeleccionadas;
 
-    this.form.valueChanges.subscribe((formValue) => {
-      const DATOS_DEL_TRAMITE: DatosDelTramiteFormState = {
-        permisoGeneral: formValue.permisoGeneral,
-        paisDestino: formValue.paisDestino,
-        usoFinal: formValue.usoFinal,
-        aduanasSeleccionadas: this.seleccionarAduanasDisponiblesDatos,
-      };
-      this.updateDatosDelTramiteFormulario.emit(DATOS_DEL_TRAMITE);
-    });
+    this.form.valueChanges
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((formValue) => {
+        const DATOS_DEL_TRAMITE: DatosDelTramiteFormState = {
+          permisoGeneral: formValue.permisoGeneral,
+          paisDestino: formValue.paisDestino,
+          usoFinal: formValue.usoFinal,
+          aduanasSeleccionadas: this.seleccionarAduanasDisponiblesDatos,
+        };
+        this.updateDatosDelTramiteFormulario.emit(DATOS_DEL_TRAMITE);
+      });
+  }
+  /**
+   * @method ngOnDestroy
+   * @description Hook de destrucción del componente. Libera las suscripciones activas.
+   */
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 }

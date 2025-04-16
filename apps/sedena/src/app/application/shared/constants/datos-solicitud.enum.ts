@@ -22,3 +22,18 @@ export const CROSLISTA_DE_PAISES: string[] = [
 ];
 export const PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE = [260216];
 export const STR_NACIONAL = 'Nacional';
+
+export const TIPO_PERSONA_OPCIONES = [
+  { label: 'Física', value: 'Fisica' },
+  { label: 'Moral', value: 'Moral' },
+];
+export const TERCEROS_NACIONALIDAD_OPCIONES = [
+  {
+    label: 'Mexicana',
+    value: 'Mexicana',
+  },
+  {
+    label: 'Extranjero',
+    value: 'Extranjero',
+  },
+];

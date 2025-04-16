@@ -6,28 +6,18 @@
     <div class="row">
       <div class="col-md-6 offset-md-6">
         <label class="form-label">Tipo persona*:</label>
-        <div class="form-check">
-          <input
-            type="radio"
-            class="form-check-input"
-            formControlName="tipoPersona"
-            [value]="tipoPersona.FISICA"
-          />
-          Física <i class="fas fa-info-circle"></i>
-        </div>
-        <div class="form-check">
-          <input
-            type="radio"
-            class="form-check-input"
-            formControlName="tipoPersona"
-            [value]="tipoPersona.MORAL"
-          />
-          Moral <i class="fas fa-info-circle"></i>
-        </div>
+        <app-input-radio
+          [radioOptions]="tipoPersonaRadioOpciones"
+          [isRequired]="true"
+          [layout]="'vertical'"
+          formControlName="tipoPersona"
+          (valueChange)="tipoPersonaCambioDeValor($event)"
+        ></app-input-radio>
       </div>
     </div>
 
-    @if(agregarProveedorForm.get('tipoPersona')?.value === tipoPersona.MORAL) {
+    @if(agregarProveedorForm.get('tipoPersona')?.value === tipoPersona.MORAL ||
+    agregarProveedorForm.get('tipoPersona')?.untouched) {
     <div class="row">
       <div class="form-group">
         <label
@@ -46,7 +36,8 @@
     }
 
     <!-- Datos Personales -->
-    @if(agregarProveedorForm.get('tipoPersona')?.value === tipoPersona.FISICA) {
+    @if(agregarProveedorForm.get('tipoPersona')?.value === tipoPersona.FISICA ||
+    agregarProveedorForm.get('tipoPersona')?.untouched) {
     <h4 class="mt-4">Datos personales</h4>
     <div class="row">
       <div class="col-md-4">
@@ -80,6 +71,7 @@
           formControlName="pais"
           [label]="'País'"
           [required]="true"
+          [isDisabled]="agregarProveedorForm.get('tipoPersona')?.value === ''"
         ></app-catalogo-select>
       </div>
       <div class="col-md-4">
