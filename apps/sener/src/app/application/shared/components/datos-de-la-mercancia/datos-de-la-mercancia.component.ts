@@ -108,6 +108,20 @@ export class DatosDeLaMercanciaComponent {
     const METODO_NOMBRE = i === 0 ? 'setFraccion' : (i === 1 ? 'setUmt' : 'setNico');
     this.alCambioDelCampoValores.emit({ form, campo: controlName, metodoNombre: METODO_NOMBRE });
   }
+
+  /**
+ * @method alCambiarPlazo
+ * @description
+ * Método que se ejecuta cuando cambia el valor del plazo en el formulario.
+ * Actualiza el valor del campo `plazo` en el formulario reactivo y emite un evento
+ * para sincronizar los datos con el almacén (store).
+ *
+ * @param {string | number} event - El nuevo valor seleccionado para el plazo.
+ *
+ * @example
+ * // Ejemplo de uso:
+ * this.alCambiarPlazo('Corto plazo');
+ */
   alCambiarPlazo(event: string | number): void {
     this.form.get('plazo')?.setValue(event);
     this.setValoresStore(this.form, 'plazo');
