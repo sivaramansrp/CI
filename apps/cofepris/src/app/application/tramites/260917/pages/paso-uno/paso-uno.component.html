@@ -62,10 +62,13 @@
         @switch (indice) { @case (1) {
         <solicitante [tabindex]="1"></solicitante>
         } @case (2) { 
-        } @case(3) {
+        <app-datos-solicitud></app-datos-solicitud>
+        } @case (3) {
+        <app-terceros-relacionados></app-terceros-relacionados>
         } @case (4) {
+        <app-pago-derechos></app-pago-derechos>
         } @case (5) {
-          <!-- <app-tramites-asociado [tabindex]="5"></app-tramites-asociado> -->
+        <app-tramites-asociados [tabindex]="5"></app-tramites-asociados>
         }
        }
       </ng-container>
