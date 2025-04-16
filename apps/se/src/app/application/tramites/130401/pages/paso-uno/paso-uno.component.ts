@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ModificacionMercanciaComponent } from '../../components/modificacion-mercancia/modificacion-mercancia.component';
 import { SolicitanteComponent } from '@ng-mf/data-access-user';
 import { SolicitudComponent } from '../../components/solicitud/solicitud.component';
 import { Subject } from 'rxjs';
@@ -21,7 +22,7 @@ import { takeUntil } from 'rxjs';
   templateUrl: './paso-uno.component.html',
   styleUrl: './paso-uno.component.scss',
   standalone: true,
-  imports: [CommonModule, SolicitanteComponent, SolicitudComponent]
+  imports: [CommonModule, SolicitanteComponent, SolicitudComponent, ModificacionMercanciaComponent]
 })
 export class PasoUnoComponent implements OnInit, OnDestroy {
   /**

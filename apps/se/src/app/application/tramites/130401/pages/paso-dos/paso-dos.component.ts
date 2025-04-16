@@ -9,8 +9,10 @@ import { CommonModule } from "@angular/common";
 import { TEXTOS } from '@ng-mf/data-access-user';
 
 /**
- * Componente que representa el paso dos del formulario o proceso.
- * Se encarga de mostrar y gestionar los tipos de documentos requeridos.
+ * Componente para gestionar el paso dos del trámite 130401.
+ * 
+ * Este componente permite al usuario anexar documentos requeridos para el trámite.
+ * También se encarga de obtener los tipos de documentos disponibles desde un catálogo.
  */
 @Component({
   selector: 'app-paso-dos',
@@ -25,63 +27,84 @@ import { TEXTOS } from '@ng-mf/data-access-user';
   ],
 })
 export class PasoDosComponent implements OnInit, OnDestroy {
-  /** Constante de textos reutilizables */
+  /**
+   * Textos utilizados en el componente.
+   * 
+   * Contiene mensajes y etiquetas predefinidas para mostrar en la interfaz.
+   */
   TEXTOS = TEXTOS;
 
-  /** Lista de tipos de documentos disponibles (catálogo) */
+  /**
+   * Lista de tipos de documentos disponibles.
+   * 
+   * Esta lista se obtiene desde un catálogo y se utiliza para mostrar las opciones
+   * de documentos que el usuario puede anexar.
+   */
   tiposDocumentos: Catalogo[] = [];
 
-  /** Clase CSS para mostrar información en un alert */
+  /**
+   * Mensaje de alerta informativa.
+   * 
+   * Este mensaje se muestra al usuario para proporcionar información adicional.
+   */
   infoAlert = 'alert-info';
 
-  /** Catálogo de documentos cargado desde el servicio */
+  /**
+   * Catálogo de documentos disponibles.
+   * 
+   * Contiene los documentos obtenidos desde el servicio de catálogos.
+   */
   catalogoDocumentos: Catalogo[] = [];
 
-  /** Observable para manejar la destrucción de suscripciones */
+  /**
+   * Notificador para destruir las suscripciones y evitar fugas de memoria.
+   * 
+   * Este `Subject` se utiliza para cancelar las suscripciones activas cuando
+   * el componente se destruye.
+   */
   private destroy$: Subject<void> = new Subject<void>();
 
   /**
    * Constructor del componente.
-   * @param catalogosServices Servicio para obtener los catálogos
+   * 
+   * @param {CatalogosService} catalogosServices - Servicio para obtener los catálogos de documentos.
    */
-  constructor(
-   public catalogosServices: CatalogosService,
-  ) { 
+  constructor(public catalogosServices: CatalogosService) {
     // Constructor vacío
   }
 
   /**
-   * Método de inicialización del componente.
-   * Se llama automáticamente cuando el componente es cargado.
-   * @returns void
+   * Método que se ejecuta al inicializar el componente.
+   * 
+   * Este método llama a `getTiposDocumentos` para obtener los tipos de documentos disponibles.
    */
   ngOnInit(): void {
     this.getTiposDocumentos();
   }
 
   /**
-   * Método que se llama cuando el componente es destruido.
-   * Libera las suscripciones activas para evitar fugas de memoria.
-   * @returns void
+   * Obtiene los tipos de documentos desde el servicio de catálogos.
+   * 
+   * Este método realiza una solicitud al servicio de catálogos para obtener
+   * los documentos disponibles y los almacena en `catalogoDocumentos`.
+   */
+  getTiposDocumentos(): void {
+    this.catalogosServices
+      .getCatalogo(CATALOGOS_ID.CAT_TIPO_DOCUMENTO)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((resp: Catalogo[]) => {
+        this.catalogoDocumentos = resp;
+      });
+  }
+
+  /**
+   * Método que se ejecuta al destruir el componente.
+   * 
+   * Este método completa el `Subject` `destroy$` para cancelar todas las suscripciones activas
+   * y evitar fugas de memoria.
    */
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
   }
-
-  /**
-   * Obtiene el catálogo de tipos de documentos disponibles para el trámite.
-   * El resultado se guarda en la propiedad `catalogoDocumentos`.
-   * @returns void
-   */
-  getTiposDocumentos(): void {
-      this.catalogosServices
-        .getCatalogo(CATALOGOS_ID.CAT_TIPO_DOCUMENTO)
-        .pipe(takeUntil(this.destroy$))
-        .subscribe(
-          (resp: Catalogo[]) => {
-            this.catalogoDocumentos = resp;
-          }
-        );
-    }
 }

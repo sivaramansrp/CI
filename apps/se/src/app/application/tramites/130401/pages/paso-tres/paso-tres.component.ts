@@ -1,12 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { Component} from '@angular/core';
+import { Component } from '@angular/core';
 import { FirmaElectronicaComponent } from '@libs/shared/data-access-user/src';
 import { Router } from '@angular/router';
+
 /**
- * Componente para gestionar el paso cuatro del trámite 32503.
+ * Componente para gestionar el paso tres del trámite 130401.
  * 
- * Este componente permite al usuario realizar la firma electrónica y, en caso de éxito,
- * redirigirlo a la página de acuse.
+ * Este componente incluye la funcionalidad para capturar la firma electrónica
+ * y redirigir al usuario al acuse una vez que se ha obtenido la firma.
  */
 @Component({
   selector: 'app-paso-tres',
@@ -16,28 +17,27 @@ import { Router } from '@angular/router';
   imports: [CommonModule, FirmaElectronicaComponent],
 })
 export class PasoTresComponent {
-
   /**
    * Constructor del componente.
    * 
-   * @param {Router} router - Servicio de Angular para manejar la navegación entre rutas.
+   * @param {Router} router - Servicio de Angular Router para la navegación entre rutas.
    */
   constructor(private router: Router) {
     // Constructor
   }
 
   /**
-   * Maneja la obtención de la firma electrónica.
+   * Método para manejar la firma electrónica obtenida.
    * 
-   * Este método recibe la firma electrónica y, si es válida, redirige al usuario
-   * a la página de acuse.
+   * Este método se ejecuta cuando se recibe un evento con la firma electrónica.
+   * Si la firma es válida, redirige al usuario a la página de acuse.
    * 
-   * @param {string} ev - Cadena que representa la firma electrónica obtenida.
+   * @param {string} ev - Firma electrónica obtenida.
    */
   obtieneFirma(ev: string): void {
     const FIRMA = ev;
     if (FIRMA) {
-      this.router.navigate(['aviso-traslado/acuse']);
+      this.router.navigate(['modificacion-descripcion/acuse']);
     }
   }
 }
