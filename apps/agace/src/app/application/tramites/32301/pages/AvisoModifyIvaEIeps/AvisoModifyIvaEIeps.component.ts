@@ -8,58 +8,66 @@ import { PasoDosComponent } from '../paso-dos/PasoDos.component';
 import { PasoTresComponent } from '../paso-tres/PasoTres.component';
 import { PasoUnoComponent } from '../peso-uno/PasoUno.component';
 import { WizardComponent } from '@ng-mf/data-access-user';
-
+// Lista de pasos para el proceso, con información sobre si está activo y completado
 export const PASOS = [
   {
-    indice: 1,
-    titulo: 'Capturar solicitud',
-    activo: true,
-    completado: true,
+    indice: 1, // Índice del paso
+    titulo: 'Capturar solicitud', // Título del paso
+    activo: true, // Indica si el paso está activo
+    completado: true, // Indica si el paso está completado
   },
   {
-    indice: 2,
-    titulo: 'Anexar requisitos',
-    activo: false,
-    completado: false,
+    indice: 2, // Índice del paso
+    titulo: 'Anexar requisitos', // Título del paso
+    activo: false, // El paso no está activo
+    completado: false, // El paso no está completado
   },
   {
-    indice: 3,
-    titulo: 'Firmar solicitud',
-    activo: false,
-    completado: false,
+    indice: 3, // Índice del paso
+    titulo: 'Firmar solicitud', // Título del paso
+    activo: false, // El paso no está activo
+    completado: false, // El paso no está completado
   },
 ];
 
-
-
+// Componente principal para el aviso de modificación de IVA y EI/EPs
 @Component({
-  selector: 'app-aviso-modify-iva-eieps',
-  standalone: true,
-  imports: [CommonModule, WizardComponent, PasoUnoComponent, PasoDosComponent, PasoTresComponent, BtnContinuarComponent],
-  templateUrl: './AvisoModifyIvaEIeps.component.html',
+  selector: 'app-aviso-modify-iva-eieps', // Selector del componente
+  standalone: true, // El componente es independiente, sin necesidad de un módulo externo
+  imports: [CommonModule, WizardComponent, PasoUnoComponent, PasoDosComponent, PasoTresComponent, BtnContinuarComponent], // Componentes importados para el wizard y botones
+  templateUrl: './AvisoModifyIvaEIeps.component.html', // Ruta al archivo HTML
 })
 export class AvisoModifyIvaEIepsComponent {
- 
+  /** Lista de pasos para el wizard */
   pasos: ListaPasosWizard[] = PASOS;
+
+  /** Índice actual del paso que se está visualizando */
   indice: number = 1;
 
+  /** Datos para la navegación entre pasos, como el número total de pasos y los textos de los botones */
   datosPasos: DatosPasos = {
-      nroPasos: this.pasos.length,
-      indice: this.indice,
-      txtBtnAnt: 'Anterior',
-      txtBtnSig: 'Continuar',
-    };
+    nroPasos: this.pasos.length, // Número total de pasos
+    indice: this.indice, // Índice del paso actual
+    txtBtnAnt: 'Anterior', // Texto para el botón de "anterior"
+    txtBtnSig: 'Continuar', // Texto para el botón de "continuar"
+  };
 
+  /** Referencia al componente Wizard, utilizado para la navegación entre pasos */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
 
-  getValorIndice(e: AccionBoton):void {
+  /** Método para manejar el cambio de índice según la acción del botón (anterior o siguiente) */
+  getValorIndice(e: AccionBoton): void {
+    // Validación de valor y acción para actualizar el índice
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
+      
+      // Acción de continuar
       if (e.accion === 'cont') {
-        this.wizardComponent.siguiente();
+        this.wizardComponent.siguiente(); // Avanzar al siguiente paso
       } else {
-        this.wizardComponent.atras();
+        this.wizardComponent.atras(); // Volver al paso anterior
       }
     }
   }
 }
+

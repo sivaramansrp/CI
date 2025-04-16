@@ -12,6 +12,10 @@ interface RatioOption {
   label: string;
   value: string | number;
 }
+/**
+ * Componente responsable de la gestión de datos relacionados con la fusión o escisión de empresas.
+ * Maneja formularios reactivos, carga de datos desde servicios y visualización condicional.
+ */
 @Component({
   selector: 'app-fusion-oescision',
   standalone: true,
@@ -19,255 +23,286 @@ interface RatioOption {
   templateUrl: './fusionOEscision.component.html',
 })
 export class FusionOEscisionComponent implements OnInit, OnDestroy, AfterViewInit {
+
+  /** Formulario principal del componente */
   formulario!: FormGroup;
+
+  /** Formulario utilizado dentro del modal */
   modelFormulario!: FormGroup;
-  fusionOescisionTitulo!:string
-  subFusionOescisionTitulo!:string
-  labelFechaFusionOscision!:string
+
+  /** Título principal mostrado dinámicamente según la opción elegida */
+  fusionOescisionTitulo!: string;
+
+  /** Subtítulo mostrado en la sección de detalle */
+  subFusionOescisionTitulo!: string;
+
+  /** Etiqueta para la fecha de fusión o escisión */
+  labelFechaFusionOscision!: string;
+
+  /** Opciones para el input radio de capacidad de almacenamiento */
   radioOptions!: RatioOption[];
-    conCertificacionPrincipalVisible: boolean = true;
+
+  /** Visibilidad del bloque con certificación (en formulario principal) */
+  conCertificacionPrincipalVisible: boolean = true;
+
+  /** Visibilidad del bloque sin certificación (en modal) */
   sinCertificacionPrincipalVisible: boolean = true;
-  ModificarFusionEscisionInstance!:Modal;
-  correctamenteModelInstance!:Modal;
-  fechasSeleccionadas = []
-    fusionradioOptions = [
-      {
-        "label": "Fusión",
-        "value": "1"
-      },
-      {
-        "label": "Escisión",
-        "value": "0"
-      }
-     
-    ]
-   
-    cantidadBienesOption = [
-      {
-        "label": "Sí",
-        "value": '1'
-      },
-      {
-        "label": "No",
-        "value": '0'
-      }
-     
-    ]
-    gridFusionEscisionHeader = ['Registro Federal de Contribuyentes',
-								'Denominaci\u00F3n o Raz\u00F3n Social',
-								'Folio VUCEM de la ultima certificaci\u00F3n/renovaci\u00F3n',
-								'Fecha de inicio de vigencia de la \u00DAltima certificaci\u00F3n/renovaci\u00F3n',
-								'Fecha de fin de vigencia de la \u00DAltima certificaci\u00F3n/renovaci\u00F3n' ]
 
-                gridFusionEscisionData:{ tbodyData: string[] }[] = [{ tbodyData: [],},];
-    
-                totalItems: number = 0;
-                itemsPerPage: number = 1;
-                currentPage: number = 1;
+  /** Instancia del modal de modificación */
+  ModificarFusionEscisionInstance!: Modal;
 
-                public miembroDeLaEmpresaBodyData: unknown[] = [];
-                
-                divCompletoVisible: boolean = false;
-                modalContent: string = '';
+  /** Instancia del modal de confirmación */
+  correctamenteModelInstance!: Modal;
 
- @ViewChild('ModificarFusionEscisionModel', { static: false }) ModificarFusionEscisionModel!: ElementRef;
- @ViewChild('correctamenteModel', { static: false }) correctamenteModel!: ElementRef;
+  /** Arreglo de fechas seleccionadas */
+  fechasSeleccionadas = [];
 
- PersonaFusionEscisionDTO!:PersonaFusionEscisionDTO
-    constructor(private fb: FormBuilder, 
-      private AvisoModifyService: AvisoModifyService,
-      private store: Tramite32301Store,
-      private Tramite32301Query:Tramite32301Query) {
-        //constructor
-      }
-      private destroy$: Subject<void> = new Subject<void>();
-    ngOnInit(): void {
+  /** Opciones del radio para seleccionar tipo de operación (fusión/escisión) */
+  fusionradioOptions = [
+    { "label": "Fusión", "value": "1" },
+    { "label": "Escisión", "value": "0" }
+  ];
 
-      this.initializeForm();
-this.getCapacidadAlmacenamiento();
-       
-    }
-    getCapacidadAlmacenamiento():void{
-      this.AvisoModifyService
-                  .getCapacidadAlmacenamiento()
-                  .subscribe((resp) =>{
-                   this.radioOptions = Object.assign([], resp);
-                  });
-     }
+  /** Opciones para indicar si se poseen bienes */
+  cantidadBienesOption = [
+    { "label": "Sí", "value": '1' },
+    { "label": "No", "value": '0' }
+  ];
 
-    ngAfterViewInit(): void {
-  if (this.ModificarFusionEscisionModel?.nativeElement) {
-        this.ModificarFusionEscisionInstance = new Modal(this.ModificarFusionEscisionModel.nativeElement);
-      }
-      if (this.correctamenteModel?.nativeElement) {
-        this.correctamenteModelInstance = new Modal(this.correctamenteModel.nativeElement);
-      }
+  /** Encabezado de tabla que muestra los datos de empresas fusionadas/escindidas */
+  gridFusionEscisionHeader = [
+    'Registro Federal de Contribuyentes',
+    'Denominación o Razón Social',
+    'Folio VUCEM de la última certificación/renovación',
+    'Fecha de inicio de vigencia de la última certificación/renovación',
+    'Fecha de fin de vigencia de la última certificación/renovación'
+  ];
 
-      
-    }
+  /** Datos a mostrar en la tabla */
+  gridFusionEscisionData: { tbodyData: string[] }[] = [{ tbodyData: [] }];
 
-    initializeForm():void{
-      this.formulario = this.fb.group({
-        capacidadAlmacenamiento: [null, Validators.required],
-        numeroTotalCarros: [null, Validators.required],
-        cantidadBienes: [null, Validators.required],
-        fechaInspeccion: [{ value: ''}],
-        descripcionClobGenerica2: ['', Validators.required],
-        personaFusionEscisionDTO:this.fb.group({
-          rfc: [''],
-          razonSocial: [{ value: '', disabled: true }],
-          numFolioTramite: [{ value: '', disabled: true }],
-          fechaInicioVigencia: [{ value: '', disabled: true }],
-          fechaFinVigencia: [{ value: '', disabled: true }]
-        })
-      
+  /** Total de elementos para paginación */
+  totalItems: number = 0;
 
+  /** Elementos por página para paginación */
+  itemsPerPage: number = 1;
+
+  /** Página actual seleccionada */
+  currentPage: number = 1;
+
+  /** Datos del cuerpo de tabla (miembros de la empresa) */
+  public miembroDeLaEmpresaBodyData: unknown[] = [];
+
+  /** Visibilidad del bloque completo con datos */
+  divCompletoVisible: boolean = false;
+
+  /** Contenido textual para el modal */
+  modalContent: string = '';
+
+  /** Referencia al modal de modificación en el DOM */
+  @ViewChild('ModificarFusionEscisionModel', { static: false }) ModificarFusionEscisionModel!: ElementRef;
+
+  /** Referencia al modal de confirmación en el DOM */
+  @ViewChild('correctamenteModel', { static: false }) correctamenteModel!: ElementRef;
+
+  /** Objeto con datos de persona fusionada o escindida */
+  PersonaFusionEscisionDTO!: PersonaFusionEscisionDTO;
+
+  /**
+   * Constructor del componente, inyecta formularios, servicios y manejo de estado.
+   */
+  constructor(
+    private fb: FormBuilder,
+    private AvisoModifyService: AvisoModifyService,
+    private store: Tramite32301Store,
+    private Tramite32301Query: Tramite32301Query
+  ) {
+    //constructor
+  }
+
+  /** Observable para gestionar el ciclo de vida del componente */
+  public destroy$: Subject<void> = new Subject<void>();
+
+  /** Inicializa formularios y obtiene opciones del servicio */
+  ngOnInit(): void {
+    this.initializeForm();
+    this.getCapacidadAlmacenamiento();
+  }
+
+  /** Llama al servicio para obtener opciones de capacidad de almacenamiento */
+  getCapacidadAlmacenamiento(): void {
+    this.AvisoModifyService.getCapacidadAlmacenamiento()
+      .subscribe((resp) => {
+        this.radioOptions = Object.assign([], resp);
       });
-      this.modelFormulario = this.fb.group({
+  }
 
-        mCantidadBienes: [null, Validators.required],
-        personaFusionEscisionDTO:this.fb.group({
+  /** Inicializa las instancias de los modales al cargar la vista */
+  ngAfterViewInit(): void {
+    if (this.ModificarFusionEscisionModel?.nativeElement) {
+      this.ModificarFusionEscisionInstance = new Modal(this.ModificarFusionEscisionModel.nativeElement);
+    }
+    if (this.correctamenteModel?.nativeElement) {
+      this.correctamenteModelInstance = new Modal(this.correctamenteModel.nativeElement);
+    }
+  }
+
+  /** Crea e inicializa los formularios reactivos */
+  initializeForm(): void {
+    this.formulario = this.fb.group({
+      capacidadAlmacenamiento: [null, Validators.required],
+      numeroTotalCarros: [null, Validators.required],
+      cantidadBienes: [null, Validators.required],
+      fechaInspeccion: [{ value: '' }],
+      descripcionClobGenerica2: ['', Validators.required],
+      personaFusionEscisionDTO: this.fb.group({
         rfc: [''],
         razonSocial: [{ value: '', disabled: true }],
         numFolioTramite: [{ value: '', disabled: true }],
         fechaInicioVigencia: [{ value: '', disabled: true }],
         fechaFinVigencia: [{ value: '', disabled: true }]
-        })
-      });
-      
-    }
- 
-    ocultarEscicion(): void {
-      const VALOR = this.formulario.get('capacidadAlmacenamiento')?.value;
-     if(VALOR === 'fusion2')
-     {
-      this.fusionradioOptions.pop();
-     }
-     else{
-      this.fusionradioOptions = [
-        {
-          "label": "Fusión",
-          "value": "1"
-        },
-        {
-          "label": "Escisión",
-          "value": "0"
-        }
-       
-      ]
-     }
-      // Implement logic to hide escision-related sections
-      
-    }
+      })
+    });
 
-    mostrarFusionOEscision():void{
-      const VALOR = this.formulario.get('numeroTotalCarros')?.value;
-    this.divCompletoVisible = VALOR === '1' || VALOR === '0';
-      this.fusionOescisionTitulo = VALOR === 1 ? 'Datos de las empresas fusionadas' : 'Datos de las empresas escindidas';
-      this.subFusionOescisionTitulo = VALOR === 1 ? 'Datos de las empresas fusionadas':'Datos de las empresas escindidas';
-      this.labelFechaFusionOscision = VALOR === 1 ? 'Fecha en que surte efecto la fusión' : 'Fecha en que surte efecto la escisión'
-    }
-    
-    mostrarCertificacionFusionada(ismodel?:string): void {
-      // Implement logic to show certification-related sections
-      const CANTIDAD_BIENES = this.formulario.get('cantidadBienes')?.value;
-      this.conCertificacionPrincipalVisible = CANTIDAD_BIENES === '1' ? true : false;
-  if(ismodel ==='isModel'){
-    const MODELCANTIDAD_BIENES = this.modelFormulario.get('mCantidadBienes')?.value;
-    this.sinCertificacionPrincipalVisible = MODELCANTIDAD_BIENES === '1' ? true : false ;
-  }   
+    this.modelFormulario = this.fb.group({
+      mCantidadBienes: [null, Validators.required],
+      personaFusionEscisionDTO: this.fb.group({
+        rfc: [''],
+        razonSocial: [{ value: '', disabled: true }],
+        numFolioTramite: [{ value: '', disabled: true }],
+        fechaInicioVigencia: [{ value: '', disabled: true }],
+        fechaFinVigencia: [{ value: '', disabled: true }]
+      })
+    });
   }
-    cargarDatosPersonaFusion(): void {
-    this.AvisoModifyService
-                  .cargarDatosPersonaFusion()
-                  .pipe(
-                    map((resp) => {
-                      this.personaFusionEscisionDTO.patchValue(resp)
-                      this.store.SetpersonaFusionEscisionDTO(resp);
-                    })
-                  ).subscribe();
-   
+
+  /** Oculta la opción de escisión si se selecciona cierto valor */
+  ocultarEscicion(): void {
+    const VALOR = this.formulario.get('capacidadAlmacenamiento')?.value;
+    if (VALOR === 'fusion2') {
+      this.fusionradioOptions.pop();
+    } else {
+      this.fusionradioOptions = [
+        { "label": "Fusión", "value": "1" },
+        { "label": "Escisión", "value": "0" }
+      ];
     }
-    ModelcargarDatosPersonaFusion():void{
+  }
+
+  /** Cambia dinámicamente los títulos y etiquetas según la opción seleccionada */
+  mostrarFusionOEscision(): void {
+    const VALOR = this.formulario.get('numeroTotalCarros')?.value;
+    this.divCompletoVisible = VALOR === '1' || VALOR === '0';
+    this.fusionOescisionTitulo = VALOR === 1 ? 'Datos de las empresas fusionadas' : 'Datos de las empresas escindidas';
+    this.subFusionOescisionTitulo = this.fusionOescisionTitulo;
+    this.labelFechaFusionOscision = VALOR === 1 ? 'Fecha en que surte efecto la fusión' : 'Fecha en que surte efecto la escisión';
+  }
+
+  /** Muestra u oculta los bloques de certificación según la opción elegida */
+  mostrarCertificacionFusionada(ismodel?: string): void {
+    const CANTIDAD_BIENES = this.formulario.get('cantidadBienes')?.value;
+    this.conCertificacionPrincipalVisible = CANTIDAD_BIENES === '1';
+
+    if (ismodel === 'isModel') {
+      const MODELCANTIDAD_BIENES = this.modelFormulario.get('mCantidadBienes')?.value;
+      this.sinCertificacionPrincipalVisible = MODELCANTIDAD_BIENES === '1';
+    }
+  }
+
+  /** Carga los datos de persona fusionada desde el servicio y los guarda en el store */
+  cargarDatosPersonaFusion(): void {
+    this.AvisoModifyService.cargarDatosPersonaFusion()
+      .pipe(map((resp) => {
+        this.personaFusionEscisionDTO.patchValue(resp);
+        this.store.SetpersonaFusionEscisionDTO(resp);
+      }))
+      .subscribe();
+  }
+
+  /** Carga los datos de persona fusionada desde el query del store hacia el modal */
+  ModelcargarDatosPersonaFusion(): void {
+    this.Tramite32301Query.selectpersonaFusionEscisionDTO$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(state => {
+        this.PersonaFusionEscisionDTO = state as unknown as PersonaFusionEscisionDTO;
+        this.mpersonaFusionEscisionDTO.patchValue(this.PersonaFusionEscisionDTO);
+      });
+  }
+
+  /** Getter del grupo de persona fusionada en el formulario principal */
+  get personaFusionEscisionDTO(): FormGroup {
+    return this.formulario.get('personaFusionEscisionDTO') as FormGroup;
+  }
+
+  /** Getter del grupo de persona fusionada en el formulario del modal */
+  get mpersonaFusionEscisionDTO(): FormGroup {
+    return this.modelFormulario.get('personaFusionEscisionDTO') as FormGroup;
+  }
+
+  /** Cambia la cantidad de elementos por página y actualiza la tabla */
+  onItemsPerPageChange(itemsPerPage: number): void {
+    this.itemsPerPage = itemsPerPage;
+    this.currentPage = 1;
+    this.updatePagination();
+  }
+
+  /** Cambia la página actual en la tabla y actualiza la vista */
+  onPageChange(page: number): void {
+    this.currentPage = page;
+    this.updatePagination();
+  }
+
+  /** Realiza el corte de datos para mostrar la tabla paginada */
+  updatePagination(): void {
+    const START_INDEX = (this.currentPage - 1) * this.itemsPerPage;
+    this.miembroDeLaEmpresaBodyData = this.miembroDeLaEmpresaBodyData.slice(
+      START_INDEX,
+      START_INDEX + this.itemsPerPage
+    );
+  }
+
+  /** Abre el modal de modificación de fusión o escisión */
+  abrirModalFusionEscision(): void {
+    if (this.ModificarFusionEscisionInstance) {
+      this.ModificarFusionEscisionInstance.show();
+    }
+  }
+
+  /** Cierra el modal y actualiza los datos mostrados en la tabla */
+  closeFusionEscisionModal(): void {
+    if (this.ModificarFusionEscisionInstance) {
+      this.ModificarFusionEscisionInstance.hide();
       this.Tramite32301Query.selectpersonaFusionEscisionDTO$
-              .pipe(takeUntil(this.destroy$))
-              .subscribe(state => {
-                this.PersonaFusionEscisionDTO = state as unknown as PersonaFusionEscisionDTO;
-                this.mpersonaFusionEscisionDTO.patchValue(this.PersonaFusionEscisionDTO)
-              })
-    }
-
-    get personaFusionEscisionDTO(): FormGroup {
-      return this.formulario.get('personaFusionEscisionDTO') as FormGroup;
-    }
-    get mpersonaFusionEscisionDTO(): FormGroup {
-      return this.modelFormulario.get('personaFusionEscisionDTO') as FormGroup;
-    }
-
-    onItemsPerPageChange(itemsPerPage: number): void {
-      this.itemsPerPage = itemsPerPage;
-      this.currentPage = 1;
-      this.updatePagination();
-    }
-  
-    onPageChange(page: number): void {
-      this.currentPage = page;
-      this.updatePagination();
-    }
-    updatePagination(): void {
-      const START_INDEX = (this.currentPage - 1) * this.itemsPerPage;
-      this.miembroDeLaEmpresaBodyData = this.miembroDeLaEmpresaBodyData.slice(
-        START_INDEX,
-        START_INDEX + this.itemsPerPage
-      );
-    }
-
-    // static eliminarPersona(): void {
-    // //eliminarPersona
-    // }
-
-    abrirModalFusionEscision(): void {
-
-      if (this.ModificarFusionEscisionInstance) {
-        this.ModificarFusionEscisionInstance.show();
-      }
-      // this.fusionOEscisionService.abrirModalFusionEscision();
-      // Placeholder implementation
-    }
-
-    // abrirModalModificarFusionEscision(): void {
-
-    //   // this.fusionOEscisionService.abrirModalModificarFusionEscision();
-    //   // Placeholder implementation
-    // }
-    closeFusionEscisionModal():void{
-      if (this.ModificarFusionEscisionInstance) {
-        this.ModificarFusionEscisionInstance.hide();
-        this.Tramite32301Query.selectpersonaFusionEscisionDTO$
         .pipe(takeUntil(this.destroy$))
         .subscribe(state => {
           this.PersonaFusionEscisionDTO = state as unknown as PersonaFusionEscisionDTO;
-          const NEW_DATU = Object.values(state)
-          const TBODY_DATA = { tbodyData: NEW_DATU.map(String) }
-          this.gridFusionEscisionData.pop()
-          this.gridFusionEscisionData.push(TBODY_DATA)
-        })
-      }
+          const NEW_DATU = Object.values(state);
+          const TBODY_DATA = { tbodyData: NEW_DATU.map(String) };
+          this.gridFusionEscisionData.pop();
+          this.gridFusionEscisionData.push(TBODY_DATA);
+        });
     }
-    closeCorrectamenteModel():void{
-      if (this.correctamenteModelInstance) {
-        this.correctamenteModelInstance.hide();
-      }
-    }
-    openCorrectamenteModel():void{
-      if (this.correctamenteModelInstance) {
-        this.correctamenteModelInstance.show();
-      }
-    }
-    
-    ngOnDestroy(): void {
-      this.destroy$.next();
-      this.destroy$.complete();
-    }
+  }
 
+  /** Cierra el modal de confirmación */
+  closeCorrectamenteModel(): void {
+    if (this.correctamenteModelInstance) {
+      this.correctamenteModelInstance.hide();
+    }
+  }
+
+  /** Abre el modal de confirmación */
+  openCorrectamenteModel(): void {
+    if (this.correctamenteModelInstance) {
+      this.correctamenteModelInstance.show();
+    }
+  }
+
+  /** Destruye las suscripciones al finalizar el componente */
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 }
+
+

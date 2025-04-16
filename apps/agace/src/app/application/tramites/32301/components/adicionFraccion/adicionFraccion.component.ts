@@ -13,6 +13,10 @@ interface RatioOption {
   label: string;
   value: string | number;
 }
+/**
+ * Componente para la gestión de la adición de fracciones arancelarias.
+ * Permite tanto la carga manual como la carga masiva de fracciones.
+ */
 @Component({
   selector: 'app-adicion-fraccion',
   standalone: true,
@@ -20,21 +24,64 @@ interface RatioOption {
   templateUrl: './adicionFraccion.component.html',
 })
 export class AdicionFraccionComponent implements OnInit, OnDestroy, AfterViewInit {
+  /** 
+ * Formulario principal para la declaración. 
+ */
   declaracionForm!: FormGroup;
-  declaracionFormModel!: FormGroup;
-  cargaManualForm!: FormGroup;
-  divBtnCargaMVisible: boolean = false;
-  messageFraccion: string = 'Deberás adjuntar el listado de fracciones arancelarias señaladas en la descripción de las actividades relacionadas con los procesos productivos o presentación de servicios, exhibido en tu solicitud de inscripción.'
-  radioOptions!: RatioOption[];
-  
-  gridFraccionesHeader = ['Fracción declarada', 'Actividad relacionada', 'Correlación fracción actual', 'Descripción fracción actual', 'NICO', 'Descripción del NICO', 'UMT', 'Pa&iacute;s de origen']
 
+  /** 
+   * Modelo del formulario de declaración. 
+   */
+  declaracionFormModel!: FormGroup;
+
+  /** 
+   * Formulario para la carga manual de datos. 
+   */
+  cargaManualForm!: FormGroup;
+
+  /** 
+   * Controla la visibilidad del botón de carga manual. 
+   */
+  divBtnCargaMVisible: boolean = false;
+
+  /** 
+   * Mensaje informativo para el usuario sobre la carga de fracciones arancelarias. 
+   */
+  messageFraccion: string = 'Deberás adjuntar el listado de fracciones arancelarias señaladas en la descripción de las actividades relacionadas con los procesos productivos o presentación de servicios, exhibido en tu solicitud de inscripción.';
+
+  /** 
+   * Opciones para los botones de radio. 
+   */
+  radioOptions!: RatioOption[];
+
+  /** 
+   * Encabezados de la tabla de fracciones arancelarias. 
+   */
+  gridFraccionesHeader = ['Fracción declarada', 'Actividad relacionada', 'Correlación fracción actual', 'Descripción fracción actual', 'NICO', 'Descripción del NICO', 'UMT', 'País de origen'];
+
+  /** 
+   * Fechas seleccionadas por el usuario. 
+   */
   fechasSeleccionadas: string[] = [];
 
+  /** 
+   * Fechas disponibles para selección. 
+   */
   fechasDatos: string[] = [];
 
+  /** 
+   * Lista de países para selección, tomada de un catálogo. 
+   */
   public crosListaDePaises = CROSLISTA_DE_PAISES;
+
+  /** 
+   * Rango de días seleccionados, basado en la lista de países. 
+   */
   selectRangoDias: string[] = this.crosListaDePaises;
+
+  /** 
+   * Configuración de botones para acciones sobre la selección. 
+   */
   botonField = [
     {
       btnNombre: 'Agregar todos',
@@ -58,14 +105,20 @@ export class AdicionFraccionComponent implements OnInit, OnDestroy, AfterViewIni
     },
   ];
 
-  
-  cveNicoModOptions =[
+  /** 
+   * Opciones del catálogo para el campo NICO. 
+   */
+  cveNicoModOptions = [
     {
       "id": -1,
       "descripcion": "Selecciona un valor"
     }
   ]
-  unidadMedidaModOption =[
+
+  /** 
+   * Opciones del catálogo para unidad de medida modificada. 
+   */
+  unidadMedidaModOption = [
     {
       "id": -1,
       "descripcion": "Seleccione"
@@ -83,7 +136,11 @@ export class AdicionFraccionComponent implements OnInit, OnDestroy, AfterViewIni
       "descripcion": "Ambos"
     }
   ]
-  activRelProcModOption =[
+
+  /** 
+   * Opciones del catálogo para actividad relacionada con el proceso. 
+   */
+  activRelProcModOption = [
     {
       "id": -1,
       "descripcion": "Seleccione"
@@ -101,250 +158,293 @@ export class AdicionFraccionComponent implements OnInit, OnDestroy, AfterViewIni
       "descripcion": "Ambos"
     }
   ]
+
+  /** 
+   * Opciones para la fracción correlacionada. 
+   */
   cveFraccionCorrelacionModOption = [
     {
       "id": -1,
       "descripcion": "Selecciona un valor"
     }
   ]
+
+  /** 
+   * Total de elementos a paginar. 
+   */
   totalItems: number = 0;
+
+  /** 
+   * Número de elementos por página. 
+   */
   itemsPerPage: number = 1;
+
+  /** 
+   * Página actual en la paginación. 
+   */
   currentPage: number = 1;
 
-
+  /** 
+   * Control de formulario para la fecha general. 
+   */
   fecha: FormControl = new FormControl('');
 
+  /** 
+   * Control de formulario para la fecha seleccionada. 
+   */
   fechaSeleccionada: FormControl = new FormControl('');
-  
+
+  /** 
+   * Catálogos asignados a propiedades para selección. 
+   */
   cveNicoMod: Catalogo[] = this.cveNicoModOptions;
   unidadMedidaMod: Catalogo[] = this.unidadMedidaModOption;
   activRelProcMod: Catalogo[] = this.activRelProcModOption;
   cveFraccionCorrelacionMod: Catalogo[] = this.cveFraccionCorrelacionModOption;
+
+  /** 
+   * Datos del cuerpo para el componente de miembros de la empresa. 
+   */
   public miembroDeLaEmpresaBodyData: unknown[] = [];
 
-  cargaMasivaFrModalInstance!:Modal;
-  CargaMasivaFralertaModelInstance!:Modal;
-  fraccionesModelInstance!:Modal;
+  /** 
+   * Instancias de modales utilizados en la carga masiva y fracciones. 
+   */
+  cargaMasivaFrModalInstance!: Modal;
+  CargaMasivaFralertaModelInstance!: Modal;
+  fraccionesModelInstance!: Modal;
 
+  /** 
+   * Referencias a los elementos del DOM para los modales. 
+   */
   @ViewChild('cargaMasivaFrModal', { static: false }) cargaMasivaFrModal!: ElementRef;
   @ViewChild('CargaMasivaFralertaModel', { static: false }) CargaMasivaFralertaModel!: ElementRef;
   @ViewChild('fraccionesModel', { static: false }) fraccionesModel!: ElementRef;
 
+  /** 
+   * Subject utilizado para destruir suscripciones y evitar fugas de memoria. 
+   */
   private destroy$: Subject<void> = new Subject<void>();
-  constructor(private fb: FormBuilder, private AvisoModifyService: AvisoModifyService, private store: Tramite32301Store, private query: Tramite32301Query) {
-    this.declaracionForm = this.fb.group({
-      tipoCarga: [''],
-      booleanGenerico: [''],
-      descripcionGenerica3: [''],
-      idSolicitud: [''],
-      labelFraccionesAgregadas: [''],
-      idCarga: ['']
+  /**
+ * Constructor donde se inyectan servicios y se inicializa el formulario principal.
+ */
+constructor(private fb: FormBuilder, private AvisoModifyService: AvisoModifyService, private store: Tramite32301Store, private query: Tramite32301Query) {
+  this.declaracionForm = this.fb.group({
+    tipoCarga: [''],
+    booleanGenerico: [''],
+    descripcionGenerica3: [''],
+    idSolicitud: [''],
+    labelFraccionesAgregadas: [''],
+    idCarga: ['']
+  });
+}
+
+/**
+ * Inicializa los formularios secundarios y obtiene las opciones de fracción adicional.
+ */
+ngOnInit(): void {
+  this.declaracionFormModel = this.fb.group({
+    archivoProceso: [''],
+    registrosProcesoCargados: [{ value: '', disabled: true }]
+  });
+
+  this.cargaManualForm = this.fb.group({
+    txtfraccionDeclCert: ['', Validators.required, Validators.maxLength(8)],
+    activRelProc: ['-1', Validators.required],
+    txtDescripcionMercancia: ['', Validators.required],
+    cveFraccionCorrelacion: ['-1', Validators.required],
+    unidadMedida: ['-1', Validators.required],
+    nico: ['', Validators.required],
+    txtDescripcionNico: [''],
+    sPaisBloqueOrigen: [[], Validators.required],
+    sPaisBloqueDestino: [[], Validators.required]
+  });
+
+  // this.rango_fechas(); // Función comentada
+  this.getAdicianFraccionOption();
+}
+
+/**
+ * Obtiene las opciones para los botones de radio relacionados con fracciones.
+ */
+getAdicianFraccionOption(): void {
+  this.AvisoModifyService
+    .getAdicianFraccionOption()
+    .subscribe((resp) => {
+      this.radioOptions = Object.assign([], resp);
     });
+}
+
+/**
+ * Agrega fechas seleccionadas dependiendo del tipo especificado ('t' para todas).
+ */
+agregar(tipo: string): void {
+  if (tipo === 't') {
+    this.fechasSeleccionadas = [...this.selectRangoDias];
+    this.fechasDatos = [];
+  } else {
+    const FECHA_VALOR = this.fecha.value.map(Number);
+    this.fechasSeleccionadas.push(this.fechasDatos[FECHA_VALOR]);
+    this.fechasDatos.splice(FECHA_VALOR, 1);
+  }
+}
+
+/**
+ * Quita fechas seleccionadas dependiendo del tipo especificado ('t' para todas).
+ */
+quitar(tipo: string = ''): void {
+  if (tipo === 't') {
+    this.fechasDatos = [...this.fechasSeleccionadas];
+    this.fechasSeleccionadas = [];
+  } else {
+    const FECHA_VALOR = this.fechaSeleccionada.value.map(Number);
+    this.fechasDatos.push(this.fechasSeleccionadas[FECHA_VALOR]);
+    this.fechasSeleccionadas.splice(FECHA_VALOR, 1);
+  }
+}
+
+/**
+ * Inicializa las instancias de los modales después de que las vistas estén cargadas.
+ */
+ngAfterViewInit(): void {
+  if (this.cargaMasivaFrModal?.nativeElement) {
+    this.cargaMasivaFrModalInstance = new Modal(this.cargaMasivaFrModal.nativeElement);
   }
 
-
-
-  ngOnInit(): void {
- 
-    this.declaracionFormModel = this.fb.group({
-      archivoProceso: [''],
-      registrosProcesoCargados: [{ value: '', disabled: true }]
-    });
-    this.cargaManualForm = this.fb.group({
-      txtfraccionDeclCert:['', Validators.required, Validators.maxLength(8)],
-      activRelProc:['-1',Validators.required],
-      txtDescripcionMercancia:['', Validators.required],
-      cveFraccionCorrelacion:['-1',Validators.required],
-      unidadMedida:['-1',Validators.required ],
-      nico:['',Validators.required],
-      txtDescripcionNico:[''],
-      sPaisBloqueOrigen:[[], Validators.required],
-      sPaisBloqueDestino:[[],Validators.required]
-    })
-    // this.rango_fechas();
-   this.getAdicianFraccionOption();
+  if (this.CargaMasivaFralertaModel?.nativeElement) {
+    this.CargaMasivaFralertaModelInstance = new Modal(this.CargaMasivaFralertaModel.nativeElement);
   }
 
-  getAdicianFraccionOption():void{
-   this.AvisoModifyService
-               .getAdicianFraccionOption()
-               .subscribe((resp) =>{
-                this.radioOptions = Object.assign([], resp);
-               });
-              
+  if (this.fraccionesModel?.nativeElement) {
+    this.fraccionesModelInstance = new Modal(this.fraccionesModel.nativeElement);
   }
-  
-  agregar(tipo: string):void {
-    if (tipo === 't') {
-      this.fechasSeleccionadas = [...this.selectRangoDias];
-      this.fechasDatos = [];
-    } else {
-      const FECHA_VALOR = this.fecha.value.map(Number);
-      this.fechasSeleccionadas.push(this.fechasDatos[FECHA_VALOR]);
-      this.fechasDatos.splice(FECHA_VALOR, 1);
-    }
+}
+
+/**
+ * Controla la visibilidad del botón de carga dependiendo del tipo de carga seleccionado.
+ */
+valorSeleccionadoTipoCarga(): void {
+  const SELECTED_VALUE = this.declaracionForm.get('idCarga')?.value;
+
+  if (SELECTED_VALUE === 'TIPCAR.MA') {
+    this.divBtnCargaMVisible = false;
   }
-
-  quitar(tipo: string = ''):void {
-    if (tipo === 't') {
-      this.fechasDatos = [...this.fechasSeleccionadas];
-      this.fechasSeleccionadas = [];
-    } else {
-      const FECHA_VALOR = this.fechaSeleccionada.value.map(Number);
-      this.fechasDatos.push(this.fechasSeleccionadas[FECHA_VALOR]);
-      this.fechasSeleccionadas.splice(FECHA_VALOR, 1);
-    }
+  else if (SELECTED_VALUE === 'TIPCAR.CM') {
+    this.divBtnCargaMVisible = true;
   }
+}
 
-  ngAfterViewInit(): void {
-    if (this.cargaMasivaFrModal?.nativeElement) {
-          this.cargaMasivaFrModalInstance = new Modal(this.cargaMasivaFrModal.nativeElement);
-        }  
+/**
+ * Maneja el evento cuando cambia la cantidad de elementos por página.
+ */
+onItemsPerPageChange(itemsPerPage: number): void {
+  this.itemsPerPage = itemsPerPage;
+  this.currentPage = 1;
+  this.updatePagination();
+}
 
-        if (this.CargaMasivaFralertaModel?.nativeElement) {
-          this.CargaMasivaFralertaModelInstance = new Modal(this.CargaMasivaFralertaModel.nativeElement);
-        }  
+/**
+ * Maneja el evento cuando se cambia de página.
+ */
+onPageChange(page: number): void {
+  this.currentPage = page;
+  this.updatePagination();
+}
 
-        if (this.fraccionesModel?.nativeElement) {
-          this.fraccionesModelInstance = new Modal(this.fraccionesModel.nativeElement);
-         
-        }  
+/**
+ * Actualiza la paginación de la tabla según el número de elementos y la página actual.
+ */
+updatePagination(): void {
+  const START_INDEX = (this.currentPage - 1) * this.itemsPerPage;
+  this.miembroDeLaEmpresaBodyData = this.miembroDeLaEmpresaBodyData.slice(
+    START_INDEX,
+    START_INDEX + this.itemsPerPage
+  );
+}
+
+/**
+ * Abre el modal para agregar fracciones manualmente.
+ */
+modalAgregaCarga(): void {
+  this.openfraccionesModelModel();
+  // this.adicionFraccionService.openAgregaCargaModal(); // Comentado según instrucciones
+}
+/**
+ * Abre el modal para la carga masiva de fracciones.
+ */
+abrirModalCargaMasivaFr(): void {
+  this.openCargaMasivaFrModal();
+}
+
+/**
+ * Abre el modal de alerta después de cargar un archivo de procesos.
+ */
+cargarArchivoProcesosAjax(): void {
+  this.openCargaMasivaFralertaModel();
+}
+
+/**
+ * Abre el modal correspondiente a la carga masiva de fracciones.
+ */
+openCargaMasivaFrModal(): void {
+  if (this.cargaMasivaFrModalInstance) {
+    this.cargaMasivaFrModalInstance.show();
   }
-  
+}
 
-  // rango_fechas(): void {
-  //   this.AvisoModifyService.getSelectRangoDias()
-  //     .pipe(takeUntil(this.destroy$))
-  //     .subscribe((data) => {
-      
-  //       // Actualizamos los valores del formulario con los datos obtenidos
-  //       this.selectRangoDias = data;
-  //       console.log(this.selectRangoDias)
-  //     });
-  // }
-  
-
-  valorSeleccionadoTipoCarga(): void {
-    const SELECTED_VALUE = this.declaracionForm.get('idCarga')?.value;
-  
-    if (SELECTED_VALUE === 'TIPCAR.MA') {
-      this.divBtnCargaMVisible = false;
-    }
-    else if (SELECTED_VALUE === 'TIPCAR.CM'){
-      this.divBtnCargaMVisible = true;
-    }
-    // if (selectedValue === 'TIPCAR.MA') {
-    //   this.divBtnCargaMVisible = false;
-    //   this.gridManualVisible = true;
-    //   this.gridMasivaVisible = false;
-    // } else if (selectedValue === 'TIPCAR.CM') {
-    //   this.divBtnCargaMVisible = true;
-    //   this.gridManualVisible = false;
-    //   this.gridMasivaVisible = true;
-    // }
+/**
+ * Cierra el modal de carga masiva de fracciones.
+ */
+closeCargaMasivaFrModal(): void {
+  if (this.cargaMasivaFrModalInstance) {
+    this.cargaMasivaFrModalInstance.hide();
   }
-  onItemsPerPageChange(itemsPerPage: number): void {
-    this.itemsPerPage = itemsPerPage;
-    this.currentPage = 1;
-    this.updatePagination();
+}
+
+/**
+ * Abre el modal de alerta de carga masiva de fracciones.
+ */
+openCargaMasivaFralertaModel(): void {
+  if (this.CargaMasivaFralertaModelInstance) {
+    this.CargaMasivaFralertaModelInstance.show();
   }
+}
 
-  onPageChange(page: number): void {
-    this.currentPage = page;
-    this.updatePagination();
+/**
+ * Cierra el modal de alerta de carga masiva de fracciones.
+ */
+closeCargaMasivaFralertaModel(): void {
+  if (this.CargaMasivaFralertaModelInstance) {
+    this.CargaMasivaFralertaModelInstance.hide();
   }
-  updatePagination(): void {
-    const START_INDEX = (this.currentPage - 1) * this.itemsPerPage;
-    this.miembroDeLaEmpresaBodyData = this.miembroDeLaEmpresaBodyData.slice(
-      START_INDEX,
-      START_INDEX + this.itemsPerPage
-    );
+}
+
+/**
+ * Abre el modal para agregar fracciones de forma manual.
+ */
+openfraccionesModelModel(): void {
+  if (this.fraccionesModelInstance) {
+    this.fraccionesModelInstance.show();
   }
+}
 
-  // vistaPreviaArchivoFraccionAjax(): void {
-  //   // Implement the logic to view the preview of the fraction file
-  //   // Currently commented out as per instructions
-  //   // this.adicionFraccionService.viewPreviaArchivoFraccion();
-  // }
-
-  // eliminarFracciones(): void {
-  //   // Implement the logic to delete fractions
-  //   // Currently commented out as per instructions
-  //   // this.adicionFraccionService.eliminarFracciones();
-  // }
-
-  // modificarFracciones(): void {
-  //   // Implement the logic to modify fractions
-  //   // Currently commented out as per instructions
-  //   // this.adicionFraccionService.modificarFracciones();
-  // }
-
-  modalAgregaCarga(): void {
-    this.openfraccionesModelModel();
-    // Implement the logic to open the modal to add a fraction
-    // Currently commented out as per instructions
-    // this.adicionFraccionService.openAgregaCargaModal();
+/**
+ * Cierra el modal para agregar fracciones de forma manual.
+ */
+closefraccionesModelModel(): void {
+  if (this.fraccionesModelInstance) {
+    this.fraccionesModelInstance.hide();
   }
-   abrirModalCargaMasivaFr(): void {
-    this.openCargaMasivaFrModal();
-  }
+}
 
-  cargarArchivoProcesosAjax(): void {
-    this.openCargaMasivaFralertaModel();
-  }
-
-  // vistaPreviaArchivoProcesosAjax(): void {
-  //   // TODO: Implementar la funcionalidad de vistaPreviaArchivoProcesosAjax
-  //   // this.adicionProcesosService.vistaPrevia(this.form.get('archivoProceso')?.value).subscribe(
-  //   //   response => {
-  //   //     // Manejar éxito
-  //   //   },
-  //   //   error => {
-  //   //     // Manejar error
-  //   //   }
-  //   // );
-  // }
+/**
+ * Se ejecuta al destruir el componente. Se utiliza para limpiar suscripciones activas y prevenir fugas de memoria.
+ */
+ngOnDestroy(): void {
+  this.destroy$.next();
+  this.destroy$.complete();
+}
 
 
-  openCargaMasivaFrModal():void{
-    if (this.cargaMasivaFrModalInstance) {
-      this.cargaMasivaFrModalInstance.show();
-    }
-  }
-
-  closeCargaMasivaFrModal():void{
-    if (this.cargaMasivaFrModalInstance) {
-      this.cargaMasivaFrModalInstance.hide();
-    }
-  }
-
-  openCargaMasivaFralertaModel():void{
-    if (this.CargaMasivaFralertaModelInstance) {
-      this.CargaMasivaFralertaModelInstance.show();
-    }
-  }
-
-  closeCargaMasivaFralertaModel():void{
-    if (this.CargaMasivaFralertaModelInstance) {
-      this.CargaMasivaFralertaModelInstance.hide();
-    }
-  }
-
-  openfraccionesModelModel():void{
-    if (this.fraccionesModelInstance) {
-      this.fraccionesModelInstance.show();
-     
-    }
-  }
-
-  closefraccionesModelModel():void{
-    if (this.fraccionesModelInstance) {
-      this.fraccionesModelInstance.hide();
-    }
-  }
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-  }
 
 }
