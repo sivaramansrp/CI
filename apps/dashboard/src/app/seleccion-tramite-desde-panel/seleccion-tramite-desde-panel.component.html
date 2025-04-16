@@ -6,17 +6,17 @@
         <table class="table table-responsive table-striped table-hover">
           <thead>
             <tr>
-              <th> #</th>
+              <th> id</th>
               <th> departmento</th>
               <th>Tipo tr&aacute;mite</th>
               <th>URL</th>
             </tr>
           </thead>
           <tbody>
-            @for(item of tramiteData; track $index) {
+            @for(item of tramiteData; track item?.id) {
               @if(item?.linkDashboard) {
                 <tr>
-                  <td> {{$index + 1}}</td>
+                  <td> {{item?.id}}</td>
                   <td> {{item?.department}}</td>
                   <td> {{item?.tramite}}</td>
                   <td> <a [routerLink]=item.linkDashboard>{{ ruta }}{{item.linkDashboard}}</a>
