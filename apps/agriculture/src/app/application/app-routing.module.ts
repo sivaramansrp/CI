@@ -100,10 +100,16 @@ const ROUTES: Routes = [
         (m) => m.AcuicolaFisicaModule
       ),
   },
-    { path: 'fitosanitario',
+  { path: 'fitosanitario',
     loadChildren: () =>
       import('./tramites/221602/fitosanitario.module').then(
         (m) => m.FitosanitarioModule
+      ),
+  },
+  { path: 'sanidad',
+    loadChildren: () =>
+      import('./tramites/221603/sanidad.module').then(
+        (m) => m.SanidadModule
       ),
   }
 ];
