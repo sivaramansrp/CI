@@ -12,32 +12,41 @@ import { TablerosService } from '../../core/service/tabletos.service';
   styleUrl: './bandeja-solicitudes.component.scss',
 })
 export class BandejaSolicitudesComponent implements OnInit {
+  /** Configuración del campo de fecha inicial */
   FECHA_INICIO = {
     labelNombre: 'Fecha inicial',
     required: false,
     habilitado: true,
   };
-
+  /** Configuración del campo de fecha final */
   FECHA_FINAL = {
     labelNombre: 'Fecha final',
     required: false,
     habilitado: true,
   };
-
+  /** Indica si el bloque de filtros está colapsado */
   colapsable: boolean = false;
+  /** Formulario de búsqueda */
   public FormSolicitud!: FormGroup;
+  /** Configuración del input de fecha inicial */
   public fechaInicioInput: InputFecha = this.FECHA_INICIO;
+  /** Configuración del input de fecha final */
   public fechaFinalInput: InputFecha = this.FECHA_FINAL;
+  /** Acciones disponibles en la tabla */
   public accionesServcios: TablaAcciones[] = [];
-  public todasSolicitudes: ListaSolicitudes[] = []; // <- Nueva propiedad con todos los datos
-
-  // Esta lista es la que se muestra en la tabla
+  /** Lista completa de solicitudes obtenida del backend */
+  public todasSolicitudes: ListaSolicitudes[] = [];
+  /** Lista de solicitudes mostrada en la página actual */
   public listaSolicitudesPaginadas: ListaSolicitudes[] = [];
+  /** Total de elementos (para paginación) */
   public totalItems: number = 0;
+  /** Cantidad de elementos por página */
   public itemsPerPage: number = 5;
+  /** Página actual */
   public currentPage: number = 1;
+  /** Copia original de las solicitudes (sin filtros) */
   public todasSolicitudesOriginales: ListaSolicitudes[] = [];
-
+  /** Configuración de columnas de la tabla */
   public configurarTabla: ConfiguracionColumna<ListaSolicitudes>[] = [
     { encabezado: 'Id solicitud', clave: (item: ListaSolicitudes) => item.idSolicitud, orden: 1 },
     { encabezado: 'Tipo de trámite', clave: (item: ListaSolicitudes) => item.tipoTramite, orden: 2 },
@@ -50,76 +59,100 @@ export class BandejaSolicitudesComponent implements OnInit {
     private fb: FormBuilder,
     private servicioFuncionario: TablerosService,
   ) {
+    // Inicialización del formulario de búsqueda
     this.FormSolicitud = this.fb.group({
       idSolicitud: [''],
       fechaInicio: [''],
       fechaFinal: ['']
     });
   }
-
+  /** Al inicializar el componente, se cargan las solicitudes */
   ngOnInit(): void {
     this.getSolicitudesTabla();
   }
 
+   /** Alterna el estado del bloque colapsable (mostrar/ocultar filtros) */
+   mostrar_colapsable(): void {
+    this.colapsable = !this.colapsable;
+  }
+
+  /**
+ * Actualiza el valor del campo 'fechaInicio' en el formulario reactivo `FormBusqueda`
+ * @param nuevoValor_fechaInicio - Nuevo valor a establecer para el campo 'fechaInicio'.
+ */
+  public cambioFechaInicioFucion(nuevo_valor: string) {
+    this.FormSolicitud.get('fechaInicio')?.setValue(nuevo_valor);
+    this.FormSolicitud.get('fechaInicio')?.markAsUntouched();
+  }
+
+  /**
+ * Actualiza el valor del campo 'fechaFinal' en el formulario reactivo `FormBusqueda`
+ * @param nuevoValor_fechaFinal - Nuevo valor a establecer para el campo 'fechaFinal'.
+ */
+  public cambioFechaFinalFuncion(nuevo_valor: string) {
+    this.FormSolicitud.get('fechaFinal')?.setValue(nuevo_valor);
+    this.FormSolicitud.get('fechaFinal')?.markAsUntouched();
+  }
+
+    /** Obtiene todos las solicitudes desde el backend y aplica la paginación inicial */
   public getSolicitudesTabla(): void {
     this.accionesServcios = [TablaAcciones.VER];
-    this.servicioFuncionario.getTableroSolicitudesTabla().subscribe((data) => {
+    this.servicioFuncionario.getListaSolicitudes().subscribe((data) => {
       this.todasSolicitudesOriginales = data;
       this.todasSolicitudes = [...data];
       this.totalItems = data.length;
       this.updatePagination();
     });
   }
-
-  mostrar_colapsable(): void {
-    this.colapsable = !this.colapsable;
-  }
-
-  public cambioFechaInicioFucion(nuevo_valor: string) {
-    this.FormSolicitud.get('fechaInicio')?.setValue(nuevo_valor);
-    this.FormSolicitud.get('fechaInicio')?.markAsUntouched();
-  }
-
-  public cambioFechaFinalFuncion(nuevo_valor: string) {
-    this.FormSolicitud.get('fechaFinal')?.setValue(nuevo_valor);
-    this.FormSolicitud.get('fechaFinal')?.markAsUntouched();
-  }
-
+  
+  /** Actualiza los elementos paginados según la página e ítems por página seleccionados */
   public updatePagination(): void {
     const STARTINDEX = (this.currentPage - 1) * this.itemsPerPage;
     const ENDINDEX = STARTINDEX + this.itemsPerPage;
     this.listaSolicitudesPaginadas = this.todasSolicitudes.slice(STARTINDEX, ENDINDEX);
   }
 
+  /**
+  * Maneja el cambio de página
+  * @param page Página seleccionada
+  */
   public onPageChange(page: number): void {
     this.currentPage = page;
     this.updatePagination();
   }
 
+  /**
+   * Maneja el cambio de número de ítems por página
+   * @param itemsPerPage Nuevo valor de ítems por página
+   */
   public onItemsPerPageChange(itemsPerPage: number): void {
     this.itemsPerPage = itemsPerPage;
     this.currentPage = 1;
     this.updatePagination();
   }
 
-  buscarPendiente(): void {
-    const FORM_DATA = this.FormSolicitud.value;
-    const { IDSOLICITUD, FECHAINICIO, FECHAFINAL } = this.FormSolicitud.value;
-  
-    const FILTROS = {
-      idSolicitud: IDSOLICITUD || '',
-      fechaInicio: FECHAINICIO || '',
-      fechaFinal: FECHAFINAL || ''
-    };
-  
-    this.servicioFuncionario.getSolicitudesFiltradas(FILTROS).subscribe((data) => {
-      this.todasSolicitudes = data;
-      this.totalItems = data.length;
-      this.currentPage = 1;
-      this.updatePagination();
-    });
+   /** Ejecuta la búsqueda de solicitudes con los filtros del formulario */
+  buscarSolicitudes() {
+    /**
+     * Se salta la regla de UPPER_CASE, ya que los valores que se recuperan en la constante 
+     * son valores predefinidos como el formulario fueron declarados
+     */
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    const { idSolicitud, fechaInicio, fechaFinal } = this.FormSolicitud.value;
+    this.servicioFuncionario
+      .getListaSolicitudes(idSolicitud || undefined, fechaInicio || undefined, fechaFinal || undefined)
+      .subscribe((data) => {
+        this.todasSolicitudesOriginales = data;
+        this.todasSolicitudes = [...data];
+        this.totalItems = data.length;
+        this.currentPage = 1;
+        this.updatePagination();
+      });
   }
 
+  /**
+   * Reseteo de valores de la busqueda
+   */
   resetFiltros(): void {
     this.FormSolicitud.reset();
     this.todasSolicitudes = [...this.todasSolicitudesOriginales];
