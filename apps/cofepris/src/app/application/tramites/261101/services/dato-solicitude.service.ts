@@ -1,12 +1,14 @@
 import { AbstractControl } from '@angular/forms';
+import { Catalogo } from '@libs/shared/data-access-user/src';
 import { Domicilio } from '../modelos/domicilio-establecimientos.model';
 import { FormGroup } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Mercancias } from '../modelos/mercancias.model';
 import { Observable } from 'rxjs';
+import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
 import { ScianData } from '../../../shared/models/datos-modificacion.model';
-
+import { TramiteAsociados } from '../../../shared/models/tramite-asociados.model';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +16,7 @@ import { ScianData } from '../../../shared/models/datos-modificacion.model';
 
 export class DatosSolicitudService {
 
-
+  banco!: Catalogo[];
   /**
    * Constructor del servicio.
    * 
@@ -60,4 +62,47 @@ export class DatosSolicitudService {
     obternerDatosData(): Observable<ScianData[]> {
       return this.http.get<ScianData[]>('assets/json/261101/datos-scian-tabla.json');
     }
+      /**
+       * Obtiene los trámites asociados desde un archivo JSON.
+       *
+       * {Observable<TramiteAsociados[]>} Un observable con la lista de trámites asociados.
+       */
+      obtenerTramitesAsociados(): Observable<TramiteAsociados[]> {
+        return this.http.get<TramiteAsociados[]>(
+          'assets/json/261101/tramite-asociados.json'
+        );
+      }
+
+      
+  /**
+   * Inicializa los datos de los catálogos relacionados con el pago de derechos.
+   */
+  inicializaPagoDeDerechosDatosCatalogos(): void {
+    this.obtenerRespuestaPorUrl(this, 'banco', '/261101/banco.json');
+  }
+        /**
+         * Obtiene una respuesta desde una URL y asigna los datos a una variable.
+         * {AutorizacionesDeVidaSilvestreService} self - El objeto que contiene la variable donde se almacenarán los datos de la respuesta.
+         * {keyof AutorizacionesDeVidaSilvestreService} variable - El nombre de la variable donde se almacenarán los datos de la respuesta.
+         * {string} url - La URL desde la cual se obtendrá la respuesta.
+         * {void}
+         *
+         * Si la variable y la URL son válidas, se realiza una solicitud HTTP GET a la URL especificada.
+         * Si la respuesta tiene un código 200 y contiene datos, estos se asignan a la variable especificada.
+         * Si la variable o la URL no son válidas, se asigna un arreglo vacío a la variable.
+         */
+        obtenerRespuestaPorUrl(
+          self: DatosSolicitudService,
+          variable: keyof DatosSolicitudService,
+          url: string
+        ): void {
+          if (self && variable && url) {
+            this.http
+              .get<RespuestaCatalogos>(`assets/json${url}`)
+              .subscribe((resp): void => {
+                (self[variable] as Catalogo[]) =
+                  resp?.code === 200 && resp.data ? resp.data : [];
+              });
+          }
+        }
 }
