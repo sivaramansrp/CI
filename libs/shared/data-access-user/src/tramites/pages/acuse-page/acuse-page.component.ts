@@ -29,7 +29,9 @@ export class AcusePageComponent implements OnInit {
 
   constructor(private tramiteQueries: TramiteFolioQueries,
     private router: Router,
-  ) {}
+  ) {
+    // Lógica de inicialización si es necesario
+  }
 
   /**
    * Método de ciclo de vida de Angular que se llama una vez que el componente ha sido inicializado.
