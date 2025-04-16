@@ -186,7 +186,7 @@ export class DatosDeLaSolicitudModificacionComponent implements OnInit, AfterVie
    */
   public solicitudState!: DatosSolicitudState;
 
-    /**
+  /**
 * Abre el modal de confirmación para eliminar un pedimento.
 * 
 * Este método configura los datos de la notificación que se mostrará en el modal

@@ -1,10 +1,9 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { DatosDeLaSolicitudModificacionComponent } from './datos-de-la-solicitud-modificacion.component';
 import { FormBuilder } from '@angular/forms';
+import { of } from 'rxjs';
+import { DatosDeLaSolicitudModificacionComponent } from './datos-de-la-solicitud-modificacion.component';
 import { EstablecimientoService } from '../../services/establecimiento.service';
 import { DatosSolicitudStore } from '../../estados/stores/datos-de-la-solicitud-modificacion.store';
 import { DatosSolicitudQuery } from '../../estados/queries/datos-de-la-solicitud-modificacion.query';
-import { of, Subject } from 'rxjs';
 
 describe('DatosDeLaSolicitudModificacionComponent', () => {
   let component: DatosDeLaSolicitudModificacionComponent;
@@ -15,11 +14,12 @@ describe('DatosDeLaSolicitudModificacionComponent', () => {
 
   beforeEach(() => {
     formBuilder = new FormBuilder();
+
     establecimientoService = {
-      getJustificationData: jest.fn(),
-      getInformacionConfidencialRadioOptions: jest.fn(),
-      getEstadodata: jest.fn(),
-      getSciandata: jest.fn(),
+      getJustificationData: jest.fn().mockReturnValue(of([{ id: 1, nombre: 'Justificación 1' }])),
+      getInformacionConfidencialRadioOptions: jest.fn().mockReturnValue(of(['Sí', 'No'])),
+      getEstadodata: jest.fn().mockReturnValue(of(['Estado1', 'Estado2'])),
+      getSciandata: jest.fn().mockReturnValue(of(['Scian1'])),
     } as unknown as jest.Mocked<EstablecimientoService>;
 
     datosSolicitudStore = {
@@ -31,6 +31,7 @@ describe('DatosDeLaSolicitudModificacionComponent', () => {
       setEstablecimientoEstados: jest.fn(),
       destroy: jest.fn(),
     } as unknown as jest.Mocked<DatosSolicitudStore>;
+
     datosSolicitudQuery = {
       selectSolicitud$: of({}),
     } as unknown as jest.Mocked<DatosSolicitudQuery>;
@@ -41,6 +42,16 @@ describe('DatosDeLaSolicitudModificacionComponent', () => {
       datosSolicitudStore,
       datosSolicitudQuery
     );
+
+    // Initialize forms required for tests
+    component.manifiestosRepresentanteForm = formBuilder.group({
+      confidencial: ['Sí'],
+    });
+
+    component.scianForm = formBuilder.group({
+      scian: [''],
+      descripcionScian: [''],
+    });
   });
 
   it('should create the component', () => {
@@ -119,7 +130,7 @@ describe('DatosDeLaSolicitudModificacionComponent', () => {
     });
   });
 
-  it('should remove a pedimento when eliminarPedimento is called', () => {
+  it('should remove a pedimento when eliminarPedimento is called with true', () => {
     component.pedimentos = [{ id: 1 }, { id: 2 }] as any;
     component.elementoParaEliminar = 0;
     component.eliminarPedimento(true);
@@ -143,5 +154,32 @@ describe('DatosDeLaSolicitudModificacionComponent', () => {
     component.modalInstance = { hide: jest.fn() } as any;
     component.cerrarModalScian();
     expect(component.modalInstance.hide).toHaveBeenCalled();
+  });
+
+  it('should call establecimientoService.getEstadodata in cargarEstado', () => {
+    const spy = jest.spyOn(establecimientoService, 'getEstadodata');
+    component.cargarEstado();
+    expect(spy).toHaveBeenCalled();
+  });
+
+  it('should call establecimientoService.getSciandata in cargarScian', () => {
+    const spy = jest.spyOn(establecimientoService, 'getSciandata');
+    component.cargarScian();
+    expect(spy).toHaveBeenCalled();
+  });
+
+  it('should call establecimientoService.getJustificationData and getInformacionConfidencialRadioOptions in establecerOpcionesGenericas', () => {
+    const spy1 = jest.spyOn(establecimientoService, 'getJustificationData');
+    const spy2 = jest.spyOn(establecimientoService, 'getInformacionConfidencialRadioOptions');
+    component.establecerOpcionesGenericas();
+    expect(spy1).toHaveBeenCalled();
+    expect(spy2).toHaveBeenCalled();
+  });
+
+  it('should subscribe to confidencial form value changes in manejarConfidencial', () => {
+    const spy = jest.spyOn(component, 'actualizarValoresStore');
+    component.manejarConfidencial();
+    component.manifiestosRepresentanteForm.get('confidencial')?.setValue('No');
+    expect(spy).toHaveBeenCalledWith(component.manifiestosRepresentanteForm, 'confidencial', 'setGenericos');
   });
 });

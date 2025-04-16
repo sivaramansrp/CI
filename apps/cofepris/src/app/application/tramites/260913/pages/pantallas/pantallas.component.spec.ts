@@ -1,4 +1,3 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PantallasComponent } from './pantallas.component';
 import { WizardComponent } from '@ng-mf/data-access-user';
 import { PANTA_PASOS } from '@libs/shared/data-access-user/src/core/enums/260604/aviso-exportacion.enum';
@@ -6,17 +5,6 @@ import { AccionBoton } from '@libs/shared/data-access-user/src/core/models/26060
 
 describe('PantallasComponent', () => {
   let component: PantallasComponent;
-  let fixture: ComponentFixture<PantallasComponent>;
-
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [PantallasComponent],
-    }).compileComponents();
-
-    fixture = TestBed.createComponent(PantallasComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
 
   beforeEach(() => {
     component = new PantallasComponent();
@@ -38,6 +26,15 @@ describe('PantallasComponent', () => {
     expect(component.indice).toBe(1);
   });
 
+  it('should initialize datosPasos with correct values', () => {
+    expect(component.datosPasos).toEqual({
+      nroPasos: component.pantallasPasos.length,
+      indice: component.indice,
+      txtBtnAnt: 'Anterior',
+      txtBtnSig: 'Continuar',
+    });
+  });
+
   it('should update the index and call wizardComponent.siguiente when accion is "cont"', () => {
     const accionBoton: AccionBoton = { accion: 'cont', valor: 2 };
     component.getValorIndice(accionBoton);
@@ -52,8 +49,15 @@ describe('PantallasComponent', () => {
     expect(component.wizardComponent.atras).toHaveBeenCalled();
   });
 
-  it('should not update the index if the value is out of range', () => {
+  it('should not update the index if the value is out of range (less than 1)', () => {
     const accionBoton: AccionBoton = { accion: 'cont', valor: 0 };
+    component.getValorIndice(accionBoton);
+    expect(component.indice).toBe(1); // Default value remains unchanged
+    expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
+  });
+
+  it('should not update the index if the value is out of range (greater than 4)', () => {
+    const accionBoton: AccionBoton = { accion: 'cont', valor: 5 };
     component.getValorIndice(accionBoton);
     expect(component.indice).toBe(1); // Default value remains unchanged
     expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
