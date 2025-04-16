@@ -54,7 +54,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
   @Input() public idProcedimiento!: number;
 
   public estaOculto = false;
-  public paisEtiqueta = false;
+  public paisEtiqueta = PAISE_DENTINO_EITIQUETA;
   public periodoHabilitado = false;
 
   public periodoUnoSemestreOpciones = PERIODO_UNO_SEMESTRE;
@@ -213,7 +213,6 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
       });
 
       this.estaOculto = PERMISO_DEFINITIVO_TITULO.includes(this.idProcedimiento);
-      this.paisEtiqueta = PAISE_DENTINO_EITIQUETA.includes(this.idProcedimiento);
       this.periodoHabilitado = PERIODO_SEMESTRE_HABILITADO.includes(this.idProcedimiento);
 
   }

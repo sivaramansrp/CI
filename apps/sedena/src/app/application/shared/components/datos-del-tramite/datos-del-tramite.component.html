@@ -3,7 +3,7 @@
     <div class="row mt-5">
       <ng-titulo titulo="Permiso definitivo (no temporal)"></ng-titulo>
     </div>
-    <div class="row mt-5">
+    <div class="row">
       <ng-titulo
         titulo="Aduana de entrada
       "
@@ -11,7 +11,7 @@
     </div>
   }
 
-    <div class="row">
+    <div class="row mt-3">
       <crosslist
         [fechas]="seleccionarAduanasDisponibles"
         [label]="aduanasDisponiblesLabel"
@@ -36,7 +36,7 @@
             />
           </div>
           <div class="col-md-8">
-            <label for="paisDestino" class="form-label">{{ paisEtiqueta ? 'País de procedencia:': 'País de:'}}</label>
+            <label for="paisDestino" class="form-label">{{ paisEtiqueta.get(idProcedimiento) ? paisEtiqueta.get(idProcedimiento) : 'País de'}}:</label>
             <input
               type="text"
               id="paisDestino"

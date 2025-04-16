@@ -26,11 +26,31 @@ export const PERMISO_DEFINITIVO_TITULO = [240119, 240118];
  * asociados a etiquetas específicas de países dentro del sistema.
  * 
  * @constant
- * @type {number[]}
+ * @type {Map{number, string}}
  * @description Utilizado para identificar y manejar etiquetas relacionadas 
  * con países en el flujo de trabajo de la aplicación.
  */
-export const PAISE_DENTINO_EITIQUETA = [240119, 240118];
+export const PAISE_DENTINO_EITIQUETA: Map<number, string> = new Map<number, string>([
+  [240119, 'País de procedencia'],
+  [240118, 'País de procedencia'],
+  [240108, 'paise destino'],
+]);
+ 
+/**
+ * Constante que define los códigos de mercancía que pueden mostrar la lista cruzada.
+ * 
+ * @constant
+ * @type {number[]}
+ * @description Esta constante contiene un arreglo de identificadores numéricos que 
+ * representan mercancías específicas para las cuales se permite mostrar la lista cruzada.
+ * 
+ * @example
+ * // Uso de la constante
+ * if (PUEDE_MOSTRAR_LA_LISTA_CRUZADA_FOR_MERCANCIA.includes(codigoMercancia)) {
+ *   // Lógica para mostrar la lista cruzada
+ * }
+ */
+export const PUEDE_MOSTRAR_LA_LISTA_CRUZADA_FOR_MERCANCIA = [240108];
 
 /**
  * Constante que representa el período del semestre habilitado.
