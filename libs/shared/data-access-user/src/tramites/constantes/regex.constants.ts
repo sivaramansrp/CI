@@ -244,6 +244,8 @@ export const REGEX_CORREO_ELECTRONICO =
  * Ejemplo válido: (123) 456-7890
  */
 export const REGEX_TELEFONO = /^([0-9A-Za-z\-() ])*$/;
+
+
 /**
  * Expresión regular para validar números decimales con hasta 2 decimales.
  * 
@@ -276,7 +278,6 @@ export const REGEX_SOLO_NUMEROS = /^[0-9]*$/;
  */
 export const REGEX_CURP =
   /^([a-zA-Z]{4})([0-9]{6})([HhMm][a-zA-Z]{5})([0-9]{2})$/;
-  
 
 /**
  * Regular expression to validate numeric values with optional decimal points.
@@ -290,6 +291,13 @@ export const REGEX_NUMERO_DECIMAL_2_DIGITOS = /^\d+(\.\d{1,2})?$/;
  * Permite dígitos y el punto decimal. 
  */
 export const REGEX_NUMEROS_USD = '^[0-9.]{1,}$';
+
+/**
+* Expresión regular para validar una cadena que contenga solo números enteros
+* separados por comas y espacios opcionales.
+* Ejemplo válido: 123, 456, 789
+*/
+export const REGEX_SEPARADO_POR_COMAS = /^\d+(,\s*\d+)*$/;
 
 /**
  * Constante de expresión regular utilizada para validar cadenas alfanuméricas.
@@ -331,3 +339,32 @@ export const REGEX_TELEFONO_DIGITOS = '/^\d{10}$/';
  * Expresión regular para validar un código postal de 5 dígitos.
  */
 export const REGEX_POSTAL = '/^\d{5}$/';
+/**
+ * Expresión regular para validar cadenas alfanuméricas con espacios.
+ * 
+ * Esta expresión regular permite letras (mayúsculas y minúsculas), números y espacios.
+ * No se permiten caracteres especiales.
+ * 
+ * Ejemplos válidos:
+ * - "Hola 123"
+ * - "Codigo con espacios"
+ * 
+ * Ejemplos no válidos:
+ * - "Hola@123" (contiene un carácter especial)
+ */
+export const REGEX_ALFANUMERICO_CON_ESPACIOS = /^[a-zA-Z0-9 ]*$/;
+
+/**
+ * Expresión regular para reemplazar caracteres no alfanuméricos ni espacios.
+ * 
+ * Esta expresión regular identifica cualquier carácter que no sea una letra (mayúscula o minúscula),
+ * un número o un espacio, y lo reemplaza.
+ * 
+ * Ejemplo de uso:
+ * ```typescript
+ * const cadena = "Hola@123!";
+ * const resultado = cadena.replace(REGEX_ALFANUMERICO_CON_ESPACIOS_REEMPLAZAR, '');
+ * console.log(resultado); // "Hola123"
+ * ```
+ */
+export const REGEX_ALFANUMERICO_CON_ESPACIOS_REEMPLAZAR = /[^a-zA-Z0-9 ]/g;
