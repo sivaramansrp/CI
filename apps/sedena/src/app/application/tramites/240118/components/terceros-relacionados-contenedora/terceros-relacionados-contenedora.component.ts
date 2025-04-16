@@ -86,7 +86,7 @@ export class TercerosRelacionadosContenedoraComponent implements OnInit {
 
   modificarProveedorDatos(datos: Proveedor): void {
     this.tramiteStore.actualizarDatosProveedor(datos);
-    this.irAAcciones();
+    // this.irAAcciones();
   }
 
   /**

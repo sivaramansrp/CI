@@ -77,4 +77,7 @@ export class Tramite240118Query extends Query<Tramite240118State> {
   public getMercanciaTablaDatos$ = this.select(
     (state) => state.merccancialTablaDatos
   );
+  public obtenerTercerosDatos$ = this.select((state) => {
+    return state.modificarDestinarioDatos || state.modificarProveedorDatos || null;
+  });
 }

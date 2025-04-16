@@ -53,8 +53,7 @@ export class AgregarDestinatarioCustomComponent
     *
     * @type {DestinoFinal | Proveedor | null | undefined}
     */
-  @Input() formaDatos!: DestinoFinal | Proveedor
-    | null | undefined;
+  @Input() formaDatos!: DestinoFinal | Proveedor | null | undefined;
 
   /**
    * Subject utilizado para gestionar la desuscripción de observables.
@@ -186,6 +185,9 @@ export class AgregarDestinatarioCustomComponent
   ngOnChanges(): void {
     this.mostrarCamposNoContribuyente =
       PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE.includes(this.idProcedimiento);
+      if (this.formaDatos) {
+        this.agregarDestinatarioFinal.patchValue(this.formaDatos)
+      }
   }
 
   /**
@@ -263,9 +265,13 @@ export class AgregarDestinatarioCustomComponent
       correoElectronico: ['', [Validators.required, Validators.email]],
       nacionalidad: [],
     });
+    
     this.agregarDestinatarioFinal.disable();
     this.agregarDestinatarioFinal.get('tipoPersona')?.enable();
     this.agregarDestinatarioFinal.get('nacionalidad')?.enable();
+    if(this.formaDatos) {
+      this.agregarDestinatarioFinal.patchValue(this.formaDatos);
+    }
   }
 
   /**

@@ -1,9 +1,10 @@
 import { DestinoFinal, Proveedor } from '../../../../shared/models/terceros-relacionados.model';
 import { AgregarDestinatarioCustomComponent } from "../../../../shared/components/agregar-destinatario-custom/agregar-destinatario-custom.component";
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Observable } from "rxjs";
 import { Tramite240118Store } from '../../estados/tramite240118Store.store';
+import { Tramite240118Query } from '../../estados/tramite240118Query.query';
 
 /**
  * @title Agregar Destinatario Final Contenedora
@@ -18,7 +19,7 @@ import { Tramite240118Store } from '../../estados/tramite240118Store.store';
   templateUrl: './agregar-destinatario-final-contenedora.component.html',
   styleUrl: './agregar-destinatario-final-contenedora.component.scss',
 })
-export class AgregarDestinatarioFinalContenedoraComponent {
+export class AgregarDestinatarioFinalContenedoraComponent implements OnInit {
     /**
      * @property terechosDatos$
      * @type {Observable<DestinoFinal | Proveedor | null | undefined>}
@@ -34,8 +35,12 @@ export class AgregarDestinatarioFinalContenedoraComponent {
    * @param {Tramite240118Store} tramiteStore - Store que administra el estado del trámite.
    * @returns {void}
    */
-  constructor(public tramiteStore: Tramite240118Store) {
-     // No hacer nada
+  constructor(public tramiteStore: Tramite240118Store,public tramiteQuery: Tramite240118Query) {
+    this.terechosDatos$ = this.tramiteQuery.obtenerTercerosDatos$;
+  }
+
+  ngOnInit(): void {
+    this.terechosDatos$ = this.tramiteQuery.obtenerTercerosDatos$;
   }
 
   /**

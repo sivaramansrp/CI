@@ -24,6 +24,8 @@ export interface Tramite240118State {
   pagoDerechos: PagoDerechosFormState;
   merccancialTablaDatos: MercanciaDetalle[];
   datosDelTramite: DatosDelTramiteFormState;
+  modificarDestinarioDatos?: DestinoFinal | null;
+  modificarProveedorDatos?: Proveedor | null;
 }
 
 /**

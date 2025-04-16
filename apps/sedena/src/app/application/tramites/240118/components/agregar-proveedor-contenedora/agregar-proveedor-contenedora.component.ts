@@ -1,9 +1,10 @@
 import { DestinoFinal, Proveedor } from '../../../../shared/models/terceros-relacionados.model';
 import { AgregarProveedorCustomComponent } from "../../../../shared/components/agregar-proveedor-custom/agregar-proveedor-custom.component";
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Observable } from "rxjs";
 import { Tramite240118Store } from '../../estados/tramite240118Store.store';
+import { Tramite240118Query } from '../../estados/tramite240118Query.query';
 
 @Component({
   selector: 'app-agregar-proveedor-contenedora',
@@ -12,7 +13,7 @@ import { Tramite240118Store } from '../../estados/tramite240118Store.store';
   templateUrl: './agregar-proveedor-contenedora.component.html',
   styleUrl: './agregar-proveedor-contenedora.component.scss',
 })
-export class AgregarProveedorContenedoraComponent {
+export class AgregarProveedorContenedoraComponent implements OnInit {
   
   /**
    * @property terechosDatos$
@@ -25,13 +26,17 @@ export class AgregarProveedorContenedoraComponent {
 
   /**
    * @constructor
-   * @description Constructor que inyecta el store `Tramite260214Store` para gestionar el estado del trámite.
+   * @description Constructor que inyecta el store `Tramite240118Store` para gestionar el estado del trámite.
    *
-   * @param tramite260214Store - Store que administra el estado del trámite 260214.
+   * @param tramite240118Store - Store que administra el estado del trámite 240118.
    */
 
-  constructor(public tramite240118Store: Tramite240118Store) {
-     // No hacer nada
+ constructor(public tramiteStore: Tramite240118Store,public tramiteQuery: Tramite240118Query) {
+  this.terechosDatos$ = this.tramiteQuery.obtenerTercerosDatos$;
+  }
+
+  ngOnInit(): void {
+    this.terechosDatos$ = this.tramiteQuery.obtenerTercerosDatos$;
   }
 
   /**
@@ -42,6 +47,6 @@ export class AgregarProveedorContenedoraComponent {
    * @returns {void} Este método no retorna ningún valor.
    */
   updateProveedorTablaDatos(event: Proveedor[]): void {
-    this.tramite240118Store.updateProveedorTablaDatos(event);
+    this.tramiteStore.updateProveedorTablaDatos(event);
   }
 }
