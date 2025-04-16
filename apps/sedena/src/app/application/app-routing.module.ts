@@ -1,5 +1,7 @@
 import { NgModule } from '@angular/core';
+
 import { RouterModule, Routes } from '@angular/router';
+
 import { SeleccionTramiteComponent } from './seleccion-tramite/seleccion-tramite.component';
 
 const ROUTES: Routes = [
@@ -14,6 +16,13 @@ const ROUTES: Routes = [
       import(
         './tramites/240101/permiso-ordinario-importacion-armas-municiones.module'
       ).then((m) => m.PermisoOrdinarioImportacionArmasMunicionesModule),
+  },
+  {
+    path: 'permiso-ordinario-exportacion-de-sustancias-quimicas',
+    loadChildren: () =>
+      import(
+        './tramites/240117/permiso-ordinario-para-la-exportacion-de-sustancias-quimicas.module'
+      ).then((m) => m.PermisoOrdinarioParaLaExportacionDeSustanciasQuimicasModule),
   },
 ];
 
