@@ -327,7 +327,14 @@ const ROUTES: Routes = [
       loadChildren: () =>
       import('./tramites/260201/importacion-psicotropicos-poretorno.module').then(
         (m) => m.ImportacionPsicotropicosPoretornoModule),
-}
+},
+{
+      path: 'actualizacion-importacion',
+      loadChildren: () =>
+        import('./tramites/260903/actualizacion-importacion-sanitaria.module').then(
+          (m) => m.ActualizacionImportacionSanitariaModule
+        ),
+},
 
 ];
 
