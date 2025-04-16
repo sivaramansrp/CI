@@ -1,34 +1,24 @@
-import {
-  Component,
-  ElementRef,
-  OnDestroy,
-  OnInit,
-  ViewChild,
-} from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {
-  FormBuilder,
-  FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
-} from '@angular/forms';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { map, Subject, takeUntil } from 'rxjs';
+import * as XLSX from 'xlsx'; // Importa XLSX para leer archivos Excel
+import { Modal } from 'bootstrap';
 import {
   AlertComponent,
   InputRadioComponent,
   TituloComponent,
+  VALID_FILE_REGEX,
 } from '@libs/shared/data-access-user/src';
 import preOperativo from 'libs/shared/theme/assets/json/32201/preOperativo.json';
 import prejson from 'libs/shared/theme/assets/json/32201/prejson.json';
-import { Tramite31601Query } from '../../estados/tramite31601.query';
-import {
-  Solicitud31601State,
-  Tramite31601Store,
-} from '../../estados/tramite31601.store';
-import { map, Subject, takeUntil } from 'rxjs';
-import { Solicitud32201Enum } from '../../constantes/anexo';
-import * as XLSX from 'xlsx'; // Import XLSX for reading Excel files
-import { Modal } from 'bootstrap';
+import { Tramite32201Query } from '../../estados/tramite32201.query';
+import { Solicitud32201State, Tramite32201Store } from '../../estados/tramite32201.store';
+import { SOLICITUD_32201_ENUM } from '../../constantes/anexo';
 
+/**
+ * Componente que representa la funcionalidad de la solicitud del trámite 32201.
+ */
 @Component({
   selector: 'app-solicitud',
   standalone: true,
@@ -62,7 +52,7 @@ export class SolicitudComponent implements OnInit {
   /**
    * Estado de la solicitud.
    */
-  public solicitudState!: Solicitud31601State;
+  public solicitudState!: Solicitud32201State;
 
   /**
    * Notificador para destruir observables.
@@ -72,10 +62,9 @@ export class SolicitudComponent implements OnInit {
   /**
    * Asigna el aviso de privacidad simplificado al atributo `TEXTOS`.
    */
-  TEXTOS = Solicitud32201Enum;
+  TEXTOS = SOLICITUD_32201_ENUM;
 
   /**
-   *
    * Una cadena que representa la clase CSS para una alerta de información.
    * Esta clase se utiliza para aplicar estilo a los mensajes de información en el componente.
    */
@@ -87,7 +76,7 @@ export class SolicitudComponent implements OnInit {
   @ViewChild('confirmarModal') confirmarModalElement!: ElementRef;
 
   /**
-   * Referencia al modal de confirmación.
+   * Referencia al modal de error.
    */
   @ViewChild('errorModal') errorModalElement!: ElementRef;
 
@@ -99,21 +88,23 @@ export class SolicitudComponent implements OnInit {
   /**
    * Constructor del componente.
    * @param fb - FormBuilder para crear formularios reactivos.
-   * @param tramite31601Store - Store para manejar el estado del trámite.
-   * @param tramite31601Query - Query para obtener datos del trámite.
+   * @param tramite32201Store - Store para manejar el estado del trámite.
+   * @param tramite32201Query - Query para obtener datos del trámite.
    */
   constructor(
     private fb: FormBuilder,
-    private tramite31601Store: Tramite31601Store,
-    private tramite31601Query: Tramite31601Query
-  ) {}
+    private tramite32201Store: Tramite32201Store,
+    private tramite32201Query: Tramite32201Query
+  ) {
+    // Constructor no vacío para evitar el error de ESLint.
+  }
 
   /**
    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
    * Llama a los métodos para obtener datos de establecimientos, empleados, domicilios e instalaciones.
    */
-  ngOnInit() {
-    this.tramite31601Query.selectSolicitud$
+  ngOnInit(): void {
+    this.tramite32201Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
@@ -121,6 +112,8 @@ export class SolicitudComponent implements OnInit {
         })
       )
       .subscribe();
+
+    // Inicializa el formulario reactivo con los valores del estado.
     this.solicitudForm = this.fb.group({
       regimen_0: [this.solicitudState?.regimen_0],
       regimen_1: [this.solicitudState?.regimen_1],
@@ -130,68 +123,53 @@ export class SolicitudComponent implements OnInit {
     });
   }
 
+  /**
+   * Método para cargar un archivo de proveedores.
+   * Valida que el archivo sea de formato Excel (.xls o .xlsx) y verifica el número de columnas.
+   * Si el archivo es válido, muestra un modal de confirmación; de lo contrario, muestra un modal de error.
+   */
   cargarProveedores(): void {
     const FILE_INPUT = document.getElementById(
       'cargarProveedores'
     ) as HTMLInputElement;
     const FILE = FILE_INPUT.files?.[0];
     if (FILE) {
-      const VALID_FILE_REGEX = /\.(xls|xlsx)$/i;
-      if (!VALID_FILE_REGEX.test(FILE.name)) {
-        alert('Por favor, cargue un archivo en formato Excel (.xlsx o .xls).');
-        return;
-      }
-
-      const READER = new FileReader();
-      READER.onload = (e): void => {
-        const DATA = new Uint8Array(e.target?.result as ArrayBuffer);
-        const WORKBOOK = XLSX.read(DATA, { type: 'array' });
-        const JSON_DATA = XLSX.utils.sheet_to_json(
-          WORKBOOK.Sheets[WORKBOOK.SheetNames[0]],
-          { header: 1 }
-        );
-
-        const EXPECTED_COLUMNS = 5;
-        const FIRST_ROW = JSON_DATA[0] as string[];
-        if (FIRST_ROW.length !== EXPECTED_COLUMNS) {
-          console.log('El número de columnas del archivo es incorrecto.');
-          if (this.errorModalElement) {
-            const MODAL_INSTANCE = new Modal(
-              this.errorModalElement.nativeElement
-            );
-            // this.cerrarModal();
-            MODAL_INSTANCE.show();
-          }
-        }
-
-        console.log('Los registros se realizaron correctamente', JSON_DATA);
-        if (this.confirmarModalElement) {
-          const MODAL_INSTANCE = new Modal(
-            this.confirmarModalElement.nativeElement
+      if (VALID_FILE_REGEX.test(FILE.name)) {
+        const READER = new FileReader();
+        READER.onload = (e): void => {
+          const DATA = new Uint8Array(e.target?.result as ArrayBuffer);
+          const WORKBOOK = XLSX.read(DATA, { type: 'array' });
+          const JSON_DATA = XLSX.utils.sheet_to_json(
+            WORKBOOK.Sheets[WORKBOOK.SheetNames[0]],
+            { header: 1 }
           );
-          // this.cerrarModal();
-          MODAL_INSTANCE.show();
-        }
-        // alert('Los registros se realizaron correctamente.');
-      };
 
-      READER.readAsArrayBuffer(FILE);
-    } else {
-      alert('Por favor, seleccione un archivo para cargar.');
+          const EXPECTED_COLUMNS = 5;
+          const FIRST_ROW = JSON_DATA[0] as string[];
+          if (FIRST_ROW.length === EXPECTED_COLUMNS) {
+            if (this.confirmarModalElement) {
+              const MODAL_INSTANCE = new Modal(
+                this.confirmarModalElement.nativeElement
+              );
+              MODAL_INSTANCE.show();
+            }
+          } else {
+            if (this.errorModalElement) {
+              const MODAL_INSTANCE = new Modal(
+                this.errorModalElement.nativeElement
+              );
+              MODAL_INSTANCE.show();
+            }
+          }
+        };
+
+        READER.readAsArrayBuffer(FILE);
+      }
     }
   }
 
   /**
-   * Cierra el modal actual.
-   */
-  cerrarModal(): void {
-    if (this.closeModal) {
-      this.closeModal.nativeElement.click();
-    }
-  }
-
-  /**
-   * Establece el valor de un campo en el store de Tramite31601.
+   * Establece el valor de un campo en el store de Tramite32201.
    * @param form - El grupo de formularios que contiene el campo.
    * @param campo - El nombre del campo cuyo valor se va a establecer.
    * @param metodoNombre - El nombre del método en el store que se utilizará para establecer el valor.
@@ -199,9 +177,9 @@ export class SolicitudComponent implements OnInit {
   setValoresStore(
     form: FormGroup,
     campo: string,
-    metodoNombre: keyof Tramite31601Store
+    metodoNombre: keyof Tramite32201Store
   ): void {
-    const valor = form.get(campo)?.value;
-    (this.tramite31601Store[metodoNombre] as (value: any) => void)(valor);
+    const FIELD_VALUE = form.get(campo)?.value;
+    (this.tramite32201Store[metodoNombre] as (value: unknown) => void)(FIELD_VALUE);
   }
 }

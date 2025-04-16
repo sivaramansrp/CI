@@ -16,7 +16,7 @@ import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
     SolicitudPageComponent,
     PasoUnoComponent,
     PasoTresComponent,
-    PasoDosComponent
-  ]
+    PasoDosComponent,
+  ],
 })
 export class AnexoVeintiochoModule { }
