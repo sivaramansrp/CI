@@ -6,54 +6,180 @@ import { Injectable } from '@angular/core';
  * @description Define el estado inicial para el trámite 32502.
  */
 export interface Solicitud32502State {
-  
-  numeroSerie: string;
-  folioTipo: string;
-  tipoBusquedaAviso: string;
-  tipoBusqueda: string;
- 
   /**
-   * Estado de la solicitud.
+   * Número de serie del vehículo.
    */
-  adace: string;
-  pais: string;
-  anio: string;
+  numeroSerie: string;
 
   /**
    * Folio del tipo de aviso.
    */
-  numeroNIV: string; 
-  anoModelo: string;
-  marca: string; 
-  modelo: string;
-  tipoVariante: string;
-  cilindros: string;
-  puertas: string;
-  combustible: string;
-  propiedad: string;
-  nombreTitulo: string;
-  paisEmitio: string;
-  provinciaEmision: string;
-  procedencia: string;
-  vehiculoImportado: string;
-  exportacion: string;
-  
+  folioTipo: string;
 
-//Datos de la importación /**
+  /**
+   * Tipo de búsqueda para el aviso.
+   */
+  tipoBusquedaAviso: string;
+
+  /**
+   * Tipo de búsqueda general.
+   */
+  tipoBusqueda: string;
+
+  /**
+   * Estado de la solicitud.
+   */
+  adace: string;
+
+  /**
+   * País relacionado con la solicitud.
+   */
+  pais: string;
+
+  /**
+   * Año relacionado con la solicitud.
+   */
+  anio: string;
+
+  /**
+   * Número NIV del vehículo.
+   */
+  numeroNIV: string;
+
+  /**
+   * Año del modelo del vehículo.
+   */
+  anoModelo: string;
+
+  /**
+   * Marca del vehículo.
+   */
+  marca: string;
+
+  /**
+   * Modelo del vehículo.
+   */
+  modelo: string;
+
+  /**
+   * Tipo o variante del vehículo.
+   */
+  tipoVariante: string;
+
+  /**
+   * Número de cilindros del vehículo.
+   */
+  cilindros: string;
+
+  /**
+   * Número de puertas del vehículo.
+   */
+  puertas: string;
+
+  /**
+   * Tipo de combustible del vehículo.
+   */
+  combustible: string;
+
+  /**
+   * Propiedad relacionada con el vehículo.
+   */
+  propiedad: string;
+
+  /**
+   * Nombre en el título de propiedad.
+   */
+  nombreTitulo: string;
+
+  /**
+   * País que emitió el título de propiedad.
+   */
+  paisEmitio: string;
+
+  /**
+   * Provincia de emisión del título de propiedad.
+   */
+  provinciaEmision: string;
+
+  /**
+   * Procedencia del vehículo.
+   */
+  procedencia: string;
+
+  /**
+   * Indica si el vehículo es importado.
+   */
+  vehiculoImportado: string;
+
+  /**
+   * Información sobre la exportación del vehículo.
+   */
+  exportacion: string;
+
+  /**
+   * Aduana de importación del vehículo.
+   */
   aduanaImportacion: string;
+
+  /**
+   * Patente de importación del vehículo.
+   */
   patenteImportacion: string;
+
+  /**
+   * Pedimento de importación del vehículo.
+   */
   pedimentoImportacion: string;
+
+  /**
+   * Valor en la aduana del vehículo.
+   */
   valorAduana: string;
-  kilometraje:string;
-  montoIGI:string;
-  formaPagoIGI:string;
-  montoDTA:string;
-  montoIVA:string;
-  valorDolares:string;
-  folioCFDI:string;
-  folioVenta:string;
-  valorVenta:string;
-  
+
+  /**
+   * Kilometraje del vehículo al momento de la importación.
+   */
+  kilometraje: string;
+
+  /**
+   * Monto del IGI pagado.
+   */
+  montoIGI: string;
+
+  /**
+   * Forma de pago del IGI.
+   */
+  formaPagoIGI: string;
+
+  /**
+   * Monto del DTA pagado.
+   */
+  montoDTA: string;
+
+  /**
+   * Monto del IVA pagado.
+   */
+  montoIVA: string;
+
+  /**
+   * Valor del vehículo en dólares.
+   */
+  valorDolares: string;
+
+  /**
+   * Folio del CFDI relacionado con el aviso.
+   */
+  folioCFDI: string;
+
+  /**
+   * Folio de la venta del vehículo.
+   */
+  folioVenta: string;
+
+  /**
+   * Valor de la venta del vehículo.
+   */
+  valorVenta: string;
 }
 /**
  * @function createInitialState

@@ -43,25 +43,10 @@
             <ng-titulo titulo="Tipo de aviso" />
             <div class="row">
                 <div class="col-md-12">
-                    <div class="col-md-5">
-                        <div class="radio">
-                            <label>
-                                <input type="radio" id="idRadioAviso" formControlName="tipoBusqueda" value="Manual"
-                                    class="form-check-input"
-                                    (change)="setValoresStore(adaceForm, 'tipoBusqueda', 'setTipoBusqueda');mostrarCampos()">
-                                Manual
-                            </label>
-                        </div>
-                    </div>
-                    <div class="col-md-5">
-                        <div class="radio">
-                            <label>
-                                <input type="radio" id="idRadioAviso" value="Carga masiva"
-                                    formControlName="tipoBusqueda" class="form-check-input"
-                                    (change)="setValoresStore(adaceForm, 'tipoBusqueda', 'setTipoBusqueda');mostrarCampos();">
-                                Carga masiva
-                            </label>
-                        </div>
+                    <div class="col-md-6">
+                        <app-input-radio [radioOptions]="radioTipoAviso" formControlName="tipoBusqueda"
+                            [layout]="'horizontal'"
+                            (change)="setValoresStore(adaceForm, 'tipoBusqueda', 'setTipoBusqueda');mostrarCampos()"></app-input-radio>
                     </div>
                 </div>
             </div>
@@ -84,8 +69,7 @@
                     <button type="button" class="btn btn-primary ms-3" [disabled]="false" (click)="datosDelAviso()">
                         Modificar
                     </button>
-                    <button type="button" class="btn btn-primary ms-3" [disabled]="false"
-                    (click)="datosDelAviso()">
+                    <button type="button" class="btn btn-primary ms-3" [disabled]="false" (click)="datosDelAviso()">
                         Agregar
                     </button>
                 </div>
@@ -96,7 +80,7 @@
 
         <ng-container *ngIf="datosCargaMasiva">
             <app-carga-masiva></app-carga-masiva>
-          
+
         </ng-container>
 
         <ng-container formGroupName="adaceForm" *ngIf="esPopupAbierto">
@@ -109,11 +93,17 @@
                             <div class="row align-items-center">
                                 <ng-titulo titulo="Tipo de operación" />
                                 <div class="row">
-                                    <div class="col-md-12">
+                                    <div class="col-md-12 d-flex align-items-center">
                                         <div class="col-md-4">
                                             Datos del tipo de registro*:
                                         </div>
-                                        <div class="col-md-2">
+
+                                        <div class="col-md-8">
+                                            <app-input-radio [radioOptions]="radioOpcionsAviso"
+                                                formControlName="tipoBusquedaAviso" [layout]="'horizontal'"
+                                                (change)="setValoresStore(adaceForm, 'tipoBusquedaAviso', 'setTipoBusquedaAviso');mostrarCamposAviso()"></app-input-radio>
+                                        </div>
+                                        <!-- <div class="col-md-2">
                                             <div class="radio">
                                                 <label>
                                                     <input type="radio" id="idRadioAviso"
@@ -143,7 +133,7 @@
                                                     Importación y venta
                                                 </label>
                                             </div>
-                                        </div>
+                                        </div> -->
                                     </div>
                                 </div>
                                 <br><br>
@@ -155,27 +145,9 @@
                                                 ¿Cuentas con el folio VUCEM de la importación?
                                             </div>
                                             <div class="col-md-3">
-                                                <div class="radio">
-                                                    <label>
-                                                        <input type="radio" id="idRadioAviso"
-                                                            formControlName="folioTipo" value="Si"
-                                                            class="form-check-input"
-                                                            (change)="setValoresStore(adaceForm, 'folioTipo', 'setFolioTipo');mostrarCamposAviso()">
-                                                        Si
-                                                    </label>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-3">
-                                                <div class="radio">
-
-                                                    <label>
-                                                        <input type="radio" id="idRadioAviso"
-                                                            formControlName="folioTipo" value="No"
-                                                            class="form-check-input"
-                                                            (change)="setValoresStore(adaceForm, 'folioTipo', 'setFolioTipo');mostrarCamposAviso()">
-                                                        No
-                                                    </label>
-                                                </div>
+                                                <app-input-radio [radioOptions]="radioOpcions"
+                                                    formControlName="folioTipo" [layout]="'horizontal'"
+                                                    (change)="setValoresStore(adaceForm, 'folioTipo', 'setFolioTipo');mostrarCamposAviso()"></app-input-radio>
                                             </div>
                                         </div>
 
@@ -193,7 +165,7 @@
                                     </div>
                                 </div>
                             </ng-container>
-                           
+
                             <ng-container *ngIf="datosDelVehiculo">
                                 <ng-titulo titulo="Datos del vehículo" />
                                 <div class="row">
@@ -220,7 +192,7 @@
                                     </div>
                                 </div>
 
-                               
+
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="col-md-4 mb-3">
@@ -246,7 +218,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                
+
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="col-md-4 mb-3">
@@ -277,7 +249,7 @@
                                     </div>
                                 </div>
 
-                                
+
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="col-md-12 mb-3">
@@ -341,7 +313,7 @@
                                     </div>
                                 </div>
                             </ng-container>
-                         
+
 
                             <ng-container *ngIf="datosDelImportacion">
                                 <ng-titulo titulo="Datos de la importación" />
@@ -455,7 +427,7 @@
                                 </div>
                             </ng-container>
 
-                            
+
 
                             <ng-container *ngIf="datosDelVenta">
                                 <ng-titulo titulo="Datos de la venta en territorio nacional" />
