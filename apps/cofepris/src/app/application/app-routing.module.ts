@@ -327,7 +327,14 @@ const ROUTES: Routes = [
     import('./tramites/260505/permiso-transformacion-maquila.module').then(
       (m) => m.PermisoTransformacionMaquilaModule
     ),
-}
+},
+{
+      path: 'actualizacion-importacion',
+      loadChildren: () =>
+        import('./tramites/260903/actualizacion-importacion-sanitaria.module').then(
+          (m) => m.ActualizacionImportacionSanitariaModule
+        ),
+},
 
 ];
 
