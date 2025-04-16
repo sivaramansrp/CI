@@ -54,6 +54,11 @@ export class SolicitudPageComponent implements OnInit, OnDestroy {
    */
   destroyNotifier$: Subject<void> = new Subject();
 
+  /**
+   * Indica si la opción de transportación está habilitada o no.
+   * Este campo es un indicador booleano que se utiliza para determinar
+   * si se requiere o se incluye transportación en el flujo actual.
+   */
   transportacion: boolean = false;
 
   /**
