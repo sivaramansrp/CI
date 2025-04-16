@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import {
   Catalogo,
   CatalogoSelectComponent,
@@ -16,8 +16,8 @@ import {
 } from '@libs/shared/data-access-user/src';
 import { AprovechamientoTextos, FECHA_INICIAL, FECHA_PAGO, RADIO_OPCIONS, RADIO_PARCIAL, RADIO_TOTAL } from '../constantes/adace32508.enum';
 import { AdaceService } from '../services/adace.service';
-import { ReplaySubject, takeUntil } from 'rxjs';
-import { Tramite32508Store } from '../state/Tramite32508.store';
+import { map, ReplaySubject, takeUntil } from 'rxjs';
+import { Solicitud32508State, Tramite32508Store } from '../state/Tramite32508.store';
 import { Tramite32508Query } from '../state/Tramite32508.query';
 
 @Component({
@@ -36,7 +36,7 @@ import { Tramite32508Query } from '../state/Tramite32508.query';
   templateUrl: './aviso.component.html',
   styleUrl: './aviso.component.css',
 })
-export class AvisoComponent implements OnInit {
+export class AvisoComponent implements OnInit ,OnDestroy {
   avisoForm!: FormGroup;
   radioOpcions = RADIO_OPCIONS;
   radioPartial = RADIO_PARCIAL;
@@ -52,6 +52,7 @@ export class AvisoComponent implements OnInit {
   public pedimentos: Array<Pedimento> = [];
   cargarArchivo: boolean = false;
   nombreArchivo: string = '';
+public solicitudState!: Solicitud32508State;
 
   public anoCatalogo: CatalogosSelect = {
     labelNombre: 'Año del periodo reportado',
@@ -71,10 +72,24 @@ export class AvisoComponent implements OnInit {
     private store: Tramite32508Store,
     private query: Tramite32508Query,
     private validacionesService: ValidacionesFormularioService
-  ) { }
+  ) { 
+    // Constructor utilizado para la creación de objetos requeridos en el componente
+  }
+
   ngOnInit(): void {
-    this.obtenerDatosAnoPeriodo();
-    this.obtenerDatosMesPeriodo();
+   
+     this.query.selectSolicitud$
+          .pipe(
+            takeUntil(this.destroyed$),
+            map((seccionState) => {
+              this.solicitudState = seccionState;
+            })
+          )
+          .subscribe();
+        this.donanteDomicilio();
+
+        this.obtenerDatosAnoPeriodo();
+        this.obtenerDatosMesPeriodo();
   }
 
   obtenerDatosAnoPeriodo(): void {
@@ -131,9 +146,9 @@ export class AvisoComponent implements OnInit {
 
   cambioFechaInitial(nuevo_fechaPago: string): void {
     this.avisoForm.patchValue({
-      fechaPago: nuevo_fechaPago,
+      fechaElaboracion: nuevo_fechaPago,
     });
-    this.setValoresStore(this.avisoForm, 'fechaInitial', 'setFechaInitial');
+    this.setValoresStore(this.avisoForm, 'fechaElaboracion', 'setFechaElaboracion');
   }
 
   validarDestinatarioFormulario(): void {
@@ -153,12 +168,30 @@ export class AvisoComponent implements OnInit {
     (this.store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
 
-  /**
-   * Inicializa el formulario con los valores actuales del estado.
-   */
   donanteDomicilio(): void {
     this.avisoForm = this.fb.group({
-      
+      claveFiscalizado: [this.solicitudState?.claveFiscalizado, [Validators.required]],
+      tipoDictamen: [this.solicitudState?.tipoDictamen, [Validators.required]],
+      rfc: [this.solicitudState?.rfc, [Validators.required]],
+      numeroInscripcion: [this.solicitudState?.numeroInscripcion, [Validators.required]],
+      ano: [this.solicitudState?.ano, [Validators.required]],
+      mes: [this.solicitudState?.mes, [Validators.required]],
+      radioPartial: [this.solicitudState?.radioPartial, [Validators.required]],
+      radioTotal: [this.solicitudState?.radioTotal, [Validators.required]],
+      saldoPendiente: [this.solicitudState?.saldoPendiente, [Validators.required]],
+      aprovechamiento: [this.solicitudState?.aprovechamiento, [Validators.required]],
+      disminucionAplicada: [this.solicitudState?.disminucionAplicada, [Validators.required]],
+      saldoPendienteDisminuir: [this.solicitudState?.saldoPendienteDisminuir, [Validators.required]],
+      cantidad: [this.solicitudState?.cantidad, [Validators.required]],
+      llaveDePago: [this.solicitudState?.llaveDePago, [Validators.required]],
+      fechaElaboracion: [this.solicitudState?.fechaElaboracion, [Validators.required]],
+      fechaPago: [this.solicitudState?.fechaPago, [Validators.required]],
+      archivo: [this.solicitudState?.archivo, [Validators.required]],
     });
+  }
+
+  ngOnDestroy(): void {
+    this.destroyed$.next(true);
+    this.destroyed$.complete();
   }
 }

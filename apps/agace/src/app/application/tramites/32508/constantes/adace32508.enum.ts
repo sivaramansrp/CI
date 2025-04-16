@@ -31,7 +31,6 @@ export const FECHA_INICIAL = {
   labelNombre: 'Fecha de elaboración del dictamen',
   required: true,
   habilitado: true,
-  readonly: true,
 };
 
 /**

@@ -16,7 +16,7 @@ export interface Catalogo {
  */
 export interface Solicitud32508State {
  
-  claveFiscalizador: string;
+  claveFiscalizado: string;
   tipoDictamen: string;
   rfc: string;
   numeroInscripcion: string;
@@ -32,7 +32,7 @@ export interface Solicitud32508State {
   llaveDePago: string;
   archivo:File[];
   fechaPago: string;
-  fechaInitial: string;
+  fechaElaboracion: string;
 }
 
 /**
@@ -41,7 +41,7 @@ export interface Solicitud32508State {
  */
 export function createInitialState(): Solicitud32508State {
   return {
-    claveFiscalizador: '',
+    claveFiscalizado: '',
     tipoDictamen: '',
     rfc: '',
     numeroInscripcion: '',
@@ -57,7 +57,7 @@ export function createInitialState(): Solicitud32508State {
     llaveDePago: '',
     archivo: [], 
     fechaPago: '',
-    fechaInitial:'',
+    fechaElaboracion:'',
     
   };
 }
@@ -79,8 +79,8 @@ export class Tramite32508Store extends Store<Solicitud32508State> {
     super(createInitialState());
   }
 
-  public setClaveFiscalizador(claveFiscalizador: string) {
-    this.update((state) => ({ ...state, claveFiscalizador }));
+  public setClaveFiscalizador(claveFiscalizado: string) {
+    this.update((state) => ({ ...state, claveFiscalizado }));
   }
 
   public setTipoDictamen(tipoDictamen: string) {
@@ -142,8 +142,8 @@ export class Tramite32508Store extends Store<Solicitud32508State> {
   public setFechaPago(fechaPago: string) {
     this.update((state) => ({ ...state, fechaPago }));
   }
- public setFechaInitial(fechaInitial: string) {
-    this.update((state) => ({ ...state, fechaInitial }));
+ public setFechaElaboracion(fechaElaboracion: string) {
+    this.update((state) => ({ ...state, fechaElaboracion }));
   }
 
   /**
