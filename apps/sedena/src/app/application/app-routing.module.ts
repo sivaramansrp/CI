@@ -12,13 +12,13 @@ const ROUTES: Routes = [
     path: 'permiso-ordinario-importacion-armas-municiones',
     loadChildren: () =>
       import(
-        './tramites/240108/permiso-ordinario-importacion-armas-municiones.module'
+        './tramites/240101/permiso-ordinario-importacion-armas-municiones.module'
       ).then((m) => m.PermisoOrdinarioImportacionArmasMunicionesModule),
   },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(ROUTES)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}
