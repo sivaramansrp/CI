@@ -1,5 +1,5 @@
 import { Catalogo, ConfiguracionColumna } from '@libs/shared/data-access-user/src';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { CONFIGURACIONCOLUMNA } from '../../enums/tramite-asociados.enum';
 import { Solicitud261401State } from '../../../../estados/tramites/tramite261401.store';
@@ -13,7 +13,7 @@ import { takeUntil } from 'rxjs';
   selector: 'app-paso-uno',
   templateUrl: './paso-uno.component.html',
 })
-export class PasoUnoComponent implements OnInit {
+export class PasoUnoComponent implements OnInit,OnDestroy {
   indice: number = 1;
 
   configuracionTabla: ConfiguracionColumna<TramiteAsociados>[] = CONFIGURACIONCOLUMNA;
@@ -91,5 +91,10 @@ export class PasoUnoComponent implements OnInit {
   }): void {
     const VALOR = $event.formularioPagoDerechos.get($event.campo)?.value;
     this.tramite261401Store.actualizarEstado({[$event.campo]: VALOR});
+  }
+
+  ngOnDestroy(): void {
+    this.notificadorDestruccion$.next();
+    this.notificadorDestruccion$.complete();
   }
 }

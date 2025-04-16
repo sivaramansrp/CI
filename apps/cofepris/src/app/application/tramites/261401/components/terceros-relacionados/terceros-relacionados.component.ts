@@ -1,5 +1,5 @@
 import { AlertComponent, TablaDinamicaComponent, TituloComponent } from '@ng-mf/data-access-user';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
 import { DESTINATARIO_ENCABEZADO_DE_TABLA } from '../../enums/destinatario.enum';
@@ -25,7 +25,7 @@ import { takeUntil } from 'rxjs';
   templateUrl: './terceros-relacionados.component.html',
   styleUrl: './terceros-relacionados.component.scss',
 })
-export class TercerosRelacionadosComponent implements OnInit {
+export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
   MENSAJE_TABLA_OBLIGATORIA = MENSAJE_TABLA_OBLIGATORIA;
   public infoAlert = 'alert-info';
   configuracionTablaDestinatarioFinal: ConfiguracionColumna<Destinatario>[] = DESTINATARIO_ENCABEZADO_DE_TABLA;
@@ -54,6 +54,10 @@ export class TercerosRelacionadosComponent implements OnInit {
           this.tramite261401Store.setDestinatarioDatos(respuesta);
         },
       });
+  }
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 
 }
