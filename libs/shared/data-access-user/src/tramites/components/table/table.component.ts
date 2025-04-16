@@ -70,5 +70,6 @@ export class TableComponent implements OnInit, OnChanges {
     if (changes[TBODYDATA]?.currentValue) {
       this.tableData.tableBody = changes[TBODYDATA]?.currentValue;
     }
+
   }
 }
