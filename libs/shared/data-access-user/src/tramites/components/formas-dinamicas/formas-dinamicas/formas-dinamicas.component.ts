@@ -126,14 +126,6 @@ export class FormasDinamicasComponent implements ControlValueAccessor, OnInit {
 
   /**
   * compo doc
-  * Valor seleccionado del radio.
-  * @type {string}
-  * @memberof FormasDinamicasComponent
-  */
-  public valorSeleccionado!: string;
-
-  /**
-  * compo doc
   * valor del ancho de la pantalla.
   * @type {number}
   * @memberof FormasDinamicasComponent
@@ -212,20 +204,20 @@ export class FormasDinamicasComponent implements ControlValueAccessor, OnInit {
   * utilizando los datos del formulario pasados como entrada a este componente
   */
   inicializarFormulario(): void {
-    if (!this.formularioDatos || !Array.isArray(this.formularioDatos)) {
+    if (!this.formularioDatos || !Array.isArray(this.formularioDatos) || this.formularioDatos.length === 0) {
       return;
     }
   
     const FORMGROUP: { [key: string]: ReturnType<FormBuilder['control']> } = {};
     this.formularioDatos.forEach(campo => {
-      if (campo.tipo_input === 'button') {
+      if (!campo || !campo.campo || campo.tipoInput === 'button' || campo.tipoInput === '') {
         return;
       }
   
       if (!this.forma?.contains(campo.campo)) {
         const VALIDADORES = FormasDinamicasComponent.obtenerValidadores(campo.validadores ?? []);
         FORMGROUP[campo.campo] = this.fb.control(
-          { value: this.estado && this.estado[campo.campo] ? this.estado[campo.campo] : campo.valor_predeterminado, disabled: campo.desactivado },
+          { value: this.estado && this.estado[campo.campo] ? this.estado[campo.campo] : campo.valorPredeterminado, disabled: campo.desactivado },
           { validators: VALIDADORES }
         );
       }
@@ -352,17 +344,6 @@ export class FormasDinamicasComponent implements ControlValueAccessor, OnInit {
     if (campo && event) {
       this.emitirCambioDeValor.emit({ campo: campo, valor: VALOR });
     }
-  }
-
-  /**
-  * compo doc
-  * @method cambiarRadio
-  * @description 
-  * Cambia el valor seleccionado del radio.
-  * @param value Valor seleccionado.
-  */
-  cambiarRadio(value: string | number): void {
-    this.valorSeleccionado = value as string;
   }
 
   /**
