@@ -1,5 +1,6 @@
-export interface DropdownList {
-  id: number | string;
-  name: string;
+export interface VehiculosTabla {
+  id: number;
+  marca: string;
+  modelo: string;
+  Vin: string;
 }
-

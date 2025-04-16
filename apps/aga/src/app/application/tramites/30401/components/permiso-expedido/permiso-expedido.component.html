@@ -18,9 +18,6 @@
             (change)="setValoresStore(inicializarFormulario, 'numeroFolioPermiso')"
           />
           <div *ngIf="esInvalido('numeroFolioPermiso')" class="text-danger">
-            <small *ngIf="inicializarFormulario.controls['numeroFolioPermiso'].hasError('required')"
-              >Required</small
-            >
             <small
             *ngIf="
               inicializarFormulario.controls['calle'].hasError('maxlength')

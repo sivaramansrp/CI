@@ -1,8 +1,3 @@
-/**
- * Importa módulos y utilidades de Angular necesarios para formularios reactivos, validación y observables
- * @packageDocumentation
- * @module PagoDeDerechosComponent
- */
 import { Catalogo, CrosslistComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { ChangeDetectorRef, Component, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -18,6 +13,22 @@ import { Tramite30401Query } from '../../estados/tramites30401.query';
 import { Tramites30401State } from '../../estados/tramites30401.store';
 import { permisoComponent } from '../permiso-expedido/permiso-expedido.component';
 
+/**
+ * @packageDocumentation
+ * @module EmpresasTransportistasComponent
+ * 
+ * Este componente es responsable de gestionar el formulario reactivo para las empresas transportistas.
+ * Proporciona funcionalidades para la creación, validación y manejo de datos relacionados con las empresas transportistas.
+ */
+
+/**
+ * Importa módulos y utilidades necesarias para el funcionamiento del componente.
+ * - Angular: Formularios reactivos, validación, ciclo de vida, etc.
+ * - Servicios: `RegistroEmpresasTransporteService` para obtener datos relacionados.
+ * - Componentes: Componentes reutilizables como `CrosslistComponent`, `TituloComponent`, etc.
+ * - RxJS: Manejo de observables y suscripciones.
+ */
+
 @Component({
   selector: 'app-empresas-transportistas',
   standalone: true,
@@ -28,24 +39,96 @@ import { permisoComponent } from '../permiso-expedido/permiso-expedido.component
 })
 export class EmpresasTransportistasComponent implements OnInit, OnDestroy {
 
+  
+  /**
+   * @property {FormGroup} empresasForm
+   * Formulario reactivo que contiene los controles y validaciones para los datos de las empresas transportistas.
+   */
   public empresasForm!: FormGroup;
+
+  /**
+   * @property {Subject<void>} destroyed$
+   * Observable utilizado para manejar la destrucción de suscripciones y evitar fugas de memoria.
+   */
   public destroyed$ = new Subject<void>();
+
+  /**
+   * @property {Observable<Catalogo[]>} tipoTransitoList$
+   * Observable que contiene la lista de tipos de tránsito.
+   */
   public tipoTransitoList$!: Observable<Catalogo[]>;
+
+  /**
+   * @property {Observable<Catalogo[]>} entidadFederativaList$
+   * Observable que contiene la lista de entidades federativas.
+   */
   public entidadFederativaList$!: Observable<Catalogo[]>;
+
+  /**
+   * @property {Observable<Catalogo[]>} delegacionMunicipioList$
+   * Observable que contiene la lista de delegaciones o municipios.
+   */
   public delegacionMunicipioList$!: Observable<Catalogo[]>;
+
+  /**
+   * @property {Observable<string>} cveFolioCaat$
+   * Observable que contiene el valor del folio CAAT.
+   */
   public cveFolioCaat$!: Observable<string>;
+
+  /**
+   * @property {Observable<Catalogo[]>} coloniaList$
+   * Observable que contiene la lista de colonias.
+   */
   public coloniaList$!: Observable<Catalogo[]>;
+
+  /**
+   * @property {string} CAPITAL_SOCIAL_NOTA
+   * Nota relacionada con el capital social.
+   */
   public CAPITAL_SOCIAL_NOTA = NOTA.CAPITAL_SOCIAL_NOTA;
+
+  /**
+   * @property {string} MI_REPRESENTADA_NOTA
+   * Nota relacionada con la representación.
+   */
   public MI_REPRESENTADA_NOTA = NOTA.MI_REPRESENTADA_NOTA;
 
+  /**
+   * @property {QueryList<CrosslistComponent>} crossList
+   * Lista de componentes `CrosslistComponent` utilizados en el formulario.
+   */
   @ViewChildren(CrosslistComponent) crossList!: QueryList<CrosslistComponent>;
 
-   public aduanasAutorizadas = CROSLISTA_ENTRADA;
-   public seleccionarAduanasEntrada = CROSLISTA_ENTRADA;
-   public seleccionadasAduanasEntradaDatos: string[] = [];
-   public seccionState!: Tramites30401State;
-  
-   aduanasEntradaBotons = [
+  /**
+   * @property {any} aduanasAutorizadas
+   * Lista de aduanas autorizadas.
+   */
+  public aduanasAutorizadas = CROSLISTA_ENTRADA;
+
+  /**
+   * @property {any} seleccionarAduanasEntrada
+   * Lista de aduanas seleccionadas para entrada.
+   */
+  public seleccionarAduanasEntrada = CROSLISTA_ENTRADA;
+
+  /**
+   * @property {string[]} seleccionadasAduanasEntradaDatos
+   * Datos de las aduanas seleccionadas.
+   */
+  public seleccionadasAduanasEntradaDatos: string[] = [];
+
+  /**
+   * @property {Tramites30401State} seccionState
+   * Estado actual del formulario.
+   */
+  public seccionState!: Tramites30401State;
+
+  /**
+   * @property {Array} aduanasEntradaBotons
+   * Configuración de los botones para gestionar las aduanas de entrada.
+   */
+  aduanasEntradaBotons = [
     {
       btnNombre: 'Agregar',
       class: 'btn-primary',
@@ -69,24 +152,24 @@ export class EmpresasTransportistasComponent implements OnInit, OnDestroy {
   ];
 
   /**
-   * Constructor para inyectar los servicios y las tiendas necesarias.
-   * @param fb - FormBuilder para formularios reactivos.
-   * @param tramite30401Store - Tienda para gestionar el estado del formulario.
-   * @param tramite30401Query - Servicio de consulta para acceder a los datos del store.
-   * @param Servicio - Servicio para obtener la lista de bancos.
+   * @constructor
+   * Constructor para inyectar los servicios y dependencias necesarias.
+   * @param {FormBuilder} fb - Servicio para construir formularios reactivos.
+   * @param {Tramite30401Query} tramite30401Query - Servicio para consultar datos del estado.
+   * @param {RegistroEmpresasTransporteService} Servicio - Servicio para obtener datos relacionados con empresas transportistas.
+   * @param {ChangeDetectorRef} cdr - Servicio para detectar cambios en el DOM.
    */
   constructor(
     public fb: FormBuilder,
     private tramite30401Query: Tramite30401Query,
     private Servicio: RegistroEmpresasTransporteService,
     private cdr: ChangeDetectorRef,
-  ) {
-     // No se necesita lógica de inicialización adicional.
-  }
+  ) {}
 
   /**
-   * Maneja el cambio de selección de países de origen.
-   * @param events Lista de países seleccionados.
+   * @method aduanasEntradaSeleccionadasChange
+   * Maneja el cambio de selección de aduanas de entrada.
+   * @param {string[]} events - Lista de aduanas seleccionadas.
    */
   aduanasEntradaSeleccionadasChange(events: string[]): void {
     this.seleccionadasAduanasEntradaDatos = events;
@@ -96,7 +179,8 @@ export class EmpresasTransportistasComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Hook de ciclo de vida para inicializar la lógica del componente y cargar datos.
+   * @method ngOnInit
+   * Hook de ciclo de vida para inicializar el componente.
    */
   ngOnInit(): void {
     this.enPatchStoredFormData();
@@ -105,7 +189,8 @@ export class EmpresasTransportistasComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Crea el formulario reactivo con las reglas de validación para cada control.
+   * @method crearForm
+   * Crea el formulario reactivo con sus controles y validaciones.
    */
   crearForm(): void {
     this.empresasForm = this.fb.group({
@@ -134,51 +219,54 @@ export class EmpresasTransportistasComponent implements OnInit, OnDestroy {
         miRepresentada: [this.seccionState?.miRepresentada, Validators.requiredTrue],
       })
     });
-}
+  }
 
-
+  /**
+   * @method obtenerlistadescargable
+   * Obtiene las listas necesarias para llenar los selectores del formulario.
+   */
   obtenerlistadescargable(): void {
     this.tipoTransitoList$ = this.Servicio.tipoTransitoList();
     this.entidadFederativaList$ = this.Servicio.entidadFederativaList();
     this.delegacionMunicipioList$ = this.Servicio.delegacionMunicipioList();
     this.coloniaList$ = this.Servicio.coloniaList();
     this.cveFolioCaat$ = this.Servicio.cveFolioCaat().pipe(
-      map((datos:{id?:number; value: string}) => {
-      return datos.value
-      })
+      map((datos: { id?: number; value: string }) => datos.value)
     );
-    this.cdr.detectChanges()
+    this.cdr.detectChanges();
   }
 
   /**
-   * Actualiza el formulario con datos obtenidos desde la tienda.
+   * @method enPatchStoredFormData
+   * Actualiza el formulario con los datos almacenados en el estado.
    */
   public enPatchStoredFormData(): void {
     this.tramite30401Query.selectTramite30401$
-      .pipe(
-        takeUntil(this.destroyed$)
-      ).subscribe((datos: Tramites30401State) => {
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((datos: Tramites30401State) => {
         this.seccionState = datos;
       });
   }
 
   /**
-   * Verifica si un control del formulario es inválido, tocado o modificado.
+   * @method esInvalido
+   * Verifica si un control del formulario es inválido.
    * @param {string} nombreControl - Nombre del control a verificar.
-   * @returns {boolean} - True si el control es inválido, de lo contrario false.
+   * @returns {boolean} - `true` si el control es inválido, de lo contrario `false`.
    */
   public esInvalido(nombreControl: string): boolean {
     const CONTROL = this.empresasForm.get(nombreControl);
-    return CONTROL
-      ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty)
-      : false;
+    return CONTROL ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty) : false;
   }
 
-   /**
-   * Método de ciclo de vida de Angular que se ejecuta al destruir el componente.
+  /**
+   * @method ngOnDestroy
+   * Hook de ciclo de vida que se ejecuta al destruir el componente.
+   * Libera recursos y suscripciones.
    */
-   ngOnDestroy(): void {
+  ngOnDestroy(): void {
     this.destroyed$.next();
     this.destroyed$.complete();
   }
+  
 }

@@ -4,6 +4,10 @@ import { InputCheckComponent, TituloComponent } from '@libs/shared/data-access-u
 import { CommonModule } from '@angular/common';
 import { Tramite30401Store } from '../../estados/tramites30401.store';
 
+/**
+ * Componente que representa un permiso expedido.
+ * Este componente es parte del flujo de trabajo del trámite 30401.
+ */
 @Component({
   selector: 'app-permiso-expedido',
   standalone: true,
@@ -12,11 +16,36 @@ import { Tramite30401Store } from '../../estados/tramites30401.store';
   styleUrl: './permiso-expedido.component.scss',
 })
 export class permisoComponent implements OnInit {
+  /**
+   * Formulario inicializado para gestionar los datos del componente.
+   */
   inicializarFormulario!: FormGroup;
-  @Input() grupoDeFormulario!:string;
-  @Input() titulo!:string;
-  @Input() capitalSocialNota!:string;
-  @Input() miRepresentadaNota!:string;
+
+  /**
+   * Nombre del grupo de formulario que será utilizado.
+   */
+  @Input() grupoDeFormulario!: string;
+
+  /**
+   * Título que se mostrará en el componente.
+   */
+  @Input() titulo!: string;
+
+  /**
+   * Nota sobre el capital social que se mostrará en el formulario.
+   */
+  @Input() capitalSocialNota!: string;
+
+  /**
+   * Nota sobre la representada que se mostrará en el formulario.
+   */
+  @Input() miRepresentadaNota!: string;
+
+  /**
+   * Constructor del componente.
+   * @param grupoDeFormaRaiz - Directiva que proporciona acceso al formulario raíz.
+   * @param tramite30401Store - Servicio para gestionar el estado del trámite 30401.
+   */
 
   constructor(
     public grupoDeFormaRaiz: FormGroupDirective,
@@ -25,6 +54,10 @@ export class permisoComponent implements OnInit {
      // No se necesita lógica de inicialización adicional.
   }
 
+  /**
+   * Método de inicialización del componente.
+   * Obtiene el grupo de formulario correspondiente del formulario raíz.
+   */
   ngOnInit(): void {
     this.inicializarFormulario = this.grupoDeFormaRaiz.control.get(this.grupoDeFormulario) as FormGroup;
   }

@@ -1,6 +1,6 @@
 import { Store, StoreConfig } from '@datorama/akita';
-import { Catalogo } from '@libs/shared/data-access-user/src';
 import { Injectable } from '@angular/core';
+import { VehiculosTabla } from '../modelos/registro-empresas-transporte.model';
 
 
 /**
@@ -14,7 +14,7 @@ export interface Tramites30401State {
   llaveDePago: string;
   fecPago: string;
   impPago: string;
-  efectuarElPago:boolean;
+  manifiestoDeclaracion:boolean;
 
   cveFolioCaat: string;
   tipoTransito: string;
@@ -32,6 +32,7 @@ export interface Tramites30401State {
   fechaExpedicion: string;
   elCapitalSocial: boolean;
   miRepresentada: boolean;
+  vehiculosTablaDatos:VehiculosTabla[];
 
 }
 
@@ -45,7 +46,7 @@ export function createInitialState(): Tramites30401State {
     llaveDePago: '',
     fecPago: '',
     impPago: '',
-    efectuarElPago:false,
+    manifiestoDeclaracion:false,
 
     cveFolioCaat: '',
     tipoTransito: '',
@@ -63,6 +64,7 @@ export function createInitialState(): Tramites30401State {
     fechaExpedicion: '',
     elCapitalSocial: false,
     miRepresentada: false,
+    vehiculosTablaDatos:[]
   };
 }
 
@@ -82,55 +84,15 @@ export class Tramite30401Store extends Store<Tramites30401State> {
     }));
   }
 
-
-  public setEfectuarElPago(efectuarElPago: boolean) {
+  /**
+   * method vetVehiculosTablaDatos
+   * description Actualiza los datos de la tabla de mercancías en el estado.
+   * param {ConfiguracionItem[]} vehiculosTablaDatos Datos de la tabla de mercancías.
+   */
+  public setVehiculosTablaDatos(vehiculosTablaDatos: VehiculosTabla[]): void {
     this.update((state) => ({
       ...state,
-      efectuarElPago,
+      vehiculosTablaDatos,
     }));
   }
-
-
-  public setClaveDeReferencia(claveDeReferencia: string) {
-    this.update((state) => ({
-      ...state,
-      claveDeReferencia,
-    }));
-  }
-
-  public setCadenaPagoDependencia(cadenaPagoDependencia: string) {
-    this.update((state) => ({
-      ...state,
-      cadenaPagoDependencia,
-    }));
-  }
-
-  public setClave(clave: string) {
-    this.update((state) => ({
-      ...state,
-      clave,
-    }));
-  }
-
-  public setLlaveDePago(llaveDePago: string) {
-    this.update((state) => ({
-      ...state,
-      llaveDePago,
-    }));
-  }
-
-  public setFecPago(fecPago: string) {
-    this.update((state) => ({
-      ...state,
-      fecPago,
-    }));
-  }
-
-  public setImpPago(impPago: string) {
-    this.update((state) => ({
-      ...state,
-      impPago,
-    }));
-  }
-  
 }

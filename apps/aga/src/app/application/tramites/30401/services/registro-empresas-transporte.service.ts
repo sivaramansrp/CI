@@ -23,25 +23,56 @@ export class RegistroEmpresasTransporteService {
        // Si es necesario, se puede agregar aquí la lógica de inicialización
   }
 
-  onBancoList(): Observable<Catalogo[]> {
-    return this.http.get<Catalogo[]>('assets/json/30401/banco-list.json');
-  }
+  /**
+ * Obtiene la lista de bancos desde un archivo JSON local.
+ * 
+ * @returns Un observable que emite un arreglo de objetos de tipo `Catalogo`.
+ */
+onBancoList(): Observable<Catalogo[]> {
+  return this.http.get<Catalogo[]>('assets/json/30401/banco-list.json');
+}
 
-  tipoTransitoList(): Observable<Catalogo[]> {
-    return this.http.get<Catalogo[]>('assets/json/30401/tipode-transito-list.json');
-  }
+/**
+* Obtiene la lista de tipos de tránsito desde un archivo JSON local.
+* 
+* @returns Un observable que emite un arreglo de objetos de tipo `Catalogo`.
+*/
+tipoTransitoList(): Observable<Catalogo[]> {
+  return this.http.get<Catalogo[]>('assets/json/30401/tipode-transito-list.json');
+}
 
-  entidadFederativaList(): Observable<Catalogo[]> {
-    return this.http.get<Catalogo[]>('assets/json/30401/entidad-federativa-list.json');
-  }
-  delegacionMunicipioList(): Observable<Catalogo[]> {
-    return this.http.get<Catalogo[]>('assets/json/30401/municipio-delegacion-list.json');
-  }
+/**
+* Obtiene la lista de entidades federativas desde un archivo JSON local.
+* 
+* @returns Un observable que emite un arreglo de objetos de tipo `Catalogo`.
+*/
+entidadFederativaList(): Observable<Catalogo[]> {
+  return this.http.get<Catalogo[]>('assets/json/30401/entidad-federativa-list.json');
+}
 
-  coloniaList(): Observable<Catalogo[]> {
-    return this.http.get<Catalogo[]>('assets/json/30401/colonia-list.json');
-  }
+/**
+* Obtiene la lista de delegaciones o municipios desde un archivo JSON local.
+* 
+* @returns Un observable que emite un arreglo de objetos de tipo `Catalogo`.
+*/
+delegacionMunicipioList(): Observable<Catalogo[]> {
+  return this.http.get<Catalogo[]>('assets/json/30401/municipio-delegacion-list.json');
+}
 
+/**
+* Obtiene la lista de colonias desde un archivo JSON local.
+* 
+* @returns Un observable que emite un arreglo de objetos de tipo `Catalogo`.
+*/
+coloniaList(): Observable<Catalogo[]> {
+  return this.http.get<Catalogo[]>('assets/json/30401/colonia-list.json');
+}
+
+/**
+* Obtiene el folio CAAT desde un archivo JSON local.
+* 
+* @returns Un observable que emite un objeto con un identificador opcional (`id`) y un valor (`value`).
+*/
   cveFolioCaat(): Observable<{id?:number; value: string}> {
     return this.http.get<{id?:number; value: string}>('assets/json/30401/numero-caat.json');
   }

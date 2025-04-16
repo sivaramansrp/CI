@@ -92,20 +92,6 @@ describe('EmpresasTransportistasComponent', () => {
     expect(component.seccionState.tipoTransito).toBe('someValue');
   });
 
-  
-  it('should update seleccionadasAduanasEntradaDatos on aduanasEntradaSeleccionadasChange', () => {
-    const events = ['Aduana1', 'Aduana2'];
-    component.aduanasEntradaSeleccionadasChange(events);
-    expect(component.seleccionadasAduanasEntradaDatos).toEqual(events);
-    expect(component.empresasForm.get('cboAduanasActuar')?.value).toEqual(events);
-  });
-  
-  it('should update seleccionadasAduanasEntradaDatos on aduanasEntradaSeleccionadasChange', () => {
-    const events = ['Aduana1', 'Aduana2'];
-    component.aduanasEntradaSeleccionadasChange(events);
-    expect(component.seleccionadasAduanasEntradaDatos).toEqual(events);
-    expect(component.empresasForm.get('cboAduanasActuar')?.value).toEqual(events);
-  });
 
   it('should return true for esInvalido if control is invalid, touched, or dirty', () => {
     component.ngOnInit();
