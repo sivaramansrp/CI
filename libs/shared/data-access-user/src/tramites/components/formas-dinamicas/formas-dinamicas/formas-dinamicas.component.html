@@ -143,6 +143,27 @@
                         
                       </div>
                     </div>
+                  } @case ('date') {
+                    <div [ngClass]="[obtenerClaseResponsiva(item.clase), 'mt-' + item.margin_top]" class="min-height">
+                      <div class="form-group">
+                        <label class="form-label" [for]="item.id">{{
+                          item.label_nombre
+                        }}</label>
+                        <input 
+                          type="date"
+                          class="form-control"
+                          [id]="item.id"
+                          [formControlName]="item.campo"
+                          [required]="seRequiere(item.campo)"  
+                          [readonly]="item.solo_lectura"
+                          [ngClass]="esValido(item.campo) ? 'required' : ''">
+                        <validadores-de-formularios 
+                          [forma]="forma" 
+                          [controlDeFormulario]="item.campo" 
+                          [validadores]="item.validadores ?? []"
+                        ></validadores-de-formularios>
+                      </div>
+                    </div>
                   }
             }
     }
