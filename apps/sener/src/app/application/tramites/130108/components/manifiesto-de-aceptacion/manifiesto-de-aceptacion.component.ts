@@ -80,31 +80,7 @@ import { TituloComponent } from '@ng-mf/data-access-user';
  * Este componente se utiliza dentro de un flujo de trámites donde el usuario debe aceptar ciertos términos o condiciones.
  * A través de este componente, se gestionan las interacciones del usuario con el manifiesto y las alertas relacionadas.
  */
-export class ManifiestoDeAceptacionComponent {
- 
-  /**
-   * @constructor
-   * @descripcion
-   * El constructor del componente. Actualmente no realiza ninguna acción específica, pero está preparado para
-   * realizar inicializaciones o inyectar dependencias si fuera necesario en el futuro.
-   * El constructor es utilizado por Angular para crear instancias de la clase y asociarlas con el ciclo de vida del componente.
-   */
-  constructor() {
-    // Constructor vacío, actualmente no se requiere lógica adicional en este momento.
-  }
- 
-  /**
-   * @metodo
-   * @nombre ngOnInit
-   * @descripcion
-   * Método de ciclo de vida de Angular que se ejecuta cuando el componente es inicializado.
-   * En este momento, se pueden realizar tareas de configuración o inicialización si fuera necesario.
-   * Aunque no se usa explícitamente en este componente, puede ser implementado para agregar lógica adicional.
-   */
-  // ngOnInit() {
-  //   // Lógica de inicialización, si fuera necesario.
-  // }
-}
+export class ManifiestoDeAceptacionComponent {}
  
  
  
