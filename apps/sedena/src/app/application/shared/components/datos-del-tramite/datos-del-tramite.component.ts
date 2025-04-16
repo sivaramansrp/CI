@@ -1,4 +1,4 @@
-import { CROSLISTA_ADUANAS_DISPONIBLES, DATOS_DEL_TRAMITE_MAP, PAISE_DENTINO_EITIQUETA, PERIODO_DOS_SEMESTRE, PERIODO_SEMESTRE_HABILITADO, PERIODO_UNO_SEMESTRE, PERMISO_DEFINITIVO_TITULO } from '../../constants/datos-del-tramilte.enum';
+import { CROSLISTA_ADUANAS_DISPONIBLES, DATOS_DEL_TRAMITE_MAP, FETCHA_PAGO, MANIFIESTOS_DECLARACIONES, PAISE_DENTINO_EITIQUETA, PERIODO_DOS_SEMESTRE, PERIODO_SEMESTRE_HABILITADO, PERIODO_UNO_SEMESTRE, PERMISO_ADUNA_TITULO, PERMISO_DEFINITIVO_TITULO } from '../../constants/datos-del-tramilte.enum';
 import { CrossListLable, InputCheckComponent, InputRadioComponent } from '@ng-mf/data-access-user';
 import { FormBuilder, FormControl } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
@@ -7,8 +7,12 @@ import { Component } from '@angular/core';
 import { CrosslistComponent } from '@ng-mf/data-access-user';
 import { DatosDelTramiteFormState } from '../../models/datos-del-tramite.model';
 import { EventEmitter } from '@angular/core';
+import { FECHA_DE_PAGO } from '../../models/datos-del-tramite.model';
 import { FormGroup } from '@angular/forms';
 import { Input } from '@angular/core';
+import { InputFecha } from '@ng-mf/data-access-user';
+import { InputFechaComponent } from '@ng-mf/data-access-user';
+import { MANIFIESTOS_DECLARACION } from '../../models/datos-del-tramite.model';
 import { MERCANCIA_ENCABEZADO_DE_TABLA } from '../../models/datos-del-tramite.model';
 import { MercanciaDetalle } from '../../models/datos-del-tramite.model';
 import { OnDestroy } from '@angular/core';
@@ -38,8 +42,9 @@ import { takeUntil } from 'rxjs';
     ReactiveFormsModule,
     TablaDinamicaComponent,
     InputRadioComponent,
-    InputCheckComponent
-  ],
+    InputCheckComponent,
+    InputFechaComponent
+],
   templateUrl: './datos-del-tramite.component.html',
   styleUrl: './datos-del-tramite.component.css',
 })
@@ -56,7 +61,9 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
   public estaOculto = false;
   public paisEtiqueta = PAISE_DENTINO_EITIQUETA;
   public periodoHabilitado = false;
-
+  public esAduna = false;
+  public manifiestosDeclaraciones = false;
+  public fetchaPago = false;
   public periodoUnoSemestreOpciones = PERIODO_UNO_SEMESTRE;
   public periodoUnoSemestreRadioOpciones = PERIODO_DOS_SEMESTRE;
 
@@ -93,6 +100,33 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    * @property {FormGroup} form
    */
   form!: FormGroup;
+
+  /**
+ * Texto de los manifiestos.
+ */
+    manifiestosTexto: string = '';
+  /**
+   * @property {InputFecha} fechaInicioInput
+   * Objeto con la configuración de la fecha inicial del componente.
+   */
+  fechaInicioInput: InputFecha = FECHA_DE_PAGO;
+  /**
+   * @method onReset
+   * @description Limpia todos los campos del formulario de pago de derechos.
+   */
+  onReset(): void {
+    this.form.reset();
+  }
+
+  /**
+   * @method onFechaCambiada
+   * @description Actualiza la Fecha única de pago en el formulario.
+   *
+   * @param {string} fecha - Fecha seleccionada en el componente `InputFecha`.
+   */
+  onFechaCambiada(fecha: string): void {
+    this.form.patchValue({ fechaPago: fecha });
+  }
 
   /**
    * Estado inicial del formulario del trámite, recibido desde el componente padre.
@@ -148,10 +182,14 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
         { value: 'MEXICO (ESTADOS UNIDOS MEXICANOS)', disabled: true },
       ],
       usoFinal: ['', Validators.required],
-
+      fechaPago: [
+        this.datosDelTramiteFormState?.fechaPago || '',
+        Validators.required,
+      ],
       unoSemestre: [this.datosDelTramiteFormState.unoSemestre ?? null],
       dosSemestre: [this.datosDelTramiteFormState.dosSemestre ?? null],
       anoEnCurso: [this.datosDelTramiteFormState.anoEnCurso ?? false],
+      informacionConfidencial: [this.datosDelTramiteFormState.informacionConfidencial ?? false],
     });
   }
 
@@ -185,6 +223,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.crearFormaulario();
+    this.manifiestosTexto = MANIFIESTOS_DECLARACION.MANIFIESTOS;
     this.form.patchValue({
       permisoGeneral: this.datosDelTramiteFormState.permisoGeneral,
       usoFinal: this.datosDelTramiteFormState.usoFinal,
@@ -206,6 +245,8 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
           usoFinal: formValue.usoFinal,
           aduanasSeleccionadas: this.seleccionarAduanasDisponiblesDatos,
           anoEnCurso: formValue.anoEnCurso,
+          fechaPago: formValue.fechaPago,
+          informacionConfidencial: formValue.informacionConfidencial,
           dosSemestre: formValue.dosSemestre,
           unoSemestre: formValue.unoSemestre,
         };
@@ -213,8 +254,10 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
       });
 
       this.estaOculto = PERMISO_DEFINITIVO_TITULO.includes(this.idProcedimiento);
+      this.esAduna = PERMISO_ADUNA_TITULO.includes(this.idProcedimiento);
       this.periodoHabilitado = PERIODO_SEMESTRE_HABILITADO.includes(this.idProcedimiento);
-
+      this.manifiestosDeclaraciones = MANIFIESTOS_DECLARACIONES.includes(this.idProcedimiento);
+      this.fetchaPago = FETCHA_PAGO.includes(this.idProcedimiento);
   }
 
   /**
