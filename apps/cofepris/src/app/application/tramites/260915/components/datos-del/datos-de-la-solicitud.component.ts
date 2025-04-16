@@ -526,6 +526,7 @@ onAgregar(){
       return;
     }
     this.abrirModal();
+    
   }
   
   
@@ -547,11 +548,13 @@ onAgregar(){
 
     /** Maneja la selección de filas */
     onfilasSeleccionadas(filasSeleccionadas: FilaData[] | FilaData2[]): void {
-      console.log('onfilasSeleccionadas triggered with:', filasSeleccionadas);
-    
-      if (filasSeleccionadas.length > 0 && 'id' in filasSeleccionadas[0]) {
-        this.filasSeleccionadas = new Set(filasSeleccionadas.map((row) => Number(row.id)));
-      } else if (filasSeleccionadas.length > 0 && 'claveScianG' in filasSeleccionadas[0] && 'claveScian' in filasSeleccionadas[0].claveScianG) {
+      console.log('onfilasSeleccionadas triggered with:', filasSeleccionadas[0]);
+       if (filasSeleccionadas.length > 0 && 'clasificaionProductos' in filasSeleccionadas[0]) {
+        console.log("sravani");
+        this.filasSeleccionadas = new Set((filasSeleccionadas as FilaData2[]).map((row) => row.id));
+       }
+      else if (filasSeleccionadas.length > 0 && 'claveScianG' in filasSeleccionadas[0] && 'claveScian' in filasSeleccionadas[0].claveScianG) {
+        console.log("hello")
         this.filasSeleccionadas = new Set((filasSeleccionadas as FilaData[]).map((row) => Number(row.claveScianG.claveScian)));
       } else {
         this.filasSeleccionadas.clear();
@@ -559,6 +562,7 @@ onAgregar(){
     
       console.log('Updated selected rows set:', Array.from(this.filasSeleccionadas));
     }
+    
 
   onSubmit() {
     const formData = { ...this.clavaScianForm.value };
@@ -608,32 +612,88 @@ onSave() {
       (item: Catalogo) => String(item.id) === String(formData.estadoFisico)
     )?.descripcion || formData.estadoFisico;
   
-    
-    // Add the extracted data to the tableData2 array
-    this.mercanciasData.push(formData);
+    if (this.indiceFilaSeleccionada !== null) {
+      // Update the existing row in mercanciasData
+      this.mercanciasData[this.indiceFilaSeleccionada] = { ...this.mercanciasData[this.indiceFilaSeleccionada], ...formData };
+      console.log('Updated row:', this.mercanciasData[this.indiceFilaSeleccionada]);
+      this.indiceFilaSeleccionada = null; // Reset the index
+    } else {
+      // Add a new row if no row is being modified
+      this.mercanciasData.push(formData);
+    }
 
     // Reset the form
     this.dataDeLaSolicitudForm.reset();
   
 }
-onDeleted(){
-  // if (!this.filasSeleccionadas || this.filasSeleccionadas.size === 0) {
-  //   console.warn('No rows selected for deletion.');
-  //   return;
-  // }
+onDeleted(): void {
+  if (!this.filasSeleccionadas || this.filasSeleccionadas.size === 0) {
+    console.warn('No rows selected for deletion.');
+    return;
+  }
 
-  console.log('Rows selected for deletion:', Array.from(this.filasSeleccionadas));
-  console.log('Data before deletion:', this.mercanciasData);
+  // Filter out the selected rows from the tableData array
+  this.mercanciasData = this.mercanciasData.filter((row) => !this.filasSeleccionadas.has(row.id));
 
-  this.mercanciasData = this.mercanciasData.filter((row) => {
-    const rowId = row.id; // Assuming each row in mercanciasData has a unique 'id'
-    return !this.filasSeleccionadas.has(Number(rowId));
+  // Clear the selection after deletion
+  this.filasSeleccionadas.clear();
+
+  console.log('Updated table data:', this.tableData);
+}
+onModificar(): void {
+  if (!this.filasSeleccionadas || this.filasSeleccionadas.size !== 1) {
+    console.warn('Please select exactly one row to modify.');
+    return;
+  }
+
+  // Get the selected row's ID
+  const selectedId = Array.from(this.filasSeleccionadas)[0];
+
+  // Find the selected row in the data
+  const selectedRowIndex = this.mercanciasData.findIndex((row) => row.id === selectedId);
+
+  if (selectedRowIndex === -1) {
+    console.warn('Selected row not found in the data.');
+    return;
+  }
+
+  
+  // Set the index of the selected row for later modification
+  this.indiceFilaSeleccionada = selectedRowIndex;
+
+  const selectedRow = this.mercanciasData[selectedRowIndex];
+
+
+  // Populate the form with the selected row's data
+  this.dataDeLaSolicitudForm.patchValue(this.mercanciasData[selectedRowIndex]);
+
+  console.log('Selected row:', selectedRow);
+
+  // Manually map the fields to the form
+  this.dataDeLaSolicitudForm.patchValue({
+    descripcionFraccionArancelaria: selectedRow.descripcionFraccionArancelaria,
+    cantidadUMT: selectedRow.cantidadUMT,
+    umt: selectedRow.umt,
+    cantidadUMC: selectedRow.cantidadUMC,
+    umc: selectedRow.umc,
+    tipoProducto: selectedRow.tipoProducto,
+    clasificaionProductos: selectedRow.clasificaionProductos,
+    especificarProducto: selectedRow.especificarProducto,
+    nombreProductoEspecifico: selectedRow.nombreProductoEspecifico,
+    denominacionDistintiva: selectedRow.denominacionDistintiva,
+    denominacionNombre: selectedRow.denominacionNombre,
+    estadoFisico: selectedRow.estadoFisico,
+    presentacionFarmaceutica: selectedRow.presentacionFarmaceutica,
+    fraccionArancelaria: selectedRow.fraccionArancelaria,
   });
 
-  // Clear the selection
-  this.filasSeleccionadas.clear();
+  // Open the modal
+  const modalElement = document.getElementById('modalAgregarMercancia');
+  if (modalElement) {
+    const modalInstance = new Modal(modalElement);
+    modalInstance.show();
+  }
 }
-
 setValoresStore(
   form: FormGroup,
   campo: string,

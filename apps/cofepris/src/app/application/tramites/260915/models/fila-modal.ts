@@ -21,7 +21,7 @@ export interface FilaData {
 export interface FilaData2 {
   /** Identificador único de la fila. */
   id: number;
-
+  
   /** Clasificación de los productos. */
   clasificaionProductos: string;
 
@@ -74,6 +74,7 @@ export interface FilaData2 {
  * Interfaz que representa los datos de una fila con información adicional.
  */
 export interface FilaData3 {
+  id: number;
   /** Justificación del trámite. */
   justification: string;
 

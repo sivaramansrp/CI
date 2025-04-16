@@ -214,11 +214,11 @@
       <div class="col-md-12 mt-4">
         <label class="form-label mb-5" for="">mercancías*:</label>
         <app-tabla-dinamica 
-         [tipoSeleccionTabla]="tipoSeleccionsoliMercancias"
-          [configuracionTabla]="mercanciasDatos"
-          [datos]="mercanciasData"
-          (listaDeFilaSeleccionada)="onfilasSeleccionadas($event)">
-          </app-tabla-dinamica>
+  [tipoSeleccionTabla]="tipoSeleccionsoliMercancias"
+  [configuracionTabla]="mercanciasDatos"
+  [datos]="mercanciasData"
+  (listaDeFilaSeleccionada)="onfilasSeleccionadas($event)">
+</app-tabla-dinamica>
       </div>
      
       <div class="modal fade" id="modalAgregarMercancia" tabindex="-1" aria-labelledby="modalAgregarMercanciaLabel" aria-hidden="true">
@@ -406,7 +406,7 @@
       
 <div class="col-md-12 d-flex justify-content-end">
   <button type="button" class="btn btn-primary" name="eliminar" id="btneliminar" (click)="onDeleted()">Eliminar</button>
-  <button type="button" class="btn btn-primary" name="modificar" id="btnmodificar">Modificar</button>
+  <button type="button" class="btn btn-primary" name="modificar" id="btnmodificar" (click)="onModificar()">Modificar</button>
   <button type="button" class="btn btn-primary" name="agregarAduana" id="btnagregarAduana" data-bs-toggle="modal" data-bs-target="#modalAgregarMercancia" (click)="agregarMercanciaGrid()">Agregar</button>
 </div>
   <ng-titulo titulo="Manifiestos y declaraciones" />
