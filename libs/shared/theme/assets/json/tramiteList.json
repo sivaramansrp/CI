@@ -1304,8 +1304,8 @@
     {
         "id": 187,
         "tramite": 231003,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "/semarnat/aviso-de-reciclaje/datos",
+        "linkDepartment": "/semarnat/aviso-de-reciclaje/datos",
         "department": "semarnat"
     },
     {
