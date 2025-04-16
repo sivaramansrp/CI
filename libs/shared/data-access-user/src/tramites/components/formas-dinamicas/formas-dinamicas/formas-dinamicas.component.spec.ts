@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormasDinamicasComponent } from './formas-dinamicas.component';
-import { ReactiveFormsModule, FormBuilder, Validators, FormControl, AbstractControl, FormGroup } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, Validators, FormControl, FormGroup } from '@angular/forms';
 import { ModeloDeFormaDinamica } from '@libs/shared/data-access-user/src/core/models/shared/forms-model';
 
 describe('FormasDinamicasComponent', () => {
@@ -21,16 +21,16 @@ describe('FormasDinamicasComponent', () => {
     component.forma = formBuilder.group({});
     component.formularioDatos = [
       {
-        label_nombre: 'RFC',
+        labelNombre: 'RFC',
         campo: 'rfc',
         clase: 'col-md-4',
-        tipo_input: 'text',
+        tipoInput: 'text',
         validadores: [{ tipo: 'required' }],
         desactivado: false,
-        solo_lectura: false,
+        soloLectura: false,
       },
     ];
-    component.state = {
+    component.estado = {
       rfc: '',
       nombre: 'Mock Name',
       apellidoPaterno: 'Mock Surname',
@@ -71,7 +71,7 @@ describe('FormasDinamicasComponent', () => {
     component.forma = new FormGroup({
       rfc: new FormControl('1234567890', Validators.required),
     });
-    const result = component.isValid('rfc');
+    const result = component.esValido('rfc');
     expect(validacionesServiceMock.isValid).toHaveBeenCalledWith(component.forma, 'rfc');
     expect(result).toBe(true);
   });
@@ -90,7 +90,7 @@ describe('FormasDinamicasComponent', () => {
     component.forma = new FormGroup({
       rfc: new FormControl('', Validators.required),
     });
-    const result = component.isValid('rfc');
+    const result = component.esValido('rfc');
     expect(validacionesServiceMock.isValid).toHaveBeenCalledWith(component.forma, 'rfc');
     expect(result).toBe(false);
   });
@@ -109,7 +109,7 @@ describe('FormasDinamicasComponent', () => {
     component.forma = new FormGroup({
       nombre: new FormControl('John Doe', Validators.required),
     });
-    const result = component.isValid('rfc');
+    const result = component.esValido('rfc');
     expect(validacionesServiceMock.isValid).toHaveBeenCalledWith(component.forma, 'rfc');
     expect(result).toBeNull();
   });
@@ -121,10 +121,10 @@ describe('FormasDinamicasComponent', () => {
     );
 
     const item: ModeloDeFormaDinamica = {
-      label_nombre: 'Mock Label',
+      labelNombre: 'Mock Label',
       campo: 'mockCampo',
       clase: 'mockClase',
-      tipo_input: 'text',
+      tipoInput: 'text',
       desactivado: false,
       validadores: [{ tipo: 'required' }, { tipo: 'maxLength' }],
     };
@@ -134,10 +134,10 @@ describe('FormasDinamicasComponent', () => {
 
   it('should return false when validadores does not contain "required"', () => {
     const item: ModeloDeFormaDinamica = {
-      label_nombre: 'Mock Label',
+      labelNombre: 'Mock Label',
       campo: 'mockCampo',
       clase: 'mockClase',
-      tipo_input: 'text',
+      tipoInput: 'text',
       desactivado: false,
       validadores: [{ tipo: 'maxLength' }],
     };
@@ -147,10 +147,10 @@ describe('FormasDinamicasComponent', () => {
 
   it('should return false when validadores is an empty array', () => {
     const item: ModeloDeFormaDinamica = {
-      label_nombre: 'Mock Label',
+      labelNombre: 'Mock Label',
       campo: 'mockCampo',
       clase: 'mockClase',
-      tipo_input: 'text',
+      tipoInput: 'text',
       desactivado: false,
       validadores: [],
     };
@@ -160,10 +160,10 @@ describe('FormasDinamicasComponent', () => {
 
   it('should return false when validadores is undefined', () => {
     const item: ModeloDeFormaDinamica = {
-      label_nombre: 'Mock Label',
+      labelNombre: 'Mock Label',
       campo: 'mockCampo',
       clase: 'mockClase',
-      tipo_input: 'text',
+      tipoInput: 'text',
       desactivado: false,
       validadores: undefined,
     };
@@ -171,49 +171,39 @@ describe('FormasDinamicasComponent', () => {
     expect(result).toBe(false);
   });
 
-  it('should update valorSeleccionado with a string value', () => {
-    component.cambiarRadio('testValue');
-    expect(component.valorSeleccionado).toBe('testValue');
-  });
-
-  it('should update valorSeleccionado with an empty string', () => {
-    component.cambiarRadio('');
-    expect(component.valorSeleccionado).toBe('');
-  });
-
   it('should return "col-12" for screen width between 768 and 991', () => {
-    component.screenWidth = 800;
-    const result = component.getResponsiveClass('col-md-4');
+    component.anchoDePantalla = 800;
+    const result = component.obtenerClaseResponsiva('col-md-4');
     expect(result).toBe('col-12');
   });
 
   it('should return the provided clase for screen width greater than 991', () => {
-    component.screenWidth = 1024;
-    const result = component.getResponsiveClass('col-md-4');
+    component.anchoDePantalla = 1024;
+    const result = component.obtenerClaseResponsiva('col-md-4');
     expect(result).toBe('col-md-4');
   });
 
   it('should return "col-12" for screen width less than 768', () => {
-    component.screenWidth = 600;
-    const result = component.getResponsiveClass('col-md-4');
+    component.anchoDePantalla = 600;
+    const result = component.obtenerClaseResponsiva('col-md-4');
     expect(result).toBe('col-12');
   });
 
   it('should return "col-12" for screen width exactly 768', () => {
-    component.screenWidth = 768;
-    const result = component.getResponsiveClass('col-md-4');
+    component.anchoDePantalla = 768;
+    const result = component.obtenerClaseResponsiva('col-md-4');
     expect(result).toBe('col-12');
   });
 
   it('should return "col-12" for screen width exactly 991', () => {
-    component.screenWidth = 991;
-    const result = component.getResponsiveClass('col-md-4');
+    component.anchoDePantalla = 991;
+    const result = component.obtenerClaseResponsiva('col-md-4');
     expect(result).toBe('col-12');
   });
 
   it('should return an empty string when screen width is greater than 991 and clase is empty', () => {
-    component.screenWidth = 1024;
-    const result = component.getResponsiveClass('');
+    component.anchoDePantalla = 1024;
+    const result = component.obtenerClaseResponsiva('');
     expect(result).toBe('');
   });
 
@@ -221,13 +211,13 @@ describe('FormasDinamicasComponent', () => {
     jest.spyOn(component.emitirEventoDeClic, 'emit');
     const mockItem: ModeloDeFormaDinamica = {
       id: 'button1',
-      label_nombre: 'Click Me',
+      labelNombre: 'Click Me',
       campo: 'submit',
       clase: 'btn-primary',
-      tipo_input: 'button',
+      tipoInput: 'button',
       desactivado: false
     };
-    component.onButtonClick(mockItem);
+    component.alHacerClicEnElBoton(mockItem);
     expect(component.emitirEventoDeClic.emit).toHaveBeenCalledWith(mockItem);
   });
 
@@ -236,24 +226,24 @@ describe('FormasDinamicasComponent', () => {
   
     const mockItem1: ModeloDeFormaDinamica = {
       id: 'button1',
-      label_nombre: 'First Button',
+      labelNombre: 'First Button',
       campo: 'save',
       clase: 'btn-primary',
-      tipo_input: 'button',
+      tipoInput: 'button',
       desactivado: false
     };
   
     const mockItem2: ModeloDeFormaDinamica = {
       id: 'button2',
-      label_nombre: 'Second Button',
+      labelNombre: 'Second Button',
       campo: 'cancel',
       clase: 'btn-secondary',
-      tipo_input: 'button',
+      tipoInput: 'button',
       desactivado: true
     };
   
-    component.onButtonClick(mockItem1);
-    component.onButtonClick(mockItem2);
+    component.alHacerClicEnElBoton(mockItem1);
+    component.alHacerClicEnElBoton(mockItem2);
   
     expect(component.emitirEventoDeClic.emit).toHaveBeenCalledTimes(2);
     expect(component.emitirEventoDeClic.emit).toHaveBeenCalledWith(mockItem1);

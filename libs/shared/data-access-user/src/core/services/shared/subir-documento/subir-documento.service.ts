@@ -9,7 +9,9 @@ import { enviroment } from '../../../../enviroments/enviroment';
 export class SubirDocumentoService {
   private urlServer = enviroment.URL_SERVER_UPLOAD;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+    // Lógica de inicialización si es necesario
+  }
 
   subirDocumento(token: string, file: File): Observable<{ message: string }> {
     const headers = new HttpHeaders({
