@@ -18,9 +18,9 @@ export class Tramite32508Query extends Query<Solicitud32508State> {
 
   /**
    * Selecciona todo el estado de la solicitud.
+   * @returns Un observable que emite el estado completo de la solicitud.
    */
   selectSolicitud$ = this.select((state) => {
     return state;
   });
-
 }

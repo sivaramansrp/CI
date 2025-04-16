@@ -51,7 +51,7 @@ describe('AvisoComponent', () => {
       numeroInscripcion: 'test',
       ano: null,
       mes: null,
-      radioPartial: '',
+      radioParcial: '',
       radioTotal: '',
       saldoPendiente: '',
       aprovechamiento: '',
