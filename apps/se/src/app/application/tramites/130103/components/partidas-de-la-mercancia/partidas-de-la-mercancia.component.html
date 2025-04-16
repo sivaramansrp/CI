@@ -1,0 +1,70 @@
+<div class="container">
+    <form [formGroup]="forma">
+        <div class="row">
+            <ng-titulo titulo="Partidas de la mercancía" />
+        </div>
+        <div class="row">
+            <ng-alert [CONTENIDO]="instrucciones"></ng-alert>
+        </div>
+        <div class="row">
+            <formas-dinamicas [forma]="ninoFormGroup" [formularioDatos]="partidasDeLaMercanciaFormData"
+            [estado]="importacionstate" (emitirCambioDeValor)="establecerCambioDeValor($event)"></formas-dinamicas>
+        </div>
+        <div class="row mt-5">
+            <div class="col-md-8"></div>
+            <div class="col-md-4 text-end">
+            <div class="btn-group">
+                <button
+                class="btn btn-primary me-2"
+                type="button"
+                >
+                Cargar archivo
+                </button>
+                <button
+                class="btn btn-primary ms-2"
+                (click)="agregar()"
+            >
+                Agregar
+            </button>
+            </div>
+            </div>
+        </div>
+        <div class="row mt-5">
+            <ng-alert [CONTENIDO]="instrucciones_para_partidas"></ng-alert>
+        </div>
+        <div class="row">
+            <h6>Partidas:</h6>
+            <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX"  [configuracionTabla]="encabezadoDeTabla"
+                [datos]="datosTabla"></app-tabla-dinamica>
+        </div>
+        <div class="row mt-5">
+            <div class="col-md-6 d-flex justify-content-between">
+                <div class="form-group">
+                    <label class="form-label" for="cantidad_total">Cantidad :</label>
+                    <input
+                      class="form-control"
+                      type="number"
+                      id="cantidad_total"
+                      formControlName="cantidad_total"
+                    />
+                  </div>
+    
+                  <div class="form-group">
+                    <label class="form-label" for="valor_total">Valor total USD :</label>
+                    <input
+                      class="form-control"
+                      type="number"
+                      id="valor_total"
+                      formControlName="valor_total"
+                    />
+                  </div>
+            </div>
+        </div>
+        <div class="row mt-5 text-end">
+            <div>
+                <button type="button" class="btn btn-danger me-2 btn-space" >Eliminar partida</button>
+                <button type="button" class="btn btn-primary btn-space" >Modificar partida</button>
+            </div>
+        </div>
+    </form>
+</div>
