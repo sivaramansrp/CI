@@ -295,6 +295,13 @@ const ROUTES: Routes = [
         (m) => m.PermisoDeImportacionModule)
   },
   {
+    path: 'permiso-sujetos',
+    loadChildren: () =>
+      import(
+        './tramites/260504/permiso-sujetos.module'
+      ).then((m) => m.PermisoSujetosModule),
+  },
+  {
     path: 'permiso-importacion-calidad',
     loadChildren: () =>
       import('./tramites/260514/parmiso-importacion-calidad.module').then(
@@ -320,7 +327,14 @@ const ROUTES: Routes = [
       loadChildren: () =>
       import('./tramites/260201/importacion-psicotropicos-poretorno.module').then(
         (m) => m.ImportacionPsicotropicosPoretornoModule),
-}
+},
+{
+      path: 'actualizacion-importacion',
+      loadChildren: () =>
+        import('./tramites/260903/actualizacion-importacion-sanitaria.module').then(
+          (m) => m.ActualizacionImportacionSanitariaModule
+        ),
+},
 
 ];
 
