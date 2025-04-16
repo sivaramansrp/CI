@@ -4,10 +4,12 @@ import { DatosDelSolicitudModificacionComponent } from '../../shared/components/
 import { DatosSolicitudComponent } from './components/datos-solicitud/datos-solicitud.component';
 import { ModificacionPermisoImportacionComponent } from './pages/modificacion-permiso-importacion/modificacion-permiso-importacion.component';
 import { NgModule } from '@angular/core';
+import { PagoDeDerechosComponent } from '../../shared/components/pago-de-derechos/pago-de-derechos.component';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { PermisoImportacionRoutingModule } from './permiso-importacion-routing.module';
+import { TramitesAsociadosSeccionComponent } from '../../shared/components/tramites-asociados-seccion/tramites-asociados-seccion.component';
 
 @NgModule({
   declarations: [
@@ -16,6 +18,6 @@ import { PermisoImportacionRoutingModule } from './permiso-importacion-routing.m
     PasoDosComponent,
     PasoTresComponent
   ],
-  imports: [CommonModule, PermisoImportacionRoutingModule,BtnContinuarComponent,WizardComponent,SolicitanteComponent,DatosSolicitudComponent,DatosDelSolicitudModificacionComponent],
+  imports: [CommonModule, PermisoImportacionRoutingModule,BtnContinuarComponent,WizardComponent,SolicitanteComponent,DatosSolicitudComponent,DatosDelSolicitudModificacionComponent,PagoDeDerechosComponent,TramitesAsociadosSeccionComponent],
 })
 export class PermisoImportacionModule {}
