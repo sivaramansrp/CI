@@ -175,17 +175,19 @@
         </div>
       </div>
 
-      <div class="row">
-        <ng-titulo titulo="País de origen"></ng-titulo>
-      </div>
-      <div class="row">
-        <crosslist
-          [fechas]="seleccionarOrigenDelPais"
-          [label]="paisDeOriginLabel"
-          [fechasSeleccionadas]="seleccionadasPaisDeOriginDatos"
-          (fechasSeleccionadasChange)="paisDeOriginSeleccionadasChange($event)"
-        ></crosslist>
-      </div>
+      @if(!puedeMostrarLaListaCruzada){
+        <div class="row">
+          <ng-titulo titulo="País de origen"></ng-titulo>
+        </div>
+        <div class="row">
+          <crosslist
+            [fechas]="seleccionarOrigenDelPais"
+            [label]="paisDeOriginLabel"
+            [fechasSeleccionadas]="seleccionadasPaisDeOriginDatos"
+            (fechasSeleccionadasChange)="paisDeOriginSeleccionadasChange($event)"
+          ></crosslist>
+        </div>
+      }
 
       <div class="row mt-5">
         <div class="col-md-12">
