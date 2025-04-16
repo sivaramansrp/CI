@@ -320,7 +320,14 @@ const ROUTES: Routes = [
       loadChildren: () =>
       import('./tramites/260201/importacion-psicotropicos-poretorno.module').then(
         (m) => m.ImportacionPsicotropicosPoretornoModule),
-}
+},
+{
+  path: 'exportacion-materias-primas-estupefacientes',
+  loadChildren: () =>
+    import(
+      './tramites/260302/exportacion-materias-primas-estupefacientes.module'
+    ).then((m) => m.ExportacionMateriasPrimasEstupefacientesModule),
+},
 
 ];
 
