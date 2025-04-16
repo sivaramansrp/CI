@@ -101,9 +101,24 @@ export class ExportacionMineralesDeHierroService {
   getProductoOptions(): Observable<ProductoResponse> {
     return this.http.get<ProductoResponse>('assets/json/130108/producto-otions.json');
   }
+
+  /**
+ * @description
+ * Método para obtener los datos de la tabla de partidas de la mercancía desde un archivo JSON local.
+ * Este método realiza una solicitud HTTP para cargar los datos y los emite como un observable.
+ *
+ * @returns {Observable<PartidasDeLaMercanciaModelo[]>} Observable que emite un arreglo de objetos
+ * de tipo `PartidasDeLaMercanciaModelo`, representando las partidas de la mercancía.
+ *
+ * @example
+ * // Ejemplo de uso:
+ * this.exportacionMineralesDeHierroService.getTablaDatos().subscribe((datos) => {
+ *   console.log(datos);
+ * });
+ */
   getTablaDatos(): Observable<PartidasDeLaMercanciaModelo[]> {
     return this.http.get<PartidasDeLaMercanciaModelo[]>(
-          'assets/json/130108/partidas-de-la.json'
+          'assets/json/130111/partidas-de-la.json'
         );
   }
 }
