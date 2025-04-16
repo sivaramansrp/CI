@@ -1,116 +1,116 @@
 export const REPRESENTANTE_LEGAL = [
     {
       id: 'resigtro',
-      label_nombre: 'Registro Federal de Contribuyentes',
+      labelNombre: 'Registro Federal de Contribuyentes',
       campo: 'resigtro',
       clase: 'col-md-4',
-      tipo_input: 'text',
+      tipoInput: 'text',
       desactivado: false,
-      solo_lectura: false,
+      soloLectura: false,
       validadores: [
         {
           tipo: 'required'
         }
       ],
-      marcador_de_posicion: '',
-      valor_predeterminado: '',
-      margin_top: 0
+      marcadorDePosicion: '',
+      valorPredeterminado: '',
+      marginTop: 0
     },
     {
       id: 'consultarIDC',
-      label_nombre: 'Buscar',
+      labelNombre: 'Buscar',
       campo: 'buscar',
       clase: 'col-md-8',
-      tipo_input: 'button',
+      tipoInput: 'button',
       desactivado: false,
-      margin_top: 5,
+      marginTop: 5,
     },
     {
       id: 'rfc',
-      label_nombre: 'RFC',
+      labelNombre: 'RFC',
       campo: 'rfc',
       clase: 'col-md-4',
-      tipo_input: 'number',
+      tipoInput: 'number',
       desactivado: true,
-      solo_lectura: false,
+      soloLectura: false,
       validadores:[
         {
           tipo: 'required'
         }
       ],
-      marcador_de_posicion: '',
-      margin_top: 3
+      marcadorDePosicion: '',
+      marginTop: 3
     },
     {
       id: 'nombre',
-      label_nombre: 'Nombre',
+      labelNombre: 'Nombre',
       campo: 'nombre',
       clase: 'col-md-4',
-      tipo_input: 'text',
+      tipoInput: 'text',
       desactivado: true,
-      solo_lectura: false,
+      soloLectura: false,
       validadores: [
         { tipo: 'required' }
       ],
-      marcador_de_posicion: '',
-      margin_top: 3
+      marcadorDePosicion: '',
+      marginTop: 3
     },
     {
       id: 'apellidoPaterno',
-      label_nombre: 'Apellido Paterno',
+      labelNombre: 'Apellido Paterno',
       campo: 'apellidoPaterno',
       clase: 'col-md-4',
-      tipo_input: 'text',
+      tipoInput: 'text',
       desactivado: true,
-      solo_lectura: false,
+      soloLectura: false,
       validadores: [
         { tipo: '' }
       ],
-      marcador_de_posicion: '',
-      margin_top: 3
+      marcadorDePosicion: '',
+      marginTop: 3
     },
     {
         id: 'apellidoMaterno',
-        label_nombre: 'Apellido Materno',
+        labelNombre: 'Apellido Materno',
         campo: 'apellidoMaterno',
         clase: 'col-md-4',
-        tipo_input: 'text',
+        tipoInput: 'text',
         desactivado: true,
-        solo_lectura: false,
+        soloLectura: false,
         validadores: [
             { tipo: '' }
         ],
-        marcador_de_posicion: '',
-        margin_top: 3
+        marcadorDePosicion: '',
+        marginTop: 3
     },
     {
         id: 'telefono',
-        label_nombre: 'Teléfono',
+        labelNombre: 'Teléfono',
         campo: 'telefono',
         clase: 'col-md-4',
-        tipo_input: 'text',
+        tipoInput: 'text',
         desactivado: true,
-        solo_lectura: false,
+        soloLectura: false,
         validadores: [
             { tipo: '' }
         ],
-        marcador_de_posicion: '',
-        margin_top: 3
+        marcadorDePosicion: '',
+        marginTop: 3
     },
     {
         id: 'correoElectronico',
-        label_nombre: 'Correo Electrónico',
+        labelNombre: 'Correo Electrónico',
         campo: 'correoElectronico',
         clase: 'col-md-4',
-        tipo_input: 'text',
+        tipoInput: 'text',
         desactivado: true,
-        solo_lectura: false,
+        soloLectura: false,
         validadores:[
             {
             tipo: ''
             }
         ],
-        marcador_de_posicion: '',
-        margin_top: 3
+        marcadorDePosicion: '',
+        marginTop: 3
     }
   ];

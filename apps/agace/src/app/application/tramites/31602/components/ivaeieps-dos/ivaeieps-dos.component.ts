@@ -80,10 +80,10 @@ export class IvaeiepsDosComponent implements OnInit,OnDestroy {
     this.comercioExteriorSvc.getBancoDatos().pipe(takeUntil(this.destroyNotifier$)).subscribe((response) => {
       const API_DATOS = JSON.parse(JSON.stringify(response));
       const DATOS = API_DATOS.data;
-      const BANCO_FIELD: any = this.pagoDeDerechosDatos.find((datos: ModeloDeFormaDinamica) => datos.id === 'banco');
-      if (BANCO_FIELD) {
-        if (!BANCO_FIELD.opciones) {
-          BANCO_FIELD.opciones = DATOS.map((item: { id: number; descripcion: string }) => ({
+      const CLASIFICACION_FIELD = this.pagoDeDerechosDatos.find((datos: ModeloDeFormaDinamica) => datos.id === 'banco') as ModeloDeFormaDinamica;
+      if (CLASIFICACION_FIELD) {
+        if (!CLASIFICACION_FIELD.opciones) {
+          CLASIFICACION_FIELD.opciones = DATOS.map((item: { id: number; descripcion: string }) => ({
             descripcion: item.descripcion,
             id: item.id,
           }));
