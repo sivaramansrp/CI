@@ -7,35 +7,62 @@ import {
 import { Subject, takeUntil } from 'rxjs';
 import { Tramite260703Query } from '../../estados/query/tramite260703.query';
 
+/**
+ * Componente que representa la sección de datos del establecimiento.
+ * Permite capturar y gestionar información relacionada con el establecimiento.
+ */
 @Component({
   selector: 'app-datos-del-establecimiento',
   templateUrl: './datos-del-establecimiento.component.html',
   styleUrl: './datos-del-establecimiento.component.css',
 })
 export class DatosDelEstablecimientoComponent implements OnInit, OnDestroy {
+  /**
+   * Formulario reactivo para capturar los datos del establecimiento.
+   */
   datosDelEstablecimientoForm!: FormGroup;
+
+  /**
+   * Estado actual de la solicitud de permiso.
+   */
   solicitudPermisoState!: SolicitudPermisoState;
 
-  destroy$ = new Subject<void>();
+  /**
+   * Observable utilizado para limpiar las suscripciones al destruir el componente.
+   * Esto ayuda a evitar fugas de memoria.
+   */
+  destruir$ = new Subject<void>();
 
+  /**
+   * Constructor del componente.
+   * @param formBuilder Servicio para construir formularios reactivos.
+   * @param tramite260703Store Servicio para gestionar el estado del trámite.
+   * @param tramitte260703Query Servicio para consultar el estado del trámite.
+   */
   constructor(
     private formBuilder: FormBuilder,
     private tramite260703Store: Tramite260703Store,
     private tramitte260703Query: Tramite260703Query
-  ) {
-    //
-  }
+  ) {}
 
+  /**
+   * Método del ciclo de vida que se ejecuta al inicializar el componente.
+   * Configura las suscripciones necesarias y crea el formulario inicial.
+   */
   ngOnInit(): void {
     this.tramitte260703Query.selectSolicitudPermiso$
-      .pipe(takeUntil(this.destroy$))
+      .pipe(takeUntil(this.destruir$))
       .subscribe((state) => {
         this.solicitudPermisoState = state;
       });
-    this.createDatosDelEstablecimientoForm();
+    this.crearFormularioDatosDelEstablecimiento();
   }
 
-  createDatosDelEstablecimientoForm(): void {
+  /**
+   * Crea el formulario reactivo para capturar los datos del establecimiento.
+   * Inicializa los valores del formulario con el estado actual de la solicitud.
+   */
+  crearFormularioDatosDelEstablecimiento(): void {
     this.datosDelEstablecimientoForm = this.formBuilder.group({
       razonSocial: [
         this.solicitudPermisoState.datosDelEstablecimientoFormState.razonSocial,
@@ -49,14 +76,22 @@ export class DatosDelEstablecimientoComponent implements OnInit, OnDestroy {
     });
   }
 
-  setValoresStore(campo:string):void{
-    this.tramite260703Store.updateDatosDelEstablecimientoFormState({
+  /**
+   * Actualiza el estado del formulario de datos del establecimiento en el store.
+   * @param campo Nombre del campo del formulario a actualizar.
+   */
+  setValoresStore(campo: string): void {
+    this.tramite260703Store.actualizarDatosDelFormularioDelEstablecimiento({
       [campo]: this.datosDelEstablecimientoForm.get(campo)?.value,
     });
   }
 
+  /**
+   * Método del ciclo de vida que se ejecuta al destruir el componente.
+   * Limpia las suscripciones para evitar fugas de memoria.
+   */
   ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
+    this.destruir$.next();
+    this.destruir$.complete();
   }
 }
