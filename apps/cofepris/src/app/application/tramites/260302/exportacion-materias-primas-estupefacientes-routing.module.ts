@@ -5,7 +5,7 @@ import { AgregarOtrosComponent } from './components/agregar-otros/agregar-otros.
 import { AgregarProveedorContenedoraComponent } from './components/agregar-proveedor-contenedora/agregar-proveedor-contenedora.component';
 import { ContenedorDePasosComponent } from './pages/contenedor-de-paso/contenedor-de-pasos.component';
 import { DatosGeneralesComponent } from './components/datos-generales/datos-generales.component';
-import { DatosMercanciaContenedoraComponent } from './components/datos-mercancia-contenedora/datos-mercancia-contenedora.component';
+import { ExporticonMercanciaEstupefacientesComponent } from './components/exporticon-mercancia-estupefacientes/exporticon-mercancia-estupefacientes.component';
 import { NgModule } from '@angular/core';
 import { ScianTablaContenedoraComponent } from './components/scian-tabla-contenedora/scian-tabla-contenedora.component';
 
@@ -21,7 +21,7 @@ const ROUTES: Routes = [
   },
   {
     path: 'mercancia-datos',
-    component: DatosMercanciaContenedoraComponent,
+    component: ExporticonMercanciaEstupefacientesComponent,
   },
   {
     path: 'agregar-fabricante',
