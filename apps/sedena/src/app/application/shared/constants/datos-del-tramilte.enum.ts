@@ -36,7 +36,7 @@ export const PERMISO_DEFINITIVO_TITULO = [240119, 240118, 240107];
  * @type {number[]}
  * @description Representa códigos específicos utilizados en el sistema para identificar permisos aduaneros.
  */
-export const PERMISO_ADUNA_TITULO = [240119, 240118];
+export const PERMISO_ADUNA_TITULO = [240119, 240118, 240108];
 
 /**
  * Mapa de etiquetas asociadas a países.
