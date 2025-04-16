@@ -2,8 +2,8 @@
  *  Este servicio proporciona métodos para obtener datos relacionados con la mercancía asociada.
  */
 
-import { Injectable } from '@angular/core';
 import { HttpCoreService } from '../../shared/http/http.service';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -14,7 +14,9 @@ export class MercanciaasociadaService {
   /**
    * {HttpCoreService} http - Servicio HTTP para realizar solicitudes.
    */
-  constructor(private http: HttpCoreService) { }
+  constructor(private http: HttpCoreService) {
+    // Lógica de inicialización si es necesario
+   }
   
   /**
    * @method getMercanciaAsociada
