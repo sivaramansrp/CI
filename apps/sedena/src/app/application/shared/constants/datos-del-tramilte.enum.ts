@@ -41,7 +41,7 @@ export const PAISE_DENTINO_EITIQUETA = [240119, 240118];
  * Este valor puede ser utilizado para validar o configurar funcionalidades relacionadas
  * con el período académico activo.
  */
-export const PERIODO_SEMESTRE_HABILITADO = [240119];
+export const PERIODO_SEMESTRE_HABILITADO = [240119, 240108];
 
 /**
  * Constante que representa el período del primer semestre.
@@ -96,3 +96,11 @@ export const DATOS_DEL_TRAMITE_MAP: Map<string, number[]> = new Map([
   ['dosSemestre', [240119]],
   ['anoEnCurso', [240119]],
 ]);
+
+/**
+ * Lista de IDs de países en los que se debe ocultar la opción "Agregar mercancía"
+ * 
+ * @constant
+ * @type {number[]}
+ */
+export const AGGREGAR_MERCANCIA_PAISE_OCULTAR = [240108];
