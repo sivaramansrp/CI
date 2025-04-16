@@ -2,7 +2,17 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 
-import { AlertComponent, BtnContinuarComponent, CatalogoSelectComponent, InputRadioComponent, SolicitanteComponent, TablaDinamicaComponent, TableComponent, TituloComponent, WizardComponent } from '@ng-mf/data-access-user';
+import {
+  AlertComponent,
+  BtnContinuarComponent,
+  CatalogoSelectComponent,
+  InputRadioComponent,
+  SolicitanteComponent,
+  TablaDinamicaComponent,
+  TableComponent,
+  TituloComponent,
+  WizardComponent,
+} from '@ng-mf/data-access-user';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { DatosComponent } from './pages/datos/datos.component';
 import { DatosDelEstablecimientoComponent } from './components/datos-del-establecimiento/datos-del-establecimiento.component';
@@ -20,12 +30,21 @@ import { SubirDocumentoService } from '@libs/shared/data-access-user/src/core/se
 import { TercerosRelacionadosComponent } from './components/terceros-relacionados/terceros-relacionados.component';
 import { TramiteAsociadosComponent } from '../../shared/components/tramite-asociados/tramite-asociados.component';
 
-
-
 @NgModule({
-  declarations: [PasoUnoComponent,DatosComponent, DatosSolitudeComponent,DatosDelEstablecimientoComponent, DomicilioDelEstablecimientoComponent ,ManifiestosYDeclaracionesComponent,RepresentanteLegalComponent, TercerosRelacionadosComponent],
+  declarations: [
+    PasoUnoComponent,
+    PasoDosComponent,
+    PasoTresComponent,
+    DatosComponent,
+    DatosSolitudeComponent,
+    DatosDelEstablecimientoComponent,
+    DomicilioDelEstablecimientoComponent,
+    ManifiestosYDeclaracionesComponent,
+    RepresentanteLegalComponent,
+    TercerosRelacionadosComponent,
+  ],
   imports: [
-    CommonModule, 
+    CommonModule,
     SolicitudPermisoRoutingModule,
     WizardComponent,
     SolicitanteComponent,
@@ -35,18 +54,12 @@ import { TramiteAsociadosComponent } from '../../shared/components/tramite-asoci
     ReactiveFormsModule,
     BtnContinuarComponent,
     TablaDinamicaComponent,
-    PasoDosComponent,
-    PasoTresComponent,
     AlertComponent,
     PagoDeDerechosComponent,
     TramiteAsociadosComponent,
     TableComponent,
-    ToastrModule.forRoot()
+    ToastrModule.forRoot(),
   ],
-  providers: [
-    ToastrService,
-    InicioSesionService,
-    SubirDocumentoService
-  ]
+  providers: [ToastrService, InicioSesionService, SubirDocumentoService],
 })
 export class SolicitudPermisoModule {}
