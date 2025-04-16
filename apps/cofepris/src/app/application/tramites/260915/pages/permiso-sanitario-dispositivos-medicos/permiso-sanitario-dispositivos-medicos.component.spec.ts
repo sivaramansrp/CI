@@ -1,19 +1,19 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { PermisoSanitarioSolicitanteComponent } from './permiso-sanitario-solicitante.component';
 import { WizardComponent } from '@libs/shared/data-access-user/src';
 import { BtnContinuarComponent } from '@libs/shared/data-access-user/src';
+import { PermisoSanitarioDispositivosMedicosComponent } from './permiso-sanitario-dispositivos-medicos.component';
 
 describe('ImportacionProductosComponent', () => {
-  let component: PermisoSanitarioSolicitanteComponent;
-  let fixture: ComponentFixture<PermisoSanitarioSolicitanteComponent>;
+  let component: PermisoSanitarioDispositivosMedicosComponent;
+  let fixture: ComponentFixture<PermisoSanitarioDispositivosMedicosComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [PermisoSanitarioSolicitanteComponent],
+      declarations: [PermisoSanitarioDispositivosMedicosComponent],
       imports: [WizardComponent, BtnContinuarComponent]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(PermisoSanitarioSolicitanteComponent);
+    fixture = TestBed.createComponent(PermisoSanitarioDispositivosMedicosComponent);
     component = fixture.componentInstance;
 
     component.wizardComponent = {

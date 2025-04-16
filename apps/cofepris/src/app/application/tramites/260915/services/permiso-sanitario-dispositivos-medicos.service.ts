@@ -133,6 +133,10 @@ export class PermisoSanitarioDispositivosMedicosService {
     return this.http.get<MercanciaCrossList[]>('./assets/json/260915/mercancia-crosslist.json');
   }
 
+  /**
+ * Obtiene los datos del estado físico desde un archivo JSON.
+ * @returns Observable con la lista de estados físicos.
+ */
   getEstadoFisicoData(): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>('./assets/json/260915/estadofisico.json');
   }

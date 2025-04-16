@@ -45,14 +45,6 @@ export class DatosEmpresaComponent {
    * Textos de alerta.
    */
   TEXTOS = ALERT;
-
-
- 
-  constructor(
-    
-    ) {
-    // Constructor
-  }
   
   /**
    * Método para mostrar u ocultar el formulario colapsable.

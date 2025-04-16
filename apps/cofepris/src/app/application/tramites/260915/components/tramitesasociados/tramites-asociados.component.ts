@@ -1,17 +1,19 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { DESTINATARIO_CONFIGURACION_TABLA2 } from '../../constants/column-config.enum';
+
 import { ReplaySubject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { TramitesAsociados } from '../../models/destinatario.model';
-import {  Notificacion, NotificacionesComponent, Pedimento } from '@libs/shared/data-access-user/src';
+
+import { Notificacion, NotificacionesComponent, Pedimento } from '@libs/shared/data-access-user/src';
+import { PermisoSanitarioDispositivosMedicosService } from '../../services/permiso-sanitario-dispositivos-medicos.service';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
-import { DESTINATARIO_CONFIGURACION_TABLA2 } from '../../constants/column-config.enum';
-import { PermisoSanitarioDispositivosMedicosService } from '../../services/permiso-sanitario-dispositivos-medicos.service';
+import { TramitesAsociados } from '../../models/destinatario.model';
 
 @Component({
   selector: 'app-tramites-asociados',
   templateUrl: './tramites-asociados.component.html',
-  styleUrls: ['./tramites-asociados.component.css'],
+  styleUrls: ['./tramites-asociados.component.scss'],
   standalone: true,
   imports: [TablaDinamicaComponent, TituloComponent,NotificacionesComponent],
 })
@@ -63,8 +65,6 @@ export class TramitesAsociadosComponent implements OnInit, OnDestroy {
         this.tablaFilaDatos = data as TramitesAsociados[];
       });
   }
-
-  
   /** Método que se ejecuta al destruir el componente */
   ngOnDestroy(): void {
     this.destroyed$.next(true);

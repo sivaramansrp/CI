@@ -1,41 +1,26 @@
-import { ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { Catalogo, CatalogosSelect, ConfiguracionColumna, InputFecha, InputRadioComponent, Notificacion, NotificacionesComponent, Pedimento, TablaSeleccion } from '@libs/shared/data-access-user/src';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { FilaData, FilaData2, ListaClave } from '../../models/fila-modal';
 import { CommonModule } from '@angular/common';
+import { ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
+import { map, ReplaySubject, takeUntil } from 'rxjs';
+
+import { Catalogo, InputFecha, InputRadioComponent, Notificacion, NotificacionesComponent, Pedimento, TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CrosslistComponent } from '../../../../../../../../../libs/shared/data-access-user/src/tramites/components/crosslist/crosslist.component';
-import { FECHAINICIAL, FECHAFINAL } from '../../models/destinatario.model';
+import { InputCheckComponent } from '@libs/shared/data-access-user/src';
 import { InputFechaComponent } from '../../../../../../../../../libs/shared/data-access-user/src/tramites/components/input-fecha/input-fecha.component';
-import { map, ReplaySubject, takeUntil } from 'rxjs';
+import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
+import { TituloComponent } from '@libs/shared/data-access-user/src';
+
+import { CLASIFICACION_PRODUCTO_DATA, CLAVE_SCIAN_DATA, DESCRIPCION_SCIAN_DATA, ESTADO_DATA, ESTADO_FISICO_DATA, ESPECIFICAR_DATA, REGIMEN_AL_QUE_DATA, TIPO_PRODUCTO_DATA, ADUANA_DATA } from '../../constants/catalogs.enum';
+import { CONFIGURACION_COLUMNAS_MERCANCIAS, CONFIGURACION_COLUMNAS_SOLI } from '../../constants/column-config.enum';
+import { TEXTOS } from '../../constants/constantes.enum';
+import { FilaData, FilaData2, ListaClave } from '../../models/fila-modal';
 import { MercanciaCrossList, CrossList, CrossListLable } from '../../models/mercancia.model';
 import { Modal } from 'bootstrap';
-import { RadioOpcion } from '../../models/radio.model';
-
+import { PermisoSanitarioDispositivosMedicosService } from '../../services/permiso-sanitario-dispositivos-medicos.service';
 import { Solicitud260915Query } from '../../estados/tramites260915.query';
 import { Solicitud260915State, Solicitud260915Store } from '../../estados/tramites260915.store';
-import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
-import { TEXTOS } from '../../constants/constantes.enum';
-import { TituloComponent } from '@libs/shared/data-access-user/src';
-import { InputCheckComponent } from '@libs/shared/data-access-user/src';
-import {
-  ESTADO_DATA,
-  CLAVE_SCIAN_DATA,
-  DESCRIPCION_SCIAN_DATA,
-  REGIMEN_AL_QUE_DATA,
-  ADUANA_DATA,
-  CLASIFICACION_PRODUCTO_DATA,
-  ESPECIFICAR_DATA,
-  TIPO_PRODUCTO_DATA,
-  ESTADO_FISICO_DATA,
-} from '../../constants/catalogs.enum';
-import {
-  CONFIGURACION_COLUMNAS_SOLI,
-  CONFIGURACION_COLUMNAS_MERCANCIAS
-
-} from '../../constants/column-config.enum';
-import { PermisoSanitarioDispositivosMedicosService } from '../../services/permiso-sanitario-dispositivos-medicos.service';
 import { DatosEmpresaComponent } from '../datos-empresa/datos-empresa.component';
 
 /**
@@ -46,7 +31,7 @@ import { DatosEmpresaComponent } from '../datos-empresa/datos-empresa.component'
   standalone: true,
   imports: [CommonModule,ReactiveFormsModule,InputRadioComponent,TituloComponent,CatalogoSelectComponent,TablaDinamicaComponent,InputRadioComponent,InputFechaComponent,CrosslistComponent,InputCheckComponent,NotificacionesComponent,DatosEmpresaComponent],
   templateUrl: './datos-de-la-solicitud.component.html',
-  styleUrls: ['./datos-de-la-solicitud.component.css'],
+  styleUrls: ['./datos-de-la-solicitud.component.scss'],
 })
 export class DatosdelasolicitudComponent implements OnInit,OnDestroy {
    /** Formulario principal para los datos de la solicitud */
@@ -156,7 +141,8 @@ opcionDeBotonDeRadio = [
   /** Datos de la tabla */
   tableData: FilaData[] = [];
 
-  mercanciasData: FilaData2[] = [];
+ /** Datos de las mercancías. */
+mercanciasData: FilaData2[] = [];
 
   /** Conjunto de filas seleccionadas */
   filasSeleccionadas: Set<number> = new Set();
@@ -166,8 +152,6 @@ opcionDeBotonDeRadio = [
     { label: 'No', value: 'no' },
     { label: 'Sí', value: 'si' },
   ];
-
-
 
   /** Fila seleccionada */
   selectedRow: any;
@@ -248,9 +232,10 @@ opcionDeBotonDeRadio = [
       }),
     });
   }
+
+  /** Configuración del formulario con validaciones para los campos del trámite. */
 createForm(){
   this.dataDeLaSolicitudForm = this.fb.group({
-   
       descripcionFraccionArancelaria: [this.dataDeLaSolicitudState?.descripcionFraccionArancelaria, Validators.required],
       cantidadUMT:[this.dataDeLaSolicitudState?.cantidadUMT, Validators.required],
       umt:[this.dataDeLaSolicitudState?.descripcionFraccionArancelaria, Validators.required],
@@ -340,7 +325,7 @@ eliminarPedimento(borrar: boolean): void {
  * @param i Índice del elemento que se desea eliminar (por defecto 0).
  * @param isSeleccionarEstablecimiento Indica si se debe mostrar el mensaje para seleccionar un establecimiento.
  */
- abrirModal(i: number = 0): void {
+ abrirModal(i: number = 0,isSeleccionarEstablecimiento: boolean = false): void {
   if(this.filasSeleccionadas && this.filasSeleccionadas.size > 0){
   this.nuevaNotificacion = {
     tipoNotificacion: 'alert',
@@ -353,11 +338,22 @@ eliminarPedimento(borrar: boolean): void {
     txtBtnAceptar: 'Aceptar',
     txtBtnCancelar: 'Cancelar',
   }
+} else if(isSeleccionarEstablecimiento){
+  this.nuevaNotificacion = {
+    tipoNotificacion: 'alert',
+    categoria: 'danger',
+    modo: 'action',
+    titulo: '',
+    mensaje: 'Por el momento no hay comunicación con el Sistema de COFEPRIS, favor de capturar su establecimiento.',
+    cerrar: false,
+    tiempoDeEspera: 2000,
+    txtBtnAceptar: 'Aceptar',
+    txtBtnCancelar: 'Cancelar',
+  };
 }
  
   this.elementoParaEliminar = i;
 }
-
 
   /**
  * Método para obtener los datos del crosslist de mercancías.
@@ -450,6 +446,8 @@ usoEspecificoColapsable(): void {
         this.aduanaData.catalogos = data as Catalogo[];
       });
   }
+
+  /** Obtiene los datos del estado físico desde el servicio y los asigna al catálogo correspondiente. */
   getEstadoFisicoData(){
     this.permisosanitariodisposivos.getEstadoFisicoData()
       .pipe(takeUntil(this.destroyed$))
@@ -467,8 +465,6 @@ usoEspecificoColapsable(): void {
     this.dataDeLaSolicitudForm.enable();
     this.habilitarEstado = false;
   }
-
-   
 
     /** Obtiene los datos de clasificación del producto */
   getClasificacionDelProductoData(){
@@ -496,11 +492,9 @@ usoEspecificoColapsable(): void {
     });
   }
 
-
   /** Muestra el modal de selección de establecimiento */
-
   seleccionarEstablecimiento(): void {
-    this.abrirModal();
+    this.abrirModal(0,true);
   }
 
     /** Limpia el formulario de clave SCIAN */
@@ -526,44 +520,38 @@ onAgregar(){
       return;
     }
     this.abrirModal();
-    
   }
   
-  
     /** Cancela la acción de agregar clave SCIAN */
-
   onCancelar() {
     this.showClavaScianForm = false; 
     this.clavaScianForm.reset(); 
   }
-    /** Agrega una nueva mercancia a la tabla */
 
+    /** Agrega una nueva mercancia a la tabla */
   agregarMercanciaGrid(): void {
     if (this.modalElement) {
      const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
      MODAL_INSTANCE.show();
    }
  }
- 
 
-    /** Maneja la selección de filas */
+  /** Maneja la selección de filas */
     onfilasSeleccionadas(filasSeleccionadas: FilaData[] | FilaData2[]): void {
-      console.log('onfilasSeleccionadas triggered with:', filasSeleccionadas[0]);
        if (filasSeleccionadas.length > 0 && 'clasificaionProductos' in filasSeleccionadas[0]) {
-        console.log("sravani");
         this.filasSeleccionadas = new Set((filasSeleccionadas as FilaData2[]).map((row) => row.id));
        }
       else if (filasSeleccionadas.length > 0 && 'claveScianG' in filasSeleccionadas[0] && 'claveScian' in filasSeleccionadas[0].claveScianG) {
-        console.log("hello")
         this.filasSeleccionadas = new Set((filasSeleccionadas as FilaData[]).map((row) => Number(row.claveScianG.claveScian)));
       } else {
         this.filasSeleccionadas.clear();
       }
-    
-      console.log('Updated selected rows set:', Array.from(this.filasSeleccionadas));
     }
     
-
+   /** Maneja el envío del formulario de clave SCIAN. 
+ * Busca las descripciones correspondientes en los catálogos y las asigna al formulario.
+ * Luego, agrega los datos a la tabla y reinicia el formulario.
+ */ 
   onSubmit() {
     const formData = { ...this.clavaScianForm.value };
     formData.claveScianG.claveScian = this.claveScianData.catalogos.find(
@@ -583,17 +571,21 @@ onAgregar(){
 get datosDelTramiteRealizar(): FormGroup {
   return this.dataDeLaSolicitudForm.get('datosDelTramiteRealizar') as FormGroup;
 }
-
+/** Alterna el estado del campo de licencia sanitaria en función del aviso de funcionamiento. 
+ * Si el aviso de funcionamiento está activado, deshabilita el campo de licencia sanitaria. 
+ * De lo contrario, lo habilita.
+ */
 toggleLicenciaSanitaria(): void {
   const avisoDeFuncionamiento = this.dataDeLaSolicitudForm.get('datosDelTramiteRealizar.avisoDeFuncionamiento')?.value;
   const licenciaSanitariaControl = this.dataDeLaSolicitudForm.get('datosDelTramiteRealizar.licenciaSanitaria');
-  
+
   if (avisoDeFuncionamiento) {
     licenciaSanitariaControl?.disable();
   } else {
     licenciaSanitariaControl?.enable();
   }
 }
+/** Guarda los datos del formulario de la solicitud. */
 onSave() {
     const formData = { ...this.dataDeLaSolicitudForm.value };
     formData.tipoProducto = this.tipoProductoData.catalogos.find(
@@ -611,65 +603,42 @@ onSave() {
     formData.estadoFisico = this.estadoFisicoData.catalogos.find(
       (item: Catalogo) => String(item.id) === String(formData.estadoFisico)
     )?.descripcion || formData.estadoFisico;
-  
     if (this.indiceFilaSeleccionada !== null) {
-      // Update the existing row in mercanciasData
       this.mercanciasData[this.indiceFilaSeleccionada] = { ...this.mercanciasData[this.indiceFilaSeleccionada], ...formData };
-      console.log('Updated row:', this.mercanciasData[this.indiceFilaSeleccionada]);
-      this.indiceFilaSeleccionada = null; // Reset the index
+      this.indiceFilaSeleccionada = null; 
     } else {
-      // Add a new row if no row is being modified
       this.mercanciasData.push(formData);
     }
-
-    // Reset the form
     this.dataDeLaSolicitudForm.reset();
   
 }
+/** Elimina las filas seleccionadas de la tabla de mercancías. */
 onDeleted(): void {
   if (!this.filasSeleccionadas || this.filasSeleccionadas.size === 0) {
-    console.warn('No rows selected for deletion.');
     return;
   }
 
-  // Filter out the selected rows from the tableData array
   this.mercanciasData = this.mercanciasData.filter((row) => !this.filasSeleccionadas.has(row.id));
-
-  // Clear the selection after deletion
   this.filasSeleccionadas.clear();
 
-  console.log('Updated table data:', this.tableData);
 }
+/** Modifica una fila seleccionada de la tabla de mercancías. 
+ * Verifica que solo haya una fila seleccionada. Si la fila existe, 
+ * carga sus datos en el formulario y muestra el modal para editarla.
+ */
 onModificar(): void {
   if (!this.filasSeleccionadas || this.filasSeleccionadas.size !== 1) {
-    console.warn('Please select exactly one row to modify.');
     return;
   }
-
-  // Get the selected row's ID
   const selectedId = Array.from(this.filasSeleccionadas)[0];
-
-  // Find the selected row in the data
   const selectedRowIndex = this.mercanciasData.findIndex((row) => row.id === selectedId);
 
   if (selectedRowIndex === -1) {
-    console.warn('Selected row not found in the data.');
     return;
   }
-
-  
-  // Set the index of the selected row for later modification
   this.indiceFilaSeleccionada = selectedRowIndex;
-
   const selectedRow = this.mercanciasData[selectedRowIndex];
-
-
-  // Populate the form with the selected row's data
   this.dataDeLaSolicitudForm.patchValue(this.mercanciasData[selectedRowIndex]);
-
-  console.log('Selected row:', selectedRow);
-
-  // Manually map the fields to the form
   this.dataDeLaSolicitudForm.patchValue({
     descripcionFraccionArancelaria: selectedRow.descripcionFraccionArancelaria,
     cantidadUMT: selectedRow.cantidadUMT,
@@ -686,14 +655,20 @@ onModificar(): void {
     presentacionFarmaceutica: selectedRow.presentacionFarmaceutica,
     fraccionArancelaria: selectedRow.fraccionArancelaria,
   });
-
-  // Open the modal
   const modalElement = document.getElementById('modalAgregarMercancia');
   if (modalElement) {
     const modalInstance = new Modal(modalElement);
     modalInstance.show();
   }
 }
+/** Establece un valor en el store a partir de un campo del formulario. 
+ * Obtiene el valor del campo especificado en el formulario y lo asigna 
+ * al método correspondiente del store.
+ * 
+ * @param form El formulario reactivo del cual se obtiene el valor.
+ * @param campo El nombre del campo en el formulario.
+ * @param metodoNombre El nombre del método en el store donde se asignará el valor.
+ */
 setValoresStore(
   form: FormGroup,
   campo: string,
@@ -702,7 +677,6 @@ setValoresStore(
   const VALOR = form.get(campo)?.value;
   (this.solicitud260915Store[metodoNombre] as (value: any) => void)(VALOR);
 }
-
 
   /** Destrucción del componente */
   ngOnDestroy(): void {

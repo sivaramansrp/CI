@@ -34,19 +34,23 @@ export interface FilaData2 {
   /** denominacionDistintiva del producto. */
   denominacionDistintiva: string;
 
+  /** Denominación del nombre del producto. */
   denominacionNombre: string;
 
   /** Tipo de producto. */
   tipoProducto: string;
 
+  /** Estado físico del producto. */
   estadoFisico: string;
+
   /** Fracción arancelaria del producto. */
   fraccionArancelaria: string;
 
   /** Descripción de la fracción arancelaria. */
   descripcionFraccionArancelaria: string;
 
-  presentacionFarmaceutica:string;
+  /** Presentación farmacéutica del producto. */
+  presentacionFarmaceutica: string;
 
   /** Cantidad en la unidad de medida de tarifa (UMT). */
   cantidadUMT: string;
@@ -74,7 +78,10 @@ export interface FilaData2 {
  * Interfaz que representa los datos de una fila con información adicional.
  */
 export interface FilaData3 {
+
+ /** Identificador único. */
   id: number;
+
   /** Justificación del trámite. */
   justification: string;
 

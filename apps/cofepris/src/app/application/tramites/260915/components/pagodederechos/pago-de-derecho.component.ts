@@ -1,15 +1,19 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { Component, OnDestroy, OnInit, ChangeDetectorRef } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Catalogo, CatalogosSelect,InputFecha, TituloComponent } from '@libs/shared/data-access-user/src';
 import { map, ReplaySubject, takeUntil } from 'rxjs';
-import { Solicitud260915Query } from '../../estados/tramites260915.query';
-import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
+
 import { Solicitud260915State, Solicitud260915Store } from '../../estados/tramites260915.store';
-import { InputFechaComponent } from '@libs/shared/data-access-user/src';
+import { CommonModule } from '@angular/common';
+
 import { BANCO_DATA } from '../../constants/catalogs.enum';
+import { Solicitud260915Query } from '../../estados/tramites260915.query';
 import { PermisoSanitarioDispositivosMedicosService } from '../../services/permiso-sanitario-dispositivos-medicos.service';
+
+import { Catalogo, InputFecha, TituloComponent } from '@libs/shared/data-access-user/src';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
+import { InputFechaComponent } from '@libs/shared/data-access-user/src';
 /**
  * Componente para gestionar el pago de derechos en el trámite.
  */
@@ -18,7 +22,7 @@ import { PermisoSanitarioDispositivosMedicosService } from '../../services/permi
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, TituloComponent, CatalogoSelectComponent,InputFechaComponent],
   templateUrl: './pago-de-derecho.component.html',
-  styleUrls: ['./pago-de-derecho.component.css'],
+  styleUrls: ['./pago-de-derecho.component.scss'],
 })
 export class PagoDeDerechoComponent implements OnInit, OnDestroy {
   /** Formulario reactivo para gestionar los datos del pago de derechos */
@@ -30,7 +34,8 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
   /** Estado del pago de derechos que se está gestionando */
   pagoDeDerechosState!: Solicitud260915State;
 
- public bancoData = BANCO_DATA;
+/** Datos del catálogo de bancos. */
+public bancoData = BANCO_DATA;
 
   /**
  * Configuración para el campo de selección de la fecha de pago.

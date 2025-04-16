@@ -5,44 +5,38 @@ import { isPlatformBrowser } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { Observable, of as observableOf, throwError } from 'rxjs';
-
+import { Solicitud260915State, Solicitud260915Store } from '../../estados/tramites260915.store';
+import { Solicitud260915Query } from '../../estados/tramites260915.query';
 import { Component } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { TercerosrelacionadosComponent } from './terceros-relacionados.component';
-import { RegistrarSolicitudMcpService } from '../../services/registrar-solicitud-mcp.service';
-import { Solicitud260702Store } from '../../estados/tramites260702.store';
-import { Solicitud260702Query } from '../../estados/tramites260702.query';
+import { PermisoSanitarioDispositivosMedicosService } from '../../services/permiso-sanitario-dispositivos-medicos.service';
+import { provideHttpClient } from '@angular/common/http';
 
-
-class MockRegistrarSolicitudMcpService {
-  getPaisData() {
-    return observableOf([]); // Mocked response for getPaisData
-  }
+class MockSolicitud260915Store {
+  setValoresStore = jest.fn();
 }
 
-class MockSolicitud260702Store {
-  metodoNombre = jest.fn();
+class MockSolicitud260915Query {
+  selectSolicitud$ = jest.fn(() => observableOf({}));
 }
 
-class MockSolicitud260702Query {
-  selectSolicitud$ = observableOf({});
-}
 describe('TercerosrelacionadosComponent', () => {
   let fixture;
   let component;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule,TercerosrelacionadosComponent ],
-      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
+      imports: [FormsModule, ReactiveFormsModule, TercerosrelacionadosComponent],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
       providers: [
+        provideHttpClient(),
         FormBuilder,
-        { provide: RegistrarSolicitudMcpService, useClass: MockRegistrarSolicitudMcpService },
-        { provide: Solicitud260702Store, useClass: MockSolicitud260702Store },
-        { provide: Solicitud260702Query, useClass: MockSolicitud260702Query }
-      ]
-    }).overrideComponent(TercerosrelacionadosComponent, {
-
+        { provide: PermisoSanitarioDispositivosMedicosService, useValue: {} },
+        { provide: Solicitud260915Store, useClass: MockSolicitud260915Store },
+        { provide: Solicitud260915Query, useClass: MockSolicitud260915Query },
+      ],
+    
     }).compileComponents();
     fixture = TestBed.createComponent(TercerosrelacionadosComponent);
     component = fixture.debugElement.componentInstance;
@@ -99,8 +93,8 @@ describe('TercerosrelacionadosComponent', () => {
   });
 
   it('should run #ngOnInit()', async () => {
-    component.solicitud260702Query = component.solicitud260702Query || {};
-    component.solicitud260702Query.selectSolicitud$ = observableOf({});
+    component.solicitud260915Query = component.solicitud260915Query || {};
+    component.solicitud260915Query.selectSolicitud$ = observableOf({});
     component.crearFormTransporte = jest.fn();
     component.getPaisData = jest.fn();
     component.ngOnInit();
@@ -109,12 +103,12 @@ describe('TercerosrelacionadosComponent', () => {
   });
 
   it('should run #getPaisData()', async () => {
-    component.registrarsolicitudmcp = component.registrarsolicitudmcp || {};
-    component.registrarsolicitudmcp.getPaisData = jest.fn().mockReturnValue(observableOf({}));
+    component.permisosanitariodispositivosmedicosservice = component.permisosanitariodispositivosmedicosservice || {};
+    component.permisosanitariodispositivosmedicosservice.getPaisData = jest.fn().mockReturnValue(observableOf({}));
     component.paisData = component.paisData || {};
     component.paisData.catalogos = 'catalogos';
     component.getPaisData();
-    expect(component.registrarsolicitudmcp.getPaisData).toHaveBeenCalled();
+    expect(component.permisosanitariodispositivosmedicosservice.getPaisData).toHaveBeenCalled();
   });
 
   it('should run #onGuardar()', async () => {
@@ -221,21 +215,21 @@ describe('TercerosrelacionadosComponent', () => {
   });
 
   it('should run #setValoresStore()', async () => {
-    // Mock solicitud260702Store and metodoNombre
-    component.solicitud260702Store = {
-      metodoNombre: jest.fn(), // Mock metodoNombre as a function
+   
+    component.solicitud260915Store = {
+      metodoNombre: jest.fn(), 
     };
   
-    // Mock form behavior
+   
     const mockForm = {
-      get: jest.fn().mockReturnValue({ value: 'mockValue' }), // Mock form.get(campo)?.value
+      get: jest.fn().mockReturnValue({ value: 'mockValue' }), 
     };
   
-    // Call setValoresStore
+    
     component.setValoresStore(mockForm, 'campo', 'metodoNombre');
   
-    // Verify that metodoNombre was called with the correct value
-    expect(component.solicitud260702Store.metodoNombre).toHaveBeenCalledWith('mockValue');
+    
+    expect(component.solicitud260915Store.metodoNombre).toHaveBeenCalledWith('mockValue');
   });
 
   it('should run #ngOnDestroy()', async () => {
@@ -248,4 +242,4 @@ describe('TercerosrelacionadosComponent', () => {
     expect(component.destroyed$.complete).toHaveBeenCalled();
   });
 
-});
+})

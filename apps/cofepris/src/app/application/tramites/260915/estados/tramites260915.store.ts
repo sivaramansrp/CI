@@ -157,11 +157,14 @@ export interface Solicitud260915State {
   /** Fracción arancelaria del producto */
   fraccionArancelaria: string;
 
-  denominacionNombre: string;
+/** Denominación del nombre del producto. */
+ denominacionNombre: string;
 
-  estadoFisico: string;
+/** Estado físico del producto. */
+estadoFisico: string;
 
-  presentacionFarmaceutica: string;
+/** Presentación farmacéutica del producto. */
+presentacionFarmaceutica: string;
 }
 
 /**
@@ -324,12 +327,14 @@ export function createInitialSolicitudState(): Solicitud260915State {
     /** Fracción arancelaria del producto */
     fraccionArancelaria: '',
 
+   /** Denominación del nombre del producto. */
+   denominacionNombre: '',
 
-    denominacionNombre: '',
+   /** Estado físico del producto. */
+   estadoFisico: '',
 
-    estadoFisico: '',
-
-    presentacionFarmaceutica:'',
+  /** Presentación farmacéutica del producto. */
+   presentacionFarmaceutica: '',
   };
 }
 /**
@@ -894,22 +899,27 @@ export class Solicitud260915Store extends Store<Solicitud260915State> {
       fraccionArancelaria,
     }));
   }
-  public setDenominacionNombre(denominacionNombre: string): void {
-    this.update((state) => ({
-      ...state,
-      denominacionNombre,
-    }));
-  }
-  public setEstadoFisico(estadoFisico: string): void {
-    this.update((state) => ({
-      ...state,
-      estadoFisico,
-    }));
-  }
-  public setPresentacionFarmaceutica(presentacionFarmaceutica: string): void {
-    this.update((state) => ({
-      ...state,
-      presentacionFarmaceutica,
-    }));
-  }
+  /** Actualiza la denominación del nombre del producto en el estado. */
+public setDenominacionNombre(denominacionNombre: string): void {
+  this.update((state) => ({
+    ...state,
+    denominacionNombre,
+  }));
+}
+
+/** Actualiza el estado físico del producto en el estado. */
+public setEstadoFisico(estadoFisico: string): void {
+  this.update((state) => ({
+    ...state,
+    estadoFisico,
+  }));
+}
+
+/** Actualiza la presentación farmacéutica del producto en el estado. */
+public setPresentacionFarmaceutica(presentacionFarmaceutica: string): void {
+  this.update((state) => ({
+    ...state,
+    presentacionFarmaceutica,
+  }));
+}
 }

@@ -1,29 +1,20 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
-import { TEXTOS, TIPO_PERSONA_RADIO_OPTIONS } from '../../constants/constantes.enum';
-import { AlertComponent, Notificacion, NotificacionesComponent, Pedimento } from '@libs/shared/data-access-user/src';
-import { TituloComponent } from '@libs/shared/data-access-user/src';
-import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
-import { TablaSeleccion } from '@libs/shared/data-access-user/src';
-import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
-import { Destinatario } from '../../models/destinatario.model';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { Catalogo, CatalogosSelect } from '@ng-mf/data-access-user';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { Modal } from 'bootstrap';
 import { ReplaySubject } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
-import { ReactiveFormsModule } from '@angular/forms';
-import { PermisoSanitarioDispositivosMedicosService } from '../../services/permiso-sanitario-dispositivos-medicos.service';
-import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
-import { Modal } from 'bootstrap';
-import { Solicitud260915Query } from '../../estados/tramites260915.query';
-import {
-  Solicitud260915State,
-  Solicitud260915Store,
-} from '../../estados/tramites260915.store';
-import{ InputRadioComponent} from '@libs/shared/data-access-user/src';
-import { DESTINATARIO_CONFIGURACION_TABLA } from '../../constants/column-config.enum';
 
+import { AlertComponent, Catalogo, CatalogosSelect, ConfiguracionColumna, InputRadioComponent, Notificacion, NotificacionesComponent, Pedimento, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
+
+import { DESTINATARIO_CONFIGURACION_TABLA } from '../../constants/column-config.enum';
+import { TEXTOS, TIPO_PERSONA_RADIO_OPTIONS } from '../../constants/constantes.enum';
+import { Destinatario } from '../../models/destinatario.model';
+import { Solicitud260915Query } from '../../estados/tramites260915.query';
+import { Solicitud260915State, Solicitud260915Store } from '../../estados/tramites260915.store';
+import { PermisoSanitarioDispositivosMedicosService } from '../../services/permiso-sanitario-dispositivos-medicos.service';
+import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
 
 /**
  * Componente para gestionar los terceros relacionados en el trámite.
@@ -40,10 +31,10 @@ import { DESTINATARIO_CONFIGURACION_TABLA } from '../../constants/column-config.
     ReactiveFormsModule,
     CatalogoSelectComponent,
     NotificacionesComponent,
-    InputRadioComponent
+    InputRadioComponent,
   ],
   templateUrl: './terceros-relacionados.component.html',
-  styleUrl: './terceros-relacionados.component.css',
+  styleUrl: './terceros-relacionados.component.scss',
 })
 export class TercerosrelacionadosComponent implements OnInit, OnDestroy {
   /** Constantes de texto utilizadas en el componente */
@@ -80,40 +71,39 @@ export class TercerosrelacionadosComponent implements OnInit, OnDestroy {
     primerOpcion: 'Selecciona un medio de transporte',
     catalogos: [],
   };
-  
+
   /**
    * Variable para almacenar el tipo de persona seleccionada (por ejemplo, 'fisica' o 'moral').
    */
   tipoPersonaSeleccionada: string = '';
 
-
-    /**
+  /**
    * Variable para almacenar el tipo de público.
    */
-    tipoDePublicos: string = '';
-   /**
+  tipoDePublicos: string = '';
+  /**
    * Opciones de radio para seleccionar el tipo de persona.
    */
-   tipoPersonaRadioOptions = TIPO_PERSONA_RADIO_OPTIONS;
-/** 
- * Notificación actual que se mostrará en el componente.
- */
-public nuevaNotificacion!: Notificacion;
+  tipoPersonaRadioOptions = TIPO_PERSONA_RADIO_OPTIONS;
+  /**
+   * Notificación actual que se mostrará en el componente.
+   */
+  public nuevaNotificacion!: Notificacion;
 
-/** 
- * Índice del elemento que se eliminará de la lista.
- */
-elementoParaEliminar!: number;
+  /**
+   * Índice del elemento que se eliminará de la lista.
+   */
+  elementoParaEliminar!: number;
 
-/** 
- * Lista de pedimentos gestionados en el componente.
- */
-pedimentos: Array<Pedimento> = [];
+  /**
+   * Lista de pedimentos gestionados en el componente.
+   */
+  pedimentos: Array<Pedimento> = [];
   /** Datos de la tabla de destinatarios */
   tableData: Destinatario[] = [];
 
-   /** Configuración de las columnas de la tabla */
-   destinatarioConfiguracionTabla = DESTINATARIO_CONFIGURACION_TABLA;
+  /** Configuración de las columnas de la tabla */
+  destinatarioConfiguracionTabla = DESTINATARIO_CONFIGURACION_TABLA;
 
   /**
    * Constructor del componente.
@@ -194,27 +184,26 @@ pedimentos: Array<Pedimento> = [];
         })
       )
       .subscribe();
-      
+
     this.crearFormTransporte();
     this.getPaisData();
   }
-/**
- * Elimina un pedimento de la lista.
- * @param borrar Indica si se debe proceder con la eliminación.
- */
+  /**
+   * Elimina un pedimento de la lista.
+   * @param borrar Indica si se debe proceder con la eliminación.
+   */
   eliminarPedimento(borrar: boolean): void {
     if (borrar) {
       this.pedimentos.splice(this.elementoParaEliminar, 1);
       this.eliminarMercancias(); // Call the deletion logic
       this.abrirModal(0, true);
-
     }
   }
-/**
- * Abre un modal para mostrar una notificación.
- * @param i Índice del elemento seleccionado (por defecto 0).
- * @param isDeleted Indica si se debe mostrar la notificación de éxito tras la eliminación.
- */
+  /**
+   * Abre un modal para mostrar una notificación.
+   * @param i Índice del elemento seleccionado (por defecto 0).
+   * @param isDeleted Indica si se debe mostrar la notificación de éxito tras la eliminación.
+   */
   abrirModal(i: number = 0, isDeleted: boolean = false): void {
     if (isDeleted) {
       this.nuevaNotificacion = {
@@ -228,7 +217,6 @@ pedimentos: Array<Pedimento> = [];
         txtBtnAceptar: 'Aceptar',
         txtBtnCancelar: '',
       };
-      
     } else if (this.selectedRows && this.selectedRows.size > 0) {
       this.nuevaNotificacion = {
         tipoNotificacion: 'alert',
@@ -245,8 +233,6 @@ pedimentos: Array<Pedimento> = [];
     }
   }
 
- 
-  
   /**
    * Obtiene los datos del catálogo de países.
    */
@@ -270,7 +256,6 @@ pedimentos: Array<Pedimento> = [];
    * Getter para obtener el formulario de agregar destinatario.
    */
   get agregarDestinatario(): FormGroup {
-  
     return this.destinatarioForm.get('agregarDestinatario') as FormGroup;
   }
 
@@ -358,11 +343,7 @@ pedimentos: Array<Pedimento> = [];
         });
 
         this.esFormularioVisible = true;
-      } else {
-        console.error('Selected row data not found.');
       }
-    } else {
-      console.warn('Please select exactly one row to modify.');
     }
   }
 
@@ -399,16 +380,15 @@ pedimentos: Array<Pedimento> = [];
    */
   limpiarFormulario() {
     this.destinatarioForm.reset();
-    
   }
 
   /**
- * Maneja la acción de eliminación de las filas seleccionadas.
- * Si hay filas seleccionadas, abre un modal para confirmar la eliminación.
- */
+   * Maneja la acción de eliminación de las filas seleccionadas.
+   * Si hay filas seleccionadas, abre un modal para confirmar la eliminación.
+   */
   onDeleted(): void {
     if (this.selectedRows.size > 0) {
-      this.abrirModal(); 
+      this.abrirModal();
     }
   }
 

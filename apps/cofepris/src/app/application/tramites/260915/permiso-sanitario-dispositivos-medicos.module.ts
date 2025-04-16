@@ -10,24 +10,21 @@ import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { WizardComponent } from '@libs/shared/data-access-user/src';
 
-// import { DatosdelasolicitudComponent } from './components/datos-del/datos-de-la-solicitud.component';
-// import { PagoDeDerechoComponent } from './components/pagodederechos/pago-de-derecho.component';
-// import { TercerosrelacionadosComponent } from './components/terceros relacionados/terceros-relacionados.component';
-import { ToastrService } from 'ngx-toastr';
-// import { TramitesAsociadosComponent } from './components/tramitesasociados/tramites-asociados.component';
+import { DatosEmpresaComponent } from './components/datos-empresa/datos-empresa.component';
+import { DatosdelasolicitudComponent } from './components/datos-del/datos-de-la-solicitud.component';
+import { PagoDeDerechoComponent } from './components/pagodederechos/pago-de-derecho.component';
+import { TercerosrelacionadosComponent } from './components/terceros relacionados/terceros-relacionados.component';
+import { TramitesAsociadosComponent } from './components/tramitesasociados/tramites-asociados.component';
 
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
+import { PermisoSanitarioDispositivosMedicosComponent } from './pages/permiso-sanitario-dispositivos-medicos/permiso-sanitario-dispositivos-medicos.component';
 
 import { PermisoSanitarioDispositivosMedicosRoutingModule } from './permiso-sanitario-dispositivos-medicos-routing.module';
 import { PermisoSanitarioDispositivosMedicosService } from './services/permiso-sanitario-dispositivos-medicos.service';
-import { PermisoSanitarioDispositivosMedicosComponent } from './pages/permiso-sanitario-dispositivos-medicos/permiso-sanitario-dispositivos-medicos.component';
-import { PagoDeDerechoComponent } from './components/pagodederechos/pago-de-derecho.component';
-import { TramitesAsociadosComponent } from './components/tramitesasociados/tramites-asociados.component';
-import { TercerosrelacionadosComponent } from './components/terceros relacionados/terceros-relacionados.component';
-import { DatosdelasolicitudComponent } from './components/datos-del/datos-de-la-solicitud.component';
-import { DatosEmpresaComponent } from './components/datos-empresa/datos-empresa.component';
+
+import { ToastrService } from 'ngx-toastr';
 
 @NgModule({
     declarations: [
