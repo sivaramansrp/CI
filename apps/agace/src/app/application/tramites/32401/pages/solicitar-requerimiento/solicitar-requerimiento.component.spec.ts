@@ -120,4 +120,14 @@ describe('SolicitarRequerimientoComponent', () => {
       state: { data: { folioTramite: '123' } },
     });
   });
+
+  it('should call agregarRequerimientoOpcions and populate requerimientoOpcions', () => {
+    const mockRequerimientoOpcions = [{ value: 1, label: 'Option 1' }];
+    jest.spyOn(autoridadServiceMock, 'agregarRequerimientoOpcions').mockReturnValue(of(mockRequerimientoOpcions));
+
+    component.agregarRequerimientoOpcions();
+
+    expect(autoridadServiceMock.agregarRequerimientoOpcions).toHaveBeenCalled();
+    expect(component.requerimientoOpcions).toEqual(mockRequerimientoOpcions);
+  });
 });

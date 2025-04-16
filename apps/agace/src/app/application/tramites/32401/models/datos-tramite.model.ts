@@ -134,3 +134,13 @@ export interface CapturarElTextoLibre {
   identificacion: string;
 }
 
+/**
+ * Representa un catálogo de selección con una lista de elementos.
+ * Incluye un código, una lista de elementos y un mensaje adicional.
+ */
+export interface RequerimientoOpcions {
+  /** Código de estado del catálogo. */
+  label: string;
+  /** Lista de elementos del catálogo. */
+  value: number;
+}

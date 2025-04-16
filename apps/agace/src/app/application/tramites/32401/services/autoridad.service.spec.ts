@@ -5,7 +5,7 @@ import {
 } from '@angular/common/http/testing';
 import { AutoridadService } from './autoridad.service';
 import { CatalogosSelect } from '@libs/shared/data-access-user/src';
-import { CapturarElTextoLibre, RespuestaContenedor } from '../models/datos-tramite.model';
+import { CapturarElTextoLibre, RequerimientoOpcions, RespuestaContenedor } from '../models/datos-tramite.model';
 
 describe('AutoridadService', () => {
   let service: AutoridadService;
@@ -141,6 +141,34 @@ describe('AutoridadService', () => {
 
     const req = httpMock.expectOne(
       'assets/json/32401/capturar-el-texto-libre.json'
+    );
+    expect(req.request.method).toBe('GET');
+    req.flush(mockResponse);
+  });
+
+  it('should fetch RequerimientoOpcions data', (done) => {
+    const mockResponse: RequerimientoOpcions[] = [
+      {
+        value: 1,
+        label: 'Opción 1',
+      },
+      {
+        value: 2,
+        label: 'Opción 2',
+      },
+      {
+        value: 3,
+        label: 'Opción 3',
+      },
+    ];
+
+    service.agregarRequerimientoOpcions().subscribe((response) => {
+      expect(response).toEqual(mockResponse);
+      done();
+    });
+
+    const req = httpMock.expectOne(
+      'assets/json/32401/requerimiento-opcions.json'
     );
     expect(req.request.method).toBe('GET');
     req.flush(mockResponse);

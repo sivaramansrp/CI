@@ -15,6 +15,7 @@ import { InputRadioComponent } from '@libs/shared/data-access-user/src';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
+import { RequerimientoOpcions } from '../../models/datos-tramite.model';
 import { Router } from '@angular/router';
 import { Solicitud32401State } from '../../estados/tramite32401.store';
 import { Subject } from 'rxjs';
@@ -81,16 +82,7 @@ export class SolicitarRequerimientoComponent implements OnInit, OnDestroy {
   mostrarSeccionNoManifiesto: boolean = false;
 
   /** Opciones disponibles para el tipo de requerimiento */
-  requerimientoOpcions = [
-    {
-      label: 'Requerimiento por parte de la autoridad',
-      value: 1,
-    },
-    {
-      label: 'Inicio de cancelación',
-      value: 2,
-    },
-  ];
+  requerimientoOpcions: RequerimientoOpcions[] = [] as RequerimientoOpcions[];
 
   /** Lista de trámites obtenida desde el catálogo */
   tramiteList: CatalogosSelect = {} as CatalogosSelect;
@@ -158,6 +150,7 @@ export class SolicitarRequerimientoComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.inicializarFormulario();
     this.obtenerAduanaLista();
+    this.agregarRequerimientoOpcions();
     this.tramite32401Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -242,6 +235,20 @@ export class SolicitarRequerimientoComponent implements OnInit, OnDestroy {
    */
   isValid(form: FormGroup, field: string): boolean | null {
     return this.validacionesService.isValid(form, field);
+  }
+
+  /**
+   * Método que llama al servicio para obtener y agregar las opciones de requerimiento.
+   * Se suscribe al observable y asigna la respuesta al arreglo `requerimientoOpcions`.
+   * La suscripción se gestiona con `takeUntil` para evitar fugas de memoria.
+   */
+  public agregarRequerimientoOpcions(): void {
+    this.autoridadService
+      .agregarRequerimientoOpcions()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((respuesta: RequerimientoOpcions[]) => {
+        this.requerimientoOpcions = respuesta;
+      });
   }
 
   /**

@@ -3,6 +3,7 @@ import { CatalogosSelect } from '@libs/shared/data-access-user/src';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { RequerimientoOpcions } from '../models/datos-tramite.model';
 import { RespuestaContenedor } from '../models/datos-tramite.model';
 /**
  * Servicio para interactuar con los datos relacionados con la autoridad.
@@ -60,6 +61,18 @@ export class AutoridadService {
   agregarCapturarElTextoLibre(): Observable<CapturarElTextoLibre> {
     return this.http.get<CapturarElTextoLibre>(
       `assets/json/32401/capturar-el-texto-libre.json`
+    );
+  }
+
+  /**
+   * Realiza una petición HTTP GET para obtener las opciones de requerimiento
+   * desde un archivo JSON local ubicado en la ruta especificada.
+   *
+   * @returns Un observable que emite un arreglo de objetos `RequerimientoOpcions`.
+   */
+  agregarRequerimientoOpcions(): Observable<RequerimientoOpcions[]> {
+    return this.http.get<RequerimientoOpcions[]>(
+      `assets/json/32401/requerimiento-opcions.json`
     );
   }
 }
