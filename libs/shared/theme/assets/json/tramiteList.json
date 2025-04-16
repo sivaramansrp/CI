@@ -1605,8 +1605,8 @@
     {
         "id": 230,
         "tramite": 260905,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "cofepris/enmienda-permiso-sanitario/solictud",
+        "linkDepartment": "pago/enmienda-permiso-sanitario/solictud",
         "department": "cofepris"
     },
     {
