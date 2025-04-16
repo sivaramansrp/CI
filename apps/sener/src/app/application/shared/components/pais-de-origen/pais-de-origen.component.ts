@@ -112,7 +112,7 @@ export class PaisDeOrigenComponent implements OnChanges {
    * @descripcion Evento emitido para establecer valores en el store.
    * @tipo {EventEmitter<{ form: FormGroup; campo: string; metodoNombre: string }>}
    */
-  @Output() setValoresStoreEvent = new EventEmitter<{ form: FormGroup; campo: string; metodoNombre: string }>();
+  @Output() setValoresStoreEvent = new EventEmitter<{ form: FormGroup; campo: string}>();
  
   /**
    * @propiedad
@@ -221,8 +221,8 @@ export class PaisDeOrigenComponent implements OnChanges {
    * @param {string} campo - El campo a actualizar.
    * @param {string} metodoNombre - El nombre del método.
    */
-  setValoresStore(form: FormGroup, campo: string, metodoNombre: string): void {
-    this.setValoresStoreEvent.emit({ form, campo, metodoNombre });
+  setValoresStore(form: FormGroup, campo: string): void {
+    this.setValoresStoreEvent.emit({ form, campo });
   }
 }
  

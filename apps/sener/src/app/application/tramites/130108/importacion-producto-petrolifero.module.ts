@@ -6,6 +6,7 @@ import { ExportacionMineralesDeHierroComponent } from './pages/exportacion-miner
 import { ImportacionProductoPetroliferoRoutingModule } from './importacion-producto-petrolifero.routing.module';
 import { ManifiestoDeAceptacionComponent } from './components/manifiesto-de-aceptacion/manifiesto-de-aceptacion.component';
 import { NgModule } from '@angular/core';
+import { NotificacionesComponent } from "@libs/shared/data-access-user/src/tramites/components/notificaciones/notificaciones.component";
 import { PaisDeOrigenComponent } from '../../shared/components/pais-de-origen/pais-de-origen.component';
 import { PartidasDeLaMercanciaComponent } from '../../shared/components/partidas-de-la-mercancia/partidas-de-la-mercancia.component';
 import { PasoDosComponent } from '../../shared/components/paso-dos/paso-dos.component';
@@ -14,6 +15,7 @@ import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RepresentacionComponent } from '../../shared/components/representacion/representacion.component';
 import { SolicitudComponent } from './components/solicitud/solicitud.component';
+import { ToastrService } from 'ngx-toastr';
 
 
 
@@ -45,7 +47,9 @@ import { SolicitudComponent } from './components/solicitud/solicitud.component';
     TablaDinamicaComponent,
     PaisDeOrigenComponent,
     RepresentacionComponent,
-    CrosslistComponent
-  ]
+    CrosslistComponent,
+    NotificacionesComponent
+  ],
+  providers: [ ToastrService ]
 })
 export class ImportacionProductoPetroliferoModule { }

@@ -65,7 +65,6 @@ export class DatosDelTramiteComponent {
   @Output() setValoresStoreEvent = new EventEmitter<{
     form: FormGroup;
     campo: string;
-    metodoNombre: string;
   }>();
 
   /**
@@ -88,7 +87,7 @@ export class DatosDelTramiteComponent {
    * @param campo El campo específico que se está modificando.
    * @param metodoNombre Nombre del método relacionado con el cambio.
    */
-  setValoresStore(form: FormGroup, campo: string, metodoNombre: string): void {
-    this.setValoresStoreEvent.emit({ form, campo, metodoNombre });
+  setValoresStore(form: FormGroup, campo: string): void {
+    this.setValoresStoreEvent.emit({ form, campo });
   }
 }

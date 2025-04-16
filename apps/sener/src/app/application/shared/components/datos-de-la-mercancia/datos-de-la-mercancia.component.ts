@@ -4,7 +4,7 @@ import {
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Catalogo } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 import { CommonModule } from '@angular/common';
 import { ProductoOpción } from '../../constantes/vehiculos-adaptados.enum';
@@ -52,20 +52,6 @@ export class DatosDeLaMercanciaComponent {
    */
   @Input() mercanciaCatalogoArray: Catalogo[][] = [];
 
-  /**
-   * @description Catálogo que contiene opciones de unidad.
-   */
-  @Input() unidadCatalogo: Catalogo[] = [];
-
-   /**
-   * @description Catálogo que contiene opciones de acotación.
-   */
-  @Input() acotacionCatalogo: Catalogo[] = []; 
-
-  /**
-   * @description Catálogo que contiene opciones de NICO.
-   */
-  @Input() nicoCatalogoArray: Catalogo[] = [];
 
   /**
    * @description Emisor de eventos para pasar datos del formulario al componente padre.
@@ -74,16 +60,17 @@ export class DatosDeLaMercanciaComponent {
   @Output() setValoresStoreEvent = new EventEmitter<{
     form: FormGroup;
     campo: string;
-    metodoNombre: string;
   }>();
 
   /**
-   * @method obtenerFraccion
-   * @description Obtiene información de fracción arancelaria y actualiza el valor de la unidad de medida.
+   * @description Emisor de eventos para pasar datos del formulario al componente padre.
+   * @event alCambioDelCampoValores
    */
-  obtenerFraccion(): void {
-    this.form.get('unidadMedida')?.setValue(this.unidadCatalogo[0].id);
-  }
+  @Output() alCambioDelCampoValores = new EventEmitter<{
+    form: FormGroup;
+    campo: string;
+    metodoNombre: string;
+  }>();
 
   /**
    * @method esInvalido
@@ -105,83 +92,24 @@ export class DatosDeLaMercanciaComponent {
    * @param campo El nombre del campo que se está actualizando.
    * @param metodoNombre El nombre del método asociado con la acción.
    */
-  setValoresStore(form: FormGroup, campo: string, metodoNombre: string): void {
-    this.setValoresStoreEvent.emit({ form, campo, metodoNombre });
+  setValoresStore(form: FormGroup, campo: string): void {
+    this.setValoresStoreEvent.emit({ form, campo });
   }
-
   /**
-   * @method onFraccionChange
-   * @description Maneja el cambio de fracción, actualiza el formulario y emite eventos relacionados.
-   * @param selected Objeto seleccionado que contiene el ID de la fracción y el ID relacionado de la unidad de medida.
+   * @method alCambioDelCampo
+   * @description Maneja el evento de cambio de un campo en el formulario.
+   * @param controlName El nombre del control que ha cambiado.
+   * @param event El evento asociado con el cambio.
+   * @param metodoNombre El nombre del método asociado con la acción.
    */
-  onFraccionChange(selected: { id: string | number; relacionadaUmtId?: string | number; relacionadaAcotacionId?: string | number }): void {
-    this.form.get('fraccion')?.setValue(selected.id);
-    this.setValoresStore(this.form, 'fraccion', 'setFraccion');
-
-    const UMT_MATCH = this.unidadCatalogo.find(
-      (umt) => umt.id === selected?.relacionadaUmtId
-    );
-
-    if (UMT_MATCH) {
-      this.form.get('unidadMedida')?.setValue(UMT_MATCH.id);
-      this.form.get('unidadMedida')?.updateValueAndValidity();
-
-      this.setValoresStore(this.form, 'unidadMedida', 'setUmt');
-      const ACOTACION_MATCH = this.acotacionCatalogo.find(
-        (acotacion) => acotacion.id === selected?.relacionadaAcotacionId
-      );
-      if (ACOTACION_MATCH) {
-        this.form.get('acotacion')?.setValue(ACOTACION_MATCH.descripcion);
-       
-        this.setValoresStore(this.form, 'acotacion', 'setAcotacion');
-      } else {
-        console.warn('No se encontró una acotación coincidente para la fracción seleccionada.');
-      }
-    } else {
-      console.warn('No se encontró una unidad de medida coincidente para la fracción seleccionada.');
-    }
+  alCambioDelCampo(form: FormGroup, controlName: string, i: number): void {
+    // Se puede actualizar el valor del control en el formulario si fuera necesario, o bien confiar en la vinculación de formularios.
+    // Se emite el evento con el valor seleccionado para que el componente padre lo procese.
+    const METODO_NOMBRE = i === 0 ? 'setFraccion' : (i === 1 ? 'setUmt' : 'setNico');
+    this.alCambioDelCampoValores.emit({ form, campo: controlName, metodoNombre: METODO_NOMBRE });
   }
-
-  /**
-   * @method onUmtChange
-   * @description Maneja el cambio de unidad de medida (UMT) y actualiza el formulario.
-   * @param selected Objeto seleccionado que contiene el ID de la unidad de medida.
-   */
-  onUmtChange(selected: { id: string | number }): void {
-    this.form.get('umt')?.setValue(selected.id);
-    this.setValoresStore(this.form, 'umt', 'setUmt');
-  }
-
-  /**
-   * @method onNicoChange
-   * @description Maneja el cambio de NICO y actualiza el formulario.
-   * @param selected Objeto seleccionado que contiene el ID de NICO.
-   */
-  onNicoChange(selected: { id: string | number }): void {
-    this.form.get('nico')?.setValue(selected.id);
-    this.setValoresStore(this.form, 'nico', 'setNico');
-    const RAW = this.form.get('fraccion')?.value;
-    if (!RAW) {
-      return;
-    }
-    const FRACCION_ID = typeof RAW === 'string'
-      ? parseInt(RAW, 10)
-      : RAW;
-    const FRACCION_OPTION = this.mercanciaCatalogoArray[0]
-      .find(c => c.id === FRACCION_ID);
-      if (FRACCION_OPTION) {        
-        const TEXT_ONLY = FRACCION_OPTION.descripcion.replace(/^[\d\s-]+/, '').trim();        
-        this.form.get('descripcionNico')?.setValue(TEXT_ONLY);        
-        this.setValoresStore(this.form, 'descripcionNico', 'setDescripcionNico');
-      } 
-  }
-
-  /**
-   * @method umtControl
-   * @description Obtiene el control de formulario para la unidad de medida (UMT).
-   * @returns El control de formulario asociado con la unidad de medida.
-   */
-  get umtControl(): FormControl {
-    return this.form.get('umt') as FormControl;
+  alCambiarPlazo(event: string | number): void {
+    this.form.get('plazo')?.setValue(event);
+    this.setValoresStore(this.form, 'plazo');
   }
 }

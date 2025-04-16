@@ -39,7 +39,7 @@ export interface Tramite130121State {
   /**
    * Unidad de medida.
    */
-  unidadMedida: string;
+  // unidadMedida: string;
   /**
    * Solicitud del trámite.
    */
@@ -47,11 +47,11 @@ export interface Tramite130121State {
   /**
    * Valor por defecto del select.
    */
-  defaultSelect: string;
+  // defaultSelect: string;
   /**
    * Plazo por defecto.
    */
-  defaultPlazo: string;
+  // defaultPlazo: string;
   /**
    * Régimen del trámite.
    */
@@ -67,7 +67,7 @@ export interface Tramite130121State {
   /**
    * Cantidad de partidas de la mercancía.
    */
-  cantidadPartidasDeLaMercancia: string;
+  cantidadModificar: string;
   /**
    * Valor de la partida en USD para partidas de la mercancía.
    */
@@ -75,7 +75,7 @@ export interface Tramite130121State {
   /**
    * Descripción de las partidas de la mercancía.
    */
-  descripcionPartidasDeLaMercancia: string;
+  descripcionModificar: string;
   /**
    * Valor de la factura en USD.
    */
@@ -108,6 +108,10 @@ export interface Tramite130121State {
    * Indica si se muestra la tabla.
    */
   mostrarTabla: boolean;
+  /** Descripción   acotacion */
+  acotacion: string;
+  /** Descripción del NICO */
+  descripcionNico: string;
 }
 
 /**
@@ -119,22 +123,19 @@ export function createInitialState(): Tramite130121State {
   return {
     filaSeleccionada: [],
     mostrarTabla: false,
-    solicitud: '',
+    solicitud: 'Inicial',
     fraccion: '',
     umt: '',
     nico: '',
-    defaultSelect: 'Inicial',
-    plazo: '',
+    plazo: 'Largo plazo (5 años)',
     descripcion: '',
     cantidad: '',
     valorPartidaUSD: 0,
-    unidadMedida: '',
-    defaultPlazo: 'Largo plazo (5 años)',
     regimen: '',
     clasificacion: '',
-    cantidadPartidasDeLaMercancia: '',
+    cantidadModificar: '',
     valorPartidaUSDPartidasDeLaMercancia: 0,
-    descripcionPartidasDeLaMercancia: '',
+    descripcionModificar: '',
     valorFacturaUSD: '',
     bloque: '',
     usoEspecifico: '',
@@ -142,6 +143,8 @@ export function createInitialState(): Tramite130121State {
     observaciones: '',
     entidad: '',
     representacion: '',
+    acotacion: '',
+    descripcionNico: '',
   };
 }
 
@@ -171,12 +174,12 @@ export class Tramite130121Store extends Store<Tramite130121State> {
    * @param {string} fraccion - La fracción arancelaria a establecer.
    * @memberof Tramite130121Store
    */
-  public setFraccion(fraccion: string): void {
-    this.update((state) => ({
-      ...state,
-      fraccion,
-    }));
-  }
+  // public setFraccion(fraccion: string): void {
+  //   this.update((state) => ({
+  //     ...state,
+  //     fraccion,
+  //   }));
+  // }
 
   /**
  * Actualiza la acotación en el estado.
@@ -184,12 +187,12 @@ export class Tramite130121Store extends Store<Tramite130121State> {
  * @param {string} actacion - La acotación a establecer.
  * @memberof Tramite130121Store
  */
-  public setAcotacion(actacion: string): void {
-    this.update((state) => ({
-      ...state,
-      actacion,
-    }));
-  }
+  // public setAcotacion(actacion: string): void {
+  //   this.update((state) => ({
+  //     ...state,
+  //     actacion,
+  //   }));
+  // }
 
 /**
  * Actualiza la descripción del NICO en el estado.
@@ -197,12 +200,12 @@ export class Tramite130121Store extends Store<Tramite130121State> {
  * @param {string} descripcionNico - La descripción del NICO a establecer.
  * @memberof Tramite130121Store
  */
-  public setDescripcionNico(descripcionNico: string): void {
-    this.update((state) => ({
-      ...state,
-      descripcionNico,
-    }));
-  }
+  // public setDescripcionNico(descripcionNico: string): void {
+  //   this.update((state) => ({
+  //     ...state,
+  //     descripcionNico,
+  //   }));
+  // }
 
   /**
    * Actualiza la unidad de medida UMT en el estado.
@@ -210,12 +213,12 @@ export class Tramite130121Store extends Store<Tramite130121State> {
    * @param {string} umt - La unidad de medida a establecer.
    * @memberof Tramite130121Store
    */
-  public setUmt(umt: string): void {
-    this.update((state) => ({
-      ...state,
-      umt,
-    }));
-  }
+  // public setUmt(umt: string): void {
+  //   this.update((state) => ({
+  //     ...state,
+  //     umt,
+  //   }));
+  // }
 
   /**
    * Actualiza el código NICo en el estado.
@@ -223,12 +226,12 @@ export class Tramite130121Store extends Store<Tramite130121State> {
    * @param {string} nico - El código NICo a establecer.
    * @memberof Tramite130121Store
    */
-  public setNico(nico: string): void {
-    this.update((state) => ({
-      ...state,
-      nico,
-    }));
-  }
+  // public setNico(nico: string): void {
+  //   this.update((state) => ({
+  //     ...state,
+  //     nico,
+  //   }));
+  // }
 
   /**
    * Actualiza la solicitud en el estado.
@@ -236,12 +239,12 @@ export class Tramite130121Store extends Store<Tramite130121State> {
    * @param {string} solicitud - La solicitud a establecer.
    * @memberof Tramite130121Store
    */
-  public updateSolicitud(solicitud: string): void {
-    this.update((state) => ({
-      ...state,
-      solicitud,
-    }));
-  }
+  // public updateSolicitud(solicitud: string): void {
+  //   this.update((state) => ({
+  //     ...state,
+  //     solicitud,
+  //   }));
+  // }
 
   /**
    * Actualiza el valor por defecto del select en el estado.
@@ -249,12 +252,12 @@ export class Tramite130121Store extends Store<Tramite130121State> {
    * @param {string} defaultSelect - El valor por defecto del select a establecer.
    * @memberof Tramite130121Store
    */
-  public updateDefaultSelect(defaultSelect: string): void {
-    this.update((state) => ({
-      ...state,
-      defaultSelect,
-    }));
-  }
+  // public updateDefaultSelect(defaultSelect: string): void {
+  //   this.update((state) => ({
+  //     ...state,
+  //     defaultSelect,
+  //   }));
+  // }
 
   /**
    * Actualiza múltiples propiedades del estado.
@@ -272,9 +275,9 @@ export class Tramite130121Store extends Store<Tramite130121State> {
    * @param {string} plazo - El plazo a establecer.
    * @memberof Tramite130121Store
    */
-  public setProducto(plazo: string): void {
-    this.update({ plazo });
-  }
+  // public setProducto(plazo: string): void {
+  //   this.update({ plazo });
+  // }
 
   /**
    * Actualiza la descripción en el estado.
@@ -282,9 +285,9 @@ export class Tramite130121Store extends Store<Tramite130121State> {
    * @param {string} descripcion - La descripción a establecer.
    * @memberof Tramite130121Store
    */
-  public setDescripcion(descripcion: string): void {
-    this.update({ descripcion });
-  }
+  // public setDescripcion(descripcion: string): void {
+  //   this.update({ descripcion });
+  // }
 
   /**
    * Actualiza la cantidad en el estado.
@@ -292,9 +295,9 @@ export class Tramite130121Store extends Store<Tramite130121State> {
    * @param {string} cantidad - La cantidad a establecer.
    * @memberof Tramite130121Store
    */
-  public setCantidad(cantidad: string): void {
-    this.update({ cantidad });
-  }
+  // public setCantidad(cantidad: string): void {
+  //   this.update({ cantidad });
+  // }
 
   /**
    * Actualiza el valor de la partida en USD en el estado.
@@ -302,9 +305,9 @@ export class Tramite130121Store extends Store<Tramite130121State> {
    * @param {number} valorPartidaUSD - El valor en USD a establecer.
    * @memberof Tramite130121Store
    */
-  public setValorPartidaUSD(valorPartidaUSD: number): void {
-    this.update({ valorPartidaUSD });
-  }
+  // public setValorPartidaUSD(valorPartidaUSD: number): void {
+  //   this.update({ valorPartidaUSD });
+  // }
 
   /**
    * Actualiza la unidad de medida en el estado.
@@ -312,9 +315,9 @@ export class Tramite130121Store extends Store<Tramite130121State> {
    * @param {string} unidadMedida - La unidad de medida a establecer.
    * @memberof Tramite130121Store
    */
-  public setUnidadMedida(unidadMedida: string): void {
-    this.update({ unidadMedida });
-  }
+  // public setUnidadMedida(unidadMedida: string): void {
+  //   this.update({ unidadMedida });
+  // }
 
   /**
    * Actualiza el plazo por defecto del producto en el estado.
@@ -322,9 +325,9 @@ export class Tramite130121Store extends Store<Tramite130121State> {
    * @param {string} defaultPlazo - El plazo por defecto a establecer.
    * @memberof Tramite130121Store
    */
-  public updateDefaultProducto(defaultPlazo: string): void {
-    this.update({ defaultPlazo });
-  }
+  // public updateDefaultProducto(defaultPlazo: string): void {
+  //   this.update({ defaultPlazo });
+  // }
 
   /**
    * Actualiza el régimen en el estado.
@@ -332,9 +335,9 @@ export class Tramite130121Store extends Store<Tramite130121State> {
    * @param {string} regimen - El régimen a establecer.
    * @memberof Tramite130121Store
    */
-  public setregimen(regimen: string): void {
-    this.update({ regimen });
-  }
+  // public setregimen(regimen: string): void {
+  //   this.update({ regimen });
+  // }
 
   /**
    * Actualiza la clasificación en el estado.
@@ -342,9 +345,9 @@ export class Tramite130121Store extends Store<Tramite130121State> {
    * @param {string} clasificacion - La clasificación a establecer.
    * @memberof Tramite130121Store
    */
-  public setclasificacion(clasificacion: string): void {
-    this.update({ clasificacion });
-  }
+  // public setclasificacion(clasificacion: string): void {
+  //   this.update({ clasificacion });
+  // }
 
   /**
    * Actualiza el indicador que muestra la tabla en el estado.
@@ -362,42 +365,42 @@ export class Tramite130121Store extends Store<Tramite130121State> {
    * @param {string} valorFacturaUSD - El valor de la factura a establecer en USD.
    * @memberof Tramite130121Store
    */
-  public setValorFacturaUSD(valorFacturaUSD: string): void {
-    this.update((state) => ({
-      ...state,
-      valorFacturaUSD,
-    }));
-  }
+  // public setValorFacturaUSD(valorFacturaUSD: string): void {
+  //   this.update((state) => ({
+  //     ...state,
+  //     valorFacturaUSD,
+  //   }));
+  // }
 
   /**
    * Actualiza la descripción de las partidas de la mercancía en el estado.
    *
-   * @param {string} descripcionPartidasDeLaMercancia - La descripción a establecer para las partidas.
+   * @param {string} descripcionModificar - La descripción a establecer para las partidas.
    * @memberof Tramite130121Store
    */
-  public setDescripcionPartidasDeLaMercancia(
-    descripcionPartidasDeLaMercancia: string
-  ): void {
-    this.update((state) => ({
-      ...state,
-      descripcionPartidasDeLaMercancia,
-    }));
-  }
+  // public setDescripcionPartidasDeLaMercancia(
+  //   descripcionModificar: string
+  // ): void {
+  //   this.update((state) => ({
+  //     ...state,
+  //     descripcionModificar,
+  //   }));
+  // }
 
   /**
    * Actualiza la cantidad de partidas de la mercancía en el estado.
    *
-   * @param {string} cantidadPartidasDeLaMercancia - La cantidad de partidas a establecer.
+   * @param {string} cantidadModificar - La cantidad de partidas a establecer.
    * @memberof Tramite130121Store
    */
-  public setCantidadPartidasDeLaMercancia(
-    cantidadPartidasDeLaMercancia: string
-  ): void {
-    this.update((state) => ({
-      ...state,
-      cantidadPartidasDeLaMercancia,
-    }));
-  }
+  // public setCantidadPartidasDeLaMercancia(
+  //   cantidadModificar: string
+  // ): void {
+  //   this.update((state) => ({
+  //     ...state,
+  //     cantidadModificar,
+  //   }));
+  // }
 
   /**
    * Actualiza el valor de la partida en USD en el estado.
@@ -406,12 +409,12 @@ export class Tramite130121Store extends Store<Tramite130121State> {
    * @param {number} valorPartidaUSD - El valor en USD a establecer.
    * @memberof Tramite130121Store
    */
-  public setvalorPartidaUSD(valorPartidaUSD: number): void {
-    this.update((state) => ({
-      ...state,
-      valorPartidaUSD,
-    }));
-  }
+  // public setvalorPartidaUSD(valorPartidaUSD: number): void {
+  //   this.update((state) => ({
+  //     ...state,
+  //     valorPartidaUSD,
+  //   }));
+  // }
 
   /**
    * Actualiza el valor de la partida en USD para las partidas de la mercancía en el estado.
@@ -419,14 +422,14 @@ export class Tramite130121Store extends Store<Tramite130121State> {
    * @param {number} valorPartidaUSDPartidasDeLaMercancia - El valor en USD a establecer para las partidas.
    * @memberof Tramite130121Store
    */
-  public setValorPartidaUSDPartidasDeLaMercancia(
-    valorPartidaUSDPartidasDeLaMercancia: number
-  ): void {
-    this.update((state) => ({
-      ...state,
-      valorPartidaUSDPartidasDeLaMercancia,
-    }));
-  }
+  // public setValorPartidaUSDPartidasDeLaMercancia(
+  //   valorPartidaUSDPartidasDeLaMercancia: number
+  // ): void {
+  //   this.update((state) => ({
+  //     ...state,
+  //     valorPartidaUSDPartidasDeLaMercancia,
+  //   }));
+  // }
 
   /**
    * Actualiza el bloque en el estado.
@@ -434,9 +437,9 @@ export class Tramite130121Store extends Store<Tramite130121State> {
    * @param {string} bloque - El bloque a establecer.
    * @memberof Tramite130121Store
    */
-  public setBloque(bloque: string): void {
-    this.update({ bloque });
-  }
+  // public setBloque(bloque: string): void {
+  //   this.update({ bloque });
+  // }
 
   /**
    * Actualiza el uso específico en el estado.
@@ -444,9 +447,9 @@ export class Tramite130121Store extends Store<Tramite130121State> {
    * @param {string} usoEspecifico - El uso específico a establecer.
    * @memberof Tramite130121Store
    */
-  public setUsoEspecifico(usoEspecifico: string): void {
-    this.update({ usoEspecifico });
-  }
+  // public setUsoEspecifico(usoEspecifico: string): void {
+  //   this.update({ usoEspecifico });
+  // }
 
   /**
    * Actualiza la justificación para importación o exportación en el estado.
@@ -454,11 +457,11 @@ export class Tramite130121Store extends Store<Tramite130121State> {
    * @param {string} justificacionImportacionExportacion - La justificación a establecer.
    * @memberof Tramite130121Store
    */
-  public setJustificacionImportacionExportacion(
-    justificacionImportacionExportacion: string
-  ): void {
-    this.update({ justificacionImportacionExportacion });
-  }
+  // public setJustificacionImportacionExportacion(
+  //   justificacionImportacionExportacion: string
+  // ): void {
+  //   this.update({ justificacionImportacionExportacion });
+  // }
 
   /**
    * Actualiza las observaciones en el estado.
@@ -466,9 +469,9 @@ export class Tramite130121Store extends Store<Tramite130121State> {
    * @param {string} observaciones - Las observaciones a establecer.
    * @memberof Tramite130121Store
    */
-  public setObservaciones(observaciones: string): void {
-    this.update({ observaciones });
-  }
+  // public setObservaciones(observaciones: string): void {
+  //   this.update({ observaciones });
+  // }
 
   /**
    * Actualiza la entidad en el estado.
@@ -476,9 +479,9 @@ export class Tramite130121Store extends Store<Tramite130121State> {
    * @param {string} entidad - La entidad a establecer.
    * @memberof Tramite130121Store
    */
-  public setEntidad(entidad: string): void {
-    this.update({ entidad });
-  }
+  // public setEntidad(entidad: string): void {
+  //   this.update({ entidad });
+  // }
 
   /**
    * Actualiza la representación en el estado.
@@ -486,9 +489,9 @@ export class Tramite130121Store extends Store<Tramite130121State> {
    * @param {string} representacion - La representación a establecer.
    * @memberof Tramite130121Store
    */
-  public setRepresentacion(representacion: string): void {
-    this.update({ representacion });
-  }
+  // public setRepresentacion(representacion: string): void {
+  //   this.update({ representacion });
+  // }
 
   /**
    * Almacena el valor de la fila seleccionada en la tabla en el estado.
@@ -501,5 +504,12 @@ export class Tramite130121Store extends Store<Tramite130121State> {
     this.update({
       filaSeleccionada: fila,
     });
+  }
+  public establecerDatos(values: Partial<Tramite130121State>): void {  
+      
+    this.update((state) => ({
+      ...state,
+      ...values,
+    }));
   }
 }

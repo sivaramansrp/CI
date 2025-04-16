@@ -65,7 +65,7 @@ export class RepresentacionComponent {
    * @type {EventEmitter<{ form: FormGroup; campo: string; metodoNombre: string }>}
    * @event setValoresStoreEvent - Evento que emite los valores del formulario, el campo y el método para actualizar el store.
    */
-  @Output() setValoresStoreEvent = new EventEmitter<{ form: FormGroup; campo: string; metodoNombre: string }>();
+  @Output() setValoresStoreEvent = new EventEmitter<{ form: FormGroup; campo: string }>();
 
   /**
    * Constructor del componente.
@@ -83,7 +83,7 @@ export class RepresentacionComponent {
    * @param {string} metodoNombre - El nombre del método que se ejecutará.
    * @description Este método emite un evento con los valores necesarios para actualizar el store.
    */
-  setValoresStore(form: FormGroup, campo: string, metodoNombre: string): void {
-    this.setValoresStoreEvent.emit({ form, campo, metodoNombre });
+  setValoresStore(form: FormGroup, campo: string): void {
+    this.setValoresStoreEvent.emit({ form, campo });
   }
 }
