@@ -44,6 +44,9 @@ export interface DetallesDelProducto {
     numeroDeSerie: number;
 }
 
+/**
+ * Representa una lista de catálogo que contiene un conjunto de datos de tipo `Catalogo`.
+ */
 export interface CatalogoLista {
     datos: Catalogo[];
   }
