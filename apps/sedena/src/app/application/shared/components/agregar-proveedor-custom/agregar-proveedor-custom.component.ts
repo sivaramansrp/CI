@@ -4,9 +4,12 @@ import { DestinoFinal, Proveedor } from '../../models/terceros-relacionados.mode
 
 import { CommonModule, Location } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE, TERCEROS_NACIONALIDAD_OPCIONES, TIPO_PERSONA_OPCIONES } from '../../constants/datos-solicitud.enum';
+import { PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE, TERCEROS_NACIONALIDAD_OPCIONES, TIPO_PERSONA_OPCIONES,TERCEROS_NACIONALIDAD_OPCIONES_EXTRANJERO  } from '../../constants/datos-solicitud.enum';
 import { Subject, takeUntil } from 'rxjs';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
+import { ES_CURP } from '../../constants/datos-del-tramilte.enum';
+import  {NUMERO_TRAMITE} from '../../constants/datos-solicitud.enum';
+
 
 /**
  * @component AgregarProveedorComponent
@@ -25,7 +28,7 @@ import { DatosSolicitudService } from '../../services/datos-solicitud.service';
     InputRadioComponent,
   ],
   templateUrl: './agregar-proveedor-custom.component.html',
-  styleUrl: './agregar-proveedor-custom.component.css',
+  styleUrl: './agregar-proveedor-custom.component.scss',
 })
 export class AgregarProveedorCustomComponent implements OnDestroy, OnInit, OnChanges {
 
@@ -131,6 +134,14 @@ export class AgregarProveedorCustomComponent implements OnDestroy, OnInit, OnCha
    */
   public codigosPostalesDatos: Catalogo[] = [];
 
+   /**
+   * @property esCURP
+   * @description Controla la visibilidad de los campos específicoS C.U.R.P.
+   * @type {boolean}
+   * @default false
+   */
+   public esCURP = false;
+
 
   /**
    * @constructor
@@ -190,6 +201,7 @@ export class AgregarProveedorCustomComponent implements OnDestroy, OnInit, OnCha
       telefono: [''],
       nacionalidad:[''],
       rfc:[''],
+      curp:[''],
       municipio:[''],
       localidad:[''],
       correoElectronico: ['', [Validators.required, Validators.email]],
@@ -204,9 +216,12 @@ export class AgregarProveedorCustomComponent implements OnDestroy, OnInit, OnCha
   ngOnInit(): void {
     this.crearFormaulario();
     this.cargarDatos();
+    this.esCURP = ES_CURP.includes(this.idProcedimiento);
+        
     if(this.formaDatos) {
       this.agregarProveedorForm.patchValue(this.formaDatos);
     }
+    this.nacionalidadOpciones();
   }
 
   /**
@@ -323,6 +338,24 @@ export class AgregarProveedorCustomComponent implements OnDestroy, OnInit, OnCha
       nacionalidad: event,
     });
   }
+  /**
+   * @method nacionalidadOpciones
+   * @description Configura las opciones de nacionalidad según el procedimiento.
+   * Utiliza el enum `NUMERO_TRAMITE` para determinar qué opciones mostrar.
+   *
+   * @returns {void} Este método no retorna ningún valor.
+   */
+
+  nacionalidadOpciones(): void {
+    switch (this.idProcedimiento) {
+      case NUMERO_TRAMITE.TRAMITE_240114:
+       this.tercerosNacionalidadOpciones = TERCEROS_NACIONALIDAD_OPCIONES_EXTRANJERO;
+        break
+      default:
+        this.tercerosNacionalidadOpciones;
+      
+  }
+}
 
 
   /**

@@ -43,8 +43,18 @@
         <label class="form-label">R.F.C.:</label>
         <input type="text" class="form-control" formControlName="rfc" />
       </div>
+
+      @if(esCURP){
+        <div class="col-md-6" *ngIf="agregarProveedorForm.get('tipoPersona')?.value !== tipoPersona.MORAL && agregarProveedorForm.get('tipoPersona')?.value !== tipoPersona.FISICA">
+          <label class="form-label">C.U.R.P:</label>
+          <input type="text" class="form-control" formControlName="curp" />
+        </div>
+      }
     </div>
-    } @if(agregarProveedorForm.get('tipoPersona')?.value ===
+    } 
+    
+    
+    @if(agregarProveedorForm.get('tipoPersona')?.value ===
     tipoPersona.MORAL || agregarProveedorForm.get('tipoPersona')?.untouched)
     {
     <div class="row">
