@@ -16,6 +16,8 @@ import { TercerosRelacionadosFabSeccionComponent } from '../../shared/components
 import { ToastrService } from 'ngx-toastr';
 import { provideHttpClient } from '@angular/common/http';
 import { TercerosRelacionadosFebService } from '../../shared/services/tereceros-relacionados-feb.service';
+import { PasoDosComponent } from '../../shared/components/paso-dos/paso-dos.component';
+import { PasoTresComponent } from '../../shared/components/paso-tres/paso-tres.component';
 
 
 @NgModule({
@@ -33,6 +35,8 @@ import { TercerosRelacionadosFebService } from '../../shared/services/tereceros-
       AlertComponent,
       TercerosRelacionadosComponent,
       TercerosRelacionadosFabSeccionComponent,
+      PasoDosComponent,
+      PasoTresComponent,
       ModificacionPermisoSanitarioLaSaludRoutingModule],
        providers: [provideHttpClient(), ToastrService,TercerosRelacionadosFebService]
 })

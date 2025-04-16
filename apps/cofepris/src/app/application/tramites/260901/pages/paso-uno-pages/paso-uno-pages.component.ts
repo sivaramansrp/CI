@@ -32,71 +32,95 @@ export class PasoUnoPagesComponent implements AfterViewInit {
     }
 
     collectFormValues(): any {
-      const ALL_FORM_VALUES: any = {};
+      const ALL_FORM_VALUES: any = {
+        solicitante: null,
+        datosSolicitud: [],
+        tercerosRelacionados: [],
+        pagoDeDerechos: [],
+        tramitesAsociados: [],
+      };
     
-      // Collect values for each tab
+      console.log('Starting to collect values from all tabs...');
     
+      // Tab 1: SolicitanteComponent
       if (this.solicitante?.form) {
-       
+        console.log('Tab 1: Solicitante Form:', this.solicitante.form.value);
         ALL_FORM_VALUES.solicitante = this.solicitante.form.value;
-      } 
-    
-      if (this.datosSolicitudComponents?.length > 0) {
-        this.datosSolicitudComponents.toArray().forEach((component, index) => {
-          if (component?.domicilioEstablecimiento) {
-          
-            ALL_FORM_VALUES[`datosSolicitud_${index}`] = component.domicilioEstablecimiento.value;
-          }
-          if (component?.scianForm) {
-           
-            ALL_FORM_VALUES[`datosSolicitud_${index}_scian`] = component.scianForm.value;
-          }
-          if (component?.solicitudForm) {
-            
-            ALL_FORM_VALUES[`datosSolicitud_${index}_solicitud`] = component.solicitudForm.value;
-          }
-          if (component?.solicitudEstablecimientoForm) {
-         
-            ALL_FORM_VALUES[`datosSolicitud_${index}_solicitudEstablecimiento`] = component.solicitudEstablecimientoForm.value;
-          }
-          if (component?.formMercancias) {
-          
-            ALL_FORM_VALUES[`datosSolicitud_${index}_formMercancias`] = component.formMercancias.value;
-          }
-        });
-      } 
-    
-      if (this.tercerosRelacionadosComponents?.length > 0) {
-        this.tercerosRelacionadosComponents.toArray().forEach((component, index) => {
-          if (component?.agregarFacturadorFormGroup) {
-           
-            ALL_FORM_VALUES[`tercerosRelacionados_${index}_facturador`] = component.agregarFacturadorFormGroup.value;
-          }
-          if (component?.agregarFabricanteFormGroup) {
-           
-            ALL_FORM_VALUES[`tercerosRelacionados_${index}_fabricante`] = component.agregarFabricanteFormGroup.value;
-          }
-          if (component?.agregarDestinatarioFormGroup) {
-          
-            ALL_FORM_VALUES[`tercerosRelacionados_${index}_destinatario`] = component.agregarDestinatarioFormGroup.value;
-          }
-          if (component?.agregarProveedorFormGroup) {
-           
-            ALL_FORM_VALUES[`tercerosRelacionados_${index}_proveedor`] = component.agregarProveedorFormGroup.value;
-          }
-        });
+      } else {
+        console.log('Tab 1: SolicitanteComponent is not initialized or does not have a form.');
       }
     
+      // Tab 2: DatosDelSolicitudModificacionComponent
+      if (this.datosSolicitudComponents?.length > 0) {
+        this.datosSolicitudComponents.toArray().forEach((component, index) => {
+          const childData: any = {};
+          if (component?.domicilioEstablecimiento) {
+            childData.domicilioEstablecimiento = component.domicilioEstablecimiento.value;
+          }
+          if (component?.scianForm) {
+            childData.scianForm = component.scianForm.value;
+          }
+          if (component?.solicitudForm) {
+            childData.solicitudForm = component.solicitudForm.value;
+          }
+          if (component?.solicitudEstablecimientoForm) {
+            childData.solicitudEstablecimientoForm = component.solicitudEstablecimientoForm.value;
+          }
+          if (component?.formMercancias) {
+            childData.formMercancias = component.formMercancias.value;
+          }
+          ALL_FORM_VALUES.datosSolicitud.push(childData);
+        });
+      } else {
+        console.log('Tab 2: DatosDelSolicitudModificacionComponent is not initialized or has no instances.');
+      }
+    
+      // Tab 3: TercerosRelacionadosFabSeccionComponent
+      if (this.tercerosRelacionadosComponents?.length > 0) {
+        this.tercerosRelacionadosComponents.toArray().forEach((component, index) => {
+          const childData: any = {};
+          if (component?.agregarFacturadorFormGroup) {
+            childData.facturador = component.agregarFacturadorFormGroup.value;
+          }
+          if (component?.agregarFabricanteFormGroup) {
+            childData.fabricante = component.agregarFabricanteFormGroup.value;
+          }
+          if (component?.agregarDestinatarioFormGroup) {
+            childData.destinatario = component.agregarDestinatarioFormGroup.value;
+          }
+          if (component?.agregarProveedorFormGroup) {
+            childData.proveedor = component.agregarProveedorFormGroup.value;
+          }
+          ALL_FORM_VALUES.tercerosRelacionados.push(childData);
+        });
+      } else {
+        console.log('Tab 3: TercerosRelacionadosFabSeccionComponent is not initialized or has no instances.');
+      }
+    
+      // Tab 4: PagoDeDerechosEntradaComponent
       if (this.pagoDeDerechosEntradaComponent?.length > 0) {
         this.pagoDeDerechosEntradaComponent.toArray().forEach((component, index) => {
           if (component?.pagoDerechos) {
-          
-            ALL_FORM_VALUES[`pagoDeDerechos_${index}`] = component.pagoDerechos.value;
+            ALL_FORM_VALUES.pagoDeDerechos.push(component.pagoDerechos.value);
           }
         });
-      } 
+      } else {
+        console.log('Tab 4: PagoDeDerechosEntradaComponent is not initialized or has no instances.');
+      }
     
-   
+      // Tab 5: TramitesAsociadosSeccionComponent
+      if (this.tramitesAsociadosSeccionComponent?.length > 0) {
+        this.tramitesAsociadosSeccionComponent.toArray().forEach((component, index) => {
+          if (component.acuseTablaDatos) {
+            console.log(`Tab 5: TramitesAsociadosSeccionComponent[${index}] Data:`, component.acuseTablaDatos);
+            ALL_FORM_VALUES.tramitesAsociados.push(...component.acuseTablaDatos); // Collect data from all instances
+          }
+        });
+      } else {
+        console.log('Tab 5: TramitesAsociadosSeccionComponent is not initialized or has no instances.');
+      }
+    
+      console.log('Collected All Form Values in Parent-Child Format:', ALL_FORM_VALUES);
       return ALL_FORM_VALUES;
     }
      /**
