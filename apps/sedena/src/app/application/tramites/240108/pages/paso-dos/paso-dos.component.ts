@@ -9,7 +9,7 @@ import {
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { TEXTOS_REQUISITOS } from '../../constants/importacion-armas-municiones.enum';
+import { TEXTOS_REQUISITOS } from '../../constants/importacion-armas-explosivo.enum';
 
 /**
  * @component PasoDosComponent
