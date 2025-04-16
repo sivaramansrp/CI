@@ -1979,6 +1979,13 @@
         "linkDashboard": "/aga/invocar-modulo/solicitante",
         "linkDepartment": "/pago/invocar-modulo/solicitante",
         "department": "aga"
+    },
+    {
+        "id": 284,
+        "tramite": 570102,
+        "linkDashboard": "/aga/registro-solicitud/solicitud",
+        "linkDepartment": "/pago/registro-solicitud/solicitud",
+        "department": "aga"
     }
 
     

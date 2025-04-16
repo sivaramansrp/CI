@@ -1,0 +1,19 @@
+<div class="row mt-5"><label>Desistir Solicitud de Servicios Extraordinarios</label></div>
+<div class="row mt-5">
+    <label>Folio VUCEM</label>
+    <input type="text" class="form-control gris-color" readonly  />
+</div>
+
+<div class="row mt-5">
+    <div class="col-md-4">
+    <label>*Motivo del Desistimiento</label>
+    <textarea cols="50" rows="5"></textarea>
+</div></div>
+<div class="col-md-12 mt-5 d-flex justify-content-end">
+<button type="button" class="btn btn-primary ms-3" (click)="cargaArchivo()" >Guardar y firmar
+</button>
+</div>
+@if (nuevaNotificacion ) { <section>
+    <lib-notificaciones [notificacionInput]="nuevaNotificacion"
+        (confirmacionModal)="eliminarPedimento($event)"></lib-notificaciones>
+</section> }
