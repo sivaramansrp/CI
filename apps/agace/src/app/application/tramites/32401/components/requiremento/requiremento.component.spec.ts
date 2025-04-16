@@ -54,11 +54,11 @@ describe('RequirementoComponent', () => {
 
   it('should navigate to the correct route on continuar', () => {
     component.continuar();
-    expect(routerSpy.navigate).toHaveBeenCalledWith(['/pago/manifiesto-aereo/capturar-el-texto-libre']);
+    expect(routerSpy.navigate).toHaveBeenCalledWith(['/agace/manifiesto-aereo/capturar-el-texto-libre']);
   });
 
   it('should navigate to the correct route on cancelar', () => {
     component.cancelar();
-    expect(routerSpy.navigate).toHaveBeenCalledWith(['/pago/manifiesto-aereo/main']);
+    expect(routerSpy.navigate).toHaveBeenCalledWith(['/agace/manifiesto-aereo/main']);
   });
 });

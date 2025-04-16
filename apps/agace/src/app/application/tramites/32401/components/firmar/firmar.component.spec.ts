@@ -60,6 +60,8 @@ describe('FirmarComponent', () => {
     };
     tramiteFolioService.obtenerTramite.mockReturnValue(of(mockTramite));
 
+    fixture.detectChanges();
+
     component.obtieneFirma('validSignature');
 
     expect(tramiteFolioService.obtenerTramite).toHaveBeenCalledWith(19);
@@ -68,7 +70,7 @@ describe('FirmarComponent', () => {
       'validSignature'
     );
     expect(router.navigate).toHaveBeenCalledWith([
-      'pago/registro-solicitud/acuse',
+      'agace/registro-solicitud/acuse',
     ]);
   });
 
@@ -76,9 +78,11 @@ describe('FirmarComponent', () => {
     tramiteFolioService.obtenerTramite.mockReturnValue(
       throwError(() => new Error('Error'))
     );
-
+  
+    fixture.detectChanges();
+  
     component.obtieneFirma('validSignature');
-
+  
     expect(tramiteFolioService.obtenerTramite).toHaveBeenCalledWith(19);
     expect(tramiteStore.establecerTramite).not.toHaveBeenCalled();
     expect(router.navigate).not.toHaveBeenCalled();

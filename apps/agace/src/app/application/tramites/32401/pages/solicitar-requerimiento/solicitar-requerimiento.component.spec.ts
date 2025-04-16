@@ -20,6 +20,7 @@ describe('SolicitarRequerimientoComponent', () => {
     autoridadServiceMock = {
       obtenerTramiteLista: jest.fn().mockReturnValue(of({ catalogos: [] })),
       agregarSolicitud: jest.fn().mockReturnValue(of({ success: true, datos: {} })),
+      agregarRequerimientoOpcions: jest.fn().mockReturnValue(of([])),
     };
 
     tramite32401StoreMock = {
@@ -115,9 +116,9 @@ describe('SolicitarRequerimientoComponent', () => {
 
   it('should navigate to a new route on valorDeAlternancia', () => {
     const routerSpy = jest.spyOn(component['router'], 'navigate');
-    component.valorDeAlternancia({ folioTramite: '123' });
-    expect(routerSpy).toHaveBeenCalledWith(['pago/manifiesto-aereo/requiremento'], {
-      state: { data: { folioTramite: '123' } },
+    component.valorDeAlternancia({ folioTramite: '123', tipoTramite: ''});
+    expect(routerSpy).toHaveBeenCalledWith(['agace/manifiesto-aereo/requiremento'], {
+      state: { data: { folioTramite: '123',  tipoTramite: '' } },
     });
   });
 

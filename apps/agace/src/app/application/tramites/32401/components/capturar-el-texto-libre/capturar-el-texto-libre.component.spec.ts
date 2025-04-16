@@ -61,7 +61,7 @@ describe('CapturarElTextoLibreComponent', () => {
   it('should navigate to the correct route on guardarYFirmar', () => {
     component.guardarYFirmar();
     expect(routerSpy.navigate).toHaveBeenCalledWith([
-      '/pago/manifiesto-aereo/firmar',
+      '/agace/manifiesto-aereo/firmar',
     ]);
   });
   it('should call agregarCapturarElTextoLibre and update capturarElTextoLibre', () => {
