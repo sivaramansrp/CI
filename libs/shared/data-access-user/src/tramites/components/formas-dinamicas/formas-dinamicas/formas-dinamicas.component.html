@@ -145,10 +145,10 @@
                       </div>
                     </div>
                   } @case ('date') {
-                    <div [ngClass]="[obtenerClaseResponsiva(item.clase), 'mt-' + item.margin_top]" class="min-height">
+                    <div [ngClass]="[obtenerClaseResponsiva(item.clase), 'mt-' + item.marginTop]" class="min-height">
                       <div class="form-group">
                         <label class="form-label" [for]="item.id">{{
-                          item.label_nombre
+                          item.labelNombre
                         }}</label>
                         <input 
                           type="date"
@@ -156,7 +156,7 @@
                           [id]="item.id"
                           [formControlName]="item.campo"
                           [required]="seRequiere(item.campo)"  
-                          [readonly]="item.solo_lectura"
+                          [readonly]="item.soloLectura"
                           [ngClass]="esValido(item.campo) ? 'required' : ''">
                         <validadores-de-formularios 
                           [forma]="forma" 
@@ -164,6 +164,7 @@
                           [validadores]="item.validadores ?? []"
                         ></validadores-de-formularios>
                       </div>
+                    </div>
                   } @case ('') {
                     <div [ngClass]="[obtenerClaseResponsiva(item.clase), 'mt-' + item.marginTop]">
                     </div>
