@@ -6,8 +6,8 @@ import { OnInit } from '@angular/core';
 import { Proveedor } from '../../../../shared/models/terceros-relacionados.model';
 import { Subject } from 'rxjs';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
-import { Tramite240101Query } from '../../estados/tramite240107Query.query';
-import { Tramite240101Store } from '../../estados/tramite240107Store.store';
+import { Tramite240107Query } from '../../estados/tramite240107Query.query';
+import { Tramite240107Store } from '../../estados/tramite240107Store.store';
 import { takeUntil } from 'rxjs';
 
 /**
@@ -48,13 +48,13 @@ export class TercerosRelacionadosContenedoraComponent
    * Constructor del componente.
    *
    * @method constructor
-   * @param {Tramite240101Store} tramiteStore - Store de Akita que maneja el estado del trámite.
-   * @param {Tramite240101Query} tramiteQuery - Query de Akita para obtener datos del trámite.
+   * @param {Tramite240107Store} tramiteStore - Store de Akita que maneja el estado del trámite.
+   * @param {Tramite240107Query} tramiteQuery - Query de Akita para obtener datos del trámite.
    * @returns {void}
    */
   constructor(
-    private tramiteStore: Tramite240101Store,
-    private tramiteQuery: Tramite240101Query // eslint-disable-next-line no-empty-function
+    private tramiteStore: Tramite240107Store,
+    private tramiteQuery: Tramite240107Query // eslint-disable-next-line no-empty-function
   ) {}
 
   /**
@@ -67,13 +67,13 @@ export class TercerosRelacionadosContenedoraComponent
   ngOnInit(): void {
     this.tramiteQuery.getDestinatarioFinalTablaDatos$
       .pipe(takeUntil(this.unsubscribe$))
-      .subscribe((data) => {
+      .subscribe((data: DestinoFinal[]) => {
         this.destinatarioFinalTablaDatos = data;
       });
 
     this.tramiteQuery.getProveedorTablaDatos$
       .pipe(takeUntil(this.unsubscribe$))
-      .subscribe((data) => {
+      .subscribe((data: Proveedor[]) => {
         this.proveedorTablaDatos = data;
       });
   }

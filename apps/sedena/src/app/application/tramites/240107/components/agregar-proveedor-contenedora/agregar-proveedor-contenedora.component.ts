@@ -2,7 +2,7 @@ import { AgregarProveedorComponent } from '../../../../shared/components/agregar
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { Proveedor } from '../../../../shared/models/terceros-relacionados.model';
-import { Tramite240101Store } from '../../estados/tramite240107Store.store';
+import { Tramite240107Store } from '../../estados/tramite240107Store.store';
 
 @Component({
   selector: 'app-agregar-proveedor-contenedora',
@@ -19,7 +19,7 @@ export class AgregarProveedorContenedoraComponent {
    * @param tramite260214Store - Store que administra el estado del trámite 260214.
    */
   // eslint-disable-next-line no-empty-function
-  constructor(public tramite240101Store: Tramite240101Store) {}
+  constructor(public tramite240107Store: Tramite240107Store) {}
 
   /**
    * @method updateProveedorTablaDatos
@@ -29,6 +29,6 @@ export class AgregarProveedorContenedoraComponent {
    * @returns {void} Este método no retorna ningún valor.
    */
   updateProveedorTablaDatos(event: Proveedor[]): void {
-    this.tramite240101Store.updateProveedorTablaDatos(event);
+    this.tramite240107Store.updateProveedorTablaDatos(event);
   }
 }

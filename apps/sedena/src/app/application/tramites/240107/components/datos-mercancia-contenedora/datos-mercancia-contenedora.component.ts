@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { DatosMercanciaComponent } from '../../../../shared/components/datos-mercancia/datos-mercancia.component';
 import { MercanciaDetalle } from '../../../../shared/models/datos-del-tramite.model';
-import { Tramite240101Store } from '../../estados/tramite240107Store.store';
+import { Tramite240107Store } from '../../estados/tramite240107Store.store';
 
 /**
  * @title Datos de la Mercancía Contenedora
@@ -22,11 +22,11 @@ export class DatosMercanciaContenedoraComponent {
    * Constructor del componente.
    *
    * @method constructor
-   * @param {Tramite240101Store} tramiteStore - Store de Akita para actualizar el estado de la tabla de mercancías.
+   * @param {Tramite240107Store} tramiteStore - Store de Akita para actualizar el estado de la tabla de mercancías.
    * @returns {void}
    */
   // eslint-disable-next-line no-empty-function
-  constructor(private tramiteStore: Tramite240101Store) {}
+  constructor(private tramiteStore: Tramite240107Store) {}
 
   /**
    * Actualiza los datos de la tabla de mercancía en el store.

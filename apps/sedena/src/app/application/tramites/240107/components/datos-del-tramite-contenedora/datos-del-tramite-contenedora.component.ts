@@ -2,14 +2,18 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { DatosDelTramiteComponent } from '../../../../shared/components/datos-del-tramite/datos-del-tramite.component';
 import { DatosDelTramiteFormState } from '../../../../shared/models/datos-del-tramite.model';
+import { FormBuilder } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
+import { ID_PROCEDIMIENTO } from '../../constantes/sustancias-quimicas.enum';
 import { MercanciaDetalle } from '../../../../shared/models/datos-del-tramite.model';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
 import { Subject } from 'rxjs';
-import { Tramite240101Query } from '../../estados/tramite240107Query.query';
-import { Tramite240101Store } from '../../estados/tramite240107Store.store';
+import { Tramite240107Query } from '../../estados/tramite240107Query.query';
+import { Tramite240107Store } from '../../estados/tramite240107Store.store';
+import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
 import { takeUntil } from 'rxjs';
-
 /**
  * @title Datos del Trámite Contenedora
  * @description Componente contenedor que se encarga de enlazar el estado del trámite con el componente de datos del trámite.
@@ -19,11 +23,13 @@ import { takeUntil } from 'rxjs';
 @Component({
   selector: 'app-datos-del-tramite-contenedora',
   standalone: true,
-  imports: [CommonModule, DatosDelTramiteComponent],
+  imports: [CommonModule, DatosDelTramiteComponent, ReactiveFormsModule],
   templateUrl: './datos-del-tramite-contenedora.component.html',
   styleUrl: './datos-del-tramite-contenedora.component.css',
 })
 export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
+  public formCombinacion!: FormGroup;
+
   /**
    * Observable para limpiar suscripciones activas al destruir el componente.
    * @property {Subject<void>} unsubscribe$
@@ -42,18 +48,24 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
    */
   public datosDelTramiteFormState!: DatosDelTramiteFormState;
 
+  public readonly idProcedimiento = ID_PROCEDIMIENTO;
+ 
   /**
    * Constructor del componente.
    *
    * @method constructor
-   * @param {Tramite240101Query} tramiteQuery - Query de Akita para obtener el estado actual del trámite.
-   * @param {Tramite240101Store} tramiteStore - Store de Akita para actualizar el estado del trámite.
+   * @param {Tramite240107Query} tramiteQuery - Query de Akita para obtener el estado actual del trámite.
+   * @param {Tramite240107Store} tramiteStore - Store de Akita para actualizar el estado del trámite.
    * @returns {void}
    */
   constructor(
-    private tramiteQuery: Tramite240101Query,
-    private tramiteStore: Tramite240101Store // eslint-disable-next-line no-empty-function
-  ) {}
+    private fb: FormBuilder,
+    private tramiteQuery: Tramite240107Query,
+    private tramiteStore: Tramite240107Store,
+    private validacionesService: ValidacionesFormularioService,
+  ) {
+    this.crearFormCombinacion();
+  }
 
   /**
    * Hook del ciclo de vida que se ejecuta al inicializar el componente.
@@ -63,6 +75,7 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   ngOnInit(): void {
+    this.crearFormCombinacion();
     this.tramiteQuery.getMercanciaTablaDatos$
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((data) => {
@@ -75,17 +88,13 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
         this.datosDelTramiteFormState = data;
       });
   }
+  public isValid(field: string): boolean {
+    return this.validacionesService.isValid(this.formCombinacion, field) ?? false;
+  }
 
-  /**
-   * Hook del ciclo de vida que se ejecuta al destruir el componente.
-   * Libera las suscripciones activas para evitar fugas de memoria.
-   *
-   * @method ngOnDestroy
-   * @returns {void}
-   */
-  ngOnDestroy(): void {
-    this.unsubscribe$.next();
-    this.unsubscribe$.complete();
+  public crearFormCombinacion(): void {
+    this.formCombinacion = this.fb.group({
+    });
   }
 
   /**
@@ -97,5 +106,18 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
    */
   updateDatosDelTramiteFormulario(event: DatosDelTramiteFormState): void {
     this.tramiteStore.updateDatosDelTramiteFormState(event);
+  }
+
+  
+  /**
+   * Hook del ciclo de vida que se ejecuta al destruir el componente.
+   * Libera las suscripciones activas para evitar fugas de memoria.
+   *
+   * @method ngOnDestroy
+   * @returns {void}
+   */
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 }
