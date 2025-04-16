@@ -1,3 +1,7 @@
+/**
+ * datos-retorno-prorroga.component.ts
+ * Componente que gestiona los datos de retorno de prórroga para el trámite 630303.
+ */
 import { CommonModule } from '@angular/common';
 
 import { Component, OnDestroy, OnInit } from '@angular/core';

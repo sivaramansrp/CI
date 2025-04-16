@@ -29,7 +29,11 @@ describe('DatosDeLaSolicitudComponent (Jest)', () => {
     aduanaIngreso: 'Aduana 1',
     seccionAduanera: 'Sección A1',
     fechaIngreso: '2025-04-01',
-    fechaVencimiento: '2025-12-31'
+    fechaVencimiento: '2025-12-31',
+    descripcionMercancia: 'Mercancía de prueba',
+    motivo: 'Motivo de prueba',
+    listaMercancia: '',
+    declaracion: true
   };
 
   beforeEach(async () => {

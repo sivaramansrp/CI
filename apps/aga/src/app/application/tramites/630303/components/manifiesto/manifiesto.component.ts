@@ -1,3 +1,7 @@
+/**
+ * manifiesto.component.ts
+ * Componente que gestiona el manifiesto para el trámite 630303.
+ */
 import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import { CommonModule } from '@angular/common';
@@ -9,33 +13,71 @@ import { Tramite630303Query } from '../../estados/tramite630303.query';
 
 import { Subject, takeUntil } from 'rxjs';
 
+/**
+ * Componente que gestiona el manifiesto para el trámite 630303.
+ * Permite inicializar formularios, obtener datos del estado y manejar el estado del formulario.
+ */
 @Component({
   selector: 'app-manifiesto',
   standalone: true,
-  imports: [CommonModule, TituloComponent,ReactiveFormsModule],
+  imports: [CommonModule, TituloComponent, ReactiveFormsModule],
   templateUrl: './manifiesto.component.html',
   styleUrl: './manifiesto.component.scss',
 })
-export class ManifiestoComponent implements OnInit,OnDestroy{
-  private destroyed$ = new Subject<void>();
-  manifiestoFormulario!: FormGroup;
-  estadoSeleccionado!:Tramite630303State;
+export class ManifiestoComponent implements OnInit, OnDestroy {
 
-  constructor(private fb: FormBuilder,private tramite630303Store: Tramite630303Store,private tramite630303Query: Tramite630303Query) {
-   
-  }
- 
+  /**
+   * Subject utilizado para manejar la destrucción de suscripciones y evitar fugas de memoria.
+   */
+  private destroyed$ = new Subject<void>();
+
+  /**
+   * Formulario reactivo para gestionar el manifiesto.
+   */
+  manifiestoFormulario!: FormGroup;
+
+  /**
+   * Estado seleccionado del trámite 630303.
+   */
+  estadoSeleccionado!: Tramite630303State;
+
+  /**
+   * Constructor del componente.
+   * 
+   * @param fb - Constructor de formularios reactivos.
+   * @param tramite630303Store - Store para manejar el estado del trámite.
+   * @param tramite630303Query - Query para consultar el estado del trámite.
+   */
+  constructor(
+    private fb: FormBuilder,
+    private tramite630303Store: Tramite630303Store,
+    private tramite630303Query: Tramite630303Query
+  ) {}
+
+  /**
+   * Método del ciclo de vida que se ejecuta al inicializar el componente.
+   * Inicializa el formulario y obtiene el estado del trámite.
+   */
   ngOnInit(): void {
     this.getValorStore();
     this.inizializarFormulario();
   }
 
+  /**
+   * Inicializa el formulario reactivo con valores predeterminados y validaciones.
+   */
   inizializarFormulario(): void {
     this.manifiestoFormulario = this.fb.group({
       declaracion: [this.estadoSeleccionado?.declaracion, Validators.required]
     });
   }
 
+  /**
+   * Actualiza un valor específico en el store del trámite.
+   * 
+   * @param FormGroup - Formulario reactivo.
+   * @param control - Nombre del control cuyo valor se actualizará en el store.
+   */
   setValorStore(FormGroup: FormGroup, control: string): void {
     const VALOR = FormGroup.get(control)?.value;
     this.tramite630303Store.setTramite630303State({
@@ -43,17 +85,25 @@ export class ManifiestoComponent implements OnInit,OnDestroy{
     });
   }
 
-    getValorStore(): void {
-      this.tramite630303Query.selectTramite630303State$.pipe(
-        takeUntil(this.destroyed$)
-      ).subscribe(
-        (data) => {
-          this.estadoSeleccionado = data;
-        }
-      );
-    }
-    ngOnDestroy(): void {
-      this.destroyed$.next();
-      this.destroyed$.complete();
-    }
+  /**
+   * Obtiene el estado actual del trámite desde el store.
+   */
+  getValorStore(): void {
+    this.tramite630303Query.selectTramite630303State$.pipe(
+      takeUntil(this.destroyed$)
+    ).subscribe(
+      (data) => {
+        this.estadoSeleccionado = data;
+      }
+    );
+  }
+
+  /**
+   * Método del ciclo de vida que se ejecuta al destruir el componente.
+   * Libera las suscripciones activas para evitar fugas de memoria.
+   */
+  ngOnDestroy(): void {
+    this.destroyed$.next();
+    this.destroyed$.complete();
+  }
 }
