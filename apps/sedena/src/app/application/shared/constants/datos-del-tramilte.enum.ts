@@ -67,7 +67,7 @@ export const PUEDE_MOSTRAR_LA_LISTA_CRUZADA_FOR_MERCANCIA = [240108, 240107];
  * @type {number[]}
  * @description Contiene un arreglo de números que identifican el semestre habilitado. Este valor puede ser utilizado para validar o configurar funcionalidades relacionadas con el período académico activo.
  */
-export const PERIODO_SEMESTRE_HABILITADO = [240119, 240108, 240107];
+export const PERIODO_SEMESTRE_HABILITADO = [240119, 240108, 240107, 240114];
 
 /**
  * Identificadores numéricos relacionados con manifiestos y declaraciones.
@@ -95,7 +95,7 @@ export const FETCHA_PAGO = [240107];
  * @type {number[]}
  * @description Contiene un arreglo de identificadores numéricos relacionados con CURP en el sistema.
  */
-export const ES_CURP = [240107];
+export const ES_CURP = [240107,240114];
 
 /**
  * Período del primer semestre.
