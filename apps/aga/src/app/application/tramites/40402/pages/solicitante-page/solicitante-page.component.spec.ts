@@ -11,12 +11,12 @@ import {
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { of as observableOf } from 'rxjs';
 import { SolicitantePageComponent } from './solicitante-page.component';
-import { Tramite40403Store } from '../../estados/tramite40403.store';
-import { Tramite40403Query } from '../../estados/tramite40403.query';
 import { WizardComponent } from '@ng-mf/data-access-user';
+import { Tramite40402Query } from '../../estados/tramite40402.query';
+import { Tramite40402Store } from '../../estados/tramite40402.store';
 
 @Injectable()
-class MockTramite40403Store {
+class MockTramite40402Store {
   establecerSeccion = jest.fn();
   establecerFormaValida = jest.fn();
 }
@@ -25,17 +25,17 @@ class MockTramite40403Store {
 describe('SolicitantePageComponent', () => {
   let fixture: ComponentFixture<SolicitantePageComponent>;
   let component: SolicitantePageComponent;
-  let Tramite40403QueryMock: jest.Mocked<Tramite40403Query>;
-  let tramite40403StoreMock: MockTramite40403Store;
+  let Tramite40402QueryMock: jest.Mocked<Tramite40402Query>;
+  let tramite40402StoreMock: MockTramite40402Store;
 
   beforeEach(async () => {
-    Tramite40403QueryMock = {
+    Tramite40402QueryMock = {
       selectSeccionState$: observableOf({
         pasos: [],
         currentStep: 1,
       }),
-    } as unknown as jest.Mocked<Tramite40403Query>;
-    tramite40403StoreMock = new MockTramite40403Store();
+    } as unknown as jest.Mocked<Tramite40402Query>;
+    tramite40402StoreMock = new MockTramite40402Store();
     await TestBed.configureTestingModule({
       imports: [FormsModule, ReactiveFormsModule],
       declarations: [
@@ -43,8 +43,8 @@ describe('SolicitantePageComponent', () => {
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
       providers: [
-        { provide: Tramite40403Query, useValue: Tramite40403QueryMock },
-        { provide: Tramite40403Store, useValue: tramite40403StoreMock },
+        { provide: Tramite40402Query, useValue: Tramite40402QueryMock },
+        { provide: Tramite40402Store, useValue: tramite40402StoreMock },
       ],
     }).compileComponents();
 
@@ -95,7 +95,7 @@ describe('SolicitantePageComponent', () => {
    */
   it('should assign sections correctly using asignarSecciones()', () => {
     (component as any).asignarSecciones();
-    expect(tramite40403StoreMock.establecerSeccion).toHaveBeenCalled();
-    expect(tramite40403StoreMock.establecerFormaValida).toHaveBeenCalled();
+    expect(tramite40402StoreMock.establecerSeccion).toHaveBeenCalled();
+    expect(tramite40402StoreMock.establecerFormaValida).toHaveBeenCalled();
   });
 });

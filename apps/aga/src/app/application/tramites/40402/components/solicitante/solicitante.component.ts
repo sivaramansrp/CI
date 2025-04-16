@@ -22,8 +22,6 @@ export class SolicitanteComponent implements OnInit {
    * Constructor para inyectar las dependencias necesarias.
    * @param fb - Servicio FormBuilder para crear formularios reactivos.
    */
-  // eslint-deshabilitar-la-siguiente-línea-sin-función-vacía
-  // eslint-disable-next-line no-empty-function
   constructor(private fb: FormBuilder) { }
 
   /**

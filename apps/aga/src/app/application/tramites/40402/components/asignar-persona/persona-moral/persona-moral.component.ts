@@ -4,12 +4,11 @@ import { Subject, map, merge, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 
 import { Catalogo, CatalogoSelectComponent, TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
-import { CONFIGURACION_PARA_PME_ENCABEZADO_DE_TABLA, TEXTOS } from '../../../../40201/constantes/transportacion-maritima.enum';
-import { PersonaMoralExtranjeraForm } from '../../../../40201/models/transportacion-maritima.model';
-import { Tramite40201Store, TransportacionMaritima40201State } from 'apps/aga/src/app/application/core/estados/tramites/tramite40201.store';
-import { Tramite40201Query } from 'apps/aga/src/app/application/core/queries/tramite40201.query';
-import { TransportacionMaritimaService } from '../../../../40201/services/transportacion-maritima/transportacion-maritima.service';
-
+import { PersonaMoralExtranjeraForm } from '../../../../40402/models/transportacion-maritima.model';
+import { TransportacionMaritimaService } from '../../../../40402/services/transportacion-maritima/transportacion-maritima.service';
+import { Tramite40402Store, Tramitenacionales40402State } from '../../../estados/tramite40402.store';
+import { Tramite40402Query } from '../../../estados/tramite40402.query';
+import { CONFIGURACION_PARA_PME_ENCABEZADO_DE_TABLA, TEXTOS } from '../../../constants/transportacion-maritima.enum';
 
 /**
  * Componente para la captura de datos de persona moral extranjera.
@@ -66,7 +65,7 @@ export class PersonaMoralComponent implements OnInit, OnDestroy {
   /**
    * Estado de la solicitud.
    */
-  public transportacionMaritimaState!: TransportacionMaritima40201State;
+  public transportacionMaritimaState!: Tramitenacionales40402State;
 
   /**
    * Subject para destruir notificador.
@@ -76,14 +75,14 @@ export class PersonaMoralComponent implements OnInit, OnDestroy {
   /**
    * Constructor del componente.
    * @param {FormBuilder} fb - Servicio para construir formularios reactivos.
-   * @param {Tramite40201Store} tramite40201Store - Store para gestionar el estado del trámite 40201.
-   * @param {Tramite40201Query} tramite40201Query - Query para consultar el estado del trámite 40201.
+   * @param {Tramite40402Store} tramite40402Store - Store para gestionar el estado del trámite 40402.
+   * @param {Tramite40402Query} tramite40402Query - Query para consultar el estado del trámite 40402.
    * @param {TransportacionMaritimaService} transportacionMaritimaService - Servicio para obtener datos de transportación marítima.
    */
   constructor(
     private fb: FormBuilder,
-    private tramite40201Store: Tramite40201Store,
-    private tramite40201Query: Tramite40201Query,
+    private tramite40402Store: Tramite40402Store,
+    private tramite40402Query: Tramite40402Query,
     private transportacionMaritimaService: TransportacionMaritimaService,
   ) {
     // El constructor se utiliza para la inyección de dependencias
@@ -96,7 +95,7 @@ export class PersonaMoralComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.inicializaCatalogos();
 
-    this.tramite40201Query.selectSeccionState$
+    this.tramite40402Query.selectSeccionState$
       .pipe(
         takeUntil(this.destruirNotificador$),
         map((seccionState) => {
@@ -225,7 +224,7 @@ export class PersonaMoralComponent implements OnInit, OnDestroy {
    */
   paisSeleccion(): void {
     const PAIS = this.personaMoralExtranjeraForm.get('paisPME')?.value;
-    this.tramite40201Store.setPaisPME(PAIS);
+    this.tramite40402Store.setPaisPME(PAIS);
   }
 
   /**
@@ -248,7 +247,7 @@ export class PersonaMoralComponent implements OnInit, OnDestroy {
       domicilioPME: `${personaMoralExtranjeraFormDatos.callePME} ${personaMoralExtranjeraFormDatos.numeroExteriorPME} ${personaMoralExtranjeraFormDatos.estadoPME} ${PAIS} ${personaMoralExtranjeraFormDatos.codigoPostalPME}`.trim(),
     });
     this.personaMoralExtranjeraTabla = NUEVO_CUERPO_TABLA;
-    this.tramite40201Store.setPersonaMoralExtranjeraTabla(this.personaMoralExtranjeraTabla);
+    this.tramite40402Store.setPersonaMoralExtranjeraTabla(this.personaMoralExtranjeraTabla);
     this.limpiarDatosPME();
     this.cerrarModal();
   }
@@ -293,16 +292,16 @@ export class PersonaMoralComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Establece los valores en el store de tramite40201.
+   * Establece los valores en el store de tramite40402.
    *
    * @param {FormGroup} form - El formulario del cual se obtiene el valor.
    * @param {string} campo - El nombre del campo del formulario cuyo valor se va a obtener.
    * @param {string} metodoNombre - El nombre del método en el store que se va a invocar con el valor del campo.
    * @returns {void}
    */
-  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite40201Store): void {
+  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite40402Store): void {
     const VALOR = form.get(campo)?.value;
-    (this.tramite40201Store[metodoNombre] as (value: unknown) => void)(VALOR);
+    (this.tramite40402Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
 
   /**

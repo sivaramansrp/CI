@@ -1,13 +1,10 @@
-import {
-  Tramite40403Store,
-  Tramitenacionales40403State,
-} from './tramite40403.store';
 import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
+import { Tramite40402Store, Tramitenacionales40402State } from './tramite40402.store';
 
 @Injectable({ providedIn: 'root' })
-export class Tramite40403Query extends Query<Tramitenacionales40403State> {
-  constructor(protected override store: Tramite40403Store) {
+export class Tramite40402Query extends Query<Tramitenacionales40402State> {
+  constructor(protected override store: Tramite40402Store) {
     super(store);
   }
   /**

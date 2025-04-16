@@ -1,19 +1,14 @@
-/* eslint-disable no-empty-function */
-
-import {
-  Tramite40403Store,
-  Tramitenacionales40403State,
-} from '../../estados/tramite40403.store';
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS } from '@ng-mf/data-access-user';
-import { SECCIONES_TRAMITE_40403 } from '../../constants/solicitud.enums';
+import { SECCIONES_TRAMITE_40402 } from '../../constants/solicitud.enums';
 import { Subject } from 'rxjs';
-import { Tramite40403Query } from '../../estados/tramite40403.query';
 import { WizardComponent } from '@ng-mf/data-access-user';
 import { map } from 'rxjs/operators';
 import { takeUntil } from 'rxjs/operators';
+import { Tramite40402Store, Tramitenacionales40402State } from '../../estados/tramite40402.store';
+import { Tramite40402Query } from '../../estados/tramite40402.query';
 /**
  * Interfaz que define la estructura de un botón de acción en el asistente.
  */
@@ -48,7 +43,7 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
   /**
    * Estado actual de las secciones del formulario, gestionado por el store.
    */
-  public seccion!: Tramitenacionales40403State;
+  public seccion!: Tramitenacionales40402State;
 
   /**
    * Notificador para gestionar la destrucción de suscripciones activas.
@@ -72,12 +67,12 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
 
   /**
    * Constructor del componente.
-   * @param tramite40403Query - Consulta para obtener datos del estado del trámite.
-   * @param tramite40403Store - Almacén para gestionar el estado del trámite.
+   * @param tramite40402Query - Consulta para obtener datos del estado del trámite.
+   * @param tramite40402Store - Almacén para gestionar el estado del trámite.
    */
   constructor(
-    private tramite40403Query: Tramite40403Query,
-    private tramite40403Store: Tramite40403Store
+    private tramite40402Query: Tramite40402Query,
+    private tramite40402Store: Tramite40402Store
   ) {}
 
   /**
@@ -92,7 +87,7 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
       return paso;
     });
 
-    this.tramite40403Query.selectSeccionState$
+    this.tramite40402Query.selectSeccionState$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
@@ -145,13 +140,13 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
     const FORMA_VALIDA: boolean[] = [];
 
     for (const LLAVE_SECCION of Object.keys(
-      SECCIONES_TRAMITE_40403.PASO_1
-    ) as Array<keyof typeof SECCIONES_TRAMITE_40403.PASO_1>) {
-      SECCIONES.push(SECCIONES_TRAMITE_40403.PASO_1[LLAVE_SECCION]);
+      SECCIONES_TRAMITE_40402.PASO_1
+    ) as Array<keyof typeof SECCIONES_TRAMITE_40402.PASO_1>) {
+      SECCIONES.push(SECCIONES_TRAMITE_40402.PASO_1[LLAVE_SECCION]);
       FORMA_VALIDA.push(false);
     }
 
-    this.tramite40403Store.establecerSeccion(SECCIONES);
-    this.tramite40403Store.establecerFormaValida(FORMA_VALIDA);
+    this.tramite40402Store.establecerSeccion(SECCIONES);
+    this.tramite40402Store.establecerFormaValida(FORMA_VALIDA);
   }
 }

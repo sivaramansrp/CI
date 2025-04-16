@@ -2,8 +2,8 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { Subject } from 'rxjs';
-import { Tramite40403Service } from '../../estados/tramite40403.service';
 import { takeUntil } from 'rxjs';
+import { Tramite40402Service } from '../../estados/tramite40402.service';
 
 @Component({
   selector: 'app-datos-tramite',
@@ -40,12 +40,12 @@ export class DatosTramiteComponent implements OnInit, OnDestroy {
   /**
    * Constructor del componente.
    * @param fb - FormBuilder para inicializar el formulario reactivo.
-   * @param tramite40403Service - Servicio para interactuar con la API relacionada con el trámite.
+   * @param tramite40402Service - Servicio para interactuar con la API relacionada con el trámite.
    */
 
   constructor(
     private fb: FormBuilder,
-    private tramite40403Service: Tramite40403Service
+    private tramite40402Service: Tramite40402Service
   ) {}
   /**
    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
@@ -97,7 +97,7 @@ export class DatosTramiteComponent implements OnInit, OnDestroy {
    */
 
   private cargarCodigoTransportacion(): void {
-    this.tramite40403Service
+    this.tramite40402Service
       .geTideCodTransportacionAerea()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((datos) => {
@@ -108,7 +108,7 @@ export class DatosTramiteComponent implements OnInit, OnDestroy {
    * Carga los tipos de CAAT aéreo desde el servicio.
    */
   private cargarTipoCaatAereo(): void {
-    this.tramite40403Service
+    this.tramite40402Service
       .getTipoDeCaatAerea ()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((datos) => {
@@ -134,7 +134,7 @@ export class DatosTramiteComponent implements OnInit, OnDestroy {
   buscarSolicitudPorCAAT(): void {
     if (this.formulario.valid) {
       const claveFolio = this.formulario.get('claveFolioCAAT')?.value;
-      this.tramite40403Service
+      this.tramite40402Service
         .buscarSolicitudPorCAATe(claveFolio)
         .pipe(takeUntil(this.destroyNotifier$))
         .subscribe((respuesta) => {
@@ -162,7 +162,7 @@ export class DatosTramiteComponent implements OnInit, OnDestroy {
    */
 
   tipoDeCaatAereaData(): void {
-    this.tramite40403Service
+    this.tramite40402Service
       .getTipoDeCaatAerea ()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data) => {
@@ -173,7 +173,7 @@ export class DatosTramiteComponent implements OnInit, OnDestroy {
    * Carga los datos del catálogo de códigos de transportación aérea desde el servicio.
    */
   ideCodTransportacionAereaData(): void {
-    this.tramite40403Service
+    this.tramite40402Service
       .geTideCodTransportacionAerea()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data) => {

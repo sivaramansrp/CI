@@ -1,4 +1,4 @@
-export const SECCIONES_TRAMITE_40403 = {
+export const SECCIONES_TRAMITE_40402 = {
     PASO_1: {
       VALIDACION_SECCION_1: false,
       VALIDACION_SECCION_2: true,

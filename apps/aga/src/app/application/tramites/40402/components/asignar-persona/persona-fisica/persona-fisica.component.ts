@@ -3,11 +3,11 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { Subject, map, merge, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { Catalogo, CatalogoSelectComponent, TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
-import { PersonaFisicaExtranjeraForm } from '../../../../40201/models/transportacion-maritima.model';
-import { CONFIGURACION_PARA_PFE_ENCABEZADO_DE_TABLA, TEXTOS } from '../../../../40201/constantes/transportacion-maritima.enum';
-import { Tramite40201Store, TransportacionMaritima40201State } from 'apps/aga/src/app/application/core/estados/tramites/tramite40201.store';
-import { Tramite40201Query } from 'apps/aga/src/app/application/core/queries/tramite40201.query';
-import { TransportacionMaritimaService } from '../../../../40201/services/transportacion-maritima/transportacion-maritima.service';
+import { PersonaFisicaExtranjeraForm } from '../../../../40402/models/transportacion-maritima.model';
+import { TransportacionMaritimaService } from '../../../../40402/services/transportacion-maritima/transportacion-maritima.service';
+import { CONFIGURACION_PARA_PFE_ENCABEZADO_DE_TABLA, TEXTOS } from '../../../constants/transportacion-maritima.enum';
+import { Tramite40402Store, Tramitenacionales40402State } from '../../../estados/tramite40402.store';
+import { Tramite40402Query } from '../../../estados/tramite40402.query';
 
 /**
  * Componente para gestionar la información de personas físicas extranjeras.
@@ -61,7 +61,7 @@ export class PersonaFisicaComponent implements OnInit, OnDestroy {
   /**
    * Estado de la solicitud.
    */
-  public transportacionMaritimaState!: TransportacionMaritima40201State;
+  public transportacionMaritimaState!: Tramitenacionales40402State;
 
   /**
    * Subject para destruir notificador.
@@ -71,14 +71,14 @@ export class PersonaFisicaComponent implements OnInit, OnDestroy {
   /**
    * Constructor del componente.
    * @param fb FormBuilder para crear formularios reactivos.
-   * @param tramite40201Store Store para gestionar el estado del trámite 40201.
-   * @param tramite40201Query Query para consultar el estado del trámite 40201.
+   * @param tramite40402Store Store para gestionar el estado del trámite 40402.
+   * @param tramite40402Query Query para consultar el estado del trámite 40402.
    * @param transportacionMaritimaService Servicio para obtener los catálogos y datos relacionados con los transportacion marítima.
    */
   constructor(
     private fb: FormBuilder,
-    private tramite40201Store: Tramite40201Store,
-    private tramite40201Query: Tramite40201Query,
+    private tramite40402Store: Tramite40402Store,
+    private tramite40402Query: Tramite40402Query,
     private transportacionMaritimaService: TransportacionMaritimaService,
   ) { 
     // El constructor se utiliza para la inyección de dependencias
@@ -90,7 +90,7 @@ export class PersonaFisicaComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.inicializaCatalogos();
 
-    this.tramite40201Query.selectSeccionState$
+    this.tramite40402Query.selectSeccionState$
       .pipe(
         takeUntil(this.destruirNotificador$),
         map((seccionState) => {
@@ -220,7 +220,7 @@ export class PersonaFisicaComponent implements OnInit, OnDestroy {
    */
   paisSeleccion(): void {
     const PAIS = this.personaFisicaExtranjeraForm.get('paisPFE')?.value;
-    this.tramite40201Store.setPaisPFE(PAIS);
+    this.tramite40402Store.setPaisPFE(PAIS);
   }
 
   /**
@@ -243,7 +243,7 @@ export class PersonaFisicaComponent implements OnInit, OnDestroy {
       domicilioPFE: `${personaFisicaExtranjeraFormDatos.callePFE} ${personaFisicaExtranjeraFormDatos.numeroExteriorPFE} ${personaFisicaExtranjeraFormDatos.ciudadPFE} ${personaFisicaExtranjeraFormDatos.estadoPFE} ${PAIS} ${personaFisicaExtranjeraFormDatos.codigoPostalPFE}`.trim(),
     });
     this.personaFisicaExtranjeraTabla = NUEVO_CUERPO_TABLA;
-    this.tramite40201Store.setPersonaFisicaExtranjeraTabla(this.personaFisicaExtranjeraTabla);
+    this.tramite40402Store.setPersonaFisicaExtranjeraTabla(this.personaFisicaExtranjeraTabla);
     this.limpiarDatosPFE();
     this.cerrarModal();
   }
@@ -290,16 +290,16 @@ export class PersonaFisicaComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Establece los valores en el store de tramite40201.
+   * Establece los valores en el store de tramite40402.
    *
    * @param {FormGroup} form - El formulario del cual se obtiene el valor.
    * @param {string} campo - El nombre del campo del formulario cuyo valor se va a obtener.
    * @param {string} metodoNombre - El nombre del método en el store que se va a invocar con el valor del campo.
    * @returns {void}
    */
-  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite40201Store): void {
+  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite40402Store): void {
     const VALOR = form.get(campo)?.value;
-    (this.tramite40201Store[metodoNombre] as (value: unknown) => void)(VALOR);
+    (this.tramite40402Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
 
   /**

@@ -2,19 +2,19 @@
 // import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
 // import { of, Subject } from 'rxjs';
 // import { PersonaMoralExtranjeraComponent } from './persona-moral-extranjera.component';
-// import { Tramite40201Store } from '../../../../core/estados/tramites/tramite40201.store';
-// import { Tramite40201Query } from '../../../../core/queries/tramite40201.query';
+// import { Tramite40402Store } from '../../../../core/estados/tramites/tramite40402.store';
+// import { Tramite40402Query } from '../../../../core/queries/tramite40402.query';
 // import { TransportacionMaritimaService } from '../../services/transportacion-maritima/transportacion-maritima.service';
 
 // describe('PersonaMoralExtranjeraComponent', () => {
 //   let component: PersonaMoralExtranjeraComponent;
 //   let fixture: ComponentFixture<PersonaMoralExtranjeraComponent>;
-//   let tramite40201StoreMock: jest.Mocked<Tramite40201Store>;
-//   let tramite40201QueryMock: jest.Mocked<Tramite40201Query>;
+//   let tramite40402StoreMock: jest.Mocked<Tramite40402Store>;
+//   let tramite40402QueryMock: jest.Mocked<Tramite40402Query>;
 //   let transportacionMaritimaServiceMock: jest.Mocked<TransportacionMaritimaService>;
 
 //   beforeEach(async () => {
-//     tramite40201StoreMock = {
+//     tramite40402StoreMock = {
 //       setPersonaMoralExtranjeraTabla: jest.fn(),
 //       setPaisPME: jest.fn(),
 //       setCodigoPostalPME: jest.fn(),
@@ -28,9 +28,9 @@
 //       setApellidoMaternoDG: jest.fn(),
 //       setDenominacionPME: jest.fn(),
 //       setCorreoPME: jest.fn(),
-//     } as unknown as jest.Mocked<Tramite40201Store>;
+//     } as unknown as jest.Mocked<Tramite40402Store>;
 
-//     tramite40201QueryMock = {
+//     tramite40402QueryMock = {
 //       selectSeccionState$: of({
 //           personaMoralExtranjeraTabla: [],
 //           paisPME: '',
@@ -46,7 +46,7 @@
 //           denominacionPME: '',
 //           correoPME: '',
 //         }),
-//     } as unknown as jest.Mocked<Tramite40201Query>;
+//     } as unknown as jest.Mocked<Tramite40402Query>;
 
 //     transportacionMaritimaServiceMock = {
 //       getPaisCatalogo: jest.fn().mockReturnValue(of({ data: [] })),
@@ -56,8 +56,8 @@
 //       imports: [ReactiveFormsModule, PersonaMoralExtranjeraComponent],
 //       providers: [
 //         FormBuilder,
-//         { provide: Tramite40201Store, useValue: tramite40201StoreMock },
-//         { provide: Tramite40201Query, useValue: tramite40201QueryMock },
+//         { provide: Tramite40402Store, useValue: tramite40402StoreMock },
+//         { provide: Tramite40402Query, useValue: tramite40402QueryMock },
 //         { provide: TransportacionMaritimaService, useValue: transportacionMaritimaServiceMock },
 //       ],
 //     }).compileComponents();
@@ -87,7 +87,7 @@
 //   it('should update the store when a country is selected', () => {
 //     component.personaMoralExtranjeraForm.get('cvePais')?.setValue('1');
 //     component.paisSeleccion();
-//     expect(tramite40201StoreMock.setPaisPME).toHaveBeenCalledWith('1');
+//     expect(tramite40402StoreMock.setPaisPME).toHaveBeenCalledWith('1');
 //   });
 
 //   it('should add a new person to the table on agregarPME', () => {
@@ -118,7 +118,7 @@
 //       nombreDirectorGeneral: 'John Doe Smith',
 //       domicilioPME: 'Calle 123 Estado México 12345',
 //     });
-//     expect(tramite40201StoreMock.setPersonaMoralExtranjeraTabla).toHaveBeenCalledWith(component.personaMoralExtranjeraTabla);
+//     expect(tramite40402StoreMock.setPersonaMoralExtranjeraTabla).toHaveBeenCalledWith(component.personaMoralExtranjeraTabla);
 //   });
 
 //   it('should reset the form and update the store on limpiarDatosPME', () => {

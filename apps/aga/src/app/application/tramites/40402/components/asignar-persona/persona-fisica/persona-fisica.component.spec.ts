@@ -2,19 +2,19 @@
 // import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
 // import { of, Subject } from 'rxjs';
 // import { PersonaFisicaExtranjeraComponent } from './persona-fisica-extranjera.component';
-// import { Tramite40201Store } from '../../../../core/estados/tramites/tramite40201.store';
-// import { Tramite40201Query } from '../../../../core/queries/tramite40201.query';
+// import { Tramite40402Store } from '../../../../core/estados/tramites/tramite40402.store';
+// import { Tramite40402Query } from '../../../../core/queries/tramite40402.query';
 // import { TransportacionMaritimaService } from '../../services/transportacion-maritima/transportacion-maritima.service';
 
 // describe('PersonaFisicaExtranjeraComponent', () => {
 //   let component: PersonaFisicaExtranjeraComponent;
 //   let fixture: ComponentFixture<PersonaFisicaExtranjeraComponent>;
-//   let tramite40201StoreMock: jest.Mocked<Tramite40201Store>;
-//   let tramite40201QueryMock: jest.Mocked<Tramite40201Query>;
+//   let tramite40402StoreMock: jest.Mocked<Tramite40402Store>;
+//   let tramite40402QueryMock: jest.Mocked<Tramite40402Query>;
 //   let transportacionMaritimaServiceMock: jest.Mocked<TransportacionMaritimaService>;
 
 //   beforeEach(async () => {
-//     tramite40201StoreMock = {
+//     tramite40402StoreMock = {
 //       setPersonaFisicaExtranjeraTabla: jest.fn(),
 //       setPaisPFE: jest.fn(),
 //       setNombrePFE: jest.fn(),
@@ -27,9 +27,9 @@
 //       setCallePFE: jest.fn(),
 //       setNumeroExteriorPFE: jest.fn(),
 //       setNumeroInteriorPFE: jest.fn(),
-//     } as unknown as jest.Mocked<Tramite40201Store>;
+//     } as unknown as jest.Mocked<Tramite40402Store>;
 
-//     tramite40201QueryMock = {
+//     tramite40402QueryMock = {
 //       selectSeccionState$: of({
 //           personaFisicaNacionalTabla: [],
 //           buscarRfcPFN: '',
@@ -47,7 +47,7 @@
 //           numeroExteriorPFN: '',
 //           numeroInteriorPFN: '',
 //         }),
-//     } as unknown as jest.Mocked<Tramite40201Query>;
+//     } as unknown as jest.Mocked<Tramite40402Query>;
 
 //     transportacionMaritimaServiceMock = {
 //       getPaisCatalogo: jest.fn().mockReturnValue(of({ data: [] })),
@@ -57,8 +57,8 @@
 //       imports: [ReactiveFormsModule, PersonaFisicaExtranjeraComponent],
 //       providers: [
 //         FormBuilder,
-//         { provide: Tramite40201Store, useValue: tramite40201StoreMock },
-//         { provide: Tramite40201Query, useValue: tramite40201QueryMock },
+//         { provide: Tramite40402Store, useValue: tramite40402StoreMock },
+//         { provide: Tramite40402Query, useValue: tramite40402QueryMock },
 //         { provide: TransportacionMaritimaService, useValue: transportacionMaritimaServiceMock },
 //       ],
 //     }).compileComponents();
@@ -95,7 +95,7 @@
 //   it('should update the store when a country is selected', () => {
 //     component.personaFisicaExtranjeraForm.get('paisPFE')?.setValue('1');
 //     component.paisSeleccion();
-//     expect(tramite40201StoreMock.setPaisPFE).toHaveBeenCalledWith('1');
+//     expect(tramite40402StoreMock.setPaisPFE).toHaveBeenCalledWith('1');
 //   });
 
 //   it('should add a new person to the table on agregarPFE', () => {
@@ -127,13 +127,13 @@
 //       paisPFE: 'México',
 //       domicilioPFE: 'Calle 123 Ciudad Estado México 12345',
 //     });
-//     expect(tramite40201StoreMock.setPersonaFisicaExtranjeraTabla).toHaveBeenCalledWith(component.personaFisicaExtranjeraTabla);
+//     expect(tramite40402StoreMock.setPersonaFisicaExtranjeraTabla).toHaveBeenCalledWith(component.personaFisicaExtranjeraTabla);
 //   });
 
 //   it('should update the store with form values on actualizarFormularioState', () => {
 //     component.personaFisicaExtranjeraForm.get('nombrePFE')?.setValue('John');
 //     component.actualizarFormularioState();
-//     expect(tramite40201StoreMock.setNombrePFE).toHaveBeenCalledWith('John');
+//     expect(tramite40402StoreMock.setNombrePFE).toHaveBeenCalledWith('John');
 //   });
 
 //   it('should close the modal on cerrarModal', () => {

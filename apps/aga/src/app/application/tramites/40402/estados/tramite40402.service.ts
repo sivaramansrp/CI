@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, catchError, of, throwError } from 'rxjs';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { Injectable } from '@angular/core';
-import { Tramite40403Store } from './tramite40403.store';
+import { Tramite40402Store } from './tramite40402.store';
 
 @Injectable({
   providedIn: 'root',
@@ -10,19 +10,19 @@ import { Tramite40403Store } from './tramite40403.store';
 @Injectable({
   providedIn: 'root',
 })
-export class Tramite40403Service {
+export class Tramite40402Service {
   /**
    * Ruta base para acceder a los archivos JSON locales relacionados con el trámite.
    */
-  baseUrl = '../../../../../assets/json/40403/';
+  baseUrl = '../../../../../assets/json/40402/';
 
   /**
    * Constructor del servicio.
-   * @param tramite40403Store - Almacén de estado para gestionar datos relacionados con el trámite.
+   * @param tramite40402Store - Almacén de estado para gestionar datos relacionados con el trámite.
    * @param http - Cliente HTTP para realizar solicitudes a la API o cargar recursos.
    */
   constructor(
-    private tramite40403Store: Tramite40403Store,
+    private tramite40402Store: Tramite40402Store,
     private http: HttpClient
   ) {}
 
@@ -31,7 +31,7 @@ export class Tramite40403Service {
    * @returns Un observable que emite una lista de objetos de tipo `Catalogo`.
    */
   getTipoDeCaatAerea(): Observable<Catalogo[]> {
-    return this.http.get<Catalogo[]>('/assets/json/40403/tipo-CAAT-aéreo.json');
+    return this.http.get<Catalogo[]>('/assets/json/40402/tipo-CAAT-aéreo.json');
   }
 
   /**
@@ -39,7 +39,7 @@ export class Tramite40403Service {
    * @returns Un observable que emite una lista de objetos de tipo `Catalogo`.
    */
   geTideCodTransportacionAerea(): Observable<Catalogo[]> {
-    return this.http.get<Catalogo[]>('/assets/json/40403/codigo.json');
+    return this.http.get<Catalogo[]>('/assets/json/40402/codigo.json');
   }
 
   /**
