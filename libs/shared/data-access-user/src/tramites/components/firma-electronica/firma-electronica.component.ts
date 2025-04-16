@@ -1,10 +1,9 @@
+import * as forge from 'node-forge';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { LOGIN, PADDING } from '../../constantes/constantes';
 import { CommonModule } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
-
-import * as forge from 'node-forge';
 import { ValidacionesFormularioService } from '../../../core/services/shared/validaciones-formulario/validaciones-formulario.service';
 
 @Component({
@@ -33,7 +32,9 @@ export class FirmaElectronicaComponent {
     private fb: FormBuilder,
     private toastrService: ToastrService,
     private formValidator: ValidacionesFormularioService
-  ) { }
+  ) { 
+    // Lógica de inicialización si es necesario
+  }
 
   /**
    * Getter para saber si el componente esta siendo usado para hacer 'login'
@@ -108,12 +109,12 @@ export class FirmaElectronicaComponent {
    * @returns {void} No regresa valor alguno.
    */
   validateFilesBase(
-    certFile: string,
+    certeile: string,
     binaryData: ArrayBuffer,
     password: string
   ): void {
     try {
-      const CERT = forge.pki.certificateFromPem(certFile);
+      const CERT = forge.pki.certificateFromPem(this.certFile);
       const CERT_PUBLIC_KEY = CERT.publicKey as forge.pki.rsa.PublicKey;
 
       const PADDING_START = PADDING.INICIO;
@@ -144,7 +145,7 @@ export class FirmaElectronicaComponent {
           'La llave privada no coincide con el certificado o la contraseña es incorrecta.'
         );
       }
-    } catch (error) {
+    } catch (ERROR) {
       this.toastrService.error('Error en la validación');
     }
   }
