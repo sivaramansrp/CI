@@ -16,6 +16,10 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy{
      */
     representanteLegalForm!: FormGroup;
 
+    /**
+     * Estado actual de la solicitud de permiso.
+     * Se utiliza para gestionar y observar los datos relacionados con el representante legal.
+     */
     solicitudPermisoState!: SolicitudPermisoState;
   
     /**
@@ -27,11 +31,11 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy{
      * Constructor del componente.
      * Inyecta servicios necesarios para gestionar el estado del trámite y las interacciones del formulario.
      *
-     * @param formBuilder FormBuilder para construir formularios reactivos.
-     * @param tramite260703Store Store para gestionar el estado del trámite.
-     * @param tramite260703Query Query para observar cambios en el estado del trámite.
-     * @param solicitudPermisoService Servicio para gestionar las interacciones de aviso sanitario.
-     * @param toastr Servicio para mostrar notificaciones al usuario.
+     * formBuilder FormBuilder para construir formularios reactivos.
+     * tramite260703Store Store para gestionar el estado del trámite.
+     * tramite260703Query Query para observar cambios en el estado del trámite.
+     * solicitudPermisoService Servicio para gestionar las interacciones de aviso sanitario.
+     * toastr Servicio para mostrar notificaciones al usuario.
      */
     constructor(
       private formBuilder: FormBuilder,
@@ -54,7 +58,6 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy{
           this.solicitudPermisoState = seccionState;
         });
   
-      // Inicializar el formulario principal
       this.crearFormulario();
     }
   
@@ -85,12 +88,12 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy{
     /**
     * Establece los valores en el store de tramite260703.
     *
-    * @param {FormGroup} form - El formulario del cual se obtiene el valor.
-    * @param {string} campo - El nombre del campo del formulario cuyo valor se va a obtener.
+    * {FormGroup} form - El formulario del cual se obtiene el valor.
+    * {string} campo - El nombre del campo del formulario cuyo valor se va a obtener.
     */
     setValoresStore(campo: string): void {
       const VALOR = this.representanteLegalForm.get(campo)?.value;
-      this.tramite260703Store.updateRepresentanteLegalFormState({
+      this.tramite260703Store.actualizarEstadoFormularioRepresentanteLegal({
         [campo]: VALOR
       });
     }
