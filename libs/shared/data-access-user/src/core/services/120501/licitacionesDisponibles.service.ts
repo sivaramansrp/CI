@@ -7,7 +7,9 @@ import { Observable } from 'rxjs/internal/Observable';
 })
 export class LicitacionesDisponiblesService {
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) { 
+    // Lógica de inicialización si es necesario
+  }
 
   getData(): Observable<any> {
     return this.http.get('assets/json/120501/licitaciones-disponibles.json');
