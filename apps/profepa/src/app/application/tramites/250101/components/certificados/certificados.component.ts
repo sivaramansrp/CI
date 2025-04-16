@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import {
@@ -7,6 +7,7 @@ import {
 } from '@libs/shared/data-access-user/src';
 import { CertificadosService } from '../../services/certificados.service';
 import { ModalComponent } from '../modal/modal.component';
+import { Subject } from 'rxjs';
 
 export interface CertificadosTablaDatos {
   columns: string[];
@@ -19,7 +20,8 @@ export interface CertificadosTablaDatos {
   templateUrl: './certificados.component.html',
   styleUrl: './certificados.component.scss',
 })
-export class CertificadosComponent implements OnInit {
+export class CertificadosComponent implements OnInit,OnDestroy {
+  private destroy$ = new Subject<void>();
   showTableDiv = true;
 
   showFitosanitariosModal = false;
@@ -64,5 +66,10 @@ export class CertificadosComponent implements OnInit {
   cambiarCertificadosAutorizaciones(): void {
     this.showTableDiv = !this.showTableDiv;
     this.showAutorizacionesModal = !this.showAutorizacionesModal;
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

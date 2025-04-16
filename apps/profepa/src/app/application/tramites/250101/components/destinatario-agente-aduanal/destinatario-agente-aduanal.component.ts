@@ -24,8 +24,8 @@ import { ModalComponent } from '../modal/modal.component';
 import { TablaDatos } from '../../models/flora-fauna.models';
 import { Tramite250101Store } from '../../estados/tramite250101.store';
 
-export interface DestinatarioTablaDatos{
-  columns : string[];
+export interface DestinatarioTablaDatos {
+  columns: string[];
 }
 
 @Component({
@@ -46,13 +46,10 @@ export interface DestinatarioTablaDatos{
 export class DestinatarioAgenteAduanalComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
 
-
   showTableDiv = true;
-
   showDestinatarioModal = false;
   showAgenteModal = false;
   showAceptarModal = false;
-
 
   destinatarioOpcionDeBotonDeRadio = DESTINATARIO_OPCIONES_DE_BOTON_DE_RADIO;
 
@@ -79,7 +76,7 @@ export class DestinatarioAgenteAduanalComponent implements OnInit, OnDestroy {
     this.destinatarioService
       .getDestinatarioEncabezadoDeTabla()
       .pipe(takeUntil(this.destroy$))
-      .subscribe((data:DestinatarioTablaDatos) => {
+      .subscribe((data: DestinatarioTablaDatos) => {
         this.tablaDestinatarioData = data.columns;
       });
 
@@ -90,13 +87,19 @@ export class DestinatarioAgenteAduanalComponent implements OnInit, OnDestroy {
         this.tablaAgenteAduanalData = data.columns;
       });
 
-    this.destinatarioService.getPaisData().pipe(takeUntil(this.destroy$)).subscribe((data) => {
-      this.paisData = data;
-    });
+    this.destinatarioService
+      .getPaisData()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((data) => {
+        this.paisData = data;
+      });
 
-    this.destinatarioService.getEstadoData().pipe(takeUntil(this.destroy$)).subscribe((data) => {
-      this.estadoData = data;
-    });
+    this.destinatarioService
+      .getEstadoData()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((data) => {
+        this.estadoData = data;
+      });
 
     this.establecerFormDestinatariosModal();
     this.establecerFormAgenteAduanal();
@@ -114,40 +117,69 @@ export class DestinatarioAgenteAduanalComponent implements OnInit, OnDestroy {
 
   establecerFormDestinatariosModal(): void {
     this.formDestinatariosModal = this.fb.group({
-      destinatarioRadio: new FormControl({ value: '1', disabled: true }, [Validators.required]),
-      destinatarioRazonSocial: new FormControl('', [Validators.required, Validators.maxLength(120)]),
+      destinatarioRadio: new FormControl({ value: '1', disabled: true }, [
+        Validators.required,
+      ]),
+      destinatarioRazonSocial: new FormControl('', [
+        Validators.required,
+        Validators.maxLength(120),
+      ]),
       paisNacionalDestinatario: new FormControl('', [Validators.required]),
       estadoNacionalDestinatario: new FormControl('', [Validators.required]),
-      codigoPostalDestinatario: new FormControl('', [Validators.required, Validators.maxLength(12)]),
+      codigoPostalDestinatario: new FormControl('', [
+        Validators.required,
+        Validators.maxLength(12),
+      ]),
       domicilioDestinatario: new FormControl('', [Validators.required]),
     });
   }
 
   establecerFormAgenteAduanal(): void {
     this.formAgenteAduanal = this.fb.group({
-      nombreAgenteAduanal: new FormControl('', [Validators.required,Validators.maxLength(28)]),
-      primerApellidoAgenteAduanal: new FormControl('', [Validators.required,Validators.maxLength(20)]),
-      segundoApellidoAgenteAduanal: new FormControl('', [Validators.required,Validators.maxLength(20)]),
-      patenteAgenteAduanal: new FormControl('', [Validators.required,Validators.maxLength(4)]),
+      nombreAgenteAduanal: new FormControl('', [
+        Validators.required,
+        Validators.maxLength(28),
+      ]),
+      primerApellidoAgenteAduanal: new FormControl('', [
+        Validators.required,
+        Validators.maxLength(20),
+      ]),
+      segundoApellidoAgenteAduanal: new FormControl('', [
+        Validators.required,
+        Validators.maxLength(20),
+      ]),
+      patenteAgenteAduanal: new FormControl('', [
+        Validators.required,
+        Validators.maxLength(4),
+      ]),
     });
   }
 
+  openAceptarModal(): void {
+    this.showAceptarModal = true;
+  }
+
+  confirmAgregar(): void {
+    this.enviarDestinatarioFormulario();
+    this.showAceptarModal = false;
+  }
+
   enviarDestinatarioFormulario(): void {
-const PAIS_VALOR = this.paisData.find(
-  (item: Catalogo) => 
-    item.id === this.formDestinatariosModal.value.paisNacionalDestinatario)?.descripcion;
+    const PAIS_VALOR = this.paisData.find(
+      (item: Catalogo) =>
+        item.id === this.formDestinatariosModal.value.paisNacionalDestinatario
+    )?.descripcion;
 
-const ESTADO_VALOR = this.estadoData.find(
-  (item: Catalogo) => 
-    item.id === this.formDestinatariosModal.value.estadoNacionalDestinatario)?.descripcion;
-
-
+    const ESTADO_VALOR = this.estadoData.find(
+      (item: Catalogo) =>
+        item.id === this.formDestinatariosModal.value.estadoNacionalDestinatario
+    )?.descripcion;
 
     const DESTINATARIO_FILA = {
       tbodyData: [
         this.formDestinatariosModal.value.destinatarioRazonSocial,
         PAIS_VALOR,
-        "",
+        '',
         ESTADO_VALOR,
         this.formDestinatariosModal.value.domicilioDestinatario,
         this.formDestinatariosModal.value.codigoPostalDestinatario,
@@ -184,48 +216,76 @@ const ESTADO_VALOR = this.estadoData.find(
     this.showAgenteModal = !this.showAgenteModal;
   }
 
-  actualizarDenominacion():void{
-    const DESTINATARIO_DENOMINACION = this.formDestinatariosModal.get('destinatarioRazonSocial')?.value;
-    this.tramite250101Store.establecerDestinatarioDenominacion(DESTINATARIO_DENOMINACION);
+  actualizarDenominacion(): void {
+    const DESTINATARIO_DENOMINACION = this.formDestinatariosModal.get(
+      'destinatarioRazonSocial'
+    )?.value;
+    this.tramite250101Store.establecerDestinatarioDenominacion(
+      DESTINATARIO_DENOMINACION
+    );
   }
 
-  actualizarCodigoPostal():void{
-    const DESTINATARIO_CODIGO_POSTAL = this.formDestinatariosModal.get('codigoPostalDestinatario')?.value;
-    this.tramite250101Store.establecerDestinatarioCodigoPostal(DESTINATARIO_CODIGO_POSTAL);
+  actualizarCodigoPostal(): void {
+    const DESTINATARIO_CODIGO_POSTAL = this.formDestinatariosModal.get(
+      'codigoPostalDestinatario'
+    )?.value;
+    this.tramite250101Store.establecerDestinatarioCodigoPostal(
+      DESTINATARIO_CODIGO_POSTAL
+    );
   }
 
-  actualizarDomicilio():void{
-    const DESTINATARIO_DOMICILIO = this.formDestinatariosModal.get('domicilioDestinatario')?.value;
-    this.tramite250101Store.establecerDestinatarioDomicilio(DESTINATARIO_DOMICILIO);
+  actualizarDomicilio(): void {
+    const DESTINATARIO_DOMICILIO = this.formDestinatariosModal.get(
+      'domicilioDestinatario'
+    )?.value;
+    this.tramite250101Store.establecerDestinatarioDomicilio(
+      DESTINATARIO_DOMICILIO
+    );
   }
 
-  actualizarDestinatarioPais():void{
-    const DESTINATARIO_PAIS = this.formDestinatariosModal.get('paisNacionalDestinatario')?.value;
+  actualizarDestinatarioPais(): void {
+    const DESTINATARIO_PAIS = this.formDestinatariosModal.get(
+      'paisNacionalDestinatario'
+    )?.value;
     this.tramite250101Store.establecerDestinatarioPais(DESTINATARIO_PAIS);
   }
 
-  actualizarDestinatarioEstado():void{
-    const DESTINATARIO_ESTADO = this.formDestinatariosModal.get('estadoNacionalDestinatario')?.value;
+  actualizarDestinatarioEstado(): void {
+    const DESTINATARIO_ESTADO = this.formDestinatariosModal.get(
+      'estadoNacionalDestinatario'
+    )?.value;
     this.tramite250101Store.establecerDestinatarioEstado(DESTINATARIO_ESTADO);
   }
 
-  actualizarAgenteNombre():void{
-    const AGENTE_NOMBRE = this.formAgenteAduanal.get('nombreAgenteAduanal')?.value;
+  actualizarAgenteNombre(): void {
+    const AGENTE_NOMBRE = this.formAgenteAduanal.get(
+      'nombreAgenteAduanal'
+    )?.value;
     this.tramite250101Store.establecerAgenteAduanalNombre(AGENTE_NOMBRE);
   }
 
-  actualizarAgentePrimerApellido():void{
-    const AGENTE_PRIMER_APELLIDO = this.formAgenteAduanal.get('primerApellidoAgenteAduanal')?.value;
-    this.tramite250101Store.establecerAgenteAduanalPrimerApellido(AGENTE_PRIMER_APELLIDO);
+  actualizarAgentePrimerApellido(): void {
+    const AGENTE_PRIMER_APELLIDO = this.formAgenteAduanal.get(
+      'primerApellidoAgenteAduanal'
+    )?.value;
+    this.tramite250101Store.establecerAgenteAduanalPrimerApellido(
+      AGENTE_PRIMER_APELLIDO
+    );
   }
 
-  actualizarAgenteSegundoApellido():void{
-    const AGENTE_SEGUNDO_APELLIDO = this.formAgenteAduanal.get('segundoApellidoAgenteAduanal')?.value;
-    this.tramite250101Store.establecerAgenteAduanalSegundoApellido(AGENTE_SEGUNDO_APELLIDO);
+  actualizarAgenteSegundoApellido(): void {
+    const AGENTE_SEGUNDO_APELLIDO = this.formAgenteAduanal.get(
+      'segundoApellidoAgenteAduanal'
+    )?.value;
+    this.tramite250101Store.establecerAgenteAduanalSegundoApellido(
+      AGENTE_SEGUNDO_APELLIDO
+    );
   }
 
-  actualizarAgentePatente():void{
-    const AGENTE_PATENTE = this.formAgenteAduanal.get('patenteAgenteAduanal')?.value;
+  actualizarAgentePatente(): void {
+    const AGENTE_PATENTE = this.formAgenteAduanal.get(
+      'patenteAgenteAduanal'
+    )?.value;
     this.tramite250101Store.establecerAgenteAduanalPatente(AGENTE_PATENTE);
   }
 

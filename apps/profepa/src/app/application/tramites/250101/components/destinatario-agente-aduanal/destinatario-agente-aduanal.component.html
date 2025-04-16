@@ -49,7 +49,6 @@
 
             <div class="clearfix"></div>
 
-
             <div class="col-md-4 mt-5 dropdown-field">
                 <div class="form-group">
                     <app-catalogo-select [catalogo]="paisData" [label]="'País'" [required]="true" name=""
@@ -82,9 +81,20 @@
                     (click)="cambiarDestinatario()">Cancelar</button>
                 <button type="button" class="btn btn-default ms-3" id="limpiarDestinatarioBtn">Limpiar</button>
                 <button type="button" class="btn btn-primary ms-3" id="registroDestinatarioBtn"
-                    (click)="enviarDestinatarioFormulario()">Agregar</button>
+                    (click)="openAceptarModal()">Agregar</button>
             </div>
         </form>
+    </div>
+</app-modal>
+
+<app-modal [active]="showAceptarModal" class="aceptar-modal">
+    <div>
+        <div class="black-top-header"></div>
+        <hr/>
+        <p>Agregado correctamente.</p>
+        <div class="d-flex justify-content-end mt-4">
+            <button type="button" class="btn btn-primary ms-3" (click)="confirmAgregar()">Aceptar</button>
+        </div>
     </div>
 </app-modal>
 

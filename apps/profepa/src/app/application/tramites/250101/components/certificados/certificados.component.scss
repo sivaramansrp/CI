@@ -7,3 +7,10 @@
       }
     }
   }
+
+::ng-deep app-modal {
+  .popup {
+    width: 50% !important; 
+    height:50% !important;
+  }
+}
