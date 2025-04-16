@@ -933,8 +933,8 @@
     {
         "id": 134,
         "tramite": 40401,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "/aga/registro-del-codigo/solicitud",
+        "linkDepartment": "/pago/registro-del-codigo/solicitud",
         "department": "aga"
     },
     {
