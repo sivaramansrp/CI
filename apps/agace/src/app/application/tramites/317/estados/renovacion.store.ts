@@ -108,7 +108,7 @@ export function createInitialState(): UnicoState {
 @Injectable({
   providedIn: 'root',
 })
-@StoreConfig({ name: 'unicoStore', resettable: true })
+@StoreConfig({ name: 'renovacionStore', resettable: true })
 export class UnicoStore extends Store<UnicoState> {
   /**
    * Constructor de la clase UnicoStore.

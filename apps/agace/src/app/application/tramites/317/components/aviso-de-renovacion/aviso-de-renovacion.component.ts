@@ -14,8 +14,8 @@ import { Subject } from 'rxjs';
 
 import { PreOperativo } from '../../models/aviso.model';
 
-import { UnicoState } from '../../estados/unico.store';
-import { UnicoStore } from '../../estados/unico.store';
+import { UnicoState } from '../../estados/renovacion.store';
+import { UnicoStore } from '../../estados/renovacion.store';
 
 import { UnicoQuery } from '../../estados/queries/unico.query';
 
