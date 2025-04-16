@@ -6,11 +6,13 @@ import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { PropietarioComponent } from '../../../../shared/components/propietario/propietario.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import { Subject, takeUntil } from 'rxjs';
-import { Tramite261401Query } from '../../../../estados/queries/tramite261401.query';
-import { Solicitud261401State, Tramite261401Store } from '../../../../estados/tramites/tramite261401.store';
-import { Validators } from '@angular/forms';
+import { Solicitud261401State } from '../../../../estados/tramites/tramite261401.store';
 import { SolicitudModificacionPermisoSalidaTerritorioService } from '../../services/solicitud-modificacion-permiso-salida-territorio.service';
+import { Subject } from 'rxjs';
+import { Tramite261401Query } from '../../../../estados/queries/tramite261401.query';
+import { Tramite261401Store } from '../../../../estados/tramites/tramite261401.store';
+import { Validators } from '@angular/forms';
+import { takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-datos-de-la-solicitud',

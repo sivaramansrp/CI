@@ -66,8 +66,15 @@
         } @case (3) {
         <app-terceros-relacionados [tabindex]="3"></app-terceros-relacionados>
         } @case (4) {
-          <!-- <app-terceros-relacionados [tabindex]="4"></app-terceros-relacionados> -->
-        }
+          <app-pago-de-derechos 
+          [formularioPagoDerechos]="formularioPagoDerechos"
+          [banco]="banco"
+          (setValoresStoreEvent)="setValoresStore($event)"
+          ></app-pago-de-derechos>
+        } @case (5) {
+          <app-tramite-asociados
+        [configuracionTabla]="configuracionTabla" [tramiteAsociados]="tramiteAsociados"></app-tramite-asociados>
+        } 
        }
       </ng-container>
     </div>

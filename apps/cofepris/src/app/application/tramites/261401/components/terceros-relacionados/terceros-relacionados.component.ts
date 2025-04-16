@@ -1,15 +1,16 @@
 import { AlertComponent, TablaDinamicaComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
-import { Destinatario } from '../../models/destinatario.model';
+import { DESTINATARIO_ENCABEZADO_DE_TABLA } from '../../enums/destinatario.enum';
+import { Destinatario } from '../../enums/destinatario.enum';
+import { MENSAJE_TABLA_OBLIGATORIA } from '../../../../shared/models/terceros-relacionados.model';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
 
-import { MENSAJE_TABLA_OBLIGATORIA } from '../../../../shared/models/terceros-relacionados.model';
-
-import { DESTINATARIO_ENCABEZADO_DE_TABLA } from '../../models/destinatario.model';
 import { SolicitudModificacionPermisoSalidaTerritorioService } from '../../services/solicitud-modificacion-permiso-salida-territorio.service';
 import { Subject } from 'rxjs';
+import { Tramite261401Query } from '../../../../estados/queries/tramite261401.query';
+import { Tramite261401Store } from '../../../../estados/tramites/tramite261401.store';
 import { takeUntil } from 'rxjs';
 
 
@@ -24,21 +25,25 @@ import { takeUntil } from 'rxjs';
   templateUrl: './terceros-relacionados.component.html',
   styleUrl: './terceros-relacionados.component.scss',
 })
-export class TercerosRelacionadosComponent {
+export class TercerosRelacionadosComponent implements OnInit {
   MENSAJE_TABLA_OBLIGATORIA = MENSAJE_TABLA_OBLIGATORIA;
   public infoAlert = 'alert-info';
-  configuracionTablaDestinatarioFinal: ConfiguracionColumna<Destinatario>[] =
-      DESTINATARIO_ENCABEZADO_DE_TABLA;
+  configuracionTablaDestinatarioFinal: ConfiguracionColumna<Destinatario>[] = DESTINATARIO_ENCABEZADO_DE_TABLA;
+
   tipoSeleccionTabla = TablaSeleccion.CHECKBOX;
   destinatarioDatos: Destinatario[] = [];
   private destroyNotifier$: Subject<void> = new Subject();
 
   constructor(
     public solicitudDatosService: SolicitudModificacionPermisoSalidaTerritorioService,
+    private tramite261401Store: Tramite261401Store,
+    private tramite261401Query: Tramite261401Query,
   ) {
+    // Constructor
+  }
+  ngOnInit(): void {
     this.obtenerDestinatarioListo();
   }
-
   obtenerDestinatarioListo(): void {
     this.solicitudDatosService
       .obtenerDestinatarioListo()
@@ -46,6 +51,7 @@ export class TercerosRelacionadosComponent {
       .subscribe({
         next: (respuesta: Destinatario[]) => {
           this.destinatarioDatos = respuesta;
+          this.tramite261401Store.setDestinatarioDatos(respuesta);
         },
       });
   }
