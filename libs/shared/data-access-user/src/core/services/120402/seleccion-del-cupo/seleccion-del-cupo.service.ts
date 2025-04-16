@@ -1,13 +1,15 @@
+import { HttpCoreService } from '../../shared/http/http.service';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { HttpCoreService } from '../../shared/http/http.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SeleccionDelCupoService {
 
-  constructor( private http: HttpCoreService) { }
+  constructor( private http: HttpCoreService) { 
+    // Lógica de inicialización si es necesario
+  }
 
   getSeleccionDelCupo(): Observable<unknown> {
     return this.http.get('assets/json/120402/seleccion-del-cupo.json');
