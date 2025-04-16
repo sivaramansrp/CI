@@ -24,7 +24,7 @@ import { takeUntil } from 'rxjs';
 /**
 * Texto de adjuntar para terceros.
 */
-const TERCEROS_TEXTO_DE_ADJUNTAR = "El Servicio de Administracion  es el sujeto obligado y responsable del tratamiento de los datos personales que se recaban a traves de la Ventanilla Digital Mexicana de Come, los datos personalespodran ser utilizados y transferidos a la autoridades competentes, con la finalidad de llevar a cabo cualquier tramite relacionado con importaciones, exportaciones y transito de mercancias  de comercio exterior incluyendo las regulaciones y restricciones no arancelanas que, conforme a la legislacion aplicable, sea exigido por las autondades competentes en materia de comercio exterior  y/o consultar informacion sobre los procedimientos para la importacion, exportacion y transito de mercanciasde comercio exterior, incluyendo las regulaciones y restricciones no arancelarias, asa como las notificaciones ue se deriven de dichos tramites y seran protegidos, incorporados y tratados en el sistema de datos personales de la VUCEM, asatiismo podran ser transmitidos a las autoridades competentes establecidas en el Decreto por el que se establece la Ventanilla Digital Mexicana de Comercio Exterior, putilicado en el Diario Oficial de la  Federacion el 14 de enero de 2011, asi como al propio titular de la informacion. El titular en su caso, podramanifestar su negativa para el tratamiento de sus datos personales para finalidades y transteennas de  los mismos que requieran el consentimiento del ntular. Si desea conocer";
+const TERCEROS_TEXTO_DE_ADJUNTAR = `<h5>Aviso de privacidad simplificado</h5>"El Servicio de Administracion  es el sujeto obligado y responsable del tratamiento de los datos personales que se recaban a traves de la Ventanilla Digital Mexicana de Come, los datos personalespodran ser utilizados y transferidos a la autoridades competentes, con la finalidad de llevar a cabo cualquier tramite relacionado con importaciones, exportaciones y transito de mercancias  de comercio exterior incluyendo las regulaciones y restricciones no arancelanas que, conforme a la legislacion aplicable, sea exigido por las autondades competentes en materia de comercio exterior  y/o consultar informacion sobre los procedimientos para la importacion, exportacion y transito de mercanciasde comercio exterior, incluyendo las regulaciones y restricciones no arancelarias, asa como las notificaciones ue se deriven de dichos tramites y seran protegidos, incorporados y tratados en el sistema de datos personales de la VUCEM, asatiismo podran ser transmitidos a las autoridades competentes establecidas en el Decreto por el que se establece la Ventanilla Digital Mexicana de Comercio Exterior, putilicado en el Diario Oficial de la  Federacion el 14 de enero de 2011, asi como al propio titular de la informacion. El titular en su caso, podramanifestar su negativa para el tratamiento de sus datos personales para finalidades y transteennas de  los mismos que requieran el consentimiento del ntular. Si desea conocer"<h5>Aviso de drivacidad integral</h5>`;
 
 
 
@@ -45,20 +45,15 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   preOperativeForm!: FormGroup;
   /** Subject para notificar la destrucción del componente */
   private destroy$ = new Subject<void>();
-  /**
-   * @property {Catalogo[]} radioOptions
-   *  Opciones del radio button obtenidas desde preOperativo.json.
+
+    /**
+   * Opciones del componente de radio input.
+   * @public
    */
-  radioOptions = [
-    {
-      label: 'Prorroga',
-      value: 'Prorroga',
-    },
-    {
-      label: 'Modificacion',
-      value: 'Modificacion',
-    },
-  ];
+    public radioOptions: { label: string; value: string }[] = [
+      { label: 'Prorroga', value: 'Prorroga' },
+      { label: 'Modificacion', value: 'Modificacion' },
+    ];
   /**
    * Clase de alerta informativa.
    */

@@ -1,19 +1,20 @@
-<form [formGroup]="preOperativeForm">
-<div class="col-md-4">
-  <label class="mt-5 mb-3">
-    Seleccione el tipo de operación que desea realizar*:
-  </label>
-    <app-input-radio
-    [radioOptions]="radioOptions"
-    formControlName="ideGenerica1" 
-    (change)="setValoresStore(preOperativeForm,'ideGenerica1')"
-    [layout]="'horizontal'"
-  ></app-input-radio>
-</div>
+<div class="container">
+  <h6 class="mt-4">Seleccione el tipo de operación que desea realizar*:</h6>
+  <form [formGroup]="preOperativeForm">
+    <div class="row mt-5">
+      <div class="col-md-12">
+        <app-input-radio
+          [radioOptions]="radioOptions"
+          formControlName="ideGenerica1"
+          (change)="setValoresStore(preOperativeForm,'ideGenerica1')"
+          [layout]="'horizontal'"
+        ></app-input-radio>
+      </div>
+    </div>
 
     <div class="row mt-5">
-      <div class="col-md-4 form-group">
-          <label class="form-label" for="motivoDesistimiento">justificacion*:</label>
+      <label for="observaciones">justificacion*:</label>
+      <div class="col-md-8">
           <textarea  formControlName="observaciones" id="motivoDesistimiento" name="motivoDesistimiento" rows="4"
               cols="50" [ngClass]="isValid('motivoDesistimiento') ? 'required' : ''"
               (change)="setValoresStore(preOperativeForm,'observaciones')"></textarea>
@@ -24,6 +25,7 @@
   </div>
     <br>
 </form>
+</div>
 <br>
 <app-datosestablecimiento></app-datosestablecimiento>
 <br>
