@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { DatosMercanciaComponent } from '../../../../shared/components/datos-mercancia/datos-mercancia.component';
 import { MercanciaDetalle } from '../../../../shared/models/datos-del-tramite.model';
+import { NUMERO_TRAMITE } from '../../../../shared/constants/datos-solicitud.enum';
 import { Tramite240108Store } from '../../estados/tramite240108Store.store';
 
 /**
@@ -18,6 +19,7 @@ import { Tramite240108Store } from '../../estados/tramite240108Store.store';
   styleUrl: './datos-mercancia-contenedora.component.css',
 })
 export class DatosMercanciaContenedoraComponent {
+  idProcedimiento = NUMERO_TRAMITE.TRAMITE_240108;
   /**
    * Constructor del componente.
    *
