@@ -1,24 +1,13 @@
-import { Catalogo } from '@ng-mf/data-access-user';
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
-import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Catalogo, CatalogoSelectComponent, InputRadioComponent, TipoPersona, TituloComponent } from '@ng-mf/data-access-user';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output } from '@angular/core';
+
+import { CommonModule, Location } from '@angular/common';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE, TERCEROS_NACIONALIDAD_OPCIONES, TIPO_PERSONA_OPCIONES } from '../../constants/datos-solicitud.enum';
+import { Subject, takeUntil } from 'rxjs';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
-import { EventEmitter } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
-import { FormGroup } from '@angular/forms';
-import { InputRadioComponent } from '@ng-mf/data-access-user';
-import { Location } from '@angular/common';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { Output } from '@angular/core';
 import { Proveedor } from '../../models/terceros-relacionados.model';
-import { ReactiveFormsModule } from '@angular/forms';
-import { Subject } from 'rxjs';
-import { TIPO_PERSONA_OPCIONES } from '../../constants/datos-solicitud.enum';
-import { TipoPersona } from '@ng-mf/data-access-user';
-import { TituloComponent } from '@ng-mf/data-access-user';
-import { Validators } from '@angular/forms';
-import { takeUntil } from 'rxjs';
+
 /**
  * @component AgregarProveedorComponent
  * @description Componente responsable de manejar el formulario para agregar proveedores.
@@ -26,7 +15,7 @@ import { takeUntil } from 'rxjs';
  * actualizar el estado del trámite con la información del proveedor capturado.
  */
 @Component({
-  selector: 'app-agregar-proveedor',
+  selector: 'app-agregar-proveedor-custom',
   standalone: true,
   imports: [
     CommonModule,
@@ -35,15 +24,16 @@ import { takeUntil } from 'rxjs';
     TituloComponent,
     InputRadioComponent,
   ],
-  templateUrl: './agregar-proveedor.component.html',
-  styleUrl: './agregar-proveedor.component.css',
+  templateUrl: './agregar-proveedor-custom.component.html',
+  styleUrl: './agregar-proveedor-custom.component.css',
 })
-export class AgregarProveedorComponent implements OnDestroy, OnInit {
+export class AgregarProveedorCustomComponent implements OnDestroy, OnInit, OnChanges {
+
   /**
-   * @property tipoPersona
-   * @description Proporciona acceso al enum `TipoPersona` para su uso en la clase.
-   * @type {TipoPersona}
-   */
+    * @property tipoPersona
+    * @description Proporciona acceso al enum `TipoPersona` para su uso en la clase.
+    * @type {TipoPersona}
+    */
   public tipoPersona = TipoPersona;
   /**
    * @property {Subject<void>} unsubscribe$
@@ -85,6 +75,55 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
   tipoPersonaRadioOpciones = TIPO_PERSONA_OPCIONES;
 
   /**
+ * @property mostrarCamposNoContribuyente
+ * @description Controla la visibilidad de los campos específicos para no contribuyentes.
+ * @type {boolean}
+ * @default false
+ */
+  public mostrarCamposNoContribuyente: boolean = false;
+
+  /*
+   * Opciones de nacionalidad para el formulario.
+   */
+
+  tercerosNacionalidadOpciones = TERCEROS_NACIONALIDAD_OPCIONES;
+
+
+  /**
+   * @property idProcedimiento
+   * @description Identificador del procedimiento asociado a este componente.
+   * @type {number}
+   */
+  @Input() idProcedimiento!: number;
+
+  /**
+   * Datos de catálogo de estados.
+   * @property {Catalogo[]} estadosDatos
+   */
+  public estadosDatos: Catalogo[] = [];
+  /**
+   * Datos de catálogo de municipios.
+   * @property {Catalogo[]} municipiosDatos
+   */
+  public municipiosDatos: Catalogo[] = [];
+  /**
+   * Datos de catálogo de localidades.
+   * @property {Catalogo[]} localidadesDatos
+   */
+  public localidadesDatos: Catalogo[] = [];
+  /**
+   * Datos de catálogo de colonias.
+   * @property {Catalogo[]} coloniasDatos
+   */
+  public coloniasDatos: Catalogo[] = [];
+  /**
+   * Datos de catálogo de códigos postales.
+   * @property {Catalogo[]} codigosPostalesDatos
+   */
+  public codigosPostalesDatos: Catalogo[] = [];
+
+
+  /**
    * @constructor
    * Inicializa el formulario y los servicios necesarios para el componente.
    *
@@ -98,7 +137,20 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
     private fb: FormBuilder,
     private datosSolicitudService: DatosSolicitudService,
     private ubicaccion: Location // eslint-disable-next-line no-empty-function
-  ) {}
+  ) {
+    this.mostrarCamposNoContribuyente =
+      PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE.includes(this.idProcedimiento);
+  }
+  
+  /**
+   * Hook de ciclo de vida de Angular que se llama cuando se detectan cambios en las propiedades de entrada.
+   * Llama al método `mostrarCamposNoContribuyente()`.
+   */
+  ngOnChanges(): void {
+    this.mostrarCamposNoContribuyente =
+      PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE.includes(this.idProcedimiento);
+  }
+
   /**
    * Crea el formulario reactivo `agregarDestinatarioFinal` utilizando `FormBuilder`.
    * Define los campos y sus validaciones.
@@ -127,6 +179,10 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
       numeroInterior: [''],
       lada: [''],
       telefono: [''],
+      nacionalidad:[''],
+      rfc:[''],
+      municipio:[''],
+      localidad:[''],
       correoElectronico: ['', [Validators.required, Validators.email]],
     });
     this.agregarProveedorForm.disable();
@@ -152,6 +208,36 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
       .subscribe((data) => {
         this.paisesDatos = data;
       });
+    this.datosSolicitudService
+      .obtenerListaEstados()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((data) => {
+        this.estadosDatos = data;
+      });
+    this.datosSolicitudService
+      .obtenerListaMunicipios()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((data) => {
+        this.municipiosDatos = data;
+      });
+      this.datosSolicitudService
+      .obtenerListaLocalidades()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((data) => {
+        this.localidadesDatos = data;
+      });
+      this.datosSolicitudService
+      .obtenerListaCodigosPostales()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((data) => {
+        this.codigosPostalesDatos = data;
+      });
+    this.datosSolicitudService
+      .obtenerListaColonias()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((data) => {
+        this.coloniasDatos = data;
+      });
   }
 
   /**
@@ -161,9 +247,8 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
    */
   guardarProveedor(): void {
     const NUEVO_PROVEEDOR: Proveedor = {
-      nombreRazonSocial: `${this.agregarProveedorForm.value.nombres} ${
-        this.agregarProveedorForm.value.primerApellido
-      } ${this.agregarProveedorForm.value.segundoApellido || ''}`.trim(),
+      nombreRazonSocial: `${this.agregarProveedorForm.value.nombres} ${this.agregarProveedorForm.value.primerApellido
+        } ${this.agregarProveedorForm.value.segundoApellido || ''}`.trim(),
       rfc: '',
       curp: '',
       telefono: this.agregarProveedorForm.value.telefono || '',
@@ -215,6 +300,18 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
       tipoPersona: event,
     });
   }
+  /**
+ * * Método que se ejecuta cuando se selecciona un país en el formulario.
+ * * @param {string} event - El país seleccionado.
+ * * @returns {void} No retorna ningún valor.
+ */
+
+  terecerosNacionalidadCambioDeValor(event: string | number): void {
+    this.agregarProveedorForm.patchValue({
+      nacionalidad: event,
+    });
+  }
+
 
   /**
    * @method ngOnDestroy

@@ -4,18 +4,8 @@
     <!-- Datos Generales -->
     <h4>Datos generales</h4>
     <div class="row">
-      <div class="col-md-6">
-        <label class="form-label">Terceros nacionalidad*:</label>
-        <app-input-radio
-          [radioOptions]="tercerosNacionalidadOpciones"
-          [isRequired]="true"
-          [layout]="'vertical'"
-          formControlName="nacionalidad"
-          (valueChange)="terecerosNacionalidadCambioDeValor($event)"
-        ></app-input-radio>
-      </div>
-      <div class="col-md-6">
-        <label class="form-label">Tipo persona:</label>
+      <div class="col-md-6 offset-md-6">
+        <label class="form-label">Tipo persona*:</label>
         <app-input-radio
           [radioOptions]="tipoPersonaRadioOpciones"
           [isRequired]="true"
@@ -23,30 +13,11 @@
           formControlName="tipoPersona"
           (valueChange)="tipoPersonaCambioDeValor($event)"
         ></app-input-radio>
+      </div>
+    </div>
 
-        @if(mostrarCamposNoContribuyente){
-        <div class="form-check">
-          <input
-            type="radio"
-            class="form-check-input"
-            formControlName="tipoPersona"
-            value="NoContribyunte"
-          />
-          No Contribyunte
-        </div>
-        }
-      </div>
-    </div>
-    @if(agregarDestinatarioFinal.get('nacionalidad')?.value !== 'Extranjero') {
-    <div class="row mt-5">
-      <div class="col-md-6">
-        <label class="form-label">R.F.C.:</label>
-        <input type="text" class="form-control" formControlName="rfc" />
-      </div>
-    </div>
-    } @if(agregarDestinatarioFinal.get('tipoPersona')?.value ===
-    tipoPersona.MORAL || agregarDestinatarioFinal.get('tipoPersona')?.untouched)
-    {
+    @if(agregarDestinatarioFinal.get('tipoPersona')?.value === tipoPersona.MORAL ||
+    agregarDestinatarioFinal.get('tipoPersona')?.untouched) {
     <div class="row">
       <div class="form-group">
         <label
@@ -65,11 +36,10 @@
     }
 
     <!-- Datos Personales -->
-    @if(agregarDestinatarioFinal.get('tipoPersona')?.value ===
-    tipoPersona.FISICA ||
+    @if(agregarDestinatarioFinal.get('tipoPersona')?.value === tipoPersona.FISICA ||
     agregarDestinatarioFinal.get('tipoPersona')?.untouched) {
-    <div class="row mt-3">
-      <h4 class="mt-5">Datos personales</h4>
+    <h4 class="mt-4">Datos personales</h4>
+    <div class="row">
       <div class="col-md-4">
         <label class="form-label">Nombre(s):</label>
         <input type="text" class="form-control" formControlName="nombres" />
@@ -91,23 +61,24 @@
         />
       </div>
     </div>
-    } @if (idProcedimiento === 260102) {
-    <h4 class="mt-5">Domicilio</h4>
-    <div class="row mt-5">
+    }
+    <!-- Domicilio -->
+    <div class="row">
+      <h4 class="mt-4">Domicilio</h4>
       <div class="col-md-4 px-5">
         <app-catalogo-select
           [catalogo]="paisesDatos"
           formControlName="pais"
           [label]="'País'"
           [required]="true"
+          [isDisabled]="agregarDestinatarioFinal.get('tipoPersona')?.value === ''"
         ></app-catalogo-select>
       </div>
-      <div class="col-md-4 px-5">
+      <div class="col-md-4">
         <label class="form-label">Estado:</label>
         <input type="text" class="form-control" formControlName="estado" />
       </div>
-
-      <div class="col-md-4 px-5">
+      <div class="col-md-4">
         <label class="form-label">Código postal o equivalente:</label>
         <input
           type="text"
@@ -116,90 +87,18 @@
         />
       </div>
     </div>
-    }
-
-    <!-- Domicilio -->
-    @else{
-    <h4 class="mt-5">Domicilio</h4>
-    <div class="row mt-5">
-      <div class="col-md-4 px-5">
-        <app-catalogo-select
-          [catalogo]="paisesDatos"
-          formControlName="pais"
-          [label]="'País'"
-          [required]="true"
-          [isDisabled]="
-            agregarDestinatarioFinal.get('tipoPersona')?.value === ''
-          "
-        ></app-catalogo-select>
-      </div>
-      <div class="col-md-4 px-5">
-        <app-catalogo-select
-          [catalogo]="estadosDatos"
-          formControlName="estado"
-          [label]="'Estado/localidad'"
-          [required]="true"
-          [isDisabled]="
-            agregarDestinatarioFinal.get('tipoPersona')?.value === ''
-          "
-        ></app-catalogo-select>
-      </div>
-      <div class="col-md-4 px-5">
-        <app-catalogo-select
-          [catalogo]="municipiosDatos"
-          formControlName="municipio"
-          [label]="'Municipio/alcaldía'"
-          [required]="true"
-          [isDisabled]="
-            agregarDestinatarioFinal.get('tipoPersona')?.value === ''
-          "
-        ></app-catalogo-select>
-      </div>
-    </div>
 
     <div class="row mt-3">
-      <div class="col-md-4 px-5">
-        <app-catalogo-select
-          [catalogo]="localidadesDatos"
-          formControlName="localidad"
-          [label]="'Localidad'"
-          [required]="true"
-          [isDisabled]="
-            agregarDestinatarioFinal.get('tipoPersona')?.value === ''
-          "
-        ></app-catalogo-select>
+      <div class="col-md-4">
+        <label class="form-label">Colonia o equivalente:</label>
+        <input type="text" class="form-control" formControlName="colonia" />
       </div>
-      <div class="col-md-4 px-5">
-        <app-catalogo-select
-          [catalogo]="codigosPostalesDatos"
-          formControlName="codigoPostal"
-          [label]="'Código postal o equivalente'"
-          [required]="true"
-          [isDisabled]="
-            agregarDestinatarioFinal.get('tipoPersona')?.value === ''
-          "
-        ></app-catalogo-select>
-      </div>
-      <div class="col-md-4 px-5">
-        <app-catalogo-select
-          [catalogo]="coloniasDatos"
-          formControlName="colonia"
-          [label]="'Colonia'"
-          [required]="true"
-          [isDisabled]="
-            agregarDestinatarioFinal.get('tipoPersona')?.value === ''
-          "
-        ></app-catalogo-select>
-      </div>
-    </div>
-    }
-
-    <div class="row mt-3">
-      <div class="col-md-9">
+      <div class="col-md-4">
         <label class="form-label">Calle:</label>
         <input type="text" class="form-control" formControlName="calle" />
+        <i class="fas fa-info-circle"></i>
       </div>
-      <div class="col-md-3">
+      <div class="col-md-4">
         <label class="form-label">Número exterior:</label>
         <input
           type="text"
@@ -233,6 +132,7 @@
           class="form-control"
           formControlName="correoElectronico"
         />
+        <i class="fas fa-info-circle"></i>
       </div>
     </div>
 

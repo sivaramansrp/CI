@@ -1,15 +1,17 @@
 <div class="container">
-  <div class="row mt-5">
-    <ng-titulo titulo="Permiso definitivo (no temporal)"></ng-titulo>
-  </div>
-
-  <div class="row mt-5">
-    <ng-titulo
-      titulo="Aduana de entrada
-    "
-    ></ng-titulo>
-
+  @if(!estaOculto){    
+    <div class="row mt-5">
+      <ng-titulo titulo="Permiso definitivo (no temporal)"></ng-titulo>
+    </div>
     <div class="row">
+      <ng-titulo
+        titulo="Aduana de entrada
+      "
+      ></ng-titulo>
+    </div>
+  }
+
+    <div class="row mt-3">
       <crosslist
         [fechas]="seleccionarAduanasDisponibles"
         [label]="aduanasDisponiblesLabel"
@@ -34,7 +36,7 @@
             />
           </div>
           <div class="col-md-8">
-            <label for="paisDestino" class="form-label">País destino:</label>
+            <label for="paisDestino" class="form-label">{{ paisEtiqueta.get(idProcedimiento) ? paisEtiqueta.get(idProcedimiento) : 'País de'}}:</label>
             <input
               type="text"
               id="paisDestino"
@@ -82,5 +84,43 @@
         </div>
       </div>
     </div>
-  </div>
+
+    @if(periodoHabilitado){
+
+      <div class="row mt-5">
+        <ng-titulo titulo="Periodo"></ng-titulo>
+      </div>
+      <h4>Periodo*:</h4>
+      <form [formGroup]="form" class="container">
+        <div class="row">
+          <div class="col-md-4">
+            <app-input-radio
+              [radioOptions]="periodoUnoSemestreOpciones"
+              [isRequired]="true"
+              [layout]="'vertical'"
+              formControlName="unoSemestre"
+              (valueChange)="actualizarUnoSemestre($event)"
+            ></app-input-radio>
+          </div>
+          <div class="col-md-4">
+            <app-input-radio
+              [radioOptions]="periodoUnoSemestreRadioOpciones"
+              [isRequired]="true"
+              [layout]="'vertical'"
+              formControlName="dosSemestre"
+              (valueChange)="actualizarDosSemestre($event)"
+            ></app-input-radio>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-4">
+            <lib-input-check [id]="'anoEnCurso'" [label]="'Año en curso'" [required]="false"
+            formControlName="anoEnCurso"></lib-input-check>
+          </div>
+        </div>
+      </form>
+    }
+
+
 </div>
