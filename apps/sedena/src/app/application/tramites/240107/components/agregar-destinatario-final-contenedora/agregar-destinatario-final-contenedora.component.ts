@@ -2,6 +2,7 @@ import { AgregarDestinatarioFinalComponent } from '../../../../shared/components
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { DestinoFinal } from '../../../../shared/models/terceros-relacionados.model';
+import { ID_PROCEDIMIENTO } from '../../constantes/sustancias-quimicas.enum';
 import { Tramite240107Store } from '../../estados/tramite240107Store.store';
 
 /**
@@ -18,6 +19,11 @@ import { Tramite240107Store } from '../../estados/tramite240107Store.store';
   styleUrl: './agregar-destinatario-final-contenedora.component.css',
 })
 export class AgregarDestinatarioFinalContenedoraComponent {
+  /**
+   * Identificador del procedimiento.
+   * @property {number} idProcedimiento
+   */
+  public readonly idProcedimiento = ID_PROCEDIMIENTO;
   /**
    * Constructor del componente.
    *
