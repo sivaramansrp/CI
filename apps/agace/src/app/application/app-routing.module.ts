@@ -60,6 +60,13 @@ const ROUTES: Routes = [
         (m) => m.AvisoTrasladoModule
       ),
   },
+  {
+    path: 'aviso-destruccion',
+    loadChildren: () =>
+      import('./tramites/32506/aviso-destruccion.module').then(
+        (m) => m.AvisoDestruccionModule
+      ),
+  }
 ];
 
 @NgModule({
