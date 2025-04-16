@@ -87,7 +87,7 @@ describe('PagoDeDerechosComponent', () => {
   it('should update the store value on setValoresStore', () => {
     const form = component.datosImportadorExportador;
     form.get('banco')?.setValue('BANCO1');
-    component.setValoresStore(form, 'banco', 'setllaveDePago');
+    component.setValoresStore(form, 'banco');
     expect(tramite300105StoreMock.setllaveDePago).toHaveBeenCalledWith('BANCO1');
   });
 

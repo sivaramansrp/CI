@@ -110,31 +110,18 @@ export class DatosDelSolicitanteComponent implements OnInit, OnDestroy {
   /**
    * Método para actualizar el valor del campo en el store.
    */
-  setValoresStore(
-    form: FormGroup,
-    campo: string,
-    metodoNombre: keyof Tramite300105Store
-  ): void {
+  setValoresStore(form: FormGroup, campo: string): void {
     const VALOR = form.get(campo)?.value;
-    (
-      this.tramite300105Store[metodoNombre] as (
-        value: string | number | null
-      ) => void
-    )(VALOR);
+    this.tramite300105Store.establecerDatos({[campo]: VALOR});
   }
 
   /**
    * Maneja el evento de clic en un botón de radio.
    */
-  onRadioClick(nombreControl: string, value: boolean): void {
+  onRadioClick(nombreControl: string): void {
     const CURRENT_VALUE = this.datosSolicitante.get(nombreControl)?.value;
-    if (CURRENT_VALUE === value) {
-      // Si se hace clic en el mismo valor, desmarcarlo
-      this.datosSolicitante.get(nombreControl)?.setValue(false);
-    } else {
-      // De lo contrario, seleccionar el nuevo valor
-      this.datosSolicitante.get(nombreControl)?.setValue(value);
-    }
+    this.datosSolicitante.get(nombreControl)?.setValue(!CURRENT_VALUE);
+    this.tramite300105Store.establecerDatos({[nombreControl]: !CURRENT_VALUE});
   }
 
   /**

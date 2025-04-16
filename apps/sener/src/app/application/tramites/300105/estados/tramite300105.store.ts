@@ -109,6 +109,17 @@ export class Tramite300105Store extends Store<Tramite300105State> {
   }
 
   /**
+   * Actualiza el estado con los nuevos datos proporcionados.
+   * Utiliza el método update del store para modificar el estado actual.
+   */
+  public establecerDatos(datos: Partial<Tramite300105State>): void {
+    this.update((state) => ({
+      ...state,
+      ...datos,
+    }));
+  }
+
+  /**
    * method setMercanciaTablaDatos
    * description Actualiza los datos de la tabla de mercancías en el estado.
    * param {ConfiguracionItem[]} mercanciaTablaDatos Datos de la tabla de mercancías.
@@ -133,66 +144,6 @@ export class Tramite300105Store extends Store<Tramite300105State> {
   }
 
   /**
-   * method setObservaciones
-   * description Actualiza las observaciones en el estado.
-   * param {string} observaciones Observaciones relacionadas con el trámite.
-   */
-  public setObservaciones(observaciones: string): void {
-    this.update((state) => ({
-      ...state,
-      observaciones,
-    }));
-  }
-
-  /**
-   * method setTercerosPopupState
-   * description Actualiza el estado del popup de terceros relacionados.
-   * param {boolean} tercerosPopupState Estado del popup de terceros.
-   */
-  public setTercerosPopupState(tercerosPopupState: boolean): void {
-    this.update((state) => ({
-      ...state,
-      tercerosPopupState,
-    }));
-  }
-
-  /**
-   * method setClaveDeReferencia
-   * description Actualiza la clave de referencia en el estado.
-   * param {string} claveDeReferencia Clave de referencia.
-   */
-  public setClaveDeReferencia(claveDeReferencia: string): void {
-    this.update((state) => ({
-      ...state,
-      claveDeReferencia,
-    }));
-  }
-
-  /**
-   * method setCadenaDependencia
-   * description Actualiza la cadena de dependencia en el estado.
-   * param {string} cadenaDependencia Cadena de dependencia.
-   */
-  public setCadenaDependencia(cadenaDependencia: string): void {
-    this.update((state) => ({
-      ...state,
-      cadenaDependencia,
-    }));
-  }
-
-  /**
-   * method setBanco
-   * description Actualiza el banco en el estado.
-   * param {string} banco Banco relacionado con el trámite.
-   */
-  public setBanco(banco: string): void {
-    this.update((state) => ({
-      ...state,
-      banco,
-    }));
-  }
-
-  /**
    * method setllaveDePago
    * description Actualiza la llave de pago en el estado.
    * param {string} llaveDePago Llave de pago.
@@ -201,126 +152,6 @@ export class Tramite300105Store extends Store<Tramite300105State> {
     this.update((state) => ({
       ...state,
       llaveDePago,
-    }));
-  }
-
-  /**
-   * method setFechaPago
-   * description Actualiza la fecha de pago en el estado.
-   * param {string} fechaPago Fecha de pago.
-   */
-  public setFechaPago(fechaPago: string): void {
-    this.update((state) => ({
-      ...state,
-      fechaPago,
-    }));
-  }
-
-  /**
-   * method setImportePago
-   * description Actualiza el importe de pago en el estado.
-   * param {string} importePago Importe de pago.
-   */
-  public setImportePago(importePago: string): void {
-    this.update((state) => ({
-      ...state,
-      importePago,
-    }));
-  }
-
-  /**
-   * method setNumeroExpediente
-   * description Actualiza el número de expediente en el estado.
-   * param {string} numeroExpediente Número de expediente.
-   */
-  public setNumeroExpediente(numeroExpediente: string): void {
-    this.update((state) => ({
-      ...state,
-      numeroExpediente,
-    }));
-  }
-
-  /**
-   * method setTipoOperacion
-   * description Actualiza el tipo de operación en el estado.
-   * param {string} tipoOperacion Tipo de operación.
-   */
-  public setTipoOperacion(tipoOperacion: string): void {
-    this.update((state) => ({
-      ...state,
-      tipoOperacion,
-    }));
-  }
-
-  /**
-   * method setFinalidad
-   * description Actualiza la finalidad en el estado.
-   * param {string} finalidad Finalidad del trámite.
-   */
-  public setFinalidad(finalidad: string): void {
-    this.update((state) => ({
-      ...state,
-      finalidad,
-    }));
-  }
-
-  /**
-   * method setIsExento
-   * description Actualiza el valor de isExento en el estado.
-   * param {boolean} isExento Indica si el trámite está exento.
-   */
-  public setIsExento(isExento: boolean): void {
-    this.update((state) => ({
-      ...state,
-      isExento,
-    }));
-  }
-
-  /**
-   * method setIsAutorizacion
-   * description Actualiza el valor de isAutorizacion en el estado.
-   * param {boolean} isAutorizacion Indica si el trámite tiene autorización.
-   */
-  public setIsAutorizacion(isAutorizacion: boolean): void {
-    this.update((state) => ({
-      ...state,
-      isAutorizacion,
-    }));
-  }
-
-  /**
-   * method setNumAutorizacion1
-   * description Actualiza el valor de numAutorizacion1 en el estado.
-   * param {string} numAutorizacion1 Número de autorización 1.
-   */
-  public setNumAutorizacion1(numAutorizacion1: string): void {
-    this.update((state) => ({
-      ...state,
-      numAutorizacion1,
-    }));
-  }
-
-  /**
-   * method setNumAutorizacion2
-   * description Actualiza el valor de numAutorizacion2 en el estado.
-   * param {string} numAutorizacion2 Número de autorización 2.
-   */
-  public setNumAutorizacion2(numAutorizacion2: string): void {
-    this.update((state) => ({
-      ...state,
-      numAutorizacion2,
-    }));
-  }
-
-  /**
-   * method setNumAutorizacion3
-   * description Actualiza el valor de numAutorizacion3 en el estado.
-   * param {string} numAutorizacion3 Número de autorización 3.
-   */
-  public setNumAutorizacion3(numAutorizacion3: string): void {
-    this.update((state) => ({
-      ...state,
-      numAutorizacion3,
     }));
   }
 }

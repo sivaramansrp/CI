@@ -119,10 +119,10 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * Descripción: Capitaliza el valor de la llave de pago y actualiza el estado en el store.
    */
   manejarCambioLlavePago(): void {
-    const CAPITALIZED_VALUE = this.datosImportadorExportador.get('llaveDePago')?.value.toUpperCase();
-    this.datosImportadorExportador.get('llaveDePago')?.setValue(CAPITALIZED_VALUE);
+    const VALOR_EN_MAYUSCULAS = this.datosImportadorExportador.get('llaveDePago')?.value.toUpperCase();
+    this.datosImportadorExportador.get('llaveDePago')?.setValue(VALOR_EN_MAYUSCULAS);
     this.tramite300105Store.setllaveDePago(
-      CAPITALIZED_VALUE
+      VALOR_EN_MAYUSCULAS
     );
   }
 
@@ -134,17 +134,9 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    *   - campo: Nombre del campo cuyo valor se actualizará en el store.
    *   - metodoNombre: Nombre del método del store que se utilizará para actualizar el valor.
    */
-  setValoresStore(
-    form: FormGroup,
-    campo: string,
-    metodoNombre: keyof Tramite300105Store
-  ): void {
+  setValoresStore(form: FormGroup, campo: string): void {
     const VALOR = form.get(campo)?.value;
-    (
-      this.tramite300105Store[metodoNombre] as (
-        value: string | number | null
-      ) => void
-    )(VALOR);
+    this.tramite300105Store.establecerDatos({[campo]: VALOR});
   }
 
   /**
