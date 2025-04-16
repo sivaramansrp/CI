@@ -46,7 +46,7 @@ export class AgregarArchivoComponent {
      * Maneja el evento de clic para el botón de acción del archivo.
      * Emite el evento `archivoAction`.
      */
-    onArchivoClick() {
+    onArchivoClick():void {
       this.archivoAction.emit();
     }
   
@@ -54,7 +54,7 @@ export class AgregarArchivoComponent {
      * Maneja el evento de clic para el botón de acción de agregar.
      * Emite el evento `agregarAction` para notificar a los componentes padres.
      */
-    onAgregarClick() {
+    onAgregarClick():void {
       this.agregarAction.emit()
     }
 }

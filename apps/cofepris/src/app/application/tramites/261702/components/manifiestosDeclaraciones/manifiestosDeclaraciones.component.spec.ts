@@ -32,7 +32,6 @@ describe('ManifiestosDeclaracionesComponent', () => {
 
     fixture = TestBed.createComponent(ManifiestosDeclaracionesComponent);
     component = fixture.componentInstance;
-    component.subscription = new Subscription();
     component.destroyNotifier$ = new Subject<void>();
 
     fixture.detectChanges();
@@ -62,7 +61,6 @@ describe('ManifiestosDeclaracionesComponent', () => {
 
   it('should clean up subscriptions and complete destroyNotifier$ on ngOnDestroy', () => {
     // Spy on relevant methods
-    const subscriptionSpy = jest.spyOn(component.subscription, 'unsubscribe');
     const notifierNextSpy = jest.spyOn(component.destroyNotifier$, 'next');
     const notifierCompleteSpy = jest.spyOn(component.destroyNotifier$, 'complete');
   
@@ -70,7 +68,6 @@ describe('ManifiestosDeclaracionesComponent', () => {
     component.ngOnDestroy();
   
     // Assertions
-    expect(subscriptionSpy).toHaveBeenCalled();
     expect(notifierNextSpy).toHaveBeenCalled();
     expect(notifierCompleteSpy).toHaveBeenCalled();
   });
