@@ -10,11 +10,6 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class ValidacionesFormularioService {
-  public rfcPattern =
-    /^([A-ZÑ&]{3,4})?(?:\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01]))?[A-Z\d]{2}[A\d]$/;
-  public patronDeNumero = /^[0-9]\d*$/;
-  public llavePagoPattern= /^[a-zA-Z0-9]*$/
-
   /**
    * Valida si el campo de un formulario no contiene errores
    * @param {AbstractControl} control  : Control del formulario

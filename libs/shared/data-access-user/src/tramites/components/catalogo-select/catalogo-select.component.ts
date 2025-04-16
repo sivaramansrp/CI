@@ -52,9 +52,9 @@ export class CatalogoSelectComponent
     });
   }
 
-  // eslint-disable-next-line class-methods-use-this, 
+  // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-empty-function
   private onChange: (value: string) => void = () => {};
-  // eslint-disable-next-line class-methods-use-this, no-empty-function
+  // eslint-disable-next-line class-methods-use-this, no-empty-function, @typescript-eslint/no-empty-function
   private onTouched: () => void = () => {};
 
   /**
@@ -111,8 +111,14 @@ export class CatalogoSelectComponent
    * @returns void
    */
   writeValue(value: string): void {
-    if (value && this.formSelect.get('selectControl')?.value !== value) {
-      this.formSelect.get('selectControl')?.setValue(value, { emitEvent: false });
+    if (value === null || value === undefined) {
+      // Limpia el valor en el formulario interno del componente
+      this.formSelect.get('selectControl')?.reset();
+    } else {
+      // Establece el valor si no está vacío
+      if (this.formSelect.get('selectControl')?.value !== value) {
+        this.formSelect.get('selectControl')?.setValue(value, { emitEvent: false });
+      }
     }
   }
 

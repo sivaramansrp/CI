@@ -6,7 +6,7 @@ const ROUTES: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'seleccion-tramite' },
   {
     path: 'seleccion-tramite',
-    component: SeleccionTramiteComponent
+    component: SeleccionTramiteComponent,
   },
   {
     path: 'antecesor',
@@ -18,9 +18,7 @@ const ROUTES: Routes = [
   {
     path: 'aviso',
     loadChildren: () =>
-      import('./tramites/32502/aviso.module').then(
-        (m) => m.AvisoModule
-      ),
+      import('./tramites/32502/aviso.module').then((m) => m.AvisoModule),
   },
   {
     path: 'aviso-procesos',
@@ -32,30 +30,50 @@ const ROUTES: Routes = [
   {
     path: 'registro-solicitud',
     loadChildren: () =>
+      import('./tramites/31802/registro-solicitud.module').then(
+        (m) => m.RegistroSolicitudModule
+      ),
+  },
+  {
+    path: 'autoridad',
+    loadChildren: () =>
+      import('./tramites/31501/autoridad.module').then(
+        (m) => m.AutoridadModule
+      ),
+  },
+  {
+    path: 'registro-solicitud',
+    loadChildren: () =>
       import('./tramites/31803/registro-solicitud.module').then(
-        (m) => m.RegistroSolicitudModule),
-      },{
-        
+        (m) => m.RegistroSolicitudModule
+      ),
+  },
+  {
     path: 'mercancias-desmontadas-o-sin-montar',
     loadChildren: () =>
-      import('./tramites/32501/mercancias-desmontadas-o-sin-montar.module').then(
-        (m) => m.MercanciasDesmontadasOSinMontarModule
+      import(
+        './tramites/32501/mercancias-desmontadas-o-sin-montar.module'
+      ).then((m) => m.MercanciasDesmontadasOSinMontarModule),
+  },
+  {
+    path: 'aviso-traslado',
+    loadChildren: () =>
+      import('./tramites/32503/aviso-traslado.module').then(
+        (m) => m.AvisoTrasladoModule
       ),
   },
 
   {
-        
     path: 'entrega-acta-solicitante',
     loadChildren: () =>
       import('./tramites/32507/entrega-acta.module').then(
         (m) => m.EntregaActaModule
       ),
   },
-
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(ROUTES)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}
