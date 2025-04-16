@@ -10,6 +10,7 @@
       [tipoSeleccionTabla]="destinoFinalTablaConfiguracion.tipoSeleccionTabla"
       [configuracionTabla]="destinoFinalTablaConfiguracion.configuracionTabla"
       [datos]="destinatarioFinalTablaDatos"
+      (listaDeFilaSeleccionada)="destinarioTablaSeleccionada = $event"
     ></app-tabla-dinamica>
   </div>
   <div class="row mt-5">
@@ -19,6 +20,8 @@
           type="button"
           name="modificarMercancias"
           class="btn btn-default"
+          [disabled]="destinarioTablaSeleccionada.length > 1"
+          (click)="modificarDestinatario()"
         >
           Modificar
         </button>
@@ -49,6 +52,7 @@
       [tipoSeleccionTabla]="dproveedorTablaConfiguracion.tipoSeleccionTabla"
       [configuracionTabla]="dproveedorTablaConfiguracion.configuracionTabla"
       [datos]="proveedorTablaDatos"
+      (listaDeFilaSeleccionada)="proveedorTablaSeleccionada = $event"
     ></app-tabla-dinamica>
   </div>
   <div class="row mt-5">
@@ -58,6 +62,7 @@
           type="button"
           name="modificarMercancias"
           class="btn btn-default"
+          [disabled]="proveedorTablaSeleccionada.length > 1"
         >
           Modificar
         </button>
