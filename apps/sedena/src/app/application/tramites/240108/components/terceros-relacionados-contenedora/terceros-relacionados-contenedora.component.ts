@@ -1,3 +1,4 @@
+import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { DestinoFinal } from '../../../../shared/models/terceros-relacionados.model';
@@ -6,6 +7,7 @@ import { Proveedor } from '../../../../shared/models/terceros-relacionados.model
 import { Subject } from 'rxjs';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
 import { Tramite240108Query } from '../../estados/tramite240108Query.query';
+import { Tramite240108Store } from '../../estados/tramite240108Store.store';
 import { takeUntil } from 'rxjs';
 
 /**
@@ -49,7 +51,10 @@ export class TercerosRelacionadosContenedoraComponent implements OnInit {
    * @returns {void}
    */
   constructor(
-    private tramiteQuery: Tramite240108Query
+    private tramiteQuery: Tramite240108Query,
+    private tramiteStore: Tramite240108Store,
+    private router: Router,
+    private activatedRoute: ActivatedRoute
   ) // eslint-disable-next-line no-empty-function
   {}
 
@@ -72,5 +77,27 @@ export class TercerosRelacionadosContenedoraComponent implements OnInit {
       .subscribe((data) => {
         this.proveedorTablaDatos = data;
       });
+  }
+
+  modificarDestinarioDatos(datos: DestinoFinal): void {
+    this.tramiteStore.actualizarDatosDestinatario(datos);
+    this.irAAcciones();
+  }
+
+  modificarProveedorDatos(datos: Proveedor): void {
+    this.tramiteStore.actualizarDatosProveedor(datos);
+    this.irAAcciones();
+  }
+
+  /**
+   * Navega a una ruta relativa dentro del flujo actual.
+   * @method irAAcciones
+   * @param {string} accionesPath - Ruta relativa a la que se desea navegar.
+   * @returns {void}
+   */
+  irAAcciones(): void {
+    this.router.navigate(['../agregar-destino-final'], {
+      relativeTo: this.activatedRoute,
+    });
   }
 }

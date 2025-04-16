@@ -1,7 +1,9 @@
+import { DestinoFinal, Proveedor } from '../../../../shared/models/terceros-relacionados.model';
 import { AgregarDestinatarioFinalComponent } from '../../../../shared/components/agregar-destinatario-final/agregar-destinatario-final.component';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { DestinoFinal } from '../../../../shared/models/terceros-relacionados.model';
+import { Observable } from 'rxjs';
+import { Tramite240108Query } from '../../estados/tramite240108Query.query';
 import { Tramite240108Store } from '../../estados/tramite240108Store.store';
 
 /**
@@ -18,6 +20,8 @@ import { Tramite240108Store } from '../../estados/tramite240108Store.store';
   styleUrl: './agregar-destinatario-final-contenedora.component.css',
 })
 export class AgregarDestinatarioFinalContenedoraComponent {
+
+  terechosDatos$!: Observable<DestinoFinal | Proveedor | null | undefined>;
   /**
    * Constructor del componente.
    *
@@ -25,8 +29,9 @@ export class AgregarDestinatarioFinalContenedoraComponent {
    * @param {Tramite240108Store} tramiteStore - Store que administra el estado del trámite.
    * @returns {void}
    */
-  // eslint-disable-next-line no-empty-function
-  constructor(public tramiteStore: Tramite240108Store) {}
+  constructor(public tramiteStore: Tramite240108Store, public tramiteQuery: Tramite240108Query) {
+    this.terechosDatos$ = this.tramiteQuery.obtenerTercerosDatos$;
+  }
 
   /**
    * Actualiza la lista de destinatarios finales en el store del trámite.

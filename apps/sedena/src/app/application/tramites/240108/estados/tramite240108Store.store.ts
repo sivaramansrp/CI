@@ -24,6 +24,8 @@ export interface Tramite240108State {
   pagoDerechos: PagoDerechosFormState;
   merccancialTablaDatos: MercanciaDetalle[];
   datosDelTramite: DatosDelTramiteFormState;
+  modificarDestinarioDatos?: DestinoFinal | null;
+  modificarProveedorDatos?: Proveedor | null;
 }
 
 /**
@@ -52,6 +54,8 @@ export function createInitialState(): Tramite240108State {
       aduanasSeleccionadas: [],
       paisDestino: '',
     },
+    modificarDestinarioDatos: null,
+    modificarProveedorDatos: null
   };
 }
 
@@ -130,6 +134,7 @@ export class Tramite240108Store extends Store<Tramite240108State> {
         ...state.destinatarioFinalTablaDatos,
         ...newDestinatarios,
       ],
+      modificarDestinarioDatos: null
     }));
   }
 
@@ -144,6 +149,7 @@ export class Tramite240108Store extends Store<Tramite240108State> {
     this.update((state) => ({
       ...state,
       proveedorTablaDatos: [...state.proveedorTablaDatos, ...newProveedores],
+      modificarProveedorDatos: null
     }));
   }
 
@@ -160,4 +166,21 @@ export class Tramite240108Store extends Store<Tramite240108State> {
       merccancialTablaDatos: [...state.merccancialTablaDatos, ...newMercancia],
     }));
   }
+
+  public actualizarDatosDestinatario(datos: DestinoFinal): void {
+    this.update((state) => ({
+      ...state,
+      modificarDestinarioDatos: datos,
+      modificarProveedorDatos: null
+    }));
+  }
+
+  public actualizarDatosProveedor(datos: Proveedor): void {
+    this.update((state) => ({
+      ...state,
+      modificarProveedorDatos: datos,
+      modificarDestinarioDatos: null
+    }));
+  }
+
 }
