@@ -141,7 +141,7 @@ export class Tramite260703Store extends Store<SolicitudPermisoState> {
     }));
   }
 
-  updateManifiestosFormState(
+  actualizarEstadoFormularioManifiestos(
     valores: Partial<SolicitudPermisoState['manifiestosFormState']>
   ): void {
     this.update((state) => ({
