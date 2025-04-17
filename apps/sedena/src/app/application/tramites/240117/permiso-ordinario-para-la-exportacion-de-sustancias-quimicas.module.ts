@@ -4,10 +4,12 @@ import { PermisoOrdinarioParaLaExportacionDeSustanciasQuimicasRoutingModule } fr
 
 import { AnexarDocumentosComponent, BtnContinuarComponent, FirmaElectronicaComponent, SolicitanteComponent, TituloComponent, WizardComponent } from '@libs/shared/data-access-user/src';
 
-import { AlertComponent } from 'ngx-bootstrap/alert';
+import { AlertComponent } from '@ng-mf/data-access-user';
 
 import { DatosDelTramiteComponent } from '../../shared/components/datos-del-tramite/datos-del-tramite.component';
 import { PagoDeDerechosComponent } from '../../shared/components/pago-de-derechos/pago-de-derechos.component';
+import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
+import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { PermisoOrdinarioImportacionArmasMunicionesRoutingModule } from '../240101/permiso-ordinario-importacion-armas-municiones-routing.module';
 import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
@@ -18,6 +20,8 @@ import { TercerosRelacionadosComponent } from '../../shared/components/terceros-
 @NgModule({
   declarations: [
     PasoUnoComponent,
+    PasoDosComponent,
+    PasoTresComponent,
     SolicitudPageComponent,
   ],
   imports: [
@@ -37,6 +41,8 @@ import { TercerosRelacionadosComponent } from '../../shared/components/terceros-
   ],
   exports:[
     PasoUnoComponent,
+    PasoDosComponent,
+    PasoTresComponent,
     SolicitanteComponent
   ]
 })
