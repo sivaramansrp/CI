@@ -2,7 +2,7 @@ import { AgregarDestinatarioFinalComponent } from '../../../../shared/components
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { DestinoFinal } from '../../../../shared/models/terceros-relacionados.model';
-import { Tramite240101Store } from '../../estados/tramite240101Store.store';
+import { Tramite240101Store } from '../../estados/tramite240111Store.store';
 
 /**
  * @title Agregar Destinatario Final Contenedora

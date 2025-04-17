@@ -5,8 +5,8 @@ import { OnInit } from '@angular/core';
 import { Proveedor } from '../../../../shared/models/terceros-relacionados.model';
 import { Subject } from 'rxjs';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
-import { Tramite240101Query } from '../../estados/tramite240101Query.query';
-import { Tramite240101Store } from '../../estados/tramite240101Store.store';
+import { Tramite240101Query } from '../../estados/tramite240111Query.query';
+import { Tramite240101Store } from '../../estados/tramite240111Store.store';
 import { takeUntil } from 'rxjs';
 
 /**

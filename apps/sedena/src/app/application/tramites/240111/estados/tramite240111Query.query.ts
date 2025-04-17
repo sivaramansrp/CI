@@ -1,7 +1,7 @@
 import {
   Tramite240101State,
   Tramite240101Store,
-} from './tramite240101Store.store';
+} from './tramite240111Store.store';
 import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
 
