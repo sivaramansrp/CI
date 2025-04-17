@@ -62,18 +62,18 @@
         @switch (indice) { @case (1) {
         <solicitante [tabindex]="1"></solicitante>
         } @case (2) {
-        <!-- <app-datos-de-la-solicitud [tabindex]="2"></app-datos-de-la-solicitud> -->
+        <app-datos-de-la-solicitud [tabindex]="2"></app-datos-de-la-solicitud>
         } @case (3) {
         <!-- <app-terceros-relacionados [tabindex]="3"></app-terceros-relacionados> -->
         } @case (4) {
-          <!-- <app-pago-de-derechos 
+          <app-pago-de-derechos 
           [formularioPagoDerechos]="formularioPagoDerechos"
           [banco]="banco"
           (setValoresStoreEvent)="setValoresStore($event)"
-          ></app-pago-de-derechos> -->
+          ></app-pago-de-derechos>
         } @case (5) {
-          <!-- <app-tramite-asociados
-        [configuracionTabla]="configuracionTabla" [tramiteAsociados]="tramiteAsociados"></app-tramite-asociados> -->
+          <app-tramite-asociados
+        [configuracionTabla]="configuracionTabla" [tramiteAsociados]="tramiteAsociados"></app-tramite-asociados>
         } 
        }
       </ng-container>

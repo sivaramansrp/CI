@@ -1,7 +1,9 @@
 import { AlertComponent, BtnContinuarComponent, SolicitanteComponent, WizardComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
+import { DatosDeLaSolicitudComponent } from './components/datos-de-la-solicitud/datos-de-la-solicitud.component';
 import { InicioSesionService } from '@libs/shared/data-access-user/src/core/services/shared/inicio-sesion/inicio-sesion.service';
 import { NgModule } from '@angular/core';
+import { PagoDeDerechosComponent } from '../../shared/components/pago-de-derechos-new/pago-de-derechos.component';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
@@ -11,6 +13,7 @@ import { SolicitudModificacionPermisoInternacionRoutingModule } from './solicitu
 import { SubirDocumentoService } from '@libs/shared/data-access-user/src/core/services/shared/subir-documento/subir-documento.service';
 import { ToastrModule } from 'ngx-toastr';
 import { ToastrService } from 'ngx-toastr';
+import { TramiteAsociadosComponent } from '../../shared/components/tramite-asociados/tramite-asociados.component';
 
 @NgModule({
   declarations: [
@@ -22,11 +25,14 @@ import { ToastrService } from 'ngx-toastr';
     SolicitudModificacionPermisoInternacionRoutingModule,
     WizardComponent,
     BtnContinuarComponent,
+    DatosDeLaSolicitudComponent,
     ReactiveFormsModule,
     SolicitanteComponent,
     AlertComponent,
     PasoDosComponent,                                                                    
     PasoTresComponent,
+    TramiteAsociadosComponent,
+    PagoDeDerechosComponent,
     ToastrModule.forRoot()
   ],
   providers: [
