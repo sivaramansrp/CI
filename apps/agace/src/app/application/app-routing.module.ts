@@ -29,6 +29,13 @@ const ROUTES: Routes = [
         (m) => m.AvisoProcesosModule
       ),
   },
+  {
+    path: 'aviso',
+    loadChildren: () =>
+      import('./tramites/32301/aviso-modify-ivaEIepsAgace.module').then(
+        (m) => m.AvisoModifyIvaElepsAgaceModule
+      ),
+  },
 ];
 
 @NgModule({

@@ -1,4 +1,5 @@
 export interface catalogoResponse {
+  data: catalogoResponse;
   id: number;
   descripcion: string;
 }

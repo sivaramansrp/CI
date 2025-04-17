@@ -1,0 +1,101 @@
+<div class="container">
+  <form [formGroup]="proveedorXtranjForm">
+    <div class="row">
+      <div class="col-md-12 mb-4">
+        <ng-titulo [titulo]="ProveedoresTitulo"></ng-titulo>
+        <div class="col-md-12">
+          <div class="alert alert-info">
+            <div class="form-check">
+              Descargue la plantilla para la carga masiva de su(s) proceso(s)
+              productivo(s)
+              <a href="/assets/pdf/carga_proveedoresExtranjeros_aviso.xlsx"
+                >Aquí</a
+              >
+            </div>
+          </div>
+        </div>
+
+        <div class="row" style="margin-top: 20px">
+          <div class="col-md-8">
+            <input
+              type="file"
+              accept=".xlsx"
+              (change)="onFileSelected($event)"
+              class="form-control sfile"
+              name="archivoExtranjero"
+              id="archivoExtranjero"
+              title="Examinar"
+              formControlName="archivoExtranjero"
+            />
+          </div>
+          <div class="col-md-4 d-flex justify-content-end">
+            <button
+              type="button"
+              name="cargaArchivoProcesos"
+              id="cargaArchivoProcesos"
+              class="btn btn-primary me-md-3"
+            >
+              Anexar
+            </button>
+            <button
+              type="button"
+              name="vistaPreviaProcesos"
+              id="vistaPreviaProcesos"
+              class="btn btn-primary"
+            >
+              Vista previa
+            </button>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-5">
+            <label
+              for="agace.seccionProveedores.existentes"
+              id="labelProveedor"
+            >
+              {{ seccionProveedoresExistentes }}
+            </label>
+          </div>
+          <div class="col-md-1">
+            <input
+              type="text"
+              class="form-control"
+              name="registrosProveedoresExtranjeros"
+              id="registrosProveedoresExtranjeros"
+              formControlName="registrosProveedoresExtranjeros"
+            />
+          </div>
+          <div class="col-md-2">&nbsp;</div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
+<div class="modal fade" tabindex="-1" #CargaExtranjeroModel>
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"></h5>
+      </div>
+      <div class="modal-body p-4">
+        <div class="row">
+          <div class="col-12 text-center">
+            El archivo debe contener almenos un registro.
+          </div>
+        </div>
+
+        <div class="button-group d-flex justify-content-center mt-5 me-md-3">
+          <button
+            type="button"
+            class="btn btn-primary"
+            (click)="closeCargaExtranjeroModel()"
+          >
+            Aceptar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
