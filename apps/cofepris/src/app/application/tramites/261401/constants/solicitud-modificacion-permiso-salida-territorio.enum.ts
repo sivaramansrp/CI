@@ -5,15 +5,16 @@ export const PASOS_EXPORTACION = [
     activo: true,
     completado: true,
 },
-{
+{    
     indice: 2,
-    titulo: 'Requisitos necesarios',
+    titulo: 'Anexar necesarios',
     activo: false,
     completado: false,
+
 },
 {
     indice: 3,
-    titulo: 'Anexar necesarios',
+    titulo: 'Firmar solicitud',
     activo: false,
     completado: false,
 }
