@@ -107,8 +107,8 @@
     {
         "id": 16,
         "tramite": 31601,
-        "linkDashboard": "/agace/pago/antecesor/datosdelasolicitud",
-        "linkDepartment": "/agace/pago/antecesor/datosdelasolicitud",
+        "linkDashboard": "/agace/antecesor/datosdelasolicitud",
+        "linkDepartment": "/pago/antecesor/datosdelasolicitud",
         "department": "agace"
     },
     {
@@ -297,7 +297,7 @@
         "id": 43,
         "tramite": 110208,
         "linkDashboard": "/se/validar-inicialmente/certificado-origen",
-        "linkDepartment": "/se/validar-inicialmente/certificado-origen",
+        "linkDepartment": "/pago/validar-inicialmente/certificado-origen",
         "department": "se"
     },
     {
@@ -395,7 +395,7 @@
         "id": 57,
         "tramite": 120601,
         "linkDashboard": "/se/registro-como-empresa/datos",
-        "linkDepartment": "/se/registro-como-empresa/datos",
+        "linkDepartment": "/pago/registro-como-empresa/datos",
         "department": "se"
     },
     {
@@ -528,7 +528,7 @@
         "id": 76,
         "tramite": 220401,
         "linkDashboard": "/agriculture/pantallas-extraordinarios",
-        "linkDepartment": "/agriculture/pantallas-extraordinarios",
+        "linkDepartment": "/pago/pantallas-extraordinarios",
         "department": "agriculture"
     },
     {
@@ -625,9 +625,9 @@
     {
         "id": 90,
         "tramite": 260211,
-        "linkDashboard": "/permiso-sanitario/pantallas",
-        "linkDepartment": "/permiso-sanitario/pantallas",
-        "department": ""
+        "linkDashboard": "/cofepris/permiso-sanitario/pantallas",
+        "linkDepartment": "/pago/permiso-sanitario/pantallas",
+        "department": "cofepris"
     },
     {
         "id": 91,
@@ -1291,7 +1291,7 @@
         "id": 185,
         "tramite": 130301,
         "linkDashboard": "/se/solicitud-prorroga/solicitud",
-        "linkDepartment": "/se/solicitud-prorroga/solicitud",
+        "linkDepartment": "/pago/solicitud-prorroga/solicitud",
         "department": "se"
     },
     {
