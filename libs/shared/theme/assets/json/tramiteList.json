@@ -416,7 +416,7 @@
         "id": 60,
         "tramite": 130102,
         "linkDashboard": "/se/octava-temporal/solicitante",
-        "linkDepartment": "/se/octava-temporal/solicitante",
+        "linkDepartment": "/pago/octava-temporal/solicitante",
         "department": "se"
     },
     {
@@ -479,7 +479,7 @@
         "id": 69,
         "tramite": 140201,
         "linkDashboard": "/se/cancelaciones-ministerio/solicitud",
-        "linkDepartment": "/se/cancelaciones-ministerio/solicitud",
+        "linkDepartment": "/pago/cancelaciones-ministerio/solicitud",
         "department": "se"
     },
     {
@@ -703,7 +703,7 @@
         "id": 101,
         "tramite": 260603,
         "linkDashboard": "/cofepris/aviso-de-importacion/SolicitudePage",
-        "linkDepartment": "/cofepris/aviso-de-importacion/SolicitudePage",
+        "linkDepartment": "/pago/aviso-de-importacion/SolicitudePage",
         "department": "cofepris"
     },
     {
@@ -1073,8 +1073,8 @@
     {
         "id": 154,
         "tramite": 260512,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "/cofepris/Permiso-de-importacion/pantallaspage",
+        "linkDepartment": "/pago/Permiso-de-importacion/pantallaspage",
         "department": "cofepris"
     },
     {
