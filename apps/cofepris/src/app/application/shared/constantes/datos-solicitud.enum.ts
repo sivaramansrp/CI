@@ -505,7 +505,7 @@ export const REPRESENTANTE_LEGAL = [260208];
  *   // Lógica para manejar procedimientos relacionados con el banco
  * }
  */
-export const BANCO = [260208, 260209, 260207, 260201, 260219];
+export const BANCO = [260208, 260209, 260207, 260201, 260219,260302];
 
 /**
  * @const DATOS_MERCANCIA_CAMPO
