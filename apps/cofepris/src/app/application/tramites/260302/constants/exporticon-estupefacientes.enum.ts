@@ -1,29 +1,32 @@
-import { ConfiguracionColumna, Fabricante, TipoPersona } from "@ng-mf/data-access-user";
-import { Facturador } from "../../../shared/models/terceros-relacionados.model";
-import { TablaMercanciasDatos } from "../../../shared/models/datos-solicitud.model";
+import {
+  ConfiguracionColumna,
+  Fabricante,
+  TipoPersona,
+} from '@ng-mf/data-access-user';
+import { Facturador } from '../../../shared/models/terceros-relacionados.model';
+import { TablaMercanciasDatos } from '../../../shared/models/datos-solicitud.model';
 
 export const PASOS = [
-    {
-      indice: 1,
-      titulo: 'Capturar solicitud',
-      activo: true,
-      completado: true,
-    },
-    {
-      indice: 2,
-      titulo: 'Anexar requisitos',
-      activo: false,
-      completado: false,
-    },
-    {
-      indice: 3,
-      titulo: 'Firmar solicitud',
-      activo: false,
-      completado: false,
-    },
-  ];
-  export const TITULOMENSAJE =
-  'Solicitud importación de materias primas que sean o contengan estupefacientes o psicotrópicos';
+  {
+    indice: 1,
+    titulo: 'Capturar solicitud',
+    activo: true,
+    completado: true,
+  },
+  {
+    indice: 2,
+    titulo: 'Anexar requisitos',
+    activo: false,
+    completado: false,
+  },
+  {
+    indice: 3,
+    titulo: 'Firmar solicitud',
+    activo: false,
+    completado: false,
+  },
+];
+export const TITULOMENSAJE = 'Solicitud Exportación de Materias Primas que sean o contengan Estupefacientes o Psicotrópicos';
 export const TEXTOS_REQUISITOS =
   'La solicitud ha quedado registrada con el número temporal [202767640]. Este no tiene validez legal y sirve solamente para efectos de identificar tu Solicitud. Un folio oficial le será asignado a la solicitud al momento en que esta sea firmada.';
 
@@ -136,15 +139,15 @@ export const FACTURADOR_ENCABEZADO_DE_TABLA: ConfiguracionColumna<Facturador>[] 
       encabezado: 'Código Postal',
       clave: (fila) => fila.codigoPostal,
       orden: 15,
-    }
+    },
   ];
 
 export enum TIPO_TABLA_DATOS {
-  DESTINATARIO= 'Destinatario(Destino final)',
+  DESTINATARIO = 'Destinatario(Destino final)',
   FACTURADOR = 'facturador',
   PROVEEDOR = 'Proveedor / Distribudor',
   CERTIFICADO = 'Certificado analítico',
-  OTROS = 'Otros'
+  OTROS = 'Otros',
 }
 export const PRODUCTO_TABLA_ESTUPEFACIENTES_EXPORTICON = [
   {
@@ -160,19 +163,19 @@ export const PRODUCTO_TABLA_ESTUPEFACIENTES_EXPORTICON = [
   },
   {
     encabezado: 'Denominación común internacional',
-    clave: (ele: TablaMercanciasDatos): string |undefined =>
+    clave: (ele: TablaMercanciasDatos): string | undefined =>
       ele.denominacionCumonInternacional, // Reemplaza 'ele.denominacionEspecificaProducto' con la clave correcta
     orden: 3,
   },
   {
     encabezado: 'Marca comercial o denominación distintiva',
-    clave: (ele: TablaMercanciasDatos): string |undefined =>
+    clave: (ele: TablaMercanciasDatos): string | undefined =>
       ele.marcaComercialDenominacion, // Reemplaza 'ele.denominacionEspecificaProducto' con la clave correcta
     orden: 4,
   },
   {
     encabezado: 'Número CAS',
-    clave: (ele: TablaMercanciasDatos): string | undefined=> ele.numeroCAS, // Reemplaza 'ele.estadoFisico' con la clave correcta
+    clave: (ele: TablaMercanciasDatos): string | undefined => ele.numeroCAS, // Reemplaza 'ele.estadoFisico' con la clave correcta
     orden: 5,
   },
   {
@@ -182,13 +185,15 @@ export const PRODUCTO_TABLA_ESTUPEFACIENTES_EXPORTICON = [
   },
   {
     encabezado: 'Descripción de la fracción',
-    clave: (ele: TablaMercanciasDatos): string |undefined => ele.descripcionFraccion, // Reemplaza 'ele.descripcionFraccion' con la clave correcta
+    clave: (ele: TablaMercanciasDatos): string | undefined =>
+      ele.descripcionFraccion, // Reemplaza 'ele.descripcionFraccion' con la clave correcta
     orden: 7,
   },
 
   {
     encabezado: 'Cantidad de lotes ',
-    clave: (ele: TablaMercanciasDatos): string |undefined => ele.cantidadDeLotes, // Reemplaza 'ele.descripcionFraccion' con la clave correcta
+    clave: (ele: TablaMercanciasDatos): string | undefined =>
+      ele.cantidadDeLotes, // Reemplaza 'ele.descripcionFraccion' con la clave correcta
     orden: 8,
   },
   {
@@ -228,7 +233,8 @@ export const PRODUCTO_TABLA_ESTUPEFACIENTES_EXPORTICON = [
   },
   {
     encabezado: 'UMC',
-    clave: (ele: TablaMercanciasDatos): string | undefined => ele.unidadMedidaComercializacion, // Reemplaza 'ele.unidadMedidaTarifa' con la clave correcta
+    clave: (ele: TablaMercanciasDatos): string | undefined =>
+      ele.unidadMedidaComercializacion, // Reemplaza 'ele.unidadMedidaTarifa' con la clave correcta
     orden: 16,
   },
   {
@@ -241,11 +247,7 @@ export const PRODUCTO_TABLA_ESTUPEFACIENTES_EXPORTICON = [
     clave: (ele: TablaMercanciasDatos): string => ele.tipoProducto, // Reemplaza 'ele.tipoProducto' con la clave correcta
     orden: 18,
   },
- 
 ];
-
-
-
 
 export const TERCEROS_NACIONALIDAD_RADIO_OPCIONS = [
   { label: 'Nacional', value: 'true' },
