@@ -9,7 +9,7 @@ import { Subject } from 'rxjs';
 import { Tramite240106Query } from '../../estados/tramite240106Query.query';
 import { Tramite240106Store } from '../../estados/tramite240106Store.store';
 import { takeUntil } from 'rxjs';
-
+import { ID_PROCEDIMIENTO } from '../../constants/importacion-sustancias-quimicas.enum';
 /**
  * @title Datos del Trámite Contenedora
  * @description Componente contenedor que se encarga de enlazar el estado del trámite con el componente de datos del trámite.
@@ -24,6 +24,8 @@ import { takeUntil } from 'rxjs';
   styleUrl: './datos-del-tramite-contenedora.component.css',
 })
 export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
+
+  idProcedimiento = ID_PROCEDIMIENTO;
   /**
    * Observable para limpiar suscripciones activas al destruir el componente.
    * @property {Subject<void>} unsubscribe$
