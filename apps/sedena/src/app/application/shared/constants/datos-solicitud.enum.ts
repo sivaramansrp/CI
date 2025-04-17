@@ -52,3 +52,5 @@ export const TERCEROS_NACIONALIDAD_OPCIONES_EXTRANJERO = [
     value: 'Extranjero',
   },
 ];
+
+export const CAMPO_OBLIGATORIO =  [240111];

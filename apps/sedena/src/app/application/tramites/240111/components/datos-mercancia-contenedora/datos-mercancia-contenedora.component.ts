@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { DatosMercanciaComponent } from '../../../../shared/components/datos-mercancia/datos-mercancia.component';
 import { MercanciaDetalle } from '../../../../shared/models/datos-del-tramite.model';
 import { Tramite240101Store } from '../../estados/tramite240111Store.store';
+import { ID_PROCEDIMIENTO } from '../../constants/importacion-armas-municiones.enum';
 
 /**
  * @title Datos de la Mercancía Contenedora
@@ -18,6 +19,7 @@ import { Tramite240101Store } from '../../estados/tramite240111Store.store';
   styleUrl: './datos-mercancia-contenedora.component.css',
 })
 export class DatosMercanciaContenedoraComponent {
+  public readonly idProcedimiento = ID_PROCEDIMIENTO;
   /**
    * Constructor del componente.
    *

@@ -9,6 +9,7 @@ import { Subject } from 'rxjs';
 import { Tramite240101Query } from '../../estados/tramite240111Query.query';
 import { Tramite240101Store } from '../../estados/tramite240111Store.store';
 import { takeUntil } from 'rxjs';
+import { ID_PROCEDIMIENTO } from '../../constants/importacion-armas-municiones.enum';
 
 /**
  * @title Datos del Trámite Contenedora
@@ -47,6 +48,8 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
    * @property {Subject<void>} destroy$
    */
   private destroy$ = new Subject<void>();
+
+  public readonly idProcedimiento = ID_PROCEDIMIENTO;
 
   /**
    * Constructor del componente.

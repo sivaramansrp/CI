@@ -1,4 +1,4 @@
-import { PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE } from '../../constants/datos-solicitud.enum';
+import { CAMPO_OBLIGATORIO, PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE } from '../../constants/datos-solicitud.enum';
 import { STR_NACIONAL } from '../../constants/datos-solicitud.enum';
 import { TERCEROS_NACIONALIDAD_OPCIONES } from '../../constants/datos-solicitud.enum';
 import { TIPO_PERSONA_OPCIONES } from '../../constants/datos-solicitud.enum';
@@ -177,6 +177,8 @@ export class AgregarDestinatarioFinalComponent
    */
   @Input() formaDatos!: DestinoFinal | Proveedor| null | undefined;
 
+  public campoObligatorio = true
+
   /**
    * Crea el componente e inicializa el grupo de formulario.
    *
@@ -242,6 +244,8 @@ export class AgregarDestinatarioFinalComponent
    */
   ngOnInit(): void {
     this.crearFormaulario();
+    this.campoObligatorio = CAMPO_OBLIGATORIO.includes(this.idProcedimiento)
+    this.campoObligatorioChange();
     this.cargarDatos();
     this.esCURP = ES_CURP.includes(this.idProcedimiento);
   }
@@ -295,6 +299,25 @@ export class AgregarDestinatarioFinalComponent
     if(this.formaDatos) {
       this.agregarDestinatarioFinal.patchValue(this.formaDatos);
     }
+  }
+
+  campoObligatorioChange(): void {
+    const COLONIA = this.agregarDestinatarioFinal.get('colonia')
+    const CALLE = this.agregarDestinatarioFinal.get('calle')
+    const NUMEROEXTERIOR = this.agregarDestinatarioFinal.get('numeroExterior')
+    if(this.campoObligatorio){
+      COLONIA?.clearValidators();
+      CALLE?.setValidators([Validators.required]);
+      NUMEROEXTERIOR?.setValidators([Validators.required]);
+    }
+    else{
+      COLONIA?.setValidators([Validators.required]);
+      CALLE?.clearValidators();
+      NUMEROEXTERIOR?.clearValidators();
+    }
+    COLONIA?.updateValueAndValidity();
+    CALLE?.updateValueAndValidity();
+    NUMEROEXTERIOR?.updateValueAndValidity();
   }
 
   /**
