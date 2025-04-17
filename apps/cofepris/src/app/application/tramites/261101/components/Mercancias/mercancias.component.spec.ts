@@ -6,11 +6,48 @@ import { DatosProcedureStore } from '../../../../estados/tramites/tramites261101
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { of } from 'rxjs';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
+import { ComponentFixture } from '@angular/core/testing';
 
 describe('MercanciasComponent', () => {
   let component: MercanciasComponent;
-  let fixture: any;
-  let mockDatosSolicitudService: {getMercanciasData:jest.Mock};
+  let fixture: ComponentFixture<MercanciasComponent>;
+  
+  describe('MercanciasComponent', () => {
+    let component: MercanciasComponent;
+    let fixture: ComponentFixture<MercanciasComponent>; // Explicitly typed
+  
+    let mockDatosSolicitudService: { getMercanciasData: jest.Mock };
+    let mockDatosProcedureStore: { selectProrroga: jest.Mock };
+    let mockDatosProcedureQuery: { selectProrroga: jest.Mock };
+  
+    beforeEach(async () => {
+      mockDatosSolicitudService = {
+        getMercanciasData: jest.fn().mockReturnValue(of([])),
+      };
+      mockDatosProcedureStore = {
+        selectProrroga: jest.fn(),
+      };
+      mockDatosProcedureQuery = {
+        selectProrroga: jest.fn().mockReturnValue(of({ aduanas: 'Test Aduana' })),
+      };
+  
+      await TestBed.configureTestingModule({
+        imports: [ReactiveFormsModule, MercanciasComponent],
+        providers: [
+          FormBuilder,
+          { provide: DatosSolicitudService, useValue: mockDatosSolicitudService },
+          { provide: DatosProcedureStore, useValue: mockDatosProcedureStore },
+          { provide: DatosProcedureQuery, useValue: mockDatosProcedureQuery },
+        ],
+      }).compileComponents();
+  
+      fixture = TestBed.createComponent(MercanciasComponent);
+      component = fixture.componentInstance;
+      fixture.detectChanges();
+    });
+  
+    // ...existing tests...
+  });  let mockDatosSolicitudService: {getMercanciasData:jest.Mock};
   let mockDatosProcedureStore: {selectProrroga:jest.Mock};
   let mockDatosProcedureQuery: {selectProrroga:jest.Mock};
 
