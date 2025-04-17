@@ -248,7 +248,7 @@
         "id": 36,
         "tramite": 90305,
         "linkDashboard": "/se/prosec-modificacion/solicitante",
-        "linkDepartment": "/se/prosec-modificacion/solicitante",
+        "linkDepartment": "/pago/prosec-modificacion/solicitante",
         "department": "se"
     },
     {
@@ -661,7 +661,7 @@
         "id": 95,
         "tramite": 260401,
         "linkDashboard": "/cofepris/territorio-nacional/solicitante",
-        "linkDepartment": "/cofepris/territorio-nacional/solicitante",
+        "linkDepartment": "/pago/territorio-nacional/solicitante",
         "department": "cofepris"
     },
     {
@@ -1088,7 +1088,7 @@
         "id": 156,
         "tramite": 260902,
         "linkDashboard": "/cofepris/modificacion-permiso-sanitario/solicitante",
-        "linkDepartment": "/cofepris/modificacion-permiso-sanitario/solicitante",
+        "linkDepartment": "/pago/modificacion-permiso-sanitario/solicitante",
         "department": "cofepris"
     },
     {
@@ -1598,8 +1598,8 @@
     {
         "id": 229,
         "tramite": 260901,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "/cofepris/modificacion-permiso-sanitario-la-salud/solicitante",
+        "linkDepartment": "/pago/modificacion-permiso-sanitario-la-salud/solicitante",
         "department": "cofepris"
     },
     {
