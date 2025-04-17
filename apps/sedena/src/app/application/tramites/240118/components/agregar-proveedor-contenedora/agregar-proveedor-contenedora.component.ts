@@ -23,6 +23,12 @@ export class AgregarProveedorContenedoraComponent implements OnInit {
    * @command Este observable se utiliza para gestionar y observar los datos de los proveedores o destinos finales en el componente.
    */
   terechosDatos$!: Observable<DestinoFinal | Proveedor | null | undefined>;
+   /**
+   * @property {number} idProcedimiento
+   * Identificador del procedimiento actual.
+   */
+   public readonly idProcedimiento:number = 240118;
+
 
   /**
    * @constructor

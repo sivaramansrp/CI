@@ -262,9 +262,9 @@ export class AgregarDestinatarioCustomComponent
       calle: ['', Validators.required],
       numeroExterior: ['', Validators.required],
       numeroInterior: [''],
-      lada: ['', Validators.required],
-      telefono: ['', Validators.required],
-      correoElectronico: ['', [Validators.required, Validators.email]],
+      lada: [''],
+      telefono: [''],
+      correoElectronico: ['', [Validators.email]],
       nacionalidad: [],
     });
     
