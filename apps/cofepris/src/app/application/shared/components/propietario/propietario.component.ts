@@ -194,8 +194,6 @@ export class PropietarioComponent implements AfterViewInit, OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe((data) => {
         this.propietarioData = data;
-        console.log(this.propietarioData);
-        
       });
       this.establecimientoService
       .getPropietarioRadioData()
