@@ -573,7 +573,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       case 260207:
         this.elementosRequeridos = ['denominacionRazon'];
         break;
-      case 2602019:
+      case 260219:
         this.elementosRequeridos = [
           'denominacionRazon',
           'scian',

@@ -177,6 +177,7 @@ export class TercerosRelacionadosComponent implements OnInit {
    * Crea el formulario, activa la escucha de cambios y sincroniza el estado con el input.
    */
   ngOnInit(): void {
+    this.validarElementos();
     this.habilitarFacturador = OCULTAR_FACTURADOR.includes(this.idProcedimiento)
       ? false
       : true;
@@ -194,7 +195,7 @@ export class TercerosRelacionadosComponent implements OnInit {
     switch (this.idProcedimiento) {
       case 260219:
         this.elementosRequeridos = [
-          'facturador',
+          'fabricante',
           'destinoFinal'
         ];
         break;
