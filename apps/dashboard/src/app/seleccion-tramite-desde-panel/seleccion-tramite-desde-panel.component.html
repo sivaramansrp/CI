@@ -6,55 +6,27 @@
         <table class="table table-responsive table-striped table-hover">
           <thead>
             <tr>
-              <th> id</th>
-              <th> departmento</th>
+              <th>id</th>
+              <th>departmento</th>
               <th>Tipo tr&aacute;mite</th>
               <th>URL</th>
             </tr>
           </thead>
           <tbody>
-            @for(item of tramiteData; track item?.id) {
-              @if(item?.linkDashboard) {
-                <tr>
-                  <td> {{item?.id}}</td>
-                  <td> {{item?.department}}</td>
-                  <td> {{item?.tramite}}</td>
-                  <td> <a [routerLink]=item.linkDashboard>{{ ruta }}{{item.linkDashboard}}</a>
-                  </td>
+            @for(item of tramiteData; track item?.id) { @if(item?.linkDashboard)
+            {
+            <tr>
+              <td>{{ item?.id }}</td>
+              <td>{{ item?.department }}</td>
+              <td>{{ item?.tramite }}</td>
+              <td>
+                <a [routerLink]="item.linkDashboard"
+                  >{{ ruta }}{{ item.linkDashboard }}</a
+                >
+              </td>
             </tr>
-          <tr>
-            <td>80206</td>
-            <td>
-              <a routerLink="/se/modalidad-ampliacion/registro"
-                >{{ ruta }}/se/modalidad-ampliacion/registro</a
-              >
-            </td>
-          </tr>
-          <tr>
-              <td>260201</td>
-                <td>
-                <a routerLink="/cofepris/importacion-psicotropicos-poretorno/contenedor-de-pasos">
-                {{ruta}}/cofepris/importacion-psicotropicos-poretorno/contenedor-de-pasos</a>
-                  </td>
-           </tr>
-          <tr>
-            <td> 40301 </td>
-            <td>
-              <a routerLink="/aga/pago/registro-caat-naviero/caat-naviero">{{ruta}}/aga/pago/transferencia-contenedores/solicitud</a>
-            </td>
-          </tr>
-          <tr>
-            <td>240107</td>
-            <td>
-              <a routerLink="/sedena/sustancias-quimicas/sustancias-quimicas">{{ ruta
-                }}/sedena/sustancias-quimicas/sustancias-quimicas</a>
-            </td>
-          </tr>
+            } }
           </tbody>
-                </tr>
-              }
-            }
-            </tbody>
         </table>
       </div>
     </div>
