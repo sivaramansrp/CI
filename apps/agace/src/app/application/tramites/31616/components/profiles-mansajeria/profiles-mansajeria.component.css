@@ -73,4 +73,17 @@
   .color-white {
     color: white;
   }
+
+  .close {
+    height: 0;
+  }
+
+  .open {
+    height: auto;
+  }
+
+  .body-panel {
+    transition: 0.2s linear;
+    overflow: hidden;
+  }
   

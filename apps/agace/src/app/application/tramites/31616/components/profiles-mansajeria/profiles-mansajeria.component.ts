@@ -1,18 +1,20 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { SeguridadFisicaComponent } from '../seguridad-fisica/seguridad-fisica.component';
 import { FormBuilder, FormGroup, FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ProfilesDomocilioDelaComponent } from '../profiles-domocilio-dela/profiles-domocilio-dela.component';
 
 @Component({
   selector: 'app-profiles-mansajeria',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, ProfilesDomocilioDelaComponent],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, ProfilesDomocilioDelaComponent,SeguridadFisicaComponent,],
   templateUrl: './profiles-mansajeria.component.html',
   styleUrls: ['./profiles-mansajeria.component.css'],
 })
 export class ProfilesMansajeriaComponent {
   profileForm!: FormGroup;
   mostrarContenido = false;
+  showSeguridad = false;
   public hasAgregar: boolean = false;
 
   constructor(private fb: FormBuilder) {
@@ -38,6 +40,10 @@ export class ProfilesMansajeriaComponent {
 
   alternarContenido(): void {
     this.mostrarContenido = !this.mostrarContenido;
+  }
+
+  toggleSeguridad():void {
+    this.showSeguridad = !this.showSeguridad;
   }
 }
 
