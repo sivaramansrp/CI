@@ -6,7 +6,7 @@
   <p>
     La empresa de mensajería y paquetería debe establecer medidas para identificar, analizar y mitigar los riesgos de seguridad que podrían derivar en alteraciones de mercancía de comercio exterior durante su manejo, guardado, custodia y traslado en su cadena de suministro y sus instalaciones, bajo el lineamiento de un procedimiento documentado. Dicho análisis debe estar basado en el modelo de su organización (ejemplo: ubicaciones de las instalaciones, tipo de actividad, volumen y país de destino de clientes, proveedores, rutas, tipo de información, características de personal, clasificación y manejo de documentos, Tecnologías de la Información, amenazas potenciales, etcétera) y debe realizarse periódicamente para implementar medidas de seguridad apropiadas.
   </p>
-  <ul style="color: #0078D4;"> <!-- Apply the blue color as shown in the screenshot -->
+  <ul class="custom-heading"> 
     <h6>* Anexe la matriz de riesgo, así como el procedimiento documentado para identificar riesgos en la cadena de suministro y las instalaciones de su empresa, asegúrese de incluir los siguientes puntos:</h6>
     
     <p> a. Señalar la periodicidad con que revisa y/o actualiza el análisis de riesgo.</p>
@@ -18,10 +18,10 @@
    <p> d. Mencionar quiénes son los responsables de revisar actualizar el análisis de riesgo.</p>
     
   </ul>
-  <h6 style="color: #0078D4; font-weight: bold;">
+  <h6 class="custom-heading">
      * Asimismo, el procedimiento documentado para identificar riesgos en la cadena de suministro y sus instalaciones, deberá contemplar el proceso de apreciación y gestión del riesgo, e incluir los siguientes aspectos:
   </h6>
-  <ul style="color: #0078D4;">
+  <ul class="custom-heading">
     
     <p> a. El contexto (cultural, político, legal, económico, geográfico, social, etcétera) de la instalación.</p>
     
@@ -41,6 +41,43 @@
       <p> f.Seguimiento y revisión del riesgo (monitoreo de los resultados del análisis de riesgo y verificación de la eficacia de su tratamiento).</p>
     
   </ul>
-  
+ 
+  <form>
+    <div class="form-group">
+        <label class="custom-required" for="comiteSeguridad"> Señale quiénes conforman el Comité de Seguridad de la compañía (Nombre y puesto).</label>
+        <textarea class="custom-textarea" rows="6" cols="100" id="comiteSeguridad" formControlName="comiteSeguridad"></textarea>
+      </div>
+    <div class="form-group">
+      <label class="custom-required" for="fuentesInformacion">Indique cuáles son las fuentes de información utilizadas para calificar riesgos durante la fase de análisis.</label>
+      <textarea class="custom-textarea" rows="6" cols="100" id="fuentesInformacion" formControlName="fuentesInformacion"></textarea>
+    </div>
+  </form>
+  <h4 class="custom-heading">1.2 Políticas de seguridad</h4>
+  <p>
+    La empresa debe contar con una política orientada a prevenir, asegurar y reconocer amenazas en la seguridad de la cadena de suministros e instalaciones de la compañía, como lo son el tráfico de drogas, lavado de dinero, tráfico de armas, contrabando de personas, mercancías prohibidas y actos de terrorismo.
+  </p>
+  <p>
+    Para promover una cultura de seguridad, las compañías deben demostrar su compromiso con la seguridad de la cadena de suministro y el Programa Operador Económico Autorizado a través de una declaración que resalte la importancia de proteger el flujo del comercio nacional e internacional de actividades delictivas, establecida por medio de la política de seguridad.
+  </p>
+  <p>
+    Los altos funcionarios o directivos de la empresa que deben respaldar y firmar la política de seguridad, pueden ser el presidente de la compañía, el director ejecutivo, el gerente general o personal con cargo homólogo con facultad para toma de decisiones.
+  </p>
+  <div class="form-group">
+    <label class="custom-required" for="politica"> Enunciar la política de seguridad orientada a prevenir, asegurar y reconocer amenazas en la cadena de suministros e instalaciones, de la empresa</label>
+    <textarea class="custom-textarea" rows="6" cols="100" id="politica" formControlName="politica"></textarea>
+  </div>
+  <div class="form-group">
+    <label class="custom-required" for="indique">Indique quién es el responsable de su revisión, firma y difusión hacia los empleados.</label>
+    <textarea class="custom-textarea" rows="6" cols="100" id="indique" formControlName="indique"></textarea>
+  </div>
+  <div class="form-group">
+    <label class="custom-required" for="periodicidad"> Indique la periodicidad con la que se lleva a cabo su actualización.</label>
+    <textarea class="custom-textarea" rows="6" cols="100" id="periodicidad" formControlName="periodicidad"></textarea>
+  </div>
+  <div class="form-group">
+    <label class="custom-required" for="programa">
+        Indique el programa y/o campaña de difusión que utiliza para comunicar a los empleados la política de seguridad en la cadena de suministros.</label>
+    <textarea class="custom-textarea" rows="6" cols="100" id="programa" formControlName="programa"></textarea>
+  </div>
 </div>
 

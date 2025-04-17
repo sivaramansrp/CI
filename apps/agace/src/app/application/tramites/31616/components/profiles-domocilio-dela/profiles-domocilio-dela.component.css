@@ -1,0 +1,22 @@
+/* .form-group {
+  margin-bottom: 1rem;
+} */
+
+.custom-required::before {
+  content: " *";
+  color: red;
+}
+
+.custom-heading{
+    color: #0078D4;
+    font-weight: bold;
+}
+
+/* textarea.form-control {
+  width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 0.5rem;
+  font-size: 1rem;
+  resize: vertical;
+} */
