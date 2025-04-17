@@ -1,10 +1,6 @@
-  [
-    {
-      "id": 1,
-      "descripcion": ""
-    },
-    {
-        "id": 2,
-        "descripcion": ""
-      }
-  ]
+[
+  {
+    "id": 1,
+    "descripcion": "Licuado"
+  }
+]

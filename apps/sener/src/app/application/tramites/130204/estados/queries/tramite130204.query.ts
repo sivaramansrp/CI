@@ -1,20 +1,20 @@
-import { Tramite130108State, Tramite130108Store } from '../tramites/tramites130108.store';
+import { Tramite130204State, Tramite130204Store } from '../tramites/tramites130204.store';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Query } from '@datorama/akita';
 
 /**
- * Clase encargada de realizar consultas al estado del tramite 130108.
+ * Clase encargada de realizar consultas al estado del tramite 130204.
  * Utiliza el patrón Query de Akita para obtener los datos desde el store.
  */
 @Injectable({ providedIn: 'root' })
-export class Tramite130108Query extends Query<Tramite130108State> {
+export class Tramite130204Query extends Query<Tramite130204State> {
 
   /**
    * Selecciona todo el estado del tramite.
-   * @returns Observable con el estado completo del tramite 130108.
+   * @returns Observable con el estado completo del tramite 130204.
    */
-  get selectSolicitud$(): Observable<Tramite130108State> {
+  get selectSolicitud$(): Observable<Tramite130204State> {
     return this.select((state) => state);
   }
 
@@ -49,10 +49,10 @@ export class Tramite130108Query extends Query<Tramite130108State> {
   }));
 
   /**
-   * Constructor de la clase Tramite130108Query.
-   * @param store - El store asociado al tramite 130108.
+   * Constructor de la clase Tramite130204Query.
+   * @param store - El store asociado al tramite 130204.
    */
-  constructor(protected override store: Tramite130108Store) {
+  constructor(protected override store: Tramite130204Store) {
     super(store);
   }
 }

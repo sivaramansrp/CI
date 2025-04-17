@@ -3,10 +3,10 @@ import { Injectable } from '@angular/core';
 import { PartidasDeLaMercanciaModelo } from '../../../../shared/models/partidas-de-la-mercancia.model'; // Replace with the correct path
 
 /**
- * Interfaz que define el estado del trámite 130108.
+ * Interfaz que define el estado del trámite 130204.
  * @interface
  */
-export interface Tramite130108State {
+export interface Tramite130204State {
   /** Plazo del trámite */
   plazo: string;
   /** Descripción del trámite */
@@ -58,10 +58,10 @@ export interface Tramite130108State {
 }
 
 /**
- * Función que devuelve el estado inicial para el trámite 130108.
- * @returns {Tramite130108State} Estado inicial con valores predeterminados.
+ * Función que devuelve el estado inicial para el trámite 130204.
+ * @returns {Tramite130204State} Estado inicial con valores predeterminados.
  */
-export function createInitialState(): Tramite130108State {
+export function createInitialState(): Tramite130204State {
   return {
     filaSeleccionada: [],
     mostrarTabla: false,
@@ -91,14 +91,14 @@ export function createInitialState(): Tramite130108State {
 }
 
 /**
- * Store para gestionar el estado del trámite 130108.
+ * Store para gestionar el estado del trámite 130204.
  * @class
  */
 @Injectable({ providedIn: 'root' })
-@StoreConfig({ name: 'tramite130108' })
-export class Tramite130108Store extends Store<Tramite130108State> {
+@StoreConfig({ name: 'tramite130204' })
+export class Tramite130204Store extends Store<Tramite130204State> {
   /**
-   * Constructor de la clase Tramite130108Store que inicializa el estado.
+   * Constructor de la clase Tramite130204Store que inicializa el estado.
    */
   constructor() {
     super(createInitialState());
@@ -138,7 +138,7 @@ export class Tramite130108Store extends Store<Tramite130108State> {
  *
  * @returns {void}
  */
-public establecerDatos(values: Partial<Tramite130108State>): void {  
+public establecerDatos(values: Partial<Tramite130204State>): void {  
     
   this.update((state) => ({
     ...state,

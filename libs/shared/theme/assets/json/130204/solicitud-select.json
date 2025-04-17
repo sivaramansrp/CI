@@ -1,10 +1,9 @@
 [
     [
-      { "id": 1, "descripcion": "Definitivosk" },
-      { "id": 2, "descripcion": "Temporales" },
-      { "id": 3, "descripcion": "Depósito Fiscal" }   
+      { "id": 1, "descripcion": "Definitivos" },
+      { "id": 2, "descripcion": "Temporales" }
     ],
     [
-      { "id": 1, "descripcion": "De importación" }
+      { "id": 1, "descripcion": "De exportación" }
     ]
   ]

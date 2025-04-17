@@ -1,13 +1,13 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ExportacionMineralesDeHierroComponent } from './exportacion-minerales-de-hierro.component';
+import { ExportacionHidrocarburosComponent } from './exportacion-hidrocarburos.component';
 import { WizardComponent } from '@libs/shared/data-access-user/src';
 import { PASOS_EXPORTACION } from '../../constants/exportacion-minerales-de-hierro-pasos.enum';
 import { AccionBoton } from '../../enums/accion-botton.enum';
 import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 
-describe('ExportacionMineralesDeHierroComponent', () => {
-  let component: ExportacionMineralesDeHierroComponent;
-  let fixture: ComponentFixture<ExportacionMineralesDeHierroComponent>;
+describe('ExportacionHidrocarburosComponent', () => {
+  let component: ExportacionHidrocarburosComponent;
+  let fixture: ComponentFixture<ExportacionHidrocarburosComponent>;
   let wizardComponentSpy: Partial<WizardComponent>;
 
   beforeEach(async () => {
@@ -17,12 +17,12 @@ describe('ExportacionMineralesDeHierroComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      declarations: [ExportacionMineralesDeHierroComponent],
+      declarations: [ExportacionHidrocarburosComponent],
       providers: [{ provide: WizardComponent, useValue: wizardComponentSpy }],
       schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(ExportacionMineralesDeHierroComponent);
+    fixture = TestBed.createComponent(ExportacionHidrocarburosComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

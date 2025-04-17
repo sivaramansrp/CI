@@ -2,9 +2,9 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { of, Subject } from 'rxjs';
 import { SolicitudComponent } from './solicitud.component';
-import { ExportacionMineralesDeHierroService } from '../../services/exportacion-minerales-de-hierro.service';
-import { Tramite130108Store } from '../../estados/tramites/tramites130108.store';
-import { Tramite130108Query } from '../../estados/queries/tramite130108.query';
+import { ExportacionHidrocarburosService } from '../../services/exportacion-hidrocarburos.service';
+import { Tramite130204Store } from '../../estados/tramites/tramites130204.store';
+import { Tramite130204Query } from '../../estados/queries/tramite130204.query';
 import { PaisDeOrigenComponent } from '../../../../shared/components/pais-de-origen/pais-de-origen.component';
 
 describe('SolicitudComponent', () => {
@@ -42,9 +42,9 @@ describe('SolicitudComponent', () => {
       imports: [ReactiveFormsModule],
       providers: [
         FormBuilder,
-        { provide: ExportacionMineralesDeHierroService, useValue: exportacionServiceMock },
-        { provide: Tramite130108Store, useValue: tramiteStoreMock },
-        { provide: Tramite130108Query, useValue: tramiteQueryMock },
+        { provide: ExportacionHidrocarburosService, useValue: exportacionServiceMock },
+        { provide: Tramite130204Store, useValue: tramiteStoreMock },
+        { provide: Tramite130204Query, useValue: tramiteQueryMock },
       ],
     }).compileComponents();
   });

@@ -2,12 +2,12 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { Routes } from '@angular/router';
 
-import { ExportacionMineralesDeHierroComponent } from './pages/exportacion-minerales-de-hierro/exportacion-minerales-de-hierro.component';
+import { ExportacionHidrocarburosComponent } from './pages/exportacion-hidrocarburos/exportacion-hidrocarburos.component';
 
 const ROUTES: Routes = [
   {
     path: 'solicitud',
-    component: ExportacionMineralesDeHierroComponent
+    component: ExportacionHidrocarburosComponent
   },
   {
     path: '',
@@ -20,4 +20,4 @@ const ROUTES: Routes = [
   imports: [RouterModule.forChild(ROUTES)],
   exports: [RouterModule]
 })
-export class ImportacionProductoPetroliferoRoutingModule { }
+export class ExportacionHidrocarburosRoutingModule { }

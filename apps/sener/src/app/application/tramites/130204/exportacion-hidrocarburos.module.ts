@@ -2,8 +2,8 @@ import { BtnContinuarComponent, CrosslistComponent, InputRadioComponent, Solicit
 import { CommonModule } from '@angular/common';
 import { DatosDeLaMercanciaComponent } from '../../shared/components/datos-de-la-mercancia/datos-de-la-mercancia.component';
 import { DatosDelTramiteComponent } from '../../shared/components/datos-del-tramite/datos-del-tramite.component';
-import { ExportacionMineralesDeHierroComponent } from './pages/exportacion-minerales-de-hierro/exportacion-minerales-de-hierro.component';
-import { ImportacionProductoPetroliferoRoutingModule } from './importacion-producto-petrolifero.routing.module';
+import { ExportacionHidrocarburosComponent } from './pages/exportacion-hidrocarburos/exportacion-hidrocarburos.component';
+import { ExportacionHidrocarburosRoutingModule } from './exportacion-hidrocarburos.routing.module';
 import { ManifiestoDeAceptacionComponent } from './components/manifiesto-de-aceptacion/manifiesto-de-aceptacion.component';
 import { NgModule } from '@angular/core';
 import { NotificacionesComponent } from "@libs/shared/data-access-user/src/tramites/components/notificaciones/notificaciones.component";
@@ -23,7 +23,7 @@ import { ToastrService } from 'ngx-toastr';
 
 @NgModule({
   declarations: [
-    ExportacionMineralesDeHierroComponent,
+    ExportacionHidrocarburosComponent,
     PasoUnoComponent,
     SolicitudComponent,
 
@@ -32,7 +32,7 @@ import { ToastrService } from 'ngx-toastr';
     CommonModule,
     ManifiestoDeAceptacionComponent,
     TituloComponent,
-    ImportacionProductoPetroliferoRoutingModule,
+    ExportacionHidrocarburosRoutingModule,
     WizardComponent,
     BtnContinuarComponent,
     TituloComponent,
@@ -52,4 +52,4 @@ import { ToastrService } from 'ngx-toastr';
   ],
   providers: [ ToastrService ]
 })
-export class ImportacionProductoPetroliferoModule { }
+export class ExportacionHidrocarburosModule { }

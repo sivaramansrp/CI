@@ -1,21 +1,21 @@
 import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { ExportacionMineralesDeHierroService } from './exportacion-minerales-de-hierro.service';
+import { ExportacionHidrocarburosService } from './exportacion-hidrocarburos.service';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { ProductoResponse } from '../../../shared/constantes/vehiculos-adaptados.enum';
 
-describe('ExportacionMineralesDeHierroService', () => {
-  let service: ExportacionMineralesDeHierroService;
+describe('ExportacionHidrocarburosService', () => {
+  let service: ExportacionHidrocarburosService;
   let httpMock: HttpTestingController;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
-      providers: [ExportacionMineralesDeHierroService],
+      providers: [ExportacionHidrocarburosService],
       schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA]
     });
-    service = TestBed.inject(ExportacionMineralesDeHierroService);
+    service = TestBed.inject(ExportacionHidrocarburosService);
     httpMock = TestBed.inject(HttpTestingController);
   });
 
@@ -47,7 +47,7 @@ describe('ExportacionMineralesDeHierroService', () => {
       expect(paises).toEqual(mockPaises);
     });
 
-    const req = httpMock.expectOne('/assets/json/130108/pais-procenia.json');
+    const req = httpMock.expectOne('/assets/json/130204/pais-procenia.json');
     expect(req.request.method).toBe('GET');
     req.flush(mockPaises);
   });
@@ -68,7 +68,7 @@ describe('ExportacionMineralesDeHierroService', () => {
       expect(paises).toEqual(mockPaisesBloque);
     });
 
-    const req = httpMock.expectOne('/assets/json/130108/paises-por-bloque.json');
+    const req = httpMock.expectOne('/assets/json/130204/paises-por-bloque.json');
     expect(req.request.method).toBe('GET');
     req.flush(mockPaisesBloque);
   });
@@ -82,7 +82,7 @@ describe('ExportacionMineralesDeHierroService', () => {
       expect(estados).toEqual(mockEstados);
     });
 
-    const req = httpMock.expectOne('/assets/json/130108/estado.json');
+    const req = httpMock.expectOne('/assets/json/130204/estado.json');
     expect(req.request.method).toBe('GET');
     req.flush(mockEstados);
   });
@@ -96,7 +96,7 @@ describe('ExportacionMineralesDeHierroService', () => {
       expect(representaciones).toEqual(mockRepresentaciones);
     });
 
-    const req = httpMock.expectOne('/assets/json/130108/representacion-federal.json');
+    const req = httpMock.expectOne('/assets/json/130204/representacion-federal.json');
     expect(req.request.method).toBe('GET');
     req.flush(mockRepresentaciones);
   });
@@ -113,7 +113,7 @@ describe('ExportacionMineralesDeHierroService', () => {
       expect(options).toEqual(mockSolicitudeOptions);
     });
 
-    const req = httpMock.expectOne('assets/json/130108/solicitude-options.json');
+    const req = httpMock.expectOne('assets/json/130204/solicitude-options.json');
     expect(req.request.method).toBe('GET');
     req.flush(mockSolicitudeOptions);
   });
@@ -131,7 +131,7 @@ describe('ExportacionMineralesDeHierroService', () => {
       expect(options).toEqual(mockProductoOptions);
     });
 
-    const req = httpMock.expectOne('assets/json/130108/producto-otions.json');
+    const req = httpMock.expectOne('assets/json/130204/producto-otions.json');
     expect(req.request.method).toBe('GET');
     req.flush(mockProductoOptions);
   });

@@ -23,10 +23,10 @@ import { PASOS_EXPORTACION } from '../../constants/exportacion-minerales-de-hier
  * - PASOS_EXPORTACION: Constante que define los pasos específicos para exportación de minerales de hierro
  */
 @Component({
-  selector: 'app-exportacion-minerales-de-hierro',
-  templateUrl: './exportacion-minerales-de-hierro.component.html',
+  selector: 'app-exportacion-hidrocarburos',
+  templateUrl: './exportacion-hidrocarburos.component.html',
 })
-export class ExportacionMineralesDeHierroComponent {
+export class ExportacionHidrocarburosComponent {
   /**
    * @description Lista de pasos que conforman el wizard de exportación de minerales de hierro.
    * Se obtiene desde la constante PASOS_EXPORTACION.
