@@ -23,10 +23,8 @@ describe('PasoUnoComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule ],
-      declarations: [
-        PasoUnoComponent,
-      ],
+      imports: [ FormsModule, ReactiveFormsModule,
+        PasoUnoComponent],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
         { provide: Tramite240120Query, useClass: MockTramite240120Query },
