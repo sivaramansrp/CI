@@ -1,8 +1,8 @@
-import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { Catalogo } from '../../models/shared/catalogos.model';
-import { HttpClient } from '@angular/common/http';
 import { FormGroup } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 
 @Injectable({
   providedIn: 'root',
@@ -11,10 +11,10 @@ export class DatosTramiteService {
   private readonly url = './assets/json/11202/contenedor-mockdata.json';
 
   constructor(private http: HttpClient) {
-    this.getAduanas,
-      this.getContenedores,
-      this.submitSolicitud,
-      this.uploadArchivo;
+    this.getAduanas();
+  this.getContenedores();
+  this.submitSolicitud();
+  this.uploadArchivo();
   }
   /**
    * 
@@ -33,17 +33,17 @@ Obtenga una lista ficticia de Contenedores
   /**
    * Simular carga de archivos
    */
-  uploadArchivo(archivo: File): Observable<any> {
+  uploadArchivo(archivo?: File): Observable<any> {
     return of({
       success: true,
-      message: `Archivo ${archivo.name} cargado exitosamente`,
+      message: `Archivo ${archivo?.name} cargado exitosamente`,
     });
   }
 
   /**
    * Simular un envío exitoso de formulario
    */
-  submitSolicitud(solicitudData: FormGroup): Observable<any> {
+  submitSolicitud(_solicitudData?: FormGroup): Observable<any> {
     return of({ success: true, message: 'Solicitud enviada exitosamente' });
   }
 
