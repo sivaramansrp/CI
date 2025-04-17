@@ -295,6 +295,13 @@ const ROUTES: Routes = [
         (m) => m.PermisoDeImportacionModule)
   },
   {
+    path: 'permiso-sujetos',
+    loadChildren: () =>
+      import(
+        './tramites/260504/permiso-sujetos.module'
+      ).then((m) => m.PermisoSujetosModule),
+  },
+  {
     path: 'permiso-importacion-calidad',
     loadChildren: () =>
       import('./tramites/260514/parmiso-importacion-calidad.module').then(
@@ -322,12 +329,25 @@ const ROUTES: Routes = [
         (m) => m.ImportacionPsicotropicosPoretornoModule),
 },
 {
-  path: 'permiso-importacion-module',
+  path: 'permiso-transformacion-maquila',
   loadChildren: () =>
-  import('./tramites/260917/permiso-importacion.module').then(
-    (m) => m.PermisoImportacionModule),
+    import('./tramites/260505/permiso-transformacion-maquila.module').then(
+      (m) => m.PermisoTransformacionMaquilaModule
+    ),
 },
-
+{
+      path: 'actualizacion-importacion',
+      loadChildren: () =>
+        import('./tramites/260903/actualizacion-importacion-sanitaria.module').then(
+          (m) => m.ActualizacionImportacionSanitariaModule
+        ),
+},
+{
+  path: 'permiso-sanitario-dispositivos-medicos',
+  loadChildren: () =>
+    import('./tramites/260915/permiso-sanitario-dispositivos-medicos.module').then(
+      (m) => m.PermisoSanitarioDispositivosMedicosModule)
+},
 
 ];
 
