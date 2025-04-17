@@ -283,7 +283,7 @@
         "id": 41,
         "tramite": 110203,
         "linkDashboard": "/se/tecnicos/solicitante",
-        "linkDepartment": "/se/tecnicos/solicitante",
+        "linkDepartment": "/pago/tecnicos/solicitante",
         "department": "se"
     },
     {
@@ -422,9 +422,9 @@
     {
         "id": 61,
         "tramite": 130106,
-        "linkDashboard": "/desmantelar/solicitante",
-        "linkDepartment": "/desmantelar/solicitante",
-        "department": ""
+      "linkDashboard": "/se/desmantelar/solicitante",
+        "linkDepartment": "/pago/desmantelar/solicitante",
+        "department": "se"
     },
     {
         "id": 62,
@@ -464,8 +464,8 @@
     {
         "id": 67,
         "tramite": 140103,
-        "linkDashboard": "/se/pago/cancelacion-de/solicitante",
-        "linkDepartment": "/se/pago/cancelacion-de/solicitante",
+        "linkDashboard": "/se/cancelacion-de/solicitante",
+        "linkDepartment": "/pago/cancelacion-de/solicitante",
         "department": "se"
     },
     {
@@ -1235,7 +1235,7 @@
         "id": 177,
         "tramite": 221602,
         "linkDashboard": "/agriculture/fitosanitario/solicitante",
-        "linkDepartment": "/agriculture/fitosanitario/solicitante",
+        "linkDepartment": "/pago/fitosanitario/solicitante",
         "department": "agricultura"
     },
     {
@@ -1717,8 +1717,8 @@
     {
         "id": 246,
         "tramite": 250101,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "/profepa/flora-fauna/solictud",
+        "linkDepartment": "/pago/flora-fauna/solictud",
         "department": "profepa"
     },
     {
