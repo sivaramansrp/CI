@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS } from '../../constants/importacion-armas-explosivo.enum';
-import { TITULOMENSAJE } from '../../constants/importacion-armas-explosivo.enum';
+import { TITULO_MENSAJE } from '../../constants/importacion-armas-explosivo.enum';
 import { ViewChild } from '@angular/core';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
@@ -24,7 +24,7 @@ export class SolicitudPageComponent {
    * Se actualiza dependiendo del paso seleccionado.
    * @type {string | null}
    */
-  public tituloMensaje: string | null = TITULOMENSAJE;
+  public tituloMensaje: string | null = TITULO_MENSAJE;
 
   /**
    * @property pasos
@@ -87,7 +87,7 @@ export class SolicitudPageComponent {
   public getValorIndice(e: AccionBoton): void {
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
-      this.tituloMensaje = SolicitudPageComponent.obtenerNombreDelTítulo(
+      this.tituloMensaje = this.obtenerNombreDelTítulo(
         e.valor
       );
 
@@ -106,16 +106,16 @@ export class SolicitudPageComponent {
    * @param {number} valor - Índice del paso.
    * @returns {string} Título correspondiente al paso.
    */
-  public static obtenerNombreDelTítulo(valor: number): string {
+  obtenerNombreDelTítulo(valor: number): string {
     switch (valor) {
       case 1:
-        return TITULOMENSAJE;
+        return TITULO_MENSAJE;
       case 2:
-        return 'Cargar requisitos';
+        return this.pasos[1].titulo;
       case 3:
-        return 'Firmar';
+        return this.pasos[2].titulo;
       default:
-        return TITULOMENSAJE;
+        return TITULO_MENSAJE;
     }
   }
 }

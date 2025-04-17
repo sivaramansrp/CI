@@ -18,7 +18,7 @@ export const PASOS = [
     completado: false,
   },
 ];
-export const TITULOMENSAJE =
+export const TITULO_MENSAJE =
   'Solicitud Permiso ordinario para la importación de explosivo';
 export const TEXTOS_REQUISITOS =
   'La solicitud ha quedado registrada con el número temporal [202767640]. Este no tiene validez legal y sirve solamente para efectos de identificar tu Solicitud. Un folio oficial le será asignado a la solicitud al momento en que esta sea firmada.';

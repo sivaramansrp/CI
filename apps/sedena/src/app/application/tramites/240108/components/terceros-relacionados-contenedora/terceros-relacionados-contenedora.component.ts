@@ -90,7 +90,7 @@ export class TercerosRelacionadosContenedoraComponent implements OnInit, OnDestr
    */
   modificarDestinarioDatos(datos: DestinoFinal): void {
     this.tramiteStore.actualizarDatosDestinatario(datos);
-    this.irAAcciones();
+    this.irAAcciones('../agregar-destino-final');
   }
 
   /**
@@ -103,6 +103,7 @@ export class TercerosRelacionadosContenedoraComponent implements OnInit, OnDestr
    */
   modificarProveedorDatos(datos: Proveedor): void {
     this.tramiteStore.actualizarDatosProveedor(datos);
+    this.irAAcciones('../agregar-destino-final')
   }
 
   /**
@@ -111,8 +112,8 @@ export class TercerosRelacionadosContenedoraComponent implements OnInit, OnDestr
    * @param {string} accionesPath - Ruta relativa a la que se desea navegar.
    * @returns {void}
    */
-  irAAcciones(): void {
-    this.router.navigate(['../agregar-destino-final'], {
+  irAAcciones(accionesPath: string): void {
+    this.router.navigate([ accionesPath ], {
       relativeTo: this.activatedRoute,
     });
   }

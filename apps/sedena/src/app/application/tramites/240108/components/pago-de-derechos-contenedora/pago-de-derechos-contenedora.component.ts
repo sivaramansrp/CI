@@ -51,7 +51,7 @@ export class PagoDeDerechosContenedoraComponent implements OnInit, OnDestroy {
   constructor(
     private tramiteQuery: Tramite240108Query,
     private tramiteStore: Tramite240108Store
-  ) // eslint-disable-next-line no-empty-function
+  ) 
   {}
 
   /**
