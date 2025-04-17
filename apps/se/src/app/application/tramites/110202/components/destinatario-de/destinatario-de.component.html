@@ -1,6 +1,6 @@
 <app-datos-del-destinatario
   [datosForm]="formDatosDelDestinatarioValues"
-  (formDatosDelDestinatarioEvent)="detosDelDestinatarioFunc($event)"
+  (formDatosDelDestinatarioEvent)="setValoresStore($event)"
   (formaValida)="setFormValida($event)"
 ></app-datos-del-destinatario>
 
@@ -8,7 +8,7 @@
   [paisDestino]="paisDestino"
   (paisDestionSeleccionEvent)="paisDestinSeleccion($event)"
   [paisDestin]="(paisDestin$ | async) || []"
-  (formDestinatarioEvent)="formDestinatarioFunc($event)"
+  (formDestinatarioEvent)="setValoresStoreDe($event)"
   [datosForm]="formDestinatarioValues"
   (formaValida)="setFormValidaDestinatario($event)"
 ></app-destinatario>

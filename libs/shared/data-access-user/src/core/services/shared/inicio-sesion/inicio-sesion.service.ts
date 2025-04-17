@@ -10,7 +10,9 @@ import { enviroment } from '../../../../enviroments/enviroment';
 export class InicioSesionService {
   urlServer = enviroment.URL_SERVER;
 
-  constructor(public http: HttpClient) {}
+  constructor(public http: HttpClient) {
+    // Lógica de inicialización si es necesario
+  }
 
   /**
    * Obtiene un token de autenticación enviando las credenciales de inicio de sesión.
