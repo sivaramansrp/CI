@@ -52,7 +52,7 @@
         "id": 8,
         "tramite": 6001,
         "linkDashboard": "/aga/registro-cuentas-bancarias/todospasos",
-        "linkDepartment": "/aga/registro-cuentas-bancarias/todospasos",
+        "linkDepartment": "/pago/registro-cuentas-bancarias/todospasos",
         "department": "aga"
     },
     {
@@ -241,7 +241,7 @@
         "id": 35,
         "tramite": 90201,
         "linkDashboard": "/se/expansion-de-productores/registrar-solicitud",
-        "linkDepartment": "/se/expansion-de-productores/registrar-solicitud",
+        "linkDepartment": "/pago/expansion-de-productores/registrar-solicitud",
         "department": "se"
     },
     {
@@ -255,7 +255,7 @@
         "id": 37,
         "tramite": 110101,
         "linkDashboard": "/se/pantallas/datosdecomponentes",
-        "linkDepartment": "/se/pantallas/datosdecomponentes",
+        "linkDepartment": "/pago/pantallas/datosdecomponentes",
         "department": "se"
     },
     {
@@ -528,7 +528,7 @@
         "id": 76,
         "tramite": 220401,
         "linkDashboard": "/agriculture/pantallas-extraordinarios",
-        "linkDepartment": "/agriculture/pantallas-extraordinarios",
+        "linkDepartment": "/pago/pantallas-extraordinarios",
         "department": "agriculture"
     },
     {
@@ -724,7 +724,7 @@
         "id": 104,
         "tramite": 260701,
         "linkDashboard": "/cofepris/permiso-certificados/registrarSolicitudIP",
-        "linkDepartment": "/cofepris/permiso-certificados/registrarSolicitudIP",
+        "linkDepartment": "/pago/permiso-certificados/registrarSolicitudIP",
         "department": "cofepris"
     },
     {
@@ -1066,8 +1066,8 @@
     {
         "id": 153,
         "tramite": 260303,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "/cofepris/importacion-psicotropicos/registrarIPM",
+        "linkDepartment": "/pago/importacion-psicotropicos/registrarIPM",
         "department": "cofepris"
     },
     {
