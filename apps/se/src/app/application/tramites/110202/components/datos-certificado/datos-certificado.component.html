@@ -1,5 +1,5 @@
 <app-datos-certificado-de [precisa]="precisa" [idioma]="idioma" [idiomaDatos]="(idiomaDatos$ | async) || []"
-  (formDatosCertificadoEvent)="obtenerDatosFormulario($event)" (idiomaSeleccionEvent)="idiomaSeleccion($event)"
+  (formDatosCertificadoEvent)="setValoresStore($event)" (idiomaSeleccionEvent)="idiomaSeleccion($event)"
   (entidadFederativaSeleccionEvent)="entidadFederativaSeleccion($event)"
   (representacionFederalSeleccionEvent)="representacionFederalSeleccion($event)"
   [entidadFederativaDatos]="(entidadFederativas$ | async) || []"
