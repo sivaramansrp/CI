@@ -255,7 +255,7 @@ export class BusquedaPermisosComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Establece los valores en el store de tramite40202.
+   * Establece los valores en el store de tramite140216.
    *
    * @param {FormGroup} form - El formulario del cual se obtiene el valor.
    * @param {string} campo - El nombre del campo del formulario cuyo valor se va a obtener.
