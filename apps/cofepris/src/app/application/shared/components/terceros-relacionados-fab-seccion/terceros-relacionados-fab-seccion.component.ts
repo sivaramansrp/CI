@@ -4,10 +4,13 @@ import { CommonModule } from '@angular/common';
 import { AlertComponent, Catalogo, CatalogoSelectComponent, InputRadioComponent, TableComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 
 import { AbstractControl, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { NACIONALIDAD_OPCIONES_DE_BOTON_DE_RADIO, PERSONA_OPCIONES_DE_BOTON_DE_RADIO, TERCEROS_TEXTO_DE_ALERTA } from '../../constantes/tereceros-relacionados-fab-seccion.enum';
-import { TercerosRelacionadosFebService } from '../../services/tereceros-relacionados-feb.service';
-import { ModalComponent } from '../modal/modal.component';
 import { DatosSeleccionados } from '../../models/terceros-fabricante-relocionados.model';
+
+import { NACIONALIDAD_OPCIONES_DE_BOTON_DE_RADIO, PERSONA_OPCIONES_DE_BOTON_DE_RADIO, TERCEROS_TEXTO_DE_ALERTA } from '../../constantes/tereceros-relacionados-fab-seccion.enum';
+import { ModalComponent } from '../modal/modal.component';
+import { TercerosRelacionadosFebService } from '../../services/tereceros-relacionados-feb.service';
+
+
 import { TablaDatos } from '../../models/terceros-fabricante.model';
 import { TramiteRelacionadaseStore } from '../../estados/stores/terceros-relacionados.stores';
 
@@ -218,6 +221,7 @@ export class TercerosRelacionadosFabSeccionComponent implements OnInit {
      * Obtiene los datos para los selectores desde el servicio y inicializa los formularios.
      */
     ngOnInit(): void {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       this.tercerosService.getEncabezadoDeTabla().subscribe((data: any) => {
         this.tablaEncabezadoData = data.columns;
       });
