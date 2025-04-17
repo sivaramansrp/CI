@@ -27,7 +27,7 @@ export const CROSLISTA_ADUANAS_DISPONIBLES: string[] = [
  * @type {number[]}
  * @description Representa códigos específicos utilizados en el sistema para identificar tipos de permisos definitivos.
  */
-export const PERMISO_DEFINITIVO_TITULO = [240119, 240118, 240107, 240106];
+export const PERMISO_DEFINITIVO_TITULO = [240119, 240118, 240107, 240106, 240108];
 
 /**
  * Identificadores numéricos relacionados con permisos aduaneros.
@@ -77,7 +77,7 @@ export const PERIODO_SEMESTRE_HABILITADO = [240119, 240108, 240107, 240114, 2401
  * @description Contiene un arreglo de identificadores numéricos relacionados con manifiestos y declaraciones en el sistema.
  */
 
-export const MANIFIESTOS_DECLARACIONES = [240107];
+export const MANIFIESTOS_DECLARACIONES = [240107, 240106];
 
 /**
  * Identificadores numéricos relacionados con fechas de pago.
