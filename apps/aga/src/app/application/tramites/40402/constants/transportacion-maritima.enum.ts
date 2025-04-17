@@ -101,7 +101,7 @@ export const CONFIGURACION_PARA_PMN_ENCABEZADO_DE_TABLA: ConfiguracionColumna<Pe
  */
 export const CONFIGURACION_PARA_PFE_ENCABEZADO_DE_TABLA: ConfiguracionColumna<PersonaFisicaExtranjeraForm>[] = [
     { encabezado: 'Nombre', clave: (fila) => fila.nombrePFE, orden: 1 },
-    { encabezado: 'No. seguro social', clave: (fila) => fila.seguroNumero, orden: 2 },
+    { encabezado: 'Número del seguro social', clave: (fila) => fila.seguroNumero, orden: 2 },
     { encabezado: 'Domicilio', clave: (fila) => fila.domicilioPFE, orden: 3 },
     { encabezado: 'País', clave: (fila) => fila.paisPFE, orden: 4 },
     { encabezado: 'Estado', clave: (fila) => fila.estadoPFE, orden: 5 },
@@ -113,13 +113,12 @@ export const CONFIGURACION_PARA_PFE_ENCABEZADO_DE_TABLA: ConfiguracionColumna<Pe
  * @enum {Array<{encabezado: string, clave: (fila: PersonaMoralExtranjeraForm) => string, orden: number}>}
  */
 export const CONFIGURACION_PARA_PME_ENCABEZADO_DE_TABLA: ConfiguracionColumna<PersonaMoralExtranjeraForm>[] = [
-    { encabezado: 'Razón social', clave: (fila) => fila.denominacionPME, orden: 1 },
+    { encabezado: 'Denominación o razón social', clave: (fila) => fila.denominacionPME, orden: 1 },
     { encabezado: 'Domicilio', clave: (fila) => fila.domicilioPME, orden: 2 },
     { encabezado: 'País', clave: (fila) => fila.paisPME, orden: 3 },
     { encabezado: 'Estado', clave: (fila) => fila.estadoPME, orden: 4 },
-    { encabezado: 'C.P.', clave: (fila) => fila.codigoPostalPME, orden: 5 },
-    { encabezado: 'Nombre del director general', clave: (fila) => fila.nombreDG, orden: 6 },
-    { encabezado: 'Correo electrónico', clave: (fila) => fila.correoPME, orden: 7 }
+    { encabezado: 'Código postal', clave: (fila) => fila.codigoPostalPME, orden: 5 },
+    { encabezado: 'Correo electrónico', clave: (fila) => fila.correoPME, orden: 6 }
 ];
 
 /**

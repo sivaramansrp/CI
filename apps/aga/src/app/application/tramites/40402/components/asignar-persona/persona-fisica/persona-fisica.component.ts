@@ -2,7 +2,7 @@ import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/co
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, merge, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { Catalogo, CatalogoSelectComponent, TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, TablaDinamicaComponent, TituloComponent, TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { PersonaFisicaExtranjeraForm } from '../../../../40402/models/transportacion-maritima.model';
 import { TransportacionMaritimaService } from '../../../../40402/services/transportacion-maritima/transportacion-maritima.service';
 import { CONFIGURACION_PARA_PFE_ENCABEZADO_DE_TABLA, TEXTOS } from '../../../constants/transportacion-maritima.enum';
@@ -27,6 +27,10 @@ import { Tramite40402Query } from '../../../estados/tramite40402.query';
   styleUrl: './persona-fisica.component.css',
 })
 export class PersonaFisicaComponent implements OnInit, OnDestroy {
+    /**
+   * Configuración de la tabla de selección.
+   */
+    TablaSeleccion = TablaSeleccion;
   /**
    * Formulario reactivo para gestionar la información de personas físicas extranjeras.
    */

@@ -1,11 +1,11 @@
 <ng-titulo titulo="Persona física"></ng-titulo>
 
 <label for="Persona física extranjero">Persona física
-    extranjero:</label>
+    extranjera:</label>
 
 <div class="row mt-5">
     <div class="col-md-12">
-        <app-tabla-dinamica [configuracionTabla]="configuracionParaPFEEncabezadoDeTabla"
+        <app-tabla-dinamica  [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX"        [configuracionTabla]="configuracionParaPFEEncabezadoDeTabla"
             [datos]="personaFisicaExtranjeraTabla">
         </app-tabla-dinamica>
     </div>
@@ -38,12 +38,7 @@
                         <ng-titulo titulo="Persona física extranjera"></ng-titulo>
 
                         <div class="row">
-                            <div class="col-md-4">
-                                <label class="form-label" for="seguroNumero">Número del seguro social*:</label>
-                                <input type="text" class="form-control" size="40" id="nssPFE" maxlength="11"
-                                    formControlName="seguroNumero"
-                                    (change)="setValoresStore(personaFisicaExtranjeraForm,'seguroNumero', 'setSeguroNumero')">
-                            </div>
+                            
                             <div class="col-md-4">
                                 <label class="form-label" for="nombrePFE">Nombre(s)*:</label>
                                 <input type="text" class="form-control" size="40" id="nombrePFE" maxlength="200"
@@ -51,24 +46,31 @@
                                     (change)="setValoresStore(personaFisicaExtranjeraForm,'nombrePFE', 'setNombrePFE')">
                             </div>
                             <div class="col-md-4">
-                                <label class="form-label" for="apellidoPaterno">Primer Apellido*:</label>
+                                <label class="form-label" for="apellidoPaterno">Primer apellido*:</label>
                                 <input type="text" class="form-control" size="40" id="apellidoPaternoPFE"
                                     maxlength="200" formControlName="apellidoPaternoPFE"
                                     (change)="setValoresStore(personaFisicaExtranjeraForm,'apellidoPaternoPFE', 'setApellidoPaternoPFE')">
                             </div>
-                        </div>
-
-                        <div class="row">
                             <div class="col-md-4">
-                                <label class="form-label" for="apellidoMaterno">Segundo Apellido:</label>
+                                <label class="form-label" for="apellidoMaterno">Segundo apellido:</label>
                                 <input type="text" class="form-control" name="apellidoMaternoPFE"
                                     formControlName="apellidoMaternoPFE" id="apellidoMaternoPFE" maxlength="200"
                                     (change)="setValoresStore(personaFisicaExtranjeraForm,'apellidoMaternoPFE', 'setApellidoMaternoPFE')">
                             </div>
+                        </div>
+
+                        <div class="row">
                             <div class="col-md-8">
-                                <label class="form-label" for="correoPFE">Correo electrónico*: <span
-                                        class="bi bi-question-circle-fill" title="{{ TEXTOS.CORREO_TITULO_TOOLTIP }}"
-                                        data-bs-toggle="tooltip"></span></label>
+                                <label class="form-label" for="seguroNumero">Número del seguro social*: <span
+                                    class="bi bi-question-circle-fill" title="{{ TEXTOS.CORREO_TITULO_TOOLTIP }}"
+                                    data-bs-toggle="tooltip"></span></label>
+                                <input type="text" class="form-control" size="40" id="nssPFE" maxlength="11"
+                                    formControlName="seguroNumero"
+                                    (change)="setValoresStore(personaFisicaExtranjeraForm,'seguroNumero', 'setSeguroNumero')">
+                            </div>
+                            
+                            <div class="col-md-4">
+                                <label class="form-label" for="correoPFE">Correo electrónico*: </label>
                                 <input type="text" class="form-control" name="correoPFE" formControlName="correoPFE"
                                     maxlength="320" id="correoPFE"
                                     (change)="setValoresStore(personaFisicaExtranjeraForm,'correoPFE', 'setCorreoPFE')">
@@ -90,19 +92,20 @@
                                     formControlName="codigoPostalPFE" maxlength="12"
                                     (change)="setValoresStore(personaFisicaExtranjeraForm,'codigoPostalPFE', 'setCodigoPostalPFE')">
                             </div>
+                            
                             <div class="col-md-4 pt-7">
-                                <label for="ciudad">Ciudad*:</label>
-                                <input type="text" class="form-control" name="ciudadPFE" id="ciudadPFE"
-                                    formControlName="ciudadPFE" maxlength="120"
-                                    (change)="setValoresStore(personaFisicaExtranjeraForm,'ciudadPFE', 'setCiudadPFE')">
-                            </div>
-                        </div>
-                        <div class="row pt-7">
-                            <div class="col-md-4">
                                 <label for="estado">Estado*:</label>
                                 <input type="text" class="form-control" name="estadoPFE" id="entidadFederativaPFE"
                                     formControlName="estadoPFE" maxlength="200"
                                     (change)="setValoresStore(personaFisicaExtranjeraForm,'estadoPFE', 'setEstadoPFE')">
+                            </div>
+                        </div>
+                        <div class="row pt-7">
+                            <div class="col-md-4">
+                                <label for="ciudad">Ciudad*:</label>
+                                <input type="text" class="form-control" name="ciudadPFE" id="ciudadPFE"
+                                    formControlName="ciudadPFE" maxlength="120"
+                                    (change)="setValoresStore(personaFisicaExtranjeraForm,'ciudadPFE', 'setCiudadPFE')">
                             </div>
                             <div class="col-md-8">
                                 <label for="calle">Calle*:</label>
@@ -139,7 +142,7 @@
                         <button type="button" class="btn btn-default mx-2" id="cancelarPFE" name="cancelar"
                             data-bs-dismiss="modal" #closeModal>Cancelar</button>
                         <button type="button" class="btn btn-primary" id="guardarPFE" name="guardar"
-                            (click)="agregarPFE(personaFisicaExtranjeraForm.getRawValue())">Guardar</button>
+                            (click)="agregarPFE(personaFisicaExtranjeraForm.getRawValue())">Agregar</button>
                     </div>
                 </div>
             </div>

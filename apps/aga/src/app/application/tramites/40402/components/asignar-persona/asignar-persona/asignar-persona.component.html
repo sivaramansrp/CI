@@ -1,6 +1,6 @@
 <div class="container" id="divTabIngreso">
     <div class="container">
-        <div class="row">
+        <div class="row mt-4">
             <ul class="nav nav-tabs">
                 <li [ngClass]="indice === 1 ? 'active' : ''">
                     <a data-toggle="tab" (click)="seleccionaTab(1)" (keydown.enter)="seleccionaTab(1)"
@@ -12,7 +12,7 @@
                 </li>
             </ul>
     
-            <ng-container>
+            <ng-container class="row mt-5">
                 @switch (indice) {
                 @case (1) {
                 <app-persona-fisica [tabindex]="1"></app-persona-fisica>
