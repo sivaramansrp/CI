@@ -95,7 +95,7 @@ export class DatosTramiteComponent implements OnInit, OnDestroy {
    * Carga los códigos de transportación desde el servicio.
    */
 
-  private cargarCodigoTransportacion(): void {
+  public cargarCodigoTransportacion(): void {
     this.tramite40402Service
       .geTideCodTransportacionAerea()
       .pipe(takeUntil(this.destroyNotifier$))
@@ -106,7 +106,7 @@ export class DatosTramiteComponent implements OnInit, OnDestroy {
   /**
    * Carga los tipos de CAAT aéreo desde el servicio.
    */
-  private cargarTipoCaatAereo(): void {
+  public cargarTipoCaatAereo(): void {
     this.tramite40402Service
       .getTipoDeCaatAerea ()
       .pipe(takeUntil(this.destroyNotifier$))

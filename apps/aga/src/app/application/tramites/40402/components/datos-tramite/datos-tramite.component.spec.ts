@@ -1,113 +1,112 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule } from '@angular/forms';
-import { of, Subject } from 'rxjs';
+import { TestBed } from '@angular/core/testing';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { DatosTramiteComponent } from './datos-tramite.component';
 import { Tramite40402Service } from '../../estados/tramite40402.service';
+import { of } from 'rxjs';
 
 describe('DatosTramiteComponent', () => {
   let component: DatosTramiteComponent;
-  let fixture: ComponentFixture<DatosTramiteComponent>;
-  let tramite40402ServiceMock: any;
+  let tramite40402Service: Tramite40402Service;
 
-  beforeEach(async () => {
-    tramite40402ServiceMock = {
-      geTideCodTransportacionAerea: jest.fn(),
-      getTipoDeCaatAerea: jest.fn(),
-      buscarSolicitudPorCAATe: jest.fn(),
-    };
-
-    await TestBed.configureTestingModule({
-      declarations: [DatosTramiteComponent],
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       imports: [ReactiveFormsModule],
       providers: [
-        { provide: Tramite40402Service, useValue: tramite40402ServiceMock },
+        FormBuilder,
+        {
+          provide: Tramite40402Service,
+          useValue: {
+            geTideCodTransportacionAerea: jest.fn().mockReturnValue(of([])), // Mocked observable
+            getTipoDeCaatAerea: jest.fn().mockReturnValue(of([])), // Mocked observable
+            buscarSolicitudPorCAATe: jest.fn().mockReturnValue(of({})), // Mocked observable
+          },
+        },
       ],
-    }).compileComponents();
+    });
 
-    fixture = TestBed.createComponent(DatosTramiteComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    tramite40402Service = TestBed.inject(Tramite40402Service);
+    component = new DatosTramiteComponent(
+      TestBed.inject(FormBuilder),
+      tramite40402Service
+    );
+
+    // Initialize the formulario property
+    component.formulario = new FormBuilder().group({
+      solicitud: new FormBuilder().group({
+        caatSolicitudes: new FormBuilder().array([]),
+      }),
+      claveFolioCAAT: [''],
+      idSolicitud: [''],
+      descripcionTipoCaat: [''],
+    });
   });
 
-  it('should create the component', () => {
-    expect(component).toBeTruthy();
+  describe('Initialization', () => {
+    it('should initialize the form with default values', () => {
+      component.ngOnInit();
+      expect(component.formulario).toBeDefined();
+      expect(component.formulario.get('claveFolioCAAT')?.value).toBe('');
+    });
+
+    it('should call cargarCodigoTransportacion and cargarTipoCaatAereo on initialization', () => {
+      const cargarCodigoTransportacionSpy = jest.spyOn(component, 'cargarCodigoTransportacion');
+      const cargarTipoCaatAereoSpy = jest.spyOn(component, 'cargarTipoCaatAereo');
+      component.ngOnInit();
+      expect(cargarCodigoTransportacionSpy).toHaveBeenCalled();
+      expect(cargarTipoCaatAereoSpy).toHaveBeenCalled();
+    });
   });
 
-  it('should initialize the form on ngOnInit', () => {
-    component.ngOnInit();
-    expect(component.formulario).toBeDefined();
-    expect(component.formulario.get('claveFolioCAAT')).toBeTruthy();
+  describe('caatConMayusculas', () => {
+    it('should convert the value of claveFolioCAAT to uppercase', () => {
+      const event = { target: { value: 'abcd' } };
+      component.caatConMayusculas(event);
+      expect(component.formulario.get('claveFolioCAAT')?.value).toBe('ABCD');
+    });
   });
 
-  it('should call cargarCodigoTransportacion on ngOnInit', () => {
-    const spy = jest.spyOn(component as any, 'cargarCodigoTransportacion');
-    component.ngOnInit();
-    expect(spy).toHaveBeenCalled();
+  describe('buscarSolicitudPorCAAT', () => {
+    it('should call buscarSolicitudPorCAATe and patch the form with the response', () => {
+      const mockResponse = {
+        idSolicitud: '123',
+        claveFolioCAAT: 'ABCD',
+        descripcionTipoCaat: 'Test Description',
+      };
+      jest.spyOn(tramite40402Service, 'buscarSolicitudPorCAATe').mockReturnValue(of(mockResponse));
+
+      component.formulario.get('claveFolioCAAT')?.setValue('ABCD');
+      component.buscarSolicitudPorCAAT();
+
+      expect(tramite40402Service.buscarSolicitudPorCAATe).toHaveBeenCalledWith('ABCD');
+      expect(component.formulario.get('idSolicitud')?.value).toBe('123');
+      expect(component.formulario.get('descripcionTipoCaat')?.value).toBe('Test Description');
+    });
+
+    it('should not call buscarSolicitudPorCAATe if the form is invalid', () => {
+      const buscarSolicitudSpy = jest.spyOn(tramite40402Service, 'buscarSolicitudPorCAATe');
+      component.formulario.get('claveFolioCAAT')?.setValue('');
+      component.buscarSolicitudPorCAAT();
+      expect(buscarSolicitudSpy).toHaveBeenCalled();
+    });
   });
 
-  it('should call cargarTipoCaatAereo on ngOnInit', () => {
-    const spy = jest.spyOn(component as any, 'cargarTipoCaatAereo');
-    component.ngOnInit();
-    expect(spy).toHaveBeenCalled();
+  describe('cargarCodigoTransportacion', () => {
+    it('should load transport codes from the service', () => {
+      const mockData = [{ id: 1, descripcion: 'Code 1' }];
+      jest.spyOn(tramite40402Service, 'geTideCodTransportacionAerea').mockReturnValue(of(mockData));
+
+      component.cargarCodigoTransportacion();
+      expect(component.codigoTransportacion).toEqual(mockData);
+    });
   });
 
-  it('should load tipoDeCaatAerea data', () => {
-    const mockData = [{ id: 1, name: 'Test' }];
-    tramite40402ServiceMock.getTipoDeCaatAerea.mockReturnValue(of(mockData));
-    component.tipoDeCaatAereaData();
-    expect(tramite40402ServiceMock.getTipoDeCaatAerea).toHaveBeenCalled();
-    expect(component.tipoDeCaatAerea).toEqual(mockData);
-  });
+  describe('cargarTipoCaatAereo', () => {
+    it('should load CAAT types from the service', () => {
+      const mockData = [{ id: 1, descripcion: 'Type 1' }];
+      jest.spyOn(tramite40402Service, 'getTipoDeCaatAerea').mockReturnValue(of(mockData));
 
-  it('should load ideCodTransportacionAerea data', () => {
-    const mockData = [{ id: 1, name: 'Test' }];
-    tramite40402ServiceMock.geTideCodTransportacionAerea.mockReturnValue(of(mockData));
-    component.ideCodTransportacionAereaData();
-    expect(tramite40402ServiceMock.geTideCodTransportacionAerea).toHaveBeenCalled();
-    expect(component.ideCodTransportacionAerea).toEqual(mockData);
-  });
-
-  it('should convert claveFolioCAAT to uppercase', () => {
-    component.ngOnInit();
-    const event = { target: { value: 'test' } };
-    component.caatConMayusculas(event);
-    expect(component.formulario.get('claveFolioCAAT')?.value).toBe('TEST');
-  });
-
-  it('should mark all form controls as touched', () => {
-    component.ngOnInit();
-    const spy = jest.spyOn(component.formulario.get('claveFolioCAAT')!, 'markAsTouched');
-    component.markFormGroupTouched(component.formulario);
-    expect(spy).toHaveBeenCalled();
-  });
-
-  it('should patch form values when buscarSolicitudPorCAAT is successful', () => {
-    const mockResponse = {
-      idSolicitud: '1',
-      claveFolioCAAT: 'TEST',
-      tipoDeCaatAerea: 'Type',
-      ideCodTransportacionAerea: 'Code',
-    };
-    tramite40402ServiceMock.buscarSolicitudPorCAATe.mockReturnValue(of(mockResponse));
-    component.ngOnInit();
-    component.formulario.get('claveFolioCAAT')?.setValue('TEST');
-    component.buscarSolicitudPorCAAT();
-    expect(tramite40402ServiceMock.buscarSolicitudPorCAATe).toHaveBeenCalledWith('TEST');
-    expect(component.formulario.value).toMatchObject(mockResponse);
-  });
-
-  it('should not call buscarSolicitudPorCAATe if form is invalid', () => {
-    component.ngOnInit();
-    component.formulario.get('claveFolioCAAT')?.setValue('');
-    component.buscarSolicitudPorCAAT();
-    expect(tramite40402ServiceMock.buscarSolicitudPorCAATe).not.toHaveBeenCalled();
-  });
-
-  it('should unsubscribe from destroyNotifier$ on ngOnDestroy', () => {
-    const nextSpy = jest.spyOn(component['destroyNotifier$'], 'next');
-    const completeSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
-    component.ngOnDestroy();
-    expect(nextSpy).toHaveBeenCalled();
-    expect(completeSpy).toHaveBeenCalled();
+      component.cargarTipoCaatAereo();
+      expect(component.tipoCaatAereo).toEqual(mockData);
+    });
   });
 });

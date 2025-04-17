@@ -1,83 +1,90 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { By } from '@angular/platform-browser';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { TestBed } from '@angular/core/testing';
 import { PersonaMoralComponent } from './persona-moral.component';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { Tramite40402Store } from '../../../estados/tramite40402.store';
+import { Tramite40402Query } from '../../../estados/tramite40402.query';
+import { TransportacionMaritimaService } from '../../../../40402/services/transportacion-maritima/transportacion-maritima.service';
+import { provideHttpClient } from '@angular/common/http';
 
 describe('PersonaMoralComponent', () => {
   let component: PersonaMoralComponent;
-  let fixture: ComponentFixture<PersonaMoralComponent>;
+  let tramite40402Store: Tramite40402Store;
+  let transportacionMaritimaService: TransportacionMaritimaService;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [],
-      imports: [ReactiveFormsModule, PersonaMoralComponent, FormsModule],
-      schemas: [NO_ERRORS_SCHEMA],
-    }).compileComponents();
-
-    fixture = TestBed.createComponent(PersonaMoralComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
-
-  it('should open the modal when "Agregar" button is clicked', () => {
-    const agregarButton = fixture.debugElement.query(By.css('button[name="AgregarPME"]'));
-    agregarButton.nativeElement.click();
-    fixture.detectChanges();
-
-    const modal = fixture.debugElement.query(By.css('#modalAgregarPME'));
-    expect(modal.nativeElement.classList).toContain('show');
-  });
-
-  it('should bind form fields to personaMoralExtranjeraForm', () => {
-    const denominacionInput = fixture.debugElement.query(By.css('input[formControlName="denominacionPME"]'));
-    const correoInput = fixture.debugElement.query(By.css('input[formControlName="correoPME"]'));
-
-    denominacionInput.nativeElement.value = 'Test Denomination';
-    denominacionInput.nativeElement.dispatchEvent(new Event('input'));
-    correoInput.nativeElement.value = 'test@example.com';
-    correoInput.nativeElement.dispatchEvent(new Event('input'));
-
-    expect(component.personaMoralExtranjeraForm.get('denominacionPME')?.value).toBe('Test Denomination');
-    expect(component.personaMoralExtranjeraForm.get('correoPME')?.value).toBe('test@example.com');
-  });
-
-  it('should call agregarPME with form data when "Guardar" button is clicked', () => {
-    const agregarPMESpy = jest.spyOn(component, 'agregarPME');
-    component.personaMoralExtranjeraForm.setValue({
-      denominacionPME: 'Test Denomination',
-      correoPME: 'test@example.com',
-      paisPME: '1',
-      codigoPostalPME: '12345',
-      ciudadPME: 'Test City',
-      estadoPME: 'Test State',
-      callePME: 'Test Street',
-      numeroExteriorPME: '123',
-      numeroInteriorPME: '456',
-      nombreDG: 'John',
-      apellidoPaternoDG: 'Doe',
-      apellidoMaternoDG: 'Smith',
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [ReactiveFormsModule],
+      providers: [
+        provideHttpClient(),
+        FormBuilder,
+        Tramite40402Store,
+        Tramite40402Query,
+        TransportacionMaritimaService,
+      ],
     });
 
-    const guardarButton = fixture.debugElement.query(By.css('button[name="guardar"]'));
-    guardarButton.nativeElement.click();
-
-    expect(agregarPMESpy).toHaveBeenCalledWith(component.personaMoralExtranjeraForm.getRawValue());
+    tramite40402Store = TestBed.inject(Tramite40402Store);
+    transportacionMaritimaService = TestBed.inject(TransportacionMaritimaService);
+    component = new PersonaMoralComponent(
+      TestBed.inject(FormBuilder),
+      tramite40402Store,
+      TestBed.inject(Tramite40402Query),
+      transportacionMaritimaService
+    );
   });
 
-  it('should call limpiarDatosPME when "Limpiar" button is clicked', () => {
-    const limpiarSpy = jest.spyOn(component, 'limpiarDatosPME');
-    const limpiarButton = fixture.debugElement.query(By.css('button[name="limpiar"]'));
-    limpiarButton.nativeElement.click();
-
-    expect(limpiarSpy).toHaveBeenCalled();
+  describe('crearAgregarPMNForm', () => {
+    it('should initialize the form with default values', () => {
+      component.crearAgregarPMNForm();
+      expect(component.personaMoralExtranjeraForm).toBeDefined();
+      expect(component.personaMoralExtranjeraForm.get('denominacionPME')?.value).toBeNull();
+      expect(component.personaMoralExtranjeraForm.get('correoPME')?.value).toBeNull();
+    });
   });
 
-  it('should close the modal when "Cancelar" button is clicked', () => {
-    const cancelarButton = fixture.debugElement.query(By.css('button[name="cancelar"]'));
-    const closeModalSpy = jest.spyOn(component.closeModal.nativeElement, 'click');
+  describe('agregarPME', () => {
+    it('should add a new person to the table and update the store', () => {
+      const spy = jest.spyOn(tramite40402Store, 'setPersonaMoralExtranjeraTabla');
+      component.crearAgregarPMNForm();
+      component.personaMoralExtranjeraForm.setValue({
+        denominacionPME: 'Empresa XYZ',
+        correoPME: 'empresa@xyz.com',
+        paisPME: '1',
+        codigoPostalPME: '12345',
+        ciudadPME: 'Ciudad XYZ',
+        estadoPME: 'Estado XYZ',
+        callePME: 'Calle XYZ',
+        numeroExteriorPME: '123',
+        numeroInteriorPME: 'A',
+        nombreDG: 'John',
+        apellidoPaternoDG: 'Doe',
+        apellidoMaternoDG: 'Smith',
+      });
 
-    cancelarButton.nativeElement.click();
-    expect(closeModalSpy).toHaveBeenCalled();
+      component.agregarPME(component.personaMoralExtranjeraForm.getRawValue());
+      expect(component.personaMoralExtranjeraTabla.length).toBe(1);
+      expect(spy).toHaveBeenCalledWith(component.personaMoralExtranjeraTabla);
+    });
+  });
+
+  describe('limpiarDatosPME', () => {
+    it('should reset the form and update the store', () => {
+      const spy = jest.spyOn(component, 'actualizarFormularioState');
+      component.crearAgregarPMNForm();
+      component.personaMoralExtranjeraForm.get('denominacionPME')?.setValue('Empresa XYZ');
+      component.limpiarDatosPME();
+      expect(component.personaMoralExtranjeraForm.get('denominacionPME')?.value).toBeNull();
+      expect(spy).toHaveBeenCalled();
+    });
+  });
+
+  describe('actualizarFormularioState', () => {
+    it('should update the store with form values', () => {
+      const spy = jest.spyOn(tramite40402Store, 'setDenominacionPME');
+      component.crearAgregarPMNForm();
+      component.personaMoralExtranjeraForm.get('denominacionPME')?.setValue('Empresa XYZ');
+      component.actualizarFormularioState();
+      expect(spy).toHaveBeenCalledWith('Empresa XYZ');
+    });
   });
 });

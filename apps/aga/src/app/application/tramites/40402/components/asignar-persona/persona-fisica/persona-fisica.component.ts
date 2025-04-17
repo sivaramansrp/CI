@@ -134,81 +134,81 @@ export class PersonaFisicaComponent implements OnInit, OnDestroy {
   crearAgregarPFEForm(): void {
     this.personaFisicaExtranjeraForm = this.fb.group({
       seguroNumero: [
-        this.transportacionMaritimaState.seguroNumero,
+        this.transportacionMaritimaState?.seguroNumero,
         [
           Validators.required,
           Validators.maxLength(11)
         ]
       ],
       nombrePFE: [
-        this.transportacionMaritimaState.nombrePFE,
+        this.transportacionMaritimaState?.nombrePFE,
         [
           Validators.required,
           Validators.maxLength(200)
         ]
       ],
       apellidoPaternoPFE: [
-        this.transportacionMaritimaState.apellidoPaternoPFE,
+        this.transportacionMaritimaState?.apellidoPaternoPFE,
         [
           Validators.required,
           Validators.maxLength(200)
         ]
       ],
       apellidoMaternoPFE: [
-        this.transportacionMaritimaState.apellidoMaternoPFE,
+        this.transportacionMaritimaState?.apellidoMaternoPFE,
         [
           Validators.required,
           Validators.maxLength(200)
         ]
       ],
       correoPFE: [
-        this.transportacionMaritimaState.correoPFE,
+        this.transportacionMaritimaState?.correoPFE,
         [
           Validators.required,
           Validators.maxLength(320)
         ]
       ],
       paisPFE: [
-        this.transportacionMaritimaState.paisPFE,
+        this.transportacionMaritimaState?.paisPFE,
         Validators.required
       ],
       codigoPostalPFE: [
-        this.transportacionMaritimaState.codigoPostalPFE,
+        this.transportacionMaritimaState?.codigoPostalPFE,
         [
           Validators.required,
           Validators.maxLength(12)
         ]
       ],
       ciudadPFE: [
-        this.transportacionMaritimaState.ciudadPFE,
+        this.transportacionMaritimaState?.ciudadPFE,
         [
           Validators.required,
           Validators.maxLength(120)
         ]
       ],
       estadoPFE: [
-        this.transportacionMaritimaState.estadoPFE,
+        this.transportacionMaritimaState?.estadoPFE,
         [
           Validators.required,
           Validators.maxLength(200)
         ]
       ],
       callePFE: [
-        this.transportacionMaritimaState.callePFE,
+        this.transportacionMaritimaState?.callePFE,
         [
           Validators.required,
           Validators.maxLength(100)
         ]
       ],
       numeroExteriorPFE: [
-        this.transportacionMaritimaState.numeroExteriorPFE,
+        this.transportacionMaritimaState?.numeroExteriorPFE,
         [
           Validators.required,
           Validators.maxLength(55)
         ]
       ],
       numeroInteriorPFE: [
-        this.transportacionMaritimaState.numeroInteriorPFE,
+        this.transportacionMaritimaState?.numeroInteriorPFE,
         [
           Validators.maxLength(55)
         ]
@@ -251,7 +251,7 @@ export class PersonaFisicaComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   agregarPFE(personaFisicaExtranjeraFormDatos: PersonaFisicaExtranjeraForm): void {
-    const PAIS = this.pais.find((pais) => pais.id === Number(personaFisicaExtranjeraFormDatos.paisPFE))?.descripcion;
+    const PAIS = this.pais?.find((pais) => pais.id === Number(personaFisicaExtranjeraFormDatos.paisPFE))?.descripcion;
 
     const NUEVO_CUERPO_TABLA = [...this.personaFisicaExtranjeraTabla];
 

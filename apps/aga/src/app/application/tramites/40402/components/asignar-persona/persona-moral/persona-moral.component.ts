@@ -120,79 +120,79 @@ export class PersonaMoralComponent implements OnInit, OnDestroy {
   crearAgregarPMNForm(): void {
     this.personaMoralExtranjeraForm = this.fb.group({
       denominacionPME: [
-        this.transportacionMaritimaState.denominacionPME,
+        this.transportacionMaritimaState?.denominacionPME,
         [
           Validators.required,
           Validators.maxLength(254)
         ]
       ],
       correoPME: [
-        this.transportacionMaritimaState.correoPME,
+        this.transportacionMaritimaState?.correoPME,
         [
           Validators.required,
           Validators.maxLength(320)
         ]
       ],
       paisPME: [
-        this.transportacionMaritimaState.paisPME,
+        this.transportacionMaritimaState?.paisPME,
       ],
       codigoPostalPME: [
-        this.transportacionMaritimaState.codigoPostalPME,
+        this.transportacionMaritimaState?.codigoPostalPME,
         [
           Validators.required,
           Validators.maxLength(12)
         ]
       ],
       ciudadPME: [
-        this.transportacionMaritimaState.ciudadPME,
+        this.transportacionMaritimaState?.ciudadPME,
         [
           Validators.required,
           Validators.maxLength(100)
         ]
       ],
       estadoPME: [
-        this.transportacionMaritimaState.estadoPME,
+        this.transportacionMaritimaState?.estadoPME,
         [
           Validators.required,
           Validators.maxLength(200)
         ]
       ],
       callePME: [
-        this.transportacionMaritimaState.callePME,
+        this.transportacionMaritimaState?.callePME,
         [
           Validators.required,
           Validators.maxLength(100)
         ]
       ],
       numeroExteriorPME: [
-        this.transportacionMaritimaState.numeroExteriorPME,
+        this.transportacionMaritimaState?.numeroExteriorPME,
         [
           Validators.required,
           Validators.maxLength(55)
         ]
       ],
       numeroInteriorPME: [
-        this.transportacionMaritimaState.numeroInteriorPME,
+        this.transportacionMaritimaState?.numeroInteriorPME,
         [
           Validators.maxLength(55)
         ]
       ],
       nombreDG: [
-        this.transportacionMaritimaState.nombreDG,
+        this.transportacionMaritimaState?.nombreDG,
         [
           Validators.required,
           Validators.maxLength(28)
         ]
       ],
       apellidoPaternoDG: [
-        this.transportacionMaritimaState.apellidoPaternoDG,
+        this.transportacionMaritimaState?.apellidoPaternoDG,
         [
           Validators.required,
           Validators.maxLength(20)
         ]
       ],
       apellidoMaternoDG: [
-        this.transportacionMaritimaState.apellidoMaternoDG,
+        this.transportacionMaritimaState?.apellidoMaternoDG,
         [
           Validators.maxLength(20)
         ]
@@ -235,7 +235,7 @@ export class PersonaMoralComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   agregarPME(personaMoralExtranjeraFormDatos: PersonaMoralExtranjeraForm): void {
-    const PAIS = this.pais.find((pais) => pais.id === Number(personaMoralExtranjeraFormDatos.paisPME))?.descripcion;
+    const PAIS = this.pais?.find((pais) => pais.id === Number(personaMoralExtranjeraFormDatos.paisPME))?.descripcion;
 
     const NUEVO_CUERPO_TABLA = [...this.personaMoralExtranjeraTabla];
 
