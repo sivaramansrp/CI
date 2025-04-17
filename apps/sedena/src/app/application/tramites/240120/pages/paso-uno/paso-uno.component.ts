@@ -5,6 +5,11 @@ import { Subject } from 'rxjs';
 import { Tramite240120Query } from '../../estados/tramite240120Query.query';
 import { Tramite240120Store } from '../../estados/tramite240120Store.store';
 import { takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
+import { DatosDelTramiteContenedoraComponent } from '../../components/datos-del-tramite-contenedora/datos-del-tramite-contenedora.component';
+import { TercerosRelacionadosContenedoraComponent } from '../../components/terceros-relacionados-contenedora/terceros-relacionados-contenedora.component';
+import { PagoDeDerechosContenedoraComponent } from '../../components/pago-de-derechos-contenedora/pago-de-derechos-contenedora.component';
 
 /**
  * @title Paso Uno
@@ -13,6 +18,14 @@ import { takeUntil } from 'rxjs';
  */
 @Component({
   selector: 'app-paso-uno',
+  standalone: true,
+  imports: [
+    CommonModule,
+    SolicitanteComponent,
+    DatosDelTramiteContenedoraComponent,
+    TercerosRelacionadosContenedoraComponent,
+    PagoDeDerechosContenedoraComponent,
+  ],
   templateUrl: './paso-uno.component.html',
   styleUrl: './paso-uno.component.css',
 })
