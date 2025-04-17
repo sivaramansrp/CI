@@ -41,7 +41,7 @@
       <p> f.Seguimiento y revisión del riesgo (monitoreo de los resultados del análisis de riesgo y verificación de la eficacia de su tratamiento).</p>
     
   </ul>
- 
+  <form [formGroup]="contingencyForm" >
 <div class="form-group">
         <label class="custom-required" for="comiteSeguridad"> Señale quiénes conforman el Comité de Seguridad de la compañía (Nombre y puesto).</label>
         <textarea class="custom-textarea" rows="6" cols="100" id="comiteSeguridad" formControlName="comiteSeguridad"></textarea>
@@ -181,35 +181,37 @@
   <p>
     La empresa de mensajería y paquetería deberá demostrar con personal autorizado los planes de contingencia y/o emergencia, así como realizar pruebas, ejercicios prácticos y simulacros anuales a dichos planes de contingencia y emergencia para constatar su efectividad, mismos de los que se deberá mantener un registro debidamente registrado y firmado (por ejemplo: reportes de resultados, análisis de lecciones aprendidas, grabaciones de videograbaciones, fotografías, etcétera, que demuestren su ejecución). El plan de contingencia y/o emergencia deberá actualizarse según sea necesario, en función de los cambios en las operaciones y el nivel de riesgo de la organización.
   </p>
-  <div class="form-group">
-    <label>* Indique si cuenta con procedimiento o plan de emergencia documentado, para asegurar la continuidad del negocio en caso de una situación de emergencia o de seguridad, que afecte el desarrollo normal de las actividades de comercio exterior de la empresa.</label>
-    <div>
-      <input type="radio" id="planEmergenciaSi" formControlName="planEmergencia" value="Si">
-      <label for="planEmergenciaSi">Si</label>
-      <input type="radio" id="planEmergenciaNo" formControlName="planEmergencia" value="No">
-      <label for="planEmergenciaNo">No</label>
+ 
+    <div class="form-group">
+      <label class="custom-required" for="planEmergencia">
+        * Indique si cuenta con procedimiento o plan de emergencia documentado, para asegurar la continuidad del negocio en caso de una situación de emergencia o de seguridad.
+      </label>
+      <div>
+        <input type="radio" id="planEmergenciaSi" formControlName="planEmergencia" value="Si">
+        <label for="planEmergenciaSi">Si</label>
+        <input type="radio" id="planEmergenciaNo" formControlName="planEmergencia" value="No">
+        <label for="planEmergenciaNo">No</label>
+      </div>
     </div>
-  </div>
-  <p class="custom-heading custom-required"> Anexe el procedimiento o plan de contingencia y/o emergenca documentado, para asegurar la continuidad del negocio en caso de una situación de emergencia o de seguridad, que afecte el desarrollo normal de las actividades de comercio exterior de la empresa de mensajería y paquetería.</p>
-  <p class="custom-heading">Este procedimiento debe incluir, de manera enunciativa mas no limitativa, lo siguiente:</p>
-  <div class="form-group">
-    <p class="custom-heading">
-      a. ¿Qué situaciones contempla, describiendo el plan de acción y pasos que hay que seguir en caso de crisis, así como las tareas que el personal tenga asignadas durante el manejo de dichas contingencias?
-    </p>
-    
-  </div>
-  
-  <div class="form-group">
-    <p class="custom-heading">
-      b. ¿Qué mecanismos utiliza para garantizar que el plan de continuidad del negocio sea efectivo?
-    </p>
-   
-  </div>
-  <div class="form-group">
-    <p class="custom-heading">
-      c. Contemplar la programación y realización de simulacros anuales y cómo se documentan (por ejemplo: reportes de resultados, minutos o informes, mismos que deberán ir acompañados de videograbaciones, fotografías, etcétera, que demuestren su ejecución).
-    </p>
-   
-  </div>
+    <div class="form-group">
+      <label class="custom-required" for="situacionesContempladas">
+        a. ¿Qué situaciones contempla, describiendo el plan de acción y pasos que hay que seguir en caso de crisis?
+      </label>
+      <textarea class="custom-textarea" rows="6" cols="100" id="situacionesContempladas" formControlName="situacionesContempladas"></textarea>
+    </div>
+    <div class="form-group">
+      <label class="custom-required" for="mecanismosContinuidad">
+        b. ¿Qué mecanismos utiliza para garantizar que el plan de continuidad del negocio sea efectivo?
+      </label>
+      <textarea class="custom-textarea" rows="6" cols="100" id="mecanismosContinuidad" formControlName="mecanismosContinuidad"></textarea>
+    </div>
+    <div class="form-group">
+      <label class="custom-required" for="simulacrosDocumentacion">
+        c. Contemplar la programación y realización de simulacros anuales y cómo se documentan.
+      </label>
+      <textarea class="custom-textarea" rows="6" cols="100" id="simulacrosDocumentacion" formControlName="simulacrosDocumentacion"></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
 </div>
 
