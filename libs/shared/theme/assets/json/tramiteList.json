@@ -716,9 +716,9 @@
     {
         "id": 103,
         "tramite": 260605,
-        "linkDashboard": "/pago/aviso-de-modificacion-module/datos-de-la-solicitud",
+        "linkDashboard": "/cofepris/aviso-de-modificacion-module/datos-de-la-solicitud",
         "linkDepartment": "/pago/aviso-de-modificacion-module/datos-de-la-solicitud",
-        "department": ""
+        "department": "cofepris"
     },
     {
         "id": 104,
@@ -1570,8 +1570,8 @@
     {
         "id": 225,
         "tramite": 260513,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "cofepris/muestras-de-toxicos/plaguicidas",
+        "linkDepartment": "pago/muestras-de-toxicos/plaguicidas",
         "department": "cofepris"
     },
     {
