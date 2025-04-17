@@ -1801,8 +1801,8 @@
     {
         "id": 258,
         "tramite": 240107,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "/sedena/sustancias-quimicas/sustancias-quimicas",
+        "linkDepartment": "/sedena/sustancias-quimicas/sustancias-quimicas",
         "department": "sedena"
     },
     {
