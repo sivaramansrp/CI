@@ -1,13 +1,14 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { map, Subject, takeUntil } from 'rxjs';
 import * as XLSX from 'xlsx'; // Importa XLSX para leer archivos Excel
-import { Modal } from 'bootstrap';
 import {
   AlertComponent,
   InputCheckComponent,
   InputRadioComponent,
+  Notificacion,
+  NotificacionesComponent,
   TituloComponent,
   VALID_FILE_REGEX,
 } from '@libs/shared/data-access-user/src';
@@ -28,7 +29,8 @@ import { SOLICITUD_32201_ENUM } from '../../constantes/anexo';
     TituloComponent,
     InputRadioComponent,
     AlertComponent,
-    InputCheckComponent
+    InputCheckComponent,
+    NotificacionesComponent
   ],
   templateUrl: './solicitud.component.html',
   styleUrl: './solicitud.component.scss',
@@ -61,19 +63,16 @@ export class SolicitudComponent implements OnInit {
   public infoAlert = 'alert-info';
 
   /**
-   * Referencia al modal de confirmación.
+   * Representa una confirmar instancia de notificación asociada con el componente.
+   * Esta propiedad se utiliza para gestionar y almacenar datos de notificaciones.
    */
-  @ViewChild('confirmarModal') confirmarModalElement!: ElementRef;
+  public confirmarNotificacion!: Notificacion;
 
   /**
-   * Referencia al modal de error.
+   * Representa una error instancia de notificación asociada con el componente.
+   * Esta propiedad se utiliza para gestionar y almacenar datos de notificaciones.
    */
-  @ViewChild('errorModal') errorModalElement!: ElementRef;
-
-  /**
-   * Referencia al botón para cerrar el modal.
-   */
-  @ViewChild('closeModal') closeModal!: ElementRef;
+  public errorNotificacion!: Notificacion;
 
   /**
    * Constructor del componente.
@@ -137,24 +136,42 @@ export class SolicitudComponent implements OnInit {
           const EXPECTED_COLUMNS = 5;  // Agregue aquí el número requerido de columnas o lógica 
           const FIRST_ROW = JSON_DATA[0] as string[];
           if (FIRST_ROW.length === EXPECTED_COLUMNS) {
-            if (this.confirmarModalElement) {
-              const MODAL_INSTANCE = new Modal(
-                this.confirmarModalElement.nativeElement
-              );
-              MODAL_INSTANCE.show();
-            }
+            this.confirmarModal(0); // Abre el modal de confirmación
           } else {
-            if (this.errorModalElement) {
-              const MODAL_INSTANCE = new Modal(
-                this.errorModalElement.nativeElement
-              );
-              MODAL_INSTANCE.show();
-            }
+            this.errorModal(0); // Abre el modal de error
           }
         };
 
         READER.readAsArrayBuffer(FILE);
       }
+    }
+  }
+
+  public confirmarModal(i: number = 0): void {
+    this.confirmarNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'Los registros se realizaron correctamente',
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    }
+  }
+
+  public errorModal(i: number = 0): void {
+    this.errorNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: 'Mensajes',
+      mensaje: 'El número de columnas del archivo es incorrecto',
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
     }
   }
 
