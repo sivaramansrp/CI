@@ -348,6 +348,12 @@ const ROUTES: Routes = [
     import('./tramites/260915/permiso-sanitario-dispositivos-medicos.module').then(
       (m) => m.PermisoSanitarioDispositivosMedicosModule)
 },
+{
+  path: 'correccion-interna-de-la-cofepris',
+  loadChildren: () =>
+    import('./tramites/261601/correccion-interna-de-la-cofepris.module').then(
+      (m) => m.CorreccionInternaDeLaCofeprisModule)
+},
 
 ];
 
