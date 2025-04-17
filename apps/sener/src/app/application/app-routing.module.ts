@@ -33,6 +33,13 @@ const ROUTES: Routes = [
       import('./tramites/130121/permiso-de-hidrocarburos.module').then(
         (m) => m.PermisoDeHidrocarburosModule
       )
+  },
+  {
+    path: 'pexim',
+    loadChildren: () =>
+      import('./tramites/140216/suspension-permiso.module').then(
+        (m) => m.SuspensionPermisoModule
+      )
   }
 ];
 
