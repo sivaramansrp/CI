@@ -21,7 +21,7 @@ import { Observable, Subject } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { Otros } from '../../models/exporticon-estupefacientes.model';
 import { Tramite260302Query } from '../../estados/tramite260302Query.query';
-import { Tramite260302Store } from '../../estados/tramite260302Store.store';
+
 
 /**
  * @component TercerosRelacionadosVistaComponent

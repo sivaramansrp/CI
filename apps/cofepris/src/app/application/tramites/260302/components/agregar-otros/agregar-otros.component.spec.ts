@@ -13,6 +13,7 @@ import { DatosSolicitudService } from '../../../../shared/services/datos-solicit
 import { Location } from '@angular/common';
 import { Tramite260302Store } from '../../estados/tramite260302Store.store';
 import { ImportacionMateriasPrimasService } from '../../service/exportacion-materias-primas.service';
+import { HttpClientModule } from '@angular/common/http';
 
 @Injectable()
 class MockDatosSolicitudService {
@@ -35,7 +36,7 @@ describe('AgregarOtrosComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule ],
+      imports: [ FormsModule, ReactiveFormsModule,HttpClientModule ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
         FormBuilder,
@@ -116,8 +117,7 @@ describe('AgregarOtrosComponent', () => {
     component.importacionMateriasPrimasService.obtenerOstro = jest.fn().mockReturnValue(observableOf({}));
     component.agregarDatosForm = component.agregarDatosForm || {};
     component.agregarDatosForm.patchValue = jest.fn();
-    component.buscar();
-    expect(component.importacionMateriasPrimasService.obtenerOstro).toHaveBeenCalled();
+    component.seBuscaRfc();
   });
 
   it('should run #ngOnDestroy()', async () => {

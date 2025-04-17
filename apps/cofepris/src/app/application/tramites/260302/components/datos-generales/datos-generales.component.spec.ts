@@ -78,13 +78,6 @@ describe('DatosGeneralesComponent', () => {
     expect(component.datosSolicitudService.obtenerListaPaises).toHaveBeenCalled();
   });
 
-  it('should run #cancelar()', async () => {
-    component.router = component.router || {};
-    component.router.navigate = jest.fn();
-    component.cancelar();
-    expect(component.router.navigate).toHaveBeenCalled();
-  });
-
   it('should run #limpiarFormulario()', async () => {
     component.agregarDatosForm = component.agregarDatosForm || {};
     component.agregarDatosForm.reset = jest.fn();
@@ -94,10 +87,6 @@ describe('DatosGeneralesComponent', () => {
 
   it('should run #guardarDatos()', async () => {
     component.tipoTablaDatos = component.tipoTablaDatos || {};
-    component.tipoTablaDatos.FABRICANTE = 'FABRICANTE';
-    component.tipoTablaDatos.FACTURADOR = 'FACTURADOR';
-    component.tipoTablaDatos.CERTIFICADO = 'CERTIFICADO';
-    component.tipoTablaDatos.PROVEEDOR = 'PROVEEDOR';
     component.tipoTablaDatos.OTROS = 'OTROS';
     component.addFabricantes = jest.fn();
     component.agregarDatosForm = component.agregarDatosForm || {};
@@ -112,17 +101,12 @@ describe('DatosGeneralesComponent', () => {
 
   });
 
-  it('should run #addFabricantes()', async () => {
+  it('should run #addDestinario()', async () => {
     component.tramiteStore = component.tramiteStore || {};
-    component.tramiteStore.updateFabricanteTablaDatos = jest.fn();
-    component.addFabricantes({});
+    component.tramiteStore.updateDestinatarioTablaDatos = jest.fn();
+    component.addDestinatario({});
   });
 
-  it('should run #addCertificadoTablaDatos()', async () => {
-    component.tramiteStore = component.tramiteStore || {};
-    component.tramiteStore.updateCertificadoTablaDatos = jest.fn();
-    component.addCertificadoTablaDatos({});
-  });
 
   it('should run #addOtros()', async () => {
     component.tramiteStore = component.tramiteStore || {};
@@ -130,16 +114,6 @@ describe('DatosGeneralesComponent', () => {
     component.addOtros({});
   });
 
-  it('should run #addProveedores()', async () => {
-    component.tramiteStore = component.tramiteStore || {};
-    component.tramiteStore.updateProveedorTablaDatos = jest.fn();
-    component.addProveedores({});
-  });
 
-  it('should run #addFacturadores()', async () => {
-    component.tramiteStore = component.tramiteStore || {};
-    component.tramiteStore.updateFacturadorTablaDatos = jest.fn();
-    component.addFacturadores({});
-  });
 
 });

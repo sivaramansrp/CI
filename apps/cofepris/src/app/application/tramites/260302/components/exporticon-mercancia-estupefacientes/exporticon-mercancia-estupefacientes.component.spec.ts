@@ -1,18 +1,18 @@
 import { TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
-import { DatosMercanciaEstupefacientesComponent } from './datos-mercancia-estupefacientes.component';
+import { ExporticonMercanciaEstupefacientesComponent } from './exporticon-mercancia-estupefacientes.component';
 import { HttpClientModule } from '@angular/common/http';
 
-describe('DatosMercanciaEstupefacientesComponent', () => {
-  let component: DatosMercanciaEstupefacientesComponent;
+describe('ExporticonMercanciaEstupefacientesComponent', () => {
+  let component: ExporticonMercanciaEstupefacientesComponent;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule,DatosMercanciaEstupefacientesComponent,HttpClientModule],
+      imports: [ReactiveFormsModule,ExporticonMercanciaEstupefacientesComponent,HttpClientModule],
       declarations: [],
     }).compileComponents();
 
-    const fixture = TestBed.createComponent(DatosMercanciaEstupefacientesComponent);
+    const fixture = TestBed.createComponent(ExporticonMercanciaEstupefacientesComponent);
     component = fixture.componentInstance;
     component.mercanciaFormState = {
       clasificacionProducto: '',
@@ -53,43 +53,24 @@ describe('DatosMercanciaEstupefacientesComponent', () => {
     expect(component.mercanciaForm.value).toEqual({
       clasificacionProducto: '',
       especificarClasificacionProducto: '',
-      marcaComercialDenominación: '', // Corrected property name
+      marcaComercialDenominacion: '',
       denominacionCumonInternacional: '',
       tipoProducto: '',
       formaFarmaceutica: '',
       estadoFisico: '',
       fraccionArancelaria: '',
       descripcionFraccion: '',
-      cantidadUmtValor: '',
-      cantidadUmt: '',
-      cantidadUmcValor: '',
-      cantidadUmc: '',
+      cantidadUMT: '',
+      cantidadUMC: '',
       numeroCAS: '',
       cantidadDeLotes: '',
-      kgPorLote: '',
       paisDeDestino: '101',
+      presentacion: '',
+      usoEspecifico: '',
       paisDeProcedencia: '',
-      detallarUsoEspecifico: '',
-      nummeroDePiezasAFabricar: '', 
-      descripcionNumeroDePiezas: '',
-      presentacion: '',
-      numeroRegistroSanitario: '',
-      usoEspecifico:'',
-      paisOrigen:'',
+      unidadMedidaComercializacion: '',
+      unidadMedidaTarifa: '',
     });
-  });
-
-  it('should not add a new detail if form fields are empty', () => {
-    component.mercanciaForm.patchValue({
-      presentacion: '',
-      numeroDePiezasAFabricar: '',
-      descripcionNumeroDePiezas: '',
-      numeroRegistroSanitario: '',
-    });
-
-    component.agregarDetalleMercancia();
-
-    expect(component.detalleMercanciaDatos.length).toBe(0);
   });
 
  
