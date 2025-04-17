@@ -1,3 +1,5 @@
+import { ConfiguracionVisibilidad } from "../models/datos-domicilio-legal.model";
+
 export const MENSAJE_DE_ALERTA: string =
   'Cumplo con los requisitos y normatividad aplicable, sin que me eximan de que la autoridad sanitaria verifique su cumplimiento, esto sin perjuicio de las sanciones en que puedo incurrir por falsedad de declaraciones dadas a una autoridad. Asimismo acepto que la notificación de este trámite, sea a través de la Ventanilla Única de Comercio Exterior por los mecanismos de la misma.';
 
@@ -44,3 +46,10 @@ export const CROSLISTA_DE_ADUANAS_ENTRADA: string[] = [
   'CD. JUAREZ',
   'CHIHUAHUA, CHIH.'
 ];
+export const DEFAULT_CONFIGURACION_VISIBILIDAD: ConfiguracionVisibilidad = {
+  paisOrigen: false, 
+  paisFabrica: true,
+  paisElaboracion: true,
+  paisProveedor: true,
+  paisProcedencia: true
+};
