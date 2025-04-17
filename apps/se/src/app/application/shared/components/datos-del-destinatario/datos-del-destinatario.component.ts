@@ -1,10 +1,8 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Subject } from 'rxjs';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
-import { delay } from 'rxjs';
-import { takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-datos-del-destinatario',
@@ -13,7 +11,7 @@ import { takeUntil } from 'rxjs';
   templateUrl: './datos-del-destinatario.component.html',
   styleUrl: './datos-del-destinatario.component.scss',
 })
-export class DatosDelDestinatarioComponent implements OnInit, OnDestroy {
+export class DatosDelDestinatarioComponent implements OnDestroy {
 
   /**
    * Datos del formulario para inicializar los valores
@@ -25,7 +23,8 @@ export class DatosDelDestinatarioComponent implements OnInit, OnDestroy {
    * Evento que se emite cuando cambian los datos del formulario del destinatario
    * @type {EventEmitter<undefined>}
    */
-  @Output() formDatosDelDestinatarioEvent: EventEmitter<undefined> = new EventEmitter<undefined>();
+  @Output() formDatosDelDestinatarioEvent: EventEmitter<{ formGroupName: string; campo: string; valor: undefined; storeStateName: string }> = new EventEmitter<{ formGroupName: string; campo: string; valor: undefined; storeStateName: string }>();
+
 
   /**
    * FormGroup para el formulario de datos del destinatario
@@ -68,20 +67,21 @@ export class DatosDelDestinatarioComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Método del ciclo de vida OnInit de Angular
-   * Configura la suscripción a los cambios del formulario
+   * Establece valores en el store y emite eventos relacionados con el formulario.
+   *
+   * @param formGroupName - El nombre del grupo de formulario al que pertenece el campo.
+   * @param campo - El nombre del campo cuyo valor se desea obtener y procesar.
+   * @param storeStateName - El nombre del estado en el store asociado al campo.
+   * 
+   * @remarks
+   * Este método obtiene el valor de un campo específico del formulario `formDatosDelDestinatario`,
+   * emite un evento para indicar si el formulario es válido y otro evento con los datos del campo
+   * y su estado asociado en el store.
    */
-  ngOnInit(): void {
-    this.formDatosDelDestinatario.valueChanges
-      .pipe(
-        delay(100), // Retraso para evitar emisiones muy frecuentes
-        takeUntil(this.destroyNotifier$) // Para desuscribirse al destruir el componente
-      )
-      .subscribe((_) => {
-        // Emite los valores actuales del formulario
-        this.formDatosDelDestinatarioEvent.emit(this.formDatosDelDestinatario.value);
-        this.formaValida.emit(this.formDatosDelDestinatario.valid);
-      });
+  setValoresStore(formGroupName: string, campo: string, storeStateName: string):void {    
+    const VALOR = this.formDatosDelDestinatario.get(campo)?.value;    
+    this.formaValida.emit(this.formDatosDelDestinatario.valid);
+    this.formDatosDelDestinatarioEvent.emit({ formGroupName, campo, valor: VALOR, storeStateName });
   }
 
   /**
