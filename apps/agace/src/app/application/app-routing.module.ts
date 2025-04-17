@@ -6,7 +6,7 @@ const ROUTES: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'seleccion-tramite' },
   {
     path: 'seleccion-tramite',
-    component: SeleccionTramiteComponent
+    component: SeleccionTramiteComponent,
   },
   {
     path: 'antecesor',
@@ -18,9 +18,7 @@ const ROUTES: Routes = [
   {
     path: 'aviso',
     loadChildren: () =>
-      import('./tramites/32502/aviso.module').then(
-        (m) => m.AvisoModule
-      ),
+      import('./tramites/32502/aviso.module').then((m) => m.AvisoModule),
   },
   {
     path: 'aviso-procesos',
@@ -29,6 +27,18 @@ const ROUTES: Routes = [
         (m) => m.AvisoProcesosModule
       ),
   },
+  {
+    path: 'aviso-unico-renovacion',
+    loadChildren: () =>
+      import('./tramites/317/aviso-unico-renovacion.module').then(
+        (m) => m.AvisoUnicoRenovacionModule)
+      },
+      {
+    path: 'registro-solicitud',
+    loadChildren: () =>
+      import('./tramites/31802/registro-solicitud.module').then(
+        (m) => m.RegistroSolicitudModule),
+   },
   {
     path: 'autoridad',
     loadChildren: () =>
@@ -40,19 +50,34 @@ const ROUTES: Routes = [
     path: 'registro-solicitud',
     loadChildren: () =>
       import('./tramites/31803/registro-solicitud.module').then(
-        (m) => m.RegistroSolicitudModule),
-      },{
-        
+        (m) => m.RegistroSolicitudModule
+      ),
+  },
+  {
     path: 'mercancias-desmontadas-o-sin-montar',
     loadChildren: () =>
-      import('./tramites/32501/mercancias-desmontadas-o-sin-montar.module').then(
-        (m) => m.MercanciasDesmontadasOSinMontarModule
+      import(
+        './tramites/32501/mercancias-desmontadas-o-sin-montar.module'
+      ).then((m) => m.MercanciasDesmontadasOSinMontarModule),
+  },
+  {
+    path: 'manifiesto-aereo',
+    loadChildren: () =>
+      import(
+        './tramites/32401/manifiesto-aereo.module'
+      ).then((m) => m.ManifiestoAereoModule),
+  },
+  {
+    path: 'aviso-traslado',
+    loadChildren: () =>
+      import('./tramites/32503/aviso-traslado.module').then(
+        (m) => m.AvisoTrasladoModule
       ),
   },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(ROUTES)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

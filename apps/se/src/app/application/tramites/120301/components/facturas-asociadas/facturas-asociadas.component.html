@@ -4,7 +4,7 @@
     <form [formGroup]="formularioAsociacionFactura">
       <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="tableColumns" [datos]="facturasDisponible" ></app-tabla-dinamica>
       <div class="col-12 col-xxl-4 col-xl-4 col-md-4 col-sm-4 mb-5">
-        <label for="message" class="form-label">Cantidad*:</label>
+        <label for="message" class="form-label">Cantidad asociada*:</label>
         <input type="text" class="form-control" id="message" placeholder="" formControlName="cantidadFacturas"
         (change)="
           setValoresStore(
@@ -20,5 +20,35 @@
       </div>
       <h6>Facturas asociadas</h6>
       <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="asociadastableColumns" [datos]="facturasAsociadas" ></app-tabla-dinamica>
+      <div class="row mb-5">
+        <div class="d-flex justify-content-end mt-3">
+            <button type="submit" class="btn btn-primary ">Eliminar seleccionado</button>
+            
+        </div>
+    </div>
+      <div class="row mb-5">
+        <div class="col-6 ">
+          <label for="message" class="form-label">Cantidad total:</label>
+          <input type="text" class="form-control" id="message" placeholder="" formControlName="cantidadFacturasTotal"
+          (change)="
+            setValoresStore(
+            formularioAsociacionFactura,
+            'cantidadFacturas',
+            'setCantidadFacturas'
+            )"/>
+        </div>
+        <div class="col-6 ">
+          <label for="message" class="form-label">Metros cuadrados equivalentes:</label>
+          <input type="text" class="form-control" id="message" placeholder="" formControlName="metrosCuadradosEquivalentes"
+          (change)="
+            setValoresStore(
+            formularioAsociacionFactura,
+            'cantidadFacturas',
+            'setCantidadFacturas'
+            )"/>
+        </div>
+        
+
+      </div>
     </form>
   </div>

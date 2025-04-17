@@ -9,7 +9,7 @@ export class WizardService {
 
   actualIndice = this.indice.asObservable();
 
-  cambio_indice(indice: number) {
+  cambio_indice(indice: number):void {
     this.indice.next(indice);
   }
 }
