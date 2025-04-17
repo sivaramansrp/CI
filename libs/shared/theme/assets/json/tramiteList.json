@@ -381,7 +381,7 @@
         "id": 55,
         "tramite": 120404,
         "linkDashboard": "/se/entidad-legal/soliciante",
-        "linkDepartment": "/se/entidad-legal/soliciante",
+        "linkDepartment": "/pago/entidad-legal/soliciante",
         "department": "se"
     },
     {
@@ -625,9 +625,9 @@
     {
         "id": 90,
         "tramite": 260211,
-        "linkDashboard": "/permiso-sanitario/pantallas",
-        "linkDepartment": "/permiso-sanitario/pantallas",
-        "department": ""
+        "linkDashboard": "cofepris/permiso-sanitario/pantallas",
+        "linkDepartment": "pago/permiso-sanitario/pantallas",
+        "department": "cofepris"
     },
     {
         "id": 91,
@@ -710,7 +710,7 @@
         "id": 102,
         "tramite": 260604,
         "linkDashboard": "/cofepris/aviso-exportacion/pantallas",
-        "linkDepartment": "/cofepris/aviso-exportacion/pantallas",
+        "linkDepartment": "/pago/aviso-exportacion/pantallas",
         "department": "cofepris"
     },
     {
@@ -1081,7 +1081,7 @@
         "id": 155,
         "tramite": 260514,
         "linkDashboard": "/cofepris/permiso-importacion-calidad/pantallas",
-        "linkDepartment": "/cofepris/permiso-importacion-calidad/pantallas",
+        "linkDepartment": "/pago/permiso-importacion-calidad/pantallas",
         "department": "cofepris"
     },
     {
@@ -1227,8 +1227,8 @@
     {
         "id": 176,
         "tramite": 317,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "agace/aviso-unico-renovacion/pantallas",
+        "linkDepartment": "pago/aviso-unico-renovacion/pantallas",
         "department": "agace"
     },
     {
