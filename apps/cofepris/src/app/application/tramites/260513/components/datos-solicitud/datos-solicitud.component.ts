@@ -1,5 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { ConfiguracionVisibilidad } from '../../models/datos-solitudes.model';
+import { DEFAULT_CONFIGURACION_VISIBILIDAD } from '../../constantes/datos-solicitud.enum';
 import { DatosDeLaComponent } from '../../../../shared/components/datos-solicitud/datos-solicitud.component';
 
 @Component({
@@ -19,4 +21,6 @@ export class DatosSolicitudComponent {
    * Indica si se debe mostrar la sección de Aduanas de Entrada
    */
   isAduanasEntradaVisible: boolean = true;
+
+  configuracionVisibilidad: ConfiguracionVisibilidad = DEFAULT_CONFIGURACION_VISIBILIDAD
 }
