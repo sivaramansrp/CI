@@ -148,6 +148,13 @@ export class AgregarDestinatarioFinalComponent
   public elementosNoRequeridos:string[]=[]
 
   /**
+   * Arreglo que almacena los elementos requeridos.
+   * @type {string[]}
+   */
+  public elementosRequeridos: string[] = [];
+
+
+  /**
    * Crea el componente e inicializa el grupo de formulario.
    *
    * @param {FormBuilder} fb - Inyector de FormBuilder para crear formularios reactivos.
@@ -343,8 +350,18 @@ export class AgregarDestinatarioFinalComponent
           ? [Validators.required]
           : [],
       ],
-      calle: ['', Validators.required],
-      numeroExterior: ['', Validators.required],
+      calle: [
+        '',
+        this.elementosRequeridos.includes('calle')
+          ? [Validators.required]
+          : [],
+      ],
+      numeroExterior: [
+        '',
+        this.elementosRequeridos.includes('numeroExterior')
+          ? [Validators.required]
+          : [],
+      ],
       numeroInterior: [''],
       lada: ['', Validators.required],
       telefono: [
@@ -393,9 +410,15 @@ export class AgregarDestinatarioFinalComponent
         ];
         this.elementosNoRequeridos = ['localidad', 'colonia'];
         break;
+        case 260219:
+          this.elementosRequeridos = ['calle', 'numeroExterior'];
+          this.elementosDeshabilitados = ['pais'];
+          this.elementosNoRequeridos = ['colonia'];
+        break;
       default:
         this.elementosDeshabilitados = [];
         this.elementosNoRequeridos = [];
+        this.elementosRequeridos = [];
     }
   }
 

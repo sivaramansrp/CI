@@ -377,7 +377,7 @@ export const TABLA_OPCION_DATA: TablaOpcionConfig[] = [
  * @type {number[]}
 */
 export const PROCEDIMIENTOS_NO_PARA_ELEMENTO_COLAPSABLE = [
-  260214, 260216, 260205, 260217, 260218, 260102,260301, 260208,260207, 260209,260201
+  260214, 260216, 260205, 260217, 260218, 260102,260301, 260208,260207, 260209,260201, 260219
 ];
 
 /**
@@ -505,7 +505,7 @@ export const REPRESENTANTE_LEGAL = [260208];
  *   // Lógica para manejar procedimientos relacionados con el banco
  * }
  */
-export const BANCO = [260208, 260209, 260207, 260201];
+export const BANCO = [260208, 260209, 260207, 260201, 260219];
 
 /**
  * @const DATOS_MERCANCIA_CAMPO
@@ -662,9 +662,12 @@ export const STR_NACIONAL = 'Nacional';
 export const CAMPOS_REQUERIDOS_FORMULARIO_MAP: Map<string, number[]> = new Map([
   ['colonia', [260301]],
   ['localidad', [260301]],
-  ['denominacionRazon',[260301, 260208,260207,260209]],
-  ['scian', [260301, 260208]],
-  ['correoElectronico', [260208,260207,260209]],
+  ['denominacionRazon',[260301, 260208,260207,260209, 260219]],
+  ['scian', [260301, 260208, 260219]],
+  ['correoElectronico', [260208,260207,260209, 260219]],
+  ['rfcSanitario', [260219]],
+  ['facturador', [260219]],
+  ['destinoFinal', [260219]]
 ]);
 
 /**
