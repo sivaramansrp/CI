@@ -3,6 +3,7 @@ import {
   CatalogoSelectComponent,
   TituloComponent,
 } from '@ng-mf/data-access-user';
+import { CommonModule,Location} from '@angular/common';
 import {
   FormBuilder,
   FormGroup,
@@ -11,7 +12,6 @@ import {
 } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 import { Catalogo } from '@ng-mf/data-access-user';
-import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { DatosSolicitudService } from '../../../../shared/services/datos-solicitud.service';
 import { Facturador } from '../../../../shared/models/terceros-relacionados.model';
@@ -68,7 +68,8 @@ export class DatosGeneralesComponent {
     private datosSolicitudService: DatosSolicitudService,
     private fb: FormBuilder,
     private tramiteStore: Tramite260302Store,
-    private router: Router
+    private router: Router,
+    private ubicaccion: Location
   ) {
     this.tipoDatos = this.route.snapshot.paramMap.get('tipo') || '';
     this.crearFormulario();
@@ -121,10 +122,11 @@ export class DatosGeneralesComponent {
    * Navega a la ruta 'pago/importacion-materias-primas-estupefacientes'.
    */
   cancelar(): void {
-    this.router.navigate([
-      'pago',
-      'importacion-materias-primas-estupefacientes',
-    ]);
+    // this.router.navigate([
+    //   'pago',
+    //   'importacion-materias-primas-estupefacientes',
+    // ]);
+    this.ubicaccion.back();
   }
 
   /**
@@ -142,7 +144,7 @@ export class DatosGeneralesComponent {
    */
   guardarDatos(): void {
     switch (this.tipoDatos) {
-      case this.tipoTablaDatos.FABRICANTE:
+      case this.tipoTablaDatos.DESTINATARIO:
         this.addFabricantes([this.agregarDatosForm.value]);
         break;
       case this.tipoTablaDatos.FACTURADOR:
@@ -161,10 +163,7 @@ export class DatosGeneralesComponent {
       default:
         break;
     }
-    this.router.navigate([
-      'pago',
-      'importacion-materias-primas-estupefacientes',
-    ]);
+    this.ubicaccion.back();
   }
 
   /**

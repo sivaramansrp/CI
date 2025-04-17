@@ -24,18 +24,6 @@ const ROUTES: Routes = [
     component: ExporticonMercanciaEstupefacientesComponent,
   },
   {
-    path: 'agregar-fabricante',
-    component: AgregarFabricanteContenedoraComponent,
-  },
-  {
-    path: 'agregar-proveedor',
-    component: AgregarProveedorContenedoraComponent,
-  },
-  {
-    path: 'agregar-facturador',
-    component: AgregarFacturadorContenedoraComponent,
-  },
-  {
 
     path: 'aggregar-datos-generales/:tipo',
     component: DatosGeneralesComponent

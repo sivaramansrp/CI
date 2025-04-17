@@ -140,7 +140,7 @@ export const FACTURADOR_ENCABEZADO_DE_TABLA: ConfiguracionColumna<Facturador>[] 
   ];
 
 export enum TIPO_TABLA_DATOS {
-  FABRICANTE = 'fabricante',
+  DESTINATARIO= 'Destinatario(Destino final)',
   FACTURADOR = 'facturador',
   PROVEEDOR = 'Proveedor / Distribudor',
   CERTIFICADO = 'Certificado analítico',
