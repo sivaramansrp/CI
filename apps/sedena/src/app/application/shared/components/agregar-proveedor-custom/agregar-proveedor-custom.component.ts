@@ -3,7 +3,6 @@ import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output } 
 import { DestinoFinal, Proveedor } from '../../models/terceros-relacionados.model';
 
 import { CommonModule, Location } from '@angular/common';
-import { DestinoFinal, Proveedor } from '../../models/terceros-relacionados.model';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE, TERCEROS_NACIONALIDAD_OPCIONES, TIPO_PERSONA_OPCIONES } from '../../constants/datos-solicitud.enum';
 import { Subject, takeUntil } from 'rxjs';
@@ -77,15 +76,7 @@ export class AgregarProveedorCustomComponent implements OnDestroy, OnInit, OnCha
    */
   @Output() updateProveedorTablaDatos = new EventEmitter<Proveedor[]>();
 
-    /**
-   * Datos del formulario que pueden ser de tipo `DestinoFinal`, `Proveedor`, `null` o `undefined`.
-   * Este input se utiliza para recibir la información necesaria desde el componente padre.
-   *
-   * @type {DestinoFinal | Proveedor | null | undefined}
-   */
-    @Input() formaDatos!: DestinoFinal | Proveedor | null | undefined;
-
-
+ 
   /**
    * Opciones de radio para seleccionar el tipo de persona.
    */

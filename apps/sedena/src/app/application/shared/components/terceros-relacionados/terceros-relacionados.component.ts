@@ -142,9 +142,21 @@ export class TercerosRelacionadosComponent {
   modificarDestinatario(): void {
     this.modificarDestinarioDatos.emit(this.destinarioTablaSeleccionada[0])
   }
+  
+  /**
+   * Elimina el destinatario final seleccionado y emite un evento con el destinatario eliminado.
+   * 
+   * @command Eliminar destinatario final seleccionado.
+   */
   eliminarDestinatarioFinal():void{
     this.eliminarDestinatarioFinalEvent.emit(this.destinarioTablaSeleccionada[0]);
   }
+
+  /**
+   * Elimina el proveedor final seleccionado y emite un evento con el proveedor eliminado.
+   * 
+   * @command Eliminar el proveedor final seleccionado.
+   */
   eliminarProveedorFinal():void{
     this.eliminarProveedorFinalEvent.emit(this.proveedorTablaSeleccionada[0]);
   }
