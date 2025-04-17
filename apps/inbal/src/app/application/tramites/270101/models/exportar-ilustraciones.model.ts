@@ -16,3 +16,14 @@ export interface DatosDelSolicitud {
     fraccionArancelaria: string;
     descripcion: string;
 }
+
+export interface AduanaDeSalida {
+    tipo: string;
+    ciudad: string;
+    sede: string;
+    tipoDeTraslado: string;
+    fechaExhibicion: string;
+    observaciones: string;
+    fechoInicio: string;
+    fechaFin: string;
+}

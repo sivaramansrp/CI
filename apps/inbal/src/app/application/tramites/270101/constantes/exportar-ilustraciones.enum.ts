@@ -135,7 +135,7 @@ export const INFORMACION_DE_LA_OBRA_ARTE = [
     id: 'variables',
     labelNombre: 'Variables',
     campo: 'variables',
-    clase: 'col-md-8',
+    clase: 'col-md-4',
     tipoInput: 'text',
     desactivado: false,
     soloLectura: false,
@@ -144,19 +144,19 @@ export const INFORMACION_DE_LA_OBRA_ARTE = [
     valorPredeterminado: '',
     marginTop: 0,
   },
-//   {
-//     id: '',
-//     labelNombre: '',
-//     campo: '',
-//     clase: 'col-md-4',
-//     tipoInput: '',
-//     desactivado: false,
-//     soloLectura: false,
-//     validadores: [],
-//     marcadorDePosicion: '',
-//     valorPredeterminado: '',
-//     marginTop: 0,
-//   },
+  {
+    id: '',
+    labelNombre: '',
+    campo: '',
+    clase: 'col-md-4',
+    tipoInput: '',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [],
+    marcadorDePosicion: '',
+    valorPredeterminado: '',
+    marginTop: 0,
+  },
 ];
 
 export const PERIODO_EN_EL_QUE_PERMANECERA = [
@@ -175,7 +175,311 @@ export const PERIODO_EN_EL_QUE_PERMANECERA = [
         valorPredeterminado: '',
         marginTop: 0,
     },
+    {
+      id: 'fecha_fin',
+      labelNombre: 'Fecha fin',
+      campo: 'fecha_fin',
+      clase: 'col-md-4',
+      tipoInput: 'date',
+      desactivado: false,
+      soloLectura: false,
+      validadores: [
+          { tipo: 'required' }
+      ],
+      marcadorDePosicion: '',
+      valorPredeterminado: '',
+      marginTop: 0,
+  },
+  {
+    id: 'responsable_exportacion',
+    labelNombre: 'Responsable de la exportación',
+    campo: 'responsable_exportacion',
+    clase: 'col-md-4',
+    tipoInput: 'text',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [{ tipo: 'required' }],
+    marcadorDePosicion: '',
+    valorPredeterminado: '',
+    marginTop: 0,
+  },
+]
+
+export const MOTIVO_DE_LA_EXPORTACION = [
+  {
+    id: 'motivo',
+    labelNombre: 'Motivo',
+    campo: 'motivo',
+    clase: 'col-md-4',
+    tipoInput: 'select-catalogos',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [{ tipo: 'required' }],
+    marcadorDePosicion: 'Selecciona un valor',
+    valorPredeterminado: '',
+    marginTop: 0,
+  },
+  {
+    id: 'nombre',
+    labelNombre: 'Nombre',
+    campo: 'nombre',
+    clase: 'col-md-4',
+    tipoInput: 'text',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [{ tipo: 'required' }],
+    marcadorDePosicion: '',
+    valorPredeterminado: '',
+    marginTop: 0,
+    mostrar: false
+  },
+]
+
+export const LUGAR_DE_DESTINO = [
+  {
+    id: 'pais',
+    labelNombre: 'País',
+    campo: 'pais',
+    clase: 'col-md-4',
+    tipoInput: 'select-catalogos',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [{ tipo: 'required' }],
+    marcadorDePosicion: 'Selecciona un valor',
+    valorPredeterminado: '',
+    marginTop: 0,
+  },
+  {
+    id: 'ciudad',
+    labelNombre: 'Ciudad',
+    campo: 'ciudad',
+    clase: 'col-md-4',
+    tipoInput: 'text',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [{ tipo: 'required' }],
+    marcadorDePosicion: '',
+    valorPredeterminado: '',
+    marginTop: 0
+  },
+  {
+    id: 'sede',
+    labelNombre: 'Sede',
+    campo: 'sede',
+    clase: 'col-md-4',
+    tipoInput: 'text',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [{ tipo: 'required' }],
+    marcadorDePosicion: '',
+    valorPredeterminado: '',
+    marginTop: 0
+  },
+]
+
+export const ITINERARIO_DE_EXPORTACION = [
+  {
+    id: 'tipoItinerario',
+    labelNombre: 'Tipo itinerario',
+    campo: 'tipoItinerario',
+    clase: 'col-md-4',
+    tipoInput: 'select-catalogos',
+    desactivado: true,
+    soloLectura: false,
+    validadores: [{ tipo: 'required' }],
+    marcadorDePosicion: '',
+    valorPredeterminado: '1',
+    marginTop: 0,
+    opciones: [
+      {
+        id: 1, descripcion: 'Traslado'
+      }
+    ]
+  },
+  {
+    id: 'ciudad',
+    labelNombre: 'Ciudad',
+    campo: 'ciudad',
+    clase: 'col-md-4',
+    tipoInput: 'text',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [{ tipo: 'required' }],
+    marcadorDePosicion: '',
+    valorPredeterminado: '',
+    marginTop: 0
+  },
+  {
+    id: '',
+    labelNombre: '',
+    campo: '',
+    clase: 'col-md-4',
+    tipoInput: '',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [],
+    marcadorDePosicion: '',
+    valorPredeterminado: '',
+    marginTop: 0
+  },
+  {
+    id: 'tipoDeTraslado',
+    labelNombre: 'Tipo de traslado',
+    campo: 'tipoDeTraslado',
+    clase: 'col-md-4',
+    tipoInput: 'select-catalogos',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [{ tipo: 'required' }],
+    marcadorDePosicion: '',
+    valorPredeterminado: '',
+    marginTop: 0
+  },
+  {
+    id: 'observaciones',
+    labelNombre: 'Observaciones',
+    campo: 'observaciones',
+    clase: 'col-md-8',
+    tipoInput: 'textarea',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [{ tipo: 'required' }],
+    marcadorDePosicion: '',
+    valorPredeterminado: '',
+    marginTop: 0
+  },
+  {
+    id: 'fechaInicio',
+    labelNombre: 'Fecha inicio',
+    campo: 'fechaInicio',
+    clase: 'col-md-4',
+    tipoInput: 'date',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [{ tipo: 'required' }],
+    marcadorDePosicion: '',
+    valorPredeterminado: '',
+    marginTop: 0
+  },
+  {
+    id: 'fechaFin',
+    labelNombre: 'Fecha fin',
+    campo: 'fechaFin',
+    clase: 'col-md-4',
+    tipoInput: 'date',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [{ tipo: 'required' }],
+    marcadorDePosicion: '',
+    valorPredeterminado: '',
+    marginTop: 0
+  },
+]
+
+export const ITINERARIO_DE_EXPORTACION_MAXIMO = [
+  {
+    id: 'tipoItinerario',
+    labelNombre: 'Tipo itinerario',
+    campo: 'tipoItinerario',
+    clase: 'col-md-4',
+    tipoInput: 'select-catalogos',
+    desactivado: true,
+    soloLectura: false,
+    validadores: [{ tipo: 'required' }],
+    marcadorDePosicion: '',
+    valorPredeterminado: '1',
+    marginTop: 0,
+    opciones: [
+      {
+        id: 1, descripcion: 'Traslado'
+      }
+    ]
+  },
+  {
+    id: 'ciudad',
+    labelNombre: 'Ciudad',
+    campo: 'ciudad',
+    clase: 'col-md-4',
+    tipoInput: 'text',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [{ tipo: 'required' }],
+    marcadorDePosicion: '',
+    valorPredeterminado: '',
+    marginTop: 0
+  },
+  {
+    id: 'nombre',
+    labelNombre: 'Nombre de Sede',
+    campo: 'nombre',
+    clase: 'col-md-4',
+    tipoInput: 'text',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [],
+    marcadorDePosicion: '',
+    valorPredeterminado: '',
+    marginTop: 0
+  },
+  {
+    id: 'observaciones',
+    labelNombre: 'Observaciones',
+    campo: 'observaciones',
+    clase: 'col-md-9',
+    tipoInput: 'textarea',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [{ tipo: 'required' }],
+    marcadorDePosicion: '',
+    valorPredeterminado: '',
+    marginTop: 0
+  },
+  {
+    id: 'fechaDeExhibicion',
+    labelNombre: 'Fecha de exhibicion',
+    campo: 'fechaDeExhibicion',
+    clase: 'col-md-4',
+    tipoInput: 'date',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [{ tipo: 'required' }],
+    marcadorDePosicion: '',
+    valorPredeterminado: '',
+    marginTop: 0
+  },
+  {
+    id: 'fechaInicio',
+    labelNombre: 'Fecha inicio',
+    campo: 'fechaInicio',
+    clase: 'col-md-4',
+    tipoInput: 'date',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [{ tipo: 'required' }],
+    marcadorDePosicion: '',
+    valorPredeterminado: '',
+    marginTop: 0
+  },
+  {
+    id: 'fechaFin',
+    labelNombre: 'Fecha fin',
+    campo: 'fechaFin',
+    clase: 'col-md-4',
+    tipoInput: 'date',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [{ tipo: 'required' }],
+    marcadorDePosicion: '',
+    valorPredeterminado: '',
+    marginTop: 0
+  },
 ]
 
 export const OBRA_DE_ARTE_ALERT =
   'Nota: Es indispensable proporcionar las medidas de cada pieza, ya que de no hacerlo se puede afectar la dictaminación de su solicitud';
+
+export const ADUANA_ALERT =
+'Agrega los datos del traslado y, posteriormente, siguiendo el mismo proceso, agrega la sede. A cada traslado le corresponde una sede (máximo 2 itinerarios).';
+
+export const ERROR_DE_REGISTRO_ALERT =
+'<strong>¡Error de registro! </strong>En el itinerario de la exportación y transportacion a cada translado le corresponde una sede.';

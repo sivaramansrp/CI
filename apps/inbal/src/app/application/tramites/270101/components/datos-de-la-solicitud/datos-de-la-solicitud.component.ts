@@ -56,7 +56,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   /**
    * Referencia al elemento del modal para agregar mercancías.
    */
-  @ViewChild('modal') modalElement!: ElementRef;
+  @ViewChild('modalSolicitud') modalElement!: ElementRef;
 
   /**
    * Referencia al modal de confirmación.
@@ -176,7 +176,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   /**
    * compo doc
    * @type {FormGroup}
-   * @memberof RepresentacionFederalComponent
+   * @memberof DatosDeLaSolicitudComponent
    * @description
    * Este es un formulario reactivo de Angular representado por un FormGroup.
    * Se utiliza para manejar y validar los datos del formulario en el componente.

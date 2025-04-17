@@ -1,1 +1,6 @@
-<p>motivo-de-la-exportacion works!</p>
+<form [formGroup]="forma">
+    <div class="row">
+      <formas-dinamicas formularioTitulo="Motivo de la exportación" [forma]="ninoFormGroup" [formularioDatos]="motivoFormData"
+      (emitirCambioDeValor)="establecerCambioDeValor($event)"></formas-dinamicas>
+    </div>
+</form>

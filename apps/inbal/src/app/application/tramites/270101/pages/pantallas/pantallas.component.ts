@@ -1,5 +1,6 @@
 import { AccionBoton, DatosPasos, ListaPasosWizard, WizardComponent } from '@libs/shared/data-access-user/src';
 import { Component, ViewChild } from '@angular/core';
+import { ERROR_DE_REGISTRO_ALERT } from '../../constantes/exportar-ilustraciones.enum';
 import { PANTA_PASOS } from '@libs/shared/data-access-user/src/core/services/31601/servicios-pantallas.enum';
 
 @Component({
@@ -40,6 +41,20 @@ export class PantallasComponent {
   * @type {WizardComponent}
   */
   @ViewChild(WizardComponent) public wizardComponent!: WizardComponent;
+
+  /**
+  * @property registroAlert
+  * @type {string}
+  * @description
+  * Esta propiedad almacena el mensaje de alerta relacionado con la información de la obra de arte. 
+  * El valor de esta propiedad se obtiene de la constante `ERROR_DE_REGISTRO_ALERT`, que contiene el contenido 
+  * predefinido para mostrar en el componente de alerta.
+  * 
+  * @example
+  * console.log(this.registroAlert);
+  * // Muestra el contenido de la alerta configurada en `ERROR_DE_REGISTRO_ALERT`.
+  */
+  public registroAlert = ERROR_DE_REGISTRO_ALERT;
 
   /**
   * compo doc

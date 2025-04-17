@@ -46,10 +46,11 @@ export interface ModeloDeFormaDinamica {
   marginTop?: number; // margin-top
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   layout?: any; // layout for radio options
+  mostrar?: boolean; // show or hide the field
 }
 
 export interface Validadores {
   tipo: string; // type
-  valor?: number | string; // value
+  valor?: number | string | RegExp; // value
   mensaje?: string; // message
 }
