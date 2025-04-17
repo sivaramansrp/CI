@@ -1,4 +1,4 @@
-export const EMPRESA_FRONTERA  = [
+export const EMPRESA_FRONTERA = [
   {
     indice: 1,
     titulo: 'Capturar solicitud',

@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
+import { Observable,catchError, throwError } from 'rxjs';
 import { HttpCoreService } from '../shared/http/http.service';
-import { catchError, Observable, throwError } from 'rxjs';
+import { Injectable } from '@angular/core';
 
 @Injectable({
   providedIn: 'root'
@@ -8,7 +8,7 @@ import { catchError, Observable, throwError } from 'rxjs';
 export class AdministrarResiduosService {
 
   constructor(private http: HttpCoreService) {
-    // Constructor
+   // Lógica de inicialización si es necesario
    }
 
      getAdministrarResiduos(): Observable<unknown> {

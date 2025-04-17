@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { ConfiguracionColumna, TablaAcciones } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ConfiguracionColumna } from '@ng-mf/data-access-user';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
 
 @Component({
@@ -22,13 +22,13 @@ export class TablaDinamicaComponent<T> {
   @Output() filaClic = new EventEmitter<T>();
 
   @Input() tipoSeleccionTabla!: TablaSeleccion;
-/*
-   * Este valor es necesario para que la plantilla pueda acceder a los diferentes tipos de selección como "CHECKBOX", "RADIO", etc., que definen el comportamiento de la tabla.
-   *
-   * @type {typeof TablaSeleccion}
-   */
+  /*
+     * Este valor es necesario para que la plantilla pueda acceder a los diferentes tipos de selección como "CHECKBOX", "RADIO", etc., que definen el comportamiento de la tabla.
+     *
+     * @type {typeof TablaSeleccion}
+     */
   TablaSeleccion = TablaSeleccion;
-  
+
   /**
    * Configuración de las columnas de la tabla.
    * Contiene la información sobre cómo se deben mostrar las columnas, incluyendo el nombre, el orden,
@@ -51,29 +51,33 @@ export class TablaDinamicaComponent<T> {
    * Identificador único para la tabla dinámica.
    * Este identificador se utiliza para diferenciar y manejar múltiples tablas dinámicas en la aplicación.
    */
-  @Input() tableId!:string;
+  @Input() tableId!: string;
 
-   /**
-   * Propiedad privada que almacena un valor numérico relacionado con la selección de entrada.
-   * 
-   * @private
-   * @type {number}
+  /**
+  * Propiedad privada que almacena un valor numérico relacionado con la selección de entrada.
+  * 
+  * @private
+  * @type {number}
+  */
+  private _inputSelection!: number;
+  /**
+   * Setter para la propiedad `inputSelection`.
+   * Este método se utiliza para actualizar el valor de `_inputSelection` y sincronizarlo con `idFilaSeleccionada`.
+   *
+   * @param {number} value - El nuevo valor que se asignará a `inputSelection` y `idFilaSeleccionada`.
    */
-   private _inputSelection!:number;
-   /**
-    * Setter para la propiedad `inputSelection`.
-    * Este método se utiliza para actualizar el valor de `_inputSelection` y sincronizarlo con `idFilaSeleccionada`.
-    *
-    * @param {number} value - El nuevo valor que se asignará a `inputSelection` y `idFilaSeleccionada`.
-    */
-   @Input()
-   set inputSelection(value: number) {
+  @Input()
+  set inputSelection(value: number) {
 
-     this._inputSelection = value; // Actualiza el valor interno de `_inputSelection`
-     
-     this.idFilaSeleccionada = value; // Sincroniza el valor con `idFilaSeleccionada`
-   
-    }
+    this._inputSelection = value; // Actualiza el valor interno de `_inputSelection`
+
+    this.idFilaSeleccionada = value; // Sincroniza el valor con `idFilaSeleccionada`
+
+  }
+  /**
+   *   Array que recibe que acciones va a tener la tabla
+   */
+  @Input() acciones: TablaAcciones[] = [];
 
   /**
    * Evento que se emite cuando el usuario selecciona una fila de la tabla.
@@ -93,7 +97,7 @@ export class TablaDinamicaComponent<T> {
     true
   );
 
-  
+
   /**
    * Evento de salida que emite un objeto con información sobre una fila y una columna.
    * 
@@ -123,6 +127,10 @@ export class TablaDinamicaComponent<T> {
    */
   filasSeleccionadas: number[] = [];
 
+  /**
+   * Almacena un array de los indices de las acciones para la tabla definidos en el enum TablaAcciones
+   */
+  public accionesEnum = TablaAcciones;
   /**
    * Método para obtener la configuración de las columnas ordenada según el campo "orden".
    *
@@ -205,7 +213,7 @@ export class TablaDinamicaComponent<T> {
    * 
    * @param data - Los datos de la fila que fue clickeada.
    */
-  onFilaClic(data: T): void {    
+  onFilaClic(data: T): void {
     this.filaClic.emit(data);
   }
 
