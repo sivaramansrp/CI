@@ -1965,5 +1965,12 @@
         "linkDashboard": "",
         "linkDepartment": "",
         "department": "sener"
+    },
+    {
+       "id": 282,
+        "tramite": 32508,
+        "linkDashboard": "/agace/adace/solicitud",
+        "linkDepartment": "/pago/adace/solicitud",
+        "department": "agace" 
     }
 ]
