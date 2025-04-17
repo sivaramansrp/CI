@@ -74,7 +74,7 @@ describe('SolicitantePageComponent', () => {
     const wizardComponentSpySiguiente = jest.spyOn(component.wizardComponent, 'siguiente');
     const wizardComponentSpyAtras = jest.spyOn(component.wizardComponent, 'atras');
     component.getValorIndice({ accion: 'cont', valor: 5 });
-    expect(component.indice).toBe(1); // Default value
+    expect(component.indice).toBe(1);
     expect(wizardComponentSpySiguiente).not.toHaveBeenCalled();
     expect(wizardComponentSpyAtras).not.toHaveBeenCalled();
     expect(storeMock.setPasoActivo).not.toHaveBeenCalled();

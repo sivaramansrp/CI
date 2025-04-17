@@ -1,8 +1,10 @@
+import { AcusePageComponent } from '@libs/shared/data-access-user/src';
 import { InvocarPageComponent } from './pages/invocar-page/invocar-page.component';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { Routes } from '@angular/router';
 import { SolicitantePageComponent } from './pages/solicitante-page/solicitante-page.component';
+
 const ROUTES_CONTENEDOR: Routes = [
   {
     path: 'solicitante',
@@ -11,6 +13,10 @@ const ROUTES_CONTENEDOR: Routes = [
   {
     path: 'invocar-modulo',
     component: InvocarPageComponent,
+  },
+  {
+    path: 'acuse',
+    component: AcusePageComponent,
   },
   {
     path: '',

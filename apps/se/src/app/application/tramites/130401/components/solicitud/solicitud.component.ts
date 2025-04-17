@@ -11,6 +11,12 @@ import { Tramite130401Query } from '../../../../estados/queries/tramite130401.qu
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
 
+/**
+ * Componente para gestionar la solicitud del trámite 130401.
+ * 
+ * Este componente muestra los datos de la solicitud, las partidas y las fracciones arancelarias.
+ * También permite inicializar el formulario de solicitud y cargar los datos desde el servicio.
+ */
 @Component({
   selector: 'app-solicitud',
   templateUrl: './solicitud.component.html',
@@ -19,12 +25,47 @@ import { takeUntil } from 'rxjs';
   imports: [CommonModule, TituloComponent, FormsModule, ReactiveFormsModule, InputRadioComponent, TablaDinamicaComponent],
 })
 export class SolicitudComponent implements OnInit, OnDestroy {
-
+  /**
+   * Notificador para destruir las suscripciones y evitar fugas de memoria.
+   * 
+   * Este `Subject` se utiliza para cancelar las suscripciones activas cuando
+   * el componente se destruye.
+   */
   destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+   * Estado actual del trámite.
+   * 
+   * Esta propiedad almacena el estado del trámite obtenido desde el store.
+   */
   public tramiteState!: Tramite130401State;
+
+  /**
+   * Formulario reactivo para capturar los datos de la solicitud.
+   * 
+   * Este formulario incluye campos como el número de folio, solicitud, régimen, entre otros.
+   */
   solicitudFormulario!: FormGroup;
+
+  /**
+   * Opciones de radio para el tipo de solicitud.
+   * 
+   * Estas opciones se muestran en el formulario para seleccionar el tipo de solicitud.
+   */
   solicitudOpcionRadio = SOLICITUD_OPCION_RADIO;
+
+  /**
+   * Opciones de radio para el tipo de producto.
+   * 
+   * Estas opciones se muestran en el formulario para seleccionar el tipo de producto.
+   */
   productoOpcionRadio = PRODUCTO_OPCION_RADIO;
+
+  /**
+   * Configuración de las columnas de la tabla de partidas.
+   * 
+   * Define los encabezados y claves para mostrar los datos de las partidas.
+   */
   public solicitudTablaEncabezados: ConfiguracionColumna<SolicitudTablaDatos>[] = [
     {
       encabezado: '',
@@ -38,7 +79,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     },
     {
       encabezado: 'Descripción',
-      clave: (ele: SolicitudTablaDatos) => ele.descripcionAutorizada,
+      clave: (ele: SolicitudTablaDatos) => ele.descripcion,
       orden: 3,
     },
     {
@@ -52,7 +93,19 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       orden: 5,
     }
   ];
+
+  /**
+   * Datos de la tabla de partidas.
+   * 
+   * Contiene las partidas obtenidas desde el servicio.
+   */
   solicitudTablaDatos: SolicitudTablaDatos[] = [];
+
+  /**
+   * Configuración de las columnas de la tabla de fracciones arancelarias.
+   * 
+   * Define los encabezados y claves para mostrar los datos de las fracciones arancelarias.
+   */
   public arancelariaTablaEncabezados: ConfiguracionColumna<DatosArancelaria>[] = [
     {
       encabezado: '',
@@ -70,8 +123,23 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       orden: 3,
     }
   ];
+
+  /**
+   * Datos de la tabla de fracciones arancelarias.
+   * 
+   * Contiene las fracciones arancelarias obtenidas desde el servicio.
+   */
   arancelariaTablaDatos: DatosArancelaria[] = [];
 
+  /**
+   * Constructor del componente.
+   * 
+   * @param {Tramite130401Store} store - Store para gestionar el estado del trámite.
+   * @param {Tramite130401Query} tramiteQuery - Query para obtener el estado del trámite.
+   * @param {FormBuilder} fb - Servicio para construir formularios reactivos.
+   * @param {ValidacionesFormularioService} validacionesService - Servicio para validar formularios.
+   * @param {ModificacionDescripcionService} modificacionDescripcionService - Servicio para obtener datos relacionados con la solicitud.
+   */
   constructor(
     public store: Tramite130401Store,
     public tramiteQuery: Tramite130401Query,
@@ -81,6 +149,13 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   ) {
     // Constructor del componente
   }
+
+  /**
+   * Método que se ejecuta al inicializar el componente.
+   * 
+   * Este método suscribe al estado del trámite, inicializa el formulario y
+   * carga los datos de partidas, fracciones arancelarias y solicitud.
+   */
   ngOnInit(): void {
     this.tramiteQuery.selectSolicitud$
       .pipe(
@@ -97,6 +172,10 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       this.cargarSolicitud();
     }
   }
+
+  /**
+   * Inicializa el formulario reactivo para capturar los datos de la solicitud.
+   */
   inicializarFormulario(): void {
     this.solicitudFormulario = this.fb.group({
       numeroFolioTramiteOriginal: [{ value: this.tramiteState?.datosSolicitud?.numeroFolioTramiteOriginal, disabled: true }, []],
@@ -111,6 +190,10 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       importeFacturaAutorizadoUSD: [{ value: this.tramiteState?.datosSolicitud?.importeFacturaAutorizadoUSD, disabled: true }, []],
     });
   }
+
+  /**
+   * Carga las partidas desde el servicio y las almacena en la tabla de partidas.
+   */
   cargarPartidas(): void {
     this.modificacionDescripcionService.obtenerPartidas()
       .pipe(takeUntil(this.destroyNotifier$))
@@ -118,6 +201,10 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         this.solicitudTablaDatos = respuesta.datos;
       });
   }
+
+  /**
+   * Carga las fracciones arancelarias desde el servicio y las almacena en la tabla de fracciones arancelarias.
+   */
   cargararancelaria(): void {
     this.modificacionDescripcionService.obtenerarancelaria()
       .pipe(takeUntil(this.destroyNotifier$))
@@ -125,6 +212,10 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         this.arancelariaTablaDatos = respuesta.datos;
       });
   }
+
+  /**
+   * Carga los datos de la solicitud desde el servicio y los almacena en el store.
+   */
   cargarSolicitud(): void {
     this.modificacionDescripcionService.obtenerSolicitud()
       .pipe(takeUntil(this.destroyNotifier$))
@@ -134,13 +225,25 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       });
   }
 
+  /**
+   * Verifica si un campo del formulario es válido.
+   * 
+   * @param {FormGroup} form - El formulario reactivo.
+   * @param {string} field - El nombre del campo a validar.
+   * @returns {boolean} `true` si el campo es válido, de lo contrario `false`.
+   */
   isValid(form: FormGroup, field: string): boolean {
     return this.validacionesService.isValid(form, field) || false;
   }
 
+  /**
+   * Método que se ejecuta al destruir el componente.
+   * 
+   * Este método completa el `Subject` `destroyNotifier$` para cancelar todas las suscripciones activas
+   * y evitar fugas de memoria.
+   */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
-
 }
