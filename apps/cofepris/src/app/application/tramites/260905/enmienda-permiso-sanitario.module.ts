@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 
-import { BtnContinuarComponent, TituloComponent, WizardComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, FirmaElectronicaComponent, TituloComponent, WizardComponent } from '@ng-mf/data-access-user';
 import { EnmiendaPermisoSanitarioComponent } from './pages/enmienda-permiso-sanitario/enmienda-permiso-sanitario.component';
 
 import { Datos260905Component } from './pages/datos-260905/datos-260905.component';
@@ -30,7 +30,9 @@ import { PagoDeDerechosEntradaComponent } from '../../shared/components/pago-de-
 
 @NgModule({
   declarations: [EnmiendaPermisoSanitarioComponent,
-    Datos260905Component
+    Datos260905Component,
+    PasoDosComponent,
+    PasoTresComponent
   ],
   imports: [
     CommonModule,
@@ -38,14 +40,15 @@ import { PagoDeDerechosEntradaComponent } from '../../shared/components/pago-de-
     WizardComponent,
     TituloComponent,
     SolicitanteComponent,
-    PasoDosComponent,
-    PasoTresComponent,
     BtnContinuarComponent,
     PagoDeDerechosBancoComponent,
     DatosDelSolicitudModificacionComponent,
     TramitesAsociadosSeccionComponent,
     TercerosRelacionadosFabricanteComponent,
-    PagoDeDerechosEntradaComponent
+    PagoDeDerechosEntradaComponent,
+    FirmaElectronicaComponent,
+    AnexarDocumentosComponent, 
+    AlertComponent,
   ],
   providers: [provideHttpClient(), ToastrService,InicioSesionService,SubirDocumentoService ],
 })

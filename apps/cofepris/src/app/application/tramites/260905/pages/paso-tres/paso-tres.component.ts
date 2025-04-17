@@ -4,8 +4,6 @@
 
 import { Component } from '@angular/core';
 
-import { CommonModule } from '@angular/common';
-import { FirmaElectronicaComponent } from '@libs/shared/data-access-user/src';
 import { Router } from '@angular/router';
 
 /**
@@ -16,11 +14,6 @@ import { Router } from '@angular/router';
  */
 @Component({
   selector: 'app-paso-tres',
-  standalone: true, 
-  imports: [
-    CommonModule, 
-    FirmaElectronicaComponent, 
-  ],
   templateUrl: './paso-tres.component.html', 
 })
 export class PasoTresComponent {

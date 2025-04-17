@@ -7,9 +7,7 @@
 */
 import { Component } from '@angular/core';
 
-import { CommonModule } from '@angular/common';
-
-import { AlertComponent, AnexarDocumentosComponent, TEXTOS, TituloComponent } from '@libs/shared/data-access-user/src';
+import { TEXTOS } from '@libs/shared/data-access-user/src';
 
 /**
  * @nombre PasoDosComponent
@@ -18,13 +16,6 @@ import { AlertComponent, AnexarDocumentosComponent, TEXTOS, TituloComponent } fr
  */
 @Component({
   selector: 'app-paso-dos',
-  standalone: true,
-  imports: [
-    CommonModule, 
-    TituloComponent,
-    AnexarDocumentosComponent, 
-    AlertComponent,
-  ],
   templateUrl: './paso-dos.component.html', 
 })
 export class PasoDosComponent {
