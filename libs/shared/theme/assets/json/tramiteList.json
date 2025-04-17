@@ -164,7 +164,7 @@
         "id": 24,
         "tramite": 40302,
         "linkDashboard": "/aga/registro-transportista/solicitante",
-        "linkDepartment": "/aga/registro-transportista/solicitante",
+        "linkDepartment": "/pago/registro-transportista/solicitante",
         "department": "aga"
     },
     {
@@ -633,7 +633,7 @@
         "id": 91,
         "tramite": 260212,
         "linkDashboard": "/cofepris/permiso-maquila/solictud",
-        "linkDepartment": "/cofepris/permiso-maquila/solictud",
+        "linkDepartment": "/pago/permiso-maquila/solictud",
         "department": "cofepris"
     },
     {
@@ -1108,8 +1108,8 @@
     {
         "id": 159,
         "tramite": 270201,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "/inbal/aviso-siglos/solicitud",
+        "linkDepartment": "/pago/aviso-siglos/solicitud",
         "department": "inbal"
     },
     {
