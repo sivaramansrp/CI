@@ -1088,7 +1088,7 @@
         "id": 156,
         "tramite": 260902,
         "linkDashboard": "/cofepris/modificacion-permiso-sanitario/solicitante",
-        "linkDepartment": "/cofepris/modificacion-permiso-sanitario/solicitante",
+        "linkDepartment": "/pago/modificacion-permiso-sanitario/solicitante",
         "department": "cofepris"
     },
     {
@@ -1598,8 +1598,8 @@
     {
         "id": 229,
         "tramite": 260901,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "/cofepris/modificacion-permiso-sanitario-la-salud/solicitante",
+        "linkDepartment": "/pago/modificacion-permiso-sanitario-la-salud/solicitante",
         "department": "cofepris"
     },
     {
@@ -1987,6 +1987,7 @@
         "linkDepartment": "/pago/aviso-unico-renovacion/pantallas",
         "department": "agace"
     }
+   
 
     
 ]
