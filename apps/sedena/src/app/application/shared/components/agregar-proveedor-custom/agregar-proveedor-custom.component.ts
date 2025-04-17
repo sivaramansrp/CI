@@ -4,11 +4,11 @@ import { DestinoFinal, Proveedor } from '../../models/terceros-relacionados.mode
 
 import { CommonModule, Location } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE, TERCEROS_NACIONALIDAD_OPCIONES, TIPO_PERSONA_OPCIONES,TERCEROS_NACIONALIDAD_OPCIONES_EXTRANJERO  } from '../../constants/datos-solicitud.enum';
+import { PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE, TERCEROS_NACIONALIDAD_OPCIONES, TERCEROS_NACIONALIDAD_OPCIONES_EXTRANJERO,TIPO_PERSONA_OPCIONES} from '../../constants/datos-solicitud.enum';
 import { Subject, takeUntil } from 'rxjs';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 import { ES_CURP } from '../../constants/datos-del-tramilte.enum';
-import  {NUMERO_TRAMITE} from '../../constants/datos-solicitud.enum';
+import {NUMERO_TRAMITE} from '../../constants/datos-solicitud.enum';
 
 
 /**
@@ -352,7 +352,7 @@ export class AgregarProveedorCustomComponent implements OnDestroy, OnInit, OnCha
        this.tercerosNacionalidadOpciones = TERCEROS_NACIONALIDAD_OPCIONES_EXTRANJERO;
         break
       default:
-        this.tercerosNacionalidadOpciones;
+        this.tercerosNacionalidadOpciones= TERCEROS_NACIONALIDAD_OPCIONES;
       
   }
 }
