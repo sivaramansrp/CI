@@ -30,14 +30,9 @@ describe('DatosDeLaSolicitudComponent (Jest)', () => {
     seccionAduanera: 'Sección A1',
     fechaIngreso: '2025-04-01',
     fechaVencimiento: '2025-12-31',
-    marca: 'Toyota',
-    modelo: 'Corolla',
-    numeroDeSerie: '123456789',
-    numeroDeMotor: '987654321',
-    otraPropiedad3: 'valor3',
-    otraPropiedad4: 'valor4',
-    descripcionMercancia: 'Descripción de la mercancía',
-    motivo: 'Motivo de la importación',
+    descripcionMercancia: 'Mercancía de prueba',
+    motivo: 'Motivo de prueba',
+    listaMercancia: '',
     declaracion: true
   };
 

@@ -12,7 +12,7 @@ export class RetornoImportacionTemporalService {
   /**
    * Constructor del servicio.
    * 
-   * {HttpClient} http - Cliente HTTP para realizar solicitudes.
+   * @param {HttpClient} http - Cliente HTTP para realizar solicitudes.
    */
   constructor(private http: HttpClient) {
     // No se necesita lógica de inicialización adicional.
@@ -21,7 +21,7 @@ export class RetornoImportacionTemporalService {
   /**
    * Obtiene la lista de secciones aduaneras desde un archivo JSON local.
    * 
-   * {Observable<Catalogo[]>} Observable que emite un arreglo de objetos tipo Catalogo.
+   * @returns {Observable<Catalogo[]>} Observable que emite un arreglo de objetos tipo Catalogo.
    */
   getSeccionAduanera(): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>('/assets/json/630307/seccion-aduanera.json');
@@ -30,7 +30,7 @@ export class RetornoImportacionTemporalService {
   /**
    * Obtiene la lista de aduanas de ingreso desde un archivo JSON local.
    * 
-   * {Observable<Catalogo[]>} Observable que emite un arreglo de objetos tipo Catalogo.
+   * @returns {Observable<Catalogo[]>} Observable que emite un arreglo de objetos tipo Catalogo.
    */
   getAduanaDeIngreso(): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>('/assets/json/630307/aduana-de-ingreso.json');
@@ -39,7 +39,7 @@ export class RetornoImportacionTemporalService {
   /**
    * Obtiene la lista de prórrogas desde un archivo JSON local.
    * 
-   * {Observable<Catalogo[]>} Observable que emite un arreglo de objetos tipo Catalogo.
+   * @returns {Observable<Catalogo[]>} Observable que emite un arreglo de objetos tipo Catalogo.
    */
   getProrroga(): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>('/assets/json/630307/prorroga.json');

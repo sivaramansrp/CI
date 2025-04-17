@@ -1,5 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
-import { DatosPasos } from '@ng-mf/data-access-user';
+
+import { AVISO, DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS_REGISTRO } from '../../enum/retorno-importacion-temporal.enum';
 import { WizardComponent } from '@ng-mf/data-access-user';
@@ -24,8 +25,20 @@ interface AccionBoton {
 @Component({
   selector: 'app-retorno-importacion-temporal',
   templateUrl:'./retorno-importacion-temporal-page.component.html',
+  standalone:false
 })
 export class RetornoImportacionTemporalComponent {
+
+
+  /**
+   * Mensaje de información para la alerta.
+   */
+  public infoAlert = 'alert-info';
+
+  /**
+   * Textos de aviso utilizados en el componente.
+   */
+  TEXTOS = AVISO.Aviso;
   /**
    * Lista de pasos en el asistente.
    */

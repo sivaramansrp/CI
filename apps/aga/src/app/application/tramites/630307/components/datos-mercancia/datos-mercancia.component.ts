@@ -5,15 +5,16 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import { CommonModule } from '@angular/common';
 
-import { ModeloDeFormaDinamica, REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, TituloComponent } from "@ng-mf/data-access-user";
+import { ModeloDeFormaDinamica} from "@ng-mf/data-access-user";
+
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component'; // Adjust the path as needed
 
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup} from '@angular/forms';
 import { Tramite630307State, Tramite630307Store } from '../../estados/tramite630307.store';
 import { Tramite630307Query } from '../../estados/tramite630307.query';
 
 import { Subject, takeUntil } from 'rxjs';
-import { FORMULARIO_DATOS } from '../../enum/retorno-importacion-temporal.enum';
+import { FORMULARIO_DATOS_MERCANCIA } from '../../enum/retorno-importacion-temporal.enum';
 /**
  * Componente que gestiona los datos de la mercancía para el trámite 630307.
  * Permite inicializar formularios, obtener datos del estado y manejar el estado del formulario.
@@ -21,7 +22,7 @@ import { FORMULARIO_DATOS } from '../../enum/retorno-importacion-temporal.enum';
 @Component({
   selector: 'app-datos-mercancia',
   standalone: true,
-  imports: [CommonModule, TituloComponent, ReactiveFormsModule,FormasDinamicasComponent],
+  imports: [CommonModule, FormasDinamicasComponent],
   templateUrl: './datos-mercancia.component.html',
   styleUrl: './datos-mercancia.component.scss',
 })
@@ -41,7 +42,11 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
    * Formulario reactivo para gestionar los datos de la mercancía.
    */
   datosMercancia!: FormGroup;
-formularioDatos: ModeloDeFormaDinamica[]=FORMULARIO_DATOS;
+
+  /**
+   * Formulario dinámico que define la estructura del formulario de datos de mercancía.
+   */
+  formularioDatosMercancia: ModeloDeFormaDinamica[] = FORMULARIO_DATOS_MERCANCIA;
 
   /**
    * Constructor del componente.
@@ -70,18 +75,7 @@ formularioDatos: ModeloDeFormaDinamica[]=FORMULARIO_DATOS;
    */
   inicializarFormulario(): void {
     this.datosMercancia = this.formBuilder.group({
-      // descripcionMercancia: [
-      //   this.estadoSeleccionado?.descripcionMercancia,
-      //   [Validators.required, Validators.pattern(REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL)],
-      // ],
-      // motivo: [
-      //   this.estadoSeleccionado?.motivo,
-      //   [Validators.required, Validators.pattern(REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL)],
-      // ],
-      // listaMercancia: [
-      //   this.estadoSeleccionado?.listaMercancia,
-      //   [Validators.required, Validators.pattern(REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL)],
-      // ],
+      // Define los controles del formulario aquí
     });
   }
 
@@ -110,6 +104,15 @@ formularioDatos: ModeloDeFormaDinamica[]=FORMULARIO_DATOS;
   }
 
   /**
+   * Establece un cambio de valor en el store basado en un evento.
+   * 
+   * @param $event - Evento que contiene el campo y el valor a actualizar.
+   */
+  establecerCambioDeValor($event: { campo: string; valor: unknown }): void {
+    this.setValorStore(this.datosMercancia, $event.campo);
+  }
+
+  /**
    * Método del ciclo de vida que se ejecuta al destruir el componente.
    * Libera las suscripciones activas para evitar fugas de memoria.
    */
@@ -117,8 +120,4 @@ formularioDatos: ModeloDeFormaDinamica[]=FORMULARIO_DATOS;
     this.destroyed$.next();
     this.destroyed$.complete();
   }
-
-  establecerCambioDeValor($event: { campo: string; valor: unknown}): void {
-    this.setValorStore(this.datosMercancia, $event.campo);
-   }
 }

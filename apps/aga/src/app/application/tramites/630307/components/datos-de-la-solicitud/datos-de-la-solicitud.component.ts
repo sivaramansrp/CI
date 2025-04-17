@@ -2,26 +2,29 @@
  * datos-de-la-solicitud.component.ts
  * Componente que gestiona los datos de la solicitud para el trámite 630307.
  */
+import { Tramite630307State, Tramite630307Store} from '../../estados/tramite630307.store';
 import { CommonModule } from '@angular/common';
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
+
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+
 import { Subject, takeUntil } from 'rxjs';
 
-import { Catalogo, InputFecha, TituloComponent } from "@ng-mf/data-access-user";
-import { CatalogoSelectComponent } from "@ng-mf/data-access-user";
+import { Catalogo, CatalogoSelectComponent, InputFecha, ModeloDeFormaDinamica } from "@ng-mf/data-access-user";
 import { InputFechaComponent } from "@ng-mf/data-access-user";
 
 import { DatosRetornoAutorizacionComponent } from "../datos-retorno-autorizacion/datos-retorno-autorizacion.component";
 import { DatosRetornoProrrogaComponent } from "../datos-retorno-prorroga/datos-retorno-prorroga.component";
-import { ESTIMADA_RETORNO } from '../../enum/retorno-importacion-temporal.enum';
-import { RetornoImportacionTemporalService } from '../../services/retorno-importacion-temporal.service';
 
-import { Tramite630307State, Tramite630307Store } from '../../estados/tramite630307.store';
-import { Tramite630307Query } from '../../estados/tramite630307.query';
+import { ESTIMADA_RETORNO, FORMULARIO_DATOS_SOLICITUD } from '../../enum/retorno-importacion-temporal.enum';
+import { RetornoImportacionTemporalService } from '../../services/retorno-importacion-temporal.service';
 
 import { DatosMercanciaComponent } from "../datos-mercancia/datos-mercancia.component";
 import { ManifiestoComponent } from "../manifiesto/manifiesto.component";
+
+import { FormasDinamicasComponent } from "@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component";
+import { Tramite630307Query } from '../../estados/tramite630307.query';
 
 /**
  * Componente que gestiona los datos de la solicitud para el trámite 630307.
@@ -30,11 +33,25 @@ import { ManifiestoComponent } from "../manifiesto/manifiesto.component";
 @Component({
   selector: 'app-datos-de-la-solicitud',
   standalone: true,
-  imports: [CommonModule, TituloComponent, ReactiveFormsModule, CatalogoSelectComponent, InputFechaComponent, DatosRetornoProrrogaComponent, DatosRetornoAutorizacionComponent, DatosMercanciaComponent, ManifiestoComponent],
+  imports: [
+    CommonModule,
+    CatalogoSelectComponent,
+    ReactiveFormsModule,
+    InputFechaComponent,
+    DatosRetornoProrrogaComponent,
+    DatosRetornoAutorizacionComponent,
+    DatosMercanciaComponent,
+    ManifiestoComponent,
+    FormasDinamicasComponent,
+  ],
   templateUrl: './datos-de-la-solicitud.component.html',
   styleUrl: './datos-de-la-solicitud.component.scss',
 })
 export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
+  /**
+   * Formulario dinámico para gestionar los datos de la solicitud.
+   */
+  formularioDatosSolicitud: ModeloDeFormaDinamica[] = FORMULARIO_DATOS_SOLICITUD;
 
   /**
    * Formulario reactivo para gestionar los datos de la importación temporal.
@@ -45,16 +62,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Fecha estimada de retorno, inicializada con un valor por defecto.
    */
   datosfecha: InputFecha = ESTIMADA_RETORNO;
-
-  /**
-   * Opciones de aduanas de ingreso obtenidas desde un catálogo.
-   */
-  aduanaDeingresOpciones: Catalogo[] = [];
-
-  /**
-   * Opciones de secciones aduaneras obtenidas desde un catálogo.
-   */
-  seccionAduaneraOpciones: Catalogo[] = [];
 
   /**
    * Opciones de prórrogas obtenidas desde un catálogo.
@@ -89,9 +96,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     private retornoImportacionTemporalService: RetornoImportacionTemporalService,
     private tramite630307Store: Tramite630307Store,
     private tramite630307Query: Tramite630307Query
-  ) {
-    //constructor
-  }
+  ) {}
 
   /**
    * Método del ciclo de vida que se ejecuta al inicializar el componente.
@@ -111,10 +116,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   inizializarFormulario(): void {
     this.datosImportacionTemporalFormulario = this.fb.group({
-      cveAduana: [this.estadoSeleccionado?.cveAduana, Validators.required],
-      cveSeccionAduanal: [this.estadoSeleccionado?.cveSeccionAduanal],
       fechaLimiteRetorno: [this.estadoSeleccionado?.fechaLimiteRetorno, Validators.required],
-      cuentaProrroga: [this.estadoSeleccionado?.cuentaProrroga, Validators.required]
+      cuentaProrroga: [this.estadoSeleccionado?.cuentaProrroga, Validators.required],
     });
   }
 
@@ -137,7 +140,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     this.retornoImportacionTemporalService.getAduanaDeIngreso()
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data) => {
-        this.aduanaDeingresOpciones = data;
+        this.formularioDatosSolicitud[0].opciones = data;
       });
   }
 
@@ -148,7 +151,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     this.retornoImportacionTemporalService.getSeccionAduanera()
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data) => {
-        this.seccionAduaneraOpciones = data;
+        this.formularioDatosSolicitud[1].opciones = data;
       });
   }
 
@@ -168,7 +171,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   onChangeTipoImportacionRetorno(): void {
     const CUENTA_PRORROGA = this.datosImportacionTemporalFormulario.get('cuentaProrroga')?.value;
-    this.showRetornoProrroga = CUENTA_PRORROGA === '1';
+    this.showRetornoProrroga = CUENTA_PRORROGA === 1;
     this.setValorStore(this.datosImportacionTemporalFormulario, 'cuentaProrroga');
   }
 
@@ -181,7 +184,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   setValorStore(FormGroup: FormGroup, control: string): void {
     const VALOR = FormGroup.get(control)?.value;
     this.tramite630307Store.setTramite630307State({
-      [control]: VALOR
+      [control]: VALOR,
     });
   }
 
@@ -189,13 +192,20 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Obtiene el estado actual del trámite desde el store.
    */
   getValorStore(): void {
-    this.tramite630307Query.selectTramite630307State$.pipe(
-      takeUntil(this.destroyed$)
-    ).subscribe(
-      (data) => {
+    this.tramite630307Query.selectTramite630307State$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((data) => {
         this.estadoSeleccionado = data;
-      }
-    );
+      });
+  }
+
+  /**
+   * Establece un cambio de valor en el store basado en un evento.
+   * 
+   * @param $event - Evento que contiene el campo y el valor a actualizar.
+   */
+  establecerCambioDeValor($event: { campo: string; valor: unknown }): void {
+    this.setValorStore(this.datosImportacionTemporalFormulario, $event.campo);
   }
 
   /**

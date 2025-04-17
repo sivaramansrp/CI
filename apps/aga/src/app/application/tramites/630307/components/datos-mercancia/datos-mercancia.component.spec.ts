@@ -3,34 +3,34 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { of, Subject } from 'rxjs';
 
 import { DatosMercanciaComponent } from './datos-mercancia.component';
-import { Tramite630303Store } from '../../estados/tramite630303.store';
-import { Tramite630303Query } from '../../estados/tramite630303.query';
+import { Tramite630307Store } from '../../estados/tramite630307.store';
+import { Tramite630307Query } from '../../estados/tramite630307.query';
 
 describe('DatosMercanciaComponent', () => {
   let component: DatosMercanciaComponent;
   let fixture: ComponentFixture<DatosMercanciaComponent>;
-  let mockStore: jest.Mocked<Tramite630303Store>;
-  let mockQuery: jest.Mocked<Tramite630303Query>;
+  let mockStore: jest.Mocked<Tramite630307Store>;
+  let mockQuery: jest.Mocked<Tramite630307Query>;
 
   beforeEach(async () => {
     mockStore = {
-      setTramite630303State: jest.fn(),
-    } as unknown as jest.Mocked<Tramite630303Store>;
+      setTramite630307State: jest.fn(),
+    } as unknown as jest.Mocked<Tramite630307Store>;
 
     mockQuery = {
-      selectTramite630303State$: of({
+      selectTramite630307State$: of({
         descripcionMercancia: 'Mercancía de prueba',
         motivo: 'Motivo de prueba',
         listaMercancia: 'Lista de prueba',
       }),
-    } as unknown as jest.Mocked<Tramite630303Query>;
+    } as unknown as jest.Mocked<Tramite630307Query>;
 
     await TestBed.configureTestingModule({
       declarations: [],
       imports: [ReactiveFormsModule,DatosMercanciaComponent],
       providers: [
-        { provide: Tramite630303Store, useValue: mockStore },
-        { provide: Tramite630303Query, useValue: mockQuery },
+        { provide: Tramite630307Store, useValue: mockStore },
+        { provide: Tramite630307Query, useValue: mockQuery },
       ],
     }).compileComponents();
   });
@@ -59,7 +59,7 @@ describe('DatosMercanciaComponent', () => {
 
     component.setValorStore(component.datosMercancia, 'descripcionMercancia');
 
-    expect(mockStore.setTramite630303State).toHaveBeenCalledWith({
+    expect(mockStore.setTramite630307State).toHaveBeenCalledWith({
       descripcionMercancia: newValue,
     });
   });
@@ -70,7 +70,7 @@ describe('DatosMercanciaComponent', () => {
 
     component.setValorStore(component.datosMercancia, 'motivo');
 
-    expect(mockStore.setTramite630303State).toHaveBeenCalledWith({
+    expect(mockStore.setTramite630307State).toHaveBeenCalledWith({
       motivo: newValue,
     });
   });
@@ -81,7 +81,7 @@ describe('DatosMercanciaComponent', () => {
 
     component.setValorStore(component.datosMercancia, 'listaMercancia');
 
-    expect(mockStore.setTramite630303State).toHaveBeenCalledWith({
+    expect(mockStore.setTramite630307State).toHaveBeenCalledWith({
       listaMercancia: newValue,
     });
   });

@@ -1,74 +1,107 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Store, StoreConfig } from '@datorama/akita';
 
 import { Injectable } from '@angular/core';
 
 /**
- * Creación del estado inicial para la interfaz de trámite.
- * Define las propiedades necesarias para gestionar el estado del trámite 630307.
+ * Interfaz que define el estado del trámite 630307.
+ * Contiene las propiedades necesarias para gestionar el estado del trámite.
  */
 export interface Tramite630307State {
-  /** Clave de la aduana seleccionada. */
+  /**
+   * Clave de la aduana.
+   */
   cveAduana: string;
 
-  /** Clave de la sección aduanal seleccionada. */
+  /**
+   * Clave de la sección aduanal.
+   */
   cveSeccionAduanal: string;
 
-  /** Fecha límite para el retorno de la mercancía. */
+  /**
+   * Fecha límite de retorno.
+   */
   fechaLimiteRetorno: string;
 
-  /** Indica si cuenta con prórroga. */
+  /**
+   * Indica si se cuenta con prórroga.
+   */
   cuentaProrroga: string;
 
-  /** Folio de información general de la prórroga. */
+  /**
+   * Folio de información general de la prórroga.
+   */
   folioInformacionGeneralProrroga: string;
 
-  /** Fecha de inicio de la prórroga. */
+  /**
+   * Fecha de inicio de la prórroga.
+   */
   fechaInicioProrroga: string;
 
-  /** Fecha de vencimiento de la prórroga. */
+  /**
+   * Fecha de vencimiento de la prórroga.
+   */
   fechaVencimientoProrroga: string;
 
-  /** Folio de información general de la autorización. */
+  /**
+   * Folio de información general de la autorización.
+   */
   folioInformacionGeneralAutorizacion: string;
 
-  /** Aduana de ingreso seleccionada. */
+  /**
+   * Aduana de ingreso.
+   */
   aduanaIngreso: string;
 
-  /** Sección aduanera seleccionada. */
+  /**
+   * Sección aduanera.
+   */
   seccionAduanera: string;
 
-  /** Fecha de ingreso de la mercancía. */
+  /**
+   * Fecha de ingreso.
+   */
   fechaIngreso: string;
 
-  /** Fecha de vencimiento de la mercancía. */
+  /**
+   * Fecha de vencimiento.
+   */
   fechaVencimiento: string;
 
-  /** Marca de la mercancía. */
-  marca: string;
+   /** Marca de la mercancía. */
+   marca: string;
 
-  /** Modelo de la mercancía. */
-  modelo: string;
+   /** Modelo de la mercancía. */
+   modelo: string;
+ 
+   /** Número de serie de la mercancía. */
+   numeroDeSerie: string;
+ 
+   /** Número de motor de la mercancía. */
+   numeroDeMotor: string;
 
-  /** Número de serie de la mercancía. */
-  numeroDeSerie: string;
-
-  /** Número de motor de la mercancía. */
-  numeroDeMotor: string;
-
-  /** Descripción de la mercancía. */
+  /**
+   * Descripción de la mercancía.
+   */
   descripcionMercancia: string;
 
-  /** Motivo relacionado con la mercancía. */
+  /**
+   * Motivo relacionado con el trámite.
+   */
   motivo: string;
 
-  /** Declaración del manifiesto. */
-  declaracion: boolean;
+ /**
+   * Indica si se ha realizado la declaración.
+   */
+  declaracion:boolean;
+
+  [key: string]: unknown; // Permite propiedades adicionales
 }
 
 /**
- * Crea el estado inicial para el trámite 630307.
+ * Función que crea el estado inicial del trámite 630307.
  * 
- * @returns Estado inicial con valores predeterminados.
+ * @returns Estado inicial del trámite 630307.
  */
 export function createInitialState(): Tramite630307State {
   return {
@@ -90,12 +123,13 @@ export function createInitialState(): Tramite630307State {
     numeroDeMotor: '',
     descripcionMercancia: '',
     motivo: '',
-    declaracion: false,
+    declaracion:false,
   };
 }
 
 /**
- * Servicio que implementa el store para gestionar el estado del trámite 630307.
+ * Clase que representa el store del trámite 630307.
+ * Extiende la clase `Store` de Akita para gestionar el estado del trámite.
  */
 @Injectable({
   providedIn: 'root',
@@ -111,14 +145,14 @@ export class Tramite630307Store extends Store<Tramite630307State> {
   }
 
   /**
-   * Actualiza el estado del trámite con los valores proporcionados.
+   * Actualiza el estado del trámite 630307 con los valores proporcionados.
    * 
-   * @param values Valores parciales para actualizar el estado.
+   * @param valores - Valores parciales para actualizar el estado.
    */
-  setTramite630307State(values: Partial<Tramite630307State>): void {
-    this.update((state) => ({
+  setTramite630307State(valores: Partial<Tramite630307State>): void {
+    this.update((state => ({
       ...state,
-      ...values,
-    }));
+      ...valores,
+    })));
   }
 }
