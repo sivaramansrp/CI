@@ -1199,8 +1199,8 @@
     {
         "id": 172,
         "tramite": 120204,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "/se/expedicion-certificado-cupos/solicitud-expedicion",
+        "linkDepartment": "/pago/expedicion-certificado-cupos/solicitud-expedicion",
         "department": "se"
     },
     {
@@ -1297,15 +1297,15 @@
     {
         "id": 186,
         "tramite": 140101,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "/se/solicitud-de-cancelation/solicitante",
+        "linkDepartment": "/pago/solicitud-de-cancelation/solicitante",
         "department": "se"
     },
     {
         "id": 187,
         "tramite": 231003,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "/pago/aviso-de-reciclaje/datos",
+        "linkDepartment": "/pago/aviso-de-reciclaje/datos",
         "department": "semarnat"
     },
     {
