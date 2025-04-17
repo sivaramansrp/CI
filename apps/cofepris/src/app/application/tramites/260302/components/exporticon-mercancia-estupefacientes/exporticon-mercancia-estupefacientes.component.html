@@ -58,16 +58,16 @@
     <div class="row">
       <div class="col-md-10">
         <div class="form-group">
-          <label class="form-label" for="marcaComercialDenominación"
+          <label class="form-label" for="marcaComercialDenominacion"
             >Marca comercial o denominación distintiva:*
           </label>
           <input
             class="form-control"
-            id="marcaComercialDenominación"
+            id="marcaComercialDenominacion"
             type="text"
-            formControlName="marcaComercialDenominación"
+            formControlName="marcaComercialDenominacion"
             [ngClass]="
-              isValid(mercanciaForm, 'marcaComercialDenominación')
+              isValid(mercanciaForm, 'marcaComercialDenominacion')
                 ? 'required'
                 : ''
             "
@@ -176,23 +176,23 @@
     <div class="row">
       <div class="col-md-5">
         <div class="form-group">
-          <label class="form-label" for="cantidadUmtValor"
+          <label class="form-label" for="cantidadUMT"
             >Cantidad UMT*:</label
           >
           <input
             class="form-control"
-            id="cantidadUmtValor"
+            id="cantidadUMT"
             type="text"
-            formControlName="cantidadUmtValor"
+            formControlName="cantidadUMT"
             [ngClass]="
-              isValid(mercanciaForm, 'cantidadUmtValor') ? 'required' : ''
+              isValid(mercanciaForm, 'cantidadUMT') ? 'required' : ''
             "
           />
         </div>
       </div>
       <div class="col-md-5">
         <div class="form-group">
-          <label class="form-label" for="cantidadUmt">UMT*:</label>
+          <label class="form-label" for="unidadMedidaTarifa">UMT*:</label>
           <span
             class="bi bi-question-circle-fill"
             title="UMT"
@@ -200,10 +200,10 @@
           ></span>
           <input
             class="form-control"
-            id="cantidadUmt"
+            id="unidadMedidaTarifa"
             type="text"
-            formControlName="cantidadUmt"
-            [ngClass]="isValid(mercanciaForm, 'cantidadUmt') ? 'required' : ''"
+            formControlName="unidadMedidaTarifa"
+            [ngClass]="isValid(mercanciaForm, 'unidadMedidaTarifa') ? 'required' : ''"
           />
         </div>
       </div>
@@ -212,16 +212,16 @@
     <div class="row">
       <div class="col-md-5">
         <div class="form-group">
-          <label class="form-label" for="cantidadUmcValor"
+          <label class="form-label" for="cantidadUMC"
             >Cantidad UMC*:</label
           >
           <input
             class="form-control"
-            id="cantidadUmcValor"
+            id="cantidadUMC"
             type="text"
-            formControlName="cantidadUmcValor"
+            formControlName="cantidadUMC"
             [ngClass]="
-              isValid(mercanciaForm, 'cantidadUmcValor') ? 'required' : ''
+              isValid(mercanciaForm, 'cantidadUMC') ? 'required' : ''
             "
           />
         </div>
@@ -229,11 +229,11 @@
       <div class="col-md-5 ml-2">
         <app-catalogo-select
           [catalogo]="cantidadUmcDatos"
-          formControlName="cantidadUmc"
+          formControlName="unidadMedidaComercializacion"
           [label]="'UMC'"
           [required]="true"
           [tooltipQuestionCircle]="true"
-          name="cantidadUmc"
+          name="unidadMedidaComercializacion"
         ></app-catalogo-select>
       </div>
     </div>

@@ -263,7 +263,7 @@ export class ExporticonMercanciaEstupefacientesComponent implements OnInit, OnDe
         this.mercanciaFormState.denominacionCumonInternacional,
         Validators.required,
       ],
-      marcaComercialDenominación: [
+      marcaComercialDenominacion: [
         this.mercanciaFormState.marcaComercialDenominacion,
         Validators.required,
       ],
@@ -281,16 +281,17 @@ export class ExporticonMercanciaEstupefacientesComponent implements OnInit, OnDe
         this.mercanciaFormState.descripcionFraccion,
         Validators.required,
       ],
-      cantidadUmtValor: [
+      unidadMedidaTarifa: [
         this.mercanciaFormState.cantidadUmtValor,
         Validators.required,
       ],
-      cantidadUmt: [this.mercanciaFormState.cantidadUmt, Validators.required],
-      cantidadUmcValor: [
+      cantidadUMT: [this.mercanciaFormState.cantidadUmt, Validators.required],
+      cantidadUMC: [
         this.mercanciaFormState.cantidadUmcValor,
         Validators.required,
       ],
-      cantidadUmc: [this.mercanciaFormState.cantidadUmc, Validators.required],
+      unidadMedidaComercializacion: [this.mercanciaFormState.cantidadUmc, Validators.required],
+
 
       numeroCAS: [this.mercanciaFormState.numeroCAS],
       cantidadDeLotes: [
@@ -422,6 +423,7 @@ export class ExporticonMercanciaEstupefacientesComponent implements OnInit, OnDe
       tipoProducto: event.tipoProducto,
       usoEspecifico: event.usoEspecifico,
       numeroCAS: event.numeroCAS,
+      paisDeDestino: event.paisDeDestino,
     };
 
     const INDICES = this.tramiteState.tablaMercanciasConfigDatos.findIndex(

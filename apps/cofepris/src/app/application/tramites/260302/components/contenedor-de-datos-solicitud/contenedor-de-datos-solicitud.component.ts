@@ -7,7 +7,7 @@ import {
   TablaScianConfig,
   TablaSeleccion,
 } from '../../../../shared/models/datos-solicitud.model';
-import { ID_PROCEDIMIENTO, PRODUCTO_TABLA_ESTUPEFACIENTES } from '../../constants/exporticon-estupefacientes.enum';
+import { ID_PROCEDIMIENTO, PRODUCTO_TABLA_ESTUPEFACIENTES_EXPORTICON } from '../../constants/exporticon-estupefacientes.enum';
 import {
   OPCION_TABLA,
   SCIAN_TABLA,
@@ -86,7 +86,7 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
    */
   public tablaMercanciasConfig = {
     tipoSeleccionTabla: TablaSeleccion.CHECKBOX,
-    configuracionTabla: PRODUCTO_TABLA_ESTUPEFACIENTES,
+    configuracionTabla: PRODUCTO_TABLA_ESTUPEFACIENTES_EXPORTICON,
     datos: [] as TablaMercanciasDatos[],
   };
 

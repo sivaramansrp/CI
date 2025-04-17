@@ -146,7 +146,7 @@ export enum TIPO_TABLA_DATOS {
   CERTIFICADO = 'Certificado analítico',
   OTROS = 'Otros'
 }
-export const PRODUCTO_TABLA_ESTUPEFACIENTES = [
+export const PRODUCTO_TABLA_ESTUPEFACIENTES_EXPORTICON = [
   {
     encabezado: 'Clasificación del producto',
     clave: (ele: TablaMercanciasDatos): string => ele.clasificacionProducto, // Reemplaza 'ele.clasificacionProducto' con la clave correcta
@@ -192,95 +192,59 @@ export const PRODUCTO_TABLA_ESTUPEFACIENTES = [
     orden: 8,
   },
   {
-    encabezado: 'Kg o g por lote ',
-    clave: (ele: TablaMercanciasDatos): string |undefined => ele.kgPorLote, // Reemplaza 'ele.descripcionFraccion' con la clave correcta
-    orden: 9,
-  },
-  {
-    encabezado: 'Número de registro sanitario',
-    clave: (ele: TablaMercanciasDatos): string => ele.numeroRegistroSanitario, // Reemplaza 'ele.numeroRegistroSanitario' con la clave correcta
-    orden: 10,
-  },
-  {
-    encabezado: 'Número de registro sanitario',
-    clave: (ele: TablaMercanciasDatos): string => ele.numeroRegistroSanitario, // Reemplaza 'ele.numeroRegistroSanitario' con la clave correcta
-    orden: 11,
-  },
-  {
-    encabezado: 'Número de piezas a fabricar',
-    clave: (ele: TablaMercanciasDatos): string |undefined=>
-      ele.numeroDePiezasAFabricar, // Reemplaza 'ele.unidadMedidaComercializacion' con la clave correcta
-    orden: 12,
-  },
-  {
-    encabezado: 'Descripción del número de piezas a fabricar',
-    clave: (ele: TablaMercanciasDatos): string |undefined=>
-      ele.descripcionNumeroDePiezas, // Reemplaza 'ele.unidadMedidaComercializacion' con la clave correcta
-    orden: 13,
-  },
-  {
-    encabezado: 'Número de piezas a fabricar',
-    clave: (ele: TablaMercanciasDatos): string |undefined=>
-      ele.numeroDePiezasAFabricar, // Reemplaza 'ele.unidadMedidaComercializacion' con la clave correcta
-    orden: 14,
-  },
-  {
     encabezado: 'Presentación',
     clave: (ele: TablaMercanciasDatos): string => ele.presentacion, // Reemplaza 'ele.Presentación' con la clave correcta
-    orden: 15,
+    orden: 9,
   },
   {
     encabezado: 'Uso especifico',
     clave: (ele: TablaMercanciasDatos): string => ele.usoEspecifico, // Reemplaza 'ele.usoEspecifico' con la clave correcta
-    orden: 16,
-  },
-  {
-    encabezado: 'Detallar uso específico',
-    clave: (ele: TablaMercanciasDatos): string | undefined => ele.detallarUsoEspecifico, // Reemplaza 'ele.Presentación' con la clave correcta
-    orden: 17,
-  },
-  {
-    encabezado: 'País de origen',
-    clave: (ele: TablaMercanciasDatos): string => ele.paisOrigen, // Reemplaza 'ele.paisOrigen' con la clave correcta
-    orden: 18,
-  },
-  {
-    encabezado: 'País de procedencia',
-    clave: (ele: TablaMercanciasDatos): string => ele.paisProcedencia, // Reemplaza 'ele.paisProcedencia' con la clave correcta
-    orden: 19,
+    orden: 10,
   },
   {
     encabezado: 'País de destino',
     clave: (ele: TablaMercanciasDatos): string | undefined => ele.paisDeDestino, // Reemplaza 'ele.paisProcedencia' con la clave correcta
-    orden: 20,
+    orden: 11,
   },
   {
     encabezado: 'Forma farmacéutica',
     clave: (ele: TablaMercanciasDatos): string => ele.formaFarmaceutica, // Reemplaza 'ele.formaFarmaceutica' con la clave correcta
-    orden: 21,
+    orden: 12,
   },
   {
     encabezado: 'Estado físico',
     clave: (ele: TablaMercanciasDatos): string => ele.estadoFisico, // Reemplaza 'ele.estadoFisico' con la clave correcta
-    orden: 22,
+    orden: 13,
   },
   {
     encabezado: 'Unidad de medida de tarifa (UMT)',
     clave: (ele: TablaMercanciasDatos): string => ele.unidadMedidaTarifa, // Reemplaza 'ele.unidadMedidaTarifa' con la clave correcta
-    orden: 23,
+    orden: 14,
   },
   {
     encabezado: 'Cantidad UMT',
     clave: (ele: TablaMercanciasDatos): string => ele.cantidadUMT, // Reemplaza 'ele.cantidadUMT' con la clave correcta
-    orden: 24,
+    orden: 15,
+  },
+  {
+    encabezado: 'UMC',
+    clave: (ele: TablaMercanciasDatos): string | undefined => ele.unidadMedidaComercializacion, // Reemplaza 'ele.unidadMedidaTarifa' con la clave correcta
+    orden: 16,
+  },
+  {
+    encabezado: 'Cantidad UMC',
+    clave: (ele: TablaMercanciasDatos): string => ele.cantidadUMC, // Reemplaza 'ele.cantidadUMT' con la clave correcta
+    orden: 17,
   },
   {
     encabezado: 'Tipo producto',
     clave: (ele: TablaMercanciasDatos): string => ele.tipoProducto, // Reemplaza 'ele.tipoProducto' con la clave correcta
-    orden: 25,
+    orden: 18,
   },
  
 ];
+
+
 
 
 export const TERCEROS_NACIONALIDAD_RADIO_OPCIONS = [
