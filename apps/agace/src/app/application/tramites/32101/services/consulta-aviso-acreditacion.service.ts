@@ -1,14 +1,14 @@
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { datosDeLaTabla, RespuestaContenedor, RespuestaTramite } from '../models/datos-tramite.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { datosDeLaTabla, RespuestaContenedor, RespuestaTramite } from '../models/datos-tramite.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ConsultaAvisoAcreditacionService {
 
-  public selectedRowSource = new BehaviorSubject<datosDeLaTabla | null>(null);
+  public selectedRowSource = new Subject<datosDeLaTabla>();
   formData$ = this.selectedRowSource.asObservable();
 
   constructor(private http: HttpClient) {}
@@ -34,12 +34,7 @@ export class ConsultaAvisoAcreditacionService {
     );
   }
 
-  setSelectedRow(data: any): void {
-    this.selectedRowSource.next(data);
-    console.log("222",data);
-  }
-
-  getCurrentValue(): any {
-    return this.selectedRowSource.getValue(); // 👈 to access old/current value directly
+  setUpdatedRow(row: datosDeLaTabla): void {
+    this.selectedRowSource.next(row);
   }
 }
