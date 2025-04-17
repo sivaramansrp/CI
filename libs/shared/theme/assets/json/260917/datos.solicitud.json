@@ -1,5 +1,5 @@
 {
-    "radioOptions" : [
+    "tipoOperacion" : [
         {
             "label": "Prórroga",
             "value": "prorroga"
@@ -11,6 +11,16 @@
         {
             "label": "Modificación y prórroga",
             "value": "modificacionYProrroga"
+        }
+    ],
+    "publicarInformacionConfidencial" : [
+        {
+            "label": "Sí",
+            "value": "Sí"
+        },
+        {
+            "label": "No",
+            "value": "No"
         }
     ]
 }
