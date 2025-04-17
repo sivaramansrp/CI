@@ -17,7 +17,6 @@ const FLORA_FAUNA_ALERT =
 
 @Component({
   selector: 'app-flora-fauna',
-  standalone: false,
   templateUrl: './flora-fauna.component.html',
 })
 export class FloraFaunaComponent {

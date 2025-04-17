@@ -156,6 +156,7 @@ export class DestinatarioAgenteAduanalComponent implements OnInit, OnDestroy {
   }
 
   openAceptarModal(): void {
+    this.showDestinatarioModal = !this.showDestinatarioModal;
     this.showAceptarModal = true;
   }
 
@@ -193,7 +194,6 @@ export class DestinatarioAgenteAduanalComponent implements OnInit, OnDestroy {
     );
 
     this.showTableDiv = !this.showTableDiv;
-    this.showDestinatarioModal = !this.showDestinatarioModal;
   }
 
   enviarAgenteAduanalFormulario(): void {
