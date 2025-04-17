@@ -178,7 +178,7 @@
         "id": 26,
         "tramite": 80102,
         "linkDashboard": "/se/autorizacion-programa-nuevo/solicitud",
-        "linkDepartment": "/se/autorizacion-programa-nuevo/solicitud",
+        "linkDepartment": "/pago/autorizacion-programa-nuevo/solicitud",
         "department": "se"
     },
     {
@@ -206,7 +206,7 @@
         "id": 30,
         "tramite": 80207,
         "linkDashboard": "/se/subfabricante-immex/contenedor-de-pasos",
-        "linkDepartment": "/se/subfabricante-immex/contenedor-de-pasos",
+        "linkDepartment": "/pago/subfabricante-immex/contenedor-de-pasos",
         "department": "se"
     },
     {
@@ -640,7 +640,7 @@
         "id": 92,
         "tramite": 260214,
         "linkDashboard": "/cofepris/importacion-dispositivos-medicos-uso/contenedor-de-pasos",
-        "linkDepartment": "/cofepris/importacion-dispositivos-medicos-uso/contenedor-de-pasos",
+        "linkDepartment": "/pago/importacion-dispositivos-medicos-uso/contenedor-de-pasos",
         "department": "cofepris"
     },
     {
@@ -654,7 +654,7 @@
         "id": 94,
         "tramite": 260216,
         "linkDashboard": "/cofepris/importacion-dispositivos-medicos-donacion/contenedor-de-pasos",
-        "linkDepartment": "/cofepris/importacion-dispositivos-medicos-donacion/contenedor-de-pasos",
+        "linkDepartment": "/pago/importacion-dispositivos-medicos-donacion/contenedor-de-pasos",
         "department": "cofepris"
     },
     {
@@ -1480,14 +1480,14 @@
         "id": 212,
         "tramite": 260201,
         "linkDashboard": "/cofepris/importacion-psicotropicos-poretorno/contenedor-de-pasos",
-        "linkDepartment": "/cofepris/importacion-psicotropicos-poretorno/contenedor-de-pasos",
+        "linkDepartment": "/pago/importacion-psicotropicos-poretorno/contenedor-de-pasos",
         "department": "cofepris"
     },
     {
         "id": 213,
         "tramite": 260207,
         "linkDashboard": "/cofepris/importacion-tratamientos-especiales/contenedor-de-pasos",
-        "linkDepartment": "/cofepris/importacion-tratamientos-especiales/contenedor-de-pasos",
+        "linkDepartment": "/pago/importacion-tratamientos-especiales/contenedor-de-pasos",
         "department": "cofepris"
     },
     {
