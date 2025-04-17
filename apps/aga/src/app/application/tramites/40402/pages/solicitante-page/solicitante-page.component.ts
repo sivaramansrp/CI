@@ -1,14 +1,15 @@
-import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS } from '@ng-mf/data-access-user';
 import { SECCIONES_TRAMITE_40402 } from '../../constants/solicitud.enums';
 import { Subject } from 'rxjs';
+import { Tramite40402Query } from '../../estados/tramite40402.query';
+import { Tramite40402Store } from '../../estados/tramite40402.store';
+import { Tramitenacionales40402State } from '../../estados/tramite40402.store';
 import { WizardComponent } from '@ng-mf/data-access-user';
 import { map } from 'rxjs/operators';
 import { takeUntil } from 'rxjs/operators';
-import { Tramite40402Store, Tramitenacionales40402State } from '../../estados/tramite40402.store';
-import { Tramite40402Query } from '../../estados/tramite40402.query';
 /**
  * Interfaz que define la estructura de un botón de acción en el asistente.
  */

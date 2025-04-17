@@ -1,13 +1,30 @@
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Subject, map, merge, takeUntil } from 'rxjs';
+import { CONFIGURACION_PARA_PFE_ENCABEZADO_DE_TABLA } from '../../../constants/transportacion-maritima.enum';
+import { Catalogo } from '@libs/shared/data-access-user/src';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
-import { Catalogo, CatalogoSelectComponent, TablaDinamicaComponent, TituloComponent, TablaSeleccion } from '@libs/shared/data-access-user/src';
+import { Component } from '@angular/core';
+import { ElementRef } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
+import { OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
 import { PersonaFisicaExtranjeraForm } from '../../../../40402/models/transportacion-maritima.model';
-import { TransportacionMaritimaService } from '../../../../40402/services/transportacion-maritima/transportacion-maritima.service';
-import { CONFIGURACION_PARA_PFE_ENCABEZADO_DE_TABLA, TEXTOS } from '../../../constants/transportacion-maritima.enum';
-import { Tramite40402Store, Tramitenacionales40402State } from '../../../estados/tramite40402.store';
+import { ReactiveFormsModule } from '@angular/forms';
+import { Subject } from 'rxjs';
+import { TEXTOS } from '../../../constants/transportacion-maritima.enum';
+import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
+import { TablaSeleccion } from '@libs/shared/data-access-user/src';
+import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { Tramite40402Query } from '../../../estados/tramite40402.query';
+import { Tramite40402Store } from '../../../estados/tramite40402.store';
+import { Tramitenacionales40402State } from '../../../estados/tramite40402.store';
+import { TransportacionMaritimaService } from '../../../../40402/services/transportacion-maritima/transportacion-maritima.service';
+import { Validators } from '@angular/forms';
+import { ViewChild } from '@angular/core';
+import { map } from 'rxjs';
+import { merge } from 'rxjs';
+import { takeUntil } from 'rxjs';
 
 /**
  * Componente para gestionar la información de personas físicas extranjeras.

@@ -1,8 +1,10 @@
-import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, catchError, of, throwError } from 'rxjs';
 import { Catalogo } from '@libs/shared/data-access-user/src';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 import { Tramite40402Store } from './tramite40402.store';
+import { catchError } from 'rxjs';
+import { throwError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',

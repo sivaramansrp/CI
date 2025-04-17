@@ -2,8 +2,8 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs';
 import { Tramite40402Service } from '../../estados/tramite40402.service';
+import { takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-datos-tramite',
@@ -19,11 +19,11 @@ export class DatosTramiteComponent implements OnInit, OnDestroy {
   /**
    * Lista de códigos de transportación obtenidos desde el servicio.
    */
-  codigoTransportacion: any[] = [];
+  codigoTransportacion: unknown[] = [];
   /**
    * Lista de tipos de CAAT aéreo obtenidos desde el servicio.
    */
-  tipoCaatAereo: any[] = [];
+  tipoCaatAereo: unknown[] = [];
   /**
    * Catálogo de tipos de CAAT aéreo.
    */
@@ -133,9 +133,9 @@ export class DatosTramiteComponent implements OnInit, OnDestroy {
    */
   buscarSolicitudPorCAAT(): void {
     if (this.formulario.valid) {
-      const claveFolio = this.formulario.get('claveFolioCAAT')?.value;
+      const CLAVE_FOLIO = this.formulario.get('claveFolioCAAT')?.value;
       this.tramite40402Service
-        .buscarSolicitudPorCAATe(claveFolio)
+        .buscarSolicitudPorCAATe(CLAVE_FOLIO)
         .pipe(takeUntil(this.destroyNotifier$))
         .subscribe((respuesta) => {
           if (respuesta) {

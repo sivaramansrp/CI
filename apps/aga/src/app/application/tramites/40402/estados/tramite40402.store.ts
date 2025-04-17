@@ -1,8 +1,8 @@
-import { Catalogo } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 import { Injectable } from '@angular/core';
+import { PersonaFisicaExtranjeraForm } from '../models/transportacion-maritima.model';
+import { PersonaMoralExtranjeraForm } from '../models/transportacion-maritima.model';
 import { Store } from '@datorama/akita';
 import { StoreConfig } from '@datorama/akita';
-import { PersonaFisicaExtranjeraForm, PersonaMoralExtranjeraForm } from '../models/transportacion-maritima.model';
 
 /**
  * Modelo de estado para el trámite 40402.

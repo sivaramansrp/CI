@@ -2,7 +2,7 @@ import { AfterViewInit, Component, Input, ViewChild } from '@angular/core';
 import {
   DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL,
   PERSONA_MORAL_NACIONAL,
-} from 'libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
+} from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
 import {
   FormularioDinamico,
   SolicitanteComponent,

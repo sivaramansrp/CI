@@ -1,9 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-
-import { RespuestaCaatTabla, RespuestaContribuyentePMNTabla, RespuestaContribuyenteTabla } from '../../models/transportacion-maritima.model';
+import { RespuestaCaatTabla } from '../../models/transportacion-maritima.model';
 import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
+import { RespuestaContribuyentePMNTabla } from '../../models/transportacion-maritima.model';
+import { RespuestaContribuyenteTabla } from '../../models/transportacion-maritima.model';
 
 /**
  * Servicio para la gestión de datos relacionados con la transportación marítima.

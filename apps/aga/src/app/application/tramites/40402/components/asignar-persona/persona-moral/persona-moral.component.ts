@@ -4,11 +4,13 @@ import { Subject, map, merge, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 
 import { Catalogo, CatalogoSelectComponent, TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { CONFIGURACION_PARA_PME_ENCABEZADO_DE_TABLA } from '../../../constants/transportacion-maritima.enum';
 import { PersonaMoralExtranjeraForm } from '../../../../40402/models/transportacion-maritima.model';
-import { TransportacionMaritimaService } from '../../../../40402/services/transportacion-maritima/transportacion-maritima.service';
-import { Tramite40402Store, Tramitenacionales40402State } from '../../../estados/tramite40402.store';
+import { TEXTOS } from '../../../constants/transportacion-maritima.enum';
 import { Tramite40402Query } from '../../../estados/tramite40402.query';
-import { CONFIGURACION_PARA_PME_ENCABEZADO_DE_TABLA, TEXTOS } from '../../../constants/transportacion-maritima.enum';
+import { Tramite40402Store } from '../../../estados/tramite40402.store';
+import { Tramitenacionales40402State } from '../../../estados/tramite40402.store';
+import { TransportacionMaritimaService } from '../../../../40402/services/transportacion-maritima/transportacion-maritima.service';
 
 /**
  * Componente para la captura de datos de persona moral extranjera.
