@@ -46,18 +46,18 @@ interface DatosProcedureQueryMockType {
 describe('PasoUnoComponent', () => {
   let component: PasoUnoComponent;
   let fixture: ComponentFixture<PasoUnoComponent>;
-  let DatosSolicitudServiceMock: DatosSolicitudServiceMockType;
-  let DatosProcedureStoreMock: DatosProcedureStoreMockType;
-  let DatosProcedureQueryMock: DatosProcedureQueryMockType;
+  let datosSolicitudServiceMock: DatosSolicitudServiceMockType;
+  let datosProcedureStoreMock: DatosProcedureStoreMockType;
+  let datosProcedureQueryMock: DatosProcedureQueryMockType;
 
   beforeEach(async () => {
-    DatosSolicitudServiceMock = {
+    datosSolicitudServiceMock = {
       obtenerTramitesAsociados: jest.fn().mockReturnValue(of([])),
       inicializaPagoDeDerechosDatosCatalogos: jest.fn(),
       banco: [{ id: 1, descripcion: 'Banco 1' }],
     };
 
-    DatosProcedureStoreMock = {
+    datosProcedureStoreMock = {
       setClaveDeReferencia: jest.fn(),
       setCadenaPagoDependencia: jest.fn(),
       setBancoseleccionado: jest.fn(),
@@ -66,7 +66,7 @@ describe('PasoUnoComponent', () => {
       setImpPago: jest.fn(),
     };
 
-    DatosProcedureQueryMock = {
+    datosProcedureQueryMock = {
       selectSolicitudPermiso$: of({
         claveDeReferencia: '12345',
         cadenaPagoDependencia: 'DEPENDENCIA',
@@ -82,9 +82,9 @@ describe('PasoUnoComponent', () => {
       imports: [ReactiveFormsModule, TramiteAsociadosComponent, PagoDeDerechosComponent],
       providers: [
         FormBuilder,
-        { provide: DatosSolicitudService, useValue: DatosSolicitudServiceMock },
-        { provide: DatosProcedureStore, useValue: DatosProcedureStoreMock },
-        { provide: DatosProcedureQuery, useValue: DatosProcedureQueryMock },
+        { provide: DatosSolicitudService, useValue: datosSolicitudServiceMock },
+        { provide: DatosProcedureStore, useValue: datosProcedureStoreMock },
+        { provide: DatosProcedureQuery, useValue: datosProcedureQueryMock },
       ],
       schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
@@ -102,7 +102,7 @@ describe('PasoUnoComponent', () => {
     const tramiteAsociadosMock = [
       { id: 1, folioTramite: '12345', tipoTramite: 'Tipo A', estatus: 'Activo', fetchaAltaDeRegistro: '2025-04-10' },
     ];
-    DatosSolicitudServiceMock.obtenerTramitesAsociados.mockReturnValue(of(tramiteAsociadosMock));
+    datosSolicitudServiceMock.obtenerTramitesAsociados.mockReturnValue(of(tramiteAsociadosMock));
 
     component.ngOnInit();
     expect(component.tramiteAsociados).toEqual(tramiteAsociadosMock);
