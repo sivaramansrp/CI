@@ -1,5 +1,5 @@
 import { Catalogo, CatalogoSelectComponent,TituloComponent } from '@libs/shared/data-access-user/src';
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MenusDesplegables } from '../../models/modificacion.enum';
@@ -12,7 +12,7 @@ import { Subject } from 'rxjs';
   templateUrl: './datos-certificado-de.component.html',
   styleUrl: './datos-certificado-de.component.scss'
 })
-export class DatosCertificadoDeComponent implements OnDestroy, OnInit {
+export class DatosCertificadoDeComponent implements OnDestroy {
   /**
    * Datos de los menús desplegables.
    * @type {MenusDesplegables[]}
@@ -60,7 +60,7 @@ export class DatosCertificadoDeComponent implements OnDestroy, OnInit {
    * @type {EventEmitter<undefined>}
    * @output
    */
-  @Output() formDatosCertificadoEvent: EventEmitter<undefined> = new EventEmitter<undefined>();
+  @Output() formDatosCertificadoEvent: EventEmitter<{ formGroupName: string; campo: string; valor: undefined; storeStateName: string }> = new EventEmitter<{ formGroupName: string; campo: string; valor: undefined; storeStateName: string }>();
 
   /**
    * Evento que emite cuando se selecciona un idioma.
@@ -166,22 +166,24 @@ export class DatosCertificadoDeComponent implements OnDestroy, OnInit {
     return this.formDatosCertificado.get('') as FormControl;
   }
 
-  /**
-   * Método de ciclo de vida de Angular, se ejecuta al inicializar el componente.
-   * Se utiliza para cargar los datos y suscribirse a los cambios del formulario.
-   */
-  ngOnInit(): void {
-    /**
-     * Suscripción a los cambios de valor del formulario para enviar los datos al store.
-    */
-    this.formDatosCertificado.valueChanges.subscribe((value) => {
-      if (!this.actualizandoFormulario) {
-        this.formDatosCertificadoEvent.emit(value);
-        this.formaValida.emit(this.formDatosCertificado.valid);
-      }
-    });
-
+ /**
+   * Establece valores en el store y emite eventos relacionados con el formulario.
+   *
+   * @param formGroupName - El nombre del grupo de formulario al que pertenece el campo.
+   * @param campo - El nombre del campo cuyo valor se desea obtener y procesar.
+   * @param storeStateName - El nombre del estado en el store asociado al campo.
+   * 
+   * @remarks
+   * Este método obtiene el valor de un campo específico del formulario `formDatosDelDestinatario`,
+   * emite un evento para indicar si el formulario es válido y otro evento con los datos del campo
+   * y su estado asociado en el store.
+   */ 
+  setValoresStore(formGroupName: string, campo: string, storeStateName: string):void {    
+    const VALOR = this.formDatosCertificado.get(campo)?.value;    
+    this.formaValida.emit(this.formDatosCertificado.valid);
+    this.formDatosCertificadoEvent.emit({ formGroupName, campo, valor: VALOR, storeStateName });
   }
+
 
   /**
    * Método que selecciona un idioma y actualiza el estado en el store.
