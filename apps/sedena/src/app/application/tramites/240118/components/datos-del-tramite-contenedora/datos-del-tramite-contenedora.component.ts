@@ -1,14 +1,11 @@
+import { Component,OnDestroy,OnInit } from '@angular/core';
+import { Subject,takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
 import { DatosDelTramiteComponent } from '../../../../shared/components/datos-del-tramite/datos-del-tramite.component';
 import { DatosDelTramiteFormState } from '../../../../shared/models/datos-del-tramite.model';
 import { MercanciaDetalle } from '../../../../shared/models/datos-del-tramite.model';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { Subject } from 'rxjs';
 import { Tramite240118Query } from '../../estados/tramite240118Query.query';
 import { Tramite240118Store } from '../../estados/tramite240118Store.store';
-import { takeUntil } from 'rxjs';
 
 /**
  * @title Datos del Trámite Contenedora

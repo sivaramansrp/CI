@@ -1,13 +1,11 @@
+import { Component,OnDestroy,OnInit } from '@angular/core';
+import { Subject,takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
 import { PagoDeDerechosComponent } from '../../../../shared/components/pago-de-derechos/pago-de-derechos.component';
 import { PagoDerechosFormState } from '../../../../shared/models/pago-de-derechos.model';
-import { Subject } from 'rxjs';
 import { Tramite240118Query } from '../../estados/tramite240118Query.query';
 import { Tramite240118Store } from '../../estados/tramite240118Store.store';
-import { takeUntil } from 'rxjs';
+
 /**
  * @title Pago de Derechos Contenedora
  * @description Componente contenedor que se encarga de enlazar el estado de pago de derechos con el formulario correspondiente.
@@ -35,12 +33,6 @@ export class PagoDeDerechosContenedoraComponent implements OnInit, OnDestroy {
   public pagoDerechoFormState!: PagoDerechosFormState;
 
   /**
-   * Observable adicional para limpieza de suscripciones.
-   * @property {Subject<void>} destroy$
-   */
-  private destroy$ = new Subject<void>();
-
-  /**
    * Constructor del componente.
    *
    * @method constructor
@@ -65,7 +57,7 @@ export class PagoDeDerechosContenedoraComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.tramiteQuery.getPagoDerechos$
-      .pipe(takeUntil(this.destroy$))
+      .pipe(takeUntil(this.unsubscribe$))
       .subscribe((data) => {
         this.pagoDerechoFormState = data;
       });

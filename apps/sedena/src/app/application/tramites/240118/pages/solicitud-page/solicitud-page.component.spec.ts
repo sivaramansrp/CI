@@ -1,5 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SolicitudPageComponent } from './solicitud-page.component';
+import { PermisoExtraordinarioParaModule } from '../../permiso-extraordinario-para-module';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('SolicitudPageComponent', () => {
   let component: SolicitudPageComponent;
@@ -7,7 +9,8 @@ describe('SolicitudPageComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SolicitudPageComponent],
+      imports: [PermisoExtraordinarioParaModule, HttpClientTestingModule],
+      declarations: [SolicitudPageComponent],
     }).compileComponents();
 
     fixture = TestBed.createComponent(SolicitudPageComponent);

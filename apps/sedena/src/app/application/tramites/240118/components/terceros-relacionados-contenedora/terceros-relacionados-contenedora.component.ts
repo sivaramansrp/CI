@@ -1,14 +1,12 @@
 import { ActivatedRoute, Router } from '@angular/router';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
 import { DestinoFinal } from '../../../../shared/models/terceros-relacionados.model';
-import { OnInit } from '@angular/core';
 import { Proveedor } from '../../../../shared/models/terceros-relacionados.model';
-import { Subject } from 'rxjs';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
 import { Tramite240118Query } from '../../estados/tramite240118Query.query';
 import { Tramite240118Store } from '../../estados/tramite240118Store.store';
-import { takeUntil } from 'rxjs';
 
 /**
  * @title Terceros Relacionados Contenedora
@@ -23,7 +21,7 @@ import { takeUntil } from 'rxjs';
   templateUrl: './terceros-relacionados-contenedora.component.html',
   styleUrl: './terceros-relacionados-contenedora.component.css',
 })
-export class TercerosRelacionadosContenedoraComponent implements OnInit {
+export class TercerosRelacionadosContenedoraComponent implements OnInit, OnDestroy {
   /**
    * Observable para limpiar las suscripciones activas al destruir el componente.
    * @property {Subject<void>} destroy$
@@ -55,8 +53,7 @@ export class TercerosRelacionadosContenedoraComponent implements OnInit {
     private tramiteStore: Tramite240118Store,
     private router: Router,
     private activatedRoute: ActivatedRoute
-  ) // eslint-disable-next-line no-empty-function
-  {}
+  ) { }
 
   /**
    * Hook del ciclo de vida que se ejecuta al inicializar el componente.
@@ -79,14 +76,27 @@ export class TercerosRelacionadosContenedoraComponent implements OnInit {
       });
   }
 
+  /**
+   * Actualiza la lista de destinatarios finales en el store del trámite.
+   *
+   * @method modificarDestinarioDatos
+   * @param {DestinoFinal[]} event - Lista de destinatarios finales actualizada.
+   * @returns {void}
+   */
   modificarDestinarioDatos(datos: DestinoFinal): void {
     this.tramiteStore.actualizarDatosDestinatario(datos);
     this.irAAcciones();
   }
-
+  /**
+    * Actualiza la lista de proveedores en el store del trámite.
+    * 
+    * @method modificarProveedorDatos
+    * @param {Proveedor} datos - Proveedor a modificar.
+    * @returns {void}
+   */
   modificarProveedorDatos(datos: Proveedor): void {
     this.tramiteStore.actualizarDatosProveedor(datos);
-    // this.irAAcciones();
+    this.irAAccionesProveedor();
   }
 
   /**
@@ -100,24 +110,47 @@ export class TercerosRelacionadosContenedoraComponent implements OnInit {
       relativeTo: this.activatedRoute,
     });
   }
+    /**
+   * Navega a una ruta relativa dentro del flujo actual.
+   * @method irAAcciones
+   * @param {string} accionesPath - Ruta relativa a la que se desea navegar.
+   * @returns {void}
+   */
+    irAAccionesProveedor(): void {
+      this.router.navigate(['../agregar-proveedor'], {
+        relativeTo: this.activatedRoute,
+      });
+    }
   /**
    * @method eliminarDestinatarioFinal
    * @description Elimina el primer DestinoFinal final de la tabla de datos.
    * Si no hay DestinoFinal finales seleccionados, no realiza ninguna acción.
    */
-  eliminarDestinatarioFinal(datos:DestinoFinal): void {    
+  eliminarDestinatarioFinal(datos: DestinoFinal): void {
     if (datos) {
       this.tramiteStore.eliminarDestinatarioFinal(datos);
     }
   }
-    /**
-   * @method eliminarProveedor
-   * @description Elimina el primer Proveedor final de la tabla de datos.
-   * Si no hay Proveedor finales seleccionados, no realiza ninguna acción.
-   */
-  eliminarProveedor(datos:Proveedor): void {
+  /**
+ * @method eliminarProveedor
+ * @description Elimina el primer Proveedor final de la tabla de datos.
+ * Si no hay Proveedor finales seleccionados, no realiza ninguna acción.
+ */
+  eliminarProveedor(datos: Proveedor): void {
     if (datos) {
       this.tramiteStore.eliminareliminarProveedorFinal(datos);
     }
   }
+  /**
+   * Hook del ciclo de vida que se ejecuta al destruir el componente.
+   * Libera las suscripciones para evitar fugas de memoria.
+   *
+   * @method ngOnDestroy
+   * @returns {void}
+   */
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
 }

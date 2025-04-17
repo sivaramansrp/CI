@@ -7,7 +7,6 @@ describe('PasoUnoComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [PasoUnoComponent],
     }).compileComponents();
 
     fixture = TestBed.createComponent(PasoUnoComponent);

@@ -8,7 +8,7 @@ describe('PasoTresComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [PasoTresComponent,ToastrModule.forRoot()],
+      imports: [ToastrModule.forRoot()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(PasoTresComponent);
