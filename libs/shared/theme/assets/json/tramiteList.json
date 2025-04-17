@@ -227,7 +227,7 @@
         "id": 33,
         "tramite": 80308,
         "linkDashboard": "/se/modificacion/solicitud",
-        "linkDepartment": "/se/modificacion/solicitud",
+        "linkDepartment": "/pago/modificacion/solicitud",
         "department": "se"
     },
     {
@@ -612,14 +612,14 @@
         "id": 88,
         "tramite": 260203,
         "linkDashboard": "/cofepris/medicamentos-registro-sanitario/solicitud",
-        "linkDepartment": "/cofepris/medicamentos-registro-sanitario/solicitud",
+        "linkDepartment": "/pago/medicamentos-registro-sanitario/solicitud",
         "department": "cofepris"
     },
     {
         "id": 89,
         "tramite": 260205,
         "linkDashboard": "/cofepris/materias-primas-destinados/solicitud",
-        "linkDepartment": "/cofepris/materias-primas-destinados/solicitud",
+        "linkDepartment": "/pago/materias-primas-destinados/solicitud",
         "department": "cofepris"
     },
     {
