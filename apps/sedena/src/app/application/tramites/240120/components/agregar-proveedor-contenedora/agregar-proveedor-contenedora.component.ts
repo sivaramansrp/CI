@@ -14,9 +14,9 @@ import { Tramite240120Store } from '../../estados/tramite240120Store.store';
 export class AgregarProveedorContenedoraComponent {
   /**
    * @constructor
-   * @description Constructor que inyecta el store `Tramite260214Store` para gestionar el estado del trámite.
+   * @description Constructor que inyecta el store `Tramite240120Store` para gestionar el estado del trámite.
    *
-   * @param tramite260214Store - Store que administra el estado del trámite 260214.
+   * @param tramite240120Store - Store que administra el estado del trámite 240120.
    */
   // eslint-disable-next-line no-empty-function
   constructor(public tramite240120Store: Tramite240120Store) {}
