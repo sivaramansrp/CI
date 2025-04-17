@@ -1444,8 +1444,8 @@
     {
         "id": 207,
         "tramite": 32101,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "/agace/Consulta-Aviso-Acreditacion/solicitud",
+        "linkDepartment": "/pago/Consulta-Aviso-Acreditacion/solicitud",
         "department": "agace"
     },
     {
