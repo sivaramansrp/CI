@@ -11,7 +11,6 @@ import { takeUntil } from 'rxjs';
   styleUrls: ['./datos-tramite.component.scss'],
 })
 export class DatosTramiteComponent implements OnInit, OnDestroy {
-  noRequerido: boolean = false; 
   /**
    * Formulario reactivo utilizado para capturar los datos del trámite.
    */

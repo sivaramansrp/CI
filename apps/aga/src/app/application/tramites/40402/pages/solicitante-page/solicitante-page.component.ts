@@ -81,13 +81,6 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
    * Configura los pasos del asistente y asigna las secciones al store.
    */
   ngOnInit(): void {
-    this.pasos = PASOS.slice(0, 2).map((paso) => {
-      if (paso.indice === 2 && paso.titulo === 'Anexar necesarios') {
-        return { ...paso, titulo: 'Firmar solicitud' };
-      }
-      return paso;
-    });
-
     this.tramite40402Query.selectSeccionState$
       .pipe(
         takeUntil(this.destroyNotifier$),
