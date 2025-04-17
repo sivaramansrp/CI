@@ -15,6 +15,7 @@ import { SolicitudDeRegistroInvocarService } from './services/solicitudDeRegistr
 import { ReprestantanteComponent } from './components/represtantante/represtantante.component';
 
 import { ProfilesMansajeriaComponent } from './components/profiles-mansajeria/profiles-mansajeria.component';
+import { ProfilesDomocilioDelaComponent } from './components/profiles-domocilio-dela/profiles-domocilio-dela.component';
 
 @NgModule({
   declarations: [SolicitudPasoComponent, PasoUnoComponent],
@@ -26,7 +27,8 @@ import { ProfilesMansajeriaComponent } from './components/profiles-mansajeria/pr
     SolicitanteComponent,
     DatoComunesComponent,
     ReprestantanteComponent,
-    ProfilesMansajeriaComponent
+    ProfilesMansajeriaComponent,
+    ProfilesDomocilioDelaComponent
     
   ],
   providers: [
