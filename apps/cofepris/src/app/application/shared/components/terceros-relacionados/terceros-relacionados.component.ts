@@ -13,7 +13,7 @@ import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 
-import { CAMPOS_REQUERIDOS_FORMULARIO_MAP, OCULTAR_FACTURADOR } from '../../constantes/datos-solicitud.enum';
+import { OCULTAR_FACTURADOR } from '../../constantes/datos-solicitud.enum';
 import { OCULTAR_PROVEEDOR } from '../../constantes/datos-solicitud.enum';
 
 import { DESTINATARIO_ENCABEZADO_DE_TABLA } from '../../models/terceros-relacionados.model';
@@ -116,6 +116,13 @@ export class TercerosRelacionadosComponent implements OnInit {
    */
   public habilitarFacturador = true;
 
+    /**
+   * Lista de elementos requeridos en el formulario.
+   * Esta propiedad almacena un arreglo de cadenas que representan
+   * los elementos que deben ser obligatorios en el formulario.
+   */
+    public elementosRequeridos: string[] = [];
+
   /**
    * @constructor
    * Inyecta los servicios de router, rutas activas y store del trámite.
@@ -178,6 +185,25 @@ export class TercerosRelacionadosComponent implements OnInit {
       : true;
   }
 
+   /**
+   * Valida elementos según el `idProcedimiento` y establece
+   * las listas de elementos no válidos y añadidos.
+   * @returns {void} Lista de elementos no válidos.
+   */
+   validarElementos(): void {
+    switch (this.idProcedimiento) {
+      case 260219:
+        this.elementosRequeridos = [
+          'facturador',
+          'destinoFinal'
+        ];
+        break;
+     default:
+        this.elementosRequeridos = [];
+        break;
+    }
+  }
+
   /**
     * Verifica si un campo es requerido según la configuración de campos requeridos.
     *
@@ -185,8 +211,7 @@ export class TercerosRelacionadosComponent implements OnInit {
     * @returns {boolean} Retorna `true` si el campo es requerido, `false` en caso contrario.
     */
   esCampoRequerido(campo: string): boolean {
-    const PROCEDIMIENTOS = CAMPOS_REQUERIDOS_FORMULARIO_MAP.get(campo);
-    return PROCEDIMIENTOS?.includes(this.idProcedimiento) ?? false;
+    return this.elementosRequeridos?.includes(campo) ?? false;
   }
   
 }
