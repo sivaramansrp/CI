@@ -7,6 +7,7 @@ import { Solicitud260917State, Tramite260917Store } from '../../estados/tramites
 import { Subject, map, takeUntil } from 'rxjs';
 import { CROSLISTA_DE_PAISES } from '@libs/shared/data-access-user/src/core/enums/260917/domicillo-del.enum';
 import { CommonModule } from '@angular/common';
+import {MANIFIESTOS_DECLARACION} from '../../constantes/certificados-licencias.enum';
 import { Tramite260917Query } from '../../estados/queries/tramite260917.query';
 import radioOptions from '@libs/shared/theme/assets/json/260917/datos.solicitud.json';
 @Component({
@@ -54,7 +55,12 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
 
   elementoParaEliminar!: number;
 
-  
+  /**
+* Texto de los manifiestos.
+*/
+  manifiestosText: string = '';
+
+
 
   /**
    * Grupo de formularios para domicilio.
@@ -217,7 +223,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    * - Inicializa el grupo de formularios `formMercancias` con controles para campos relacionados con las mercancías.
    */
   ngOnInit(): void {
-
+    this.manifiestosText = MANIFIESTOS_DECLARACION.MANIFIESTOS;
     this.genericOptions = radioOptions.tipoOperacion;
     this.hacerlosRadioOptions = radioOptions.publicarInformacionConfidencial;
     this.tramite260701Query.selectSolicitud$.pipe(takeUntil(this.destroyed$), map((seccionState) => {
