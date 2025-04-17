@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ConfiguracionColumna, InputFecha, InputFechaComponent, ListaPendientes, TablaAcciones, TablaDinamicaComponent, TablePaginationComponent } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { ReplaySubject } from 'rxjs';
 import { TablerosService } from '../../core/service/tabletos.service';
 
 @Component({
@@ -11,7 +12,7 @@ import { TablerosService } from '../../core/service/tabletos.service';
   templateUrl: './seleccion-modulo.component.html',
   styleUrl: './seleccion-modulo.component.scss',
 })
-export class SeleccionModuloComponent implements OnInit {
+export class SeleccionModuloComponent implements OnInit, OnDestroy {
   /** Configuración del campo de fecha inicial */
   FECHA_INICIO = {
     labelNombre: 'Fecha inicial',
@@ -24,6 +25,8 @@ export class SeleccionModuloComponent implements OnInit {
     required: false,
     habilitado: true,
   };
+   /** Observable para manejar la destrucción del componente */
+   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   /** Indica si el bloque de filtros está colapsado */
   colapsable: boolean = false;
   /** Formulario de búsqueda */
@@ -47,6 +50,8 @@ export class SeleccionModuloComponent implements OnInit {
   /** Copia original de los pendientes (sin filtros) */
   public todosPendientesOriginales: ListaPendientes[] = [];
 
+   
+
   /** Configuración de columnas de la tabla */
   public configurarTabla: ConfiguracionColumna<ListaPendientes>[] = [
     { encabezado: 'Folio tramite', clave: (item: ListaPendientes) => item.folio, orden: 1 },
@@ -60,18 +65,22 @@ export class SeleccionModuloComponent implements OnInit {
     private fb: FormBuilder,
     private servicioFuncionario: TablerosService
   ) {
-    // Inicialización del formulario de búsqueda
+  }
+
+  /** Al inicializar el componente, se cargan los pendientes */
+  ngOnInit(): void {
+    this.inicializaFormConsulta();
+    this.getPendientesTabla();
+  }
+
+   // Inicialización del formulario de búsqueda
+   inicializaFormConsulta(): void {
     this.FormBusqueda = this.fb.group({
       folio: [''],
       info: [''],
       fechaInicio: [''],
       fechaFinal: ['']
     });
-  }
-
-  /** Al inicializar el componente, se cargan los pendientes */
-  ngOnInit(): void {
-    this.getPendientesTabla();
   }
 
   /**
@@ -108,30 +117,30 @@ export class SeleccionModuloComponent implements OnInit {
     });
   }
 
+  /**
+   * Método que se ejecuta cuando se cambia de página en la paginación.
+   * @param {number} page - Número de la página seleccionada.
+   */
+  onPageChange(page: number) {
+    this.currentPage = page;
+    this.updatePagination();
+  }
+
+  /**
+   * Método que se ejecuta cuando cambia el número de elementos por página.
+   * @param {number} itemsPerPage - Número de elementos a mostrar por página.
+   */
+  onItemsPerPageChange(itemsPerPage: number) {
+    this.itemsPerPage = itemsPerPage;
+    this.currentPage = 1;
+    this.updatePagination();
+  }
+
    /** Actualiza los elementos paginados según la página e ítems por página seleccionados */
    public updatePagination(): void {
     const STARTINDEX = (this.currentPage - 1) * this.itemsPerPage;
     const ENDINDEX = STARTINDEX + this.itemsPerPage;
     this.listaPendientesPaginados = this.todosPendientes.slice(STARTINDEX, ENDINDEX);
-  }
-
-  /**
-  * Maneja el cambio de página
-  * @param page Página seleccionada
-  */
-  public onPageChange(page: number): void {
-    this.currentPage = page;
-    this.updatePagination();
-  }
-
-   /**
-   * Maneja el cambio de número de ítems por página
-   * @param itemsPerPage Nuevo valor de ítems por página
-   */
-   public onItemsPerPageChange(itemsPerPage: number): void {
-    this.itemsPerPage = itemsPerPage;
-    this.currentPage = 1;
-    this.updatePagination();
   }
 
   /** Ejecuta la búsqueda de pendientes con los filtros del formulario */
@@ -162,5 +171,13 @@ export class SeleccionModuloComponent implements OnInit {
     this.totalItems = this.todosPendientes.length;
     this.currentPage = 1;
     this.updatePagination();
+  }
+
+   /**
+   * Método que se ejecuta al destruir el componente.
+   */
+   ngOnDestroy(): void {
+    this.destroyed$.next(true);
+    this.destroyed$.complete();
   }
 }

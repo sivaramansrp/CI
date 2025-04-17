@@ -28,7 +28,6 @@ import { provideHttpClient } from '@angular/common/http';
     TituloComponent,
     ToastrModule.forRoot(),
     BandejaTareasPendientesComponent,
-    FooterComponent
 ],
   providers: [
     ToastrService,

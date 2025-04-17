@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ConfiguracionColumna, InputFecha, InputFechaComponent, ListaSolicitudes, TablaAcciones, TablaDinamicaComponent, TablePaginationComponent } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { ReplaySubject } from 'rxjs';
 import { TablerosService } from '../../core/service/tabletos.service';
 
 @Component({
@@ -11,7 +12,7 @@ import { TablerosService } from '../../core/service/tabletos.service';
   templateUrl: './bandeja-solicitudes.component.html',
   styleUrl: './bandeja-solicitudes.component.scss',
 })
-export class BandejaSolicitudesComponent implements OnInit {
+export class BandejaSolicitudesComponent implements OnInit, OnDestroy {
   /** Configuración del campo de fecha inicial */
   FECHA_INICIO = {
     labelNombre: 'Fecha inicial',
@@ -24,10 +25,12 @@ export class BandejaSolicitudesComponent implements OnInit {
     required: false,
     habilitado: true,
   };
+  /** Observable para manejar la destrucción del componente */
+  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   /** Indica si el bloque de filtros está colapsado */
   colapsable: boolean = false;
   /** Formulario de búsqueda */
-  public FormSolicitud!: FormGroup;
+  public FormBusqueda!: FormGroup;
   /** Configuración del input de fecha inicial */
   public fechaInicioInput: InputFecha = this.FECHA_INICIO;
   /** Configuración del input de fecha final */
@@ -54,25 +57,28 @@ export class BandejaSolicitudesComponent implements OnInit {
     { encabezado: 'Fecha de actualización', clave: (item: ListaSolicitudes) => item.fechaActualizacion, orden: 4 },
     { encabezado: 'Dias trascurridos', clave: (item: ListaSolicitudes) => item.diasTrascurridos, orden: 5 }
   ]
-
   constructor(
     private fb: FormBuilder,
     private servicioFuncionario: TablerosService,
   ) {
-    // Inicialización del formulario de búsqueda
-    this.FormSolicitud = this.fb.group({
+  }
+  /** Al inicializar el componente, se cargan las solicitudes */
+  ngOnInit(): void {
+    this.inicializaFormConsulta();
+    this.getSolicitudesTabla();
+  }
+
+  // Inicialización del formulario de búsqueda
+  inicializaFormConsulta(): void {
+    this.FormBusqueda = this.fb.group({
       idSolicitud: [''],
       fechaInicio: [''],
       fechaFinal: ['']
     });
   }
-  /** Al inicializar el componente, se cargan las solicitudes */
-  ngOnInit(): void {
-    this.getSolicitudesTabla();
-  }
 
-   /** Alterna el estado del bloque colapsable (mostrar/ocultar filtros) */
-   mostrar_colapsable(): void {
+  /** Alterna el estado del bloque colapsable (mostrar/ocultar filtros) */
+  mostrar_colapsable(): void {
     this.colapsable = !this.colapsable;
   }
 
@@ -81,8 +87,8 @@ export class BandejaSolicitudesComponent implements OnInit {
  * @param nuevoValor_fechaInicio - Nuevo valor a establecer para el campo 'fechaInicio'.
  */
   public cambioFechaInicioFucion(nuevo_valor: string) {
-    this.FormSolicitud.get('fechaInicio')?.setValue(nuevo_valor);
-    this.FormSolicitud.get('fechaInicio')?.markAsUntouched();
+    this.FormBusqueda.get('fechaInicio')?.setValue(nuevo_valor);
+    this.FormBusqueda.get('fechaInicio')?.markAsUntouched();
   }
 
   /**
@@ -90,11 +96,11 @@ export class BandejaSolicitudesComponent implements OnInit {
  * @param nuevoValor_fechaFinal - Nuevo valor a establecer para el campo 'fechaFinal'.
  */
   public cambioFechaFinalFuncion(nuevo_valor: string) {
-    this.FormSolicitud.get('fechaFinal')?.setValue(nuevo_valor);
-    this.FormSolicitud.get('fechaFinal')?.markAsUntouched();
+    this.FormBusqueda.get('fechaFinal')?.setValue(nuevo_valor);
+    this.FormBusqueda.get('fechaFinal')?.markAsUntouched();
   }
 
-    /** Obtiene todos las solicitudes desde el backend y aplica la paginación inicial */
+  /** Obtiene todos las solicitudes desde el backend y aplica la paginación inicial */
   public getSolicitudesTabla(): void {
     this.accionesServcios = [TablaAcciones.VER];
     this.servicioFuncionario.getListaSolicitudes().subscribe((data) => {
@@ -104,7 +110,26 @@ export class BandejaSolicitudesComponent implements OnInit {
       this.updatePagination();
     });
   }
-  
+
+  /**
+   * Método que se ejecuta cuando se cambia de página en la paginación.
+   * @param {number} page - Número de la página seleccionada.
+   */
+  onPageChange(page: number) {
+    this.currentPage = page;
+    this.updatePagination();
+  }
+
+  /**
+   * Método que se ejecuta cuando cambia el número de elementos por página.
+   * @param {number} itemsPerPage - Número de elementos a mostrar por página.
+   */
+  onItemsPerPageChange(itemsPerPage: number) {
+    this.itemsPerPage = itemsPerPage;
+    this.currentPage = 1;
+    this.updatePagination();
+  }
+
   /** Actualiza los elementos paginados según la página e ítems por página seleccionados */
   public updatePagination(): void {
     const STARTINDEX = (this.currentPage - 1) * this.itemsPerPage;
@@ -112,33 +137,14 @@ export class BandejaSolicitudesComponent implements OnInit {
     this.listaSolicitudesPaginadas = this.todasSolicitudes.slice(STARTINDEX, ENDINDEX);
   }
 
-  /**
-  * Maneja el cambio de página
-  * @param page Página seleccionada
-  */
-  public onPageChange(page: number): void {
-    this.currentPage = page;
-    this.updatePagination();
-  }
-
-  /**
-   * Maneja el cambio de número de ítems por página
-   * @param itemsPerPage Nuevo valor de ítems por página
-   */
-  public onItemsPerPageChange(itemsPerPage: number): void {
-    this.itemsPerPage = itemsPerPage;
-    this.currentPage = 1;
-    this.updatePagination();
-  }
-
-   /** Ejecuta la búsqueda de solicitudes con los filtros del formulario */
+  /** Ejecuta la búsqueda de solicitudes con los filtros del formulario */
   buscarSolicitudes() {
     /**
      * Se salta la regla de UPPER_CASE, ya que los valores que se recuperan en la constante 
      * son valores predefinidos como el formulario fueron declarados
      */
     // eslint-disable-next-line @typescript-eslint/naming-convention
-    const { idSolicitud, fechaInicio, fechaFinal } = this.FormSolicitud.value;
+    const { idSolicitud, fechaInicio, fechaFinal } = this.FormBusqueda.value;
     this.servicioFuncionario
       .getListaSolicitudes(idSolicitud || undefined, fechaInicio || undefined, fechaFinal || undefined)
       .subscribe((data) => {
@@ -154,10 +160,18 @@ export class BandejaSolicitudesComponent implements OnInit {
    * Reseteo de valores de la busqueda
    */
   resetFiltros(): void {
-    this.FormSolicitud.reset();
+    this.FormBusqueda.reset();
     this.todasSolicitudes = [...this.todasSolicitudesOriginales];
     this.totalItems = this.todasSolicitudes.length;
     this.currentPage = 1;
     this.updatePagination();
+  }
+
+  /**
+ * Método que se ejecuta al destruir el componente.
+ */
+  ngOnDestroy(): void {
+    this.destroyed$.next(true);
+    this.destroyed$.complete();
   }
 }

@@ -4,11 +4,6 @@ import { NgModule } from '@angular/core';
 
 
 const ROUTES: Routes = [
-  { path: '', pathMatch: 'full', redirectTo: 'app-seleccion-modulo' },
-  // {
-  //   path: 'app-seleccion-modulo',
-  //   component: SeleccionModuloComponent
-  // },
   {
     path: '',
     loadChildren: () =>

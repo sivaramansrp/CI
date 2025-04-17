@@ -1,6 +1,5 @@
 import { RouterModule, Routes } from '@angular/router';
 import { AtenderRequerimientoComponent } from './atender-requerimiento/atender-requerimiento.component';
-import { AutorizacionMasivaComponent } from './autorizacion-masiva/autorizacion-masiva.component';
 import { AutorizarDictamenComponent } from './autorizar/autorizar-dictamen/autorizar-dictamen.component';
 import { BandejaPendientesComponent } from './bandeja-pendientes/bandeja-pendientes.component';
 import { BandejaSolicitudesComponent } from './bandeja-solicitudes/bandeja-solicitudes.component';
@@ -9,8 +8,6 @@ import { NgModule } from '@angular/core';
 import { ObservacionesDictamenComponent } from './autorizar/observaciones/observaciones-dictamen.component';
 import { SeleccionModuloComponent } from './seleccion-modulo/seleccion-modulo.component';
 import { SolicitudPageComponent } from './evaluar-solicitud/solicitud-page/solicitud-page.component';
-import { TableroSeguimientoComponent } from './tablero-seguimiento/tablero-seguimiento.component';
-
 
 const ROUTES: Routes = [
   {
@@ -44,14 +41,6 @@ const ROUTES: Routes = [
   {
     path: 'bandeja-solicitudes',
     component: BandejaSolicitudesComponent,
-  },
-  {
-    path: 'autorizacion-masiva',
-    component: AutorizacionMasivaComponent
-  },
-  {
-    path: 'tablero-seguimiento',
-    component: TableroSeguimientoComponent
   }
 
 ];
