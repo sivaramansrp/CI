@@ -730,8 +730,8 @@
     {
         "id": 105,
         "tramite": 290101,
-        "linkDashboard": "/cafe-exportadores/cafe-exportadores",
-        "linkDepartment": "/cafe-exportadores/cafe-exportadores",
+        "linkDashboard": "/amecafe/cafe-exportadores/cafe-exportadores",
+        "linkDepartment": "/amecafe/cafe-exportadores/cafe-exportadores",
         "department": "amecafe"
     },
     {
