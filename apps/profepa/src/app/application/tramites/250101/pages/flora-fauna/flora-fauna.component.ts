@@ -4,8 +4,9 @@ import {
   ListaPasosWizard,
   WizardComponent,
 } from '@ng-mf/data-access-user';
-
+import { ALERTA_COM } from '@libs/shared/data-access-user/src/tramites/constantes/110208/certificado.enum';
 import { FLORA_FAUNA } from '../../constantes/flora-fauna.enum';
+
 
 interface AccionBoton {
   accion: string;
@@ -24,7 +25,7 @@ export class FloraFaunaComponent {
 
   pantallasPasos: ListaPasosWizard[] = FLORA_FAUNA;
   TEXTO_FLORA_FAUNA_ALERT = FLORA_FAUNA_ALERT;
-
+  TEXTOS= ALERTA_COM;
   indice = 1;
 
   datosPasos: DatosPasos = {

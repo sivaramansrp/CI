@@ -23,4 +23,10 @@ export class Tramite250101Query extends Query<Tramite250101State>{
     constructor(private tramiteStore: Tramite250101Store){
         super(tramiteStore);
     }
+        /**
+   * Selecciona el estado completo de la solicitud
+   */
+  selectSolicitud$ = this.select((state) => {
+    return state;
+  });
 }

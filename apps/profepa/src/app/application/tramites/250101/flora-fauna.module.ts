@@ -18,8 +18,12 @@ import { FloraFaunaComponent } from './pages/flora-fauna/flora-fauna.component';
 import { FloraFaunaRoutingModule } from './flora-fauna-routing.module';
 import { InicioSesionService } from '@libs/shared/data-access-user/src/core/services/shared/inicio-sesion/inicio-sesion.service';
 import { NgModule } from '@angular/core';
+
+import { MercanciasComponent } from './components/mercancias/mercancias.component';
+import { PagoDeDerechos250101Component } from './components/pago-de-derechos250101/pago-de-derechos250101.component';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
+import { Requisitos250101Component } from './components/requisitos250101/requisitos250101.component';
 import { SolicitanteService } from '@ng-mf/data-access-user';
 import { SubirDocumentoService } from '@libs/shared/data-access-user/src/core/services/shared/subir-documento/subir-documento.service';
 import { TipoMovimientoComponent } from './components/tipo-movimiento/tipo-movimiento.component';
@@ -41,7 +45,10 @@ import { provideHttpClient } from '@angular/common/http';
     SolicitanteComponent,
     BtnContinuarComponent,
     AnexarDocumentosComponent,
-    FirmaElectronicaComponent
+    FirmaElectronicaComponent,
+    PagoDeDerechos250101Component,
+    MercanciasComponent,
+    Requisitos250101Component
   ],
   providers: [
     provideHttpClient(),
@@ -53,5 +60,6 @@ import { provideHttpClient } from '@angular/common/http';
     InicioSesionService,
     SubirDocumentoService,
   ],
+
 })
 export class FloraFaunaModule {}
