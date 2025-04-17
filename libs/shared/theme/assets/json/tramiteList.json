@@ -1591,8 +1591,8 @@
     {
         "id": 228,
         "tramite": 260703,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "/cofepris/solicitud-permiso/datos",
+        "linkDepartment": "/pago/solicitud-permiso/datos",
         "department": "cofepris"
     },
     {
