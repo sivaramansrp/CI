@@ -1,0 +1,57 @@
+<div class="container">
+    <!-- Contenedor principal -->
+    <div class="row">
+        <!-- Fila principal -->
+        <ul class="nav nav-tabs">
+            <!-- Lista de pestañas de navegación -->
+            <li [ngClass]="indice === 1 ? 'active' : ''">
+                <!-- Pestaña activa si el índice es 1 -->
+                <a data-toggle="tab" tabindex="1" (keyup)="seleccionaTab(1)" (click)="seleccionaTab(1)">Solicitante</a>
+                <!-- Enlace para seleccionar la pestaña "Solicitante" -->
+            </li>
+            <li [ngClass]="indice === 2 ? 'active' : ''">
+                <!-- Pestaña activa si el índice es 2 -->
+                <a data-toggle="tab" tabindex="2" (keyup)="seleccionaTab(2)" (click)="seleccionaTab(2)">Solicitud</a>
+                
+            </li>
+            <li [ngClass]="indice === 3 ? 'active' : ''">
+                
+                <a data-toggle="tab" tabindex="3" (keyup)="seleccionaTab(3)" (click)="seleccionaTab(3)">Monumentos o bienes muebles históricos</a>
+                
+            </li>
+            <li [ngClass]="indice === 4 ? 'active' : ''">
+                
+                <a data-toggle="tab" tabindex="4" (keyup)="seleccionaTab(4)" (click)="seleccionaTab(4)">Destino</a>
+                
+            </li>
+            <li>
+                
+                <a data-toggle="tab" tabindex="5">Itinerario</a>
+               
+            <li>
+                
+                <a data-toggle="tab" tabindex="6">Pago de derechos</a>
+                
+            </li>
+            </ul>
+        <ng-container>
+            <!-- Contenedor para el contenido dinámico según el índice -->
+            @switch (indice) {
+            @case (1) {
+                <!-- Caso 1: Mostrar componente "Solicitante" -->
+                <solicitante #Solicitante></solicitante>
+            }
+            @case (2) {
+              <app-solicitud></app-solicitud>  
+            }
+            @case (3) {
+                
+            }
+            @case (4) {
+             <app-destino></app-destino>   
+            }
+
+            }
+        </ng-container>
+    </div>
+</div>
