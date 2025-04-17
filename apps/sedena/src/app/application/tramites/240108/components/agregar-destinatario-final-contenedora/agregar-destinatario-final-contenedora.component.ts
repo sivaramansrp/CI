@@ -21,7 +21,17 @@ import { Tramite240108Store } from '../../estados/tramite240108Store.store';
 })
 export class AgregarDestinatarioFinalContenedoraComponent {
 
+  /**
+   * Observable que emite los datos del tercero (destinatario o proveedor),
+   * que pueden ser `DestinoFinal`, `Proveedor`, `null` o `undefined`.
+   * 
+   * Se utiliza para obtener la información actual del tercero desde una fuente reactiva.
+   *
+   * @type {Observable<DestinoFinal | Proveedor | null | undefined>}
+   */
   terechosDatos$!: Observable<DestinoFinal | Proveedor | null | undefined>;
+
+  
   /**
    * Constructor del componente.
    *

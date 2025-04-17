@@ -167,6 +167,15 @@ export class Tramite240108Store extends Store<Tramite240108State> {
     }));
   }
 
+  /**
+   * Actualiza el estado con los datos del destinatario proporcionados y limpia los datos del proveedor.
+   * 
+   * Esta función se utiliza para establecer nuevos datos del destinatario (`modificarDestinarioDatos`)
+   * en el estado del store, asegurando que los datos del proveedor se reinicien a `null`.
+   *
+   * @param {DestinoFinal} datos - Objeto con la información actualizada del destinatario.
+   * @returns {void}
+   */
   public actualizarDatosDestinatario(datos: DestinoFinal): void {
     this.update((state) => ({
       ...state,
@@ -175,6 +184,15 @@ export class Tramite240108Store extends Store<Tramite240108State> {
     }));
   }
 
+  /**
+   * Actualiza el estado con los datos del proveedor proporcionados y limpia los datos del destinatario.
+   * 
+   * Esta función se utiliza para establecer nuevos datos del proveedor (`modificarProveedorDatos`)
+   * en el estado del store, asegurando que los datos del destinatario se reinicien a `null`.
+   *
+   * @param {Proveedor} datos - Objeto con la información actualizada del proveedor.
+   * @returns {void}
+   */
   public actualizarDatosProveedor(datos: Proveedor): void {
     this.update((state) => ({
       ...state,

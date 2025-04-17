@@ -19,15 +19,6 @@ import { WizardComponent } from '@ng-mf/data-access-user';
  */
 @Component({
   selector: 'app-solicitud-page',
-  standalone: true,
-  imports: [
-    CommonModule,
-    WizardComponent,
-    PasoDosComponent,
-    PasoTresComponent,
-    BtnContinuarComponent,
-    PasoUnoComponent
-],
   templateUrl: './solicitud-page.component.html',
   styleUrl: './solicitud-page.component.css',
 })

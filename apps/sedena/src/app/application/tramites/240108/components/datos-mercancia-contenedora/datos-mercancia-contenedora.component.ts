@@ -19,6 +19,14 @@ import { Tramite240108Store } from '../../estados/tramite240108Store.store';
   styleUrl: './datos-mercancia-contenedora.component.css',
 })
 export class DatosMercanciaContenedoraComponent {
+
+  /**
+   * Identificador del procedimiento asociado al trámite.
+   * 
+   * Se obtiene desde la constante `NUMERO_TRAMITE.TRAMITE_240108`.
+   *
+   * @type {number}
+   */
   idProcedimiento = NUMERO_TRAMITE.TRAMITE_240108;
   /**
    * Constructor del componente.

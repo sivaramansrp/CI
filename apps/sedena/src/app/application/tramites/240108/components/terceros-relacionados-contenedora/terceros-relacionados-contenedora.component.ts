@@ -1,6 +1,6 @@
 import { ActivatedRoute, Router } from '@angular/router';
+import { Component, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
 import { DestinoFinal } from '../../../../shared/models/terceros-relacionados.model';
 import { OnInit } from '@angular/core';
 import { Proveedor } from '../../../../shared/models/terceros-relacionados.model';
@@ -23,7 +23,7 @@ import { takeUntil } from 'rxjs';
   templateUrl: './terceros-relacionados-contenedora.component.html',
   styleUrl: './terceros-relacionados-contenedora.component.css',
 })
-export class TercerosRelacionadosContenedoraComponent implements OnInit {
+export class TercerosRelacionadosContenedoraComponent implements OnInit, OnDestroy {
   /**
    * Observable para limpiar las suscripciones activas al destruir el componente.
    * @property {Subject<void>} destroy$
@@ -55,7 +55,7 @@ export class TercerosRelacionadosContenedoraComponent implements OnInit {
     private tramiteStore: Tramite240108Store,
     private router: Router,
     private activatedRoute: ActivatedRoute
-  ) // eslint-disable-next-line no-empty-function
+  ) 
   {}
 
   /**
@@ -79,14 +79,30 @@ export class TercerosRelacionadosContenedoraComponent implements OnInit {
       });
   }
 
+  /**
+   * Modifica los datos del destinatario en el store y navega a la sección de acciones.
+   * 
+   * Llama al método `actualizarDatosDestinatario` del store con el objeto recibido,
+   * y luego ejecuta la función `irAAcciones()` para continuar con el flujo.
+   *
+   * @param {DestinoFinal} datos - Objeto que contiene los datos actualizados del destinatario.
+   * @returns {void}
+   */
   modificarDestinarioDatos(datos: DestinoFinal): void {
     this.tramiteStore.actualizarDatosDestinatario(datos);
     this.irAAcciones();
   }
 
+  /**
+   * Modifica los datos del proveedor en el store.
+   * 
+   * Llama al método `actualizarDatosProveedor` del store con el objeto recibido.
+   *
+   * @param {Proveedor} datos - Objeto que contiene los datos actualizados del proveedor.
+   * @returns {void}
+   */
   modificarProveedorDatos(datos: Proveedor): void {
     this.tramiteStore.actualizarDatosProveedor(datos);
-    this.irAAcciones();
   }
 
   /**
@@ -99,5 +115,18 @@ export class TercerosRelacionadosContenedoraComponent implements OnInit {
     this.router.navigate(['../agregar-destino-final'], {
       relativeTo: this.activatedRoute,
     });
+  }
+
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
+   * 
+   * Emite y completa el observable `destroy$` para limpiar suscripciones activas
+   * y prevenir fugas de memoria.
+   *
+   * @returns {void}
+   */
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }
