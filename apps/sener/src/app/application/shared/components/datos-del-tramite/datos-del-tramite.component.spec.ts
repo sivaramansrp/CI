@@ -29,20 +29,20 @@ describe('DatosDelTramiteComponent', () => {
 
   describe('esInvalido', () => {
     it('should return true if the control is invalid and touched', () => {
-      const control = component.form.get('testControl');
-      control?.markAsTouched();
+      const CONTROL = component.form.get('testControl');
+      CONTROL?.markAsTouched();
       expect(component.esInvalido('testControl')).toBe(true);
     });
 
     it('should return true if the control is invalid and dirty', () => {
-      const control = component.form.get('testControl');
-      control?.markAsDirty();
+      const CONTROL = component.form.get('testControl');
+      CONTROL?.markAsDirty();
       expect(component.esInvalido('testControl')).toBe(true);
     });
 
     it('should return false if the control is valid', () => {
-      const control = component.form.get('testControl');
-      control?.setValue('Valid Value');
+      const CONTROL = component.form.get('testControl');
+      CONTROL?.setValue('Valid Value');
       expect(component.esInvalido('testControl')).toBe(false);
     });
 
@@ -53,30 +53,30 @@ describe('DatosDelTramiteComponent', () => {
 
   describe('setValoresStore', () => {
     it('should emit the setValoresStoreEvent with the correct payload', () => {
-      const emitSpy = jest.spyOn(component.setValoresStoreEvent, 'emit');
-      const form = component.form;
-      const campo = 'testControl';
+      const EMITSPY = jest.spyOn(component.setValoresStoreEvent, 'emit');
+      const FORM = component.form;
+      const COMPO = 'testControl';
 
-      component.setValoresStore(form, campo);
+      component.setValoresStore(FORM, COMPO);
 
-      expect(emitSpy).toHaveBeenCalledWith({ form, campo });
+      expect(EMITSPY).toHaveBeenCalledWith({ FORM, COMPO });
     });
   });
 
   describe('Input properties', () => {
     it('should have default values for inputFields', () => {
-      const defaultComponent = new DatosDelTramiteComponent();
-      expect(defaultComponent.inputFields).toEqual([]);
+      const DEFAULTCOMPONENT  = new DatosDelTramiteComponent();
+      expect(DEFAULTCOMPONENT.inputFields).toEqual([]);
     });
 
     it('should have default values for catalogosArray', () => {
-      const defaultComponent = new DatosDelTramiteComponent();
-      expect(defaultComponent.catalogosArray).toEqual([]);
+      const DEFAULTCOMPONENT = new DatosDelTramiteComponent();
+      expect(DEFAULTCOMPONENT.catalogosArray).toEqual([]);
     });
 
     it('should have default values for solicitudOpciones', () => {
-      const defaultComponent = new DatosDelTramiteComponent();
-      expect(defaultComponent.solicitudOpciones).toEqual([]);
+      const DEFAULTCOMPONENT = new DatosDelTramiteComponent();
+      expect(DEFAULTCOMPONENT.solicitudOpciones).toEqual([]);
     });
   });
 

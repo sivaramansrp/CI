@@ -28,7 +28,7 @@ describe('ExportacionHidrocarburosService', () => {
   });
 
   it('should fetch the list of countries from "pais-procedencia.json"', () => {
-    const mockPaises: Catalogo[] = [
+    const MOCKPAISES: Catalogo[] = [
       { id: 1, descripcion: 'SGP' },
       { id: 2, descripcion: 'TLC JAPON' },
       { id: 3, descripcion: 'TLC PERU' },
@@ -44,16 +44,16 @@ describe('ExportacionHidrocarburosService', () => {
     ];
 
     service.getListaDePaisesDisponibles().subscribe((paises) => {
-      expect(paises).toEqual(mockPaises);
+      expect(paises).toEqual(MOCKPAISES);
     });
 
-    const req = httpMock.expectOne('/assets/json/130204/pais-procenia.json');
-    expect(req.request.method).toBe('GET');
-    req.flush(mockPaises);
+    const REQ = httpMock.expectOne('/assets/json/130204/pais-procenia.json');
+    expect(REQ.request.method).toBe('GET');
+    REQ.flush(MOCKPAISES);
   });
 
   it('should fetch countries by block from "paises-por-bloque.json"', () => {
-    const mockPaisesBloque: Catalogo[] = [
+    const MOCKPAISESBLOQUE: Catalogo[] = [
       { id: 1, descripcion: 'URUGUAY (REPUBLICA ORIENTAL DE)' },
       { id: 2, descripcion: 'ARGENTINA (REPUBLICA)' },
       { id: 3, descripcion: 'CUBA (REPUBLICA DE)' },
@@ -65,44 +65,44 @@ describe('ExportacionHidrocarburosService', () => {
     ];
 
     service.getPaisesPorBloque(1).subscribe((paises) => {
-      expect(paises).toEqual(mockPaisesBloque);
+      expect(paises).toEqual(MOCKPAISESBLOQUE);
     });
 
-    const req = httpMock.expectOne('/assets/json/130204/paises-por-bloque.json');
-    expect(req.request.method).toBe('GET');
-    req.flush(mockPaisesBloque);
+    const REQ = httpMock.expectOne('/assets/json/130204/paises-por-bloque.json');
+    expect(REQ.request.method).toBe('GET');
+    REQ.flush(MOCKPAISESBLOQUE);
   });
 
   it('should fetch the list of states from "estado.json"', () => {
-    const mockEstados: Catalogo[] = [
+    const MOCKESTADOS: Catalogo[] = [
       { id: 1, descripcion: 'SINALOA' }
     ];
 
     service.getEstado().subscribe((estados) => {
-      expect(estados).toEqual(mockEstados);
+      expect(estados).toEqual(MOCKESTADOS);
     });
 
-    const req = httpMock.expectOne('/assets/json/130204/estado.json');
-    expect(req.request.method).toBe('GET');
-    req.flush(mockEstados);
+    const REQ = httpMock.expectOne('/assets/json/130204/estado.json');
+    expect(REQ.request.method).toBe('GET');
+    REQ.flush(MOCKESTADOS);
   });
 
   it('should fetch the list of federal representations from "representacion-federal.json"', () => {
-    const mockRepresentaciones: Catalogo[] = [
+    const MOCKREPRESENTACIONES: Catalogo[] = [
       { id: 1, descripcion: 'SECRETARIA DE ENERGIA (oficina central)' }
     ];
 
     service.getRepresentacionFederal().subscribe((representaciones) => {
-      expect(representaciones).toEqual(mockRepresentaciones);
+      expect(representaciones).toEqual(MOCKREPRESENTACIONES);
     });
 
-    const req = httpMock.expectOne('/assets/json/130204/representacion-federal.json');
-    expect(req.request.method).toBe('GET');
-    req.flush(mockRepresentaciones);
+    const REQ = httpMock.expectOne('/assets/json/130204/representacion-federal.json');
+    expect(REQ.request.method).toBe('GET');
+    REQ.flush(MOCKREPRESENTACIONES);
   });
 
   it('should fetch the solicitation options from "solicitude-options.json"', () => {
-    const mockSolicitudeOptions: ProductoResponse = {
+    const MOCKSOLICITUDEOPTIONS: ProductoResponse = {
       options: [
         { label: 'Inicial', value: 'Inicial' }
       ],
@@ -110,16 +110,16 @@ describe('ExportacionHidrocarburosService', () => {
     };
 
     service.getSolicitudeOptions().subscribe((options) => {
-      expect(options).toEqual(mockSolicitudeOptions);
+      expect(options).toEqual(MOCKSOLICITUDEOPTIONS);
     });
 
-    const req = httpMock.expectOne('assets/json/130204/solicitude-options.json');
-    expect(req.request.method).toBe('GET');
-    req.flush(mockSolicitudeOptions);
+    const REQ = httpMock.expectOne('assets/json/130204/solicitude-options.json');
+    expect(REQ.request.method).toBe('GET');
+    REQ.flush(MOCKSOLICITUDEOPTIONS);
   });
 
   it('should fetch the product options from "producto-otions.json"', () => {
-    const mockProductoOptions: ProductoResponse = {
+    const MOCKPRODUCTOOPTIONS: ProductoResponse = {
       options: [
         { label: 'NuevoLargo plazo (5 años)', value: 'Largo plazo (5 años)' },
         { label: 'Corto plazo (60 días o 1 año)', value: 'Corto plazo (60 días o 1 año)' }
@@ -128,12 +128,12 @@ describe('ExportacionHidrocarburosService', () => {
     };
 
     service.getProductoOptions().subscribe((options) => {
-      expect(options).toEqual(mockProductoOptions);
+      expect(options).toEqual(MOCKPRODUCTOOPTIONS);
     });
 
-    const req = httpMock.expectOne('assets/json/130204/plazo-options.json');
-    expect(req.request.method).toBe('GET');
-    req.flush(mockProductoOptions);
+    const REQ = httpMock.expectOne('assets/json/130204/plazo-options.json');
+    expect(REQ.request.method).toBe('GET');
+    REQ.flush(MOCKPRODUCTOOPTIONS);
   });
   
 });

@@ -45,30 +45,30 @@ describe('ExportacionHidrocarburosComponent', () => {
   });
 
   it('should update indice and call siguiente on wizardComponent when AccionBoton is "cont"', () => {
-    const action: AccionBoton = { accion: 'cont', valor: 2 };
+    const ACTION: AccionBoton = { accion: 'cont', valor: 2 };
     component.wizardComponent = wizardComponentSpy as WizardComponent;
 
-    component.getValorIndice(action);
+    component.getValorIndice(ACTION);
 
     expect(component.indice).toBe(2);
     expect(wizardComponentSpy.siguiente).toHaveBeenCalled();
   });
 
   it('should update indice and call atras on wizardComponent when AccionBoton is not "cont"', () => {
-    const action: AccionBoton = { accion: 'ant', valor: 1 };
+    const ACTION: AccionBoton = { accion: 'ant', valor: 1 };
     component.wizardComponent = wizardComponentSpy as WizardComponent;
 
-    component.getValorIndice(action);
+    component.getValorIndice(ACTION);
 
     expect(component.indice).toBe(1);
     expect(wizardComponentSpy.atras).toHaveBeenCalled();
   });
 
   it('should not call siguiente or atras when AccionBoton value is out of bounds', () => {
-    const action: AccionBoton = { accion: 'cont', valor: 5 };
+    const ACTION: AccionBoton = { accion: 'cont', valor: 5 };
     component.wizardComponent = wizardComponentSpy as WizardComponent;
 
-    component.getValorIndice(action);
+    component.getValorIndice(ACTION);
 
     expect(component.indice).toBe(1); // Remains unchanged
     expect(wizardComponentSpy.siguiente).not.toHaveBeenCalled();

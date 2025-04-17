@@ -16,9 +16,9 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 describe('SolicitudComponent', () => {
   let component: SolicitudComponent;
   let fixture: ComponentFixture<SolicitudComponent>;
-  let exportacionServiceMock: any;
-  let tramiteStoreMock: any;
-  let tramiteQueryMock: any;
+  let exportacionServiceMock: Partial<ExportacionHidrocarburosService>;
+  let tramiteStoreMock: Partial<Tramite130204Store>;
+  let tramiteQueryMock: Partial<Tramite130204Query>;
 
   beforeEach(async () => {
     exportacionServiceMock = {
@@ -75,15 +75,15 @@ describe('SolicitudComponent', () => {
   });
 
   it('should initialize forms on ngOnInit', () => {
-    const spyInitForms = jest.spyOn(component, 'inicializarFormularios');
+    const SPYINITFORMS = jest.spyOn(component, 'inicializarFormularios');
     component.ngOnInit();
-    expect(spyInitForms).toHaveBeenCalled();
+    expect(SPYINITFORMS).toHaveBeenCalled();
   });
 
   it('should call opcionesDeBusqueda on ngOnInit', () => {
-    const spyOpciones = jest.spyOn(component, 'opcionesDeBusqueda');
+    const SPYOPCIONES = jest.spyOn(component, 'opcionesDeBusqueda');
     component.ngOnInit();
-    expect(spyOpciones).toHaveBeenCalled();
+    expect(SPYOPCIONES).toHaveBeenCalled();
   });
 
   it('should fetch table data and update formForTotalCount', () => {
@@ -97,14 +97,14 @@ describe('SolicitudComponent', () => {
   });
 
   it('should handle store updates for setFraccion', () => {
-    // 1) build a simple form with the controls your method will patch
-    const form = new FormBuilder().group({
+        // 1) Construir un formulario simple con los controles que tu método parcheará
+    const FORM = new FormBuilder().group({
       fraccion: [1],
       umt: [''],
       acotacion: ['']
     });
 
-    // 2) stub the catalog arrays so .find() returns a match
+        // 2) Simular los catálogos para que .find() devuelva una coincidencia
     component.mercanciaCatalogoArray = [[
       { id: 1, descripcion: 'Sample', relacionadaUmtId: 2, relacionadaAcotacionId: 99 }
     ]];
@@ -112,26 +112,26 @@ describe('SolicitudComponent', () => {
       { id: 99, descripcion: 'My Acotación' }
     ];
 
-    // 3) spy on setValoresStore to verify it's called for each field
-    const spySet = jest.spyOn(component, 'setValoresStore');
+        // 3) Espiar setValoresStore para verificar que se llame por cada campo
+    const SPYSET = jest.spyOn(component, 'setValoresStore');
 
-    // 4) invoke the handler
+        // 4) Invocar el manejador
     component.handleStoreUpdate({
       form,
       campo: 'fraccion',
       metodoNombre: 'setFraccion'
     });
 
-    // 5) assertions
-    expect(spySet).toHaveBeenCalledWith(form, 'fraccion');
-    expect(form.value.umt).toBe(2);
-    expect(spySet).toHaveBeenCalledWith(form, 'umt');
-    expect(form.value.acotacion).toBe('My Acotación');
-    expect(spySet).toHaveBeenCalledWith(form, 'acotacion');
+        // 5) Aserciones
+    expect(SPYSET).toHaveBeenCalledWith(FORM, 'fraccion');
+    expect(FORM.value.umt).toBe(2);
+    expect(SPYSET).toHaveBeenCalledWith(FORM, 'umt');
+    expect(FORM.value.acotacion).toBe('My Acotación');
+    expect(SPYSET).toHaveBeenCalledWith(FORM, 'acotacion');
   });
 
   it('should handle store updates for setNico', () => {
-    const form = new FormBuilder().group({
+    const FORM = new FormBuilder().group({
       fraccion: [1],
       descripcionNico: ['']
     });
@@ -140,15 +140,15 @@ describe('SolicitudComponent', () => {
       { id: 1, descripcion: 'Test Descripción' }
     ]];
 
-    const spySet = jest.spyOn(component, 'setValoresStore');
+    const SPYSET = jest.spyOn(component, 'setValoresStore');
     component.handleStoreUpdate({
       form,
       campo: 'nico',
       metodoNombre: 'setNico'
     });
 
-    expect(spySet).toHaveBeenCalledWith(form, 'nico');
-    expect(form.value.descripcionNico).toBe('Test Descripción');
+    expect(SPYSET).toHaveBeenCalledWith(FORM, 'nico');
+    expect(FORM.value.descripcionNico).toBe('Test Descripción');
   });
 
   it('should validate and show/hide table based on form validity', () => {
@@ -166,28 +166,28 @@ describe('SolicitudComponent', () => {
   });
 
   it('should fetch countries by block and update selectRangoDias', () => {
-    const mockData = [{ descripcion: 'Country 1' }, { descripcion: 'Country 2' }];
-    exportacionServiceMock.getPaisesPorBloque.mockReturnValue(of(mockData));
+    const MOCKDATA = [{ descripcion: 'Country 1' }, { descripcion: 'Country 2' }];
+    (exportacionServiceMock.getPaisesPorBloque as jest.Mock).mockReturnValue(of(MOCKDATA));
 
     component.fetchPaisesPorBloque(1);
     expect(exportacionServiceMock.getPaisesPorBloque).toHaveBeenCalledWith(1);
-    expect(component.paisesPorBloque).toEqual(mockData);
+    expect(component.paisesPorBloque).toEqual(MOCKDATA);
     expect(component.selectRangoDias).toEqual(['Country 1', 'Country 2']);
   });
 
   it('should set values in the store', () => {
-    const form = new FormBuilder().group({ campo: ['value'] });
-    component.setValoresStore(form, 'campo');
+    const FORM = new FormBuilder().group({ campo: ['value'] });
+    component.setValoresStore(FORM, 'campo');
     expect(tramiteStoreMock.establecerDatos).toHaveBeenCalledWith({ campo: 'value' });
   });
 
   it('should clean up subscriptions on ngOnDestroy', () => {
-    const spyNext = jest.spyOn(component['destroyed$'], 'next');
-    const spyComplete = jest.spyOn(component['destroyed$'], 'complete');
+    const SPYNEXT = jest.spyOn(component['destroyed$'], 'next');
+    const SPYCOMPLETE = jest.spyOn(component['destroyed$'], 'complete');
 
     component.ngOnDestroy();
 
-    expect(spyNext).toHaveBeenCalled();
-    expect(spyComplete).toHaveBeenCalled();
+    expect(SPYNEXT).toHaveBeenCalled();
+    expect(SPYCOMPLETE).toHaveBeenCalled();
   });
 });
