@@ -12,7 +12,7 @@ const ROUTES: Routes = [
   {
     path: '',
     pathMatch: 'full',
-    redirectTo: 'solicitud-modificacion-permiso-salida-territorio'
+    redirectTo: 'solicitud'
   }
 ];
 
