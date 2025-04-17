@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { DatosDelTramiteComponent } from '../../../../shared/components/datos-del-tramite/datos-del-tramite.component';
 import { DatosDelTramiteFormState } from '../../../../shared/models/datos-del-tramite.model';
 import { MercanciaDetalle } from '../../../../shared/models/datos-del-tramite.model';
+import { NUMERO_TRAMITE } from '../../../../shared/constants/datos-solicitud.enum';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
@@ -24,6 +25,16 @@ import { takeUntil } from 'rxjs';
   styleUrl: './datos-del-tramite-contenedora.component.css',
 })
 export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
+
+  /**
+   * Identificador del procedimiento asociado al trámite.
+   * 
+   * Se obtiene desde la constante `NUMERO_TRAMITE.TRAMITE_240108`.
+   *
+   * @type {number}
+   */
+  idProcedimiento = NUMERO_TRAMITE.TRAMITE_240108;
+  
   /**
    * Observable para limpiar suscripciones activas al destruir el componente.
    * @property {Subject<void>} unsubscribe$
