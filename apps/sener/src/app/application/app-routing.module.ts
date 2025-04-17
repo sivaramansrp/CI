@@ -22,6 +22,13 @@ const ROUTES: Routes = [
         (m) => m.RenunciaDeDerechosDeModule
       ),
   },
+  {
+    path: 'exportacion-hidrocarburos',
+    loadChildren: () =>
+      import('./tramites/130204/exportacion-hidrocarburos.module').then(
+        (m) => m.ExportacionHidrocarburosModule
+      ),
+  }
 ];
 
 @NgModule({
