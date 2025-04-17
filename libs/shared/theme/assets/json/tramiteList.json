@@ -1766,8 +1766,8 @@
     {
         "id": 253,
         "tramite": 130401,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "/se/modificacion-descripcion/invocar-modulo",
+        "linkDepartment": "/se/pago/modificacion-descripcion/invocar-modulo",
         "department": "se"
     },
     {
