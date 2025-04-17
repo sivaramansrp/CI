@@ -1,4 +1,4 @@
-import { REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL } from "@libs/shared/data-access-user/src/tramites/constantes/regex.constants";
+import { REGEX_CORREO_ELECTRONICO, REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, REGEX_NOMBRE, REGEX_PATRON_ALFANUMERICO } from "@libs/shared/data-access-user/src/tramites/constantes/regex.constants";
 
 
 /**
@@ -164,4 +164,221 @@ export const FORMULARIO_DATOS_SOLICITUD = [
         valorPredeterminado: '',
         marginTop: 0
     },
+];
+
+export const FORMULARIO_DATOS_PROPIETARIO = [
+    {
+        id: 'nombre',
+        labelNombre: 'Nombre(s)',
+        campo: 'nombre',
+        clase: 'col-md-4',
+        tipoInput: 'text',
+        desactivado: false,
+        soloLectura: false,
+        validadores: [
+            { tipo: 'required' },
+            { tipo: 'pattern', valor:REGEX_NOMBRE, mensaje: 'Por favor, corrija el nombre' }
+        ],
+        marcadorDePosicion: '',
+        valorPredeterminado: '',
+        marginTop: 0
+    },
+    {
+        id: 'apellidoPaterno',
+        labelNombre: 'Apellido Paterno',
+        campo: 'apellidoPaterno',
+        clase: 'col-md-4',
+        tipoInput: 'text',
+        desactivado: false,
+        soloLectura: false,
+        validadores: [
+            { tipo: 'required' },
+            { tipo: 'pattern', valor:REGEX_NOMBRE, mensaje: 'Por favor, corrija el appellido paterno.' }
+        ],
+        marcadorDePosicion: '',
+        valorPredeterminado: '',
+        marginTop: 0
+    },
+    {
+        id: 'apellidoMaterno',
+        labelNombre: 'Apellido Materno',
+        campo: 'apellidoMaterno',
+        clase: 'col-md-4',
+        tipoInput: 'text',
+        desactivado: false,
+        soloLectura: false,
+        validadores: [
+            { tipo: 'pattern', valor:REGEX_NOMBRE, mensaje: 'Por favor, corrija el appellido materno.' }
+        ],
+        marcadorDePosicion: '',
+        valorPredeterminado: '',
+        marginTop: 0
+    },
+    {
+        id: 'calle',
+        labelNombre: 'Calle',
+        campo: 'calle',
+        clase: 'col-md-4',
+        tipoInput: 'text',
+        desactivado: false,
+        soloLectura: false,
+        validadores: [
+            { tipo: 'required' },
+            { tipo: 'pattern', valor:REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija la calle.' }
+        ],
+        marcadorDePosicion: '',
+        valorPredeterminado: '',
+        marginTop: 0
+    },
+    {
+        id: 'numeroExterior',
+        labelNombre: 'Número Exterior',
+        campo: 'numeroExterior',
+        clase: 'col-md-4',
+        tipoInput: 'number',
+        desactivado: false,
+        soloLectura: false,
+        validadores: [
+            { tipo: 'required' }
+        ],
+        marcadorDePosicion: '',
+        valorPredeterminado: '',
+        marginTop: 0
+    },
+    {
+        id: 'numeroInterior',
+        labelNombre: 'Número Interior',
+        campo: 'numeroInterior',
+        clase: 'col-md-4',
+        tipoInput: 'number',
+        desactivado: false,
+        soloLectura: false,
+        validadores: [],
+        marcadorDePosicion: '',
+        valorPredeterminado: '',
+        marginTop: 0
+    },
+    {
+        id: 'pais',
+        labelNombre: 'País',
+        campo: 'pais',
+        clase: 'col-md-4',
+        tipoInput: 'select-catalogos',
+        desactivado: false,
+        soloLectura: false,
+        validadores: [
+            { tipo: 'required' }
+        ],
+        marcadorDePosicion: '',
+        valorPredeterminado: '',
+        marginTop: 0
+    },
+    {
+        id: 'estadoLocalidad',
+        labelNombre: 'Estado y Localidad',
+        campo: 'estadoLocalidad',
+        clase: 'col-md-4',
+        tipoInput: 'text',
+        desactivado: false,
+        soloLectura: false,
+        validadores: [
+            { tipo: 'required' }
+        ],
+        marcadorDePosicion: '',
+        valorPredeterminado: '',
+        marginTop: 0
+    },
+    {
+        id: 'correoElectronico',
+        labelNombre: 'Correo Electrónico',
+        campo: 'correoElectronico',
+        clase: 'col-md-4',
+        tipoInput: 'text',
+        desactivado: false,
+        soloLectura: false,
+        validadores: [
+            { tipo: 'required' },
+            { tipo: 'pattern', valor:REGEX_CORREO_ELECTRONICO, mensaje: 'Por favor, escriba una dirección de correo válida.' }
+        ],
+        marcadorDePosicion: '',
+        valorPredeterminado: '',
+        marginTop: 0
+    },
+    {
+        id: 'telefono',
+        labelNombre: 'Teléfono',
+        campo: 'telefono',
+        clase: 'col-md-4',
+        tipoInput: 'text',
+        desactivado: false,
+        soloLectura: false,
+        validadores: [
+            { tipo: 'required' }
+        ],
+        marcadorDePosicion: '',
+        valorPredeterminado: '',
+        marginTop: 0
+    },
+    {
+        id: 'codigoPostal',
+        labelNombre: 'Código Postal',
+        campo: 'codigoPostal',
+        clase: 'col-md-4',
+        tipoInput: 'text',
+        desactivado: false,
+        soloLectura: false,
+        validadores: [
+            { tipo: 'required' }
+        ],
+        marcadorDePosicion: '',
+        valorPredeterminado: '',
+        marginTop: 0
+    }
+];
+
+export const FORMULARIO_DATOS_AUTORIZACION = [
+    {
+        id: 'folioInformacionGeneralAutorizacion',
+        labelNombre: 'Folio de autorización de importación temporal formato en papel',
+        campo: 'folioInformacionGeneralAutorizacion',
+        clase: 'col-md-8',
+        tipoInput: 'text',
+        desactivado: false,
+        soloLectura: false,
+        validadores: [
+            { tipo: 'required' },
+            { tipo: 'pattern', valor: REGEX_PATRON_ALFANUMERICO, mensaje: 'Por favor, corrija el folio de autorización de importación temporal formato en papel.' }
+        ],
+        marcadorDePosicion: '',
+        valorPredeterminado: '',
+        marginTop: 0
+    },
+    {
+        id: 'aduanaIngreso',
+        labelNombre: 'Aduana de ingreso',
+        campo: 'aduanaIngreso',
+        clase: 'col-md-4',
+        tipoInput: 'select-catalogos',
+        desactivado: false,
+        soloLectura: false,
+        validadores: [
+            { tipo: 'required' }
+        ],
+        marcadorDePosicion: '',
+        valorPredeterminado: '',
+        marginTop: 0
+    },
+    {
+        id: 'seccionAduanera',
+        labelNombre: 'Sección aduanera',
+        campo: 'seccionAduanera',
+        clase: 'col-md-4',
+        tipoInput: 'select-catalogos',
+        desactivado: false,
+        soloLectura: false,
+        validadores: [],
+        marcadorDePosicion: '',
+        valorPredeterminado: '',
+        marginTop: 0
+    }
 ];

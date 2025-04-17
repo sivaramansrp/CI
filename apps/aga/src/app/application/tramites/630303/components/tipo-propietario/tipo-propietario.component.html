@@ -1,0 +1,20 @@
+<div class="container">
+    <ng-titulo [titulo]="'Tipo de Propietario'"></ng-titulo>
+        <form [formGroup]="tipoPropietarioFormulario" class="ms-2">
+            <div class="row mt-4">
+                <div class="col-md-4">
+                    <app-catalogo-select [label]="'Propietario'" [required]="true"
+                        [tooltipQuestionCircle]="true"></app-catalogo-select>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col-md-4">
+                    <app-catalogo-select [label]="'Tipo de propietario'" [required]="true"></app-catalogo-select>
+                </div>
+            </div>
+        </form>
+    <div class="row mt-4">
+        <formas-dinamicas [forma]="tipoPropietarioFormulario" [formularioDatos]="formularioDatosTipoPropietario"
+            [estado]="estadoSeleccionado" (emitirCambioDeValor)="establecerCambioDeValor($event)"></formas-dinamicas>
+    </div>
+</div>

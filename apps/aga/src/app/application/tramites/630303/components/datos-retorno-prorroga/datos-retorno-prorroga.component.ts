@@ -82,11 +82,11 @@ export class DatosRetornoProrrogaComponent implements OnInit,OnDestroy {
   inicializarFormulario(): void {
     this.datosImportacionRetornoProrrogaGeneralFormulario = this.fb.group({
       folioInformacionGeneralProrroga: [
-        this.estadoSeleccionado?.folioInformacionGeneralProrroga,
+        this.estadoSeleccionado?.['folioInformacionGeneralProrroga'],
         [Validators.required, Validators.pattern(REGEX_PATRON_ALFANUMERICO)],
       ],
-      fechaInicioProrroga: [this.estadoSeleccionado?.fechaInicioProrroga, Validators.required],
-      fechaVencimientoProrroga: [this.estadoSeleccionado?.fechaVencimientoProrroga, Validators.required],
+      fechaInicioProrroga: [this.estadoSeleccionado?.['fechaInicioProrroga'], Validators.required],
+      fechaVencimientoProrroga: [this.estadoSeleccionado?.['fechaVencimientoProrroga'], Validators.required],
     });
   }
 
@@ -122,9 +122,7 @@ export class DatosRetornoProrrogaComponent implements OnInit,OnDestroy {
    */
   setValorStore(FormGroup: FormGroup, control: string): void {
     const VALOR = FormGroup.get(control)?.value;
-    this.tramite630303Store.setTramite630303State({
-      [control]: VALOR,
-    });
+    this.tramite630303Store.setTramite630303State(control, VALOR);
   }
 
   /**

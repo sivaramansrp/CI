@@ -80,19 +80,6 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Actualiza un valor específico en el store del trámite.
-   * 
-   * @param FormGroup - Formulario reactivo.
-   * @param control - Nombre del control cuyo valor se actualizará en el store.
-   */
-  setValorStore(FormGroup: FormGroup, control: string): void {
-    const VALOR = FormGroup.get(control)?.value;
-    this.tramite630303Store.setTramite630303State({
-      [control]: VALOR,
-    });
-  }
-
-  /**
    * Obtiene el estado actual del trámite desde el store.
    */
   getValorStore(): void {
@@ -109,7 +96,7 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
    * @param $event - Evento que contiene el campo y el valor a actualizar.
    */
   establecerCambioDeValor($event: { campo: string; valor: unknown }): void {
-    this.setValorStore(this.datosMercancia, $event.campo);
+    this.tramite630303Store.setTramite630303State($event.campo, $event.valor);
   }
 
   /**

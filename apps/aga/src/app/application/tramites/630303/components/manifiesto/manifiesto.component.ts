@@ -68,7 +68,7 @@ export class ManifiestoComponent implements OnInit, OnDestroy {
    */
   inizializarFormulario(): void {
     this.manifiestoFormulario = this.fb.group({
-      declaracion: [this.estadoSeleccionado?.declaracion, Validators.required]
+      declaracion: [this.estadoSeleccionado?.['declaracion'], Validators.required]
     });
   }
 
@@ -80,9 +80,7 @@ export class ManifiestoComponent implements OnInit, OnDestroy {
    */
   setValorStore(FormGroup: FormGroup, control: string): void {
     const VALOR = FormGroup.get(control)?.value;
-    this.tramite630303Store.setTramite630303State({
-      [control]: VALOR
-    });
+    this.tramite630303Store.setTramite630303State(control, VALOR);
   }
 
   /**
