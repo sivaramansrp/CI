@@ -3,8 +3,8 @@ import {
   MercanciaFormEstupefacientes,
 } from '../../../shared/models/datos-solicitud.model';
 import { Destinatario } from '../../../shared/models/terceros-relacionados.model';
-import { Facturador } from '../../../shared/models/terceros-relacionados.model';
 import { Injectable } from '@angular/core';
+import { Otros } from '../models/exporticon-estupefacientes.model';
 import { PagoDerechosFormState } from '../../../shared/models/terceros-relacionados.model';
 import { Store } from '@datorama/akita';
 import { StoreConfig } from '@datorama/akita';
@@ -18,7 +18,7 @@ import { TablaScianConfig } from '../../../shared/models/datos-solicitud.model';
  * 
  * @interface Tramite260302State
  * @property {Destinatario[]} certificadoTablaDatos - Datos de destinatarios para la tabla de certificados.
- * @property {Facturador[]} facturadorTablaDatos - Datos de facturadores para la tabla de facturadores.
+ * @property {Facturador[]} destinatarioTableDatos - Datos de facturadores para la tabla de facturadores.
  * @property {Facturador[]} proveedorTablaDatos - Datos de proveedores para la tabla de proveedores.
  * @property {Facturador[]} fabricanteTablaDatos - Datos de fabricantes para la tabla de fabricantes.
  * @property {Facturador[]} otrosTablaDatos - Datos de otros para la tabla de otros.
@@ -35,11 +35,8 @@ import { TablaScianConfig } from '../../../shared/models/datos-solicitud.model';
  * @property {number} [tabSeleccionado] - Índice del tab seleccionado (opcional).
  */
 export interface Tramite260302State {
-  certificadoTablaDatos: Destinatario[];
-  facturadorTablaDatos: Facturador[];
-  proveedorTablaDatos: Facturador[];
-  fabricanteTablaDatos: Facturador[];
-  otrosTablaDatos: Facturador[];
+  destinatarioTableDatos: Destinatario[];
+  otrosTablaDatos: Otros[];
 
   datosSolicitudFormState: DatosSolicitudFormState;
   mercanciaForm: MercanciaFormEstupefacientes;
@@ -64,10 +61,7 @@ export interface Tramite260302State {
 export function createInitialState(): Tramite260302State {
   return {
     otrosTablaDatos:[],
-    certificadoTablaDatos: [],
-    facturadorTablaDatos: [],
-    proveedorTablaDatos: [],
-    fabricanteTablaDatos: [],
+    destinatarioTableDatos: [],
     datosSolicitudFormState: {
       rfcSanitario: '',
       denominacionRazon: '',
@@ -171,64 +165,23 @@ export class Tramite260302Store extends Store<Tramite260302State> {
   }
 
   /**
-   * @method updateFabricanteTablaDatos
+   * @method updateDestinatarioTablaDatos
    * @description Agrega nuevos fabricantes a la lista existente.
-   * @param {Facturador[]} newFabricantes - Lista de nuevos fabricantes.
+   * @param {Destinatario[]} newFabricantes - Lista de nuevos fabricantes.
    */
-  public updateFabricanteTablaDatos(newFabricantes: Facturador[]): void {
+  public updateDestinatarioTablaDatos(newDestinatario: Destinatario[]): void {
     this.update((state) => ({
       ...state,
-      fabricanteTablaDatos: [...state.fabricanteTablaDatos, ...newFabricantes],
-    }));
-  }
-
-  /**
-   * @method updateDestinatarioFinalTablaDatos
-   * @description Agrega nuevos destinatarios finales a la lista existente.
-   * @param {Facturador[]} newDestinatarios - Lista de nuevos destinatarios.
-   */
-  public updateCertificadoTablaDatos(
-    certificadoTablaDatos: Facturador[]
-  ): void {
-    this.update((state) => ({
-      ...state,
-      certificadoTablaDatos: [
-        ...state.certificadoTablaDatos,
-        ...certificadoTablaDatos,
-      ],
-    }));
-  }
-
-  /**
-   * @method updateProveedorTablaDatos
-   * @description Agrega nuevos proveedores a la lista existente.
-   * @param {Facturador[]} newProveedores - Lista de nuevos proveedores.
-   */
-  public updateProveedorTablaDatos(newProveedores: Facturador[]): void {
-    this.update((state) => ({
-      ...state,
-      proveedorTablaDatos: [...state.proveedorTablaDatos, ...newProveedores],
-    }));
-  }
-
-  /**
-   * @method updateFacturadorTablaDatos
-   * @description Agrega nuevos facturadores a la lista existente.
-   * @param {Facturador[]} newFacturadores - Lista de nuevos facturadores.
-   */
-  public updateFacturadorTablaDatos(newFacturadores: Facturador[]): void {
-    this.update((state) => ({
-      ...state,
-      facturadorTablaDatos: [...state.facturadorTablaDatos, ...newFacturadores],
+      destinatarioTableDatos: [...state.destinatarioTableDatos, ...newDestinatario],
     }));
   }
 
   /**
    * @method updateOtrosTablaDatos
    * @description Agrega nuevos facturadores a la lista existente.
-   * @param {Facturador[]} otrosTablaDatos - Lista de nuevos Otros.
+   * @param {Otros[]} otrosTablaDatos - Lista de nuevos Otros.
    */
-  public updateOtrosTablaDatos(otrosTablaDatos: Facturador[]): void {
+  public updateOtrosTablaDatos(otrosTablaDatos: Otros[]): void {
     this.update((state) => ({
       ...state,
       otrosTablaDatos: [...state.otrosTablaDatos, ...otrosTablaDatos],

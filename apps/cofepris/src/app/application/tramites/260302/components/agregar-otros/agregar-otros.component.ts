@@ -1,4 +1,8 @@
-import { Catalogo, InputRadioComponent, TipoPersona } from '@ng-mf/data-access-user';
+import {
+  Catalogo,
+  InputRadioComponent,
+  TipoPersona,
+} from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
@@ -7,19 +11,28 @@ import {
   Validators,
 } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
-import { TERCEROS_NACIONALIDAD_RADIO_OPCIONS, TERCEROS_PERSONA_RADIO_OPCIONS } from '../../constants/exporticon-estupefacientes.enum';
+import {
+  TERCEROS_NACIONALIDAD_RADIO_OPCIONS,
+  TERCEROS_PERSONA_RADIO_OPCIONS,
+} from '../../constants/exporticon-estupefacientes.enum';
 import { CommonModule } from '@angular/common';
 import { DatosSolicitudService } from '../../../../shared/services/datos-solicitud.service';
-import { ExportacionMateriasPrimasService} from '../../service/exportacion-materias-primas.service';
+import { ExportacionMateriasPrimasService } from '../../service/exportacion-materias-primas.service';
 import { Facturador } from '../../../../shared/models/terceros-relacionados.model';
 import { Location } from '@angular/common';
+import { Otros } from '../../models/exporticon-estupefacientes.model';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { Tramite260302Store } from '../../estados/tramite260302Store.store';
 
 @Component({
   selector: 'app-agregar-otros',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, TituloComponent, InputRadioComponent],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    TituloComponent,
+    InputRadioComponent,
+  ],
   templateUrl: './agregar-otros.component.html',
   styleUrl: './agregar-otros.component.scss',
 })
@@ -57,7 +70,7 @@ export class AgregarOtrosComponent implements OnInit, OnDestroy {
   public paisesDatos: Catalogo[] = [];
 
   radioOpcions = TERCEROS_NACIONALIDAD_RADIO_OPCIONS;
-  tipoPersonaRadioOpcions= TERCEROS_PERSONA_RADIO_OPCIONS;
+  tipoPersonaRadioOpcions = TERCEROS_PERSONA_RADIO_OPCIONS;
 
   /**
    * @constructor
@@ -74,7 +87,7 @@ export class AgregarOtrosComponent implements OnInit, OnDestroy {
     private datosSolicitudService: DatosSolicitudService,
     private ubicaccion: Location,
     private tramiteStore: Tramite260302Store,
-    private exportacionMateriasPrimasService: ExportacionMateriasPrimasService,
+    private exportacionMateriasPrimasService: ExportacionMateriasPrimasService
   ) {
     this.crearFormulario();
     this.changeNacionalidad();
@@ -83,7 +96,7 @@ export class AgregarOtrosComponent implements OnInit, OnDestroy {
   /**
    * Crea y inicializa el formulario con los campos y validaciones necesarios.
    * Este formulario incluye información personal y de contacto.
-   * 
+   *
    * @returns {void}
    */
   crearFormulario(): void {
@@ -152,12 +165,38 @@ export class AgregarOtrosComponent implements OnInit, OnDestroy {
     this.ubicaccion.back();
   }
 
+  obtenerNuevoValorFormulario(): Otros {
+    const VALOR_FORMULARIO = this.agregarDatosForm.getRawValue();
+
+    let nombreRazonSocial: string;
+
+    if (VALOR_FORMULARIO.tipoPersona === this.tipoPersona.MORAL) {
+      nombreRazonSocial = VALOR_FORMULARIO.denominacionRazon;
+    } else if (VALOR_FORMULARIO.tipoPersona === this.tipoPersona.FISICA) {
+      nombreRazonSocial = `${VALOR_FORMULARIO.nombres} ${
+        VALOR_FORMULARIO.primerApellido
+      } ${VALOR_FORMULARIO.segundoApellido || ''}`.trim();
+    } else {
+      nombreRazonSocial = '';
+    }
+
+    // 👇 Replace only nombreRazonSocial, keeping rest of the object the same
+     const NUEVO_VALOR_FORMULARIO = {
+      ...VALOR_FORMULARIO,
+      nombreRazonSocial: nombreRazonSocial,
+    };
+
+    return NUEVO_VALOR_FORMULARIO;
+  }
+
   /**
    * Guarda los datos del formulario y navega hacia atrás.
    * Actualiza el estado de los datos en el store y realiza una acción de retroceso en la ubicación.
    */
   guardar(): void {
-    this.tramiteStore.updateOtrosTablaDatos([this.agregarDatosForm.value]);
+    this.tramiteStore.updateOtrosTablaDatos([
+      this.obtenerNuevoValorFormulario(),
+    ]);
     this.ubicaccion.back();
   }
 

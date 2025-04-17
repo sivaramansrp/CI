@@ -1,9 +1,9 @@
 import {
   ConfiguracionColumna,
-  Fabricante,
   TipoPersona,
 } from '@ng-mf/data-access-user';
-import { Facturador } from '../../../shared/models/terceros-relacionados.model';
+import { Destinatario } from '../../../shared/models/terceros-relacionados.model';
+import { Otros } from '../models/exporticon-estupefacientes.model';
 import { TablaMercanciasDatos } from '../../../shared/models/datos-solicitud.model';
 
 export const PASOS = [
@@ -33,65 +33,10 @@ export const TEXTOS_REQUISITOS =
 export const ID_PROCEDIMIENTO = 260302;
 
 /**
- * @const FABRICANTE_ENCABEZADO_DE_TABLA
+ * @const DESTINATARIO_ENCABEZADO_DE_TABLA
  * @description Columnas configuradas para mostrar los datos del fabricante en una tabla.
  */
-export const FABRICANTE_ENCABEZADO_DE_TABLA: ConfiguracionColumna<Fabricante>[] =
-  [
-    {
-      encabezado: 'Nombre/Denominación o Razón Social',
-      clave: (fila) => fila.nombre,
-      orden: 1,
-    },
-    { encabezado: 'R.F.C.', clave: (fila) => fila.rfc, orden: 2 },
-    { encabezado: 'CURP', clave: (fila) => fila.curp, orden: 3 },
-    { encabezado: 'Teléfono', clave: (fila) => fila.telefono, orden: 4 },
-    {
-      encabezado: 'Correo Electrónico',
-      clave: (fila) => fila.correoElectronico,
-      orden: 5,
-    },
-    { encabezado: 'Calle', clave: (fila) => fila.calle, orden: 6 },
-    {
-      encabezado: 'Número Exterior',
-      clave: (fila) => fila.numeroExterior,
-      orden: 7,
-    },
-    {
-      encabezado: 'Número Interior',
-      clave: (fila) => fila.numeroInterior,
-      orden: 8,
-    },
-    { encabezado: 'País', clave: (fila) => fila.pais, orden: 9 },
-    { encabezado: 'Colonia', clave: (fila) => fila.colonia, orden: 10 },
-    {
-      encabezado: 'Municipio o Alcaldía',
-      clave: (fila) => fila.municipio,
-      orden: 11,
-    },
-    { encabezado: 'Localidad', clave: (fila) => fila.localidad, orden: 12 },
-    {
-      encabezado: 'Entidad Federativa',
-      clave: (fila) => fila.entidadFederativa,
-      orden: 13,
-    },
-    {
-      encabezado: 'Estado/Localidad',
-      clave: (fila) => fila.localidad,
-      orden: 14,
-    },
-    {
-      encabezado: 'Código Postal',
-      clave: (fila) => fila.cp,
-      orden: 15,
-    },
-  ];
-
-/**
- * @const FACTURADOR_ENCABEZADO_DE_TABLA
- * @description Columnas configuradas para mostrar los datos del facturador en una tabla.
- */
-export const FACTURADOR_ENCABEZADO_DE_TABLA: ConfiguracionColumna<Facturador>[] =
+export const DESTINATARIO_ENCABEZADO_DE_TABLA: ConfiguracionColumna<Destinatario>[] =
   [
     {
       encabezado: 'Nombre/Denominación o Razón Social',
@@ -132,7 +77,7 @@ export const FACTURADOR_ENCABEZADO_DE_TABLA: ConfiguracionColumna<Facturador>[] 
     },
     {
       encabezado: 'Estado/Localidad',
-      clave: (fila) => fila.estadoLocalidad,
+      clave: (fila) => fila.localidad,
       orden: 14,
     },
     {
@@ -142,11 +87,68 @@ export const FACTURADOR_ENCABEZADO_DE_TABLA: ConfiguracionColumna<Facturador>[] 
     },
   ];
 
+  /**
+ * @const OTROS_ENCABEZADO_DE_TABLA
+ * @description Columnas configuradas para mostrar los datos del otros en una tabla.
+ */
+export const OTROS_ENCABEZADO_DE_TABLA: ConfiguracionColumna<Otros>[] =
+[
+  {
+    encabezado: 'Tercero nombre descripcion',
+    clave: (fila) => fila.nombreDescripcion,
+    orden: 1,
+  },
+  {
+    encabezado: 'Nombre/Denominación o Razón Social',
+    clave: (fila) => fila.nombreRazonSocial,
+    orden: 2,
+  },
+  { encabezado: 'R.F.C.', clave: (fila) => fila.rfc, orden: 3 },
+  { encabezado: 'CURP', clave: (fila) => fila.curp, orden: 4 },
+  { encabezado: 'Teléfono', clave: (fila) => fila.telefono, orden: 5 },
+  {
+    encabezado: 'Correo Electrónico',
+    clave: (fila) => fila.correoElectronico,
+    orden: 6,
+  },
+  { encabezado: 'Calle', clave: (fila) => fila.calle, orden: 7 },
+  {
+    encabezado: 'Número Exterior',
+    clave: (fila) => fila.numeroExterior,
+    orden: 8,
+  },
+  {
+    encabezado: 'Número Interior',
+    clave: (fila) => fila.numeroInterior,
+    orden: 9,
+  },
+  { encabezado: 'País', clave: (fila) => fila.pais, orden: 10 },
+  { encabezado: 'Colonia', clave: (fila) => fila.colonia, orden: 11 },
+  {
+    encabezado: 'Municipio o Alcaldía',
+    clave: (fila) => fila.municipioAlcaldia,
+    orden: 12,
+  },
+  { encabezado: 'Localidad', clave: (fila) => fila.localidad, orden: 13 },
+  {
+    encabezado: 'Entidad Federativa',
+    clave: (fila) => fila.entidadFederativa,
+    orden: 14,
+  },
+  {
+    encabezado: 'Estado/Localidad',
+    clave: (fila) => fila.localidad,
+    orden: 15,
+  },
+  {
+    encabezado: 'Código Postal',
+    clave: (fila) => fila.codigoPostal,
+    orden: 16,
+  },
+];
+
 export enum TIPO_TABLA_DATOS {
   DESTINATARIO = 'Destinatario(Destino final)',
-  FACTURADOR = 'facturador',
-  PROVEEDOR = 'Proveedor / Distribudor',
-  CERTIFICADO = 'Certificado analítico',
   OTROS = 'Otros',
 }
 export const PRODUCTO_TABLA_ESTUPEFACIENTES_EXPORTICON = [

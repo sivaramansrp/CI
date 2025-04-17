@@ -36,37 +36,14 @@ export class Tramite260302Query extends Query<Tramite260302State> {
   });
 
   /**
-   * @property {Observable<Fabricante[]>} getFabricanteTablaDatos$
+   * @property {Observable<Fabricante[]>} getdestinatarioTablaDatos$
    * @description
    * Selecciona la lista de fabricantes del estado.
    */
-  public getFabricanteTablaDatos$ = this.select(
-    (state) => state.fabricanteTablaDatos
+  public getdestinatarioTablaDatos$ = this.select(
+    (state) => state.destinatarioTableDatos
   );
-  /**
-   * @property {Observable<Destinatario[]>} getCertificadoTablaDatos$
-   * @description
-   * Selecciona la lista de destinatarios finales del estado.
-   */
-  public getCertificadoTablaDatos$ = this.select(
-    (state) => state.certificadoTablaDatos
-  );
-  /**
-   * @property {Observable<Proveedor[]>} getProveedorTablaDatos$
-   * @description
-   * Selecciona la lista de proveedores del estado.
-   */
-  public getProveedorTablaDatos$ = this.select(
-    (state) => state.proveedorTablaDatos
-  );
-  /**
-   * @property {Observable<Facturador[]>} getFacturadorTablaDatos$
-   * @description
-   * Selecciona la lista de facturadores del estado.
-   */
-  public getFacturadorTablaDatos$ = this.select(
-    (state) => state.facturadorTablaDatos
-  );
+  
   /**
    * @property {Observable<number | undefined>} getTabSeleccionado$
    * @description
@@ -74,6 +51,11 @@ export class Tramite260302Query extends Query<Tramite260302State> {
    */
   public getTabSeleccionado$ = this.select((state) => state.tabSeleccionado);
 
+
+  /**
+   * @description Obtiene un observable que selecciona el estado `otrosTablaDatos` desde el estado global.
+   * @returns Un observable que emite los datos de la tabla "otrosTablaDatos".
+   */
   getOtrasTablaDatos$ = this.select(
     (state) => state.otrosTablaDatos
   );

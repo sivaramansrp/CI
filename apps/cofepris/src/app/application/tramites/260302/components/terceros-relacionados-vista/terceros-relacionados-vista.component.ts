@@ -8,18 +8,18 @@ import {
 } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
-  Destinatario,
-  Fabricante,
-  Facturador,
-  MENSAJE_TABLA_OBLIGATORIA,
-  Proveedor,
-} from '../../../../shared/models/terceros-relacionados.model';
-import {
-  FACTURADOR_ENCABEZADO_DE_TABLA,
+  DESTINATARIO_ENCABEZADO_DE_TABLA,
+  OTROS_ENCABEZADO_DE_TABLA,
   TIPO_TABLA_DATOS,
 } from '../../constants/exporticon-estupefacientes.enum';
+import {
+  Destinatario,
+  Facturador,
+  MENSAJE_TABLA_OBLIGATORIA,
+} from '../../../../shared/models/terceros-relacionados.model';
 import { Observable, Subject } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { Otros } from '../../models/exporticon-estupefacientes.model';
 import { Tramite260302Query } from '../../estados/tramite260302Query.query';
 import { Tramite260302Store } from '../../estados/tramite260302Store.store';
 
@@ -62,11 +62,18 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
   MENSAJE_TABLA_OBLIGATORIA = MENSAJE_TABLA_OBLIGATORIA;
 
   /**
-   * @property {ConfiguracionColumna<Facturador>[]} configuracionTablaFacturador
+   * @property {ConfiguracionColumna<Facturador>[]} configuracionTablaDestinatario
    * Configuración de columnas para la tabla de facturadores.
    */
-  configuracionTablaFacturador: ConfiguracionColumna<Facturador>[] =
-    FACTURADOR_ENCABEZADO_DE_TABLA;
+  configuracionTablaDestinatario: ConfiguracionColumna<Facturador>[] =
+  DESTINATARIO_ENCABEZADO_DE_TABLA;
+
+    /**
+   * @property {ConfiguracionColumna<Facturador>[]} configuracionTablaDestinatario
+   * Configuración de columnas para la tabla de facturadores.
+   */
+    configuracionTablaOtros: ConfiguracionColumna<Otros>[] =
+    OTROS_ENCABEZADO_DE_TABLA;
 
   /**
    * @property {TablaSeleccion} tipoSeleccionTabla
@@ -86,34 +93,17 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
    */
   public habilitarFacturador = true;
   /**
-   * @property {Fabricante[]} fabricanteTablaDatos
+   * @property {Destinatario[]}destinatarioTablaDatos
    * Datos de la tabla de fabricantes.
    */
-  fabricanteTablaDatos$!: Observable<Fabricante[]>;
+ destinatarioTablaDatos$!: Observable<Destinatario[]>;
 
-  /**
-   * @property {Destinatario[]} destinatarioFinalTablaDatos
-   * Datos de la tabla de destinatarios finales.
-   */
-  certificadoTablaDatos$!: Observable<Destinatario[]>;
-
-  /**
-   * @property {Proveedor[]} proveedorTablaDatos
-   * Datos de la tabla de proveedores.
-   */
-  proveedorTablaDatos$!: Observable<Proveedor[]>;
-
-  /**
-   * @property {Facturador[]} facturadorTablaDatos
-   * Datos de la tabla de facturadores.
-   */
-  facturadorTablaDatos$!: Observable<Facturador[]>;
 
   /**
    * @property {Facturador[]} facturadorTablaDatos
    * Datos de la tabla de Otros.
    */
-  otrasTablaDatos$!: Observable<Facturador[]>;
+  otrasTablaDatos$!: Observable<Otros[]>;
 
   /**
    * @property {Subject<void>} destroy$
@@ -136,7 +126,6 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
    * @param tramiteQuery - Servicio de consulta que expone observables para leer los datos del store.
    */
   constructor(
-    private tramiteStore: Tramite260302Store,
     private tramiteQuery: Tramite260302Query,
     private router: Router,
     private activatedROute: ActivatedRoute
@@ -150,13 +139,7 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
    * Suscribe los observables para mostrar los datos en la vista.
    */
   ngOnInit(): void {
-    this.fabricanteTablaDatos$ = this.tramiteQuery.getFabricanteTablaDatos$;
-
-    this.certificadoTablaDatos$ = this.tramiteQuery.getCertificadoTablaDatos$;
-
-    this.proveedorTablaDatos$ = this.tramiteQuery.getProveedorTablaDatos$;
-
-    this.facturadorTablaDatos$ = this.tramiteQuery.getFacturadorTablaDatos$;
+    this.destinatarioTablaDatos$ = this.tramiteQuery.getdestinatarioTablaDatos$;
 
     this.otrasTablaDatos$ = this.tramiteQuery.getOtrasTablaDatos$;
   }

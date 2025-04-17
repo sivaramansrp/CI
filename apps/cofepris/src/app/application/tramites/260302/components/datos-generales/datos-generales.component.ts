@@ -14,7 +14,8 @@ import { Subject, takeUntil } from 'rxjs';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { Component } from '@angular/core';
 import { DatosSolicitudService } from '../../../../shared/services/datos-solicitud.service';
-import { Facturador } from '../../../../shared/models/terceros-relacionados.model';
+import { Destinatario } from '../../../../shared/models/terceros-relacionados.model';
+import { Otros } from '../../models/exporticon-estupefacientes.model';
 import { TIPO_TABLA_DATOS } from '../../constants/exporticon-estupefacientes.enum';
 import { Tramite260302Store } from '../../estados/tramite260302Store.store';
 
@@ -122,10 +123,6 @@ export class DatosGeneralesComponent {
    * Navega a la ruta 'pago/importacion-materias-primas-estupefacientes'.
    */
   cancelar(): void {
-    // this.router.navigate([
-    //   'pago',
-    //   'importacion-materias-primas-estupefacientes',
-    // ]);
     this.ubicaccion.back();
   }
 
@@ -145,21 +142,12 @@ export class DatosGeneralesComponent {
   guardarDatos(): void {
     switch (this.tipoDatos) {
       case this.tipoTablaDatos.DESTINATARIO:
-        this.addFabricantes([this.agregarDatosForm.value]);
-        break;
-      case this.tipoTablaDatos.FACTURADOR:
-        this.addFacturadores([this.agregarDatosForm.value]);
-        break;
-      case this.tipoTablaDatos.CERTIFICADO:
-        this.addCertificadoTablaDatos([this.agregarDatosForm.value]);
-        break;
-      case this.tipoTablaDatos.PROVEEDOR:
-        this.addProveedores([this.agregarDatosForm.value]);
+        this.addDestinatario([this.agregarDatosForm.getRawValue()]);
         break;
       case this.tipoTablaDatos.OTROS:
         this.addOtros([this.agregarDatosForm.value]);
 
-        break;
+       break;
       default:
         break;
     }
@@ -167,23 +155,13 @@ export class DatosGeneralesComponent {
   }
 
   /**
-   * @method addFabricantes
+   * @method addDestinatario
    * @description Agrega nuevos fabricantes a la tabla de datos del trámite.
    *
    * @param newFabricantes - Lista de objetos `Fabricante` a agregar.
    */
-  addFabricantes(newFabricantes: Facturador[]): void {
-    this.tramiteStore.updateFabricanteTablaDatos(newFabricantes);
-  }
-
-  /**
-   * @method addDestinatarios
-   * @description Agrega nuevos destinatarios a la tabla de datos del destinatario final.
-   *
-   * @param newDestinatarios - Lista de objetos `Destinatario` a agregar.
-   */
-  addCertificadoTablaDatos(newDestinatarios: Facturador[]): void {
-    this.tramiteStore.updateCertificadoTablaDatos(newDestinatarios);
+  addDestinatario(newDestinatario: Destinatario[]): void {
+    this.tramiteStore.updateDestinatarioTablaDatos(newDestinatario);
   }
 
   /**
@@ -192,27 +170,9 @@ export class DatosGeneralesComponent {
    *
    * @param datos - Array de objetos `Facturador` con los datos a actualizar.
    */
-  addOtros(datos: Facturador[]): void {
+  addOtros(datos: Otros[]): void {
     this.tramiteStore.updateOtrosTablaDatos(datos);
   }
 
-  /**
-   * @method addProveedores
-   * @description Agrega nuevos proveedores a la tabla de datos del trámite.
-   *
-   * @param newProveedores - Lista de objetos `Proveedor` a agregar.
-   */
-  addProveedores(newProveedores: Facturador[]): void {
-    this.tramiteStore.updateProveedorTablaDatos(newProveedores);
-  }
-
-  /**
-   * @method addFacturadores
-   * @description Agrega nuevos facturadores a la tabla de datos del trámite.
-   *
-   * @param newFacturadores - Lista de objetos `Facturador` a agregar.
-   */
-  addFacturadores(newFacturadores: Facturador[]): void {
-    this.tramiteStore.updateFacturadorTablaDatos(newFacturadores);
-  }
+  
 }
