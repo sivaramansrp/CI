@@ -1,5 +1,5 @@
 import { CatalogosSelect } from '@libs/shared/data-access-user/src';
-import { DatosPorGarantia } from '../models/solicitud.model';
+import { DatosGeneralesDeLaSolicitud, DatosGeneralesDeLaSolicitudCatologo, DatosPorGarantia, SubContratistas } from '../models/solicitud.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ModificacionDenominacionRazonSocial } from '../models/solicitud.model';
@@ -37,4 +37,30 @@ export class SolicitudService {
       'assets/json/31301/datos-por-garantia.json'
     );
   }
+
+  conseguirDatosGeneralesOpcionDeRadio(): Observable<DatosGeneralesDeLaSolicitud> {
+    return this.http.get<DatosGeneralesDeLaSolicitud>(
+      'assets/json/31301/datos-generales-de-la-solicitud-radio-option.json'
+    );
+  }
+
+  conseguirDatosGeneralesCatologo(): Observable<DatosGeneralesDeLaSolicitudCatologo> {
+    return this.http.get<DatosGeneralesDeLaSolicitudCatologo>(
+      'assets/json/31301/datos-generales-de-la-solicitud-catologo.json'
+    );
+  }
+
+  conseguirListaDeSubcontratistas(): Observable<SubContratistas[]> {
+    return this.http.get<SubContratistas[]>(
+      'assets/json/31301/lista-de-subcontratistas.json'
+    );
+  }
+
+  conseguirRegimenAduanero(): Observable<string[]> {
+    return this.http.get<string[]>(
+      'assets/json/31301/regimen-aduanero.json'
+    );
+  }
+  
+
 }

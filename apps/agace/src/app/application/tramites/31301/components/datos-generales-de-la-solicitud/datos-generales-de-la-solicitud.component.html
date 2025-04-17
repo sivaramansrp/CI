@@ -1,1 +1,1007 @@
-<p>datos-generales-de-la-solicitud works!</p>
+<div class="container">
+  <form [formGroup]="datosGeneralesForm">
+    <div class="row mt-5">
+      <div class="col-md-12">
+        <label class="form-label">Tipo de endoso *:</label>
+        <app-input-radio
+          [radioOptions]="tipoDeEndosoOpcion.radioOptions"
+          [isRequired]="tipoDeEndosoOpcion.isRequired"
+          [layout]="'vertical'"
+        ></app-input-radio>
+      </div>
+      <div class="col-md-12">
+        <label class="form-label">Tipo de garantía *:</label>
+        <app-input-radio
+          [radioOptions]="tipoDeGarantiaOpcion.radioOptions"
+          [isRequired]="tipoDeGarantiaOpcion.isRequired"
+          [layout]="'horizontal'"
+          [gap]="'50px'"
+        ></app-input-radio>
+      </div>
+      <div class="col-md-12">
+        <label class="form-label">Nota:</label><br />
+        <label class="form-label">Modalidad de la garantía *:</label>
+        <app-input-radio
+          [radioOptions]="modalidadDeLaGarantiaOpcion.radioOptions"
+          [isRequired]="modalidadDeLaGarantiaOpcion.isRequired"
+          [layout]="'horizontal'"
+          [gap]="'50px'"
+        ></app-input-radio>
+      </div>
+      <div class="col-md-8">
+        <label class="form-label">Tipo sector *:</label>
+        <app-input-radio
+          [radioOptions]="tipoSectorOpcion.radioOptions"
+          [isRequired]="tipoSectorOpcion.isRequired"
+          [layout]="'horizontal'"
+          [gap]="'50px'"
+        ></app-input-radio>
+      </div>
+      <div class="col-md-4">
+        <app-catalogo-select
+          [catalogo]="conceptoLista.catalogos"
+          [label]="conceptoLista.labelNombre"
+          [placeholder]="conceptoLista.primerOpcion"
+          [required]="false"
+          name=""
+          id=""
+        ></app-catalogo-select>
+      </div>
+      <div class="col-md-12">
+        <ng-titulo titulo="Requisitos" />
+      </div>
+      <div class="col-md-12">
+        <label class="form-label text-start"
+          >Señale si al momento de ingresar su solicitud se encuentra al
+          corriente en el cumplimiento de sus obligaciones fiscales y
+          aduaneras.</label
+        >
+        <app-input-radio
+          [radioOptions]="sinoOpcion.radioOptions"
+          [isRequired]="sinoOpcion.isRequired"
+          [layout]="'horizontal'"
+          [gap]="'50px'"
+          formControlName="3500"
+        ></app-input-radio>
+      </div>
+
+      <div class="col-md-12 mt-4">
+        <label class="form-label text-start"
+          >Indique si autorizó al SAT hacer pública su opinión positiva sobre el
+          cumplimiento de obligaciones fiscales.</label
+        >
+        <app-input-radio
+          [radioOptions]="sinoOpcion.radioOptions"
+          [isRequired]="sinoOpcion.isRequired"
+          [layout]="'horizontal'"
+          [gap]="'50px'"
+          formControlName="3501"
+        ></app-input-radio>
+      </div>
+
+      <div class="col-md-12 mt-4">
+        <label class="form-label text-start"
+          >Indique si cuenta con la totalidad de personal registrado ante el
+          IMSS, del SUA, y realiza el pago de las cuotas obrero patronales, así
+          como que cumple con la obligación de retener y enterar el ISR de los
+          trabajadores.</label
+        >
+        <app-input-radio
+          [radioOptions]="sinoOpcion.radioOptions"
+          [isRequired]="sinoOpcion.isRequired"
+          [layout]="'horizontal'"
+          [gap]="'50px'"
+          formControlName="3502"
+        ></app-input-radio>
+      </div>
+
+      <div class="col-md-12 mt-4">
+        <label class="form-label text-start"
+          >Indique la denominación o razón social de los subcontratistas de
+          quienes reciba los servicios especializados o la ejecución de obras
+          especializadas.</label
+        >
+      </div>
+      <div class="col-md-4">
+        <label class="form-label text-start" for="RFC">RFC:</label>
+        <input
+          class="form-control"
+          type="text"
+          size="80"
+          id="RFC"
+          name="RFC"
+          formControlName="rfc"
+        />
+      </div>
+      <div class="col-md-8"></div>
+      <div class="col-md-12">
+        <div class="form-group pull-right">
+          <button
+            type="button"
+            name="Agregar"
+            id="btnBusqRfc"
+            class="btn btn-primary me-5"
+          >
+            Agregar
+          </button>
+        </div>
+      </div>
+      <div class="col-md-12 mt-5">
+        <app-tabla-dinamica
+          [tipoSeleccionTabla]="tipoSeleccionTabla"
+          [configuracionTabla]="configuracionColumnas"
+          [datos]="listaDeSubcontratistas"
+        >
+        </app-tabla-dinamica>
+      </div>
+      <div class="col-md-12">
+        <div class="form-group pull-right">
+          <button
+            type="button"
+            name="eliminar"
+            id="btnBusqRfcEliminar"
+            class="btn btn-danger me-5"
+          >
+            Eliminar
+          </button>
+        </div>
+      </div>
+      <div class="col-md-12 mt-4">
+        <label class="form-label text-start"
+          >Señale si se encuentra en el listado de empresas publicadas por el
+          SAT en términos del artículo 69 del CFF, con excepción de lo dispuesto
+          en la fracción VI del referido artículo.</label
+        >
+        <app-input-radio
+          [radioOptions]="sinoOpcion.radioOptions"
+          [isRequired]="sinoOpcion.isRequired"
+          [layout]="'horizontal'"
+          [gap]="'50px'"
+          formControlName="3503"
+        ></app-input-radio>
+      </div>
+
+      <div class="col-md-12 mt-4">
+        <label class="form-label text-start"
+          >Del mismo modo indique si se encuentra en el listado de empresas
+          publicadas por el SAT en términos del artículo 69-B, párrafo cuarto
+          del CFF.</label
+        >
+        <app-input-radio
+          [radioOptions]="sinoOpcion.radioOptions"
+          [isRequired]="sinoOpcion.isRequired"
+          [layout]="'horizontal'"
+          [gap]="'50px'"
+          formControlName="3504"
+        ></app-input-radio>
+      </div>
+      <div class="col-md-12 mt-4">
+        <label class="form-label text-start"
+          >Indique si se encuentra en el listado de empresas publicadas por el
+          SAT en términos del articulo 69-B Bis noveno párrafo, párrafo cuarto
+          del CFF.</label
+        >
+        <app-input-radio
+          [radioOptions]="sinoOpcion.radioOptions"
+          [isRequired]="sinoOpcion.isRequired"
+          [layout]="'horizontal'"
+          [gap]="'50px'"
+          formControlName="3505"
+        ></app-input-radio>
+      </div>
+      <div class="col-md-12 mt-4">
+        <label class="form-label text-start"
+          >Señale si sus certificados de sellos digitales están vigentes.</label
+        >
+        <app-input-radio
+          [radioOptions]="sinoOpcion.radioOptions"
+          [isRequired]="sinoOpcion.isRequired"
+          [layout]="'horizontal'"
+          [gap]="'50px'"
+          formControlName="3506"
+        ></app-input-radio>
+      </div>
+      <div class="col-md-12 mt-4">
+        <label class="form-label text-start"
+          >Señale si tiene actualizado sus medios de contacto para efectos del
+          buzón tributario en términos del artículo 17-K, penúltimo párrafo del
+          CFF.</label
+        >
+        <app-input-radio
+          [radioOptions]="sinoOpcion.radioOptions"
+          [isRequired]="sinoOpcion.isRequired"
+          [layout]="'horizontal'"
+          [gap]="'50px'"
+          formControlName="3507"
+        ></app-input-radio>
+      </div>
+
+      <div class="col-md-12 mt-4">
+        <label class="form-label text-start"
+          >Señale si se encuentra suspendida en el Padrón de Importadores o en
+          el Padrón de Importadores de Sectores Específicos o Padrón de
+          Exportadores Sectorial.</label
+        >
+        <app-input-radio
+          [radioOptions]="sinoOpcion.radioOptions"
+          [isRequired]="sinoOpcion.isRequired"
+          [layout]="'horizontal'"
+          [gap]="'50px'"
+          formControlName="3508"
+        ></app-input-radio>
+      </div>
+
+      <div class="col-md-12">
+        <ng-titulo titulo="Clientes y provedores en el Extranjero" />
+      </div>
+
+      <div class="col-md-12">
+        <label class="form-label text-start"
+          >Archivo con la totalidad de sus clientes y proveedores en el
+          extranjero, directa o indirectamente vinculados con el régimen
+          aduanero con el que se solicita la certificación, con los que haya
+          realizado operaciones de comercio exterior durante los últimos 12
+          meses.</label
+        >
+        <div class="mt-3">
+          <b>Para descargar plantilla del archivo de excel de click </b>
+          <a href="/assets/pdf/carga_proveedoresExtranjeros_aviso.xlsx">aquí</a>
+        </div>
+        <div class="row" style="margin-top: 20px">
+          <div class="col-md-4">
+            <input
+              type="file"
+              accept=".xlsx"
+              class="form-control sfile"
+              name="archivoExtranjero"
+              id="archivoExtranjero"
+              title="Examinar"
+            />
+          </div>
+          <div class="col-md-8"></div>
+          <div class="col-md-8"></div>
+          <div class="col-md-4 d-flex justify-content-end">
+            <button
+              type="button"
+              name="cargaArchivoProcesos"
+              id="cargaArchivoProcesos"
+              class="btn btn-primary me-md-3"
+            >
+              Cargar archivo
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-12">
+        <ng-titulo titulo="Provedores Nacionales" />
+      </div>
+
+      <div class="col-md-12">
+        <label class="form-label text-start"
+          >Archivo que contiene el RFC de los proveedores de insumos adquiridos
+          en territorio nacional, vinculados al proceso bajo el régimen que
+          solicita de los últimos 6 meses.</label
+        >
+        <div class="mt-3">
+          <b>Para descargar plantilla del archivo de excel de click </b>
+          <a href="/assets/pdf/carga_proveedoresExtranjeros_aviso.xlsx">aquí</a>
+        </div>
+        <div class="row" style="margin-top: 20px">
+          <div class="col-md-4">
+            <input
+              type="file"
+              accept=".xlsx"
+              class="form-control sfile"
+              name="archivoExtranjero"
+              id="archivoExtranjero"
+              title="Examinar"
+            />
+          </div>
+          <div class="col-md-8"></div>
+          <div class="col-md-8"></div>
+          <div class="col-md-4 d-flex justify-content-end">
+            <button
+              type="button"
+              name="cargaArchivoProcesos"
+              id="cargaArchivoProcesos"
+              class="btn btn-primary me-md-3"
+            >
+              Cargar archivo
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-12 mt-4">
+        <label class="form-label text-start"
+          >Señale si el SAT ha interpuesto querella o denuncia penal en contra
+          de los socios, accionistas, representante legal con facultad para
+          actos de administración o de dominio, o integrantes de la
+          administración de la empresa solicitante o, en su caso declaratoria de
+          perjuicio, durante los últimos tres años anteriores a la presentación
+          de la solicitud.</label
+        >
+        <app-input-radio
+          [radioOptions]="sinoOpcion.radioOptions"
+          [isRequired]="sinoOpcion.isRequired"
+          [layout]="'horizontal'"
+          [gap]="'50px'"
+          formControlName="3508"
+        ></app-input-radio>
+      </div>
+
+      <div class="col-md-12">
+        <ng-titulo titulo="Control de inventarios" />
+      </div>
+
+      <div class="col-md-12 mt-4">
+        <label class="form-label text-start"
+          >Señale si el SAT ha interpuesto querella o denuncia penal en contra
+          de los socios, accionistas, representante legal con facultad para
+          actos de administración o de dominio, o integrantes de la
+          administración de la empresa solicitante o, en su caso declaratoria de
+          perjuicio, durante los últimos tres años anteriores a la presentación
+          de la solicitud.</label
+        >
+        <app-input-radio
+          [radioOptions]="sinoOpcion.radioOptions"
+          [isRequired]="sinoOpcion.isRequired"
+          [layout]="'horizontal'"
+          [gap]="'50px'"
+          formControlName="3508"
+        ></app-input-radio>
+      </div>
+
+      <div class="col-md-12 mt-4">
+        <label class="form-label text-start"
+          >Indique, si cuenta con un sistema de control de inventarios de
+          conformidad con las disposiciones previstas por el Anexo 24.</label
+        >
+        <app-input-radio
+          [radioOptions]="sinoOpcion.radioOptions"
+          [isRequired]="sinoOpcion.isRequired"
+          [layout]="'horizontal'"
+          [gap]="'50px'"
+          formControlName="3508"
+        ></app-input-radio>
+      </div>
+
+      <div class="col-md-12 mt-4">
+        <div class="alert alert-info">
+          <div class="form-check">
+            En caso de declarar que se cuenta con un sistema de control de
+            inventarios conforme al anexo 24, deberá anexar un archivo con el
+            reporte de saldos de mercancía de importación temporal de un periodo
+            de un mes, que se encuentre dentro de los tres meses anteriores a la
+            fecha de la presente solicitud.
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-12 mt-4">
+        <label class="form-label text-start"
+          >Nombre del sistema o datos para su identificación</label
+        >
+        <textarea
+          id="textoGenerico1"
+          class="form-control"
+          rows="3"
+          style="height: 50px"
+        ></textarea>
+      </div>
+
+      <div class="col-md-12 mt-4">
+        <label class="form-label text-start"> Lugar de radicación</label>
+        <textarea
+          id="textoGenerico2"
+          class="form-control"
+          rows="3"
+          style="height: 50px"
+        ></textarea>
+      </div>
+
+      <div class="col-md-12 mt-4">
+        <label class="form-label text-start"
+          >Señale si lleva la contabilidad en medios electrónicos de conformidad
+          con el artículo 28, fracción III, del CFF y la regla 2.8.1.5. de la
+          RMF.</label
+        >
+        <app-input-radio
+          [radioOptions]="sinoOpcion.radioOptions"
+          [isRequired]="sinoOpcion.isRequired"
+          [layout]="'horizontal'"
+          [gap]="'50px'"
+          formControlName="3508"
+        ></app-input-radio>
+      </div>
+
+      <div class="col-md-12 mt-4">
+        <label class="form-label text-start"
+          >Señale si ingresa mensualmente su información contable a través del
+          portal del SAT. de conformidad con el artículo 28, fracción IV. del
+          CFF y la regla 2.8.1.6. de la RMF.</label
+        >
+        <app-input-radio
+          [radioOptions]="sinoOpcion.radioOptions"
+          [isRequired]="sinoOpcion.isRequired"
+          [layout]="'horizontal'"
+          [gap]="'50px'"
+          formControlName="3508"
+        ></app-input-radio>
+      </div>
+
+      <div class="col-md-12">
+        <ng-titulo titulo="Miembros de la empresa" />
+      </div>
+
+      <div class="col-md-12 mt-4">
+        <label class="form-label text-start"
+          >Señale si los socios, accionistas, según corresponda, representante
+          legal con facultad para actos de administración o de dominio, e
+          integrantes de la administración de conformidad con la constitución de
+          la empresa solicitante, se encuentran al corriente en el cumplimiento
+          de sus obligaciones fiscales.</label
+        >
+        <app-input-radio
+          [radioOptions]="sinoOpcion.radioOptions"
+          [isRequired]="sinoOpcion.isRequired"
+          [layout]="'horizontal'"
+          [gap]="'50px'"
+          formControlName="3508"
+        ></app-input-radio>
+      </div>
+
+      <div class="col-md-12 mt-4">
+        <label class="form-label text-start"
+          >Opinión positiva vigente del cumplimiento de obligaciones fiscales de
+          la solicitante, los socios, accionistas, representante legal con
+          facultad para actos de administración o de dominio, administrador
+          único o miembros del consejo de administración, según sea el
+          caso.</label
+        >
+        <textarea
+          id="textoGenerico3"
+          class="form-control"
+          rows="3"
+          style="height: 50px"
+        ></textarea>
+      </div>
+
+      <div class="col-md-12">
+        <ng-titulo titulo="Miembros de la empresa" />
+      </div>
+
+      <div class="col-md-12">
+        <app-tabla-dinamica
+          [tipoSeleccionTabla]="tipoSeleccionTabla"
+          [configuracionTabla]="seccionSociosICConfiguracionColumnas"
+        >
+        </app-tabla-dinamica>
+      </div>
+
+      <div class="col-md-12">
+        <div class="d-flex justify-content-end">
+          <button type="button" id="eliminarSocio" class="btn btn-danger">
+            Eliminar
+          </button>
+          <button
+            type="button"
+            id="modificarSocio"
+            class="btn btn-secondary ms-3"
+          >
+            Modificar
+          </button>
+          <button type="button" id="agregarSocio" class="btn btn-primary ms-3">
+            Agregar
+          </button>
+        </div>
+      </div>
+
+      <div class="col-md-12 mt-4">
+        <label class="form-label text-start"
+          >Manifieste si sus socios o accionistas, e integrantes de la
+          administración, su representante legal con facultad para actos de
+          administración o de dominio, o sus partes relacionadas en términos de
+          la Ley del ISR no se encuentren vinculados con alguna empresa a la que
+          se hubiere cancelado su Registro en el Esquema de Certificación de
+          Empresas, de conformidad con las fracciones V, VI y VII del Apartado
+          A; II y III del Apartado B de la regla 7.2.4 .; y/o VI, VII y XI de la
+          regla 7.2.5.</label
+        >
+        <app-input-radio
+          [radioOptions]="sinoOpcion.radioOptions"
+          [isRequired]="sinoOpcion.isRequired"
+          [layout]="'horizontal'"
+          [gap]="'50px'"
+          formControlName="3508"
+        ></app-input-radio>
+      </div>
+
+      <div class="col-md-12 mt-4">
+        <label class="form-label text-start"
+          >Indique si sus proveedores se encuentran en el listado de empresas
+          publicadas por el SAT, en términos del 69 del CFF, con excepción de la
+          fracción VI, articulo 69-B, párrafo cuarto y 69-B Bis noveno párrafo
+          del CFF.</label
+        >
+        <app-input-radio
+          [radioOptions]="sinoOpcion.radioOptions"
+          [isRequired]="sinoOpcion.isRequired"
+          [layout]="'horizontal'"
+          [gap]="'50px'"
+          formControlName="3508"
+        ></app-input-radio>
+      </div>
+
+      <div class="col-md-12 mt-4">
+        <label class="form-label text-start"
+          >Manifieste si se le ha determinado algún crédito fiscal firme en los
+          doce meses anteriores a la fecha de presentación de la
+          solicitud.</label
+        >
+        <app-input-radio
+          [radioOptions]="sinoOpcion.radioOptions"
+          [isRequired]="sinoOpcion.isRequired"
+          [layout]="'horizontal'"
+          [gap]="'50px'"
+          formControlName="3508"
+        ></app-input-radio>
+      </div>
+
+      <div class="col-md-12 mt-4">
+        <label class="form-label text-start"
+          >Manifieste si cuenta con inversión en territorio nacional y acredita
+          la legal posesión de la misma, sin que sea admisible aquella que se
+          obtiene de manera gratuita.</label
+        >
+        <app-input-radio
+          [radioOptions]="sinoOpcion.radioOptions"
+          [isRequired]="sinoOpcion.isRequired"
+          [layout]="'horizontal'"
+          [gap]="'50px'"
+          formControlName="3508"
+        ></app-input-radio>
+      </div>
+      <div class="col-md-4 mt-4">
+        <app-catalogo-select
+          [catalogo]="tipoDeInversionLista.catalogos"
+          [label]="tipoDeInversionLista.labelNombre"
+          [placeholder]="tipoDeInversionLista.primerOpcion"
+          [required]="true"
+          name=""
+          id=""
+        ></app-catalogo-select>
+      </div>
+      <div class="col-md-4 mt-4">
+        <label class="form-label text-start" for="valorenpesos"
+          >Valor en pesos *:</label
+        >
+        <input
+          class="form-control"
+          type="text"
+          size="80"
+          id="valorenpesos"
+          name="valorenpesos"
+        />
+      </div>
+      <div class="col-md-4 mt-4"></div>
+      <div class="col-md-12 mt-4">
+        <label class="form-label text-start" for="valorenpesos"
+          >Descripción general *:</label
+        >
+        <input
+          class="form-control"
+          type="text"
+          size="80"
+          id="valorenpesos"
+          name="valorenpesos"
+        />
+      </div>
+      <div class="col-md-12">
+        <app-tabla-dinamica
+          [tipoSeleccionTabla]="tipoSeleccionTabla"
+          [configuracionTabla]="seccionSociosICConfiguracionColumnas"
+        >
+        </app-tabla-dinamica>
+      </div>
+
+      <div class="col-md-12">
+        <div class="d-flex justify-content-end">
+          <button type="button" id="eliminarSocio" class="btn btn-danger">
+            Eliminar
+          </button>
+          <button type="button" id="agregarSocio" class="btn btn-primary ms-3">
+            Agregar
+          </button>
+        </div>
+      </div>
+
+      <div class="col-md-12 mt-4">
+        <label class="form-label text-start"
+          >Señale si previamente contó con la Certificación en materia de IVA e
+          IEPS, el Registro en el Esquema de Certificación de Empresas bajo la
+          modalidad IVA e IEPS o Garantía del interés fiscal del IVA e
+          IEPS.</label
+        >
+        <app-input-radio
+          [radioOptions]="sinoOpcion.radioOptions"
+          [isRequired]="sinoOpcion.isRequired"
+          [layout]="'horizontal'"
+          [gap]="'50px'"
+          formControlName="3508"
+        ></app-input-radio>
+      </div>
+
+      <div class="col-md-12 mt-4">
+        <label class="form-label text-start"
+          >En caso afirmativo, señale si se encuentra al corriente en el
+          cumplimiento de las obligaciones relativas al Anexo 30 sobre dicho
+          registro.</label
+        >
+        <app-input-radio
+          [radioOptions]="sinoOpcion.radioOptions"
+          [isRequired]="sinoOpcion.isRequired"
+          [layout]="'horizontal'"
+          [gap]="'50px'"
+          formControlName="3508"
+        ></app-input-radio>
+      </div>
+
+      <div class="col-md-12 mt-4 text-start">
+        <h5 class="form-label text-start">Régimen aduanero*:</h5>
+        <div
+          *ngFor="let regimen of listaRegimenAduanero; let i = index"
+          class="mb-2"
+        >
+          <div class="d-flex align-items-center">
+            <div class="form-check">
+              <input
+                type="checkbox"
+                class="form-check-input"
+                [id]="'regimen_valorPorDefecto' + i"
+                [readonly]="true"
+              />
+
+              <span class="ms-3">{{ regimen }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-12 mt-4">
+        <label class="form-label text-start"
+          >Indique todos los domicilios registrados ante el SAT de la persona
+          moral solicitante e indique aquellos en que se desarrollen actividades
+          relacionadas con su proceso productivo y/o la prestación de servicios
+          (Se requiere tabla, agregar las filas necesarias de acuerdo al número
+          de instalaciones).</label
+        >
+      </div>
+      <div class="col-md-12">
+        <app-tabla-dinamica
+          [tipoSeleccionTabla]="tipoSeleccionTabla"
+          [configuracionTabla]="seccionSociosICConfiguracionColumnas"
+        >
+        </app-tabla-dinamica>
+      </div>
+      <div class="col-md-12">
+        <div class="d-flex justify-content-end">
+          <button type="button" id="modificarSocio" class="btn btn-secondary">
+            Modificar
+          </button>
+
+          <button type="button" id="eliminarSocio" class="btn btn-danger ms-3">
+            Eliminar
+          </button>
+
+          <button type="button" id="agregarSocio" class="btn btn-primary ms-3">
+            Agregar
+          </button>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label text-start" for=""
+          >Numero de Programa I M M E X *:</label
+        >
+        <input class="form-control" type="text" size="80" id="" name="" />
+      </div>
+      <div class="col-md-6">
+        <label class="form-label text-start" for=""
+          >Modalidad del Programa I M M E X *:</label
+        >
+        <input class="form-control" type="text" size="80" id="" name="" />
+      </div>
+      <div class="col-md-12 mt-4">
+        <label class="form-label text-start"
+          >Señale si ha realizado operaciones al amparo de su programa
+          IMMEX.</label
+        >
+        <app-input-radio
+          [radioOptions]="sinoOpcion.radioOptions"
+          [isRequired]="sinoOpcion.isRequired"
+          [layout]="'horizontal'"
+          [gap]="'50px'"
+          formControlName="3508"
+        ></app-input-radio>
+      </div>
+
+      <div class="col-md-12">
+        <ng-titulo titulo="Infraestructura" />
+      </div>
+
+      <div class="col-md-12 mt-4">
+        <label class="form-label text-start"
+          >Señale si al momento de su solicitud cuenta con la infraestructura
+          necesaria para realizar la operación, el proceso productivo o de
+          servicios, según corresponda al régimen aduanero por el que se
+          solicita el registro.</label
+        >
+        <app-input-radio
+          [radioOptions]="sinoOpcion.radioOptions"
+          [isRequired]="sinoOpcion.isRequired"
+          [layout]="'horizontal'"
+          [gap]="'50px'"
+          formControlName="3508"
+        ></app-input-radio>
+      </div>
+
+      <div class="col-md-12 mt-4">
+        <label class="form-label text-start"
+          >Manifieste si se le ha emitido resolución de improcedencia de las
+          devoluciones del IVA cuyo monto represente más del 20% del total de
+          las devoluciones autorizadas y/o que el monto negado resultante supere
+          los $5,000,000.00 (cinco millones de pesos 00/100 m.n.) en lo
+          individual o en su conjunto, durante los últimos seis meses contados a
+          partir de la fecha de presentación de la solicitud.</label
+        >
+        <app-input-radio
+          [radioOptions]="sinoOpcion.radioOptions"
+          [isRequired]="sinoOpcion.isRequired"
+          [layout]="'horizontal'"
+          [gap]="'50px'"
+          formControlName="3508"
+        ></app-input-radio>
+      </div>
+
+      <div class="col-md-12 mt-4">
+        <label class="form-label text-start"
+          >En caso afirmativo, señale el porcentaje y el monto que representan
+          de la totalidad de solicitudes de devolución autorizadas, aquéllas en
+          que la autoridad haya emitido resolución de improcedencia.</label
+        >
+      </div>
+      <div class="col-md-4 mt-4">
+        <label class="form-label text-start" for="">Porcentaje *:</label>
+        <input class="form-control" type="text" size="80" id="" name="" />
+      </div>
+      <div class="col-md-4 mt-4">
+        <label class="form-label text-start" for="">Monto *:</label>
+        <input class="form-control" type="text" size="80" id="" name="" />
+      </div>
+      <div class="col-md-4 mt-4"></div>
+
+      <div class="col-md-12 mt-4">
+        <label class="form-label text-start"
+          >Manifiesta que cuenta con la capacidad financiera para llevar a cabo
+          su proyecto productivo o de servicios, a través de solvencia económica
+          propia o asumiendo la responsabilidad solidaria.</label
+        >
+        <app-input-radio
+          [radioOptions]="sinoOpcion.radioOptions"
+          [isRequired]="sinoOpcion.isRequired"
+          [layout]="'horizontal'"
+          [gap]="'50px'"
+          formControlName="3508"
+        ></app-input-radio>
+      </div>
+
+      <div class="col-md-12">
+        <label class="form-label text-start"
+          >Archivo con monto anual de las importaciones temporales que realizará
+          por fracción arancelaria. El monto deberá ser acorde en su capacidad
+          productiva y financiera.</label
+        >
+        <div class="row" style="margin-top: 20px">
+          <div class="col-md-4">
+            <input
+              type="file"
+              accept=".xlsx"
+              class="form-control sfile"
+              name=""
+              id=""
+              title="Examinar"
+            />
+          </div>
+          <div class="col-md-8"></div>
+          <div class="col-md-8"></div>
+          <div class="col-md-4 d-flex justify-content-end">
+            <button
+              type="button"
+              name="cargaArchivoProcesos"
+              id="cargaArchivoProcesos"
+              class="btn btn-primary me-md-3"
+            >
+              Cargar archivo
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-12 mt-4">
+        <label class="form-label text-start"
+          >Indique si durante los últimos doce meses ha importado temporalmente
+          mercancías y que, al menos el 50% de las importaciones temporales de
+          insumos realizadas durante el mismo período fueron transformadas y
+          retoradas, retornadas en su mismo estado, transferidas, destruidas, o
+          se les prestó un servicio.</label
+        >
+        <app-input-radio
+          [radioOptions]="sinoOpcion.radioOptions"
+          [isRequired]="sinoOpcion.isRequired"
+          [layout]="'horizontal'"
+          [gap]="'50px'"
+          formControlName="3508"
+        ></app-input-radio>
+      </div>
+
+      <div class="col-md-12 mt-4">
+        <label class="form-label text-start" for=""
+          >Capture el valor en aduana total en moneda nacional de sus
+          importaciones temporales de insumos del periodo requerido conforme al
+          parrafo anterior *:</label
+        >
+        <input class="form-control" type="text" size="80" id="" name="" />
+      </div>
+
+      <div class="row">
+        <div class="col-md-3 mt-4">
+          <p class="text-center">(A)</p>
+          <label class="form-label text-start" for=""
+            >Concepto (declare solo los que apliquen)</label
+          >
+        </div>
+        <div class="col-md-3 mt-4">
+          <p class="text-center">(B)</p>
+          <label class="form-label text-start" for=""
+            >Valor comercial del concepto indicado en la Columna A (moneda
+            nacional)</label
+          >
+        </div>
+        <div class="col-md-3 mt-4">
+          <p class="text-center">(C)</p>
+          <label class="form-label text-start" for=""
+            >Valor en Aduana de los insumos importados temporalmente incluidos
+            en concepto de la columna A</label
+          >
+        </div>
+        <div class="col-md-3 mt-4">
+          <p class="text-center">(D)</p>
+          <label class="form-label text-start" for=""
+            >Porcentaje que representa respecto del total de importaciones
+            temporales de materiales directos einsumos</label
+          >
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-3 mt-4">
+          <label class="form-label text-start" for="">Retornos</label>
+        </div>
+        <div class="col-md-3 mt-4">
+          <input type="text" class="form-control" name="" id="" />
+        </div>
+        <div class="col-md-3 mt-4">
+          <input type="text" class="form-control" name="" id="" />
+        </div>
+        <div class="col-md-3 mt-4">
+          <input type="text" class="form-control" name="" id="" />
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-3 mt-4">
+          <label class="form-label text-start" for=""
+            >Transferencias virtuales de mercancías</label
+          >
+        </div>
+        <div class="col-md-3 mt-4">
+          <input type="text" class="form-control" name="" id="" />
+        </div>
+        <div class="col-md-3 mt-4">
+          <input type="text" class="form-control" name="" id="" />
+        </div>
+        <div class="col-md-3 mt-4">
+          <input type="text" class="form-control" name="" id="" />
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-3 mt-4">
+          <label class="form-label text-start" for="">Desperdicios</label>
+        </div>
+        <div class="col-md-3 mt-4">
+          <input type="text" class="form-control" name="" id="" />
+        </div>
+        <div class="col-md-3 mt-4">
+          <input type="text" class="form-control" name="" id="" />
+        </div>
+        <div class="col-md-3 mt-4">
+          <input type="text" class="form-control" name="" id="" />
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-3 mt-4">
+          <label class="form-label text-start" for=""
+            >Constancias de Transferencia de Mercancías ( C T M)</label
+          >
+        </div>
+        <div class="col-md-3 mt-4">
+          <input type="text" class="form-control" name="" id="" />
+        </div>
+        <div class="col-md-3 mt-4">
+          <input type="text" class="form-control" name="" id="" />
+        </div>
+        <div class="col-md-3 mt-4">
+          <input type="text" class="form-control" name="" id="" />
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-3 mt-4">
+          <label class="form-label text-start" for="">Totales</label>
+        </div>
+        <div class="col-md-3 mt-4">
+          <input type="text" class="form-control" name="" id="" />
+        </div>
+        <div class="col-md-3 mt-4">
+          <input type="text" class="form-control" name="" id="" />
+        </div>
+        <div class="col-md-3 mt-4">
+          <input type="text" class="form-control" name="" id="" />
+        </div>
+      </div>
+
+      <div class="col-md-12 mt-5">
+        <div class="alert alert-info">
+          <div class="form-check">
+            En caso de haber declarado que realiza Constancias de Transferencia
+            de Mercancías (CTM), anexe un archivo con los nombres y domicilios
+            de las empresas a las que les transfirió mercancías mediante
+            Constancias de Transferencia de Mercancías (CTM), así como los
+            montos en moneda nacional y, en su caso, dos Constancias de
+            Transferencia de Mercancías (CTM).
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-12">
+        <ng-titulo
+          titulo="Manifestaciones de acuerdo a lo establecido en la regla 7.4.2 en las RGCE"
+        />
+        <div class="alert alert-info">
+          <div class="form-check text-start">
+            <input type="checkbox" class="form-check-input" /> &nbsp;
+            <b>*</b> Bajo protesta de decir verdad manifiesto, que continúo
+            cumpliendo los requisitos establecidos en la regla 7.4.1., 7.4.2.,
+            7.4.3. y 7.4.7.
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-12">
+        <ng-titulo titulo="Manifiesto bajo protesta" />
+        <div class="alert alert-info">
+          <div class="form-check text-start">
+            <input type="checkbox" class="form-check-input" />&nbsp;
+            <b>*</b>Bajo protesta de decir la verdad, manifiesto que los datos
+            asentados en el presente documento son ciertos y que las facultades
+            que me fueron otorgadas para representar al solicitante no me han
+            sido modificadas y/o revocadas
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

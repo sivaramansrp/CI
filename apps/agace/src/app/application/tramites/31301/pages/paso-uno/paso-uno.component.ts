@@ -33,7 +33,7 @@ export class PasoUnoComponent {
    * Índice utilizado para identificar la posición actual en un proceso o lista.
    * @type {number}
    */
-  indice: number = 1;
+  indice: number = 2;
 
   /**
    * Selecciona una pestaña específica.
