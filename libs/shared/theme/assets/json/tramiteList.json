@@ -95,7 +95,7 @@
         "tramite": 11204,
         "linkDashboard": "/pago/transferencia-contenedores/solicitud",
         "linkDepartment": "/pago/transferencia-contenedores/solicitud",
-        "department": ""
+        "department": "aga"
     },
     {
         "id": 15,
@@ -536,7 +536,7 @@
         "tramite": 220402,
         "linkDashboard": "/pantallas-captura/solicitud",
         "linkDepartment": "/pantallas-captura/solicitud",
-        "department": ""
+        "department": "agriculture"
     },
     {
         "id": 78,
@@ -585,7 +585,7 @@
         "tramite": 230101,
         "linkDashboard": "/tramites-disponibles/solicitud",
         "linkDepartment": "/tramites-disponibles/solicitud",
-        "department": ""
+        "department": "semarnat"
     },
     {
         "id": 85,
