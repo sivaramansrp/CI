@@ -140,6 +140,16 @@ export const appRoutes: Route[] = [
             remoteName: 'sedena',
             exposedModule: './Module'
         }).then((m) => m.AppSedenaModule)
-  }         
+  },
+  {
+    path: 'inbal',
+    loadChildren: () =>
+        loadRemoteModule({
+            remoteEntry: 'http://localhost:4218/remoteAppEntry.js',
+            remoteName: 'inbal',
+            exposedModule: './Module'
+        }).then((m) => m.AppInbalModule)
+  },
+
 
 ];
