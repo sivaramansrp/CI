@@ -9,13 +9,20 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import {
+  Notificacion,
+  TituloComponent,
+} from '@libs/shared/data-access-user/src';
+import {
+  NotificacionesComponent,
+  Pedimento,
+} from '@libs/shared/data-access-user/src';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DatosDomicilioLegalQuery } from '../../estados/queries/datos-domicilio-legal.query';
 import { DomicilioComponent } from '../domicilio-establecimiento/domicilio-establecimiento.component';
 import { ManifiestosComponent } from '../manifiestos-declaraciones/manifiestos-declaraciones.component';
 import { RepresentanteLegalRfcComponent } from '../representante-legal-rfc/representante-legal-rfc.component';
-import { TituloComponent } from '@libs/shared/data-access-user/src';
 /**
  * Componente responsable de gestionar y mostrar los datos principales del formulario,
  * incluyendo domicilio, manifiestos y representante legal.
@@ -29,6 +36,7 @@ import { TituloComponent } from '@libs/shared/data-access-user/src';
     TituloComponent,
     DomicilioComponent,
     ManifiestosComponent,
+    NotificacionesComponent,
     RepresentanteLegalRfcComponent,
   ],
   templateUrl: './datos-solicitud.component.html',
@@ -49,6 +57,31 @@ export class DatosDeLaComponent implements OnInit, OnDestroy {
    * Estado de la solicitud.
    */
   public solicitudState!: DatosDomicilioLegalState;
+
+  /**
+   * Método que se llama cuando se elimina un pedimento.
+   * @param {boolean} borrar - Indica si se debe eliminar el pedimento.
+   * Si es verdadero, se elimina el pedimento en la posición `elementoParaEliminar` del arreglo `pedimentos`.
+   */
+  eliminarPedimento(borrar: boolean): void {
+    if (borrar) {
+      this.pedimentos.splice(this.elementoParaEliminar, 1);
+    }
+  }
+
+  /**
+   * @description
+   * Arreglo que almacena los pedimentos asociados al establecimiento.
+   * Cada pedimento contiene información relevante para el trámite.
+   */
+  pedimentos: Array<Pedimento> = [];
+
+  /**
+   * @description
+   * Variable que almacena el índice del elemento que se desea eliminar de la lista de pedimentos.
+   * Utilizada para realizar operaciones de eliminación en el arreglo `pedimentos`.
+   */
+  elementoParaEliminar!: number;
 
   /**
    * Notificador para destruir observables.
@@ -99,6 +132,35 @@ export class DatosDeLaComponent implements OnInit, OnDestroy {
       ],
     });
   }
+
+  /**
+   * Método que se llama cuando se envía el formulario.
+   * Se utiliza para establecer los valores en el store de DatosDomicilioLegal.
+   */
+  abrirModal(i: number = 0): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje:
+        'Por el momento no hay comunicación con el Sistema de COFEPRIS, favor de capturar su establecimiento.',
+      cerrar: true,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+    this.alternarControlesDeFormulario();
+
+    this.elementoParaEliminar = i;
+  }
+
+  /**
+   * @description
+   * Objeto que representa una nueva notificación.
+   * Se utiliza para mostrar mensajes de alerta o información al usuario.
+   */
+  public nuevaNotificacion!: Notificacion;
 
   /**
    * Método que se llama cuando se envía el formulario.
