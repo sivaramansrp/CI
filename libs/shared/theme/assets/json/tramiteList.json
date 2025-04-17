@@ -975,8 +975,8 @@
     {
         "id": 140,
         "tramite": 32401,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "/agace/manifiesto-aereo/solicitar-requiremento",
+        "linkDepartment": "/agace/manifiesto-aereo/solicitar-requiremento",
         "department": "agace"
     },
     {
@@ -1094,8 +1094,8 @@
     {
         "id": 157,
         "tramite": 260903,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "/cofepris/actualizacion-importacion/solictud",
+        "linkDepartment": "/pago/actualizacion-importacion/solictud",
         "department": "cofepris"
     },
     {
@@ -1304,8 +1304,8 @@
     {
         "id": 187,
         "tramite": 231003,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "/semarnat/aviso-de-reciclaje/datos",
+        "linkDepartment": "/semarnat/aviso-de-reciclaje/datos",
         "department": "semarnat"
     },
     {
@@ -1528,8 +1528,8 @@
     {
         "id": 219,
         "tramite": 260504,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "/cofepris/permiso-sujetos/plaguicidas",
+        "linkDepartment": "/pago/permiso-sujetos/plaguicidas",
         "department": "cofepris"
     },
     {
@@ -1982,10 +1982,18 @@
     },
     {
         "id": 284,
+        "tramite": 317,
+        "linkDashboard": "/agace/aviso-unico-renovacion/pantallas",
+        "linkDepartment": "/pago/aviso-unico-renovacion/pantallas",
+        "department": "agace"
+    },
+    {
+        "id": 285,
         "tramite": 260915,
         "linkDashboard": "/cofepris/permiso-sanitario-dispositivos-medicos/permiso-sanitario-dispositivos-medicos",
         "linkDepartment": "/pago/permiso-sanitario-dispositivos-medicos/permiso-sanitario-dispositivos-medicos",
         "department": "cofepris"
+
     }
 
     
