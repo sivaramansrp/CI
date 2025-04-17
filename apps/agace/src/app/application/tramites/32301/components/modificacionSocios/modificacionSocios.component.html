@@ -1,67 +1,91 @@
 <div class="container">
-    <div class="row ">
-        <div class="col-md-12 mb-4">
-            <ng-titulo [titulo]="'Aviso de modificaciones de socios, accionistas, miembros o integrantes, administrador único o consejo de administración y representantes legales'"></ng-titulo>
-
-            </div>
-            
-            </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <label class="form-label text-left">Socios, accionistas, miembros o integrantes, administrador unico o consejo de administracion y representantes legales que han sido revocados
-                    </label>
-                </div>
-                
-        <ng-table [commonTableHeader]="tableColumns"  [commonTableBody]="mercanciasData" ></ng-table>
-        <div class="d-flex justify-content-center">
-            <app-table-pagination
-              [totalItems]="totalItems"
-              [itemsPerPage]="itemsPerPage"
-              [currentPage]="currentPage"
-              (pageChange)="onPageChange($event)"
-              (itemsPerPageChange)="onItemsPerPageChange($event)"
-            >
-            </app-table-pagination>
-          </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <label class="form-label text-left">Declare la información requerida en cada uno de los movimientos que
-                        realice y ratifique aquellos nombramientos que continuen sin modificación
-                    </label>
-                </div>
-
-                <ng-table [commonTableHeader]="declaretableColumns" [commonTableBody]="declareData" ></ng-table>
-        <div class="d-flex justify-content-center">
-            <app-table-pagination
-              [totalItems]="totalItems"
-              [itemsPerPage]="itemsPerPage"
-              [currentPage]="currentPage"
-              (pageChange)="onPageChange($event)"
-              (itemsPerPageChange)="onItemsPerPageChange($event)"
-            >
-            </app-table-pagination>
-                
-
-                </div>
-                <div class="d-flex justify-content-end mt-5">
-                    <button type="button" class="btn btn-default me-md-3" (click)= "openRevocarModal()"> Revocar </button>
-                    <button type="button" class="btn btn-default me-md-3" (click)= "openRaticarModal()"> Ratificar</button>
-                    <button type="button" class="btn btn-primary me-md-3" (click)="openAgregarModal()">Agregar</button>
-                    <button type="button" class="btn btn-primary me-md-3" >Eliminar</button>
-                    
-                  </div>
-
-    <div class="col-12 mt-5">
-        <ng-alert [CONTENIDO]="messageNac"></ng-alert>
-
+  <div class="row">
+    <div class="col-md-12 mb-4">
+      <ng-titulo
+        [titulo]="
+          'Aviso de modificaciones de socios, accionistas, miembros o integrantes, administrador único o consejo de administración y representantes legales'
+        "
+      ></ng-titulo>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <label class="form-label text-left"
+        >Socios, accionistas, miembros o integrantes, administrador unico o
+        consejo de administracion y representantes legales que han sido
+        revocados
+      </label>
     </div>
 
+    <ng-table
+      [commonTableHeader]="tableColumns"
+      [commonTableBody]="mercanciasData"
+    ></ng-table>
+    <div class="d-flex justify-content-center">
+      <app-table-pagination
+        [totalItems]="totalItems"
+        [itemsPerPage]="itemsPerPage"
+        [currentPage]="currentPage"
+        (pageChange)="onPageChange($event)"
+        (itemsPerPageChange)="onItemsPerPageChange($event)"
+      >
+      </app-table-pagination>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <label class="form-label text-left"
+        >Declare la información requerida en cada uno de los movimientos que
+        realice y ratifique aquellos nombramientos que continuen sin
+        modificación
+      </label>
+    </div>
 
-</div>
+    <ng-table
+      [commonTableHeader]="declaretableColumns"
+      [commonTableBody]="declareData"
+    ></ng-table>
+    <div class="d-flex justify-content-center">
+      <app-table-pagination
+        [totalItems]="totalItems"
+        [itemsPerPage]="itemsPerPage"
+        [currentPage]="currentPage"
+        (pageChange)="onPageChange($event)"
+        (itemsPerPageChange)="onItemsPerPageChange($event)"
+      >
+      </app-table-pagination>
+    </div>
+    <div class="d-flex justify-content-end mt-5">
+      <button
+        type="button"
+        class="btn btn-default me-md-3"
+        (click)="openRevocarModal()"
+      >
+        Revocar
+      </button>
+      <button
+        type="button"
+        class="btn btn-default me-md-3"
+        (click)="openRaticarModal()"
+      >
+        Ratificar
+      </button>
+      <button
+        type="button"
+        class="btn btn-primary me-md-3"
+        (click)="openAgregarModal()"
+      >
+        Agregar
+      </button>
+      <button type="button" class="btn btn-primary me-md-3">Eliminar</button>
+    </div>
 
+    <div class="col-12 mt-5">
+      <ng-alert [CONTENIDO]="messageNac"></ng-alert>
+    </div>
+  </div>
 
-<div class="modal fade" tabindex="-1" #Agregar>
+  <div class="modal fade" tabindex="-1" #Agregar>
     <div class="modal-dialog modal-xl">
       <div class="modal-content">
         <div class="modal-header">
@@ -73,12 +97,17 @@
               <div class="col-4">
                 <div class="form-group">
                   <app-catalogo-select
-                 
                     [label]="'En su carácter de'"
                     [required]="true"
                     [catalogo]="enSuCaracterDeOptions"
                     formControlName="ensucarácterde"
-                    (change)="setValoresStore(agregarMiembroDeLaEmpresaFrom,'ensucarácterde', 'setSnsucarácterde')"
+                    (change)="
+                      setValoresStore(
+                        agregarMiembroDeLaEmpresaFrom,
+                        'ensucarácterde',
+                        'setSnsucarácterde'
+                      )
+                    "
                   ></app-catalogo-select>
                 </div>
               </div>
@@ -90,7 +119,13 @@
                     id="rfc"
                     formControlName="rfc"
                     class="form-control"
-                    (change)="setValoresStore(agregarMiembroDeLaEmpresaFrom,'rfc', 'setRfc')"
+                    (change)="
+                      setValoresStore(
+                        agregarMiembroDeLaEmpresaFrom,
+                        'rfc',
+                        'setRfc'
+                      )
+                    "
                   />
                 </div>
               </div>
@@ -112,13 +147,21 @@
                     [layout]="'horizontal'"
                     [gap]="'50px'"
                     formControlName="obligadoaTributarenMéxico"
-                    (change)="setValoresStore(agregarMiembroDeLaEmpresaFrom,'obligadoaTributarenMéxico', 'setObligadoaTributarenMéxico')"
+                    (change)="
+                      setValoresStore(
+                        agregarMiembroDeLaEmpresaFrom,
+                        'obligadoaTributarenMéxico',
+                        'setObligadoaTributarenMéxico'
+                      )
+                    "
                   ></app-input-radio>
                 </div>
               </div>
               <div class="col-4">
                 <div class="form-group">
-                  <label for="registroFederaldeContribuyentes" class="form-label"
+                  <label
+                    for="registroFederaldeContribuyentes"
+                    class="form-label"
                     >Registro Federal de Contribuyentes *:</label
                   >
                   <input
@@ -127,12 +170,18 @@
                     class="form-control"
                     [value]="agregarMiembroDeLaEmpresaFrom.get('rfc')?.value"
                     formControlName="registroFederaldeContribuyentes"
-                    (change)="setValoresStore(agregarMiembroDeLaEmpresaFrom,'registroFederaldeContribuyentes', 'setRegistroFederaldeContribuyentes')"
+                    (change)="
+                      setValoresStore(
+                        agregarMiembroDeLaEmpresaFrom,
+                        'registroFederaldeContribuyentes',
+                        'setRegistroFederaldeContribuyentes'
+                      )
+                    "
                   />
                 </div>
               </div>
             </div>
-  
+
             <div class="row">
               <div class="col-4">
                 <div class="form-group">
@@ -142,7 +191,13 @@
                     [required]="true"
                     [catalogo]="nacionalidadOptions"
                     formControlName="nacionalidad"
-                    (change)="setValoresStore(agregarMiembroDeLaEmpresaFrom,'nacionalidad', 'setNacionalidad')"
+                    (change)="
+                      setValoresStore(
+                        agregarMiembroDeLaEmpresaFrom,
+                        'nacionalidad',
+                        'setNacionalidad'
+                      )
+                    "
                   ></app-catalogo-select>
                 </div>
               </div>
@@ -156,13 +211,23 @@
                     id="nombreCompleto"
                     class="form-control"
                     formControlName="nombreCompleto"
-                    (change)="setValoresStore(agregarMiembroDeLaEmpresaFrom,'nombreCompleto', 'setNombreCompleto')"
+                    (change)="
+                      setValoresStore(
+                        agregarMiembroDeLaEmpresaFrom,
+                        'nombreCompleto',
+                        'setNombreCompleto'
+                      )
+                    "
                   />
                 </div>
               </div>
             </div>
             <div class="button-group d-flex justify-content-end">
-              <button type="submit" class="btn btn-primary me-md-3" (click)="getValorStore()">
+              <button
+                type="submit"
+                class="btn btn-primary me-md-3"
+                (click)="getValorStore()"
+              >
                 Aceptar
               </button>
               <button
@@ -186,33 +251,26 @@
           <h5 class="modal-title"></h5>
         </div>
         <div class="modal-body p-4">
-            <div class="row">
-               <div class="col-12 text-center">
-                Se han ratificado los registros seleccionados
-                </div>
+          <div class="row">
+            <div class="col-12 text-center">
+              Se han ratificado los registros seleccionados
+            </div>
           </div>
-           
+
           <div class="button-group d-flex justify-content-center">
-         
             <button
               type="button"
-              class="btn btn-default "
+              class="btn btn-default"
               (click)="closeRaticarModal()"
             >
               Aceptar
             </button>
           </div>
-
-  
-         
-  
         </div>
       </div>
     </div>
   </div>
 
-
-  
   <div class="modal fade" tabindex="-1" #Revocar>
     <div class="modal-dialog modal-sl">
       <div class="modal-content">
@@ -220,17 +278,16 @@
           <h5 class="modal-title"></h5>
         </div>
         <div class="modal-body p-4">
-            <div class="row">
-               <div class="col-12 text-center">
-                Se han revocado los registros seleccionados
-                </div>
+          <div class="row">
+            <div class="col-12 text-center">
+              Se han revocado los registros seleccionados
+            </div>
           </div>
-           
+
           <div class="button-group d-flex justify-content-center">
-         
             <button
               type="button"
-              class="btn btn-default "
+              class="btn btn-default"
               (click)="closeRevocarModal()"
             >
               Aceptar
@@ -248,17 +305,14 @@
           <h5 class="modal-title"></h5>
         </div>
         <div class="modal-body p-4">
-            <div class="row">
-               <div class="col-12 text-center">
-                Datos guardados correctamente.
-                </div>
+          <div class="row">
+            <div class="col-12 text-center">Datos guardados correctamente.</div>
           </div>
-           
+
           <div class="button-group d-flex justify-content-center">
-         
             <button
               type="button"
-              class="btn btn-default "
+              class="btn btn-default"
               (click)="closeCorrectamenteModel()"
             >
               Aceptar
@@ -268,3 +322,4 @@
       </div>
     </div>
   </div>
+</div>

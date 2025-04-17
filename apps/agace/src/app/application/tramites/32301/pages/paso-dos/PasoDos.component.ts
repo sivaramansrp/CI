@@ -7,7 +7,7 @@ import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogosService } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
-import documentList from '@libs/shared/theme/assets/json/32502/document-list.json';
+import documentList from '@libs/shared/theme/assets/json/32301/document-list.json';
 
 @Component({
   selector: 'app-paso-dos', // Selector del componente

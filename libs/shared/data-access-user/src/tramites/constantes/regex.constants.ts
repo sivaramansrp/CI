@@ -1,3 +1,5 @@
+import exp from "constants";
+
 export const REG_X = {
   SOLO_NUMEROS: /^[0-9]+$/, // Permite solo números enteros
   DECIMALES_DOS_LUGARES: /^[0-9]+(\.[0-9]{1,2})?$/, // Permite números con hasta dos decimales
@@ -121,3 +123,8 @@ export const REGEX_PATRON_DECIMAL_15_4=/^\d{0,15}(\.\d{1,4})?$/;
  * - "Hola@123" (contiene un carácter especial)
  */
 export const REGEX_PATRON_ALFANUMERICO=/^[A-Za-z0-9Ññ]+$/;
+
+export const CODIGO_POSTAL = /^\d{5}$/
+
+export const RFC_PARTES_C = /^[A-ZÑ&]{3,4}\d{6}[A-Z0-9]{3}$/
+

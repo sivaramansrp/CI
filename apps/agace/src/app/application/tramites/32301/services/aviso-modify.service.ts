@@ -21,6 +21,9 @@ export class AvisoModifyService {
   private personaFusionEscision = 'personaFusionEscision.json';
   private selectRangoDias = 'selectRangoDias.json';
   private adicianFraccionOption = 'adicianFraccionOption.json';
+  private adicianFraccionNicoModOptions = 'adicianFraccionNicoModOptions.json';
+  private adicianFraccionUnidadMedidaModOption = 'adicianFraccionUnidadMedidaModOption.json';
+  private adicianFraccionActivRelProcModOption = 'adicianFraccionActivRelProcModOption.json'
   private capacidadAlmacenamiento = 'fusionOEscision.json';
   private entidadFederativa = 'entidadFederative.json';
   private gridDomiciliosModificados = 'gridDomiciliosModificados.json';
@@ -30,7 +33,8 @@ export class AvisoModifyService {
   private preOperativo = 'preOperativo.json';
   private gridMiembrosEmpresas = 'gridMiembrosEmpresas.json';
   private seccionMiembrosRevocados = 'seccionMiembrosRevocados.json';
-
+ private adicianFraccioncveFraccionCorrelacionModOption = 'adicianFraccioncveFraccionCorrelacionModOption.json';
+ private subFusionOescision = 'subFusionOescision.json'
   /** Método para obtener el tipo de aviso */
   getAvisoModify(): Observable<catalogoResponse> {
     return this.http.get<catalogoResponse>(`${this.jsonUrl}/${this.fileName}`).pipe(
@@ -51,6 +55,12 @@ export class AvisoModifyService {
     );
   }
 
+
+  gridsubFusionOescision(): Observable<TableDataNgTable> {
+    return this.http.get<TableDataNgTable>(`${this.jsonUrl}/${this.subFusionOescision}`);
+  }
+
+
   /** Método para obtener el rango de días */
   getSelectRangoDias(): Observable<string[]> {
     return this.http.get<string[]>(`${this.jsonUrl}/${this.selectRangoDias}`);
@@ -60,6 +70,38 @@ export class AvisoModifyService {
   getAdicianFraccionOption(): Observable<string[]> {
     return this.http.get<string[]>(`${this.jsonUrl}/${this.adicianFraccionOption}`);
   }
+
+ /**
+ * Obtiene las opciones de modificación de clave nacional única desde la URL JSON.
+ * Retorna un Observable con un array de cadenas.
+ */
+getAdicianFraccionNicoModOptions(): Observable<string[]> {
+  return this.http.get<string[]>(`${this.jsonUrl}/${this.adicianFraccionNicoModOptions}`);
+}
+
+/**
+ * Obtiene las opciones de modificación de unidad de medida desde la URL JSON.
+ * Retorna un Observable con un array de cadenas.
+ */
+getAdicianFraccionUnidadMedidaModOption(): Observable<string[]> {
+  return this.http.get<string[]>(`${this.jsonUrl}/${this.adicianFraccionUnidadMedidaModOption}`);
+}
+
+/**
+ * Obtiene las opciones de modificación de actividad relacionada con el proceso desde la URL JSON.
+ * Retorna un Observable con un array de cadenas.
+ */
+getAdicianFraccionActivRelProcModOption(): Observable<string[]> {
+  return this.http.get<string[]>(`${this.jsonUrl}/${this.adicianFraccionActivRelProcModOption}`);
+}
+
+/**
+ * Obtiene las opciones de modificación de la clave de fracción de correlación desde la URL JSON.
+ * Retorna un Observable con un array de cadenas.
+ */
+getAdicianFraccioncveFraccionCorrelacionModOption(): Observable<string[]> {
+  return this.http.get<string[]>(`${this.jsonUrl}/${this.adicianFraccioncveFraccionCorrelacionModOption}`);
+}
 
   /** Método para obtener la capacidad de almacenamiento */
   getCapacidadAlmacenamiento(): Observable<string[]> {

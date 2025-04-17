@@ -1,5 +1,4 @@
 {
-  //"include": ["apps/**/src/**/*.ts"],
-  "include": ["apps/agace/src/app/application/tramites/32301/**/*.ts"],
+  "include": ["apps/**/src/**/*.ts"],
   "exclude": ["src/test.ts", "src/**/*.spec.ts"]
 }

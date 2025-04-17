@@ -10,6 +10,7 @@ import { ModificacionSocios, TableDataNgTable } from '../../models/avisomodify.m
 import { Subject, takeUntil } from 'rxjs';
 import { AvisoModifyService } from '../../services/aviso-modify.service';
 import { CommonModule } from '@angular/common';
+import { MESSAGE_NAC } from '../../enums/modificacionSocios.enum'
 import { Modal } from 'bootstrap';
 import { Tramite32301Query } from '../../estados/tramite32301.query';
 import { Tramite32301Store } from '../../estados/tramite32301.store';
@@ -48,10 +49,10 @@ export class ModificacionSociosComponent implements OnInit, AfterViewInit, OnDes
   public miembroDeLaEmpresaBodyData: unknown[] = [];
 
   // Instancias de los modales para mostrar
-  AgregarModelInstance!: Modal;
-  RaticarModelnstance!: Modal;
-  RevocarModelnstance!: Modal;
-  Correctamentelnstance!:Modal;
+  agregarModelInstance!: Modal;
+  raticarModelnstance!: Modal;
+  revocarModelnstance!: Modal;
+  correctAmentelnstance!:Modal;
   
   // Modelo de datos para la modificación de socios
   modificacionSocios!:ModificacionSocios;
@@ -62,25 +63,16 @@ export class ModificacionSociosComponent implements OnInit, AfterViewInit, OnDes
   enSuCaracterDeOptions!: Catalogo[];
 
   // Referencias a los elementos del DOM de los modales
-  @ViewChild('Agregar', { static: false }) AgregarMOdel!: ElementRef;
-  @ViewChild('Raticar', { static: false }) RaticarMOdel!: ElementRef;
-  @ViewChild('Revocar', { static: false }) RevocarMOdel!: ElementRef;
-  @ViewChild('CorrectamenteModel', { static: false }) CorrectamenteModel!: ElementRef;
+  @ViewChild('Agregar', { static: false }) agregarMOdel!: ElementRef;
+  @ViewChild('Raticar', { static: false }) raticarModel!: ElementRef;
+  @ViewChild('Revocar', { static: false }) revocarModel!: ElementRef;
+  @ViewChild('CorrectamenteModel', { static: false }) correctAmenteModel!: ElementRef;
   
   // Formulario reactivo para agregar miembros
   agregarMiembroDeLaEmpresaFrom!: FormGroup;
 
   // Mensaje sobre la nacionalidad y tributo en México
-  messageNac: string = `- Tratándose de socios o accionistas, deberá presentar el documento
-    denominado <b>"Relación de los socios, accionistas o asociados, residentes en el extranjero"</b>, conforme la norma oficial
-    aprobada número 96, del Apartado A del Anexo 1 de la RMF para 2017.
-    <br><br>
-    - Tratándose de representante legal, administrador único y/o miembros del consejo de administración, 
-    de forma enunciativa, más no limitativa, podrá presentar documentos que acrediten que dichas personas no
-    se encuentran obligadas a tributar en MÉXICO, tales como, Opinión del cumplimiento de obligaciones fiscales con la 
-    leyenda "Sin obligaciones fiscales", constancia de residencia para efectos fiscales del país donde tributa, declaraciones
-    fiscales del país donde se encuentren obligados a tributar, pasaporte expedido por su país de origen, etc. Deberá presentar 
-    el documento denominado <b>"documento que acredite no tributar en MÉXICO"</b>.`;
+  messageNac: string = MESSAGE_NAC
 
   // Subject para controlar la destrucción del componente
   private destroy$: Subject<void> = new Subject<void>();
@@ -200,68 +192,78 @@ export class ModificacionSociosComponent implements OnInit, AfterViewInit, OnDes
 
   // Inicialización de los modales después de que la vista se carga
   ngAfterViewInit(): void {
-    if (this.AgregarMOdel?.nativeElement) {
-      this.AgregarModelInstance = new Modal(this.AgregarMOdel.nativeElement);
+    if (this.agregarMOdel?.nativeElement) {
+      this.agregarModelInstance = new Modal(this.agregarMOdel.nativeElement);
     }
 
-    if (this.RaticarMOdel?.nativeElement) {
-      this.RaticarModelnstance = new Modal(this.RaticarMOdel.nativeElement);
+    if (this.raticarModel?.nativeElement) {
+      this.raticarModelnstance = new Modal(this.raticarModel.nativeElement);
     }
-    if (this.RevocarMOdel?.nativeElement) {
-      this.RevocarModelnstance = new Modal(this.RevocarMOdel.nativeElement);
+    if (this.revocarModel?.nativeElement) {
+      this.revocarModelnstance = new Modal(this.revocarModel.nativeElement);
     }
 
-    if (this.CorrectamenteModel?.nativeElement) {
-      this.Correctamentelnstance = new Modal(this.CorrectamenteModel.nativeElement);
+    if (this.correctAmenteModel?.nativeElement) {
+      this.correctAmentelnstance = new Modal(this.correctAmenteModel.nativeElement);
     }
   }
 
   // Métodos para abrir los modales
   openAgregarModal(): void {
-    if (this.AgregarModelInstance) {
-      this.AgregarModelInstance.show();
+    if (this.agregarModelInstance) {
+      this.agregarModelInstance.show();
     }
-  }
-  openRaticarModal(): void {
-    if (this.RaticarModelnstance) {
-      this.RaticarModelnstance.show();
+  }openRaticarModal(): void {
+    /** Abre el modal para la acción de "Raticar" si la instancia existe */
+    if (this.raticarModelnstance) {
+        this.raticarModelnstance.show();
     }
-  }
-  openRevocarModal(): void {
-    if (this.RevocarModelnstance) {
-      this.RevocarModelnstance.show();
-    }
-  }
-  openCorrectamenteModel(): void {
-    if (this.Correctamentelnstance) {
-      this.Correctamentelnstance.show();
-    }
-  }
+}
 
-  // Métodos para cerrar los modales
-  closeCorrectamenteModel(): void {
-    if (this.Correctamentelnstance) {
-      this.Correctamentelnstance.hide();
+openRevocarModal(): void {
+    /** Abre el modal para la acción de "Revocar" si la instancia existe */
+    if (this.revocarModelnstance) {
+        this.revocarModelnstance.show();
     }
-  }
+}
 
-  closeAgregarModal(): void {
-    if (this.AgregarModelInstance) {
-      this.AgregarModelInstance.hide();
-      this.openCorrectamenteModel();
+openCorrectamenteModel(): void {
+    /** Abre el modal de confirmación si la instancia existe */
+    if (this.correctAmentelnstance) {
+        this.correctAmentelnstance.show();
     }
-  }
+}
 
-  closeRaticarModal(): void {
-    if (this.RaticarModelnstance) {
-      this.RaticarModelnstance.hide();
+// Métodos para cerrar los modales
+closeCorrectamenteModel(): void {
+    /** Cierra el modal de confirmación si la instancia existe */
+    if (this.correctAmentelnstance) {
+        this.correctAmentelnstance.hide();
     }
-  }
-  closeRevocarModal(): void {
-    if (this.RevocarModelnstance) {
-      this.RevocarModelnstance.hide();
+}
+
+closeAgregarModal(): void {
+    /** Cierra el modal de "Agregar" y abre el modal de confirmación */
+    if (this.agregarModelInstance) {
+        this.agregarModelInstance.hide();
+        this.openCorrectamenteModel();
     }
-  }
+}
+
+closeRaticarModal(): void {
+    /** Cierra el modal para la acción de "Raticar" si la instancia existe */
+    if (this.raticarModelnstance) {
+        this.raticarModelnstance.hide();
+    }
+}
+
+closeRevocarModal(): void {
+    /** Cierra el modal para la acción de "Revocar" si la instancia existe */
+    if (this.revocarModelnstance) {
+        this.revocarModelnstance.hide();
+    }
+}
+
 
   // Método de destrucción del componente para evitar fugas de memoria
   ngOnDestroy(): void {

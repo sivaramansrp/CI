@@ -14,16 +14,15 @@ import {
   TableComponent,
   TituloComponent,
 } from '@ng-mf/data-access-user';
+import { CODIGO_POSTAL, RFC_PARTES_C } from '@libs/shared/data-access-user/src/tramites/constantes/regex.constants';
+import { CVE_TIPO_DOC_DATA, FRACCION_ARANCELARIA_DATA, MESSAGE_NAC,MODIFICACION_PARTES_HEADER,MOSTRAR_GRID_NUEVO_HEADER, RADIO_OPTIONS } from '../../enums/modificacionGoceInmueble.enum'
 import {
   FormBuilder,
   FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import {
-  ModificacionGoceInmueble,
-  TableDataNgTable,
-} from '../../models/avisomodify.model';
+import { ModificacionGoceInmueble, TableDataNgTable } from '../../models/avisomodify.model';
 import { Subject, takeUntil } from 'rxjs';
 import { AvisoModifyService } from '../../services/aviso-modify.service';
 import { CommonModule } from '@angular/common';
@@ -31,6 +30,7 @@ import { Modal } from 'bootstrap';
 import { Tramite32301Query } from '../../estados/tramite32301.query';
 import { Tramite32301Store } from '../../estados/tramite32301.store';
 interface TableData {
+
   tableHeader: string[];
   tableBody: TableBodyItem[];
 }
@@ -58,19 +58,10 @@ export class ModificacionGoceInmuebleComponent
   modificacionGoceForm!: FormGroup;
 
   /** Opciones para los radios de selección: "Domicilio nuevo" o "Modificar domicilio" */
-  radioOptions = [
-    {
-      label: 'Domicilio nuevo',
-      value: 'DomicilioNuevo',
-    },
-    {
-      label: 'Modificar domicilio',
-      value: 'ModificarDomicilio',
-    },
-  ];
+  radioOptions = RADIO_OPTIONS
 
   /** Mensaje de información para la modificación de partes contratantes */
-  messageNac = `En caso de modificar las partes contratantes en la documentación con la que acreditó el legal uso y goce del domicilio, se tendrá que incluir un escrito libre en el apartado de Anexar requisitos, mediante el tipo de documento "Otros" que detalle los cambios realizados.`;
+  messageNac = MESSAGE_NAC
 
   /** Bandera para mostrar el grid de domicilios nuevos */
   mostrarGridNuevo: boolean = false;
@@ -79,10 +70,10 @@ export class ModificacionGoceInmuebleComponent
   mostrarGridModificado: boolean = false;
 
   /** Instancia del modal para modificar domicilio */
-  ModificarModelInstance!: Modal;
+  modificarModelInstance!: Modal;
 
   /** Instancia del modal para modificar registro de domicilio */
-  ModificarRecordModelInstance!: Modal;
+  modificarRecordModelInstance!: Modal;
 
   /** Instancia del modal para el domicilio nuevo */
   modalDomiciliosInmuebleNuevoInstance!: Modal;
@@ -105,42 +96,13 @@ export class ModificacionGoceInmuebleComponent
   gridDomiciliosModificadosHeader: string[] = [];
 
   /** Encabezado de la tabla de domicilios nuevos */
-  mostrarGridNuevoHeader = [
-    'idInmueble',
-    'Domicilio',
-    'Código Postal',
-    'Entidad federativa',
-    'cveEntidad',
-    'Alcaldía o Municipio',
-    'cveMunicipio',
-    'Tipo de Documento con el que se acredita el uso y goce',
-    'cveTipoDoc',
-    'Fecha inicio de vigencia',
-    'Fecha fin vigencia',
-    'Observaciones',
-  ];
+  mostrarGridNuevoHeader = MOSTRAR_GRID_NUEVO_HEADER
 
   /** Encabezado de la tabla de partes modificadas */
-  modificacionPartesHeader = ['RFC', 'Nombre', 'Carácter de'];
+  modificacionPartesHeader = MODIFICACION_PARTES_HEADER;
 
   /** Datos de las partes modificadas */
   modificacionPartesData: { tbodyData: string[] }[] = [{ tbodyData: [] }];
-
-  /** Datos de las fracciones arancelarias */
-  fraccionArancelariaData = [
-    {
-      id: 1,
-      descripcion: 'ENSENADA',
-    },
-  ];
-
-  /** Datos de los tipos de documento */
-  cveTipoDocData = [
-    {
-      id: 1,
-      descripcion: 'contrato de compra',
-    },
-  ];
 
   /** Datos de la tabla de domicilios modificados */
   gridDomiciliosModificadosData: { tbodyData: string[] }[] = [
@@ -154,17 +116,17 @@ export class ModificacionGoceInmuebleComponent
   entidadFederativa!: Catalogo[];
 
   /** Datos de las fracciones arancelarias */
-  fraccionArancelaria: Catalogo[] = this.fraccionArancelariaData;
+  fraccionArancelaria: Catalogo[] = FRACCION_ARANCELARIA_DATA;
 
   /** Datos de los tipos de documento */
-  cveTipoDoc: Catalogo[] = this.cveTipoDocData;
+  cveTipoDoc: Catalogo[] = CVE_TIPO_DOC_DATA;
 
   /** Referencia al modal de modificar */
-  @ViewChild('ModificarModel', { static: false }) ModificarModel!: ElementRef;
+  @ViewChild('ModificarModel', { static: false }) modificarModel!: ElementRef;
 
   /** Referencia al modal de modificar registro */
   @ViewChild('ModificarRecordModel', { static: false })
-  ModificarRecordModel!: ElementRef;
+  modificarRecordModel!: ElementRef;
 
   /** Referencia al modal de domicilio nuevo */
   @ViewChild('modalDomiciliosInmuebleNuevo', { static: false })
@@ -233,14 +195,14 @@ export class ModificacionGoceInmuebleComponent
 
   /** Inicializa las instancias de los modales después de que la vista está completamente cargada */
   ngAfterViewInit(): void {
-    if (this.ModificarModel?.nativeElement) {
-      this.ModificarModelInstance = new Modal(
-        this.ModificarModel.nativeElement
+    if (this.modificarModel?.nativeElement) {
+      this.modificarModelInstance = new Modal(
+        this.modificarModel.nativeElement
       );
     }
-    if (this.ModificarRecordModel?.nativeElement) {
-      this.ModificarRecordModelInstance = new Modal(
-        this.ModificarRecordModel.nativeElement
+    if (this.modificarRecordModel?.nativeElement) {
+      this.modificarRecordModelInstance = new Modal(
+        this.modificarRecordModel.nativeElement
       );
     }
 
@@ -261,7 +223,7 @@ export class ModificacionGoceInmuebleComponent
         [
           Validators.required,
           Validators.maxLength(5),
-          Validators.pattern(/^\d{5}$/),
+          Validators.pattern(CODIGO_POSTAL),
         ],
       ],
       cveEntidad: ['', Validators.required],
@@ -276,7 +238,7 @@ export class ModificacionGoceInmuebleComponent
         [
           Validators.required,
           Validators.maxLength(13),
-          Validators.pattern(/^[A-ZÑ&]{3,4}\d{6}[A-Z0-9]{3}$/),
+          Validators.pattern(RFC_PARTES_C),
         ],
       ],
       rfcPartesCons: [{ value: '', disabled: true }],
@@ -379,9 +341,7 @@ export class ModificacionGoceInmuebleComponent
   guardarDomInmuebleNvo(): void {
     this.store.setModificacionGoceInmueble(this.direccionGrid.value); // Guarda los datos en el store
     this.Tramite32301Query.select().pipe(takeUntil(this.destroy$)).subscribe();
-    if (this.direccionGrid.valid) {
-      // this.store.setModificacionGoceInmueble(this.direccionGrid.value);
-    } else {
+    if (!this.direccionGrid.valid) {
       this.direccionGrid.markAllAsTouched(); // Marca todos los campos como tocados si no son válidos
     }
     this.closeModalDomiciliosInmuebleNuevoModel(); // Cierra el modal después de guardar
@@ -394,8 +354,8 @@ export class ModificacionGoceInmuebleComponent
 
   /** Abre el modal para modificar el domicilio */
   openModificarModel(): void {
-    if (this.ModificarModelInstance) {
-      this.ModificarModelInstance.show(); // Muestra el modal
+    if (this.modificarModelInstance) {
+      this.modificarModelInstance.show(); // Muestra el modal
     }
   }
 
@@ -416,22 +376,22 @@ export class ModificacionGoceInmuebleComponent
 
   /** Abre el modal para modificar el registro */
   openModificarRecordModel(): void {
-    if (this.ModificarRecordModelInstance) {
-      this.ModificarRecordModelInstance.show();
+    if (this.modificarRecordModelInstance) {
+      this.modificarRecordModelInstance.show();
     }
   }
 
   /** Cierra el modal de modificación */
   closeModificarModel(): void {
-    if (this.ModificarModelInstance) {
-      this.ModificarModelInstance.hide();
+    if (this.modificarModelInstance) {
+      this.modificarModelInstance.hide();
     }
   }
 
   /** Cierra el modal de modificación del registro */
   closeModificarRecordModel(): void {
-    if (this.ModificarRecordModelInstance) {
-      this.ModificarRecordModelInstance.hide();
+    if (this.modificarRecordModelInstance) {
+      this.modificarRecordModelInstance.hide();
     }
   }
 

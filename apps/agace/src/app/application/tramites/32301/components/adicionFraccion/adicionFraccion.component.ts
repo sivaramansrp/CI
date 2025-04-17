@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { AlertComponent, Catalogo, CatalogoSelectComponent, CrosslistComponent, InputRadioComponent, TableComponent, TablePaginationComponent, TituloComponent } from "@ng-mf/data-access-user";
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ALOTO_FRACCIONES} from '../../enums/adicionFraccion.enum'
 import { AvisoModifyService } from '../../services/aviso-modify.service';
 import { CROSLISTA_DE_PAISES } from '../../enums/pantallas-constante.enum'
 import { CommonModule } from '@angular/common';
@@ -8,7 +9,6 @@ import { Modal } from 'bootstrap';
 import { Subject } from 'rxjs';
 import { Tramite32301Query } from '../../estados/tramite32301.query';
 import { Tramite32301Store } from '../../estados/tramite32301.store';
-
 interface RatioOption {
   label: string;
   value: string | number;
@@ -49,6 +49,7 @@ export class AdicionFraccionComponent implements OnInit, OnDestroy, AfterViewIni
    */
   messageFraccion: string = 'Deberás adjuntar el listado de fracciones arancelarias señaladas en la descripción de las actividades relacionadas con los procesos productivos o presentación de servicios, exhibido en tu solicitud de inscripción.';
 
+  alotoFracciones = ALOTO_FRACCIONES
   /** 
    * Opciones para los botones de radio. 
    */
@@ -106,70 +107,6 @@ export class AdicionFraccionComponent implements OnInit, OnDestroy, AfterViewIni
   ];
 
   /** 
-   * Opciones del catálogo para el campo NICO. 
-   */
-  cveNicoModOptions = [
-    {
-      "id": -1,
-      "descripcion": "Selecciona un valor"
-    }
-  ]
-
-  /** 
-   * Opciones del catálogo para unidad de medida modificada. 
-   */
-  unidadMedidaModOption = [
-    {
-      "id": -1,
-      "descripcion": "Seleccione"
-    },
-    {
-      "id": 1,
-      "descripcion": "Proceso"
-    },
-    {
-      "id": 2,
-      "descripcion": "Servicio"
-    },
-    {
-      "id": 3,
-      "descripcion": "Ambos"
-    }
-  ]
-
-  /** 
-   * Opciones del catálogo para actividad relacionada con el proceso. 
-   */
-  activRelProcModOption = [
-    {
-      "id": -1,
-      "descripcion": "Seleccione"
-    },
-    {
-      "id": 1,
-      "descripcion": "Proceso"
-    },
-    {
-      "id": 2,
-      "descripcion": "Servicio"
-    },
-    {
-      "id": 3,
-      "descripcion": "Ambos"
-    }
-  ]
-
-  /** 
-   * Opciones para la fracción correlacionada. 
-   */
-  cveFraccionCorrelacionModOption = [
-    {
-      "id": -1,
-      "descripcion": "Selecciona un valor"
-    }
-  ]
-
-  /** 
    * Total de elementos a paginar. 
    */
   totalItems: number = 0;
@@ -197,10 +134,10 @@ export class AdicionFraccionComponent implements OnInit, OnDestroy, AfterViewIni
   /** 
    * Catálogos asignados a propiedades para selección. 
    */
-  cveNicoMod: Catalogo[] = this.cveNicoModOptions;
-  unidadMedidaMod: Catalogo[] = this.unidadMedidaModOption;
-  activRelProcMod: Catalogo[] = this.activRelProcModOption;
-  cveFraccionCorrelacionMod: Catalogo[] = this.cveFraccionCorrelacionModOption;
+  cveNicoMod!: Catalogo[]
+  unidadMedidaMod!: Catalogo[]
+  activRelProcMod!: Catalogo[]
+  cveFraccionCorrelacionMod!: Catalogo[]
 
   /** 
    * Datos del cuerpo para el componente de miembros de la empresa. 
@@ -259,9 +196,9 @@ ngOnInit(): void {
     sPaisBloqueOrigen: [[], Validators.required],
     sPaisBloqueDestino: [[], Validators.required]
   });
-
-  // this.rango_fechas(); // Función comentada
   this.getAdicianFraccionOption();
+  this.getAdicianFraccionNicoModOptions();
+  this.getAdicianFraccionActivRelProcModOption();
 }
 
 /**
@@ -274,6 +211,50 @@ getAdicianFraccionOption(): void {
       this.radioOptions = Object.assign([], resp);
     });
 }
+/**
+ * Obtiene las opciones de modificación de clave nacional única.
+ */
+getAdicianFraccionNicoModOptions(): void {
+  this.AvisoModifyService
+    .getAdicianFraccionNicoModOptions()
+    .subscribe((resp) => {
+      this.cveNicoMod = Object.assign([], resp);
+    });
+}
+
+/**
+ * Obtiene las opciones de modificación de unidad de medida.
+ */
+getAdicianFraccionUnidadMedidaModOption(): void {
+  this.AvisoModifyService
+    .getAdicianFraccionUnidadMedidaModOption()
+    .subscribe((resp) => {
+      this.unidadMedidaMod = Object.assign([], resp);
+    });
+}
+
+/**
+ * Obtiene las opciones de modificación de actividad relacionada con el proceso.
+ */
+getAdicianFraccionActivRelProcModOption(): void {
+  this.AvisoModifyService
+    .getAdicianFraccionActivRelProcModOption()
+    .subscribe((resp) => {
+      this.activRelProcMod = Object.assign([], resp);
+    });
+}
+
+/**
+ * Obtiene las opciones de modificación de la clave de fracción de correlación.
+ */
+getAdicianFraccioncveFraccionCorrelacionModOption(): void {
+  this.AvisoModifyService
+    .getAdicianFraccioncveFraccionCorrelacionModOption()
+    .subscribe((resp) => {
+      this.cveFraccionCorrelacionMod = Object.assign([], resp);
+    });
+}
+
 
 /**
  * Agrega fechas seleccionadas dependiendo del tipo especificado ('t' para todas).
@@ -367,7 +348,6 @@ updatePagination(): void {
  */
 modalAgregaCarga(): void {
   this.openfraccionesModelModel();
-  // this.adicionFraccionService.openAgregaCargaModal(); // Comentado según instrucciones
 }
 /**
  * Abre el modal para la carga masiva de fracciones.

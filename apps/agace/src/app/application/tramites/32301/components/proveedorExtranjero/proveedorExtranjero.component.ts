@@ -4,10 +4,10 @@ import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@ang
 import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { Modal } from 'bootstrap';
+import { PROVEEDORES } from '../../enums/proveedorExtranjero.enum'
 import { ProveedorExtranjero } from '../../models/avisomodify.model';
 import { Tramite32301Query } from '../../estados/tramite32301.query';
 import { Tramite32301Store } from '../../estados/tramite32301.store';
-
 /**
  * Componente para manejar la carga y gestión de proveedores extranjeros.
  * Este componente incluye un formulario reactivo para la carga de archivos y registros de proveedores.
@@ -25,6 +25,8 @@ export class ProveedorExtranjeroComponent implements OnInit, OnDestroy {
 
   /** Título dinámico basado en el tipo de proveedor */
   ProveedoresTitulo!: string;
+
+  proveedores!: typeof PROVEEDORES;
 
   /** Formulario reactivo para la carga de proveedores extranjeros */
   proveedorXtranjForm!: FormGroup;

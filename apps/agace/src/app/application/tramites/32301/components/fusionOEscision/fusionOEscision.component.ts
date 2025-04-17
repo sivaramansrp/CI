@@ -1,11 +1,13 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { AlertComponent, InputRadioComponent, TableComponent, TablePaginationComponent, TituloComponent } from "@ng-mf/data-access-user";
+import { CANTIDAD_BIENES_OPTION, FUSIONRADIO_OPTIONS } from '../../enums/fusionOEscision.enum'
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { AvisoModifyService } from '../../services/aviso-modify.service';
 import { CommonModule } from '@angular/common';
 import { Modal } from 'bootstrap';
 import { PersonaFusionEscisionDTO } from '../../models/avisomodify.model';
+import { TableDataNgTable,} from '../../models/avisomodify.model';
 import { Tramite32301Query } from '../../estados/tramite32301.query';
 import { Tramite32301Store } from '../../estados/tramite32301.store';
 interface RatioOption {
@@ -58,25 +60,14 @@ export class FusionOEscisionComponent implements OnInit, OnDestroy, AfterViewIni
   fechasSeleccionadas = [];
 
   /** Opciones del radio para seleccionar tipo de operación (fusión/escisión) */
-  fusionradioOptions = [
-    { "label": "Fusión", "value": "1" },
-    { "label": "Escisión", "value": "0" }
-  ];
+  fusionradioOptions = FUSIONRADIO_OPTIONS
+  
 
   /** Opciones para indicar si se poseen bienes */
-  cantidadBienesOption = [
-    { "label": "Sí", "value": '1' },
-    { "label": "No", "value": '0' }
-  ];
+  cantidadBienesOption = CANTIDAD_BIENES_OPTION
 
   /** Encabezado de tabla que muestra los datos de empresas fusionadas/escindidas */
-  gridFusionEscisionHeader = [
-    'Registro Federal de Contribuyentes',
-    'Denominación o Razón Social',
-    'Folio VUCEM de la última certificación/renovación',
-    'Fecha de inicio de vigencia de la última certificación/renovación',
-    'Fecha de fin de vigencia de la última certificación/renovación'
-  ];
+  gridFusionEscisionHeader: string[] = []
 
   /** Datos a mostrar en la tabla */
   gridFusionEscisionData: { tbodyData: string[] }[] = [{ tbodyData: [] }];
@@ -127,6 +118,7 @@ export class FusionOEscisionComponent implements OnInit, OnDestroy, AfterViewIni
   ngOnInit(): void {
     this.initializeForm();
     this.getCapacidadAlmacenamiento();
+    this.getGridsubFusionOescision();
   }
 
   /** Llama al servicio para obtener opciones de capacidad de almacenamiento */
@@ -182,10 +174,7 @@ export class FusionOEscisionComponent implements OnInit, OnDestroy, AfterViewIni
     if (VALOR === 'fusion2') {
       this.fusionradioOptions.pop();
     } else {
-      this.fusionradioOptions = [
-        { "label": "Fusión", "value": "1" },
-        { "label": "Escisión", "value": "0" }
-      ];
+      this.fusionradioOptions = FUSIONRADIO_OPTIONS
     }
   }
 
@@ -228,6 +217,15 @@ export class FusionOEscisionComponent implements OnInit, OnDestroy, AfterViewIni
         this.mpersonaFusionEscisionDTO.patchValue(this.PersonaFusionEscisionDTO);
       });
   }
+
+  getGridsubFusionOescision(): void {
+    this.AvisoModifyService.gridsubFusionOescision().subscribe(
+      (resp: TableDataNgTable) => {
+        this.gridFusionEscisionHeader = resp.tableHeader; // Asigna los encabezados para los domicilios nuevos
+      }
+    );
+  }
+
 
   /** Getter del grupo de persona fusionada en el formulario principal */
   get personaFusionEscisionDTO(): FormGroup {
