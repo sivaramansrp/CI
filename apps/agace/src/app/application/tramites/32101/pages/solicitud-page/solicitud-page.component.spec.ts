@@ -23,27 +23,6 @@ class MyCustomDirective {
   @Input() myCustom;
 }
 
-@Pipe({ name: 'translate' })
-class TranslatePipe implements PipeTransform {
-  transform(value) {
-    return value;
-  }
-}
-
-@Pipe({ name: 'phoneNumber' })
-class PhoneNumberPipe implements PipeTransform {
-  transform(value) {
-    return value;
-  }
-}
-
-@Pipe({ name: 'safeHtml' })
-class SafeHtmlPipe implements PipeTransform {
-  transform(value) {
-    return value;
-  }
-}
-
 describe('SolicitudPageComponent', () => {
   let fixture;
   let component;

@@ -11,24 +11,92 @@ export interface Catalogo {
  * Creacion del estado inicial para la interfaz de tramite 32101
  * @returns Solicitud32502
  */
+/**
+ * Representa el estado de la solicitud 32101.
+ */
 export interface Solicitud32101State {
+  /**
+   * Lista de tipos de inversión disponibles.
+   * Puede ser un arreglo de objetos de tipo `Catalogo` o `null`.
+   */
   tipoDeInversion: Catalogo[] | null;
-  valorEnPesos: number;
-  descripcionGeneral: string;
-  listaDeDocumentos: string;
-  datosDelContenedor: datosDeLaTabla[];
-  abc: datosDeLaTabla | null;
-  manifiesto1: string;
-  manifiesto2: string;
-  manifiesto3: string;
-  claveDeReferencia: number;
-  importeDePago: number;
-  cadenaDeLaDependencia: string;
-  numeroDeOperacion: number;
-  banco: Catalogo[] | null;
-  llaveDePago: number;
-  fechaInicialInput: string;
 
+  /**
+   * Valor en pesos asociado a la solicitud.
+   */
+  valorEnPesos: number;
+
+  /**
+   * Descripción general de la solicitud.
+   */
+  descripcionGeneral: string;
+
+  /**
+   * Lista de documentos relacionados con la solicitud.
+   */
+  listaDeDocumentos: string;
+
+  /**
+   * Datos del contenedor representados como un arreglo de objetos de tipo `datosDeLaTabla`.
+   */
+  datosDelContenedor: datosDeLaTabla[];
+
+  /**
+   * Información específica de un elemento de la tabla.
+   * Puede ser un objeto de tipo `datosDeLaTabla` o `null`.
+   */
+  abc: datosDeLaTabla | null;
+
+  /**
+   * Manifiesto número 1 relacionado con la solicitud.
+   */
+  manifiesto1: string;
+
+  /**
+   * Manifiesto número 2 relacionado con la solicitud.
+   */
+  manifiesto2: string;
+
+  /**
+   * Manifiesto número 3 relacionado con la solicitud.
+   */
+  manifiesto3: string;
+
+  /**
+   * Clave de referencia única para la solicitud.
+   */
+  claveDeReferencia: number;
+
+  /**
+   * Importe de pago asociado a la solicitud.
+   */
+  importeDePago: number;
+
+  /**
+   * Cadena proporcionada por la dependencia correspondiente.
+   */
+  cadenaDeLaDependencia: string;
+
+  /**
+   * Número de operación relacionado con la solicitud.
+   */
+  numeroDeOperacion: number;
+
+  /**
+   * Lista de bancos disponibles.
+   * Puede ser un arreglo de objetos de tipo `Catalogo` o `null`.
+   */
+  banco: Catalogo[] | null;
+
+  /**
+   * Llave única de pago asociada a la solicitud.
+   */
+  llaveDePago: number;
+
+  /**
+   * Fecha inicial ingresada en formato de cadena.
+   */
+  fechaInicialInput: string;
 }
 
 export function createInitialState(): Solicitud32101State {
@@ -65,6 +133,11 @@ export class Tramite32101Store extends Store<Solicitud32101State> {
     super(createInitialState());
   }
 
+  /**
+   * Establece el tipo de inversión en el estado de la tienda.
+   *
+   * @param tipoDeInversion - Un arreglo de objetos del tipo `Catalogo` que representa el tipo de inversión.
+   */
   public setTipoDeInversion(tipoDeInversion: Catalogo[]) {
     this.update((state) => ({
       ...state,
@@ -72,6 +145,11 @@ export class Tramite32101Store extends Store<Solicitud32101State> {
     }));
   }
 
+  /**
+   * Establece el valor en pesos en el estado de la tienda.
+   *
+   * @param valorEnPesos - El nuevo valor en pesos que se debe asignar al estado.
+   */
   public setValorEnPesos(valorEnPesos: number) {
     this.update((state) => ({
       ...state,
@@ -79,6 +157,11 @@ export class Tramite32101Store extends Store<Solicitud32101State> {
     }));
   }
 
+  /**
+   * Establece la descripción general en el estado de la tienda.
+   *
+   * @param descripcionGeneral - La nueva descripción general que se asignará al estado.
+   */
   public setDescripcionGeneral(descripcionGeneral: string) {
     this.update((state) => ({
       ...state,
@@ -86,6 +169,11 @@ export class Tramite32101Store extends Store<Solicitud32101State> {
     }));
   }
 
+  /**
+   * Establece el valor de "abc" en el estado de la tienda.
+   *
+   * @param abc - Los datos de la tabla que se asignarán al estado.
+   */
   public setAbc(abc: datosDeLaTabla) {
     this.update((state) => ({
       ...state,
@@ -93,6 +181,11 @@ export class Tramite32101Store extends Store<Solicitud32101State> {
     }));
   }
 
+  /**
+   * Establece el valor de `manifiesto1` en el estado de la tienda.
+   *
+   * @param manifiesto1 - El nuevo valor para el campo `manifiesto1`.
+   */
   public setManifiesto1(manifiesto1: string) {
     this.update((state) => ({
       ...state,
@@ -100,6 +193,11 @@ export class Tramite32101Store extends Store<Solicitud32101State> {
     }));
   }
 
+  /**
+   * Establece el valor de `manifiesto2` en el estado de la tienda.
+   *
+   * @param manifiesto2 - El nuevo valor para la propiedad `manifiesto2`.
+   */
   public setManifiesto2(manifiesto2: string) {
     this.update((state) => ({
       ...state,
@@ -107,6 +205,11 @@ export class Tramite32101Store extends Store<Solicitud32101State> {
     }));
   }
 
+  /**
+   * Establece el valor de `manifiesto3` en el estado de la tienda.
+   *
+   * @param manifiesto3 - El nuevo valor para la propiedad `manifiesto3`.
+   */
   public setManifiesto3(manifiesto3: string) {
     this.update((state) => ({
       ...state,
@@ -114,55 +217,95 @@ export class Tramite32101Store extends Store<Solicitud32101State> {
     }));
   }
 
-    public setClaveDeReferencia(claveDeReferencia: number) {
+  /**
+   * Establece la clave de referencia en el estado de la tienda.
+   *
+   * @param claveDeReferencia - El número que representa la clave de referencia a establecer.
+   */
+  public setClaveDeReferencia(claveDeReferencia: number) {
     this.update((state) => ({
       ...state,
       claveDeReferencia,
     }));
   }
 
-      public setImporteDePago(importeDePago: number) {
+  /**
+   * Establece el importe de pago en el estado de la tienda.
+   *
+   * @param importeDePago - El nuevo importe de pago que se debe asignar.
+   */
+  public setImporteDePago(importeDePago: number) {
     this.update((state) => ({
       ...state,
       importeDePago,
     }));
   }
 
-      public setCadenaDeLaDependencia(cadenaDeLaDependencia: string) {
+  /**
+   * Establece el valor de la cadena de la dependencia en el estado.
+   *
+   * @param cadenaDeLaDependencia - La nueva cadena de la dependencia que se establecerá en el estado.
+   */
+  public setCadenaDeLaDependencia(cadenaDeLaDependencia: string) {
     this.update((state) => ({
       ...state,
       cadenaDeLaDependencia,
     }));
   }
 
-        public setNumeroDeOperacion(numeroDeOperacion: number) {
+  /**
+   * Establece el número de operación en el estado de la tienda.
+   *
+   * @param numeroDeOperacion - El número de operación que se debe asignar al estado.
+   */
+  public setNumeroDeOperacion(numeroDeOperacion: number) {
     this.update((state) => ({
       ...state,
       numeroDeOperacion,
     }));
   }
 
-    public setBanco(banco: Catalogo[]) {
+  /**
+   * Establece el valor del banco en el estado de la tienda.
+   *
+   * @param banco - Un arreglo de objetos de tipo `Catalogo` que representa el banco a establecer.
+   */
+  public setBanco(banco: Catalogo[]) {
     this.update((state) => ({
       ...state,
       banco,
     }));
   }
 
-      public setLlaveDePago(llaveDePago: number) {
+  /**
+   * Establece el valor de la llave de pago en el estado.
+   *
+   * @param llaveDePago - El número que representa la llave de pago a establecer.
+   */
+  public setLlaveDePago(llaveDePago: number) {
     this.update((state) => ({
       ...state,
       llaveDePago,
     }));
   }
 
-        public setFechaInicialInput(fechaInicialInput: string) {
+  /**
+   * Establece el valor de `fechaInicialInput` en el estado de la tienda.
+   *
+   * @param fechaInicialInput - La fecha inicial proporcionada como una cadena de texto.
+   */
+  public setFechaInicialInput(fechaInicialInput: string) {
     this.update((state) => ({
       ...state,
       fechaInicialInput,
     }));
   }
 
+  /**
+   * Establece la lista de documentos en el estado.
+   *
+   * @param listaDeDocumentos - La nueva lista de documentos que se asignará al estado.
+   */
   public setListaDeDocumentos(listaDeDocumentos: string) {
     this.update((state) => ({
       ...state,
@@ -170,6 +313,11 @@ export class Tramite32101Store extends Store<Solicitud32101State> {
     }));
   }
 
+  /**
+   * Establece los datos del contenedor en el estado de la tienda.
+   *
+   * @param datosDelContenedor - Un arreglo de objetos de tipo `datosDeLaTabla` que representa los datos a actualizar en el contenedor.
+   */
   public setDatosDelContenedor(datosDelContenedor: datosDeLaTabla[]) {
     this.update((state) => ({
       ...state,
