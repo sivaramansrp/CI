@@ -4,9 +4,12 @@ import { ReactiveFormsModule } from '@angular/forms';
 
 import {
   AlertComponent,
+  AnexarDocumentosComponent,
   BtnContinuarComponent,
   CatalogoSelectComponent,
+  FirmaElectronicaComponent,
   InputRadioComponent,
+  NotificacionesComponent,
   SolicitanteComponent,
   TablaDinamicaComponent,
   TableComponent,
@@ -58,6 +61,9 @@ import { TramiteAsociadosComponent } from '../../shared/components/tramite-asoci
     PagoDeDerechosComponent,
     TramiteAsociadosComponent,
     TableComponent,
+    AnexarDocumentosComponent,
+    FirmaElectronicaComponent,
+    NotificacionesComponent,
     ToastrModule.forRoot(),
   ],
   providers: [ToastrService, InicioSesionService, SubirDocumentoService],

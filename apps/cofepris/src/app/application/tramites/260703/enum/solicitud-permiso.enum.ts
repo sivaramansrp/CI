@@ -4,7 +4,7 @@ import { TramiteAsociados } from "../../../shared/models/tramite-asociados.model
 /**
  * Opciones de botones de radio con etiquetas y valores correspondientes.
  */
-export const OPCIONES_DE_BOTON_DE_RADIO = [
+export const OPCIONES_DE_BOTON_DE_RADIO_INFORMACION_CONFIDENCIAL = [
   {
     label: 'Sí',
     value: '1',
@@ -14,6 +14,25 @@ export const OPCIONES_DE_BOTON_DE_RADIO = [
     value: '0',
   }
 ];
+
+/**
+ * Opciones de botones de radio para identificar el tipo de trámite genérico 1.
+ */
+export const OPCIONES_DE_BOTON_DE_RADIO_IDEGENERICA1 = [
+  {
+    label: 'Prórroga',
+    value: 'Prorroga',
+  },
+  {
+    label: 'Modificación',
+    value: 'Modificacion',
+  },
+  {
+    label: 'Modificación y prórroga',
+    value: 'Modificacion y prorroga',
+  },
+  ];
+
 
 /**
    * Configuración para las columnas de la tabla.

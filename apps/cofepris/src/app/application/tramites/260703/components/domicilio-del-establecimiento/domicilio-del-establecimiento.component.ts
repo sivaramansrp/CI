@@ -1,7 +1,8 @@
 import {
   Catalogo,
   ConfiguracionColumna,
-  TablaSeleccion,
+  Notificacion,
+  TablaSeleccion
 } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -65,15 +66,23 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
    */
   tipoSeleccionTabla = TablaSeleccion.CHECKBOX;
 
-  /**
-   * Cabeceras de la tabla de SCIAN.
-   */
-  public scianHeaderData: string[] = [];
+  warningMessage = '¡Precaución! Debes capturar localidad y colonia';
 
   /**
-   * Cuerpo de datos de la tabla SCIAN.
+   * Configuración de la notificación para mostrar mensajes de advertencia.
+   * Este objeto define las propiedades de la notificación, como el mensaje,
+   * la categoría y el tipo de notificación.
    */
-  public scianBodyData: unknown = null;
+  notificacionInput: Notificacion = {
+    mensaje: '¡Precaución! Debes capturar localidad y colonia',
+    cerrar: false,
+    categoria: 'warning',
+    tipoNotificacion: 'banner',
+    modo: '',
+    titulo: '',
+    txtBtnAceptar: '',
+    txtBtnCancelar: ''
+  };
 
   /**
    * Observable utilizado para limpiar las suscripciones al destruir el componente.

@@ -5,6 +5,7 @@ import {
   Tramite260703Store,
 } from '../../estados/store/tramite260703.store';
 import { Subject, takeUntil } from 'rxjs';
+import { OPCIONES_DE_BOTON_DE_RADIO_INFORMACION_CONFIDENCIAL } from '../../enum/solicitud-permiso.enum';
 import { Tramite260703Query } from '../../estados/query/tramite260703.query';
 
 /**
@@ -36,21 +37,8 @@ export class DatosSolitudeComponent implements OnInit, OnDestroy {
   /**
    * Opciones de radio para seleccionar el tipo de solicitud.
    */
-  radioOptions = [
-    {
-      label: 'Prórroga',
-      value: 'Prorroga',
-    },
-    {
-      label: 'Modificación',
-      value: 'Modificacion',
-    },
-    {
-      label: 'Modificación y prórroga',
-      value: 'Modificacion y prorroga',
-    },
-  ];
-
+  radioOptions = OPCIONES_DE_BOTON_DE_RADIO_INFORMACION_CONFIDENCIAL;
+ 
   /**
    * Constructor del componente.
    * formBuilder Servicio para construir formularios reactivos.

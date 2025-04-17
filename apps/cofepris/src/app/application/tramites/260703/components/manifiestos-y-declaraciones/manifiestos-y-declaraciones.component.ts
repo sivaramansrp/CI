@@ -9,7 +9,7 @@ import {
   Tramite260703Store,
 } from '../../estados/store/tramite260703.store';
 import { Subject, takeUntil } from 'rxjs';
-import { OPCIONES_DE_BOTON_DE_RADIO } from '../../enum/solicitud-permiso.enum';
+import { OPCIONES_DE_BOTON_DE_RADIO_INFORMACION_CONFIDENCIAL } from '../../enum/solicitud-permiso.enum';
 import { SolicitudPermisoService } from '../../services/solicitud-permiso.service';
 import { Tramite260703Query } from '../../estados/query/tramite260703.query';
 
@@ -36,7 +36,7 @@ export class ManifiestosYDeclaracionesComponent implements OnInit, OnDestroy {
   /**
    * Opciones de botones de radio para seleccionar información confidencial.
    */
-  opcionDeBotonDeRadio = OPCIONES_DE_BOTON_DE_RADIO;
+  opcionDeBotonDeRadio = OPCIONES_DE_BOTON_DE_RADIO_INFORMACION_CONFIDENCIAL;
 
   /**
    * Estado actual de la solicitud de permiso.
