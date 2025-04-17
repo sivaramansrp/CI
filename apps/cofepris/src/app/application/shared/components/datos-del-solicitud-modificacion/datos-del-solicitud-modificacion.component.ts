@@ -29,7 +29,7 @@ import {
 } from '@libs/shared/data-access-user/src';
 import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 
-import { CROSLISTA_DE_PAISES, FECHA_DE_PAGO, MERCANCIAS_DATA, TEXTOS } from '../../constantes/aviso-de-funcionamiento.enum';
+import { CROSLISTA_DE_PAISES, FECHA_DE_PAGO, MERCANCIAS_DATA, SCIAN_TABLE_CONFIG, TEXTOS } from '../../constantes/aviso-de-funcionamiento.enum';
 import { CommonModule } from '@angular/common';
 import { DatosDelSolicituteSeccionQuery } from '../../estados/queries/datos-del-solicitute-seccion.query';
 import { DatosDelSolicituteSeccionStateStore } from '../../estados/stores/datos-del-solicitute-seccion.store';
@@ -144,11 +144,16 @@ eliminarPedimento(borrar: boolean): void {
     this.pedimentos.splice(this.elementoParaEliminar, 1);
   }
 }
+
   /**
    * @input showPreFillingOptions
    * Indica si se deben mostrar las opciones de prellenado.
    */
   @Input() showPreFillingOptions: boolean = true; 
+  /**
+   * Indica si se debe mostrar el checkbox de AIFA.
+   */
+  @Input() showAifaCheckbox: boolean = true; 
   /**
    * Referencia al modal del establecimiento.
    */
@@ -159,6 +164,9 @@ eliminarPedimento(borrar: boolean): void {
    */
   @ViewChild('establecimientoModalButton', { static: false })
   establecimientoModalButton!: ElementRef;
+  @ViewChild('modalAddAgentMercancias', { static: false })
+  modalAddAgentMercancias!: ElementRef;
+
  /**
    * Fecha de caducidad para el formulario.
    */
@@ -168,6 +176,7 @@ eliminarPedimento(borrar: boolean): void {
    */
    modalInstance!: Modal;
 
+
    /**
     * Formulario para gestionar mercancías.
     */
@@ -176,6 +185,7 @@ eliminarPedimento(borrar: boolean): void {
    * Instancia del modal del establecimiento.
    */
   establecimientoModalInstance!: Modal;
+  modalAddAgentMercanciasInstance!: Modal;
 
   /**
    * Datos del catálogo SCIAN.
@@ -384,7 +394,7 @@ eliminarPedimento(borrar: boolean): void {
   /**
    * Datos cargados dinámicamente para la tabla SCIAN.
    */
-  datosData: ScianData[] = [];
+  datosData: ScianModel[] = [];
   /**
    * Enum para la selección de tablas.
    */
@@ -423,6 +433,9 @@ eliminarPedimento(borrar: boolean): void {
     }
     if (this.establecimientoModal) {
       this.modalInstance = new Modal(this.establecimientoModal.nativeElement);
+    }
+    if (this.modalAddAgentMercancias) {
+      this.modalAddAgentMercanciasInstance = new Modal(this.modalAddAgentMercancias.nativeElement); 
     }
   }
 
@@ -559,7 +572,7 @@ eliminarPedimento(borrar: boolean): void {
     this.domicilioEstablecimiento.get('observaciones')?.disable();
   }
 });
-console.log(this.domicilioEstablecimiento.get('ideGenerica1')?.value);
+
   }
   /**
  * Alterna el estado colapsable de la sección "Uno".
@@ -659,6 +672,7 @@ console.log(this.domicilioEstablecimiento.get('ideGenerica1')?.value);
 
       // Agregar el nuevo dato a la tabla
       this.personaparas.push(SCIAN_DATA);
+      this.datosData = [...this.personaparas];
 
       // Limpiar el formulario
       this.scianForm.reset();
@@ -667,7 +681,39 @@ console.log(this.domicilioEstablecimiento.get('ideGenerica1')?.value);
       this.closeScianModal();
     }
   }
-
+  guardarMarcancia(): void {
+    if (this.formMercancias.valid) {
+      const MERCANCIA: MercanciasInfo = {
+        clasificacion: this.formMercancias.get('clasificacion')?.value,
+        especificar: this.formMercancias.get('especificarClasificacionProducto')?.value,
+        denominacionEspecifica: this.formMercancias.get('denominacionEspecifica')?.value,
+        denominacionDistintiva: this.formMercancias.get('denominacionDistintiva')?.value,
+        denominacionComun: this.formMercancias.get('denominacionComun')?.value,
+        formaFarmaceutica: this.formMercancias.get('tipoDeProducto')?.value,
+        estadoFisico: this.formMercancias.get('estadoFisico')?.value,
+        fraccionArancelaria: this.formMercancias.get('fraccionArancelaria')?.value,
+        descripcionFraccion: this.formMercancias.get('descripcionFraccion')?.value,
+        unidadUMT: this.formMercancias.get('UMT')?.value,
+        cantidadUMT: this.formMercancias.get('cantidadUMT')?.value,
+        unidad: this.formMercancias.get('UMC')?.value,
+        cantidadUMC: this.formMercancias.get('cantidadUMC')?.value,
+        presentacion: this.formMercancias.get('presentacion')?.value,
+        numeroRegistro: this.formMercancias.get('numeroRegistro')?.value,
+        paisDeOrigen: this.formMercancias.get('paisDeOrigen')?.value,
+        paisDeProcedencia: this.formMercancias.get('paisDeProcedencia')?.value,
+        tipoProducto: this.formMercancias.get('tipoDeProducto')?.value,
+        usoEspecifico: this.formMercancias.get('usoEspecifico')?.value,
+      };
+  
+      // Add the new data to the table
+      this.mercanciasTablaDatos.push(MERCANCIA);
+  
+  
+      // Reset the form
+      this.formMercancias.reset();
+      this.closeMercanciaModal();
+    }
+  }
   /**
    * Abre el modal SCIAN.
    */
@@ -682,10 +728,24 @@ console.log(this.domicilioEstablecimiento.get('ideGenerica1')?.value);
     this.modalInstance.hide();
   }
 
+   /**
+   * Abre el modal SCIAN.
+   */
+   openMercanciaModal(): void {
+    this.modalAddAgentMercanciasInstance.show();
+  }
+
+  /**
+   * Cierra el modal SCIAN.
+   */
+  closeMercanciaModal(): void {
+    this.modalAddAgentMercanciasInstance.hide();
+  }
+
   /**
    * Configuración de columnas para la tabla de datos SCIAN.
    */
-  configuracionTabla: ConfiguracionColumna<ScianData>[] = SCIAN_DATA;
+  configuracionTabla: ConfiguracionColumna<ScianModel>[] = SCIAN_TABLE_CONFIG;
   /**
    * Método de ciclo de vida de Angular que se ejecuta al destruir el componente.
    */

@@ -1,15 +1,40 @@
+
+/**
+ * ModificacionPermisoSanitarioLaSaludComponent
+ */
 import { Component, ViewChild } from '@angular/core';
 
 import { AccionBoton, DatosPasos, ListaPasosWizard, WizardComponent } from '@libs/shared/data-access-user/src';
 
 import { AVISO_PRIVACIDAD, MODIFICACION_PERMISO_DATA, MODIFICACION_PERMISO_ENUM } from '../../constantes/mod-permiso.enum';
 import { PasoUnoPagesComponent } from '../paso-uno-pages/paso-uno-pages.component';
-
+/**
+ * Component 
+ */
 @Component({
   selector: 'app-modificacion-permiso-sanitario-la-salud',
   templateUrl: './modificacion-permiso-sanitario-la-salud.component.html',
 })
+/**
+  *ModificacionPermisoSanitarioLaSaludComponent 
+ * 
+ */
 export class ModificacionPermisoSanitarioLaSaludComponent {
+  /**
+ * Referencia al componente `PasoUnoPagesComponent` dentro de la plantilla.
+ * 
+ * Esta propiedad utiliza el decorador `@ViewChild` para obtener una instancia del componente
+ * `PasoUnoPagesComponent` que se encuentra en la plantilla del componente actual.
+ * 
+ * Uso:
+ * - Se utiliza para acceder a los métodos y propiedades del componente `PasoUnoPagesComponent`.
+ * - Por ejemplo, se llama al método `collectFormValues()` para recopilar los valores del formulario
+ *   del paso uno.
+ * 
+ * Nota:
+ * - Esta propiedad se inicializa después de que Angular haya renderizado la vista.
+ * - Asegúrese de que el componente `PasoUnoPagesComponent` esté presente en la plantilla.
+ */
   @ViewChild(PasoUnoPagesComponent) pasoUnoComponent!: PasoUnoPagesComponent;
   /**
      * 
@@ -22,6 +47,21 @@ export class ModificacionPermisoSanitarioLaSaludComponent {
    *  * Este mensaje se utiliza para mostrar información relevante al usuario.
    */
     msgData =MODIFICACION_PERMISO_DATA;
+    /**
+ * Referencia al componente `WizardComponent` dentro de la plantilla.
+ * 
+ * Esta propiedad utiliza el decorador `@ViewChild` para obtener una instancia del componente
+ * `WizardComponent` que se encuentra en la plantilla del componente actual.
+ * 
+ * Uso:
+ * - Se utiliza para acceder a los métodos y propiedades del componente `WizardComponent`.
+ * - Por ejemplo, se llama a los métodos `siguiente()` y `atras()` para navegar entre los pasos
+ *   del asistente (wizard).
+ * 
+ * Nota:
+ * - Esta propiedad se inicializa después de que Angular haya renderizado la vista.
+ * - Asegúrese de que el componente `WizardComponent` esté presente en la plantilla.
+ */
     @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
     /**
      * 
@@ -72,12 +112,33 @@ export class ModificacionPermisoSanitarioLaSaludComponent {
    * - Si la acción es 'cont', avanza al siguiente paso utilizando el método `siguiente` del componente `WizardComponent`.
    * - Si la acción no es 'cont', retrocede al paso anterior utilizando el método `atras` del componente `WizardComponent`.
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   payload: any = {}; // Object to store all form values
+  /**
+ * Método para actualizar el índice del paso actual en el asistente (wizard) y recopilar los valores del formulario.
+ * 
+ * Este método se ejecuta cuando se realiza una acción en el asistente, como avanzar al siguiente paso
+ * o retroceder al paso anterior. También recopila los valores del formulario del componente `PasoUnoPagesComponent`.
+ * 
+ * @param e - Objeto de tipo `AccionBoton` que contiene:
+ *   - `accion`: La acción a realizar ('cont' para continuar o cualquier otro valor para retroceder).
+ *   - `valor`: El índice del paso al que se desea navegar.
+ * 
+ * Comportamiento:
+ * - Si el componente `PasoUnoPagesComponent` está inicializado, se llama al método `collectFormValues()` para
+ *   recopilar los valores del formulario y se almacenan en la propiedad `payload`.
+ * - Si el valor del índice está entre 1 y 4 (inclusive), actualiza el índice actual.
+ * - Si la acción es 'cont', avanza al siguiente paso utilizando el método `siguiente` del componente `WizardComponent`.
+ * - Si la acción no es 'cont', retrocede al paso anterior utilizando el método `atras` del componente `WizardComponent`.
+ * 
+ * Manejo de errores:
+ * - Si el componente `PasoUnoPagesComponent` no está inicializado, se registra un mensaje de error en la consola.
+ */
   getValorIndice(e: AccionBoton): void {
     if (this.pasoUnoComponent) {
       // Call collectFormValues() from PasoUnoPagesComponent
       this.payload = this.pasoUnoComponent.collectFormValues();
-      console.log('Payload with All Tabs Values:', this.payload);
+      console.log('Payload', this.payload);
     } else {
       console.error('PasoUnoPagesComponent is not initialized.');
     }
@@ -91,18 +152,38 @@ export class ModificacionPermisoSanitarioLaSaludComponent {
       }
     }
   }
-
+/**
+ * Método para recopilar todos los valores de los formularios de los pasos del asistente (wizard).
+ * 
+ * Este método recopila los valores de los formularios de los componentes hijos, como `PasoUnoPagesComponent`,
+ * y los organiza en un objeto que contiene los datos de cada paso.
+ * 
+ * @returns Un objeto que contiene los valores de los formularios de todos los pasos del asistente.
+ * 
+ * Comportamiento:
+ * - Si el componente `PasoUnoPagesComponent` está inicializado, se llama al método `collectFormValues()` 
+ *   para recopilar los valores del formulario del paso uno y se almacenan en la propiedad `pasoUno` 
+ *   del objeto `ALL_FORM_VALUES`.
+ * 
+ * Uso:
+ * - Este método se utiliza para consolidar los datos de todos los pasos del asistente en un único objeto,
+ *   que puede ser enviado a un backend o utilizado para otras operaciones.
+ * 
+ * Manejo de errores:
+ * - Si el componente `PasoUnoPagesComponent` no está inicializado, no se recopilan los valores de ese paso.
+ */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   collectAllFormValues(): any {
-    const allFormValues: any = {};
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const ALL_FORM_VALUES: any = {};
   
-   
     if (this.pasoUnoComponent) {
-      const pasoUnoValues = this.pasoUnoComponent.collectFormValues();
-      allFormValues.pasoUno = pasoUnoValues;
+      const PASO_UNO_VALUES = this.pasoUnoComponent.collectFormValues();
+      ALL_FORM_VALUES.pasoUno = PASO_UNO_VALUES;
     }
   
    
   
-    return allFormValues;
+    return ALL_FORM_VALUES;
   }
 }

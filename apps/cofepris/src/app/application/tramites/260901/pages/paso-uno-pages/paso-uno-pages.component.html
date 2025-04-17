@@ -23,31 +23,12 @@
           </li>
       </ul>
   
-      <!-- <ng-container>
-        @switch (indice) {
-        @case (1) {
-        <solicitante [tabindex]="1"></solicitante>
-        }
-        @case (2) {
-      <app-datos-del-solicitud-modificacion [showPreFillingOptions]="false"></app-datos-del-solicitud-modificacion>
-        }
-        @case (3) {
-
-      <app-terceros-relacionados-fab-seccion></app-terceros-relacionados-fab-seccion>
-        } 
-        @case (4) {
-          <app-pago-de-derechos-entrada></app-pago-de-derechos-entrada>
-        }
-        @case (5) {
-          <app-tramites-asociados-seccion></app-tramites-asociados-seccion>
-        }
-      }
-      </ng-container> -->
+    
       <div [ngStyle]="{ display: indice === 1 ? 'block' : 'none' }">
         <solicitante [tabindex]="1"></solicitante>
       </div>
       <div [ngStyle]="{ display: indice === 2 ? 'block' : 'none' }">
-        <app-datos-del-solicitud-modificacion></app-datos-del-solicitud-modificacion>
+        <app-datos-del-solicitud-modificacion  [showAifaCheckbox]="false" [showPreFillingOptions]="false"></app-datos-del-solicitud-modificacion>
       </div>
       <div [ngStyle]="{ display: indice === 3 ? 'block' : 'none' }">
         <app-terceros-relacionados-fab-seccion></app-terceros-relacionados-fab-seccion>
