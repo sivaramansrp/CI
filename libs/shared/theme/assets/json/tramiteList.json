@@ -1986,6 +1986,14 @@
         "linkDashboard": "/agace/aviso-unico-renovacion/pantallas",
         "linkDepartment": "/pago/aviso-unico-renovacion/pantallas",
         "department": "agace"
+    },
+    {
+        "id": 285,
+        "tramite": 260915,
+        "linkDashboard": "/cofepris/permiso-sanitario-dispositivos-medicos/permiso-sanitario-dispositivos-medicos",
+        "linkDepartment": "/pago/permiso-sanitario-dispositivos-medicos/permiso-sanitario-dispositivos-medicos",
+        "department": "cofepris"
+
     }
 
     
