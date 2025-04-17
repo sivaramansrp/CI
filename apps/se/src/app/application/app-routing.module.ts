@@ -350,6 +350,13 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'importacion-definitiva',
+    loadChildren: () =>
+      import('./tramites/130103/importacion-definitiva.module').then(
+        (m) => m.ImportacionDefinitivaModule
+      ),
+  },
+  {
     path: 'solicitud-de-cancelacion',
     loadChildren: () =>
       import('./tramites/140101/solicitud-de-cancelacion.module').then(
@@ -396,6 +403,12 @@ const ROUTES: Routes = [
       import('./tramites/130109/vehiculos-usados-adaptados.module').then(
         (m) => m.VehiculosUsadosAdaptadosModule
       ),
+  },
+    {
+    path: 'expedicion-certificado-cupos',
+    loadChildren: () =>
+      import('./tramites/120204/expedicion-certificado-cupos.module').then(
+        (m) => m.ExpedicionCertificadoModule),
   },
   {
     path: 'exportar-diamantes',

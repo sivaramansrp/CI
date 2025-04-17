@@ -126,6 +126,23 @@ export class DatosCertificadoComponent implements OnDestroy, OnInit {
     this.cargarRepresentacionFederal();
   }
 
+   /**
+   * Establece valores en el estado de la tienda para un formulario genérico de certificado.
+   * 
+   * @param event - Objeto que contiene los datos necesarios para actualizar el estado.
+   * @param event.formGroupName - Nombre del grupo de formulario (no utilizado en esta implementación).
+   * @param event.campo - Nombre del campo que se actualizará en el estado.
+   * @param event.valor - Valor que se asignará al campo especificado.
+   * @param event.storeStateName - Nombre del estado de la tienda (no utilizado en esta implementación).
+   * 
+   * @returns void
+   * 
+   * @command Este método actualiza el estado de la tienda con los valores proporcionados.
+   */
+   setValoresStore(event: { formGroupName: string, campo: string, valor: undefined, storeStateName: string }) :void{
+    const { campo: CAMPO, valor: VALOR } = event;
+    this.store.setFormDatosCertificado({ [CAMPO]: VALOR });
+  }
   /**
    * Método que selecciona un idioma y actualiza el estado en el store.
    * @param estado El estado del idioma seleccionado.
