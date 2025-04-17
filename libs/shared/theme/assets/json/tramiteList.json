@@ -1017,7 +1017,7 @@
     {
         "id": 146,
         "tramite": 220403,
-        "linkDashboard": "/pago/certificado-exportacion/acuicola",
+        "linkDashboard": "/agriculture/certificado-exportacion/acuicola",
         "linkDepartment": "/pago/certificado-exportacion/acuicola",
         "department": "agriculture"
     },
