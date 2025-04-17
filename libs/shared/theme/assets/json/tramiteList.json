@@ -199,7 +199,7 @@
         "id": 29,
         "tramite": 80205,
         "linkDashboard": "/se/certificado-registro/registro",
-        "linkDepartment": "/se/certificado-registro/registro",
+        "linkDepartment": "/pago/certificado-registro/registro",
         "department": "se"
     },
     {
@@ -570,7 +570,7 @@
         "id": 82,
         "tramite": 220702,
         "linkDashboard": "/agriculture/inspeccion-fitosanitario/fitosanitario",
-        "linkDepartment": "/agriculture/inspeccion-fitosanitario/fitosanitario",
+        "linkDepartment": "/pago/inspeccion-fitosanitario/fitosanitario",
         "department": "agriculture"
     },
     {
@@ -1725,7 +1725,7 @@
         "id": 247,
         "tramite": 80206,
         "linkDashboard": "/se/modalidad-ampliacion/registro",
-        "linkDepartment": "/se/modalidad-ampliacion/registro",
+        "linkDepartment": "/pago/modalidad-ampliacion/registro",
         "department": "se"
     },
     {
