@@ -1,4 +1,15 @@
 <div class="container">
+    <div class="row mb-4">
+        <label class="mt-5 mb-3">
+          Seleccione el tipo de operación que desea realizar*:
+        </label>
+
+        <app-input-radio
+          [radioOptions]="genericOptions"
+          [isRequired]="true"
+          [layout]="'horizontal'"
+        ></app-input-radio>
+      </div>
     <ng-titulo titulo="Domicilio del establecimiento"></ng-titulo>
     <form [formGroup]="domicilio">
         <div class="row mb-4">

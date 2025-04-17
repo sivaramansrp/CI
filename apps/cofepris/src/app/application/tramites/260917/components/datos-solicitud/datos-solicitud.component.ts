@@ -1,13 +1,14 @@
-import {AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna,CrossListLable,CrosslistComponent, InputFecha, InputFechaComponent,LISTACLAVESDELOSLOTES,Listaclaves, MERCANCIAS_DATA, MercanciasInfo, NICO_TABLA, ScianModel, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import {AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna,CrossListLable,CrosslistComponent, InputFecha, InputFechaComponent,InputRadioComponent,LISTACLAVESDELOSLOTES,Listaclaves, MERCANCIAS_DATA, MercanciasInfo, NICO_TABLA, ScianModel, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { FECHA_DE_PAGO, LOCALIDAD_COLONIA } from '../../constantes/certificados-licencias.enum';
-import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitud260917State, Tramite260917Store } from '../../estados/tramites/tramite260917.store';
 import {Subject, map, takeUntil } from 'rxjs';
 import {CROSLISTA_DE_PAISES} from '@libs/shared/data-access-user/src/core/enums/260917/domicillo-del.enum';
 import { CommonModule } from '@angular/common';
+import { PropietarioTipoPersona } from '../../modelos/datos-solicitud.model';
 import { Tramite260917Query } from '../../estados/queries/tramite260917.query';
-
+import radioOptions from '@libs/shared/theme/assets/json/260917/datos.solicitud.json';
 @Component({
   selector: 'app-datos-solicitud',
   standalone: true,
@@ -16,6 +17,7 @@ import { Tramite260917Query } from '../../estados/queries/tramite260917.query';
       FormsModule,
       CrosslistComponent,
       InputFechaComponent,
+      InputRadioComponent,
       TituloComponent,
       CatalogoSelectComponent,
       TablaDinamicaComponent,
@@ -43,6 +45,8 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
           ) {
             // Dependencia inyectada para uso posterior
           }
+
+        genericOptions: PropietarioTipoPersona[] = [];
          
           /**
            * Grupo de formularios para domicilio.
@@ -205,6 +209,8 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
          * - Inicializa el grupo de formularios `formMercancias` con controles para campos relacionados con las mercancías.
          */
         ngOnInit(): void {
+
+          this.genericOptions = radioOptions.radioOptions;
           this.tramite260701Query.selectSolicitud$.pipe(takeUntil(this.destroyed$),map((seccionState) => {
               this.solicitudState = seccionState;
           })).subscribe();
@@ -214,6 +220,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
            * Inicialización del formulario de domicilio.
            */
           this.domicilio = this.fb.group({
+            ideGenerica1: ['', Validators.required],
             codigoPostal: [this.solicitudState.codigoPostal],
             estado: [this.solicitudState.estado],
             muncipio: [this.solicitudState.muncipio],
