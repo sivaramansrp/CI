@@ -10,7 +10,7 @@
         "id": 2,
         "tramite": 301,
         "linkDashboard": "/aga/importante/datosdelasolicitud",
-        "linkDepartment": "/aga/importante/datosdelasolicitud",
+        "linkDepartment": "/pago/importante/datosdelasolicitud",
         "department": "aga "
     },
     {
@@ -367,7 +367,7 @@
         "id": 53,
         "tramite": 120402,
         "linkDashboard": "/se/asignacion-directa-de-cupo/solicitante",
-        "linkDepartment": "/se/asignacion-directa-de-cupo/solicitante",
+        "linkDepartment": "/pago/asignacion-directa-de-cupo/solicitante",
         "department": "se"
     },
     {
@@ -647,7 +647,7 @@
         "id": 93,
         "tramite": 260215,
         "linkDashboard": "/cofepris/permiso-sanitario-importacion/sanitario",
-        "linkDepartment": "/cofepris/permiso-sanitario-importacion/sanitario",
+        "linkDepartment": "/pago/permiso-sanitario-importacion/sanitario",
         "department": "cofepris"
     },
     {
@@ -675,21 +675,21 @@
         "id": 97,
         "tramite": 260501,
         "linkDashboard": "/cofepris/permiso-plaguicidas/plaguicidas",
-        "linkDepartment": "/cofepris/permiso-plaguicidas/plaguicidas",
+        "linkDepartment": "/pago/permiso-plaguicidas/plaguicidas",
         "department": "cofepris"
     },
     {
         "id": 98,
         "tramite": 260502,
-        "linkDashboard": "/pago/muestras-plaguicidas/plaguicidas",
+        "linkDashboard": "/cofepris/muestras-plaguicidas/plaguicidas",
         "linkDepartment": "/pago/muestras-plaguicidas/plaguicidas",
-        "department": ""
+        "department": "cofepris"
     },
     {
         "id": 99,
         "tramite": 260503,
         "linkDashboard": "/cofepris/permiso-experimentales-plaguicidas/plaguicidas",
-        "linkDepartment": "/cofepris/permiso-experimentales-plaguicidas/plaguicidas",
+        "linkDepartment": "/pago/permiso-experimentales-plaguicidas/plaguicidas",
         "department": "cofepris"
     },
     {
@@ -1528,15 +1528,15 @@
     {
         "id": 219,
         "tramite": 260504,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "/cofepris/permiso-sujetos/plaguicidas",
+        "linkDepartment": "/pago/permiso-sujetos/plaguicidas",
         "department": "cofepris"
     },
     {
         "id": 220,
         "tramite": 260505,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "/cofepris/permiso-transformacion-maquila/plaguicidas",
+        "linkDepartment": "/pago/permiso-transformacion-maquila/plaguicidas",
         "department": "cofepris"
     },
     {
