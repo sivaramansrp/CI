@@ -180,6 +180,14 @@ export class AgregarDestinatarioFinalComponent
   public campoObligatorio = true
 
   /**
+   * @property campoObligatorio
+   * @description Indica si ciertos campos del formulario son obligatorios según el procedimiento.
+   * @type {boolean}
+   * @default true
+   */
+  public campoObligatorio = false;
+
+  /**
    * Crea el componente e inicializa el grupo de formulario.
    *
    * @param {FormBuilder} fb - Inyector de FormBuilder para crear formularios reactivos.
@@ -301,6 +309,33 @@ export class AgregarDestinatarioFinalComponent
     }
   }
 
+  campoObligatorioChange(): void {
+    const COLONIA = this.agregarDestinatarioFinal.get('colonia')
+    const CALLE = this.agregarDestinatarioFinal.get('calle')
+    const NUMEROEXTERIOR = this.agregarDestinatarioFinal.get('numeroExterior')
+    if(this.campoObligatorio){
+      COLONIA?.clearValidators();
+      CALLE?.setValidators([Validators.required]);
+      NUMEROEXTERIOR?.setValidators([Validators.required]);
+    }
+    else{
+      COLONIA?.setValidators([Validators.required]);
+      CALLE?.clearValidators();
+      NUMEROEXTERIOR?.clearValidators();
+    }
+    COLONIA?.updateValueAndValidity();
+    CALLE?.updateValueAndValidity();
+    NUMEROEXTERIOR?.updateValueAndValidity();
+  }
+
+  /**
+   * @method campoObligatorioChange
+   * @description Cambia las validaciones de los campos del formulario según el valor de `campoObligatorio`.
+   * Si `campoObligatorio` es verdadero, se eliminan las validaciones de la colonia y se agregan
+   * validaciones requeridas para la calle y el número exterior. Si es falso, se realiza lo contrario.
+   *
+   * @returns {void} Este método no retorna ningún valor.
+   */
   campoObligatorioChange(): void {
     const COLONIA = this.agregarDestinatarioFinal.get('colonia')
     const CALLE = this.agregarDestinatarioFinal.get('calle')

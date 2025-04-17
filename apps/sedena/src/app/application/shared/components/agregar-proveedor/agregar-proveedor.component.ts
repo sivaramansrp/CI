@@ -106,7 +106,7 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
    * @type {boolean}
    * @default true
    */
-  public campoObligatorio = true;
+  public campoObligatorio = false;
 
   /**
    * @constructor
@@ -170,6 +170,13 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
     }
   }
 
+  /**
+   * @method campoObligatorioChange
+   * @description Método que actualiza las validaciones de los campos del formulario
+   * dependiendo de si son obligatorios o no, basado en la propiedad `campoObligatorio`.
+   *
+   * @returns {void} Este método no retorna ningún valor.
+   */
   campoObligatorioChange(): void {
     const NOMBRES = this.agregarProveedorForm.get('nombres');
     const PRIMERAPELLIDO = this.agregarProveedorForm.get('primerApellido');
