@@ -13,6 +13,8 @@ import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { DatoComunesComponent } from './components/dato-comunes/dato-comunes.component';
 import { SolicitudDeRegistroInvocarService } from './services/solicitudDeRegistroInvocar/solicitud-de-registro-invocar.service';
 import { ReprestantanteComponent } from './components/represtantante/represtantante.component';
+import { EnlaceComponent } from './components/enlace/enlace.component';
+import { PersonaComponent } from './components/persona/persona.component';
 
 @NgModule({
   declarations: [SolicitudPasoComponent, PasoUnoComponent],
@@ -24,7 +26,9 @@ import { ReprestantanteComponent } from './components/represtantante/represtanta
     SolicitanteComponent,
     DatoComunesComponent,
     AlertComponent,
-    ReprestantanteComponent
+    ReprestantanteComponent,
+    EnlaceComponent,
+    PersonaComponent
   ],
   providers: [
     SolicitudDeRegistroInvocarService

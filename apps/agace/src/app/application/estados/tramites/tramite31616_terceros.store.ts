@@ -20,6 +20,26 @@ export interface Solicitud31616TercerosState {
      * El valor de correo.
      */
     correo: string;
+    /**
+     * El valor de resigtroFedral.
+     */
+    resigtroFedral: string;
+    /**
+     * El valor de cargo.
+     */
+    cargo: string;
+    /**
+     * El valor de telefonoEnlace.
+     */
+    telefonoEnlace: string;
+    /**
+     * El valor de correoEnlace.
+     */
+    correoEnlace: string;
+    /**
+     * El valor de suplente.
+     */
+    suplente: string;
     
    
 }
@@ -43,6 +63,26 @@ export function createInitialState(): Solicitud31616TercerosState {
          * El valor de correo.
          */
         correo: '',
+        /**
+         * El valor de resigtroFedral.
+         */
+        resigtroFedral: '',
+        /**
+         * El valor de cargo.
+         */
+        cargo: '',
+        /**
+         * El valor de telefonoEnlace.
+         */
+        telefonoEnlace: '',
+        /**
+         * El valor de correoEnlace.
+         */
+        correoEnlace: '',
+        /**
+         * El valor de suplente.
+         */
+        suplente: '',
         
     };
 }
@@ -100,6 +140,56 @@ export class Tramite31616TercerosStore extends Store<Solicitud31616TercerosState
         this.update((state) => ({
             ...state,
             correo,
+        }));
+    }
+    /**
+     * Establece el estado de resigtroFedral.
+     * @param resigtroFedral - El valor de resigtroFedral.
+     */
+    public setResigtroFedral(resigtroFedral: string) {
+        this.update((state) => ({
+            ...state,
+            resigtroFedral,
+        }));
+    }
+    /**
+     * Establece el estado de cargo.
+     * @param cargo - El valor de cargo.
+     */
+    public setCargo(cargo: string) {
+        this.update((state) => ({
+            ...state,
+            cargo,
+        }));
+    }
+    /**
+     * Establece el estado de telefonoEnlace.
+     * @param telefonoEnlace - El valor de telefonoEnlace.
+     */
+    public setTelefonoEnlace(telefonoEnlace: string) {
+        this.update((state) => ({
+            ...state,
+            telefonoEnlace,
+        }));
+    }
+    /**
+     * Establece el estado de correoEnlace.
+     * @param correoEnlace - El valor de correoEnlace.
+     */
+    public setCorreoEnlace(correoEnlace: string) {
+        this.update((state) => ({
+            ...state,
+            correoEnlace,
+        }));
+    }
+    /**
+     * Establece el estado de suplente.
+     * @param suplente - El valor de suplente.
+     */
+    public setSuplente(suplente: string) {
+        this.update((state) => ({
+            ...state,
+            suplente,
         }));
     }
 

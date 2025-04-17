@@ -98,3 +98,57 @@ export interface InstalacionesPrincipalesRespuestaTabla {
      */
     message: string;
 }
+
+export interface PersonasInfo {
+    rfc: string; // RFC de la persona
+    curp: string; // CURP de la persona
+    nombre: string; // Nombre de la persona
+    apellidoPaterno: string; // Apellido paterno de la persona
+    apellidoMaterno: string; // Apellido materno de la persona
+}
+
+export const PERSONAS_TABLA = [
+    {
+      encabezado: 'RFC',
+      clave: (ele: PersonasInfo) => ele.rfc,
+      orden: 1,
+    },
+    {
+      encabezado: 'CURP',
+      clave: (ele: PersonasInfo) => ele.curp,
+      orden: 2,
+    },
+    {
+        
+        encabezado: 'Nombre',
+        clave: (ele: PersonasInfo) => ele.nombre,
+        orden: 3,
+    },
+    {
+        
+        encabezado: 'Apellido Paterno',
+        clave: (ele: PersonasInfo) => ele.apellidoPaterno,
+        orden: 4,
+    },
+    {
+        
+        encabezado: 'Apellido Materno',
+        clave: (ele: PersonasInfo) => ele.apellidoMaterno,
+        orden: 5,
+    }
+];
+
+export interface PersonaRespuestaTabla {
+    /**
+     * Código de respuesta.
+     */
+    code: number;
+    /**
+     * Datos de la tabla NICO.
+     */
+    data: PersonasInfo[];
+    /**
+     * Mensaje de la respuesta.
+     */
+    message: string;
+}

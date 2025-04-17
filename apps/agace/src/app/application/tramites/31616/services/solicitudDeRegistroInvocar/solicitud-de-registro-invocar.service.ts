@@ -1,7 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { InstalacionesPrincipalesRespuestaTabla, RespuestaTabla } from '@libs/shared/data-access-user/src/core/models/31616/dato-comunes.model';
+import { InstalacionesPrincipalesRespuestaTabla, PersonaRespuestaTabla, RespuestaTabla } from '@libs/shared/data-access-user/src/core/models/31616/dato-comunes.model';
+import { Personas } from '@libs/shared/data-access-user/src/core/models/31601/servicios-pantallas.model';
+
 
 @Injectable({
   providedIn: 'root'
@@ -16,5 +18,8 @@ export class SolicitudDeRegistroInvocarService {
 
   obtenerInstalacionesPrincipalesTablaDatos(): Observable<InstalacionesPrincipalesRespuestaTabla> {
     return this.http.get<InstalacionesPrincipalesRespuestaTabla>('assets/json/31616/instalacionesPrincipales-tabla.json');
+  }
+  obtenerPersonaTablaDatos(): Observable<PersonaRespuestaTabla> {
+    return this.http.get<PersonaRespuestaTabla>('assets/json/31616/personapara.json');
   }
 }
