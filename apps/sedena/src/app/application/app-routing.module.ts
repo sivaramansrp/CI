@@ -1,5 +1,5 @@
-import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { NgModule } from '@angular/core';
 import { SeleccionTramiteComponent } from './seleccion-tramite/seleccion-tramite.component';
 
 const ROUTES: Routes = [
@@ -14,6 +14,13 @@ const ROUTES: Routes = [
       import(
         './tramites/240101/permiso-ordinario-importacion-armas-municiones.module'
       ).then((m) => m.PermisoOrdinarioImportacionArmasMunicionesModule),
+  },
+  {
+    path: 'permiso-ordinario-importacion-material-explosivo',
+    loadChildren: () =>
+      import(
+        './tramites/240108/permiso-ordinario-importacion-exlposivo.module'
+      ).then((m) => m.PermisoOrdinarioImportacionExlposivoModule),
   },
   {
     path: 'importacion-de-material-explosivo',
