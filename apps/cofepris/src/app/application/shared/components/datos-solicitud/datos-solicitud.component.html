@@ -8,7 +8,7 @@
         <button
           type="button"
           class="btn btn-primary"
-          (click)="alternarControlesDeFormulario()"
+          (click)="abrirModal()"
         >
           Seleccionar establecimiento
         </button>
@@ -70,3 +70,9 @@
   <app-manifiestos></app-manifiestos>
   <app-representante-legal-rfc></app-representante-legal-rfc>
 </div>
+@if (nuevaNotificacion) {
+  <section>
+    <lib-notificaciones [notificacionInput]="nuevaNotificacion" (confirmacionModal)="eliminarPedimento($event)">
+    </lib-notificaciones>
+  </section>
+  }

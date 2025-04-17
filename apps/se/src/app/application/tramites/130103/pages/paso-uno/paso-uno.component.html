@@ -1,0 +1,37 @@
+<div class="container">
+  <div class="row">
+    <ul class="nav nav-tabs">
+      <li [ngClass]="indice === 1 ? 'active' : ''">
+        <a
+          data-toggle="tab"
+          tabindex="0"
+          (keyup)="seleccionaTab(1)"
+          (click)="seleccionaTab(1)"
+          >Solicitante</a
+        >
+      </li>
+      <li [ngClass]="indice === 2 ? 'active' : ''">
+        <a
+          data-toggle="tab"
+          tabindex="0"
+          (keyup)="seleccionaTab(2)"
+          (click)="seleccionaTab(2)"
+          >Datos de la solicitud</a
+        >
+      </li>
+    </ul>
+    <ng-container>
+      @switch (indice) { @case(1) {
+      <solicitante></solicitante>
+      } @case (2) {
+      <app-datos-del-tramite-realizer></app-datos-del-tramite-realizer>
+      <app-datos-de-la-mercancia></app-datos-de-la-mercancia>
+      <app-partidas-de-la-mercancia></app-partidas-de-la-mercancia>
+      <app-uso-especifico-de-la-mercancia></app-uso-especifico-de-la-mercancia>
+      <app-criterio-de-dictamen></app-criterio-de-dictamen>
+      <app-pais-procedencia></app-pais-procedencia>
+      <app-representacion-federal></app-representacion-federal>
+      } }
+    </ng-container>
+  </div>
+</div>
