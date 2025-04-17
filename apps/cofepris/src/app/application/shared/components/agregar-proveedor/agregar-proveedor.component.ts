@@ -81,6 +81,12 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
   public paisesDatos: Catalogo[] = [];
 
   /**
+ * Arreglo que almacena los elementos requeridos.
+ * @type {string[]}
+ */
+  public elementosRequeridos: string[] = [];
+
+  /**
    * @property updateProveedorTablaDatos
    * @description Evento que emite una lista actualizada de objetos `Proveedor` hacia el componente padre.
    * Se utiliza para sincronizar los datos de la tabla o disparar acciones relacionadas.
@@ -144,7 +150,12 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
       primerApellido: ['', Validators.required],
       segundoApellido: [''],
       pais: ['', Validators.required],
-      estado: ['', Validators.required],
+      estado: [
+        '',
+        this.elementosRequeridos.includes('estado')
+          ? [Validators.required]
+          : [],
+      ],
       codigoPostal: [''],
       colonia: [''],
       calle: ['', Validators.required],
@@ -183,10 +194,13 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
             'telefono',
             'correoElectronico'
           ];
-        
+          break;
+          case 260219:
+            this.elementosRequeridos = ['estado'];
           break;
         default:
           this.elementosDeshabilitados = [];
+          this.elementosRequeridos = [];
       }
     }
 
