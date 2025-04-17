@@ -1,6 +1,6 @@
 import { Catalogo, RespuestaCatalogos } from '@libs/shared/data-access-user/src';
-import { Destinatario } from '../enums/destinatario.enum';
 import { HttpClient } from '@angular/common/http';
+import { InformaciondeProcedencia } from '../enums/informacion-de-procedencia.enum';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { TramiteAsociados } from '../../../shared/models/tramite-asociados.model';
@@ -27,9 +27,9 @@ export class SolicitudModificacionPermisoInternacionService {
   * Obtiene la lista de destinatarios desde un archivo JSON.
   * Retorna un observable con la lista de destinatarios.
   */
- obtenerDestinatarioListo(): Observable<Destinatario[]> {
+ obtenerDestinatarioListo(): Observable<InformaciondeProcedencia[]> {
    return this.http
-     .get<Destinatario[]>('../../../assets/json/261402/destinatario-mock.json')
+     .get<InformaciondeProcedencia[]>('../../../assets/json/261402/destinatario-mock.json')
      .pipe();
  }
 

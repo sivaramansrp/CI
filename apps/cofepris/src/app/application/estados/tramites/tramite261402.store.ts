@@ -1,5 +1,5 @@
 import { Store, StoreConfig } from '@datorama/akita';
-//import { Destinatario } from '../../tramites/261402/enums/destinatario.enum';
+import { InformaciondeProcedencia } from '../../tramites/261402/enums/informacion-de-procedencia.enum';
 import { Injectable } from '@angular/core';
 
 /**
@@ -15,7 +15,7 @@ export interface Solicitud261402State {
   /**
    * Lista de destinatarios asociados a la solicitud.
    */
-  //destinatarioDatos: Destinatario[];
+  destinatarioDatos: InformaciondeProcedencia[];
 
   /**
    * La clave de referencia asociada con la solicitud.
@@ -55,7 +55,7 @@ export interface Solicitud261402State {
 export function createInitialState(): Solicitud261402State {
   return {
     observaciones: '',
-    //destinatarioDatos: [],
+    destinatarioDatos: [],
     claveDeReferencia: '',
     cadenaPagoDependencia: '',
     bancoClave: '',
@@ -93,12 +93,12 @@ export class Tramite261402Store extends Store<Solicitud261402State> {
    * Actualiza la lista de destinatarios en el estado.
    * Param destinatarioDatos Lista de destinatarios a establecer.
    */
-  // public setDestinatarioDatos(destinatarioDatos: Destinatario[]): void {
-  //   this.update((state) => ({
-  //     ...state,
-  //     destinatarioDatos,
-  //   }));
-  // }
+  public setDestinatarioDatos(destinatarioDatos: InformaciondeProcedencia[]): void {
+    this.update((state) => ({
+      ...state,
+      destinatarioDatos,
+    }));
+  }
 
   /**
    * Actualiza el estado de la solicitud con los valores proporcionados.

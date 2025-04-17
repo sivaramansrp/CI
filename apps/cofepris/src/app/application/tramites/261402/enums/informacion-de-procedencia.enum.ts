@@ -4,7 +4,7 @@ import { ConfiguracionColumna } from '@ng-mf/data-access-user';
  * Interfaz que representa la información de un destinatario.
  * Contiene los datos personales y de contacto del destinatario, así como su dirección.
  */
-export interface Destinatario {
+export interface InformaciondeProcedencia {
   /** Nombre completo del destinatario. */
   nombre: string;
 
@@ -55,80 +55,80 @@ export interface Destinatario {
  * Configuración de las columnas para mostrar la información de los destinatarios en una tabla.
  * Define los encabezados, claves y el orden de las columnas.
  */
-export const DESTINATARIO_ENCABEZADO_DE_TABLA: ConfiguracionColumna<Destinatario>[] = [
+export const DESTINATARIO_ENCABEZADO_DE_TABLA: ConfiguracionColumna<InformaciondeProcedencia>[] = [
   {
     encabezado: 'Nombre/denominación o razón social',
-    clave: (item: Destinatario) => item.nombre,
+    clave: (item: InformaciondeProcedencia) => item.nombre,
     orden: 1,
   },
   {
     encabezado: 'R.F.C.',
-    clave: (item: Destinatario) => item.rfc,
+    clave: (item: InformaciondeProcedencia) => item.rfc,
     orden: 2,
   },
   {
     encabezado: 'CURP',
-    clave: (item: Destinatario) => item.curp,
+    clave: (item: InformaciondeProcedencia) => item.curp,
     orden: 3,
   },
   {
     encabezado: 'Teléfono',
-    clave: (item: Destinatario) => item.telefono,
+    clave: (item: InformaciondeProcedencia) => item.telefono,
     orden: 4,
   },
   {
     encabezado: 'Correo electrónico',
-    clave: (item: Destinatario) => item.correoElectronico,
+    clave: (item: InformaciondeProcedencia) => item.correoElectronico,
     orden: 5,
   },
   {
     encabezado: 'Calle',
-    clave: (item: Destinatario) => item.calle,
+    clave: (item: InformaciondeProcedencia) => item.calle,
     orden: 6,
   },
   {
     encabezado: 'Número exterior',
-    clave: (item: Destinatario) => item.numeroExterior,
+    clave: (item: InformaciondeProcedencia) => item.numeroExterior,
     orden: 7,
   },
   {
     encabezado: 'Número interior',
-    clave: (item: Destinatario) => item.numeroInterior,
+    clave: (item: InformaciondeProcedencia) => item.numeroInterior,
     orden: 8,
   },
   {
     encabezado: 'País',
-    clave: (item: Destinatario) => item.pais,
+    clave: (item: InformaciondeProcedencia) => item.pais,
     orden: 9,
   },
   {
     encabezado: 'Colonia',
-    clave: (item: Destinatario) => item.colonia,
+    clave: (item: InformaciondeProcedencia) => item.colonia,
     orden: 10,
   },
   {
     encabezado: 'Municipio o alcaldía',
-    clave: (item: Destinatario) => item.municipio,
+    clave: (item: InformaciondeProcedencia) => item.municipio,
     orden: 11,
   },
   {
     encabezado: 'Localidad',
-    clave: (item: Destinatario) => item.localidad,
+    clave: (item: InformaciondeProcedencia) => item.localidad,
     orden: 12,
   },
   {
     encabezado: 'Estado',
-    clave: (item: Destinatario) => item.estado,
+    clave: (item: InformaciondeProcedencia) => item.estado,
     orden: 13,
   },
   {
     encabezado: 'Estado',
-    clave: (item: Destinatario) => item.estado2,
+    clave: (item: InformaciondeProcedencia) => item.estado2,
     orden: 14,
   },
   {
     encabezado: 'Código postal',
-    clave: (item: Destinatario) => item.codigo,
+    clave: (item: InformaciondeProcedencia) => item.codigo,
     orden: 15,
   },
 ];

@@ -11,6 +11,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { SolicitudModificacionPermisoInternacionComponent } from './pages/solicitud-modificacion-permiso-internacion/solicitud-modificacion-permiso-internacion.component';
 import { SolicitudModificacionPermisoInternacionRoutingModule } from './solicitud-modificacion-permiso-internacion-routing.module';
 import { SubirDocumentoService } from '@libs/shared/data-access-user/src/core/services/shared/subir-documento/subir-documento.service';
+import { TercerosRelacionadosComponent } from './components/terceros-relacionados/terceros-relacionados.component';
 import { ToastrModule } from 'ngx-toastr';
 import { ToastrService } from 'ngx-toastr';
 import { TramiteAsociadosComponent } from '../../shared/components/tramite-asociados/tramite-asociados.component';
@@ -33,6 +34,7 @@ import { TramiteAsociadosComponent } from '../../shared/components/tramite-asoci
     PasoTresComponent,
     TramiteAsociadosComponent,
     PagoDeDerechosComponent,
+    TercerosRelacionadosComponent,
     ToastrModule.forRoot()
   ],
   providers: [
