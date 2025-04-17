@@ -10,7 +10,9 @@ import { enviroment } from '../../../../enviroments/enviroment';
 export class TramiteFolioService {
   urlServer = enviroment.URL_SERVER_JSON_AUXILIAR;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+    // Lógica de inicialización si es necesario
+  }
 
   /**
    * @description Función para obtener el trámite
