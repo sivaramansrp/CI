@@ -18,8 +18,10 @@ export class AgregarProveedorContenedoraComponent {
    *
    * @param tramite260214Store - Store que administra el estado del trámite 260214.
    */
-  // eslint-disable-next-line no-empty-function
-  constructor(public tramite240107Store: Tramite240107Store) {}
+ 
+  constructor(public tramite240107Store: Tramite240107Store) {
+    // Se puede agregar aquí la lógica del constructor si es necesario
+  }
 
   /**
    * @method updateProveedorTablaDatos

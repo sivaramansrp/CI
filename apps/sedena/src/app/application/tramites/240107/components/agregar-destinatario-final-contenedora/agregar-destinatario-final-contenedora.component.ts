@@ -31,8 +31,10 @@ export class AgregarDestinatarioFinalContenedoraComponent {
    * @param {Tramite240107Store} tramiteStore - Store que administra el estado del trámite.
    * @returns {void}
    */
-  // eslint-disable-next-line no-empty-function
-  constructor(public tramiteStore: Tramite240107Store) {}
+ 
+  constructor(public tramiteStore: Tramite240107Store) {
+    // Se puede agregar aquí la lógica del constructor si es necesario
+  }
 
   /**
    * Actualiza la lista de destinatarios finales en el store del trámite.

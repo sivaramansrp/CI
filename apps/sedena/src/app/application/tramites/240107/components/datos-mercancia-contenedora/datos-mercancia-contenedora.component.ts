@@ -33,8 +33,10 @@ export class DatosMercanciaContenedoraComponent {
    * @param {Tramite240107Store} tramiteStore - Store de Akita para actualizar el estado de la tabla de mercancías.
    * @returns {void}
    */
-  // eslint-disable-next-line no-empty-function
-  constructor(private tramiteStore: Tramite240107Store) {}
+
+  constructor(private tramiteStore: Tramite240107Store) {
+    // Se puede agregar aquí la lógica del constructor si es necesario
+  }
 
   /**
    * Actualiza los datos de la tabla de mercancía en el store.

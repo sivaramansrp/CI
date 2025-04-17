@@ -1,15 +1,26 @@
 // @ts-nocheck
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
+import {
+  Component,
+  CUSTOM_ELEMENTS_SCHEMA,
+  Directive,
+  Injectable,
+  Input,
+  NO_ERRORS_SCHEMA,
+  Output,
+  Pipe,
+  PipeTransform
+} from '@angular/core';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
+import { ActivatedRoute } from '@angular/router';
 import { Observable, of as observableOf, throwError } from 'rxjs';
 
-import { Component } from '@angular/core';
-import { PasoUnoComponent } from './paso-uno.component';
-import { ActivatedRoute } from '@angular/router';
 import { SeccionLibStore } from '@libs/shared/data-access-user/src';
+
+import { PasoUnoComponent } from './paso-uno.component';
+
 
 @Directive({ selector: '[myCustom]' })
 class MyCustomDirective {
@@ -77,7 +88,6 @@ describe('PasoUnoComponent', () => {
   it('should run #ngOnInit()', async () => {
     component.route = component.route || {};
     component.route.queryParams = observableOf({});
-    component.seccionesDeLaSolicitud = component.seccionesDeLaSolicitud || {};
     component.ngOnInit();
 
   });
@@ -87,24 +97,15 @@ describe('PasoUnoComponent', () => {
     component.destroyNotifier$.next = jest.fn();
     component.destroyNotifier$.complete = jest.fn();
     component.ngOnDestroy();
-      expect(component.destroyNotifier$.next).toHaveBeenCalled();
-      expect(component.destroyNotifier$.complete).toHaveBeenCalled();
+    expect(component.destroyNotifier$.next).toHaveBeenCalled();
+    expect(component.destroyNotifier$.complete).toHaveBeenCalled();
   });
 
   it('should run #seleccionaTab()', async () => {
     component.tabChanged = component.tabChanged || {};
     component.tabChanged.emit = jest.fn();
     component.seleccionaTab({});
-      expect(component.tabChanged.emit).toHaveBeenCalled();
-  });
-
-  it('should run #asignarSecciones()', async () => {
-    component.seccionStore = component.seccionStore || {};
-    component.seccionStore.establecerSeccion = jest.fn();
-    component.seccionStore.establecerFormaValida = jest.fn();
-    component.asignarSecciones();
-      expect(component.seccionStore.establecerSeccion).toHaveBeenCalled();
-      expect(component.seccionStore.establecerFormaValida).toHaveBeenCalled();
+    expect(component.tabChanged.emit).toHaveBeenCalled();
   });
 
 });

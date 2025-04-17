@@ -54,8 +54,10 @@ export class TercerosRelacionadosContenedoraComponent
    */
   constructor(
     private tramiteStore: Tramite240107Store,
-    private tramiteQuery: Tramite240107Query // eslint-disable-next-line no-empty-function
-  ) {}
+    private tramiteQuery: Tramite240107Query
+  ) {
+    // Se puede agregar aquí la lógica del constructor si es necesario
+  }
 
   /**
    * Hook del ciclo de vida que se ejecuta al inicializar el componente.
