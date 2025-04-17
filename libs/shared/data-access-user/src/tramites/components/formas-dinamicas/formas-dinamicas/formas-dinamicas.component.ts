@@ -262,7 +262,7 @@ export class FormasDinamicasComponent implements ControlValueAccessor, OnInit {
       if (validadore.tipo.includes('maxlength') && typeof validadore.valor === 'number') {
         VALIDATORS.push(Validators.maxLength(validadore.valor));
       }
-      if (validadore.tipo.includes('pattern') && typeof validadore.valor === 'string') {
+      if (validadore.tipo.includes('pattern') && validadore.valor instanceof RegExp) {
         VALIDATORS.push(Validators.pattern(validadore.valor));
       }
     });

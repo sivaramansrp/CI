@@ -1,7 +1,7 @@
 <div class="container">
-    <ng-titulo [titulo]="'Datos de la mercancía que se importará al país temporalmente'"></ng-titulo>
+    <!-- <ng-titulo [titulo]="'Datos de la mercancía que se importará al país temporalmente'"></ng-titulo> -->
     <form [formGroup]="datosMercancia">
-        <div class="row">
+        <!-- <div class="row">
             <div class="col-md-12">
             <label for="descripcionMercancia" class="form-label">Descripción general de la mercancía *:</label>
             <textarea id="descripcionMercancia" formControlName="descripcionMercancia" class="form-control"
@@ -43,6 +43,11 @@
                     detallada de la mercancía.</small>
             </div>
             </div>
+        </div> -->
+
+        <div class="row">
+            <formas-dinamicas formularioTitulo="Datos de la mercancía que se importará al país temporalmente" [forma]="datosMercancia" [formularioDatos]="formularioDatos" [estado]="estadoSeleccionado"
+        (emitirCambioDeValor)="establecerCambioDeValor($event)"></formas-dinamicas>
         </div>
     </form>
 </div>

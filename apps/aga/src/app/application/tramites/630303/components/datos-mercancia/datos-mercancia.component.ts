@@ -5,13 +5,15 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import { CommonModule } from '@angular/common';
 
-import { REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, TituloComponent } from "@ng-mf/data-access-user";
+import { ModeloDeFormaDinamica, REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, TituloComponent } from "@ng-mf/data-access-user";
+import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component'; // Adjust the path as needed
 
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Tramite630303State, Tramite630303Store } from '../../estados/tramite630303.store';
 import { Tramite630303Query } from '../../estados/tramite630303.query';
 
 import { Subject, takeUntil } from 'rxjs';
+import { FORMULARIO_DATOS } from '../../enum/retorno-importacion-temporal.enum';
 /**
  * Componente que gestiona los datos de la mercancía para el trámite 630303.
  * Permite inicializar formularios, obtener datos del estado y manejar el estado del formulario.
@@ -19,7 +21,7 @@ import { Subject, takeUntil } from 'rxjs';
 @Component({
   selector: 'app-datos-mercancia',
   standalone: true,
-  imports: [CommonModule, TituloComponent, ReactiveFormsModule],
+  imports: [CommonModule, TituloComponent, ReactiveFormsModule,FormasDinamicasComponent],
   templateUrl: './datos-mercancia.component.html',
   styleUrl: './datos-mercancia.component.scss',
 })
@@ -39,6 +41,7 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
    * Formulario reactivo para gestionar los datos de la mercancía.
    */
   datosMercancia!: FormGroup;
+formularioDatos: ModeloDeFormaDinamica[]=FORMULARIO_DATOS;
 
   /**
    * Constructor del componente.
@@ -67,18 +70,18 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
    */
   inicializarFormulario(): void {
     this.datosMercancia = this.formBuilder.group({
-      descripcionMercancia: [
-        this.estadoSeleccionado?.descripcionMercancia,
-        [Validators.required, Validators.pattern(REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL)],
-      ],
-      motivo: [
-        this.estadoSeleccionado?.motivo,
-        [Validators.required, Validators.pattern(REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL)],
-      ],
-      listaMercancia: [
-        this.estadoSeleccionado?.listaMercancia,
-        [Validators.required, Validators.pattern(REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL)],
-      ],
+      // descripcionMercancia: [
+      //   this.estadoSeleccionado?.descripcionMercancia,
+      //   [Validators.required, Validators.pattern(REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL)],
+      // ],
+      // motivo: [
+      //   this.estadoSeleccionado?.motivo,
+      //   [Validators.required, Validators.pattern(REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL)],
+      // ],
+      // listaMercancia: [
+      //   this.estadoSeleccionado?.listaMercancia,
+      //   [Validators.required, Validators.pattern(REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL)],
+      // ],
     });
   }
 
@@ -114,4 +117,8 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
     this.destroyed$.next();
     this.destroyed$.complete();
   }
+
+  establecerCambioDeValor($event: { campo: string; valor: any }): void {
+    this.setValorStore(this.datosMercancia, $event.campo);
+   }
 }

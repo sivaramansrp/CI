@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Store, StoreConfig } from '@datorama/akita';
 
 import { Injectable } from '@angular/core';
@@ -85,6 +86,8 @@ export interface Tramite630303State {
    * Indica si se ha realizado la declaración.
    */
   declaracion:boolean;
+
+  [key: string]: unknown; // Permite propiedades adicionales
 }
 
 /**

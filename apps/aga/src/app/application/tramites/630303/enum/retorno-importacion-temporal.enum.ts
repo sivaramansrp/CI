@@ -1,3 +1,5 @@
+
+
 /**
  * PASOS_REGISTRO
  * Define los pasos del registro para el trámite 630303.
@@ -78,3 +80,55 @@ export const FECHA_VENCIMIENTO = {
     required: true,
     habilitado: true
 };
+
+export const FORMULARIO_DATOS = [
+    {
+        id: 'descripcionMercancia',
+        labelNombre: 'Descripción general de la mercancía',
+        campo: 'descripcionMercancia',
+        clase: 'col-md-12',
+        tipoInput: 'textarea',
+        desactivado: false,
+        soloLectura: false,
+        validadores: [
+            { tipo: 'required' },
+            { tipo: 'pattern', valor: /^(?!\s)(.*\S)?$/, mensaje: 'Por favor, corrija la descripción general de la mercancía.' }
+        ],
+        marcadorDePosicion: '',
+        valorPredeterminado: '',
+        marginTop: 0
+    },
+    {
+        id: 'motivo',
+        labelNombre: 'Motivo o justificación de la importación temporal',
+        campo: 'motivo',
+        clase: 'col-md-12',
+        tipoInput: 'textarea',
+        desactivado: false,
+        soloLectura: false,
+        validadores: [
+            { tipo: 'required' },
+            { tipo: 'pattern', valor: /^(?!\s)(.*\S)?$/, mensaje: 'Por favor, corrija el motivo o justificación de la importación temporal.' }
+        ],
+        marcadorDePosicion: '',
+        valorPredeterminado: '',
+        marginTop: 0
+    },
+    {
+        id: 'listaMercancia',
+        labelNombre: 'Lista detallada de la mercancía',
+        campo: 'listaMercancia',
+        clase: 'col-md-12',
+        tipoInput: 'textarea',
+        desactivado: false,
+        soloLectura: false,
+        validadores: [
+           { tipo: 'required'},
+            { tipo: 'pattern', valor:/^(?!\s)(.*\S)?$/, mensaje: 'Por favor, corrija la lista detallada de la mercancía.' }
+        ],
+        marcadorDePosicion: '',
+        valorPredeterminado: '',
+        marginTop: 0
+    }
+];
+
