@@ -74,6 +74,13 @@ const ROUTES: Routes = [
         (m) => m.AvisoTrasladoModule
       ),
   },
+  {
+    path: 'adace',
+    loadChildren: () =>
+      import('./tramites/32508/adace.module').then(
+        (m) => m.AdaceModule
+      ),
+  }
 ];
 
 @NgModule({
