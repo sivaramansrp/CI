@@ -1,29 +1,43 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ProfilesDomocilioDelaComponent } from '../profiles-domocilio-dela/profiles-domocilio-dela.component';
 
 @Component({
   selector: 'app-profiles-mansajeria',
   standalone: true,
-  imports: [CommonModule,ReactiveFormsModule,FormsModule,ProfilesDomocilioDelaComponent],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, ProfilesDomocilioDelaComponent],
   templateUrl: './profiles-mansajeria.component.html',
-  styleUrl: './profiles-mansajeria.component.css',
+  styleUrls: ['./profiles-mansajeria.component.css'],
 })
 export class ProfilesMansajeriaComponent {
-  profileForm!:FormGroup;
+  profileForm!: FormGroup;
   mostrarContenido = false;
-  public hasAgregar:boolean = false;
+  public hasAgregar: boolean = false;
+
   constructor(private fb: FormBuilder) {
-}
+    this.profileForm = this.fb.group({
+      domicilio: new FormControl(''),
+      antiguedad: new FormControl(''),
+      productos: new FormControl(''),
+      embarquesExp: new FormControl(''),
+      embarquesImp: new FormControl(''),
+      empleados: new FormControl(''),
+      superficie: new FormControl(''),
+      nombre: new FormControl(''),
+      categoria: new FormControl(''),
+      vigencia: new FormControl(''),
+      nombre2: new FormControl(''),
+      categoria2: new FormControl(''),
+      vigencia2: new FormControl(''),
+      nombre3: new FormControl(''),
+      categoria3: new FormControl(''),
+      vigencia3: new FormControl(''),
+    });
+  }
 
-alternarContenido(): void {
-  this.mostrarContenido = !this.mostrarContenido;
-}
-
-public agregar(agregar:string) {
-  if(agregar === 'Agregar'){
-    this.hasAgregar = true;
+  alternarContenido(): void {
+    this.mostrarContenido = !this.mostrarContenido;
   }
 }
-}
+
