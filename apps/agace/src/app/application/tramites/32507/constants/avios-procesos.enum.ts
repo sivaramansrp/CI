@@ -1,3 +1,4 @@
+import { AvisoTabla, AvisoTablaDatos } from "../models/aviso-traslado.model";
 
 /**
  * Constante que define los pasos del wizard en el trámite.
@@ -57,36 +58,8 @@ export const FECHA_INGRESO = {
   habilitado: true,
 };
 
-/**
- * Tipos de aviso disponibles.
- * 
- * Define los valores y etiquetas para los tipos de aviso.
- */
-export const TIPAVI = [
-  {
-    value: 'inicial',
-    label: 'Inicial',
-  },
-  {
-    value: 'prorroga',
-    label: 'Prórroga',
-  }
-];
-/**
- * Tipos de carga disponibles.
- * 
- * Define los valores y etiquetas para los tipos de carga.
- */
-export const TIPACA = [
-  {
-    value: 'manual',
-    label: 'Manual',
-  },
-  {
-    value: 'carga_masiva',
-    label: 'Carga Masiva',
-  }
-];
+
+
 
 /**
  * @constant RADIO_OPCIONS
@@ -100,3 +73,41 @@ export const RADIO_OPCIONS = [
 
 
 export const REGEX_ALFANUMERICO_CON_ESPACIOS_REEMPLAZAR = /[^a-zA-Z0-9 ]/g;
+
+
+
+
+export const ENCABEZADAS_CONSTANT = {
+  encabezado: '',
+  clave: (ele: AvisoTablaDatos) => '',
+  orden: 0,
+};
+
+
+export const TABLA_DE_DATOS_AVISO = {
+  encabezadas: [
+    { encabezado: 'ID de transacción de VUCEM', clave: (ele: AvisoTabla) => ele.idTransaccionVUCEM
+      , orden: 1 },
+    {
+      encabezado: 'Cantidad',
+      clave: (ele: AvisoTabla) => ele.cantidad,
+      orden: 2,
+    },
+    {
+      encabezado: 'Peso (Kg)',
+      clave: (ele: AvisoTabla) => ele.pesoKg,
+      orden: 3,
+    },
+    {
+      encabezado: 'Descripción Unidad de medida',
+      clave: (ele: AvisoTabla) => ele.descripcionUnidadMedida,
+      orden: 4,
+    },
+    {
+      encabezado: 'Descripción',
+      clave: (ele: AvisoTabla) => ele.descripcion,
+      orden: 5,
+    },
+  ],
+  datos: []
+};

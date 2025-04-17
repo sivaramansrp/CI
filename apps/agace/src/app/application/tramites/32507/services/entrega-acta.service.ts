@@ -57,5 +57,14 @@ export class EntregaActaService {
     return this.http.get<MercanciaTablaDatos>(`assets/json/32503/mercancia-tabla.json`);
   }
 
+
+  /**
+   * Obtiene la lista de entidades federativas.
+   * 
+   * @returns {Observable<CatalogoLista>} Un observable con la lista de entidades federativas.
+   */
+  obtenerLevantaActa(): Observable<CatalogoLista> {
+    return this.http.get<CatalogoLista>(`assets/json/32507/levanta-acta.json`);
+  }
   
 }

@@ -1,13 +1,13 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AvisoComponent } from './aviso.component';
 import { ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
-import { By } from '@angular/platform-browser';
-import { Subject, of } from 'rxjs';
+
 import { Tramite32503Store } from '../../../../estados/tramites/tramite32503.store';
 import { Tramite32503Query } from '../../../../estados/queries/tramite32503.query';
 import { Modal } from 'bootstrap';
 import { AvisoTabla, MercanciaTabla } from "../../models/aviso-traslado.model";
 import { provideHttpClient } from '@angular/common/http';
+import { of } from 'rxjs';
 
 
 
@@ -38,48 +38,28 @@ describe('AvisoComponent', () => {
 
     tablaDeDatos = [
       {
-        "id": 1,
-        "rfc": "XAXX010101000",
-        "nombreComercial": "NOMBRE COMERCIAL",
-        "entidadFederativa": "ENTIDAD FEDERATIVA",
-        "alcaldioOMuncipio": "ALCALDIA O MUNICIPIO",
-        "colonia": "COLONIA"
+        "idTransaccionVUCEM": "12345",
+        "cantidad": "10",
+        "pesoKg": "25.5",
+        "descripcionUnidadMedida": "Kilogramos",
+        "descripcion": "Producto A"
       },
       {
-        "id": 1,
-        "rfc": "XAXX010101000",
-        "nombreComercial": "NOMBRE COMERCIAL",
-        "entidadFederativa": "ENTIDAD FEDERATIVA",
-        "alcaldioOMuncipio": "ALCALDIA O MUNICIPIO",
-        "colonia": "COLONIA"
-      }
-    ];
-    tablaDeMercancia = [
-      {
-        "id": 1,
-        "claveFraccionArancelaria": "certificado",
-        "nico": "01",
-        "cantidad": "50",
-        "claveUnidadMedida": "Botella",
-        "valorUSD": "2555",
-        "descripcionMercancia": "certificado",
-        "descripcionProceso": "certificado",
-        "numPedimentoExportacion": "certificado",
-        "numPedimentoImportacion": "certificado"
+        "idTransaccionVUCEM": "67890",
+        "cantidad": "5",
+        "pesoKg": "12.3",
+        "descripcionUnidadMedida": "Litros",
+        "descripcion": "Producto B"
       },
       {
-        "id": 1,
-        "claveFraccionArancelaria": "certificado",
-        "nico": "01",
-        "cantidad": "50",
-        "claveUnidadMedida": "Botella",
-        "valorUSD": "2555",
-        "descripcionMercancia": "certificado",
-        "descripcionProceso": "certificado",
-        "numPedimentoExportacion": "certificado",
-        "numPedimentoImportacion": "certificado"
+        "idTransaccionVUCEM": "11223",
+        "cantidad": "20",
+        "pesoKg": "50.0",
+        "descripcionUnidadMedida": "Cajas",
+        "descripcion": "Producto C"
       }
     ]
+ 
     await TestBed.configureTestingModule({
       imports: [ReactiveFormsModule, AvisoComponent],
       declarations: [],
@@ -115,24 +95,8 @@ describe('AvisoComponent', () => {
     });
   });
 
-  it('should call setAvisoFormularioTipoAviso when verificaTipoAviso is called', () => {
-    component.avisoFormulario = new FormGroup({});
-    component.verificaTipoAviso();
-    expect(tramiteStoreMock.setAvisoFormularioTipoAviso).toHaveBeenCalled();
-  });
 
-  it('should disable idTransaccion and motivoProrroga when tipoAviso is "inicial"', () => {
-    component.avisoFormulario = new FormGroup({
-      datosAviso: new FormGroup({
-        tipoAviso: new FormBuilder().control('inicial'),
-        idTransaccion: new FormBuilder().control(''),
-        motivoProrroga: new FormBuilder().control(''),
-      }),
-    });
-    component.verificaTipoAviso();
-    expect(component.avisoFormulario.get('datosAviso.idTransaccion')?.disabled).toBeTruthy();
-    expect(component.avisoFormulario.get('datosAviso.motivoProrroga')?.disabled).toBeTruthy();
-  });
+
 
   it('should open the domicilio modal when abiertoDomicilio is called', () => {
     const modalElement = fixture.debugElement.nativeElement.querySelector('#modalDomicilio');
@@ -142,13 +106,7 @@ describe('AvisoComponent', () => {
     expect(modalInstanceSpy).toHaveBeenCalled();
   });
 
-  it('should open the mercancia modal when abiertoMercancia is called', () => {
-    const modalElement = fixture.debugElement.nativeElement.querySelector('#modalMercancia');
-    component.modalMercancia = { nativeElement: modalElement };
-    const modalInstanceSpy = jest.spyOn(Modal.prototype, 'show');
-    component.abiertoMercancia();
-    expect(modalInstanceSpy).toHaveBeenCalled();
-  });
+
 
   it('should filter out selected rows when eliminarDomicilio is called', () => {
     component.tablaDeDatos.datos = tablaDeDatos
@@ -158,19 +116,9 @@ describe('AvisoComponent', () => {
     expect(component.filaSeleccionadaLista).toEqual([]);
   });
 
-  it('should filter out selected rows when eliminarMercancia is called', () => {
-    component.tablaDeMercancia.datos = tablaDeMercancia
-    component.filaSeleccionadaMercanciaLista = [tablaDeMercancia[1]];
-    component.eliminarMercancia();
-    expect(component.tablaDeMercancia.datos).toEqual([tablaDeMercancia[0]]);
-    expect(component.filaSeleccionadaMercanciaLista).toEqual([]);
-  });
 
-  it('should call setAvisoFormularioFechaTranslado when cambioFechaIngreso is called', () => {
-    const nuevoValor = '2025-04-10';
-    component.cambioFechaIngreso(nuevoValor);
-    expect(tramiteStoreMock.setAvisoFormularioFechaTranslado).toHaveBeenCalledWith(nuevoValor);
-  });
+
+ 
 
   it('should complete destroyNotifier$ on ngOnDestroy', () => {
     const nextSpy = jest.spyOn(component.destroyNotifier$, 'next');

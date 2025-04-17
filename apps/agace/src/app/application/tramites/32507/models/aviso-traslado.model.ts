@@ -92,12 +92,11 @@ export interface DatosSolicitante {
  * Representa un aviso en la tabla de avisos.
  */
 export interface AvisoTabla {
-  id: number;
-  rfc: string;
-  nombreComercial: string;
-  entidadFederativa: string;
-  alcaldioOMuncipio: string;
-  colonia: string;
+  idTransaccionVUCEM: string; 
+  cantidad: string;         
+  pesoKg: string;           
+  descripcionUnidadMedida: string; 
+  descripcion: string; 
 }
 
 /**
@@ -170,9 +169,15 @@ export interface DomicilioFormulario {
  * Representa el formulario de un aviso.
  */
 export interface AvisoFormulario {
+  
+ 
   adace: string;
   valorProgramaImmex: string;
   valorAnioProgramaImmex: string;
+  tipoBusqueda: string;
+  levantaActa: string;
+
+  
   tipoAviso: string;
   idTransaccion: string;
   motivoProrroga: string;

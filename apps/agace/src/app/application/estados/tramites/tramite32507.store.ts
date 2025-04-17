@@ -88,6 +88,9 @@ export function createInitialState(): Tramite32507State {
       adace: '',
       valorProgramaImmex: '',
       valorAnioProgramaImmex: '',
+      tipoBusqueda:'',
+      levantaActa: '',
+
       tipoAviso: '',
       idTransaccion: '',
       motivoProrroga: '',
@@ -507,6 +510,20 @@ export class Tramite32507Store extends Store<Tramite32507State> {
     this.update((state) => ({
       ...state,
       avisoFormulario: { ...state.avisoFormulario, nombreComercial },
+    }));
+  }
+
+  public setAvisoFormularioTipoBusqueda(tipoBusqueda:string):void{
+    this.update((state) => ({
+      ...state,
+      avisoFormulario: { ...state.avisoFormulario, tipoBusqueda },
+    }));
+  }
+
+  public setAvisoFormularioLevantaActa(levantaActa:string):void{
+    this.update((state) => ({
+      ...state,
+      avisoFormulario: { ...state.avisoFormulario, levantaActa },
     }));
   }
 

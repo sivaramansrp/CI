@@ -45,18 +45,47 @@
     </ng-container>
     <!-- Third section -->
     <ng-titulo titulo="Datos de la ADACE que asistió a la destrucción" />
-    <ng-container formGroupName="datosEmpresa">
-
+    <ng-container formGroupName="datosAdace">
       <div class="row">
         <div class="col-md-12">
-            <div class="col-md-6">
-                <app-input-radio [radioOptions]="radioOpcions" formControlName="tipoBusqueda"
-                    [layout]="'horizontal'"
-                    (change)="setValoresStore(datosEmpresa, 'tipoBusqueda', 'setTipoBusqueda')"></app-input-radio>
-            </div>
+          <div class="col-md-3">
+            ¿Acudió la ADACE?
+          </div>
+          <div class="col-md-3">
+            <app-input-radio [radioOptions]="radioOpcions" formControlName="tipoBusqueda" [layout]="'horizontal'"
+              (change)="setValoresStore(datosAdace, 'tipoBusqueda', 'setAvisoFormularioTipoBusqueda')"></app-input-radio>
+          </div>
         </div>
-    </div>
+      </div>
+      <br>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="col-md-4">
+            <app-catalogo-select [catalogo]="optoinAdace" [label]="'ADACE que levanta el acta'" [required]="true"
+              id="levantaActa" formControlName="levantaActa"
+              [ngClass]="isValid(datosAdace,'levantaActa') ? 'required' : ''"
+              (change)="setValoresStore(datosAdace, 'levantaActa', 'setAvisoFormularioLevantaActa')"></app-catalogo-select>
+          </div>
+        </div>
+      </div>
     </ng-container>
-    </form>
+
+    <ng-titulo titulo="Datos de las mercancías destruídas" />
+    <div class="row">
+      <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion.CHECKBOX" [configuracionTabla]="tablaDeDatos.encabezadas"
+        [datos]="tablaDeDatos.datos" (listaDeFilaSeleccionada)="filaSeleccionada($event)"></app-tabla-dinamica>
+      <div class="d-flex justify-content-end">
+        <button type="button" class="btn btn-danger ms-3" [disabled]="false" (click)="eliminarDomicilio()">
+          Eliminar
+        </button>
+        <button type="button" class="btn btn-primary ms-3" [disabled]="false">
+          Modificar
+        </button>
+        <button type="button" class="btn btn-primary ms-3" [disabled]="false" (click)="abiertoDomicilio()">
+          Agregar
+        </button>
+      </div>
+    </div>
+  </form>
 
 </div>
