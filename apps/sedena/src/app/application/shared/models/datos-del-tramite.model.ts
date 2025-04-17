@@ -20,6 +20,15 @@ export interface DatosDelTramiteFormState {
 }
 
 /**
+ * Interfaz que representa el estado del formulario de justificación del trámite.
+ *
+ * @property {string} justificacion - Justificación proporcionada por el usuario para el trámite.
+ */
+export interface JustificacionTramiteFormState {
+  justificacion: string;
+}
+
+/**
  * Interfaz que representa los datos capturados para una mercancía.
  *
  * @property {string} fraccionArancelaria - Clave de la fracción arancelaria.
