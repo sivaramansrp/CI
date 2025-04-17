@@ -11,44 +11,60 @@
  * @import { AgregarArchivoComponent } from '../../../../shared/components/agregar-archivo/agregar-archivo.component';
  * @import { CatalogosSelect } from '../../../../core/models/shared/components.model';
  * @import { SelectCatalogosComponent } from '../../../../shared/components/select-catalogos/select-catalogos.component';
- * @import { TableComponent } from '../../../../shared/components/table/table.component';
  * @import unidadRadioFields from '../../../../../assets/json/220401/unidad.json';
  * @import { TituloComponent } from '../../../../shared/components/titulo/titulo.component';
  * @import { HISTORICO_TBCOL } from '../../../../shared/constantes/elegibilidad-de-textiles.enums';
  */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-
-import { 
-  CatalogosSelect, 
-  
-  ConfiguracionColumna, 
-  
-  SeccionLibQuery, 
-  
-  SeccionLibState, 
-  
-  SeccionLibStore, 
-  
-  TablaSeleccion
- } from '@ng-mf/data-access-user';
-
-import { ElegibilidadDeTextilesStore, TextilesState, createInitialState } from '../../estados/elegibilidad-de-textiles.store';
-import { Subject,delay, map, takeUntil, tap } from 'rxjs';
-import { CATALOGOS } from '../../constantes/elegibilidad-de-textiles.enums';
 import { CommonModule } from '@angular/common';
-import { ElegibilidadDeTextilesQuery } from '../../queries/elegibilidad-de-textiles.query';
-import { ElegibilidadTextilesService } from '../../services/elegibilidad-textiles/elegibilidad-textiles.service';
-import { HistoricoColumns } from '../../models/elegibilidad-de-textiles.model';
-import { HttpErrorResponse } from '@angular/common/http';
+
+import { Component } from '@angular/core';
+import { OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
+
+import { FormBuilder } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
+import { Validators } from '@angular/forms';
+
+import {
+  CatalogosSelect,
+  ConfiguracionColumna,
+  SeccionLibQuery,
+  SeccionLibState,
+  SeccionLibStore,
+  TablaSeleccion
+} from '@ng-mf/data-access-user';
+
 import { InputRadioComponent } from '@ng-mf/data-access-user';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
-import { TableComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
+
 import radioOptionsData from '@libs/shared/theme/assets/json/120301/tipos-de-fabricante-exportador.json';
 import unidadRadioFields from '@libs/shared/theme/assets/json/220401/unidad.json';
 
+import { Subject } from 'rxjs';
+import { delay } from 'rxjs';
+import { map } from 'rxjs';
+import { takeUntil } from 'rxjs';
+import { tap } from 'rxjs';
+
+import { CATALOGOS, VALIDO } from '../../constantes/elegibilidad-de-textiles.enums';
+
+import { ElegibilidadDeTextilesStore } from '../../estados/elegibilidad-de-textiles.store';
+import { TextilesState } from '../../estados/elegibilidad-de-textiles.store';
+
+import { HistoricoColumns } from '../../models/elegibilidad-de-textiles.model';
+
+import { ElegibilidadDeTextilesQuery } from '../../queries/elegibilidad-de-textiles.query';
+
+import { ElegibilidadTextilesService } from '../../services/elegibilidad-textiles/elegibilidad-textiles.service';
+
+/**
+ * @component HistoricoFabricantesComponent
+ * @description Este componente es responsable de manejar el historial de fabricantes.
+ * Incluye un formulario para capturar los datos de los fabricantes y tablas para mostrar los fabricantes nacionales y sus datos.
+ */
 @Component({
   selector: 'app-historico-fabricantes',
   templateUrl: './historico-fabricantes.component.html',
@@ -58,7 +74,6 @@ import unidadRadioFields from '@libs/shared/theme/assets/json/220401/unidad.json
     TituloComponent,
     CommonModule,
     ReactiveFormsModule,
-    TableComponent,
     InputRadioComponent,
     TablaDinamicaComponent
   ]
@@ -90,11 +105,13 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
   radioBoton = unidadRadioFields;
 
   /**
-   * @property {string[]} tableColumns - Array de encabezados de columnas de la tabla.
+   * @property {TablaSeleccion} TablaSeleccion - Configuración para la selección de tablas.
    */
-
   TablaSeleccion = TablaSeleccion;
 
+  /**
+   * @property {ConfiguracionColumna<HistoricoColumns>[]} tableColumns - Configuración de las columnas de la tabla de fabricantes nacionales.
+   */
   tableColumns: ConfiguracionColumna<HistoricoColumns>[] = [
     { encabezado: 'Nombre del fabricante', 
       clave: (fila) => fila.nombreFabricante, 
@@ -122,16 +139,35 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
   ];
 
   /**
-   * @property {any[]} fabricantesNacionales - Array de datos de fabricantes nacionales.
+   * @property {HistoricoColumns[]} fabricantesNacionales - Array de datos de fabricantes nacionales.
    */
   fabricantesNacionales: HistoricoColumns[] = [];
 
+  /**
+   * @property {Subject<void>} destroyNotifier$ - Sujeto para manejar la destrucción de suscripciones.
+   */
   private destroyNotifier$: Subject<void> = new Subject();
 
+  /**
+   * @property {TextilesState} historicoState - Estado actual del historial de fabricantes.
+   */
   private historicoState!: TextilesState;
 
-  private seccionState!: SeccionLibState
+  /**
+   * @property {SeccionLibState} seccionState - Estado actual de la sección.
+   */
+  private seccionState!: SeccionLibState;
 
+  /**
+   * @constructor
+   * @description Constructor del componente. Inicializa los servicios necesarios.
+   * @param {FormBuilder} fb - Servicio para la creación de formularios reactivos.
+   * @param {ElegibilidadDeTextilesStore} ElegibilidadDeTextilesStore - Store para manejar el estado de elegibilidad de textiles.
+   * @param {ElegibilidadDeTextilesQuery} ElegibilidadDeTextilesQuery - Query para consultar el estado de elegibilidad de textiles.
+   * @param {SeccionLibStore} seccionStore - Store para manejar el estado de la sección.
+   * @param {SeccionLibQuery} seccionQuery - Query para consultar el estado de la sección.
+   * @param {ElegibilidadTextilesService} elegibilidadTextilesService - Servicio para manejar la lógica de elegibilidad de textiles.
+   */
   constructor(
     private fb: FormBuilder,
     private ElegibilidadDeTextilesStore: ElegibilidadDeTextilesStore,
@@ -139,8 +175,8 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
     private seccionStore: SeccionLibStore,
     private seccionQuery: SeccionLibQuery,
     private elegibilidadTextilesService: ElegibilidadTextilesService
-  ) { 
-    // Constructor logic can be added here if needed
+  ) {
+    // Se puede agregar aquí la lógica del constructor si es necesario
   }
 
   /**
@@ -164,8 +200,8 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-      this.initActionFormBuild();
-      this.recuperarDatos();
+    this.initActionFormBuild();
+    this.recuperarDatos();
 
     this.historicoFabricantesForm.statusChanges
       .pipe(
@@ -175,32 +211,36 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
           if (this.historicoFabricantesForm.valid) {
             this.ElegibilidadDeTextilesStore.setFormaValida([
               ...this.historicoState.formaValida,
-              { id: 3, descripcion: "AllValida" }])
+              { id: 3, descripcion: "TodoValido" }])
           }
         })
       )
       .subscribe();
 
-    this.seccionStore.establecerFormaValida([false])
-
-    if(this.historicoState.formaValida && this.historicoState.formaValida[0] && this.historicoState.formaValida[0].descripcion === 'AllValida'){
-    this.seccionStore.establecerSeccion([true]);
-    this.seccionStore.establecerFormaValida([true])
-  }
-  else{
     this.seccionStore.establecerFormaValida([false]);
-  }
+
+    if(this.historicoState.formaValida && this.historicoState.formaValida[0] && this.historicoState.formaValida[0].descripcion === VALIDO){
+      this.seccionStore.establecerSeccion([true]);
+      this.seccionStore.establecerFormaValida([true]);
+    } else {
+      this.seccionStore.establecerFormaValida([false]);
+    }
   }
 
+  /**
+   * @method initActionFormBuild
+   * @description Inicializa el formulario reactivo para capturar los datos de los fabricantes.
+   */
   initActionFormBuild(): void {
     this.historicoFabricantesForm = this.fb.group({
-      exportadorFabricanteMismo: [this.historicoState.exportadorFabricanteMismo,],
+      exportadorFabricanteMismo: [this.historicoState.exportadorFabricanteMismo],
       numeroRegistroFiscal: [this.historicoState.numeroRegistroFiscal, [Validators.required, Validators.minLength(5)]],
       fabricantesNacionales: [[]],
     });
   }
+
   /**
-   * @method fetchData
+   * @method recuperarDatos
    * @description Obtiene los datos de los fabricantes desde el servicio.
    */
   recuperarDatos(): void {
@@ -208,7 +248,7 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
     .pipe(takeUntil(this.destroyNotifier$))
     .subscribe({
       next: (response) => {
-          this.fabricantesNacionales = response as HistoricoColumns[]
+          this.fabricantesNacionales = response as HistoricoColumns[];
         },
       error: (error) => {
         console.error('Error al obtener los datos:', error);
@@ -219,13 +259,11 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
   /**
    * @method onValueChange
    * @description Maneja el cambio de valor del radio.
-   * @param {any} newValue - El nuevo valor seleccionado.
+   * @param {string | number} newValue - El nuevo valor seleccionado.
    */
-  onValueChange(newValue: number|string) {
+  onValueChange(newValue: number | string): void {
     this.selectedValue = newValue;
   }
-
-  form!: FormGroup;
 
   /**
    * @property {CatalogosSelect[]} dropdownConfigs - Configuraciones de los dropdowns.
@@ -237,24 +275,28 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
     { labelNombre: 'Distrito Desarrollo Rural (DDR)', required: false, catalogos: CATALOGOS, primerOpcion: '' }
   ];
 
-
+  /**
+   * @method setValoresStore
+   * @description Establece los valores en el store de textiles.
+   * @param {FormGroup} form - El formulario reactivo.
+   * @param {string} campo - El nombre del campo.
+   * @param {keyof ElegibilidadDeTextilesStore} metodoNombre - El método del store a invocar.
+   */
   setValoresStore(
     form: FormGroup,
     campo: string,
     metodoNombre: keyof ElegibilidadDeTextilesStore
   ): void {
     const VALOR = form.get(campo)?.value;
-    (this.ElegibilidadDeTextilesStore[metodoNombre] as (value: string) => void)(
-      VALOR
-    );
+    (this.ElegibilidadDeTextilesStore[metodoNombre] as (value: string) => void)(VALOR);
   }
 
   /**
+   * @method ngOnDestroy
    * @description Método que se ejecuta cuando el componente es destruido.
    */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
-
 }
