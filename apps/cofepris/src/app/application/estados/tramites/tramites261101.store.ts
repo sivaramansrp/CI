@@ -93,17 +93,4 @@ export class DatosProcedureStore extends Store<DatosProcedureState> {
       ...values,
     }));
   }
-
-
-
-  /**
-* Actualiza el estado del store con los valores proporcionados.
-* valores Un objeto parcial de SolicitudPermisoState con los valores a actualizar.
-*/
-  public actualizarEstado(valores: Partial<DatosProcedureState>): void {
-    this.update((state) => ({
-      ...state,
-      ...valores
-    }));
-  }
 }

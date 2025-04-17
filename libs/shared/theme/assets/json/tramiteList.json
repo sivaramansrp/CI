@@ -1661,8 +1661,8 @@
     {
         "id": 238,
         "tramite": 261101,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "/cofepris/solicitude-modification/solitud-modification",
+        "linkDepartment": "/pago/solicitude-modification/solitud-modification",
         "department": "cofepris"
     },
     {
@@ -1979,13 +1979,6 @@
         "linkDashboard": "/aga/invocar-modulo/solicitante",
         "linkDepartment": "/pago/invocar-modulo/solicitante",
         "department": "aga"
-    },
-    {
-        "id": 284,
-        "tramite": 261101,
-        "linkDashboard": "/cofepris/solicitude-modification/solitudmodification",
-        "linkDepartment": "/pago/solicitude-modification/solitudmodification",
-        "department": "cofepris"
     }
 
     

@@ -4,9 +4,7 @@ import { Component } from '@angular/core';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
 import { DatosProcedureQuery } from '../../../../estados/queries/tramites261101.query';
 import { DatosProcedureState } from '../../../../estados/tramites/tramites261101.store';
-import { DatosProcedureStore } from '../../../../estados/tramites/tramites261101.store';
-import { DatosSolicitudService } from '../../../261101/services/dato-solicitude.service'
-import { FormBuilder } from '@angular/forms';
+import { DatosSolicitudService } from '../../services/datoSolicitude.service'
 import { FormControl } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { Mercancias } from '../../modelos/mercancias.model';
@@ -37,7 +35,7 @@ export class MercanciasComponent implements OnInit, OnDestroy {
   public TablaSeleccion: TablaSeleccion = TablaSeleccion.CHECKBOX;
 
   /** Array para almacenar la respuesta de permisos cancelar */
-  Mercanciasdata: Mercancias[] = [];
+  mercanciasDatas: Mercancias[] = [];
 
   /** Subject para notificar la destrucción del componente */
   private destroy$ = new Subject<void>();
@@ -52,6 +50,17 @@ export class MercanciasComponent implements OnInit, OnDestroy {
     { encabezado: 'Fracción arancelaria', clave: (item: Mercancias) => item.fraccionArancelaria, orden: 6 },
     { encabezado: 'Descripción de I fracción ', clave: (item: Mercancias) => item.descripcionDeFraccion, orden: 7 },
   ];
+    /**
+ * Estado de la sección que contiene los datos del procedimiento.
+ * 
+ * Esta propiedad almacena el estado actual de los datos relacionados con el procedimiento.
+ * Se inicializa a través de un observable en el método `obtenerDatosFormulario`, 
+ * que suscribe a los cambios en el estado y actualiza esta propiedad con los datos más recientes.
+ * 
+ * Tipo: `DatosProcedureState`
+ * 
+ * @private
+ */
   private seccionState!: DatosProcedureState;
 
 
@@ -60,11 +69,10 @@ export class MercanciasComponent implements OnInit, OnDestroy {
    * 
    * @param fb - Una instancia de FormBuilder utilizada para crear y gestionar formularios.
    */
-  constructor(private fb: FormBuilder, private DatosSolicitudService: DatosSolicitudService,
-    private store: DatosProcedureStore,
+  constructor( private datosSolicitudService: DatosSolicitudService,
     private query: DatosProcedureQuery,
   ) {
-    //constructor
+    // Constructor del componente
   }
 
   /**
@@ -82,10 +90,10 @@ export class MercanciasComponent implements OnInit, OnDestroy {
    * Cargar datos de domicilioEstablecimiento
    */
   mercanciasData(): void {
-    this.DatosSolicitudService.getMercanciasData()
+    this.datosSolicitudService.getMercanciasData()
       .pipe(takeUntil(this.destroy$))
       .subscribe(response => {
-        this.Mercanciasdata = response;
+        this.mercanciasDatas = response;
       });
   }
   crearFormulario(): void {

@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { MercanciasComponent } from './mercancias.component';
-import { DatosSolicitudService } from '../../../261101/services/dato-solicitude.service';
+import { DatosSolicitudService } from '../../services/datoSolicitude.service';
 import { DatosProcedureQuery } from '../../../../estados/queries/tramites261101.query';
 import { DatosProcedureStore } from '../../../../estados/tramites/tramites261101.store';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
@@ -10,17 +10,19 @@ import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tab
 describe('MercanciasComponent', () => {
   let component: MercanciasComponent;
   let fixture: any;
-  let mockDatosSolicitudService: any;
-  let mockDatosProcedureStore: any;
-  let mockDatosProcedureQuery: any;
+  let mockDatosSolicitudService: {getMercanciasData:jest.Mock};
+  let mockDatosProcedureStore: {selectProrroga:jest.Mock};
+  let mockDatosProcedureQuery: {selectProrroga:jest.Mock};
 
   beforeEach(async () => {
     mockDatosSolicitudService = {
       getMercanciasData: jest.fn().mockReturnValue(of([])),
     };
-    mockDatosProcedureStore = {};
+    mockDatosProcedureStore = {
+      selectProrroga: jest.fn(),
+    };
     mockDatosProcedureQuery = {
-      selectProrroga$: of({ aduanas: 'Test Aduana' }),
+      selectProrroga: jest.fn().mockReturnValue(of({ aduanas: 'Test Aduana' })),
     };
 
     await TestBed.configureTestingModule({
@@ -65,7 +67,7 @@ describe('MercanciasComponent', () => {
 
     component.mercanciasData();
     expect(mockDatosSolicitudService.getMercanciasData).toHaveBeenCalled();
-    expect(component.Mercanciasdata).toEqual(mockResponse);
+    expect(component.mercanciasDatas).toEqual(mockResponse);
   });
 
   it('should initialize the form in crearFormulario', () => {
@@ -91,7 +93,7 @@ describe('MercanciasComponent', () => {
 
   it('should have the correct default values', () => {
     expect(component.TablaSeleccion).toBe(TablaSeleccion.CHECKBOX);
-    expect(component.Mercanciasdata).toEqual([]);
+    expect(component.mercanciasDatas).toEqual([]);
   });
 
   it('should handle errors in getMercanciasData gracefully', () => {
@@ -103,7 +105,7 @@ describe('MercanciasComponent', () => {
 
   it('should update seccionState correctly when query emits a new value', () => {
     const newValue = { aduanas: 'Updated Aduana' };
-    mockDatosProcedureQuery.selectProrroga$ = of(newValue);
+    mockDatosProcedureQuery.selectProrroga.mockReturnValue(of(newValue));
     component.ngOnInit();
   });
 
@@ -130,6 +132,6 @@ describe('MercanciasComponent', () => {
   it('should handle empty response from getMercanciasData', () => {
     mockDatosSolicitudService.getMercanciasData.mockReturnValue(of([]));
     component.mercanciasData();
-    expect(component.Mercanciasdata).toEqual([]);
+    expect(component.mercanciasDatas).toEqual([]);
   });
 });

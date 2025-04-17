@@ -57,9 +57,16 @@ export class ManifiestosComponent implements OnInit, OnDestroy {
   public Aduana!: FormGroup;
 
   /**
-   * Estado actual de la sección almacenado desde el observable.
-   * @private
-   */
+ * Estado de la sección que contiene los datos del procedimiento.
+ * 
+ * Esta propiedad almacena el estado actual de los datos relacionados con el procedimiento.
+ * Se inicializa a través de un observable en el método `obtenerDatosFormulario`, 
+ * que suscribe a los cambios en el estado y actualiza esta propiedad con los datos más recientes.
+ * 
+ * Tipo: `DatosProcedureState`
+ * 
+ * @private
+ */
   private seccionState!: DatosProcedureState;
 
   /**
@@ -88,7 +95,7 @@ export class ManifiestosComponent implements OnInit, OnDestroy {
     private store: DatosProcedureStore,
     private query: DatosProcedureQuery
   ) {
-    //constructor
+    // Constructor del componente
   }
 
   /**
@@ -99,10 +106,18 @@ export class ManifiestosComponent implements OnInit, OnDestroy {
     this.obtenerDatosFormulario();
   }
 
-  /**
-   * Inicializa el formulario reactivo con los valores del estado.
-   * @public
-   */
+/**
+ * Inicializa el formulario reactivo `Aduana` con los valores del estado actual.
+ * 
+ * Este método configura un grupo de controles de formulario con los siguientes campos:
+ * - `aduanas`: Campo que representa las aduanas, inicializado con el valor de `seccionState?.aduanas` o una cadena vacía.
+ * - `informacionConfidencial`: Campo que representa la información confidencial, inicializado con el valor de `seccionState?.informacionConfidencial` o una cadena vacía.
+ * - `Si`: Campo adicional inicializado con una cadena vacía.
+ * 
+ * Todos los campos están habilitados por defecto.
+ * 
+ * @returns {void}
+ */
   public mercanciasData(): void {
     this.Aduana = this.fb.group({
       aduanas: [
@@ -142,9 +157,19 @@ export class ManifiestosComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  /**
-* Gancho de ciclo de vida obtenerDatosFormulario
-*/
+/**
+ * Obtiene los datos del formulario desde el estado almacenado y los configura en el componente.
+ * 
+ * Este método realiza las siguientes acciones:
+ * - Se suscribe al observable `selectProrroga$` para obtener los datos del estado actual.
+ * - Asigna los datos obtenidos a la propiedad `seccionState`.
+ * - Determina si la declaración está marcada basándose en el valor de `aduanas`.
+ * - Llama al método `mercanciasData` para inicializar el formulario reactivo `Aduana` con los datos obtenidos.
+ * 
+ * La suscripción se gestiona con `takeUntil` para evitar fugas de memoria al destruir el componente.
+ * 
+ * @returns {void}
+ */
   obtenerDatosFormulario(): void {
     this.query.selectProrroga$
       ?.pipe(takeUntil(this.destroy$))

@@ -19,8 +19,8 @@ import { takeUntil } from 'rxjs';
   selector: 'app-datosestablecimiento',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule,TituloComponent],
-  templateUrl: './datosestablecimiento.component.html',
-  styleUrl: './datosestablecimiento.component.css',
+  templateUrl: './datos-establecimiento.component.html',
+  styleUrl: './datos-establecimiento.component.css',
 })
 export class DatosestablecimientoComponent implements OnInit, OnDestroy {
   /**
@@ -29,8 +29,19 @@ export class DatosestablecimientoComponent implements OnInit, OnDestroy {
   datosdelestablecimiento!: FormGroup;
   /** Subject para notificar la destrucción del componente */
   private destroy$ = new Subject<void>();
+  /**
+ * Variable que almacena el estado de la sección actual del procedimiento.
+ * Se utiliza para gestionar y acceder a los datos relacionados con el estado
+ * del procedimiento en curso.
+ */
   private seccionState!: DatosProcedureState;
-
+  /**
+   * Constructor de la clase `DatosestablecimientoComponent`.
+   * 
+   * @param fb - Servicio `FormBuilder` utilizado para crear formularios reactivos.
+   * @param store - Servicio `DatosProcedureStore` que gestiona el estado de los datos del procedimiento.
+   * @param query - Servicio `DatosProcedureQuery` que permite realizar consultas sobre el estado del procedimiento.
+   */
   constructor(private fb: FormBuilder,
     private store: DatosProcedureStore,
     private query: DatosProcedureQuery,
@@ -38,6 +49,15 @@ export class DatosestablecimientoComponent implements OnInit, OnDestroy {
     //constructor
   }
 
+    /**
+   * Gancho de ciclo de vida `OnInit`.
+   * 
+   * Este método se ejecuta al inicializar el componente. Realiza las siguientes acciones:
+   * - Se suscribe al observable `selectProrroga$` del servicio `DatosProcedureQuery` para obtener
+   *   el estado actual del procedimiento y lo asigna a la variable `seccionState`.
+   * - Llama al método `crearFormulario` para inicializar el formulario reactivo con los datos
+   *   obtenidos del estado actual.
+   */
   ngOnInit(): void {
     this.query.selectProrroga$?.pipe(takeUntil(this.destroy$))
       .subscribe((data: DatosProcedureState) => {
@@ -46,6 +66,15 @@ export class DatosestablecimientoComponent implements OnInit, OnDestroy {
     this.crearFormulario();
   }
 
+  /**
+ * Método para inicializar el formulario reactivo de datos del establecimiento.
+ * Este formulario se utiliza para gestionar los datos relacionados con la denominación
+ * del establecimiento, obteniendo su valor inicial desde el estado actual de la sección.
+ * 
+ * El formulario se crea utilizando el FormBuilder y contiene un único campo:
+ * - `denominacion`: Representa la denominación del establecimiento, cuyo valor inicial
+ *   se obtiene de la propiedad `denominacion` del estado de la sección (`seccionState`).
+ */
   crearFormulario(): void {
     this.datosdelestablecimiento = this.fb.group({
       denominacion: [this.seccionState

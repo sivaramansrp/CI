@@ -1,25 +1,29 @@
 import { AlertComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { DatosProcedureQuery } from '../../../estados/queries/tramites261101.query';
-import { DatosProcedureState } from '../../../estados/tramites/tramites261101.store';
-import { DatosProcedureStore } from '../../../estados/tramites/tramites261101.store';
-import { DatosSolicitudService } from '../services/dato-solicitude.service'
-import { DatosestablecimientoComponent } from './DatosEstablecimiento/datosestablecimiento.component';
-import { DomicilioEstablecimientosComponent } from './DomicilioEstablecimientos/domicilio-establecimientos.component';
+import { DatosProcedureQuery } from '../../../../estados/queries/tramites261101.query';
+import { DatosProcedureState } from '../../../../estados/tramites/tramites261101.store';
+import { DatosProcedureStore } from '../../../../estados/tramites/tramites261101.store';
+import { DatosSolicitudService } from '../../services/datoSolicitude.service'
+import { DatosestablecimientoComponent } from '../datos-establecimiento/datos-establecimiento.component';
+import { DomicilioEstablecimientosComponent } from '../domicilio-establecimientos/domicilio-establecimientos.component';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { InputRadioComponent } from '@libs/shared/data-access-user/src';
-import { ManifiestosComponent } from './Manifiestos/manifiestos.component';
-import { MercanciasComponent } from './Mercancias/mercancias.component';
+import { ManifiestosComponent } from '../manifiestos/manifiestos.component';
+import { MercanciasComponent } from '../mercancias/mercancias.component';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { RepresentanteLegalComponent } from './Representantelegal/representante-legal.component';
+import { RepresentanteLegalComponent } from '../representantelegal/representante-legal.component';
 import { Subject } from 'rxjs';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { Validators } from '@angular/forms';
 import { takeUntil } from 'rxjs';
+
+
+
+
 
 /**
 * Texto de adjuntar para terceros.
@@ -35,8 +39,8 @@ const TERCEROS_TEXTO_DE_ADJUNTAR = `<h5>Aviso de privacidad simplificado</h5>"El
   imports: [CommonModule, ReactiveFormsModule, DatosestablecimientoComponent,
     DomicilioEstablecimientosComponent, MercanciasComponent, ManifiestosComponent,
     RepresentanteLegalComponent, InputRadioComponent, TituloComponent, AlertComponent],
-  templateUrl: './DatosSolicitud.component.html',
-  styleUrl: './DatosSolicitud.component.css',
+  templateUrl: './datos-solicitud.component.html',
+  styleUrl: './datos-solicitud.component.css',
 })
 export class DatosSolicitudComponent implements OnInit, OnDestroy {
   /**
@@ -65,14 +69,50 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    * Texto de adjuntar para terceros.
    */
   TEXTO_DE_ADJUNTAR: string = TERCEROS_TEXTO_DE_ADJUNTAR;
-
+/**
+ * Estado de la sección que contiene los datos del procedimiento.
+ * 
+ * Esta propiedad almacena el estado actual de los datos relacionados con el procedimiento.
+ * Se inicializa a través de un observable en el método `obtenerDatosFormulario`, 
+ * que suscribe a los cambios en el estado y actualiza esta propiedad con los datos más recientes.
+ * 
+ * Tipo: `DatosProcedureState`
+ * 
+ * @private
+ */
   private seccionState!: DatosProcedureState;
+  /**
+ * Constructor de la clase `DatosSolicitudComponent`.
+ * 
+ * Este constructor inicializa las dependencias necesarias para el funcionamiento del componente.
+ * 
+ * @param fb - Servicio `FormBuilder` utilizado para crear formularios reactivos.
+ * @param store - Almacén de estado `DatosProcedureStore` para gestionar el estado de los datos del procedimiento.
+ * @param query - Consulta `DatosProcedureQuery` para obtener datos del estado de los procedimientos.
+ */
   constructor(private fb: FormBuilder,
-    private DatosSolicitudService: DatosSolicitudService,
     private store: DatosProcedureStore,
     private query: DatosProcedureQuery) {
     //constructor
   }
+  /**
+ * Gancho de ciclo de vida `ngOnInit`.
+ * 
+ * Este método se ejecuta automáticamente cuando el componente es inicializado por Angular.
+ * Su propósito es realizar configuraciones iniciales necesarias para el correcto funcionamiento del componente.
+ * 
+ * En este caso, se realizan las siguientes acciones:
+ * 
+ * 1. `obtenerDatosFormulario()`: 
+ *    - Método que suscribe a un observable para obtener los datos del estado del procedimiento.
+ *    - Actualiza la propiedad `seccionState` con los datos más recientes.
+ * 
+ * 2. `crearFormulario()`: 
+ *    - Método que inicializa el formulario reactivo `preOperativeForm` con los valores obtenidos del estado.
+ *    - Define las validaciones necesarias para los campos del formulario.
+ * 
+ * @returns void
+ */
   ngOnInit(): void {
     this.obtenerDatosFormulario();
     this.crearFormulario();
@@ -95,7 +135,18 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     const VALOR = form.get(campo)?.value;
     this.store.establecerDatos({ [campo]: VALOR });
   }
-  
+  /**
+ * Método para inicializar el formulario reactivo `preOperativeForm`.
+ * Este formulario contiene los campos necesarios para capturar los datos preoperativos.
+ * 
+ * Campos del formulario:
+ * - `ideGenerica1`: Campo opcional que se inicializa con el valor de `ideGenerica1` 
+ *   del estado `seccionState`.
+ * - `observaciones`: Campo obligatorio que se inicializa con el valor de `observaciones` 
+ *   del estado `seccionState` y tiene una validación de requerido.
+ * 
+ * @returns void
+ */
   crearFormulario(): void {
     this.preOperativeForm = this.fb.group({
       ideGenerica1: [this.seccionState?.ideGenerica1],

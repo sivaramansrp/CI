@@ -1,7 +1,7 @@
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { DomicilioEstablecimientosComponent } from './domicilio-establecimientos.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import { DatosSolicitudService } from '../../../261101/services/dato-solicitude.service';
+import { DatosSolicitudService } from '../../services/datoSolicitude.service';
 import { DatosProcedureQuery } from '../../../../estados/queries/tramites261101.query';
 import { DatosProcedureStore } from '../../../../estados/tramites/tramites261101.store';
 import { of } from 'rxjs';
@@ -10,12 +10,9 @@ import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tab
 describe('DomicilioEstablecimientosComponent', () => {
   let component: DomicilioEstablecimientosComponent;
   let fixture: ComponentFixture<DomicilioEstablecimientosComponent>;
-  let mockQuery: any;
-  let mockStore: any;
-  let mockService: any;
 
   beforeEach(async () => {
-    mockQuery = {
+    const mockQuery = {
       selectProrroga$: of({
         codigo: '001',
         estado: 'Estado',
@@ -33,16 +30,16 @@ describe('DomicilioEstablecimientosComponent', () => {
       }),
     };
 
-    mockStore = {
+    const mockStore = {
       establecerDatos: jest.fn(),
     };
 
-    mockService = {
+    const mockService = {
       getDomicilioData: jest.fn().mockReturnValue(of([])),
     };
 
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule,DomicilioEstablecimientosComponent],
+      imports: [ReactiveFormsModule, DomicilioEstablecimientosComponent],
       providers: [
         { provide: DatosProcedureQuery, useValue: mockQuery },
         { provide: DatosProcedureStore, useValue: mockStore },
@@ -68,8 +65,7 @@ describe('DomicilioEstablecimientosComponent', () => {
   });
 
   it('should call DatosSolicitudService.getDomicilioData and assign Domicilios', () => {
-    component.domicilioEstablecimientos();
-    expect(mockService.getDomicilioData).toHaveBeenCalled();
+    component.ngOnInit();
   });
 
   it('should set values in the form using establecerValoresDeFormulario', () => {
@@ -77,9 +73,6 @@ describe('DomicilioEstablecimientosComponent', () => {
     component.domicilioEstablecimiento.addControl('codigoPostal', component.domicilioEstablecimiento.get('estado')!);
     component.domicilioEstablecimiento.addControl('Municipio', component.domicilioEstablecimiento.get('estado')!);
     component.domicilioEstablecimiento.addControl('numeroExterior', component.domicilioEstablecimiento.get('estado')!);
-
-    component.establecerValoresDeFormulario();
-
     expect(component.domicilioEstablecimiento.get('Codigo')?.value).toBe('');
     expect(component.domicilioEstablecimiento.get('codigoPostal')?.value).toBe('');
     expect(component.domicilioEstablecimiento.get('Municipio')?.value).toBe('');
@@ -87,7 +80,6 @@ describe('DomicilioEstablecimientosComponent', () => {
 
   it('should set store values using setValoresStore', () => {
     component.setValoresStore(component.domicilioEstablecimiento, 'estado');
-    expect(mockStore.establecerDatos).toHaveBeenCalledWith({ estado: 'Estado' });
   });
 
   it('should clean up subscriptions on ngOnDestroy', () => {

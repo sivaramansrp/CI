@@ -12,7 +12,7 @@ import {
 import { DatosProcedureQuery } from '../../../../estados/queries/tramites261101.query'
 import { DatosProcedureState } from '../../../../estados/tramites/tramites261101.store';
 import { DatosProcedureStore } from '../../../../estados/tramites/tramites261101.store';
-import { DatosSolicitudService } from '../../../261101/services/dato-solicitude.service';
+import { DatosSolicitudService } from '../../../261101/services/datoSolicitude.service';
 import { SolicitudPermisoState } from '../../../260703/estados/store/tramite260703.store';
 import { Subject } from 'rxjs';
 import { TramiteAsociados } from '../../../../shared/models/tramite-asociados.model';
@@ -92,7 +92,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    */
   constructor(
     private formBuilder: FormBuilder,
- private DatosSolicitudService: DatosSolicitudService,
+ private datosSolicitudService: DatosSolicitudService,
     private store: DatosProcedureStore,
     private query: DatosProcedureQuery
   ) {
@@ -110,14 +110,14 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
         this.estadoSolicitudPermiso = estadoSolicitudPermiso;
       });
 
-    this.DatosSolicitudService
+    this.datosSolicitudService
       .obtenerTramitesAsociados()
       .pipe(takeUntil(this.notificadorDestruccion$))
       .subscribe((tramiteAsociados: TramiteAsociados[]) => {
         this.tramiteAsociados = tramiteAsociados;
       });
 
-    this.DatosSolicitudService.inicializaPagoDeDerechosDatosCatalogos();
+    this.datosSolicitudService.inicializaPagoDeDerechosDatosCatalogos();
   }
 
   /**
@@ -163,16 +163,15 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     campo: string;
   }): void {
     const VALOR = $event.formularioPagoDerechos.get($event.campo)?.value;
-    this.store.actualizarEstado({[$event.campo]: VALOR});
+    this.store.establecerDatos({[$event.campo]: VALOR});
   }
-
   /**
    * Selecciona una pestaña estableciendo su índice.
    * i El índice de la pestaña a seleccionar.
    */
   seleccionaTab(i: number): void {
     if (i === 4) {
-      this.banco = this.DatosSolicitudService.banco;
+      this.banco = this.datosSolicitudService.banco;
       this.crearformularioPagoDerechos();
     }
     this.indice = i;

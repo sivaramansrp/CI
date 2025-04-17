@@ -1,34 +1,56 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PasoUnoComponent } from './paso-uno.component';
-import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { NO_ERRORS_SCHEMA, Component } from '@angular/core';
-import { of, Subject } from 'rxjs';
+import { of, Observable } from 'rxjs';
 import { DatosProcedureQuery } from '../../../../estados/queries/tramites261101.query'
 import { DatosProcedureStore } from '../../../../estados/tramites/tramites261101.store';
-import { DatosSolicitudService } from '../../../261101/services/dato-solicitude.service';
+import { DatosSolicitudService } from '../../../261101/services/datoSolicitude.service';
 import { TramiteAsociadosComponent } from '../../../../shared/components/tramite-asociados/tramite-asociados.component';
 import { PagoDeDerechosComponent } from '../../../../shared/components/pago-de-derechos-new/pago-de-derechos.component';
-import { DatosSolicitudComponent } from '../../components/DatosSolicitud.component';
-import { TercerosRelacionadosFabricanteComponent } from '../../components/Terceros-relacionados-fabricante/terceros-relacionados-fabricante.component';
+import { DatosSolicitudComponent } from '../../components/datos-solicitude/datos-solicitud.component';
+import { TercerosRelacionadosFabricanteComponent } from '../../components/terceros-relacionados-fabricante/terceros-relacionados-fabricante.component';
 
-/**
- * Mock component for 'solicitante' to avoid dependency errors
- */
+
 @Component({
   selector: 'solicitante',
   template: '<div></div>',
 })
 class MockSolicitanteComponent {}
+interface DatosSolicitudServiceMockType {
+  obtenerTramitesAsociados: jest.Mock<Observable<any>>;
+  inicializaPagoDeDerechosDatosCatalogos: jest.Mock<void>;
+  banco: { id: number; descripcion: string }[];
+}
+
+interface DatosProcedureStoreMockType {
+  setClaveDeReferencia: jest.Mock<void>;
+  setCadenaPagoDependencia: jest.Mock<void>;
+  setBancoseleccionado: jest.Mock<void>;
+  setLlaveDePago: jest.Mock<void>;
+  setFecPago: jest.Mock<void>;
+  setImpPago: jest.Mock<void>;
+}
+
+interface DatosProcedureQueryMockType {
+  selectSolicitudPermiso$: Observable<{
+    claveDeReferencia: string;
+    cadenaPagoDependencia: string;
+    bancoseleccionado: number;
+    llaveDePago: string;
+    fecPago: string;
+    impPago: number;
+  }>;
+}
 
 describe('PasoUnoComponent', () => {
   let component: PasoUnoComponent;
   let fixture: ComponentFixture<PasoUnoComponent>;
-  let DatosSolicitudServiceMock: any;
-  let DatosProcedureStoreMock: any;
-  let DatosProcedureQueryMock: any;
+  let DatosSolicitudServiceMock: DatosSolicitudServiceMockType;
+  let DatosProcedureStoreMock: DatosProcedureStoreMockType;
+  let DatosProcedureQueryMock: DatosProcedureQueryMockType;
 
   beforeEach(async () => {
-    // Mock services
     DatosSolicitudServiceMock = {
       obtenerTramitesAsociados: jest.fn().mockReturnValue(of([])),
       inicializaPagoDeDerechosDatosCatalogos: jest.fn(),
@@ -56,8 +78,8 @@ describe('PasoUnoComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      declarations: [PasoUnoComponent,, DatosSolicitudComponent, TercerosRelacionadosFabricanteComponent],
-      imports: [ReactiveFormsModule,  TramiteAsociadosComponent, PagoDeDerechosComponent],
+      declarations: [PasoUnoComponent, DatosSolicitudComponent, TercerosRelacionadosFabricanteComponent],
+      imports: [ReactiveFormsModule, TramiteAsociadosComponent, PagoDeDerechosComponent],
       providers: [
         FormBuilder,
         { provide: DatosSolicitudService, useValue: DatosSolicitudServiceMock },

@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 import { DatosProcedureQuery } from '../../../../estados/queries/tramites261101.query';
 import { DatosProcedureState } from '../../../../estados/tramites/tramites261101.store';
 import { DatosProcedureStore } from '../../../../estados/tramites/tramites261101.store';
-import { DatosSolicitudService} from '../../services/dato-solicitude.service'
+import { DatosSolicitudService} from '../../services/datoSolicitude.service'
 import { Domicilio } from '../../modelos/domicilio-establecimientos.model';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
@@ -39,6 +39,17 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
 
   /** Subject para notificar la destrucción del componente */
   private destroy$ = new Subject<void>();
+    /**
+ * Estado de la sección que contiene los datos del procedimiento.
+ * 
+ * Esta propiedad almacena el estado actual de los datos relacionados con el procedimiento.
+ * Se inicializa a través de un observable en el método `obtenerDatosFormulario`, 
+ * que suscribe a los cambios en el estado y actualiza esta propiedad con los datos más recientes.
+ * 
+ * Tipo: `DatosProcedureState`
+ * 
+ * @private
+ */
   private seccionState!: DatosProcedureState;
   
   /**
@@ -50,7 +61,7 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
     private store: DatosProcedureStore,
     private query: DatosProcedureQuery,
   ) {
-    //constructor
+    // Constructor del componente
   }
 
   /**

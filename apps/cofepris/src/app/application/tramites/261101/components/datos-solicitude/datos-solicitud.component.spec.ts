@@ -1,20 +1,20 @@
 import { TestBed } from '@angular/core/testing';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { DatosSolicitudComponent } from './DatosSolicitud.component';
-import { DatosSolicitudService } from '../services/dato-solicitude.service';
-import { DatosProcedureQuery } from '../../../estados/queries/tramites261101.query';
-import { DatosProcedureStore } from '../../../estados/tramites/tramites261101.store';
+import { DatosSolicitudComponent } from './datos-solicitud.component';
+import { DatosSolicitudService } from '../../services/datoSolicitude.service'
+import { DatosProcedureQuery } from '../../../../estados/queries/tramites261101.query';
+import { DatosProcedureStore } from '../../../../estados/tramites/tramites261101.store';
 import { of } from 'rxjs';
 
 describe('DatosSolicitudComponent', () => {
   let component: DatosSolicitudComponent;
-  let mockDatosSolicitudService: any;
-  let mockDatosProcedureStore: any;
-  let mockDatosProcedureQuery: any;
+  let mockDatosSolicitudService: { isValid: jest.Mock };
+  let mockDatosProcedureStore: { establecerDatos: jest.Mock };
+  let mockDatosProcedureQuery: { selectideGenerica1$: jest.Mock };
 
   beforeEach(() => {
     mockDatosSolicitudService = {
-      isValid: jest.fn(),
+      isValid: jest.fn() as jest.Mock,
     };
 
     mockDatosProcedureStore = {
@@ -22,10 +22,12 @@ describe('DatosSolicitudComponent', () => {
     };
 
     mockDatosProcedureQuery = {
-      selectideGenerica1$: of({
-        ideGenerica1: 'ideGenerica1',
-        observaciones: 'Alguna justificación',
-      }),
+      selectideGenerica1$: jest.fn().mockReturnValue(
+        of({
+          ideGenerica1: 'ideGenerica1',
+          observaciones: 'Alguna justificación',
+        })
+      ),
     };
 
     TestBed.configureTestingModule({
@@ -54,7 +56,7 @@ describe('DatosSolicitudComponent', () => {
   });
 
   it('debería suscribirse a selectideGenerica1$ en ngOnInit', () => {
-    const spy = jest.spyOn(mockDatosProcedureQuery.selectideGenerica1$, 'subscribe');
+    const spy = jest.spyOn(mockDatosProcedureQuery, 'selectideGenerica1$');
     component.ngOnInit();
     expect(spy).toHaveBeenCalled();
   });

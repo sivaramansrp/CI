@@ -4,7 +4,7 @@ import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
 import { DatosProcedureQuery } from '../../../../estados/queries/tramites261101.query';
 import { DatosProcedureState } from '../../../../estados/tramites/tramites261101.store';
 import { DatosProcedureStore } from '../../../../estados/tramites/tramites261101.store';
-import { DatosSolicitudService } from '../../../261101/services/dato-solicitude.service'
+import { DatosSolicitudService } from '../../services/datoSolicitude.service'
 import { Domicilio } from '../../modelos/domicilio-establecimientos.model';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
@@ -57,32 +57,54 @@ export class DomicilioEstablecimientosComponent implements OnInit, OnDestroy {
 * Enum para la selección de tablas.
 */
   tipoSeleccionTabla = TablaSeleccion;
+  /**
+ * Estado de la sección que contiene los datos del procedimiento.
+ * 
+ * Esta propiedad almacena el estado actual de los datos relacionados con el procedimiento.
+ * Se inicializa a través de un observable en el método `obtenerDatosFormulario`, 
+ * que suscribe a los cambios en el estado y actualiza esta propiedad con los datos más recientes.
+ * 
+ * Tipo: `DatosProcedureState`
+ * 
+ * @private
+ */
   private seccionState!: DatosProcedureState;
 
   /**
-   * Constructor para SolicitanteComponent.
+   * Constructor del componente DomicilioEstablecimientosComponent.
    * 
-   * @param fb - Una instancia de FormBuilder utilizada para crear y gestionar formularios.
+   * Este constructor inicializa las dependencias necesarias para el funcionamiento del componente.
+   * 
+   * @param fb - Instancia de FormBuilder utilizada para crear y gestionar formularios reactivos.
+   * @param datosSolicitudService - Servicio encargado de manejar las solicitudes relacionadas con los datos del formulario.
+   * @param store - Almacén de estado (store) utilizado para gestionar y actualizar el estado de los datos del procedimiento.
+   * @param query - Consulta (query) utilizada para obtener datos del estado del procedimiento.
    */
   constructor(private fb: FormBuilder,
-    private DatosSolicitudService: DatosSolicitudService,
+    private datosSolicitudService: DatosSolicitudService,
     private store: DatosProcedureStore,
     private query: DatosProcedureQuery,
   ) {
-    //constructor
+    // Constructor del componente
   }
 
-  /**
-   * Gancho de ciclo de vida que se llama después de que se inicializan las propiedades enlazadas a datos de una directiva.
-   * Inicializa el componente configurando los valores del formulario.
-   * 
-   */
-  ngOnInit(): void {
-    this.loadStorData();
-    this.establecerdomicilioEstablecimiento();
-    this.AvisodeFuncionamientomiento()
-    this.loadScian();
-  }
+/**
+ * Método del ciclo de vida Angular que se ejecuta al inicializar el componente.
+ * 
+ * Este método realiza las siguientes acciones:
+ * 1. Carga los datos almacenados en el estado mediante `loadStorData`.
+ * 2. Inicializa el formulario reactivo para el domicilio del establecimiento con `establecerdomicilioEstablecimiento`.
+ * 3. Configura el formulario reactivo para el aviso de funcionamiento con `avisodeFuncionamientomiento`.
+ * 4. Carga los datos del catálogo SCIAN con `loadScian`.
+ * 
+ * @returns {void}
+ */
+ngOnInit(): void {
+  this.loadStorData(); // Carga los datos almacenados en el estado.
+  this.establecerdomicilioEstablecimiento(); // Inicializa el formulario de domicilio.
+  this.avisodeFuncionamientomiento(); // Configura el formulario de aviso de funcionamiento.
+  this.loadScian(); // Carga los datos del catálogo SCIAN.
+}
 
   /**
  * Inicializa el domicilioEstablecimiento con un conjunto de controles de formulario.
@@ -114,36 +136,13 @@ export class DomicilioEstablecimientosComponent implements OnInit, OnDestroy {
    * 
    * @returns {void}
    */
-  public AvisodeFuncionamientomiento(): void {
+  public avisodeFuncionamientomiento(): void {
     this.AvisodeFuncionamiento = this.fb.group({
       funcionamiento: [{ value: this.seccionState?.funcionamiento, disabled: false }],
       licencia: [{ value: this.seccionState?.licencia, disabled: false }],
       regimen: [{ value: this.seccionState?.regimen, disabled: false }],
     });
   }
-
-  /**
-   * Establece valores predeterminados para los campos del formulario en el domicilioEstablecimiento.
-   * 
-   * Este metodo asigna valores predefinidos a los siguientes controles del formulario:
-   * - 'rfc': Establece el valor a 'AALM87326'.
-   * - 'denominacion': Establece el valor a 'SVHGSA ASCV 332'.
-   * - 'actividadEconomica': Establece el valor a 'SIMa gsys'.
-   * - 'correoElectronico': Establece el valor a 'SV US'.
-   * 
-   * @returns {void}
-   */
-  public establecerValoresDeFormulario(): void {
-    this.domicilioEstablecimiento.get('Codigo')?.setValue('');
-    this.domicilioEstablecimiento.get('codigoPostal')?.setValue('');
-    this.domicilioEstablecimiento.get('estado')?.setValue('');
-    this.domicilioEstablecimiento.get('Municipio')?.setValue('');
-    this.domicilioEstablecimiento.get('localidad')?.setValue('');
-    this.domicilioEstablecimiento.get('colonia')?.setValue('');
-    this.domicilioEstablecimiento.get('calle')?.setValue('');
-    this.domicilioEstablecimiento.get('numeroExterior')?.setValue('')
-  }
-
 
   /**
     * Pasa el valor de un campo del formulario a la tienda para la gestión del estado.
@@ -172,10 +171,10 @@ export class DomicilioEstablecimientosComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Carga los datos del catálogo SCIAN.
+   * Carga los datos del catálogo loadScian.
    */
   loadScian(): void {
-    this.DatosSolicitudService
+    this.datosSolicitudService
       .obternerDatosData()
       .pipe(takeUntil(this.destroy$))
       .subscribe((resp) => {

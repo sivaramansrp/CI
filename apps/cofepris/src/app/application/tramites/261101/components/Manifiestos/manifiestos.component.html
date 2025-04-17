@@ -5,9 +5,6 @@
         aria-label="Seleccionar" [checked]="declaracionEstaMarcado" />{{manifestoDeVeracidad}}
     </label>
   </div>
-
-
   <app-input-radio [radioOptions]="radioOptions" formControlName="informacionConfidencial"
     (change)="setValoresStore(Aduana,'informacionConfidencial')" [layout]="'horizontal'"></app-input-radio>
-
 </form>

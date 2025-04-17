@@ -7,9 +7,8 @@ import {
   TablaSeleccion,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
-import { Component } from '@angular/core';
-
 import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
 import { FABRICANTE_TABLA } from '../../../../shared/constantes/terceros-relacionados-fabricante.enum';
 import { OTROS_TABLA } from '../../../../shared/constantes/terceros-relacionados-fabricante.enum';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
