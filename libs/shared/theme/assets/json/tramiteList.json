@@ -135,8 +135,8 @@
     {
         "id": 20,
         "tramite": 32504,
-        "linkDashboard": "/agace/aviso/aviso-procesos",
-        "linkDepartment": "/agace/aviso/aviso-procesos",
+        "linkDashboard": "/agace/aviso-procesos/aviso-procesos",
+        "linkDepartment": "/pago/aviso-procesos/aviso-procesos",
         "department": "agace"
     },
     {
@@ -170,8 +170,8 @@
     {
         "id": 25,
         "tramite": 80101,
-        "linkDashboard": "/se/pago/nuevo-programa-industrial/action",
-        "linkDepartment": "/se/pago/nuevo-programa-industrial/action",
+        "linkDashboard": "/se/nuevo-programa-industrial/action",
+        "linkDepartment": "/pago/nuevo-programa-industrial/action",
         "department": "se"
     },
     {
@@ -212,8 +212,8 @@
     {
         "id": 31,
         "tramite": 80208,
-        "linkDashboard": "/se/pago/solicitud-modalidad/modalidad",
-        "linkDepartment": "/se/pago/solicitud-modalidad/modalidad",
+        "linkDashboard": "/se/solicitud-modalidad/modalidad",
+        "linkDepartment": "/pago/solicitud-modalidad/modalidad",
         "department": "se"
     },
     {
@@ -276,7 +276,7 @@
         "id": 40,
         "tramite": 110202,
         "linkDashboard": "/se/certificado-validacion/validacion",
-        "linkDepartment": "/se/certificado-validacion/validacion",
+        "linkDepartment": "/pago/certificado-validacion/validacion",
         "department": "se"
     },
     {
@@ -290,7 +290,7 @@
         "id": 42,
         "tramite": 110204,
         "linkDashboard": "/se/pexim/certificado-origen",
-        "linkDepartment": "/se/pexim/certificado-origen",
+        "linkDepartment": "/pago/pexim/certificado-origen",
         "department": "se"
     },
     {
@@ -577,7 +577,7 @@
         "id": 83,
         "tramite": 220703,
         "linkDashboard": "/agriculture/acuicola-fisica/acuicola",
-        "linkDepartment": "/agriculture/acuicola-fisica/acuicola",
+        "linkDepartment": "/pago/acuicola-fisica/acuicola",
         "department": "agriculture"
     },
     {
@@ -590,7 +590,7 @@
     {
         "id": 85,
         "tramite": 230401,
-        "linkDashboard": "/pago/pantallas/action",
+        "linkDashboard": "/semarnat/pantallas/action",
         "linkDepartment": "/pago/pantallas/action",
         "department": "semarnat"
     },
@@ -905,8 +905,8 @@
     {
         "id": 130,
         "tramite": 302,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "aga/certi-registro/proceso-completo",
+        "linkDepartment": "/pago/certi-registro/proceso-completo",
         "department": "aga"
     },
     {
@@ -1024,14 +1024,14 @@
     {
         "id": 147,
         "tramite": 260102,
-        "linkDashboard": "/pago/consumo-personal/solicitud",
+        "linkDashboard": "/cofepris/consumo-personal/solicitud",
         "linkDepartment": "/pago/consumo-personal/solicitud",
         "department": "cofepris"
     },
     {
         "id": 148,
         "tramite": 260206,
-        "linkDashboard": "/pago/maquila-materias-primas/solicitud",
+        "linkDashboard": "/cofepris/maquila-materias-primas/solicitud",
         "linkDepartment": "/pago/maquila-materias-primas/solicitud",
         "department": "cofepris"
     },
@@ -1046,13 +1046,13 @@
         "id": 150,
         "tramite": 260217,
         "linkDashboard": "/cofepris/dispositivos-medicos-sin-registrar/contenedor-de-pasos",
-        "linkDepartment": "/cofepris/dispositivos-medicos-sin-registrar/contenedor-de-pasos",
+        "linkDepartment": "/pago/dispositivos-medicos-sin-registrar/contenedor-de-pasos",
         "department": "cofepris"
     },
     {
         "id": 151,
         "tramite": 260218,
-        "linkDashboard": "/pago/dispositivos-medicos-laboratorio/contenedor-de-pasos",
+        "linkDashboard": "/cofepris/dispositivos-medicos-laboratorio/contenedor-de-pasos",
         "linkDepartment": "/pago/dispositivos-medicos-laboratorio/contenedor-de-pasos",
         "department": "cofepris"
     },
@@ -1101,8 +1101,8 @@
     {
         "id": 158,
         "tramite": 261702,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "cofepris//retiros-cofepris/pantallas",
+        "linkDepartment": "/pago/retiros-cofepris/pantallas",
         "department": "cofepris"
     },
     {
@@ -1493,15 +1493,15 @@
     {
         "id": 214,
         "tramite": 260208,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "/cofepris/medicamentos-destinados-uso/contenedor-de-pasos",
+        "linkDepartment": "/pago/medicamentos-destinados-uso/contenedor-de-pasos",
         "department": "cofepris"
     },
     {
         "id": 215,
         "tramite": 260209,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "/cofepris/importacion-destinados-donacio/contenedor-de-pasos",
+        "linkDepartment": "/pago/importacion-destinados-donacio/contenedor-de-pasos",
         "department": "cofepris"
     },
     {
@@ -1934,8 +1934,8 @@
     {
         "id": 277,
         "tramite": 230501,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "/semarnat/materiales-peligrosos/solicitud",
+        "linkDepartment": "/pago/materiales-peligrosos/solicitud",
         "department": "semarnat"
     },
     {
@@ -1965,6 +1965,13 @@
         "linkDashboard": "",
         "linkDepartment": "",
         "department": "sener"
+    },
+    {
+        "id": 282,
+        "tramite": 130103,
+        "linkDashboard": "/se/importacion-definitiva/pantallas",
+        "linkDepartment": "/pago/importacion-definitiva/pantallas",
+        "department": "se"
     },
     {
        "id": 282,
