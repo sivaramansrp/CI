@@ -75,4 +75,17 @@ export class TercerosRelacionadosContenedoraComponent implements OnInit {
         this.proveedorTablaDatos = data;
       });
   }
+
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
+   * 
+   * Emite y completa el observable `destroy$` para limpiar suscripciones activas
+   * y prevenir fugas de memoria.
+   *
+   * @returns {void}
+   */
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 }
