@@ -1,4 +1,4 @@
-import { BtnContinuarComponent, SolicitanteComponent, WizardComponent } from '@libs/shared/data-access-user/src';
+import { AlertComponent, BtnContinuarComponent, SolicitanteComponent, WizardComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { DatosDelSolicitudModificacionComponent } from '../../shared/components/datos-del-solicitud-modificacion/datos-del-solicitud-modificacion.component';
 import { DatosSolicitudComponent } from './components/datos-solicitud/datos-solicitud.component';
@@ -18,6 +18,6 @@ import { TramitesAsociadosSeccionComponent } from '../../shared/components/trami
     PasoDosComponent,
     PasoTresComponent
   ],
-  imports: [CommonModule, PermisoImportacionRoutingModule,BtnContinuarComponent,WizardComponent,SolicitanteComponent,DatosSolicitudComponent,DatosDelSolicitudModificacionComponent,PagoDeDerechosComponent,TramitesAsociadosSeccionComponent],
+  imports: [CommonModule, PermisoImportacionRoutingModule,BtnContinuarComponent,WizardComponent,SolicitanteComponent,DatosSolicitudComponent,DatosDelSolicitudModificacionComponent,PagoDeDerechosComponent,AlertComponent,TramitesAsociadosSeccionComponent],
 })
 export class PermisoImportacionModule {}
