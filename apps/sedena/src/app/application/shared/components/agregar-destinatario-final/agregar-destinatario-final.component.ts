@@ -1,4 +1,4 @@
-import { CAMPO_OBLIGATORIO, PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE } from '../../constants/datos-solicitud.enum';
+import { CAMPO_OBLIGATORIO_DESTINATARIO, PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE } from '../../constants/datos-solicitud.enum';
 import { STR_NACIONAL } from '../../constants/datos-solicitud.enum';
 import { TERCEROS_NACIONALIDAD_OPCIONES } from '../../constants/datos-solicitud.enum';
 import { TIPO_PERSONA_OPCIONES } from '../../constants/datos-solicitud.enum';
@@ -244,7 +244,7 @@ export class AgregarDestinatarioFinalComponent
    */
   ngOnInit(): void {
     this.crearFormaulario();
-    this.campoObligatorio = CAMPO_OBLIGATORIO.includes(this.idProcedimiento)
+    this.campoObligatorio = CAMPO_OBLIGATORIO_DESTINATARIO.includes(this.idProcedimiento)
     this.campoObligatorioChange();
     this.cargarDatos();
     this.esCURP = ES_CURP.includes(this.idProcedimiento);

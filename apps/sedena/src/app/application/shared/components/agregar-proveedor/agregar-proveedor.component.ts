@@ -14,7 +14,7 @@ import { OnInit } from '@angular/core';
 import { Output } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Subject } from 'rxjs';
-import { TIPO_PERSONA_OPCIONES } from '../../constants/datos-solicitud.enum';
+import { CAMPO_OBLIGATORIO_PROVEEDOR, TIPO_PERSONA_OPCIONES } from '../../constants/datos-solicitud.enum';
 import { TipoPersona } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { Validators } from '@angular/forms';
@@ -73,6 +73,13 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
   public paisesDatos: Catalogo[] = [];
 
   /**
+   * @property idProcedimiento
+   * @description Identificador del procedimiento asociado a este componente.
+   * @type {number}
+   */
+  @Input() idProcedimiento!: number;
+
+  /**
    * @property updateProveedorTablaDatos
    * @description Evento que emite una lista actualizada de objetos `Proveedor` hacia el componente padre.
    * Se utiliza para sincronizar los datos de la tabla o disparar acciones relacionadas.
@@ -92,6 +99,14 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
    * Opciones de radio para seleccionar el tipo de persona.
    */
   tipoPersonaRadioOpciones = TIPO_PERSONA_OPCIONES;
+
+  /**
+   * @property campoObligatorio
+   * @description Indica si ciertos campos del formulario son obligatorios según el procedimiento.
+   * @type {boolean}
+   * @default true
+   */
+  public campoObligatorio = true;
 
   /**
    * @constructor
@@ -147,10 +162,43 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
    */
   ngOnInit(): void {
     this.crearFormaulario();
+    this.campoObligatorio = CAMPO_OBLIGATORIO_PROVEEDOR.includes(this.idProcedimiento)
+    this.campoObligatorioChange();
     this.cargarDatos();
     if(this.formaDatos) {
       this.agregarProveedorForm.patchValue(this.formaDatos);
     }
+  }
+
+  campoObligatorioChange(): void {
+    const NOMBRES = this.agregarProveedorForm.get('nombres');
+    const PRIMERAPELLIDO = this.agregarProveedorForm.get('primerApellido');
+    const ESTADO = this.agregarProveedorForm.get('estado');
+    const CODIGOPOSTAL = this.agregarProveedorForm.get('codigoPostal');
+    const CALLE = this.agregarProveedorForm.get('calle');
+    const NUMEROEXTERIOR = this.agregarProveedorForm.get('numeroExterior');
+    if(this.campoObligatorio){
+      NOMBRES?.setValidators([Validators.required]);
+      PRIMERAPELLIDO?.setValidators([Validators.required]);
+      ESTADO?.setValidators([Validators.required]);
+      CODIGOPOSTAL?.setValidators([Validators.required]);
+      CALLE?.setValidators([Validators.required]);
+      NUMEROEXTERIOR?.setValidators([Validators.required]);
+    }
+    else{
+      NOMBRES?.clearValidators();
+      PRIMERAPELLIDO?.clearValidators();
+      ESTADO?.clearValidators();
+      CODIGOPOSTAL?.clearValidators();
+      CALLE?.clearValidators();
+      NUMEROEXTERIOR?.clearValidators();
+    }
+    NOMBRES?.updateValueAndValidity();
+    PRIMERAPELLIDO?.updateValueAndValidity();
+    ESTADO?.updateValueAndValidity();
+    CODIGOPOSTAL?.updateValueAndValidity();
+    CALLE?.updateValueAndValidity();
+    NUMEROEXTERIOR?.updateValueAndValidity();
   }
 
   /**

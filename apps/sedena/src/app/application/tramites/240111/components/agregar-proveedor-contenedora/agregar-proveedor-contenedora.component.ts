@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { Proveedor } from '../../../../shared/models/terceros-relacionados.model';
 import { Tramite240101Store } from '../../estados/tramite240111Store.store';
+import { ID_PROCEDIMIENTO } from '../../constants/importacion-armas-municiones.enum';
 
 @Component({
   selector: 'app-agregar-proveedor-contenedora',
@@ -12,6 +13,7 @@ import { Tramite240101Store } from '../../estados/tramite240111Store.store';
   styleUrl: './agregar-proveedor-contenedora.component.css',
 })
 export class AgregarProveedorContenedoraComponent {
+  public readonly idProcedimiento = ID_PROCEDIMIENTO;
   /**
    * @constructor
    * @description Constructor que inyecta el store `Tramite260214Store` para gestionar el estado del trámite.
