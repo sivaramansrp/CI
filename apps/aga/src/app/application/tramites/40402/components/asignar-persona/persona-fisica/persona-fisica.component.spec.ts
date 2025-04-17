@@ -1,153 +1,113 @@
-// import { ComponentFixture, TestBed } from '@angular/core/testing';
-// import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
-// import { of, Subject } from 'rxjs';
-// import { PersonaFisicaExtranjeraComponent } from './persona-fisica-extranjera.component';
-// import { Tramite40402Store } from '../../../../core/estados/tramites/tramite40402.store';
-// import { Tramite40402Query } from '../../../../core/queries/tramite40402.query';
-// import { TransportacionMaritimaService } from '../../services/transportacion-maritima/transportacion-maritima.service';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ReactiveFormsModule } from '@angular/forms';
+import { PersonaFisicaComponent } from './persona-fisica.component';
+import { TransportacionMaritimaService } from '../../../../40402/services/transportacion-maritima/transportacion-maritima.service';
+import { Tramite40402Store } from '../../../estados/tramite40402.store';
+import { of } from 'rxjs';
 
-// describe('PersonaFisicaExtranjeraComponent', () => {
-//   let component: PersonaFisicaExtranjeraComponent;
-//   let fixture: ComponentFixture<PersonaFisicaExtranjeraComponent>;
-//   let tramite40402StoreMock: jest.Mocked<Tramite40402Store>;
-//   let tramite40402QueryMock: jest.Mocked<Tramite40402Query>;
-//   let transportacionMaritimaServiceMock: jest.Mocked<TransportacionMaritimaService>;
+describe('PersonaFisicaComponent', () => {
+  let component: PersonaFisicaComponent;
+  let fixture: ComponentFixture<PersonaFisicaComponent>;
+  let mockTransportacionMaritimaService: any;
+  let mockTramite40402Store: any;
 
-//   beforeEach(async () => {
-//     tramite40402StoreMock = {
-//       setPersonaFisicaExtranjeraTabla: jest.fn(),
-//       setPaisPFE: jest.fn(),
-//       setNombrePFE: jest.fn(),
-//       setSeguroNumero: jest.fn(),
-//       setApellidoMaternoPFE: jest.fn(),
-//       setCorreoPFE: jest.fn(),
-//       setCodigoPostalPFE: jest.fn(),
-//       setCiudadPFE: jest.fn(),
-//       setEstadoPFE: jest.fn(),
-//       setCallePFE: jest.fn(),
-//       setNumeroExteriorPFE: jest.fn(),
-//       setNumeroInteriorPFE: jest.fn(),
-//     } as unknown as jest.Mocked<Tramite40402Store>;
+  beforeEach(async () => {
+    mockTransportacionMaritimaService = {
+      getPaisCatalogo: jest.fn().mockReturnValue(of({ data: [{ id: 1, descripcion: 'Mexico' }] })),
+    };
+    mockTramite40402Store = {
+      setPaisPFE: jest.fn(),
+      setPersonaFisicaExtranjeraTabla: jest.fn(),
+    };
 
-//     tramite40402QueryMock = {
-//       selectSeccionState$: of({
-//           personaFisicaNacionalTabla: [],
-//           buscarRfcPFN: '',
-//           rfcPFN: '',
-//           nombrePFN: '',
-//           apellidoPaternoPFN: '',
-//           apellidoMaternoPFN: '',
-//           paisPFN: '',
-//           codigoPostalPFN: '',
-//           estadoPFN: '',
-//           municipioPFN: '',
-//           localidadPFN: '',
-//           coloniaPFN: '',
-//           callePFN: '',
-//           numeroExteriorPFN: '',
-//           numeroInteriorPFN: '',
-//         }),
-//     } as unknown as jest.Mocked<Tramite40402Query>;
+    await TestBed.configureTestingModule({
+      declarations: [],
+      imports: [ReactiveFormsModule, PersonaFisicaComponent],
+      providers: [
+        { provide: TransportacionMaritimaService, useValue: mockTransportacionMaritimaService },
+        { provide: Tramite40402Store, useValue: mockTramite40402Store },
+      ],
+    }).compileComponents();
 
-//     transportacionMaritimaServiceMock = {
-//       getPaisCatalogo: jest.fn().mockReturnValue(of({ data: [] })),
-//     } as unknown as jest.Mocked<TransportacionMaritimaService>;
+    fixture = TestBed.createComponent(PersonaFisicaComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
 
-//     await TestBed.configureTestingModule({
-//       imports: [ReactiveFormsModule, PersonaFisicaExtranjeraComponent],
-//       providers: [
-//         FormBuilder,
-//         { provide: Tramite40402Store, useValue: tramite40402StoreMock },
-//         { provide: Tramite40402Query, useValue: tramite40402QueryMock },
-//         { provide: TransportacionMaritimaService, useValue: transportacionMaritimaServiceMock },
-//       ],
-//     }).compileComponents();
+  it('should create the component', () => {
+    expect(component).toBeTruthy();
+  });
 
-//     fixture = TestBed.createComponent(PersonaFisicaExtranjeraComponent);
-//     component = fixture.componentInstance;
-//     fixture.detectChanges();
-//   });
+  it('should initialize the form with default values', () => {
+    expect(component.personaFisicaExtranjeraForm).toBeDefined();
+    const form = component.personaFisicaExtranjeraForm;
+    expect(form.get('nombrePFE')?.value).toBeNull();
+    expect(form.get('seguroNumero')?.value).toBeNull();
+  });
 
-//   it('should create the component', () => {
-//     expect(component).toBeTruthy();
-//   });
+  it('should validate required fields in the form', () => {
+    const form = component.personaFisicaExtranjeraForm;
+    form.get('nombrePFE')?.setValue('');
+    form.get('seguroNumero')?.setValue('');
+    expect(form.get('nombrePFE')?.valid).toBeFalsy();
+    expect(form.get('seguroNumero')?.valid).toBeFalsy();
+  });
 
-//   it('should initialize the form on ngOnInit', () => {
-//     component.ngOnInit();
-//     expect(component.personaFisicaExtranjeraForm).toBeDefined();
-//     expect(component.pais).toEqual([]);
-//   });
+  it('should call setValoresStore when a form control changes', () => {
+    const spy = jest.spyOn(component, 'setValoresStore');
+    const form = component.personaFisicaExtranjeraForm;
+    form.get('nombrePFE')?.setValue('John');
+    expect(spy).toHaveBeenCalledWith(form, 'nombrePFE', 'setNombrePFE');
+  });
 
-//   it('should reset form fields and update the store on limpiarDatosPFE', () => {
-//     jest.spyOn(component, 'actualizarFormularioState');
-//     component.limpiarDatosPFE();
-//     expect(component.personaFisicaExtranjeraForm.pristine).toBeTruthy();
-//     expect(component.actualizarFormularioState).toHaveBeenCalled();
-//   });
+  it('should call agregarPFE and update the table', () => {
+    const form = component.personaFisicaExtranjeraForm;
+    form.setValue({
+      seguroNumero: '12345678901',
+      nombrePFE: 'John',
+      apellidoPaternoPFE: 'Doe',
+      apellidoMaternoPFE: 'Smith',
+      correoPFE: 'john.doe@example.com',
+      paisPFE: 1,
+      codigoPostalPFE: '12345',
+      ciudadPFE: 'Mexico City',
+      estadoPFE: 'CDMX',
+      callePFE: 'Main Street',
+      numeroExteriorPFE: '123',
+      numeroInteriorPFE: 'A',
+    });
 
-//   it('should fetch country catalog on inicializaCatalogos', () => {
-//     const mockPais = [{ id: 1, descripcion: 'México' }];
-//     transportacionMaritimaServiceMock.getPaisCatalogo.mockReturnValue(of({ code: 200, data: mockPais, message: 'Success' }));
-//     component.inicializaCatalogos();
-//     expect(component.pais).toEqual(mockPais);
-//   });
+    component.agregarPFE(form.getRawValue());
+    expect(component.personaFisicaExtranjeraTabla.length).toBe(1);
+    expect(mockTramite40402Store.setPersonaFisicaExtranjeraTabla).toHaveBeenCalled();
+  });
 
-//   it('should update the store when a country is selected', () => {
-//     component.personaFisicaExtranjeraForm.get('paisPFE')?.setValue('1');
-//     component.paisSeleccion();
-//     expect(tramite40402StoreMock.setPaisPFE).toHaveBeenCalledWith('1');
-//   });
+  it('should reset the form when limpiarDatosPFE is called', () => {
+    const form = component.personaFisicaExtranjeraForm;
+    form.setValue({
+      seguroNumero: '12345678901',
+      nombrePFE: 'John',
+      apellidoPaternoPFE: 'Doe',
+      apellidoMaternoPFE: 'Smith',
+      correoPFE: 'john.doe@example.com',
+      paisPFE: 1,
+      codigoPostalPFE: '12345',
+      ciudadPFE: 'Mexico City',
+      estadoPFE: 'CDMX',
+      callePFE: 'Main Street',
+      numeroExteriorPFE: '123',
+      numeroInteriorPFE: 'A',
+    });
 
-//   it('should add a new person to the table on agregarPFE', () => {
-//     const mockFormData = {
-//       nombrePFE: 'John',
-//       apellidoPaternoPFE: 'Doe',
-//       apellidoMaternoPFE: 'Smith',
-//       seguroNumero: '12345678901',
-//       correoPFE: 'john.doe@example.com',
-//       paisPFE: '1',
-//       codigoPostalPFE: '12345',
-//       ciudadPFE: 'Ciudad',
-//       estadoPFE: 'Estado',
-//       callePFE: 'Calle',
-//       numeroExteriorPFE: '123',
-//       numeroInteriorPFE: '456',
-//     };
-//     const mockPais = [{ id: 1, descripcion: 'México' }];
-//     component.pais = mockPais;
+    component.limpiarDatosPFE();
+    expect(form.get('nombrePFE')?.value).toBeNull();
+    expect(form.get('seguroNumero')?.value).toBeNull();
+  });
 
-//     component.agregarPFE(mockFormData as any);
-
-//     expect(component.personaFisicaExtranjeraTabla.length).toBe(1);
-//     expect(component.personaFisicaExtranjeraTabla[0]).toEqual({
-//       nombrePFE: 'John Doe Smith',
-//       seguroNumero: '12345678901',
-//       estadoPFE: 'Estado',
-//       correoPFE: 'john.doe@example.com',
-//       paisPFE: 'México',
-//       domicilioPFE: 'Calle 123 Ciudad Estado México 12345',
-//     });
-//     expect(tramite40402StoreMock.setPersonaFisicaExtranjeraTabla).toHaveBeenCalledWith(component.personaFisicaExtranjeraTabla);
-//   });
-
-//   it('should update the store with form values on actualizarFormularioState', () => {
-//     component.personaFisicaExtranjeraForm.get('nombrePFE')?.setValue('John');
-//     component.actualizarFormularioState();
-//     expect(tramite40402StoreMock.setNombrePFE).toHaveBeenCalledWith('John');
-//   });
-
-//   it('should close the modal on cerrarModal', () => {
-//     const closeModalMock = { nativeElement: { click: jest.fn() } };
-//     component.closeModal = closeModalMock as any;
-//     component.cerrarModal();
-//     expect(closeModalMock.nativeElement.click).toHaveBeenCalled();
-//   });
-
-//   it('should complete destruirNotificador$ on ngOnDestroy', () => {
-//     const nextSpy = jest.spyOn(component['destruirNotificador$'], 'next');
-//     const completeSpy = jest.spyOn(component['destruirNotificador$'], 'complete');
-//     component.ngOnDestroy();
-//     expect(nextSpy).toHaveBeenCalled();
-//     expect(completeSpy).toHaveBeenCalled();
-//   });
-// });
+  it('should call setPaisPFE when a country is selected', () => {
+    const form = component.personaFisicaExtranjeraForm;
+    form.get('paisPFE')?.setValue(1);
+    component.paisSeleccion();
+    expect(mockTramite40402Store.setPaisPFE).toHaveBeenCalledWith(1);
+  });
+});

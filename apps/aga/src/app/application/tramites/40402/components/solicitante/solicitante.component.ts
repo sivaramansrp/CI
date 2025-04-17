@@ -64,20 +64,20 @@ export class SolicitanteComponent implements OnInit {
    * y que `solicitudForm` está correctamente inicializado.
    */
   setFormValues(): void {
-    this.solicitudForm.get('rfc')?.setValue(mockData.rfc);
-    this.solicitudForm.get('denominacion')?.setValue(mockData.denominacion);
-    this.solicitudForm.get('actividadEconomica')?.setValue(mockData.actividadEconomica);
-    this.solicitudForm.get('correoElectronico')?.setValue(mockData.correoElectronico);
-    this.solicitudForm.get('pais')?.setValue(mockData.pais);
-    this.solicitudForm.get('codigoPostal')?.setValue(mockData.codigoPostal);
-    this.solicitudForm.get('estado')?.setValue(mockData.estado);
-    this.solicitudForm.get('municipioOAlcadia')?.setValue(mockData.municipioOAlcadia);
-    this.solicitudForm.get('localidad')?.setValue(mockData.municipioOAlcadia);
-    this.solicitudForm.get('colonia')?.setValue(mockData.denominacion);
-    this.solicitudForm.get('calle')?.setValue(mockData.calle);
-    this.solicitudForm.get('numeroExterior')?.setValue(mockData.numeroExterior);
-    this.solicitudForm.get('numeroInterior')?.setValue(mockData.numeroInterior);
-    this.solicitudForm.get('lada')?.setValue(mockData.lada);
-    this.solicitudForm.get('telefono')?.setValue(mockData.telefono);
+    this.solicitudForm.get('rfc')?.setValue(mockData?.rfc);
+    this.solicitudForm.get('denominacion')?.setValue(mockData?.denominacion);
+    this.solicitudForm.get('actividadEconomica')?.setValue(mockData?.actividadEconomica);
+    this.solicitudForm.get('correoElectronico')?.setValue(mockData?.correoElectronico);
+    this.solicitudForm.get('pais')?.setValue(mockData?.pais);
+    this.solicitudForm.get('codigoPostal')?.setValue(mockData?.codigoPostal);
+    this.solicitudForm.get('estado')?.setValue(mockData?.estado);
+    this.solicitudForm.get('municipioOAlcadia')?.setValue(mockData?.municipioOAlcadia);
+    this.solicitudForm.get('localidad')?.setValue(mockData?.municipioOAlcadia);
+    this.solicitudForm.get('colonia')?.setValue(mockData?.denominacion);
+    this.solicitudForm.get('calle')?.setValue(mockData?.calle);
+    this.solicitudForm.get('numeroExterior')?.setValue(mockData?.numeroExterior);
+    this.solicitudForm.get('numeroInterior')?.setValue(mockData?.numeroInterior);
+    this.solicitudForm.get('lada')?.setValue(mockData?.lada);
+    this.solicitudForm.get('telefono')?.setValue(mockData?.telefono);
   }
 }
