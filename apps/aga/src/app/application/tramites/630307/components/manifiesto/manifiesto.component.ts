@@ -1,8 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import { CommonModule } from '@angular/common';
-
-import { REGEX_ALFANUMERICO_CON_ESPACIOS, REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, REGEX_SOLO_NUMEROS, TituloComponent } from "@ng-mf/data-access-user";
+import { TituloComponent } from "@ng-mf/data-access-user";
 
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Tramite630307State, Tramite630307Store } from '../../estados/tramite630307.store';
@@ -11,21 +10,26 @@ import { Tramite630307Query } from '../../estados/tramite630307.query';
 import { Subject, takeUntil } from 'rxjs';
 
 /**
- * Componente para gestionar los datos de la mercancía.
- * Permite capturar y almacenar información relacionada con la mercancía en el estado global.
+ * Componente para gestionar el manifiesto del trámite.
+ * Permite capturar y almacenar la declaración del manifiesto en el estado global.
  */
 @Component({
-  selector: 'app-datos-mercancia',
+  selector: 'app-manifiesto',
   standalone: true,
   imports: [CommonModule, TituloComponent, ReactiveFormsModule],
-  templateUrl: './datos-mercancia.component.html',
-  styleUrl: './datos-mercancia.component.scss',
+  templateUrl: './manifiesto.component.html',
+  styleUrl: './manifiesto.component.scss',
 })
-export class DatosMercanciaComponent implements OnInit, OnDestroy {
+export class ManifiestoComponent implements OnInit, OnDestroy {
   /**
    * Observable utilizado para manejar la destrucción del componente y evitar fugas de memoria.
    */
   private destroyed$ = new Subject<void>();
+
+  /**
+   * Formulario reactivo para capturar la declaración del manifiesto.
+   */
+  manifiestoFormulario!: FormGroup;
 
   /**
    * Estado seleccionado del trámite.
@@ -34,21 +38,14 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
   estadoSeleccionado!: Tramite630307State;
 
   /**
-   * Formulario reactivo para capturar los datos de la mercancía.
-   */
-  datosMercancia!: FormGroup;
-
-  /**
    * Constructor del componente.
    * Inicializa los servicios necesarios para gestionar el estado y los formularios.
    */
   constructor(
-    private formBuilder: FormBuilder,
+    private fb: FormBuilder,
     private tramite630307Store: Tramite630307Store,
     private tramite630307Query: Tramite630307Query
-  ) {
-    // Constructor vacío
-  }
+  ) {}
 
   /**
    * Método que se ejecuta al inicializar el componente.
@@ -56,39 +53,16 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.getValorStore();
-    this.inicializarFormulario();
+    this.inizializarFormulario();
   }
 
   /**
    * Inicializa el formulario reactivo con los valores del estado actual.
-   * Configura las validaciones necesarias para cada campo del formulario.
+   * Configura las validaciones necesarias para los campos del formulario.
    */
-  inicializarFormulario(): void {
-    this.datosMercancia = this.formBuilder.group({
-      marca: [
-        this.estadoSeleccionado?.marca,
-        [Validators.required, Validators.pattern(REGEX_ALFANUMERICO_CON_ESPACIOS)],
-      ],
-      modelo: [
-        this.estadoSeleccionado?.modelo,
-        [Validators.required, Validators.pattern(REGEX_ALFANUMERICO_CON_ESPACIOS)],
-      ],
-      numeroDeSerie: [
-        this.estadoSeleccionado?.numeroDeSerie,
-        [Validators.required, Validators.pattern(REGEX_SOLO_NUMEROS)],
-      ],
-      numeroDeMotor: [
-        this.estadoSeleccionado?.numeroDeMotor,
-        [Validators.required, Validators.pattern(REGEX_SOLO_NUMEROS)],
-      ],
-      descripcionMercancia: [
-        this.estadoSeleccionado?.descripcionMercancia,
-        [Validators.required, Validators.pattern(REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL)],
-      ],
-      motivo: [
-        this.estadoSeleccionado?.motivo,
-        [Validators.required, Validators.pattern(REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL)],
-      ],
+  inizializarFormulario(): void {
+    this.manifiestoFormulario = this.fb.group({
+      declaracion: [this.estadoSeleccionado?.declaracion, Validators.required],
     });
   }
 

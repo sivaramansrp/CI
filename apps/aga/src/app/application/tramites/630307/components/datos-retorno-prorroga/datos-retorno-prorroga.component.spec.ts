@@ -1,62 +1,89 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
+import { of, Subject } from 'rxjs';
+
 import { DatosRetornoProrrogaComponent } from './datos-retorno-prorroga.component';
+import { Tramite630307Store } from '../../estados/tramite630307.store';
+import { Tramite630307Query } from '../../estados/tramite630307.query';
 
 describe('DatosRetornoProrrogaComponent', () => {
   let component: DatosRetornoProrrogaComponent;
   let fixture: ComponentFixture<DatosRetornoProrrogaComponent>;
+  let mockStore: jest.Mocked<Tramite630307Store>;
+  let mockQuery: jest.Mocked<Tramite630307Query>;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule],
-      declarations: [DatosRetornoProrrogaComponent],
-      providers: [FormBuilder],
-    }).compileComponents();
+    mockStore = {
+      setTramite630307State: jest.fn(),
+    } as unknown as jest.Mocked<Tramite630307Store>;
 
+    mockQuery = {
+      selectTramite630307State$: of({
+        folioInformacionGeneralProrroga: '12345',
+        fechaInicioProrroga: '2025-01-01',
+        fechaVencimientoProrroga: '2025-12-31',
+      }),
+    } as unknown as jest.Mocked<Tramite630307Query>;
+
+    await TestBed.configureTestingModule({
+      declarations: [],
+      imports: [ReactiveFormsModule,DatosRetornoProrrogaComponent],
+      providers: [
+        { provide: Tramite630307Store, useValue: mockStore },
+        { provide: Tramite630307Query, useValue: mockQuery },
+      ],
+    }).compileComponents();
+  });
+
+  beforeEach(() => {
     fixture = TestBed.createComponent(DatosRetornoProrrogaComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  it('debería crear el componente', () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  describe('constructor', () => {
-    it('debería inicializar el formulario con los campos requeridos y validaciones', () => {
-      expect(component.datosImportacionRetornoProrrogaGeneralFormulario).toBeDefined();
-      const form = component.datosImportacionRetornoProrrogaGeneralFormulario;
-
-      expect(form.get('folioInformacionGeneralProrroga')).toBeDefined();
-      expect(form.get('folioInformacionGeneralProrroga')?.validator).toBeTruthy();
-
-      expect(form.get('fechaInicioProrroga')).toBeDefined();
-      expect(form.get('fechaInicioProrroga')?.validator).toBeTruthy();
-
-      expect(form.get('fechaVencimientoProrroga')).toBeDefined();
-      expect(form.get('fechaVencimientoProrroga')?.validator).toBeTruthy();
+  it('should initialize the form with default values', () => {
+    expect(component.datosImportacionRetornoProrrogaGeneralFormulario.value).toEqual({
+      folioInformacionGeneralProrroga: '12345',
+      fechaInicioProrroga: '2025-01-01',
+      fechaVencimientoProrroga: '2025-12-31',
     });
   });
 
-  describe('cambioFechaVencimientoProrroga', () => {
-    it('debería actualizar el valor de fechaVencimientoProrroga en el formulario', () => {
-      const nuevoValor = '2023-10-15';
-      component.cambioFechaVencimientoProrroga(nuevoValor);
+  it('should update fechaInicioProrroga in the form and store when cambioFechaInicioProrroga is called', () => {
+    const newDate = '2025-02-01';
+    component.cambioFechaInicioProrroga(newDate);
 
-      expect(
-        component.datosImportacionRetornoProrrogaGeneralFormulario.get('fechaVencimientoProrroga')?.value
-      ).toBe(nuevoValor);
+    expect(component.datosImportacionRetornoProrrogaGeneralFormulario.get('fechaInicioProrroga')?.value).toBe(newDate);
+    expect(mockStore.setTramite630307State).toHaveBeenCalledWith({ fechaInicioProrroga: newDate });
+  });
+
+  it('should update fechaVencimientoProrroga in the form and store when cambioFechaVencimientoProrroga is called', () => {
+    const newDate = '2025-11-30';
+    component.cambioFechaVencimientoProrroga(newDate);
+
+    expect(component.datosImportacionRetornoProrrogaGeneralFormulario.get('fechaVencimientoProrroga')?.value).toBe(newDate);
+    expect(mockStore.setTramite630307State).toHaveBeenCalledWith({ fechaVencimientoProrroga: newDate });
+  });
+
+  it('should call setValorStore and update the store', () => {
+    component.setValorStore(component.datosImportacionRetornoProrrogaGeneralFormulario, 'fechaInicioProrroga');
+
+    expect(mockStore.setTramite630307State).toHaveBeenCalledWith({
+      fechaInicioProrroga: '2025-01-01',
     });
   });
 
-  describe('cambioFechaInicioProrroga', () => {
-    it('debería actualizar el valor de fechaInicioProrroga en el formulario', () => {
-      const nuevoValor = '2023-10-01';
-      component.cambioFechaInicioProrroga(nuevoValor);
+  it('should clean up subscriptions on ngOnDestroy', () => {
+    const destroyedSpy = jest.spyOn(component['destroyed$'], 'next');
+    const completeSpy = jest.spyOn(component['destroyed$'], 'complete');
 
-      expect(
-        component.datosImportacionRetornoProrrogaGeneralFormulario.get('fechaInicioProrroga')?.value
-      ).toBe(nuevoValor);
-    });
+    component.ngOnDestroy();
+
+    expect(destroyedSpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
   });
 });

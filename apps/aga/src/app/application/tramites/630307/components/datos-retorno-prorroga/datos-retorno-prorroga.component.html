@@ -7,7 +7,8 @@
                     <label for="folioInformacionGeneralProrroga"class="form-label">Folio de prórroga de importación temporal formato en
                         papel *:</label>
                     <input id="folioInformacionGeneralProrroga" formControlName="folioInformacionGeneralProrroga"
-                        type="text" class="form-control" />
+                        type="text" class="form-control" 
+                        (change)="setValorStore(datosImportacionRetornoProrrogaGeneralFormulario,'folioInformacionGeneralProrroga')"/>
                     <div *ngIf="datosImportacionRetornoProrrogaGeneralFormulario.get('folioInformacionGeneralProrroga')?.invalid 
                     && datosImportacionRetornoProrrogaGeneralFormulario.get('folioInformacionGeneralProrroga')?.touched"
                         class="text-danger">

@@ -1,93 +1,113 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
+import { of, Subject } from 'rxjs';
+
 import { DatosRetornoAutorizacionComponent } from './datos-retorno-autorizacion.component';
 import { RetornoImportacionTemporalService } from '../../services/retorno-importacion-temporal.service';
-import { of, Subject } from 'rxjs';
+import { Tramite630307Store } from '../../estados/tramite630307.store';
+import { Tramite630307Query } from '../../estados/tramite630307.query';
 
 describe('DatosRetornoAutorizacionComponent', () => {
   let component: DatosRetornoAutorizacionComponent;
   let fixture: ComponentFixture<DatosRetornoAutorizacionComponent>;
-  let mockService: jest.Mocked<RetornoImportacionTemporalService>;
+  let mockRetornoService: jest.Mocked<RetornoImportacionTemporalService>;
+  let mockStore: jest.Mocked<Tramite630307Store>;
+  let mockQuery: jest.Mocked<Tramite630307Query>;
 
   beforeEach(async () => {
-    mockService = {
-      getAduanaDeIngreso: jest.fn().mockReturnValue(of([{ id: 1, descripcion: 'Aduana 1' }])),
-      getSeccionAduanera: jest.fn().mockReturnValue(of([{ id: 1, descripcion: 'Sección 1' }])),
-    } as any;
+    mockRetornoService = {
+      getAduanaDeIngreso: jest.fn(),
+      getSeccionAduanera: jest.fn(),
+    } as unknown as jest.Mocked<RetornoImportacionTemporalService>;
+
+    mockStore = {
+      setTramite630307State: jest.fn(),
+    } as unknown as jest.Mocked<Tramite630307Store>;
+
+    mockQuery = {
+      selectTramite630307State$: of({
+        folioInformacionGeneralAutorizacion: '12345',
+        aduanaIngreso: '001',
+        seccionAduanera: '002',
+        fechaIngreso: '2025-01-01',
+        fechaVencimiento: '2025-12-31',
+      }),
+    } as unknown as jest.Mocked<Tramite630307Query>;
 
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule],
-      declarations: [DatosRetornoAutorizacionComponent],
+      declarations: [],
+      imports: [ReactiveFormsModule,DatosRetornoAutorizacionComponent],
       providers: [
-        FormBuilder,
-        { provide: RetornoImportacionTemporalService, useValue: mockService },
+        { provide: RetornoImportacionTemporalService, useValue: mockRetornoService },
+        { provide: Tramite630307Store, useValue: mockStore },
+        { provide: Tramite630307Query, useValue: mockQuery },
       ],
     }).compileComponents();
+  });
 
+  beforeEach(() => {
     fixture = TestBed.createComponent(DatosRetornoAutorizacionComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  it('debería crear el componente', () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  describe('ngOnInit', () => {
-    it('debería llamar a getAduanaDeIngreso y getSeccionAduanera', () => {
-      jest.spyOn(component, 'getAduanaDeIngreso');
-      jest.spyOn(component, 'getSeccionAduanera');
-
-      component.ngOnInit();
-
-      expect(component.getAduanaDeIngreso).toHaveBeenCalled();
-      expect(component.getSeccionAduanera).toHaveBeenCalled();
+  it('should initialize the form with default values', () => {
+    expect(component.datosImportacionRetornoAutorizacionGeneralFormulario.value).toEqual({
+      folioInformacionGeneralAutorizacion: '12345',
+      aduanaIngreso: '001',
+      seccionAduanera: '002',
+      fechaIngreso: '2025-01-01',
+      fechaVencimiento: '2025-12-31',
     });
   });
 
-  describe('getAduanaDeIngreso', () => {
-    it('debería obtener las opciones de aduana de ingreso desde el servicio', () => {
-      component.getAduanaDeIngreso();
+  it('should call getAduanaDeIngreso and populate aduanaDeingresOpciones', () => {
+    const mockData = [{ id: 1, descripcion: 'Aduana 1' }];
+    mockRetornoService.getAduanaDeIngreso.mockReturnValue(of(mockData));
 
-      expect(mockService.getAduanaDeIngreso).toHaveBeenCalled();
-      expect(component.aduanaDeingresOpciones).toEqual([{ id: 1, descripcion: 'Aduana 1' }]);
-    });
+    component.getAduanaDeIngreso();
+
+    expect(mockRetornoService.getAduanaDeIngreso).toHaveBeenCalled();
+    expect(component.aduanaDeingresOpciones).toEqual(mockData);
   });
 
-  describe('getSeccionAduanera', () => {
-    it('debería obtener las opciones de sección aduanera desde el servicio', () => {
-      component.getSeccionAduanera();
+  it('should call getSeccionAduanera and populate seccionAduaneraOpciones', () => {
+    const mockData = [{ id: 2, descripcion: 'Sección 1' }];
+    mockRetornoService.getSeccionAduanera.mockReturnValue(of(mockData));
 
-      expect(mockService.getSeccionAduanera).toHaveBeenCalled();
-      expect(component.seccionAduaneraOpciones).toEqual([{ id: 1, descripcion: 'Sección 1' }]);
-    });
+    component.getSeccionAduanera();
+
+    expect(mockRetornoService.getSeccionAduanera).toHaveBeenCalled();
+    expect(component.seccionAduaneraOpciones).toEqual(mockData);
   });
 
-  describe('cambioFechaIngreso', () => {
-    it('debería actualizar el valor de fechaVencimientoProrroga en el formulario', () => {
-      component.cambioFechaIngreso('2023-10-01');
+  it('should update fechaIngreso in the form and store when cambioFechaIngreso is called', () => {
+    const newDate = '2025-02-01';
+    component.cambioFechaIngreso(newDate);
 
-      expect(component.datosImportacionRetornoAutorizacionGeneralFormulario.get('fechaVencimientoProrroga')?.value).toBe('2023-10-01');
-    });
+    expect(component.datosImportacionRetornoAutorizacionGeneralFormulario.get('fechaIngreso')?.value).toBe(newDate);
+    expect(mockStore.setTramite630307State).toHaveBeenCalledWith({ fechaIngreso: newDate });
   });
 
-  describe('cambioFechaVencimiento', () => {
-    it('debería actualizar el valor de fechaVencimiento en el formulario', () => {
-      component.cambioFechaVencimiento('2023-10-15');
+  it('should update fechaVencimiento in the form and store when cambioFechaVencimiento is called', () => {
+    const newDate = '2025-11-30';
+    component.cambioFechaVencimiento(newDate);
 
-      expect(component.datosImportacionRetornoAutorizacionGeneralFormulario.get('fechaVencimiento')?.value).toBe('2023-10-15');
-    });
+    expect(component.datosImportacionRetornoAutorizacionGeneralFormulario.get('fechaVencimiento')?.value).toBe(newDate);
+    expect(mockStore.setTramite630307State).toHaveBeenCalledWith({ fechaVencimiento: newDate });
   });
 
-  describe('ngOnDestroy', () => {
-    it('debería completar el observable destroyed$', () => {
-      const destroyedSpy = jest.spyOn(component['destroyed$'], 'next');
-      const completeSpy = jest.spyOn(component['destroyed$'], 'complete');
+  it('should clean up subscriptions on ngOnDestroy', () => {
+    const destroyedSpy = jest.spyOn(component['destroyed$'], 'next');
+    const completeSpy = jest.spyOn(component['destroyed$'], 'complete');
 
-      component.ngOnDestroy();
+    component.ngOnDestroy();
 
-      expect(destroyedSpy).toHaveBeenCalled();
-      expect(completeSpy).toHaveBeenCalled();
-    });
+    expect(destroyedSpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
   });
 });
