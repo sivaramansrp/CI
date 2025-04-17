@@ -18,6 +18,8 @@ import { DatosDelSolicitudModificacionComponent } from '../../../../shared/compo
 import { PagoDeDerechosEntradaComponent } from '../../../../shared/components/pago-de-derechos-entrada/pago-de-derechos-entrada.component';
 import { TercerosRelacionadosFabSeccionComponent } from '../../../../shared/components/terceros-relacionados-fab-seccion/terceros-relacionados-fab-seccion.component';
 import { TramitesAsociadosSeccionComponent } from '../../../../shared/components/tramites-asociados-seccion/tramites-asociados-seccion.component';
+
+import { CompleteForm, Destinatario, DomicilioEstablecimiento, Fabricante, Facturador, FormMercancias, PagoDeDerechos, Proveedor, ScianForm, SolicitanteData, SolicitudEstablecimientoForm, SolicitudForm, TercerosRelacionados, Tramite } from '../../models/mod-permiso.model';
 /*
   * @description
 */
@@ -85,8 +87,15 @@ export class PasoUnoPagesComponent implements AfterViewInit {
   /**
    * Objeto para almacenar todos los valores recopilados de los formularios.
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  payload: any = {};
+ 
+
+  payload: {
+    solicitante?: SolicitanteData;
+    datosSolicitud?: CompleteForm[];
+    tercerosRelacionados?: TercerosRelacionados[];
+    pagoDeDerechos?: PagoDeDerechos[];
+    tramitesAsociados?: Tramite[];
+  } = {};
 
   /**
    * Hook del ciclo de vida de Angular que se ejecuta después de que la vista ha sido inicializada.
@@ -106,11 +115,22 @@ export class PasoUnoPagesComponent implements AfterViewInit {
    * 
    * @returns Un objeto que contiene los valores de los formularios de todas las secciones.
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  collectFormValues(): any {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const ALL_FORM_VALUES: any = {
-      solicitante: [],
+ 
+  collectFormValues(): {
+    solicitante?: SolicitanteData;
+    datosSolicitud?: CompleteForm[];
+    tercerosRelacionados?: TercerosRelacionados[];
+    pagoDeDerechos?: PagoDeDerechos[];
+    tramitesAsociados?: Tramite[];
+  } {
+    const ALL_FORM_VALUES: {
+      solicitante?: SolicitanteData;
+      datosSolicitud?: CompleteForm[];
+      tercerosRelacionados?: TercerosRelacionados[];
+      pagoDeDerechos?: PagoDeDerechos[];
+      tramitesAsociados?: Tramite[];
+    } = {
+      solicitante: undefined,
       datosSolicitud: [],
       tercerosRelacionados: [],
       pagoDeDerechos: [],
@@ -119,85 +139,57 @@ export class PasoUnoPagesComponent implements AfterViewInit {
 
     // Tab 1: SolicitanteComponent
     if (this.solicitante?.form) {
-      ALL_FORM_VALUES.solicitante = this.solicitante.form.value;
+      ALL_FORM_VALUES.solicitante = this.solicitante.form.value as SolicitanteData;
     }
 
     // Tab 2: DatosDelSolicitudModificacionComponent
     if (this.datosSolicitudComponents?.length > 0) {
       this.datosSolicitudComponents.toArray().forEach((component) => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const CHILD_DATA: any = {};
-        if (component?.domicilioEstablecimiento) {
-          CHILD_DATA.domicilioEstablecimiento =
-            component.domicilioEstablecimiento.value;
-        }
-        if (component?.scianForm) {
-          CHILD_DATA.scianForm = component.scianForm.value;
-        }
-        if (component?.solicitudForm) {
-          CHILD_DATA.solicitudForm = component.solicitudForm.value;
-        }
-        if (component?.solicitudEstablecimientoForm) {
-          CHILD_DATA.solicitudEstablecimientoForm =
-            component.solicitudEstablecimientoForm.value;
-        }
-        if (component?.formMercancias) {
-          CHILD_DATA.formMercancias = component.formMercancias.value;
-        }
-        ALL_FORM_VALUES.datosSolicitud.push(CHILD_DATA);
+        const CHILD_DATA: CompleteForm = {
+          domicilioEstablecimiento: component.domicilioEstablecimiento?.value as DomicilioEstablecimiento,
+          scianForm: component.scianForm?.value as ScianForm,
+          solicitudForm: component.solicitudForm?.value as SolicitudForm,
+          solicitudEstablecimientoForm: component.solicitudEstablecimientoForm?.value as SolicitudEstablecimientoForm,
+          formMercancias: component.formMercancias?.value as FormMercancias,
+        };
+        ALL_FORM_VALUES.datosSolicitud?.push(CHILD_DATA);
       });
     }
 
     // Tab 3: TercerosRelacionadosFabSeccionComponent
     if (this.tercerosRelacionadosComponents?.length > 0) {
-      this.tercerosRelacionadosComponents
-        .toArray()
-        .forEach((component) => {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          const CHILD_DATA: any = {};
-          if (component?.agregarFacturadorFormGroup) {
-            CHILD_DATA.facturador = component.agregarFacturadorFormGroup.value;
-          }
-          if (component?.agregarFabricanteFormGroup) {
-            CHILD_DATA.fabricante = component.agregarFabricanteFormGroup.value;
-          }
-          if (component?.agregarDestinatarioFormGroup) {
-            CHILD_DATA.destinatario =
-              component.agregarDestinatarioFormGroup.value;
-          }
-          if (component?.agregarProveedorFormGroup) {
-            CHILD_DATA.proveedor = component.agregarProveedorFormGroup.value;
-          }
-          ALL_FORM_VALUES.tercerosRelacionados.push(CHILD_DATA);
-        });
+      this.tercerosRelacionadosComponents.toArray().forEach((component) => {
+        const CHILD_DATA: TercerosRelacionados = {
+          facturador: component.agregarFacturadorFormGroup?.value as Facturador,
+          fabricante: component.agregarFabricanteFormGroup?.value as Fabricante,
+          destinatario: component.agregarDestinatarioFormGroup?.value as Destinatario,
+          proveedor: component.agregarProveedorFormGroup?.value as Proveedor,
+        };
+        ALL_FORM_VALUES.tercerosRelacionados?.push(CHILD_DATA);
+      });
     }
 
     // Tab 4: PagoDeDerechosEntradaComponent
     if (this.pagoDeDerechosEntradaComponent?.length > 0) {
-      this.pagoDeDerechosEntradaComponent
-        .toArray()
-        .forEach((component) => {
-          if (component?.pagoDerechos) {
-            ALL_FORM_VALUES.pagoDeDerechos.push(component.pagoDerechos.value);
-          }
-        });
+      this.pagoDeDerechosEntradaComponent.toArray().forEach((component) => {
+        if (component?.pagoDerechos) {
+          ALL_FORM_VALUES.pagoDeDerechos?.push(component.pagoDerechos.value as PagoDeDerechos);
+        }
+      });
     }
 
     // Tab 5: TramitesAsociadosSeccionComponent
     if (this.tramitesAsociadosSeccionComponent?.length > 0) {
-      this.tramitesAsociadosSeccionComponent
-        .toArray()
-        .forEach((component) => {
-          if (component.acuseTablaDatos) {
-            ALL_FORM_VALUES.tramitesAsociados.push(
-              ...component.acuseTablaDatos
-            ); // Collect data from all instances
-          }
-        });
+      this.tramitesAsociadosSeccionComponent.toArray().forEach((component) => {
+        if (component.acuseTablaDatos) {
+          ALL_FORM_VALUES.tramitesAsociados?.push(...component.acuseTablaDatos as Tramite[]);
+        }
+      });
     }
 
     return ALL_FORM_VALUES;
   }
+
 
   /**
    * Índice actual del subtítulo seleccionado en la interfaz.

@@ -1,13 +1,16 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { AlertComponent, Catalogo, CatalogoSelectComponent, InputRadioComponent, TableComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { AlertComponent, Catalogo, CatalogoSelectComponent, InputRadioComponent, REGEX_CURP, REGEX_RFC_FISICA, REGEX_RFC_MORAL, REGEX_TELEFONO, TableComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 
 import { AbstractControl, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { DatosSeleccionados } from '../../models/terceros-fabricante-relocionados.model';
 
 import { NACIONALIDAD_OPCIONES_DE_BOTON_DE_RADIO, PERSONA_OPCIONES_DE_BOTON_DE_RADIO, TERCEROS_TEXTO_DE_ALERTA } from '../../constantes/tereceros-relacionados-fab-seccion.enum';
 import { ModalComponent } from '../modal/modal.component';
+
+import { Subject, takeUntil } from 'rxjs';
+
 import { TercerosRelacionadosFebService } from '../../services/tereceros-relacionados-feb.service';
 
 
@@ -30,7 +33,86 @@ import { TramiteRelacionadaseStore } from '../../estados/stores/terceros-relacio
   templateUrl: './terceros-relacionados-fab-seccion.component.html',
   styleUrl: './terceros-relacionados-fab-seccion.component.scss',
 })
-export class TercerosRelacionadosFabSeccionComponent implements OnInit {
+export class TercerosRelacionadosFabSeccionComponent implements OnInit, OnDestroy {
+   /**
+     * Subject utilizado para destruir las suscripciones y evitar fugas de memoria.
+     */
+    private destroy$ = new Subject<void>();
+    /**
+     * Almacena los datos del encabezado de la tabla.
+     * Esta propiedad se utiliza para definir las columnas que se mostrarán en la tabla.
+     */
+    tablaEncabezadoData: string[] = [];
+  
+   /**
+ * Indicador para determinar si la nacionalidad seleccionada es "Nacional".
+ * 
+ * @description Este indicador se utiliza para controlar la lógica relacionada con personas de nacionalidad nacional.
+ * Por ejemplo, habilitar o deshabilitar campos específicos en el formulario según la selección.
+ * 
+ * @type {boolean}
+ * @default false
+ */
+public nacional = false;
+  
+   /**
+ * Indicador para determinar si la nacionalidad seleccionada es "Extranjera".
+ * 
+ * @description Este indicador se utiliza para controlar la lógica relacionada con personas de nacionalidad extranjera.
+ * Por ejemplo, habilitar o deshabilitar campos específicos en el formulario según la selección.
+ * 
+ * @type {boolean}
+ * @default false
+ */
+public extranjero = false;
+  
+    /**
+     * Indicador para determinar si se ha seleccionado una persona física.
+     * Inicialmente establecido en `false`.
+     *
+     * @description Este indicador se utiliza para controlar la lógica relacionada con personas físicas.
+     */
+    public fisica = false;
+  
+    /**
+     * Indicador para determinar si se ha seleccionado una persona moral.
+     * Inicialmente establecido en `false`.
+     *
+     * @description Este indicador se utiliza para controlar la lógica relacionada con personas morales.
+     */
+    public moral = false;
+  
+    /**
+     * Datos de las filas para la tabla de fabricantes.
+     * Inicialmente vacío, se llenará con los datos agregados por el usuario.
+     *
+     * @description Este arreglo almacena las filas que se mostrarán en la tabla de fabricantes.
+     */
+    fabricanteRowData: TablaDatos[] = [];
+  
+    /**
+     * Datos de las filas para la tabla de destinatarios.
+     * Inicialmente vacío, se llenará con los datos agregados por el usuario.
+     *
+     * @description Este arreglo almacena las filas que se mostrarán en la tabla de destinatarios.
+     */
+    destinatarioRowData: TablaDatos[] = [];
+  
+    /**
+     * Datos de las filas para la tabla de proveedores.
+     * Inicialmente vacío, se llenará con los datos agregados por el usuario.
+     *
+     * @description Este arreglo almacena las filas que se mostrarán en la tabla de proveedores.
+     */
+    proveedorRowData: TablaDatos[] = [];
+  
+    /**
+     * Datos de las filas para la tabla de facturadores.
+     * Inicialmente vacío, se llenará con los datos agregados por el usuario.
+     *
+     * @description Este arreglo almacena las filas que se mostrarán en la tabla de facturadores.
+     */
+    facturadorRowData: TablaDatos[] = [];
 
    /**
      * Indicador de visibilidad para la sección de la tabla.
@@ -221,8 +303,9 @@ export class TercerosRelacionadosFabSeccionComponent implements OnInit {
      * Obtiene los datos para los selectores desde el servicio y inicializa los formularios.
      */
     ngOnInit(): void {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      this.tercerosService.getEncabezadoDeTabla().subscribe((data: any) => {
+      
+      this.tercerosService.getEncabezadoDeTabla()
+        .pipe(takeUntil(this.destroy$)).subscribe((data:{ columns: string[] }) => {
         this.tablaEncabezadoData = data.columns;
       });
   
@@ -230,7 +313,8 @@ export class TercerosRelacionadosFabSeccionComponent implements OnInit {
        * Obtiene los datos para los selectores desde el servicio de terceros.
        * Actualiza la propiedad `dropdownData` con los datos obtenidos.
        */
-      this.tercerosService.getData().subscribe((data) => {
+      this.tercerosService.getData()
+      .pipe(takeUntil(this.destroy$)).subscribe((data) => {
         this.dropdownData = data;
       });
   
@@ -239,7 +323,8 @@ export class TercerosRelacionadosFabSeccionComponent implements OnInit {
        */
   
       // Carga los datos de país para el dropdown.
-      this.tercerosService.getPaisData().subscribe((data) => {
+      this.tercerosService.getPaisData()
+        .pipe(takeUntil(this.destroy$)).subscribe((data) => {
         /**
          * Asigna los datos de país a la variable paisDropdownData.
          */
@@ -247,7 +332,8 @@ export class TercerosRelacionadosFabSeccionComponent implements OnInit {
       });
   
       // Carga los datos de municipio para el dropdown.
-      this.tercerosService.getMunicipioData().subscribe((data) => {
+      this.tercerosService.getMunicipioData()
+      .pipe(takeUntil(this.destroy$)).subscribe((data) => {
         /**
          * Asigna los datos de municipio a la variable municipioDropdownData.
          */
@@ -255,7 +341,8 @@ export class TercerosRelacionadosFabSeccionComponent implements OnInit {
       });
   
       // Carga los datos de código postal para el dropdown.
-      this.tercerosService.getCodigoPostalData().subscribe((data) => {
+      this.tercerosService.getCodigoPostalData()
+      .pipe(takeUntil(this.destroy$)).subscribe((data) => {
         /**
          * Asigna los datos de código postal a la variable codigoPostalDropdownData.
          */
@@ -263,7 +350,8 @@ export class TercerosRelacionadosFabSeccionComponent implements OnInit {
       });
   
       // Carga los datos de colonia para el dropdown.
-      this.tercerosService.getColoniaData().subscribe((data) => {
+      this.tercerosService.getColoniaData()
+        .pipe(takeUntil(this.destroy$)).subscribe((data) => {
         /**
          * Asigna los datos de colonia a la variable coloniaDropdownData.
          */
@@ -271,7 +359,8 @@ export class TercerosRelacionadosFabSeccionComponent implements OnInit {
       });
   
       // Carga los datos de localidad para el dropdown.
-      this.tercerosService.getLocalidadData().subscribe((data) => {
+      this.tercerosService.getLocalidadData()
+      .pipe(takeUntil(this.destroy$)).subscribe((data) => {
         /**
          * Asigna los datos de localidad a la variable localidadDropdownData.
          */
@@ -309,12 +398,12 @@ export class TercerosRelacionadosFabSeccionComponent implements OnInit {
          * RFC del tercero.
          * Requiere validación adicional mediante `rfcValidator`.
          */
-        rfc: new FormControl('', [Validators.required, this.rfcValidator]),
+        rfc: new FormControl('', [Validators.required,TercerosRelacionadosFabSeccionComponent.rfcValidator]),
         /**
          * CURP del tercero.
          * Requiere validación adicional mediante `curpValidator`.
          */
-        curp: new FormControl('', [Validators.required, this.curpValidator]),
+        curp: new FormControl('', [Validators.required, Validators.pattern(REGEX_CURP)]),
         /**
          * Nombre del tercero.
          */
@@ -337,9 +426,8 @@ export class TercerosRelacionadosFabSeccionComponent implements OnInit {
          */
         pais: new FormControl('', [
           Validators.required,
-          this.requiredPaisValidator,
+          TercerosRelacionadosFabSeccionComponent.requiredPaisValidator,
         ]),
-  
         extranjeroEstado: new FormControl('', [Validators.required]),
         /**
          * Estado o localidad del tercero.
@@ -389,7 +477,7 @@ export class TercerosRelacionadosFabSeccionComponent implements OnInit {
          * Teléfono del tercero.
          * Requiere validación adicional mediante `telefonoValidator`.
          */
-        telefono: new FormControl('', [this.telefonoValidator]),
+        telefono: new FormControl('', [Validators.pattern(REGEX_TELEFONO)]),
         /**
          * Correo electrónico del tercero.
          */
@@ -607,7 +695,7 @@ export class TercerosRelacionadosFabSeccionComponent implements OnInit {
          */
         pais: new FormControl('', [
           Validators.required,
-          this.requiredPaisValidator,
+          TercerosRelacionadosFabSeccionComponent.requiredPaisValidator,
         ]),
         /**
          * Estado del facturador.
@@ -654,63 +742,7 @@ export class TercerosRelacionadosFabSeccionComponent implements OnInit {
       this.agregarFacturadorFormGroup.get('denominacionRazonSocial')?.disable();
     }
   
-    /**
-     * Almacena los datos del encabezado de la tabla.
-     * Esta propiedad se utiliza para definir las columnas que se mostrarán en la tabla.
-     */
-    tablaEncabezadoData: string[] = [];
   
-    public nacional = false;
-  
-    public extranjero = false;
-  
-    /**
-     * Indicador para determinar si se ha seleccionado una persona física.
-     * Inicialmente establecido en `false`.
-     *
-     * @description Este indicador se utiliza para controlar la lógica relacionada con personas físicas.
-     */
-    public fisica = false;
-  
-    /**
-     * Indicador para determinar si se ha seleccionado una persona moral.
-     * Inicialmente establecido en `false`.
-     *
-     * @description Este indicador se utiliza para controlar la lógica relacionada con personas morales.
-     */
-    public moral = false;
-  
-    /**
-     * Datos de las filas para la tabla de fabricantes.
-     * Inicialmente vacío, se llenará con los datos agregados por el usuario.
-     *
-     * @description Este arreglo almacena las filas que se mostrarán en la tabla de fabricantes.
-     */
-    fabricanteRowData: TablaDatos[] = [];
-  
-    /**
-     * Datos de las filas para la tabla de destinatarios.
-     * Inicialmente vacío, se llenará con los datos agregados por el usuario.
-     *
-     * @description Este arreglo almacena las filas que se mostrarán en la tabla de destinatarios.
-     */
-    destinatarioRowData: TablaDatos[] = [];
-  
-    /**
-     * Datos de las filas para la tabla de proveedores.
-     * Inicialmente vacío, se llenará con los datos agregados por el usuario.
-     *
-     * @description Este arreglo almacena las filas que se mostrarán en la tabla de proveedores.
-     */
-    proveedorRowData: TablaDatos[] = [];
-  
-    /**
-     * Datos de las filas para la tabla de facturadores.
-     * Inicialmente vacío, se llenará con los datos agregados por el usuario.
-     *
-     * @description Este arreglo almacena las filas que se mostrarán en la tabla de facturadores.
-     */
-    facturadorRowData: TablaDatos[] = [];
   
     /**
      * Maneja el cambio en los checkboxes para seleccionar el tipo de persona.
@@ -1317,8 +1349,8 @@ export class TercerosRelacionadosFabSeccionComponent implements OnInit {
      * @param control Control del formulario a validar.
      * @returns Nulo si el valor es válido, de lo contrario devuelve un objeto con la propiedad `requiredPais`.
      */
-    // eslint-disable-next-line class-methods-use-this
-    requiredPaisValidator(control: AbstractControl) {
+  
+    static requiredPaisValidator(control: AbstractControl): { requiredPais: boolean } | null {
       return control.value !== '' && control.value !== '-1'
         ? null
         : { requiredPais: true };
@@ -1331,39 +1363,22 @@ export class TercerosRelacionadosFabSeccionComponent implements OnInit {
      * @param control Control del formulario a validar.
      * @returns Nulo si el RFC es válido, de lo contrario devuelve un objeto con la propiedad `invalidRFC`.
      */
-    // eslint-disable-next-line class-methods-use-this
-    rfcValidator(control: AbstractControl) {
-      const RFC_FISICA = /^([a-zñA-ZÑ]{4})(\d{6})(([a-zA-Z]|\d){3})$/;
-      const RFC_MORAL = /^([a-zñA-ZÑ&]{3})(\d{6})(([a-zA-Z]|\d){3})$/;
-      return RFC_FISICA.test(control.value) || RFC_MORAL.test(control.value)
-        ? null
-        : { invalidRFC: true };
+    
+    static rfcValidator(control: AbstractControl): { invalidRFC: boolean } | null {
+      const VALUE = control.value;
+      if (REGEX_RFC_FISICA.test(VALUE) || REGEX_RFC_MORAL.test(VALUE)) {
+        return null; // RFC válido
+      }
+      return { invalidRFC: true }; // RFC inválido
     }
-  
+   
+
     /**
-     * Validador para verificar que la CURP sea válida.
-     * Utiliza una expresión regular para validar el formato de la CURP.
-     *
-     * @param control Control del formulario a validar.
-     * @returns Nulo si la CURP es válida, de lo contrario devuelve un objeto con la propiedad `invalidCURP`.
-     */
-    // eslint-disable-next-line class-methods-use-this
-    curpValidator(control: AbstractControl) {
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      const pattern = /^([a-zA-Z]{4})([0-9]{6})([HhMm][a-zA-Z]{5})([0-9]{2})$/;
-      return pattern.test(control.value) ? null : { invalidCURP: true };
-    }
-  
-    /**
-     * Validador para verificar que el teléfono sea válido.
-     * Utiliza una expresión regular que permite números, letras, guiones, paréntesis y espacios.
-     *
-     * @param control Control del formulario a validar.
-     * @returns Nulo si el teléfono es válido, de lo contrario devuelve un objeto con la propiedad `invalidTelefono`.
-     */
-    // eslint-disable-next-line class-methods-use-this
-    telefonoValidator(control: AbstractControl) {
-      const PATTERN = /^([0-9A-Za-z\-() ])*$/;
-      return PATTERN.test(control.value) ? null : { invalidTelefono: true };
-    }
+   * Ciclo de vida `OnDestroy`.
+   * Limpia las suscripciones para evitar fugas de memoria.
+   */
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 }

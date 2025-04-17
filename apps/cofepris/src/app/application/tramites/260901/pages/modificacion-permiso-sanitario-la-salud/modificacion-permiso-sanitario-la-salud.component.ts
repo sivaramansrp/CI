@@ -4,10 +4,11 @@
  */
 import { Component, ViewChild } from '@angular/core';
 
-import { AccionBoton, DatosPasos, ListaPasosWizard, WizardComponent } from '@libs/shared/data-access-user/src';
+import { AccionBoton, AVISO, DatosPasos, ListaPasosWizard, WizardComponent } from '@libs/shared/data-access-user/src';
 
-import { AVISO_PRIVACIDAD, MODIFICACION_PERMISO_DATA, MODIFICACION_PERMISO_ENUM } from '../../constantes/mod-permiso.enum';
+import {MODIFICACION_PERMISO_DATA, MODIFICACION_PERMISO_ENUM } from '../../constantes/mod-permiso.enum';
 import { PasoUnoPagesComponent } from '../paso-uno-pages/paso-uno-pages.component';
+import { CompleteForm, PagoDeDerechos, SolicitanteData, TercerosRelacionados, Tramite } from '../../models/mod-permiso.model';
 /**
  * Component 
  */
@@ -79,7 +80,7 @@ export class ModificacionPermisoSanitarioLaSaludComponent {
      * @default 1
      */
     indice: number = 1;
-      TEXTOS = AVISO_PRIVACIDAD;
+      TEXTOS = AVISO;
    
    /**
      * Objeto que contiene los datos de configuración para los pasos del asistente (wizard).
@@ -98,22 +99,16 @@ export class ModificacionPermisoSanitarioLaSaludComponent {
   };
   
   /**
-   * Método para actualizar el índice del paso actual en el asistente (wizard).
-   * 
-   * Este método se ejecuta cuando se realiza una acción en el asistente, como avanzar
-   * al siguiente paso o retroceder al paso anterior.
-   * 
-   * @param e - Objeto de tipo `AccionBoton` que contiene:
-   *   - `accion`: La acción a realizar ('cont' para continuar o cualquier otro valor para retroceder).
-   *   - `valor`: El índice del paso al que se desea navegar.
-   * 
-   * Comportamiento:
-   * - Si el valor del índice está entre 1 y 4 (inclusive), actualiza el índice actual.
-   * - Si la acción es 'cont', avanza al siguiente paso utilizando el método `siguiente` del componente `WizardComponent`.
-   * - Si la acción no es 'cont', retrocede al paso anterior utilizando el método `atras` del componente `WizardComponent`.
+   * Objeto para almacenar todos los valores recopilados de los formularios.
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  payload: any = {}; // Object to store all form values
+  payload: {
+    solicitante?: SolicitanteData;
+    datosSolicitud?: CompleteForm[];
+    tercerosRelacionados?: TercerosRelacionados[];
+    pagoDeDerechos?: PagoDeDerechos[];
+    tramitesAsociados?: Tramite[];
+  } = {};
+
   /**
  * Método para actualizar el índice del paso actual en el asistente (wizard) y recopilar los valores del formulario.
  * 
@@ -172,18 +167,31 @@ export class ModificacionPermisoSanitarioLaSaludComponent {
  * Manejo de errores:
  * - Si el componente `PasoUnoPagesComponent` no está inicializado, no se recopilan los valores de ese paso.
  */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  collectAllFormValues(): any {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const ALL_FORM_VALUES: any = {};
   
-    if (this.pasoUnoComponent) {
-      const PASO_UNO_VALUES = this.pasoUnoComponent.collectFormValues();
-      ALL_FORM_VALUES.pasoUno = PASO_UNO_VALUES;
-    }
-  
-   
-  
-    return ALL_FORM_VALUES;
+collectAllFormValues(): {
+  pasoUno?: {
+    solicitante?: SolicitanteData;
+    datosSolicitud?: CompleteForm[];
+    tercerosRelacionados?: TercerosRelacionados[];
+    pagoDeDerechos?: PagoDeDerechos[];
+    tramitesAsociados?: Tramite[];
+  };
+} {
+  const ALL_FORM_VALUES: {
+    pasoUno?: {
+      solicitante?: SolicitanteData;
+      datosSolicitud?: CompleteForm[];
+      tercerosRelacionados?: TercerosRelacionados[];
+      pagoDeDerechos?: PagoDeDerechos[];
+      tramitesAsociados?: Tramite[];
+    };
+  } = {};
+
+  if (this.pasoUnoComponent) {
+    const PASO_UNO_VALUES = this.pasoUnoComponent.collectFormValues();
+    ALL_FORM_VALUES.pasoUno = PASO_UNO_VALUES;
   }
+
+  return ALL_FORM_VALUES;
+}
 }

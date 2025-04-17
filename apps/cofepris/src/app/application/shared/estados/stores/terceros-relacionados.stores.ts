@@ -52,7 +52,7 @@ export function createInitialState(): TercerosRelacionadasState {
 @Injectable({
   providedIn: 'root',
 })
-@StoreConfig({ name: 'tramite', resettable: true })
+@StoreConfig({ name: 'tercerosRelacionadas', resettable: true })
 export class TramiteRelacionadaseStore extends Store<TercerosRelacionadasState> {
 
   /**

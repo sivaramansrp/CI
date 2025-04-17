@@ -541,7 +541,7 @@ eliminarPedimento(borrar: boolean): void {
       fechaCaducidad: [''],
       
     });
-   this.setDisabled();
+   this.establecerDeshabilitado();
     this.establecimientoService
       .getJustificationData()
       .pipe(takeUntil(this.destroy$))
@@ -564,7 +564,7 @@ eliminarPedimento(borrar: boolean): void {
 /**
  * Deshabilita el campo "observaciones" del formulario de domicilio
  */
-  setDisabled(): void {
+establecerDeshabilitado(): void {
  this.domicilioEstablecimiento.get('ideGenerica1')?.valueChanges.subscribe((value) => {
   if (value === 'modificacion') {
     this.domicilioEstablecimiento.get('observaciones')?.enable();
@@ -681,6 +681,15 @@ eliminarPedimento(borrar: boolean): void {
       this.closeScianModal();
     }
   }
+   /**
+    * compo docs
+     * @description
+     * Este método guarda los datos de una mercancía ingresados en el formulario `formMercancias`.
+     * Si el formulario es válido, se crea un objeto `MERCANCIA` con los valores del formulario,
+     * se agrega a la tabla de datos `mercanciasTablaDatos`, y luego se reinicia el formulario.
+     */
+
+  
   guardarMarcancia(): void {
     if (this.formMercancias.valid) {
       const MERCANCIA: MercanciasInfo = {
@@ -711,7 +720,7 @@ eliminarPedimento(borrar: boolean): void {
   
       // Reset the form
       this.formMercancias.reset();
-      this.closeMercanciaModal();
+      this.cerrarModalMercancía();
     }
   }
   /**
@@ -731,14 +740,14 @@ eliminarPedimento(borrar: boolean): void {
    /**
    * Abre el modal SCIAN.
    */
-   openMercanciaModal(): void {
+   abrirModalMercancia(): void {
     this.modalAddAgentMercanciasInstance.show();
   }
 
   /**
    * Cierra el modal SCIAN.
    */
-  closeMercanciaModal(): void {
+  cerrarModalMercancía(): void {
     this.modalAddAgentMercanciasInstance.hide();
   }
 
