@@ -53,3 +53,7 @@ export const TERCEROS_NACIONALIDAD_OPCIONES_EXTRANJERO = [
     value: 'Extranjero',
   },
 ];
+
+export const CAMPO_OBLIGATORIO_DESTINATARIO =  [240111];
+
+export const CAMPO_OBLIGATORIO_PROVEEDOR =  [240111];
