@@ -1,9 +1,10 @@
 import { CATALOGOS_ID } from '@ng-mf/data-access-user';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogosService } from '@ng-mf/data-access-user';
-import { Component } from '@angular/core';
-import { OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { TEXTOS } from '@ng-mf/data-access-user';
+import { ReplaySubject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 /**
  * PasoDosComponent.
@@ -15,7 +16,7 @@ import { TEXTOS } from '@ng-mf/data-access-user';
   templateUrl: './paso-dos.component.html',
   styleUrl: './paso-dos.component.scss',
 })
-export class PasoDosComponent implements OnInit {
+export class PasoDosComponent implements OnInit, OnDestroy {
   /**
    * Textos de la aplicación que serán utilizados para mostrar contenido en la interfaz.
    */
@@ -38,14 +39,15 @@ export class PasoDosComponent implements OnInit {
   catalogoDocumentos: Catalogo[] = [];
 
   /**
+   * ReplaySubject para manejar la finalización de las suscripciones.
+   */
+  private destroyed$ = new ReplaySubject<void>(1);
+
+  /**
    * Constructor de PasoDosComponent.
    * @param catalogosServices Servicio para interactuar con los catálogos.
    */
-  constructor(
-    private catalogosServices: CatalogosService,
-  ) {
-    // Inicialización del componente
-  }
+  constructor(private catalogosServices: CatalogosService) {}
 
   /**
    * Ciclo de vida de Angular: ngOnInit.
@@ -61,12 +63,25 @@ export class PasoDosComponent implements OnInit {
    * Actualiza la propiedad `catalogoDocumentos` con los datos obtenidos.
    */
   getTiposDocumentos(): void {
-    this.catalogosServices.getCatalogo(CATALOGOS_ID.CAT_TIPO_DOCUMENTO).subscribe({
+    this.catalogosServices
+      .getCatalogo(CATALOGOS_ID.CAT_TIPO_DOCUMENTO)
+      .pipe(takeUntil(this.destroyed$)) // Finaliza la suscripción al destruir el componente
+      .subscribe({
         next: (respuesta): void => {
           if (respuesta.length > 0) {
             this.catalogoDocumentos = respuesta;
           }
         },
       });
+  }
+
+  /**
+   * Ciclo de vida de Angular: ngOnDestroy.
+   * Se ejecuta al destruir el componente.
+   * Emite un valor para completar las suscripciones activas.
+   */
+  ngOnDestroy(): void {
+    this.destroyed$.next(); // Emite un valor para finalizar las suscripciones
+    this.destroyed$.complete(); // Completa el ReplaySubject
   }
 }
