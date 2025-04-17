@@ -1,12 +1,21 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
 import { Observable } from 'rxjs';
-import { PermisosVigentesRespuesta } from '../../models/suspension-permiso.model';
+import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
 
+import { PermisosVigentesRespuesta, PersonasNotificarRespuesta, TitularDetalleRespuesta } from '../../models/suspension-permiso.model';
+
+/**
+ * Servicio para gestionar la suspensión de permisos.
+ * @class SuspensionPermisoService
+ */
 @Injectable({
   providedIn: 'root'
 })
+
+/**
+ * Servicio para gestionar la suspensión de permisos.
+ */
 export class SuspensionPermisoService {
 
    /**
@@ -15,7 +24,9 @@ export class SuspensionPermisoService {
    */
    constructor(
     private http: HttpClient
-  ) { }
+  ) { 
+    // Constructor vacío
+  }
 
   /**
    * Obtiene los datos del documentos seleccionados.
@@ -29,7 +40,23 @@ export class SuspensionPermisoService {
    * Obtiene los datos de la tabla de permisos vigentes.
    * @returns Observable con los datos de la tabla de permisos vigentes.
    */
-  buscarPermisosVigentes(): Observable<PermisosVigentesRespuesta> {
+  obtenerPermisosVigentes(): Observable<PermisosVigentesRespuesta> {
     return this.http.get<PermisosVigentesRespuesta>('assets/json/140216/permisos-vigentes.json');
+  }
+
+  /**
+   * Obtiene los datos del detalle del titular.
+   * @returns Observable con los datos del detalle del titular.
+   */
+  obtenerDetalleTitular(): Observable<TitularDetalleRespuesta> {
+    return this.http.get<TitularDetalleRespuesta>('assets/json/140216/detalle-titular.json');
+  }
+
+  /**
+   * Obtiene los datos del personal a notificar.
+   * @returns Observable con los datos de las personas a notificar.
+   */
+  obtenerPersonasNotificar(): Observable<PersonasNotificarRespuesta> {
+    return this.http.get<PersonasNotificarRespuesta>('assets/json/140216/personas-notificar.json');
   }
 }

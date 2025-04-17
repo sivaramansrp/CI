@@ -53,9 +53,10 @@
     </div>
     <div class="row">
         <div class="col-md-4">
-            <label class="form-label" for="numAutorizacion" name="numAutorizacion">Número de oficido de suspensión*:</label>
-            <input type="text" class="form-control" name="numAutorizacion" formControlName="numAutorizacion"
-                size="30" id="numOficioText"
+            <label class="form-label" for="numAutorizacion" name="numAutorizacion">Número de oficido de
+                suspensión*:</label>
+            <input type="text" class="form-control" name="numAutorizacion" formControlName="numAutorizacion" size="30"
+                id="numOficioText"
                 (change)="setValoresStore(busquedaPermisosForm,'numAutorizacion', 'setNumAutorizacion')">
         </div>
     </div>
@@ -63,8 +64,58 @@
         <div class="col-md-4">
             <div class="input-group">
                 <input-fecha [setFecha]="busquedaPermisosForm.get('fechaSuspension')?.value" [datos]="fechaFinalInput"
-                    (valorCambiado)="cambioFechaSuspension($event)"></input-fecha>
+                (valorCambiado)="cambioFechaSuspension($event)"></input-fecha>
             </div>
         </div>
-    </div>    
+    </div>
+</div>
+
+<!-- Modal para detalle del permiso -->
+<div class="modal fade" id="detalle-del-permiso" tabindex="-1" aria-labelledby="modalDetalleDelPermisoLabel">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body">
+                <app-detalle-del-permiso></app-detalle-del-permiso>
+            </div>
+            <div class="container mb-5">
+                <div class="pull-right">
+                    <button type="button" class="btn btn-default" name="cerrar" data-bs-dismiss="modal"
+                        #closeModal>Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para detalle titular -->
+<div class="modal fade" id="detalle-rfc-facultad" tabindex="-1" aria-labelledby="modalDetalleRfcFacultadLabel">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body">
+                <app-detalle-titular></app-detalle-titular>
+            </div>
+            <div class="container mb-5">
+                <div class="pull-right">
+                    <button type="button" class="btn btn-default" name="cerrar" data-bs-dismiss="modal"
+                        #closeModal>Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="personas-notificar" tabindex="-1" aria-labelledby="modalPersonasNotificarLabel">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body">
+                <app-personas-notificar></app-personas-notificar>
+            </div>
+            <div class="container mb-5">
+                <div class="pull-right">
+                    <button type="button" class="btn btn-default" name="cerrar" data-bs-dismiss="modal"
+                        #closeModal>Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

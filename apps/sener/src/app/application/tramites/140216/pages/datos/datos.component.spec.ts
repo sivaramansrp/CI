@@ -5,7 +5,7 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { SolicitanteComponent, SolicitanteService } from '@libs/shared/data-access-user/src';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { ManiobrasMercanciasComponent } from '../../components/maniobras-mercancias/maniobras-mercancias.component';
+import { BusquedaPermisosComponent } from '../../components/busqueda-permisos/busqueda-permisos.component';
 
 describe('DatosComponent', () => {
   let component: DatosComponent;
@@ -14,7 +14,7 @@ describe('DatosComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [DatosComponent],
-      imports: [ CommonModule, SolicitanteComponent, HttpClientModule, ManiobrasMercanciasComponent],
+      imports: [ CommonModule, SolicitanteComponent, HttpClientModule, BusquedaPermisosComponent],
       providers: [SolicitanteService, HttpClientTestingModule, HttpClient],
       schemas: [NO_ERRORS_SCHEMA]
     }).compileComponents();
@@ -34,34 +34,12 @@ describe('DatosComponent', () => {
     expect(component.indice).toBe(1);
   });
 
-  it('should update the selected tab index when seleccionaTab is called', () => {
-    // Llamar a seleccionaTab y verificar que actualiza correctamente el índice
-    component.seleccionaTab(2);
-    expect(component.indice).toBe(2);
-  });
-
-  it('should render Solicitante tab when indice is 1', () => {
+  it('should render Busqueda Permisos tab when indice is 1', () => {
     // Establecer el índice en 1 y verificar que se renderiza el componente correspondiente
     component.indice = 1;
     fixture.detectChanges();
-    const SOLICITANTE = fixture.nativeElement.querySelector('solicitante');
+    const SOLICITANTE = fixture.nativeElement.querySelector('app-busqueda-permisos');
     expect(SOLICITANTE).toBeTruthy();
-  });
-
-  it('should render maniobras-mercancias tab when indice is 2', () => {
-    component.indice = 2;
-    fixture.detectChanges();
-    const MANIOBRAS_MERCANCIAS = fixture.nativeElement.querySelector('app-maniobras-mercancias');
-    expect(MANIOBRAS_MERCANCIAS).toBeTruthy();
-  });
-
-  it('should handle keyboard navigation (Enter key)', () => {
-    // Simular que el usuario presiona Enter en el tab y verificar que cambia el índice
-    const EVENT = new KeyboardEvent('keydown', { key: 'Enter' });
-    const TAB_ELEMENT = fixture.nativeElement.querySelector('a[tabindex="2"]');
-    TAB_ELEMENT.dispatchEvent(EVENT);
-    component.seleccionaTab(2);
-    expect(component.indice).toBe(2);
   });
 
   it('should handle keyboard navigation (Space key)', () => {

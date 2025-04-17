@@ -1,13 +1,18 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { SuspensionPermisoService } from '../../services/suspension-permiso/suspension-permiso.service';
-import { map, Subject, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { Modal } from 'bootstrap';
+
 import { BusquedaPermisos140216State, Tramite140216Store } from '../../estados/tramites/tramite140216.store';
-import { Tramite140216Query } from '../../estados/queries/tramite140216.query';
-import { InputFecha, InputFechaComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { FECHA_SALIDA, PERMISOS_VIGENTES_ENCABEZADO_DE_TABLA } from '../../constantes/suspension-permiso.enum';
+import { InputFecha, InputFechaComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { PermisosVigentes, PermisosVigentesRespuesta } from '../../models/suspension-permiso.model';
+import { DetalleDelPermisoComponent } from '../detalle-del-permiso/detalle-del-permiso.component';
+import { DetalleTitularComponent } from '../detalle-titular/detalle-titular.component';
+import { PersonasNotificarComponent } from '../personas-notificar/personas-notificar.component';
+import { SuspensionPermisoService } from '../../services/suspension-permiso/suspension-permiso.service';
+import { Tramite140216Query } from '../../estados/queries/tramite140216.query';
 
 /**
  * Componente para la búsqueda de permisos.
@@ -21,11 +26,15 @@ import { PermisosVigentes, PermisosVigentesRespuesta } from '../../models/suspen
     ReactiveFormsModule,
     TituloComponent,
     TablaDinamicaComponent,
-    InputFechaComponent
+    InputFechaComponent,
+    DetalleDelPermisoComponent,
+    DetalleTitularComponent,
+    PersonasNotificarComponent
   ],
   templateUrl: './busqueda-permisos.component.html',
   styleUrl: './busqueda-permisos.component.scss',
 })
+
 export class BusquedaPermisosComponent implements OnInit, OnDestroy {
   /**
    * Referencia al formulario reactivo de busquedaPermisos.
@@ -59,6 +68,29 @@ export class BusquedaPermisosComponent implements OnInit, OnDestroy {
    * Fecha final de entrada.
    */
   fechaFinalInput: InputFecha = FECHA_SALIDA;
+
+  /**
+   * Referencia al elemento modal para mostrar detalles del RFC de la facultad.
+   * @type {ElementRef}
+   */
+  @ViewChild('detalle-rfc-facultad', { static: false }) modalDetalleRfcFacultad!: ElementRef;
+
+  /**
+   * Referencia al elemento modal para mostrar detalles del permiso.
+   * @type {ElementRef}
+   */
+  @ViewChild('detalle-del-permiso', { static: false }) modalDetallePermiso!: ElementRef;
+
+  /**
+   * Referencia al elemento modal para mostrar personas a notificar.
+   * @type {ElementRef}
+   */
+  @ViewChild('personas-notificar', { static: false }) modalPersonasNotificar!: ElementRef;
+
+  /**
+   * Elemento modal para mostrar información adicional.
+   */
+  modalElemento!: HTMLElement | null;
 
   /**
    * Subject para destruir notificador.
@@ -131,11 +163,11 @@ export class BusquedaPermisosComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   relanzarGrid(): void {
-    this.suspensionPermisoService.buscarPermisosVigentes()
+    this.suspensionPermisoService.obtenerPermisosVigentes()
       .pipe(takeUntil(this.destruirNotificador$))
       .subscribe({
         next: (permisosVigentes: PermisosVigentesRespuesta) => {
-          this.permisosVigentesTabla = permisosVigentes.data.map((permiso: any) => {
+          this.permisosVigentesTabla = permisosVigentes.data.map((permiso: PermisosVigentes) => {
             return {
               numeroResolucion: permiso.numeroResolucion,
               tipoSolicitud: permiso.tipoSolicitud,
@@ -158,16 +190,42 @@ export class BusquedaPermisosComponent implements OnInit, OnDestroy {
       });
   }
 
+  /**
+   * Método que se ejecuta al hacer clic en el botón "Limpiar".
+   * @returns {void}
+   */
   limpiarGrid(): void {
+    this.permisosVigentesTabla = [];
+    this.tramite140216Store.setPermisosVigentesTabla(this.permisosVigentesTabla);
+    this.tramite140216Store.setFolioTramiteBusqueda('');
+    this.tramite140216Store.setMotivoSuspension('');
+    this.tramite140216Store.setNumAutorizacion('');
+    this.tramite140216Store.setFechaSuspension('');
+    this.busquedaPermisosForm.reset();
   }
 
+  /**
+   * Método que se ejecuta al hacer clic en el botón "Detalle del permiso".
+   * @returns {void}
+   */
   obtenerDetallePermiso(): void {
+    this.mostrarModal('detalle-del-permiso');
   }
 
+  /**
+   * Método que se ejecuta al hacer clic en el botón "Detalle titular".
+   * @returns {void}
+   */
   obtenerDetalleTitular(): void {
+    this.mostrarModal('detalle-rfc-facultad');
   }
 
+  /**
+   * Método que se ejecuta al hacer clic en el botón "Personas a notificar".
+   * @returns {void}
+   */
   obtenerPersonasNotificacion(): void {
+    this.mostrarModal('personas-notificar');
   }
 
   /**
@@ -181,6 +239,19 @@ export class BusquedaPermisosComponent implements OnInit, OnDestroy {
       fechaSuspension: nuevo_valor,
     });
     this.tramite140216Store.setFechaSuspension(nuevo_valor);
+  }
+
+  /**
+   * Muestra un modal específico.
+   * @param id - El ID del modal que se va a mostrar.
+   * @returns {void}
+   */
+  mostrarModal(id: string): void {
+    this.modalElemento = document.getElementById(id);
+    if (this.modalElemento) {
+      const MODAL = Modal.getOrCreateInstance(this.modalElemento);
+      MODAL.show();
+    }
   }
 
   /**

@@ -16,7 +16,10 @@
             "cantidadAutorizada": "44,444.00",
             "valorAutorizada": "44,442.00",
             "fechaInicioVigencia": "08/03/2025",
-            "fechaFinVigencia": "08/03/2045"
+            "fechaFinVigencia": "08/03/2045",
+            "saldo": ".00",
+            "descripcionMercancia": "sgsg",
+            "paisProcedencia": "CRI-COSTA RICA (REPUBLICA DE)"
         }
     ],
     "message": "Consulta exitosa"
