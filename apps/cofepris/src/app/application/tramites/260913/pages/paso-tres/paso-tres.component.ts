@@ -11,11 +11,6 @@ import { Router } from '@angular/router';
  */
 @Component({
   selector: 'app-paso-tres',
-  standalone: true,
-  imports: [
-    CommonModule,
-    FirmaElectronicaComponent,
-  ],
   templateUrl: './paso-tres.component.html',
 })
 export class PasoTresComponent {

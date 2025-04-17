@@ -17,13 +17,6 @@ import { Component } from '@angular/core';
  */
 @Component({
   selector: 'app-paso-dos',
-  standalone: true,
-  imports: [
-    CommonModule, 
-    TituloComponent,
-    AnexarDocumentosComponent, 
-    AlertComponent,
-  ],
   templateUrl: './paso-dos.component.html', 
 })
 export class PasoDosComponent {
