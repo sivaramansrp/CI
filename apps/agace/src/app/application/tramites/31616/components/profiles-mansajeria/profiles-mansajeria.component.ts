@@ -11,6 +11,11 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angul
 })
 export class ProfilesMansajeriaComponent {
   profileForm!:FormGroup;
+  mostrarContenido = false;
   constructor(private fb: FormBuilder) {
+}
+
+alternarContenido(): void {
+  this.mostrarContenido = !this.mostrarContenido;
 }
 }

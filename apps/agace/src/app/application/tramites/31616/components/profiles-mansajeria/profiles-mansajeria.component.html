@@ -41,9 +41,9 @@
     <label class="custom-label" for="superficie">Superficie de la instalación (m²):</label>
     <input class="custom-input" id="superficie" formControlName="superficie" type="number" />
   </div>
-  <p><strong>Indique si cuenta con certificaciones que consideren que impactan en el proceso de su cadena de suministros, por ejemplo: ISO 9000; Procesos Logísticos Confiables, entre otros.</strong></p>
+  <p class="fw-bold">Indique si cuenta con certificaciones que consideren que impactan en el proceso de su cadena de suministros, por ejemplo: ISO 9000; Procesos Logísticos Confiables, entre otros.</p>
   <div class="form-row">
-    <p><strong>Otras Certificaciones:</strong></p>
+    <p class="fw-bold">Otras Certificaciones:</p>
   </div>
   
   <div class="row">
@@ -99,6 +99,22 @@
                 <input type="date" class="form-control" id="vigencia3" formControlName="vigencia3:" 
                  >
               </div>
+            </div>
+
+            <div class="table-container">
+                <div class="table-header pb-2">
+                  <h3>Empresas del grupo certificadas en materia de IVA e IEPS</h3>
+                  <button (click)="alternarContenido()" class="toggle-btn">
+                    <i
+                      class="bi fs-5 m-1"
+                      [ngClass]="{
+                        'bi-chevron-down': !mostrarContenido,
+                        'bi-chevron-up': mostrarContenido
+                      }"
+                    >
+                    </i>
+                  </button>
+                </div>
             </div>
 </form>
 
