@@ -177,8 +177,6 @@ export class AgregarDestinatarioFinalComponent
    */
   @Input() formaDatos!: DestinoFinal | Proveedor| null | undefined;
 
-  public campoObligatorio = true
-
   /**
    * @property campoObligatorio
    * @description Indica si ciertos campos del formulario son obligatorios según el procedimiento.
@@ -307,25 +305,6 @@ export class AgregarDestinatarioFinalComponent
     if(this.formaDatos) {
       this.agregarDestinatarioFinal.patchValue(this.formaDatos);
     }
-  }
-
-  campoObligatorioChange(): void {
-    const COLONIA = this.agregarDestinatarioFinal.get('colonia')
-    const CALLE = this.agregarDestinatarioFinal.get('calle')
-    const NUMEROEXTERIOR = this.agregarDestinatarioFinal.get('numeroExterior')
-    if(this.campoObligatorio){
-      COLONIA?.clearValidators();
-      CALLE?.setValidators([Validators.required]);
-      NUMEROEXTERIOR?.setValidators([Validators.required]);
-    }
-    else{
-      COLONIA?.setValidators([Validators.required]);
-      CALLE?.clearValidators();
-      NUMEROEXTERIOR?.clearValidators();
-    }
-    COLONIA?.updateValueAndValidity();
-    CALLE?.updateValueAndValidity();
-    NUMEROEXTERIOR?.updateValueAndValidity();
   }
 
   /**
