@@ -27,6 +27,8 @@
                     [formularioTitulo]="'Importación temporal bajo la modalidad del programa IMMEX (sensibles)'"
                     [forma]="importacionTemporalFormGroup" 
                     [formularioDatos]="importacionTemporalDatos"
+                    [estado]="solicitudState"
+                    (emitirCambioDeValor)="establecerCambioDeValor($event)"
                     >
                 </formas-dinamicas>
             </div>
@@ -40,6 +42,8 @@
                 [formularioSubtitulo]="'Deberá anexar una copia simple de la autorización para el establecimiento del depósito fiscal para someterse al proceso de ensamble y fabricación de vehículos a empresas de la industria terminal vigente.'"
                 [forma]="depositoFiscalFormGroup" 
                 [formularioDatos]="depositoFiscalDatos"
+                [estado]="solicitudState"
+                (emitirCambioDeValor)="establecerCambioDeValor($event)"
                 >
             </formas-dinamicas>
         </div>
@@ -51,6 +55,8 @@
                 [formularioSubtitulo]="'Deberá anexar copia simple de la autorización vigente emitida por el SAT para la elaboración, transformación o reparación en recinto fiscalizado.'"
                 [forma]="elaboracionFormGroup" 
                 [formularioDatos]="elaboracionDatos"
+                [estado]="solicitudState"
+                (emitirCambioDeValor)="establecerCambioDeValor($event)"
                 >
             </formas-dinamicas>
         </div>
@@ -62,6 +68,8 @@
                 [formularioSubtitulo]="'Deberá anexar copia simple de la autorización vigente emitida por el SAT para la elaboración, transformación o reparación en recinto fiscalizado estratégico.'"
                 [forma]="recintoFiscalizadoFormGroup" 
                 [formularioDatos]="recintoFiscalizadoDatos"
+                [estado]="solicitudState"
+                (emitirCambioDeValor)="establecerCambioDeValor($event)"
                 >
             </formas-dinamicas>
         </div>

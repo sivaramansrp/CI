@@ -30,67 +30,81 @@
       <h4 class="modal-title pull-left">Agregar</h4>
     </div>
     <div class="modal-body">
-      <div class="row mb-3">
-        <div class="col-md-4">
-            <div class="form-group">
-                <label for="rfcInput" class="form-label">RFC</label>
-                <input
-                    type="text"
-                    class="form-control"
-                    id="rfcInput"
-                    placeholder="Ingrese RFC"/>
-            </div>
-        </div>
-        <div class="col-md-8">
-            <div class="btn-group mt-5">
-              <button class="btn btn-default" type="button">Buscar</button>
-            </div>
-        </div>
-      </div>
-      <div class="row mb-3">
-        <div class="col-md-6">
-            <label for="resigtro" class="form-label">Registro Federal de Contribuyentes</label>
-        <div class="form-group">
-            <input
-              class="form-control"
-              id="resigtro"
-              type="text"
-            />
+      <form [formGroup]="numeroDeEmpleadosForm">
+        <div class="row mb-3">
+          <div class="col-md-4">
+              <div class="form-group">
+                  <label for="rfcInput" class="form-label">RFC</label>
+                  <input
+                      type="text"
+                      class="form-control"
+                      id="rfcInput"
+                      formControlName="rfc"
+                      placeholder="Ingrese RFC"/>
+              </div>
+              @if(numeroDeEmpleadosForm.controls['rfc'].invalid && numeroDeEmpleadosForm.controls['rfc'].touched) {
+                <div class="mensaje-error">Este campo es obligatorio.</div>
+              }
+          </div>
+          <div class="col-md-8">
+              <div class="btn-group mt-5">
+                <button class="btn btn-default" type="button">Buscar</button>
+              </div>
           </div>
         </div>
-      </div>
-      <div class="row mb-3">
-        <div class="col-md-8">
-            <label for="razonSocial" class="form-label">Razón Social</label>
-            <input
-                type="text"
+        <div class="row mb-3">
+          <div class="col-md-6">
+              <label for="resigtro" class="form-label">Registro Federal de Contribuyentes</label>
+          <div class="form-group">
+              <input
                 class="form-control"
-                id="razonSocial"
-                placeholder="Ingrese razonSocial"/>
-        </div>
-      </div>
-      <div class="row mb-3">
-        <div class="col-md-6">
-            <label for="numeroEmpleados" class="form-label">Numero de empleados</label>
-            <div class="form-group">
-                <input
-                    type="text"
-                    class="form-control"
-                    id="numeroEmpleados"
-                    placeholder="Ingrese numero de empleados"/>
+                id="resigtro"
+                type="text"
+              />
             </div>
+          </div>
         </div>
-      </div>
-      <div class="row mb-3">
-        <div class="col-md-6">
-            <app-catalogo-select
-                [catalogo]="bimestreTresCatalogo"
-                formControlName="comboBimestresTres"
-                [label]="'Bimestre'"
-                [required]="true">
-            </app-catalogo-select>
+        <div class="row mb-3">
+          <div class="col-md-8">
+              <label for="razonSocial" class="form-label">Razón Social</label>
+              <input
+                  type="text"
+                  class="form-control"
+                  id="razonSocial"
+                  formControlName="razonSocial"
+                  placeholder="Ingrese razonSocial"/>
+                  @if(numeroDeEmpleadosForm.controls['razonSocial'].invalid && numeroDeEmpleadosForm.controls['razonSocial'].touched) {
+                    <div class="mensaje-error">Este campo es obligatorio.</div>
+                  }
+          </div>
         </div>
-      </div>
+        <div class="row mb-3">
+          <div class="col-md-6">
+              <label for="numeroEmpleados" class="form-label">Numero de empleados</label>
+              <div class="form-group">
+                  <input
+                      type="text"
+                      class="form-control"
+                      id="numeroEmpleados"
+                      formControlName="numeroEmpleados"
+                      placeholder="Ingrese numero de empleados"/>
+              </div>
+              @if(numeroDeEmpleadosForm.controls['numeroEmpleados'].invalid && numeroDeEmpleadosForm.controls['numeroEmpleados'].touched) {
+                <div class="mensaje-error">Este campo es obligatorio.</div>
+              }
+          </div>
+        </div>
+        <div class="row mb-3">
+          <div class="col-md-6">
+              <app-catalogo-select
+                  [catalogo]="bimestreTresCatalogo"
+                  formControlName="comboBimestresTres"
+                  [label]="'Bimestre'"
+                  [required]="true">
+              </app-catalogo-select>
+          </div>
+        </div>
+      </form>
     </div>
     <div class="modal-footer d-flex justify-content-end">
       <button type="button" class="btn btn-primary" (click)="modalRef?.hide()">Aceptar</button>

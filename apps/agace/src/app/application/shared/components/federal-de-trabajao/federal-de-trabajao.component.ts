@@ -1,21 +1,22 @@
 import { Component, OnDestroy, OnInit, TemplateRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Catalogo, CatalogoSelectComponent, ConfiguracionColumna, TablaDinamicaComponent, TablaSeleccion } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, ConfiguracionColumna, REGEX_RFC, TablaDinamicaComponent, TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { Mencione, MENCIONE_TABLA } from '../../models/datos-comunes.model';
 import { Subject, takeUntil } from 'rxjs';
 import { DatosComunesService } from '../../services/datos-comunes.service';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 
 @Component({
   selector: 'app-federal-de-trabajao',
   standalone: true,
-  imports: [CommonModule,TablaDinamicaComponent,CatalogoSelectComponent],
+  imports: [CommonModule,TablaDinamicaComponent,CatalogoSelectComponent,ReactiveFormsModule],
   templateUrl: './federal-de-trabajao.component.html',
   styleUrl: './federal-de-trabajao.component.scss',
 })
 export class FederalDeTrabajaoComponent implements OnInit,OnDestroy {
 
+  public numeroDeEmpleadosForm!: FormGroup;
   public tablaSeleccionCheckbox: TablaSeleccion = TablaSeleccion.CHECKBOX;
   public mencioneTablaDatos: Mencione[] = [];
   public configuracionTabla:ConfiguracionColumna<Mencione>[] = MENCIONE_TABLA;
@@ -37,6 +38,17 @@ export class FederalDeTrabajaoComponent implements OnInit,OnDestroy {
   ngOnInit(): void {
     this.getMencioneDatos();
     this.getBancoCatalogDatos();
+    this.cerearFormulario();
+  }
+
+  public cerearFormulario(): void {
+    this.numeroDeEmpleadosForm = this.fb.group({
+      rfc: ['',[Validators.required,Validators.pattern(REGEX_RFC)]],
+      razonSocial: ['',[Validators.required,Validators.minLength(3)]],
+      numeroEmpleados: ['',[Validators.required]],
+      empleadosPropios: ['',[Validators.required, Validators.maxLength(8)]],
+      archivoNacionales: ['',[Validators.required]],
+    });
   }
 
   public getMencioneDatos(): void {

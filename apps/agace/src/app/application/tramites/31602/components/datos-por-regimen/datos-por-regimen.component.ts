@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
@@ -6,6 +6,9 @@ import { DEPOSITO_FISCAL, ELABORACION, IMPORTACION_TEMPORAL, INDIQUE_SI_REALIZA,
 import radio_si_no from 'libs/shared/theme/assets/json/31601/radio_si_no.json';
 import { InputRadioComponent } from '@libs/shared/data-access-user/src';
 import { ConceptosComponent } from '../conceptos/conceptos.component';
+import { Solicitud31602State, Tramite31602Store } from '../../estados/stores/tramite31602.store';
+import { Tramite31602Query } from '../../estados/queries/tramite31602.query';
+import { map, Subject, takeUntil } from 'rxjs';
 
 
 @Component({
@@ -21,9 +24,10 @@ import { ConceptosComponent } from '../conceptos/conceptos.component';
   templateUrl: './datos-por-regimen.component.html',
   styleUrl: './datos-por-regimen.component.scss',
 })
-export class DatosPorRegimenComponent implements OnInit {
+export class DatosPorRegimenComponent implements OnInit,OnDestroy {
 
 
+  private destroyNotifier$: Subject<void> = new Subject();
   public importacionesForm!: FormGroup;
   public radioOpcions = radio_si_no;
   public valorSeleccionado: string | number = '';
@@ -44,14 +48,24 @@ export class DatosPorRegimenComponent implements OnInit {
   public depositoFiscalDatos = DEPOSITO_FISCAL;
   public elaboracionDatos = ELABORACION;
   public recintoFiscalizadoDatos = RECINTO_FISCALIZADO;
+  public solicitudState!: Solicitud31602State;
 
   constructor(
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private tramite31602Store: Tramite31602Store,
+    private tramite31602Query: Tramite31602Query
   ) {
     //
   }
 
   ngOnInit(): void {
+    this.tramite31602Query.selectSolicitud$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
+        this.solicitudState = seccionState;
+      })).subscribe();
+    this.cerarImportacionesForm();
+  }
+
+  public cerarImportacionesForm(): void {
     this.importacionesForm = this.fb.group({
       importaciones: ['']
     });
@@ -77,5 +91,18 @@ export class DatosPorRegimenComponent implements OnInit {
     this.valorSeleccionado = value;
   }
 
+  public establecerCambioDeValor(event: { campo: string; valor: any }): void {
+    if (event && typeof event.valor === 'object' && event.valor !== null && 'id' in event.valor) {
+      const VALOR = event.valor.id;
+      this.tramite31602Store.setDynamicFieldValue(event.campo, VALOR);
+    } else if (event) {
+      this.tramite31602Store.setDynamicFieldValue(event.campo, event.valor);
+    }
+  }
 
+
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  }
 }

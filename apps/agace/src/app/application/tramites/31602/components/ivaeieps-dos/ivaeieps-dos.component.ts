@@ -4,8 +4,10 @@ import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
 import { DE_LAS_SIGUIENTES, PAGO_DE_DERECHOS, PERMISO_A_DESISTIR_DOS, PERMISO_A_DESISTIR_TRES } from '../../constantes/ivaeieps.enum';
 import { ComercioExteriorService } from '../../services/comercio-exterior.service';
-import { Subject, takeUntil } from 'rxjs';
+import { map, Subject, takeUntil } from 'rxjs';
 import { ModeloDeFormaDinamica } from '@libs/shared/data-access-user/src';
+import { Solicitud31602State, Tramite31602Store } from '../../estados/stores/tramite31602.store';
+import { Tramite31602Query } from '../../estados/queries/tramite31602.query';
 
 @Component({
   selector: 'app-ivaeieps-dos',
@@ -39,16 +41,22 @@ export class IvaeiepsDosComponent implements OnInit,OnDestroy {
   public deLasSiguientesDatos = DE_LAS_SIGUIENTES;
   public pagoDeDerechosDatos = PAGO_DE_DERECHOS;
   private destroyNotifier$: Subject<void> = new Subject();
+  public solicitudState!: Solicitud31602State;
 
 
   constructor(
       private fb: FormBuilder,
       private comercioExteriorSvc: ComercioExteriorService,
+      private tramite31602Store: Tramite31602Store,
+      private tramite31602Query: Tramite31602Query
     ) {
     //
   }
 
   ngOnInit(): void {
+    this.tramite31602Query.selectSolicitud$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
+       this.solicitudState = seccionState;
+     })).subscribe();
     this.crearPorcentajeMontoForm();
     this.getBancoCatalogDatos();
   }
@@ -90,6 +98,15 @@ export class IvaeiepsDosComponent implements OnInit,OnDestroy {
         }
       }
     });
+  }
+
+  public establecerCambioDeValor(event: { campo: string; valor: any }): void {
+    if (event && typeof event.valor === 'object' && event.valor !== null && 'id' in event.valor) {
+      const VALOR = event.valor.id;
+      this.tramite31602Store.setDynamicFieldValue(event.campo, VALOR);
+    } else if (event) {
+      this.tramite31602Store.setDynamicFieldValue(event.campo, event.valor);
+    }
   }
 
 
