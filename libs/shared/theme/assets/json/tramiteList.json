@@ -1994,6 +1994,14 @@
         "linkDepartment": "/pago/permiso-sanitario-dispositivos-medicos/permiso-sanitario-dispositivos-medicos",
         "department": "cofepris"
 
+    },
+    {
+        "id": 286,
+        "tramite": 240108,
+        "linkDashboard": "/sedena/permiso-ordinario-importacion-material-explosivo/contenedor-de-pasos",
+        "linkDepartment": "/pago/permiso-ordinario-importacion-material-explosivo/contenedor-de-pasos",
+        "department": "sedena"
+
     }
 
     
