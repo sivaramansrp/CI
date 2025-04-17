@@ -13,7 +13,7 @@ import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 
-import { OCULTAR_FACTURADOR } from '../../constantes/datos-solicitud.enum';
+import { CAMPOS_REQUERIDOS_FORMULARIO_MAP, OCULTAR_FACTURADOR } from '../../constantes/datos-solicitud.enum';
 import { OCULTAR_PROVEEDOR } from '../../constantes/datos-solicitud.enum';
 
 import { DESTINATARIO_ENCABEZADO_DE_TABLA } from '../../models/terceros-relacionados.model';
@@ -125,7 +125,9 @@ export class TercerosRelacionadosComponent implements OnInit {
    * @param tramiteStore - Store que administra los datos del trámite.
    * @param tramiteQuery - Servicio para consultar los datos del trámite.
    */
-  constructor(private router: Router, private activatedRoute: ActivatedRoute) {}
+  constructor(private router: Router, private activatedRoute: ActivatedRoute) {
+    // No se necesita lógica de inicialización adicional.
+   }
 
   /**
    * @property {Fabricante[]} fabricanteTablaDatos
@@ -175,4 +177,16 @@ export class TercerosRelacionadosComponent implements OnInit {
       ? false
       : true;
   }
+
+  /**
+    * Verifica si un campo es requerido según la configuración de campos requeridos.
+    *
+    * @param {string} campo - Nombre del campo a verificar.
+    * @returns {boolean} Retorna `true` si el campo es requerido, `false` en caso contrario.
+    */
+  esCampoRequerido(campo: string): boolean {
+    const PROCEDIMIENTOS = CAMPOS_REQUERIDOS_FORMULARIO_MAP.get(campo);
+    return PROCEDIMIENTOS?.includes(this.idProcedimiento) ?? false;
+  }
+  
 }
