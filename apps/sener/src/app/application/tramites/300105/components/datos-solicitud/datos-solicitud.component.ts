@@ -17,7 +17,7 @@ import {
 import {
   CrosslistBoton,
   OBTENER_BOTONES_CROSSLIST,
-} from '../../enum/crosslist-botons.enum';
+} from '../../enum/botons.enum';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 import {
@@ -98,8 +98,11 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   configuracionTabla: ConfiguracionColumna<ConfiguracionItem>[] =
     TABLA_CONFIGURACION;
 
-      /**
-   * Configuración de las columnas para la tabla.
+
+  /**
+   * Configuración de las columnas para la tabla de series.
+   * Esta propiedad define la configuración de las columnas que se utilizarán
+   * en la tabla de series dentro del componente de datos de solicitud.
    */
   serieTabla: ConfiguracionColumna<SerieConfiguracionItem>[] =
   SERIE_TABLA_CONFIGURACION;

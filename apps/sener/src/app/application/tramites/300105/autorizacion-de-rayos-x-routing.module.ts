@@ -1,12 +1,12 @@
 import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
 
-import { PageComponent } from './pages/page/page.component';
+import { AutorizacionDatosComponent } from './pages/autorizacion-datos/autorizacion-datos.component';
 
 const ROUTES: Routes = [
   {
     path: 'solicitud',
-    component: PageComponent,
+    component: AutorizacionDatosComponent,
   },
   {
     path: '',

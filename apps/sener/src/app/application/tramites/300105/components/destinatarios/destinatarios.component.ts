@@ -11,7 +11,7 @@ import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import {
   CrosslistBoton,
   OBTENER_BOTONES_CROSSLIST,
-} from '../../enum/crosslist-botons.enum';
+} from '../../enum/botons.enum';
 import { DESTINATARIO_TABLA_CONFIGURACION, DestinatarioConfiguracionItem, MERCANCIA_TABLA_CONFIGURACION, MercanciaConfiguracionItem } from '../../enum/destinatario-tabla.enum';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
@@ -88,8 +88,10 @@ export class DestinatariosComponent implements OnInit, OnDestroy {
   configuracionTabla: ConfiguracionColumna<DestinatarioConfiguracionItem>[] =
   DESTINATARIO_TABLA_CONFIGURACION;
 
-      /**
-   * Configuración de las columnas para la tabla.
+  /**
+   * Configuración de las columnas para la tabla de mercancías.
+   * Esta propiedad define la estructura y configuración de las columnas que se 
+   * utilizarán en la tabla de mercancías dentro del componente destinatarios.
    */
   mercanciaTabla: ConfiguracionColumna<MercanciaConfiguracionItem>[] =
   MERCANCIA_TABLA_CONFIGURACION;

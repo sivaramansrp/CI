@@ -41,21 +41,11 @@
           </div>
         </div>
         <div class="row"  style="margin-top: 20px; margin-bottom: 10px">
-          <div class="col-md-2">
+          <div class="col-md-4">
             <div class="form-group">
-              <label>
-                <input type="radio" [checked]="datosSolicitante.get('isExento')?.value === true"
-                  (click)="onRadioClick('isExento')" />
-                Exento
-              </label>
-            </div>
-          </div>
-          <div class="col-md-2">
-            <div class="form-group"><label>
-                <input type="radio" [checked]="datosSolicitante.get('isAutorizacion')?.value === true"
-                  (click)="onRadioClick('isAutorizacion')" />
-                Autorización
-              </label>
+              <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true"
+                  [layout]="'horizontal'" formControlName="isExento"
+                  (change)="setValoresStore(datosSolicitante,'isExento')"></app-input-radio>
             </div>
           </div>
           <div class="col-md-1">

@@ -90,3 +90,22 @@ export const OBTENER_BOTONES_CROSSLIST = (crosslistComponent: CrosslistComponent
     },
   },
 ];
+
+
+/**
+ * Matriz de opciones para botones de radio.
+ *
+ * Cada objeto representa una opción de botón de radio con:
+ * - `label`: El texto mostrado a la usuaria.
+ * - `value`: El valor correspondiente de la opción.
+ */
+export const OPCIONES_DE_BOTON_DE_RADIO = [
+    {
+        label: 'Exento',
+        value: '1',
+    },
+    {
+        label: 'Autorización',
+        value: '0',
+    }
+];

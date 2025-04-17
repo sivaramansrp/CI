@@ -1,7 +1,7 @@
 import { Catalogo, RespuestaCatalogos } from '@libs/shared/data-access-user/src';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, Subject, takeUntil } from 'rxjs';
 
 /**
  * Servicio AutorizacionDeRayosXService
@@ -46,6 +46,11 @@ export class AutorizacionDeRayosXService {
    * Contiene los tipos de mercancía disponibles.
    */
   tipoMercancia: Catalogo[] = [];
+
+  /**
+   * Sujeto utilizado como notificador para la destrucción de observables.
+   */
+  private destroyNotifier$ = new Subject<void>();
 
   /**
    * Constructor del servicio.
@@ -112,7 +117,9 @@ export class AutorizacionDeRayosXService {
     url: string
   ): void {
     if (self && variable && url) {
-      this.http.get<RespuestaCatalogos>(`assets/json${url}`).subscribe((resp): void => {
+      this.http.get<RespuestaCatalogos>(`assets/json${url}`)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((resp): void => {
         (self[variable] as Catalogo[]) = resp?.code === 200 && resp.data ? resp.data : [];
       });
     }

@@ -22,10 +22,10 @@ interface AccionBoton {
  * Componente que representa los pasos de datos en un proceso de múltiples pasos.
  */
 @Component({
-  selector: 'app-page',
-  templateUrl: './page.component.html',
+  selector: 'app-autorizacion-datos',
+  templateUrl: './autorizacion-datos.component.html',
 })
-export class PageComponent {
+export class AutorizacionDatosComponent {
   /**
    * Lista de pasos en el asistente.
    */
