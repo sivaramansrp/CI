@@ -3,10 +3,10 @@ import { DatosDeLaSolicitudComponent } from './datos-de-la-solicitud.component';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { Tramite261401Store } from '../../../../estados/tramites/tramite261401.store';
 import { Tramite261401Query } from '../../../../estados/queries/tramite261401.query';
-import { SolicitudModificacionPermisoSalidaTerritorioService } from '../../services/solicitud-modificacion-permiso-salida-territorio.service';
 import { of } from 'rxjs';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
+import { SolicitudModificacionPermisoSalidaTerritorioService } from '../../services/solicitudModificacionPermisoSalidaTerritorio.service';
 
 describe('DatosDeLaSolicitudComponent', () => {
   let component: DatosDeLaSolicitudComponent;

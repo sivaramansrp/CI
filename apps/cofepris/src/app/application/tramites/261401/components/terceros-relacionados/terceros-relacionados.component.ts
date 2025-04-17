@@ -11,7 +11,7 @@ import { Destinatario } from '../../enums/destinatario.enum';
 import { MENSAJE_TABLA_OBLIGATORIA } from '../../../../shared/models/terceros-relacionados.model';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
 
-import { SolicitudModificacionPermisoSalidaTerritorioService } from '../../services/solicitud-modificacion-permiso-salida-territorio.service';
+import { SolicitudModificacionPermisoSalidaTerritorioService } from '../../services/solicitudModificacionPermisoSalidaTerritorio.service';
 import { Subject } from 'rxjs';
 import { Tramite261401Query } from '../../../../estados/queries/tramite261401.query';
 import { Tramite261401Store } from '../../../../estados/tramites/tramite261401.store';
@@ -62,9 +62,9 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
 
   /**
    * Constructor del componente.
-   * Param solicitudDatosService Servicio para obtener los datos de los destinatarios.
-   * Param tramite261401Store Store para gestionar el estado del trámite.
-   * Param tramite261401Query Query para obtener datos del estado del trámite.
+   * @param solicitudDatosService Servicio para obtener los datos de los destinatarios.
+   * @param tramite261401Store Store para gestionar el estado del trámite.
+   * @param tramite261401Query Query para obtener datos del estado del trámite.
    */
   constructor(
     public solicitudDatosService: SolicitudModificacionPermisoSalidaTerritorioService,

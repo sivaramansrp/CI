@@ -11,7 +11,7 @@ import { OnInit } from '@angular/core';
 import { PropietarioComponent } from '../../../../shared/components/propietario/propietario.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Solicitud261401State } from '../../../../estados/tramites/tramite261401.store';
-import { SolicitudModificacionPermisoSalidaTerritorioService } from '../../services/solicitud-modificacion-permiso-salida-territorio.service';
+import { SolicitudModificacionPermisoSalidaTerritorioService } from '../../services/solicitudModificacionPermisoSalidaTerritorio.service';
 import { Subject } from 'rxjs';
 import { Tramite261401Query } from '../../../../estados/queries/tramite261401.query';
 import { Tramite261401Store } from '../../../../estados/tramites/tramite261401.store';

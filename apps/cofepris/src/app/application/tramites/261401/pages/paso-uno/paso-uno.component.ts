@@ -7,7 +7,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { CONFIGURACIONCOLUMNA } from '../../enums/tramite-asociados.enum';
 import { Solicitud261401State } from '../../../../estados/tramites/tramite261401.store';
-import { SolicitudModificacionPermisoSalidaTerritorioService } from '../../services/solicitud-modificacion-permiso-salida-territorio.service';
+import { SolicitudModificacionPermisoSalidaTerritorioService } from '../../services/solicitudModificacionPermisoSalidaTerritorio.service';
 import { Subject } from 'rxjs';
 import { Tramite261401Query } from '../../../../estados/queries/tramite261401.query';
 import { Tramite261401Store } from '../../../../estados/tramites/tramite261401.store';

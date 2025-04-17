@@ -1,11 +1,11 @@
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { TercerosRelacionadosComponent } from './terceros-relacionados.component';
-import { SolicitudModificacionPermisoSalidaTerritorioService } from '../../services/solicitud-modificacion-permiso-salida-territorio.service';
 import { Tramite261401Store } from '../../../../estados/tramites/tramite261401.store';
 import { Tramite261401Query } from '../../../../estados/queries/tramite261401.query';
 import { of, Subject } from 'rxjs';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { Destinatario } from '../../enums/destinatario.enum';
+import { SolicitudModificacionPermisoSalidaTerritorioService } from '../../services/solicitudModificacionPermisoSalidaTerritorio.service';
 
 describe('TercerosRelacionadosComponent', () => {
   let component: TercerosRelacionadosComponent;

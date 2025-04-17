@@ -2,7 +2,6 @@ import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
 import { of, Subject } from 'rxjs';
 import { PasoUnoComponent } from './paso-uno.component';
-import { SolicitudModificacionPermisoSalidaTerritorioService } from '../../services/solicitud-modificacion-permiso-salida-territorio.service';
 import { Tramite261401Query } from '../../../../estados/queries/tramite261401.query';
 import { Tramite261401Store } from '../../../../estados/tramites/tramite261401.store';
 import { TramiteAsociados } from '../../../../shared/models/tramite-asociados.model';
@@ -10,6 +9,7 @@ import { Component, NO_ERRORS_SCHEMA } from '@angular/core';
 import { TercerosRelacionadosComponent } from '../../components/terceros-relacionados/terceros-relacionados.component';
 import { TramiteAsociadosComponent } from '../../../../shared/components/tramite-asociados/tramite-asociados.component';
 import { PagoDeDerechosComponent } from '../../../../shared/components/pago-de-derechos-new/pago-de-derechos.component';
+import { SolicitudModificacionPermisoSalidaTerritorioService } from '../../services/solicitudModificacionPermisoSalidaTerritorio.service';
 
 
 describe('PasoUnoComponent', () => {
