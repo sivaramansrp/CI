@@ -8,6 +8,7 @@ import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
 import { provideHttpClient } from '@angular/common/http';
 import { provideToastr, ToastrService } from 'ngx-toastr';
+import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 
 describe('SolicitantePageComponent', () => {
   let component: SolicitantePageComponent;
@@ -27,7 +28,7 @@ describe('SolicitantePageComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [WizardComponent, BtnContinuarComponent, PasoUnoComponent, PasoTresComponent, AlertComponent],
+      imports: [WizardComponent, BtnContinuarComponent, PasoUnoComponent, PasoTresComponent, AlertComponent, PasoDosComponent],
       declarations: [SolicitantePageComponent],
       providers: [
         ToastrService,
@@ -100,22 +101,29 @@ describe('SolicitantePageComponent', () => {
     expect(pasoUnoElement).toBeTruthy();
   });
 
-  it('should render app-paso-tres when indice is 2', () => {
+  it('should render app-paso-dos when indice is 2', () => {
     component.indice = 2;
+    fixture.detectChanges();
+    const pasoTresElement = fixture.debugElement.nativeElement.querySelector('app-paso-dos');
+    expect(pasoTresElement).toBeTruthy();
+  });
+
+  it('should render app-paso-tres when indice is 3', () => {
+    component.indice = 3;
     fixture.detectChanges();
     const pasoTresElement = fixture.debugElement.nativeElement.querySelector('app-paso-tres');
     expect(pasoTresElement).toBeTruthy();
   });
 
-  it('should render ng-alert when indice is 1', () => {
-    component.indice = 1;
+  it('should render ng-alert when indice is 2', () => {
+    component.indice = 2;
     fixture.detectChanges();
     const alertElement = fixture.debugElement.nativeElement.querySelector('ng-alert');
     expect(alertElement).toBeTruthy();
   });
 
-  it('should not render ng-alert when indice is not 1', () => {
-    component.indice = 2;
+  it('should not render ng-alert when indice is not 2', () => {
+    component.indice = 1;
     fixture.detectChanges();
     const alertElement = fixture.debugElement.nativeElement.querySelector('ng-alert');
     expect(alertElement).toBeFalsy();
