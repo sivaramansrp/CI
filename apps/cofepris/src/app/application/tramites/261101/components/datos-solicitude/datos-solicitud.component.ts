@@ -93,7 +93,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   constructor(private fb: FormBuilder,
     private store: DatosProcedureStore,
     private query: DatosProcedureQuery) {
-    //constructor
+    // Constructor del componente
   }
   /**
  * Gancho de ciclo de vida `ngOnInit`.

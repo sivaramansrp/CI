@@ -16,6 +16,12 @@ import { TramiteAsociados } from '../../../shared/models/tramite-asociados.model
 
 export class DatosSolicitudService {
 
+  /**
+ * Lista de catálogos relacionados con los bancos.
+ * 
+ * Esta propiedad almacena los datos de los catálogos obtenidos desde un archivo JSON
+ * que contienen información sobre los bancos disponibles para el pago de derechos.
+ */
   banco!: Catalogo[];
   /**
    * Constructor del servicio.
