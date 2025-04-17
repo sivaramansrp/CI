@@ -1,8 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ConfiguracionColumna, InputFecha, InputFechaComponent, ListaPendientes, TablaAcciones, TablaDinamicaComponent, TablePaginationComponent } from '@libs/shared/data-access-user/src';
+import { ConfiguracionColumna, InputFecha, InputFechaComponent, TablaAcciones, TablaDinamicaComponent, TablePaginationComponent } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { ReplaySubject, catchError, map } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { ReplaySubject } from 'rxjs';
+import { ListaPendientes } from '../../core/models/pendientes.model';
+
 import { TablerosService } from '../../core/service/tabletos.service';
 
 @Component({
@@ -25,8 +27,8 @@ export class SeleccionModuloComponent implements OnInit, OnDestroy {
     required: false,
     habilitado: true,
   };
-   /** Observable para manejar la destrucción del componente */
-   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+  /** Observable para manejar la destrucción del componente */
+  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   /** Indica si el bloque de filtros está colapsado */
   colapsable: boolean = false;
   /** Formulario de búsqueda */
@@ -50,8 +52,6 @@ export class SeleccionModuloComponent implements OnInit, OnDestroy {
   /** Copia original de los pendientes (sin filtros) */
   public todosPendientesOriginales: ListaPendientes[] = [];
 
-   
-
   /** Configuración de columnas de la tabla */
   public configurarTabla: ConfiguracionColumna<ListaPendientes>[] = [
     { encabezado: 'Folio tramite', clave: (item: ListaPendientes) => item.folio, orden: 1 },
@@ -73,8 +73,8 @@ export class SeleccionModuloComponent implements OnInit, OnDestroy {
     this.getPendientesTabla();
   }
 
-   // Inicialización del formulario de búsqueda
-   inicializaFormConsulta(): void {
+  // Inicialización del formulario de búsqueda
+  inicializaFormConsulta(): void {
     this.FormBusqueda = this.fb.group({
       folio: [''],
       info: [''],
@@ -109,12 +109,19 @@ export class SeleccionModuloComponent implements OnInit, OnDestroy {
   /** Obtiene todos los pendientes desde el backend y aplica la paginación inicial */
   public getPendientesTabla(): void {
     this.accionesServcios = [TablaAcciones.EDITAR];
-    this.servicioFuncionario.getListaPendientes().subscribe((data) => {
-      this.todosPendientesOriginales = data;
-      this.todosPendientes = [...data];
-      this.totalItems = data.length;
-      this.updatePagination();
-    });
+    this.servicioFuncionario.getListaPendientes()
+      .pipe(
+        map((data) => {
+          this.todosPendientesOriginales = data;
+          this.todosPendientes = [...data];
+          this.totalItems = data.length;
+          this.updatePagination();
+        }),
+        catchError((_error) => {
+          return _error;
+        })
+      )
+      .subscribe();
   }
 
   /**
@@ -136,8 +143,8 @@ export class SeleccionModuloComponent implements OnInit, OnDestroy {
     this.updatePagination();
   }
 
-   /** Actualiza los elementos paginados según la página e ítems por página seleccionados */
-   public updatePagination(): void {
+  /** Actualiza los elementos paginados según la página e ítems por página seleccionados */
+  public updatePagination(): void {
     const STARTINDEX = (this.currentPage - 1) * this.itemsPerPage;
     const ENDINDEX = STARTINDEX + this.itemsPerPage;
     this.listaPendientesPaginados = this.todosPendientes.slice(STARTINDEX, ENDINDEX);
@@ -153,18 +160,24 @@ export class SeleccionModuloComponent implements OnInit, OnDestroy {
     const { folio, info, fechaInicio, fechaFinal } = this.FormBusqueda.value;
     this.servicioFuncionario
       .getListaPendientes(folio || undefined, info || undefined, fechaInicio || undefined, fechaFinal || undefined)
-      .subscribe((data) => {
-        this.todosPendientesOriginales = data;
-        this.todosPendientes = [...data];
-        this.totalItems = data.length;
-        this.currentPage = 1;
-        this.updatePagination();
-      });
+      .pipe(
+        map((data) => {
+          this.todosPendientesOriginales = data;
+          this.todosPendientes = [...data];
+          this.totalItems = data.length;
+          this.currentPage = 1;
+          this.updatePagination();
+        }),
+        catchError((_error) => {
+          return _error;
+        })
+      )
+      .subscribe();
   }
 
-   /**
-   * Reseteo de valores de la busqueda
-   */
+  /**
+  * Reseteo de valores de la busqueda
+  */
   resetFiltros(): void {
     this.FormBusqueda.reset();
     this.todosPendientes = [...this.todosPendientesOriginales];
@@ -173,10 +186,10 @@ export class SeleccionModuloComponent implements OnInit, OnDestroy {
     this.updatePagination();
   }
 
-   /**
-   * Método que se ejecuta al destruir el componente.
-   */
-   ngOnDestroy(): void {
+  /**
+  * Método que se ejecuta al destruir el componente.
+  */
+  ngOnDestroy(): void {
     this.destroyed$.next(true);
     this.destroyed$.complete();
   }

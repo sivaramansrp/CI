@@ -1,8 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ConfiguracionColumna, InputFecha, InputFechaComponent, ListaSolicitudes, TablaAcciones, TablaDinamicaComponent, TablePaginationComponent } from '@libs/shared/data-access-user/src';
+import { ConfiguracionColumna, InputFecha, InputFechaComponent, TablaAcciones, TablaDinamicaComponent, TablePaginationComponent } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { ReplaySubject, catchError, map } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { ReplaySubject } from 'rxjs';
+import { ListaSolicitudes } from '../../core/models/solicitudes.model';
 import { TablerosService } from '../../core/service/tabletos.service';
 
 @Component({
@@ -27,6 +28,7 @@ export class BandejaSolicitudesComponent implements OnInit, OnDestroy {
   };
   /** Observable para manejar la destrucción del componente */
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+
   /** Indica si el bloque de filtros está colapsado */
   colapsable: boolean = false;
   /** Formulario de búsqueda */
@@ -49,6 +51,7 @@ export class BandejaSolicitudesComponent implements OnInit, OnDestroy {
   public currentPage: number = 1;
   /** Copia original de las solicitudes (sin filtros) */
   public todasSolicitudesOriginales: ListaSolicitudes[] = [];
+
   /** Configuración de columnas de la tabla */
   public configurarTabla: ConfiguracionColumna<ListaSolicitudes>[] = [
     { encabezado: 'Id solicitud', clave: (item: ListaSolicitudes) => item.idSolicitud, orden: 1 },
@@ -103,12 +106,19 @@ export class BandejaSolicitudesComponent implements OnInit, OnDestroy {
   /** Obtiene todos las solicitudes desde el backend y aplica la paginación inicial */
   public getSolicitudesTabla(): void {
     this.accionesServcios = [TablaAcciones.VER];
-    this.servicioFuncionario.getListaSolicitudes().subscribe((data) => {
-      this.todasSolicitudesOriginales = data;
-      this.todasSolicitudes = [...data];
-      this.totalItems = data.length;
-      this.updatePagination();
-    });
+    this.servicioFuncionario.getListaSolicitudes()
+    .pipe(
+      map((data)=>{
+        this.todasSolicitudesOriginales = data;
+        this.todasSolicitudes = [...data];
+        this.totalItems = data.length;
+        this.updatePagination();
+      }),
+      catchError((_error) => {
+        return _error;
+      })
+    )
+    .subscribe();
   }
 
   /**
@@ -147,13 +157,19 @@ export class BandejaSolicitudesComponent implements OnInit, OnDestroy {
     const { idSolicitud, fechaInicio, fechaFinal } = this.FormBusqueda.value;
     this.servicioFuncionario
       .getListaSolicitudes(idSolicitud || undefined, fechaInicio || undefined, fechaFinal || undefined)
-      .subscribe((data) => {
-        this.todasSolicitudesOriginales = data;
-        this.todasSolicitudes = [...data];
-        this.totalItems = data.length;
-        this.currentPage = 1;
-        this.updatePagination();
-      });
+      .pipe(
+        map((data) => {
+          this.todasSolicitudesOriginales = data;
+          this.todasSolicitudes = [...data];
+          this.totalItems = data.length;
+          this.currentPage = 1;
+          this.updatePagination();
+        }),
+        catchError((_error) => {
+          return _error;
+        })
+      )
+      .subscribe();
   }
 
   /**

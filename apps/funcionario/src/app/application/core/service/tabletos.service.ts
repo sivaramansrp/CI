@@ -1,9 +1,8 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { ListaPendientes, ListaSolicitudes } from '@libs/shared/data-access-user/src';
-import { Observable, catchError, throwError } from 'rxjs';
 import { Injectable } from '@angular/core';
-import { map } from 'rxjs/operators';
-
+import { ListaPendientes } from '../models/pendientes.model';
+import { ListaSolicitudes } from '../models/solicitudes.model';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
