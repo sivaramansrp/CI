@@ -348,6 +348,12 @@ const ROUTES: Routes = [
     import('./tramites/260915/permiso-sanitario-dispositivos-medicos.module').then(
       (m) => m.PermisoSanitarioDispositivosMedicosModule)
 },
+{
+  path: 'solicitud-modificacion-permiso-internacion',
+  loadChildren: () =>
+    import('./tramites/261402/solicitud-modificacion-permiso-internacion.module').then(
+      (m) => m.SolicitudModificacionPermisoInternacionModule)
+}
 
 ];
 
