@@ -2,8 +2,9 @@ import { AgregarDestinatarioFinalComponent } from '../../../../shared/components
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { DestinoFinal } from '../../../../shared/models/terceros-relacionados.model';
-import { Tramite240101Store } from '../../estados/tramite240111Store.store';
 import { ID_PROCEDIMIENTO } from '../../constants/importacion-armas-municiones.enum';
+import { Tramite240101Store } from '../../estados/tramite240111Store.store';
+
 
 /**
  * @title Agregar Destinatario Final Contenedora

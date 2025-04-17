@@ -1,5 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AgregarDestinatarioFinalContenedoraComponent } from './agregar-destinatario-final-contenedora.component';
+import { DatosSolicitudService } from '../../../../shared/services/datos-solicitud.service';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('AgregarDestinatarioFinalContenedoraComponent', () => {
   let component: AgregarDestinatarioFinalContenedoraComponent;
@@ -7,7 +9,8 @@ describe('AgregarDestinatarioFinalContenedoraComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AgregarDestinatarioFinalContenedoraComponent],
+      imports: [AgregarDestinatarioFinalContenedoraComponent, HttpClientTestingModule],
+      providers: [DatosSolicitudService],
     }).compileComponents();
 
     fixture = TestBed.createComponent(

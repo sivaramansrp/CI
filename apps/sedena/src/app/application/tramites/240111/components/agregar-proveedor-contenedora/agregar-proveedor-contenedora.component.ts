@@ -1,9 +1,9 @@
 import { AgregarProveedorComponent } from '../../../../shared/components/agregar-proveedor/agregar-proveedor.component';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { ID_PROCEDIMIENTO } from '../../constants/importacion-armas-municiones.enum';
 import { Proveedor } from '../../../../shared/models/terceros-relacionados.model';
 import { Tramite240101Store } from '../../estados/tramite240111Store.store';
-import { ID_PROCEDIMIENTO } from '../../constants/importacion-armas-municiones.enum';
 
 @Component({
   selector: 'app-agregar-proveedor-contenedora',

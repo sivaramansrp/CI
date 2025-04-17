@@ -1,3 +1,4 @@
+import { CAMPO_OBLIGATORIO_PROVEEDOR, TIPO_PERSONA_OPCIONES } from '../../constants/datos-solicitud.enum';
 import { Component, Input } from '@angular/core';
 import { DestinoFinal, Proveedor } from '../../models/terceros-relacionados.model';
 import { Catalogo } from '@ng-mf/data-access-user';
@@ -14,7 +15,6 @@ import { OnInit } from '@angular/core';
 import { Output } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Subject } from 'rxjs';
-import { CAMPO_OBLIGATORIO_PROVEEDOR, TIPO_PERSONA_OPCIONES } from '../../constants/datos-solicitud.enum';
 import { TipoPersona } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { Validators } from '@angular/forms';

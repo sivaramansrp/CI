@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { DatosDelTramiteComponent } from '../../../../shared/components/datos-del-tramite/datos-del-tramite.component';
 import { DatosDelTramiteFormState } from '../../../../shared/models/datos-del-tramite.model';
+import { ID_PROCEDIMIENTO } from '../../constants/importacion-armas-municiones.enum';
 import { MercanciaDetalle } from '../../../../shared/models/datos-del-tramite.model';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
@@ -9,7 +10,6 @@ import { Subject } from 'rxjs';
 import { Tramite240101Query } from '../../estados/tramite240111Query.query';
 import { Tramite240101Store } from '../../estados/tramite240111Store.store';
 import { takeUntil } from 'rxjs';
-import { ID_PROCEDIMIENTO } from '../../constants/importacion-armas-municiones.enum';
 
 /**
  * @title Datos del Trámite Contenedora

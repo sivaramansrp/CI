@@ -1,9 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { DatosMercanciaComponent } from '../../../../shared/components/datos-mercancia/datos-mercancia.component';
+import { ID_PROCEDIMIENTO } from '../../constants/importacion-armas-municiones.enum';
 import { MercanciaDetalle } from '../../../../shared/models/datos-del-tramite.model';
 import { Tramite240101Store } from '../../estados/tramite240111Store.store';
-import { ID_PROCEDIMIENTO } from '../../constants/importacion-armas-municiones.enum';
 
 /**
  * @title Datos de la Mercancía Contenedora

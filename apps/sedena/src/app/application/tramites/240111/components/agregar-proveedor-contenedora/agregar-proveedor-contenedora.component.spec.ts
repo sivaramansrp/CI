@@ -1,5 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AgregarProveedorContenedoraComponent } from './agregar-proveedor-contenedora.component';
+import { DatosSolicitudService } from '../../../../shared/services/datos-solicitud.service';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('AgregarProveedorContenedoraComponent', () => {
   let component: AgregarProveedorContenedoraComponent;
@@ -7,7 +9,8 @@ describe('AgregarProveedorContenedoraComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AgregarProveedorContenedoraComponent],
+      imports: [AgregarProveedorContenedoraComponent,HttpClientTestingModule],
+      providers: [DatosSolicitudService],
     }).compileComponents();
 
     fixture = TestBed.createComponent(AgregarProveedorContenedoraComponent);
