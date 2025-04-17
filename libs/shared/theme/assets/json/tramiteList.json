@@ -170,8 +170,8 @@
     {
         "id": 25,
         "tramite": 80101,
-        "linkDashboard": "/se/pago/nuevo-programa-industrial/action",
-        "linkDepartment": "/se/pago/nuevo-programa-industrial/action",
+        "linkDashboard": "/se/nuevo-programa-industrial/action",
+        "linkDepartment": "/pago/nuevo-programa-industrial/action",
         "department": "se"
     },
     {
@@ -276,7 +276,7 @@
         "id": 40,
         "tramite": 110202,
         "linkDashboard": "/se/certificado-validacion/validacion",
-        "linkDepartment": "/se/certificado-validacion/validacion",
+        "linkDepartment": "/pago/certificado-validacion/validacion",
         "department": "se"
     },
     {
@@ -290,7 +290,7 @@
         "id": 42,
         "tramite": 110204,
         "linkDashboard": "/se/pexim/certificado-origen",
-        "linkDepartment": "/se/pexim/certificado-origen",
+        "linkDepartment": "/pago/pexim/certificado-origen",
         "department": "se"
     },
     {
@@ -590,7 +590,7 @@
     {
         "id": 85,
         "tramite": 230401,
-        "linkDashboard": "/pago/pantallas/action",
+        "linkDashboard": "/semarnat/pantallas/action",
         "linkDepartment": "/pago/pantallas/action",
         "department": "semarnat"
     },
@@ -1024,14 +1024,14 @@
     {
         "id": 147,
         "tramite": 260102,
-        "linkDashboard": "/pago/consumo-personal/solicitud",
+        "linkDashboard": "/cofepris/consumo-personal/solicitud",
         "linkDepartment": "/pago/consumo-personal/solicitud",
         "department": "cofepris"
     },
     {
         "id": 148,
         "tramite": 260206,
-        "linkDashboard": "/pago/maquila-materias-primas/solicitud",
+        "linkDashboard": "/cofepris/maquila-materias-primas/solicitud",
         "linkDepartment": "/pago/maquila-materias-primas/solicitud",
         "department": "cofepris"
     },
@@ -1052,7 +1052,7 @@
     {
         "id": 151,
         "tramite": 260218,
-        "linkDashboard": "/pago/dispositivos-medicos-laboratorio/contenedor-de-pasos",
+        "linkDashboard": "/cofepris/dispositivos-medicos-laboratorio/contenedor-de-pasos",
         "linkDepartment": "/pago/dispositivos-medicos-laboratorio/contenedor-de-pasos",
         "department": "cofepris"
     },
@@ -1934,8 +1934,8 @@
     {
         "id": 277,
         "tramite": 230501,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "/semarnat/materiales-peligrosos/solicitud",
+        "linkDepartment": "/pago/materiales-peligrosos/solicitud",
         "department": "semarnat"
     },
     {
