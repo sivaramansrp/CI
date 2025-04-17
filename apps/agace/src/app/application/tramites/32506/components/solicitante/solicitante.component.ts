@@ -1,7 +1,7 @@
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
-import { AvisoTrasladoService } from '../../services/aviso-destruccion.service';
+import { AvisoDestruccionService } from '../../services/aviso-destruccion.service';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { Tramite32503Query } from '../../../../estados/queries/tramite32503.query';
 import { Tramite32503State } from '../../../../estados/tramites/tramite32503.store';
@@ -49,13 +49,13 @@ export class SolicitanteComponent implements OnInit, OnDestroy {
    * @param {FormBuilder} fb - Servicio para construir formularios reactivos.
    * @param {Tramite32503Store} store - Store para gestionar el estado del trámite.
    * @param {Tramite32503Query} tramiteQuery - Query para obtener el estado del trámite.
-   * @param {AvisoTrasladoService} avisoTrasladoService - Servicio para obtener datos relacionados con el solicitante.
+   * @param {AvisoDestruccionService} avisoDestruccionService - Servicio para obtener datos relacionados con el solicitante.
    */
   constructor(
     public fb: FormBuilder,
     public store: Tramite32503Store,
     public tramiteQuery: Tramite32503Query,
-    public avisoTrasladoService: AvisoTrasladoService
+    public avisoDestruccionService: AvisoDestruccionService
   ) { 
     // El constructor se utiliza para la inyección de dependencias.
   }
@@ -107,7 +107,7 @@ export class SolicitanteComponent implements OnInit, OnDestroy {
    * Carga los datos del solicitante desde el servicio y los almacena en el store.
    */
   cargarDatosSolicitante(): void {
-    this.avisoTrasladoService.obtenerDatosSolicitante().pipe(
+    this.avisoDestruccionService.obtenerDatosSolicitante().pipe(
       takeUntil(this.destroyNotifier$)).subscribe((datos) => {
         (this.store.setDatosSolicitante as (valor: unknown) => void)(datos);
         this.inicializarFormulario();

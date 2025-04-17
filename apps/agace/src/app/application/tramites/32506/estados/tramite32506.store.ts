@@ -1,4 +1,4 @@
-import { ArchivoDocumentos, AvisoFormulario, DatosSolicitante, DomicilioFormulario, MercanciaFormulario, TipoDocumento } from '../models/aviso-destruccion.model';
+import { ArchivoDocumentos, AvisoFormulario, DatosSolicitante, DesperdicioFormulario, DomicilioFormulario, PedimentoFormulario, ProcesoFormulario, TipoDocumento } from '../models/aviso-destruccion.model';
 import { Injectable } from '@angular/core';
 import { Store } from '@datorama/akita';
 import { StoreConfig } from '@datorama/akita';
@@ -10,7 +10,7 @@ import { StoreConfig } from '@datorama/akita';
  * @property {number} pasoActivo - Indica el paso activo en el flujo del trámite.
  * @property {number} pestanaActiva - Indica la pestaña activa en la interfaz del trámite.
  * @property {DatosSolicitante} datosSolicitante - Contiene los datos del solicitante.
- * @property {MercanciaFormulario} mercanciaFormulario - Contiene los datos del formulario de mercancía.
+ * @property {PedimentoFormulario} pedimentoFormulario - Contiene los datos del formulario de pedimento.
  * @property {DomicilioFormulario} domicilioFormulario - Contiene los datos del formulario de domicilio.
  * @property {AvisoFormulario} avisoFormulario - Contiene los datos del formulario de aviso.
  * @property {TipoDocumento[]} tipoTablaDatos - Lista de tipos de documentos disponibles.
@@ -22,9 +22,11 @@ export interface Tramite32506State {
   pasoActivo: number;
   pestanaActiva: number;
   datosSolicitante: DatosSolicitante;
-  mercanciaFormulario: MercanciaFormulario;
   domicilioFormulario: DomicilioFormulario;
   avisoFormulario: AvisoFormulario;
+  procesoFormulario: ProcesoFormulario;
+  desperdicioFormulario: DesperdicioFormulario;
+  pedimentoFormulario: PedimentoFormulario;
   tipoTablaDatos: TipoDocumento[];
   tipoDocumento: string;
   documentosDesplegable: ArchivoDocumentos[];
@@ -51,6 +53,8 @@ export function createInitialState(): Tramite32506State {
       correoElectronico: "",
       pais: "",
       codigoPostal: "",
+      horaDestruccion: "",
+      fechaDestruccion: "",
       entidadFederativa: "",
       municipio: "",
       localidad: "",
@@ -61,17 +65,6 @@ export function createInitialState(): Tramite32506State {
       lada: "",
       telefono: "",
       adace: "",
-    },
-    mercanciaFormulario: {
-      claveFraccionArancelaria: '',
-      nico: '',
-      cantidad: '',
-      claveUnidadMedida: '',
-      valorUSD: '',
-      descripcionMercancia: '',
-      descripcionProceso: '',
-      numPedimentoExportacion: '',
-      numPedimentoImportacion: '',
     },
     domicilioFormulario: {
       nombreComercial: '',
@@ -90,7 +83,7 @@ export function createInitialState(): Tramite32506State {
       valorAnioProgramaImmex: '',
       tipoAviso: '',
       justificacion: '',
-      motivoProrroga: '',
+      periodicidadMensualDestruccion: '',
       fechaTranslado: '',
       nombreComercial: '',
       claveEntidadFederativa: '',
@@ -100,7 +93,29 @@ export function createInitialState(): Tramite32506State {
       numeroExterior: '',
       numeroInterior: '',
       codigoPostal: '',
+      horaDestruccion: '',
+      fechaDestruccion: '',
       tipoCarga: '',
+    },
+    procesoFormulario: {
+      descripcionProcesoDestruccion: ''
+    },
+    desperdicioFormulario: {
+      descripcionDesperdicio: '',
+      cantidadDesp: '',
+      claveUnidadMedidaDesp: '',
+      porcentaje: '',
+      descripcionMercancia: '',
+      circunstanciaHechos: ''
+    },
+    pedimentoFormulario: {
+      patenteAutorizacion: '',
+      pedimento: '',
+      claveAduanaPedimento: '',
+      claveFraccionArancelariaPedimento: '',
+      nicoPedimento: '',
+      cantidadPedimento: '',
+      claveUnidadMedidaPedimento: ''
     },
     tipoTablaDatos: [],
     tipoDocumento: '',
@@ -201,114 +216,6 @@ export class Tramite32506Store extends Store<Tramite32506State> {
   }
 
   /**
-   * Actualiza la fracción arancelaria en el formulario de mercancías.
-   * 
-   * @param {string} claveFraccionArancelaria - La clave de la fracción arancelaria.
-   */
-  public setFraccionArancelaria(claveFraccionArancelaria: string): void {
-    this.update((state) => ({
-      ...state,
-      mercanciaFormulario: { ...state.mercanciaFormulario, claveFraccionArancelaria },
-    }));
-  }
-
-  /**
-   * Actualiza el NICO (Número de Identificación Comercial) en el formulario de mercancías.
-   * 
-   * @param {string} nico - El número de identificación comercial.
-   */
-  public setMercanciaFormularioNico(nico: string): void {
-    this.update((state) => ({
-      ...state,
-      mercanciaFormulario: { ...state.mercanciaFormulario, nico },
-    }));
-  }
-
-  /**
-   * Actualiza la cantidad en el formulario de mercancías.
-   * 
-   * @param {string} cantidad - La cantidad de la mercancía.
-   */
-  public setMercanciaFormularioCantidad(cantidad: string): void {
-    this.update((state) => ({
-      ...state,
-      mercanciaFormulario: { ...state.mercanciaFormulario, cantidad },
-    }));
-  }
-
-  /**
-   * Actualiza la unidad de medida en el formulario de mercancías.
-   * 
-   * @param {string} claveUnidadMedida - La clave de la unidad de medida.
-   */
-  public setMercanciaFormularioUnidadMedida(claveUnidadMedida: string): void {
-    this.update((state) => ({
-      ...state,
-      mercanciaFormulario: { ...state.mercanciaFormulario, claveUnidadMedida },
-    }));
-  }
-
-  /**
-   * Actualiza el valor en USD de la mercancía en el formulario de mercancías.
-   * 
-   * @param {string} valorUSD - El valor en dólares de la mercancía.
-   */
-  public setMercanciaFormularioValor(valorUSD: string): void {
-    this.update((state) => ({
-      ...state,
-      mercanciaFormulario: { ...state.mercanciaFormulario, valorUSD },
-    }));
-  }
-
-  /**
-   * Actualiza la descripción de la mercancía en el formulario de mercancías.
-   * 
-   * @param {string} descripcionMercancia - La descripción de la mercancía.
-   */
-  public setMercanciaFormularioDescripcionMercancia(descripcionMercancia: string): void {
-    this.update((state) => ({
-      ...state,
-      mercanciaFormulario: { ...state.mercanciaFormulario, descripcionMercancia },
-    }));
-  }
-
-  /**
-   * Actualiza la descripción del proceso en el formulario de mercancías.
-   * 
-   * @param {string} descripcionProceso - La descripción del proceso.
-   */
-  public setMercanciaFormularioDescripcionProceso(descripcionProceso: string): void {
-    this.update((state) => ({
-      ...state,
-      mercanciaFormulario: { ...state.mercanciaFormulario, descripcionProceso },
-    }));
-  }
-
-  /**
-   * Actualiza el número de pedimento de exportación en el formulario de mercancías.
-   * 
-   * @param {string} numPedimentoExportacion - El número de pedimento de exportación.
-   */
-  public setMercanciaFormularioPedimentoExportacion(numPedimentoExportacion: string): void {
-    this.update((state) => ({
-      ...state,
-      mercanciaFormulario: { ...state.mercanciaFormulario, numPedimentoExportacion },
-    }));
-  }
-
-  /**
-   * Actualiza el número de pedimento de importación en el formulario de mercancías.
-   * 
-   * @param {string} numPedimentoImportacion - El número de pedimento de importación.
-   */
-  public setMercanciaFormularioPedimentoImportacion(numPedimentoImportacion: string): void {
-    this.update((state) => ({
-      ...state,
-      mercanciaFormulario: { ...state.mercanciaFormulario, numPedimentoImportacion },
-    }));
-  }
-
-  /**
    * Actualiza el nombre comercial en el formulario de domicilio.
    * 
    * @param {string} nombreComercial - El nombre comercial.
@@ -404,6 +311,30 @@ export class Tramite32506Store extends Store<Tramite32506State> {
   }
 
   /**
+   * Actualiza el hora destrucción en el formulario de domicilio.
+   * 
+   * @param {string} horaDestruccion - El horaDestruccion.
+   */
+  public setHoraDestruccion(horaDestruccion: string): void {
+    this.update((state) => ({
+      ...state,
+      domicilioFormulario: { ...state.domicilioFormulario, horaDestruccion },
+    }));
+  }
+
+  /**
+   * Actualiza el fecha destrucción en el formulario de domicilio.
+   * 
+   * @param {string} fechaDestruccion - El fechaDestruccion.
+   */
+  public setFechaDestruccion(fechaDestruccion: string): void {
+    this.update((state) => ({
+      ...state,
+      domicilioFormulario: { ...state.domicilioFormulario, fechaDestruccion },
+    }));
+  }
+
+  /**
    * Actualiza el RFC en el formulario de domicilio.
    * 
    * @param {string} rfc - El RFC.
@@ -475,14 +406,14 @@ export class Tramite32506Store extends Store<Tramite32506State> {
   }
 
   /**
-   * Actualiza el motivo de la prórroga en el formulario de aviso.
+   * Actualiza el Periodicidad Mensual Destruccion en el formulario de aviso.
    * 
-   * @param {string} motivoProrroga - El motivo de la prórroga.
+   * @param {string} periodicidadMensualDestruccion - El Periodicidad Mensual Destruccion.
    */
-  public setAvisoFormularioMotivoProrroga(motivoProrroga: string): void {
+  public setPeriodicidadMensualDestruccion(periodicidadMensualDestruccion: string): void {
     this.update((state) => ({
       ...state,
-      avisoFormulario: { ...state.avisoFormulario, motivoProrroga },
+      avisoFormulario: { ...state.avisoFormulario, periodicidadMensualDestruccion },
     }));
   }
 
@@ -616,4 +547,103 @@ export class Tramite32506Store extends Store<Tramite32506State> {
       tipoTablaDatos,
     }));
   }
+
+  public setDescripcionProcesoDestruccion(descripcionProceso: string): void {
+    this.update((state) => ({
+      ...state,
+      procesoFormulario: { ...state.procesoFormulario, descripcionProceso },
+    }))
+  }
+
+  
+  public setDescripcionDesperdicio(descripcionDesperdicio: string): void {
+    this.update((state) => ({
+      ...state,
+      desperdicioFormulario: { ...state.desperdicioFormulario, descripcionDesperdicio },
+    }))
+  }
+
+  public setCantidadDesp(cantidadDesp: string): void {
+    this.update((state) => ({
+      ...state,
+      desperdicioFormulario: { ...state.desperdicioFormulario, cantidadDesp },
+    }))
+  }
+  
+  public setClaveUnidadMedidaDesp(claveUnidadMedidaDesp: string): void {
+    this.update((state) => ({
+      ...state,
+      desperdicioFormulario: { ...state.desperdicioFormulario, claveUnidadMedidaDesp },
+    }))
+  }
+
+  public setPorcentaje(porcentaje: string): void {
+    this.update((state) => ({
+      ...state,
+      desperdicioFormulario: { ...state.desperdicioFormulario, porcentaje },
+    }))
+  }
+
+  public setDescripcionMercancia(descripcionMercancia: string): void {
+    this.update((state) => ({
+      ...state,
+      desperdicioFormulario: { ...state.desperdicioFormulario, descripcionMercancia },
+    }))
+  }
+  public setCircunstanciaHechos(circunstanciaHechos: string): void {
+    this.update((state) => ({
+      ...state,
+      desperdicioFormulario: { ...state.desperdicioFormulario, circunstanciaHechos },
+    }))
+  }
+
+  public setPatenteAutorizacion(patenteAutorizacion: string): void {
+    this.update((state) => ({
+      ...state,
+      pedimentoFormulario: { ...state.pedimentoFormulario, patenteAutorizacion },
+    }))
+  }
+
+  public setPedimento(pedimento: string): void {
+    this.update((state) => ({
+      ...state,
+      pedimentoFormulario: { ...state.pedimentoFormulario, pedimento },
+    }))
+  }
+
+  public setClaveAduanaPedimento(claveAduanaPedimento: string): void {
+    this.update((state) => ({
+      ...state,
+      pedimentoFormulario: { ...state.pedimentoFormulario, claveAduanaPedimento },
+    }))
+  }
+
+  public setClaveFraccionArancelariaPedimento(claveFraccionArancelariaPedimento: string): void {
+    this.update((state) => ({
+      ...state,
+      pedimentoFormulario: { ...state.pedimentoFormulario, claveFraccionArancelariaPedimento },
+    }))
+  }
+
+  public setNicoPedimento(nicoPedimento: string): void {
+    this.update((state) => ({
+      ...state,
+      pedimentoFormulario: { ...state.pedimentoFormulario, nicoPedimento },
+    }))
+  }
+
+  public setCantidadPedimento(cantidadPedimento: string): void {
+    this.update((state) => ({
+      ...state,
+      pedimentoFormulario: { ...state.pedimentoFormulario, cantidadPedimento },
+    }))
+  }
+
+  public setClaveUnidadMedidaPedimento(claveUnidadMedidaPedimento: string): void {
+    this.update((state) => ({
+      ...state,
+      pedimentoFormulario: { ...state.pedimentoFormulario, claveUnidadMedidaPedimento },
+    }))
+  }
+
 }

@@ -32,10 +32,13 @@ export const PASOS = [
  * en la interfaz del usuario.
  */
 export const TEXTOS = {
-  TIPO_CARGO: ` Datos de la Plantilla de Carga Masiva<span class="">*</span><br />
-     <label><a href="javascript:;" target="_blank"> Descargar plantilla</a></label>
+  TIPO_CARGO: ` El archivo no debe exceder los 1000 registros. Para descargar plantilla del archivo de excel de click <span class="">*</span><br />
+     <label><a href="javascript:void(0);"> Descargar plantilla</a></label>
         `,
   TERCEROS_TEXTO_DE_ALERTA: 'La solicitud ha quedado registrada con el número temporal 202767903 Éste no tiene validez legal y sirve solamente para efectos de identificar tu solicitud. Un folio oficial le será asignado a la solicitud al momento en que ésta sea firmada.',
+  SELECTOR_DESPERDICIO: `
+  <input type="checkbox" formControlName="selectorDesperdicio" /><span class="require">*</span>No es posible declarar el porcentaje que representa la mercancia a destruir, de la mercancia importada temporalmente de la que procede
+  `
 };
 /**
  * Configuración para la fecha de ingreso.

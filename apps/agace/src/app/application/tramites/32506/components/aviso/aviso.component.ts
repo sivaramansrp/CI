@@ -1,24 +1,24 @@
-import { 
-AlertComponent,
-CatalogoSelectComponent,
-InputFecha,
-InputFechaComponent,
-InputRadioComponent,
-REGEX_ALFANUMERICO_CON_ESPACIOS,
-REGEX_ALFANUMERICO_CON_ESPACIOS_REEMPLAZAR,
-REGEX_IMPORTE_PAGO,
-REGEX_NUMEROS,
-REGEX_NUMEROS_USD,
-REGEX_REEMPLAZAR,
-REGEX_SOLO_NUMEROS,
-TablaDinamicaComponent,
-TablaSeleccion,
-TituloComponent,
-ValidacionesFormularioService
- } from "@libs/shared/data-access-user/src";
-import { AvisoTabla, AvisoTablaDatos, Catalogo, CatalogoLista, MercanciaTabla, MercanciaTablaDatos } from "../../models/aviso-destruccion.model";
+import {
+  AlertComponent,
+  CatalogoSelectComponent,
+  InputFecha,
+  InputFechaComponent,
+  InputHoraComponent,
+  InputRadioComponent,
+  REGEX_ALFANUMERICO_CON_ESPACIOS,
+  REGEX_ALFANUMERICO_CON_ESPACIOS_REEMPLAZAR,
+  REGEX_IMPORTE_PAGO,
+  REGEX_NUMEROS,
+  REGEX_REEMPLAZAR,
+  REGEX_SOLO_NUMEROS,
+  TablaDinamicaComponent,
+  TablaSeleccion,
+  TituloComponent,
+  ValidacionesFormularioService
+} from "@libs/shared/data-access-user/src";
+import { AvisoTabla, AvisoTablaDatos, Catalogo, CatalogoLista, DesperdicioTabla, DesperdicioTablaDatos, PedimentoTabla, PedimentoTablaDatos, ProcesoTabla, ProcesoTablaDatos } from "../../models/aviso-destruccion.model";
 import { FECHA_INGRESO, TEXTOS, TIPACA, TIPAVI } from "../../constants/aviso-destruccion.enum";
-import { AvisoTrasladoService } from "../../services/aviso-destruccion.service";
+import { AvisoDestruccionService } from "../../services/aviso-destruccion.service";
 import { CommonModule } from "@angular/common";
 import { Component } from "@angular/core";
 import { ElementRef } from "@angular/core";
@@ -49,7 +49,7 @@ import { takeUntil } from "rxjs";
   selector: 'app-aviso',
   templateUrl: './aviso.component.html',
   styleUrl: './aviso.component.scss',
-  imports: [CommonModule, ReactiveFormsModule, TituloComponent, InputFechaComponent,
+  imports: [CommonModule, ReactiveFormsModule, TituloComponent, InputFechaComponent, InputHoraComponent,
     CatalogoSelectComponent, TablaDinamicaComponent, AlertComponent, NotificacionesComponent,
     InputRadioComponent
   ],
@@ -61,6 +61,10 @@ export class AvisoComponent implements OnInit, OnDestroy {
    * @description Formulario reactivo que contiene los datos del aviso en el trámite.
   */
   avisoFormulario!: FormGroup;
+
+  procesoFormulario!: FormGroup;
+
+  desperdicioFormulario!: FormGroup;
   /**
    * @property {Subject<void>} destroyNotifier$
    * @description Sujeto utilizado para manejar la destrucción de suscripciones y evitar fugas de memoria.
@@ -111,27 +115,36 @@ export class AvisoComponent implements OnInit, OnDestroy {
     datos: AvisoTabla[],
   } = {
       encabezadas: [
-        { encabezado: 'RFC', clave: (ele: AvisoTabla) => ele.rfc, orden: 1 },
         {
           encabezado: 'Nombre comercial',
           clave: (ele: AvisoTabla) => ele.nombreComercial,
-          orden: 2,
+          orden: 1,
         },
         {
           encabezado: 'Entidad federativa',
           clave: (ele: AvisoTabla) => ele.entidadFederativa,
-          orden: 3,
+          orden: 2
         },
         {
           encabezado: 'Alcaldía o Municipio',
           clave: (ele: AvisoTabla) => ele.alcaldioOMuncipio,
-          orden: 4,
+          orden: 3
         },
         {
           encabezado: 'Colonia',
           clave: (ele: AvisoTabla) => ele.colonia,
-          orden: 5,
+          orden: 4
         },
+        {
+          encabezado: 'Hora Destrucción',
+          clave: (ele: AvisoTabla) => ele.horaDestruccion,
+          orden: 5
+        },
+        {
+          encabezado: 'Fecha Destrucción',
+          clave: (ele: AvisoTabla) => ele.fechaDestruccion,
+          orden: 5
+        }
       ],
       datos: []
     };
@@ -154,91 +167,116 @@ export class AvisoComponent implements OnInit, OnDestroy {
   */
   @ViewChild('closeDomicilio') public closeDomicilio!: ElementRef;
 
-  /**
-   * @property {ElementRef} modalMercancia
-   * @description Referencia al elemento del modal de mercancía en la plantilla HTML.
-   * Utilizado para abrir o manipular el modal de mercancía.
-  */
-  @ViewChild('modalMercancia') modalMercancia!: ElementRef;
-  /**
-   * @property {ElementRef} closeMercancia
-   * @description Referencia al botón o elemento que cierra el modal de mercancía.
-   * Utilizado para cerrar el modal de manera programática.
-  */
-  @ViewChild('closeMercancia') public closeMercancia!: ElementRef;
-  /**
-   * @property {FormGroup} domicilioFormulario
-   * @description Formulario reactivo que contiene los datos relacionados con el domicilio.
-  */
+  @ViewChild('modalProceso') modalProceso!: ElementRef;
+
+  @ViewChild('closeProceso') public closeProceso!: ElementRef;
+
+  @ViewChild('modalDesperdicio') modalDesperdicio!: ElementRef;
+
+  @ViewChild('closeDesperdicio') public closeDesperdicio!: ElementRef;
+
+  @ViewChild('modalPedimento') modalPedimento!: ElementRef;
+
+  @ViewChild('closePedimento') public closePedimento!: ElementRef;
+
+
   domicilioFormulario!: FormGroup;
   /**
-   * @property {object} tablaDeMercancia
+   * @property {object} tablaPedimento
    * @description Configuración de la tabla de mercancías utilizada en el componente.
    * Contiene las definiciones de las columnas (encabezados) y los datos que se mostrarán en la tabla.
    */
-  tablaDeMercancia: {
+  tablaPedimento: {
     encabezadas: {
       encabezado: string,
-      clave: (ele: MercanciaTabla) => string,
+      clave: (ele: PedimentoTabla) => string,
       orden: number
     }[],
-    datos: MercanciaTabla[],
+    datos: PedimentoTabla[],
   } = {
       encabezadas: [
-        { encabezado: 'Fracción arancelaria', clave: (ele: MercanciaTabla) => ele.claveFraccionArancelaria, orden: 1 },
         {
-          encabezado: 'NICO',
-          clave: (ele: MercanciaTabla) => ele.nico,
+          encabezado: 'Número de patente',
+          clave: (ele: PedimentoTabla) => ele.patenteAutorizacion,
+          orden: 1
+        },
+        {
+          encabezado: 'Número de pedimento',
+          clave: (ele: PedimentoTabla) => ele.pedimento,
           orden: 2,
         },
         {
-          encabezado: 'Unidad de medida',
-          clave: (ele: MercanciaTabla) => ele.claveUnidadMedida,
+          encabezado: 'Aduana del pedimento',
+          clave: (ele: PedimentoTabla) => ele.claveAduanaPedimento,
           orden: 3,
         },
         {
-          encabezado: 'Cantidad',
-          clave: (ele: MercanciaTabla) => ele.cantidad,
+          encabezado: 'Fracción de la mercancía',
+          clave: (ele: PedimentoTabla) => ele.claveFraccionArancelariaPedimento,
           orden: 4,
         },
         {
-          encabezado: 'Valor USD',
-          clave: (ele: MercanciaTabla) => ele.valorUSD,
+          encabezado: 'NICO de la mercancía',
+          clave: (ele: PedimentoTabla) => ele.nicoPedimento,
           orden: 5,
         },
         {
-          encabezado: 'Descripción de la Mercancía',
-          clave: (ele: MercanciaTabla) => ele.descripcionMercancia,
+          encabezado: 'Cantidad de la mercancía',
+          clave: (ele: PedimentoTabla) => ele.cantidadPedimento,
           orden: 6,
         },
         {
-          encabezado: 'Proceso llevará',
-          clave: (ele: MercanciaTabla) => ele.descripcionProceso,
-          orden: 6,
-        }, {
-          encabezado: 'Número de exportación',
-          clave: (ele: MercanciaTabla) => ele.numPedimentoExportacion,
-          orden: 6,
-        },
-        {
-          encabezado: 'Número de importación',
-          clave: (ele: MercanciaTabla) => ele.numPedimentoImportacion,
+          encabezado: 'Unidad de medida de la mercancía',
+          clave: (ele: PedimentoTabla) => ele.claveUnidadMedidaPedimento,
           orden: 6,
         }
       ],
       datos: []
     };
+
+  tablaProceso: {
+    encabezadas: {
+      encabezado: string,
+      clave: (ele: ProcesoTabla) => string,
+      orden: number
+    }[],
+    datos: ProcesoTabla[],
+  } = {
+      encabezadas: [
+        { encabezado: 'Descripción del proceso destructivo', clave: (ele: ProcesoTabla) => ele.descripcionProcesoDestruccion, orden: 1 }
+      ],
+      datos: []
+    };
+
+  tablaDesperdicio: {
+    encabezadas: {
+      encabezado: string,
+      clave: (ele: DesperdicioTabla) => string,
+      orden: number
+    }[],
+    datos: DesperdicioTabla[],
+  } = {
+      encabezadas: [
+        { encabezado: 'Datos de los desperdicios a destruir', clave: (ele: DesperdicioTabla) => ele.descripcionProcesoDestruccion, orden: 1 }
+      ],
+      datos: []
+    };
+
   /**
    * @property {MercanciaTabla[]} filaSeleccionadaMercanciaLista
    * @description Lista de filas seleccionadas en la tabla de mercancías.
    * Contiene los datos de las filas seleccionadas por el usuario en la tabla de mercancías.
    */
-  filaSeleccionadaMercanciaLista: MercanciaTabla[] = [];
+  filaSeleccionadaPedimentoLista: PedimentoTabla[] = [];
+
+  filaSeleccionadaProcesoLista: ProcesoTabla[] = [];
+
+  filaSeleccionadaDesperdicioLista: DesperdicioTabla[] = [];
   /**
-   * @property {FormGroup} mercanciaFormulario
+   * @property {FormGroup} pedimentoFormulario
    * @description Formulario reactivo que contiene los datos relacionados con la mercancía.
    */
-  mercanciaFormulario!: FormGroup;
+  pedimentoFormulario!: FormGroup;
   /**
    * @property {Catalogo[]} fraccionArancelaria
    * @description Lista de fracciones arancelarias cargadas desde un catálogo.
@@ -278,14 +316,14 @@ export class AvisoComponent implements OnInit, OnDestroy {
    * @param {FormBuilder} fb - Constructor para crear formularios reactivos.
    * @param {Tramite32506Store} store - Store para gestionar el estado del trámite.
    * @param {Tramite32506Query} tramiteQuery - Query para obtener el estado del trámite.
-   * @param {AvisoTrasladoService} avisoTrasladoService - Servicio para obtener datos relacionados con el aviso.
+   * @param {avisoDestruccionService} avisoDestruccionService - Servicio para obtener datos relacionados con el aviso.
    * @param {ValidacionesFormularioService} validacionesService - Servicio para validar formularios.
   */
   constructor(
     public fb: FormBuilder,
     public store: Tramite32506Store,
     public tramiteQuery: Tramite32506Query,
-    public avisoTrasladoService: AvisoTrasladoService,
+    public avisoDestruccionService: AvisoDestruccionService,
     private validacionesService: ValidacionesFormularioService,
   ) {
     // El constructor se utiliza para la inyección de dependencias.
@@ -309,7 +347,9 @@ export class AvisoComponent implements OnInit, OnDestroy {
     this.cargarFederativa();
     this.cargarMunicipio();
     this.cargarColonias();
-    this.inicializarMercanciaFormulario();
+    this.inicializarPedimentoFormulario();
+    this.inicializarProcesoFormulario();
+    this.inicializarDesperdicioFormulario();
     this.cargarFraccionArancelaria();
     this.cargarUnidadMedida();
   }
@@ -328,13 +368,13 @@ export class AvisoComponent implements OnInit, OnDestroy {
   }
   /**
    * @method cargarFraccionArancelaria
-   * @description Método para cargar la lista de fracciones arancelarias desde el servicio `avisoTrasladoService`.
+   * @description Método para cargar la lista de fracciones arancelarias desde el servicio `avisoDestruccionService`.
    * Los datos obtenidos se asignan a la propiedad `fraccionArancelaria`.
    *
    * @returns {void}
    */
   public cargarFraccionArancelaria(): void {
-    this.avisoTrasladoService
+    this.avisoDestruccionService
       .obtenerFraccionArancelaria()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe(
@@ -345,13 +385,13 @@ export class AvisoComponent implements OnInit, OnDestroy {
   }
   /**
    * @method cargarUnidadMedida
-   * @description Método para cargar la lista de unidades de medida desde el servicio `avisoTrasladoService`.
+   * @description Método para cargar la lista de unidades de medida desde el servicio `avisoDestruccionService`.
    * Los datos obtenidos se asignan a la propiedad `unidadMedida`.
    *
    * @returns {void}
    */
   public cargarUnidadMedida(): void {
-    this.avisoTrasladoService
+    this.avisoDestruccionService
       .obtenerUnidadMedida()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe(
@@ -362,13 +402,13 @@ export class AvisoComponent implements OnInit, OnDestroy {
   }
   /**
    * @method cargarFederativa
-   * @description Método para cargar la lista de entidades federativas desde el servicio `avisoTrasladoService`.
+   * @description Método para cargar la lista de entidades federativas desde el servicio `avisoDestruccionService`.
    * Los datos obtenidos se asignan a la propiedad `entidadFederativa`.
    *
    * @returns {void}
    */
   public cargarFederativa(): void {
-    this.avisoTrasladoService
+    this.avisoDestruccionService
       .obtenerFederativa()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe(
@@ -379,13 +419,13 @@ export class AvisoComponent implements OnInit, OnDestroy {
   }
   /**
    * @method cargarMunicipio
-   * @description Método para cargar la lista de municipios desde el servicio `avisoTrasladoService`.
+   * @description Método para cargar la lista de municipios desde el servicio `avisoDestruccionService`.
    * Los datos obtenidos se asignan a la propiedad `delegacionMunicipio`.
    *
    * @returns {void}
    */
   public cargarMunicipio(): void {
-    this.avisoTrasladoService
+    this.avisoDestruccionService
       .obtenerMunicipio()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe(
@@ -396,13 +436,13 @@ export class AvisoComponent implements OnInit, OnDestroy {
   }
   /**
    * @method cargarColonias
-   * @description Método para cargar la lista de colonias desde el servicio `avisoTrasladoService`.
+   * @description Método para cargar la lista de colonias desde el servicio `avisoDestruccionService`.
    * Los datos obtenidos se asignan a la propiedad `colonia`.
    *
    * @returns {void}
    */
   public cargarColonias(): void {
-    this.avisoTrasladoService
+    this.avisoDestruccionService
       .obtenerColonias()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe(
@@ -413,13 +453,13 @@ export class AvisoComponent implements OnInit, OnDestroy {
   }
   /**
    * @method cargarAvisoTabla
-   * @description Método para cargar los datos de la tabla de avisos desde el servicio `avisoTrasladoService`.
+   * @description Método para cargar los datos de la tabla de avisos desde el servicio `avisoDestruccionService`.
    * Los datos obtenidos se asignan a la propiedad `tablaDeDatos.datos`.
    *
    * @returns {void}
    */
   public cargarAvisoTabla(): void {
-    this.avisoTrasladoService
+    this.avisoDestruccionService
       .obtenerAvisoTabla()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe(
@@ -428,23 +468,41 @@ export class AvisoComponent implements OnInit, OnDestroy {
         }
       );
   }
-  /**
-   * @method cargarMercanciaTabla
-   * @description Método para cargar los datos de la tabla de mercancías desde el servicio `avisoTrasladoService`.
-   * Los datos obtenidos se asignan a la propiedad `tablaDeMercancia.datos`.
-   *
-   * @returns {void}
-   */
-  public cargarMercanciaTabla(): void {
-    this.avisoTrasladoService
-      .obtenerMercanciaTabla()
+
+
+  public cargarProcesoTabla(): void {
+    this.avisoDestruccionService
+      .obtenerProcesoTabla()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe(
-        (datos: MercanciaTablaDatos) => {
-          this.tablaDeMercancia.datos = datos.datos;
+        (datos: ProcesoTablaDatos) => {
+          this.tablaProceso.datos = datos.datos;
         }
       );
   }
+
+  public cargarDesperdicioTabla(): void {
+    this.avisoDestruccionService
+      .obtenerDesperdicioTabla()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe(
+        (datos: DesperdicioTablaDatos) => {
+          this.tablaDesperdicio.datos = datos.datos;
+        }
+      );
+  }
+
+  public cargarPedimentoTabla(): void {
+    this.avisoDestruccionService
+      .obtenerPedimentoTabla()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe(
+        (datos: PedimentoTablaDatos) => {
+          this.tablaPedimento.datos = datos.datos;
+        }
+      );
+  }
+
   /**
    * @method inicializarFormulario
    * @description Método para inicializar el formulario reactivo `avisoFormulario` con los datos del estado actual del trámite.
@@ -466,8 +524,8 @@ export class AvisoComponent implements OnInit, OnDestroy {
       }),
       datosAviso: this.fb.group({
         tipoAviso: [this.tramiteState?.avisoFormulario?.tipoAviso, [Validators.required]],
-        justificacion: [{value: this.tramiteState?.avisoFormulario?.justificacion, disabled: true }, [Validators.maxLength(250)]],
-        motivoProrroga: [this.tramiteState?.avisoFormulario?.motivoProrroga, [Validators.required, Validators.maxLength(250)]],
+        justificacion: [{ value: this.tramiteState?.avisoFormulario?.justificacion, disabled: true }, [Validators.required, Validators.maxLength(250)]],
+        periodicidadMensualDestruccion: [{ value: this.tramiteState?.avisoFormulario?.periodicidadMensualDestruccion, disabled: true }, [Validators.required, Validators.maxLength(2)]],
         fechaTranslado: [{ value: this.tramiteState?.avisoFormulario?.fechaTranslado, disabled: true }, Validators.required],
       }),
       direccionOrigen: this.fb.group({
@@ -478,13 +536,13 @@ export class AvisoComponent implements OnInit, OnDestroy {
         calle: [this.tramiteState?.avisoFormulario?.calle, [Validators.required, Validators.maxLength(250)]],
         numeroExterior: [this.tramiteState?.avisoFormulario?.numeroExterior, [Validators.required, Validators.maxLength(15), Validators.pattern(REGEX_ALFANUMERICO_CON_ESPACIOS)]],
         numeroInterior: [this.tramiteState?.avisoFormulario?.numeroInterior, [Validators.maxLength(15), Validators.pattern(REGEX_ALFANUMERICO_CON_ESPACIOS)]],
-        codigoPostal: [this.tramiteState?.avisoFormulario?.codigoPostal, [Validators.required, Validators.maxLength(5), Validators.pattern(REGEX_SOLO_NUMEROS)]],
+        codigoPostal: [this.tramiteState?.avisoFormulario?.codigoPostal, [Validators.required, Validators.maxLength(5), Validators.pattern(REGEX_SOLO_NUMEROS)]]
       }),
       tipoCarga: [this.tramiteState?.avisoFormulario?.tipoCarga, [Validators.required]],
       archivoMasivo: [null]
 
     });
-    this.verificaTipoAviso();
+    // this.verificaTipoAviso();
   }
   /**
    * @method adaceFormulario
@@ -542,30 +600,48 @@ export class AvisoComponent implements OnInit, OnDestroy {
       numeroInterior: [this.tramiteState?.domicilioFormulario?.numeroInterior, [Validators.maxLength(15), Validators.pattern(REGEX_IMPORTE_PAGO)]],
       codigoPostal: [this.tramiteState?.domicilioFormulario?.codigoPostal, [Validators.required, Validators.maxLength(5), Validators.pattern(REGEX_SOLO_NUMEROS)]],
       rfc: [this.tramiteState?.domicilioFormulario?.rfc, [Validators.required]],
+      horaDestruccion: [this.tramiteState?.avisoFormulario?.horaDestruccion, [Validators.required]],
+      fechaDestruccion: [this.tramiteState?.avisoFormulario?.fechaDestruccion, [Validators.required]]
     });
   }
   /**
-   * @method inicializarMercanciaFormulario
-   * @description Método para inicializar el formulario reactivo `mercanciaFormulario` con los datos del estado actual del trámite.
+   * @method inicializarPedimentoFormulario
+   * @description Método para inicializar el formulario reactivo `pedimentoFormulario` con los datos del estado actual del trámite.
    * 
    * - Agrupa los campos relacionados con la mercancía, como `claveFraccionArancelaria`, `nico`, `cantidad`, entre otros.
    * - Aplica validaciones específicas a cada campo, como longitud máxima, patrones y campos obligatorios.
    *
    * @returns {void}
    */
-  inicializarMercanciaFormulario(): void {
-    this.mercanciaFormulario = this.fb.group({
-      claveFraccionArancelaria: [this.tramiteState?.mercanciaFormulario?.claveFraccionArancelaria, Validators.required],
-      nico: [this.tramiteState?.mercanciaFormulario?.nico, [Validators.required, Validators.maxLength(2), Validators.pattern(REGEX_SOLO_NUMEROS)]],
-      cantidad: [this.tramiteState?.mercanciaFormulario?.cantidad, [Validators.required, Validators.pattern(REGEX_NUMEROS_USD)]],
-      claveUnidadMedida: [this.tramiteState?.mercanciaFormulario?.claveUnidadMedida, Validators.required],
-      valorUSD: [this.tramiteState?.mercanciaFormulario?.valorUSD, [Validators.required, Validators.pattern(REGEX_NUMEROS_USD)]],
-      descripcionMercancia: [this.tramiteState?.mercanciaFormulario?.descripcionMercancia, [Validators.required, Validators.maxLength(250)]],
-      descripcionProceso: [this.tramiteState?.mercanciaFormulario?.descripcionProceso, [Validators.required, Validators.maxLength(250)]],
-      numPedimentoExportacion: [this.tramiteState?.mercanciaFormulario?.numPedimentoExportacion, [Validators.required, Validators.maxLength(15)]],
-      numPedimentoImportacion: [this.tramiteState?.mercanciaFormulario?.numPedimentoImportacion, [Validators.required, Validators.maxLength(15)]],
+  inicializarPedimentoFormulario(): void {
+    this.pedimentoFormulario = this.fb.group({
+      patenteAutorizacion: [this.tramiteState?.pedimentoFormulario?.patenteAutorizacion, [Validators.required, Validators.maxLength(4)]],
+      pedimento: [this.tramiteState?.pedimentoFormulario?.pedimento, [Validators.required, Validators.maxLength(7)]],
+      claveAduanaPedimento: [this.tramiteState?.pedimentoFormulario?.claveAduanaPedimento, [Validators.required]],
+      claveFraccionArancelariaPedimento: [this.tramiteState?.pedimentoFormulario?.claveFraccionArancelariaPedimento, Validators.required],
+      nicoPedimento: [this.tramiteState?.pedimentoFormulario?.nicoPedimento, [Validators.required, Validators.maxLength(2)]],
+      cantidadPedimento: [this.tramiteState?.pedimentoFormulario?.cantidadPedimento, [Validators.required, Validators.maxLength(15)]],
+      claveUnidadMedidaPedimento: [this.tramiteState?.pedimentoFormulario?.claveUnidadMedidaPedimento, [Validators.required]]
     });
   }
+
+  inicializarProcesoFormulario(): void {
+    this.procesoFormulario = this.fb.group({
+      descripcionProcesoDestruccion: [this.tramiteState?.procesoFormulario?.descripcionProcesoDestruccion, Validators.required]
+    });
+  }
+
+  inicializarDesperdicioFormulario(): void {
+    this.desperdicioFormulario = this.fb.group({
+      descripcionDesperdicio: [this.tramiteState?.desperdicioFormulario?.descripcionDesperdicio, Validators.required],
+      cantidadDesp: [this.tramiteState?.desperdicioFormulario?.cantidadDesp, [Validators.required, Validators.maxLength(15)]],
+      claveUnidadMedidaDesp: [this.tramiteState?.desperdicioFormulario?.claveUnidadMedidaDesp, [Validators.required]],
+      porcentaje: [this.tramiteState?.desperdicioFormulario?.porcentaje, [Validators.required, Validators.maxLength(3)]],
+      descripcionMercancia: [this.tramiteState?.desperdicioFormulario?.descripcionMercancia, [Validators.required]],
+      circunstanciaHechos: [this.tramiteState?.desperdicioFormulario?.circunstanciaHechos, [Validators.required]]
+    });
+  }
+
   /**
    * @method isValid
    * @description Método para verificar si un campo específico de un formulario es válido.
@@ -615,9 +691,18 @@ export class AvisoComponent implements OnInit, OnDestroy {
    * @param {MercanciaTabla[]} evento - Lista de filas seleccionadas en la tabla de mercancías.
    * @returns {void}
    */
-  filaSeleccionadaMercancia(evento: MercanciaTabla[]): void {
-    this.filaSeleccionadaMercanciaLista = evento;
+  filaSeleccionadaPedimento(evento: PedimentoTabla[]): void {
+    this.filaSeleccionadaPedimentoLista = evento;
   }
+
+  filaSeleccionaProceso(evento: ProcesoTabla[]): void {
+    this.filaSeleccionadaProcesoLista = evento;
+  }
+
+  filaSeleccionaDesperdicio(evento: DesperdicioTabla[]): void {
+    this.filaSeleccionadaDesperdicioLista = evento;
+  }
+
   /**
    * @method eliminarMercancia
    * @description Método para eliminar las filas seleccionadas de la tabla de mercancías.
@@ -627,9 +712,9 @@ export class AvisoComponent implements OnInit, OnDestroy {
    *
    * @returns {void}
    */
-  eliminarMercancia(): void {
-    this.tablaDeMercancia.datos = this.tablaDeMercancia.datos.filter((ele) => !this.filaSeleccionadaMercanciaLista.includes(ele));
-    this.filaSeleccionadaMercanciaLista = [];
+  eliminarPedimento(): void {
+    this.tablaPedimento.datos = this.tablaPedimento.datos.filter((ele) => !this.filaSeleccionadaPedimentoLista.includes(ele));
+    this.filaSeleccionadaPedimentoLista = [];
   }
   /**
    * @method eliminarDomicilio
@@ -644,6 +729,17 @@ export class AvisoComponent implements OnInit, OnDestroy {
     this.tablaDeDatos.datos = this.tablaDeDatos.datos.filter((ele) => !this.filaSeleccionadaLista.includes(ele));
     this.filaSeleccionadaLista = [];
   }
+
+  eliminarProceso(): void {
+    this.tablaProceso.datos = this.tablaProceso.datos.filter((ele) => !this.filaSeleccionadaProcesoLista.includes(ele));
+    this.filaSeleccionadaProcesoLista = [];
+  }
+
+  eliminarDesperdicio(): void {
+    this.tablaDesperdicio.datos = this.tablaDesperdicio.datos.filter((ele) => !this.filaSeleccionadaDesperdicioLista.includes(ele));
+    this.filaSeleccionadaDesperdicioLista = [];
+  }
+
   /**
    * @method verificaTipoAviso
    * @description Método para verificar el tipo de aviso seleccionado en el formulario.
@@ -656,11 +752,11 @@ export class AvisoComponent implements OnInit, OnDestroy {
   verificaTipoAviso(): void {
     const TIPO_AVISO = this.avisoFormulario.get('datosAviso.tipoAviso')?.value;
     this.store.setAvisoFormularioTipoAviso(TIPO_AVISO);
-    this.avisoFormulario.get('datosAviso.idTransaccion')?.enable();
-    this.avisoFormulario.get('datosAviso.motivoProrroga')?.enable();
+    this.avisoFormulario.get('datosAviso.justificacion')?.enable();
+    this.avisoFormulario.get('datosAviso.periodicidadMensualDestruccion')?.enable();
     if (TIPO_AVISO === TIPAVI[0].value) {
-      this.avisoFormulario.get('datosAviso.idTransaccion')?.disable();
-      this.avisoFormulario.get('datosAviso.motivoProrroga')?.disable();
+      this.avisoFormulario.get('datosAviso.justificacion')?.disable();
+      this.avisoFormulario.get('datosAviso.periodicidadMensualDestruccion')?.disable();
     }
   }
   /**
@@ -677,6 +773,21 @@ export class AvisoComponent implements OnInit, OnDestroy {
       MODAL_INSTANCE.show();
     }
   }
+
+  abiertoProceso(): void {
+    if (this.modalProceso) {
+      const MODAL_INSTANCE = new Modal(this.modalProceso.nativeElement);
+      MODAL_INSTANCE.show();
+    }
+  }
+
+  abiertoDesperdicio(): void {
+    if (this.modalDesperdicio) {
+      const MODAL_INSTANCE = new Modal(this.modalDesperdicio.nativeElement);
+      MODAL_INSTANCE.show();
+    }
+  }
+
   /**
    * @method abiertoMercancia
    * @description Método para abrir el modal de mercancía.
@@ -685,24 +796,13 @@ export class AvisoComponent implements OnInit, OnDestroy {
    *
    * @returns {void}
    */
-  abiertoMercancia(): void {
-    if (this.modalMercancia) {
-      const MODAL_INSTANCE = new Modal(this.modalMercancia.nativeElement);
+  abiertoPedimento(): void {
+    if (this.modalPedimento) {
+      const MODAL_INSTANCE = new Modal(this.modalPedimento.nativeElement);
       MODAL_INSTANCE.show();
     }
   }
-  /**
-   * @method agregarMercancia
-   * @description Método para agregar mercancías a la tabla de mercancías.
-   * 
-   * - Carga los datos de la tabla de mercancías y cierra el modal de mercancía.
-   *
-   * @returns {void}
-   */
-  agregarMercancia(): void {
-    this.cargarMercanciaTabla();
-    this.closeMercancia.nativeElement.click();
-  }
+
   /**
    * @method agregarDomicilio
    * @description Método para agregar domicilios a la tabla de avisos.
@@ -716,6 +816,25 @@ export class AvisoComponent implements OnInit, OnDestroy {
     this.closeDomicilio.nativeElement.click();
     this.abrirModal()
   }
+
+  agregarProceso(): void {
+    this.cargarProcesoTabla();
+    this.closeProceso.nativeElement.click();
+    this.abrirModal();
+  }
+
+  agregarDesperdicio(): void {
+    this.cargarDesperdicioTabla();
+    this.closeDesperdicio.nativeElement.click();
+    this.abrirModal();
+  }
+
+  agregarPedimento(): void {
+    this.cargarPedimentoTabla();
+    this.closePedimento.nativeElement.click();
+    this.abrirModal();
+  }
+
   /**
    * @method sanitizeAlphanumeric
    * @description Método para limpiar un campo de formulario, eliminando caracteres no alfanuméricos.

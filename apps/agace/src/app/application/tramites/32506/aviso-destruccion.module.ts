@@ -1,6 +1,6 @@
 import { AlertComponent, BtnContinuarComponent, WizardComponent } from "@libs/shared/data-access-user/src";
+import { AvisoDestruccionService } from "./services/aviso-destruccion.service";
 import { AvisoTrasladoRoutingModule } from "./aviso-destruccion-routing.module";
-import { AvisoTrasladoService } from "./services/aviso-destruccion.service";
 import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
 import { PasoDosComponent } from "./pages/paso-dos/paso-dos.component";
@@ -29,7 +29,7 @@ import { ToastrService } from "ngx-toastr";
     ToastrModule.forRoot()
   ],
   exports: [],
-  providers: [ToastrService, AvisoTrasladoService]
+  providers: [ToastrService, AvisoDestruccionService]
 })
 export class AvisoDestruccionModule {
 

@@ -1,4 +1,4 @@
-import { AvisoTablaDatos, CatalogoLista,DatosSolicitante, MercanciaTablaDatos } from '../models/aviso-destruccion.model';
+import { AvisoTablaDatos, CatalogoLista,DatosSolicitante, DesperdicioTablaDatos, PedimentoTablaDatos, ProcesoTablaDatos } from '../models/aviso-destruccion.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -11,7 +11,7 @@ import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export class AvisoTrasladoService {
+export class AvisoDestruccionService {
   /**
    * Constructor del servicio.
    * 
@@ -33,9 +33,18 @@ export class AvisoTrasladoService {
    * 
    * @returns {Observable<MercanciaTablaDatos>} Un observable con los datos de la tabla de mercancías.
    */
-  obtenerMercanciaTabla(): Observable<MercanciaTablaDatos> {
-    return this.http.get<MercanciaTablaDatos>(`assets/json/32506/mercancia-tabla.json`);
+  obtenerPedimentoTabla(): Observable<PedimentoTablaDatos> {
+    return this.http.get<PedimentoTablaDatos>(`assets/json/32506/pedimento-tabla.json`);
   }
+
+  obtenerProcesoTabla(): Observable<ProcesoTablaDatos> {
+    return this.http.get<ProcesoTablaDatos>(`assets/json/32506/proceso-tabla.json`);
+  }
+
+  obtenerDesperdicioTabla(): Observable<DesperdicioTablaDatos> {
+    return this.http.get<DesperdicioTablaDatos>(`assets/json/32506/desperdicio-tabla.json`);
+  }
+
   /**
    * Obtiene los datos de la tabla de aviso.
    * 

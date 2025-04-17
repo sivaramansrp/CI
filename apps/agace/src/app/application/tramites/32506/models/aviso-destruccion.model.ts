@@ -12,11 +12,12 @@ export interface AvisoTablaDatos {
  */
 export interface AvisoTabla {
   id: number;
-  rfc: string;
   nombreComercial: string;
   entidadFederativa: string;
   alcaldioOMuncipio: string;
   colonia: string;
+  horaDestruccion: string;
+  fechaDestruccion: string;
 }
 /**
  * Representa una lista de elementos de un catálogo.
@@ -59,6 +60,8 @@ export interface DatosSolicitante {
   correoElectronico: string;
   pais: string;
   codigoPostal: string;
+  horaDestruccion: string;
+  fechaDestruccion: string;
   entidadFederativa: string;
   municipio: string;
   localidad: string;
@@ -73,26 +76,24 @@ export interface DatosSolicitante {
 /**
  * Representa los datos de la tabla de mercancías.
  */
-export interface MercanciaTablaDatos {
+export interface PedimentoTablaDatos {
   /**
    * Lista de mercancías en la tabla.
    */
-  datos: MercanciaTabla[];
+  datos: PedimentoTabla[];
 }
 /**
  * Representa una mercancía en la tabla de mercancías.
  */
-export interface MercanciaTabla {
+export interface PedimentoTabla {
   id: number;
-  claveFraccionArancelaria: string;
-  nico: string;
-  cantidad: string;
-  claveUnidadMedida: string;
-  valorUSD: string;
-  descripcionMercancia: string;
-  descripcionProceso: string;
-  numPedimentoExportacion: string;
-  numPedimentoImportacion: string;
+  patenteAutorizacion: string;
+  pedimento: string;
+  claveAduanaPedimento: string;
+  claveFraccionArancelariaPedimento: string;
+  nicoPedimento: string;
+  cantidadPedimento: string;
+  claveUnidadMedidaPedimento: string;
 }
 /**
  * Representa una acción de un botón en el wizard.
@@ -153,7 +154,7 @@ export interface AvisoFormulario {
   valorAnioProgramaImmex: string;
   tipoAviso: string;
   justificacion: string;
-  motivoProrroga: string;
+  periodicidadMensualDestruccion: string;
   fechaTranslado: string;
   nombreComercial: string;
   claveEntidadFederativa: string;
@@ -163,8 +164,59 @@ export interface AvisoFormulario {
   numeroExterior: string;
   numeroInterior: string;
   codigoPostal: string;
+  horaDestruccion: string;
+  fechaDestruccion: string
   tipoCarga: string;
 }
+
+export interface ProcesoTablaDatos {
+  /**
+   * Lista de procesos en la tabla.
+   */
+  datos: ProcesoTabla[];
+}
+
+export interface ProcesoTabla {
+  id: number;
+  descripcionProcesoDestruccion: string;
+}
+
+export interface DesperdicioTablaDatos {
+  /**
+   * Lista de procesos en la tabla.
+   */
+  datos: DesperdicioTabla[];
+}
+
+export interface DesperdicioTabla {
+  id: number;
+  descripcionProcesoDestruccion: string;
+}
+
+export interface ProcesoFormulario {
+  descripcionProcesoDestruccion: string;
+}
+
+export interface PedimentoFormulario {
+  patenteAutorizacion: string;
+  pedimento: string;
+  claveAduanaPedimento: string;
+  claveFraccionArancelariaPedimento: string;
+  nicoPedimento: string;
+  cantidadPedimento: string;
+  claveUnidadMedidaPedimento: string;
+}
+
+export interface DesperdicioFormulario {
+  descripcionDesperdicio: string;
+  cantidadDesp: string;
+  claveUnidadMedidaDesp: string;
+  porcentaje: string;
+  descripcionMercancia: string;
+  circunstanciaHechos: string;
+}
+
+
 /**
  * Representa un archivo de documentos.
  */
