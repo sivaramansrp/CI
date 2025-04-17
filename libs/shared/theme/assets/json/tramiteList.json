@@ -212,8 +212,8 @@
     {
         "id": 31,
         "tramite": 80208,
-        "linkDashboard": "/se/pago/solicitud-modalidad/modalidad",
-        "linkDepartment": "/se/pago/solicitud-modalidad/modalidad",
+        "linkDashboard": "/se/solicitud-modalidad/modalidad",
+        "linkDepartment": "/pago/solicitud-modalidad/modalidad",
         "department": "se"
     },
     {
@@ -276,7 +276,7 @@
         "id": 40,
         "tramite": 110202,
         "linkDashboard": "/se/certificado-validacion/validacion",
-        "linkDepartment": "/se/certificado-validacion/validacion",
+        "linkDepartment": "/pago/certificado-validacion/validacion",
         "department": "se"
     },
     {
@@ -577,7 +577,7 @@
         "id": 83,
         "tramite": 220703,
         "linkDashboard": "/agriculture/acuicola-fisica/acuicola",
-        "linkDepartment": "/agriculture/acuicola-fisica/acuicola",
+        "linkDepartment": "/pago/acuicola-fisica/acuicola",
         "department": "agriculture"
     },
     {
@@ -1046,7 +1046,7 @@
         "id": 150,
         "tramite": 260217,
         "linkDashboard": "/cofepris/dispositivos-medicos-sin-registrar/contenedor-de-pasos",
-        "linkDepartment": "/cofepris/dispositivos-medicos-sin-registrar/contenedor-de-pasos",
+        "linkDepartment": "/pago/dispositivos-medicos-sin-registrar/contenedor-de-pasos",
         "department": "cofepris"
     },
     {
@@ -1493,15 +1493,15 @@
     {
         "id": 214,
         "tramite": 260208,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "/cofepris/medicamentos-destinados-uso/contenedor-de-pasos",
+        "linkDepartment": "/pago/medicamentos-destinados-uso/contenedor-de-pasos",
         "department": "cofepris"
     },
     {
         "id": 215,
         "tramite": 260209,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "/cofepris/importacion-destinados-donacio/contenedor-de-pasos",
+        "linkDepartment": "/pago/importacion-destinados-donacio/contenedor-de-pasos",
         "department": "cofepris"
     },
     {
