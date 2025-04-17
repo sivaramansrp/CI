@@ -297,6 +297,12 @@ export class DomicilioComponent implements OnInit, OnDestroy {
     derecha: 'País(es) seleccionados',
   };
 
+  /**
+   * Objeto que representa la configuración de etiquetas para la selección de país de origen.
+   * 
+   * @property {string} tituluDeLaIzquierda - Etiqueta que se muestra a la izquierda, indicando el título "País de origen".
+   * @property {string} derecha - Etiqueta que se muestra a la derecha, indicando los países seleccionados.
+   */
   public paisDeOrigen: CrossListLable = {
     tituluDeLaIzquierda: 'País de origen',
     derecha: 'País(es) seleccionados',

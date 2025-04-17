@@ -22,5 +22,10 @@ export class DatosSolicitudComponent {
    */
   isAduanasEntradaVisible: boolean = true;
 
+  /**
+   * Configuración de visibilidad utilizada para determinar qué elementos
+   * deben ser visibles en el componente. Se inicializa con la configuración
+   * predeterminada definida en `DEFAULT_CONFIGURACION_VISIBILIDAD`.
+   */
   configuracionVisibilidad: ConfiguracionVisibilidad = DEFAULT_CONFIGURACION_VISIBILIDAD
 }
