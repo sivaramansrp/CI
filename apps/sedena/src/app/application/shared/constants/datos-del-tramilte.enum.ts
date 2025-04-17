@@ -77,7 +77,7 @@ export const PERIODO_SEMESTRE_HABILITADO = [240119, 240108, 240107, 240114, 2401
  * @description Contiene un arreglo de identificadores numéricos relacionados con manifiestos y declaraciones en el sistema.
  */
 
-export const MANIFIESTOS_DECLARACIONES = [240107];
+export const MANIFIESTOS_DECLARACIONES = [240107, 240106];
 
 /**
  * Identificadores numéricos relacionados con fechas de pago.
