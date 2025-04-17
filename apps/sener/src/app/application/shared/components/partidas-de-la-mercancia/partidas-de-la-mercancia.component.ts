@@ -1,14 +1,15 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
+import { PARTIDASDELAMERCANCIA_TABLA } from '../../constantes/partidas-de-la-mercancia.enum';
+
+import { PartidasDeLaMercanciaModelo } from '../../models/partidas-de-la-mercancia.model';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
 
 import { TituloComponent } from '@ng-mf/data-access-user';
 
-import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
-
+import { TablaDinamicaComponent } from '@ng-mf/data-access-user'; 
 /**
  * @component
  * @name PartidasDeLaMercanciaComponent
@@ -46,13 +47,13 @@ export class PartidasDeLaMercanciaComponent {
    * @property {ConfiguracionColumna<any>[]} tableHeaderData
    * @description Configuración de las columnas de la tabla dinámica.
    */
-  @Input() tableHeaderData: ConfiguracionColumna<any>[] = [];
-
+  @Input() tableHeaderData: ConfiguracionColumna<PartidasDeLaMercanciaModelo>[] =
+    PARTIDASDELAMERCANCIA_TABLA;
   /**
    * @property {any[]} tableBodyData
    * @description Datos que se mostrarán en el cuerpo de la tabla dinámica.
    */
-  @Input() tableBodyData: any[] = [];
+  @Input() tableBodyData: PartidasDeLaMercanciaModelo[] = [];
 
   /**
    * @property {boolean} mostrarTabla
@@ -64,7 +65,7 @@ export class PartidasDeLaMercanciaComponent {
    * @event filaSeleccionadaChange
    * @description Evento que emite las filas seleccionadas en la tabla dinámica.
    */
-  @Output() filaSeleccionadaChange = new EventEmitter<any[]>();
+  @Output() filaSeleccionadaChange = new EventEmitter<PartidasDeLaMercanciaModelo[]>();
 
   /**
    * @event validarYEnviarFormularioEvent
@@ -85,7 +86,7 @@ export class PartidasDeLaMercanciaComponent {
    * Incluye el formulario reactivo, el nombre del campo que se está actualizando
    * y el nombre del método que realiza la actualización.
    */
-  @Output() setValoresStoreEvent = new EventEmitter<{ form: FormGroup; campo: string; metodoNombre: string }>();
+  @Output() setValoresStoreEvent = new EventEmitter<{ form: FormGroup; campo: string }>();
 
   /**
    * @property {TablaSeleccion} CHECKBOX
@@ -118,8 +119,8 @@ export class PartidasDeLaMercanciaComponent {
    * @description Maneja las filas seleccionadas en la tabla dinámica y emite un evento.
    * @param {any[]} filasSeleccionadas Lista de filas seleccionadas.
    */
-  handleListaDeFilaSeleccionada(filasSeleccionadas: any[]): void {
-    this.filaSeleccionadaChange.emit(filasSeleccionadas);
+  handleListaDeFilaSeleccionada(event: PartidasDeLaMercanciaModelo[]): void {
+    this.filaSeleccionadaChange.emit(event);
   }
 
   /**
@@ -145,7 +146,7 @@ export class PartidasDeLaMercanciaComponent {
    * @param {string} campo Nombre del campo que se está actualizando.
    * @param {string} metodoNombre Nombre del método que realiza la actualización.
    */
-  setValoresStore(form: FormGroup, campo: string, metodoNombre: string): void {
-    this.setValoresStoreEvent.emit({ form, campo, metodoNombre });
+  setValoresStore(form: FormGroup, campo: string): void {
+    this.setValoresStoreEvent.emit({ form, campo });
   }
 }

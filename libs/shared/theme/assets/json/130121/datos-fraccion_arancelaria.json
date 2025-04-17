@@ -123,5 +123,18 @@
       "relacionadaUmtId": 2,
       "relacionadaAcotacionId": 1
     }
+  ],
+  [
+    {
+      "id": 1,
+      "descripcion": "Litro"
+    },
+    {
+      "id": 2,
+      "descripcion": "Kilogramo"
+    }
+  ],
+  [
+    { "id": 1, "descripcion": "00" }
   ]
 ]

@@ -438,6 +438,21 @@ export class Tramite110202Store extends Store<TramiteState> {
    * 
    * @returns {void} - No devuelve ningún valor.
    */
+  setFormCertificadoGenric(values: { [key: string]: undefined | boolean | string | number | object }): void {    
+    this.update((state) => ({
+      formCertificado: {
+        ...state.formCertificado,
+        ...values,
+      },
+    }));
+  }
+  /**
+   * Establece los valores del formulario del certificado en el almacén.
+   * 
+   * @param {Object} values - Un objeto con las claves y valores para actualizar el formulario del certificado.
+   * 
+   * @returns {void} - No devuelve ningún valor.
+   */
   setFormMercancia(values: { [key: string]: undefined | boolean | string | number | object }): void {
     this.update((state) => ({
       mercanciaForm: {

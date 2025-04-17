@@ -9,6 +9,10 @@ const ROUTES: Routes = [
     component: SeleccionTramiteComponent
   },
   {
+    path:'producto-petrolifero',
+    loadChildren: () => import('./tramites/130108/importacion-producto-petrolifero.module').then(m => m.ImportacionProductoPetroliferoModule)
+  },
+  {
     
     path: 'hidrocarburos-de-petroleo',
     loadChildren: () =>
