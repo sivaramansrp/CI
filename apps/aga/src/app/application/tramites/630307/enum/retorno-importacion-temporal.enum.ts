@@ -93,7 +93,7 @@ export const FORMULARIO_DATOS_MERCANCIA = [
         soloLectura: false,
         validadores: [
             { tipo: 'required' },
-            { tipo: 'pattern', valor:REGEX_ALFANUMERICO_CON_ESPACIOS, mensaje: 'Por favor, corrija la Marca.' }
+            { tipo: 'pattern', valor: REGEX_ALFANUMERICO_CON_ESPACIOS, mensaje: 'Por favor, corrija la Marca.' }
         ],
         marcadorDePosicion: '',
         valorPredeterminado: '',
@@ -109,7 +109,7 @@ export const FORMULARIO_DATOS_MERCANCIA = [
         soloLectura: false,
         validadores: [
             { tipo: 'required' },
-            { tipo: 'pattern', valor:'REGEX_ALFANUMERICO_CON_ESPACIOS', mensaje: 'Por favor, corrija la Modelo.' }
+            { tipo: 'pattern', valor: REGEX_ALFANUMERICO_CON_ESPACIOS, mensaje: 'Por favor, corrija la Modelo.' }
         ],
         marcadorDePosicion: '',
         valorPredeterminado: '',
@@ -125,7 +125,7 @@ export const FORMULARIO_DATOS_MERCANCIA = [
         soloLectura: false,
         validadores: [
             { tipo: 'required' },
-            { tipo: 'pattern', valor: 'REGEX_SOLO_NUMEROS', mensaje: 'Por favor, corrija la Número de serie.' }
+            { tipo: 'pattern', valor: REGEX_SOLO_NUMEROS, mensaje: 'Por favor, corrija la Número de serie.' }
         ],
         marcadorDePosicion: '',
         valorPredeterminado: '',
@@ -141,7 +141,7 @@ export const FORMULARIO_DATOS_MERCANCIA = [
         soloLectura: false,
         validadores: [
             { tipo: 'required' },
-            { tipo: 'pattern', valor:'REGEX_SOLO_NUMEROS', mensaje: 'Por favor, corrija la Número de motor.' }
+            { tipo: 'pattern', valor: REGEX_SOLO_NUMEROS, mensaje: 'Por favor, corrija la Número de motor.' }
         ],
         marcadorDePosicion: '',
         valorPredeterminado: '',
@@ -157,7 +157,7 @@ export const FORMULARIO_DATOS_MERCANCIA = [
         soloLectura: false,
         validadores: [
             { tipo: 'required' },
-            { tipo: 'pattern', valor: 'REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL', mensaje: 'Por favor, corrija la descripción general de la mercancía.' }
+            { tipo: 'pattern', valor: REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija la descripción general de la mercancía.' }
         ],
         marcadorDePosicion: '',
         valorPredeterminado: '',
@@ -173,7 +173,7 @@ export const FORMULARIO_DATOS_MERCANCIA = [
         soloLectura: false,
         validadores: [
             { tipo: 'required' },
-            { tipo: 'pattern', valor: 'REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL', mensaje: 'Por favor, corrija el motivo o justificación de la importación temporal.' }
+            { tipo: 'pattern', valor: REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija el motivo o justificación de la importación temporal.' }
         ],
         marcadorDePosicion: '',
         valorPredeterminado: '',
@@ -181,8 +181,6 @@ export const FORMULARIO_DATOS_MERCANCIA = [
     },
    
 ];
-
-
 
 export const FORMULARIO_DATOS_SOLICITUD = [
     {
