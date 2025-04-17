@@ -79,5 +79,98 @@
         Indique el programa y/o campaña de difusión que utiliza para comunicar a los empleados la política de seguridad en la cadena de suministros.</label>
     <textarea class="custom-textarea" rows="6" cols="100" id="programa" formControlName="programa"></textarea>
   </div>
+  <h4 class="custom-heading">1.2 Políticas de seguridad</h4>
+  <div class="form-group">
+    <label for="programaDifusion">* Indique el programa y/o campaña de difusión que utiliza para comunicar a los empleados la política de seguridad en la cadena de suministros.</label>
+    <textarea class="custom-textarea" rows="6" cols="100" id="programaDifusion" formControlName="programaDifusion"></textarea>
+  </div>
+  <div class="form-group">
+    <label>* Indique si realiza capacitación inicial y de reforzamiento de la política de seguridad en la cadena de suministros.</label>
+    <div>
+      <input type="radio" id="capacitacionSi" formControlName="capacitacion" value="Si">
+      <label for="capacitacionSi">Si</label>
+      <input type="radio" id="capacitacionNo" formControlName="capacitacion" value="No">
+      <label for="capacitacionNo">No</label>
+    </div>
+  </div>
+
+  <h4 class="custom-heading">1.3 Auditorías internas en la cadena de suministros</h4>
+  <p>
+    Además del monitoreo de rutina en control y seguridad, es necesario programar y realizar auditorías periódicas, que permitan evaluar todos los procesos en materia de seguridad en la cadena de suministros de una manera más crítica y profunda, así como garantizar que sus empleados sigan los procedimientos de seguridad de la empresa. Las auditorías deben ser realizadas por el Comité de Seguridad de la compañía.
+  </p>
+  <div class="form-group">
+    <label>* Si cuenta con un procedimiento documentado para su realización.</label>
+    <div>
+      <input type="radio" id="procedimientoSi" formControlName="procedimiento" value="Si">
+      <label for="procedimientoSi">Si</label>
+      <input type="radio" id="procedimientoNo" formControlName="procedimiento" value="No">
+      <label for="procedimientoNo">No</label>
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="custom-required" for="descripcionProcedimiento">
+       Describa el procedimiento documentado para llevar a cabo una auditoría interna enfocada en la seguridad en la cadena de suministros.
+    </label>
+    <textarea class="custom-textarea" rows="6" cols="100" id="descripcionProcedimiento" formControlName="descripcionProcedimiento"></textarea>
+  </div>
+  <div class="form-group">
+    <label class="custom-required" for="nombreProcedimiento">
+       Nombre del procedimiento para llevar a cabo una auditoría interna enfocada en la seguridad en la cadena de suministros.
+    </label>
+    <textarea class="custom-textarea" rows="6" cols="100" id="nombreProcedimiento" formControlName="nombreProcedimiento"></textarea>
+  </div>
+  <div class="form-group">
+    <label class="custom-required" for="programacionAuditoria">
+       Señale cómo la empresa de mensajería y paquetería lleva a cabo la programación o calendarización para una auditoría interna, en materia de seguridad en la cadena de suministros.
+    </label>
+    <textarea class="custom-textarea" rows="6" cols="100" id="programacionAuditoria" formControlName="programacionAuditoria"></textarea>
+  </div>
+  <div class="form-group">
+    <label class="custom-required" for="participantesAuditoria">
+      Indique quiénes participan en ellas, los registros que se generan, así como la periodicidad con la que se llevan a cabo.
+    </label>
+    <textarea class="custom-textarea" rows="6" cols="100" id="participantesAuditoria" formControlName="participantesAuditoria"></textarea>
+  </div>
+  <div class="form-group">
+    <label class="custom-required"> Si el enfoque de las auditorías es en base al tamaño de la organización y a la naturaleza de los riesgos.</label>
+    <div>
+      <input type="radio" id="enfoqueSi" formControlName="enfoqueAuditoria" value="Si">
+      <label for="enfoqueSi">Si</label>
+      <input type="radio" id="enfoqueNo" formControlName="enfoqueAuditoria" value="No">
+      <label for="enfoqueNo">No</label>
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="custom-required" for="procesosAuditados">
+      Mencione los procesos o tópicos que se auditan.
+    </label>
+    <textarea class="custom-textarea" rows="6" cols="100" id="procesosAuditados" formControlName="procesosAuditados"></textarea>
+  </div>
+  <div class="form-group">
+    <label class="custom-required" for="registrosAuditoria">
+       Describa los registros de los resultados de las auditorías y su seguimiento.
+    </label>
+    <textarea class="custom-textarea" rows="6" cols="100" id="registrosAuditoria" formControlName="registrosAuditoria"></textarea>
+  </div>
+  <div class="form-group">
+    <label class="custom-required" for="programación">
+      
+ Señale cómo lleva a cabo la programación o calendarización para realizar una auditoría interna en materia de seguridad en la cadena de suministros.
+    </label>
+    <textarea class="custom-textarea" rows="6" cols="100" id="programación" formControlName="programación"></textarea>
+  </div>
+  <div class="form-group">
+    <label class="custom-required" for="registrosNombre">
+      Indique los nombre y puestos de quienes participan, los registros que se efectúan y la periodicidad con la que se realizan las auditorías internas.
+    </label>
+    <textarea class="custom-textarea" rows="6" cols="100" id="registrosNombre" formControlName="registrosNombre"></textarea>
+  </div>
+
+  <div class="form-group">
+    <label class="custom-required" for="registrosEmpresa">
+     Indique cómo es que la gerencia de la empresa verifica el resultado de las auditorias en materia de seguridad de la cadena de suministros y como realiza y/o implementa acciones preventivas, correctivas y de mejora además del seguimiento y cierre de las mismas.
+    </label>
+    <textarea class="custom-textarea" rows="6" cols="100" id="registrosEmpresa" formControlName="registrosEmpresa"></textarea>
+  </div>
 </div>
 
