@@ -23,7 +23,7 @@ import {
 } from '@libs/shared/data-access-user/src';
 import { CommonModule, Location } from '@angular/common';
 import { Component,OnDestroy, OnInit,} from '@angular/core';
-import { Subject,first,map,takeUntil, tap } from 'rxjs';
+import { Subject,first,takeUntil, tap } from 'rxjs';
 import {
   Tramite260302State,
   Tramite260302Store,
