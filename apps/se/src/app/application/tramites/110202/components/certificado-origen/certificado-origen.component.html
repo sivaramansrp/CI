@@ -1,4 +1,4 @@
-<app-certificado-de-origen (formCertificadoEvent)="obtenerDatosFormulario($event)"
+<app-certificado-de-origen  (formCertificadoEvent)="setValoresStore($event)"
     (tipoEstadoSeleccionEvent)="tipoEstadoSeleccion($event)" (paisBloquEvent)="tipoSeleccion($event)"
     (setbuscarMercanciaEvent)="buscarrMercancia()" [tratadoAcuerdo]="(estados$ | async ) || []"
     [paisBloqu]="(pais$ | async) || []" [tableData]="(datos1$ | async) || []" (filaClics)="abrirModificarModal($event)"
