@@ -560,7 +560,7 @@ export const PROCEDIMIENTOS_PARA_DESHABILITAR_NOMBRE_RAZON_SOCIAL=[260301,260207
  *              relacionados con colonias o equivalentes en el sistema.
  * @type {number[]}
  */
-export const PROCEDIMIENTOS_PARA_COLONIA_O_EQUIVALENTE=[260207,260208, 260209]
+export const PROCEDIMIENTOS_PARA_COLONIA_O_EQUIVALENTE=[260207,260208, 260209, 260219]
 
 /**
  * @enum {number}

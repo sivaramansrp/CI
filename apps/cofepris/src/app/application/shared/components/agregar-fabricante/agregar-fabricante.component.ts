@@ -280,6 +280,7 @@ export class AgregarFabricanteComponent implements OnDestroy, OnInit {
       case 260207:
       case 260209:
       case 260208:
+      case 260219:
         this.elementosDeshabilitados = ['pais'];
         this.elementosNoRequeridos = ['codigoPostal', 'colonia'];
         break;
