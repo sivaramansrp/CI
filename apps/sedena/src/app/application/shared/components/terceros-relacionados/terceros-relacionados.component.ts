@@ -57,7 +57,18 @@ export class TercerosRelacionadosComponent {
    * @type {EventEmitter<DestinoFinal>}
    */
   @Output() modificarDestinarioDatos: EventEmitter<DestinoFinal> = new EventEmitter<DestinoFinal>(true);
-  
+  /**
+   * @output eliminarDestinatarioFinalEvent - Evento que emite cuando se elimina un destinatario final.
+   * Este EventEmitter emite una instancia de `DestinoFinal`.
+   */
+  @Output() eliminarDestinatarioFinalEvent: EventEmitter<DestinoFinal> = new EventEmitter<DestinoFinal>(true);
+  /**
+   * Evento que emite cuando se desea eliminar un proveedor final.
+   * Este EventEmitter emite una instancia de tipo `Proveedor`.
+   * 
+   * @event eliminarProveedorFinalEvent
+   */
+  @Output() eliminarProveedorFinalEvent: EventEmitter<Proveedor> = new EventEmitter<DestinoFinal>(true);
   /**
    * Emite un evento cuando se modifican los datos del proveedor.
    * El evento contiene un objeto de tipo `Proveedor`.
@@ -130,6 +141,24 @@ export class TercerosRelacionadosComponent {
    */
   modificarDestinatario(): void {
     this.modificarDestinarioDatos.emit(this.destinarioTablaSeleccionada[0])
+  }
+  
+  /**
+   * Elimina el destinatario final seleccionado y emite un evento con el destinatario eliminado.
+   * 
+   * @command Eliminar destinatario final seleccionado.
+   */
+  eliminarDestinatarioFinal():void{
+    this.eliminarDestinatarioFinalEvent.emit(this.destinarioTablaSeleccionada[0]);
+  }
+
+  /**
+   * Elimina el proveedor final seleccionado y emite un evento con el proveedor eliminado.
+   * 
+   * @command Eliminar el proveedor final seleccionado.
+   */
+  eliminarProveedorFinal():void{
+    this.eliminarProveedorFinalEvent.emit(this.proveedorTablaSeleccionada[0]);
   }
 
   /**
