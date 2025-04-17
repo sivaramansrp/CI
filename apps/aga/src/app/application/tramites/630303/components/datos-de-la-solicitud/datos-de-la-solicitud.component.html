@@ -1,20 +1,10 @@
 <div class="container">
-    <ng-titulo [titulo]="'Datos de la Solicitud'"></ng-titulo>
+    <div class="row">
+        <formas-dinamicas formularioTitulo="Datos de la Solicitud" [forma]="datosImportacionTemporalFormulario"
+            [formularioDatos]="formularioDatosSolicitud" [estado]="estadoSeleccionado"
+            (emitirCambioDeValor)="establecerCambioDeValor($event)"></formas-dinamicas>
+    </div>
     <form [formGroup]="datosImportacionTemporalFormulario">
-        <div class="row mt-4">
-            <div class="col-md-4">
-                <app-catalogo-select [catalogo]="aduanaDeingresOpciones" [label]="'Aduana de ingreso'" [required]="true"
-                    formControlName="cveAduana"
-                    (change)="setValorStore(datosImportacionTemporalFormulario,'cveAduana')"></app-catalogo-select>
-                <input type="hidden" id="hidAduana" formControlName="cveAduana" />
-            </div>
-            <div class="col-md-4">
-                <app-catalogo-select [catalogo]="seccionAduaneraOpciones" [label]="'Sección aduanera'"
-                    [required]="false" formControlName="cveSeccionAduanal"
-                    (change)="setValorStore(datosImportacionTemporalFormulario,'cveSeccionAduanal')"></app-catalogo-select>
-                <input type="hidden" id="hidSeccionAduanal" formControlName="cveSeccionAduanal" />
-            </div>
-        </div>
         <div class="row">
             <div class="col-md-4">
                 <input-fecha [setFecha]="datosImportacionTemporalFormulario.get('fechaLimiteRetorno')?.value"
@@ -27,6 +17,7 @@
             </div>
         </div>
     </form>
+
 </div>
 <div>
     <div *ngIf="showRetornoProrroga">

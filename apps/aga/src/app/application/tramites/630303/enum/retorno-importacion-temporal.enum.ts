@@ -1,3 +1,4 @@
+import { REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL } from "@libs/shared/data-access-user/src/tramites/constantes/regex.constants";
 
 
 /**
@@ -81,7 +82,7 @@ export const FECHA_VENCIMIENTO = {
     habilitado: true
 };
 
-export const FORMULARIO_DATOS = [
+export const FORMULARIO_DATOS_MERCANCIA = [
     {
         id: 'descripcionMercancia',
         labelNombre: 'Descripción general de la mercancía',
@@ -92,7 +93,7 @@ export const FORMULARIO_DATOS = [
         soloLectura: false,
         validadores: [
             { tipo: 'required' },
-            { tipo: 'pattern', valor: /^(?!\s)(.*\S)?$/, mensaje: 'Por favor, corrija la descripción general de la mercancía.' }
+            { tipo: 'pattern', valor: REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija la descripción general de la mercancía.' }
         ],
         marcadorDePosicion: '',
         valorPredeterminado: '',
@@ -108,7 +109,7 @@ export const FORMULARIO_DATOS = [
         soloLectura: false,
         validadores: [
             { tipo: 'required' },
-            { tipo: 'pattern', valor: /^(?!\s)(.*\S)?$/, mensaje: 'Por favor, corrija el motivo o justificación de la importación temporal.' }
+            { tipo: 'pattern', valor: REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija el motivo o justificación de la importación temporal.' }
         ],
         marcadorDePosicion: '',
         valorPredeterminado: '',
@@ -124,7 +125,7 @@ export const FORMULARIO_DATOS = [
         soloLectura: false,
         validadores: [
            { tipo: 'required'},
-            { tipo: 'pattern', valor:/^(?!\s)(.*\S)?$/, mensaje: 'Por favor, corrija la lista detallada de la mercancía.' }
+            { tipo: 'pattern', valor:REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija la lista detallada de la mercancía.' }
         ],
         marcadorDePosicion: '',
         valorPredeterminado: '',
@@ -132,3 +133,35 @@ export const FORMULARIO_DATOS = [
     }
 ];
 
+
+
+export const FORMULARIO_DATOS_SOLICITUD = [
+    {
+        id: 'cveAduana',
+        labelNombre: 'Aduana de ingreso',
+        campo: 'cveAduana',
+        clase: 'col-md-4',
+        tipoInput: 'select-catalogos',
+        desactivado: false,
+        soloLectura: false,
+        validadores: [
+            { tipo: 'required' }
+        ],
+        marcadorDePosicion: '',
+        valorPredeterminado: '',
+        marginTop: 0
+    },
+    {
+        id: 'cveSeccionAduanal',
+        labelNombre: 'Sección aduanera',
+        campo: 'cveSeccionAduanal',
+        clase: 'col-md-4',
+        tipoInput: 'select-catalogos',
+        desactivado: false,
+        soloLectura: false,
+        validadores: [],
+        marcadorDePosicion: '',
+        valorPredeterminado: '',
+        marginTop: 0
+    },
+];
