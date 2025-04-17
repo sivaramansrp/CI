@@ -6,6 +6,7 @@ import * as XLSX from 'xlsx'; // Importa XLSX para leer archivos Excel
 import { Modal } from 'bootstrap';
 import {
   AlertComponent,
+  InputCheckComponent,
   InputRadioComponent,
   TituloComponent,
   VALID_FILE_REGEX,
@@ -27,6 +28,7 @@ import { SOLICITUD_32201_ENUM } from '../../constantes/anexo';
     TituloComponent,
     InputRadioComponent,
     AlertComponent,
+    InputCheckComponent
   ],
   templateUrl: './solicitud.component.html',
   styleUrl: './solicitud.component.scss',
@@ -132,7 +134,7 @@ export class SolicitudComponent implements OnInit {
             { header: 1 }
           );
 
-          const EXPECTED_COLUMNS = 5;
+          const EXPECTED_COLUMNS = 5;  // Agregue aquí el número requerido de columnas o lógica 
           const FIRST_ROW = JSON_DATA[0] as string[];
           if (FIRST_ROW.length === EXPECTED_COLUMNS) {
             if (this.confirmarModalElement) {
