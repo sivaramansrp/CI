@@ -49,7 +49,7 @@ export interface DatosDespacho {
     idAduana: string;
     descripcionAduana: string;
 
-    idSeccionAduanera: string;
+    idSeccionDespacho: string;
     seccionAduanera: string;
 
     nombreRecinto: string;
@@ -80,7 +80,7 @@ export interface DatosMercancia {
 }
 
 export interface ResponsablesDespacho {
-    gafete: string;
+    gafeteRespoDespacho: string;
     nombre: string;
     primerApellido: string;
     segundoApellido: string;
@@ -102,11 +102,11 @@ export interface Personas {
 // Pedimento
 export interface DatosComponentePedimento {
     patente: number;
-    idAduana: number;
+    idAduanaDespacho: number;
 }
 
 export interface Persona {
-    gafete?: number ;
+    gafeteRespoDespacho?: number ;
     nombre: string;
     primerApellido: string;
     segundoApellido: string;

@@ -25,6 +25,7 @@ import { map } from 'rxjs';
   templateUrl: './aviso.component.html',
   styleUrl: './aviso.component.scss',
   imports: [CommonModule, ReactiveFormsModule, TituloComponent, CatalogoSelectComponent, InputFechaComponent, InputRadioComponent, ManualAvisoComponent, CargaMasivaComponent, TablaDinamicaComponent],
+  providers: [AvisoDatosService],
   standalone: true,
 })
 export class AvisoComponent implements OnInit {
