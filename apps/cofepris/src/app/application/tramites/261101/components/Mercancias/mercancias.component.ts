@@ -96,6 +96,16 @@ export class MercanciasComponent implements OnInit, OnDestroy {
         this.mercanciasDatas = response;
       });
   }
+  /**
+ * Método para crear y configurar el formulario reactivo `Aduana`.
+ * 
+ * Este formulario contiene un único control llamado `Aduana`, que se inicializa
+ * con el estado actual de la sección (`seccionState`). Este estado es obtenido
+ * previamente a través de un observable en el método `obtenerDatosFormulario`.
+ * 
+ * El formulario es utilizado para gestionar los datos relacionados con la aduana
+ * en el contexto del componente.
+ */
   crearFormulario(): void {
     this.Aduana = new FormGroup({
       Aduana: new FormControl(this.seccionState),
