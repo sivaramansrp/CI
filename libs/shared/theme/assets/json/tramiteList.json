@@ -52,7 +52,7 @@
         "id": 8,
         "tramite": 6001,
         "linkDashboard": "/aga/registro-cuentas-bancarias/todospasos",
-        "linkDepartment": "/aga/registro-cuentas-bancarias/todospasos",
+        "linkDepartment": "/pago/registro-cuentas-bancarias/todospasos",
         "department": "aga"
     },
     {
@@ -241,7 +241,7 @@
         "id": 35,
         "tramite": 90201,
         "linkDashboard": "/se/expansion-de-productores/registrar-solicitud",
-        "linkDepartment": "/se/expansion-de-productores/registrar-solicitud",
+        "linkDepartment": "/pago/expansion-de-productores/registrar-solicitud",
         "department": "se"
     },
     {
@@ -255,7 +255,7 @@
         "id": 37,
         "tramite": 110101,
         "linkDashboard": "/se/pantallas/datosdecomponentes",
-        "linkDepartment": "/se/pantallas/datosdecomponentes",
+        "linkDepartment": "/pago/pantallas/datosdecomponentes",
         "department": "se"
     },
     {
@@ -381,7 +381,7 @@
         "id": 55,
         "tramite": 120404,
         "linkDashboard": "/se/entidad-legal/soliciante",
-        "linkDepartment": "/se/entidad-legal/soliciante",
+        "linkDepartment": "/pago/entidad-legal/soliciante",
         "department": "se"
     },
     {
@@ -710,7 +710,7 @@
         "id": 102,
         "tramite": 260604,
         "linkDashboard": "/cofepris/aviso-exportacion/pantallas",
-        "linkDepartment": "/cofepris/aviso-exportacion/pantallas",
+        "linkDepartment": "/pago/aviso-exportacion/pantallas",
         "department": "cofepris"
     },
     {
@@ -724,7 +724,7 @@
         "id": 104,
         "tramite": 260701,
         "linkDashboard": "/cofepris/permiso-certificados/registrarSolicitudIP",
-        "linkDepartment": "/cofepris/permiso-certificados/registrarSolicitudIP",
+        "linkDepartment": "/pago/permiso-certificados/registrarSolicitudIP",
         "department": "cofepris"
     },
     {
@@ -1066,8 +1066,8 @@
     {
         "id": 153,
         "tramite": 260303,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "/cofepris/importacion-psicotropicos/registrarIPM",
+        "linkDepartment": "/pago/importacion-psicotropicos/registrarIPM",
         "department": "cofepris"
     },
     {
@@ -1081,7 +1081,7 @@
         "id": 155,
         "tramite": 260514,
         "linkDashboard": "/cofepris/permiso-importacion-calidad/pantallas",
-        "linkDepartment": "/cofepris/permiso-importacion-calidad/pantallas",
+        "linkDepartment": "/pago/permiso-importacion-calidad/pantallas",
         "department": "cofepris"
     },
     {
@@ -1227,8 +1227,8 @@
     {
         "id": 176,
         "tramite": 317,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "agace/aviso-unico-renovacion/pantallas",
+        "linkDepartment": "pago/aviso-unico-renovacion/pantallas",
         "department": "agace"
     },
     {
