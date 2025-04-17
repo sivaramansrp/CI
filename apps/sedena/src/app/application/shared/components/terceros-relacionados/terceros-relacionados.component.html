@@ -20,7 +20,6 @@
           type="button"
           name="modificarMercancias"
           class="btn btn-default"
-          [disabled]="destinarioTablaSeleccionada.length > 1"
           (click)="modificarDestinatario()"
         >
           Modificar
@@ -29,6 +28,7 @@
           type="button"
           name="eliminarMercancias"
           class="btn btn-danger ms-2"
+          (click)="eliminarDestinatarioFinal()"
         >
           Eliminar
         </button>
@@ -63,6 +63,7 @@
           name="modificarMercancias"
           class="btn btn-default"
           [disabled]="proveedorTablaSeleccionada.length > 1"
+          (click)="modificarProveedor()"
         >
           Modificar
         </button>
@@ -70,6 +71,7 @@
           type="button"
           name="eliminarMercancias"
           class="btn btn-danger ms-2"
+          (click)="eliminarProveedorFinal()"
         >
           Eliminar
         </button>

@@ -3,7 +3,7 @@ import { STR_NACIONAL } from '../../constants/datos-solicitud.enum';
 import { TERCEROS_NACIONALIDAD_OPCIONES } from '../../constants/datos-solicitud.enum';
 import { TIPO_PERSONA_OPCIONES } from '../../constants/datos-solicitud.enum';
 
-import { DestinoFinal } from '../../models/terceros-relacionados.model';
+import { DestinoFinal, Proveedor } from '../../models/terceros-relacionados.model';
 
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 
@@ -46,8 +46,7 @@ import { takeUntil } from 'rxjs';
   styleUrl: './agregar-destinatario-custom.component.scss',
 })
 export class AgregarDestinatarioCustomComponent
-  implements OnDestroy, OnInit, OnChanges
-{
+  implements OnDestroy, OnInit, OnChanges {
   /**
    * Subject utilizado para gestionar la desuscripción de observables.
    * Se completa en `ngOnDestroy()` para prevenir fugas de memoria.
@@ -118,6 +117,13 @@ export class AgregarDestinatarioCustomComponent
    */
   @Input() idProcedimiento!: number;
 
+/**
+   * Datos del formulario que pueden ser de tipo `DestinoFinal`, `Proveedor`, `null` o `undefined`.
+   * Este input se utiliza para recibir la información necesaria desde el componente padre.
+   *
+   * @type {DestinoFinal | Proveedor | null | undefined}
+   */
+@Input() formaDatos!: DestinoFinal | Proveedor | null | undefined;
   /**
    * @property mostrarCamposNoContribuyente
    * @description Controla la visibilidad de los campos específicos para no contribuyentes.
@@ -178,6 +184,9 @@ export class AgregarDestinatarioCustomComponent
   ngOnChanges(): void {
     this.mostrarCamposNoContribuyente =
       PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE.includes(this.idProcedimiento);
+      if (this.formaDatos) {
+        this.agregarDestinatarioFinal.patchValue(this.formaDatos)
+      }
   }
 
   /**
@@ -220,6 +229,9 @@ export class AgregarDestinatarioCustomComponent
   ngOnInit(): void {
     this.crearFormaulario();
     this.cargarDatos();
+    if(this.formaDatos) {
+      this.agregarDestinatarioFinal.patchValue(this.formaDatos);
+    }
   }
 
   /**
@@ -256,9 +268,13 @@ export class AgregarDestinatarioCustomComponent
       correoElectronico: ['', [Validators.required, Validators.email]],
       nacionalidad: [],
     });
+    
     this.agregarDestinatarioFinal.disable();
     this.agregarDestinatarioFinal.get('tipoPersona')?.enable();
     this.agregarDestinatarioFinal.get('nacionalidad')?.enable();
+    if(this.formaDatos) {
+      this.agregarDestinatarioFinal.patchValue(this.formaDatos);
+    }
   }
 
   /**
