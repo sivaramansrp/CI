@@ -80,17 +80,8 @@ export const MERCANCIA_TABLA = [
 ];
 
 export interface RespuestaTabla {
-    /**
-     * Código de respuesta.
-     */
     code: number;
-    /**
-     * Datos de la tabla NICO.
-     */
     data: MercanciasInfo[];
-    /**
-     * Mensaje de la respuesta.
-     */
     message: string;
 }
 
@@ -134,16 +125,86 @@ export const INSTALACIONES_PRINCIPALES_TABLA = [
 ];
 
 export interface InstalacionesPrincipalesRespuestaTabla {
-    /**
-     * Código de respuesta.
-     */
     code: number;
-    /**
-     * Datos de la tabla NICO.
-     */
     data: InstalacionesPrincipalesTablaInfo[];
-    /**
-     * Mensaje de la respuesta.
-     */
     message: string;
 }
+
+export interface ControlInventarios {
+    nombreSistema: string;
+    lugarRadicacion: string;
+    sistemaControlInventarios: string;
+}
+
+
+export const CONTROL_INVENTARIOS_TABLA = [
+    {
+        encabezado: 'Nombre del sistema o datos para su identificación',
+        clave: (ele: ControlInventarios) => ele.nombreSistema,
+        orden: 1,
+    },
+    {
+        encabezado: 'Lugar de radicación',
+        clave: (ele: ControlInventarios) => ele.lugarRadicacion,
+        orden: 2,
+    },
+    {
+        
+        encabezado: 'Indique si se trata de un sistema de control de inventarios conforme el anexo 24',
+        clave: (ele: ControlInventarios) => ele.sistemaControlInventarios,
+        orden: 3,
+    }
+];
+
+export interface Miembro {
+    tipoDePersona: string;
+    nombre: string;
+    rfc: string;
+    caracter: string;
+    nacionalidad: string;
+    obligadoTributar: string;
+    nombreEmpresa: string;
+}
+
+export const AGREGAR_MIEMBRO_TABLA = [
+    {
+        encabezado: 'Tipo de Persona',
+        clave: (ele: Miembro) => ele.tipoDePersona,
+        orden: 1,
+    },
+    {
+        encabezado: 'Nombre',
+        clave: (ele: Miembro) => ele.nombre,
+        orden: 2,
+    },
+    {
+        
+        encabezado: 'RFC',
+        clave: (ele: Miembro) => ele.rfc,
+        orden: 3,
+    },
+    {
+        
+        encabezado: 'En su carácter de',
+        clave: (ele: Miembro) => ele.caracter,
+        orden: 4,
+    },
+    {
+        
+        encabezado: 'Nacionalidad',
+        clave: (ele: Miembro) => ele.nacionalidad,
+        orden: 5,
+    },
+    {
+        
+        encabezado: 'Obligado a tributar en México',
+        clave: (ele: Miembro) => ele.obligadoTributar,
+        orden: 6,
+    },
+    {
+        
+        encabezado: 'Nombre de la empresa',
+        clave: (ele: Miembro) => ele.nombreEmpresa,
+        orden: 7,
+    }
+];
