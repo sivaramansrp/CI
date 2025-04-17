@@ -230,6 +230,13 @@ const ROUTES: Routes = [
       import('./tramites/10302/exencion-impuestos.module').then(
         (m) => m.ExencionImpuestosModule
       ),
+  },
+  {
+    path: 'codigo-transportista',
+    loadChildren: () =>
+      import('./tramites/40402/codigo-transportista.module').then(
+        (m) => m.CodigoTransportistaModule
+      ),
   }
 ];
 
