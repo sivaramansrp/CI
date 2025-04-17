@@ -14,8 +14,7 @@ describe('MercanciasComponent', () => {
   
   describe('MercanciasComponent', () => {
     let component: MercanciasComponent;
-    let fixture: ComponentFixture<MercanciasComponent>; // Explicitly typed
-  
+    let fixture: ComponentFixture<MercanciasComponent>; 
     let mockDatosSolicitudService: { getMercanciasData: jest.Mock };
     let mockDatosProcedureStore: { selectProrroga: jest.Mock };
     let mockDatosProcedureQuery: { selectProrroga: jest.Mock };
