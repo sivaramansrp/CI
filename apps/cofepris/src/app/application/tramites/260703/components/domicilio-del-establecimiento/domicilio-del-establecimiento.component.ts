@@ -11,6 +11,7 @@ import {
   Tramite260703Store,
 } from '../../estados/store/tramite260703.store';
 import { Subject, takeUntil } from 'rxjs';
+import { NOTIFICION_INPUT } from '../../enum/solicitud-permiso.enum';
 import { SCIAN_DATA } from '../../../../shared/constantes/datos-scian.enum';
 import { ScianData } from '../../../../shared/models/datos-modificacion.model';
 import { SolicitudPermisoService } from '../../services/solicitud-permiso.service';
@@ -23,7 +24,7 @@ import { Tramite260703Query } from '../../estados/query/tramite260703.query';
 @Component({
   selector: 'app-domicilio-del-establecimiento',
   templateUrl: './domicilio-del-establecimiento.component.html',
-  styleUrl: './domicilio-del-establecimiento.component.css',
+  styleUrl: './domicilio-del-establecimiento.component.scss',
 })
 export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
   /**
@@ -66,29 +67,17 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
    */
   tipoSeleccionTabla = TablaSeleccion.CHECKBOX;
 
-  warningMessage = '¡Precaución! Debes capturar localidad y colonia';
-
   /**
-   * Configuración de la notificación para mostrar mensajes de advertencia.
-   * Este objeto define las propiedades de la notificación, como el mensaje,
-   * la categoría y el tipo de notificación.
+   * Configuración de la notificación de entrada.
+   * Define los parámetros iniciales para las notificaciones del componente.
    */
-  notificacionInput: Notificacion = {
-    mensaje: '¡Precaución! Debes capturar localidad y colonia',
-    cerrar: false,
-    categoria: 'warning',
-    tipoNotificacion: 'banner',
-    modo: '',
-    titulo: '',
-    txtBtnAceptar: '',
-    txtBtnCancelar: ''
-  };
+  notificacionInput: Notificacion = NOTIFICION_INPUT;
 
   /**
    * Observable utilizado para limpiar las suscripciones al destruir el componente.
    * Esto ayuda a evitar fugas de memoria.
    */
-  destroy$: Subject<void> = new Subject<void>();
+  destruirNotificacion$: Subject<void> = new Subject<void>();
 
   /**
    * Constructor del componente.
@@ -111,7 +100,7 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.tramite2606703Query.selectSolicitudPermiso$
-      .pipe(takeUntil(this.destroy$))
+      .pipe(takeUntil(this.destruirNotificacion$))
       .subscribe((solicitudPermisoState: SolicitudPermisoState) => {
         this.solicitudPermisoState = solicitudPermisoState;
       });
@@ -179,7 +168,7 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
   obtenerScianData(): void {
     this.solicitudPermisoService
       .obtenerScianData()
-      .pipe(takeUntil(this.destroy$))
+      .pipe(takeUntil(this.destruirNotificacion$))
       .subscribe((data) => {
         this.datos = data;
       });
@@ -222,7 +211,7 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
    * Limpia las suscripciones para evitar fugas de memoria.
    */
   ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
+    this.destruirNotificacion$.next();
+    this.destruirNotificacion$.complete();
   }
 }

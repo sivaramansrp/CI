@@ -19,7 +19,7 @@ import {
 import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { DatosComponent } from './pages/datos/datos.component';
 import { DatosDelEstablecimientoComponent } from './components/datos-del-establecimiento/datos-del-establecimiento.component';
-import { DatosSolitudeComponent } from './components/datos-solicitud/datos-solitude.component';
+import { DatosSolitudeComponent } from './components/datos-solicitud/datos-solicitude.component';
 import { DomicilioDelEstablecimientoComponent } from './components/domicilio-del-establecimiento/domicilio-del-establecimiento.component';
 import { InicioSesionService } from '@libs/shared/data-access-user/src/core/services/shared/inicio-sesion/inicio-sesion.service';
 import { ManifiestosYDeclaracionesComponent } from './components/manifiestos-y-declaraciones/manifiestos-y-declaraciones.component';

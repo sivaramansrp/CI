@@ -84,8 +84,8 @@ describe('DatosDelEstablecimientoComponent', () => {
   });
 
   it('should clean up subscriptions on ngOnDestroy', () => {
-    const destroySpy = jest.spyOn(component['destruir$'], 'next');
-    const completeSpy = jest.spyOn(component['destruir$'], 'complete');
+    const destroySpy = jest.spyOn(component['destruirNotificacion$'], 'next');
+    const completeSpy = jest.spyOn(component['destruirNotificacion$'], 'complete');
 
     component.ngOnDestroy();
 

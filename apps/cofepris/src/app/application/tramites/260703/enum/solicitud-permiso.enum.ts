@@ -1,4 +1,5 @@
 import { ConfiguracionColumna } from "@libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model";
+import { Notificacion } from "@libs/shared/data-access-user/src";
 import { TramiteAsociados } from "../../../shared/models/tramite-asociados.model";
 
 /**
@@ -61,3 +62,17 @@ export const OPCIONES_DE_BOTON_DE_RADIO_IDEGENERICA1 = [
       orden: 5,
     },
   ];
+
+  /**
+   * Configuración de notificación para alertar al usuario sobre la captura de localidad y colonia.
+   */
+  export const NOTIFICION_INPUT: Notificacion = {
+      mensaje: '¡Precaución! Debes capturar localidad y colonia',
+      cerrar: false,
+      categoria: 'warning',
+      tipoNotificacion: 'banner',
+      modo: '',
+      titulo: '',
+      txtBtnAceptar: '',
+      txtBtnCancelar: ''
+    };

@@ -20,7 +20,7 @@ import { Tramite260703Query } from '../../estados/query/tramite260703.query';
 @Component({
   selector: 'app-manifiestos-y-declaraciones',
   templateUrl: './manifiestos-y-declaraciones.component.html',
-  styleUrl: './manifiestos-y-declaraciones.component.css',
+  styleUrl: './manifiestos-y-declaraciones.component.scss',
 })
 export class ManifiestosYDeclaracionesComponent implements OnInit, OnDestroy {
   /**

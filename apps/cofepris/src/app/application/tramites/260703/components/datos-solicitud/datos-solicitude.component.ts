@@ -14,8 +14,8 @@ import { Tramite260703Query } from '../../estados/query/tramite260703.query';
  */
 @Component({
   selector: 'app-datos-solitude',
-  templateUrl: './datos-solitude.component.html',
-  styleUrl: './datos-solitude.component.css',
+  templateUrl: './datos-solicitude.component.html',
+  styleUrl: './datos-solicitude.component.scss',
 })
 export class DatosSolitudeComponent implements OnInit, OnDestroy {
   /**

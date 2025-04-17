@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { DatosSolitudeComponent } from './datos-solitude.component';
+import { DatosSolitudeComponent } from './datos-solicitude.component';
 import { ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
 
 import { of } from 'rxjs';

@@ -8,7 +8,7 @@ import { Tramite260703Query } from '../../estados/query/tramite260703.query';
 @Component({
   selector: 'app-representante-legal',
   templateUrl: './representante-legal.component.html',
-  styleUrl: './representante-legal.component.css',
+  styleUrl: './representante-legal.component.scss',
 })
 export class RepresentanteLegalComponent implements OnInit, OnDestroy{
    /**

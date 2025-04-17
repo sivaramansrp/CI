@@ -14,7 +14,7 @@ import { Tramite260703Query } from '../../estados/query/tramite260703.query';
 @Component({
   selector: 'app-datos-del-establecimiento',
   templateUrl: './datos-del-establecimiento.component.html',
-  styleUrl: './datos-del-establecimiento.component.css',
+  styleUrl: './datos-del-establecimiento.component.scss',
 })
 export class DatosDelEstablecimientoComponent implements OnInit, OnDestroy {
   /**
@@ -28,21 +28,21 @@ export class DatosDelEstablecimientoComponent implements OnInit, OnDestroy {
   solicitudPermisoState!: SolicitudPermisoState;
 
   /**
-   * Observable utilizado para limpiar las suscripciones al destruir el componente.
+   * Observable utilizado para limpiar las suscripciones al destruirNotificacion el componente.
    * Esto ayuda a evitar fugas de memoria.
    */
-  destruir$ = new Subject<void>();
+  destruirNotificacion$ = new Subject<void>();
 
   /**
    * Constructor del componente.
-   * @param formBuilder Servicio para construir formularios reactivos.
-   * @param tramite260703Store Servicio para gestionar el estado del trámite.
-   * @param tramitte260703Query Servicio para consultar el estado del trámite.
+   * formBuilder Servicio para construir formularios reactivos.
+   * tramite260703Store Servicio para gestionar el estado del trámite.
+   * tramite260703Query Servicio para consultar el estado del trámite.
    */
   constructor(
     private formBuilder: FormBuilder,
     private tramite260703Store: Tramite260703Store,
-    private tramitte260703Query: Tramite260703Query
+    private tramite260703Query: Tramite260703Query
   ) {}
 
   /**
@@ -50,8 +50,8 @@ export class DatosDelEstablecimientoComponent implements OnInit, OnDestroy {
    * Configura las suscripciones necesarias y crea el formulario inicial.
    */
   ngOnInit(): void {
-    this.tramitte260703Query.selectSolicitudPermiso$
-      .pipe(takeUntil(this.destruir$))
+    this.tramite260703Query.selectSolicitudPermiso$
+      .pipe(takeUntil(this.destruirNotificacion$))
       .subscribe((state) => {
         this.solicitudPermisoState = state;
       });
@@ -87,11 +87,11 @@ export class DatosDelEstablecimientoComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Método del ciclo de vida que se ejecuta al destruir el componente.
+   * Método del ciclo de vida que se ejecuta al destruirNotificacion el componente.
    * Limpia las suscripciones para evitar fugas de memoria.
    */
   ngOnDestroy(): void {
-    this.destruir$.next();
-    this.destruir$.complete();
+    this.destruirNotificacion$.next();
+    this.destruirNotificacion$.complete();
   }
 }
