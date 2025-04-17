@@ -99,7 +99,7 @@ export class ExportacionHidrocarburosService {
    * @returns {Observable<ProductoResponse>} Observable que emite las opciones de producto disponibles.
    */
   getProductoOptions(): Observable<ProductoResponse> {
-    return this.http.get<ProductoResponse>('assets/json/130204/producto-otions.json');
+    return this.http.get<ProductoResponse>('assets/json/130204/plazo-options.json');
   }
 
   /**

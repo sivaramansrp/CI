@@ -1,11 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { of, Subject } from 'rxjs';
+import { of } from 'rxjs';
 import { SolicitudComponent } from './solicitud.component';
 import { ExportacionHidrocarburosService } from '../../services/exportacion-hidrocarburos.service';
 import { Tramite130204Store } from '../../estados/tramites/tramites130204.store';
 import { Tramite130204Query } from '../../estados/queries/tramite130204.query';
 import { PaisDeOrigenComponent } from '../../../../shared/components/pais-de-origen/pais-de-origen.component';
+import { DatosDeLaMercanciaComponent } from '../../../../shared/components/datos-de-la-mercancia/datos-de-la-mercancia.component';
+import { DatosDelTramiteComponent } from '../../../../shared/components/datos-del-tramite/datos-del-tramite.component';
+import { PartidasDeLaMercanciaComponent } from '../../../../shared/components/partidas-de-la-mercancia/partidas-de-la-mercancia.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { RepresentacionComponent } from '../../../../shared/components/representacion/representacion.component';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 describe('SolicitudComponent', () => {
   let component: SolicitudComponent;
@@ -38,8 +44,17 @@ describe('SolicitudComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      declarations: [SolicitudComponent, PaisDeOrigenComponent],
-      imports: [ReactiveFormsModule],
+      declarations: [ SolicitudComponent ],
+      imports: [
+        ReactiveFormsModule,
+        HttpClientTestingModule,
+        PaisDeOrigenComponent,
+        DatosDeLaMercanciaComponent,
+        DatosDelTramiteComponent,
+        PartidasDeLaMercanciaComponent,
+        RepresentacionComponent,
+      ],
+      schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
       providers: [
         FormBuilder,
         { provide: ExportacionHidrocarburosService, useValue: exportacionServiceMock },
@@ -66,9 +81,9 @@ describe('SolicitudComponent', () => {
   });
 
   it('should call opcionesDeBusqueda on ngOnInit', () => {
-    const spyOpcionesDeBusqueda = jest.spyOn(component, 'opcionesDeBusqueda');
+    const spyOpciones = jest.spyOn(component, 'opcionesDeBusqueda');
     component.ngOnInit();
-    expect(spyOpcionesDeBusqueda).toHaveBeenCalled();
+    expect(spyOpciones).toHaveBeenCalled();
   });
 
   it('should fetch table data and update formForTotalCount', () => {
@@ -82,31 +97,64 @@ describe('SolicitudComponent', () => {
   });
 
   it('should handle store updates for setFraccion', () => {
-    const form = new FormBuilder().group({ fraccion: [1], umt: [''] });
-    component.mercanciaCatalogoArray = [[{ id: 1, descripcion: 'Sample Description', relacionadaUmtId: 2 }]];
-    const spySetValoresStore = jest.spyOn(component, 'setValoresStore');
+    // 1) build a simple form with the controls your method will patch
+    const form = new FormBuilder().group({
+      fraccion: [1],
+      umt: [''],
+      acotacion: ['']
+    });
 
-    component.handleStoreUpdate({ form, campo: 'fraccion', metodoNombre: 'setFraccion' });
+    // 2) stub the catalog arrays so .find() returns a match
+    component.mercanciaCatalogoArray = [[
+      { id: 1, descripcion: 'Sample', relacionadaUmtId: 2, relacionadaAcotacionId: 99 }
+    ]];
+    component.acotacionCatalogo = [
+      { id: 99, descripcion: 'My Acotación' }
+    ];
 
-    expect(spySetValoresStore).toHaveBeenCalledWith(form, 'fraccion');
+    // 3) spy on setValoresStore to verify it's called for each field
+    const spySet = jest.spyOn(component, 'setValoresStore');
+
+    // 4) invoke the handler
+    component.handleStoreUpdate({
+      form,
+      campo: 'fraccion',
+      metodoNombre: 'setFraccion'
+    });
+
+    // 5) assertions
+    expect(spySet).toHaveBeenCalledWith(form, 'fraccion');
     expect(form.value.umt).toBe(2);
+    expect(spySet).toHaveBeenCalledWith(form, 'umt');
+    expect(form.value.acotacion).toBe('My Acotación');
+    expect(spySet).toHaveBeenCalledWith(form, 'acotacion');
   });
 
   it('should handle store updates for setNico', () => {
-    const form = new FormBuilder().group({ fraccion: [1], descripcionNico: [''] });
-    component.mercanciaCatalogoArray = [[{ id: 1, descripcion: 'Test Descripción' }]];
-    const spySetValoresStore = jest.spyOn(component, 'setValoresStore');
+    const form = new FormBuilder().group({
+      fraccion: [1],
+      descripcionNico: ['']
+    });
 
-    component.handleStoreUpdate({ form, campo: 'nico', metodoNombre: 'setNico' });
+    component.mercanciaCatalogoArray = [[
+      { id: 1, descripcion: 'Test Descripción' }
+    ]];
 
-    expect(spySetValoresStore).toHaveBeenCalledWith(form, 'nico');
+    const spySet = jest.spyOn(component, 'setValoresStore');
+    component.handleStoreUpdate({
+      form,
+      campo: 'nico',
+      metodoNombre: 'setNico'
+    });
+
+    expect(spySet).toHaveBeenCalledWith(form, 'nico');
     expect(form.value.descripcionNico).toBe('Test Descripción');
   });
 
   it('should validate and show/hide table based on form validity', () => {
     component['fb'] = new FormBuilder();
     component.partidasDelaMercanciaForm = component['fb'].group({
-      cantidadModificar: ['', Validators.required],
+      cantidadModificar: ['', Validators.required]
     });
 
     component.validarYEnviarFormulario();

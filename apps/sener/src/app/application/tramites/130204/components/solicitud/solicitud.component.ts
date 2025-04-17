@@ -372,7 +372,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         this.seccionState?.descripcion,
         [
           Validators.required,
-          Validators.minLength(10),
           Validators.maxLength(500),
         ],
       ],

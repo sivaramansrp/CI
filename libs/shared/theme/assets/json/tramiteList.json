@@ -1171,15 +1171,15 @@
     {
         "id": 168,
         "tramite": 130108,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "/pago/producto-petrolifero/solicitud",
+        "linkDepartment": "/pago/producto-petrolifero/solicitud",
         "department": "sener"
     },
     {
         "id": 169,
         "tramite": 130121,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "/sener/permiso-de-hidrocarburos/datos",
+        "linkDepartment": "/sener/permiso-de-hidrocarburos/datos",
         "department": "sener"
     },
     {
@@ -1948,8 +1948,8 @@
     {
         "id": 279,
         "tramite": 130204,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "/sener/exportacion-hidrocarburos/solicitud",
+        "linkDepartment": "/sener/exportacion-hidrocarburos/solicitud",
         "department": "sener"
     },
     {

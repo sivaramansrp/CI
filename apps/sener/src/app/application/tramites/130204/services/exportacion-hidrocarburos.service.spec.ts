@@ -131,8 +131,9 @@ describe('ExportacionHidrocarburosService', () => {
       expect(options).toEqual(mockProductoOptions);
     });
 
-    const req = httpMock.expectOne('assets/json/130204/producto-otions.json');
+    const req = httpMock.expectOne('assets/json/130204/plazo-options.json');
     expect(req.request.method).toBe('GET');
     req.flush(mockProductoOptions);
   });
+  
 });
