@@ -1213,8 +1213,8 @@
     {
         "id": 174,
         "tramite": 105,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "/aga/invocar-modulo/solicitante",
+        "linkDepartment": "/pago/invocar-modulo/solicitante",
         "department": "aga"
     },
     {
