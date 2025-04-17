@@ -79,3 +79,103 @@ export const FECHA_VENCIMIENTO = {
     required: true,
     habilitado: true
 };
+
+export const FORMULARIO_DATOS = [
+    {
+        id: 'marca',
+        labelNombre: 'Marca',
+        campo: 'marca',
+        clase: 'col-md-6',
+        tipoInput: 'input',
+        desactivado: false,
+        soloLectura: false,
+        validadores: [
+            { tipo: 'required' },
+            { tipo: 'pattern', valor: /^(?!\s)(.*\S)?$/, mensaje: 'Por favor, corrija la descripción general de la mercancía.' }
+        ],
+        marcadorDePosicion: '',
+        valorPredeterminado: '',
+        marginTop: 0
+    },
+    {
+        id: 'modelo',
+        labelNombre: 'Modelo',
+        campo: 'modelo',
+        clase: 'col-md-6',
+        tipoInput: 'input',
+        desactivado: false,
+        soloLectura: false,
+        validadores: [
+            { tipo: 'required' },
+            { tipo: 'pattern', valor: /^(?!\s)(.*\S)?$/, mensaje: 'Por favor, corrija la descripción general de la mercancía.' }
+        ],
+        marcadorDePosicion: '',
+        valorPredeterminado: '',
+        marginTop: 0
+    },
+    {
+        id: 'numeroDeSerie',
+        labelNombre: 'Número de serie',
+        campo: 'numeroDeSerie',
+        clase: 'col-md-6',
+        tipoInput: 'input',
+        desactivado: false,
+        soloLectura: false,
+        validadores: [
+            { tipo: 'required' },
+            { tipo: 'pattern', valor: /^(?!\s)(.*\S)?$/, mensaje: 'Por favor, corrija la descripción general de la mercancía.' }
+        ],
+        marcadorDePosicion: '',
+        valorPredeterminado: '',
+        marginTop: 0
+    },
+    {
+        id: 'numeroDeMotor',
+        labelNombre: 'Número de motor',
+        campo: 'numeroDeMotor',
+        clase: 'col-md-12',
+        tipoInput: 'input',
+        desactivado: false,
+        soloLectura: false,
+        validadores: [
+            { tipo: 'required' },
+            { tipo: 'pattern', valor: /^(?!\s)(.*\S)?$/, mensaje: 'Por favor, corrija la descripción general de la mercancía.' }
+        ],
+        marcadorDePosicion: '',
+        valorPredeterminado: '',
+        marginTop: 0
+    },
+    {
+        id: 'descripcionMercancia',
+        labelNombre: 'Descripción general de la mercancía',
+        campo: 'descripcionMercancia',
+        clase: 'col-md-6',
+        tipoInput: 'textarea',
+        desactivado: false,
+        soloLectura: false,
+        validadores: [
+            { tipo: 'required' },
+            { tipo: 'pattern', valor: /^(?!\s)(.*\S)?$/, mensaje: 'Por favor, corrija la descripción general de la mercancía.' }
+        ],
+        marcadorDePosicion: '',
+        valorPredeterminado: '',
+        marginTop: 0
+    },
+    {
+        id: 'motivo',
+        labelNombre: 'Motivo o justificación de la importación temporal',
+        campo: 'motivo',
+        clase: 'col-md-12',
+        tipoInput: 'textarea',
+        desactivado: false,
+        soloLectura: false,
+        validadores: [
+            { tipo: 'required' },
+            { tipo: 'pattern', valor: /^(?!\s)(.*\S)?$/, mensaje: 'Por favor, corrija el motivo o justificación de la importación temporal.' }
+        ],
+        marcadorDePosicion: '',
+        valorPredeterminado: '',
+        marginTop: 0
+    },
+    
+];

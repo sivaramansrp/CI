@@ -1,53 +1,9 @@
 <div class="container">
-    <ng-titulo [titulo]="'Datos de la mercancía que se importará al país temporalmente'"></ng-titulo>
+    <!-- <ng-titulo [titulo]="'Datos de la mercancía que se importará al país temporalmente'"></ng-titulo> -->
     <form [formGroup]="datosMercancia">
-        <div class="row">
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="marca" class="form-label">Marca *</label>
-                    <input id="marca" formControlName="marca" type="text" class="form-control" (change)="setValorStore(datosMercancia, 'marca')" />
-                    <div *ngIf="datosMercancia.get('marca')?.invalid && datosMercancia.get('marca')?.touched">
-                        <small *ngIf="datosMercancia.get('marca')?.errors?.['required']" class="text-danger">Este campo es obligatorio</small>
-                        <small *ngIf="datosMercancia.get('marca')?.errors?.['pattern']" class="text-danger">Corrija el nombre de la persona.</small>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="modelo" class="form-label">Modelo *</label>
-                    <input id="modelo" formControlName="modelo" type="text" class="form-control" (change)="setValorStore(datosMercancia, 'modelo')" />
-                    <div *ngIf="datosMercancia.get('modelo')?.invalid && datosMercancia.get('modelo')?.touched">
-                        <small *ngIf="datosMercancia.get('modelo')?.errors?.['required']" class="text-danger">Este campo es obligatorio</small>
-                        <small *ngIf="datosMercancia.get('modelo')?.errors?.['pattern']" class="text-danger">Corrija la descripción/dirección.</small>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="numeroDeSerie" class="form-label">Número de serie *</label>
-                    <input id="numeroDeSerie" formControlName="numeroDeSerie" type="text" class="form-control" (change)="setValorStore(datosMercancia, 'numeroDeSerie')" />
-                    <div *ngIf="datosMercancia.get('numeroDeSerie')?.invalid && datosMercancia.get('numeroDeSerie')?.touched">
-                        <small *ngIf="datosMercancia.get('numeroDeSerie')?.errors?.['required']" class="text-danger">Este campo es obligatorio</small>
-                        <small *ngIf="datosMercancia.get('numeroDeSerie')?.errors?.['pattern']" class="text-danger">Ingrese solo dígitos.</small>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="numeroDeMotor" class="form-label">Número de motor *</label>
-                    <input id="numeroDeMotor" formControlName="numeroDeMotor" type="text" class="form-control" (change)="setValorStore(datosMercancia, 'numeroDeMotor')" />
-                    <div *ngIf="datosMercancia.get('numeroDeMotor')?.invalid && datosMercancia.get('numeroDeMotor')?.touched">
-                        <small *ngIf="datosMercancia.get('numeroDeMotor')?.errors?.['required']" class="text-danger">Este campo es obligatorio</small>
-                        <small *ngIf="datosMercancia.get('numeroDeMotor')?.errors?.['pattern']" class="text-danger">Ingrese solo dígitos.</small>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row">
+        <!-- <div class="row">
             <div class="col-md-12">
-            <label for="descripcionMercancia" class="form-label">Descripción adicional de la mercancía:</label>
+            <label for="descripcionMercancia" class="form-label">Descripción general de la mercancía *:</label>
             <textarea id="descripcionMercancia" formControlName="descripcionMercancia" class="form-control"
             (change)="setValorStore(datosMercancia,'descripcionMercancia')"></textarea>
             <div
@@ -55,7 +11,7 @@
                 <small *ngIf="datosMercancia.get('descripcionMercancia')?.errors?.['required']" class="text-danger">Este campo es
                     obligatorio.</small>
                 <small *ngIf="datosMercancia.get('descripcionMercancia')?.errors?.['pattern']" class="text-danger">
-                    Por favor, corrija la descripción adicional de la mercancía
+                    Por favor, corrija la descripción general de la mercancía
                 </small>.
             </div>
         </div>
@@ -75,6 +31,23 @@
             </div>
         </div>
 
-      
+        <div class="row">
+            <div class="col-md-12">
+            <label for="listaMercancia" class="form-label">Lista detallada de la mercancía *:</label>
+            <textarea id="listaMercancia" formControlName="listaMercancia" class="form-control"
+            (change)="setValorStore(datosMercancia,'listaMercancia')"></textarea>
+            <div *ngIf="datosMercancia.get('listaMercancia')?.invalid && datosMercancia.get('listaMercancia')?.touched">
+                <small *ngIf="datosMercancia.get('listaMercancia')?.errors?.['required']" class="text-danger">Este campo es
+                    obligatorio.</small>
+                <small *ngIf="datosMercancia.get('listaMercancia')?.errors?.['pattern']" class="text-danger">Por favor, corrija la lista
+                    detallada de la mercancía.</small>
+            </div>
+            </div>
+        </div> -->
+
+        <div class="row">
+            <formas-dinamicas formularioTitulo="Datos de la mercancía que se importará al país temporalmente" [forma]="datosMercancia" [formularioDatos]="formularioDatos" [estado]="estadoSeleccionado"
+        (emitirCambioDeValor)="establecerCambioDeValor($event)"></formas-dinamicas>
+        </div>
     </form>
 </div>

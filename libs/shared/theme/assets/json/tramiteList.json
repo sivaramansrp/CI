@@ -1388,8 +1388,8 @@
     {
         "id": 199,
         "tramite": 630307,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "/aga/aeronaves-en-retorno-temporal/solicitud",
+        "linkDepartment": "/pago/aeronaves-en-retorno-temporal/solicitud",
         "department": "aga"
     },
     {

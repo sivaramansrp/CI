@@ -1,42 +1,41 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
-import { DatosMercanciaComponent } from './datos-mercancia.component';
-import { Tramite630307Store } from '../../estados/tramite630307.store';
-import { Tramite630307Query } from '../../estados/tramite630307.query';
+import { ReactiveFormsModule } from '@angular/forms';
 import { of, Subject } from 'rxjs';
+
+import { DatosMercanciaComponent } from './datos-mercancia.component';
+import { Tramite630303Store } from '../../estados/tramite630303.store';
+import { Tramite630303Query } from '../../estados/tramite630303.query';
 
 describe('DatosMercanciaComponent', () => {
   let component: DatosMercanciaComponent;
   let fixture: ComponentFixture<DatosMercanciaComponent>;
-  let mockStore: jest.Mocked<Tramite630307Store>;
-  let mockQuery: jest.Mocked<Tramite630307Query>;
+  let mockStore: jest.Mocked<Tramite630303Store>;
+  let mockQuery: jest.Mocked<Tramite630303Query>;
 
   beforeEach(async () => {
     mockStore = {
-      setTramite630307State: jest.fn(),
-    } as any;
+      setTramite630303State: jest.fn(),
+    } as unknown as jest.Mocked<Tramite630303Store>;
 
     mockQuery = {
-      selectTramite630307State$: of({
-        marca: 'Toyota',
-        modelo: 'Corolla',
-        numeroDeSerie: '123456',
-        numeroDeMotor: '78910',
-        descripcionMercancia: 'Vehículo',
-        motivo: 'Importación temporal',
+      selectTramite630303State$: of({
+        descripcionMercancia: 'Mercancía de prueba',
+        motivo: 'Motivo de prueba',
+        listaMercancia: 'Lista de prueba',
       }),
-    } as any;
+    } as unknown as jest.Mocked<Tramite630303Query>;
 
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule],
-      declarations: [DatosMercanciaComponent],
+      declarations: [],
+      imports: [ReactiveFormsModule,DatosMercanciaComponent],
       providers: [
-        FormBuilder,
-        { provide: Tramite630307Store, useValue: mockStore },
-        { provide: Tramite630307Query, useValue: mockQuery },
+        { provide: Tramite630303Store, useValue: mockStore },
+        { provide: Tramite630303Query, useValue: mockQuery },
       ],
     }).compileComponents();
+  });
 
+  beforeEach(() => {
     fixture = TestBed.createComponent(DatosMercanciaComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
@@ -46,68 +45,54 @@ describe('DatosMercanciaComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  describe('ngOnInit', () => {
-    it('should call getValorStore and inicializarFormulario', () => {
-      jest.spyOn(component, 'getValorStore');
-      jest.spyOn(component, 'inicializarFormulario');
-
-      component.ngOnInit();
-
-      expect(component.getValorStore).toHaveBeenCalled();
-      expect(component.inicializarFormulario).toHaveBeenCalled();
+  it('should initialize the form with default values', () => {
+    expect(component.datosMercancia.value).toEqual({
+      descripcionMercancia: 'Mercancía de prueba',
+      motivo: 'Motivo de prueba',
+      listaMercancia: 'Lista de prueba',
     });
   });
 
-  describe('inicializarFormulario', () => {
-    it('should initialize the form with default values and validations', () => {
-      component.inicializarFormulario();
+  it('should update descripcionMercancia in the form and store when setValorStore is called', () => {
+    const newValue = 'Nueva descripción';
+    component.datosMercancia.patchValue({ descripcionMercancia: newValue });
 
-      expect(component.datosMercancia.get('marca')?.value).toBe('Toyota');
-      expect(component.datosMercancia.get('modelo')?.value).toBe('Corolla');
-      expect(component.datosMercancia.get('numeroDeSerie')?.value).toBe('123456');
-      expect(component.datosMercancia.get('numeroDeMotor')?.value).toBe('78910');
-      expect(component.datosMercancia.get('descripcionMercancia')?.value).toBe('Vehículo');
-      expect(component.datosMercancia.get('motivo')?.value).toBe('Importación temporal');
+    component.setValorStore(component.datosMercancia, 'descripcionMercancia');
+
+    expect(mockStore.setTramite630303State).toHaveBeenCalledWith({
+      descripcionMercancia: newValue,
     });
   });
 
-  describe('setValorStore', () => {
-    it('should update the store with the form control value', () => {
-      component.inicializarFormulario();
-      component.datosMercancia.get('marca')?.setValue('Honda');
+  it('should update motivo in the form and store when setValorStore is called', () => {
+    const newValue = 'Nuevo motivo';
+    component.datosMercancia.patchValue({ motivo: newValue });
 
-      component.setValorStore(component.datosMercancia, 'marca');
+    component.setValorStore(component.datosMercancia, 'motivo');
 
-      expect(mockStore.setTramite630307State).toHaveBeenCalledWith({
-        marca: 'Honda',
-      });
+    expect(mockStore.setTramite630303State).toHaveBeenCalledWith({
+      motivo: newValue,
     });
   });
 
-  describe('getValorStore', () => {
-    it('should subscribe to the store and set estadoSeleccionado', () => {
-      component.getValorStore();
+  it('should update listaMercancia in the form and store when setValorStore is called', () => {
+    const newValue = 'Nueva lista';
+    component.datosMercancia.patchValue({ listaMercancia: newValue });
 
-      expect(component.estadoSeleccionado).toEqual({
-        marca: 'Toyota',
-        modelo: 'Corolla',
-        numeroDeSerie: '123456',
-        numeroDeMotor: '78910',
-        descripcionMercancia: 'Vehículo',
-        motivo: 'Importación temporal',
-      });
+    component.setValorStore(component.datosMercancia, 'listaMercancia');
+
+    expect(mockStore.setTramite630303State).toHaveBeenCalledWith({
+      listaMercancia: newValue,
     });
   });
 
-  describe('ngOnDestroy', () => {
-    it('should complete the destroyed$ subject', () => {
-      const destroyedSpy = jest.spyOn(component['destroyed$'], 'next');
-      const completeSpy = jest.spyOn(component['destroyed$'], 'complete');
+  it('should clean up subscriptions on ngOnDestroy', () => {
+    const destroyedSpy = jest.spyOn(component['destroyed$'], 'next');
+    const completeSpy = jest.spyOn(component['destroyed$'], 'complete');
 
-      component.ngOnDestroy();
+    component.ngOnDestroy();
 
-      expect(destroyedSpy).toHaveBeenCalled();
-      expect(completeSpy).toHaveBeenCalled();
-    });
+    expect(destroyedSpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
   });
 });
