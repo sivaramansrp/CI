@@ -39,5 +39,17 @@ export const TERCEROS_NACIONALIDAD_OPCIONES = [
 ];
 
 export const NUMERO_TRAMITE = {
-  TRAMITE_240108: 240108
+  TRAMITE_240108: 240108,
+  TRAMITE_240114: 240114,
+  TRAMITE_240308: 240308
 }
+export const TERCEROS_NACIONALIDAD_OPCIONES_EXTRANJERO = [
+  {
+    label: 'Nacional',
+    value: 'Nacional',
+  },
+  {
+    label: 'Extranjero',
+    value: 'Extranjero',
+  },
+];

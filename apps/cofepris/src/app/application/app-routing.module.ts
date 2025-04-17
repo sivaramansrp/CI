@@ -342,6 +342,12 @@ const ROUTES: Routes = [
           (m) => m.ActualizacionImportacionSanitariaModule
         ),
 },
+{
+  path: 'permiso-sanitario-dispositivos-medicos',
+  loadChildren: () =>
+    import('./tramites/260915/permiso-sanitario-dispositivos-medicos.module').then(
+      (m) => m.PermisoSanitarioDispositivosMedicosModule)
+},
 
 ];
 

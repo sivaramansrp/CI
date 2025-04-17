@@ -89,15 +89,19 @@
     </div>
 
     <div class="row mt-3">
+      @if(idProcedimiento !==240114){
       <div class="col-md-4">
         <label class="form-label">Colonia o equivalente:</label>
         <input type="text" class="form-control" formControlName="colonia" />
       </div>
-      <div class="col-md-4">
+      }
+      
+      <div [ngClass]="idProcedimiento !== 240114 ? 'col-md-4' : 'col-md-8'">
         <label class="form-label">Calle:</label>
         <input type="text" class="form-control" formControlName="calle" />
         <i class="fas fa-info-circle"></i>
       </div>
+      
       <div class="col-md-4">
         <label class="form-label">Número exterior:</label>
         <input

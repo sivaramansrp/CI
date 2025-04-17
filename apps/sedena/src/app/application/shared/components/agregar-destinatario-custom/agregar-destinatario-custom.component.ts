@@ -48,14 +48,6 @@ import { takeUntil } from 'rxjs';
 export class AgregarDestinatarioCustomComponent
   implements OnDestroy, OnInit, OnChanges {
   /**
-    * Datos del formulario que pueden ser de tipo `DestinoFinal`, `Proveedor`, `null` o `undefined`.
-    * Este input se utiliza para recibir la información necesaria desde el componente padre.
-    *
-    * @type {DestinoFinal | Proveedor | null | undefined}
-    */
-  @Input() formaDatos!: DestinoFinal | Proveedor | null | undefined;
-
-  /**
    * Subject utilizado para gestionar la desuscripción de observables.
    * Se completa en `ngOnDestroy()` para prevenir fugas de memoria.
    * @property {Subject<void>} unsubscribe$
@@ -125,7 +117,13 @@ export class AgregarDestinatarioCustomComponent
    */
   @Input() idProcedimiento!: number;
 
-
+/**
+   * Datos del formulario que pueden ser de tipo `DestinoFinal`, `Proveedor`, `null` o `undefined`.
+   * Este input se utiliza para recibir la información necesaria desde el componente padre.
+   *
+   * @type {DestinoFinal | Proveedor | null | undefined}
+   */
+@Input() formaDatos!: DestinoFinal | Proveedor | null | undefined;
   /**
    * @property mostrarCamposNoContribuyente
    * @description Controla la visibilidad de los campos específicos para no contribuyentes.
