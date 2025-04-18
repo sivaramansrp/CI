@@ -1,7 +1,7 @@
+import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { DestinoFinal } from '../../../../shared/models/terceros-relacionados.model';
-import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Proveedor } from '../../../../shared/models/terceros-relacionados.model';
 import { Subject } from 'rxjs';
@@ -24,7 +24,7 @@ import { takeUntil } from 'rxjs';
   styleUrl: './terceros-relacionados-contenedora.component.css',
 })
 export class TercerosRelacionadosContenedoraComponent
-  implements OnInit, OnDestroy
+  implements OnInit
 {
   /**
    * Observable para limpiar las suscripciones activas al destruir el componente.
@@ -54,9 +54,13 @@ export class TercerosRelacionadosContenedoraComponent
    */
   constructor(
     private tramiteStore: Tramite240106Store,
-    private tramiteQuery: Tramite240106Query // eslint-disable-next-line no-empty-function
+    private tramiteQuery: Tramite240106Query,
+    private router: Router,
+    private activatedRoute: ActivatedRoute
+     // eslint-disable-next-line no-empty-function
   ) {}
 
+  
   /**
    * Hook del ciclo de vida que se ejecuta al inicializar el componente.
    * Suscribe a los observables de destinatarios y proveedores para mostrarlos en la vista.
@@ -77,12 +81,47 @@ export class TercerosRelacionadosContenedoraComponent
         this.proveedorTablaDatos = data;
       });
   }
-  /**
-   * Hook que se ejecuta al destruir el componente.
-   * Envía un valor al Subject `unsubscribe$` y lo completa para liberar suscripciones.
-   */
-  ngOnDestroy(): void {
-    this.unsubscribe$.next();
-    this.unsubscribe$.complete();
+  
+  modificarDestinarioDatos(datos: DestinoFinal): void {
+    this.tramiteStore.actualizarDatosDestinatario(datos);
+    this.irAAcciones('../agregar-destino-final');
   }
+
+  modificarProveedorDatos(datos: Proveedor): void {
+    this.tramiteStore.actualizarDatosProveedor(datos);
+    this.irAAcciones('../agregar-proveedor');
+  }
+
+    /**
+* @method eliminarDestinatarioFinal
+* @description Elimina el primer DestinoFinal final de la tabla de datos.
+* Si no hay DestinoFinal finales seleccionados, no realiza ninguna acción.
+*/
+eliminarDestinatarioFinal(datos: DestinoFinal): void {
+  if (datos) {
+    this.tramiteStore.eliminarDestinatarioFinal(datos);
+    
+  }
+}
+/**
+* @method eliminarProveedor
+* @description Elimina el primer Proveedor final de la tabla de datos.
+* Si no hay Proveedor finales seleccionados, no realiza ninguna acción.
+*/
+eliminarProveedor(datos: Proveedor): void {
+  if (datos) {
+    this.tramiteStore.eliminareliminarProveedorFinal(datos);
+  }
+}  
+  /**
+* Navega a una ruta relativa dentro del flujo actual.
+* @method irAAcciones
+* @param {string} accionesPath - Ruta relativa a la que se desea navegar.
+* @returns {void}
+*/
+irAAcciones(url: string): void {
+  this.router.navigate([url], {
+    relativeTo: this.activatedRoute,
+  });
+}
 }

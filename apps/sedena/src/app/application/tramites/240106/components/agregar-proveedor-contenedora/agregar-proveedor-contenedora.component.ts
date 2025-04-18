@@ -2,6 +2,7 @@ import { AgregarProveedorComponent } from '../../../../shared/components/agregar
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { Proveedor } from '../../../../shared/models/terceros-relacionados.model';
+import { Tramite240106Query } from '../../estados/tramite240106Query.query';
 import { Tramite240106Store } from '../../estados/tramite240106Store.store';
 
 @Component({
@@ -19,8 +20,9 @@ export class AgregarProveedorContenedoraComponent {
    * @param tramite260106Store - Store que administra el estado del trámite 260214.
    */
   // eslint-disable-next-line no-empty-function
-  constructor(public tramite240106Store: Tramite240106Store) {}
-
+  constructor(public tramite240106Store: Tramite240106Store, public tramiteQuery: Tramite240106Query) {
+  
+      }
   /**
    * @method updateProveedorTablaDatos
    * @description Actualiza los datos de la tabla de proveedores en el store del trámite.

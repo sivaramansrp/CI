@@ -1,5 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PasoTresComponent } from './paso-tres.component';
+import { ToastrModule } from 'ngx-toastr';
+import { FirmaElectronicaComponent } from '@libs/shared/data-access-user/src';
 
 describe('PasoTresComponent', () => {
   let component: PasoTresComponent;
@@ -7,7 +9,8 @@ describe('PasoTresComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [PasoTresComponent],
+      imports: [ToastrModule.forRoot(), FirmaElectronicaComponent],
+      declarations: [PasoTresComponent],
     }).compileComponents();
 
     fixture = TestBed.createComponent(PasoTresComponent);

@@ -2,6 +2,7 @@ import { AgregarDestinatarioFinalComponent } from '../../../../shared/components
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { DestinoFinal } from '../../../../shared/models/terceros-relacionados.model';
+import { Tramite240106Query } from '../../estados/tramite240106Query.query';
 import { Tramite240106Store } from '../../estados/tramite240106Store.store';
 
 /**
@@ -18,6 +19,7 @@ import { Tramite240106Store } from '../../estados/tramite240106Store.store';
   styleUrl: './agregar-destinatario-final-contenedora.component.css',
 })
 export class AgregarDestinatarioFinalContenedoraComponent {
+ 
   /**
    * Constructor del componente.
    *
@@ -26,7 +28,10 @@ export class AgregarDestinatarioFinalContenedoraComponent {
    * @returns {void}
    */
   // eslint-disable-next-line no-empty-function
-  constructor(public tramiteStore: Tramite240106Store) {}
+  constructor(public tramiteStore: Tramite240106Store, public tramiteQuery: Tramite240106Query) {
+
+    }
+ 
 
   /**
    * Actualiza la lista de destinatarios finales en el store del trámite.

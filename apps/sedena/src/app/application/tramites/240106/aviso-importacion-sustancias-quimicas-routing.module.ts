@@ -1,11 +1,11 @@
-import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
 import { AgregarDestinatarioFinalContenedoraComponent } from './components/agregar-destinatario-final-contenedora/agregar-destinatario-final-contenedora.component';
 import { AgregarProveedorContenedoraComponent } from './components/agregar-proveedor-contenedora/agregar-proveedor-contenedora.component';
 import { DatosMercanciaContenedoraComponent } from './components/datos-mercancia-contenedora/datos-mercancia-contenedora.component';
+import { NgModule } from '@angular/core';
+import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
 
-const routes: Routes = [
+const ROUTES: Routes = [
   {
     path: '',
     pathMatch: 'full',
@@ -30,7 +30,7 @@ const routes: Routes = [
   ];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
+  imports: [RouterModule.forChild(ROUTES)],
   exports: [RouterModule]
 })
 export class AvisoImportacionSustanciasQuimicasRoutingModule { 

@@ -20,7 +20,12 @@ export const PASOS = [
 ];
 export const TITULOMENSAJE =
   'Aviso de importación de sustancias químicas';
+/**
+ * Constante que representa los textos de requisitos para el trámite de importación
+ * de sustancias químicas. Actualmente se encuentra vacío, pero puede ser utilizado
+ * para almacenar información relevante sobre los requisitos necesarios.
+ */
 export const TEXTOS_REQUISITOS =
-  'La solicitud ha quedado registrada con el número temporal [202767640]. Este no tiene validez legal y sirve solamente para efectos de identificar tu Solicitud. Un folio oficial le será asignado a la solicitud al momento en que esta sea firmada.';
-
+  '';
+  // Constante que representa el identificador único del procedimiento
 export const ID_PROCEDIMIENTO = 240106;
