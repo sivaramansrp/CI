@@ -121,7 +121,7 @@ export class DestinatarioAgenteAduanalComponent implements OnInit, OnDestroy {
         Validators.required,
         Validators.maxLength(12),
       ]),
-      domicilioDestinatario: new FormControl('', [Validators.required]),
+      domicilioDestinatario: new FormControl('', [Validators.required,Validators.maxLength(100),]),
     });
   }
 

@@ -43,8 +43,18 @@
 
             <div class="col-md-8 mt-5">
                 <label class="form-label" for="denominacionRSDestinatario">Denominación o razón social*:</label>
-                <input type="text" class="form-control" id="denominacionRSDestinatario" maxlength="120"
+                <input type="text" class="form-control" id="denominacionRSDestinatario"
                     formControlName="destinatarioRazonSocial" name="denominacionRSDestinatario" (input)="actualizarDenominacion()" [required]=true>
+                    @if(formDestinatariosModal.controls['destinatarioRazonSocial'].invalid && formDestinatariosModal.controls['destinatarioRazonSocial'].touched){
+                        <div class="d-grid">
+                            @if(formDestinatariosModal.controls['destinatarioRazonSocial'].errors?.['required']) {
+                                <span class="mensaje-error">Este campo es obligatorio</span>
+                            }
+                            @if(formDestinatariosModal.controls['destinatarioRazonSocial'].errors?.['maxlength']) {
+                                <span class="mensaje-error">No puede exceder los 120 caracteres.</span>
+                            }
+                        </div>
+                    }
             </div>
 
             <div class="clearfix"></div>
@@ -66,14 +76,34 @@
 
             <div class="col-md-4 mt-5 dropdown-field">
                 <label class="form-label" for="codigoPostalDestinatario">Código postal o equivalente*:</label>
-                <input type="text" class="form-control" id="codigoPostalDestinatario" maxlength="12"
+                <input type="text" class="form-control" id="codigoPostalDestinatario" 
                     formControlName="codigoPostalDestinatario" name="codigoPostalDestinatario" (input)="actualizarCodigoPostal()" [required]=true>
+                    @if(formDestinatariosModal.controls['codigoPostalDestinatario'].invalid && formDestinatariosModal.controls['codigoPostalDestinatario'].touched){
+                        <div class="d-grid">
+                            @if(formDestinatariosModal.controls['codigoPostalDestinatario'].errors?.['required']) {
+                                <span class="mensaje-error">Este campo es obligatorio</span>
+                            }
+                            @if(formDestinatariosModal.controls['codigoPostalDestinatario'].errors?.['maxlength']) {
+                                <span class="mensaje-error">No puede exceder los 12 caracteres.</span>
+                            }
+                        </div>
+                    }
             </div>
 
-            <div class="col-md-8 mt-4">
+            <div class="col-md-8 mt-4 dropdown-field">
                 <label class="form-label" for="domicilio">Domicilio*:</label>
-                <input type="text" class="form-control" id="domicilioDestinatario" maxlength="100"
+                <input type="text" class="form-control" id="domicilioDestinatario"
                     formControlName="domicilioDestinatario" name="domicilio" (input)="actualizarDomicilio()" [required]=true>
+                    @if(formDestinatariosModal.controls['domicilioDestinatario'].invalid && formDestinatariosModal.controls['domicilioDestinatario'].touched){
+                        <div class="d-grid">
+                            @if(formDestinatariosModal.controls['domicilioDestinatario'].errors?.['required']) {
+                                <span class="mensaje-error">Este campo es obligatorio</span>
+                            }
+                            @if(formDestinatariosModal.controls['domicilioDestinatario'].errors?.['maxlength']) {
+                                <span class="mensaje-error">No puede exceder los 100 caracteres.</span>
+                            }
+                        </div>
+                    }
             </div>
 
             <div class="col-md-12 mt-5 pb-5 d-flex justify-content-end">
@@ -102,28 +132,68 @@
     <div>
         <ng-titulo titulo="Agente aduanal" />
         <form [formGroup]="formAgenteAduanal">
-            <div class="col-md-4 mt-5">
+            <div class="col-md-4 mt-5 dropdown-field">
                 <label class="form-label" for="nombreAgente">Nombre(s)*:</label>
-                <input type="text" class="form-control" id="nombreAgente" maxlength="28" formControlName="nombreAgenteAduanal"
+                <input type="text" class="form-control" id="nombreAgente" formControlName="nombreAgenteAduanal"
                     name="nombreAgente" (input)="actualizarAgenteNombre()" [required]=true>
+                    @if(formAgenteAduanal.controls['nombreAgenteAduanal'].invalid && formAgenteAduanal.controls['nombreAgenteAduanal'].touched){
+                        <div class="d-grid">
+                            @if(formAgenteAduanal.controls['nombreAgenteAduanal'].errors?.['required']) {
+                                <span class="mensaje-error">Este campo es obligatorio</span>
+                            }
+                            @if(formAgenteAduanal.controls['nombreAgenteAduanal'].errors?.['maxlength']) {
+                                <span class="mensaje-error">No puede exceder los 28 caracteres.</span>
+                            }
+                        </div>
+                    }
             </div>
 
-            <div class="col-md-4 mt-5">
+            <div class="col-md-4 mt-5 dropdown-field">
                 <label class="form-label" for="apellidoPaternoAgente">Primer apellido*:</label>
-                <input type="text" class="form-control" id="apellidoPaternoAgente" maxlength="20"
+                <input type="text" class="form-control" id="apellidoPaternoAgente"
                     formControlName="primerApellidoAgenteAduanal" name="apellidoPaternoAgente" (input)="actualizarAgentePrimerApellido()" [required]=true>
+                    @if(formAgenteAduanal.controls['primerApellidoAgenteAduanal'].invalid && formAgenteAduanal.controls['primerApellidoAgenteAduanal'].touched){
+                        <div class="d-grid">
+                            @if(formAgenteAduanal.controls['primerApellidoAgenteAduanal'].errors?.['required']) {
+                                <span class="mensaje-error">Este campo es obligatorio</span>
+                            }
+                            @if(formAgenteAduanal.controls['primerApellidoAgenteAduanal'].errors?.['maxlength']) {
+                                <span class="mensaje-error">No puede exceder los 20 caracteres.</span>
+                            }
+                        </div>
+                    }
             </div>
 
-            <div class="col-md-4 mt-5">
+            <div class="col-md-4 mt-5 dropdown-field">
                 <label class="form-label" for="apellidoMaternoAgente">Segundo apellido*:</label>
-                <input type="text" class="form-control" id="apellidoMaternoAgente" maxlength="20"
+                <input type="text" class="form-control" id="apellidoMaternoAgente" 
                     formControlName="segundoApellidoAgenteAduanal" name="apellidoMaternoAgente" (input)="actualizarAgenteSegundoApellido()" [required]=true>
+                    @if(formAgenteAduanal.controls['segundoApellidoAgenteAduanal'].invalid && formAgenteAduanal.controls['segundoApellidoAgenteAduanal'].touched){
+                        <div class="d-grid">
+                            @if(formAgenteAduanal.controls['segundoApellidoAgenteAduanal'].errors?.['required']) {
+                                <span class="mensaje-error">Este campo es obligatorio</span>
+                            }
+                            @if(formAgenteAduanal.controls['segundoApellidoAgenteAduanal'].errors?.['maxlength']) {
+                                <span class="mensaje-error">No puede exceder los 20 caracteres.</span>
+                            }
+                        </div>
+                    }
             </div>
 
-            <div class="col-md-8 mt-5">
+            <div class="col-md-8 mt-5 dropdown-field">
                 <label class="form-label" for="patente">Número de patente de agente aduanal*:</label>
-                <input type="text" class="form-control" id="patente" maxlength="4" formControlName="patenteAgenteAduanal"
+                <input type="text" class="form-control" id="patente" formControlName="patenteAgenteAduanal"
                     name="patente" (input)="actualizarAgentePatente()" [required]=true>
+                    @if(formAgenteAduanal.controls['patenteAgenteAduanal'].invalid && formAgenteAduanal.controls['patenteAgenteAduanal'].touched){
+                        <div class="d-grid">
+                            @if(formAgenteAduanal.controls['patenteAgenteAduanal'].errors?.['required']) {
+                                <span class="mensaje-error">Este campo es obligatorio</span>
+                            }
+                            @if(formAgenteAduanal.controls['patenteAgenteAduanal'].errors?.['maxlength']) {
+                                <span class="mensaje-error">No puede exceder los 4 caracteres.</span>
+                            }
+                        </div>
+                    }
             </div>
 
             <div class="col-md-12 mt-5 d-flex justify-content-end">
