@@ -2001,8 +2001,13 @@
         "linkDepartment": "/pago/permiso-sanitario-dispositivos-medicos/permiso-sanitario-dispositivos-medicos",
         "department": "cofepris"
 
-    }
-   
+    },
+    {
+        "id": 286,
+        "tramite": 11102,
+        "linkDashboard": "/aga/modificacion-donaciones-immex/solicitud",
+        "linkDepartment": "/pago/modificacion-donaciones-immex/solicitud",
+        "department": "aga"
 
-    
+    }   
 ]
