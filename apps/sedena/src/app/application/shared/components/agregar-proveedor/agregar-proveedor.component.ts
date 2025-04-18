@@ -1,23 +1,15 @@
 import { CAMPO_OBLIGATORIO_PROVEEDOR, TIPO_PERSONA_OPCIONES } from '../../constants/datos-solicitud.enum';
-import { Component, Input } from '@angular/core';
+import { CommonModule, Location } from '@angular/common';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { DestinoFinal, Proveedor } from '../../models/terceros-relacionados.model';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
-import { CommonModule } from '@angular/common';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
-import { EventEmitter } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
-import { FormGroup } from '@angular/forms';
 import { InputRadioComponent } from '@ng-mf/data-access-user';
-import { Location } from '@angular/common';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { Output } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { TipoPersona } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
-import { Validators } from '@angular/forms';
 import { takeUntil } from 'rxjs';
 
 /**

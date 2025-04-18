@@ -38,14 +38,71 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
  */
   @Input() public idProcedimiento!: number;
 
+  /**
+   * Indica si el elemento está oculto o visible.
+   * 
+   * @type {boolean}
+   * - `true`: El elemento está oculto.
+   * - `false`: El elemento está visible.
+   */
   public estaOculto = false;
+
+  /**
+   * Etiqueta que representa el país asociado al trámite.
+   * Esta propiedad utiliza la constante `PAISE_DENTINO_EITIQUETA` 
+   * para asignar el valor correspondiente.
+   */
   public paisEtiqueta = PAISE_DENTINO_EITIQUETA;
+  /**
+   * Indica si el periodo habilitado está activo o no.
+   * Esta propiedad se utiliza para determinar si el periodo de semestre está habilitado.
+   * @type {boolean}
+   */
   public periodoHabilitado = false;
+  
+  /**
+   * Indica si el trámite está relacionado con aduanas.
+   * 
+   * @type {boolean}
+   * @default false
+   */
   public esAduna = false;
+  /**
+   * Indica si el trámite está relacionado con manifiestos y declaraciones.
+   * 
+   * @type {boolean}
+   * @default false
+   */
   public manifiestosDeclaraciones = false;
+  /**
+   * Indica si la fecha de pago está habilitada.
+   * 
+   * @type {boolean}
+   * @default false
+   */
   public fetchaPago = false;
+  /**
+   * Opciones para el campo de periodo de un semestre.
+   * 
+   * @type {string[]}
+   * @default ['Uno Semestre', 'Dos Semestre']
+   */
   public periodoUnoSemestreOpciones = PERIODO_UNO_SEMESTRE;
+
+  /**
+   * Opciones para el campo de periodo de dos semestre.
+   * 
+   * @type {string[]}
+   * @default ['Uno Semestre', 'Dos Semestre']
+   */
   public periodoUnoSemestreRadioOpciones = PERIODO_DOS_SEMESTRE;
+
+  /**
+   * Indica si el componente está en modo de justificación.
+   * 
+   * @type {boolean}
+   * @default false
+   */
   public esJustificacion = false;
 
   /**
