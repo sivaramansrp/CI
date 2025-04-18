@@ -1,5 +1,4 @@
 import { ActivatedRoute, Router } from '@angular/router';
-// import { AlertComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { DestinoFinal } from '../../../../shared/models/terceros-relacionados.model';
@@ -8,7 +7,6 @@ import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Proveedor } from '../../../../shared/models/terceros-relacionados.model';
 import { Subject } from 'rxjs';
-// import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
 import { Tramite240117Query } from '../../estados/tramite240117Query.query';
 import { Tramite240117Store } from '../../estados/tramite240117Store.store';
@@ -39,7 +37,13 @@ import { takeUntil } from 'rxjs';
 })
 export class TercerosRelacionadosContenedoraComponent implements OnInit, OnDestroy{
 
-  idProcedimiento = NUMERO_TRAMITE.TRAMITE_240117;
+  /**
+   * Identificador del procedimiento asignado al trámite específico.
+   * 
+   * @property {NUMERO_TRAMITE} idProcedimiento - Representa el identificador único del trámite.
+   * @value TRAMITE_240117 - Código correspondiente al trámite específico.
+   */
+    idProcedimiento = NUMERO_TRAMITE.TRAMITE_240117;
 
   /**
    * Observable para limpiar las suscripciones activas al destruir el componente.

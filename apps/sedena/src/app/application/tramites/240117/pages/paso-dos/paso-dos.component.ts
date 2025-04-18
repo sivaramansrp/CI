@@ -1,11 +1,10 @@
+import { AlertComponent, AnexarDocumentosComponent, CATALOGOS_ID, Catalogo, CatalogosService} from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { CATALOGOS_ID } from '@ng-mf/data-access-user';
-import { Catalogo } from '@ng-mf/data-access-user';
-import { CatalogosService } from '@ng-mf/data-access-user';
+import { CommonModule } from '@angular/common';
 import { Subject } from 'rxjs';
 import { TEXTOS_REQUISITOS } from '../../constants/importacion-armas-municiones.enum';
+import { TituloComponent } from '@ng-mf/data-access-user';
 import { takeUntil } from 'rxjs';
-
 
 /**
  * @component
@@ -22,6 +21,8 @@ import { takeUntil } from 'rxjs';
  */
 @Component({
   selector: 'app-paso-dos',
+  standalone: true,
+  imports:[CommonModule, AlertComponent, TituloComponent, AnexarDocumentosComponent],
   templateUrl: './paso-dos.component.html',
   styleUrl: './paso-dos.component.css',
 })
@@ -78,44 +79,44 @@ export class PasoDosComponent implements OnInit, OnDestroy {
       // Dependencies are injected here. No initialization logic needed.
     }
 
-     /**
-       * @method ngOnInit
-       * @description Angular lifecycle hook triggered on component initialization.
-       * Initiates the fetch of document types.
-       * @returns {void}
-       */
-      ngOnInit(): void {
-        this.getTiposDocumentos();
-      }
-    
-      /**
-       * @method getTiposDocumentos
-       * @description Fetches the catalog of document types for the procedure.
-       * Updates the `catalogoDocumentos` list if successful.
-       * @returns {void}
-       */
-      public getTiposDocumentos(): void {
-        this.catalogosServices
-          .getCatalogo(CATALOGOS_ID.CAT_TIPO_DOCUMENTO)
-          .pipe(takeUntil(this.destroyNotifier$))
-          .subscribe({
-            next: (resp): void => {
-              if (resp.length > 0) {
-                this.catalogoDocumentos = resp;
-              }
-            },
-          });
-      }
-    
-      /**
-       * @method ngOnDestroy
-       * @description Angular lifecycle hook triggered just before the component is destroyed.
-       * Cleans up active subscriptions to prevent memory leaks.
-       * @returns {void}
-       */
-      ngOnDestroy(): void {
-        this.destroyNotifier$.next();
-        this.destroyNotifier$.complete();
-      }
+    /**
+     * @method ngOnInit
+     * @description Angular lifecycle hook triggered on component initialization.
+     * Initiates the fetch of document types.
+     * @returns {void}
+     */
+    ngOnInit(): void {
+      this.getTiposDocumentos();
+    }
+  
+    /**
+     * @method getTiposDocumentos
+     * @description Fetches the catalog of document types for the procedure.
+     * Updates the `catalogoDocumentos` list if successful.
+     * @returns {void}
+     */
+    public getTiposDocumentos(): void {
+      this.catalogosServices
+        .getCatalogo(CATALOGOS_ID.CAT_TIPO_DOCUMENTO)
+        .pipe(takeUntil(this.destroyNotifier$))
+        .subscribe({
+          next: (resp): void => {
+            if (resp.length > 0) {
+              this.catalogoDocumentos = resp;
+            }
+          },
+        });
+    }
+  
+    /**
+     * @method ngOnDestroy
+     * @description Angular lifecycle hook triggered just before the component is destroyed.
+     * Cleans up active subscriptions to prevent memory leaks.
+     * @returns {void}
+     */
+    ngOnDestroy(): void {
+      this.destroyNotifier$.next();
+      this.destroyNotifier$.complete();
+    }
 
   }
