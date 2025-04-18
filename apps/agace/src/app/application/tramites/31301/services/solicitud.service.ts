@@ -1,5 +1,5 @@
 import { CatalogosSelect } from '@libs/shared/data-access-user/src';
-import { DatosGeneralesDeLaSolicitud, DatosGeneralesDeLaSolicitudCatologo, DatosPorGarantia, SubContratistas } from '../models/solicitud.model';
+import { DatosGeneralesDeLaSolicitud, DatosGeneralesDeLaSolicitudCatologo, DatosPorGarantia, Domicilios, SeccionSociosIC, SubContratistas, TipoDeInversion } from '../models/solicitud.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ModificacionDenominacionRazonSocial } from '../models/solicitud.model';
@@ -62,5 +62,21 @@ export class SolicitudService {
     );
   }
   
+  conseguirMiembrosDeLaEmpresa(): Observable<SeccionSociosIC[]> {
+    return this.http.get<SeccionSociosIC[]>(
+      'assets/json/31301/miembros-de-la-empresa.json'
+    );
+  }
 
+  conseguirTipoDeInversionDatos(): Observable<TipoDeInversion[]> {
+    return this.http.get<TipoDeInversion[]>(
+      'assets/json/31301/tipo-de-inversion-datos.json'
+    );
+  }
+
+  conseguirDomicilios(): Observable<Domicilios[]> {
+    return this.http.get<Domicilios[]>(
+      'assets/json/31301/domicilios.json'
+    );
+  } 
 }

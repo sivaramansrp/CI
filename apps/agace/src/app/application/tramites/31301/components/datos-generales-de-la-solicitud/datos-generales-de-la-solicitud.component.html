@@ -476,6 +476,7 @@
         <app-tabla-dinamica
           [tipoSeleccionTabla]="tipoSeleccionTabla"
           [configuracionTabla]="seccionSociosICConfiguracionColumnas"
+          [datos]="listaSeccionSociosIC"
         >
         </app-tabla-dinamica>
       </div>
@@ -601,7 +602,8 @@
       <div class="col-md-12">
         <app-tabla-dinamica
           [tipoSeleccionTabla]="tipoSeleccionTabla"
-          [configuracionTabla]="seccionSociosICConfiguracionColumnas"
+          [configuracionTabla]="tipoDeInversionConfiguracionColumnas"
+          [datos]="tipoDeInversionDatos"
         >
         </app-tabla-dinamica>
       </div>
@@ -678,10 +680,11 @@
           de instalaciones).</label
         >
       </div>
-      <div class="col-md-12">
+      <div class="col-md-12 mt-4">
         <app-tabla-dinamica
           [tipoSeleccionTabla]="tipoSeleccionTabla"
-          [configuracionTabla]="seccionSociosICConfiguracionColumnas"
+          [configuracionTabla]="domiciliosConfiguracionColumnas"
+          [datos]="domiciliosDatos"
         >
         </app-tabla-dinamica>
       </div>

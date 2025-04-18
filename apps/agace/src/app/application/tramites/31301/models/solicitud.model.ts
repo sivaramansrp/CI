@@ -1,4 +1,4 @@
-import { CatalogosSelect } from "@libs/shared/data-access-user/src";
+import { CatalogosSelect } from '@libs/shared/data-access-user/src';
 
 export interface RecibirNotificaciones {
   rfc: string;
@@ -39,12 +39,12 @@ export interface DatosGeneralesDeLaSolicitud {
   tipoDeGarantia: InputRadio;
   modalidadDeLaGarantia: InputRadio;
   tipoSector: InputRadio;
-  requisitos:InputRadio;
+  requisitos: InputRadio;
 }
 
 export interface DatosGeneralesDeLaSolicitudCatologo {
-  concepto : CatalogosSelect;
-  tipoDeInversion : CatalogosSelect;
+  concepto: CatalogosSelect;
+  tipoDeInversion: CatalogosSelect;
 }
 
 export interface SubContratistas {
@@ -52,6 +52,54 @@ export interface SubContratistas {
   razonSocial: string;
 }
 
-export interface SeccionSociosIC{
+export interface SeccionSociosIC {
+  idMiembroEmpresa?: string;
+  idSolicitud?: string;
+  tipoPersona?: string;
+  tipoPersonaMuestra: string;
+  nombreCompleto: string;
   rfc: string;
+  caracterDe: string;
+  paisNombre: string;
+  tipoCaracter?: string;
+  paisClave?: string;
+  tributarMexico: string;
+  nombreEmpresa: string;
+  nombre?: string;
+  apellidoPaterno?: string;
+  apellidoMaterno?: string;
+  razonSocial?: string;
+}
+
+export interface TipoDeInversion {
+  idRegistro?: string;
+  tipoInversion: string;
+  descripcion: string;
+  valor: string;
+  cveTipoInversion?: string;
+}
+
+export interface Domicilios {
+  instalacionPrincipal: string;
+  cveTipoInstalacion?: string;
+  tipoInstalacion: string;
+  cveEntidadFederativa?: string;
+  entidadFederativa: string;
+  cveDelegacionMunicipio?: string;
+  municipioDelegacion: string;
+  direccion: string;
+  codigoPostal: string;
+  registroSESAT: string;
+  procesoProductivo: string;
+  fechaModificacion?: string;
+  cveEstatus?: string;
+  estatus: string;
+  noExterior?: string;
+  noInterior?: string;
+  cveColonia?: string;
+  calle?: string;
+  descCol?: string;
+  idRecinto?: string;
+  numFolioAcuse?: string;
+  observaciones?: string;
 }

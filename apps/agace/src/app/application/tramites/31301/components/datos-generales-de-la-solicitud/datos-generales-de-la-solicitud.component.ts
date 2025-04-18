@@ -16,9 +16,11 @@ import { Subject, takeUntil } from 'rxjs';
 import {
   DatosGeneralesDeLaSolicitud,
   DatosGeneralesDeLaSolicitudCatologo,
+  Domicilios,
   InputRadio,
   SeccionSociosIC,
   SubContratistas,
+  TipoDeInversion,
 } from '../../models/solicitud.model';
 @Component({
   selector: 'app-datos-generales-de-la-solicitud',
@@ -62,15 +64,108 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
     },
   ];
   listaDeSubcontratistas: SubContratistas[] = [] as SubContratistas[];
-  seccionSociosICConfiguracionColumnas: ConfiguracionColumna<SubContratistas>[] =
+  seccionSociosICConfiguracionColumnas: ConfiguracionColumna<SeccionSociosIC>[] =
     [
       {
+        encabezado: 'Tipo de Persona',
+        clave: (item: SeccionSociosIC) => item.tipoPersonaMuestra,
+        orden: 1,
+      },
+      {
+        encabezado: 'Nombre',
+        clave: (item: SeccionSociosIC) => item.nombreCompleto,
+        orden: 1,
+      },
+      {
         encabezado: 'RFC',
-        clave: (item: SubContratistas) => item.rfc,
+        clave: (item: SeccionSociosIC) => item.rfc,
+        orden: 1,
+      },
+      {
+        encabezado: 'En su car\u00E1cter de',
+        clave: (item: SeccionSociosIC) => item.caracterDe,
+        orden: 1,
+      },
+      {
+        encabezado: 'Obligado a tributar en M\u00E9xico',
+        clave: (item: SeccionSociosIC) => item.tributarMexico,
+        orden: 1,
+      },
+      {
+        encabezado: 'Nombre de la empresa',
+        clave: (item: SeccionSociosIC) => item.nombreEmpresa,
         orden: 1,
       },
     ];
-  // listaSeccionSociosIC: SeccionSociosIC[] = [] as SeccionSociosIC[];
+
+  listaSeccionSociosIC: SeccionSociosIC[] = [] as SeccionSociosIC[];
+  tipoDeInversionConfiguracionColumnas: ConfiguracionColumna<TipoDeInversion>[] =
+    [
+      {
+        encabezado: 'Tipo de inversión',
+        clave: (item: TipoDeInversion) => item.tipoInversion,
+        orden: 1,
+      },
+      {
+        encabezado: 'Descripción general',
+        clave: (item: TipoDeInversion) => item.descripcion,
+        orden: 1,
+      },
+      {
+        encabezado: 'Valor en moneda nacional',
+        clave: (item: TipoDeInversion) => item.valor,
+        orden: 1,
+      },
+    ];
+  tipoDeInversionDatos: TipoDeInversion[] = [] as TipoDeInversion[];
+  domiciliosConfiguracionColumnas: ConfiguracionColumna<Domicilios>[] = [
+    {
+      encabezado: 'Instalaciones principales',
+      clave: (item: Domicilios) => item.instalacionPrincipal,
+      orden: 1,
+    },
+    {
+      encabezado: 'Tipo de instalación',
+      clave: (item: Domicilios) => item.tipoInstalacion,
+      orden: 1,
+    },
+    {
+      encabezado: 'Entidad federativa',
+      clave: (item: Domicilios) => item.entidadFederativa,
+      orden: 1,
+    },
+    {
+      encabezado: 'Municipio o delegación',
+      clave: (item: Domicilios) => item.municipioDelegacion,
+      orden: 1,
+    },
+    {
+      encabezado: 'Colonia, calle y número',
+      clave: (item: Domicilios) => item.direccion,
+      orden: 1,
+    },
+    {
+      encabezado: 'Código postal',
+      clave: (item: Domicilios) => item.codigoPostal,
+      orden: 1,
+    },
+    {
+      encabezado: 'Registro an SE/SAT',
+      clave: (item: Domicilios) => item.registroSESAT,
+      orden: 1,
+    },
+    {
+      encabezado: 'Proceso Productivo',
+      clave: (item: Domicilios) => item.procesoProductivo,
+      orden: 1,
+    },
+    {
+      encabezado: 'Estatus',
+      clave: (item: Domicilios) => item.estatus,
+      orden: 1,
+    },
+  ];
+  domiciliosDatos: Domicilios[] = [] as Domicilios[];
   listaRegimenAduanero: string[] = [];
   constructor(
     public fb: FormBuilder,
@@ -80,6 +175,9 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
     this.conseguirDatosGeneralesCatologo();
     this.conseguirListaDeSubcontratistas();
     this.conseguirRegimenAduanero();
+    this.conseguirMiembrosDeLaEmpresa();
+    this.conseguirTipoDeInversionDatos();
+    this.conseguirDomicilios();
   }
 
   ngOnInit(): void {
@@ -138,26 +236,47 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
 
   conseguirRegimenAduanero(): void {
     this.solicitudService
-    .conseguirRegimenAduanero()
-    .pipe(takeUntil(this.destroy$))
-    .subscribe({
-      next: (respuesta: string[]) => {
-        this.listaRegimenAduanero = respuesta;
-      },
-    });
+      .conseguirRegimenAduanero()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (respuesta: string[]) => {
+          this.listaRegimenAduanero = respuesta;
+        },
+      });
   }
 
-  // onFileSelected(event: Event): void {
-  //   const INPUT = event.target as HTMLInputElement;
-  //   const FILE = INPUT?.files?.[0];
+  conseguirMiembrosDeLaEmpresa(): void {
+    this.solicitudService
+      .conseguirMiembrosDeLaEmpresa()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (respuesta: SeccionSociosIC[]) => {
+          this.listaSeccionSociosIC = respuesta;
+        },
+      });
+  }
 
-  //   if (FILE) {
-  //     // this.proveedorXtranjForm.patchValue({ archivoExtranjero: FILE });
-  //     // this.proveedorXtranjForm.get('archivoExtranjero')?.updateValueAndValidity();
-  //   } else {
-  //     // this.openCargaExtranjeroModel();
-  //   }
-  // }
+  conseguirTipoDeInversionDatos(): void {
+    this.solicitudService
+      .conseguirTipoDeInversionDatos()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (respuesta: TipoDeInversion[]) => {
+          this.tipoDeInversionDatos = respuesta;
+        },
+      });
+  }
+
+  conseguirDomicilios(): void {
+    this.solicitudService
+      .conseguirDomicilios()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (respuesta: Domicilios[]) => {
+          this.domiciliosDatos = respuesta;
+        },
+      });
+  }
 
   ngOnDestroy(): void {
     this.destroy$.next();
