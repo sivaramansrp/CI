@@ -933,8 +933,8 @@
     {
         "id": 134,
         "tramite": 40401,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "/aga/registro-del-codigo/solicitud",
+        "linkDepartment": "/pago/registro-del-codigo/solicitud",
         "department": "aga"
     },
     {
@@ -1088,7 +1088,7 @@
         "id": 156,
         "tramite": 260902,
         "linkDashboard": "/cofepris/modificacion-permiso-sanitario/solicitante",
-        "linkDepartment": "/cofepris/modificacion-permiso-sanitario/solicitante",
+        "linkDepartment": "/pago/modificacion-permiso-sanitario/solicitante",
         "department": "cofepris"
     },
     {
@@ -1598,8 +1598,8 @@
     {
         "id": 229,
         "tramite": 260901,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "/cofepris/modificacion-permiso-sanitario-la-salud/solicitante",
+        "linkDepartment": "/pago/modificacion-permiso-sanitario-la-salud/solicitante",
         "department": "cofepris"
     },
     {
@@ -1962,8 +1962,8 @@
     {
         "id": 281,
         "tramite": 300105,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "/sener/autorizacion-de-rayos-x/solicitud",
+        "linkDepartment": "/pago/autorizacion-de-rayos-x/solicitud",
         "department": "sener"
     },
     {
@@ -1995,6 +1995,7 @@
         "department": "cofepris"
 
     }
+   
 
     
 ]
