@@ -37,21 +37,21 @@
             <div class="col-md-4">
                 <div class="form-group">
                   <label class="form-label" for="identificacion">No. identificación:*</label>
-                  <input class="form-control" id="identificacion" 
+                  <input class="form-control" id="identificacion"  maxlength="20"
                     type="number" formControlName="identificacion"   (change)="setValoresStore(transporteForm, 'identificacion', 'setIdentificacion')"/>
                 </div>
               </div> 
               <div class="col-md-4">
                 <div class="form-group">
                   <label class="form-label" for="economico">No. económico:*:</label>
-                  <input class="form-control" id="economico" 
+                  <input class="form-control" id="economico" maxlength="50"
                     type="number" formControlName="economico"  (change)="setValoresStore(transporteForm, 'economico', 'setEconomico')" />
                 </div>
               </div> 
               <div class="col-md-4">
                 <div class="form-group">
                   <label class="form-label" for="placa">Placa:*</label>
-                  <input class="form-control" id="placa" 
+                  <input class="form-control" id="placa"  maxlength="25"
                     type="number" formControlName="placa"  (change)="setValoresStore(transporteForm, 'placa', 'setPlaca')"/>
                 </div>
               </div>
@@ -97,14 +97,14 @@
                 <div class="col-md-4">
                     <div class="form-group">
                       <label class="form-label" for="numero">Número*:</label>
-                      <input class="form-control" id="numero" 
+                      <input class="form-control" id="numero" maxlength="50"
                         type="number" formControlName="numero"  (change)="setValoresStore(transporteForm, 'numero', 'setNumero')"/>
                     </div>
                   </div>
                   <div class="col-md-4">
                     <div class="form-group">
                         <label class="form-label" for="fechas">Fecha*:</label>
-                        <input class="form-control" id="fechas" type="date"
+                        <input class="form-control" id="fechas" type="date"  [max]="fechaInicioTramite" 
                           formControlName="fechas"  (change)="setValoresStore(transporteForm, 'fechas', 'setFechas')" />
                     </div>
                   </div>

@@ -8,7 +8,7 @@
           <div class="col-md-4">
             <div class="form-group">
               <label class="form-label" for="clave">Clave de referencia:</label>
-              <input class="form-control" id="clave" type="number"
+              <input class="form-control" id="clave" type="number" maxlength="14"
                 formControlName="clave" (change)="setValoresStore(pagoDerechosForm, 'clave', 'setClave')" />
             </div>
           </div>
@@ -16,7 +16,7 @@
           <div class="col-md-4">
             <div class="form-group">
               <label class="form-label" for="dependencia">Cadena de la dependencia:</label>
-              <input class="form-control" id="dependencia" 
+              <input class="form-control" id="dependencia" maxlength="20"
                 type="text" formControlName="dependencia" (change)="setValoresStore(pagoDerechosForm, 'dependencia', 'setDependencia')" />
             </div>
           </div>
@@ -34,7 +34,7 @@
           <div class="col-md-4">
             <div class="form-group">
               <label class="form-label" for="llave">Llave de pago:</label>
-              <input class="form-control" id="llave" type="number"
+              <input class="form-control" id="llave" type="number" maxlength="10"
                 formControlName="llave" (change)="setValoresStore(pagoDerechosForm, 'llave', 'setLlave')" />
             </div>
           </div>
@@ -42,7 +42,7 @@
           <div class="col-md-4">
             <div class="form-group">
               <label class="form-label" for="fecha">Fecha de pago:</label>
-              <input class="form-control" id="fecha" type="date"
+              <input class="form-control" id="fecha" type="date"  [max]="fechaInicioTramite" 
                 formControlName="fecha" (change)="setValoresStore(pagoDerechosForm, 'fecha', 'setFecha')" />
             </div>
           </div>
@@ -50,7 +50,7 @@
           <div class="col-md-4">
             <div class="form-group">
               <label class="form-label" for="importe">Importe de pago:</label>
-              <input class="form-control" id="importe" type="number"
+              <input class="form-control" id="importe" type="number"  maxlength="16"
                 formControlName="importe" (change)="setValoresStore(pagoDerechosForm, 'importe', 'setImporte')" />
             </div>
           </div>

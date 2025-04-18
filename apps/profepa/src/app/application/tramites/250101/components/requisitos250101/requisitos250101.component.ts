@@ -1,15 +1,12 @@
-import { CONFIGURATION_TABLA_REQUISITOS, CONFIGURATION_TABLA_TRANSPORTE, Requisito, Transporte } from '../../models/flora-fauna.models';
-import { Catalogo, CatalogoSelectComponent, ConfiguracionColumna, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
-import { Component, OnDestroy,OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { CONFIGURATION_TABLA_REQUISITOS,CONFIGURATION_TABLA_TRANSPORTE,Requisito,Transporte } from '../../models/flora-fauna.models';
+import { Catalogo,CatalogoSelectComponent,ConfiguracionColumna,TablaDinamicaComponent,TablaSeleccion,TituloComponent } from '@libs/shared/data-access-user/src';
+import { Component,OnDestroy,OnInit } from '@angular/core';
+import { FormBuilder,FormGroup,FormsModule,ReactiveFormsModule,Validators } from '@angular/forms';
 import { Subject,map,takeUntil } from 'rxjs';
-import { ModalComponent } from '../modal/modal.component';
-
 import { Tramite250101State, Tramite250101Store } from '../../estados/tramite250101.store';
+import { ModalComponent } from '../modal/modal.component';
 import { Tramite250101Query } from '../../estados/tramite250101.query';
 import catalogoDatos from '@libs/shared/theme/assets/json/250101/banco.json';
-
-
 /**
  * Componente encargado de gestionar los requisitos y el transporte del trámite 250101.
  * Permite agregar elementos a las tablas dinámicas y almacenar los valores en el estado del store.
@@ -89,7 +86,11 @@ export class Requisitos250101Component implements OnInit, OnDestroy {
    * Subject para destruir suscripciones y evitar fugas de memoria.
    */
   private destroyNotifier$: Subject<void> = new Subject();
-
+  /**
+ * Variable que almacena la fecha actual en formato `YYYY-MM-DD`.
+ * Esta fecha se utiliza para establecer el valor máximo en el campo de entrada de fecha.
+ * */
+  fechaInicioTramite = new Date().toISOString().split('T')[0];
   /**
    * Constructor que inyecta las dependencias necesarias.
    */

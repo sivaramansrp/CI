@@ -1,6 +1,6 @@
-import { Catalogo, CatalogoSelectComponent, TituloComponent } from '@libs/shared/data-access-user/src';
-import { Component,OnDestroy , OnInit} from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Catalogo,CatalogoSelectComponent,TituloComponent } from '@libs/shared/data-access-user/src';
+import { Component,OnDestroy,OnInit} from '@angular/core';
+import { FormBuilder,FormGroup,FormsModule,ReactiveFormsModule,Validators } from '@angular/forms';
 import { Subject,map,takeUntil } from 'rxjs';
 import catalogoDatos from '@libs/shared/theme/assets/json/250101/banco.json';
 import pago from '@libs/shared/theme/assets/json/250101/pago-formdatos.json';
@@ -81,6 +81,11 @@ export class PagoDeDerechos250101Component implements OnInit, OnDestroy {
    * llave, fecha e importe.
    */
   pagoDerechosForm!: FormGroup;
+   /**
+ * Variable que almacena la fecha actual en formato `YYYY-MM-DD`.
+ * Esta fecha se utiliza para establecer el valor máximo en el campo de entrada de fecha.
+ * */
+  fechaInicioTramite = new Date().toISOString().split('T')[0];
 
   /**
    * Subject utilizado para gestionar la destrucción del componente y evitar memory leaks.

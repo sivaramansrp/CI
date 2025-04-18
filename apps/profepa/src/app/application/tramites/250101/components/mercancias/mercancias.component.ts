@@ -1,9 +1,9 @@
-import { CONFIGURATION_TABLA, CONFIGURATION_TABLA_MERCANCIAS, Detalle, Producto } from '../../models/flora-fauna.models';
-import { Catalogo, CatalogoSelectComponent, ConfiguracionColumna, TablaDinamicaComponent,TablaSeleccion,TituloComponent } from '@libs/shared/data-access-user/src';
-import { Component, OnDestroy, OnInit} from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Subject,map, takeUntil } from 'rxjs';
-import { Tramite250101State, Tramite250101Store } from '../../estados/tramite250101.store';
+import { CONFIGURATION_TABLA, CONFIGURATION_TABLA_MERCANCIAS,Detalle,Producto } from '../../models/flora-fauna.models';
+import { Catalogo,CatalogoSelectComponent,ConfiguracionColumna,TablaDinamicaComponent,TablaSeleccion,TituloComponent } from '@libs/shared/data-access-user/src';
+import { Component,OnDestroy,OnInit} from '@angular/core';
+import { FormBuilder,FormGroup,FormsModule,ReactiveFormsModule,Validators } from '@angular/forms';
+import { Subject,map,takeUntil } from 'rxjs';
+import { Tramite250101State,Tramite250101Store } from '../../estados/tramite250101.store';
 import { ModalComponent } from '../modal/modal.component';
 import { Tramite250101Query } from '../../estados/tramite250101.query';
 import catalogoDatos from '@libs/shared/theme/assets/json/250101/banco.json';
