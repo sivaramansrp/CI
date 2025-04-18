@@ -1,3 +1,13 @@
+/**
+ * @const PASOS
+ * @description Arreglo que define los pasos de un proceso en la aplicación.
+ * Cada paso incluye un índice, un título, y estados de actividad y completitud.
+ * 
+ * @property {number} indice - Número que identifica el orden del paso.
+ * @property {string} titulo - Título descriptivo del paso.
+ * @property {boolean} activo - Indica si el paso está activo actualmente.
+ * @property {boolean} completado - Indica si el paso ha sido completado.
+ */
 export const PASOS = [
   {
     indice: 1,

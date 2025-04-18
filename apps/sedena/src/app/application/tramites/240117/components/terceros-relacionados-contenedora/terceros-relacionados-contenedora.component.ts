@@ -14,6 +14,22 @@ import { Tramite240117Query } from '../../estados/tramite240117Query.query';
 import { Tramite240117Store } from '../../estados/tramite240117Store.store';
 import { takeUntil } from 'rxjs';
 
+/**
+ * @component
+ * @name TercerosRelacionadosContenedoraComponent
+ * @description
+ * Componente contenedor para gestionar los datos de terceros relacionados en el trámite 240117.
+ * Este componente utiliza el patrón de diseño de Akita para manejar el estado y las consultas
+ * relacionadas con los datos de destinatarios finales y proveedores.
+ * 
+ * @selector app-terceros-relacionados-contenedora
+ * @standalone true
+ * @imports [CommonModule, TercerosRelacionadosComponent]
+ * @templateUrl ./terceros-relacionados-contenedora.component.html
+ * @styleUrl ./terceros-relacionados-contenedora.component.css
+ * 
+ * @implements OnInit, OnDestroy
+ */
 @Component({
   selector: 'app-terceros-relacionados-contenedora',
   standalone: true,
@@ -21,7 +37,7 @@ import { takeUntil } from 'rxjs';
   templateUrl: './terceros-relacionados-contenedora.component.html',
   styleUrl: './terceros-relacionados-contenedora.component.css',
 })
-export class TercerosRelacionadosContenedoraComponent implements OnInit{
+export class TercerosRelacionadosContenedoraComponent implements OnInit, OnDestroy{
 
   idProcedimiento = NUMERO_TRAMITE.TRAMITE_240117;
 
@@ -102,4 +118,13 @@ export class TercerosRelacionadosContenedoraComponent implements OnInit{
       relativeTo: this.activatedRoute,
     });
   }
+
+    /**
+   * Hook que se ejecuta al destruir el componente.
+   * Envía un valor al Subject `unsubscribe$` y lo completa para liberar suscripciones.
+   */
+    ngOnDestroy(): void {
+      this.destroy$.next();
+      this.destroy$.complete();
+    }
 }

@@ -1,4 +1,4 @@
-import { AgregarDestinatarioFinalComponent } from '../../shared/components/agregar-destinatario-final/agregar-destinatario-final.component';
+import { AgregarDestinatarioFinalContenedoraComponent } from './components/agregar-destinatario-final-contenedora/agregar-destinatario-final-contenedora.component';
 import { AgregarProveedorContenedoraComponent } from './components/agregar-proveedor-contenedora/agregar-proveedor-contenedora.component';
 import { DatosMercanciaContenedoraComponent } from './components/datos-mercancia-contenedora/datos-mercancia-contenedora.component';
 import { NgModule } from '@angular/core';
@@ -23,7 +23,7 @@ const ROUTES: Routes = [
     },
     {
       path: 'agregar-destino-final',
-      component: AgregarDestinatarioFinalComponent,
+      component: AgregarDestinatarioFinalContenedoraComponent,
     },
     {
       path: 'agregar-proveedor',

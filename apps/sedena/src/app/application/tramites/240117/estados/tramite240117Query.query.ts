@@ -10,6 +10,23 @@ import { Query } from '@datorama/akita';
  * usando el patrón de Akita para manejo de estado.
  */
 
+/**
+ * @description Servicio de consulta (Query) para el Trámite 240117.
+ * Proporciona observables para acceder al estado del trámite y sus diferentes secciones.
+ *
+ * @example
+ * ```typescript
+ * constructor(private tramite240117Query: Tramite240117Query) {}
+ *
+ * this.tramite240117Query.getTabSeleccionado$.subscribe(tab => {
+ *   console.log('Pestaña seleccionada:', tab);
+ * });
+ * ```
+ *
+ * @class Tramite240117Query
+ * @extends {Query<Tramite240117State>}
+ * @see {@link Tramite240117Store}
+ */
 @Injectable({ providedIn: 'root' })
 export class Tramite240117Query extends Query<Tramite240117State> {
   /**

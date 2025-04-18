@@ -10,6 +10,23 @@ import { takeUntil } from 'rxjs';
 import { Tramite240117Query } from '../../estados/tramite240117Query.query';
 import { Tramite240117Store } from '../../estados/tramite240117Store.store';
 
+/**
+ * @component
+ * @name PagoDeDerechosContenedoraComponent
+ * @description
+ * Componente contenedor para la gestión del formulario de pago de derechos.
+ * Este componente es responsable de suscribirse a los cambios en el estado del formulario
+ * y actualizar el store correspondiente. También maneja la liberación de recursos al destruirse.
+ *
+ * @selector app-pago-de-derechos-contenedora
+ * @standalone true
+ * @imports [CommonModule, PagoDeDerechosComponent]
+ * @templateUrl ./pago-de-derechos-contenedora.component.html
+ * @styleUrl ./pago-de-derechos-contenedora.component.css
+ *
+ * @example
+ * <app-pago-de-derechos-contenedora></app-pago-de-derechos-contenedora>
+ */
 @Component({
   selector: 'app-pago-de-derechos-contenedora',
   standalone: true,

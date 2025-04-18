@@ -19,11 +19,11 @@ import { StoreConfig } from '@datorama/akita';
  */
 export interface Tramite240117State {
   tabSeleccionado?: number;
-  destinatarioFinalTablaDatos: DestinoFinal[];          // tab 3 popup one
-  proveedorTablaDatos: Proveedor[];                     // tab3 popup2
-  pagoDerechos: PagoDerechosFormState;                  // tab 4
-  merccancialTablaDatos: MercanciaDetalle[];            //tab2 popup
-  datosDelTramite: DatosDelTramiteFormState;            // tab2
+  destinatarioFinalTablaDatos: DestinoFinal[];          
+  proveedorTablaDatos: Proveedor[];
+  pagoDerechos: PagoDerechosFormState;
+  merccancialTablaDatos: MercanciaDetalle[];
+  datosDelTramite: DatosDelTramiteFormState;
   modificarDestinarioDatos?: DestinoFinal | null;
   modificarProveedorDatos?: Proveedor | null;
 }
@@ -60,6 +60,17 @@ export function createInitialState(): Tramite240117State {
 /**
  * Store que maneja el estado del trámite 240117.
  * Utiliza Akita para el control reactivo del estado.
+ */
+/**
+ * @fileoverview
+ * Este archivo contiene la definición de la clase `Tramite240117Store`, 
+ * que extiende la funcionalidad de la clase `Store` para manejar el estado 
+ * de la aplicación relacionado con el trámite 240117. 
+ * Proporciona métodos para actualizar diferentes partes del estado, 
+ * como pestañas seleccionadas, datos de formularios y tablas de datos.
+ * 
+ * @author [Tu Nombre]
+ * @version 1.0
  */
 @Injectable({
   providedIn: 'root',

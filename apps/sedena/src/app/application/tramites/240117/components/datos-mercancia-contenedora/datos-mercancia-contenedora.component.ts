@@ -10,6 +10,18 @@ import { Tramite240117Store } from '../../estados/tramite240117Store.store';
  * @description Componente contenedor encargado de recibir los datos de mercancía y actualizar el estado global del trámite.
  * @summary Actúa como puente entre el componente de datos de mercancía y el store de Akita.
  */
+/**
+ * Componente que representa los datos de mercancía contenedora.
+ * 
+ * Este componente es parte del trámite 240117 y se encarga de gestionar
+ * y actualizar los datos de mercancías en el store correspondiente.
+ * 
+ * @selector app-datos-mercancia-contenedora
+ * @standalone true
+ * @imports CommonModule, DatosMercanciaComponent
+ * @templateUrl ./datos-mercancia-contenedora.component.html
+ * @styleUrl ./datos-mercancia-contenedora.component.css
+ */
 @Component({
   selector: 'app-datos-mercancia-contenedora',
   standalone: true,

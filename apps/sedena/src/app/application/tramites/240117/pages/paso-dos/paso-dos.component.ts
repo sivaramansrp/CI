@@ -7,6 +7,19 @@ import { TEXTOS_REQUISITOS } from '../../constants/importacion-armas-municiones.
 import { takeUntil } from 'rxjs';
 
 
+/**
+ * @component
+ * @name PasoDosComponent
+ * @description Este componente representa el segundo paso de un formulario en el flujo de trámites.
+ * Se encarga de manejar la lógica relacionada con los tipos de documentos requeridos y seleccionados
+ * por el usuario, así como de interactuar con los servicios necesarios para obtener los datos del catálogo.
+ * 
+ * @example
+ * <app-paso-dos></app-paso-dos>
+ * 
+ * @implements OnInit
+ * @implements OnDestroy
+ */
 @Component({
   selector: 'app-paso-dos',
   templateUrl: './paso-dos.component.html',

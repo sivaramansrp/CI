@@ -7,6 +7,46 @@ import { TITULOMENSAJE } from '../../constants/importacion-armas-municiones.enum
 import { ViewChild } from '@angular/core';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
+/**
+ * @component
+ * @name SolicitudPageComponent
+ * @description Componente que representa la página de solicitud en el flujo de trámites.
+ * Este componente incluye un wizard para la navegación entre diferentes pasos del proceso.
+ * 
+ * @selector app-solicitud-page
+ * @template ./solicitud-page.component.html
+ * @style ./solicitud-page.component.css
+ * 
+ * @property {string | null} tituloMensaje - Título que se muestra en la parte superior del wizard. 
+ * Se actualiza dependiendo del paso seleccionado.
+ * 
+ * @property {ListaPasosWizard[]} pasos - Listado de pasos definidos para el wizard, incluyendo 
+ * información y componentes asociados.
+ * 
+ * @property {number} indice - Índice del paso actual en el wizard.
+ * 
+ * @property {WizardComponent} wizardComponent - Referencia al componente `WizardComponent`, utilizada 
+ * para invocar métodos de navegación interna como `siguiente()` y `atras()`.
+ * 
+ * @property {DatosPasos} datosPasos - Configuración de la barra de navegación del wizard: número de pasos, 
+ * índice actual y textos de los botones.
+ * 
+ * @method seleccionaTab
+ * @description Permite cambiar el paso actual de forma manual al hacer clic en las pestañas (tabs) del wizard.
+ * @param {number} i - Índice del paso seleccionado.
+ * @returns {void}
+ * 
+ * @method getValorIndice
+ * @description Controla la navegación del wizard en función de la acción recibida (`cont` o `atras`). 
+ * Actualiza el paso actual y el título mostrado, y llama a los métodos de navegación del `WizardComponent`.
+ * @param {AccionBoton} e - Objeto que contiene el índice del paso y la acción a realizar.
+ * @returns {void}
+ * 
+ * @method obtenerNombreDelTítulo
+ * @description Método estático que determina el título a mostrar de acuerdo al índice del paso actual.
+ * @param {number} valor - Índice del paso.
+ * @returns {string} Título correspondiente al paso.
+ */
 @Component({
   selector: 'app-solicitud-page',
   standalone: false,

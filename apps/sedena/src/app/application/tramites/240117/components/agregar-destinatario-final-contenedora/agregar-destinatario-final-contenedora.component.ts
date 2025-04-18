@@ -1,5 +1,5 @@
 import { DestinoFinal, Proveedor } from '../../../../shared/models/terceros-relacionados.model';
-import { AgregarDestinatarioFinalComponent } from '../../../../shared/components/agregar-destinatario-final/agregar-destinatario-final.component';
+import { AgregarDestinatarioCustomComponent } from '../../../../shared/components/agregar-destinatario-custom/agregar-destinatario-custom.component';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { NUMERO_TRAMITE } from '../../../../shared/constants/datos-solicitud.enum';
@@ -12,10 +12,31 @@ import { Tramite240117Store } from '../../estados/tramite240117Store.store';
  * @description Componente contenedor que gestiona la integración del componente de destinatario final con el store.
  * @summary Encapsula el componente de agregar destinatario final y propaga los datos al estado global.
  */
+/**
+ * @component
+ * @name AgregarDestinatarioFinalContenedoraComponent
+ * @description
+ * Componente encargado de gestionar la interfaz de usuario para agregar destinatarios finales
+ * en el contexto del trámite 240117. Este componente es independiente y utiliza otros módulos
+ * y componentes para su funcionalidad.
+ * 
+ * @selector app-agregar-destinatario-final-contenedora
+ * @standalone true
+ * @imports
+ * - CommonModule
+ * - AgregarDestinatarioCustomComponent
+ * 
+ * @templateUrl ./agregar-destinatario-final-contenedora.component.html
+ * @styleUrl ./agregar-destinatario-final-contenedora.component.css
+ * 
+ * @remarks
+ * Este componente interactúa con el store y las consultas del trámite para gestionar
+ * los datos relacionados con los destinatarios finales.
+ */
 @Component({
   selector: 'app-agregar-destinatario-final-contenedora',
   standalone: true,
-  imports: [CommonModule, AgregarDestinatarioFinalComponent],
+  imports: [CommonModule, AgregarDestinatarioCustomComponent],
   templateUrl: './agregar-destinatario-final-contenedora.component.html',
   styleUrl: './agregar-destinatario-final-contenedora.component.css',
 })

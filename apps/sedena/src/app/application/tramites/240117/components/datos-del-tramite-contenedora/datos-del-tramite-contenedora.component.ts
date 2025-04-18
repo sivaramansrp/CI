@@ -10,6 +10,21 @@ import { Subject } from 'rxjs';
 import { Tramite240117Query } from '../../estados/tramite240117Query.query';
 import { Tramite240117Store } from '../../estados/tramite240117Store.store';
 import { takeUntil } from 'rxjs';
+/**
+ * @component
+ * @name DatosDelTramiteContenedoraComponent
+ * @description Componente encargado de gestionar y mostrar los datos del trámite en la interfaz de usuario.
+ * Este componente utiliza Akita para manejar el estado del trámite y sus datos asociados.
+ * 
+ * @selector app-datos-del-tramite-contenedora
+ * @standalone true
+ * @imports CommonModule, DatosDelTramiteComponent
+ * @templateUrl ./datos-del-tramite-contenedora.component.html
+ * @styleUrl ./datos-del-tramite-contenedora.component.css
+ * 
+ * @class DatosDelTramiteContenedoraComponent
+ * @implements OnInit, OnDestroy
+ */
 @Component({
   selector: 'app-datos-del-tramite-contenedora',
   standalone: true,
@@ -48,8 +63,8 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
    * Constructor del componente.
    *
    * @method constructor
-   * @param {Tramite240101Query} tramiteQuery - Query de Akita para obtener el estado actual del trámite.
-   * @param {Tramite240101Store} tramiteStore - Store de Akita para actualizar el estado del trámite.
+   * @param {Tramite240117Query} tramiteQuery - Query de Akita para obtener el estado actual del trámite.
+   * @param {Tramite240117Store} tramiteStore - Store de Akita para actualizar el estado del trámite.
    * @returns {void}
    */
   constructor(

@@ -7,6 +7,16 @@ import { takeUntil } from 'rxjs';
 import { Tramite240117Query } from '../../estados/tramite240117Query.query';
 import { Tramite240117Store } from '../../estados/tramite240117Store.store';
 
+/**
+ * @component
+ * @name PasoUnoComponent
+ * @description Este componente representa el primer paso de un formulario en el flujo de trámites.
+ * Gestiona el índice de la pestaña seleccionada y actualiza el estado correspondiente en el store.
+ * También maneja la suscripción a observables para evitar fugas de memoria.
+ * 
+ * @implements OnDestroy
+ * @implements OnInit
+ */
 @Component({
   selector: 'app-paso-uno',
   templateUrl: './paso-uno.component.html',
