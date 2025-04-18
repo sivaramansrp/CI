@@ -45,7 +45,7 @@ jobs:
           npm install --force
       # 4. Construye el proyecto Angular con Nx (build del dashboard).
       - name: Build Docker images from docker-compose
-        run:  docker-compose -f ./docker/modulefederation-microfrontends.yml up -d
+        run:  docker compose -f ./docker/modulefederation-microfrontends.yml up -d
    
 
       - name: Listar archivos
@@ -68,7 +68,7 @@ jobs:
           context: ./
           file: apps/dashboard/Dockerfile
           tags: |
-            ghcr.io/vucem30/modulefederation-dashboard:latest
+            ghcr.io/vucem30/dockerized-modulefederation-dashboard:latest
           push: ${{ github.ref == 'refs/heads/develop' }}
 
       - name: Execute remote command (last one)
@@ -80,15 +80,15 @@ jobs:
           port: 22
           script: |
             cd /home/ubuntu/v30
-            microk8s kubectl rollout restart deployment modulefederation-dashboard
+            microk8s kubectl rollout restart deployment modulefederation-dashboard-deployment-dev
 
       - name: Build image and push to GitHub Container Registry
         uses: docker/build-push-action@v2
         with:
           context: ./
-          file: apps/dashboard/Dockerfile
+          file: apps/login/Dockerfile
           tags: |
-            ghcr.io/vucem30/modulefederation-login-microfront:latest
+            ghcr.io/vucem30/dockerized-modulefederation-login-microfront:latest
           push: ${{ github.ref == 'refs/heads/develop' }}
 
       - name: Execute remote command (last one)
@@ -100,15 +100,15 @@ jobs:
           port: 22
           script: |
             cd /home/ubuntu/v30
-            microk8s kubectl rollout restart deployment modulefederation-login-microfront	
+            microk8s kubectl rollout restart deployment modulefederation-login-microfront-deployment-dev	
 
       - name: Build image and push to GitHub Container Registry
         uses: docker/build-push-action@v2
         with:
           context: ./
-          file: apps/dashboard/Dockerfile
+          file: apps/aga/Dockerfile
           tags: |
-            ghcr.io/vucem30/modulefederation-aga-microfront:latest
+            ghcr.io/vucem30/dockerized-modulefederation-aga-microfront:latest
           push: ${{ github.ref == 'refs/heads/develop' }}
 
       - name: Execute remote command (last one)
@@ -120,15 +120,15 @@ jobs:
           port: 22
           script: |
             cd /home/ubuntu/v30
-            microk8s kubectl rollout restart deployment modulefederation-aga-microfront	
+            microk8s kubectl rollout restart deployment modulefederation-aga-microfront-deployment-dev	
 
       - name: Build image and push to GitHub Container Registry
         uses: docker/build-push-action@v2
         with:
           context: ./
-          file: apps/dashboard/Dockerfile
+          file: apps/agriculture/Dockerfile
           tags: |
-            ghcr.io/vucem30/modulefederation-agriculture-microfront:latest
+            ghcr.io/vucem30/dockerized-modulefederation-agriculture-microfront:latest
           push: ${{ github.ref == 'refs/heads/develop' }}
 
       - name: Execute remote command (last one)
@@ -140,15 +140,15 @@ jobs:
           port: 22
           script: |
             cd /home/ubuntu/v30
-            microk8s kubectl rollout restart deployment  modulefederation-agriculture-microfront	
+            microk8s kubectl rollout restart deployment  modulefederation-agriculture-microfront-deployment-dev	
 
       - name: Build image and push to GitHub Container Registry
         uses: docker/build-push-action@v2
         with:
           context: ./
-          file: apps/dashboard/Dockerfile
+          file: apps/se/Dockerfile
           tags: |
-            ghcr.io/vucem30/modulefederation-se-microfront:latest
+            ghcr.io/vucem30/dockerized-modulefederation-se-microfront:latest
           push: ${{ github.ref == 'refs/heads/develop' }}
 
       - name: Execute remote command (last one)
@@ -160,15 +160,15 @@ jobs:
           port: 22
           script: |
             cd /home/ubuntu/v30
-            microk8s kubectl rollout restart deployment  modulefederation-se-microfront	
+            microk8s kubectl rollout restart deployment  modulefederation-se-microfront-dev	
 
       - name: Build image and push to GitHub Container Registry
         uses: docker/build-push-action@v2
         with:
           context: ./
-          file: apps/dashboard/Dockerfile
+          file: apps/semarnat/Dockerfile
           tags: |
-            ghcr.io/vucem30/modulefederation-semarnat-microfront:latest
+            ghcr.io/vucem30/dockerized-modulefederation-semarnat-microfront:latest
           push: ${{ github.ref == 'refs/heads/develop' }}
 
       - name: Execute remote command (last one)
@@ -180,15 +180,15 @@ jobs:
           port: 22
           script: |
             cd /home/ubuntu/v30
-            microk8s kubectl rollout restart deployment  modulefederation-semarnat-microfront	
+            microk8s kubectl rollout restart deployment modulefederation-semarnat-microfront-dev	
 
       - name: Build image and push to GitHub Container Registry
         uses: docker/build-push-action@v2
         with:
           context: ./
-          file: apps/dashboard/Dockerfile
+          file: apps/agace/Dockerfile
           tags: |
-            ghcr.io/vucem30/modulefederation-agace-microfront:latest
+            ghcr.io/vucem30/dockerized-modulefederation-agace-microfront:latest
           push: ${{ github.ref == 'refs/heads/develop' }}
 
       - name: Execute remote command (last one)
@@ -200,15 +200,15 @@ jobs:
           port: 22
           script: |
             cd /home/ubuntu/v30
-            microk8s kubectl rollout restart deployment  modulefederation-agace-microfront
+            microk8s kubectl rollout restart deployment  modulefederation-agace-microfront-deployment-dev
 
       - name: Build image and push to GitHub Container Registry
         uses: docker/build-push-action@v2
         with:
           context: ./
-          file: apps/dashboard/Dockerfile
+          file: apps/funcionario/Dockerfile
           tags: |
-            ghcr.io/vucem30/modulefederation-funcionario-microfront:latest
+            ghcr.io/vucem30/dockerized-modulefederation-funcionario-microfront:latest
           push: ${{ github.ref == 'refs/heads/develop' }}
 
       - name: Execute remote command (last one)
@@ -220,15 +220,15 @@ jobs:
           port: 22
           script: |
             cd /home/ubuntu/v30
-            microk8s kubectl rollout restart deployment  modulefederation-funcionario-microfront
+            microk8s kubectl rollout restart deployment  modulefederation-funcionario-microfront-deployment-dev
 
       - name: Build image and push to GitHub Container Registry
         uses: docker/build-push-action@v2
         with:
           context: ./
-          file: apps/dashboard/Dockerfile
+          file: apps/cofepris/Dockerfile
           tags: |
-            ghcr.io/vucem30/modulefederation-cofepris-microfront:latest
+            ghcr.io/vucem30/dockerized-modulefederation-cofepris-microfront:latest
           push: ${{ github.ref == 'refs/heads/develop' }}
 
       - name: Execute remote command (last one)
@@ -240,15 +240,15 @@ jobs:
           port: 22
           script: |
             cd /home/ubuntu/v30
-            microk8s kubectl rollout restart deployment  modulefederation-cofepris-microfront
+            microk8s kubectl rollout restart deployment  modulefederation-cofepris-microfront-deployment-dev
 
       - name: Build image and push to GitHub Container Registry
         uses: docker/build-push-action@v2
         with:
           context: ./
-          file: apps/dashboard/Dockerfile
+          file: apps/amecafe/Dockerfile
           tags: |
-            ghcr.io/vucem30/modulefederation-amecafe-microfront:latest
+            ghcr.io/vucem30/dockerized-modulefederation-amecafe-microfront:latest
           push: ${{ github.ref == 'refs/heads/develop' }}
 
       - name: Execute remote command (last one)
@@ -260,15 +260,15 @@ jobs:
           port: 22
           script: |
             cd /home/ubuntu/v30
-            microk8s kubectl rollout restart deployment  modulefederation-amecafe-microfront
+            microk8s kubectl rollout restart deployment  modulefederation-amecafe-microfront-deployment-dev
 
       - name: Build image and push to GitHub Container Registry
         uses: docker/build-push-action@v2
         with:
           context: ./
-          file: apps/dashboard/Dockerfile
+          file: apps/inbal/Dockerfile
           tags: |
-            ghcr.io/vucem30/modulefederation-inbal-microfront:latest
+            ghcr.io/vucem30/dockerized-modulefederation-inbal-microfront:latest
           push: ${{ github.ref == 'refs/heads/develop' }}
 
       - name: Execute remote command (last one)
@@ -280,13 +280,13 @@ jobs:
           port: 22
           script: |
             cd /home/ubuntu/v30
-            microk8s kubectl rollout restart deployment  modulefederation-inbal-microfront
+            microk8s kubectl rollout restart deployment modulefederation-inbal-microfront-deployment-dev
 
       - name: Build image and push to GitHub Container Registry
         uses: docker/build-push-action@v2
         with:
           context: ./
-          file: apps/dashboard/Dockerfile
+          file: apps/sedena/Dockerfile
           tags: |
             ghcr.io/vucem30/modulefederation-sedena-microfront:latest
           push: ${{ github.ref == 'refs/heads/develop' }}

@@ -369,25 +369,24 @@ export const REGEX_ALFANUMERICO_CON_ESPACIOS = /^[a-zA-Z0-9 ]*$/;
  */
 export const REGEX_ALFANUMERICO_CON_ESPACIOS_REEMPLAZAR = /[^a-zA-Z0-9 ]/g;
 
-
 /**
- * Expresión regular para validar nombres.
- * 
- * Esta expresión regular asegura que un nombre:
- * - No comience ni termine con un espacio.
- * - Contenga caracteres alfanuméricos, incluyendo caracteres especiales como Ñ, ñ, Ä, Ë, Ï, Ö, Ü, Ç, ç, y otros.
- * - Permita caracteres como &, /, -, ., ', y paréntesis.
- * - Admite caracteres griegos como α y β.
- * 
- * Ejemplos válidos:
- * - "Juan Pérez"
- * - "María-José"
- * - "O'Connor"
- * - "Αλέξανδρος"
- * 
- * Ejemplos no válidos:
- * - " Juan" (comienza con un espacio)
- * - "Pérez " (termina con un espacio)
- * - "Juan@Pérez" (contiene un carácter no permitido)
+ * Expresión regular para validar o coincidir con cadenas que comienzan con uno o más:
+ * - Dígitos (0-9)
+ * - Espacios en blanco
+ * - Guiones (-)
+ *
+ * Desglose de la expresión regular:
+ * - `^`: Aserta el inicio de la cadena.
+ * - `[\d\s-]`: Coincide con cualquier dígito (`\d`), espacio en blanco (`\s`) o guión (`-`).
+ * - `+`: Indica que el patrón anterior debe aparecer una o más veces.
+ *
+ * Ejemplos de coincidencias:
+ * - "123-456" (coincide con "123-")
+ * - "  -789" (coincide con "  -")
+ * - "42" (coincide con "42")
+ *
+ * Ejemplos de no coincidencias:
+ * - "abc123" (no comienza con un dígito, espacio o guión)
+ * - "!@#" (no comienza con un carácter válido)
  */
-export const REGEX_NOMBRE = /^(?! )[A-Za-zÑñÄËÏÖÜäëïöüÇç0-9&/\-().'αβ]+(?: [A-Za-zÑñÄËÏÖÜäëïöüÇç0-9&/\-().'αβ]+)*(?<! )$/;
+export const REGEX_TEXTO_PREFIJO = /^[\d\s-]+/;
