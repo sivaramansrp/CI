@@ -2,17 +2,17 @@
  * manifiesto.component.ts
  * Componente que gestiona el manifiesto para el trámite 630303.
  */
-import { Component, OnDestroy, OnInit } from '@angular/core';
-
 import { CommonModule } from '@angular/common';
-import { TituloComponent } from "@ng-mf/data-access-user";
 
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Tramite630303State, Tramite630303Store } from '../../estados/tramite630303.store';
-import { Tramite630303Query } from '../../estados/tramite630303.query';
-
 import { Subject, takeUntil } from 'rxjs';
 
+import { TituloComponent } from '@ng-mf/data-access-user';
+
+import { Tramite630303Query } from '../../estados/tramite630303.query';
+
+import { Tramite630303State, Tramite630303Store } from '../../estados/tramite630303.store';
 /**
  * Componente que gestiona el manifiesto para el trámite 630303.
  * Permite inicializar formularios, obtener datos del estado y manejar el estado del formulario.
@@ -25,7 +25,6 @@ import { Subject, takeUntil } from 'rxjs';
   styleUrl: './manifiesto.component.scss',
 })
 export class ManifiestoComponent implements OnInit, OnDestroy {
-
   /**
    * Subject utilizado para manejar la destrucción de suscripciones y evitar fugas de memoria.
    */

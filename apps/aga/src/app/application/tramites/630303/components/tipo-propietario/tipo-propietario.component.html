@@ -12,48 +12,71 @@
             <solicitante></solicitante>
         </div>
         <div *ngIf="tipoPropietarioFormulario.get('propietario')?.value==='2'">
-            <div class="row mt-4" >
+            <div class="row mt-4">
                 <div class="col-md-4">
-                    <app-catalogo-select [label]="'Tipo de propietario'" [required]="true"  formControlName="tipoDePropietario"
-                    [catalogo]="tipoDePropietarioOpciones" (selectionChange)="establecerCambioDeValor({campo:'tipoDePropietario',valor:$event});ajustarValidadoresSegunValor($event)"></app-catalogo-select>
+                    <app-catalogo-select [label]="'Tipo de propietario'" [required]="true"
+                        formControlName="tipoDePropietario" [catalogo]="tipoDePropietarioOpciones"
+                        (selectionChange)="establecerCambioDeValor({campo:'tipoDePropietario',valor:$event});ajustarValidadoresSegunValor()"></app-catalogo-select>
                 </div>
             </div>
             <div *ngIf="tipoPropietarioFormulario.get('tipoDePropietario')?.value">
-            <div class="row mt-4" *ngIf="tipoPropietarioFormulario.get('tipoDePropietario')?.value==='1'">
-                <div class="col-md-4">
-                    <label for="nombre" class="form-label">Nombre(s) *:</label>
-                    <input id="nombre" type="text" class="form-control" formControlName="nombre">
-                    <div *ngIf="tipoPropietarioFormulario.get('nombre')?.invalid && tipoPropietarioFormulario.get('nombre')?.touched">
-                        <small class="text-danger" *ngIf="tipoPropietarioFormulario.get('nombre')?.errors?.['required']">Este campo es obligatorio.</small>
-                        <small class="text-danger" *ngIf="tipoPropietarioFormulario.get('nombre')?.errors?.['pattern']">Por favor, corrija el nombre.</small>
+                <div class="row mt-4" *ngIf="tipoPropietarioFormulario.get('tipoDePropietario')?.value==='1'">
+                    <div class="col-md-4">
+                        <label for="nombre" class="form-label">Nombre(s) *:</label>
+                        <input id="nombre" type="text" class="form-control" formControlName="nombre"
+                            (change)="establecerCambioDeValor({campo:'nombre',valor:$event})">
+                        <div
+                            *ngIf="tipoPropietarioFormulario.get('nombre')?.invalid && tipoPropietarioFormulario.get('nombre')?.touched">
+                            <small class="text-danger"
+                                *ngIf="tipoPropietarioFormulario.get('nombre')?.errors?.['required']">Este campo es
+                                obligatorio.</small>
+                            <small class="text-danger"
+                                *ngIf="tipoPropietarioFormulario.get('nombre')?.errors?.['pattern']">Por favor, corrija
+                                el nombre.</small>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="apellidoPaterno" class="form-label">Apellido paterno *:</label>
+                        <input id="apellidoPaterno" type="text" class="form-control" formControlName="apellidoPaterno"
+                            (change)="establecerCambioDeValor({campo:'apellidoPaterno',valor:$event})">
+                        <div
+                            *ngIf="tipoPropietarioFormulario.get('apellidoPaterno')?.invalid && tipoPropietarioFormulario.get('apellidoPaterno')?.touched">
+                            <small class="text-danger"
+                                *ngIf="tipoPropietarioFormulario.get('apellidoPaterno')?.errors?.['required']">Este
+                                campo es obligatorio.</small>
+                            <small class="text-danger"
+                                *ngIf="tipoPropietarioFormulario.get('apellidoPaterno')?.errors?.['pattern']">Por favor,
+                                corrija el apellido paterno.</small>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="apellidoMaterno" class="form-label">Apellido materno :</label>
+                        <input id="apellidoMaterno" type="text" class="form-control" formControlName="apellidoMaterno"
+                            (change)="establecerCambioDeValor({campo:'apellidoMaterno',valor:$event})">
+                        <div
+                            *ngIf="tipoPropietarioFormulario.get('apellidoMaterno')?.invalid && tipoPropietarioFormulario.get('apellidoMaterno')?.touched">
+                            <small class="text-danger"
+                                *ngIf="tipoPropietarioFormulario.get('apellidoMaterno')?.errors?.['pattern']">Por favor,
+                                corrija el apellido materno.</small>
+                        </div>
                     </div>
                 </div>
-                <div class="col-md-4">
-                    <label for="apellidoPaterno" class="form-label">Apellido paterno *:</label>
-                    <input id="apellidoPaterno" type="text" class="form-control" formControlName="apellidoPaterno">
-                    <div *ngIf="tipoPropietarioFormulario.get('apellidoPaterno')?.invalid && tipoPropietarioFormulario.get('apellidoPaterno')?.touched">
-                        <small class="text-danger" *ngIf="tipoPropietarioFormulario.get('apellidoPaterno')?.errors?.['required']">Este campo es obligatorio.</small>
-                        <small class="text-danger" *ngIf="tipoPropietarioFormulario.get('apellidoPaterno')?.errors?.['pattern']">Por favor, corrija el apellido paterno.</small>
+                <div class="row mt-4" *ngIf="tipoPropietarioFormulario.get('tipoDePropietario')?.value==='2'">
+                    <div class="col-md-8">
+                        <label for="razonSocial" class="form-label">Denominación o razón social *:</label>
+                        <input id="razonSocial" type="text" class="form-control" formControlName="razonSocial"
+                            (change)="establecerCambioDeValor({campo:'razonSocial',valor:$event})">
+                        <div
+                            *ngIf="tipoPropietarioFormulario.get('razonSocial')?.invalid && tipoPropietarioFormulario.get('razonSocial')?.touched">
+                            <small class="text-danger"
+                                *ngIf="tipoPropietarioFormulario.get('razonSocial')?.errors?.['required']">Este campo es
+                                obligatorio.</small>
+                            <small class="text-danger"
+                                *ngIf="tipoPropietarioFormulario.get('razonSocial')?.errors?.['pattern']">Por favor,
+                                corrija la denominación o razón social.</small>
+                        </div>
                     </div>
                 </div>
-                <div class="col-md-4">
-                    <label for="apellidoMaterno" class="form-label">Apellido materno :</label>
-                    <input id="apellidoMaterno" type="text" class="form-control" formControlName="apellidoMaterno">
-                    <div *ngIf="tipoPropietarioFormulario.get('apellidoMaterno')?.invalid && tipoPropietarioFormulario.get('apellidoMaterno')?.touched">
-                        <small class="text-danger" *ngIf="tipoPropietarioFormulario.get('apellidoMaterno')?.errors?.['pattern']">Por favor, corrija el apellido materno.</small>
-                    </div>
-                </div>
-            </div>
-            <div class="row mt-4" *ngIf="tipoPropietarioFormulario.get('tipoDePropietario')?.value==='2'">
-                <div class="col-md-8">
-                    <label for="razonSocial" class="form-label">Denominación o razón social *:</label>
-                    <input id="razonSocial" type="text" class="form-control" formControlName="razonSocial">
-                    <div *ngIf="tipoPropietarioFormulario.get('razonSocial')?.invalid && tipoPropietarioFormulario.get('razonSocial')?.touched">
-                        <small class="text-danger" *ngIf="tipoPropietarioFormulario.get('razonSocial')?.errors?.['required']">Este campo es obligatorio.</small>
-                        <small class="text-danger" *ngIf="tipoPropietarioFormulario.get('razonSocial')?.errors?.['pattern']">Por favor, corrija la denominación o razón social.</small>
-                    </div>
-                </div>
-            </div>
 
                 <div class="row mt-4">
                     <formas-dinamicas [forma]="tipoPropietarioFormulario"

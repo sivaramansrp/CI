@@ -26,9 +26,7 @@ describe('DatosRetornoAutorizacionComponent', () => {
 
     mockQuery = {
       selectTramite630303State$: of({
-        folioInformacionGeneralAutorizacion: '12345',
-        aduanaIngreso: '001',
-        seccionAduanera: '002',
+        seccionAduanera: 'Sección 1',
         fechaIngreso: '2025-01-01',
         fechaVencimiento: '2025-12-31',
       }),
@@ -57,25 +55,24 @@ describe('DatosRetornoAutorizacionComponent', () => {
 
   it('should initialize the form with default values', () => {
     expect(component.datosImportacionRetornoAutorizacionGeneralFormulario.value).toEqual({
-      folioInformacionGeneralAutorizacion: '12345',
-      aduanaIngreso: '001',
-      seccionAduanera: '002',
+      seccionAduanera: 'Sección 1',
       fechaIngreso: '2025-01-01',
       fechaVencimiento: '2025-12-31',
     });
   });
 
-  it('should call getAduanaDeIngreso and populate aduanaDeingresOpciones', () => {
+  it('should fetch aduana de ingreso options', () => {
     const mockData = [{ id: 1, descripcion: 'Aduana 1' }];
     mockRetornoService.getAduanaDeIngreso.mockReturnValue(of(mockData));
 
     component.getAduanaDeIngreso();
 
     expect(mockRetornoService.getAduanaDeIngreso).toHaveBeenCalled();
-    expect(component.aduanaDeingresOpciones).toEqual(mockData);
+    const aduanaIngreso = component.formularioDatosAutorizacion.find((item) => item.id === 'aduanaDeIngreso');
+    expect(aduanaIngreso?.opciones).toEqual(mockData);
   });
 
-  it('should call getSeccionAduanera and populate seccionAduaneraOpciones', () => {
+  it('should fetch seccion aduanera options', () => {
     const mockData = [{ id: 2, descripcion: 'Sección 1' }];
     mockRetornoService.getSeccionAduanera.mockReturnValue(of(mockData));
 
@@ -85,20 +82,10 @@ describe('DatosRetornoAutorizacionComponent', () => {
     expect(component.seccionAduaneraOpciones).toEqual(mockData);
   });
 
-  it('should update fechaIngreso in the form and store when cambioFechaIngreso is called', () => {
-    const newDate = '2025-02-01';
-    component.cambioFechaIngreso(newDate);
+  it('should update tramite630303Store when establecerCambioDeValor is called', () => {
+    component.establecerCambioDeValor({ campo: 'seccionAduanera', valor: 'Sección 2' });
 
-    expect(component.datosImportacionRetornoAutorizacionGeneralFormulario.get('fechaIngreso')?.value).toBe(newDate);
-    expect(mockStore.setTramite630303State).toHaveBeenCalledWith({ fechaIngreso: newDate });
-  });
-
-  it('should update fechaVencimiento in the form and store when cambioFechaVencimiento is called', () => {
-    const newDate = '2025-11-30';
-    component.cambioFechaVencimiento(newDate);
-
-    expect(component.datosImportacionRetornoAutorizacionGeneralFormulario.get('fechaVencimiento')?.value).toBe(newDate);
-    expect(mockStore.setTramite630303State).toHaveBeenCalledWith({ fechaVencimiento: newDate });
+    expect(mockStore.setTramite630303State).toHaveBeenCalledWith('seccionAduanera', 'Sección 2');
   });
 
   it('should clean up subscriptions on ngOnDestroy', () => {

@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
-import { of, Subject } from 'rxjs';
+import { of } from 'rxjs';
 
 import { DatosRetornoProrrogaComponent } from './datos-retorno-prorroga.component';
 import { Tramite630303Store } from '../../estados/tramite630303.store';
@@ -19,7 +19,7 @@ describe('DatosRetornoProrrogaComponent', () => {
 
     mockQuery = {
       selectTramite630303State$: of({
-        folioInformacionGeneralProrroga: '12345',
+        folioInformacionGeneralProrroga: 'F12345',
         fechaInicioProrroga: '2025-01-01',
         fechaVencimientoProrroga: '2025-12-31',
       }),
@@ -47,34 +47,44 @@ describe('DatosRetornoProrrogaComponent', () => {
 
   it('should initialize the form with default values', () => {
     expect(component.datosImportacionRetornoProrrogaGeneralFormulario.value).toEqual({
-      folioInformacionGeneralProrroga: '12345',
+      folioInformacionGeneralProrroga: 'F12345',
       fechaInicioProrroga: '2025-01-01',
       fechaVencimientoProrroga: '2025-12-31',
     });
   });
 
   it('should update fechaInicioProrroga in the form and store when cambioFechaInicioProrroga is called', () => {
-    const newDate = '2025-02-01';
-    component.cambioFechaInicioProrroga(newDate);
+    const newValue = '2025-02-01';
+    component.cambioFechaInicioProrroga(newValue);
 
-    expect(component.datosImportacionRetornoProrrogaGeneralFormulario.get('fechaInicioProrroga')?.value).toBe(newDate);
-    expect(mockStore.setTramite630303State).toHaveBeenCalledWith({ fechaInicioProrroga: newDate });
+    expect(component.datosImportacionRetornoProrrogaGeneralFormulario.get('fechaInicioProrroga')?.value).toBe(newValue);
+    expect(mockStore.setTramite630303State).toHaveBeenCalledWith('fechaInicioProrroga', newValue);
   });
 
   it('should update fechaVencimientoProrroga in the form and store when cambioFechaVencimientoProrroga is called', () => {
-    const newDate = '2025-11-30';
-    component.cambioFechaVencimientoProrroga(newDate);
+    const newValue = '2025-11-30';
+    component.cambioFechaVencimientoProrroga(newValue);
 
-    expect(component.datosImportacionRetornoProrrogaGeneralFormulario.get('fechaVencimientoProrroga')?.value).toBe(newDate);
-    expect(mockStore.setTramite630303State).toHaveBeenCalledWith({ fechaVencimientoProrroga: newDate });
+    expect(component.datosImportacionRetornoProrrogaGeneralFormulario.get('fechaVencimientoProrroga')?.value).toBe(newValue);
+    expect(mockStore.setTramite630303State).toHaveBeenCalledWith('fechaVencimientoProrroga', newValue);
   });
 
-  it('should call setValorStore and update the store', () => {
-    component.setValorStore(component.datosImportacionRetornoProrrogaGeneralFormulario, 'fechaInicioProrroga');
-
-    expect(mockStore.setTramite630303State).toHaveBeenCalledWith({
+  it('should fetch the state from the store and set estadoSeleccionado', () => {
+    component.getValorStore();
+    expect(component.estadoSeleccionado).toEqual({
+      folioInformacionGeneralProrroga: 'F12345',
       fechaInicioProrroga: '2025-01-01',
+      fechaVencimientoProrroga: '2025-12-31',
     });
+  });
+
+  it('should update tramite630303Store when setValorStore is called', () => {
+    const formGroup = component.datosImportacionRetornoProrrogaGeneralFormulario;
+    formGroup.patchValue({ folioInformacionGeneralProrroga: 'F67890' });
+
+    component.setValorStore(formGroup, 'folioInformacionGeneralProrroga');
+
+    expect(mockStore.setTramite630303State).toHaveBeenCalledWith('folioInformacionGeneralProrroga', 'F67890');
   });
 
   it('should clean up subscriptions on ngOnDestroy', () => {

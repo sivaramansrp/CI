@@ -1,4 +1,4 @@
-import { REGEX_CORREO_ELECTRONICO, REGEX_NOMBRE, REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, REGEX_PATRON_ALFANUMERICO, REGEX_POSTAL, REGEX_TELEFONO, REGEX_TELEFONO_DIGITOS } from "@libs/shared/data-access-user/src/tramites/constantes/regex.constants";
+import { REGEX_CORREO_ELECTRONICO, REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, REGEX_PATRON_ALFANUMERICO, REGEX_POSTAL, REGEX_TELEFONO_DIGITOS } from "@libs/shared/data-access-user/src/tramites/constantes/regex.constants";
 
 
 /**
@@ -82,6 +82,12 @@ export const FECHA_VENCIMIENTO = {
     habilitado: true
 };
 
+/**
+ * FORMULARIO_DATOS_MERCANCIA
+ * Define los campos del formulario para la mercancía.
+ * Cada campo contiene un ID, nombre de etiqueta, campo, clase, tipo de input, validadores y otros atributos.
+ */
+
 export const FORMULARIO_DATOS_MERCANCIA = [
     {
         id: 'descripcionMercancia',
@@ -133,7 +139,11 @@ export const FORMULARIO_DATOS_MERCANCIA = [
     }
 ];
 
-
+/**
+ * FORMULARIO_DATOS_SOLICITUD
+ * Define los campos del formulario para la solicitud.
+ * Cada campo contiene un ID, nombre de etiqueta, campo, clase, tipo de input, validadores y otros atributos.
+ **/
 
 export const FORMULARIO_DATOS_SOLICITUD = [
     {
@@ -165,6 +175,12 @@ export const FORMULARIO_DATOS_SOLICITUD = [
         marginTop: 0
     },
 ];
+
+/**
+ * FORMULARIO_DATOS_PROPIETARIO 
+ * Define los campos del formulario para los datos del propietario.
+ * Cada campo contiene un ID, nombre de etiqueta, campo, clase, tipo de input, validadores y otros atributos.
+ * */
 
 export const FORMULARIO_DATOS_PROPIETARIO = [
     {
@@ -292,6 +308,12 @@ export const FORMULARIO_DATOS_PROPIETARIO = [
     }
 ];
 
+/**
+ * FORMULARIO_DATOS_AUTORIZACION
+ *  Define los campos del formulario para la autorización.
+ * Cada campo contiene un ID, nombre de etiqueta, campo, clase, tipo de input, validadores y otros atributos.
+ * */
+
 export const FORMULARIO_DATOS_AUTORIZACION = [
     {
         id: 'folioInformacionGeneralAutorizacion',
@@ -310,9 +332,9 @@ export const FORMULARIO_DATOS_AUTORIZACION = [
         marginTop: 0
     },
     {
-        id: 'aduanaIngreso',
+        id: 'aduanaDeIngreso',
         labelNombre: 'Aduana de ingreso',
-        campo: 'aduanaIngreso',
+        campo: 'aduanaDeIngreso',
         clase: 'col-md-4',
         tipoInput: 'select-catalogos',
         desactivado: false,

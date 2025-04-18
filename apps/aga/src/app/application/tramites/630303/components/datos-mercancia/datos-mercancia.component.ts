@@ -1,21 +1,21 @@
 /**
  * Componente que gestiona los datos de la mercancía para el trámite 630303.
  */
-import { Component, OnDestroy, OnInit } from '@angular/core';
-
 import { CommonModule } from '@angular/common';
 
-import { ModeloDeFormaDinamica} from "@ng-mf/data-access-user";
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { Subject, takeUntil } from 'rxjs';
 
-import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component'; // Adjust the path as needed
+import { ModeloDeFormaDinamica } from '@ng-mf/data-access-user';
 
-import { FormBuilder, FormGroup} from '@angular/forms';
-import { Tramite630303State, Tramite630303Store } from '../../estados/tramite630303.store';
+import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
+import { TituloComponent } from '@ng-mf/data-access-user';
+
+import { FORMULARIO_DATOS_MERCANCIA } from '../../enum/retorno-importacion-temporal.enum';
 import { Tramite630303Query } from '../../estados/tramite630303.query';
 
-import { Subject, takeUntil } from 'rxjs';
-import { FORMULARIO_DATOS_MERCANCIA } from '../../enum/retorno-importacion-temporal.enum';
-import { TituloComponent } from "../../../../../../../../../libs/shared/data-access-user/src/tramites/components/titulo/titulo.component";
+import { Tramite630303State, Tramite630303Store } from '../../estados/tramite630303.store';
 /**
  * Componente que gestiona los datos de la mercancía para el trámite 630303.
  * Permite inicializar formularios, obtener datos del estado y manejar el estado del formulario.
@@ -28,7 +28,6 @@ import { TituloComponent } from "../../../../../../../../../libs/shared/data-acc
   styleUrl: './datos-mercancia.component.scss',
 })
 export class DatosMercanciaComponent implements OnInit, OnDestroy {
-
   /**
    * Subject utilizado para manejar la destrucción de suscripciones y evitar fugas de memoria.
    */

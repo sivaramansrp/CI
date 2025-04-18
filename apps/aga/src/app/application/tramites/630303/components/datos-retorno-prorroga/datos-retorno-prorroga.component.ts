@@ -5,15 +5,16 @@
 import { CommonModule } from '@angular/common';
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
-
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Subject, takeUntil } from 'rxjs';
+
 import { InputFecha, REGEX_PATRON_ALFANUMERICO, TituloComponent } from '@ng-mf/data-access-user';
 import { InputFechaComponent } from '@ng-mf/data-access-user';
 
 import { FECHA_INICIO_PRORROGA, FECHA_VENCIMIENTO_PRORROGA } from '../../enum/retorno-importacion-temporal.enum';
-import { Subject, takeUntil } from 'rxjs';
-import { Tramite630303State, Tramite630303Store } from '../../estados/tramite630303.store';
 import { Tramite630303Query } from '../../estados/tramite630303.query';
+
+import { Tramite630303State, Tramite630303Store } from '../../estados/tramite630303.store';
 /**
  * Componente que gestiona los datos de retorno de prórroga para el trámite 630303.
  * Permite inicializar formularios, obtener datos de catálogos y manejar el estado del formulario.
@@ -25,8 +26,7 @@ import { Tramite630303Query } from '../../estados/tramite630303.query';
   templateUrl: './datos-retorno-prorroga.component.html',
   styleUrl: './datos-retorno-prorroga.component.scss',
 })
-export class DatosRetornoProrrogaComponent implements OnInit,OnDestroy {
-
+export class DatosRetornoProrrogaComponent implements OnInit, OnDestroy {
   /**
    * Estado seleccionado del trámite 630303.
    */
@@ -63,9 +63,7 @@ export class DatosRetornoProrrogaComponent implements OnInit,OnDestroy {
     private fb: FormBuilder,
     private tramite630303Store: Tramite630303Store,
     private tramite630303Query: Tramite630303Query
-  ) {
-    //Constructor
-  }
+  ) {}
 
   /**
    * Método del ciclo de vida que se ejecuta al inicializar el componente.

@@ -4,11 +4,12 @@
         <div class="row">
             <div class="col-md-8">
                 <div class="form-group">
-                    <label for="folioInformacionGeneralProrroga"class="form-label">Folio de prórroga de importación temporal formato en
+                    <label for="folioInformacionGeneralProrroga" class="form-label">Folio de prórroga de importación
+                        temporal formato en
                         papel *:</label>
                     <input id="folioInformacionGeneralProrroga" formControlName="folioInformacionGeneralProrroga"
-                        type="text" class="form-control" 
-                        (change)="setValorStore(datosImportacionRetornoProrrogaGeneralFormulario,'folioInformacionGeneralProrroga')"/>
+                        type="text" class="form-control"
+                        (change)="setValorStore(datosImportacionRetornoProrrogaGeneralFormulario,'folioInformacionGeneralProrroga')" />
                     <div *ngIf="datosImportacionRetornoProrrogaGeneralFormulario.get('folioInformacionGeneralProrroga')?.invalid 
                     && datosImportacionRetornoProrrogaGeneralFormulario.get('folioInformacionGeneralProrroga')?.touched"
                         class="text-danger">
@@ -27,7 +28,8 @@
         <div class="row">
             <div class="col-md-4">
                 <div class="form-group">
-                    <input-fecha [setFecha]="datosImportacionRetornoProrrogaGeneralFormulario.get('fechaInicioProrroga')?.value"
+                    <input-fecha
+                        [setFecha]="datosImportacionRetornoProrrogaGeneralFormulario.get('fechaInicioProrroga')?.value"
                         [datos]="inputFechaInicioProrroga"
                         (valorCambiado)="cambioFechaInicioProrroga($event)"></input-fecha>
                 </div>
