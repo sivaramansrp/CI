@@ -102,7 +102,7 @@ export const FETCHA_PAGO = [240107, 240106];
  * @type {number[]}
  * @description Contiene un arreglo de identificadores numéricos relacionados con CURP en el sistema.
  */
-export const ES_CURP = [240107, 240114, 240118];
+export const ES_CURP = [240107, 240114, 240118, 240117];
 
 /**
  * Período del primer semestre.
