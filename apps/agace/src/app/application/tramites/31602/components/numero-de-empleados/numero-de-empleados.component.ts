@@ -50,7 +50,7 @@ export class NumeroDeEmpleadosComponent implements OnInit,OnDestroy {
     this.modalRef = this.modalService.show(template, { class: 'modal-lg',});
   }
 
-  public crearAgregarForm() {
+  public crearAgregarForm(): void {
     this.agregarForm = this.fb.group({
       rfc: [''],
       registroInput: [{ value: '', disabled: true }],
