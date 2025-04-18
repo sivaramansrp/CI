@@ -1,18 +1,18 @@
-import { Component, OnDestroy, OnInit, TemplateRef } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { DatosComunesService } from '../../services/datos-comunes.service';
-import { map, Subject, takeUntil } from 'rxjs';
-import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, InputCheckComponent, InputRadioComponent, REGEX_RFC, TablaDinamicaComponent, TablaSeleccion } from '@libs/shared/data-access-user/src';
-import dinamicaradio from 'libs/shared/theme/assets/json/31602/dinamica-radio-datos.json';
-import radio_si_no from 'libs/shared/theme/assets/json/31601/radio_si_no.json';
 import { AGREGAR_MIEMBRO_TABLA, DATOS_COMUNES_TEXTOS, DATOS_COMUNES_TEXTOS_DOS, Miembro } from '../../models/datos-comunes.model';
-import { FederalDeTrabajaoComponent } from '../federal-de-trabajao/federal-de-trabajao.component';
-import { DatosComunesDosComponent } from '../datos-comunes-dos/datos-comunes-dos.component';
-import { TituloComponent } from "../../../../../../../../libs/shared/data-access-user/src/tramites/components/titulo/titulo.component";
+import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, InputCheckComponent, InputRadioComponent, TablaDinamicaComponent, TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { Component, OnDestroy, OnInit, TemplateRef } from '@angular/core';
 import { DatosComunesState, DatosComunesStore } from '../../estados/stores/datos-comunes.store';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Subject,map, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { DatosComunesDosComponent } from '../datos-comunes-dos/datos-comunes-dos.component';
 import { DatosComunesQuery } from '../../estados/queries/datos-comunes.query';
+import { DatosComunesService } from '../../services/datos-comunes.service';
+import { FederalDeTrabajaoComponent } from '../federal-de-trabajao/federal-de-trabajao.component';
+import { TituloComponent } from "@libs/shared/data-access-user/src/tramites/components/titulo/titulo.component";
+import dinamicaradio from '@libs/shared/theme/assets/json/31602/dinamica-radio-datos.json';
+import radio_si_no from '@libs/shared/theme/assets/json/31601/radio_si_no.json';
 
 /**
  * Componente que representa la funcionalidad compartida de datos comunes.

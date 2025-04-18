@@ -1,12 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
 import { DE_LAS_SIGUIENTES, PAGO_DE_DERECHOS, PERMISO_A_DESISTIR_DOS, PERMISO_A_DESISTIR_TRES } from '../../constantes/ivaeieps.enum';
-import { ComercioExteriorService } from '../../services/comercio-exterior.service';
-import { map, Subject, takeUntil } from 'rxjs';
-import { ModeloDeFormaDinamica } from '@libs/shared/data-access-user/src';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Solicitud31602State, Tramite31602Store } from '../../estados/stores/tramite31602.store';
+import { Subject,map, takeUntil } from 'rxjs';
+import { ComercioExteriorService } from '../../services/comercio-exterior.service';
+import { CommonModule } from '@angular/common';
+import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
+import { ModeloDeFormaDinamica } from '@libs/shared/data-access-user/src';
 import { Tramite31602Query } from '../../estados/queries/tramite31602.query';
 
 /**

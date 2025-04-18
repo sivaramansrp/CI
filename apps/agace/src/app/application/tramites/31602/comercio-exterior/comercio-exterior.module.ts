@@ -1,22 +1,23 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-
-import { ComercioExteriorRoutingModule } from './comercio-exterior-routing.module';
-import { TodospasosComponent } from '../pages/todospasos/todospasos.component';
-import { PasoUnoComponent } from '../pages/paso-uno/paso-uno.component';
 import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, CatalogosService, FirmaElectronicaComponent, InicioSesionService, SolicitanteComponent, SubirDocumentoService, TituloComponent, WizardComponent } from '@libs/shared/data-access-user/src';
+import { ToastrModule, ToastrService } from 'ngx-toastr';
+import { BsModalService } from 'ngx-bootstrap/modal';
+import { ComercioExteriorRoutingModule } from './comercio-exterior-routing.module';
+import { ComercioExteriorService } from '../services/comercio-exterior.service';
+import { CommonModule } from '@angular/common';
+import { DatosComunesComponent } from '../../../shared/components/datos-comunes/datos-comunes.component';
+import { DatosComunesService } from '../../../shared/services/datos-comunes.service';
+import { DatosPorRegimenComponent } from '../components/datos-por-regimen/datos-por-regimen.component';
+import { IvaeiepsComponent } from '../components/ivaeieps/ivaeieps.component';
+import { NgModule } from '@angular/core';
 import { PasoDosComponent } from '../pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from '../pages/paso-tres/paso-tres.component';
-import { ToastrModule, ToastrService } from 'ngx-toastr';
-import { provideHttpClient } from '@angular/common/http';
-import { ComercioExteriorService } from '../services/comercio-exterior.service';
-import { IvaeiepsComponent } from '../components/ivaeieps/ivaeieps.component';
-import { DatosPorRegimenComponent } from '../components/datos-por-regimen/datos-por-regimen.component';
-import { BsModalService } from 'ngx-bootstrap/modal';
+import { PasoUnoComponent } from '../pages/paso-uno/paso-uno.component';
 import { TercerosRelacionadosComponent } from '../../../shared/components/terceros-relacionados/terceros-relacionados.component';
-import { DatosComunesComponent } from '../../../shared/components/datos-comunes/datos-comunes.component';
 import { TercerosRelacionadosService } from '../../../shared/services/terceros-relacionados.service';
-import { DatosComunesService } from '../../../shared/services/datos-comunes.service';
+import { TodospasosComponent } from '../pages/todospasos/todospasos.component';
+import { provideHttpClient } from '@angular/common/http';
+
+
 
 
 @NgModule({

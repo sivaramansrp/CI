@@ -1,11 +1,10 @@
-import { Component, OnDestroy, OnInit, TemplateRef } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Anteriores, ANTERIORES_TABLA, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
-import { ComercioExteriorService } from '../../services/comercio-exterior.service';
+import { ANTERIORES_TABLA,Anteriores, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { Component, OnDestroy, OnInit, TemplateRef } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
-
+import { ComercioExteriorService } from '../../services/comercio-exterior.service';
+import { CommonModule } from '@angular/common';
 /**
  * Componente que representa la sección de "Número de Empleados".
  * Este componente es responsable de gestionar los datos de empleados, mostrarlos en una tabla dinámica,

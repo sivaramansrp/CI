@@ -1,11 +1,11 @@
-import { Component, OnDestroy, OnInit, TemplateRef } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { Catalogo, CatalogoSelectComponent, ConfiguracionColumna, REGEX_RFC, TablaDinamicaComponent, TablaSeleccion } from '@libs/shared/data-access-user/src';
-import { Mencione, MENCIONE_TABLA } from '../../models/datos-comunes.model';
-import { Subject, takeUntil } from 'rxjs';
-import { DatosComunesService } from '../../services/datos-comunes.service';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { Catalogo, CatalogoSelectComponent, ConfiguracionColumna, REGEX_RFC, TablaDinamicaComponent, TablaSeleccion } from '@libs/shared/data-access-user/src';
+import { Component, OnDestroy, OnInit, TemplateRef } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MENCIONE_TABLA,Mencione } from '../../models/datos-comunes.model';
+import { Subject, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { DatosComunesService } from '../../services/datos-comunes.service';
 
 /**
  * Componente que representa la funcionalidad de Federal De Trabajao.
@@ -107,7 +107,7 @@ export class FederalDeTrabajaoComponent implements OnInit, OnDestroy {
    * 
    * @param template - Referencia de la plantilla para el contenido del modal.
    */
-  public abrirModal(template: TemplateRef<any>): void {
+  public abrirModal(template: TemplateRef<unknown>): void {
     this.modalRef = this.modalService.show(template, { class: 'modal-lg' });
   }
 

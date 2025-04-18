@@ -1,5 +1,5 @@
-import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { NgModule } from '@angular/core';
 import { TodospasosComponent } from '../pages/todospasos/todospasos.component';
 
 const ROUTES: Routes = [

@@ -1,13 +1,14 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Catalogo, CatalogoSelectComponent, InputRadioComponent } from '@libs/shared/data-access-user/src';
-import radio_si_no from 'libs/shared/theme/assets/json/31601/radio_si_no.json';
-import { ComercioExteriorService } from '../../services/comercio-exterior.service';
-import { map, Subject, takeUntil } from 'rxjs';
-import { NumeroDeEmpleadosComponent } from '../numero-de-empleados/numero-de-empleados.component';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Solicitud31602IvaeiepsState, Tramite31602IvaeiepsStore } from '../../estados/stores/tramite31602ivaeieps.store';
+import { Subject,map, takeUntil } from 'rxjs';
+import { ComercioExteriorService } from '../../services/comercio-exterior.service';
+import { CommonModule } from '@angular/common';
+import { NumeroDeEmpleadosComponent } from '../numero-de-empleados/numero-de-empleados.component';
 import { Tramite31602IvaeiepsQuery } from '../../estados/queries/tramite31602ivaeieps.query';
+import radio_si_no from '@libs/shared/theme/assets/json/31601/radio_si_no.json';
+
 
 /**
  * Componente que representa la sección de "Conceptos" de la aplicación.

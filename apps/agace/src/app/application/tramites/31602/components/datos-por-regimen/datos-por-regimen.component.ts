@@ -1,14 +1,14 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { DEPOSITO_FISCAL, ELABORACION, IMPORTACION_TEMPORAL, INDIQUE_SI_REALIZA, RECINTO_FISCALIZADO } from '../../constantes/datos-por-regimen.enum';
-import radio_si_no from 'libs/shared/theme/assets/json/31601/radio_si_no.json';
-import { InputRadioComponent } from '@libs/shared/data-access-user/src';
-import { ConceptosComponent } from '../conceptos/conceptos.component';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Solicitud31602State, Tramite31602Store } from '../../estados/stores/tramite31602.store';
+import { Subject,map, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { ConceptosComponent } from '../conceptos/conceptos.component';
+import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
+import { InputRadioComponent } from '@libs/shared/data-access-user/src';
 import { Tramite31602Query } from '../../estados/queries/tramite31602.query';
-import { map, Subject, takeUntil } from 'rxjs';
+import radio_si_no from '@libs/shared/theme/assets/json/31601/radio_si_no.json';
 
 /**
  * Componente que representa la sección "Datos Por Régimen".

@@ -1,16 +1,16 @@
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { Component, OnDestroy, OnInit, TemplateRef } from '@angular/core';
+import { ConfiguracionColumna, TablaDinamicaComponent, TablaSeleccion } from '@libs/shared/data-access-user/src';
+import { ENLACE_TABLA, EnlaceOperativo, PERSONAS_PARA,Personas } from '../../models/terceros-relacionados.model';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Subject,map,takeUntil } from 'rxjs';
+import { TercerosRelacionadosState, TercerosRelacionadosStore } from '../../estados/stores/terceros-relacionados.store';
 import { CommonModule } from '@angular/common';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { REPRESENTANTE_LEGAL } from '../../constants/terceros-relacionados.enum';
-import { ConfiguracionColumna, TablaDinamicaComponent, TablaSeleccion } from '@libs/shared/data-access-user/src';
-import { TituloComponent } from "../../../../../../../../libs/shared/data-access-user/src/tramites/components/titulo/titulo.component";
-import { ENLACE_TABLA, EnlaceOperativo, Personas, PERSONAS_PARA } from '../../models/terceros-relacionados.model';
-import { TercerosRelacionadosService } from '../../services/terceros-relacionados.service';
-import { map, Subject, takeUntil } from 'rxjs';
-import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import { TercerosRelacionadosState, TercerosRelacionadosStore } from '../../estados/stores/terceros-relacionados.store';
 import { TercerosRelacionadosQuery } from '../../estados/queries/terceros-relacionados.query';
+import { TercerosRelacionadosService } from '../../services/terceros-relacionados.service';
+import { TituloComponent } from '@libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
 
 /**
  * Componente que representa la funcionalidad de "Terceros Relacionados".

@@ -1,15 +1,17 @@
-import { Component, OnDestroy, OnInit, TemplateRef } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, InputCheckComponent, InputRadioComponent, REGEX_RFC, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
-import { DatosComunesService } from '../../services/datos-comunes.service';
-import { map, Subject, takeUntil } from 'rxjs';
-import { CONTROL_INVENTARIOS_TABLA, ControlInventarios, DATOS_COMUNES_TEXTOS_TRES, INSTALACIONES_PRINCIPALES_TABLA, InstalacionesPrincipalesTablaInfo } from '../../models/datos-comunes.model';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import radio_si_no from 'libs/shared/theme/assets/json/31601/radio_si_no.json';
-import dinamicaradio from 'libs/shared/theme/assets/json/31602/dinamica-radio-datos.json';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { CONTROL_INVENTARIOS_TABLA, ControlInventarios, DATOS_COMUNES_TEXTOS_TRES, INSTALACIONES_PRINCIPALES_TABLA, InstalacionesPrincipalesTablaInfo } from '../../models/datos-comunes.model';
+import { Component, OnDestroy, OnInit, TemplateRef } from '@angular/core';
 import { DatosComunesState, DatosComunesStore } from '../../estados/stores/datos-comunes.store';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Subject,map, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
 import { DatosComunesQuery } from '../../estados/queries/datos-comunes.query';
+import { DatosComunesService } from '../../services/datos-comunes.service';
+import dinamicaradio from '@libs/shared/theme/assets/json/31602/dinamica-radio-datos.json';
+import radio_si_no from '@libs/shared/theme/assets/json/31601/radio_si_no.json';
+
+
 
 /**
  * Componente que representa la sección "Datos Comunes Dos".

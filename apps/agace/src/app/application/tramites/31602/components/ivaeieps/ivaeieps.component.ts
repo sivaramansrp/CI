@@ -1,16 +1,16 @@
+import { BsModalRef,BsModalService } from 'ngx-bootstrap/modal';
 import { Component, OnDestroy, OnInit, TemplateRef } from '@angular/core';
+import { ConfiguracionColumna, EMPRESAS_TABLA, EmpresasDelGrupo, InputCheckComponent, InputRadioComponent, REGEX_RFC, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Solicitud31602IvaeiepsState, Tramite31602IvaeiepsStore } from '../../estados/stores/tramite31602ivaeieps.store';
+import { Subject,map, takeUntil } from 'rxjs';
+import { ComercioExteriorService } from '../../services/comercio-exterior.service';
 import { CommonModule } from '@angular/common';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { PERMISO_A_DESISTIR } from '../../constantes/ivaeieps.enum';
-import { ConfiguracionColumna, EMPRESAS_TABLA, EmpresasDelGrupo, InputCheckComponent, InputRadioComponent, REGEX_RFC, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
-import radio_si_no from 'libs/shared/theme/assets/json/31601/radio_si_no.json';
-import { ComercioExteriorService } from '../../services/comercio-exterior.service';
-import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { IvaeiepsDosComponent } from '../ivaeieps-dos/ivaeieps-dos.component';
-import { map, Subject, takeUntil } from 'rxjs';
-import { Solicitud31602IvaeiepsState, Tramite31602IvaeiepsStore } from '../../estados/stores/tramite31602ivaeieps.store';
+import { PERMISO_A_DESISTIR } from '../../constantes/ivaeieps.enum';
 import { Tramite31602IvaeiepsQuery } from '../../estados/queries/tramite31602ivaeieps.query';
+import radio_si_no from '@libs/shared/theme/assets/json/31601/radio_si_no.json';
 
 
 /**
