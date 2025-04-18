@@ -100,7 +100,8 @@ export const TERCEROS_NACIONALIDAD_OPCIONES = [
 export const NUMERO_TRAMITE = {
   TRAMITE_240108: 240108,
   TRAMITE_240114: 240114,
-  TRAMITE_240308: 240308
+  TRAMITE_240308: 240308,
+  TRAMITE_240117: 240117
 }
 
 /**
@@ -133,6 +134,17 @@ export const TERCEROS_NACIONALIDAD_OPCIONES_EXTRANJERO = [
 export const CAMPO_OBLIGATORIO_DESTINATARIO = [240111];
 
 /**
+ * @const CAMPO_OBLIGATORIO_DESTINATARIO_PROVEEDOR
+ * @description Representa un arreglo que contiene los identificadores de los campos obligatorios
+ *              relacionados con el destinatario proveedor.
+ * @type {number[]}
+ */
+export const CAMPO_OBLIGATORIO_DESTINATARIO_PROVEEDOR = [240117];
+
+
+
+
+/**
  * Constante que representa los campos obligatorios para el proveedor.
  * 
  * @const CAMPO_OBLIGATORIO_PROVEEDOR
@@ -151,3 +163,7 @@ export const CAMPO_OBLIGATORIO_PROVEEDOR = [240111];
  * los campos que son requeridos para los derechos en el sistema.
  */
 export const CAMPO_OBLIGATORIO_DERECHOS = [240111];
+
+
+export const COLONIA_FIELD_FLAG = [240117, 240114];
+
