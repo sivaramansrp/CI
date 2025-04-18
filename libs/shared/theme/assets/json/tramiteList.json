@@ -1994,6 +1994,13 @@
         "linkDepartment": "/pago/permiso-sanitario-dispositivos-medicos/permiso-sanitario-dispositivos-medicos",
         "department": "cofepris"
 
+    },
+    {
+        "id": 287,
+        "tramite": 240120,
+        "linkDashboard": "/sedena/pago/permiso-exportacion-pirotecnia/contenedor-de-pasos",
+        "linkDepartment": "/sedena/pago/permiso-exportacion-pirotecnia/contenedor-de-pasos",
+        "department": "sedena"
     }
 
     
