@@ -141,3 +141,13 @@ export const CAMPO_OBLIGATORIO_DESTINATARIO = [240111];
  * los campos que son requeridos para el proveedor en el sistema.
  */
 export const CAMPO_OBLIGATORIO_PROVEEDOR = [240111];
+
+/**
+ * Constante que representa los campos obligatorios para los derechos.
+ * 
+ * @const CAMPO_OBLIGATORIO_DERECHOS
+ * @type {number[]}
+ * @description Contiene un arreglo de identificadores numéricos que indican 
+ * los campos que son requeridos para los derechos en el sistema.
+ */
+export const CAMPO_OBLIGATORIO_DERECHOS = [240111];
