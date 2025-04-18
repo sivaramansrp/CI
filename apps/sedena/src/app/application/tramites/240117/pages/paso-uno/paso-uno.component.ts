@@ -4,9 +4,8 @@ import { OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs';
 
-import { Tramite240101Query } from '../../../240101/estados/tramite240101Query.query';
-
-import { Tramite240101Store } from '../../../240101/estados/tramite240101Store.store';
+import { Tramite240117Query } from '../../estados/tramite240117Query.query';
+import { Tramite240117Store } from '../../estados/tramite240117Store.store';
 
 @Component({
   selector: 'app-paso-uno',
@@ -38,8 +37,8 @@ public indice: number | undefined = 1;
    */
 
   constructor(
-      private tramite240101Query: Tramite240101Query,
-      private tramite240101Store: Tramite240101Store // eslint-disable-next-line no-empty-function
+      private tramite240117Query: Tramite240117Query,
+      private tramite240117Store: Tramite240117Store // eslint-disable-next-line no-empty-function
     ) {}
 
 
@@ -50,7 +49,7 @@ public indice: number | undefined = 1;
        * @returns {void}
        */
       ngOnInit(): void {
-        this.tramite240101Query.getTabSeleccionado$
+        this.tramite240117Query.getTabSeleccionado$
           .pipe(takeUntil(this.destroyNotifier$))
           .subscribe((tab) => {
             this.indice = tab;
@@ -64,7 +63,7 @@ public indice: number | undefined = 1;
    * @returns {void}
    */
   public seleccionaTab(i: number): void {
-    this.tramite240101Store.updateTabSeleccionado(i);
+    this.tramite240117Store.updateTabSeleccionado(i);
   }
 
    /**

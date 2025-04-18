@@ -19,11 +19,13 @@ import { StoreConfig } from '@datorama/akita';
  */
 export interface Tramite240117State {
   tabSeleccionado?: number;
-  destinatarioFinalTablaDatos: DestinoFinal[];
-  proveedorTablaDatos: Proveedor[];
-  pagoDerechos: PagoDerechosFormState;
-  merccancialTablaDatos: MercanciaDetalle[];
-  datosDelTramite: DatosDelTramiteFormState;
+  destinatarioFinalTablaDatos: DestinoFinal[];          // tab 3 popup one
+  proveedorTablaDatos: Proveedor[];                     // tab3 popup2
+  pagoDerechos: PagoDerechosFormState;                  // tab 4
+  merccancialTablaDatos: MercanciaDetalle[];            //tab2 popup
+  datosDelTramite: DatosDelTramiteFormState;            // tab2
+  modificarDestinarioDatos?: DestinoFinal | null;
+  modificarProveedorDatos?: Proveedor | null;
 }
 
 /**
@@ -158,6 +160,22 @@ export class Tramite240117Store extends Store<Tramite240117State> {
     this.update((state) => ({
       ...state,
       merccancialTablaDatos: [...state.merccancialTablaDatos, ...newMercancia],
+    }));
+  }
+
+  public actualizarDatosDestinatario(datos: DestinoFinal): void {
+    this.update((state) => ({
+      ...state,
+      modificarDestinarioDatos: datos,
+      modificarProveedorDatos: null
+    }));
+  }
+
+  public actualizarDatosProveedor(datos: Proveedor): void {
+    this.update((state) => ({
+      ...state,
+      modificarProveedorDatos: datos,
+      modificarDestinarioDatos: null
     }));
   }
 }

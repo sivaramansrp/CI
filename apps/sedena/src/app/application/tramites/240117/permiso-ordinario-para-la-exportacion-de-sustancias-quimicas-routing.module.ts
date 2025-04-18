@@ -1,6 +1,9 @@
+import { AgregarDestinatarioFinalComponent } from '../../shared/components/agregar-destinatario-final/agregar-destinatario-final.component';
+import { AgregarProveedorContenedoraComponent } from './components/agregar-proveedor-contenedora/agregar-proveedor-contenedora.component';
+import { DatosMercanciaContenedoraComponent } from './components/datos-mercancia-contenedora/datos-mercancia-contenedora.component';
 import { NgModule } from '@angular/core';
-
-import { RouterModule, Routes } from '@angular/router';
+import { RouterModule } from '@angular/router';
+import { Routes } from '@angular/router';
 import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
 
 const ROUTES: Routes = [
@@ -14,18 +17,18 @@ const ROUTES: Routes = [
       pathMatch: 'full',
       redirectTo: 'contenedor-de-pasos',
     },
-    // {
-    //   path: 'agregar-datos-mercancia',
-    //   component: DatosMercanciaContenedoraComponent,
-    // },
-    // {
-    //   path: 'agregar-destino-final',
-    //   component: AgregarDestinatarioFinalContenedoraComponent,
-    // },
-    // {
-    //   path: 'agregar-proveedor',
-    //   component: AgregarProveedorContenedoraComponent,
-    // },
+    {
+      path: 'agregar-datos-mercancia',
+      component: DatosMercanciaContenedoraComponent,
+    },
+    {
+      path: 'agregar-destino-final',
+      component: AgregarDestinatarioFinalComponent,
+    },
+    {
+      path: 'agregar-proveedor',
+      component: AgregarProveedorContenedoraComponent,
+    },
 ];
 
 @NgModule({

@@ -7,15 +7,14 @@ import { AnexarDocumentosComponent, BtnContinuarComponent, FirmaElectronicaCompo
 import { AlertComponent } from '@ng-mf/data-access-user';
 
 import { DatosDelTramiteComponent } from '../../shared/components/datos-del-tramite/datos-del-tramite.component';
+import { DatosDelTramiteContenedoraComponent } from './components/datos-del-tramite-contenedora/datos-del-tramite-contenedora.component';
 import { PagoDeDerechosComponent } from '../../shared/components/pago-de-derechos/pago-de-derechos.component';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
-import { PermisoOrdinarioImportacionArmasMunicionesRoutingModule } from '../240101/permiso-ordinario-importacion-armas-municiones-routing.module';
 import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
 import { TercerosRelacionadosComponent } from '../../shared/components/terceros-relacionados/terceros-relacionados.component';
-
-
+import { TercerosRelacionadosContenedoraComponent } from './components/terceros-relacionados-contenedora/terceros-relacionados-contenedora.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +26,6 @@ import { TercerosRelacionadosComponent } from '../../shared/components/terceros-
   imports: [
     CommonModule,
     PermisoOrdinarioParaLaExportacionDeSustanciasQuimicasRoutingModule,
-    PermisoOrdinarioImportacionArmasMunicionesRoutingModule,
     SolicitanteComponent,
     DatosDelTramiteComponent,
     TercerosRelacionadosComponent,
@@ -38,7 +36,9 @@ import { TercerosRelacionadosComponent } from '../../shared/components/terceros-
     FirmaElectronicaComponent,
     WizardComponent,
     BtnContinuarComponent,
-  ],
+    DatosDelTramiteContenedoraComponent,
+    TercerosRelacionadosContenedoraComponent
+],
   exports:[
     PasoUnoComponent,
     PasoDosComponent,
