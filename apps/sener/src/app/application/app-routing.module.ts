@@ -40,6 +40,13 @@ const ROUTES: Routes = [
       import('./tramites/300105/autorizacion-de-rayos-x.module').then(
         (m) => m.AutorizacionDeRayosXModule
       ),
+  },
+  {
+    path: 'pexim',
+    loadChildren: () =>
+      import('./tramites/140216/suspension-permiso.module').then(
+        (m) => m.SuspensionPermisoModule
+      )
   }
 ];
 
