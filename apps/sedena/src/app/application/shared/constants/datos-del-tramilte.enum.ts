@@ -27,7 +27,7 @@ export const CROSLISTA_ADUANAS_DISPONIBLES: string[] = [
  * @type {number[]}
  * @description Representa códigos específicos utilizados en el sistema para identificar tipos de permisos definitivos.
  */
-export const PERMISO_DEFINITIVO_TITULO = [240119, 240118, 240107, 240106];
+export const PERMISO_DEFINITIVO_TITULO = [240119, 240118, 240107, 240106, 240108, 240308];
 
 /**
  * Identificadores numéricos relacionados con permisos aduaneros.
@@ -67,7 +67,7 @@ export const PUEDE_MOSTRAR_LA_LISTA_CRUZADA_FOR_MERCANCIA = [240108, 240107];
  * @type {number[]}
  * @description Contiene un arreglo de números que identifican el semestre habilitado. Este valor puede ser utilizado para validar o configurar funcionalidades relacionadas con el período académico activo.
  */
-export const PERIODO_SEMESTRE_HABILITADO = [240119, 240108, 240107, 240114, 240106];
+export const PERIODO_SEMESTRE_HABILITADO = [240119, 240108, 240107, 240114, 240106, 240308];
 
 /**
  * Identificadores numéricos relacionados con manifiestos y declaraciones.
@@ -95,7 +95,7 @@ export const FETCHA_PAGO = [240107,240106];
  * @type {number[]}
  * @description Contiene un arreglo de identificadores numéricos relacionados con CURP en el sistema.
  */
-export const ES_CURP = [240107,240114];
+export const ES_CURP = [240107,240114,240118];
 
 /**
  * Período del primer semestre.
@@ -146,3 +146,12 @@ export const DATOS_DEL_TRAMITE_MAP: Map<string, number[]> = new Map([
  * @description Contiene un arreglo de identificadores numéricos de países donde se debe ocultar la opción "Agregar mercancía".
  */
 export const AGGREGAR_MERCANCIA_PAISE_OCULTAR = [240108];
+
+/**
+ * @constant
+ * @name PERMISO_JUSTIFICACION
+ * @type {number[]}
+ * @description Contiene un arreglo de identificadores numéricos relacionados con permisos de justificación específicos.
+ * Este valor es utilizado en el sistema para identificar trámites que requieren justificación.
+ */
+export const PERMISO_JUSTIFICACION = [240308];

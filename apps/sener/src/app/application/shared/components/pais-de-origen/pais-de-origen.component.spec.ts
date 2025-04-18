@@ -1,100 +1,104 @@
-import { DatosSolicitudComponent } from './datos-solicitud.component';
-import { FormBuilder } from '@angular/forms';
-import { of, Subject } from 'rxjs';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ReactiveFormsModule, FormGroup, FormControl } from '@angular/forms';
+import { PaisDeOrigenComponent } from './pais-de-origen.component';
+import { Catalogo } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 
-describe('DatosSolicitudComponent - ngOnInit', () => {
-  let component: DatosSolicitudComponent;
-  let fb: FormBuilder;
-  let query: any;
+describe('PaisDeOrigenComponent', () => {
+  let component: PaisDeOrigenComponent;
+  let fixture: ComponentFixture<PaisDeOrigenComponent>;
 
-  beforeEach(() => {
-    fb = new FormBuilder();
-    query = {
-      mostrarTabla$: of(true),
-      selectSolicitud$: of({
-        cantidadPartidasDeLaMercancia: '10',
-        valorPartidaUSDPartidasDeLaMercancia: '100.00',
-        descripcionPartidasDeLaMercancia: 'Test description',
-      }),
-      fraccion$: of('Test fraccion'),
-      unidadMedida$: of('Test unidad'),
-    };
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [ReactiveFormsModule, PaisDeOrigenComponent],
+      declarations: [],
+    }).compileComponents();
 
-    component = new DatosSolicitudComponent(fb, {} as any, {} as any, query, {} as any);
-    component['destroyed$'] = new Subject<void>();
-    component.partidasDelaMercanciaForm = fb.group({
-      cantidadPartidasDeLaMercancia: [''],
-      valorPartidaUSDPartidasDeLaMercancia: [''],
-      descripcionPartidasDeLaMercancia: [''],
-      fraccion: [''],
-      unidadMedida: [''],
+    fixture = TestBed.createComponent(PaisDeOrigenComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should create the component', () => {
+    expect(component).toBeTruthy();
+  });
+
+  describe('campoDeBotones', () => {
+    beforeEach(() => {
+      component.crosslistComponent = {
+        agregar: jest.fn(),
+        quitar: jest.fn(),
+      } as unknown as any;
+    });
+
+    it('should call agregar method of CrosslistComponent when "Agregar" button is clicked', () => {
+      component.campoDeBotones[0].funcion();
+      expect(component.crosslistComponent.agregar).toHaveBeenCalledWith('');
+    });
+
+    it('should call agregar method of CrosslistComponent with "t" when "Agregar todos" button is clicked', () => {
+      component.campoDeBotones[1].funcion();
+      expect(component.crosslistComponent.agregar).toHaveBeenCalledWith('t');
+    });
+
+    it('should call agregar method of CrosslistComponent when "Eliminar" button is clicked', () => {
+      component.campoDeBotones[2].funcion();
+      expect(component.crosslistComponent.agregar).toHaveBeenCalledWith('');
+    });
+
+    it('should call quitar method of CrosslistComponent when "Eliminar todos" button is clicked', () => {
+      component.campoDeBotones[3].funcion();
+      expect(component.crosslistComponent.quitar).toHaveBeenCalledWith('');
     });
   });
 
-  afterEach(() => {
-    component['destroyed$'].next();
-    component['destroyed$'].complete();
-  });
+  describe('ngOnChanges', () => {
+    it('should update selectRangoDias when paisesPorBloque changes', () => {
+      const mockPaisesPorBloque: Catalogo[] = [
+        { id: 1, descripcion: 'País 1' },
+        { id: 2, descripcion: 'País 2' },
+      ];
+      component.paisesPorBloque = mockPaisesPorBloque;
 
-  it('should initialize forms and subscriptions', () => {
-    const inicializarFormulariosSpy = jest.spyOn(component, 'inicializarFormularios');
-    const configuracionFormularioSuscripcionesSpy = jest.spyOn(component, 'configuracionFormularioSuscripciones');
-    const opcionesDeBusquedaSpy = jest.spyOn(component, 'opcionesDeBusqueda');
-    const formularioTotalCountSpy = jest.spyOn(component, 'formularioTotalCount');
-    const getEstablecimientoSpy = jest.spyOn(component, 'getEstablecimiento');
-    const calcularTotalesSpy = jest.spyOn(component, 'calcularTotales');
-    const fetchEntidadFederativaSpy = jest.spyOn(component, 'fetchEntidadFederativa');
-    const fetchRepresentacionFederalSpy = jest.spyOn(component, 'fetchRepresentacionFederal');
-    const listaDePaisesDisponiblesSpy = jest.spyOn(component, 'listaDePaisesDisponibles');
+      component.ngOnChanges({
+        paisesPorBloque: {
+          currentValue: mockPaisesPorBloque,
+          previousValue: [],
+          firstChange: true,
+          isFirstChange: () => true,
+        },
+      });
 
-    component.ngOnInit();
-
-    expect(inicializarFormulariosSpy).toHaveBeenCalled();
-    expect(configuracionFormularioSuscripcionesSpy).toHaveBeenCalled();
-    expect(opcionesDeBusquedaSpy).toHaveBeenCalled();
-    expect(formularioTotalCountSpy).toHaveBeenCalled();
-    expect(getEstablecimientoSpy).toHaveBeenCalled();
-    expect(calcularTotalesSpy).toHaveBeenCalled();
-    expect(fetchEntidadFederativaSpy).toHaveBeenCalled();
-    expect(fetchRepresentacionFederalSpy).toHaveBeenCalled();
-    expect(listaDePaisesDisponiblesSpy).toHaveBeenCalled();
-  });
-
-  it('should update mostrarTabla from mostrarTabla$ observable', () => {
-    component.ngOnInit();
-    expect(component.mostrarTabla).toBe(true);
-  });
-
-  it('should patch partidasDelaMercanciaForm from selectSolicitud$ observable', () => {
-    const patchValueSpy = jest.spyOn(component.partidasDelaMercanciaForm, 'patchValue');
-
-    component.ngOnInit();
-
-    expect(patchValueSpy).toHaveBeenCalledWith({
-      cantidadPartidasDeLaMercancia: '10',
-      valorPartidaUSDPartidasDeLaMercancia: '100.00',
-      descripcionPartidasDeLaMercancia: 'Test description',
+      expect(component.selectRangoDias).toEqual(['País 1', 'País 2']);
     });
   });
 
-  it('should patch fraccion from fraccion$ observable', () => {
-    const patchValueSpy = jest.spyOn(component.partidasDelaMercanciaForm, 'patchValue');
+  describe('Outputs', () => {
+    it('should emit bloqueCambiar with the correct value', () => {
+      jest.spyOn(component.bloqueCambiar, 'emit');
+      const mockEvent = {
+        target: { value: '2' },
+      } as unknown as Event;
 
-    component.ngOnInit();
+      component.enCambioDeBloque(mockEvent);
 
-    expect(patchValueSpy).toHaveBeenCalledWith({ fraccion: 'Test fraccion' }, { emitEvent: false });
-  });
+      expect(component.bloqueCambiar.emit).toHaveBeenCalledWith(2);
+    });
 
-  it('should patch unidadMedida from unidadMedida$ observable and update its validity', () => {
-    const patchValueSpy = jest.spyOn(component.partidasDelaMercanciaForm, 'patchValue');
-    const updateValueAndValiditySpy = jest.spyOn(
-      component.partidasDelaMercanciaForm.get('unidadMedida')!,
-      'updateValueAndValidity'
-    );
+    it('should emit setValoresStoreEvent with the correct payload', () => {
+      jest.spyOn(component.setValoresStoreEvent, 'emit');
+      const mockForm = new FormGroup({
+        campo1: new FormControl('valor1'),
+      } as any);
+      const mockCampo = 'campo1';
+      const mockMetodoNombre = 'metodo1';
 
-    component.ngOnInit();
+      component.setValoresStore(mockForm, mockCampo, mockMetodoNombre);
 
-    expect(patchValueSpy).toHaveBeenCalledWith({ unidadMedida: 'Test unidad' }, { emitEvent: false });
-    expect(updateValueAndValiditySpy).toHaveBeenCalled();
+      expect(component.setValoresStoreEvent.emit).toHaveBeenCalledWith({
+        form: mockForm,
+        campo: mockCampo,
+        metodoNombre: mockMetodoNombre,
+      });
+    });
   });
 });

@@ -1,4 +1,22 @@
 <div class="container">
+  @if(esJustificacion){
+    <div class="row mt-5">
+      <form [formGroup]="formDeJustificacion" class="container">
+        <div class="mb-3">
+          <label for="justificacion" class="form-label">
+            *Justificación
+          </label>
+          <textarea
+            id="justificacion"
+            class="form-control"
+            rows="3"
+            formControlName="justificacion"
+            style="height: 90px"
+          ></textarea>
+        </div>
+      </form>
+      </div>
+    }
   @if(!estaOculto){    
     <div class="row mt-5">
       <ng-titulo titulo="Permiso definitivo (no temporal)"></ng-titulo>
@@ -18,6 +36,7 @@
         [fechas]="seleccionarAduanasDisponibles"
         [label]="aduanasDisponiblesLabel"
         [fechasSeleccionadas]="seleccionarAduanasDisponiblesDatos"
+        [botones]="aduanasBotones"
         (fechasSeleccionadasChange)="
           aduanasDisponiblesSeleccionadasChange($event)
         "

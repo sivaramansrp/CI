@@ -31,6 +31,13 @@ import {NUMERO_TRAMITE} from '../../constants/datos-solicitud.enum';
   styleUrl: './agregar-proveedor-custom.component.scss',
 })
 export class AgregarProveedorCustomComponent implements OnDestroy, OnInit, OnChanges {
+ /**
+   * Datos del formulario que pueden ser de tipo `DestinoFinal`, `Proveedor`, `null` o `undefined`.
+   * Este input se utiliza para recibir la información necesaria desde el componente padre.
+   *
+   * @type {Proveedor | DestinoFinal | null | undefined}
+   */
+  @Input() formaDatos!: Proveedor | DestinoFinal| null | undefined;
 
   /**
     * @property tipoPersona
@@ -71,14 +78,6 @@ export class AgregarProveedorCustomComponent implements OnDestroy, OnInit, OnCha
    * @type {EventEmitter<Proveedor[]>}
    */
   @Output() updateProveedorTablaDatos = new EventEmitter<Proveedor[]>();
-
-     /**
-   * Datos del formulario que pueden ser de tipo `DestinoFinal`, `Proveedor`, `null` o `undefined`.
-   * Este input se utiliza para recibir la información necesaria desde el componente padre.
-   *
-   * @type {DestinoFinal | Proveedor | null | undefined}
-   */
-     @Input() formaDatos!: DestinoFinal | Proveedor | null | undefined;
 
 
   /**
