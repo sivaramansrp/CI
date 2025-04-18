@@ -393,8 +393,21 @@ export const REGEX_ALFANUMERICO_CON_ESPACIOS_REEMPLAZAR = /[^a-zA-Z0-9 ]/g;
  */
 export const REGEX_TEXTO_PREFIJO = /^[\d\s-]+/;
 
-
+/**
+ * Expresión regular para validar un Código Postal mexicano.
+ * Debe contener exactamente 5 dígitos numéricos.
+ * Ejemplo válido: 12345
+ */
 export const CODIGO_POSTAL = /^\d{5}$/
 
+/**
+ * Expresión regular para validar un RFC (Registro Federal de Contribuyentes) 
+ * de personas morales o físicas con homoclave.
+ * Estructura:
+ * - 3 o 4 letras en mayúscula (pueden incluir Ñ o &)
+ * - 6 dígitos numéricos correspondientes a la fecha (AAMMDD)
+ * - 3 caracteres alfanuméricos como homoclave
+ * Ejemplo válido: ABCD9102031A2
+ */
 export const RFC_PARTES_C = /^[A-ZÑ&]{3,4}\d{6}[A-Z0-9]{3}$/
 
