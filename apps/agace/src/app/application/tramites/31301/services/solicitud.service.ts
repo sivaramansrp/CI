@@ -1,5 +1,5 @@
 import { CatalogosSelect } from '@libs/shared/data-access-user/src';
-import { DatosGeneralesDeLaSolicitud, DatosGeneralesDeLaSolicitudCatologo, DatosPorGarantia, Domicilios, SeccionSociosIC, SubContratistas, TipoDeInversion } from '../models/solicitud.model';
+import { DatosGeneralesDeLaSolicitudCatologo, DatosGeneralesDeLaSolicitudDatos, DatosGeneralesDeLaSolicitudRadioLista, DatosPorGarantia, Domicilios, SeccionSociosIC, SubContratistas, TipoDeInversion } from '../models/solicitud.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ModificacionDenominacionRazonSocial } from '../models/solicitud.model';
@@ -38,8 +38,8 @@ export class SolicitudService {
     );
   }
 
-  conseguirDatosGeneralesOpcionDeRadio(): Observable<DatosGeneralesDeLaSolicitud> {
-    return this.http.get<DatosGeneralesDeLaSolicitud>(
+  conseguirDatosGeneralesOpcionDeRadio(): Observable<DatosGeneralesDeLaSolicitudRadioLista> {
+    return this.http.get<DatosGeneralesDeLaSolicitudRadioLista>(
       'assets/json/31301/datos-generales-de-la-solicitud-radio-option.json'
     );
   }
@@ -77,6 +77,12 @@ export class SolicitudService {
   conseguirDomicilios(): Observable<Domicilios[]> {
     return this.http.get<Domicilios[]>(
       'assets/json/31301/domicilios.json'
+    );
+  } 
+
+  conseguirDatosGeneralesDeLaSolicitudDatos(): Observable<DatosGeneralesDeLaSolicitudDatos> {
+    return this.http.get<DatosGeneralesDeLaSolicitudDatos>(
+      'assets/json/31301/datos-generales-de-la-solicitud-datos.json'
     );
   } 
 }
