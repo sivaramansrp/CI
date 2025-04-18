@@ -1,16 +1,16 @@
 import { Store, StoreConfig } from '@datorama/akita';
+import { CatalogoResponse } from '@libs/shared/data-access-user/src';
 import { Injectable } from '@angular/core';
-import { TablaDatos } from '../models/flora-fauna.models';
+import { TablaDatos} from '../models/flora-fauna.models';
 
-import { catalogoResponse } from '@libs/shared/data-access-user/src';
 
 export interface Tramite250101State {
-  tipoAduana: catalogoResponse | null;
-  tipoInspectoria: catalogoResponse | null;
-  tipoMunicipio: catalogoResponse | null;
+  tipoAduana: CatalogoResponse | null;
+  tipoInspectoria: CatalogoResponse | null;
+  tipoMunicipio: CatalogoResponse | null;
   destinatarioDenominacion: string;
-  destinatarioPais: catalogoResponse | null;
-  destinatarioEstado: catalogoResponse | null;
+  destinatarioPais: CatalogoResponse | null;
+  destinatarioEstado: CatalogoResponse | null;
   destinatarioCodigoPostal: string;
   destinatarioDomicilio: string;
   agenteAduanalNombre: string;
@@ -102,7 +102,7 @@ export class Tramite250101Store extends Store<Tramite250101State> {
    * Actualiza el tipo de aduana en el estado.
    * @param tipoAduana Catálogo de aduana
    */
-  public establecerTipoAduana(tipoAduana: catalogoResponse): void {
+  public establecerTipoAduana(tipoAduana: CatalogoResponse): void {
     this.update((state) => ({ ...state, tipoAduana }));
   }
 
@@ -110,7 +110,7 @@ export class Tramite250101Store extends Store<Tramite250101State> {
    * Actualiza el tipo de inspectoria en el estado.
    * @param tipoInspectoria Catálogo de inspectoria
    */
-  public establecerTipoInspectoria(tipoInspectoria: catalogoResponse): void {
+  public establecerTipoInspectoria(tipoInspectoria: CatalogoResponse): void {
     this.update((state) => ({ ...state, tipoInspectoria }));
   }
 
@@ -118,7 +118,7 @@ export class Tramite250101Store extends Store<Tramite250101State> {
    * Actualiza el tipo de municipio en el estado.
    * @param tipoMunicipio Catálogo de municipio
    */
-  public establecerTipoMunicipio(tipoMunicipio: catalogoResponse): void {
+  public establecerTipoMunicipio(tipoMunicipio: CatalogoResponse): void {
     this.update((state) => ({ ...state, tipoMunicipio }));
   }
 
@@ -134,7 +134,7 @@ export class Tramite250101Store extends Store<Tramite250101State> {
    * Establece el país del destinatario.
    * @param destinatarioPais Catálogo del país
    */
-  public establecerDestinatarioPais(destinatarioPais: catalogoResponse): void {
+  public establecerDestinatarioPais(destinatarioPais: CatalogoResponse): void {
     this.update((state) => ({ ...state, destinatarioPais }));
   }
 
@@ -142,7 +142,7 @@ export class Tramite250101Store extends Store<Tramite250101State> {
    * Establece el estado del destinatario.
    * @param destinatarioEstado Catálogo del estado
    */
-  public establecerDestinatarioEstado(destinatarioEstado: catalogoResponse): void {
+  public establecerDestinatarioEstado(destinatarioEstado: CatalogoResponse): void {
     this.update((state) => ({ ...state, destinatarioEstado }));
   }
 
