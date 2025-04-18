@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 import { DatosMercanciaComponent } from '../../../../shared/components/datos-mercancia/datos-mercancia.component';
 import { ID_PROCEDIMIENTO } from '../../constants/importacion-armas-municiones.enum';
 import { MercanciaDetalle } from '../../../../shared/models/datos-del-tramite.model';
-import { Tramite240101Store } from '../../estados/tramite240111Store.store';
+import { Tramite240101Store } from '../../estados/tramite240105Store.store';
 
 /**
  * @title Datos de la Mercancía Contenedora

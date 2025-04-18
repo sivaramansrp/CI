@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { DestinoFinal } from '../../../../shared/models/terceros-relacionados.model';
 import { ID_PROCEDIMIENTO } from '../../constants/importacion-armas-municiones.enum';
-import { Tramite240101Store } from '../../estados/tramite240111Store.store';
+import { Tramite240101Store } from '../../estados/tramite240105Store.store';
 
 
 /**

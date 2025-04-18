@@ -7,8 +7,8 @@ import { PagoDeDerechosContenedoraComponent } from '../../components/pago-de-der
 import { SolicitanteComponent } from '@ng-mf/data-access-user';
 import { Subject } from 'rxjs';
 import { TercerosRelacionadosContenedoraComponent } from '../../components/terceros-relacionados-contenedora/terceros-relacionados-contenedora.component';
-import { Tramite240101Query } from '../../estados/tramite240111Query.query';
-import { Tramite240101Store } from '../../estados/tramite240111Store.store';
+import { Tramite240101Query } from '../../estados/tramite240105Query.query';
+import { Tramite240101Store } from '../../estados/tramite240105Store.store';
 import { takeUntil } from 'rxjs';
 
 /**

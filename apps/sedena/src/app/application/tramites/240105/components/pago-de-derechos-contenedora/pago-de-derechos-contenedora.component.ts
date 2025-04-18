@@ -6,8 +6,8 @@ import { OnInit } from '@angular/core';
 import { PagoDeDerechosComponent } from '../../../../shared/components/pago-de-derechos/pago-de-derechos.component';
 import { PagoDerechosFormState } from '../../../../shared/models/pago-de-derechos.model';
 import { Subject } from 'rxjs';
-import { Tramite240101Query } from '../../estados/tramite240111Query.query';
-import { Tramite240101Store } from '../../estados/tramite240111Store.store';
+import { Tramite240101Query } from '../../estados/tramite240105Query.query';
+import { Tramite240101Store } from '../../estados/tramite240105Store.store';
 import { takeUntil } from 'rxjs';
 
 /**
