@@ -15,6 +15,15 @@ const ROUTES: Routes = [
         './tramites/240101/permiso-ordinario-importacion-armas-municiones.module'
       ).then((m) => m.PermisoOrdinarioImportacionArmasMunicionesModule),
   },
+  {
+    path: 'permiso-extraordinario-importacion-armamento-fisicas-morales',
+    loadChildren: () =>
+      import(
+        './tramites/240102/permiso-extraordinario-importacion-armamento-fisicas-morales.module'
+      ).then(
+        (m) => m.PermisoExtraordinarioImportacionArmamentoFisicasMoralesModule
+      ),
+  },
 ];
 
 @NgModule({
