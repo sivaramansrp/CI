@@ -385,8 +385,6 @@ const ROUTES: Routes = [
       (m) => m.ImportacionDeInsumosModule
     ),
 },
-<<<<<<< HEAD
-=======
 {
     path: 'enmienda-permiso-sanitario',
     loadChildren: () =>
@@ -395,7 +393,6 @@ const ROUTES: Routes = [
       ),
   },
 
->>>>>>> dbf0f1ae531287b91d4fcb7cb3dfe40309a6fe5b
 ];
 
 @NgModule({
