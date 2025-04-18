@@ -3,10 +3,10 @@ import { AvisoComponent } from './aviso.component';
 import { ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { Subject, of } from 'rxjs';
-import { Tramite32503Store } from '../../../../estados/tramites/tramite32503.store';
-import { Tramite32503Query } from '../../../../estados/queries/tramite32503.query';
+import { Tramite32506Store } from '../../estados/tramite32506.store';
+import { Tramite32506Query } from '../../estados/tramite32506.query';
 import { Modal } from 'bootstrap';
-import { AvisoTabla, MercanciaTabla } from "../../models/aviso-destruccion.model";
+import { AvisoTabla, PedimentoTabla } from "../../models/aviso-destruccion.model";
 import { provideHttpClient } from '@angular/common/http';
 
 
@@ -17,7 +17,7 @@ describe('AvisoComponent', () => {
   let tramiteStoreMock: any;
   let tramiteQueryMock: any;
   let tablaDeDatos: AvisoTabla[];
-  let tablaDeMercancia: MercanciaTabla[];
+  let tablaDeMercancia: PedimentoTabla[];
 
 
   beforeEach(async () => {
@@ -39,54 +39,31 @@ describe('AvisoComponent', () => {
     tablaDeDatos = [
       {
         "id": 1,
-        "rfc": "XAXX010101000",
         "nombreComercial": "NOMBRE COMERCIAL",
         "entidadFederativa": "ENTIDAD FEDERATIVA",
         "alcaldioOMuncipio": "ALCALDIA O MUNICIPIO",
-        "colonia": "COLONIA"
-      },
-      {
-        "id": 1,
-        "rfc": "XAXX010101000",
-        "nombreComercial": "NOMBRE COMERCIAL",
-        "entidadFederativa": "ENTIDAD FEDERATIVA",
-        "alcaldioOMuncipio": "ALCALDIA O MUNICIPIO",
-        "colonia": "COLONIA"
+        "colonia": "COLONIA",
+        "horaDestruccion": "00:00",
+        "fechaDestruccion": "2023-10-01"
       }
     ];
     tablaDeMercancia = [
       {
         "id": 1,
-        "claveFraccionArancelaria": "certificado",
-        "nico": "01",
-        "cantidad": "50",
-        "claveUnidadMedida": "Botella",
-        "valorUSD": "2555",
-        "descripcionMercancia": "certificado",
-        "descripcionProceso": "certificado",
-        "numPedimentoExportacion": "certificado",
-        "numPedimentoImportacion": "certificado"
-      },
-      {
-        "id": 1,
-        "claveFraccionArancelaria": "certificado",
-        "nico": "01",
-        "cantidad": "50",
-        "claveUnidadMedida": "Botella",
-        "valorUSD": "2555",
-        "descripcionMercancia": "certificado",
-        "descripcionProceso": "certificado",
-        "numPedimentoExportacion": "certificado",
-        "numPedimentoImportacion": "certificado"
+        "patenteAutorizacion": "2452",
+        "pedimento": "5254782",
+        "claveAduanaPedimento": "ALTAMIRA",
+        "claveFraccionArancelariaPedimento": "certificado",
+        "nicoPedimento": "02",
+        "cantidadPedimento": "25",
+        "claveUnidadMedidaPedimento": "Litro"
       }
     ]
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule, AvisoComponent],
+      imports: [ReactiveFormsModule,AvisoComponent],
       declarations: [],
       providers: [
-        provideHttpClient(),
-        { provide: Tramite32503Store, useValue: tramiteStoreMock },
-        { provide: Tramite32503Query, useValue: tramiteQueryMock },
+        provideHttpClient(), Tramite32506Store, Tramite32506Query,
         FormBuilder,
       ],
     }).compileComponents();
@@ -143,10 +120,10 @@ describe('AvisoComponent', () => {
   });
 
   it('should open the mercancia modal when abiertoMercancia is called', () => {
-    const modalElement = fixture.debugElement.nativeElement.querySelector('#modalMercancia');
-    component.modalMercancia = { nativeElement: modalElement };
+    const modalElement = fixture.debugElement.nativeElement.querySelector('#modalPedimento');
+    component.modalPedimento = { nativeElement: modalElement };
     const modalInstanceSpy = jest.spyOn(Modal.prototype, 'show');
-    component.abiertoMercancia();
+    component.abiertoPedimento();
     expect(modalInstanceSpy).toHaveBeenCalled();
   });
 
@@ -159,11 +136,11 @@ describe('AvisoComponent', () => {
   });
 
   it('should filter out selected rows when eliminarMercancia is called', () => {
-    component.tablaDeMercancia.datos = tablaDeMercancia
-    component.filaSeleccionadaMercanciaLista = [tablaDeMercancia[1]];
-    component.eliminarMercancia();
-    expect(component.tablaDeMercancia.datos).toEqual([tablaDeMercancia[0]]);
-    expect(component.filaSeleccionadaMercanciaLista).toEqual([]);
+    component.tablaPedimento.datos = tablaDeMercancia
+    component.filaSeleccionadaPedimentoLista = [tablaDeMercancia[1]];
+    component.eliminarPedimento();
+    expect(component.tablaPedimento.datos).toEqual([tablaDeMercancia[0]]);
+    expect(component.filaSeleccionadaPedimentoLista).toEqual([]);
   });
 
   it('should call setAvisoFormularioFechaTranslado when cambioFechaIngreso is called', () => {

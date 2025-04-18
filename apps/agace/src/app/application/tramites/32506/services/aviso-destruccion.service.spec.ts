@@ -1,19 +1,19 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { AvisoTrasladoService } from './aviso-traslado.service';
-import { CatalogoLista, AvisoTablaDatos, MercanciaTablaDatos, DatosSolicitante } from '../models/aviso-destruccion.model';
+import { AvisoDestruccionService } from './aviso-destruccion.service';
+import { CatalogoLista, AvisoTablaDatos, PedimentoTablaDatos, DatosSolicitante } from '../models/aviso-destruccion.model';
 
 describe('AvisoTrasladoService', () => {
-    let service: AvisoTrasladoService;
+    let service: AvisoDestruccionService;
     let httpMock: HttpTestingController;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [HttpClientTestingModule],
-            providers: [AvisoTrasladoService],
+            providers: [AvisoDestruccionService],
         });
 
-        service = TestBed.inject(AvisoTrasladoService);
+        service = TestBed.inject(AvisoDestruccionService);
         httpMock = TestBed.inject(HttpTestingController);
     });
 
@@ -24,7 +24,7 @@ describe('AvisoTrasladoService', () => {
     it('debería crearse el servicio', () => {
         expect(service).toBeTruthy();
     });
-    
+
 
     it('debería obtener los datos del solicitante', () => {
         const mockResponse: DatosSolicitante = {
@@ -43,14 +43,17 @@ describe('AvisoTrasladoService', () => {
             "nInt": "",
             "lada": "",
             "telefono": "",
-            "adace": "Occidente"
+            "adace": "Occidente",
+            "horaDestruccion": "10:00",
+            "fechaDestruccion": "2023-10-10"
+
         };
 
         service.obtenerDatosSolicitante().subscribe((response) => {
             expect(response).toEqual(mockResponse);
         });
 
-        const req = httpMock.expectOne('assets/json/32503/datosSolicitante.json');
+        const req = httpMock.expectOne('assets/json/32506/datosSolicitante.json');
         expect(req.request.method).toBe('GET');
         req.flush(mockResponse);
     });
@@ -62,7 +65,7 @@ describe('AvisoTrasladoService', () => {
             expect(response).toEqual(mockResponse);
         });
 
-        const req = httpMock.expectOne('assets/json/32503/entidad-federativa.json');
+        const req = httpMock.expectOne('assets/json/32506/entidad-federativa.json');
         expect(req.request.method).toBe('GET');
         req.flush(mockResponse);
     });
@@ -74,7 +77,7 @@ describe('AvisoTrasladoService', () => {
             expect(response).toEqual(mockResponse);
         });
 
-        const req = httpMock.expectOne('assets/json/32503/entidad-federativa.json');
+        const req = httpMock.expectOne('assets/json/32506/entidad-federativa.json');
         expect(req.request.method).toBe('GET');
         req.flush(mockResponse);
     });
@@ -86,7 +89,7 @@ describe('AvisoTrasladoService', () => {
             expect(response).toEqual(mockResponse);
         });
 
-        const req = httpMock.expectOne('assets/json/32503/entidad-federativa.json');
+        const req = httpMock.expectOne('assets/json/32506/entidad-federativa.json');
         expect(req.request.method).toBe('GET');
         req.flush(mockResponse);
     });
@@ -95,11 +98,12 @@ describe('AvisoTrasladoService', () => {
         const mockResponse: AvisoTablaDatos = {
             datos: [{
                 "id": 1,
-                "rfc": "XAXX010101000",
                 "nombreComercial": "NOMBRE COMERCIAL",
                 "entidadFederativa": "ENTIDAD FEDERATIVA",
                 "alcaldioOMuncipio": "ALCALDIA O MUNICIPIO",
-                "colonia": "COLONIA"
+                "colonia": "COLONIA",
+                "horaDestruccion": "",
+                "fechaDestruccion": "",
             },]
         };
 
@@ -107,32 +111,30 @@ describe('AvisoTrasladoService', () => {
             expect(response).toEqual(mockResponse);
         });
 
-        const req = httpMock.expectOne('assets/json/32503/aviso-tabla.json');
+        const req = httpMock.expectOne('assets/json/32506/aviso-tabla.json');
         expect(req.request.method).toBe('GET');
         req.flush(mockResponse);
     });
 
     it('debería obtener los datos de la tabla de mercancías', () => {
-        const mockResponse: MercanciaTablaDatos = {
+        const mockResponse: PedimentoTablaDatos = {
             datos: [{
-                "id": 1,
-                "claveFraccionArancelaria": "certificado",
-                "nico": "01",
-                "cantidad": "50",
-                "claveUnidadMedida": "Botella",
-                "valorUSD": "2555",
-                "descripcionMercancia": "certificado",
-                "descripcionProceso": "certificado",
-                "numPedimentoExportacion": "certificado",
-                "numPedimentoImportacion": "certificado"
+                id: 1,
+                patenteAutorizacion: "",
+                pedimento: "",
+                claveAduanaPedimento: "",
+                claveFraccionArancelariaPedimento: "",
+                claveUnidadMedidaPedimento: "",
+                cantidadPedimento: "",
+                nicoPedimento: "",
             }]
         };
 
-        service.obtenerMercanciaTabla().subscribe((response) => {
+        service.obtenerPedimentoTabla().subscribe((response) => {
             expect(response).toEqual(mockResponse);
         });
 
-        const req = httpMock.expectOne('assets/json/32503/mercancia-tabla.json');
+        const req = httpMock.expectOne('assets/json/32506/pedimento-tabla.json');
         expect(req.request.method).toBe('GET');
         req.flush(mockResponse);
     });
@@ -144,7 +146,7 @@ describe('AvisoTrasladoService', () => {
             expect(response).toEqual(mockResponse);
         });
 
-        const req = httpMock.expectOne('assets/json/32503/entidad-federativa.json');
+        const req = httpMock.expectOne('assets/json/32506/entidad-federativa.json');
         expect(req.request.method).toBe('GET');
         req.flush(mockResponse);
     });
@@ -156,7 +158,7 @@ describe('AvisoTrasladoService', () => {
             expect(response).toEqual(mockResponse);
         });
 
-        const req = httpMock.expectOne('assets/json/32503/entidad-federativa.json');
+        const req = httpMock.expectOne('assets/json/32506/entidad-federativa.json');
         expect(req.request.method).toBe('GET');
         req.flush(mockResponse);
     });

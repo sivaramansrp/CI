@@ -3,33 +3,72 @@ import { Injectable } from '@angular/core';
 import { Store } from '@datorama/akita';
 import { StoreConfig } from '@datorama/akita';
 
+
 /**
- * @interface Tramite32506State
- * @description Representa el estado de la gestión del trámite 32506.
- *
- * @property {number} pasoActivo - Indica el paso activo en el flujo del trámite.
- * @property {number} pestanaActiva - Indica la pestaña activa en la interfaz del trámite.
- * @property {DatosSolicitante} datosSolicitante - Contiene los datos del solicitante.
- * @property {PedimentoFormulario} pedimentoFormulario - Contiene los datos del formulario de pedimento.
- * @property {DomicilioFormulario} domicilioFormulario - Contiene los datos del formulario de domicilio.
- * @property {AvisoFormulario} avisoFormulario - Contiene los datos del formulario de aviso.
- * @property {TipoDocumento[]} tipoTablaDatos - Lista de tipos de documentos disponibles.
- * @property {string} tipoDocumento - Tipo de documento seleccionado.
- * @property {ArchivoDocumentos[]} documentosDesplegable - Lista de documentos disponibles en el desplegable.
- * @property {string[]} valorSeleccionado - Valores seleccionados en el formulario.
+ * Interfaz que define el estado del trámite 32506.
+ * 
+ * Esta interfaz contiene todas las propiedades necesarias para manejar el estado del trámite,
+ * incluyendo datos del solicitante, formularios relacionados, y otros datos relevantes.
  */
 export interface Tramite32506State {
+  /**
+   * Paso activo del trámite.
+   */
   pasoActivo: number;
+
+  /**
+   * Pestaña activa del trámite.
+   */
   pestanaActiva: number;
+
+  /**
+   * Datos del solicitante.
+   */
   datosSolicitante: DatosSolicitante;
+
+  /**
+   * Información del formulario de domicilio.
+   */
   domicilioFormulario: DomicilioFormulario;
+
+  /**
+   * Información del formulario de aviso.
+   */
   avisoFormulario: AvisoFormulario;
+
+  /**
+   * Información del formulario de proceso.
+   */
   procesoFormulario: ProcesoFormulario;
+
+  /**
+   * Información del formulario de desperdicio.
+   */
   desperdicioFormulario: DesperdicioFormulario;
+
+  /**
+   * Información del formulario de pedimento.
+   */
   pedimentoFormulario: PedimentoFormulario;
+
+  /**
+   * Datos de la tabla de tipos de documentos.
+   */
   tipoTablaDatos: TipoDocumento[];
+
+  /**
+   * Tipo de documento seleccionado.
+   */
   tipoDocumento: string;
+
+  /**
+   * Lista de documentos desplegables.
+   */
   documentosDesplegable: ArchivoDocumentos[];
+
+  /**
+   * Lista de valores seleccionados.
+   */
   valorSeleccionado: string[];
 }
 /**
@@ -548,102 +587,173 @@ export class Tramite32506Store extends Store<Tramite32506State> {
     }));
   }
 
+  /**
+   * Actualiza la descripción del proceso de destrucción en el formulario de proceso.
+   * 
+   * @param {string} descripcionProceso - La descripción del proceso de destrucción.
+   */
   public setDescripcionProcesoDestruccion(descripcionProceso: string): void {
     this.update((state) => ({
       ...state,
       procesoFormulario: { ...state.procesoFormulario, descripcionProceso },
-    }))
+    }));
   }
 
   
+  /**
+   * Actualiza la descripción del desperdicio en el formulario de desperdicio.
+   * 
+   * @param {string} descripcionDesperdicio - La descripción del desperdicio.
+   */
   public setDescripcionDesperdicio(descripcionDesperdicio: string): void {
     this.update((state) => ({
       ...state,
       desperdicioFormulario: { ...state.desperdicioFormulario, descripcionDesperdicio },
-    }))
+    }));
   }
 
+  /**
+   * Actualiza la cantidad de desperdicio en el formulario de desperdicio.
+   * 
+   * @param {string} cantidadDesp - La cantidad de desperdicio.
+   */
   public setCantidadDesp(cantidadDesp: string): void {
     this.update((state) => ({
       ...state,
       desperdicioFormulario: { ...state.desperdicioFormulario, cantidadDesp },
-    }))
+    }));
   }
-  
+
+  /**
+   * Actualiza la clave de unidad de medida del desperdicio en el formulario de desperdicio.
+   * 
+   * @param {string} claveUnidadMedidaDesp - La clave de unidad de medida del desperdicio.
+   */
   public setClaveUnidadMedidaDesp(claveUnidadMedidaDesp: string): void {
     this.update((state) => ({
       ...state,
       desperdicioFormulario: { ...state.desperdicioFormulario, claveUnidadMedidaDesp },
-    }))
+    }));
   }
 
+  /**
+   * Actualiza el porcentaje en el formulario de desperdicio.
+   * 
+   * @param {string} porcentaje - El porcentaje.
+   */
   public setPorcentaje(porcentaje: string): void {
     this.update((state) => ({
       ...state,
       desperdicioFormulario: { ...state.desperdicioFormulario, porcentaje },
-    }))
+    }));
   }
 
+  /**
+   * Actualiza la descripción de la mercancía en el formulario de desperdicio.
+   * 
+   * @param {string} descripcionMercancia - La descripción de la mercancía.
+   */
   public setDescripcionMercancia(descripcionMercancia: string): void {
     this.update((state) => ({
       ...state,
       desperdicioFormulario: { ...state.desperdicioFormulario, descripcionMercancia },
-    }))
+    }));
   }
+
+  /**
+   * Actualiza la circunstancia de los hechos en el formulario de desperdicio.
+   * 
+   * @param {string} circunstanciaHechos - La circunstancia de los hechos.
+   */
   public setCircunstanciaHechos(circunstanciaHechos: string): void {
     this.update((state) => ({
       ...state,
       desperdicioFormulario: { ...state.desperdicioFormulario, circunstanciaHechos },
-    }))
+    }));
   }
 
+  /**
+   * Actualiza la patente de autorización en el formulario de pedimento.
+   * 
+   * @param {string} patenteAutorizacion - La patente de autorización.
+   */
   public setPatenteAutorizacion(patenteAutorizacion: string): void {
     this.update((state) => ({
       ...state,
       pedimentoFormulario: { ...state.pedimentoFormulario, patenteAutorizacion },
-    }))
+    }));
   }
 
+  /**
+   * Actualiza el pedimento en el formulario de pedimento.
+   * 
+   * @param {string} pedimento - El pedimento.
+   */
   public setPedimento(pedimento: string): void {
     this.update((state) => ({
       ...state,
       pedimentoFormulario: { ...state.pedimentoFormulario, pedimento },
-    }))
+    }));
   }
 
+  /**
+   * Actualiza la clave de aduana del pedimento en el formulario de pedimento.
+   * 
+   * @param {string} claveAduanaPedimento - La clave de aduana del pedimento.
+   */
   public setClaveAduanaPedimento(claveAduanaPedimento: string): void {
     this.update((state) => ({
       ...state,
       pedimentoFormulario: { ...state.pedimentoFormulario, claveAduanaPedimento },
-    }))
+    }));
   }
 
+  /**
+   * Actualiza la clave de fracción arancelaria del pedimento en el formulario de pedimento.
+   * 
+   * @param {string} claveFraccionArancelariaPedimento - La clave de fracción arancelaria del pedimento.
+   */
   public setClaveFraccionArancelariaPedimento(claveFraccionArancelariaPedimento: string): void {
     this.update((state) => ({
       ...state,
       pedimentoFormulario: { ...state.pedimentoFormulario, claveFraccionArancelariaPedimento },
-    }))
+    }));
   }
 
+  /**
+   * Actualiza el NICO del pedimento en el formulario de pedimento.
+   * 
+   * @param {string} nicoPedimento - El NICO del pedimento.
+   */
   public setNicoPedimento(nicoPedimento: string): void {
     this.update((state) => ({
       ...state,
       pedimentoFormulario: { ...state.pedimentoFormulario, nicoPedimento },
-    }))
+    }));
   }
 
+  /**
+   * Actualiza la cantidad del pedimento en el formulario de pedimento.
+   * 
+   * @param {string} cantidadPedimento - La cantidad del pedimento.
+   */
   public setCantidadPedimento(cantidadPedimento: string): void {
     this.update((state) => ({
       ...state,
       pedimentoFormulario: { ...state.pedimentoFormulario, cantidadPedimento },
-    }))
+    }));
   }
 
+  /**
+   * Actualiza la clave de unidad de medida del pedimento en el formulario de pedimento.
+   * 
+   * @param {string} claveUnidadMedidaPedimento - La clave de unidad de medida del pedimento.
+   */
   public setClaveUnidadMedidaPedimento(claveUnidadMedidaPedimento: string): void {
     this.update((state) => ({
       ...state,
       pedimentoFormulario: { ...state.pedimentoFormulario, claveUnidadMedidaPedimento },
-    }))
+    }));
   }
 
 }

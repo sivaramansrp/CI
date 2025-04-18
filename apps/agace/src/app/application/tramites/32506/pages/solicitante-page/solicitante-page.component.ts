@@ -5,9 +5,9 @@ import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS } from '../../constants/aviso-destruccion.enum';
 import { Subject } from 'rxjs';
 import { TEXTOS } from '../../constants/aviso-destruccion.enum';
-import { Tramite32503Query } from '../../../../estados/queries/tramite32503.query';
-import { Tramite32503State } from '../../../../estados/tramites/tramite32503.store';
-import { Tramite32503Store } from '../../../../estados/tramites/tramite32503.store';
+import { Tramite32506Query } from '../../estados/tramite32506.query';
+import { Tramite32506State } from '../../estados/tramite32506.store';
+import { Tramite32506Store } from '../../estados/tramite32506.store';
 import { WizardComponent } from '@ng-mf/data-access-user';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
@@ -73,7 +73,7 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
    * 
    * Esta propiedad almacena el estado del trámite obtenido desde el store.
    */
-  public tramiteState!: Tramite32503State;
+  public tramiteState!: Tramite32506State;
 
   /**
    * Referencia al componente `WizardComponent`.
@@ -99,12 +99,12 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
   /**
    * Constructor del componente.
    * 
-   * @param {Tramite32503Store} store - Store para gestionar el estado del trámite.
-   * @param {Tramite32503Query} tramiteQuery - Query para obtener el estado del trámite.
+   * @param {Tramite32506Store} store - Store para gestionar el estado del trámite.
+   * @param {Tramite32506Query} tramiteQuery - Query para obtener el estado del trámite.
    */
   constructor(
-    public store: Tramite32503Store,
-    public tramiteQuery: Tramite32503Query
+    public store: Tramite32506Store,
+    public tramiteQuery: Tramite32506Query
   ) {
     // El constructor se utiliza para la inyección de dependencias.
   }

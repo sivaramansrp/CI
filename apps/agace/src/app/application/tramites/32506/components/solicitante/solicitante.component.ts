@@ -3,9 +3,9 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angul
 import { Subject, map, takeUntil } from 'rxjs';
 import { AvisoDestruccionService } from '../../services/aviso-destruccion.service';
 import { TituloComponent } from '@ng-mf/data-access-user';
-import { Tramite32503Query } from '../../../../estados/queries/tramite32503.query';
-import { Tramite32503State } from '../../../../estados/tramites/tramite32503.store';
-import { Tramite32503Store } from '../../../../estados/tramites/tramite32503.store';
+import { Tramite32506Query } from '../../estados/tramite32506.query';
+import { Tramite32506State } from '../../estados/tramite32506.store';
+import { Tramite32506Store } from '../../estados/tramite32506.store';
 
 /**
  * Componente para gestionar el formulario del solicitante.
@@ -32,11 +32,11 @@ export class SolicitanteComponent implements OnInit, OnDestroy {
   public destroyNotifier$: Subject<void> = new Subject();
 
   /**
-   * Estado actual del trámite 32503.
+   * Estado actual del trámite 32506.
    * 
    * Contiene toda la información relacionada con el estado del trámite.
    */
-  public tramiteState!: Tramite32503State;
+  public tramiteState!: Tramite32506State;
 
   /**
    * Evento para emitir cuando se desea continuar al siguiente paso.
@@ -47,14 +47,14 @@ export class SolicitanteComponent implements OnInit, OnDestroy {
    * Constructor del componente.
    * 
    * @param {FormBuilder} fb - Servicio para construir formularios reactivos.
-   * @param {Tramite32503Store} store - Store para gestionar el estado del trámite.
-   * @param {Tramite32503Query} tramiteQuery - Query para obtener el estado del trámite.
+   * @param {Tramite32506Store} store - Store para gestionar el estado del trámite.
+   * @param {Tramite32506Query} tramiteQuery - Query para obtener el estado del trámite.
    * @param {AvisoDestruccionService} avisoDestruccionService - Servicio para obtener datos relacionados con el solicitante.
    */
   constructor(
     public fb: FormBuilder,
-    public store: Tramite32503Store,
-    public tramiteQuery: Tramite32503Query,
+    public store: Tramite32506Store,
+    public tramiteQuery: Tramite32506Query,
     public avisoDestruccionService: AvisoDestruccionService
   ) { 
     // El constructor se utiliza para la inyección de dependencias.

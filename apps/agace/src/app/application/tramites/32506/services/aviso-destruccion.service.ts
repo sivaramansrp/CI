@@ -29,18 +29,27 @@ export class AvisoDestruccionService {
     return this.http.get<DatosSolicitante>(`assets/json/32506/datosSolicitante.json`);
   }
   /**
-   * Obtiene los datos de la tabla de mercancías.
+   * Obtiene los datos de la tabla de Pedimento.
    * 
-   * @returns {Observable<MercanciaTablaDatos>} Un observable con los datos de la tabla de mercancías.
+   * @returns {Observable<PedimentoTablaDatos>} Un observable con los datos de la tabla de Pedimento.
    */
   obtenerPedimentoTabla(): Observable<PedimentoTablaDatos> {
     return this.http.get<PedimentoTablaDatos>(`assets/json/32506/pedimento-tabla.json`);
   }
 
+  /**
+   * Obtiene los datos de la tabla de procesos.
+   * 
+   * @returns {Observable<ProcesoTablaDatos>} Un observable con los datos de la tabla de procesos.
+   */
   obtenerProcesoTabla(): Observable<ProcesoTablaDatos> {
     return this.http.get<ProcesoTablaDatos>(`assets/json/32506/proceso-tabla.json`);
   }
 
+  /**
+   * @descripcion Obtiene los datos de la tabla de desperdicio desde un archivo JSON local.
+   * @retorno Un observable que emite los datos de la tabla de desperdicio (`DesperdicioTablaDatos`).
+   */
   obtenerDesperdicioTabla(): Observable<DesperdicioTablaDatos> {
     return this.http.get<DesperdicioTablaDatos>(`assets/json/32506/desperdicio-tabla.json`);
   }

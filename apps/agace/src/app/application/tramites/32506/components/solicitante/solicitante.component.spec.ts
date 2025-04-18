@@ -2,9 +2,9 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SolicitanteComponent } from './solicitante.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { of, Subject } from 'rxjs';
-import { Tramite32503Query } from '../../../../estados/queries/tramite32503.query';
-import { Tramite32503Store } from '../../../../estados/tramites/tramite32503.store';
-import { AvisoTrasladoService } from '../../services/aviso-traslado.service';
+import { Tramite32506Query } from '../../estados/tramite32506.query';
+import { Tramite32506Store } from '../../estados/tramite32506.store';
+import { AvisoDestruccionService } from '../../services/aviso-destruccion.service';
 
 describe('SolicitanteComponent', () => {
   let component: SolicitanteComponent;
@@ -68,9 +68,9 @@ describe('SolicitanteComponent', () => {
       imports: [ReactiveFormsModule,SolicitanteComponent],
       declarations: [],
       providers: [
-        { provide: Tramite32503Query, useValue: tramiteQueryMock },
-        { provide: Tramite32503Store, useValue: tramiteStoreMock },
-        { provide: AvisoTrasladoService, useValue: avisoTrasladoServiceMock },
+        { provide: Tramite32506Query, useValue: tramiteQueryMock },
+        { provide: Tramite32506Store, useValue: tramiteStoreMock },
+        { provide: AvisoDestruccionService, useValue: avisoTrasladoServiceMock },
       ],
     }).compileComponents();
 

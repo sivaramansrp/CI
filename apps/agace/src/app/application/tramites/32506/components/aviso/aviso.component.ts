@@ -62,8 +62,16 @@ export class AvisoComponent implements OnInit, OnDestroy {
   */
   avisoFormulario!: FormGroup;
 
+  /**
+   * @property {FormGroup} procesoFormulario
+   * @description Formulario reactivo que contiene los datos del aviso en el trámite.
+  */
   procesoFormulario!: FormGroup;
 
+  /**
+     * @property {FormGroup} desperdicioFormulario
+     * @description Formulario reactivo que contiene los datos del aviso en el trámite.
+    */
   desperdicioFormulario!: FormGroup;
   /**
    * @property {Subject<void>} destroyNotifier$
@@ -167,23 +175,61 @@ export class AvisoComponent implements OnInit, OnDestroy {
   */
   @ViewChild('closeDomicilio') public closeDomicilio!: ElementRef;
 
+  /**
+   * @property {ElementRef} modalProceso
+   * @description Referencia al elemento del modal de domicilio en la plantilla HTML.
+   * Utilizado para abrir o manipular el modal de Proceso.
+  */
+
   @ViewChild('modalProceso') modalProceso!: ElementRef;
 
+  /**
+   * @property {ElementRef} closeProceso
+   * @description Referencia al botón o elemento que cierra el modal de Proceso.
+   * Utilizado para cerrar el modal de manera programática.
+  */
   @ViewChild('closeProceso') public closeProceso!: ElementRef;
+
+  /**
+   * @property {ElementRef} modalDesperdicio
+   * @description Referencia al elemento del modal de domicilio en la plantilla HTML.
+   * Utilizado para abrir o manipular el modal de Desperdicio.
+  */
 
   @ViewChild('modalDesperdicio') modalDesperdicio!: ElementRef;
 
+  /**
+   * @property {ElementRef} closeDesperdicio
+   * @description Referencia al botón o elemento que cierra el modal de Desperdicio.
+   * Utilizado para cerrar el modal de manera programática.
+  */
   @ViewChild('closeDesperdicio') public closeDesperdicio!: ElementRef;
+
+  /**
+   * @property {ElementRef} modalPedimento
+   * @description Referencia al elemento del modal de domicilio en la plantilla HTML.
+   * Utilizado para abrir o manipular el modal de Pedimento.
+  */
 
   @ViewChild('modalPedimento') modalPedimento!: ElementRef;
 
+ /**
+   * @property {ElementRef} closePedimento
+   * @description Referencia al botón o elemento que cierra el modal de Pedimento.
+   * Utilizado para cerrar el modal de manera programática.
+  */
   @ViewChild('closePedimento') public closePedimento!: ElementRef;
 
 
+  /**
+   * @property {FormGroup} domicilioFormulario
+   * @description Formulario reactivo que contiene los datos relacionados con el domicilio.
+   * Este formulario incluye campos como nombre comercial, entidad federativa, municipio, colonia, calle, número exterior, número interior, código postal, RFC, hora y fecha de destrucción.
+   */
   domicilioFormulario!: FormGroup;
   /**
    * @property {object} tablaPedimento
-   * @description Configuración de la tabla de mercancías utilizada en el componente.
+   * @description Configuración de la tabla de Pedimento utilizada en el componente.
    * Contiene las definiciones de las columnas (encabezados) y los datos que se mostrarán en la tabla.
    */
   tablaPedimento: {
@@ -233,7 +279,11 @@ export class AvisoComponent implements OnInit, OnDestroy {
       ],
       datos: []
     };
-
+/**
+   * @property {object} tablaProceso
+   * @description Configuración de la tabla de Proceso utilizada en el componente.
+   * Contiene las definiciones de las columnas (encabezados) y los datos que se mostrarán en la tabla.
+   */
   tablaProceso: {
     encabezadas: {
       encabezado: string,
@@ -247,7 +297,11 @@ export class AvisoComponent implements OnInit, OnDestroy {
       ],
       datos: []
     };
-
+/**
+   * @property {object} tablaDesperdicio
+   * @description Configuración de la tabla de Desperdicio utilizada en el componente.
+   * Contiene las definiciones de las columnas (encabezados) y los datos que se mostrarán en la tabla.
+   */
   tablaDesperdicio: {
     encabezadas: {
       encabezado: string,
@@ -263,18 +317,28 @@ export class AvisoComponent implements OnInit, OnDestroy {
     };
 
   /**
-   * @property {MercanciaTabla[]} filaSeleccionadaMercanciaLista
-   * @description Lista de filas seleccionadas en la tabla de mercancías.
-   * Contiene los datos de las filas seleccionadas por el usuario en la tabla de mercancías.
+   * @property {PedimentoTabla[]} filaSeleccionadaPedimentoLista
+   * @description Lista de filas seleccionadas en la tabla de Pedimento.
+   * Contiene los datos de las filas seleccionadas por el usuario en la tabla de Pedimento.
    */
   filaSeleccionadaPedimentoLista: PedimentoTabla[] = [];
 
+  /**
+   * @property {ProcesoTabla[]} filaSeleccionadaProcesoLista
+   * @description Lista de filas seleccionadas en la tabla de Pedimento.
+   * Contiene los datos de las filas seleccionadas por el usuario en la tabla de Pedimento.
+   */
   filaSeleccionadaProcesoLista: ProcesoTabla[] = [];
+  /**
+   * @property {DesperdicioTabla[]} filaSeleccionadaDesperdicioLista
+   * @description Lista de filas seleccionadas en la tabla de Desperdicio.
+   * Contiene los datos de las filas seleccionadas por el usuario en la tabla de Desperdicio.
+   */
 
   filaSeleccionadaDesperdicioLista: DesperdicioTabla[] = [];
   /**
    * @property {FormGroup} pedimentoFormulario
-   * @description Formulario reactivo que contiene los datos relacionados con la mercancía.
+   * @description Formulario reactivo que contiene los datos relacionados con la pedimento.
    */
   pedimentoFormulario!: FormGroup;
   /**
@@ -470,6 +534,19 @@ export class AvisoComponent implements OnInit, OnDestroy {
   }
 
 
+  /**
+   * Carga los datos del proceso en la tabla utilizando el servicio `avisoDestruccionService`.
+   * 
+   * Este método realiza una solicitud para obtener los datos del proceso y los asigna
+   * a la propiedad `datos` de `tablaProceso`. Utiliza `takeUntil` para gestionar la
+   * suscripción y evitar fugas de memoria.
+   * 
+   * @remarks
+   * Este método depende de `avisoDestruccionService` para obtener los datos y de
+   * `destroyNotifier$` para manejar la finalización de la suscripción.
+   * 
+   * @returns {void} No retorna ningún valor.
+   */
   public cargarProcesoTabla(): void {
     this.avisoDestruccionService
       .obtenerProcesoTabla()
@@ -481,6 +558,15 @@ export class AvisoComponent implements OnInit, OnDestroy {
       );
   }
 
+  /**
+   * @method cargarDesperdicioTabla
+   * @description Método para cargar los datos de la tabla de desperdicios desde el servicio `avisoDestruccionService`.
+   * 
+   * - Realiza una solicitud para obtener los datos de desperdicios y los asigna a la propiedad `tablaDesperdicio.datos`.
+   * - Utiliza `takeUntil` para gestionar la suscripción y evitar fugas de memoria.
+   *
+   * @returns {void}
+   */
   public cargarDesperdicioTabla(): void {
     this.avisoDestruccionService
       .obtenerDesperdicioTabla()
@@ -492,6 +578,23 @@ export class AvisoComponent implements OnInit, OnDestroy {
       );
   }
 
+  /**
+   * @method cargarPedimentoTabla
+   * @description Este método se encarga de cargar los datos de la tabla de pedimentos
+   * obtenidos desde el servicio `avisoDestruccionService` y asignarlos a la propiedad
+   * `datos` de la tabla de pedimentos.
+   * 
+   * @returns {void} No retorna ningún valor.
+   * 
+   * @example
+   * // Ejemplo de uso:
+   * this.cargarPedimentoTabla();
+   * 
+   * @remarks
+   * Este método utiliza el operador `takeUntil` para gestionar la suscripción y evitar
+   * fugas de memoria. Los datos obtenidos deben cumplir con la estructura definida en
+   * `PedimentoTablaDatos`.
+   */
   public cargarPedimentoTabla(): void {
     this.avisoDestruccionService
       .obtenerPedimentoTabla()
@@ -625,12 +728,30 @@ export class AvisoComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * @method inicializarProcesoFormulario
+   * @description Método para inicializar el formulario reactivo `procesoFormulario` con los datos del estado actual del trámite.
+   * 
+   * - Agrupa los campos relacionados con el proceso destructivo, como `descripcionProcesoDestruccion`.
+   * - Aplica validaciones específicas a cada campo, como campos obligatorios.
+   *
+   * @returns {void}
+   */
   inicializarProcesoFormulario(): void {
     this.procesoFormulario = this.fb.group({
       descripcionProcesoDestruccion: [this.tramiteState?.procesoFormulario?.descripcionProcesoDestruccion, Validators.required]
     });
   }
 
+  /**
+   * @method inicializarDesperdicioFormulario
+   * @description Método para inicializar el formulario reactivo `desperdicioFormulario` con los datos del estado actual del trámite.
+   * 
+   * - Agrupa los campos relacionados con los desperdicios, como `descripcionDesperdicio`, `cantidadDesp`, `claveUnidadMedidaDesp`, entre otros.
+   * - Aplica validaciones específicas a cada campo, como longitud máxima, patrones y campos obligatorios.
+   *
+   * @returns {void}
+   */
   inicializarDesperdicioFormulario(): void {
     this.desperdicioFormulario = this.fb.group({
       descripcionDesperdicio: [this.tramiteState?.desperdicioFormulario?.descripcionDesperdicio, Validators.required],
@@ -683,29 +804,41 @@ export class AvisoComponent implements OnInit, OnDestroy {
     this.filaSeleccionadaLista = evento;
   }
   /**
-   * @method filaSeleccionadaMercancia
-   * @description Método para manejar las filas seleccionadas en la tabla de mercancías.
+   * @method filaSeleccionadaPedimento
+   * @description Método para manejar las filas seleccionadas en la tabla de Pedimento.
    * 
-   * - Actualiza la propiedad `filaSeleccionadaMercanciaLista` con las filas seleccionadas.
+   * - Actualiza la propiedad `filaSeleccionadaPedimentoLista` con las filas seleccionadas.
    *
-   * @param {MercanciaTabla[]} evento - Lista de filas seleccionadas en la tabla de mercancías.
+   * @param {PedimentoTabla[]} evento - Lista de filas seleccionadas en la tabla de Pedimento.
    * @returns {void}
    */
   filaSeleccionadaPedimento(evento: PedimentoTabla[]): void {
     this.filaSeleccionadaPedimentoLista = evento;
   }
 
+  /**
+   * @method filaSeleccionaProceso
+   * @description Actualiza la lista de filas seleccionadas en el proceso basado en el evento proporcionado.
+   * @param {ProcesoTabla[]} evento - Lista de objetos `ProcesoTabla` que representan las filas seleccionadas.
+   * @returns {void} Este método no retorna ningún valor.
+   */
   filaSeleccionaProceso(evento: ProcesoTabla[]): void {
     this.filaSeleccionadaProcesoLista = evento;
   }
 
+  /**
+   * @description Maneja el evento de selección de filas en la tabla de desperdicios.
+   * Actualiza la lista de filas seleccionadas con los datos proporcionados.
+   * 
+   * @param evento - Arreglo de objetos de tipo `DesperdicioTabla` que representan las filas seleccionadas.
+   */
   filaSeleccionaDesperdicio(evento: DesperdicioTabla[]): void {
     this.filaSeleccionadaDesperdicioLista = evento;
   }
 
   /**
-   * @method eliminarMercancia
-   * @description Método para eliminar las filas seleccionadas de la tabla de mercancías.
+   * @method eliminarPedimento
+   * @description Método para eliminar las filas seleccionadas de la tabla de Pedimento.
    * 
    * - Filtra los datos de la tabla para excluir las filas seleccionadas.
    * - Limpia la lista de filas seleccionadas.
@@ -730,11 +863,29 @@ export class AvisoComponent implements OnInit, OnDestroy {
     this.filaSeleccionadaLista = [];
   }
 
+  /**
+   * @method eliminarProceso
+   * @description Método para eliminar las filas seleccionadas de la tabla de Proceso.
+   * 
+   * - Filtra los datos de la tabla para excluir las filas seleccionadas.
+   * - Limpia la lista de filas seleccionadas.
+   *
+   * @returns {void}
+   */
   eliminarProceso(): void {
     this.tablaProceso.datos = this.tablaProceso.datos.filter((ele) => !this.filaSeleccionadaProcesoLista.includes(ele));
     this.filaSeleccionadaProcesoLista = [];
   }
 
+  /**
+   * Elimina los elementos seleccionados de la tabla de desperdicios.
+   * 
+   * Este método filtra los datos de la tabla de desperdicio, eliminando
+   * aquellos elementos que están presentes en la lista de filas seleccionadas.
+   * Después de realizar la eliminación, la lista de filas seleccionadas se vacía.
+   * 
+   * @returns {void} No retorna ningún valor.
+   */
   eliminarDesperdicio(): void {
     this.tablaDesperdicio.datos = this.tablaDesperdicio.datos.filter((ele) => !this.filaSeleccionadaDesperdicioLista.includes(ele));
     this.filaSeleccionadaDesperdicioLista = [];
@@ -774,6 +925,14 @@ export class AvisoComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * @method abiertoProceso
+   * @description Método para abrir el modal de proceso.
+   * 
+   * - Utiliza la referencia al modal de proceso para mostrarlo en la interfaz.
+   *
+   * @returns {void}
+   */
   abiertoProceso(): void {
     if (this.modalProceso) {
       const MODAL_INSTANCE = new Modal(this.modalProceso.nativeElement);
@@ -781,6 +940,15 @@ export class AvisoComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * @description Abre un modal para mostrar información relacionada con desperdicios.
+   * Si el elemento `modalDesperdicio` está definido, se crea una instancia de `Modal`
+   * utilizando el elemento nativo y se muestra el modal.
+   *
+   * @method
+   * @memberof AvisoComponent
+   * @returns {void} No retorna ningún valor.
+   */
   abiertoDesperdicio(): void {
     if (this.modalDesperdicio) {
       const MODAL_INSTANCE = new Modal(this.modalDesperdicio.nativeElement);
@@ -789,10 +957,10 @@ export class AvisoComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * @method abiertoMercancia
-   * @description Método para abrir el modal de mercancía.
+   * @method abiertoPedimento
+   * @description Método para abrir el modal de pedimento.
    * 
-   * - Utiliza la referencia al modal de mercancía para mostrarlo en la interfaz.
+   * - Utiliza la referencia al modal de pedimento para mostrarlo en la interfaz.
    *
    * @returns {void}
    */
@@ -817,18 +985,52 @@ export class AvisoComponent implements OnInit, OnDestroy {
     this.abrirModal()
   }
 
+  /**
+   * Agrega un nuevo proceso a la tabla y gestiona el cierre del modal actual
+   * y la apertura de un nuevo modal.
+   *
+   * @remarks
+   * Este método realiza las siguientes acciones:
+   * 1. Llama al método `cargarProcesoTabla` para agregar el proceso a la tabla.
+   * 2. Simula un clic en el elemento `closeProceso` para cerrar el modal actual.
+   * 3. Llama al método `abrirModal` para abrir un nuevo modal.
+   *
+   * @returns {void} Este método no retorna ningún valor.
+   */
   agregarProceso(): void {
     this.cargarProcesoTabla();
     this.closeProceso.nativeElement.click();
     this.abrirModal();
   }
 
+  /**
+   * @method agregarDesperdicio
+   * @description Método para agregar desperdicios a la tabla de desperdicios.
+   * 
+   * - Llama al método `cargarDesperdicioTabla` para cargar los datos de desperdicios.
+   * - Cierra el modal de desperdicio utilizando la referencia `closeDesperdicio`.
+   * - Abre un modal de notificación para confirmar que el registro fue agregado correctamente.
+   *
+   * @returns {void}
+   */
   agregarDesperdicio(): void {
     this.cargarDesperdicioTabla();
     this.closeDesperdicio.nativeElement.click();
     this.abrirModal();
   }
 
+  /**
+   * Agrega un pedimento a la tabla y realiza las acciones necesarias para cerrar el modal actual
+   * y abrir un nuevo modal.
+   *
+   * @remarks
+   * Este método realiza las siguientes acciones:
+   * 1. Llama al método `cargarPedimentoTabla` para cargar el pedimento en la tabla.
+   * 2. Simula un clic en el elemento `closePedimento` para cerrar el modal actual.
+   * 3. Llama al método `abrirModal` para abrir un nuevo modal.
+   *
+   * @returns {void} Este método no retorna ningún valor.
+   */
   agregarPedimento(): void {
     this.cargarPedimentoTabla();
     this.closePedimento.nativeElement.click();

@@ -1,14 +1,13 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SolicitantePageComponent } from './solicitante-page.component';
 import { AlertComponent, BtnContinuarComponent, WizardComponent } from '@ng-mf/data-access-user';
-import { Tramite32503Store } from '../../../../estados/tramites/tramite32503.store';
-import { Tramite32503Query } from '../../../../estados/queries/tramite32503.query';
+import { Tramite32506Store } from '../../estados/tramite32506.store';
+import { Tramite32506Query } from '../../estados/tramite32506.query';
 import { of } from 'rxjs';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
 import { provideHttpClient } from '@angular/common/http';
 import { provideToastr, ToastrService } from 'ngx-toastr';
-import { PasoCuatroComponent } from "../paso-cuatro/paso-cuatro.component";
 import { PasoDosComponent } from "../paso-dos/paso-dos.component";
 
 describe('SolicitantePageComponent', () => {
@@ -29,7 +28,7 @@ describe('SolicitantePageComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [WizardComponent, BtnContinuarComponent, PasoUnoComponent, PasoTresComponent, AlertComponent,PasoDosComponent,PasoCuatroComponent],
+      imports: [WizardComponent, BtnContinuarComponent, PasoUnoComponent, PasoTresComponent, AlertComponent,PasoDosComponent],
       declarations: [SolicitantePageComponent],
       providers: [
         ToastrService,
@@ -37,8 +36,8 @@ describe('SolicitantePageComponent', () => {
           positionClass: 'toast-top-right',
         }),
         provideHttpClient(),
-        { provide: Tramite32503Store, useValue: storeMock },
-        { provide: Tramite32503Query, useValue: queryMock },
+        { provide: Tramite32506Store, useValue: storeMock },
+        { provide: Tramite32506Query, useValue: queryMock },
       ],
     }).compileComponents();
 
@@ -112,12 +111,6 @@ describe('SolicitantePageComponent', () => {
     component.indice = 3;
     fixture.detectChanges();
     const pasoTresElement = fixture.debugElement.nativeElement.querySelector('app-paso-tres');
-    expect(pasoTresElement).toBeTruthy();
-  });
-  it('should render app-paso-cuatro when indice is 4', () => {
-    component.indice = 4;
-    fixture.detectChanges();
-    const pasoTresElement = fixture.debugElement.nativeElement.querySelector('app-paso-cuatro');
     expect(pasoTresElement).toBeTruthy();
   });
 

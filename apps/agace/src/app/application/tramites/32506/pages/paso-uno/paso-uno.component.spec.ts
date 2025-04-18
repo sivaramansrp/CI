@@ -2,8 +2,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PasoUnoComponent } from './paso-uno.component';
 import { SolicitanteComponent } from '../../components/solicitante/solicitante.component';
 import { AvisoComponent } from '../../components/aviso/aviso.component';
-import { Tramite32503Query } from '../../../../estados/queries/tramite32503.query';
-import { Tramite32503Store } from '../../../../estados/tramites/tramite32503.store';
+import { Tramite32506Query } from '../../estados/tramite32506.query';
+import { Tramite32506Store } from '../../estados/tramite32506.store';
 import { of, Subject } from 'rxjs';
 import { provideHttpClient } from '@angular/common/http';
 
@@ -28,8 +28,8 @@ describe('PasoUnoComponent', () => {
       imports: [PasoUnoComponent, SolicitanteComponent, AvisoComponent],
       providers: [
         provideHttpClient(),
-        { provide: Tramite32503Query, useValue: tramiteQueryMock },
-        { provide: Tramite32503Store, useValue: tramiteStoreMock },
+        { provide: Tramite32506Query, useValue: tramiteQueryMock },
+        { provide: Tramite32506Store, useValue: tramiteStoreMock },
       ],
     }).compileComponents();
 
