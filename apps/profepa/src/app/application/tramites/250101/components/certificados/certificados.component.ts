@@ -4,31 +4,14 @@
  * Componente que gestiona la visualización y manipulación de certificados.
  * Proporciona funcionalidad para mostrar tablas y modales relacionados con certificados fitosanitarios y autorizaciones.
  */
-
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-
-import {
-  TableComponent,
-  TituloComponent,
-} from '@libs/shared/data-access-user/src'; // Importa componentes compartidos para la interfaz de usuario.
-import { CertificadosService } from '../../services/certificados.service'; // Servicio para obtener datos relacionados con los certificados.
+import { Component, OnDestroy, OnInit } from '@angular/core';// Importa decoradores y ciclos de vida de Angular
+import { CertificadosService } from '../../services/certificados.service';// Servicio para obtener datos relacionados con los certificados.
+import { CertificadosTablaDatos } from '../../models/flora-fauna.models';// Importa la interfaz de datos para la tabla de certificados
+import { CommonModule } from '@angular/common';// Importa directivas comunes de Angular como ngIf y ngFor
 import { ModalComponent } from '../modal/modal.component'; // Componente para mostrar modales.
 import { Subject } from 'rxjs'; // Utilidad de RxJS para manejar observables y suscripciones.
-
-/**
- * @interface CertificadosTablaDatos
- * @description
- * Interfaz que define la estructura de los datos de las tablas de certificados.
- */
-export interface CertificadosTablaDatos {
-  /**
-   * @property columns
-   * @description
-   * Arreglo de cadenas que representa las columnas de la tabla.
-   */
-  columns: string[];
-}
+import { TableComponent } from '@libs/shared/data-access-user/src'; // Importa componente compartido para la tabla.
+import { TituloComponent } from '@libs/shared/data-access-user/src'; // Importa componente compartido para el título.
 
 /**
  * @component CertificadosComponent

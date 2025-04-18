@@ -43,7 +43,7 @@
 
             <div class="col-md-8 mt-5">
                 <label class="form-label" for="denominacionRSDestinatario">Denominación o razón social*:</label>
-                <input type="text" class="form-control" id="denominacionRSDestinatario"
+                <input type="text" class="form-control" id="denominacionRSDestinatario" maxlength="120"
                     formControlName="destinatarioRazonSocial" name="denominacionRSDestinatario" (input)="actualizarDenominacion()" [required]=true>
             </div>
 
@@ -51,14 +51,14 @@
 
             <div class="col-md-4 mt-5 dropdown-field">
                 <div class="form-group">
-                    <app-catalogo-select [catalogo]="paisData" [label]="'País'" [required]="true" name=""
+                    <app-catalogo-select [catalogo]="paisData" [label]="'País'" [required]="true" name="paisNacionalDestinatario"
                         id="paisNacionalDestinatario1" formControlName="paisNacionalDestinatario" (change)="actualizarDestinatarioPais()"></app-catalogo-select>
                 </div>
             </div>
 
             <div class="col-md-4 mt-5 dropdown-field">
                 <div class="form-group">
-                    <app-catalogo-select [catalogo]="estadoData" [label]="'Estado'" [required]="true" name=""
+                    <app-catalogo-select [catalogo]="estadoData" [label]="'Estado'" [required]="true" name="estadoNacionalDestinatario"
                         id="estadoNacionalDestinatario1"
                         formControlName="estadoNacionalDestinatario" (change)="actualizarDestinatarioEstado()"></app-catalogo-select>
                 </div>
@@ -66,13 +66,13 @@
 
             <div class="col-md-4 mt-5 dropdown-field">
                 <label class="form-label" for="codigoPostalDestinatario">Código postal o equivalente*:</label>
-                <input type="text" class="form-control" id="codigoPostalDestinatario"
+                <input type="text" class="form-control" id="codigoPostalDestinatario" maxlength="12"
                     formControlName="codigoPostalDestinatario" name="codigoPostalDestinatario" (input)="actualizarCodigoPostal()" [required]=true>
             </div>
 
             <div class="col-md-8 mt-4">
                 <label class="form-label" for="domicilio">Domicilio*:</label>
-                <input type="text" class="form-control" id="domicilioDestinatario"
+                <input type="text" class="form-control" id="domicilioDestinatario" maxlength="100"
                     formControlName="domicilioDestinatario" name="domicilio" (input)="actualizarDomicilio()" [required]=true>
             </div>
 
@@ -104,25 +104,25 @@
         <form [formGroup]="formAgenteAduanal">
             <div class="col-md-4 mt-5">
                 <label class="form-label" for="nombreAgente">Nombre(s)*:</label>
-                <input type="text" class="form-control" id="nombreAgente" formControlName="nombreAgenteAduanal"
+                <input type="text" class="form-control" id="nombreAgente" maxlength="28" formControlName="nombreAgenteAduanal"
                     name="nombreAgente" (input)="actualizarAgenteNombre()" [required]=true>
             </div>
 
             <div class="col-md-4 mt-5">
                 <label class="form-label" for="apellidoPaternoAgente">Primer apellido*:</label>
-                <input type="text" class="form-control" id="apellidoPaternoAgente"
+                <input type="text" class="form-control" id="apellidoPaternoAgente" maxlength="20"
                     formControlName="primerApellidoAgenteAduanal" name="apellidoPaternoAgente" (input)="actualizarAgentePrimerApellido()" [required]=true>
             </div>
 
             <div class="col-md-4 mt-5">
                 <label class="form-label" for="apellidoMaternoAgente">Segundo apellido*:</label>
-                <input type="text" class="form-control" id="apellidoMaternoAgente"
+                <input type="text" class="form-control" id="apellidoMaternoAgente" maxlength="20"
                     formControlName="segundoApellidoAgenteAduanal" name="apellidoMaternoAgente" (input)="actualizarAgenteSegundoApellido()" [required]=true>
             </div>
 
             <div class="col-md-8 mt-5">
                 <label class="form-label" for="patente">Número de patente de agente aduanal*:</label>
-                <input type="text" class="form-control" id="patente" formControlName="patenteAgenteAduanal"
+                <input type="text" class="form-control" id="patente" maxlength="4" formControlName="patenteAgenteAduanal"
                     name="patente" (input)="actualizarAgentePatente()" [required]=true>
             </div>
 

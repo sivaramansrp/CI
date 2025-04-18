@@ -4,18 +4,13 @@
  * Componente que gestiona el formulario y la lógica relacionada con el tipo de movimiento.
  * Permite seleccionar opciones de movimiento, aduana, inspectoría y municipio.
  */
-
 import {
   Catalogo,
   CatalogoSelectComponent,
   InputRadioComponent,
   TituloComponent,
 } from '@libs/shared/data-access-user/src'; // Importa componentes compartidos para la interfaz de usuario.
-
-/**
- * Importaciones necesarias de Angular.
- */
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core'; //Importaciones necesarias de Angular.
 import {
   FormBuilder,
   FormControl,

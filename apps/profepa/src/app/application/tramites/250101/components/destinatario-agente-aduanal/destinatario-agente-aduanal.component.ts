@@ -1,32 +1,23 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Catalogo } from '@libs/shared/data-access-user/src';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { DESTINATARIO_OPCIONES_DE_BOTON_DE_RADIO } from '../../constantes/flora-fauna.enum';
-
-import {
-  Catalogo,
-  CatalogoSelectComponent,
-  InputRadioComponent,
-  TableComponent,
-  TituloComponent,
-} from '@libs/shared/data-access-user/src';
-
-import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-
-import { Subject, takeUntil } from 'rxjs';
 import { DestinatarioService } from '../../services/destinatario.service';
+import { DestinatarioTablaDatos } from '../../models/flora-fauna.models';
+import { FormBuilder } from '@angular/forms';
+import { FormControl } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
+import { InputRadioComponent } from '@libs/shared/data-access-user/src';
 import { ModalComponent } from '../modal/modal.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { Subject} from 'rxjs';
 import { TablaDatos } from '../../models/flora-fauna.models';
+import { TableComponent } from '@libs/shared/data-access-user/src';
+import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { Tramite250101Store } from '../../estados/tramite250101.store';
-
-export interface DestinatarioTablaDatos {
-  columns: string[];
-}
+import { Validators } from '@angular/forms';
+import { takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-destinatario-agente-aduanal',

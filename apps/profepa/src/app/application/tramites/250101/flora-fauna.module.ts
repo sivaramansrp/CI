@@ -1,5 +1,3 @@
-import { CommonModule } from '@angular/common';
-
 import {
   AlertComponent,
   AnexarDocumentosComponent,
@@ -11,15 +9,15 @@ import {
 } from '@ng-mf/data-access-user';
 import { CertificadosComponent } from './components/certificados/certificados.component';
 import { CertificadosService } from './services/certificados.service';
+import { CommonModule } from '@angular/common';
 import { Datos250101Component } from './pages/datos-250101/datos-250101.component';
 import { DestinatarioAgenteAduanalComponent } from './components/destinatario-agente-aduanal/destinatario-agente-aduanal.component';
 import { DestinatarioService } from './services/destinatario.service';
 import { FloraFaunaComponent } from './pages/flora-fauna/flora-fauna.component';
 import { FloraFaunaRoutingModule } from './flora-fauna-routing.module';
 import { InicioSesionService } from '@libs/shared/data-access-user/src/core/services/shared/inicio-sesion/inicio-sesion.service';
-import { NgModule } from '@angular/core';
-
 import { MercanciasComponent } from './components/mercancias/mercancias.component';
+import { NgModule } from '@angular/core';
 import { PagoDeDerechos250101Component } from './components/pago-de-derechos250101/pago-de-derechos250101.component';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';

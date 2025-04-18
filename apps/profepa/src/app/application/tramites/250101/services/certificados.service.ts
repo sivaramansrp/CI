@@ -1,8 +1,7 @@
+import { CertificadosTablaDatos } from '../models/flora-fauna.models';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-
-import { CertificadosTablaDatos } from '../components/certificados/certificados.component';
 
 @Injectable({
   providedIn: 'root'

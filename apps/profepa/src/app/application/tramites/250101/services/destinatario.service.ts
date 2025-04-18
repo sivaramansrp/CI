@@ -1,5 +1,5 @@
 import { Catalogo } from '@libs/shared/data-access-user/src';
-import { DestinatarioTablaDatos } from '../components/destinatario-agente-aduanal/destinatario-agente-aduanal.component';
+import { DestinatarioTablaDatos } from '../models/flora-fauna.models'; 
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';

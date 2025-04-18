@@ -1,10 +1,20 @@
 /**
  * Importaciones necesarias para el funcionamiento del componente.
  */
+import {
+  Catalogo,
+  CatalogoSelectComponent,
+  InputRadioComponent,
+  SolicitanteComponent,
+} from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-
-import { Subject } from 'rxjs';
-
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import {
   REGEX_ALTO,
   REGEX_ANCHO,
@@ -13,45 +23,19 @@ import {
   REGEX_DIAMETRO,
   REGEX_PROFUNDIDAD,
 } from '@libs/shared/data-access-user/src';
-import { takeUntil } from 'rxjs';
-
-import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-
-import {
-  Catalogo,
-  CatalogoSelectComponent,
-  InputRadioComponent,
-  SolicitanteComponent,
-} from '@libs/shared/data-access-user/src';
-
-import { TituloComponent } from '@libs/shared/data-access-user/src';
-
-import { TableComponent } from '@libs/shared/data-access-user/src';
-
-import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
-
-import { OPCIONES_DE_BOTON_DE_RADIO } from '../../constantes/aviso-siglos.enum';
-
 import { AlertComponent } from '@libs/shared/data-access-user/src';
-
-import { ModalComponent } from '../modal/modal.component';
-
 import { CommonModule } from '@angular/common';
+import { ModalComponent } from '../modal/modal.component';
+import { OPCIONES_DE_BOTON_DE_RADIO } from '../../constantes/aviso-siglos.enum';
+import { ObraTablaDatos } from '../../models/aviso-siglos.models';
 import { SolicitudService } from '../../services/solicitud.service';
-
+import { Subject } from 'rxjs';
 import { TablaDatos } from '../../models/aviso-siglos.models';
-
+import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
+import { TableComponent } from '@libs/shared/data-access-user/src';
+import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { Tramite270201Store } from '../../estados/tramites/tramite270201.store';
-
-export interface ObraTablaDatos {
-  columns: string[];
-}
+import { takeUntil } from 'rxjs';
 
 /**
  * Constante que contiene el texto del manifiesto de alerta sobre la propiedad y datos técnicos de la obra(s).

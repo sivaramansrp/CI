@@ -13,3 +13,6 @@ export interface TablaDatos {
     tbodyData: string[];
   }
   
+  export interface ObraTablaDatos {
+    columns: string[];
+  }
