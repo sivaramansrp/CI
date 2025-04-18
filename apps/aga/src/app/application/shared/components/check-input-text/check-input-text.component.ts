@@ -1,8 +1,10 @@
 /* eslint-disable class-methods-use-this */
 import {
   Component,
+  EventEmitter,
   Input,
   OnChanges,
+  Output,
   SimpleChanges
 } from '@angular/core';
 import {
@@ -12,6 +14,7 @@ import {
   Validators
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { DatosCheckInputText } from '../../../core/models/shared/check-input-text.model';
 
 
 @Component({
@@ -21,6 +24,7 @@ import { CommonModule } from '@angular/common';
   templateUrl: './check-input-text.component.html',
   styleUrl: './check-input-text.component.scss',
 })
+
 export class CheckInputTextComponent implements OnChanges {
 
   /**
@@ -65,7 +69,14 @@ export class CheckInputTextComponent implements OnChanges {
    * - 'visible': el input de texto es visible y deshabilitado.
    * - 'invisible': el input de texto es invisible y deshabilitado.
    */
-  @Input({ required: true }) tipo!: string;
+  @Input() tipo!: string;
+  @Input() maxLengthValidacion!: number;
+
+  @Input() checkboxValor!: boolean;
+  @Input() textoValor!: string;
+  @Input() labelText!: string;
+
+  @Output() checkboxChange = new EventEmitter<DatosCheckInputText>();
 
 
   /**
@@ -95,6 +106,21 @@ export class CheckInputTextComponent implements OnChanges {
     if (changes['required']) {
       this.required = changes['required'].currentValue;
     }
+    if (changes['maxLengthValidacion']) {
+      this.maxLengthValidacion = changes['maxLengthValidacion'].currentValue;
+      this.forma.get('texto')?.setValidators([Validators.maxLength(this.maxLengthValidacion)]);
+      this.forma.get('texto')?.updateValueAndValidity();
+    }
+
+    if (changes['checkboxValor'] && changes['checkboxValor'].currentValue) {
+      console.log('checkboxValor', changes['checkboxValor'].currentValue);
+      
+      this.checkboxValor = changes['checkboxValor'].currentValue;
+      this.forma.get('checkbox')?.setValue(this.checkboxValor);
+      this.textoValor = changes['textoValor'].currentValue;
+      this.forma.get('texto')?.enable();
+      this.forma.get('texto')?.setValue(this.textoValor);
+    }
   }
 
   /**
@@ -107,10 +133,10 @@ export class CheckInputTextComponent implements OnChanges {
 
     if (this.tipo === 'invisible' && !this.hidden) {
       this.hidden = true;
-      this.activarInputTexto();
+      // this.activarInputTexto();
     } else if (this.tipo === 'invisible' && this.hidden) {
       this.hidden = false;
-      this.desactivarInputTexto();
+      // this.desactivarInputTexto();
     }
 
     if (CHECKBOX) {
@@ -142,8 +168,22 @@ export class CheckInputTextComponent implements OnChanges {
    * @returns {void} No retorna ningún valor.
    */
   desactivarInputTexto(): void {
+    this.forma.reset();
     this.forma.get('texto')?.disable();
     this.forma.get('texto')?.clearValidators();
     this.forma.get('texto')?.updateValueAndValidity();
+
+    this.enviarValoresCheckboxInput();
+  }
+
+  enviarValoresCheckboxInput(): void {
+    const CHECKBOX = this.forma.get('checkbox')?.value;
+    const TEXTO = this.forma.get('texto')?.value;
+    const DATOS: DatosCheckInputText = {
+      checkbox: CHECKBOX,   
+      texto: TEXTO,
+    };
+
+    this.checkboxChange.emit(DATOS)
   }
 }

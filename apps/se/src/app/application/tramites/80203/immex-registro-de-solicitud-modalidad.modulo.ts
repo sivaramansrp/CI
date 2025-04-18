@@ -21,7 +21,6 @@ import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { FirmaElectronicaComponent } from '@ng-mf/data-access-user';
-import { SelectCatalogosComponent } from '@ng-mf/data-access-user';
 import { SharedModule } from '@ng-mf/data-access-user';
 import { SolicitanteComponent } from '@ng-mf/data-access-user';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
@@ -52,7 +51,6 @@ import { WizardComponent } from '@ng-mf/data-access-user';
     CatalogoSelectComponent,
     Anexo1Component,
     TablaDinamicaComponent,
-    SelectCatalogosComponent,
     SolicitanteComponent
   ],
   providers: [ToastrService],

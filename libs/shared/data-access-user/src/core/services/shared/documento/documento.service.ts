@@ -9,20 +9,22 @@ import { enviroment } from '../../../../enviroments/enviroment';
 export class DocumentoService {
   private urlServer = enviroment.URL_SERVER_UPLOAD;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+    // Lógica de inicialización si es necesario
+  }
 
   subirDocumento(token: string, file: File): Observable<{ message: string }> {
-    const headers = new HttpHeaders({
+    const HEADERS = new HttpHeaders({
       jwt: `${token}`,
       idUser: 1,
     });
 
-    const formData = new FormData();
-    formData.append('file', file, file.name);
+    const FORM_DATA = new FormData();
+    FORM_DATA.append('file', file, file.name);
 
 
-    return this.http.put<{ message: string }>(`${this.urlServer}/upload`, formData, {
-      headers,
+    return this.http.put<{ message: string }>(`${this.urlServer}/upload`, FORM_DATA, {
+      headers: HEADERS,
     });
   }
 

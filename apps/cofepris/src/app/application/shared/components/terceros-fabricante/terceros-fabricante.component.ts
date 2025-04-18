@@ -19,18 +19,21 @@ import {
   REGEX_SOLO_NUMEROS,
   TituloComponent,
 } from '@ng-mf/data-access-user';
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, Inject, Input, OnDestroy, OnInit } from '@angular/core';
+import {
+  DEFAULT_TABLA_ORDEN,
+  TERCEROS_RELACIONADOS_TABLE_HEADER_DATA,
+} from '../../constantes/terceros-fabricante.enum';
 import {
   REGEX_CURP,
   REGEX_RFC_FISICA,
   REGEX_RFC_MORAL,
-} from 'libs/shared/data-access-user/src/tramites/constantes/regex.constants';
+} from '@libs/shared/data-access-user/src/tramites/constantes/regex.constants';
 import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ModalComponent } from '../modal/modal.component';
 import NacionalidadRadioOptions from '@libs/shared/theme/assets/json/260501/nacionalidad-options.json';
-import SELECT_OPTIONS_DATA from 'libs/shared/theme/assets/json/260501/fabricante-select-options-data.json';
-import { TERCEROS_RELACIONADOS_TABLE_HEADER_DATA } from '../../constantes/terceros-fabricante.enum';
+import SELECT_OPTIONS_DATA from '@libs/shared/theme/assets/json/260501/fabricante-select-options-data.json';
 import { TablaDatos } from '../../models/terceros-fabricante.model';
 import { TableComponent } from '@ng-mf/data-access-user';
 import { TercerosFabricanteService } from '../../services/terceros-fabricante.service';
@@ -72,6 +75,25 @@ const TERCEROS_TEXTO_DE_ALERTA =
  * Utiliza formularios reactivos y componentes personalizados para mostrar datos.
  */
 export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
+  /**
+   * Expresión regular para validar el RFC de personas físicas.
+   * @description Utiliza una expresión regular para verificar el formato del RFC.
+   */
+  @Input() tablaOrden: { nombre: string; orden: number; esVisible: boolean }[] =
+    DEFAULT_TABLA_ORDEN;
+
+  /**
+   *  Método para validar el RFC del tercero.
+   * @param control Control del formulario que contiene el RFC.
+   * @returns Un objeto de error si el RFC es inválido, o `null` si es válido.
+   * @description Valida el RFC del tercero utilizando expresiones regulares.
+   */
+  getSortedTablas(): { nombre: string; orden: number; esVisible: boolean }[] {
+    return this.tablaOrden
+      .filter((tabla) => tabla.esVisible) // Only include visible tables
+      .sort((a, b) => a.orden - b.orden);
+  }
+
   /**
    * Indicador de visibilidad para la sección de la tabla.
    * Inicialmente visible (`true`).
@@ -280,7 +302,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    * Inicializa el formulario para agregar un fabricante.
    * Configura los campos del formulario con validaciones y comportamientos específicos.
    */
-  initializeAgregarFabricanteFormGroup() {
+  initializeAgregarFabricanteFormGroup(): void {
     /**
      * Crea el formulario reactivos para agregar un fabricante.
      * Cada campo tiene sus propias validaciones.
@@ -413,7 +435,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    * Inicializa el formulario para agregar un formulador.
    * Configura los campos del formulario con validaciones y comportamientos específicos.
    */
-  initializeAgregarFormuladorFormGroup() {
+  initializeAgregarFormuladorFormGroup(): void {
     /**
      * Crea el formulario reactivos para agregar un formulador.
      * Cada campo tiene sus propias validaciones.
@@ -567,7 +589,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    * Inicializa el formulario para agregar un proveedor.
    * Configura los campos del formulario con validaciones y comportamientos específicos.
    */
-  initializeAgregarProveedorFormGroup() {
+  initializeAgregarProveedorFormGroup(): void {
     /**
      * Crea el formulario reactivos para agregar un proveedor.
      * Cada campo tiene sus propias validaciones.
@@ -772,7 +794,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    *
    * @param checkBoxName Nombre del checkbox seleccionado (fisica o moral).
    */
-  public inputChecked(checkBoxName: string) {
+  public inputChecked(checkBoxName: string): void {
     if (checkBoxName === 'fisica') {
       this.fisica = true;
       this.moral = false;
@@ -788,7 +810,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
     }
   }
 
-  public tercerosInputChecked(checkBoxName: string) {
+  public tercerosInputChecked(checkBoxName: string): void {
     if (checkBoxName === 'nacional') {
       this.nacional = true;
       this.extranjero = false;
@@ -802,7 +824,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    * Cambia la visibilidad del formulario de Fabricante.
    * Oculta la tabla principal y muestra el formulario, también resetea los valores de persona física y moral.
    */
-  toggleDivFabricante() {
+  toggleDivFabricante(): void {
     this.fisica = false;
     this.moral = false;
     this.showTableDiv = !this.showTableDiv;
@@ -813,7 +835,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    * Cambia la visibilidad del formulario de Formulador.
    * Oculta la tabla principal y muestra el formulario, también resetea los valores de persona física y moral.
    */
-  toggleDivFormulador() {
+  toggleDivFormulador(): void {
     this.fisica = false;
     this.moral = false;
     this.showTableDiv = !this.showTableDiv;
@@ -824,7 +846,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    * Cambia la visibilidad del formulario de Proveedor.
    * Oculta la tabla principal y muestra el formulario, también resetea los valores de persona física y moral.
    */
-  toggleDivProveedor() {
+  toggleDivProveedor(): void {
     this.fisica = false;
     this.moral = false;
     this.showTableDiv = !this.showTableDiv;
@@ -843,7 +865,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    *
    * @description Este método es llamado al enviar el formulario de agregar un fabricante.
    */
-  submitFabricanteForm() {
+  submitFabricanteForm(): void {
     /**
      * Obtiene el valor de la localidad seleccionada en el formulario.
      */
@@ -991,7 +1013,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    *
    * @description Este método es llamado al enviar el formulario de agregar un formulador.
    */
-  submitFormuladorForm() {
+  submitFormuladorForm(): void {
     /**
      * Obtiene el valor de la localidad seleccionada en el formulario.
      */
@@ -1139,7 +1161,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    *
    * @description Este método es llamado al enviar el formulario de agregar un proveedor.
    */
-  submitProveedorForm() {
+  submitProveedorForm(): void {
     /**
      * Obtiene el valor de la localidad seleccionada en el formulario.
      */
@@ -1337,7 +1359,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    *
    * @param value Valor seleccionado del radio button.
    */
-  cambiarRadio(value: string | number) {
+  cambiarRadio(value: string | number): void {
     const VALOR_SELECCIONADO = value as string;
     this.tercerosInputChecked(VALOR_SELECCIONADO);
   }
@@ -1347,7 +1369,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    *
    * @param value Valor seleccionado del radio button.
    */
-  cambiarRadioFisica(value: string | number) {
+  cambiarRadioFisica(value: string | number): void {
     const VALOR_SELECCIONADO = value as string;
     this.inputChecked(VALOR_SELECCIONADO);
   }

@@ -43,11 +43,11 @@ jobs:
       - name: Install dependencies
         run: |
           npm install --force
-
       # 4. Construye el proyecto Angular con Nx (build del dashboard).
       - name: Build Docker images from docker-compose
-        run: docker compose -f ./docker/modulefederation-microfrontends.yml build
-     
+        run:  docker compose -f ./docker/modulefederation-microfrontends.yml up -d
+   
+
       - name: Listar archivos
         run: ls -la
         
@@ -68,7 +68,7 @@ jobs:
           context: ./
           file: apps/dashboard/Dockerfile
           tags: |
-            ghcr.io/vucem30/dockerized-front-vucem30:latest
+            ghcr.io/vucem30/dockerized-modulefederation-dashboard:latest
           push: ${{ github.ref == 'refs/heads/develop' }}
 
       - name: Execute remote command (last one)
@@ -80,4 +80,224 @@ jobs:
           port: 22
           script: |
             cd /home/ubuntu/v30
-            microk8s kubectl rollout restart deployment front-vucem30-deployment-dev
+            microk8s kubectl rollout restart deployment modulefederation-dashboard-deployment-dev
+
+      - name: Build image and push to GitHub Container Registry
+        uses: docker/build-push-action@v2
+        with:
+          context: ./
+          file: apps/login/Dockerfile
+          tags: |
+            ghcr.io/vucem30/dockerized-modulefederation-login-microfront:latest
+          push: ${{ github.ref == 'refs/heads/develop' }}
+
+      - name: Execute remote command (last one)
+        uses: appleboy/ssh-action@v0.1.8
+        with:
+          host: ${{ secrets.REMOTE_SRV_IP }}
+          username: ${{ secrets.REMOTE_SRV_USER }}
+          key: ${{ secrets.REMOTE_SRV_PRIV_KEY }}
+          port: 22
+          script: |
+            cd /home/ubuntu/v30
+            microk8s kubectl rollout restart deployment modulefederation-login-microfront-deployment-dev	
+
+      - name: Build image and push to GitHub Container Registry
+        uses: docker/build-push-action@v2
+        with:
+          context: ./
+          file: apps/aga/Dockerfile
+          tags: |
+            ghcr.io/vucem30/dockerized-modulefederation-aga-microfront:latest
+          push: ${{ github.ref == 'refs/heads/develop' }}
+
+      - name: Execute remote command (last one)
+        uses: appleboy/ssh-action@v0.1.8
+        with:
+          host: ${{ secrets.REMOTE_SRV_IP }}
+          username: ${{ secrets.REMOTE_SRV_USER }}
+          key: ${{ secrets.REMOTE_SRV_PRIV_KEY }}
+          port: 22
+          script: |
+            cd /home/ubuntu/v30
+            microk8s kubectl rollout restart deployment modulefederation-aga-microfront-deployment-dev	
+
+      - name: Build image and push to GitHub Container Registry
+        uses: docker/build-push-action@v2
+        with:
+          context: ./
+          file: apps/agriculture/Dockerfile
+          tags: |
+            ghcr.io/vucem30/dockerized-modulefederation-agriculture-microfront:latest
+          push: ${{ github.ref == 'refs/heads/develop' }}
+
+      - name: Execute remote command (last one)
+        uses: appleboy/ssh-action@v0.1.8
+        with:
+          host: ${{ secrets.REMOTE_SRV_IP }}
+          username: ${{ secrets.REMOTE_SRV_USER }}
+          key: ${{ secrets.REMOTE_SRV_PRIV_KEY }}
+          port: 22
+          script: |
+            cd /home/ubuntu/v30
+            microk8s kubectl rollout restart deployment  modulefederation-agriculture-microfront-deployment-dev	
+
+      - name: Build image and push to GitHub Container Registry
+        uses: docker/build-push-action@v2
+        with:
+          context: ./
+          file: apps/se/Dockerfile
+          tags: |
+            ghcr.io/vucem30/dockerized-modulefederation-se-microfront:latest
+          push: ${{ github.ref == 'refs/heads/develop' }}
+
+      - name: Execute remote command (last one)
+        uses: appleboy/ssh-action@v0.1.8
+        with:
+          host: ${{ secrets.REMOTE_SRV_IP }}
+          username: ${{ secrets.REMOTE_SRV_USER }}
+          key: ${{ secrets.REMOTE_SRV_PRIV_KEY }}
+          port: 22
+          script: |
+            cd /home/ubuntu/v30
+            microk8s kubectl rollout restart deployment  modulefederation-se-microfront-dev	
+
+      - name: Build image and push to GitHub Container Registry
+        uses: docker/build-push-action@v2
+        with:
+          context: ./
+          file: apps/semarnat/Dockerfile
+          tags: |
+            ghcr.io/vucem30/dockerized-modulefederation-semarnat-microfront:latest
+          push: ${{ github.ref == 'refs/heads/develop' }}
+
+      - name: Execute remote command (last one)
+        uses: appleboy/ssh-action@v0.1.8
+        with:
+          host: ${{ secrets.REMOTE_SRV_IP }}
+          username: ${{ secrets.REMOTE_SRV_USER }}
+          key: ${{ secrets.REMOTE_SRV_PRIV_KEY }}
+          port: 22
+          script: |
+            cd /home/ubuntu/v30
+            microk8s kubectl rollout restart deployment modulefederation-semarnat-microfront-dev	
+
+      - name: Build image and push to GitHub Container Registry
+        uses: docker/build-push-action@v2
+        with:
+          context: ./
+          file: apps/agace/Dockerfile
+          tags: |
+            ghcr.io/vucem30/dockerized-modulefederation-agace-microfront:latest
+          push: ${{ github.ref == 'refs/heads/develop' }}
+
+      - name: Execute remote command (last one)
+        uses: appleboy/ssh-action@v0.1.8
+        with:
+          host: ${{ secrets.REMOTE_SRV_IP }}
+          username: ${{ secrets.REMOTE_SRV_USER }}
+          key: ${{ secrets.REMOTE_SRV_PRIV_KEY }}
+          port: 22
+          script: |
+            cd /home/ubuntu/v30
+            microk8s kubectl rollout restart deployment  modulefederation-agace-microfront-deployment-dev
+
+      - name: Build image and push to GitHub Container Registry
+        uses: docker/build-push-action@v2
+        with:
+          context: ./
+          file: apps/funcionario/Dockerfile
+          tags: |
+            ghcr.io/vucem30/dockerized-modulefederation-funcionario-microfront:latest
+          push: ${{ github.ref == 'refs/heads/develop' }}
+
+      - name: Execute remote command (last one)
+        uses: appleboy/ssh-action@v0.1.8
+        with:
+          host: ${{ secrets.REMOTE_SRV_IP }}
+          username: ${{ secrets.REMOTE_SRV_USER }}
+          key: ${{ secrets.REMOTE_SRV_PRIV_KEY }}
+          port: 22
+          script: |
+            cd /home/ubuntu/v30
+            microk8s kubectl rollout restart deployment  modulefederation-funcionario-microfront-deployment-dev
+
+      - name: Build image and push to GitHub Container Registry
+        uses: docker/build-push-action@v2
+        with:
+          context: ./
+          file: apps/cofepris/Dockerfile
+          tags: |
+            ghcr.io/vucem30/dockerized-modulefederation-cofepris-microfront:latest
+          push: ${{ github.ref == 'refs/heads/develop' }}
+
+      - name: Execute remote command (last one)
+        uses: appleboy/ssh-action@v0.1.8
+        with:
+          host: ${{ secrets.REMOTE_SRV_IP }}
+          username: ${{ secrets.REMOTE_SRV_USER }}
+          key: ${{ secrets.REMOTE_SRV_PRIV_KEY }}
+          port: 22
+          script: |
+            cd /home/ubuntu/v30
+            microk8s kubectl rollout restart deployment  modulefederation-cofepris-microfront-deployment-dev
+
+      - name: Build image and push to GitHub Container Registry
+        uses: docker/build-push-action@v2
+        with:
+          context: ./
+          file: apps/amecafe/Dockerfile
+          tags: |
+            ghcr.io/vucem30/dockerized-modulefederation-amecafe-microfront:latest
+          push: ${{ github.ref == 'refs/heads/develop' }}
+
+      - name: Execute remote command (last one)
+        uses: appleboy/ssh-action@v0.1.8
+        with:
+          host: ${{ secrets.REMOTE_SRV_IP }}
+          username: ${{ secrets.REMOTE_SRV_USER }}
+          key: ${{ secrets.REMOTE_SRV_PRIV_KEY }}
+          port: 22
+          script: |
+            cd /home/ubuntu/v30
+            microk8s kubectl rollout restart deployment  modulefederation-amecafe-microfront-deployment-dev
+
+      - name: Build image and push to GitHub Container Registry
+        uses: docker/build-push-action@v2
+        with:
+          context: ./
+          file: apps/inbal/Dockerfile
+          tags: |
+            ghcr.io/vucem30/dockerized-modulefederation-inbal-microfront:latest
+          push: ${{ github.ref == 'refs/heads/develop' }}
+
+      - name: Execute remote command (last one)
+        uses: appleboy/ssh-action@v0.1.8
+        with:
+          host: ${{ secrets.REMOTE_SRV_IP }}
+          username: ${{ secrets.REMOTE_SRV_USER }}
+          key: ${{ secrets.REMOTE_SRV_PRIV_KEY }}
+          port: 22
+          script: |
+            cd /home/ubuntu/v30
+            microk8s kubectl rollout restart deployment modulefederation-inbal-microfront-deployment-dev
+
+      - name: Build image and push to GitHub Container Registry
+        uses: docker/build-push-action@v2
+        with:
+          context: ./
+          file: apps/sedena/Dockerfile
+          tags: |
+            ghcr.io/vucem30/modulefederation-sedena-microfront:latest
+          push: ${{ github.ref == 'refs/heads/develop' }}
+
+      - name: Execute remote command (last one)
+        uses: appleboy/ssh-action@v0.1.8
+        with:
+          host: ${{ secrets.REMOTE_SRV_IP }}
+          username: ${{ secrets.REMOTE_SRV_USER }}
+          key: ${{ secrets.REMOTE_SRV_PRIV_KEY }}
+          port: 22
+          script: |
+            cd /home/ubuntu/v30
+            microk8s kubectl rollout restart deployment modulefederation-sedena-microfront
