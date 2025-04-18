@@ -17,7 +17,7 @@ import tratadosTable from 'libs/shared/theme/assets/json/110101/tratados-table.j
 /**
  * Componente Tratados que se utiliza para mostrar y gestionar los tratados.
  * 
- * Este componente utiliza varios subcomponentes como TituloComponent, SelectCatalogosComponent, CommonModule,
+ * Este componente utiliza varios subcomponentes como TituloComponent, CommonModule,
  * TableComponent y AlertComponent para mostrar información y permitir al usuario seleccionar y agregar tratados.
  * 
  * @component

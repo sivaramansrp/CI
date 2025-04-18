@@ -1,4 +1,4 @@
-import { AgregarTransporteComponent, CatalogosService, UppercaseDirective } from '@ng-mf/data-access-user';
+import { AgregarTransporteComponent, CatalogosService, InputRadioComponent, UppercaseDirective } from '@ng-mf/data-access-user';
 import { NgModule, forwardRef } from '@angular/core';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
 
@@ -7,6 +7,7 @@ import { AlertComponent } from '@ng-mf/data-access-user';
 import { AnexarDocumentosComponent } from '@ng-mf/data-access-user';
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { CheckInputTextComponent } from '../../shared/components/check-input-text/check-input-text.component';
 import { CommonModule } from '@angular/common';
 import { CrosslistComponent } from '@ng-mf/data-access-user';
 import { FirmaElectronicaComponent } from '@ng-mf/data-access-user';
@@ -21,7 +22,6 @@ import { PedimentoComponent } from './components/pedimento/pedimento.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RepresentanteFiscalComponent } from '@ng-mf/data-access-user';
 import { RouterModule } from '@angular/router';
-import { SelectCatalogosComponent } from '@ng-mf/data-access-user';
 import { SelectPaisesComponent } from '@ng-mf/data-access-user';
 import { ServiciosExtraordinariosRoutingModule } from './servicios-extraordinarios-routing.module';
 import { SolicitanteComponent } from '@ng-mf/data-access-user';
@@ -40,6 +40,7 @@ import { WizardComponent } from '@ng-mf/data-access-user';
     PasoTresComponent,
   ],
   imports: [
+    CheckInputTextComponent,
     forwardRef(() => TercerosComponent),
     forwardRef(() => AgregaPersonasComponent),
     forwardRef(() =>AgregarTransporteComponent),
@@ -58,13 +59,13 @@ import { WizardComponent } from '@ng-mf/data-access-user';
     ReactiveFormsModule,
     forwardRef(() => RepresentanteFiscalComponent),
     RouterModule,
-    forwardRef(() => SelectCatalogosComponent),
     forwardRef(() => SelectPaisesComponent),
     ServiciosExtraordinariosRoutingModule,
     forwardRef(() => SolicitanteComponent),
     forwardRef(() => TituloComponent),
     forwardRef(() => WizardComponent),
     forwardRef(() => UppercaseDirective),
+    forwardRef(() => InputRadioComponent),
     ToastrModule.forRoot()
   ],
   exports: [

@@ -1,5 +1,4 @@
-export interface catalogoResponse {
-  data: catalogoResponse;
+export interface CatalogoResponse {
   id: number;
   descripcion: string;
 }
@@ -23,6 +22,8 @@ export interface Catalogo {
   clave?: string;
   tam?: string;
   dpi?: string
+  relacionadaUmtId?: number;
+  relacionadaAcotacionId?: number;
 }
 
 export interface CatalogoPaises {
@@ -41,6 +42,14 @@ export interface BodyTablaAcuse {
   idDocumento: string;
   documento: string;
   urlPdf: string;
+}
+
+export interface RespuestaDocuemntosRequeridos {
+  id: number;
+  requerido: boolean;
+  tipoDocumento: string;
+  nombreArchivo: string;
+  estatus: string;
 }
 
 

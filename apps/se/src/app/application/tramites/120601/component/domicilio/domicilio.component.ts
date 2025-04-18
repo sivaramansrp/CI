@@ -19,7 +19,6 @@ import {
   DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL
 } from '@ng-mf/data-access-user';
 
-import { UppercaseDirective } from '@ng-mf/data-access-user';
 /**
  * `DomicilioComponent` maneja los datos del formulario relacionados con el domicilio
  * y gestiona la entrada del usuario para diferentes tipos de personas 
@@ -28,7 +27,7 @@ import { UppercaseDirective } from '@ng-mf/data-access-user';
 @Component({
   selector: 'app-domicilio',
   standalone: true,
-  imports: [CommonModule, SolicitanteComponent, TituloComponent, ReactiveFormsModule, UppercaseDirective],
+  imports: [CommonModule, TituloComponent, ReactiveFormsModule],
   templateUrl: './Domicilio.component.html',
   styleUrl: './Domicilio.component.scss',
 })
@@ -69,7 +68,6 @@ export class DomicilioComponent implements OnInit, OnDestroy {
   constructor(
     private solicitanteServicio: SolicitanteService,
     private fb: FormBuilder,
-    private formServices: FormulariosService
   ) {
     this.obtenerTipoPersona(TIPO_PERSONA.FISICA_NACIONAL);
     this.crearFormulario();
@@ -170,10 +168,10 @@ export class DomicilioComponent implements OnInit, OnDestroy {
             if (response) {
               const DATOS = JSON.parse(response.data);
               const DATOS_DOMICILIO_FISCAL = DATOS.domicilioFiscal;
-              const CAMPOS_DATOS_DOMICILIO_FISCAL = this.formServices.obtenerNombresCamposForm(this.domicilioFiscalForm);
+              const CAMPOS_DATOS_DOMICILIO_FISCAL = FormulariosService.obtenerNombresCamposForm(this.domicilioFiscalForm);
 
               CAMPOS_DATOS_DOMICILIO_FISCAL.forEach((campo) => {
-                this.formServices.agregarValorCampoDesactivados(this.domicilioFiscalForm, campo, DATOS_DOMICILIO_FISCAL[campo]);
+                FormulariosService.agregarValorCampoDesactivado(this.domicilioFiscalForm, campo, DATOS_DOMICILIO_FISCAL[campo]);
               });
             }
           })

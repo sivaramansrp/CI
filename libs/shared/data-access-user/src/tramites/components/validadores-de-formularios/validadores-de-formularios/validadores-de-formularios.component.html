@@ -1,0 +1,33 @@
+<div [ngClass]="{'min-height': setMinHeight}">
+    @if (forma.get(controlDeFormulario)?.touched && forma.get(controlDeFormulario)?.invalid) {
+        @for (validador of validadores; let i = $index; track $index) {
+            @if (validador.tipo === 'required' && forma.get(controlDeFormulario)?.errors?.['required']) {
+                <div class="mensaje-error">
+                    Este campo es obligatorio.
+                </div>
+            } @else if (validador.tipo === 'minlength' && forma.get(controlDeFormulario)?.errors?.['minlength']) {
+                <div class="mensaje-error">
+                    {{ 'Debe tener al menos ' + validador.valor + ' caracteres.' }}
+                </div>
+            } @else if (validador.tipo === 'maxlength' && forma.get(controlDeFormulario)?.errors?.['maxlength']) {
+                <div class="mensaje-error">
+                    {{ 'Debe tener como máximo ' + validador.valor + ' caracteres.' }}
+                </div> 
+            } @else if (validador.tipo === 'pattern' && forma.get(controlDeFormulario)?.errors?.['pattern']) {
+                <div class="mensaje-error">
+                    {{ validador.mensaje }}
+                </div>
+            } @else if (validador.tipo === 'backend' && forma.get(controlDeFormulario)?.errors?.['backend']) {
+                <div class="mensaje-error">
+                    {{ forma.get(controlDeFormulario)?.errors?.['backend'].mensaje }}
+                </div>
+            } @else if (validador.tipo === 'custom' && forma.get(controlDeFormulario)?.errors?.['custom']) {
+                <div class="mensaje-error">
+                    {{ forma.get(controlDeFormulario)?.errors?.['custom'].mensaje }}
+                </div>
+            }
+    
+        }
+    }
+</div>
+

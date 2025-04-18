@@ -1,18 +1,22 @@
-
 <div class="form-group">
-<form [formGroup]="FormInputRadio"> 
+  <form [formGroup]="FormInputRadio">
     <div *ngFor="let option of radioOptions" [ngClass]="layout">
-        
-          <input 
-            type="radio"
-            [value]="option.value"
-            [checked]="selectedValue === option.value"
-            (change)="onSelectionChange(option.value)"
-            formControlName="seleccion" 
-          />
-          <span class="radio-label">{{ option.label }}</span>
-    
-      </div>
-      
-</form>
+      <input
+        type="radio"
+        [value]="option.value"
+        [id]="option.value"
+        [checked]="selectedValue === option.value"
+        (change)="onSelectionChange(option.value)"
+        formControlName="seleccion"
+      />
+      <span class="radio-label">{{ option.label }}</span>
+      <span
+        *ngIf="showTooltip && option.hint"
+        class="bi bi-question-circle-fill fs-4 m-1"
+        [title]="option.hint"
+        ata-bs-toggle="tooltip"
+      >
+      </span>
+    </div>
+  </form>
 </div>

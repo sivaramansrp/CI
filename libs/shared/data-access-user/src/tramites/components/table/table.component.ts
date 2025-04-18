@@ -1,6 +1,12 @@
 /* eslint-disable @angular-eslint/component-selector */
 /* eslint-disable @typescript-eslint/no-empty-function */
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnChanges,
+  OnInit,
+  SimpleChanges,
+} from '@angular/core';
 import { TableData } from '../../../core/models/shared/components.model';
 
 import { CommonModule } from '@angular/common';
@@ -33,14 +39,13 @@ export class TableComponent implements OnInit, OnChanges {
   * Si no se pasa ningún valor desde el componente padre, tomará el valor predeterminado como verdadero
   */
 
-
   /**
    * @description
    * tableData se utiliza para obtener datos de la tabla de la componente
    */
   public tableData: TableData = {
     tableHeader: [],
-    tableBody: []
+    tableBody: [],
   };
 
   /**
@@ -50,9 +55,11 @@ export class TableComponent implements OnInit, OnChanges {
   ngOnInit(): void {
     this.tableData = {
       tableHeader: this.commonTableHeader,
-      tableBody: this.commonTableBody
-    }
+      tableBody: this.commonTableBody,
+    };
   }
+
+ 
 
   ngOnChanges(changes: SimpleChanges): void {
     const TBODYKEY = 'commonTableHeader';
@@ -63,5 +70,6 @@ export class TableComponent implements OnInit, OnChanges {
     if (changes[TBODYDATA]?.currentValue) {
       this.tableData.tableBody = changes[TBODYDATA]?.currentValue;
     }
+
   }
 }
