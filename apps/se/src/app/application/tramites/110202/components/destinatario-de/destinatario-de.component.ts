@@ -164,6 +164,41 @@ export class DestinatarioDeComponent implements OnDestroy, OnInit {
     this.medioDeTransporte$ = this.tramiteQuery.selectMedioDeTransporte$;
   }
 
+    /**
+   * Establece valores en el estado de la tienda para un formulario genérico de certificado.
+   * 
+   * @param event - Objeto que contiene los datos necesarios para actualizar el estado.
+   * @param event.formGroupName - Nombre del grupo de formulario (no utilizado en esta implementación).
+   * @param event.campo - Nombre del campo que se actualizará en el estado.
+   * @param event.valor - Valor que se asignará al campo especificado.
+   * @param event.storeStateName - Nombre del estado de la tienda (no utilizado en esta implementación).
+   * 
+   * @returns void
+   * 
+   * @command Este método actualiza el estado de la tienda con los valores proporcionados.
+   */
+    setValoresStore(event: { formGroupName: string, campo: string, valor: undefined, storeStateName: string }) :void{
+      const { campo: CAMPO, valor: VALOR } = event;
+      this.store.setFormDatosDelDestinatario({ [CAMPO]: VALOR });
+    }
+        /**
+   * Establece valores en el estado de la tienda para un formulario genérico de certificado.
+   * 
+   * @param event - Objeto que contiene los datos necesarios para actualizar el estado.
+   * @param event.formGroupName - Nombre del grupo de formulario (no utilizado en esta implementación).
+   * @param event.campo - Nombre del campo que se actualizará en el estado.
+   * @param event.valor - Valor que se asignará al campo especificado.
+   * @param event.storeStateName - Nombre del estado de la tienda (no utilizado en esta implementación).
+   * 
+   * @returns void
+   * 
+   * @command Este método actualiza el estado de la tienda con los valores proporcionados.
+   */
+        setValoresStoreDe(event: { formGroupName: string, campo: string, valor: undefined, storeStateName: string }) :void{
+          const { campo: CAMPO, valor: VALOR } = event;
+          this.store.setFormDestinatario({ [CAMPO]: VALOR });
+        }
+
   /**
    * Obtiene el control del formulario.
    * @returns Control del formulario.
