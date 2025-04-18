@@ -2001,6 +2001,14 @@
         "linkDepartment": "/pago/permiso-sanitario-dispositivos-medicos/permiso-sanitario-dispositivos-medicos",
         "department": "cofepris"
 
+    },
+    {
+        "id": 286,
+        "tramite": 240105,
+        "linkDashboard": "/sedena/importacion-de-sustancias/ordinario-para",
+        "linkDepartment": "/pago/importacion-de-sustancias/ordinario-para",
+        "department": "sedena"
+
     }
    
 
