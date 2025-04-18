@@ -1,0 +1,91 @@
+import { HttpClient } from "@angular/common/http";
+import { Injectable } from "@angular/core";
+
+import { Catalogo } from "@libs/shared/data-access-user/src";
+import { Observable } from "rxjs";
+
+@Injectable({
+  providedIn: 'root',
+})
+export class TercerosRelacionadosFebService {
+
+  /**
+   * Constructor del servicio.
+   * Inyecta el cliente HTTP para realizar peticiones.
+   * 
+   * @param http Cliente HTTP para realizar peticiones.
+   */
+  constructor(private http: HttpClient) {
+    // Constructor logic can be added here if needed
+  }
+
+  /**
+   * Obtiene los datos de terceros relacionados desde un archivo JSON local.
+   * 
+   * @returns {Observable<Catalogo[]>} Observable que emite un arreglo de objetos `Catalogo`.
+   * @description Este método realiza una petición HTTP para obtener los datos de terceros relacionados.
+   */
+  getData(): Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>('assets/json/cofepris/terceros-relacionados.json');
+  }
+
+  /**
+   * Obtiene los datos de países desde un archivo JSON local.
+   * 
+   * @returns {Observable<Catalogo[]>} Observable que emite un arreglo de objetos `Catalogo`.
+   * @description Este método realiza una petición HTTP para obtener los datos de países.
+   */
+  getPaisData(): Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>('assets/json/cofepris/pais.json');
+  }
+
+  /**
+   * Obtiene los datos de municipios desde un archivo JSON local.
+   * 
+   * @returns {Observable<Catalogo[]>} Observable que emite un arreglo de objetos `Catalogo`.
+   * @description Este método realiza una petición HTTP para obtener los datos de municipios.
+   */
+  getMunicipioData(): Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>('assets/json/cofepris/municipio.json');
+  }
+
+  /**
+   * Obtiene los datos de códigos postales desde un archivo JSON local.
+   * 
+   * @returns {Observable<Catalogo[]>} Observable que emite un arreglo de objetos `Catalogo`.
+   * @description Este método realiza una petición HTTP para obtener los datos de códigos postales.
+   */
+  getCodigoPostalData(): Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>('assets/json/cofepris/codigo-postal.json');
+  }
+
+  /**
+   * Obtiene los datos de colonias desde un archivo JSON local.
+   * 
+   * @returns {Observable<Catalogo[]>} Observable que emite un arreglo de objetos `Catalogo`.
+   * @description Este método realiza una petición HTTP para obtener los datos de colonias.
+   */
+  getColoniaData(): Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>('assets/json/cofepris/colonia.json');
+  }
+
+  /**
+   * Obtiene los datos de localidades desde un archivo JSON local.
+   * 
+   * @returns {Observable<Catalogo[]>} Observable que emite un arreglo de objetos `Catalogo`.
+   * @description Este método realiza una petición HTTP para obtener los datos de localidades.
+   */
+  getLocalidadData(): Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>('assets/json/cofepris/localidad.json');
+  }
+
+  /**
+   * Obtiene los encabezados de la tabla desde un archivo JSON local.
+   * 
+   * @returns {Observable<{ columns: string[] }>} Observable que emite un objeto con un arreglo de columnas.
+   * @description Este método realiza una petición HTTP para obtener los encabezados de la tabla.
+   */
+  getEncabezadoDeTabla(): Observable<{ columns: string[] }> {
+    return this.http.get<{ columns: string[] }>('assets/json/cofepris/encabezado-de-tabla.json');
+  }
+}
