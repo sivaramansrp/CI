@@ -1,9 +1,9 @@
+import { Component, Input } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CROSLISTA_DE_PAISES } from '../../constants/datos-solicitud.enum';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
 import { CrossListLable } from '@ng-mf/data-access-user';
 import { CrosslistComponent } from '@ng-mf/data-access-user';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
@@ -14,6 +14,7 @@ import { Location } from '@angular/common';
 import { MercanciaDetalle } from '../../models/datos-del-tramite.model';
 import { OnInit } from '@angular/core';
 import { Output } from '@angular/core';
+import { PUEDE_MOSTRAR_LA_LISTA_CRUZADA_FOR_MERCANCIA } from '../../constants/datos-del-tramilte.enum';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
@@ -57,6 +58,16 @@ export class DatosMercanciaComponent implements OnInit {
    * @event updateMercanciaDetalle
    */
   @Output() updateMercanciaDetalle = new EventEmitter<MercanciaDetalle[]>();
+
+  /**
+ * @property {number} idProcedimiento
+ * Identificador único del procedimiento asociado a la solicitud.
+ * Este valor es recibido como un input desde el componente padre.
+ *
+ * @decorador @Input
+ */
+  @Input() public idProcedimiento!: number;
+  public puedeMostrarLaListaCruzada = false;
 
   /**
    * Formulario reactivo para capturar los datos de la mercancía.
@@ -207,6 +218,7 @@ export class DatosMercanciaComponent implements OnInit {
   ngOnInit(): void {
     this.crearFormaulario();
     this.cargarDatos();
+    this.puedeMostrarLaListaCruzada = PUEDE_MOSTRAR_LA_LISTA_CRUZADA_FOR_MERCANCIA.includes(this.idProcedimiento);
   }
 
   /**
