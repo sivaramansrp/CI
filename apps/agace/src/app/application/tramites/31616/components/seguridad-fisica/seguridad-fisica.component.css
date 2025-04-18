@@ -1,9 +1,10 @@
 .para-title{
-  color: rgb(35, 112, 184);
+  color: #0078D4;
 }
 
 .alert-text {
-  color: rgb(35, 112, 184);
+  color: #0078D4;
+  font-weight: bold;
 }
 
 .danger {
@@ -28,4 +29,14 @@
   resize: vertical;
   padding: 10px;
   font-size: 14px;
+}
+
+.centered-list-wrapper {
+  padding-left: 3%;
+}
+
+.centered-list {
+  display: inline-block; 
+  text-align: left; 
+  margin-top: 0;
 }
