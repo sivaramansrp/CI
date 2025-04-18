@@ -1982,6 +1982,13 @@
     },
     {
         "id": 284,
+        "tramite": 260913,
+        "linkDashboard": "/cofepris/modificacion-del-permiso/pantallas",
+        "linkDepartment": "/pago/modificacion-del-permiso/pantallas",
+        "department": "cofepris"
+    },
+    {
+        "id": 285,
         "tramite": 317,
         "linkDashboard": "/agace/aviso-unico-renovacion/pantallas",
         "linkDepartment": "/pago/aviso-unico-renovacion/pantallas",
