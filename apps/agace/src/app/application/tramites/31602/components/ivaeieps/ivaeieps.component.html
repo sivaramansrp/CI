@@ -80,50 +80,37 @@
                       </section>
                   
                       <div class="checkbox-container">
-                        <div class="form-check">
-                          <input
-                            class="form-check-input"
-                            type="checkbox"
-                            id="empleados"
-                            formControlName="empleados"
-                            (change)="setValoresStore(ivaEiepsFormGroup,'empleados', 'setEmpleados')"
-                          />
-                          <label class="fw-normal" for="empleados">Empleados</label>
-                        </div>
-                  
-                        <div class="form-check">
-                          <input
-                            class="form-check-input"
-                            type="checkbox"
-                            id="infraestructura"
-                            formControlName="infraestructura"
-                            (change)="setValoresStore(ivaEiepsFormGroup,'infraestructura', 'setInfraestructura')"
-                          />
-                          <label class="fw-normal" for="infraestructura">Infraestructura</label>
-                        </div>
-                        <div class="form-check">
-                          <input
-                            class="form-check-input"
-                            type="checkbox"
-                            id="monto"
-                            formControlName="monto"
-                            (change)="setValoresStore(ivaEiepsFormGroup,'monto', 'setMonto')"
-                          />
-                          <label class="fw-normal" for="monto">Monto de Inversión</label>
-                        </div>
-                        <div class="form-check">
-                          <input
-                            class="form-check-input"
-                            type="checkbox"
-                            id="antiguedad"
-                            formControlName="antiguedad"
-                            (change)="setValoresStore(ivaEiepsFormGroup,'antiguedad', 'setAntiguedad')"
-                          />
-                          <label class="fw-normal" for="antiguedad"
-                            >Antigüedad (Únicamente tratándose de las empresas que se mencionan en
-                            el apartado B, regla 7.1.2)</label
-                          >
-                        </div>
+                        <lib-input-check 
+                          [id]="'empleados'" 
+                          formControlName="empleados"
+                          [label]="'Empleados'" 
+                          [required]="false"
+                          (change)="setValoresStore(ivaEiepsFormGroup,'empleados', 'setEmpleados')">
+                        </lib-input-check>
+
+                        <lib-input-check 
+                          [id]="'infraestructura'" 
+                          formControlName="infraestructura"
+                          [label]="'Infraestructura'" 
+                          [required]="false"
+                          (change)="setValoresStore(ivaEiepsFormGroup,'infraestructura', 'setInfraestructura')">
+                        </lib-input-check>
+
+                        <lib-input-check 
+                          [id]="'monto'" 
+                          formControlName="monto"
+                          [label]="'Monto de Inversión'" 
+                          [required]="false"
+                          (change)="setValoresStore(ivaEiepsFormGroup,'monto', 'setMonto')">
+                        </lib-input-check>
+
+                        <lib-input-check 
+                          [id]="'antiguedad'" 
+                          formControlName="antiguedad"
+                          [label]="'Antigüedad (Únicamente tratándose de las empresas que se mencionan en el apartado B, regla 7.1.2)'" 
+                          [required]="false"
+                          (change)="setValoresStore(ivaEiepsFormGroup,'antiguedad', 'setAntiguedad')">
+                        </lib-input-check>
                       </div>
                 </div>
             }
