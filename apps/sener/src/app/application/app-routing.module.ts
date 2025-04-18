@@ -35,6 +35,13 @@ const ROUTES: Routes = [
       )
   },
   {
+    path: 'autorizacion-de-rayos-x',
+    loadChildren: () =>
+      import('./tramites/300105/autorizacion-de-rayos-x.module').then(
+        (m) => m.AutorizacionDeRayosXModule
+      ),
+  },
+  {
     path: 'pexim',
     loadChildren: () =>
       import('./tramites/140216/suspension-permiso.module').then(
