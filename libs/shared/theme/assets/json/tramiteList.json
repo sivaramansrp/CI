@@ -933,8 +933,8 @@
     {
         "id": 134,
         "tramite": 40401,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "/aga/registro-del-codigo/solicitud",
+        "linkDepartment": "/pago/registro-del-codigo/solicitud",
         "department": "aga"
     },
     {
@@ -1088,7 +1088,7 @@
         "id": 156,
         "tramite": 260902,
         "linkDashboard": "/cofepris/modificacion-permiso-sanitario/solicitante",
-        "linkDepartment": "/cofepris/modificacion-permiso-sanitario/solicitante",
+        "linkDepartment": "/pago/modificacion-permiso-sanitario/solicitante",
         "department": "cofepris"
     },
     {
@@ -1591,22 +1591,22 @@
     {
         "id": 228,
         "tramite": 260703,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "/cofepris/solicitud-permiso/datos",
+        "linkDepartment": "/pago/solicitud-permiso/datos",
         "department": "cofepris"
     },
     {
         "id": 229,
         "tramite": 260901,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "/cofepris/modificacion-permiso-sanitario-la-salud/solicitante",
+        "linkDepartment": "/pago/modificacion-permiso-sanitario-la-salud/solicitante",
         "department": "cofepris"
     },
     {
         "id": 230,
         "tramite": 260905,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "/cofepris/enmienda-permiso-sanitario/solictud",
+        "linkDepartment": "/pago/enmienda-permiso-sanitario/solictud",
         "department": "cofepris"
     },
     {
@@ -1955,15 +1955,15 @@
     {
         "id": 280,
         "tramite": 140216,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "/sener/pexim/suspension-permiso",
+        "linkDepartment": "/pago/pexim/suspension-permiso",
         "department": "sener"
     },
     {
         "id": 281,
         "tramite": 300105,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "/sener/autorizacion-de-rayos-x/solicitud",
+        "linkDepartment": "/pago/autorizacion-de-rayos-x/solicitud",
         "department": "sener"
     },
     {
@@ -1982,6 +1982,13 @@
     },
     {
         "id": 284,
+        "tramite": 260913,
+        "linkDashboard": "/cofepris/modificacion-del-permiso/pantallas",
+        "linkDepartment": "/pago/modificacion-del-permiso/pantallas",
+        "department": "cofepris"
+    },
+    {
+        "id": 285,
         "tramite": 317,
         "linkDashboard": "/agace/aviso-unico-renovacion/pantallas",
         "linkDepartment": "/pago/aviso-unico-renovacion/pantallas",
@@ -2002,6 +2009,7 @@
         "linkDepartment": "/sedena/pago/permiso-exportacion-pirotecnia/contenedor-de-pasos",
         "department": "sedena"
     }
+   
 
     
 ]
