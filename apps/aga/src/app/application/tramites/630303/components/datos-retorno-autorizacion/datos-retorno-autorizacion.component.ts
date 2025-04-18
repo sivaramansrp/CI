@@ -9,7 +9,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Subject, takeUntil } from 'rxjs';
 
 import { Catalogo, InputFecha, ModeloDeFormaDinamica } from '@libs/shared/data-access-user/src';
-import { InputFechaComponent } from '@ng-mf/data-access-user';
+import {CatalogoSelectComponent, InputFechaComponent } from '@ng-mf/data-access-user';
 
 import { FECHA_INGRESO, FECHA_VENCIMIENTO, FORMULARIO_DATOS_AUTORIZACION } from '../../enum/retorno-importacion-temporal.enum';
 import { RetornoImportacionTemporalService } from '../../services/retorno-importacion-temporal.service';
@@ -18,6 +18,8 @@ import { Tramite630303State, Tramite630303Store } from '../../estados/tramite630
 import { Tramite630303Query } from '../../estados/tramite630303.query';
 
 import { FormasDinamicasComponent } from "@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component";
+import { TituloComponent } from "../../../../../../../../../libs/shared/data-access-user/src/tramites/components/titulo/titulo.component";
+
 /**
  * Componente que gestiona los datos de retorno de autorización para el trámite 630303.
  * Permite inicializar formularios, obtener datos de catálogos y manejar el estado del formulario.
@@ -25,7 +27,7 @@ import { FormasDinamicasComponent } from "@libs/shared/data-access-user/src/tram
 @Component({
   selector: 'app-datos-retorno-autorizacion',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, InputFechaComponent, FormasDinamicasComponent],
+  imports: [CommonModule, ReactiveFormsModule, InputFechaComponent, FormasDinamicasComponent, CatalogoSelectComponent, TituloComponent],
   templateUrl: './datos-retorno-autorizacion.component.html',
   styleUrl: './datos-retorno-autorizacion.component.scss',
 })
@@ -33,6 +35,8 @@ export class DatosRetornoAutorizacionComponent implements OnInit, OnDestroy {
 
   public readonly ADUANA_INDEX = 1;
   public readonly SECCION_INDEX = 2;
+
+  seccionAduaneraOpciones: Catalogo[] = [];
 
   formularioDatosAutorizacion: ModeloDeFormaDinamica[] = FORMULARIO_DATOS_AUTORIZACION;
   
@@ -94,6 +98,7 @@ export class DatosRetornoAutorizacionComponent implements OnInit, OnDestroy {
    */
   inicializarFormulario(): void {
     this.datosImportacionRetornoAutorizacionGeneralFormulario = this.fb.group({
+      seccionAduanera: [this.estadoSeleccionado?.['seccionAduanera']||''],
       fechaIngreso: [this.estadoSeleccionado?.['fechaIngreso']||'', Validators.required],
       fechaVencimiento: [this.estadoSeleccionado?.['fechaVencimiento']||'', Validators.required],
     });
@@ -117,7 +122,7 @@ export class DatosRetornoAutorizacionComponent implements OnInit, OnDestroy {
     this.retornoImportacionTemporalService.getSeccionAduanera()
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data) => {
-        this.formularioDatosAutorizacion[this.SECCION_INDEX].opciones = data;
+        this.seccionAduaneraOpciones = data;
       });
   }
 

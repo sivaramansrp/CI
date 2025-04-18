@@ -15,6 +15,7 @@ import { Tramite630303Query } from '../../estados/tramite630303.query';
 
 import { Subject, takeUntil } from 'rxjs';
 import { FORMULARIO_DATOS_MERCANCIA } from '../../enum/retorno-importacion-temporal.enum';
+import { TituloComponent } from "../../../../../../../../../libs/shared/data-access-user/src/tramites/components/titulo/titulo.component";
 /**
  * Componente que gestiona los datos de la mercancía para el trámite 630303.
  * Permite inicializar formularios, obtener datos del estado y manejar el estado del formulario.
@@ -22,7 +23,7 @@ import { FORMULARIO_DATOS_MERCANCIA } from '../../enum/retorno-importacion-tempo
 @Component({
   selector: 'app-datos-mercancia',
   standalone: true,
-  imports: [CommonModule, FormasDinamicasComponent],
+  imports: [CommonModule, FormasDinamicasComponent, TituloComponent],
   templateUrl: './datos-mercancia.component.html',
   styleUrl: './datos-mercancia.component.scss',
 })

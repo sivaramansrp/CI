@@ -1,4 +1,4 @@
-import { REGEX_CORREO_ELECTRONICO, REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, REGEX_NOMBRE, REGEX_PATRON_ALFANUMERICO } from "@libs/shared/data-access-user/src/tramites/constantes/regex.constants";
+import { REGEX_CORREO_ELECTRONICO, REGEX_NOMBRE, REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, REGEX_PATRON_ALFANUMERICO, REGEX_POSTAL, REGEX_TELEFONO, REGEX_TELEFONO_DIGITOS } from "@libs/shared/data-access-user/src/tramites/constantes/regex.constants";
 
 
 /**
@@ -152,9 +152,9 @@ export const FORMULARIO_DATOS_SOLICITUD = [
         marginTop: 0
     },
     {
-        id: 'cveSeccionAduanal',
+        id: 'cveSeccionAduanera',
         labelNombre: 'Sección aduanera',
-        campo: 'cveSeccionAduanal',
+        campo: 'cveSeccionAduanera',
         clase: 'col-md-4',
         tipoInput: 'select-catalogos',
         desactivado: false,
@@ -167,53 +167,6 @@ export const FORMULARIO_DATOS_SOLICITUD = [
 ];
 
 export const FORMULARIO_DATOS_PROPIETARIO = [
-    {
-        id: 'nombre',
-        labelNombre: 'Nombre(s)',
-        campo: 'nombre',
-        clase: 'col-md-4',
-        tipoInput: 'text',
-        desactivado: false,
-        soloLectura: false,
-        validadores: [
-            { tipo: 'required' },
-            { tipo: 'pattern', valor:REGEX_NOMBRE, mensaje: 'Por favor, corrija el nombre' }
-        ],
-        marcadorDePosicion: '',
-        valorPredeterminado: '',
-        marginTop: 0
-    },
-    {
-        id: 'apellidoPaterno',
-        labelNombre: 'Apellido Paterno',
-        campo: 'apellidoPaterno',
-        clase: 'col-md-4',
-        tipoInput: 'text',
-        desactivado: false,
-        soloLectura: false,
-        validadores: [
-            { tipo: 'required' },
-            { tipo: 'pattern', valor:REGEX_NOMBRE, mensaje: 'Por favor, corrija el appellido paterno.' }
-        ],
-        marcadorDePosicion: '',
-        valorPredeterminado: '',
-        marginTop: 0
-    },
-    {
-        id: 'apellidoMaterno',
-        labelNombre: 'Apellido Materno',
-        campo: 'apellidoMaterno',
-        clase: 'col-md-4',
-        tipoInput: 'text',
-        desactivado: false,
-        soloLectura: false,
-        validadores: [
-            { tipo: 'pattern', valor:REGEX_NOMBRE, mensaje: 'Por favor, corrija el appellido materno.' }
-        ],
-        marcadorDePosicion: '',
-        valorPredeterminado: '',
-        marginTop: 0
-    },
     {
         id: 'calle',
         labelNombre: 'Calle',
@@ -282,7 +235,8 @@ export const FORMULARIO_DATOS_PROPIETARIO = [
         desactivado: false,
         soloLectura: false,
         validadores: [
-            { tipo: 'required' }
+            { tipo: 'required' },
+            { tipo: 'pattern', valor:REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija el estado y localidad.' }
         ],
         marcadorDePosicion: '',
         valorPredeterminado: '',
@@ -313,7 +267,8 @@ export const FORMULARIO_DATOS_PROPIETARIO = [
         desactivado: false,
         soloLectura: false,
         validadores: [
-            { tipo: 'required' }
+            { tipo: 'required' },
+            { tipo: 'pattern', valor:REGEX_TELEFONO_DIGITOS, mensaje: 'Por favor, corrija el teléfono.' }
         ],
         marcadorDePosicion: '',
         valorPredeterminado: '',
@@ -328,7 +283,8 @@ export const FORMULARIO_DATOS_PROPIETARIO = [
         desactivado: false,
         soloLectura: false,
         validadores: [
-            { tipo: 'required' }
+            { tipo: 'required' },
+            { tipo: 'pattern', valor:REGEX_POSTAL, mensaje: 'Debe contener sólo 5 números.' }
         ],
         marcadorDePosicion: '',
         valorPredeterminado: '',
@@ -368,17 +324,5 @@ export const FORMULARIO_DATOS_AUTORIZACION = [
         valorPredeterminado: '',
         marginTop: 0
     },
-    {
-        id: 'seccionAduanera',
-        labelNombre: 'Sección aduanera',
-        campo: 'seccionAduanera',
-        clase: 'col-md-4',
-        tipoInput: 'select-catalogos',
-        desactivado: false,
-        soloLectura: false,
-        validadores: [],
-        marcadorDePosicion: '',
-        valorPredeterminado: '',
-        marginTop: 0
-    }
+    
 ];

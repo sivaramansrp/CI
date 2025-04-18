@@ -45,4 +45,12 @@ export class RetornoImportacionTemporalService {
     return this.http.get<Catalogo[]>('/assets/json/630303/prorroga.json');
   }
 
+  getPropietario(): Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>('/assets/json/630303/propietario.json');
+  }
+
+
+  getTipoDePropietario(): Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>('/assets/json/630303/tipo-de-propietario.json');
+  }
 }

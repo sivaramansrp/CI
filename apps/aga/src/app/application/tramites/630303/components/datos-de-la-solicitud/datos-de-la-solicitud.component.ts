@@ -21,6 +21,7 @@ import { Tramite630303State, Tramite630303Store } from '../../estados/tramite630
 import { Tramite630303Query } from '../../estados/tramite630303.query';
 
 import { FormasDinamicasComponent } from "@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component";
+import { TituloComponent } from "../../../../../../../../../libs/shared/data-access-user/src/tramites/components/titulo/titulo.component";
 
 /**
  * Componente que gestiona los datos de la solicitud para el trámite 630303.
@@ -37,7 +38,8 @@ import { FormasDinamicasComponent } from "@libs/shared/data-access-user/src/tram
     DatosRetornoProrrogaComponent,
     DatosRetornoAutorizacionComponent,
     FormasDinamicasComponent,
-  ],
+    TituloComponent
+],
   templateUrl: './datos-de-la-solicitud.component.html',
   styleUrl: './datos-de-la-solicitud.component.scss',
 })
