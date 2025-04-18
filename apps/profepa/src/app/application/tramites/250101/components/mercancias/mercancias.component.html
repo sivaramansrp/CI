@@ -60,6 +60,14 @@
                 formControlName="cantidad" (change)="setValoresStore(formMercancias, 'cantidad', 'setCantidad')"/>
              
             </div>
+            @if(formMercancias.controls['cantidad'].invalid && formMercancias.controls['cantidad'].touched) {
+              <div class="d-grid">
+                @if(formMercancias.controls['cantidad'].errors?.['required']) {
+                  <span class="mensaje-error">Este campo es obligatorio</span>
+                }
+              
+              </div>
+            }
           </div>
           <div class="col-md-4">
             <div class="form-group">

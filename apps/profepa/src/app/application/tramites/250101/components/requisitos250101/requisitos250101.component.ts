@@ -118,11 +118,11 @@ export class Requisitos250101Component implements OnInit, OnDestroy {
 
     this.transporteForm = this.fb.group({
       medio: [this.solicitudState.medio, Validators.required],
-      identificacion: [this.solicitudState.identificacion, Validators.required],
-      economico: [this.solicitudState.economico, Validators.required],
-      placa: [this.solicitudState.placa, Validators.required],
-      numero: [this.solicitudState.numero, Validators.required],
-      fechas: [this.solicitudState.fechas, Validators.required],
+      identificacion: [this.solicitudState.identificacion,[Validators.required,Validators.maxLength(16)]],
+      economico: [this.solicitudState.economico,[Validators.required,Validators.maxLength(50)]],
+      placa: [this.solicitudState.placa,[Validators.required,Validators.maxLength(25)]],
+      numero: [this.solicitudState.numero,[Validators.required,Validators.maxLength(50)]],
+      fechas: [this.solicitudState.fechas,Validators.required],
       requisito: [this.solicitudState.requisito, Validators.required],
     });
   }

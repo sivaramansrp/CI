@@ -37,16 +37,36 @@
             <div class="col-md-4">
                 <div class="form-group">
                   <label class="form-label" for="identificacion">No. identificación:*</label>
-                  <input class="form-control" id="identificacion"  maxlength="20"
+                  <input class="form-control" id="identificacion" 
                     type="number" formControlName="identificacion"   (change)="setValoresStore(transporteForm, 'identificacion', 'setIdentificacion')"/>
                 </div>
+                @if(transporteForm.controls['identificacion'].invalid && transporteForm.controls['identificacion'].touched) {
+                  <div class="d-grid">
+                    @if(transporteForm.controls['identificacion'].errors?.['required']) {
+                      <span class="mensaje-error">Este campo es obligatorio</span>
+                    }                  
+                    @if(transporteForm.controls['identificacion'].errors?.['maxlength']) {
+                      <span class="mensaje-error">El número de identificación no puede ser mayor a 25 caracteres</span>
+                    }
+                  </div>
+                }
               </div> 
               <div class="col-md-4">
                 <div class="form-group">
                   <label class="form-label" for="economico">No. económico:*:</label>
-                  <input class="form-control" id="economico" maxlength="50"
+                  <input class="form-control" id="economico"
                     type="number" formControlName="economico"  (change)="setValoresStore(transporteForm, 'economico', 'setEconomico')" />
                 </div>
+                @if(transporteForm.controls['economico'].invalid && transporteForm.controls['economico'].touched) {
+                  <div class="d-grid">
+                    @if(transporteForm.controls['economico'].errors?.['required']) {
+                      <span class="mensaje-error">Este campo es obligatorio</span>
+                    }
+                    @if(transporteForm.controls['economico'].errors?.['maxlength']) {
+                      <span class="mensaje-error">El número económico no puede ser mayor a 50 caracteres</span>
+                    }
+                  </div>
+                }
               </div> 
               <div class="col-md-4">
                 <div class="form-group">
@@ -54,6 +74,16 @@
                   <input class="form-control" id="placa"  maxlength="25"
                     type="number" formControlName="placa"  (change)="setValoresStore(transporteForm, 'placa', 'setPlaca')"/>
                 </div>
+                @if(transporteForm.controls['placa'].invalid && transporteForm.controls['placa'].touched) {
+                  <div class="d-grid">
+                    @if(transporteForm.controls['placa'].errors?.['required']) {
+                      <span class="mensaje-error">Este campo es obligatorio</span>
+                    }
+                    @if(transporteForm.controls['placa'].errors?.['maxlength']) {
+                      <span class="mensaje-error">La placa no puede ser mayor a 25 caracteres</span>
+                    }
+                  </div>
+                }
               </div>
             </div>
             <div class="col-md-12 mt-5 d-flex justify-content-end">
@@ -97,9 +127,19 @@
                 <div class="col-md-4">
                     <div class="form-group">
                       <label class="form-label" for="numero">Número*:</label>
-                      <input class="form-control" id="numero" maxlength="50"
+                      <input class="form-control" id="numero" 
                         type="number" formControlName="numero"  (change)="setValoresStore(transporteForm, 'numero', 'setNumero')"/>
                     </div>
+                    @if(transporteForm.controls['numero'].invalid && transporteForm.controls['numero'].touched) {
+                      <div class="d-grid">
+                        @if(transporteForm.controls['numero'].errors?.['required']) {
+                          <span class="mensaje-error">Este campo es obligatorio</span>
+                        }
+                        @if(transporteForm.controls['numero'].errors?.['maxlength']) {
+                          <span class="mensaje-error">El número no puede ser mayor a 50 caracteres</span>
+                        }
+                      </div>
+                    }
                   </div>
                   <div class="col-md-4">
                     <div class="form-group">
@@ -107,6 +147,17 @@
                         <input class="form-control" id="fechas" type="date"  [max]="fechaInicioTramite" 
                           formControlName="fechas"  (change)="setValoresStore(transporteForm, 'fechas', 'setFechas')" />
                     </div>
+                    @if(transporteForm.controls['fechas'].invalid && transporteForm.controls['fechas'].touched) {
+                      <div class="d-grid">
+                        @if(transporteForm.controls['fechas'].errors?.['required']) {
+                          <span class="mensaje-error">Este campo es obligatorio</span>
+                        }
+                        @if(transporteForm.controls['fechas'].errors?.['max']) {
+                          <span class="mensaje-error">La fecha no puede ser posterior a la fecha de inicio del trámite</span>
+                        }
+                       
+                      </div>
+                    }
                   </div>
 
             </div>
