@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit, TemplateRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Anteriores, ANTERIORES_TABLA, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 import { ComercioExteriorService } from '../../services/comercio-exterior.service';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
@@ -52,15 +52,15 @@ export class NumeroDeEmpleadosComponent implements OnInit,OnDestroy {
 
   public crearAgregarForm(): void {
     this.agregarForm = this.fb.group({
-      rfc: [''],
+      rfc: ['',Validators.required],
       registroInput: [{ value: '', disabled: true }],
       razonSocialInput: [{ value: '', disabled: true }],
-      numeroUno: [''],
-      numeroDos: [''],
-      numeroTres: [''],
-      agregarCatalogoUno: [''],
-      agregarCatalogoDos: [''],
-      agregarCatalogoTres: [''],
+      numeroUno: ['',Validators.required],
+      numeroDos: ['',Validators.required],
+      numeroTres: ['',Validators.required],
+      agregarCatalogoUno: ['',Validators.required],
+      agregarCatalogoDos: ['',Validators.required],
+      agregarCatalogoTres: ['',Validators.required],
     });
   }
 

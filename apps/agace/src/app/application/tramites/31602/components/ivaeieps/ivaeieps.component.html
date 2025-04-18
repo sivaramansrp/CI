@@ -23,7 +23,9 @@
                     [isRequired]="true"
                     [layout]="'horizontal'"
                     [gap]="'50px'"
-                    formControlName="indiqueIva">
+                    formControlName="indiqueIva"
+                    (change)="setValoresStore(ivaEiepsFormGroup,'indiqueIva', 'setIndiqueIva')"
+                    >
                 </app-input-radio>
             </div>
             @if(predeterminadoSeleccionar === 'Si') {
@@ -84,6 +86,7 @@
                             type="checkbox"
                             id="empleados"
                             formControlName="empleados"
+                            (change)="setValoresStore(ivaEiepsFormGroup,'empleados', 'setEmpleados')"
                           />
                           <label class="fw-normal" for="empleados">Empleados</label>
                         </div>
@@ -94,6 +97,7 @@
                             type="checkbox"
                             id="infraestructura"
                             formControlName="infraestructura"
+                            (change)="setValoresStore(ivaEiepsFormGroup,'infraestructura', 'setInfraestructura')"
                           />
                           <label class="fw-normal" for="infraestructura">Infraestructura</label>
                         </div>
@@ -103,6 +107,7 @@
                             type="checkbox"
                             id="monto"
                             formControlName="monto"
+                            (change)="setValoresStore(ivaEiepsFormGroup,'monto', 'setMonto')"
                           />
                           <label class="fw-normal" for="monto">Monto de Inversión</label>
                         </div>
@@ -112,6 +117,7 @@
                             type="checkbox"
                             id="antiguedad"
                             formControlName="antiguedad"
+                            (change)="setValoresStore(ivaEiepsFormGroup,'antiguedad', 'setAntiguedad')"
                           />
                           <label class="fw-normal" for="antiguedad"
                             >Antigüedad (Únicamente tratándose de las empresas que se mencionan en

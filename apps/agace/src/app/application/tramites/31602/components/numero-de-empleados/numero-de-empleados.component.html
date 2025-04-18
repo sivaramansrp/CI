@@ -43,6 +43,9 @@
                 </button>
               </div>
             </div>
+            @if(agregarForm.get('rfc')?.invalid && agregarForm.get('rfc')?.touched) {
+            <div class="mensaje-error">Este campo es obligatorio.</div>
+            }
           </div>
         </div>
 
@@ -93,6 +96,9 @@
                 formControlName="numeroUno"
                 placeholder="1er Bimestre"
               />
+              @if(agregarForm.get('numeroUno')?.invalid && agregarForm.get('numeroUno')?.touched) {
+              <div class="mensaje-error">Este campo es obligatorio.</div>
+              }
               <label class="form-label" for="empleados1"
                 >Número de empleados</label
               >
@@ -102,6 +108,9 @@
                 formControlName="numeroDos"
                 placeholder="2do Bimestre"
               />
+              @if(agregarForm.get('numeroDos')?.invalid && agregarForm.get('numeroDos')?.touched) {
+              <div class="mensaje-error">Este campo es obligatorio.</div>
+              }
               <label class="form-label" for="empleados1"
                 >Número de empleados</label
               >
@@ -111,6 +120,9 @@
                 formControlName="numeroTres"
                 placeholder="3er Bimestre"
               />
+              @if(agregarForm.get('numeroTres')?.invalid && agregarForm.get('numeroTres')?.touched) {
+              <div class="mensaje-error">Este campo es obligatorio.</div>
+              }
             </div>
           </div>
           <div class="col-md-6">

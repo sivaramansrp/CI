@@ -8,7 +8,9 @@ import radio_si_no from 'libs/shared/theme/assets/json/31601/radio_si_no.json';
 import { ComercioExteriorService } from '../../services/comercio-exterior.service';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { IvaeiepsDosComponent } from '../ivaeieps-dos/ivaeieps-dos.component';
-import { Subject, takeUntil } from 'rxjs';
+import { map, Subject, takeUntil } from 'rxjs';
+import { Solicitud31602IvaeiepsState, Tramite31602IvaeiepsStore } from '../../estados/stores/tramite31602ivaeieps.store';
+import { Tramite31602IvaeiepsQuery } from '../../estados/queries/tramite31602ivaeieps.query';
 
 @Component({
   selector: 'app-ivaeieps',
@@ -41,17 +43,23 @@ export class IvaeiepsComponent implements OnInit,OnDestroy {
   public empresasDelGrupoDatos: EmpresasDelGrupo[] = [];
   public configuracionTabla: ConfiguracionColumna<EmpresasDelGrupo>[] = EMPRESAS_TABLA;
   private destroyNotifier$: Subject<void> = new Subject();
+  public solicitudState!: Solicitud31602IvaeiepsState;
 
 
   constructor(
     private fb: FormBuilder,
     private comercioExteriorSvc: ComercioExteriorService,
-    private modalService: BsModalService
+    private modalService: BsModalService,
+    private tramite31602Store: Tramite31602IvaeiepsStore,
+    private tramite31602Query: Tramite31602IvaeiepsQuery
   ) {
     //
   }
 
   ngOnInit(): void {
+    this.tramite31602Query.selectSolicitud$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
+        this.solicitudState = seccionState;
+    })).subscribe();
     this.crearIvaEiepsForm();
     this.getEmpresasDelGrupoDatos();
     this.crearIvaForm();
@@ -59,11 +67,11 @@ export class IvaeiepsComponent implements OnInit,OnDestroy {
 
   public crearIvaEiepsForm(): void {
     this.ivaEiepsFormGroup = this.fb.group({
-      indiqueIva: [''],
-      empleados: [''],
-      infraestructura: [''],
-      monto: [''],
-      antiguedad: [''],
+      indiqueIva: [this.solicitudState.indiqueIva],
+      empleados: [this.solicitudState.empleados],
+      infraestructura: [this.solicitudState.infraestructura],
+      monto: [this.solicitudState.monto],
+      antiguedad: [this.solicitudState.antiguedad],
     });
   }
 
@@ -92,6 +100,11 @@ export class IvaeiepsComponent implements OnInit,OnDestroy {
 
   public abrirModal(template: TemplateRef<void>): void {
     this.modalRef = this.modalService.show(template);
+  }
+
+  public setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite31602IvaeiepsStore): void {
+    const VALOR = form.get(campo)?.value;
+    (this.tramite31602Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
 
   ngOnDestroy(): void {

@@ -17,6 +17,7 @@
                       type="number"
                       formControlName="transferencias"
                       class="form-control"
+                      (change)="setValoresStore(conceptosForm,'transferencias', 'setTransferencias')"
                       placeholder=""
                     />
                   </td>
@@ -25,6 +26,7 @@
                       type="number"
                       formControlName="transferenciasVir"
                       class="form-control"
+                      (change)="setValoresStore(conceptosForm,'transferenciasVir', 'setTransferenciasVir')"
                       placeholder=""
                     />
                   </td>
@@ -35,6 +37,7 @@
                     <input
                       type="number"
                       formControlName="retornos"
+                      (change)="setValoresStore(conceptosForm,'retornos', 'setRetornos')"
                       class="form-control"
                       placeholder=""
                     />
@@ -43,6 +46,7 @@
                     <input
                       type="number"
                       formControlName="retornosSe"
+                      (change)="setValoresStore(conceptosForm,'retornosSe', 'setRetornosSe')"
                       class="form-control"
                       placeholder=""
                     />
@@ -54,6 +58,7 @@
                     <input
                       type="number"
                       formControlName="constancias"
+                      (change)="setValoresStore(conceptosForm,'constancias', 'setConstancias')"
                       class="form-control"
                       placeholder="10"
                     />
@@ -62,6 +67,7 @@
                     <input
                       type="number"
                       formControlName="constanciasDe"
+                      (change)="setValoresStore(conceptosForm,'constanciasDe', 'setConstanciasDe')"
                       class="form-control"
                       placeholder="10"
                     />
@@ -73,6 +79,7 @@
                     <input
                       type="number"
                       formControlName="total"
+                      (change)="setValoresStore(conceptosForm,'total', 'setTotal')"
                       class="form-control"
                       placeholder="100"
                     />
@@ -81,6 +88,7 @@
                     <input
                       type="number"
                       formControlName="totalDos"
+                      (change)="setValoresStore(conceptosForm,'totalDos', 'setTotalDos')"
                       class="form-control"
                       placeholder="100"
                     />
@@ -100,6 +108,7 @@
                     id="empleadosPropios-si"
                     [isRequired]="true"
                     formControlName="empleadosPropios"
+                    (change)="setValoresStore(conceptosForm,'empleadosPropios', 'setEmpleadosPropios')"
                     [layout]="'horizontal'">
                 </app-input-radio>
           </div>
@@ -117,6 +126,7 @@
                     type="number"
                     class="form-control"
                     formControlName="numeroEmpleados"
+                    (change)="setValoresStore(conceptosForm,'numeroEmpleados', 'setNumeroEmpleados')"
                     id="numeroEmpleados"
                     placeholder=""
                   />
@@ -129,6 +139,7 @@
                     id="numeroEmpleados"
                     placeholder=""
                     formControlName="numeroEmpleadosDos"
+                    (change)="setValoresStore(conceptosForm,'numeroEmpleadosDos', 'setNumeroEmpleadosDos')"
                   />
                   <label class="form-label" for="numeroEmpleados"
                     >Número de empleados <span>*</span>:</label
@@ -139,6 +150,7 @@
                     id="numeroEmpleados"
                     placeholder=""
                     formControlName="numeroEmpleadosTres"
+                    (change)="setValoresStore(conceptosForm,'numeroEmpleadosTres', 'setNumeroEmpleadosTres')"
                   />
                 </div>
                 <div class="col-md-6">
@@ -147,6 +159,7 @@
                     formControlName="comboBimestresUno"
                     [label]="'Bimestre'"
                     [required]="true"
+                    (change)="setValoresStore(conceptosForm,'comboBimestresUno', 'setComboBimestresUno')"
                   >
                   </app-catalogo-select>
                   <app-catalogo-select
@@ -154,6 +167,7 @@
                     formControlName="comboBimestresDos"
                     [label]="'Bimestre'"
                     [required]="true"
+                    (change)="setValoresStore(conceptosForm,'comboBimestresDos', 'setComboBimestresDos')"
                   >
                   </app-catalogo-select>
                   <app-catalogo-select
@@ -161,6 +175,7 @@
                     formControlName="comboBimestresTres"
                     [label]="'Bimestre'"
                     [required]="true"
+                    (change)="setValoresStore(conceptosForm,'comboBimestresTres', 'setComboBimestresTres')"
                   >
                   </app-catalogo-select>
                 </div>
@@ -177,6 +192,7 @@
                     id="conEmpleados-si"
                     [isRequired]="true"
                     formControlName="conEmpleados"
+                    (change)="setValoresStore(conceptosForm,'conEmpleados', 'setConEmpleados')"
                     [layout]="'horizontal'">
                 </app-input-radio>
           </div>
@@ -194,6 +210,7 @@
                     id="conEmpleados-si"
                     [isRequired]="true"
                     formControlName="conEmpleados"
+                    (change)="setValoresStore(conceptosForm,'conEmpleados', 'setConEmpleados')"
                     [layout]="'horizontal'">
                 </app-input-radio>
           </div>
@@ -208,6 +225,7 @@
                     id="conEmpleados-si"
                     [isRequired]="true"
                     formControlName="indiqueSiLosSocios"
+                    (change)="setValoresStore(conceptosForm,'indiqueSiLosSocios', 'setIndiqueSiLosSocios')"
                     [layout]="'horizontal'">
                 </app-input-radio>
           </div>
