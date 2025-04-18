@@ -541,8 +541,8 @@
     {
         "id": 78,
         "tramite": 220404,
-        "linkDashboard": "/agriculture/pago/desistimiento/desistimiento-page",
-        "linkDepartment": "/agriculture/pago/desistimiento/desistimiento-page",
+        "linkDashboard": "/agriculture/desistimiento/desistimiento-page",
+        "linkDepartment": "/pago/desistimiento/desistimiento-page",
         "department": "agriculture"
     },
     {
@@ -744,8 +744,8 @@
     {
         "id": 107,
         "tramite": 570101,
-        "linkDashboard": "/aga/pago/cancelacion-servicios-extraordinarios/cancelacion-extraordinarios",
-        "linkDepartment": "/aga/pago/cancelacion-servicios-extraordinarios/cancelacion-extraordinarios",
+        "linkDashboard": "/aga/cancelacion-servicios-extraordinarios/cancelacion-extraordinarios",
+        "linkDepartment": "/pago/cancelacion-servicios-extraordinarios/cancelacion-extraordinarios",
         "department": "aga"
     },
     {
