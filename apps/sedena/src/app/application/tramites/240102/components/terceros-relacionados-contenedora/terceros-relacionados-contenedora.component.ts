@@ -1,15 +1,17 @@
+import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { DestinoFinal } from '../../../../shared/models/terceros-relacionados.model';
+import { ID_PROCEDIMIENTO } from '../../constants/importacion-armas-municiones.enum';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Proveedor } from '../../../../shared/models/terceros-relacionados.model';
+import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
 import { Tramite240102Query } from '../../estados/tramite240102Query.query';
 import { Tramite240102Store } from '../../estados/tramite240102Store.store';
 import { takeUntil } from 'rxjs';
-
 /**
  * @title Terceros Relacionados Contenedora
  * @description Componente contenedor encargado de suscribirse a los datos de destinatarios finales y proveedores del trámite.
@@ -26,6 +28,7 @@ import { takeUntil } from 'rxjs';
 export class TercerosRelacionadosContenedoraComponent
   implements OnInit, OnDestroy
 {
+  public idProcedimiento = ID_PROCEDIMIENTO; // ID del procedimiento actual
   /**
    * Observable para limpiar las suscripciones activas al destruir el componente.
    * @property {Subject<void>} destroy$
@@ -54,7 +57,9 @@ export class TercerosRelacionadosContenedoraComponent
    */
   constructor(
     private tramiteStore: Tramite240102Store,
-    private tramiteQuery: Tramite240102Query // eslint-disable-next-line no-empty-function
+    private tramiteQuery: Tramite240102Query, // eslint-disable-next-line no-empty-function
+    private router: Router,
+    private activatedRoute: ActivatedRoute
   ) {}
 
   /**
@@ -77,6 +82,34 @@ export class TercerosRelacionadosContenedoraComponent
         this.proveedorTablaDatos = data;
       });
   }
+
+  /**
+   * Modifica los datos del destinatario en el store y navega a la sección de acciones.
+   *
+   * Llama al método `actualizarDatosDestinatario` del store con el objeto recibido,
+   * y luego ejecuta la función `irAAcciones()` para continuar con el flujo.
+   *
+   * @param {DestinoFinal} datos - Objeto que contiene los datos actualizados del destinatario.
+   * @returns {void}
+   */
+  modificarDestinarioDatos(datos: DestinoFinal): void {
+    this.tramiteStore.actualizarDatosDestinatario(datos);
+    this.irAAcciones('../agregar-destino-final');
+  }
+
+  /**
+   * Modifica los datos del proveedor en el store.
+   *
+   * Llama al método `actualizarDatosProveedor` del store con el objeto recibido.
+   *
+   * @param {Proveedor} datos - Objeto que contiene los datos actualizados del proveedor.
+   * @returns {void}
+   */
+  modificarProveedorDatos(datos: Proveedor): void {
+    this.tramiteStore.actualizarDatosProveedor(datos);
+    this.irAAcciones('../agregar-destino-final');
+  }
+
   /**
    * Hook que se ejecuta al destruir el componente.
    * Envía un valor al Subject `unsubscribe$` y lo completa para liberar suscripciones.
@@ -84,5 +117,17 @@ export class TercerosRelacionadosContenedoraComponent
   ngOnDestroy(): void {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
+  }
+
+  /**
+   * Navega a una ruta relativa dentro del flujo actual.
+   * @method irAAcciones
+   * @param {string} accionesPath - Ruta relativa a la que se desea navegar.
+   * @returns {void}
+   */
+  irAAcciones(accionesPath: string): void {
+    this.router.navigate([accionesPath], {
+      relativeTo: this.activatedRoute,
+    });
   }
 }

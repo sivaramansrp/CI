@@ -8,7 +8,7 @@ import { Store } from '@datorama/akita';
 import { StoreConfig } from '@datorama/akita';
 
 /**
- * Interfaz que representa el estado completo del trámite 240101.
+ * Interfaz que representa el estado completo del trámite 240102.
  *
  * @property {number} [tabSeleccionado] - Pestaña actualmente activa en el flujo.
  * @property {DestinoFinal[]} destinatarioFinalTablaDatos - Lista de destinatarios finales registrados.
@@ -17,22 +17,24 @@ import { StoreConfig } from '@datorama/akita';
  * @property {MercanciaDetalle[]} merccancialTablaDatos - Lista de mercancías registradas.
  * @property {DatosDelTramiteFormState} datosDelTramite - Información general del formulario de datos del trámite.
  */
-export interface Tramite240101State {
+export interface Tramite240102State {
   tabSeleccionado?: number;
   destinatarioFinalTablaDatos: DestinoFinal[];
   proveedorTablaDatos: Proveedor[];
   pagoDerechos: PagoDerechosFormState;
   merccancialTablaDatos: MercanciaDetalle[];
   datosDelTramite: DatosDelTramiteFormState;
+  modificarDestinarioDatos?: DestinoFinal | null;
+  modificarProveedorDatos?: Proveedor | null;
 }
 
 /**
- * Crea el estado inicial para el trámite 240101.
+ * Crea el estado inicial para el trámite 240102.
  *
  * @function createInitialState
- * @returns {Tramite240101State} El estado inicial del store.
+ * @returns {Tramite240102State} El estado inicial del store.
  */
-export function createInitialState(): Tramite240101State {
+export function createInitialState(): Tramite240102State {
   return {
     tabSeleccionado: 1,
     destinatarioFinalTablaDatos: [],
@@ -52,18 +54,20 @@ export function createInitialState(): Tramite240101State {
       aduanasSeleccionadas: [],
       paisDestino: '',
     },
+    modificarDestinarioDatos: null,
+    modificarProveedorDatos: null,
   };
 }
 
 /**
- * Store que maneja el estado del trámite 240101.
+ * Store que maneja el estado del trámite 240102.
  * Utiliza Akita para el control reactivo del estado.
  */
 @Injectable({
   providedIn: 'root',
 })
-@StoreConfig({ name: 'tramite240101', resettable: true })
-export class Tramite240102Store extends Store<Tramite240101State> {
+@StoreConfig({ name: 'tramite240102', resettable: true })
+export class Tramite240102Store extends Store<Tramite240102State> {
   constructor() {
     super(createInitialState());
   }
@@ -158,6 +162,39 @@ export class Tramite240102Store extends Store<Tramite240101State> {
     this.update((state) => ({
       ...state,
       merccancialTablaDatos: [...state.merccancialTablaDatos, ...newMercancia],
+    }));
+  }
+  /**
+   * Actualiza el estado con los datos del destinatario proporcionados y limpia los datos del proveedor.
+   *
+   * Esta función se utiliza para establecer nuevos datos del destinatario (`modificarDestinarioDatos`)
+   * en el estado del store, asegurando que los datos del proveedor se reinicien a `null`.
+   *
+   * @param {DestinoFinal} datos - Objeto con la información actualizada del destinatario.
+   * @returns {void}
+   */
+  public actualizarDatosDestinatario(datos: DestinoFinal): void {
+    this.update((state) => ({
+      ...state,
+      modificarDestinarioDatos: datos,
+      modificarProveedorDatos: null,
+    }));
+  }
+
+  /**
+   * Actualiza el estado con los datos del proveedor proporcionados y limpia los datos del destinatario.
+   *
+   * Esta función se utiliza para establecer nuevos datos del proveedor (`modificarProveedorDatos`)
+   * en el estado del store, asegurando que los datos del destinatario se reinicien a `null`.
+   *
+   * @param {Proveedor} datos - Objeto con la información actualizada del proveedor.
+   * @returns {void}
+   */
+  public actualizarDatosProveedor(datos: Proveedor): void {
+    this.update((state) => ({
+      ...state,
+      modificarProveedorDatos: datos,
+      modificarDestinarioDatos: null,
     }));
   }
 }

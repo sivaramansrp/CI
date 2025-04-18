@@ -1,5 +1,5 @@
 import {
-  Tramite240101State,
+  Tramite240102State,
   Tramite240102Store,
 } from './tramite240102Store.store';
 import { Injectable } from '@angular/core';
@@ -11,7 +11,7 @@ import { Query } from '@datorama/akita';
  */
 
 @Injectable({ providedIn: 'root' })
-export class Tramite240102Query extends Query<Tramite240101State> {
+export class Tramite240102Query extends Query<Tramite240102State> {
   /**
    * Constructor que inicializa el query con el store correspondiente.
    *
@@ -77,4 +77,18 @@ export class Tramite240102Query extends Query<Tramite240101State> {
   public getMercanciaTablaDatos$ = this.select(
     (state) => state.merccancialTablaDatos
   );
+
+  /**
+   * Observable que emite los datos del tercero seleccionados, ya sea un destinatario o un proveedor.
+   *
+   * Devuelve `modificarDestinarioDatos` si existe; de lo contrario, `modificarProveedorDatos`.
+   * Si ninguno está definido, retorna `null`.
+   *
+   * @type {Observable<DestinoFinal | Proveedor | null>}
+   */
+  public obtenerTercerosDatos$ = this.select((state) => {
+    return (
+      state.modificarDestinarioDatos || state.modificarProveedorDatos || null
+    );
+  });
 }
