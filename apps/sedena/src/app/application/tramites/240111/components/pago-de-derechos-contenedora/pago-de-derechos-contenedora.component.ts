@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { ID_PROCEDIMIENTO } from '../../constants/importacion-armas-municiones.enum';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { PagoDeDerechosComponent } from '../../../../shared/components/pago-de-derechos/pago-de-derechos.component';
@@ -8,6 +9,7 @@ import { Subject } from 'rxjs';
 import { Tramite240101Query } from '../../estados/tramite240111Query.query';
 import { Tramite240101Store } from '../../estados/tramite240111Store.store';
 import { takeUntil } from 'rxjs';
+
 /**
  * @title Pago de Derechos Contenedora
  * @description Componente contenedor que se encarga de enlazar el estado de pago de derechos con el formulario correspondiente.
@@ -22,6 +24,14 @@ import { takeUntil } from 'rxjs';
   styleUrl: './pago-de-derechos-contenedora.component.css',
 })
 export class PagoDeDerechosContenedoraComponent implements OnInit, OnDestroy {
+  /**
+   * @var {number} idProcedimiento
+   * @description Identificador único del procedimiento asociado.
+   * @access Público
+   * @readonly
+   * @since Versión 1.0.0
+   */
+  public readonly idProcedimiento = ID_PROCEDIMIENTO;
   /**
    * Observable para liberar suscripciones al destruir el componente.
    * @property {Subject<void>} unsubscribe$
