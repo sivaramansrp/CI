@@ -315,6 +315,15 @@ const ROUTES: Routes = [
       import('./tramites/260512/permiso-de-importacion.module').then(
         (m) => m.PermisoDeImportacionModule)
   },
+
+  {
+    path: 'modificacion-permiso-sanitario-la-salud',
+    loadChildren: () =>
+      import(
+        './tramites/260901/modificacion-permiso-sanitario-la-salud.module'
+      ).then((m) => m.ModificacionPermisoSanitarioLaSaludModule),
+      
+  },
   {
     path: 'permiso-sujetos',
     loadChildren: () =>
@@ -363,6 +372,19 @@ const ROUTES: Routes = [
           (m) => m.ActualizacionImportacionSanitariaModule
         ),
 },
+{
+  path: 'permiso-sanitario-dispositivos-medicos',
+  loadChildren: () =>
+    import('./tramites/260915/permiso-sanitario-dispositivos-medicos.module').then(
+      (m) => m.PermisoSanitarioDispositivosMedicosModule)
+},
+{
+    path: 'enmienda-permiso-sanitario',
+    loadChildren: () =>
+      import('./tramites/260905/enmienda-permiso-sanitario.module').then(
+        (m) => m.EnmiendaPermisoSanitarioModule
+      ),
+  },
 
 ];
 

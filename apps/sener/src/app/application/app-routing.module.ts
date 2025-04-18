@@ -9,6 +9,10 @@ const ROUTES: Routes = [
     component: SeleccionTramiteComponent
   },
   {
+    path:'producto-petrolifero',
+    loadChildren: () => import('./tramites/130108/importacion-producto-petrolifero.module').then(m => m.ImportacionProductoPetroliferoModule)
+  },
+  {
     
     path: 'hidrocarburos-de-petroleo',
     loadChildren: () =>
@@ -29,6 +33,13 @@ const ROUTES: Routes = [
       import('./tramites/130121/permiso-de-hidrocarburos.module').then(
         (m) => m.PermisoDeHidrocarburosModule
       )
+  },
+  {
+    path: 'autorizacion-de-rayos-x',
+    loadChildren: () =>
+      import('./tramites/300105/autorizacion-de-rayos-x.module').then(
+        (m) => m.AutorizacionDeRayosXModule
+      ),
   }
 ];
 
