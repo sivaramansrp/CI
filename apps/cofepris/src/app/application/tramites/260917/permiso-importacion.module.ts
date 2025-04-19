@@ -9,7 +9,9 @@ import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { PermisoImportacionRoutingModule } from './permiso-importacion-routing.module';
+import { TercerosRelacionadosComponent } from '../../shared/components/terceros-relacionados/terceros-relacionados.component';
 import { TramitesAsociadosSeccionComponent } from '../../shared/components/tramites-asociados-seccion/tramites-asociados-seccion.component';
+
 
 @NgModule({
   declarations: [
@@ -18,6 +20,6 @@ import { TramitesAsociadosSeccionComponent } from '../../shared/components/trami
     PasoDosComponent,
     PasoTresComponent
   ],
-  imports: [CommonModule, PermisoImportacionRoutingModule,BtnContinuarComponent,WizardComponent,SolicitanteComponent,DatosSolicitudComponent,DatosDelSolicitudModificacionComponent,PagoDeDerechosComponent,AlertComponent,TramitesAsociadosSeccionComponent],
+  imports: [CommonModule, PermisoImportacionRoutingModule,BtnContinuarComponent,WizardComponent,SolicitanteComponent,DatosSolicitudComponent,DatosDelSolicitudModificacionComponent,PagoDeDerechosComponent,AlertComponent,TramitesAsociadosSeccionComponent,TercerosRelacionadosComponent],
 })
 export class PermisoImportacionModule {}
