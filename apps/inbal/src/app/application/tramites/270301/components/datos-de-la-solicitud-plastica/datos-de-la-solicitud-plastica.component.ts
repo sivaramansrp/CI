@@ -3,7 +3,7 @@
  */
 import { Component,OnDestroy, OnInit } from '@angular/core';
 
-import { Subject } from 'rxjs';
+import { map, Subject } from 'rxjs';
 
 import { REGEX_ALTO, REGEX_ANCHO, REGEX_ANO_DE_CREACION, REGEX_AVALUO, REGEX_DIAMETRO, REGEX_PROFUNDIDAD } from '@libs/shared/data-access-user/src';
 import { takeUntil } from 'rxjs';
@@ -40,7 +40,9 @@ import { SolicitudService } from '../../services/solicitud.service';
 
 import { TablaDatos } from '../../models/aviso-siglos.models';
 
-import { Tramite270201Store } from '../../estados/tramites/tramite270201.store';
+import { Agregar270301Store, solicitud270301State } from '../../estados/tramites/agregar270301.store';
+
+import { AgregarQuery } from '../../estados/queries/agregar.query';
 
 export interface ObraTablaDatos {
   columns: string[];
@@ -91,6 +93,8 @@ const OBRA_DE_ARTE_ALERT =
 export class DatosDeLaSolicitudPlasticaComponent implements OnInit, OnDestroy {
   /** Subject para destruir el componente */
   private destroy$ = new Subject<void>();
+
+  public solicitudState!: solicitud270301State;
 
   /**
    * @property {boolean} showTableDiv
@@ -224,13 +228,14 @@ export class DatosDeLaSolicitudPlasticaComponent implements OnInit, OnDestroy {
    * o lógica al constructor según sea necesario.
    *
    * @param {FormBuilder} fb - Utilizado para construir y gestionar formularios reactivos.
-   * @param {Tramite270201Store} tramite270201Store - Almacén que gestiona el estado del trámite 270201.
+   * @param {Agregar270301Store} Agregar270301Store - Almacén que gestiona el estado del trámite 270201.
    * @param {SolicitudService} solicitudService - Servicio encargado de realizar solicitudes HTTP
    * y obtener datos relacionados con el trámite.
    */
   constructor(
     private fb: FormBuilder,
-    private tramite270201Store: Tramite270201Store,
+    private Agregar270301Store: Agregar270301Store,
+    private agregarQuery: AgregarQuery,
     private solicitudService: SolicitudService
   ) {
     // La lógica del constructor se puede añadir aquí si es necesario
@@ -259,6 +264,14 @@ export class DatosDeLaSolicitudPlasticaComponent implements OnInit, OnDestroy {
      * Obtiene los datos de las columnas para la tabla de obras de arte desde el servicio de solicitud.
      * Actualiza la propiedad `tablaObraDeArteData` con los datos recibidos.
      */
+    this.agregarQuery.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((seccionState) => {
+          this.solicitudState = seccionState as solicitud270301State ;
+        })
+      )
+      .subscribe();
     this.solicitudService
       .getObraDeArteTabla()
       .pipe(takeUntil(this.destroy$))
@@ -399,7 +412,8 @@ export class DatosDeLaSolicitudPlasticaComponent implements OnInit, OnDestroy {
        * Es obligatorio y debe ser completado.
        * @default ''
        */
-      tipoDeOperacion: new FormControl('', [Validators.required]),
+      // nombre: [this.solicitudState?.nombre || '', [Validators.required]],
+      tipoDeOperacion: new FormControl( this.solicitudState?.tipoDeOperacion ||'', [Validators.required]),
 
       /**
        * @control tipoDeMovimiento
@@ -408,7 +422,7 @@ export class DatosDeLaSolicitudPlasticaComponent implements OnInit, OnDestroy {
        * Es obligatorio y debe ser completado.
        * @default ''
        */
-      tipoDeMovimiento: new FormControl('', [Validators.required]),
+      tipoDeMovimiento: new FormControl( this.solicitudState?.tipoDeMovimiento ||'', [Validators.required]),
 
       /**
        * @control motivo
@@ -417,7 +431,7 @@ export class DatosDeLaSolicitudPlasticaComponent implements OnInit, OnDestroy {
        * Es obligatorio y debe ser completado.
        * @default ''
        */
-      motivo: new FormControl('', [Validators.required]),
+      motivo: new FormControl(this.solicitudState?.motivo ||'', [Validators.required]),
 
       /**
        * @control pais
@@ -426,7 +440,7 @@ export class DatosDeLaSolicitudPlasticaComponent implements OnInit, OnDestroy {
        * Es obligatorio y debe ser completado.
        * @default ''
        */
-      pais: new FormControl('', [Validators.required]),
+      pais: new FormControl(this.solicitudState?.pais ||'', [Validators.required]),
 
       /**
        * @control ciudad
@@ -435,12 +449,12 @@ export class DatosDeLaSolicitudPlasticaComponent implements OnInit, OnDestroy {
        * Es obligatorio y debe ser completado.
        * @default ''
        */
-      ciudad: new FormControl('', [
+      ciudad: new FormControl(this.solicitudState?.ciudad ||'', [
         Validators.required,
         Validators.maxLength(250),
       ]),
 
-      emprsaTransportista: new FormControl('', [Validators.required]),
+      medioTransporte: new FormControl(this.solicitudState?.medioTransporte ||'', [Validators.required]),
 
       /**
        * @control medioTransporte
@@ -449,11 +463,11 @@ export class DatosDeLaSolicitudPlasticaComponent implements OnInit, OnDestroy {
        * Es obligatorio y debe ser completado.
        * @default ''
        */
-      medioTransporte: new FormControl('', [Validators.required]),
+      emprsaTransportista: new FormControl(this.solicitudState?.emprsaTransportista ||'', [Validators.required]),
 
-      destinofinal: new FormControl('', [Validators.required]),
+      destinofinal: new FormControl(this.solicitudState?.destinofinal ||'', [Validators.required]),
 
-      periodoEstancia: new FormControl('', [Validators.required]),
+      periodoEstancia: new FormControl(this.solicitudState?.periodoEstancia ||'', [Validators.required]),
 
       /**
        * @control aduanaEntrada
@@ -462,7 +476,7 @@ export class DatosDeLaSolicitudPlasticaComponent implements OnInit, OnDestroy {
        * Es obligatorio y debe ser completado.
        * @default ''
        */
-      aduanaEntrada: new FormControl('', [Validators.required]),
+      aduanaEntrada: new FormControl(this.solicitudState?.aduanaEntrada ||'', [Validators.required]),
     });
   }
 
@@ -673,393 +687,12 @@ export class DatosDeLaSolicitudPlasticaComponent implements OnInit, OnDestroy {
     });
   }
 
-  /**
-   * @method actualizarOperacion
-   * @description
-   * Actualiza el estado con el tipo de operación seleccionado en el formulario de solicitud.
-   * Obtiene el valor del campo `tipoDeOperacion` y lo envía al almacén del trámite.
-   *
-   * @example
-   * Uso del método:
-   * ```
-   * this.actualizarOperacion();
-   * console.log('Tipo de operación actualizada.');
-   * ```
-   */
-  actualizarOperacion(): void {
-    const OPERACION = this.solicitudFormGroup.get('tipoDeOperacion')?.value;
-    if (OPERACION !== null) {
-      this.tramite270201Store.setOperacion(OPERACION);
-    }
+ setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Agregar270301Store): void {
+    const VALOR = form.get(campo)?.value;
+    (this.Agregar270301Store[metodoNombre] as (value: string) => void)(VALOR);
   }
 
-  /**
-   * @method actualizarMovimiento
-   * @description
-   * Actualiza el estado con el tipo de movimiento seleccionado en el formulario de solicitud.
-   * Obtiene el valor del campo `tipoDeMovimiento` y lo envía al almacén del trámite.
-   *
-   * @example
-   * Uso del método:
-   * ```
-   * this.actualizarMovimiento();
-   * console.log('Tipo de movimiento actualizado.');
-   * ```
-   */
-  actualizarMovimiento(): void {
-    const MOVIMIENTO = this.solicitudFormGroup.get('tipoDeMovimiento')?.value;
-    this.tramite270201Store.setOperacion(MOVIMIENTO);
-  }
-
-  /**
-   * @method actualizarMotivo
-   * @description
-   * Actualiza el estado con el motivo seleccionado en el formulario de solicitud.
-   * Obtiene el valor del campo `motivo` y lo envía al almacén del trámite.
-   *
-   * @example
-   * Uso del método:
-   * ```
-   * this.actualizarMotivo();
-   * console.log('Motivo actualizado.');
-   * ```
-   */
-  actualizarMotivo(): void {
-    const MOTIVO = this.solicitudFormGroup.get('motivo')?.value;
-    this.tramite270201Store.setOperacion(MOTIVO);
-  }
-
-  /**
-   * @method actualizarPais
-   * @description
-   * Actualiza el estado con el país seleccionado en el formulario de solicitud.
-   * Obtiene el valor del campo `pais` y lo envía al almacén del trámite.
-   *
-   * @example
-   * Uso del método:
-   * ```
-   * this.actualizarPais();
-   * console.log('País actualizado.');
-   * ```
-   */
-  actualizarPais(): void {
-    const PAIS = this.solicitudFormGroup.get('pais')?.value;
-    this.tramite270201Store.setOperacion(PAIS);
-  }
-
-  /**
-   * @method actualizarCiudad
-   * @description
-   * Actualiza el estado con la ciudad seleccionada en el formulario de solicitud.
-   * Obtiene el valor del campo `ciudad` y lo envía al almacén del trámite.
-   *
-   * @example
-   * Uso del método:
-   * ```
-   * this.actualizarCiudad();
-   * console.log('Ciudad actualizada.');
-   * ```
-   */
-  actualizarCiudad(): void {
-    const CIUDAD = this.solicitudFormGroup.get('ciudad')?.value;
-    this.tramite270201Store.setOperacion(CIUDAD);
-  }
-
-  /**
-   * @method actualizarTransporte
-   * @description
-   * Actualiza el estado con el medio de transporte seleccionado en el formulario de solicitud.
-   * Obtiene el valor del campo `medioTransporte` y lo envía al almacén del trámite.
-   *
-   * @example
-   * Uso del método:
-   * ```
-   * this.actualizarTransporte();
-   * console.log('Medio de transporte actualizado.');
-   * ```
-   */
-  actualizarTransporte(): void {
-    const TRANSPORTE = this.solicitudFormGroup.get('medioTransporte')?.value;
-    this.tramite270201Store.setOperacion(TRANSPORTE);
-  }
-
-  /**
-   * @method actualizarAduana
-   * @description
-   * Actualiza el estado con la aduana de entrada seleccionada en el formulario de solicitud.
-   * Obtiene el valor del campo `aduanaEntrada` y lo envía al almacén del trámite.
-   *
-   * @example
-   * Uso del método:
-   * ```
-   * this.actualizarAduana();
-   * console.log('Aduana de entrada actualizada.');
-   * ```
-   */
-  actualizarAduana(): void {
-    const ADUANA = this.solicitudFormGroup.get('aduanaEntrada')?.value;
-    this.tramite270201Store.setOperacion(ADUANA);
-  }
-
-  /**
-   * @method actualizarAutor
-   * @description
-   * Actualiza el estado con el autor de la obra de arte seleccionado en el formulario de solicitud.
-   * Obtiene el valor del campo `autor` y lo envía al almacén del trámite.
-   *
-   * @example
-   * Uso del método:
-   * ```
-   * this.actualizarAutor();
-   * console.log('Autor de la obra actualizado.');
-   * ```
-   */
-  actualizarAutor(): void {
-    const AUTOR = this.solicitudFormGroup.get('autor')?.value;
-    this.tramite270201Store.setOperacion(AUTOR);
-  }
-
-  /**
-   * @method actualizarTitulo
-   * @description
-   * Actualiza el estado con el título de la obra de arte seleccionado en el formulario de solicitud.
-   * Obtiene el valor del campo `titulo` y lo envía al almacén del trámite.
-   *
-   * @example
-   * Uso del método:
-   * ```
-   * this.actualizarTitulo();
-   * console.log('Título de la obra actualizado.');
-   * ```
-   */
-  actualizarTitulo(): void {
-    const TITULO = this.solicitudFormGroup.get('titulo')?.value;
-    this.tramite270201Store.setOperacion(TITULO);
-  }
-
-  /**
-   * @method actualizarTecnica
-   * @description
-   * Actualiza el estado con la técnica de realización seleccionada en el formulario de solicitud.
-   * Obtiene el valor del campo `tecnicaDeRealizacion` y lo envía al almacén del trámite.
-   *
-   * @example
-   * Uso del método:
-   * ```
-   * this.actualizarTecnica();
-   * console.log('Técnica de realización actualizada.');
-   * ```
-   */
-  actualizarTecnica(): void {
-    const TECNICA = this.solicitudFormGroup.get('tecnicaDeRealizacion')?.value;
-    this.tramite270201Store.setOperacion(TECNICA);
-  }
-
-  /**
-   * @method actualizarAlto
-   * @description
-   * Actualiza el estado con la altura de la obra de arte seleccionada en el formulario de solicitud.
-   * Obtiene el valor del campo `alto` y lo envía al almacén del trámite.
-   *
-   * @example
-   * Uso del método:
-   * ```
-   * this.actualizarAlto();
-   * console.log('Altura de la obra actualizada.');
-   * ```
-   */
-  actualizarAlto(): void {
-    const ALTO = this.solicitudFormGroup.get('alto')?.value;
-    this.tramite270201Store.setOperacion(ALTO);
-  }
-
-  /**
-   * @method actualizarAncho
-   * @description
-   * Actualiza el estado con el ancho de la obra de arte seleccionada en el formulario de solicitud.
-   * Obtiene el valor del campo `ancho` y lo envía al almacén del trámite.
-   *
-   * @example
-   * Uso del método:
-   * ```
-   * this.actualizarAncho();
-   * console.log('Anchura de la obra actualizada.');
-   * ```
-   */
-  actualizarAncho(): void {
-    const ANCHO = this.solicitudFormGroup.get('ancho')?.value;
-    this.tramite270201Store.setOperacion(ANCHO);
-  }
-
-  /**
-   * @method actualizarProfundidad
-   * @description
-   * Actualiza el estado con la profundidad de la obra de arte seleccionada en el formulario de solicitud.
-   * Obtiene el valor del campo `profundidad` y lo envía al almacén del trámite.
-   *
-   * @example
-   * Uso del método:
-   * ```
-   * this.actualizarProfundidad();
-   * console.log('Profundidad de la obra actualizada.');
-   * ```
-   */
-  actualizarProfundidad(): void {
-    const PROFUNDIDAD = this.solicitudFormGroup.get('profundidad')?.value;
-    this.tramite270201Store.setOperacion(PROFUNDIDAD);
-  }
-
-  /**
-   * @method actualizarDiametro
-   * @description
-   * Actualiza el estado con el diámetro de la obra de arte seleccionada en el formulario de solicitud.
-   * Obtiene el valor del campo `diametro` y lo envía al almacén del trámite.
-   *
-   * @example
-   * Uso del método:
-   * ```
-   * this.actualizarDiametro();
-   * console.log('Diámetro de la obra actualizado.');
-   * ```
-   */
-  actualizarDiametro(): void {
-    const DIAMETRO = this.solicitudFormGroup.get('diametro')?.value;
-    this.tramite270201Store.setOperacion(DIAMETRO);
-  }
-
-  /**
-   * @method actualizarVariables
-   * @description
-   * Actualiza el estado con las variables adicionales de la obra de arte seleccionadas en el formulario de solicitud.
-   * Obtiene el valor del campo `variables` y lo envía al almacén del trámite.
-   *
-   * @example
-   * Uso del método:
-   * ```
-   * this.actualizarVariables();
-   * console.log('Variables adicionales de la obra actualizadas.');
-   * ```
-   */
-  actualizarVariables(): void {
-    const VARIABLES = this.solicitudFormGroup.get('variables')?.value;
-    this.tramite270201Store.setOperacion(VARIABLES);
-  }
-
-  /**
-   * @method actualizarAnoDeCreacion
-   * @description
-   * Actualiza el estado con el año de creación de la obra de arte seleccionado en el formulario de solicitud.
-   * Obtiene el valor del campo `anoDeCreacion` y lo envía al almacén del trámite.
-   *
-   * @example
-   * Uso del método:
-   * ```
-   * this.actualizarAnoDeCreacion();
-   * console.log('Año de creación actualizado.');
-   * ```
-   */
-  actualizarAnoDeCreacion(): void {
-    const ANO_DE_CREACION = this.solicitudFormGroup.get('anoDeCreacion')?.value;
-    this.tramite270201Store.setOperacion(ANO_DE_CREACION);
-  }
-
-  /**
-   * @method actualizarAvaluo
-   * @description
-   * Actualiza el estado con el avalúo de la obra de arte seleccionado en el formulario de solicitud.
-   * Obtiene el valor del campo `avaluo` y lo envía al almacén del trámite.
-   *
-   * @example
-   * Uso del método:
-   * ```
-   * this.actualizarAvaluo();
-   * console.log('Avalúo actualizado.');
-   * ```
-   */
-  actualizarAvaluo(): void {
-    const AVALUO = this.solicitudFormGroup.get('avaluo')?.value;
-    this.tramite270201Store.setOperacion(AVALUO);
-  }
-
-  /**
-   * @method actualizarMoneda
-   * @description
-   * Actualiza el estado con la moneda asociada al avalúo seleccionada en el formulario de solicitud.
-   * Obtiene el valor del campo `moneda` y lo envía al almacén del trámite.
-   *
-   * @example
-   * Uso del método:
-   * ```
-   * this.actualizarMoneda();
-   * console.log('Moneda actualizada.');
-   * ```
-   */
-  actualizarMoneda(): void {
-    const MONEDA = this.solicitudFormGroup.get('moneda')?.value;
-    this.tramite270201Store.setOperacion(MONEDA);
-  }
-
-  /**
-   * @method actualizarPropietario
-   * @description
-   * Actualiza el estado con el propietario de la obra de arte seleccionado en el formulario de solicitud.
-   * Obtiene el valor del campo `propietario` y lo envía al almacén del trámite.
-   *
-   * @example
-   * Uso del método:
-   * ```
-   * this.actualizarPropietario();
-   * console.log('Propietario actualizado.');
-   * ```
-   */
-  actualizarPropietario(): void {
-    const PROPIETARIO = this.solicitudFormGroup.get('propietario')?.value;
-    this.tramite270201Store.setOperacion(PROPIETARIO);
-  }
-
-  /**
-   * @method actualizarFraccionArancelaria
-   * @description
-   * Actualiza el estado con la fracción arancelaria seleccionada en el formulario de solicitud.
-   * Obtiene el valor del campo `fraccionArancelaria` y lo envía al almacén del trámite.
-   *
-   * @example
-   * Uso del método:
-   * ```
-   * this.actualizarFraccionArancelaria();
-   * console.log('Fracción arancelaria actualizada.');
-   * ```
-   */
-  actualizarFraccionArancelaria(): void {
-    const FRACCION_ARANCELARIA = this.solicitudFormGroup.get(
-      'fraccionArancelaria'
-    )?.value;
-    if (FRACCION_ARANCELARIA !== null && FRACCION_ARANCELARIA !== undefined) {
-      this.tramite270201Store.setOperacion(FRACCION_ARANCELARIA);
-    }
-  }
-
-  /**
-   * @method actualizarDescArancelaria
-   * @description
-   * Actualiza el estado con la descripción arancelaria de la obra seleccionada en el formulario de solicitud.
-   * Obtiene el valor del campo `descripcionArancelaria` y lo envía al almacén del trámite.
-   *
-   * @example
-   * Uso del método:
-   * ```
-   * this.actualizarDescArancelaria();
-   * console.log('Descripción arancelaria actualizada.');
-   * ```
-   */
-  actualizarDescArancelaria(): void {
-    const DESCRIPCION_ARANCELARIA = this.solicitudFormGroup.get(
-      'descripcionArancelaria'
-    )?.value;
-    this.tramite270201Store.setOperacion(DESCRIPCION_ARANCELARIA);
-  }
-
-  /**
+/**
    * Arreglo que almacena los datos de las filas de la tabla de obras de arte.
    *
    * @type {TablaDatos[]}
@@ -1139,7 +772,7 @@ export class DatosDeLaSolicitudPlasticaComponent implements OnInit, OnDestroy {
     /**
      * Actualiza el almacenamiento de obras de arte en la tienda.
      */
-    this.tramite270201Store.setObraDeArte(this.obraDeArteRowData);
+    // this.Agregar270301Store.setObraDeArte(this.obraDeArteRowData);
 
     /**
      * Alterna la visibilidad del div de la tabla y el modal de obras de arte.
