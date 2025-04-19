@@ -1109,4 +1109,48 @@ export class Tramite260917Store extends Store<Solicitud260917State> {
         }));
     }
 
+    public setAceptaManifiestos(aceptaManifiestos: string):void{
+        this.update((state) => ({
+            ...state,
+            aceptaManifiestos
+        }));
+    }
+
+    public setAceptaPublicacion(aceptaPublicacion: string):void{
+        this.update((state) => ({
+            ...state,
+            aceptaPublicacion
+        }));
+    }
+
+    public setRFCRepresentante(rfcRepresentante: string):void{
+        this.update((state) => ({
+            ...state,
+            rfcRepresentante
+        }));
+    }
+
+    public setRazonSocialRepresentante(razonSocialRepresentante: string):void{
+        this.update((state) => ({
+            ...state,
+            razonSocialRepresentante
+        }));
+    }
+
+    public setApellidoPaternoRepresentante(apellidoPaternoRepresentante: string):void{
+        this.update((state) => ({
+            ...state,
+            apellidoPaternoRepresentante
+        }));
+    }
+
+    public setApellidoMaternoRepresentante(apellidoMaternoRepresentante: string):void{
+        this.update((state) => ({
+            ...state,
+            apellidoMaternoRepresentante
+        }));
+    }
+
+
+
 }

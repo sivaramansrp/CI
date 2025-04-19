@@ -475,7 +475,7 @@
                   type="checkbox"
                   id="manifesto"
                   class="mt-5"
-                  formControlName="aceptaManifiestos"  />
+                  formControlName="aceptaManifiestos" (change)="setValoresStore(formularioManifiestos,'aceptaManifiestos', 'setAceptaManifiestos')"  />
                 <b> *</b>
               </div>
               <div class="col-md-11 mt-4">
@@ -491,6 +491,7 @@
           </label>
           <app-input-radio
             formControlName="aceptaPublicacion"
+            (change)="setValoresStore(formularioManifiestos,'aceptaPublicacion', 'setAceptaPublicacion')"
             [radioOptions]="hacerlosRadioOptions"
             [isRequired]="true"
             [layout]="'horizontal'">
@@ -508,7 +509,7 @@
             class="form-control"
             placeholder=""
             type="text"
-            formControlName="rfcRepresentante" />
+            formControlName="rfcRepresentante"  (change)="setValoresStore(formularioManifiestos,'rfcRepresentante', 'setRFCRepresentante')"/>
         </div>
       
         <div class="col-md-2 mt-4">
@@ -524,7 +525,7 @@
             class="form-control"
             placeholder=""
             type="text"
-            formControlName="razonSocialRepresentante" />
+            formControlName="razonSocialRepresentante"  (change)="setValoresStore(formularioManifiestos,'razonSocialRepresentante', 'setRazonSocialRepresentante')" />
         </div>
       
         <div class="col-md-4 mt-4">
@@ -534,7 +535,7 @@
             class="form-control"
             placeholder=""
             type="text"
-            formControlName="apellidoPaternoRepresentante" />
+            formControlName="apellidoPaternoRepresentante"  (change)="setValoresStore(formularioManifiestos,'apellidoPaternoRepresentante', 'setApellidoPaternoRepresentante')" />
         </div>
       
         <div class="col-md-4 mt-4">
@@ -544,7 +545,7 @@
             class="form-control"
             placeholder=""
             type="text"
-            formControlName="apellidoMaternoRepresentante" />
+            formControlName="apellidoMaternoRepresentante"  (change)="setValoresStore(formularioManifiestos,'apellidoMaternoRepresentante', 'setApellidoMaternoRepresentante')" />
         </div>
       </form>
       
