@@ -4,8 +4,8 @@ import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.co
 import { ComponenteDeActualizacionComponent } from './components/componente-de-actualizacion/componente-de-actualizacion.component';
 const ROUTES: Routes = [
   {
-    path: 'solicitud',
     component: SolicitudPageComponent,
+    path: 'solicitud',
   },
   {
     path: '',
