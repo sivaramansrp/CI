@@ -241,6 +241,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     this.manifiestosText = MANIFIESTOS_DECLARACION.MANIFIESTOS;
     this.genericOptions = radioOptions.tipoOperacion;
     this.hacerlosRadioOptions = radioOptions.publicarInformacionConfidencial;
+    this.estado = radioOptions.estado;
     this.tramite260701Query.selectSolicitud$.pipe(takeUntil(this.destroyed$), map((seccionState) => {
       this.solicitudState = seccionState;
     })).subscribe();
