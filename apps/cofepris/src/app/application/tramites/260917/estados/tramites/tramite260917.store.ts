@@ -288,6 +288,19 @@ export interface Solicitud260917State {
      */
     justificacion: string;
 
+    rfcResponsableSanitario: string;
+
+    aceptaManifiestos: string;
+
+    aceptaPublicacion: string;
+
+    rfcRepresentante: string;
+
+    razonSocialRepresentante: string;
+
+    apellidoPaternoRepresentante: string;
+
+    apellidoMaternoRepresentante: string;
 }
 
 export function createInitialState(): Solicitud260917State {
@@ -362,7 +375,14 @@ return {
     tercerosRelacionadosCorreoElectronico: '',
     muncipio: '',
     tipoOperacion: '',
-    justificacion: ''
+    justificacion: '',
+    rfcResponsableSanitario: '',
+    aceptaManifiestos: '',
+    aceptaPublicacion: '',
+    rfcRepresentante: '',
+    razonSocialRepresentante: '',
+    apellidoPaternoRepresentante: '',
+    apellidoMaternoRepresentante: '',
     };
     
 }
@@ -1079,6 +1099,13 @@ export class Tramite260917Store extends Store<Solicitud260917State> {
         this.update((state) => ({
             ...state,
             justificacion,
+        }));
+    }
+
+    public setRFCResponsableSanitario(rfcResponsableSanitario: string):void{
+        this.update((state) => ({
+            ...state,
+            rfcResponsableSanitario,
         }));
     }
 

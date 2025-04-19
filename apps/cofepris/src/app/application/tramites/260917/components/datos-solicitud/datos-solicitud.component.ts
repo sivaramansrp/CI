@@ -1,13 +1,13 @@
 import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, CrossListLable, CrosslistComponent, InputFecha, InputFechaComponent, InputRadioComponent, LISTACLAVESDELOSLOTES, Listaclaves, MERCANCIAS_DATA, MercanciasInfo, NICO_TABLA, Notificacion, ScianModel, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { FECHA_DE_PAGO, LOCALIDAD_COLONIA } from '../../constantes/certificados-licencias.enum';
-import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PcuerdoPublicar, PropietarioTipoPersona } from '../../modelos/datos-solicitud.model';
 import { Solicitud260917State, Tramite260917Store } from '../../estados/tramites/tramite260917.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CROSLISTA_DE_PAISES } from '@libs/shared/data-access-user/src/core/enums/260917/domicillo-del.enum';
 import { CommonModule } from '@angular/common';
-import {MANIFIESTOS_DECLARACION} from '../../constantes/certificados-licencias.enum';
+import { MANIFIESTOS_DECLARACION } from '../../constantes/certificados-licencias.enum';
 import { Tramite260917Query } from '../../estados/queries/tramite260917.query';
 import radioOptions from '@libs/shared/theme/assets/json/260917/datos.solicitud.json';
 @Component({
@@ -76,6 +76,8 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    * Grupo de formularios para mercancías.
    */
   public formMercancias!: FormGroup;
+
+  public formularioManifiestos!: FormGroup;
 
   /**
    * Control para la fecha de aduanas de entrada.
@@ -235,7 +237,11 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
      * Inicialización del formulario de domicilio.
      */
     this.domicilio = this.fb.group({
-      ideGenerica1: ['', Validators.required],
+      tipoOperacion: [this.solicitudState.tipoOperacion],
+      justificacion: [this.solicitudState.justificacion],
+      rfcResponsableSanitario: [this.solicitudState.rfcResponsableSanitario],
+      razonSocial: [this.solicitudState.razonSocial],
+      correoElectronico: [this.solicitudState.correoElectronico],
       codigoPostal: [this.solicitudState.codigoPostal],
       estado: [this.solicitudState.estado],
       muncipio: [this.solicitudState.muncipio],
@@ -282,7 +288,19 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
       fechaCaducidad: [this.solicitudState.fechaCaducidad],
       claveDeLosLotes: [this.solicitudState.claveDeLosLotes],
     });
+
+    this.formularioManifiestos = this.fb.group({
+      aceptaManifiestos: [this.solicitudState.aceptaManifiestos],
+      aceptaPublicacion: [this.solicitudState.aceptaPublicacion],
+      rfcRepresentante: [this.solicitudState.rfcRepresentante],
+      razonSocialRepresentante: [this.solicitudState.razonSocialRepresentante],
+      apellidoPaternoRepresentante: [this.solicitudState.apellidoPaternoRepresentante],
+      apellidoMaternoRepresentante: [this.solicitudState.apellidoMaternoRepresentante],
+    });
+
   }
+
+
 
   /**
    * Botones de acción para gestionar listas de países en la primera sección.
