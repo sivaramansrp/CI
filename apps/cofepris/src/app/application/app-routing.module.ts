@@ -385,7 +385,12 @@ const ROUTES: Routes = [
         (m) => m.EnmiendaPermisoSanitarioModule
       ),
   },
-
+  {
+    path: 'cancelacion-peticion',
+    loadChildren: () =>
+      import('./tramites/261701/cancelacion-peticion.module').then(
+        (m) => m.CancelacionPeticionModule)
+  },
 ];
 
 @NgModule({
