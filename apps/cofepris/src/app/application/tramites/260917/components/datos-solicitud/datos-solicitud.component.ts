@@ -47,13 +47,26 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     // Dependencia inyectada para uso posterior
   }
 
+  /**
+   * Opciones genéricas del tipo de persona (física o moral).
+   */
   genericOptions: PropietarioTipoPersona[] = [];
 
+  /**
+   * Opciones transformadas para usarse como botones de tipo radio.
+   */
   hacerlosRadioOptions: PcuerdoPublicar[] = [];
 
+  /**
+   * Modelo de datos para una nueva notificación que se va a crear.
+   */
   public nuevaNotificacion!: Notificacion;
 
+  /**
+   * Identificador del elemento que se desea eliminar.
+   */
   elementoParaEliminar!: number;
+
 
   /**
 * Texto de los manifiestos.
@@ -233,70 +246,149 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     })).subscribe();
 
 
-    /**
-     * Inicialización del formulario de domicilio.
-     */
     this.domicilio = this.fb.group({
+      /** Tipo de operación seleccionada por el usuario */
       tipoOperacion: [this.solicitudState.tipoOperacion],
+
+      /** Justificación proporcionada para la solicitud */
       justificacion: [this.solicitudState.justificacion],
+
+      /** RFC del responsable sanitario */
       rfcResponsableSanitario: [this.solicitudState.rfcResponsableSanitario],
+
+      /** Razón social de la empresa o entidad */
       razonSocial: [this.solicitudState.razonSocial],
+
+      /** Correo electrónico de contacto */
       correoElectronico: [this.solicitudState.correoElectronico],
+
+      /** Código postal del domicilio */
       codigoPostal: [this.solicitudState.codigoPostal],
+
+      /** Estado donde se ubica el domicilio */
       estado: [this.solicitudState.estado],
+
+      /** Municipio correspondiente al domicilio */
       muncipio: [this.solicitudState.muncipio],
+
+      /** Localidad del domicilio */
       localidad: [this.solicitudState.localidad],
+
+      /** Colonia donde se ubica el domicilio */
       colonia: [this.solicitudState.colonia],
+
+      /** Calle del domicilio */
       calle: [this.solicitudState.calle],
+
+      /** Clave LADA del número telefónico */
       lada: [this.solicitudState.lada],
+
+      /** Número de teléfono de contacto */
       telefono: [this.solicitudState.telefono],
+
+      /** Indica si se muestra el aviso correspondiente */
       avisoCheckbox: [this.solicitudState.avisoCheckbox],
+
+      /** Número de licencia sanitaria asociada */
       licenciaSanitaria: [this.solicitudState.licenciaSanitaria],
+
+      /** Campo utilizado para marcar en caso de que aplique una condición especial */
       marcarEnCasoDeQueSea: [this.solicitudState.marcarEnCasoDeQueSea],
+
+      /** Régimen fiscal o legal correspondiente */
       regimen: [this.solicitudState.regimen],
+
+      /** Lista de aduanas por las que se realizará la entrada */
       aduanasEntradas: [this.solicitudState.aduanasEntradas],
+
+      /** Número de permiso asociado a la operación */
       numeroPermiso: [this.solicitudState.numeroPermiso],
     });
 
-    /**
-     * Inicialización del formulario de agente.
-     */
+
     this.formAgente = this.fb.group({
+      /** Clave SCiAN seleccionada del modal */
       claveScianModal: [this.solicitudState.claveScianModal],
+
+      /** Descripción asociada a la clave SCiAN seleccionada */
       claveDescripcionModal: [this.solicitudState.claveDescripcionModal],
     });
 
-    /**
-     * Inicialización del formulario de mercancías.
-     */
+
     this.formMercancias = this.fb.group({
+      /** Clasificación del producto (p. ej. medicamento, cosmético, etc.) */
       clasificacion: [this.solicitudState.clasificacion],
+
+      /** Detalle adicional si se selecciona "Otro" en clasificación */
       especificarClasificacionProducto: [this.solicitudState.especificarClasificacionProducto],
+
+      /** Denominación específica del producto */
       denominacionEspecifica: [this.solicitudState.denominacionEspecifica],
+
+      /** Denominación distintiva del producto (marca, sello, etc.) */
       denominacionDistintiva: [this.solicitudState.denominacionDistintiva],
+
+      /** Nombre común del producto */
       denominacionComun: [this.solicitudState.denominacionComun],
+
+      /** Tipo de producto (sólido, líquido, etc.) */
       tipoDeProducto: [this.solicitudState.tipoDeProducto],
+
+      /** Estado físico del producto */
       estadoFisico: [this.solicitudState.estadoFisico],
+
+      /** Fracción arancelaria del producto */
       fraccionArancelaria: [this.solicitudState.fraccionArancelaria],
+
+      /** Descripción asociada a la fracción arancelaria */
       descripcionFraccion: [this.solicitudState.descripcionFraccion],
+
+      /** Cantidad expresada en unidad de medida de trámite (UMT) */
       cantidadUMT: [this.solicitudState.cantidadUMT],
+
+      /** Unidad de medida de trámite (UMT) */
       UMT: [this.solicitudState.UMT],
+
+      /** Cantidad expresada en unidad de medida comercial (UMC) */
       cantidadUMC: [this.solicitudState.cantidadUMC],
+
+      /** Unidad de medida comercial (UMC) */
       UMC: [this.solicitudState.UMC],
+
+      /** Presentación del producto (empaque, forma de venta, etc.) */
       presentacion: [this.solicitudState.presentacion],
+
+      /** Número de registro sanitario del producto */
       numeroRegistro: [this.solicitudState.numeroRegistro],
+
+      /** Fecha de caducidad del producto */
       fechaCaducidad: [this.solicitudState.fechaCaducidad],
+
+      /** Clave de los lotes del producto */
       claveDeLosLotes: [this.solicitudState.claveDeLosLotes],
     });
 
+
     this.formularioManifiestos = this.fb.group({
+      /** Indica si acepta los términos relacionados con los manifiestos */
       aceptaManifiestos: [this.solicitudState.aceptaManifiestos],
+
+      /** Indica si acepta la publicación en medios oficiales */
       aceptaPublicacion: [this.solicitudState.aceptaPublicacion],
+
+      /** RFC del representante legal que firma la solicitud */
       rfcRepresentante: [this.solicitudState.rfcRepresentante],
+
+      /** Razón social del representante legal */
       razonSocialRepresentante: [this.solicitudState.razonSocialRepresentante],
+
+      /** Apellido paterno del representante legal */
       apellidoPaternoRepresentante: [this.solicitudState.apellidoPaternoRepresentante],
+
+      /** Apellido materno del representante legal */
       apellidoMaternoRepresentante: [this.solicitudState.apellidoMaternoRepresentante],
     });
+
 
   }
 
@@ -334,6 +426,12 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
 
 
 
+  /**
+   * Abre el modal de notificación para informar que no hay comunicación
+   * con el sistema de COFEPRIS, solicitando al usuario capturar su establecimiento.
+   * 
+   * @param i Índice del elemento que se desea eliminar (por defecto es 0).
+   */
   abrirModal(i: number = 0): void {
     this.nuevaNotificacion = {
       tipoNotificacion: 'alert',
@@ -349,6 +447,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
 
     this.elementoParaEliminar = i;
   }
+
 
   /**
    * Establece el valor de un campo en el store de Tramite31601.
