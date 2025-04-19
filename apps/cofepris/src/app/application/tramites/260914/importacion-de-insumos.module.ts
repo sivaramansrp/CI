@@ -3,7 +3,7 @@ import { AlertComponent } from '@libs/shared/data-access-user/src';
 import { AnexarDocumentosComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { DatosComponent } from './pages/datos/datos.component';
-import { DatosDelSolicitudModificacionComponent } from '../../shared/components/datos-del-solicitud-modificacion/datos-del-solicitud-modificacion.component';
+import { DatosDeLaSolicitudModificacionComponent } from '../../shared/components/datos-de-la-solicitud-modificacion/datos-de-la-solicitud-modificacion.component';
 import { FirmaElectronicaComponent } from '@libs/shared/data-access-user/src';
 import { ImportacionDeInsumosRoutingModule } from './importacion-de-insumos-routing.module';
 import { InputCheckComponent } from '@libs/shared/data-access-user/src';
@@ -31,13 +31,12 @@ import { WizardComponent } from '@libs/shared/data-access-user/src';
     ImportacionDeInsumosRoutingModule,
     BtnContinuarComponent,
     WizardComponent,
-   
+    DatosDeLaSolicitudModificacionComponent,
     SolicitanteComponent,
     PagoDeDerechosEntradaComponent,
     TramitesAsociadosSeccionComponent,
     TercerosRelacionadosFabricanteComponent,
     InputCheckComponent,
-    DatosDelSolicitudModificacionComponent,
     TituloComponent,
     AnexarDocumentosComponent,
     AlertComponent,
