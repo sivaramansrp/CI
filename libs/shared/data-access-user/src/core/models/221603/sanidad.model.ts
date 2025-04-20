@@ -79,11 +79,11 @@ export interface Destinatario {
 
 
  export const CONFIGURATION_TABLA_DATOS = [
-  { encabezado: 'Nombre/denominación o razón social', clave: (item: Exportador) => item.nombreDenominacionORazonSocial, orden: 1 },
-  { encabezado: 'Teléfono', clave: (item: Exportador) => item.telefono, orden: 2 },
-  { encabezado: 'Correo electrónico', clave: (item: Exportador) => item.correoElectronico, orden: 3 },
-  { encabezado: 'Domicilio', clave: (item: Exportador) => item.domicilio, orden: 4 },
-  { encabezado: 'País', clave: (item: Exportador) => item.pais, orden: 5 }
+  { encabezado: 'Nombre/denominación o razón social', clave: (item: Exportador):string => item.nombreDenominacionORazonSocial, orden: 1 },
+  { encabezado: 'Teléfono', clave: (item: Exportador):string => item.telefono, orden: 2 },
+  { encabezado: 'Correo electrónico', clave: (item: Exportador):string => item.correoElectronico, orden: 3 },
+  { encabezado: 'Domicilio', clave: (item: Exportador):string => item.domicilio, orden: 4 },
+  { encabezado: 'País', clave: (item: Exportador):string => item.pais, orden: 5 }
 ];
 
 export const CONFIGURATION_TABLA_MERCANCIAS = [
@@ -111,15 +111,15 @@ export const CONFIGURATION_TABLA_MERCANCIAS = [
 
 
 export const CONFIGURATION_TABLA_DESTINATARIO = [
-  { encabezado: 'Nombre/denominación o razón social', clave: (item: Destinatario) => item.nombreDenominacionORazonSocial, orden: 1 },
-  { encabezado: 'Teléfono', clave: (item: Destinatario) => item.telefono, orden: 2 },
-  { encabezado: 'Correo electrónico', clave: (item: Destinatario) => item.correoElectronico, orden: 3 },
-  { encabezado: 'Calle', clave: (item: Destinatario) => item.calle, orden: 4 },
-  { encabezado: 'Número exterior', clave: (item: Destinatario) => item.numeroExterior, orden: 5 },
-  { encabezado: 'Número interior', clave: (item: Destinatario) => item.numeroInterior, orden: 6 },
-  { encabezado: 'País', clave: (item: Destinatario) => item.pais, orden: 7 },
-  { encabezado: 'Colonia', clave: (item: Destinatario) => item.colonia, orden: 8 },
-  { encabezado: 'Municipio o Alcaldía', clave: (item: Destinatario) => item.municipioOAlcaldia, orden: 9 },
-  { encabezado: 'Entidad Federativa', clave: (item: Destinatario) => item.entidadFederativa, orden: 10 },
-  { encabezado: 'Código Postal', clave: (item: Destinatario) => item.codigoPostal, orden: 11 }
+  { encabezado: 'Nombre/denominación o razón social', clave: (item: Destinatario):string => item.nombreDenominacionORazonSocial, orden: 1 },
+  { encabezado: 'Teléfono', clave: (item: Destinatario):string => item.telefono, orden: 2 },
+  { encabezado: 'Correo electrónico', clave: (item: Destinatario):string => item.correoElectronico, orden: 3 },
+  { encabezado: 'Calle', clave: (item: Destinatario):string => item.calle, orden: 4 },
+  { encabezado: 'Número exterior', clave: (item: Destinatario):string => item.numeroExterior, orden: 5 },
+  { encabezado: 'Número interior', clave: (item: Destinatario):string => item.numeroInterior, orden: 6 },
+  { encabezado: 'País', clave: (item: Destinatario):string => item.pais, orden: 7 },
+  { encabezado: 'Colonia', clave: (item: Destinatario):string => item.colonia, orden: 8 },
+  { encabezado: 'Municipio o alcaldía', clave: (item: Destinatario):string => item.municipioOAlcaldia, orden: 9 },
+  { encabezado: 'Entidad federativa', clave: (item: Destinatario):string => item.entidadFederativa, orden: 10 },
+  { encabezado: 'Código postal', clave: (item: Destinatario):string => item.codigoPostal, orden: 11 }
 ];

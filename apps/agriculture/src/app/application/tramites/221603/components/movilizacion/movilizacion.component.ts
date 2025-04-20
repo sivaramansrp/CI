@@ -133,13 +133,14 @@ export class MovilizacionComponent implements OnInit, OnDestroy {
       .subscribe();
 
     this.MedioForm = this.fb.group({
-      medio: [this.solicitudState.medio, Validators.required],
+      medio: [1, Validators.required],
       transporte: [this.solicitudState.transporte, Validators.required],
-      verificacion: [this.solicitudState.verificacion, Validators.required],
+      verificacion: [14, Validators.required],
       empresa: [this.solicitudState.empresa, Validators.required]
     });
 
     this.MedioForm.get('empresa')?.setValue(realizar.formData.empresa);
+    this.MedioForm.get('transporte')?.setValue(realizar.formData.transporte);
   }
 
   /**
