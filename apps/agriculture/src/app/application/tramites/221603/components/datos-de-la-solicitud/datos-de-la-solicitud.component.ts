@@ -179,7 +179,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       oficina: [this.solicitudState.oficina, Validators.required],
       punto: [this.solicitudState.punto, Validators.required],
       guia: [this.solicitudState.guia],
-      regimen: [this.solicitudState.regimen, Validators.required],
+      regimen: [3, Validators.required],
       carro: [this.solicitudState.carro]
     });
 
