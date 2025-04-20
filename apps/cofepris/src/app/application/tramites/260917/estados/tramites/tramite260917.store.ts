@@ -6,19 +6,19 @@ import { Injectable } from '@angular/core';
  * @returns Solicitud260701
  */
 export interface Solicitud260917State {
-  /**
-   * denominacionORazonSocial
-   * @type {string}
-   */
-  denominacionORazonSocial: string;
+    /**
+     * denominacionORazonSocial
+     * @type {string}
+     */
+    denominacionORazonSocial: string;
     /**
      * El valor de correoElectronico.
      */
-  correoElectronico: string;
+    correoElectronico: string;
     /**
      * El valor de codigoPostal.
      */
-  codigoPostal: string;
+    codigoPostal: string;
     /**
      * El valor de estado.
      */
@@ -26,11 +26,11 @@ export interface Solicitud260917State {
     /**
      * El valor de municipio.
      */
-  municipio: string;
+    municipio: string;
     /**
      * El valor de localidad.
      */
-  localidad: string;
+    localidad: string;
     /**
      * El valor de colonia.
      */
@@ -38,7 +38,7 @@ export interface Solicitud260917State {
     /**
      * El valor de calle.
      */
-  calle: string;
+    calle: string;
     /**
      * El valor de lada.
      */
@@ -46,7 +46,7 @@ export interface Solicitud260917State {
     /**
      * El valor de telefono.
      */
-  telefono: string;
+    telefono: string;
     /**
      * El valor de avisoCheckbox.
      */
@@ -288,123 +288,301 @@ export interface Solicitud260917State {
      */
     justificacion: string;
 
+    /**
+     * RFC del responsable sanitario del establecimiento.
+     */
     rfcResponsableSanitario: string;
 
+    /**
+     * Indica si se aceptan los manifiestos. Valores esperados: 'Sí' o 'No'.
+     */
     aceptaManifiestos: string;
 
+    /**
+     * Indica si se acepta la publicación de información confidencial. Valores esperados: 'Sí' o 'No'.
+     */
     aceptaPublicacion: string;
 
+    /**
+     * RFC del representante legal.
+     */
     rfcRepresentante: string;
 
+    /**
+     * Razón social del representante legal.
+     */
     razonSocialRepresentante: string;
 
+    /**
+     * Apellido paterno del representante legal.
+     */
     apellidoPaternoRepresentante: string;
 
+    /**
+     * Apellido materno del representante legal.
+     */
     apellidoMaternoRepresentante: string;
+
 }
 
+/**
+ * Crea el estado inicial del formulario Solicitud260917.
+ * @returns Estado inicial con todos los campos definidos como cadenas vacías.
+ */
 export function createInitialState(): Solicitud260917State {
-return {
+    return {
+        /** Denominación o razón social del solicitante. */
+        denominacionORazonSocial: '',
 
-    denominacionORazonSocial: '',
-    correoElectronico: '',
-    codigoPostal: '',
-    estado: '',
-    municipio: '',
-    localidad: '',
-    colonia: '',
-    calle: '',
-    lada: '',
-    telefono: '',
-    avisoCheckbox: '',
-    licenciaSanitaria: '',
-    marcarEnCasoDeQueSea: '',
-    regimen: '',
-    aduanasEntradas: '',
-    numeroPermiso: '',
-    claveScianModal: '',
-    claveDescripcionModal: '',
-    clasificacion: '',
-    especificarClasificacionProducto: '',
-    denominacionEspecifica: '',
-    denominacionDistintiva: '',
-    denominacionComun: '',
-    tipoDeProducto: '',
-    estadoFisico: '',
-    fraccionArancelaria: '',
-    descripcionFraccion: '',
-    cantidadUMT: '',
-    UMT: '',
-    cantidadUMC: '',
-    UMC: '',
-    presentacion: '',
-    numeroRegistro: '',
-    fechaCaducidad: '',
-    claveDeLosLotes: '',
-    cumplimiento: '',
-    claveDeReferencia: '',
-    cadenaDependencia: '',
-    banco: '',
-    llaveDePago: '',
-    fechaPago: '',
-    importePago: '',
-    rfc: '',
-    nombre: '',
-    apellidoPaterno: '',
-    apellidoMaterno: '',
-    denominacionSocial: '',
-    terceroNombre: '',
-    primerApellido: '',
-    nacional: '',
-    extranjero: '',
-    tipoPersona: '',
-    tercerosRelacionadosRfc: '',
-    curp: '',
-    razonSocial: '',
-    pais: '',
-    tercerosRelacionadosEstado: '',
-    tercerosRelacionadosMunicipio: '',
-    tercerosRelacionadosLocalidad: '',
-    tercerosRelacionadosCodigoPostal: '',
-    tercerosRelacionadosColonia: '',
-    tercerosRelacionadosCalle: '',
-    numeroExterior: '',
-    numeroInterior: '',
-    tercerosRelacionadosLada: '',
-    tercerosRelacionadosTelefono: '',
-    tercerosRelacionadosCorreoElectronico: '',
-    muncipio: '',
-    tipoOperacion: '',
-    justificacion: '',
-    rfcResponsableSanitario: '',
-    aceptaManifiestos: '',
-    aceptaPublicacion: '',
-    rfcRepresentante: '',
-    razonSocialRepresentante: '',
-    apellidoPaternoRepresentante: '',
-    apellidoMaternoRepresentante: '',
+        /** Correo electrónico del solicitante. */
+        correoElectronico: '',
+
+        /** Código postal del domicilio. */
+        codigoPostal: '',
+
+        /** Estado del domicilio. */
+        estado: '',
+
+        /** Municipio del domicilio. */
+        municipio: '',
+
+        /** Localidad del domicilio. */
+        localidad: '',
+
+        /** Colonia del domicilio. */
+        colonia: '',
+
+        /** Calle del domicilio. */
+        calle: '',
+
+        /** Clave lada del número telefónico. */
+        lada: '',
+
+        /** Teléfono del solicitante. */
+        telefono: '',
+
+        /** Indica si se marcó el aviso correspondiente. */
+        avisoCheckbox: '',
+
+        /** Licencia sanitaria correspondiente. */
+        licenciaSanitaria: '',
+
+        /** Campo adicional para marcar condiciones especiales. */
+        marcarEnCasoDeQueSea: '',
+
+        /** Régimen bajo el cual opera. */
+        regimen: '',
+
+        /** Aduanas de entrada especificadas. */
+        aduanasEntradas: '',
+
+        /** Número de permiso. */
+        numeroPermiso: '',
+
+        /** Clave SCIAN seleccionada desde el modal. */
+        claveScianModal: '',
+
+        /** Descripción SCIAN seleccionada desde el modal. */
+        claveDescripcionModal: '',
+
+        /** Clasificación del producto. */
+        clasificacion: '',
+
+        /** Detalle adicional de la clasificación. */
+        especificarClasificacionProducto: '',
+
+        /** Denominación específica del producto. */
+        denominacionEspecifica: '',
+
+        /** Denominación distintiva del producto. */
+        denominacionDistintiva: '',
+
+        /** Denominación común del producto. */
+        denominacionComun: '',
+
+        /** Tipo de producto. */
+        tipoDeProducto: '',
+
+        /** Estado físico del producto. */
+        estadoFisico: '',
+
+        /** Fracción arancelaria del producto. */
+        fraccionArancelaria: '',
+
+        /** Descripción de la fracción arancelaria. */
+        descripcionFraccion: '',
+
+        /** Cantidad en unidad de medida de transporte. */
+        cantidadUMT: '',
+
+        /** Unidad de medida de transporte. */
+        UMT: '',
+
+        /** Cantidad en unidad de medida comercial. */
+        cantidadUMC: '',
+
+        /** Unidad de medida comercial. */
+        UMC: '',
+
+        /** Presentación del producto. */
+        presentacion: '',
+
+        /** Número de registro del producto. */
+        numeroRegistro: '',
+
+        /** Fecha de caducidad del producto. */
+        fechaCaducidad: '',
+
+        /** Clave de los lotes del producto. */
+        claveDeLosLotes: '',
+
+        /** Cumplimiento de requisitos del producto. */
+        cumplimiento: '',
+
+        /** Clave de referencia de pago. */
+        claveDeReferencia: '',
+
+        /** Cadena de dependencia asociada al pago. */
+        cadenaDependencia: '',
+
+        /** Banco receptor del pago. */
+        banco: '',
+
+        /** Llave generada para el pago. */
+        llaveDePago: '',
+
+        /** Fecha en la que se realizó el pago. */
+        fechaPago: '',
+
+        /** Importe del pago realizado. */
+        importePago: '',
+
+        /** RFC del contribuyente o tercero. */
+        rfc: '',
+
+        /** Nombre del contribuyente o tercero. */
+        nombre: '',
+
+        /** Apellido paterno. */
+        apellidoPaterno: '',
+
+        /** Apellido materno. */
+        apellidoMaterno: '',
+
+        /** Denominación social (si aplica). */
+        denominacionSocial: '',
+
+        /** Nombre del tercero relacionado. */
+        terceroNombre: '',
+
+        /** Primer apellido del tercero relacionado. */
+        primerApellido: '',
+
+        /** Marca si el tercero es nacional. */
+        nacional: '',
+
+        /** Marca si el tercero es extranjero. */
+        extranjero: '',
+
+        /** Tipo de persona (física o moral). */
+        tipoPersona: '',
+
+        /** RFC del tercero relacionado. */
+        tercerosRelacionadosRfc: '',
+
+        /** CURP del tercero relacionado. */
+        curp: '',
+
+        /** Razón social del tercero. */
+        razonSocial: '',
+
+        /** País del tercero. */
+        pais: '',
+
+        /** Estado del tercero. */
+        tercerosRelacionadosEstado: '',
+
+        /** Municipio del tercero. */
+        tercerosRelacionadosMunicipio: '',
+
+        /** Localidad del tercero. */
+        tercerosRelacionadosLocalidad: '',
+
+        /** Código postal del tercero. */
+        tercerosRelacionadosCodigoPostal: '',
+
+        /** Colonia del tercero. */
+        tercerosRelacionadosColonia: '',
+
+        /** Calle del tercero. */
+        tercerosRelacionadosCalle: '',
+
+        /** Número exterior del domicilio del tercero. */
+        numeroExterior: '',
+
+        /** Número interior del domicilio del tercero. */
+        numeroInterior: '',
+
+        /** Lada del teléfono del tercero. */
+        tercerosRelacionadosLada: '',
+
+        /** Teléfono del tercero. */
+        tercerosRelacionadosTelefono: '',
+
+        /** Correo electrónico del tercero. */
+        tercerosRelacionadosCorreoElectronico: '',
+
+        /** Municipio (campo extra). */
+        muncipio: '',
+
+        /** Tipo de operación del trámite. */
+        tipoOperacion: '',
+
+        /** Justificación de la operación. */
+        justificacion: '',
+
+        /** RFC del responsable sanitario. */
+        rfcResponsableSanitario: '',
+
+        /** Aceptación de manifiestos por parte del usuario. */
+        aceptaManifiestos: '',
+
+        /** Aceptación de publicación de datos confidenciales. */
+        aceptaPublicacion: '',
+
+        /** RFC del representante legal. */
+        rfcRepresentante: '',
+
+        /** Razón social del representante. */
+        razonSocialRepresentante: '',
+
+        /** Apellido paterno del representante. */
+        apellidoPaternoRepresentante: '',
+
+        /** Apellido materno del representante. */
+        apellidoMaternoRepresentante: '',
     };
-    
 }
+
 
 @Injectable({
-  providedIn: 'root',
+    providedIn: 'root',
 })
 @StoreConfig({ name: 'tramite260701', resettable: true })
 export class Tramite260917Store extends Store<Solicitud260917State> {
-  /**
-   * Crea una instancia de Tramite260917Store.
-   * @constructor
-   */
-  constructor() {
-    super(createInitialState());
-  }
+    /**
+     * Crea una instancia de Tramite260917Store.
+     * @constructor
+     */
+    constructor() {
+        super(createInitialState());
+    }
 
     /**
      * Establece el estado de denominacionORazonSocial.
      * @param denominacionORazonSocial - El valor de denominacionORazonSocial.
      */
-    public setDenominacionORazonSocial(denominacionORazonSocial: string):void {
+    public setDenominacionORazonSocial(denominacionORazonSocial: string): void {
         this.update((state) => ({
             ...state,
             denominacionORazonSocial,
@@ -414,7 +592,7 @@ export class Tramite260917Store extends Store<Solicitud260917State> {
      * Establece el estado de correoElectronico.
      * @param correoElectronico - El valor de correoElectronico.
      */
-    public setCorreoElectronico(correoElectronico: string):void {
+    public setCorreoElectronico(correoElectronico: string): void {
         this.update((state) => ({
             ...state,
             correoElectronico,
@@ -424,7 +602,7 @@ export class Tramite260917Store extends Store<Solicitud260917State> {
      * Establece el estado de codigoPostal.
      * @param codigoPostal - El valor de codigoPostal.
      */
-    public setCodigoPostal(codigoPostal: string):void {
+    public setCodigoPostal(codigoPostal: string): void {
         this.update((state) => ({
             ...state,
             codigoPostal,
@@ -434,7 +612,7 @@ export class Tramite260917Store extends Store<Solicitud260917State> {
      * Establece el estado de estado.
      * @param estado - El valor de estado.
      */
-    public setEstado(estado: string):void {
+    public setEstado(estado: string): void {
         this.update((state) => ({
             ...state,
             estado,
@@ -444,7 +622,7 @@ export class Tramite260917Store extends Store<Solicitud260917State> {
      * Establece el estado de municipio.
      * @param municipio - El valor de municipio.
      */
-    public setMunicipio(municipio: string):void {
+    public setMunicipio(municipio: string): void {
         this.update((state) => ({
             ...state,
             municipio,
@@ -454,7 +632,7 @@ export class Tramite260917Store extends Store<Solicitud260917State> {
      * Establece el estado de localidad.
      * @param localidad - El valor de localidad.
      */
-    public setLocalidad(localidad: string):void {
+    public setLocalidad(localidad: string): void {
         this.update((state) => ({
             ...state,
             localidad,
@@ -464,7 +642,7 @@ export class Tramite260917Store extends Store<Solicitud260917State> {
      * Establece el estado de colonia.
      * @param colonia - El valor de colonia.
      */
-    public setColonia(colonia: string):void {
+    public setColonia(colonia: string): void {
         this.update((state) => ({
             ...state,
             colonia,
@@ -474,7 +652,7 @@ export class Tramite260917Store extends Store<Solicitud260917State> {
      * Establece el estado de calle.
      * @param calle - El valor de calle.
      */
-    public setCalle(calle: string):void {
+    public setCalle(calle: string): void {
         this.update((state) => ({
             ...state,
             calle,
@@ -484,7 +662,7 @@ export class Tramite260917Store extends Store<Solicitud260917State> {
      * Establece el estado de lada.
      * @param lada - El valor de lada.
      */
-    public setLada(lada: string):void {
+    public setLada(lada: string): void {
         this.update((state) => ({
             ...state,
             lada,
@@ -494,7 +672,7 @@ export class Tramite260917Store extends Store<Solicitud260917State> {
      * Establece el estado de telefono.
      * @param telefono - El valor de telefono.
      */
-    public setTelefono(telefono: string):void {
+    public setTelefono(telefono: string): void {
         this.update((state) => ({
             ...state,
             telefono,
@@ -504,7 +682,7 @@ export class Tramite260917Store extends Store<Solicitud260917State> {
      * Establece el estado de avisoCheckbox.
      * @param avisoCheckbox - El valor de avisoCheckbox.
      */
-    public setAvisoCheckbox(avisoCheckbox: string):void {
+    public setAvisoCheckbox(avisoCheckbox: string): void {
         this.update((state) => ({
             ...state,
             avisoCheckbox,
@@ -514,7 +692,7 @@ export class Tramite260917Store extends Store<Solicitud260917State> {
      * Establece el estado de licenciaSanitaria.
      * @param licenciaSanitaria - El valor de licenciaSanitaria.
      */
-    public setLicenciaSanitaria(licenciaSanitaria: string):void {
+    public setLicenciaSanitaria(licenciaSanitaria: string): void {
         this.update((state) => ({
             ...state,
             licenciaSanitaria,
@@ -524,7 +702,7 @@ export class Tramite260917Store extends Store<Solicitud260917State> {
      * Establece el estado de marcarEnCasoDeQueSea.
      * @param marcarEnCasoDeQueSea - El valor de marcarEnCasoDeQueSea.
      */
-    public setMarcarEnCasoDeQueSea(marcarEnCasoDeQueSea: string):void {
+    public setMarcarEnCasoDeQueSea(marcarEnCasoDeQueSea: string): void {
         this.update((state) => ({
             ...state,
             marcarEnCasoDeQueSea,
@@ -534,7 +712,7 @@ export class Tramite260917Store extends Store<Solicitud260917State> {
      * Establece el estado de regimen.
      * @param regimen - El valor de regimen.
      */
-    public setRegimen(regimen: string):void {
+    public setRegimen(regimen: string): void {
         this.update((state) => ({
             ...state,
             regimen,
@@ -544,7 +722,7 @@ export class Tramite260917Store extends Store<Solicitud260917State> {
      * Establece el estado de aduanasEntradas.
      * @param aduanasEntradas - El valor de aduanasEntradas.
      */
-    public setAduanasEntradas(aduanasEntradas: string):void {
+    public setAduanasEntradas(aduanasEntradas: string): void {
         this.update((state) => ({
             ...state,
             aduanasEntradas,
@@ -554,7 +732,7 @@ export class Tramite260917Store extends Store<Solicitud260917State> {
      * Establece el estado de numeroPermiso.
      * @param numeroPermiso - El valor de numeroPermiso.
      */
-    public setNumeroPermiso(numeroPermiso: string):void {
+    public setNumeroPermiso(numeroPermiso: string): void {
         this.update((state) => ({
             ...state,
             numeroPermiso,
@@ -564,7 +742,7 @@ export class Tramite260917Store extends Store<Solicitud260917State> {
      * Establece el estado de claveScianModal.
      * @param claveScianModal - El valor de claveScianModal.
      */
-    public setClaveScianModal(claveScianModal: string):void {
+    public setClaveScianModal(claveScianModal: string): void {
         this.update((state) => ({
             ...state,
             claveScianModal,
@@ -574,7 +752,7 @@ export class Tramite260917Store extends Store<Solicitud260917State> {
      * Establece el estado de claveDescripcionModal.
      * @param claveDescripcionModal - El valor de claveDescripcionModal.
      */
-    public setClaveDescripcionModal(claveDescripcionModal: string):void {
+    public setClaveDescripcionModal(claveDescripcionModal: string): void {
         this.update((state) => ({
             ...state,
             claveDescripcionModal,
@@ -584,7 +762,7 @@ export class Tramite260917Store extends Store<Solicitud260917State> {
      * Establece el estado de clasificacion.
      * @param clasificacion - El valor de clasificacion.
      */
-    public setClasificacion(clasificacion: string):void {
+    public setClasificacion(clasificacion: string): void {
         this.update((state) => ({
             ...state,
             clasificacion,
@@ -594,7 +772,7 @@ export class Tramite260917Store extends Store<Solicitud260917State> {
      * Establece el estado de especificarClasificacionProducto.
      * @param especificarClasificacionProducto - El valor de especificarClasificacionProducto.
      */
-    public setEspecificarClasificacionProducto(especificarClasificacionProducto: string):void {
+    public setEspecificarClasificacionProducto(especificarClasificacionProducto: string): void {
         this.update((state) => ({
             ...state,
             especificarClasificacionProducto,
@@ -604,7 +782,7 @@ export class Tramite260917Store extends Store<Solicitud260917State> {
      * Establece el estado de denominacionEspecifica.
      * @param denominacionEspecifica - El valor de denominacionEspecifica.
      */
-    public setDenominacionEspecifica(denominacionEspecifica: string):void {
+    public setDenominacionEspecifica(denominacionEspecifica: string): void {
         this.update((state) => ({
             ...state,
             denominacionEspecifica,
@@ -614,7 +792,7 @@ export class Tramite260917Store extends Store<Solicitud260917State> {
      * Establece el estado de denominacionDistintiva.
      * @param denominacionDistintiva - El valor de denominacionDistintiva.
      */
-    public setDenominacionDistintiva(denominacionDistintiva: string):void {
+    public setDenominacionDistintiva(denominacionDistintiva: string): void {
         this.update((state) => ({
             ...state,
             denominacionDistintiva,
@@ -624,7 +802,7 @@ export class Tramite260917Store extends Store<Solicitud260917State> {
      * Establece el estado de denominacionComun.
      * @param denominacionComun - El valor de denominacionComun.
      */
-    public setDenominacionComun(denominacionComun: string):void {
+    public setDenominacionComun(denominacionComun: string): void {
         this.update((state) => ({
             ...state,
             denominacionComun,
@@ -634,7 +812,7 @@ export class Tramite260917Store extends Store<Solicitud260917State> {
      * Establece el estado de tipoDeProducto.
      * @param tipoDeProducto - El valor de tipoDeProducto.
      */
-    public setTipoDeProducto(tipoDeProducto: string):void {
+    public setTipoDeProducto(tipoDeProducto: string): void {
         this.update((state) => ({
             ...state,
             tipoDeProducto,
@@ -644,7 +822,7 @@ export class Tramite260917Store extends Store<Solicitud260917State> {
      * Establece el estado de estadoFisico.
      * @param estadoFisico - El valor de estadoFisico.
      */
-    public setEstadoFisico(estadoFisico: string):void {
+    public setEstadoFisico(estadoFisico: string): void {
         this.update((state) => ({
             ...state,
             estadoFisico,
@@ -654,7 +832,7 @@ export class Tramite260917Store extends Store<Solicitud260917State> {
      * Establece el estado de fraccionArancelaria.
      * @param fraccionArancelaria - El valor de fraccionArancelaria.
      */
-    public setFraccionArancelaria(fraccionArancelaria: string):void {
+    public setFraccionArancelaria(fraccionArancelaria: string): void {
         this.update((state) => ({
             ...state,
             fraccionArancelaria,
@@ -664,7 +842,7 @@ export class Tramite260917Store extends Store<Solicitud260917State> {
      * Establece el estado de descripcionFraccion.
      * @param descripcionFraccion - El valor de descripcionFraccion.
      */
-    public setDescripcionFraccion(descripcionFraccion: string):void{
+    public setDescripcionFraccion(descripcionFraccion: string): void {
         this.update((state) => ({
             ...state,
             descripcionFraccion,
@@ -674,7 +852,7 @@ export class Tramite260917Store extends Store<Solicitud260917State> {
      * Establece el estado de cantidadUMT.
      * @param cantidadUMT - El valor de cantidadUMT.
      */
-    public setCantidadUMT(cantidadUMT: string):void {
+    public setCantidadUMT(cantidadUMT: string): void {
         this.update((state) => ({
             ...state,
             cantidadUMT,
@@ -684,7 +862,7 @@ export class Tramite260917Store extends Store<Solicitud260917State> {
      * Establece el estado de UMT.
      * @param UMT - El valor de UMT.
      */
-    public setUMT(UMT: string):void {
+    public setUMT(UMT: string): void {
         this.update((state) => ({
             ...state,
             UMT,
@@ -694,7 +872,7 @@ export class Tramite260917Store extends Store<Solicitud260917State> {
      * Establece el estado de cantidadUMC.
      * @param cantidadUMC - El valor de cantidadUMC.
      */
-    public setCantidadUMC(cantidadUMC: string):void {
+    public setCantidadUMC(cantidadUMC: string): void {
         this.update((state) => ({
             ...state,
             cantidadUMC,
@@ -704,7 +882,7 @@ export class Tramite260917Store extends Store<Solicitud260917State> {
      * Establece el estado de UMC.
      * @param UMC - El valor de UMC.
      */
-    public setUMC(UMC: string):void{
+    public setUMC(UMC: string): void {
         this.update((state) => ({
             ...state,
             UMC,
@@ -714,7 +892,7 @@ export class Tramite260917Store extends Store<Solicitud260917State> {
      * Establece el estado de presentacion.
      * @param presentacion - El valor de presentacion.
      */
-    public setPresentacion(presentacion: string):void{
+    public setPresentacion(presentacion: string): void {
         this.update((state) => ({
             ...state,
             presentacion,
@@ -724,7 +902,7 @@ export class Tramite260917Store extends Store<Solicitud260917State> {
      * Establece el estado de numeroRegistro.
      * @param numeroRegistro - El valor de numeroRegistro.
      */
-    public setNumeroRegistro(numeroRegistro: string):void {
+    public setNumeroRegistro(numeroRegistro: string): void {
         this.update((state) => ({
             ...state,
             numeroRegistro,
@@ -734,7 +912,7 @@ export class Tramite260917Store extends Store<Solicitud260917State> {
      * Establece el estado de fechaCaducidad.
      * @param fechaCaducidad - El valor de fechaCaducidad.
      */
-    public setFechaCaducidad(fechaCaducidad: string):void{
+    public setFechaCaducidad(fechaCaducidad: string): void {
         this.update((state) => ({
             ...state,
             fechaCaducidad,
@@ -744,7 +922,7 @@ export class Tramite260917Store extends Store<Solicitud260917State> {
      * Establece el estado de claveDeLosLotes.
      * @param claveDeLosLotes - El valor de claveDeLosLotes.
      */
-    public setClaveDeLosLotes(claveDeLosLotes: string):void{
+    public setClaveDeLosLotes(claveDeLosLotes: string): void {
         this.update((state) => ({
             ...state,
             claveDeLosLotes,
@@ -754,7 +932,7 @@ export class Tramite260917Store extends Store<Solicitud260917State> {
      * Establece el estado de cumplimiento.
      * @param cumplimiento - El valor de cumplimiento.
      */
-    public setCumplimiento(cumplimiento: string):void{
+    public setCumplimiento(cumplimiento: string): void {
         this.update((state) => ({
             ...state,
             cumplimiento,
@@ -764,7 +942,7 @@ export class Tramite260917Store extends Store<Solicitud260917State> {
      * Establece el estado de claveDeReferencia.
      * @param claveDeReferencia - El valor de claveDeReferencia.
      */
-    public setClaveDeReferencia(claveDeReferencia: string):void{
+    public setClaveDeReferencia(claveDeReferencia: string): void {
         this.update((state) => ({
             ...state,
             claveDeReferencia,
@@ -774,7 +952,7 @@ export class Tramite260917Store extends Store<Solicitud260917State> {
      * Establece el estado de cadenaDependencia.
      * @param cadenaDependencia - El valor de cadenaDependencia.
      */
-    public setCadenaDependencia(cadenaDependencia: string):void{
+    public setCadenaDependencia(cadenaDependencia: string): void {
         this.update((state) => ({
             ...state,
             cadenaDependencia,
@@ -784,7 +962,7 @@ export class Tramite260917Store extends Store<Solicitud260917State> {
      * Establece el estado de banco.
      * @param banco - El valor de banco.
      */
-    public setBanco(banco: string):void{
+    public setBanco(banco: string): void {
         this.update((state) => ({
             ...state,
             banco,
@@ -794,7 +972,7 @@ export class Tramite260917Store extends Store<Solicitud260917State> {
      * Establece el estado de llaveDePago.
      * @param llaveDePago - El valor de llaveDePago.
      */
-    public setLlaveDePago(llaveDePago: string):void{
+    public setLlaveDePago(llaveDePago: string): void {
         this.update((state) => ({
             ...state,
             llaveDePago,
@@ -804,7 +982,7 @@ export class Tramite260917Store extends Store<Solicitud260917State> {
      * Establece el estado de fechaPago.
      * @param fechaPago - El valor de fechaPago.
      */
-    public setFechaPago(fechaPago: string):void{
+    public setFechaPago(fechaPago: string): void {
         this.update((state) => ({
             ...state,
             fechaPago,
@@ -814,7 +992,7 @@ export class Tramite260917Store extends Store<Solicitud260917State> {
      * Establece el estado de importePago.
      * @param importePago - El valor de importePago.
      */
-    public setImportePago(importePago: string):void{
+    public setImportePago(importePago: string): void {
         this.update((state) => ({
             ...state,
             importePago,
@@ -824,7 +1002,7 @@ export class Tramite260917Store extends Store<Solicitud260917State> {
      * Establece el estado de rfc.
      * @param rfc - El valor de rfc.
      */
-    public setRfc(rfc: string):void{
+    public setRfc(rfc: string): void {
         this.update((state) => ({
             ...state,
             rfc,
@@ -834,7 +1012,7 @@ export class Tramite260917Store extends Store<Solicitud260917State> {
      * Establece el estado de nombre.
      * @param nombre - El valor de nombre.
      */
-    public setNombre(nombre: string):void{
+    public setNombre(nombre: string): void {
         this.update((state) => ({
             ...state,
             nombre,
@@ -844,7 +1022,7 @@ export class Tramite260917Store extends Store<Solicitud260917State> {
      * Establece el estado de apellidoPaterno.
      * @param apellidoPaterno - El valor de apellidoPaterno.
      */
-    public setApellidoPaterno(apellidoPaterno: string):void{
+    public setApellidoPaterno(apellidoPaterno: string): void {
         this.update((state) => ({
             ...state,
             apellidoPaterno,
@@ -854,7 +1032,7 @@ export class Tramite260917Store extends Store<Solicitud260917State> {
      * Establece el estado de apellidoMaterno.
      * @param apellidoMaterno - El valor de apellidoMaterno.
      */
-    public setApellidoMaterno(apellidoMaterno: string):void{
+    public setApellidoMaterno(apellidoMaterno: string): void {
         this.update((state) => ({
             ...state,
             apellidoMaterno,
@@ -864,7 +1042,7 @@ export class Tramite260917Store extends Store<Solicitud260917State> {
      * Establece el estado de denominacionSocial.
      * @param denominacionSocial - El valor de denominacionSocial.
      */
-    public setDenominacionSocial(denominacionSocial: string):void{
+    public setDenominacionSocial(denominacionSocial: string): void {
         this.update((state) => ({
             ...state,
             denominacionSocial,
@@ -874,7 +1052,7 @@ export class Tramite260917Store extends Store<Solicitud260917State> {
      * Establece el estado de terceroNombre.
      * @param terceroNombre - El valor de terceroNombre.
      */
-    public setTerceroNombre(terceroNombre: string):void{
+    public setTerceroNombre(terceroNombre: string): void {
         this.update((state) => ({
             ...state,
             terceroNombre,
@@ -884,7 +1062,7 @@ export class Tramite260917Store extends Store<Solicitud260917State> {
      * Establece el estado de primerApellido.
      * @param primerApellido - El valor de primerApellido.
      */
-    public setPrimerApellido(primerApellido: string):void{
+    public setPrimerApellido(primerApellido: string): void {
         this.update((state) => ({
             ...state,
             primerApellido,
@@ -894,7 +1072,7 @@ export class Tramite260917Store extends Store<Solicitud260917State> {
      * Establece el estado de nacional.
      * @param nacional - El valor de nacional.
      */
-    public setNacional(nacional: string):void{
+    public setNacional(nacional: string): void {
         this.update((state) => ({
             ...state,
             nacional,
@@ -904,7 +1082,7 @@ export class Tramite260917Store extends Store<Solicitud260917State> {
      * Establece el estado de extranjero.
      * @param extranjero - El valor de extranjero.
      */
-    public setExtranjero(extranjero: string):void{
+    public setExtranjero(extranjero: string): void {
         this.update((state) => ({
             ...state,
             extranjero,
@@ -914,7 +1092,7 @@ export class Tramite260917Store extends Store<Solicitud260917State> {
      * Establece el estado de tipoPersona.
      * @param tipoPersona - El valor de tipoPersona.
      */
-    public setTipoPersona(tipoPersona: string):void{
+    public setTipoPersona(tipoPersona: string): void {
         this.update((state) => ({
             ...state,
             tipoPersona,
@@ -924,7 +1102,7 @@ export class Tramite260917Store extends Store<Solicitud260917State> {
      * Establece el estado de tercerosRelacionadosRfc.
      * @param tercerosRelacionadosRfc - El valor de tercerosRelacionadosRfc.
      */
-    public setTercerosRelacionadosRfc(tercerosRelacionadosRfc: string):void{
+    public setTercerosRelacionadosRfc(tercerosRelacionadosRfc: string): void {
         this.update((state) => ({
             ...state,
             tercerosRelacionadosRfc,
@@ -934,7 +1112,7 @@ export class Tramite260917Store extends Store<Solicitud260917State> {
      * Establece el estado de curp.
      * @param curp - El valor de curp.
      */
-    public setCurp(curp: string):void{
+    public setCurp(curp: string): void {
         this.update((state) => ({
             ...state,
             curp,
@@ -944,7 +1122,7 @@ export class Tramite260917Store extends Store<Solicitud260917State> {
      * Establece el estado de razonSocial.
      * @param razonSocial - El valor de razonSocial.
      */
-    public setRazonSocial(razonSocial: string):void{
+    public setRazonSocial(razonSocial: string): void {
         this.update((state) => ({
             ...state,
             razonSocial,
@@ -954,7 +1132,7 @@ export class Tramite260917Store extends Store<Solicitud260917State> {
      * Establece el estado de pais.
      * @param pais - El valor de pais.
      */
-    public setPais(pais: string):void{
+    public setPais(pais: string): void {
         this.update((state) => ({
             ...state,
             pais,
@@ -964,7 +1142,7 @@ export class Tramite260917Store extends Store<Solicitud260917State> {
      * Establece el estado de tercerosRelacionadosEstado.
      * @param tercerosRelacionadosEstado - El valor de tercerosRelacionadosEstado.
      */
-    public setTercerosRelacionadosEstado(tercerosRelacionadosEstado: string):void{
+    public setTercerosRelacionadosEstado(tercerosRelacionadosEstado: string): void {
         this.update((state) => ({
             ...state,
             tercerosRelacionadosEstado,
@@ -974,7 +1152,7 @@ export class Tramite260917Store extends Store<Solicitud260917State> {
      * Establece el estado de tercerosRelacionadosMunicipio.
      * @param tercerosRelacionadosMunicipio - El valor de tercerosRelacionadosMunicipio.
      */
-    public setTercerosRelacionadosMunicipio(tercerosRelacionadosMunicipio: string):void{
+    public setTercerosRelacionadosMunicipio(tercerosRelacionadosMunicipio: string): void {
         this.update((state) => ({
             ...state,
             tercerosRelacionadosMunicipio,
@@ -984,7 +1162,7 @@ export class Tramite260917Store extends Store<Solicitud260917State> {
      * Establece el estado de tercerosRelacionadosLocalidad.
      * @param tercerosRelacionadosLocalidad - El valor de tercerosRelacionadosLocalidad.
      */
-    public setTercerosRelacionadosLocalidad(tercerosRelacionadosLocalidad: string):void{
+    public setTercerosRelacionadosLocalidad(tercerosRelacionadosLocalidad: string): void {
         this.update((state) => ({
             ...state,
             tercerosRelacionadosLocalidad,
@@ -994,7 +1172,7 @@ export class Tramite260917Store extends Store<Solicitud260917State> {
      * Establece el estado de tercerosRelacionadosCodigoPostal.
      * @param tercerosRelacionadosCodigoPostal - El valor de tercerosRelacionadosCodigoPostal.
      */
-    public setTercerosRelacionadosCodigoPostal(tercerosRelacionadosCodigoPostal: string):void{
+    public setTercerosRelacionadosCodigoPostal(tercerosRelacionadosCodigoPostal: string): void {
         this.update((state) => ({
             ...state,
             tercerosRelacionadosCodigoPostal,
@@ -1004,7 +1182,7 @@ export class Tramite260917Store extends Store<Solicitud260917State> {
      * Establece el estado de tercerosRelacionadosColonia.
      * @param tercerosRelacionadosColonia - El valor de tercerosRelacionadosColonia.
      */
-    public setTercerosRelacionadosColonia(tercerosRelacionadosColonia: string):void{
+    public setTercerosRelacionadosColonia(tercerosRelacionadosColonia: string): void {
         this.update((state) => ({
             ...state,
             tercerosRelacionadosColonia,
@@ -1014,7 +1192,7 @@ export class Tramite260917Store extends Store<Solicitud260917State> {
      * Establece el estado de tercerosRelacionadosCalle.
      * @param tercerosRelacionadosCalle - El valor de tercerosRelacionadosCalle.
      */
-    public setTercerosRelacionadosCalle(tercerosRelacionadosCalle: string):void{
+    public setTercerosRelacionadosCalle(tercerosRelacionadosCalle: string): void {
         this.update((state) => ({
             ...state,
             tercerosRelacionadosCalle,
@@ -1024,7 +1202,7 @@ export class Tramite260917Store extends Store<Solicitud260917State> {
      * Establece el estado de numeroExterior.
      * @param numeroExterior - El valor de numeroExterior.
      */
-    public setNumeroExterior(numeroExterior: string):void{
+    public setNumeroExterior(numeroExterior: string): void {
         this.update((state) => ({
             ...state,
             numeroExterior,
@@ -1034,7 +1212,7 @@ export class Tramite260917Store extends Store<Solicitud260917State> {
      * Establece el estado de numeroInterior.
      * @param numeroInterior - El valor de numeroInterior.
      */
-    public setNumeroInterior(numeroInterior: string):void{
+    public setNumeroInterior(numeroInterior: string): void {
         this.update((state) => ({
             ...state,
             numeroInterior,
@@ -1044,7 +1222,7 @@ export class Tramite260917Store extends Store<Solicitud260917State> {
      * Establece el estado de tercerosRelacionadosLada.
      * @param tercerosRelacionadosLada - El valor de tercerosRelacionadosLada.
      */
-    public setTercerosRelacionadosLada(tercerosRelacionadosLada: string):void{
+    public setTercerosRelacionadosLada(tercerosRelacionadosLada: string): void {
         this.update((state) => ({
             ...state,
             tercerosRelacionadosLada,
@@ -1054,7 +1232,7 @@ export class Tramite260917Store extends Store<Solicitud260917State> {
      * Establece el estado de tercerosRelacionadosTelefono.
      * @param tercerosRelacionadosTelefono - El valor de tercerosRelacionadosTelefono.
      */
-    public setTercerosRelacionadosTelefono(tercerosRelacionadosTelefono: string):void{
+    public setTercerosRelacionadosTelefono(tercerosRelacionadosTelefono: string): void {
         this.update((state) => ({
             ...state,
             tercerosRelacionadosTelefono,
@@ -1064,7 +1242,7 @@ export class Tramite260917Store extends Store<Solicitud260917State> {
      * Establece el estado de tercerosRelacionadosCorreoElectronico.
      * @param tercerosRelacionadosCorreoElectronico - El valor de tercerosRelacionadosCorreoElectronico.
      */
-    public setTercerosRelacionadosCorreoElectronico(tercerosRelacionadosCorreoElectronico: string):void{
+    public setTercerosRelacionadosCorreoElectronico(tercerosRelacionadosCorreoElectronico: string): void {
         this.update((state) => ({
             ...state,
             tercerosRelacionadosCorreoElectronico,
@@ -1075,7 +1253,7 @@ export class Tramite260917Store extends Store<Solicitud260917State> {
      * Establece el estado de muncipio.
      * @param muncipio - El valor de muncipio.
      */
-    public setMuncipio(muncipio: string):void{
+    public setMuncipio(muncipio: string): void {
         this.update((state) => ({
             ...state,
             muncipio,
@@ -1085,7 +1263,7 @@ export class Tramite260917Store extends Store<Solicitud260917State> {
      * Establece el estado de tipoOperacion.
      * @param tipoOperacion - El valor de tipoOperacion.
      */
-    public setTipoOperacion(tipoOperacion: string):void{
+    public setTipoOperacion(tipoOperacion: string): void {
         this.update((state) => ({
             ...state,
             tipoOperacion,
@@ -1095,62 +1273,88 @@ export class Tramite260917Store extends Store<Solicitud260917State> {
      * Establece el estado de justificacion.
      * @param justificacion - El valor de justificacion.
      */
-    public setJustificacion(justificacion: string):void{
+    public setJustificacion(justificacion: string): void {
         this.update((state) => ({
             ...state,
             justificacion,
         }));
     }
 
-    public setRFCResponsableSanitario(rfcResponsableSanitario: string):void{
+    /**
+     * Actualiza el RFC del responsable sanitario en el estado.
+     * @param rfcResponsableSanitario - Nuevo valor del RFC del responsable sanitario.
+     */
+    public setRFCResponsableSanitario(rfcResponsableSanitario: string): void {
         this.update((state) => ({
             ...state,
             rfcResponsableSanitario,
         }));
     }
 
-    public setAceptaManifiestos(aceptaManifiestos: string):void{
+    /**
+     * Actualiza el valor de aceptación de manifiestos en el estado.
+     * @param aceptaManifiestos - Valor que indica si se aceptan los manifiestos.
+     */
+    public setAceptaManifiestos(aceptaManifiestos: string): void {
         this.update((state) => ({
             ...state,
-            aceptaManifiestos
+            aceptaManifiestos,
         }));
     }
 
-    public setAceptaPublicacion(aceptaPublicacion: string):void{
+    /**
+     * Actualiza el valor de aceptación de publicación en el estado.
+     * @param aceptaPublicacion - Valor que indica si se acepta la publicación.
+     */
+    public setAceptaPublicacion(aceptaPublicacion: string): void {
         this.update((state) => ({
             ...state,
-            aceptaPublicacion
+            aceptaPublicacion,
         }));
     }
 
-    public setRFCRepresentante(rfcRepresentante: string):void{
+    /**
+     * Actualiza el RFC del representante en el estado.
+     * @param rfcRepresentante - Nuevo valor del RFC del representante.
+     */
+    public setRFCRepresentante(rfcRepresentante: string): void {
         this.update((state) => ({
             ...state,
-            rfcRepresentante
+            rfcRepresentante,
         }));
     }
 
-    public setRazonSocialRepresentante(razonSocialRepresentante: string):void{
+    /**
+     * Actualiza la razón social del representante en el estado.
+     * @param razonSocialRepresentante - Nueva razón social del representante.
+     */
+    public setRazonSocialRepresentante(razonSocialRepresentante: string): void {
         this.update((state) => ({
             ...state,
-            razonSocialRepresentante
+            razonSocialRepresentante,
         }));
     }
 
-    public setApellidoPaternoRepresentante(apellidoPaternoRepresentante: string):void{
+    /**
+     * Actualiza el apellido paterno del representante en el estado.
+     * @param apellidoPaternoRepresentante - Nuevo apellido paterno del representante.
+     */
+    public setApellidoPaternoRepresentante(apellidoPaternoRepresentante: string): void {
         this.update((state) => ({
             ...state,
-            apellidoPaternoRepresentante
+            apellidoPaternoRepresentante,
         }));
     }
 
-    public setApellidoMaternoRepresentante(apellidoMaternoRepresentante: string):void{
+    /**
+     * Actualiza el apellido materno del representante en el estado.
+     * @param apellidoMaternoRepresentante - Nuevo apellido materno del representante.
+     */
+    public setApellidoMaternoRepresentante(apellidoMaternoRepresentante: string): void {
         this.update((state) => ({
             ...state,
-            apellidoMaternoRepresentante
+            apellidoMaternoRepresentante,
         }));
     }
-
-
 
 }

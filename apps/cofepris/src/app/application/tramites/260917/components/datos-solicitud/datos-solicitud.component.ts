@@ -90,6 +90,9 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    */
   public formMercancias!: FormGroup;
 
+  /**
+ * Formulario que contiene los datos relacionados con los manifiestos.
+ */
   public formularioManifiestos!: FormGroup;
 
   /**
@@ -238,13 +241,38 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    * - Inicializa el grupo de formularios `formMercancias` con controles para campos relacionados con las mercancías.
    */
   ngOnInit(): void {
+    /**
+ * Texto de declaración relacionado con manifiestos.
+ */
     this.manifiestosText = MANIFIESTOS_DECLARACION.MANIFIESTOS;
+
+    /**
+     * Opciones genéricas para el tipo de operación.
+     */
     this.genericOptions = radioOptions.tipoOperacion;
+
+    /**
+     * Opciones para la publicación de información confidencial.
+     */
     this.hacerlosRadioOptions = radioOptions.publicarInformacionConfidencial;
+
+    /**
+     * Opciones de estado disponibles.
+     */
     this.estado = radioOptions.estado;
-    this.tramite260701Query.selectSolicitud$.pipe(takeUntil(this.destroyed$), map((seccionState) => {
-      this.solicitudState = seccionState;
-    })).subscribe();
+
+    /**
+ * Suscripción al estado de la sección "solicitud" desde el query de Akita.
+ * Se actualiza `solicitudState` cada vez que cambia el estado en el store.
+ */
+    this.tramite260701Query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+        })
+      )
+      .subscribe();
 
 
     this.domicilio = this.fb.group({
