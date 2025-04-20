@@ -1,7 +1,13 @@
-import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, SolicitanteComponent } from '@libs/shared/data-access-user/src';
+import {
+  AlertComponent,
+  AnexarDocumentosComponent,
+  BtnContinuarComponent,
+  CatalogoSelectComponent,
+  InputRadioComponent,
+  SolicitanteComponent,
+} from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { DatosComponent } from './pages/datos/datos.component';
-
 
 import { FirmaElectronicaComponent } from '@ng-mf/data-access-user';
 import { FirmarSolicitudComponent } from './pages/firmar-solicitud/firmar-solicitud.component';
@@ -19,24 +25,35 @@ import { SanidadRoutingModule } from './sanidad-routing.module';
 
 import { PagoDeDerechosComponent } from './components/pago-de-derechos/pago-de-derechos.component';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
+import { ReactiveFormsModule } from '@angular/forms';
 import { TercerosComponent } from './components/terceros/terceros.component';
 
-
-
 @NgModule({
-  declarations: [    
-    DatosComponent,FirmarSolicitudComponent,SanidadComponent,PasoDosComponent
+  declarations: [
+    DatosComponent,
+    FirmarSolicitudComponent,
+    SanidadComponent,
+    PasoDosComponent,
+    PagoDeDerechosComponent,
   ],
   imports: [
-    CommonModule,AlertComponent,AnexarDocumentosComponent,
+    CommonModule,
+    AlertComponent,
+    AnexarDocumentosComponent,
     SanidadRoutingModule,
-    BtnContinuarComponent,   
+    BtnContinuarComponent,
     TituloComponent,
-    WizardComponent,FirmaElectronicaComponent,
-    SolicitanteComponent,DatosDeLaSolicitudComponent,MovilizacionComponent,TercerosComponent,PagoDeDerechosComponent
-  ],
-  providers: [
-    ToastrService
-  ]
+    TituloComponent,
+    ReactiveFormsModule,
+    CatalogoSelectComponent,
+    WizardComponent,
+    FirmaElectronicaComponent,
+    SolicitanteComponent,
+    DatosDeLaSolicitudComponent,
+    MovilizacionComponent,
+    TercerosComponent,
+    InputRadioComponent
+],
+  providers: [ToastrService],
 })
-export class SanidadModule { }
+export class SanidadModule {}

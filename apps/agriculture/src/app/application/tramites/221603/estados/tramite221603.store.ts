@@ -73,6 +73,8 @@ export interface Solicitud221603State {
    */
   empresa: string;
 
+  exento: string;
+
   /**
    * Clave única asociada al trámite.
    * @type {string}
@@ -127,6 +129,7 @@ export function createInitialState(): Solicitud221603State {
     transporte: '',
     verificacion: '',
     empresa: '',
+    exento: '',
     clave: '',
     dependencia: '',
     banco: '',
@@ -271,6 +274,13 @@ export class Tramite221603Store extends Store<Solicitud221603State> {
     this.update((state) => ({
       ...state,
       empresa,
+    }));
+  }
+
+  public setExentoDePago(exento: string): void {
+    this.update((state) => ({
+      ...state,
+      exento,
     }));
   }
 
