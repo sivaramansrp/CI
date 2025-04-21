@@ -11,7 +11,6 @@ import { ModificacionPermisoImportacionMedicamentosComponent } from '../../compo
 import { TercerosRelacionadosFabricanteComponent } from '../../components/terceros-relacionados-fabricante/terceros-relacionados-fabricante.component';
 import { ModificacionPermisoImportacionMedicamentosService } from '../../services/modificacion-permiso-importacion-medicamentos.service';
 
-
 @Component({
   selector: 'solicitante',
   template: '<div></div>',
@@ -44,7 +43,7 @@ interface DatosProcedureQueryMockType {
 }
 
 describe('PasoUnoComponent', () => {
-  let component: PasoUnoComponent;
+  let componente: PasoUnoComponent;
   let fixture: ComponentFixture<PasoUnoComponent>;
   let ModificacionPermisoImportacionMedicamentosServiceMock: ModificacionPermisoImportacionMedicamentosServiceMockType;
   let datosProcedureStoreMock: DatosProcedureStoreMockType;
@@ -90,49 +89,49 @@ describe('PasoUnoComponent', () => {
     }).compileComponents();
 
     fixture = TestBed.createComponent(PasoUnoComponent);
-    component = fixture.componentInstance;
+    componente = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
+  it('debería crearse', () => {
+    expect(componente).toBeTruthy();
   });
 
-  it('should initialize tramiteAsociados on ngOnInit', () => {
-    const tramiteAsociadosMock = [
-      { id: 1, folioTramite: '12345', tipoTramite: 'Tipo A', estatus: 'Activo', fetchaAltaDeRegistro: '2025-04-10' },
+  it('debería inicializar tramiteAsociados en ngOnInit', () => {
+    const TRAMITE_ASOCIADOS_MOCK = [
+        { id: 1, folioTramite: '12345', tipoTramite: 'Tipo A', estatus: 'Activo', fetchaAltaDeRegistro: '2025-04-10' },
     ];
-    ModificacionPermisoImportacionMedicamentosServiceMock.obtenerTramitesAsociados.mockReturnValue(of(tramiteAsociadosMock));
+    ModificacionPermisoImportacionMedicamentosServiceMock.obtenerTramitesAsociados.mockReturnValue(of(TRAMITE_ASOCIADOS_MOCK));
 
-    component.ngOnInit();
-    expect(component.tramiteAsociados).toEqual(tramiteAsociadosMock);
+    componente.ngOnInit();
+    expect(componente.tramiteAsociados).toEqual(TRAMITE_ASOCIADOS_MOCK);
   });
 
-  it('should initialize form on crearformularioPagoDerechos', () => {
-    component.crearformularioPagoDerechos();
-    expect(component.formularioPagoDerechos).toBeDefined();
-    expect(component.formularioPagoDerechos.get('claveDeReferencia')?.value).toBe('12345');
-    expect(component.formularioPagoDerechos.get('cadenaPagoDependencia')?.value).toBe('DEPENDENCIA');
-    expect(component.formularioPagoDerechos.get('banco')?.value).toBe(1);
-    expect(component.formularioPagoDerechos.get('llaveDePago')?.value).toBe('LLAVE123');
-    expect(component.formularioPagoDerechos.get('fecPago')?.value).toBe('2025-04-10');
-    expect(component.formularioPagoDerechos.get('impPago')?.value).toBe(1000);
+  it('debería inicializar el formulario en crearformularioPagoDerechos', () => {
+    componente.crearformularioPagoDerechos();
+    expect(componente.formularioPagoDerechos).toBeDefined();
+    expect(componente.formularioPagoDerechos.get('claveDeReferencia')?.value).toBe('12345');
+    expect(componente.formularioPagoDerechos.get('cadenaPagoDependencia')?.value).toBe('DEPENDENCIA');
+    expect(componente.formularioPagoDerechos.get('banco')?.value).toBe(1);
+    expect(componente.formularioPagoDerechos.get('llaveDePago')?.value).toBe('LLAVE123');
+    expect(componente.formularioPagoDerechos.get('fecPago')?.value).toBe('2025-04-10');
+    expect(componente.formularioPagoDerechos.get('impPago')?.value).toBe(1000);
   });
 
-  it('should select a tab and initialize banco on seleccionaTab', () => {
-    component.seleccionaTab(4);
-    expect(component.indice).toBe(4);
-    expect(component.banco).toEqual([{ id: 1, descripcion: 'Banco 1' }]);
+  it('debería seleccionar una pestaña e inicializar banco en seleccionaTab', () => {
+    componente.seleccionaTab(4);
+    expect(componente.indice).toBe(4);
+    expect(componente.banco).toEqual([{ id: 1, descripcion: 'Banco 1' }]);
   });
 
-  it('should clean up subscriptions on ngOnDestroy', () => {
-    const destroySpy = jest.spyOn(component['notificadorDestruccion$'], 'next');
-    const completeSpy = jest.spyOn(component['notificadorDestruccion$'], 'complete');
+  it('debería limpiar las suscripciones en ngOnDestroy', () => {
+    const DESTROY_SPY = jest.spyOn(componente['notificadorDestruccion$'], 'next');
+    const COMPLETE_SPY = jest.spyOn(componente['notificadorDestruccion$'], 'complete');
 
-    component.ngOnDestroy();
+    componente.ngOnDestroy();
 
-    expect(destroySpy).toHaveBeenCalled();
-    expect(completeSpy).toHaveBeenCalled();
+    expect(DESTROY_SPY).toHaveBeenCalled();
+    expect(COMPLETE_SPY).toHaveBeenCalled();
   });
 
 });
