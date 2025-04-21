@@ -197,7 +197,7 @@ export const FORMULARIO_DATOS_MERCANCIA = [
 export const FORMULARIO_DATOS_SOLICITUD = [
     {
         id: 'cveAduana',
-        labelNombre: 'Aduana de ingreso',
+        labelNombre: 'Aduana de retorno',
         campo: 'cveAduana',
         clase: 'col-md-4',
         tipoInput: 'select-catalogos',
@@ -212,7 +212,7 @@ export const FORMULARIO_DATOS_SOLICITUD = [
     },
     {
         id: 'cveSeccionAduanera',
-        labelNombre: 'Sección aduanera',
+        labelNombre: 'Sección aduanera de retorno',
         campo: 'cveSeccionAduanera',
         clase: 'col-md-4',
         tipoInput: 'select-catalogos',
