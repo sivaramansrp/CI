@@ -2,7 +2,9 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import {
   DatosPasos,
   ListaPasosWizard,
+  Notificacion,
   PASOS,
+  Pedimento,
   WizardComponent,
 } from '@ng-mf/data-access-user';
 
@@ -36,6 +38,29 @@ interface AccionBoton {
  * Componente que representa la página de solicitud.
  */
 export class SolicitudPageComponent implements OnInit {
+
+  hideModal: boolean = false;
+
+  /**
+   * Índice del elemento a eliminar.
+   */
+  public elementoParaEliminar!: number;
+
+   /**
+     * Notificación a mostrar en el modal.
+     */
+    public nuevaNotificacion!: Notificacion;
+
+     /**
+       * Lista de pedimentos asociados a la solicitud.
+       */
+      public pedimentos: Array<Pedimento> = [];
+
+      /**
+   * Indica si se está cargando un archivo.
+   */
+  cargarArchivo: boolean = false;
+
   /**
    * Texto de alerta para terceros.
    * Este texto se muestra en la interfaz de usuario para informar a los usuarios sobre el estado de su solicitud.
@@ -96,6 +121,8 @@ export class SolicitudPageComponent implements OnInit {
 
   getValorIndice(e: AccionBoton): void {
     this.alEventoHijo(this.nombre);
+    this.cargaArchivo();
+    if(this.hideModal){
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
       if (e.accion === 'cont' && this.indice === 2) {
@@ -106,6 +133,7 @@ export class SolicitudPageComponent implements OnInit {
       }
     }
   }
+  }
 
   /**
    * Maneja el evento emitido por un componente hijo.
@@ -115,4 +143,46 @@ export class SolicitudPageComponent implements OnInit {
   alEventoHijo(nombre: number): void {
     this.nombre = nombre;
   }
+
+   /**
+   * Elimina un pedimento de la lista.
+   * @param borrar Indica si se debe eliminar el pedimento.
+   */
+   eliminarPedimento(borrar: boolean): void {
+    if (borrar) {
+      this.pedimentos.splice(this.elementoParaEliminar, 1);
+      this.hideModal = true;
+      this.getValorIndice({ accion: 'cont', valor: 2 });
+    }
+  }
+
+  /**
+   * Abre un modal con una notificación.
+   * @param i Índice del elemento a eliminar (opcional).
+   */
+  abrirModal(i: number = 0): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje:
+        '¿Deseas desistir la solicitud de servicios extraordinarios con el folio 0105700100020252470000001?',
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Sí',
+      txtBtnCancelar: 'No',
+    };
+    this.elementoParaEliminar = i;
+  }
+
+  /**
+   * Marca que se está cargando un archivo y abre el modal.
+   */
+  cargaArchivo(): void {
+    this.cargarArchivo = true;
+    this.abrirModal();
+  }
+
+
 }

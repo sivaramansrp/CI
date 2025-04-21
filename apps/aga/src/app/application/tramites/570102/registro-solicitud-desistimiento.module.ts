@@ -1,4 +1,4 @@
-import { AlertComponent,AnexarDocumentosComponent,BtnContinuarComponent, FirmaElectronicaComponent, InputCheckComponent,SharedModule,SolicitanteComponent, TituloComponent,WizardComponent} from '@libs/shared/data-access-user/src';
+import { AlertComponent,AnexarDocumentosComponent,BtnContinuarComponent, FirmaElectronicaComponent, InputCheckComponent,NotificacionesComponent,SharedModule,SolicitanteComponent, TituloComponent,WizardComponent} from '@libs/shared/data-access-user/src';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
@@ -29,7 +29,8 @@ import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.co
     FirmaElectronicaComponent,
     SharedModule,
     TituloComponent,
-    AlertComponent
+    AlertComponent,
+    NotificacionesComponent
   ],
   exports:[SolicitudPageComponent]
 })

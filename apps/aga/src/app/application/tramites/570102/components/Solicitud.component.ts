@@ -12,7 +12,7 @@ import { Tramite570102Query } from '../state/Tramite570102.query';
 @Component({
   selector: 'app-solicitud',
   standalone: true,
-  imports: [CommonModule, NotificacionesComponent, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './Solicitud.component.html',
   styleUrl: './Solicitud.component.css',
 })
@@ -21,26 +21,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * Observable para gestionar la destrucción del componente y evitar fugas de memoria.
    */
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
-
-  /**
-   * Lista de pedimentos asociados a la solicitud.
-   */
-  public pedimentos: Array<Pedimento> = [];
-
-  /**
-   * Notificación a mostrar en el modal.
-   */
-  public nuevaNotificacion!: Notificacion;
-
-  /**
-   * Índice del elemento a eliminar.
-   */
-  public elementoParaEliminar!: number;
-
-  /**
-   * Indica si se está cargando un archivo.
-   */
-  cargarArchivo: boolean = false;
 
   /**
    * Formulario reactivo para gestionar los datos de la solicitud.
@@ -82,44 +62,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       )
       .subscribe();
     this.donanteDomicilio();
-  }
-
-  /**
-   * Elimina un pedimento de la lista.
-   * @param borrar Indica si se debe eliminar el pedimento.
-   */
-  eliminarPedimento(borrar: boolean): void {
-    if (borrar) {
-      this.pedimentos.splice(this.elementoParaEliminar, 1);
-    }
-  }
-
-  /**
-   * Abre un modal con una notificación.
-   * @param i Índice del elemento a eliminar (opcional).
-   */
-  abrirModal(i: number = 0): void {
-    this.nuevaNotificacion = {
-      tipoNotificacion: 'alert',
-      categoria: 'danger',
-      modo: 'action',
-      titulo: '',
-      mensaje:
-        '¿Deseas desistir la solicitud de servicios extraordinarios con el folio 0105700100020252470000001?',
-      cerrar: false,
-      tiempoDeEspera: 2000,
-      txtBtnAceptar: 'Sí',
-      txtBtnCancelar: 'No',
-    };
-    this.elementoParaEliminar = i;
-  }
-
-  /**
-   * Marca que se está cargando un archivo y abre el modal.
-   */
-  cargaArchivo(): void {
-    this.cargarArchivo = true;
-    this.abrirModal();
   }
 
   /**

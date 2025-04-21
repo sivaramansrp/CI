@@ -21,4 +21,8 @@
 
     </div>
   </div>
+  @if (nuevaNotificacion ) { <section *ngIf="nuevaNotificacion">
+    <lib-notificaciones [notificacionInput]="nuevaNotificacion"
+      (confirmacionModal)="eliminarPedimento($event)"></lib-notificaciones>
+  </section> }
 </div>
