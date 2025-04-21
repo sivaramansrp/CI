@@ -217,7 +217,7 @@ const ROUTES: Routes = [
         (m) => m.CancelacionDonacionesModule
       ),
   },
-  {
+  { 
     path: 'prestadores-servicio',
     loadChildren: () =>
       import('./tramites/202/prestadores-servicio.module').then(
@@ -237,6 +237,12 @@ const ROUTES: Routes = [
       import('./tramites/570102/registro-solicitud-desistimiento.module').then(
         (m) => m.RegistroSolicitudDesistimientoModule
       ),
+    },
+    {
+    path: 'registro-del-codigo',
+      loadChildren: () =>
+        import('./tramites/40401/tramite40401.module').then(
+          (m) => m.Tramite40401Module),
   }
 ];
 
