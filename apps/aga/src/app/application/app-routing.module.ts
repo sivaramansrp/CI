@@ -231,6 +231,13 @@ const ROUTES: Routes = [
         (m) => m.ExencionImpuestosModule
       ),
   },
+  {
+    path:'registro-solicitud',
+    loadChildren: () =>
+      import('./tramites/570102/registro-solicitud-desistimiento.module').then(
+        (m) => m.RegistroSolicitudDesistimientoModule
+      ),
+    },
     {
     path: 'registro-del-codigo',
       loadChildren: () =>
