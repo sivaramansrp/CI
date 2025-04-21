@@ -142,20 +142,20 @@
                     }
                   </div>
                   <div class="col-md-4">
-                    <div class="form-group">
-                        <label class="form-label" for="fechas">Fecha*:</label>
-                        <input class="form-control" id="fechas" type="date"  [max]="fechaInicioTramite" 
-                          formControlName="fechas"  (change)="setValoresStore(transporteForm, 'fechas', 'setFechas')" />
-                    </div>
+                    <div class="form-group">                       
+                    <input-fecha
+                      [datos]="INPUT_FECHA"
+                      [setFecha]="transporteForm.get('fechas')?.value"
+                      (valorCambiado)="cambioFechasFinal($event)"
+                      >
+                    </input-fecha>
+                          
+                        </div>
                     @if(transporteForm.controls['fechas'].invalid && transporteForm.controls['fechas'].touched) {
                       <div class="d-grid">
                         @if(transporteForm.controls['fechas'].errors?.['required']) {
                           <span class="mensaje-error">Este campo es obligatorio</span>
-                        }
-                        @if(transporteForm.controls['fechas'].errors?.['max']) {
-                          <span class="mensaje-error">La fecha no puede ser posterior a la fecha de inicio del trámite</span>
-                        }
-                       
+                        }                      
                       </div>
                     }
                   </div>

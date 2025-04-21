@@ -1,7 +1,8 @@
-import { Catalogo,CatalogoSelectComponent,TituloComponent } from '@libs/shared/data-access-user/src';
+import { Catalogo,CatalogoSelectComponent,InputFechaComponent,TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component,OnDestroy,OnInit} from '@angular/core';
 import { FormBuilder,FormGroup,FormsModule,ReactiveFormsModule,Validators } from '@angular/forms';
 import { Subject,map,takeUntil } from 'rxjs';
+import { INPUT_FECHA_PAGO } from '../../constantes/flora-fauna.enum';
 import catalogoDatos from '@libs/shared/theme/assets/json/250101/banco.json';
 import pago from '@libs/shared/theme/assets/json/250101/pago-formdatos.json';
 
@@ -33,7 +34,7 @@ import { Tramite250101Query } from '../../estados/tramite250101.query';
     TituloComponent,
     FormsModule,
     ReactiveFormsModule,
-    CatalogoSelectComponent
+    CatalogoSelectComponent,InputFechaComponent
   ],
   templateUrl: './pago-de-derechos250101.component.html',
   styleUrls: ['./pago-de-derechos250101.component.scss']
@@ -81,12 +82,12 @@ export class PagoDeDerechos250101Component implements OnInit, OnDestroy {
    * llave, fecha e importe.
    */
   pagoDerechosForm!: FormGroup;
-   /**
- * Variable que almacena la fecha actual en formato `YYYY-MM-DD`.
- * Esta fecha se utiliza para establecer el valor máximo en el campo de entrada de fecha.
- * */
-  fechaInicioTramite = new Date().toISOString().split('T')[0];
-
+ 
+  /**
+   * Constante para configurar el input de fecha.
+   * Define las propiedades del campo de entrada de fecha.
+   */
+  INPUT_FECHA_CONFIG = INPUT_FECHA_PAGO;
   /**
    * Subject utilizado para gestionar la destrucción del componente y evitar memory leaks.
    */
@@ -159,6 +160,16 @@ export class PagoDeDerechos250101Component implements OnInit, OnDestroy {
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite250101Store): void {
     const VALOR = form.get(campo)?.value;
     (this.tramite250101Store[metodoNombre] as (value: unknown) => void)(VALOR);
+  }
+   /**
+   * Maneja los cambios en el campo "Fecha de Pago".
+   * Actualiza el estado del almacén con la fecha de pago proporcionada.  
+   */
+  cambioFechaFinal(nuevo_valor: string): void {
+    this.pagoDerechosForm.patchValue({
+      fecha: nuevo_valor,
+    });
+    this.tramite250101Store.setFecha(nuevo_valor);
   }
 
   /**

@@ -71,19 +71,17 @@
           
           <div class="col-md-4">
             <div class="form-group">
-              <label class="form-label" for="fecha">Fecha de pago:</label>
-              <input class="form-control" id="fecha" type="date"  [max]="fechaInicioTramite" 
-                formControlName="fecha" (change)="setValoresStore(pagoDerechosForm, 'fecha', 'setFecha')" />
-            </div>
+              <input-fecha
+                [datos]="INPUT_FECHA_CONFIG"
+                [setFecha]="pagoDerechosForm.get('fecha')?.value"
+                (valorCambiado)="cambioFechaFinal($event)">
+              </input-fecha>                       
+              </div>
             @if(pagoDerechosForm.controls['fecha'].invalid && pagoDerechosForm.controls['fecha'].touched) {
               <div class="d-grid">
                 @if(pagoDerechosForm.controls['fecha'].errors?.['required']) {
                   <span class="mensaje-error">Este campo es obligatorio</span>
-                }
-                @if(pagoDerechosForm.controls['fecha'].errors?.['max']) {
-                  <span class="mensaje-error">La fecha no puede ser posterior a la fecha de inicio del trámite</span>
-                }
-               
+                }                         
               </div>
             }
           </div>
