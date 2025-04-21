@@ -2,31 +2,30 @@ import { Catalogo, REGEX_NUMERO_DECIMAL_ENTERO, REGEX_TEXTO_PREFIJO, REG_X } fro
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
-import { Tramite130108State, Tramite130108Store } from '../../estados/tramites/tramites130108.store';
+import { Tramite130201State, Tramite130201Store } from '../../estados/tramites/tramites130201.store';
 
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
 
-import { ExportacionMineralesDeHierroService } from '../../services/exportacion-minerales-de-hierro.service';
+import { ExportacionPetroliferosService } from '../../services/exportacion-petroliferos.service';
 
 import { HttpClient } from '@angular/common/http';
 
 import { PaisDeOrigenComponent } from '../../../../shared/components/pais-de-origen/pais-de-origen.component';
 
 import { PartidasDeLaMercanciaModelo } from '../../../../shared/models/partidas-de-la-mercancia.model';
-import PartidasdelaTable from '@libs/shared/theme/assets/json/130108/partidas-de-la.json';
 
 import { ProductoOpción } from '../../../../shared/constantes/vehiculos-adaptados.enum';
 
 import { PARTIDASDELAMERCANCIA_TABLA } from '../../../../shared/constantes/partidas-de-la-mercancia.enum';
-import acotacionOptions from '@libs/shared/theme/assets/json/130121/acotacion.json';
+import acotacionOptions from '@libs/shared/theme/assets/json/130201/acotacion.json';
 
 import { TEXTOS } from '../../../../shared/constantes/representacion-federal.enum';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
-import { Tramite130108Query } from '../../estados/queries/tramite130108.query';
-import mercanciaCatalogoVal from '@libs/shared/theme/assets/json/130108/mercancia-select.json';
-import solicitudeSelectVal from '@libs/shared/theme/assets/json/130108/solicitud-select.json';
+import { Tramite130201Query } from '../../estados/queries/tramite130201.query';
+import mercanciaCatalogoVal from '@libs/shared/theme/assets/json/130201/mercancia-select.json';
+import solicitudeSelectVal from '@libs/shared/theme/assets/json/130201/solicitud-select.json';
 
-import nicoCatalogoVal from '@libs/shared/theme/assets/json/130108/nico.json';
+import nicoCatalogoVal from '@libs/shared/theme/assets/json/130201/nico.json';
 
 
 /**
@@ -48,7 +47,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
  * @type {FormGroup} Formulario que contiene los campos relacionados con las partidas de la mercancía.
  */
   partidasDelaMercanciaForm!: FormGroup;
- 
+
   /**
    * Formulario del trámite.
    * @type {FormGroup} Formulario que contiene los campos relacionados con el trámite.
@@ -103,12 +102,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * @type {TablaSeleccion} Enum que especifica el tipo de selección de la tabla.
    */
   checkBox = TablaSeleccion.CHECKBOX;
-
-  /**
-   * Función para obtener los datos de la tabla de establecimiento.
-   * @type {any} Datos de la tabla que serán mostrados para el establecimiento.
-   */
-  public getEstablecimientoTableData = PartidasdelaTable;
 
   /**
    * Fila seleccionada en la tabla.
@@ -212,21 +205,21 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * @type {Catalogo[]} Arreglo que contiene los elementos del catálogo para el bloque.
    */
   elementosDeBloque: Catalogo[] = [];
-  
-/**
- * @public
- * @property {PaisDeOrigenComponent} paisDeOrigenComponent
- * @description
- * Referencia al componente hijo `PaisDeOrigenComponent`. 
- * Este componente se utiliza para gestionar la selección del país de origen de la mercancía.
- * 
- * @example
- * // Acceder a un método o propiedad del componente hijo:
- * this.paisDeOrigenComponent.metodoDelComponenteHijo();
- * 
- * @type {PaisDeOrigenComponent}
- */
-@ViewChild(PaisDeOrigenComponent) paisDeOrigenComponent!: PaisDeOrigenComponent;
+
+  /**
+   * @public
+   * @property {PaisDeOrigenComponent} paisDeOrigenComponent
+   * @description
+   * Referencia al componente hijo `PaisDeOrigenComponent`. 
+   * Este componente se utiliza para gestionar la selección del país de origen de la mercancía.
+   * 
+   * @example
+   * // Acceder a un método o propiedad del componente hijo:
+   * this.paisDeOrigenComponent.metodoDelComponenteHijo();
+   * 
+   * @type {PaisDeOrigenComponent}
+   */
+  @ViewChild(PaisDeOrigenComponent) paisDeOrigenComponent!: PaisDeOrigenComponent;
 
   /**
    * Catálogo de países por bloque.
@@ -269,7 +262,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * @type {Catalogo[]} Arreglo que contiene los catálogos disponibles para el número de identificación de la carga (NICO).
    */
   nicoCatalogoArray: Catalogo[] = nicoCatalogoVal as Catalogo[];
- 
+
 /**
  * @property
  * @name tituloParte
@@ -278,18 +271,18 @@ export class SolicitudComponent implements OnInit, OnDestroy {
  * Este valor puede ser utilizado en la plantilla del componente para personalizar el texto mostrado.
  * 
  * @type {string}
- * @default 'País(es) de origen'
+ * @default 'País(es) de destino'
  * 
  * @example
  * <h1>{{ tituloParte }}</h1>
  */
-tituloParte = 'País(es) de origen';
-
+tituloParte = 'País(es) de destino';
+  
   /**
  * @public
- * @property {Tramite130108State} seccionState
+ * @property {Tramite130201State} seccionState
  * @description
- * Estado de la sección actual del trámite 130108. 
+ * Estado de la sección actual del trámite 130201. 
  * Esta propiedad almacena los datos relacionados con el estado del trámite, 
  * incluyendo información sobre la solicitud, mercancía, y otros detalles relevantes.
  * 
@@ -297,24 +290,24 @@ tituloParte = 'País(es) de origen';
  * // Ejemplo de uso:
  * this.seccionState.solicitud; // Accede a la solicitud actual del estado
  * 
- * @type {Tramite130108State}
+ * @type {Tramite130201State}
  */
-  public seccionState!: Tramite130108State;
+  public seccionState!: Tramite130201State;
 
   /**
    * Constructor de la clase.
    * @param {FormBuilder} fb - Servicio para construir formularios reactivos.
    * @param {HttpClient} http - Servicio para hacer peticiones HTTP.
-   * @param {Tramite130108Store} tramite130108Store - Servicio que gestiona el estado relacionado con el trámite 130108.
-   * @param {Tramite130108Query} tramite130108Query - Servicio que consulta el estado del trámite 130108.
-   * @param {ExportacionMineralesDeHierroService} exportacionMineralesDeHierroService - Servicio que gestiona la exportación de minerales de hierro.
+   * @param {Tramite130201Store} tramite130201Store - Servicio que gestiona el estado relacionado con el trámite 130201.
+   * @param {Tramite130201Query} tramite130201Query - Servicio que consulta el estado del trámite 130201.
+   * @param {ExportacionPetroliferosService} ExportacionPetroliferosService - Servicio que gestiona la exportación de minerales de hierro.
    */
   constructor(
     private fb: FormBuilder,
     private http: HttpClient,
-    private tramite130108Store: Tramite130108Store,
-    private tramite130108Query: Tramite130108Query,
-    private exportacionMineralesDeHierroService: ExportacionMineralesDeHierroService
+    private tramite130201Store: Tramite130201Store,
+    private tramite130201Query: Tramite130201Query,
+    private exportacionPetroliferosService: ExportacionPetroliferosService
   ) {
     // Constructor vacío, solo se inyectan los servicios
   }
@@ -394,7 +387,6 @@ tituloParte = 'País(es) de origen';
         this.seccionState?.descripcion,
         [
           Validators.required,
-          Validators.minLength(10),
           Validators.maxLength(500),
         ],
       ],
@@ -544,19 +536,19 @@ tituloParte = 'País(es) de origen';
   * cuando se reciben cambios desde el store o la consulta a la API.
   * 
   * - Suscripciones a los valores de 'solicitud', 'regimen' y 'clasificacion' que se 
-  *   reciben desde el store (tramite130108Query).
+  *   reciben desde el store (tramite130201Query).
   * - Suscripciones a los valores de 'mercanciaState', 'selectSolicitud' y 'frmRepresentacionForm'.
   * - Actualización del estado global del store cada vez que los formularios se modifican.
   */
   configuracionFormularioSuscripciones(): void {
 
-    this.tramite130108Query.selectSolicitud$
+    this.tramite130201Query.selectSolicitud$
       .pipe(takeUntil(this.destroyed$))
-      .subscribe((state: Tramite130108State) => {
+      .subscribe((state: Tramite130201State) => {
         this.seccionState = state;
       });
 
-    this.tramite130108Query.mostrarTabla$
+    this.tramite130201Query.mostrarTabla$
       .pipe(takeUntil(this.destroyed$))
       .subscribe((mostrarTabla) => {
         this.mostrarTabla = mostrarTabla;
@@ -599,7 +591,7 @@ tituloParte = 'País(es) de origen';
   /**
    * @description
    * Método encargado de obtener las opciones para la solicitud y el producto mediante dos llamadas a servicios:
-   * 1. **getSolicitudeOptions**: Recupera las opciones para la solicitud y actualiza el estado de la tienda (`tramite130108Store`) con la opción seleccionada y un valor predeterminado.
+   * 1. **getSolicitudeOptions**: Recupera las opciones para la solicitud y actualiza el estado de la tienda (`tramite130201Store`) con la opción seleccionada y un valor predeterminado.
    * 2. **getProductoOptions**: Recupera las opciones para el producto y actualiza el estado de la tienda con el plazo seleccionado y un valor predeterminado.
    * 
    * Ambas solicitudes se manejan usando un `pipe` con el operador `takeUntil` para asegurarse de que las suscripciones se cancelen cuando el componente sea destruido, evitando posibles fugas de memoria.
@@ -611,19 +603,19 @@ tituloParte = 'País(es) de origen';
     /**
      * @description
      * Realiza una llamada al servicio `getSolicitudeOptions` para obtener las opciones disponibles para la solicitud.
-     * Una vez obtenidos los datos, se actualizan las opciones de solicitud y se modifica el estado de la tienda `tramite130108Store`.
+     * Una vez obtenidos los datos, se actualizan las opciones de solicitud y se modifica el estado de la tienda `tramite130201Store`.
      * 
-     * @observable {Observable<any>} Observa el resultado de la llamada a `getSolicitudeOptions` del servicio `exportacionMineralesDeHierroService`.
+     * @observable {Observable<any>} Observa el resultado de la llamada a `getSolicitudeOptions` del servicio `exportacionPetroliferosService`.
      * @param {data} datos que contienen las opciones de solicitud.
      * @returns {void}
      */
-    this.exportacionMineralesDeHierroService
+    this.exportacionPetroliferosService
       .getSolicitudeOptions()
       .pipe(takeUntil(this.destroyed$))
       .subscribe({
         /**
          * @description
-         * Acción a realizar cuando la respuesta de la solicitud es exitosa. Actualiza las opciones de solicitud y el estado en `tramite130108Store`.
+         * Acción a realizar cuando la respuesta de la solicitud es exitosa. Actualiza las opciones de solicitud y el estado en `tramite130201Store`.
          * 
          * @param {data} Respuesta de la API que contiene las opciones de la solicitud.
          */
@@ -643,34 +635,34 @@ tituloParte = 'País(es) de origen';
     /**
    * @description
    * Realiza una llamada al servicio `getProductoOptions` para obtener las opciones disponibles para el producto.
-   * Al igual que la llamada anterior, una vez obtenidos los datos, se actualiza el estado de la tienda `tramite130108Store`.
+   * Al igual que la llamada anterior, una vez obtenidos los datos, se actualiza el estado de la tienda `tramite130201Store`.
    * 
-   * @observable {Observable<any>} Observa el resultado de la llamada a `getProductoOptions` del servicio `exportacionMineralesDeHierroService`.
+   * @observable {Observable<any>} Observa el resultado de la llamada a `getProductoOptions` del servicio `exportacionPetroliferosService`.
    * @param {data} datos que contienen las opciones de producto.
    * @returns {void}
    */
-    this.exportacionMineralesDeHierroService
+    this.exportacionPetroliferosService
       .getProductoOptions()
       .pipe(takeUntil(this.destroyed$))
       .subscribe({
         /**
          * @description
-         * Acción a realizar cuando la respuesta de la solicitud de producto es exitosa. Actualiza las opciones de producto y el estado en `tramite130108Store`.
+         * Acción a realizar cuando la respuesta de la solicitud de producto es exitosa. Actualiza las opciones de producto y el estado en `tramite130201Store`.
          * 
          * @param {data} Respuesta de la API que contiene las opciones del producto.
          */
-       next: (data) => {
-      this.productoOpciones = data.options;
-    },
+        next: (data) => {
+          this.productoOpciones = data.options;
+        },
       });
   }
- 
+
 
   /**
  * Método encargado de manejar la fila seleccionada en una tabla.
  * Si hay filas seleccionadas, se guarda la primera fila en la propiedad `filaSeleccionada`.
  * Si no hay filas seleccionadas, se establece como un arreglo vacío.
- * Luego, si existe una fila seleccionada, se actualiza el estado de la tienda `tramite130108Store` 
+ * Luego, si existe una fila seleccionada, se actualiza el estado de la tienda `tramite130201Store` 
  * con los valores de la fila seleccionada mediante el método `storeTableValues`.
  * 
  * @param {PartidasDeLaMercanciaModelo[]} filasSeleccionadas - Arreglo de filas seleccionadas en la tabla.
@@ -681,7 +673,7 @@ tituloParte = 'País(es) de origen';
       ? filasSeleccionadas
       : [];
     if (this.filaSeleccionada) {
-      this.tramite130108Store.storeTableValues(this.filaSeleccionada);
+      this.tramite130201Store.storeTableValues(this.filaSeleccionada);
     }
 
   }
@@ -696,7 +688,7 @@ tituloParte = 'País(es) de origen';
 * 
 */
   obtenerTablaDatos(): void {
-    this.exportacionMineralesDeHierroService.getTablaDatos().pipe(takeUntil(this.destroyed$)).subscribe((data) => {
+    this.exportacionPetroliferosService.getTablaDatos().pipe(takeUntil(this.destroyed$)).subscribe((data) => {
       this.tableBodyData = data;
       this.formForTotalCount.patchValue({
         cantidadTotal: data[0].cantidad,
@@ -704,43 +696,46 @@ tituloParte = 'País(es) de origen';
       });
     });
   }
-/**
- * @description
- * Método encargado de manejar las actualizaciones del store basadas en eventos del formulario.
- * Este método realiza diferentes acciones dependiendo del valor de `metodoNombre` en el evento recibido.
- * 
- * - Si `metodoNombre` es `setFraccion`, actualiza el valor de la fracción y, si existe, 
- *   establece la unidad de medida relacionada (UMT) en el formulario.
- * - Si `metodoNombre` es `setNico`, actualiza el valor de NICO y, si existe, 
- *   establece la descripción del NICO en el formulario.
- * 
- * @param {Object} event - Evento que contiene el formulario, el campo y el nombre del método.
- * @param {FormGroup} event.form - Formulario reactivo asociado al evento.
- * @param {string} event.campo - Nombre del campo que se está actualizando.
- * @param {string} event.metodoNombre - Nombre del método que define la acción a realizar.
- * 
- * @returns {void}
- */
+  /**
+   * @description
+   * Método encargado de manejar las actualizaciones del store basadas en eventos del formulario.
+   * Este método realiza diferentes acciones dependiendo del valor de `metodoNombre` en el evento recibido.
+   * 
+   * - Si `metodoNombre` es `setFraccion`, actualiza el valor de la fracción y, si existe, 
+   *   establece la unidad de medida relacionada (UMT) en el formulario.
+   * - Si `metodoNombre` es `setNico`, actualiza el valor de NICO y, si existe, 
+   *   establece la descripción del NICO en el formulario.
+   * 
+   * @param {Object} event - Evento que contiene el formulario, el campo y el nombre del método.
+   * @param {FormGroup} event.form - Formulario reactivo asociado al evento.
+   * @param {string} event.campo - Nombre del campo que se está actualizando.
+   * @param {string} event.metodoNombre - Nombre del método que define la acción a realizar.
+   * 
+   * @returns {void}
+   */
   handleStoreUpdate(event: { form: FormGroup; campo: string; metodoNombre: string }): void {
     if (event.metodoNombre === 'setFraccion') {
+
       this.setValoresStore(event.form, 'fraccion');
 
       const RAW_FRACCION_VALUE = event.form.get('fraccion')?.value;
-
       const SELECTED_FRACCION = Number(RAW_FRACCION_VALUE);
-
       const FRACTION_OBJ = this.mercanciaCatalogoArray[0]?.find(
         (frac) => frac.id === SELECTED_FRACCION
       );
+
       if (FRACTION_OBJ) {
         if (FRACTION_OBJ.relacionadaUmtId) {
           event.form.patchValue({ umt: FRACTION_OBJ.relacionadaUmtId });
           this.setValoresStore(event.form, 'umt');
-
-        } else {
-          console.warn('No se encontró la propiedad relacionadaUmtId en el objeto fracción.');
-        }
-      } else {
+        } 
+      const ACOT_OPT = this.acotacionCatalogo.find(a => a.id === FRACTION_OBJ.relacionadaAcotacionId);
+      if (ACOT_OPT) {
+        event.form.patchValue({ acotacion: ACOT_OPT.descripcion });
+        this.setValoresStore(event.form, 'acotacion');
+      }
+      }
+      else {
         console.warn('No se encontró el objeto fracción para el ID seleccionado.');
       }
     }
@@ -819,8 +814,8 @@ tituloParte = 'País(es) de origen';
    */
   navegarParaModificarPartida(): void {
     if (this.filaSeleccionada) {
-      this.tramite130108Store.setMostrarTabla(true);
-      this.tramite130108Store.storeTableValues(this.filaSeleccionada);
+      this.tramite130201Store.setMostrarTabla(true);
+      this.tramite130201Store.storeTableValues(this.filaSeleccionada);
     }
   }
 
@@ -831,7 +826,7 @@ tituloParte = 'País(es) de origen';
    */
   fetchEntidadFederativa(): void {
     // Llamada al servicio para obtener los datos del estado
-    this.exportacionMineralesDeHierroService.getEstado().pipe(takeUntil(this.destroyed$)).subscribe((data) => {
+    this.exportacionPetroliferosService.getEstado().pipe(takeUntil(this.destroyed$)).subscribe((data) => {
       // Asignamos el resultado al estado
       this.estado = data;
     });
@@ -845,7 +840,7 @@ tituloParte = 'País(es) de origen';
   */
   fetchRepresentacionFederal(): void {
     // Llamada al servicio para obtener la representación federal
-    this.exportacionMineralesDeHierroService
+    this.exportacionPetroliferosService
       .getRepresentacionFederal().pipe(takeUntil(this.destroyed$))
       .subscribe((data) => {
         // Asignamos el resultado a la propiedad representacionFederal
@@ -861,7 +856,7 @@ tituloParte = 'País(es) de origen';
    */
   listaDePaisesDisponibles(): void {
     // Llamada al servicio para obtener la lista de países disponibles
-    this.exportacionMineralesDeHierroService
+    this.exportacionPetroliferosService
       .getListaDePaisesDisponibles()
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data) => {
@@ -879,7 +874,7 @@ tituloParte = 'País(es) de origen';
   */
   obtenerListaDeCiudades(): void {
     // Llamada al servicio para obtener la lista de ciudades
-    this.exportacionMineralesDeHierroService
+    this.exportacionPetroliferosService
       .obtenerListaDeCiudades()
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data) => {
@@ -905,7 +900,7 @@ tituloParte = 'País(es) de origen';
   */
   fetchPaisesPorBloque(_bloqueId: number): void {
     // Llamada al servicio para obtener los países por bloque
-    this.exportacionMineralesDeHierroService
+    this.exportacionPetroliferosService
       .getPaisesPorBloque(_bloqueId)
       .pipe(takeUntil(this.destroyed$)) // Se asegura de que la suscripción se cancele correctamente
       .subscribe((data) => {
@@ -931,7 +926,7 @@ tituloParte = 'País(es) de origen';
   }
 
   /**
-   * Método que establece los valores en el store de `tramite130108Store`.
+   * Método que establece los valores en el store de `tramite130201Store`.
    * Se utiliza para actualizar el estado del store con los valores de un campo específico
    * del formulario. Si el formulario o el campo no existen, se retorna sin hacer nada.
    * 
@@ -945,7 +940,7 @@ tituloParte = 'País(es) de origen';
     }
     const CONTROL = form.get(campo);
     if (CONTROL && CONTROL.value !== null && CONTROL.value !== undefined) {
-      this.tramite130108Store.establecerDatos({ [campo]: CONTROL.value });
+      this.tramite130201Store.establecerDatos({ [campo]: CONTROL.value });
     }
   }
   disabledModificar(): boolean {
