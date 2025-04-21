@@ -1675,8 +1675,8 @@
     {
         "id": 240,
         "tramite": 261401,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "/cofepris/solicitud-modificacion-permiso-salida-territorio/solicitud",
+        "linkDepartment": "/pago/solicitud-modificacion-permiso-salida-territorio/solicitud",
         "department": "cofepris"
     },
     {
