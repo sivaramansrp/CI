@@ -989,8 +989,8 @@
     {
         "id": 142,
         "tramite": 32505,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "/agace/aviso-procesos-solicitante",
+        "linkDepartment": "/pago/aviso-procesos-solicitante",
         "department": "agace"
     },
     {
