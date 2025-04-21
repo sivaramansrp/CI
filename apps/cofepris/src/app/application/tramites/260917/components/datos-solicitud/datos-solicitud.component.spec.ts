@@ -1,4 +1,3 @@
-// datos-solicitud.component.spec.ts
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DatosSolicitudComponent } from './datos-solicitud.component';
 import { Tramite260917Query } from '../../estados/queries/tramite260917.query';
@@ -8,10 +7,10 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 describe('DatosSolicitudComponent', () => {
-  let component: DatosSolicitudComponent;
+  let componente: DatosSolicitudComponent;
   let fixture: ComponentFixture<DatosSolicitudComponent>;
 
-  const mockSolicitudState = {
+  const ESTADO_SOLICITUD_MOCK: Record<string, string> = {
     tipoOperacion: 'importación',
     justificacion: 'Razón válida',
     rfcResponsableSanitario: 'RFC123456ABC',
@@ -58,14 +57,14 @@ describe('DatosSolicitudComponent', () => {
     apellidoMaternoRepresentante: 'Gómez',
   };
 
-  beforeEach(async () => {
+  beforeEach(async (): Promise<void> => {
     await TestBed.configureTestingModule({
       imports: [ReactiveFormsModule, DatosSolicitudComponent],
       providers: [
         {
           provide: Tramite260917Query,
           useValue: {
-            selectSolicitud$: of(mockSolicitudState),
+            selectSolicitud$: of(ESTADO_SOLICITUD_MOCK),
           },
         },
         {
@@ -73,47 +72,46 @@ describe('DatosSolicitudComponent', () => {
           useValue: {
             setTipoOperacion: jest.fn(),
             setJustificacion: jest.fn(),
-            // Add other mocked methods if needed
           },
         },
       ],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA], // handles custom elements in the template
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
     }).compileComponents();
 
     fixture = TestBed.createComponent(DatosSolicitudComponent);
-    component = fixture.componentInstance;
+    componente = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
-    expect(component).toBeTruthy();
+  it('debería crear el componente', (): void => {
+    expect(componente).toBeTruthy();
   });
 
-  it('should initialize domicilio form with state values', () => {
-    const form = component.domicilio;
-    expect(form.get('tipoOperacion')?.value).toBe(mockSolicitudState.tipoOperacion);
-    expect(form.get('justificacion')?.value).toBe(mockSolicitudState.justificacion);
-    expect(form.get('rfcResponsableSanitario')?.value).toBe(mockSolicitudState.rfcResponsableSanitario);
-    expect(form.get('estado')?.value).toBe(mockSolicitudState.estado);
+  it('debería inicializar el formulario "domicilio" con valores del estado', (): void => {
+    const formulario = componente.domicilio;
+    expect(formulario.get('tipoOperacion')?.value).toBe(ESTADO_SOLICITUD_MOCK['tipoOperacion']);
+    expect(formulario.get('justificacion')?.value).toBe(ESTADO_SOLICITUD_MOCK['justificacion']);
+    expect(formulario.get('rfcResponsableSanitario')?.value).toBe(ESTADO_SOLICITUD_MOCK['rfcResponsableSanitario']);
+    expect(formulario.get('estado')?.value).toBe(ESTADO_SOLICITUD_MOCK['estado']);
   });
 
-  it('should initialize formAgente form with state values', () => {
-    const form = component.formAgente;
-    expect(form.get('claveScianModal')?.value).toBe(mockSolicitudState.claveScianModal);
-    expect(form.get('claveDescripcionModal')?.value).toBe(mockSolicitudState.claveDescripcionModal);
+  it('debería inicializar el formulario "formAgente" con valores del estado', (): void => {
+    const formulario = componente.formAgente;
+    expect(formulario.get('claveScianModal')?.value).toBe(ESTADO_SOLICITUD_MOCK['claveScianModal']);
+    expect(formulario.get('claveDescripcionModal')?.value).toBe(ESTADO_SOLICITUD_MOCK['claveDescripcionModal']);
   });
 
-  it('should initialize formMercancias form with state values', () => {
-    const form = component.formMercancias;
-    expect(form.get('clasificacion')?.value).toBe(mockSolicitudState.clasificacion);
-    expect(form.get('cantidadUMT')?.value).toBe(mockSolicitudState.cantidadUMT);
-    expect(form.get('presentacion')?.value).toBe(mockSolicitudState.presentacion);
+  it('debería inicializar el formulario "formMercancias" con valores del estado', (): void => {
+    const formulario = componente.formMercancias;
+    expect(formulario.get('clasificacion')?.value).toBe(ESTADO_SOLICITUD_MOCK['clasificacion']);
+    expect(formulario.get('cantidadUMT')?.value).toBe(ESTADO_SOLICITUD_MOCK['cantidadUMT']);
+    expect(formulario.get('presentacion')?.value).toBe(ESTADO_SOLICITUD_MOCK['presentacion']);
   });
 
-  it('should initialize formularioManifiestos form with state values', () => {
-    const form = component.formularioManifiestos;
-    expect(form.get('aceptaManifiestos')?.value).toBe(mockSolicitudState.aceptaManifiestos);
-    expect(form.get('rfcRepresentante')?.value).toBe(mockSolicitudState.rfcRepresentante);
-    expect(form.get('razonSocialRepresentante')?.value).toBe(mockSolicitudState.razonSocialRepresentante);
+  it('debería inicializar el formulario "formularioManifiestos" con valores del estado', (): void => {
+    const formulario = componente.formularioManifiestos;
+    expect(formulario.get('aceptaManifiestos')?.value).toBe(ESTADO_SOLICITUD_MOCK['aceptaManifiestos']);
+    expect(formulario.get('rfcRepresentante')?.value).toBe(ESTADO_SOLICITUD_MOCK['rfcRepresentante']);
+    expect(formulario.get('razonSocialRepresentante')?.value).toBe(ESTADO_SOLICITUD_MOCK['razonSocialRepresentante']);
   });
 });
