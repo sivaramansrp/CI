@@ -3,7 +3,7 @@
 <form [formGroup]="domicilioEstablecimiento">
     <div class="row">
         <div class="col-md-4">
-            <label class="form-label" for="representanteLegalRFCPostal">representanteLegalRFC*:
+            <label class="form-label" for="representanteLegalRFCPostal">RepresentanteLegalRFC*:
             </label>
             <input [ngClass]="isValid('representanteLegalRFC') ? 'required' : ''" type="text" class="form-control" id="representanteLegalRFCPostal" formControlName="representanteLegalRFC" (change)="setValoresStore(domicilioEstablecimiento,'representanteLegalRFC')">
             <div  *ngIf="domicilioEstablecimiento?.get('representanteLegalRFC')?.invalid && domicilioEstablecimiento?.get('representanteLegalRFC')?.touched" class="text-danger">

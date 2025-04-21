@@ -24,7 +24,7 @@ export class ManifiestosComponent implements OnInit, OnDestroy {
    * @description
    * Texto de los manifiestos.
    */
-  mensajeManifiestos: string = '';
+  manifiestosText: string = '';
   /**
    * Texto ingresado en el cuadro para motivo de desistimiento.
    * @public
@@ -102,7 +102,7 @@ export class ManifiestosComponent implements OnInit, OnDestroy {
    * Se suscribe al observable `selectProrroga$` y configura el formulario.
    */
   public ngOnInit(): void {
-    this.mensajeManifiestos = MANIFIESTOS_DECLARACION.MANIFIESTOS;
+    this.manifiestosText = MANIFIESTOS_DECLARACION.MANIFIESTOS;
     this.obtenerDatosFormulario();
   }
 

@@ -55,34 +55,6 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
       CONFIGURACIONCOLUMNA;
   
   /**
-   * Configuración para las columnas de la tabla.
-   * Define cómo se mostrarán los datos de los trámites asociados.
-   */
-  // configuracionTabla: ConfiguracionColumna<TramiteAsociados>[] = [
-  //   { encabezado: '', clave: (item: TramiteAsociados) => item.id, orden: 1 },
-  //   {
-  //     encabezado: 'Folio trámite',
-  //     clave: (item: TramiteAsociados) => item.folioTramite,
-  //     orden: 2,
-  //   },
-  //   {
-  //     encabezado: 'Tipo trámite',
-  //     clave: (item: TramiteAsociados) => item.tipoTramite,
-  //     orden: 3,
-  //   },
-  //   {
-  //     encabezado: 'Estatus',
-  //     clave: (item: TramiteAsociados) => item.estatus,
-  //     orden: 4,
-  //   },
-  //   {
-  //     encabezado: 'Fecha alta de registro',
-  //     clave: (item: TramiteAsociados) => item.fetchaAltaDeRegistro,
-  //     orden: 5,
-  //   },
-  // ];
-
-  /**
    * Lista de bancos disponibles para seleccionar.
    */
   banco!: Catalogo[];
