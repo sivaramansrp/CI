@@ -33,6 +33,20 @@ const ROUTES: Routes = [
       import('./tramites/130121/permiso-de-hidrocarburos.module').then(
         (m) => m.PermisoDeHidrocarburosModule
       )
+  },
+  {
+    path: 'autorizacion-de-rayos-x',
+    loadChildren: () =>
+      import('./tramites/300105/autorizacion-de-rayos-x.module').then(
+        (m) => m.AutorizacionDeRayosXModule
+      ),
+  },
+  {
+    path: 'pexim',
+    loadChildren: () =>
+      import('./tramites/140216/suspension-permiso.module').then(
+        (m) => m.SuspensionPermisoModule
+      )
   }
 ];
 
