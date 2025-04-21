@@ -386,13 +386,6 @@ const ROUTES: Routes = [
       ),
   },
   {
-      path: 'solicitud-modificacion',
-      loadChildren: () =>
-        import('./tramites/261101/datos-solicitude.module').then(
-          (m) => m.DatosSolicitudeModule
-        ),
-  },
-  {
     path: 'modificacion-permiso-importacion-medicamentos',
     loadChildren: () =>
       import('./tramites/261103/modificacion-permiso-importacion-medicamentos.module').then(
