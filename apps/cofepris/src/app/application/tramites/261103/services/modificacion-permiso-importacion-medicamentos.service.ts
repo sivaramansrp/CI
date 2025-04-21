@@ -68,7 +68,7 @@ export class ModificacionPermisoImportacionMedicamentosService {
    * @returns {Observable<Domicilio[]>} Un observable que emite una lista de objetos `Domicilio` con los datos de los domicilios.
    */
   getDomicilioData(): Observable<Domicilio[]> {
-    return this.http.get<Domicilio[]>('assets/json/261101/domicilio-establecimientos.json');
+    return this.http.get<Domicilio[]>('assets/json/261103/domicilio-establecimientos.json');
   }
   
   /**
@@ -77,7 +77,7 @@ export class ModificacionPermisoImportacionMedicamentosService {
    * @returns {Observable<Mercancias[]>} Un observable que emite una lista de objetos `Mercancias` con los datos de las mercancías.
    */
   getMercanciasData(): Observable<Mercancias[]> {
-    return this.http.get<Mercancias[]>('assets/json/261101/mercancias.json');
+    return this.http.get<Mercancias[]>('assets/json/261103/mercancias.json');
   }
 
     /**
@@ -85,7 +85,7 @@ export class ModificacionPermisoImportacionMedicamentosService {
      * @returns Un observable que emite una lista de objetos `ScianData` con los datos de la tabla SCIAN.
      */
     obternerDatosData(): Observable<ScianData[]> {
-      return this.http.get<ScianData[]>('assets/json/261101/datos-scian-tabla.json');
+      return this.http.get<ScianData[]>('assets/json/261103/datos-scian-tabla.json');
     }
       /**
        * Obtiene los trámites asociados desde un archivo JSON.
@@ -94,7 +94,7 @@ export class ModificacionPermisoImportacionMedicamentosService {
        */
       obtenerTramitesAsociados(): Observable<TramiteAsociados[]> {
         return this.http.get<TramiteAsociados[]>(
-          'assets/json/261101/tramite-asociados.json'
+          'assets/json/261103/tramite-asociados.json'
         );
       }
 
@@ -103,7 +103,7 @@ export class ModificacionPermisoImportacionMedicamentosService {
    * Inicializa los datos de los catálogos relacionados con el pago de derechos.
    */
   inicializaPagoDeDerechosDatosCatalogos(): void {
-    this.obtenerRespuestaPorUrl(this, 'banco', '/261101/banco.json');
+    this.obtenerRespuestaPorUrl(this, 'banco', '/261103/banco.json');
   }
         /**
          * Obtiene una respuesta desde una URL y asigna los datos a una variable.
