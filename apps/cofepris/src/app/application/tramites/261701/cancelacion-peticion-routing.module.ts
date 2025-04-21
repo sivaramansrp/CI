@@ -7,12 +7,7 @@ const ROUTES: Routes = [
   {
     path: 'pantallas',
     component: PantallasComponent,
-  },
-  {
-    path: 'paso-uno',
-    component: PasoUnoComponent
   }
-
 ];
 
 @NgModule({

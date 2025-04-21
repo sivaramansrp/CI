@@ -7,15 +7,15 @@ import { of, Subject } from 'rxjs';
 describe('ManifiestosDeclaracionesComponent', () => {
   let component: ManifiestosDeclaracionesComponent;
   let fixture: ComponentFixture<ManifiestosDeclaracionesComponent>;
-  let mockTramite261701Store: jest.Mocked<Tramite261701Store>;
-  let mockTramite261701Query: jest.Mocked<Tramite261701Query>;
+  let MOCK_TRAMITE261701_STORE: jest.Mocked<Tramite261701Store>;
+  let MOCK_TRAMITE261701_QUERY: jest.Mocked<Tramite261701Query>;
 
   beforeEach(async () => {
-    mockTramite261701Store = {
+    MOCK_TRAMITE261701_STORE = {
       setDynamicFieldValue: jest.fn(),
     } as unknown as jest.Mocked<Tramite261701Store>;
 
-    mockTramite261701Query = {
+    MOCK_TRAMITE261701_QUERY = {
       select$: of({
         manifiestos: true,
       }),
@@ -24,10 +24,9 @@ describe('ManifiestosDeclaracionesComponent', () => {
     await TestBed.configureTestingModule({
       imports: [ManifiestosDeclaracionesComponent],
       providers: [
-        { provide: Tramite261701Query, useValue: mockTramite261701Query },
-        { provide: Tramite261701Store, useValue: mockTramite261701Store },
+        { provide: Tramite261701Query, useValue: MOCK_TRAMITE261701_QUERY },
+        { provide: Tramite261701Store, useValue: MOCK_TRAMITE261701_STORE },
       ],
-  
     }).compileComponents();
 
     fixture = TestBed.createComponent(ManifiestosDeclaracionesComponent);
@@ -37,66 +36,65 @@ describe('ManifiestosDeclaracionesComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('debería crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should subscribe to select$ on ngOnInit', () => {
-    const spy = jest.spyOn(mockTramite261701Query.select$, 'subscribe');
+  it('debería suscribirse a select$ en ngOnInit', () => {
+    const ESPIA_SUBSCRIBIR = jest.spyOn(MOCK_TRAMITE261701_QUERY.select$, 'subscribe');
     component.ngOnInit();
-    expect(spy).toHaveBeenCalled();
+    expect(ESPIA_SUBSCRIBIR).toHaveBeenCalled();
     expect(component.CancelacionPeticionState).toEqual({ manifiestos: true });
   });
 
-
-  it('should set the checkbox value on establecerValor', () => {
+  it('debería establecer el valor del checkbox en establecerValor', () => {
     document.body.innerHTML = `<input id="manifiestos" type="checkbox" />`;
     component.CancelacionPeticionState = { manifiestos: true };
 
     component.establecerValor();
 
-    const checkbox = document.getElementById('manifiestos') as HTMLInputElement;
-    expect(checkbox.checked).toBe(true);
+    const ELEMENTO_CHECKBOX = document.getElementById('manifiestos') as HTMLInputElement;
+    expect(ELEMENTO_CHECKBOX.checked).toBe(true);
   });
 
-  it('should clean up subscriptions and complete destroyNotifier$ on ngOnDestroy', () => {
-    const notifierNextSpy = jest.spyOn(component.destroyNotifier$, 'next');
-    const notifierCompleteSpy = jest.spyOn(component.destroyNotifier$, 'complete');
-  
+  it('debería limpiar las suscripciones y completar destroyNotifier$ en ngOnDestroy', () => {
+    const ESPIA_NOTIFICADOR_SIGUIENTE = jest.spyOn(component.destroyNotifier$, 'next');
+    const ESPIA_NOTIFICADOR_COMPLETAR = jest.spyOn(component.destroyNotifier$, 'complete');
+
     // ngOnDestroy
     component.ngOnDestroy();
-  
+
     // Assertions
-    expect(notifierNextSpy).toHaveBeenCalled();
-    expect(notifierCompleteSpy).toHaveBeenCalled();
+    expect(ESPIA_NOTIFICADOR_SIGUIENTE).toHaveBeenCalled();
+    expect(ESPIA_NOTIFICADOR_COMPLETAR).toHaveBeenCalled();
   });
 
-  it('should add click event listener to checkbox in ngAfterViewInit', () => {
+  it('debería agregar un evento de clic al checkbox en ngAfterViewInit', () => {
     document.body.innerHTML = `<input id="manifiestos" type="checkbox" />`;
-    const checkbox = document.getElementById('manifiestos') as HTMLInputElement;
+    const ELEMENTO_CHECKBOX = document.getElementById('manifiestos') as HTMLInputElement;
 
-    const addEventListenerSpy = jest.spyOn(checkbox, 'addEventListener');
+    const ESPIA_AGREGAR_EVENTO = jest.spyOn(ELEMENTO_CHECKBOX, 'addEventListener');
     component.ngAfterViewInit();
 
-    expect(addEventListenerSpy).toHaveBeenCalledWith('click', expect.any(Function));
+    expect(ESPIA_AGREGAR_EVENTO).toHaveBeenCalledWith('click', expect.any(Function));
   });
 
-  it('should update manifiestosCheckboxChecked and call establecerDatos on checkbox click', () => {
+  it('debería actualizar manifiestosCheckboxChecked y llamar a establecerDatos al hacer clic en el checkbox', () => {
     document.body.innerHTML = `<input id="manifiestos" type="checkbox" />`;
-    const checkbox = document.getElementById('manifiestos') as HTMLInputElement;
+    const ELEMENTO_CHECKBOX = document.getElementById('manifiestos') as HTMLInputElement;
 
     component.ngAfterViewInit();
 
-    checkbox.checked = true;
-    checkbox.click();
+    ELEMENTO_CHECKBOX.checked = true;
+    ELEMENTO_CHECKBOX.click();
 
     expect(component.manifiestosCheckboxChecked).toBe(true);
-    expect(mockTramite261701Store.establecerDatos).toHaveBeenCalledWith('manifiestos', true);
+    expect(MOCK_TRAMITE261701_STORE.establecerDatos).toHaveBeenCalledWith('manifiestos', true);
 
-    checkbox.checked = false;
-    checkbox.click();
+    ELEMENTO_CHECKBOX.checked = false;
+    ELEMENTO_CHECKBOX.click();
 
     expect(component.manifiestosCheckboxChecked).toBe(false);
-    expect(mockTramite261701Store.establecerDatos).toHaveBeenCalledWith('manifiestos', false);
+    expect(MOCK_TRAMITE261701_STORE.establecerDatos).toHaveBeenCalledWith('manifiestos', false);
   });
 });

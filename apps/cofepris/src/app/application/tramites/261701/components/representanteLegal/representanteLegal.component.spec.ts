@@ -10,15 +10,15 @@ import { Tramite261702Query } from 'apps/cofepris/src/app/application/estados/qu
 describe('RepresentanteLegalComponent', () => {
   let component: RepresentanteLegalComponent;
   let fixture: ComponentFixture<RepresentanteLegalComponent>;
-  let mockTramite261702Store: jest.Mocked<Tramite261702Store>;
-  let mockTramite261702Query: jest.Mocked<Tramite261702Query>;
+  let MOCK_TRAMITE261702_STORE: jest.Mocked<Tramite261702Store>;
+  let MOCK_TRAMITE261702_QUERY: jest.Mocked<Tramite261702Query>;
 
   beforeEach(async () => {
-    mockTramite261702Store = {
-          setDynamicFieldValue: jest.fn(),
-        } as unknown as jest.Mocked<Tramite261702Store>;
-    
-    mockTramite261702Query = {
+    MOCK_TRAMITE261702_STORE = {
+      setDynamicFieldValue: jest.fn(),
+    } as unknown as jest.Mocked<Tramite261702Store>;
+
+    MOCK_TRAMITE261702_QUERY = {
       selectRetiros$: of({
         rfc: 'rfc',
       }),
@@ -27,10 +27,9 @@ describe('RepresentanteLegalComponent', () => {
     await TestBed.configureTestingModule({
       imports: [RepresentanteLegalComponent, HttpClientModule],
       providers: [
-        { provide: Tramite261702Query, useValue: mockTramite261702Query },
-        { provide: Tramite261702Store, useValue: mockTramite261702Store },
+        { provide: Tramite261702Query, useValue: MOCK_TRAMITE261702_QUERY },
+        { provide: Tramite261702Store, useValue: MOCK_TRAMITE261702_STORE },
       ],
-  
     }).compileComponents();
 
     fixture = TestBed.createComponent(RepresentanteLegalComponent);
@@ -38,18 +37,18 @@ describe('RepresentanteLegalComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('debería crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize form correctly', () => {
-    const ninoFormGroup = component.forma.get('ninoFormGroup') as FormGroup;
-    expect(ninoFormGroup).toBeDefined();
+  it('debería inicializar el formulario correctamente', () => {
+    const GRUPO_FORMULARIO_NINO = component.forma.get('ninoFormGroup') as FormGroup;
+    expect(GRUPO_FORMULARIO_NINO).toBeDefined();
     expect(component.forma).toBeDefined();
   });
 
-  it('should update form controls and call store on button click', () => {
-    const event: ModeloDeFormaDinamica = {
+  it('debería actualizar los controles del formulario y llamar al store al hacer clic en el botón', () => {
+    const EVENTO: ModeloDeFormaDinamica = {
       id: 'consultarIDC',
       labelNombre: 'Buscar',
       campo: 'buscar',
@@ -58,49 +57,48 @@ describe('RepresentanteLegalComponent', () => {
       desactivado: false,
       marginTop: 5,
     };
-  
-    component.alHacerClicEnElBoton(event);
-    const ninoFormGroup = component.forma.get('ninoFormGroup') as FormGroup;
-    ninoFormGroup.addControl('nombre', new FormGroup({}));
-    ninoFormGroup.addControl('apellidoPaterno', new FormGroup({}));
-    ninoFormGroup.addControl('apellidoMaterno', new FormGroup({}));
 
-    expect(ninoFormGroup.get('nombre')?.value).toEqual(47875);
-    expect(ninoFormGroup.get('apellidoPaterno')?.value).toEqual('Paterno');
-    expect(ninoFormGroup.get('apellidoMaterno')?.value).toEqual('Materno');
+    component.alHacerClicEnElBoton(EVENTO);
+    const GRUPO_FORMULARIO_NINO = component.forma.get('ninoFormGroup') as FormGroup;
+    GRUPO_FORMULARIO_NINO.addControl('nombre', new FormGroup({}));
+    GRUPO_FORMULARIO_NINO.addControl('apellidoPaterno', new FormGroup({}));
+    GRUPO_FORMULARIO_NINO.addControl('apellidoMaterno', new FormGroup({}));
+
+    expect(GRUPO_FORMULARIO_NINO.get('nombre')?.value).toEqual(47875);
+    expect(GRUPO_FORMULARIO_NINO.get('apellidoPaterno')?.value).toEqual('Paterno');
+    expect(GRUPO_FORMULARIO_NINO.get('apellidoMaterno')?.value).toEqual('Materno');
   });
 
-  it('should subscribe to selectRetiros$ on ngOnInit', () => {
-    const spy = jest.spyOn(mockTramite261702Query.selectRetiros$, 'subscribe');
+  it('debería suscribirse a selectRetiros$ en ngOnInit', () => {
+    const ESPIA_SUBSCRIBIR = jest.spyOn(MOCK_TRAMITE261702_QUERY.selectRetiros$, 'subscribe');
     component.ngOnInit();
-    expect(spy).toHaveBeenCalled();
+    expect(ESPIA_SUBSCRIBIR).toHaveBeenCalled();
     expect(component.cancelacionState).toEqual({ rfc: 'rfc' });
   });
 
-  it('should trigger valueChanges and update store', () => {
-    const ninoFormGroup = component.ninoFormGroup;
-    ninoFormGroup.addControl('testField', new FormBuilder().control('initialValue'));
-    ninoFormGroup.get('testField')?.setValue('newValue');
-    expect(mockTramite261702Store.setDynamicFieldValue).toHaveBeenCalledWith('testField', 'newValue');
+  it('debería activar valueChanges y actualizar el store', () => {
+    const GRUPO_FORMULARIO_NINO = component.ninoFormGroup;
+    GRUPO_FORMULARIO_NINO.addControl('campoPrueba', new FormBuilder().control('valorInicial'));
+    GRUPO_FORMULARIO_NINO.get('campoPrueba')?.setValue('nuevoValor');
+    expect(MOCK_TRAMITE261702_STORE.setDynamicFieldValue).toHaveBeenCalledWith('campoPrueba', 'nuevoValor');
   });
 
-  it('should clear subscriptions on ngOnDestroy', () => {
-    const nextSpy = jest.spyOn(component['destruirNotificador$'], 'next');
-    const completeSpy = jest.spyOn(component['destruirNotificador$'], 'complete');
+  it('debería limpiar las suscripciones en ngOnDestroy', () => {
+    const ESPIA_NOTIFICADOR_SIGUIENTE = jest.spyOn(component['destruirNotificador$'], 'next');
+    const ESPIA_NOTIFICADOR_COMPLETAR = jest.spyOn(component['destruirNotificador$'], 'complete');
     component.ngOnDestroy();
-    expect(nextSpy).toHaveBeenCalled();
-    expect(completeSpy).toHaveBeenCalled();
+    expect(ESPIA_NOTIFICADOR_SIGUIENTE).toHaveBeenCalled();
+    expect(ESPIA_NOTIFICADOR_COMPLETAR).toHaveBeenCalled();
   });
 
-  it('should set and remove validators dynamically', () => {
-    const ninoFormGroup = component.ninoFormGroup;
-    ninoFormGroup.addControl('rfc', new FormBuilder().control(''));
-    ninoFormGroup.get('rfc')?.setValidators([Validators.required]);
-    ninoFormGroup.get('rfc')?.updateValueAndValidity();
-    expect(ninoFormGroup.get('rfc')?.validator).toBeDefined();
-    ninoFormGroup.get('rfc')?.setValidators([]);
-    ninoFormGroup.get('rfc')?.updateValueAndValidity();
-    expect(ninoFormGroup.get('rfc')?.validator).toBeNull();
+  it('debería establecer y eliminar validadores dinámicamente', () => {
+    const GRUPO_FORMULARIO_NINO = component.ninoFormGroup;
+    GRUPO_FORMULARIO_NINO.addControl('rfc', new FormBuilder().control(''));
+    GRUPO_FORMULARIO_NINO.get('rfc')?.setValidators([Validators.required]);
+    GRUPO_FORMULARIO_NINO.get('rfc')?.updateValueAndValidity();
+    expect(GRUPO_FORMULARIO_NINO.get('rfc')?.validator).toBeDefined();
+    GRUPO_FORMULARIO_NINO.get('rfc')?.setValidators([]);
+    GRUPO_FORMULARIO_NINO.get('rfc')?.updateValueAndValidity();
+    expect(GRUPO_FORMULARIO_NINO.get('rfc')?.validator).toBeNull();
   });
-  
 });
