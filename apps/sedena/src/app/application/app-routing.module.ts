@@ -24,13 +24,6 @@ const ROUTES: Routes = [
         (m) => m.PermisoExtraordinarioImportacionArmamentoFisicasMoralesModule
       ),
   },
-  {
-    path: 'permiso-ordinario-importacion-material-explosivo',
-    loadChildren: () =>
-      import(
-        './tramites/240108/permiso-ordinario-importacion-exlposivo.module'
-      ).then((m) => m.PermisoOrdinarioImportacionExlposivoModule),
-  },
 ];
 
 @NgModule({
