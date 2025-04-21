@@ -34,11 +34,6 @@ import { Tramite32101Query } from '../../../../estados/queries/tramite32101.quer
   styleUrl: './Solicitud.component.css',
 })
 export class SolicitudComponent implements OnInit,OnDestroy {
-  /**
-   * Observable para manejar la destrucción del componente.
-   * Se utiliza para cancelar suscripciones activas.
-   */
-  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
   /**
    * Formulario reactivo para gestionar los datos de la solicitud.
