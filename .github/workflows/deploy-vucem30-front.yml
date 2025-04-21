@@ -54,7 +54,7 @@ jobs:
           password: ${{ secrets.GHCR_PAT }}
 
       - name: Build image and push to GitHub Container Registry
-        run:  docker compose -f ./docker/modulefederation-microfrontends.yml up -dashboard-deployment-dev
+        run:  docker compose -f ./docker/modulefederation-microfrontends.yml up -d
 
       - name: Execute remote command (last one)
         uses: appleboy/ssh-action@v0.1.8
