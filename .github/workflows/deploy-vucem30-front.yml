@@ -55,9 +55,8 @@ jobs:
 
       - name: Build image and push to GitHub Container Registry
         run: |
-          if ${{ github.ref == 'refs/heads/develop' }}; then
-            docker compose -f ./docker/modulefederation-microfrontends.yml build --push
-          fi
+           if: github.ref == 'refs/heads/develop' && github.event_name == 'push'
+            docker compose -f ./docker/modulefederation-microfrontends.yml build
 
       - name: Execute remote command (last one)
         uses: appleboy/ssh-action@v0.1.8
