@@ -1,9 +1,8 @@
 import { Component, ViewChild } from '@angular/core';
+import { DatosPasos, PASOS_REGISTRO } from '@libs/shared/data-access-user/src';
 import { ALERTA_COM } from '@libs/shared/data-access-user/src/tramites/constantes/110208/certificado.enum';
 import{AccionBoton} from '@libs/shared/data-access-user/src/core/models/140103/cancelacion.model';
-import { DatosPasos } from '@libs/shared/data-access-user/src';
 import { ListaPasosWizard } from '@libs/shared/data-access-user/src';
-import { PASOS} from '@libs/shared/data-access-user/src/core/models/221603/sanidad.model';
 import { WizardComponent } from '@libs/shared/data-access-user/src';
 
 @Component({
@@ -16,7 +15,7 @@ export class SanidadComponent {
     /**
    * @property {ListaPasosWizard[]} pantallasPasos - Array para almacenar los pasos del wizard.
    */
-  pantallasPasos: ListaPasosWizard[] = PASOS;
+  pantallasPasos: ListaPasosWizard[] = PASOS_REGISTRO;
 
     TEXTOS= ALERTA_COM;
 

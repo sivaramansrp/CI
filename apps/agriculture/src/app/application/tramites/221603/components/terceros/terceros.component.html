@@ -6,7 +6,7 @@
   <h6>Exportador*</h6>
   <app-tabla-dinamica
     [configuracionTabla]="configuracionTabla"
-    [datos]="exportador"
+    [datos]="sanidadService.exportador"
     [tipoSeleccionTabla]="checkbox"
   ></app-tabla-dinamica>
   
@@ -21,7 +21,7 @@
   <h6>Destinatario (destino final)*</h6>
   <app-tabla-dinamica
     [configuracionTabla]="configuracionTablaDatos"
-    [datos]="destinatario"
+    [datos]="sanidadService.destinatario"
     [tipoSeleccionTabla]="checkbox"
   ></app-tabla-dinamica>
 

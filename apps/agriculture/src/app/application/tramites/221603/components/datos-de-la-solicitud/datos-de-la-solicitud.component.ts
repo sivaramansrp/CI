@@ -1,31 +1,34 @@
-
-
+import {
+  CONFIGURATION_TABLA_MERCANCIAS,
+  DATOS_SOLICITUD,
+  FormularioDatos,
+  Mercancia,
+} from '../../enum/sanidad.enum';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { CommonModule } from '@angular/common';
-
-import { Subject, map, takeUntil } from 'rxjs';
-
-import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
-import { CONFIGURATION_TABLA_MERCANCIAS, DATOS_SOLICITUD, Mercancia } from '@libs/shared/data-access-user/src/core/models/221603/sanidad.model';
-import { Solicitud221603State, Tramite221603Store } from '../../estados/tramite221603.store';
+import {
+  ConfiguracionColumna,
+  TablaSeleccion,
+} from '@libs/shared/data-access-user/src';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  Solicitud221603State,
+  Tramite221603Store,
+} from '../../estados/tramite221603.store';
+import { Subject, takeUntil } from 'rxjs';
+import { SanidadService } from '../../service/sanidad.service';
 import { Tramite221603Query } from '../../estados/tramite221603.query';
-import realizar from '@libs/shared/theme/assets/json/221603/realizar.json';
-
-
-
 
 /**
- * Componente que gestiona la visualización y el manejo de los datos de la solicitud 221603, incluyendo 
+ * Componente que gestiona la visualización y el manejo de los datos de la solicitud 221603, incluyendo
  * la gestión de mercancías y la visualización de una tabla dinámica con los requisitos y detalles de las mercancías.
- * 
+ *
  * Este componente utiliza formularios reactivos para capturar los datos de la solicitud y gestionar el estado
  * de los campos. También incluye la opción de mostrar/ocultar contenido relacionado con la solicitud.
- * 
+ *
  * @component
  * @example
  * <app-datos-de-la-solicitud></app-datos-de-la-solicitud>
- * 
+ *
  * @imports
  * - `TituloComponent`: Componente para mostrar el título en la interfaz.
  * - `FormsModule`: Módulo necesario para trabajar con formularios basados en plantillas.
@@ -34,78 +37,30 @@ import realizar from '@libs/shared/theme/assets/json/221603/realizar.json';
  * - `CatalogoSelectComponent`: Componente para seleccionar valores de un catálogo.
  * - `AlertComponent`: Componente para mostrar alertas.
  * - `CommonModule`: Módulo común de Angular que permite utilizar directivas comunes como `ngIf`, `ngFor`, etc.
- * 
+ *
  */
 @Component({
   selector: 'app-datos-de-la-solicitud',
-  standalone: true,
-  imports: [
-    TituloComponent,
-    TablaDinamicaComponent,
-    FormsModule,
-    ReactiveFormsModule,
-    CatalogoSelectComponent,
-    AlertComponent,
-    CommonModule
-  ],
   templateUrl: './datos-de-la-solicitud.component.html',
-  styleUrls: ['./datos-de-la-solicitud.component.scss']
+  styleUrls: ['./datos-de-la-solicitud.component.scss'],
 })
-
-/**
- * Componente que maneja la visualización y actualización de los datos relacionados con la solicitud 221603.
- * Utiliza un formulario reactivo para capturar y persistir la información relacionada con la solicitud.
- * También incluye un modal para mostrar las mercancías y gestionar ciertos campos del formulario.
- * 
- * @class
- * @implements OnInit, OnDestroy
- * @example
- * <app-datos-de-la-solicitud></app-datos-de-la-solicitud>
- * 
- * @constructor
- * El componente se inicializa con un formulario reactivo que gestiona los datos de la solicitud, como justificación,
- * aduana, oficina y punto. También maneja la visualización de la tabla dinámica que contiene la lista de mercancías.
- * 
- * @property {FormGroup} TramitesForm - Formulario reactivo que gestiona los datos de la solicitud, como justificación,
- * aduana, oficina, etc.
- * @property {Catalogo[]} regimen - Lista de opciones de régimen obtenidas del catálogo.
- * @property {Mercancia[]} mercancias - Lista de mercancías obtenidas de un catálogo.
- * @property {ConfiguracionColumna<Mercancia>[]} configuracionTabla - Configuración de las columnas para la tabla dinámica.
- * @property {Solicitud221603State} solicitudState - Estado de la solicitud 221603 que contiene los valores actuales de la solicitud.
- * @property {string} TEXTOS - Contiene los datos relacionados con la solicitud (generalmente un texto descriptivo).
- * @property {boolean} showContent - Controla la visibilidad del contenido relacionado con la solicitud.
- * 
- * @method toggleContent() - Método que cambia la visibilidad del contenido asociado a la solicitud.
- * @method ngOnInit() - Inicializa el formulario reactivo y carga los datos de la solicitud.
- * @method setValoresStore() - Actualiza el store del trámite con el valor de un campo específico del formulario.
- * @method ngOnDestroy() - Se ejecuta cuando el componente es destruido. Limpia los recursos y previene memory leaks.
- */
 export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
-
-  /**
-   * Lista de opciones de régimen obtenidas de un catálogo.
-   */
-  public regimen: Catalogo[] = realizar.regimen;
-
   /**
    * Estado de la solicitud 221603, que contiene los valores actuales de la solicitud.
    */
-  public solicitudState!: Solicitud221603State;
+  solicitudState!: Solicitud221603State;
 
   /**
    * Formulario reactivo que gestiona los datos de la solicitud.
    */
-  TramitesForm!: FormGroup;
+  datosSolicitudForm!: FormGroup;
 
-  /**
-   * Subject utilizado para gestionar la destrucción del componente y evitar memory leaks.
-   */
-  private destroyNotifier$: Subject<void> = new Subject();
+  formularioDatos!: FormularioDatos;
 
   /**
    * Constante para definir el tipo de selección de tabla (checkbox).
    */
-  public checkbox = TablaSeleccion.CHECKBOX;
+  checkbox = TablaSeleccion.CHECKBOX;
 
   /**
    * Texto que contiene los datos de la solicitud.
@@ -118,28 +73,80 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   showContent = true;
 
   /**
-   * Lista de mercancías obtenidas del catálogo.
-   */
-  mercancias: Mercancia[] = realizar.mercancias;
-
-  /**
    * Configuración de las columnas para la tabla dinámica que muestra las mercancías.
    */
-  configuracionTabla: ConfiguracionColumna<Mercancia>[] = CONFIGURATION_TABLA_MERCANCIAS;
+  configuracionTabla: ConfiguracionColumna<Mercancia>[] =
+    CONFIGURATION_TABLA_MERCANCIAS;
 
   /**
-   * Constructor del componente. Inicializa el formulario reactivo y configura las dependencias necesarias.
-   * 
-   * @param fb - FormBuilder utilizado para crear el formulario reactivo.
-   * @param tramite221603Store - Store que gestiona los valores persistentes del trámite 221603.
-   * @param tramite221603Query - Query que se utiliza para obtener el estado actual de la solicitud 221603.
+   * Subject utilizado para gestionar la destrucción del componente y evitar memory leaks.
    */
+  private destroyNotifier$: Subject<void> = new Subject();
+
   constructor(
-    private fb: FormBuilder,
+    private formBuilder: FormBuilder,
     private tramite221603Store: Tramite221603Store,
-    private tramite221603Query: Tramite221603Query
+    private tramite221603Query: Tramite221603Query,
+    public sanidadService: SanidadService
   ) {
     // Constructor que inyecta las dependencias necesarias
+  }
+
+  /**
+   * Método que se ejecuta cuando el componente es inicializado.
+   *
+   * Inicializa el formulario reactivo y carga los datos necesarios para la solicitud.
+   */
+  ngOnInit(): void {
+
+    this.tramite221603Query.selectSolicitud$
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((state: Solicitud221603State) => {
+        this.solicitudState = state;
+      });
+
+      this.inicializarFormulario();
+      this.sanidadService.getFormularioDatos()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((resp: FormularioDatos) => {
+        this.formularioDatos = resp;
+        this.inicializarFormulario();
+      });
+      
+    this.sanidadService.inicializaCatalogosRegimen();
+    this.sanidadService.inicializaDatosMercancia();
+   
+  }
+
+  /**
+   * Inicializa el formulario reactivo con los valores actuales del estado de la solicitud.
+   *
+   * Carga los datos de la solicitud, como justificación, aduana, oficina, punto, y régimen.
+   */
+  private inicializarFormulario(): void {
+    this.datosSolicitudForm = this.formBuilder.group({
+      justificacion: [this.solicitudState.justificacion, Validators.required],
+      aduana: [this.solicitudState.aduana, Validators.required],
+      oficina: [this.solicitudState.oficina, Validators.required],
+      punto: [this.solicitudState.punto, Validators.required],
+      guia: [this.solicitudState.guia],
+      regimen: [
+        this.solicitudState.regimen ? this.solicitudState.regimen : 3,
+        Validators.required,
+      ],
+      carro: [this.solicitudState.carro],
+    });
+
+    this.datosSolicitudForm.get('punto')?.setValue(this.formularioDatos?.punto);
+    this.datosSolicitudForm.get('punto')?.disable();
+    this.datosSolicitudForm
+    .get('aduana')
+    ?.setValue(this.formularioDatos?.aduana);
+    this.datosSolicitudForm.get('aduana')?.disable();
+    this.datosSolicitudForm
+    .get('oficina')
+    ?.setValue(this.formularioDatos?.oficina);
+    this.datosSolicitudForm.get('oficina')?.disable();
   }
 
   /**
@@ -149,57 +156,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     this.showContent = !this.showContent;
   }
 
-  /**
-   * Método que se ejecuta cuando el componente es inicializado.
-   * 
-   * Inicializa el formulario reactivo y carga los datos necesarios para la solicitud.
-   */
-  ngOnInit(): void {
-    this.inicializarFormulario();
-  }
-
-  /**
-   * Inicializa el formulario reactivo con los valores actuales del estado de la solicitud.
-   * 
-   * Carga los datos de la solicitud, como justificación, aduana, oficina, punto, y régimen.
-   */
-  private inicializarFormulario(): void {
-    this.tramite221603Query.selectSolicitud$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((seccionState) => {
-          this.solicitudState = seccionState as Solicitud221603State;
-        })
-      )
-      .subscribe();
-
-    this.TramitesForm = this.fb.group({
-      justificacion: [this.solicitudState.justificacion, Validators.required],
-      aduana: [this.solicitudState.aduana, Validators.required],
-      oficina: [this.solicitudState.oficina, Validators.required],
-      punto: [this.solicitudState.punto, Validators.required],
-      guia: [this.solicitudState.guia],
-      regimen: [3, Validators.required],
-      carro: [this.solicitudState.carro]
-    });
-
-    this.TramitesForm.get('punto')?.disable();
-    this.TramitesForm.get('aduana')?.disable();
-    this.TramitesForm.get('oficina')?.disable();
-    this.TramitesForm.get('aduana')?.setValue(realizar.formData.aduana);
-    this.TramitesForm.get('oficina')?.setValue(realizar.formData.oficina);
-    this.TramitesForm.get('punto')?.setValue(realizar.formData.punto);
-  }
-
-  /**
-   * Método que actualiza los valores del store con los datos del formulario.
-   * 
-   * @param form - Formulario reactivo con los datos actuales.
-   * @param campo - El campo que debe actualizarse en el store.
-   * @param metodoNombre - El nombre del método en el store que se debe invocar.
-   */
-  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite221603Store): void {
-    const VALOR = form.get(campo)?.value;
+  setValoresStore(campo: string, metodoNombre: keyof Tramite221603Store): void {
+    const VALOR = this.datosSolicitudForm.get(campo)?.value;
     (this.tramite221603Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
 

@@ -14,14 +14,14 @@
   </div>
 </div>
 
-<div class="container" [formGroup]="TramitesForm">
+<div class="container" [formGroup]="datosSolicitudForm">
  
   <div class="row">
     <div class="col-md-12">
       <div class="form-group">
         <label class="form-label" for="justificacion">Justificación*:</label>
         <textarea class="form-control custom-textarea" id="justificacion" formControlName="justificacion" style="height: 90px;" 
-                  (change)="setValoresStore(TramitesForm, 'justificacion', 'setJustificacion')"></textarea>
+                  (change)="setValoresStore('justificacion', 'setJustificacion')"></textarea>
       </div>
     </div>
   </div>
@@ -33,7 +33,7 @@
     <div class="col-md-8">
       <div class="form-group">
         <label class="form-label" for="aduana">Aduana de ingreso*:</label>
-        <input class="form-control" id="aduana" formControlName="aduana" type="text" (change)="setValoresStore(TramitesForm, 'aduana', 'setAduana')" />
+        <input class="form-control" id="aduana" formControlName="aduana" type="text" (change)="setValoresStore('aduana', 'setAduana')" />
       </div>
     </div>
   </div>
@@ -43,7 +43,7 @@
     <div class="col-md-8">
       <div class="form-group">
         <label class="form-label" for="oficina">Oficina de inspección de Sanidad Agropecuaria*:</label>
-        <input class="form-control" id="oficina" formControlName="oficina" type="text" (change)="setValoresStore(TramitesForm, 'oficina', 'setOficina')" />
+        <input class="form-control" id="oficina" formControlName="oficina" type="text" (change)="setValoresStore('oficina', 'setOficina')" />
       </div>
     </div>
   </div>
@@ -53,7 +53,7 @@
     <div class="col-md-8">
       <div class="form-group">
         <label class="form-label" for="punto">Punto de inspección*:</label>
-        <input class="form-control" id="punto" formControlName="punto" type="text" (change)="setValoresStore(TramitesForm, 'punto', 'setPunto')" />
+        <input class="form-control" id="punto" formControlName="punto" type="text" (change)="setValoresStore('punto', 'setPunto')" />
       </div>
     </div>
   </div>
@@ -63,33 +63,22 @@
     <div class="col-md-4">
       <div class="form-group">
         <label class="form-label" for="guia">Número de guía:</label>
-        <input class="form-control" id="guia" formControlName="guia" type="number" (change)="setValoresStore(TramitesForm, 'guia', 'setGuia')" />
+        <input class="form-control" id="guia" formControlName="guia" type="number" (change)="setValoresStore('guia', 'setGuia')" />
       </div>
     </div>
 
     <div class="col-md-4">
       <div class="form-group">
-        <app-catalogo-select [catalogo]="regimen" [label]="'Régimen'" [required]="true" name="regimen"
-                             formControlName="regimen" (change)="setValoresStore(TramitesForm, 'regimen', 'setRegimen')">
+        <app-catalogo-select [catalogo]="sanidadService.regimen" [label]="'Régimen'" [required]="true" name="regimen"
+                             formControlName="regimen" (change)="setValoresStore('regimen', 'setRegimen')">
         </app-catalogo-select>
       </div>
     </div>
   </div>
-
-<!--   
-  <div class="row" style="padding-bottom: 20px;">
-    <div class="col-md-4">
-      <div class="form-group">
-        <label class="form-label" for="carro">Número de Carro de Ferrocarril:</label>
-        <input class="form-control" id="carro" formControlName="carro" type="text" (change)="setValoresStore(TramitesForm, 'carro', 'setCarro')" />
-      </div>
-    </div>
-  </div> -->
-
   
   <div class="row" style="margin-top: 50px;">
     <h6>Mercancías</h6>
-    <app-tabla-dinamica [configuracionTabla]="configuracionTabla" [datos]="mercancias" [tipoSeleccionTabla]="checkbox"></app-tabla-dinamica>
+    <app-tabla-dinamica [configuracionTabla]="configuracionTabla" [datos]="sanidadService.mercancia" [tipoSeleccionTabla]="checkbox"></app-tabla-dinamica>
     
     <nav aria-label="Page navigation example">
       <ul class="pagination justify-content-center">
@@ -97,7 +86,6 @@
       </ul>
     </nav>
   </div>
-
   
   <div class="col-md-12 mt-5 d-flex justify-content-end">
     <button type="button" class="btn btn-default">Modificar</button>

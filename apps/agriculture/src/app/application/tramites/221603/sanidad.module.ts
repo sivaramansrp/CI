@@ -5,6 +5,7 @@ import {
   CatalogoSelectComponent,
   InputRadioComponent,
   SolicitanteComponent,
+  TablaDinamicaComponent,
 } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { DatosComponent } from './pages/datos/datos.component';
@@ -31,6 +32,7 @@ import { TercerosComponent } from './components/terceros/terceros.component';
 @NgModule({
   declarations: [
     DatosComponent,
+    DatosDeLaSolicitudComponent,
     FirmarSolicitudComponent,
     SanidadComponent,
     PasoDosComponent,
@@ -49,10 +51,10 @@ import { TercerosComponent } from './components/terceros/terceros.component';
     WizardComponent,
     FirmaElectronicaComponent,
     SolicitanteComponent,
-    DatosDeLaSolicitudComponent,
     MovilizacionComponent,
     TercerosComponent,
-    InputRadioComponent
+    InputRadioComponent,
+    TablaDinamicaComponent,
 ],
   providers: [ToastrService],
 })
