@@ -1010,8 +1010,8 @@
     {
         "id": 145,
         "tramite": 32508,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "/agace/adace/solicitud",
+        "linkDepartment": "/pago/adace/solicitud",
         "department": "agace"
     },
     {

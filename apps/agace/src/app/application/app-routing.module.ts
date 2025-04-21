@@ -74,13 +74,19 @@ const ROUTES: Routes = [
         (m) => m.AvisoTrasladoModule
       ),
   },
-
   {
     path: 'aviso-procesos-solicitante',
     loadChildren: () =>
       import('./tramites/32505/aviso-procesos.module').then(
         (m) => m.AvisoProcesosModule)
-      }
+  },
+  {
+    path: 'adace',
+    loadChildren: () =>
+      import('./tramites/32508/adace.module').then(
+        (m) => m.AdaceModule
+      ),
+  }
 ];
 
 @NgModule({
