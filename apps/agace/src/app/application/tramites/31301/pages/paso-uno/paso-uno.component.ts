@@ -9,6 +9,7 @@ import { TercerosRelacionadosComponent } from '../../components/terceros-relacio
 
 /**
  * Componente que representa el primer paso de un trámite.
+ * Maneja la visualización y activación de diferentes secciones (tabs) según el tipo de endoso.
  */
 @Component({
   selector: 'app-paso-uno',
@@ -25,30 +26,37 @@ import { TercerosRelacionadosComponent } from '../../components/terceros-relacio
   templateUrl: './paso-uno.component.html',
   styleUrls: ['./paso-uno.component.scss'],
 })
-/**
- * Componente que representa el primer paso de un trámite.
- */
 export class PasoUnoComponent {
   /**
-   * Índice utilizado para identificar la posición actual en un proceso o lista.
+   * Índice utilizado para identificar la pestaña activa dentro del paso.
    * @type {number}
    */
   indice: number = 2;
 
+  /**
+   * Determina si la pestaña de modificación de denominación o razón social debe estar habilitada.
+   * @type {boolean}
+   */
   isEnableModificacionTab: boolean = false;
 
   /**
-   * Selecciona una pestaña específica.
-   * @param i - El índice de la pestaña a seleccionar.
+   * Cambia la pestaña activa según el índice proporcionado.
+   * @param i - El índice de la pestaña que se desea activar.
    */
   seleccionaTab(i: number): void {
     this.indice = i;
   }
 
-  tipoDeEndosoChanges(evento: string | number): void{
-    if(evento === 3){
-      this.isEnableModificacionTab = true; 
-    }else {
+  /**
+   * Maneja el cambio de tipo de endoso y habilita o deshabilita la pestaña de modificación
+   * dependiendo del valor seleccionado.
+   * 
+   * @param evento - El tipo de endoso seleccionado (puede ser string o número).
+   */
+  tipoDeEndosoChanges(evento: string | number): void {
+    if (evento === 3) {
+      this.isEnableModificacionTab = true;
+    } else {
       this.isEnableModificacionTab = false;
     }
   }
