@@ -8,6 +8,7 @@ import { DatosSolicitudService } from '../../services/datoSolicitude.service'
 import { Domicilio } from '../../modelos/domicilio-establecimientos.model';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
+import { InputCheckComponent } from '@ng-mf/data-access-user';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -23,9 +24,9 @@ import { takeUntil } from 'rxjs';
 @Component({
   selector: 'app-domicilio-establecimientos',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, TablaDinamicaComponent],
+  imports: [CommonModule, ReactiveFormsModule, TablaDinamicaComponent,InputCheckComponent],
   templateUrl: './domicilio-establecimientos.component.html',
-  styleUrl: './domicilio-establecimientos.component.css',
+  styleUrl: './domicilio-establecimientos.component.scss',
 })
 export class DomicilioEstablecimientosComponent implements OnInit, OnDestroy {
   /**

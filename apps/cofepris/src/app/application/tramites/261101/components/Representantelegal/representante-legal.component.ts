@@ -20,7 +20,7 @@ import { takeUntil } from 'rxjs';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule,TituloComponent],
   templateUrl: './representante-legal.component.html',
-  styleUrl: './representante-legal.component.css',
+  styleUrl: './representante-legal.component.scss',
 })
 export class RepresentanteLegalComponent implements OnInit, OnDestroy {
   /**

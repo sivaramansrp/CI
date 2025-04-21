@@ -109,13 +109,11 @@
 <br>
 <form [formGroup]="AvisodeFuncionamiento">
     <div class="col-md-3">
-        <label>
-            <input type="checkbox" id="funciona" formControlName="funcionamiento"
-                (change)="setValoresStore(domicilioEstablecimiento,'funcionamiento')">Aviso de funcionamiento
-        </label>
+        <lib-input-check [id]="'funciona'" [label]="'Aviso de funcionamiento'" [required]="false"
+        formControlName="funcionamiento"
+        (change)="setValoresStore(domicilioEstablecimiento,'funcionamiento')"></lib-input-check>
     </div>
-    <div class="col-md-5">
-        
+    <div class="col-md-5"> 
         <label class="form-label" for="licencia">No. de licencia sanitaria:
             <select  class="form-select" formControlName="licencia" id="licencia"
                 (change)="setValoresStore(domicilioEstablecimiento,'licencia')">

@@ -5,14 +5,14 @@ import { DatosComponent } from './pages/datos/datos.component';
 
 const ROUTES: Routes = [
   {
-    path: 'solitud-modification',
+    path: 'solicitud-modificacion',
     component: DatosComponent,
 
   },
   {
     path: '',
     pathMatch: 'full',
-    redirectTo: 'solitud-modification',
+    redirectTo: 'solicitud-modificacion',
   }
 ];
 

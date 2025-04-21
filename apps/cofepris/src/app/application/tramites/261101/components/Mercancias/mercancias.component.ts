@@ -20,7 +20,7 @@ import { takeUntil } from 'rxjs';
   standalone: true,
   imports: [CommonModule, TablaDinamicaComponent, CatalogoSelectComponent,TituloComponent],
   templateUrl: './mercancias.component.html',
-  styleUrl: './mercancias.component.css',
+  styleUrl: './mercancias.component.scss',
 })
 export class MercanciasComponent implements OnInit, OnDestroy {
   /**

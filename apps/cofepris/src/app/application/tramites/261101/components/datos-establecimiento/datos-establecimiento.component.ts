@@ -12,15 +12,12 @@ import { Subject } from 'rxjs';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { takeUntil } from 'rxjs';
 
-
-
-
 @Component({
   selector: 'app-datosestablecimiento',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule,TituloComponent],
   templateUrl: './datos-establecimiento.component.html',
-  styleUrl: './datos-establecimiento.component.css',
+  styleUrl: './datos-establecimiento.component.scss',
 })
 export class DatosestablecimientoComponent implements OnInit, OnDestroy {
   /**
@@ -46,7 +43,7 @@ export class DatosestablecimientoComponent implements OnInit, OnDestroy {
     private store: DatosProcedureStore,
     private query: DatosProcedureQuery,
   ) {
-    //constructor
+    // Constructor del componente
   }
 
     /**

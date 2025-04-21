@@ -6,6 +6,7 @@ import { DatosProcedureStore } from '../../../../estados/tramites/tramites261101
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { InputRadioComponent } from '@libs/shared/data-access-user/src';
+import { MANIFIESTOS_DECLARACION } from '../../../../shared/constantes/aviso-de-funcionamiento.enum';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -16,16 +17,14 @@ import { takeUntil } from 'rxjs';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, InputRadioComponent],
   templateUrl: './manifiestos.component.html',
-  styleUrl: './manifiestos.component.css',
+  styleUrl: './manifiestos.component.scss',
 })
 export class ManifiestosComponent implements OnInit, OnDestroy {
   /**
-   * Texto del manifiesto de veracidad.
-   * @public
+   * @description
+   * Texto de los manifiestos.
    */
-  public manifestoDeVeracidad: string =
-    'Cumplo con los requisitos y normatividad aplicable, sin que me eximan de que la autoridad sanitaria verifique su cumplimiento, esto sin perjuicio de las sanciones en que puedo incurrir por falsedat de declaraciones dadas a una autondad. Asimismo acepto, que la notificación de este trámite, sea a través de la ventanilla Unica de Comercio Exterior por los mecanismos de la misma';
-
+  mensajeManifiestos: string = '';
   /**
    * Texto ingresado en el cuadro para motivo de desistimiento.
    * @public
@@ -103,6 +102,7 @@ export class ManifiestosComponent implements OnInit, OnDestroy {
    * Se suscribe al observable `selectProrroga$` y configura el formulario.
    */
   public ngOnInit(): void {
+    this.mensajeManifiestos = MANIFIESTOS_DECLARACION.MANIFIESTOS;
     this.obtenerDatosFormulario();
   }
 

@@ -9,11 +9,11 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
+import { CONFIGURACIONCOLUMNA } from '../../enum/solicitud-permiso.enum';
 import { DatosProcedureQuery } from '../../../../estados/queries/tramites261101.query'
 import { DatosProcedureState } from '../../../../estados/tramites/tramites261101.store';
 import { DatosProcedureStore } from '../../../../estados/tramites/tramites261101.store';
 import { DatosSolicitudService } from '../../../261101/services/datoSolicitude.service';
-import { SolicitudPermisoState } from '../../../260703/estados/store/tramite260703.store';
 import { Subject } from 'rxjs';
 import { TramiteAsociados } from '../../../../shared/models/tramite-asociados.model';
 import { takeUntil } from 'rxjs';
@@ -40,40 +40,47 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   /**
    * Estado actual de la solicitud de permiso.
    */
-  estadoSolicitudPermiso!: SolicitudPermisoState;
+  estadoSolicitudPermiso!: DatosProcedureState;
 
   /**
    * Lista de trámites asociados que se mostrarán en la tabla.
    */
   tramiteAsociados!: TramiteAsociados[];
 
+
+    /**
+     * Configuración de las columnas de la tabla para mostrar los trámites asociados.
+     */
+    configuracionTabla: ConfiguracionColumna<TramiteAsociados>[] =
+      CONFIGURACIONCOLUMNA;
+  
   /**
    * Configuración para las columnas de la tabla.
    * Define cómo se mostrarán los datos de los trámites asociados.
    */
-  configuracionTabla: ConfiguracionColumna<TramiteAsociados>[] = [
-    { encabezado: '', clave: (item: TramiteAsociados) => item.id, orden: 1 },
-    {
-      encabezado: 'Folio trámite',
-      clave: (item: TramiteAsociados) => item.folioTramite,
-      orden: 2,
-    },
-    {
-      encabezado: 'Tipo trámite',
-      clave: (item: TramiteAsociados) => item.tipoTramite,
-      orden: 3,
-    },
-    {
-      encabezado: 'Estatus',
-      clave: (item: TramiteAsociados) => item.estatus,
-      orden: 4,
-    },
-    {
-      encabezado: 'Fecha alta de registro',
-      clave: (item: TramiteAsociados) => item.fetchaAltaDeRegistro,
-      orden: 5,
-    },
-  ];
+  // configuracionTabla: ConfiguracionColumna<TramiteAsociados>[] = [
+  //   { encabezado: '', clave: (item: TramiteAsociados) => item.id, orden: 1 },
+  //   {
+  //     encabezado: 'Folio trámite',
+  //     clave: (item: TramiteAsociados) => item.folioTramite,
+  //     orden: 2,
+  //   },
+  //   {
+  //     encabezado: 'Tipo trámite',
+  //     clave: (item: TramiteAsociados) => item.tipoTramite,
+  //     orden: 3,
+  //   },
+  //   {
+  //     encabezado: 'Estatus',
+  //     clave: (item: TramiteAsociados) => item.estatus,
+  //     orden: 4,
+  //   },
+  //   {
+  //     encabezado: 'Fecha alta de registro',
+  //     clave: (item: TramiteAsociados) => item.fetchaAltaDeRegistro,
+  //     orden: 5,
+  //   },
+  // ];
 
   /**
    * Lista de bancos disponibles para seleccionar.
