@@ -45,181 +45,6 @@ export class Tramite130121Query extends Query<Tramite130121State> {
   }
 
   /**
-   * Observable for the "solicitud" property in the state.
-   *
-   * @readonly
-   * @type {Observable<string>}
-   * @memberof Tramite130121Query
-   */
-  get solicitud$(): Observable<string> {
-    return this.select((state) => state.solicitud);
-  }
-
-  /**
-   * Observable for the "fraccion" property in the state.
-   *
-   * @readonly
-   * @type {Observable<string>}
-   * @memberof Tramite130121Query
-   */
-  get fraccion$(): Observable<string> {
-    return this.select((state) => state.fraccion);
-  }
-
-  /**
-   * Observable for the "umt" property in the state.
-   *
-   * @readonly
-   * @type {Observable<string>}
-   * @memberof Tramite130121Query
-   */
-  get umt$(): Observable<string> {
-    return this.select((state) => state.umt);
-  }
-
-  /**
-   * Observable for the "nico" property in the state.
-   *
-   * @readonly
-   * @type {Observable<string>}
-   * @memberof Tramite130121Query
-   */
-  get nico$(): Observable<string> {
-    return this.select((state) => state.nico);
-  }
-
-  /**
-   * Observable for the "plazo" property in the state.
-   *
-   * @readonly
-   * @type {Observable<unknown>}
-   * @memberof Tramite130121Query
-   */
-  get plazo$(): Observable<unknown> {
-    return this.select((state) => state.plazo);
-  }
-
-  /**
-   * Observable for the "descripcionPartidasDeLaMercancia" property in the state.
-   *
-   * @type {Observable<string>}
-   * @memberof Tramite130121Query
-   */
-  descripcionPartidasDeLaMercancia$: Observable<string> = this.select(
-    (state) => state.descripcionPartidasDeLaMercancia
-  );
-
-  /**
-   * Observable for the "cantidadPartidasDeLaMercancia" property in the state.
-   *
-   * @type {Observable<string>}
-   * @memberof Tramite130121Query
-   */
-  cantidadPartidasDeLaMercancia$: Observable<string> = this.select(
-    (state) => state.cantidadPartidasDeLaMercancia
-  );
-
-  /**
-   * Observable for the "valorPartidaUSDPartidasDeLaMercancia" property in the state.
-   *
-   * @type {Observable<number>}
-   * @memberof Tramite130121Query
-   */
-  valorPartidaUSDPartidasDeLaMercancia$: Observable<number> = this.select(
-    (state) => state.valorPartidaUSDPartidasDeLaMercancia
-  );
-
-  /**
-   * Observable for the "unidadMedida" property in the state.
-   *
-   * @type {Observable<string>}
-   * @memberof Tramite130121Query
-   */
-  unidadMedida$: Observable<string> = this.select((state) => state.unidadMedida);
-
-  /**
-   * Observable for the "defaultSelect" property in the state.
-   *
-   * @type {Observable<string>}
-   * @memberof Tramite130121Query
-   */
-  defaultSelect$: Observable<string> = this.select((state) => state.defaultSelect);
-
-  /**
-   * Observable for the "defaultPlazo" property in the state.
-   *
-   * @type {Observable<string>}
-   * @memberof Tramite130121Query
-   */
-  defaultPlazo$: Observable<string> = this.select((state) => state.defaultPlazo);
-
-  /**
-   * Observable for the "clasificacion" property in the state.
-   *
-   * @type {Observable<string>}
-   * @memberof Tramite130121Query
-   */
-  clasificacion$: Observable<string> = this.select((state) => state.clasificacion);
-
-  /**
-   * Observable for the "regimen" property in the state.
-   *
-   * @type {Observable<string>}
-   * @memberof Tramite130121Query
-   */
-  regimen$: Observable<string> = this.select((state) => state.regimen);
-
-  /**
-   * Observable for the "bloque" property in the state.
-   *
-   * @type {Observable<string>}
-   * @memberof Tramite130121Query
-   */
-  bloque$: Observable<string> = this.select((state) => state.bloque);
-
-  /**
-   * Observable for the "usoEspecifico" property in the state.
-   *
-   * @type {Observable<string>}
-   * @memberof Tramite130121Query
-   */
-  usoEspecifico$: Observable<string> = this.select((state) => state.usoEspecifico);
-
-  /**
-   * Observable for the "justificacionImportacionExportacion" property in the state.
-   *
-   * @type {Observable<string>}
-   * @memberof Tramite130121Query
-   */
-  justificacionImportacionExportacion$: Observable<string> = this.select(
-    (state) => state.justificacionImportacionExportacion
-  );
-
-  /**
-   * Observable for the "observaciones" property in the state.
-   *
-   * @type {Observable<string>}
-   * @memberof Tramite130121Query
-   */
-  observaciones$: Observable<string> = this.select((state) => state.observaciones);
-
-  /**
-   * Observable for the "entidad" property in the state.
-   *
-   * @type {Observable<string>}
-   * @memberof Tramite130121Query
-   */
-  entidad$: Observable<string> = this.select((state) => state.entidad);
-
-  /**
-   * Observable for the "representacion" property in the state.
-   *
-   * @type {Observable<string>}
-   * @memberof Tramite130121Query
-   */
-  representacion$: Observable<string> = this.select((state) => state.representacion);
-
-  /**
    * Observable combining several properties from the state related to "mercancia".
    *
    * The returned object includes:
@@ -254,8 +79,6 @@ export class Tramite130121Query extends Query<Tramite130121State> {
     nico: string;
     cantidad: number;
     valorPartidaUSD: number;
-    unidadMedida: string;
-    defaultPlazo: string;
   }> = this.select((state) => ({
     plazo: state.plazo,
     descripcion: state.descripcion,
@@ -264,8 +87,6 @@ export class Tramite130121Query extends Query<Tramite130121State> {
     nico: state.nico,
     cantidad: Number(state.cantidad),
     valorPartidaUSD: state.valorPartidaUSD,
-    unidadMedida: state.unidadMedida,
-    defaultPlazo: state.defaultPlazo,
   }));
 
   /**
