@@ -220,5 +220,25 @@
     <app-gestion-aduanera></app-gestion-aduanera>
   </div>
 </div>
+
+<!-- 7.Seguridad-los-vehiculos -->
+<div class="table-container">
+  <div class="table-header pb-2">
+    <h3>7. Seguridad de los vehículos de carga, contenedores, carros de tren, remolques y/o semirremolques</h3>
+    <button (click)="alternarSeguridadVehiculos()" class="toggle-btn">
+      <i
+        class="bi fs-5 m-1"
+        [ngClass]="{
+          'bi-chevron-down': !mostrarSeguridadVehiculos,
+          'bi-chevron-up': mostrarSeguridadVehiculos
+        }"
+      >
+      </i>
+    </button>
+  </div>
+  <div class="accordion-body body-panel {{ mostrarSeguridadVehiculos ? 'open' : 'close'}}" >
+    <app-seguridad-los-vehiculos></app-seguridad-los-vehiculos>
+  </div>
+</div>
 </form>
 

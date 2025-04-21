@@ -11,6 +11,7 @@ import { ControlesFisicoComponent } from '../controles-fisico/controles-fisico.c
 import { GestionAduaneraComponent } from '../gestion-aduanera/gestion-aduanera.component';
 import { ProfilesDomocilioDelaComponent } from '../profiles-domocilio-dela/profiles-domocilio-dela.component';
 import { SeguridadFisicaComponent } from '../seguridad-fisica/seguridad-fisica.component';
+import { SeguridadLosVehiculosComponent } from '../seguridad-los-vehiculos/seguridad-los-vehiculos.component';
 import { SeguridadProcesosComponent } from '../seguridad-procesos/seguridad-procesos.component';
 import { SociosComercialesComponent } from '../socios-comerciales/socios-comerciales.component';
 
@@ -26,7 +27,8 @@ import { SociosComercialesComponent } from '../socios-comerciales/socios-comerci
     ControlesFisicoComponent,
     SociosComercialesComponent,
     SeguridadProcesosComponent,
-    GestionAduaneraComponent
+    GestionAduaneraComponent,
+    SeguridadLosVehiculosComponent
   ],
   templateUrl: './perfiles-mensajeria.component.html',
   styleUrls: ['./perfiles-mensajeria.component.css'],
@@ -39,6 +41,7 @@ export class PerfilesMensajeriaComponent {
   mostrarSociosComeciales: boolean = false;
   mostrarSeguridadProcesos: boolean = false;
   mostrarGestionAduanera: boolean = false;
+  mostrarSeguridadVehiculos: boolean = false;
   public hasAgregar: boolean = false;
 
   constructor(private fb: FormBuilder) {
@@ -84,5 +87,9 @@ export class PerfilesMensajeriaComponent {
 
   alternarGestionAduanera(): void {
     this.mostrarGestionAduanera = !this.mostrarGestionAduanera;
+  }
+
+  alternarSeguridadVehiculos(): void {
+    this.mostrarSeguridadVehiculos = !this.mostrarSeguridadVehiculos;
   }
 }
