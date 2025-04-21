@@ -37,16 +37,16 @@ describe('SolicitudPageComponent', () => {
     component.indice = 2;
     fixture.detectChanges(); 
 
-    const pasoDosElement = fixture.debugElement.query(By.css('app-paso-dos'));
-    expect(pasoDosElement).toBeTruthy();  
+    const PASO_DOS_ELEMENT = fixture.debugElement.query(By.css('app-paso-dos'));
+    expect(PASO_DOS_ELEMENT).toBeTruthy();  
   });
 
   it('should render <app-paso-tres> when indice is 3', () => {
     component.indice = 3;
     fixture.detectChanges();  
 
-    const pasoTresElement = fixture.debugElement.query(By.css('app-paso-tres'));
-    expect(pasoTresElement).toBeTruthy(); 
+    const PASO_TRES_ELEMENT = fixture.debugElement.query(By.css('app-paso-tres'));
+    expect(PASO_TRES_ELEMENT).toBeTruthy(); 
   });
 
   it('should render the correct step based on the current indice', () => {
@@ -54,48 +54,48 @@ describe('SolicitudPageComponent', () => {
     fixture.detectChanges();
     let PASO_UNO_ELEMENT= fixture.debugElement.query(By.css('app-paso-uno'));
     expect(PASO_UNO_ELEMENT).toBeTruthy();
-    let pasoDosElement = fixture.debugElement.query(By.css('app-paso-dos'));
-    let pasoTresElement = fixture.debugElement.query(By.css('app-paso-tres'));
-    expect(pasoDosElement).toBeFalsy();
-    expect(pasoTresElement).toBeFalsy();
+    let PASO_DOS_ELEMENT = fixture.debugElement.query(By.css('app-paso-dos'));
+    let PASO_TRES_ELEMENT = fixture.debugElement.query(By.css('app-paso-tres'));
+    expect(PASO_DOS_ELEMENT).toBeFalsy();
+    expect(PASO_TRES_ELEMENT).toBeFalsy();
 
     component.indice = 2;
     fixture.detectChanges();
     PASO_UNO_ELEMENT= fixture.debugElement.query(By.css('app-paso-uno'));
-    pasoDosElement = fixture.debugElement.query(By.css('app-paso-dos'));
-    pasoTresElement = fixture.debugElement.query(By.css('app-paso-tres'));
+    PASO_DOS_ELEMENT = fixture.debugElement.query(By.css('app-paso-dos'));
+    PASO_TRES_ELEMENT = fixture.debugElement.query(By.css('app-paso-tres'));
     expect(PASO_UNO_ELEMENT).toBeFalsy();
-    expect(pasoDosElement).toBeTruthy();
-    expect(pasoTresElement).toBeFalsy();
+    expect(PASO_DOS_ELEMENT).toBeTruthy();
+    expect(PASO_TRES_ELEMENT).toBeFalsy();
 
     component.indice = 3;
     fixture.detectChanges();
     PASO_UNO_ELEMENT= fixture.debugElement.query(By.css('app-paso-uno'));
-    pasoDosElement = fixture.debugElement.query(By.css('app-paso-dos'));
-    pasoTresElement = fixture.debugElement.query(By.css('app-paso-tres'));
+    PASO_DOS_ELEMENT = fixture.debugElement.query(By.css('app-paso-dos'));
+    PASO_TRES_ELEMENT = fixture.debugElement.query(By.css('app-paso-tres'));
     expect(PASO_UNO_ELEMENT).toBeFalsy();
-    expect(pasoDosElement).toBeFalsy();
-    expect(pasoTresElement).toBeTruthy();
+    expect(PASO_DOS_ELEMENT).toBeFalsy();
+    expect(PASO_TRES_ELEMENT).toBeTruthy();
   });
 
   it('should trigger getValorIndice when btn-continuar is clicked', () => {
-    const actionEvent = { valor: 2, accion: 'cont' };
-    const getValorIndiceSpy = jest.spyOn(component, 'getValorIndice');
+    const ACTION_EVENT = { valor: 2, accion: 'cont' };
+    const GET_VALOR_INDICE_SPY = jest.spyOn(component, 'getValorIndice');
     component.indice = 1;
     fixture.detectChanges();
 
-    const continuarButton = fixture.debugElement.query(By.css('btn-continuar'));
-    continuarButton.triggerEventHandler('continuarEvento', actionEvent);
-    expect(getValorIndiceSpy).toHaveBeenCalledWith(actionEvent);
+    const CONTINUAR_BUTTON = fixture.debugElement.query(By.css('btn-continuar'));
+    CONTINUAR_BUTTON.triggerEventHandler('continuarEvento', ACTION_EVENT);
+    expect(GET_VALOR_INDICE_SPY).toHaveBeenCalledWith(ACTION_EVENT);
   });
 
   it('should not navigate when an invalid action is triggered', () => {
-    const actionEvent = { valor: 5, accion: 'cont' }; 
+    const ACTION_EVENT = { valor: 5, accion: 'cont' }; 
 
-    const getValorIndiceSpy = jest.spyOn(component, 'getValorIndice');
-    component.getValorIndice(actionEvent);
+    const GET_VALOR_INDICE_SPY = jest.spyOn(component, 'getValorIndice');
+    component.getValorIndice(ACTION_EVENT);
 
     expect(component.indice).toBe(1);  
-    expect(getValorIndiceSpy).toHaveBeenCalledWith(actionEvent);
+    expect(GET_VALOR_INDICE_SPY).toHaveBeenCalledWith(ACTION_EVENT);
   });
 });

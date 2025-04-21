@@ -72,21 +72,7 @@ export class Tramite240308Store extends Store<Tramite240308State> {
   constructor() {
     super(createInitialState());
   }
-
-  /**
-   * Cambia la pestaña actualmente seleccionada.
-   *
-   * @method updateTabSeleccionado
-   * @param {number} tabSeleccionado - Índice de la nueva pestaña seleccionada.
-   * @returns {void}
-   */
-  public updateTabSeleccionado(tabSeleccionado: number): void {
-    this.update((state) => ({
-      ...state,
-      tabSeleccionado: tabSeleccionado,
-    }));
-  }
-
+  
   /**
    * Actualiza los datos generales del formulario de trámite.
    *
