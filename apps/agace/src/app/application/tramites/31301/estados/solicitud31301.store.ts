@@ -3,7 +3,7 @@ import { Store } from '@datorama/akita';
 import { StoreConfig } from '@datorama/akita';
 
 export interface Solicitud31301State {
-  tipoDeEndoso: string;
+  tipoDeEndoso: string | number;
   tipoDeGarantia: number;
   modalidadDeLaGarantia: number;
   tipoSector: string;
@@ -189,7 +189,7 @@ export class Solicitud31301Store extends Store<Solicitud31301State> {
     super(createInitialSolicitudState());
   }
 
-  actualizarTipoDeEndoso(tipoDeEndoso: string): void {
+  actualizarTipoDeEndoso(tipoDeEndoso: string | number): void {
     this.update((state) => ({ ...state, tipoDeEndoso }));
   }
 

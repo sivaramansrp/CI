@@ -1,10 +1,11 @@
-
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PasoTresComponent } from './paso-tres.component';
 import { provideToastr, ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
 import { FirmaElectronicaComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { ReactiveFormsModule } from '@angular/forms';
 
 describe('PasoTresComponent', () => {
   let component: PasoTresComponent;
@@ -13,12 +14,20 @@ describe('PasoTresComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [FirmaElectronicaComponent, CommonModule],
-      declarations: [PasoTresComponent],
-      providers: [ToastrService,
+      imports: [
+        FirmaElectronicaComponent,
+        CommonModule,
+        PasoTresComponent,
+        HttpClientTestingModule,
+        ReactiveFormsModule,
+      ],
+      declarations: [],
+      providers: [
+        ToastrService,
         provideToastr({
           positionClass: 'toast-top-right',
-        }),],
+        }),
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(PasoTresComponent);
@@ -44,4 +53,3 @@ describe('PasoTresComponent', () => {
     expect(navigateSpy).not.toHaveBeenCalled();
   });
 });
-

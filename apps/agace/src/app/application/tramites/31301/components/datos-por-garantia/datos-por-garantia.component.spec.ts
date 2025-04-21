@@ -104,11 +104,11 @@ describe('DatosPorGarantiaComponent', () => {
       polizaDeFianzaActual: 1,
       numeroFolio: '12345',
       rfcInstitucion: 'RFC123',
-      fechaExpedicion: '2023-01-01',
-      fechaInicioVigenciaNo: '2023-01-02',
-      fechaFinVigenciaNo: '2023-01-03',
-      fechaInicioVigencia: '2023-01-04',
-      fechaFinVigencia: '2023-01-05',
+      fechaExpedicion: '01/01/2023',
+      fechaInicioVigenciaNo: '01/02/2023',
+      fechaFinVigenciaNo: '01/03/2023',
+      fechaInicioVigencia: '01/04/2023',
+      fechaFinVigencia: '01/05/2023',
       importeTotal: '1000',
     };
     solicitud31301QueryMock.selectSolicitud$ = of(mockState);
@@ -118,11 +118,11 @@ describe('DatosPorGarantiaComponent', () => {
       polizaDeFianzaActual: 1,
       numeroFolio: '12345',
       rfcInstitucion: 'RFC123',
-      fechaExpedicion: '2023-01-01',
-      fechaInicioVigenciaNo: '2023-01-02',
-      fechaFinVigenciaNo: '2023-01-03',
-      fechaInicioVigencia: '2023-01-03',
-      fechaFinVigencia: '2023-01-05',
+      fechaExpedicion: '01/01/2023',
+      fechaInicioVigenciaNo: '01/02/2023',
+      fechaFinVigenciaNo: '01/03/2023',
+      fechaInicioVigencia: '01/03/2023',
+      fechaFinVigencia: '01/05/2023',
       importeTotal: '1000',
     });
   });

@@ -1,35 +1,37 @@
-import {
-  CatalogoSelectComponent,
-  CatalogosSelect,
-  ConfiguracionColumna,
-  InputRadioComponent,
-  REG_X,
-  REGEX_SOLO_NUMEROS,
-  TablaDinamicaComponent,
-  TablaSeleccion,
-} from '@libs/shared/data-access-user/src';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
+import { CatalogosSelect } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component } from '@angular/core';
+import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
+import { DatosGeneralesDeLaSolicitudCatologo } from '../../models/solicitud.model';
+import { DatosGeneralesDeLaSolicitudDatos } from '../../models/solicitud.model';
+import { DatosGeneralesDeLaSolicitudRadioLista } from '../../models/solicitud.model';
+import { Domicilios } from '../../models/solicitud.model';
+import { EventEmitter } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
+import { InputRadio } from '../../models/solicitud.model';
+import { InputRadioComponent } from '@libs/shared/data-access-user/src';
+import { OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
+import { Output } from '@angular/core';
+import { REGEX_SOLO_NUMEROS } from '@libs/shared/data-access-user/src';
+import { REG_X } from '@libs/shared/data-access-user/src';
 import { ReactiveFormsModule } from '@angular/forms';
-import { SolicitudService } from '../../services/solicitud.service';
-import { TituloComponent } from '@libs/shared/data-access-user/src';
-import { map, Subject, takeUntil } from 'rxjs';
-import {
-  DatosGeneralesDeLaSolicitudCatologo,
-  DatosGeneralesDeLaSolicitudDatos,
-  DatosGeneralesDeLaSolicitudRadioLista,
-  Domicilios,
-  InputRadio,
-  SeccionSociosIC,
-  SubContratistas,
-  TipoDeInversion,
-} from '../../models/solicitud.model';
-import {
-  Solicitud31301State,
-  Solicitud31301Store,
-} from '../../estados/solicitud31301.store';
+import { SeccionSociosIC } from '../../models/solicitud.model';
 import { Solicitud31301Query } from '../../estados/solicitud31301.query';
+import { Solicitud31301State } from '../../estados/solicitud31301.store';
+import { Solicitud31301Store } from '../../estados/solicitud31301.store';
+import { SolicitudService } from '../../services/solicitud.service';
+import { SubContratistas } from '../../models/solicitud.model';
+import { Subject } from 'rxjs';
+import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
+import { TablaSeleccion } from '@libs/shared/data-access-user/src';
+import { TipoDeInversion } from '../../models/solicitud.model';
+import { TituloComponent } from '@libs/shared/data-access-user/src';
+import { Validators } from '@angular/forms';
+import { map } from 'rxjs';
+import { takeUntil } from 'rxjs';
 @Component({
   selector: 'app-datos-generales-de-la-solicitud',
   standalone: true,
@@ -176,6 +178,7 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
   domiciliosDatos: Domicilios[] = [] as Domicilios[];
   listaRegimenAduanero: string[] = [];
   solicitud31301State: Solicitud31301State = {} as Solicitud31301State;
+  @Output() tipoDeEndosoChanges = new EventEmitter();
   constructor(
     public fb: FormBuilder,
     public solicitudService: SolicitudService,
@@ -485,6 +488,8 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
             alerta1: this.solicitud31301State.alerta1,
             alerta2: this.solicitud31301State.alerta2,
           });
+
+          this.tipoDeEndosoChanges.emit(this.solicitud31301State.tipoDeEndoso);
         })
       )
       .subscribe();
@@ -718,8 +723,9 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
       });
   }
 
-  getTipoDeEndoso(evento: string | number) {
-    console.log(evento);
+  getTipoDeEndoso(evento: string | number): void {
+    this.tipoDeEndosoChanges.emit(evento);
+    this.solicitud31301Store.actualizarTipoDeEndoso(evento);
   }
 
   ngOnDestroy(): void {

@@ -11,13 +11,13 @@ describe('PasoUnoComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [
-        PasoUnoComponent,
       ],
       imports: [
         CommonModule,
         SolicitanteComponent,
         BtnContinuarComponent,
-        HttpClientTestingModule
+        HttpClientTestingModule,
+        PasoUnoComponent
       ],
     }).compileComponents();
 
@@ -46,5 +46,21 @@ describe('PasoUnoComponent', () => {
 
     component.seleccionaTab(4);
     expect(component.indice).toBe(4);
+  });
+
+  it('should enable isEnableModificacionTab when tipoDeEndosoChanges is called with 3', () => {
+    component.tipoDeEndosoChanges(3);
+    expect(component.isEnableModificacionTab).toBe(true);
+  });
+
+  it('should disable isEnableModificacionTab when tipoDeEndosoChanges is called with a value other than 3', () => {
+    component.tipoDeEndosoChanges(2);
+    expect(component.isEnableModificacionTab).toBe(false);
+
+    component.tipoDeEndosoChanges(0);
+    expect(component.isEnableModificacionTab).toBe(false);
+
+    component.tipoDeEndosoChanges('test');
+    expect(component.isEnableModificacionTab).toBe(false);
   });
 });

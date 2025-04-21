@@ -35,11 +35,21 @@ export class PasoUnoComponent {
    */
   indice: number = 2;
 
+  isEnableModificacionTab: boolean = false;
+
   /**
    * Selecciona una pestaña específica.
    * @param i - El índice de la pestaña a seleccionar.
    */
   seleccionaTab(i: number): void {
     this.indice = i;
+  }
+
+  tipoDeEndosoChanges(evento: string | number): void{
+    if(evento === 3){
+      this.isEnableModificacionTab = true; 
+    }else {
+      this.isEnableModificacionTab = false;
+    }
   }
 }

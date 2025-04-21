@@ -18,9 +18,10 @@ describe('SolicitudPageComponent', () => {
         PasoUnoComponent,
         PasoDosComponent,
         PasoTresComponent,
-        BtnContinuarComponent
+        BtnContinuarComponent,
+        SolicitudPageComponent
       ],
-      declarations: [SolicitudPageComponent],
+      declarations: [],
       schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA]
     })
     .compileComponents();

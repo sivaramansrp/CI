@@ -17,9 +17,14 @@ describe('ModificacionDeDenominacionORazorsSocialComponent', () => {
   let solicitud31301StoreMock: jest.Mocked<Solicitud31301Store>;
   let solicitud31301QueryMock: jest.Mocked<Solicitud31301Query>;
 
+  const mockInitialResponse: ModificacionDenominacionRazonSocial = {
+    razonSocialAnterior: 'Old Name',
+    razonSocialActual: 'New Name',
+  };
+
   beforeEach(async () => {
     solicitudServiceMock = {
-      conseguirModificacionDenominacionRazonSocial: jest.fn(),
+      conseguirModificacionDenominacionRazonSocial: jest.fn().mockReturnValue(of(mockInitialResponse)),
       conseguirRecibirNotificaciones: jest.fn(),
       conseguirNombreInstitucionCatalogo: jest.fn(),
       conseguirDatosPorGarantia: jest.fn(),
@@ -31,11 +36,8 @@ describe('ModificacionDeDenominacionORazorsSocialComponent', () => {
     } as unknown as jest.Mocked<Solicitud31301Store>;
 
     solicitud31301QueryMock = {
-      selectSolicitud$: of({
-        razonSocialAnterior: 'Old Name',
-        razonSocialActual: 'New Name',
-      }),
-    } as jest.Mocked<Solicitud31301Query>;
+      selectSolicitud$: of(mockInitialResponse),
+    } as unknown as jest.Mocked<Solicitud31301Query>;
 
     await TestBed.configureTestingModule({
       imports: [
@@ -53,11 +55,9 @@ describe('ModificacionDeDenominacionORazorsSocialComponent', () => {
       ],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(
-      ModificacionDeDenominacionORazorsSocialComponent
-    );
+    fixture = TestBed.createComponent(ModificacionDeDenominacionORazorsSocialComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
+    fixture.detectChanges(); // triggers ngOnInit
   });
 
   it('should create the component', () => {
@@ -72,28 +72,20 @@ describe('ModificacionDeDenominacionORazorsSocialComponent', () => {
   });
 
   it('should call conseguirModificacionDenominacionRazonSocial on initialization', () => {
-    expect(
-      solicitudServiceMock.conseguirModificacionDenominacionRazonSocial
-    ).toHaveBeenCalled();
+    expect(solicitudServiceMock.conseguirModificacionDenominacionRazonSocial).toHaveBeenCalled();
   });
 
   it('should update the store with the response from conseguirModificacionDenominacionRazonSocial', () => {
-    const mockResponse: ModificacionDenominacionRazonSocial = {
+    const mockNewResponse: ModificacionDenominacionRazonSocial = {
       razonSocialAnterior: 'Previous Name',
       razonSocialActual: 'Updated Name',
     };
-    solicitudServiceMock.conseguirModificacionDenominacionRazonSocial.mockReturnValue(
-      of(mockResponse)
-    );
+    solicitudServiceMock.conseguirModificacionDenominacionRazonSocial.mockReturnValue(of(mockNewResponse));
 
     component.conseguirModificacionDenominacionRazonSocial();
 
-    expect(
-      solicitud31301StoreMock.actualizarRazonSocialActual
-    ).toHaveBeenCalledWith('Updated Name');
-    expect(
-      solicitud31301StoreMock.actualizarRazonSocialAnterior
-    ).toHaveBeenCalledWith('Previous Name');
+    expect(solicitud31301StoreMock.actualizarRazonSocialActual).toHaveBeenCalledWith('Updated Name');
+    expect(solicitud31301StoreMock.actualizarRazonSocialAnterior).toHaveBeenCalledWith('Previous Name');
   });
 
   it('should unsubscribe from observables on destroy', () => {

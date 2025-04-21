@@ -1,11 +1,8 @@
-import {
-  AlertComponent,
-  CatalogosService,
-  TramiteFolioService,
-} from '@ng-mf/data-access-user';
+import { AlertComponent } from '@ng-mf/data-access-user';
 import { AnexarDocumentosComponent } from '@ng-mf/data-access-user';
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { CatalogosService } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { CrosslistComponent } from '@ng-mf/data-access-user';
 import { EndosoGarantiaRoutingModule } from './endoso-garantia-routing.module';
@@ -17,8 +14,6 @@ import { InputFechaComponent } from '@ng-mf/data-access-user';
 import { InputHoraComponent } from '@ng-mf/data-access-user';
 import { InputRadioComponent } from '@ng-mf/data-access-user';
 import { NgModule } from '@angular/core';
-import { PaginaDosAcusesYResolucionesDetallesComponent } from './pages/pagina-dos-acuses-y-resoluciones-detalles/pagina-dos-acuses-y-resoluciones-detalles.component';
-import { PaginaUnoAcusesYResolucionesBusquedaComponent } from './pages/pagina-uno-acuses-y-resoluciones-busqueda/pagina-uno-acuses-y-resoluciones-busqueda.component';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
@@ -32,6 +27,7 @@ import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { ToastrModule } from 'ngx-toastr';
 import { ToastrService } from 'ngx-toastr';
+import { TramiteFolioService } from '@ng-mf/data-access-user';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
 @NgModule({
@@ -60,8 +56,6 @@ import { WizardComponent } from '@ng-mf/data-access-user';
     InputRadioComponent,
     TablaDinamicaComponent,
     ToastrModule.forRoot(),
-    PaginaDosAcusesYResolucionesDetallesComponent,
-    PaginaUnoAcusesYResolucionesBusquedaComponent,
     PasoUnoComponent,
     SolicitudPageComponent,
     PasoDosComponent,
@@ -70,7 +64,6 @@ import { WizardComponent } from '@ng-mf/data-access-user';
   exports: [],
   providers: [
     ToastrService,
-    // RetiradaDeLaAutorizacionDeDonacionesService,
     CatalogosService,
     TramiteFolioService,
   ],

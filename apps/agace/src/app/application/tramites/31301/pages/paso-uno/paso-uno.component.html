@@ -23,6 +23,7 @@
           >Datos generales de la solicitud</a
         >
       </li>
+
       <li [ngClass]="indice === 3 ? 'active' : ''">
         <a
           data-toggle="tab"
@@ -34,6 +35,7 @@
           >Datos por garantia</a
         >
       </li>
+      @if(isEnableModificacionTab){
       <li [ngClass]="indice === 4 ? 'active' : ''">
         <a
           data-toggle="tab"
@@ -45,6 +47,7 @@
           >Modificacion de denominacion o razors social</a
         >
       </li>
+      }
       <li [ngClass]="indice === 5 ? 'active' : ''">
         <a
           data-toggle="tab"
@@ -62,7 +65,9 @@
       @switch (indice) { @case (1) {
       <solicitante></solicitante>
       } @case (2) {
-      <app-datos-generales-de-la-solicitud></app-datos-generales-de-la-solicitud>
+      <app-datos-generales-de-la-solicitud
+        (tipoDeEndosoChanges)="tipoDeEndosoChanges($event)"
+      ></app-datos-generales-de-la-solicitud>
       } @case (3) {
       <app-datos-por-garantia></app-datos-por-garantia>
       } @case (4) {
