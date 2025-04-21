@@ -4,6 +4,8 @@ import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS } from '../../constants/avios-procesos.enum';
 import { WizardComponent } from '@ng-mf/data-access-user';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
+import { PasoDosComponent } from '../paso-dos/paso-dos.component';
+import { PasoTresComponent } from '../paso-tres/paso-tres.component';
 interface AccionBoton {
   accion: string;
   valor: number;
@@ -13,7 +15,7 @@ interface AccionBoton {
   templateUrl: './solicitante-page.component.html',
   styleUrl: './solicitante-page.component.scss',
   standalone: true,
-  imports: [WizardComponent,PasoUnoComponent,BtnContinuarComponent],
+  imports: [WizardComponent,PasoUnoComponent,BtnContinuarComponent,PasoDosComponent,PasoTresComponent],
 })
 export class SolicitantePageComponent {
   /**

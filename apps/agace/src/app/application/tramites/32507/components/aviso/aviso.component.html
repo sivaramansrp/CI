@@ -75,17 +75,82 @@
       <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion.CHECKBOX" [configuracionTabla]="tablaDeDatos.encabezadas"
         [datos]="tablaDeDatos.datos" (listaDeFilaSeleccionada)="filaSeleccionada($event)"></app-tabla-dinamica>
       <div class="d-flex justify-content-end">
-        <button type="button" class="btn btn-danger ms-3" [disabled]="false" (click)="eliminarDomicilio()">
-          Eliminar
-        </button>
-        <button type="button" class="btn btn-primary ms-3" [disabled]="false">
+               <button type="button" class="btn btn-primary ms-3" [disabled]="false" (click)="datosDelAviso()">
           Modificar
         </button>
-        <button type="button" class="btn btn-primary ms-3" [disabled]="false" (click)="abiertoDomicilio()">
+        <button type="button" class="btn btn-primary ms-3" [disabled]="false" (click)="datosDelAviso()">
           Agregar
         </button>
       </div>
     </div>
+
+    <ng-container formGroupName="adaceForm" *ngIf="esPopupAbierto">
+      <div class="modal fade" id="datosAviso" tabindex="-1" #datosAviso aria-labelledby="datosAviso" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
+          <div class="modal-content">
+            <div class="modal-body">
+              <ng-titulo titulo="Datos de la destrucción en relación con la cual se presenta el Acta de Hechos" />
+
+              <div class="row">
+                <div class="col-md-4 mb-3">
+                  <label>ID de transacción de VUCEM:</label>
+                  <input type="text" class="form-control" id="transaccionId" formControlName="transaccionId"
+                    (change)="setValoresStore(adaceForm, 'transaccionId', 'setAvisoFormularioTransaccionId')" />
+                </div>
+              </div>
+
+
+              <ng-titulo titulo="Datos de las mercancías destruídas" />
+              <div class="row">
+                <div class="col-md-4 mb-3">
+                  <label>Cantidad*:</label>
+                  <input type="text" class="form-control" id="cantidad" formControlName="cantidad"
+                    [ngClass]="isValid(adaceForm,'cantidad') ? 'required' : ''"
+                    (change)="setValoresStore(adaceForm, 'cantidad', 'setAvisoFormularioCantidad')" />
+                </div>
+                <div class="col-md-4 mb-3">
+                  <label>Peso (Kg)*:</label>
+                  <input type="text" class="form-control" id="peso" formControlName="peso"
+                    [ngClass]="isValid(adaceForm,'peso') ? 'required' : ''"
+                    (change)="setValoresStore(adaceForm, 'peso', 'setAvisoFormularioPeso')" />
+                </div>
+
+                <div class="col-md-4 ">
+                  <app-catalogo-select class="unidadMedida" [label]="'Unidad de medida'" [catalogo]="unidadMedida"
+                    [required]="true" id="unidadMedida" formControlName="unidadMedida"
+                    [ngClass]="isValid(adaceForm,'unidadMedida') ? 'required' : ''"
+                    (change)="setValoresStore(adaceForm, 'cilindros', 'setAvisoFormularioUnidadMedida')">
+                  </app-catalogo-select>
+
+
+                </div>
+
+                <div class="row">
+                  <div class="col-md-6 mb-6">
+                  <div>
+                    <label>Datos de las mercancías destruídas*:</label>
+                    <input type="text" class="form-control" formControlName="descripcion"
+                      id="descripcion" maxlength="250"
+                      [ngClass]="isValid(adaceForm,'descripcion') ? 'required' : ''"
+                      (change)="setValoresStore(adaceForm,'descripcion', 'setAvisoFormularioDescripcion')">
+                  </div>
+                </div>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer custom-footer mt-4 justify-content-end">
+              <button type="button" class="btn btn-danger" data-bs-dismiss="modal" #closeMercancia> Cancelar </button>
+              <button type="submit" class="btn btn-primary" (click)="agregarMercancia()"> Agregar </button>
+            </div>
+          </div>
+         
+        </div>
+       
+      </div>
+      
+    </ng-container>
+   
+
   </form>
 
 </div>
