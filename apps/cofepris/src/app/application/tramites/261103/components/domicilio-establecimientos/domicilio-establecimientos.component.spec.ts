@@ -5,8 +5,9 @@ import { ModificacionPermisoImportacionMedicamentosService } from '../../service
 import { DatosProcedureQuery } from '../../../../estados/queries/tramites261103.query';
 import { DatosProcedureStore } from '../../../../estados/tramites/tramites261103.store';
 import { of } from 'rxjs';
+
 describe('DomicilioEstablecimientosComponent', () => {
-  let component: DomicilioEstablecimientosComponent;
+  let componente: DomicilioEstablecimientosComponent;
   let fixture: ComponentFixture<DomicilioEstablecimientosComponent>;
 
   beforeEach(async () => {
@@ -46,44 +47,44 @@ describe('DomicilioEstablecimientosComponent', () => {
     }).compileComponents();
 
     fixture = TestBed.createComponent(DomicilioEstablecimientosComponent);
-    component = fixture.componentInstance;
+    componente = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
-    expect(component).toBeTruthy();
+  it('debería crear el componente', () => {
+    expect(componente).toBeTruthy();
   });
 
-  it('should initialize forms in ngOnInit', () => {
-    expect(component.domicilioEstablecimiento).toBeTruthy();
-    expect(component.AvisodeFuncionamiento).toBeTruthy();
+  it('debería inicializar los formularios en ngOnInit', () => {
+    expect(componente.domicilioEstablecimiento).toBeTruthy();
+    expect(componente.AvisodeFuncionamiento).toBeTruthy();
 
-    expect(component.domicilioEstablecimiento.get('estado')?.value).toBe('Estado');
-    expect(component.AvisodeFuncionamiento.get('funcionamiento')?.value).toBe('Operando');
+    expect(componente.domicilioEstablecimiento.get('estado')?.value).toBe('Estado');
+    expect(componente.AvisodeFuncionamiento.get('funcionamiento')?.value).toBe('Operando');
   });
 
-  it('should call ModificacionPermisoImportacionMedicamentosService.getDomicilioData and assign Domicilios', () => {
-    component.ngOnInit();
+  it('debería llamar a ModificacionPermisoImportacionMedicamentosService.getDomicilioData y asignar Domicilios', () => {
+    componente.ngOnInit();
   });
 
-  it('should set values in the form using establecerValoresDeFormulario', () => {
-    component.domicilioEstablecimiento.addControl('Codigo', component.domicilioEstablecimiento.get('estado')!);
-    component.domicilioEstablecimiento.addControl('codigoPostal', component.domicilioEstablecimiento.get('estado')!);
-    component.domicilioEstablecimiento.addControl('Municipio', component.domicilioEstablecimiento.get('estado')!);
-    component.domicilioEstablecimiento.addControl('numeroExterior', component.domicilioEstablecimiento.get('estado')!);
-    expect(component.domicilioEstablecimiento.get('Codigo')?.value).toBe('');
-    expect(component.domicilioEstablecimiento.get('codigoPostal')?.value).toBe('');
-    expect(component.domicilioEstablecimiento.get('Municipio')?.value).toBe('');
+  it('debería establecer valores en el formulario usando establecerValoresDeFormulario', () => {
+    componente.domicilioEstablecimiento.addControl('Codigo', componente.domicilioEstablecimiento.get('estado')!);
+    componente.domicilioEstablecimiento.addControl('codigoPostal', componente.domicilioEstablecimiento.get('estado')!);
+    componente.domicilioEstablecimiento.addControl('Municipio', componente.domicilioEstablecimiento.get('estado')!);
+    componente.domicilioEstablecimiento.addControl('numeroExterior', componente.domicilioEstablecimiento.get('estado')!);
+    expect(componente.domicilioEstablecimiento.get('Codigo')?.value).toBe('');
+    expect(componente.domicilioEstablecimiento.get('codigoPostal')?.value).toBe('');
+    expect(componente.domicilioEstablecimiento.get('Municipio')?.value).toBe('');
   });
 
-  it('should set store values using setValoresStore', () => {
-    component.setValoresStore(component.domicilioEstablecimiento, 'estado');
+  it('debería establecer valores en el store usando setValoresStore', () => {
+    componente.setValoresStore(componente.domicilioEstablecimiento, 'estado');
   });
 
-  it('should clean up subscriptions on ngOnDestroy', () => {
-    const nextSpy = jest.spyOn(component['destroy$'], 'next');
-    const completeSpy = jest.spyOn(component['destroy$'], 'complete');
-    component.ngOnDestroy();
+  it('debería limpiar las suscripciones en ngOnDestroy', () => {
+    const nextSpy = jest.spyOn(componente['destroy$'], 'next');
+    const completeSpy = jest.spyOn(componente['destroy$'], 'complete');
+    componente.ngOnDestroy();
     expect(nextSpy).toHaveBeenCalled();
     expect(completeSpy).toHaveBeenCalled();
   });

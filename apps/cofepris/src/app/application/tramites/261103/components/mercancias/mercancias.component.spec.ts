@@ -9,11 +9,11 @@ import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tab
 import { ComponentFixture } from '@angular/core/testing';
 
 describe('MercanciasComponent', () => {
-  let component: MercanciasComponent;
+  let componente: MercanciasComponent;
   let fixture: ComponentFixture<MercanciasComponent>;
   
   describe('MercanciasComponent', () => {
-    let component: MercanciasComponent;
+    let componente: MercanciasComponent;
     let fixture: ComponentFixture<MercanciasComponent>; 
     let mockModificacionPermisoImportacionMedicamentosService: { getMercanciasData: jest.Mock };
     let mockDatosProcedureStore: { selectProrroga: jest.Mock };
@@ -27,7 +27,7 @@ describe('MercanciasComponent', () => {
         selectProrroga: jest.fn(),
       };
       mockDatosProcedureQuery = {
-        selectProrroga: jest.fn().mockReturnValue(of({ aduanas: 'Test Aduana' })),
+        selectProrroga: jest.fn().mockReturnValue(of({ aduanas: 'Aduana de Prueba' })),
       };
   
       await TestBed.configureTestingModule({
@@ -41,12 +41,13 @@ describe('MercanciasComponent', () => {
       }).compileComponents();
   
       fixture = TestBed.createComponent(MercanciasComponent);
-      component = fixture.componentInstance;
+      componente = fixture.componentInstance;
       fixture.detectChanges();
     });
   
-    // ...existing tests...
-  });  let mockModificacionPermisoImportacionMedicamentosService: {getMercanciasData:jest.Mock};
+    // ...pruebas existentes...
+  });  
+  let mockModificacionPermisoImportacionMedicamentosService: {getMercanciasData:jest.Mock};
   let mockDatosProcedureStore: {selectProrroga:jest.Mock};
   let mockDatosProcedureQuery: {selectProrroga:jest.Mock};
 
@@ -58,7 +59,7 @@ describe('MercanciasComponent', () => {
       selectProrroga: jest.fn(),
     };
     mockDatosProcedureQuery = {
-      selectProrroga: jest.fn().mockReturnValue(of({ aduanas: 'Test Aduana' })),
+      selectProrroga: jest.fn().mockReturnValue(of({ aduanas: 'Aduana de Prueba' })),
     };
 
     await TestBed.configureTestingModule({
@@ -72,102 +73,102 @@ describe('MercanciasComponent', () => {
     }).compileComponents();
 
     fixture = TestBed.createComponent(MercanciasComponent);
-    component = fixture.componentInstance;
+    componente = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
-    expect(component).toBeTruthy();
+  it('debería crear el componente', () => {
+    expect(componente).toBeTruthy();
   });
 
-  it('should initialize the form on ngOnInit', () => {
-    const crearFormularioSpy = jest.spyOn(component, 'crearFormulario');
-    component.ngOnInit();
+  it('debería inicializar el formulario en ngOnInit', () => {
+    const crearFormularioSpy = jest.spyOn(componente, 'crearFormulario');
+    componente.ngOnInit();
     expect(crearFormularioSpy).toHaveBeenCalled();
-    expect(component.Aduana).toBeDefined();
+    expect(componente.Aduana).toBeDefined();
   });
 
-  it('should call mercanciasData on ngOnInit', () => {
-    const mercanciasDataSpy = jest.spyOn(component, 'mercanciasData');
-    component.ngOnInit();
+  it('debería llamar a mercanciasData en ngOnInit', () => {
+    const mercanciasDataSpy = jest.spyOn(componente, 'mercanciasData');
+    componente.ngOnInit();
     expect(mercanciasDataSpy).toHaveBeenCalled();
   });
 
-  it('should set seccionState from query.selectProrroga$', () => {
-    component.ngOnInit();
+  it('debería establecer seccionState desde query.selectProrroga$', () => {
+    componente.ngOnInit();
   });
 
-  it('should call getMercanciasData and set Mercanciasdata', () => {
-    const mockResponse = [{ clasificacionDelProducto: 'Test' }];
+  it('debería llamar a getMercanciasData y establecer Mercanciasdata', () => {
+    const mockResponse = [{ clasificacionDelProducto: 'Prueba' }];
     mockModificacionPermisoImportacionMedicamentosService.getMercanciasData.mockReturnValue(of(mockResponse));
 
-    component.mercanciasData();
+    componente.mercanciasData();
     expect(mockModificacionPermisoImportacionMedicamentosService.getMercanciasData).toHaveBeenCalled();
-    expect(component.mercanciasDatas).toEqual(mockResponse);
+    expect(componente.mercanciasDatas).toEqual(mockResponse);
   });
 
-  it('should initialize the form in crearFormulario', () => {
-    component.crearFormulario();
-    expect(component.Aduana.value).toEqual({ Aduana: { aduanas: 'Test Aduana' } });
+  it('debería inicializar el formulario en crearFormulario', () => {
+    componente.crearFormulario();
+    expect(componente.Aduana.value).toEqual({ Aduana: { aduanas: 'Aduana de Prueba' } });
   });
 
-  it('should have the correct table configuration', () => {
-    expect(component.configuracionTabla).toBeDefined();
-    expect(component.configuracionTabla.length).toBe(7);
-    expect(component.configuracionTabla[0].encabezado).toBe('Clasificación del producto ');
+  it('debería tener la configuración correcta de la tabla', () => {
+    expect(componente.configuracionTabla).toBeDefined();
+    expect(componente.configuracionTabla.length).toBe(7);
+    expect(componente.configuracionTabla[0].encabezado).toBe('Clasificación del producto ');
   });
 
-  it('should destroy subscriptions on component destroy', () => {
-    const destroySpy = jest.spyOn(component['destroy$'], 'next');
-    const completeSpy = jest.spyOn(component['destroy$'], 'complete');
+  it('debería destruir las suscripciones al destruir el componente', () => {
+    const destroySpy = jest.spyOn(componente['destroy$'], 'next');
+    const completeSpy = jest.spyOn(componente['destroy$'], 'complete');
 
-    component.ngOnDestroy();
+    componente.ngOnDestroy();
 
     expect(destroySpy).toHaveBeenCalledWith();
     expect(completeSpy).toHaveBeenCalled();
   });
 
-  it('should have the correct default values', () => {
-    expect(component.TablaSeleccion).toBe(TablaSeleccion.CHECKBOX);
-    expect(component.mercanciasDatas).toEqual([]);
+  it('debería tener los valores predeterminados correctos', () => {
+    expect(componente.TablaSeleccion).toBe(TablaSeleccion.CHECKBOX);
+    expect(componente.mercanciasDatas).toEqual([]);
   });
 
-  it('should handle errors in getMercanciasData gracefully', () => {
-    const error = new Error('Test error');
+  it('debería manejar errores en getMercanciasData correctamente', () => {
+    const error = new Error('Error de prueba');
     mockModificacionPermisoImportacionMedicamentosService.getMercanciasData.mockReturnValue(of(() => { throw error; }));
 
-    expect(() => component.mercanciasData()).not.toThrow();
+    expect(() => componente.mercanciasData()).not.toThrow();
   });
 
-  it('should update seccionState correctly when query emits a new value', () => {
-    const newValue = { aduanas: 'Updated Aduana' };
+  it('debería actualizar seccionState correctamente cuando query emite un nuevo valor', () => {
+    const newValue = { aduanas: 'Aduana Actualizada' };
     mockDatosProcedureQuery.selectProrroga.mockReturnValue(of(newValue));
-    component.ngOnInit();
+    componente.ngOnInit();
   });
 
-  it('should unsubscribe from observables on ngOnDestroy', () => {
-    const destroySpy = jest.spyOn(component['destroy$'], 'next');
-    const completeSpy = jest.spyOn(component['destroy$'], 'complete')
-    component.ngOnDestroy();
+  it('debería desuscribirse de los observables en ngOnDestroy', () => {
+    const destroySpy = jest.spyOn(componente['destroy$'], 'next');
+    const completeSpy = jest.spyOn(componente['destroy$'], 'complete');
+    componente.ngOnDestroy();
     expect(destroySpy).toHaveBeenCalledWith();
     expect(completeSpy).toHaveBeenCalled();
   });
 
-  it('should correctly initialize configuracionTabla', () => {
-    expect(component.configuracionTabla).toBeDefined();
-    expect(component.configuracionTabla.length).toBeGreaterThan(0);
+  it('debería inicializar configuracionTabla correctamente', () => {
+    expect(componente.configuracionTabla).toBeDefined();
+    expect(componente.configuracionTabla.length).toBeGreaterThan(0);
   });
 
-  it('should validate form controls correctly', () => {
-    component.crearFormulario(); 
-    const control = component.Aduana.get('Aduana');
-    control?.setValue('Valid Aduana');
+  it('debería validar los controles del formulario correctamente', () => {
+    componente.crearFormulario(); 
+    const control = componente.Aduana.get('Aduana');
+    control?.setValue('Aduana Válida');
     expect(control?.valid).toBeTruthy();
   });
 
-  it('should handle empty response from getMercanciasData', () => {
+  it('debería manejar respuesta vacía de getMercanciasData', () => {
     mockModificacionPermisoImportacionMedicamentosService.getMercanciasData.mockReturnValue(of([]));
-    component.mercanciasData();
-    expect(component.mercanciasDatas).toEqual([]);
+    componente.mercanciasData();
+    expect(componente.mercanciasDatas).toEqual([]);
   });
 });

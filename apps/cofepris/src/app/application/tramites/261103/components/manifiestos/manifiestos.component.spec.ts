@@ -5,26 +5,26 @@ import { By } from '@angular/platform-browser';
 import { InputRadioComponent } from '@libs/shared/data-access-user/src';
 
 describe('ManifiestosComponent', () => {
-  let component: ManifiestosComponent;
+  let componente: ManifiestosComponent;
   let fixture: ComponentFixture<ManifiestosComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule,ManifiestosComponent, InputRadioComponent],
+      imports: [ReactiveFormsModule, ManifiestosComponent, InputRadioComponent],
       providers: [FormBuilder],
     }).compileComponents();
   });
 
   beforeEach(() => {  
     fixture = TestBed.createComponent(ManifiestosComponent);
-    component = fixture.componentInstance;
-    // component.manifestoDeVeracidad = 'Test Manifesto';
-    component.radioOptions = [
-      { label: 'Option 1', value: 'Option 1' },
-      { label: 'Option 2', value: 'Option 2' },
+    componente = fixture.componentInstance;
+    // componente.manifestoDeVeracidad = 'Test Manifesto';
+    componente.radioOptions = [
+      { label: 'Opción 1', value: 'Opción 1' },
+      { label: 'Opción 2', value: 'Opción 2' },
     ];
-    component.declaracionEstaMarcado = true;
-    component.Aduana = new FormBuilder().group({
+    componente.declaracionEstaMarcado = true;
+    componente.Aduana = new FormBuilder().group({
       aduanas: [false],
       informacionConfidencial: [''],
     });
@@ -32,34 +32,34 @@ describe('ManifiestosComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
-    expect(component).toBeTruthy();
+  it('debería crear el componente', () => {
+    expect(componente).toBeTruthy();
   });
 
-  it('should render manifestoDeVeracidad text', () => {
-    const label = fixture.debugElement.query(By.css('label')).nativeElement;
-    expect(label.textContent.trim()).toContain('Test Manifesto');
+  it('debería renderizar el texto de manifestoDeVeracidad', () => {
+    const etiqueta = fixture.debugElement.query(By.css('label')).nativeElement;
+    expect(etiqueta.textContent.trim()).toContain('Test Manifesto');
   });
 
-  it('should bind the checkbox to the form control', () => {
+  it('debería vincular el checkbox al control del formulario', () => {
     const checkbox = fixture.debugElement.query(By.css('input[type="checkbox"]')).nativeElement;
     expect(checkbox.checked).toBe(true);
     checkbox.click();
     fixture.detectChanges();
-    expect(component.Aduana.get('aduanas')?.value).toBe(false);
+    expect(componente.Aduana.get('aduanas')?.value).toBe(false);
   });
 
-  it('should bind the radio options to the form control', () => {
-    const radioComponent = fixture.debugElement.query(By.directive(InputRadioComponent)).componentInstance;
-    expect(radioComponent.radioOptions).toEqual(['Option 1', 'Option 2']);
-    expect(radioComponent.layout).toBe('horizontal');
+  it('debería vincular las opciones de radio al control del formulario', () => {
+    const componenteRadio = fixture.debugElement.query(By.directive(InputRadioComponent)).componentInstance;
+    expect(componenteRadio.radioOptions).toEqual(['Opción 1', 'Opción 2']);
+    expect(componenteRadio.layout).toBe('horizontal');
   });
 
-  it('should call setValoresStore on radio change', () => {
-    const spy = jest.spyOn(component, 'setValoresStore');
-    const radioComponent = fixture.debugElement.query(By.directive(InputRadioComponent)).componentInstance;
-    radioComponent.change.emit('Option 1');
+  it('debería llamar a setValoresStore al cambiar el radio', () => {
+    const espia = jest.spyOn(componente, 'setValoresStore');
+    const componenteRadio = fixture.debugElement.query(By.directive(InputRadioComponent)).componentInstance;
+    componenteRadio.change.emit('Opción 1');
     fixture.detectChanges();
-    expect(spy).toHaveBeenCalledWith(component.Aduana, 'informacionConfidencial');
+    expect(espia).toHaveBeenCalledWith(componente.Aduana, 'informacionConfidencial');
   });
 });
