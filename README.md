@@ -128,3 +128,12 @@ It will show tasks that you can run with Nx.
     - Resolve webcache 
     - npm i webpack@5.91.0
     - Follow step1
+
+# Change Host & PORT
+- Port
+    - departmant -> project.json
+    - dashboard\src\app\app.routes.ts -> ports add here
+- Host
+    - Environment
+    - libs\shared\data-access-user\src\enviroments\enviroment.ts
+    - WEB_HOST - format ('http://localhost'),

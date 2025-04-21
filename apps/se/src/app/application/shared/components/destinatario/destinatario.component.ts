@@ -1,10 +1,9 @@
 import { Catalogo, CatalogoSelectComponent, TituloComponent } from '@libs/shared/data-access-user/src';
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MenusDesplegables } from '../../models/modificacion.enum';
 import { Subject } from 'rxjs';
-import { delay } from 'rxjs';
-import { takeUntil } from 'rxjs';
+
 
 @Component({
   selector: 'app-destinatario',
@@ -17,7 +16,7 @@ import { takeUntil } from 'rxjs';
   templateUrl: './destinatario.component.html',
   styleUrl: './destinatario.component.scss'
 })
-export class DestinatarioComponent implements OnInit, OnDestroy {
+export class DestinatarioComponent implements OnDestroy {
 
   /**
    * Indica si el país de destino está habilitado
@@ -47,7 +46,7 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
    * Evento que se emite cuando cambia el formulario de destinatario
    * @type {EventEmitter<undefined>}
    */
-  @Output() formDestinatarioEvent: EventEmitter<undefined> = new EventEmitter<undefined>();
+  @Output() formDestinatarioEvent: EventEmitter<{ formGroupName: string; campo: string; valor: undefined; storeStateName: string }> = new EventEmitter<{ formGroupName: string; campo: string; valor: undefined; storeStateName: string }>();
 
   /**
    * Valores actuales del formulario de destinatario
@@ -111,18 +110,6 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
     }, 100);
   }
 
-  /**
-   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente
-   */
-  ngOnInit(): void {
-    this.formDestinatario.valueChanges
-      .pipe(delay(100))
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((_) => {
-        this.formDestinatarioEvent.emit(this.formDestinatario.value);
-        this.formaValida.emit(this.formDestinatario.valid);
-      });
-  }
 
   /**
    * Maneja la selección de un país de destino
@@ -139,5 +126,22 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
-
+  
+   /**
+   * Establece valores en el store y emite eventos relacionados con el formulario.
+   *
+   * @param formGroupName - El nombre del grupo de formulario al que pertenece el campo.
+   * @param campo - El nombre del campo cuyo valor se desea obtener y procesar.
+   * @param storeStateName - El nombre del estado en el store asociado al campo.
+   * 
+   * @remarks
+   * Este método obtiene el valor de un campo específico del formulario `formDatosDelDestinatario`,
+   * emite un evento para indicar si el formulario es válido y otro evento con los datos del campo
+   * y su estado asociado en el store.
+   */
+  setValoresStore(formGroupName: string, campo: string, storeStateName: string):void {    
+    const VALOR = this.formDestinatario.get(campo)?.value;    
+    this.formaValida.emit(this.formDestinatario.valid);
+    this.formDestinatarioEvent.emit({ formGroupName, campo, valor: VALOR, storeStateName });
+  }
 }
