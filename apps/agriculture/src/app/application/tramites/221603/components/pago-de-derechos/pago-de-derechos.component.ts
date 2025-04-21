@@ -5,8 +5,8 @@ import {
   Tramite221603Store,
 } from '../../estados/tramite221603.store';
 import { Subject, map, takeUntil } from 'rxjs';
-import { EXENTO_DE_RADIO_BOTONS } from '../enum/sanidad.enum';
-import { SanidadService } from '../service/sanidad.service';
+import { EXENTO_DE_RADIO_BOTONS } from '../../enum/sanidad.enum';
+import { SanidadService } from '../../service/sanidad.service';
 import { Tramite221603Query } from '../../estados/tramite221603.query';
 import realizar from '@libs/shared/theme/assets/json/221603/realizar.json';
 
