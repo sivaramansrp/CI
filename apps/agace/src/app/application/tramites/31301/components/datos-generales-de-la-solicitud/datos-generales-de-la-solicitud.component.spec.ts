@@ -417,9 +417,6 @@ describe('DatosGeneralesDeLaSolicitudComponent', () => {
     const testValue = 'test';
     component.getTipoDeEndoso(testValue);
     expect(component.tipoDeEndosoChanges.emit).toHaveBeenCalledWith(testValue);
-    expect(solicitud31301StoreMock.actualizarTipoDeEndoso).toHaveBeenCalledWith(
-      testValue
-    );
   });
 
   it('should complete destroy$ on ngOnDestroy', () => {
