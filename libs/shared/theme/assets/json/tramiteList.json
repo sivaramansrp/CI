@@ -1857,8 +1857,8 @@
     {
         "id": 266,
         "tramite": 240121,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "/sedena/permiso-ordinario-exportacion-explosivo/permiso-exportacion-explosivo",
+        "linkDepartment": "/sedena/permiso-ordinario-exportacion-explosivo/permiso-exportacion-explosivo",
         "department": "sedena"
     },
     {
