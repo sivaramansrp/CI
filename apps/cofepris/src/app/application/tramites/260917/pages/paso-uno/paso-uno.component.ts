@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
-
+/**
+ * Componente que representa el paso uno del formulario o flujo de trabajo.
+ */
 @Component({
   selector: 'app-paso-uno',
   templateUrl: './paso-uno.component.html',

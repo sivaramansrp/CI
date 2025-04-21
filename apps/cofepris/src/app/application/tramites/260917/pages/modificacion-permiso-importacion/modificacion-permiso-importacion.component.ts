@@ -1,6 +1,8 @@
 import { AVISO, AccionBoton, DatosPasos, ListaPasosWizard, PAGO_DE_DERECHOS, PASOS, WizardComponent } from '@libs/shared/data-access-user/src';
 import { Component, ViewChild } from '@angular/core';
-
+/**
+ * Componente para la modificación de permisos de importación.
+ */
 @Component({
   selector: 'app-modificacion-permiso-importacion',
   templateUrl: './modificacion-permiso-importacion.component.html',

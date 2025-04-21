@@ -4,7 +4,9 @@ import {
 } from '../tramites/tramite260917.store';
 import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
-
+/**
+ * Servicio disponible a nivel global (root) para inyección de dependencias.
+ */
 @Injectable({ providedIn: 'root' })
 export class Tramite260917Query extends Query<Solicitud260917State> {
   /**

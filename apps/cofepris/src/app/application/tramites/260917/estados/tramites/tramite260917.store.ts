@@ -564,7 +564,9 @@ export function createInitialState(): Solicitud260917State {
     };
 }
 
-
+/**
+ * Servicio que gestiona el estado del trámite 260701.
+ */
 @Injectable({
     providedIn: 'root',
 })
