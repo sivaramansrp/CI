@@ -386,6 +386,13 @@ const ROUTES: Routes = [
       ),
   },
 
+  {
+    path: 'exportacion-medicamentos-contengan',
+    loadChildren: () =>
+      import('./tramites/260304/exportacion-medicamentos-contengan.module').then(
+        (m) => m.ExportacionMedicamentosContenganModule
+      ),
+  },
 ];
 
 @NgModule({
