@@ -192,7 +192,7 @@
         "id": 28,
         "tramite": 80203,
         "linkDashboard": "/se/immex-registro-solicitud-modality/immex-registro",
-        "linkDepartment": "/se/immex-registro-solicitud-modality/immex-registro",
+        "linkDepartment": "/pago/immex-registro-solicitud-modality/immex-registro",
         "department": "se"
     },
     {
@@ -360,7 +360,7 @@
         "id": 52,
         "tramite": 120301,
         "linkDashboard": "/se/elegibilidad-de-textiles/elegibilidad-textiles",
-        "linkDepartment": "/se/elegibilidad-de-textiles/elegibilidad-textiles",
+        "linkDepartment": "/pago/elegibilidad-de-textiles/elegibilidad-textiles",
         "department": "se"
     },
     {
@@ -563,7 +563,7 @@
         "id": 81,
         "tramite": 220701,
         "linkDashboard": "/agriculture/inspeccion-fisica/inspeccion-fisica-zoosanitario",
-        "linkDepartment": "/agriculture/inspeccion-fisica/inspeccion-fisica-zoosanitario",
+        "linkDepartment": "/pago/inspeccion-fisica/inspeccion-fisica-zoosanitario",
         "department": "agriculture"
     },
     {
@@ -731,7 +731,7 @@
         "id": 105,
         "tramite": 290101,
         "linkDashboard": "/amecafe/cafe-exportadores/cafe-exportadores",
-        "linkDepartment": "/amecafe/cafe-exportadores/cafe-exportadores",
+        "linkDepartment": "/pago/cafe-exportadores/cafe-exportadores",
         "department": "amecafe"
     },
     {
