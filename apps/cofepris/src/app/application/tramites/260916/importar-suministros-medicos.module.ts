@@ -1,10 +1,9 @@
 import { CommonModule } from '@angular/common';
 
-import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, FirmaElectronicaComponent, TituloComponent, WizardComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, FirmaElectronicaComponent, SolicitanteComponent, TituloComponent, WizardComponent } from '@ng-mf/data-access-user';
 import { ImportarSuministrosMedicosComponent } from './pages/importar-suministros-medicos/importar-suministros-medicos.component';
 
 import { Datos260916Component } from './pages/datos-260916/datos-260916.component';
-import { SolicitanteComponent } from './components/solicitante/solicitante.component';
 
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 

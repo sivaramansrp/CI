@@ -18,8 +18,10 @@ import { TEXTOS } from '@libs/shared/data-access-user/src';
   templateUrl: './paso-dos.component.html', 
 })
 export class PasoDosComponent {
+ 
   /**
-   * @prop {any} TEXTOS - Contiene constantes de texto utilizadas en la UI.
+   * @propiedad TEXTOS
+   * @descripcion Referencia a los textos compartidos utilizados en el componente.
    */
   TEXTOS = TEXTOS;
 }
