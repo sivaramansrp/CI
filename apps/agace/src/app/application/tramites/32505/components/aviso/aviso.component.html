@@ -103,37 +103,7 @@
                                                 formControlName="tipoBusquedaAviso" [layout]="'horizontal'"
                                                 (change)="setValoresStore(adaceForm, 'tipoBusquedaAviso', 'setTipoBusquedaAviso');mostrarCamposAviso()"></app-input-radio>
                                         </div>
-                                        <!-- <div class="col-md-2">
-                                            <div class="radio">
-                                                <label>
-                                                    <input type="radio" id="idRadioAviso"
-                                                        formControlName="tipoBusquedaAviso" value="Importación"
-                                                        class="form-check-input"
-                                                        (change)="setValoresStore(adaceForm, 'tipoBusquedaAviso', 'setTipoBusquedaAviso');mostrarCamposAviso()">
-                                                    Importación
-                                                </label>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-2">
-                                            <div class="radio">
-                                                <label>
-                                                    <input type="radio" id="idRadioAviso" value="Venta"
-                                                        formControlName="tipoBusquedaAviso" class="form-check-input"
-                                                        (change)="setValoresStore(adaceForm, 'tipoBusquedaAviso', 'setTipoBusquedaAviso');mostrarCamposAviso()">
-                                                    Venta
-                                                </label>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="radio">
-                                                <label>
-                                                    <input type="radio" id="idRadioAviso" value="Importación y venta"
-                                                        formControlName="tipoBusquedaAviso" class="form-check-input"
-                                                        (change)="setValoresStore(adaceForm, 'tipoBusquedaAviso', 'setTipoBusquedaAviso');mostrarCamposAviso()">
-                                                    Importación y venta
-                                                </label>
-                                            </div>
-                                        </div> -->
+
                                     </div>
                                 </div>
                                 <br><br>
@@ -313,8 +283,6 @@
                                     </div>
                                 </div>
                             </ng-container>
-
-
                             <ng-container *ngIf="datosDelImportacion">
                                 <ng-titulo titulo="Datos de la importación" />
                                 <div class="row">
@@ -427,8 +395,6 @@
                                 </div>
                             </ng-container>
 
-
-
                             <ng-container *ngIf="datosDelVenta">
                                 <ng-titulo titulo="Datos de la venta en territorio nacional" />
                                 <div class="row">
@@ -461,7 +427,5 @@
                 </div>
             </div>
         </ng-container>
-
-
     </div>
 </form>
