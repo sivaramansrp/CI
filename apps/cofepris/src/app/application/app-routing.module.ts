@@ -45,7 +45,6 @@ const ROUTES: Routes = [
         './tramites/260204/permiso-sanitario-importacion-medicamentos.module'
       ).then((m) => m.PermisoSanitarioImportacionMedicamentosModule),
   },
-
   {
     path: 'aviso-exportacion',
     loadChildren: () => import('./tramites/260604/aviso-exportacion.module').then(m => m.AvisoExportacionModule)
@@ -213,6 +212,13 @@ const ROUTES: Routes = [
       import(
         './tramites/260203/permiso-sanitario-importacion-medicamentos.module'
       ).then((m) => m.PermisoSanitarioImportacion260203Module),
+  },
+  {
+    path: 'solicitud-modificacion-permiso-salida-territorio',
+    loadChildren: () =>
+      import(
+        './tramites/261401/solicitud-modificacion-permiso-salida-territorio.module'
+      ).then((m) => m.SolicitudModificacionPermisoSalidaTerritorioModule),
   },
   {
     path: 'permiso-experimentales-plaguicidas',
@@ -386,11 +392,18 @@ const ROUTES: Routes = [
       ),
   },
   {
+      path: 'solicitud-modificacion',
+      loadChildren: () =>
+        import('./tramites/261101/datos-solicitude.module').then(
+          (m) => m.DatosSolicitudeModule
+        ),
+  },
+  {
     path: 'cancelacion-peticion',
     loadChildren: () =>
       import('./tramites/261701/cancelacion-peticion.module').then(
         (m) => m.CancelacionPeticionModule)
-  },
+  }
 ];
 
 @NgModule({
