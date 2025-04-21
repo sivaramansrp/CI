@@ -14,3 +14,32 @@ export const OPCIONES_DE_BOTON_DE_RADIO = [
         value: '0',
     }
 ];
+
+export const OPCIONES_RECONOCIMIENTO = [
+    {
+        label: 'si Autorizo',
+        value: '1',
+    },
+    {
+        label: 'No Autorizo',
+        value: '0',
+    }
+];
+
+export const OPCIONES_INFORMACION = [
+    {
+        label: 'Pública',
+        value: '1',
+    },
+    {
+        label: 'Privada',
+        value: '0',
+    }
+];
+
+
+export const FECHA_DE_FACTURA = {
+    labelNombre: 'Fecha de pago',
+    required: true,
+    habilitado: true,
+};

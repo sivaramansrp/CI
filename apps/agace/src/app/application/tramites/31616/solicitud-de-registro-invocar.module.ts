@@ -15,6 +15,7 @@ import { SolicitudDeRegistroInvocarService } from './services/solicitudDeRegistr
 import { ReprestantanteComponent } from './components/represtantante/represtantante.component';
 import { EnlaceComponent } from './components/enlace/enlace.component';
 import { PersonaComponent } from './components/persona/persona.component';
+import { MensajeriaComponent } from './components/mensajeria/mensajeria.component';
 
 @NgModule({
   declarations: [SolicitudPasoComponent, PasoUnoComponent],
@@ -28,7 +29,8 @@ import { PersonaComponent } from './components/persona/persona.component';
     AlertComponent,
     ReprestantanteComponent,
     EnlaceComponent,
-    PersonaComponent
+    PersonaComponent,
+    MensajeriaComponent
   ],
   providers: [
     SolicitudDeRegistroInvocarService
