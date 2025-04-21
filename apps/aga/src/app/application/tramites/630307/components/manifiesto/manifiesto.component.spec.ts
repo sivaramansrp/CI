@@ -55,8 +55,13 @@ describe('ManifiestoComponent', () => {
 
     component.setValorStore(component.manifiestoFormulario, 'declaracion');
 
-    expect(mockStore.setTramite630307State).toHaveBeenCalledWith({
-      declaracion: newValue,
+    expect(mockStore.setTramite630307State).toHaveBeenCalledWith('declaracion', newValue);
+  });
+
+  it('should fetch the state from the store and set estadoSeleccionado', () => {
+    component.getValorStore();
+    expect(component.estadoSeleccionado).toEqual({
+      declaracion: 'Declaración de prueba',
     });
   });
 

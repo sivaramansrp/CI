@@ -5,15 +5,16 @@
 import { CommonModule } from '@angular/common';
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
-
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Subject, takeUntil } from 'rxjs';
+
 import { InputFecha, REGEX_PATRON_ALFANUMERICO, TituloComponent } from '@ng-mf/data-access-user';
 import { InputFechaComponent } from '@ng-mf/data-access-user';
 
 import { FECHA_INICIO_PRORROGA, FECHA_VENCIMIENTO_PRORROGA } from '../../enum/retorno-importacion-temporal.enum';
-import { Subject, takeUntil } from 'rxjs';
-import { Tramite630307State, Tramite630307Store } from '../../estados/tramite630307.store';
 import { Tramite630307Query } from '../../estados/tramite630307.query';
+
+import { Tramite630307State, Tramite630307Store } from '../../estados/tramite630307.store';
 /**
  * Componente que gestiona los datos de retorno de prórroga para el trámite 630307.
  * Permite inicializar formularios, obtener datos de catálogos y manejar el estado del formulario.
@@ -25,8 +26,7 @@ import { Tramite630307Query } from '../../estados/tramite630307.query';
   templateUrl: './datos-retorno-prorroga.component.html',
   styleUrl: './datos-retorno-prorroga.component.scss',
 })
-export class DatosRetornoProrrogaComponent implements OnInit,OnDestroy {
-
+export class DatosRetornoProrrogaComponent implements OnInit, OnDestroy {
   /**
    * Estado seleccionado del trámite 630307.
    */
@@ -63,9 +63,7 @@ export class DatosRetornoProrrogaComponent implements OnInit,OnDestroy {
     private fb: FormBuilder,
     private tramite630307Store: Tramite630307Store,
     private tramite630307Query: Tramite630307Query
-  ) {
-    //Constructor
-  }
+  ) {}
 
   /**
    * Método del ciclo de vida que se ejecuta al inicializar el componente.
@@ -82,11 +80,11 @@ export class DatosRetornoProrrogaComponent implements OnInit,OnDestroy {
   inicializarFormulario(): void {
     this.datosImportacionRetornoProrrogaGeneralFormulario = this.fb.group({
       folioInformacionGeneralProrroga: [
-        this.estadoSeleccionado?.folioInformacionGeneralProrroga,
+        this.estadoSeleccionado?.['folioInformacionGeneralProrroga'],
         [Validators.required, Validators.pattern(REGEX_PATRON_ALFANUMERICO)],
       ],
-      fechaInicioProrroga: [this.estadoSeleccionado?.fechaInicioProrroga, Validators.required],
-      fechaVencimientoProrroga: [this.estadoSeleccionado?.fechaVencimientoProrroga, Validators.required],
+      fechaInicioProrroga: [this.estadoSeleccionado?.['fechaInicioProrroga'], Validators.required],
+      fechaVencimientoProrroga: [this.estadoSeleccionado?.['fechaVencimientoProrroga'], Validators.required],
     });
   }
 
@@ -122,9 +120,7 @@ export class DatosRetornoProrrogaComponent implements OnInit,OnDestroy {
    */
   setValorStore(FormGroup: FormGroup, control: string): void {
     const VALOR = FormGroup.get(control)?.value;
-    this.tramite630307Store.setTramite630307State({
-      [control]: VALOR,
-    });
+    this.tramite630307Store.setTramite630307State(control, VALOR);
   }
 
   /**

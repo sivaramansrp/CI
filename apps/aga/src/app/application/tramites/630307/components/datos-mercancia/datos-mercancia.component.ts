@@ -1,20 +1,21 @@
 /**
  * Componente que gestiona los datos de la mercancía para el trámite 630307.
  */
-import { Component, OnDestroy, OnInit } from '@angular/core';
-
 import { CommonModule } from '@angular/common';
 
-import { ModeloDeFormaDinamica} from "@ng-mf/data-access-user";
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { Subject, takeUntil } from 'rxjs';
 
-import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component'; // Adjust the path as needed
+import { ModeloDeFormaDinamica } from '@ng-mf/data-access-user';
 
-import { FormBuilder, FormGroup} from '@angular/forms';
-import { Tramite630307State, Tramite630307Store } from '../../estados/tramite630307.store';
+import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
+import { TituloComponent } from '@ng-mf/data-access-user';
+
+import { FORMULARIO_DATOS_MERCANCIA } from '../../enum/retorno-importacion-temporal.enum';
 import { Tramite630307Query } from '../../estados/tramite630307.query';
 
-import { Subject, takeUntil } from 'rxjs';
-import { FORMULARIO_DATOS_MERCANCIA } from '../../enum/retorno-importacion-temporal.enum';
+import { Tramite630307State, Tramite630307Store } from '../../estados/tramite630307.store';
 /**
  * Componente que gestiona los datos de la mercancía para el trámite 630307.
  * Permite inicializar formularios, obtener datos del estado y manejar el estado del formulario.
@@ -22,12 +23,11 @@ import { FORMULARIO_DATOS_MERCANCIA } from '../../enum/retorno-importacion-tempo
 @Component({
   selector: 'app-datos-mercancia',
   standalone: true,
-  imports: [CommonModule, FormasDinamicasComponent],
+  imports: [CommonModule, FormasDinamicasComponent, TituloComponent],
   templateUrl: './datos-mercancia.component.html',
   styleUrl: './datos-mercancia.component.scss',
 })
 export class DatosMercanciaComponent implements OnInit, OnDestroy {
-
   /**
    * Subject utilizado para manejar la destrucción de suscripciones y evitar fugas de memoria.
    */
@@ -80,19 +80,6 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Actualiza un valor específico en el store del trámite.
-   * 
-   * @param FormGroup - Formulario reactivo.
-   * @param control - Nombre del control cuyo valor se actualizará en el store.
-   */
-  setValorStore(FormGroup: FormGroup, control: string): void {
-    const VALOR = FormGroup.get(control)?.value;
-    this.tramite630307Store.setTramite630307State({
-      [control]: VALOR,
-    });
-  }
-
-  /**
    * Obtiene el estado actual del trámite desde el store.
    */
   getValorStore(): void {
@@ -109,7 +96,7 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
    * @param $event - Evento que contiene el campo y el valor a actualizar.
    */
   establecerCambioDeValor($event: { campo: string; valor: unknown }): void {
-    this.setValorStore(this.datosMercancia, $event.campo);
+    this.tramite630307Store.setTramite630307State($event.campo, $event.valor);
   }
 
   /**

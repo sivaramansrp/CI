@@ -2,17 +2,17 @@
  * manifiesto.component.ts
  * Componente que gestiona el manifiesto para el trámite 630307.
  */
-import { Component, OnDestroy, OnInit } from '@angular/core';
-
 import { CommonModule } from '@angular/common';
-import { TituloComponent } from "@ng-mf/data-access-user";
 
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Tramite630307State, Tramite630307Store } from '../../estados/tramite630307.store';
-import { Tramite630307Query } from '../../estados/tramite630307.query';
-
 import { Subject, takeUntil } from 'rxjs';
 
+import { TituloComponent } from '@ng-mf/data-access-user';
+
+import { Tramite630307Query } from '../../estados/tramite630307.query';
+
+import { Tramite630307State, Tramite630307Store } from '../../estados/tramite630307.store';
 /**
  * Componente que gestiona el manifiesto para el trámite 630307.
  * Permite inicializar formularios, obtener datos del estado y manejar el estado del formulario.
@@ -25,7 +25,6 @@ import { Subject, takeUntil } from 'rxjs';
   styleUrl: './manifiesto.component.scss',
 })
 export class ManifiestoComponent implements OnInit, OnDestroy {
-
   /**
    * Subject utilizado para manejar la destrucción de suscripciones y evitar fugas de memoria.
    */
@@ -68,7 +67,7 @@ export class ManifiestoComponent implements OnInit, OnDestroy {
    */
   inizializarFormulario(): void {
     this.manifiestoFormulario = this.fb.group({
-      declaracion: [this.estadoSeleccionado?.declaracion, Validators.required]
+      declaracion: [this.estadoSeleccionado?.['declaracion'], Validators.required]
     });
   }
 
@@ -80,9 +79,7 @@ export class ManifiestoComponent implements OnInit, OnDestroy {
    */
   setValorStore(FormGroup: FormGroup, control: string): void {
     const VALOR = FormGroup.get(control)?.value;
-    this.tramite630307Store.setTramite630307State({
-      [control]: VALOR
-    });
+    this.tramite630307Store.setTramite630307State(control, VALOR);
   }
 
   /**

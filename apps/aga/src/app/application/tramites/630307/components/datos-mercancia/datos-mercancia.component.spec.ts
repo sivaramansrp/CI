@@ -46,44 +46,29 @@ describe('DatosMercanciaComponent', () => {
   });
 
   it('should initialize the form with default values', () => {
+    component.inicializarFormulario();
     expect(component.datosMercancia.value).toEqual({
+      // Add expected default values for the form controls here
+    });
+  });
+
+  it('should fetch the state from the store and set estadoSeleccionado', () => {
+    component.getValorStore();
+    expect(component.estadoSeleccionado).toEqual({
       descripcionMercancia: 'Mercancía de prueba',
       motivo: 'Motivo de prueba',
       listaMercancia: 'Lista de prueba',
     });
   });
 
-  it('should update descripcionMercancia in the form and store when setValorStore is called', () => {
-    const newValue = 'Nueva descripción';
-    component.datosMercancia.patchValue({ descripcionMercancia: newValue });
+  it('should call setTramite630307State when establecerCambioDeValor is called', () => {
+    const event = { campo: 'descripcionMercancia', valor: 'Nueva descripción' };
+    component.establecerCambioDeValor(event);
 
-    component.setValorStore(component.datosMercancia, 'descripcionMercancia');
-
-    expect(mockStore.setTramite630307State).toHaveBeenCalledWith({
-      descripcionMercancia: newValue,
-    });
-  });
-
-  it('should update motivo in the form and store when setValorStore is called', () => {
-    const newValue = 'Nuevo motivo';
-    component.datosMercancia.patchValue({ motivo: newValue });
-
-    component.setValorStore(component.datosMercancia, 'motivo');
-
-    expect(mockStore.setTramite630307State).toHaveBeenCalledWith({
-      motivo: newValue,
-    });
-  });
-
-  it('should update listaMercancia in the form and store when setValorStore is called', () => {
-    const newValue = 'Nueva lista';
-    component.datosMercancia.patchValue({ listaMercancia: newValue });
-
-    component.setValorStore(component.datosMercancia, 'listaMercancia');
-
-    expect(mockStore.setTramite630307State).toHaveBeenCalledWith({
-      listaMercancia: newValue,
-    });
+    expect(mockStore.setTramite630307State).toHaveBeenCalledWith(
+      event.campo,
+      event.valor
+    );
   });
 
   it('should clean up subscriptions on ngOnDestroy', () => {
