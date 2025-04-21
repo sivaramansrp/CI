@@ -194,9 +194,6 @@ export class AgregarDestinatarioCustomComponent
   ngOnChanges(): void {
     this.mostrarCamposNoContribuyente =
       PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE.includes(this.idProcedimiento);
-      if (this.formaDatos) {
-        this.agregarDestinatarioFinal.patchValue(this.formaDatos)
-      }
   }
 
   /**
