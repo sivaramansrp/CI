@@ -254,6 +254,9 @@ export interface PermisoModel {
       orden: 20,
     },
   ];
+  /**
+   * Interface representing the visibility configuration for various country-related fields.
+   */
   export interface ConfiguracionVisibilidad {
     paisOrigen: boolean;
     paisFabrica: boolean;

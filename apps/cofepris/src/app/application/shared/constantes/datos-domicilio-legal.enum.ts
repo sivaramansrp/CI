@@ -46,6 +46,18 @@ export const CROSLISTA_DE_ADUANAS_ENTRADA: string[] = [
   'CD. JUAREZ',
   'CHIHUAHUA, CHIH.'
 ];
+/**
+ * Represents the default visibility configuration for various country-related fields.
+ * 
+ * @constant
+ * @type {ConfiguracionVisibilidad}
+ * 
+ * @property {boolean} paisOrigen - Indicates whether the country of origin is visible. Default is `false`.
+ * @property {boolean} paisFabrica - Indicates whether the country of manufacture is visible. Default is `true`.
+ * @property {boolean} paisElaboracion - Indicates whether the country of elaboration is visible. Default is `true`.
+ * @property {boolean} paisProveedor - Indicates whether the country of the supplier is visible. Default is `true`.
+ * @property {boolean} paisProcedencia - Indicates whether the country of provenance is visible. Default is `true`.
+ */
 export const DEFAULT_CONFIGURACION_VISIBILIDAD: ConfiguracionVisibilidad = {
   paisOrigen: false, 
   paisFabrica: true,
