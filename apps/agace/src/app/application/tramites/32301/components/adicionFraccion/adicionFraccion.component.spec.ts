@@ -13,7 +13,7 @@ describe('AdicionFraccionComponent', () => {
   let component: AdicionFraccionComponent;
   let fixture: ComponentFixture<AdicionFraccionComponent>;
   let avisoModifyServiceMock: any;
-
+  let divBtnCargaMVisible: boolean = false;
   beforeEach(async () => {
     avisoModifyServiceMock = {
       getAdicianFraccionOption: jest
@@ -42,12 +42,28 @@ describe('AdicionFraccionComponent', () => {
         { provide: Tramite32301Query, useValue: {} },
       ],
     }).compileComponents();
+  
   });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(AdicionFraccionComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
+    component.declaracionForm = new FormBuilder().group({ idCarga: [''] });
+
+    it('should set divBtnCargaMVisible to false when idCarga is TIPCAR.MA', () => {
+      component.declaracionForm.patchValue({ idCarga: 'TIPCAR.MA' });
+      component.valorSeleccionadoTipoCarga();
+  
+      expect(component.divBtnCargaMVisible).toBeFalsy();
+    });
+  
+    it('should set divBtnCargaMVisible to true when idCarga is TIPCAR.CM', () => {
+      component.declaracionForm.patchValue({ idCarga: 'TIPCAR.CM' });
+      component.valorSeleccionadoTipoCarga();
+  
+      expect(component.divBtnCargaMVisible).toBe(true);
+    });
   });
 
   it('should create the component', () => {
@@ -59,12 +75,28 @@ describe('AdicionFraccionComponent', () => {
     expect(component.declaracionForm).toBeDefined();
     expect(component.declaracionFormModel).toBeDefined();
     expect(component.cargaManualForm).toBeDefined();
+ 
+  });
+  it('should have default values', () => {
+    component.declaracionForm.patchValue({ idCarga: 'TIPCAR.MA' });
+    component.valorSeleccionadoTipoCarga();
+    expect(component.divBtnCargaMVisible).toBe(false);
   });
 
   it('should fetch radio options on getAdicianFraccionOption', () => {
     component.getAdicianFraccionOption();
     expect(avisoModifyServiceMock.getAdicianFraccionOption).toHaveBeenCalled();
     expect(component.radioOptions).toEqual([{ label: 'Option 1', value: 1 }]);
+  });
+
+  it('should fetch and update radioOptions', () => {
+    const mockOptions = [{ label: 'Option 1', value: '1' }, { label: 'Option 2', value: '2' }];
+    avisoModifyServiceMock.getAdicianFraccionOption.and.returnValue(of(mockOptions));
+
+    component.getAdicianFraccionOption();
+
+    expect(component.radioOptions).toEqual(mockOptions);
+    expect(avisoModifyServiceMock.getAdicianFraccionOption).toHaveBeenCalledTimes(1);
   });
 
   it('should add all dates when agregar is called with "t"', () => {

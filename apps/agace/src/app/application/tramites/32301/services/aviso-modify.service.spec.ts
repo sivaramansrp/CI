@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { AvisoModifyService } from './aviso-modify.service';
-import { catalogoResponse } from '@ng-mf/data-access-user';
+import { CatalogoResponse } from '@ng-mf/data-access-user';
 import { PersonaFusionEscisionDTO, TableDataNgTable } from '../models/avisomodify.model';
 
 describe('AvisoModifyService', () => {

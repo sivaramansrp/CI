@@ -1,9 +1,9 @@
 import { Observable, catchError, of } from 'rxjs';
+import { CatalogoResponse } from '@ng-mf/data-access-user';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { PersonaFusionEscisionDTO } from '../models/avisomodify.model';
 import { TableDataNgTable } from '../models/avisomodify.model';
-import { catalogoResponse } from '@ng-mf/data-access-user';
 
 @Injectable({
   providedIn: 'any' // El servicio está disponible en toda la aplicación.
@@ -36,11 +36,11 @@ export class AvisoModifyService {
  private adicianFraccioncveFraccionCorrelacionModOption = 'adicianFraccioncveFraccionCorrelacionModOption.json';
  private subFusionOescision = 'subFusionOescision.json'
   /** Método para obtener el tipo de aviso */
-  getAvisoModify(): Observable<catalogoResponse> {
-    return this.http.get<catalogoResponse>(`${this.jsonUrl}/${this.fileName}`).pipe(
+  getAvisoModify(): Observable<CatalogoResponse> {
+    return this.http.get<CatalogoResponse>(`${this.jsonUrl}/${this.fileName}`).pipe(
       catchError(error => {
         console.error('Error fetching data from:', this.jsonUrl, error);
-        return of({ id: 0, descripcion: '', code: 0, data: [], message: 'Respuesta por defecto debido a un error' } as unknown as catalogoResponse);
+        return of({ id: 0, descripcion: '', code: 0, data: [], message: 'Respuesta por defecto debido a un error' } as unknown as CatalogoResponse);
       })
     );
   }

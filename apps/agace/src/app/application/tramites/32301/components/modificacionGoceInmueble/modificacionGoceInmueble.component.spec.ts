@@ -160,10 +160,10 @@ describe('ModificacionGoceInmuebleComponent', () => {
   });
 
   it('should initialize modals on ngAfterViewInit', () => {
-    component.ModificarModel = {
+    component.modificarModel = {
       nativeElement: document.createElement('div'),
     } as any;
-    component.ModificarRecordModel = {
+    component.modificarRecordModel = {
       nativeElement: document.createElement('div'),
     } as any;
     component.modalDomiciliosInmuebleNuevo = {
@@ -172,8 +172,8 @@ describe('ModificacionGoceInmuebleComponent', () => {
 
     component.ngAfterViewInit();
 
-    expect(component.ModificarModelInstance).toBeInstanceOf(Modal);
-    expect(component.ModificarRecordModelInstance).toBeInstanceOf(Modal);
+    expect(component.modificarModelInstance).toBeInstanceOf(Modal);
+    expect(component.modificarRecordModelInstance).toBeInstanceOf(Modal);
     expect(component.modalDomiciliosInmuebleNuevoInstance).toBeInstanceOf(
       Modal
     );
