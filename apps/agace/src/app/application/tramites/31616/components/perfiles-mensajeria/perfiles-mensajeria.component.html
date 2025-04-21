@@ -180,5 +180,45 @@
     <app-socios-comerciales></app-socios-comerciales>
   </div>
 </div>
+
+<!-- 5.Seguridad-Procesos -->
+<div class="table-container">
+  <div class="table-header pb-2">
+    <h3>5. Seguridad de procesos</h3>
+    <button (click)="alternarSeguridadProcesos()" class="toggle-btn">
+      <i
+        class="bi fs-5 m-1"
+        [ngClass]="{
+          'bi-chevron-down': !mostrarSeguridadProcesos,
+          'bi-chevron-up': mostrarSeguridadProcesos
+        }"
+      >
+      </i>
+    </button>
+  </div>
+  <div class="accordion-body body-panel {{ mostrarSeguridadProcesos ? 'open' : 'close'}}" >
+    <app-seguridad-procesos></app-seguridad-procesos>
+  </div>
+</div>
+
+<!-- 6.Gestion-aduanera -->
+<div class="table-container">
+  <div class="table-header pb-2">
+    <h3>6. Gestión aduanera</h3>
+    <button (click)="alternarGestionAduanera()" class="toggle-btn">
+      <i
+        class="bi fs-5 m-1"
+        [ngClass]="{
+          'bi-chevron-down': !mostrarGestionAduanera,
+          'bi-chevron-up': mostrarGestionAduanera
+        }"
+      >
+      </i>
+    </button>
+  </div>
+  <div class="accordion-body body-panel {{ mostrarGestionAduanera ? 'open' : 'close'}}" >
+    <app-gestion-aduanera></app-gestion-aduanera>
+  </div>
+</div>
 </form>
 

@@ -31,8 +31,9 @@
   font-size: 14px;
 }
 
-.centered-list-wrapper {
+.centered-list-wrapper ol li {
   padding-left: 3%;
+  margin-bottom: 5px;
 }
 
 .centered-list {

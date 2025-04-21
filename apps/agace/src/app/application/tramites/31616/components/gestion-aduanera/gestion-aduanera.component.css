@@ -1,9 +1,9 @@
-.para-title {
-    color: #0078d4;
+.para-title{
+    color: #0078D4;
   }
   
   .alert-text {
-    color: #0078d4;
+    color: #0078D4;
     font-weight: bold;
   }
   
@@ -37,8 +37,7 @@
   }
   
   .centered-list {
-    display: inline-block;
-    text-align: left;
+    display: inline-block; 
+    text-align: left; 
     margin-top: 0;
   }
-  

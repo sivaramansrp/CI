@@ -1,16 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ProfilesMansajeriaComponent } from './profiles-mansajeria.component';
+import { PerfilesMensajeriaComponent } from './perfiles-mensajeria.component';
 
 describe('ProfilesMansajeriaComponent', () => {
-  let component: ProfilesMansajeriaComponent;
-  let fixture: ComponentFixture<ProfilesMansajeriaComponent>;
+  let component: PerfilesMensajeriaComponent;
+  let fixture: ComponentFixture<PerfilesMensajeriaComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ProfilesMansajeriaComponent],
+      imports: [PerfilesMensajeriaComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(ProfilesMansajeriaComponent);
+    fixture = TestBed.createComponent(PerfilesMensajeriaComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -1,24 +1,44 @@
-import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ControlesFisicoComponent } from '../controles-fisico/controles-fisico.component';
+import { GestionAduaneraComponent } from '../gestion-aduanera/gestion-aduanera.component';
 import { ProfilesDomocilioDelaComponent } from '../profiles-domocilio-dela/profiles-domocilio-dela.component';
 import { SeguridadFisicaComponent } from '../seguridad-fisica/seguridad-fisica.component';
+import { SeguridadProcesosComponent } from '../seguridad-procesos/seguridad-procesos.component';
 import { SociosComercialesComponent } from '../socios-comerciales/socios-comerciales.component';
 
 @Component({
-  selector: 'app-profiles-mansajeria',
+  selector: 'app-perfiles-mensajeria',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, ProfilesDomocilioDelaComponent,SeguridadFisicaComponent,ControlesFisicoComponent,SociosComercialesComponent],
-  templateUrl: './profiles-mansajeria.component.html',
-  styleUrls: ['./profiles-mansajeria.component.css'],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    FormsModule,
+    ProfilesDomocilioDelaComponent,
+    SeguridadFisicaComponent,
+    ControlesFisicoComponent,
+    SociosComercialesComponent,
+    SeguridadProcesosComponent,
+    GestionAduaneraComponent
+  ],
+  templateUrl: './perfiles-mensajeria.component.html',
+  styleUrls: ['./perfiles-mensajeria.component.css'],
 })
-export class ProfilesMansajeriaComponent {
+export class PerfilesMensajeriaComponent {
   profileForm!: FormGroup;
   mostrarContenido: boolean = false;
   mostrarSeguridad: boolean = false;
   mostrarAccesoFisico: boolean = false;
   mostrarSociosComeciales: boolean = false;
+  mostrarSeguridadProcesos: boolean = false;
+  mostrarGestionAduanera: boolean = false;
   public hasAgregar: boolean = false;
 
   constructor(private fb: FormBuilder) {
@@ -46,16 +66,23 @@ export class ProfilesMansajeriaComponent {
     this.mostrarContenido = !this.mostrarContenido;
   }
 
-  alternarSeguridad():void {
+  alternarSeguridad(): void {
     this.mostrarSeguridad = !this.mostrarSeguridad;
   }
 
-  alternarAccesoFisico():void {
+  alternarAccesoFisico(): void {
     this.mostrarAccesoFisico = !this.mostrarAccesoFisico;
   }
 
-  alternarSociosComerciales():void {
+  alternarSociosComerciales(): void {
     this.mostrarSociosComeciales = !this.mostrarSociosComeciales;
   }
-}
 
+  alternarSeguridadProcesos(): void {
+    this.mostrarSeguridadProcesos = !this.mostrarSeguridadProcesos;
+  }
+
+  alternarGestionAduanera(): void {
+    this.mostrarGestionAduanera = !this.mostrarGestionAduanera;
+  }
+}
