@@ -249,17 +249,17 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     /**
      * Opciones genéricas para el tipo de operación.
      */
-    this.genericOptions = radioOptions.tipoOperacion;
+    this.genericOptions = radioOptions?.tipoOperacion;
 
     /**
      * Opciones para la publicación de información confidencial.
      */
-    this.hacerlosRadioOptions = radioOptions.publicarInformacionConfidencial;
+    this.hacerlosRadioOptions = radioOptions?.publicarInformacionConfidencial;
 
     /**
      * Opciones de estado disponibles.
      */
-    this.estado = radioOptions.estado;
+    this.estado = radioOptions?.estado;
 
     /**
  * Suscripción al estado de la sección "solicitud" desde el query de Akita.
