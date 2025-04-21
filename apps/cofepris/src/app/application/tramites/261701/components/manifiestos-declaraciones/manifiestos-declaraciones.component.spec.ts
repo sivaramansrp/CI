@@ -44,12 +44,12 @@ describe('ManifiestosDeclaracionesComponent', () => {
     const ESPIA_SUBSCRIBIR = jest.spyOn(MOCK_TRAMITE261701_QUERY.select$, 'subscribe');
     component.ngOnInit();
     expect(ESPIA_SUBSCRIBIR).toHaveBeenCalled();
-    expect(component.CancelacionPeticionState).toEqual({ manifiestos: true });
+    expect(component.cancelacionPeticionState).toEqual({ manifiestos: true });
   });
 
   it('debería establecer el valor del checkbox en establecerValor', () => {
     document.body.innerHTML = `<input id="manifiestos" type="checkbox" />`;
-    component.CancelacionPeticionState = { manifiestos: true };
+    component.cancelacionPeticionState = { manifiestos: true };
 
     component.establecerValor();
 

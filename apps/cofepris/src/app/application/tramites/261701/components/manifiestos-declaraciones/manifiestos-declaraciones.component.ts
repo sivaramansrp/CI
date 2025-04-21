@@ -47,7 +47,7 @@ export class ManifiestosDeclaracionesComponent implements OnInit, AfterViewInit,
    * @type {CancelacionPeticion261701State}
    * @memberof ManifiestosDeclaracionesComponent
    */
-    public CancelacionPeticionState!: CancelacionPeticion261701State;
+    public cancelacionPeticionState!: CancelacionPeticion261701State;
 
       
   /**
@@ -60,8 +60,7 @@ export class ManifiestosDeclaracionesComponent implements OnInit, AfterViewInit,
  */
   constructor(
     private tramite261701Store: Tramite261701Store,
-    private tramite261701Query: Tramite261701Query
-  // eslint-disable-next-line no-empty-function
+    private tramite261701Query: Tramite261701Query 
   ) {}
 
   /**
@@ -79,7 +78,7 @@ export class ManifiestosDeclaracionesComponent implements OnInit, AfterViewInit,
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
-          this.CancelacionPeticionState = seccionState;
+          this.cancelacionPeticionState = seccionState;
         })
       )
       .subscribe();
@@ -90,7 +89,7 @@ export class ManifiestosDeclaracionesComponent implements OnInit, AfterViewInit,
    * @method establecerValor
    * @description
    * Este método se utiliza para establecer el estado del checkbox "manifiestos"
-   * basado en el valor almacenado en el estado `CancelacionPeticionState`.
+   * basado en el valor almacenado en el estado `cancelacionPeticionState`.
    * 
    * @returns {void}
    * @memberof ManifiestosDeclaracionesComponent
@@ -98,7 +97,7 @@ export class ManifiestosDeclaracionesComponent implements OnInit, AfterViewInit,
   establecerValor(): void {
     const CHECKBOX_ELEMENT = document.getElementById('manifiestos');
     if (CHECKBOX_ELEMENT) {
-      (CHECKBOX_ELEMENT as HTMLInputElement).checked = this.CancelacionPeticionState['manifiestos'];
+      (CHECKBOX_ELEMENT as HTMLInputElement).checked = this.cancelacionPeticionState['manifiestos'];
     }
   }
 

@@ -93,9 +93,10 @@ get ninoFormGroup(): FormGroup {
    */
   constructor(
       private tramite261701Store: Tramite261701Store,
-      private tramite261701Query: Tramite261701Query
-    // eslint-disable-next-line no-empty-function
-    ) {}
+      private tramite261701Query: Tramite261701Query  
+    ) {
+         // Constructor vacio
+    }
 
     /**
    * @method ngOnInit
