@@ -10,11 +10,11 @@ const ROUTES: Routes = [
   {
     path: '',
     pathMatch: 'full',
-    redirectTo: 'permiso-ordinario-exportacion-explosivo',
+    redirectTo: 'permiso-exportacion-explosivo',
 
   },
   {
-    path: 'permiso-ordinario-exportacion-explosivo',
+    path: 'permiso-exportacion-explosivo',
         component: SolicitudPageComponent,
   },
   {

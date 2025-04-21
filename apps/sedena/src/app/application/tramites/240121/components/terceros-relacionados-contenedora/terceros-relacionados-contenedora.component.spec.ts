@@ -17,8 +17,8 @@ import { ActivatedRoute } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http'; 
 import { Observable, of as observableOf } from 'rxjs';
 
-import { Tramite240107Query } from '../../estados/tramite240107Query.query';
-import { Tramite240107Store } from '../../estados/tramite240107Store.store';
+import { Tramite240121Query } from '../../estados/tramite240121Query.query';
+import { Tramite240121Store } from '../../estados/tramite240121Store.store';
 import { TercerosRelacionadosContenedoraComponent } from './terceros-relacionados-contenedora.component';
 
 class MockActivatedRoute {
@@ -28,10 +28,10 @@ class MockActivatedRoute {
 }
 
 @Injectable()
-class MockTramite240107Store {}
+class MockTramite240121Store {}
 
 @Injectable()
-class MockTramite240107Query {}
+class MockTramite240121Query {}
 
 @Directive({ selector: '[myCustom]' })
 class MyCustomDirective {
@@ -66,8 +66,8 @@ describe('TercerosRelacionadosContenedoraComponent', () => {
       ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
-        { provide: Tramite240107Store, useClass: MockTramite240107Store },
-        { provide: Tramite240107Query, useClass: MockTramite240107Query },
+        { provide: Tramite240121Store, useClass: MockTramite240121Store },
+        { provide: Tramite240121Query, useClass: MockTramite240121Query },
         { provide: ActivatedRoute, useClass: MockActivatedRoute },
       ]
     }).compileComponents();

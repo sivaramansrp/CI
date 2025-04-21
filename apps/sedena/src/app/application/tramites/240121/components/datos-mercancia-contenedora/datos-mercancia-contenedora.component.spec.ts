@@ -1,12 +1,12 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DatosMercanciaContenedoraComponent } from './datos-mercancia-contenedora.component';
-import { Tramite240107Store } from '../../estados/tramite240107Store.store';
+import { Tramite240121Store } from '../../estados/tramite240121Store.store';
 import { ActivatedRoute } from '@angular/router';
 import { Injectable, Directive, Input, PipeTransform, Pipe } from '@angular/core';
 
 @Injectable()
-class MockTramite240107Store {
+class MockTramite240121Store {
   updateMercanciaTablaDatos = jest.fn();
 }
 
@@ -59,7 +59,7 @@ describe('DatosMercanciaContenedoraComponent', () => {
         MyCustomDirective,
       ],
       providers: [
-        { provide: Tramite240107Store, useClass: MockTramite240107Store },
+        { provide: Tramite240121Store, useClass: MockTramite240121Store },
         { provide: ActivatedRoute, useClass: MockActivatedRoute },
       ],
     }).compileComponents();
@@ -74,7 +74,7 @@ describe('DatosMercanciaContenedoraComponent', () => {
 
   it('should call updateMercanciaTablaDatos when updateMercanciaDetalle is invoked', () => {
     const mockEvent = [{ id: 1, name: 'Test Mercancia' }];
-    const tramiteStore = TestBed.inject(Tramite240107Store);
+    const tramiteStore = TestBed.inject(Tramite240121Store);
     const mockMercanciaDetalle = [
       {
       id: 1,

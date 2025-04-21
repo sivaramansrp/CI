@@ -4,7 +4,7 @@ import { DatosDelTramiteComponent } from '../../../../shared/components/datos-de
 import { DatosDelTramiteFormState } from '../../../../shared/models/datos-del-tramite.model';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
-import { ID_PROCEDIMIENTO } from '../../constantes/importacion-armas-explosivo.enum';
+import { ID_PROCEDIMIENTO } from '../../constantes/exportacion-armas-explosivo.enum';
 import { MercanciaDetalle } from '../../../../shared/models/datos-del-tramite.model';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
