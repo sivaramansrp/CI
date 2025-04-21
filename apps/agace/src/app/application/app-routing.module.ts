@@ -74,6 +74,13 @@ const ROUTES: Routes = [
         (m) => m.AvisoTrasladoModule
       ),
   },
+  {
+    path: 'endoso-garantia',
+    loadChildren: () =>
+      import('./tramites/31301/endoso-garantia.module').then(
+        (m) => m.EndosoGarantiaModule
+      ),
+  },
 ];
 
 @NgModule({
