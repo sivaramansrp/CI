@@ -97,7 +97,7 @@
                       [required]="true" 
                       name=""
                       [placeholder]="'Selecciona un valor'"
-                      (selectionChange)="cambioEvento($event, 'moneda')"
+                      (change)="cambioEvento($event, 'moneda')"
                       ></app-catalogo-select>
                       <validadores-de-formularios 
                         [forma]="forma" 
@@ -135,7 +135,7 @@
                   [required]="true" 
                   name=""
                   [placeholder]="'Selecciona un valor'"
-                  (selectionChange)="cambioEvento($event, 'fraccionArancelaria')"
+                  (change)="cambioEvento($event, 'fraccionArancelaria')"
                   ></app-catalogo-select>
                   <validadores-de-formularios 
                       [forma]="forma" 

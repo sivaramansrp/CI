@@ -601,8 +601,7 @@ ngOnInit(): void {
   * this.cambioEvento($event, 'anoDeCreacion');
   * // Registra en la consola el valor actual del campo "anoDeCreacion".
   */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  public cambioEvento(event: any, campo: string): void {
+  public cambioEvento(event: Event, campo: string): void {
     let VALOR;
     if (event.target) {
       VALOR = (event.target as HTMLInputElement).value;
@@ -610,7 +609,7 @@ ngOnInit(): void {
       const CONTROL = this.forma.get(campo);
       VALOR = CONTROL ? CONTROL.value : null;
     }
-    this.cambioEnValoresStore(event.campo,VALOR);
+    this.cambioEnValoresStore(campo, VALOR);
   }
 
   /**

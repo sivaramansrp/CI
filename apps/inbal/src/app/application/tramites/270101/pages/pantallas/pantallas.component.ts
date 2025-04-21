@@ -164,7 +164,7 @@ export class PantallasComponent {
    * this.esValido = true;
    * // Indica que todos los formularios son válidos.
    */
-  public esValido: boolean = false;
+  public esValido!: boolean;
 
   /**
   * compo doc

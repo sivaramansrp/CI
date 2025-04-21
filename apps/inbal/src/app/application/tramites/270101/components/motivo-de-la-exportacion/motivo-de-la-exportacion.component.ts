@@ -166,24 +166,43 @@ export class MotivoDeLaExportacionComponent implements OnInit, OnDestroy {
             })
         )
         .subscribe();
-
-    this.exportarIlustracionesService.getMonedaData()
-        .pipe(
-            takeUntil(this.destroy$)
-        )
-        .subscribe((data) => {
-            this.motivoData = data;
-            const MOTIVO_FIELD = this.motivoFormData.find((datos: ModeloDeFormaDinamica) => datos.campo === 'motivo') as ModeloDeFormaDinamica;
-            if (MOTIVO_FIELD) {
-                if (!MOTIVO_FIELD.opciones) {
-                    MOTIVO_FIELD.opciones = this.motivoData.map((item: { id: number; descripcion: string }) => ({
-                        descripcion: item.descripcion,
-                        id: item.id,
-                    }));
-                }
-            }
-        });
+    this.obtenerMonedadatos();
   }
+
+  /**
+  * @method obtenerMonedadatos
+  * @description
+  * Este método se utiliza para obtener los datos relacionados con las monedas desde el servicio 
+  * `ExportarIlustracionesService` y asignarlos al campo `motivo` en el formulario dinámico.
+  * 
+  * Funcionalidad:
+  * - Realiza una solicitud al servicio para obtener los datos de las monedas.
+  * - Busca el campo `motivo` en la configuración del formulario dinámico.
+  * - Asigna las opciones obtenidas al campo `motivo` si no están configuradas previamente.
+  * - Utiliza `takeUntil` para gestionar la destrucción de las suscripciones y evitar fugas de memoria.
+  * 
+  * @example
+  * this.obtenerMonedadatos();
+  * // Obtiene los datos de las monedas y los asigna al campo `motivo` en el formulario dinámico.
+  */
+public obtenerMonedadatos(): void {
+  this.exportarIlustracionesService.getMonedaData()
+      .pipe(
+          takeUntil(this.destroy$)
+      )
+      .subscribe((data) => {
+          this.motivoData = data;
+          const MOTIVO_FIELD = this.motivoFormData.find((datos: ModeloDeFormaDinamica) => datos.campo === 'motivo') as ModeloDeFormaDinamica;
+          if (MOTIVO_FIELD) {
+              if (!MOTIVO_FIELD.opciones) {
+                  MOTIVO_FIELD.opciones = this.motivoData.map((item: { id: number; descripcion: string }) => ({
+                      descripcion: item.descripcion,
+                      id: item.id,
+                  }));
+              }
+          }
+      });
+}
 
   /**
   * compo doc

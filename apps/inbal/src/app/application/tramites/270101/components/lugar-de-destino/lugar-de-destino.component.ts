@@ -167,23 +167,43 @@ export class LugarDeDestinoComponent implements OnInit, OnDestroy {
       )
       .subscribe();
 
-    this.exportarIlustracionesService.getPaisData()
-      .pipe(
-        takeUntil(this.destroy$)
-      )
-      .subscribe((data) => {
-        this.lugarDeDestinoData = data;
-        const MOTIVO_FIELD = this.lugarDeDestinoFormData.find((datos: ModeloDeFormaDinamica) => datos.campo === 'pais') as ModeloDeFormaDinamica;
-        if (MOTIVO_FIELD) {
-          if (!MOTIVO_FIELD.opciones) {
-            MOTIVO_FIELD.opciones = this.lugarDeDestinoData.map((item: { id: number; descripcion: string }) => ({
-              descripcion: item.descripcion,
-              id: item.id,
-            }));
-          }
-        }
-      });
+    this.obtenerPaisDatos();
   }
+
+  /**
+  * @method obtenerPaisDatos
+  * @description
+  * Este método se utiliza para obtener los datos relacionados con los países desde el servicio 
+  * `ExportarIlustracionesService` y asignarlos al campo `pais` en el formulario dinámico.
+  * 
+  * Funcionalidad:
+  * - Realiza una solicitud al servicio para obtener los datos de los países.
+  * - Busca el campo `pais` en la configuración del formulario dinámico.
+  * - Asigna las opciones obtenidas al campo `pais` si no están configuradas previamente.
+  * - Utiliza `takeUntil` para gestionar la destrucción de las suscripciones y evitar fugas de memoria.
+  * 
+  * @example
+  * this.obtenerPaisDatos();
+  * // Obtiene los datos de los países y los asigna al campo `pais` en el formulario dinámico.
+  */
+public obtenerPaisDatos(): void {
+  this.exportarIlustracionesService.getPaisData()
+    .pipe(
+      takeUntil(this.destroy$)
+    )
+    .subscribe((data) => {
+      this.lugarDeDestinoData = data;
+      const PAIS_FIELD = this.lugarDeDestinoFormData.find((datos: ModeloDeFormaDinamica) => datos.campo === 'pais') as ModeloDeFormaDinamica;
+      if (PAIS_FIELD) {
+        if (!PAIS_FIELD.opciones) {
+          PAIS_FIELD.opciones = this.lugarDeDestinoData.map((item: { id: number; descripcion: string }) => ({
+            descripcion: item.descripcion,
+            id: item.id,
+          }));
+        }
+      }
+    });
+}
 
     /**
   * compo doc
