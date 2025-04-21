@@ -1,8 +1,8 @@
 import { Component, OnDestroy } from '@angular/core';
-import { TramiteFolioService, TramiteStore} from '@ng-mf/data-access-user';
 import { ReplaySubject,catchError, map, takeUntil } from 'rxjs';
+import { TramiteFolioService, TramiteStore} from '@ng-mf/data-access-user';
 import { Router } from '@angular/router';
-// import { TramiteStore } from '@ng-mf/data-access-user'; 
+
 /**
  * Componente que representa el paso tres del trámite.
  */

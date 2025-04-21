@@ -1,18 +1,16 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-
-import { RegistroSolicitudDesistimientoRoutingModule } from './registro-solicitud-desistimiento-routing.module';
+import { AlertComponent,AnexarDocumentosComponent,BtnContinuarComponent, FirmaElectronicaComponent, InputCheckComponent,SharedModule,SolicitanteComponent, TituloComponent,WizardComponent} from '@libs/shared/data-access-user/src';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { AlertComponent,SharedModule, WizardComponent, BtnContinuarComponent, SolicitanteComponent, InputCheckComponent, FirmaElectronicaComponent, TituloComponent, AnexarDocumentosComponent } from '@libs/shared/data-access-user/src';
-import { SolicitudComponent } from './components/Solicitud.component';
-import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
-import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
+import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
+import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
+import { RegistroSolicitudDesistimientoRoutingModule } from './registro-solicitud-desistimiento-routing.module';
+import { SolicitudComponent } from './components/Solicitud.component';
 import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
 
 
 @NgModule({
-  declarations: [PasoUnoComponent, PasoDosComponent, PasoTresComponent, SolicitudPageComponent],
+  declarations: [PasoUnoComponent, PasoTresComponent, SolicitudPageComponent],
   imports: [
     CommonModule,
     RegistroSolicitudDesistimientoRoutingModule,
@@ -32,6 +30,7 @@ import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.co
     SharedModule,
     TituloComponent,
     AlertComponent
-  ]
+  ],
+  exports:[SolicitudPageComponent]
 })
 export class RegistroSolicitudDesistimientoModule { }
