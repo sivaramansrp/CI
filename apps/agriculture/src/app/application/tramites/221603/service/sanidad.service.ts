@@ -11,6 +11,8 @@ export class SanidadService {
 
   regimen: Catalogo[] = [];
   mercancia: Mercancia[] = [];
+  medio: Catalogo[] = [];
+  verificacion: Catalogo[] = [];
   exportador: Exportador[] = [];
   destinatario: Destinatario[] = [];
   banco: Catalogo[] = [];
@@ -24,6 +26,11 @@ export class SanidadService {
 
   public inicializaDatosMercancia(): void {
     this.obtenerRespuestaPorUrl(this, 'mercancia', '/221603/mercancia.json');
+  }
+
+  public inicializaMovilizacionDatosCatalogos(): void {
+    this.obtenerRespuestaPorUrl(this, 'medio', '/221603/medio.json');
+    this.obtenerRespuestaPorUrl(this, 'verificacion', '/221603/verificacion.json');
   }
 
   public inicializaDatosExportador(): void {

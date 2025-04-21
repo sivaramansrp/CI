@@ -37,6 +37,7 @@ import { TercerosComponent } from './components/terceros/terceros.component';
     SanidadComponent,
     PasoDosComponent,
     PagoDeDerechosComponent,
+    MovilizacionComponent
   ],
   imports: [
     CommonModule,
@@ -51,10 +52,9 @@ import { TercerosComponent } from './components/terceros/terceros.component';
     WizardComponent,
     FirmaElectronicaComponent,
     SolicitanteComponent,
-    MovilizacionComponent,
     TercerosComponent,
     InputRadioComponent,
-    TablaDinamicaComponent,
+    TablaDinamicaComponent
 ],
   providers: [ToastrService],
 })
