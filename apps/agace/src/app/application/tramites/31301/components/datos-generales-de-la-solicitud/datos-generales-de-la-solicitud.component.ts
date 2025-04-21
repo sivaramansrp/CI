@@ -240,13 +240,10 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     // Inicialización del formulario con los valores actuales del estado
     this.datosGeneralesForm = this.fb.group({
-      // Campo editable con validación requerida
       tipoDeEndoso: [
         this.solicitud31301State.tipoDeEndoso,
         [Validators.required],
       ],
-
-      // Campos deshabilitados, solamente de lectura
       tipoDeGarantia: [
         { value: this.solicitud31301State.tipoDeGarantia, disabled: true },
       ],
@@ -260,9 +257,38 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
         { value: this.solicitud31301State.tipoSector, disabled: true },
       ],
       concepto: [{ value: this.solicitud31301State.concepto, disabled: true }],
-      // ... (todos los demás campos siguen el mismo patrón)
-
-      // Campos con validaciones específicas
+      '3500': [{ value: this.solicitud31301State['3500'], disabled: true }],
+      '3501': [{ value: this.solicitud31301State['3501'], disabled: true }],
+      '3502': [{ value: this.solicitud31301State['3502'], disabled: true }],
+      datosGeneralesRFC: [
+        { value: this.solicitud31301State.datosGeneralesRFC, disabled: true },
+      ],
+      '3503': [{ value: this.solicitud31301State['3503'], disabled: true }],
+      '3504': [{ value: this.solicitud31301State['3504'], disabled: true }],
+      '3505': [{ value: this.solicitud31301State['3505'], disabled: true }],
+      '3506': [{ value: this.solicitud31301State['3506'], disabled: true }],
+      '3507': [{ value: this.solicitud31301State['3507'], disabled: true }],
+      '3508': [{ value: this.solicitud31301State['3508'], disabled: true }],
+      '3509': [{ value: this.solicitud31301State['3509'], disabled: true }],
+      '3511': [{ value: this.solicitud31301State['3511'], disabled: true }],
+      '3512': [{ value: this.solicitud31301State['3512'], disabled: true }],
+      '3513': [{ value: this.solicitud31301State['3513'], disabled: true }],
+      textoGenerico1: [
+        { value: this.solicitud31301State.textoGenerico1, disabled: true },
+      ],
+      textoGenerico2: [
+        { value: this.solicitud31301State.textoGenerico2, disabled: true },
+      ],
+      '3514': [{ value: this.solicitud31301State['3514'], disabled: true }],
+      '3515': [{ value: this.solicitud31301State['3515'], disabled: true }],
+      '3516': [{ value: this.solicitud31301State['3516'], disabled: true }],
+      textoGenerico3: [
+        { value: this.solicitud31301State.textoGenerico3, disabled: true },
+      ],
+      '3517': [{ value: this.solicitud31301State['3517'], disabled: true }],
+      '3518': [{ value: this.solicitud31301State['3518'], disabled: true }],
+      '3519': [{ value: this.solicitud31301State['3519'], disabled: true }],
+      '3520': [{ value: this.solicitud31301State['3520'], disabled: true }],
       tipoInversion: [
         { value: this.solicitud31301State.tipoInversion, disabled: true },
         [Validators.required],
@@ -279,8 +305,24 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
         { value: this.solicitud31301State.descInversion, disabled: true },
         [Validators.required, Validators.maxLength(700)],
       ],
-
-      // Campos con validaciones de texto numérico limitado
+      '3521': [{ value: this.solicitud31301State['3521'], disabled: true }],
+      '3522': [{ value: this.solicitud31301State['3522'], disabled: true }],
+      claveEnumeracionD0: [
+        { value: this.solicitud31301State.claveEnumeracionD0, disabled: true },
+      ],
+      claveEnumeracionD1: [
+        { value: this.solicitud31301State.claveEnumeracionD1, disabled: true },
+      ],
+      claveEnumeracionD2: [
+        { value: this.solicitud31301State.claveEnumeracionD2, disabled: true },
+      ],
+      claveEnumeracionD3: [
+        { value: this.solicitud31301State.claveEnumeracionD3, disabled: true },
+      ],
+      claveEnumeracionH: [
+        this.solicitud31301State.claveEnumeracionH,
+        Validators.required,
+      ],
       textoGenerico4: [
         { value: this.solicitud31301State.textoGenerico4, disabled: true },
         [Validators.required, Validators.maxLength(30)],
@@ -289,13 +331,119 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
         { value: this.solicitud31301State.textoGenerico5, disabled: true },
         [Validators.required, Validators.maxLength(30)],
       ],
+      '3523': [{ value: this.solicitud31301State['3523'], disabled: true }],
+      '3528': [{ value: this.solicitud31301State['3528'], disabled: true }],
+      '3529': [{ value: this.solicitud31301State['3529'], disabled: true }],
       textoGenerico6: [
         { value: this.solicitud31301State.textoGenerico6, disabled: true },
         [Validators.required, Validators.pattern(REG_X.SOLO_NUMEROS)],
       ],
-      // ... (continúa con los textoGenerico7 a textoGenerico21)
-
-      // Campos sin validación
+      textoGenerico7: [
+        { value: this.solicitud31301State.textoGenerico7, disabled: true },
+        [Validators.required, Validators.pattern(REG_X.SOLO_NUMEROS)],
+      ],
+      '3530': [{ value: this.solicitud31301State['3530'], disabled: true }],
+      '3531': [{ value: this.solicitud31301State['3531'], disabled: true }],
+      textoGenerico9: [
+        { value: this.solicitud31301State.textoGenerico9, disabled: true },
+        [Validators.required, Validators.maxLength(700)],
+      ],
+      textoGenerico10: [
+        { value: this.solicitud31301State.textoGenerico10, disabled: true },
+        [
+          Validators.required,
+          Validators.maxLength(15),
+          Validators.pattern(REG_X.SOLO_NUMEROS),
+        ],
+      ],
+      textoGenerico11: [
+        { value: this.solicitud31301State.textoGenerico11, disabled: true },
+        [
+          Validators.required,
+          Validators.maxLength(15),
+          Validators.pattern(REG_X.SOLO_NUMEROS),
+        ],
+      ],
+      textoGenerico12: [
+        { value: this.solicitud31301State.textoGenerico12, disabled: true },
+        [
+          Validators.required,
+          Validators.maxLength(15),
+          Validators.pattern(REG_X.SOLO_NUMEROS),
+        ],
+      ],
+      textoGenerico13: [
+        { value: this.solicitud31301State.textoGenerico13, disabled: true },
+        [
+          Validators.required,
+          Validators.maxLength(15),
+          Validators.pattern(REG_X.SOLO_NUMEROS),
+        ],
+      ],
+      textoGenerico14: [
+        { value: this.solicitud31301State.textoGenerico14, disabled: true },
+        [
+          Validators.required,
+          Validators.maxLength(15),
+          Validators.pattern(REG_X.SOLO_NUMEROS),
+        ],
+      ],
+      textoGenerico15: [
+        { value: this.solicitud31301State.textoGenerico15, disabled: true },
+        [
+          Validators.required,
+          Validators.maxLength(15),
+          Validators.pattern(REG_X.SOLO_NUMEROS),
+        ],
+      ],
+      textoGenerico16: [
+        { value: this.solicitud31301State.textoGenerico16, disabled: true },
+        [
+          Validators.required,
+          Validators.maxLength(15),
+          Validators.pattern(REG_X.SOLO_NUMEROS),
+        ],
+      ],
+      textoGenerico17: [
+        { value: this.solicitud31301State.textoGenerico17, disabled: true },
+        [
+          Validators.required,
+          Validators.maxLength(15),
+          Validators.pattern(REG_X.SOLO_NUMEROS),
+        ],
+      ],
+      textoGenerico18: [
+        { value: this.solicitud31301State.textoGenerico18, disabled: true },
+        [
+          Validators.required,
+          Validators.maxLength(15),
+          Validators.pattern(REG_X.SOLO_NUMEROS),
+        ],
+      ],
+      textoGenerico19: [
+        { value: this.solicitud31301State.textoGenerico19, disabled: true },
+        [
+          Validators.required,
+          Validators.maxLength(15),
+          Validators.pattern(REG_X.SOLO_NUMEROS),
+        ],
+      ],
+      textoGenerico20: [
+        { value: this.solicitud31301State.textoGenerico20, disabled: true },
+        [
+          Validators.required,
+          Validators.maxLength(15),
+          Validators.pattern(REG_X.SOLO_NUMEROS),
+        ],
+      ],
+      textoGenerico21: [
+        { value: this.solicitud31301State.textoGenerico21, disabled: true },
+        [
+          Validators.required,
+          Validators.maxLength(15),
+          Validators.pattern(REG_X.SOLO_NUMEROS),
+        ],
+      ],
       textoGenerico22: [
         { value: this.solicitud31301State.textoGenerico22, disabled: true },
       ],
@@ -305,8 +453,6 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
       textoGenerico24: [
         { value: this.solicitud31301State.textoGenerico24, disabled: true },
       ],
-
-      // Campos de alerta sin validación
       alerta1: [this.solicitud31301State.alerta1],
       alerta2: [this.solicitud31301State.alerta2],
     });
@@ -328,8 +474,65 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
               this.solicitud31301State.modalidadDeLaGarantia,
             tipoSector: this.solicitud31301State.tipoSector,
             concepto: this.solicitud31301State.concepto,
-            // ... (todos los demás campos también se actualizan aquí)
-
+            '3500': this.solicitud31301State['3500'],
+            '3501': this.solicitud31301State['3501'],
+            '3502': this.solicitud31301State['3502'],
+            datosGeneralesRFC: this.solicitud31301State.datosGeneralesRFC,
+            '3503': this.solicitud31301State['3503'],
+            '3504': this.solicitud31301State['3504'],
+            '3505': this.solicitud31301State['3505'],
+            '3506': this.solicitud31301State['3506'],
+            '3507': this.solicitud31301State['3507'],
+            '3508': this.solicitud31301State['3508'],
+            '3509': this.solicitud31301State['3509'],
+            '3511': this.solicitud31301State['3511'],
+            '3512': this.solicitud31301State['3512'],
+            '3513': this.solicitud31301State['3513'],
+            textoGenerico1: this.solicitud31301State.textoGenerico1,
+            textoGenerico2: this.solicitud31301State.textoGenerico2,
+            '3514': this.solicitud31301State['3514'],
+            '3515': this.solicitud31301State['3515'],
+            '3516': this.solicitud31301State['3516'],
+            textoGenerico3: this.solicitud31301State.textoGenerico3,
+            '3517': this.solicitud31301State['3517'],
+            '3518': this.solicitud31301State['3518'],
+            '3519': this.solicitud31301State['3519'],
+            '3520': this.solicitud31301State['3520'],
+            tipoInversion: this.solicitud31301State.tipoInversion,
+            cantidadInversion: this.solicitud31301State.cantidadInversion,
+            descInversion: this.solicitud31301State.descInversion,
+            '3521': this.solicitud31301State['3521'],
+            '3522': this.solicitud31301State['3522'],
+            claveEnumeracionD0: this.solicitud31301State.claveEnumeracionD0,
+            claveEnumeracionD1: this.solicitud31301State.claveEnumeracionD1,
+            claveEnumeracionD2: this.solicitud31301State.claveEnumeracionD2,
+            claveEnumeracionD3: this.solicitud31301State.claveEnumeracionD3,
+            claveEnumeracionH: this.solicitud31301State.claveEnumeracionH,
+            textoGenerico4: this.solicitud31301State.textoGenerico4,
+            textoGenerico5: this.solicitud31301State.textoGenerico5,
+            '3523': this.solicitud31301State['3523'],
+            '3528': this.solicitud31301State['3528'],
+            '3529': this.solicitud31301State['3529'],
+            textoGenerico6: this.solicitud31301State.textoGenerico6,
+            textoGenerico7: this.solicitud31301State.textoGenerico7,
+            '3530': this.solicitud31301State['3530'],
+            '3531': this.solicitud31301State['3531'],
+            textoGenerico9: this.solicitud31301State.textoGenerico9,
+            textoGenerico10: this.solicitud31301State.textoGenerico10,
+            textoGenerico11: this.solicitud31301State.textoGenerico11,
+            textoGenerico12: this.solicitud31301State.textoGenerico12,
+            textoGenerico13: this.solicitud31301State.textoGenerico13,
+            textoGenerico14: this.solicitud31301State.textoGenerico14,
+            textoGenerico15: this.solicitud31301State.textoGenerico15,
+            textoGenerico16: this.solicitud31301State.textoGenerico16,
+            textoGenerico17: this.solicitud31301State.textoGenerico17,
+            textoGenerico18: this.solicitud31301State.textoGenerico18,
+            textoGenerico19: this.solicitud31301State.textoGenerico19,
+            textoGenerico20: this.solicitud31301State.textoGenerico20,
+            textoGenerico21: this.solicitud31301State.textoGenerico21,
+            textoGenerico22: this.solicitud31301State.textoGenerico22,
+            textoGenerico23: this.solicitud31301State.textoGenerico23,
+            textoGenerico24: this.solicitud31301State.textoGenerico24,
             alerta1: this.solicitud31301State.alerta1,
             alerta2: this.solicitud31301State.alerta2,
           });
@@ -463,9 +666,6 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (respuesta: DatosGeneralesDeLaSolicitudDatos) => {
           // Se actualizan múltiples propiedades en el store a partir de la respuesta del servicio
-          this.solicitud31301Store.actualizarTipoDeEndoso(
-            respuesta.tipoDeEndoso
-          );
           this.solicitud31301Store.actualizarTipoDeGarantia(
             respuesta.tipoDeGarantia
           );
