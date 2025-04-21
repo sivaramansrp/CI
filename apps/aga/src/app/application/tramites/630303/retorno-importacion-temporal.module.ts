@@ -2,9 +2,10 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 
-import { AlertComponent, BtnContinuarComponent, CatalogoSelectComponent, SolicitanteComponent, TablaDinamicaComponent, TituloComponent, WizardComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, BtnContinuarComponent, CatalogoSelectComponent, FirmaElectronicaComponent, SolicitanteComponent, TablaDinamicaComponent, TituloComponent, WizardComponent } from '@ng-mf/data-access-user';
 import { RetornoImportacionTemporalComponent } from './pages/retorno-importacion-temporal-page/retorno-importacion-temporal-page.component';
 
+import { AnexarDocumentosComponent } from "@ng-mf/data-access-user";
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
@@ -21,7 +22,8 @@ import { ManifiestoComponent } from "./components/manifiesto/manifiesto.componen
 
 
 @NgModule({
-  declarations: [RetornoImportacionTemporalComponent, PasoUnoComponent,SolicitudComponent],
+  declarations: [RetornoImportacionTemporalComponent, PasoUnoComponent, SolicitudComponent, PasoDosComponent,
+    PasoTresComponent],
   imports: [
     CommonModule,
     RetornoImportacionTemporalRoutingModule,
@@ -32,17 +34,17 @@ import { ManifiestoComponent } from "./components/manifiesto/manifiesto.componen
     ReactiveFormsModule,
     BtnContinuarComponent,
     TablaDinamicaComponent,
-    PasoDosComponent,
-    PasoTresComponent,
+    FirmaElectronicaComponent,
     AlertComponent,
     ToastrModule.forRoot(),
     DatosDeLaSolicitudComponent,
     TipoPropietarioComponent,
     DatosMercanciaComponent,
-    ManifiestoComponent
+    ManifiestoComponent,
+    AnexarDocumentosComponent
 ],
   providers: [
     ToastrService,
   ]
 })
-export class RetornoImportacionTemporalModule {}
+export class RetornoImportacionTemporalModule { }

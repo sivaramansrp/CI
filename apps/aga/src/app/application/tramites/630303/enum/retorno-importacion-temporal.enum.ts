@@ -1,4 +1,4 @@
-import { REGEX_CORREO_ELECTRONICO, REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, REGEX_PATRON_ALFANUMERICO, REGEX_POSTAL, REGEX_TELEFONO_DIGITOS } from "@libs/shared/data-access-user/src/tramites/constantes/regex.constants";
+import { REGEX_CORREO_ELECTRONICO, REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, REGEX_PATRON_ALFANUMERICO, REGEX_POSTAL, REGEX_TELEFONO } from "@libs/shared/data-access-user/src/tramites/constantes/regex.constants";
 
 
 /**
@@ -284,7 +284,7 @@ export const FORMULARIO_DATOS_PROPIETARIO = [
         soloLectura: false,
         validadores: [
             { tipo: 'required' },
-            { tipo: 'pattern', valor:REGEX_TELEFONO_DIGITOS, mensaje: 'Por favor, corrija el teléfono.' }
+            { tipo: 'pattern', valor:REGEX_TELEFONO, mensaje: 'Por favor, corrija el teléfono.' }
         ],
         marcadorDePosicion: '',
         valorPredeterminado: '',
