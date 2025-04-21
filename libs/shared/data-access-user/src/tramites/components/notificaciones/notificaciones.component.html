@@ -21,7 +21,7 @@
 </div>
 } @else if (notificacionInput.tipoNotificacion === eTipoNoficacionEnum.BANNER) {
 <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-12 hidden-xs">
         <alert [type]="notificacionInput.categoria" [dismissible]="notificacionInput.cerrar"
             [dismissOnTimeout]="notificacionInput.tiempoDeEspera" (onClose)="verBanner = false">
             <span [innerHTML]="notificacionInput.mensaje"></span>

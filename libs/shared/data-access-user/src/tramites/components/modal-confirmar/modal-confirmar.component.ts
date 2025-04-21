@@ -7,7 +7,6 @@ import { BsModalRef } from 'ngx-bootstrap/modal';
   standalone: true,
   imports: [],
   templateUrl: './modal-confirmar.component.html',
-  styleUrl: './modal-confirmar.component.scss'
 })
 export class ModalConfirmarComponent {
 

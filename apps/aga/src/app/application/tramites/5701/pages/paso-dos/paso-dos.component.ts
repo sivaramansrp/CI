@@ -75,4 +75,5 @@ export class PasoDosComponent implements OnInit {
   documentosCargados(cargaRealizada: boolean): void {
     this.cargaRealizada = cargaRealizada;
   }
+
 }

@@ -16,7 +16,7 @@ interface AccionBoton {
 
 @Component({
   templateUrl: './solicitud-page.component.html',
-  styles: ``,
+  styleUrl: './solicitud-page.component.scss',
 })
 export class SolicitudPageComponent implements OnInit {
   pasos: ListaPasosWizard[] = PASOS;
@@ -108,4 +108,17 @@ export class SolicitudPageComponent implements OnInit {
     this.seccionStore.establecerSeccion(SECCIONES);
     this.seccionStore.establecerFormaValida(FORMA_VALIDA);
   }
+
+  
+  onClickCargaArchivos(): void {
+    console.log('click en cargar archivos');
+    
+  }
+
+  anterior() : void {
+    this.wizardComponent.atras();
+    this.indice = this.wizardComponent.indiceActual + 1;
+    this.datosPasos.indice = this.wizardComponent.indiceActual + 1;
+  }
+
 }

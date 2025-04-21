@@ -1,9 +1,14 @@
-<div class="container">
-  @if (!cargaRealizada) {
-  <lib-notificaciones [notificacionInput]="alertaNotificacion"></lib-notificaciones>
-  }
+<div class="row">
 
-  <anexar-documentos [catalogoDocumentos]='catalogoDocumentos'
-    [catalogoDocumentosOpcionales]="catalogoDocumentosOpcionales"
-    (cargaRealizada)="documentosCargados($event)"></anexar-documentos>
+  <div class="col-md-12">
+    <lib-notificaciones [notificacionInput]="alertaNotificacion"></lib-notificaciones>
+  </div>
+
+  <div class="col-md-12">
+    <anexar-documentos [catalogoDocumentos]='catalogoDocumentos'
+      [catalogoDocumentosOpcionales]="catalogoDocumentosOpcionales"
+      (cargaRealizada)="documentosCargados($event)"></anexar-documentos>
+  </div>
+
+  
 </div>
