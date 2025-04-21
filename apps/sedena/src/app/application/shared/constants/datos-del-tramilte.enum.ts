@@ -28,7 +28,7 @@ export const CROSLISTA_ADUANAS_DISPONIBLES: string[] = [
  * @description Representa códigos específicos utilizados en el sistema para identificar tipos de permisos definitivos.
  */
 export const PERMISO_DEFINITIVO_TITULO = [
-  240119, 240118, 240107, 240106, 240108, 240308,
+  240119, 240118, 240107, 240106, 240108, 240308,240117
 ];
 
 /**
@@ -63,7 +63,7 @@ export const PAISE_DENTINO_EITIQUETA: Map<number, string> = new Map<
  * @type {number[]}
  * @description Contiene un arreglo de identificadores numéricos que representan mercancías específicas para las cuales se permite mostrar la lista cruzada.
  */
-export const PUEDE_MOSTRAR_LA_LISTA_CRUZADA_FOR_MERCANCIA = [240108, 240107];
+export const PUEDE_MOSTRAR_LA_LISTA_CRUZADA_FOR_MERCANCIA = [240108, 240107, 240117];
 
 /**
  * Período del semestre habilitado.
@@ -73,7 +73,7 @@ export const PUEDE_MOSTRAR_LA_LISTA_CRUZADA_FOR_MERCANCIA = [240108, 240107];
  * @description Contiene un arreglo de números que identifican el semestre habilitado. Este valor puede ser utilizado para validar o configurar funcionalidades relacionadas con el período académico activo.
  */
 export const PERIODO_SEMESTRE_HABILITADO = [
-  240119, 240108, 240107, 240114, 240106, 240308,
+  240119, 240108, 240107, 240114, 240106, 240308, 240117
 ];
 
 /**
@@ -84,7 +84,7 @@ export const PERIODO_SEMESTRE_HABILITADO = [
  * @description Contiene un arreglo de identificadores numéricos relacionados con manifiestos y declaraciones en el sistema.
  */
 
-export const MANIFIESTOS_DECLARACIONES = [240107, 240106];
+export const MANIFIESTOS_DECLARACIONES = [240107, 240106, 240117];
 
 /**
  * Identificadores numéricos relacionados con fechas de pago.
@@ -102,7 +102,7 @@ export const FETCHA_PAGO = [240107, 240106];
  * @type {number[]}
  * @description Contiene un arreglo de identificadores numéricos relacionados con CURP en el sistema.
  */
-export const ES_CURP = [240107, 240114, 240118];
+export const ES_CURP = [240107, 240114, 240118, 240117];
 
 /**
  * Período del primer semestre.
@@ -164,3 +164,12 @@ export const AGGREGAR_MERCANCIA_PAISE_OCULTAR = [240108];
 export const PERMISO_JUSTIFICACION = [240308];
 
 export const OCULTAR_PERMISO_GENERAL = [240102];
+
+/**
+ * Identificadores numéricos relacionados con RFC.
+ * 
+ * @constant
+ * @type {number[]}
+ * @description Contiene un arreglo de identificadores numéricos relacionados con RFC en el sistema.
+ */
+export const ES_RFC = [240117];
