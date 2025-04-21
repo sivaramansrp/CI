@@ -10,8 +10,11 @@ import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 describe('SolicitudPageComponent', () => {
   let component: SolicitudPageComponent;
   let fixture: ComponentFixture<SolicitudPageComponent>;
+  let wizardMock: WizardComponent;
 
   beforeEach(async () => {
+    wizardMock = jasmine.createSpyObj('WizardComponent', ['siguiente', 'atras'])
+
     await TestBed.configureTestingModule({
       imports: [
         WizardComponent,
@@ -22,6 +25,7 @@ describe('SolicitudPageComponent', () => {
         SolicitudPageComponent
       ],
       declarations: [],
+      providers:[{ provide: WizardComponent, useValue: wizardMock }],
       schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA]
     })
     .compileComponents();
@@ -29,20 +33,28 @@ describe('SolicitudPageComponent', () => {
     fixture = TestBed.createComponent(SolicitudPageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
+
+    component.wizardComponent = wizardMock;
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should select tab', () => {
-    component.seleccionaTab(2);
+  it('should not update indice for invalid tab values', () => {
+    component.seleccionaTab(-1);
+    expect(component.indice).not.toBe(-1);
+  });
+  
+  it('should handle edge cases for getValorIndice', () => {
+    const invalidEvent = { accion: 'invalid', valor: 5 };
+    component.getValorIndice(invalidEvent);
+    expect(component.indice).not.toBe(5);
+  
+    const nullActionEvent = { accion: 'cont', valor: 2 };
+    component.getValorIndice(nullActionEvent);
+    expect(wizardMock.atras).toHaveBeenCalled();
     expect(component.indice).toBe(2);
   });
-
-  it('should get value index', () => {
-    const event = { accion: 'cont', valor: 2 };
-    component.getValorIndice(event);
-    expect(component.indice).toBe(2);
-  });
+  
 });

@@ -7,6 +7,7 @@ import { Solicitud31301Query } from '../../estados/solicitud31301.query';
 import { of, Subject } from 'rxjs';
 import { DatosPorGarantia } from '../../models/solicitud.model';
 import {
+  Catalogo,
   CatalogoSelectComponent,
   CatalogosSelect,
   InputFechaComponent,
@@ -128,11 +129,11 @@ describe('DatosPorGarantiaComponent', () => {
   });
 
   it('should call actualizarPolizaDeFianzaActual when seleccionaNombreInstitucion is triggered', () => {
-    const mockCatalogo = { id: '123' } as any;
+    const mockCatalogo = { id: 1, descripcion: "test"} as Catalogo;
     component.seleccionaNombreInstitucion(mockCatalogo);
     expect(
       solicitud31301StoreMock.actualizarPolizaDeFianzaActual
-    ).toHaveBeenCalledWith('123');
+    ).toHaveBeenCalledWith(1);
   });
 
   it('should complete destroy$ on ngOnDestroy', () => {
