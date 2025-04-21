@@ -59,14 +59,14 @@
         "id": 9,
         "tramite": 10301,
         "linkDashboard": "/aga/importador-exportador/solicitud",
-        "linkDepartment": "/aga/importador-exportador/solicitud",
+        "linkDepartment": "/pago/importador-exportador/solicitud",
         "department": "aga"
     },
     {
         "id": 10,
         "tramite": 10303,
         "linkDashboard": "/aga/donaciones-extranjeras/solicitud",
-        "linkDepartment": "/aga/donaciones-extranjeras/solicitud",
+        "linkDepartment": "/pago/donaciones-extranjeras/solicitud",
         "department": "aga"
     },
     {
@@ -87,13 +87,13 @@
         "id": 13,
         "tramite": 11202,
         "linkDashboard": "/aga/retorno-contenedores/solicitante",
-        "linkDepartment": "/aga/retorno-contenedores/solicitante",
+        "linkDepartment": "/pago/retorno-contenedores/solicitante",
         "department": "aga"
     },
     {
         "id": 14,
         "tramite": 11204,
-        "linkDashboard": "/pago/transferencia-contenedores/solicitud",
+        "linkDashboard": "/aga/transferencia-contenedores/solicitud",
         "linkDepartment": "/pago/transferencia-contenedores/solicitud",
         "department": "aga"
     },
@@ -101,7 +101,7 @@
         "id": 15,
         "tramite": 30901,
         "linkDashboard": "/aga/muestras-mercancias/renovaciones",
-        "linkDepartment": "/aga/muestras-mercancias/renovaciones",
+        "linkDepartment": "/pago/muestras-mercancias/renovaciones",
         "department": "aga"
     },
     {
@@ -114,22 +114,22 @@
     {
         "id": 17,
         "tramite": 31803,
-        "linkDashboard": "gace/registro-solicitud/pagina-uno-acuses-y-resoluciones-busqueda",
-        "linkDepartment": "gace/registro-solicitud/pagina-uno-acuses-y-resoluciones-busqueda",
+        "linkDashboard": "/agace/registro-solicitud/pagina-uno-acuses-y-resoluciones-busqueda",
+        "linkDepartment": "/pago/registro-solicitud/pagina-uno-acuses-y-resoluciones-busqueda",
         "department": "agace"
     },
     {
         "id": 18,
         "tramite": 32501,
         "linkDashboard": "/agace/mercancias-desmontadas-o-sin-montar/solicitud",
-        "linkDepartment": "/agace/mercancias-desmontadas-o-sin-montar/solicitud",
+        "linkDepartment": "/pago/mercancias-desmontadas-o-sin-montar/solicitud",
         "department": "agace"
     },
     {
         "id": 19,
         "tramite": 32502,
         "linkDashboard": "/agace/aviso",
-        "linkDepartment": "/agace/aviso",
+        "linkDepartment": "/pago/aviso",
         "department": "agace"
     },
     {
@@ -143,21 +143,21 @@
         "id": 21,
         "tramite": 40101,
         "linkDashboard": "/aga/transportista-terrestre/solicitante",
-        "linkDepartment": "/aga/transportista-terrestre/solicitante",
+        "linkDepartment": "/pago/transportista-terrestre/solicitante",
         "department": "aga"
     },
     {
         "id": 22,
         "tramite": 40102,
         "linkDashboard": "/aga/transportista-terrestre/solicitante",
-        "linkDepartment": "/aga/transportista-terrestre/solicitante",
+        "linkDepartment": "/pago/transportista-terrestre/solicitante",
         "department": "aga"
     },
     {
         "id": 23,
         "tramite": 40103,
         "linkDashboard": "/aga/modificar-caat-terrestre/solicitante",
-        "linkDepartment": "/aga/modificar-caat-terrestre/solicitante",
+        "linkDepartment": "/pago/modificar-caat-terrestre/solicitante",
         "department": "aga"
     },
     {
@@ -955,7 +955,7 @@
         "id": 137,
         "tramite": 31501,
         "linkDashboard": "/agace/autoridad/solicitud",
-        "linkDepartment": "/agace/autoridad/solicitud",
+        "linkDepartment": "/pago/autoridad/solicitud",
         "department": "agace"
     },
     {
@@ -969,7 +969,7 @@
         "id": 139,
         "tramite": 31802,
         "linkDashboard": "/agace/registro-solicitud/solicitud",
-        "linkDepartment": "/agace/registro-solicitud/solicitud",
+        "linkDepartment": "/pago/registro-solicitud/solicitud",
         "department": "agace"
     },
     {
@@ -982,7 +982,7 @@
     {
         "id": 141,
         "tramite": 32503,
-        "linkDashboard": "/pago/aviso-traslado/solicitante",
+        "linkDashboard": "/agace/aviso-traslado/solicitante",
         "linkDepartment": "/pago/aviso-traslado/solicitante",
         "department": "agace"
     },
