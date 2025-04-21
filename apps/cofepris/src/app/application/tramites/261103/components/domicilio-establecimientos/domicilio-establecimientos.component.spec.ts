@@ -11,7 +11,7 @@ describe('DomicilioEstablecimientosComponent', () => {
   let fixture: ComponentFixture<DomicilioEstablecimientosComponent>;
 
   beforeEach(async () => {
-    const mockQuery = {
+    const MOCK_QUERY = {
       selectProrroga$: of({
         codigo: '001',
         estado: 'Estado',
@@ -29,20 +29,20 @@ describe('DomicilioEstablecimientosComponent', () => {
       }),
     };
 
-    const mockStore = {
+    const MOCK_STORE = {
       establecerDatos: jest.fn(),
     };
 
-    const mockService = {
+    const MOCK_SERVICE = {
       getDomicilioData: jest.fn().mockReturnValue(of([])),
     };
 
     await TestBed.configureTestingModule({
       imports: [ReactiveFormsModule, DomicilioEstablecimientosComponent],
       providers: [
-        { provide: DatosProcedureQuery, useValue: mockQuery },
-        { provide: DatosProcedureStore, useValue: mockStore },
-        { provide: ModificacionPermisoImportacionMedicamentosService, useValue: mockService },
+        { provide: DatosProcedureQuery, useValue: MOCK_QUERY },
+        { provide: DatosProcedureStore, useValue: MOCK_STORE },
+        { provide: ModificacionPermisoImportacionMedicamentosService, useValue: MOCK_SERVICE },
       ],
     }).compileComponents();
 
@@ -82,10 +82,10 @@ describe('DomicilioEstablecimientosComponent', () => {
   });
 
   it('debería limpiar las suscripciones en ngOnDestroy', () => {
-    const nextSpy = jest.spyOn(componente['destroy$'], 'next');
-    const completeSpy = jest.spyOn(componente['destroy$'], 'complete');
+    const NEXT_SPY = jest.spyOn(componente['destroy$'], 'next');
+    const COMPLETE_SPY = jest.spyOn(componente['destroy$'], 'complete');
     componente.ngOnDestroy();
-    expect(nextSpy).toHaveBeenCalled();
-    expect(completeSpy).toHaveBeenCalled();
+    expect(NEXT_SPY).toHaveBeenCalled();
+    expect(COMPLETE_SPY).toHaveBeenCalled();
   });
 });

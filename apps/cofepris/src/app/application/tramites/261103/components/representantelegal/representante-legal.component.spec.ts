@@ -31,21 +31,21 @@ describe('RepresentanteLegalComponent', () => {
   });
 
   it('debería renderizar correctamente los inputs del formulario', () => {
-    const representanteLegalRFCInput = fixture.debugElement.query(By.css('#representanteLegalRFCPostal'));
-    const buscarInput = fixture.debugElement.query(By.css('#buscar'));
-    const representanteLegalNombreInput = fixture.debugElement.query(By.css('#representanteLegalNombre'));
-    const representanteLegalApPaternoInput = fixture.debugElement.query(By.css('#representanteLegalApMaterno'));
-    expect(buscarInput).toBeTruthy();
-    expect(representanteLegalNombreInput).toBeTruthy();
-    expect(representanteLegalApPaternoInput).toBeTruthy();
+    const REPRESENTANTE_LEGAL_RFC_INPUT = fixture.debugElement.query(By.css('#representanteLegalRFCPostal'));
+    const BUSCAR_INPUT = fixture.debugElement.query(By.css('#buscar'));
+    const REPRESENTANTE_LEGAL_NOMBRE_INPUT = fixture.debugElement.query(By.css('#representanteLegalNombre'));
+    const REPRESENTANTE_LEGAL_AP_PATERNO_INPUT = fixture.debugElement.query(By.css('#representanteLegalApMaterno'));
+    expect(BUSCAR_INPUT).toBeTruthy();
+    expect(REPRESENTANTE_LEGAL_NOMBRE_INPUT).toBeTruthy();
+    expect(REPRESENTANTE_LEGAL_AP_PATERNO_INPUT).toBeTruthy();
   });
 
   it('debería llamar a setValoresStore cuando un input cambia', () => {
     jest.spyOn(component, 'setValoresStore');
-    const representanteLegalRFCInput = fixture.debugElement.query(By.css('#representanteLegalRFCPostal')).nativeElement;
+    const REPRESENTANTE_LEGAL_RFC_INPUT = fixture.debugElement.query(By.css('#representanteLegalRFCPostal')).nativeElement;
 
-    representanteLegalRFCInput.value = 'representanteLegalRFC123';
-    representanteLegalRFCInput.dispatchEvent(new Event('change'));
+    REPRESENTANTE_LEGAL_RFC_INPUT.value = 'representanteLegalRFC123';
+    REPRESENTANTE_LEGAL_RFC_INPUT.dispatchEvent(new Event('change'));
 
     expect(component.setValoresStore).toHaveBeenCalledWith(component.domicilioEstablecimiento, 'representanteLegalRFC');
   });

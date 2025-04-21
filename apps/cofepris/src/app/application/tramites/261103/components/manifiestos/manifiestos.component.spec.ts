@@ -37,29 +37,29 @@ describe('ManifiestosComponent', () => {
   });
 
   it('debería renderizar el texto de manifestoDeVeracidad', () => {
-    const etiqueta = fixture.debugElement.query(By.css('label')).nativeElement;
-    expect(etiqueta.textContent.trim()).toContain('Test Manifesto');
+    const ETIQUETA = fixture.debugElement.query(By.css('label')).nativeElement;
+    expect(ETIQUETA.textContent.trim()).toContain('Test Manifesto');
   });
 
   it('debería vincular el checkbox al control del formulario', () => {
-    const checkbox = fixture.debugElement.query(By.css('input[type="checkbox"]')).nativeElement;
-    expect(checkbox.checked).toBe(true);
-    checkbox.click();
+    const CHECKBOX = fixture.debugElement.query(By.css('input[type="checkbox"]')).nativeElement;
+    expect(CHECKBOX.checked).toBe(true);
+    CHECKBOX.click();
     fixture.detectChanges();
     expect(componente.Aduana.get('aduanas')?.value).toBe(false);
   });
 
   it('debería vincular las opciones de radio al control del formulario', () => {
-    const componenteRadio = fixture.debugElement.query(By.directive(InputRadioComponent)).componentInstance;
-    expect(componenteRadio.radioOptions).toEqual(['Opción 1', 'Opción 2']);
-    expect(componenteRadio.layout).toBe('horizontal');
+    const COMPONENTE_RADIO = fixture.debugElement.query(By.directive(InputRadioComponent)).componentInstance;
+    expect(COMPONENTE_RADIO.radioOptions).toEqual(['Opción 1', 'Opción 2']);
+    expect(COMPONENTE_RADIO.layout).toBe('horizontal');
   });
 
   it('debería llamar a setValoresStore al cambiar el radio', () => {
-    const espia = jest.spyOn(componente, 'setValoresStore');
-    const componenteRadio = fixture.debugElement.query(By.directive(InputRadioComponent)).componentInstance;
-    componenteRadio.change.emit('Opción 1');
+    const ESPIA = jest.spyOn(componente, 'setValoresStore');
+    const COMPONENTE_RADIO = fixture.debugElement.query(By.directive(InputRadioComponent)).componentInstance;
+    COMPONENTE_RADIO.change.emit('Opción 1');
     fixture.detectChanges();
-    expect(espia).toHaveBeenCalledWith(componente.Aduana, 'informacionConfidencial');
+    expect(ESPIA).toHaveBeenCalledWith(componente.Aduana, 'informacionConfidencial');
   });
 });

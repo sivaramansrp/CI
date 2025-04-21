@@ -8,53 +8,53 @@ import { FABRICANTE_TABLA } from '../../../../shared/constantes/terceros-relacio
 import { OTROS_TABLA } from '../../../../shared/constantes/terceros-relacionados-fabricante.enum';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
 
-describe('TercerosRelacionadosFabricanteComponent', () => {
-  let component: TercerosRelacionadosFabricanteComponent;
+describe('ComponenteTercerosRelacionadosFabricante', () => {
+  let componente: TercerosRelacionadosFabricanteComponent;
   let fixture: ComponentFixture<TercerosRelacionadosFabricanteComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [TablaDinamicaComponent, AlertComponent, TituloComponent],
-      imports: [CommonModule,TercerosRelacionadosFabricanteComponent],
+      imports: [CommonModule, TercerosRelacionadosFabricanteComponent],
     }).compileComponents();
 
     fixture = TestBed.createComponent(TercerosRelacionadosFabricanteComponent);
-    component = fixture.componentInstance;
+    componente = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
+  it('debería crearse', () => {
+    expect(componente).toBeTruthy();
   });
 
-  it('should generate correct configuration for tables', () => {
-    const generatedConfig: ConfiguracionColumna<Fabricante>[] = component.generateConfiguracionTabla(FABRICANTE_TABLA);
+  it('debería generar la configuración correcta para las tablas', () => {
+    const CONFIGURACION_GENERADA: ConfiguracionColumna<Fabricante>[] = componente.generateConfiguracionTabla(FABRICANTE_TABLA);
     
-    expect(Array.isArray(generatedConfig)).toBeTruthy();
+    expect(Array.isArray(CONFIGURACION_GENERADA)).toBeTruthy();
     
-    generatedConfig.forEach(config => {
+    CONFIGURACION_GENERADA.forEach(config => {
       expect(config).toHaveProperty('encabezado');
       expect(config).toHaveProperty('clave');
       expect(config).toHaveProperty('orden');
     });
   });
 
-  it('should initialize with correct table data', () => {
-    expect(component.fabricanteTablaDatos).toEqual([]);
-    expect(component.facturadorTablaDatos).toEqual([]);
-    expect(component.otrosTablaDatos).toEqual([]);
+  it('debería inicializarse con los datos correctos de las tablas', () => {
+    expect(componente.fabricanteTablaDatos).toEqual([]);
+    expect(componente.facturadorTablaDatos).toEqual([]);
+    expect(componente.otrosTablaDatos).toEqual([]);
   });
 
-  it('should set correct selection type for checkboxes', () => {
-    expect(component.checkbox).toBe(TablaSeleccion.CHECKBOX);
+  it('debería establecer el tipo de selección correcto para los checkboxes', () => {
+    expect(componente.checkbox).toBe(TablaSeleccion.CHECKBOX);
   });
 
-  it('should generate configuration for "Otros" table correctly', () => {
-    const generatedConfigOtros: ConfiguracionColumna<Otros>[] = component.generateConfiguracionTabla(OTROS_TABLA);
+  it('debería generar la configuración para la tabla "Otros" correctamente', () => {
+    const CONFIGURACION_GENERADA_OTROS: ConfiguracionColumna<Otros>[] = componente.generateConfiguracionTabla(OTROS_TABLA);
     
-    expect(Array.isArray(generatedConfigOtros)).toBeTruthy();
+    expect(Array.isArray(CONFIGURACION_GENERADA_OTROS)).toBeTruthy();
     
-    generatedConfigOtros.forEach(config => {
+    CONFIGURACION_GENERADA_OTROS.forEach(config => {
       expect(config).toHaveProperty('encabezado');
       expect(config).toHaveProperty('clave');
       expect(config).toHaveProperty('orden');

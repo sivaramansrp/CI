@@ -2,20 +2,20 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DatosestablecimientoComponent } from './datos-establecimiento.component';
 
 describe('DatosestablecimientoComponent', () => {
-  let component: DatosestablecimientoComponent;
-  let fixture: ComponentFixture<DatosestablecimientoComponent>;
+  let COMPONENT: DatosestablecimientoComponent;
+  let FIXTURE: ComponentFixture<DatosestablecimientoComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [DatosestablecimientoComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(DatosestablecimientoComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    FIXTURE = TestBed.createComponent(DatosestablecimientoComponent);
+    COMPONENT = FIXTURE.componentInstance;
+    FIXTURE.detectChanges();
   });
 
   it('should create', () => {
-    expect(component).toBeTruthy();
+    expect(COMPONENT).toBeTruthy();
   });
 });
