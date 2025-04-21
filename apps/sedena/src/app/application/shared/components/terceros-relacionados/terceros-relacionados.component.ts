@@ -68,7 +68,7 @@ export class TercerosRelacionadosComponent {
    * 
    * @event eliminarProveedorFinalEvent
    */
-  @Output() eliminarProveedorFinalEvent: EventEmitter<Proveedor> = new EventEmitter<DestinoFinal>(true);
+  @Output() eliminarProveedorFinalEvent: EventEmitter<Proveedor> = new EventEmitter<Proveedor>(true);
   /**
    * Emite un evento cuando se modifican los datos del proveedor.
    * El evento contiene un objeto de tipo `Proveedor`.
