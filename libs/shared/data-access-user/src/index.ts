@@ -29,7 +29,6 @@ export * from './core/enums/tipoPersona.enum';
 export * from './core/estados/seccion.store';
 export * from './core/estados/terceros.store';
 export * from './core/models/260303/certificados-licencias-permisos.model';
-export * from './core/models/260303/certificados-licencias-permisos.model';
 export * from './core/models/260701/certificados-licencias.model';
 export * from './core/models/260701/certificados-licencias.model';
 export * from './core/models/301/servicios-pantallas.model';
@@ -149,3 +148,5 @@ export * from './tramites/shared.module';
 
 export {TramiteDetails} from './core/models/tramiteDetails'
 export {AVISO} from './tramites/constantes/aviso-privacidad.enum';
+export * from './core/enums/consulta-generica.enum';
+export * from './core/models/shared/consulta-generica.model';
