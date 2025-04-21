@@ -27,7 +27,9 @@ export const CROSLISTA_ADUANAS_DISPONIBLES: string[] = [
  * @type {number[]}
  * @description Representa códigos específicos utilizados en el sistema para identificar tipos de permisos definitivos.
  */
-export const PERMISO_DEFINITIVO_TITULO = [240119, 240118, 240107, 240106, 240108, 240308, 240117];
+export const PERMISO_DEFINITIVO_TITULO = [
+  240119, 240118, 240107, 240106, 240108, 240308,240117
+];
 
 /**
  * Identificadores numéricos relacionados con permisos aduaneros.
