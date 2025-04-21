@@ -1,7 +1,7 @@
 import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, CrossListLable, CrosslistComponent, InputFecha, InputFechaComponent, InputRadioComponent, LISTACLAVESDELOSLOTES, Listaclaves, MERCANCIAS_DATA, MercanciasInfo, NICO_TABLA, Notificacion, ScianModel, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { FECHA_DE_PAGO, LOCALIDAD_COLONIA } from '../../constantes/certificados-licencias.enum';
-import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { PcuerdoPublicar, PropietarioTipoPersona } from '../../modelos/datos-solicitud.model';
 import { Solicitud260917State, Tramite260917Store } from '../../estados/tramites/tramite260917.store';
 import { Subject, map, takeUntil } from 'rxjs';
@@ -94,16 +94,6 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
  * Formulario que contiene los datos relacionados con los manifiestos.
  */
   public formularioManifiestos!: FormGroup;
-
-  /**
-   * Control para la fecha de aduanas de entrada.
-   */
-  public aduanasDeEntradaFecha: FormControl = new FormControl('');
-
-  /**
-   * Control para la fecha seleccionada de aduanas de entrada.
-   */
-  public aduanasDeEntradaFechaSeleccionada: FormControl = new FormControl('');
 
   /**
    * Lista de catálogos de estados.
@@ -277,28 +267,28 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
 
     this.domicilio = this.fb.group({
       /** Tipo de operación seleccionada por el usuario */
-      tipoOperacion: [this.solicitudState.tipoOperacion],
+      tipoOperacion: [this.solicitudState.tipoOperacion, Validators.required],
 
       /** Justificación proporcionada para la solicitud */
-      justificacion: [this.solicitudState.justificacion],
+      justificacion: [this.solicitudState.justificacion, Validators.required],
 
       /** RFC del responsable sanitario */
       rfcResponsableSanitario: [this.solicitudState.rfcResponsableSanitario],
 
       /** Razón social de la empresa o entidad */
-      razonSocial: [this.solicitudState.razonSocial],
+      razonSocial: [this.solicitudState.razonSocial, Validators.required],
 
       /** Correo electrónico de contacto */
-      correoElectronico: [this.solicitudState.correoElectronico],
+      correoElectronico: [this.solicitudState.correoElectronico, Validators.required],
 
       /** Código postal del domicilio */
-      codigoPostal: [this.solicitudState.codigoPostal],
+      codigoPostal: [this.solicitudState.codigoPostal, Validators.required],
 
       /** Estado donde se ubica el domicilio */
-      estado: [this.solicitudState.estado],
+      estado: [this.solicitudState.estado, Validators.required],
 
       /** Municipio correspondiente al domicilio */
-      muncipio: [this.solicitudState.muncipio],
+      muncipio: [this.solicitudState.muncipio, Validators.required],
 
       /** Localidad del domicilio */
       localidad: [this.solicitudState.localidad],
@@ -307,13 +297,13 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
       colonia: [this.solicitudState.colonia],
 
       /** Calle del domicilio */
-      calle: [this.solicitudState.calle],
+      calle: [this.solicitudState.calle,Validators.required],
 
       /** Clave LADA del número telefónico */
       lada: [this.solicitudState.lada],
 
       /** Número de teléfono de contacto */
-      telefono: [this.solicitudState.telefono],
+      telefono: [this.solicitudState.telefono, Validators.required],
 
       /** Indica si se muestra el aviso correspondiente */
       avisoCheckbox: [this.solicitudState.avisoCheckbox],
@@ -325,19 +315,16 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
       marcarEnCasoDeQueSea: [this.solicitudState.marcarEnCasoDeQueSea],
 
       /** Régimen fiscal o legal correspondiente */
-      regimen: [this.solicitudState.regimen],
+      regimen: [this.solicitudState.regimen, Validators.required],
 
       /** Lista de aduanas por las que se realizará la entrada */
-      aduanasEntradas: [this.solicitudState.aduanasEntradas],
-
-      /** Número de permiso asociado a la operación */
-      numeroPermiso: [this.solicitudState.numeroPermiso],
+      aduanasEntradas: [this.solicitudState.aduanasEntradas,Validators.required],
     });
 
 
     this.formAgente = this.fb.group({
       /** Clave SCiAN seleccionada del modal */
-      claveScianModal: [this.solicitudState.claveScianModal],
+      claveScianModal: [this.solicitudState.claveScianModal,Validators.required],
 
       /** Descripción asociada a la clave SCiAN seleccionada */
       claveDescripcionModal: [this.solicitudState.claveDescripcionModal],
@@ -346,73 +333,73 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
 
     this.formMercancias = this.fb.group({
       /** Clasificación del producto (p. ej. medicamento, cosmético, etc.) */
-      clasificacion: [this.solicitudState.clasificacion],
+      clasificacion: [this.solicitudState.clasificacion,Validators.required],
 
       /** Detalle adicional si se selecciona "Otro" en clasificación */
-      especificarClasificacionProducto: [this.solicitudState.especificarClasificacionProducto],
+      especificarClasificacionProducto: [this.solicitudState.especificarClasificacionProducto,Validators.required],
 
       /** Denominación específica del producto */
-      denominacionEspecifica: [this.solicitudState.denominacionEspecifica],
+      denominacionEspecifica: [this.solicitudState.denominacionEspecifica,Validators.required],
 
       /** Denominación distintiva del producto (marca, sello, etc.) */
-      denominacionDistintiva: [this.solicitudState.denominacionDistintiva],
+      denominacionDistintiva: [this.solicitudState.denominacionDistintiva,Validators.required],
 
       /** Nombre común del producto */
-      denominacionComun: [this.solicitudState.denominacionComun],
+      denominacionComun: [this.solicitudState.denominacionComun,Validators.required],
 
       /** Tipo de producto (sólido, líquido, etc.) */
-      tipoDeProducto: [this.solicitudState.tipoDeProducto],
+      tipoDeProducto: [this.solicitudState.tipoDeProducto,Validators.required],
 
       /** Estado físico del producto */
-      estadoFisico: [this.solicitudState.estadoFisico],
+      estadoFisico: [this.solicitudState.estadoFisico,Validators.required],
 
       /** Fracción arancelaria del producto */
-      fraccionArancelaria: [this.solicitudState.fraccionArancelaria],
+      fraccionArancelaria: [this.solicitudState.fraccionArancelaria,Validators.required],
 
       /** Descripción asociada a la fracción arancelaria */
-      descripcionFraccion: [this.solicitudState.descripcionFraccion],
+      descripcionFraccion: [this.solicitudState.descripcionFraccion,Validators.required],
 
       /** Cantidad expresada en unidad de medida de trámite (UMT) */
-      cantidadUMT: [this.solicitudState.cantidadUMT],
+      cantidadUMT: [this.solicitudState.cantidadUMT,Validators.required],
 
       /** Unidad de medida de trámite (UMT) */
-      UMT: [this.solicitudState.UMT],
+      UMT: [this.solicitudState.UMT, Validators.required],
 
       /** Cantidad expresada en unidad de medida comercial (UMC) */
-      cantidadUMC: [this.solicitudState.cantidadUMC],
+      cantidadUMC: [this.solicitudState.cantidadUMC,Validators.required],
 
       /** Unidad de medida comercial (UMC) */
-      UMC: [this.solicitudState.UMC],
+      UMC: [this.solicitudState.UMC,Validators.required],
 
       /** Presentación del producto (empaque, forma de venta, etc.) */
-      presentacion: [this.solicitudState.presentacion],
+      presentacion: [this.solicitudState.presentacion,Validators.required],
 
       /** Número de registro sanitario del producto */
-      numeroRegistro: [this.solicitudState.numeroRegistro],
+      numeroRegistro: [this.solicitudState.numeroRegistro,Validators.required],
 
       /** Fecha de caducidad del producto */
       fechaCaducidad: [this.solicitudState.fechaCaducidad],
 
       /** Clave de los lotes del producto */
-      claveDeLosLotes: [this.solicitudState.claveDeLosLotes],
+      claveDeLosLotes: [this.solicitudState.claveDeLosLotes,Validators.required],
     });
 
 
     this.formularioManifiestos = this.fb.group({
       /** Indica si acepta los términos relacionados con los manifiestos */
-      aceptaManifiestos: [this.solicitudState.aceptaManifiestos],
+      aceptaManifiestos: [this.solicitudState.aceptaManifiestos,Validators.required],
 
       /** Indica si acepta la publicación en medios oficiales */
-      aceptaPublicacion: [this.solicitudState.aceptaPublicacion],
+      aceptaPublicacion: [this.solicitudState.aceptaPublicacion,Validators.required],
 
       /** RFC del representante legal que firma la solicitud */
-      rfcRepresentante: [this.solicitudState.rfcRepresentante],
+      rfcRepresentante: [this.solicitudState.rfcRepresentante,Validators.required],
 
       /** Razón social del representante legal */
-      razonSocialRepresentante: [this.solicitudState.razonSocialRepresentante],
+      razonSocialRepresentante: [this.solicitudState.razonSocialRepresentante,Validators.required],
 
       /** Apellido paterno del representante legal */
-      apellidoPaternoRepresentante: [this.solicitudState.apellidoPaternoRepresentante],
+      apellidoPaternoRepresentante: [this.solicitudState.apellidoPaternoRepresentante,Validators.required],
 
       /** Apellido materno del representante legal */
       apellidoMaternoRepresentante: [this.solicitudState.apellidoMaternoRepresentante],
