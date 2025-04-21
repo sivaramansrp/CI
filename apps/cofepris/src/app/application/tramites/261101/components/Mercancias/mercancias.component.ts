@@ -1,3 +1,4 @@
+import { CONFIGURACIONCOLUMNA } from '../../enum/mercancias.enum';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
@@ -40,16 +41,11 @@ export class MercanciasComponent implements OnInit, OnDestroy {
   /** Subject para notificar la destrucción del componente */
   private destroy$ = new Subject<void>();
 
-  /** Configuración para las columnas de la tabla */
-  configuracionTabla: ConfiguracionColumna<Mercancias>[] = [
-    { encabezado: 'Clasificación del producto ', clave: (item: Mercancias) => item.clasificacionDelProducto, orden: 1 },
-    { encabezado: 'Especificar clasificación del product  ', clave: (item: Mercancias) => item.especificarClasificacionDelProduct, orden: 2 },
-    { encabezado: 'Denominación ', clave: (item: Mercancias) => item.denominacion, orden: 3 },
-    { encabezado: 'Denominación distintiva  ', clave: (item: Mercancias) => item.denominacionDistintiva, orden: 4 },
-    { encabezado: 'Número CAS  ', clave: (item: Mercancias) => item.numeroCAS, orden: 5 },
-    { encabezado: 'Fracción arancelaria', clave: (item: Mercancias) => item.fraccionArancelaria, orden: 6 },
-    { encabezado: 'Descripción de I fracción ', clave: (item: Mercancias) => item.descripcionDeFraccion, orden: 7 },
-  ];
+      /**
+       * Configuración de las columnas de la tabla para mostrar los trámites asociados.
+       */
+      configuracionTabla: ConfiguracionColumna<Mercancias>[] =
+        CONFIGURACIONCOLUMNA;
     /**
  * Estado de la sección que contiene los datos del procedimiento.
  * 
