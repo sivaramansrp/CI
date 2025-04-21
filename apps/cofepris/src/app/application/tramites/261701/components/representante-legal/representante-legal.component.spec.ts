@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { RepresentanteLegalComponent } from './representanteLegal.component';
+import { RepresentanteLegalComponent } from './representante-legal.component';
 import { HttpClientModule } from '@angular/common/http';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ModeloDeFormaDinamica } from '@libs/shared/data-access-user/src';

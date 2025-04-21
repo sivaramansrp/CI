@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ManifiestosDeclaracionesComponent } from './manifiestosDeclaraciones.component';
+import { ManifiestosDeclaracionesComponent } from './manifiestos-declaraciones.component';
 import { Tramite261701Store } from '../../estados/store/tramite261701.store';
 import { Tramite261701Query } from '../../estados/query/tramite261701.query';
 import { of, Subject } from 'rxjs';

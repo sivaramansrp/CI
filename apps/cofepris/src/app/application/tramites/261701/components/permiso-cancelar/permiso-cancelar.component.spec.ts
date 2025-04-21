@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { PermisoCancelarComponent } from './permisoCancelar.component';
+import { PermisoCancelarComponent } from './permiso-cancelar.component';
 import { HttpClientModule } from '@angular/common/http';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Tramite261702Store } from '../../../../estados/tramites/tramite261702.store';
