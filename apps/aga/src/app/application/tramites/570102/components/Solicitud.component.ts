@@ -20,7 +20,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   /**
    * Observable para gestionar la destrucción del componente y evitar fugas de memoria.
    */
-  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+  public destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
   /**
    * Formulario reactivo para gestionar los datos de la solicitud.

@@ -38,27 +38,30 @@ interface AccionBoton {
  * Componente que representa la página de solicitud.
  */
 export class SolicitudPageComponent implements OnInit {
-
-  hideModal: boolean = false;
+  /**
+   * Indica si el modal debe estar oculto.
+   * Se utiliza para controlar la visibilidad del modal en la interfaz de usuario.
+   */
+  ocultarModal: boolean = false;
 
   /**
    * Índice del elemento a eliminar.
    */
   public elementoParaEliminar!: number;
 
-   /**
-     * Notificación a mostrar en el modal.
-     */
-    public nuevaNotificacion!: Notificacion;
+  /**
+    * Notificación a mostrar en el modal.
+    */
+  public nuevaNotificacion!: Notificacion;
 
-     /**
-       * Lista de pedimentos asociados a la solicitud.
-       */
-      public pedimentos: Array<Pedimento> = [];
+  /**
+    * Lista de pedimentos asociados a la solicitud.
+    */
+  public pedimentos: Array<Pedimento> = [];
 
-      /**
-   * Indica si se está cargando un archivo.
-   */
+  /**
+* Indica si se está cargando un archivo.
+*/
   cargarArchivo: boolean = false;
 
   /**
@@ -98,6 +101,17 @@ export class SolicitudPageComponent implements OnInit {
     txtBtnSig: 'Guardar y firmar',
   };
   /**
+   * Configuración de los datos de los pasos del asistente.
+   * Contiene información sobre el número total de pasos, el índice actual,
+   * y los textos de los botones "Anterior" y "Continuar".
+   */
+  datosIndice: DatosPasos = {
+    nroPasos: this.pasos.length,
+    indice: this.indice,
+    txtBtnAnt: 'Anterior',
+    txtBtnSig: 'Continuar',
+  };
+  /**
    * Inicializa el componente.
    * Filtra y mapea los pasos del asistente para excluir y reorganizar pasos específicos.
    */
@@ -122,17 +136,15 @@ export class SolicitudPageComponent implements OnInit {
   getValorIndice(e: AccionBoton): void {
     this.alEventoHijo(this.nombre);
     this.cargaArchivo();
-    if(this.hideModal){
-    if (e.valor > 0 && e.valor < 5) {
-      this.indice = e.valor;
-      if (e.accion === 'cont' && this.indice === 2) {
-        this.nombre = 1;
-        this.wizardComponent.siguiente();
-      } else {
-        // this.wizardComponent.atras();
+    if (this.ocultarModal) {
+      if (e.valor > 0 && e.valor < 5) {
+        this.indice = e.valor;
+        if (e.accion === 'cont' && this.indice === 2) {
+          this.nombre = 1;
+          this.wizardComponent.siguiente();
+        }
       }
     }
-  }
   }
 
   /**
@@ -144,14 +156,14 @@ export class SolicitudPageComponent implements OnInit {
     this.nombre = nombre;
   }
 
-   /**
-   * Elimina un pedimento de la lista.
-   * @param borrar Indica si se debe eliminar el pedimento.
-   */
-   eliminarPedimento(borrar: boolean): void {
+  /**
+  * Elimina un pedimento de la lista.
+  * @param borrar Indica si se debe eliminar el pedimento.
+  */
+  eliminarPedimento(borrar: boolean): void {
     if (borrar) {
       this.pedimentos.splice(this.elementoParaEliminar, 1);
-      this.hideModal = true;
+      this.ocultarModal = true;
       this.getValorIndice({ accion: 'cont', valor: 2 });
     }
   }
@@ -181,7 +193,9 @@ export class SolicitudPageComponent implements OnInit {
    */
   cargaArchivo(): void {
     this.cargarArchivo = true;
-    this.abrirModal();
+    if (this.indice === 1) {
+      this.abrirModal();
+    }
   }
 
 

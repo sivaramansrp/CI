@@ -1,22 +1,50 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SolicitudComponent } from './Solicitud.component';
-import { Notificacion } from '@libs/shared/data-access-user/src';
-import { Router } from '@angular/router';
-import { RouterTestingModule } from '@angular/router/testing';
+import { FormBuilder, ReactiveFormsModule, FormGroup } from '@angular/forms';
+import { Tramite570102Store } from '../state/Tramite570102.store';
+import { Tramite570102Query } from '../state/Tramite570102.query';
+import { ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
+import { ReplaySubject, of } from 'rxjs';
 
 describe('SolicitudComponent', () => {
   let component: SolicitudComponent;
   let fixture: ComponentFixture<SolicitudComponent>;
-  let router: Router;
+  let store: Tramite570102Store;
+  let query: Tramite570102Query;
+  let validacionesService: ValidacionesFormularioService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SolicitudComponent, RouterTestingModule],
+      imports: [ReactiveFormsModule],
+      declarations: [SolicitudComponent],
+      providers: [
+        FormBuilder,
+        {
+          provide: Tramite570102Store,
+          useValue: {
+            setMotivoDelDes: jest.fn(),
+          },
+        },
+        {
+          provide: Tramite570102Query,
+          useValue: {
+            selectSolicitud$: of({ motivoDelDes: 'Test motivo' }),
+          },
+        },
+        {
+          provide: ValidacionesFormularioService,
+          useValue: {
+            isValid: jest.fn().mockReturnValue(true),
+          },
+        },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(SolicitudComponent);
     component = fixture.componentInstance;
-    router = TestBed.inject(Router);
+    store = TestBed.inject(Tramite570102Store);
+    query = TestBed.inject(Tramite570102Query);
+    validacionesService = TestBed.inject(ValidacionesFormularioService);
     fixture.detectChanges();
   });
 
@@ -24,83 +52,45 @@ describe('SolicitudComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize pedimentos as an empty array', () => {
-    expect(component.pedimentos).toEqual([]);
+  it('should initialize solicitudForm in donanteDomicilio', () => {
+    component.solicitudState = { motivoDelDes: 'Test motivo' };
+    component.donanteDomicilio();
+    expect(component.solicitudForm.get('motivoDelDes')?.value).toBe('Test motivo');
   });
 
-  it('should initialize nuevaNotificacion as undefined', () => {
-    expect(component.nuevaNotificacion).toBeUndefined();
+  it('should mark all fields as touched if form is invalid in validarDestinatarioFormulario', () => {
+    component.solicitudForm = new FormGroup({});
+    const markAllAsTouchedSpy = jest.spyOn(component.solicitudForm, 'markAllAsTouched');
+    component.validarDestinatarioFormulario();
+    expect(markAllAsTouchedSpy).toHaveBeenCalled();
   });
 
-  it('should initialize elementoParaEliminar as undefined', () => {
-    expect(component.elementoParaEliminar).toBeUndefined();
+  it('should return true if the field is valid in esValido', () => {
+    const result = component.esValido(component.solicitudForm, 'motivoDelDes');
+    expect(result).toBe(true);
+    expect(validacionesService.isValid).toHaveBeenCalledWith(component.solicitudForm, 'motivoDelDes');
   });
 
-  it('should set nuevaNotificacion and elementoParaEliminar in abrirModal', () => {
-    component.abrirModal(2);
-    expect(component.nuevaNotificacion).toEqual({
-      tipoNotificacion: 'alert',
-      categoria: 'danger',
-      modo: 'action',
-      titulo: '',
-      mensaje:
-        '¿Deseas desistir la solicitud de servicios extraordinarios con el folio 0105700100020252470000001?',
-      cerrar: false,
-      tiempoDeEspera: 2000,
-      txtBtnAceptar: 'Sí',
-      txtBtnCancelar: 'No',
-    });
-    expect(component.elementoParaEliminar).toBe(2);
+  it('should update the store with the correct value in setValoresStore', () => {
+    const setMotivoDelDesSpy = jest.spyOn(store, 'setMotivoDelDes');
+    component.solicitudForm = new FormGroup({});
+    component.solicitudForm.addControl('motivoDelDes', new FormBuilder().control('Nuevo motivo'));
+    component.setValoresStore(component.solicitudForm, 'motivoDelDes', 'setMotivoDelDes');
+    expect(setMotivoDelDesSpy).toHaveBeenCalledWith('Nuevo motivo');
   });
 
-  it('should remove pedimento and navigate to paso tres when eliminarPedimento is called with true', () => {
-    const navigateSpy = jest.spyOn(router, 'navigate');
-    component.pedimentos = [
-      {
-        patente: 123,
-        pedimento: 456,
-        aduana: 789,
-        idTipoPedimento: 1,
-        descTipoPedimento: 'Test Pedimento',
-        numero: '12345',
-        comprobanteValor: 'Test Valor',
-        pedimentoValidado: true,
-      },
-    ];
-    component.elementoParaEliminar = 0;
-  
-    component.eliminarPedimento(true);
-  
-    expect(component.pedimentos.length).toBe(0);
-    expect(navigateSpy).toHaveBeenCalledWith(['/pasotres']);
-  });
-  
-  it('should not remove pedimento or navigate when eliminarPedimento is called with false', () => {
-    const navigateSpy = jest.spyOn(router, 'navigate');
-    component.pedimentos = [
-      {
-        patente: 123,
-        pedimento: 456,
-        aduana: 789,
-        idTipoPedimento: 1,
-        descTipoPedimento: 'Test Pedimento',
-        numero: '12345',
-        comprobanteValor: 'Test Valor',
-        pedimentoValidado: true,
-      },
-    ];
-    component.elementoParaEliminar = 0;
-  
-    component.eliminarPedimento(false);
-  
-    expect(component.pedimentos.length).toBe(1);
-    expect(navigateSpy).not.toHaveBeenCalled();
+  it('should complete destroyed$ on ngOnDestroy', () => {
+    const nextSpy = jest.spyOn(component.destroyed$, 'next');
+    const completeSpy = jest.spyOn(component.destroyed$, 'complete');
+    component.ngOnDestroy();
+    expect(nextSpy).toHaveBeenCalledWith(true);
+    expect(completeSpy).toHaveBeenCalled();
   });
 
-  it('should set cargarArchivo to true and call abrirModal in cargaArchivo', () => {
-    const abrirModalSpy = jest.spyOn(component, 'abrirModal');
-    component.cargaArchivo();
-    expect(component.cargarArchivo).toBe(true);
-    expect(abrirModalSpy).toHaveBeenCalled();
+  it('should subscribe to query.selectSolicitud$ and set solicitudState on ngOnInit', () => {
+    const solicitudState = { motivoDelDes: 'Test motivo' };
+    jest.spyOn(query, 'selectSolicitud$', 'get').mockReturnValue(of(solicitudState));
+    component.ngOnInit();
+    expect(component.solicitudState).toEqual(solicitudState);
   });
 });
