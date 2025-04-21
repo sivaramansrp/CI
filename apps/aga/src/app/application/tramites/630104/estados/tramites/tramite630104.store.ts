@@ -12,34 +12,35 @@ import { Injectable } from '@angular/core';
  * @description Define la estructura del estado para el trámite 630104.
  */
 export interface Tramite630104State {
-  /** Indica si el solicitante es representante legal o no */
-  esConsultaRep: string | null;
-  /** Indica si el solicitante es extranjero o no */
-  esExtranjero: string | null;
-  /** Nombre del solicitante */
-  nombre: string;
-  /** Razón social del solicitante */
-  razonSocial: string;
-  /** Apellido paterno del solicitante */
-  apellidoPaterno: string;
-  /** Apellido materno del solicitante */
-  apellidoMaterno: string;
-  /** Calle del solicitante */
-  calle: string;
-  /** Número exterior del solicitante */
-  numeroExterior: string;
-  /** Número interior del solicitante */
-  numeroInterior: string;
-  /** País del solicitante */
-  pais: string;
-  /** Estado o localidad del solicitante */
-  estadoLocalidad: string;
-  /** Correo electrónico del solicitante */
-  correoElectronico: string;
-  /** Teléfono del solicitante */
-  telefono: string;
-  /** Código postal del solicitante */
-  codigoPostal: string;
+  [key: string]: unknown; 
+  // /** Indica si el solicitante es representante legal o no */
+  // esConsultaRep: string | null;
+  // /** Indica si el solicitante es extranjero o no */
+  // esExtranjero: string | null;
+  // /** Nombre del solicitante */
+  // nombre: string;
+  // /** Razón social del solicitante */
+  // razonSocial: string;
+  // /** Apellido paterno del solicitante */
+  // apellidoPaterno: string;
+  // /** Apellido materno del solicitante */
+  // apellidoMaterno: string;
+  // /** Calle del solicitante */
+  // calle: string;
+  // /** Número exterior del solicitante */
+  // numeroExterior: string;
+  // /** Número interior del solicitante */
+  // numeroInterior: string;
+  // /** País del solicitante */
+  // pais: string;
+  // /** Estado o localidad del solicitante */
+  // estadoLocalidad: string;
+  // /** Correo electrónico del solicitante */
+  // correoElectronico: string;
+  // /** Teléfono del solicitante */
+  // telefono: string;
+  // /** Código postal del solicitante */
+  // codigoPostal: string;
 }
 
 /**
@@ -49,20 +50,20 @@ export interface Tramite630104State {
  */
 export function createInitialState(): Tramite630104State {
   return {
-    esConsultaRep: null,
-    esExtranjero: null,
-    razonSocial:'',
-    nombre: '',
-    apellidoPaterno: '',
-    apellidoMaterno: '',
-    calle: '',
-    numeroExterior: '',
-    numeroInterior: '',
-    pais: '',
-    estadoLocalidad: '',
-    correoElectronico: '',
-    telefono: '',
-    codigoPostal: '',
+    // esConsultaRep: null,
+    // esExtranjero: null,
+    // razonSocial:'',
+    // nombre: '',
+    // apellidoPaterno: '',
+    // apellidoMaterno: '',
+    // calle: '',
+    // numeroExterior: '',
+    // numeroInterior: '',
+    // pais: '',
+    // estadoLocalidad: '',
+    // correoElectronico: '',
+    // telefono: '',
+    // codigoPostal: '',
   };
 }
 
@@ -76,17 +77,7 @@ export function createInitialState(): Tramite630104State {
 })
 @StoreConfig({ name: 'tramite630104', resettable: true })
 export class Tramite630104Store extends Store<Tramite630104State> {
-  /**
-   * Propiedad que indica si el solicitante es extranjero.
-   * @type {string | null}
-   */
-  esExtranjero: string | null = null;
 
-  /**
-   * Propiedad que indica si el solicitante es representante legal.
-   * @type {string | null}
-   */
-  esConsultaRep: string | null = null;
 
   /**
    * Constructor del store.
@@ -100,21 +91,10 @@ export class Tramite630104Store extends Store<Tramite630104State> {
    * Método para actualizar propiedades específicas del estado.
    * @param values Valores parciales del estado que se desean actualizar.
    */
-  public establecerDatos(values: Partial<Tramite630104State>): void {
-    this.update((state) => ({
+  public setTramite630104State(fieldName: string, valores:unknown): void {
+    this.update((state => ({
       ...state,
-      ...values,
-    }));
-  }
-
-  /**
-   * Método para actualizar el código del país del fabricante en el estado.
-   * @param cvePaisFabricante Código del país del fabricante.
-   */
-  public setCvePaisFabricante(cvePaisFabricante: string): void {
-    this.update((state) => ({
-      ...state,
-      cvePaisFabricante,
-    }));
+      [fieldName]: valores,
+    })));
   }
 }

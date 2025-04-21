@@ -1,6 +1,8 @@
 import { NgModule } from '@angular/core';
 
 import { CommonModule } from '@angular/common';
+import {DatosMercanciaComponent} from './components/datos-mercancia/datos-mercancia.component';
+import{ManifiestoComponent} from './components/manifiesto/manifiesto.component';
 
 import { EquipoEInstrumentosMusicalesRoutingModule } from './equipo-e-instrumentos-musicales-routing.module'
 
@@ -12,32 +14,40 @@ import { PasoDosComponent} from './pages/paso-dos/paso-dos.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
-import { PersonaFisicaExtranjeroComponent } from '../../shared/components/persona-fisica-extranjero.component/persona-fisica-extranjero.component';
-import {TipoDePropietarioComponent}from '../../shared/components/tipo-de-propietario/tipo-de-propietario.component';
 
 
 import { ReactiveFormsModule } from '@angular/forms';
 
-import { SolicitudComponent } from './components/solicitud/solicitud.component';
+import { DatosDeLaSolicitudComponent } from './components/datos-de-la-solicitud/datos-de-la-solicitud.component';
 
+import { SolicitudTabComponentsComponent } from './pages/solicitud-tab-components/solicitud-tab-components.component';
 
+import {TipoPropietarioComponent} from './components/tipo-propietario/tipo-propietario.component';
 
+import {FechaDeImportacionComponent } from './components/fecha-de-importacion/fecha-de-importacion.component';
+
+import {DatosDelNombreComponent} from './components/datos-del-nombre/datos-del-nombre.component';
 @NgModule({
   declarations: [
     EquipoEInstrumentosMusicalesComponent,
     PasoUnoComponent,
-    SolicitudComponent
+    SolicitudTabComponentsComponent
+    
   ],
   imports: [
     CommonModule,
+    DatosDeLaSolicitudComponent,
+    TipoPropietarioComponent,
+    FechaDeImportacionComponent,
+    DatosDelNombreComponent,
+    DatosMercanciaComponent,
+    ManifiestoComponent,
     EquipoEInstrumentosMusicalesRoutingModule,
     WizardComponent,
     BtnContinuarComponent,
     PasoTresComponent,
     PasoDosComponent,
     TituloComponent,
-    TipoDePropietarioComponent,
-    PersonaFisicaExtranjeroComponent,
     InputRadioComponent,
     SolicitanteComponent,
     ReactiveFormsModule,

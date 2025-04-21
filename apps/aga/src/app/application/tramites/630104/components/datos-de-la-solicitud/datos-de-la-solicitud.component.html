@@ -1,0 +1,8 @@
+<div class="container">
+    <ng-titulo [titulo]="'Datos de la solicitud'"></ng-titulo>
+    <div class="row">
+        <formas-dinamicas [forma]="datosImportacionTemporalFormulario" [formularioDatos]="formularioDatosSolicitud"
+            [estado]="estadoSeleccionado" (emitirCambioDeValor)="establecerCambioDeValor($event)"></formas-dinamicas>
+    </div>
+
+</div>

@@ -38,4 +38,66 @@ export class EquipoEInstrumentosMusicalesService {
     );
   }
 
+   /**
+   * Obtiene la lista de secciones aduaneras desde un archivo JSON local.
+   * 
+   * @returns {Observable<Catalogo[]>} Observable que emite un arreglo de objetos tipo Catalogo.
+   */
+   getSeccionAduanera(): Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>('/assets/json/630104/seccion-aduanera.json');
+  }
+
+  /**
+   * Obtiene la lista de aduanas de ingreso desde un archivo JSON local.
+   * 
+   * @returns {Observable<Catalogo[]>} Observable que emite un arreglo de objetos tipo Catalogo.
+   */
+  getAduanaDeIngreso(): Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>('/assets/json/630104/aduana-de-ingreso.json');
+  }
+
+  /**
+   * Obtiene la lista de prórrogas desde un archivo JSON local.
+   * 
+   * @returns {Observable<Catalogo[]>} Observable que emite un arreglo de objetos tipo Catalogo.
+   */
+  getProrroga(): Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>('/assets/json/630104/prorroga.json');
+  }
+
+  /**
+   * Obtiene la lista de propietarios desde un archivo JSON local.
+   * 
+   * @returns {Observable<Catalogo[]>} Observable que emite un arreglo de objetos tipo Catalogo.
+   */
+  getPropietario(): Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>('/assets/json/630104/propietario.json');
+  }
+
+  /**
+   * Obtiene la lista de tipos de propietarios desde un archivo JSON local.
+   * 
+   * @returns {Observable<Catalogo[]>} Observable que emite un arreglo de objetos tipo Catalogo.
+   */
+  getTipoDePropietario(): Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>('/assets/json/630104/tipo-de-propietario.json');
+  }
+
+  getconsultarPorRFC(): Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>('/assets/json/630104/consultar-por-rfc.json');
+  }
+
+  getTipoDeRepresentante(): Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>('/assets/json/630104/tipo-de-representante.json'); 
+  }
+
+  
+  /**
+   * Obtiene la lista de países desde un archivo JSON local.
+   **/
+
+  getPais(): Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>('/assets/json/630104/pais.json');
+  }
+
   }

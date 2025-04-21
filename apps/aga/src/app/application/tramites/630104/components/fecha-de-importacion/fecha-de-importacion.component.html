@@ -1,0 +1,27 @@
+
+<div class="container">
+    <ng-titulo [titulo]="'Fecha de Importación '"></ng-titulo>
+    <div class="row">
+        <formas-dinamicas [forma]="FechaDeImportacionTemporalFormulario" [formularioDatos]="formularioFechaDeImportacion"
+         (emitirCambioDeValor)="establecerCambioDeValor($event)"></formas-dinamicas>
+    </div>
+<div class="row">
+    <form [formGroup]="FechaDeImportacionTemporalFormulario">
+        <div class="col-md-4">
+            <input-fecha [setFecha]="FechaDeImportacionTemporalFormulario.get('fechaLimiteRetorno')?.value"
+                [datos]="datosfechaLimite" (valorCambiado)="this.establecerCambioDeValor({
+                    campo: 'fechaLimiteRetorno',
+                  valor: $event})"></input-fecha>
+        </div>
+
+        <div class="col-md-4">
+            <input-fecha [setFecha]="FechaDeImportacionTemporalFormulario.get('fechaLimiteRetorno')?.value"
+                [datos]="datosfecha" (valorCambiado)="this.establecerCambioDeValor({
+                    campo: 'fechaLimiteRetorno',
+                  valor: $event})"></input-fecha>
+        </div>
+        
+    
+    </form>
+    </div>
+    </div>
