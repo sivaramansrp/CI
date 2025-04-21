@@ -24,9 +24,7 @@
         </form>
     </div>
 </div>
-<div>
-    <div *ngIf="datosImportacionTemporalFormulario.get('cuentaProrroga')?.value === '1'">
+    @if(datosImportacionTemporalFormulario.get('cuentaProrroga')?.value === '1'){
         <app-datos-retorno-prorroga></app-datos-retorno-prorroga>
-    </div>
+    }
     <app-datos-retorno-autorizacion></app-datos-retorno-autorizacion>
-</div>
