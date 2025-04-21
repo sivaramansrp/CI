@@ -41,11 +41,11 @@
     <h4 class="mt-4">Datos personales</h4>
     <div class="row">
       <div class="col-md-4">
-        <label class="form-label">Nombre(s):</label>
+        <label class="form-label">Nombre(s)*:</label>
         <input type="text" class="form-control" formControlName="nombres" />
       </div>
       <div class="col-md-4">
-        <label class="form-label">Primer apellido:</label>
+        <label class="form-label">Primer apellido*:</label>
         <input
           type="text"
           class="form-control"
@@ -75,11 +75,11 @@
         ></app-catalogo-select>
       </div>
       <div class="col-md-4">
-        <label class="form-label">Estado:</label>
+        <label class="form-label">Estado*:</label>
         <input type="text" class="form-control" formControlName="estado" />
       </div>
       <div class="col-md-4">
-        <label class="form-label">Código postal o equivalente:</label>
+        <label class="form-label">Código postal o equivalente*:</label>
         <input
           type="text"
           class="form-control"
@@ -89,21 +89,21 @@
     </div>
 
     <div class="row mt-3">
-      @if(idProcedimiento !==240114){
+      @if(!colonia_visibilidad) {
       <div class="col-md-4">
         <label class="form-label">Colonia o equivalente:</label>
         <input type="text" class="form-control" formControlName="colonia" />
       </div>
       }
       
-      <div [ngClass]="idProcedimiento !== 240114 ? 'col-md-4' : 'col-md-8'">
-        <label class="form-label">Calle:</label>
+      <div [ngClass]="(!colonia_visibilidad) ? 'col-md-4' : 'col-md-8'">
+        <label class="form-label">Calle*:</label>
         <input type="text" class="form-control" formControlName="calle" />
         <i class="fas fa-info-circle"></i>
       </div>
       
       <div class="col-md-4">
-        <label class="form-label">Número exterior:</label>
+        <label class="form-label">Número exterior*:</label>
         <input
           type="text"
           class="form-control"

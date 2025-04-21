@@ -4,10 +4,12 @@ import { DestinoFinal, Proveedor } from '../../models/terceros-relacionados.mode
 
 import { CommonModule, Location } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE, TERCEROS_NACIONALIDAD_OPCIONES, TERCEROS_NACIONALIDAD_OPCIONES_EXTRANJERO,TIPO_PERSONA_OPCIONES} from '../../constants/datos-solicitud.enum';
+
+import { CAMPO_OBLIGATORIO_DESTINATARIO_PROVEEDOR, PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE, TERCEROS_NACIONALIDAD_OPCIONES, TERCEROS_NACIONALIDAD_OPCIONES_EXTRANJERO,TIPO_PERSONA_OPCIONES} from '../../constants/datos-solicitud.enum';
 import { Subject, takeUntil } from 'rxjs';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 import { ES_CURP } from '../../constants/datos-del-tramilte.enum';
+import { ES_RFC } from '../../constants/datos-del-tramilte.enum';
 import {NUMERO_TRAMITE} from '../../constants/datos-solicitud.enum';
 
 
@@ -31,6 +33,13 @@ import {NUMERO_TRAMITE} from '../../constants/datos-solicitud.enum';
   styleUrl: './agregar-proveedor-custom.component.scss',
 })
 export class AgregarProveedorCustomComponent implements OnDestroy, OnInit, OnChanges {
+ /**
+   * Datos del formulario que pueden ser de tipo `DestinoFinal`, `Proveedor`, `null` o `undefined`.
+   * Este input se utiliza para recibir la información necesaria desde el componente padre.
+   *
+   * @type {Proveedor | DestinoFinal | null | undefined}
+   */
+  @Input() formaDatos!: Proveedor | DestinoFinal| null | undefined;
 
   /**
     * @property tipoPersona
@@ -71,14 +80,6 @@ export class AgregarProveedorCustomComponent implements OnDestroy, OnInit, OnCha
    * @type {EventEmitter<Proveedor[]>}
    */
   @Output() updateProveedorTablaDatos = new EventEmitter<Proveedor[]>();
-
-     /**
-   * Datos del formulario que pueden ser de tipo `DestinoFinal`, `Proveedor`, `null` o `undefined`.
-   * Este input se utiliza para recibir la información necesaria desde el componente padre.
-   *
-   * @type {DestinoFinal | Proveedor | null | undefined}
-   */
-     @Input() formaDatos!: DestinoFinal | Proveedor | null | undefined;
 
 
   /**
@@ -142,6 +143,21 @@ export class AgregarProveedorCustomComponent implements OnDestroy, OnInit, OnCha
    */
    public esCURP = false;
 
+  /**
+   * @property {boolean} esRFC
+   * @description Indica si el valor actual corresponde a un RFC (Registro Federal de Contribuyentes).
+   * @default false
+   */
+  public esRFC = false;
+   
+     /**
+    * @property campoObligatorioProveedor
+    * @description Indica si ciertos campos del formulario son obligatorios según el procedimiento.
+    * @type {boolean}
+    * @default true
+    */
+   public campoObligatorioProveedor = false;
+ 
 
   /**
    * @constructor
@@ -217,7 +233,9 @@ export class AgregarProveedorCustomComponent implements OnDestroy, OnInit, OnCha
     this.crearFormaulario();
     this.cargarDatos();
     this.esCURP = ES_CURP.includes(this.idProcedimiento);
-        
+    this.esRFC = ES_RFC.includes(this.idProcedimiento);
+    this.campoObligatorioProveedor = CAMPO_OBLIGATORIO_DESTINATARIO_PROVEEDOR.includes(this.idProcedimiento)
+    this.campoObligatorioChange();
     if(this.formaDatos) {
       this.agregarProveedorForm.patchValue(this.formaDatos);
     }
@@ -351,9 +369,54 @@ export class AgregarProveedorCustomComponent implements OnDestroy, OnInit, OnCha
       case NUMERO_TRAMITE.TRAMITE_240114:
        this.tercerosNacionalidadOpciones = TERCEROS_NACIONALIDAD_OPCIONES_EXTRANJERO;
         break
+      case NUMERO_TRAMITE.TRAMITE_240117:
+        this.tercerosNacionalidadOpciones = TERCEROS_NACIONALIDAD_OPCIONES_EXTRANJERO;
+          break
       default:
         this.tercerosNacionalidadOpciones= TERCEROS_NACIONALIDAD_OPCIONES;
       
+  }
+}
+
+ /**
+    * @method campoObligatorioChange
+    * @description Cambia las validaciones de los campos del formulario según el valor de `campoObligatorioProveedor`.
+    * Si `campoObligatorioProveedor` es verdadero, se eliminan las validaciones de la colonia y se agregan
+    * validaciones requeridas para la calle y el número exterior. Si es falso, se realiza lo contrario.
+    *
+    * @returns {void} Este método no retorna ningún valor.
+    */
+ campoObligatorioChange(): void {
+  const NOMBRES = this.agregarProveedorForm.get('nombres')
+  const PRIMERAPELLIDO = this.agregarProveedorForm.get('primerApellido')
+  const MUNICIPIO = this.agregarProveedorForm.get('municipio')
+  const LOCALIDAD = this.agregarProveedorForm.get('localidad')
+  const COLINIA = this.agregarProveedorForm.get('colonia');
+  const CALLE = this.agregarProveedorForm.get('calle');
+  const NUMEROEXTERIOR = this.agregarProveedorForm.get('numeroExterior');
+  const ESTADO = this.agregarProveedorForm.get('estado');
+  const CODIGOPOSTAL = this.agregarProveedorForm.get('codigoPostal');
+
+  if(this.campoObligatorioProveedor){
+    NOMBRES?.setValidators([Validators.required]);
+    PRIMERAPELLIDO?.setValidators([Validators.required]);
+    MUNICIPIO?.clearValidators();
+    LOCALIDAD?.clearValidators();
+    COLINIA?.clearValidators();
+    CALLE?.setValidators([Validators.required]);
+    NUMEROEXTERIOR?.setValidators([Validators.required]);
+    ESTADO?.setValidators([Validators.required]);
+    CODIGOPOSTAL?.setValidators([Validators.required]);
+  } else {
+    NOMBRES?.clearValidators();
+    PRIMERAPELLIDO?.clearValidators();
+    MUNICIPIO?.setValidators([Validators.required]);
+    LOCALIDAD?.setValidators([Validators.required]);
+    COLINIA?.setValidators([Validators.required]);
+    CALLE?.clearValidators();
+    NUMEROEXTERIOR?.clearValidators();
+    ESTADO?.clearValidators();
+    CODIGOPOSTAL?.clearValidators();
   }
 }
 
