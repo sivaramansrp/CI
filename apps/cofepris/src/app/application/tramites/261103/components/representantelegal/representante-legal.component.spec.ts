@@ -35,8 +35,6 @@ describe('RepresentanteLegalComponent', () => {
     const buscarInput = fixture.debugElement.query(By.css('#buscar'));
     const representanteLegalNombreInput = fixture.debugElement.query(By.css('#representanteLegalNombre'));
     const representanteLegalApPaternoInput = fixture.debugElement.query(By.css('#representanteLegalApMaterno'));
-
-    // expect(representanteLegalRFCInput).toBeTruthy();
     expect(buscarInput).toBeTruthy();
     expect(representanteLegalNombreInput).toBeTruthy();
     expect(representanteLegalApPaternoInput).toBeTruthy();
@@ -55,10 +53,6 @@ describe('RepresentanteLegalComponent', () => {
   it('debería actualizar el valor del control del formulario cuando se llama setValoresStore', () => {
     component.setValoresStore(component.domicilioEstablecimiento, 'representanteLegalRFC');
     expect(component.domicilioEstablecimiento.get('representanteLegalRFC')?.value).toBe('representanteLegalRFC123');
-  });
-
-  it('debería manejar renderizado condicional (si aplica)', () => {
-    // Agregar pruebas para cualquier elemento condicional en la plantilla
   });
 
   it('debería manejar entradas inválidas del formulario de manera adecuada', () => {

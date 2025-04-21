@@ -1,9 +1,8 @@
 import { TestBed } from '@angular/core/testing';
 import { MercanciasComponent } from './mercancias.component';
 import { ModificacionPermisoImportacionMedicamentosService } from '../../services/modificacion-permiso-importacion-medicamentos.service';
-
-import { DatosProcedureQuery } from '../../../../estados/queries/tramites261101.query';
-import { DatosProcedureStore } from '../../../../estados/tramites/tramites261101.store';
+import { DatosProcedureQuery } from '../../../../estados/queries/tramites261103.query';
+import { DatosProcedureStore } from '../../../../estados/tramites/tramites261103.store';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { of } from 'rxjs';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';

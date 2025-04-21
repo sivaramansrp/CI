@@ -71,7 +71,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    */
   constructor(
     private formBuilder: FormBuilder,
- private modificacionPermisoImportacionMedicamentosService: ModificacionPermisoImportacionMedicamentosService,
+    private modificacionPermisoImportacionMedicamentosService: ModificacionPermisoImportacionMedicamentosService,
     private store: DatosProcedureStore,
     private query: DatosProcedureQuery
   ) {

@@ -2,11 +2,9 @@ import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { DomicilioEstablecimientosComponent } from './domicilio-establecimientos.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ModificacionPermisoImportacionMedicamentosService } from '../../services/modificacion-permiso-importacion-medicamentos.service';
-import { DatosProcedureQuery } from '../../../../estados/queries/tramites261101.query';
-import { DatosProcedureStore } from '../../../../estados/tramites/tramites261101.store';
+import { DatosProcedureQuery } from '../../../../estados/queries/tramites261103.query';
+import { DatosProcedureStore } from '../../../../estados/tramites/tramites261103.store';
 import { of } from 'rxjs';
-import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
-
 describe('DomicilioEstablecimientosComponent', () => {
   let component: DomicilioEstablecimientosComponent;
   let fixture: ComponentFixture<DomicilioEstablecimientosComponent>;
@@ -85,19 +83,8 @@ describe('DomicilioEstablecimientosComponent', () => {
   it('should clean up subscriptions on ngOnDestroy', () => {
     const nextSpy = jest.spyOn(component['destroy$'], 'next');
     const completeSpy = jest.spyOn(component['destroy$'], 'complete');
-
     component.ngOnDestroy();
-
     expect(nextSpy).toHaveBeenCalled();
     expect(completeSpy).toHaveBeenCalled();
   });
-
-  // it('should have correct tabla config', () => {
-  //   expect(component.configuracionTabla.length).toBe(2);
-  //   expect(component.configuracionTabla[0].encabezado).toContain('Clave');
-  // });
-
-  // it('should use CHECKBOX as TablaSeleccion enum', () => {
-  //   expect(component.TablaSeleccion).toBe(TablaSeleccion.CHECKBOX);
-  // });
 });

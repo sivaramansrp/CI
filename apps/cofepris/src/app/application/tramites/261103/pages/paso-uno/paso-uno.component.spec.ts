@@ -3,8 +3,8 @@ import { PasoUnoComponent } from './paso-uno.component';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { NO_ERRORS_SCHEMA, Component } from '@angular/core';
 import { of, Observable } from 'rxjs';
-import { DatosProcedureQuery } from '../../../../estados/queries/tramites261101.query'
-import { DatosProcedureStore } from '../../../../estados/tramites/tramites261101.store';
+import { DatosProcedureQuery } from '../../../../estados/queries/tramites261103.query'
+import { DatosProcedureStore } from '../../../../estados/tramites/tramites261103.store';
 import { TramiteAsociadosComponent } from '../../../../shared/components/tramite-asociados/tramite-asociados.component';
 import { PagoDeDerechosComponent } from '../../../../shared/components/pago-de-derechos-new/pago-de-derechos.component';
 import { ModificacionPermisoImportacionMedicamentosComponent } from '../../components/modificacion-permiso-importacion-medicamentos/modificacion-permiso-importacion-medicamentos';
