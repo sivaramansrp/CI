@@ -3,6 +3,7 @@ import { AfterViewInit, ChangeDetectorRef, Component, ViewChild } from '@angular
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL, PERSONA_MORAL_NACIONAL } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
 import { FormularioDinamico, SolicitanteComponent, TIPO_PERSONA, TituloComponent } from '@ng-mf/data-access-user';
+import { DatosDeLaSolicitudComponent } from '../../components/datos-de-la-solicitud/datos-de-la-solicitud.component';
 
 /**
  * Componente que representa el paso uno del trámite.
@@ -11,7 +12,7 @@ import { FormularioDinamico, SolicitanteComponent, TIPO_PERSONA, TituloComponent
   selector: 'paso-uno',
   templateUrl: './paso-uno.component.html',
   standalone: true,
-  imports: [SolicitanteComponent, CommonModule, FormsModule, ReactiveFormsModule],
+  imports: [SolicitanteComponent, CommonModule, FormsModule, ReactiveFormsModule, DatosDeLaSolicitudComponent],
 })
 export class PasoUnoComponent implements AfterViewInit {
   /**
