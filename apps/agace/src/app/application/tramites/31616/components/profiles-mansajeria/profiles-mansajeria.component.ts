@@ -1,20 +1,24 @@
-import { Component } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { SeguridadFisicaComponent } from '../seguridad-fisica/seguridad-fisica.component';
-import { FormBuilder, FormGroup, FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Component } from '@angular/core';
+import { ControlesFisicoComponent } from '../controles-fisico/controles-fisico.component';
 import { ProfilesDomocilioDelaComponent } from '../profiles-domocilio-dela/profiles-domocilio-dela.component';
+import { SeguridadFisicaComponent } from '../seguridad-fisica/seguridad-fisica.component';
+import { SociosComercialesComponent } from '../socios-comerciales/socios-comerciales.component';
 
 @Component({
   selector: 'app-profiles-mansajeria',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, ProfilesDomocilioDelaComponent,SeguridadFisicaComponent,],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, ProfilesDomocilioDelaComponent,SeguridadFisicaComponent,ControlesFisicoComponent,SociosComercialesComponent],
   templateUrl: './profiles-mansajeria.component.html',
   styleUrls: ['./profiles-mansajeria.component.css'],
 })
 export class ProfilesMansajeriaComponent {
   profileForm!: FormGroup;
-  mostrarContenido = false;
-  showSeguridad = false;
+  mostrarContenido: boolean = false;
+  mostrarSeguridad: boolean = false;
+  mostrarAccesoFisico: boolean = false;
+  mostrarSociosComeciales: boolean = false;
   public hasAgregar: boolean = false;
 
   constructor(private fb: FormBuilder) {
@@ -42,8 +46,16 @@ export class ProfilesMansajeriaComponent {
     this.mostrarContenido = !this.mostrarContenido;
   }
 
-  toggleSeguridad():void {
-    this.showSeguridad = !this.showSeguridad;
+  alternarSeguridad():void {
+    this.mostrarSeguridad = !this.mostrarSeguridad;
+  }
+
+  alternarAccesoFisico():void {
+    this.mostrarAccesoFisico = !this.mostrarAccesoFisico;
+  }
+
+  alternarSociosComerciales():void {
+    this.mostrarSociosComeciales = !this.mostrarSociosComeciales;
   }
 }
 

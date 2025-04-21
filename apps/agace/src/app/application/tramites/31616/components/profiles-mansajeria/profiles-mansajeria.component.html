@@ -120,22 +120,64 @@
             *ngIf="mostrarContenido"
           >
 </app-profiles-domocilio-dela>
+
+<!-- 2.Seguridad-fisica-->
 <div class="table-container">
   <div class="table-header pb-2">
     <h3>2. Seguridad física</h3>
-    <button (click)="toggleSeguridad()" class="toggle-btn">
+    <button (click)="alternarSeguridad()" class="toggle-btn">
       <i
         class="bi fs-5 m-1"
         [ngClass]="{
-          'bi-chevron-down': !showSeguridad,
-          'bi-chevron-up': showSeguridad
+          'bi-chevron-down': !mostrarSeguridad,
+          'bi-chevron-up': mostrarSeguridad
         }"
       >
       </i>
     </button>
   </div>
-  <div class="accordion-body body-panel {{ showSeguridad ? 'open' : 'close'}}" >
+  <div class="accordion-body body-panel {{ mostrarSeguridad ? 'open' : 'close'}}" >
     <app-seguridad-fisica></app-seguridad-fisica>
+  </div>
+</div>
+
+<!-- 3.Controles-de-acceso-fisico -->
+<div class="table-container">
+  <div class="table-header pb-2">
+    <h3>3. Controles de acceso físico</h3>
+    <button (click)="alternarAccesoFisico()" class="toggle-btn">
+      <i
+        class="bi fs-5 m-1"
+        [ngClass]="{
+          'bi-chevron-down': !mostrarAccesoFisico,
+          'bi-chevron-up': mostrarAccesoFisico
+        }"
+      >
+      </i>
+    </button>
+  </div>
+  <div class="accordion-body body-panel {{ mostrarAccesoFisico ? 'open' : 'close'}}" >
+    <app-controles-fisico></app-controles-fisico>
+  </div>
+</div>
+
+<!-- 4.Socios-comerciales -->
+<div class="table-container">
+  <div class="table-header pb-2">
+    <h3>4. Socios comerciales</h3>
+    <button (click)="alternarSociosComerciales()" class="toggle-btn">
+      <i
+        class="bi fs-5 m-1"
+        [ngClass]="{
+          'bi-chevron-down': !mostrarSociosComeciales,
+          'bi-chevron-up': mostrarSociosComeciales
+        }"
+      >
+      </i>
+    </button>
+  </div>
+  <div class="accordion-body body-panel {{ mostrarSociosComeciales ? 'open' : 'close'}}" >
+    <app-socios-comerciales></app-socios-comerciales>
   </div>
 </div>
 </form>
