@@ -88,15 +88,6 @@ export const appRoutes: Route[] = [
         }).then((m) => m.AppFuncionarioModule)
   },
   {
-    path: 'agace',
-    loadChildren: () =>
-      loadRemoteModule({
-        remoteEntry: 'http://localhost:4209/remoteAppEntry.js',
-        remoteName: 'agace',
-        exposedModule: './Module'
-      }).then((m) => m.AppAgaceModule)
-  },
-  {
     path: 'cofepris',
     loadChildren: () =>
       loadRemoteModule({
