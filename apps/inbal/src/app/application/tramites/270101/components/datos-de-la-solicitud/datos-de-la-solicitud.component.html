@@ -6,10 +6,11 @@
             [tipoSeleccionTabla]="tablaSeleccion.CHECKBOX"
             [configuracionTabla]="configuracionTabla"
             [datos]="configuracionTablaDatos"
+            (listaDeFilaSeleccionada)="listaDeFilaSeleccionada($event)"
         ></app-tabla-dinamica>
     </div>
     <div class="col-md-12 mt-5 d-flex justify-content-end">
-        <button type="button" class="btn btn-default ms-3">Eliminar</button>
+        <button type="button" class="btn btn-default ms-3" (click)="eliminar()">Eliminar</button>
         <button
           type="button"
           class="btn btn-primary ms-3"
@@ -34,7 +35,13 @@
       <div class="modal-body">
         <form [formGroup]="forma">
           <div class="row">
-            <formas-dinamicas formularioTitulo="Información de la obra de arte que se pretende exportar" [forma]="ninoFormGroup" [formularioDatos]="informacionFormData"></formas-dinamicas>
+            <formas-dinamicas 
+              formularioTitulo="Información de la obra de arte que se pretende exportar"
+              [forma]="ninoFormGroup"
+              [formularioDatos]="informacionFormData"
+              [estado]="exportarIlustracionesState"
+              (emitirCambioDeValor)="establecerCambioDeValor($event)"
+              ></formas-dinamicas>
           </div>
           <div class="row">
               <div class="col-md-12 mt-5">

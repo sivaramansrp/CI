@@ -1,5 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PeriodoEnElExtranjeroComponent } from './periodo-en-el-extranjero.component';
+import { HttpClientModule } from '@angular/common/http';
+import { ExportarIlustracionesService } from '../../services/exportar-ilustraciones.service';
 
 describe('PeriodoEnElExtranjeroComponent', () => {
   let component: PeriodoEnElExtranjeroComponent;
@@ -7,7 +9,8 @@ describe('PeriodoEnElExtranjeroComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [PeriodoEnElExtranjeroComponent],
+      imports: [PeriodoEnElExtranjeroComponent, HttpClientModule],
+      providers: [ExportarIlustracionesService],
     }).compileComponents();
 
     fixture = TestBed.createComponent(PeriodoEnElExtranjeroComponent);

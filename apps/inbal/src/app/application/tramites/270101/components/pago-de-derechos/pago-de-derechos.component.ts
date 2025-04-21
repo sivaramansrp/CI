@@ -5,79 +5,80 @@ import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ExportarIlustracionesService } from '../../services/exportar-ilustraciones.service';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
-import { PERIODO_EN_EL_QUE_PERMANECERA } from '../../constantes/exportar-ilustraciones.enum';
+import { ModeloDeFormaDinamica } from '@libs/shared/data-access-user/src';
+import { PAGO_DE_DERECHOS } from '../../constantes/exportar-ilustraciones.enum';
 import { Tramite270101Query } from '../../../../estados/queries/270101/tramite270101.query';
+
 /**
-  * @component PeriodoEnElExtranjeroComponent
-  * @selector periodo-en-el-extranjero
+  * @component PagoDeDerechosComponent
+  * @selector pago-de-derechos
   * @description
-  * Este componente es responsable de gestionar y renderizar los datos relacionados con el periodo 
-  * en el que permanecerá en el extranjero durante el proceso de exportación de obras de arte. 
-  * Incluye formularios dinámicos para capturar información como fechas y otros detalles relevantes.
+  * Este componente es responsable de gestionar y renderizar los datos relacionados con el pago de derechos 
+  * en el proceso de exportación de obras de arte. Incluye formularios dinámicos para capturar información 
+  * como el banco, monto y otros detalles relacionados con el pago.
   * 
   * Funcionalidades principales:
-  * - Renderiza un formulario dinámico basado en la configuración definida en `PERIODO_EN_EL_QUE_PERMANECERA`.
+  * - Renderiza un formulario dinámico basado en la configuración definida en `PAGO_DE_DERECHOS`.
+  * - Obtiene datos relacionados con los bancos desde el servicio `ExportarIlustracionesService`.
   * - Maneja los cambios en los valores del formulario y actualiza el estado dinámico en el store.
-  * - Obtiene y gestiona datos relacionados con el periodo desde el servicio `ExportarIlustracionesService`.
   * 
   * Componentes importados:
   * - `FormasDinamicasComponent`: Componente para renderizar formularios dinámicos.
   * 
-  * @templateUrl ./periodo-en-el-extranjero.component.html
-  * @styleUrl ./periodo-en-el-extranjero.component.scss
+  * @templateUrl ./pago-de-derechos.component.html
+  * @styleUrl ./pago-de-derechos.component.scss
   */
   @Component({
-    selector: 'periodo-en-el-extranjero',
+    selector: 'pago-de-derechos',
     standalone: true,
     imports: [
       CommonModule,
-      FormasDinamicasComponent,
-      ReactiveFormsModule
+      ReactiveFormsModule,
+      FormasDinamicasComponent
     ],
-    templateUrl: './periodo-en-el-extranjero.component.html',
-    styleUrl: './periodo-en-el-extranjero.component.scss',
+    templateUrl: './pago-de-derechos.component.html',
+    styleUrl: './pago-de-derechos.component.scss',
   })
 
-export class PeriodoEnElExtranjeroComponent implements OnInit, OnDestroy {
-
-/**
+export class PagoDeDerechosComponent implements OnInit, OnDestroy {
+  /**
  * compo doc
- * @property periodoPermaneceraFormData
+ * @property pagoDeDerechosFormData
  * @type {ModeloDeFormaDinamica[]}
  * @description
  * Esta propiedad contiene la configuración de los campos del formulario dinámico
  * utilizado en el componente. La configuración está basada en la constante
- * `PERIODO_EN_EL_QUE_PERMANECERA`, que define los detalles de cada campo, como su
+ * `PAGO_DE_DERECHOS`, que define los detalles de cada campo, como su
  * identificador, etiqueta, tipo de entrada, validadores, y más.
  *
  * Se utiliza para renderizar dinámicamente los campos del formulario y para
  * gestionar su comportamiento, como la validación y la interacción con los datos
  * obtenidos de los servicios.
  */
-  public periodoPermaneceraFormData = PERIODO_EN_EL_QUE_PERMANECERA;
+  public pagoDeDerechosFormData = PAGO_DE_DERECHOS;
 
-    /**
-   * compo doc
-   * @type {FormGroup}
-   * @memberof RepresentanteLegalComponent
-   * @description
-   * Este es un formulario reactivo de Angular representado por un FormGroup.
-   * Se utiliza para manejar y validar los datos del formulario en el componente.
-   */
+  /**
+  * compo doc
+  * @type {FormGroup}
+  * @memberof PagoDeDerechosComponent
+  * @description
+  * Este es un formulario reactivo de Angular representado por un FormGroup.
+  * Se utiliza para manejar y validar los datos del formulario en el componente.
+  */
   public forma: FormGroup = new FormGroup({
-    ninoFormGroup: new FormGroup({})
+    ninoFormGroup: new FormGroup({}),
   });
-
+    
   /**
   * compo doc
   * @getter ninoFormGroup
   * @description
-  * Este getter devuelve el grupo de formularios anidado llamado `ninoFormGroup` 
-  * dentro del formulario reactivo principal `forma`. 
+  * Este getter devuelve el grupo de formularios anidado llamado `ninoFormGroup`
+  * dentro del formulario reactivo principal `forma`.
   * Se utiliza para acceder y manipular los controles y valores específicos de este grupo de formularios.
-  * 
+  *
   * @returns {FormGroup} El grupo de formularios `ninoFormGroup` como un objeto de tipo `FormGroup`.
-  * 
+  *
   * @example
   * const grupo = this.ninoFormGroup;
   * grupo.get('campo').setValue('nuevo valor');
@@ -92,15 +93,15 @@ export class PeriodoEnElExtranjeroComponent implements OnInit, OnDestroy {
   /**
   * Estado de la solicitud de la sección 301.
   * @type {ExportarIlustraciones270101State}
-  * @memberof PeriodoEnElExtranjeroComponent
+  * @memberof MotivoDeLaExportacionComponent
   */
   public exportarIlustracionesState!: ExportarIlustraciones270101State;
 
-  /**
+      /**
   * @constructor
   * @description
-  * Este constructor inicializa el componente `PeriodoEnElExtranjeroComponent` e inyecta los servicios necesarios 
-  * para gestionar los datos y el estado del formulario relacionado con el periodo en el extranjero.
+  * Este constructor inicializa el componente `PagoDeDerechosComponent` e inyecta los servicios necesarios 
+  * para gestionar los datos y el estado del formulario relacionado con el pago de derechos.
   * 
   * Servicios inyectados:
   * - `ExportarIlustracionesService`: Servicio utilizado para obtener y gestionar datos relacionados con la exportación.
@@ -115,17 +116,17 @@ export class PeriodoEnElExtranjeroComponent implements OnInit, OnDestroy {
     public exportarIlustracionesService: ExportarIlustracionesService,
     private tramite270101Store: Tramite270101Store,
     private tramite270101Query: Tramite270101Query
-    ) {
+  ) {
     //
-    }
+  }
 
-  /**
+      /**
   * @method ngOnInit
   * @description
   * Este método es parte del ciclo de vida del componente y se ejecuta automáticamente 
   * después de que Angular haya inicializado todas las propiedades vinculadas al componente. 
   * En este caso, se utiliza para inicializar el estado del formulario y obtener los datos relacionados 
-  * con el periodo en el extranjero desde el store.
+  * con el pago de derechos desde el store.
   * 
   * Funcionalidad:
   * - Obtiene el estado actual del trámite desde `tramite270101Query`.
@@ -149,9 +150,45 @@ export class PeriodoEnElExtranjeroComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
+
+    this.obtenerBancoDatos();
   }
 
-  /**
+      /**
+  * @method obtenerBancoDatos
+  * @description
+  * Este método se utiliza para obtener los datos relacionados con los bancos desde el servicio 
+  * `ExportarIlustracionesService` y asignarlos al campo `banco` en el formulario dinámico.
+  * 
+  * Funcionalidad:
+  * - Realiza una solicitud al servicio para obtener los datos de los bancos.
+  * - Busca el campo `banco` en la configuración del formulario dinámico.
+  * - Asigna las opciones obtenidas al campo `banco` si no están configuradas previamente.
+  * - Utiliza `takeUntil` para gestionar la destrucción de las suscripciones y evitar fugas de memoria.
+  * 
+  * @example
+  * this.obtenerBancoDatos();
+  * // Obtiene los datos de los bancos y los asigna al campo `banco` en el formulario dinámico.
+  */
+  public obtenerBancoDatos(): void {
+    this.exportarIlustracionesService.getBancoData()
+    .pipe(
+      takeUntil(this.destroy$)
+    )
+    .subscribe((resp) => {
+      const BANCO_FIELD = this.pagoDeDerechosFormData.find((datos: ModeloDeFormaDinamica) => datos.campo === 'banco') as ModeloDeFormaDinamica;
+      if (BANCO_FIELD) {
+        if (!BANCO_FIELD.opciones) {
+          BANCO_FIELD.opciones = resp.map((item: { id: number; descripcion: string }) => ({
+            descripcion: item.descripcion,
+            id: item.id,
+          }));
+        }
+      }
+    });
+  }
+
+       /**
   * compo doc
   * @method establecerCambioDeValor
   * @description
@@ -166,10 +203,10 @@ export class PeriodoEnElExtranjeroComponent implements OnInit, OnDestroy {
   * establecerCambioDeValor({ campo: 'nombre', valor: 'Juan' });
   * // Actualiza el campo 'nombre' con el valor 'Juan' en el store dinámico.
   */
-  establecerCambioDeValor(event: { campo: string; valor: string }): void {
+  establecerCambioDeValor(event: { campo: string; valor: object | string }): void {
     if (event) {
       this.tramite270101Store.setDynamicFieldValue(event.campo, event.valor);
-      this.exportarIlustracionesService.setForm('periodoEnElExtranjero', this.ninoFormGroup);
+      this.exportarIlustracionesService.setForm('pagoDeDerechos', this.ninoFormGroup);
     }
   }
 

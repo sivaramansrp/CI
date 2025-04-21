@@ -1,5 +1,5 @@
 import * as moment from 'moment';
-import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
+import { Component, EventEmitter, HostListener, Input, OnChanges, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MESES, SEMANA } from '../../../core/enums/constantes-alertas.enum';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
@@ -30,7 +30,6 @@ export class InputFechaComponent implements OnChanges {
   mountSelect!: { name: string; value: number; indexWeek: number }[];
   mostrar: boolean = false;
   Formulario!: FormGroup;
-
 
   constructor(
     private fb: FormBuilder
@@ -194,6 +193,19 @@ export class InputFechaComponent implements OnChanges {
   mostrarCalendario(): void {
     if (this.datos.habilitado) {
       this.mostrar = true;
+    }
+  }
+
+  @HostListener('document:mousedown', ['$event'])
+  onDocumentClick(event: Event): void {
+    if (!this.mostrar) {
+      return;
+    }
+    const ELEMENTO_OBJETIVO = event.target as HTMLElement;
+    const CALENDARIO = document.querySelector('#calendario');
+    
+    if (CALENDARIO && !CALENDARIO.contains(ELEMENTO_OBJETIVO)) {
+      this.mostrar = false;
     }
   }
 

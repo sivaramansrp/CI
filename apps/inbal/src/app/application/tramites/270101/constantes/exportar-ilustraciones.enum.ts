@@ -174,6 +174,7 @@ export const PERIODO_EN_EL_QUE_PERMANECERA = [
         marcadorDePosicion: '',
         valorPredeterminado: '',
         marginTop: 0,
+        habilitado: true
     },
     {
       id: 'fecha_fin',
@@ -189,6 +190,7 @@ export const PERIODO_EN_EL_QUE_PERMANECERA = [
       marcadorDePosicion: '',
       valorPredeterminado: '',
       marginTop: 0,
+      habilitado: true
   },
   {
     id: 'responsable_exportacion',
@@ -202,7 +204,7 @@ export const PERIODO_EN_EL_QUE_PERMANECERA = [
     marcadorDePosicion: '',
     valorPredeterminado: '',
     marginTop: 0,
-  },
+  }
 ]
 
 export const MOTIVO_DE_LA_EXPORTACION = [
@@ -359,7 +361,8 @@ export const ITINERARIO_DE_EXPORTACION = [
     validadores: [{ tipo: 'required' }],
     marcadorDePosicion: '',
     valorPredeterminado: '',
-    marginTop: 0
+    marginTop: 0,
+    habilitado: true
   },
   {
     id: 'fechaFin',
@@ -372,7 +375,8 @@ export const ITINERARIO_DE_EXPORTACION = [
     validadores: [{ tipo: 'required' }],
     marcadorDePosicion: '',
     valorPredeterminado: '',
-    marginTop: 0
+    marginTop: 0,
+    habilitado: true
   },
 ]
 
@@ -386,7 +390,7 @@ export const ITINERARIO_DE_EXPORTACION_MAXIMO = [
     desactivado: true,
     soloLectura: false,
     validadores: [{ tipo: 'required' }],
-    marcadorDePosicion: '',
+    marcadorDePosicion: 'Selecciona un valor',
     valorPredeterminado: '1',
     marginTop: 0,
     opciones: [
@@ -445,7 +449,8 @@ export const ITINERARIO_DE_EXPORTACION_MAXIMO = [
     validadores: [{ tipo: 'required' }],
     marcadorDePosicion: '',
     valorPredeterminado: '',
-    marginTop: 0
+    marginTop: 0,
+    habilitado: true
   },
   {
     id: 'fechaInicio',
@@ -458,7 +463,8 @@ export const ITINERARIO_DE_EXPORTACION_MAXIMO = [
     validadores: [{ tipo: 'required' }],
     marcadorDePosicion: '',
     valorPredeterminado: '',
-    marginTop: 0
+    marginTop: 0,
+    habilitado: true
   },
   {
     id: 'fechaFin',
@@ -471,6 +477,89 @@ export const ITINERARIO_DE_EXPORTACION_MAXIMO = [
     validadores: [{ tipo: 'required' }],
     marcadorDePosicion: '',
     valorPredeterminado: '',
+    marginTop: 0,
+    habilitado: true
+  },
+]
+
+export const PAGO_DE_DERECHOS = [
+  {
+    id: 'claveDeReferencia',
+    labelNombre: 'Clave de referencia',
+    campo: 'claveDeReferencia',
+    clase: 'col-md-4',
+    tipoInput: 'text',
+    desactivado: true,
+    soloLectura: false,
+    validadores: [],
+    marcadorDePosicion: '',
+    valorPredeterminado: '144000786',
+    marginTop: 0
+  },
+  {
+    id: 'cadenaDeLaDependencia',
+    labelNombre: 'Cadena de la dependencia',
+    campo: 'cadenaDeLaDependencia',
+    clase: 'col-md-4',
+    tipoInput: 'text',
+    desactivado: true,
+    soloLectura: false,
+    validadores: [],
+    marcadorDePosicion: '',
+    valorPredeterminado: '04055740400001',
+    marginTop: 0
+  },
+  {
+    id: 'banco',
+    labelNombre: 'Banco',
+    campo: 'banco',
+    clase: 'col-md-4',
+    tipoInput: 'select-catalogos',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [{ tipo: 'required' }],
+    marcadorDePosicion: 'Selecciona un valor',
+    valorPredeterminado: '',
+    marginTop: 0
+  },
+  {
+    id: 'llaveDePago',
+    labelNombre: 'Llave de pago',
+    campo: 'llaveDePago',
+    clase: 'col-md-4',
+    tipoInput: 'text',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [{ tipo: 'required' }],
+    marcadorDePosicion: '',
+    valorPredeterminado: '',
+    marginTop: 0
+  },
+  {
+    id: 'fechaDePago',
+    labelNombre: 'Fecha de pago',
+    campo: 'fechaDePago',
+    clase: 'col-md-4',
+    tipoInput: 'date',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [{ tipo: 'required' }],
+    marcadorDePosicion: '',
+    valorPredeterminado: '',
+    marginTop: 0,
+    habilitado: true
+  },
+  {
+    id: 'importeDePago',
+    labelNombre: 'Importe de pago',
+    campo: 'importeDePago',
+    clase: 'col-md-4',
+    tipoInput: 'text',
+    desactivado: true,
+    soloLectura: false,
+    validadores: [],
+    marcadorDePosicion: '',
+    valorPredeterminado: '40',
     marginTop: 0
   },
 ]
@@ -483,3 +572,6 @@ export const ADUANA_ALERT =
 
 export const ERROR_DE_REGISTRO_ALERT =
 '<strong>¡Error de registro! </strong>En el itinerario de la exportación y transportacion a cada translado le corresponde una sede.';
+
+export const ERROR_FORMA_ALERT =
+'<strong>¡Error de registro! </strong>Faltan campos por capturar.';

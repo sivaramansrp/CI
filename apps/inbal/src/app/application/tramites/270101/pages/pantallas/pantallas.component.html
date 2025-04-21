@@ -3,21 +3,29 @@
         <div class="col-12">
           <h2>Permiso de exportación temporal de obra plástica declarada monumento artístico o histórico, competencia del Instituto Nacional de Bellas Artes y Literatura</h2>
         </div>
-        <div class="col-12">
-          <ng-alert [CUSTOMECLASS]="'alert-danger'" [CONTENIDO]="registroAlert"></ng-alert>
-        </div>
+        @if (itinerarioError) {
+          <div class="col-12">
+            <ng-alert [CUSTOMECLASS]="'alert-danger'" [CONTENIDO]="registroAlert"></ng-alert>
+          </div>
+        }
+        
+        @if (!esValido && esValido !== undefined) {
+          <div class="col-12">
+            <ng-alert [CUSTOMECLASS]="'alert-danger'" [CONTENIDO]="formaErrorAlert"></ng-alert>
+          </div>
+        }
         <app-wizard [listaPasos]="pantallasPasos"></app-wizard>
       </div>
       <div class="row">
         @switch (indice) { 
         @case (1) {
-          <paso-uno></paso-uno>
+          <paso-uno (pestanaCambiado)="pestanaCambiado($event)"></paso-uno>
         }
-         <!-- @case (2) {
+         @case (2) {
           <app-paso-dos></app-paso-dos>
         } @case (3) {
           <app-paso-tres></app-paso-tres>
-        } -->
+        }
        }
       </div>
       <btn-continuar
@@ -26,9 +34,9 @@
     >
     </btn-continuar>
 
-    <!-- @if (indiceDePestanaSeleccionada===2) {
+    @if (indiceDePestanaSeleccionada!==1) {
       <div class="mt-5">
         <ng-alert [CONTENIDO]="avisoPrivacidadAlert"></ng-alert>
       </div>
-    } -->
+    }
 </div>

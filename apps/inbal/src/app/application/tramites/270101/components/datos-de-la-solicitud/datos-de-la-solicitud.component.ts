@@ -1,13 +1,15 @@
 import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, ModeloDeFormaDinamica, TablaDinamicaComponent, TablaSeleccion, TituloComponent, ValidacionesFormularioService, Validadores } from '@libs/shared/data-access-user/src';
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { DATOS_DE_LA_SOLICICTUD, INFORMACION_DE_LA_OBRA_ARTE, OBRA_DE_ARTE_ALERT } from '../../constantes/exportar-ilustraciones.enum';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { Subject, takeUntil } from 'rxjs';
+import { ExportarIlustraciones270101State, Tramite270101Store } from '../../../../estados/tramites/270101/tramite270101.store';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DatosDelSolicitud } from '../../models/exportar-ilustraciones.model';
 import { ExportarIlustracionesService } from '../../services/exportar-ilustraciones.service';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
 import { Modal } from 'bootstrap';
+import { Tramite270101Query } from '../../../../estados/queries/270101/tramite270101.query';
 import { ValidadoresDeFormulariosComponent } from '@libs/shared/data-access-user/src/tramites/components/validadores-de-formularios/validadores-de-formularios/validadores-de-formularios.component';
 
 /**
@@ -173,21 +175,35 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   public configuracionTablaDatos: DatosDelSolicitud[] = [];
 
+ 
   /**
-   * compo doc
-   * @type {FormGroup}
-   * @memberof DatosDeLaSolicitudComponent
-   * @description
-   * Este es un formulario reactivo de Angular representado por un FormGroup.
-   * Se utiliza para manejar y validar los datos del formulario en el componente.
-   */
+  * @property forma
+  * @type {FormGroup}
+  * @description
+  * Este es el formulario reactivo principal del componente, que contiene un grupo de controles 
+  * y subgrupos para gestionar los datos de la solicitud. Cada control está configurado con un valor inicial, 
+  * un estado (habilitado o deshabilitado) y validadores específicos.
+  * 
+  * Controles principales:
+  * - `ninoFormGroup`: Subgrupo de formularios anidado para datos específicos.
+  * - `anoDeCreacion`: Campo obligatorio para el año de creación.
+  * - `avaluo`: Campo obligatorio para el avalúo.
+  * - `moneda`: Campo obligatorio para seleccionar la moneda.
+  * - `propietario`: Campo obligatorio para el propietario.
+  * - `fraccionArancelaria`: Campo obligatorio para la fracción arancelaria.
+  * - `descripcion`: Campo deshabilitado para la descripción.
+  * 
+  * @example
+  * console.log(this.forma.value);
+  * // Muestra los valores actuales de los campos del formulario.
+  */
   public forma: FormGroup = new FormGroup({
     ninoFormGroup: new FormGroup({}),
-    anoDeCreacion: new FormControl({value: '', disabled: false}),
-    avaluo: new FormControl({value: '', disabled: false}),
-    moneda: new FormControl({value: '', disabled: false}),
-    propietario: new FormControl({value: '', disabled: false}),
-    fraccionArancelaria: new FormControl({value: '', disabled: false}),
+    anoDeCreacion: new FormControl({value: '', disabled: false}, Validators.required),
+    avaluo: new FormControl({value: '', disabled: false}, Validators.required),
+    moneda: new FormControl({value: '', disabled: false}, Validators.required),
+    propietario: new FormControl({value: '', disabled: false}, Validators.required),
+    fraccionArancelaria: new FormControl({value: '', disabled: false}, Validators.required),
     descripcion: new FormControl({value: '', disabled: true}),
   });
 
@@ -239,8 +255,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   */
   public alertInformacion = OBRA_DE_ARTE_ALERT;
 
-   /** Subject para destruir el componente */
-     private destroy$ = new Subject<void>();
+  /** Subject para destruir el componente */
+    public destroy$ = new Subject<void>();
 
   /**
     * @property {Catalogo[]} monedaData
@@ -266,9 +282,38 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   public autorData: Catalogo[] = [];
 
-  public validadores: Validadores[] = [
-    { tipo: 'required', valor: '', mensaje: 'Este campo es obligatorio' }
-  ]
+  /**
+  * @property validadores
+  * @type {Validadores[]}
+  * @description
+  * Esta propiedad define un conjunto de validadores utilizados para validar los campos del formulario. 
+  * Cada validador incluye el tipo de validación, un valor asociado (si aplica) y un mensaje de error 
+  * que se muestra cuando la validación falla.
+  * 
+  * Funcionalidad:
+  * - Valida los campos del formulario asegurándose de que cumplan con los requisitos especificados.
+  * - Muestra un mensaje de error personalizado si el campo no cumple con la validación.
+  * 
+  * @example
+  * public validadores: Validadores[] = [
+  *   { tipo: 'required', valor: '', mensaje: 'Este campo es obligatorio' }
+  * ];
+  */
+public validadores: Validadores[] = [
+  { tipo: 'required', valor: '', mensaje: 'Este campo es obligatorio' }
+];
+
+  /**
+  * Estado de la solicitud de la sección 301.
+  * @type {ExportarIlustraciones270101State}
+  * @memberof DatosdelasolicitudComponent
+  */
+  public exportarIlustracionesState!: ExportarIlustraciones270101State;
+
+  /**
+   * Datos configurados para la tabla.
+   */
+  public datosSeleccionados: DatosDelSolicitud[] = [];
 
   /**
   * @constructor
@@ -282,10 +327,14 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   * 
   * @param {ExportarIlustracionesService} exportarIlustracionesService - Servicio para gestionar datos de exportación.
   * @param {ValidacionesFormularioService} validacionesService - Servicio para manejar validaciones del formulario.
+  * @param tramite270101Store Servicio encargado de gestionar el estado dinámico asociado al trámite 270101.
+  * @param tramite270101Query Consulta que facilita la obtención de datos específicos del estado del trámite 270101.
   */
 constructor(
   public exportarIlustracionesService: ExportarIlustracionesService,
-  private validacionesService: ValidacionesFormularioService
+  private validacionesService: ValidacionesFormularioService,
+  private tramite270101Store: Tramite270101Store,
+  private tramite270101Query: Tramite270101Query
  ) {
   //
  }
@@ -319,28 +368,33 @@ constructor(
   * }
   */
 ngOnInit(): void {
-  this.obtenerAutor();
-  /**
-   * Obtiene los datos de moneda desde el servicio y los asigna a `monedaData`.
-   */
-  this.exportarIlustracionesService.getMonedaData()
+  this.tramite270101Query.selectExportarIlustraciones$
     .pipe(
-      takeUntil(this.destroy$)
-    )
-    .subscribe((data) => {
-      this.monedaData = data;
-    });
+      takeUntil(this.destroy$),
+      map((seccionState) => {
+        this.exportarIlustracionesState = seccionState;
 
-  /**
-   * Obtiene los datos de fracciones arancelarias desde el servicio y los asigna a `arancelariaData`.
-   */
-  this.exportarIlustracionesService.getArancelariaData()
-    .pipe(
-      takeUntil(this.destroy$)
+        if (
+          this.exportarIlustracionesState &&
+          typeof this.exportarIlustracionesState === 'object' &&
+          this.exportarIlustracionesState !== null &&
+          'configuracionTablaDatos' in this.exportarIlustracionesState
+        ) {
+          const DATOS = this.exportarIlustracionesState['configuracionTablaDatos'] || [];
+          DATOS.forEach((item: DatosDelSolicitud) => {
+            const IS_ALREADY_ADDED = this.configuracionTablaDatos.some((i: { titulo: string }) => i.titulo === item.titulo);
+            if (!IS_ALREADY_ADDED) {
+              this.configuracionTablaDatos.push(item);
+            }
+          });
+        }
+      })
     )
-    .subscribe((data) => {
-      this.arancelariaData = data;
-    });
+    .subscribe();
+
+  this.obtenerAutor();
+  this.obtenerMonedaDatos();
+  this.obtenerArancelariaDatos();
 }
 
   /**
@@ -376,6 +430,56 @@ ngOnInit(): void {
           }
         }
       });
+  }
+
+  /**
+  * @method obtenerMonedaDatos
+  * @description
+  * Este método se utiliza para obtener los datos relacionados con las monedas desde el servicio 
+  * `ExportarIlustracionesService` y asignarlos a la propiedad `monedaData`.
+  * 
+  * Funcionalidad:
+  * - Realiza una solicitud al servicio para obtener los datos de las monedas.
+  * - Asigna los datos obtenidos a la propiedad `monedaData`.
+  * - Utiliza `takeUntil` para gestionar la destrucción de las suscripciones y evitar fugas de memoria.
+  * 
+  * @example
+  * this.obtenerMonedaDatos();
+  * // Obtiene los datos de las monedas y los asigna a `monedaData`.
+  */
+  public obtenerMonedaDatos(): void {
+    this.exportarIlustracionesService.getMonedaData()
+    .pipe(
+      takeUntil(this.destroy$)
+    )
+    .subscribe((data) => {
+      this.monedaData = data;
+    });
+  }
+
+  /**
+  * @method obtenerArancelariaDatos
+  * @description
+  * Este método se utiliza para obtener los datos relacionados con las fracciones arancelarias desde el servicio 
+  * `ExportarIlustracionesService` y asignarlos a la propiedad `arancelariaData`.
+  * 
+  * Funcionalidad:
+  * - Realiza una solicitud al servicio para obtener los datos de las fracciones arancelarias.
+  * - Asigna los datos obtenidos a la propiedad `arancelariaData`.
+  * - Utiliza `takeUntil` para gestionar la destrucción de las suscripciones y evitar fugas de memoria.
+  * 
+  * @example
+  * this.obtenerArancelariaDatos();
+  * // Obtiene los datos de las fracciones arancelarias y los asigna a `arancelariaData`.
+  */
+  public obtenerArancelariaDatos(): void {
+    this.exportarIlustracionesService.getArancelariaData()
+    .pipe(
+      takeUntil(this.destroy$)
+    )
+    .subscribe((data) => {
+      this.arancelariaData = data;
+    });
   }
 
   /**
@@ -438,13 +542,6 @@ ngOnInit(): void {
   */
   agregarConfirmarModal(): void {
     if (this.ninoFormGroup.valid && this.forma.valid) {
-      // if (this.confirmarModalElement) {
-      //   const INSTANCIA_MODAL = new Modal(
-      //     this.confirmarModalElement.nativeElement
-      //   );
-      //   this.cerrarModal();
-      //   INSTANCIA_MODAL.show();
-      // }
       const DETALLES = {
         autor: this.ninoFormGroup.get('autor')?.value,
         titulo: this.ninoFormGroup.get('titulo')?.value,
@@ -463,6 +560,8 @@ ngOnInit(): void {
         descripcion: this.forma.get('descripcion')?.value,
       };
       this.configuracionTablaDatos?.push(DETALLES);
+      this.exportarIlustracionesService.setDatosDeSolicitudArray(DETALLES);
+      this.cambioEnValoresStore('configuracionTablaDatos', DETALLES)
       this.ninoFormGroup.reset();
       this.forma.reset();
       this.cerrarModal();
@@ -511,7 +610,94 @@ ngOnInit(): void {
       const CONTROL = this.forma.get(campo);
       VALOR = CONTROL ? CONTROL.value : null;
     }
-    console.log(VALOR)
+    this.cambioEnValoresStore(event.campo,VALOR);
+  }
+
+  /**
+  * compo doc
+  * @method establecerCambioDeValor
+  * @description
+  * Este método se utiliza para manejar los cambios en los valores de un formulario dinámico.
+  * Recibe un evento que contiene el nombre del campo y su nuevo valor, y actualiza el estado
+  * dinámico del formulario en el store correspondiente.
+  * 
+  * @param event - Un objeto que contiene el campo que ha cambiado y su nuevo valor.
+  * El objeto tiene la estructura: `{ campo: string; valor: any }`.
+  * 
+  * @example
+  * establecerCambioDeValor({ campo: 'nombre', valor: 'Juan' });
+  * // Actualiza el campo 'nombre' con el valor 'Juan' en el store dinámico.
+  */
+  establecerCambioDeValor(event: { campo: string; valor: object | string }): void {
+    if (event) {
+      this.cambioEnValoresStore(event.campo, event.valor);
+    }
+  }
+
+  /**
+  * compo doc
+  * @method cambioEnValoresStore
+  * @description 
+  * Este método se utiliza para emitir un evento cuando hay un cambio en los valores del formulario.
+  * Recibe como parámetros el formulario preactivo (FormGroup) y el campo que ha cambiado.
+  * Luego, emite un objeto con esta información utilizando el EventEmitter `emitirValorCambiado`.
+  * @param form - El formulario reactivo que contiene los datos.
+  * @param campo - El nombre del campo que ha cambiado.
+  */
+  public cambioEnValoresStore(campo: string, valor: unknown): void {
+    this.tramite270101Store.setDynamicFieldValue(campo, valor);
+  }
+
+  /**
+  * @method listaDeFilaSeleccionada
+  * @description
+  * Este método se utiliza para manejar la selección de filas en la tabla dinámica. 
+  * Cuando se seleccionan filas, los datos correspondientes se agregan a la propiedad `datosSeleccionados`.
+  * 
+  * Funcionalidad:
+  * - Verifica si el evento contiene elementos seleccionados.
+  * - Itera sobre los elementos seleccionados y los agrega a la lista `datosSeleccionados`.
+  * 
+  * @param {DatosDelSolicitud[]} event - Lista de elementos seleccionados en la tabla dinámica.
+  * 
+  * @example
+  * this.listaDeFilaSeleccionada(seleccionados);
+  * // Agrega los elementos seleccionados a `datosSeleccionados`.
+  */
+  public listaDeFilaSeleccionada(event: DatosDelSolicitud[]): void {
+    if (event.length > 0) {
+        event.forEach((item) => {
+            this.datosSeleccionados.push(item);
+        });
+    }
+  }
+  
+  /**
+  * @method eliminar
+  * @description
+  * Este método se utiliza para eliminar las filas seleccionadas de la tabla dinámica. 
+  * Itera sobre los elementos seleccionados en `datosSeleccionados`, busca su índice en 
+  * `configuracionTablaDatos` y los elimina si existen. Luego, actualiza el estado del store 
+  * con los datos actualizados de la tabla.
+  * 
+  * Funcionalidad:
+  * - Itera sobre los elementos seleccionados en `datosSeleccionados`.
+  * - Busca el índice de cada elemento en `configuracionTablaDatos`.
+  * - Elimina el elemento si se encuentra en la tabla.
+  * - Actualiza el estado del store con los datos actualizados.
+  * 
+  * @example
+  * this.eliminar();
+  * // Elimina las filas seleccionadas de la tabla dinámica.
+  */
+  public eliminar(): void {
+    this.datosSeleccionados.forEach((item) => {
+      const INDEX = this.configuracionTablaDatos?.findIndex((obj) => obj.titulo === item.titulo);
+      if (INDEX !== -1) {
+        this.configuracionTablaDatos?.splice(INDEX, 1);
+        this.cambioEnValoresStore('configuracionTablaDatos', this.configuracionTablaDatos);
+      }
+    });
   }
 
   /**
