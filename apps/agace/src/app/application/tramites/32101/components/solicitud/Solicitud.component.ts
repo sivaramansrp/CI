@@ -1,6 +1,6 @@
 import {AbstractControl,FormBuilder,FormGroup,FormsModule,ReactiveFormsModule,ValidationErrors,Validators} from '@angular/forms';
 import {Catalogo,CatalogoSelectComponent,CatalogosSelect,ConfiguracionColumna,InputFecha,InputFechaComponent,Notificacion,NotificacionesComponent,Pedimento,TablaDinamicaComponent,TablaSeleccion,TituloComponent,ValidacionesFormularioService,} from '@libs/shared/data-access-user/src';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ReplaySubject, Subject, map, takeUntil } from 'rxjs';
 import { Solicitud32101State, Tramite32101Store } from '../../../../estados/tramites/tramite32101.store';
 import { TramiteList, datosDeLaTabla } from '../../models/datos-tramite.model';
@@ -33,7 +33,7 @@ import { Tramite32101Query } from '../../../../estados/queries/tramite32101.quer
   templateUrl: './Solicitud.component.html',
   styleUrl: './Solicitud.component.css',
 })
-export class SolicitudComponent implements OnInit {
+export class SolicitudComponent implements OnInit,OnDestroy {
   /**
    * Observable para manejar la destrucción del componente.
    * Se utiliza para cancelar suscripciones activas.
@@ -240,6 +240,15 @@ export class SolicitudComponent implements OnInit {
       .subscribe((formData) => {
         this.updateTableRow(formData);
       });
+  }
+
+      /**
+   * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
+   * Cancela todas las suscripciones activas.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 
   /**

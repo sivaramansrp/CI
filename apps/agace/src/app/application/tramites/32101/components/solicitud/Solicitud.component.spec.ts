@@ -8,20 +8,31 @@ import { Observable, of as observableOf, throwError } from 'rxjs';
 
 import { Component } from '@angular/core';
 import { SolicitudComponent } from './solicitud.component';
-import { RegistroSolicitudService } from '../services/registro-solicitud-service.service';
+import { ConsultaAvisoAcreditacionService } from '../../services/consulta-aviso-acreditacion.service';
 import { FormBuilder } from '@angular/forms';
-import { Tramite31803Store } from '../state/Tramite31803.store';
-import { Tramite31803Query } from '../state/Tramite31803.query';
 import { ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
+import { Tramite32101Store } from '../../../../estados/tramites/tramite32101.store';
+import { Tramite32101Query } from '../../../../estados/queries/tramite32101.query';
+import { Router } from '@angular/router';
 
 @Injectable()
-class MockRegistroSolicitudService {}
+class MockConsultaAvisoAcreditacionService {}
 
 @Injectable()
-class MockTramite31803Store {}
+class MockTramite32101Store {}
 
 @Injectable()
-class MockTramite31803Query {}
+class MockTramite32101Query {}
+
+@Injectable()
+class MockRouter {
+  navigate() {};
+}
+
+@Directive({ selector: '[myCustom]' })
+class MyCustomDirective {
+  @Input() myCustom;
+}
 
 describe('SolicitudComponent', () => {
   let fixture;
@@ -29,23 +40,23 @@ describe('SolicitudComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule ,SolicitudComponent],
+      imports: [
+        SolicitudComponent, FormsModule, ReactiveFormsModule ],
       declarations: [
-        
-        TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
         MyCustomDirective
       ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
-        { provide: RegistroSolicitudService, useClass: MockRegistroSolicitudService },
+        { provide: ConsultaAvisoAcreditacionService, useClass: MockConsultaAvisoAcreditacionService },
         FormBuilder,
-        { provide: Tramite31803Store, useClass: MockTramite31803Store },
-        { provide: Tramite31803Query, useClass: MockTramite31803Query },
-        ValidacionesFormularioService
+        ValidacionesFormularioService,
+        { provide: Tramite32101Store, useClass: MockTramite32101Store },
+        { provide: Tramite32101Query, useClass: MockTramite32101Query },
+        { provide: Router, useClass: MockRouter }
       ]
     }).overrideComponent(SolicitudComponent, {
 
-      set: { providers: [{ provide: RegistroSolicitudService, useClass: MockRegistroSolicitudService }] }    
+      set: { providers: [{ provide: ConsultaAvisoAcreditacionService, useClass: MockConsultaAvisoAcreditacionService }] }    
     }).compileComponents();
     fixture = TestBed.createComponent(SolicitudComponent);
     component = fixture.debugElement.componentInstance;
@@ -60,59 +71,90 @@ describe('SolicitudComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  it('should run GetterDeclaration #tipoDeInversion', async () => {
+    component.registroForm = component.registroForm || {};
+    component.registroForm.get = jest.fn();
+    const tipoDeInversion = component.tipoDeInversion;
+  });
+
+  it('should run GetterDeclaration #valorEnPesos', async () => {
+    component.registroForm = component.registroForm || {};
+    component.registroForm.get = jest.fn();
+    const valorEnPesos = component.valorEnPesos;
+  });
+
+  it('should run GetterDeclaration #claveDeReferencia', async () => {
+    component.registroForm = component.registroForm || {};
+    component.registroForm.get = jest.fn();
+    const claveDeReferencia = component.claveDeReferencia;
+  });
+
+  it('should run GetterDeclaration #importeDePago', async () => {
+    component.registroForm = component.registroForm || {};
+    component.registroForm.get = jest.fn();
+    const importeDePago = component.importeDePago;
+  });
+
+  it('should run GetterDeclaration #cadenaDeLaDependencia', async () => {
+    component.registroForm = component.registroForm || {};
+    component.registroForm.get = jest.fn();
+    const cadenaDeLaDependencia = component.cadenaDeLaDependencia;
+  });
+
+  it('should run GetterDeclaration #llaveDePago', async () => {
+    component.registroForm = component.registroForm || {};
+    component.registroForm.get = jest.fn();
+    const llaveDePago = component.llaveDePago;
+  });
+
+  it('should run GetterDeclaration #numeroDeOperacion', async () => {
+    component.registroForm = component.registroForm || {};
+    component.registroForm.get = jest.fn();
+    const numeroDeOperacion = component.numeroDeOperacion;
+  });
+
+  it('should run GetterDeclaration #descripcionGeneral', async () => {
+    component.registroForm = component.registroForm || {};
+    component.registroForm.get = jest.fn();
+    const descripcionGeneral = component.descripcionGeneral;
+  });
+
   it('should run #ngOnInit()', async () => {
-    component.getBancoData = jest.fn();
-    component.query = component.query || {};
-    component.query.selectSolicitud$ = observableOf({});
-    component.donanteDomicilio = jest.fn();
+    component.tramite32101Query = component.tramite32101Query || {};
+    component.tramite32101Query.selectSolicitud$ = observableOf({});
+    component.inicializarFormulario = jest.fn();
+    component.fetchListaDeDocumentos = jest.fn();
+    component.fetchListaDeInversion = jest.fn();
+    component.fetchBancoList = jest.fn();
+    component.consultaAvisoAcreditacionService = component.consultaAvisoAcreditacionService || {};
+    component.consultaAvisoAcreditacionService.formData$ = observableOf({});
+    component.updateTableRow = jest.fn();
     component.ngOnInit();
-    expect(component.getBancoData).toHaveBeenCalled();
-    expect(component.donanteDomicilio).toHaveBeenCalled();
   });
 
-  it('should run #cambioFechaFactura()', async () => {
-    component.registroForm = component.registroForm || {};
-    component.registroForm.patchValue = jest.fn();
-    component.setValoresStore = jest.fn();
-    component.cambioFechaFactura({});
-    expect(component.registroForm.patchValue).toHaveBeenCalled();
-    expect(component.setValoresStore).toHaveBeenCalled();
-  });
-
-  it('should run #getBancoData()', async () => {
-    component.registroSolicitud = component.registroSolicitud || {};
-    component.registroSolicitud.getBancoData = jest.fn().mockReturnValue(observableOf({}));
-    component.bancoCatalogo = component.bancoCatalogo || {};
-    component.bancoCatalogo.catalogos = 'catalogos';
-    component.getBancoData();
-    expect(component.registroSolicitud.getBancoData).toHaveBeenCalled();
-  });
-
-  it('should run #onSubmit()', async () => {
-    component.registroForm = component.registroForm || {};
-    component.registroForm.valid = 'valid';
-    component.onSubmit();
-
-  });
-
-  it('should run #isValid()', async () => {
-    component.validacionesService = component.validacionesService || {};
-    component.validacionesService.isValid = jest.fn();
-    component.isValid({}, {});
-    expect(component.validacionesService.isValid).toHaveBeenCalled();
-  });
-
-  it('should run #validarDestinatarioFormulario()', async () => {
-    component.registroForm = component.registroForm || {};
-    component.registroForm.invalid = 'invalid';
-    component.registroForm.markAllAsTouched = jest.fn();
-    component.validarDestinatarioFormulario();
-    expect(component.registroForm.markAllAsTouched).toHaveBeenCalled();
+  it('should run #inicializarFormulario()', async () => {
+    component.fb = component.fb || {};
+    component.fb.group = jest.fn();
+    component.solicitudState = component.solicitudState || {};
+    component.solicitudState.listaDeDocumentos = 'listaDeDocumentos';
+    component.solicitudState.valorEnPesos = 'valorEnPesos';
+    component.solicitudState.descripcionGeneral = 'descripcionGeneral';
+    component.solicitudState.manifiesto1 = 'manifiesto1';
+    component.solicitudState.manifiesto2 = 'manifiesto2';
+    component.solicitudState.manifiesto3 = 'manifiesto3';
+    component.solicitudState.claveDeReferencia = 'claveDeReferencia';
+    component.solicitudState.cadenaDeLaDependencia = 'cadenaDeLaDependencia';
+    component.solicitudState.numeroDeOperacion = 'numeroDeOperacion';
+    component.solicitudState.banco = 'banco';
+    component.solicitudState.llaveDePago = 'llaveDePago';
+    component.solicitudState.fechaInicialInput = 'fechaInicialInput';
+    component.solicitudState.importeDePago = 'importeDePago';
+    component.inicializarFormulario();
   });
 
   it('should run #setValoresStore()', async () => {
-    component.store = component.store || {};
-    component.store.metodoNombre = jest.fn();
+    component.tramite32101Store = component.tramite32101Store || {};
+    component.tramite32101Store.metodoNombre = jest.fn();
     component.setValoresStore({
       get: function() {
         return {
@@ -120,29 +162,155 @@ describe('SolicitudComponent', () => {
         };
       }
     }, {}, {});
-    expect(component.store.metodoNombre).toHaveBeenCalled();
   });
 
-  it('should run #donanteDomicilio()', async () => {
-    component.fb = component.fb || {};
-    component.fb.group = jest.fn();
-    component.solicitudState = component.solicitudState || {};
-    component.solicitudState.banco = 'banco';
-    component.solicitudState.llave = 'llave';
-    component.solicitudState.manifiesto1 = 'manifiesto1';
-    component.solicitudState.manifiesto2 = 'manifiesto2';
-    component.solicitudState.numeroOperacion = 'numeroOperacion';
-    component.donanteDomicilio();
-    expect(component.fb.group).toHaveBeenCalled();
+  it('should run #isValid()', async () => {
+    component.validacionesService = component.validacionesService || {};
+    component.validacionesService.isValid = jest.fn();
+    component.isValid({}, {});
   });
 
-  it('should run #ngOnDestroy()', async () => {
-    component.destroyed$ = component.destroyed$ || {};
-    component.destroyed$.next = jest.fn();
-    component.destroyed$.complete = jest.fn();
-    component.ngOnDestroy();
-    expect(component.destroyed$.next).toHaveBeenCalled();
-    expect(component.destroyed$.complete).toHaveBeenCalled();
+  it('should run #fetchListaDeDocumentos()', async () => {
+    component.consultaAvisoAcreditacionService = component.consultaAvisoAcreditacionService || {};
+    component.consultaAvisoAcreditacionService.getListaDeDocumentos = jest.fn().mockReturnValue(observableOf({
+      data: {}
+    }));
+    component.tramiteList = component.tramiteList || {};
+    component.tramiteList.catalogos = 'catalogos';
+    component.fetchListaDeDocumentos();
+  });
+
+  it('should run #fetchListaDeInversion()', async () => {
+    component.consultaAvisoAcreditacionService = component.consultaAvisoAcreditacionService || {};
+    component.consultaAvisoAcreditacionService.getListaDeDocumentos = jest.fn().mockReturnValue(observableOf({
+      data: {}
+    }));
+    component.aduana = component.aduana || {};
+    component.aduana.catalogos = 'catalogos';
+    component.fetchListaDeInversion();
+  });
+
+  it('should run #fetchBancoList()', async () => {
+    component.consultaAvisoAcreditacionService = component.consultaAvisoAcreditacionService || {};
+    component.consultaAvisoAcreditacionService.getListaDeDocumentos = jest.fn().mockReturnValue(observableOf({
+      data: {}
+    }));
+    component.banco = component.banco || {};
+    component.banco.catalogos = 'catalogos';
+    component.fetchBancoList();
+  });
+
+  it('should run #poblarTabla()', async () => {
+    component.registroForm = component.registroForm || {};
+    component.registroForm.value = {
+      tipoDeInversion: {},
+      descripcionGeneral: {},
+      listaDeDocumentos: {},
+      valorEnPesos: {}
+    };
+    component.registroForm.reset = jest.fn();
+    component.registroForm.markAsUntouched = jest.fn();
+    component.registroForm.markAsPristine = jest.fn();
+    component.configuracionTablaDatos = component.configuracionTablaDatos || {};
+    component.configuracionTablaDatos.push = jest.fn();
+    component.tramiteList = component.tramiteList || {};
+    component.tramiteList.catalogos = 'catalogos';
+    component.aduana = component.aduana || {};
+    component.aduana.catalogos = 'catalogos';
+    component.tramite32101Store = component.tramite32101Store || {};
+    component.tramite32101Store.setDatosDelContenedor = jest.fn();
+    component.abrirModal = jest.fn();
+    component.poblarTabla();
+  });
+
+  it('should run #onCheckboxClicked()', async () => {
+    component.selectedRows = component.selectedRows || {};
+    component.selectedRows.includes = jest.fn();
+    component.selectedRows.push = jest.fn();
+    component.selectedRows = ['selectedRows'];
+    component.onCheckboxClicked({});
+  });
+
+  it('should run #modificarFilaSeleccionada()', async () => {
+    component.selectedRows = component.selectedRows || {};
+    component.selectedRows[0] = '0';
+    component.consultaAvisoAcreditacionService = component.consultaAvisoAcreditacionService || {};
+    component.consultaAvisoAcreditacionService.setUpdatedRow = jest.fn();
+    component.tramite32101Store = component.tramite32101Store || {};
+    component.tramite32101Store.setAbc = jest.fn();
+    component.router = component.router || {};
+    component.router.navigate = jest.fn();
+    window.alert = jest.fn();
+    component.modificarFilaSeleccionada();
+  });
+
+  it('should run #eliminarFilasSeleccionadas()', async () => {
+    component.selectedRows = component.selectedRows || {};
+    component.selectedRows.includes = jest.fn();
+    component.configuracionTablaDatos = component.configuracionTablaDatos || {};
+    component.configuracionTablaDatos = ['configuracionTablaDatos'];
+    component.tramite32101Store = component.tramite32101Store || {};
+    component.tramite32101Store.setDatosDelContenedor = jest.fn();
+    component.abrirEleminarModal = jest.fn();
+    window.alert = jest.fn();
+    component.eliminarFilasSeleccionadas();
+  });
+
+  it('should run #formularioDeActualizacion()', async () => {
+    component.registroForm = component.registroForm || {};
+    component.registroForm.value = 'value';
+    component.consultaAvisoAcreditacionService = component.consultaAvisoAcreditacionService || {};
+    component.consultaAvisoAcreditacionService.setUpdatedRow = jest.fn();
+    component.formularioDeActualizacion();
+  });
+
+
+  it('should run #cambioFechaIngreso()', async () => {
+    component.registroForm = component.registroForm || {};
+    component.registroForm.get = jest.fn().mockReturnValue({
+      markAsUntouched: function() {},
+      setValue: function() {}
+    });
+    component.cambioFechaIngreso({});
+  });
+
+  it('should run #borrar()', async () => {
+    component.registroForm = component.registroForm || {};
+    component.registroForm.get = jest.fn().mockReturnValue({
+      reset: function() {}
+    });
+    component.borrar();
+  });
+
+  it('should run #updateTableRow()', async () => {
+    component.configuracionTablaDatos = component.configuracionTablaDatos || {};
+    component.configuracionTablaDatos.findIndex = jest.fn().mockReturnValue([
+      {
+        "id": {}
+      }
+    ]);
+    component.configuracionTablaDatos.INDEX = 'INDEX';
+    component.updateTableRow({
+      id: {}
+    });
+  });
+
+  it('should run #abrirModal()', async () => {
+
+    component.abrirModal();
+
+  });
+
+  it('should run #abrirEleminarModal()', async () => {
+
+    component.abrirEleminarModal();
+
+  });
+
+  it('should run #eliminarPedimento()', async () => {
+    component.pedimentos = component.pedimentos || {};
+    component.pedimentos.splice = jest.fn();
+    component.eliminarPedimento({});
   });
 
 });

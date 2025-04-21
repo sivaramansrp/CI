@@ -1,6 +1,6 @@
 import {Catalogo,Solicitud32101State,Tramite32101Store} from '../../../../estados/tramites/tramite32101.store';
 import {CatalogoSelectComponent,TituloComponent} from '@libs/shared/data-access-user/src';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {FormBuilder,FormGroup,FormsModule,ReactiveFormsModule} from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { TramiteList, datosDeLaTabla } from '../../models/datos-tramite.model';
@@ -21,7 +21,7 @@ import { Tramite32101Query } from '../../../../estados/queries/tramite32101.quer
   templateUrl: './componente-de-actualizacion.component.html',
   styleUrl: './componente-de-actualizacion.component.css',
 })
-export class ComponenteDeActualizacionComponent implements OnInit {
+export class ComponenteDeActualizacionComponent implements OnInit, OnDestroy {
   /**
    * Formulario reactivo utilizado para modificar los datos en el componente.
    * Este formulario se inicializa con los controles necesarios para la actualización
@@ -107,6 +107,15 @@ export class ComponenteDeActualizacionComponent implements OnInit {
     this.initForm();
     this.fetchListaDeDocumentos();
     this.fetchListaDeInversion();
+  }
+
+    /**
+   * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
+   * Cancela todas las suscripciones activas.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 
   /**
