@@ -7,7 +7,7 @@ import {
   TablaSeleccion,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 import { CommonModule } from '@angular/common';
 
@@ -35,6 +35,7 @@ import {
   styleUrl: './terceros-relacionados-fabricante.component.scss',
 })
 export class TercerosRelacionadosFabricanteComponent {
+  @Input() programTitle: boolean = false;
   /**
    * Un arreglo que contiene los datos de los fabricantes (Fabricante).
    * Esto se utiliza para gestionar y mostrar información relacionada con los fabricantes
