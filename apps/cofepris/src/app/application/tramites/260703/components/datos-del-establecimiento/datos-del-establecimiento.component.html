@@ -1,0 +1,79 @@
+<ng-titulo titulo="Datos del establecimiento"></ng-titulo>
+
+<div [formGroup]="datosDelEstablecimientoForm">
+  <div class="text-end">
+    <button
+      type="button"
+      class="btn btn-primary"
+      name="seleccionarEstablecimiento"
+      id="btnEstablecimiento"
+    >
+      Seleccionar establecimiento
+    </button>
+  </div>
+  <div class="row mt-5">
+    <div class="col-md-8">
+      <label for="razonSocial" class="form-label"
+        >Denominación o razón social*:</label
+      >
+      <input
+        type="text"
+        class="form-control"
+        formControlName="razonSocial"
+        id="razonSocial"
+        placeholder="DE URBANIZACIONES SIGNUM, S DE RL DE CV"
+        size="68"
+        (change)="setValoresStore('razonSocial')"
+        [class.is-invalid]="
+          datosDelEstablecimientoForm.get('razonSocial')?.touched &&
+          datosDelEstablecimientoForm.get('razonSocial')?.invalid"
+      />
+      <div
+      class="invalid-feedback"
+      *ngIf="
+        datosDelEstablecimientoForm.get('razonSocial')?.touched &&
+        datosDelEstablecimientoForm.get('razonSocial')?.invalid
+      "
+    >
+      <span
+        *ngIf="datosDelEstablecimientoForm.get('razonSocial')?.hasError('required')"
+        >Este campo es obligatorio.</span
+      >
+    </div>
+    </div>
+    <div class="col-md-4">
+      <label for="correoElectronico" class="form-label"
+        >Correo electrónico:
+        <span
+          class="bi bi-question-circle-fill"
+          title="ejemplo@dominio.com"
+          data-bs-toggle="tooltip"
+        ></span
+      ></label>
+      <input
+        type="text"
+        class="form-control"
+        formControlName="correoElectronico"
+        id="correoElectronico"
+        placeholder="Ultrasist@pruebas.com"
+        maxlength="320"
+        (change)="setValoresStore('correoElectronico')"
+        [class.is-invalid]="
+          datosDelEstablecimientoForm.get('correoElectronico')?.touched &&
+          datosDelEstablecimientoForm.get('correoElectronico')?.invalid"
+      />
+      <div
+        class="invalid-feedback"
+        *ngIf="
+          datosDelEstablecimientoForm.get('correoElectronico')?.touched &&
+          datosDelEstablecimientoForm.get('correoElectronico')?.invalid
+        "
+      >
+        <span
+          *ngIf="datosDelEstablecimientoForm.get('correoElectronico')?.hasError('required')"
+          >Este campo es obligatorio.</span
+        >
+      </div>
+    </div>
+  </div>
+</div>
