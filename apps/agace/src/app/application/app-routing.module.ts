@@ -28,6 +28,12 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'aviso-unico-renovacion',
+    loadChildren: () =>
+      import('./tramites/317/aviso-unico-renovacion.module').then(
+        (m) => m.AvisoUnicoRenovacionModule)
+      },
+      {
     path: 'registro-solicitud',
     loadChildren: () =>
       import('./tramites/31802/registro-solicitud.module').then(
@@ -54,6 +60,13 @@ const ROUTES: Routes = [
       import(
         './tramites/32501/mercancias-desmontadas-o-sin-montar.module'
       ).then((m) => m.MercanciasDesmontadasOSinMontarModule),
+  },
+  {
+    path: 'manifiesto-aereo',
+    loadChildren: () =>
+      import(
+        './tramites/32401/manifiesto-aereo.module'
+      ).then((m) => m.ManifiestoAereoModule),
   },
   {
     path: 'aviso-traslado',
