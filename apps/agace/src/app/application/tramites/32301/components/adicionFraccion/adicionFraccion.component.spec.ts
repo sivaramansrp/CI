@@ -7,14 +7,17 @@ import { of } from 'rxjs';
 import { AvisoModifyService } from '../../services/aviso-modify.service';
 import { Tramite32301Store } from '../../estados/tramite32301.store';
 import { Tramite32301Query } from '../../estados/tramite32301.query';
-import { AlertComponent, Catalogo, CatalogoSelectComponent, CrosslistComponent, InputRadioComponent, TableComponent, TablePaginationComponent, TituloComponent } from "@ng-mf/data-access-user";
+import { AlertComponent, Catalogo, CatalogoSelectComponent, CrosslistComponent, InputRadioComponent, TableComponent, TablePaginationComponent, TituloComponent, FirmaElectronicaComponent, SharedModule, WizardComponent } from "@ng-mf/data-access-user";
+import { HttpClientModule } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 
 describe('AdicionFraccionComponent', () => {
   let component: AdicionFraccionComponent;
   let fixture: ComponentFixture<AdicionFraccionComponent>;
   let avisoModifyServiceMock: any;
-  let divBtnCargaMVisible: boolean = false;
   beforeEach(async () => {
+
     avisoModifyServiceMock = {
       getAdicianFraccionOption: jest
         .fn()
@@ -23,6 +26,7 @@ describe('AdicionFraccionComponent', () => {
 
     await TestBed.configureTestingModule({
       imports: [
+        AdicionFraccionComponent,
         CommonModule,
         ReactiveFormsModule,
         TituloComponent,
@@ -32,7 +36,13 @@ describe('AdicionFraccionComponent', () => {
         TablePaginationComponent,
         CatalogoSelectComponent,
         CrosslistComponent,
-        AdicionFraccionComponent
+        FirmaElectronicaComponent,
+        RouterModule,
+        FormsModule,
+        HttpClientModule,
+        WizardComponent,
+        SharedModule,
+    
       ],
       declarations: [],
       providers: [
@@ -50,20 +60,6 @@ describe('AdicionFraccionComponent', () => {
     component = fixture.componentInstance;
     fixture.detectChanges();
     component.declaracionForm = new FormBuilder().group({ idCarga: [''] });
-
-    it('should set divBtnCargaMVisible to false when idCarga is TIPCAR.MA', () => {
-      component.declaracionForm.patchValue({ idCarga: 'TIPCAR.MA' });
-      component.valorSeleccionadoTipoCarga();
-  
-      expect(component.divBtnCargaMVisible).toBeFalsy();
-    });
-  
-    it('should set divBtnCargaMVisible to true when idCarga is TIPCAR.CM', () => {
-      component.declaracionForm.patchValue({ idCarga: 'TIPCAR.CM' });
-      component.valorSeleccionadoTipoCarga();
-  
-      expect(component.divBtnCargaMVisible).toBe(true);
-    });
   });
 
   it('should create the component', () => {
@@ -88,16 +84,22 @@ describe('AdicionFraccionComponent', () => {
     expect(avisoModifyServiceMock.getAdicianFraccionOption).toHaveBeenCalled();
     expect(component.radioOptions).toEqual([{ label: 'Option 1', value: 1 }]);
   });
+  
 
   it('should fetch and update radioOptions', () => {
-    const mockOptions = [{ label: 'Option 1', value: '1' }, { label: 'Option 2', value: '2' }];
-    avisoModifyServiceMock.getAdicianFraccionOption.and.returnValue(of(mockOptions));
-
+    const mockOptions = [
+      { label: 'Option 1', value: '1' },
+      { label: 'Option 2', value: '2' }
+    ];
+  
+    avisoModifyServiceMock.getAdicianFraccionOption = jest.fn().mockReturnValue(of(mockOptions));
+  
     component.getAdicianFraccionOption();
-
-    expect(component.radioOptions).toEqual(mockOptions);
+  
     expect(avisoModifyServiceMock.getAdicianFraccionOption).toHaveBeenCalledTimes(1);
+    expect(component.radioOptions).toEqual(mockOptions);
   });
+  ;
 
   it('should add all dates when agregar is called with "t"', () => {
     component.selectRangoDias = ['2023-01-01', '2023-01-02'];

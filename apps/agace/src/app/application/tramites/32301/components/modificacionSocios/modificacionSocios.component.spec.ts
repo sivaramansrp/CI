@@ -6,6 +6,11 @@ import { AvisoModifyService } from '../../services/aviso-modify.service';
 import { Tramite32301Store } from '../../estados/tramite32301.store';
 import { Tramite32301Query } from '../../estados/tramite32301.query';
 import { Modal } from 'bootstrap';
+import { AlertComponent, Catalogo, CatalogoSelectComponent, InputRadioComponent, TableComponent, TablePaginationComponent, TituloComponent, FirmaElectronicaComponent, SharedModule, WizardComponent } from "@ng-mf/data-access-user";
+import { CommonModule } from '@angular/common';
+import { HttpClientModule } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 
 describe('ModificacionSociosComponent', () => {
   let component: ModificacionSociosComponent;
@@ -70,8 +75,13 @@ describe('ModificacionSociosComponent', () => {
     } as Partial<Tramite32301Query>;
 
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule],
-      declarations: [ModificacionSociosComponent],
+      imports: [],
+      declarations: [ModificacionSociosComponent, ReactiveFormsModule, CommonModule, TituloComponent, TableComponent, TablePaginationComponent, CatalogoSelectComponent, InputRadioComponent, AlertComponent, FirmaElectronicaComponent,
+                            RouterModule,
+                            FormsModule,
+                            HttpClientModule,
+                            WizardComponent,
+                            SharedModule],
       providers: [
         FormBuilder,
         { provide: AvisoModifyService, useValue: avisoModifyServiceMock },
@@ -117,7 +127,7 @@ describe('ModificacionSociosComponent', () => {
       show: jest.fn(),
       hide: jest.fn(),
     } as unknown as Modal;
-    component.AgregarModelInstance = modalInstanceMock;
+    component.agregarModelInstance = modalInstanceMock;
 
     component.openAgregarModal();
     expect(modalInstanceMock.show).toHaveBeenCalled();

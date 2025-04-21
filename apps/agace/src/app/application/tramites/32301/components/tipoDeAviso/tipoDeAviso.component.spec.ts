@@ -1,4 +1,4 @@
-import { AlertComponent, InputCheckComponent, TituloComponent } from "@ng-mf/data-access-user";
+import { AlertComponent, InputCheckComponent, TituloComponent, FirmaElectronicaComponent, SharedModule, WizardComponent  } from "@ng-mf/data-access-user";
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AvisoModifyService } from '../../services/aviso-modify.service';
@@ -6,6 +6,11 @@ import { of } from 'rxjs';
 import { TipoDeAvisoComponent } from './tipoDeAviso.component';
 import { Tramite32301Query } from '../../estados/tramite32301.query';
 import { Tramite32301Store } from '../../estados/tramite32301.store';
+import { CommonModule } from '@angular/common';
+import { HttpClientModule } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
+
 
 describe('TipoDeAvisoComponent', () => {
   let component: TipoDeAvisoComponent;
@@ -36,7 +41,11 @@ describe('TipoDeAvisoComponent', () => {
 
     await TestBed.configureTestingModule({
       declarations: [],
-      imports: [ReactiveFormsModule, AlertComponent, InputCheckComponent, TituloComponent, TipoDeAvisoComponent],
+      imports: [ReactiveFormsModule, AlertComponent, InputCheckComponent, TituloComponent, TipoDeAvisoComponent, FirmaElectronicaComponent, RouterModule,
+                                  FormsModule,
+                                  HttpClientModule,
+                                  WizardComponent,
+                                  SharedModule],
       providers: [
         FormBuilder,
         { provide: AvisoModifyService, useValue: avisoModifyServiceMock },

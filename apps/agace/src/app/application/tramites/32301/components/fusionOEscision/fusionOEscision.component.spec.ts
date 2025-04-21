@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { AlertComponent, InputRadioComponent, TableComponent, TablePaginationComponent, TituloComponent } from "@ng-mf/data-access-user";
+import { AlertComponent, InputRadioComponent, TableComponent, TablePaginationComponent, TituloComponent, FirmaElectronicaComponent, SharedModule, WizardComponent } from "@ng-mf/data-access-user";
 import { FusionOEscisionComponent } from './fusionOEscision.component';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -8,6 +8,9 @@ import { AvisoModifyService } from '../../services/aviso-modify.service';
 import { Tramite32301Query } from '../../estados/tramite32301.query';
 import { Tramite32301Store } from '../../estados/tramite32301.store';
 import { Modal } from 'bootstrap';
+import { HttpClientModule } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 
 describe('FusionOEscisionComponent', () => {
   let component: FusionOEscisionComponent;
@@ -32,7 +35,12 @@ describe('FusionOEscisionComponent', () => {
 
     await TestBed.configureTestingModule({
       declarations: [],
-      imports: [CommonModule, ReactiveFormsModule, AlertComponent, TituloComponent, InputRadioComponent, TableComponent, TablePaginationComponent, FusionOEscisionComponent],
+      imports: [CommonModule, ReactiveFormsModule, AlertComponent, TituloComponent, InputRadioComponent, TableComponent, TablePaginationComponent, FusionOEscisionComponent, FirmaElectronicaComponent,
+              RouterModule,
+              FormsModule,
+              HttpClientModule,
+              WizardComponent,
+              SharedModule],
       providers: [
         FormBuilder,
         { provide: AvisoModifyService, useValue: avisoModifyServiceMock },

@@ -6,6 +6,7 @@ import {
   InputRadioComponent,
   TableComponent,
   TituloComponent,
+  FirmaElectronicaComponent, SharedModule, WizardComponent
 } from '@ng-mf/data-access-user';
 import { ModificacionGoceInmuebleComponent } from './modificacionGoceInmueble.component';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
@@ -15,6 +16,9 @@ import { Tramite32301Store } from '../../estados/tramite32301.store';
 import { Tramite32301Query } from '../../estados/tramite32301.query';
 import { Modal } from 'bootstrap';
 import { CommonModule } from '@angular/common';
+import { HttpClientModule } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 
 describe('ModificacionGoceInmuebleComponent', () => {
   let component: ModificacionGoceInmuebleComponent;
@@ -54,6 +58,12 @@ describe('ModificacionGoceInmuebleComponent', () => {
         TableComponent,
         CatalogoSelectComponent,
         ModificacionGoceInmuebleComponent,
+        FirmaElectronicaComponent,
+                      RouterModule,
+                      FormsModule,
+                      HttpClientModule,
+                      WizardComponent,
+                      SharedModule
       ],
       providers: [
         FormBuilder,
