@@ -14,7 +14,7 @@ const ROUTES: Routes = [
   {
     path: '',
     pathMatch: 'full',
-    redirectTo: 'contenedor-de-pasos',
+    redirectTo: 'sustancias-quimicas',
   },
   {
     path: 'agregar-datos-mercancia',
