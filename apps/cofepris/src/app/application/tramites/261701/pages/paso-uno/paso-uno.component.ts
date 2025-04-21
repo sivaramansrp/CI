@@ -1,9 +1,10 @@
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { Subject, takeUntil } from 'rxjs';
+import { CONFIGURACIONCOLUMNA } from '../../constantes/cancelacion-peticion.enum';
+import { CancelacionPeticionService } from '../../services/cancelacion-peticion.service';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
 import { TramiteAsociados } from '../../../../shared/models/tramite-asociados.model';
-import { CONFIGURACIONCOLUMNA } from '../../constantes/cancelacion-peticion.enum';
-import { Subject, takeUntil } from 'rxjs';
-import { CancelacionPeticionService } from '../../services/cancelacion-peticion.service';
+
 /**
  * @component
  * @name PasoUnoComponent

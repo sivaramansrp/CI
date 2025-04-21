@@ -1,12 +1,12 @@
+import { CancelacionPeticion261701State, Tramite261701Store } from '../../estados/store/tramite261701.store';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { CancelacionPeticion261701State, Tramite261701Store } from '../../../estados/store/tramite261701.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
 import { ModeloDeFormaDinamica } from '@libs/shared/data-access-user/src';
-import { REPRESENTANTE_LEGAL } from '../../../constantes/cancelacion-peticion.enum';
-import { Tramite261701Query } from '../../../estados/query/tramite261701.query';
+import { REPRESENTANTE_LEGAL } from '../../constantes/cancelacion-peticion.enum';
+import { Tramite261701Query } from '../../estados/query/tramite261701.query';
 
 /**
  * @Component Decorador
