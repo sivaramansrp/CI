@@ -28,8 +28,8 @@ import { Tramite261701Query } from '../../estados/query/tramite261701.query';
     ReactiveFormsModule,
     FormasDinamicasComponent
   ],
-  templateUrl: './permisoCancelar.component.html',
-  styleUrl: './permisoCancelar.component.scss',
+  templateUrl: './permiso-cancelar.component.html',
+  styleUrl: './permiso-cancelar.component.scss',
 })
 export class PermisoCancelarComponent implements OnInit, OnDestroy {
 

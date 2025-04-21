@@ -29,8 +29,8 @@ import { Tramite261701Query } from '../../estados/query/tramite261701.query';
     FormasDinamicasComponent,
     ReactiveFormsModule
   ],
-  templateUrl: './representanteLegal.component.html',
-  styleUrl: './representanteLegal.component.scss',
+  templateUrl: './representante-legal.component.html',
+  styleUrl: './representante-legal.component.scss',
 })
 export class RepresentanteLegalComponent implements OnInit, OnDestroy {
   /**

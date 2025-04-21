@@ -12,8 +12,8 @@ import { Tramite261701Query } from '../../estados/query/tramite261701.query';
  */
 @Component({
   selector: 'manifiestos-declaraciones',
-  templateUrl: './manifiestosDeclaraciones.component.html',
-  styleUrl: './manifiestosDeclaraciones.component.scss',
+  templateUrl: './manifiestos-declaraciones.component.html',
+  styleUrl: './manifiestos-declaraciones.component.scss',
 })
 export class ManifiestosDeclaracionesComponent implements OnInit, AfterViewInit, OnDestroy{
 /** compo doc
@@ -61,7 +61,9 @@ export class ManifiestosDeclaracionesComponent implements OnInit, AfterViewInit,
   constructor(
     private tramite261701Store: Tramite261701Store,
     private tramite261701Query: Tramite261701Query 
-  ) {}
+  ) {
+    // Constructor vacio
+  }
 
   /**
   * compo doc
@@ -102,38 +104,50 @@ export class ManifiestosDeclaracionesComponent implements OnInit, AfterViewInit,
   }
 
   /**
-   * compo doc
    * @method ngAfterViewInit
    * @description
-   * Este gancho se ejecuta después de que la vista del componente ha sido inicializada.
-   * En este método se agrega un evento de escucha al checkbox "manifiestos" para 
-   * actualizar dinámicamente su estado y almacenar el valor correspondiente en 
-   * el store del trámite 261701. Además, se establece el valor inicial del checkbox 
-   * según el estado actual.
+   * Este método se ejecuta después de que la vista del componente ha sido inicializada.
+   * - Agrega un evento de escucha al checkbox "manifiestos" para rastrear los clics.
+   * - Actualiza dinámicamente el estado del checkbox y almacena el valor en el store.
+   * - Establece el valor inicial del checkbox según el estado actual.
    * 
    * @memberof ManifiestosDeclaracionesComponent
    * @returns {void}
    */
   ngAfterViewInit(): void {
-    const CHECKBOX_ELEMENT = document.getElementById('manifiestos');
-    if (CHECKBOX_ELEMENT) {
-      CHECKBOX_ELEMENT.addEventListener('click', () => {
-        this.manifiestosCheckboxChecked = (CHECKBOX_ELEMENT as HTMLInputElement).checked;
+    const ELEMENTO_CHECKBOX = document.getElementById('manifiestos');
+    if (ELEMENTO_CHECKBOX) {
+      // Definir el manejador del evento
+      const MANEJADOR_CLICK = () => {
+        this.manifiestosCheckboxChecked = (ELEMENTO_CHECKBOX as HTMLInputElement).checked;
         this.tramite261701Store.establecerDatos('manifiestos', this.manifiestosCheckboxChecked);
-      });
+      };
+
+      // Agregar el evento de escucha al checkbox
+      ELEMENTO_CHECKBOX.addEventListener('click', MANEJADOR_CLICK);
+
+      // Almacenar el manejador en el elemento para eliminarlo posteriormente
+      (ELEMENTO_CHECKBOX as any).__manejadorClick = MANEJADOR_CLICK;
     }
     this.establecerValor();
   }
 
   /**
    * @method ngOnDestroy
-   * @description Método `ngOnDestroy()`.
-   * Este método se ejecuta cuando el componente se destruye y realiza las siguientes acciones:
-   * - Desuscribe la suscripción a los cambios en el formulario reactivo.
+   * @description
+   * Este método se ejecuta cuando el componente se destruye.
+   * - Elimina el evento de escucha del checkbox "manifiestos" para evitar fugas de memoria.
+   * - Notifica la destrucción del componente a través del Subject `destroyNotifier$`.
+   * 
    * @memberof ManifiestosDeclaracionesComponent
    * @returns {void}
    */
   ngOnDestroy(): void {
+    const ELEMENTO_CHECKBOX = document.getElementById('manifiestos');
+    if (ELEMENTO_CHECKBOX && (ELEMENTO_CHECKBOX as any).__manejadorClick) {
+      // Eliminar el evento de escucha del checkbox
+      ELEMENTO_CHECKBOX.removeEventListener('click', (ELEMENTO_CHECKBOX as any).__manejadorClick);
+    }
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
