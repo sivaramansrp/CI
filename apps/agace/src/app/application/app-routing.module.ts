@@ -37,8 +37,9 @@ const ROUTES: Routes = [
     path: 'registro-solicitud',
     loadChildren: () =>
       import('./tramites/31802/registro-solicitud.module').then(
-        (m) => m.RegistroSolicitudModule),
-   },
+        (m) => m.RegistroSolicitudModule
+      ),
+  },
   {
     path: 'autoridad',
     loadChildren: () =>
@@ -72,6 +73,14 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/32503/aviso-traslado.module').then(
         (m) => m.AvisoTrasladoModule
+      ),
+  },
+
+  {
+    path: 'entrega-acta-solicitante',
+    loadChildren: () =>
+      import('./tramites/32507/entrega-acta.module').then(
+        (m) => m.EntregaActaModule
       ),
   },
 ];
