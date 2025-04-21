@@ -42,7 +42,6 @@ jobs:
       - name: Install dependencies
         run: |
           npm install --force
-
       - name: Set up Docker Buildx
         id: buildx
         uses: docker/setup-buildx-action@v1
@@ -55,10 +54,7 @@ jobs:
           password: ${{ secrets.GHCR_PAT }}
 
       - name: Build image and push to GitHub Container Registry
-        run: |
-          if [[ $GITHUB_REF == 'refs/heads/develop' ]]; then
-            docker compose -f ./docker/modulefederation-microfrontends.yml build --push
-          fi
+        run:  docker compose -f ./docker/modulefederation-microfrontends.yml up -d
 
       - name: Execute remote command (last one)
         uses: appleboy/ssh-action@v0.1.8
