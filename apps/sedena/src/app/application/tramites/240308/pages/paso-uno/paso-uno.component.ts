@@ -41,8 +41,10 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
    */
   constructor(
     private tramite240308Query: Tramite240308Query,
-    private tramite240308Store: Tramite240308Store // eslint-disable-next-line no-empty-function
-  ) {}
+    private tramite240308Store: Tramite240308Store 
+  ) {
+    // 
+  }
 
   /**
    * Angular lifecycle method that runs on component initialization.

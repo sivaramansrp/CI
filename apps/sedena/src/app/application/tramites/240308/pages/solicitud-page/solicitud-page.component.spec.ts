@@ -29,8 +29,8 @@ describe('SolicitudPageComponent', () => {
     component.indice = 1;
     fixture.detectChanges(); 
 
-    const pasoUnoElement = fixture.debugElement.query(By.css('app-paso-uno'));
-    expect(pasoUnoElement).toBeTruthy();
+    const PASO_UNO_ELEMENT= fixture.debugElement.query(By.css('app-paso-uno'));
+    expect(PASO_UNO_ELEMENT).toBeTruthy();
   });
 
   it('should render <app-paso-dos> when indice is 2', () => {
@@ -52,8 +52,8 @@ describe('SolicitudPageComponent', () => {
   it('should render the correct step based on the current indice', () => {
     component.indice = 1;
     fixture.detectChanges();
-    let pasoUnoElement = fixture.debugElement.query(By.css('app-paso-uno'));
-    expect(pasoUnoElement).toBeTruthy();
+    let PASO_UNO_ELEMENT= fixture.debugElement.query(By.css('app-paso-uno'));
+    expect(PASO_UNO_ELEMENT).toBeTruthy();
     let pasoDosElement = fixture.debugElement.query(By.css('app-paso-dos'));
     let pasoTresElement = fixture.debugElement.query(By.css('app-paso-tres'));
     expect(pasoDosElement).toBeFalsy();
@@ -61,19 +61,19 @@ describe('SolicitudPageComponent', () => {
 
     component.indice = 2;
     fixture.detectChanges();
-    pasoUnoElement = fixture.debugElement.query(By.css('app-paso-uno'));
+    PASO_UNO_ELEMENT= fixture.debugElement.query(By.css('app-paso-uno'));
     pasoDosElement = fixture.debugElement.query(By.css('app-paso-dos'));
     pasoTresElement = fixture.debugElement.query(By.css('app-paso-tres'));
-    expect(pasoUnoElement).toBeFalsy();
+    expect(PASO_UNO_ELEMENT).toBeFalsy();
     expect(pasoDosElement).toBeTruthy();
     expect(pasoTresElement).toBeFalsy();
 
     component.indice = 3;
     fixture.detectChanges();
-    pasoUnoElement = fixture.debugElement.query(By.css('app-paso-uno'));
+    PASO_UNO_ELEMENT= fixture.debugElement.query(By.css('app-paso-uno'));
     pasoDosElement = fixture.debugElement.query(By.css('app-paso-dos'));
     pasoTresElement = fixture.debugElement.query(By.css('app-paso-tres'));
-    expect(pasoUnoElement).toBeFalsy();
+    expect(PASO_UNO_ELEMENT).toBeFalsy();
     expect(pasoDosElement).toBeFalsy();
     expect(pasoTresElement).toBeTruthy();
   });

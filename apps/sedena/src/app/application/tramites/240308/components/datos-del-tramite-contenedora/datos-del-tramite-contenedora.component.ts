@@ -5,14 +5,13 @@ import { DatosDelTramiteComponent } from '../../../../shared/components/datos-de
 import { DatosDelTramiteFormState } from '../../../../shared/models/datos-del-tramite.model';
 import { JustificacionTramiteFormState } from '../../../../shared/models/datos-del-tramite.model';
 import { MercanciaDetalle } from '../../../../shared/models/datos-del-tramite.model';
+import { NUMERO_TRAMITE } from '../../../../shared/constants/datos-solicitud.enum';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
 import { Tramite240308Query } from '../../estados/tramite240308Query.query';
 import { Tramite240308Store } from '../../estados/tramite240308Store.store';
 import { takeUntil } from 'rxjs';
-import { NUMERO_TRAMITE } from '../../../../shared/constants/datos-solicitud.enum';
-
 
 /**
  * @title Datos del Trámite Contenedora
@@ -45,10 +44,19 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
    * @property {DatosDelTramiteFormState} datosDelTramiteFormState
    */
   public datosDelTramiteFormState!: DatosDelTramiteFormState;
-
+  /**
+   * @property {JustificacionTramiteFormState} justificacionTramiteFormState
+   * Estado actual del formulario de justificación del trámite.
+   * Contiene los datos capturados en el formulario de justificación.
+   */
   public justificacionTramiteFormState!: JustificacionTramiteFormState;
 
-  idProcedimiento :number = NUMERO_TRAMITE.TRAMITE_240308;
+  /**
+   * @property {number} idProcedimiento
+   * Identificador numérico del procedimiento asociado al trámite.
+   * En este caso, corresponde al trámite 240308.
+   */
+  idProcedimiento: number = NUMERO_TRAMITE.TRAMITE_240308;
 
   /**
    * Referencia al componente Crosslist para manejar la selección de aduanas.
@@ -115,7 +123,7 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
         this.datosDelTramiteFormState = data;
       });
 
-      this.tramiteQuery.getJustificacionTramite$
+    this.tramiteQuery.getJustificacionTramite$
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((data) => {
         this.justificacionTramiteFormState = data;

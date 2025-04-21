@@ -44,8 +44,10 @@ export class PagoDeDerechosContenedoraComponent implements OnInit, OnDestroy {
    */
   constructor(
     private tramiteQuery: Tramite240308Query,
-    private tramiteStore: Tramite240308Store // eslint-disable-next-line no-empty-function
-  ) {}
+    private tramiteStore: Tramite240308Store 
+  ) {
+    // 
+  }
 
   /**
    * Hook del ciclo de vida que se ejecuta al inicializar el componente.
