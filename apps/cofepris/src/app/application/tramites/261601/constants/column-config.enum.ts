@@ -2,7 +2,9 @@
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
 import { TramitesAsociados } from '../models/destinatario.model';
 
-
+/**
+ * Configuración de las columnas de la tabla para los trámites asociados.
+ */
 export const DESTINATARIO_CONFIGURACION_TABLA: ConfiguracionColumna<TramitesAsociados>[] = [
   {
     /** Configuración de la columna para el número */

@@ -1,60 +1,59 @@
-// import { ComponentFixture, TestBed } from '@angular/core/testing';
-// import { WizardComponent } from '@libs/shared/data-access-user/src';
-// import { BtnContinuarComponent } from '@libs/shared/data-access-user/src';
-// import { PermisoSanitarioDispositivosMedicosComponent } from './correccion-interna-de-la-cofepris';
+// @ts-nocheck
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { By } from '@angular/platform-browser';
+import { Observable, of as observableOf, throwError } from 'rxjs';
 
-// describe('ImportacionProductosComponent', () => {
-//   let component: PermisoSanitarioDispositivosMedicosComponent;
-//   let fixture: ComponentFixture<PermisoSanitarioDispositivosMedicosComponent>;
+import { Component } from '@angular/core';
+import { CorreccionInternaDeLaCofeprisComponent } from './correccion-interna-de-la-cofepris.component';
 
-//   beforeEach(async () => {
-//     await TestBed.configureTestingModule({
-//       declarations: [PermisoSanitarioDispositivosMedicosComponent],
-//       imports: [WizardComponent, BtnContinuarComponent]
-//     }).compileComponents();
+@Directive({ selector: '[myCustom]' })
+class MyCustomDirective {}
 
-//     fixture = TestBed.createComponent(PermisoSanitarioDispositivosMedicosComponent);
-//     component = fixture.componentInstance;
 
-//     component.wizardComponent = {
-//       siguiente: jest.fn(),
-//       atras: jest.fn(),
-//     } as unknown as WizardComponent; 
-//   });
 
-//   it('should create the component', () => {
-//     expect(component).toBeTruthy();
-//   });
+describe('CorreccionInternaDeLaCofeprisComponent', () => {
+  let fixture;
+  let component;
 
-//   // it('should navigate to the next step when accion is "cont" and valor is valid', () => {
-//   //   const accionBoton = { accion: 'cont', valor: 2 };
-//   //   component.getValorIndice(accionBoton);
-//   //   expect(component.indice).toBe(2); 
-//   //   expect(component.wizardComponent.siguiente).toHaveBeenCalled(); 
-//   //   expect(component.wizardComponent.atras).not.toHaveBeenCalled();
-//   // });
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [ FormsModule, ReactiveFormsModule ],
+      declarations: [
+        CorreccionInternaDeLaCofeprisComponent,
+      ],
+      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
+      providers: [
 
-//   // it('should navigate to the previous step when accion is "atras" and valor is valid', () => {
-//   //   const accionBoton = { accion: 'atras', valor: 3 };
-//   //   component.getValorIndice(accionBoton);
-//   //   expect(component.indice).toBe(3);
-//   //   expect(component.wizardComponent.atras).toHaveBeenCalled(); 
-//   //   expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
-//   // });
+      ]
+    }).overrideComponent(CorreccionInternaDeLaCofeprisComponent, {
 
-//   // it('should not navigate if valor is out of range (too low)', () => {
-//   //   const accionBoton = { accion: 'cont', valor: 0 };
-//   //   component.getValorIndice(accionBoton);
-//   //   expect(component.indice).toBe(1);
-//   //   expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
-//   //   expect(component.wizardComponent.atras).not.toHaveBeenCalled();
-//   // });
+    }).compileComponents();
+    fixture = TestBed.createComponent(CorreccionInternaDeLaCofeprisComponent);
+    component = fixture.debugElement.componentInstance;
+  });
 
-//   // it('should not navigate if valor is out of range (too high)', () => {
-//   //   const accionBoton = { accion: 'cont', valor: 6 };
-//   //   component.getValorIndice(accionBoton);
-//   //   expect(component.indice).toBe(1);
-//   //   expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
-//   //   expect(component.wizardComponent.atras).not.toHaveBeenCalled();
-//   // });
-// });
+  afterEach(() => {
+    component.ngOnDestroy = function() {};
+    fixture.destroy();
+  });
+
+  it('should run #constructor()', async () => {
+    expect(component).toBeTruthy();
+  });
+
+  it('should run #getValorIndice()', async () => {
+    component.wizardComponent = component.wizardComponent || {};
+    component.wizardComponent.siguiente = jest.fn();
+    component.wizardComponent.atras = jest.fn();
+    component.getValorIndice({
+      valor: {},
+      accion: {}
+    });
+    expect(component.wizardComponent.siguiente).toHaveBeenCalled();
+    expect(component.wizardComponent.atras).toHaveBeenCalled();
+  });
+
+});
