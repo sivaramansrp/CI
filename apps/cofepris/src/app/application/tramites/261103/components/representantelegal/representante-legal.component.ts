@@ -3,10 +3,10 @@ import { Component } from '@angular/core';
 import { DatosProcedureQuery } from '../../../../estados/queries/tramites261103.query';
 import { DatosProcedureState } from '../../../../estados/tramites/tramites261103.store';
 import { DatosProcedureStore } from '../../../../estados/tramites/tramites261103.store';
-import { DatosSolicitudService } from '../../services/modificacion-permiso-importacion-medicamentos.service';
 import { Domicilio } from '../../modelos/domicilio-establecimientos.model';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
+import { ModificacionPermisoImportacionMedicamentosService } from '../../services/modificacion-permiso-importacion-medicamentos.service';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -113,7 +113,7 @@ ngOnDestroy(): void {
    * @returns Booleano que indica si el campo es válido
    */
   isValid(field: string): boolean {
-    return Boolean(DatosSolicitudService.isValid(this.domicilioEstablecimiento, field));
+    return Boolean(ModificacionPermisoImportacionMedicamentosService.isValid(this.domicilioEstablecimiento, field));
   }
     /**
 * Gancho de ciclo de vida obtenerDatosFormulario

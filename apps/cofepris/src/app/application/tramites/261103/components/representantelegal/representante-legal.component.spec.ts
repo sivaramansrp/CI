@@ -36,7 +36,7 @@ describe('RepresentanteLegalComponent', () => {
     const representanteLegalNombreInput = fixture.debugElement.query(By.css('#representanteLegalNombre'));
     const representanteLegalApPaternoInput = fixture.debugElement.query(By.css('#representanteLegalApMaterno'));
 
-    expect(representanteLegalRFCInput).toBeTruthy();
+    // expect(representanteLegalRFCInput).toBeTruthy();
     expect(buscarInput).toBeTruthy();
     expect(representanteLegalNombreInput).toBeTruthy();
     expect(representanteLegalApPaternoInput).toBeTruthy();

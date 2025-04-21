@@ -5,11 +5,11 @@ import { NO_ERRORS_SCHEMA, Component } from '@angular/core';
 import { of, Observable } from 'rxjs';
 import { DatosProcedureQuery } from '../../../../estados/queries/tramites261101.query'
 import { DatosProcedureStore } from '../../../../estados/tramites/tramites261101.store';
-import { DatosSolicitudService } from '../../../261101/services/datoSolicitude.service';
 import { TramiteAsociadosComponent } from '../../../../shared/components/tramite-asociados/tramite-asociados.component';
 import { PagoDeDerechosComponent } from '../../../../shared/components/pago-de-derechos-new/pago-de-derechos.component';
-import { DatosSolicitudComponent } from '../../components/modificacion-permiso-importacion-medicamentos/modificacion-permiso-importacion-medicamentos';
+import { ModificacionPermisoImportacionMedicamentosComponent } from '../../components/modificacion-permiso-importacion-medicamentos/modificacion-permiso-importacion-medicamentos';
 import { TercerosRelacionadosFabricanteComponent } from '../../components/terceros-relacionados-fabricante/terceros-relacionados-fabricante.component';
+import { ModificacionPermisoImportacionMedicamentosService } from '../../services/modificacion-permiso-importacion-medicamentos.service';
 
 
 @Component({
@@ -17,7 +17,7 @@ import { TercerosRelacionadosFabricanteComponent } from '../../components/tercer
   template: '<div></div>',
 })
 class MockSolicitanteComponent {}
-interface DatosSolicitudServiceMockType {
+interface ModificacionPermisoImportacionMedicamentosServiceMockType {
   obtenerTramitesAsociados: jest.Mock<Observable<any>>;
   inicializaPagoDeDerechosDatosCatalogos: jest.Mock<void>;
   banco: { id: number; descripcion: string }[];
@@ -46,12 +46,12 @@ interface DatosProcedureQueryMockType {
 describe('PasoUnoComponent', () => {
   let component: PasoUnoComponent;
   let fixture: ComponentFixture<PasoUnoComponent>;
-  let datosSolicitudServiceMock: DatosSolicitudServiceMockType;
+  let ModificacionPermisoImportacionMedicamentosServiceMock: ModificacionPermisoImportacionMedicamentosServiceMockType;
   let datosProcedureStoreMock: DatosProcedureStoreMockType;
   let datosProcedureQueryMock: DatosProcedureQueryMockType;
 
   beforeEach(async () => {
-    datosSolicitudServiceMock = {
+    ModificacionPermisoImportacionMedicamentosServiceMock = {
       obtenerTramitesAsociados: jest.fn().mockReturnValue(of([])),
       inicializaPagoDeDerechosDatosCatalogos: jest.fn(),
       banco: [{ id: 1, descripcion: 'Banco 1' }],
@@ -78,11 +78,11 @@ describe('PasoUnoComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      declarations: [PasoUnoComponent, DatosSolicitudComponent, TercerosRelacionadosFabricanteComponent],
+      declarations: [PasoUnoComponent, ModificacionPermisoImportacionMedicamentosComponent, TercerosRelacionadosFabricanteComponent],
       imports: [ReactiveFormsModule, TramiteAsociadosComponent, PagoDeDerechosComponent],
       providers: [
         FormBuilder,
-        { provide: DatosSolicitudService, useValue: datosSolicitudServiceMock },
+        { provide: ModificacionPermisoImportacionMedicamentosService, useValue: ModificacionPermisoImportacionMedicamentosServiceMock },
         { provide: DatosProcedureStore, useValue: datosProcedureStoreMock },
         { provide: DatosProcedureQuery, useValue: datosProcedureQueryMock },
       ],
@@ -102,7 +102,7 @@ describe('PasoUnoComponent', () => {
     const tramiteAsociadosMock = [
       { id: 1, folioTramite: '12345', tipoTramite: 'Tipo A', estatus: 'Activo', fetchaAltaDeRegistro: '2025-04-10' },
     ];
-    datosSolicitudServiceMock.obtenerTramitesAsociados.mockReturnValue(of(tramiteAsociadosMock));
+    ModificacionPermisoImportacionMedicamentosServiceMock.obtenerTramitesAsociados.mockReturnValue(of(tramiteAsociadosMock));
 
     component.ngOnInit();
     expect(component.tramiteAsociados).toEqual(tramiteAsociadosMock);

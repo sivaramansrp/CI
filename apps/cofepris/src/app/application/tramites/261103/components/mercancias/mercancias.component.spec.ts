@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { MercanciasComponent } from './mercancias.component';
-import { DatosSolicitudService } from '../../services/modificacion-permiso-importacion-medicamentos.service';
+import { ModificacionPermisoImportacionMedicamentosService } from '../../services/modificacion-permiso-importacion-medicamentos.service';
+
 import { DatosProcedureQuery } from '../../../../estados/queries/tramites261101.query';
 import { DatosProcedureStore } from '../../../../estados/tramites/tramites261101.store';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
@@ -15,12 +16,12 @@ describe('MercanciasComponent', () => {
   describe('MercanciasComponent', () => {
     let component: MercanciasComponent;
     let fixture: ComponentFixture<MercanciasComponent>; 
-    let mockDatosSolicitudService: { getMercanciasData: jest.Mock };
+    let mockModificacionPermisoImportacionMedicamentosService: { getMercanciasData: jest.Mock };
     let mockDatosProcedureStore: { selectProrroga: jest.Mock };
     let mockDatosProcedureQuery: { selectProrroga: jest.Mock };
   
     beforeEach(async () => {
-      mockDatosSolicitudService = {
+      mockModificacionPermisoImportacionMedicamentosService = {
         getMercanciasData: jest.fn().mockReturnValue(of([])),
       };
       mockDatosProcedureStore = {
@@ -34,7 +35,7 @@ describe('MercanciasComponent', () => {
         imports: [ReactiveFormsModule, MercanciasComponent],
         providers: [
           FormBuilder,
-          { provide: DatosSolicitudService, useValue: mockDatosSolicitudService },
+          { provide: ModificacionPermisoImportacionMedicamentosService, useValue: mockModificacionPermisoImportacionMedicamentosService },
           { provide: DatosProcedureStore, useValue: mockDatosProcedureStore },
           { provide: DatosProcedureQuery, useValue: mockDatosProcedureQuery },
         ],
@@ -46,12 +47,12 @@ describe('MercanciasComponent', () => {
     });
   
     // ...existing tests...
-  });  let mockDatosSolicitudService: {getMercanciasData:jest.Mock};
+  });  let mockModificacionPermisoImportacionMedicamentosService: {getMercanciasData:jest.Mock};
   let mockDatosProcedureStore: {selectProrroga:jest.Mock};
   let mockDatosProcedureQuery: {selectProrroga:jest.Mock};
 
   beforeEach(async () => {
-    mockDatosSolicitudService = {
+    mockModificacionPermisoImportacionMedicamentosService = {
       getMercanciasData: jest.fn().mockReturnValue(of([])),
     };
     mockDatosProcedureStore = {
@@ -65,7 +66,7 @@ describe('MercanciasComponent', () => {
       imports: [ReactiveFormsModule, MercanciasComponent],
       providers: [
         FormBuilder,
-        { provide: DatosSolicitudService, useValue: mockDatosSolicitudService },
+        { provide: ModificacionPermisoImportacionMedicamentosService, useValue: mockModificacionPermisoImportacionMedicamentosService },
         { provide: DatosProcedureStore, useValue: mockDatosProcedureStore },
         { provide: DatosProcedureQuery, useValue: mockDatosProcedureQuery },
       ],
@@ -99,10 +100,10 @@ describe('MercanciasComponent', () => {
 
   it('should call getMercanciasData and set Mercanciasdata', () => {
     const mockResponse = [{ clasificacionDelProducto: 'Test' }];
-    mockDatosSolicitudService.getMercanciasData.mockReturnValue(of(mockResponse));
+    mockModificacionPermisoImportacionMedicamentosService.getMercanciasData.mockReturnValue(of(mockResponse));
 
     component.mercanciasData();
-    expect(mockDatosSolicitudService.getMercanciasData).toHaveBeenCalled();
+    expect(mockModificacionPermisoImportacionMedicamentosService.getMercanciasData).toHaveBeenCalled();
     expect(component.mercanciasDatas).toEqual(mockResponse);
   });
 
@@ -134,7 +135,7 @@ describe('MercanciasComponent', () => {
 
   it('should handle errors in getMercanciasData gracefully', () => {
     const error = new Error('Test error');
-    mockDatosSolicitudService.getMercanciasData.mockReturnValue(of(() => { throw error; }));
+    mockModificacionPermisoImportacionMedicamentosService.getMercanciasData.mockReturnValue(of(() => { throw error; }));
 
     expect(() => component.mercanciasData()).not.toThrow();
   });
@@ -166,7 +167,7 @@ describe('MercanciasComponent', () => {
   });
 
   it('should handle empty response from getMercanciasData', () => {
-    mockDatosSolicitudService.getMercanciasData.mockReturnValue(of([]));
+    mockModificacionPermisoImportacionMedicamentosService.getMercanciasData.mockReturnValue(of([]));
     component.mercanciasData();
     expect(component.mercanciasDatas).toEqual([]);
   });

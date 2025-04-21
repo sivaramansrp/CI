@@ -18,7 +18,7 @@ describe('ManifiestosComponent', () => {
   beforeEach(() => {  
     fixture = TestBed.createComponent(ManifiestosComponent);
     component = fixture.componentInstance;
-    component.manifestoDeVeracidad = 'Test Manifesto';
+    // component.manifestoDeVeracidad = 'Test Manifesto';
     component.radioOptions = [
       { label: 'Option 1', value: 'Option 1' },
       { label: 'Option 2', value: 'Option 2' },

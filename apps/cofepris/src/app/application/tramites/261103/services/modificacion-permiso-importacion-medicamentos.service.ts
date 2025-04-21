@@ -14,7 +14,7 @@ import { TramiteAsociados } from '../../../shared/models/tramite-asociados.model
   providedIn: 'root'
 })  
 
-export class DatosSolicitudService {
+export class ModificacionPermisoImportacionMedicamentosService {
 
   /**
  * Lista de catálogos relacionados con los bancos.
@@ -117,8 +117,8 @@ export class DatosSolicitudService {
          * Si la variable o la URL no son válidas, se asigna un arreglo vacío a la variable.
          */
         obtenerRespuestaPorUrl(
-          self: DatosSolicitudService,
-          variable: keyof DatosSolicitudService,
+          self: ModificacionPermisoImportacionMedicamentosService,
+          variable: keyof ModificacionPermisoImportacionMedicamentosService,
           url: string
         ): void {
           if (self && variable && url) {

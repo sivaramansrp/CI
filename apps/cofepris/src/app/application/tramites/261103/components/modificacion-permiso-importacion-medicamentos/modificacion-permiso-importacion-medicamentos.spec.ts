@@ -1,19 +1,19 @@
 import { TestBed } from '@angular/core/testing';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { DatosSolicitudComponent } from './modificacion-permiso-importacion-medicamentos';
-import { DatosSolicitudService } from '../../services/modificacion-permiso-importacion-medicamentos.service'
+import { ModificacionPermisoImportacionMedicamentosService } from '../../services/modificacion-permiso-importacion-medicamentos.service';
 import { DatosProcedureQuery } from '../../../../estados/queries/tramites261101.query';
 import { DatosProcedureStore } from '../../../../estados/tramites/tramites261101.store';
 import { of } from 'rxjs';
+import { ModificacionPermisoImportacionMedicamentosComponent } from './modificacion-permiso-importacion-medicamentos';
 
-describe('DatosSolicitudComponent', () => {
-  let component: DatosSolicitudComponent;
-  let mockDatosSolicitudService: { isValid: jest.Mock };
+describe('ModificacionPermisoImportacionMedicamentosComponent', () => {
+  let component: ModificacionPermisoImportacionMedicamentosComponent;
+  let mockModificacionPermisoImportacionMedicamentosService: { isValid: jest.Mock };
   let mockDatosProcedureStore: { establecerDatos: jest.Mock };
   let mockDatosProcedureQuery: { selectideGenerica1$: jest.Mock };
 
   beforeEach(() => {
-    mockDatosSolicitudService = {
+    mockModificacionPermisoImportacionMedicamentosService = {
       isValid: jest.fn() as jest.Mock,
     };
 
@@ -31,16 +31,16 @@ describe('DatosSolicitudComponent', () => {
     };
 
     TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule, DatosSolicitudComponent],
+      imports: [ReactiveFormsModule, ModificacionPermisoImportacionMedicamentosComponent],
       providers: [
         FormBuilder,
-        { provide: DatosSolicitudService, useValue: mockDatosSolicitudService },
+        { provide: ModificacionPermisoImportacionMedicamentosService, useValue: mockModificacionPermisoImportacionMedicamentosService },
         { provide: DatosProcedureStore, useValue: mockDatosProcedureStore },
         { provide: DatosProcedureQuery, useValue: mockDatosProcedureQuery },
       ],
     }).compileComponents();
 
-    const fixture = TestBed.createComponent(DatosSolicitudComponent);
+    const fixture = TestBed.createComponent(ModificacionPermisoImportacionMedicamentosComponent);
     component = fixture.componentInstance;
   });
 
@@ -63,7 +63,7 @@ describe('DatosSolicitudComponent', () => {
 
   it('debería validar un campo del formulario usando isValid', () => {
     // Simula el valor de retorno del método isValid en el servicio
-    mockDatosSolicitudService.isValid.mockReturnValue(true);
+    mockModificacionPermisoImportacionMedicamentosService.isValid.mockReturnValue(true);
 
     // Inicializa el formulario con un control
     component.preOperativeForm = new FormBuilder().group({
@@ -74,7 +74,7 @@ describe('DatosSolicitudComponent', () => {
     const result = component.isValid('ideGenerica1');
 
     // Verifica que el método isValid del servicio se haya llamado con los argumentos correctos
-    expect(mockDatosSolicitudService.isValid).toHaveBeenCalledWith(component.preOperativeForm, 'ideGenerica1');
+    expect(mockModificacionPermisoImportacionMedicamentosService.isValid).toHaveBeenCalledWith(component.preOperativeForm, 'ideGenerica1');
 
     // Verifica que el resultado sea true (según el mock)
     expect(result).toBe(true);

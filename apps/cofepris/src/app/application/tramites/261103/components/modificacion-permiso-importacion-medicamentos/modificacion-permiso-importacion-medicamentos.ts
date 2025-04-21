@@ -6,7 +6,6 @@ import { Component } from '@angular/core';
 import { DatosProcedureQuery } from '../../../../estados/queries/tramites261103.query';
 import { DatosProcedureState } from '../../../../estados/tramites/tramites261103.store';
 import { DatosProcedureStore } from '../../../../estados/tramites/tramites261103.store';
-import { DatosSolicitudService } from '../../services/modificacion-permiso-importacion-medicamentos.service';
 import { DatosestablecimientoComponent } from '../datos-establecimiento/datos-establecimiento.component';
 import { DomicilioEstablecimientosComponent } from '../domicilio-establecimientos/domicilio-establecimientos.component';
 import { FormBuilder } from '@angular/forms';
@@ -14,6 +13,7 @@ import { FormGroup } from '@angular/forms';
 import { InputRadioComponent } from '@libs/shared/data-access-user/src';
 import { ManifiestosComponent } from '../manifiestos/manifiestos.component';
 import { MercanciasComponent } from '../mercancias/mercancias.component';
+import { ModificacionPermisoImportacionMedicamentosService } from '../../services/modificacion-permiso-importacion-medicamentos.service';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -150,7 +150,7 @@ export class ModificacionPermisoImportacionMedicamentosComponent implements OnIn
    * @returns Booleano que indica si el campo es válido
    */
   isValid(field: string): boolean {
-    return Boolean(DatosSolicitudService.isValid(this.preOperativeForm, field));
+    return Boolean(ModificacionPermisoImportacionMedicamentosService.isValid(this.preOperativeForm, field));
   }
   /**
 * Gancho de ciclo de vida obtenerDatosFormulario

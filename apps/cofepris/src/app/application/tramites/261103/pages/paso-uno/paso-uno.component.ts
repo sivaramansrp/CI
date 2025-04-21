@@ -13,7 +13,7 @@ import { CONFIGURACIONCOLUMNA } from '../../enum/solicitud-permiso.enum';
 import { DatosProcedureQuery } from '../../../../estados/queries/tramites261103.query'
 import { DatosProcedureState } from '../../../../estados/tramites/tramites261103.store';
 import { DatosProcedureStore } from '../../../../estados/tramites/tramites261103.store';
-import { DatosSolicitudService } from '../../../261101/services/datoSolicitude.service';
+import { ModificacionPermisoImportacionMedicamentosService } from '../../services/modificacion-permiso-importacion-medicamentos.service';
 import { Subject } from 'rxjs';
 import { TramiteAsociados } from '../../../../shared/models/tramite-asociados.model';
 import { takeUntil } from 'rxjs';
@@ -71,7 +71,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    */
   constructor(
     private formBuilder: FormBuilder,
- private datosSolicitudService: DatosSolicitudService,
+ private modificacionPermisoImportacionMedicamentosService: ModificacionPermisoImportacionMedicamentosService,
     private store: DatosProcedureStore,
     private query: DatosProcedureQuery
   ) {
@@ -89,14 +89,14 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
         this.estadoSolicitudPermiso = estadoSolicitudPermiso;
       });
 
-    this.datosSolicitudService
+    this.modificacionPermisoImportacionMedicamentosService
       .obtenerTramitesAsociados()
       .pipe(takeUntil(this.notificadorDestruccion$))
       .subscribe((tramiteAsociados: TramiteAsociados[]) => {
         this.tramiteAsociados = tramiteAsociados;
       });
 
-    this.datosSolicitudService.inicializaPagoDeDerechosDatosCatalogos();
+    this.modificacionPermisoImportacionMedicamentosService.inicializaPagoDeDerechosDatosCatalogos();
   }
 
   /**
@@ -150,7 +150,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    */
   seleccionaTab(i: number): void {
     if (i === 4) {
-      this.banco = this.datosSolicitudService.banco;
+      this.banco = this.modificacionPermisoImportacionMedicamentosService.banco;
       this.crearformularioPagoDerechos();
     }
     this.indice = i;

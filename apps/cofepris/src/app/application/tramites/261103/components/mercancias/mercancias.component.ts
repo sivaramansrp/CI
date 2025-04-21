@@ -5,10 +5,10 @@ import { Component } from '@angular/core';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
 import { DatosProcedureQuery } from '../../../../estados/queries/tramites261103.query';
 import { DatosProcedureState } from '../../../../estados/tramites/tramites261103.store';
-import { DatosSolicitudService } from '../../services/modificacion-permiso-importacion-medicamentos.service'
 import { FormControl } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { Mercancias } from '../../modelos/mercancias.model';
+import { ModificacionPermisoImportacionMedicamentosService } from '../../services/modificacion-permiso-importacion-medicamentos.service'
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
@@ -65,7 +65,7 @@ export class MercanciasComponent implements OnInit, OnDestroy {
    * 
    * @param fb - Una instancia de FormBuilder utilizada para crear y gestionar formularios.
    */
-  constructor( private datosSolicitudService: DatosSolicitudService,
+  constructor( private modificacionPermisoImportacionMedicamentosService: ModificacionPermisoImportacionMedicamentosService,
     private query: DatosProcedureQuery,
   ) {
     // Constructor del componente
@@ -86,7 +86,7 @@ export class MercanciasComponent implements OnInit, OnDestroy {
    * Cargar datos de domicilioEstablecimiento
    */
   mercanciasData(): void {
-    this.datosSolicitudService.getMercanciasData()
+    this.modificacionPermisoImportacionMedicamentosService.getMercanciasData()
       .pipe(takeUntil(this.destroy$))
       .subscribe(response => {
         this.mercanciasDatas = response;
