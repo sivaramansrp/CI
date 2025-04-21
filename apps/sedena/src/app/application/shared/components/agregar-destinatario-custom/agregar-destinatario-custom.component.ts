@@ -1,4 +1,4 @@
-import { PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE } from '../../constants/datos-solicitud.enum';
+import { COLONIA_FIELD_FLAG, PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE } from '../../constants/datos-solicitud.enum';
 import { STR_NACIONAL } from '../../constants/datos-solicitud.enum';
 import { TERCEROS_NACIONALIDAD_OPCIONES } from '../../constants/datos-solicitud.enum';
 import { TIPO_PERSONA_OPCIONES } from '../../constants/datos-solicitud.enum';
@@ -132,6 +132,16 @@ export class AgregarDestinatarioCustomComponent
    */
   public mostrarCamposNoContribuyente: boolean = false;
 
+
+    /**
+   * @property mostrarCamposNoContribuyente
+   * @description Controla la visibilidad de los campos específicos para no contribuyentes.
+   * @type {boolean}
+   * @default false
+   */
+    public colonia_visibilidad: boolean = false;
+
+
   /**
    * Emite la lista de destinatarios actualizada para ser consumida por otros componentes.
    * @property {EventEmitter<Destinatario[]>} updateDestinatarioFinalTabla
@@ -226,6 +236,7 @@ export class AgregarDestinatarioCustomComponent
    * Llama al método `cargarDatos()`.
    */
   ngOnInit(): void {
+    this.colonia_visibilidad = COLONIA_FIELD_FLAG.includes(this.idProcedimiento);
     this.crearFormaulario();
     this.cargarDatos();
     if(this.formaDatos) {
