@@ -269,6 +269,21 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * @type {Catalogo[]} Arreglo que contiene los catálogos disponibles para el número de identificación de la carga (NICO).
    */
   nicoCatalogoArray: Catalogo[] = nicoCatalogoVal as Catalogo[];
+
+  /**
+ * @property
+ * @name tituloParte
+ * @description
+ * Título que se utiliza para mostrar el encabezado de la sección relacionada con los países de destino.
+ * Este valor puede ser utilizado en la plantilla del componente para personalizar el texto mostrado.
+ * 
+ * @type {string}
+ * @default 'País(es) de origen'
+ * 
+ * @example
+ * <h1>{{ tituloParte }}</h1>
+ */
+ tituloParte = 'País(es) de origen';
  
   /**
  * @public

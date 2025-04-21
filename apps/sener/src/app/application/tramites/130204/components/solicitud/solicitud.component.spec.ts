@@ -39,7 +39,32 @@ describe('SolicitudComponent', () => {
     };
 
     tramiteQueryMock = {
-      selectSolicitud$: of({}),
+      selectSolicitud$: of({
+        plazo: '30 días',
+        descripcion: 'Descripción de prueba',
+        fraccion: '1234.56.78',
+        nico: 'NICO123',
+        cantidad: '100',
+        valorPartidaUSD: 500,
+        umt: 'kg',
+        solicitud: 'Solicitud123',
+        regimen: 'Regimen Especial',
+        clasificacion: 'Clasificación A',
+        filaSeleccionada: [],
+        cantidadModificar: '10',
+        valorPartidaUSDPartidasDeLaMercancia: 1000,
+        descripcionModificar: 'Descripción de modificación',
+        valorFacturaUSD: '5000',
+        bloque: 'Bloque A',
+        usoEspecifico: 'Uso específico',
+        justificacionImportacionExportacion: 'Justificación',
+        observaciones: 'Sin observaciones',
+        entidad: 'Entidad A',
+        representacion: 'Representación A',
+        mostrarTabla: false,
+        acotacion: 'Acotación',
+        descripcionNico: 'Descripción NICO',
+      }),
       mostrarTabla$: of(false),
     };
 
@@ -117,7 +142,7 @@ describe('SolicitudComponent', () => {
 
         // 4) Invocar el manejador
     component.handleStoreUpdate({
-      form,
+      form: FORM,
       campo: 'fraccion',
       metodoNombre: 'setFraccion'
     });
@@ -142,7 +167,7 @@ describe('SolicitudComponent', () => {
 
     const SPYSET = jest.spyOn(component, 'setValoresStore');
     component.handleStoreUpdate({
-      form,
+      form: FORM,
       campo: 'nico',
       metodoNombre: 'setNico'
     });
