@@ -1703,8 +1703,8 @@
     {
         "id": 244,
         "tramite": 270101,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "/inbal/informacion-arte-exportar/pantallas",
+        "linkDepartment": "/pago/informacion-arte-exportar/pantallas",
         "department": "inbal"
     },
     {
