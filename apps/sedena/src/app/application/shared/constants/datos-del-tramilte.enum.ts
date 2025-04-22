@@ -163,6 +163,14 @@ export const AGGREGAR_MERCANCIA_PAISE_OCULTAR = [240108];
  */
 export const PERMISO_JUSTIFICACION = [240308];
 
+/**
+ * Constante que define una lista de permisos generales que deben ser ocultados.
+ * 
+ * @const OCULTAR_PERMISO_GENERAL
+ * @type {number[]}
+ * @description Contiene un arreglo de identificadores numéricos que representan permisos específicos
+ * que no deben ser visibles o accesibles en ciertas partes de la aplicación.
+ */
 export const OCULTAR_PERMISO_GENERAL = [240102];
 
 /**
