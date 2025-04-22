@@ -23,12 +23,6 @@ import { takeUntil } from 'rxjs';
 })
 export class PagoDeDerechosContenedoraComponent implements OnInit, OnDestroy {
   /**
-   * Observable para liberar suscripciones al destruir el componente.
-   * @property {Subject<void>} unsubscribe$
-   */
-  private unsubscribe$ = new Subject<void>();
-
-  /**
    * Estado actual del formulario de pago de derechos.
    * @property {PagoDerechosFormState} pagoDerechoFormState
    */
@@ -77,8 +71,8 @@ export class PagoDeDerechosContenedoraComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   ngOnDestroy(): void {
-    this.unsubscribe$.next();
-    this.unsubscribe$.complete();
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   /**

@@ -25,12 +25,6 @@ import { takeUntil } from 'rxjs';
 })
 export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
   /**
-   * Observable para limpiar suscripciones activas al destruir el componente.
-   * @property {Subject<void>} unsubscribe$
-   */
-  private unsubscribe$ = new Subject<void>();
-
-  /**
    * Datos de la tabla de mercancías que se muestran en el formulario.
    * @property {MercanciaDetalle[]} datosMercanciaTabla
    */
@@ -91,8 +85,8 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   ngOnDestroy(): void {
-    this.unsubscribe$.next();
-    this.unsubscribe$.complete();
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   /**
