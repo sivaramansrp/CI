@@ -381,6 +381,10 @@ export class AgregarProveedorCustomComponent implements OnDestroy, OnInit, OnCha
       case NUMERO_TRAMITE.TRAMITE_240117:
         this.tercerosNacionalidadOpciones = TERCEROS_NACIONALIDAD_OPCIONES_EXTRANJERO;
         break
+      case NUMERO_TRAMITE.TRAMITE_240121:
+        this.tercerosNacionalidadOpciones =
+          TERCEROS_NACIONALIDAD_OPCIONES_EXTRANJERO;
+        break;
       default:
         this.tercerosNacionalidadOpciones = TERCEROS_NACIONALIDAD_OPCIONES;
 
