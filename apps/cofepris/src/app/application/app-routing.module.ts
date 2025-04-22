@@ -412,6 +412,12 @@ const ROUTES: Routes = [
           )
   },
 
+  {
+    path: 'cancelacion-peticion',
+    loadChildren: () =>
+      import('./tramites/261701/cancelacion-peticion.module').then(
+        (m) => m.CancelacionPeticionModule)
+  },
 ];
 
 @NgModule({
