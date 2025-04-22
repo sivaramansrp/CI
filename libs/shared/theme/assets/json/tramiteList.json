@@ -2001,6 +2001,14 @@
         "linkDepartment": "/pago/permiso-sanitario-dispositivos-medicos/permiso-sanitario-dispositivos-medicos",
         "department": "cofepris"
 
+    },
+    {
+        "id": 286,
+        "tramite": 150103,
+        "linkDashboard": "/se/informe-anual-programa/solicitud-de-reporte",
+        "linkDepartment": "/pago/informe-anual-programa/solicitud-de-reporte",
+        "department": "se"
+
     }
    
 
