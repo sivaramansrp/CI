@@ -1,8 +1,8 @@
 import { CAPTURA_OPCIONES_DE_BOTON_DE_RADIO } from '../../enums/sagarpa.enum';
-import { Catalogo } from '@ng-mf/data-access-user';
+import { Catalogo, CatalogoSelectComponent, InputRadioComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { CatalogosSelect } from '@ng-mf/data-access-user';
 import { Component } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
@@ -15,6 +15,7 @@ import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
 import { Validators } from '@angular/forms';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
 /**
  * Interfaz para definir la estructura de las filas.
  */
@@ -35,6 +36,8 @@ interface Row {
   selector: 'app-datos-generales',
   templateUrl: './datos-generales.component.html',
   styleUrls: ['./datos-generales.component.scss'],
+  standalone: true,
+  imports: [TituloComponent, ReactiveFormsModule, CatalogoSelectComponent,InputRadioComponent,CommonModule],
 })
 export class DatosGeneralesComponent implements OnInit, OnDestroy {
   /**

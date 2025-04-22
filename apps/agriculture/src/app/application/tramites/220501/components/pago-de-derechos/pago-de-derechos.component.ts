@@ -1,7 +1,7 @@
-import { Catalogo } from '@ng-mf/data-access-user';
+import { Catalogo, CatalogoSelectComponent, InputRadioComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { CatalogosSelect } from '@ng-mf/data-access-user';
 import { Component } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
@@ -23,6 +23,8 @@ import { Solicitud220501Store } from '../../estados/tramites220501.store';
   selector: 'app-pago-de-derechos',
   templateUrl: './pago-de-derechos.component.html',
   styleUrls: ['./pago-de-derechos.component.scss'],
+  standalone: true,
+  imports: [InputRadioComponent,TituloComponent,ReactiveFormsModule,CatalogoSelectComponent],
 })
 export class PagoDeDerechosComponent implements OnInit , OnDestroy{
   /**

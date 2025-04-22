@@ -1,17 +1,21 @@
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitud220501State, Solicitud220501Store } from '../../estados/tramites220501.store';
 import { Solicitud220501Query } from '../../estados/tramites220501.query';
 import { Subject } from 'rxjs';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
+import { TituloComponent } from '@libs/shared/data-access-user/src';
+import { CommonModule } from '@angular/common';
 /**
  * Componente para agregar mercancía.
  */
 @Component({
   selector: 'app-agregar-mercancia',
   templateUrl: './agregar-mercancia.component.html',
-  styleUrl: './agregar-mercancia.component.scss'
+  styleUrl: './agregar-mercancia.component.scss',
+  standalone: true,
+  imports: [ReactiveFormsModule, TituloComponent, CommonModule],
 })
 export class AgregarMercanciaComponent implements OnChanges, OnInit, OnDestroy{
   /**

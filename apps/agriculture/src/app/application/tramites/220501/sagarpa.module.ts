@@ -35,17 +35,11 @@ import { ToastrService } from 'ngx-toastr';
 import { WizardComponent } from '@ng-mf/data-access-user';
 @NgModule({
   declarations: [
-    SolicitudComponent,
     SolicitudPageComponent,
     PasoUnoComponent,
     PasoDosComponent,
     PasoTresComponent,
-    RevisionDocumentalComponent,
-    MedioTransporteComponent,
-    AgregarMercanciaComponent,
-    DatosGeneralesComponent,
-    TercerosRelacionadosComponent,
-    PagoDeDerechosComponent,
+    
   ],
   imports: [
     CommonModule,
@@ -71,9 +65,16 @@ import { WizardComponent } from '@ng-mf/data-access-user';
     CatalogoSelectComponent,
     TableComponent,
     InputRadioComponent,
+    SolicitudComponent,
+    RevisionDocumentalComponent,
+    MedioTransporteComponent,
+    AgregarMercanciaComponent,
+    DatosGeneralesComponent,
+    TercerosRelacionadosComponent,
+    PagoDeDerechosComponent,
     ToastrModule.forRoot()
   ],
-  exports: [SolicitudComponent, SolicitudPageComponent],
+  exports: [SolicitudPageComponent],
   providers:[
     ToastrService,
   ]

@@ -28,6 +28,7 @@ interface AccionBoton {
 @Component({
   templateUrl: './solicitud-page.component.html',
   styles: ``,
+  standalone: false,
 })
 export class SolicitudPageComponent implements OnInit {
   /**
