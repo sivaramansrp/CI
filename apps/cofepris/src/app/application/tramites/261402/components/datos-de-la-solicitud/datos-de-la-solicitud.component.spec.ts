@@ -43,38 +43,38 @@ describe('DatosDeLaSolicitudComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form with data from the query', () => {
+  it('debe inicializar el formulario con los datos de la consulta', () => {
     expect(component.formulario).toBeDefined();
     expect(component.formulario.get('observaciones')?.value).toBe('Test Observations');
   });
 
-  it('should call actualizarEstado in the store when setValoresStore is called', () => {
-    const mockForm = new FormBuilder().group({
+  it('debe llamar a actualizarEstado en la tienda cuando se llama a setValoresStore', () => {
+    const MOCK_FORM = new FormBuilder().group({
       observaciones: 'Updated Observations',
     });
 
-    component.setValoresStore(mockForm, 'observaciones');
+    component.setValoresStore(MOCK_FORM, 'observaciones');
 
     expect(tramite261402StoreMock.actualizarEstado).toHaveBeenCalledWith({
       observaciones: 'Updated Observations',
     });
   });
 
-  it('should clean up subscriptions on ngOnDestroy', () => {
-    const destroySpy = jest.spyOn(component['destroy$'], 'next');
-    const completeSpy = jest.spyOn(component['destroy$'], 'complete');
+  it('Deberían limpiar las suscripciones en ngOnDestroy', () => {
+    const DESTROY_SPY = jest.spyOn(component['destroy$'], 'next');
+    const COMPLETE_SPY = jest.spyOn(component['destroy$'], 'complete');
 
     component.ngOnDestroy();
 
-    expect(destroySpy).toHaveBeenCalled();
-    expect(completeSpy).toHaveBeenCalled();
+    expect(DESTROY_SPY).toHaveBeenCalled();
+    expect(COMPLETE_SPY).toHaveBeenCalled();
   });
 
-  it('should create the form in crearFormulario', () => {
+  it('Debería crear el formulario en crearFormulario', () => {
     component.crearFormulario();
     expect(component.formulario).toBeDefined();
     expect(component.formulario.get('observaciones')).toBeTruthy();

@@ -38,18 +38,18 @@ describe('TercerosRelacionadosComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should call obtenerDestinatarioListo on ngOnInit', () => {
-    const obtenerDestinatarioListoSpy = jest.spyOn(component, 'obtenerDestinatarioListo');
+  it('debe llamar a obtenerDestinatarioListo en ngOnInit', () => {
+    const OBTENER_DESTINATARIO_LISTO_SPY = jest.spyOn(component, 'obtenerDestinatarioListo');
     component.ngOnInit();
-    expect(obtenerDestinatarioListoSpy).toHaveBeenCalled();
+    expect(OBTENER_DESTINATARIO_LISTO_SPY).toHaveBeenCalled();
   });
 
-  it('should populate destinatarioDatos and call setDestinatarioDatos in the store', () => {
-    const mockDestinatarios: InformaciondeProcedencia[] = [
+  it('Debe completar destinatarioDatos y llamar a setDestinatarioDatos en el almacén', () => {
+    const MOCK_DESTINATARIOS: InformaciondeProcedencia[] = [
       {
         nombre: 'InformaciondeProcedencia 1',
         curp: 'RFC123456',
@@ -69,21 +69,21 @@ describe('TercerosRelacionadosComponent', () => {
       },
     ];
   
-    solicitudDatosServiceMock.obtenerDestinatarioListo.mockReturnValue(of(mockDestinatarios));
+    solicitudDatosServiceMock.obtenerDestinatarioListo.mockReturnValue(of(MOCK_DESTINATARIOS));
   
     component.obtenerDestinatarioListo();
   
-    expect(component.destinatarioDatos).toEqual(mockDestinatarios);
-    expect(tramite261402StoreMock.setDestinatarioDatos).toHaveBeenCalledWith(mockDestinatarios);
+    expect(component.destinatarioDatos).toEqual(MOCK_DESTINATARIOS);
+    expect(tramite261402StoreMock.setDestinatarioDatos).toHaveBeenCalledWith(MOCK_DESTINATARIOS);
   });
 
-  it('should clean up subscriptions on ngOnDestroy', () => {
-    const destroySpy = jest.spyOn(component['destroyNotifier$'], 'next');
-    const completeSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
+  it('Deberían limpiar las suscripciones en ngOnDestroy', () => {
+    const DESTROY_SPY = jest.spyOn(component['destroyNotifier$'], 'next');
+    const COMPLETE_SPY = jest.spyOn(component['destroyNotifier$'], 'complete');
 
     component.ngOnDestroy();
 
-    expect(destroySpy).toHaveBeenCalled();
-    expect(completeSpy).toHaveBeenCalled();
+    expect(DESTROY_SPY).toHaveBeenCalled();
+    expect(COMPLETE_SPY).toHaveBeenCalled();
   });
 });

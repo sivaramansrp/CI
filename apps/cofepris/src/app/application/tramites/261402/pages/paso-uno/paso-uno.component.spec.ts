@@ -19,7 +19,6 @@ describe('PasoUnoComponent', () => {
   let tramite261402QueryMock: any;
 
   beforeEach(async () => {
-    // Mock services
     solicitudPermisoServiceMock = {
       obtenerTramitesAsociados: jest.fn().mockReturnValue(of([])),
       inicializaPagoDeDerechosDatosCatalogos: jest.fn(),
@@ -63,21 +62,21 @@ describe('PasoUnoComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize tramiteAsociados on ngOnInit', () => {
-    const tramiteAsociadosMock = [
+  it('debe inicializar tramiteAsociados en ngOnInit', () => {
+    const TRAMITE_ASOCIADOS_MOCK = [
       { id: 1, folioTramite: '12345', tipoTramite: 'Tipo A', estatus: 'Activo', fetchaAltaDeRegistro: '2025-04-10' },
     ];
-    solicitudPermisoServiceMock.obtenerTramitesAsociados.mockReturnValue(of(tramiteAsociadosMock));
+    solicitudPermisoServiceMock.obtenerTramitesAsociados.mockReturnValue(of(TRAMITE_ASOCIADOS_MOCK));
 
     component.ngOnInit();
-    expect(component.tramiteAsociados).toEqual(tramiteAsociadosMock);
+    expect(component.tramiteAsociados).toEqual(TRAMITE_ASOCIADOS_MOCK);
   });
 
-  it('should initialize form on crearformularioPagoDerechos', () => {
+  it('Debería inicializar el formulario en crearformularioPagoDerechos', () => {
     component.crearformularioPagoDerechos();
     expect(component.formularioPagoDerechos).toBeDefined();
     expect(component.formularioPagoDerechos.get('claveDeReferencia')?.value).toBe('12345');
@@ -87,20 +86,20 @@ describe('PasoUnoComponent', () => {
     expect(component.formularioPagoDerechos.get('impPago')?.value).toBe(1000);
   });
 
-  it('should select a tab and initialize banco on seleccionaTab', () => {
+  it('Debería inicializar el formulario en crearformularioPagoDerechos', () => {
     component.seleccionaTab(4);
     expect(component.indice).toBe(4);
     expect(component.banco).toEqual([{ id: 1, descripcion: 'Banco 1' }]);
   });
 
-  it('should clean up subscriptions on ngOnDestroy', () => {
-    const destroySpy = jest.spyOn(component['notificadorDestruccion$'], 'next');
-    const completeSpy = jest.spyOn(component['notificadorDestruccion$'], 'complete');
+  it('Deberían limpiar las suscripciones en ngOnDestroy', () => {
+    const DESTROY_SPY = jest.spyOn(component['notificadorDestruccion$'], 'next');
+    const COMPLETE_SPY = jest.spyOn(component['notificadorDestruccion$'], 'complete');
   
     component.ngOnDestroy();
   
-    expect(destroySpy).toHaveBeenCalled();
-    expect(completeSpy).toHaveBeenCalled();
+    expect(DESTROY_SPY).toHaveBeenCalled();
+    expect(COMPLETE_SPY).toHaveBeenCalled();
   });
 
 });
