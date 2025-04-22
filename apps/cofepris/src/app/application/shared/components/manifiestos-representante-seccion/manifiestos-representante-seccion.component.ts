@@ -80,7 +80,9 @@ export class ManifiestosRepresentanteSeccionComponent
     private representanteStore: DatosDelSolicituteSeccionStateStore,
     private representanteQuery: DatosDelSolicituteSeccionQuery,
     private establecimientoService :EstablecimientoService
-  ) {}
+  ) {
+    // Inicializa el formulario y carga los datos iniciales.
+  }
 
   /**
    * Ciclo de vida `OnInit`.
