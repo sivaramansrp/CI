@@ -1,13 +1,22 @@
+/**
+ * Contiene constantes de texto comunes utilizadas en toda la aplicación.
+ */
 export const DATOS_COMUNES_TEXTOS = {
     alerta: `<p><strong>Nota:</strong> Si no encuadra en los sectores o los servicios
             de los catálogos, deberá seleccionar el más cercano a sus actividades.</p>`,
 }
 
+/**
+ * Contiene constantes de texto comunes utilizadas en toda la aplicación.
+ */
 export const DATOS_COMUNES_TEXTOS_DOS = {
     alerta: `<p><strong>Nota:</strong> En el caso de la Modalidad de IVA e IEPS,
           tendrá que contar con al meanos 10 trabajadores registrados.</p>`,
 }
 
+/**
+ * Contiene constantes de texto comunes utilizadas en la aplicación.
+ */
 export const DATOS_COMUNES_TEXTOS_TRES = {
     alerta: `<p><strong>Nota:</strong>De contar con un programa IMMEX activo y
           vigente al momento de ingresar la solicitud, se mostrarán los
@@ -17,6 +26,9 @@ export const DATOS_COMUNES_TEXTOS_TRES = {
           la Entidad Federativa.</p>`,
 }
 
+/**
+ * Interfaz que representa los detalles de una mención.
+ */
 export interface Mencione {
     denominacionSocial: string;
     rfc: string;
@@ -24,6 +36,15 @@ export interface Mencione {
     bimestre: string;
 }
 
+/**
+ * Representa un arreglo constante `MENCIONE_TABLA` que define la estructura de una tabla
+ * con encabezados, claves y orden para mostrar información sobre una entidad `Mencione`.
+ *
+ * Cada objeto en el arreglo contiene:
+ * - `encabezado`: El nombre del encabezado de la columna.
+ * - `clave`: Una función que extrae el valor correspondiente de un objeto `Mencione`.
+ * - `orden`: El orden en el que la columna debe aparecer.
+ */
 export const MENCIONE_TABLA = [
     {
         encabezado: 'Denominación Social',
@@ -47,12 +68,29 @@ export const MENCIONE_TABLA = [
     },
 ];
 
+/**
+ * Interfaz que representa información sobre mercancías.
+ */
 export interface MercanciasInfo {
     denominacion_social: string;
     rfc: string;
     numero_de_empleados: string;
     bimestre:string;
 }
+
+/**
+ * Representa un arreglo constante `MERCANCIA_TABLA` que define la estructura de una tabla
+ * para mostrar información sobre mercancías. Cada objeto en el arreglo corresponde
+ * a una columna en la tabla.
+ *
+ * @constant
+ * @type {Array<{ encabezado: string; clave: (ele: MercanciasInfo) => any; orden: number }>}
+ *
+ * @property {string} encabezado - El nombre del encabezado de la columna.
+ * @property {(ele: MercanciasInfo) => any} clave - Una función que extrae el valor
+ * de un objeto `MercanciasInfo` para la columna correspondiente.
+ * @property {number} orden - El orden en el que la columna aparece en la tabla.
+ */
 
 export const MERCANCIA_TABLA = [
     {
@@ -79,12 +117,18 @@ export const MERCANCIA_TABLA = [
     }
 ];
 
+/**
+ * Interfaz que representa la estructura de respuesta para una tabla.
+ */
 export interface RespuestaTabla {
     code: number;
     data: MercanciasInfo[];
     message: string;
 }
 
+/**
+ * Interfaz que representa la información para la tabla de instalaciones principales.
+ */
 export interface InstalacionesPrincipalesTablaInfo {
     instalacionesPrincipales: string;
     tipoDeInstalacion: string;
@@ -92,6 +136,17 @@ export interface InstalacionesPrincipalesTablaInfo {
     municipioODelegacion:string;
     colonia:string
 }
+
+/**
+ * Representa un arreglo constante de objetos que define la estructura y metadatos
+ * para la tabla de "Instalaciones Principales".
+ *
+ * Cada objeto en el arreglo contiene las siguientes propiedades:
+ * - `encabezado`: Una cadena que representa el título del encabezado para la columna.
+ * - `clave`: Una función que toma un objeto `InstalacionesPrincipalesTablaInfo`
+ *   y devuelve el valor correspondiente para la columna respectiva.
+ * - `orden`: Un número que indica el orden de la columna en la tabla.
+ */
 
 export const INSTALACIONES_PRINCIPALES_TABLA = [
     {
@@ -124,12 +179,18 @@ export const INSTALACIONES_PRINCIPALES_TABLA = [
     }
 ];
 
+/**
+ * Interfaz que representa la estructura de respuesta para la tabla de instalaciones principales.
+ */
 export interface InstalacionesPrincipalesRespuestaTabla {
     code: number;
     data: InstalacionesPrincipalesTablaInfo[];
     message: string;
 }
 
+/**
+ * Interfaz que representa el control de inventarios.
+ */
 export interface ControlInventarios {
     nombreSistema: string;
     lugarRadicacion: string;
@@ -137,6 +198,20 @@ export interface ControlInventarios {
 }
 
 
+/**
+ * Representa un arreglo constante `CONTROL_INVENTARIOS_TABLA` que define la estructura
+ * de los datos de control de inventarios para una aplicación específica. Cada objeto
+ * en el arreglo corresponde a una columna en una tabla, con propiedades para el encabezado,
+ * una función para extraer el valor de un objeto `ControlInventarios`, y el orden de la columna.
+ *
+ * @constant
+ * @type {Array<{ encabezado: string; clave: (ele: ControlInventarios) => any; orden: number }>}
+ *
+ * @property {string} encabezado - El texto del encabezado para la columna.
+ * @property {(ele: ControlInventarios) => any} clave - Una función que extrae el valor
+ * de un objeto `ControlInventarios` para la columna.
+ * @property {number} orden - El orden en el que la columna aparece en la tabla.
+ */
 export const CONTROL_INVENTARIOS_TABLA = [
     {
         encabezado: 'Nombre del sistema o datos para su identificación',
@@ -156,6 +231,9 @@ export const CONTROL_INVENTARIOS_TABLA = [
     }
 ];
 
+/**
+ * Interface representing the control of Miembro.
+ */
 export interface Miembro {
     tipoDePersona: string;
     nombre: string;
@@ -166,6 +244,18 @@ export interface Miembro {
     nombreEmpresa: string;
 }
 
+/**
+ * Un arreglo constante que define la estructura de una tabla para agregar miembros.
+ * Cada objeto en el arreglo representa una columna en la tabla, incluyendo su encabezado,
+ * una función para extraer el valor correspondiente de un objeto `Miembro`, y su orden.
+ *
+ * @constant
+ * @type {Array<{encabezado: string, clave: (ele: Miembro) => any, orden: number}>}
+ *
+ * @property {string} encabezado - El texto del encabezado para la columna.
+ * @property {(ele: Miembro) => any} clave - Una función que extrae el valor para la columna de un objeto `Miembro`.
+ * @property {number} orden - El orden de la columna en la tabla.
+ */
 export const AGREGAR_MIEMBRO_TABLA = [
     {
         encabezado: 'Tipo de Persona',

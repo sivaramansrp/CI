@@ -14,7 +14,7 @@ import { PasoTresComponent } from '../pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from '../pages/paso-uno/paso-uno.component';
 import { TercerosRelacionadosComponent } from '../../../shared/components/terceros-relacionados/terceros-relacionados.component';
 import { TercerosRelacionadosService } from '../../../shared/services/terceros-relacionados.service';
-import { TodospasosComponent } from '../pages/todospasos/todospasos.component';
+import { TodospasosComponent } from '../pages/todos-pasos/todos-pasos.component';
 import { provideHttpClient } from '@angular/common/http';
 
 

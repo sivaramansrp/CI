@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { DE_LAS_SIGUIENTES, PAGO_DE_DERECHOS, PERMISO_A_DESISTIR_DOS, PERMISO_A_DESISTIR_TRES } from '../../constantes/ivaeieps.enum';
+import { CONFIGURACION_IVAEIEPS_DOS,PAGO_DE_DERECHOS, PERMISO_A_DESISTIR_DOS, PERMISO_A_DESISTIR_TRES } from '../../constantes/ivaeieps.enum';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Solicitud31602State, Tramite31602Store } from '../../estados/stores/tramite31602.store';
 import { Subject,map, takeUntil } from 'rxjs';
@@ -81,10 +81,10 @@ export class IvaeiepsDosComponent implements OnInit,OnDestroy {
    */
   public predeterminadoSeleccionarDatos = PERMISO_A_DESISTIR_TRES;
   /**
-   * Contiene los datos para la sección "de las siguientes", obtenidos de la constante `DE_LAS_SIGUIENTES`.
+   * Contiene los datos para la sección "de las siguientes", obtenidos de la constante `CONFIGURACION_IVAEIEPS_DOS`.
    * Esta propiedad se utiliza para gestionar y mostrar datos específicos relacionados con la funcionalidad del componente.
    */
-  public deLasSiguientesDatos = DE_LAS_SIGUIENTES;
+  public deLasSiguientesDatos = CONFIGURACION_IVAEIEPS_DOS;
   /**
    * Representa los datos de pago de derechos utilizados en el componente.
    * Esta propiedad se inicializa con la constante `PAGO_DE_DERECHOS`.

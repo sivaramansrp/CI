@@ -1,9 +1,15 @@
+/**
+ * Representa una empresa dentro de un grupo.
+ */
 export interface EmpresasDelGrupo {
-    rfc: string;
-    denominctionORazonSocial: string;
-    domicillo: string;
+  rfc: string;
+  denominctionORazonSocial: string;
+  domicillo: string;
 }
 
+/**
+ * Representa los detalles de registros anteriores relacionados con una entidad empresarial.
+ */
 export interface Anteriores {
     denominacionSocial: string;
     rfc: string;
@@ -15,6 +21,17 @@ export interface Anteriores {
     bimestreTres: string;
 }
 
+/**
+ * Una constante que representa la estructura de la tabla para mostrar información de empresas.
+ * Cada objeto en el arreglo define una columna en la tabla con su encabezado, función de mapeo de datos y orden.
+ *
+ * @constant
+ * @type {Array<{encabezado: string, clave: (ele: EmpresasDelGrupo) => any, orden: number}>}
+ *
+ * @property {string} encabezado - El nombre del encabezado de la columna.
+ * @property {(ele: EmpresasDelGrupo) => any} clave - Una función que mapea un objeto `EmpresasDelGrupo` al valor mostrado en la columna.
+ * @property {number} orden - El orden en el que aparece la columna en la tabla.
+ */
 export const EMPRESAS_TABLA = [
     {
       encabezado: 'RFC',
@@ -33,9 +50,25 @@ export const EMPRESAS_TABLA = [
     },
 ];
 
+/**
+ * Una constante `ANTERIORES_TABLA` que define la estructura de una tabla
+ * con encabezados, funciones de mapeo de datos y orden para cada columna.
+ * 
+ * Cada objeto en el arreglo representa una columna en la tabla con las siguientes propiedades:
+ * 
+ * - `encabezado`: El encabezado o título de la columna.
+ * - `clave`: Una función que mapea un objeto `Anteriores` al valor para esta columna.
+ * - `orden`: El orden o posición de la columna en la tabla.
+ * 
+ * Ejemplo de columnas incluye:
+ * - Denominación Social
+ * - RFC
+ * - Número de empleados para varios bimestres
+ * - Bimestres (1ro, 2do, 3ro)
+ */
 export const ANTERIORES_TABLA = [
   {
-    encabezado: 'Denominacion Social',
+    encabezado: 'Denominación Social',
     clave: (ele: Anteriores) => ele.denominacionSocial,
     orden: 1,
   },

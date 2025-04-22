@@ -51,10 +51,10 @@ export class TercerosRelacionadosStore extends Store<TercerosRelacionadosState> 
     }
 
     /**
-   * Set a value dynamically in the store by field name.
-   * @param fieldName The name of the field to update.
-   * @param value The value to set.
-   */
+     * Establece un valor dinámicamente en el store por nombre de campo.
+     * @param fieldName El nombre del campo a actualizar.
+     * @param value El valor a establecer.
+     */
   public setDynamicFieldValue(fieldName: string, value: string | number | boolean): void {
     this.update((state) => ({
       ...state,

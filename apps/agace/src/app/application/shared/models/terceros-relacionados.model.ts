@@ -1,3 +1,6 @@
+/**
+ * Representa un enlace operativo (Enlace Operativo) con información detallada personal y de contacto.
+ */
 export interface EnlaceOperativo {
     rfc: string;
     nombre: string;
@@ -10,6 +13,9 @@ export interface EnlaceOperativo {
     suplente: string;
 }
 
+/**
+ * Representa a una persona con detalles de identificación y personales.
+ */
 export interface Personas {
   rfc: string;
   curp: string;
@@ -18,6 +24,19 @@ export interface Personas {
   apellidoMaterno: string;
 }
 
+/**
+ * Representa una constante `ENLACE_TABLA` que define la estructura de una tabla
+ * para mostrar información sobre entidades de tipo "Enlace Operativo".
+ * Cada objeto en el arreglo corresponde a una columna en la tabla.
+ *
+ * @constant
+ * @type {Array<{ encabezado: string; clave: (ele: EnlaceOperativo) => any; orden: number }>}
+ *
+ * @property {string} encabezado - El nombre del encabezado de la columna de la tabla.
+ * @property {(ele: EnlaceOperativo) => any} clave - Una función que extrae el valor
+ *     para la columna desde un objeto `EnlaceOperativo`.
+ * @property {number} orden - El orden en el que la columna aparece en la tabla.
+ */
 export const ENLACE_TABLA = [
     {
       encabezado: 'RFC',
@@ -66,6 +85,17 @@ export const ENLACE_TABLA = [
     }
 ];
 
+/**
+ * Representa una constante que define un arreglo de objetos utilizado para
+ * especificar la estructura y mapeo de propiedades para entidades de tipo "Personas".
+ * Cada objeto en el arreglo incluye:
+ * - Un nombre de encabezado (`encabezado`) para propósitos de visualización.
+ * - Una función de mapeo de clave (`clave`) para extraer la propiedad correspondiente de un objeto `Personas`.
+ * - Un orden (`orden`) para determinar la secuencia de los campos.
+ *
+ * @constant
+ * @type {Array<{ encabezado: string; clave: (ele: Personas) => any; orden: number }>}
+ */
 export const PERSONAS_PARA = [
   {
     encabezado: 'RFC',

@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { TodospasosComponent } from './todospasos.component';
+import { TodospasosComponent } from './todos-pasos.component';
 
 describe('TodospasosComponent', () => {
   let component: TodospasosComponent;

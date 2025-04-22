@@ -1,3 +1,24 @@
+/**
+ * Representa un arreglo constante de objetos que define la configuración para un formulario de "Representante Legal".
+ * Cada objeto en el arreglo especifica las propiedades y reglas de validación para un campo del formulario.
+ *
+ * @constant
+ * @type {Array<Object>}
+ *
+ * @property {string} id - El identificador único para el campo del formulario.
+ * @property {string} labelNombre - La etiqueta mostrada para el campo del formulario.
+ * @property {string} campo - El nombre del campo en el formulario.
+ * @property {string} clase - La clase CSS aplicada al campo del formulario para el estilo.
+ * @property {string} tipoInput - El tipo de elemento de entrada (por ejemplo, 'text', 'button', 'number').
+ * @property {boolean} desactivado - Indica si el campo está deshabilitado.
+ * @property {boolean} soloLectura - Indica si el campo es de solo lectura.
+ * @property {Array<Object>} validadores - Un arreglo de reglas de validación para el campo.
+ * @property {string} validadores.tipo - El tipo de validación (por ejemplo, 'required').
+ * @property {string} marcadorDePosicion - Texto de marcador de posición para el campo de entrada.
+ * @property {string} valorPredeterminado - Valor predeterminado para el campo de entrada.
+ * @property {number} marginTop - El margen superior aplicado al campo.
+ */
+
 export const REPRESENTANTE_LEGAL = [
     {
       id: 'resigtro',

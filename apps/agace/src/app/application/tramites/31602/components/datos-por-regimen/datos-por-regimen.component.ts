@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { DEPOSITO_FISCAL, ELABORACION, IMPORTACION_TEMPORAL, INDIQUE_SI_REALIZA, RECINTO_FISCALIZADO } from '../../constantes/datos-por-regimen.enum';
+import { CONFIGURACION_DATOS, DEPOSITO_FISCAL, ELABORACION, IMPORTACION_TEMPORAL, RECINTO_FISCALIZADO } from '../../constantes/datos-por-regimen.enum';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Solicitud31602State, Tramite31602Store } from '../../estados/stores/tramite31602.store';
 import { Subject,map, takeUntil } from 'rxjs';
@@ -86,9 +86,9 @@ export class DatosPorRegimenComponent implements OnInit,OnDestroy {
   });
   /**
    * Representa los datos del formulario para indicar si se realiza una acción específica.
-   * Esta propiedad se inicializa con la constante `INDIQUE_SI_REALIZA`.
+   * Esta propiedad se inicializa con la constante `CONFIGURACION_DATOS`.
    */
-  public indiqueSiFormDatos = INDIQUE_SI_REALIZA;
+  public indiqueSiFormDatos = CONFIGURACION_DATOS;
   /**
    * Contiene los datos relacionados con la importación temporal.
    * Esta propiedad se inicializa con la constante `IMPORTACION_TEMPORAL`.

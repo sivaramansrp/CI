@@ -4,8 +4,8 @@ import { PANTA_PASOS, TITULO_PASO_DOS, TITULO_PASO_TRES, TITULO_PASO_UNO } from 
 import { Subject } from 'rxjs';
 
 @Component({
-  selector: 'app-todospasos',
-  templateUrl: './todospasos.component.html',
+  selector: 'app-todos-pasos',
+  templateUrl: './todos-pasos.component.html',
 })
 export class TodospasosComponent implements OnDestroy {
 
