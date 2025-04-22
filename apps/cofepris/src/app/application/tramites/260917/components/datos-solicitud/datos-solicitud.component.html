@@ -7,6 +7,10 @@
             <app-input-radio formControlName="tipoOperacion" (change)="setValoresStore(domicilio,'tipoOperacion', 'setTipoOperacion')" [radioOptions]="genericOptions" [isRequired]="true"
                 [layout]="'horizontal'">
             </app-input-radio>
+            <span
+  *ngIf="domicilio.controls['tipoOperacion']?.errors?.['required'] && domicilio.controls['tipoOperacion']?.touched"
+  class="mensaje-error">Este campo es obligatorio.
+</span>
         </div>
         <div class="row mt-5">
             <div class="col-md-12">
@@ -42,6 +46,9 @@
                     </label>
                     <input id="establecimientoRFCResponsableSanitarioId" class="form-control" type="text"
                         formControlName="rfcResponsableSanitario" (change)="setValoresStore(domicilio,'rfcResponsableSanitario', 'setRFCResponsableSanitario')" />
+                        <span *ngIf="domicilio.controls['rfcResponsableSanitario']?.errors?.['required'] && domicilio.controls['rfcResponsableSanitario']?.touched" class="mensaje-error">
+                            Este campo es obligatorio.
+                          </span>
                 </div>
             </div>
 
@@ -350,6 +357,9 @@
                             <input type="text" id="cantidadUMT" formControlName="cantidadUMT"
                                 (change)="setValoresStore(formMercancias,'cantidadUMT', 'setCantidadUMT')"
                                 class="form-control">
+                                <span *ngIf="formMercancias.controls['cantidadUMT']?.errors?.['required'] && formMercancias.controls['cantidadUMT']?.touched" class="mensaje-error">
+                                    Este campo es obligatorio.
+                                  </span>
                         </div>
                         <div class="form-group">
                             <label for="UMT">UMT*:</label>

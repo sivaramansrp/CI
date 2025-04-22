@@ -13,6 +13,10 @@ export class ModificacionPermisoImportacionComponent {
     */
   pasos: ListaPasosWizard[] = PASOS;
 
+  /**
+ * Variable que almacena los textos relacionados con el pago de derechos.
+ */
+
   TEXTOS = PAGO_DE_DERECHOS;
 
   /** Clase CSS utilizada para mostrar una alerta de tipo informativo */
