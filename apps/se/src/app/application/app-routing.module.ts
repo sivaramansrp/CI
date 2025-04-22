@@ -431,6 +431,13 @@ const ROUTES: Routes = [
         (m) => m.ModalidadAmpliacionModule
       ),
   },
+  {
+    path: 'solicitud-de-registro-tpl',
+    loadChildren: () =>
+      import('./tramites/120101/solicitud-de-registro-tpl.module').then(
+        (m) => m.SolicitudDeRegistroTplModule
+      ),
+  },
   
 ];
 
