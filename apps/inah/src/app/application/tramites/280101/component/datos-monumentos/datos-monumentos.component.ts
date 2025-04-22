@@ -49,7 +49,7 @@ export class DatosMonumentoComponent implements OnInit, OnDestroy {
   /**
    * Formulario reactivo para gestionar los datos de la mercancía.
    */
-  mercanciaForm: FormGroup;
+  mercanciaForm!: FormGroup;
 
   /**
    * Datos de la tabla de elementos.
@@ -108,6 +108,14 @@ export class DatosMonumentoComponent implements OnInit, OnDestroy {
     private store: Tramite280101Store,
     private query: Tramite280101Query
   ) {
+  
+  }
+
+  /**
+   * Método que se ejecuta al inicializar el componente.
+   */
+  ngOnInit(): void {
+    this.getAduana();
     this.mercanciaForm = this.fb.group({
       descEpoca: [''],
       descMaterial: [''],
@@ -122,13 +130,6 @@ export class DatosMonumentoComponent implements OnInit, OnDestroy {
       idFraccionGubernamental: ['', Validators.required],
       descripcionUsoMercancia: ['', Validators.required],
     });
-  }
-
-  /**
-   * Método que se ejecuta al inicializar el componente.
-   */
-  ngOnInit(): void {
-    this.getAduana();
 
     this.query.selectSolicitud$
       .pipe(
