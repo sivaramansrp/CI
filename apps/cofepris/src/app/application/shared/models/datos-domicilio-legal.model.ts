@@ -255,7 +255,7 @@ export interface PermisoModel {
     },
   ];
   /**
-   * Interface representing the visibility configuration for various country-related fields.
+   * Interfaz que representa la configuración de visibilidad para varios campos relacionados con países.
    */
   export interface ConfiguracionVisibilidad {
     paisOrigen: boolean;
