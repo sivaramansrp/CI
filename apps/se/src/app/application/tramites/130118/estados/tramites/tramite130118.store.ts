@@ -107,11 +107,6 @@ export interface Solicitud130118State {
   razonSocial: string;
 
   /** 
-   * Nombre del molino relacionado con el trámite (si aplica). 
-   */
-  molino: string;
-
-  /** 
    * Domicilio del solicitante o empresa. 
    */
   domicilio: string;
@@ -232,11 +227,6 @@ export function createInitialState(): Solicitud130118State {
      * Razón social de la empresa (si aplica, inicialmente vacío).
      */
     razonSocial: '',
-
-    /**
-     * Nombre del molino relacionado con el trámite (si aplica, inicialmente vacío).
-     */
-    molino: '',
 
     /**
      * Domicilio del solicitante o empresa (inicialmente vacío).
@@ -502,17 +492,6 @@ export class Tramite130118Store extends Store<Solicitud130118State> {
     this.update((state) => ({
       ...state,
       domicilio,
-    }));
-  }
-
-  /**
-   * Actualiza el molino.
-   * @param molino - Nuevo molino.
-   */
-  public setMolino(molino: string): void {
-    this.update((state) => ({
-      ...state,
-      molino,
     }));
   }
 
