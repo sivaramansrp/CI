@@ -352,7 +352,7 @@
   {
     "id": 51,
     "tramite": 120201,
-    "linkDashboard": "/pago/cupos/consultar-cupo",
+    "linkDashboard": "/se/cupos/consultar-cupo",
     "linkDepartment": "/pago/cupos/consultar-cupo",
     "department": ""
   },
@@ -437,7 +437,7 @@
     "id": 63,
     "tramite": 130118,
     "linkDashboard": "/se/pexim/solicitud",
-    "linkDepartment": "/se/pexim/solicitud",
+    "linkDepartment": "/pago/pexim/solicitud",
     "department": "se"
   },
   {
@@ -549,7 +549,7 @@
     "id": 79,
     "tramite": 220501,
     "linkDashboard": "/agriculture/sagarpa/datosdelasolicitud",
-    "linkDepartment": "/agriculture/sagarpa/datosdelasolicitud",
+    "linkDepartment": "/pago/sagarpa/datosdelasolicitud",
     "department": "agriculture"
   },
   {
@@ -695,8 +695,8 @@
   {
     "id": 100,
     "tramite": 260601,
-    "linkDashboard": "/cofepris/aviso-sanitario/datosde-la-solicitud",
-    "linkDepartment": "/cofepris/aviso-sanitario/datosde-la-solicitud",
+    "linkDashboard": "/cofepris/aviso-sanitario/datos-de-la-solicitud",
+    "linkDepartment": "/pago/aviso-sanitario/datos-de-la-solicitud",
     "department": "cofepris"
   },
   {
