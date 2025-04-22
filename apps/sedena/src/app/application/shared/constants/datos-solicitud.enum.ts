@@ -123,6 +123,20 @@ export const TERCEROS_NACIONALIDAD_OPCIONES_EXTRANJERO = [
   },
 ];
 
+/*
+**
+ * Opciones disponibles para el tipo de persona no contribuyente.
+ * 
+ * Contiene una opción:
+ * - 'NoContribyunte': Representa a un no contribuyente.
+ * 
+ * Cada opción incluye una etiqueta (`label`) y un valor (`value`).
+ */
+export const TIPO_PERSONA_OPCIONES_NO_CONTRIBUYENTE = [
+  { label: 'NoContribyunte', value: 'NoContribyunte' },
+];
+
+
 /**
  * Constante que define los campos obligatorios para el destinatario.
  * 
