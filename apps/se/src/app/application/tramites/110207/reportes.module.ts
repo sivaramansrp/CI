@@ -14,9 +14,11 @@ import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.co
 
 
 @NgModule({
-  declarations: [PasoDosComponent,
-      PasoTresComponent,
-      PasoUnoComponent,SolicitudPageComponent],
+  declarations: [
+    PasoDosComponent,
+    PasoTresComponent,
+    PasoUnoComponent,
+    SolicitudPageComponent],
   imports: [
     CommonModule,
     SharedModule,
