@@ -3,6 +3,7 @@ import { ConfiguracionColumna, TablaDinamicaComponent, TituloComponent, Validaci
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Tramite130401State, Tramite130401Store } from '../../../../estados/tramites/tramite130401.store';
 import { CommonModule } from '@angular/common';
+import { MERCANCIA_TABLA_ENCABEZADOS } from '../../constants/modificacion-descripcion.enum';
 import { MercanciaTablaDatos } from '../../models/modificacion-descripcion.model';
 import { ModificacionDescripcionService } from '../../services/modificacion-descripcion.service';
 import { Subject } from 'rxjs';
@@ -53,38 +54,7 @@ export class ModificacionMercanciaComponent implements OnInit, OnDestroy {
    * 
    * Define los encabezados y claves para mostrar los datos de las mercancías.
    */
-  public mercanciaTablaEncabezados: ConfiguracionColumna<MercanciaTablaDatos>[] = [
-    {
-      encabezado: '',
-      clave: (ele: MercanciaTablaDatos) => ele.id,
-      orden: 1,
-    },
-    {
-      encabezado: 'Cantidad',
-      clave: (ele: MercanciaTablaDatos) => ele.cantidad,
-      orden: 2,
-    },
-    {
-      encabezado: 'Descripción autorizada',
-      clave: (ele: MercanciaTablaDatos) => ele.descripcionAutorizada,
-      orden: 3,
-    },
-    {
-      encabezado: 'Descripción solicitada',
-      clave: (ele: MercanciaTablaDatos) => ele.descripcionSolicitada,
-      orden: 4,
-    },
-    {
-      encabezado: 'Precio unitario USD',
-      clave: (ele: MercanciaTablaDatos) => ele.precioUnitarioUSD,
-      orden: 5,
-    },
-    {
-      encabezado: 'Total USD',
-      clave: (ele: MercanciaTablaDatos) => ele.totalUSD,
-      orden: 6,
-    }
-  ];
+  public mercanciaTablaEncabezados: ConfiguracionColumna<MercanciaTablaDatos>[] = MERCANCIA_TABLA_ENCABEZADOS;
 
   /**
    * Datos de la tabla de mercancías.

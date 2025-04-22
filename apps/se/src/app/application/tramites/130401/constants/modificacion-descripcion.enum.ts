@@ -1,3 +1,4 @@
+import { DatosArancelaria, MercanciaTablaDatos, SolicitudTablaDatos } from "../models/modificacion-descripcion.model";
 /**
  * Constante que define los pasos del proceso del trámite 130401.
  * 
@@ -76,4 +77,110 @@ export const PRODUCTO_OPCION_RADIO = [
     label: 'Usado',
     value: '1',
   },
+];
+/**
+ * @constant MERCANCIA_TABLA_ENCABEZADOS
+ * @description Encabezados de la tabla de mercancías.
+ * 
+ * - Define las columnas que se mostrarán en la tabla de mercancías.
+ * - Cada columna incluye:
+ *   - `encabezado`: El título de la columna.
+ *   - `clave`: Una función que obtiene el valor correspondiente a la columna desde un objeto de tipo `MercanciaTablaDatos`.
+ *   - `orden`: El orden en el que se mostrarán las columnas.
+ */
+export const MERCANCIA_TABLA_ENCABEZADOS = [
+  {
+    encabezado: '',
+    clave: (ele: MercanciaTablaDatos): number => ele.id,
+    orden: 1,
+  },
+  {
+    encabezado: 'Cantidad',
+    clave: (ele: MercanciaTablaDatos): string => ele.cantidad,
+    orden: 2,
+  },
+  {
+    encabezado: 'Descripción autorizada',
+    clave: (ele: MercanciaTablaDatos): string => ele.descripcionAutorizada,
+    orden: 3,
+  },
+  {
+    encabezado: 'Descripción solicitada',
+    clave: (ele: MercanciaTablaDatos): string => ele.descripcionSolicitada,
+    orden: 4,
+  },
+  {
+    encabezado: 'Precio unitario USD',
+    clave: (ele: MercanciaTablaDatos): string => ele.precioUnitarioUSD,
+    orden: 5,
+  },
+  {
+    encabezado: 'Total USD',
+    clave: (ele: MercanciaTablaDatos): string => ele.totalUSD,
+    orden: 6,
+  }
+];
+/**
+ * @constant SOLICITUD_TABLA_ENCABEZADOS
+ * @description Encabezados de la tabla de solicitudes.
+ * 
+ * - Define las columnas que se mostrarán en la tabla de solicitudes.
+ * - Cada columna incluye:
+ *   - `encabezado`: El título de la columna.
+ *   - `clave`: Una función que obtiene el valor correspondiente a la columna desde un objeto de tipo `SolicitudTablaDatos`.
+ *   - `orden`: El orden en el que se mostrarán las columnas.
+ */
+export const SOLICITUD_TABLA_ENCABEZADOS = [
+  {
+    encabezado: '',
+    clave: (ele: SolicitudTablaDatos): number => ele.id,
+    orden: 1,
+  },
+  {
+    encabezado: 'Cantidad',
+    clave: (ele: SolicitudTablaDatos): string => ele.cantidad,
+    orden: 2,
+  },
+  {
+    encabezado: 'Descripción',
+    clave: (ele: SolicitudTablaDatos): string => ele.descripcion,
+    orden: 3,
+  },
+  {
+    encabezado: 'Precio unitario USD',
+    clave: (ele: SolicitudTablaDatos): string => ele.precioUnitarioUSD,
+    orden: 4,
+  },
+  {
+    encabezado: 'Total USD',
+    clave: (ele: SolicitudTablaDatos): string => ele.totalUSD,
+    orden: 5,
+  }
+];
+/**
+ * @constant ARANCELARIA_TABLA_ENCABEZADOS
+ * @description Encabezados de la tabla de fracciones arancelarias.
+ * 
+ * - Define las columnas que se mostrarán en la tabla de fracciones arancelarias.
+ * - Cada columna incluye:
+ *   - `encabezado`: El título de la columna.
+ *   - `clave`: Una función que obtiene el valor correspondiente a la columna desde un objeto de tipo `DatosArancelaria`.
+ *   - `orden`: El orden en el que se mostrarán las columnas.
+ */
+export const ARANCELARIA_TABLA_ENCABEZADOS = [
+  {
+    encabezado: '',
+    clave: (ele: DatosArancelaria): number => ele.id,
+    orden: 1,
+  },
+  {
+    encabezado: 'Fracción arancelaria',
+    clave: (ele: DatosArancelaria): string => ele.fraccionArancelaria,
+    orden: 2,
+  },
+  {
+    encabezado: 'Descripción',
+    clave: (ele: DatosArancelaria): string => ele.descripcion,
+    orden: 3,
+  }
 ];

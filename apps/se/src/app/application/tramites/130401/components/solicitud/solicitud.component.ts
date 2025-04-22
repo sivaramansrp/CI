@@ -1,8 +1,8 @@
+import { ARANCELARIA_TABLA_ENCABEZADOS, PRODUCTO_OPCION_RADIO, SOLICITUD_OPCION_RADIO, SOLICITUD_TABLA_ENCABEZADOS } from '../../constants/modificacion-descripcion.enum';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ConfiguracionColumna, InputRadioComponent, TablaDinamicaComponent, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { DatosArancelaria, SolicitudTablaDatos } from '../../models/modificacion-descripcion.model';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { PRODUCTO_OPCION_RADIO, SOLICITUD_OPCION_RADIO } from '../../constants/modificacion-descripcion.enum';
 import { Tramite130401State, Tramite130401Store } from '../../../../estados/tramites/tramite130401.store';
 import { CommonModule } from '@angular/common';
 import { ModificacionDescripcionService } from '../../services/modificacion-descripcion.service';
@@ -66,33 +66,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * 
    * Define los encabezados y claves para mostrar los datos de las partidas.
    */
-  public solicitudTablaEncabezados: ConfiguracionColumna<SolicitudTablaDatos>[] = [
-    {
-      encabezado: '',
-      clave: (ele: SolicitudTablaDatos) => ele.id,
-      orden: 1,
-    },
-    {
-      encabezado: 'Cantidad',
-      clave: (ele: SolicitudTablaDatos) => ele.cantidad,
-      orden: 2,
-    },
-    {
-      encabezado: 'Descripción',
-      clave: (ele: SolicitudTablaDatos) => ele.descripcion,
-      orden: 3,
-    },
-    {
-      encabezado: 'Precio unitario USD',
-      clave: (ele: SolicitudTablaDatos) => ele.precioUnitarioUSD,
-      orden: 4,
-    },
-    {
-      encabezado: 'Total USD',
-      clave: (ele: SolicitudTablaDatos) => ele.totalUSD,
-      orden: 5,
-    }
-  ];
+  public solicitudTablaEncabezados: ConfiguracionColumna<SolicitudTablaDatos>[] = SOLICITUD_TABLA_ENCABEZADOS;
 
   /**
    * Datos de la tabla de partidas.
@@ -106,23 +80,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * 
    * Define los encabezados y claves para mostrar los datos de las fracciones arancelarias.
    */
-  public arancelariaTablaEncabezados: ConfiguracionColumna<DatosArancelaria>[] = [
-    {
-      encabezado: '',
-      clave: (ele: DatosArancelaria) => ele.id,
-      orden: 1,
-    },
-    {
-      encabezado: 'Fracción arancelaria',
-      clave: (ele: DatosArancelaria) => ele.fraccionArancelaria,
-      orden: 2,
-    },
-    {
-      encabezado: 'Descripción',
-      clave: (ele: DatosArancelaria) => ele.descripcion,
-      orden: 3,
-    }
-  ];
+  public arancelariaTablaEncabezados: ConfiguracionColumna<DatosArancelaria>[] = ARANCELARIA_TABLA_ENCABEZADOS;
 
   /**
    * Datos de la tabla de fracciones arancelarias.
