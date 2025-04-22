@@ -1,5 +1,6 @@
 import {
   BtnContinuarComponent,
+  SolicitanteComponent,
   WizardComponent,
 } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
@@ -22,6 +23,7 @@ import { PasoUnoComponent } from './pages/modificacion-permiso-lab/paso-uno/paso
     ModificacionPermisoLabRoutingModule,
     WizardComponent,
     BtnContinuarComponent,
+    SolicitanteComponent
   ],
 })
 export class ModificacionPermisoLabModule {}
