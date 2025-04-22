@@ -20,5 +20,8 @@
       [datos]="datosPasos"
       (continuarEvento)="getValorIndice($event)"
     >
-    </btn-continuar>
+   </btn-continuar>
+   <button (click)="onSave()">Save</button>
+   <app-datos-de-la-solicitud-modificacion [insumos]="true"></app-datos-de-la-solicitud-modificacion>
+   
 </div>

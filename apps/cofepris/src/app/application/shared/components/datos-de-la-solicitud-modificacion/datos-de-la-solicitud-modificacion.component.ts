@@ -295,6 +295,14 @@ abrirModal(i: number = 0): void {
     });
   }
 
+  getAllFormsData(): any {
+    return {
+      datosSolicitudform: this.datosSolicitudform.value,
+      manifiestosRepresentanteForm: this.manifiestosRepresentanteForm.value,
+      scianForm: this.scianForm.value,
+    }
+  }
+  
   /**
    * @description
    * Actualiza el estado del store con los valores del formulario.

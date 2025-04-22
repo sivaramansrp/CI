@@ -1,6 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { DatosPasos, ListaPasosWizard } from '@libs/shared/data-access-user/src';
 import { AccionBoton } from '@libs/shared/data-access-user/src/core/models/260604/aviso-exportacion.model';
+import { DatosDeLaSolicitudModificacionComponent } from '../../../../shared/components/datos-de-la-solicitud-modificacion/datos-de-la-solicitud-modificacion.component';
 import { PANTA_PASOS } from '@libs/shared/data-access-user/src/core/enums/260604/aviso-exportacion.enum';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
@@ -34,6 +35,8 @@ export class PantallasComponent {
    */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
 
+  @ViewChild(DatosDeLaSolicitudModificacionComponent) datosDeLaSolicitudModificacionComponent!: DatosDeLaSolicitudModificacionComponent;
+  groupedPayload: any = null;
   /**
    * @description
    * Datos relacionados con los pasos del wizard, como el número total de pasos,
@@ -57,7 +60,17 @@ export class PantallasComponent {
    * @param {AccionBoton} e - Objeto que contiene la acción (`cont` o `atras`) y el valor del paso.
    */
   getValorIndice(e: AccionBoton): void {
+ 
     if (e.valor > 0 && e.valor < 5) {
+      const DATOS_DE_LA_SOLICITUD_MODIFICACION_COMPONENT = this.datosDeLaSolicitudModificacionComponent.getAllFormsData();
+
+      this.groupedPayload = {
+        DatosDeLaSolicitudModificacionComponent: DATOS_DE_LA_SOLICITUD_MODIFICACION_COMPONENT
+      };
+    
+      // eslint-disable-next-line no-console
+      console.log('Grouped Payload:', this.groupedPayload);
+
       this.indice = e.valor;
       if (e.accion === 'cont') {
         this.wizardComponent.siguiente();
@@ -65,5 +78,16 @@ export class PantallasComponent {
         this.wizardComponent.atras();
       }
     }
+  }
+  onSave(): void {
+    const DATOS_DE_LA_SOLICITUD_MODIFICACION_COMPONENT = this.datosDeLaSolicitudModificacionComponent.getAllFormsData();
+
+      this.groupedPayload = {
+        DatosDeLaSolicitudModificacionComponent: DATOS_DE_LA_SOLICITUD_MODIFICACION_COMPONENT
+      };
+    
+      // eslint-disable-next-line no-console
+      console.log('Grouped Payload:', this.groupedPayload);
+
   }
 }
