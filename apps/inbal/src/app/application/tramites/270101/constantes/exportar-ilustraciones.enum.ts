@@ -1,3 +1,18 @@
+/**
+  * @constant DATOS_DE_LA_SOLICICTUD
+  * @type {Record<string, string>}
+  * @description
+  * Este objeto contiene las claves y descripciones de los campos relacionados con los datos de la solicitud. 
+  * Se utiliza para mapear los nombres de los campos con sus descripciones legibles.
+  * 
+  * Funcionalidad:
+  * - Proporciona una referencia centralizada para los nombres y descripciones de los campos.
+  * - Facilita la reutilización y consistencia en la aplicación.
+  * 
+  * @example
+  * console.log(DATOS_DE_LA_SOLICICTUD.AUTOR);
+  * // Salida: 'Autor'
+  */
 export const DATOS_DE_LA_SOLICICTUD = {
   AUTOR: 'Autor',
   TITULO: 'Titulo',
@@ -16,6 +31,21 @@ export const DATOS_DE_LA_SOLICICTUD = {
   DESCRIPCION: 'Descripción de la fracción arancelaria',
 };
 
+/**
+  * @constant INFORMACION_DE_LA_OBRA_ARTE
+  * @type {Array<Record<string, unknown>>}
+  * @description
+  * Este arreglo contiene la configuración de los campos dinámicos relacionados con la información de la obra de arte. 
+  * Se utiliza para definir las propiedades de cada campo, como su tipo, validadores, y valores predeterminados.
+  * 
+  * Funcionalidad:
+  * - Proporciona una referencia centralizada para la configuración de los campos de la obra de arte.
+  * - Facilita la generación dinámica de formularios y la reutilización de la configuración.
+  * 
+  * @example
+  * console.log(INFORMACION_DE_LA_OBRA_ARTE[0].labelNombre);
+  * // Salida: 'Autor'
+  */
 export const INFORMACION_DE_LA_OBRA_ARTE = [
   {
     id: 'autor',
@@ -159,24 +189,40 @@ export const INFORMACION_DE_LA_OBRA_ARTE = [
   },
 ];
 
+/**
+  * @constant PERIODO_EN_EL_QUE_PERMANECERA
+  * @type {Array<Record<string, unknown>>}
+  * @description
+  * Este arreglo contiene la configuración de los campos dinámicos relacionados con el periodo en el que permanecerá 
+  * en el extranjero durante el proceso de exportación. Define las propiedades de cada campo, como su tipo, validadores, 
+  * y valores predeterminados.
+  * 
+  * Funcionalidad:
+  * - Proporciona una referencia centralizada para la configuración de los campos del periodo en el extranjero.
+  * - Facilita la generación dinámica de formularios y la reutilización de la configuración.
+  * 
+  * @example
+  * console.log(PERIODO_EN_EL_QUE_PERMANECERA[0].labelNombre);
+  * // Salida: 'Fecha inicio'
+  */
 export const PERIODO_EN_EL_QUE_PERMANECERA = [
-    {
-        id: 'fecha_inicio',
-        labelNombre: 'Fecha inicio',
-        campo: 'fecha_inicio',
-        clase: 'col-md-4',
-        tipoInput: 'date',
-        desactivado: false,
-        soloLectura: false,
-        validadores: [
-            { tipo: 'required' }
-        ],
-        marcadorDePosicion: '',
-        valorPredeterminado: '',
-        marginTop: 0,
-        habilitado: true
-    },
-    {
+  {
+      id: 'fecha_inicio',
+      labelNombre: 'Fecha inicio',
+      campo: 'fecha_inicio',
+      clase: 'col-md-4',
+      tipoInput: 'date',
+      desactivado: false,
+      soloLectura: false,
+      validadores: [
+          { tipo: 'required' }
+      ],
+      marcadorDePosicion: '',
+      valorPredeterminado: '',
+      marginTop: 0,
+      habilitado: true
+  },
+  {
       id: 'fecha_fin',
       labelNombre: 'Fecha fin',
       campo: 'fecha_fin',
@@ -193,20 +239,35 @@ export const PERIODO_EN_EL_QUE_PERMANECERA = [
       habilitado: true
   },
   {
-    id: 'responsable_exportacion',
-    labelNombre: 'Responsable de la exportación',
-    campo: 'responsable_exportacion',
-    clase: 'col-md-4',
-    tipoInput: 'text',
-    desactivado: false,
-    soloLectura: false,
-    validadores: [{ tipo: 'required' }],
-    marcadorDePosicion: '',
-    valorPredeterminado: '',
-    marginTop: 0,
+      id: 'responsable_exportacion',
+      labelNombre: 'Responsable de la exportación',
+      campo: 'responsable_exportacion',
+      clase: 'col-md-4',
+      tipoInput: 'text',
+      desactivado: false,
+      soloLectura: false,
+      validadores: [{ tipo: 'required' }],
+      marcadorDePosicion: '',
+      valorPredeterminado: '',
+      marginTop: 0,
   }
-]
+];
 
+/**
+  * @constant MOTIVO_DE_LA_EXPORTACION
+  * @type {Array<Record<string, unknown>>}
+  * @description
+  * Este arreglo contiene la configuración de los campos dinámicos relacionados con el motivo de la exportación. 
+  * Define las propiedades de cada campo, como su tipo, validadores y valores predeterminados.
+  * 
+  * Funcionalidad:
+  * - Proporciona una referencia centralizada para la configuración de los campos del motivo de la exportación.
+  * - Facilita la generación dinámica de formularios y la reutilización de la configuración.
+  * 
+  * @example
+  * console.log(MOTIVO_DE_LA_EXPORTACION[0].labelNombre);
+  * // Salida: 'Motivo'
+  */
 export const MOTIVO_DE_LA_EXPORTACION = [
   {
     id: 'motivo',
@@ -237,6 +298,21 @@ export const MOTIVO_DE_LA_EXPORTACION = [
   },
 ]
 
+/**
+  * @constant LUGAR_DE_DESTINO
+  * @type {Array<Record<string, unknown>>}
+  * @description
+  * Este arreglo contiene la configuración de los campos dinámicos relacionados con el motivo de la exportación. 
+  * Define las propiedades de cada campo, como su tipo, validadores y valores predeterminados.
+  * 
+  * Funcionalidad:
+  * - Proporciona una referencia centralizada para la configuración de los campos del motivo de la exportación.
+  * - Facilita la generación dinámica de formularios y la reutilización de la configuración.
+  * 
+  * @example
+  * console.log(LUGAR_DE_DESTINO[0].labelNombre);
+  * // Salida: 'Motivo'
+  */
 export const LUGAR_DE_DESTINO = [
   {
     id: 'pais',
@@ -279,6 +355,21 @@ export const LUGAR_DE_DESTINO = [
   },
 ]
 
+/**
+  * @constant ITINERARIO_DE_EXPORTACION
+  * @type {Array<Record<string, unknown>>}
+  * @description
+  * Este arreglo contiene la configuración de los campos dinámicos relacionados con el motivo de la exportación. 
+  * Define las propiedades de cada campo, como su tipo, validadores y valores predeterminados.
+  * 
+  * Funcionalidad:
+  * - Proporciona una referencia centralizada para la configuración de los campos del motivo de la exportación.
+  * - Facilita la generación dinámica de formularios y la reutilización de la configuración.
+  * 
+  * @example
+  * console.log(ITINERARIO_DE_EXPORTACION[0].labelNombre);
+  * // Salida: 'Motivo'
+  */
 export const ITINERARIO_DE_EXPORTACION = [
   {
     id: 'tipoItinerario',
@@ -380,6 +471,21 @@ export const ITINERARIO_DE_EXPORTACION = [
   },
 ]
 
+/**
+  * @constant ITINERARIO_DE_EXPORTACION_MAXIMO
+  * @type {Array<Record<string, unknown>>}
+  * @description
+  * Este arreglo contiene la configuración de los campos dinámicos relacionados con el motivo de la exportación. 
+  * Define las propiedades de cada campo, como su tipo, validadores y valores predeterminados.
+  * 
+  * Funcionalidad:
+  * - Proporciona una referencia centralizada para la configuración de los campos del motivo de la exportación.
+  * - Facilita la generación dinámica de formularios y la reutilización de la configuración.
+  * 
+  * @example
+  * console.log(ITINERARIO_DE_EXPORTACION_MAXIMO[0].labelNombre);
+  * // Salida: 'Motivo'
+  */
 export const ITINERARIO_DE_EXPORTACION_MAXIMO = [
   {
     id: 'tipoItinerario',
@@ -482,6 +588,21 @@ export const ITINERARIO_DE_EXPORTACION_MAXIMO = [
   },
 ]
 
+/**
+  * @constant PAGO_DE_DERECHOS
+  * @type {Array<Record<string, unknown>>}
+  * @description
+  * Este arreglo contiene la configuración de los campos dinámicos relacionados con el motivo de la exportación. 
+  * Define las propiedades de cada campo, como su tipo, validadores y valores predeterminados.
+  * 
+  * Funcionalidad:
+  * - Proporciona una referencia centralizada para la configuración de los campos del motivo de la exportación.
+  * - Facilita la generación dinámica de formularios y la reutilización de la configuración.
+  * 
+  * @example
+  * console.log(PAGO_DE_DERECHOS[0].labelNombre);
+  * // Salida: 'Motivo'
+  */
 export const PAGO_DE_DERECHOS = [
   {
     id: 'claveDeReferencia',
@@ -564,14 +685,50 @@ export const PAGO_DE_DERECHOS = [
   },
 ]
 
+/**
+  * @constant OBRA_DE_ARTE_ALERT
+  * @type {string}
+  * @description
+  * Este mensaje de alerta informa al usuario sobre la importancia de proporcionar las medidas de cada pieza 
+  * para evitar afectar la dictaminación de su solicitud.
+  * 
+  * @example
+  * console.log(OBRA_DE_ARTE_ALERT);
+  * // Salida: 'Nota: Es indispensable proporcionar las medidas de cada pieza, ya que de no hacerlo se puede afectar la dictaminación de su solicitud'
+  */
 export const OBRA_DE_ARTE_ALERT =
   'Nota: Es indispensable proporcionar las medidas de cada pieza, ya que de no hacerlo se puede afectar la dictaminación de su solicitud';
 
+  /**
+  * @constant ADUANA_ALERT
+  * @type {string}
+  * @description
+  * Este mensaje de alerta informa al usuario sobre el proceso para agregar datos del traslado y la sede, 
+  * indicando que a cada traslado le corresponde una sede con un máximo de dos itinerarios.
+  * 
+  * @example
+  * console.log(ADUANA_ALERT);
+  * // Salida: 'Agrega los datos del traslado y, posteriormente, siguiendo el mismo proceso, agrega la sede. A cada traslado le corresponde una sede (máximo 2 itinerarios).'
+  */
 export const ADUANA_ALERT =
 'Agrega los datos del traslado y, posteriormente, siguiendo el mismo proceso, agrega la sede. A cada traslado le corresponde una sede (máximo 2 itinerarios).';
 
+/**
+  * @constant ERROR_DE_REGISTRO_ALERT
+  * @type {string}
+  * @description
+  * Este mensaje de alerta informa al usuario sobre el proceso para agregar datos del traslado y la sede, 
+  * indicando que a cada traslado le corresponde una sede con un máximo de dos itinerarios.
+  */
 export const ERROR_DE_REGISTRO_ALERT =
 '<strong>¡Error de registro! </strong>En el itinerario de la exportación y transportacion a cada translado le corresponde una sede.';
 
+/**
+  * @constant ERROR_FORMA_ALERT
+  * @type {string}
+  * @description
+  * Este mensaje de alerta informa al usuario sobre el proceso para agregar datos del traslado y la sede, 
+  * indicando que a cada traslado le corresponde una sede con un máximo de dos itinerarios.
+  */
 export const ERROR_FORMA_ALERT =
 '<strong>¡Error de registro! </strong>Faltan campos por capturar.';
