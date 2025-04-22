@@ -772,15 +772,15 @@
   {
     "id": 111,
     "tramite": 260904,
-    "linkDashboard": "/pago/modificación-del-permiso-sanitario-de-importación-de-insumos/sanitary-permit",
+    "linkDashboard": "/cofepris/modificación-del-permiso-sanitario-de-importación-de-insumos/sanitary-permit",
     "linkDepartment": "/pago/modificación-del-permiso-sanitario-de-importación-de-insumos/sanitary-permit",
     "department": "cofepris"
   },
   {
     "id": 112,
     "tramite": 260911,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "cofepris/modificacion-de-dispositivos/permiso-sanitario",
+    "linkDepartment": "pago/modificacion-de-dispositivos/permiso-sanitario",
     "department": "cofepris"
   },
   {
