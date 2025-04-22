@@ -23,11 +23,11 @@ describe('ExportacionPetroliferosService', () => {
     httpMock.verify();
   });
 
-  it('should be created', () => {
+  it('debería crear el servicio', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should fetch the list of countries from "pais-procedencia.json"', () => {
+  it('debería obtener la lista de países desde "pais-procedencia.json"', () => {
     const MOCKPAISES: Catalogo[] = [
       { id: 1, descripcion: 'SGP' },
       { id: 2, descripcion: 'TLC JAPON' },
@@ -52,7 +52,7 @@ describe('ExportacionPetroliferosService', () => {
     REQ.flush(MOCKPAISES);
   });
 
-  it('should fetch countries by block from "paises-por-bloque.json"', () => {
+  it('debería obtener los países por bloque desde "paises-por-bloque.json"', () => {
     const MOCKPAISESBLOQUE: Catalogo[] = [
       { id: 1, descripcion: 'URUGUAY (REPUBLICA ORIENTAL DE)' },
       { id: 2, descripcion: 'ARGENTINA (REPUBLICA)' },
@@ -73,7 +73,7 @@ describe('ExportacionPetroliferosService', () => {
     REQ.flush(MOCKPAISESBLOQUE);
   });
 
-  it('should fetch the list of states from "estado.json"', () => {
+  it('debería obtener la lista de estados desde "estado.json"', () => {
     const MOCKESTADOS: Catalogo[] = [
       { id: 1, descripcion: 'SINALOA' }
     ];
@@ -87,7 +87,7 @@ describe('ExportacionPetroliferosService', () => {
     REQ.flush(MOCKESTADOS);
   });
 
-  it('should fetch the list of federal representations from "representacion-federal.json"', () => {
+  it('debería obtener la lista de representaciones federales desde "representacion-federal.json"', () => {
     const MOCKREPRESENTACIONES: Catalogo[] = [
       { id: 1, descripcion: 'SECRETARIA DE ENERGIA (oficina central)' }
     ];
@@ -101,7 +101,7 @@ describe('ExportacionPetroliferosService', () => {
     REQ.flush(MOCKREPRESENTACIONES);
   });
 
-  it('should fetch the solicitation options from "solicitude-options.json"', () => {
+  it('debería obtener las opciones de solicitud desde "solicitude-options.json"', () => {
     const MOCKSOLICITUDEOPTIONS: ProductoResponse = {
       options: [
         { label: 'Inicial', value: 'Inicial' }
@@ -118,7 +118,7 @@ describe('ExportacionPetroliferosService', () => {
     REQ.flush(MOCKSOLICITUDEOPTIONS);
   });
 
-  it('should fetch the product options from "producto-otions.json"', () => {
+  it('debería obtener las opciones de producto desde "producto-otions.json"', () => {
     const MOCKPRODUCTOOPTIONS: ProductoResponse = {
       options: [
         { label: 'NuevoLargo plazo (5 años)', value: 'Largo plazo (5 años)' },
@@ -135,5 +135,4 @@ describe('ExportacionPetroliferosService', () => {
     expect(REQ.request.method).toBe('GET');
     REQ.flush(MOCKPRODUCTOOPTIONS);
   });
-  
 });

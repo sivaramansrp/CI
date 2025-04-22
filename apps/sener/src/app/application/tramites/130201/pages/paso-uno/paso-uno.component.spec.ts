@@ -21,15 +21,15 @@ describe('PasoUnoComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('debería crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should have initial indice value as 1', () => {
+  it('debería tener el valor inicial de indice como 1', () => {
     expect(component.indice).toBe(1);
   });
 
-  it('should update indice when seleccionaTab is called', () => {
+  it('debería actualizar el índice cuando se llama a seleccionaTab', () => {
     component.seleccionaTab(2);
     expect(component.indice).toBe(2);
   });

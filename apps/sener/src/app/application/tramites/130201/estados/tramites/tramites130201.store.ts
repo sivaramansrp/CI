@@ -130,7 +130,7 @@ export class Tramite130201Store extends Store<Tramite130201State> {
  * en el objeto `values`. Combina el estado actual con los nuevos valores utilizando
  * el operador de propagación (`...`).
  *
- * @param {Partial<Tramite130121State>} values - Objeto que contiene las propiedades a actualizar en el estado.
+ * @param {Partial<Tramite130201State>} values - Objeto que contiene las propiedades a actualizar en el estado.
  *
  * @example
  * // Ejemplo de uso:
@@ -139,7 +139,6 @@ export class Tramite130201Store extends Store<Tramite130201State> {
  * @returns {void}
  */
 public establecerDatos(values: Partial<Tramite130201State>): void {  
-    
   this.update((state) => ({
     ...state,
     ...values,

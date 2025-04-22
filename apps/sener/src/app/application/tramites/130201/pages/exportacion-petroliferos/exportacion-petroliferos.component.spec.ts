@@ -27,15 +27,15 @@ describe('ExportacionPetroliferosComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('debería crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize pasosSolicitar with PASOS_EXPORTACION', () => {
+  it('debería inicializar pasosSolicitar con PASOS_EXPORTACION', () => {
     expect(component.pasosSolicitar).toEqual(PASOS_EXPORTACION);
   });
 
-  it('should initialize datosPasos correctly', () => {
+  it('debería inicializar datosPasos correctamente', () => {
     expect(component.datosPasos).toEqual({
       nroPasos: PASOS_EXPORTACION.length,
       indice: 1,
@@ -44,7 +44,7 @@ describe('ExportacionPetroliferosComponent', () => {
     });
   });
 
-  it('should update indice and call siguiente on wizardComponent when AccionBoton is "cont"', () => {
+  it('debería actualizar el índice y llamar a siguiente en wizardComponent cuando AccionBoton sea "cont"', () => {
     const ACTION: AccionBoton = { accion: 'cont', valor: 2 };
     component.wizardComponent = wizardComponentSpy as WizardComponent;
 
@@ -54,7 +54,7 @@ describe('ExportacionPetroliferosComponent', () => {
     expect(wizardComponentSpy.siguiente).toHaveBeenCalled();
   });
 
-  it('should update indice and call atras on wizardComponent when AccionBoton is not "cont"', () => {
+  it('debería actualizar el índice y llamar a atras en wizardComponent cuando AccionBoton no sea "cont"', () => {
     const ACTION: AccionBoton = { accion: 'ant', valor: 1 };
     component.wizardComponent = wizardComponentSpy as WizardComponent;
 
@@ -64,18 +64,18 @@ describe('ExportacionPetroliferosComponent', () => {
     expect(wizardComponentSpy.atras).toHaveBeenCalled();
   });
 
-  it('should not call siguiente or atras when AccionBoton value is out of bounds', () => {
+  it('no debería llamar a siguiente ni atras cuando el valor de AccionBoton esté fuera de los límites', () => {
     const ACTION: AccionBoton = { accion: 'cont', valor: 5 };
     component.wizardComponent = wizardComponentSpy as WizardComponent;
 
     component.getValorIndice(ACTION);
 
-    expect(component.indice).toBe(1); // Remains unchanged
+    expect(component.indice).toBe(1); // Permanece sin cambios
     expect(wizardComponentSpy.siguiente).not.toHaveBeenCalled();
     expect(wizardComponentSpy.atras).not.toHaveBeenCalled();
   });
 
-  it('should correctly set tabIndex', () => {
+  it('debería establecer correctamente tabIndex', () => {
     expect(component.tabIndex).toBe(1);
   });
 });
