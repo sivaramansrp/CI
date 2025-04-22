@@ -1,5 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RevisionDocumentalComponent } from './revision-documental.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { RevisionService } from '../../services/revision.service';
 
 describe('RevisionDocumentalComponent', () => {
   let component: RevisionDocumentalComponent;
@@ -8,7 +10,7 @@ describe('RevisionDocumentalComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [],
-      imports: [RevisionDocumentalComponent],
+      imports: [HttpClientTestingModule,RevisionDocumentalComponent],
     }).compileComponents();
 
     fixture = TestBed.createComponent(RevisionDocumentalComponent);

@@ -33,6 +33,8 @@ import { TituloComponent } from '@ng-mf/data-access-user';
 import { ToastrModule } from 'ngx-toastr';
 import { ToastrService } from 'ngx-toastr';
 import { WizardComponent } from '@ng-mf/data-access-user';
+import { RevisionService } from './services/revision.service';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 @NgModule({
   declarations: [
     SolicitudPageComponent,
@@ -72,11 +74,12 @@ import { WizardComponent } from '@ng-mf/data-access-user';
     DatosGeneralesComponent,
     TercerosRelacionadosComponent,
     PagoDeDerechosComponent,
+    HttpClientModule,
     ToastrModule.forRoot()
   ],
   exports: [SolicitudPageComponent],
   providers:[
-    ToastrService,
+    ToastrService,RevisionService
   ]
 })
 export class SagarpaModule {}
