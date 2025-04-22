@@ -1,5 +1,6 @@
 import { Catalogo, REGEX_NUMERO_DECIMAL_ENTERO, REGEX_TEXTO_PREFIJO, REG_X } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { DATOS_INPUT_FIELDS, MERCANCIA_INPUT_VALUES } from '@libs/shared/data-access-user/src/tramites/constantes/valores-constantes.enum';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 import { Tramite130204State, Tramite130204Store } from '../../estados/tramites/tramites130204.store';
@@ -20,6 +21,7 @@ import { PARTIDASDELAMERCANCIA_TABLA } from '../../../../shared/constantes/parti
 import acotacionOptions from '@libs/shared/theme/assets/json/130204/acotacion.json';
 
 import { TEXTOS } from '../../../../shared/constantes/representacion-federal.enum';
+import { TITULO_DESTINO } from '@libs/shared/data-access-user/src/tramites/constantes/Pais-titulo.enum';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
 import { Tramite130204Query } from '../../estados/queries/tramite130204.query';
 import mercanciaCatalogoVal from '@libs/shared/theme/assets/json/130204/mercancia-select.json';
@@ -125,63 +127,15 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * Datos de los campos de entrada del formulario.
    * @type {Array<{label: string, placeholder: string, required: boolean, controlName: string}>} Arreglo que contiene los datos de los campos del formulario de mercancía.
    */
-  datosInputFields = [
-    {
-      label: 'Régimen al que se destinará la mercancía',
-      placeholder: 'Selecciona un valor',
-      required: true,
-      controlName: 'regimen',
-    },
-    {
-      label: 'Clasificación del régimen',
-      placeholder: 'Selecciona un valor',
-      required: true,
-      controlName: 'clasificacion',
-    },
-  ];
+  datosInputFields = DATOS_INPUT_FIELDS;
 
   /**
  * Datos de los campos de entrada para la mercancía.
  * @type {Array<{label: string, placeholder: string, required: boolean, controlName: string}>} 
  * Arreglo que contiene los datos de los campos que serán utilizados en el formulario de mercancía.
  */
-  mercanciaInputValues = [
-    /**
-     * Fracción arancelaria.
-     * @type {{label: string, placeholder: string, required: boolean, controlName: string}} 
-     * Campo para seleccionar la fracción arancelaria de la mercancía.
-     */
-    {
-      label: 'Fracción arancelaria',
-      placeholder: 'Selecciona un valor',
-      required: true,
-      controlName: 'fraccion',
-    },
-
-    /**
-     * Unidad de medida de la tarifa (UMT).
-     * @type {{label: string, placeholder: string, required: boolean, controlName: string}} 
-     * Campo para seleccionar la unidad de medida de la tarifa asociada a la mercancía.
-     */
-    {
-      label: 'Unidad de medida de la tarifa (UMT)',
-      placeholder: 'Selecciona un valor',
-      required: true,
-      controlName: 'umt',
-    },
-
-    /**
-     * NICO (Número de Identificación de la Carga).
-     * @type {{label: string, placeholder: string, required: boolean, controlName: string}} 
-     * Campo para seleccionar el número de identificación de la carga (NICO) de la mercancía.
-     */
-    {
-      label: 'NICO',
-      placeholder: 'Selecciona un valor',
-      required: true,
-      controlName: 'nico',
-    },
-  ];
+  mercanciaInputValues = MERCANCIA_INPUT_VALUES;
+  
   /**
  * Array de catálogos.
  * @type {Catalogo[][]} Arreglo bidimensional de catálogos que contiene los valores para las solicitudes.
@@ -263,20 +217,20 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   nicoCatalogoArray: Catalogo[] = nicoCatalogoVal as Catalogo[];
 
-  /**
+ /**
  * @property
  * @name tituloParte
  * @description
- * Título que se utiliza para mostrar el encabezado de la sección relacionada con los países de destino.
- * Este valor puede ser utilizado en la plantilla del componente para personalizar el texto mostrado.
+ * Título que se utiliza para mostrar el encabezado de la sección relacionada con los países de origen.
+ * Este valor se asigna desde la constante `TITULO_DESTINO` para mantener consistencia en los textos utilizados.
  * 
  * @type {string}
- * @default 'País(es) de destino'
+ * @default 'Pais(es) de destino'
  * 
  * @example
  * <h1>{{ tituloParte }}</h1>
  */
-tituloParte = 'País(es) de destino';
+tituloParte = TITULO_DESTINO;
 
   /**
  * @public
