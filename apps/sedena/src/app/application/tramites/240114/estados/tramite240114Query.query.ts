@@ -75,6 +75,6 @@ export class Tramite240114Query extends Query<Tramite240114State> {
    * @property {Observable<MercanciaDetalle[]>} getMercanciaTablaDatos$
    */
   public getMercanciaTablaDatos$ = this.select(
-    (state) => state.merccancialTablaDatos
+    (state) => state.mercancialTablaDatos
   );
 }

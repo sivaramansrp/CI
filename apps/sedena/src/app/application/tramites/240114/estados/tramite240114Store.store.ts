@@ -14,7 +14,7 @@ import { StoreConfig } from '@datorama/akita';
  * @property {DestinoFinal[]} destinatarioFinalTablaDatos - Lista de destinatarios finales registrados.
  * @property {Proveedor[]} proveedorTablaDatos - Lista de proveedores registrados.
  * @property {PagoDerechosFormState} pagoDerechos - Información del formulario de pago de derechos.
- * @property {MercanciaDetalle[]} merccancialTablaDatos - Lista de mercancías registradas.
+ * @property {MercanciaDetalle[]} mercancialTablaDatos - Lista de mercancías registradas.
  * @property {DatosDelTramiteFormState} datosDelTramite - Información general del formulario de datos del trámite.
  */
 export interface Tramite240114State {
@@ -22,7 +22,7 @@ export interface Tramite240114State {
   destinatarioFinalTablaDatos: DestinoFinal[];
   proveedorTablaDatos: Proveedor[];
   pagoDerechos: PagoDerechosFormState;
-  merccancialTablaDatos: MercanciaDetalle[];
+  mercancialTablaDatos: MercanciaDetalle[];
   datosDelTramite: DatosDelTramiteFormState;
 }
 
@@ -45,7 +45,7 @@ export function createInitialState(): Tramite240114State {
       fechaPago: '',
       importePago: '',
     },
-    merccancialTablaDatos: [],
+    mercancialTablaDatos: [],
     datosDelTramite: {
       permisoGeneral: '',
       usoFinal: '',
@@ -157,7 +157,7 @@ export class Tramite240114Store extends Store<Tramite240114State> {
   public updateMercanciaTablaDatos(newMercancia: MercanciaDetalle[]): void {
     this.update((state) => ({
       ...state,
-      merccancialTablaDatos: [...state.merccancialTablaDatos, ...newMercancia],
+      mercancialTablaDatos: [...state.mercancialTablaDatos, ...newMercancia],
     }));
   }
 }

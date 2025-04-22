@@ -21,12 +21,7 @@ import { takeUntil } from 'rxjs';
   templateUrl: './pago-de-derechos-contenedora.component.html'
 })
 export class PagoDeDerechosContenedoraComponent implements OnInit, OnDestroy {
-  /**
-   * Observable para liberar suscripciones al destruir el componente.
-   * @property {Subject<void>} unsubscribe$
-   */
-  private unsubscribe$ = new Subject<void>();
-
+  
   /**
    * Estado actual del formulario de pago de derechos.
    * @property {PagoDerechosFormState} pagoDerechoFormState
@@ -69,17 +64,14 @@ export class PagoDeDerechosContenedoraComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Hook del ciclo de vida que se ejecuta al destruir el componente.
-   * Libera las suscripciones para evitar fugas de memoria.
-   *
+   * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
+   * Limpia las suscripciones.
    * @method ngOnDestroy
-   * @returns {void}
    */
   ngOnDestroy(): void {
-    this.unsubscribe$.next();
-    this.unsubscribe$.complete();
+    this.destroy$.next();
+    this.destroy$.complete();
   }
-
   /**
    * Actualiza el estado del formulario de pago de derechos en el store.
    *
