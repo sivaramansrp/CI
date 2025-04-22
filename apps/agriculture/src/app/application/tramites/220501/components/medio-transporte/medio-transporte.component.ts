@@ -181,6 +181,7 @@ export class MedioTransporteComponent implements OnInit, OnDestroy {
     const MEDIODETRANSPORTE$ = this.sagarpaService
       .getMediodetransporte()
       .pipe(
+        takeUntil(this.destroyed$),
         map((resp) => {
           this.medioDeTransporte = resp.data;
         })
