@@ -7,7 +7,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 
-import { CatalogoSelectComponent,SolicitanteComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent, SolicitanteComponent, TituloComponent } from '@ng-mf/data-access-user';
 
 import { Catalogo, ModeloDeFormaDinamica, REGEX_NOMBRE } from '@libs/shared/data-access-user/src';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
@@ -23,60 +23,60 @@ import { EquipoEInstrumentosMusicalesService } from '../../services/equipo-e-ins
 @Component({
   selector: 'app-datos-del-nombre',
   standalone: true,
-  imports: [CommonModule, FormasDinamicasComponent, CatalogoSelectComponent,SolicitanteComponent, TituloComponent, ReactiveFormsModule, SolicitanteComponent],
+  imports: [CommonModule, FormasDinamicasComponent, CatalogoSelectComponent, SolicitanteComponent, TituloComponent, ReactiveFormsModule, SolicitanteComponent],
   templateUrl: './datos-del-nombre.component.html',
   styleUrl: './datos-del-nombre.component.scss',
 })
-export class DatosDelNombreComponent implements OnInit,OnDestroy {
+export class DatosDelNombreComponent implements OnInit, OnDestroy {
 
 
-  public consultarPorRFCOpcionseleccionada : boolean = false;
- consultarPorRFC: Catalogo[]= [];
+  public consultarPorRFCOpcionseleccionada: boolean = false;
+  consultarPorRFC: Catalogo[] = [];
 
- tipoDeRepresentanteOpciones: Catalogo[] = [];
+  tipoDeRepresentanteOpciones: Catalogo[] = [];
 
- /**
-  * Opciones de tipos de propietarios obtenidas desde un catálogo.
-  */
- tipoDePropietarioOpciones: Catalogo[] = [];
-
- /**
-  * Formulario dinámico para gestionar los datos del tipo de propietario.
-  */
- formularioDatosTipoPropietario: ModeloDeFormaDinamica[] = FORMULARIO_DATOS_NOMBRE;
-
- /**
-  * Formulario reactivo para gestionar los datos del tipo de propietario.
-  */
- datisDelNombre!: FormGroup;
-
- /**
-  * Estado seleccionado del trámite 630303.
-  */
- estadoSeleccionado!: Tramite630104State;
-
- /**
-  * Subject utilizado para manejar la destrucción de suscripciones y evitar fugas de memoria.
-  */
- private destroyed$ = new Subject<void>();
-
- /**
-  * Constructor del componente.
-  * 
-  * @param fb - Constructor de formularios reactivos.
-  * @param tramite630104Store - Store para manejar el estado del trámite.
-  * @param tramite630104Query - Query para consultar el estado del trámite.
-  * @param retornoImportacionTemporalService - Servicio para obtener datos de catálogos.
-  */
-    constructor(private fb: FormBuilder,private tramite630104Store: Tramite630104Store,
-        private tramite630104Query: Tramite630104Query,private equipoEInstrumentosMusicalesService: EquipoEInstrumentosMusicalesService) {
-     //
-    }
-   
-    /**
-   * Método del ciclo de vida que se ejecuta al inicializar el componente.
-   * Inicializa el formulario y obtiene datos de catálogos.
+  /**
+   * Opciones de tipos de propietarios obtenidas desde un catálogo.
    */
+  tipoDePropietarioOpciones: Catalogo[] = [];
+
+  /**
+   * Formulario dinámico para gestionar los datos del tipo de propietario.
+   */
+  formularioDatosTipoPropietario: ModeloDeFormaDinamica[] = FORMULARIO_DATOS_NOMBRE;
+
+  /**
+   * Formulario reactivo para gestionar los datos del tipo de propietario.
+   */
+  datisDelNombre!: FormGroup;
+
+  /**
+   * Estado seleccionado del trámite 630303.
+   */
+  estadoSeleccionado!: Tramite630104State;
+
+  /**
+   * Subject utilizado para manejar la destrucción de suscripciones y evitar fugas de memoria.
+   */
+  private destroyed$ = new Subject<void>();
+
+  /**
+   * Constructor del componente.
+   * 
+   * @param fb - Constructor de formularios reactivos.
+   * @param tramite630104Store - Store para manejar el estado del trámite.
+   * @param tramite630104Query - Query para consultar el estado del trámite.
+   * @param retornoImportacionTemporalService - Servicio para obtener datos de catálogos.
+   */
+  constructor(private fb: FormBuilder, private tramite630104Store: Tramite630104Store,
+    private tramite630104Query: Tramite630104Query, private equipoEInstrumentosMusicalesService: EquipoEInstrumentosMusicalesService) {
+    //
+  }
+
+  /**
+ * Método del ciclo de vida que se ejecuta al inicializar el componente.
+ * Inicializa el formulario y obtiene datos de catálogos.
+ */
   ngOnInit(): void {
     this.getValorStore();
     this.inicializarFormulario();
@@ -97,7 +97,9 @@ export class DatosDelNombreComponent implements OnInit,OnDestroy {
       apellidoPaterno: [this.estadoSeleccionado?.['apellidoPaterno'] || '', [Validators.required, Validators.pattern(REGEX_NOMBRE)]],
       apellidoMaterno: [this.estadoSeleccionado?.['apellidoMaterno'] || '', Validators.pattern(REGEX_NOMBRE)],
       razonSocial: [this.estadoSeleccionado?.['razonSocial'] || '', [Validators.required, Validators.pattern(REGEX_NOMBRE)]],
-      rfc :[this.estadoSeleccionado?.['rfc'] || '', [Validators.required, Validators.pattern(REGEX_NOMBRE)]]
+      rfc: [this.estadoSeleccionado?.['rfc'] || '', [Validators.required, Validators.pattern(REGEX_NOMBRE)]],
+      rfcOptionado: [this.estadoSeleccionado?.['rfcOptionado'] || '', [Validators.required, Validators.pattern(REGEX_NOMBRE)]],
+      curp: [this.estadoSeleccionado?.['curp'] || '', [Validators.required, Validators.pattern(REGEX_NOMBRE)]],
     });
   }
 
@@ -117,11 +119,11 @@ export class DatosDelNombreComponent implements OnInit,OnDestroy {
    */
   getconsultarPorRFC(): void {
     this.equipoEInstrumentosMusicalesService
-    .getconsultarPorRFC()
-    .pipe(takeUntil(this.destroyed$))
-    .subscribe((data) => {
-      this.consultarPorRFC = data;
-   });
+      .getconsultarPorRFC()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((data) => {
+        this.consultarPorRFC = data;
+      });
   }
 
   /**
@@ -133,7 +135,7 @@ export class DatosDelNombreComponent implements OnInit,OnDestroy {
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data) => {
         this.tipoDeRepresentanteOpciones = data;
-        });
+      });
   }
 
   /**
@@ -151,10 +153,15 @@ export class DatosDelNombreComponent implements OnInit,OnDestroy {
       });
   }
 
-  
+
   continuar(): void {
-    this.consultarPorRFCOpcionseleccionada = this.datisDelNombre.get('consultarPorRFC')?.value === '1';
-  }
+    if (this.datisDelNombre.get('consultarPorRFC')?.value === '1') {
+      this.consultarPorRFCOpcionseleccionada = true;
+    }
+    else if (this.datisDelNombre.get('consultarPorRFC')?.value === '2') {
+      this.consultarPorRFCOpcionseleccionada = false
+    }
+    }
   /**
    * Establece un cambio de valor en el store basado en un evento.
    * 
@@ -166,7 +173,8 @@ export class DatosDelNombreComponent implements OnInit,OnDestroy {
     } else {
       this.tramite630104Store.setTramite630104State($event.campo, $event.valor);
     }
-  }
+    this.consultarPorRFCOpcionseleccionada = this.datisDelNombre.get('consultarPorRFC')?.value;
+    }
 
   /**
    * Establece validadores a un conjunto de campos del formulario.
@@ -207,7 +215,7 @@ export class DatosDelNombreComponent implements OnInit,OnDestroy {
       this.limpiarValidadores(['nombre', 'apellidoPaterno']);
       this.establecerValidadores(['razonSocial'], Validators.required);
     }
-  }
+}
 
 
 
@@ -218,6 +226,6 @@ export class DatosDelNombreComponent implements OnInit,OnDestroy {
   ngOnDestroy(): void {
     this.destroyed$.next();
     this.destroyed$.complete();
-  }  
+  }
 }
-  
+

@@ -1,6 +1,5 @@
 <div class="container">
-    <ng-titulo [titulo]="'¿Desea consultar al representante por
-    RFC?'"></ng-titulo>
+    <ng-titulo [titulo]="'Datos del nombre o denominación social del representante en México o centro de operaciones'"></ng-titulo>
     <form [formGroup]="datisDelNombre" class="ms-2">
         <div class="row mt-4">
             <div class="col-md-4">
@@ -27,7 +26,7 @@
               </div>
 
             }
-           @if(consultarPorRFCOpcionseleccionada === true) {
+           @if(consultarPorRFCOpcionseleccionada=== true) {
             <div >hi</div>
            }
         </div>
@@ -44,6 +43,30 @@
         @if(datisDelNombre.get('tipoDeRepresentante')?.value){
         @if(datisDelNombre.get('tipoDeRepresentante')?.value==='1'){
         <div class="row mt-4">
+            <div class="col-md-6">
+                <label for="nombre" class="form-label">R F C *:</label>
+                <input id="nombre" type="text" class="form-control" formControlName="rfcOptionado"
+                    (change)="establecerCambioDeValor({campo: 'rfcOptionado', valor:(datisDelNombre.get('rfcOptionado')?.value)})">
+                <div *ngIf="datisDelNombre.get('rfcOptionado')?.invalid && datisDelNombre.get('rfcOptionado')?.touched">
+                    <small class="text-danger" *ngIf="datisDelNombre.get('rfcOptionado')?.errors?.['required']">Este campo es
+                        obligatorio.</small>
+                    <small class="text-danger" *ngIf="datisDelNombre.get('rfcOptionado')?.errors?.['pattern']">Por
+                        favor, corrija
+                        el rfcOptionado.</small>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <label for="curp" class="form-label">C U R P:</label>
+                <input id="td_curp" type="text" class="form-control" formControlName="curp"
+                    (change)="establecerCambioDeValor({campo: 'curp', valor:(datisDelNombre.get('curp')?.value)})">
+                <div *ngIf="datisDelNombre.get('curp')?.invalid && datisDelNombre.get('curp')?.touched">
+                  
+                    <small class="text-danger" *ngIf="datisDelNombre.get('curp')?.errors?.['pattern']">Por
+                        favor, corrija
+                        el rfcOptionado.</small>
+                </div>
+            </div>
+          
             <div class="col-md-4">
                 <label for="nombre" class="form-label">Nombre(s) *:</label>
                 <input id="nombre" type="text" class="form-control" formControlName="nombre"
@@ -80,10 +103,36 @@
                         corrija el apellido materno.</small>
                 </div>
             </div>
+            <div class="row mt-4">
+                <div class="col-md-8">
+                    <label for="razonSocial" class="form-label">Denominación o razón social *:</label>
+                    <input id="razonSocial" type="text" class="form-control" formControlName="razonSocial"
+                        (change)="establecerCambioDeValor({campo:'razonSocial',valor:datisDelNombre.get('razonSocial')?.value})">
+                    <div *ngIf="datisDelNombre.get('razonSocial')?.invalid && datisDelNombre.get('razonSocial')?.touched">
+                        <small class="text-danger" *ngIf="datisDelNombre.get('razonSocial')?.errors?.['required']">Este
+                            campo es
+                            obligatorio.</small>
+                        <small class="text-danger" *ngIf="datisDelNombre.get('razonSocial')?.errors?.['pattern']">Por favor,
+                            corrija la denominación o razón social.</small>
+                    </div>
+                </div>
+            </div>
         </div>
         }
         @else if (datisDelNombre.get('tipoDeRepresentante')?.value==='2') {
         <div class="row mt-4">
+            <div class="col-md-6">
+                <label for="nombre" class="form-label">R F C *:</label>
+                <input id="nombre" type="text" class="form-control" formControlName="rfcOptionado"
+                    (change)="establecerCambioDeValor({campo: 'rfcOptionado', valor:(datisDelNombre.get('rfcOptionado')?.value)})">
+                <div *ngIf="datisDelNombre.get('rfcOptionado')?.invalid && datisDelNombre.get('rfcOptionado')?.touched">
+                    <small class="text-danger" *ngIf="datisDelNombre.get('rfcOptionado')?.errors?.['required']">Este campo es
+                        obligatorio.</small>
+                    <small class="text-danger" *ngIf="datisDelNombre.get('rfcOptionado')?.errors?.['pattern']">Por
+                        favor, corrija
+                        el rfcOptionado.</small>
+                </div>
+            </div>
             <div class="col-md-8">
                 <label for="razonSocial" class="form-label">Denominación o razón social *:</label>
                 <input id="razonSocial" type="text" class="form-control" formControlName="razonSocial"
