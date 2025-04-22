@@ -2001,8 +2001,14 @@
         "linkDepartment": "/pago/permiso-sanitario-dispositivos-medicos/permiso-sanitario-dispositivos-medicos",
         "department": "cofepris"
 
+    },
+    {
+        "id": 286,
+        "tramite": 31602,
+        "linkDashboard": "/agace/registros-de-comercio-exterior/registrar-solicitud",
+        "linkDepartment": "/pago/registros-de-comercio-exterior/registrar-solicitud",
+        "department": "cofepris"
     }
-   
 
     
 ]
