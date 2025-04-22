@@ -50,7 +50,7 @@ import { takeUntil } from 'rxjs';
     InputRadioComponent,
   ],
   templateUrl: './agregar-destinatario-final.component.html',
-  styleUrl: './agregar-destinatario-final.component.css',
+  styleUrl: './agregar-destinatario-final.component.scss',
 })
 export class AgregarDestinatarioFinalComponent
   implements OnDestroy, OnInit, OnChanges
