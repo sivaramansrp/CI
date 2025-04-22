@@ -11,13 +11,20 @@ import { TramiteFolioService } from '@libs/shared/data-access-user/src/core/serv
   styleUrl: './paso-tres.component.scss'
 })
 export class PasoTresComponent implements OnDestroy {
-  private destroyed$ = new Subject<void>(); // Subject to signal unsubscription
+  /**
+ * Sujeto utilizado para manejar la finalización de suscripciones activas al destruir el componente.
+ */
+private destroyed$ = new Subject<void>();
 
-  constructor(
-    private router: Router,
-    private serviciosExtraordinariosServices: TramiteFolioService,
-  ) {}
-
+/**
+ * Constructor del componente PasoTres.
+ * @param router - Servicio de enrutamiento para la navegación entre páginas.
+ * @param serviciosExtraordinariosServices - Servicio para manejar operaciones relacionadas con trámites.
+ */
+constructor(
+  private router: Router,
+  private serviciosExtraordinariosServices: TramiteFolioService,
+) {}
   /**
    * Maneja el evento de obtención de firma y realiza la navegación al acuse si la firma es válida.
    * @param ev - Cadena de texto que representa la firma obtenida desde el evento.
