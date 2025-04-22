@@ -55,6 +55,9 @@ jobs:
 
       - name: Build image and push to GitHub Container Registry
         run: docker compose -f ./docker/modulefederation-microfrontends.yml build
+		
+      - name: Build image and push to GitHub Container Registry
+        run: docker compose -f ./docker/modulefederation-microfrontends.yml push						
 
       - name: Execute remote command (last one)
         uses: appleboy/ssh-action@v0.1.8
@@ -77,5 +80,3 @@ jobs:
             microk8s kubectl rollout restart deployment modulefederation-amecafe-microfront-deployment-dev
             microk8s kubectl rollout restart deployment modulefederation-inbal-microfront-deployment-dev
             microk8s kubectl rollout restart deployment modulefederation-sedena-microfront
-      - name: registry pull
-        run: docker pull ghcr.io/${{ github.actor }}/vucem30
