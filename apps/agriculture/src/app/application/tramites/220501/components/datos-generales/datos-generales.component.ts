@@ -432,7 +432,7 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
         const RESPONSE = resp.data;
 
         this.regimenDestinaran = {
-          labelNombre: 'Régimen al que se destinarán las mercancías',
+          labelNombre: 'Régimen al que se destinará la mercancía',
           required: false,
           primerOpcion: 'Selecciona un valor',
           catalogos: RESPONSE,
@@ -452,7 +452,7 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
         const RESPONSE = resp.data;
 
         this.movilizacionNacional = {
-          labelNombre: 'Movilización Nacional',
+          labelNombre: 'Datos para movilización nacional',
           required: false,
           primerOpcion: 'Selecciona un valor',
           catalogos: RESPONSE,

@@ -29,7 +29,7 @@ export const OpcionesDeBotonDeRadio = [
         value: '1',
       },
       {
-        label: 'Productos Subproductos',
+        label: 'Productos y Subproductos',
         value: '0',
       }
   ];
