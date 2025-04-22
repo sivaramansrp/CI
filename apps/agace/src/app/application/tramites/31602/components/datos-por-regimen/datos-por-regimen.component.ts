@@ -1,5 +1,5 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CONFIGURACION_DATOS, DEPOSITO_FISCAL, ELABORACION, IMPORTACION_TEMPORAL, RECINTO_FISCALIZADO } from '../../constantes/datos-por-regimen.enum';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Solicitud31602State, Tramite31602Store } from '../../estados/stores/tramite31602.store';
 import { Subject,map, takeUntil } from 'rxjs';

@@ -1,5 +1,5 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CONFIGURACION_IVAEIEPS_DOS,PAGO_DE_DERECHOS, PERMISO_A_DESISTIR_DOS, PERMISO_A_DESISTIR_TRES } from '../../constantes/ivaeieps.enum';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Solicitud31602State, Tramite31602Store } from '../../estados/stores/tramite31602.store';
 import { Subject,map, takeUntil } from 'rxjs';
