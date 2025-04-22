@@ -165,5 +165,14 @@ export const CAMPO_OBLIGATORIO_PROVEEDOR = [240111];
 export const CAMPO_OBLIGATORIO_DERECHOS = [240111];
 
 
+/**
+ * Constante que define los valores de bandera para el campo "Colonia".
+ * 
+ * Estos valores se utilizan para identificar y manejar condiciones específicas
+ * relacionadas con el campo "Colonia" en la solicitud.
+ * 
+ * @const
+ * @type {number[]}
+ */
 export const COLONIA_FIELD_FLAG = [240117, 240114];
 
