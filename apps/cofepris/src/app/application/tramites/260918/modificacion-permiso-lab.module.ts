@@ -7,9 +7,16 @@ import { ModificacionPermisoLabComponent } from './pages/modificacion-permiso-la
 import { ModificacionPermisoLabRoutingModule } from './modificacion-permiso-lab-routing.module';
 import { NgModule } from '@angular/core';
 import { PasoUnoComponent } from './pages/modificacion-permiso-lab/paso-uno/paso-uno.component';
+import { PasoDosComponent } from './pages/modificacion-permiso-lab/paso-dos/paso-dos.component';
+import { PasoTresComponent } from './pages/modificacion-permiso-lab/paso-tres/paso-tres.component';
 
 @NgModule({
-  declarations: [ModificacionPermisoLabComponent, PasoUnoComponent],
+  declarations: [
+    ModificacionPermisoLabComponent,
+    PasoUnoComponent,
+    PasoDosComponent,
+    PasoTresComponent,
+  ],
   imports: [
     CommonModule,
     ModificacionPermisoLabRoutingModule,
