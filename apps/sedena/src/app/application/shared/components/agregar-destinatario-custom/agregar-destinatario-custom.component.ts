@@ -1,4 +1,4 @@
-import { CAMPO_OBLIGATORIO_DESTINATARIO, PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE, TIPO_PERSONA_OPCIONES_NO_CONTRIBUYENTE } from '../../constants/datos-solicitud.enum';
+import { COLONIA_FIELD_FLAG, NUMERO_TRAMITE, PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE } from '../../constants/datos-solicitud.enum';
 import { STR_NACIONAL } from '../../constants/datos-solicitud.enum';
 import { TERCEROS_NACIONALIDAD_OPCIONES } from '../../constants/datos-solicitud.enum';
 import { TIPO_PERSONA_OPCIONES } from '../../constants/datos-solicitud.enum';
@@ -29,18 +29,11 @@ import { InputRadioComponent } from '@ng-mf/data-access-user';
 import { TipoPersona } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 
-import { ES_CURP } from '../../constants/datos-del-tramilte.enum';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs';
 
-/**
- * Componente para agregar un destinatario final (Destinatario) al formulario y almacenarlo.
- *
- * @example
- * <app-agregar-destinatario-final></app-agregar-destinatario-final>
- */
 @Component({
-  selector: 'app-agregar-destinatario-final',
+  selector: 'app-agregar-destinatario-custom',
   standalone: true,
   imports: [
     CommonModule,
@@ -49,10 +42,10 @@ import { takeUntil } from 'rxjs';
     TituloComponent,
     InputRadioComponent,
   ],
-  templateUrl: './agregar-destinatario-final.component.html',
-  styleUrl: './agregar-destinatario-final.component.scss',
+  templateUrl: './agregar-destinatario-custom.component.html',
+  styleUrl: './agregar-destinatario-custom.component.scss',
 })
-export class AgregarDestinatarioFinalComponent
+export class AgregarDestinatarioCustomComponent
   implements OnDestroy, OnInit, OnChanges {
   /**
    * Subject utilizado para gestionar la desuscripción de observables.
@@ -124,6 +117,13 @@ export class AgregarDestinatarioFinalComponent
    */
   @Input() idProcedimiento!: number;
 
+/**
+   * Datos del formulario que pueden ser de tipo `DestinoFinal`, `Proveedor`, `null` o `undefined`.
+   * Este input se utiliza para recibir la información necesaria desde el componente padre.
+   *
+   * @type {DestinoFinal | Proveedor | null | undefined}
+   */
+@Input() formaDatos!: DestinoFinal | Proveedor | null | undefined;
   /**
    * @property mostrarCamposNoContribuyente
    * @description Controla la visibilidad de los campos específicos para no contribuyentes.
@@ -132,13 +132,15 @@ export class AgregarDestinatarioFinalComponent
    */
   public mostrarCamposNoContribuyente: boolean = false;
 
-  /**
- * @property esCURP
- * @description Controla la visibilidad de los campos específicoS C.U.R.P.
- * @type {boolean}
- * @default false
- */
-  public esCURP = false;
+
+    /**
+   * @property mostrarCamposNoContribuyente
+   * @description Controla la visibilidad de los campos específicos para no contribuyentes.
+   * @type {boolean}
+   * @default false
+   */
+    public colonia_visibilidad: boolean = false;
+
 
   /**
    * Emite la lista de destinatarios actualizada para ser consumida por otros componentes.
@@ -167,30 +169,6 @@ export class AgregarDestinatarioFinalComponent
    */
 
   tercerosNacionalidadOpciones = TERCEROS_NACIONALIDAD_OPCIONES;
-
-  /**
-   * @description Opciones de tipo de persona para radio buttons, específicas para no contribuyentes.
-   * @command Opciones utilizadas para determinar el tipo de persona en el formulario de proveedor.
-   */
-  tipoPersonaRadioOpcionesNoContribuyente = TIPO_PERSONA_OPCIONES_NO_CONTRIBUYENTE;
-
-
-  /**
-   * Datos del formulario que pueden ser de tipo `DestinoFinal`, `Proveedor`, `null` o `undefined`.
-   * Este input se utiliza para recibir la información necesaria desde el componente padre.
-   *
-   * @type {DestinoFinal | Proveedor | null | undefined}
-   */
-  @Input() formaDatos!: DestinoFinal | Proveedor | null | undefined;
-
-  /**
-   * @property campoObligatorio
-   * @description Indica si ciertos campos del formulario son obligatorios según el procedimiento.
-   * @type {boolean}
-   * @default true
-   */
-  public campoObligatorio = false;
-
   /**
    * Crea el componente e inicializa el grupo de formulario.
    *
@@ -214,7 +192,8 @@ export class AgregarDestinatarioFinalComponent
    * Llama al método `mostrarCamposNoContribuyente()`.
    */
   ngOnChanges(): void {
-    this.mostrarCamposNoContribuyente = PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE.includes(this.idProcedimiento);
+    this.mostrarCamposNoContribuyente =
+      PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE.includes(this.idProcedimiento);
   }
 
   /**
@@ -223,11 +202,12 @@ export class AgregarDestinatarioFinalComponent
    * y navega hacia atrás en el historial.
    */
   guardarDestinatario(): void {
+    const DENOMINACIONRAZON_ONLY_FLAG = (this.agregarDestinatarioFinal.value.tipoPersona === TipoPersona.MORAL) && (NUMERO_TRAMITE.TRAMITE_240117 === this.idProcedimiento);
     const NUEVO_DESTINATARIO: DestinoFinal = {
-      nombreRazonSocial: `${this.agregarDestinatarioFinal.value.nombres} ${this.agregarDestinatarioFinal.value.primerApellido
-        } ${this.agregarDestinatarioFinal.value.segundoApellido || ''}`.trim(),
+      nombreRazonSocial: DENOMINACIONRAZON_ONLY_FLAG ? `${this.agregarDestinatarioFinal.value.denominacionRazon}`.trim() : `${this.agregarDestinatarioFinal.value.nombres} ${this.agregarDestinatarioFinal.value.primerApellido
+        } ${this.agregarDestinatarioFinal.value.segundoApellido || ''} `.trim(),
       rfc: this.agregarDestinatarioFinal.value.rfc,
-      curp: this.agregarDestinatarioFinal.value.curp,
+      curp: '',
       telefono:
         `${this.agregarDestinatarioFinal.value.lada} ${this.agregarDestinatarioFinal.value.telefono}`.trim(),
       correoElectronico: this.agregarDestinatarioFinal.value.correoElectronico,
@@ -254,11 +234,12 @@ export class AgregarDestinatarioFinalComponent
    * Llama al método `cargarDatos()`.
    */
   ngOnInit(): void {
+    this.colonia_visibilidad = COLONIA_FIELD_FLAG.includes(this.idProcedimiento);
     this.crearFormaulario();
-    this.campoObligatorio = CAMPO_OBLIGATORIO_DESTINATARIO.includes(this.idProcedimiento)
-    this.campoObligatorioChange();
     this.cargarDatos();
-    this.esCURP = ES_CURP.includes(this.idProcedimiento);
+    if(this.formaDatos) {
+      this.agregarDestinatarioFinal.patchValue(this.formaDatos);
+    }
   }
 
   /**
@@ -270,14 +251,6 @@ export class AgregarDestinatarioFinalComponent
     this.agregarDestinatarioFinal = this.fb.group({
       tipoPersona: ['', Validators.required],
       rfc: [
-        '',
-        [
-          Validators.required,
-          Validators.minLength(12),
-          Validators.maxLength(13),
-        ],
-      ],
-      curp: [
         '',
         [
           Validators.required,
@@ -298,45 +271,18 @@ export class AgregarDestinatarioFinalComponent
       calle: ['', Validators.required],
       numeroExterior: ['', Validators.required],
       numeroInterior: [''],
-      lada: ['', Validators.required],
-      telefono: ['', Validators.required],
-      correoElectronico: ['', [Validators.required, Validators.email]],
+      lada: [''],
+      telefono: [''],
+      correoElectronico: ['', [Validators.email]],
       nacionalidad: [],
     });
-    this.cargarDatos();
+    
     this.agregarDestinatarioFinal.disable();
     this.agregarDestinatarioFinal.get('tipoPersona')?.enable();
     this.agregarDestinatarioFinal.get('nacionalidad')?.enable();
-    if (this.formaDatos) {
+    if(this.formaDatos) {
       this.agregarDestinatarioFinal.patchValue(this.formaDatos);
     }
-  }
-
-  /**
-   * @method campoObligatorioChange
-   * @description Cambia las validaciones de los campos del formulario según el valor de `campoObligatorio`.
-   * Si `campoObligatorio` es verdadero, se eliminan las validaciones de la colonia y se agregan
-   * validaciones requeridas para la calle y el número exterior. Si es falso, se realiza lo contrario.
-   *
-   * @returns {void} Este método no retorna ningún valor.
-   */
-  campoObligatorioChange(): void {
-    const COLONIA = this.agregarDestinatarioFinal.get('colonia')
-    const CALLE = this.agregarDestinatarioFinal.get('calle')
-    const NUMEROEXTERIOR = this.agregarDestinatarioFinal.get('numeroExterior')
-    if (this.campoObligatorio) {
-      COLONIA?.clearValidators();
-      CALLE?.setValidators([Validators.required]);
-      NUMEROEXTERIOR?.setValidators([Validators.required]);
-    }
-    else {
-      COLONIA?.setValidators([Validators.required]);
-      CALLE?.clearValidators();
-      NUMEROEXTERIOR?.clearValidators();
-    }
-    COLONIA?.updateValueAndValidity();
-    CALLE?.updateValueAndValidity();
-    NUMEROEXTERIOR?.updateValueAndValidity();
   }
 
   /**

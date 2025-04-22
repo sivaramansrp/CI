@@ -1,6 +1,6 @@
 <div class="container mt-4">
-  <ng-titulo titulo="Agregar proveedor"></ng-titulo>
-  <form [formGroup]="agregarProveedorForm">
+  <ng-titulo titulo="Agregar destinatraio (destino final)"></ng-titulo>
+  <form [formGroup]="agregarDestinatarioFinal">
     <!-- Datos Generales -->
     <h4>Datos generales</h4>
     <div class="row">
@@ -16,8 +16,8 @@
       </div>
     </div>
 
-    @if(agregarProveedorForm.get('tipoPersona')?.value === tipoPersona.MORAL ||
-    agregarProveedorForm.get('tipoPersona')?.untouched) {
+    @if(agregarDestinatarioFinal.get('tipoPersona')?.value === tipoPersona.MORAL ||
+    agregarDestinatarioFinal.get('tipoPersona')?.untouched) {
     <div class="row">
       <div class="form-group">
         <label
@@ -36,16 +36,16 @@
     }
 
     <!-- Datos Personales -->
-    @if(agregarProveedorForm.get('tipoPersona')?.value === tipoPersona.FISICA ||
-    agregarProveedorForm.get('tipoPersona')?.untouched) {
+    @if(agregarDestinatarioFinal.get('tipoPersona')?.value === tipoPersona.FISICA ||
+    agregarDestinatarioFinal.get('tipoPersona')?.untouched) {
     <h4 class="mt-4">Datos personales</h4>
     <div class="row">
       <div class="col-md-4">
-        <label class="form-label">Nombre(s)<span *ngIf="campoObligatorio">*</span>:</label>
+        <label class="form-label">Nombre(s)*:</label>
         <input type="text" class="form-control" formControlName="nombres" />
       </div>
       <div class="col-md-4">
-        <label class="form-label">Primer apellido<span *ngIf="campoObligatorio">*</span>:</label>
+        <label class="form-label">Primer apellido*:</label>
         <input
           type="text"
           class="form-control"
@@ -71,15 +71,15 @@
           formControlName="pais"
           [label]="'País'"
           [required]="true"
-          [isDisabled]="agregarProveedorForm.get('tipoPersona')?.value === ''"
+          [isDisabled]="agregarDestinatarioFinal.get('tipoPersona')?.value === ''"
         ></app-catalogo-select>
       </div>
       <div class="col-md-4">
-        <label class="form-label">Estado<span *ngIf="campoObligatorio">*</span>:</label>
+        <label class="form-label">Estado*:</label>
         <input type="text" class="form-control" formControlName="estado" />
       </div>
       <div class="col-md-4">
-        <label class="form-label">Código postal o equivalente<span *ngIf="campoObligatorio">*</span>:</label>
+        <label class="form-label">Código postal o equivalente*:</label>
         <input
           type="text"
           class="form-control"
@@ -88,44 +88,29 @@
       </div>
     </div>
 
-    @if(campoObligatorio){
-      <div class="row mt-3">
-        <div class="col-md-8">
-          <label class="form-label">Calle<span *ngIf="campoObligatorio">*</span>:</label>
-          <input type="text" class="form-control" formControlName="calle" />
-          <i class="fas fa-info-circle"></i>
-        </div>
-        <div class="col-md-4">
-          <label class="form-label">Número exterior<span *ngIf="campoObligatorio">*</span>:</label>
-          <input
-            type="text"
-            class="form-control"
-            formControlName="numeroExterior"
-          />
-        </div>
+    <div class="row mt-3">
+      @if(!colonia_visibilidad) {
+      <div class="col-md-4">
+        <label class="form-label">Colonia o equivalente:</label>
+        <input type="text" class="form-control" formControlName="colonia" />
       </div>
-    }
-    @else{
-      <div class="row mt-3">
-        <div class="col-md-4">
-          <label class="form-label">Colonia o equivalente:</label>
-          <input type="text" class="form-control" formControlName="colonia" />
-        </div>
-        <div class="col-md-4">
-          <label class="form-label">Calle:</label>
-          <input type="text" class="form-control" formControlName="calle" />
-          <i class="fas fa-info-circle"></i>
-        </div>
-        <div class="col-md-4">
-          <label class="form-label">Número exterior:</label>
-          <input
-            type="text"
-            class="form-control"
-            formControlName="numeroExterior"
-          />
-        </div>
+      }
+      
+      <div [ngClass]="(!colonia_visibilidad) ? 'col-md-4' : 'col-md-8'">
+        <label class="form-label">Calle*:</label>
+        <input type="text" class="form-control" formControlName="calle" />
+        <i class="fas fa-info-circle"></i>
       </div>
-    }
+      
+      <div class="col-md-4">
+        <label class="form-label">Número exterior*:</label>
+        <input
+          type="text"
+          class="form-control"
+          formControlName="numeroExterior"
+        />
+      </div>
+    </div>
 
     <div class="row mt-3">
       <div class="col-md-4">
@@ -178,7 +163,7 @@
             type="button"
             name="agregarMercancias"
             class="btn btn-primary ms-2"
-            (click)="guardarProveedor()"
+            (click)="guardarDestinatario()"
           >
             Guardar
           </button>
