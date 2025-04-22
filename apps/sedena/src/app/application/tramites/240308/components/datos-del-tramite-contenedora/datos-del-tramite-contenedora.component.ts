@@ -11,6 +11,7 @@ import { OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
 import { Tramite240308Query } from '../../estados/tramite240308Query.query';
 import { Tramite240308Store } from '../../estados/tramite240308Store.store';
+import { construirAduanasBotones } from '../../constants/solicitude-de-artificios-pirotecnicos.enum';
 import { takeUntil } from 'rxjs';
 
 /**
@@ -24,7 +25,7 @@ import { takeUntil } from 'rxjs';
   standalone: true,
   imports: [CommonModule, DatosDelTramiteComponent],
   templateUrl: './datos-del-tramite-contenedora.component.html',
-  styleUrl: './datos-del-tramite-contenedora.component.css',
+  styleUrl: './datos-del-tramite-contenedora.component.scss',
 })
 export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
   /**
@@ -62,32 +63,14 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
    * Referencia al componente Crosslist para manejar la selección de aduanas.
    */
   @ViewChild(CrosslistComponent) crossList!: CrosslistComponent;
-  /**
-   * Botones para manejar la selección de aduanas en el componente Crosslist.
-   */
-  readonly aduanasBotones = [
-    {
-      btnNombre: 'Agregar todos',
-      class: 'btn-primary',
-      funcion: (): void => this.crossList?.agregar('t'),
-    },
-    {
-      btnNombre: 'Agregar selección',
-      class: 'btn-default',
-      funcion: (): void => this.crossList?.agregar(''),
-    },
-    {
-      btnNombre: 'Restar selección',
-      class: 'btn-danger',
-      funcion: (): void => this.crossList?.quitar(''),
-    },
-    {
-      btnNombre: 'Restar todos',
-      class: 'btn-default',
-      funcion: (): void => this.crossList?.quitar('t'),
-    },
-  ];
 
+  /**
+  * @property {Array<{ btnNombre: string; class: string }>} aduanasBotones
+  * Lista de botones configurados para manejar las acciones relacionadas con las aduanas.
+  * Cada botón incluye un nombre y una clase CSS para su estilo.
+  */
+  aduanasBotones: { btnNombre: string; class: string }[] = [];
+  
   /**
    * Constructor del componente.
    *
@@ -111,6 +94,7 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   ngOnInit(): void {
+    this.aduanasBotones = construirAduanasBotones(this);
     this.tramiteQuery.getMercanciaTablaDatos$
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((data) => {
@@ -153,6 +137,14 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
     this.tramiteStore.updateDatosDelTramiteFormState(event);
   }
 
+  /**
+  * @method updateJustificacionFormulario
+  * @description Actualiza el estado del formulario de justificación del trámite en el store.
+  * Permite guardar los datos capturados en el formulario de justificación.
+  *
+  * @param {JustificacionTramiteFormState} event - Estado actualizado del formulario de justificación.
+  * @returns {void}
+  */
   updateJustificacionFormulario(event: JustificacionTramiteFormState): void {
     this.tramiteStore.updateJustificacionFormulario(event);
   }
