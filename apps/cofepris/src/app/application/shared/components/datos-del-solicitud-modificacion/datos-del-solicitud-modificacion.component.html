@@ -266,7 +266,7 @@
         <label class="form-label" for="scian">S.C.I.A.N.*:</label>
         <app-tabla-dinamica
           [configuracionTabla]="configuracionTabla"
-          [datos]="datosData"
+          [datos]="personaparas"
           [tipoSeleccionTabla]="tipoSeleccionTabla.CHECKBOX"
           formcontrolname="scian"
         >
@@ -344,10 +344,10 @@
         ></app-catalogo-select>
       </div>
     </div>
-    <div class="row mt-5">
-      <div class="col-md-4"></div>
-      <div class="col-md-4"></div>
-      <div class="col-md-4">
+    <div class="row mt-5" *ngIf="showAifaCheckbox">
+     
+      <div class="col-md-6"></div>
+      <div class="col-md-6">
        
         <lib-input-check
         [label]="'Aeropuerto Internacional Felipe Ángeles (AIFA)'"
@@ -375,7 +375,8 @@
         <button
           class="btn btn-primary me-2"
           data-bs-toggle="modal"
-          data-bs-target="#modalAddAgentMercancias"
+          
+          (click)="abrirModalMercancia()"
         >
           Agregar
         </button>
@@ -394,7 +395,13 @@
   }
 
 
-<div class="modal fade" #establecimientoModal>
+<div 
+class="modal fade" 
+#establecimientoModal
+tabindex="-1"
+aria-labelledby="establecimientoModalLabel"
+aria-hidden="true"
+>
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <form [formGroup]="scianForm">
@@ -432,7 +439,7 @@
           >
             Limpiar
           </button>
-          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">
+          <button type="button" class="btn btn-primary" (click)="cerrarModal()" >
             Cancelar
           </button>
           <button
@@ -450,7 +457,7 @@
 
 <div
   class="modal fade"
-  id="modalAddAgentMercancias"
+ #modalAddAgentMercancias
   tabindex="-1"
   aria-labelledby="modalAddAgentMercanciasLabel"
   aria-hidden="true"
@@ -709,7 +716,7 @@
         <button type="button" class="btn btn-default" data-bs-dismiss="modal">
           Cancelar
         </button>
-        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">
+        <button type="button" class="btn btn-primary" (click)="guardarMarcancia()" >
           Agregar
         </button>
       </div>
