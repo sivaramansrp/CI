@@ -11,7 +11,8 @@ import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
  */
 @Component({
   selector: 'app-datos', // Selector del componente
-  templateUrl: './datos.component.html' // Ruta del archivo HTML asociado al componente
+  templateUrl: './datos.component.html', // Ruta del archivo HTML asociado al componente
+  styleUrl:'./datos.component.scss',
 })
 export class DatosComponent implements OnInit {
   /**
@@ -61,5 +62,19 @@ export class DatosComponent implements OnInit {
   seleccionaTab(i: number): void {
     this.indice = i;
     this.service.indice = i;
+  }
+
+  /**
+   * Método para determinar si una pestaña está deshabilitada.
+   * 
+   * Este método verifica si una pestaña específica debe estar deshabilitada
+   * según su índice.
+   * 
+   * @param tabIndex - Índice de la pestaña que se desea verificar.
+   * @returns `true` si la pestaña está deshabilitada, `false` en caso contrario.
+   */
+  isTabDisabled(tabIndex: number): boolean {
+
+    return tabIndex === 5 || tabIndex === 6;
   }
 }

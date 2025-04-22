@@ -82,7 +82,7 @@ SolicitudComponent,
 
   it('should disable the nombre field if exposicionOpcion is "false"', () => {
     component.SolicitudForm.patchValue({ exposicionOpcion: 'false' });
-    component.setFormValues(); // Ensure this method updates the form state
+    component.establecerValoresFormulario(); // Ensure this method updates the form state
     fixture.detectChanges(); // Trigger change detection to apply updates
     expect(component.SolicitudForm.get('nombre')?.disabled).toBeTruthy(); // Verify the field is disabled
   });

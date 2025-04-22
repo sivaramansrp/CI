@@ -13,10 +13,11 @@
             <li [ngClass]="indice === 4 ? 'active' : ''">
                 <a data-toggle="tab" tabindex="4" (keyup)="seleccionaTab(4)" (click)="seleccionaTab(4)">Destino</a>
             </li>
-            <li [ngClass]="">
-                <a data-toggle="tab" tabindex="5">Itinerario</a>
-            <li [ngClass]="">
-                <a data-toggle="tab" tabindex="6">Pago de derechos</a>
+            <li [ngClass]="{ 'disabled': isTabDisabled(5) }">
+                <a data-toggle="tab" tabindex="5" [attr.disabled]="isTabDisabled(5) ? true : null"  class="custom_li">Itinerario</a>
+            </li>
+            <li [ngClass]="{ 'disabled': isTabDisabled(6) }">
+                <a data-toggle="tab" tabindex="6" [attr.disabled]="isTabDisabled(6) ? true : null" class="custom_li">Pago de derechos</a>
             </li>
         </ul>
         <ng-container>

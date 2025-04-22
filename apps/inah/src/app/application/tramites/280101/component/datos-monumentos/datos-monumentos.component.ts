@@ -116,6 +116,40 @@ export class DatosMonumentoComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.getAduana();
+    this.inicializarFormulario();
+    this.query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+        })
+      )
+      .subscribe();
+
+    this.elementoTablaDatos = this.solicitudState.elementoTablaDatos;
+  }
+
+
+  /**
+   * Inicializa el formulario `mercanciaForm` con un conjunto de controles y validaciones.
+   * 
+   * Los campos del formulario incluyen:
+   * - `descEpoca`: Campo de texto sin validaciones.
+   * - `descMaterial`: Campo de texto sin validaciones.
+   * - `descFraccion`: Campo de texto sin validaciones.
+   * - `descripcionMercancia`: Campo obligatorio.
+   * - `generica2`: Campo obligatorio.
+   * - `descripcionIdentificacion`: Campo obligatorio.
+   * - `generica1`: Campo obligatorio.
+   * - `cantidadPresentacion`: Campo obligatorio que solo permite números enteros.
+   * - `componente`: Campo obligatorio que solo permite números enteros.
+   * - `importeTotalComponente`: Campo obligatorio que solo permite números enteros.
+   * - `idFraccionGubernamental`: Campo obligatorio.
+   * - `descripcionUsoMercancia`: Campo obligatorio.
+   * 
+   * Este método utiliza `FormBuilder` para crear un grupo de controles con sus respectivas validaciones.
+   */
+  inicializarFormulario(): void {
     this.mercanciaForm = this.fb.group({
       descEpoca: [''],
       descMaterial: [''],
@@ -131,16 +165,6 @@ export class DatosMonumentoComponent implements OnInit, OnDestroy {
       descripcionUsoMercancia: ['', Validators.required],
     });
 
-    this.query.selectSolicitud$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((seccionState) => {
-          this.solicitudState = seccionState;
-        })
-      )
-      .subscribe();
-
-    this.elementoTablaDatos = this.solicitudState.elementoTablaDatos;
   }
 
   /**

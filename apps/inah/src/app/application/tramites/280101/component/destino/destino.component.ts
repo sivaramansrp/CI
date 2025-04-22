@@ -67,13 +67,13 @@ export class DestinoComponent implements OnInit, OnDestroy {
       )
       .subscribe();
 
-    this.setFormValues();
+    this.establecerValoresFormulario();
   }
 
   /**
    * Establece los valores iniciales del formulario `DestinoForm` utilizando el estado de la solicitud.
    */
-  setFormValues(): void {
+  establecerValoresFormulario(): void {
     this.DestinoForm = this.fb.group({
       pais: [this.solicitudState?.pais, [Validators.required]],
       codigoPostal: [this.solicitudState?.codigoPostal, [Validators.required]],

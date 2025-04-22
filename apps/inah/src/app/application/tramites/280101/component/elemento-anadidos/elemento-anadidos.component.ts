@@ -62,6 +62,25 @@ export class ElementoAnadidasComponent implements OnInit,OnDestroy {
    */
   ngOnInit(): void {
     this.getAduana(); // Obtiene el catálogo de aduanas.
+    this.inicializarFormulario();
+    
+  }
+
+  /**
+   * Inicializa el formulario reactivo para la gestión de elementos añadidos.
+   * 
+   * Este formulario contiene los siguientes campos:
+   * - `descElementoAnadido`: Campo opcional para la descripción del elemento añadido.
+   * - `idElementoAnadido`: Campo obligatorio para el ID del elemento añadido.
+   * - `descripcionPresentacion`: Campo obligatorio para la descripción de la presentación.
+   * - `alto`: Campo obligatorio para el alto del elemento, debe ser un valor numérico.
+   * - `ancho`: Campo obligatorio para el ancho del elemento, debe ser un valor numérico.
+   * - `profundidad`: Campo obligatorio para la profundidad del elemento, debe ser un valor numérico.
+   * 
+   * Cada campo incluye validaciones específicas, como obligatoriedad y patrones para asegurar
+   * que los valores ingresados sean válidos.
+   */
+  inicializarFormulario(): void {
     this.parteForm = this.fb.group({
       descElementoAnadido: [''], // Campo para la descripción del elemento añadido.
       idElementoAnadido: ['', Validators.required], // Campo obligatorio para el ID del elemento añadido.

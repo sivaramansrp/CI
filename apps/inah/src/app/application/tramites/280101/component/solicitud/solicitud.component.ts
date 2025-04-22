@@ -108,13 +108,13 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       )
       .subscribe();
 
-    this.setFormValues(); // Establece los valores iniciales del formulario.
+    this.establecerValoresFormulario(); // Establece los valores iniciales del formulario.
   }
 
   /**
    * Establece los valores iniciales del formulario `SolicitudForm` utilizando el estado de la solicitud.
    */
-  setFormValues(): void {
+  establecerValoresFormulario(): void {
     this.SolicitudForm = this.fb.group({
       modalidadOpcion: [this.solicitudState?.modalidadOpcion, [Validators.required]], // Campo obligatorio para la modalidad.
       exposicionOpcion: [this.solicitudState?.exposicionOpcion, [Validators.required]], // Campo obligatorio para la exposición.
