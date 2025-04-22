@@ -474,8 +474,17 @@ export class AduanaComponent implements OnInit, OnDestroy {
     this.exportarIlustracionesService
       .getAduanaDeSalidaData()
       .pipe(takeUntil(this.destroy$))
-      .subscribe((resp: Catalogo[]) => {
-        this.aduanaData = resp;
+      .subscribe({
+        next: (resp: Catalogo[]) => {
+          if (Array.isArray(resp) && resp.length > 0) {
+            this.aduanaData = resp;
+          } else {
+            this.aduanaData = [];
+          }
+        },
+        error: () => {
+          this.aduanaData = [];
+        }
       });
   }
 

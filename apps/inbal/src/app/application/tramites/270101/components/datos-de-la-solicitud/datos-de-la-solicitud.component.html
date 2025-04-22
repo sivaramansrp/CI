@@ -91,7 +91,7 @@
               </div>
               <div class="col-md-4">
                   <app-catalogo-select
-                      [catalogo]="monedaData || []" 
+                      [catalogo]="monedaData" 
                       formControlName="moneda" 
                       [label]="informacionlabel.MONEDA" 
                       [required]="true" 
@@ -127,9 +127,9 @@
                       ></validadores-de-formularios>
                     </div>
               </div>
-              <div class="col-md-4">
+              <div class="col-md-4 ">
                   <app-catalogo-select
-                  [catalogo]="arancelariaData || []" 
+                  [catalogo]="arancelariaData" 
                   formControlName="fraccionArancelaria" 
                   [label]="informacionlabel.FRACCION_ARANCELARIA" 
                   [required]="true" 

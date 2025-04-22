@@ -452,8 +452,17 @@ ngOnInit(): void {
     .pipe(
       takeUntil(this.destroy$)
     )
-    .subscribe((data) => {
-      this.monedaData = data;
+    .subscribe({
+      next: (resp: Catalogo[]) => {
+        if (Array.isArray(resp) && resp.length > 0) {
+          this.monedaData = resp;
+        } else {
+          this.monedaData = [];
+        }
+      },
+      error: () => {
+        this.monedaData = [];
+      }
     });
   }
 
@@ -477,8 +486,17 @@ ngOnInit(): void {
     .pipe(
       takeUntil(this.destroy$)
     )
-    .subscribe((data) => {
-      this.arancelariaData = data;
+    .subscribe({
+      next: (resp: Catalogo[]) => {
+        if (Array.isArray(resp) && resp.length > 0) {
+          this.arancelariaData = resp;
+        } else {
+          this.arancelariaData = [];
+        }
+      },
+      error: () => {
+        this.arancelariaData = [];
+      }
     });
   }
 

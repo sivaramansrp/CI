@@ -173,20 +173,7 @@ export const INFORMACION_DE_LA_OBRA_ARTE = [
     marcadorDePosicion: 'Inserta variables',
     valorPredeterminado: '',
     marginTop: 0,
-  },
-  {
-    id: '',
-    labelNombre: '',
-    campo: '',
-    clase: 'col-md-4',
-    tipoInput: '',
-    desactivado: false,
-    soloLectura: false,
-    validadores: [],
-    marcadorDePosicion: '',
-    valorPredeterminado: '',
-    marginTop: 0,
-  },
+  }
 ];
 
 /**
