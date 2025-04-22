@@ -1,11 +1,14 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  EXENTO_DE_RADIO_BOTONS,
+  FormularioDatos,
+} from '../../enum/sanidad.enum';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {
   Solicitud221603State,
   Tramite221603Store,
 } from '../../estados/tramite221603.store';
-import { Subject, map, takeUntil } from 'rxjs';
-import { EXENTO_DE_RADIO_BOTONS, FormularioDatos } from '../../enum/sanidad.enum';
+import { Subject, takeUntil } from 'rxjs';
 import { SanidadService } from '../../service/sanidad.service';
 import { Tramite221603Query } from '../../estados/tramite221603.query';
 import realizar from '@libs/shared/theme/assets/json/221603/realizar.json';
@@ -27,7 +30,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    */
   pagoDerechosForm!: FormGroup;
 
-  formularioDatos!:FormularioDatos;
+  formularioDatos!: FormularioDatos;
 
   exentoDeBotonDeRadio = EXENTO_DE_RADIO_BOTONS;
   isExentoSelected = true;
@@ -59,20 +62,19 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * Inicializa el formulario reactivo con los valores actuales de la solicitud.
    */
   ngOnInit(): void {
-
     this.tramite221603Query.selectSolicitud$
-      .pipe(
-        takeUntil(this.destroyNotifier$))
-      .subscribe((state: Solicitud221603State)=>{
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((state: Solicitud221603State) => {
         this.solicitudState = state;
       });
-
-    this.sanidadService.getFormularioDatos()
-    .subscribe((formularioDatos: FormularioDatos) => {
-      this.formularioDatos = formularioDatos;
-    });
-    this.sanidadService.inicializaPagoDeDerechosDatosCatalogos();
     this.inicializarFormulario();
+    this.sanidadService
+      .getFormularioDatos()
+      .subscribe((formularioDatos: FormularioDatos) => {
+        this.formularioDatos = formularioDatos;
+        this.inicializarFormulario();
+      });
+    this.sanidadService.inicializaPagoDeDerechosDatosCatalogos();
   }
 
   /**
@@ -82,7 +84,6 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * dependencia, banco, llave, fecha e importe. También asigna valores predeterminados a algunos campos.
    */
   private inicializarFormulario(): void {
-    
     this.pagoDerechosForm = this.formBuilder.group({
       exentoDePago: [this.solicitudState.exento, Validators.required],
       justificacion: [this.solicitudState.justificacion, Validators.required],
@@ -102,19 +103,16 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     this.pagoDerechosForm.get('clave')?.disable();
     this.pagoDerechosForm.get('dependencia')?.disable();
     this.pagoDerechosForm.get('importe')?.disable();
-    this.pagoDerechosForm.get('clave')?.setValue(realizar.formData.clave);
+    this.pagoDerechosForm.get('clave')?.setValue(this.formularioDatos?.clave);
     this.pagoDerechosForm
       .get('dependencia')
       ?.setValue(realizar.formData.dependencia);
-    this.pagoDerechosForm.get('importe')?.setValue(realizar.formData.importe);
+    this.pagoDerechosForm.get('importe')?.setValue(this.formularioDatos?.importe);
   }
 
   updateExento(): void {
     this.isExentoSelected = false;
-    this.setValoresStore(
-      'exentoDePago',
-      'setExentoDePago'
-    );
+    this.setValoresStore('exentoDePago', 'setExentoDePago');
   }
 
   /**
@@ -124,10 +122,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * @param campo - El campo que debe actualizarse en el store.
    * @param metodoNombre - El nombre del método en el store que se debe invocar.
    */
-  setValoresStore(
-    campo: string,
-    metodoNombre: keyof Tramite221603Store
-  ): void {
+  setValoresStore(campo: string, metodoNombre: keyof Tramite221603Store): void {
     const VALOR = this.pagoDerechosForm.get(campo)?.value;
     (this.tramite221603Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
