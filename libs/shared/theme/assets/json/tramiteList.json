@@ -905,7 +905,7 @@
   {
     "id": 130,
     "tramite": 302,
-    "linkDashboard": "aga/certi-registro/proceso-completo",
+    "linkDashboard": "/aga/certi-registro/proceso-completo",
     "linkDepartment": "/pago/certi-registro/proceso-completo",
     "department": "aga"
   },
@@ -1101,7 +1101,7 @@
   {
     "id": 158,
     "tramite": 261702,
-    "linkDashboard": "cofepris//retiros-cofepris/pantallas",
+    "linkDashboard": "/cofepris/retiros-cofepris/pantallas",
     "linkDepartment": "/pago/retiros-cofepris/pantallas",
     "department": "cofepris"
   },
@@ -1206,8 +1206,8 @@
   {
     "id": 173,
     "tramite": 130103,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/se/importacion-definitiva/pantallas",
+    "linkDepartment": "/pago/importacion-definitiva/pantallas",
     "department": "se"
   },
   {
@@ -1227,8 +1227,8 @@
   {
     "id": 176,
     "tramite": 317,
-    "linkDashboard": "agace/aviso-unico-renovacion/pantallas",
-    "linkDepartment": "pago/aviso-unico-renovacion/pantallas",
+    "linkDashboard": "/agace/aviso-unico-renovacion/pantallas",
+    "linkDepartment": "/pago/aviso-unico-renovacion/pantallas",
     "department": "agace"
   },
   {
@@ -1297,8 +1297,8 @@
   {
     "id": 186,
     "tramite": 140101,
-    "linkDashboard": "/se/solicitud-de-cancelation/solicitante",
-    "linkDepartment": "/pago/solicitud-de-cancelation/solicitante",
+    "linkDashboard": "/se/solicitud-de-cancelacion/solicitante",
+    "linkDepartment": "/pago/solicitud-de-cancelacion/solicitante",
     "department": "se"
   },
   {
