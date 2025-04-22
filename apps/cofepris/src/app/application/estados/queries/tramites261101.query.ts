@@ -1,9 +1,7 @@
-import { DatosProcedureState } from '../tramites/tramites261101.store';
-import { DatosProcedureStore } from '../tramites/tramites261101.store';
+import { DatosProcedureState } from '../../estados/tramites/tramites261101.store';
+import { DatosProcedureStore } from '../../estados/tramites/tramites261101.store';
 import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
-
-
 
 @Injectable({ providedIn: 'root' })
 export class DatosProcedureQuery extends Query<DatosProcedureState> {
