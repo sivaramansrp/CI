@@ -1,4 +1,8 @@
 import { Component } from '@angular/core';
+import { DatosGeneralesComponent } from '../datos-generales/datos-generales.component';
+import { TercerosRelacionadosComponent } from '../terceros-relacionados/terceros-relacionados.component';
+import { PagoDeDerechosComponent } from '../pago-de-derechos/pago-de-derechos.component';
+import { CommonModule } from '@angular/common';
 
 /**
  * Componente para la revisión documental.
@@ -6,7 +10,9 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'app-revision-documental',
   templateUrl: './revision-documental.component.html',
-  styleUrl: './revision-documental.component.scss'
+  styleUrl: './revision-documental.component.scss',
+  standalone: true,
+  imports: [DatosGeneralesComponent,TercerosRelacionadosComponent,PagoDeDerechosComponent,CommonModule],
 })
 export class RevisionDocumentalComponent {
 

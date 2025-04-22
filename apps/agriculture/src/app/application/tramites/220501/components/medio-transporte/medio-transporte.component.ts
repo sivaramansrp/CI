@@ -1,7 +1,7 @@
-import { Catalogo } from '@ng-mf/data-access-user';
+import { AlertComponent, Catalogo, CatalogoSelectComponent, InputRadioComponent, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { Component } from '@angular/core';
 import { EventEmitter } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { FormControl } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { OnDestroy } from '@angular/core';
@@ -20,6 +20,8 @@ import { Solicitud220501State } from '../../estados/tramites220501.store';
 import { Solicitud220501Store } from '../../estados/tramites220501.store';
 import { TEXTOS } from '../../constantes/texto-enum';
 import mercanciaTable from '@libs/shared/theme/assets/json/220501/mercancia-table.json';
+import { CommonModule } from '@angular/common';
+import { AgregarMercanciaComponent } from '../agregar-mercancia/agregar-mercancia.component';
 
 /**
  * Componente para seleccionar el medio de transporte.
@@ -28,6 +30,10 @@ import mercanciaTable from '@libs/shared/theme/assets/json/220501/mercancia-tabl
   selector: 'app-medio-transporte',
   templateUrl: './medio-transporte.component.html',
   styleUrl: './medio-transporte.component.scss',
+  standalone: true,
+  imports: [ReactiveFormsModule, TituloComponent,CommonModule, CatalogoSelectComponent,
+    InputRadioComponent,AlertComponent,TableComponent,AgregarMercanciaComponent
+  ],
 })
 /**
  * Componente que permite seleccionar el medio de transporte para una solicitud.

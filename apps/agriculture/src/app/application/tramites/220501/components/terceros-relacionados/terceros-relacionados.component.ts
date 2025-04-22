@@ -1,4 +1,7 @@
+import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
+import { AlertComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 
 /**
  * Texto de alerta utilizado en el componente.
@@ -86,6 +89,8 @@ interface Rows {
   selector: 'app-terceros-relacionados',
   templateUrl: './terceros-relacionados.component.html',
   styleUrl: './terceros-relacionados.component.scss',
+  standalone: true,
+  imports: [TituloComponent, CommonModule, ReactiveFormsModule,AlertComponent],
 })
 export class TercerosRelacionadosComponent {
   /**

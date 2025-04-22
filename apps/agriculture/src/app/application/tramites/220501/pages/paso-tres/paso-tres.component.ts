@@ -7,7 +7,8 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-paso-tres',
   templateUrl: './paso-tres.component.html',
-  styleUrl: './paso-tres.component.scss'
+  styleUrl: './paso-tres.component.scss',
+  standalone:false,
 })
 export class PasoTresComponent {
 
