@@ -402,8 +402,8 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
     for (const ARCHIVO of archivosCargando) {
       const DATA = await this.uploadFiles(ARCHIVO.archivo);
       ARCHIVO.mensaje = DATA.mensaje;
-      ARCHIVO.cargado = DATA.cargado;
-      ARCHIVO.estatus = DATA.estatus;
+      ARCHIVO.cargado = true;
+      ARCHIVO.estatus = 'cargado';
     }
   }
 
