@@ -947,8 +947,8 @@
     {
         "id": 136,
         "tramite": 570102,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "/aga/registro-solicitud/solicitud",
+        "linkDepartment": "/pago/registro-solicitud/solicitud",
         "department": "aga"
     },
     {
