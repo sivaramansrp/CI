@@ -24,7 +24,7 @@
             <div class="col-md-4">
                 <label for="nombre" class="form-label">Nombre(s) *:</label>
                 <input id="nombre" type="text" class="form-control" formControlName="nombre"
-                    (change)="establecerCambioDeValor({campo:'nombre',valor:$event})">
+                    (change)="establecerCambioDeValor({campo: 'nombre', valor:(tipoPropietarioFormulario.get('nombre')?.value)})">
                 <div
                     *ngIf="tipoPropietarioFormulario.get('nombre')?.invalid && tipoPropietarioFormulario.get('nombre')?.touched">
                     <small class="text-danger"
@@ -38,7 +38,7 @@
             <div class="col-md-4">
                 <label for="apellidoPaterno" class="form-label">Apellido paterno *:</label>
                 <input id="apellidoPaterno" type="text" class="form-control" formControlName="apellidoPaterno"
-                    (change)="establecerCambioDeValor({campo:'apellidoPaterno',valor:$event})">
+                    (change)="establecerCambioDeValor({campo:'apellidoPaterno',valor:tipoPropietarioFormulario.get('apellidoPaterno')?.value})">
                 <div
                     *ngIf="tipoPropietarioFormulario.get('apellidoPaterno')?.invalid && tipoPropietarioFormulario.get('apellidoPaterno')?.touched">
                     <small class="text-danger"
@@ -52,7 +52,7 @@
             <div class="col-md-4">
                 <label for="apellidoMaterno" class="form-label">Apellido materno :</label>
                 <input id="apellidoMaterno" type="text" class="form-control" formControlName="apellidoMaterno"
-                    (change)="establecerCambioDeValor({campo:'apellidoMaterno',valor:$event})">
+                    (change)="establecerCambioDeValor({campo:'apellidoMaterno',valor:tipoPropietarioFormulario.get('apellidoMaterno')?.value})">
                 <div
                     *ngIf="tipoPropietarioFormulario.get('apellidoMaterno')?.invalid && tipoPropietarioFormulario.get('apellidoMaterno')?.touched">
                     <small class="text-danger"
@@ -67,7 +67,7 @@
             <div class="col-md-8">
                 <label for="razonSocial" class="form-label">Denominación o razón social *:</label>
                 <input id="razonSocial" type="text" class="form-control" formControlName="razonSocial"
-                    (change)="establecerCambioDeValor({campo:'razonSocial',valor:$event})">
+                    (change)="establecerCambioDeValor({campo:'razonSocial',valor:tipoPropietarioFormulario.get('razonSocial')?.value})">
                 <div
                     *ngIf="tipoPropietarioFormulario.get('razonSocial')?.invalid && tipoPropietarioFormulario.get('razonSocial')?.touched">
                     <small class="text-danger"
