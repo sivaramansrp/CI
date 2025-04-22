@@ -93,6 +93,13 @@ const ROUTES: Routes = [
       import('./tramites/32508/adace.module').then(
         (m) => m.AdaceModule
       ),
+  },
+  {
+    path: 'registros-de-comercio-exterior',
+    loadChildren: () =>
+      import('./tramites/31603/registros-de-comercio-exterior/registros-de-comercio-exterior.module').then(
+        (m) => m.RegistrosDeComercioExteriorModule
+      ),
   }
 ];
 
