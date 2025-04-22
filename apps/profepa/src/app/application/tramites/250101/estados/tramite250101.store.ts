@@ -3,88 +3,177 @@ import { CatalogoResponse } from '@libs/shared/data-access-user/src';
 import { Injectable } from '@angular/core';
 import { TablaDatos} from '../models/flora-fauna.models';
 
-
+/**
+ * Estado del trámite con clave 250101. Contiene toda la información capturada
+ * durante el proceso del trámite, incluyendo datos del destinatario, agente aduanal,
+ * mercancía, y aspectos administrativos.
+ */
 export interface Tramite250101State {
+  /** Tipo de aduana seleccionada. */
   tipoAduana: CatalogoResponse | null;
+  /** Tipo de inspectoría seleccionada. */
   tipoInspectoria: CatalogoResponse | null;
+  /** Municipio correspondiente al trámite. */
   tipoMunicipio: CatalogoResponse | null;
+  /** Denominación del destinatario. */
   destinatarioDenominacion: string;
+  /** País del destinatario. */
   destinatarioPais: CatalogoResponse | null;
+  /** Estado del destinatario. */
   destinatarioEstado: CatalogoResponse | null;
+  /** Código postal del destinatario. */
   destinatarioCodigoPostal: string;
+  /** Domicilio completo del destinatario. */
   destinatarioDomicilio: string;
+  /** Nombre del agente aduanal. */
   agenteAduanalNombre: string;
+  /** Primer apellido del agente aduanal. */
   agenteAduanalPrimerApellido: string;
+  /** Segundo apellido del agente aduanal. */
   agenteAduanalSegundoApellido: string;
+  /** Número de patente del agente aduanal. */
   agenteAduanalPatente: string;
+  /** Datos en tabla relacionados con el destinatario. */
   destinatarioRowData: TablaDatos[];
-  agenteAduanalRowData: TablaDatos[]; 
-  clave: string; 
+  /** Datos en tabla relacionados con el agente aduanal. */
+  agenteAduanalRowData: TablaDatos[];
+  /** Clave de identificación del trámite. */
+  clave: string;
+  /** Dependencia relacionada con el trámite. */
   dependencia: string;
-  banco: string; 
+  /** Banco relacionado al trámite o pago. */
+  banco: string;
+  /** Llave o folio del trámite. */
   llave: string;
+  /** Fecha del trámite o captura. */
   fecha: string;
+  /** Importe monetario relacionado. */
   importe: string;
-  revisados:string;
+  /** Documentos o elementos revisados. */
+  revisados: string;
+  /** Medio por el cual se realiza el trámite (ej. digital, físico). */
   medio: string;
-  identificacion:string;
+  /** Tipo de identificación proporcionada. */
+  identificacion: string;
+  /** Número económico del vehículo. */
   economico: string;
-  placa:string;
+  /** Placa del vehículo. */
+  placa: string;
+  /** Número del trámite o folio interno. */
   numero: string;
-  fechas:string;
-  requisito:string;
+  /** Fechas adicionales relacionadas al trámite. */
+  fechas: string;
+  /** Requisitos solicitados o entregados. */
+  requisito: string;
+  /** Descripción general del trámite o mercancía. */
   descripcion: string;
+  /** Fracción arancelaria de la mercancía. */
   fraccion: string;
+  /** Descripción arancelaria. */
   arancelaria: string;
+  /** Cantidad de mercancía. */
   cantidad: string;
+  /** Unidad de medida de la mercancía. */
   medida: string;
+  /** Género biológico de la especie. */
   genero: string;
+  /** Especie biológica. */
   especie: string;
-  comun:string;
+  /** Nombre común de la especie. */
+  comun: string;
+  /** Lugar de origen del producto. */
   origen: string;
+  /** Lugar de procedencia del producto. */
   procedencia: string;
-  
 }
 
+
+/**
+ * Crea y retorna el estado inicial para el trámite 250101.
+ *
+ * Esta función se utiliza para inicializar todos los campos del estado
+ * con valores por defecto (nulos, cadenas vacías o arreglos vacíos),
+ * asegurando una estructura limpia para comenzar el flujo del trámite.
+ *
+ * @returns {Tramite250101State} Estado inicial del trámite.
+ */
 export function createInitialState(): Tramite250101State {
   return {
+    /** Valor inicial para tipo de aduana (sin seleccionar). */
     tipoAduana: null,
+    /** Valor inicial para tipo de inspectoría (sin seleccionar). */
     tipoInspectoria: null,
+    /** Valor inicial para municipio (sin seleccionar). */
     tipoMunicipio: null,
+    /** Denominación del destinatario (vacía). */
     destinatarioDenominacion: '',
+    /** País del destinatario (sin seleccionar). */
     destinatarioPais: null,
+    /** Estado del destinatario (sin seleccionar). */
     destinatarioEstado: null,
+    /** Código postal del destinatario (vacío). */
     destinatarioCodigoPostal: '',
+    /** Domicilio del destinatario (vacío). */
     destinatarioDomicilio: '',
+    /** Nombre del agente aduanal (vacío). */
     agenteAduanalNombre: '',
+    /** Primer apellido del agente aduanal (vacío). */
     agenteAduanalPrimerApellido: '',
+    /** Segundo apellido del agente aduanal (vacío). */
     agenteAduanalSegundoApellido: '',
+    /** Patente del agente aduanal (vacía). */
     agenteAduanalPatente: '',
+    /** Lista vacía para los datos del destinatario en tabla. */
     destinatarioRowData: [],
+    /** Lista vacía para los datos del agente aduanal en tabla. */
     agenteAduanalRowData: [],
+    /** Clave del trámite (vacía). */
     clave: '',
+    /** Dependencia relacionada (vacía). */
     dependencia: '',
+    /** Banco relacionado (vacío). */
     banco: '',
+    /** Llave única del trámite (vacía). */
     llave: '',
+    /** Fecha del trámite (vacía). */
     fecha: '',
+    /** Importe monetario (vacío). */
     importe: '',
+    /** Elementos revisados (vacío). */
     revisados: '',
+    /** Medio por el cual se realiza el trámite (vacío). */
     medio: '',
-    identificacion:'',
+    /** Identificación proporcionada (vacía). */
+    identificacion: '',
+    /** Número económico del vehículo (vacío). */
     economico: '',
-    placa:'',
+    /** Placa del vehículo (vacía). */
+    placa: '',
+    /** Número interno o folio (vacío). */
     numero: '',
-    fechas:'',
-    requisito:'',
+    /** Fechas relacionadas (vacío). */
+    fechas: '',
+    /** Requisitos entregados o solicitados (vacío). */
+    requisito: '',
+    /** Descripción general (vacía). */
     descripcion: '',
-    fraccion:'',
-    arancelaria:'',
+    /** Fracción arancelaria (vacía). */
+    fraccion: '',
+    /** Descripción arancelaria (vacía). */
+    arancelaria: '',
+    /** Cantidad de mercancía (vacía). */
     cantidad: '',
+    /** Unidad de medida (vacía). */
     medida: '',
-    genero:'',
+    /** Género biológico (vacío). */
+    genero: '',
+    /** Especie biológica (vacía). */
     especie: '',
-    comun:'',
-    origen:'',
+    /** Nombre común (vacío). */
+    comun: '',
+    /** País o región de origen (vacío). */
+    origen: '',
+    /** Lugar de procedencia (vacío). */
     procedencia: '',
   };
 }
@@ -92,7 +181,7 @@ export function createInitialState(): Tramite250101State {
 @Injectable({
   providedIn: 'root',
 })
-@StoreConfig({ name: 'floraFaunaState', resettable: true })
+@StoreConfig({ name: 'tramite250101', resettable: true })
 export class Tramite250101Store extends Store<Tramite250101State> {
   constructor() {
     super(createInitialState());
