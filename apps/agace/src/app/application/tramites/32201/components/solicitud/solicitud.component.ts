@@ -12,9 +12,9 @@ import {
   TituloComponent,
   VALID_FILE_REGEX,
 } from '@libs/shared/data-access-user/src';
+import { SOLICITUD_32201_ENUM } from '../../constantes/anexo';
 import { Tramite32201Query } from '../../estados/tramite32201.query';
 import { Solicitud32201State, Tramite32201Store } from '../../estados/tramite32201.store';
-import { SOLICITUD_32201_ENUM } from '../../constantes/anexo';
 
 /**
  * Componente que representa la funcionalidad de la solicitud del trámite 32201.
@@ -136,9 +136,9 @@ export class SolicitudComponent implements OnInit {
           const EXPECTED_COLUMNS = 5;  // Agregue aquí el número requerido de columnas o lógica 
           const FIRST_ROW = JSON_DATA[0] as string[];
           if (FIRST_ROW.length === EXPECTED_COLUMNS) {
-            this.confirmarModal(0); // Abre el modal de confirmación
+            this.confirmarModal(); // Abre el modal de confirmación
           } else {
-            this.errorModal(0); // Abre el modal de error
+            this.errorModal(); // Abre el modal de error
           }
         };
 
@@ -147,7 +147,7 @@ export class SolicitudComponent implements OnInit {
     }
   }
 
-  public confirmarModal(i: number = 0): void {
+  public confirmarModal(): void {
     this.confirmarNotificacion = {
       tipoNotificacion: 'alert',
       categoria: 'danger',
@@ -161,7 +161,7 @@ export class SolicitudComponent implements OnInit {
     }
   }
 
-  public errorModal(i: number = 0): void {
+  public errorModal(): void {
     this.errorNotificacion = {
       tipoNotificacion: 'alert',
       categoria: 'danger',

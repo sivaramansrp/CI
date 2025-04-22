@@ -7,7 +7,7 @@ import {
   TEXTOS,
   TituloComponent,
 } from '@ng-mf/data-access-user';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 
 /**
@@ -20,7 +20,7 @@ import { Subject, takeUntil } from 'rxjs';
   standalone: true,
   imports: [TituloComponent, AlertComponent, AnexarDocumentosComponent],
 })
-export class PasoDosComponent implements OnInit {
+export class PasoDosComponent implements OnInit, OnDestroy {
   /**
    * Constante que contiene los textos utilizados en el componente.
    */
