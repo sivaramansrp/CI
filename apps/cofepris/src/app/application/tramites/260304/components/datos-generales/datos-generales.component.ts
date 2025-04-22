@@ -17,6 +17,7 @@ import { Catalogo } from '@ng-mf/data-access-user';
 import { Component } from '@angular/core';
 import { DatosSolicitudService } from '../../../../shared/services/datos-solicitud.service';
 import { Destinatario } from '../../../../shared/models/terceros-relacionados.model';
+import { OnDestroy } from '@angular/core';
 import { Otros } from '../../models/medicamentos-contengan.model';
 import { TERCEROS_NACIONALIDAD_RADIO_OPCIONS } from '../../constants/medicamentos-contengan.enum';
 import { TERCEROS_PERSONA_RADIO_OPCIONS } from '../../constants/medicamentos-contengan.enum';
@@ -36,7 +37,7 @@ import { Tramite260304Store } from '../../estados/tramite260304Store.store';
   templateUrl: './datos-generales.component.html',
   styleUrl: './datos-generales.component.scss',
 })
-export class DatosGeneralesComponent {
+export class DatosGeneralesComponent implements OnDestroy {
   /**
    * Variable que almacena el tipo de dato, que se inicializa más tarde.
    * Se usa el operador `!` para indicar que la variable no es nula ni indefinida en el momento de su uso.
@@ -69,11 +70,35 @@ export class DatosGeneralesComponent {
    */
   tipoTablaDatos = TIPO_TABLA_DATOS;
 
-  radioOpcions = TERCEROS_NACIONALIDAD_RADIO_OPCIONS;
-  tipoPersonaRadioOpcions = TERCEROS_PERSONA_RADIO_OPCIONS;
-
+  /**
+   * Asigna el valor de `TipoPersona` a la variable `tipoPersona`.
+   * `TipoPersona` es un objeto o constante que define los tipos de personas (física o moral).
+   */
   public tipoPersona = TipoPersona;
 
+  /**
+   * Asigna el valor de `TERCEROS_NACIONALIDAD_RADIO_OPCIONS` a la variable `radioOpcions`.
+   * `TERCEROS_NACIONALIDAD_RADIO_OPCIONS` es un objeto o constante que define las opciones de nacionalidad.
+   */
+  radioOpcions = TERCEROS_NACIONALIDAD_RADIO_OPCIONS;
+
+  /**
+   * Asigna el valor de `TERCEROS_PERSONA_RADIO_OPCIONS` a la variable `tipoPersonaRadioOpcions`.
+   * `TERCEROS_PERSONA_RADIO_OPCIONS` es un objeto o constante que define las opciones de tipo de persona.
+   */
+  tipoPersonaRadioOpcions = TERCEROS_PERSONA_RADIO_OPCIONS;
+
+  /**
+   * Constructor del componente `DatosGeneralesComponent`.
+   * Inicializa el formulario y carga los datos necesarios para el componente.
+   *
+   * @param {ActivatedRoute} route - Ruta activa para obtener parámetros de la URL.
+   * @param {DatosSolicitudService} datosSolicitudService - Servicio para obtener datos de solicitud.
+   * @param {FormBuilder} fb - Constructor de formularios reactivos de Angular.
+   * @param {Tramite260304Store} tramiteStore - Store para manejar el estado del trámite 260304.
+   * @param {Router} router - Router de Angular para la navegación entre rutas.
+   * @param {Location} ubicaccion - Servicio para interactuar con la ubicación del navegador.
+   */
   constructor(
     private route: ActivatedRoute,
     private datosSolicitudService: DatosSolicitudService,
@@ -160,7 +185,6 @@ export class DatosGeneralesComponent {
         break;
       case this.tipoTablaDatos.OTROS:
         this.addOtros([this.agregarDatosForm.value]);
-
         break;
       default:
         break;
@@ -188,7 +212,15 @@ export class DatosGeneralesComponent {
     this.tramiteStore.updateOtrosTablaDatos(datos);
   }
 
-
-
+  /**
+   * @method ngOnDestroy
+   * @description
+   * Método del ciclo de vida de Angular que se llama antes de destruir el componente.
+   * Libera recursos y completa el observable `destroyNotifier$`.
+   */
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+  }
 
 }

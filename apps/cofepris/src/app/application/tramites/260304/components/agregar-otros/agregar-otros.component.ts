@@ -17,7 +17,8 @@ import {
 } from '../../constants/medicamentos-contengan.enum';
 import { CommonModule } from '@angular/common';
 import { DatosSolicitudService } from '../../../../shared/services/datos-solicitud.service';
-import { ExportacionMateriasPrimasService } from '../../service/exportacion-materias-primas.service';
+
+import { ExportacionMedicamentosContenganService } from '../../service/exportacion-medicamentos-contengan.service';
 import { Facturador } from '../../../../shared/models/terceros-relacionados.model';
 import { Location } from '@angular/common';
 import { Otros } from '../../models/medicamentos-contengan.model';
@@ -43,6 +44,7 @@ export class AgregarOtrosComponent implements OnInit, OnDestroy {
    * @type {TipoPersona}
    */
   public tipoPersona = TipoPersona;
+
   /**
    * @property {Subject<void>} unsubscribe$
    * Subject para cancelar suscripciones activas y evitar fugas de memoria.
@@ -69,7 +71,18 @@ export class AgregarOtrosComponent implements OnInit, OnDestroy {
    */
   public paisesDatos: Catalogo[] = [];
 
+  /**
+   * Opciones de nacionalidad para terceros.
+   * Este objeto contiene las opciones que se presentan en un grupo de botones de radio
+   * para seleccionar la nacionalidad de un tercero.
+   */
   radioOpcions = TERCEROS_NACIONALIDAD_RADIO_OPCIONS;
+
+  /**
+   * Opciones de tipo de persona para terceros.
+   * Este objeto contiene las opciones que se presentan en un grupo de botones de radio
+   * para seleccionar el tipo de persona (física o jurídica) de un tercero.
+   */
   tipoPersonaRadioOpcions = TERCEROS_PERSONA_RADIO_OPCIONS;
 
   /**
@@ -87,7 +100,7 @@ export class AgregarOtrosComponent implements OnInit, OnDestroy {
     private datosSolicitudService: DatosSolicitudService,
     private ubicaccion: Location,
     private tramiteStore: Tramite260304Store,
-    private exportacionMateriasPrimasService: ExportacionMateriasPrimasService
+    private exportacionMedicamentosContenganService: ExportacionMedicamentosContenganService
   ) {
     this.crearFormulario();
     this.changeNacionalidad();
@@ -155,6 +168,7 @@ export class AgregarOtrosComponent implements OnInit, OnDestroy {
   limpiarFormulario(): void {
     this.agregarDatosForm.reset();
   }
+
   /**
    * @method cancelar
    * @description Navega hacia la vista anterior utilizando el servicio de ubicación (`Location`).
@@ -165,6 +179,10 @@ export class AgregarOtrosComponent implements OnInit, OnDestroy {
     this.ubicaccion.back();
   }
 
+  /**
+   * Obtiene un nuevo valor para el formulario, procesando los datos según el tipo de persona.
+   * @returns {Otros} Objeto con los valores del formulario, incluyendo el nombre o razón social procesado.
+   */
   obtenerNuevoValorFormulario(): Otros {
     const VALOR_FORMULARIO = this.agregarDatosForm.getRawValue();
 
@@ -180,8 +198,7 @@ export class AgregarOtrosComponent implements OnInit, OnDestroy {
       nombreRazonSocial = '';
     }
 
-    // 👇 Replace only nombreRazonSocial, keeping rest of the object the same
-     const NUEVO_VALOR_FORMULARIO = {
+    const NUEVO_VALOR_FORMULARIO = {
       ...VALOR_FORMULARIO,
       nombreRazonSocial: nombreRazonSocial,
     };
@@ -233,7 +250,7 @@ export class AgregarOtrosComponent implements OnInit, OnDestroy {
    * Hace una petición al servicio 'exportacionMateriasPrimasService' y actualiza los valores del formulario con los datos obtenidos.
    */
   seBuscaRfc(): void {
-    this.exportacionMateriasPrimasService
+    this.exportacionMedicamentosContenganService
       .obtenerOstro()
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((data) => {

@@ -6,15 +6,16 @@ import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root',
 })
-export class ExportacionMateriasPrimasService {
+export class ExportacionMedicamentosContenganService {
+
   /**
    * @property {string} jsonUrl
    * Ruta relativa al archivo JSON que contiene los datos del domicilio.
    * Usado para cargar información desde el frontend (assets).
    * @private
    */
-  private jsonUrl = 'assets/json/260301/';
-
+  private jsonUrl = 'assets/json/260304/';
+  
   constructor(public httpServicios: HttpClient) {
     // Constructor necesario para inyectar el servicio HttpClient
   }

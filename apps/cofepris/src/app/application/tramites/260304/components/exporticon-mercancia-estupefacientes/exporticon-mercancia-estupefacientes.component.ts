@@ -23,16 +23,16 @@ import {
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
 import { CommonModule, Location } from '@angular/common';
-import { Component, OnDestroy, OnInit, } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject, first, takeUntil, tap } from 'rxjs';
 import {
   Tramite260304State,
   Tramite260304Store,
 } from '../../estados/tramite260304Store.store';
+import { DETALLE_MERCANCIA_PRODUCTO_TERMINADO } from '../../constants/medicamentos-contengan.enum';
 import { DatosSolicitudService } from '../../../../shared/services/datos-solicitud.service';
 import { DetalleMercancíaProductoTerminado } from '../../models/medicamentos-contengan.model';
 import { Tramite260304Query } from '../../estados/tramite260304Query.query';
-import { DETALLE_MERCANCIA_PRODUCTO_TERMINADO } from '../../constants/medicamentos-contengan.enum';
 
 /**
  * @component DatosMercanciaComponent
@@ -54,7 +54,9 @@ import { DETALLE_MERCANCIA_PRODUCTO_TERMINADO } from '../../constants/medicament
   styleUrl: './exporticon-mercancia-estupefacientes.component.scss',
   providers: [DatosSolicitudService],
 })
-export class ExporticonMercanciaEstupefacientesComponent implements OnInit, OnDestroy {
+export class ExporticonMercanciaEstupefacientesComponent
+  implements OnInit, OnDestroy
+{
   /**
    * @property {FormGroup} mercanciaForm
    * Formulario reactivo principal para capturar los datos de la mercancía.
@@ -65,7 +67,7 @@ export class ExporticonMercanciaEstupefacientesComponent implements OnInit, OnDe
    * @property {MercanciaForm} MercanciaFormEstupefacientes
    * Input que recibe el estado inicial del formulario de mercancía.
    */
-  public mercanciaFormState!: MercanciaFormEstupefacientes
+  public mercanciaFormState!: MercanciaFormEstupefacientes;
 
   /**
    * @property {Catalogo[]} clasificacionProductoDatos
@@ -119,6 +121,11 @@ export class ExporticonMercanciaEstupefacientesComponent implements OnInit, OnDe
     derecha: 'Uso específico',
   };
 
+  /**
+   * @property {CrossListLable} formaFaramaceuticaLabel
+   * Etiqueta personalizada para el componente de lista cruzada de forma farmacéutica.
+   * Define los títulos para los elementos disponibles y seleccionados.
+   */
   public formaFaramaceuticaLabel: CrossListLable = {
     tituluDeLaIzquierda: 'Forma farmacéutica',
     derecha: 'Forma farmacéutica',
@@ -159,7 +166,6 @@ export class ExporticonMercanciaEstupefacientesComponent implements OnInit, OnDe
    */
   public paisDeDestinoDatos: Catalogo[] = [];
 
-
   /**
    * @property {Subject<void>} destroyNotifier$
    * Subject utilizado para limpiar las suscripciones activas al destruir el componente.
@@ -172,6 +178,27 @@ export class ExporticonMercanciaEstupefacientesComponent implements OnInit, OnDe
    * Estado completo del trámite, que contiene información como la tabla de mercancías.
    */
   public tramiteState!: Tramite260304State;
+
+  /**
+   * Lista que representa la tabla de mercancías, utilizada para mostrar o manipular
+   * los productos terminados relacionados con la mercancía.
+   * @type {DetalleMercancíaProductoTerminado[]}
+   */
+  public tablaMercanciasLista: DetalleMercancíaProductoTerminado[] = [];
+
+  /**
+   * Arreglo que almacena los datos detallados de la mercancía,
+   * posiblemente utilizado para operaciones internas como edición o validación.
+   * @type {DetalleMercancíaProductoTerminado[]}
+   */
+  public detalleMercanciaDatos: DetalleMercancíaProductoTerminado[] = [];
+
+  /**
+   * Constante que representa la configuración o estructura de la tabla de detalles
+   * de mercancía de productos terminados. Puede ser utilizada para construir
+   * @type {typeof DETALLE_MERCANCIA_PRODUCTO_TERMINADO}
+   */
+  tablaDetalleMercancia = DETALLE_MERCANCIA_PRODUCTO_TERMINADO;
 
   /**
    * @constructor
@@ -249,9 +276,9 @@ export class ExporticonMercanciaEstupefacientesComponent implements OnInit, OnDe
    * @description Crea y configura el formulario reactivo para la gestión de mercancías estupefacientes.
    * Este formulario incluye validaciones requeridas para varios campos relacionados con la clasificación,
    * denominación, tipo, cantidad, origen y otros detalles específicos de la mercancía.
-   * 
+   *
    * @returns {void} No retorna ningún valor.
-   * 
+   *
    */
   crearMercanciaForm(): void {
     this.mercanciaForm = this.fb.group({
@@ -294,8 +321,10 @@ export class ExporticonMercanciaEstupefacientesComponent implements OnInit, OnDe
         this.mercanciaFormState.cantidadUmcValor,
         Validators.required,
       ],
-      unidadMedidaComercializacion: [this.mercanciaFormState.cantidadUmc, Validators.required],
-
+      unidadMedidaComercializacion: [
+        this.mercanciaFormState.cantidadUmc,
+        Validators.required,
+      ],
 
       numeroCAS: [this.mercanciaFormState.numeroCAS],
       cantidadDeLotes: [
@@ -310,14 +339,13 @@ export class ExporticonMercanciaEstupefacientesComponent implements OnInit, OnDe
         Validators.required,
       ],
 
-
       presentacion: [this.mercanciaFormState.presentacion, Validators.required],
 
       numeroRegistroSanitario: [
         this.mercanciaFormState.numeroRegistroSanitario,
         Validators.required,
       ],
-      
+
       usoEspecifico: [this.mercanciaFormState.usoEspecifico],
     });
   }
@@ -338,6 +366,14 @@ export class ExporticonMercanciaEstupefacientesComponent implements OnInit, OnDe
     return control.errors && control.touched;
   }
 
+  /**
+   * Maneja el evento de cambio para las selecciones de forma farmacéutica.
+   *
+   * @param events - Un arreglo de cadenas que representa las selecciones actuales de forma farmacéutica.
+   *
+   * Este método actualiza la propiedad `seleccionadasFormaFormaceuticaDatos` con las selecciones proporcionadas
+   * y actualiza el formulario `mercanciaForm` para reflejar los valores seleccionados en el campo `formaFarmaceutica`.
+   */
   formaFarmaceuticaSeleccionadasChange(events: string[]): void {
     this.seleccionadasFormaFormaceuticaDatos = events;
     if (events.length > 0) {
@@ -405,10 +441,13 @@ export class ExporticonMercanciaEstupefacientesComponent implements OnInit, OnDe
     this.ubicaccion.back();
   }
 
-
+  /**
+   * Maneja la selección de una mercancía en la tabla de mercancías.
+   * Actualiza el estado del store con los datos de la mercancía seleccionada.
+   *
+   * @param event - Objeto que contiene los datos de la mercancía seleccionada.
+   */
   mercanciaSeleccionado(event: TablaMercanciasDatos): void {
-
-
     const SELECCIONADO_MERCANCIA = {
       clasificacionProducto: event.clasificacionProducto,
       especificarClasificacionProducto: event.especificarClasificacionProducto,
@@ -462,23 +501,10 @@ export class ExporticonMercanciaEstupefacientesComponent implements OnInit, OnDe
     }));
   }
 
-
-
   /**
-   * @method ngOnDestroy
-   * @description Hook de destrucción del componente. Libera las suscripciones activas.
+   * Elimina detalles de mercancías basándose en coincidencias con la lista de mercancías.
+   * @returns {void}
    */
-  ngOnDestroy(): void {
-    this.destroyNotifier$.next();
-    this.destroyNotifier$.complete();
-  }
-
-  tablaDetalleMercancia = DETALLE_MERCANCIA_PRODUCTO_TERMINADO;
-
-  public tablaMercanciasLista: DetalleMercancíaProductoTerminado[] = [];
-
-  public detalleMercanciaDatos: DetalleMercancíaProductoTerminado[] = [];
-
   eliminarDetalleMercancia(): void {
     const [DETALLE] = this.detalleMercanciaDatos;
     const [TABLA] = this.tablaMercanciasLista;
@@ -491,32 +517,39 @@ export class ExporticonMercanciaEstupefacientesComponent implements OnInit, OnDe
     this.detalleMercanciaDatos = VALOR
       ? []
       : this.detalleMercanciaDatos.filter((item) =>
-        this.tablaMercanciasLista.some(
-          (tablaItem) =>
-            tablaItem.registroSanitario === item.registroSanitario
-        )
-      );
+          this.tablaMercanciasLista.some(
+            (tablaItem) =>
+              tablaItem.registroSanitario === item.registroSanitario
+          )
+        );
   }
 
-  agregarDetalleMercancia():void{
+  /**
+   * Agrega un nuevo detalle de mercancía a la lista de datos de detalles si existen valores válidos.
+   * @returns {void}
+   */
+  agregarDetalleMercancia(): void {
     const PRESENTACION = this.mercanciaForm.get('presentacion')?.value;
-    const CANTIDAD_UMC = this.mercanciaForm.get(
-      'cantidadUMC'
-    )?.value;
+    const CANTIDAD_UMC = this.mercanciaForm.get('cantidadUMC')?.value;
     const NUMERO_REGISTRO_SANITARIO = this.mercanciaForm.get(
       'numeroRegistroSanitario'
     )?.value;
 
-    if (
-      PRESENTACION ||
-      CANTIDAD_UMC ||
-      NUMERO_REGISTRO_SANITARIO
-    ) {
+    if (PRESENTACION || CANTIDAD_UMC || NUMERO_REGISTRO_SANITARIO) {
       this.detalleMercanciaDatos.push({
         presentacion: PRESENTACION,
         cantidad: CANTIDAD_UMC,
         registroSanitario: NUMERO_REGISTRO_SANITARIO,
       });
     }
+  }
+
+  /**
+   * @method ngOnDestroy
+   * @description Hook de destrucción del componente. Libera las suscripciones activas.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

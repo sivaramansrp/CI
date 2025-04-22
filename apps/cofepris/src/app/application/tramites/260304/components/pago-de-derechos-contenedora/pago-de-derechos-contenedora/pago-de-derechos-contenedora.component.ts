@@ -23,16 +23,15 @@ export class PagoDeDerechosContenedoraComponent {
    * @property {PagoDerechosFormState} pagoDerechos
    * @description Estado actual del formulario de pago de derechos, obtenido del store del trámite.
    */
-
   public pagoDerechos: PagoDerechosFormState;
 
-    /**
-     * @property {string} idProcedimiento
-     * @description
-     * Identificador del procedimiento.
-     */
-    public readonly idProcedimiento = ID_PROCEDIMIENTO;
-    
+  /**
+   * @property {string} idProcedimiento
+   * @description
+   * Identificador del procedimiento.
+   */
+  public readonly idProcedimiento = ID_PROCEDIMIENTO;
+
   /**
    * @constructor
    * @description Constructor que inyecta el store `Tramite260304Store` para gestionar el estado del trámite.

@@ -13,41 +13,83 @@ import { TablaMercanciasDatos } from '../../../shared/models/datos-solicitud.mod
 import { TablaOpcionConfig } from '../../../shared/models/datos-solicitud.model';
 import { TablaScianConfig } from '../../../shared/models/datos-solicitud.model';
 
-/**
- * Estado que representa los datos de un trámite 260304, incluyendo tablas de datos, formularios y configuraciones.
- * 
- * @interface Tramite260304State
- * @property {Destinatario[]} certificadoTablaDatos - Datos de destinatarios para la tabla de certificados.
- * @property {Facturador[]} destinatarioTableDatos - Datos de facturadores para la tabla de facturadores.
- * @property {Facturador[]} proveedorTablaDatos - Datos de proveedores para la tabla de proveedores.
- * @property {Facturador[]} fabricanteTablaDatos - Datos de fabricantes para la tabla de fabricantes.
- * @property {Facturador[]} otrosTablaDatos - Datos de otros para la tabla de otros.
- * @property {DatosSolicitudFormState} datosSolicitudFormState - Estado del formulario de solicitud de datos.
- * @property {MercanciaFormEstupefacientes} mercanciaForm - Formulario relacionado con la mercancía de estupefacientes.
- * @property {TablaOpcionConfig[]} opcionConfigDatos - Datos de configuración de opciones.
- * @property {TablaScianConfig[]} scianConfigDatos - Datos de configuración SCIAN.
- * @property {TablaMercanciasDatos[]} tablaMercanciasConfigDatos - Datos de configuración de mercancías.
- * @property {TablaOpcionConfig[]} seleccionadoopcionDatos - Datos de selección de opciones.
- * @property {TablaScianConfig[]} seleccionadoScianDatos - Datos de selección SCIAN.
- * @property {TablaMercanciasDatos[]} seleccionadoTablaMercanciasDatos - Datos de selección de mercancías.
- * @property {boolean} opcionesColapsableState - Estado de las opciones colapsables (si están expandidas o colapsadas).
- * @property {PagoDerechosFormState} pagoDerechos - Estado del formulario de pago de derechos.
- * @property {number} [tabSeleccionado] - Índice del tab seleccionado (opcional).
- */
 export interface Tramite260304State {
+  /**
+   * @type {Destinatario[]}
+   * Lista de datos de destinatarios
+   */
   destinatarioTableDatos: Destinatario[];
+
+  /**
+   * @type {Otros[]}
+   * Lista de datos de otros
+   */
   otrosTablaDatos: Otros[];
 
+  /**
+   * @type {DatosSolicitudFormState}
+   * Estado del formulario de datos de solicitud
+   */
   datosSolicitudFormState: DatosSolicitudFormState;
+
+  /**
+   * @type {MercanciaFormEstupefacientes}
+   * Formulario de mercancías estupefacientes
+   */
   mercanciaForm: MercanciaFormEstupefacientes;
+
+  /**
+   * @type {TablaOpcionConfig[]}
+   * Configuración de opciones para la tabla
+   */
   opcionConfigDatos: TablaOpcionConfig[];
+
+  /**
+   * @type {TablaScianConfig[]}
+   * Configuración de datos SCIAN para la tabla
+   */
   scianConfigDatos: TablaScianConfig[];
+
+  /**
+   * @type {TablaMercanciasDatos[]}
+   * Configuración de datos de mercancías para la tabla
+   */
   tablaMercanciasConfigDatos: TablaMercanciasDatos[];
+
+  /**
+   * @type {TablaOpcionConfig[]}
+   * Opciones seleccionadas para la tabla
+   */
   seleccionadoopcionDatos: TablaOpcionConfig[];
+
+  /**
+   * @type {TablaScianConfig[]}
+   * Datos SCIAN seleccionados para la tabla
+   */
   seleccionadoScianDatos: TablaScianConfig[];
+
+  /**
+   * @type {TablaMercanciasDatos[]}
+   * Datos de mercancías seleccionados para la tabla
+   */
   seleccionadoTablaMercanciasDatos: TablaMercanciasDatos[];
+
+  /**
+   * @type {boolean}
+   * Estado de las opciones colapsables (expandido/colapsado)
+   */
   opcionesColapsableState: boolean;
+
+  /**
+   * @type {PagoDerechosFormState}
+   * Estado del formulario de pago de derechos
+   */
   pagoDerechos: PagoDerechosFormState;
+
+  /**
+   * @type {number | undefined}
+   * Índice de la pestaña seleccionada
+   */
   tabSeleccionado?: number;
 }
 
@@ -60,7 +102,7 @@ export interface Tramite260304State {
  */
 export function createInitialState(): Tramite260304State {
   return {
-    otrosTablaDatos:[],
+    otrosTablaDatos: [],
     destinatarioTableDatos: [],
     datosSolicitudFormState: {
       rfcSanitario: '',
@@ -104,15 +146,15 @@ export function createInitialState(): Tramite260304State {
       numeroCAS: '',
       cantidadDeLotes: '',
       kgPorLote: '',
-      paisDeDestino:'',
+      paisDeDestino: '',
       paisDeProcedencia: '',
-      detallarUsoEspecifico:'',
-      numeroDePiezasAFabricar:'',
-      descripcionNumeroDePiezas:'',
+      detallarUsoEspecifico: '',
+      numeroDePiezasAFabricar: '',
+      descripcionNumeroDePiezas: '',
       presentacion: '',
       numeroRegistroSanitario: '',
       usoEspecifico: '',
-      paisOrigen:''
+      paisOrigen: '',
     },
     opcionConfigDatos: TABLA_OPCION_DATA,
     scianConfigDatos: [],
@@ -172,7 +214,10 @@ export class Tramite260304Store extends Store<Tramite260304State> {
   public updateDestinatarioTablaDatos(newDestinatario: Destinatario[]): void {
     this.update((state) => ({
       ...state,
-      destinatarioTableDatos: [...state.destinatarioTableDatos, ...newDestinatario],
+      destinatarioTableDatos: [
+        ...state.destinatarioTableDatos,
+        ...newDestinatario,
+      ],
     }));
   }
 

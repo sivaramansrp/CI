@@ -11,8 +11,8 @@ import { AgregarOtrosComponent } from './agregar-otros.component';
 import { FormBuilder } from '@angular/forms';
 import { DatosSolicitudService } from '../../../../shared/services/datos-solicitud.service';
 import { Location } from '@angular/common';
-import { Tramite260302Store } from '../../estados/tramite260304Store.store';
-import { ImportacionMateriasPrimasService } from '../../service/exportacion-materias-primas.service';
+import { Tramite260304Store } from '../../estados/tramite260304Store.store';
+import { ExportacionMedicamentosContenganService } from '../../service/exportacion-medicamentos-contengan.service';
 import { HttpClientModule } from '@angular/common/http';
 
 @Injectable()
@@ -21,7 +21,7 @@ class MockDatosSolicitudService {
 }
 
 @Injectable()
-class MockTramite260302Store {
+class MockTramite260304Store {
   updateOtrosTablaDatos() {}
 }
 
@@ -42,8 +42,7 @@ describe('AgregarOtrosComponent', () => {
         FormBuilder,
         { provide: DatosSolicitudService, useClass: MockDatosSolicitudService },
         Location,
-        { provide: Tramite260302Store, useClass: MockTramite260302Store },
-        { provide: ImportacionMateriasPrimasService, useClass: MockImportacionMateriasPrimasService }
+        { provide: Tramite260304Store, useClass: MockTramite260304Store },
       ]
     }).overrideComponent(AgregarOtrosComponent, {
 

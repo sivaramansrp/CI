@@ -22,7 +22,6 @@ import { CommonModule } from '@angular/common';
 import { Otros } from '../../models/medicamentos-contengan.model';
 import { Tramite260304Query } from '../../estados/tramite260304Query.query';
 
-
 /**
  * @component TercerosRelacionadosVistaComponent
  * @description Componente de solo lectura que muestra las tablas de terceros relacionados
@@ -39,7 +38,7 @@ import { Tramite260304Query } from '../../estados/tramite260304Query.query';
     TituloComponent,
   ],
   templateUrl: './terceros-relacionados-vista.component.html',
-  styleUrl: './terceros-relacionados-vista.component.css',
+  styleUrl: './terceros-relacionados-vista.component.scss',
 })
 export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
   /**
@@ -49,6 +48,7 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
    *
    */
   public idProcedimiento!: number;
+
   /**
    * @property {string} infoAlert
    * Tipo de alerta visual mostrada en la interfaz.
@@ -66,13 +66,13 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
    * Configuración de columnas para la tabla de facturadores.
    */
   configuracionTablaDestinatario: ConfiguracionColumna<Facturador>[] =
-  DESTINATARIO_ENCABEZADO_DE_TABLA;
+    DESTINATARIO_ENCABEZADO_DE_TABLA;
 
-    /**
+  /**
    * @property {ConfiguracionColumna<Facturador>[]} configuracionTablaDestinatario
    * Configuración de columnas para la tabla de facturadores.
    */
-    configuracionTablaOtros: ConfiguracionColumna<Otros>[] =
+  configuracionTablaOtros: ConfiguracionColumna<Otros>[] =
     OTROS_ENCABEZADO_DE_TABLA;
 
   /**
@@ -92,12 +92,12 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
    * @input habilitarFacturador - Valor booleano que habilita o deshabilita la sección del facturador.
    */
   public habilitarFacturador = true;
+
   /**
    * @property {Destinatario[]}destinatarioTablaDatos
    * Datos de la tabla de fabricantes.
    */
- destinatarioTablaDatos$!: Observable<Destinatario[]>;
-
+  destinatarioTablaDatos$!: Observable<Destinatario[]>;
 
   /**
    * @property {Facturador[]} facturadorTablaDatos
@@ -130,7 +130,7 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
     private router: Router,
     private activatedROute: ActivatedRoute
   ) {
-    //
+    // No se necesita lógica de inicialización adicional
   }
 
   /**
@@ -140,7 +140,6 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.destinatarioTablaDatos$ = this.tramiteQuery.getdestinatarioTablaDatos$;
-
     this.otrasTablaDatos$ = this.tramiteQuery.getOtrasTablaDatos$;
   }
 
