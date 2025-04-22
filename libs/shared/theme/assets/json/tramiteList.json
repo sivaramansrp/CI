@@ -1129,8 +1129,8 @@
   {
     "id": 162,
     "tramite": 130114,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/pago/diamante-bruto/diamante",
+    "linkDepartment": "/pago/diamante-bruto/diamante",
     "department": "se"
   },
   {
@@ -1192,8 +1192,8 @@
   {
     "id": 171,
     "tramite": 140112,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/sener/hidrocarburos-de-petroleo/permiso-de-retiro",
+    "linkDepartment": "/sener/hidrocarburos-de-petroleo/permiso-de-retiro",
     "department": "sener"
   },
   {
