@@ -262,7 +262,7 @@ export const FORMULARIO_DATOS_PROPIETARIO = [
         id: 'correoElectronico',
         labelNombre: 'Correo Electrónico',
         campo: 'correoElectronico',
-        clase: 'col-md-4',
+        clase: 'col-md-4 break-line',
         tipoInput: 'text',
         desactivado: false,
         soloLectura: false,

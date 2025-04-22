@@ -24,7 +24,7 @@
         </form>
     </div>
 </div>
-    @if(datosImportacionTemporalFormulario.get('cuentaProrroga')?.value === '1'){
-        <app-datos-retorno-prorroga></app-datos-retorno-prorroga>
-    }
-    <app-datos-retorno-autorizacion></app-datos-retorno-autorizacion>
+@if(datosImportacionTemporalFormulario.get('cuentaProrroga')?.value === '1'){
+<app-datos-retorno-prorroga></app-datos-retorno-prorroga>
+}
+<app-datos-retorno-autorizacion></app-datos-retorno-autorizacion>
