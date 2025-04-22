@@ -1,19 +1,19 @@
-import { Component, ViewChild } from '@angular/core';
-// Importación del componente Solicitante desde la librería compartida
-import {SolicitanteComponent } from '@libs/shared/data-access-user/src';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { PermisoDeExportacionService } from '../../services/permiso-de-exportacion.service';
+import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
 
 /**
  * Componente DatosComponent.
  * 
- * Este componente se encarga de gestionar la lógica relacionada con los datos
- * en la página correspondiente. Incluye funcionalidades para interactuar con
- * componentes hijos y manejar la selección de pestañas.
+ * Este componente es responsable de manejar la lógica y la interacción de la vista
+ * asociada al archivo `datos.component.html`. Permite la selección de pestañas y 
+ * la interacción con el componente hijo `SolicitanteComponent`.
  */
 @Component({
   selector: 'app-datos', // Selector del componente
   templateUrl: './datos.component.html' // Ruta del archivo HTML asociado al componente
 })
-export class DatosComponent {
+export class DatosComponent implements OnInit {
   /**
    * Índice del subtítulo actual.
    * 
@@ -31,6 +31,26 @@ export class DatosComponent {
   @ViewChild(SolicitanteComponent) solicitante!: SolicitanteComponent;
 
   /**
+   * Constructor del componente.
+   * 
+   * @param service - Servicio de PermisoDeExportacionService que se utiliza para
+   * compartir datos y lógica entre diferentes componentes.
+   */
+  constructor(public service: PermisoDeExportacionService) {}
+
+  /**
+   * Método de inicialización del componente.
+   * 
+   * Este método se ejecuta al inicializar el componente. Si el servicio contiene
+   * un índice predefinido, selecciona automáticamente la pestaña correspondiente.
+   */
+  ngOnInit(): void {
+    if (this.service.indice) {
+      this.seleccionaTab(this.service.indice);
+    }
+  }
+
+  /**
    * Método para seleccionar una pestaña específica.
    * 
    * Este método actualiza el índice de la pestaña seleccionada, permitiendo
@@ -40,5 +60,6 @@ export class DatosComponent {
    */
   seleccionaTab(i: number): void {
     this.indice = i;
+    this.service.indice = i;
   }
 }

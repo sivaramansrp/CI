@@ -1,26 +1,27 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PermisoDeExportacionComponent } from './permiso-de-exportacion.component';
-import { CUSTOM_ELEMENTS_SCHEMA, Component, Input } from '@angular/core';
-import { WizardComponent } from '@libs/shared/data-access-user/src'; // Import WizardComponent
-import { AccionBoton } from '@libs/shared/data-access-user/src/core/models/140103/cancelacion.model';
-import { AVISO, FIRMAR } from '@libs/shared/data-access-user/src/tramites/constantes/aviso-privacidad.enum';
-
-@Component({
-  selector: 'ng-alert',
-  template: '<div [innerHTML]="CONTENIDO"></div>',
-})
-class MockNgAlertComponent {
-  @Input() CONTENIDO!: string;
-}
+import { WizardComponent } from '@libs/shared/data-access-user/src';
+import { PASOS } from '@libs/shared/data-access-user/src/tramites/constantes/303/pasos.enums';
+import { AVISO } from '@libs/shared/data-access-user/src/tramites/constantes/aviso-privacidad.enum';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 describe('PermisoDeExportacionComponent', () => {
   let component: PermisoDeExportacionComponent;
   let fixture: ComponentFixture<PermisoDeExportacionComponent>;
+  let wizardMock: any;
 
   beforeEach(async () => {
+    wizardMock = {
+      siguiente: jest.fn(),
+      atras: jest.fn(),
+    };
+
     await TestBed.configureTestingModule({
-      declarations: [PermisoDeExportacionComponent, MockNgAlertComponent], // Mock ng-alert component
-      schemas: [CUSTOM_ELEMENTS_SCHEMA], // Allow custom elements like <app-datos>, <app-firmar-solicitud>
+      declarations: [PermisoDeExportacionComponent],
+      providers: [
+        { provide: WizardComponent, useValue: wizardMock },
+      ],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA], // Add this line
     }).compileComponents();
 
     fixture = TestBed.createComponent(PermisoDeExportacionComponent);
@@ -32,124 +33,47 @@ describe('PermisoDeExportacionComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should display "Registro de solicitud de Cancelación IMMEX" when indice is 1', () => {
-    component.indice = 1;
-    fixture.detectChanges();
-
-    const compiled = fixture.nativeElement as HTMLElement;
-    const heading = compiled.querySelector('h1');
-    expect(heading?.textContent).toContain('Registro de solicitud de Cancelación IMMEX');
+  it('should initialize pantallasPasos and TEXTOS correctly', () => {
+    expect(component.pantallasPasos).toEqual(PASOS);
+    expect(component.TEXTOS).toEqual(AVISO);
   });
 
-  it('should display "Firmar" and ng-alert when indice is not 1', () => {
-    component.indice = 2;
-  
-    fixture.detectChanges();
-
-    const compiled = fixture.nativeElement as HTMLElement;
-    const heading = compiled.querySelector('h1');
-    const alert = compiled.querySelector('ng-alert');
-
-    expect(heading?.textContent).toContain('Firmar');
-    expect(alert).toBeTruthy();
-
-    // Check the rendered content of the ng-alert
-    const alertContent = alert?.innerHTML.trim();
-    expect(alertContent).toContain('La solicitud ha sido guardado existosamente.');
-  });
-
-  it('should render <app-datos> when indice is 1', () => {
-    component.indice = 1;
-    fixture.detectChanges();
-
-    const compiled = fixture.nativeElement as HTMLElement;
-    const appDatos = compiled.querySelector('app-datos');
-    expect(appDatos).toBeTruthy();
-  });
-
-  it('should render <app-firmar-solicitud> when indice is 2', () => {
-    component.indice = 2;
-    fixture.detectChanges();
-
-    const compiled = fixture.nativeElement as HTMLElement;
-    const appFirmarSolicitud = compiled.querySelector('app-firmar-solicitud');
-    expect(appFirmarSolicitud).toBeTruthy();
-  });
-
-  it('should render <ng-alert> with TEXTOS.AVISO.Aviso when indice is 1', () => {
-    component.indice = 1;
-    
-    component.TEXTOS = AVISO;
-    fixture.detectChanges();
-
-    const compiled = fixture.nativeElement as HTMLElement;
-    const alert = compiled.querySelector('ng-alert');
-
-    expect(alert).toBeTruthy();
-
-    // Check the rendered content of the ng-alert
-    const alertContent = alert?.innerHTML.trim();
-    expect(alertContent).toContain('Aviso de privacidad simplificado');
-  });
-
-  it('should call getValorIndice when btn-continuar emits continuarEvento', () => {
-    jest.spyOn(component, 'getValorIndice');
-    const compiled = fixture.nativeElement as HTMLElement;
-    const btnContinuar = compiled.querySelector('btn-continuar');
-
-    // Simulate the event emission
-    const event = new Event('continuarEvento');
-    btnContinuar?.dispatchEvent(event);
-
-    expect(component.getValorIndice).toHaveBeenCalled();
-  });
-  it('should update indice and call wizardComponent.siguiente when getValorIndice is called with accion "cont"', () => {
-    component.wizardComponent = {
-      siguiente: jest.fn(),
-      atras: jest.fn(),
-    } as unknown as WizardComponent;
-  
-    const accionBoton: AccionBoton = { valor: 2, accion: 'cont' };
+  it('should update indice and call siguiente on getValorIndice with "cont" action', () => {
+    component.wizardComponent = wizardMock;
+    const accionBoton = { valor: 2, accion: 'cont' };
     component.getValorIndice(accionBoton);
-  
+
     expect(component.indice).toBe(2);
-    expect(component.wizardComponent.siguiente).toHaveBeenCalled();
+    expect(wizardMock.siguiente).toHaveBeenCalled();
   });
-  it('should update indice and call wizardComponent.atras when getValorIndice is called with accion "atras"', () => {
-    component.wizardComponent = {
-      siguiente: jest.fn(),
-      atras: jest.fn(),
-    } as unknown as WizardComponent;
-  
-    const accionBoton: AccionBoton = { valor: 3, accion: 'atras' };
+
+  it('should update indice and call atras on getValorIndice with "atrás" action', () => {
+    component.wizardComponent = wizardMock;
+    const accionBoton = { valor: 1, accion: 'atrás' };
     component.getValorIndice(accionBoton);
-  
-    expect(component.indice).toBe(3);
-    expect(component.wizardComponent.atras).toHaveBeenCalled();
+
+    expect(component.indice).toBe(1);
+    expect(wizardMock.atras).toHaveBeenCalled();
   });
-  
-  it('should not update indice or call wizardComponent methods if valor is out of range', () => {
-    component.wizardComponent = {
-      siguiente: jest.fn(),
-      atras: jest.fn(),
-    } as unknown as WizardComponent;
-  
-    const accionBoton: AccionBoton = { valor: 5, accion: 'cont' };
+
+  it('should not update indice or call wizard methods if valor is out of range', () => {
+    component.wizardComponent = wizardMock;
+    const accionBoton = { valor: 6, accion: 'cont' };
     component.getValorIndice(accionBoton);
-  
+
     expect(component.indice).toBe(1); // Default value
-    expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
-    expect(component.wizardComponent.atras).not.toHaveBeenCalled();
+    expect(wizardMock.siguiente).not.toHaveBeenCalled();
+    expect(wizardMock.atras).not.toHaveBeenCalled();
   });
-  it('should initialize datosPasos with correct values', () => {
-    expect(component.datosPasos.nroPasos).toBe(component.pantallasPasos.length);
-    expect(component.datosPasos.indice).toBe(component.indice);
-    expect(component.datosPasos.txtBtnAnt).toBe('Anterior');
-    expect(component.datosPasos.txtBtnSig).toBe('Continuar');
-  });
-  
-  it('should have TEXTOS initialized with AVISO and FIRMAR constants', () => {
-    expect(component.TEXTOS.Aviso).toBe(AVISO);
-    expect(component.TEXTOS).toBe(FIRMAR);
+
+  it('should not update indice or call wizard methods if accion is invalid', () => {
+    component.indice = 1; // Ensure the initial value of indice is set
+    component.wizardComponent = wizardMock;
+    const accionBoton = { valor: 2, accion: 'invalid' };
+    component.getValorIndice(accionBoton);
+
+    expect(component.indice).toBe(1); // Ensure indice remains unchanged
+    expect(wizardMock.siguiente).not.toHaveBeenCalled();
+    expect(wizardMock.atras).not.toHaveBeenCalled();
   });
 });

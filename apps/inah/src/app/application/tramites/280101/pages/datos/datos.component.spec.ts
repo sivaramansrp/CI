@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DatosComponent } from './datos.component';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { PermisoDeExportacionService } from '../../services/permiso-de-exportacion.service'; // Adjust the import path
+import { HttpClientTestingModule } from '@angular/common/http/testing'; // Import HttpClientTestingModule
 
 describe('DatosComponent', () => {
   let component: DatosComponent;
@@ -14,6 +16,8 @@ describe('DatosComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [DatosComponent], // Declare the component to be tested
+      imports: [HttpClientTestingModule], // Import HttpClientTestingModule for _HttpClient
+      providers: [PermisoDeExportacionService], // Provide the required service
       schemas: [NO_ERRORS_SCHEMA], // Ignore unknown elements in the template
     }).compileComponents();
 

@@ -1,120 +1,171 @@
-import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { Catalogo, CatalogoSelectComponent, InputRadioComponent, TituloComponent } from '@libs/shared/data-access-user/src';
-import mockData from '@libs/shared/theme/assets/json/40101/solicitante-mockdata.json';
-import { EXPOSICION_RADIO_OPCIONS,MODALIDAD_RADIO_OPCIONS } from '../../constantes/permiso-de-exportacion.enum';
-import { PermisoDeExportacionService } from '../../services/permiso-de-exportacion.service';
-import { Subject, takeUntil } from 'rxjs';
+import { Component, OnDestroy, OnInit } from '@angular/core'; // Importa las clases base para componentes de Angular.
+import { CommonModule } from '@angular/common'; // Importa funcionalidades comunes de Angular.
+
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'; // Importa clases para formularios reactivos.
+import { Subject, map, takeUntil } from 'rxjs'; // Importa clases para manejar observables y suscripciones.
+
+import { EXPOSICION_RADIO_OPCIONS, MODALIDAD_RADIO_OPCIONS } from '../../constantes/permiso-de-exportacion.enum'; // Importa constantes para opciones de radio.
+
+import { Catalogo, CatalogoSelectComponent, InputRadioComponent, TituloComponent } from '@libs/shared/data-access-user/src'; // Importa componentes y modelos compartidos.
+import { Solicitud280101State, Tramite280101Store } from '../../../../estados/tramite/tramite280101.store'; // Importa el estado y el store del trámite.
+import { PermisoDeExportacionService } from '../../services/permiso-de-exportacion.service'; // Importa el servicio de permisos de exportación.
+import { Tramite280101Query } from '../../../../estados/queries/tramite280101.query'; // Importa la consulta para el estado del trámite.
+
+
 
 /**
- * Componente para gestionar el formulario del solicitante.
+ * Componente que representa la solicitud del trámite 280101.
+ * 
+ * Este componente utiliza un formulario reactivo para gestionar los datos de la solicitud,
+ * incluyendo opciones de modalidad, exposición, aduanas, y otros campos relacionados.
+ * También interactúa con un store para manejar el estado del trámite y un servicio para
+ * obtener datos necesarios como el catálogo de aduanas.
+ * 
+ * @remarks
+ * - El componente es independiente (`standalone`) y utiliza varios módulos y componentes reutilizables.
+ * - Implementa las interfaces `OnInit` y `OnDestroy` para manejar la inicialización y limpieza de recursos.
+ * 
+ * @example
+ * ```html
+ * <app-solicitud></app-solicitud>
+ * ```
  */
 @Component({
-  selector: 'app-solicitud',
-  templateUrl: './solicitud.component.html',
-  styleUrl: './solicitud.component.scss',
-  standalone: true,
+  selector: 'app-solicitud', // Define el selector del componente.
+  templateUrl: './solicitud.component.html', // Ruta al archivo de plantilla HTML del componente.
+  styleUrl: './solicitud.component.scss', // Ruta al archivo de estilos SCSS del componente.
+  standalone: true, // Indica que el componente es independiente y no necesita declararse en un módulo.
   imports: [
-      CommonModule,
-      ReactiveFormsModule,
-      TituloComponent,
-      InputRadioComponent,
-      CatalogoSelectComponent
-    ]
+    CatalogoSelectComponent, // Componente reutilizable para desplegar catálogos en listas desplegables.
+    CommonModule, // Módulo común de Angular para funcionalidades básicas.
+    InputRadioComponent, // Componente reutilizable para opciones de radio.
+    ReactiveFormsModule, // Módulo para trabajar con formularios reactivos.
+    TituloComponent // Componente reutilizable para mostrar títulos.
+  ]
 })
-export class SolicitudComponent implements OnInit {
+export class SolicitudComponent implements OnInit, OnDestroy {
   /**
-   * Grupo de formulario para el formulario de solicitud.
+   * Formulario reactivo para gestionar los datos de la solicitud.
    */
-  ModalidadForm!: FormGroup;
+  SolicitudForm!: FormGroup;
 
-  CantidadForm!: FormGroup;
-
-  ObservacionesForm! : FormGroup;
-
-  LugarDeSalidaForm! : FormGroup;
-
+  /**
+   * Opciones de radio para la modalidad.
+   */
   public radioOpcions = MODALIDAD_RADIO_OPCIONS;
 
-  aduana:Catalogo[] = [];
-
-  exposicionRadioOpcions = EXPOSICION_RADIO_OPCIONS;
-
-  public valorSeleccionado!: string;
-  private destroyed$ = new Subject<void>();
-
+  /**
+   * Catálogo de aduanas.
+   */
+  aduana: Catalogo[] = [];
 
   /**
-   * Constructor para inyectar las dependencias necesarias.
-   * @param fb - Servicio FormBuilder para crear formularios reactivos.
+   * Opciones de radio para la exposición.
    */
-  // eslint-deshabilitar-la-siguiente-línea-sin-función-vacía
-  constructor(private fb: FormBuilder,public service:PermisoDeExportacionService) {/**
-    * Constructor para inyectar las dependencias necesarias.
-    * @param fb - Servicio FormBuilder para crear formularios reactivos.
-    */
+  exposicionRadioOpcions = EXPOSICION_RADIO_OPCIONS;
 
-    this.ModalidadForm = this.fb.group({
-      modalidadOpcion: [""],
-      exposicionOpcion: ["false"],
-      nombre: [""],
-      });
+  /**
+   * Valor seleccionado en las opciones de radio.
+   */
+  public valorSeleccionado!: string;
 
-    this.LugarDeSalidaForm = this.fb.group({
-      aduana: [""],
-      aduanaEntrada :[""]
-    })
-    this.ObservacionesForm = this.fb.group({
-      monumentos: [""],
-    })
-    this.CantidadForm = this.fb.group({
-      cantidad: [""],
-    })
-   }
+  /**
+   * Estado de la solicitud 280101.
+   */
+  public solicitudState!: Solicitud280101State;
+
+  /**
+   * Subject para manejar la destrucción del componente y evitar fugas de memoria.
+   */
+  private destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+   * Constructor del componente.
+   * @param fb FormBuilder para crear formularios reactivos.
+   * @param service Servicio de permisos de exportación.
+   * @param store Store para manejar el estado del trámite.
+   * @param query Query para obtener el estado del trámite.
+   */
+  constructor(
+    private fb: FormBuilder,
+    public service: PermisoDeExportacionService,
+    private store: Tramite280101Store,
+    private query: Tramite280101Query
+  ) {}
 
   /**
    * Método que se ejecuta al inicializar el componente.
-   * Inicializa el formulario `solicitudForm` con los campos necesarios.
-   * @returns {void}
    */
   ngOnInit(): void {
+    this.getAduana(); // Obtiene el catálogo de aduanas.
 
-    this. getAduana();
-    if (this.ModalidadForm.get('exposicionOpcion')?.value === "false") {
-      this.ModalidadForm.get('nombre')?.disable();
-    }
-   // this.setFormValues();
+    this.query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$), // Finaliza la suscripción al destruir el componente.
+        map((seccionState) => {
+          this.solicitudState = seccionState; // Asigna el estado de la solicitud.
+        })
+      )
+      .subscribe();
 
+    this.setFormValues(); // Establece los valores iniciales del formulario.
   }
 
   /**
-   * Establece los valores del formulario `solicitudForm` utilizando datos simulados.
-   * 
-   * Este método llena los siguientes campos en el formulario:
-   * - rfc: El RFC (Registro Federal de Contribuyentes).
-   * - denominacion: La denominación o razón social.
-   * - actividadEconomica: La actividad económica.
-   * - correoElectronico: La dirección de correo electrónico.
-   * 
-   * @remarks
-   * Este método asume que `mockData` contiene los campos necesarios
-   * y que `solicitudForm` está correctamente inicializado.
+   * Establece los valores iniciales del formulario `SolicitudForm` utilizando el estado de la solicitud.
    */
-  setFormValues():void {
+  setFormValues(): void {
+    this.SolicitudForm = this.fb.group({
+      modalidadOpcion: [this.solicitudState?.modalidadOpcion, [Validators.required]], // Campo obligatorio para la modalidad.
+      exposicionOpcion: [this.solicitudState?.exposicionOpcion, [Validators.required]], // Campo obligatorio para la exposición.
+      nombre: [this.solicitudState?.nombre, [Validators.required]], // Campo obligatorio para el nombre.
+      aduana: [this.solicitudState?.aduana, [Validators.required]], // Campo obligatorio para la aduana.
+      aduanaEntrada: [this.solicitudState?.aduanaEntrada], // Campo opcional para la aduana de entrada.
+      descripcionClobGenerica: [this.solicitudState?.descripcionClobGenerica, [Validators.required]], // Campo obligatorio para la descripción genérica.
+      cantMonumentos: [this.solicitudState?.cantMonumentos, [Validators.required]], // Campo obligatorio para la cantidad de monumentos.
+    });
+
+    if (this.SolicitudForm.get('exposicionOpcion')?.value === "false") {
+      this.SolicitudForm.get('nombre')?.disable(); // Deshabilita el campo de nombre si la opción de exposición es "false".
+    }
   }
 
-  public cambiarRadio(value: string | number) {
-    this.valorSeleccionado = value as string;
+  /**
+   * Actualiza el estado del store con los valores del formulario.
+   * @param form Formulario reactivo que contiene los valores.
+   * @param campo Nombre del campo del formulario.
+   * @param metodoNombre Método del store que se utilizará para guardar el valor.
+   */
+  setValoresStore(
+    form: FormGroup,
+    campo: string,
+    metodoNombre: keyof Tramite280101Store
+  ): void {
+    const VALOR = form.get(campo)?.value; // Obtiene el valor del campo.
+    (this.store[metodoNombre] as (value: unknown) => void)(VALOR); // Actualiza el store con el valor.
+    if (campo === "exposicionOpcion" && VALOR === "true") {
+      this.SolicitudForm.get('nombre')?.enable(); // Habilita el campo de nombre si la opción de exposición es "true".
+    }
   }
 
-  getAduana():void{
-    this.service.getAduana().pipe(
-      takeUntil(this.destroyed$)
-    ).subscribe(
-      (data:Catalogo) => {
-        this.aduana = Array.isArray(data) ? data : [data];
-      }
-    );
+  /**
+   * Obtiene el catálogo de aduanas desde el servicio.
+   */
+  getAduana(): void {
+    this.service
+      .getAduana()
+      .pipe(takeUntil(this.destroyNotifier$)) // Finaliza la suscripción al destruir el componente.
+      .subscribe((data: Catalogo) => {
+        this.aduana = Array.isArray(data) ? data : [data]; // Asigna los datos al catálogo de aduanas.
+      });
+  }
+
+  /**
+   * Método que se ejecuta al destruir el componente.
+   * Limpia las suscripciones para evitar fugas de memoria.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next(); // Notifica la destrucción del componente.
+    this.destroyNotifier$.complete(); // Completa el Subject.
   }
 }

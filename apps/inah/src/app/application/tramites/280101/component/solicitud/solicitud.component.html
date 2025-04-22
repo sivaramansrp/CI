@@ -1,109 +1,112 @@
-<div>
-  <div class="container1">
-  <ng-titulo titulo="Modalidad"/>
-  <form [formGroup]="ModalidadForm">
+<div class="container">
+  <form [formGroup]="SolicitudForm">
+    <div class="container">
+    <ng-titulo titulo="Modalidad"/>
     <div class="row">
       <div class="col-md-4">
         <label class="form-label" for="Modalidad"
-          >Modalidad*:<span
-            title="Title"
-            ata-bs-toggle="tooltip"
-          >*</span>
+          >Modalidad*:
         </label>
         <app-input-radio
             [radioOptions]="radioOpcions"
-            id="opcion"
             formControlName="modalidadOpcion"
+            (change)="setValoresStore(SolicitudForm, 'modalidadOpcion', 'setModalidad')"
             >
           </app-input-radio>
+          <div *ngIf="SolicitudForm.get('modalidadOpcion')?.errors?.['required'] && SolicitudForm.get('modalidadOpcion')?.touched">
+            <small class="text-danger">Este campo es obligatorio.</small>
+          </div>
       </div>
       <div class="col-md-4">
         <label class="form-label" for="van-a-exposicion"
-          >Van a exposicion?*:</label
+          >¿ Van a exposición?*:</label>
         ><span class="bi bi-question-circle-fill fs-4 m-1 require"></span>
         <app-input-radio
             [radioOptions]="exposicionRadioOpcions"
-            id="exposicionOpcion"
             formControlName="exposicionOpcion"
             [layout]="'horizontal'"
+            (change)="setValoresStore(SolicitudForm, 'exposicionOpcion', 'setExposicionOpcion')"
             >
           </app-input-radio>
+          <div *ngIf="SolicitudForm.get('exposicionOpcion')?.errors?.['required'] && SolicitudForm.get('exposicionOpcion')?.touched">
+            <small class="text-danger">Este campo es obligatorio.</small>
+          </div>
       </div>
       <div class="col-md-4">
-          <label class="form-label" for=""
-            >Nombre de la Exposicion*:</label>
+          <label class="form-label" for="nombre"
+            >Nombre de la Exposición :</label>
+            <span class="bi bi-question-circle-fill fs-4 m-1"></span>
           <input
             type="text"
             class="form-control"
-            id=""
+            id="nombreExposicion"
             formControlName="nombre"
+            (change)="setValoresStore(SolicitudForm, 'nombre', 'setNombre')"
           />
         </div>   
     </div>
-  </form>
-</div>
-<div class="container2">
+  </div>
+
+<div class="container">
   <ng-titulo titulo="Lugar de Salida y Entrada de Territorio Nacional"/>
-  <form [formGroup]="LugarDeSalidaForm">
     <div class="row">
       <div class="col-md-4">
         <app-catalogo-select [catalogo]="aduana" formControlName="aduana" [label]="'Aduana de salida'"
-                [required]="true" name="aduana" [placeholder]="'Selecciona un valor'"></app-catalogo-select>
+                [required]="true" name="aduana" [placeholder]="'Selecciona un valor'" (change)="setValoresStore(SolicitudForm, 'aduana', 'setAduana')"></app-catalogo-select>
+                <div *ngIf="SolicitudForm.get('aduana')?.errors?.['required'] && SolicitudForm.get('aduana')?.touched">
+                  <small class="text-danger">Este campo es obligatorio.</small>
+                </div>
 
       </div>
-      @if (ModalidadForm.get('modalidadOpcion')?.value == '2') {
+      @if (SolicitudForm.get('modalidadOpcion')?.value === '2') {
       <div class="col-md-4">
         <app-catalogo-select [catalogo]="aduana" formControlName="aduanaEntrada" [label]="'Aduanas de entrada'"
-                [required]="true" name="aduana" [placeholder]="'Selecciona un valor'"></app-catalogo-select>
+                [required]="true" name="aduana" [placeholder]="'Selecciona un valor'" (change)="setValoresStore(SolicitudForm, 'aduanaEntrada', 'setAduanaEntrada')"></app-catalogo-select>
+                <div *ngIf="SolicitudForm.get('aduanaEntrada')?.errors?.['required'] && SolicitudForm.get('aduanaEntrada')?.touched">
+                  <small class="text-danger">Este campo es obligatorio.</small>
+                </div>
 
       </div>
     }
       </div>
-  </form>
-</div>
-<div class="container3">
+  </div>
+<div class="container">
   <ng-titulo titulo="Observaciones"/>
-  <form [formGroup]="ObservacionesForm">
     <div class="row">
       <div class="col-md-8">
         <label class="form-label" for="Monumentos"
-          >Descripción de Monumentos o Bienes Muebles a Exportar:<span
-            class="bi bi-question-circle-fill fs-4 m-1 require"
-            title="Title"
-            ata-bs-toggle="tooltip"
-          >*</span>
+          >Descripción de Monumentos o Bienes Muebles a Exportar*:
         </label>
-        <input
-          type="text"
+        <textarea
           class="form-control"
-          id="monumentos"
-          formControlName="monumentos"
-        />
+          formControlName="descripcionClobGenerica"
+          cols="100"
+          rows="5"
+          (change)="setValoresStore(SolicitudForm, 'descripcionClobGenerica', 'setDescripcionClobGenerica')"
+        ></textarea>
+        <div *ngIf="SolicitudForm.get('descripcionClobGenerica')?.errors?.['required'] && SolicitudForm.get('descripcionClobGenerica')?.touched">
+          <small class="text-danger">Este campo es obligatorio.</small>
+        </div>
       </div>
       </div>
-  </form>
 </div>
 
-<div class="container4">
+<div class="container">
   <ng-titulo titulo="Cantidad de monumentos"/>
-  <form [formGroup]="CantidadForm">
     <div class="row">
       <div class="col-md-8">
         <label class="form-label" for="cantidad"
-          >Cantidad de Monumentos o bienes históricos a Exportar:<span
-            class="bi bi-question-circle-fill fs-4 m-1 require"
-            title="Title"
-            ata-bs-toggle="tooltip"
-          >*</span>
+          >Cantidad de Monumentos o bienes históricos a Exportar*:
         </label>
         <input
           type="text"
           class="form-control"
-          id="cantidad"
-          formControlName="cantidad"
+          id="cantAutoriBienesCult"
+          formControlName="cantMonumentos"
+          (change)="setValoresStore(SolicitudForm, 'cantMonumentos', 'setCantMonumentos')"
         />
       </div>
     </div>
-  </form>
 </div>
+</form>
 </div>

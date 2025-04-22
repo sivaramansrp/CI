@@ -1,11 +1,18 @@
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Subject, map, takeUntil } from 'rxjs';
+
+import { Solicitud280101State, Tramite280101Store } from '../../../../estados/tramite/tramite280101.store';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
-import mockData from '@libs/shared/theme/assets/json/40101/solicitante-mockdata.json';
+import { Tramite280101Query } from '../../../../estados/queries//tramite280101.query';
+
 
 /**
- * Componente para gestionar el formulario del solicitante.
+ * Componente `DestinoComponent` que gestiona el formulario reactivo para los datos del destino
+ * en el trámite 280101. Este componente es independiente y utiliza módulos comunes de Angular,
+ * formularios reactivos y un componente reutilizable para títulos.
  */
 @Component({
   selector: 'app-destino',
@@ -13,69 +20,94 @@ import mockData from '@libs/shared/theme/assets/json/40101/solicitante-mockdata.
   styleUrl: './destino.component.scss',
   standalone: true,
   imports: [
-      CommonModule,
-      ReactiveFormsModule,
-      TituloComponent
-    ]
+    CommonModule,
+    ReactiveFormsModule,
+    TituloComponent
+  ]
 })
-export class DestinoComponent implements OnInit {
+
+export class DestinoComponent implements OnInit, OnDestroy {
   /**
-   * Grupo de formulario para el formulario de solicitud.
+   * Formulario reactivo para gestionar los datos del destino.
    */
   DestinoForm!: FormGroup;
 
   /**
-   * Constructor para inyectar las dependencias necesarias.
-   * @param fb - Servicio FormBuilder para crear formularios reactivos.
+   * Estado de la solicitud 280101.
    */
-  // eslint-deshabilitar-la-siguiente-línea-sin-función-vacía
-  constructor(private fb: FormBuilder) {/**
-    * Constructor para inyectar las dependencias necesarias.
-    * @param fb - Servicio FormBuilder para crear formularios reactivos.
-    */}
+  public solicitudState!: Solicitud280101State;
+
+  /**
+   * Subject para manejar la destrucción del componente.
+   */
+  private destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+   * Constructor del componente.
+   * @param fb FormBuilder para crear formularios reactivos.
+   * @param store Store para gestionar el estado de la solicitud.
+   * @param query Query para obtener el estado de la solicitud.
+   */
+  constructor(
+    private fb: FormBuilder,
+    private store: Tramite280101Store,
+    private query: Tramite280101Query
+  ) {}
 
   /**
    * Método que se ejecuta al inicializar el componente.
-   * Inicializa el formulario `solicitudForm` con los campos necesarios.
-   * @returns {void}
    */
   ngOnInit(): void {
-    this.DestinoForm = this.fb.group({
-      pais: [''],
-      codigoPostal: [''],
-      estado: [''],
-      municipioOAlcadia: [''],
-      localidad: [''],
-      colonia: [''],
-      numeroExterior: [''],
-      numeroInterior: [''],
-      calle: [''],
-    });
-   // this.setFormValues();
+    this.query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+        })
+      )
+      .subscribe();
+
+    this.setFormValues();
   }
 
   /**
-   * Establece los valores del formulario `solicitudForm` utilizando datos simulados.
-   * 
-   * Este método llena los siguientes campos en el formulario:
-   * - rfc: El RFC (Registro Federal de Contribuyentes).
-   * - denominacion: La denominación o razón social.
-   * - actividadEconomica: La actividad económica.
-   * - correoElectronico: La dirección de correo electrónico.
-   * 
-   * @remarks
-   * Este método asume que `mockData` contiene los campos necesarios
-   * y que `solicitudForm` está correctamente inicializado.
+   * Establece los valores iniciales del formulario `DestinoForm` utilizando el estado de la solicitud.
    */
-  setFormValues():void {
-    this.DestinoForm.get('pais')?.setValue(mockData.rfc);
-    this.DestinoForm.get('codigoPostal')?.setValue(mockData.denominacion);
-    this.DestinoForm.get('estado')?.setValue(mockData.actividadEconomica);
-    this.DestinoForm.get('municipioOAlcadia')?.setValue(mockData.correoElectronico);
-    this.DestinoForm.get('localidad')?.setValue(mockData.rfc);
-    this.DestinoForm.get('colonia')?.setValue(mockData.denominacion);
-    this.DestinoForm.get('numeroExterior')?.setValue(mockData.correoElectronico);
-    this.DestinoForm.get('numeroInterior')?.setValue(mockData.rfc);
-    this.DestinoForm.get('calle')?.setValue(mockData.actividadEconomica);
+  setFormValues(): void {
+    this.DestinoForm = this.fb.group({
+      pais: [this.solicitudState?.pais, [Validators.required]],
+      codigoPostal: [this.solicitudState?.codigoPostal, [Validators.required]],
+      estado: [this.solicitudState?.estado, [Validators.required]],
+      municipioOAlcadia: [this.solicitudState?.municipioOAlcadia, [Validators.required]],
+      localidad: [this.solicitudState?.localidad, [Validators.required]],
+      colonia: [this.solicitudState?.colonia, [Validators.required]],
+      numeroExterior: [this.solicitudState?.numeroExterior, [Validators.required]],
+      numeroInterior: [this.solicitudState?.numeroInterior, [Validators.required]],
+      calle: [this.solicitudState?.calle, [Validators.required]],
+    });
+  }
+
+  /**
+   * Actualiza el estado del store con los valores del formulario.
+   * @param form Formulario reactivo que contiene los valores.
+   * @param campo Nombre del campo del formulario.
+   * @param metodoNombre Método del store que se utilizará para guardar el valor.
+   */
+  setValoresStore(
+    form: FormGroup,
+    campo: string,
+    metodoNombre: keyof Tramite280101Store
+  ): void {
+    const VALOR = form.get(campo)?.value;
+    (this.store[metodoNombre] as (value: unknown) => void)(VALOR);
+  }
+
+  /**
+   * Método que se ejecuta al destruir el componente.
+   * Limpia las suscripciones para evitar fugas de memoria.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

@@ -1,63 +1,49 @@
-//import { DetalledelaLicitacion, DistribucionSaldo, LicitacionesDisponibles } from '../../../shared/models/expedicion-certificado.model';
-import { Catalogo } from '@libs/shared/data-access-user/src';
-import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/internal/Observable';
+import { Catalogo } from '@libs/shared/data-access-user/src'; // Importa la interfaz `Catalogo` para definir la estructura de los datos.
+import { HttpClient } from '@angular/common/http'; // Importa el cliente HTTP para realizar solicitudes HTTP.
+import { Injectable } from '@angular/core'; // Importa el decorador Injectable para inyección de dependencias.
+import { Observable } from 'rxjs/internal/Observable'; // Importa la clase Observable para manejar flujos de datos asíncronos.
+
+
 
 /**
- * Servicio para la gestión de datos relacionados con la expedición de certificados.
- * Proporciona métodos para obtener información desde archivos JSON locales.
+ * Servicio para gestionar las operaciones relacionadas con el permiso de exportación.
+ * 
+ * Este servicio proporciona métodos para interactuar con recursos externos y manejar
+ * datos relacionados con el flujo del trámite de exportación.
+ * 
+ * @providedIn 'any' - Define que el servicio puede ser proporcionado en cualquier módulo.
  */
 @Injectable({
-  providedIn: 'any'
+  providedIn: 'any',
 })
 export class PermisoDeExportacionService {
+  /**
+   * Índice utilizado para rastrear el paso actual en el flujo del trámite.
+   * 
+   * Este índice se actualiza dinámicamente para reflejar el progreso del usuario
+   * en el proceso del trámite.
+   */
+  indice!: number;
 
   /**
    * Constructor del servicio.
-   * @param http Cliente HTTP utilizado para realizar solicitudes a los archivos JSON.
+   * 
+   * @param http Cliente HTTP utilizado para realizar solicitudes a recursos externos.
+   * Este cliente se inyecta automáticamente mediante el mecanismo de inyección de dependencias de Angular.
    */
   constructor(private http: HttpClient) {
-    // El constructor se utiliza para la inyección de dependencias.
+    
   }
 
   /**
-   * Obtiene el catálogo de entidades federativas.
-   * @returns Un observable que emite los datos del catálogo de entidades federativas.
+   * Obtiene el catálogo de aduanas desde un archivo JSON local.
+   * 
+   * Este método realiza una solicitud HTTP GET para recuperar los datos del catálogo
+   * de aduanas desde un archivo JSON almacenado localmente.
+   * 
+   * @returns Un Observable que emite los datos del catálogo de aduanas en formato `Catalogo`.
    */
   getAduana(): Observable<Catalogo> {
     return this.http.get<Catalogo>('assets/json/120204/entidad-federativa.json');
   }
-
-  /**
-   * Obtiene el catálogo de representaciones federales.
-   * @returns Un observable que emite los datos del catálogo de representaciones federales.
-   */
-  // getRepresentacionFederal(): Observable<Catalogo> {
-  //   return this.http.get<Catalogo>('assets/json/120204/representacion-federal.json');
-  // }
-
-  /**
-   * Obtiene los detalles de la licitación.
-   * @returns Un observable que emite los datos de los detalles de la licitación.
-   */
-  // getDetallesDelalicitacion(): Observable<DetalledelaLicitacion> {
-  //   return this.http.get<DetalledelaLicitacion>('assets/json/120204/detalles-licitacion.json');
-  // }
-
-  /**
-   * Obtiene la distribución del saldo.
-   * @returns Un observable que emite los datos de la distribución del saldo.
-   */
-  // getDistribucionSaldo(): Observable<DistribucionSaldo> {
-  //   return this.http.get<DistribucionSaldo>('assets/json/120204/distribucion-saldo.json');
-  // }
-
-  /**
-   * Obtiene los datos de la tabla de licitaciones disponibles.
-   * @returns Un observable que emite los datos de la tabla de licitaciones disponibles.
-   */
-  // obtenerDatosTabla(): Observable<LicitacionesDisponibles> {
-  //   return this.http.get<LicitacionesDisponibles>('assets/json/120204/datos-de-la-tabla.json');
-  // }
 }

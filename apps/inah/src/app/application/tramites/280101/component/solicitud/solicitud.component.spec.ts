@@ -1,113 +1,113 @@
-// @ts-nocheck
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import {
-  Pipe,
-  PipeTransform,
-  Injectable,
-  CUSTOM_ELEMENTS_SCHEMA,
-  NO_ERRORS_SCHEMA,
-  Directive,
-  Input,
-  Output,
-  NgModule,
-} from '@angular/core';
-import {
-  FormsModule,
-  ReactiveFormsModule,
-  FormBuilder,
-  FormGroup,
-  FormControl,
-} from '@angular/forms';
-import { By } from '@angular/platform-browser';
-import { Observable, of as observableOf, throwError } from 'rxjs';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ReactiveFormsModule } from '@angular/forms';
+import { of } from 'rxjs';
+import { SolicitudComponent } from './solicitud.component';
+import { Tramite280101Store } from '../../../../estados/tramite/tramite280101.store';
+import { Tramite280101Query } from '../../../../estados/queries/tramite280101.query';
+import { PermisoDeExportacionService } from '../../services/permiso-de-exportacion.service';
+import { CatalogoSelectComponent, InputRadioComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { HttpClientModule } from '@angular/common/http';
 
-import { Component } from '@angular/core';
-import { SolicitanteComponent } from './solicitante.component';
-import { TituloComponent } from '@libs/shared/data-access-user/src';
+describe('SolicitudComponent', () => {
+  let component: SolicitudComponent;
+  let fixture: ComponentFixture<SolicitudComponent>;
+  let storeMock: any;
+  let queryMock: any;
+  let serviceMock: any;
 
-@Directive({ selector: '[myCustom]' })
-class MyCustomDirective {
-  @Input() myCustom;
-}
+  beforeEach(async () => {
+    storeMock = {
+      setModalidad: jest.fn(),
+      setExposicionOpcion: jest.fn(),
+      setNombre: jest.fn(),
+      setAduana: jest.fn(),
+      setDescripcionClobGenerica: jest.fn(),
+      setCantMonumentos: jest.fn(),
+    };
 
-@Pipe({ name: 'translate' })
-class TranslatePipe implements PipeTransform {
-  transform(value) {
-    return value;
-  }
-}
+    queryMock = {
+      selectSolicitud$: of({
+        modalidadOpcion: '1',
+        exposicionOpcion: 'true',
+        nombre: 'Test Name',
+        aduana: [{ id: 1, descripcion: 'Aduana 1' }],
+        descripcionClobGenerica: 'Test Description',
+        cantMonumentos: '5',
+      }),
+    };
 
-@Pipe({ name: 'phoneNumber' })
-class PhoneNumberPipe implements PipeTransform {
-  transform(value) {
-    return value;
-  }
-}
+    serviceMock = {
+      getAduana: jest.fn().mockReturnValue(of([{ id: 1, descripcion: 'Aduana 1' }])),
+    };
 
-@Pipe({ name: 'safeHtml' })
-class SafeHtmlPipe implements PipeTransform {
-  transform(value) {
-    return value;
-  }
-}
-
-@NgModule({
-  declarations: [
-    SolicitanteComponent,
-    TranslatePipe,
-    PhoneNumberPipe,
-    SafeHtmlPipe,
-    MyCustomDirective,
-  ],
-  imports: [FormsModule, ReactiveFormsModule, TituloComponent],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
-})
-class TestModule {}
-
-describe('SolicitanteComponent', () => {
-  let fixture: ComponentFixture<SolicitanteComponent>;
-  let component: SolicitanteComponent;
-
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [TestModule], // Importa el módulo de prueba
-      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
-      providers: [FormBuilder],
+    await TestBed.configureTestingModule({
+      declarations: [],
+      imports: [
+        ReactiveFormsModule,
+        HttpClientModule,
+SolicitudComponent,
+        CatalogoSelectComponent,
+        InputRadioComponent,
+        TituloComponent,
+      ],
+      providers: [
+        { provide: Tramite280101Store, useValue: storeMock },
+        { provide: Tramite280101Query, useValue: queryMock },
+        { provide: PermisoDeExportacionService, useValue: serviceMock },
+      ],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(SolicitanteComponent);
+    fixture = TestBed.createComponent(SolicitudComponent);
     component = fixture.componentInstance;
-    component.solicitudForm = new FormGroup({
-      rfc: new FormControl(''),
-      denominacion: new FormControl(''),
-      actividadEconomica: new FormControl(''),
-      correoElectronico: new FormControl(''),
-    });
+    fixture.detectChanges();
   });
 
-  afterEach(() => {
-    if (component) {
-      component.ngOnDestroy = function () {};
-    }
-    if (fixture) {
-      fixture.destroy();
-    }
-  });
-
-  /**
-   * Verifica que el componente se haya creado correctamente.
-   */
-  it('should run #constructor()', async () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  /**
-   * Verifica que el método `ngOnInit` funcione correctamente.
-   */
-  it('should run #ngOnInit()', async () => {
-    component.fb = component.fb || {};
-    component.fb.group = jest.fn();
-    component.setFormValues = jest.fn();
-    component.ngOnInit();
+  it('should initialize the form and fetch aduana data on ngOnInit', () => {
+    expect(component.SolicitudForm).toBeDefined();
+    expect(component.aduana).toEqual([{ id: 1, descripcion: 'Aduana 1' }]);
+    expect(component.SolicitudForm.value).toEqual({
+      modalidadOpcion: '1',
+      exposicionOpcion: 'true',
+      nombre: 'Test Name',
+      aduana: null,
+      aduanaEntrada: null,
+      descripcionClobGenerica: 'Test Description',
+      cantMonumentos: '5',
+    });
+  });
+
+  it('should disable the nombre field if exposicionOpcion is "false"', () => {
+    component.SolicitudForm.patchValue({ exposicionOpcion: 'false' });
+    component.setFormValues(); // Ensure this method updates the form state
+    fixture.detectChanges(); // Trigger change detection to apply updates
+    expect(component.SolicitudForm.get('nombre')?.disabled).toBeTruthy(); // Verify the field is disabled
+  });
+
+  it('should enable the nombre field if exposicionOpcion is "true"', () => {
+    component.setValoresStore(component.SolicitudForm, 'exposicionOpcion', 'setExposicionOpcion');
+    expect(component.SolicitudForm.get('nombre')?.enabled).toBeTruthy();
+  });
+
+  it('should call the correct store method when setValoresStore is invoked', () => {
+    const form = component.SolicitudForm;
+    component.setValoresStore(form, 'modalidadOpcion', 'setModalidad');
+    expect(storeMock.setModalidad).toHaveBeenCalledWith('1');
+
+    component.setValoresStore(form, 'cantMonumentos', 'setCantMonumentos');
+    expect(storeMock.setCantMonumentos).toHaveBeenCalledWith('5');
+  });
+
+  it('should clean up subscriptions on destroy', () => {
+    const destroyNotifierSpy = jest.spyOn(component['destroyNotifier$'], 'next');
+    const destroyNotifierCompleteSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
+
+    component.ngOnDestroy();
+
+    expect(destroyNotifierSpy).toHaveBeenCalled();
+    expect(destroyNotifierCompleteSpy).toHaveBeenCalled();
   });
 });
