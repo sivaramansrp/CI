@@ -6,12 +6,6 @@ import { SanidadService } from '../../service/sanidad.service';
 
 @Component({
   selector: 'app-terceros',
-  standalone: true,
-  imports: [
-    TituloComponent,
-    TablaDinamicaComponent,
-    AlertComponent
-  ],
   templateUrl: './terceros.component.html',
   styleUrls: ['./terceros.component.scss']
 })
@@ -27,7 +21,7 @@ export class TercerosComponent implements OnInit{
    * Configuración de las columnas de la tabla de exportadores.
    * Define el encabezado, clave y el orden de las columnas para la tabla de exportadores.
    */
-  public checkbox = TablaSeleccion.CHECKBOX;
+  checkbox = TablaSeleccion.CHECKBOX;
 
   /**
    * Configuración de las columnas de la tabla de exportadores.

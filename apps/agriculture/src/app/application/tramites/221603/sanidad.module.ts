@@ -37,7 +37,8 @@ import { TercerosComponent } from './components/terceros/terceros.component';
     SanidadComponent,
     PasoDosComponent,
     PagoDeDerechosComponent,
-    MovilizacionComponent
+    MovilizacionComponent,
+    TercerosComponent,
   ],
   imports: [
     CommonModule,
@@ -52,10 +53,9 @@ import { TercerosComponent } from './components/terceros/terceros.component';
     WizardComponent,
     FirmaElectronicaComponent,
     SolicitanteComponent,
-    TercerosComponent,
     InputRadioComponent,
-    TablaDinamicaComponent
-],
+    TablaDinamicaComponent,
+  ],
   providers: [ToastrService],
 })
 export class SanidadModule {}

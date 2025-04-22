@@ -5,7 +5,7 @@ import {
   Tramite221603Store,
 } from '../../estados/tramite221603.store';
 import { Subject, map, takeUntil } from 'rxjs';
-import { EXENTO_DE_RADIO_BOTONS } from '../../enum/sanidad.enum';
+import { EXENTO_DE_RADIO_BOTONS, FormularioDatos } from '../../enum/sanidad.enum';
 import { SanidadService } from '../../service/sanidad.service';
 import { Tramite221603Query } from '../../estados/tramite221603.query';
 import realizar from '@libs/shared/theme/assets/json/221603/realizar.json';
@@ -26,6 +26,8 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * llave, fecha e importe.
    */
   pagoDerechosForm!: FormGroup;
+
+  formularioDatos!:FormularioDatos;
 
   exentoDeBotonDeRadio = EXENTO_DE_RADIO_BOTONS;
   isExentoSelected = true;
@@ -57,6 +59,18 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * Inicializa el formulario reactivo con los valores actuales de la solicitud.
    */
   ngOnInit(): void {
+
+    this.tramite221603Query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$))
+      .subscribe((state: Solicitud221603State)=>{
+        this.solicitudState = state;
+      });
+
+    this.sanidadService.getFormularioDatos()
+    .subscribe((formularioDatos: FormularioDatos) => {
+      this.formularioDatos = formularioDatos;
+    });
     this.sanidadService.inicializaPagoDeDerechosDatosCatalogos();
     this.inicializarFormulario();
   }
@@ -68,15 +82,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * dependencia, banco, llave, fecha e importe. También asigna valores predeterminados a algunos campos.
    */
   private inicializarFormulario(): void {
-    this.tramite221603Query.selectSolicitud$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((seccionState) => {
-          this.solicitudState = seccionState as Solicitud221603State;
-        })
-      )
-      .subscribe();
-
+    
     this.pagoDerechosForm = this.formBuilder.group({
       exentoDePago: [this.solicitudState.exento, Validators.required],
       justificacion: [this.solicitudState.justificacion, Validators.required],
@@ -106,7 +112,6 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   updateExento(): void {
     this.isExentoSelected = false;
     this.setValoresStore(
-      this.pagoDerechosForm,
       'exentoDePago',
       'setExentoDePago'
     );
@@ -120,11 +125,10 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * @param metodoNombre - El nombre del método en el store que se debe invocar.
    */
   setValoresStore(
-    form: FormGroup,
     campo: string,
     metodoNombre: keyof Tramite221603Store
   ): void {
-    const VALOR = form.get(campo)?.value;
+    const VALOR = this.pagoDerechosForm.get(campo)?.value;
     (this.tramite221603Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
 
