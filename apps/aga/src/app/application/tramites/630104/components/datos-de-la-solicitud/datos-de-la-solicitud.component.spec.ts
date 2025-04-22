@@ -1,11 +1,14 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { of } from 'rxjs';
-import { ReactiveFormsModule } from '@angular/forms';
-
 import { DatosDeLaSolicitudComponent } from './datos-de-la-solicitud.component';
+import { ReactiveFormsModule } from '@angular/forms';
 import { EquipoEInstrumentosMusicalesService } from '../../services/equipo-e-instrumentos-musicales.service';
 import { Tramite630104Store } from '../../estados/tramites/tramite630104.store';
 import { Tramite630104Query } from '../../estados/queries/tramite630104.query';
+import { of } from 'rxjs';
+
+
+
+
 
 describe('DatosDeLaSolicitudComponent', () => {
   let component: DatosDeLaSolicitudComponent;

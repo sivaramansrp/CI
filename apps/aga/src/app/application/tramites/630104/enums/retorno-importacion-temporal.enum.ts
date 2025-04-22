@@ -35,7 +35,8 @@ export const PASOS_REGISTRO = [
 export const ESTIMADA_RETORNO = {
     labelNombre: 'Fecha límite estimada de retorno',
     required: true,
-    habilitado: true
+    habilitado: true,
+    desactivado: true
 };
 
 /**
@@ -115,6 +116,40 @@ export const FORMULARIO_DATOS_MERCANCIA = [
         id: 'motivo',
         labelNombre: 'Motivo o justificación de la importación temporal',
         campo: 'motivo',
+        clase: 'col-md-12',
+        tipoInput: 'textarea',
+        desactivado: false,
+        soloLectura: false,
+        validadores: [
+            { tipo: 'required' },
+            { tipo: 'pattern', valor: REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija el motivo o justificación de la importación temporal.' }
+        ],
+        marcadorDePosicion: '',
+        valorPredeterminado: '',
+        marginTop: 0
+    },
+
+    {
+        id: 'nombre',
+        labelNombre: 'Nombre commercial del artista o grupo musical',
+        campo: 'nombreComercial',
+        clase: 'col-md-12',
+        tipoInput: 'text',
+        desactivado: false,
+        soloLectura: false,
+        validadores: [
+            { tipo: 'required' },
+            { tipo: 'pattern', valor: REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija el motivo o justificación de la importación temporal.' }
+        ],
+        marcadorDePosicion: '',
+        valorPredeterminado: '',
+        marginTop: 0
+    },
+
+    {
+        id: 'observaciones',
+        labelNombre: 'Observaciones',
+        campo: 'observaciones',
         clase: 'col-md-12',
         tipoInput: 'textarea',
         desactivado: false,
@@ -399,7 +434,7 @@ export const FORMULARIO_DATOS_NOMBRE = [
         id: 'municipio',
         labelNombre: 'Municipio o delegación',
         campo: 'municipio',
-        clase: 'col-md-7',
+        clase: 'col-md-6',
         tipoInput: 'select-catalogos',
         desactivado: false,
         soloLectura: false,
@@ -411,25 +446,11 @@ export const FORMULARIO_DATOS_NOMBRE = [
         valorPredeterminado: '',
         marginTop: 0
     },
-
-    {
-        id: '',
-        labelNombre: 'Nombre',
-        campo: '',
-        clase: 'col-md-6',
-        tipoInput: '',
-        desactivado: false,
-        soloLectura: false,
-        validadores: [],
-        marcadorDePosicion: '',
-        valorPredeterminado: '',
-        marginTop: 0
-    },
  {
         id: 'ddlLocalidad',
         labelNombre: 'Localidad',
         campo: 'localidad',
-        clase: 'col-md-6',
+        clase: 'col-md-6 break-line',
         tipoInput: 'select-catalogos',
         desactivado: false,
         soloLectura: false,

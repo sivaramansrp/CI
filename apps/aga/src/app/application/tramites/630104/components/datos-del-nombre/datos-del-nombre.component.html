@@ -1,67 +1,96 @@
 <div class="container">
-    <ng-titulo [titulo]="'Datos del nombre o denominación social del representante en México o centro de operaciones'"></ng-titulo>
+    <ng-titulo [titulo]="'¿Desea consultar al representante por
+    RFC?'"></ng-titulo>
     <form [formGroup]="datisDelNombre" class="ms-2">
         <div class="row mt-4">
             <div class="col-md-4">
-                <app-catalogo-select [label]="'¿Desea consultar al representante por
-                RFC?'"
-                    [catalogo]="consultarPorRFC" formControlName="consultarPorRFC"
+                <app-catalogo-select [label]="'Propietario'" [required]="true" [tooltipQuestionCircle]="true"
+                [catalogo]="consultarPorRFC" formControlName="consultarPorRFC"
                     (selectionChange)="establecerCambioDeValor({campo:'propietario',valor:$event})"></app-catalogo-select>
             </div>
         </div>
-        <div *ngIf="datisDelNombre.get('consultarPorRFC')?.value==='1'">
-            <solicitante></solicitante>
+        @if (datisDelNombre.get('consultarPorRFC')?.value==='2') {
+        <div class="row mt-4">
+            <div class="col-md-4">
+                <app-catalogo-select [label]="'Tipo de representante'" [required]="true"
+                    formControlName="tipoDeRepresentante" [catalogo]="tipoDeRepresentanteOpciones"
+                    (selectionChange)="establecerCambioDeValor({campo:'tipoDeRepresentante',valor:$event});ajustarValidadoresSegunValor()"></app-catalogo-select>
+            </div>
         </div>
-        <div *ngIf="datisDelNombre.get('consultarPorRFC')?.value==='2'">
-            <div class="row mt-4" >
-                <div class="col-md-4">
-                    <app-catalogo-select [label]="'Tipo de representante'" [required]="true"  formControlName="tipoDeRepresentante"
-                    [catalogo]="tipoDeRepresentanteOpciones" (selectionChange)="establecerCambioDeValor({campo:'tipoDeRepresentante',valor:$event});ajustarValidadoresSegunValor($event)"></app-catalogo-select>
-                </div>
-            </div>
-            <div *ngIf="datisDelNombre.get('tipoDeRepresentante')?.value">
-            <div class="row mt-4" *ngIf="datisDelNombre.get('tipoDeRepresentante')?.value==='1'">
-                <div class="col-md-4">
-                    <label for="nombre" class="form-label">Nombre(s) *:</label>
-                    <input id="nombre" type="text" class="form-control" formControlName="nombre">
-                    <div *ngIf="datisDelNombre.get('nombre')?.invalid && datisDelNombre.get('nombre')?.touched">
-                        <small class="text-danger" *ngIf="datisDelNombre.get('nombre')?.errors?.['required']">Este campo es obligatorio.</small>
-                        <small class="text-danger" *ngIf="datisDelNombre.get('nombre')?.errors?.['pattern']">Por favor, corrija el nombre.</small>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <label for="apellidoPaterno" class="form-label">Apellido paterno *:</label>
-                    <input id="apellidoPaterno" type="text" class="form-control" formControlName="apellidoPaterno">
-                    <div *ngIf="datisDelNombre.get('apellidoPaterno')?.invalid && datisDelNombre.get('apellidoPaterno')?.touched">
-                        <small class="text-danger" *ngIf="datisDelNombre.get('apellidoPaterno')?.errors?.['required']">Este campo es obligatorio.</small>
-                        <small class="text-danger" *ngIf="datisDelNombre.get('apellidoPaterno')?.errors?.['pattern']">Por favor, corrija el apellido paterno.</small>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <label for="apellidoMaterno" class="form-label">Apellido materno :</label>
-                    <input id="apellidoMaterno" type="text" class="form-control" formControlName="apellidoMaterno">
-                    <div *ngIf="datisDelNombre.get('apellidoMaterno')?.invalid && datisDelNombre.get('apellidoMaterno')?.touched">
-                        <small class="text-danger" *ngIf="datisDelNombre.get('apellidoMaterno')?.errors?.['pattern']">Por favor, corrija el apellido materno.</small>
-                    </div>
-                </div>
-            </div>
-            <div class="row mt-4" *ngIf="datisDelNombre.get('tipoDeRepresentante')?.value==='2'">
-                <div class="col-md-8">
-                    <label for="razonSocial" class="form-label">Denominación o razón social *:</label>
-                    <input id="razonSocial" type="text" class="form-control" formControlName="razonSocial">
-                    <div *ngIf="datisDelNombre.get('razonSocial')?.invalid && datisDelNombre.get('razonSocial')?.touched">
-                        <small class="text-danger" *ngIf="datisDelNombre.get('razonSocial')?.errors?.['required']">Este campo es obligatorio.</small>
-                        <small class="text-danger" *ngIf="datisDelNombre.get('razonSocial')?.errors?.['pattern']">Por favor, corrija la denominación o razón social.</small>
-                    </div>
-                </div>
-            </div>
+        }
 
-                <div class="row mt-4">
-                    <formas-dinamicas [forma]="datisDelNombre "
-                        [formularioDatos]="formularioDatosTipoPropietario" [estado]="estadoSeleccionado"
-                        (emitirCambioDeValor)="establecerCambioDeValor($event)"></formas-dinamicas>
+        @if(datisDelNombre.get('tipoDeRepresentante')?.value){
+        @if(datisDelNombre.get('tipoDeRepresentante')?.value==='1'){
+        <div class="row mt-4">
+            <div class="col-md-4">
+                <label for="nombre" class="form-label">Nombre(s) *:</label>
+                <input id="nombre" type="text" class="form-control" formControlName="nombre"
+                    (change)="establecerCambioDeValor({campo: 'nombre', valor:(datisDelNombre.get('nombre')?.value)})">
+                <div
+                    *ngIf="datisDelNombre.get('nombre')?.invalid && datisDelNombre.get('nombre')?.touched">
+                    <small class="text-danger"
+                        *ngIf="datisDelNombre.get('nombre')?.errors?.['required']">Este campo es
+                        obligatorio.</small>
+                    <small class="text-danger" *ngIf="datisDelNombre.get('nombre')?.errors?.['pattern']">Por
+                        favor, corrija
+                        el nombre.</small>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <label for="apellidoPaterno" class="form-label">Apellido paterno *:</label>
+                <input id="apellidoPaterno" type="text" class="form-control" formControlName="apellidoPaterno"
+                    (change)="establecerCambioDeValor({campo:'apellidoPaterno',valor:datisDelNombre.get('apellidoPaterno')?.value})">
+                <div
+                    *ngIf="datisDelNombre.get('apellidoPaterno')?.invalid && datisDelNombre.get('apellidoPaterno')?.touched">
+                    <small class="text-danger"
+                        *ngIf="datisDelNombre.get('apellidoPaterno')?.errors?.['required']">Este
+                        campo es obligatorio.</small>
+                    <small class="text-danger"
+                        *ngIf="datisDelNombre.get('apellidoPaterno')?.errors?.['pattern']">Por favor,
+                        corrija el apellido paterno.</small>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <label for="apellidoMaterno" class="form-label">Apellido materno :</label>
+                <input id="apellidoMaterno" type="text" class="form-control" formControlName="apellidoMaterno"
+                    (change)="establecerCambioDeValor({campo:'apellidoMaterno',valor:datisDelNombre.get('apellidoMaterno')?.value})">
+                <div
+                    *ngIf="datisDelNombre.get('apellidoMaterno')?.invalid && datisDelNombre.get('apellidoMaterno')?.touched">
+                    <small class="text-danger"
+                        *ngIf="datisDelNombre.get('apellidoMaterno')?.errors?.['pattern']">Por favor,
+                        corrija el apellido materno.</small>
                 </div>
             </div>
         </div>
+        }
+        @else if (datisDelNombre.get('tipoDeRepresentante')?.value==='2') {
+        <div class="row mt-4">
+            <div class="col-md-8">
+                <label for="razonSocial" class="form-label">Denominación o razón social *:</label>
+                <input id="razonSocial" type="text" class="form-control" formControlName="razonSocial"
+                    (change)="establecerCambioDeValor({campo:'razonSocial',valor:datisDelNombre.get('razonSocial')?.value})">
+                <div
+                    *ngIf="datisDelNombre.get('razonSocial')?.invalid && datisDelNombre.get('razonSocial')?.touched">
+                    <small class="text-danger"
+                        *ngIf="datisDelNombre.get('razonSocial')?.errors?.['required']">Este campo es
+                        obligatorio.</small>
+                    <small class="text-danger"
+                        *ngIf="datisDelNombre.get('razonSocial')?.errors?.['pattern']">Por favor,
+                        corrija la denominación o razón social.</small>
+                </div>
+            </div>
+        </div>
+        }
+
+        <div class="row">
+            <formas-dinamicas [forma]="datisDelNombre" [formularioDatos]="formularioDatosTipoPropietario"
+                [estado]="estadoSeleccionado"
+                (emitirCambioDeValor)="establecerCambioDeValor($event)"></formas-dinamicas>
+        </div>
+        }
     </form>
 </div>
+@if(datisDelNombre.get('consultarPorRFC')?.value==='1')
+{
+<solicitante></solicitante>
+}

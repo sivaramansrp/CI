@@ -1,3 +1,4 @@
+import { AlertComponent} from '@ng-mf/data-access-user';
 import { NgModule } from '@angular/core';
 
 import { CommonModule } from '@angular/common';
@@ -36,6 +37,7 @@ import {DatosDelNombreComponent} from './components/datos-del-nombre/datos-del-n
   ],
   imports: [
     CommonModule,
+    AlertComponent,
     DatosDeLaSolicitudComponent,
     TipoPropietarioComponent,
     FechaDeImportacionComponent,

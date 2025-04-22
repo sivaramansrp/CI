@@ -31,15 +31,16 @@ import { EquipoEInstrumentosMusicalesService } from '../../services/equipo-e-ins
 })
 export class TipoPropietarioComponent implements OnInit,OnDestroy {
 
-ajustarValidadoresSegunValor($event:Catalogo): void {
-  if ($event.descripcion ==='Persona Física Extranjero') {
-    this.limpiarValidadores(['razonSocial']);
-    this.establecerValidadores(['nombre', 'apellidoPaterno'], Validators.required);
-  } else if ($event.descripcion ==='Persona Moral Extranjero') {
-    this.limpiarValidadores(['nombre', 'apellidoPaterno']);
-    this.establecerValidadores(['razonSocial'], Validators.required);
+  ajustarValidadoresSegunValor(): void {
+    const TIPO_DE_PROPIETARIO = this.tipoPropietarioFormulario.get('tipoDePropietario')?.value;
+    if (TIPO_DE_PROPIETARIO === '1') {
+      this.limpiarValidadores(['razonSocial']);
+      this.establecerValidadores(['nombre', 'apellidoPaterno'], Validators.required);
+    } else if (TIPO_DE_PROPIETARIO === '2') {
+      this.limpiarValidadores(['nombre', 'apellidoPaterno']);
+      this.establecerValidadores(['razonSocial'], Validators.required);
+    }
   }
-}
 
 
   /**
@@ -66,6 +67,7 @@ ajustarValidadoresSegunValor($event:Catalogo): void {
     this.inicializarFormulario();
     this.getPropietario();
     this.getTipoDePropietario();
+    this.ajustarValidadoresSegunValor();
   
   }
   inicializarFormulario() : void {

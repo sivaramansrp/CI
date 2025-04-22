@@ -1,5 +1,5 @@
+import {AVISO, DatosPasos, ListaPasosWizard, WizardComponent} from '@libs/shared/data-access-user/src';
 import { Component, ViewChild } from '@angular/core';
-import { DatosPasos, ListaPasosWizard, WizardComponent } from '@libs/shared/data-access-user/src';
 import { AccionBoton } from '../../enums/accionbotton.enum';
 import { PASOS_EXPORTACION } from '../../constants/equipo-e-instrumentos-musicales-pasos.enum';
 
@@ -19,6 +19,16 @@ export class EquipoEInstrumentosMusicalesComponent {
    * Los pasos se obtienen de la constante `PASOS_EXPORTACION`.
    */
   pasosSolicitar: ListaPasosWizard[] = PASOS_EXPORTACION;
+
+    /**
+   * Mensaje de información para la alerta.
+   */
+    public infoAlert = 'alert-info';
+
+    /**
+   * Textos de aviso utilizados en el componente.
+   */
+    TEXTOS = AVISO.Aviso;
 
   /**
    * Índice del paso actual en el asistente.
