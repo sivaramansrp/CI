@@ -500,28 +500,28 @@
         "id": 72,
         "tramite": 220102,
         "linkDashboard": "/agriculture/peticion-requisitos-fitosanitarios/invocar-modulo",
-        "linkDepartment": "/agriculture/peticion-requisitos-fitosanitarios/invocar-modulo",
+        "linkDepartment": "/pago/peticion-requisitos-fitosanitarios/invocar-modulo",
         "department": "agriculture"
     },
     {
         "id": 73,
         "tramite": 220201,
         "linkDashboard": "/agriculture/certificado-zoosanitario/zoosanitario",
-        "linkDepartment": "/agriculture/certificado-zoosanitario/zoosanitario",
+        "linkDepartment": "/pago/certificado-zoosanitario/zoosanitario",
         "department": "agriculture"
     },
     {
         "id": 74,
         "tramite": 220202,
         "linkDashboard": "/agriculture/certificado-fitosanitario/agriculture",
-        "linkDepartment": "/agriculture/certificado-fitosanitario/agriculture",
+        "linkDepartment": "/pago/certificado-fitosanitario/agriculture",
         "department": "agriculture"
     },
     {
         "id": 75,
         "tramite": 220203,
         "linkDashboard": "/agriculture/importacion-acuacultura/sanidad",
-        "linkDepartment": "/agriculture/importacion-acuacultura/sanidad",
+        "linkDepartment": "/pago/importacion-acuacultura/sanidad",
         "department": "agriculture"
     },
     {
