@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { DestinoFinal } from '../../../../shared/models/terceros-relacionados.model';
 import { ID_PROCEDIMIENTO } from '../../constants/importacion-armas-municiones.enum';
-import { Tramite240101Store } from '../../estados/tramite240111Store.store';
+import { Tramite240111Store } from '../../estados/tramite240111Store.store';
 
 
 /**
@@ -25,11 +25,11 @@ export class AgregarDestinatarioFinalContenedoraComponent {
    * Constructor del componente.
    *
    * @method constructor
-   * @param {Tramite240101Store} tramiteStore - Store que administra el estado del trámite.
+   * @param {Tramite240111Store} tramiteStore - Store que administra el estado del trámite.
    * @returns {void}
    */
   // eslint-disable-next-line no-empty-function
-  constructor(public tramiteStore: Tramite240101Store) {}
+  constructor(public tramiteStore: Tramite240111Store) {}
 
   /**
    * Actualiza la lista de destinatarios finales en el store del trámite.

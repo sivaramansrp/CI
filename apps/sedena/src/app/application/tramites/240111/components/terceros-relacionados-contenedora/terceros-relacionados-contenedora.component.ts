@@ -5,8 +5,8 @@ import { OnInit } from '@angular/core';
 import { Proveedor } from '../../../../shared/models/terceros-relacionados.model';
 import { Subject } from 'rxjs';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
-import { Tramite240101Query } from '../../estados/tramite240111Query.query';
-import { Tramite240101Store } from '../../estados/tramite240111Store.store';
+import { Tramite240111Query } from '../../estados/tramite240111Query.query';
+import { Tramite240111Store } from '../../estados/tramite240111Store.store';
 import { takeUntil } from 'rxjs';
 
 /**
@@ -45,13 +45,13 @@ export class TercerosRelacionadosContenedoraComponent implements OnInit {
    * Constructor del componente.
    *
    * @method constructor
-   * @param {Tramite240101Store} tramiteStore - Store de Akita que maneja el estado del trámite.
-   * @param {Tramite240101Query} tramiteQuery - Query de Akita para obtener datos del trámite.
+   * @param {Tramite240111Store} tramiteStore - Store de Akita que maneja el estado del trámite.
+   * @param {Tramite240111Query} tramiteQuery - Query de Akita para obtener datos del trámite.
    * @returns {void}
    */
   constructor(
-    private tramiteStore: Tramite240101Store,
-    private tramiteQuery: Tramite240101Query
+    private tramiteStore: Tramite240111Store,
+    private tramiteQuery: Tramite240111Query
   ) // eslint-disable-next-line no-empty-function
   {}
 

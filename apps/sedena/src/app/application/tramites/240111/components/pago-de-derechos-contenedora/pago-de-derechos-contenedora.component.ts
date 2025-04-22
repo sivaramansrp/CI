@@ -6,8 +6,8 @@ import { OnInit } from '@angular/core';
 import { PagoDeDerechosComponent } from '../../../../shared/components/pago-de-derechos/pago-de-derechos.component';
 import { PagoDerechosFormState } from '../../../../shared/models/pago-de-derechos.model';
 import { Subject } from 'rxjs';
-import { Tramite240101Query } from '../../estados/tramite240111Query.query';
-import { Tramite240101Store } from '../../estados/tramite240111Store.store';
+import { Tramite240111Query } from '../../estados/tramite240111Query.query';
+import { Tramite240111Store } from '../../estados/tramite240111Store.store';
 import { takeUntil } from 'rxjs';
 
 /**
@@ -32,11 +32,6 @@ export class PagoDeDerechosContenedoraComponent implements OnInit, OnDestroy {
    * @since Versión 1.0.0
    */
   public readonly idProcedimiento = ID_PROCEDIMIENTO;
-  /**
-   * Observable para liberar suscripciones al destruir el componente.
-   * @property {Subject<void>} unsubscribe$
-   */
-  private unsubscribe$ = new Subject<void>();
 
   /**
    * Estado actual del formulario de pago de derechos.
@@ -54,13 +49,13 @@ export class PagoDeDerechosContenedoraComponent implements OnInit, OnDestroy {
    * Constructor del componente.
    *
    * @method constructor
-   * @param {Tramite240101Query} tramiteQuery - Query para obtener el estado actual del pago de derechos.
-   * @param {Tramite240101Store} tramiteStore - Store que administra el estado del pago de derechos.
+   * @param {Tramite240111Query} tramiteQuery - Query para obtener el estado actual del pago de derechos.
+   * @param {Tramite240111Store} tramiteStore - Store que administra el estado del pago de derechos.
    * @returns {void}
    */
   constructor(
-    private tramiteQuery: Tramite240101Query,
-    private tramiteStore: Tramite240101Store
+    private tramiteQuery: Tramite240111Query,
+    private tramiteStore: Tramite240111Store
   ) // eslint-disable-next-line no-empty-function
   {}
 
@@ -87,8 +82,8 @@ export class PagoDeDerechosContenedoraComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   ngOnDestroy(): void {
-    this.unsubscribe$.next();
-    this.unsubscribe$.complete();
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   /**

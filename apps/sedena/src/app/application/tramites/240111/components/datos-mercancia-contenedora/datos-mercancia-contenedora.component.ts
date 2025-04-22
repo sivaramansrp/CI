@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 import { DatosMercanciaComponent } from '../../../../shared/components/datos-mercancia/datos-mercancia.component';
 import { ID_PROCEDIMIENTO } from '../../constants/importacion-armas-municiones.enum';
 import { MercanciaDetalle } from '../../../../shared/models/datos-del-tramite.model';
-import { Tramite240101Store } from '../../estados/tramite240111Store.store';
+import { Tramite240111Store } from '../../estados/tramite240111Store.store';
 
 /**
  * @title Datos de la Mercancía Contenedora
@@ -19,16 +19,20 @@ import { Tramite240101Store } from '../../estados/tramite240111Store.store';
   styleUrl: './datos-mercancia-contenedora.component.css',
 })
 export class DatosMercanciaContenedoraComponent {
+  /**
+   * @property {string} idProcedimiento
+   * @description Identificador del procedimiento asociado al trámite.
+   */
   public readonly idProcedimiento = ID_PROCEDIMIENTO;
   /**
    * Constructor del componente.
    *
    * @method constructor
-   * @param {Tramite240101Store} tramiteStore - Store de Akita para actualizar el estado de la tabla de mercancías.
+   * @param {Tramite240111Store} tramiteStore - Store de Akita para actualizar el estado de la tabla de mercancías.
    * @returns {void}
    */
   // eslint-disable-next-line no-empty-function
-  constructor(private tramiteStore: Tramite240101Store) {}
+  constructor(private tramiteStore: Tramite240111Store) {}
 
   /**
    * Actualiza los datos de la tabla de mercancía en el store.

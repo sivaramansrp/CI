@@ -7,8 +7,8 @@ import { MercanciaDetalle } from '../../../../shared/models/datos-del-tramite.mo
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
-import { Tramite240101Query } from '../../estados/tramite240111Query.query';
-import { Tramite240101Store } from '../../estados/tramite240111Store.store';
+import { Tramite240111Query } from '../../estados/tramite240111Query.query';
+import { Tramite240111Store } from '../../estados/tramite240111Store.store';
 import { takeUntil } from 'rxjs';
 
 /**
@@ -25,11 +25,6 @@ import { takeUntil } from 'rxjs';
   styleUrl: './datos-del-tramite-contenedora.component.css',
 })
 export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
-  /**
-   * Observable para limpiar suscripciones activas al destruir el componente.
-   * @property {Subject<void>} unsubscribe$
-   */
-  private unsubscribe$ = new Subject<void>();
 
   /**
    * Datos de la tabla de mercancías que se muestran en el formulario.
@@ -55,13 +50,13 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
    * Constructor del componente.
    *
    * @method constructor
-   * @param {Tramite240101Query} tramiteQuery - Query de Akita para obtener el estado actual del trámite.
-   * @param {Tramite240101Store} tramiteStore - Store de Akita para actualizar el estado del trámite.
+   * @param {Tramite240111Query} tramiteQuery - Query de Akita para obtener el estado actual del trámite.
+   * @param {Tramite240111Store} tramiteStore - Store de Akita para actualizar el estado del trámite.
    * @returns {void}
    */
   constructor(
-    private tramiteQuery: Tramite240101Query,
-    private tramiteStore: Tramite240101Store
+    private tramiteQuery: Tramite240111Query,
+    private tramiteStore: Tramite240111Store
   ) // eslint-disable-next-line no-empty-function
   {}
 
@@ -94,8 +89,8 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   ngOnDestroy(): void {
-    this.unsubscribe$.next();
-    this.unsubscribe$.complete();
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   /**
