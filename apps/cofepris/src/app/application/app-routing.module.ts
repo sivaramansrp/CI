@@ -45,10 +45,9 @@ const ROUTES: Routes = [
         './tramites/260204/permiso-sanitario-importacion-medicamentos.module'
       ).then((m) => m.PermisoSanitarioImportacionMedicamentosModule),
   },
-
   {
     path: 'aviso-exportacion',
-    loadChildren: () => import('./tramites/260604/aviso-exportacion.module').then(m => m.AvisoExportacionModule)  
+    loadChildren: () => import('./tramites/260604/aviso-exportacion.module').then(m => m.AvisoExportacionModule)
   },
   {
     path: 'modificación-del-permiso-sanitario-de-importación-de-insumos',
@@ -185,7 +184,7 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/260704/consulta.module').then((m) => m.ConsultaModule),
   },
-{
+  {
     path: 'modificacion-permiso-sanitario',
     loadChildren: () =>
       import('./tramites/260902/modificacion-permiso-sanitario.module').then(
@@ -215,19 +214,26 @@ const ROUTES: Routes = [
       ).then((m) => m.PermisoSanitarioImportacion260203Module),
   },
   {
+    path: 'solicitud-modificacion-permiso-salida-territorio',
+    loadChildren: () =>
+      import(
+        './tramites/261401/solicitud-modificacion-permiso-salida-territorio.module'
+      ).then((m) => m.SolicitudModificacionPermisoSalidaTerritorioModule),
+  },
+  {
     path: 'permiso-experimentales-plaguicidas',
     loadChildren: () =>
       import(
         './tramites/260503/permiso-experimentales-plaguicidas.module'
       ).then((m) => m.PermisoExperimentalesPlaguicidasModule),
   },
-  { 
-    path:'modificacion-de-dispositivos',
-    loadChildren: () => 
+  {
+    path: 'modificacion-de-dispositivos',
+    loadChildren: () =>
       import('./tramites/260911/modificacion-de-dispositivos.module').then(
         (m) => m.ModificacionDeDispositivosModule
       )
-    },
+  },
   {
     path: 'retiros-cofepris',
     loadChildren: () =>
@@ -251,13 +257,34 @@ const ROUTES: Routes = [
   },
 
   {
+    path: 'modificacion-del-permiso',
+    loadChildren: () =>
+      import(
+        './tramites/260913/modificacion-del-permiso.module'
+      ).then((m) => m.ModificacionDelPermisoModule),
+  },
+  {
+    path: 'importacion-materias-primas-estupefacientes',
+    loadChildren: () =>
+      import(
+        './tramites/260301/importacion-materias-primas-estupefacientes.module'
+      ).then((m) => m.ImportacionMateriasPrimasEstupefacientesModule),
+  },
+  {
+    path: 'importacion-materias-primas-estupefacientes',
+    loadChildren: () =>
+      import(
+        './tramites/260301/importacion-materias-primas-estupefacientes.module'
+      ).then((m) => m.ImportacionMateriasPrimasEstupefacientesModule),
+  },
+  {
     path: 'medicamentos-destinados-uso',
     loadChildren: () =>
       import('./tramites/260208/importacion-medicamentos-destinados-uso.module').then(
         (m) => m.ImportacionMedicamentosDestinadosUsoModule
       ),
   },
-  
+
   {
     path: 'importacion-materias-primas-estupefacientes',
     loadChildren: () =>
@@ -280,7 +307,7 @@ const ROUTES: Routes = [
         (m) => m.ImportacionDestinadosDonacioModule
       ),
   },
-  
+
   {
     path: 'modificacion-permiso-sanitario',
     loadChildren: () =>
@@ -293,6 +320,21 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/260512/permiso-de-importacion.module').then(
         (m) => m.PermisoDeImportacionModule)
+  },
+
+  {
+    path: 'modificacion-permiso-sanitario-la-salud',
+    loadChildren: () =>
+      import(
+        './tramites/260901/modificacion-permiso-sanitario-la-salud.module'
+      ).then((m) => m.ModificacionPermisoSanitarioLaSaludModule),
+      
+  },
+  {
+    path: 'muestras-de-toxicos',
+    loadChildren: () =>
+      import('./tramites/260513/muestras-de-toxicos.module').then(
+        (m) => m.MuestrasDeToxicosModule)
   },
   {
     path: 'permiso-sujetos',
@@ -307,7 +349,7 @@ const ROUTES: Routes = [
       import('./tramites/260514/parmiso-importacion-calidad.module').then(
         (m) => m.ParmisoImportacionCalidadModule)
   },
-        
+
   {
     path: 'registrar-solicitud-mcp',
     loadChildren: () =>
@@ -321,10 +363,10 @@ const ROUTES: Routes = [
       import('./tramites/260207/importacion-tratamientos-especiales.module').then(
         (m) => m.ImportacionTratamientosEspecialesModule
       ),
-},
-{
-      path: 'importacion-psicotropicos-poretorno',
-      loadChildren: () =>
+  },
+  {
+    path: 'importacion-psicotropicos-poretorno',
+    loadChildren: () =>
       import('./tramites/260201/importacion-psicotropicos-poretorno.module').then(
         (m) => m.ImportacionPsicotropicosPoretornoModule),
 },
@@ -349,11 +391,32 @@ const ROUTES: Routes = [
       (m) => m.PermisoSanitarioDispositivosMedicosModule)
 },
 {
-  path: 'correccion-interna-de-la-cofepris',
-  loadChildren: () =>
-    import('./tramites/261601/correccion-interna-de-la-cofepris.module').then(
-      (m) => m.CorreccionInternaDeLaCofeprisModule)
-},
+    path: 'enmienda-permiso-sanitario',
+    loadChildren: () =>
+      import('./tramites/260905/enmienda-permiso-sanitario.module').then(
+        (m) => m.EnmiendaPermisoSanitarioModule
+      ),
+  },
+  {
+      path: 'solicitud-modificacion',
+      loadChildren: () =>
+        import('./tramites/261101/datos-solicitude.module').then(
+          (m) => m.DatosSolicitudeModule
+        ),
+  },
+  {
+        path: 'importar-suministros-medicos',
+        loadChildren: () =>
+          import('./tramites/260916/importar-suministros-medicos.module').then(
+            (m) => m.ImportarSuministrosMedicosModule
+          )
+  },
+  {
+    path: 'correccion-interna-de-la-cofepris',
+    loadChildren: () =>
+      import('./tramites/261601/correccion-interna-de-la-cofepris.module').then(
+        (m) => m.CorreccionInternaDeLaCofeprisModule)
+  },
 
 ];
 
