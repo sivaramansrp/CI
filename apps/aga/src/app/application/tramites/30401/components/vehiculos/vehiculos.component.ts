@@ -14,6 +14,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { NOTA, VEHICULOS_TABLA_DATOS } from '../../enums/registro-empresas-transporte.enum';
 import { Subject, takeUntil } from 'rxjs';
 import {
   Tramite30401Store,
@@ -21,7 +22,6 @@ import {
 } from '../../estados/tramites30401.store';
 import { CommonModule } from '@angular/common';
 import { Modal } from 'bootstrap';
-import { NOTA } from '../../enums/registro-empresas-transporte.enum';
 import { Tramite30401Query } from '../../estados/tramites30401.query';
 import { VehiculosTabla } from '../../modelos/registro-empresas-transporte.model';
 
@@ -57,6 +57,20 @@ export class VehiculosComponent implements OnInit {
    */
   registroVehiculosForm!: FormGroup;
 
+   /**
+   * Formulario para gestionar los archivos adjuntos.
+   * 
+   * Permite capturar y validar los datos relacionados con los archivos adjuntos.
+   */
+   formularioArchivo!: FormGroup;
+
+ /**
+   * Referencia al elemento del modal para gestionar archivos.
+   * 
+   * Se utiliza para abrir o cerrar el modal de archivos.
+   */
+ @ViewChild('modalArchivo') modalArchivo!: ElementRef;
+
   /**
    * Type of table selection (CHECKBOX).
    */
@@ -90,23 +104,7 @@ export class VehiculosComponent implements OnInit {
   /**
    * Configuration for the vehicle table columns.
    */
-  ParqueVehicular = [
-    {
-      encabezado: 'Marca',
-      clave: (item: VehiculosTabla) => item.marca,
-      orden: 1,
-    },
-    {
-      encabezado: 'Modelo (s)',
-      clave: (item: VehiculosTabla) => item.modelo,
-      orden: 2,
-    },
-    {
-      encabezado: 'Número de identificación vehicular o serie del vehículo',
-      clave: (item: VehiculosTabla) => item.Vin,
-      orden: 3,
-    },
-  ];
+  ParqueVehicular = VEHICULOS_TABLA_DATOS;
 
   /**
    * Subject used to track component destruction.
@@ -182,6 +180,7 @@ export class VehiculosComponent implements OnInit {
     private tramite30401Query: Tramite30401Query
   ) {
     this.crearFormulario();
+    this.inicializarFormularioArchivo();
   }
 
 /**
@@ -213,6 +212,30 @@ export class VehiculosComponent implements OnInit {
       modelo: ['', [Validators.required]],
       Vin: ['', [Validators.required, Validators.maxLength(17)]],
     });
+  }
+
+    /**
+ * Inicializa el formulario para gestionar archivos.
+ * 
+ * Este método configura los campos y validaciones del formulario relacionado con los archivos adjuntos.
+ */
+    inicializarFormularioArchivo(): void {
+      this.formularioArchivo = this.fb.group({
+        archivo: ['', [Validators.required]],
+      });
+    }
+
+
+     /**
+   * Muestra el modal para cargar un archivo.
+   * 
+   * Este método utiliza el modal de Bootstrap para mostrar el modal de carga de archivos.
+   */
+  cargaArchivo(): void {
+    if (this.modalArchivo) {
+      const MODAL_INSTANCE = new Modal(this.modalArchivo.nativeElement);
+      MODAL_INSTANCE.show();
+    }
   }
 
   /**
@@ -287,37 +310,26 @@ export class VehiculosComponent implements OnInit {
    * Los datos del formulario se añaden al array `vehiculosInfoList`.
    */
   vehiculosInfoDatos(): void {
-    if (
-      !this.filaSeleccionadaVehiculos ||
-      Object.keys(this.filaSeleccionadaVehiculos).length === 0
-    ) {
-      const OBJ = {
-        id: this.vehiculosInfoList.length
-          ? this.vehiculosInfoList[this.vehiculosInfoList.length - 1]?.id + 1
-          : (1 as number),
-        marca: this.registroVehiculosForm.get('marca')?.value,
-        modelo: this.registroVehiculosForm.get('modelo')?.value,
-        Vin: this.registroVehiculosForm.get('Vin')?.value,
-      };
-      this.vehiculosInfoList = [...this.vehiculosInfoList, OBJ];
-      this.tramite30401Store.setVehiculosTablaDatos([OBJ]);
-    } else {
-      const UPDATELIST = this.vehiculosInfoList.map((item) =>
-        item.id === this.filaSeleccionadaVehiculos.id
-          ? {
-              ...item,
-              marca: this.registroVehiculosForm.get('marca')?.value,
-              modelo: this.registroVehiculosForm.get('modelo')?.value,
-              Vin: this.registroVehiculosForm.get('Vin')?.value,
-            }
-          : item
-      );
+    const { marca: MARCA, modelo: MODELO, Vin: VIN } = this.registroVehiculosForm.value;
 
-      this.vehiculosInfoList = UPDATELIST;
-      this.tramite30401Store.setVehiculosTablaDatos(UPDATELIST);
-      this.filaSeleccionadaVehiculos = {} as VehiculosTabla;
+    if (!this.filaSeleccionadaVehiculos || Object.keys(this.filaSeleccionadaVehiculos).length === 0) {
+      const ID = this.vehiculosInfoList.length
+            ? this.vehiculosInfoList[this.vehiculosInfoList.length - 1]?.id + 1
+            : 1;
+
+      const OBJ = { id:ID, marca:MARCA, modelo: MODELO, Vin:VIN };
+
+        this.vehiculosInfoList = [...this.vehiculosInfoList, OBJ];
+        this.tramite30401Store.setVehiculosTablaDatos([OBJ]);
+    } else {
+        this.vehiculosInfoList = this.vehiculosInfoList.map(elemento =>
+            elemento.id === this.filaSeleccionadaVehiculos.id ? { ...elemento, marca:MARCA, modelo: MODELO, Vin:VIN } : elemento
+        );
+
+        this.tramite30401Store.setVehiculosTablaDatos(this.vehiculosInfoList);
+        this.filaSeleccionadaVehiculos = {} as VehiculosTabla;
     }
-  }
+}
   /**
    * Método para cerrar el modal de confirmación.
    * @returns {void}

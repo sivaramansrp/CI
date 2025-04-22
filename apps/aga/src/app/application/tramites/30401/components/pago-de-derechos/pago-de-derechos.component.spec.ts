@@ -1,9 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { PagoDeDerechosComponent } from './pago-de-derechos.component';
 import { RegistroEmpresasTransporteService } from '../../services/registro-empresas-transporte.service';
 import { Tramite30401Query } from '../../estados/tramites30401.query';
-import { Tramite30401Store } from '../../estados/tramites30401.store';
+import { createInitialState, Tramite30401Store } from '../../estados/tramites30401.store';
 import { of } from 'rxjs';
 import { HttpClientModule } from '@angular/common/http';
 import { Catalogo } from '@libs/shared/data-access-user/src';
@@ -21,33 +21,12 @@ describe('PagoDeDerechosComponent', () => {
     };
     mockTramite30401Query = {
       selectTramite30401$: of({
-        claveDeReferencia: '',
-    cadenaPagoDependencia: '',
-    clave: '',
-    llaveDePago: '',
-    fecPago: '',
-    impPago: '',
-    efectuarElPago:false,
-
-    cveFolioCaat: '',
-    tipoTransito: '',
-    cboAduanasActuarSeleccionadas: [],
-    calle: '',
-    numeroExterior: '',
-    numeroInterior: '',
-    entidadFederativa: '',
-    delegacionMunicipio: '',
-    colonia: '',
-    localidad: '',
-    codigoPostal: '',
-    capitalSocial: '',
-    numeroFolioPermiso: '',
-    fechaExpedicion: '',
-    elCapitalSocial: false,
-    miRepresentada: false,
+        ...createInitialState(),
       }),
     };
-    mockTramite30401Store = {};
+    mockTramite30401Store = {
+      establecerDatos: jest.fn(),
+    };
 
     await TestBed.configureTestingModule({
       imports: [ReactiveFormsModule, HttpClientModule, PagoDeDerechosComponent],
@@ -132,21 +111,33 @@ describe('PagoDeDerechosComponent', () => {
     expect(completeSpy).toHaveBeenCalled();
   });
 
-  it('should call the correct store method with the correct value in setValoresStore', () => {
-    // Arrange: Mock the store method
-    const mockMethod = jest.fn();
-    mockTramite30401Store['setClave'] = mockMethod; // Replace 'updateClave' with the actual method name in your store
-  
-    // Set up the form control with a value
-    component.pagoDeDerechosForm = component.fb.group({
-      clave: ['testValue'],
+  it('should call establecerDatos in Tramite30401Store with the correct value when setValoresStore is called', () => {
+    const mockForm = new FormGroup({
+      clave: new FormControl('testValue'),
     });
   
-    // Act: Call the method
-    component.setValoresStore(component.pagoDeDerechosForm, 'clave', 'setClave');
+    const establecerDatosSpy = jest.spyOn(mockTramite30401Store, 'establecerDatos');
   
-    // Assert: Verify the store method was called with the correct value
-    expect(mockMethod).toHaveBeenCalledWith('testValue');
+    component.setValoresStore(mockForm, 'clave');
+  
+    expect(establecerDatosSpy).toHaveBeenCalledWith({ clave: 'testValue' });
   });
   
+  it('should not call establecerDatos if the form is null', () => {
+    const establecerDatosSpy = jest.spyOn(mockTramite30401Store, 'establecerDatos');
+  
+    component.setValoresStore(null, 'clave');
+  
+    expect(establecerDatosSpy).not.toHaveBeenCalled();
+  });
+  
+  it('should not call establecerDatos if the control value is null or undefined', () => {
+    const mockForm = new FormGroup({
+      clave: new FormControl(null),
+    });
+    const establecerDatosSpy = jest.spyOn(mockTramite30401Store, 'establecerDatos');
+    component.setValoresStore(mockForm, 'clave');
+    expect(establecerDatosSpy).not.toHaveBeenCalled();
+  });
+
 });

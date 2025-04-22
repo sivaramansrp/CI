@@ -4,16 +4,31 @@
  * @module PagoDeDerechosComponent
  */
 
-import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
-import { AlertComponent, Catalogo, TituloComponent } from '@libs/shared/data-access-user/src';
+import {
+  AbstractControl,
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  ValidatorFn,
+  Validators,
+} from '@angular/forms';
+import {
+  AlertComponent,
+  Catalogo,
+  CatalogoSelectComponent,
+  InputCheckComponent,
+  TituloComponent,
+} from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subject, distinctUntilChanged, map, takeUntil } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
+import {
+  Tramite30401Store,
+  Tramites30401State,
+} from '../../estados/tramites30401.store';
 import { CommonModule } from '@angular/common';
-import {NOTA} from '../../enums/registro-empresas-transporte.enum';
+import { NOTA } from '../../enums/registro-empresas-transporte.enum';
 import { RegistroEmpresasTransporteService } from '../../services/registro-empresas-transporte.service';
 import { Tramite30401Query } from '../../estados/tramites30401.query';
-import { Tramite30401Store } from '../../estados/tramites30401.store';
-
 
 /**
  * Selector del componente
@@ -26,13 +41,19 @@ import { Tramite30401Store } from '../../estados/tramites30401.store';
 @Component({
   selector: 'app-pago-de-derechos',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, TituloComponent, AlertComponent],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    TituloComponent,
+    CatalogoSelectComponent,
+    AlertComponent,
+    InputCheckComponent,
+  ],
   providers: [RegistroEmpresasTransporteService],
   templateUrl: './pago-de-derechos.component.html',
   styleUrl: './pago-de-derechos.component.scss',
 })
 export class PagoDeDerechosComponent implements OnInit, OnDestroy {
-
   /**
    * Formulario reactivo para manejar los campos de entrada del usuario.
    */
@@ -48,16 +69,21 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    */
   public bancoList!: Catalogo[];
 
-     /**
+  /**
    * Declaración bajo protesta de decir verdad.
    */
-     public EFECTUAR_EL_PAGO = NOTA.EFECTUAR_EL_PAGO;
+  public EFECTUAR_EL_PAGO = NOTA.EFECTUAR_EL_PAGO;
 
-       /**
+  /**
    * Nota: Debes capturar todos los campos de pago de aprovechamiento
    */
-      public DEBES_CAPTURAR = NOTA.DEBES_CAPTURAR;
-     
+  public DEBES_CAPTURAR = NOTA.DEBES_CAPTURAR;
+
+  /**
+   * @property {Tramites30401State} seccionState
+   * Estado actual del formulario.
+   */
+  public seccionState!: Tramites30401State;
 
   /**
    * Constructor para inyectar los servicios y las tiendas necesarias.
@@ -72,16 +98,16 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     private tramite30401Query: Tramite30401Query,
     private Servicio: RegistroEmpresasTransporteService
   ) {
-     // No se necesita lógica de inicialización adicional.
+    // No se necesita lógica de inicialización adicional.
   }
 
   /**
    * Hook de ciclo de vida para inicializar la lógica del componente y cargar datos.
    */
   ngOnInit(): void {
-    this.crearForm();
     this.enPatchStoredFormData();
-    this.getBancoList();
+    this.crearForm();
+    this.obtenerBancoList();
   }
 
   /**
@@ -89,28 +115,61 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    */
   crearForm(): void {
     this.pagoDeDerechosForm = this.fb.group({
-      claveDeReferencia: ['', [Validators.maxLength(50)]],
-      cadenaPagoDependencia: ['', [Validators.maxLength(50)]],
-      clave: ['', Validators.required],
-      llaveDePago: ['', [Validators.required, Validators.pattern('^[A-Z0-9]{10}$')]],
-      fecPago: ['', [Validators.required, PagoDeDerechosComponent.fechaLimValidator()]],
-      impPago: ['', [Validators.maxLength(16), PagoDeDerechosComponent.noComaValidator()]],
-      efectuarElPago: [true, Validators.requiredTrue]
+      claveDeReferencia: [
+        this.seccionState.claveDeReferencia,
+        [Validators.required, Validators.maxLength(9)],
+      ],
+      cadenaPagoDependencia: [
+        this.seccionState.cadenaPagoDependencia,
+        [Validators.required, Validators.maxLength(14)],
+      ],
+      clave: [this.seccionState.clave, Validators.required],
+      llaveDePago: [
+        this.seccionState.fecPago,
+        [Validators.required, Validators.maxLength(10)],
+      ],
+      fecPago: [
+        this.seccionState.fecPago,
+        [Validators.required, PagoDeDerechosComponent.fechaLimValidator()],
+      ],
+      impPago: [
+        this.seccionState.impPago,
+        [
+          Validators.required,
+          Validators.maxLength(16),
+          PagoDeDerechosComponent.noComaValidator(),
+        ],
+      ],
+      manifiestoDeclaracion: [
+        this.seccionState.manifiestoDeclaracion,
+        [Validators.requiredTrue],
+      ],
     });
+  }
 
-    // Actualiza y valida el campo 'fecPago' cuando cambia su valor
-    this.pagoDeDerechosForm.get('fecPago')?.valueChanges
-      .pipe(distinctUntilChanged())
-      .subscribe(() => {
-        this.pagoDeDerechosForm.get('fecPago')?.updateValueAndValidity({ emitEvent: false });
-      });
+  /**
+   * Método para validar que el campo de un formulario no contenga comas.
+   * Actualiza el estado de validez del campo especificado sin emitir eventos adicionales.
+   *
+   * @param {string} compo - El nombre del campo de formulario que se validará.
+   */
+  public validarSinComas(compo: string): void {
+    this.pagoDeDerechosForm
+      .get(compo)
+      ?.updateValueAndValidity({ emitEvent: false });
+  }
 
-    // Actualiza y valida el campo 'impPago' cuando cambia su valor
-    this.pagoDeDerechosForm.get('impPago')?.valueChanges
-      .pipe(distinctUntilChanged())
-      .subscribe(() => {
-        this.pagoDeDerechosForm.get('impPago')?.updateValueAndValidity({ emitEvent: false });
-      });
+  /**
+   * Método para validar cambios en un campo de formulario relacionado con fechas futuras.
+   * Monitorea los cambios de valor del campo especificado y actualiza su estado de validación sin emitir eventos adicionales.
+   * Utiliza operadores de RxJS como distinctUntilChanged y takeUntil para manejar suscripciones de forma eficiente y evitar fugas de memoria.
+   *
+   * @param {string} compo - El nombre del campo de formulario que se validará.
+   */
+  public validarFechaFutura(compo: string): void {
+    this.pagoDeDerechosForm
+      .get(compo)
+      ?.updateValueAndValidity({ emitEvent: false });
   }
 
   /**
@@ -145,9 +204,9 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Obtiene la lista de bancos del servicio y la asigna a `bancoList`.
+   * Obtiene la lista de bancos del servicio y la asigna a `obtenerBancoList`.
    */
-  getBancoList(): void {
+  obtenerBancoList(): void {
     this.Servicio.onBancoList()
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data: Catalogo[]) => {
@@ -159,11 +218,15 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * Pasa el valor de un campo del formulario a la tienda para la gestión del estado.
    * @param form - El formulario reactivo.
    * @param campo - El nombre del campo en el formulario.
-   * @param metodoNombre - El método en la tienda para actualizar el estado.
    */
-  public setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite30401Store): void {
-    const VALOR = form.get(campo)?.value;
-    (this.tramite30401Store[metodoNombre] as (value: unknown) => void)(VALOR);
+  setValoresStore(form: FormGroup | null, campo: string): void {
+    if (!form) {
+      return;
+    }
+    const CONTROL = form.get(campo);
+    if (CONTROL && CONTROL.value !== null && CONTROL.value !== undefined) {
+      this.tramite30401Store.establecerDatos({ [campo]: CONTROL.value });
+    }
   }
 
   /**
@@ -171,20 +234,10 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    */
   public enPatchStoredFormData(): void {
     this.tramite30401Query.selectTramite30401$
-      .pipe(
-        takeUntil(this.destroyed$),
-        map((seccionState) => {
-          this.pagoDeDerechosForm.patchValue({
-            claveDeReferencia: seccionState.claveDeReferencia,
-            cadenaPagoDependencia: seccionState.cadenaPagoDependencia,
-            clave: seccionState.clave,
-            llaveDePago: seccionState.llaveDePago,
-            fecPago: seccionState.fecPago,
-            impPago: seccionState.impPago,
-          });
-        })
-      )
-      .subscribe();
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((datos: Tramites30401State) => {
+        this.seccionState = datos;
+      });
   }
 
   /**
@@ -199,10 +252,10 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       : false;
   }
 
-   /**
+  /**
    * Método de ciclo de vida de Angular que se ejecuta al destruir el componente.
    */
-   ngOnDestroy(): void {
+  ngOnDestroy(): void {
     this.destroyed$.next();
     this.destroyed$.complete();
   }
