@@ -192,7 +192,7 @@ export class AgregarProveedorCustomComponent implements OnDestroy, OnInit, OnCha
    * Define los campos y sus validaciones.
    *
    */
-  crearFormaulario(): void {
+  Formulario(): void {
     this.agregarProveedorForm = this.fb.group({
       tipoPersona: ['', Validators.required],
       denominacionRazon: [
@@ -230,7 +230,7 @@ export class AgregarProveedorCustomComponent implements OnDestroy, OnInit, OnCha
    * @description Hook de inicialización del componente. Llama a `cargarDatos()` para obtener catálogos.
    */
   ngOnInit(): void {
-    this.crearFormaulario();
+    this.Formulario();
     this.cargarDatos();
     this.esCURP = ES_CURP.includes(this.idProcedimiento);
     this.esRFC = ES_RFC.includes(this.idProcedimiento);
@@ -291,12 +291,14 @@ export class AgregarProveedorCustomComponent implements OnDestroy, OnInit, OnCha
    * local, actualiza el store del trámite y luego limpia el formulario y regresa a la vista anterior.
    */
   guardarProveedor(): void {
+    const DENOMINACIONRAZON_ONLY_FLAG = (this.agregarProveedorForm.value.tipoPersona === TipoPersona.MORAL) && (NUMERO_TRAMITE.TRAMITE_240117 === this.idProcedimiento);
     const NUEVO_PROVEEDOR: Proveedor = {
-      nombreRazonSocial: `${this.agregarProveedorForm.value.nombres} ${this.agregarProveedorForm.value.primerApellido
-        } ${this.agregarProveedorForm.value.segundoApellido || ''}`.trim(),
+      nombreRazonSocial: DENOMINACIONRAZON_ONLY_FLAG ? `${this.agregarProveedorForm.value.denominacionRazon}`.trim() : `${this.agregarProveedorForm.value.nombres} ${this.agregarProveedorForm.value.primerApellido
+      } ${this.agregarProveedorForm.value.segundoApellido || ''} `.trim(),
       rfc: '',
       curp: '',
-      telefono: this.agregarProveedorForm.value.telefono || '',
+      telefono:
+        `${this.agregarProveedorForm.value.lada} ${this.agregarProveedorForm.value.telefono}`.trim(),
       correoElectronico:
         this.agregarProveedorForm.value.correoElectronico || '',
       calle: this.agregarProveedorForm.value.calle || '',
@@ -418,6 +420,15 @@ export class AgregarProveedorCustomComponent implements OnDestroy, OnInit, OnCha
     ESTADO?.clearValidators();
     CODIGOPOSTAL?.clearValidators();
   }
+  NOMBRES?.updateValueAndValidity();
+  PRIMERAPELLIDO?.updateValueAndValidity();
+  MUNICIPIO?.updateValueAndValidity();
+  LOCALIDAD?.updateValueAndValidity();
+  COLINIA?.updateValueAndValidity();
+  CALLE?.updateValueAndValidity();
+  NUMEROEXTERIOR?.updateValueAndValidity();
+  ESTADO?.updateValueAndValidity();
+  CODIGOPOSTAL?.updateValueAndValidity();
 }
 
 

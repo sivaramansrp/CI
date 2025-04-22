@@ -23,7 +23,7 @@ import { TablaSeleccion } from '@ng-mf/data-access-user';
   standalone: true,
   imports: [CommonModule, TablaDinamicaComponent, AlertComponent],
   templateUrl: './terceros-relacionados.component.html',
-  styleUrl: './terceros-relacionados.component.css',
+  styleUrl: './terceros-relacionados.component.scss',
 })
 export class TercerosRelacionadosComponent {
   /**
