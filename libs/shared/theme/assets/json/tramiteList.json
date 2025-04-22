@@ -1458,8 +1458,8 @@
     {
         "id": 209,
         "tramite": 32201,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "/agace/anexo-veintiocho/solicitud",
+        "linkDepartment": "/agace/anexo-veintiocho/solicitud",
         "department": "agace"
     },
     {
