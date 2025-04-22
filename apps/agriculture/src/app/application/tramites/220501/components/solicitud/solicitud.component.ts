@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CargarDatosIniciales } from '../../../220502/models/solicitud-pantallas.model';
 import { CarrosDeFerrocarril } from '../../../220502/models/solicitud-pantallas.model';
@@ -6,13 +6,14 @@ import { HistorialInspeccionFisica } from '../../../220502/models/solicitud-pant
 import { Solicitud } from '../../../220502/models/solicitud-pantallas.model'
 import { SolicitudPantallasService } from '../../../220502/services/solicitud-pantallas.service';
 import { TEXTOS } from '../../constantes/texto-enum';
+import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { SolicitudDatosComponent } from '../../../220502/shared/solicitud-datos/solicitud-datos.component';
-import { DatosDelTramiteARealizarComponent } from '../../../220502/shared/datos-del-tramite-a-realizar/datos-del-tramite-a-realizar.component';
-import { ResponsableInspeccionEnPuntoComponent } from '../../../220502/shared/responsable-inspeccion-en-punto/responsable-inspeccion-en-punto.component';
-import { MedioTransporteComponent } from '../../../220502/shared/medio-transporte/medio-transporte.component';
 import { CarrosDeFerrocarrilComponent } from '../../../220502/shared/carros-de-ferrocarril/carros-de-ferrocarril.component';
+import { DatosDelTramiteARealizarComponent } from '../../../220502/shared/datos-del-tramite-a-realizar/datos-del-tramite-a-realizar.component';
 import { HistorialInspeccionFisicaComponent } from '../../../220502/shared/historial-inspeccion-fisica/historial-inspeccion-fisica.component';
+import { ResponsableInspeccionEnPuntoComponent } from '../../../220502/shared/responsable-inspeccion-en-punto/responsable-inspeccion-en-punto.component';
+import { SolicitudDatosComponent } from '../../../220502/shared/solicitud-datos/solicitud-datos.component';
+import { MedioTransporteComponent } from '../medio-transporte/medio-transporte.component';
 /**
  * Componente para gestionar los datos de la solicitud.
  */
@@ -25,7 +26,7 @@ import { HistorialInspeccionFisicaComponent } from '../../../220502/shared/histo
     MedioTransporteComponent, CarrosDeFerrocarrilComponent,HistorialInspeccionFisicaComponent
   ],
 })
-export class SolicitudComponent implements OnInit {
+export class SolicitudComponent implements OnInit, OnDestroy {
   /**
    * Constantes de texto.
    */
@@ -87,6 +88,12 @@ export class SolicitudComponent implements OnInit {
   mostrarSeccion: boolean = true;
 
   /**
+   * Subject para desuscribirse de los observables.
+   * @type {Subject<void>}
+   */
+  private destroyed$ = new Subject<void>();
+
+  /**
    * Constructor del componente.
    * @param fb FormBuilder para crear formularios.
    * @param solicitudService Servicio para gestionar las pantallas de solicitud.
@@ -116,16 +123,18 @@ export class SolicitudComponent implements OnInit {
     * Método para buscar y cargar datos iniciales del servicio.
     */
   cargarDatosIniciales(): void {
-    this.solicitudService.getData().subscribe({
-      next: (data: CargarDatosIniciales) => {
-        this.hHistorialinspeccion = data.hHistorialinspeccion;
-        this.dHistorialInspecciones = data.dHistorialInspecciones;
-        this.dCarrosDeFerrocarril = data.dCarrosDeFerrocarril;
-        this.hCarroFerrocarril = data.hCarroFerrocarril;
-        this.hSolicitud = data.hSolicitud;
-        this.dSolicitud = data.dSolicitud;
-      }
-    });
+    this.solicitudService.getData()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe({
+        next: (data: CargarDatosIniciales) => {
+          this.hHistorialinspeccion = data.hHistorialinspeccion;
+          this.dHistorialInspecciones = data.dHistorialInspecciones;
+          this.dCarrosDeFerrocarril = data.dCarrosDeFerrocarril;
+          this.hCarroFerrocarril = data.hCarroFerrocarril;
+          this.hSolicitud = data.hSolicitud;
+          this.dSolicitud = data.dSolicitud;
+        }
+      });
   }
 
   /**
@@ -134,5 +143,15 @@ export class SolicitudComponent implements OnInit {
    */
   onTransporteSeleccionado(value: boolean): void {
     this.mostrarSeccion = value;
+  }
+
+  /**
+    * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
+    * Desuscribe el componente de todos los observables.
+    * @returns {void}
+    */
+  ngOnDestroy(): void {
+    this.destroyed$.next();
+    this.destroyed$.complete();
   }
 }

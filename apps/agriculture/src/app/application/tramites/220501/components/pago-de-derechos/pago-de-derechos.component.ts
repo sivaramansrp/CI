@@ -26,7 +26,11 @@ import { Solicitud220501Store } from '../../estados/tramites220501.store';
   standalone: true,
   imports: [InputRadioComponent,TituloComponent,ReactiveFormsModule,CatalogoSelectComponent],
 })
-export class PagoDeDerechosComponent implements OnInit , OnDestroy{
+
+/**
+ * Componente que permite gestionar el pago de derechos en una solicitud.
+ */
+export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   /**
    * Indica si el formulario está deshabilitado.
    * @type {boolean}
@@ -69,11 +73,11 @@ export class PagoDeDerechosComponent implements OnInit , OnDestroy{
    */
   private revisionService: RevisionService;
 
-    /**
+  /**
    * Subject para desuscribirse de los observables.
    * @type {Subject<void>}
    */
-    private destroyed$ = new Subject<void>();
+  private destroyed$ = new Subject<void>();
 
   /** 
    * Estado de la solicitud 220501. 
@@ -94,15 +98,14 @@ export class PagoDeDerechosComponent implements OnInit , OnDestroy{
 
   /**
    * Constructor del componente.
-   *
    * @param {FormBuilder} fb - El servicio FormBuilder de Angular para crear formularios.
    * @param {RevisionService} revisionService - El servicio de revisión para obtener datos relacionados con el pago.
    */
   constructor(
     private readonly fb: FormBuilder,
     revisionService: RevisionService,
-    public solicitud220501Store : Solicitud220501Store,
-    public solicitud220501Query : Solicitud220501Query
+    public solicitud220501Store: Solicitud220501Store,
+    public solicitud220501Query: Solicitud220501Query
   ) {
     this.revisionService = revisionService;
   }
@@ -112,8 +115,8 @@ export class PagoDeDerechosComponent implements OnInit , OnDestroy{
    * @returns {void}
    */
   ngOnInit(): void {
-     this.pagoForm = this.fb.group({
-      exentoPagoNo: [{ value: this.solicitud220501State.exentoPagoNo}],
+    this.pagoForm = this.fb.group({
+      exentoPagoNo: [{ value: this.solicitud220501State.exentoPagoNo }],
       justificacion: [{ value: this.solicitud220501State.justificacion, disabled: true }],
       claveReferencia: [{ value: this.solicitud220501State.claveReferencia, disabled: true }],
       cadenaDependencia: [{ value: this.solicitud220501State.cadenaDependencia, disabled: true }],
@@ -124,23 +127,23 @@ export class PagoDeDerechosComponent implements OnInit , OnDestroy{
     });
 
     this.solicitud220501Query.selectSolicitud$
-    .pipe(
-      takeUntil(this.destroyed$),
-      map((data: Solicitud220501State) => {
-        this.solicitud220501State = data;
-        this.pagoForm.patchValue({
-          exentoPagoNo: this.solicitud220501State.exentoPagoNo,
-          justificacion: this.solicitud220501State.justificacion,
-          claveReferencia: this.solicitud220501State.claveReferencia,
-          cadenaDependencia: this.solicitud220501State.cadenaDependencia,
-          banco: this.solicitud220501State.banco,
-          llavePago: this.solicitud220501State.llavePago,
-          importePago: this.solicitud220501State.importePago,
-          fetchapago: this.solicitud220501State.fetchapago,
-        });
-      })
-    )
-    .subscribe();
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((data: Solicitud220501State) => {
+          this.solicitud220501State = data;
+          this.pagoForm.patchValue({
+            exentoPagoNo: this.solicitud220501State.exentoPagoNo,
+            justificacion: this.solicitud220501State.justificacion,
+            claveReferencia: this.solicitud220501State.claveReferencia,
+            cadenaDependencia: this.solicitud220501State.cadenaDependencia,
+            banco: this.solicitud220501State.banco,
+            llavePago: this.solicitud220501State.llavePago,
+            importePago: this.solicitud220501State.importePago,
+            fetchapago: this.solicitud220501State.fetchapago,
+          });
+        })
+      )
+      .subscribe();
 
     this.getJustificacion();
     this.getBanco();
@@ -148,9 +151,9 @@ export class PagoDeDerechosComponent implements OnInit , OnDestroy{
   }
 
   /** 
- * Obtiene la información sobre el pago de derechos a través del servicio `revisionService` 
- * y actualiza el store con la respuesta recibida.
- */
+   * Obtiene la información sobre el pago de derechos a través del servicio `revisionService` 
+   * y actualiza el store con la respuesta recibida.
+   */
   getPagoDeDerechos(): void {
     this.revisionService.getPagoDeDerechos().subscribe({
       next: (resp: PagoDeDerechos) => {
@@ -225,7 +228,6 @@ export class PagoDeDerechosComponent implements OnInit , OnDestroy{
     this.solicitud220501Store.setExentoPagoNo(value);
   }
 
-
   /** 
    * Selecciona un banco desde el catálogo y actualiza el store con la información correspondiente.
    * @param event Objeto de tipo Catalogo que contiene la información del banco seleccionado.
@@ -267,7 +269,6 @@ export class PagoDeDerechosComponent implements OnInit , OnDestroy{
     this.solicitud220501Store.setImportePago(VALUE);
   }
 
-
   /**
    * Obtiene el banco para el pago.
    * Este método llama al servicio de revisión para obtener el banco.
@@ -288,13 +289,13 @@ export class PagoDeDerechosComponent implements OnInit , OnDestroy{
     });
   }
 
-    /**
+  /**
    * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
    * Desuscribe el componente de todos los observables.
    * @returns {void}
-   * */
-    ngOnDestroy(): void {
-      this.destroyed$.next();
-      this.destroyed$.complete();
-    }
+   */
+  ngOnDestroy(): void {
+    this.destroyed$.next();
+    this.destroyed$.complete();
+  }
 }

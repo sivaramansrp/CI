@@ -14,10 +14,30 @@ const TERCEROS_TEXTO_DE_ALERTA =
  * Interfaz para definir la estructura de las filas.
  */
 interface Row {
+  /**
+   * Nombre de la persona.
+   * @type {string}
+   */
   nombre: string;
+  /**
+   * Número de teléfono de la persona.
+   * @type {string}
+   */
   telefono: string;
+  /**
+   * Correo electrónico de la persona.
+   * @type {string}
+   */
   correo: string;
+  /**
+   * Domicilio de la persona.
+   * @type {string}
+   */
   domicilio: string;
+  /**
+   * País de la persona.
+   * @type {string}
+   */
   pais: string;
 }
 
@@ -25,12 +45,40 @@ interface Row {
  * Interfaz para definir la estructura de las filas con detalles adicionales.
  */
 interface Rows {
+  /**
+   * Nombre de la persona.
+   * @type {string}
+   */
   nombre: string;
+  /**
+   * Número de teléfono de la persona.
+   * @type {string}
+   */
   telefono: string;
+  /**
+   * Correo electrónico de la persona.
+   * @type {string}
+   */
   correo: string;
+  /**
+   * Calle de la persona.
+   * @type {string}
+   */
   calle: string;
+  /**
+   * Número exterior de la persona.
+   * @type {number}
+   */
   exterior: number;
+  /**
+   * Número interior de la persona.
+   * @type {number}
+   */
   interior: number;
+  /**
+   * País de la persona.
+   * @type {string}
+   */
   pais: string;
 }
 
