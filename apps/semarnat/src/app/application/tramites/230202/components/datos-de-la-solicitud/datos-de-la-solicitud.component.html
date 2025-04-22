@@ -2,9 +2,25 @@
   <form [formGroup]="solicitudForm">
     <ng-titulo titulo="Número de certificado ..."></ng-titulo>
     <div class="col-md-12">
-      <label class="form-label text-justify">
+      <!-- <label class="form-label text-justify">
         Número de certificado fitosanitario de reexportación
-      </label>
+      </label> -->
+      <ng-container formGroupName="reexportacionForm">
+        <div class="row mt-5">
+          <div class="col-md-8">
+            <app-catalogo-select
+              [catalogo]="numeroDeCertificado"
+              [label]="'Número de certificado fitosanitario de reexportación'"
+              formControlName="numeroDeCertificado"
+              [required]="true"
+              (change)="numeroDeCertificadoSeleccion()"
+              name="numeroDeCertificado"
+            >
+            </app-catalogo-select>
+          </div>
+        </div>
+        
+      </ng-container>
     </div>
   </form>
 </div>
