@@ -2006,10 +2006,7 @@
         "id": 287,
         "tramite": 240120,
         "linkDashboard": "/sedena/pago/permiso-exportacion-pirotecnia/contenedor-de-pasos",
-        "linkDepartment": "/sedena/pago/permiso-exportacion-pirotecnia/contenedor-de-pasos",
+        "linkDepartment": "/pago/permiso-exportacion-pirotecnia/contenedor-de-pasos",
         "department": "sedena"
     }
-   
-
-    
 ]
