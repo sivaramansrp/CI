@@ -50,6 +50,6 @@ export interface ModeloDeFormaDinamica {
 
 export interface Validadores {
   tipo: string; // type
-  valor?: number | string | RegExp; // value
+  valor?: number | string; // value
   mensaje?: string; // message
 }
