@@ -115,7 +115,9 @@
       <div class="row">
         <div class="col-md-4">
           <div class="form-group">
-            <label class="form-label" for="establecimientoCorreoElectronico">Correo electrónico*:</label>
+            <label class="form-label" for="establecimientoCorreoElectronico">Correo electrónico*: <span class="bi bi-question-circle-fill"
+              title="Correo electrónico"
+              data-bs-toggle="tooltip"></span></label>
             <input
               class="form-control"
               id="establecimientoCorreoElectronicoId"
@@ -176,7 +178,7 @@
       </div>
 
       <div class="row mt-5">
-        <ng-alert [CONTENIDO]="TEXTOS.ALERTA" [CUSTOMECLASS]="class"></ng-alert>
+        <ng-alert [CONTENIDO]="TEXTOS1.ALERTA" [CUSTOMECLASS]="class"></ng-alert>
       </div>
 
       <div class="row">
@@ -370,12 +372,11 @@
         [datos]="mercanciasTablaDatos"
       ></app-tabla-dinamica>
       <div class="container text-end mt-5">
-        <button class="btn btn-default me-2">Modificar</button>
         <button class="btn btn-default me-2">Eliminar</button>
+        <button class="btn btn-default me-2">Modificar</button>
         <button
           class="btn btn-primary me-2"
           data-bs-toggle="modal"
-          
           (click)="abrirModalMercancia()"
         >
           Agregar

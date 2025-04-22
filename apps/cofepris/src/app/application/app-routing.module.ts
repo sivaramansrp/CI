@@ -385,6 +385,13 @@ const ROUTES: Routes = [
         (m) => m.EnmiendaPermisoSanitarioModule
       ),
   },
+  {
+    path: 'modificacion-permiso-importacion-tratamientos',
+    loadChildren: () =>
+      import('./tramites/260907/modificacion-permiso-importacion-tratamientos.module').then(
+        (m) => m.ModificacionPermisoImportacionTratamientosModule
+      ),
+  },
 
 ];
 

@@ -1612,8 +1612,8 @@
     {
         "id": 231,
         "tramite": 260907,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "/cofepris/modificacion-permiso-importacion-tratamientos/solicitante",
+        "linkDepartment": "/pago/modificacion-permiso-importacion-tratamientos/solicitante",
         "department": "cofepris"
     },
     {

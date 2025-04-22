@@ -376,10 +376,10 @@ eliminarPedimento(borrar: boolean): void {
    */
   estado: Catalogo[] = [];
 
-  /**
-   * Textos de alerta.
-   */
-  TEXTOS = ALERT;
+  // /**
+  //  * Textos de alerta.
+  //  */
+  // TEXTOS = ALERT;
 
   /**
    * Clase de alerta.
