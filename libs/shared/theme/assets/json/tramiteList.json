@@ -1451,8 +1451,8 @@
     {
         "id": 208,
         "tramite": 32102,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "/agace/aviso-de-ampliacion/solicitud",
+        "linkDepartment": "/pago/aviso-de-ampliacion/solicitud",
         "department": "agace"
     },
     {
