@@ -44,7 +44,7 @@ export class MensajeriaComponent implements OnInit, OnDestroy, AfterViewInit {
   public lasEmpresasForm!: FormGroup;
 
   /** Observable utilizado para cancelar suscripciones activas */
-  private destroyNotifier$: Subject<void> = new Subject();
+  public destroyNotifier$: Subject<void> = new Subject();
 
   /** Estado actual de la solicitud */
   public solicitudState!: Solicitud31616MensajeriaState;

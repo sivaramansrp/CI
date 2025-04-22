@@ -108,7 +108,7 @@ export class EnlaceComponent implements OnInit, OnDestroy {
    * Carga los encabezados de la tabla de enlace desde los datos JSON.
    */
   public getEnlace(): void {
-    this.enlaceHeaderData = this.enlaceTableData.tableHeader;
+    this.enlaceHeaderData = this.enlaceTableData?.tableHeader;
   }
 
   /**
@@ -127,7 +127,7 @@ export class EnlaceComponent implements OnInit, OnDestroy {
       resigtroFedral: [
         this.solicitudState?.resigtroFedral && this.solicitudState?.resigtroFedral !== ''
           ? this.solicitudState?.resigtroFedral
-          : this.representativeData.resigtro,
+          : this.representativeData?.resigtro,
         Validators.required,
       ],
       rfc: ['', Validators.required],
@@ -137,20 +137,20 @@ export class EnlaceComponent implements OnInit, OnDestroy {
       cargo: [
         this.solicitudState?.cargo && this.solicitudState?.cargo !== ''
           ? this.solicitudState?.cargo
-          : this.representativeData.cargo,
+          : this.representativeData?.cargo,
         Validators.required,
       ],
       cuidad: ['', Validators.required],
       telefonoEnlace: [
         this.solicitudState?.telefonoEnlace && this.solicitudState?.telefonoEnlace !== ''
           ? this.solicitudState?.telefonoEnlace
-          : this.representativeData.telefono,
+          : this.representativeData?.telefono,
         Validators.required,
       ],
       correoEnlace: [
         this.solicitudState?.correoEnlace && this.solicitudState?.correoEnlace !== ''
           ? this.solicitudState?.correoEnlace
-          : this.representativeData.correo,
+          : this.representativeData?.correo,
         Validators.required,
       ],
       suplente: [this.solicitudState?.suplente, Validators.required],
@@ -164,11 +164,11 @@ export class EnlaceComponent implements OnInit, OnDestroy {
    */
   public patchData(): void {
     this.enlace.patchValue({
-      rfc: this.representativeData.rfc,
-      nombre: this.representativeData.nombre,
-      apellidoPaterno: this.representativeData.apellidoPaterno,
-      apellidoMaterno: this.representativeData.apellidoMaterno,
-      cuidad: this.representativeData.cuidad,
+      rfc: this.representativeData?.rfc,
+      nombre: this.representativeData?.nombre,
+      apellidoPaterno: this.representativeData?.apellidoPaterno,
+      apellidoMaterno: this.representativeData?.apellidoMaterno,
+      cuidad: this.representativeData?.cuidad,
     });
 
     this.enlace.get('rfc')?.disable();

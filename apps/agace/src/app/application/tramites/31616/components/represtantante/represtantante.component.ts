@@ -105,7 +105,7 @@ export class ReprestantanteComponent implements OnInit, OnDestroy {
       resigtro: [
         this.solicitudState?.resigtro && this.solicitudState?.resigtro !== ''
           ? this.solicitudState?.resigtro
-          : this.datosRepresentativos.resigtro,
+          : this.datosRepresentativos?.resigtro,
         Validators.required
       ],
       rfc: ['', Validators.required],
@@ -115,13 +115,13 @@ export class ReprestantanteComponent implements OnInit, OnDestroy {
       telefono: [
         this.solicitudState?.telefono && this.solicitudState?.telefono !== ''
           ? this.solicitudState?.telefono
-          : this.datosRepresentativos.telefono,
+          : this.datosRepresentativos?.telefono,
         Validators.required
       ],
       correo: [
         this.solicitudState?.correo && this.solicitudState?.correo !== ''
           ? this.solicitudState?.correo
-          : this.datosRepresentativos.correo,
+          : this.datosRepresentativos?.correo,
         Validators.required
       ],
     });
@@ -132,10 +132,10 @@ export class ReprestantanteComponent implements OnInit, OnDestroy {
     this.represtantante.get('apellidoMaterno')?.disable();
 
     this.represtantante.patchValue({
-      rfc: this.datosRepresentativos.rfc,
-      nombre: this.datosRepresentativos.nombre,
-      apellidoPaterno: this.datosRepresentativos.apellidoPaterno,
-      apellidoMaterno: this.datosRepresentativos.apellidoMaterno,
+      rfc: this.datosRepresentativos?.rfc,
+      nombre: this.datosRepresentativos?.nombre,
+      apellidoPaterno: this.datosRepresentativos?.apellidoPaterno,
+      apellidoMaterno: this.datosRepresentativos?.apellidoMaterno,
     });
   }
 
