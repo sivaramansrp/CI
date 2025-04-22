@@ -397,7 +397,13 @@ const ROUTES: Routes = [
         (m) => m.EnmiendaPermisoSanitarioModule
       ),
   },
-
+  {
+    path: 'solicitud-modificacion',
+    loadChildren: () =>
+      import('./tramites/261101/datos-solicitude.module').then(
+        (m) => m.DatosSolicitudeModule
+      ),
+  }, 
   {
         path: 'importar-suministros-medicos',
         loadChildren: () =>
