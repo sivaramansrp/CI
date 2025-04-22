@@ -11,6 +11,7 @@ import { Router } from '@angular/router';
 import { TERCEROR_TEXTO_DE_ALERTA } from '../../models/terceros-relacionados.model';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
+import { TituloComponent } from '@ng-mf/data-access-user';
 
 /**
  * @title Terceros Relacionados
@@ -21,7 +22,7 @@ import { TablaSeleccion } from '@ng-mf/data-access-user';
 @Component({
   selector: 'app-terceros-relacionados',
   standalone: true,
-  imports: [CommonModule, TablaDinamicaComponent, AlertComponent],
+  imports: [CommonModule, TablaDinamicaComponent, AlertComponent, TituloComponent],
   templateUrl: './terceros-relacionados.component.html',
   styleUrl: './terceros-relacionados.component.scss',
 })
