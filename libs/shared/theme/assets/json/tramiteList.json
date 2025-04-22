@@ -814,8 +814,8 @@
     {
         "id": 117,
         "tramite": 110207,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "/se/registro/solicitud",
+        "linkDepartment": "/se/registro/solicitud",
         "department": "se"
     },
     {
