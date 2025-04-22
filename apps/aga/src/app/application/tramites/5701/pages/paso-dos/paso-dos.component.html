@@ -7,8 +7,6 @@
   <div class="col-md-12">
     <anexar-documentos [catalogoDocumentos]='catalogoDocumentos'
       [catalogoDocumentosOpcionales]="catalogoDocumentosOpcionales"
-      (cargaRealizada)="documentosCargados($event)"></anexar-documentos>
-  </div>
-
-  
+      (cargaRealizada)="documentosCargados($event)" [cargaArchivosEvento]="reenviarEvento"></anexar-documentos>
+  </div>  
 </div>

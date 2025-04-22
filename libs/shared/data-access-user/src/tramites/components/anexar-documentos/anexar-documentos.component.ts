@@ -54,6 +54,7 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
 
   @Input() catalogoDocumentos: Catalogo[] = [];
   @Input() catalogoDocumentosOpcionales: Catalogo[] = [];
+  @Input() cargaArchivosEvento!: EventEmitter<void>;
 
   @Output() cargaRealizada = new EventEmitter<boolean>();
   @ViewChildren('fileInput') fileInputs!: QueryList<ElementRef>;
@@ -120,6 +121,12 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
     this.archivosOpcionalesOriginal = [...this.archivosOpcionales];
     this.obtenerToken(this.datosLogin);
     this.crearFormaDocumento();
+
+    this.cargaArchivosEvento
+      .pipe(takeUntil(this.destroyNotifier$),
+      map(() => this.confirmUpload())
+      )
+      .subscribe();
   }
 
   /**
@@ -450,5 +457,7 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscription.forEach((sub: Subscription) => sub.unsubscribe());
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

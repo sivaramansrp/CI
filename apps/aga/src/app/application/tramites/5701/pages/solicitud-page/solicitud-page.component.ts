@@ -1,13 +1,14 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 import {
-  DatosPasos, SeccionLibQuery, SeccionLibState,
+  DatosPasos,
+  ListaPasosWizard,
+  PASOS,
+  SECCIONES_TRAMITE_5701,
+  SeccionLibQuery, SeccionLibState,
   SeccionLibStore,
+  WizardComponent
 } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
-import { ListaPasosWizard } from '@ng-mf/data-access-user';
-import { PASOS } from '@ng-mf/data-access-user';
-import { SECCIONES_TRAMITE_5701 } from '@ng-mf/data-access-user';
-import { WizardComponent } from '@ng-mf/data-access-user';
 
 interface AccionBoton {
   accion: string;
@@ -25,6 +26,7 @@ export class SolicitudPageComponent implements OnInit {
   private destroyNotifier$: Subject<void> = new Subject();
 
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
+  @Output() cargarArchivosEvento = new EventEmitter<void>();
 
   datosPasos: DatosPasos = {
     nroPasos: this.pasos.length,
@@ -34,12 +36,8 @@ export class SolicitudPageComponent implements OnInit {
   };
 
   constructor(
-              private seccionQuery: SeccionLibQuery,
-              private seccionStore: SeccionLibStore,) 
-  // eslint-disable-next-line no-empty-function
-  {
-
-  }
+    private seccionQuery: SeccionLibQuery,
+    private seccionStore: SeccionLibStore,) { }
 
   /**
    * Método de ciclo de vida de Angular que se ejecuta al inicializar el componente.
@@ -50,7 +48,7 @@ export class SolicitudPageComponent implements OnInit {
    * 
    * Además, llama al método `asignarSecciones` para realizar asignaciones adicionales.
    */
-  ngOnInit(): void{
+  ngOnInit(): void {
     this.seccionQuery.selectSeccionState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -109,16 +107,14 @@ export class SolicitudPageComponent implements OnInit {
     this.seccionStore.establecerFormaValida(FORMA_VALIDA);
   }
 
-  
+
   onClickCargaArchivos(): void {
-    console.log('click en cargar archivos');
-    
+    this.cargarArchivosEvento.emit();
   }
 
-  anterior() : void {
+  anterior(): void {
     this.wizardComponent.atras();
     this.indice = this.wizardComponent.indiceActual + 1;
     this.datosPasos.indice = this.wizardComponent.indiceActual + 1;
   }
-
 }

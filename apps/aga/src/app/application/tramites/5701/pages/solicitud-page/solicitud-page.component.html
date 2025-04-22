@@ -15,7 +15,7 @@
         <paso-uno></paso-uno>
         }
         @case (2) {
-        <paso-dos></paso-dos>
+        <paso-dos [cargaArchivosEvento]="cargarArchivosEvento"></paso-dos>
         }
         @case (3) {
         <paso-tres></paso-tres>
@@ -29,13 +29,13 @@
         @if (indice !== 2) {
         <btn-continuar [datos]="datosPasos" (continuarEvento)="getValorIndice($event)"></btn-continuar>
         } @else {
-          <div class="mt-5 mb-3 d-flex justify-content-end">
-            <button type="button" class="btn btn-default" (click)="anterior()">
-              Anterior
-            </button>
-        
-            <button class="btn btn-primary ms-3" (click)="onClickCargaArchivos()">Cargar archivos</button>
-          </div>
+        <div class="mt-5 mb-3 d-flex justify-content-end">
+          <button type="button" class="btn btn-default" (click)="anterior()">
+            Anterior
+          </button>
+
+          <button class="btn btn-primary ms-3" (click)="onClickCargaArchivos()">Cargar archivos</button>
+        </div>
         }
       </div>
     </div>
