@@ -86,7 +86,14 @@ const ROUTES: Routes = [
       import('./tramites/32508/adace.module').then(
         (m) => m.AdaceModule
       ),
-  }
+  },
+  {
+    path: 'endoso-garantia',
+    loadChildren: () =>
+      import('./tramites/31301/endoso-garantia.module').then(
+        (m) => m.EndosoGarantiaModule
+      ),
+  },
 ];
 
 @NgModule({

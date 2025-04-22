@@ -1402,8 +1402,8 @@
     {
         "id": 201,
         "tramite": 31301,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "/agace/endoso-garantia/solicitud",
+        "linkDepartment": "/pago/endoso-garantia/solicitud",
         "department": "agace"
     },
     {
