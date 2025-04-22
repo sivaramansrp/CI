@@ -471,8 +471,8 @@
     {
         "id": 68,
         "tramite": 140105,
-        "linkDashboard": "/se/pago/desistimiento-de-permiso/solicitante",
-        "linkDepartment": "/se/pago/desistimiento-de-permiso/solicitante",
+        "linkDashboard": "/se/desistimiento-de-permiso/solicitante",
+        "linkDepartment": "/se/desistimiento-de-permiso/solicitante",
         "department": "se"
     },
     {
@@ -1850,8 +1850,8 @@
     {
         "id": 265,
         "tramite": 240120,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "/sedena/permiso-exportacion-pirotecnia/contenedor-de-pasos",
+        "linkDepartment": "/pago/permiso-exportacion-pirotecnia/contenedor-de-pasos",
         "department": "sedena"
     },
     {
@@ -2001,12 +2001,5 @@
         "linkDepartment": "/pago/permiso-sanitario-dispositivos-medicos/permiso-sanitario-dispositivos-medicos",
         "department": "cofepris"
 
-    },
-    {
-        "id": 287,
-        "tramite": 240120,
-        "linkDashboard": "/sedena/pago/permiso-exportacion-pirotecnia/contenedor-de-pasos",
-        "linkDepartment": "/pago/permiso-exportacion-pirotecnia/contenedor-de-pasos",
-        "department": "sedena"
     }
 ]
