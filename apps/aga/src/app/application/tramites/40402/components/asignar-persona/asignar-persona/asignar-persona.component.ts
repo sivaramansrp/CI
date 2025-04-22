@@ -5,7 +5,10 @@ import { PersonaFisicaComponent } from '../persona-fisica/persona-fisica.compone
 import { PersonaMoralComponent } from '../persona-moral/persona-moral.component';
 
 /**
- * Componente para asignar CAAT marítimo.
+ * @component
+ * @name AsignarPersonaComponent
+ * @description Componente para asignar una persona, ya sea física o moral.
+ * Permite alternar entre pestañas para seleccionar el tipo de persona.
  */
 @Component({
   selector: 'app-asignar-persona',
@@ -21,26 +24,15 @@ import { PersonaMoralComponent } from '../persona-moral/persona-moral.component'
 })
 export class AsignarPersonaComponent {
   /**
-   * Cadena que representa el aviso de privacidad simplificado.
-   * Este aviso es utilizado para informar a los usuarios sobre el manejo de sus datos personales.
-   */
-  // TEXTOS = EMPRESA_MARITIMA_REQUERIDA;
-
-  /**
-   * Una cadena que representa la clase CSS para una alerta de información.
-   * Esta clase se utiliza para aplicar estilo a los mensajes de información en el componente.
-   */
-  // infoAlert = 'alert-info';
-
-  /**
-   * Índice de la pestaña seleccionada.
+   * @property {number} indice
+   * @description Índice de la pestaña seleccionada. Por defecto, es 1.
    */
   indice: number = 1;
 
   /**
-   * Selecciona la pestaña especificada.
-   * 
-   * @param i - El índice de la pestaña a seleccionar.
+   * @method seleccionaTab
+   * @description Cambia el índice de la pestaña seleccionada.
+   * @param {number} i - Índice de la pestaña a seleccionar.
    */
   seleccionaTab(i: number): void {
     this.indice = i;
