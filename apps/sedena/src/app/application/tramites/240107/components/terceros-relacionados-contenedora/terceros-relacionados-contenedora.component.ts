@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { DestinoFinal } from '../../../../shared/models/terceros-relacionados.model';
+import { ID_PROCEDIMIENTO } from '../../constantes/sustancias-quimicas.enum';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Proveedor } from '../../../../shared/models/terceros-relacionados.model';
@@ -26,6 +27,11 @@ import { takeUntil } from 'rxjs';
 export class TercerosRelacionadosContenedoraComponent
   implements OnInit, OnDestroy
 {
+  /**
+   * Identificador del procedimiento.
+   * @property {number} idProcedimiento
+   */
+  public readonly idProcedimiento = ID_PROCEDIMIENTO;
   /**
    * Observable para limpiar las suscripciones activas al destruir el componente.
    * @property {Subject<void>} destroy$
