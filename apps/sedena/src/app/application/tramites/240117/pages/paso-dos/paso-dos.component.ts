@@ -2,7 +2,7 @@ import { AlertComponent, AnexarDocumentosComponent, CATALOGOS_ID, Catalogo, Cata
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Subject } from 'rxjs';
-import { TEXTOS_REQUISITOS } from '../../constantes/importacion-armas-municiones.enum';
+import { TEXTOS_REQUISITOS } from '../../constantes/exportacion-quimicas-sustancias.enum';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { takeUntil } from 'rxjs';
 
