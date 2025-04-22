@@ -1,31 +1,54 @@
-import { CROSLISTA_ADUANAS_DISPONIBLES, DATOS_DEL_TRAMITE_MAP, FETCHA_PAGO, MANIFIESTOS_DECLARACIONES, PAISE_DENTINO_EITIQUETA, PERIODO_DOS_SEMESTRE, PERIODO_SEMESTRE_HABILITADO, PERIODO_UNO_SEMESTRE, PERMISO_ADUNA_TITULO, PERMISO_DEFINITIVO_TITULO } from '../../constants/datos-del-tramilte.enum';
-import { CrossListLable, InputCheckComponent, InputRadioComponent } from '@ng-mf/data-access-user';
-import { FormBuilder, FormControl } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import {
+  CROSLISTA_ADUANAS_DISPONIBLES,
+  DATOS_DEL_TRAMITE_MAP,
+  FETCHA_PAGO,
+  MANIFIESTOS_DECLARACIONES,
+  OCULTAR_PERMISO_GENERAL,
+  PAISE_DENTINO_EITIQUETA,
+  PERIODO_DOS_SEMESTRE,
+  PERIODO_SEMESTRE_HABILITADO,
+  PERIODO_UNO_SEMESTRE,
+  PERMISO_ADUNA_TITULO,
+  PERMISO_DEFINITIVO_TITULO,
+  PERMISO_JUSTIFICACION,
+} from '../../constants/datos-del-tramilte.enum';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+} from '@angular/core';
+import {
+  CrossListLable,
+  CrosslistComponent,
+  InputCheckComponent,
+  InputFecha,
+  InputFechaComponent,
+  InputRadioComponent,
+  TablaDinamicaComponent,
+  TablaSeleccion,
+  TituloComponent,
+} from '@ng-mf/data-access-user';
+import {
+  DatosDelTramiteFormState,
+  FECHA_DE_PAGO,
+  JustificacionTramiteFormState,
+  MANIFIESTOS_DECLARACION,
+  MERCANCIA_ENCABEZADO_DE_TABLA,
+  MercanciaDetalle,
+} from '../../models/datos-del-tramite.model';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { CrosslistComponent } from '@ng-mf/data-access-user';
-import { DatosDelTramiteFormState } from '../../models/datos-del-tramite.model';
-import { EventEmitter } from '@angular/core';
-import { FECHA_DE_PAGO } from '../../models/datos-del-tramite.model';
-import { FormGroup } from '@angular/forms';
-import { Input } from '@angular/core';
-import { InputFecha } from '@ng-mf/data-access-user';
-import { InputFechaComponent } from '@ng-mf/data-access-user';
-import { MANIFIESTOS_DECLARACION } from '../../models/datos-del-tramite.model';
-import { MERCANCIA_ENCABEZADO_DE_TABLA } from '../../models/datos-del-tramite.model';
-import { MercanciaDetalle } from '../../models/datos-del-tramite.model';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { Output } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
-import { Subject } from 'rxjs';
-import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
-import { TablaSeleccion } from '@ng-mf/data-access-user';
-import { TituloComponent } from '@ng-mf/data-access-user';
-import { Validators } from '@angular/forms';
-import { takeUntil } from 'rxjs';
 /**
  * @title Datos del Trámite
  * @description Componente que gestiona el formulario de datos del trámite como permisos, uso final y selección de aduanas.
@@ -43,29 +66,96 @@ import { takeUntil } from 'rxjs';
     TablaDinamicaComponent,
     InputRadioComponent,
     InputCheckComponent,
-    InputFechaComponent
-],
+    InputFechaComponent,
+  ],
   templateUrl: './datos-del-tramite.component.html',
-  styleUrl: './datos-del-tramite.component.css',
+  styleUrl: './datos-del-tramite.component.scss',
 })
 export class DatosDelTramiteComponent implements OnInit, OnDestroy {
   /**
- * @property {number} idProcedimiento
- * Identificador único del procedimiento asociado a la solicitud.
- * Este valor es recibido como un input desde el componente padre.
- *
- * @decorador @Input
- */
+   * @property {number} idProcedimiento
+   * Identificador único del procedimiento asociado a la solicitud.
+   * Este valor es recibido como un input desde el componente padre.
+   *
+   * @decorador @Input
+   */
   @Input() public idProcedimiento!: number;
 
+  /**
+   * Indica si el elemento está oculto o visible.
+   *
+   * @type {boolean}
+   * - `true`: El elemento está oculto.
+   * - `false`: El elemento está visible.
+   */
   public estaOculto = false;
+
+  /**
+   * Etiqueta que representa el país asociado al trámite.
+   * Esta propiedad utiliza la constante `PAISE_DENTINO_EITIQUETA`
+   * para asignar el valor correspondiente.
+   */
   public paisEtiqueta = PAISE_DENTINO_EITIQUETA;
+  /**
+   * Indica si el periodo habilitado está activo o no.
+   * Esta propiedad se utiliza para determinar si el periodo de semestre está habilitado.
+   * @type {boolean}
+   */
   public periodoHabilitado = false;
+
+  /**
+   * Indica si el trámite está relacionado con aduanas.
+   *
+   * @type {boolean}
+   * @default false
+   */
   public esAduna = false;
+  /**
+   * Indica si el trámite está relacionado con manifiestos y declaraciones.
+   *
+   * @type {boolean}
+   * @default false
+   */
   public manifiestosDeclaraciones = false;
+  /**
+   * Indica si la fecha de pago está habilitada.
+   *
+   * @type {boolean}
+   * @default false
+   */
   public fetchaPago = false;
+  /**
+   * Opciones para el campo de periodo de un semestre.
+   *
+   * @type {string[]}
+   * @default ['Uno Semestre', 'Dos Semestre']
+   */
   public periodoUnoSemestreOpciones = PERIODO_UNO_SEMESTRE;
+
+  /**
+   * Opciones para el campo de periodo de dos semestre.
+   *
+   * @type {string[]}
+   * @default ['Uno Semestre', 'Dos Semestre']
+   */
   public periodoUnoSemestreRadioOpciones = PERIODO_DOS_SEMESTRE;
+
+  /**
+   * Indica si el componente está en modo de justificación.
+   *
+   * @type {boolean}
+   * @default false
+   */
+  public esJustificacion = false;
+
+  /**
+   * Indica si el permiso general está oculto.
+   *
+   * @type {boolean}
+   * @default false
+   */
+
+  public ocultarPermisoGeneral = false;
 
   /**
    * @property {Subject<void>} unsubscribe$
@@ -100,11 +190,15 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    * @property {FormGroup} form
    */
   form!: FormGroup;
-
   /**
- * Texto de los manifiestos.
- */
-    manifiestosTexto: string = '';
+   * Formulario reactivo utilizado para justificar una acción o actividad.
+   *  @property {FormGroup} formDeJustificacion
+   */
+  formDeJustificacion!: FormGroup;
+  /**
+   * Texto de los manifiestos.
+   */
+  manifiestosTexto: string = '';
   /**
    * @property {InputFecha} fechaInicioInput
    * Objeto con la configuración de la fecha inicial del componente.
@@ -116,6 +210,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    */
   onReset(): void {
     this.form.reset();
+    this.formDeJustificacion.reset();
   }
 
   /**
@@ -133,6 +228,12 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    * @property {DatosDelTramiteFormState} datosDelTramiteFormState
    */
   @Input() datosDelTramiteFormState!: DatosDelTramiteFormState;
+
+  /**
+   * Estado del formulario de justificación del trámite recibido desde el componente padre.
+   * @property {JustificacionTramiteFormState} justificacionTramiteFormState
+   */
+  @Input() justificacionTramiteFormState!: JustificacionTramiteFormState;
 
   /**
    * Lista de datos de mercancías que se utilizan en la tabla dinámica.
@@ -156,6 +257,21 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    */
   @Output() updateDatosDelTramiteFormulario =
     new EventEmitter<DatosDelTramiteFormState>();
+
+  /**
+   * Evento emitido cuando se actualiza el formulario de justificación del trámite.
+   * @event updateJustificacionFormulario
+   */
+  @Output() updateJustificacionFormulario =
+    new EventEmitter<JustificacionTramiteFormState>();
+
+  /**
+   * @property {unknown[] | null} aduanasBotones
+   * Lista de botones relacionados con aduanas que se recibe desde el componente padre.
+   * Este input permite configurar dinámicamente los botones asociados a las aduanas.
+   * @decorador @Input
+   */
+  @Input() aduanasBotones: unknown[] | null = null;
 
   /**
    * Constructor del componente.
@@ -189,7 +305,25 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
       unoSemestre: [this.datosDelTramiteFormState.unoSemestre ?? null],
       dosSemestre: [this.datosDelTramiteFormState.dosSemestre ?? null],
       anoEnCurso: [this.datosDelTramiteFormState.anoEnCurso ?? false],
-      informacionConfidencial: [this.datosDelTramiteFormState.informacionConfidencial ?? false],
+      informacionConfidencial: [
+        this.datosDelTramiteFormState.informacionConfidencial ?? false,
+      ],
+    });
+  }
+
+  /**
+   * @method crearFormularioJustificacion
+   * @description Crea el formulario reactivo para capturar la justificación del trámite.
+   * Inicializa el campo `justificacion` con el valor recibido desde el estado del formulario,
+   * o un valor vacío si no existe, y aplica la validación requerida.
+   * @returns {void}
+   */
+  crearFormularioJustificacion(): void {
+    this.formDeJustificacion = this.fb.group({
+      justificacion: [
+        this.justificacionTramiteFormState?.justificacion ?? '',
+        Validators.required,
+      ],
     });
   }
 
@@ -222,15 +356,29 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   ngOnInit(): void {
+    this.esJustificacion = PERMISO_JUSTIFICACION.includes(this.idProcedimiento);
+    this.ocultarPermisoGeneral = OCULTAR_PERMISO_GENERAL.includes(
+      this.idProcedimiento
+    );
     this.crearFormaulario();
     this.manifiestosTexto = MANIFIESTOS_DECLARACION.MANIFIESTOS;
     this.form.patchValue({
       permisoGeneral: this.datosDelTramiteFormState.permisoGeneral,
       usoFinal: this.datosDelTramiteFormState.usoFinal,
     });
-    
+
+    if (this.esJustificacion) {
+      this.crearFormularioJustificacion();
+    }
+
     if (this.idProcedimiento) {
       this.actualizarFormControlsById();
+    }
+
+    if (this.esJustificacion) {
+      this.formDeJustificacion.patchValue({
+        justificacion: this.justificacionTramiteFormState.justificacion,
+      });
     }
 
     this.seleccionarAduanasDisponiblesDatos =
@@ -252,12 +400,25 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
         };
         this.updateDatosDelTramiteFormulario.emit(DATOS_DEL_TRAMITE);
       });
-
-      this.estaOculto = PERMISO_DEFINITIVO_TITULO.includes(this.idProcedimiento);
-      this.esAduna = PERMISO_ADUNA_TITULO.includes(this.idProcedimiento);
-      this.periodoHabilitado = PERIODO_SEMESTRE_HABILITADO.includes(this.idProcedimiento);
-      this.manifiestosDeclaraciones = MANIFIESTOS_DECLARACIONES.includes(this.idProcedimiento);
-      this.fetchaPago = FETCHA_PAGO.includes(this.idProcedimiento);
+    if (this.esJustificacion) {
+      this.formDeJustificacion.valueChanges
+        .pipe(takeUntil(this.unsubscribe$))
+        .subscribe((formValue) => {
+          const DATOS_JUSTIFICACION: JustificacionTramiteFormState = {
+            justificacion: formValue.justificacion,
+          };
+          this.updateJustificacionFormulario.emit(DATOS_JUSTIFICACION);
+        });
+    }
+    this.estaOculto = PERMISO_DEFINITIVO_TITULO.includes(this.idProcedimiento);
+    this.esAduna = PERMISO_ADUNA_TITULO.includes(this.idProcedimiento);
+    this.periodoHabilitado = PERIODO_SEMESTRE_HABILITADO.includes(
+      this.idProcedimiento
+    );
+    this.manifiestosDeclaraciones = MANIFIESTOS_DECLARACIONES.includes(
+      this.idProcedimiento
+    );
+    this.fetchaPago = FETCHA_PAGO.includes(this.idProcedimiento);
   }
 
   /**
@@ -267,14 +428,19 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   actualizarFormControlsById(): void {
-    Object.entries(DATOS_DEL_TRAMITE_MAP).forEach(([control, idsDeProcedimiento]) => {
-      if (idsDeProcedimiento.includes(this.idProcedimiento)) {
-        if (!this.form.contains(control)) {
-          const KEY = control as keyof DatosDelTramiteFormState;
-          this.form.addControl(control, new FormControl(this.datosDelTramiteFormState[KEY]));
+    Object.entries(DATOS_DEL_TRAMITE_MAP).forEach(
+      ([control, idsDeProcedimiento]) => {
+        if (idsDeProcedimiento.includes(this.idProcedimiento)) {
+          if (!this.form.contains(control)) {
+            const KEY = control as keyof DatosDelTramiteFormState;
+            this.form.addControl(
+              control,
+              new FormControl(this.datosDelTramiteFormState[KEY])
+            );
+          }
         }
       }
-    });
+    );
   }
 
   /**
