@@ -5,10 +5,12 @@ import {
   FormsModule,
   ReactiveFormsModule,
 } from '@angular/forms';
+import { CapacitacionSeguridadComponent } from '../capacitacion-seguridad/capacitacion-seguridad.component';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ControlesFisicoComponent } from '../controles-fisico/controles-fisico.component';
 import { GestionAduaneraComponent } from '../gestion-aduanera/gestion-aduanera.component';
+import { ManejoInvestigacionComponent } from '../manejo-investigacion/manejo-investigacion.component';
 import { ProfilesDomocilioDelaComponent } from '../profiles-domocilio-dela/profiles-domocilio-dela.component';
 import { SeguridadFisicaComponent } from '../seguridad-fisica/seguridad-fisica.component';
 import { SeguridadInformacionDocumentacionComponent } from '../seguridad-informacion-documentacion/seguridad-informacion-documentacion.component';
@@ -16,7 +18,6 @@ import { SeguridadLosVehiculosComponent } from '../seguridad-los-vehiculos/segur
 import { SeguridadPersonalComponent } from '../seguridad-personal/seguridad-personal.component';
 import { SeguridadProcesosComponent } from '../seguridad-procesos/seguridad-procesos.component';
 import { SociosComercialesComponent } from '../socios-comerciales/socios-comerciales.component';
-
 
 @Component({
   selector: 'app-perfiles-mensajeria',
@@ -33,7 +34,9 @@ import { SociosComercialesComponent } from '../socios-comerciales/socios-comerci
     GestionAduaneraComponent,
     SeguridadLosVehiculosComponent,
     SeguridadPersonalComponent,
-    SeguridadInformacionDocumentacionComponent
+    SeguridadInformacionDocumentacionComponent,
+    CapacitacionSeguridadComponent,
+    ManejoInvestigacionComponent
   ],
   templateUrl: './perfiles-mensajeria.component.html',
   styleUrls: ['./perfiles-mensajeria.component.css'],
@@ -49,6 +52,8 @@ export class PerfilesMensajeriaComponent {
   mostrarSeguridadVehiculos: boolean = false;
   mostrarSeguridadPersonal: boolean = false;
   mostrarSeguridadInformacion:boolean = false;
+  mostrarCapacitacionSeguridad: boolean = false;
+  mostrarManejoInvestigacion: boolean= false;
   public hasAgregar: boolean = false;
 
   constructor(private fb: FormBuilder) {
@@ -106,5 +111,13 @@ export class PerfilesMensajeriaComponent {
 
   alternarSeguridadInformacion(): void {
     this.mostrarSeguridadInformacion = !this.mostrarSeguridadInformacion;
+  }
+
+  alternarCapacitacionSeguridad(): void {
+    this.mostrarCapacitacionSeguridad = !this.mostrarCapacitacionSeguridad;
+  }
+
+  alternarManejoInvestigacion(): void {
+    this.mostrarManejoInvestigacion = !this.mostrarManejoInvestigacion;
   }
 }
