@@ -1,5 +1,6 @@
-
-
+/**
+ * Constantes para el catálogo de tipos de solicitud
+ */
 export const CATALOGOS_ID = {
     CAT_TIPO_SOL: 'tipos-solicitud',
     CAT_PAISES: 'paises',

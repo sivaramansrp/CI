@@ -15,16 +15,45 @@ import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
 import { Validators } from '@angular/forms';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
+
 /**
  * Interfaz para definir la estructura de las filas.
  */
 interface Row {
+  /**
+   * Partida de la mercancía.
+   * @type {string}
+   */
   Partida: string;
+  /**
+   * Tipo de requisito.
+   * @type {string}
+   */
   Tiporequisito: string;
+  /**
+   * Requisito de la mercancía.
+   * @type {string}
+   */
   Requisito: string;
+  /**
+   * Número de certificado.
+   * @type {number}
+   */
   Certificado: number;
+  /**
+   * Fracción arancelaria.
+   * @type {string}
+   */
   Fraccion: string;
+  /**
+   * Descripción de la mercancía.
+   * @type {string}
+   */
   Descripcion: string;
+  /**
+   * Número de identificación de la mercancía.
+   * @type {string}
+   */
   Nico: string;
 }
 
@@ -168,7 +197,11 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
    */
   empresadeTransportista!: Catalogo;
 
-  solicitud220501State : Solicitud220501State = {} as Solicitud220501State;
+  /**
+   * Estado de la solicitud 220501.
+   * @type {Solicitud220501State}
+   */
+  solicitud220501State: Solicitud220501State = {} as Solicitud220501State;
 
   /**
    * Subject para desuscribirse de los observables.
@@ -186,7 +219,20 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
    */
   opcionDeBotonDeRadio = CAPTURA_OPCIONES_DE_BOTON_DE_RADIO;
 
+  /**
+   * Índice actual de la fila.
+   * @type {number}
+   */
+  currentIndex = 0;
 
+  /**
+   * Constructor del componente.
+   * @param fb FormBuilder para crear formularios.
+   * @param revisionService Servicio de revisión para obtener datos.
+   * @param validacionesService Servicio de validaciones de formularios.
+   * @param solicitud220501Store Store para gestionar el estado de la solicitud 220501.
+   * @param solicitud220501Query Query para acceder al estado de la solicitud 220501.
+   */
   constructor(
     private readonly fb: FormBuilder,
     private revisionService: RevisionService,
@@ -194,9 +240,14 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
     public solicitud220501Store: Solicitud220501Store,
     public solicitud220501Query: Solicitud220501Query
   ) {
-  //
+    // Constructor vacío
   }
 
+  /**
+   * Método que se ejecuta al inicializar el componente.
+   * Aquí se inicializa el formulario y se obtienen los datos necesarios.
+   * @returns {void}
+   */
   ngOnInit(): void {
     this.forma = this.fb.group({
       foliodel: [{ value: this.solicitud220501State.fetchapago, disabled: true }],
@@ -206,8 +257,8 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
       claveUCON: [{ value: this.solicitud220501State.claveUCON, disabled: true }],
       establecimientoTIF: [this.solicitud220501State.establecimientoTIF, Validators.required],
       nombre: [this.solicitud220501State.nombre, Validators.required],
-      numeroguia:[{value:this.solicitud220501State.numeroguia, disabled: true},Validators.required],
-      regimen:[this.solicitud220501State.regimen,Validators.required],
+      numeroguia: [{ value: this.solicitud220501State.numeroguia, disabled: true }, Validators.required],
+      regimen: [this.solicitud220501State.regimen, Validators.required],
       capturaDatosMercancia: [this.solicitud220501State.capturaDatosMercancia],
       coordenadas: [{ value: this.solicitud220501State.coordenadas, disabled: true }],
       movilizacion: [this.solicitud220501State.movilizacion, Validators.required],
@@ -260,7 +311,7 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
    */
   actualizarDatosDelaSolicitud(): void {
     this.revisionService.getDatosDelaSolicitud().subscribe({
-      next: (resp:Solicitud220501State) => {
+      next: (resp: Solicitud220501State) => {
         this.solicitud220501Store.setFoliodel(resp.foliodel);
         this.solicitud220501Store.setClaveUCON(resp.claveUCON);
         this.solicitud220501Store.setEstablecimientoTIF(resp.establecimientoTIF);
@@ -307,7 +358,6 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
     },
   ];
 
-
   /**
    * Muestra u oculta el contenido colapsable.
    * @returns {void}
@@ -315,11 +365,6 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
   mostrar_colapsable(): void {
     this.colapsable = !this.colapsable;
   }
-  /**
-   * Índice actual de la fila.
-   * @type {number}
-   */
-  currentIndex = 0;
 
   /**
    * Rota la fila en la dirección especificada.
@@ -421,6 +466,7 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
       }
     });
   }
+
   /**
    * Obtiene el régimen al que se destinarán las mercancías.
    * Este método llama al servicio de revisión para obtener el régimen.
@@ -480,6 +526,7 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
       }
     });
   }
+
   /**
    * Obtiene la empresa transportista.
    * Este método llama al servicio de revisión para obtener la empresa transportista.
@@ -499,6 +546,7 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
       }
     });
   }
+
   /**
    * Selecciona una aduana de ingreso y actualiza el store con la descripción correspondiente.
    * @param event Objeto de tipo Catalogo que contiene la información de la aduana seleccionada.
@@ -533,7 +581,6 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
     this.solicitud220501Store.setRegimen(event.id);
   }
 
-
   /**
    * Selecciona una movilización nacional y actualiza el store con la descripción correspondiente.
    * @param event Objeto de tipo Catalogo que contiene la información de la movilización seleccionada.
@@ -561,7 +608,6 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
   seleccionarPuntoVerificacion(event: Catalogo): void {
     this.solicitud220501Store.setPunto(event.id);
   }
-
 
   /**
    * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
