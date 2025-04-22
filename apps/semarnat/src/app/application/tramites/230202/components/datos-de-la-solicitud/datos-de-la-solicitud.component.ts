@@ -35,6 +35,7 @@ export class DatosDeLaSolicitudComponent {
    * @type {Catalogo[]}
    */
   numeroDeCertificado!: Catalogo[];
+  aduana!: Catalogo[];
 
 
   constructor(
@@ -73,6 +74,7 @@ export class DatosDeLaSolicitudComponent {
     this.solicitudForm = this.fb.group({
       reexportacionForm: this.fb.group({
         numeroDeCertificado: [this.solicitudState?.numeroDeCertificado, [Validators.required]],
+        aduana: [this.solicitudState?.aduana, [Validators.required]],
       }),
       // Otros grupos de formulario pueden ir aquí
     });
@@ -88,19 +90,28 @@ export class DatosDeLaSolicitudComponent {
       })
     );
 
+    const ADUANA$ = this.phytosanitaryReexportacionService.getAduana().pipe(
+      map((resp) => {
+        this.aduana = resp.data;
+      })
+    );
+
     merge(
-      NUMERODECERTIFICADO$
+      NUMERODECERTIFICADO$,
+      ADUANA$
     )
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe();
   }
 
-  /**
-   * Maneja la selección de aduana.
-   */
   numeroDeCertificadoSeleccion(): void {
     const NUMERODECERTIFICADO = this.solicitudForm.get('reexportacionForm.numeroDeCertificado')?.value;
     this.store.setNumeroDeCertificado(NUMERODECERTIFICADO);
+  }
+
+  aduanaSeleccion(): void {
+    const ADUANA = this.solicitudForm.get('reexportacionForm.aduana')?.value;
+    this.store.setAduana(ADUANA);
   }
 
   /**

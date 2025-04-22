@@ -21,4 +21,9 @@ export class PhytosanitaryReexportacionService {
   getNumeroDeCertificado(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>('assets/json/230202/numeroDeCertificado.json');
   }
+
+  getAduana(): Observable<RespuestaCatalogos> {
+    return this.http.get<RespuestaCatalogos>('assets/json/230202/aduanaIngresara.json');
+  }
+
 }
