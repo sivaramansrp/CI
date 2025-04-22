@@ -16,6 +16,7 @@ import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
 import { Validators } from '@angular/forms';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
+import { ROWS } from '../../constantes/constantes';
 
 /**
  * Interfaz para definir la estructura de las filas.
@@ -227,7 +228,11 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
    * @type {number}
    */
   currentIndex = 0;
-
+/**
+   * Filas de datos.
+   * @type {Row[]}
+   */
+rows = ROWS; 
   /**
    * Constructor del componente.
    * @param fb FormBuilder para crear formularios.
@@ -313,7 +318,7 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
    * y luego actualiza el store con la respuesta recibida.
    */
   actualizarDatosDelaSolicitud(): void {
-    this.revisionService.getDatosDelaSolicitud().subscribe({
+    this.revisionService.getDatosDelaSolicitud().pipe(takeUntil(this.destroyed$)).subscribe({
       next: (resp: Solicitud220501State) => {
         this.solicitud220501Store.setFoliodel(resp.foliodel);
         this.solicitud220501Store.setClaveUCON(resp.claveUCON);
@@ -326,40 +331,6 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
       }
     });
   }
-
-  /**
-   * Filas de datos.
-   * @type {Row[]}
-   */
-  rows: Row[] = [
-    {
-      Partida: '1',
-      Tiporequisito: 'Inspección ocular',
-      Requisito: 'Requisito',
-      Certificado: 123456,
-      Fraccion: '01039201',
-      Descripcion: 'Con pedigree o certificado de alto registro.',
-      Nico: '00',
-    },
-    {
-      Partida: '2',
-      Tiporequisito: 'inspección de oído',
-      Requisito: 'Requisito',
-      Certificado: 123456,
-      Fraccion: '01039201',
-      Descripcion: 'Con pedigree o certificado de alto registro.',
-      Nico: '00',
-    },
-    {
-      Partida: '3',
-      Tiporequisito: 'inspección de nariz',
-      Requisito: 'Requisito',
-      Certificado: 123456,
-      Fraccion: '01039201',
-      Descripcion: 'Con pedigree o certificado de alto registro.',
-      Nico: '00',
-    },
-  ];
 
   /**
    * Muestra u oculta el contenido colapsable.
@@ -396,7 +367,7 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   getAduanaIngreso(): void {
-    this.revisionService.getAduanaIngreso().subscribe((resp) => {
+    this.revisionService.getAduanaIngreso().pipe(takeUntil(this.destroyed$)).subscribe((resp) => {
       if (resp.code === 200) {
         const RESPONSE = resp.data;
 
@@ -416,7 +387,7 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   getOficianaInspeccion(): void {
-    this.revisionService.getOficianaInspeccion().subscribe((resp) => {
+    this.revisionService.getOficianaInspeccion().pipe(takeUntil(this.destroyed$)).subscribe((resp) => {
       if (resp.code === 200) {
         const RESPONSE = resp.data;
 
@@ -436,7 +407,7 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   getPuntoInspeccion(): void {
-    this.revisionService.getPuntoInspeccion().subscribe((resp) => {
+    this.revisionService.getPuntoInspeccion().pipe(takeUntil(this.destroyed$)).subscribe((resp) => {
       if (resp.code === 200) {
         const RESPONSE = resp.data;
 
@@ -456,7 +427,7 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   getEstablecimiento(): void {
-    this.revisionService.getEstablecimiento().subscribe((resp) => {
+    this.revisionService.getEstablecimiento().pipe(takeUntil(this.destroyed$)).subscribe((resp) => {
       if (resp.code === 200) {
         const RESPONSE = resp.data;
 
@@ -476,7 +447,7 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   getRegimenDestinaran(): void {
-    this.revisionService.getRegimenDestinaran().subscribe((resp) => {
+    this.revisionService.getRegimenDestinaran().pipe(takeUntil(this.destroyed$)).subscribe((resp) => {
       if (resp.code === 200) {
         const RESPONSE = resp.data;
 
@@ -496,7 +467,7 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   getMovilizacionNacional(): void {
-    this.revisionService.getMovilizacionNacional().subscribe((resp) => {
+    this.revisionService.getMovilizacionNacional().pipe(takeUntil(this.destroyed$)).subscribe((resp) => {
       if (resp.code === 200) {
         const RESPONSE = resp.data;
 
@@ -516,7 +487,7 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   getPuntoVerificacion(): void {
-    this.revisionService.getPuntoVerificacion().subscribe((resp) => {
+    this.revisionService.getPuntoVerificacion().pipe(takeUntil(this.destroyed$)).subscribe((resp) => {
       if (resp.code === 200) {
         const RESPONSE = resp.data;
 
@@ -536,7 +507,7 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   getEmpresaTransportista(): void {
-    this.revisionService.getEmpresaTransportista().subscribe((resp) => {
+    this.revisionService.getEmpresaTransportista().pipe(takeUntil(this.destroyed$)).subscribe((resp) => {
       if (resp.code === 200) {
         const RESPONSE = resp.data;
 

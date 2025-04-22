@@ -3,85 +3,8 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { AlertComponent, TituloComponent } from '@libs/shared/data-access-user/src';
-
-/**
- * Texto de alerta utilizado en el componente.
- * @constant {string}
- */
-const TERCEROS_TEXTO_DE_ALERTA =
-  'Las tablas con asterisco son obligatorias y debes agregar por lo menos un registro.'; // Define the constant
-
-/**
- * Interfaz para definir la estructura de las filas.
- */
-interface Row {
-  /**
-   * Nombre de la persona.
-   * @type {string}
-   */
-  nombre: string;
-  /**
-   * Número de teléfono de la persona.
-   * @type {string}
-   */
-  telefono: string;
-  /**
-   * Correo electrónico de la persona.
-   * @type {string}
-   */
-  correo: string;
-  /**
-   * Domicilio de la persona.
-   * @type {string}
-   */
-  domicilio: string;
-  /**
-   * País de la persona.
-   * @type {string}
-   */
-  pais: string;
-}
-
-/**
- * Interfaz para definir la estructura de las filas con detalles adicionales.
- */
-interface Rows {
-  /**
-   * Nombre de la persona.
-   * @type {string}
-   */
-  nombre: string;
-  /**
-   * Número de teléfono de la persona.
-   * @type {string}
-   */
-  telefono: string;
-  /**
-   * Correo electrónico de la persona.
-   * @type {string}
-   */
-  correo: string;
-  /**
-   * Calle de la persona.
-   * @type {string}
-   */
-  calle: string;
-  /**
-   * Número exterior de la persona.
-   * @type {number}
-   */
-  exterior: number;
-  /**
-   * Número interior de la persona.
-   * @type {number}
-   */
-  interior: number;
-  /**
-   * País de la persona.
-   * @type {string}
-   */
-  pais: string;
-}
+import { Row, Rows } from '../../models/pago-de-derechos.model';
+import { ITEMS, PERSONA, TERCEROS_TEXTO_DE_ALERTA } from '../../constantes/constantes';
 
 /**
  * Componente para gestionar los terceros relacionados.
@@ -106,35 +29,16 @@ export class TercerosRelacionadosComponent {
    */
   @Input() enableScrollbar: boolean = false;
 
-  /**
+   /**
    * Lista de elementos de tipo Row.
    * @type {Row[]}
    */
-  items: Row[] = [
-    {
-      nombre: 'Miriam Lopez Solis',
-      telefono: '52-2298456543',
-      correo: 'miriam@gmail.com',
-      domicilio: 'este es un domicilio address',
-      pais: 'ANGOLA(REPUBLIC DE)',
-    },
-  ];
-
-  /**
-   * Lista de elementos de tipo Rows.
-   * @type {Rows[]}
-   */
-  persona: Rows[] = [
-    {
-      nombre: 'Miriam Lopez Solis',
-      telefono: '52-2298456543',
-      correo: 'miriam@gmail.com',
-      calle: '#10',
-      exterior: 856,
-      interior: 1,
-      pais: 'MEXICO(ESTAD UNIDOS MEXICANOS',
-    },
-  ];
+   items = ITEMS; 
+   /**
+    * Lista de elementos de tipo Rows.
+    * @type {Rows[]}
+    */
+   persona = PERSONA;
 
   // Otros miembros de la clase...
 }
