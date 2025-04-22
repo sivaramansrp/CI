@@ -119,8 +119,6 @@ export class TercerosRelacionadosFabricanteComponent {
   public configuracionOtrosTabla: ConfiguracionColumna<Otros>[] =
     TercerosRelacionadosFabricanteComponent.generateConfiguracionTabla(this.configuracionOtros);
 
-  // /* eslint-disable @typescript-eslint/no-explicit-any */
-  // /* eslint-disable class-methods-use-this */
   /**
    * Genera un arreglo de configuración para una tabla basado en el arreglo de datos proporcionado.
    *
