@@ -11,9 +11,12 @@ import { ControlesFisicoComponent } from '../controles-fisico/controles-fisico.c
 import { GestionAduaneraComponent } from '../gestion-aduanera/gestion-aduanera.component';
 import { ProfilesDomocilioDelaComponent } from '../profiles-domocilio-dela/profiles-domocilio-dela.component';
 import { SeguridadFisicaComponent } from '../seguridad-fisica/seguridad-fisica.component';
+import { SeguridadInformacionDocumentacionComponent } from '../seguridad-informacion-documentacion/seguridad-informacion-documentacion.component';
 import { SeguridadLosVehiculosComponent } from '../seguridad-los-vehiculos/seguridad-los-vehiculos.component';
+import { SeguridadPersonalComponent } from '../seguridad-personal/seguridad-personal.component';
 import { SeguridadProcesosComponent } from '../seguridad-procesos/seguridad-procesos.component';
 import { SociosComercialesComponent } from '../socios-comerciales/socios-comerciales.component';
+
 
 @Component({
   selector: 'app-perfiles-mensajeria',
@@ -28,7 +31,9 @@ import { SociosComercialesComponent } from '../socios-comerciales/socios-comerci
     SociosComercialesComponent,
     SeguridadProcesosComponent,
     GestionAduaneraComponent,
-    SeguridadLosVehiculosComponent
+    SeguridadLosVehiculosComponent,
+    SeguridadPersonalComponent,
+    SeguridadInformacionDocumentacionComponent
   ],
   templateUrl: './perfiles-mensajeria.component.html',
   styleUrls: ['./perfiles-mensajeria.component.css'],
@@ -42,6 +47,8 @@ export class PerfilesMensajeriaComponent {
   mostrarSeguridadProcesos: boolean = false;
   mostrarGestionAduanera: boolean = false;
   mostrarSeguridadVehiculos: boolean = false;
+  mostrarSeguridadPersonal: boolean = false;
+  mostrarSeguridadInformacion:boolean = false;
   public hasAgregar: boolean = false;
 
   constructor(private fb: FormBuilder) {
@@ -91,5 +98,13 @@ export class PerfilesMensajeriaComponent {
 
   alternarSeguridadVehiculos(): void {
     this.mostrarSeguridadVehiculos = !this.mostrarSeguridadVehiculos;
+  }
+
+  alternarSeguridadPersonal(): void {
+    this.mostrarSeguridadPersonal = !this.mostrarSeguridadPersonal;
+  }
+
+  alternarSeguridadInformacion(): void {
+    this.mostrarSeguridadInformacion = !this.mostrarSeguridadInformacion;
   }
 }
