@@ -20,14 +20,14 @@ import { Tramite240117Store } from '../../estados/tramite240117Store.store';
  * @standalone true
  * @imports CommonModule, DatosMercanciaComponent
  * @templateUrl ./datos-mercancia-contenedora.component.html
- * @styleUrl ./datos-mercancia-contenedora.component.css
+ * @styleUrl ./datos-mercancia-contenedora.component.scss
  */
 @Component({
   selector: 'app-datos-mercancia-contenedora',
   standalone: true,
   imports: [CommonModule, DatosMercanciaComponent],
   templateUrl: './datos-mercancia-contenedora.component.html',
-  styleUrl: './datos-mercancia-contenedora.component.css',
+  styleUrl: './datos-mercancia-contenedora.component.scss',
 })
 export class DatosMercanciaContenedoraComponent {
     idProcedimiento = NUMERO_TRAMITE.TRAMITE_240117;

@@ -20,7 +20,7 @@ import { takeUntil } from 'rxjs';
  * @standalone true
  * @imports CommonModule, DatosDelTramiteComponent
  * @templateUrl ./datos-del-tramite-contenedora.component.html
- * @styleUrl ./datos-del-tramite-contenedora.component.css
+ * @styleUrl ./datos-del-tramite-contenedora.component.scss
  * 
  * @class DatosDelTramiteContenedoraComponent
  * @implements OnInit, OnDestroy
@@ -30,7 +30,7 @@ import { takeUntil } from 'rxjs';
   standalone: true,
   imports: [CommonModule, DatosDelTramiteComponent],
   templateUrl: './datos-del-tramite-contenedora.component.html',
-  styleUrl: './datos-del-tramite-contenedora.component.css',
+  styleUrl: './datos-del-tramite-contenedora.component.scss',
 })
 export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy { 
 

@@ -16,7 +16,7 @@ import { Tramite240117Store } from '../../estados/tramite240117Store.store';
  * @standalone true
  * @imports CommonModule, AgregarProveedorCustomComponent
  * @templateUrl ./agregar-proveedor-contenedora.component.html
- * @styleUrl ./agregar-proveedor-contenedora.component.css
+ * @styleUrl ./agregar-proveedor-contenedora.component.scss
  * 
  * @property {number} idProcedimiento - Identificador único del procedimiento asociado al trámite 240117.
  * 
@@ -33,7 +33,7 @@ import { Tramite240117Store } from '../../estados/tramite240117Store.store';
   standalone: true,
   imports: [CommonModule, AgregarProveedorCustomComponent],
   templateUrl: './agregar-proveedor-contenedora.component.html',
-  styleUrl: './agregar-proveedor-contenedora.component.css',
+  styleUrl: './agregar-proveedor-contenedora.component.scss',
 })
 export class AgregarProveedorContenedoraComponent {
 

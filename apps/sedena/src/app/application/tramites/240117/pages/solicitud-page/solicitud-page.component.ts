@@ -19,7 +19,7 @@ import { WizardComponent } from '@ng-mf/data-access-user';
  * 
  * @selector app-solicitud-page
  * @template ./solicitud-page.component.html
- * @style ./solicitud-page.component.css
+ * @style ./solicitud-page.component.scss
  * 
  * @property {string | null} tituloMensaje - Título que se muestra en la parte superior del wizard. 
  * Se actualiza dependiendo del paso seleccionado.
@@ -63,7 +63,7 @@ import { WizardComponent } from '@ng-mf/data-access-user';
     BtnContinuarComponent
   ],
   templateUrl: './solicitud-page.component.html',
-  styleUrl: './solicitud-page.component.css',
+  styleUrl: './solicitud-page.component.scss',
 })
 export class SolicitudPageComponent {
 

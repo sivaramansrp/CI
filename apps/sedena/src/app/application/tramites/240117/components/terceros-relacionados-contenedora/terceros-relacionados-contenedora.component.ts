@@ -24,7 +24,7 @@ import { takeUntil } from 'rxjs';
  * @standalone true
  * @imports [CommonModule, TercerosRelacionadosComponent]
  * @templateUrl ./terceros-relacionados-contenedora.component.html
- * @styleUrl ./terceros-relacionados-contenedora.component.css
+ * @styleUrl ./terceros-relacionados-contenedora.component.scss
  * 
  * @implements OnInit, OnDestroy
  */
@@ -33,7 +33,7 @@ import { takeUntil } from 'rxjs';
   standalone: true,
   imports: [CommonModule, TercerosRelacionadosComponent],
   templateUrl: './terceros-relacionados-contenedora.component.html',
-  styleUrl: './terceros-relacionados-contenedora.component.css',
+  styleUrl: './terceros-relacionados-contenedora.component.scss',
 })
 export class TercerosRelacionadosContenedoraComponent implements OnInit, OnDestroy{
 

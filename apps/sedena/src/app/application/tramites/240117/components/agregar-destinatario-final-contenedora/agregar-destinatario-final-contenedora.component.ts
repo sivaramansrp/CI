@@ -27,7 +27,7 @@ import { Tramite240117Store } from '../../estados/tramite240117Store.store';
  * - AgregarDestinatarioCustomComponent
  * 
  * @templateUrl ./agregar-destinatario-final-contenedora.component.html
- * @styleUrl ./agregar-destinatario-final-contenedora.component.css
+ * @styleUrl ./agregar-destinatario-final-contenedora.component.scss
  * 
  * @remarks
  * Este componente interactúa con el store y las consultas del trámite para gestionar
@@ -38,7 +38,7 @@ import { Tramite240117Store } from '../../estados/tramite240117Store.store';
   standalone: true,
   imports: [CommonModule, AgregarDestinatarioCustomComponent],
   templateUrl: './agregar-destinatario-final-contenedora.component.html',
-  styleUrl: './agregar-destinatario-final-contenedora.component.css',
+  styleUrl: './agregar-destinatario-final-contenedora.component.scss',
 })
 export class AgregarDestinatarioFinalContenedoraComponent {
   

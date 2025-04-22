@@ -17,13 +17,13 @@ import { FirmaElectronicaComponent } from '@libs/shared/data-access-user/src';
  * 
  * @selector app-paso-tres
  * @template ./paso-tres.component.html
- * @style ./paso-tres.component.css
+ * @style ./paso-tres.component.scss
  */
 @Component({
   selector: 'app-paso-tres',
   standalone: true,
   imports:[CommonModule ,FirmaElectronicaComponent],
   templateUrl: './paso-tres.component.html',
-  styleUrl: './paso-tres.component.css',
+  styleUrl: './paso-tres.component.scss',
 })
 export class PasoTresComponent {}
