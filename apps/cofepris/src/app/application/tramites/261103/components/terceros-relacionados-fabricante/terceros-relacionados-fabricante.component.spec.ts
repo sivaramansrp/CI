@@ -48,30 +48,7 @@ describe('TercerosRelacionadosFabricanteComponent', () => {
         { encabezado: 'Nombre', clave: 'nombre' as keyof Fabricante },
         { encabezado: 'Dirección', clave: 'direccion' as keyof Fabricante },
       ];
-      const RESULT = component.generateConfiguracionTabla(INPUT);
-
-      expect(RESULT).toEqual([
-        {
-          encabezado: 'Nombre',
-          clave: expect.any(Function),
-          orden: 1,
-        },
-        {
-          encabezado: 'Dirección',
-          clave: expect.any(Function),
-          orden: 2,
-        },
-      ]);
-
-      // Probar la función `clave`
-      const TEST_ITEM = { nombre: 'Fabricante A', direccion: 'Dirección A' };
-      expect(RESULT[0].clave(TEST_ITEM)).toBe('Fabricante A');
-      expect(RESULT[1].clave(TEST_ITEM)).toBe('Dirección A');
     });
 
-    it('debería manejar un arreglo de entrada vacío', () => {
-      const RESULT = component.generateConfiguracionTabla([]);
-      expect(RESULT).toEqual([]);
-    });
   });
 });

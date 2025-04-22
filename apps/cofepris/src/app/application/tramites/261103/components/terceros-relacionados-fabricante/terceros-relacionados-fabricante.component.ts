@@ -82,7 +82,7 @@ export class TercerosRelacionadosFabricanteComponent {
    * @type {ConfiguracionColumna<Fabricante>[]} Configuración de las columnas de la tabla.
    */
   public configuracionTabla: ConfiguracionColumna<Fabricante>[] =
-    this.generateConfiguracionTabla(this.configuracionFabricante);
+    TercerosRelacionadosFabricanteComponent.generateConfiguracionTabla(this.configuracionFabricante);
   /**
    * @public
    * @property {ConfiguracionColumna<Fabricante>[]} configuracionFacturadorTabla
@@ -92,7 +92,7 @@ export class TercerosRelacionadosFabricanteComponent {
    * por `configuracionFabricante` a través del método `generateConfiguracionTabla`.
    */
   public configuracionFacturadorTabla: ConfiguracionColumna<Fabricante>[] =
-    this.generateConfiguracionTabla(this.configuracionFabricante);
+    TercerosRelacionadosFabricanteComponent.generateConfiguracionTabla(this.configuracionFabricante);
   /**
    * Configuración de la tabla para "Proveedor".
    *
@@ -100,7 +100,7 @@ export class TercerosRelacionadosFabricanteComponent {
    * a través del método `generateConfiguracionTabla`.
    */
   public configuracionProveedorTabla: ConfiguracionColumna<Fabricante>[] =
-    this.generateConfiguracionTabla(this.configuracionFabricante);
+    TercerosRelacionadosFabricanteComponent.generateConfiguracionTabla(this.configuracionFabricante);
   /**
    * Configuración de la tabla para el certificado analítico relacionado con los fabricantes.
    *
@@ -110,17 +110,17 @@ export class TercerosRelacionadosFabricanteComponent {
    * @type {ConfiguracionColumna<Fabricante>[]} - Arreglo de configuraciones de columnas para la tabla.
    */
   public configuracionCertificadoAnaliticoTabla: ConfiguracionColumna<Fabricante>[] =
-    this.generateConfiguracionTabla(this.configuracionFabricante);
+    TercerosRelacionadosFabricanteComponent.generateConfiguracionTabla(this.configuracionFabricante);
   /**
    * Configuración de la tabla para los datos de "Otros".
    *
    * @type {ConfiguracionColumna<Otros>[]} Configuración de las columnas de la tabla.
    */
   public configuracionOtrosTabla: ConfiguracionColumna<Otros>[] =
-    this.generateConfiguracionTabla(this.configuracionOtros);
+    TercerosRelacionadosFabricanteComponent.generateConfiguracionTabla(this.configuracionOtros);
 
-  /* eslint-disable @typescript-eslint/no-explicit-any */
-  /* eslint-disable class-methods-use-this */
+  // /* eslint-disable @typescript-eslint/no-explicit-any */
+  // /* eslint-disable class-methods-use-this */
   /**
    * Genera un arreglo de configuración para una tabla basado en el arreglo de datos proporcionado.
    *
@@ -134,12 +134,12 @@ export class TercerosRelacionadosFabricanteComponent {
    *   - `clave`: Una función que obtiene el valor de la clave especificada de un objeto de datos.
    *   - `orden`: El orden de la columna, comenzando desde 1.
    */
-  generateConfiguracionTabla(datosArray: Array<{ encabezado: string; clave: keyof Fabricante }>): ConfiguracionColumna<any>[] {
-    const FIELDS: Array<{ encabezado: string; clave: keyof Fabricante }> =
+  static generateConfiguracionTabla<T>(datosArray: Array<{ encabezado: string; clave: keyof T }>): ConfiguracionColumna<T>[] {
+    const FIELDS: Array<{ encabezado: string; clave: keyof T }> =
       datosArray;
     return FIELDS.map((field, index) => ({
       encabezado: field.encabezado,
-      clave: (item: any) => item[field.clave],
+      clave: (item: T) => item[field.clave] as string | number | boolean | undefined,
       orden: index + 1,
     }));
   }
