@@ -480,120 +480,125 @@
               />
             </div>
           
-          <div class="form-group mt-5">
-            <div class="panel-group ficha-collapse" id="accordion">
-              <div class="panel panel-default">
-                <div
-                  class="panel-heading"
-                  (click)="mostrar_colapsable()"
-                  tabindex="0"
-                >
-                  <p class="panel-title">País donde se produce o fabrica el ingrediente activo</p>
-                  <button
-                    type="button"
-                    class="collpase-button collapsed"
-                  ></button>
-                </div>
-                @if(colapsable){
-                <div class="panel-collapse collapse in" id="panel-01">
-                  <div class="panel-body">
-                    <crosslist
-                      [fechas]="seleccionarOrigenDelPais"
-                      [label]="paisDeProcedenciaLabel"
-                      [botones]="paisDeProcedenciaBotones"
-                    ></crosslist>
-                  </div>
-                </div>
-                }
-              </div>
-            </div>
-          </div>
-      
-          <div class="form-group mt-5">
-            <div class="panel-group ficha-collapse" id="accordion">
-              <div class="panel panel-default">
-                <div
-                  class="panel-heading"
-                  (click)="mostrar_colapsableDuos()"
-                  tabindex="0"
-                >
-                  <p class="panel-title">País donde se elabora el producto</p>
-                  <button
-                    type="button"
-                    class="collpase-button collapsed"
-                  ></button>
-                </div>
-                @if(colapsableDuos){
-                <div class="panel-collapse collapse in" id="panel-01">
-                  <div class="panel-body">
-                    <crosslist
-                      [fechas]="seleccionarOrigenDelPaisDuos"
-                      [label]="paisDeProcedenciaLabel"
-                      [botones]="paisDeProcedenciaBotonesDuos"
-                    ></crosslist>
-                  </div>
-                </div>
-                }
-              </div>
-            </div>
-          </div>
-      
-          <div class="form-group mt-5">
-            <div class="panel-group ficha-collapse" id="accordion">
-              <div class="panel panel-default">
-                <div
-                  class="panel-heading"
-                  (click)="mostrar_colapsableTres()"
-                  tabindex="0"
-                >
-                  <p class="panel-title">País proveedor</p>
-                  <button
-                    type="button"
-                    class="collpase-button collapsed"
-                  ></button>
-                </div>
-                @if(colapsableTres){
-                <div class="panel-collapse collapse in" id="panel-01">
-                  <div class="panel-body">
-                    <crosslist
-                      [fechas]="seleccionarOrigenDelPaisTres"
-                      [label]="paisDeProcedenciaLabel"
-                      [botones]="paisDeProcedenciaBotonesTres"
-                    ></crosslist>
-                  </div>
-                </div>
-                }
-              </div>
-            </div>
-          </div>
-          <div class="form-group mt-5">
-              <div class="panel-group ficha-collapse" id="accordion">
-                <div class="panel panel-default">
-                  <div
-                    class="panel-heading"
-                    (click)="mostrar_colapsableTres()"
-                    tabindex="0"
-                  >
-                    <p class="panel-title">País de procedencia/País de último puerto de embarque</p>
-                    <button
-                      type="button"
-                      class="collpase-button collapsed"
-                    ></button>
-                  </div>
-                  @if(colapsableTres){
-                  <div class="panel-collapse collapse in" id="panel-01">
-                    <div class="panel-body">
-                      <crosslist
-                        [fechas]="seleccionarOrigenDelPaisCuatro"
-                        [label]="paisDeProcedenciaLabel"
-                        [botones]="paisDeProcedenciaBotonesCuatro"
-                      ></crosslist>
+            @if (configuracionVisibilidad.paisOrigen) {
+              <div class="form-group mt-5">
+                <div class="panel-group ficha-collapse" id="accordion">
+                  <div class="panel panel-default">
+                    <div class="panel-heading" (click)="mostrar_colapsable()" tabindex="0">
+                      <p class="panel-title">País de origen</p>
+                      <button type="button" class="collpase-button collapsed"></button>
                     </div>
+                    @if (colapsable) {
+                      <div class="panel-collapse collapse in" id="panel-01">
+                        <div class="panel-body">
+                          <crosslist
+                            [fechas]="seleccionarOrigenDelPais"
+                            [label]="paisDeOrigen"
+                            [botones]="paisDeProcedenciaBotones"
+                          ></crosslist>
+                        </div>
+                      </div>
+                    }
                   </div>
-                  }
                 </div>
               </div>
-            </div>
+            }
+            
+            @if (configuracionVisibilidad.paisFabrica) {
+              <div class="form-group mt-5">
+                <div class="panel-group ficha-collapse" id="accordion">
+                  <div class="panel panel-default">
+                    <div class="panel-heading" (click)="mostrar_colapsable()" tabindex="0">
+                      <p class="panel-title">país donde se produce o fabrica el ingrediente activo</p>
+                      <button type="button" class="collpase-button collapsed"></button>
+                    </div>
+                    @if (colapsable) {
+                      <div class="panel-collapse collapse in" id="panel-01">
+                        <div class="panel-body">
+                          <crosslist
+                            [fechas]="seleccionarOrigenDelPais"
+                            [label]="paisDeProcedenciaLabel"
+                            [botones]="paisDeProcedenciaBotones"
+                          ></crosslist>
+                        </div>
+                      </div>
+                    }
+                  </div>
+                </div>
+              </div>
+            }
+            
+            @if (configuracionVisibilidad.paisElaboracion) {
+              <div class="form-group mt-5">
+                <div class="panel-group ficha-collapse" id="accordion">
+                  <div class="panel panel-default">
+                    <div class="panel-heading" (click)="mostrar_colapsableDuos()" tabindex="0">
+                      <p class="panel-title">país donde se elabora el producto</p>
+                      <button type="button" class="collpase-button collapsed"></button>
+                    </div>
+                    @if (colapsableDuos) {
+                      <div class="panel-collapse collapse in" id="panel-01">
+                        <div class="panel-body">
+                          <crosslist
+                            [fechas]="seleccionarOrigenDelPaisDuos"
+                            [label]="paisDeProcedenciaLabel"
+                            [botones]="paisDeProcedenciaBotonesDuos"
+                          ></crosslist>
+                        </div>
+                      </div>
+                    }
+                  </div>
+                </div>
+              </div>
+            }
+            
+            @if (configuracionVisibilidad.paisProveedor) {
+              <div class="form-group mt-5">
+                <div class="panel-group ficha-collapse" id="accordion">
+                  <div class="panel panel-default">
+                    <div class="panel-heading" (click)="mostrar_colapsableTres()" tabindex="0">
+                      <p class="panel-title">país proveedor</p>
+                      <button type="button" class="collpase-button collapsed"></button>
+                    </div>
+                    @if (colapsableTres) {
+                      <div class="panel-collapse collapse in" id="panel-01">
+                        <div class="panel-body">
+                          <crosslist
+                            [fechas]="seleccionarOrigenDelPaisTres"
+                            [label]="paisDeProcedenciaLabel"
+                            [botones]="paisDeProcedenciaBotonesTres"
+                          ></crosslist>
+                        </div>
+                      </div>
+                    }
+                  </div>
+                </div>
+              </div>
+            }
+            
+            @if (configuracionVisibilidad.paisProcedencia) {
+              <div class="form-group mt-5">
+                <div class="panel-group ficha-collapse" id="accordion">
+                  <div class="panel panel-default">
+                    <div class="panel-heading" (click)="mostrar_colapsableTres()" tabindex="0">
+                      <p class="panel-title">país de procedencia/país de último puerto de embarque</p>
+                      <button type="button" class="collpase-button collapsed"></button>
+                    </div>
+                    @if (colapsableTres) {
+                      <div class="panel-collapse collapse in" id="panel-01">
+                        <div class="panel-body">
+                          <crosslist
+                            [fechas]="seleccionarOrigenDelPaisCuatro"
+                            [label]="paisDeProcedenciaLabel"
+                            [botones]="paisDeProcedenciaBotonesCuatro"
+                          ></crosslist>
+                        </div>
+                      </div>
+                    }
+                  </div>
+                </div>
+              </div>
+            }
             <div class="form-group">
               <app-catalogo-select
                 [catalogo]="estado"

@@ -331,6 +331,12 @@ const ROUTES: Routes = [
       
   },
   {
+    path: 'muestras-de-toxicos',
+    loadChildren: () =>
+      import('./tramites/260513/muestras-de-toxicos.module').then(
+        (m) => m.MuestrasDeToxicosModule)
+  },
+  {
     path: 'permiso-sujetos',
     loadChildren: () =>
       import(
@@ -391,13 +397,22 @@ const ROUTES: Routes = [
         (m) => m.EnmiendaPermisoSanitarioModule
       ),
   },
+
   {
-    path: 'modificacion-permiso-importacion-medicamentos',
-    loadChildren: () =>
-      import('./tramites/261103/modificacion-permiso-importacion-medicamentos.module').then(
-        (m) => m.ModificacionPermisoImportacionModule
-      ),
-},
+        path: 'importar-suministros-medicos',
+        loadChildren: () =>
+          import('./tramites/260916/importar-suministros-medicos.module').then(
+            (m) => m.ImportarSuministrosMedicosModule
+          )
+  },
+  {
+        path: 'modificacion-permiso-importacion-medicamentos',
+        loadChildren: () =>
+          import('./tramites/261103/modificacion-permiso-importacion-medicamentos.module').then(
+            (m) => m.ModificacionPermisoImportacionModule
+          ),
+    },
+
 ];
 
 @NgModule({
