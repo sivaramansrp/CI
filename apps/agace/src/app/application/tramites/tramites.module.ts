@@ -9,4 +9,4 @@ import { NgModule } from '@angular/core';
   exports: [
   ]
 })
-export class ViewsModule { }
+export class ViewsModule {}

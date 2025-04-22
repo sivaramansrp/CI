@@ -16,6 +16,13 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'registros-de-comercio-exterior',
+    loadChildren: () =>
+      import('./tramites/31602/comercio-exterior/comercio-exterior.module').then(
+        (m) => m.ComercioExteriorModule
+      ),
+  },
+  {
     path: 'aviso',
     loadChildren: () =>
       import('./tramites/32502/aviso.module').then((m) => m.AvisoModule),
