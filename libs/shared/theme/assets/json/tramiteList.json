@@ -989,8 +989,8 @@
     {
         "id": 142,
         "tramite": 32505,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "/agace/aviso-procesos-solicitante",
+        "linkDepartment": "/pago/aviso-procesos-solicitante",
         "department": "agace"
     },
     {
@@ -1010,8 +1010,8 @@
     {
         "id": 145,
         "tramite": 32508,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "/agace/adace/solicitud",
+        "linkDepartment": "/pago/adace/solicitud",
         "department": "agace"
     },
     {
@@ -1647,8 +1647,8 @@
     {
         "id": 236,
         "tramite": 260916,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "/cofepris/importar-suministros-medicos/solictud",
+        "linkDepartment": "/pago/importar-suministros-medicos/solictud",
         "department": "cofepris"
     },
     {
@@ -1661,8 +1661,8 @@
     {
         "id": 238,
         "tramite": 261101,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "/cofepris/solicitude-modification/solitud-modification",
+        "linkDepartment": "/pago/solicitude-modification/solitud-modification",
         "department": "cofepris"
     },
     {
@@ -1675,8 +1675,8 @@
     {
         "id": 240,
         "tramite": 261401,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "/cofepris/solicitud-modificacion-permiso-salida-territorio/solicitud",
+        "linkDepartment": "/pago/solicitud-modificacion-permiso-salida-territorio/solicitud",
         "department": "cofepris"
     },
     {

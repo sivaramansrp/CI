@@ -45,7 +45,6 @@ const ROUTES: Routes = [
         './tramites/260204/permiso-sanitario-importacion-medicamentos.module'
       ).then((m) => m.PermisoSanitarioImportacionMedicamentosModule),
   },
-
   {
     path: 'aviso-exportacion',
     loadChildren: () => import('./tramites/260604/aviso-exportacion.module').then(m => m.AvisoExportacionModule)
@@ -213,6 +212,13 @@ const ROUTES: Routes = [
       import(
         './tramites/260203/permiso-sanitario-importacion-medicamentos.module'
       ).then((m) => m.PermisoSanitarioImportacion260203Module),
+  },
+  {
+    path: 'solicitud-modificacion-permiso-salida-territorio',
+    loadChildren: () =>
+      import(
+        './tramites/261401/solicitud-modificacion-permiso-salida-territorio.module'
+      ).then((m) => m.SolicitudModificacionPermisoSalidaTerritorioModule),
   },
   {
     path: 'permiso-experimentales-plaguicidas',
@@ -390,6 +396,20 @@ const ROUTES: Routes = [
       import('./tramites/260905/enmienda-permiso-sanitario.module').then(
         (m) => m.EnmiendaPermisoSanitarioModule
       ),
+  },
+  {
+      path: 'solicitud-modificacion',
+      loadChildren: () =>
+        import('./tramites/261101/datos-solicitude.module').then(
+          (m) => m.DatosSolicitudeModule
+        ),
+  },
+  {
+        path: 'importar-suministros-medicos',
+        loadChildren: () =>
+          import('./tramites/260916/importar-suministros-medicos.module').then(
+            (m) => m.ImportarSuministrosMedicosModule
+          )
   },
 
 ];
