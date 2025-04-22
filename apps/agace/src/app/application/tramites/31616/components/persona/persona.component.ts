@@ -5,59 +5,93 @@ import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { SolicitudDeRegistroInvocarService } from '../../services/solicitudDeRegistroInvocar/solicitud-de-registro-invocar.service';
 
+/**
+ * Componente que muestra una tabla dinámica con información de personas relacionadas al trámite 31616.
+ *
+ * @export
+ * @class PersonaComponent
+ * @implements {OnInit}
+ * @implements {OnDestroy}
+ */
 @Component({
   selector: 'app-persona',
   standalone: true,
-  imports: [CommonModule,
+  imports: [
+    CommonModule,
     TablaDinamicaComponent,
     TituloComponent
   ],
   templateUrl: './persona.component.html',
   styleUrl: './persona.component.css',
 })
-export class PersonaComponent implements OnInit,OnDestroy{
-  
+export class PersonaComponent implements OnInit, OnDestroy {
+
   /**
-   * Configuración de las columnas de la tabla de mercancías.
+   * Configuración de las columnas que se mostrarán en la tabla de personas.
+   *
+   * @type {ConfiguracionColumna<PersonasInfo>[]}
+   * @memberof PersonaComponent
    */
   personasTabla: ConfiguracionColumna<PersonasInfo>[] = PERSONAS_TABLA;
 
   /**
-   * Datos de la tabla de mercancías.
+   * Datos obtenidos para mostrar en la tabla de personas.
+   *
+   * @type {PersonasInfo[]}
+   * @memberof PersonaComponent
    */
   personasTablaDatos: PersonasInfo[] = [];
-  
+
   /**
-   * Notificador para destruir observables activos y evitar pérdidas de memoria.
+   * Notificador utilizado para cancelar suscripciones activas al destruir el componente
+   * y evitar pérdidas de memoria.
+   *
+   * @private
+   * @type {Subject<void>}
+   * @memberof PersonaComponent
    */
   private destroyNotifier$: Subject<void> = new Subject();
 
+  /**
+   * Crea una instancia del componente.
+   *
+   * @param {SolicitudDeRegistroInvocarService} service Servicio para obtener datos de personas.
+   * @memberof PersonaComponent
+   */
   constructor(
     private service: SolicitudDeRegistroInvocarService,
-  
-  ) {
-    //Añade lógica aquí
-  }
-  
-  ngOnInit(): void {
-    this.obtenerTablaDatos()
-  }
+  ) {}
 
-    /**
-   * Obtiene los datos de la tabla de mercancías.
-   */
-    obtenerTablaDatos(): void {
-      this.service.obtenerPersonaTablaDatos()
-        .pipe(takeUntil(this.destroyNotifier$))
-        .subscribe((data) => {
-          const DATOS = data?.data;
-          this.personasTablaDatos = DATOS;
-        });
-    }
-
-    
   /**
-   * Método que se ejecuta al destruir el componente.
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Invoca la carga inicial de datos para la tabla.
+   *
+   * @memberof PersonaComponent
+   */
+  ngOnInit(): void {
+    this.obtenerTablaDatos();
+  }
+
+  /**
+   * Obtiene los datos de la tabla de personas desde el servicio.
+   * La suscripción se cancela automáticamente al destruir el componente.
+   *
+   * @memberof PersonaComponent
+   */
+  obtenerTablaDatos(): void {
+    this.service.obtenerPersonaTablaDatos()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data) => {
+        const DATOS = data?.data;
+        this.personasTablaDatos = DATOS;
+      });
+  }
+
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta cuando el componente se destruye.
+   * Completa el observable para liberar recursos y evitar fugas de memoria.
+   *
+   * @memberof PersonaComponent
    */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();

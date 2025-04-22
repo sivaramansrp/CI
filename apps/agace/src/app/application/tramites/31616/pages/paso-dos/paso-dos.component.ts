@@ -2,6 +2,15 @@ import { CATALOGOS_ID, Catalogo, CatalogosService, TEXTOS } from '@ng-mf/data-ac
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 
+/**
+ * Componente que representa el segundo paso de un flujo de captura,
+ * donde se muestran y seleccionan tipos de documentos disponibles.
+ *
+ * @export
+ * @class PasoDosComponent
+ * @implements {OnInit}
+ * @implements {OnDestroy}
+ */
 @Component({
   selector: 'app-paso-dos',
   templateUrl: './paso-dos.component.html',
@@ -10,52 +19,70 @@ export class PasoDosComponent implements OnInit, OnDestroy {
   /**
    * Sujeto utilizado para manejar la destrucción de observables.
    * Este objeto se utiliza para evitar pérdidas de memoria al cancelar suscripciones activas.
-   * 
+   *
    * @private
+   * @type {Subject<void>}
+   * @memberof PasoDosComponent
    */
   private destroyed$ = new Subject<void>();
 
   /**
-   * Textos usados en el componente, provenientes de una fuente centralizada.
+   * Conjunto de textos utilizados en el componente.
+   * Se obtienen desde una fuente centralizada para facilitar su mantenimiento y reutilización.
+   *
+   * @type {*}
+   * @memberof PasoDosComponent
    */
   TEXTOS = TEXTOS;
 
   /**
-   * Lista de tipos de documentos disponibles para selección.
+   * Lista de tipos de documentos disponibles que pueden ser seleccionados por el usuario.
+   *
+   * @type {Catalogo[]}
+   * @memberof PasoDosComponent
    */
   tiposDocumentos: Catalogo[] = [];
 
   /**
-   * Clase de estilo para mensajes de alerta informativa.
+   * Clase CSS utilizada para mostrar mensajes informativos en la interfaz.
+   *
+   * @type {string}
+   * @memberof PasoDosComponent
    */
   infoAlert = 'alert-info';
 
   /**
-   * Catálogo completo de documentos disponibles.
+   * Catálogo completo de documentos obtenidos desde el servicio.
+   *
+   * @type {Catalogo[]}
+   * @memberof PasoDosComponent
    */
   catalogoDocumentos: Catalogo[] = [];
 
   /**
    * Constructor del componente.
-   * 
-   * @param {CatalogosService} catalogosServices Servicio para obtener los catálogos necesarios.
+   * Inyecta el servicio `CatalogosService` para obtener los catálogos de datos necesarios.
+   *
+   * @param {CatalogosService} catalogosServices - Servicio para obtener catálogos.
+   * @memberof PasoDosComponent
    */
-  constructor(public catalogosServices: CatalogosService) {
-    //Añade lógica aquí
-  }
+  constructor(public catalogosServices: CatalogosService) {}
 
   /**
    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
-   * Inicializa la lista de tipos de documentos disponibles y define algunos documentos seleccionados por defecto.
+   * Carga los tipos de documentos disponibles desde el servicio de catálogos.
+   *
+   * @memberof PasoDosComponent
    */
   ngOnInit(): void {
     this.getTiposDocumentos();
   }
 
   /**
-   * Obtiene el catálogo de tipos de documentos disponibles para el trámite.
-   * Este método realiza una solicitud al servicio de catálogos para cargar la lista
-   * de documentos disponibles que el usuario podrá seleccionar.
+   * Obtiene el catálogo de tipos de documentos desde el servicio de catálogos.
+   * El resultado se almacena en la propiedad `catalogoDocumentos`.
+   *
+   * @memberof PasoDosComponent
    */
   getTiposDocumentos(): void {
     this.catalogosServices
@@ -63,20 +90,22 @@ export class PasoDosComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroyed$))
       .subscribe({
         next: (resp): void => {
-          // Si la respuesta tiene documentos, los almacena en catalogoDocumentos
           if (resp.length > 0) {
             this.catalogoDocumentos = resp;
           }
         },
         error: (_error): void => {
-          // Manejo de errores, actualmente vacío pero puede ser implementado
+          // Manejo de errores, pendiente de implementación
         },
       });
   }
 
   /**
-   * Método del ciclo de vida de Angular que se llama cuando el componente se destruye.
-   * Este método completa el observable `destroyed$` para cancelar las suscripciones activas.
+   * Método del ciclo de vida de Angular que se llama al destruir el componente.
+   * Completa el observable `destroyed$` para cancelar todas las suscripciones activas
+   * y liberar recursos.
+   *
+   * @memberof PasoDosComponent
    */
   ngOnDestroy(): void {
     this.destroyed$.next();
