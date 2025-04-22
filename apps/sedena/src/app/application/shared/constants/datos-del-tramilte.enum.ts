@@ -41,6 +41,16 @@ export const PERMISO_DEFINITIVO_TITULO = [
 export const PERMISO_ADUNA_TITULO = [240119, 240118];
 
 /**
+ * Identificadores numéricos relacionados con permisos OCULTAR_BOTONES.
+ *
+ * @constant
+ * @type {number[]}
+ * @description Representa códigos específicos utilizados en el sistema para identificar permisos OCULTAR_BOTONES.
+ */
+export const OCULTAR_BOTONES = [240121];
+
+
+/**
  * Mapa de etiquetas asociadas a países.
  *
  * @constant
