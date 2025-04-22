@@ -5,12 +5,12 @@ import { DestinoFinal, Proveedor } from '../../models/terceros-relacionados.mode
 import { CommonModule, Location } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
-import { CAMPO_OBLIGATORIO_DESTINATARIO_PROVEEDOR, PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE, TERCEROS_NACIONALIDAD_OPCIONES, TERCEROS_NACIONALIDAD_OPCIONES_EXTRANJERO,TIPO_PERSONA_OPCIONES} from '../../constants/datos-solicitud.enum';
+import { CAMPO_OBLIGATORIO_DESTINATARIO_PROVEEDOR, PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE, TERCEROS_NACIONALIDAD_OPCIONES, TERCEROS_NACIONALIDAD_OPCIONES_EXTRANJERO, TIPO_PERSONA_OPCIONES, TIPO_PERSONA_OPCIONES_NO_CONTRIBUYENTE } from '../../constants/datos-solicitud.enum';
 import { Subject, takeUntil } from 'rxjs';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 import { ES_CURP } from '../../constants/datos-del-tramilte.enum';
 import { ES_RFC } from '../../constants/datos-del-tramilte.enum';
-import {NUMERO_TRAMITE} from '../../constants/datos-solicitud.enum';
+import { NUMERO_TRAMITE } from '../../constants/datos-solicitud.enum';
 
 
 /**
@@ -33,13 +33,13 @@ import {NUMERO_TRAMITE} from '../../constants/datos-solicitud.enum';
   styleUrl: './agregar-proveedor-custom.component.scss',
 })
 export class AgregarProveedorCustomComponent implements OnDestroy, OnInit, OnChanges {
- /**
-   * Datos del formulario que pueden ser de tipo `DestinoFinal`, `Proveedor`, `null` o `undefined`.
-   * Este input se utiliza para recibir la información necesaria desde el componente padre.
-   *
-   * @type {Proveedor | DestinoFinal | null | undefined}
-   */
-  @Input() formaDatos!: Proveedor | DestinoFinal| null | undefined;
+  /**
+    * Datos del formulario que pueden ser de tipo `DestinoFinal`, `Proveedor`, `null` o `undefined`.
+    * Este input se utiliza para recibir la información necesaria desde el componente padre.
+    *
+    * @type {Proveedor | DestinoFinal | null | undefined}
+    */
+  @Input() formaDatos!: Proveedor | DestinoFinal | null | undefined;
 
   /**
     * @property tipoPersona
@@ -86,6 +86,13 @@ export class AgregarProveedorCustomComponent implements OnDestroy, OnInit, OnCha
    * Opciones de radio para seleccionar el tipo de persona.
    */
   tipoPersonaRadioOpciones = TIPO_PERSONA_OPCIONES;
+
+  /**
+   * @description Opciones de tipo de persona para radio buttons, específicas para no contribuyentes.
+   * @command Opciones utilizadas para determinar el tipo de persona en el formulario de proveedor.
+   */
+  tipoPersonaRadioOpcionesNoContribuyente = TIPO_PERSONA_OPCIONES_NO_CONTRIBUYENTE;
+
 
   /**
  * @property mostrarCamposNoContribuyente
@@ -135,13 +142,13 @@ export class AgregarProveedorCustomComponent implements OnDestroy, OnInit, OnCha
    */
   public codigosPostalesDatos: Catalogo[] = [];
 
-   /**
-   * @property esCURP
-   * @description Controla la visibilidad de los campos específicoS C.U.R.P.
-   * @type {boolean}
-   * @default false
-   */
-   public esCURP = false;
+  /**
+  * @property esCURP
+  * @description Controla la visibilidad de los campos específicoS C.U.R.P.
+  * @type {boolean}
+  * @default false
+  */
+  public esCURP = false;
 
   /**
    * @property {boolean} esRFC
@@ -149,15 +156,15 @@ export class AgregarProveedorCustomComponent implements OnDestroy, OnInit, OnCha
    * @default false
    */
   public esRFC = false;
-   
-     /**
-    * @property campoObligatorioProveedor
-    * @description Indica si ciertos campos del formulario son obligatorios según el procedimiento.
-    * @type {boolean}
-    * @default true
-    */
-   public campoObligatorioProveedor = false;
- 
+
+  /**
+ * @property campoObligatorioProveedor
+ * @description Indica si ciertos campos del formulario son obligatorios según el procedimiento.
+ * @type {boolean}
+ * @default true
+ */
+  public campoObligatorioProveedor = false;
+
 
   /**
    * @constructor
@@ -177,7 +184,7 @@ export class AgregarProveedorCustomComponent implements OnDestroy, OnInit, OnCha
     this.mostrarCamposNoContribuyente =
       PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE.includes(this.idProcedimiento);
   }
-  
+
   /**
    * Hook de ciclo de vida de Angular que se llama cuando se detectan cambios en las propiedades de entrada.
    * Llama al método `mostrarCamposNoContribuyente()`.
@@ -192,7 +199,7 @@ export class AgregarProveedorCustomComponent implements OnDestroy, OnInit, OnCha
    * Define los campos y sus validaciones.
    *
    */
-  crearFormaulario(): void {
+  Formulario(): void {
     this.agregarProveedorForm = this.fb.group({
       tipoPersona: ['', Validators.required],
       denominacionRazon: [
@@ -215,11 +222,11 @@ export class AgregarProveedorCustomComponent implements OnDestroy, OnInit, OnCha
       numeroInterior: [''],
       lada: [''],
       telefono: [''],
-      nacionalidad:[''],
-      rfc:[''],
-      curp:[''],
-      municipio:[''],
-      localidad:[''],
+      nacionalidad: [''],
+      rfc: [''],
+      curp: [''],
+      municipio: [''],
+      localidad: [''],
       correoElectronico: ['', [Validators.required, Validators.email]],
     });
     this.agregarProveedorForm.disable();
@@ -230,13 +237,13 @@ export class AgregarProveedorCustomComponent implements OnDestroy, OnInit, OnCha
    * @description Hook de inicialización del componente. Llama a `cargarDatos()` para obtener catálogos.
    */
   ngOnInit(): void {
-    this.crearFormaulario();
+    this.Formulario();
     this.cargarDatos();
     this.esCURP = ES_CURP.includes(this.idProcedimiento);
     this.esRFC = ES_RFC.includes(this.idProcedimiento);
     this.campoObligatorioProveedor = CAMPO_OBLIGATORIO_DESTINATARIO_PROVEEDOR.includes(this.idProcedimiento)
     this.campoObligatorioChange();
-    if(this.formaDatos) {
+    if (this.formaDatos) {
       this.agregarProveedorForm.patchValue(this.formaDatos);
     }
     this.nacionalidadOpciones();
@@ -265,13 +272,13 @@ export class AgregarProveedorCustomComponent implements OnDestroy, OnInit, OnCha
       .subscribe((data) => {
         this.municipiosDatos = data;
       });
-      this.datosSolicitudService
+    this.datosSolicitudService
       .obtenerListaLocalidades()
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((data) => {
         this.localidadesDatos = data;
       });
-      this.datosSolicitudService
+    this.datosSolicitudService
       .obtenerListaCodigosPostales()
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((data) => {
@@ -291,12 +298,14 @@ export class AgregarProveedorCustomComponent implements OnDestroy, OnInit, OnCha
    * local, actualiza el store del trámite y luego limpia el formulario y regresa a la vista anterior.
    */
   guardarProveedor(): void {
+    const DENOMINACIONRAZON_ONLY_FLAG = (this.agregarProveedorForm.value.tipoPersona === TipoPersona.MORAL) && (NUMERO_TRAMITE.TRAMITE_240117 === this.idProcedimiento);
     const NUEVO_PROVEEDOR: Proveedor = {
-      nombreRazonSocial: `${this.agregarProveedorForm.value.nombres} ${this.agregarProveedorForm.value.primerApellido
-        } ${this.agregarProveedorForm.value.segundoApellido || ''}`.trim(),
+      nombreRazonSocial: DENOMINACIONRAZON_ONLY_FLAG ? `${this.agregarProveedorForm.value.denominacionRazon}`.trim() : `${this.agregarProveedorForm.value.nombres} ${this.agregarProveedorForm.value.primerApellido
+        } ${this.agregarProveedorForm.value.segundoApellido || ''} `.trim(),
       rfc: '',
       curp: '',
-      telefono: this.agregarProveedorForm.value.telefono || '',
+      telefono:
+        `${this.agregarProveedorForm.value.lada} ${this.agregarProveedorForm.value.telefono}`.trim(),
       correoElectronico:
         this.agregarProveedorForm.value.correoElectronico || '',
       calle: this.agregarProveedorForm.value.calle || '',
@@ -367,58 +376,67 @@ export class AgregarProveedorCustomComponent implements OnDestroy, OnInit, OnCha
   nacionalidadOpciones(): void {
     switch (this.idProcedimiento) {
       case NUMERO_TRAMITE.TRAMITE_240114:
-       this.tercerosNacionalidadOpciones = TERCEROS_NACIONALIDAD_OPCIONES_EXTRANJERO;
+        this.tercerosNacionalidadOpciones = TERCEROS_NACIONALIDAD_OPCIONES_EXTRANJERO;
         break
       case NUMERO_TRAMITE.TRAMITE_240117:
         this.tercerosNacionalidadOpciones = TERCEROS_NACIONALIDAD_OPCIONES_EXTRANJERO;
-          break
+        break
       default:
-        this.tercerosNacionalidadOpciones= TERCEROS_NACIONALIDAD_OPCIONES;
-      
-  }
-}
+        this.tercerosNacionalidadOpciones = TERCEROS_NACIONALIDAD_OPCIONES;
 
- /**
-    * @method campoObligatorioChange
-    * @description Cambia las validaciones de los campos del formulario según el valor de `campoObligatorioProveedor`.
-    * Si `campoObligatorioProveedor` es verdadero, se eliminan las validaciones de la colonia y se agregan
-    * validaciones requeridas para la calle y el número exterior. Si es falso, se realiza lo contrario.
-    *
-    * @returns {void} Este método no retorna ningún valor.
-    */
- campoObligatorioChange(): void {
-  const NOMBRES = this.agregarProveedorForm.get('nombres')
-  const PRIMERAPELLIDO = this.agregarProveedorForm.get('primerApellido')
-  const MUNICIPIO = this.agregarProveedorForm.get('municipio')
-  const LOCALIDAD = this.agregarProveedorForm.get('localidad')
-  const COLINIA = this.agregarProveedorForm.get('colonia');
-  const CALLE = this.agregarProveedorForm.get('calle');
-  const NUMEROEXTERIOR = this.agregarProveedorForm.get('numeroExterior');
-  const ESTADO = this.agregarProveedorForm.get('estado');
-  const CODIGOPOSTAL = this.agregarProveedorForm.get('codigoPostal');
-
-  if(this.campoObligatorioProveedor){
-    NOMBRES?.setValidators([Validators.required]);
-    PRIMERAPELLIDO?.setValidators([Validators.required]);
-    MUNICIPIO?.clearValidators();
-    LOCALIDAD?.clearValidators();
-    COLINIA?.clearValidators();
-    CALLE?.setValidators([Validators.required]);
-    NUMEROEXTERIOR?.setValidators([Validators.required]);
-    ESTADO?.setValidators([Validators.required]);
-    CODIGOPOSTAL?.setValidators([Validators.required]);
-  } else {
-    NOMBRES?.clearValidators();
-    PRIMERAPELLIDO?.clearValidators();
-    MUNICIPIO?.setValidators([Validators.required]);
-    LOCALIDAD?.setValidators([Validators.required]);
-    COLINIA?.setValidators([Validators.required]);
-    CALLE?.clearValidators();
-    NUMEROEXTERIOR?.clearValidators();
-    ESTADO?.clearValidators();
-    CODIGOPOSTAL?.clearValidators();
+    }
   }
-}
+
+  /**
+     * @method campoObligatorioChange
+     * @description Cambia las validaciones de los campos del formulario según el valor de `campoObligatorioProveedor`.
+     * Si `campoObligatorioProveedor` es verdadero, se eliminan las validaciones de la colonia y se agregan
+     * validaciones requeridas para la calle y el número exterior. Si es falso, se realiza lo contrario.
+     *
+     * @returns {void} Este método no retorna ningún valor.
+     */
+  campoObligatorioChange(): void {
+    const NOMBRES = this.agregarProveedorForm.get('nombres')
+    const PRIMERAPELLIDO = this.agregarProveedorForm.get('primerApellido')
+    const MUNICIPIO = this.agregarProveedorForm.get('municipio')
+    const LOCALIDAD = this.agregarProveedorForm.get('localidad')
+    const COLINIA = this.agregarProveedorForm.get('colonia');
+    const CALLE = this.agregarProveedorForm.get('calle');
+    const NUMEROEXTERIOR = this.agregarProveedorForm.get('numeroExterior');
+    const ESTADO = this.agregarProveedorForm.get('estado');
+    const CODIGOPOSTAL = this.agregarProveedorForm.get('codigoPostal');
+
+    if (this.campoObligatorioProveedor) {
+      NOMBRES?.setValidators([Validators.required]);
+      PRIMERAPELLIDO?.setValidators([Validators.required]);
+      MUNICIPIO?.clearValidators();
+      LOCALIDAD?.clearValidators();
+      COLINIA?.clearValidators();
+      CALLE?.setValidators([Validators.required]);
+      NUMEROEXTERIOR?.setValidators([Validators.required]);
+      ESTADO?.setValidators([Validators.required]);
+      CODIGOPOSTAL?.setValidators([Validators.required]);
+    } else {
+      NOMBRES?.clearValidators();
+      PRIMERAPELLIDO?.clearValidators();
+      MUNICIPIO?.setValidators([Validators.required]);
+      LOCALIDAD?.setValidators([Validators.required]);
+      COLINIA?.setValidators([Validators.required]);
+      CALLE?.clearValidators();
+      NUMEROEXTERIOR?.clearValidators();
+      ESTADO?.clearValidators();
+      CODIGOPOSTAL?.clearValidators();
+    }
+    NOMBRES?.updateValueAndValidity();
+    PRIMERAPELLIDO?.updateValueAndValidity();
+    MUNICIPIO?.updateValueAndValidity();
+    LOCALIDAD?.updateValueAndValidity();
+    COLINIA?.updateValueAndValidity();
+    CALLE?.updateValueAndValidity();
+    NUMEROEXTERIOR?.updateValueAndValidity();
+    ESTADO?.updateValueAndValidity();
+    CODIGOPOSTAL?.updateValueAndValidity();
+  }
 
 
   /**
