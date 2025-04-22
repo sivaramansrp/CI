@@ -9,14 +9,12 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Subject, takeUntil } from 'rxjs';
 
 import { Catalogo, CatalogoSelectComponent, InputFecha, ModeloDeFormaDinamica } from '@ng-mf/data-access-user';
-import { DatosMercanciaComponent } from '../datos-mercancia/datos-mercancia.component';
 import { InputFechaComponent } from '@ng-mf/data-access-user';
 
 import { DatosRetornoAutorizacionComponent } from '../datos-retorno-autorizacion/datos-retorno-autorizacion.component';
 import { DatosRetornoProrrogaComponent } from '../datos-retorno-prorroga/datos-retorno-prorroga.component';
 
 import { ESTIMADA_RETORNO, FORMULARIO_DATOS_SOLICITUD } from '../../enum/retorno-importacion-temporal.enum';
-import { ManifiestoComponent } from '../manifiesto/manifiesto.component';
 import { RetornoImportacionTemporalService } from '../../services/retorno-importacion-temporal.service';
 
 import { Tramite630307Query } from '../../estados/tramite630307.query';
@@ -25,9 +23,6 @@ import { Tramite630307State, Tramite630307Store } from '../../estados/tramite630
 
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
 import { TituloComponent } from '@ng-mf/data-access-user';
-
-import { TipoPropietarioComponent } from '../tipo-propietario/tipo-propietario.component';
-
 /**
  * datos-de-la-solicitud.component.ts
  * Componente que gestiona los datos de la solicitud para el trámite 630307.
@@ -45,9 +40,6 @@ import { TipoPropietarioComponent } from '../tipo-propietario/tipo-propietario.c
     DatosRetornoAutorizacionComponent,
     FormasDinamicasComponent,
     TituloComponent,
-    TipoPropietarioComponent,
-    DatosMercanciaComponent,
-    ManifiestoComponent
   ],
   templateUrl: './datos-de-la-solicitud.component.html',
   styleUrl: './datos-de-la-solicitud.component.scss',
