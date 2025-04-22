@@ -214,7 +214,6 @@ export class MedioTransporteComponent implements OnInit, OnDestroy {
    * @param e Evento de cambio del input.
    */
   estableceSeleccionSolicitudFerro(value: number | string): void {
-    // const TARGET = e.target as HTMLInputElement;
     this.esSolicitudFerrosValor = value;
     if (this.esSolicitudFerrosValor === '1') {
       this.transporteSeleccionado.emit(true);
