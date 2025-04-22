@@ -1,9 +1,9 @@
 import {Catalogo,Solicitud32101State,Tramite32101Store} from '../../../../estados/tramites/tramite32101.store';
 import {CatalogoSelectComponent,TituloComponent} from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { DatosDeLaTabla, TramiteList } from '../../models/datos-tramite.model';
 import {FormBuilder,FormGroup,FormsModule,ReactiveFormsModule} from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
-import { TramiteList, datosDeLaTabla } from '../../models/datos-tramite.model';
 import { CommonModule } from '@angular/common';
 import { ConsultaAvisoAcreditacionService } from '../../services/consulta-aviso-acreditacion.service';
 import { Tramite32101Query } from '../../../../estados/queries/tramite32101.query';
@@ -222,7 +222,7 @@ export class ComponenteDeActualizacionComponent implements OnInit, OnDestroy {
    * ```
    */
   onGuardarCambios(): void {
-  const UPDATED_ROW: datosDeLaTabla = {
+  const UPDATED_ROW: DatosDeLaTabla = {
     id: this.solicitudState.abc?.id ?? 0,
     tipoDeInversion: ComponenteDeActualizacionComponent.getDropdownLabel(
       this.modificarFormulario.value.tipoDeInversion,

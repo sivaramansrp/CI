@@ -1,9 +1,9 @@
 import {AbstractControl,FormBuilder,FormGroup,FormsModule,ReactiveFormsModule,ValidationErrors,Validators} from '@angular/forms';
-import {Catalogo,CatalogoSelectComponent,CatalogosSelect,ConfiguracionColumna,InputFecha,InputFechaComponent,Notificacion,NotificacionesComponent,Pedimento,TablaDinamicaComponent,TablaSeleccion,TituloComponent,ValidacionesFormularioService,} from '@libs/shared/data-access-user/src';
+import {Catalogo,CatalogoSelectComponent,ConfiguracionColumna,InputFecha,InputFechaComponent,Notificacion,NotificacionesComponent,Pedimento,TablaDinamicaComponent,TablaSeleccion,TituloComponent,ValidacionesFormularioService,} from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ReplaySubject, Subject, map, takeUntil } from 'rxjs';
+import { DatosDeLaTabla, TramiteList } from '../../models/datos-tramite.model';
 import { Solicitud32101State, Tramite32101Store } from '../../../../estados/tramites/tramite32101.store';
-import { TramiteList, datosDeLaTabla } from '../../models/datos-tramite.model';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConsultaAvisoAcreditacionService } from '../../services/consulta-aviso-acreditacion.service';
 import { FECHA_PAGO } from '../../models/registro.model';
@@ -60,7 +60,7 @@ export class SolicitudComponent implements OnInit,OnDestroy {
   /**
    * Datos configurados para la tabla.
    */
-  configuracionTablaDatos: datosDeLaTabla[] = [];
+  configuracionTablaDatos: DatosDeLaTabla[] = [];
 
   /**
    * Enumeración que contiene los textos utilizados en el componente.
@@ -111,7 +111,7 @@ export class SolicitudComponent implements OnInit,OnDestroy {
    * Arreglo que contiene las filas seleccionadas de la tabla.
    * Cada elemento del arreglo es de tipo `datosDeLaTabla`.
    */
-  selectedRows: datosDeLaTabla[] = [];
+  selectedRows: DatosDeLaTabla[] = [];
 
   // Notificación utilizada para mostrar mensajes o alertas en la interfaz.
   public nuevaNotificacion!: Notificacion;
@@ -138,7 +138,7 @@ export class SolicitudComponent implements OnInit,OnDestroy {
    *   que se mostrará en la celda correspondiente.
    * - `orden`: Un número que indica la posición de la columna en la tabla.
    */
-  public encabezadoDeTabla: ConfiguracionColumna<datosDeLaTabla>[] = [
+  public encabezadoDeTabla: ConfiguracionColumna<DatosDeLaTabla>[] = [
     {
       encabezado: 'Tipo de inversión',
       clave: (artículo) => artículo.tipoDeInversion,
@@ -484,7 +484,7 @@ export class SolicitudComponent implements OnInit,OnDestroy {
    */
   poblarTabla(): void {
     const FORM_VALUES = this.registroForm.value;
-    const NEW_ROW: datosDeLaTabla = {
+    const NEW_ROW: DatosDeLaTabla = {
       id: this.configuracionTablaDatos.length + 1,
       tipoDeInversion: SolicitudComponent.getDropdownLabel(
         FORM_VALUES.tipoDeInversion,
@@ -515,6 +515,7 @@ export class SolicitudComponent implements OnInit,OnDestroy {
    */
   static getDropdownLabel(selectedId: number, catalog: Catalogo[]): string {
     const SELECTED_ITEMS = catalog.find(
+      // eslint-disable-next-line no-self-compare
       (item) => item.descripcion === item.descripcion
 );
     return SELECTED_ITEMS ? SELECTED_ITEMS.descripcion : 'N/A';
@@ -529,10 +530,10 @@ export class SolicitudComponent implements OnInit,OnDestroy {
    *   (`selectedRows`) si aún no está presente.
    * - Si `row` es `null`, se elimina de la lista de filas seleccionadas.
    */
-  onCheckboxClicked(row: datosDeLaTabla | null): void {
+  onCheckboxClicked(row: DatosDeLaTabla | null): void {
     if (row) {
       // Add the selected row to the selectedRows array if it's not already present
-      if (!this.selectedRows.includes(row)) {
+      if (!this.selectedRows.some(selectedRow => selectedRow.id === row.id)) {
         this.selectedRows.push(row);
       }
     } else {
@@ -545,23 +546,50 @@ export class SolicitudComponent implements OnInit,OnDestroy {
 
   // modify selected row in other component
   modificarFilaSeleccionada(): void {
+    const SELECTED_ROW = this.selectedRows[0];
+    const CURRENT_URL = this.router.url;
     if (this.selectedRows.length !== 1) {
-      window.alert('Please select exactly one row to modify.');
+      this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: 'Error',
+      mensaje: 'Por favor, seleccione exactamente una fila para modificar.',
+      cerrar: true,
+      tiempoDeEspera: 3000,
+      txtBtnAceptar: 'De acuerdo',
+      txtBtnCancelar: '',
+    };
       return;
     }
-    const SELECTED_ROW = this.selectedRows[0];
+    if (SELECTED_ROW) {
     this.consultaAvisoAcreditacionService.setUpdatedRow(SELECTED_ROW);
-
     this.tramite32101Store.setAbc(SELECTED_ROW);
     setTimeout(() => {
-      this.router.navigate(['/pago/consulta-aviso-acreditacion/actualizacion']);
+      if(CURRENT_URL.includes('agace')){
+        this.router.navigate(['/agace/consulta-aviso-acreditacion/actualizacion']);
+      }
+      if(CURRENT_URL.includes('pago')){
+        this.router.navigate(['/pago/consulta-aviso-acreditacion/actualizacion']);
+      }
     }, 100);
+  }
   }
 
   // Delete selected rows
   eliminarFilasSeleccionadas(): void {
     if (this.selectedRows.length === 0) {
-      window.alert('No rows selected for deletion.');
+      this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: 'Error',
+      mensaje: 'No se seleccionaron filas para eliminar.',
+      cerrar: true,
+      tiempoDeEspera: 3000,
+      txtBtnAceptar: 'De acuerdo',
+      txtBtnCancelar: '',
+    };
       return;
     }
     this.configuracionTablaDatos = this.configuracionTablaDatos.filter(
@@ -586,7 +614,7 @@ export class SolicitudComponent implements OnInit,OnDestroy {
    * formularioDeActualizacion();
    * // El servicio `consultaAvisoAcreditacionService` procesará estos datos.
    */
-  formularioDeActualizacion() {
+  formularioDeActualizacion(): void {
     const FORM_DATA = this.registroForm.value;
     this.consultaAvisoAcreditacionService.setUpdatedRow(FORM_DATA);
   }
@@ -614,6 +642,7 @@ export class SolicitudComponent implements OnInit,OnDestroy {
   public cambioFechaIngreso(nuevo_valor: string): void {
     this.registroForm.get('fechaInicialInput')?.setValue(nuevo_valor);
     this.registroForm.get('fechaInicialInput')?.markAsUntouched();
+    this.tramite32101Store.setFechaInicialInput(nuevo_valor);
   }
 
   /**
@@ -627,7 +656,7 @@ export class SolicitudComponent implements OnInit,OnDestroy {
    * 
    * Utiliza el método `reset()` para limpiar los valores de cada control.
    */
-  borrar() {
+  borrar(): void {
     this.registroForm.get('numeroDeOperacion')?.reset();
     this.registroForm.get('banco')?.reset();
     this.registroForm.get('llaveDePago')?.reset();
@@ -645,7 +674,7 @@ export class SolicitudComponent implements OnInit,OnDestroy {
    * Si no se encuentra una fila con el mismo `id` que el de `updatedRow`,
    * no se realiza ninguna actualización.
    */
-  updateTableRow(updatedRow: datosDeLaTabla): void {
+  updateTableRow(updatedRow: DatosDeLaTabla): void {
     const INDEX = this.configuracionTablaDatos.findIndex(
       (row) => row.id === updatedRow.id
     );

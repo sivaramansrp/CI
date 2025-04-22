@@ -1,6 +1,6 @@
 import { Store, StoreConfig } from '@datorama/akita';
+import { DatosDeLaTabla } from '../../tramites/32101/models/datos-tramite.model';
 import { Injectable } from '@angular/core';
-import { datosDeLaTabla } from '../../tramites/32101/models/datos-tramite.model';
 
 export interface Catalogo {
   id: number;
@@ -39,13 +39,13 @@ export interface Solicitud32101State {
   /**
    * Datos del contenedor representados como un arreglo de objetos de tipo `datosDeLaTabla`.
    */
-  datosDelContenedor: datosDeLaTabla[];
+  datosDelContenedor: DatosDeLaTabla[];
 
   /**
    * Información específica de un elemento de la tabla.
    * Puede ser un objeto de tipo `datosDeLaTabla` o `null`.
    */
-  abc: datosDeLaTabla | null;
+  abc: DatosDeLaTabla | null;
 
   /**
    * Manifiesto número 1 relacionado con la solicitud.
@@ -126,13 +126,13 @@ export function createInitialState(): Solicitud32101State {
 })
 @StoreConfig({ name: 'tramite32101', resettable: true })
 export class Tramite32101Store extends Store<Solicitud32101State> {
-  setFraccionRegla(arg0: string): void {
-    throw new Error('Method not implemented.');
-  }
   constructor() {
     super(createInitialState());
   }
 
+  static setFraccionRegla(arg0: string): void {
+    throw new Error('Method not implemented.');
+  }
   /**
    * Establece el tipo de inversión en el estado de la tienda.
    *
@@ -174,7 +174,7 @@ export class Tramite32101Store extends Store<Solicitud32101State> {
    *
    * @param abc - Los datos de la tabla que se asignarán al estado.
    */
-  public setAbc(abc: datosDeLaTabla) {
+  public setAbc(abc: DatosDeLaTabla) {
     this.update((state) => ({
       ...state,
       abc,
@@ -318,7 +318,7 @@ export class Tramite32101Store extends Store<Solicitud32101State> {
    *
    * @param datosDelContenedor - Un arreglo de objetos de tipo `datosDeLaTabla` que representa los datos a actualizar en el contenedor.
    */
-  public setDatosDelContenedor(datosDelContenedor: datosDeLaTabla[]) {
+  public setDatosDelContenedor(datosDelContenedor: DatosDeLaTabla[]) {
     this.update((state) => ({
       ...state,
       datosDelContenedor,

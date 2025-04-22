@@ -1,7 +1,7 @@
 import { RouterModule, Routes } from '@angular/router';
+import { ComponenteDeActualizacionComponent } from './components/componente-de-actualizacion/componente-de-actualizacion.component';
 import { NgModule } from '@angular/core';
 import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
-import { ComponenteDeActualizacionComponent } from './components/componente-de-actualizacion/componente-de-actualizacion.component';
 const ROUTES: Routes = [
   {
     component: SolicitudPageComponent,

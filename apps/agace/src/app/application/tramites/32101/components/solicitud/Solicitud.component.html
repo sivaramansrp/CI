@@ -85,7 +85,7 @@ pre-operativa)"></ng-titulo>
       <input class="form-control" [ngClass]="isValid(llaveDePago, 'llaveDePago') ? 'required' : ''" type="number" formControlName="llaveDePago" name="llaveDePago" id="llaveDePago" (change)="setValoresStore(registroForm, 'llaveDePago', 'setLlaveDePago')" />
     </div>
     <div class="col-md-5">
-      <input-fecha [datos]="fechaInicialInput" (valorCambiado)="cambioFechaIngreso($event)" (change)="setValoresStore(registroForm, 'fechaInicialInput', 'setFechaInicialInput')" ></input-fecha>
+      <input-fecha [datos]="fechaInicialInput"   (valorCambiado)="cambioFechaIngreso($event)" [setFecha]="registroForm.get('fechaInicialInput')?.value"></input-fecha>
       <div *ngIf="registroForm.get('fechaInicialInput')?.hasError('fechaInvalida')" class="text-danger">
     The payment date must be less than or equal to the current date.
   </div>

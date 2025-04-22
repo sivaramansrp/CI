@@ -1,5 +1,5 @@
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
-import { datosDeLaTabla, RespuestaContenedor, RespuestaTramite } from '../models/datos-tramite.model';
+import { DatosDeLaTabla, RespuestaContenedor, RespuestaTramite } from '../models/datos-tramite.model';
+import { Observable, Subject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
@@ -8,7 +8,7 @@ import { Injectable } from '@angular/core';
 })
 export class ConsultaAvisoAcreditacionService {
 
-  public selectedRowSource = new Subject<datosDeLaTabla>();
+  public selectedRowSource = new Subject<DatosDeLaTabla>();
   formData$ = this.selectedRowSource.asObservable();
 
   constructor(private http: HttpClient) {}
@@ -34,7 +34,7 @@ export class ConsultaAvisoAcreditacionService {
     );
   }
 
-  setUpdatedRow(row: datosDeLaTabla): void {
+  setUpdatedRow(row: DatosDeLaTabla): void {
     this.selectedRowSource.next(row);
   }
 }
