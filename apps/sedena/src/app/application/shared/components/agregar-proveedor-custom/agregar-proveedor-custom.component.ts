@@ -192,7 +192,7 @@ export class AgregarProveedorCustomComponent implements OnDestroy, OnInit, OnCha
    * Define los campos y sus validaciones.
    *
    */
-  crearFormaulario(): void {
+  Formulario(): void {
     this.agregarProveedorForm = this.fb.group({
       tipoPersona: ['', Validators.required],
       denominacionRazon: [
@@ -230,7 +230,7 @@ export class AgregarProveedorCustomComponent implements OnDestroy, OnInit, OnCha
    * @description Hook de inicialización del componente. Llama a `cargarDatos()` para obtener catálogos.
    */
   ngOnInit(): void {
-    this.crearFormaulario();
+    this.Formulario();
     this.cargarDatos();
     this.esCURP = ES_CURP.includes(this.idProcedimiento);
     this.esRFC = ES_RFC.includes(this.idProcedimiento);
