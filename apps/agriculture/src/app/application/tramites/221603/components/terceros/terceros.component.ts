@@ -1,7 +1,7 @@
 
-import { AlertComponent, ConfiguracionColumna, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { CONFIGURATION_TABLA_DESTINATARIO, CONFIGURATION_TABLA_EXPORTADOR, Destinatario, Exportador, MENSAJE_TABLA_OBLIGATORIA } from '../../enum/sanidad.enum';
 import { Component, OnInit } from '@angular/core';
+import { ConfiguracionColumna, TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { SanidadService } from '../../service/sanidad.service';
 
 @Component({

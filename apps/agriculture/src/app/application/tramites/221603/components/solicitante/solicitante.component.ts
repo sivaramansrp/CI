@@ -1,4 +1,3 @@
-import { Component, Input, OnInit, forwardRef } from '@angular/core';
 import {
   CATALOGOS_ID,
   DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_EXTRANJERA,
@@ -14,6 +13,7 @@ import {
   TituloComponent,
   UppercaseDirective,
 } from '@libs/shared/data-access-user/src';
+import { Component, Input, OnInit, forwardRef } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -21,8 +21,8 @@ import {
   ValidatorFn,
   Validators,
 } from '@angular/forms';
-import { tap } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { tap } from 'rxjs';
 
 
 @Component({
