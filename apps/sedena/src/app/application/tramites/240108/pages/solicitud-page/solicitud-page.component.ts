@@ -15,7 +15,7 @@ import { WizardComponent } from '@ng-mf/data-access-user';
 @Component({
   selector: 'app-solicitud-page',
   templateUrl: './solicitud-page.component.html',
-  styleUrl: './solicitud-page.component.css',
+  styleUrl: './solicitud-page.component.scss',
 })
 export class SolicitudPageComponent {
   /**
