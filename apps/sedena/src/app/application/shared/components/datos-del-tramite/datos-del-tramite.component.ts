@@ -69,7 +69,7 @@ import { CommonModule } from '@angular/common';
     InputFechaComponent,
   ],
   templateUrl: './datos-del-tramite.component.html',
-  styleUrl: './datos-del-tramite.component.css',
+  styleUrl: './datos-del-tramite.component.scss',
 })
 export class DatosDelTramiteComponent implements OnInit, OnDestroy {
   /**

@@ -29,7 +29,7 @@ import { takeUntil } from 'rxjs';
     InputRadioComponent,
   ],
   templateUrl: './agregar-proveedor.component.html',
-  styleUrl: './agregar-proveedor.component.css',
+  styleUrl: './agregar-proveedor.component.scss',
 })
 export class AgregarProveedorComponent implements OnDestroy, OnInit {
   /**
