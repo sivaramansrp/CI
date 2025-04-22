@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { DestinoFinal, Proveedor } from '../../../../shared/models/terceros-relacionados.model';
 import { AgregarDestinatarioCustomComponent } from "../../../../shared/components/agregar-destinatario-custom/agregar-destinatario-custom.component";
 import { CommonModule } from '@angular/common';
-import { ID_PROCEDIMIENTO } from '../../constants/extraordinario-para';
+import { ID_PROCEDIMIENTO } from '../../constants/solicitud-permiso-extraordinario-exportacion';
 import { Observable } from "rxjs";
 import { Tramite240118Query } from '../../estados/tramite240118Query.query';
 import { Tramite240118Store } from '../../estados/tramite240118Store.store';

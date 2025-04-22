@@ -19,7 +19,7 @@ import { Tramite240118Store } from '../../estados/tramite240118Store.store';
   standalone: true,
   imports: [CommonModule, TercerosRelacionadosComponent],
   templateUrl: './terceros-relacionados-contenedora.component.html',
-  styleUrl: './terceros-relacionados-contenedora.component.css',
+  styleUrl: './terceros-relacionados-contenedora.component.scss',
 })
 export class TercerosRelacionadosContenedoraComponent implements OnInit, OnDestroy {
   /**

@@ -36,4 +36,4 @@ const ROUTES: Routes = [
   exports: [RouterModule],
 })
 
-export class PermisoExtraordinarioParaRoutingModule {}
+export class PermisoExtraordinarioParaLaExportacionDeSustanciasQuimicasRoutingModule {}

@@ -5,7 +5,7 @@ import {
 } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
-import { TEXTOS_REQUISITOS } from '../../constants/extraordinario-para';
+import { TEXTOS_REQUISITOS } from '../../constants/solicitud-permiso-extraordinario-exportacion';
 
 /**
  * @component PasoDosComponent
