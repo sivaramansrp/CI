@@ -431,11 +431,12 @@ const ROUTES: Routes = [
         (m) => m.ModalidadAmpliacionModule
       ),
   },
-  {
-    path: 'registro',
-    loadChildren: () =>
-      import('./tramites/110207/registro.module').then((m) => m.RegistroModule),
-  },
+  {path: 'reportes',
+    loadChildren:() =>
+      import('./tramites/110207/reportes.module').then(
+        (m) => m.ReportesModule
+      )
+  }
   
 ];
 

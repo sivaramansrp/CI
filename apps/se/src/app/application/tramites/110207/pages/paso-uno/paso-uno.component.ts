@@ -21,15 +21,7 @@ import { RegistroService } from '../../services/registro.service';
   selector: 'app-paso-uno',
   templateUrl: './paso-uno.component.html',
   styles: ``,
-  standalone: true,
-  imports: [
-    SharedModule,
-    CommonModule,
-    SolicitanteComponent,
-    CertificadoDeOrigenComponent,
-    DatosCertificadoComponent,
-    DestinatarioComponent,
-  ],
+  standalone: false,
 })
 export class PasoUnoComponent implements AfterViewInit, OnInit {
   /**
