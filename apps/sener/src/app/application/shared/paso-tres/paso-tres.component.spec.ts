@@ -18,4 +18,22 @@ describe('PasoTresComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should navigate to "servicios-extraordinarios/acuse" when obtieneFirma is called with a valid signature', () => {
+    const routerSpy = jest.spyOn(component['router'], 'navigate');
+    const mockSignature = 'valid-signature';
+
+    component.obtieneFirma(mockSignature);
+
+    expect(routerSpy).toHaveBeenCalledWith(['servicios-extraordinarios/acuse']);
+  });
+
+  it('should not navigate when obtieneFirma is called with an empty signature', () => {
+    const routerSpy = jest.spyOn(component['router'], 'navigate');
+    const mockSignature = '';
+
+    component.obtieneFirma(mockSignature);
+
+    expect(routerSpy).not.toHaveBeenCalled();
+  });
 });
