@@ -190,7 +190,7 @@ export class Requisitos250101Component implements OnInit, OnDestroy {
   /**
    * Agrega un nuevo registro a la tabla de requisitos con los datos del formulario.
    */
-  RequisitosDatos(): void {
+  requisitosDatos(): void {
     const REQUISITO_FORMDATA = {
       No: this.transporteForm.value.numero,
       Fecha: this.transporteForm.value.fechas,
@@ -203,7 +203,7 @@ export class Requisitos250101Component implements OnInit, OnDestroy {
   /**
    * Agrega un nuevo registro a la tabla de transporte con los datos del formulario.
    */
-  TransporteDatos(): void {
+  transporteDatos(): void {
     const TRANSPORTE_FORMDATA = {
       numeroIdentificacion: this.transporteForm.value.identificacion,
       numeroEconomico: this.transporteForm.value.economico,
