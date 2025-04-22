@@ -13,6 +13,6 @@ import { FirmaElectronicaComponent } from '@libs/shared/data-access-user/src';
   standalone: true,
   imports: [CommonModule, FirmaElectronicaComponent],
   templateUrl: './paso-tres.component.html',
-  styleUrl: './paso-tres.component.css',
+  styleUrl: './paso-tres.component.scss',
 })
 export class PasoTresComponent {}

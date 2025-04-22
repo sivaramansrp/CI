@@ -28,7 +28,7 @@ import { WizardComponent } from '@ng-mf/data-access-user';
     BtnContinuarComponent,
   ],
   templateUrl: './solicitud-page.component.html',
-  styleUrl: './solicitud-page.component.css',
+  styleUrl: './solicitud-page.component.scss',
 })
 export class SolicitudPageComponent {
   /**

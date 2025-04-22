@@ -26,7 +26,7 @@ import { TEXTOS_REQUISITOS } from '../../constants/importacion-armas-municiones.
     AnexarDocumentosComponent,
   ],
   templateUrl: './paso-dos.component.html',
-  styleUrl: './paso-dos.component.css',
+  styleUrl: './paso-dos.component.scss',
 })
 export class PasoDosComponent implements OnInit, OnDestroy {
   /**
