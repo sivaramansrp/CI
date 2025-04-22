@@ -4,13 +4,14 @@
             <label class="mt-5 mb-3">
                 Seleccione el tipo de operación que desea realizar*:
             </label>
-            <app-input-radio formControlName="tipoOperacion" (change)="setValoresStore(domicilio,'tipoOperacion', 'setTipoOperacion')" [radioOptions]="genericOptions" [isRequired]="true"
-                [layout]="'horizontal'">
+            <app-input-radio formControlName="tipoOperacion"
+                (change)="setValoresStore(domicilio,'tipoOperacion', 'setTipoOperacion')"
+                [radioOptions]="genericOptions" [isRequired]="true" [layout]="'horizontal'">
             </app-input-radio>
             <span
-  *ngIf="domicilio.controls['tipoOperacion']?.errors?.['required'] && domicilio.controls['tipoOperacion']?.touched"
-  class="mensaje-error">Este campo es obligatorio.
-</span>
+                *ngIf="domicilio.controls['tipoOperacion']?.errors?.['required'] && domicilio.controls['tipoOperacion']?.touched"
+                class="mensaje-error">Este campo es obligatorio.
+            </span>
         </div>
         <div class="row mt-5">
             <div class="col-md-12">
@@ -20,11 +21,14 @@
                 </div>
                 <div>
                     <textarea id="observacionesId" class="form-control" placeholder="Justificación"
-                        formControlName="justificacion" (change)="setValoresStore(domicilio,'justificacion', 'setJustificacion')" rows="5" cols="70">
+                        formControlName="justificacion"
+                        (change)="setValoresStore(domicilio,'justificacion', 'setJustificacion')" rows="5" cols="70">
               </textarea>
-              <span *ngIf="domicilio.controls['justificacion']?.errors?.['required'] && domicilio.controls['justificacion']?.touched" class="mensaje-error">
-                Este campo es obligatorio.
-              </span>
+                    <span
+                        *ngIf="domicilio.controls['justificacion']?.errors?.['required'] && domicilio.controls['justificacion']?.touched"
+                        class="mensaje-error">
+                        Este campo es obligatorio.
+                    </span>
                 </div>
             </div>
         </div>
@@ -45,10 +49,9 @@
                         RFC del responsable sanitario:
                     </label>
                     <input id="establecimientoRFCResponsableSanitarioId" class="form-control" type="text"
-                        formControlName="rfcResponsableSanitario" (change)="setValoresStore(domicilio,'rfcResponsableSanitario', 'setRFCResponsableSanitario')" />
-                        <span *ngIf="domicilio.controls['rfcResponsableSanitario']?.errors?.['required'] && domicilio.controls['rfcResponsableSanitario']?.touched" class="mensaje-error">
-                            Este campo es obligatorio.
-                          </span>
+                        formControlName="rfcResponsableSanitario"
+                        (change)="setValoresStore(domicilio,'rfcResponsableSanitario', 'setRFCResponsableSanitario')" />
+
                 </div>
             </div>
 
@@ -58,10 +61,13 @@
                         Denominación o razón social*:
                     </label>
                     <input id="establecimientoRazonSocialId" class="form-control" type="text"
-                        formControlName="razonSocial" (change)="setValoresStore(domicilio,'razonSocial', 'setRazonSocial')"/>
-                        <span *ngIf="domicilio.controls['razonSocial']?.errors?.['required'] && domicilio.controls['razonSocial']?.touched" class="mensaje-error">
-                            Este campo es obligatorio.
-                          </span>
+                        formControlName="razonSocial"
+                        (change)="setValoresStore(domicilio,'razonSocial', 'setRazonSocial')" />
+                    <span
+                        *ngIf="domicilio.controls['razonSocial']?.errors?.['required'] && domicilio.controls['razonSocial']?.touched"
+                        class="mensaje-error">
+                        Este campo es obligatorio.
+                    </span>
                 </div>
             </div>
         </div>
@@ -73,10 +79,13 @@
                         Correo electrónico*:
                     </label>
                     <input id="establecimientoCorreoElectronicoId" class="form-control" type="text"
-                        formControlName="correoElectronico" (change)="setValoresStore(domicilio,'correoElectronico', 'setCorreoElectronico')" />
-                        <span *ngIf="domicilio.controls['correoElectronico']?.errors?.['required'] && domicilio.controls['correoElectronico']?.touched" class="mensaje-error">
-                            Este campo es obligatorio.
-                          </span>
+                        formControlName="correoElectronico"
+                        (change)="setValoresStore(domicilio,'correoElectronico', 'setCorreoElectronico')" />
+                    <span
+                        *ngIf="domicilio.controls['correoElectronico']?.errors?.['required'] && domicilio.controls['correoElectronico']?.touched"
+                        class="mensaje-error">
+                        Este campo es obligatorio.
+                    </span>
                 </div>
             </div>
         </div>
@@ -88,9 +97,11 @@
                     <input class="form-control" id="codigoPostal" placeholder="" type="text"
                         formControlName="codigoPostal"
                         (change)="setValoresStore(domicilio,'codigoPostal', 'setCodigoPostal')" />
-                        <span *ngIf="domicilio.controls['codigoPostal']?.errors?.['required'] && domicilio.controls['codigoPostal']?.touched" class="mensaje-error">
-                            Este campo es obligatorio.
-                          </span>
+                    <span
+                        *ngIf="domicilio.controls['codigoPostal']?.errors?.['required'] && domicilio.controls['codigoPostal']?.touched"
+                        class="mensaje-error">
+                        Este campo es obligatorio.
+                    </span>
                 </div>
             </div>
             <div class="col-md-4">
@@ -103,9 +114,11 @@
                     <label class="form-label" for="muncipio">Municipio o alcaldía*:</label>
                     <input class="form-control" id="muncipio" placeholder="" type="text" formControlName="muncipio"
                         (change)="setValoresStore(domicilio,'muncipio', 'setMuncipio')" />
-                        <span *ngIf="domicilio.controls['muncipio']?.errors?.['required'] && domicilio.controls['muncipio']?.touched" class="mensaje-error">
-                            Este campo es obligatorio.
-                          </span>
+                    <span
+                        *ngIf="domicilio.controls['muncipio']?.errors?.['required'] && domicilio.controls['muncipio']?.touched"
+                        class="mensaje-error">
+                        Este campo es obligatorio.
+                    </span>
                 </div>
             </div>
         </div>
@@ -116,9 +129,11 @@
                     <label class="form-label" for="localidad">Localidad:</label>
                     <input class="form-control" id="localidad" placeholder="" type="text" formControlName="localidad"
                         (change)="setValoresStore(domicilio,'localidad', 'setLocalidad')" />
-                        <span *ngIf="domicilio.controls['localidad']?.errors?.['required'] && domicilio.controls['localidad']?.touched" class="mensaje-error">
-                            Este campo es obligatorio.
-                          </span>
+                    <span
+                        *ngIf="domicilio.controls['localidad']?.errors?.['required'] && domicilio.controls['localidad']?.touched"
+                        class="mensaje-error">
+                        Este campo es obligatorio.
+                    </span>
                 </div>
             </div>
             <div class="col-md-4">
@@ -126,9 +141,11 @@
                     <label class="form-label" for="colonia">Colonia:</label>
                     <input class="form-control" id="colonia" placeholder="" type="text" formControlName="colonia"
                         (change)="setValoresStore(domicilio,'colonia', 'setColonia')" />
-                        <span *ngIf="domicilio.controls['colonia']?.errors?.['required'] && domicilio.controls['colonia']?.touched" class="mensaje-error">
-                            Este campo es obligatorio.
-                          </span>
+                    <span
+                        *ngIf="domicilio.controls['colonia']?.errors?.['required'] && domicilio.controls['colonia']?.touched"
+                        class="mensaje-error">
+                        Este campo es obligatorio.
+                    </span>
                 </div>
             </div>
 
@@ -139,9 +156,11 @@
                     <label class="form-label" for="calle">Calle*:</label>
                     <input class="form-control" id="calle" placeholder="" type="text" formControlName="calle"
                         (change)="setValoresStore(domicilio,'calle', 'setCalle')" />
-                        <span *ngIf="domicilio.controls['calle']?.errors?.['required'] && domicilio.controls['calle']?.touched" class="mensaje-error">
-                            Este campo es obligatorio.
-                          </span>
+                    <span
+                        *ngIf="domicilio.controls['calle']?.errors?.['required'] && domicilio.controls['calle']?.touched"
+                        class="mensaje-error">
+                        Este campo es obligatorio.
+                    </span>
                 </div>
             </div>
 
@@ -159,9 +178,11 @@
                     <label class="form-label" for="telefono">Teléfono*:</label>
                     <input class="form-control" id="telefono" placeholder="" type="number" formControlName="telefono"
                         (change)="setValoresStore(domicilio,'telefono', 'setTelefono')" />
-                        <span *ngIf="domicilio.controls['telefono']?.errors?.['required'] && domicilio.controls['telefono']?.touched" class="mensaje-error">
-                            Este campo es obligatorio.
-                          </span>
+                    <span
+                        *ngIf="domicilio.controls['telefono']?.errors?.['required'] && domicilio.controls['telefono']?.touched"
+                        class="mensaje-error">
+                        Este campo es obligatorio.
+                    </span>
                 </div>
             </div>
 
@@ -312,12 +333,22 @@
                             <input type="text" id="denominacionEspecifica" formControlName="denominacionEspecifica"
                                 (change)="setValoresStore(formMercancias,'denominacionEspecifica', 'setDenominacionEspecifica')"
                                 class="form-control">
+                            <span
+                                *ngIf="formMercancias.controls['denominacionEspecifica']?.errors?.['required'] && formMercancias.controls['denominacionEspecifica']?.touched"
+                                class="mensaje-error">
+                                Este campo es obligatorio.
+                            </span>
                         </div>
                         <div class="form-group">
                             <label for="denominacionDistintiva">Denominación distintiva*:</label>
                             <input type="text" id="denominacionDistintiva" formControlName="denominacionDistintiva"
                                 (change)="setValoresStore(formMercancias,'denominacionDistintiva', 'setDenominacionDistintiva')"
                                 class="form-control" />
+                            <span
+                                *ngIf="formMercancias.controls['denominacionDistintiva']?.errors?.['required'] && formMercancias.controls['denominacionDistintiva']?.touched"
+                                class="mensaje-error">
+                                Este campo es obligatorio.
+                            </span>
                         </div>
                         <div class="form-group">
                             <label for="denominacionComun">Denominación común, nombre común o nombre
@@ -325,6 +356,11 @@
                             <input type="text" id="denominacionComun" formControlName="denominacionComun"
                                 (change)="setValoresStore(formMercancias,'denominacionComun', 'setDenominacionComun')"
                                 class="form-control" />
+                            <span
+                                *ngIf="formMercancias.controls['denominacionComun']?.errors?.['required'] && formMercancias.controls['denominacionComun']?.touched"
+                                class="mensaje-error">
+                                Este campo es obligatorio.
+                            </span>
                         </div>
                         <div class="form-group">
                             <app-catalogo-select [catalogo]="estado" formControlName="tipoDeProducto"
@@ -345,32 +381,54 @@
                             <input type="text" id="fraccionArancelaria" formControlName="fraccionArancelaria"
                                 (change)="setValoresStore(formMercancias,'fraccionArancelaria', 'setFraccionArancelaria')"
                                 class="form-control">
+                            <span
+                                *ngIf="formMercancias.controls['fraccionArancelaria']?.errors?.['required'] && formMercancias.controls['fraccionArancelaria']?.touched"
+                                class="mensaje-error">
+                                Este campo es obligatorio.
+                            </span>
                         </div>
                         <div class="form-group">
                             <label for="descripcionFraccion">Descripción de la fracción*:</label>
                             <input type="text" id="descripcionFraccion" formControlName="descripcionFraccion"
                                 (change)="setValoresStore(formMercancias,'descripcionFraccion', 'setDescripcionFraccion')"
                                 class="form-control">
+                            <span
+                                *ngIf="formMercancias.controls['descripcionFraccion']?.errors?.['required'] && formMercancias.controls['descripcionFraccion']?.touched"
+                                class="mensaje-error">
+                                Este campo es obligatorio.
+                            </span>
                         </div>
                         <div class="form-group">
                             <label for="cantidadUMT">Cantidad UMT*:</label>
                             <input type="text" id="cantidadUMT" formControlName="cantidadUMT"
                                 (change)="setValoresStore(formMercancias,'cantidadUMT', 'setCantidadUMT')"
                                 class="form-control">
-                                <span *ngIf="formMercancias.controls['cantidadUMT']?.errors?.['required'] && formMercancias.controls['cantidadUMT']?.touched" class="mensaje-error">
-                                    Este campo es obligatorio.
-                                  </span>
+                            <span
+                                *ngIf="formMercancias.controls['cantidadUMT']?.errors?.['required'] && formMercancias.controls['cantidadUMT']?.touched"
+                                class="mensaje-error">
+                                Este campo es obligatorio.
+                            </span>
                         </div>
                         <div class="form-group">
                             <label for="UMT">UMT*:</label>
                             <input type="text" id="UMT" formControlName="UMT"
                                 (change)="setValoresStore(formMercancias,'UMT', 'setUMT')" class="form-control">
+                            <span
+                                *ngIf="formMercancias.controls['UMT']?.errors?.['required'] && formMercancias.controls['UMT']?.touched"
+                                class="mensaje-error">
+                                Este campo es obligatorio.
+                            </span>
                         </div>
                         <div class="form-group">
                             <label for="cantidadUMC">Cantidad UMC*:</label>
                             <input type="text" id="cantidadUMC"
                                 (change)="setValoresStore(formMercancias,'cantidadUMC', 'setCantidadUMC')"
                                 formControlName="cantidadUMC" class="form-control">
+                            <span
+                                *ngIf="formMercancias.controls['cantidadUMC']?.errors?.['required'] && formMercancias.controls['cantidadUMC']?.touched"
+                                class="mensaje-error">
+                                Este campo es obligatorio.
+                            </span>
                         </div>
                         <div class="form-group">
                             <app-catalogo-select [catalogo]="estado" formControlName="UMC" [label]="'UMC'"
@@ -382,12 +440,22 @@
                             <input type="text" id="presentacion" formControlName="presentacion"
                                 (change)="setValoresStore(formMercancias,'presentacion', 'setPresentacion')"
                                 class="form-control">
+                            <span
+                                *ngIf="formMercancias.controls['presentacion']?.errors?.['required'] && formMercancias.controls['presentacion']?.touched"
+                                class="mensaje-error">
+                                Este campo es obligatorio.
+                            </span>
                         </div>
                         <div class="form-group">
                             <label for="numeroRegistro">Número de registro sanitario*:</label>
                             <input type="text" id="numeroRegistro" formControlName="numeroRegistro"
                                 (change)="setValoresStore(formMercancias,'numeroRegistro', 'setNumeroRegistro')"
                                 class="form-control">
+                            <span
+                                *ngIf="formMercancias.controls['numeroRegistro']?.errors?.['required'] && formMercancias.controls['numeroRegistro']?.touched"
+                                class="mensaje-error">
+                                Este campo es obligatorio.
+                            </span>
                         </div>
                         <div class="form-group mt-5">
                             <div class="panel-group ficha-collapse" id="accordion">
@@ -456,6 +524,11 @@
                                     <input type="text" id="claveDeLosLotes" formControlName="claveDeLosLotes"
                                         (change)="setValoresStore(formMercancias,'claveDeLosLotes', 'setClaveDeLosLotes')"
                                         class="form-control">
+                                    <span
+                                        *ngIf="formMercancias.controls['claveDeLosLotes']?.errors?.['required'] && formMercancias.controls['claveDeLosLotes']?.touched"
+                                        class="mensaje-error">
+                                        Este campo es obligatorio.
+                                    </span>
                                 </div>
                             </div>
                         </div>
@@ -504,98 +577,92 @@
 
     <form [formGroup]="formularioManifiestos">
         <div class="col-md-12 mt-4">
-          <ng-titulo titulo="Manifiestos y declaraciones" />
-          <div class="alert alert-info">
-            <label class="etiqueta-normal d-flex">
-              <div class="col-md-1 mt-5">
-                <input
-                  type="checkbox"
-                  id="manifesto"
-                  class="mt-5"
-                  formControlName="aceptaManifiestos" (change)="setValoresStore(formularioManifiestos,'aceptaManifiestos', 'setAceptaManifiestos')"  />
-                <b> *</b>
-              </div>
-              <div class="col-md-11 mt-4">
-                {{ manifiestosText }}
-              </div>
-            </label>
-          </div>
+            <ng-titulo titulo="Manifiestos y declaraciones" />
+            <div class="alert alert-info">
+                <label class="etiqueta-normal d-flex">
+                    <div class="col-md-1 mt-5">
+                        <input type="checkbox" id="manifesto" class="mt-5" formControlName="aceptaManifiestos"
+                            (change)="setValoresStore(formularioManifiestos,'aceptaManifiestos', 'setAceptaManifiestos')" />
+                        <b> *</b>
+                    </div>
+                    <div class="col-md-11 mt-4">
+                        {{ manifiestosText }}
+                    </div>
+                </label>
+            </div>
         </div>
-      
+
         <div class="col-md-12 mt-4">
-          <label class="form-label">
-            Los datos o anexos pueden contener información confidencial ¿Está de acuerdo en hacerlos públicos?*:
-          </label>
-          <app-input-radio
-            formControlName="aceptaPublicacion"
-            (change)="setValoresStore(formularioManifiestos,'aceptaPublicacion', 'setAceptaPublicacion')"
-            [radioOptions]="hacerlosRadioOptions"
-            [isRequired]="true"
-            [layout]="'horizontal'">
-          </app-input-radio>
+            <label class="form-label">
+                Los datos o anexos pueden contener información confidencial ¿Está de acuerdo en hacerlos públicos?*:
+            </label>
+            <app-input-radio formControlName="aceptaPublicacion"
+                (change)="setValoresStore(formularioManifiestos,'aceptaPublicacion', 'setAceptaPublicacion')"
+                [radioOptions]="hacerlosRadioOptions" [isRequired]="true" [layout]="'horizontal'">
+            </app-input-radio>
+            <span
+                *ngIf="formularioManifiestos.controls['aceptaPublicacion']?.errors?.['required'] && formularioManifiestos.controls['aceptaPublicacion']?.touched"
+                class="mensaje-error">
+                Este campo es obligatorio.
+            </span>
         </div>
-      
+
         <div class="col-md-12">
-          <ng-titulo titulo="Representante legal" />
+            <ng-titulo titulo="Representante legal" />
         </div>
-      
+
         <div class="col-md-4 mt-2">
-          <label class="form-label" for="rfc">RFC*:</label>
-          <input
-            id="rfc"
-            class="form-control"
-            placeholder=""
-            type="text"
-            formControlName="rfcRepresentante"  (change)="setValoresStore(formularioManifiestos,'rfcRepresentante', 'setRFCRepresentante')"/>
-            <span *ngIf="formularioManifiestos.controls['rfcRepresentante']?.errors?.['required'] && formularioManifiestos.controls['rfcRepresentante']?.touched" class="mensaje-error">
+            <label class="form-label" for="rfc">RFC*:</label>
+            <input id="rfc" class="form-control" placeholder="" type="text" formControlName="rfcRepresentante"
+                (change)="setValoresStore(formularioManifiestos,'rfcRepresentante', 'setRFCRepresentante')" />
+            <span
+                *ngIf="formularioManifiestos.controls['rfcRepresentante']?.errors?.['required'] && formularioManifiestos.controls['rfcRepresentante']?.touched"
+                class="mensaje-error">
                 Este campo es obligatorio.
-              </span>
+            </span>
         </div>
-      
+
         <div class="col-md-2 mt-4">
-          <button type="button" class="btn btn-default btn-space">Buscar</button>
+            <button type="button" class="btn btn-default btn-space">Buscar</button>
         </div>
-      
+
         <div class="col-md-6 mt-4"></div>
-      
+
         <div class="col-md-4 mt-4">
-          <label class="form-label" for="legalRazonSocial">Nombre o Razón Social*:</label>
-          <input
-            id="legalRazonSocial"
-            class="form-control"
-            placeholder=""
-            type="text"
-            formControlName="razonSocialRepresentante"  (change)="setValoresStore(formularioManifiestos,'razonSocialRepresentante', 'setRazonSocialRepresentante')" />
-            <span *ngIf="formularioManifiestos.controls['razonSocialRepresentante']?.errors?.['required'] && formularioManifiestos.controls['razonSocialRepresentante']?.touched" class="mensaje-error">
+            <label class="form-label" for="legalRazonSocial">Nombre o Razón Social*:</label>
+            <input id="legalRazonSocial" class="form-control" placeholder="" type="text"
+                formControlName="razonSocialRepresentante"
+                (change)="setValoresStore(formularioManifiestos,'razonSocialRepresentante', 'setRazonSocialRepresentante')" />
+            <span
+                *ngIf="formularioManifiestos.controls['razonSocialRepresentante']?.errors?.['required'] && formularioManifiestos.controls['razonSocialRepresentante']?.touched"
+                class="mensaje-error">
                 Este campo es obligatorio.
-              </span>
+            </span>
         </div>
-      
+
         <div class="col-md-4 mt-4">
-          <label class="form-label" for="apellidoPaterno">Apellido paterno*:</label>
-          <input
-            id="apellidoPaterno"
-            class="form-control"
-            placeholder=""
-            type="text"
-            formControlName="apellidoPaternoRepresentante"  (change)="setValoresStore(formularioManifiestos,'apellidoPaternoRepresentante', 'setApellidoPaternoRepresentante')" />
-            <span *ngIf="formularioManifiestos.controls['apellidoPaternoRepresentante']?.errors?.['required'] && formularioManifiestos.controls['apellidoPaternoRepresentante']?.touched" class="mensaje-error">
+            <label class="form-label" for="apellidoPaterno">Apellido paterno*:</label>
+            <input id="apellidoPaterno" class="form-control" placeholder="" type="text"
+                formControlName="apellidoPaternoRepresentante"
+                (change)="setValoresStore(formularioManifiestos,'apellidoPaternoRepresentante', 'setApellidoPaternoRepresentante')" />
+            <span
+                *ngIf="formularioManifiestos.controls['apellidoPaternoRepresentante']?.errors?.['required'] && formularioManifiestos.controls['apellidoPaternoRepresentante']?.touched"
+                class="mensaje-error">
                 Este campo es obligatorio.
-              </span>
+            </span>
         </div>
-      
+
         <div class="col-md-4 mt-4">
-          <label class="form-label" for="apellidoMaterno">Apellido materno:</label>
-          <input
-            id="apellidoMaterno"
-            class="form-control"
-            placeholder=""
-            type="text"
-            formControlName="apellidoMaternoRepresentante"  (change)="setValoresStore(formularioManifiestos,'apellidoMaternoRepresentante', 'setApellidoMaternoRepresentante')" />
-            <span *ngIf="formularioManifiestos.controls['apellidoMaternoRepresentante']?.errors?.['required'] && formularioManifiestos.controls['apellidoMaternoRepresentante']?.touched" class="mensaje-error">
+            <label class="form-label" for="apellidoMaterno">Apellido materno:</label>
+            <input id="apellidoMaterno" class="form-control" placeholder="" type="text"
+                formControlName="apellidoMaternoRepresentante"
+                (change)="setValoresStore(formularioManifiestos,'apellidoMaternoRepresentante', 'setApellidoMaternoRepresentante')" />
+            <span
+                *ngIf="formularioManifiestos.controls['apellidoMaternoRepresentante']?.errors?.['required'] && formularioManifiestos.controls['apellidoMaternoRepresentante']?.touched"
+                class="mensaje-error">
                 Este campo es obligatorio.
-              </span>
+            </span>
         </div>
-      </form>
-      
+    </form>
+
 </div>
