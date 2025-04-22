@@ -1,6 +1,9 @@
 @if (formularioTitulo) {
   <ng-titulo [titulo]="formularioTitulo"></ng-titulo>
 }
+@if(formularioSubtitulo) {
+  <p class="fw-bold m-0">{{formularioSubtitulo}}</p>
+}
 <form [formGroup]="forma">
     @for (item of formularioDatos; track item.campo; let i = $index) {
             @switch(item.tipoInput) {
@@ -134,6 +137,7 @@
                           item.labelNombre
                         }} {{seRequiere(item.campo) ? '*:' : ':'}}</label>
                         <app-input-radio
+                          [layout]="item.layout ? item.layout : 'vertical'"
                           [radioOptions]="item.opciones || []"
                           id="{{item.id}}"
                           formControlName="{{item.campo}}"
