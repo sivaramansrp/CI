@@ -1633,8 +1633,8 @@
     {
         "id": 234,
         "tramite": 260913,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "/cofepris/modificacion-del-permiso/pantallas",
+        "linkDepartment": "/pago/modificacion-del-permiso/pantallas",
         "department": "cofepris"
     },
     {
