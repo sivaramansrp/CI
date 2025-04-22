@@ -1892,8 +1892,8 @@
     {
         "id": 271,
         "tramite": 240405,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "/sedena/solicitude-de/importacion/sustancias-quimicas",
+        "linkDepartment": "/pago/solicitude-de/importacion/sustancias-quimicas",
         "department": "sedena"
     },
     {

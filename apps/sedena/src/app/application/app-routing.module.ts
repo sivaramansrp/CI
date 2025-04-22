@@ -16,11 +16,11 @@ const ROUTES: Routes = [
       ).then((m) => m.PermisoOrdinarioImportacionArmasMunicionesModule),
   },
   {
-    path: 'permiso-ordinario-importacion-material-explosivo',
+    path: 'solicitude-de',
     loadChildren: () =>
       import(
-        './tramites/240108/permiso-ordinario-importacion-exlposivo.module'
-      ).then((m) => m.PermisoOrdinarioImportacionExlposivoModule),
+        './tramites/240405/solicitud-de-sustancias-quimicas.module'
+      ).then((m) => m.SolicitudDeSustanciasQuimicasModule),
   },
 ];
 
