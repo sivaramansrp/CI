@@ -401,15 +401,15 @@
   {
     "id": 58,
     "tramite": 120602,
-    "linkDashboard": "/se/empresa-frontera/datos-empresad",
-    "linkDepartment": "/se/empresa-frontera/datos-empresad",
+    "linkDashboard": "/se/empresa-frontera/datos-empresa",
+    "linkDepartment": "/pago/empresa-frontera/datos-empresa",
     "department": "se"
   },
   {
     "id": 59,
     "tramite": 120602,
-    "linkDashboard": "/se/pago/empresa-frontera/datos-empresad",
-    "linkDepartment": "/se/pago/empresa-frontera/datos-empresad",
+    "linkDashboard": "",
+    "linkDepartment": "",
     "department": "se"
   },
   {
