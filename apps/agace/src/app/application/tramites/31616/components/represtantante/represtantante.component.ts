@@ -1,5 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -7,12 +6,13 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import representanteDatos from 'libs/shared/theme/assets/json/31601/represtantante-data.json';
-import { TituloComponent } from '@ng-mf/data-access-user';
-import { Tramite31616TercerosStore, Solicitud31616TercerosState } from '../../../../estados/tramites/tramite31616_terceros.store';
-import { Tramite31616TercerosQuery } from '../../../../estados/queries/tramite31616_terceros.query';
+import { Solicitud31616TercerosState,Tramite31616TercerosStore } from '../../../../estados/tramites/tramite31616_terceros.store';
+import { map,takeUntil } from 'rxjs/operators';
+import { CommonModule } from '@angular/common';
 import { Subject } from 'rxjs';
-import { takeUntil, map } from 'rxjs/operators';
+import { TituloComponent } from '@ng-mf/data-access-user';
+import { Tramite31616TercerosQuery } from '../../../../estados/queries/tramite31616_terceros.query';
+import representanteDatos from '@libs/shared/theme/assets/json/31601/represtantante-data.json';
 
 @Component({
   selector: 'app-represtantante',
@@ -57,7 +57,9 @@ export class ReprestantanteComponent implements OnInit, OnDestroy {
       private fb: FormBuilder,
       private tramite31616Store: Tramite31616TercerosStore,
       private tramite31616Query: Tramite31616TercerosQuery
-    ) {}
+    ) {
+      //Añade lógica aquí
+    }
   
     /**
      * Método que se ejecuta al inicializar el componente.
@@ -75,13 +77,13 @@ export class ReprestantanteComponent implements OnInit, OnDestroy {
         .subscribe();
   
       this.represtantante = this.fb.group({
-        resigtro: [this.solicitudState?.resigtro && this.solicitudState?.resigtro !='' ? this.solicitudState?.resigtro : this.datosRepresentativos.resigtro, Validators.required],
+        resigtro: [this.solicitudState?.resigtro && this.solicitudState?.resigtro !=='' ? this.solicitudState?.resigtro : this.datosRepresentativos.resigtro, Validators.required],
         rfc: ['', Validators.required],
         nombre: ['', Validators.required],
         apellidoPaterno: ['', Validators.required],
         apellidoMaterno: ['', Validators.required],
-        telefono: [this.solicitudState?.telefono && this.solicitudState?.telefono !='' ? this.solicitudState?.telefono : this.datosRepresentativos.telefono, Validators.required],
-        correo: [this.solicitudState?.correo && this.solicitudState?.correo !='' ? this.solicitudState?.correo : this.datosRepresentativos.correo, Validators.required],
+        telefono: [this.solicitudState?.telefono && this.solicitudState?.telefono !=='' ? this.solicitudState?.telefono : this.datosRepresentativos.telefono, Validators.required],
+        correo: [this.solicitudState?.correo && this.solicitudState?.correo !=='' ? this.solicitudState?.correo : this.datosRepresentativos.correo, Validators.required],
       });
   
       // Deshabilita los campos que no deben ser modificados

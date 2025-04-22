@@ -1,8 +1,7 @@
+import { InstalacionesPrincipalesRespuestaTabla, PersonaRespuestaTabla, RespuestaTabla } from '@libs/shared/data-access-user/src/core/models/31616/dato-comunes.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { InstalacionesPrincipalesRespuestaTabla, PersonaRespuestaTabla, RespuestaTabla } from '@libs/shared/data-access-user/src/core/models/31616/dato-comunes.model';
-import { Personas } from '@libs/shared/data-access-user/src/core/models/31601/servicios-pantallas.model';
 
 
 @Injectable({
@@ -10,7 +9,9 @@ import { Personas } from '@libs/shared/data-access-user/src/core/models/31601/se
 })
 export class SolicitudDeRegistroInvocarService {
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+    //Añade lógica aquí
+   }
 
   obtenerTablaDatos(): Observable<RespuestaTabla> {
     return this.http.get<RespuestaTabla>('assets/json/31616/mercancias-tabla.json');

@@ -1,9 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { ConfiguracionColumna, TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { PERSONAS_TABLA, PersonasInfo } from '@libs/shared/data-access-user/src/core/models/31616/dato-comunes.model';
-import { SolicitudDeRegistroInvocarService } from '../../services/solicitudDeRegistroInvocar/solicitud-de-registro-invocar.service';
 import { Subject, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { SolicitudDeRegistroInvocarService } from '../../services/solicitudDeRegistroInvocar/solicitud-de-registro-invocar.service';
 
 @Component({
   selector: 'app-persona',
@@ -35,7 +35,9 @@ export class PersonaComponent implements OnInit,OnDestroy{
   constructor(
     private service: SolicitudDeRegistroInvocarService,
   
-  ) {}
+  ) {
+    //Añade lógica aquí
+  }
   
   ngOnInit(): void {
     this.obtenerTablaDatos()

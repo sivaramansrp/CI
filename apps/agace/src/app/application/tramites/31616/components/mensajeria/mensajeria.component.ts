@@ -1,15 +1,16 @@
-import { Component, ElementRef, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Solicitud31616MensajeriaState, Tramite31616MensajeriaStore } from '../../../../estados/tramites/tramite31616_mensajeria.store';
-import { Tramite31616MensajeriaQuery } from '../../../../estados/queries/tramite31616_mensajeria.query';
-import { SolicitudDeRegistroInvocarService } from '../../services/solicitudDeRegistroInvocar/solicitud-de-registro-invocar.service';
-import { map, Subject, takeUntil } from 'rxjs';
-import { Catalogo, CatalogoSelectComponent, ConfiguracionColumna, InputFecha, InputFechaComponent, InputRadioComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { FECHA_DE_FACTURA, OPCIONES_DE_BOTON_DE_RADIO, OPCIONES_INFORMACION, OPCIONES_RECONOCIMIENTO } from '@libs/shared/data-access-user/src/tramites/constantes/31616/datos-comunes.enum';
 import { MERCANCIA_TABLA, MercanciasInfo } from '@libs/shared/data-access-user/src/core/models/31616/dato-comunes.model';
+
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Catalogo, CatalogoSelectComponent, ConfiguracionColumna, InputFecha, InputFechaComponent, InputRadioComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Solicitud31616MensajeriaState, Tramite31616MensajeriaStore } from '../../../../estados/tramites/tramite31616_mensajeria.store';
+import { Subject, map, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
 import { Modal } from 'bootstrap';
-import productivo from 'libs/shared/theme/assets/json/31616/productivo.json';
+import { SolicitudDeRegistroInvocarService } from '../../services/solicitudDeRegistroInvocar/solicitud-de-registro-invocar.service';
+import { Tramite31616MensajeriaQuery } from '../../../../estados/queries/tramite31616_mensajeria.query';
+import productivo from '@libs/shared/theme/assets/json/31616/productivo.json';
 
 @Component({
   selector: 'app-mensajeria',
@@ -27,7 +28,7 @@ import productivo from 'libs/shared/theme/assets/json/31616/productivo.json';
   styleUrl: './mensajeria.component.css',
   encapsulation: ViewEncapsulation.None
 })
-export class MensajeriaComponent implements OnInit{
+export class MensajeriaComponent implements OnInit,OnDestroy,AfterViewInit{
   mensajeriaGroup!:FormGroup
   susFilialesForm!:FormGroup
   lasEmpresasForm!:FormGroup
@@ -73,7 +74,9 @@ export class MensajeriaComponent implements OnInit{
       private service: SolicitudDeRegistroInvocarService,
       private tramite31616Store: Tramite31616MensajeriaStore,
       private tramite31616Query: Tramite31616MensajeriaQuery,
-    ) {}
+    ) {
+      //Añade lógica aquí
+    }
     
   ngOnInit(): void {
     this.tramite31616Query.selectSolicitud$
@@ -89,7 +92,7 @@ export class MensajeriaComponent implements OnInit{
     this.obtenerTablaDatos()
   }
 
-  ngAfterViewInit() {
+  ngAfterViewInit():void {
       // Inicializa el modal de modificación
       if (this.tablaModal) {
         this.tablaInstance = new Modal(this.tablaModal.nativeElement);
@@ -148,9 +151,9 @@ export class MensajeriaComponent implements OnInit{
       domicilio:[{value:'',disabled:true}],
     })
 
-    this.isLaSolicitante = this.solicitudState?.laSolicitante =='1' ? true : false;
-    this.isSusFiliales = this.solicitudState?.susFiliales =='1' ? true : false;
-    this.isLasEmpresas = this.solicitudState?.lasEmpresas =='1' ? true : false;
+    this.isLaSolicitante = parseInt(this.solicitudState?.laSolicitante,10) === 1 ? true : false;
+    this.isSusFiliales = parseInt(this.solicitudState?.susFiliales,10) === 1 ? true : false;
+    this.isLasEmpresas = parseInt(this.solicitudState?.lasEmpresas,10) === 1 ? true : false;
   }
 
   /**
@@ -165,25 +168,25 @@ export class MensajeriaComponent implements OnInit{
       });
   }
 
-  openTablaModal() {
+  openTablaModal():void {
     if (this.tablaInstance) {
       this.tablaInstance.show();
     }
   }
 
-  closeTablaModal() {
+  closeTablaModal():void {
     if (this.tablaInstance) {
       this.tablaInstance.hide();
     }
   }
 
-  openTablaDosModal() {
+  openTablaDosModal():void {
     if (this.tablaDosInstance) {
       this.tablaDosInstance.show();
     }
   }
 
-  closeTablaDosModal() {
+  closeTablaDosModal():void {
     if (this.tablaDosInstance) {
       this.tablaDosInstance.hide();
     }
@@ -199,14 +202,14 @@ export class MensajeriaComponent implements OnInit{
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite31616MensajeriaStore): void {
     const VALOR = form.get(campo)?.value;
     (this.tramite31616Store[metodoNombre] as (value: string) => void)(VALOR);
-    if(campo == 'laSolicitante'){
-      this.isLaSolicitante = VALOR =='1' ? true : false;
+    if(campo === 'laSolicitante'){
+      this.isLaSolicitante = parseInt(VALOR,10) === 1 ? true : false;
     }
-    if(campo == 'susFiliales'){
-      this.isSusFiliales = VALOR =='1' ? true : false;
+    if(campo === 'susFiliales'){
+      this.isSusFiliales = parseInt(VALOR,10) === 1 ? true : false;
     }
-    if(campo == 'lasEmpresas'){
-      this.isLasEmpresas = VALOR =='1' ? true : false;
+    if(campo === 'lasEmpresas'){
+      this.isLasEmpresas = parseInt(VALOR,10) === 1 ? true : false;
     }
   }
 

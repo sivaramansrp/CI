@@ -1,15 +1,15 @@
-import { CommonModule } from '@angular/common';
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Solicitud31616TercerosState, Tramite31616TercerosStore } from '../../../../estados/tramites/tramite31616_terceros.store';
+import { map, takeUntil } from 'rxjs/operators';
+import { CommonModule } from '@angular/common';
+import { Subject } from 'rxjs';
 import { TableComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
-import enlace from 'libs/shared/theme/assets/json/31601/enlace.json';
-import enlaceData from 'libs/shared/theme/assets/json/31601/enlace-data.json';
-import { Tramite31616TercerosStore, Solicitud31616TercerosState } from '../../../../estados/tramites/tramite31616_terceros.store';
 import { Tramite31616TercerosQuery } from '../../../../estados/queries/tramite31616_terceros.query';
-import { Subject } from 'rxjs';
-import { takeUntil, map } from 'rxjs/operators';
+import enlace from '@libs/shared/theme/assets/json/31601/enlace.json';
+import enlaceData from '@libs/shared/theme/assets/json/31601/enlace-data.json';
 
 @Component({
   selector: 'app-enlace',
@@ -24,7 +24,7 @@ import { takeUntil, map } from 'rxjs/operators';
   templateUrl: './enlace.component.html',
   styleUrl: './enlace.component.css',
 })
-export class EnlaceComponent implements OnInit {
+export class EnlaceComponent implements OnInit,OnDestroy {
     /**
    * Encabezados de la tabla de enlace.
    */
@@ -68,7 +68,9 @@ export class EnlaceComponent implements OnInit {
       private fb: FormBuilder,
       private tramite31616Store: Tramite31616TercerosStore,
       private tramite31616Query: Tramite31616TercerosQuery
-    ) {}
+    ) {
+      //Añade lógica aquí
+    }
   
     /**
      * Método que se ejecuta al inicializar el componente.
@@ -92,7 +94,7 @@ export class EnlaceComponent implements OnInit {
     /**
      * Método que obtiene los encabezados de la tabla de enlace.
      */
-    public getEnlace() {
+    public getEnlace():void {
       this.enlaceHeaderData = this.enlaceTableData.tableHeader;
     }
   
@@ -109,7 +111,7 @@ export class EnlaceComponent implements OnInit {
     /**
      * Método que abre el modal y carga el formulario con los datos predefinidos del representante.
      */
-    public abrirModal() {
+    public abrirModal():void {
       this.modal = 'show'; // Muestra el modal
       this.getRegistroForm(); // Carga los datos en el formulario
     }
@@ -117,17 +119,17 @@ export class EnlaceComponent implements OnInit {
     /**
      * Método que configura el formulario con los datos del representante.
      */
-    public getRegistroForm() {
+    public getRegistroForm():void {
       this.enlace = this.fb.group({
-        resigtroFedral: [this.solicitudState?.resigtroFedral && this.solicitudState?.resigtroFedral !='' ? this.solicitudState?.resigtroFedral : this.representativeData.resigtro, Validators.required],
+        resigtroFedral: [this.solicitudState?.resigtroFedral && this.solicitudState?.resigtroFedral !=='' ? this.solicitudState?.resigtroFedral : this.representativeData.resigtro, Validators.required],
         rfc: ['', Validators.required],
         nombre: ['', Validators.required],
         apellidoPaterno: ['', Validators.required],
         apellidoMaterno: ['', Validators.required],
-        cargo: [this.solicitudState?.cargo && this.solicitudState?.cargo !='' ? this.solicitudState?.cargo : this.representativeData.cargo, Validators.required],
+        cargo: [this.solicitudState?.cargo && this.solicitudState?.cargo !=='' ? this.solicitudState?.cargo : this.representativeData.cargo, Validators.required],
         cuidad: ['', Validators.required],
-        telefonoEnlace: [this.solicitudState?.telefonoEnlace && this.solicitudState?.telefonoEnlace !='' ? this.solicitudState?.telefonoEnlace : this.representativeData.telefono, Validators.required],
-        correoEnlace: [this.solicitudState?.correoEnlace && this.solicitudState?.correoEnlace !='' ? this.solicitudState?.correoEnlace : this.representativeData.correo, Validators.required],
+        telefonoEnlace: [this.solicitudState?.telefonoEnlace && this.solicitudState?.telefonoEnlace !=='' ? this.solicitudState?.telefonoEnlace : this.representativeData.telefono, Validators.required],
+        correoEnlace: [this.solicitudState?.correoEnlace && this.solicitudState?.correoEnlace !=='' ? this.solicitudState?.correoEnlace : this.representativeData.correo, Validators.required],
         suplente: [this.solicitudState?.suplente, Validators.required],
       });
   
@@ -138,7 +140,7 @@ export class EnlaceComponent implements OnInit {
     /**
      * Método que parchea los datos en el formulario, cargando la información del representante.
      */
-    public patchData() {
+    public patchData():void {
       // Se insertan los valores en los campos del formulario
       this.enlace.patchValue({
         rfc: this.representativeData.rfc,

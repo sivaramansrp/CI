@@ -1,16 +1,16 @@
-import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, InputRadioComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
-import productivo from 'libs/shared/theme/assets/json/31616/productivo.json';
-import serviciosAgace from 'libs/shared/theme/assets/json/31616/serviciosAgace.json';
-import { Solicitud31616State, Tramite31616Store } from '../../../../estados/tramites/tramite31616.store';
-import { Tramite31616Query } from '../../../../estados/queries/tramite31616.query';
-import { map, Subject, takeUntil } from 'rxjs';
 import { ALERTA_COM,OPCIONES_DE_BOTON_DE_RADIO } from '@libs/shared/data-access-user/src/tramites/constantes/31616/datos-comunes.enum';
-import { Modal } from 'bootstrap';
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, InputRadioComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { INSTALACIONES_PRINCIPALES_TABLA, InstalacionesPrincipalesTablaInfo, MERCANCIA_TABLA, MercanciasInfo } from '@libs/shared/data-access-user/src/core/models/31616/dato-comunes.model';
+import { Solicitud31616State, Tramite31616Store } from '../../../../estados/tramites/tramite31616.store';
+import { Subject, map, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { Modal } from 'bootstrap';
 import { SolicitudDeRegistroInvocarService } from '../../services/solicitudDeRegistroInvocar/solicitud-de-registro-invocar.service';
+import { Tramite31616Query } from '../../../../estados/queries/tramite31616.query';
+import productivo from '@libs/shared/theme/assets/json/31616/productivo.json';
+import serviciosAgace from '@libs/shared/theme/assets/json/31616/serviciosAgace.json';
 
 @Component({
   selector: 'app-dato-comunes',
@@ -81,6 +81,7 @@ export class DatoComunesComponent implements OnInit, OnDestroy, AfterViewInit {
 
   showSenaleCuentaEmpleados = false
   showSenaleSiAlMomento = false
+  changed = false
   
   /**
    * Configuración de las columnas de la tabla de mercancías.
@@ -108,7 +109,9 @@ export class DatoComunesComponent implements OnInit, OnDestroy, AfterViewInit {
     private service: SolicitudDeRegistroInvocarService,
     private tramite31616Store: Tramite31616Store,
     private tramite31616Query: Tramite31616Query,
-  ) {}
+  ) {
+    // Añade lógica aquí
+  }
 
   ngOnInit(): void {
     this.tramite31616Query.selectSolicitud$
@@ -121,10 +124,10 @@ export class DatoComunesComponent implements OnInit, OnDestroy, AfterViewInit {
       .subscribe();
       this.crearFormulario()
 
-      if(this.solicitudState?.senaleCuentaEmpleados == '1'){
+      if(parseInt(this.solicitudState?.senaleCuentaEmpleados,10) === 1){
         this.showSenaleCuentaEmpleados = true
       }
-      if(this.solicitudState?.senaleSiAlMomento == '1'){
+      if(parseInt(this.solicitudState?.senaleSiAlMomento,10) === 1){
         this.showSenaleSiAlMomento = true
       }
 
@@ -132,7 +135,7 @@ export class DatoComunesComponent implements OnInit, OnDestroy, AfterViewInit {
     this.obtenerInstalacionesPrincipalesTablaDatos()
   }
 
-  ngAfterViewInit() {
+  ngAfterViewInit():void {
     // Inicializa el modal de modificación
     if (this.confirmModal) {
       this.confirmInstance = new Modal(this.confirmModal.nativeElement);
@@ -149,59 +152,59 @@ export class DatoComunesComponent implements OnInit, OnDestroy, AfterViewInit {
 
   }
 
-  openConfirmModal() {
+  openConfirmModal():void {
     if (this.confirmInstance) {
       this.confirmInstance.show();
     }
   }
 
-  closeConfirmModal() {
+  closeConfirmModal():void {
     if (this.confirmInstance) {
       this.confirmInstance.hide();
     }
   }
 
-  openTablaModal() {
+  openTablaModal():void {
     if (this.tablaInstance) {
       this.tablaInstance.show();
     }
   }
 
-  closeTablaModal() {
+  closeTablaModal():void {
     if (this.tablaInstance) {
       this.tablaInstance.hide();
     }
   }
 
-  openMiembroDeLaEmpresaModal() {
+  openMiembroDeLaEmpresaModal():void {
     if (this.miembroDeLaEmpresaInstance) {
       this.miembroDeLaEmpresaInstance.show();
     }
   }
 
-  closeMiembroDeLaEmpresaModal() {
+  closeMiembroDeLaEmpresaModal():void {
     if (this.miembroDeLaEmpresaInstance) {
       this.miembroDeLaEmpresaInstance.hide();
     }
   }
 
-  crearTablaDatos(){
+  crearTablaDatos():void{
     this.obtenerTablaDatos()
     this.closeTablaModal()
   }
 
-  crearTablaDosDatos(){
+  crearTablaDosDatos():void{
     this.obtenerInstalacionesPrincipalesTablaDatos()
     this.closeTablaDosModal()
   }
 
-  openTablaDosModal() {
+  openTablaDosModal():void {
     if (this.instalacionesPrincipalesTablaInstance) {
       this.instalacionesPrincipalesTablaInstance.show();
     }
   }
 
-  closeTablaDosModal() {
+  closeTablaDosModal():void {
     if (this.instalacionesPrincipalesTablaInstance) {
       this.instalacionesPrincipalesTablaInstance.hide();
     }
@@ -303,19 +306,19 @@ export class DatoComunesComponent implements OnInit, OnDestroy, AfterViewInit {
     comprobarModalValor?:number
   ): void {
     const VALOR = form.get(campo)?.value;
-    if(comprobarModal && VALOR == comprobarModalValor){
+    if(comprobarModal && parseInt(VALOR,10) === comprobarModalValor){
       this.openConfirmModal()
     }
-    if(campo == "senaleCuentaEmpleados"){
-      if(VALOR == comprobarModalValor){
+    if(campo === "senaleCuentaEmpleados"){
+      if(parseInt(VALOR,10) === comprobarModalValor){
 
         this.showSenaleCuentaEmpleados = true
       }else{
         this.showSenaleCuentaEmpleados = false
       }
     }
-    if(campo == "senaleSiAlMomento"){
-      if(VALOR == comprobarModalValor){
+    if(campo === "senaleSiAlMomento"){
+      if(parseInt(VALOR,10) === comprobarModalValor){
 
         this.showSenaleSiAlMomento = true
       }else{
@@ -330,6 +333,7 @@ export class DatoComunesComponent implements OnInit, OnDestroy, AfterViewInit {
    */
   enCambioDeValor(): void {
     // Implementar la lógica para evento de cambio de valor.
+    this.changed = !this.changed
   }
 
   /**
