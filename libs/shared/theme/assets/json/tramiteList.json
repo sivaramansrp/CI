@@ -892,14 +892,14 @@
     "id": 128,
     "tramite": 130109,
     "linkDashboard": "/se/importacion-de/vehiculos-usados-adaptados",
-    "linkDepartment": "/se/importacion-de/vehiculos-usados-adaptados",
+    "linkDepartment": "/pago/importacion-de/vehiculos-usados-adaptados",
     "department": "se"
   },
   {
     "id": 129,
     "tramite": 130110,
-    "linkDashboard": "/se/pago/importacion/neumaticos-comercializar",
-    "linkDepartment": "/se/pago/importacion/neumaticos-comercializar",
+    "linkDashboard": "/se/importacion/neumaticos-comercializar",
+    "linkDepartment": "/pago/importacion/neumaticos-comercializar",
     "department": "se"
   },
   {
