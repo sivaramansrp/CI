@@ -185,7 +185,7 @@
     "id": 27,
     "tramite": 80202,
     "linkDashboard": "/se/immex-ampliacion-sensibles/solicitud",
-    "linkDepartment": "/pago/immex-ampliacion-sensibles/solicitud",
+    "linkDepartment": "/se/immex-ampliacion-sensibles/solicitud",
     "department": "agace"
   },
   {
@@ -332,7 +332,7 @@
     "id": 48,
     "tramite": 110218,
     "linkDashboard": "/se/certificado-tecnico-japon/validar-certificado-tecnico-japon",
-    "linkDepartment": "/se/certificado-tecnico-japon/validar-certificado-tecnico-japon",
+    "linkDepartment": "/pago/certificado-tecnico-japon/validar-certificado-tecnico-japon",
     "department": "se"
   },
   {
@@ -388,7 +388,7 @@
     "id": 56,
     "tramite": 120501,
     "linkDashboard": "/se/solicitartransferencia/cupos-solicitud-transferencia",
-    "linkDepartment": "/se/solicitartransferencia/cupos-solicitud-transferencia",
+    "linkDepartment": "/pago/solicitartransferencia/cupos-solicitud-transferencia",
     "department": "se"
   },
   {
@@ -430,7 +430,7 @@
     "id": 62,
     "tramite": 130111,
     "linkDashboard": "/se/importacion-de-vehiculos-usados/importacion-de-vehiculos",
-    "linkDepartment": "/se/importacion-de-vehiculos-usados/importacion-de-vehiculos",
+    "linkDepartment": "/pago/importacion-de-vehiculos-usados/importacion-de-vehiculos",
     "department": "se"
   },
   {
@@ -759,14 +759,14 @@
     "id": 109,
     "tramite": 260204,
     "linkDashboard": "/cofepris/permiso-sanitario-importacion-medicamentos",
-    "linkDepartment": "/pago/permiso-sanitario-importacion-medicamentos",
+    "linkDepartment": "/cofepris/permiso-sanitario-importacion-medicamentos",
     "department": "cofepris"
   },
   {
     "id": 110,
     "tramite": 260210,
     "linkDashboard": "/cofepris/permiso-sanitario-importacion-medicamentos-pruebas",
-    "linkDepartment": "/pago/permiso-sanitario-importacion-medicamentos-pruebas",
+    "linkDepartment": "/cofepris/permiso-sanitario-importacion-medicamentos-pruebas",
     "department": "cofepris"
   },
   {
@@ -1039,7 +1039,7 @@
     "id": 149,
     "tramite": 260213,
     "linkDashboard": "/cofepris/permiso-sanitario-medicos-uso-personal",
-    "linkDepartment": "/pago/permiso-sanitario-medicos-uso-personal",
+    "linkDepartment": "/cofepris/permiso-sanitario-medicos-uso-personal",
     "department": "cofepris"
   },
   {
@@ -1773,8 +1773,8 @@
   {
     "id": 254,
     "tramite": 240101,
-    "linkDashboard": "/sedena/permiso-ordinario-importacion-armas-municiones",
-    "linkDepartment": "/pago/permiso-ordinario-importacion-armas-municiones",
+    "linkDashboard": "",
+    "linkDepartment": "",
     "department": "sedena"
   },
   {
