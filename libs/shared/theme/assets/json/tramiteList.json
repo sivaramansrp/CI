@@ -1165,7 +1165,7 @@
     "id": 167,
     "tramite": 230902,
     "linkDashboard": "/semarnat/tramites-cites-importacion-exportacion-reexportacion/datos",
-    "linkDepartment": "/semarnat/tramites-cites-importacion-exportacion-reexportacion/datos",
+    "linkDepartment": "/pago/tramites-cites-importacion-exportacion-reexportacion/datos",
     "department": "semarnat"
   },
   {
@@ -1753,14 +1753,14 @@
     "id": 251,
     "tramite": 130113,
     "linkDashboard": "/se/importacion/equipo-anticontaminante",
-    "linkDepartment": "/se/importacion/equipo-anticontaminante",
+    "linkDepartment": "/pago/importacion/equipo-anticontaminante",
     "department": "se"
   },
   {
     "id": 252,
     "tramite": 130116,
     "linkDashboard": "/se/solicitud-importacion-ambulancia/reconstruccion-reacondicionamiento",
-    "linkDepartment": "/se/solicitud-importacion-ambulancia/reconstruccion-reacondicionamiento",
+    "linkDepartment": "/pago/solicitud-importacion-ambulancia/reconstruccion-reacondicionamiento",
     "department": "se"
   },
   {
