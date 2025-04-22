@@ -1,4 +1,4 @@
-import { CapturaOpcionesDeBotonDeRadio } from '../../enums/sagarpa.enum';
+import { CAPTURA_OPCIONES_DE_BOTON_DE_RADIO } from '../../enums/sagarpa.enum';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogosSelect } from '@ng-mf/data-access-user';
 import { Component } from '@angular/core';
@@ -184,7 +184,7 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
   /** 
    * Variable que almacena las opciones disponibles para el botón de radio. 
    */
-  opcionDeBotonDeRadio = CapturaOpcionesDeBotonDeRadio;
+  opcionDeBotonDeRadio = CAPTURA_OPCIONES_DE_BOTON_DE_RADIO;
 
 
   constructor(

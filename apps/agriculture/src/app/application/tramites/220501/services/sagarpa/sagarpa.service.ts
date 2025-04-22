@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 import { RespuestaCatalogos } from '@ng-mf/data-access-user';
 
 /**
@@ -20,10 +21,9 @@ export class SagarpaService {
 
   /**
    * Método para obtener los medios de transporte.
-   * @param {string} catalogo - El nombre del catálogo a obtener
    * @returns Observable con la respuesta de los catálogos de medios de transporte.
    */
-  getMediodetransporte(catalogo: string) {
+  getMediodetransporte(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>('assets/json/220501/medio-transporte.json');
   }
 }

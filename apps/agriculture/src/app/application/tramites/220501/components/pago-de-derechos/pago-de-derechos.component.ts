@@ -5,15 +5,16 @@ import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
-import { OpcionesDeBotonDeRadio } from '../../enums/sagarpa.enum';
+import { Subject } from 'rxjs';
+import { map } from 'rxjs';
+import { takeUntil } from 'rxjs';
+
+import { OPCIONES_DE_BOTON_DE_RADIO } from '../../enums/sagarpa.enum';
 import { PagoDeDerechos } from '../../models/pago-de-derechos.model';
 import { RevisionService } from '../../services/revision.service';
 import { Solicitud220501Query } from '../../estados/tramites220501.query';
 import { Solicitud220501State } from '../../estados/tramites220501.store';
 import { Solicitud220501Store } from '../../estados/tramites220501.store';
-import { Subject } from 'rxjs';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
 
 /**
  * Componente para gestionar el pago de derechos.
@@ -87,7 +88,7 @@ export class PagoDeDerechosComponent implements OnInit , OnDestroy{
   /** 
    * Enumeración u objeto que contiene las opciones disponibles para el botón de radio.
    */
-  opcionDeBotonDeRadio = OpcionesDeBotonDeRadio;
+  opcionDeBotonDeRadio = OPCIONES_DE_BOTON_DE_RADIO;
 
   /**
    * Constructor del componente.

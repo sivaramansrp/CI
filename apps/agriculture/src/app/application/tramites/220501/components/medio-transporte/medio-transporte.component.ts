@@ -1,4 +1,3 @@
-import { CATALOGOS_ID } from '../../constantes/constantes';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { Component } from '@angular/core';
 import { EventEmitter } from '@angular/core';
@@ -7,19 +6,20 @@ import { FormControl } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
-import { OpcionesDeBotonDeRadio } from '../../enums/sagarpa.enum';
 import { Output } from '@angular/core';
+import { Subject } from 'rxjs';
+import { Validators } from '@angular/forms';
+import { map } from 'rxjs';
+import { merge } from 'rxjs';
+import { takeUntil } from 'rxjs';
+
+import { OPCIONES_DE_BOTON_DE_RADIO } from '../../enums/sagarpa.enum';
 import { SagarpaService } from '../../services/sagarpa/sagarpa.service';
 import { Solicitud220501Query } from '../../estados/tramites220501.query';
 import { Solicitud220501State } from '../../estados/tramites220501.store';
 import { Solicitud220501Store } from '../../estados/tramites220501.store';
-import { Subject } from 'rxjs';
 import { TEXTOS } from '../../constantes/texto-enum';
-import { Validators } from '@angular/forms';
-import { map } from 'rxjs';
-import mercanciaTable from '../../../../../../../../../libs/shared/theme/assets/json/220501/mercancia-table.json';
-import { merge } from 'rxjs';
-import { takeUntil } from 'rxjs';
+import mercanciaTable from '@libs/shared/theme/assets/json/220501/mercancia-table.json';
 
 /**
  * Componente para seleccionar el medio de transporte.
@@ -102,7 +102,7 @@ export class MedioTransporteComponent implements OnInit, OnDestroy {
     /** 
      * Variable que almacena las opciones disponibles para el botón de radio. 
      */
-    opcionDeBotonDeRadio = OpcionesDeBotonDeRadio;
+    opcionDeBotonDeRadio = OPCIONES_DE_BOTON_DE_RADIO;
     
   /**
    * Constructor del componente.
@@ -170,7 +170,7 @@ export class MedioTransporteComponent implements OnInit, OnDestroy {
    */
   private inicializaCatalogos(): void {
     const MEDIODETRANSPORTE$ = this.sagarpaService
-      .getMediodetransporte(CATALOGOS_ID.CAT_MEDIO_DE_TRANSPORTE)
+      .getMediodetransporte()
       .pipe(
         map((resp) => {
           this.medioDeTransporte = resp.data;
