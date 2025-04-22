@@ -89,7 +89,7 @@ COPY --from=node /app/dist/apps/dashboard .
 RUN echo "OK" > /usr/share/nginx/html/health.txt
 
 # Expose port 80
-EXPOSE 80
+# EXPOSE 80
 
 # Configure health check
 HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3 \
