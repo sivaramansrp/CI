@@ -40,7 +40,7 @@ import { takeUntil } from 'rxjs';
     TituloComponent,
   ],
   templateUrl: './pago-de-derechos.component.html',
-  styleUrl: './pago-de-derechos.component.css',
+  styleUrl: './pago-de-derechos.component.scss',
 })
 export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   /**
