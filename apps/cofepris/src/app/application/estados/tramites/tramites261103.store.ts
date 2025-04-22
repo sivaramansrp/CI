@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@datorama/akita';
-import { StoreConfig } from '@datorama/akita'
+import { StoreConfig } from '@datorama/akita';
 /**
  * Interfaz que define el estado inicial para los datos de un trámite.
  * Contiene todas las propiedades necesarias para gestionar la información
