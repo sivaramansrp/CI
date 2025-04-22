@@ -1647,8 +1647,8 @@
     {
         "id": 236,
         "tramite": 260916,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "/cofepris/importar-suministros-medicos/solictud",
+        "linkDepartment": "/pago/importar-suministros-medicos/solictud",
         "department": "cofepris"
     },
     {
