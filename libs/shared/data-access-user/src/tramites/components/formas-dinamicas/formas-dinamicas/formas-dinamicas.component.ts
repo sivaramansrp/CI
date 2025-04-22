@@ -64,6 +64,12 @@ export class FormasDinamicasComponent implements ControlValueAccessor, OnInit {
   @Input() public formularioTitulo!: string;
 
   /**
+   * Subtítulo del formulario, generalmente utilizado para proporcionar contexto adicional
+   * o información sobre el propósito o contenido del formulario.
+   */
+  @Input() public formularioSubtitulo!: string;
+
+  /**
   * compo doc
   * @input forma
   * @type {FormGroup}
