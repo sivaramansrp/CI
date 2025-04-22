@@ -94,7 +94,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   setValoresStore(form: FormGroup, campo: string): void {
     const VALOR = form.get(campo)?.value;
-    this.tramite261402Store.establecerDatos({ [campo]: VALOR });
+    this.tramite261402Store.actualizarEstado({ [campo]: VALOR });
   }
 
   /**

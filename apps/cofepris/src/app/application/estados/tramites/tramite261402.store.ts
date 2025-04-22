@@ -78,16 +78,6 @@ export class Tramite261402Store extends Store<Solicitud261402State> {
     super(createInitialState());
   }
 
-  /**
-   * Actualiza el estado de la solicitud con los valores proporcionados.
-   * Param values Objeto parcial con los valores a actualizar.
-   */
-  public establecerDatos(values: Partial<Solicitud261402State>): void {
-    this.update((state) => ({
-      ...state,
-      ...values,
-    }));
-  }
 
   /**
    * Actualiza la lista de destinatarios en el estado.

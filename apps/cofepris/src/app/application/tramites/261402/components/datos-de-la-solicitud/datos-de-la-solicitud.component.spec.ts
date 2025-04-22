@@ -17,6 +17,7 @@ describe('DatosDeLaSolicitudComponent', () => {
   beforeEach(async () => {
     tramite261402StoreMock = {
       establecerDatos: jest.fn(),
+      actualizarEstado: jest.fn(),
     } as unknown as jest.Mocked<Tramite261402Store>;
 
     tramite261402QueryMock = {
@@ -51,14 +52,14 @@ describe('DatosDeLaSolicitudComponent', () => {
     expect(component.formulario.get('observaciones')?.value).toBe('Test Observations');
   });
 
-  it('should call establecerDatos in the store when setValoresStore is called', () => {
+  it('should call actualizarEstado in the store when setValoresStore is called', () => {
     const mockForm = new FormBuilder().group({
       observaciones: 'Updated Observations',
     });
 
     component.setValoresStore(mockForm, 'observaciones');
 
-    expect(tramite261402StoreMock.establecerDatos).toHaveBeenCalledWith({
+    expect(tramite261402StoreMock.actualizarEstado).toHaveBeenCalledWith({
       observaciones: 'Updated Observations',
     });
   });

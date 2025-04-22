@@ -2,15 +2,15 @@
  * Componente que representa el primer paso del proceso de modificación de permiso de salida del territorio.
  * Este componente gestiona la configuración de trámites asociados, el formulario de pago de derechos y la navegación entre pestañas.
  */
-import { Catalogo, ConfiguracionColumna } from '@libs/shared/data-access-user/src';
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Catalogo, ConfiguracionColumna } from '@libs/shared/data-access-user/src'; 
+import { Component, OnDestroy, OnInit } from '@angular/core'; 
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'; 
 import { Solicitud261402State, Tramite261402Store } from '../../../../estados/tramites/tramite261402.store';
 import { Subject, takeUntil } from 'rxjs';
 import { CONFIGURACIONCOLUMNA } from '../../enums/tramite-asociados.enum';
 import { SolicitudModificacionPermisoInternacionService } from '../../services/solicitud-modificacion-permiso-internacion.service';
-import { Tramite261402Query } from '../../../../estados/queries/tramite261402.query';
-import { TramiteAsociados } from '../../../../shared/models/tramite-asociados.model';
+import { Tramite261402Query } from '../../../../estados/queries/tramite261402.query'; 
+import { TramiteAsociados } from '../../../../shared/models/tramite-asociados.model'; 
 
 /**
  * Decorador que define el componente Angular para el primer paso del proceso.
@@ -34,29 +34,57 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * Subject utilizado para manejar la destrucción de suscripciones.
    */
   private notificadorDestruccion$: Subject<void> = new Subject();
+
+  /**
+   * Formulario reactivo para el pago de derechos.
+   */
   formularioPagoDerechos!: FormGroup;
+
+  /**
+   * Estado actual de la solicitud de permiso.
+   */
   estadoSolicitudPermiso!: Solicitud261402State;
+
+  /**
+   * Lista de trámites asociados.
+   */
   tramiteAsociados!: TramiteAsociados[];
+
+  /**
+   * Lista de bancos disponibles.
+   */
   banco!: Catalogo[];
+
+  /**
+   * Configuración de la tabla para mostrar trámites asociados.
+   */
   configuracionTabla: ConfiguracionColumna<TramiteAsociados>[] = CONFIGURACIONCOLUMNA;
+
   /**
    * Constructor del componente.
-   * Param formBuilder Constructor para formularios reactivos.
-   * Param solicitudPermisoService Servicio para manejar datos relacionados con la solicitud de permiso.
-   * Param tramite261401Store Store para gestionar el estado del trámite.
-   * Param tramite261401Query Query para obtener datos del estado del trámite.
+   * formBuilder Constructor para formularios reactivos.
+   * solicitudPermisoService Servicio para manejar datos relacionados con la solicitud de permiso.
+   * tramite261402Store Store para gestionar el estado del trámite.
+   * tramite261402Query Query para obtener datos del estado del trámite.
    */
-  constructor(private formBuilder: FormBuilder,
+  constructor(
+    private formBuilder: FormBuilder,
     private solicitudPermisoService: SolicitudModificacionPermisoInternacionService,
     private tramite261402Store: Tramite261402Store,
-    private tramite261402Query: Tramite261402Query,) {
-    // Constructor
-  }
+    private tramite261402Query: Tramite261402Query
+  ) {}
 
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Inicializa los datos necesarios para el componente.
+   */
   ngOnInit(): void {
     this.inicializarDatosSolicitud();
   }
 
+  /**
+   * Inicializa los datos de la solicitud, incluyendo el estado actual y los trámites asociados.
+   */
   inicializarDatosSolicitud(): void {
     this.tramite261402Query.selectSolicitud$
       .pipe(takeUntil(this.notificadorDestruccion$))
@@ -67,15 +95,16 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     this.solicitudPermisoService
       .obtenerTramitesAsociados()
       .pipe(takeUntil(this.notificadorDestruccion$))
-      .subscribe(tramiteAsociados => {
+      .subscribe((tramiteAsociados) => {
         this.tramiteAsociados = tramiteAsociados;
       });
 
     this.solicitudPermisoService.inicializaPagoDeDerechosDatosCatalogos();
   }
+
   /**
    * Cambia la pestaña seleccionada y, si es la pestaña de pago, inicializa el formulario de pago.
-   * Param i Índice de la pestaña seleccionada.
+   * i Índice de la pestaña seleccionada.
    */
   seleccionaTab(i: number): void {
     if (i === 4) {
@@ -85,6 +114,9 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     this.indice = i;
   }
 
+  /**
+   * Crea el formulario reactivo para el pago de derechos, inicializando sus valores y validaciones.
+   */
   crearformularioPagoDerechos(): void {
     this.formularioPagoDerechos = this.formBuilder.group({
       claveDeReferencia: new FormControl(
@@ -114,10 +146,11 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     });
   }
 
-  setValoresStore($event: {
-    formularioPagoDerechos: FormGroup;
-    campo: string;
-  }): void {
+  /**
+   * Actualiza el estado del store con los valores del formulario de pago.
+   * $event Evento que contiene el formulario y el campo a actualizar.
+   */
+  setValoresStore($event: { formularioPagoDerechos: FormGroup; campo: string }): void {
     const VALOR = $event.formularioPagoDerechos.get($event.campo)?.value;
     this.tramite261402Store.actualizarEstado({ [$event.campo]: VALOR });
   }

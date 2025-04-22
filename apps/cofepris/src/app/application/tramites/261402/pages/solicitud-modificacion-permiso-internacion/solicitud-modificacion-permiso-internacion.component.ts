@@ -1,9 +1,19 @@
+/**
+ * el cual implementa un wizard (asistente) para guiar al usuario a través del proceso de solicitud
+ * de modificación de un permiso de salida del territorio. Utiliza componentes y servicios compartidos
+ * para la presentación y la gestión del flujo del asistente.
+ */
 import { Component, ViewChild } from '@angular/core';
 import { DatosPasos, ListaPasosWizard, WizardComponent } from '@libs/shared/data-access-user/src';
 import { AVISO } from '@libs/shared/data-access-user/src';
 import { AccionBoton } from '../../enums/accion-botton.enum';
 import { PASOS_EXPORTACION } from '../../constants/solicitud-modificacion-permiso-salida-territorio.enum';
 
+
+/**
+ * Decorador que define el componente Angular para la solicitud de modificación de permiso de internación.
+ * Incluye el selector del componente y la ruta de su plantilla HTML.
+ */
 @Component({
   selector: 'app-solicitud-modificacion-permiso-internacion',
   templateUrl: './solicitud-modificacion-permiso-internacion.component.html',

@@ -10,7 +10,7 @@ const ROUTES: Routes = [
   {
     path: '',
     pathMatch: 'full',
-    redirectTo: 'solicitud-modificacion-permiso-internacion'
+    redirectTo: 'solicitud'
   }
 ];
 

@@ -1,23 +1,22 @@
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
-import { of, Subject } from 'rxjs';
+import { of } from 'rxjs';
 import { PasoUnoComponent } from './paso-uno.component';
-import { Tramite261401Query } from '../../../../estados/queries/tramite261401.query';
-import { Tramite261401Store } from '../../../../estados/tramites/tramite261401.store';
-import { TramiteAsociados } from '../../../../shared/models/tramite-asociados.model';
-import { Component, NO_ERRORS_SCHEMA } from '@angular/core';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { TercerosRelacionadosComponent } from '../../components/terceros-relacionados/terceros-relacionados.component';
 import { TramiteAsociadosComponent } from '../../../../shared/components/tramite-asociados/tramite-asociados.component';
 import { PagoDeDerechosComponent } from '../../../../shared/components/pago-de-derechos-new/pago-de-derechos.component';
-import { SolicitudModificacionPermisoSalidaTerritorioService } from '../../services/solicitudModificacionPermisoSalidaTerritorio.service';
+import { SolicitudModificacionPermisoInternacionService } from '../../services/solicitud-modificacion-permiso-internacion.service';
+import { Tramite261402Store } from '../../../../estados/tramites/tramite261402.store';
+import { Tramite261402Query } from '../../../../estados/queries/tramite261402.query';
 
 
 describe('PasoUnoComponent', () => {
   let component: PasoUnoComponent;
   let fixture: ComponentFixture<PasoUnoComponent>;
   let solicitudPermisoServiceMock: any;
-  let tramite261401StoreMock: any;
-  let tramite261401QueryMock: any;
+  let tramite261402StoreMock: any;
+  let tramite261402QueryMock: any;
 
   beforeEach(async () => {
     // Mock services
@@ -27,7 +26,7 @@ describe('PasoUnoComponent', () => {
       banco: [{ id: 1, descripcion: 'Banco 1' }],
     };
 
-    tramite261401StoreMock = {
+    tramite261402StoreMock = {
       setClaveDeReferencia: jest.fn(),
       setCadenaPagoDependencia: jest.fn(),
       setBancoseleccionado: jest.fn(),
@@ -36,7 +35,7 @@ describe('PasoUnoComponent', () => {
       setImpPago: jest.fn(),
     };
 
-    tramite261401QueryMock = {
+    tramite261402QueryMock = {
       selectSolicitud$: of({
         claveDeReferencia: '12345',
         cadenaPagoDependencia: 'DEPENDENCIA',
@@ -52,9 +51,9 @@ describe('PasoUnoComponent', () => {
       imports: [ReactiveFormsModule,  TramiteAsociadosComponent, PagoDeDerechosComponent,TercerosRelacionadosComponent],
       providers: [
         FormBuilder,
-        { provide: SolicitudModificacionPermisoSalidaTerritorioService, useValue: solicitudPermisoServiceMock },
-        { provide: Tramite261401Store, useValue: tramite261401StoreMock },
-        { provide: Tramite261401Query, useValue: tramite261401QueryMock },
+        { provide: SolicitudModificacionPermisoInternacionService, useValue: solicitudPermisoServiceMock },
+        { provide: Tramite261402Store, useValue: tramite261402StoreMock },
+        { provide: Tramite261402Query, useValue: tramite261402QueryMock },
       ],
       schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();

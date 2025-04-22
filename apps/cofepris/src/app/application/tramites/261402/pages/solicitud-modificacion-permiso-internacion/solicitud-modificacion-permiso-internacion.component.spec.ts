@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SolicitudModificacionPermisoInternacionComponent } from './solicitud-modificacion-permiso-internacion.component';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 describe('SolicitudModificacionPermisoInternacionComponent', () => {
   let component: SolicitudModificacionPermisoInternacionComponent;
@@ -7,7 +8,8 @@ describe('SolicitudModificacionPermisoInternacionComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SolicitudModificacionPermisoInternacionComponent],
+      declarations: [SolicitudModificacionPermisoInternacionComponent],
+      schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
 
     fixture = TestBed.createComponent(

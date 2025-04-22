@@ -1682,8 +1682,8 @@
     {
         "id": 241,
         "tramite": 261402,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "/cofepris/solicitud-modificacion-permiso-internacion/solicitud",
+        "linkDepartment": "/pago/solicitud-modificacion-permiso-internacion/solicitud",
         "department": "cofepris"
     },
     {
@@ -1992,14 +1992,6 @@
         "tramite": 260915,
         "linkDashboard": "/cofepris/permiso-sanitario-dispositivos-medicos/permiso-sanitario-dispositivos-medicos",
         "linkDepartment": "/pago/permiso-sanitario-dispositivos-medicos/permiso-sanitario-dispositivos-medicos",
-        "department": "cofepris"
-
-    },
-    {
-        "id": 286,
-        "tramite": 261402,
-        "linkDashboard": "/cofepris/solicitud-modificacion-permiso-internacion/solicitud",
-        "linkDepartment": "/pago/solicitud-modificacion-permiso-internacion/solicitud",
         "department": "cofepris"
 
     }
