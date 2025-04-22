@@ -10,13 +10,6 @@ const ROUTES: Routes = [
     component: SeleccionTramiteComponent,
   },
   {
-    path: 'sustancias-quimicas',
-    loadChildren: () =>
-      import('./tramites/240107/aviso-importacion-sustancias-quimicas.module').then(
-        (m) => m.AvisoImportacionSustanciasQuimicasModule
-      )
-    },
-    {
     path: 'permiso-ordinario-importacion-armas-municiones',
     loadChildren: () =>
       import(
@@ -24,11 +17,11 @@ const ROUTES: Routes = [
       ).then((m) => m.PermisoOrdinarioImportacionArmasMunicionesModule),
   },
   {
-    path: 'permiso-ordinario-importacion-material-explosivo',
+    path: 'sustancias-quimicas',
     loadChildren: () =>
       import(
-        './tramites/240108/permiso-ordinario-importacion-exlposivo.module'
-      ).then((m) => m.PermisoOrdinarioImportacionExlposivoModule),
+        './tramites/240107/aviso-importacion-sustancias-quimicas.module'
+      ).then((m) => m.AvisoImportacionSustanciasQuimicasModule),
   },
 ];
 

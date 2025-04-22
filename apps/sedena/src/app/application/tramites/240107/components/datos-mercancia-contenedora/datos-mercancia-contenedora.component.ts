@@ -16,7 +16,7 @@ import { Tramite240107Store } from '../../estados/tramite240107Store.store';
   standalone: true,
   imports: [CommonModule, DatosMercanciaComponent],
   templateUrl: './datos-mercancia-contenedora.component.html',
-  styleUrl: './datos-mercancia-contenedora.component.css',
+  styleUrl: './datos-mercancia-contenedora.component.scss',
 })
 export class DatosMercanciaContenedoraComponent {
 

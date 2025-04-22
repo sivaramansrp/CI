@@ -153,7 +153,6 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       ],
       importePago: [
         this.pagoDerechoFormState?.importePago || '',
-        [Validators.required, Validators.pattern('^[0-9]+(\\.[0-9]{1,2})?$')],
         [Validators.required, Validators.pattern(REGEX_VALORES_NUMERICOS)],
       ],
       banco: [this.pagoDerechoFormState?.banco || '', Validators.required],

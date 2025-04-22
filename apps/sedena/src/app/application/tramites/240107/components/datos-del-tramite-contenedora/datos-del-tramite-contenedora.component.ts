@@ -25,9 +25,13 @@ import { takeUntil } from 'rxjs';
   standalone: true,
   imports: [CommonModule, DatosDelTramiteComponent, ReactiveFormsModule],
   templateUrl: './datos-del-tramite-contenedora.component.html',
-  styleUrl: './datos-del-tramite-contenedora.component.css',
+  styleUrl: './datos-del-tramite-contenedora.component.scss',
 })
 export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
+  /**
+   * Formulario reactivo para la combinación de datos.
+   * @property {FormGroup} formCombinacion
+   */
   public formCombinacion!: FormGroup;
 
   /**
@@ -48,6 +52,10 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
    */
   public datosDelTramiteFormState!: DatosDelTramiteFormState;
 
+    /**
+   * Identificador único del procedimiento.
+   * @property {number} idProcedimiento
+   */
   public readonly idProcedimiento = ID_PROCEDIMIENTO;
  
   /**
@@ -88,10 +96,23 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
         this.datosDelTramiteFormState = data;
       });
   }
+  /**
+   * Valida si un campo del formulario es válido.
+   *
+   * @method isValid
+   * @param {string} field - Nombre del campo a validar.
+   * @returns {boolean} Indica si el campo es válido.
+   */
   public isValid(field: string): boolean {
     return this.validacionesService.isValid(this.formCombinacion, field) ?? false;
   }
 
+    /**
+   * Crea el formulario reactivo para la combinación de datos.
+   *
+   * @method crearFormCombinacion
+   * @returns {void}
+   */
   public crearFormCombinacion(): void {
     this.formCombinacion = this.fb.group({
     });

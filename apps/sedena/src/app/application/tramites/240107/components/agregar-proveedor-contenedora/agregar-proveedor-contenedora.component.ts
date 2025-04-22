@@ -9,7 +9,7 @@ import { Tramite240107Store } from '../../estados/tramite240107Store.store';
   standalone: true,
   imports: [CommonModule, AgregarProveedorComponent],
   templateUrl: './agregar-proveedor-contenedora.component.html',
-  styleUrl: './agregar-proveedor-contenedora.component.css',
+  styleUrl: './agregar-proveedor-contenedora.component.scss',
 })
 export class AgregarProveedorContenedoraComponent {
   /**
