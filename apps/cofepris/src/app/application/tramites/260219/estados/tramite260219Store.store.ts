@@ -22,91 +22,91 @@ import { TablaScianConfig } from '../../../shared/models/datos-solicitud.model';
 export interface Tramite260219State {
   
   /**
-   * Array of final recipient data for the recipients table
+   * Datos de la tabla de destinatarios finales.
    * @type {Destinatario[]}
    */
   destinatarioFinalTablaDatos: Destinatario[];
 
   /**
-   * Array of biller/invoicer data for the billers table
+   * Datos de la tabla de facturadores.
    * @type {Facturador[]}
    */
   facturadorTablaDatos: Facturador[];
 
   /**
-   * Array of supplier data for the suppliers table
+   * Datos de la tabla de proveedores.
    * @type {Proveedor[]}
    */
   proveedorTablaDatos: Proveedor[];
 
   /**
-   * Array of manufacturer data for the manufacturers table
+   * Datos de la tabla de fabricantes.
    * @type {Fabricante[]}
    */
   fabricanteTablaDatos: Fabricante[];
 
   /**
-   * State object containing request form data
+   * Estado del formulario de datos de la solicitud.
    * @type {DatosSolicitudFormState}
    */
   datosSolicitudFormState: DatosSolicitudFormState;
 
   /**
-   * Form data structure for merchandise information
+   * Datos del formulario de mercancías.
    * @type {MercanciaForm}
    */
   mercanciaForm: MercanciaForm;
 
   /**
-   * Array of configuration options for data tables
+   * Configuración de opciones para la tabla.
    * @type {TablaOpcionConfig[]}
    */
   opcionConfigDatos: TablaOpcionConfig[];
 
   /**
-   * Array of SCIAN (Mexican industry classification) configuration data
+   * Configuración de SCIAN para la tabla.
    * @type {TablaScianConfig[]}
    */
   scianConfigDatos: TablaScianConfig[];
 
   /**
-   * Array of merchandise table configuration data
+   * Configuración de datos para la tabla de mercancías.
    * @type {TablaMercanciasDatos[]}
    */
   tablaMercanciasConfigDatos: TablaMercanciasDatos[];
 
   /**
-   * Array of selected configuration options
+   * Opciones seleccionadas de la tabla de configuración.
    * @type {TablaOpcionConfig[]}
    */
   seleccionadoopcionDatos: TablaOpcionConfig[];
 
   /**
-   * Array of selected SCIAN configuration data
+   * Datos seleccionados de la configuración SCIAN.
    * @type {TablaScianConfig[]}
    */
   seleccionadoScianDatos: TablaScianConfig[];
 
   /**
-   * Array of selected merchandise table data
+   * Datos seleccionados de la tabla de mercancías.
    * @type {TablaMercanciasDatos[]}
    */
   seleccionadoTablaMercanciasDatos: TablaMercanciasDatos[];
 
   /**
-   * Boolean flag indicating the collapsible options state (expanded/collapsed)
+   * Estado de las opciones colapsables.
    * @type {boolean}
    */
   opcionesColapsableState: boolean;
 
   /**
-   * State object containing payment rights form data
+   * Estado del formulario de pago de derechos.
    * @type {PagoDerechosFormState}
    */
   pagoDerechos: PagoDerechosFormState;
 
   /**
-   * Optional index of the currently selected tab
+   * Pestaña seleccionada actualmente (opcional).
    * @type {number | undefined}
    */
   tabSeleccionado?: number;
