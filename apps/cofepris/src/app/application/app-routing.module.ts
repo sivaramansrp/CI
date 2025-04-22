@@ -331,6 +331,12 @@ const ROUTES: Routes = [
       
   },
   {
+    path: 'muestras-de-toxicos',
+    loadChildren: () =>
+      import('./tramites/260513/muestras-de-toxicos.module').then(
+        (m) => m.MuestrasDeToxicosModule)
+  },
+  {
     path: 'permiso-sujetos',
     loadChildren: () =>
       import(
