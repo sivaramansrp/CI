@@ -1,19 +1,20 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { CargarDatosIniciales } from '../../../220502/models/solicitud-pantallas.model';
-import { CarrosDeFerrocarril } from '../../../220502/models/solicitud-pantallas.model';
-import { HistorialInspeccionFisica } from '../../../220502/models/solicitud-pantallas.model';
-import { Solicitud } from '../../../220502/models/solicitud-pantallas.model'
-import { SolicitudPantallasService } from '../../../220502/services/solicitud-pantallas.service';
-import { TEXTOS } from '../../constantes/texto-enum';
 import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+
+import { CargarDatosIniciales } from '../../../220502/models/solicitud-pantallas.model';
+import { CarrosDeFerrocarril } from '../../../220502/models/solicitud-pantallas.model';
 import { CarrosDeFerrocarrilComponent } from '../../../220502/shared/carros-de-ferrocarril/carros-de-ferrocarril.component';
 import { DatosDelTramiteARealizarComponent } from '../../../220502/shared/datos-del-tramite-a-realizar/datos-del-tramite-a-realizar.component';
+import { HistorialInspeccionFisica } from '../../../220502/models/solicitud-pantallas.model';
 import { HistorialInspeccionFisicaComponent } from '../../../220502/shared/historial-inspeccion-fisica/historial-inspeccion-fisica.component';
-import { ResponsableInspeccionEnPuntoComponent } from '../../../220502/shared/responsable-inspeccion-en-punto/responsable-inspeccion-en-punto.component';
-import { SolicitudDatosComponent } from '../../../220502/shared/solicitud-datos/solicitud-datos.component';
 import { MedioTransporteComponent } from '../medio-transporte/medio-transporte.component';
+import { ResponsableInspeccionEnPuntoComponent } from '../../../220502/shared/responsable-inspeccion-en-punto/responsable-inspeccion-en-punto.component';
+import { Solicitud } from '../../../220502/models/solicitud-pantallas.model'
+import { SolicitudDatosComponent } from '../../../220502/shared/solicitud-datos/solicitud-datos.component';
+import { SolicitudPantallasService } from '../../../220502/services/solicitud-pantallas.service';
+import { TEXTOS } from '../../constantes/texto-enum';
 /**
  * Componente para gestionar los datos de la solicitud.
  */

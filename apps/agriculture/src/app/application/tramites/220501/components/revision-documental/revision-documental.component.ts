@@ -1,8 +1,8 @@
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { DatosGeneralesComponent } from '../datos-generales/datos-generales.component';
-import { TercerosRelacionadosComponent } from '../terceros-relacionados/terceros-relacionados.component';
 import { PagoDeDerechosComponent } from '../pago-de-derechos/pago-de-derechos.component';
-import { CommonModule } from '@angular/common';
+import { TercerosRelacionadosComponent } from '../terceros-relacionados/terceros-relacionados.component';
 
 /**
  * Componente para la revisión documental.

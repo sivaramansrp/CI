@@ -1,8 +1,9 @@
-import { CAPTURA_OPCIONES_DE_BOTON_DE_RADIO } from '../../enums/sagarpa.enum';
 import { Catalogo, CatalogoSelectComponent, InputRadioComponent, TituloComponent } from '@ng-mf/data-access-user';
-import { CatalogosSelect } from '@ng-mf/data-access-user';
-import { Component } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { CAPTURA_OPCIONES_DE_BOTON_DE_RADIO } from '../../enums/sagarpa.enum';
+import { CatalogosSelect } from '@ng-mf/data-access-user';
+import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
@@ -15,7 +16,6 @@ import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
 import { Validators } from '@angular/forms';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
-import { CommonModule } from '@angular/common';
 
 /**
  * Interfaz para definir la estructura de las filas.

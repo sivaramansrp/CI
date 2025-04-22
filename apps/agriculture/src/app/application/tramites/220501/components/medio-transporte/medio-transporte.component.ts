@@ -1,7 +1,8 @@
 import { AlertComponent, Catalogo, CatalogoSelectComponent, InputRadioComponent, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { EventEmitter } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { FormControl } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { OnDestroy } from '@angular/core';
@@ -13,6 +14,7 @@ import { map } from 'rxjs';
 import { merge } from 'rxjs';
 import { takeUntil } from 'rxjs';
 
+import { AgregarMercanciaComponent } from '../agregar-mercancia/agregar-mercancia.component';
 import { OPCIONES_DE_BOTON_DE_RADIO } from '../../enums/sagarpa.enum';
 import { SagarpaService } from '../../services/sagarpa/sagarpa.service';
 import { Solicitud220501Query } from '../../estados/tramites220501.query';
@@ -20,8 +22,6 @@ import { Solicitud220501State } from '../../estados/tramites220501.store';
 import { Solicitud220501Store } from '../../estados/tramites220501.store';
 import { TEXTOS } from '../../constantes/texto-enum';
 import mercanciaTable from '@libs/shared/theme/assets/json/220501/mercancia-table.json';
-import { CommonModule } from '@angular/common';
-import { AgregarMercanciaComponent } from '../agregar-mercancia/agregar-mercancia.component';
 
 /**
  * Componente para seleccionar el medio de transporte.
