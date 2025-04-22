@@ -28,12 +28,9 @@ import { EquipoEInstrumentosMusicalesService } from '../../services/equipo-e-ins
   styleUrl: './datos-del-nombre.component.scss',
 })
 export class DatosDelNombreComponent implements OnInit,OnDestroy {
- /**
-   * Opciones de propietarios obtenidas desde un catálogo.
-   */
- propietarioOpciones: Catalogo[] = [];
 
- 
+
+  public consultarPorRFCOpcionseleccionada : boolean = false;
  consultarPorRFC: Catalogo[]= [];
 
  tipoDeRepresentanteOpciones: Catalogo[] = [];
@@ -100,6 +97,7 @@ export class DatosDelNombreComponent implements OnInit,OnDestroy {
       apellidoPaterno: [this.estadoSeleccionado?.['apellidoPaterno'] || '', [Validators.required, Validators.pattern(REGEX_NOMBRE)]],
       apellidoMaterno: [this.estadoSeleccionado?.['apellidoMaterno'] || '', Validators.pattern(REGEX_NOMBRE)],
       razonSocial: [this.estadoSeleccionado?.['razonSocial'] || '', [Validators.required, Validators.pattern(REGEX_NOMBRE)]],
+      rfc :[this.estadoSeleccionado?.['rfc'] || '', [Validators.required, Validators.pattern(REGEX_NOMBRE)]]
     });
   }
 
@@ -153,6 +151,10 @@ export class DatosDelNombreComponent implements OnInit,OnDestroy {
       });
   }
 
+  
+  continuar(): void {
+    this.consultarPorRFCOpcionseleccionada = this.datisDelNombre.get('consultarPorRFC')?.value === '1';
+  }
   /**
    * Establece un cambio de valor en el store basado en un evento.
    * 
@@ -206,6 +208,8 @@ export class DatosDelNombreComponent implements OnInit,OnDestroy {
       this.establecerValidadores(['razonSocial'], Validators.required);
     }
   }
+
+
 
   /**
    * Método del ciclo de vida que se ejecuta al destruir el componente.
