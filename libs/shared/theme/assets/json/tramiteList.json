@@ -1297,8 +1297,8 @@
     {
         "id": 186,
         "tramite": 140101,
-        "linkDashboard": "/se/solicitud-de-cancelation/solicitante",
-        "linkDepartment": "/pago/solicitud-de-cancelation/solicitante",
+        "linkDashboard": "/se/solicitud-de-cancelacion/solicitante",
+        "linkDepartment": "/pago/solicitud-de-cancelacion/solicitante",
         "department": "se"
     },
     {
