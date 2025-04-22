@@ -236,6 +236,12 @@ const ROUTES: Routes = [
       loadChildren: () =>
         import('./tramites/40401/tramite40401.module').then(
           (m) => m.Tramite40401Module),
+  },
+  {
+    path: 'registro-transportista',
+    loadChildren: () =>
+      import('./tramites/40302/registro-transportista.module').then(
+        (m) => m.RegistroTransportistaModule),
   }
 ];
 
