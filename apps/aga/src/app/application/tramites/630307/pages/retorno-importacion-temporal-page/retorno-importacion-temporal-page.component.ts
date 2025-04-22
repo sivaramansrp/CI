@@ -1,3 +1,7 @@
+/**
+ * Componente que representa la página de retorno de importación temporal.
+ * Permite gestionar los pasos del asistente y la navegación entre ellos.
+ */
 import { Component, ViewChild } from '@angular/core';
 
 import { AVISO, DatosPasos } from '@ng-mf/data-access-user';

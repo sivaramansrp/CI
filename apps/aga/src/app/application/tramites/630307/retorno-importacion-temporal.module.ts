@@ -2,7 +2,8 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 
-import { AlertComponent, BtnContinuarComponent, CatalogoSelectComponent, SolicitanteComponent, TablaDinamicaComponent, TituloComponent, WizardComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, CatalogoSelectComponent, FirmaElectronicaComponent, SolicitanteComponent, TablaDinamicaComponent, TituloComponent, WizardComponent } from '@ng-mf/data-access-user';
+import { DatosMercanciaComponent } from './components/datos-mercancia/datos-mercancia.component';
 import { RetornoImportacionTemporalComponent } from './pages/retorno-importacion-temporal-page/retorno-importacion-temporal-page.component';
 
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
@@ -12,11 +13,16 @@ import { RetornoImportacionTemporalRoutingModule } from './retorno-importacion-t
 
 import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { DatosDeLaSolicitudComponent } from "./components/datos-de-la-solicitud/datos-de-la-solicitud.component";
+import { SolicitudComponent } from './pages/solicitud/solicitud.component';
+import { TipoPropietarioComponent } from './components/tipo-propietario/tipo-propietario.component';
+
+import { ManifiestoComponent } from './components/manifiesto/manifiesto.component';
 
 
 
 @NgModule({
-  declarations: [RetornoImportacionTemporalComponent, PasoUnoComponent],
+  declarations: [RetornoImportacionTemporalComponent, PasoUnoComponent, SolicitudComponent, PasoDosComponent,
+    PasoTresComponent],
   imports: [
     CommonModule,
     RetornoImportacionTemporalRoutingModule,
@@ -27,11 +33,14 @@ import { DatosDeLaSolicitudComponent } from "./components/datos-de-la-solicitud/
     ReactiveFormsModule,
     BtnContinuarComponent,
     TablaDinamicaComponent,
-    PasoDosComponent,
-    PasoTresComponent,
+    FirmaElectronicaComponent,
     AlertComponent,
     ToastrModule.forRoot(),
-    DatosDeLaSolicitudComponent
+    DatosDeLaSolicitudComponent,
+    TipoPropietarioComponent,
+    DatosMercanciaComponent,
+    ManifiestoComponent,
+    AnexarDocumentosComponent
 ],
   providers: [
     ToastrService,
