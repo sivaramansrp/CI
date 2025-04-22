@@ -1,63 +1,77 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { TercerosRelacionadosFabricanteComponent } from './terceros-relacionados-fabricante.component';
-import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
-import { AlertComponent, Fabricante, Otros, TituloComponent } from '@libs/shared/data-access-user/src';
-import { TablaSeleccion } from '@libs/shared/data-access-user/src';
-import { CommonModule } from '@angular/common';
-import { FABRICANTE_TABLA } from '../../../../shared/constantes/terceros-relacionados-fabricante.enum';
-import { OTROS_TABLA } from '../../../../shared/constantes/terceros-relacionados-fabricante.enum';
-import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
+import { FABRICANTE_TABLA, OTROS_TABLA } from '../../../../shared/constantes/terceros-relacionados-fabricante.enum';
+import { Fabricante, TablaSeleccion } from '@libs/shared/data-access-user/src';
 
-describe('ComponenteTercerosRelacionadosFabricante', () => {
-  let componente: TercerosRelacionadosFabricanteComponent;
-  let fixture: ComponentFixture<TercerosRelacionadosFabricanteComponent>;
+describe('TercerosRelacionadosFabricanteComponent', () => {
+  let component: TercerosRelacionadosFabricanteComponent;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [TablaDinamicaComponent, AlertComponent, TituloComponent],
-      imports: [CommonModule, TercerosRelacionadosFabricanteComponent],
-    }).compileComponents();
-
-    fixture = TestBed.createComponent(TercerosRelacionadosFabricanteComponent);
-    componente = fixture.componentInstance;
-    fixture.detectChanges();
-  });
-
-  it('debería crearse', () => {
-    expect(componente).toBeTruthy();
-  });
-
-  it('debería generar la configuración correcta para las tablas', () => {
-    const CONFIGURACION_GENERADA: ConfiguracionColumna<Fabricante>[] = componente.generateConfiguracionTabla(FABRICANTE_TABLA);
-    
-    expect(Array.isArray(CONFIGURACION_GENERADA)).toBeTruthy();
-    
-    CONFIGURACION_GENERADA.forEach(config => {
-      expect(config).toHaveProperty('encabezado');
-      expect(config).toHaveProperty('clave');
-      expect(config).toHaveProperty('orden');
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [TercerosRelacionadosFabricanteComponent],
     });
+    const FIXTURE = TestBed.createComponent(TercerosRelacionadosFabricanteComponent);
+    component = FIXTURE.componentInstance;
   });
 
-  it('debería inicializarse con los datos correctos de las tablas', () => {
-    expect(componente.fabricanteTablaDatos).toEqual([]);
-    expect(componente.facturadorTablaDatos).toEqual([]);
-    expect(componente.otrosTablaDatos).toEqual([]);
+  it('debería crear el componente', () => {
+    expect(component).toBeTruthy();
   });
 
-  it('debería establecer el tipo de selección correcto para los checkboxes', () => {
-    expect(componente.checkbox).toBe(TablaSeleccion.CHECKBOX);
+  it('debería inicializar fabricanteTablaDatos como un arreglo vacío', () => {
+    expect(component.fabricanteTablaDatos).toEqual([]);
   });
 
-  it('debería generar la configuración para la tabla "Otros" correctamente', () => {
-    const CONFIGURACION_GENERADA_OTROS: ConfiguracionColumna<Otros>[] = componente.generateConfiguracionTabla(OTROS_TABLA);
-    
-    expect(Array.isArray(CONFIGURACION_GENERADA_OTROS)).toBeTruthy();
-    
-    CONFIGURACION_GENERADA_OTROS.forEach(config => {
-      expect(config).toHaveProperty('encabezado');
-      expect(config).toHaveProperty('clave');
-      expect(config).toHaveProperty('orden');
+  it('debería inicializar checkbox con TablaSeleccion.CHECKBOX', () => {
+    expect(component.checkbox).toBe(TablaSeleccion.CHECKBOX);
+  });
+
+  it('debería inicializar facturadorTablaDatos como un arreglo vacío', () => {
+    expect(component.facturadorTablaDatos).toEqual([]);
+  });
+
+  it('debería inicializar otrosTablaDatos como un arreglo vacío', () => {
+    expect(component.otrosTablaDatos).toEqual([]);
+  });
+
+  it('debería inicializar configuracionFabricante con FABRICANTE_TABLA', () => {
+    expect(component.configuracionFabricante).toEqual(FABRICANTE_TABLA);
+  });
+
+  it('debería inicializar configuracionOtros con OTROS_TABLA', () => {
+    expect(component.configuracionOtros).toEqual(OTROS_TABLA);
+  });
+
+  describe('generateConfiguracionTabla', () => {
+    it('debería devolver un arreglo de configuración válido para una entrada dada', () => {
+      const INPUT = [
+        { encabezado: 'Nombre', clave: 'nombre' as keyof Fabricante },
+        { encabezado: 'Dirección', clave: 'direccion' as keyof Fabricante },
+      ];
+      const RESULT = component.generateConfiguracionTabla(INPUT);
+
+      expect(RESULT).toEqual([
+        {
+          encabezado: 'Nombre',
+          clave: expect.any(Function),
+          orden: 1,
+        },
+        {
+          encabezado: 'Dirección',
+          clave: expect.any(Function),
+          orden: 2,
+        },
+      ]);
+
+      // Probar la función `clave`
+      const TEST_ITEM = { nombre: 'Fabricante A', direccion: 'Dirección A' };
+      expect(RESULT[0].clave(TEST_ITEM)).toBe('Fabricante A');
+      expect(RESULT[1].clave(TEST_ITEM)).toBe('Dirección A');
+    });
+
+    it('debería manejar un arreglo de entrada vacío', () => {
+      const RESULT = component.generateConfiguracionTabla([]);
+      expect(RESULT).toEqual([]);
     });
   });
 });

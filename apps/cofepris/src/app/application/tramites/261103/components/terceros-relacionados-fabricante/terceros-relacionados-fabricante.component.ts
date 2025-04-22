@@ -61,13 +61,13 @@ export class TercerosRelacionadosFabricanteComponent {
    * Esto se utiliza para definir las configuraciones y propiedades de la tabla
    * en el componente "Terceros Relacionados".
    */
-  public configuracionFabricante = FABRICANTE_TABLA;
+  public configuracionFabricante: Array<{ encabezado: string; clave: keyof Fabricante }> = FABRICANTE_TABLA as Array<{ encabezado: string; clave: keyof Fabricante }>;
   /**
    * Objeto de configuración para la tabla "Otros".
    * Esta propiedad se inicializa con la constante `OTROS_TABLA`,
    * que define la estructura y configuraciones para la tabla.
    */
-  public configuracionOtros = OTROS_TABLA;
+  public configuracionOtros: Array<{ encabezado: string; clave: keyof Fabricante }> = OTROS_TABLA as Array<{ encabezado: string; clave: keyof Fabricante }>;
 
   /**
    * Una propiedad pública que contiene los datos o la configuración para el componente.
@@ -134,7 +134,7 @@ export class TercerosRelacionadosFabricanteComponent {
    *   - `clave`: Una función que obtiene el valor de la clave especificada de un objeto de datos.
    *   - `orden`: El orden de la columna, comenzando desde 1.
    */
-  generateConfiguracionTabla(datosArray: any): ConfiguracionColumna<any>[] {
+  generateConfiguracionTabla(datosArray: Array<{ encabezado: string; clave: keyof Fabricante }>): ConfiguracionColumna<any>[] {
     const FIELDS: Array<{ encabezado: string; clave: keyof Fabricante }> =
       datosArray;
     return FIELDS.map((field, index) => ({
