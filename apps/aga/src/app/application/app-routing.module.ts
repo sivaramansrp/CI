@@ -155,10 +155,10 @@ const ROUTES: Routes = [
       ),
   },
   {
-    path: 'registro-transportista',
+    path: 'invocar-modulo',
     loadChildren: () =>
-      import('./tramites/40302/registro-transportista.module').then(
-        (m) => m.RegistroTransportistaModule
+      import('./tramites/105/invocar.module').then(
+        (m) => m.InvocarModule
       ),
   },
   {
@@ -217,7 +217,7 @@ const ROUTES: Routes = [
         (m) => m.CancelacionDonacionesModule
       ),
   },
-  {
+  { 
     path: 'prestadores-servicio',
     loadChildren: () =>
       import('./tramites/202/prestadores-servicio.module').then(
@@ -230,6 +230,18 @@ const ROUTES: Routes = [
       import('./tramites/10302/exencion-impuestos.module').then(
         (m) => m.ExencionImpuestosModule
       ),
+  },
+    {
+    path: 'registro-del-codigo',
+      loadChildren: () =>
+        import('./tramites/40401/tramite40401.module').then(
+          (m) => m.Tramite40401Module),
+  },
+  {
+    path: 'registro-transportista',
+    loadChildren: () =>
+      import('./tramites/40302/registro-transportista.module').then(
+        (m) => m.RegistroTransportistaModule),
   }
 ];
 

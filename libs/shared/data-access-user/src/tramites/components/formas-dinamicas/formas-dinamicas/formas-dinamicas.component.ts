@@ -64,6 +64,12 @@ export class FormasDinamicasComponent implements ControlValueAccessor, OnInit {
   @Input() public formularioTitulo!: string;
 
   /**
+   * Subtítulo del formulario, generalmente utilizado para proporcionar contexto adicional
+   * o información sobre el propósito o contenido del formulario.
+   */
+  @Input() public formularioSubtitulo!: string;
+
+  /**
   * compo doc
   * @input forma
   * @type {FormGroup}
@@ -123,14 +129,6 @@ export class FormasDinamicasComponent implements ControlValueAccessor, OnInit {
   */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   @Output() emitirCambioDeValor: EventEmitter<{ campo: string; valor: any}> = new EventEmitter<{ campo: string; valor: any}>();
-
-  /**
-  * compo doc
-  * Valor seleccionado del radio.
-  * @type {string}
-  * @memberof FormasDinamicasComponent
-  */
-  public valorSeleccionado!: string;
 
   /**
   * compo doc
@@ -212,20 +210,20 @@ export class FormasDinamicasComponent implements ControlValueAccessor, OnInit {
   * utilizando los datos del formulario pasados como entrada a este componente
   */
   inicializarFormulario(): void {
-    if (!this.formularioDatos || !Array.isArray(this.formularioDatos)) {
+    if (!this.formularioDatos || !Array.isArray(this.formularioDatos) || this.formularioDatos.length === 0) {
       return;
     }
   
     const FORMGROUP: { [key: string]: ReturnType<FormBuilder['control']> } = {};
     this.formularioDatos.forEach(campo => {
-      if (campo.tipo_input === 'button') {
+      if (!campo || !campo.campo || campo.tipoInput === 'button' || campo.tipoInput === '') {
         return;
       }
   
       if (!this.forma?.contains(campo.campo)) {
         const VALIDADORES = FormasDinamicasComponent.obtenerValidadores(campo.validadores ?? []);
         FORMGROUP[campo.campo] = this.fb.control(
-          { value: campo.valor_predeterminado || this.estado[campo.campo], disabled: campo.desactivado },
+          { value: this.estado && this.estado[campo.campo] ? this.estado[campo.campo] : campo.valorPredeterminado, disabled: campo.desactivado },
           { validators: VALIDADORES }
         );
       }
@@ -352,17 +350,6 @@ export class FormasDinamicasComponent implements ControlValueAccessor, OnInit {
     if (campo && event) {
       this.emitirCambioDeValor.emit({ campo: campo, valor: VALOR });
     }
-  }
-
-  /**
-  * compo doc
-  * @method cambiarRadio
-  * @description 
-  * Cambia el valor seleccionado del radio.
-  * @param value Valor seleccionado.
-  */
-  cambiarRadio(value: string | number): void {
-    this.valorSeleccionado = value as string;
   }
 
   /**
