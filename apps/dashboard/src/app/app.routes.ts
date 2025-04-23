@@ -155,11 +155,10 @@ export const appRoutes: Route[] = [
     path: 'profepa',
     loadChildren: () =>
         loadRemoteModule({
-            remoteEntry: 'http://localhost:4218/remoteAppEntry.js',
+            remoteEntry: 'http://localhost:4220/remoteAppEntry.js',
             remoteName: 'profepa',
             exposedModule: './Module'
         }).then((m) => m.AppProfepaModule)
   }
-
 
 ];
