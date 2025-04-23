@@ -1703,8 +1703,8 @@
     {
         "id": 244,
         "tramite": 270101,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "/inbal/informacion-arte-exportar/pantallas",
+        "linkDepartment": "/pago/informacion-arte-exportar/pantallas",
         "department": "inbal"
     },
     {
@@ -1717,8 +1717,8 @@
     {
         "id": 246,
         "tramite": 250101,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "/profepa/flora-fauna/solictud",
+        "linkDepartment": "/pago/flora-fauna/solictud",
         "department": "profepa"
     },
     {
@@ -2007,7 +2007,14 @@
         "linkDashboard": "/agace/registros-de-comercio-exterior/registrar-solicitud",
         "linkDepartment": "/pago/registros-de-comercio-exterior/registrar-solicitud",
         "department": "cofepris"
-    }
+    },
+    {
+        "id": 287,
+        "tramite": 261601,
+        "linkDashboard": "/cofepris/correccion-interna-de-la-cofepris/correccion-interna-de-la-cofepris",
+        "linkDepartment": "/pago/correccion-interna-de-la-cofepris/correccion-interna-de-la-cofepris",
+        "department": "cofepris"
+     }
 
     
 ]
