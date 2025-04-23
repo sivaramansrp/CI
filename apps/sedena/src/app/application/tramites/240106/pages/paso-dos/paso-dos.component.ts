@@ -19,7 +19,7 @@ import { TEXTOS_REQUISITOS } from '../../constants/importacion-sustancias-quimic
 @Component({
   selector: 'app-paso-dos',
   templateUrl: './paso-dos.component.html',
-  styleUrl: './paso-dos.component.css',
+  styleUrl: './paso-dos.component.scss',
 })
 export class PasoDosComponent implements OnInit, OnDestroy {
   /**

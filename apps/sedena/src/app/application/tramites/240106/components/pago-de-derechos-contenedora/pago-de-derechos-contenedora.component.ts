@@ -5,6 +5,6 @@ import { Component } from '@angular/core';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './pago-de-derechos-contenedora.component.html',
-  styleUrl: './pago-de-derechos-contenedora.component.css',
+  styleUrl: './pago-de-derechos-contenedora.component.scss',
 })
 export class PagoDeDerechosContenedoraComponent {}
