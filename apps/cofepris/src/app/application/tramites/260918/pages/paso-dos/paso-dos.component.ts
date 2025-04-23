@@ -8,10 +8,8 @@ import { TEXTOS } from '@libs/shared/data-access-user/src';
   templateUrl: './paso-dos.component.html',
 })
 export class PasoDosComponent {
-
-    /**
-     * @propiedad TEXTOS
-     * @descripcion Referencia a los textos compartidos utilizados en el componente.
-     */
+  /**
+ * Asignación de textos estáticos utilizados en la vista.
+ */
     TEXTOS = TEXTOS;
 }
