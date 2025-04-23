@@ -26,6 +26,8 @@ import { SolicitudDeRegistroInvocarService } from './services/solicitudDeRegistr
 import { SolicitudPasoComponent } from './pages/solicitud-paso/solicitud-paso.component';
 import { ToastrService } from 'ngx-toastr';
 import { provideHttpClient } from '@angular/common/http';
+import { PerfilesMensajeriaComponent } from './components/perfiles-mensajeria/perfiles-mensajeria.component';
+import { ProfilesDomocilioDelaComponent } from './components/profiles-domocilio-dela/profiles-domocilio-dela.component';
 
 @NgModule({
   declarations: [
@@ -35,13 +37,13 @@ import { provideHttpClient } from '@angular/common/http';
     PasoTresComponent,
   ],
   imports: [
+    AlertComponent,
     CommonModule,
     SolicitudDeRegistroInvocarRoutingModule,
     WizardComponent,
     BtnContinuarComponent,
     SolicitanteComponent,
     DatoComunesComponent,
-    AlertComponent,
     ReprestantanteComponent,
     EnlaceComponent,
     PersonaComponent,
@@ -49,6 +51,8 @@ import { provideHttpClient } from '@angular/common/http';
     FirmaElectronicaComponent,
     AnexarDocumentosComponent,
     TituloComponent,
+    PerfilesMensajeriaComponent,
+    ProfilesDomocilioDelaComponent,
   ],
   providers: [
     ToastrService,
