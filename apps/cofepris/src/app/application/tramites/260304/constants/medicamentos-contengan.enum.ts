@@ -3,6 +3,10 @@ import { DetalleMercancíaProductoTerminado, Otros } from '../models/medicamento
 import { Destinatario } from '../../../shared/models/terceros-relacionados.model';
 import { TablaMercanciasDatos } from '../../../shared/models/datos-solicitud.model';
 
+/**
+ * @const PASOS
+ * @description Pasos del proceso de solicitud, incluyendo su estado de actividad y completado.
+ */
 export const PASOS = [
   {
     indice: 1,
@@ -23,11 +27,25 @@ export const PASOS = [
     completado: false,
   },
 ];
+
+/**
+ * @const TITULO_MENSAJE
+ * @description Título del mensaje que describe el propósito de la solicitud.
+ */
 export const TITULO_MENSAJE =
   'Solicitud Exportación de Medicamentos que sean o contengan Estupefacientes o Psicotrópicos';
+
+/**
+ * @const TEXTOS_REQUISITOS
+ * @description Mensaje que informa al usuario sobre el número temporal de la solicitud y su validez.
+ */  
 export const TEXTOS_REQUISITOS =
   'La solicitud ha quedado registrada con el número temporal [202767640]. Este no tiene validez legal y sirve solamente para efectos de identificar tu Solicitud. Un folio oficial le será asignado a la solicitud al momento en que esta sea firmada.';
 
+/**
+ * @const ID_PROCEDIMIENTO
+ * @description Identificador único del procedimiento.
+ */
 export const ID_PROCEDIMIENTO = 260304;
 
 /**
@@ -144,10 +162,19 @@ export const OTROS_ENCABEZADO_DE_TABLA: ConfiguracionColumna<Otros>[] = [
   },
 ];
 
+/**
+ * @enum TIPO_TABLA_DATOS
+ * @description Tipos de tablas de datos disponibles.
+ */
 export enum TIPO_TABLA_DATOS {
   DESTINATARIO = 'Destinatario(Destino final)',
   OTROS = 'Otros',
 }
+
+/**
+ * @const PRODUCTO_TABLA_ESTUPEFACIENTES_EXPORTICON
+ * @description Configuración de columnas para mostrar los datos de productos estupefacientes en una tabla.
+ */
 export const PRODUCTO_TABLA_ESTUPEFACIENTES_EXPORTICON = [
   {
     encabezado: 'Clasificación del producto',
@@ -248,6 +275,10 @@ export const PRODUCTO_TABLA_ESTUPEFACIENTES_EXPORTICON = [
   },
 ];
 
+/**
+ * @const DETALLE_MERCANCIA_PRODUCTO_TERMINADO
+ * @description Configuración de columnas para mostrar los detalles de mercancías de productos terminados.
+ */
 export const DETALLE_MERCANCIA_PRODUCTO_TERMINADO = [
   {
     encabezado: 'Cantidad',
@@ -266,11 +297,19 @@ export const DETALLE_MERCANCIA_PRODUCTO_TERMINADO = [
   },
 ];
 
+/**
+ * @const TERCEROS_NACIONALIDAD_RADIO_OPCIONS
+ * @description Opciones de nacionalidad para terceros.
+ */
 export const TERCEROS_NACIONALIDAD_RADIO_OPCIONS = [
   { label: 'Nacional', value: 'true' },
   { label: 'Extranjero', value: 'false' },
 ];
 
+/**
+ * @const TERCEROS_PERSONA_RADIO_OPCIONS
+ * @description Opciones de tipo de persona para terceros.
+ */
 export const TERCEROS_PERSONA_RADIO_OPCIONS = [
   { label: 'Física', value: TipoPersona.FISICA },
   { label: 'Moral', value: TipoPersona.MORAL },
