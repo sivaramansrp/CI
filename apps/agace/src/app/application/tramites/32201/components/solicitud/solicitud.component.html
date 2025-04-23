@@ -1,0 +1,99 @@
+<div class="mt-4">
+  <form [formGroup]="solicitudForm">
+    <ng-titulo titulo="Régimen aduanero"></ng-titulo>
+    <div class="col-md-12">
+      <div class="form-check">
+        <lib-input-check
+              [id]="'regimen_0'"
+              [label]="'Importación temporal para la elaboración, transformación o reparación
+              en programas de maquila o de exportación (IMMEX)'"
+              [required]="true"
+              formControlName="regimen_0"
+              (change)="setValoresStore(solicitudForm, 'regimen_0', 'setRegimen_0')"
+        ></lib-input-check>
+      </div>
+
+      <div class="form-check">
+        <lib-input-check
+              [id]="'regimen_1'"
+              [label]="'Depósito fiscal para someterse al proceso de ensamble y fabricación de
+              vehículo a empresas de la industria automotriz terminal'"
+              [required]="true"
+              formControlName="regimen_1"
+              (change)="setValoresStore(solicitudForm, 'regimen_1', 'setRegimen_1')"
+        ></lib-input-check>
+      </div>
+
+      <div class="form-check">
+        <lib-input-check
+              [id]="'regimen_2'"
+              [label]="'Elaboración, transformación o reparación en recinto fiscalizado'"
+              [required]="true"
+              formControlName="regimen_2"
+              (change)="setValoresStore(solicitudForm, 'regimen_2', 'setRegimen_2')"
+        ></lib-input-check>
+      </div>
+
+      <div class="form-check">
+        <lib-input-check
+              [id]="'regimen_3'"
+              [label]="'Recinto Fiscalizado Estratégico'"
+              [required]="true"
+              formControlName="regimen_3"
+              (change)="setValoresStore(solicitudForm, 'regimen_3', 'setRegimen_3')"
+        ></lib-input-check>
+      </div>
+    </div>
+    
+    <ng-titulo titulo="Operaciones virtuales"></ng-titulo>
+    <div class="col-md-12">
+      <ng-alert [CONTENIDO]="TEXTOS.TEXTO_OPERACIONES_VIRTUALES" [CUSTOMECLASS]="infoAlert"></ng-alert>
+    </div>
+    <div class="col-md-12">
+      <label class="form-label text-justify">
+        Para descargar plantilla del archivo de excel de click
+        <a [href]="" target="_blank" class="text-primary fw-bold">aquí</a>.
+      </label>
+      <div class="row mt-4 mb-4">
+        <div class="col-md-4">
+          <input class="form-control" type="file" name="cargarProveedores" id="cargarProveedores" required />
+        </div>
+        <div class="col-md-8 d-flex justify-content-end">
+          <button type="button" class="btn btn-default" (click)="cargarProveedores()">
+            Cargar Proveedores
+          </button>
+        </div>
+      </div>
+      <label class="form-label text-justify">
+        Proveedores existentes actualmente.
+      </label>
+      <div class="row">
+        <div class="alert alert-info">
+          <label style="font-weight: normal">
+            <input type="checkbox" formControlName="manifiesto" (change)="
+                setValoresStore(solicitudForm, 'manifiesto', 'setManifiesto')
+              " />{{ TEXTOS.TEXTO_PROVEEDORES_EXISTENTES_ACTUALMENTE }}
+          </label>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
+<!-- Confirmar Modal -->
+@if (confirmarNotificacion) {
+  <section>
+      <lib-notificaciones 
+          [notificacionInput]="confirmarNotificacion" >
+      </lib-notificaciones>
+  </section>
+}
+
+<!-- Error Modal -->
+@if (errorNotificacion) {
+  <section>
+      <lib-notificaciones 
+          [notificacionInput]="errorNotificacion" >
+      </lib-notificaciones>
+  </section>
+}
