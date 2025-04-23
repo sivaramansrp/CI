@@ -180,6 +180,7 @@
       </div>
     </div>
     <ng-titulo titulo="Detalles del transporte" />
+    <div class="row mt-5">
     <div class="col-md-8 mb-3">
       <app-catalogo-select
         [catalogo]="options"
@@ -190,6 +191,49 @@
           setValoresStore(validacionForm, 'transporte', 'setTransporte')
         "
       ></app-catalogo-select>
+    </div></div>
+    <div class="row mt-5">
+      <div class="col-md-6 mb-3">
+        <label>Ruta completa :</label>
+          <input
+            type="text"
+            class="form-control"
+            id="rutaCompleta"
+            formControlName="rutaCompleta"
+            (change)="
+              setValoresStore(
+                validacionForm,
+                'rutaCompleta',
+                'setRutaCompleta')"/>
+      </div>
+    </div>
+    <div class="row mt-5">
+      <div class="col-md-6 mb-3">
+        <label>Puerto de embarque :</label>
+          <input
+            type="text"
+            class="form-control"
+            id="puertoEmbarque"
+            formControlName="puertoEmbarque"
+            (change)="
+              setValoresStore(
+                validacionForm,
+                'puertoEmbarque',
+                'setPuertoEmbarque')"/>
+      </div>
+      <div class="col-md-6 mb-3">
+        <label>Puerto de desembarque :</label>
+          <input
+            type="text"
+            class="form-control"
+            id="puertoDesembarque"
+            formControlName="puertoDesembarque"
+            (change)="
+              setValoresStore(
+                validacionForm,
+                'puertoDesembarque',
+                'setPuertoDesembarque')"/>
+      </div>
     </div>
   </ng-container>
 </form>

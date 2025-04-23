@@ -241,6 +241,14 @@ options!: Catalogo[];
           this.solicitudState?.correoElectronico,
           [Validators.required, Validators.email],
         ],
+        rutaCompleta: [
+          this.solicitudState?.rutaCompleta,Validators.required,
+        ],
+        puertoEmbarque: [
+          this.solicitudState?.puertoEmbarque,Validators.required,
+        ],
+        puertoDesembarque: [
+          this.solicitudState?.puertoDesembarque,Validators.required, ],
       }),
     });
   }

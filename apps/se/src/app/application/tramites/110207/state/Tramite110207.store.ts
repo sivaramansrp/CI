@@ -57,6 +57,9 @@ export interface Solicitud110207State {
   justificacion: string;
   casillaVerificacion: string;
   siCasilla: boolean;
+  rutaCompleta: string;
+  puertoEmbarque: string;
+  puertoDesembarque: string;
 }
 /**
  * Crea el estado inicial para la solicitud del trámite 110207.
@@ -110,6 +113,9 @@ export function createInitialState(): Solicitud110207State {
     justificacion: '',
     casillaVerificacion: '',
     siCasilla: false,
+    rutaCompleta: '',
+    puertoEmbarque: '',
+    puertoDesembarque: '',
   };
 }
 
@@ -575,6 +581,25 @@ export class Tramite110207Store extends Store<Solicitud110207State> {
     this.update((state) => ({
       ...state,
       casillaVerificacion,
+    }));
+  }
+  public setRutaCompleta(rutaCompleta: string) {
+    this.update((state) => ({
+      ...this.getValue(),
+      rutaCompleta,
+    }));
+  }
+  public setPuertoEmbarque(puertoEmbarque: string) {
+    this.update((state) => ({
+      ...state,
+      puertoEmbarque,
+    }));
+  }
+
+  public setPuertoDesembarque(puertoDesembarque: string) {
+    this.update((state) => ({
+      ...state,
+      puertoDesembarque,
     }));
   }
 

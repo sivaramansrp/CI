@@ -486,7 +486,6 @@ optionsTipoFactura!: Catalogo[];
 
     if (this.mercanciaForm.valid) {
       this.esMercanciaEnEdicion = true;
-      this.esFormulario = false;
       this.mercanciaSeleccionadasTablaData.splice(0, 1, {
         fraccionArancelaria:
           this.mercanciaForm?.value.validacionMercanciaForm
