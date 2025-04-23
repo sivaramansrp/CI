@@ -17,7 +17,7 @@ import { StoreConfig } from '@datorama/akita';
  * @property {MercanciaDetalle[]} merccancialTablaDatos - Lista de mercancías registradas.
  * @property {DatosDelTramiteFormState} datosDelTramite - Información general del formulario de datos del trámite.
  */
-export interface Tramite240101State {
+export interface Tramite240105State {
   tabSeleccionado?: number;
   destinatarioFinalTablaDatos: DestinoFinal[];
   proveedorTablaDatos: Proveedor[];
@@ -30,9 +30,9 @@ export interface Tramite240101State {
  * Crea el estado inicial para el trámite 240101.
  *
  * @function createInitialState
- * @returns {Tramite240101State} El estado inicial del store.
+ * @returns {Tramite240105State} El estado inicial del store.
  */
-export function createInitialState(): Tramite240101State {
+export function createInitialState(): Tramite240105State {
   return {
     tabSeleccionado: 1,
     destinatarioFinalTablaDatos: [],
@@ -62,8 +62,8 @@ export function createInitialState(): Tramite240101State {
 @Injectable({
   providedIn: 'root',
 })
-@StoreConfig({ name: 'tramite240101', resettable: true })
-export class Tramite240101Store extends Store<Tramite240101State> {
+@StoreConfig({ name: 'tramite240105', resettable: true })
+export class Tramite240105Store extends Store<Tramite240105State> {
   constructor() {
     super(createInitialState());
   }
