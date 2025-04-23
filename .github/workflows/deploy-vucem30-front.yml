@@ -78,4 +78,4 @@ jobs:
             microk8s kubectl rollout restart deployment modulefederation-cofepris-microfront-deployment-dev
             microk8s kubectl rollout restart deployment modulefederation-amecafe-microfront-deployment-dev
             microk8s kubectl rollout restart deployment modulefederation-inbal-microfront-deployment-dev
-            microk8s kubectl rollout restart deployment modulefederation-sedena-microfront
+            microk8s kubectl rollout restart deployment modulefederation-sedena-microfront-deployment-dev
