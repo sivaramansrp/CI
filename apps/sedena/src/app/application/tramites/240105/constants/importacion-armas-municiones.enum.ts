@@ -67,4 +67,4 @@ export const TEXTOS_REQUISITOS =
  * @description Identificador único del procedimiento relacionado con la importación de armas y municiones.
  * @usage Utilizado para identificar y manejar el procedimiento específico dentro del sistema.
  */
-export const ID_PROCEDIMIENTO = 240111;
+export const ID_PROCEDIMIENTO = 240105;

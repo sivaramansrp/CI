@@ -7,9 +7,10 @@ import { MercanciaDetalle } from '../../../../shared/models/datos-del-tramite.mo
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
-import { Tramite240101Query } from '../../estados/tramite240105Query.query';
-import { Tramite240101Store } from '../../estados/tramite240105Store.store';
 import { takeUntil } from 'rxjs';
+
+import { Tramite240105Query } from '../../estados/tramite240105Query.query';
+import { Tramite240105Store } from '../../estados/tramite240105Store.store';
 
 /**
  * @title Datos del Trámite Contenedora
@@ -49,19 +50,24 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
    */
   private destroy$ = new Subject<void>();
 
+  /**
+   * @description Identificador único del procedimiento asociado a este componente.
+   * Este valor es de solo lectura y se utiliza para referenciar el procedimiento específico.
+   * @see ID_PROCEDIMIENTO
+   */
   public readonly idProcedimiento = ID_PROCEDIMIENTO;
 
   /**
    * Constructor del componente.
    *
    * @method constructor
-   * @param {Tramite240101Query} tramiteQuery - Query de Akita para obtener el estado actual del trámite.
-   * @param {Tramite240101Store} tramiteStore - Store de Akita para actualizar el estado del trámite.
+   * @param {Tramite240105Query} tramiteQuery - Query de Akita para obtener el estado actual del trámite.
+   * @param {Tramite240105Store} tramiteStore - Store de Akita para actualizar el estado del trámite.
    * @returns {void}
    */
   constructor(
-    private tramiteQuery: Tramite240101Query,
-    private tramiteStore: Tramite240101Store
+    private tramiteQuery: Tramite240105Query,
+    private tramiteStore: Tramite240105Store
   ) // eslint-disable-next-line no-empty-function
   {}
 

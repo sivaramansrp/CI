@@ -6,9 +6,10 @@ import { OnInit } from '@angular/core';
 import { PagoDeDerechosComponent } from '../../../../shared/components/pago-de-derechos/pago-de-derechos.component';
 import { PagoDerechosFormState } from '../../../../shared/models/pago-de-derechos.model';
 import { Subject } from 'rxjs';
-import { Tramite240101Query } from '../../estados/tramite240105Query.query';
-import { Tramite240101Store } from '../../estados/tramite240105Store.store';
+import { Tramite240105Query } from '../../estados/tramite240105Query.query';
+import { Tramite240105Store } from '../../estados/tramite240105Store.store';
 import { takeUntil } from 'rxjs';
+
 
 /**
  * @title Pago de Derechos Contenedora
@@ -59,8 +60,8 @@ export class PagoDeDerechosContenedoraComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   constructor(
-    private tramiteQuery: Tramite240101Query,
-    private tramiteStore: Tramite240101Store
+    private tramiteQuery: Tramite240105Query,
+    private tramiteStore: Tramite240105Store
   ) // eslint-disable-next-line no-empty-function
   {}
 
