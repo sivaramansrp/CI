@@ -1,5 +1,6 @@
-import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
+import { RouterModule } from '@angular/router';
+import { Routes } from '@angular/router';
 import { SeleccionTramiteComponent } from './seleccion-tramite/seleccion-tramite.component';
 
 const ROUTES: Routes = [
@@ -9,6 +10,13 @@ const ROUTES: Routes = [
     component: SeleccionTramiteComponent,
   },
   {
+    path: 'permiso-extraordinario-para-la-exportacion-de-sustancias-quimicas',
+    loadChildren: () =>
+      import(
+        './tramites/240118/permiso-extraordinario-para-la-exportacion-de-sustancias-quimicas.module'
+      ).then((m) => m.PermisoExtraordinarioParaLaExportacionDeSustanciasQuimicasModule),
+  },
+  {
     path: 'permiso-ordinario-importacion-armas-municiones',
     loadChildren: () =>
       import(
@@ -16,7 +24,21 @@ const ROUTES: Routes = [
       ).then((m) => m.PermisoOrdinarioImportacionArmasMunicionesModule),
   },
   {
-    path: 'solicitude-de',
+    path: 'sustancias-quimicas',
+    loadChildren: () =>
+      import(
+        './tramites/240107/aviso-importacion-sustancias-quimicas.module'
+      ).then((m) => m.AvisoImportacionSustanciasQuimicasModule),
+  },
+  {
+    path: 'permiso-ordinario',
+    loadChildren: () =>
+      import(
+        './tramites/240308/solicitude-de-artificios-pirotecnicos.module'
+      ).then((m) => m.SolicitudeDeArtificiosPirotecnicosModule),
+  },
+  {
+    path: 'permiso-ordinario-importacion-material-explosivo',
     loadChildren: () =>
       import(
         './tramites/240405/solicitud-de-sustancias-quimicas.module'
