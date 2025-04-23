@@ -1,21 +1,28 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PasoUnoComponent } from './paso-uno.component';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 
-describe('PasoUnoComponent', () => {
-  let component: PasoUnoComponent;
+describe('PasoUnoComponent', (): void => {
+  let componente: PasoUnoComponent;
   let fixture: ComponentFixture<PasoUnoComponent>;
 
-  beforeEach(async () => {
+  beforeEach(async (): Promise<void> => {
     await TestBed.configureTestingModule({
       declarations: [PasoUnoComponent],
+      schemas: [NO_ERRORS_SCHEMA], 
     }).compileComponents();
 
     fixture = TestBed.createComponent(PasoUnoComponent);
-    component = fixture.componentInstance;
+    componente = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
+  it('debería crear el componente', (): void => {
+    expect(componente).toBeTruthy();
+  });
+
+  it('debería actualizar el índice cuando se llama seleccionaTab()', (): void => {
+    componente.seleccionaTab(2);
+    expect(componente.indice).toBe(2);
   });
 });
