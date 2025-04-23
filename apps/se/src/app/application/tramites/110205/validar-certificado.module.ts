@@ -13,9 +13,11 @@ import { PasoUnoComponent } from './page/paso-uno/paso-uno.component';
 import { PeruCertificadoComponent } from './page/peru-certificado/peru-certificado.component';
 import { PeruDatosCertificadoComponent } from './components/peru-datos-certificado/peru-datos-certificado.component';
 import { PeruDestinatarioComponent } from './components/peru-destinatario/peru-destinatario.component';
+import { PeruHistoricoProductoresComponent } from './components/peru-historico-productores/peru-historico-productores.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { ValidarCertificadoRoutingModule } from './validar-certificado-routing.module';
+
 
 
 
@@ -29,7 +31,8 @@ import { ValidarCertificadoRoutingModule } from './validar-certificado-routing.m
     CertificadoOrigenComponent,
     MercanciaComponent,
     PeruDatosCertificadoComponent,
-    PeruDestinatarioComponent
+    PeruDestinatarioComponent,
+    PeruHistoricoProductoresComponent,
   ],
   imports: [
     CommonModule,
