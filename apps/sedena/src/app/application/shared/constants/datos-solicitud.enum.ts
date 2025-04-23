@@ -96,12 +96,15 @@ export const TERCEROS_NACIONALIDAD_OPCIONES = [
  * - `TRAMITE_240108`: Código para el trámite 240108.
  * - `TRAMITE_240114`: Código para el trámite 240114.
  * - `TRAMITE_240308`: Código para el trámite 240308.
+ * - `TRAMITE_240117`: Código para el trámite 240117.
+ * - `TRAMITE_240121`: Código para el trámite 240121.
  */
 export const NUMERO_TRAMITE = {
   TRAMITE_240108: 240108,
   TRAMITE_240114: 240114,
   TRAMITE_240308: 240308,
-  TRAMITE_240117: 240117
+  TRAMITE_240117: 240117,
+  TRAMITE_240121: 240121,
 }
 
 /**
@@ -122,6 +125,20 @@ export const TERCEROS_NACIONALIDAD_OPCIONES_EXTRANJERO = [
     value: 'Extranjero',
   },
 ];
+
+/*
+**
+ * Opciones disponibles para el tipo de persona no contribuyente.
+ * 
+ * Contiene una opción:
+ * - 'NoContribyunte': Representa a un no contribuyente.
+ * 
+ * Cada opción incluye una etiqueta (`label`) y un valor (`value`).
+ */
+export const TIPO_PERSONA_OPCIONES_NO_CONTRIBUYENTE = [
+  { label: 'NoContribyunte', value: 'NoContribyunte' },
+];
+
 
 /**
  * Constante que define los campos obligatorios para el destinatario.
