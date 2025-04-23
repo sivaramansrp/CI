@@ -26,6 +26,9 @@ export interface Solicitud230202State {
   
   numeroDeCertificado: Catalogo[] | null;
   aduana: Catalogo[] | null;
+  fechasSeleccionadas: Catalogo[] | null;
+  pais: Catalogo[] | null;
+  
   // /**
   //  * Uso específico de la mercancía.
   //  */
@@ -159,7 +162,9 @@ export interface Solicitud230202State {
 export function createInitialState(): Solicitud230202State {
   return {
     numeroDeCertificado: null,
-    aduana: null
+    aduana: null,
+    fechasSeleccionadas: null,
+    pais: null,
     // usoEspecifico: '',
     // showTabla: true,
     // tipoDeMercancia: '',
@@ -223,6 +228,20 @@ export class Tramite230202Store extends Store<Solicitud230202State> {
     this.update((state) => ({
       ...state,
       aduana,
+    }));
+  }
+
+  public setFechasSeleccionadas(fechasSeleccionadas: Catalogo[]) {
+    this.update((state) => ({
+      ...state,
+      fechasSeleccionadas,
+    }));
+  }
+
+  public setPais(pais: Catalogo[]) {
+    this.update((state) => ({
+      ...state,
+      pais,
     }));
   }
 

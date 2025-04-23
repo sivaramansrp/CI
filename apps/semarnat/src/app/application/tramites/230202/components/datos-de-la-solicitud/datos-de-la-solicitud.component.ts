@@ -1,16 +1,17 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Catalogo, CatalogoSelectComponent, TituloComponent } from '@libs/shared/data-access-user/src';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { map, merge, Subject, takeUntil } from 'rxjs';
+import { Catalogo, CatalogoSelectComponent, CrosslistComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { map, merge, Subject, Subscription, takeUntil } from 'rxjs';
 import { Solicitud230202State, Tramite230202Store } from '../../estados/tramite230202.store';
 import { Tramite230202Query } from '../../estados/tramite230202.query';
 import { PhytosanitaryReexportacionService } from '../../services/phytosanitary-reexportacion.service';
+import { SELECCION } from '../../constantes/importador-exportador.enum';
 
 @Component({
   selector: 'app-datos-de-la-solicitud',
   standalone: true,
-  imports: [CommonModule, TituloComponent, FormsModule, ReactiveFormsModule, CatalogoSelectComponent],
+  imports: [CommonModule, TituloComponent, FormsModule, ReactiveFormsModule, CatalogoSelectComponent, CrosslistComponent],
   templateUrl: './datos-de-la-solicitud.component.html',
   styleUrl: './datos-de-la-solicitud.component.scss',
 })
@@ -36,7 +37,36 @@ export class DatosDeLaSolicitudComponent {
    */
   numeroDeCertificado!: Catalogo[];
   aduana!: Catalogo[];
+  pais!: Catalogo[];
+  selectRangoDias: [] = [];
+  fechasSeleccionadas: Catalogo[] = [];
+  fechasDatos: Catalogo[] = [];
+  fecha: FormControl = new FormControl('');
+  fechaSeleccionada: FormControl = new FormControl('');
+  getPaisSubscription!: Subscription;
 
+  botonField = [
+    {
+      btnNombre: 'Agregar ',
+      class: 'btn-primary',
+      funcion: () => this.agregar(''),
+    },
+    {
+      btnNombre: 'Agregar todo',
+      class: 'btn-default',
+      funcion: () => this.agregar(SELECCION.SELECT_ALL),
+    },
+    {
+      btnNombre: 'Remover',
+      class: 'btn-danger',
+      funcion: () => this.quitar(''),
+    },
+    {
+      btnNombre: 'Remover todo',
+      class: 'btn-default',
+      funcion: () => this.quitar(SELECCION.SELECT_ALL),
+    },
+  ];
 
   constructor(
     private phytosanitaryReexportacionService: PhytosanitaryReexportacionService,
@@ -51,6 +81,7 @@ export class DatosDeLaSolicitudComponent {
   ngOnInit(): void {
     this.inicializaCatalogos();
     this.inicializarFormulario();
+    // this.getPais();
 
     this.query.selectSolicitud$
       .pipe(
@@ -96,9 +127,16 @@ export class DatosDeLaSolicitudComponent {
       })
     );
 
+    const PAIS$ = this.phytosanitaryReexportacionService.getPais().pipe(
+      map((resp) => {
+        this.pais = resp.data;
+      })
+    );
+
     merge(
       NUMERODECERTIFICADO$,
-      ADUANA$
+      ADUANA$,
+      PAIS$
     )
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe();
@@ -114,6 +152,60 @@ export class DatosDeLaSolicitudComponent {
     this.store.setAduana(ADUANA);
   }
 
+  paisSeleccion(): void {
+    const PAIS = this.solicitudForm.get('reexportacionForm.pais')?.value;
+    this.store.setPais(PAIS);
+  }
+
+  // getPais(): void {
+  //   this.getPaisSubscription = this.phytosanitaryReexportacionService
+  //     .getPais()
+  //     .subscribe((resp) => {
+  //       if (resp.code === 200) {
+  //         const RESPONSE = resp.data;
+  //         this.store.setPais(RESPONSE);
+  //       }
+  //     });
+  // }
+
+  agregar(tipo: string) {
+    if (tipo === SELECCION.SELECT_ALL) {
+      this.fechasSeleccionadas = [...this.selectRangoDias];
+      this.fechasDatos = [];
+    } else {
+      const FECHA_VALOR = this.fecha.value;
+      const SELECTEDFECHA = this.fechasDatos.find(
+        (fecha) => fecha.id === FECHA_VALOR
+      );
+      if (SELECTEDFECHA) {
+        this.fechasSeleccionadas.push(SELECTEDFECHA);
+        this.fechasDatos = this.fechasDatos.filter(
+          (fecha) => fecha.id !== FECHA_VALOR
+        );
+      }
+    }
+    this.store.setFechasSeleccionadas(this.fechasSeleccionadas);
+  }
+
+  quitar(tipo: string = '') {
+    if (tipo === SELECCION.SELECT_ALL) {
+      this.fechasDatos = [...this.fechasSeleccionadas];
+      this.fechasSeleccionadas = [];
+    } else {
+      const FECHA_VALOR = this.fechaSeleccionada.value;
+      const SELECTEDFECHA = this.fechasSeleccionadas.find(
+        (fecha) => fecha.id === FECHA_VALOR
+      );
+      if (SELECTEDFECHA) {
+        this.fechasDatos.push(SELECTEDFECHA);
+        this.fechasSeleccionadas = this.fechasSeleccionadas.filter(
+          (fecha) => fecha.id !== FECHA_VALOR
+        );
+      }
+    }
+    this.store.setFechasSeleccionadas(this.fechasSeleccionadas);
+  }
+  
   /**
    * Método que se ejecuta al destruir el componente.
    * Se utiliza para limpiar las suscripciones.

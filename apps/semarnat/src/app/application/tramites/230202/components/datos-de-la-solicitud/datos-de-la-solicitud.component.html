@@ -30,8 +30,13 @@
           </div>
         </div>
         <ng-titulo titulo="Pais"></ng-titulo>
+        <crosslist
+          [fechas]="selectRangoDias"
+          [showSearchInput1]="true"
+          [showSearchInput2]="true"
+          [botonField]="botonField"
+        ></crosslist>
         
-
       </ng-container>
     </div>
   </form>

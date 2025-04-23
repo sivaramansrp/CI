@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
-import { Observable } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import { Tramite230202Store } from '../estados/tramite230202.store';
 
 @Injectable({
@@ -24,6 +24,10 @@ export class PhytosanitaryReexportacionService {
 
   getAduana(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>('assets/json/230202/aduanaIngresara.json');
+  }
+
+  getPais() {
+    return this.http.get<RespuestaCatalogos>('assets/json/230202/pais.json');
   }
 
 }

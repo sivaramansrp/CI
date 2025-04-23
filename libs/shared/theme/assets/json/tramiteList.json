@@ -1921,7 +1921,7 @@
         "id": 275,
         "tramite": 230202,
         "linkDashboard": "/semarnat/phytosanitary-rexportation/solicitud",
-        "linkDepartment": "",
+        "linkDepartment": "/pago/phytosanitary-rexportation/solicitud",
         "department": "semarnat"
     },
     {
