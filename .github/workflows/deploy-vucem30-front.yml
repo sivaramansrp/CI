@@ -21,98 +21,36 @@ on:
           - selected
           - all
         default: 'changed'
-      dashboard:
-        description: 'Dashboard'
+      selectedApps:
+        description: 'Aplicaciones a desplegar (separadas por comas, solo para modo "selected")'
         required: false
-        type: boolean
-        default: true
-      login:
-        description: 'Login'
-        required: false
-        type: boolean
-        default: false
-      aga:
-        description: 'AGA'
+        type: string
+        default: 'dashboard'
+      appGroup1:
+        description: 'Grupo 1: dashboard,login,aga,agriculture,se'
         required: false
         type: boolean
         default: false
-      agriculture:
-        description: 'Agriculture'
+      appGroup2:
+        description: 'Grupo 2: semarnat,agace,funcionario,cofepris,amecafe'
         required: false
         type: boolean
         default: false
-      se:
-        description: 'SE'
+      appGroup3:
+        description: 'Grupo 3: sener,inbal,sedena,profepa,crt'
         required: false
         type: boolean
         default: false
-      semarnat:
-        description: 'SEMARNAT'
-        required: false
-        type: boolean
-        default: false
-      agace:
-        description: 'AGACE'
-        required: false
-        type: boolean
-        default: false
-      funcionario:
-        description: 'Funcionario'
-        required: false
-        type: boolean
-        default: false
-      cofepris:
-        description: 'COFEPRIS'
-        required: false
-        type: boolean
-        default: false
-      amecafe:
-        description: 'AMECAFE'
-        required: false
-        type: boolean
-        default: false
-      sener:
-        description: 'SENER'
-        required: false
-        type: boolean
-        default: false
-      inbal:
-        description: 'INBAL'
-        required: false
-        type: boolean
-        default: false
-      sedena:
-        description: 'SEDENA'
-        required: false
-        type: boolean
-        default: false
-      profepa:
-        description: 'PROFEPA'
-        required: false
-        type: boolean
-        default: false
-      crt:
-        description: 'CRT'
-        required: false
-        type: boolean
-        default: false
-      inah:
-        description: 'INAH'
-        required: false
-        type: boolean
-        default: false
-      bandejas:
-        description: 'Bandejas'
-        required: false
-        type: boolean
-        default: false
-      stps:
-        description: 'STPS'
+      appGroup4:
+        description: 'Grupo 4: inah,bandejas,stps'
         required: false
         type: boolean
         default: false
   push:
-    branches: [ develop, main ]
+    branches:
+      - develop
+      - staging
+      - production
     paths:
       - 'apps/**'
       - 'libs/**'
@@ -136,6 +74,8 @@ jobs:
       env: ${{ steps.set-env.outputs.env }}
       apps_to_deploy: ${{ steps.determine-apps.outputs.apps_to_deploy }}
       deployment_matrix: ${{ steps.create-matrix.outputs.matrix }}
+    # Solo ejecutar cuando es push a develop, staging o production, o cuando se ejecuta manualmente
+    if: github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && (github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/production'))
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -147,8 +87,10 @@ jobs:
         run: |
           if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
             echo "env=${{ github.event.inputs.deploymentEnv }}" >> $GITHUB_OUTPUT
-          elif [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
+          elif [[ "${{ github.ref }}" == "refs/heads/production" ]]; then
             echo "env=prod" >> $GITHUB_OUTPUT
+          elif [[ "${{ github.ref }}" == "refs/heads/staging" ]]; then
+            echo "env=staging" >> $GITHUB_OUTPUT
           else
             echo "env=dev" >> $GITHUB_OUTPUT
           fi
@@ -170,6 +112,14 @@ jobs:
             echo "changed_files<<EOF" >> $GITHUB_OUTPUT
             echo "$CHANGED_FILES" >> $GITHUB_OUTPUT
             echo "EOF" >> $GITHUB_OUTPUT
+            
+            # Verify if this is a merge to develop, staging, or production
+            if [[ "${{ github.ref }}" == "refs/heads/develop" || "${{ github.ref }}" == "refs/heads/staging" || "${{ github.ref }}" == "refs/heads/production" ]]; then
+              echo "Running on direct push or merge to target branch"
+            else
+              echo "::warning::This workflow will only run when directly pushing to or merging into develop, staging, or production branches."
+              exit 0
+            fi
           else
             echo "changed_files=" >> $GITHUB_OUTPUT
           fi
@@ -182,10 +132,11 @@ jobs:
       - name: Install NX globally
         run: npm install -g nx@${{ env.NX_VERSION }}
 
+      # Optimización para instalar solo dependencias mínimas para la detección
       - name: Install dependencies for affected detection
         run: |
-          npm install --no-package-lock --no-save @nx/workspace nx
-          npm install @nx/nx-linux-x64-gnu
+          npm install --no-package-lock --no-save --no-audit --prefer-offline @nx/workspace nx
+          npm install --no-package-lock --no-audit --prefer-offline @nx/nx-linux-x64-gnu
 
       - name: Detect changed apps
         id: detect-apps
@@ -195,67 +146,41 @@ jobs:
           DEPLOYMENT_MODE="${{ github.event.inputs.deploymentMode }}"
           
           if [[ "${{ github.event_name }}" == "workflow_dispatch" && "$DEPLOYMENT_MODE" == "selected" ]]; then
-            # User has manually selected apps via checkboxes
-            SELECTED_APPS=""
-            
-            # Check each app input and add to list if selected
-            if [[ "${{ github.event.inputs.dashboard }}" == "true" ]]; then
-              SELECTED_APPS+="dashboard,"
-            fi
-            if [[ "${{ github.event.inputs.login }}" == "true" ]]; then
-              SELECTED_APPS+="login,"
-            fi
-            if [[ "${{ github.event.inputs.aga }}" == "true" ]]; then
-              SELECTED_APPS+="aga,"
-            fi
-            if [[ "${{ github.event.inputs.agriculture }}" == "true" ]]; then
-              SELECTED_APPS+="agriculture,"
-            fi
-            if [[ "${{ github.event.inputs.se }}" == "true" ]]; then
-              SELECTED_APPS+="se,"
-            fi
-            if [[ "${{ github.event.inputs.semarnat }}" == "true" ]]; then
-              SELECTED_APPS+="semarnat,"
-            fi
-            if [[ "${{ github.event.inputs.agace }}" == "true" ]]; then
-              SELECTED_APPS+="agace,"
-            fi
-            if [[ "${{ github.event.inputs.funcionario }}" == "true" ]]; then
-              SELECTED_APPS+="funcionario,"
-            fi
-            if [[ "${{ github.event.inputs.cofepris }}" == "true" ]]; then
-              SELECTED_APPS+="cofepris,"
-            fi
-            if [[ "${{ github.event.inputs.amecafe }}" == "true" ]]; then
-              SELECTED_APPS+="amecafe,"
-            fi
-            if [[ "${{ github.event.inputs.sener }}" == "true" ]]; then
-              SELECTED_APPS+="sener,"
-            fi
-            if [[ "${{ github.event.inputs.inbal }}" == "true" ]]; then
-              SELECTED_APPS+="inbal,"
-            fi
-            if [[ "${{ github.event.inputs.sedena }}" == "true" ]]; then
-              SELECTED_APPS+="sedena,"
-            fi
-            if [[ "${{ github.event.inputs.profepa }}" == "true" ]]; then
-              SELECTED_APPS+="profepa,"
-            fi
-            if [[ "${{ github.event.inputs.crt }}" == "true" ]]; then
-              SELECTED_APPS+="crt,"
-            fi
-            if [[ "${{ github.event.inputs.inah }}" == "true" ]]; then
-              SELECTED_APPS+="inah,"
-            fi
-            if [[ "${{ github.event.inputs.bandejas }}" == "true" ]]; then
-              SELECTED_APPS+="bandejas,"
-            fi
-            if [[ "${{ github.event.inputs.stps }}" == "true" ]]; then
-              SELECTED_APPS+="stps,"
+            # Check if any specific apps were provided in the selectedApps input
+            if [[ -n "${{ github.event.inputs.selectedApps }}" ]]; then
+              SELECTED_APPS="${{ github.event.inputs.selectedApps }}"
+            else
+              SELECTED_APPS=""
+              
+              # Process app groups
+              if [[ "${{ github.event.inputs.appGroup1 }}" == "true" ]]; then
+                if [[ -n "$SELECTED_APPS" ]]; then SELECTED_APPS+=","; fi
+                SELECTED_APPS+="dashboard,login,aga,agriculture,se"
+              fi
+              
+              if [[ "${{ github.event.inputs.appGroup2 }}" == "true" ]]; then
+                if [[ -n "$SELECTED_APPS" ]]; then SELECTED_APPS+=","; fi
+                SELECTED_APPS+="semarnat,agace,funcionario,cofepris,amecafe"
+              fi
+              
+              if [[ "${{ github.event.inputs.appGroup3 }}" == "true" ]]; then
+                if [[ -n "$SELECTED_APPS" ]]; then SELECTED_APPS+=","; fi
+                SELECTED_APPS+="sener,inbal,sedena,profepa,crt"
+              fi
+              
+              if [[ "${{ github.event.inputs.appGroup4 }}" == "true" ]]; then
+                if [[ -n "$SELECTED_APPS" ]]; then SELECTED_APPS+=","; fi
+                SELECTED_APPS+="inah,bandejas,stps"
+              fi
+              
+              # If no group was selected, default to dashboard
+              if [[ -z "$SELECTED_APPS" ]]; then
+                SELECTED_APPS="dashboard"
+              fi
             fi
             
-            # Remove trailing comma if present
-            SELECTED_APPS=$(echo "$SELECTED_APPS" | sed 's/,$//')
+            # Remove duplicates from selected apps
+            SELECTED_APPS=$(echo "$SELECTED_APPS" | tr ',' '\n' | sort -u | tr '\n' ',' | sed 's/,$//')
             
             CHANGED_APPS="$SELECTED_APPS"
             echo "Manually selected apps: $CHANGED_APPS"
@@ -427,8 +352,9 @@ jobs:
           npm install @nx/nx-linux-x64-gnu
           npm install @swc/core-linux-x64-gnu
 
+      # Optimización para instalar solo dependencias necesarias y acelerar el proceso
       - name: Install dependencies
-        run: npm ci
+        run: npm ci --no-audit --prefer-offline
 
       - name: Build ${{ matrix.app }}
         run: |
@@ -484,6 +410,7 @@ jobs:
             type=sha,format=short
             type=raw,value=latest,enable=${{ env.DEPLOYMENT_ENV == 'dev' }}
 
+      # Optimización para reducir minutos de CI: uso de cache eficiente
       - name: Build and push Docker image
         uses: docker/build-push-action@v4
         with:
@@ -492,8 +419,8 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          cache-from: type=gha,scope=${{ matrix.app }}-${{ env.DEPLOYMENT_ENV }}
+          cache-to: type=gha,scope=${{ matrix.app }}-${{ env.DEPLOYMENT_ENV }},mode=max
           build-args: |
             ENV=${{ env.DEPLOYMENT_ENV }}
             APP_NAME=${{ matrix.app }}
