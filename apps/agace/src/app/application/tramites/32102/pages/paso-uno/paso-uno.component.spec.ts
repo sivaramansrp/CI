@@ -9,10 +9,6 @@ import { Observable, of as observableOf, throwError } from 'rxjs';
 import { Component } from '@angular/core';
 import { PasoUnoComponent } from './paso-uno.component';
 
-@Directive({ selector: '[myCustom]' })
-class MyCustomDirective {
-  @Input() myCustom;
-}
 
 describe('PasoUnoComponent', () => {
   let fixture;
@@ -22,8 +18,7 @@ describe('PasoUnoComponent', () => {
     TestBed.configureTestingModule({
       imports: [ FormsModule, ReactiveFormsModule ],
       declarations: [
-        PasoUnoComponent,
-        MyCustomDirective
+        PasoUnoComponent
       ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
