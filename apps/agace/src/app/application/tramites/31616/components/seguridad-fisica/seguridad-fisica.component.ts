@@ -14,7 +14,12 @@ import { CommonModule } from '@angular/common';
 import { InputRadioComponent } from '@libs/shared/data-access-user/src';
 import { OPCIONES_DE_BOTON_DE_RADIO } from '@libs/shared/data-access-user/src/tramites/constantes/31616/datos-comunes.enum';
 import { Tramite31616PerfilesQuery } from '../../../../estados/queries/tramite31616_perfiles.query';
-
+/**
+ * @component SeguridadFisicaComponent
+ * @description
+ * Componente encargado de gestionar el formulario relacionado con la seguridad física.
+ * Permite la captura y validación de datos relacionados con materiales, monitoreo, acceso, y otros aspectos de seguridad física.
+ */
 @Component({
   selector: 'app-seguridad-fisica',
   standalone: true,
@@ -22,11 +27,44 @@ import { Tramite31616PerfilesQuery } from '../../../../estados/queries/tramite31
   templateUrl: './seguridad-fisica.component.html',
   styleUrl: './seguridad-fisica.component.css',
 })
-export class SeguridadFisicaComponent implements OnInit, OnDestroy{
+export class SeguridadFisicaComponent implements OnInit, OnDestroy {
+  /**
+   * @property {string[]} opcionDeBotonDeRadio
+   * @description
+   * Opciones disponibles para los botones de radio en el formulario.
+   */
   opcionDeBotonDeRadio = OPCIONES_DE_BOTON_DE_RADIO;
+
+  /**
+   * @property {FormGroup} seguridadFisicaForm
+   * @description
+   * Formulario reactivo que contiene los campos relacionados con la seguridad física.
+   */
   seguridadFisicaForm!: FormGroup;
+
+  /**
+   * @property {Solicitud31616PerfilesState} solicitudState
+   * @description
+   * Estado actual de la solicitud, obtenido desde el store.
+   * Contiene los valores iniciales para los campos del formulario.
+   */
   private solicitudState!: Solicitud31616PerfilesState;
+
+  /**
+   * @property {Subject<void>} destroyNotifier$
+   * @description
+   * Notificador utilizado para gestionar la destrucción de suscripciones y evitar fugas de memoria.
+   */
   private destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+   * @constructor
+   * @description
+   * Constructor que inicializa los servicios necesarios para el componente.
+   * @param {FormBuilder} fb - Servicio para construir formularios reactivos.
+   * @param {Tramite31616PerfilesStore} tramite31616Store - Store para gestionar el estado de la solicitud.
+   * @param {Tramite31616PerfilesQuery} tramite31616Query - Query para obtener datos del estado de la solicitud.
+   */
   constructor(
     private fb: FormBuilder,
     private tramite31616Store: Tramite31616PerfilesStore,
@@ -34,6 +72,13 @@ export class SeguridadFisicaComponent implements OnInit, OnDestroy{
   ) {
     //
   }
+
+  /**
+   * @method ngOnInit
+   * @description
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Configura el formulario y suscribe al estado de la solicitud.
+   */
   ngOnInit(): void {
     this.tramite31616Query.selectSolicitud$
       .pipe(
@@ -46,6 +91,13 @@ export class SeguridadFisicaComponent implements OnInit, OnDestroy{
 
     this.crearFormularioSeguridadFisica();
   }
+
+  /**
+   * @method crearFormularioSeguridadFisica
+   * @description
+   * Crea y configura el formulario reactivo con los campos necesarios para la seguridad física.
+   * Los valores iniciales se obtienen del estado de la solicitud.
+   */
   crearFormularioSeguridadFisica(): void {
     this.seguridadFisicaForm = this.fb.group({
       indiqueMateriales: [
@@ -266,7 +318,15 @@ export class SeguridadFisicaComponent implements OnInit, OnDestroy{
       ],
     });
   }
-  
+
+  /**
+   * @method setValoresStore
+   * @description
+   * Actualiza el estado del store con el valor de un campo específico del formulario.
+   * @param {FormGroup} form - Formulario reactivo que contiene los valores.
+   * @param {string} campo - Nombre del campo del formulario.
+   * @param {keyof Tramite31616PerfilesStore} metodoNombre - Método del store que se debe invocar.
+   */
   public setValoresStore(
     form: FormGroup,
     campo: string,
@@ -276,6 +336,12 @@ export class SeguridadFisicaComponent implements OnInit, OnDestroy{
     (this.tramite31616Store[metodoNombre] as (value: string) => void)(VALOR);
   }
 
+  /**
+   * @method ngOnDestroy
+   * @description
+   * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
+   * Libera las suscripciones para evitar fugas de memoria.
+   */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
