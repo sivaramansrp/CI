@@ -454,17 +454,52 @@ jobs:
           # Make directory for env-specific manifests
           mkdir -p k8s-${{ env.DEPLOYMENT_ENV }}
           
+          # Determinar recursos según el entorno
+          if [[ "${{ env.DEPLOYMENT_ENV }}" == "prod" ]]; then
+            REPLICAS="3"
+            MIN_REPLICAS="3"
+            MAX_REPLICAS="15"
+            CPU_REQUEST="200m"
+            MEM_REQUEST="256Mi"
+            CPU_LIMIT="1000m"
+            MEM_LIMIT="512Mi"
+          elif [[ "${{ env.DEPLOYMENT_ENV }}" == "staging" ]]; then
+            REPLICAS="2"
+            MIN_REPLICAS="2"
+            MAX_REPLICAS="10"
+            CPU_REQUEST="150m"
+            MEM_REQUEST="192Mi"
+            CPU_LIMIT="750m"
+            MEM_LIMIT="384Mi"
+          else
+            # Entorno de desarrollo
+            REPLICAS="1"
+            MIN_REPLICAS="1"
+            MAX_REPLICAS="5"
+            CPU_REQUEST="100m"
+            MEM_REQUEST="128Mi"
+            CPU_LIMIT="500m"
+            MEM_LIMIT="256Mi"
+          fi
+          
           # Process the template - Usar el namespace correcto para el registry
           cat k8s/vucem-microfrontends.yaml | \
           sed "s/\${ENV}/${{ env.DEPLOYMENT_ENV }}/g" | \
           sed "s/\${REGISTRY}/${{ env.DOCKER_REGISTRY }}\/vucem30-dev\/frontend/g" | \
           sed "s/\${TAG}/${{ env.DEPLOYMENT_ENV }}/g" | \
-          sed "s/\${REPLICAS}/2/g" | \
-          sed "s/\${MIN_REPLICAS}/2/g" | \
-          sed "s/\${MAX_REPLICAS}/10/g" > k8s-${{ env.DEPLOYMENT_ENV }}/vucem-microfrontends.yaml
+          sed "s/\${REPLICAS}/${REPLICAS}/g" | \
+          sed "s/\${MIN_REPLICAS}/${MIN_REPLICAS}/g" | \
+          sed "s/\${MAX_REPLICAS}/${MAX_REPLICAS}/g" | \
+          sed "s/memory: \"128Mi\"/memory: \"${MEM_REQUEST}\"/g" | \
+          sed "s/memory: \"256Mi\"/memory: \"${MEM_LIMIT}\"/g" | \
+          sed "s/cpu: \"100m\"/cpu: \"${CPU_REQUEST}\"/g" | \
+          sed "s/cpu: \"500m\"/cpu: \"${CPU_LIMIT}\"/g" > k8s-${{ env.DEPLOYMENT_ENV }}/vucem-microfrontends.yaml
           
           # Asegurar que el imagePullSecret correcto esté en el manifiesto
           sed -i "s/name: github-container-registry/name: vucem30registrykey/g" k8s-${{ env.DEPLOYMENT_ENV }}/vucem-microfrontends.yaml
+          
+          # Asegurar que los microservicios adicionales estén incluidos en el manifiesto
+          echo "Verificando que todos los microservicios listados en AVAILABLE_APPS estén en el manifiesto..."
           
           # Verificar que el manifiesto fue creado correctamente
           if [ ! -f "k8s-${{ env.DEPLOYMENT_ENV }}/vucem-microfrontends.yaml" ]; then
@@ -495,18 +530,57 @@ jobs:
           # Store deployment command
           echo "script=$DEPLOY_CMD" >> $GITHUB_OUTPUT
 
-      # Transferir archivos necesarios al servidor remoto
-      - name: Transfer files to server
+      # Preparar archivos para transferencia directa (sin compresión)
+      - name: Prepare deployment files
+        run: |
+          # Mostrar los archivos que vamos a transferir
+          echo "Preparando archivos de despliegue..."
+          echo "Directorio actual: $(pwd)"
+          echo "Archivos en directorio de trabajo:"
+          ls -la
+          
+          # Verificar que el archivo de manifiesto exista
+          if [ ! -f "k8s-${{ env.DEPLOYMENT_ENV }}/vucem-microfrontends.yaml" ]; then
+            echo "::error::No se encuentra el archivo de manifiesto en k8s-${{ env.DEPLOYMENT_ENV }}/vucem-microfrontends.yaml"
+            exit 1
+          fi
+          
+          # Verificar que el script de despliegue exista
+          if [ ! -f "deploy_commands.sh" ]; then
+            echo "::error::No se encuentra el script deploy_commands.sh"
+            exit 1
+          fi
+          
+          echo "Archivos confirmados y listos para transferencia"
+      
+      # Transferir el script de despliegue
+      - name: Transfer deployment script
         uses: appleboy/scp-action@v0.1.4
         with:
           host: ${{ secrets.REMOTE_SRV_IP }}
           username: ${{ secrets.REMOTE_SRV_USER }}
           key: ${{ secrets.REMOTE_SRV_PRIV_KEY }}
           port: 22
-          source: "k8s-${{ env.DEPLOYMENT_ENV }}/vucem-microfrontends.yaml,deploy_commands.sh"
+          source: "deploy_commands.sh"
           target: "/home/ubuntu/v30/k8s-temp"
-          # Evitar borrar otros archivos en la carpeta de destino
-          rm: false 
+          # Evitar borrar otros archivos
+          rm: false
+          overwrite: true
+          
+      # Transferir el manifiesto Kubernetes
+      - name: Transfer Kubernetes manifest
+        uses: appleboy/scp-action@v0.1.4
+        with:
+          host: ${{ secrets.REMOTE_SRV_IP }}
+          username: ${{ secrets.REMOTE_SRV_USER }}
+          key: ${{ secrets.REMOTE_SRV_PRIV_KEY }}
+          port: 22
+          source: "k8s-${{ env.DEPLOYMENT_ENV }}/vucem-microfrontends.yaml"
+          target: "/home/ubuntu/v30/k8s-temp"
+          # Evitar la estructura de directorios
+          strip_components: 1
+          # Evitar borrar otros archivos
+          rm: false
           overwrite: true
 
       # Luego ejecutar los comandos de despliegue en el servidor remoto
@@ -521,12 +595,45 @@ jobs:
           script: |
             cd /home/ubuntu/v30/k8s-temp
             
+            # Verificar que los archivos existen
+            echo "Verificando archivos en el servidor..."
+            ls -la
+            
+            if [ ! -f "vucem-microfrontends.yaml" ]; then
+              echo "ERROR: No se encuentra el archivo vucem-microfrontends.yaml"
+              exit 1
+            fi
+            
+            if [ ! -f "deploy_commands.sh" ]; then
+              echo "ERROR: No se encuentra el archivo deploy_commands.sh"
+              exit 1
+            fi
+            
             # Asegurarse que el script tiene permisos de ejecución
             chmod +x deploy_commands.sh
             
+            # Crear directorio para logs si no existe
+            mkdir -p /home/ubuntu/v30/deployment-logs
+            
             # Ejecutar el script de despliegue con el entorno apropiado
-            ./deploy_commands.sh ${{ env.DEPLOYMENT_ENV }}
+            # Capturar la salida en un archivo de registro
+            LOG_FILE="/home/ubuntu/v30/deployment-logs/deploy-${{ env.DEPLOYMENT_ENV }}-$(date +%Y%m%d-%H%M%S).log"
+            ./deploy_commands.sh ${{ env.DEPLOYMENT_ENV }} | tee $LOG_FILE
             
             # Verificación final (opcional, ya que el script ya incluye verificaciones)
-            echo "=== Resumen final del despliegue ==="
-            microk8s kubectl get pods -n vucem-${{ env.DEPLOYMENT_ENV }} | grep vucem-microfrontends
+            echo "=== Resumen final del despliegue ===" | tee -a $LOG_FILE
+            microk8s kubectl get pods -n vucem-${{ env.DEPLOYMENT_ENV }} | grep vucem-microfrontends | tee -a $LOG_FILE || echo "No se encontraron pods, puede ser que el despliegue aún no haya creado los pods"
+            
+            # Verificar estado de los servicios
+            echo "" | tee -a $LOG_FILE
+            echo "=== Estado de los servicios ===" | tee -a $LOG_FILE
+            microk8s kubectl get services -n vucem-${{ env.DEPLOYMENT_ENV }} | grep -v "kubernetes" | tee -a $LOG_FILE || echo "No se encontraron servicios"
+            
+            # Verificar ingress
+            echo "" | tee -a $LOG_FILE
+            echo "=== Estado del ingress ===" | tee -a $LOG_FILE
+            microk8s kubectl get ingress -n vucem-${{ env.DEPLOYMENT_ENV }} | tee -a $LOG_FILE || echo "No se encontraron ingress"
+            
+            # Mostrar ubicación del log
+            echo "" | tee -a $LOG_FILE
+            echo "Logs de despliegue guardados en: $LOG_FILE"
