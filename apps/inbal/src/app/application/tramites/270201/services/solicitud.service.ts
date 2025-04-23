@@ -1,10 +1,8 @@
+import { Catalogo } from '@libs/shared/data-access-user/src';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-
-import { Catalogo } from '@libs/shared/data-access-user/src';
+import { ObraTablaDatos } from '../models/aviso-siglos.models'; 
 import { Observable } from 'rxjs';
-
-import { ObraTablaDatos } from '../components/datos-de-la-solicitud/datos-de-la-solicitud.component';
 /**
  * @class SolicitudService
  * @description

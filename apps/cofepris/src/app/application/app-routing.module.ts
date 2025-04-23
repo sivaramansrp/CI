@@ -370,6 +370,14 @@ const ROUTES: Routes = [
       import('./tramites/260201/importacion-psicotropicos-poretorno.module').then(
         (m) => m.ImportacionPsicotropicosPoretornoModule),
 },
+
+{
+  path: 'importacion-remedios-herbolarios',
+  loadChildren: () =>
+  import('./tramites/260219/importacion-destinados-donacio.module').then(
+    (m) => m.ImportacionRemediosHerbolariosModule),
+},
+
 {
   path: 'permiso-transformacion-maquila',
   loadChildren: () =>
@@ -410,6 +418,12 @@ const ROUTES: Routes = [
           import('./tramites/260916/importar-suministros-medicos.module').then(
             (m) => m.ImportarSuministrosMedicosModule
           )
+  },
+  {
+    path: 'correccion-interna-de-la-cofepris',
+    loadChildren: () =>
+      import('./tramites/261601/correccion-interna-de-la-cofepris.module').then(
+        (m) => m.CorreccionInternaDeLaCofeprisModule)
   },
 
   {

@@ -24,6 +24,13 @@ const ROUTES: Routes = [
         (m) => m.PermisoExtraordinarioImportacionArmamentoFisicasMoralesModule
       ),
   },
+  {
+    path: 'permiso-ordinario',
+    loadChildren: () =>
+      import(
+        './tramites/240308/solicitude-de-artificios-pirotecnicos.module'
+      ).then((m) => m.SolicitudeDeArtificiosPirotecnicosModule),
+  },
 ];
 
 @NgModule({
