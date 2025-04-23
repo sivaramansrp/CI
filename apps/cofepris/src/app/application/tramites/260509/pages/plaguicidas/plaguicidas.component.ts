@@ -3,6 +3,10 @@ import { ListaPasosWizard, PASOS } from '@libs/shared/data-access-user/src';
 import { DatosPasos } from '@libs/shared/data-access-user/src/core/models/shared/components.model';
 import { WizardComponent } from '@libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
 
+/**
+ * Interfaz que define la estructura de los objetos de acción del botón.
+ * Contiene la acción y el valor del botón.
+ */
 interface AccionBoton {
   accion: string;
   valor: number;

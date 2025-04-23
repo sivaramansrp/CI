@@ -15,6 +15,9 @@ import { TercerosRelacionadosComponent } from '../../../../shared/components/ter
   styleUrl: './terceros-relacionados-fabricante.component.scss',
 })
 export class TercerosRelacionadosFabricanteComponent {
-  // Propiedad que almacena la constante TABLA_ORDEN para definir el orden de la tabla.
+  /**
+   * Constante que define el orden de la tabla para los terceros relacionados.
+   * Se utiliza para mostrar la tabla en el componente TercerosRelacionadosComponent.
+   */
   tablaOrden = TABLA_ORDEN;
 }
