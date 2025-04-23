@@ -4,7 +4,7 @@ services:
     image: modulefederation-agriculture-microfront:1.0.0
     build: 
       context: ./../
-      dockerfile: apps/agriculture/Dockerfile
+      dockerfile: apps/agriculture/dev.Dockerfile
     container_name: modulefederation-agriculture-microfront
     restart: on-failure
     expose:
