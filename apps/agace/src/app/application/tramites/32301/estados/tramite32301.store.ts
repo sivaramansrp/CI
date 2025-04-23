@@ -1,11 +1,37 @@
+/**
+ * Importación de modelos relacionados con el aviso de modificación.
+ * Estos modelos se utilizan para estructurar los datos dentro del sistema.
+ */
 import { FormularioGrupo, ModificacionGoceInmueble, PersonaFusionEscisionDTO, ProveedorExtranjero, TipoDevAviso } from '../models/avisomodify.model';
+
+/**
+ * Importación de la librería Akita para gestionar el estado global de la aplicación.
+ * Se incluyen `Store` y `StoreConfig` para definir y estructurar la tienda de datos.
+ */
 import { Store, StoreConfig } from '@datorama/akita';
+
+/**
+ * Importación de la funcionalidad `Injectable` de Angular.
+ * Se usa para definir que la clase puede ser inyectada como un servicio.
+ */
 import { Injectable } from '@angular/core';
 
+/**
+ * Definición de la interfaz `Catalogo`.
+ * Representa un objeto con un identificador único y una descripción asociada.
+ */
 export interface Catalogo {
-  id: number;
-  descripcion: string;
+    /**
+     * Identificador único del catálogo.
+     */
+    id: number;
+
+    /**
+     * Descripción del elemento dentro del catálogo.
+     */
+    descripcion: string;
 }
+
 
 // Estado inicial del formulario
 export const INITIAL_STATE: FormularioGrupo = {

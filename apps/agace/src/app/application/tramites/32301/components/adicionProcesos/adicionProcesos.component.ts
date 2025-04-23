@@ -1,24 +1,36 @@
-import { AlertComponent, TituloComponent } from "@ng-mf/data-access-user";
+import {
+  AlertComponent,
+  NotificacionesComponent,
+  TituloComponent,
+} from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { Modal } from 'bootstrap';
+import { Notificacion } from '@libs/shared/data-access-user/src';
 import { ProveedorExtranjero } from '../../models/avisomodify.model';
 import { Tramite32301Query } from '../../estados/tramite32301.query';
 import { Tramite32301Store } from '../../estados/tramite32301.store';
 @Component({
   selector: 'app-adicion-procesos',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, TituloComponent, AlertComponent],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    TituloComponent,
+    AlertComponent,
+    NotificacionesComponent,
+  ],
   templateUrl: './adicionProcesos.component.html',
 })
 export class AdicionProcesosComponent implements OnInit, OnDestroy {
   /** Sujeto para destruir observables y evitar fugas de memoria */
   private destroy$: Subject<void> = new Subject<void>();
-
-  /** Instancia del modal para archivo extranjero */
-  CargaExtranjeroModelInstance!: Modal;
 
   /** Título de la sección de proveedores existentes */
   seccionProveedoresExistentes: string = 'Registros cargodos:';
@@ -31,6 +43,12 @@ export class AdicionProcesosComponent implements OnInit, OnDestroy {
 
   /** Formulario reactivo para el proveedor extranjero */
   proveedorXtranjForm!: FormGroup;
+
+  /**
+   * Declaración de la variable nuevaNotificacion de tipo Notificacion.
+   * Se utiliza para almacenar y gestionar notificaciones dentro del sistema.
+   */
+  public nuevaNotificacion!: Notificacion;
 
   /**
    * Constructor que inyecta dependencias necesarias como FormBuilder, Store y Query.
@@ -52,7 +70,7 @@ export class AdicionProcesosComponent implements OnInit, OnDestroy {
 
     this.Tramite32301Query.select()
       .pipe(takeUntil(this.destroy$))
-      .subscribe(state => {
+      .subscribe((state) => {
         this.proveedorExtranjero = state as unknown as ProveedorExtranjero;
         this.crearFormProveedorExtranjer();
       });
@@ -64,7 +82,7 @@ export class AdicionProcesosComponent implements OnInit, OnDestroy {
   inicializaProveedorExtranjer(): void {
     this.store.setRegistrosProveedoresExtranjeros({
       archivoExtranjero: [],
-      registrosProveedoresExtranjeros: '0'
+      registrosProveedoresExtranjeros: '0',
     });
   }
 
@@ -73,8 +91,16 @@ export class AdicionProcesosComponent implements OnInit, OnDestroy {
    */
   crearFormProveedorExtranjer(): void {
     this.proveedorXtranjForm = this.fb.group({
-      archivoExtranjero: [this.proveedorExtranjero?.archivoExtranjero, Validators.required],
-      registrosProveedoresExtranjeros: [{ value: this.proveedorExtranjero?.registrosProveedoresExtranjeros, disabled: true }]
+      archivoExtranjero: [
+        this.proveedorExtranjero?.archivoExtranjero,
+        Validators.required,
+      ],
+      registrosProveedoresExtranjeros: [
+        {
+          value: this.proveedorExtranjero?.registrosProveedoresExtranjeros,
+          disabled: true,
+        },
+      ],
     });
   }
 
@@ -88,7 +114,9 @@ export class AdicionProcesosComponent implements OnInit, OnDestroy {
 
     if (FILE) {
       this.proveedorXtranjForm.patchValue({ archivoExtranjero: FILE });
-      this.proveedorXtranjForm.get('archivoExtranjero')?.updateValueAndValidity();
+      this.proveedorXtranjForm
+        .get('archivoExtranjero')
+        ?.updateValueAndValidity();
     } else {
       this.openCargaExtranjeroModel();
     }
@@ -97,19 +125,59 @@ export class AdicionProcesosComponent implements OnInit, OnDestroy {
   /**
    * Abre el modal de advertencia para carga de archivo extranjero.
    */
-  openCargaExtranjeroModel(): void {
-    if (this.CargaExtranjeroModelInstance) {
-      this.CargaExtranjeroModelInstance.show();
-    }
-  }
-
   /**
-   * Cierra el modal de advertencia para carga de archivo extranjero.
+   * Método para abrir el modelo de carga de archivos extranjeros.
    */
-  closeCargaExtranjeroModel(): void {
-    if (this.CargaExtranjeroModelInstance) {
-      this.CargaExtranjeroModelInstance.hide();
-    }
+  openCargaExtranjeroModel(): void {
+    /**
+     * Configuración de una nueva notificación para alertar al usuario.
+     */
+    this.nuevaNotificacion = {
+      /**
+       * Tipo de notificación: alerta.
+       */
+      tipoNotificacion: 'alert',
+
+      /**
+       * Categoría de la notificación: peligro (danger).
+       */
+      categoria: 'danger',
+
+      /**
+       * Modo de la notificación: acción requerida.
+       */
+      modo: 'action',
+
+      /**
+       * Título de la notificación (actualmente vacío).
+       */
+      titulo: '',
+
+      /**
+       * Mensaje de la notificación, indicando que el archivo debe contener al menos un registro.
+       */
+      mensaje: 'El archivo debe contener al menos un registro.',
+
+      /**
+       * Indica si la notificación debe cerrarse automáticamente (false = no se cerrará).
+       */
+      cerrar: false,
+
+      /**
+       * Tiempo de espera antes de cerrar la notificación (2000 milisegundos).
+       */
+      tiempoDeEspera: 2000,
+
+      /**
+       * Texto del botón de aceptación en la notificación.
+       */
+      txtBtnAceptar: 'Aceptar',
+
+      /**
+       * Texto del botón de cancelación en la notificación (actualmente vacío).
+       */
+      txtBtnCancelar: '',
+    };
   }
 
   /**
@@ -120,4 +188,3 @@ export class AdicionProcesosComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 }
-

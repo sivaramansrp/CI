@@ -357,28 +357,10 @@
     </div>
   </div>
 </div>
+@if (correctamenteNotificacion) {
+  <section>
+    <lib-notificaciones [notificacionInput]="correctamenteNotificacion">
+    </lib-notificaciones>
+  </section>
+  }
 
-<div class="modal fade" tabindex="-1" #correctamenteModel>
-  <div class="modal-dialog modal-sm">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title"></h5>
-      </div>
-      <div class="modal-body p-4">
-        <div class="row">
-          <div class="col-12 text-center">Datos guardados correctamente</div>
-        </div>
-
-        <div class="button-group d-flex justify-content-center mt-5 me-md-3">
-          <button
-            type="button"
-            class="btn btn-primary"
-            (click)="closeCorrectamenteModel()"
-          >
-            Aceptar
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>

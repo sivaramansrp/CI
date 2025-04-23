@@ -4,31 +4,12 @@ import { BtnContinuarComponent } from "@ng-mf/data-access-user";
 import { CommonModule } from '@angular/common';
 import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
+import { PASOS } from "../../constantes/importador-exportador.enum"
 import { PasoDosComponent } from '../paso-dos/PasoDos.component';
 import { PasoTresComponent } from '../paso-tres/PasoTres.component';
 import { PasoUnoComponent } from '../peso-uno/PasoUno.component';
 import { WizardComponent } from '@ng-mf/data-access-user';
-// Lista de pasos para el proceso, con información sobre si está activo y completado
-export const PASOS = [
-  {
-    indice: 1, // Índice del paso
-    titulo: 'Capturar solicitud', // Título del paso
-    activo: true, // Indica si el paso está activo
-    completado: true, // Indica si el paso está completado
-  },
-  {
-    indice: 2, // Índice del paso
-    titulo: 'Anexar requisitos', // Título del paso
-    activo: false, // El paso no está activo
-    completado: false, // El paso no está completado
-  },
-  {
-    indice: 3, // Índice del paso
-    titulo: 'Firmar solicitud', // Título del paso
-    activo: false, // El paso no está activo
-    completado: false, // El paso no está completado
-  },
-];
+
 
 // Componente principal para el aviso de modificación de IVA y EI/EPs
 @Component({

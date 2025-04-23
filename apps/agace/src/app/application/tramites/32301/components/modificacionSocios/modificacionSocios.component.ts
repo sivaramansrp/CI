@@ -1,89 +1,225 @@
-import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import { AlertComponent, Catalogo, CatalogoSelectComponent, InputRadioComponent, TableComponent, TablePaginationComponent, TituloComponent } from "@ng-mf/data-access-user";
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
+import {
+  AlertComponent,
+  Catalogo,
+  CatalogoSelectComponent,
+  InputRadioComponent,
+  NotificacionesComponent,
+  TableComponent,
+  TablePaginationComponent,
+  TituloComponent,
+} from '@ng-mf/data-access-user';
 import {
   FormBuilder,
   FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { ModificacionSocios, TableDataNgTable } from '../../models/avisomodify.model';
-import { Subject, takeUntil } from 'rxjs';
+import {
+  ModificacionSocios,
+  TableDataNgTable,
+} from '../../models/avisomodify.model';
+import { Subject, Subscription, takeUntil } from 'rxjs';
 import { AvisoModifyService } from '../../services/aviso-modify.service';
 import { CommonModule } from '@angular/common';
-import { MESSAGE_NAC } from '../../enums/modificacionSocios.enum'
+import { MESSAGE_NAC } from '../../enums/modificacionSocios.enum';
 import { Modal } from 'bootstrap';
+import { Notificacion } from '@libs/shared/data-access-user/src';
 import { Tramite32301Query } from '../../estados/tramite32301.query';
 import { Tramite32301Store } from '../../estados/tramite32301.store';
-
-interface PreOperativoIn{
-    label: string,
-    value: string
-}@Component({
+interface PreOperativoIn {
+  label: string;
+  value: string;
+}
+@Component({
   selector: 'app-modificacion-socios',
   standalone: true,
-  imports: [CommonModule, TituloComponent, TableComponent, TablePaginationComponent, ReactiveFormsModule, CatalogoSelectComponent, InputRadioComponent, AlertComponent],
+  imports: [
+    CommonModule,
+    TituloComponent,
+    TableComponent,
+    TablePaginationComponent,
+    ReactiveFormsModule,
+    CatalogoSelectComponent,
+    InputRadioComponent,
+    AlertComponent,
+    NotificacionesComponent,
+  ],
   templateUrl: './modificacionSocios.component.html',
 })
-export class ModificacionSociosComponent implements OnInit, AfterViewInit, OnDestroy {
-  
+export class ModificacionSociosComponent
+  implements OnInit, AfterViewInit, OnDestroy
+{
   // Definición de las columnas de la tabla
   tableColumns: string[] = [];
   declaretableColumns: string[] = [];
 
   // Datos para las tablas
-  mercanciasData: { tbodyData: string[] }[] = [{ tbodyData: [],},];
-  declareData: { tbodyData: string[] }[] = [{ tbodyData: [],},];
-  
+  mercanciasData: { tbodyData: string[] }[] = [{ tbodyData: [] }];
+  declareData: { tbodyData: string[] }[] = [{ tbodyData: [] }];
+
   // Variables para la paginación de los datos
   totalItems: number = 0;
   itemsPerPage: number = 1;
   currentPage: number = 1;
 
   // Datos de la sección de miembros revocados
-  public seccionMiembrosRevocados:{ tbodyData: string[] }[] = [{ tbodyData: [],},];
+  public seccionMiembrosRevocados: { tbodyData: string[] }[] = [
+    { tbodyData: [] },
+  ];
 
   // Datos de los miembros de la empresa
-  public gridMiembrosEmpresas:{ tbodyData: string[] }[] = [{ tbodyData: [],},];
+  public gridMiembrosEmpresas: { tbodyData: string[] }[] = [{ tbodyData: [] }];
 
   // Datos de los miembros de la empresa para mostrar en la tabla
   public miembroDeLaEmpresaBodyData: unknown[] = [];
 
   // Instancias de los modales para mostrar
   agregarModelInstance!: Modal;
-  raticarModelnstance!: Modal;
-  revocarModelnstance!: Modal;
-  correctAmentelnstance!:Modal;
-  
+
   // Modelo de datos para la modificación de socios
-  modificacionSocios!:ModificacionSocios;
+  modificacionSocios!: ModificacionSocios;
 
   // Opciones para los catálogos de nacionalidad, radio y tipo de miembro
   nacionalidadOptions!: Catalogo[];
-  radioOptions!:PreOperativoIn[];
+  radioOptions!: PreOperativoIn[];
   enSuCaracterDeOptions!: Catalogo[];
 
   // Referencias a los elementos del DOM de los modales
   @ViewChild('Agregar', { static: false }) agregarMOdel!: ElementRef;
-  @ViewChild('Raticar', { static: false }) raticarModel!: ElementRef;
-  @ViewChild('Revocar', { static: false }) revocarModel!: ElementRef;
-  @ViewChild('CorrectamenteModel', { static: false }) correctAmenteModel!: ElementRef;
-  
+
   // Formulario reactivo para agregar miembros
   agregarMiembroDeLaEmpresaFrom!: FormGroup;
 
   // Mensaje sobre la nacionalidad y tributo en México
-  messageNac: string = MESSAGE_NAC
+  messageNac: string = MESSAGE_NAC;
 
   // Subject para controlar la destrucción del componente
   private destroy$: Subject<void> = new Subject<void>();
+  /**
+   * Declaración de la variable raticarNotificacion de tipo Notificacion.
+   * Se usa para gestionar notificaciones relacionadas con la ratificación de un proceso.
+   */
+  public raticarNotificacion!: Notificacion;
 
-  constructor(private fb: FormBuilder, private AvisoModifyService: AvisoModifyService, private store: Tramite32301Store,
-    private Tramite32301Query:Tramite32301Query) {
-    // Constructor
+  /**
+   * Declaración de la variable revocarNotificacion de tipo Notificacion.
+   * Se emplea para manejar notificaciones sobre revocaciones dentro del sistema.
+   */
+  public revocarNotificacion!: Notificacion;
+
+  /**
+   * Declaración de la variable correctamenteNotificacion de tipo Notificacion.
+   * Se utiliza para almacenar y gestionar notificaciones que indican acciones exitosas.
+   */
+  public correctamenteNotificacion!: Notificacion;
+
+  /**
+   * Suscripción para obtener información sobre la característica de una entidad.
+   */
+  getEnSuCaracterDeSubscription!: Subscription;
+
+  /**
+   * Suscripción para la gestión de datos relacionados con la nacionalidad.
+   */
+  getNacionalidadSubscription!: Subscription;
+
+  /**
+   * Suscripción para obtener información sobre el estado preoperativo.
+   */
+  getPreOperativoSubscription!: Subscription;
+
+  /**
+   * Suscripción para cargar información de los miembros de la empresa en el grid.
+   */
+  getGridMiembrosEmpresaSubscription!: Subscription;
+
+  /**
+   * Suscripción para manejar la sección de miembros revocados.
+   */
+  getSeccionMiembrosRevocadoSubscription!: Subscription;
+
+  /**
+   * Constructor de la clase, donde se inyectan los servicios y almacenes necesarios.
+   */
+  /**
+   * Constructor de la clase, donde se inyectan los servicios y almacenes necesarios
+   * para la gestión del trámite 32301 y la manipulación de formularios reactivos.
+   */
+  constructor(
+    /**
+     * Servicio para la creación y gestión de formularios reactivos.
+     */
+    private fb: FormBuilder,
+
+    /**
+     * Servicio para la modificación de avisos dentro del sistema.
+     */
+    private AvisoModifyService: AvisoModifyService,
+
+    /**
+     * Almacén de datos del trámite 32301, utilizado para gestionar la información relevante.
+     */
+    private store: Tramite32301Store,
+
+    /**
+     * Servicio de consultas que permite obtener información relacionada con el trámite 32301.
+     */
+    private Tramite32301Query: Tramite32301Query
+  ) {
+    /**
+     * Bloque de inicialización del constructor.
+     */
   }
 
+  /**
+   * Método que se ejecuta al inicializar el componente.
+   * Se encarga de realizar llamadas a servicios para obtener los datos necesarios.
+   */
   ngOnInit(): void {
-    // Inicialización del formulario con los controles y validadores
+    /**
+     * Inicializa el formulario para agregar un miembro a la empresa.
+     */
+    this.initAgregarMiembroDeLaEmpresaForm();
+
+    /**
+     * Obtiene la sección de miembros revocados.
+     */
+    this.getSeccionMiembrosRevocados();
+
+    /**
+     * Recupera información sobre el carácter del miembro dentro de la empresa.
+     */
+    this.getEnSuCaracterDe();
+
+    /**
+     * Obtiene información sobre la nacionalidad de los miembros.
+     */
+    this.getNacionalidad();
+
+    /**
+     * Recupera los datos relacionados con el estado preoperativo.
+     */
+    this.getPreOperativo();
+
+    /**
+     * Obtiene la lista de miembros de la empresa para mostrarlos en el grid.
+     */
+    this.getGridMiembrosEmpresas();
+  }
+
+  /**
+   * Método para inicializar el formulario de agregación de un miembro a la empresa.
+   * Define los controles y validadores necesarios.
+   */
+  initAgregarMiembroDeLaEmpresaForm(): void {
     this.agregarMiembroDeLaEmpresaFrom = this.fb.group({
       ensucarácterde: [1, Validators.required],
       obligadoaTributarenMéxico: [true, Validators.required],
@@ -98,177 +234,465 @@ export class ModificacionSociosComponent implements OnInit, AfterViewInit, OnDes
         Validators.required,
       ],
     });
-
-    // Llamadas a servicios para obtener los datos de la aplicación
-    this.getSeccionMiembrosRevocados();
-    this.getEnSuCaracterDe();
-    this.getNacionalidad();
-    this.getPreOperativo();
-    this.getGridMiembrosEmpresas();
   }
 
-  // Método para actualizar el valor en el store
+  /**
+   * Método para actualizar un valor en el store.
+   * Se utiliza para modificar datos almacenados dentro de la gestión del trámite.
+   *
+   * @param form - Formulario reactivo del cual se obtiene el valor.
+   * @param campo - Nombre del campo dentro del formulario.
+   * @param metodoNombre - Método del store que se encargará de actualizar el valor.
+   */
   setValoresStore(
     form: FormGroup,
     campo: string,
     metodoNombre: keyof Tramite32301Store
   ): void {
+    /**
+     * Obtiene el valor del campo especificado dentro del formulario.
+     */
     const VALOR = form.get(campo)?.value;
+
+    /**
+     * Asigna el valor obtenido al store, utilizando el método correspondiente.
+     */
     (this.store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
 
-  // Método para obtener valores del store
+  /**
+   * Método para obtener valores del store relacionados con la modificación de socios.
+   * Se suscribe a la consulta y procesa la información para almacenarla en la variable correspondiente.
+   */
   getValorStore(): void {
+    /**
+     * Se suscribe al observable que selecciona la modificación de socios dentro del trámite.
+     * La suscripción se mantiene activa hasta que se destruye el componente.
+     */
     this.Tramite32301Query.selectModificacionSocios$
       .pipe(takeUntil(this.destroy$))
-      .subscribe(state => {
+      .subscribe((state) => {
+        /**
+         * Asigna el estado recibido a la variable modificacionSocios,
+         * realizando una conversión de tipos para su manipulación.
+         */
         this.modificacionSocios = state as unknown as ModificacionSocios;
-        const NEW_DATU = Object.values(this.modificacionSocios)
-        const TBODY_DATA = { tbodyData: NEW_DATU.map(String) }
-        this.declareData.push(TBODY_DATA)
+
+        /**
+         * Obtiene los valores del objeto de modificación de socios
+         * y los almacena en un nuevo array.
+         */
+        const NEW_DATU = Object.values(this.modificacionSocios);
+
+        /**
+         * Formatea los datos obtenidos para estructurarlos dentro de un objeto,
+         * convirtiendo cada elemento a tipo string.
+         */
+        const TBODY_DATA = { tbodyData: NEW_DATU.map(String) };
+
+        /**
+         * Agrega los datos procesados al arreglo de declaraciones.
+         */
+        this.declareData.push(TBODY_DATA);
       });
+
+    /**
+     * Llama al método para cerrar el modal de agregar miembros.
+     */
     this.closeAgregarModal();
   }
-
-  // Obtener las opciones de "En su carácter de"
+  /**
+   * Método para obtener las opciones disponibles de "En su carácter de".
+   * Realiza una suscripción al servicio correspondiente y almacena la respuesta.
+   */
   getEnSuCaracterDe(): void {
-    this.AvisoModifyService.getEnSuCaracterDe()
-      .subscribe((resp) => {
+    /**
+     * Suscripción al servicio que obtiene las opciones de "En su carácter de".
+     */
+    this.getEnSuCaracterDeSubscription =
+      this.AvisoModifyService.getEnSuCaracterDe().subscribe((resp) => {
+        /**
+         * Asigna la respuesta recibida a la variable enSuCaracterDeOptions,
+         * duplicando su contenido para evitar modificaciones inesperadas.
+         */
         this.enSuCaracterDeOptions = Object.assign([], resp);
       });
   }
 
-  // Obtener las opciones de nacionalidad
+  /**
+   * Método para obtener las opciones de nacionalidad disponibles en el sistema.
+   * Realiza una suscripción al servicio correspondiente y almacena la respuesta.
+   */
   getNacionalidad(): void {
-    this.AvisoModifyService.getNacionalidad()
-      .subscribe((resp) => {
+    /**
+     * Suscripción al servicio que obtiene las opciones de nacionalidad.
+     */
+    this.getNacionalidadSubscription =
+      this.AvisoModifyService.getNacionalidad().subscribe((resp) => {
+        /**
+         * Asigna la respuesta recibida a la variable nacionalidadOptions,
+         * duplicando su contenido para evitar modificaciones inesperadas.
+         */
         this.nacionalidadOptions = Object.assign([], resp);
       });
   }
-
-  // Obtener las opciones del "Pre Operativo"
+  /**
+   * Método para obtener las opciones del "Pre Operativo".
+   * Realiza una suscripción al servicio correspondiente y almacena la respuesta.
+   */
   getPreOperativo(): void {
-    this.AvisoModifyService.getPreOperativo().subscribe((resp) => {
-      this.radioOptions = Object.assign([], resp);
-    });
+    /**
+     * Suscripción al servicio que obtiene las opciones del estado preoperativo.
+     */
+    this.getPreOperativoSubscription =
+      this.AvisoModifyService.getPreOperativo().subscribe((resp) => {
+        /**
+         * Asigna la respuesta recibida a la variable radioOptions,
+         * duplicando su contenido para evitar modificaciones inesperadas.
+         */
+        this.radioOptions = Object.assign([], resp);
+      });
   }
 
-  // Obtener los datos de la tabla de miembros de la empresa
+  /**
+   * Método para obtener los datos de la tabla de miembros de la empresa.
+   * Se suscribe al servicio correspondiente y almacena la información recibida.
+   */
   getGridMiembrosEmpresas(): void {
-    this.AvisoModifyService.getGridMiembrosEmpresas().subscribe((resp: TableDataNgTable) => {
-      this.tableColumns = resp.tableHeader;
-      this.mercanciasData = resp.tableBody;
-    });
+    /**
+     * Suscripción al servicio que recupera la información de los miembros de la empresa.
+     */
+    this.getGridMiembrosEmpresaSubscription =
+      this.AvisoModifyService.getGridMiembrosEmpresas().subscribe(
+        (resp: TableDataNgTable) => {
+          /**
+           * Asigna los encabezados de la tabla a la variable tableColumns.
+           */
+          this.tableColumns = resp.tableHeader;
+
+          /**
+           * Asigna los datos del cuerpo de la tabla a la variable mercanciasData.
+           */
+          this.mercanciasData = resp.tableBody;
+        }
+      );
   }
 
-  // Obtener la sección de miembros revocados
+  /**
+   * Método para obtener la sección de miembros revocados dentro del sistema.
+   * Se suscribe al servicio correspondiente y almacena los datos recibidos.
+   */
   getSeccionMiembrosRevocados(): void {
-    this.AvisoModifyService.getSeccionMiembrosRevocados().subscribe((resp: TableDataNgTable) => {
-      this.declaretableColumns = resp.tableHeader;
-    });
+    /**
+     * Suscripción al servicio que recupera la información de los miembros revocados.
+     */
+    this.getSeccionMiembrosRevocadoSubscription =
+      this.AvisoModifyService.getSeccionMiembrosRevocados().subscribe(
+        (resp: TableDataNgTable) => {
+          /**
+           * Asigna los encabezados de la tabla a la variable declaretableColumns.
+           */
+          this.declaretableColumns = resp.tableHeader;
+        }
+      );
   }
 
-  // Actualizar la paginación de la tabla
-  updatePagination(): void {
-    const START_INDEX = (this.currentPage - 1) * this.itemsPerPage;
-    this.miembroDeLaEmpresaBodyData = this.miembroDeLaEmpresaBodyData.slice(
-      START_INDEX,
-      START_INDEX + this.itemsPerPage
-    );
-  }
+  /**
+ * Método para actualizar la paginación de la tabla de miembros de la empresa.
+ * Se calcula el índice de inicio y se ajusta el subconjunto de datos que se mostrará.
+ */
+updatePagination(): void {
 
-  // Cambiar el número de elementos por página
-  onItemsPerPageChange(itemsPerPage: number): void {
-    this.itemsPerPage = itemsPerPage;
-    this.currentPage = 1;
-    this.updatePagination();
-  }
+  /**
+   * Calcula el índice de inicio basado en la página actual y la cantidad de elementos por página.
+   */
+  const START_INDEX = (this.currentPage - 1) * this.itemsPerPage;
 
-  // Cambiar la página de la tabla
-  onPageChange(page: number): void {
-    this.currentPage = page;
-    this.updatePagination();
-  }
+  /**
+   * Obtiene un subconjunto de datos de la tabla de miembros de la empresa,
+   * comenzando desde el índice calculado y mostrando únicamente la cantidad de elementos por página.
+   */
+  this.miembroDeLaEmpresaBodyData = this.miembroDeLaEmpresaBodyData.slice(
+    START_INDEX,
+    START_INDEX + this.itemsPerPage
+  );
+}
 
-  // Inicialización de los modales después de que la vista se carga
+
+ /**
+ * Método para cambiar el número de elementos mostrados por página en la tabla.
+ * Se actualiza el valor y se reinicia la paginación.
+ *
+ * @param itemsPerPage - Número de elementos por página seleccionados.
+ */
+onItemsPerPageChange(itemsPerPage: number): void {
+
+  /**
+   * Asigna el número de elementos por página a la variable itemsPerPage.
+   */
+  this.itemsPerPage = itemsPerPage;
+
+  /**
+   * Reinicia la paginación, estableciendo la página actual en la primera.
+   */
+  this.currentPage = 1;
+
+  /**
+   * Llama al método para actualizar la paginación de la tabla.
+   */
+  this.updatePagination();
+}
+
+
+  /**
+ * Método para cambiar la página actual de la tabla.
+ * Se actualiza el número de página y se llama a la función de paginación.
+ *
+ * @param page - Número de la nueva página seleccionada.
+ */
+onPageChange(page: number): void {
+
+  /**
+   * Asigna el número de página seleccionada a la variable currentPage.
+   */
+  this.currentPage = page;
+
+  /**
+   * Llama al método para actualizar la paginación de la tabla.
+   */
+  this.updatePagination();
+}
+
+
+  /**
+   * Método que se ejecuta después de que la vista del componente ha sido completamente cargada.
+   * Se utiliza para inicializar modales en la interfaz.
+   */
   ngAfterViewInit(): void {
+    /**
+     * Verifica si existe un elemento nativo asociado al modal de agregar.
+     */
     if (this.agregarMOdel?.nativeElement) {
+      /**
+       * Crea una nueva instancia del modal utilizando el elemento DOM asociado.
+       */
       this.agregarModelInstance = new Modal(this.agregarMOdel.nativeElement);
     }
-
-    if (this.raticarModel?.nativeElement) {
-      this.raticarModelnstance = new Modal(this.raticarModel.nativeElement);
-    }
-    if (this.revocarModel?.nativeElement) {
-      this.revocarModelnstance = new Modal(this.revocarModel.nativeElement);
-    }
-
-    if (this.correctAmenteModel?.nativeElement) {
-      this.correctAmentelnstance = new Modal(this.correctAmenteModel.nativeElement);
-    }
   }
 
-  // Métodos para abrir los modales
+  /**
+   * Método para abrir el modal de agregar.
+   * Verifica si la instancia del modal existe antes de mostrarlo.
+   */
   openAgregarModal(): void {
+    /**
+     * Si la instancia del modal ha sido creada, se procede a mostrarlo.
+     */
     if (this.agregarModelInstance) {
       this.agregarModelInstance.show();
     }
-  }openRaticarModal(): void {
+  }
+
+  openRaticarModal(): void {
     /** Abre el modal para la acción de "Raticar" si la instancia existe */
-    if (this.raticarModelnstance) {
-        this.raticarModelnstance.show();
-    }
-}
+    this.raticarNotificacion = {
+      /**
+       * Tipo de notificación: alerta.
+       */
+      tipoNotificacion: 'alert',
 
-openRevocarModal(): void {
-    /** Abre el modal para la acción de "Revocar" si la instancia existe */
-    if (this.revocarModelnstance) {
-        this.revocarModelnstance.show();
-    }
-}
+      /**
+       * Categoría de la notificación: peligro (danger).
+       */
+      categoria: 'success',
 
-openCorrectamenteModel(): void {
+      /**
+       * Modo de la notificación: acción requerida.
+       */
+      modo: 'action',
+
+      /**
+       * Título de la notificación (actualmente vacío).
+       */
+      titulo: '',
+
+      /**
+       * Mensaje de la notificación, indicando que Se han ratificado los registros seleccionados.
+       */
+      mensaje: 'Se han ratificado los registros seleccionados',
+
+      /**
+       * Indica si la notificación debe cerrarse automáticamente (false = no se cerrará).
+       */
+      cerrar: false,
+
+      /**
+       * Tiempo de espera antes de cerrar la notificación (2000 milisegundos).
+       */
+      tiempoDeEspera: 2000,
+
+      /**
+       * Texto del botón de aceptación en la notificación.
+       */
+      txtBtnAceptar: 'Aceptar',
+
+      /**
+       * Texto del botón de cancelación en la notificación (actualmente vacío).
+       */
+      txtBtnCancelar: '',
+    };
+  }
+
+  openRevocarModal(): void {
+    this.revocarNotificacion = {
+      /**
+       * Tipo de notificación: alerta.
+       */
+      tipoNotificacion: 'alert',
+
+      /**
+       * Categoría de la notificación: peligro (danger).
+       */
+      categoria: 'success',
+
+      /**
+       * Modo de la notificación: acción requerida.
+       */
+      modo: 'action',
+
+      /**
+       * Título de la notificación (actualmente vacío).
+       */
+      titulo: '',
+
+      /**
+       * Mensaje de la notificación, indicando que Se han revocado los registros seleccionados.
+       */
+      mensaje: 'Se han revocado los registros seleccionados',
+
+      /**
+       * Indica si la notificación debe cerrarse automáticamente (false = no se cerrará).
+       */
+      cerrar: false,
+
+      /**
+       * Tiempo de espera antes de cerrar la notificación (2000 milisegundos).
+       */
+      tiempoDeEspera: 2000,
+
+      /**
+       * Texto del botón de aceptación en la notificación.
+       */
+      txtBtnAceptar: 'Aceptar',
+
+      /**
+       * Texto del botón de cancelación en la notificación (actualmente vacío).
+       */
+      txtBtnCancelar: '',
+    };
+  }
+
+  openCorrectamenteModel(): void {
     /** Abre el modal de confirmación si la instancia existe */
-    if (this.correctAmentelnstance) {
-        this.correctAmentelnstance.show();
-    }
-}
+    this.correctamenteNotificacion = {
+      /**
+       * Tipo de notificación: alerta.
+       */
+      tipoNotificacion: 'alert',
 
-// Métodos para cerrar los modales
-closeCorrectamenteModel(): void {
-    /** Cierra el modal de confirmación si la instancia existe */
-    if (this.correctAmentelnstance) {
-        this.correctAmentelnstance.hide();
-    }
-}
+      /**
+       * Categoría de la notificación: peligro (danger).
+       */
+      categoria: 'success',
 
-closeAgregarModal(): void {
+      /**
+       * Modo de la notificación: acción requerida.
+       */
+      modo: 'action',
+
+      /**
+       * Título de la notificación (actualmente vacío).
+       */
+      titulo: '',
+
+      /**
+       * Mensaje de la notificación, indicando que Datos guardados correctamente.
+       */
+      mensaje: 'Datos guardados correctamente.',
+
+      /**
+       * Indica si la notificación debe cerrarse automáticamente (false = no se cerrará).
+       */
+      cerrar: false,
+
+      /**
+       * Tiempo de espera antes de cerrar la notificación (2000 milisegundos).
+       */
+      tiempoDeEspera: 2000,
+
+      /**
+       * Texto del botón de aceptación en la notificación.
+       */
+      txtBtnAceptar: 'Aceptar',
+
+      /**
+       * Texto del botón de cancelación en la notificación (actualmente vacío).
+       */
+      txtBtnCancelar: '',
+    };
+  }
+  closeAgregarModal(): void {
     /** Cierra el modal de "Agregar" y abre el modal de confirmación */
     if (this.agregarModelInstance) {
-        this.agregarModelInstance.hide();
-        this.openCorrectamenteModel();
+      this.agregarModelInstance.hide();
+      this.openCorrectamenteModel();
     }
-}
-
-closeRaticarModal(): void {
-    /** Cierra el modal para la acción de "Raticar" si la instancia existe */
-    if (this.raticarModelnstance) {
-        this.raticarModelnstance.hide();
-    }
-}
-
-closeRevocarModal(): void {
-    /** Cierra el modal para la acción de "Revocar" si la instancia existe */
-    if (this.revocarModelnstance) {
-        this.revocarModelnstance.hide();
-    }
-}
-
-
+  }
   // Método de destrucción del componente para evitar fugas de memoria
   ngOnDestroy(): void {
+    /**
+     * Notifica a los observadores que el flujo de datos se va a destruir.
+     */
     this.destroy$.next();
+
+    /**
+     * Completa el flujo de datos, asegurando que no se envíen más valores.
+     */
     this.destroy$.complete();
+
+    /**
+     * Cancela la suscripción a la información de "En su carácter de" si está activa.
+     */
+    if (this.getEnSuCaracterDeSubscription) {
+      this.getEnSuCaracterDeSubscription.unsubscribe();
+    }
+
+    /**
+     * Cancela la suscripción a la información de nacionalidad si está activa.
+     */
+    if (this.getNacionalidadSubscription) {
+      this.getNacionalidadSubscription.unsubscribe();
+    }
+
+    /**
+     * Cancela la suscripción a los datos del estado preoperativo si está activa.
+     */
+    if (this.getPreOperativoSubscription) {
+      this.getPreOperativoSubscription.unsubscribe();
+    }
+
+    /**
+     * Cancela la suscripción para la gestión de miembros de la empresa si está activa.
+     */
+    if (this.getGridMiembrosEmpresaSubscription) {
+      this.getGridMiembrosEmpresaSubscription.unsubscribe();
+    }
+
+    /**
+     * Cancela la suscripción para la sección de miembros revocados si está activa.
+     */
+    if (this.getSeccionMiembrosRevocadoSubscription) {
+      this.getSeccionMiembrosRevocadoSubscription.unsubscribe();
+    }
   }
 }
-

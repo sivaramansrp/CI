@@ -74,16 +74,49 @@ export const CONTINUAR: string = "t";
 * Secciones a mostrar dentro de cada Paso de acuerdo al trámite 230401.
 * Cada paso tiene configuraciones de validación para mostrar u ocultar secciones específicas.
 */
+/**
+ * Definición de las secciones y pasos del trámite 230401.
+ * Cada paso contiene validaciones específicas para asegurar el cumplimiento de requisitos.
+ */
 export const SECCIONES_TRAMITE_230401 = {
-PASO_1: {
-  VALIDACION_SECCION_1: false, // La validación para la sección 1 en el paso 1 está deshabilitada.
-  VALIDACION_SECCION_2: true, // La validación para la sección 2 en el paso 1 está habilitada.
-  VALIDACION_SECCION_3: true, // La validación para la sección 3 en el paso 1 está habilitada.
-},
-PASO_2: {
-  VALIDACION_SECCION: true, // La validación de la sección en el paso 2 está habilitada.
-},
-PASO_3: {
-  requiereValidacion: true, // El paso 3 requiere validación.
-},
+
+  /**
+   * Paso 1 del trámite, con varias secciones que pueden requerir validación.
+   */
+  PASO_1: {
+      /**
+       * La validación para la sección 1 está deshabilitada en este paso.
+       */
+      VALIDACION_SECCION_1: false,
+
+      /**
+       * La validación para la sección 2 está habilitada en este paso.
+       */
+      VALIDACION_SECCION_2: true,
+
+      /**
+       * La validación para la sección 3 está habilitada en este paso.
+       */
+      VALIDACION_SECCION_3: true,
+  },
+
+  /**
+   * Paso 2 del trámite, con una única validación de sección.
+   */
+  PASO_2: {
+      /**
+       * La validación de la sección en el paso 2 está habilitada.
+       */
+      VALIDACION_SECCION: true,
+  },
+
+  /**
+   * Paso 3 del trámite, que requiere validación.
+   */
+  PASO_3: {
+      /**
+       * Se establece que el paso 3 requiere validación obligatoria.
+       */
+      requiereValidacion: true,
+  },
 };

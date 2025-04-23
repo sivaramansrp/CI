@@ -1,7 +1,22 @@
-import { AlertComponent, InputCheckComponent, TituloComponent } from "@ng-mf/data-access-user";
-import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Subject, map, takeUntil } from 'rxjs';
+import {
+  AlertComponent,
+  InputCheckComponent,
+  TituloComponent,
+} from '@ng-mf/data-access-user';
+import {
+  Component,
+  EventEmitter,
+  OnDestroy,
+  OnInit,
+  Output,
+} from '@angular/core';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import { Subject, Subscription, map, takeUntil } from 'rxjs';
 import { AvisoModifyService } from '../../services/aviso-modify.service';
 import { CommonModule } from '@angular/common';
 import { TipoDevAviso } from '../../models/avisomodify.model';
@@ -16,11 +31,16 @@ import { Tramite32301Store } from '../../estados/tramite32301.store';
 @Component({
   selector: 'app-tipo-de-aviso',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, TituloComponent, AlertComponent, InputCheckComponent],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    TituloComponent,
+    AlertComponent,
+    InputCheckComponent,
+  ],
   templateUrl: './tipoDeAviso.component.html',
 })
 export class TipoDeAvisoComponent implements OnInit, OnDestroy {
-
   /** Formulario reactivo para gestionar los tipos de aviso */
   miFormulario!: FormGroup;
 
@@ -38,6 +58,10 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
 
   /** Sujeto para manejar el ciclo de vida de los observables */
   private destroy$: Subject<void> = new Subject<void>();
+  /**
+   * Suscripción para obtener y gestionar modificaciones de avisos dentro del sistema.
+   */
+  public getAvisoModifySubscription!: Subscription;
 
   /**
    * Constructor del componente, inyecta las dependencias necesarias
@@ -46,10 +70,12 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
    * @param store - Store para gestionar el estado global del trámite
    * @param Tramite32301Query - Query para obtener el estado actual del trámite
    */
-  constructor(private fb: FormBuilder,
-              private AvisoModifyService: AvisoModifyService,
-              private store: Tramite32301Store,
-              private Tramite32301Query: Tramite32301Query) {
+  constructor(
+    private fb: FormBuilder,
+    private AvisoModifyService: AvisoModifyService,
+    private store: Tramite32301Store,
+    private Tramite32301Query: Tramite32301Query
+  ) {
     this.crearFormMiFormulario();
   }
 
@@ -61,7 +87,7 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
     this.inicializamiFormulario();
     this.Tramite32301Query.select()
       .pipe(takeUntil(this.destroy$))
-      .subscribe(state => {
+      .subscribe((state) => {
         this.tipoDevAviso = state as unknown as TipoDevAviso;
         this.crearFormMiFormulario();
       });
@@ -72,13 +98,13 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
    * Establece la modalidad de certificación en el store.
    */
   inicializamiFormulario(): void {
-    this.AvisoModifyService
-      .getAvisoModify()
+    this.getAvisoModifySubscription = this.AvisoModifyService.getAvisoModify()
       .pipe(
         map((resp) => {
           this.store.setModalidadCertificacion(resp.descripcion);
         })
-      ).subscribe();
+      )
+      .subscribe();
   }
 
   /**
@@ -86,14 +112,16 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
    */
   crearFormMiFormulario(): void {
     this.miFormulario = this.fb.group({
-      modalidadCertificacion: [{ value: this.tipoDevAviso?.modalidadCertificacion, disabled: true }],
+      modalidadCertificacion: [
+        { value: this.tipoDevAviso?.modalidadCertificacion, disabled: true },
+      ],
       foreignClientsSuppliers: [this.tipoDevAviso?.foreignClientsSuppliers],
       nationalSuppliers: [this.tipoDevAviso?.nationalSuppliers],
       modificationsMembers: [this.tipoDevAviso?.modificationsMembers],
       changesToLegalDocuments: [this.tipoDevAviso?.changesToLegalDocuments],
       mergerOrSplitNotice: [this.tipoDevAviso?.mergerOrSplitNotice],
       additionFractions: [this.tipoDevAviso?.additionFractions],
-      acepto253: [this.tipoDevAviso?.acepto253, Validators.required]
+      acepto253: [this.tipoDevAviso?.acepto253, Validators.required],
     });
   }
 
@@ -108,7 +136,9 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
    * Actualiza el store con el valor seleccionado de los proveedores extranjeros.
    */
   setforeignClientsSuppliers(): void {
-    const FRACCION_ARANCELATIA = this.miFormulario.get('foreignClientsSuppliers')?.value;
+    const FRACCION_ARANCELATIA = this.miFormulario.get(
+      'foreignClientsSuppliers'
+    )?.value;
     this.store.setforeignClientsSuppliers(FRACCION_ARANCELATIA);
   }
 
@@ -116,7 +146,8 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
    * Actualiza el store con el valor seleccionado de los proveedores nacionales.
    */
   setNationalSuppliers(): void {
-    const FRACCION_ARANCELATIA = this.miFormulario.get('nationalSuppliers')?.value;
+    const FRACCION_ARANCELATIA =
+      this.miFormulario.get('nationalSuppliers')?.value;
     this.store.setNationalSuppliers(FRACCION_ARANCELATIA);
   }
 
@@ -124,7 +155,9 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
    * Actualiza el store con el valor seleccionado de las modificaciones de miembros.
    */
   setModificationsMembers(): void {
-    const FRACCION_ARANCELATIA = this.miFormulario.get('modificationsMembers')?.value;
+    const FRACCION_ARANCELATIA = this.miFormulario.get(
+      'modificationsMembers'
+    )?.value;
     this.store.setModificationsMembers(FRACCION_ARANCELATIA);
   }
 
@@ -132,7 +165,9 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
    * Actualiza el store con el valor seleccionado de los cambios en los documentos legales.
    */
   setChangesToLegalDocuments(): void {
-    const FRACCION_ARANCELATIA = this.miFormulario.get('changesToLegalDocuments')?.value;
+    const FRACCION_ARANCELATIA = this.miFormulario.get(
+      'changesToLegalDocuments'
+    )?.value;
     this.store.setChangesToLegalDocuments(FRACCION_ARANCELATIA);
   }
 
@@ -140,7 +175,9 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
    * Actualiza el store con el valor seleccionado sobre la notificación de fusión o escisión.
    */
   setMergerOrSplitNotice(): void {
-    const FRACCION_ARANCELATIA = this.miFormulario.get('mergerOrSplitNotice')?.value;
+    const FRACCION_ARANCELATIA = this.miFormulario.get(
+      'mergerOrSplitNotice'
+    )?.value;
     this.store.setMergerOrSplitNotice(FRACCION_ARANCELATIA);
   }
 
@@ -148,7 +185,8 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
    * Actualiza el store con el valor seleccionado de las fracciones adicionales.
    */
   setAdditionFractions(): void {
-    const FRACCION_ARANCELATIA = this.miFormulario.get('additionFractions')?.value;
+    const FRACCION_ARANCELATIA =
+      this.miFormulario.get('additionFractions')?.value;
     this.store.setAdditionFractions(FRACCION_ARANCELATIA);
   }
 
@@ -171,7 +209,21 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
    * Se llama cuando el componente es destruido para limpiar los recursos.
    */
   ngOnDestroy(): void {
+    /**
+     * Notifica a los observadores que el flujo de datos se va a destruir.
+     */
     this.destroy$.next();
+
+    /**
+     * Completa el flujo de datos, asegurando que no se envíen más valores.
+     */
     this.destroy$.complete();
+
+    /**
+     * Cancela la suscripción a la información de modificaciones de avisos si está activa.
+     */
+    if (this.getAvisoModifySubscription) {
+      this.getAvisoModifySubscription.unsubscribe();
+    }
   }
 }

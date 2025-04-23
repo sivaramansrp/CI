@@ -1,13 +1,36 @@
-import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { AlertComponent, InputRadioComponent, TableComponent, TablePaginationComponent, TituloComponent } from "@ng-mf/data-access-user";
-import { CANTIDAD_BIENES_OPTION, FUSIONRADIO_OPTIONS } from '../../enums/fusionOEscision.enum'
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import { Subject, map, takeUntil } from 'rxjs';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
+import {
+  AlertComponent,
+  InputRadioComponent,
+  NotificacionesComponent,
+  TableComponent,
+  TablePaginationComponent,
+  TituloComponent,
+} from '@ng-mf/data-access-user';
+import {
+  CANTIDAD_BIENES_OPTION,
+  FUSIONRADIO_OPTIONS,
+} from '../../enums/fusionOEscision.enum';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import { Subject, Subscription, map, takeUntil } from 'rxjs';
 import { AvisoModifyService } from '../../services/aviso-modify.service';
 import { CommonModule } from '@angular/common';
 import { Modal } from 'bootstrap';
+import { Notificacion } from '@libs/shared/data-access-user/src';
 import { PersonaFusionEscisionDTO } from '../../models/avisomodify.model';
-import { TableDataNgTable,} from '../../models/avisomodify.model';
+import { TableDataNgTable } from '../../models/avisomodify.model';
 import { Tramite32301Query } from '../../estados/tramite32301.query';
 import { Tramite32301Store } from '../../estados/tramite32301.store';
 interface RatioOption {
@@ -21,11 +44,21 @@ interface RatioOption {
 @Component({
   selector: 'app-fusion-oescision',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, AlertComponent, TituloComponent, InputRadioComponent, TableComponent, TablePaginationComponent],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    AlertComponent,
+    TituloComponent,
+    InputRadioComponent,
+    TableComponent,
+    TablePaginationComponent,
+    NotificacionesComponent,
+  ],
   templateUrl: './fusionOEscision.component.html',
 })
-export class FusionOEscisionComponent implements OnInit, OnDestroy, AfterViewInit {
-
+export class FusionOEscisionComponent
+  implements OnInit, OnDestroy, AfterViewInit
+{
   /** Formulario principal del componente */
   formulario!: FormGroup;
 
@@ -53,21 +86,17 @@ export class FusionOEscisionComponent implements OnInit, OnDestroy, AfterViewIni
   /** Instancia del modal de modificación */
   ModificarFusionEscisionInstance!: Modal;
 
-  /** Instancia del modal de confirmación */
-  correctamenteModelInstance!: Modal;
-
   /** Arreglo de fechas seleccionadas */
   fechasSeleccionadas = [];
 
   /** Opciones del radio para seleccionar tipo de operación (fusión/escisión) */
-  fusionradioOptions = FUSIONRADIO_OPTIONS
-  
+  fusionradioOptions = FUSIONRADIO_OPTIONS;
 
   /** Opciones para indicar si se poseen bienes */
-  cantidadBienesOption = CANTIDAD_BIENES_OPTION
+  cantidadBienesOption = CANTIDAD_BIENES_OPTION;
 
   /** Encabezado de tabla que muestra los datos de empresas fusionadas/escindidas */
-  gridFusionEscisionHeader: string[] = []
+  gridFusionEscisionHeader: string[] = [];
 
   /** Datos a mostrar en la tabla */
   gridFusionEscisionData: { tbodyData: string[] }[] = [{ tbodyData: [] }];
@@ -91,13 +120,32 @@ export class FusionOEscisionComponent implements OnInit, OnDestroy, AfterViewIni
   modalContent: string = '';
 
   /** Referencia al modal de modificación en el DOM */
-  @ViewChild('ModificarFusionEscisionModel', { static: false }) ModificarFusionEscisionModel!: ElementRef;
-
-  /** Referencia al modal de confirmación en el DOM */
-  @ViewChild('correctamenteModel', { static: false }) correctamenteModel!: ElementRef;
+  @ViewChild('ModificarFusionEscisionModel', { static: false })
+  ModificarFusionEscisionModel!: ElementRef;
 
   /** Objeto con datos de persona fusionada o escindida */
   PersonaFusionEscisionDTO!: PersonaFusionEscisionDTO;
+
+  /**
+   * Declaración de la variable correctamenteNotificacion de tipo Notificacion.
+   * Se utiliza para almacenar y gestionar notificaciones que indican acciones exitosas dentro del sistema.
+   */
+  public correctamenteNotificacion!: Notificacion;
+
+  /**
+   * Suscripción para obtener la capacidad de almacenamiento disponible en el sistema.
+   */
+  getCapacidadAlmacenamientoSubscription!: Subscription;
+
+  /**
+   * Suscripción para la gestión de datos relacionados con la fusión o escisión en el grid.
+   */
+  getGridsubFusionOescisionSubscription!: Subscription;
+
+  /**
+   * Suscripción para cargar información de la persona en el proceso de fusión.
+   */
+  cargarDatosPersonaFusionSubscription!: Subscription;
 
   /**
    * Constructor del componente, inyecta formularios, servicios y manejo de estado.
@@ -123,8 +171,8 @@ export class FusionOEscisionComponent implements OnInit, OnDestroy, AfterViewIni
 
   /** Llama al servicio para obtener opciones de capacidad de almacenamiento */
   getCapacidadAlmacenamiento(): void {
-    this.AvisoModifyService.getCapacidadAlmacenamiento()
-      .subscribe((resp) => {
+    this.getCapacidadAlmacenamientoSubscription =
+      this.AvisoModifyService.getCapacidadAlmacenamiento().subscribe((resp) => {
         this.radioOptions = Object.assign([], resp);
       });
   }
@@ -132,10 +180,9 @@ export class FusionOEscisionComponent implements OnInit, OnDestroy, AfterViewIni
   /** Inicializa las instancias de los modales al cargar la vista */
   ngAfterViewInit(): void {
     if (this.ModificarFusionEscisionModel?.nativeElement) {
-      this.ModificarFusionEscisionInstance = new Modal(this.ModificarFusionEscisionModel.nativeElement);
-    }
-    if (this.correctamenteModel?.nativeElement) {
-      this.correctamenteModelInstance = new Modal(this.correctamenteModel.nativeElement);
+      this.ModificarFusionEscisionInstance = new Modal(
+        this.ModificarFusionEscisionModel.nativeElement
+      );
     }
   }
 
@@ -152,8 +199,8 @@ export class FusionOEscisionComponent implements OnInit, OnDestroy, AfterViewIni
         razonSocial: [{ value: '', disabled: true }],
         numFolioTramite: [{ value: '', disabled: true }],
         fechaInicioVigencia: [{ value: '', disabled: true }],
-        fechaFinVigencia: [{ value: '', disabled: true }]
-      })
+        fechaFinVigencia: [{ value: '', disabled: true }],
+      }),
     });
 
     this.modelFormulario = this.fb.group({
@@ -163,8 +210,8 @@ export class FusionOEscisionComponent implements OnInit, OnDestroy, AfterViewIni
         razonSocial: [{ value: '', disabled: true }],
         numFolioTramite: [{ value: '', disabled: true }],
         fechaInicioVigencia: [{ value: '', disabled: true }],
-        fechaFinVigencia: [{ value: '', disabled: true }]
-      })
+        fechaFinVigencia: [{ value: '', disabled: true }],
+      }),
     });
   }
 
@@ -174,7 +221,7 @@ export class FusionOEscisionComponent implements OnInit, OnDestroy, AfterViewIni
     if (VALOR === 'fusion2') {
       this.fusionradioOptions.pop();
     } else {
-      this.fusionradioOptions = FUSIONRADIO_OPTIONS
+      this.fusionradioOptions = FUSIONRADIO_OPTIONS;
     }
   }
 
@@ -182,9 +229,15 @@ export class FusionOEscisionComponent implements OnInit, OnDestroy, AfterViewIni
   mostrarFusionOEscision(): void {
     const VALOR = this.formulario.get('numeroTotalCarros')?.value;
     this.divCompletoVisible = VALOR === '1' || VALOR === '0';
-    this.fusionOescisionTitulo = VALOR === 1 ? 'Datos de las empresas fusionadas' : 'Datos de las empresas escindidas';
+    this.fusionOescisionTitulo =
+      VALOR === 1
+        ? 'Datos de las empresas fusionadas'
+        : 'Datos de las empresas escindidas';
     this.subFusionOescisionTitulo = this.fusionOescisionTitulo;
-    this.labelFechaFusionOscision = VALOR === 1 ? 'Fecha en que surte efecto la fusión' : 'Fecha en que surte efecto la escisión';
+    this.labelFechaFusionOscision =
+      VALOR === 1
+        ? 'Fecha en que surte efecto la fusión'
+        : 'Fecha en que surte efecto la escisión';
   }
 
   /** Muestra u oculta los bloques de certificación según la opción elegida */
@@ -193,39 +246,46 @@ export class FusionOEscisionComponent implements OnInit, OnDestroy, AfterViewIni
     this.conCertificacionPrincipalVisible = CANTIDAD_BIENES === '1';
 
     if (ismodel === 'isModel') {
-      const MODELCANTIDAD_BIENES = this.modelFormulario.get('mCantidadBienes')?.value;
+      const MODELCANTIDAD_BIENES =
+        this.modelFormulario.get('mCantidadBienes')?.value;
       this.sinCertificacionPrincipalVisible = MODELCANTIDAD_BIENES === '1';
     }
   }
 
   /** Carga los datos de persona fusionada desde el servicio y los guarda en el store */
   cargarDatosPersonaFusion(): void {
-    this.AvisoModifyService.cargarDatosPersonaFusion()
-      .pipe(map((resp) => {
-        this.personaFusionEscisionDTO.patchValue(resp);
-        this.store.SetpersonaFusionEscisionDTO(resp);
-      }))
-      .subscribe();
+    this.cargarDatosPersonaFusionSubscription =
+      this.AvisoModifyService.cargarDatosPersonaFusion()
+        .pipe(
+          map((resp) => {
+            this.personaFusionEscisionDTO.patchValue(resp);
+            this.store.SetpersonaFusionEscisionDTO(resp);
+          })
+        )
+        .subscribe();
   }
 
   /** Carga los datos de persona fusionada desde el query del store hacia el modal */
   ModelcargarDatosPersonaFusion(): void {
     this.Tramite32301Query.selectpersonaFusionEscisionDTO$
       .pipe(takeUntil(this.destroy$))
-      .subscribe(state => {
-        this.PersonaFusionEscisionDTO = state as unknown as PersonaFusionEscisionDTO;
-        this.mpersonaFusionEscisionDTO.patchValue(this.PersonaFusionEscisionDTO);
+      .subscribe((state) => {
+        this.PersonaFusionEscisionDTO =
+          state as unknown as PersonaFusionEscisionDTO;
+        this.mpersonaFusionEscisionDTO.patchValue(
+          this.PersonaFusionEscisionDTO
+        );
       });
   }
 
   getGridsubFusionOescision(): void {
-    this.AvisoModifyService.gridsubFusionOescision().subscribe(
-      (resp: TableDataNgTable) => {
-        this.gridFusionEscisionHeader = resp.tableHeader; // Asigna los encabezados para los domicilios nuevos
-      }
-    );
+    this.getGridsubFusionOescisionSubscription =
+      this.AvisoModifyService.gridsubFusionOescision().subscribe(
+        (resp: TableDataNgTable) => {
+          this.gridFusionEscisionHeader = resp.tableHeader; // Asigna los encabezados para los domicilios nuevos
+        }
+      );
   }
-
 
   /** Getter del grupo de persona fusionada en el formulario principal */
   get personaFusionEscisionDTO(): FormGroup {
@@ -272,8 +332,9 @@ export class FusionOEscisionComponent implements OnInit, OnDestroy, AfterViewIni
       this.ModificarFusionEscisionInstance.hide();
       this.Tramite32301Query.selectpersonaFusionEscisionDTO$
         .pipe(takeUntil(this.destroy$))
-        .subscribe(state => {
-          this.PersonaFusionEscisionDTO = state as unknown as PersonaFusionEscisionDTO;
+        .subscribe((state) => {
+          this.PersonaFusionEscisionDTO =
+            state as unknown as PersonaFusionEscisionDTO;
           const NEW_DATU = Object.values(state);
           const TBODY_DATA = { tbodyData: NEW_DATU.map(String) };
           this.gridFusionEscisionData.pop();
@@ -282,25 +343,87 @@ export class FusionOEscisionComponent implements OnInit, OnDestroy, AfterViewIni
     }
   }
 
-  /** Cierra el modal de confirmación */
-  closeCorrectamenteModel(): void {
-    if (this.correctamenteModelInstance) {
-      this.correctamenteModelInstance.hide();
-    }
-  }
-
   /** Abre el modal de confirmación */
   openCorrectamenteModel(): void {
-    if (this.correctamenteModelInstance) {
-      this.correctamenteModelInstance.show();
-    }
+    this.correctamenteNotificacion = {
+      /**
+       * Tipo de notificación: alerta.
+       */
+      tipoNotificacion: 'alert',
+
+      /**
+       * Categoría de la notificación: peligro (danger).
+       */
+      categoria: 'success',
+
+      /**
+       * Modo de la notificación: acción requerida.
+       */
+      modo: 'action',
+
+      /**
+       * Título de la notificación (actualmente vacío).
+       */
+      titulo: '',
+
+      /**
+       * Mensaje de la notificación, indicando que Datos guardados correctamente.
+       */
+      mensaje: 'Datos guardados correctamente.',
+
+      /**
+       * Indica si la notificación debe cerrarse automáticamente (false = no se cerrará).
+       */
+      cerrar: false,
+
+      /**
+       * Tiempo de espera antes de cerrar la notificación (2000 milisegundos).
+       */
+      tiempoDeEspera: 2000,
+
+      /**
+       * Texto del botón de aceptación en la notificación.
+       */
+      txtBtnAceptar: 'Aceptar',
+
+      /**
+       * Texto del botón de cancelación en la notificación (actualmente vacío).
+       */
+      txtBtnCancelar: '',
+    };
   }
 
   /** Destruye las suscripciones al finalizar el componente */
   ngOnDestroy(): void {
+    /**
+     * Notifica a los observadores que el flujo de datos se va a destruir.
+     */
     this.destroy$.next();
+
+    /**
+     * Completa el flujo de datos, asegurando que no se envíen más valores.
+     */
     this.destroy$.complete();
+
+    /**
+     * Cancela la suscripción para obtener la capacidad de almacenamiento si está activa.
+     */
+    if (this.getCapacidadAlmacenamientoSubscription) {
+      this.getCapacidadAlmacenamientoSubscription.unsubscribe();
+    }
+
+    /**
+     * Cancela la suscripción para gestionar datos relacionados con la fusión o escisión en el grid si está activa.
+     */
+    if (this.getGridsubFusionOescisionSubscription) {
+      this.getGridsubFusionOescisionSubscription.unsubscribe();
+    }
+
+    /**
+     * Cancela la suscripción para cargar información de la persona en el proceso de fusión si está activa.
+     */
+    if (this.cargarDatosPersonaFusionSubscription) {
+      this.cargarDatosPersonaFusionSubscription.unsubscribe();
+    }
   }
 }
-
-

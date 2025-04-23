@@ -11,26 +11,22 @@ import {
   Catalogo,
   CatalogoSelectComponent,
   InputRadioComponent,
+  NotificacionesComponent,
   TableComponent,
   TituloComponent,
 } from '@ng-mf/data-access-user';
-import { CODIGO_POSTAL, RFC_PARTES_C } from '@libs/shared/data-access-user/src/tramites/constantes/regex.constants';
-import { CVE_TIPO_DOC_DATA, FRACCION_ARANCELARIA_DATA, MESSAGE_NAC,MODIFICACION_PARTES_HEADER,MOSTRAR_GRID_NUEVO_HEADER, RADIO_OPTIONS } from '../../enums/modificacionGoceInmueble.enum'
-import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-import { ModificacionGoceInmueble, TableDataNgTable } from '../../models/avisomodify.model';
-import { Subject, takeUntil } from 'rxjs';
+import { CVE_TIPO_DOC_DATA, FRACCION_ARANCELARIA_DATA, MESSAGE_NAC, MODIFICACION_PARTES_HEADER, MOSTRAR_GRID_NUEVO_HEADER, RADIO_OPTIONS } from '../../enums/modificacionGoceInmueble.enum';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ModificacionGoceInmueble, TableDataNgTable} from '../../models/avisomodify.model';
+import { REGEX_POSTAL, REGEX_RFC } from '@libs/shared/data-access-user/src/tramites/constantes/regex.constants';
+import { Subject, Subscription, takeUntil } from 'rxjs';
 import { AvisoModifyService } from '../../services/aviso-modify.service';
 import { CommonModule } from '@angular/common';
 import { Modal } from 'bootstrap';
+import { Notificacion } from '@libs/shared/data-access-user/src';
 import { Tramite32301Query } from '../../estados/tramite32301.query';
 import { Tramite32301Store } from '../../estados/tramite32301.store';
 interface TableData {
-
   tableHeader: string[];
   tableBody: TableBodyItem[];
 }
@@ -48,6 +44,7 @@ interface TableBodyItem {
     AlertComponent,
     TableComponent,
     CatalogoSelectComponent,
+    NotificacionesComponent,
   ],
   templateUrl: './modificacionGoceInmueble.component.html',
 })
@@ -58,22 +55,16 @@ export class ModificacionGoceInmuebleComponent
   modificacionGoceForm!: FormGroup;
 
   /** Opciones para los radios de selección: "Domicilio nuevo" o "Modificar domicilio" */
-  radioOptions = RADIO_OPTIONS
+  radioOptions = RADIO_OPTIONS;
 
   /** Mensaje de información para la modificación de partes contratantes */
-  messageNac = MESSAGE_NAC
+  messageNac = MESSAGE_NAC;
 
   /** Bandera para mostrar el grid de domicilios nuevos */
   mostrarGridNuevo: boolean = false;
 
   /** Bandera para mostrar el grid de domicilios modificados */
   mostrarGridModificado: boolean = false;
-
-  /** Instancia del modal para modificar domicilio */
-  modificarModelInstance!: Modal;
-
-  /** Instancia del modal para modificar registro de domicilio */
-  modificarRecordModelInstance!: Modal;
 
   /** Instancia del modal para el domicilio nuevo */
   modalDomiciliosInmuebleNuevoInstance!: Modal;
@@ -96,7 +87,7 @@ export class ModificacionGoceInmuebleComponent
   gridDomiciliosModificadosHeader: string[] = [];
 
   /** Encabezado de la tabla de domicilios nuevos */
-  mostrarGridNuevoHeader = MOSTRAR_GRID_NUEVO_HEADER
+  mostrarGridNuevoHeader = MOSTRAR_GRID_NUEVO_HEADER;
 
   /** Encabezado de la tabla de partes modificadas */
   modificacionPartesHeader = MODIFICACION_PARTES_HEADER;
@@ -121,13 +112,6 @@ export class ModificacionGoceInmuebleComponent
   /** Datos de los tipos de documento */
   cveTipoDoc: Catalogo[] = CVE_TIPO_DOC_DATA;
 
-  /** Referencia al modal de modificar */
-  @ViewChild('ModificarModel', { static: false }) modificarModel!: ElementRef;
-
-  /** Referencia al modal de modificar registro */
-  @ViewChild('ModificarRecordModel', { static: false })
-  modificarRecordModel!: ElementRef;
-
   /** Referencia al modal de domicilio nuevo */
   @ViewChild('modalDomiciliosInmuebleNuevo', { static: false })
   modalDomiciliosInmuebleNuevo!: ElementRef;
@@ -144,6 +128,33 @@ export class ModificacionGoceInmuebleComponent
 
   /** Objeto que maneja el modelo de modificación del goce del inmueble */
   modificacionGoceInmueble!: ModificacionGoceInmueble;
+
+  /**
+   * Declaración de la variable modificarRecordNotificacion de tipo Notificacion.
+   * Se utiliza para gestionar notificaciones relacionadas con la modificación de registros.
+   */
+  public modificarRecordNotificacion!: Notificacion;
+
+  /**
+   * Declaración de la variable modificarNotificacion de tipo Notificacion.
+   * Se usa para manejar notificaciones generales sobre modificaciones dentro del sistema.
+   */
+  public modificarNotificacion!: Notificacion;
+
+  /**
+   * Suscripción para obtener información sobre entidades federativas.
+   */
+  getEntidadFederativaSubscribe!: Subscription;
+
+  /**
+   * Suscripción para actualizar y gestionar la información modificada de domicilios en el grid.
+   */
+  getGridDomiciliosModificadoSubscription!: Subscription;
+
+  /**
+   * Suscripción para controlar la visualización de datos modificados en el grid.
+   */
+  getGridMostrarGridModificadoSubscription!: Subscription;
 
   constructor(
     private fb: FormBuilder,
@@ -168,44 +179,36 @@ export class ModificacionGoceInmuebleComponent
 
   /** Método para obtener las entidades federativas del servicio */
   getEntidadFederativa(): void {
-    this.AvisoModifyService.getEntidadFederativa().subscribe((resp) => {
-      this.entidadFederativa = Object.assign([], resp); // Asigna los datos al catálogo de entidades federativas
-    });
+    this.getEntidadFederativaSubscribe =
+      this.AvisoModifyService.getEntidadFederativa().subscribe((resp) => {
+        this.entidadFederativa = Object.assign([], resp); // Asigna los datos al catálogo de entidades federativas
+      });
   }
 
   /** Método para obtener los domicilios modificados del servicio */
   getGridDomiciliosModificados(): void {
-    this.AvisoModifyService.getGridDomiciliosModificados().subscribe(
-      (res: TableDataNgTable) => {
-        this.gridDomiciliosModificadosHeader = res.tableHeader; // Asigna los encabezados de la tabla
-        this.gridDomiciliosModificadosData = res.tableBody; // Asigna los datos de la tabla
-      }
-    );
+    this.getGridDomiciliosModificadoSubscription =
+      this.AvisoModifyService.getGridDomiciliosModificados().subscribe(
+        (res: TableDataNgTable) => {
+          this.gridDomiciliosModificadosHeader = res.tableHeader; // Asigna los encabezados de la tabla
+          this.gridDomiciliosModificadosData = res.tableBody; // Asigna los datos de la tabla
+        }
+      );
   }
 
   /** Método para obtener los datos de la tabla que se muestra para la modificación */
   getGridMostrarGridModificado(): void {
-    this.AvisoModifyService.getGridMostrarGridModificado().subscribe(
-      (resp: TableDataNgTable) => {
-        this.mostrarGridNuevoHeader = resp.tableHeader; // Asigna los encabezados para los domicilios nuevos
-        this.mostrarGridNuevoHeaderData = resp.tableBody; // Asigna los datos de la tabla para domicilios nuevos
-      }
-    );
+    this.getGridMostrarGridModificadoSubscription =
+      this.AvisoModifyService.getGridMostrarGridModificado().subscribe(
+        (resp: TableDataNgTable) => {
+          this.mostrarGridNuevoHeader = resp.tableHeader; // Asigna los encabezados para los domicilios nuevos
+          this.mostrarGridNuevoHeaderData = resp.tableBody; // Asigna los datos de la tabla para domicilios nuevos
+        }
+      );
   }
 
   /** Inicializa las instancias de los modales después de que la vista está completamente cargada */
   ngAfterViewInit(): void {
-    if (this.modificarModel?.nativeElement) {
-      this.modificarModelInstance = new Modal(
-        this.modificarModel.nativeElement
-      );
-    }
-    if (this.modificarRecordModel?.nativeElement) {
-      this.modificarRecordModelInstance = new Modal(
-        this.modificarRecordModel.nativeElement
-      );
-    }
-
     if (this.modalDomiciliosInmuebleNuevo?.nativeElement) {
       this.modalDomiciliosInmuebleNuevoInstance = new Modal(
         this.modalDomiciliosInmuebleNuevo.nativeElement
@@ -223,7 +226,7 @@ export class ModificacionGoceInmuebleComponent
         [
           Validators.required,
           Validators.maxLength(5),
-          Validators.pattern(CODIGO_POSTAL),
+          Validators.pattern(REGEX_POSTAL),
         ],
       ],
       cveEntidad: ['', Validators.required],
@@ -238,7 +241,7 @@ export class ModificacionGoceInmuebleComponent
         [
           Validators.required,
           Validators.maxLength(13),
-          Validators.pattern(RFC_PARTES_C),
+          Validators.pattern(REGEX_RFC),
         ],
       ],
       rfcPartesCons: [{ value: '', disabled: true }],
@@ -354,9 +357,53 @@ export class ModificacionGoceInmuebleComponent
 
   /** Abre el modal para modificar el domicilio */
   openModificarModel(): void {
-    if (this.modificarModelInstance) {
-      this.modificarModelInstance.show(); // Muestra el modal
-    }
+    this.modificarNotificacion = {
+      /**
+       * Tipo de notificación: alerta.
+       */
+      tipoNotificacion: 'alert',
+
+      /**
+       * Categoría de la notificación: peligro (danger).
+       */
+      categoria: 'success',
+
+      /**
+       * Modo de la notificación: acción requerida.
+       */
+      modo: 'action',
+
+      /**
+       * Título de la notificación (actualmente vacío).
+       */
+      titulo: '',
+
+      /**
+       * Mensaje de la notificación, indicando que No es posible presentar Alta y Modificación de domicilios en elmismo aviso de manera simultánea. Se eliminará la informacióncapturada ¿Desea cambiar a la opción modificar domicilio?.
+       */
+      mensaje:
+        'No es posible presentar Alta y Modificación de domicilios en elmismo aviso de manera simultánea. Se eliminará la informacióncapturada ¿Desea cambiar a la opción modificar domicilio?',
+
+      /**
+       * Indica si la notificación debe cerrarse automáticamente (false = no se cerrará).
+       */
+      cerrar: false,
+
+      /**
+       * Tiempo de espera antes de cerrar la notificación (2000 milisegundos).
+       */
+      tiempoDeEspera: 2000,
+
+      /**
+       * Texto del botón de aceptación en la notificación.
+       */
+      txtBtnAceptar: 'Aceptar',
+
+      /**
+       * Texto del botón de cancelación en la notificación (actualmente vacío).
+       */
+      txtBtnCancelar: '',
+    };
   }
 
   /** Abre el modal de domicilio nuevo */
@@ -376,28 +423,78 @@ export class ModificacionGoceInmuebleComponent
 
   /** Abre el modal para modificar el registro */
   openModificarRecordModel(): void {
-    if (this.modificarRecordModelInstance) {
-      this.modificarRecordModelInstance.show();
-    }
-  }
+    this.modificarRecordNotificacion = {
+      /**
+       * Tipo de notificación: alerta.
+       */
+      tipoNotificacion: 'alert',
 
-  /** Cierra el modal de modificación */
-  closeModificarModel(): void {
-    if (this.modificarModelInstance) {
-      this.modificarModelInstance.hide();
-    }
-  }
+      /**
+       * Categoría de la notificación: peligro (danger).
+       */
+      categoria: 'success',
 
-  /** Cierra el modal de modificación del registro */
-  closeModificarRecordModel(): void {
-    if (this.modificarRecordModelInstance) {
-      this.modificarRecordModelInstance.hide();
-    }
+      /**
+       * Modo de la notificación: acción requerida.
+       */
+      modo: 'action',
+
+      /**
+       * Título de la notificación (actualmente vacío).
+       */
+      titulo: '',
+
+      /**
+       * Mensaje de la notificación, indicando que Selecciona sólo un registro para modificar.
+       */
+      mensaje: 'Selecciona sólo un registro para modificar.',
+
+      /**
+       * Indica si la notificación debe cerrarse automáticamente (false = no se cerrará).
+       */
+      cerrar: false,
+
+      /**
+       * Tiempo de espera antes de cerrar la notificación (2000 milisegundos).
+       */
+      tiempoDeEspera: 2000,
+
+      /**
+       * Texto del botón de aceptación en la notificación.
+       */
+      txtBtnAceptar: 'Aceptar',
+
+      /**
+       * Texto del botón de cancelación en la notificación (actualmente vacío).
+       */
+      txtBtnCancelar: '',
+    };
   }
 
   /** Maneja la destrucción del componente y la limpieza de observables */
   ngOnDestroy(): void {
     this.destroy$.next(); // Envía una señal para destruir los observables
     this.destroy$.complete(); // Completa el Subject para evitar memory leaks
+
+    /**
+     * Cancela la suscripción a la información de entidades federativas si está activa.
+     */
+    if (this.getEntidadFederativaSubscribe) {
+      this.getEntidadFederativaSubscribe.unsubscribe();
+    }
+
+    /**
+     * Cancela la suscripción a la información de domicilios modificados si está activa.
+     */
+    if (this.getGridDomiciliosModificadoSubscription) {
+      this.getGridDomiciliosModificadoSubscription.unsubscribe();
+    }
+
+    /**
+     * Cancela la suscripción para mostrar datos modificados en el grid si está activa.
+     */
+    if (this.getGridMostrarGridModificadoSubscription) {
+      this.getGridMostrarGridModificadoSubscription.unsubscribe();
+    }
   }
 }

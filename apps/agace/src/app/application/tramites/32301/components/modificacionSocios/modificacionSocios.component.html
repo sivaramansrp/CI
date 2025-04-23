@@ -244,82 +244,24 @@
     </div>
   </div>
 
-  <div class="modal fade" tabindex="-1" #Raticar>
-    <div class="modal-dialog modal-sl">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title"></h5>
-        </div>
-        <div class="modal-body p-4">
-          <div class="row">
-            <div class="col-12 text-center">
-              Se han ratificado los registros seleccionados
-            </div>
-          </div>
+  @if (raticarNotificacion) {
+    <section>
+      <lib-notificaciones [notificacionInput]="raticarNotificacion">
+      </lib-notificaciones>
+    </section>
+    }
 
-          <div class="button-group d-flex justify-content-center">
-            <button
-              type="button"
-              class="btn btn-default"
-              (click)="closeRaticarModal()"
-            >
-              Aceptar
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+    @if (revocarNotificacion) {
+      <section>
+        <lib-notificaciones [notificacionInput]="revocarNotificacion">
+        </lib-notificaciones>
+      </section>
+      }
 
-  <div class="modal fade" tabindex="-1" #Revocar>
-    <div class="modal-dialog modal-sl">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title"></h5>
-        </div>
-        <div class="modal-body p-4">
-          <div class="row">
-            <div class="col-12 text-center">
-              Se han revocado los registros seleccionados
-            </div>
-          </div>
-
-          <div class="button-group d-flex justify-content-center">
-            <button
-              type="button"
-              class="btn btn-default"
-              (click)="closeRevocarModal()"
-            >
-              Aceptar
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="modal fade" tabindex="-1" #CorrectamenteModel>
-    <div class="modal-dialog modal-sl">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title"></h5>
-        </div>
-        <div class="modal-body p-4">
-          <div class="row">
-            <div class="col-12 text-center">Datos guardados correctamente.</div>
-          </div>
-
-          <div class="button-group d-flex justify-content-center">
-            <button
-              type="button"
-              class="btn btn-default"
-              (click)="closeCorrectamenteModel()"
-            >
-              Aceptar
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+      @if (correctamenteNotificacion) {
+        <section>
+          <lib-notificaciones [notificacionInput]="correctamenteNotificacion">
+          </lib-notificaciones>
+        </section>
+        }
 </div>

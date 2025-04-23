@@ -94,68 +94,19 @@
   </form>
 </div>
 
-<div class="modal fade" tabindex="-1" #ModificarModel>
-  <div class="modal-dialog modal-sl">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">&nbsp;</h5>
-      </div>
-      <div class="modal-body p-4">
-        <div class="row">
-          <div class="col-12 text-center p-4">
-            No es posible presentar Alta y Modificación de domicilios en el
-            mismo aviso de manera simultánea. Se eliminará la información
-            capturada ¿Desea cambiar a la opción modificar domicilio?
-          </div>
-        </div>
+@if (modificarNotificacion) {
+  <section>
+    <lib-notificaciones [notificacionInput]="modificarNotificacion">
+    </lib-notificaciones>
+  </section>
+  }
 
-        <div class="button-group d-flex justify-content-center">
-          <button
-            type="button"
-            class="btn btn-default"
-            (click)="closeModificarModel()"
-          >
-            Aceptar
-          </button>
-          <button
-            type="button"
-            class="btn btn-default ms-1"
-            (click)="closeModificarModel()"
-          >
-            Cancelar
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="modal fade" tabindex="-1" #ModificarRecordModel>
-  <div class="modal-dialog modal-sl">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">&nbsp;</h5>
-      </div>
-      <div class="modal-body p-4">
-        <div class="row">
-          <div class="col-12 text-center p-4">
-            Selecciona sólo un registro para modificar
-          </div>
-        </div>
-
-        <div class="button-group d-flex justify-content-center">
-          <button
-            type="button"
-            class="btn btn-default"
-            (click)="closeModificarRecordModel()"
-          >
-            Aceptar
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+@if (modificarRecordNotificacion) {
+  <section>
+    <lib-notificaciones [notificacionInput]="modificarRecordNotificacion">
+    </lib-notificaciones>
+  </section>
+  }
 
 <div class="modal fade" tabindex="-1" #modalDomiciliosInmuebleNuevo>
   <div class="modal-dialog modal-xl">

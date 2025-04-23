@@ -69,29 +69,9 @@
   </form>
 </div>
 
-<div class="modal fade" tabindex="-1" #CargaExtranjeroModel>
-  <div class="modal-dialog modal-sm">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title"></h5>
-      </div>
-      <div class="modal-body p-4">
-        <div class="row">
-          <div class="col-12 text-center">
-            El archivo debe contener almenos un registro.
-          </div>
-        </div>
-
-        <div class="button-group d-flex justify-content-center mt-5 me-md-3">
-          <button
-            type="button"
-            class="btn btn-primary"
-            (click)="closeCargaExtranjeroModel()"
-          >
-            Aceptar
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+@if (cargaExtranjeroNotificacion) {
+  <section>
+    <lib-notificaciones [notificacionInput]="cargaExtranjeroNotificacion">
+    </lib-notificaciones>
+  </section>
+  }
