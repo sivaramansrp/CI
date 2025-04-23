@@ -63,6 +63,13 @@ const ROUTES: Routes = [
         './tramites/240106/aviso-importacion-sustancias-quimicas.module'
       ).then((m) => m.AvisoImportacionSustanciasQuimicasModule),
     },
+    {
+      path: 'artefactos-pirotecnicos-ordinarios',
+      loadChildren: () =>
+        import(
+          './tramites/240119/artefactos-pirotecnicos-ordinarios.module'
+        ).then((m) => m.ArtefactosPirotecnicosOrdinariosModule),
+    },
 ];
 
 @NgModule({
