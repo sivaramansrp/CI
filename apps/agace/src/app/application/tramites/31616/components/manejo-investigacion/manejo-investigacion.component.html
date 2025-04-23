@@ -1,5 +1,5 @@
 <div class="container">
-    <form>
+    <form [formGroup]="manejo">
         <div class="row mt-2">
             <div class="col-md-12 text-container">
                 <p>Deben existir procedimientos documentados para reportar e investigar incidentes de seguridad en la
@@ -42,35 +42,35 @@
             </div>
 
             <div class="col-md-12 text-container mt-4">
-                <label>
+                <label for="relacionadosSeguridad">
                     Describa el procedimiento para denunciar o reportar anomalías y/o actividades sospechosas, así como
                     los contenga los mecanismos para informar de forma anónima los problemas relacionados con la
                     seguridad
                 </label>
-                <textarea class="custom-textarea" rows="6" cols="100"></textarea>
+                <textarea class="custom-textarea" rows="6" cols="100"  formControlName="relacionadosSeguridad" (change)="setValoresStore(manejo,'relacionadosSeguridad', 'setRelacionadosSeguridad')"></textarea>
             </div>
 
             <div class="col-md-12 text-container mt-4">
-                <label>
+                <label for="reportarIncidentes">
                     <span class="danger">*</span>Quién es el responsable de reportar los incidentes.
                 </label>
-                <textarea class="custom-textarea" rows="6" cols="100"></textarea>
+                <textarea class="custom-textarea" rows="6" cols="100" formControlName="reportarIncidentes" (change)="setValoresStore(manejo,'reportarIncidentes', 'setReportarIncidentes')"></textarea>
             </div>
 
             <div class="col-md-12 text-container mt-4">
-                <label>
+                <label for="actividadesSospechosas">
                     <span class="danger">*</span>Detalle cómo determina e identifica con qué autoridad comunicarse en
                     distintos supuestos o presunción de actividades sospechosas.
                 </label>
-                <textarea class="custom-textarea" rows="6" cols="100"></textarea>
+                <textarea class="custom-textarea" rows="6" cols="100" formControlName="actividadesSospechosas" (change)="setValoresStore(manejo,'actividadesSospechosas', 'setActividadesSospechosas')"></textarea>
             </div>
 
             <div class="col-md-12 text-container mt-4">
-                <label>
+                <label for="brevementeSonsiste">
                     <span class="danger">*</span>Mencione si lleva un registro de reporte de anomalías y/o actividades
                     sospechas y describa brevemente en que sonsiste.
                 </label>
-                <textarea class="custom-textarea" rows="6" cols="100"></textarea>
+                <textarea class="custom-textarea" rows="6" cols="100" formControlName="brevementeSonsiste" (change)="setValoresStore(manejo,'brevementeSonsiste', 'setBrevementeSonsiste')"></textarea>
             </div>
         </div>
 
@@ -122,25 +122,25 @@
             </div>
 
             <div class="col-md-12 text-container mt-4">
-                <label>
+                <label for="incidenteSeguridad">
                     <span class="danger">*</span>Describa el procedimiento documentado para iniciar una investigación en
                     caso de ocurrir algún incidente de seguridad:
                 </label>
-                <textarea class="custom-textarea" rows="6" cols="100"></textarea>
+                <textarea class="custom-textarea" rows="6" cols="100" formControlName="incidenteSeguridad" (change)="setValoresStore(manejo,'incidenteSeguridad', 'setIncidenteSeguridad')"></textarea>
             </div>
 
             <div class="col-md-12 text-container mt-4">
-                <label>
+                <label for="caboInvestigacion">
                     <span class="danger">*</span>Responsable de llevar a cabo la investigación.
                 </label>
-                <textarea class="custom-textarea" rows="6" cols="100"></textarea>
+                <textarea class="custom-textarea" rows="6" cols="100" formControlName="caboInvestigacion" (change)="setValoresStore(manejo,'caboInvestigacion', 'setCaboInvestigacion')"></textarea>
             </div>
 
             <div class="col-md-12 text-container mt-4">
-                <label>
+                <label for="operacionCaboInvestigacion">
                     <span class="danger">*</span>Documentación que integra el expendiente de la investigación de la operación de comercio exterior.
                 </label>
-                <textarea class="custom-textarea" rows="6" cols="100"></textarea>
+                <textarea class="custom-textarea" rows="6" cols="100" formControlName="operacionCaboInvestigacion" (change)="setValoresStore(manejo,'operacionCaboInvestigacion', 'setOperacionCaboInvestigacion')"></textarea>
             </div>
         </div>
     </form>
