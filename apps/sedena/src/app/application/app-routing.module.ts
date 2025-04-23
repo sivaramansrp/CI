@@ -14,7 +14,10 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import(
         './tramites/240118/permiso-extraordinario-para-la-exportacion-de-sustancias-quimicas.module'
-      ).then((m) => m.PermisoExtraordinarioParaLaExportacionDeSustanciasQuimicasModule),
+      ).then(
+        (m) =>
+          m.PermisoExtraordinarioParaLaExportacionDeSustanciasQuimicasModule
+      ),
   },
   {
     path: 'permiso-ordinario-importacion-armas-municiones',
@@ -22,6 +25,15 @@ const ROUTES: Routes = [
       import(
         './tramites/240101/permiso-ordinario-importacion-armas-municiones.module'
       ).then((m) => m.PermisoOrdinarioImportacionArmasMunicionesModule),
+  },
+  {
+    path: 'permiso-extraordinario-importacion-armamento-fisicas-morales',
+    loadChildren: () =>
+      import(
+        './tramites/240102/permiso-extraordinario-importacion-armamento-fisicas-morales.module'
+      ).then(
+        (m) => m.PermisoExtraordinarioImportacionArmamentoFisicasMoralesModule
+      ),
   },
   {
     path: 'sustancias-quimicas',
