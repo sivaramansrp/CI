@@ -8,6 +8,12 @@ export interface DatosSeleccionados extends TablaDatos {
 
   checked: boolean;
 }
+/*
+  * Interfaz que representa la estructura de datos de un fabricante.
+  * Contiene información detallada sobre el fabricante, incluyendo su nacionalidad,
+  * tipo de persona, RFC, CURP, nombre, dirección y otros datos relevantes.
+  */
+
 export interface FabricanteRowData {
   tercerosNacionalidad: string;
   tipoPersona: string;

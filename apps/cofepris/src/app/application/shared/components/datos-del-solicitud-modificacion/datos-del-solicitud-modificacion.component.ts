@@ -589,19 +589,41 @@ establecerDeshabilitado(): void {
         this.scianJson = resp;
       });
   }
-  loadEstadoData(): void {
-    this.establecimientoService
-      .getEstadodata()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((resp: Catalogo[]) => {
-        this.estado = resp;
-      });
+ /**
+ * @method loadEstadoData
+ * @description
+ * Este método carga los datos del catálogo de estados desde el servicio `EstablecimientoService`.
+ * Utiliza un observable para suscribirse a los datos y los almacena en la propiedad `estado`.
+ * La suscripción se gestiona con `takeUntil` para evitar fugas de memoria al destruir el componente.
+ * 
+ * @returns void
+ */
+loadEstadoData(): void {
+  this.establecimientoService
+    .getEstadodata()
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((resp: Catalogo[]) => {
+      this.estado = resp;
+    });
+}
+
+/**
+ * @method cerrarModal
+ * @description
+ * Este método cierra el modal activo utilizando la instancia del modal de Bootstrap.
+ * Verifica si la instancia del modal (`modalInstance`) está definida antes de intentar cerrarlo.
+ * 
+ * @returns void
+ */
+cerrarModal(): void {
+  if (this.modalInstance) {
+    this.modalInstance.hide();
   }
-  cerrarModal(): void {
-    if (this.modalInstance) {
-      this.modalInstance.hide();
-    }
-  }
+}
+  /**
+   * Actualiza el estado del formulario según los cambios en los controles.
+   * @param controlName Nombre del control que cambió.
+   */
   onContriloChange(controlName: string): void {
     const UPDATED_VALUE = {
       [controlName]: this.scianForm.get(controlName)?.value,
