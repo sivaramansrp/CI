@@ -13,3 +13,17 @@ export interface TablaDatos {
     tbodyData: string[];
   }
   
+  /**
+ * @interface ObraTablaDatos
+ * @description
+ * Representa la estructura de los datos de una tabla de obras.
+ * Incluye un array que almacena las columnas de la tabla.
+ */
+  export interface ObraTablaDatos {
+    /**
+   * @property {string[]} columns
+   * @description
+   * Contiene los nombres de las columnas de la tabla.
+   */
+    columns: string[];
+  }

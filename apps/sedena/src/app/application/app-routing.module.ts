@@ -23,6 +23,13 @@ const ROUTES: Routes = [
         './tramites/240107/aviso-importacion-sustancias-quimicas.module'
       ).then((m) => m.AvisoImportacionSustanciasQuimicasModule),
   },
+  {
+    path: 'permiso-ordinario',
+    loadChildren: () =>
+      import(
+        './tramites/240308/solicitude-de-artificios-pirotecnicos.module'
+      ).then((m) => m.SolicitudeDeArtificiosPirotecnicosModule),
+  }
 ];
 
 @NgModule({
