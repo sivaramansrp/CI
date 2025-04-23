@@ -1402,8 +1402,8 @@
     {
         "id": 201,
         "tramite": 31301,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "/agace/endoso-garantia/solicitud",
+        "linkDepartment": "/pago/endoso-garantia/solicitud",
         "department": "agace"
     },
     {
@@ -1801,8 +1801,8 @@
     {
         "id": 258,
         "tramite": 240107,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "/sedena/sustancias-quimicas/sustancias-quimicas",
+        "linkDepartment": "/pago/sustancias-quimicas/sustancias-quimicas",
         "department": "sedena"
     },
     {
@@ -1836,8 +1836,8 @@
     {
         "id": 263,
         "tramite": 240118,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "sedena/permiso-extraordinario-para-la-exportacion-de-sustancias-quimicas/contenedor-de-pasos",
+        "linkDepartment": "pago/permiso-extraordinario-para-la-exportacion-de-sustancias-quimicas/contenedor-de-pasos",
         "department": "sedena"
     },
     {
@@ -2015,6 +2015,13 @@
         "linkDashboard": "/cofepris/correccion-interna-de-la-cofepris/correccion-interna-de-la-cofepris",
         "linkDepartment": "/pago/correccion-interna-de-la-cofepris/correccion-interna-de-la-cofepris",
         "department": "cofepris"
+     },
+     {
+        "id": 288,
+        "tramite": 240108,
+        "linkDashboard": "/sedena/permiso-ordinario-importacion-material-explosivo/contenedor-de-pasos",
+        "linkDepartment": "/pago/permiso-ordinario-importacion-material-explosivo/contenedor-de-pasos",
+        "department": "sedena"
      }
 
     
