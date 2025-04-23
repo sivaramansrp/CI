@@ -6,15 +6,18 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Mercancias } from '../modelos/mercancias.model';
 import { Observable } from 'rxjs';
+import { OnDestroy } from '@angular/core';
 import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
 import { ScianData } from '../../../shared/models/datos-modificacion.model';
+import { Subject } from 'rxjs';
 import { TramiteAsociados } from '../../../shared/models/tramite-asociados.model';
+import { takeUntil } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })  
 
-export class ModificacionPermisoImportacionMedicamentosService {
+export class ModificacionPermisoImportacionMedicamentosService implements OnDestroy {
 
   /**
  * Lista de catálogos relacionados con los bancos.
@@ -28,6 +31,15 @@ export class ModificacionPermisoImportacionMedicamentosService {
    * 
    * @param {HttpClient} http - Cliente HTTP para realizar solicitudes.
    */
+
+  /**
+ * Notificador para gestionar la destrucción de suscripciones.
+ * 
+ * Esta propiedad es un `Subject` que se utiliza para emitir un evento de finalización
+ * y cancelar todas las suscripciones activas cuando el componente o servicio es destruido.
+ */
+private destroyNotifier$: Subject<void> = new Subject<void>();
+
   constructor(private http: HttpClient) {
     // No se necesita lógica de inicialización adicional.
     
@@ -123,11 +135,21 @@ export class ModificacionPermisoImportacionMedicamentosService {
         ): void {
           if (self && variable && url) {
             this.http
-              .get<RespuestaCatalogos>(`assets/json${url}`)
+              .get<RespuestaCatalogos>(`assets/json${url}`).pipe(takeUntil(this.destroyNotifier$))
               .subscribe((resp): void => {
                 (self[variable] as Catalogo[]) =
                   resp?.code === 200 && resp.data ? resp.data : [];
               });
           }
         }
+
+/**
+   * @description Destruye la suscripción cuando el componente es destruido.
+   * @method ngOnDestroy
+   * @returns {void}
+ */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  }
 }
