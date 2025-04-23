@@ -369,10 +369,7 @@ eliminarPedimento(borrar: boolean): void {
    */
   estado: Catalogo[] = [];
 
-  // /**
-  //  * Textos de alerta.
-  //  */
-  // TEXTOS = ALERT;
+ 
 
   /**
    * Clase de alerta.
@@ -477,7 +474,37 @@ eliminarPedimento(borrar: boolean): void {
   ngOnInit(): void {
     this.loadScian();
     this.loadEstadoData();
+    this.crearAgregarFormulario();
+    this.establecerDeshabilitado();
+    this.estadoDelServicio();
   
+  }
+  estadoDelServicio():void{
+    this.establecimientoService
+    .getJustificationData()
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((data: PropietarioTipoPersona[]) => {
+      this.genericOptions = data; // Bind the fetched data
+    });
+    this.domicilioEstablecimientoQuery
+    .select()
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((state) => {
+      this.domicilioEstablecimiento.patchValue(state, { emitEvent: false });
+    });
+    this.domicilioEstablecimientoQuery
+    .select()
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((state) => {
+      this.solicitudEstablecimientoForm.patchValue(state, { emitEvent: false });
+    });
+  }
+  /**
+   * Método de limpieza del componente.
+   * Se utiliza para liberar recursos y evitar fugas de memoria.
+   */
+  crearAgregarFormulario():void{
+
     this.domicilioEstablecimiento = this.fb.group({
       ideGenerica1: ['', Validators.required],
       observaciones: [{ value: '', disabled: true }, [Validators.required, Validators.maxLength(2000)]],
@@ -526,25 +553,6 @@ eliminarPedimento(borrar: boolean): void {
       fechaCaducidad: [''],
       
     });
-   this.establecerDeshabilitado();
-    this.establecimientoService
-      .getJustificationData()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((data: PropietarioTipoPersona[]) => {
-        this.genericOptions = data; // Bind the fetched data
-      });
-      this.domicilioEstablecimientoQuery
-      .select()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((state) => {
-        this.domicilioEstablecimiento.patchValue(state, { emitEvent: false });
-      });
-      this.domicilioEstablecimientoQuery
-      .select()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((state) => {
-        this.solicitudEstablecimientoForm.patchValue(state, { emitEvent: false });
-      });
   }
 /**
  * Deshabilita el campo "observaciones" del formulario de domicilio
@@ -606,7 +614,7 @@ establecerDeshabilitado(): void {
   /**
    * Carga los datos del catálogo de justificación.
    */
-  onControlChange(controlName: string): void {
+  enCambioDeControl(controlName: string): void {
     
     const UPDATED_VALUE = {
       [controlName]: this.domicilioEstablecimiento.get(controlName)?.value,
@@ -618,7 +626,7 @@ establecerDeshabilitado(): void {
    * Actualiza el estado del formulario según los cambios en los controles.
    * @param controlName Nombre del control que cambió.
    */
-  onControlChangeForm(controlName: string): void {
+  enControlCambioFormulario(controlName: string): void {
   
     const UPDATED_VALUE = {
       [controlName]: this.solicitudEstablecimientoForm.get(controlName)?.value,
@@ -708,8 +716,6 @@ establecerDeshabilitado(): void {
   
       // Add the new data to the table
       this.mercanciasTablaDatos.push(MERCANCIA);
-  
-  console.log(this.mercanciasTablaDatos);
       // Reset the form
       this.formMercancias.reset();
       this.cerrarModalMercancía();
