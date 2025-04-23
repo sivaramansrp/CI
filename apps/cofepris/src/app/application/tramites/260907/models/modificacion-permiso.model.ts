@@ -46,18 +46,7 @@ export interface DatosGenerales {
     descripcionScian: string;
   }
   
-  export interface SolicitudForm {
-    ideGenerica1: string;
-    justificacionId: string;
-    codigoPostal: string;
-    estado: string;
-    municipioOAlcaldia: string;
-    localidad: string;
-    colonias: string;
-    calle: string;
-    lada: string;
-    telefono: string;
-  }
+ 
   
   export interface SolicitudEstablecimientoForm {
     noLicenciaSanitaria: string;

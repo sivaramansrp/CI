@@ -216,15 +216,8 @@ eliminarPedimento(borrar: boolean): void {
    */
    public modal: string = 'modal';
 
-   /**
-    * Formulario principal.
-    */
-   form!: FormGroup;
+  
  
-   /**
-    * Formulario de solicitud.
-    */
-   solicitudForm!: FormGroup;
 
   /**
    * Botones de acción para gestionar listas de países en la primera sección.
@@ -399,10 +392,7 @@ eliminarPedimento(borrar: boolean): void {
    * Enum para la selección de tablas.
    */
   tipoSeleccionTabla = TablaSeleccion;
-  /**
-   * Formulario de domicilio.
-   */
-  domicilio!: FormGroup;
+  
   /**
    * Formulario de establecimiento.
    */
@@ -439,10 +429,6 @@ eliminarPedimento(borrar: boolean): void {
     }
   }
 
-  /**
-   * Formulario para gestionar el representante legal.
-   */
-  representanteLegal!: FormGroup;
   /**
    * Texto de los manifiestos.
    */
@@ -491,7 +477,6 @@ eliminarPedimento(borrar: boolean): void {
   ngOnInit(): void {
     this.loadScian();
     this.loadEstadoData();
-    this.crearFormulario();
   
     this.domicilioEstablecimiento = this.fb.group({
       ideGenerica1: ['', Validators.required],
@@ -611,6 +596,13 @@ establecerDeshabilitado(): void {
       this.modalInstance.hide();
     }
   }
+  onContriloChange(controlName: string): void {
+    const UPDATED_VALUE = {
+      [controlName]: this.scianForm.get(controlName)?.value,
+    };
+    
+    this.domicilioEstablecimientoStore.update(UPDATED_VALUE);
+  }
   /**
    * Carga los datos del catálogo de justificación.
    */
@@ -717,7 +709,7 @@ establecerDeshabilitado(): void {
       // Add the new data to the table
       this.mercanciasTablaDatos.push(MERCANCIA);
   
-  
+  console.log(this.mercanciasTablaDatos);
       // Reset the form
       this.formMercancias.reset();
       this.cerrarModalMercancía();
@@ -762,35 +754,9 @@ establecerDeshabilitado(): void {
     this.destroy$.next();
     this.destroy$.complete();
   }
-  /**
-   * Habilita todos los controles del formulario si están deshabilitados.
-   * @returns {void}
-   */
-  public toggleFormControls(): void {
-    Object.keys(this.solicitudForm.controls).forEach((controlName) => {
-      const CONTROL = this.solicitudForm.get(controlName);
-      if (CONTROL?.disabled) {
-        CONTROL.enable();
-      }
-    });
-  }
+
   /**
    * Método para crear el formulario.
    */
-  crearFormulario(): void {
-    this.solicitudForm = this.fb.group({
-      ideGenerica1: ['', [Validators.required]],
-      justificacionId: ['', [Validators.required]],
-      codigoPostal: ['', [Validators.required]],
-      estado: ['', [Validators.required]],
-      municipioOAlcaldia: ['', [Validators.required]],
-      localidad: [''],
-      colonias: [''],
-      calle: ['', [Validators.required]],
-      lada: [''],
-      telefono: ['', [Validators.required]],
-    });
-
- 
-  }
+  
 }

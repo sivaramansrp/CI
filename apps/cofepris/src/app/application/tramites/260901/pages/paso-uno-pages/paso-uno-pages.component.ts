@@ -148,7 +148,6 @@ export class PasoUnoPagesComponent implements AfterViewInit {
         const CHILD_DATA: CompleteForm = {
           domicilioEstablecimiento: component.domicilioEstablecimiento?.value as DomicilioEstablecimiento,
           scianForm: component.scianForm?.value as ScianForm,
-          solicitudForm: component.solicitudForm?.value as SolicitudForm,
           solicitudEstablecimientoForm: component.solicitudEstablecimientoForm?.value as SolicitudEstablecimientoForm,
           formMercancias: component.formMercancias?.value as FormMercancias,
         };
