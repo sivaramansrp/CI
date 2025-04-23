@@ -1682,8 +1682,8 @@
   {
     "id": 241,
     "tramite": 280101,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/inah/permiso-de-exportacion/permiso",
+    "linkDepartment": "/pago/permiso-de-exportacion/permiso",
     "department": "inah"
   },
   {
