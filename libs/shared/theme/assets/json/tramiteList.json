@@ -1843,8 +1843,8 @@
     {
         "id": 264,
         "tramite": 240119,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "/sedena/artefactos-pirotecnicos-ordinarios/contenedor-de-pasos",
+        "linkDepartment": "/pago/artefactos-pirotecnicos-ordinarios/contenedor-de-pasos",
         "department": "sedena"
     },
     {
