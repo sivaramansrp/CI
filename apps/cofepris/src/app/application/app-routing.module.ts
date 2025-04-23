@@ -370,6 +370,14 @@ const ROUTES: Routes = [
       import('./tramites/260201/importacion-psicotropicos-poretorno.module').then(
         (m) => m.ImportacionPsicotropicosPoretornoModule),
 },
+
+{
+  path: 'importacion-remedios-herbolarios',
+  loadChildren: () =>
+  import('./tramites/260219/importacion-destinados-donacio.module').then(
+    (m) => m.ImportacionRemediosHerbolariosModule),
+},
+
 {
   path: 'permiso-transformacion-maquila',
   loadChildren: () =>
