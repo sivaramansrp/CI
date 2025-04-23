@@ -62,7 +62,14 @@ const ROUTES: Routes = [
       import(
         './tramites/240106/aviso-importacion-sustancias-quimicas.module'
       ).then((m) => m.AvisoImportacionSustanciasQuimicasModule),
-    },
+  },
+  {
+    path: 'importacion-de-material-explosivo',
+    loadChildren: () =>
+      import(
+        './tramites/240111/importacion-de-material-explosivo.module'
+      ).then((m) => m.ImportacionDeMaterialExplosivoModule),
+  },
     {
       path: 'artefactos-pirotecnicos-ordinarios',
       loadChildren: () =>

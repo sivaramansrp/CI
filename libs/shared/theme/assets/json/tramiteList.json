@@ -1801,8 +1801,8 @@
   {
     "id": 258,
     "tramite": 240111,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/sedena/importacion-de-material-explosivo/ordinario-para",
+    "linkDepartment": "/pago/importacion-de-material-explosivo/ordinario-para",
     "department": "sedena"
   },
   {
