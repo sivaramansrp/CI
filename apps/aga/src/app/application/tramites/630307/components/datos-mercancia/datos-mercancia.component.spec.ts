@@ -48,7 +48,7 @@ describe('DatosMercanciaComponent', () => {
   it('should initialize the form with default values', () => {
     component.inicializarFormulario();
     expect(component.datosMercancia.value).toEqual({
-      // Add expected default values for the form controls here
+     // Agregue aquí los valores predeterminados esperados para los controles de formulario
     });
   });
 
