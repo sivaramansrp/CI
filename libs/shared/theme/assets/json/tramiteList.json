@@ -4032,7 +4032,14 @@
       "linkDashboard": "/cofepris/correccion-interna-de-la-cofepris/correccion-interna-de-la-cofepris",
       "linkDepartment": "/pago/correccion-interna-de-la-cofepris/correccion-interna-de-la-cofepris",
       "department": "cofepris"
-   }
+   },
+   {
+    "id": 288,
+    "tramite": 319,
+    "linkDashboard": "/aga/operaciones-de-comercio/exterior",
+    "linkDepartment": "/pago/operaciones-de-comercio/exterior",
+    "department": "agace"
+}
 
   
 ]
