@@ -30,13 +30,19 @@
           </div>
         </div>
         <ng-titulo titulo="Pais"></ng-titulo>
+        <label class="form-label">País de origen*</label>
         <crosslist
           [fechas]="selectRangoDias"
-          [showSearchInput1]="true"
-          [showSearchInput2]="true"
-          [botonField]="botonField"
+          [label]="paisDeOrigenLabel"
+          [botones]="paisDeOrigenBotons"
         ></crosslist>
-        
+        <br/>
+        <label class="form-label">Lungar de procedencia en el terretorio nacional*</label>
+        <crosslist
+          [fechas]="selectEntidades"
+          [label]="entidadesLabel"
+          [botones]="entidadesBotons"
+        ></crosslist>
       </ng-container>
     </div>
   </form>

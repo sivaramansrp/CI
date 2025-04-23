@@ -30,4 +30,8 @@ export class PhytosanitaryReexportacionService {
     return this.http.get<RespuestaCatalogos>('assets/json/230202/pais.json');
   }
 
+  getEntidades() {
+    return this.http.get<RespuestaCatalogos>('assets/json/230202/entidades.json');
+  }
+
 }

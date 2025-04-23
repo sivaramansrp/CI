@@ -1,17 +1,39 @@
-import { Component } from '@angular/core';
+import { Component, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Catalogo, CatalogoSelectComponent, CrosslistComponent, TituloComponent } from '@libs/shared/data-access-user/src';
-import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  Catalogo,
+  CatalogoSelectComponent,
+  CrosslistComponent,
+  CrossListLable,
+  TituloComponent,
+} from '@libs/shared/data-access-user/src';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { map, merge, Subject, Subscription, takeUntil } from 'rxjs';
-import { Solicitud230202State, Tramite230202Store } from '../../estados/tramite230202.store';
+import {
+  Solicitud230202State,
+  Tramite230202Store,
+} from '../../estados/tramite230202.store';
 import { Tramite230202Query } from '../../estados/tramite230202.query';
 import { PhytosanitaryReexportacionService } from '../../services/phytosanitary-reexportacion.service';
-import { SELECCION } from '../../constantes/importador-exportador.enum';
 
 @Component({
   selector: 'app-datos-de-la-solicitud',
   standalone: true,
-  imports: [CommonModule, TituloComponent, FormsModule, ReactiveFormsModule, CatalogoSelectComponent, CrosslistComponent],
+  imports: [
+    CommonModule,
+    TituloComponent,
+    FormsModule,
+    ReactiveFormsModule,
+    CatalogoSelectComponent,
+    CrosslistComponent,
+  ],
   templateUrl: './datos-de-la-solicitud.component.html',
   styleUrl: './datos-de-la-solicitud.component.scss',
 })
@@ -38,35 +60,26 @@ export class DatosDeLaSolicitudComponent {
   numeroDeCertificado!: Catalogo[];
   aduana!: Catalogo[];
   pais!: Catalogo[];
-  selectRangoDias: [] = [];
+  entidades!: Catalogo[];
+  selectRangoDias: string[] = [];
+  selectEntidades: string[] = [];
   fechasSeleccionadas: Catalogo[] = [];
   fechasDatos: Catalogo[] = [];
   fecha: FormControl = new FormControl('');
   fechaSeleccionada: FormControl = new FormControl('');
-  getPaisSubscription!: Subscription;
-
-  botonField = [
-    {
-      btnNombre: 'Agregar ',
-      class: 'btn-primary',
-      funcion: () => this.agregar(''),
-    },
-    {
-      btnNombre: 'Agregar todo',
-      class: 'btn-default',
-      funcion: () => this.agregar(SELECCION.SELECT_ALL),
-    },
-    {
-      btnNombre: 'Remover',
-      class: 'btn-danger',
-      funcion: () => this.quitar(''),
-    },
-    {
-      btnNombre: 'Remover todo',
-      class: 'btn-default',
-      funcion: () => this.quitar(SELECCION.SELECT_ALL),
-    },
-  ];
+  // getPaisSubscription!: Subscription;
+  @ViewChild(CrosslistComponent) crosslistComponent!: CrosslistComponent;
+  @ViewChildren(CrosslistComponent) crossList!: QueryList<CrosslistComponent>;
+  public paisDeOrigenBotons = this.getCrossListBtn();
+  public entidadesBotons = this.getCrossListBtn();
+  public paisDeOrigenLabel: CrossListLable = {
+    tituluDeLaIzquierda: 'País de origen:',
+    derecha: 'País(es) seleccionado(s)*:',
+  };
+  public entidadesLabel: CrossListLable = {
+    tituluDeLaIzquierda: 'Entidades disponsibles:',
+    derecha: 'Entidades seleccionadas*:',
+  };
 
   constructor(
     private phytosanitaryReexportacionService: PhytosanitaryReexportacionService,
@@ -81,13 +94,11 @@ export class DatosDeLaSolicitudComponent {
   ngOnInit(): void {
     this.inicializaCatalogos();
     this.inicializarFormulario();
-    // this.getPais();
 
     this.query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
-
           this.solicitudState = seccionState;
         })
       )
@@ -104,10 +115,14 @@ export class DatosDeLaSolicitudComponent {
   inicializarFormulario(): void {
     this.solicitudForm = this.fb.group({
       reexportacionForm: this.fb.group({
-        numeroDeCertificado: [this.solicitudState?.numeroDeCertificado, [Validators.required]],
+        numeroDeCertificado: [
+          this.solicitudState?.numeroDeCertificado,
+          [Validators.required],
+        ],
         aduana: [this.solicitudState?.aduana, [Validators.required]],
+        pais: [this.solicitudState?.pais, [Validators.required]],
+        entidades: [this.solicitudState?.entidades, [Validators.required]],
       }),
-      // Otros grupos de formulario pueden ir aquí
     });
   }
 
@@ -115,11 +130,13 @@ export class DatosDeLaSolicitudComponent {
    * Inicializa los catálogos necesarios para el componente.
    */
   inicializaCatalogos(): void {
-    const NUMERODECERTIFICADO$ = this.phytosanitaryReexportacionService.getNumeroDeCertificado().pipe(
-      map((resp) => {
-        this.numeroDeCertificado = resp.data;
-      })
-    );
+    const NUMERODECERTIFICADO$ = this.phytosanitaryReexportacionService
+      .getNumeroDeCertificado()
+      .pipe(
+        map((resp) => {
+          this.numeroDeCertificado = resp.data;
+        })
+      );
 
     const ADUANA$ = this.phytosanitaryReexportacionService.getAduana().pipe(
       map((resp) => {
@@ -130,20 +147,30 @@ export class DatosDeLaSolicitudComponent {
     const PAIS$ = this.phytosanitaryReexportacionService.getPais().pipe(
       map((resp) => {
         this.pais = resp.data;
+        this.selectRangoDias = this.pais.map(
+            (pais: Catalogo) => pais.descripcion
+          );
       })
     );
 
-    merge(
-      NUMERODECERTIFICADO$,
-      ADUANA$,
-      PAIS$
-    )
+    const ENTIDADES$ = this.phytosanitaryReexportacionService.getEntidades().pipe(
+      map((resp) => {
+        this.entidades = resp.data;
+        this.selectEntidades = this.entidades.map(
+            (entidades: Catalogo) => entidades.descripcion
+          );
+      })
+    );
+    
+    merge(NUMERODECERTIFICADO$, ADUANA$, PAIS$, ENTIDADES$)
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe();
   }
 
   numeroDeCertificadoSeleccion(): void {
-    const NUMERODECERTIFICADO = this.solicitudForm.get('reexportacionForm.numeroDeCertificado')?.value;
+    const NUMERODECERTIFICADO = this.solicitudForm.get(
+      'reexportacionForm.numeroDeCertificado'
+    )?.value;
     this.store.setNumeroDeCertificado(NUMERODECERTIFICADO);
   }
 
@@ -157,55 +184,20 @@ export class DatosDeLaSolicitudComponent {
     this.store.setPais(PAIS);
   }
 
-  // getPais(): void {
-  //   this.getPaisSubscription = this.phytosanitaryReexportacionService
-  //     .getPais()
-  //     .subscribe((resp) => {
-  //       if (resp.code === 200) {
-  //         const RESPONSE = resp.data;
-  //         this.store.setPais(RESPONSE);
-  //       }
-  //     });
-  // }
-
-  agregar(tipo: string) {
-    if (tipo === SELECCION.SELECT_ALL) {
-      this.fechasSeleccionadas = [...this.selectRangoDias];
-      this.fechasDatos = [];
-    } else {
-      const FECHA_VALOR = this.fecha.value;
-      const SELECTEDFECHA = this.fechasDatos.find(
-        (fecha) => fecha.id === FECHA_VALOR
-      );
-      if (SELECTEDFECHA) {
-        this.fechasSeleccionadas.push(SELECTEDFECHA);
-        this.fechasDatos = this.fechasDatos.filter(
-          (fecha) => fecha.id !== FECHA_VALOR
-        );
-      }
-    }
-    this.store.setFechasSeleccionadas(this.fechasSeleccionadas);
+  entidadesSeleccion(): void {
+    const ENTIDADES = this.solicitudForm.get('reexportacionForm.entidades')?.value;
+    this.store.setEntidades(ENTIDADES);
   }
 
-  quitar(tipo: string = '') {
-    if (tipo === SELECCION.SELECT_ALL) {
-      this.fechasDatos = [...this.fechasSeleccionadas];
-      this.fechasSeleccionadas = [];
-    } else {
-      const FECHA_VALOR = this.fechaSeleccionada.value;
-      const SELECTEDFECHA = this.fechasSeleccionadas.find(
-        (fecha) => fecha.id === FECHA_VALOR
-      );
-      if (SELECTEDFECHA) {
-        this.fechasDatos.push(SELECTEDFECHA);
-        this.fechasSeleccionadas = this.fechasSeleccionadas.filter(
-          (fecha) => fecha.id !== FECHA_VALOR
-        );
-      }
-    }
-    this.store.setFechasSeleccionadas(this.fechasSeleccionadas);
+  public getCrossListBtn() {
+    return [
+      { btnNombre: 'Agregar todos', class: 'btn-default', funcion: ():void => this.crossList.toArray()[0].agregar('t') },
+      { btnNombre: 'Agregar selección', class: 'btn-primary', funcion: ():void => this.crossList.toArray()[0].agregar('') },
+      { btnNombre: 'Restar selección', class: 'btn-primary', funcion: ():void => this.crossList.toArray()[0].quitar('') },
+      { btnNombre: 'Restar todos', class: 'btn-default', funcion: ():void => this.crossList.toArray()[0].quitar('t') },
+    ];
   }
-  
+
   /**
    * Método que se ejecuta al destruir el componente.
    * Se utiliza para limpiar las suscripciones.
@@ -214,5 +206,4 @@ export class DatosDeLaSolicitudComponent {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
-  
 }

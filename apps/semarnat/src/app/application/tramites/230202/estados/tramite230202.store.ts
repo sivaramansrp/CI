@@ -28,7 +28,7 @@ export interface Solicitud230202State {
   aduana: Catalogo[] | null;
   fechasSeleccionadas: Catalogo[] | null;
   pais: Catalogo[] | null;
-  
+  entidades: Catalogo[] | null;
   // /**
   //  * Uso específico de la mercancía.
   //  */
@@ -165,6 +165,7 @@ export function createInitialState(): Solicitud230202State {
     aduana: null,
     fechasSeleccionadas: null,
     pais: null,
+    entidades: null,
     // usoEspecifico: '',
     // showTabla: true,
     // tipoDeMercancia: '',
@@ -242,6 +243,13 @@ export class Tramite230202Store extends Store<Solicitud230202State> {
     this.update((state) => ({
       ...state,
       pais,
+    }));
+  }
+
+  public setEntidades (entidades: Catalogo[]) {
+    this.update((state) => ({
+      ...state,
+      entidades,
     }));
   }
 
