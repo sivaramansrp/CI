@@ -1,15 +1,18 @@
 import { Catalogo, RespuestaCatalogos } from '@libs/shared/data-access-user/src';
+import { Injectable, OnDestroy } from '@angular/core';
+import { Observable, Subject, takeUntil } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { InformaciondeProcedencia } from '../enums/informacion-de-procedencia.enum';
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
 import { TramiteAsociados } from '../../../shared/models/tramite-asociados.model';
 
 @Injectable({
   providedIn: 'root'
 })
-export class SolicitudModificacionPermisoInternacionService {
-
+export class SolicitudModificacionPermisoInternacionService implements OnDestroy {
+ /**
+   * Subject utilizado para manejar la destrucción de suscripciones.
+   */
+  private destroyNotifier$: Subject<void> = new Subject();
  /**
    * Lista de bancos disponibles para el pago de derechos.
    */
@@ -55,7 +58,7 @@ export class SolicitudModificacionPermisoInternacionService {
  ): void {
    if (self && variable && url) {
      this.http
-       .get<RespuestaCatalogos>(`assets/json${url}`)
+       .get<RespuestaCatalogos>(`assets/json${url}`).pipe(takeUntil(this.destroyNotifier$))
        .subscribe((resp): void => {
          (self[variable] as Catalogo[]) =
            resp?.code === 200 && resp.data ? resp.data : [];
@@ -72,4 +75,13 @@ export class SolicitudModificacionPermisoInternacionService {
      'assets/json/261402/tramite-asociados.json'
    );
  }
+
+   /**
+   * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
+   * Completa el Subject para evitar fugas de memoria.
+   */
+   ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  }
 }
