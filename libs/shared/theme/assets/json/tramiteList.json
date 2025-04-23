@@ -1276,8 +1276,8 @@
     {
         "id": 183,
         "tramite": 260918,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "/cofepris/modificacion-permiso-lab/modificacion-permiso-lab",
+        "linkDepartment": "/pago/modificacion-permiso-lab/modificacion-permiso-lab",
         "department": "cofepris"
     },
     {
