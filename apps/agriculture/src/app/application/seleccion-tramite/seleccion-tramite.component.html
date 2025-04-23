@@ -5,6 +5,8 @@
       <table class="table table-responsive table-striped table-hover">
         <thead>
           <tr>
+            <th>#</th>
+            <th>departmento</th>
             <th>Tipo tr&aacute;mite</th>
             <th>URL</th>
           </tr>
@@ -52,14 +54,17 @@
             <td>220202</td>
             <td>
               <a routerLink="/pago/certificado-fitosanitario/agriculture"
-                >{{ ruta }}/pago/certificado-fitosanitario/agriculture</a>
+                >{{ ruta }}/pago/certificado-fitosanitario/agriculture</a
+              >
             </td>
           </tr>
 
           <tr>
             <td>220703</td>
             <td>
-              <a routerLink="/pago/acuicola-fisica/acuicola">{{ ruta }}/pago/acuicola-fisica/acuicola</a>
+              <a routerLink="/pago/acuicola-fisica/acuicola"
+                >{{ ruta }}/pago/acuicola-fisica/acuicola</a
+              >
             </td>
           </tr>
           <tr>
@@ -71,12 +76,12 @@
             </td>
           </tr>
           <tr>
+            <td>220402</td>
             <td>
-              220402
+              <a routerLink="/pago/pantallas-captura/solicitud"
+                >{{ ruta }}/pantallas-captura/solicitud</a
+              >
             </td>
-            <td>
-              <a routerLink="/pago/pantallas-captura/solicitud">{{ruta}}/pantallas-captura/solicitud</a>
-              </td>
           </tr>
           <tr>
             <td>220702</td>
@@ -89,45 +94,62 @@
           <tr>
             <td>220701</td>
             <td>
-              <a routerLink="/pago/inspeccion-fisica/inspeccion-fisica-zoosanitario"
-                >{{ ruta }}/pago/inspeccion-fisica/inspeccion-fisica-zoosanitario</a
+              <a
+                routerLink="/pago/inspeccion-fisica/inspeccion-fisica-zoosanitario"
+                >{{
+                  ruta
+                }}/pago/inspeccion-fisica/inspeccion-fisica-zoosanitario</a
               >
             </td>
           </tr>
           <tr>
+            <td>220102</td>
             <td>
-              220102
+              <a
+                routerLink="/pago/peticion-requisitos-fitosanitarios/invocar-modulo"
+                >{{ ruta }}/peticion-requisitos-fitosanitarios/invocar-modulo</a
+              >
             </td>
-            <td>
-              <a routerLink="/pago/peticion-requisitos-fitosanitarios/invocar-modulo">{{ruta}}/peticion-requisitos-fitosanitarios/invocar-modulo</a>
-              </td>
           </tr>
           <tr>
-              <td>
-                220403
-              </td>
-              <td>
-                <a routerLink="/pago/certificado-exportacion/acuicola">{{ruta}}/pago/certificado-exportacion/acuicola</a>
-              </td>
+            <td>220403</td>
+            <td>
+              <a routerLink="/pago/certificado-exportacion/acuicola"
+                >{{ ruta }}/pago/certificado-exportacion/acuicola</a
+              >
+            </td>
           </tr>
           <tr>
+            <td>221602</td>
             <td>
-              221602
+              <a routerLink="/pago/fitosanitario/solicitante"
+                >{{ ruta }}/pago/fitosanitario/solicitante</a
+              >
             </td>
+          </tr>
+          <tr>
+            <td>221603</td>
             <td>
-              <a routerLink="/pago/fitosanitario/solicitante">{{ruta}}/pago/fitosanitario/solicitante</a>
+              <a routerLink="/pago/sanidad/solicitante"
+                >{{ ruta }}/pago/sanidad/solicitante</a
+              >
             </td>
-        </tr>
-        <tr>
-          <td>
-            221603
-          </td>
-          <td>
-            <a routerLink="/pago/sanidad/solicitante">{{ruta}}/pago/sanidad/solicitante</a>
-          </td>
-      </tr>
+          </tr>
+
+          @for(item of tramiteData; track $index) { @if(item?.linkDepartment) {
+          <tr>
+            <td>{{ $index + 1 }}</td>
+            <td>{{ item?.department }}</td>
+            <td>{{ item?.tramite }}</td>
+            <td>
+              <a [routerLink]="item.linkDepartment"
+                >{{ ruta }}{{ item.linkDepartment }}</a
+              >
+            </td>
+          </tr>
+          } }
         </tbody>
-        </table>
+      </table>
     </div>
   </div>
 </div>
