@@ -4,6 +4,7 @@ import {
   CatalogoSelectComponent,
   CatalogosSelect,
   ConfiguracionColumna,
+  InputCheckComponent,
   InputFecha,
   TablaDinamicaComponent,
   TablaSeleccion,
@@ -57,6 +58,7 @@ const TERCEROS_TEXTO_DE_ALERTA =
     AlertComponent,
     TablaDinamicaComponent,
     InputFechaComponent,
+    InputCheckComponent,
   ],
   templateUrl: './certificado-de-origen.component.html',
   styleUrl: './certificado-de-origen.component.css',
@@ -365,6 +367,15 @@ optionsTipoFactura!: Catalogo[];
    */
   manejarClic(row: unknown) {
     this.esFormulario = true;
+  }
+  
+  /**
+   * Establece la selección del aviso de funcionamiento basado en el evento.
+   * @param evento Evento del checkbox.
+   */
+  establecerSiCasilla(evento: Event): void {
+    const VALOR = (evento.target as HTMLInputElement).checked;
+    this.store.setEstablecerSiCasilla(VALOR);
   }
   /**
    * Valida el formulario del destinatario.
@@ -683,6 +694,7 @@ optionsTipoFactura!: Catalogo[];
         ],
         fechaFinal: [this.solicitudState?.fechaFinal, [Validators.required]],
         archivo: [this.solicitudState?.archivo, [Validators.required]],
+        siCasilla: [this.solicitudState?.siCasilla, [Validators.required]],
       }),
     });
     this.mercanciaForm = this.fb.group({

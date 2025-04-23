@@ -22,34 +22,6 @@
     </div>
     <div class="row">
       <div class="col-md-4 mb-3">
-        <label>Presica*:</label>
-        <div class="col-md-12 align-text-area">
-          <textarea
-            cols="80"
-            rows="5"
-            formControlName="presica"
-            (change)="setValoresStore(validacionForm, 'presica', 'setPresica')"
-          ></textarea>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-4 mb-3">
-        <label>Presenta:</label>
-        <div class="col-md-12 align-text-area">
-          <textarea
-            cols="80"
-            rows="5"
-            formControlName="presenta"
-            (change)="
-              setValoresStore(validacionForm, 'presenta', 'setPresenta')
-            "
-          ></textarea>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-4 mb-3">
         <app-catalogo-select
           [catalogo]="optionsIdioma"
           [label]="'Idioma'"

@@ -56,6 +56,7 @@ export interface Solicitud110207State {
   numeroFactura: string;
   justificacion: string;
   casillaVerificacion: string;
+  siCasilla: boolean;
 }
 /**
  * Crea el estado inicial para la solicitud del trámite 110207.
@@ -108,6 +109,7 @@ export function createInitialState(): Solicitud110207State {
     numeroFactura: '',
     justificacion: '',
     casillaVerificacion: '',
+    siCasilla: false,
   };
 }
 
@@ -118,6 +120,12 @@ export function createInitialState(): Solicitud110207State {
 export class Tramite110207Store extends Store<Solicitud110207State> {
   constructor() {
     super(createInitialState());
+  }
+  setEstablecerSiCasilla(siCasilla: boolean): void {
+    this.update((state) => ({
+      ...state,
+      siCasilla,
+    }));
   }
   /**
    * Establece el catálogo de tratados.

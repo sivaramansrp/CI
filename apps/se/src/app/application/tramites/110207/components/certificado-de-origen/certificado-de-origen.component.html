@@ -113,6 +113,10 @@
             Buscar mercancías
           </button>
         </div>
+        <ng-titulo *ngIf="!cargarArchivo" titulo="¿Necesita el anexo de japón?" />
+        <div class="form-check mt-3">
+          <lib-input-check [id]="'siCasilla'" [label]="'Sí'" [required]="false" formControlName="siCasilla" (change)="establecerSiCasilla($event)"></lib-input-check>
+        </div>
         <div class="row mt-5">
           <label>Mercancías disponibles</label>
         </div>
