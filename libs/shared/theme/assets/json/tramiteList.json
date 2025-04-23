@@ -1570,15 +1570,15 @@
     {
         "id": 225,
         "tramite": 260513,
-        "linkDashboard": "cofepris/muestras-de-toxicos/plaguicidas",
-        "linkDepartment": "pago/muestras-de-toxicos/plaguicidas",
+        "linkDashboard": "/cofepris/muestras-de-toxicos/plaguicidas",
+        "linkDepartment": "/pago/muestras-de-toxicos/plaguicidas",
         "department": "cofepris"
     },
     {
         "id": 226,
         "tramite": 260515,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "/cofepris/permit-substances/solicitud",
+        "linkDepartment": "/pago/permit-substances/solicitud",
         "department": "cofepris"
     },
     {
