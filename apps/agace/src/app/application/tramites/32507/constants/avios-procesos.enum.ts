@@ -1,8 +1,8 @@
-import { AvisoTabla, AvisoTablaDatos } from "../models/aviso-traslado.model";
+import { AvisoTabla, AvisoTablaDatos } from '../models/aviso-traslado.model';
 
 /**
  * Constante que define los pasos del wizard en el trámite.
- * 
+ *
  * Esta constante contiene un array de objetos que representan los pasos del wizard,
  * incluyendo su índice, título, y estado (activo o completado).
  */
@@ -26,7 +26,10 @@ export const PASOS = [
     completado: false,
   },
 ];
-
+/**
+ * @constant TEXTOS_REQUISITOS
+ * @description Contiene las instrucciones y mensajes relacionados con los requisitos del trámite.
+ */
 export const TEXTOS_REQUISITOS = {
   INSTRUCCIONES: `<h6>Instrucciones</h6>
       <p>- La solicitud ha quedado registrada con el número temporal 67922457.</p>
@@ -34,9 +37,10 @@ export const TEXTOS_REQUISITOS = {
       <p>- Un folio oficial le sera asignado a la solicitud al momento en que ésta sea firmada.</p>`,
 };
 
-
-
-
+/**
+ * @constant TEXTOS
+ * @description Contiene textos genéricos utilizados en el trámite, como instrucciones y mensajes de carga de archivos.
+ */
 export const TEXTOS = {
   INSTRUCCIONES: `
   <p>- El archivo no debe exceder los 1000 registros. Para descargar plantilla del archivo de excel de click</p>`,
@@ -45,11 +49,15 @@ export const TEXTOS = {
   CARGA_DE_ARCHIVO_DE_TEXTO_EXITOSO: `El formato del archivo es correcto. Se enviará un correo de notificación con el resultado.`,
 };
 
+/**
+ * @constant ALPHANUMERIC_PATTERN
+ * @description Expresión regular para validar cadenas alfanuméricas.
+ */
 export const ALPHANUMERIC_PATTERN = '^[a-zA-Z0-9]*$';
 
 /**
  * Configuración para la fecha de ingreso.
- * 
+ *
  * Define las propiedades de la fecha de ingreso, como el nombre de la etiqueta, si es requerida y si está habilitada.
  */
 export const FECHA_INGRESO = {
@@ -57,9 +65,6 @@ export const FECHA_INGRESO = {
   required: true,
   habilitado: true,
 };
-
-
-
 
 /**
  * @constant RADIO_OPCIONS
@@ -70,24 +75,29 @@ export const RADIO_OPCIONS = [
   { label: 'No', value: 'No' },
 ];
 
-
-
-export const REGEX_ALFANUMERICO_CON_ESPACIOS_REEMPLAZAR = /[^a-zA-Z0-9 ]/g;
-
-
-
-
+/**
+ * @constant ENCABEZADAS_CONSTANT
+ * @description Configuración inicial para las columnas de una tabla.
+ * Contiene un encabezado vacío, una clave vacía y un orden inicial de 0.
+ */
 export const ENCABEZADAS_CONSTANT = {
   encabezado: '',
   clave: (ele: AvisoTablaDatos) => '',
   orden: 0,
 };
 
-
+/**
+ * @constant TABLA_DE_DATOS_AVISO
+ * @description Configuración de la tabla de datos utilizada en el trámite.
+ * Contiene las definiciones de las columnas (encabezados) y los datos que se mostrarán en la tabla.
+ */
 export const TABLA_DE_DATOS_AVISO = {
   encabezadas: [
-    { encabezado: 'ID de transacción de VUCEM', clave: (ele: AvisoTabla) => ele.idTransaccionVUCEM
-      , orden: 1 },
+    {
+      encabezado: 'ID de transacción de VUCEM',
+      clave: (ele: AvisoTabla) => ele.idTransaccionVUCEM,
+      orden: 1,
+    },
     {
       encabezado: 'Cantidad',
       clave: (ele: AvisoTabla) => ele.cantidad,
@@ -109,5 +119,5 @@ export const TABLA_DE_DATOS_AVISO = {
       orden: 5,
     },
   ],
-  datos: []
+  datos: [],
 };

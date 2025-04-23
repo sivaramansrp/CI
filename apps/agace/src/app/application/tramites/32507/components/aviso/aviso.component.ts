@@ -6,6 +6,7 @@ import {
   REGEX_NUMEROS_USD,
   REGEX_REEMPLAZAR,
   REGEX_SOLO_NUMEROS,
+  REGEX_ALFANUMERICO_CON_ESPACIOS_REEMPLAZAR,
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
@@ -20,7 +21,7 @@ import {
  
 } from '../../models/aviso-traslado.model';
 import {
-  REGEX_ALFANUMERICO_CON_ESPACIOS_REEMPLAZAR,
+  
   RADIO_OPCIONS,
   TABLA_DE_DATOS_AVISO,
 } from '../../constants/avios-procesos.enum';
