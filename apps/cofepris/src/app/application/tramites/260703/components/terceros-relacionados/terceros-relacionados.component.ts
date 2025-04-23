@@ -1,5 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ConfiguracionColumna, TablaSeleccion } from '@libs/shared/data-access-user/src';
+import {
+  ConfiguracionColumna,
+  TablaSeleccion,
+} from '@libs/shared/data-access-user/src';
 import { Destinatario, Fabricante } from '../../model/solicitud-permiso.model';
 import { Subject, takeUntil } from 'rxjs';
 import { SolicitudPermisoService } from '../../services/solicitud-permiso.service';
@@ -11,7 +14,7 @@ import { SolicitudPermisoService } from '../../services/solicitud-permiso.servic
 @Component({
   selector: 'app-terceros-relacionados',
   templateUrl: './terceros-relacionados.component.html',
-  styleUrl: './terceros-relacionados.component.css',
+  styleUrl: './terceros-relacionados.component.scss',
 })
 export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
   /**
@@ -77,7 +80,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       clave: (item: Destinatario) => item.estado,
       orden: 13,
     },
-    { encabezado: 'Estado', clave: (item: Destinatario) => '---', orden: 14 },
+    { encabezado: 'Estado', clave: () => '---', orden: 14 },
     {
       encabezado: 'Código Postal',
       clave: (item: Destinatario) => item.codigoPostal,
@@ -149,7 +152,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       clave: (item: Fabricante) => item.estado,
       orden: 13,
     },
-    { encabezado: 'Estado', clave: (item: Fabricante) => '---', orden: 14 },
+    { encabezado: 'Estado', clave: () => '---', orden: 14 },
     {
       encabezado: 'Código Postal',
       clave: (item: Fabricante) => item.codigoPostal,
