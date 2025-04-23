@@ -20,6 +20,8 @@ export interface Catalogo {
   id: number;
   descripcion: string;
   clave?: string;
+  relacionadaUmtId?: number;
+  relacionadaAcotacionId?: number;
 }
 
 export interface CatalogoDocumento extends Catalogo {

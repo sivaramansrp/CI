@@ -104,10 +104,110 @@ export interface DatosDelSolicituteSeccionState {
    */
   propietarioData: PropietarioModel[];
 
+
   /**
    * Lista de datos del establecimiento.
    */
   establecimientoData: DatosDeLaProductoModel[];
+
+  /**
+   * Identificador genérico.
+   */
+  ideGenerica1: string;
+
+  /**
+   * Observaciones adicionales.
+   */
+  observaciones: string;
+
+  /**
+   * RFC del responsable sanitario del establecimiento.
+   */
+  establecimientoRFCResponsableSanitario: string;
+
+  /**
+   * Razón social del establecimiento.
+   */
+  establecimientoRazonSocial: string;
+
+  /**
+   * Estado del establecimiento.
+   */
+  establecimientoEstados: string;
+
+  /**
+   * Descripción del municipio.
+   */
+  descripcionMunicipio: string;
+
+  /**
+   * Localidad del establecimiento.
+   */
+  localidad: string;
+
+  /**
+   * Colonia del establecimiento.
+   */
+  colonias: string;
+
+  /**
+   * Calle del establecimiento.
+   */
+  calle: string;
+
+  /**
+   * Lada del establecimiento.
+   */
+  lada: string;
+
+  /**
+   * Teléfono del establecimiento.
+   */
+  telefono: string;
+
+  /**
+   * Código SCIAN del establecimiento.
+   */
+  scian: string;
+
+  /**
+   * Colonias del establecimiento.
+   */
+  establishomentoColonias: string;
+
+  /**
+   * Número de licencia sanitaria.
+   */
+  noLicenciaSanitaria: string;
+
+  /**
+   * Checkbox de aviso.
+   */
+  avisoCheckbox: string;
+
+  /**
+   * Licencia sanitaria.
+   */
+  licenciaSanitaria: string;
+
+  /**
+   * Régimen del establecimiento.
+   */
+  regimen: string;
+
+  /**
+   * Aduanas de entrada.
+   */
+  aduanasEntradas: string;
+
+  /**
+   * Checkbox de AIFA.
+   */
+  aifaCheckbox: string;
+/**
+ * * Descripción del SCIAN.
+ */
+  descripcionScian: string;
 }
 
 /**
@@ -136,6 +236,27 @@ export function createInitialState(): DatosDelSolicituteSeccionState {
     informacionConfidencialRadio: '',
     propietarioData: [],
     establecimientoData: [],
+     scian: '',
+          descripcionScian: '',
+     ideGenerica1: '',
+          observaciones: '',
+          establecimientoRFCResponsableSanitario: '',
+          establecimientoRazonSocial:'',
+          establishomentoColonias:'',
+          establecimientoEstados :'',
+          descripcionMunicipio: '',
+          localidad :'',
+          colonias:'',
+          calle: '',
+          lada: '',
+          telefono:'',
+       
+          noLicenciaSanitaria: '',
+          avisoCheckbox: '',
+          licenciaSanitaria: '',
+          regimen:'',
+          aduanasEntradas: '',
+          aifaCheckbox: '',
   };
 }
 

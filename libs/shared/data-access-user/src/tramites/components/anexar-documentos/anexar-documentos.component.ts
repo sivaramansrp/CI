@@ -11,11 +11,17 @@ import {
   SimpleChanges,
   ViewChildren
 } from '@angular/core';
+import {
+  DPI,
+  MB,
+  PDF
+} from '../../constantes/constantes';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, Subscription, map, takeUntil } from 'rxjs';
+ 
 import { ToastrModule, ToastrService } from 'ngx-toastr';
 
-import { Catalogo, CatalogoDocumento } from '../../../core/models/shared/catalogos.model';
+import { CatalogoDocumento } from '../../../core/models/shared/catalogos.model';
 import { CommonModule } from '@angular/common';
 import { DocumentosCargados } from '../../../core/models/shared/components.model';
 import { InicioSesionService } from '../../../core/services/shared/inicio-sesion/inicio-sesion.service';
@@ -28,7 +34,6 @@ import {
 } from '../preview-documento/preview-documento.component';
 import { SubirDocumentoService } from '../../../core/services/shared/subir-documento/subir-documento.service';
 
-import { DPI, MB, PDF } from '../../constantes/constantes';
 import { DocumentosState, DocumentosStore } from '../../../core/estados/documentos.store';
 import { DocumentosQuery } from '../../../core/queries/documentos.query';
 
@@ -42,6 +47,7 @@ interface DocumentosParaCargar {
   mensaje: string;
   estatus: string;
 }
+
 
 @Component({
   selector: 'anexar-documentos',

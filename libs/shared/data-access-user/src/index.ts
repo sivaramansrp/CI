@@ -1,3 +1,5 @@
+
+
 export { AcusesYResolucionesFolioDelTramiteBusquedaComponent } from './tramites/components/acuses-y-resoluciones-folio-del-tramite-busqueda/acuses-y-resoluciones-folio-del-tramite-busqueda.component';
 export { AcusesYResolucionesFolioDelTramiteDetallesComponent } from './tramites/components/acuses-y-resoluciones-folio-del-tramite-detalles/acuses-y-resoluciones-folio-del-tramite-detalles.component';
 export { ASIGNACION_REGISTRO } from './tramites/constantes/120404/entidad.enum';
@@ -17,9 +19,10 @@ export { TituloComponent } from './tramites/components/titulo/titulo.component';
 export { TramiteFolioQueries } from './core/queries/tramiteFolio.queries';
 export { TramiteFolioState, TramiteFolioStore } from './core/estados/tramiteFolio.store'
 export { ValidacionesFormularioService } from './core/services/shared/validaciones-formulario/validaciones-formulario.service';
+export {AVISO} from './tramites/constantes/aviso-privacidad.enum';
+export {TramiteDetails} from './core/models/tramiteDetails'
 export {TramiteStore} from './core/estados/tramite.store';
 export * from './core/ambientes';
-export * from './core/enums/constantes-alertas.enum';
 export * from './core/enums/constantes-alertas.enum';
 export * from './core/enums/forma-render.enum';
 export * from './core/enums/forma-validators.enum';
@@ -29,16 +32,14 @@ export * from './core/enums/tipoPersona.enum';
 export * from './core/estados/seccion.store';
 export * from './core/estados/terceros.store';
 export * from './core/models/260303/certificados-licencias-permisos.model';
-export * from './core/models/260303/certificados-licencias-permisos.model';
-export * from './core/models/260701/certificados-licencias.model';
 export * from './core/models/260701/certificados-licencias.model';
 export * from './core/models/301/servicios-pantallas.model';
 export * from './core/models/303/secciones.model';
+export * from './core/models/31602/comercio-exterior.model';
 export * from './core/models/shared/agregar-trasnporte.model'
 export * from './core/models/shared/catalogos.model';
 export * from './core/models/shared/components.model';
 export * from './core/models/shared/configuracion-columna.model';
-export * from './core/models/shared/datos-generales.model';
 export * from './core/models/shared/datos-generales.model';
 export * from './core/models/shared/forms-model';
 export * from './core/models/usuario/perfilUsuario.model';
@@ -62,8 +63,6 @@ export * from './core/services/120602/empresa-frontera-solicitud.enum';
 export * from './core/services/130118/pexim/pexim.service';
 export * from './core/services/220471/servicios-pantallas.service';
 export * from './core/services/231001/administrar-residuos.service';
-export * from './core/services/231001/administrar-residuos.service';
-export * from './core/services/231001/materia-prima-formservice.service';
 export * from './core/services/231001/materia-prima-formservice.service';
 export * from './core/services/shared/catalogos/catalogos.service';
 export * from './core/services/shared/documento/documento.service';
@@ -74,7 +73,6 @@ export * from './core/services/shared/inicio-sesion/inicio-sesion.service';
 export * from './core/services/shared/modal-aviso/modal-aviso.service';
 export * from './core/services/shared/solicitante/solicitante.service';
 export * from './core/services/shared/subir-documento/subir-documento.service';
-export * from './core/services/shared/tramite-folio/tramite-folio.service';
 export * from './core/services/shared/tramite-folio/tramite-folio.service';
 export * from './core/services/shared/validaciones-formulario/validaciones-formulario.service';
 export * from './core/services/shared/wizard/wizard.service';
@@ -98,12 +96,11 @@ export * from './tramites/components/input-check/input-check.component';
 export * from './tramites/components/input-fecha/input-fecha.component';
 export * from './tramites/components/input-hora/input-hora.component';
 export * from './tramites/components/input-radio/input-radio.component';
+export * from './tramites/components/modal-confirmar/modal-confirmar.component';
 export * from './tramites/components/nav/nav.component';
-export * from './tramites/components/notificaciones/notificaciones.component';
 export * from './tramites/components/notificaciones/notificaciones.component';
 export * from './tramites/components/representante-fiscal/representante-fiscal.component';
 export * from './tramites/components/requerimiento-informacion/requerimiento-informacion.component';
-export * from './tramites/components/select-catalogos/select-catalogos.component';
 export * from './tramites/components/select-catalogos/select-catalogos.component';
 export * from './tramites/components/select-paises/select-paises.component';
 export * from './tramites/components/solicitante/solicitante.component';
@@ -118,7 +115,6 @@ export * from './tramites/constantes/110210/domicilio-tabla.enum';
 export * from './tramites/constantes/120501/licitaciones-disponibles-table-data.enum';
 export * from './tramites/constantes/120601/datos-generales-socios-tabledata.enum';
 export * from './tramites/constantes/120602/datos-empresa.enum';
-export * from './tramites/constantes/120602/datos-empresa.enum';
 export * from './tramites/constantes/aviso-privacidad.enum';
 export * from './tramites/constantes/constantes';
 export * from './tramites/constantes/regex.constants';
@@ -126,10 +122,8 @@ export * from './tramites/constantes/registro-como-empresa.enum';
 export * from './tramites/constantes/seccionesTramites';
 export * from './tramites/constantes/solicitante-constantes.enum';
 export * from './tramites/directives/solo-numeros/solo-numeros.directive'
-export * from './tramites/directives/solo-numeros/solo-numeros.directive'
 export * from './tramites/directives/Uppercase/uppercase.directive';
 export * from './tramites/pages/acuse-page/acuse-page.component';
 export * from './tramites/pages/firma-page/firma-page.component';
 export * from './tramites/pipes/booleanoSiNo/booleano-si-no.pipe';
 export * from './tramites/shared.module';
-export * from './tramites/components/modal-confirmar/modal-confirmar.component';

@@ -1,5 +1,5 @@
 /* eslint-disable sort-imports */
-import { ToastrModule, provideToastr } from 'ngx-toastr';
+import { ToastrModule, ToastrService, provideToastr } from 'ngx-toastr';
 
 import { AkitaNgDevtools } from '@datorama/akita-ngdevtools';
 import { AppComponent } from './app.component';
@@ -15,6 +15,7 @@ import { provideHttpClient } from '@angular/common/http';
 import { SolicitanteService } from '@ng-mf/data-access-user';
 import { TituloComponent } from "@ng-mf/data-access-user";
 import { SeleccionTramiteComponent } from './seleccion-tramite/seleccion-tramite.component';
+
 
 @NgModule({
   declarations: [
@@ -39,8 +40,8 @@ import { SeleccionTramiteComponent } from './seleccion-tramite/seleccion-tramite
       positionClass: 'toast-top-right',
     }),
     provideHttpClient(),
-    SolicitanteService
-  ],
+    SolicitanteService,
+    ToastrService ],
   bootstrap: [AppComponent],
 })
 export class AppSenerModule {}

@@ -9,6 +9,11 @@ const ROUTES: Routes = [
     component: SeleccionTramiteComponent
   },
   {
+    path:'producto-petrolifero',
+    loadChildren: () => import('./tramites/130108/importacion-producto-petrolifero.module').then(m => m.ImportacionProductoPetroliferoModule)
+  },
+  {
+    
     path: 'hidrocarburos-de-petroleo',
     loadChildren: () =>
       import('./tramites/140112/retiro-importacion-exportacion-permiso.module').then(
@@ -22,6 +27,34 @@ const ROUTES: Routes = [
         (m) => m.RenunciaDeDerechosDeModule
       ),
   },
+  {
+    path: 'permiso-de-hidrocarburos',
+    loadChildren: () =>
+      import('./tramites/130121/permiso-de-hidrocarburos.module').then(
+        (m) => m.PermisoDeHidrocarburosModule
+      )
+  },
+  {
+    path: 'exportacion-hidrocarburos',
+    loadChildren: () =>
+      import('./tramites/130204/exportacion-hidrocarburos.module').then(
+        (m) => m.ExportacionHidrocarburosModule
+      ),
+  },
+  {
+    path: 'autorizacion-de-rayos-x',
+    loadChildren: () =>
+      import('./tramites/300105/autorizacion-de-rayos-x.module').then(
+        (m) => m.AutorizacionDeRayosXModule
+      ),
+  },
+  {
+    path: 'pexim',
+    loadChildren: () =>
+      import('./tramites/140216/suspension-permiso.module').then(
+        (m) => m.SuspensionPermisoModule
+      )
+  }
 ];
 
 @NgModule({

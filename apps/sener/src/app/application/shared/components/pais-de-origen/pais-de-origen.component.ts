@@ -1,0 +1,235 @@
+/**
+ * compo doc
+ * @fileoverview Componente encargado de gestionar la selección de países de procedencia en un trámite.
+ * @module PaisDeOrigenComponent
+ */
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
+import {
+  FormGroup,
+  ReactiveFormsModule,
+} from '@angular/forms';
+import { Catalogo } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
+import { CommonModule } from '@angular/common';
+import { CrosslistComponent } from '@libs/shared/data-access-user/src/tramites/components/crosslist/crosslist.component';
+import { TituloComponent } from '@libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
+
+ 
+/**
+ * @componente
+ * @nombre PaisDeOrigenComponent
+ * @descripcion Componente para la gestión de la selección de países de procedencia.
+ *
+ * @selector app-pais-procendencia
+ * @autonomo true
+ * @plantillaUrl ./pais-procendencia.component.html
+ * @estiloUrl ./pais-procendencia.component.scss
+ * @importaciones [TituloComponent, CrosslistComponent, CommonModule, ReactiveFormsModule, CatalogoSelectComponent]
+ */
+@Component({
+  selector: 'app-pais-de-origen',
+  standalone: true,
+  imports: [
+    TituloComponent,
+    CrosslistComponent,
+    CommonModule,
+    ReactiveFormsModule,
+    CatalogoSelectComponent,
+  ],
+  templateUrl: './pais-de-origen.component.html',
+  styleUrl: './pais-de-origen.component.scss',
+})
+export class PaisDeOrigenComponent implements OnChanges {
+  /**
+   * @propiedad
+   * @nombre crosslistComponent
+   * @descripcion Referencia al componente CrosslistComponent.
+   * @tipo {CrosslistComponent}
+   */
+  @ViewChild(CrosslistComponent) crosslistComponent!: CrosslistComponent;
+
+  /**
+ * @evento
+ * @nombre eventoAlHacerClicEnTodasLasCiudades
+ * @descripcion Evento que se emite cuando se hace clic en el botón para obtener todas las ciudades.
+ * @tipo {EventEmitter<void>}
+ */
+  @Output() eventoAlHacerClicEnTodasLasCiudades = new EventEmitter<void>();
+
+  /**
+ * @metodo
+ * @nombre onObtenerCiudades
+ * @descripcion Método que emite el evento `eventoAlHacerClicEnTodasLasCiudades` para notificar que se ha solicitado obtener todas las ciudades.
+ * @returns {void}
+ */
+  onObtenerCiudades(): void {
+    this.eventoAlHacerClicEnTodasLasCiudades.emit();
+  }
+ 
+  /**
+   * @propiedad
+   * @nombre paisForm
+   * @descripcion Formulario reactivo para la selección de países.
+   * @tipo {FormGroup}
+   */
+  @Input() paisForm!: FormGroup;
+ 
+  /**
+   * @propiedad
+   * @nombre elementosDeBloque
+   * @descripcion Lista de países de procedencia.
+   * @tipo {Catalogo[]}
+   */
+  @Input() elementosDeBloque: Catalogo[] = [];
+ 
+  /**
+   * @propiedad
+   * @nombre paisesPorBloque
+   * @descripcion Lista de países agrupados por bloques.
+   * @tipo {Catalogo[]}
+   */
+  @Input() paisesPorBloque: Catalogo[] = [];
+ 
+  /**
+   * @propiedad
+   * @nombre selectRangoDias
+   * @descripcion Rango de días seleccionables.
+   * @tipo {string[]}
+   */
+  @Input() selectRangoDias: string[] = [];
+
+  /**
+ * @property
+ * @name titulo
+ * @description
+ * Título que se muestra en el componente. Este valor puede ser configurado desde el componente padre
+ * para personalizar el encabezado o título del componente.
+ * 
+ * @type {string}
+ * @default ''
+ * 
+ * @example
+ * <app-pais-de-origen [titulo]="'Selecciona un país de origen'"></app-pais-de-origen>
+ */
+  @Input() titulo: string = '';
+ 
+  /**
+   * @evento
+   * @nombre bloqueCambiar
+   * @descripcion Evento emitido cuando se cambia el bloque seleccionado.
+   * @tipo {EventEmitter<number>}
+   */
+  @Output() bloqueCambiar = new EventEmitter<number>();
+ 
+  /**
+   * @evento
+   * @nombre setValoresStoreEvent
+   * @descripcion Evento emitido para establecer valores en el store.
+   * @tipo {EventEmitter<{ form: FormGroup; campo: string; metodoNombre: string }>}
+   */
+  @Output() setValoresStoreEvent = new EventEmitter<{ form: FormGroup; campo: string}>();
+ 
+  /**
+   * @propiedad
+   * @nombre campoDeBotones
+   * @descripcion Configuración de los botones para la gestión de la selección de países.
+   * @tipo {Array<{ btnNombre: string; class: string; funcion: () => void }>}
+   */
+  campoDeBotones = [
+    {
+      /**
+       * @propiedad
+       * @nombre btnNombre
+       * @descripcion Nombre del botón para agregar todos los elementos.
+       * @tipo {string}
+       */
+      btnNombre: 'Agregar',
+      /**
+       * @propiedad
+       * @nombre class
+       * @descripcion Clase CSS del botón.
+       * @tipo {string}
+       */
+      class: 'btn-primary',
+      style: 'margin-top: 8rem; !important',
+      /**
+       * @metodo
+       * @nombre funcion
+       * @descripcion Función para agregar todos los elementos.
+       */
+      funcion: (): void => {
+        if (this.crosslistComponent) {
+          this.crosslistComponent.agregar('');
+        }
+      },
+    },
+    {
+      btnNombre: 'Agregar todos',
+      class: 'btn-primary',
+      funcion: (): void => {
+        if (this.crosslistComponent) {
+          this.crosslistComponent.agregar('t');
+        }
+      },
+    },
+    {
+      btnNombre: 'Eliminar',
+      class: 'btn-default',
+      funcion: (): void => {
+        if (this.crosslistComponent) {
+          this.crosslistComponent.agregar('');
+        }
+      },
+    },
+    {
+      btnNombre: 'Eliminar todos',
+      class: 'btn-danger',
+      funcion: (): void => {
+        if (this.crosslistComponent) {
+          this.crosslistComponent.quitar('');
+        }
+      },
+    },
+  ];
+ 
+  /**
+   * @metodo
+   * @nombre ngOnChanges
+   * @descripcion Método que se ejecuta cuando hay cambios en las propiedades de entrada del componente.
+   * @param {SimpleChanges} changes - Objeto que contiene los cambios en las propiedades de entrada.
+   */
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes) {
+      /**
+       * @descripcion Actualiza la propiedad selectRangoDias con las descripciones de los países agrupados por bloques.
+       */
+      this.selectRangoDias = this.paisesPorBloque.map(
+        (pais: Catalogo) => pais.descripcion
+      );
+    }
+  }
+ 
+  /**
+   * @metodo
+   * @nombre enCambioDeBloque
+   * @descripcion Maneja el cambio de bloque seleccionado.
+   * @param {Event} event - El evento de cambio.
+   */
+  enCambioDeBloque(event: Event): void {
+    const SELECTED_BLOQUE = Number((event.target as HTMLInputElement).value);
+    this.bloqueCambiar.emit(SELECTED_BLOQUE);
+  }
+ 
+  /**
+   * @metodo
+   * @nombre setValoresStore
+   * @descripcion Establece valores en el store.
+   * @param {FormGroup} form - El formulario reactivo.
+   * @param {string} campo - El campo a actualizar.
+   * @param {string} metodoNombre - El nombre del método.
+   */
+  setValoresStore(form: FormGroup, campo: string): void {
+    this.setValoresStoreEvent.emit({ form, campo });
+  }
+}
+ 

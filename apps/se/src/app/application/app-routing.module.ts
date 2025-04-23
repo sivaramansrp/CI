@@ -309,7 +309,7 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/110216/inicialmente-certificado-origen.module').then(
         (m) => m.InicialmenteCertificadoOrigenModule
-      ),
+      )
   },
   {
     path: 'validador-certificado-cam',
@@ -350,6 +350,13 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'importacion-definitiva',
+    loadChildren: () =>
+      import('./tramites/130103/importacion-definitiva.module').then(
+        (m) => m.ImportacionDefinitivaModule
+      ),
+  },
+  {
     path: 'solicitud-de-cancelacion',
     loadChildren: () =>
       import('./tramites/140101/solicitud-de-cancelacion.module').then(
@@ -360,6 +367,13 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/110211/validar-certificado.module').then(
         (m) => m.ValidarCertificadoModule
+      ),
+  },
+  {
+    path: 'solicitud-importacion-ambulancia',
+    loadChildren: () =>
+      import('./tramites/130116/solicitud-importacion-ambulancia.module').then(
+        (m) => m.SolicitudImportacionAmbulanciaModule
       ),
   },
   {
@@ -377,11 +391,24 @@ const ROUTES: Routes = [
         ),
   },
   {
+    path: 'importacion',
+      loadChildren: () =>
+        import('./tramites/130113/importacion-equipo-anticontaminante.module').then(
+          (m) => m.ImportacionEquipoAnticontaminanteModule
+        ),
+  },
+  {
     path: 'importacion-de',
     loadChildren: () =>
       import('./tramites/130109/vehiculos-usados-adaptados.module').then(
         (m) => m.VehiculosUsadosAdaptadosModule
       ),
+  },
+    {
+    path: 'expedicion-certificado-cupos',
+    loadChildren: () =>
+      import('./tramites/120204/expedicion-certificado-cupos.module').then(
+        (m) => m.ExpedicionCertificadoModule),
   },
   {
     path: 'exportar-diamantes',
@@ -389,7 +416,22 @@ const ROUTES: Routes = [
       import('./tramites/130203/exportación-de-diamantes-en-bruto.module').then(
         (m) => m.ExportaciónDeDiamantesEnBrutoModule
       )
-  }
+  },
+  {
+    path: 'importacion-otros-vehiculos-usados',
+    loadChildren: () =>
+      import('./tramites/130104/importacion-otros-vehiculos-usados.module').then(
+        (m) => m.ImportacionOtrosVehiculosUsadosModule
+      )
+    },
+  {
+    path: 'modalidad-ampliacion',
+    loadChildren: () =>
+      import('./tramites/80206/modalidad-ampliacion.module').then(
+        (m) => m.ModalidadAmpliacionModule
+      ),
+  },
+  
 ];
 
 @NgModule({
