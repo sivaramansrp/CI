@@ -2,6 +2,16 @@ name: CI/CD - Microfront Dashboard
 
 on:
   workflow_dispatch:
+    inputs:
+      microFrontends:
+        description: 'Lista de microfrontends a desplegar (separados por comas, dejar en blanco para detección automática)'
+        required: false
+        type: string
+      deployAll:
+        description: 'Desplegar todos los microfrontends sin importar cambios'
+        required: false
+        type: boolean
+        default: false
   push:
     branches: [ develop ]
     paths:
@@ -10,12 +20,101 @@ on:
       - 'package*.json'
       - 'Dockerfile'
       - 'docker/**'
+      - 'k8s/**'
 
 jobs:
+  detect-changes:
+    runs-on: ubuntu-latest
+    outputs:
+      affected: ${{ steps.set-affected.outputs.affected }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0 # Necesario para detectar cambios
+
+      - name: Check manual deployment inputs
+        id: check-manual
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" && "${{ github.event.inputs.microFrontends }}" != "" ]]; then
+            echo "MANUAL_DEPLOY=true" >> $GITHUB_ENV
+            echo "DEPLOY_LIST=${{ github.event.inputs.microFrontends }}" >> $GITHUB_ENV
+          elif [[ "${{ github.event_name }}" == "workflow_dispatch" && "${{ github.event.inputs.deployAll }}" == "true" ]]; then
+            echo "DEPLOY_ALL=true" >> $GITHUB_ENV
+          else
+            echo "AUTO_DETECT=true" >> $GITHUB_ENV
+          fi
+
+      - name: Setup Node.js
+        if: env.AUTO_DETECT == 'true'
+        uses: actions/setup-node@v3
+        with:
+          node-version: '22.14.0'
+
+      - name: Install NX globally
+        if: env.AUTO_DETECT == 'true'
+        run: npm install -g nx@19.3.1
+
+      - name: Install dependencies (minimal for affected detection)
+        if: env.AUTO_DETECT == 'true'
+        run: |
+          npm install --no-package-lock --no-save @nx/workspace nx
+          npm install @nx/nx-linux-x64-gnu
+
+      - name: Detect affected apps
+        if: env.AUTO_DETECT == 'true'
+        id: detect-affected
+        run: |
+          # Detecta aplicaciones afectadas con Nx
+          AFFECTED_APPS=$(npx nx show projects --affected --type=app --json | jq -r '.[] | select(. != "dashboard")' | tr '\n' ',' | sed 's/,$//')
+          
+          # Detecta cambios en manifiestos k8s manualmente
+          if git diff --name-only HEAD~1 HEAD | grep -q "k8s/"; then
+            K8S_CHANGED=$(git diff --name-only HEAD~1 HEAD | grep "k8s/" | cut -d'/' -f2 | sort -u | tr '\n' ',' | sed 's/,$//')
+            
+            # Si ya hay apps afectadas, combina ambas listas
+            if [[ -n "$AFFECTED_APPS" ]]; then
+              AFFECTED_APPS="$AFFECTED_APPS,$K8S_CHANGED"
+            else
+              AFFECTED_APPS="$K8S_CHANGED"
+            fi
+          fi
+          
+          # Siempre incluye dashboard si hay cambios en libs
+          if git diff --name-only HEAD~1 HEAD | grep -q "libs/"; then
+            if [[ -n "$AFFECTED_APPS" ]]; then
+              AFFECTED_APPS="dashboard,$AFFECTED_APPS"
+            else
+              AFFECTED_APPS="dashboard"
+            fi
+          fi
+          
+          # Elimina duplicados
+          AFFECTED_APPS=$(echo "$AFFECTED_APPS" | tr ',' '\n' | sort -u | tr '\n' ',' | sed 's/,$//')
+          
+          echo "Affected apps: $AFFECTED_APPS"
+          echo "AFFECTED_APPS=$AFFECTED_APPS" >> $GITHUB_ENV
+
+      - name: Set affected outputs
+        id: set-affected
+        run: |
+          if [[ "${{ env.MANUAL_DEPLOY }}" == "true" ]]; then
+            echo "affected=${{ env.DEPLOY_LIST }}" >> $GITHUB_OUTPUT
+          elif [[ "${{ env.DEPLOY_ALL }}" == "true" ]]; then
+            echo "affected=dashboard,login,aga,agriculture,se,semarnat,agace,funcionario,cofepris,amecafe,inbal,sedena" >> $GITHUB_OUTPUT
+          elif [[ "${{ env.AUTO_DETECT }}" == "true" ]]; then
+            echo "affected=${{ env.AFFECTED_APPS }}" >> $GITHUB_OUTPUT
+          else
+            echo "affected=" >> $GITHUB_OUTPUT
+          fi
+
   build-deploy:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.affected != ''
     runs-on: ubuntu-latest
     env:
       NX_SKIP_POSTINSTALL: 1   # Evita la ejecución del postinstall de Nx
+      AFFECTED_APPS: ${{ needs.detect-changes.outputs.affected }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -52,30 +151,95 @@ jobs:
         run: |
           sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
           sudo chmod +x /usr/local/bin/docker-compose
-      - name: Build image and push to GitHub Container Registry
-        run: docker compose -f ./docker/modulefederation-microfrontends.yml build
 
-      - name: Build image and push to GitHub Container Registry
-        run: docker compose -f ./docker/modulefederation-microfrontends.yml push
+      - name: Generate Docker Compose override for affected apps
+        run: |
+          echo "Affected apps: $AFFECTED_APPS"
+          # Crea un archivo docker-compose.override.yml con solo los servicios afectados
+          echo "version: '3'" > ./docker/docker-compose.override.yml
+          echo "services:" >> ./docker/docker-compose.override.yml
+          
+          # Siempre incluye libs si hay alguna aplicación afectada
+          echo "  modulefederation-libs:" >> ./docker/docker-compose.override.yml
+          echo "    profiles: [\"build\"]" >> ./docker/docker-compose.override.yml
+          
+          # Para cada aplicación afectada, añade su servicio
+          IFS=',' read -ra APPS <<< "$AFFECTED_APPS"
+          for app in "${APPS[@]}"; do
+            if [[ "$app" == "dashboard" ]]; then
+              echo "  modulefederation-dashboard:" >> ./docker/docker-compose.override.yml
+              echo "    profiles: [\"build\"]" >> ./docker/docker-compose.override.yml
+            elif [[ -n "$app" ]]; then
+              echo "  modulefederation-${app}-microfront:" >> ./docker/docker-compose.override.yml
+              echo "    profiles: [\"build\"]" >> ./docker/docker-compose.override.yml
+            fi
+          done
+          
+          cat ./docker/docker-compose.override.yml
 
-      - name: Execute remote command (last one)
+      - name: Build and push affected images to GitHub Container Registry
+        run: |
+          docker compose -f ./docker/modulefederation-microfrontends.yml -f ./docker/docker-compose.override.yml build
+          docker compose -f ./docker/modulefederation-microfrontends.yml -f ./docker/docker-compose.override.yml push
+
+      - name: Generate deployment script for affected apps
+        id: generate-deployment-script
+        run: |
+          # Crea un script con los comandos kubectl para los servicios afectados
+          echo "cd /home/ubuntu/v30" > deploy_commands.sh
+          
+          IFS=',' read -ra APPS <<< "$AFFECTED_APPS"
+          for app in "${APPS[@]}"; do
+            if [[ "$app" == "dashboard" ]]; then
+              echo "microk8s kubectl rollout restart deployment modulefederation-dashboard-deployment-dev" >> deploy_commands.sh
+            elif [[ "$app" == "login" ]]; then
+              echo "microk8s kubectl rollout restart deployment modulefederation-login-microfront-deployment-dev" >> deploy_commands.sh
+            elif [[ "$app" == "aga" ]]; then
+              echo "microk8s kubectl rollout restart deployment modulefederation-aga-microfront-deployment-dev" >> deploy_commands.sh
+            elif [[ "$app" == "agriculture" ]]; then
+              echo "microk8s kubectl rollout restart deployment modulefederation-agriculture-microfront-deployment-dev" >> deploy_commands.sh
+            elif [[ "$app" == "se" ]]; then
+              echo "microk8s kubectl rollout restart deployment modulefederation-se-microfront-dev" >> deploy_commands.sh
+            elif [[ "$app" == "semarnat" ]]; then
+              echo "microk8s kubectl rollout restart deployment modulefederation-semarnat-microfront-dev" >> deploy_commands.sh
+            elif [[ "$app" == "agace" ]]; then
+              echo "microk8s kubectl rollout restart deployment modulefederation-agace-microfront-deployment-dev" >> deploy_commands.sh
+            elif [[ "$app" == "funcionario" ]]; then
+              echo "microk8s kubectl rollout restart deployment modulefederation-funcionario-microfront-deployment-dev" >> deploy_commands.sh
+            elif [[ "$app" == "cofepris" ]]; then
+              echo "microk8s kubectl rollout restart deployment modulefederation-cofepris-microfront-deployment-dev" >> deploy_commands.sh
+            elif [[ "$app" == "amecafe" ]]; then
+              echo "microk8s kubectl rollout restart deployment modulefederation-amecafe-microfront-deployment-dev" >> deploy_commands.sh
+            elif [[ "$app" == "inbal" ]]; then
+              echo "microk8s kubectl rollout restart deployment modulefederation-inbal-microfront-deployment-dev" >> deploy_commands.sh
+            elif [[ "$app" == "sedena" ]]; then
+              echo "microk8s kubectl rollout restart deployment modulefederation-sedena-microfront" >> deploy_commands.sh
+            elif [[ -n "$app" && -d "./k8s/$app-microfront" ]]; then
+              # Para cualquier otro microfront que tenga configuración en k8s
+              echo "microk8s kubectl rollout restart deployment modulefederation-$app-microfront-deployment-dev" >> deploy_commands.sh
+            fi
+          done
+          
+          chmod +x deploy_commands.sh
+          cat deploy_commands.sh
+          
+          # Almacena el script para su uso en el siguiente paso
+          DEPLOY_SCRIPT=$(cat deploy_commands.sh)
+          echo "script<<EOF" >> $GITHUB_OUTPUT
+          echo "$DEPLOY_SCRIPT" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Execute remote deployment commands
         uses: appleboy/ssh-action@v0.1.8
         with:
           host: ${{ secrets.REMOTE_SRV_IP }}
           username: ${{ secrets.REMOTE_SRV_USER }}
           key: ${{ secrets.REMOTE_SRV_PRIV_KEY }}
           port: 22
+          script_stop: true
           script: |
-            cd /home/ubuntu/v30
-            microk8s kubectl rollout restart deployment modulefederation-dashboard-deployment-dev
-            microk8s kubectl rollout restart deployment modulefederation-login-microfront-deployment-dev
-            microk8s kubectl rollout restart deployment modulefederation-aga-microfront-deployment-dev
-            microk8s kubectl rollout restart deployment modulefederation-agriculture-microfront-deployment-dev
-            microk8s kubectl rollout restart deployment modulefederation-se-microfront-dev
-            microk8s kubectl rollout restart deployment modulefederation-semarnat-microfront-dev
-            microk8s kubectl rollout restart deployment modulefederation-agace-microfront-deployment-dev
-            microk8s kubectl rollout restart deployment modulefederation-funcionario-microfront-deployment-dev
-            microk8s kubectl rollout restart deployment modulefederation-cofepris-microfront-deployment-dev
-            microk8s kubectl rollout restart deployment modulefederation-amecafe-microfront-deployment-dev
-            microk8s kubectl rollout restart deployment modulefederation-inbal-microfront-deployment-dev
-            microk8s kubectl rollout restart deployment modulefederation-sedena-microfront
+            cat << 'EOL' > deploy_commands.sh
+            ${{ steps.generate-deployment-script.outputs.script }}
+            EOL
+            chmod +x deploy_commands.sh
+            ./deploy_commands.sh
