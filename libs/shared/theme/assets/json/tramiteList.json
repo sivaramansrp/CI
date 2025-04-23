@@ -1682,8 +1682,8 @@
   {
     "id": 241,
     "tramite": 280101,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/inah/permiso-de-exportacion/permiso",
+    "linkDepartment": "/pago/permiso-de-exportacion/permiso",
     "department": "inah"
   },
   {
@@ -1829,8 +1829,8 @@
   {
     "id": 262,
     "tramite": 240119,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/sedena/artefactos-pirotecnicos-ordinarios/contenedor-de-pasos",
+    "linkDepartment": "/pago/artefactos-pirotecnicos-ordinarios/contenedor-de-pasos",
     "department": "sedena"
   },
   {

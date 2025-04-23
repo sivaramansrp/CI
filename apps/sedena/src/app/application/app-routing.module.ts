@@ -64,6 +64,13 @@ const ROUTES: Routes = [
       ).then((m) => m.AvisoImportacionSustanciasQuimicasModule),
     },
     {
+      path: 'artefactos-pirotecnicos-ordinarios',
+      loadChildren: () =>
+        import(
+          './tramites/240119/artefactos-pirotecnicos-ordinarios.module'
+        ).then((m) => m.ArtefactosPirotecnicosOrdinariosModule),
+    },
+    {
       path: 'armas-municiones-para-la-gente',
       loadChildren: () =>
         import(
