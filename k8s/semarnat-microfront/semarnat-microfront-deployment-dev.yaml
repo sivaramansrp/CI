@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: modulefederation-semarnat-microfront-deployment-dev
+spec:
+  replicas: 1   
+  selector:
+    matchLabels:
+      app: modulefederation-semarnat-microfront-dev
+  template:
+    metadata:
+      labels:
+        app: modulefederation-semarnat-microfront-dev
+    spec:
+      containers:
+      - name: front-vucem30-container-dev
+        image: ghcr.io/vucem30/dockerized-modulefederation-semarnat-microfront:latest
+        ports:
+        - containerPort: 80
+        env:
+        - name: SPRING_PROFILES_ACTIVE
+          value: dev
+      imagePullSecrets:
+      - name: vucem30registrykey
