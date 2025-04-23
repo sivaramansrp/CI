@@ -1,5 +1,6 @@
-import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
+import { RouterModule } from '@angular/router';
+import { Routes } from '@angular/router';
 import { SeleccionTramiteComponent } from './seleccion-tramite/seleccion-tramite.component';
 
 const ROUTES: Routes = [
@@ -7,6 +8,16 @@ const ROUTES: Routes = [
   {
     path: 'seleccion-tramite',
     component: SeleccionTramiteComponent,
+  },
+  {
+    path: 'permiso-extraordinario-para-la-exportacion-de-sustancias-quimicas',
+    loadChildren: () =>
+      import(
+        './tramites/240118/permiso-extraordinario-para-la-exportacion-de-sustancias-quimicas.module'
+      ).then(
+        (m) =>
+          m.PermisoExtraordinarioParaLaExportacionDeSustanciasQuimicasModule
+      ),
   },
   {
     path: 'permiso-ordinario-importacion-armas-municiones',
@@ -23,6 +34,13 @@ const ROUTES: Routes = [
       ).then(
         (m) => m.PermisoExtraordinarioImportacionArmamentoFisicasMoralesModule
       ),
+  },
+  {
+    path: 'sustancias-quimicas',
+    loadChildren: () =>
+      import(
+        './tramites/240107/aviso-importacion-sustancias-quimicas.module'
+      ).then((m) => m.AvisoImportacionSustanciasQuimicasModule),
   },
   {
     path: 'permiso-ordinario',
