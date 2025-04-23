@@ -645,7 +645,6 @@ export class AvisoComponent implements OnInit, OnDestroy {
       archivoMasivo: [null]
 
     });
-    // this.verificaTipoAviso();
   }
   /**
    * @method adaceFormulario

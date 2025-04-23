@@ -996,8 +996,8 @@
     {
         "id": 143,
         "tramite": 32506,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "/agace/aviso-destruccion/solicitante",
+        "linkDepartment": "/pago/aviso-destruccion/solicitante",
         "department": "agace"
     },
     {
