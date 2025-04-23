@@ -453,13 +453,11 @@ eliminarPedimento(borrar: boolean): void {
    * Constructor del componente.
    *
    * @param fb FormBuilder para crear formularios.
-   * @param httpServicios Servicio HTTP para realizar peticiones.
    * @param tramite260904Query Consulta de datos del trámite.
    * @param tramite260904Store Almacenamiento de datos del trámite.
    */
   constructor(
     private fb: FormBuilder,
-    private httpServicios: HttpClient,
     private establecimientoService: EstablecimientoService,
     private domicilioEstablecimientoStore: DatosDelSolicituteSeccionStateStore,
     private domicilioEstablecimientoQuery: DatosDelSolicituteSeccionQuery

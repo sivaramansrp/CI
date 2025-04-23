@@ -25,7 +25,7 @@ import { TramitesAsociadosSeccionComponent } from '../../../../shared/components
  * @export
  * @class PasoUnoPagesComponent
  */
-export class PasoUnoPagesComponent implements AfterViewInit {
+export class PasoUnoPagesComponent {
   /**
      * Referencia al componente `SolicitanteComponent` para acceder a sus métodos y propiedades.
      */
@@ -73,16 +73,7 @@ export class PasoUnoPagesComponent implements AfterViewInit {
       tramitesAsociados?: Tramite[];
     } = {};
   
-    /**
-     * Hook del ciclo de vida de Angular que se ejecuta después de que la vista ha sido inicializada.
-     * 
-     * Uso:
-     * - Se utiliza para inicializar referencias a los componentes hijos.
-     */
-    ngAfterViewInit(): void {
-      //afterViewInit
     
-    }
   
     /**
      * Método para recopilar los valores de los formularios de todos los componentes hijos.
@@ -127,7 +118,7 @@ export class PasoUnoPagesComponent implements AfterViewInit {
             solicitudEstablecimientoForm: component.solicitudEstablecimientoForm?.value as SolicitudEstablecimientoForm,
             formMercancias: component.formMercancias?.value as FormMercancias,
           };
-          console.log('CHILD_DATA', CHILD_DATA);
+         
           ALL_FORM_VALUES.datosSolicitud?.push(CHILD_DATA);
         });
       }
