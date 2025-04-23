@@ -14,6 +14,10 @@ import { DatosDeLaComponent } from '../../../../shared/components/datos-solicitu
   styleUrl: './datos-solicitud.component.scss',
 })
 export class DatosSolicitudComponent {
+   /**
+   * Indica si se debe mostrar la sección de isGarantiasOfrecidasVisible
+   */
+   isGarantiasOfrecidasVisible: boolean = true;
   /**
    * Indica si se debe mostrar la sección de Aviso de Licencia
    */

@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-fabricante/terceros-fabricante.component';
+import { TABLA_ORDEN } from '../../constantes/permiso-nutrientes.enum';
 
 /**
  * Componente que muestra la sección de Terceros Relacionados.
@@ -13,4 +14,7 @@ import { TercerosRelacionadosComponent } from '../../../../shared/components/ter
   templateUrl: './terceros-relacionados-fabricante.component.html',
   styleUrl: './terceros-relacionados-fabricante.component.scss',
 })
-export class TercerosRelacionadosFabricanteComponent {}
+export class TercerosRelacionadosFabricanteComponent {
+  // Propiedad que almacena la constante TABLA_ORDEN para definir el orden de la tabla.
+    tablaOrden = TABLA_ORDEN;
+}
