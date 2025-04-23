@@ -36,13 +36,30 @@
           [label]="paisDeOrigenLabel"
           [botones]="paisDeOrigenBotons"
         ></crosslist>
-        <br/>
-        <label class="form-label">Lungar de procedencia en el terretorio nacional*</label>
+        <br />
+        <label class="form-label"
+          >Lungar de procedencia en el terretorio nacional*</label
+        >
         <crosslist
           [fechas]="selectEntidades"
           [label]="entidadesLabel"
           [botones]="entidadesBotons"
         ></crosslist>
+        <div class="row">
+          <div class="col-md-12">
+            <app-catalogo-select
+              [catalogo]="descripcionProducto"
+              [label]="'Descripción del producto'"
+              fromControlName="descripcionProducto"
+              [required]="true"
+              (change)="descripcionProductoSeleccion()"
+              name="descripcionProducto"
+            >
+            </app-catalogo-select>
+          </div>
+        </div>
+        <ng-titulo titulo="Mercancías"></ng-titulo>
+        
       </ng-container>
     </div>
   </form>

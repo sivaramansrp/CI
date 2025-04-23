@@ -34,4 +34,8 @@ export class PhytosanitaryReexportacionService {
     return this.http.get<RespuestaCatalogos>('assets/json/230202/entidades.json');
   }
 
+  getDescripcionProducto(): Observable<RespuestaCatalogos> {
+    return this.http.get<RespuestaCatalogos>('assets/json/230202/descripcionProducto.json');
+  }
+
 }

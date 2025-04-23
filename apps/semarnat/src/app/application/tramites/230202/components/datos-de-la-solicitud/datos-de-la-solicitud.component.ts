@@ -61,13 +61,14 @@ export class DatosDeLaSolicitudComponent {
   aduana!: Catalogo[];
   pais!: Catalogo[];
   entidades!: Catalogo[];
+  descripcionProducto!: Catalogo[];
   selectRangoDias: string[] = [];
   selectEntidades: string[] = [];
   fechasSeleccionadas: Catalogo[] = [];
   fechasDatos: Catalogo[] = [];
   fecha: FormControl = new FormControl('');
   fechaSeleccionada: FormControl = new FormControl('');
-  @ViewChild(CrosslistComponent) crosslistComponent!: CrosslistComponent;
+  // @ViewChild(CrosslistComponent) crosslistComponent!: CrosslistComponent;
   @ViewChildren(CrosslistComponent) crossList!: QueryList<CrosslistComponent>;
   public paisDeOrigenBotons = this.getCrossListBtn();
   public entidadesBotons = this.getCrossListBtn();
@@ -121,6 +122,7 @@ export class DatosDeLaSolicitudComponent {
         aduana: [this.solicitudState?.aduana, [Validators.required]],
         pais: [this.solicitudState?.pais, [Validators.required]],
         entidades: [this.solicitudState?.entidades, [Validators.required]],
+        descripcionProducto: [this.solicitudState?.descripcionProducto, [Validators.required]],
       }),
     });
   }
@@ -160,8 +162,14 @@ export class DatosDeLaSolicitudComponent {
           );
       })
     );
+
+    const DESCRIPCIONPRODUCTO$ = this.phytosanitaryReexportacionService.getDescripcionProducto().pipe(
+      map((resp) => {
+        this.descripcionProducto = resp.data;
+      })
+    );
     
-    merge(NUMERODECERTIFICADO$, ADUANA$, PAIS$, ENTIDADES$)
+    merge(NUMERODECERTIFICADO$, ADUANA$, PAIS$, ENTIDADES$, DESCRIPCIONPRODUCTO$)
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe();
   }
@@ -186,6 +194,11 @@ export class DatosDeLaSolicitudComponent {
   entidadesSeleccion(): void {
     const ENTIDADES = this.solicitudForm.get('reexportacionForm.entidades')?.value;
     this.store.setEntidades(ENTIDADES);
+  }
+
+  descripcionProductoSeleccion() {
+    const DESCRIPCIONPRODUCTO = this.solicitudForm.get('reexportacionForm.descripcionProducto')?.value;
+    this.store.setDescripcionProducto(DESCRIPCIONPRODUCTO);
   }
 
   public getCrossListBtn() {
