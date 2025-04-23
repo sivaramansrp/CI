@@ -2,8 +2,6 @@ import { Solicitud221603State, Tramite221603Store } from './tramite221603.store'
 import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
 
-
-
 @Injectable({ providedIn: 'root' })
 export class Tramite221603Query extends Query<Solicitud221603State> {
   /**

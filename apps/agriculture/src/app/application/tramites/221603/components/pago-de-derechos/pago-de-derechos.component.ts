@@ -69,7 +69,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       });
     this.inicializarFormulario();
     this.sanidadService
-      .getFormularioDatos()
+      .obtenerFormularioDatos()
       .subscribe((formularioDatos: FormularioDatos) => {
         this.formularioDatos = formularioDatos;
         this.inicializarFormulario();

@@ -1,48 +1,44 @@
-/**
- * compo doc
- * @component Datos90305Component
- * @description
- * Componente que gestiona la información del solicitante en el trámite 90305.
- * Permite seleccionar el tipo de persona y cambiar entre diferentes pestañas de datos.
- */
-
 import { AfterViewInit ,Component, ViewChild } from '@angular/core';
 import { SolicitanteComponent, TIPO_PERSONA } from '@ng-mf/data-access-user';
 
-/**
- * compo doc
- * @selector app-datos-90305
- */
 @Component({
   selector: 'app-datos',
   templateUrl: './datos.component.html'
 })
+/**
+ * Componente que gestiona la información del solicitante en el trámite 221603.
+ * Permite seleccionar el tipo de persona y cambiar entre diferentes pestañas de datos.
+ */
 export class DatosComponent implements AfterViewInit {
- /**
+
+  /**
    * Referencia al componente SolicitanteComponent para acceder a sus métodos y propiedades.
+   * Se utiliza para interactuar con el componente hijo y establecer el tipo de persona.
    */
- @ViewChild(SolicitanteComponent) solicitante!: SolicitanteComponent;
+  @ViewChild(SolicitanteComponent) solicitante!: SolicitanteComponent;
 
- /**
-  * Se ejecuta después de que la vista ha sido inicializada.
-  * Llama al método `obtenerTipoPersona` del componente SolicitanteComponent
-  * para establecer el tipo de persona como MORAL_NACIONAL.
-  */
- ngAfterViewInit() :void{
-   this.solicitante.obtenerTipoPersona(TIPO_PERSONA.MORAL_NACIONAL);
- }
+  /**
+   * Índice actual del subtítulo seleccionado en la interfaz.
+   * Representa la pestaña activa en la vista.
+   */
+  indice: number = 1;
 
- /**
-  * Índice actual del subtítulo seleccionado en la interfaz.
-  */
- indice: number = 1;
+  /**
+   * Se ejecuta después de que la vista ha sido inicializada.
+   * Llama al método `obtenerTipoPersona` del componente SolicitanteComponent
+   * para establecer el tipo de persona como MORAL_NACIONAL.
+   */
+  ngAfterViewInit(): void {
+    this.solicitante.obtenerTipoPersona(TIPO_PERSONA.MORAL_NACIONAL);
+  }
 
- /**
-  * Método para actualizar el índice del subtítulo seleksccionado.
-  * 
-  * @param i - Índice de la pestaña seleccionada.
-  */
- seleccionaTab(i: number): void {
-   this.indice = i;
- }
+  /**
+   * Método para actualizar el índice del subtítulo seleccionado.
+   * Cambia la pestaña activa en la interfaz de usuario.
+   * 
+   * i Índice de la pestaña seleccionada.
+   */
+  seleccionaTab(i: number): void {
+    this.indice = i;
+  }
 }

@@ -1,9 +1,23 @@
+/**
+ * Enumeración que contiene constantes, interfaces y configuraciones relacionadas con la sanidad.
+ * Proporciona datos y estructuras para gestionar las solicitudes, mercancías, exportadores y destinatarios.
+ */
+
+/**
+ * Mensaje que indica que las tablas con asterisco son obligatorias.
+ */
 export const MENSAJE_TABLA_OBLIGATORIA =
   'Las tablas con asterisco son obligatorias y debes agregar por lo menos un registro.';
 
+/**
+ * Mensaje que describe el comportamiento al cargar una nueva solicitud.
+ */
 export const DATOS_SOLICITUD =
-  ' Al dar clic en el boton "Cargar" se creara una nueva solicitud con los mismos datos de la solicitud 202768246';
+  'Al dar clic en el botón "Cargar" se creará una nueva solicitud con los mismos datos de la solicitud 202768246';
 
+/**
+ * Configuración de opciones para un radio button relacionado con la exención.
+ */
 export const EXENTO_DE_RADIO_BOTONS = [
   {
     label: 'Sí',
@@ -11,17 +25,23 @@ export const EXENTO_DE_RADIO_BOTONS = [
   },
 ];
 
+/**
+ * Interfaz que define los datos del formulario relacionados con la solicitud.
+ */
 export interface FormularioDatos {
-  aduana: string,
-    oficina: string,
-    punto: string,
-    transporte:string,
-    empresa: string,
-    clave: string,
-    dependencia: string,
-    importe: string
+  aduana: string;
+  oficina: string;
+  punto: string;
+  transporte: string;
+  empresa: string;
+  clave: string;
+  dependencia: string;
+  importe: string;
 }
 
+/**
+ * Interfaz que define los datos de una mercancía.
+ */
 export interface Mercancia {
   noPartida: number;
   tipoRequisito: string;
@@ -45,6 +65,9 @@ export interface Mercancia {
   certificadoInternacionalElectronico: string;
 }
 
+/**
+ * Interfaz que define los datos de un exportador.
+ */
 export interface Exportador {
   nombreDenominacionORazonSocial: string;
   telefono: string;
@@ -53,6 +76,9 @@ export interface Exportador {
   pais: string;
 }
 
+/**
+ * Interfaz que define los datos de un destinatario.
+ */
 export interface Destinatario {
   nombreDenominacionORazonSocial: string;
   telefono: string;
@@ -67,6 +93,10 @@ export interface Destinatario {
   codigoPostal: string;
 }
 
+/**
+ * Configuración de las columnas para la tabla de mercancías.
+ * Define los encabezados, claves y el orden de las columnas.
+ */
 export const CONFIGURATION_TABLA_MERCANCIAS = [
   {
     encabezado: 'No.partida',
@@ -171,6 +201,10 @@ export const CONFIGURATION_TABLA_MERCANCIAS = [
   },
 ];
 
+/**
+ * Configuración de las columnas para la tabla de exportadores.
+ * Define los encabezados, claves y el orden de las columnas.
+ */
 export const CONFIGURATION_TABLA_EXPORTADOR = [
   {
     encabezado: 'Nombre/denominación o razón social',
@@ -199,6 +233,10 @@ export const CONFIGURATION_TABLA_EXPORTADOR = [
   },
 ];
 
+/**
+ * Configuración de las columnas para la tabla de destinatarios.
+ * Define los encabezados, claves y el orden de las columnas.
+ */
 export const CONFIGURATION_TABLA_DESTINATARIO = [
   {
     encabezado: 'Nombre/denominación o razón social',
