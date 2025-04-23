@@ -1,3 +1,4 @@
+import { CAMPO_OBLIGATORIO_DERECHOS } from '../../constants/datos-solicitud.enum';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
@@ -38,7 +39,7 @@ import { takeUntil } from 'rxjs';
     TituloComponent,
   ],
   templateUrl: './pago-de-derechos.component.html',
-  styleUrl: './pago-de-derechos.component.css',
+  styleUrl: './pago-de-derechos.component.scss',
 })
 export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   /**
@@ -59,6 +60,13 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
 
   @Output() public updatePagoDerechos: EventEmitter<PagoDerechosFormState> =
     new EventEmitter<PagoDerechosFormState>();
+
+    /**
+   * @property idProcedimiento
+   * @description Identificador del procedimiento asociado a este componente.
+   * @type {number}
+   */
+  @Input() idProcedimiento!: number;
 
   /**
    * @property {Subject<void>} unsubscribe$
@@ -87,6 +95,14 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   bancoDatos!: Catalogo[];
 
   /**
+   * @property campoObligatorio
+   * @description Indica si ciertos campos del formulario son obligatorios según el procedimiento.
+   * @type {boolean}
+   * @default true
+   */
+  public campoObligatorio = false;
+
+  /**
    * @constructor
    * Inicializa el formulario y las dependencias del componente.
    *
@@ -108,6 +124,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.crearFormaulario();
     this.cargarDatos();
+    this.campoObligatorio = CAMPO_OBLIGATORIO_DERECHOS.includes(this.idProcedimiento)
   }
 
   /**
