@@ -411,6 +411,13 @@ const ROUTES: Routes = [
             (m) => m.ImportarSuministrosMedicosModule
           )
   },
+  {
+    path: 'permiso-nutrientes',
+    loadChildren: () =>
+      import('./tramites/260508/permiso-nutrientes.module').then(
+        (m) => m.PermisoNutrientesModule
+      ),
+  },
 
 ];
 
