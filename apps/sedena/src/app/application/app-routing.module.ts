@@ -70,6 +70,13 @@ const ROUTES: Routes = [
         './tramites/240111/importacion-de-material-explosivo.module'
       ).then((m) => m.ImportacionDeMaterialExplosivoModule),
   },
+    {
+      path: 'artefactos-pirotecnicos-ordinarios',
+      loadChildren: () =>
+        import(
+          './tramites/240119/artefactos-pirotecnicos-ordinarios.module'
+        ).then((m) => m.ArtefactosPirotecnicosOrdinariosModule),
+    },
 ];
 
 @NgModule({
