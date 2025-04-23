@@ -1,0 +1,22 @@
+<ng-titulo titulo="CAAT Aéreo"></ng-titulo>
+<form [formGroup]="formulario" (ngSubmit)="buscarSolicitudPorCAAT()">
+  <div>
+    <div class="row mb-3">
+      <div class="col-md-4">
+        <app-catalogo-select class="tipoDeCaatAerea" [catalogo]="tipoDeCaatAerea" formControlName="tipoDeCaatAerea" [required]="true" label="Tipo de CAAT Aéreo" name="tipoDeCaatAerea"></app-catalogo-select>
+      </div>
+      <div class="col-md-4">
+        <app-catalogo-select class="ideCodTransportacionAerea" [catalogo]="ideCodTransportacionAerea" formControlName="ideCodTransportacionAerea" [required]="true" label="Código de Transportación Aéreo" name="ideCodTransportacionAerea"></app-catalogo-select>
+      </div>
+      <div class="col-md-4">
+        <label for="solicitudIataIcao" class="form-label">Código*:</label>
+        <input type="text" readonly formControlName="codIataIcao" maxlength="3" class="form-control" />
+      </div>
+    </div>
+    <div class="row button-right">
+      <div>
+        <button type="button" class="btn btn-default btn-space"> Limpiar </button>
+      </div>
+    </div>
+  </div>
+</form>
