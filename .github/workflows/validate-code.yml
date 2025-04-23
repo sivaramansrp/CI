@@ -67,14 +67,20 @@ jobs:
           
           # Get affected projects
           if [ -n "$CHANGED_FILES" ]; then
-            AFFECTED_PROJECTS=$(npx nx affected:apps --plain --files=$(echo "$CHANGED_FILES" | tr '\n' ',')) || true
+            AFFECTED_OUTPUT=$(npx nx affected:apps --plain --files=$(echo "$CHANGED_FILES" | tr '\n' ',') 2>&1) || true
+            # Filter out NX error messages and get only valid project names
+            AFFECTED_PROJECTS=$(echo "$AFFECTED_OUTPUT" | grep -v "NX" | grep -v "Both project and target" | tr -d ' ' | grep -v "^$") || true
           fi
           
           if [ -z "$AFFECTED_PROJECTS" ]; then
             echo "No affected projects detected, running checks on all projects"
-            AFFECTED_PROJECTS=$(npx nx show projects --type=app --plain) || AFFECTED_PROJECTS="dashboard"
+            ALL_PROJECTS_OUTPUT=$(npx nx show projects --type=app --plain 2>&1) || true
+            # Filter out NX error messages
+            ALL_PROJECTS=$(echo "$ALL_PROJECTS_OUTPUT" | grep -v "NX" | grep -v "Both project and target" | tr -d ' ' | grep -v "^$") || true
             
-            if [ -z "$AFFECTED_PROJECTS" ]; then
+            if [ -n "$ALL_PROJECTS" ]; then
+              AFFECTED_PROJECTS="$ALL_PROJECTS"
+            else
               echo "::warning::Could not determine affected projects. Defaulting to dashboard app."
               AFFECTED_PROJECTS="dashboard"
             fi
@@ -159,14 +165,20 @@ jobs:
           
           # Get affected projects
           if [ -n "$CHANGED_FILES" ]; then
-            AFFECTED_PROJECTS=$(npx nx affected:apps --plain --files=$(echo "$CHANGED_FILES" | tr '\n' ',')) || true
+            AFFECTED_OUTPUT=$(npx nx affected:apps --plain --files=$(echo "$CHANGED_FILES" | tr '\n' ',') 2>&1) || true
+            # Filter out NX error messages and get only valid project names
+            AFFECTED_PROJECTS=$(echo "$AFFECTED_OUTPUT" | grep -v "NX" | grep -v "Both project and target" | tr -d ' ' | grep -v "^$") || true
           fi
           
           if [ -z "$AFFECTED_PROJECTS" ]; then
             echo "No affected projects detected, running tests on all projects"
-            AFFECTED_PROJECTS=$(npx nx show projects --type=app --plain) || AFFECTED_PROJECTS="dashboard"
+            ALL_PROJECTS_OUTPUT=$(npx nx show projects --type=app --plain 2>&1) || true
+            # Filter out NX error messages
+            ALL_PROJECTS=$(echo "$ALL_PROJECTS_OUTPUT" | grep -v "NX" | grep -v "Both project and target" | tr -d ' ' | grep -v "^$") || true
             
-            if [ -z "$AFFECTED_PROJECTS" ]; then
+            if [ -n "$ALL_PROJECTS" ]; then
+              AFFECTED_PROJECTS="$ALL_PROJECTS"
+            else
               echo "::warning::Could not determine affected projects. Defaulting to dashboard app."
               AFFECTED_PROJECTS="dashboard"
             fi
@@ -237,11 +249,14 @@ jobs:
           
           # Get affected projects
           if [ -n "$CHANGED_FILES" ]; then
-            AFFECTED_PROJECTS=$(npx nx affected:apps --plain --files=$(echo "$CHANGED_FILES" | tr '\n' ',')) || true
+            AFFECTED_OUTPUT=$(npx nx affected:apps --plain --files=$(echo "$CHANGED_FILES" | tr '\n' ',') 2>&1) || true
+            # Filter out NX error messages and get only valid project names
+            AFFECTED_PROJECTS=$(echo "$AFFECTED_OUTPUT" | grep -v "NX" | grep -v "Both project and target" | tr -d ' ' | grep -v "^$") || true
           fi
           
           if [ -z "$AFFECTED_PROJECTS" ]; then
             echo "No affected projects detected, checking build for dashboard"
+            echo "::warning::No affected projects found. Defaulting to dashboard app for build verification."
             AFFECTED_PROJECTS="dashboard"
           fi
           
