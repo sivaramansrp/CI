@@ -21,9 +21,9 @@ RUN npm install --force --no-audit --no-package-lock
 # RUN pwd && ls -a /app/.nx
 # RUN npm i webpack@5.91.0
 # RUN npx nx reset
-# ENV NX_VERBOSE_LOGGING=true
+ENV NX_VERBOSE_LOGGING=true
 # ENV NX_DEAMON=true
-RUN npx nx build profepa --configuration=development --verbose
+RUN npx nx build profepa --configuration=development --skip-nx-cache --verbose
 # RUN pwd && ls -a /app/dist/apps/profepa
 
 # Stage 2: Serve with Nginx
