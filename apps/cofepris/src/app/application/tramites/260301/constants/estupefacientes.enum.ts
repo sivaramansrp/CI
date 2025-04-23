@@ -293,3 +293,19 @@ export const TERCEROS_PERSONA_RADIO_OPCIONS = [
   { label: 'Moral', value: TipoPersona.MORAL },
   { label: 'No Contribuyente', value: TipoPersona.NO_CONTRIBUYENTE },
 ];
+
+export const ELEMENTOS_REQUERIDOS = [
+  'colonia',
+  'localidad',
+  'denominacionRazon',
+  'scian',
+  'correoElectronico',
+];
+
+export const ELEMENTOS_ANADIDOS = [
+  'calleYNumero',
+  'correoElectronico',
+  'rfcSanitario',
+  'regimenLaMercancia',
+  'aduana',
+];

@@ -314,3 +314,27 @@ export const TERCEROS_PERSONA_RADIO_OPCIONS = [
   { label: 'Física', value: TipoPersona.FISICA },
   { label: 'Moral', value: TipoPersona.MORAL },
 ];
+
+/**
+ * @const ELEMENTOS_REQUERIDOS
+ * @description Lista de elementos requeridos para completar el formulario o proceso.
+ */
+export const ELEMENTOS_REQUERIDOS = [
+  'colonia',
+  'localidad',
+  'denominacionRazon',
+  'scian',
+  'correoElectronico',
+];
+
+/**
+ * @const ELEMENTOS_ANADIDOS
+ * @description Lista de elementos adicionales que pueden ser incluidos en el formulario o proceso.
+ */
+export const ELEMENTOS_ANADIDOS = [
+  'calleYNumero',
+  'correoElectronico',
+  'rfcSanitario',
+  'regimenLaMercancia',
+  'aduana',
+];
