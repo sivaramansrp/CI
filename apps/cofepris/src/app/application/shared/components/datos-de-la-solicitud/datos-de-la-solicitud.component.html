@@ -56,8 +56,10 @@
       <div class="col-md-6">
         <div class="form-group">
           <label class="form-label" for="rfcSanitario"
-            >RFC del responsable sanitario:</label
+            >RFC del responsable sanitario</label
           >
+          <span class="form-label" *ngIf="esCampoRequerido('rfcSanitario')">*</span>
+          <span class="form-label mx-1">:</span>
           <input
             class="form-control"
             id="rfcSanitario"
@@ -364,7 +366,7 @@
         </div>
       </div>
       <div class="col-md-4">
-        <label class="form-label" for="licenciaSanitaria"
+        <label class="form-label mx-1" for="licenciaSanitaria"
           >No. de licencia sanitaria:</label
         >
         <span
