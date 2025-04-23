@@ -1,4 +1,4 @@
-import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, CrossListLable, CrosslistComponent, InputFecha, InputFechaComponent, InputRadioComponent, LISTACLAVESDELOSLOTES, Listaclaves, MERCANCIAS_DATA, MercanciasInfo, NICO_TABLA, Notificacion, ScianModel, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, CrossListLable, CrosslistComponent, InputCheckComponent, InputFecha, InputFechaComponent, InputRadioComponent, LISTACLAVESDELOSLOTES, Listaclaves, MERCANCIAS_DATA, MercanciasInfo, NICO_TABLA, Notificacion, ScianModel, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { FECHA_DE_PAGO, LOCALIDAD_COLONIA } from '../../constantes/certificados-licencias.enum';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -22,7 +22,9 @@ import radioOptions from '@libs/shared/theme/assets/json/260917/datos.solicitud.
     TituloComponent,
     CatalogoSelectComponent,
     TablaDinamicaComponent,
-    AlertComponent],
+    AlertComponent,
+    InputCheckComponent
+  ],
   templateUrl: './datos-solicitud.component.html',
   styleUrl: './datos-solicitud.component.scss',
 })

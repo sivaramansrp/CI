@@ -205,11 +205,10 @@
         <div class="row align-item-center">
             <div class="col-md-4">
                 <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="avisoCheckbox" formControlName="avisoCheckbox"
-                        (change)="setValoresStore(domicilio,'avisoCheckbox', 'setAvisoCheckbox')" />
-                    <label class="form-check-label" for="avisoCheckbox">
-                        <span>Aviso de funcionamiento:</span>
-                    </label>
+                    <lib-input-check [id]="'avisoCheckbox'"
+                    [label]="'Aviso de funcionamiento'" [required]="false"
+                    formControlName="avisoCheckbox"
+                    (change)="setValoresStore(domicilio, 'avisoCheckbox', 'setAvisoCheckbox')"></lib-input-check>
                 </div>
             </div>
             <div class="col-md-4">
@@ -226,12 +225,10 @@
         <div class="row mb-2 mt-3">
             <div class="col-md-12">
                 <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="marcarEnCasoDeQueSea"
+                    <lib-input-check [id]="'marcarEnCasoDeQueSea'"
+                        [label]="'Marcar en caso de que sea VIVO/FRESCO/ENHIELADO'" [required]="false"
                         formControlName="marcarEnCasoDeQueSea"
-                        (change)="setValoresStore(domicilio,'marcarEnCasoDeQueSea', 'setMarcarEnCasoDeQueSea')" />
-                    <label class="form-check-label" for="marcarEnCasoDeQueSea">
-                        <span>Marcar en caso de que sea VIVO/FRESCO/ENHIELADO</span>
-                    </label>
+                        (change)="setValoresStore(domicilio, 'marcarEnCasoDeQueSea', 'setMarcarEnCasoDeQueSea')"></lib-input-check>
                 </div>
             </div>
         </div>
@@ -581,9 +578,10 @@
             <div class="alert alert-info">
                 <label class="etiqueta-normal d-flex">
                     <div class="col-md-1 mt-5">
-                        <input type="checkbox" id="manifesto" class="mt-5" formControlName="aceptaManifiestos"
-                            (change)="setValoresStore(formularioManifiestos,'aceptaManifiestos', 'setAceptaManifiestos')" />
-                        <b> *</b>
+                        <lib-input-check [id]="'manifesto'"
+                        [label]="''" [required]="true"
+                        formControlName="aceptaManifiestos"
+                        (change)="setValoresStore(formularioManifiestos, 'aceptaManifiestos', 'setAceptaManifiestos')"></lib-input-check>
                     </div>
                     <div class="col-md-11 mt-4">
                         {{ manifiestosText }}
