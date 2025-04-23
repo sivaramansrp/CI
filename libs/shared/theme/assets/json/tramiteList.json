@@ -940,8 +940,8 @@
     {
         "id": 135,
         "tramite": 40402,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "/aga/pago/codigo-transportista",
+        "linkDepartment": "/pago/codigo-transportista",
         "department": "aga"
     },
     {
@@ -1458,8 +1458,8 @@
     {
         "id": 209,
         "tramite": 32201,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "/agace/anexo-veintiocho/solicitud",
+        "linkDepartment": "/agace/anexo-veintiocho/solicitud",
         "department": "agace"
     },
     {
@@ -1689,8 +1689,8 @@
     {
         "id": 242,
         "tramite": 261701,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "/cofepris/cancelacion-peticion/pantallas",
+        "linkDepartment": "/pago/cancelacion-peticion/pantallas",
         "department": "cofepris"
     },
     {
@@ -1703,8 +1703,8 @@
     {
         "id": 244,
         "tramite": 270101,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "/inbal/informacion-arte-exportar/pantallas",
+        "linkDepartment": "/pago/informacion-arte-exportar/pantallas",
         "department": "inbal"
     },
     {
@@ -1717,8 +1717,8 @@
     {
         "id": 246,
         "tramite": 250101,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "/profepa/flora-fauna/solictud",
+        "linkDepartment": "/pago/flora-fauna/solictud",
         "department": "profepa"
     },
     {
@@ -1801,8 +1801,8 @@
     {
         "id": 258,
         "tramite": 240107,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "/sedena/sustancias-quimicas/sustancias-quimicas",
+        "linkDepartment": "/pago/sustancias-quimicas/sustancias-quimicas",
         "department": "sedena"
     },
     {
@@ -1836,8 +1836,8 @@
     {
         "id": 263,
         "tramite": 240118,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "sedena/permiso-extraordinario-para-la-exportacion-de-sustancias-quimicas/contenedor-de-pasos",
+        "linkDepartment": "pago/permiso-extraordinario-para-la-exportacion-de-sustancias-quimicas/contenedor-de-pasos",
         "department": "sedena"
     },
     {
@@ -1878,8 +1878,8 @@
     {
         "id": 269,
         "tramite": 240308,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "/sedena/permiso-ordinario/importacion-de-artificios",
+        "linkDepartment": "/pago/permiso-ordinario/importacion-de-artificios",
         "department": "sedena"
     },
     {
@@ -1948,8 +1948,8 @@
     {
         "id": 279,
         "tramite": 130204,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "/sener/exportacion-hidrocarburos/solicitud",
+        "linkDepartment": "/pago/exportacion-hidrocarburos/solicitud",
         "department": "sener"
     },
     {
@@ -2001,8 +2001,21 @@
         "linkDepartment": "/pago/permiso-sanitario-dispositivos-medicos/permiso-sanitario-dispositivos-medicos",
         "department": "cofepris"
 
-    }
-   
+    },
+    {
+        "id": 286,
+        "tramite": 31602,
+        "linkDashboard": "/agace/registros-de-comercio-exterior/registrar-solicitud",
+        "linkDepartment": "/pago/registros-de-comercio-exterior/registrar-solicitud",
+        "department": "cofepris"
+    },
+    {
+        "id": 287,
+        "tramite": 261601,
+        "linkDashboard": "/cofepris/correccion-interna-de-la-cofepris/correccion-interna-de-la-cofepris",
+        "linkDepartment": "/pago/correccion-interna-de-la-cofepris/correccion-interna-de-la-cofepris",
+        "department": "cofepris"
+     }
 
     
 ]
