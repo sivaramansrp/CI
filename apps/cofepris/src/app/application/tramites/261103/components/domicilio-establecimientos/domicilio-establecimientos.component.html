@@ -113,14 +113,26 @@
         formControlName="funcionamiento"
         (change)="setValoresStore(domicilioEstablecimiento,'funcionamiento')"></lib-input-check>
     </div>
-    <div class="col-md-5"> 
-        <label class="form-label" for="licencia">No. de licencia sanitaria:
-            <select  class="form-select" formControlName="licencia" id="licencia"
-                (change)="setValoresStore(domicilioEstablecimiento,'licencia')">
-                <option [value]="">licencia</option>
-            </select>
-        </label>
-    </div>
+    <div class="col-md-4">
+        <div class="form-group">
+          <label class="form-label" for="licenciaSanitaria"
+            >No. de licencia sanitaria:
+            <span
+              class="bi bi-question-circle-fill"
+              title="No. de licencia sanitaria"
+              data-bs-toggle="tooltip"
+            ></span
+          ></label>
+          <input
+            class="form-control"
+            id="licenciaSanitaria"
+            placeholder=""
+            type="text"
+            formControlName="licencia"
+            (change)="setValoresStore(domicilioEstablecimiento,'licencia')"
+          />
+        </div>
+      </div>
     <br>
     <div class="col-md-12">
         <label class="form-label" for="Regimen"> Regimen al que se destinara la mercancia: </label>
