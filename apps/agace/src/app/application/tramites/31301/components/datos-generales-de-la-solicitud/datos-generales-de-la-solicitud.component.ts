@@ -3,6 +3,7 @@ import { CatalogosSelect } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
+import { DOMICILIOS_CONFIGURACION_COLUMNAS } from '../../constants/solicitud.enum';
 import { DatosGeneralesDeLaSolicitudCatologo } from '../../models/solicitud.model';
 import { DatosGeneralesDeLaSolicitudDatos } from '../../models/solicitud.model';
 import { DatosGeneralesDeLaSolicitudRadioLista } from '../../models/solicitud.model';
@@ -18,6 +19,8 @@ import { Output } from '@angular/core';
 import { REGEX_SOLO_NUMEROS } from '@libs/shared/data-access-user/src';
 import { REG_X } from '@libs/shared/data-access-user/src';
 import { ReactiveFormsModule } from '@angular/forms';
+import { SECCION_SOCIOSIC_CONFIGURACION_COLUMNAS } from '../../constants/solicitud.enum';
+import { SUB_CONTRATISTAS_CONFIGURACION } from '../../constants/solicitud.enum';
 import { SeccionSociosIC } from '../../models/solicitud.model';
 import { Solicitud31301Query } from '../../estados/solicitud31301.query';
 import { Solicitud31301State } from '../../estados/solicitud31301.store';
@@ -25,6 +28,7 @@ import { Solicitud31301Store } from '../../estados/solicitud31301.store';
 import { SolicitudService } from '../../services/solicitud.service';
 import { SubContratistas } from '../../models/solicitud.model';
 import { Subject } from 'rxjs';
+import { TIPO_DE_INVERSION_CONFIGURACION_COLUMNAS } from '../../constants/solicitud.enum';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { TipoDeInversion } from '../../models/solicitud.model';
@@ -74,131 +78,25 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
   tipoSeleccionTabla = TablaSeleccion.CHECKBOX;
 
   /** Configuración de columnas para la tabla de subcontratistas */
-  configuracionColumnas: ConfiguracionColumna<SubContratistas>[] = [
-    {
-      encabezado: 'RFC',
-      clave: (item: SubContratistas) => item.rfc,
-      orden: 1,
-    },
-    {
-      encabezado: 'Nombre / Razón social',
-      clave: (item: SubContratistas) => item.razonSocial,
-      orden: 2,
-    },
-  ];
+  configuracionColumnas: ConfiguracionColumna<SubContratistas>[] = SUB_CONTRATISTAS_CONFIGURACION;
 
   /** Lista de subcontratistas */
   listaDeSubcontratistas: SubContratistas[] = [] as SubContratistas[];
 
   /** Configuración de columnas para la sección de socios IC */
-  seccionSociosICConfiguracionColumnas: ConfiguracionColumna<SeccionSociosIC>[] =
-    [
-      {
-        encabezado: 'Tipo de Persona',
-        clave: (item: SeccionSociosIC) => item.tipoPersonaMuestra,
-        orden: 1,
-      },
-      {
-        encabezado: 'Nombre',
-        clave: (item: SeccionSociosIC) => item.nombreCompleto,
-        orden: 1,
-      },
-      {
-        encabezado: 'RFC',
-        clave: (item: SeccionSociosIC) => item.rfc,
-        orden: 1,
-      },
-      {
-        encabezado: 'En su carácter de',
-        clave: (item: SeccionSociosIC) => item.caracterDe,
-        orden: 1,
-      },
-      {
-        encabezado: 'Obligado a tributar en México',
-        clave: (item: SeccionSociosIC) => item.tributarMexico,
-        orden: 1,
-      },
-      {
-        encabezado: 'Nombre de la empresa',
-        clave: (item: SeccionSociosIC) => item.nombreEmpresa,
-        orden: 1,
-      },
-    ];
+  seccionSociosICConfiguracionColumnas: ConfiguracionColumna<SeccionSociosIC>[] = SECCION_SOCIOSIC_CONFIGURACION_COLUMNAS;
 
   /** Lista de socios IC */
   listaSeccionSociosIC: SeccionSociosIC[] = [] as SeccionSociosIC[];
 
   /** Configuración de columnas para tipo de inversión */
-  tipoDeInversionConfiguracionColumnas: ConfiguracionColumna<TipoDeInversion>[] =
-    [
-      {
-        encabezado: 'Tipo de inversión',
-        clave: (item: TipoDeInversion) => item.tipoInversion,
-        orden: 1,
-      },
-      {
-        encabezado: 'Descripción general',
-        clave: (item: TipoDeInversion) => item.descripcion,
-        orden: 1,
-      },
-      {
-        encabezado: 'Valor en moneda nacional',
-        clave: (item: TipoDeInversion) => item.valor,
-        orden: 1,
-      },
-    ];
+  tipoDeInversionConfiguracionColumnas: ConfiguracionColumna<TipoDeInversion>[] = TIPO_DE_INVERSION_CONFIGURACION_COLUMNAS;
 
   /** Datos del tipo de inversión */
   tipoDeInversionDatos: TipoDeInversion[] = [] as TipoDeInversion[];
 
   /** Configuración de columnas para domicilios */
-  domiciliosConfiguracionColumnas: ConfiguracionColumna<Domicilios>[] = [
-    {
-      encabezado: 'Instalaciones principales',
-      clave: (item: Domicilios) => item.instalacionPrincipal,
-      orden: 1,
-    },
-    {
-      encabezado: 'Tipo de instalación',
-      clave: (item: Domicilios) => item.tipoInstalacion,
-      orden: 1,
-    },
-    {
-      encabezado: 'Entidad federativa',
-      clave: (item: Domicilios) => item.entidadFederativa,
-      orden: 1,
-    },
-    {
-      encabezado: 'Municipio o delegación',
-      clave: (item: Domicilios) => item.municipioDelegacion,
-      orden: 1,
-    },
-    {
-      encabezado: 'Colonia, calle y número',
-      clave: (item: Domicilios) => item.direccion,
-      orden: 1,
-    },
-    {
-      encabezado: 'Código postal',
-      clave: (item: Domicilios) => item.codigoPostal,
-      orden: 1,
-    },
-    {
-      encabezado: 'Registro an SE/SAT',
-      clave: (item: Domicilios) => item.registroSESAT,
-      orden: 1,
-    },
-    {
-      encabezado: 'Proceso Productivo',
-      clave: (item: Domicilios) => item.procesoProductivo,
-      orden: 1,
-    },
-    {
-      encabezado: 'Estatus',
-      clave: (item: Domicilios) => item.estatus,
-      orden: 1,
-    },
-  ];
+  domiciliosConfiguracionColumnas: ConfiguracionColumna<Domicilios>[] = DOMICILIOS_CONFIGURACION_COLUMNAS;
 
   /** Datos de los domicilios */
   domiciliosDatos: Domicilios[] = [] as Domicilios[];

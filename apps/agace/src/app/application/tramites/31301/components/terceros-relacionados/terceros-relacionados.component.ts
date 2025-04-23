@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
 import { HttpClientModule } from '@angular/common/http';
 import { OnDestroy } from '@angular/core';
+import { RECIBIR_NOTIFICACIONES_CONFIGURACION } from '../../constants/solicitud.enum';
 import { RecibirNotificaciones } from '../../models/solicitud.model';
 import { SolicitudService } from '../../services/solicitud.service';
 import { Subject } from 'rxjs';
@@ -43,33 +44,7 @@ export class TercerosRelacionadosComponent implements OnDestroy {
    * Cada columna tiene un encabezado, una clave para obtener
    * el valor desde el modelo y un orden para su disposición.
    */
-  configuracionColumnas: ConfiguracionColumna<RecibirNotificaciones>[] = [
-    {
-      encabezado: 'RFC',
-      clave: (item: RecibirNotificaciones) => item.rfc,
-      orden: 1,
-    },
-    {
-      encabezado: 'CURP',
-      clave: (item: RecibirNotificaciones) => item.curp,
-      orden: 2,
-    },
-    {
-      encabezado: 'Nombre',
-      clave: (item: RecibirNotificaciones) => item.nombre,
-      orden: 3,
-    },
-    {
-      encabezado: 'Primer apellido',
-      clave: (item: RecibirNotificaciones) => item.apellidoPaterno,
-      orden: 4,
-    },
-    {
-      encabezado: 'Segundo apellido',
-      clave: (item: RecibirNotificaciones) => item.apellidoMaterno,
-      orden: 5,
-    },
-  ];
+  configuracionColumnas: ConfiguracionColumna<RecibirNotificaciones>[] = RECIBIR_NOTIFICACIONES_CONFIGURACION;
 
   /** Lista de objetos `RecibirNotificaciones` que se mostrarán en la tabla */
   orecibirNotificacionesLista: RecibirNotificaciones[] =
