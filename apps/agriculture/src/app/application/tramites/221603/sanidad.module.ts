@@ -4,7 +4,6 @@ import {
   BtnContinuarComponent,
   CatalogoSelectComponent,
   InputRadioComponent,
-  SolicitanteComponent,
   TablaDinamicaComponent,
 } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
@@ -27,6 +26,7 @@ import { SanidadRoutingModule } from './sanidad-routing.module';
 import { PagoDeDerechosComponent } from './components/pago-de-derechos/pago-de-derechos.component';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { SolicitanteComponent } from './components/solicitante/solicitante.component';
 import { TercerosComponent } from './components/terceros/terceros.component';
 
 @NgModule({
@@ -39,6 +39,7 @@ import { TercerosComponent } from './components/terceros/terceros.component';
     PagoDeDerechosComponent,
     MovilizacionComponent,
     TercerosComponent,
+    SolicitanteComponent,
   ],
   imports: [
     CommonModule,
@@ -47,12 +48,10 @@ import { TercerosComponent } from './components/terceros/terceros.component';
     SanidadRoutingModule,
     BtnContinuarComponent,
     TituloComponent,
-    TituloComponent,
     ReactiveFormsModule,
     CatalogoSelectComponent,
     WizardComponent,
     FirmaElectronicaComponent,
-    SolicitanteComponent,
     InputRadioComponent,
     TablaDinamicaComponent,
   ],

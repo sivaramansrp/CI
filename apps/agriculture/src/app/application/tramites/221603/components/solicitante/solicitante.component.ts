@@ -10,43 +10,59 @@ import {
   PERSONA_MORAL_NACIONAL,
   SolicitanteService,
   TIPO_PERSONA,
-  TituloComponent,
-  UppercaseDirective,
 } from '@libs/shared/data-access-user/src';
-import { Component, Input, OnInit, forwardRef } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
-  ReactiveFormsModule,
   ValidatorFn,
   Validators,
 } from '@angular/forms';
-import { CommonModule } from '@angular/common';
 import { tap } from 'rxjs';
-
 
 @Component({
   selector: 'solicitante',
-  standalone: true,
-  imports: [
-    TituloComponent,
-    ReactiveFormsModule,
-    CommonModule,
-    forwardRef(() => UppercaseDirective),
-  ],
   templateUrl: './solicitante.component.html',
   styleUrl: './solicitante.component.scss',
-  host: {}
 })
+/**
+ * Componente que gestiona los datos del solicitante en el trámite 221603.
+ * Permite capturar y gestionar los datos generales y el domicilio fiscal del solicitante.
+ * También incluye la funcionalidad para inicializar formularios dinámicos y obtener datos generales del solicitante.
+ */
 export class SolicitanteComponent implements OnInit {
-  @Input() tabindex!: number;
+  /**
+   * Índice de la pestaña activa en la interfaz de usuario.
+   */
+  tabindex!: number;
 
+  /**
+   * Tipo de persona que es el solicitante (física o moral, nacional o extranjera).
+   */
   tipoPersona!: number;
+
+  /**
+   * Configuración de los campos del formulario para los datos generales del solicitante.
+   */
   persona: FormularioDinamico[] = [];
+
+  /**
+   * Configuración de los campos del formulario para el domicilio fiscal del solicitante.
+   */
   domicilioFiscal: FormularioDinamico[] = [];
 
+  /**
+   * Formulario reactivo principal que contiene los grupos de formularios `datosGenerales` y `domicilioFiscal`.
+   */
   form!: FormGroup;
 
+  /**
+   * Constructor del componente. Inicializa las dependencias necesarias y prepara el formulario reactivo.
+   *
+   * solicitanteServicio - Servicio que gestiona las operaciones relacionadas con el solicitante.
+   * fb - FormBuilder utilizado para crear el formulario reactivo.
+   * formServices - Servicio que gestiona las operaciones relacionadas con los formularios dinámicos.
+   */
   constructor(
     private solicitanteServicio: SolicitanteService,
     private fb: FormBuilder,
@@ -59,57 +75,51 @@ export class SolicitanteComponent implements OnInit {
   }
 
   /**
-   * @inheritdoc
-   * @description Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
-   * Llama a la función `getDatosGenerales` para obtener datos iniciales.
-   * @returns {void} No retorna ningún valor.
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Llama a la función `getDatosGenerales` para obtener datos iniciales del solicitante.
    */
   ngOnInit(): void {
     this.getDatosGenerales();
   }
 
   /**
-   * Obtiene el tipo de persona que es solicitante, y asigna los campos correspondientes al formulario.
-   * @param tipo - Tipo de persona que es solicitante.
-   * @returns void
+   * Obtiene el tipo de persona que es solicitante y asigna los campos correspondientes al formulario.
+   *
+   * tipo - Tipo de persona que es solicitante.
    */
   obtenerTipoPersona(tipo: number): void {
     this.tipoPersona = tipo;
     if (tipo === TIPO_PERSONA.FISICA_NACIONAL) {
-      // Persona fisica nacional
       this.persona = PERSONA_FISICA_NACIONAL;
       this.domicilioFiscal = DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL;
     } else if (tipo === TIPO_PERSONA.MORAL_NACIONAL) {
-      // Persona moral nacional
       this.persona = PERSONA_MORAL_NACIONAL;
       this.domicilioFiscal = DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL;
     } else if (tipo === TIPO_PERSONA.FISICA_EXTRANJERA) {
-      // Persona fisica extranjera
       this.persona = PERSONA_FISICA_EXTRANJERO;
       this.domicilioFiscal = DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_EXTRANJERA;
     } else if (tipo === TIPO_PERSONA.MORAL_EXTRANJERA) {
-      // Persona moral extranjera
       this.persona = PERSONA_MORAL_EXTRANJERO;
       this.domicilioFiscal = DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_EXTRANJERA;
     }
   }
 
   /**
-   * Es un getter que proporciona un acceso más sencillo ala grupo de formularios llamado datosGenerales contenido dentr del formulario principal Form.
+   * Getter que proporciona acceso al grupo de formularios `datosGenerales` dentro del formulario principal.
    */
   get datosGeneralesForm(): FormGroup {
     return this.form.get('datosGenerales') as FormGroup;
   }
 
   /**
-   * Es un getter que proporciona un acceso más sencillo ala grupo de formularios llamado domicilioFiscal contenido dentr del formulario principal Form.
+   * Getter que proporciona acceso al grupo de formularios `domicilioFiscal` dentro del formulario principal.
    */
   get domicilioFiscalForm(): FormGroup {
     return this.form.get('domicilioFiscal') as FormGroup;
   }
 
   /**
-   * Crea un formulario vacío con dos grupos de formularios, datosGenerales y domicilioFiscal.
+   * Crea un formulario vacío con dos grupos de formularios: `datosGenerales` y `domicilioFiscal`.
    */
   crearFormulario(): void {
     this.form = this.fb.group({
@@ -119,10 +129,10 @@ export class SolicitanteComponent implements OnInit {
   }
 
   /**
-   * Inicializa los campos del formulario con los campos de la configuración de los campos de los formularios.
-   * @param config - Configuración de los campos de los formularios.
-   * @param grupoNombre - Nombre del grupo de formularios a inicializar.
-   * @returns void
+   * Inicializa los campos del formulario con la configuración proporcionada.
+   *
+   * config - Configuración de los campos del formulario.
+   * grupoNombre - Nombre del grupo de formularios a inicializar.
    */
   inicializarFormGroup(
     config: FormularioDinamico[],
@@ -139,9 +149,10 @@ export class SolicitanteComponent implements OnInit {
   }
 
   /**
-   * Obtiene los validadores de los campos de los formularios.
-   * @param validators - Validadores de los campos de los formularios.
-   * @returns ValidatorFn[]
+   * Obtiene los validadores de los campos del formulario a partir de la configuración.
+   *
+   * validators - Lista de validadores en formato de cadena.
+   * @returns Lista de funciones de validación.
    */
   static getValidators(validators: string[]): ValidatorFn[] {
     const FORM_VALIDATOR: ValidatorFn[] = [];
@@ -160,8 +171,8 @@ export class SolicitanteComponent implements OnInit {
   }
 
   /**
-   * Obtiene los datos generales del solicitante con una peticion get.
-   * @returns void
+   * Obtiene los datos generales del solicitante mediante una petición al servicio.
+   * Los datos obtenidos se asignan a los campos del formulario y se desactivan.
    */
   getDatosGenerales(): void {
     this.solicitanteServicio
@@ -169,18 +180,16 @@ export class SolicitanteComponent implements OnInit {
       .pipe(
         tap((response) => {
           if (response) {
-
-   
             const DATOS = JSON.parse(response.data);
             const DATOS_SOLICITANTE = DATOS.datosGenerales;
             const DATOS_DOMICILIO_FISCAL = DATOS.domicilioFiscal;
 
             const CAMPOS_DATOS_GENERALES =
-            FormulariosService.obtenerNombresCamposForm(
+              FormulariosService.obtenerNombresCamposForm(
                 this.datosGeneralesForm
               );
             const CAMPOS_DATOS_DOMICILIO_FISCAL =
-            FormulariosService.obtenerNombresCamposForm(
+              FormulariosService.obtenerNombresCamposForm(
                 this.domicilioFiscalForm
               );
 

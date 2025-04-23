@@ -11,12 +11,8 @@
             [isRequired]="true"
             [layout]="'horizontal'"
             formControlName="exentoDePago"
-            (change)="
-              setValoresStore(
-                pagoDerechosForm,
-                'exentoDePago',
-                'setExentoDePago'
-              )
+            (valueChange)="
+              actualizarExento($event)
             "
           ></app-input-radio>
         </div>
@@ -28,11 +24,9 @@
             formControlName="justificacion"
             [label]="'Justificacion'"
             [required]="true"
-            [isDisabled]="isExentoSelected"
+            [isDisabled]="disableJustificacion"
             name="justificacion"
-            (change)="
-              updateExento()
-            "
+            (change)="setValoresStore('justificacion', 'setJustificacion')"
           ></app-catalogo-select>
         </div>
       </div>
@@ -45,7 +39,7 @@
               id="clave"
               type="number"
               formControlName="clave"
-              (change)="setValoresStore(pagoDerechosForm, 'clave', 'setClave')"
+              (change)="setValoresStore('clave', 'setClave')"
             />
           </div>
         </div>
@@ -62,7 +56,6 @@
               formControlName="dependencia"
               (change)="
                 setValoresStore(
-                  pagoDerechosForm,
                   'dependencia',
                   'setDependencia'
                 )
@@ -78,8 +71,9 @@
               formControlName="banco"
               [label]="'Banco'"
               [required]="true"
+              [isDisabled]="disableBanco"
               name="banco"
-              (change)="setValoresStore(pagoDerechosForm, 'banco', 'setBanco')"
+              (change)="setValoresStore('banco', 'setBanco')"
             ></app-catalogo-select>
           </div>
         </div>
@@ -94,7 +88,7 @@
               id="llave"
               type="text"
               formControlName="llave"
-              (change)="setValoresStore(pagoDerechosForm, 'llave', 'setLlave')"
+              (change)="setValoresStore('llave', 'setLlave')"
             />
           </div>
         </div>
@@ -107,7 +101,7 @@
               id="fecha"
               type="date"
               formControlName="fecha"
-              (change)="setValoresStore(pagoDerechosForm, 'fecha', 'setFecha')"
+              (change)="setValoresStore('fecha', 'setFecha')"
             />
           </div>
         </div>
@@ -121,7 +115,7 @@
               type="number"
               formControlName="importe"
               (change)="
-                setValoresStore(pagoDerechosForm, 'importe', 'setImporte')
+                setValoresStore('importe', 'setImporte')
               "
             />
           </div>

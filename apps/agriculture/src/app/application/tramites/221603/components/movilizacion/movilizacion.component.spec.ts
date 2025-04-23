@@ -1,16 +1,12 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormBuilder, ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { of } from 'rxjs';
+import { of, Subject } from 'rxjs';
 import { MovilizacionComponent } from './movilizacion.component';
-
 import { Solicitud221603State, Tramite221603Store } from '../../estados/tramite221603.store';
 import { Tramite221603Query } from '../../estados/tramite221603.query';
-import { CatalogoSelectComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { SanidadService } from '../../service/sanidad.service';
+import { AlertComponent, CatalogoSelectComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 
-
-/**
- * Mock data for the solicitud state.
- */
 const mockSolicitudState: Solicitud221603State = {
   justificacion: '',
   aduana: '',
@@ -28,7 +24,13 @@ const mockSolicitudState: Solicitud221603State = {
   banco: '',
   llave: '',
   fecha: '',
-  importe: ''
+  importe: '',
+  exento:'',
+};
+
+const mockFormularioDatos = {
+  transporte: 'Barco',
+  empresa: 'NEW COMPANY',
 };
 
 describe('MovilizacionComponent', () => {
@@ -36,6 +38,7 @@ describe('MovilizacionComponent', () => {
   let fixture: ComponentFixture<MovilizacionComponent>;
   let tramite221603Store: Tramite221603Store;
   let tramite221603Query: Tramite221603Query;
+  let sanidadService: SanidadService;
 
   const tramite221603StoreMock = {
     setMedio: jest.fn(),
@@ -48,14 +51,20 @@ describe('MovilizacionComponent', () => {
     selectSolicitud$: of(mockSolicitudState),
   };
 
+  const sanidadServiceMock = {
+    inicializaMovilizacionDatosCatalogos: jest.fn(),
+    obtenerFormularioDatos: jest.fn().mockReturnValue(of(mockFormularioDatos)),
+  };
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [],
-      imports: [ReactiveFormsModule, FormsModule,MovilizacionComponent, TituloComponent, CatalogoSelectComponent],
+      declarations: [MovilizacionComponent],
+      imports: [ReactiveFormsModule, FormsModule, TituloComponent, AlertComponent, CatalogoSelectComponent],
       providers: [
         FormBuilder,
         { provide: Tramite221603Store, useValue: tramite221603StoreMock },
         { provide: Tramite221603Query, useValue: tramite221603QueryMock },
+        { provide: SanidadService, useValue: sanidadServiceMock },
       ],
     }).compileComponents();
   });
@@ -65,6 +74,7 @@ describe('MovilizacionComponent', () => {
     component = fixture.componentInstance;
     tramite221603Store = TestBed.inject(Tramite221603Store);
     tramite221603Query = TestBed.inject(Tramite221603Query);
+    sanidadService = TestBed.inject(SanidadService);
     fixture.detectChanges();
   });
 
@@ -72,51 +82,50 @@ describe('MovilizacionComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form with values from the store', () => {
-    // Test form initialization with values from the store
-    expect(component.MedioForm.controls['medio'].value).toBe('Terrestre');
-    expect(component.MedioForm.controls['transporte'].value).toBe('Camión');
-    expect(component.MedioForm.controls['verificacion'].value).toBe('Alta');
-    expect(component.MedioForm.controls['empresa'].value).toBe('GRUPO OPERADOR MULTIMODAL, SA DE CV');
+  it('should initialize the form with values from solicitudState and formularioDatos', () => {
+    component.ngOnInit();
+
+    expect(component.medioForm.controls['medio'].value).toBe('Terrestre');
+    expect(component.medioForm.controls['transporte'].value).toBe('Barco');
+    expect(component.medioForm.controls['verificacion'].value).toBe('Alta');
+    expect(component.medioForm.controls['empresa'].value).toBe('NEW COMPANY');
   });
 
   it('should call the store method setMedio when updating the form', () => {
-    // Simulate form value change and ensure the store method is called
-    component.MedioForm.controls['medio'].setValue('Marítimo');
-    component.setValoresStore(component.MedioForm, 'medio', 'setMedio');
+    component.medioForm.controls['medio'].setValue('Marítimo');
+    component.setValoresStore('medio', 'setMedio');
     expect(tramite221603Store.setMedio).toHaveBeenCalledWith('Marítimo');
   });
 
   it('should call the store method setTransporte when updating the form', () => {
-    component.MedioForm.controls['transporte'].setValue('Barco');
-    component.setValoresStore(component.MedioForm, 'transporte', 'setTransporte');
-    expect(tramite221603Store.setTransporte).toHaveBeenCalledWith('Barco');
+    component.medioForm.controls['transporte'].setValue('Avión');
+    component.setValoresStore('transporte', 'setTransporte');
+    expect(tramite221603Store.setTransporte).toHaveBeenCalledWith('Avión');
   });
 
   it('should call the store method setVerificacion when updating the form', () => {
-    component.MedioForm.controls['verificacion'].setValue('Baja');
-    component.setValoresStore(component.MedioForm, 'verificacion', 'setVerificacion');
+    component.medioForm.controls['verificacion'].setValue('Baja');
+    component.setValoresStore('verificacion', 'setVerificacion');
     expect(tramite221603Store.setVerificacion).toHaveBeenCalledWith('Baja');
   });
 
   it('should call the store method setEmpresa when updating the form', () => {
-    component.MedioForm.controls['empresa'].setValue('NEW COMPANY');
-    component.setValoresStore(component.MedioForm, 'empresa', 'setEmpresa');
-    expect(tramite221603Store.setEmpresa).toHaveBeenCalledWith('NEW COMPANY');
-  });
-
-  it('should initialize the store state correctly on ngOnInit', () => {
-    component.ngOnInit();
-    // Ensure that the store values are correctly initialized in the form
-    expect(component.MedioForm.controls['medio'].value).toBe(mockSolicitudState.medio);
-    expect(component.MedioForm.controls['transporte'].value).toBe(mockSolicitudState.transporte);
-    expect(component.MedioForm.controls['verificacion'].value).toBe(mockSolicitudState.verificacion);
-    expect(component.MedioForm.controls['empresa'].value).toBe(mockSolicitudState.empresa);
+    component.medioForm.controls['empresa'].setValue('NEW COMPANY 2');
+    component.setValoresStore('empresa', 'setEmpresa');
+    expect(tramite221603Store.setEmpresa).toHaveBeenCalledWith('NEW COMPANY 2');
   });
 
   it('should call ngOnDestroy and clean up resources', () => {
     const destroyNotifierSpy = jest.spyOn(component['destroyNotifier$'], 'next');
+    const destroyNotifierCompleteSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
     component.ngOnDestroy();
     expect(destroyNotifierSpy).toHaveBeenCalled();
+    expect(destroyNotifierCompleteSpy).toHaveBeenCalled();
+  });
+
+  it('should call sanidadService methods on ngOnInit', () => {
+    component.ngOnInit();
+    expect(sanidadService.inicializaMovilizacionDatosCatalogos).toHaveBeenCalled();
+    expect(sanidadService.obtenerFormularioDatos).toHaveBeenCalled();
   });
 });
