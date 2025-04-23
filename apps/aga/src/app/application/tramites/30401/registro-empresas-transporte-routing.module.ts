@@ -11,7 +11,7 @@ const ROUTES: Routes = [
   {
     path: 'transporte',
     pathMatch: 'full',
-    redirectTo: 'solicitud',
+    redirectTo: '',
   },
 ];
 

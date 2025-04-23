@@ -175,9 +175,24 @@ export class RegistroVehiculosComponent implements OnInit {
    */
   public seccionState!: Tramites30401State;
 
+  /**
+ * Representa los estados disponibles en el sistema.
+ */
   estados: Catalogo[] = [];
+
+/**
+ * Representa los municipios asociados a un estado.
+ */
   municipios: Catalogo[] = [];
+
+/**
+ * Representa las colonias asociadas a un municipio.
+ */
   colonias: Catalogo[] = [];
+
+/**
+ * Representa las aduanas disponibles.
+ */
   aduanas: Catalogo[] = [];
 
   /**
@@ -197,14 +212,14 @@ export class RegistroVehiculosComponent implements OnInit {
    * Constructor para inyectar los servicios y las tiendas necesarias.
    * @param fb - FormBuilder para formularios reactivos.
    * @param tramite30401Store - Tienda para gestionar el estado del formulario.
-   * @param tramite30401Query - Servicio de consulta para acceder a los datos del store.
-   * @param Servicio - Servicio para obtener la lista de bancos.
+   * @param tramite30401Query - servicio de consulta para acceder a los datos del store.
+   * @param servicio - servicio para obtener la lista de bancos.
    */
   constructor(
     public fb: FormBuilder,
     private tramite30401Store: Tramite30401Store,
     private tramite30401Query: Tramite30401Query,
-    private Servicio: RegistroEmpresasTransporteService
+    private servicio: RegistroEmpresasTransporteService
   ) {
     this.crearFormulario();
     this.inicializarFormularioArchivo();
@@ -509,10 +524,10 @@ export class RegistroVehiculosComponent implements OnInit {
    */
   obtenerDatosCatalogo(): void {
     forkJoin({
-      estados: this.Servicio.getEntidadesFederativas(),
-      municipios: this.Servicio.getMunicipiosAlcaldias(),
-      colonias: this.Servicio.getColonias(),
-      aduanas: this.Servicio.getAduanas(),
+      estados: this.servicio.getEntidadesFederativas(),
+      municipios: this.servicio.getMunicipiosAlcaldias(),
+      colonias: this.servicio.getColonias(),
+      aduanas: this.servicio.getAduanas(),
     })
       .pipe(takeUntil(this.destroyed$))
       .subscribe(
