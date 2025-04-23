@@ -1801,15 +1801,15 @@
   {
     "id": 258,
     "tramite": 240111,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/sedena/importacion-de-material-explosivo/ordinario-para",
+    "linkDepartment": "/pago/importacion-de-material-explosivo/ordinario-para",
     "department": "sedena"
   },
   {
     "id": 259,
     "tramite": 240114,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/sedena/armas-municiones-para-la-gente/contenedor-de-pasos",
+    "linkDepartment": "/pago/armas-municiones-para-la-gente/contenedor-de-pasos",
     "department": "sedena"
   },
   {
