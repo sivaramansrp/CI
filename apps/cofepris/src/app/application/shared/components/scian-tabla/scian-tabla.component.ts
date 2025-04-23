@@ -4,7 +4,7 @@ import { CommonModule, Location } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
-import { PROCEDIMIENTOS_NO_PARA_ELEMENTO_SCIAN } from '../../constantes/datos-scian.enum';
+import { PROCEDIMIENTOS_NO_PARA_ELEMENTO_DESCRIPCION_REQUERIDO } from '../../constantes/datos-scian.enum';
 
 @Component({
   selector: 'app-scian-tabla',
@@ -76,7 +76,7 @@ export class ScianTablaComponent implements OnInit {
     });
 
     this.scianNinoRequerido =
-      PROCEDIMIENTOS_NO_PARA_ELEMENTO_SCIAN.includes(this.idProcedimiento)
+    PROCEDIMIENTOS_NO_PARA_ELEMENTO_DESCRIPCION_REQUERIDO.includes(this.idProcedimiento)
         ? false
         : true;
   }

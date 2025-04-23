@@ -52,9 +52,11 @@ jobs:
         run: |
           sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
           sudo chmod +x /usr/local/bin/docker-compose
+      - name: Build image and push to GitHub Container Registry
+        run: docker compose -f ./docker/modulefederation-microfrontends.yml build
 
       - name: Build image and push to GitHub Container Registry
-        run: docker compose -f ./docker/modulefederation-microfrontends.yml up -d
+        run: docker compose -f ./docker/modulefederation-microfrontends.yml push
 
       - name: Execute remote command (last one)
         uses: appleboy/ssh-action@v0.1.8
@@ -76,4 +78,4 @@ jobs:
             microk8s kubectl rollout restart deployment modulefederation-cofepris-microfront-deployment-dev
             microk8s kubectl rollout restart deployment modulefederation-amecafe-microfront-deployment-dev
             microk8s kubectl rollout restart deployment modulefederation-inbal-microfront-deployment-dev
-            microk8s kubectl rollout restart deployment modulefederation-sedena-microfront
+            microk8s kubectl rollout restart deployment modulefederation-sedena-microfront-deployment-dev
