@@ -16,7 +16,10 @@ import { StoreConfig } from '@datorama/akita';
  * @property {PagoDerechosFormState} pagoDerechos - Información del formulario de pago de derechos.
  * @property {MercanciaDetalle[]} merccancialTablaDatos - Lista de mercancías registradas.
  * @property {DatosDelTramiteFormState} datosDelTramite - Información general del formulario de datos del trámite.
+ * @property {DestinoFinal | null} [modificarDestinarioDatos] - Datos del destinatario que se están modificando.
+ * @property {Proveedor | null} [modificarProveedorDatos] - Datos del proveedor que se están modificando.
  */
+
 export interface Tramite240121State {
   tabSeleccionado?: number;
   destinatarioFinalTablaDatos: DestinoFinal[];
@@ -24,6 +27,8 @@ export interface Tramite240121State {
   pagoDerechos: PagoDerechosFormState;
   merccancialTablaDatos: MercanciaDetalle[];
   datosDelTramite: DatosDelTramiteFormState;
+  modificarDestinarioDatos?: DestinoFinal | null;
+  modificarProveedorDatos?: Proveedor | null;
 }
 
 /**
@@ -52,6 +57,8 @@ export function createInitialState(): Tramite240121State {
       aduanasSeleccionadas: [],
       paisDestino: '',
     },
+    modificarDestinarioDatos: null,
+    modificarProveedorDatos: null
   };
 }
 
@@ -130,6 +137,7 @@ export class Tramite240121Store extends Store<Tramite240121State> {
         ...state.destinatarioFinalTablaDatos,
         ...newDestinatarios,
       ],
+      modificarDestinarioDatos: null
     }));
   }
 
@@ -160,4 +168,82 @@ export class Tramite240121Store extends Store<Tramite240121State> {
       merccancialTablaDatos: [...state.merccancialTablaDatos, ...newMercancia],
     }));
   }
+    /**
+ * Actualiza los datos del destinatario en el estado de la tienda.
+ *
+ * @param datos - Objeto de tipo `DestinoFinal` que contiene la información del destinatario
+ *                que se debe actualizar en el estado.
+ *
+ * @remarks
+ * Este método también establece `modificarProveedorDatos` como `null` en el estado.
+ */
+    public actualizarDatosDestinatario(datos: DestinoFinal): void {
+      this.update((state) => ({
+        ...state,
+        modificarDestinarioDatos: datos,
+        modificarProveedorDatos: null
+      }));
+    }
+  
+    /**
+     * Actualiza los datos del proveedor en el estado de la tienda.
+     * 
+     * @param datos - Objeto de tipo `Proveedor` que contiene la información actualizada del proveedor.
+     * 
+     * Este método modifica el estado actual de la tienda, asignando los nuevos datos del proveedor
+     * y estableciendo los datos del destinatario como `null`.
+     */
+    public actualizarDatosProveedor(datos: Proveedor): void {
+      this.update((state) => ({
+        ...state,
+        modificarDestinarioDatos: null,
+        modificarProveedorDatos: datos,
+      }));
+    }
+  
+    /**
+     * Elimina un destinatario de la tabla de destinatarios.
+     *
+     * @param destinatarioFinal - El destinatario que se eliminará de la tabla de destinatarios.
+     * @returns void
+     */
+    eliminarDestinatarioFinal(destinatarioFinal: DestinoFinal): void {
+      this.update(state => {
+        const INDICE_A_ELIMINAR = state.destinatarioFinalTablaDatos.findIndex(ele =>
+          Object.keys(destinatarioFinal).some(key => destinatarioFinal[key as keyof DestinoFinal] === ele[key as keyof DestinoFinal])
+        );
+  
+        if (INDICE_A_ELIMINAR !== -1) {
+          state.destinatarioFinalTablaDatos.splice(INDICE_A_ELIMINAR, 1);
+        }
+  
+        return {
+          ...state,
+          destinatarioFinalTablaDatos: [...state.destinatarioFinalTablaDatos],
+        };
+      });
+    }
+  
+    /**
+  * Elimina un Proveedor de la tabla de Proveedor.
+  *
+  * @param proveedorFinal - El Proveedor que se eliminará de la tabla de Proveedor.
+  * @returns void
+  */
+    eliminareliminarProveedorFinal(proveedorFinal: Proveedor): void {
+      this.update(state => {
+        const INDICE_A_ELIMINAR = state.proveedorTablaDatos.findIndex(ele =>
+          Object.keys(proveedorFinal).some(key => proveedorFinal[key as keyof Proveedor] === ele[key as keyof Proveedor])
+        );
+  
+        if (INDICE_A_ELIMINAR !== -1) {
+          state.proveedorTablaDatos.splice(INDICE_A_ELIMINAR, 1);
+        }
+  
+        return {
+          ...state,
+          proveedorTablaDatos: [...state.proveedorTablaDatos],
+        };
+      });
+    }
 }

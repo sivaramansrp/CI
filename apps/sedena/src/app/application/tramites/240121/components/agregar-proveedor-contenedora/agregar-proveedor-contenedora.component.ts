@@ -1,17 +1,24 @@
-import { AgregarProveedorComponent } from '../../../../shared/components/agregar-proveedor/agregar-proveedor.component';
+import { AgregarProveedorCustomComponent } from "../../../../shared/components/agregar-proveedor-custom/agregar-proveedor-custom.component";
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { ID_PROCEDIMIENTO } from '../../constantes/exportacion-armas-explosivo.enum';
 import { Proveedor } from '../../../../shared/models/terceros-relacionados.model';
 import { Tramite240121Store } from '../../estados/tramite240121Store.store';
 
 @Component({
   selector: 'app-agregar-proveedor-contenedora',
   standalone: true,
-  imports: [CommonModule, AgregarProveedorComponent],
+  imports: [CommonModule, AgregarProveedorCustomComponent],
   templateUrl: './agregar-proveedor-contenedora.component.html',
-  styleUrl: './agregar-proveedor-contenedora.component.css',
+  styleUrl: './agregar-proveedor-contenedora.component.scss',
 })
 export class AgregarProveedorContenedoraComponent {
+  /**
+   * Identificador del procedimiento.
+   * @property {number} idProcedimiento
+   */
+  public readonly idProcedimiento = ID_PROCEDIMIENTO;
+
   /**
    * @constructor
    * @description Constructor que inyecta el store `Tramite260214Store` para gestionar el estado del trámite.

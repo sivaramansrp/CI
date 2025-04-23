@@ -1,8 +1,10 @@
-import { AgregarDestinatarioFinalComponent } from '../../../../shared/components/agregar-destinatario-final/agregar-destinatario-final.component';
+import { DestinoFinal, Proveedor } from '../../../../shared/models/terceros-relacionados.model';
+import { AgregarDestinatarioCustomComponent } from '../../../../shared/components/agregar-destinatario-custom/agregar-destinatario-custom.component';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { DestinoFinal } from '../../../../shared/models/terceros-relacionados.model';
 import { ID_PROCEDIMIENTO } from '../../constantes/exportacion-armas-explosivo.enum';
+import { Observable } from 'rxjs';
+import { Tramite240121Query } from '../../estados/tramite240121Query.query';
 import { Tramite240121Store } from '../../estados/tramite240121Store.store';
 
 /**
@@ -14,16 +16,29 @@ import { Tramite240121Store } from '../../estados/tramite240121Store.store';
 @Component({
   selector: 'app-agregar-destinatario-final-contenedora',
   standalone: true,
-  imports: [CommonModule, AgregarDestinatarioFinalComponent],
+  imports: [CommonModule, AgregarDestinatarioCustomComponent],
   templateUrl: './agregar-destinatario-final-contenedora.component.html',
-  styleUrl: './agregar-destinatario-final-contenedora.component.css',
+  styleUrl: './agregar-destinatario-final-contenedora.component.scss',
 })
 export class AgregarDestinatarioFinalContenedoraComponent {
-  /**
-   * Identificador del procedimiento.
-   * @property {number} idProcedimiento
+    /**
+   * @property {boolean} estaOculto - Indica si el elemento está oculto o visible.
+   * @remarks Este valor determina la visibilidad del componente en la interfaz de usuario.
+   * @command Cambiar el valor de esta propiedad para alternar la visibilidad.
    */
-  public readonly idProcedimiento = ID_PROCEDIMIENTO;
+    public readonly idProcedimiento:number = ID_PROCEDIMIENTO;
+
+    /**
+     * Observable que emite información sobre el destino final, proveedor o un valor nulo/indefinido.
+     * 
+     * @type {Observable<DestinoFinal | Proveedor | null | undefined>}
+     * 
+     * @remarks
+     * Este observable se utiliza para gestionar los datos relacionados con los derechos
+     * y destinatarios finales en el contexto de la aplicación.
+     */
+    public terechosDatos$!: Observable<DestinoFinal | Proveedor | null | undefined>;
+
   /**
    * Constructor del componente.
    *
@@ -31,9 +46,8 @@ export class AgregarDestinatarioFinalContenedoraComponent {
    * @param {Tramite240121Store} tramiteStore - Store que administra el estado del trámite.
    * @returns {void}
    */
- 
-  constructor(public tramiteStore: Tramite240121Store) {
-    // Se puede agregar aquí la lógica del constructor si es necesario
+  constructor(public tramiteStore: Tramite240121Store, public tramiteQuery: Tramite240121Query) {
+    this.terechosDatos$ = this.tramiteQuery.obtenerTercerosDatos$;
   }
 
   /**

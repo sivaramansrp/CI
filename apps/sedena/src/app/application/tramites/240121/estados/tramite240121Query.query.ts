@@ -77,4 +77,18 @@ export class Tramite240121Query extends Query<Tramite240121State> {
   public getMercanciaTablaDatos$ = this.select(
     (state) => state.merccancialTablaDatos
   );
+
+    /**
+   * Obtiene los datos de terceros desde el estado actual.
+   * 
+   * Este observable selecciona y devuelve los datos de `modificarDestinarioDatos` 
+   * o `modificarProveedorDatos` del estado. Si ninguno de estos valores está presente, 
+   * devuelve `null`.
+   * 
+   * @returns Los datos de terceros (`modificarDestinarioDatos` o `modificarProveedorDatos`) 
+   *          o `null` si no están disponibles.
+   */
+    public obtenerTercerosDatos$ = this.select((state) => {
+      return state.modificarDestinarioDatos || state.modificarProveedorDatos || null;
+    });
 }
