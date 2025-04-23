@@ -7,8 +7,8 @@ import { PagoDeDerechosContenedoraComponent } from '../../components/pago-de-der
 import { SolicitanteComponent } from '@ng-mf/data-access-user';
 import { Subject } from 'rxjs';
 import { TercerosRelacionadosContenedoraComponent } from '../../components/terceros-relacionados-contenedora/terceros-relacionados-contenedora.component';
-import { Tramite240101Query } from '../../estados/tramite240111Query.query';
-import { Tramite240101Store } from '../../estados/tramite240111Store.store';
+import { Tramite240111Query } from '../../estados/tramite240111Query.query';
+import { Tramite240111Store } from '../../estados/tramite240111Store.store';
 import { takeUntil } from 'rxjs';
 
 /**
@@ -52,8 +52,8 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
    * @param tramite260214Store Store to update procedure state.
    */
   constructor(
-    private tramite240101Query: Tramite240101Query,
-    private tramite240101Store: Tramite240101Store // eslint-disable-next-line no-empty-function
+    private tramite240111Query: Tramite240111Query,
+    private tramite240111Store: Tramite240111Store // eslint-disable-next-line no-empty-function
   ) {}
 
   /**
@@ -63,7 +63,7 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
    * @returns {void}
    */
   ngOnInit(): void {
-    this.tramite240101Query.getTabSeleccionado$
+    this.tramite240111Query.getTabSeleccionado$
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((tab) => {
         this.indice = tab;
@@ -77,7 +77,7 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
    * @returns {void}
    */
   public seleccionaTab(i: number): void {
-    this.tramite240101Store.updateTabSeleccionado(i);
+    this.tramite240111Store.updateTabSeleccionado(i);
   }
 
   /**
