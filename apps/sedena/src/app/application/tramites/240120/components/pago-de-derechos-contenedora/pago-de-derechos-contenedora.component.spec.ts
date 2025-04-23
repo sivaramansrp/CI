@@ -51,11 +51,11 @@ describe('PagoDeDerechosContenedoraComponent', () => {
   });
 
   it('should run #ngOnDestroy()', async () => {
-    component.unsubscribe$ = component.unsubscribe$ || {};
-    component.unsubscribe$.next = jest.fn();
-    component.unsubscribe$.complete = jest.fn();
+    component.destroy$ = component.destroy$ || {};
+    component.destroy$.next = jest.fn();
+    component.destroy$.complete = jest.fn();
     component.ngOnDestroy();
-    expect(component.unsubscribe$.next).toHaveBeenCalled();
+    expect(component.destroy$.next).toHaveBeenCalled();
   });
 
   it('should run #updatePagoDerechos()', async () => {
