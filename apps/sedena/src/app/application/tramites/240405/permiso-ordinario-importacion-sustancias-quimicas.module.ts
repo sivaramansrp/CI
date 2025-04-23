@@ -18,7 +18,7 @@ import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
 
-import { SolicitudDeSustanciasQuimicasRoutingModule } from './solicitud-de-sustancias-quimicas-routing.module';
+import { PermisoOrdinarioImportacionSustanciasQuimicasRoutingModule } from './permiso-ordinario-importacion-sustancias-quimicas-routing.module';
 
 
 @NgModule({
@@ -26,11 +26,11 @@ import { SolicitudDeSustanciasQuimicasRoutingModule } from './solicitud-de-susta
     PasoUnoComponent,
     PasoDosComponent,
     PasoTresComponent,
-    SolicitudPageComponent,
+    SolicitudPageComponent
   ],
   imports: [
     CommonModule,
-    SolicitudDeSustanciasQuimicasRoutingModule,
+    PermisoOrdinarioImportacionSustanciasQuimicasRoutingModule,
     SolicitanteComponent,
     DatosDelTramiteContenedoraComponent,
     TercerosRelacionadosContenedoraComponent,
@@ -41,12 +41,12 @@ import { SolicitudDeSustanciasQuimicasRoutingModule } from './solicitud-de-susta
     FirmaElectronicaComponent,
     WizardComponent,
     BtnContinuarComponent 
-  ], 
+  ],
   exports: [
     PasoUnoComponent,
     PasoDosComponent,
     PasoTresComponent,
     SolicitudPageComponent,
-  ],
+  ]
 })
-export class SolicitudDeSustanciasQuimicasModule { }
+export class PermisoOrdinarioImportacionSustanciasQuimicasModule { }

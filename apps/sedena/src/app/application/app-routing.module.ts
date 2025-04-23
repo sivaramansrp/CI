@@ -38,11 +38,11 @@ const ROUTES: Routes = [
       ).then((m) => m.SolicitudeDeArtificiosPirotecnicosModule),
   },
   {
-    path: 'permiso-ordinario-importacion-material-explosivo',
+    path: 'permiso-ordinario-importacion-sustancias-quimicas',
     loadChildren: () =>
       import(
-        './tramites/240405/solicitud-de-sustancias-quimicas.module'
-      ).then((m) => m.SolicitudDeSustanciasQuimicasModule),
+        './tramites/240405/permiso-ordinario-importacion-sustancias-quimicas.module'
+      ).then((m) => m.PermisoOrdinarioImportacionSustanciasQuimicasModule),
   },
 ];
 

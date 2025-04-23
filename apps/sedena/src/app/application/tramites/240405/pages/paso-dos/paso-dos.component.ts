@@ -13,8 +13,8 @@ import { TEXTOS_REQUISITOS } from '../../constants/solicitud-de-sustancias-quimi
 
 /**
  * @component PasoDosComponent
- * @description Component responsible for managing step two of the procedure.
- * It handles document requirements, retrieves catalog data, and manages user selections.
+ * @description Componente responsable de gestionar el paso dos del procedimiento.
+ * Maneja los requisitos de documentos, recupera datos de catálogos y administra las selecciones del usuario.
  */
 @Component({
   selector: 'app-paso-dos',
@@ -24,59 +24,59 @@ import { TEXTOS_REQUISITOS } from '../../constants/solicitud-de-sustancias-quimi
 export class PasoDosComponent implements OnInit, OnDestroy {
   /**
    * @property TEXTOS
-   * @description Contains static text literals used in this step of the form.
+   * @description Contiene textos estáticos utilizados en este paso del formulario.
    * @type {typeof TEXTOS_REQUISITOS}
    */
   public TEXTOS = TEXTOS_REQUISITOS;
 
   /**
    * @property tiposDocumentos
-   * @description Local placeholder for document types used in this step.
+   * @description Espacio reservado localmente para los tipos de documentos utilizados en este paso.
    * @type {Catalogo[]}
    */
   public tiposDocumentos: Catalogo[] = [];
 
   /**
    * @property infoAlert
-   * @description Bootstrap alert type used for informational messages.
+   * @description Tipo de alerta de Bootstrap utilizada para mensajes informativos.
    * @type {string}
    */
   public infoAlert = 'alert-info';
 
   /**
    * @property catalogoDocumentos
-   * @description Holds the document type catalog fetched from the API.
+   * @description Contiene el catálogo de tipos de documentos recuperado de la API.
    * @type {Catalogo[]}
    */
   public catalogoDocumentos: Catalogo[] = [];
 
   /**
    * @property documentosSeleccionados
-   * @description List of documents selected by the user.
+   * @description Lista de documentos seleccionados por el usuario.
    * @type {Catalogo[]}
    */
   public documentosSeleccionados: Catalogo[] = [];
 
   /**
    * @property destroyNotifier$
-   * @description Notifier used to unsubscribe from observables when the component is destroyed.
-   * Prevents memory leaks.
+   * @description Notificador utilizado para cancelar suscripciones activas cuando el componente se destruye.
+   * Previene fugas de memoria.
    * @type {Subject<void>}
    */
   private destroyNotifier$: Subject<void> = new Subject();
 
   /**
    * @constructor
-   * @param catalogosServices Service to fetch catalog data needed in the form.
+   * @param catalogosServices Servicio para recuperar datos de catálogos necesarios en el formulario.
    */
   constructor(private catalogosServices: CatalogosService) {
-    // Dependencies are injected here. No initialization logic needed.
+    // Las dependencias se inyectan aquí. No se necesita lógica de inicialización.
   }
 
   /**
    * @method ngOnInit
-   * @description Angular lifecycle hook triggered on component initialization.
-   * Initiates the fetch of document types.
+   * @description Hook del ciclo de vida de Angular que se activa al inicializar el componente.
+   * Inicia la recuperación de los tipos de documentos.
    * @returns {void}
    */
   ngOnInit(): void {
@@ -85,8 +85,8 @@ export class PasoDosComponent implements OnInit, OnDestroy {
 
   /**
    * @method getTiposDocumentos
-   * @description Fetches the catalog of document types for the procedure.
-   * Updates the `catalogoDocumentos` list if successful.
+   * @description Recupera el catálogo de tipos de documentos para el procedimiento.
+   * Actualiza la lista `catalogoDocumentos` si la recuperación es exitosa.
    * @returns {void}
    */
   public getTiposDocumentos(): void {
@@ -104,8 +104,8 @@ export class PasoDosComponent implements OnInit, OnDestroy {
 
   /**
    * @method ngOnDestroy
-   * @description Angular lifecycle hook triggered just before the component is destroyed.
-   * Cleans up active subscriptions to prevent memory leaks.
+   * @description Hook del ciclo de vida de Angular que se activa justo antes de destruir el componente.
+   * Limpia las suscripciones activas para evitar fugas de memoria.
    * @returns {void}
    */
   ngOnDestroy(): void {

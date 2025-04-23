@@ -8,14 +8,14 @@ import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.co
 
 const ROUTES: Routes = [
   {
-    path: 'importacion-sustancias-quimicas',
+    path: 'contenedor-de-pasos',
     component: SolicitudPageComponent,
   },
 
   {
     path: '',
     pathMatch: 'full',
-    redirectTo: 'importacion-sustancias-quimicas',
+    redirectTo: 'contenedor-de-pasos',
   },
   {
     path: 'agregar-datos-mercancia',
@@ -31,9 +31,8 @@ const ROUTES: Routes = [
   },
 ];
 
-
 @NgModule({
   imports: [RouterModule.forChild(ROUTES)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class SolicitudDeSustanciasQuimicasRoutingModule { }
+export class PermisoOrdinarioImportacionSustanciasQuimicasRoutingModule { }

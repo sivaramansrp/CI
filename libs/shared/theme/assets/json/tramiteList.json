@@ -1892,8 +1892,8 @@
     {
         "id": 271,
         "tramite": 240405,
-        "linkDashboard": "/sedena/solicitude-de/importacion/sustancias-quimicas",
-        "linkDepartment": "/pago/solicitude-de/importacion/sustancias-quimicas",
+        "linkDashboard": "/sedena/permiso-ordinario-importacion-sustancias-quimicas/contenedor-de-pasos",
+        "linkDepartment": "/pago/permiso-ordinario-importacion-sustancias-quimicas/contenedor-de-pasos",
         "department": "sedena"
     },
     {

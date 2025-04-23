@@ -18,7 +18,7 @@ describe('PasoDosComponent', () => {
      fixture.detectChanges();
    });
  
-   it('should create', () => {
-     expect(component).toBeTruthy();
-   });
+   it('debería crear el componente', () => {
+    expect(component).toBeTruthy();
+  });
 });

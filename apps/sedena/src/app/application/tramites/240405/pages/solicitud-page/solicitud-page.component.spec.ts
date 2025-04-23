@@ -18,22 +18,23 @@ describe('SolicitudPageComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-  it('should create the component', () => {
+  it('debería crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should render <app-paso-uno> when indice is 1', () => {
+  it('debería crear el componente', () => {
+    expect(component).toBeTruthy();
+  });
+
+  it('debería renderizar <app-paso-uno> cuando el índice es 1', () => {
     component.indice = 1;
     fixture.detectChanges(); 
 
-    const PASO_UNO_ELEMENT= fixture.debugElement.query(By.css('app-paso-uno'));
+    const PASO_UNO_ELEMENT = fixture.debugElement.query(By.css('app-paso-uno'));
     expect(PASO_UNO_ELEMENT).toBeTruthy();
   });
 
-  it('should render <app-paso-dos> when indice is 2', () => {
+  it('debería renderizar <app-paso-dos> cuando el índice es 2', () => {
     component.indice = 2;
     fixture.detectChanges(); 
 
@@ -41,7 +42,7 @@ describe('SolicitudPageComponent', () => {
     expect(PASO_DOS_ELEMENT).toBeTruthy();  
   });
 
-  it('should render <app-paso-tres> when indice is 3', () => {
+  it('debería renderizar <app-paso-tres> cuando el índice es 3', () => {
     component.indice = 3;
     fixture.detectChanges();  
 
@@ -49,10 +50,10 @@ describe('SolicitudPageComponent', () => {
     expect(PASO_TRES_ELEMENT).toBeTruthy(); 
   });
 
-  it('should render the correct step based on the current indice', () => {
+  it('debería renderizar el paso correcto basado en el índice actual', () => {
     component.indice = 1;
     fixture.detectChanges();
-    let PASO_UNO_ELEMENT= fixture.debugElement.query(By.css('app-paso-uno'));
+    let PASO_UNO_ELEMENT = fixture.debugElement.query(By.css('app-paso-uno'));
     expect(PASO_UNO_ELEMENT).toBeTruthy();
     let PASO_DOS_ELEMENT = fixture.debugElement.query(By.css('app-paso-dos'));
     let PASO_TRES_ELEMENT = fixture.debugElement.query(By.css('app-paso-tres'));
@@ -61,7 +62,7 @@ describe('SolicitudPageComponent', () => {
 
     component.indice = 2;
     fixture.detectChanges();
-    PASO_UNO_ELEMENT= fixture.debugElement.query(By.css('app-paso-uno'));
+    PASO_UNO_ELEMENT = fixture.debugElement.query(By.css('app-paso-uno'));
     PASO_DOS_ELEMENT = fixture.debugElement.query(By.css('app-paso-dos'));
     PASO_TRES_ELEMENT = fixture.debugElement.query(By.css('app-paso-tres'));
     expect(PASO_UNO_ELEMENT).toBeFalsy();
@@ -70,7 +71,7 @@ describe('SolicitudPageComponent', () => {
 
     component.indice = 3;
     fixture.detectChanges();
-    PASO_UNO_ELEMENT= fixture.debugElement.query(By.css('app-paso-uno'));
+    PASO_UNO_ELEMENT = fixture.debugElement.query(By.css('app-paso-uno'));
     PASO_DOS_ELEMENT = fixture.debugElement.query(By.css('app-paso-dos'));
     PASO_TRES_ELEMENT = fixture.debugElement.query(By.css('app-paso-tres'));
     expect(PASO_UNO_ELEMENT).toBeFalsy();
@@ -78,7 +79,7 @@ describe('SolicitudPageComponent', () => {
     expect(PASO_TRES_ELEMENT).toBeTruthy();
   });
 
-  it('should trigger getValorIndice when btn-continuar is clicked', () => {
+  it('debería disparar getValorIndice cuando se hace clic en btn-continuar', () => {
     const ACTION_EVENT = { valor: 2, accion: 'cont' };
     const GET_VALOR_INDICE_SPY = jest.spyOn(component, 'getValorIndice');
     component.indice = 1;
@@ -89,7 +90,7 @@ describe('SolicitudPageComponent', () => {
     expect(GET_VALOR_INDICE_SPY).toHaveBeenCalledWith(ACTION_EVENT);
   });
 
-  it('should not navigate when an invalid action is triggered', () => {
+  it('no debería navegar cuando se dispara una acción inválida', () => {
     const ACTION_EVENT = { valor: 5, accion: 'cont' }; 
 
     const GET_VALOR_INDICE_SPY = jest.spyOn(component, 'getValorIndice');

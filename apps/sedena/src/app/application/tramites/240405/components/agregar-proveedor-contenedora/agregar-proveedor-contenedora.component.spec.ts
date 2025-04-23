@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AgregarProveedorContenedoraComponent } from './agregar-proveedor-contenedora.component';
-import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 describe('AgregarProveedorContenedoraComponent', () => {
   let component: AgregarProveedorContenedoraComponent;
@@ -8,8 +8,8 @@ describe('AgregarProveedorContenedoraComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [AgregarProveedorContenedoraComponent],
-    schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
+      imports: [AgregarProveedorContenedoraComponent],
+      schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
 
     fixture = TestBed.createComponent(AgregarProveedorContenedoraComponent);
@@ -17,7 +17,7 @@ describe('AgregarProveedorContenedoraComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('debería crear el componente', () => {
     expect(component).toBeTruthy();
   });
 });
