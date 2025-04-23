@@ -431,6 +431,13 @@ const ROUTES: Routes = [
         (m) => m.ModalidadAmpliacionModule
       ),
   },
+  {
+    path: 'validar-certificado',
+    loadChildren: () =>
+      import('./tramites/110205/validar-certificado.module').then(
+        (m) => m.ValidarCertificadoModule
+      ),
+  }
   
 ];
 
