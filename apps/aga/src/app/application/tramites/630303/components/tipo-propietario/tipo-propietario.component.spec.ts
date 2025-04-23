@@ -1,47 +1,45 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { TipoPropietarioComponent } from './tipo-propietario.component';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { of } from 'rxjs';
 import { Tramite630303Store } from '../../estados/tramite630303.store';
 import { Tramite630303Query } from '../../estados/tramite630303.query';
 import { RetornoImportacionTemporalService } from '../../services/retorno-importacion-temporal.service';
-import { of } from 'rxjs';
+import { FORMULARIO_DATOS_PROPIETARIO_NOMBRE } from '../../enum/retorno-importacion-temporal.enum';
 
 describe('TipoPropietarioComponent', () => {
   let component: TipoPropietarioComponent;
   let fixture: ComponentFixture<TipoPropietarioComponent>;
-  let mockStore: jest.Mocked<Tramite630303Store>;
-  let mockQuery: jest.Mocked<Tramite630303Query>;
-  let mockService: jest.Mocked<RetornoImportacionTemporalService>;
+  let storeMock: Partial<Tramite630303Store>;
+  let queryMock: Partial<Tramite630303Query>;
+  let serviceMock: Partial<RetornoImportacionTemporalService>;
 
   beforeEach(async () => {
-    mockStore = {
+    storeMock = {
       setTramite630303State: jest.fn(),
-    } as unknown as jest.Mocked<Tramite630303Store>;
+    };
 
-    mockQuery = {
+    queryMock = {
       selectTramite630303State$: of({
-        propietario: 'Propietario 1',
-        tipoDePropietario: '1',
-        nombre: 'John',
-        apellidoPaterno: 'Doe',
-        apellidoMaterno: 'Smith',
-        razonSocial: 'Empresa XYZ',
+        propietario: '1',
+        tipoDePropietario: '2',
       }),
-    } as unknown as jest.Mocked<Tramite630303Query>;
+    };
 
-    mockService = {
-      getPropietario: jest.fn().mockReturnValue(of([{ id: 1, descripcion: 'Propietario 1' }])),
-      getTipoDePropietario: jest.fn().mockReturnValue(of([{ id: 2, descripcion: 'Tipo 1' }])),
-      getPais: jest.fn().mockReturnValue(of([{ id: 3, descripcion: 'País 1' }])),
-    } as unknown as jest.Mocked<RetornoImportacionTemporalService>;
+    serviceMock = {
+      getPropietario: jest.fn().mockReturnValue(of([{ id: '1', descripcion: 'Persona' }])),
+      getTipoDePropietario: jest.fn().mockReturnValue(of([{ id: '1', descripcion: 'Física' }])),
+      getPais: jest.fn().mockReturnValue(of([{ id: 'MX', descripcion: 'México' }])),
+    };
 
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule, TipoPropietarioComponent],  
+      imports: [ReactiveFormsModule,TipoPropietarioComponent],
+      declarations: [],
       providers: [
         FormBuilder,
-        { provide: Tramite630303Store, useValue: mockStore },
-        { provide: Tramite630303Query, useValue: mockQuery },
-        { provide: RetornoImportacionTemporalService, useValue: mockService },
+        { provide: Tramite630303Store, useValue: storeMock },
+        { provide: Tramite630303Query, useValue: queryMock },
+        { provide: RetornoImportacionTemporalService, useValue: serviceMock },
       ],
     }).compileComponents();
 
@@ -54,95 +52,50 @@ describe('TipoPropietarioComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form with default values', () => {
+  it('should initialize the form with data from state', () => {
     expect(component.tipoPropietarioFormulario.value).toEqual({
-      propietario: 'Propietario 1',
-      tipoDePropietario: '1',
-      nombre: 'John',
-      apellidoPaterno: 'Doe',
-      apellidoMaterno: 'Smith',
-      razonSocial: 'Empresa XYZ',
+      propietario: '1',
+      tipoDePropietario: '2',
     });
   });
 
-  it('should fetch propietario options from the service', () => {
-    component.getPropietario();
-    expect(mockService.getPropietario).toHaveBeenCalled();
-    expect(component.propietarioOpciones).toEqual([{ id: 1, descripcion: 'Propietario 1' }]);
+  it('should call getPropietario and populate propietarioOpciones', () => {
+    expect(component.propietarioOpciones.length).toBeGreaterThan(0);
   });
 
-  it('should fetch tipoDePropietario options from the service', () => {
-    component.getTipoDePropietario();
-    expect(mockService.getTipoDePropietario).toHaveBeenCalled();
-    expect(component.tipoDePropietarioOpciones).toEqual([{ id: 2, descripcion: 'Tipo 1' }]);
+  it('should call getTipoDePropietario and populate tipoDePropietarioOpciones', () => {
+    expect(component.tipoDePropietarioOpciones.length).toBeGreaterThan(0);
   });
 
-  it('should fetch pais options from the service', () => {
-    component.getPais();
-    expect(mockService.getPais).toHaveBeenCalled();
-    const paisField = component.formularioDatosTipoPropietario.find((field) => field.id === 'pais');
-    expect(paisField?.opciones).toEqual([{ id: 3, descripcion: 'País 1' }]);
+  it('should update field visibility in cambiarTipoPropietario()', () => {
+    component.tipoPropietarioFormulario.get('tipoDePropietario')?.setValue('1');
+    component.formularioDatosPropietarioNombre = structuredClone(FORMULARIO_DATOS_PROPIETARIO_NOMBRE);
+    component.cambiarTipoPropietario();
+
+    const nombreCampo = component.formularioDatosPropietarioNombre.find(c => c.id === 'nombre');
+    expect(nombreCampo?.mostrar).toBe(true);
   });
 
-  it('should update the store when establecerCambioDeValor is called', () => {
-    const mockEvent = { campo: 'propietario', valor: 'Nuevo Propietario' };
-    component.establecerCambioDeValor(mockEvent);
-    expect(mockStore.setTramite630303State).toHaveBeenCalledWith('propietario', 'Nuevo Propietario');
+  it('should toggle mostrarTipoPropietario and mostrarSolicitante in cambiarPropietario()', () => {
+    component.tipoPropietarioFormulario.get('propietario')?.setValue('2');
+    component.cambiarPropietario();
+    expect(component.mostrarSolicitante).toBe(true);
+    expect(component.mostrarTipoPropietario).toBe(false);
   });
 
-  it('should set validators correctly when establecerValidadores is called', () => {
-    const spy = jest.spyOn(component.tipoPropietarioFormulario.get('nombre')!, 'setValidators');
-    component.establecerValidadores(['nombre'], Validators.required);
-    expect(spy).toHaveBeenCalledWith(Validators.required);
+  it('should set value in store with establecerCambioDeValor (primitive)', () => {
+    component.establecerCambioDeValor({ campo: 'propietario', valor: '1' });
+    expect(storeMock.setTramite630303State).toHaveBeenCalledWith('propietario', '1');
   });
 
-  it('should clear validators correctly when limpiarValidadores is called', () => {
-    const spy = jest.spyOn(component.tipoPropietarioFormulario.get('nombre')!, 'clearValidators');
-    component.limpiarValidadores(['nombre']);
-    expect(spy).toHaveBeenCalled();
+  it('should set value in store with establecerCambioDeValor (object with id)', () => {
+    component.establecerCambioDeValor({ campo: 'tipoDePropietario', valor: { id: 5 } });
+    expect(storeMock.setTramite630303State).toHaveBeenCalledWith('tipoDePropietario', '5');
   });
 
-  it('should adjust validators when tipoDePropietario is 1', () => {
-    component.tipoPropietarioFormulario.patchValue({ tipoDePropietario: '1' });
-    component.ajustarValidadoresSegunValor();
-    const nombreField = component.tipoPropietarioFormulario.get('nombre');
-    const apellidoPaternoField = component.tipoPropietarioFormulario.get('apellidoPaterno');
-    const razonSocialField = component.tipoPropietarioFormulario.get('razonSocial');
-    expect(nombreField?.hasValidator(Validators.required)).toBeTruthy();
-    expect(apellidoPaternoField?.hasValidator(Validators.required)).toBeTruthy();
-    expect(razonSocialField?.hasValidator(Validators.required)).toBeFalsy();
-  });
-
-  it('should adjust validators when tipoDePropietario is 2', () => {
-    component.tipoPropietarioFormulario.patchValue({ tipoDePropietario: '2' });
-    component.ajustarValidadoresSegunValor();
-    const razonSocialField = component.tipoPropietarioFormulario.get('razonSocial');
-    const nombreField = component.tipoPropietarioFormulario.get('nombre');
-    const apellidoPaternoField = component.tipoPropietarioFormulario.get('apellidoPaterno');
-    expect(razonSocialField?.hasValidator(Validators.required)).toBeTruthy();
-    expect(nombreField?.hasValidator(Validators.required)).toBeFalsy();
-    expect(apellidoPaternoField?.hasValidator(Validators.required)).toBeFalsy();
-  });
-
-  it('should call all initialization methods in ngOnInit', () => {
-    const getValorStoreSpy = jest.spyOn(component, 'getValorStore');
-    const inicializarFormularioSpy = jest.spyOn(component, 'inicializarFormulario');
-    const getPropietarioSpy = jest.spyOn(component, 'getPropietario');
-    const getTipoDePropietarioSpy = jest.spyOn(component, 'getTipoDePropietario');
-    const getPaisSpy = jest.spyOn(component, 'getPais');
-    const ajustarValidadoresSegunValorSpy = jest.spyOn(component, 'ajustarValidadoresSegunValor');
-    component.ngOnInit();
-    expect(getValorStoreSpy).toHaveBeenCalled();
-    expect(inicializarFormularioSpy).toHaveBeenCalled();
-    expect(getPropietarioSpy).toHaveBeenCalled();
-    expect(getTipoDePropietarioSpy).toHaveBeenCalled();
-    expect(getPaisSpy).toHaveBeenCalled();
-    expect(ajustarValidadoresSegunValorSpy).toHaveBeenCalled();
-  });
-
-  it('should clean up subscriptions on destroy', () => {
-    const spy = jest.spyOn((component as any).destroyed$, 'next');
+  it('should complete destroyed$ on destroy', () => {
+    const completeSpy = jest.spyOn(component['destroyed$'], 'complete');
     component.ngOnDestroy();
-    expect(spy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
   });
 });

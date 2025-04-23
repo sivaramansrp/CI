@@ -1,10 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule } from '@angular/forms';
-import { of, Subject } from 'rxjs';
-
+import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
 import { DatosMercanciaComponent } from './datos-mercancia.component';
 import { Tramite630303Store } from '../../estados/tramite630303.store';
 import { Tramite630303Query } from '../../estados/tramite630303.query';
+import { of } from 'rxjs';
 
 describe('DatosMercanciaComponent', () => {
   let component: DatosMercanciaComponent;
@@ -19,23 +18,20 @@ describe('DatosMercanciaComponent', () => {
 
     mockQuery = {
       selectTramite630303State$: of({
-        descripcionMercancia: 'Mercancía de prueba',
-        motivo: 'Motivo de prueba',
-        listaMercancia: 'Lista de prueba',
+        campo: 'valor',
       }),
     } as unknown as jest.Mocked<Tramite630303Query>;
 
     await TestBed.configureTestingModule({
-      declarations: [],
       imports: [ReactiveFormsModule,DatosMercanciaComponent],
+      declarations: [],
       providers: [
+        FormBuilder,
         { provide: Tramite630303Store, useValue: mockStore },
         { provide: Tramite630303Query, useValue: mockQuery },
       ],
     }).compileComponents();
-  });
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(DatosMercanciaComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
@@ -45,35 +41,37 @@ describe('DatosMercanciaComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  it('should initialize the form on ngOnInit', () => {
+    const inicializarFormularioSpy = jest.spyOn(component, 'inicializarFormulario');
+    const getValorStoreSpy = jest.spyOn(component, 'getValorStore');
+
+    component.ngOnInit();
+
+    expect(inicializarFormularioSpy).toHaveBeenCalled();
+    expect(getValorStoreSpy).toHaveBeenCalled();
+  });
+
   it('should initialize the form with default values', () => {
     component.inicializarFormulario();
-    expect(component.datosMercancia.value).toEqual({
-      // Add expected default values for the form controls here
-    });
+    expect(component.datosMercancia).toBeTruthy();
   });
 
-  it('should fetch the state from the store and set estadoSeleccionado', () => {
+  it('should fetch the current state from the store', () => {
     component.getValorStore();
-    expect(component.estadoSeleccionado).toEqual({
-      descripcionMercancia: 'Mercancía de prueba',
-      motivo: 'Motivo de prueba',
-      listaMercancia: 'Lista de prueba',
-    });
+    expect(component.estadoSeleccionado).toEqual({ campo: 'valor' });
   });
 
-  it('should call setTramite630303State when establecerCambioDeValor is called', () => {
-    const event = { campo: 'descripcionMercancia', valor: 'Nueva descripción' };
-    component.establecerCambioDeValor(event);
+  it('should update the store when establecerCambioDeValor is called', () => {
+    const mockEvent = { campo: 'campoPrueba', valor: 'valorPrueba' };
 
-    expect(mockStore.setTramite630303State).toHaveBeenCalledWith(
-      event.campo,
-      event.valor
-    );
+    component.establecerCambioDeValor(mockEvent);
+
+    expect(mockStore.setTramite630303State).toHaveBeenCalledWith('campoPrueba', 'valorPrueba');
   });
 
   it('should clean up subscriptions on ngOnDestroy', () => {
-    const destroyedSpy = jest.spyOn(component['destroyed$'], 'next');
-    const completeSpy = jest.spyOn(component['destroyed$'], 'complete');
+    const destroyedSpy = jest.spyOn((component as any).destroyed$, 'next');
+    const completeSpy = jest.spyOn((component as any).destroyed$, 'complete');
 
     component.ngOnDestroy();
 

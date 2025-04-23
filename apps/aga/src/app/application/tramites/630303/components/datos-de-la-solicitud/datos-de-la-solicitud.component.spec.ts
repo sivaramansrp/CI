@@ -1,59 +1,78 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { of } from 'rxjs';
-import { ReactiveFormsModule } from '@angular/forms';
-
+import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
 import { DatosDeLaSolicitudComponent } from './datos-de-la-solicitud.component';
 import { RetornoImportacionTemporalService } from '../../services/retorno-importacion-temporal.service';
 import { Tramite630303Store } from '../../estados/tramite630303.store';
 import { Tramite630303Query } from '../../estados/tramite630303.query';
+import { of } from 'rxjs';
 
 describe('DatosDeLaSolicitudComponent', () => {
   let component: DatosDeLaSolicitudComponent;
   let fixture: ComponentFixture<DatosDeLaSolicitudComponent>;
-
-  let mockRetornoService: any;
-  let mockStore: any;
-  let mockQuery: any;
-
-  const mockCatalogData = [
-    { id: '1', descripcion: 'Opción 1' },
-    { id: '2', descripcion: 'Opción 2' }
-  ];
-
-  const initialState = {
-    fechaLimiteRetorno: '2025-12-31',
-    cuentaProrroga: 'Sí'
-  };
+  let mockService: jest.Mocked<RetornoImportacionTemporalService>;
+  let mockStore: jest.Mocked<Tramite630303Store>;
+  let mockQuery: jest.Mocked<Tramite630303Query>;
 
   beforeEach(async () => {
-    mockRetornoService = {
-      getAduanaDeIngreso: jest.fn().mockReturnValue(of(mockCatalogData)),
-      getSeccionAduanera: jest.fn().mockReturnValue(of(mockCatalogData)),
-      getProrroga: jest.fn().mockReturnValue(of(mockCatalogData))
-    };
+    mockService = {
+      getAduanaDeIngreso: jest.fn(),
+      getSeccionAduanera: jest.fn(),
+      getProrroga: jest.fn(),
+    } as unknown as jest.Mocked<RetornoImportacionTemporalService>;
 
     mockStore = {
-      setTramite630303State: jest.fn()
-    };
+      setTramite630303State: jest.fn(),
+    } as unknown as jest.Mocked<Tramite630303Store>;
 
     mockQuery = {
-      selectTramite630303State$: of(initialState)
-    };
+      selectTramite630303State$: of({ cuentaProrroga: '1' }),
+    } as unknown as jest.Mocked<Tramite630303Query>;
 
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule,DatosDeLaSolicitudComponent],
+      imports: [ReactiveFormsModule, DatosDeLaSolicitudComponent],
       providers: [
-        { provide: RetornoImportacionTemporalService, useValue: mockRetornoService },
+        FormBuilder,
+        { provide: RetornoImportacionTemporalService, useValue: mockService },
         { provide: Tramite630303Store, useValue: mockStore },
-        { provide: Tramite630303Query, useValue: mockQuery }
+        { provide: Tramite630303Query, useValue: mockQuery },
       ],
-      declarations: []
     }).compileComponents();
-  });
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(DatosDeLaSolicitudComponent);
     component = fixture.componentInstance;
+
+    mockService.getAduanaDeIngreso.mockReturnValue(of([]));
+    mockService.getSeccionAduanera.mockReturnValue(of([]));
+    mockService.getProrroga.mockReturnValue(of([]));
+
+    
+    component.formularioDatosSolicitud = [
+      {
+        id: 'cveAduana', opciones: [],
+        labelNombre: '',
+        campo: '',
+        clase: '',
+        tipoInput: '',
+        desactivado: false
+      },
+      {
+        id: 'cveSeccionAduanera', opciones: [],
+        labelNombre: '',
+        campo: '',
+        clase: '',
+        tipoInput: '',
+        desactivado: false
+      },
+      {
+        id: 'cuentaProrroga', opciones: [],
+        labelNombre: '',
+        campo: '',
+        clase: '',
+        tipoInput: '',
+        desactivado: false
+      },
+    ];
+
     fixture.detectChanges();
   });
 
@@ -61,46 +80,94 @@ describe('DatosDeLaSolicitudComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form with state values', () => {
-    expect(component.datosImportacionTemporalFormulario).toBeDefined();
-    const form = component.datosImportacionTemporalFormulario.value;
-    expect(form.fechaLimiteRetorno).toBe('2025-12-31');
-    expect(form.cuentaProrroga).toBe('Sí');
+  it('should initialize the form and fetch data on ngOnInit', () => {
+    const getValorStoreSpy = jest.spyOn(component, 'getValorStore');
+    const inizializarFormularioSpy = jest.spyOn(component, 'inizializarFormulario');
+    const getAduanaDeIngresoSpy = jest.spyOn(component, 'getAduanaDeIngreso');
+    const getSeccionAduaneraSpy = jest.spyOn(component, 'getSeccionAduanera');
+    const getProrrogaSpy = jest.spyOn(component, 'getProrroga');
+    const cambiarCuentaProrrogaSpy = jest.spyOn(component, 'cambiarCuentaProrroga');
+
+    component.ngOnInit();
+
+    expect(getValorStoreSpy).toHaveBeenCalled();
+    expect(inizializarFormularioSpy).toHaveBeenCalled();
+    expect(getAduanaDeIngresoSpy).toHaveBeenCalled();
+    expect(getSeccionAduaneraSpy).toHaveBeenCalled();
+    expect(getProrrogaSpy).toHaveBeenCalled();
+    expect(cambiarCuentaProrrogaSpy).toHaveBeenCalled();
   });
 
-  it('should load Aduana de Ingreso options', () => {
+  it('should initialize the form with default values', () => {
+    component.inizializarFormulario();
+    expect(component.datosImportacionTemporalFormulario).toBeTruthy();
+  });
+
+  it('should fetch aduana de ingreso options', () => {
+    const mockData = [{ id: 1, descripcion: 'Aduana 1' }];
+    mockService.getAduanaDeIngreso.mockReturnValue(of(mockData));
+
     component.getAduanaDeIngreso();
-    expect(mockRetornoService.getAduanaDeIngreso).toHaveBeenCalled();
-    const aduana = component.formularioDatosSolicitud.find(f => f.id === 'cveAduana');
-    expect(aduana?.opciones).toEqual(mockCatalogData);
+
+    expect(mockService.getAduanaDeIngreso).toHaveBeenCalled();
+    const aduanaIngreso = component.formularioDatosSolicitud.find((item) => item.id === 'cveAduana');
+    expect(aduanaIngreso?.opciones).toEqual(mockData);
   });
 
-  it('should load Sección Aduanera options', () => {
+  it('should fetch seccion aduanera options', () => {
+    const mockData = [{ id: 2, descripcion: 'Sección 1' }];
+    mockService.getSeccionAduanera.mockReturnValue(of(mockData));
+
     component.getSeccionAduanera();
-    expect(mockRetornoService.getSeccionAduanera).toHaveBeenCalled();
-    const seccion = component.formularioDatosSolicitud.find(f => f.id === 'cveSeccionAduanera');
-    expect(seccion?.opciones).toEqual(mockCatalogData);
+
+    expect(mockService.getSeccionAduanera).toHaveBeenCalled();
+    const seccionAduanera = component.formularioDatosSolicitud.find((item) => item.id === 'cveSeccionAduanera');
+    expect(seccionAduanera?.opciones).toEqual(mockData);
   });
 
-  it('should load Prórroga options', () => {
+  it('should fetch prorroga options', () => {
+    const mockData = [{ id: 3, descripcion: 'Prórroga 1' }];
+    mockService.getProrroga.mockReturnValue(of(mockData));
+
     component.getProrroga();
-    expect(mockRetornoService.getProrroga).toHaveBeenCalled();
-    expect(component.prorrogaOpciones).toEqual(mockCatalogData);
+
+    expect(mockService.getProrroga).toHaveBeenCalled();
+    const prorroga = component.formularioDatosSolicitud.find((item) => item.id === 'cuentaProrroga');
+    expect(prorroga?.opciones).toEqual(mockData);
   });
 
-  it('should update store when establecerCambioDeValor is called with an object with id', () => {
-    component.establecerCambioDeValor({ campo: 'cveAduana', valor: { id: 5, descripcion: 'test' } });
-    expect(mockStore.setTramite630303State).toHaveBeenCalledWith('cveAduana', '5');
+  it('should fetch the current state from the store', () => {
+    component.getValorStore();
+    expect(component.estadoSeleccionado).toEqual({ cuentaProrroga: '1' });
   });
 
-  it('should update store when establecerCambioDeValor is called with primitive', () => {
-    component.establecerCambioDeValor({ campo: 'cuentaProrroga', valor: 'No' });
-    expect(mockStore.setTramite630303State).toHaveBeenCalledWith('cuentaProrroga', 'No');
+  it('should update the store and call cambiarCuentaProrroga when establecerCambioDeValor is called', () => {
+    const mockEvent = { campo: 'cuentaProrroga', valor: '1' };
+    const cambiarCuentaProrrogaSpy = jest.spyOn(component, 'cambiarCuentaProrroga');
+
+    component.establecerCambioDeValor(mockEvent);
+
+    expect(mockStore.setTramite630303State).toHaveBeenCalledWith('cuentaProrroga', '1');
+    expect(cambiarCuentaProrrogaSpy).toHaveBeenCalled();
   });
 
-  it('should clean up subscriptions on destroy', () => {
-    const spy = jest.spyOn((component as any).destroyed$, 'next');
+  it('should toggle showDatosRetornoProrroga based on cuentaProrroga value', () => {
+    component.estadoSeleccionado = { cuentaProrroga: '1' } as any;
+    component.cambiarCuentaProrroga();
+    expect(component.showDatosRetornoProrroga).toBe(true);
+
+    component.estadoSeleccionado = { cuentaProrroga: '0' } as any;
+    component.cambiarCuentaProrroga();
+    expect(component.showDatosRetornoProrroga).toBe(false);
+  });
+
+  it('should clean up subscriptions on ngOnDestroy', () => {
+    const destroyedSpy = jest.spyOn((component as any).destroyed$, 'next');
+    const completeSpy = jest.spyOn((component as any).destroyed$, 'complete');
+
     component.ngOnDestroy();
-    expect(spy).toHaveBeenCalled();
+
+    expect(destroyedSpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
   });
 });

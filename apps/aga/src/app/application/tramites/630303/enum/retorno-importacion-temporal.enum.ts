@@ -1,6 +1,13 @@
-import { REGEX_CORREO_ELECTRONICO, REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, REGEX_PATRON_ALFANUMERICO, REGEX_POSTAL, REGEX_TELEFONO } from "@libs/shared/data-access-user/src/tramites/constantes/regex.constants";
-
-
+/**
+ * Importación de constantes de expresiones regulares utilizadas para validaciones en los formularios.
+ */
+import { 
+    REGEX_CORREO_ELECTRONICO, 
+    REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, 
+    REGEX_PATRON_ALFANUMERICO, 
+    REGEX_POSTAL, 
+    REGEX_TELEFONO 
+  } from "@libs/shared/data-access-user/src/tramites/constantes/regex.constants";
 /**
  * PASOS_REGISTRO
  * Define los pasos del registro para el trámite 630303.
@@ -28,61 +35,6 @@ export const PASOS_REGISTRO = [
 ];
 
 /**
- * ESTIMADA_RETORNO
- * Configuración para la fecha límite estimada de retorno.
- * Contiene el nombre de la etiqueta, si es requerido y si está habilitado.
- */
-export const ESTIMADA_RETORNO = {
-    labelNombre: 'Fecha límite estimada de retorno',
-    required: true,
-    habilitado: true
-};
-
-/**
- * FECHA_INICIO_PRORROGA
- * Configuración para la fecha de inicio de la prórroga.
- * Contiene el nombre de la etiqueta, si es requerido y si está habilitado.
- */
-export const FECHA_INICIO_PRORROGA = {
-    labelNombre: 'Fecha de inicio prórroga',
-    required: true,
-    habilitado: true
-};
-
-/**
- * FECHA_VENCIMIENTO_PRORROGA
- * Configuración para la fecha de vencimiento de la prórroga.
- * Contiene el nombre de la etiqueta, si es requerido y si está habilitado.
- */
-export const FECHA_VENCIMIENTO_PRORROGA = {
-    labelNombre: 'Fecha de vencimiento prórroga',
-    required: true,
-    habilitado: true
-};
-
-/**
- * FECHA_INGRESO
- * Configuración para la fecha de ingreso.
- * Contiene el nombre de la etiqueta, si es requerido y si está habilitado.
- */
-export const FECHA_INGRESO = {
-    labelNombre: 'Fecha de ingreso',
-    required: true,
-    habilitado: true
-};
-
-/**
- * FECHA_VENCIMIENTO
- * Configuración para la fecha de vencimiento.
- * Contiene el nombre de la etiqueta, si es requerido y si está habilitado.
- */
-export const FECHA_VENCIMIENTO = {
-    labelNombre: 'Fecha de vencimiento',
-    required: true,
-    habilitado: true
-};
-
-/**
  * FORMULARIO_DATOS_MERCANCIA
  * Define los campos del formulario para la mercancía.
  * Cada campo contiene un ID, nombre de etiqueta, campo, clase, tipo de input, validadores y otros atributos.
@@ -103,7 +55,7 @@ export const FORMULARIO_DATOS_MERCANCIA = [
         ],
         marcadorDePosicion: '',
         valorPredeterminado: '',
-        marginTop: 0
+        marginTop: 4
     },
     {
         id: 'motivo',
@@ -119,7 +71,7 @@ export const FORMULARIO_DATOS_MERCANCIA = [
         ],
         marcadorDePosicion: '',
         valorPredeterminado: '',
-        marginTop: 0
+        marginTop: 4
     },
     {
         id: 'listaMercancia',
@@ -135,7 +87,7 @@ export const FORMULARIO_DATOS_MERCANCIA = [
         ],
         marcadorDePosicion: '',
         valorPredeterminado: '',
-        marginTop: 0
+        marginTop: 4
     }
 ];
 
@@ -174,15 +126,61 @@ export const FORMULARIO_DATOS_SOLICITUD = [
         valorPredeterminado: '',
         marginTop: 0
     },
+    {
+        id: '',
+        labelNombre: '',
+        campo: '',
+        clase: 'col-md-4',
+        tipoInput: '',
+        desactivado: false,
+        soloLectura: false,
+        validadores: [],
+        marcadorDePosicion: '',
+        valorPredeterminado: '',
+        marginTop: 0
+    },
+    {
+        id: 'fechaLimiteRetorno',
+        labelNombre: 'Fecha límite estimada de retorno',
+        campo: 'fechaLimiteRetorno',
+        clase: 'col-md-4',
+        tipoInput: 'date',
+        desactivado: false,
+        soloLectura: false,
+        validadores: [
+            { tipo: 'required' }
+        ],
+        marcadorDePosicion: '',
+        valorPredeterminado: '',
+        marginTop: 0,
+        habilitado: true
+    },
+    {
+        id: 'cuentaProrroga',
+        labelNombre: 'Cuenta con prórroga',
+        campo: 'cuentaProrroga',
+        clase: 'col-md-4',
+        tipoInput: 'select-catalogos',
+        desactivado: false,
+        soloLectura: false,
+        validadores: [
+            { tipo: 'required' }
+        ],
+        marcadorDePosicion: '',
+        valorPredeterminado: '',
+        marginTop: 0
+    }
 ];
 
 /**
- * FORMULARIO_DATOS_PROPIETARIO 
- * Define los campos del formulario para los datos del propietario.
- * Cada campo contiene un ID, nombre de etiqueta, campo, clase, tipo de input, validadores y otros atributos.
- * */
+ * FORMULARIO_DATOS_PROPIETARIO_DIRECCION
+ * Este formulario define los campos relacionados con la dirección del propietario.
+ * Cada campo incluye un identificador único (ID), el nombre de la etiqueta, el nombre del campo,
+ * la clase CSS, el tipo de input, validadores y otros atributos necesarios para la validación y presentación.
+ */
 
-export const FORMULARIO_DATOS_PROPIETARIO = [
+export const FORMULARIO_DATOS_PROPIETARIO_DIRECCION = [
+
     {
         id: 'calle',
         labelNombre: 'Calle',
@@ -201,7 +199,7 @@ export const FORMULARIO_DATOS_PROPIETARIO = [
     },
     {
         id: 'numeroExterior',
-        labelNombre: 'Número Exterior',
+        labelNombre: 'Número exterior',
         campo: 'numeroExterior',
         clase: 'col-md-4',
         tipoInput: 'number',
@@ -216,7 +214,7 @@ export const FORMULARIO_DATOS_PROPIETARIO = [
     },
     {
         id: 'numeroInterior',
-        labelNombre: 'Número Interior',
+        labelNombre: 'Número interior',
         campo: 'numeroInterior',
         clase: 'col-md-4',
         tipoInput: 'number',
@@ -240,7 +238,7 @@ export const FORMULARIO_DATOS_PROPIETARIO = [
         ],
         marcadorDePosicion: '',
         valorPredeterminado: '',
-        marginTop: 0
+        marginTop: 4
     },
     {
         id: 'estadoLocalidad',
@@ -256,13 +254,26 @@ export const FORMULARIO_DATOS_PROPIETARIO = [
         ],
         marcadorDePosicion: '',
         valorPredeterminado: '',
+        marginTop: 4
+    },
+    {
+        id: '',
+        labelNombre: '',
+        campo: '',
+        clase: 'col-md-4',
+        tipoInput: '',
+        desactivado: false,
+        soloLectura: false,
+        validadores: [],
+        marcadorDePosicion: '',
+        valorPredeterminado: '',
         marginTop: 0
     },
     {
         id: 'correoElectronico',
-        labelNombre: 'Correo Electrónico',
+        labelNombre: 'Correo electrónico',
         campo: 'correoElectronico',
-        clase: 'col-md-4 break-line',
+        clase: 'col-md-4',
         tipoInput: 'text',
         desactivado: false,
         soloLectura: false,
@@ -272,7 +283,7 @@ export const FORMULARIO_DATOS_PROPIETARIO = [
         ],
         marcadorDePosicion: '',
         valorPredeterminado: '',
-        marginTop: 0
+        marginTop: 4
     },
     {
         id: 'telefono',
@@ -288,11 +299,11 @@ export const FORMULARIO_DATOS_PROPIETARIO = [
         ],
         marcadorDePosicion: '',
         valorPredeterminado: '',
-        marginTop: 0
+        marginTop: 4
     },
     {
         id: 'codigoPostal',
-        labelNombre: 'Código Postal',
+        labelNombre: 'Código postal',
         campo: 'codigoPostal',
         clase: 'col-md-4',
         tipoInput: 'text',
@@ -304,15 +315,15 @@ export const FORMULARIO_DATOS_PROPIETARIO = [
         ],
         marcadorDePosicion: '',
         valorPredeterminado: '',
-        marginTop: 0
+        marginTop: 4
     }
 ];
 
 /**
  * FORMULARIO_DATOS_AUTORIZACION
- *  Define los campos del formulario para la autorización.
+ * Define los campos del formulario para la autorización.
  * Cada campo contiene un ID, nombre de etiqueta, campo, clase, tipo de input, validadores y otros atributos.
- * */
+ */
 
 export const FORMULARIO_DATOS_AUTORIZACION = [
     {
@@ -346,5 +357,192 @@ export const FORMULARIO_DATOS_AUTORIZACION = [
         valorPredeterminado: '',
         marginTop: 0
     },
-    
+    {
+        id: 'seccionAduanera',
+        labelNombre: 'Sección aduanera',
+        campo: 'seccionAduanera',
+        clase: 'col-md-4',
+        tipoInput: 'select-catalogos',
+        desactivado: false,
+        soloLectura: false,
+        validadores: [
+            { tipo: 'required' }
+        ],
+        marcadorDePosicion: '',
+        valorPredeterminado: '',
+        marginTop: 4
+    },
+    {
+        id: 'fechaIngreso',
+        labelNombre: 'Fecha de ingreso',
+        campo: 'fechaIngreso',
+        clase: 'col-md-4',
+        tipoInput: 'date',
+        desactivado: false,
+        soloLectura: false,
+        validadores: [
+            { tipo: 'required' }
+        ],
+        marcadorDePosicion: '',
+        valorPredeterminado: '',
+        marginTop: 4,
+        habilitado: true
+    },
+    {
+        id: 'fechaVencimiento',
+        labelNombre: 'Fecha de vencimiento',
+        campo: 'fechaVencimiento',
+        clase: 'col-md-4',
+        tipoInput: 'date',
+        desactivado: false,
+        soloLectura: false,
+        validadores: [
+            { tipo: 'required' }
+        ],
+        marcadorDePosicion: '',
+        valorPredeterminado: '',
+        marginTop: 4,
+        habilitado: true
+    }
+];
+
+/**
+ * FORMULARIO_DATOS_PRORROGA
+ * Define los campos del formulario para la prórroga.
+ * Cada campo contiene un ID, nombre de etiqueta, campo, clase, tipo de input, validadores y otros atributos.
+ * Este formulario se utiliza para capturar información relacionada con las prórrogas de importación temporal.
+ */
+export const FORMULARIO_DATOS_PRORROGA = [
+    {
+        id: 'folioInformacionGeneralProrroga',
+        labelNombre: 'Folio de prórroga de importación temporal formato en papel',
+        campo: 'folioInformacionGeneralProrroga',
+        clase: 'col-md-8',
+        tipoInput: 'text',
+        desactivado: false,
+        soloLectura: false,
+        validadores: [
+            { tipo: 'required' },
+            { tipo: 'pattern', valor: REGEX_PATRON_ALFANUMERICO, mensaje: 'Por favor, corrija el folio de prórroga de importación temporal formato en papel.' }
+        ],
+        marcadorDePosicion: '',
+        valorPredeterminado: '',
+        marginTop: 0
+    },
+    {
+        id: '',
+        labelNombre: '',
+        campo: '',
+        clase: 'col-md-4',
+        tipoInput: '',
+        desactivado: false,
+        soloLectura: false,
+        validadores: [],
+        marcadorDePosicion: '',
+        valorPredeterminado: '',
+        marginTop: 0
+    },
+    {
+        id: 'fechaInicioProrroga',
+        labelNombre: 'Fecha de inicio prórroga',
+        campo: 'fechaInicioProrroga',
+        clase: 'col-md-4',
+        tipoInput: 'date',
+        desactivado: false,
+        soloLectura: false,
+        validadores: [
+            { tipo: 'required' }
+        ],
+        marcadorDePosicion: '',
+        valorPredeterminado: '',
+        marginTop: 0,
+        habilitado: true
+    },
+    {
+        id: 'fechaVencimientoProrroga',
+        labelNombre: 'Fecha de vencimiento prórroga',
+        campo: 'fechaVencimientoProrroga',
+        clase: 'col-md-4',
+        tipoInput: 'date',
+        desactivado: false,
+        soloLectura: false,
+        validadores: [
+            { tipo: 'required' }
+        ],
+        marcadorDePosicion: '',
+        valorPredeterminado: '',
+        marginTop: 0,
+        habilitado: true
+    }
+];
+
+/**
+ * FORMULARIO_DATOS_PROPIETARIO_NOMBRE
+ * Define los campos del formulario para el nombre del propietario.
+ * Cada campo contiene un ID, nombre de etiqueta, campo, clase, tipo de input, validadores y otros atributos.
+ */
+export const FORMULARIO_DATOS_PROPIETARIO_NOMBRE = [
+    {
+        id: 'nombre',
+        labelNombre: 'Nombre(s)',
+        campo: 'nombre',
+        clase: 'col-md-4',
+        tipoInput: 'text',
+        desactivado: false,
+        soloLectura: false,
+        validadores: [
+            { tipo: 'required' },
+            { tipo: 'pattern', valor: REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija el nombre.' }
+        ],
+        marcadorDePosicion: '',
+        valorPredeterminado: '',
+        marginTop: 0
+    },
+    {
+        id: 'apellidoPaterno',
+        labelNombre: 'Apellido paterno',
+        campo: 'apellidoPaterno',
+        clase: 'col-md-4',
+        tipoInput: 'text',
+        desactivado: false,
+        soloLectura: false,
+        validadores: [
+            { tipo: 'required' },
+            { tipo: 'pattern', valor: REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija el apellido paterno.' }
+        ],
+        marcadorDePosicion: '',
+        valorPredeterminado: '',
+        marginTop: 0
+    },
+    {
+        id: 'apellidoMaterno',
+        labelNombre: 'Apellido materno',
+        campo: 'apellidoMaterno',
+        clase: 'col-md-4',
+        tipoInput: 'text',
+        desactivado: false,
+        soloLectura: false,
+        validadores: [
+            { tipo: 'pattern', valor: REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija el apellido materno.' }
+        ],
+        marcadorDePosicion: '',
+        valorPredeterminado: '',
+        marginTop: 0
+    },
+    {
+        id: 'razonSocial',
+        labelNombre: 'Denominación o razón social',
+        campo: 'razonSocial',
+        clase: 'col-md-8',
+        tipoInput: 'text',
+        desactivado: false,
+        soloLectura: false,
+        validadores: [
+            { tipo: 'required' },
+            { tipo: 'pattern', valor: REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija la denominación o razón social.' }
+        ],
+        marcadorDePosicion: '',
+        valorPredeterminado: '',
+        marginTop: 0,
+    }
 ];

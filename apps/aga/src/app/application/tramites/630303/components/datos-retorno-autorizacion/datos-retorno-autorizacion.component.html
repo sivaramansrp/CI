@@ -1,26 +1,8 @@
 <div class="container">
-    <ng-titulo [titulo]="'Información general de la autorización (formato en papel)'"></ng-titulo>
-        <div class="row">
-            <formas-dinamicas
-            [forma]="datosImportacionRetornoAutorizacionGeneralFormulario" [formularioDatos]="formularioDatosAutorizacion" [estado]="estadoSeleccionado"
+    <div class="row">
+        <formas-dinamicas [forma]="datosImportacionRetornoAutorizacionGeneralFormulario"
+            [formularioTitulo]="'Información general de la autorización (formato en papel)'"
+            [formularioDatos]="formularioDatosAutorizacion" [estado]="estadoSeleccionado"
             (emitirCambioDeValor)="establecerCambioDeValor($event)"></formas-dinamicas>
-        </div>
-        <form [formGroup]="datosImportacionRetornoAutorizacionGeneralFormulario">
-         <div class="row">
-            <div class="col-md-4">
-            <app-catalogo-select formControlName="seccionAduanera" [label]="'Sección aduanera'"
-             [catalogo]="seccionAduaneraOpciones" (selectionChange)="establecerCambioDeValor({campo:'seccionAduanera', valor:$event})"></app-catalogo-select>
-            </div>
-            <div class="col-md-4">
-                <input-fecha
-                    [setFecha]="datosImportacionRetornoAutorizacionGeneralFormulario.get('fechaIngreso')?.value"
-                    [datos]="inputFechaIngreso" (valorCambiado)="establecerCambioDeValor({campo:'fechaIngreso', valor:$event})"></input-fecha>
-            </div>
-            <div class="col-md-4">
-                <input-fecha
-                    [setFecha]="datosImportacionRetornoAutorizacionGeneralFormulario.get('fechaVencimiento')?.value"
-                    [datos]="inputFechaVencimiento" (valorCambiado)="establecerCambioDeValor({campo:'fechaVencimiento', valor:$event})"></input-fecha>
-            </div>
-        </div>
-    </form>
+    </div>
 </div>
