@@ -1,6 +1,6 @@
-import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, ModeloDeFormaDinamica, TablaDinamicaComponent, TablaSeleccion, TituloComponent, ValidacionesFormularioService, Validadores } from '@libs/shared/data-access-user/src';
+import { AlertComponent, Catalogo, CatalogoSelectComponent, ModeloDeFormaDinamica, TablaDinamicaComponent, TablaSeleccion, TituloComponent, ValidacionesFormularioService, Validadores } from '@libs/shared/data-access-user/src';
+import { CONFIGURACION_DATOS_SOLICITUD_DE_TABLA, DATOS_DE_LA_SOLICICTUD, INFORMACION_DE_LA_OBRA_ARTE, OBRA_DE_ARTE_ALERT } from '../../constantes/exportar-ilustraciones.enum';
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { DATOS_DE_LA_SOLICICTUD, INFORMACION_DE_LA_OBRA_ARTE, OBRA_DE_ARTE_ALERT } from '../../constantes/exportar-ilustraciones.enum';
 import { ExportarIlustraciones270101State, Tramite270101Store } from '../../../../estados/tramites/270101/tramite270101.store';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
@@ -90,85 +90,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   /**
    * Configuración de la tabla.
    */
-  public configuracionTabla: ConfiguracionColumna<DatosDelSolicitud>[] = [
-    {
-      encabezado: DATOS_DE_LA_SOLICICTUD.AUTOR,
-      clave: (item: DatosDelSolicitud) => item.autor,
-      orden: 1,
-    },
-    {
-      encabezado: DATOS_DE_LA_SOLICICTUD.TITULO,
-      clave: (item: DatosDelSolicitud) => item.titulo,
-      orden: 2,
-    },
-    {
-      encabezado:
-      DATOS_DE_LA_SOLICICTUD.TECNICA_DE_REALIZACION,
-      clave: (item: DatosDelSolicitud) => item.tecnicaDeRealizacion,
-      orden: 3,
-    },
-    {
-      encabezado:
-      DATOS_DE_LA_SOLICICTUD.CON_MARCO,
-      clave: (item: DatosDelSolicitud) => item.conMarco,
-      orden: 4,
-    },
-    {
-      encabezado: DATOS_DE_LA_SOLICICTUD.ANCHO,
-      clave: (item: DatosDelSolicitud) => item.ancho,
-      orden: 5,
-    },
-    {
-      encabezado: DATOS_DE_LA_SOLICICTUD.ALTO,
-      clave: (item: DatosDelSolicitud) => item.alto,
-      orden: 6,
-    },
-    {
-      encabezado: DATOS_DE_LA_SOLICICTUD.PROFUNDIDAD,
-      clave: (item: DatosDelSolicitud) => item.profundidad,
-      orden: 7,
-    },
-    {
-      encabezado: DATOS_DE_LA_SOLICICTUD.DIAMETRO,
-      clave: (item: DatosDelSolicitud) => item.diametro,
-      orden: 8,
-    },
-    {
-      encabezado: DATOS_DE_LA_SOLICICTUD.VARIABLES,
-      clave: (item: DatosDelSolicitud) => item.variables,
-      orden: 9,
-    },
-    {
-      encabezado: DATOS_DE_LA_SOLICICTUD.ANO_DE_CREACION,
-      clave: (item: DatosDelSolicitud) => item.anoDeCreacion,
-      orden: 10,
-    },
-    {
-      encabezado: DATOS_DE_LA_SOLICICTUD.AVALUO,
-      clave: (item: DatosDelSolicitud) => item.avaluo,
-      orden: 11,
-    },
-    {
-      encabezado: DATOS_DE_LA_SOLICICTUD.MONEDA,
-      clave: (item: DatosDelSolicitud) => item.moneda,
-      orden: 12,
-    },
-    {
-      encabezado: DATOS_DE_LA_SOLICICTUD.PROPIETARIO,
-      clave: (item: DatosDelSolicitud) => item.propietario,
-      orden: 13,
-    },
-    {
-      encabezado: DATOS_DE_LA_SOLICICTUD.FRACCION_ARANCELARIA,
-      clave: (item: DatosDelSolicitud) => item.fraccionArancelaria,
-      orden: 14,
-    },
-    {
-      encabezado: DATOS_DE_LA_SOLICICTUD.DESCRIPCION,
-      clave: (item: DatosDelSolicitud) => item.descripcion,
-      orden: 15,
-    },
-  ];
+  public configuracionTabla = CONFIGURACION_DATOS_SOLICITUD_DE_TABLA;
 
   /**
    * Datos configurados para la tabla.

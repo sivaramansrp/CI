@@ -196,6 +196,24 @@ export class InputFechaComponent implements OnChanges {
     }
   }
 
+  /**
+  * @method onDocumentClick
+  * @description
+  * Este método escucha eventos de clic en el documento para determinar si el usuario hizo clic fuera del calendario. 
+  * Si el clic ocurre fuera del calendario, se oculta el componente del calendario.
+  * 
+  * Funcionalidad:
+  * - Verifica si el calendario está visible (`mostrar`).
+  * - Comprueba si el clic ocurrió fuera del elemento del calendario.
+  * - Si el clic es externo, cambia la propiedad `mostrar` a `false` para ocultar el calendario.
+  * 
+  * @param {Event} event - Evento de clic en el documento.
+  * 
+  * @example
+  * // Si el usuario hace clic fuera del calendario:
+  * this.onDocumentClick(event);
+  * // El calendario se oculta.
+  */
   @HostListener('document:mousedown', ['$event'])
   onDocumentClick(event: Event): void {
     if (!this.mostrar) {

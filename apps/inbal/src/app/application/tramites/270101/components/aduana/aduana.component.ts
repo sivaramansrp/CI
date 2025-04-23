@@ -1,14 +1,14 @@
 import {
   ADUANA_ALERT,
+  CONFIGURACION_ADUANA_DE_TABLA,
   ERROR_FORMA_ALERT,
   ITINERARIO_DE_EXPORTACION,
-  ITINERARIO_DE_EXPORTACION_MAXIMO,
+  ITINERARIO_DE_EXPORTACION_MAXIMO
 } from '../../constantes/exportar-ilustraciones.enum';
 import {
   AlertComponent,
   Catalogo,
   CatalogoSelectComponent,
-  ConfiguracionColumna,
   ModeloDeFormaDinamica,
   TablaDinamicaComponent,
   TablaSeleccion,
@@ -241,49 +241,7 @@ export class AduanaComponent implements OnInit, OnDestroy {
   /**
    * Configuración de la tabla.
    */
-  public configuracionTabla: ConfiguracionColumna<AduanaDeSalida>[] = [
-    {
-      encabezado: 'Tipo',
-      clave: (item: AduanaDeSalida) => item.tipo,
-      orden: 1,
-    },
-    {
-      encabezado: 'Tipo ciudad',
-      clave: (item: AduanaDeSalida) => item.ciudad,
-      orden: 2,
-    },
-    {
-      encabezado: 'Sede',
-      clave: (item: AduanaDeSalida) => item.sede,
-      orden: 3,
-    },
-    {
-      encabezado: 'Tipo traslado',
-      clave: (item: AduanaDeSalida) => item.tipoDeTraslado,
-      orden: 4,
-    },
-    {
-      encabezado: 'Fecha exhibición',
-      clave: (item: AduanaDeSalida) => item.fechaExhibicion,
-      orden: 5,
-    },
-    {
-      encabezado: 'Observaciones',
-      clave: (item: AduanaDeSalida) => item.observaciones,
-      orden: 6,
-    },
-    {
-      encabezado: 'Fecha inicio',
-      clave: (item: AduanaDeSalida) => item.fechoInicio,
-      orden: 6,
-    },
-    {
-      encabezado: 'Fecha fin',
-      clave: (item: AduanaDeSalida) => item.fechaFin,
-      orden: 6,
-    },
-  ];
-
+  public configuracionTabla = CONFIGURACION_ADUANA_DE_TABLA;
   /**
    * Datos configurados para la tabla.
    */

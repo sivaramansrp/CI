@@ -1,3 +1,6 @@
+import { AduanaDeSalida, DatosDelSolicitud } from "../models/exportar-ilustraciones.model";
+import { ConfiguracionColumna } from "@libs/shared/data-access-user/src";
+
 /**
   * @constant DATOS_DE_LA_SOLICICTUD
   * @type {Record<string, string>}
@@ -719,3 +722,137 @@ export const ERROR_DE_REGISTRO_ALERT =
   */
 export const ERROR_FORMA_ALERT =
 '<strong>¡Error de registro! </strong>Faltan campos por capturar.';
+
+/**
+* Constantes para el manejo de los pasos del wizard de cupos
+* @type {ConfiguracionColumna<>[AduanaDeSalida]}
+* @description Configuración de las columnas para la tabla de cupos
+*/
+export const CONFIGURACION_ADUANA_DE_TABLA: ConfiguracionColumna<AduanaDeSalida>[] = [
+    {
+      encabezado: 'Tipo',
+      clave: (item: AduanaDeSalida) => item.tipo,
+      orden: 1,
+    },
+    {
+      encabezado: 'Tipo ciudad',
+      clave: (item: AduanaDeSalida) => item.ciudad,
+      orden: 2,
+    },
+    {
+      encabezado: 'Sede',
+      clave: (item: AduanaDeSalida) => item.sede,
+      orden: 3,
+    },
+    {
+      encabezado: 'Tipo traslado',
+      clave: (item: AduanaDeSalida) => item.tipoDeTraslado,
+      orden: 4,
+    },
+    {
+      encabezado: 'Fecha exhibición',
+      clave: (item: AduanaDeSalida) => item.fechaExhibicion,
+      orden: 5,
+    },
+    {
+      encabezado: 'Observaciones',
+      clave: (item: AduanaDeSalida) => item.observaciones,
+      orden: 6,
+    },
+    {
+      encabezado: 'Fecha inicio',
+      clave: (item: AduanaDeSalida) => item.fechoInicio,
+      orden: 6,
+    },
+    {
+      encabezado: 'Fecha fin',
+      clave: (item: AduanaDeSalida) => item.fechaFin,
+      orden: 6,
+    },
+  ];
+
+  /**
+   * /**
+* Constantes para el manejo de los pasos del wizard de cupos
+* @type {ConfiguracionColumna<>[DatosDelSolicitud]}
+* @description Configuración de las columnas para la tabla de cupos
+*/
+export const CONFIGURACION_DATOS_SOLICITUD_DE_TABLA: ConfiguracionColumna<DatosDelSolicitud>[] = [
+    {
+      encabezado: DATOS_DE_LA_SOLICICTUD.AUTOR,
+      clave: (item: DatosDelSolicitud) => item.autor,
+      orden: 1,
+    },
+    {
+      encabezado: DATOS_DE_LA_SOLICICTUD.TITULO,
+      clave: (item: DatosDelSolicitud) => item.titulo,
+      orden: 2,
+    },
+    {
+      encabezado:
+      DATOS_DE_LA_SOLICICTUD.TECNICA_DE_REALIZACION,
+      clave: (item: DatosDelSolicitud) => item.tecnicaDeRealizacion,
+      orden: 3,
+    },
+    {
+      encabezado:
+      DATOS_DE_LA_SOLICICTUD.CON_MARCO,
+      clave: (item: DatosDelSolicitud) => item.conMarco,
+      orden: 4,
+    },
+    {
+      encabezado: DATOS_DE_LA_SOLICICTUD.ANCHO,
+      clave: (item: DatosDelSolicitud) => item.ancho,
+      orden: 5,
+    },
+    {
+      encabezado: DATOS_DE_LA_SOLICICTUD.ALTO,
+      clave: (item: DatosDelSolicitud) => item.alto,
+      orden: 6,
+    },
+    {
+      encabezado: DATOS_DE_LA_SOLICICTUD.PROFUNDIDAD,
+      clave: (item: DatosDelSolicitud) => item.profundidad,
+      orden: 7,
+    },
+    {
+      encabezado: DATOS_DE_LA_SOLICICTUD.DIAMETRO,
+      clave: (item: DatosDelSolicitud) => item.diametro,
+      orden: 8,
+    },
+    {
+      encabezado: DATOS_DE_LA_SOLICICTUD.VARIABLES,
+      clave: (item: DatosDelSolicitud) => item.variables,
+      orden: 9,
+    },
+    {
+      encabezado: DATOS_DE_LA_SOLICICTUD.ANO_DE_CREACION,
+      clave: (item: DatosDelSolicitud) => item.anoDeCreacion,
+      orden: 10,
+    },
+    {
+      encabezado: DATOS_DE_LA_SOLICICTUD.AVALUO,
+      clave: (item: DatosDelSolicitud) => item.avaluo,
+      orden: 11,
+    },
+    {
+      encabezado: DATOS_DE_LA_SOLICICTUD.MONEDA,
+      clave: (item: DatosDelSolicitud) => item.moneda,
+      orden: 12,
+    },
+    {
+      encabezado: DATOS_DE_LA_SOLICICTUD.PROPIETARIO,
+      clave: (item: DatosDelSolicitud) => item.propietario,
+      orden: 13,
+    },
+    {
+      encabezado: DATOS_DE_LA_SOLICICTUD.FRACCION_ARANCELARIA,
+      clave: (item: DatosDelSolicitud) => item.fraccionArancelaria,
+      orden: 14,
+    },
+    {
+      encabezado: DATOS_DE_LA_SOLICICTUD.DESCRIPCION,
+      clave: (item: DatosDelSolicitud) => item.descripcion,
+      orden: 15,
+    },
+  ];
