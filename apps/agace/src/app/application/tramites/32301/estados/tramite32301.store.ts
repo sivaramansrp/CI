@@ -232,7 +232,7 @@ export class Tramite32301Store extends Store<FormularioGrupo> {
    * 
    * @param {TipoDevAviso} tipoDevAviso - El tipo de proveedor extranjero a establecer.
    */
-  setforeignClientsSuppliers(tipoDevAviso: TipoDevAviso): void {
+  setClientesProveedoresExtranjeros(tipoDevAviso: TipoDevAviso): void {
     this.update((state) => ({
       ...state,
       foreignClientsSuppliers: tipoDevAviso
@@ -244,7 +244,7 @@ export class Tramite32301Store extends Store<FormularioGrupo> {
    * 
    * @param {TipoDevAviso} tipoDevAviso - El tipo de proveedor nacional a establecer.
    */
-  setNationalSuppliers(tipoDevAviso: TipoDevAviso): void {
+  setProveedoresNacionales(tipoDevAviso: TipoDevAviso): void {
     this.update((state) => ({
       ...state,
       nationalSuppliers: tipoDevAviso
@@ -256,7 +256,7 @@ export class Tramite32301Store extends Store<FormularioGrupo> {
    * 
    * @param {TipoDevAviso} tipoDevAviso - El tipo de modificación a establecer.
    */
-  setModificationsMembers(tipoDevAviso: TipoDevAviso): void {
+  setModificacionesMiembros(tipoDevAviso: TipoDevAviso): void {
     this.update((state) => ({
       ...state,
       modificationsMembers: tipoDevAviso
@@ -268,7 +268,7 @@ export class Tramite32301Store extends Store<FormularioGrupo> {
    * 
    * @param {TipoDevAviso} tipoDevAviso - El tipo de cambio en los documentos legales.
    */
-  setChangesToLegalDocuments(tipoDevAviso: TipoDevAviso): void {
+  setCambiosDocumentosLegales(tipoDevAviso: TipoDevAviso): void {
     this.update((state) => ({
       ...state,
       changesToLegalDocuments: tipoDevAviso
@@ -280,7 +280,7 @@ export class Tramite32301Store extends Store<FormularioGrupo> {
    * 
    * @param {TipoDevAviso} tipoDevAviso - El tipo de notificación a establecer.
    */
-  setMergerOrSplitNotice(tipoDevAviso: TipoDevAviso): void {
+  setNotifiFusionOescision(tipoDevAviso: TipoDevAviso): void {
     this.update((state) => ({
       ...state,
       mergerOrSplitNotice: tipoDevAviso
@@ -292,7 +292,7 @@ export class Tramite32301Store extends Store<FormularioGrupo> {
    * 
    * @param {TipoDevAviso} tipoDevAviso - El tipo de adición a establecer.
    */
-  setAdditionFractions(tipoDevAviso: TipoDevAviso): void {
+  setAdicionalesFractions(tipoDevAviso: TipoDevAviso): void {
     this.update((state) => ({
       ...state,
       additionFractions: tipoDevAviso
@@ -304,7 +304,7 @@ export class Tramite32301Store extends Store<FormularioGrupo> {
    * 
    * @param {TipoDevAviso} tipoDevAviso - El tipo de aceptación a establecer.
    */
-  setAcepto253(tipoDevAviso: TipoDevAviso): void {
+  setAceptacion253(tipoDevAviso: TipoDevAviso): void {
     this.update((state) => ({
       ...state,
       acepto253: tipoDevAviso

@@ -78,9 +78,6 @@ export class ModificacionSociosComponent
   // Datos de los miembros de la empresa
   public gridMiembrosEmpresas: { tbodyData: string[] }[] = [{ tbodyData: [] }];
 
-  // Datos de los miembros de la empresa para mostrar en la tabla
-  public miembroDeLaEmpresaBodyData: unknown[] = [];
-
   // Instancias de los modales para mostrar
   agregarModelInstance!: Modal;
 
@@ -412,7 +409,7 @@ updatePagination(): void {
    * Obtiene un subconjunto de datos de la tabla de miembros de la empresa,
    * comenzando desde el índice calculado y mostrando únicamente la cantidad de elementos por página.
    */
-  this.miembroDeLaEmpresaBodyData = this.miembroDeLaEmpresaBodyData.slice(
+  this.mercanciasData = this.mercanciasData.slice(
     START_INDEX,
     START_INDEX + this.itemsPerPage
   );

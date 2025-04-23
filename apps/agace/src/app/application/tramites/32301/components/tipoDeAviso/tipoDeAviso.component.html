@@ -1,5 +1,5 @@
 <div class="container">
-  <form [formGroup]="miFormulario" (ngSubmit)="onSubmit()">
+  <form [formGroup]="miFormulario" (ngSubmit)="aiEnviar()">
     <div class="row">
       <div class="col-md-12 mb-4">
         <label for="modalidadCertificacion"
@@ -21,7 +21,7 @@
         class="form-check-input"
         type="checkbox"
         formControlName="foreignClientsSuppliers"
-        (change)="onSubmit(); setforeignClientsSuppliers()"
+        (change)="aiEnviar(); setClientesProveedoresExtranjeros()"
       />
       <label class="form-check-label">
         Aviso de modificaciones de clientes y proveedores extranjeros.
@@ -32,7 +32,7 @@
         class="form-check-input"
         type="checkbox"
         formControlName="nationalSuppliers"
-        (change)="onSubmit(); setNationalSuppliers()"
+        (change)="aiEnviar(); setProveedoresNacionales()"
       />
       <label class="form-check-label">
         Aviso de modificaciones de proveedores nacionales.
@@ -43,7 +43,7 @@
         class="form-check-input"
         type="checkbox"
         formControlName="modificationsMembers"
-        (change)="onSubmit(); setModificationsMembers()"
+        (change)="aiEnviar(); setModificacionesMiembros()"
       />
       <label class="form-check-label">
         Aviso de modificciones de socios, accionistas, miembros o integrantes,
@@ -56,7 +56,7 @@
         class="form-check-input"
         type="checkbox"
         formControlName="changesToLegalDocuments"
-        (change)="onSubmit(); setChangesToLegalDocuments()"
+        (change)="aiEnviar(); setCambiosDocumentosLegales()"
       />
       <label class="form-check-label">
         Aviso cuando varíe o cambie la situación respecto del documento con el
@@ -71,7 +71,7 @@
         class="form-check-input"
         type="checkbox"
         formControlName="mergerOrSplitNotice"
-        (change)="onSubmit(); setMergerOrSplitNotice()"
+        (change)="aiEnviar(); setNotifiFusionOescision()"
       />
       <label class="form-check-label"> Aviso de fusión o escisión </label>
     </div>
@@ -80,7 +80,7 @@
         class="form-check-input"
         type="checkbox"
         formControlName="additionFractions"
-        (change)="onSubmit(); setAdditionFractions()"
+        (change)="aiEnviar(); setAdicionalesFractions()"
       />
       <label class="form-check-label"> Aviso de adición de fracciones </label>
     </div>
@@ -93,7 +93,7 @@
               class="form-check-input"
               type="checkbox"
               formControlName="acepto253"
-              (change)="onSubmit(); setAcepto253()"
+              (change)="aiEnviar(); setAceptacion253()"
             />
             <label class="form-check-label">
               * Bajo protesta de decir verdad, manifiesto que los datos

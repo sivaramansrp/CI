@@ -149,21 +149,6 @@ export class AdicionFraccionComponent
   ];
 
   /**
-   * Total de elementos a paginar.
-   */
-  totalItems: number = 0;
-
-  /**
-   * Número de elementos por página.
-   */
-  itemsPerPage: number = 1;
-
-  /**
-   * Página actual en la paginación.
-   */
-  currentPage: number = 1;
-
-  /**
    * Control de formulario para la fecha general.
    */
   fecha: FormControl = new FormControl('');
@@ -395,34 +380,6 @@ export class AdicionFraccionComponent
     } else if (SELECTED_VALUE === 'TIPCAR.CM') {
       this.divBtnCargaMVisible = true;
     }
-  }
-
-  /**
-   * Maneja el evento cuando cambia la cantidad de elementos por página.
-   */
-  onItemsPerPageChange(itemsPerPage: number): void {
-    this.itemsPerPage = itemsPerPage;
-    this.currentPage = 1;
-    this.updatePagination();
-  }
-
-  /**
-   * Maneja el evento cuando se cambia de página.
-   */
-  onPageChange(page: number): void {
-    this.currentPage = page;
-    this.updatePagination();
-  }
-
-  /**
-   * Actualiza la paginación de la tabla según el número de elementos y la página actual.
-   */
-  updatePagination(): void {
-    const START_INDEX = (this.currentPage - 1) * this.itemsPerPage;
-    this.miembroDeLaEmpresaBodyData = this.miembroDeLaEmpresaBodyData.slice(
-      START_INDEX,
-      START_INDEX + this.itemsPerPage
-    );
   }
 
   /**

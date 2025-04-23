@@ -128,74 +128,78 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
   /**
    * Emite los valores del formulario cuando el usuario lo envía.
    */
-  onSubmit(): void {
+  aiEnviar(): void {
     this.tabEnabledData.emit(this.miFormulario.value);
   }
 
   /**
    * Actualiza el store con el valor seleccionado de los proveedores extranjeros.
    */
-  setforeignClientsSuppliers(): void {
+ 
+  setClientesProveedoresExtranjeros(): void {
     const FRACCION_ARANCELATIA = this.miFormulario.get(
       'foreignClientsSuppliers'
     )?.value;
-    this.store.setforeignClientsSuppliers(FRACCION_ARANCELATIA);
+    this.store.setClientesProveedoresExtranjeros(FRACCION_ARANCELATIA);
   }
 
   /**
    * Actualiza el store con el valor seleccionado de los proveedores nacionales.
    */
-  setNationalSuppliers(): void {
+  
+  setProveedoresNacionales(): void {
     const FRACCION_ARANCELATIA =
       this.miFormulario.get('nationalSuppliers')?.value;
-    this.store.setNationalSuppliers(FRACCION_ARANCELATIA);
+    this.store.setProveedoresNacionales(FRACCION_ARANCELATIA);
   }
 
   /**
    * Actualiza el store con el valor seleccionado de las modificaciones de miembros.
    */
-  setModificationsMembers(): void {
+  setModificacionesMiembros(): void {
     const FRACCION_ARANCELATIA = this.miFormulario.get(
       'modificationsMembers'
     )?.value;
-    this.store.setModificationsMembers(FRACCION_ARANCELATIA);
+    this.store.setModificacionesMiembros(FRACCION_ARANCELATIA);
   }
 
   /**
    * Actualiza el store con el valor seleccionado de los cambios en los documentos legales.
    */
-  setChangesToLegalDocuments(): void {
+  
+  setCambiosDocumentosLegales(): void {
     const FRACCION_ARANCELATIA = this.miFormulario.get(
       'changesToLegalDocuments'
     )?.value;
-    this.store.setChangesToLegalDocuments(FRACCION_ARANCELATIA);
+    this.store.setCambiosDocumentosLegales(FRACCION_ARANCELATIA);
   }
 
   /**
    * Actualiza el store con el valor seleccionado sobre la notificación de fusión o escisión.
    */
-  setMergerOrSplitNotice(): void {
+  
+  setNotifiFusionOescision(): void {
     const FRACCION_ARANCELATIA = this.miFormulario.get(
       'mergerOrSplitNotice'
     )?.value;
-    this.store.setMergerOrSplitNotice(FRACCION_ARANCELATIA);
+    this.store.setNotifiFusionOescision(FRACCION_ARANCELATIA);
   }
 
   /**
    * Actualiza el store con el valor seleccionado de las fracciones adicionales.
    */
-  setAdditionFractions(): void {
+  setAdicionalesFractions(): void {
     const FRACCION_ARANCELATIA =
       this.miFormulario.get('additionFractions')?.value;
-    this.store.setAdditionFractions(FRACCION_ARANCELATIA);
+    this.store.setAdicionalesFractions(FRACCION_ARANCELATIA);
   }
 
   /**
    * Actualiza el store con el valor del checkbox de aceptación del 253.
    */
-  setAcepto253(): void {
+  setAceptacion253(): void {
     const FRACCION_ARANCELATIA = this.miFormulario.get('acepto253')?.value;
-    this.store.setAcepto253(FRACCION_ARANCELATIA);
+    this.store.setAceptacion253(FRACCION_ARANCELATIA);
   }
 
   /**
