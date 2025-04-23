@@ -1528,8 +1528,8 @@
   {
     "id": 219,
     "tramite": 260508,
-    "linkDashboard": "/cofepris/permiso-nutrientes/plaguicidas",
-    "linkDepartment": "/pago/permiso-nutrientes/plaguicidas",
+    "linkDashboard": "",
+    "linkDepartment": "",
     "department": "cofepris"
   },
   {
@@ -1563,8 +1563,8 @@
   {
     "id": 224,
     "tramite": 260515,
-    "linkDashboard": "/cofepris/permit-substances/solicitud",
-    "linkDepartment": "/pago/permit-substances/solicitud",
+    "linkDashboard": "",
+    "linkDepartment": "",
     "department": "cofepris"
   },
   {
