@@ -1921,14 +1921,14 @@
         "id": 275,
         "tramite": 230202,
         "linkDashboard": "/semarnat/phytosanitary-rexportation/solicitud",
-        "linkDepartment": "",
+        "linkDepartment": "pago/phytosanitary-rexportation/solicitud",
         "department": "semarnat"
     },
     {
         "id": 276,
         "tramite": 230301,
         "linkDashboard": "/semarnat/desistimiento/solicitud",
-        "linkDepartment": "/semarnat/desistimiento/solicitud",
+        "linkDepartment": "/pago/desistimiento/solicitud",
         "department": "semarnat"
     },
     {
