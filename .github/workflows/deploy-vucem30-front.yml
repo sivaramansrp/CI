@@ -59,6 +59,11 @@ on:
       - 'nx.json'
       - '.github/workflows/**'
 
+# Definir permisos explícitos para el workflow
+permissions:
+  contents: read
+  packages: write
+
 env:
   NODE_VERSION: '22.14.0'
   NX_VERSION: '19.3.1'
@@ -397,14 +402,14 @@ jobs:
         uses: docker/login-action@v2
         with:
           registry: ${{ env.DOCKER_REGISTRY }}
-          username: ${{ github.actor }}
+          username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Extract Docker metadata
         id: meta
         uses: docker/metadata-action@v4
         with:
-          images: ${{ env.DOCKER_REGISTRY }}/${{ github.repository }}/vucem-front-${{ matrix.app }}
+          images: ${{ env.DOCKER_REGISTRY }}/vucem30-dev/frontend/vucem-front-${{ matrix.app }}
           tags: |
             type=raw,value=${{ env.DEPLOYMENT_ENV }}
             type=sha,format=short
