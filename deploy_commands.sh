@@ -5,6 +5,82 @@
 DEPLOYMENT_ENV=${1:-dev}  # Por defecto 'dev' si no se especifica
 REMOTE_DIR="/home/ubuntu/v30"
 K8S_TEMP_DIR="$REMOTE_DIR/k8s-temp"
+MANIFEST_FILE=""
+
+# Buscar el manifiesto en varias ubicaciones posibles
+echo "Buscando manifiesto Kubernetes..."
+
+# Lista de posibles ubicaciones del manifiesto, en orden de preferencia
+POSSIBLE_LOCATIONS=(
+  "$K8S_TEMP_DIR/vucem-microfrontends.yaml"
+  "$K8S_TEMP_DIR/k8s-$DEPLOYMENT_ENV/vucem-microfrontends.yaml"
+  "$REMOTE_DIR/k8s-$DEPLOYMENT_ENV/vucem-microfrontends.yaml"
+  "$REMOTE_DIR/k8s/vucem-microfrontends.yaml"
+  "$K8S_TEMP_DIR/vucem-microfrontends-$DEPLOYMENT_ENV.yaml"
+)
+
+# Mostrar todas las ubicaciones que se van a buscar
+echo "Posibles ubicaciones del manifiesto:"
+for location in "${POSSIBLE_LOCATIONS[@]}"; do
+  echo "- $location"
+done
+
+# Buscar el manifiesto en las ubicaciones posibles
+for location in "${POSSIBLE_LOCATIONS[@]}"; do
+  if [ -f "$location" ]; then
+    MANIFEST_FILE="$location"
+    echo "Manifiesto encontrado en: $MANIFEST_FILE"
+    break
+  fi
+done
+
+# Si no se encontró, imprimir el contenido del directorio para depurar
+if [ -z "$MANIFEST_FILE" ]; then
+  echo "No se encontró el manifiesto en las ubicaciones predefinidas."
+  echo "Contenido de $K8S_TEMP_DIR:"
+  ls -la "$K8S_TEMP_DIR"
+  
+  # Buscar más exhaustivamente
+  echo "Buscando manifiestos en todas las ubicaciones posibles..."
+  FOUND_FILES=$(find "$REMOTE_DIR" -name "vucem-microfrontends*.yaml" 2>/dev/null)
+  
+  if [ -n "$FOUND_FILES" ]; then
+    echo "Se encontraron posibles manifiestos de Kubernetes:"
+    echo "$FOUND_FILES"
+    
+    # Intentar usar el primer archivo encontrado
+    FIRST_FILE=$(echo "$FOUND_FILES" | head -1)
+    echo "Intentando usar: $FIRST_FILE"
+    MANIFEST_FILE="$FIRST_FILE"
+    
+    # Verificar que sea un archivo válido de Kubernetes
+    if grep -q "apiVersion" "$MANIFEST_FILE" && grep -q "kind" "$MANIFEST_FILE"; then
+      echo "El archivo parece ser un manifiesto de Kubernetes válido. Procediendo con el despliegue."
+    else
+      echo "El archivo encontrado no parece ser un manifiesto de Kubernetes válido."
+      exit 1
+    fi
+  else
+    echo "No se encontraron archivos de manifiesto en todo el directorio."
+    exit 1
+  fi
+fi
+
+# Mostrar información sobre el manifiesto
+echo "Utilizando manifiesto: $MANIFEST_FILE"
+if [ -f "$MANIFEST_FILE" ]; then
+  echo "El archivo existe y su tamaño es: $(du -h "$MANIFEST_FILE" | cut -f1)"
+  echo "Primeras líneas del manifiesto:"
+  head -10 "$MANIFEST_FILE"
+else
+  echo "ADVERTENCIA: A pesar de la verificación previa, el archivo no existe."
+  exit 1
+fi
+
+# Crear directorio para logs de despliegue
+LOG_DIR="$REMOTE_DIR/deployment-logs"
+mkdir -p "$LOG_DIR"
+LOG_FILE="$LOG_DIR/deploy-$DEPLOYMENT_ENV-$(date +%Y%m%d-%H%M%S).log"
 
 # Función para mostrar mensajes de ayuda
 show_help() {
@@ -62,32 +138,70 @@ if [ $? -ne 0 ]; then
   echo "  -n vucem-$DEPLOYMENT_ENV"
 fi
 
-# Aplicar manifiesto
-echo "Aplicando manifiesto Kubernetes..."
-microk8s kubectl apply -f "$K8S_TEMP_DIR/vucem-microfrontends.yaml"
+# Verificar si encontramos el manifiesto
+if [ -z "$MANIFEST_FILE" ]; then
+  echo "Error: No se pudo encontrar el archivo de manifiesto vucem-microfrontends.yaml"
+  echo "Ubicaciones buscadas:"
+  echo "- $K8S_TEMP_DIR/vucem-microfrontends.yaml"
+  echo "- $K8S_TEMP_DIR/k8s-$DEPLOYMENT_ENV/vucem-microfrontends.yaml"
+  echo "- $REMOTE_DIR/k8s-$DEPLOYMENT_ENV/vucem-microfrontends.yaml"
+  
+  # Buscar posibles manifiestos en otras ubicaciones
+  echo "Buscando manifiestos en otras ubicaciones..."
+  find "$REMOTE_DIR" -name "vucem-microfrontends.yaml" 2>/dev/null
+  
+  exit 1
+fi
+
+# Aplicar manifiesto con validación previa
+echo "Validando manifiesto Kubernetes desde: $MANIFEST_FILE" | tee -a "$LOG_FILE"
+microk8s kubectl apply --validate=true --dry-run=client -f "$MANIFEST_FILE" | tee -a "$LOG_FILE"
 if [ $? -ne 0 ]; then
-  echo "Error: Falló la aplicación del manifiesto Kubernetes."
+  echo "Error: Falló la validación del manifiesto Kubernetes." | tee -a "$LOG_FILE"
+  exit 1
+fi
+
+# Aplicar manifiesto
+echo "Aplicando manifiesto Kubernetes desde: $MANIFEST_FILE" | tee -a "$LOG_FILE"
+microk8s kubectl apply -f "$MANIFEST_FILE" | tee -a "$LOG_FILE"
+if [ $? -ne 0 ]; then
+  echo "Error: Falló la aplicación del manifiesto Kubernetes." | tee -a "$LOG_FILE"
   exit 1
 fi
 
 # Reiniciar despliegue para aplicar cambios
-echo "Reiniciando deployment vucem-microfrontends-$DEPLOYMENT_ENV..."
-microk8s kubectl rollout restart deployment vucem-microfrontends-$DEPLOYMENT_ENV -n vucem-$DEPLOYMENT_ENV
+echo "Reiniciando deployment vucem-microfrontends-$DEPLOYMENT_ENV..." | tee -a "$LOG_FILE"
+microk8s kubectl rollout restart deployment vucem-microfrontends-$DEPLOYMENT_ENV -n vucem-$DEPLOYMENT_ENV | tee -a "$LOG_FILE"
 if [ $? -ne 0 ]; then
-  echo "Error: Falló el reinicio del deployment."
+  echo "Error: Falló el reinicio del deployment." | tee -a "$LOG_FILE"
   exit 1
 fi
 
 # Verificar estado del despliegue
-echo "=== Verificando estado del despliegue ==="
-echo "Pods en el namespace vucem-$DEPLOYMENT_ENV:"
-microk8s kubectl get pods -n vucem-$DEPLOYMENT_ENV | grep vucem-microfrontends
+echo "=== Verificando estado del despliegue ===" | tee -a "$LOG_FILE"
+echo "Pods en el namespace vucem-$DEPLOYMENT_ENV:" | tee -a "$LOG_FILE"
+microk8s kubectl get pods -n vucem-$DEPLOYMENT_ENV | grep vucem-microfrontends | tee -a "$LOG_FILE"
 
-echo "Información del deployment:"
-microk8s kubectl get deployment vucem-microfrontends-$DEPLOYMENT_ENV -n vucem-$DEPLOYMENT_ENV
+echo "Información del deployment:" | tee -a "$LOG_FILE"
+microk8s kubectl get deployment vucem-microfrontends-$DEPLOYMENT_ENV -n vucem-$DEPLOYMENT_ENV | tee -a "$LOG_FILE"
 
-# Esperar a que el despliegue esté disponible (opcional)
-echo "Esperando a que el despliegue esté disponible..."
-microk8s kubectl rollout status deployment/vucem-microfrontends-$DEPLOYMENT_ENV -n vucem-$DEPLOYMENT_ENV --timeout=120s
+# Verificar los servicios
+echo "Información de servicios:" | tee -a "$LOG_FILE"
+microk8s kubectl get services -n vucem-$DEPLOYMENT_ENV | grep -v kubernetes | tee -a "$LOG_FILE"
 
-echo "=== Despliegue completado ==="
+# Verificar ingress
+echo "Información de ingress:" | tee -a "$LOG_FILE"
+microk8s kubectl get ingress -n vucem-$DEPLOYMENT_ENV | tee -a "$LOG_FILE"
+
+# Esperar a que el despliegue esté disponible
+echo "Esperando a que el despliegue esté disponible..." | tee -a "$LOG_FILE"
+microk8s kubectl rollout status deployment/vucem-microfrontends-$DEPLOYMENT_ENV -n vucem-$DEPLOYMENT_ENV --timeout=180s | tee -a "$LOG_FILE"
+
+# Verificar readiness/liveness de los pods
+echo "Verificando estado de readiness/liveness de los pods:" | tee -a "$LOG_FILE"
+POD_NAMES=$(microk8s kubectl get pods -n vucem-$DEPLOYMENT_ENV -l app=vucem-microfrontends -o name | head -1)
+if [ -n "$POD_NAMES" ]; then
+  microk8s kubectl describe $POD_NAMES -n vucem-$DEPLOYMENT_ENV | grep -A 5 "Readiness\|Liveness" | tee -a "$LOG_FILE"
+fi
+
+echo "=== Despliegue completado ===" | tee -a "$LOG_FILE"
