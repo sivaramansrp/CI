@@ -2008,7 +2008,14 @@
         "linkDashboard": "/agace/registros-de-comercio-exterior/registrar-solicitud",
         "linkDepartment": "/pago/registros-de-comercio-exterior/registrar-solicitud",
         "department": "cofepris"
-    }
+    },
+    {
+        "id": 287,
+        "tramite": 261601,
+        "linkDashboard": "/cofepris/correccion-interna-de-la-cofepris/correccion-interna-de-la-cofepris",
+        "linkDepartment": "/pago/correccion-interna-de-la-cofepris/correccion-interna-de-la-cofepris",
+        "department": "cofepris"
+     }
 
     
 ]
