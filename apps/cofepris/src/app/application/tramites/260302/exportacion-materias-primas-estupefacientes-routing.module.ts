@@ -22,7 +22,7 @@ const ROUTES: Routes = [
   },
   {
 
-    path: 'aggregar-datos-generales/:tipo',
+    path: 'agregar-datos-generales/:tipo',
     component: DatosGeneralesComponent
   },
   {

@@ -69,7 +69,16 @@ export class AgregarOtrosComponent implements OnInit, OnDestroy {
    */
   public paisesDatos: Catalogo[] = [];
 
+  /**
+   * @property {string} tipoDatos
+   * Tipo de datos que se está capturando en el formulario.
+   */
   radioOpcions = TERCEROS_NACIONALIDAD_RADIO_OPCIONS;
+
+  /**
+   * @property {string} tipoDatos
+   * Tipo de datos que se está capturando en el formulario.
+   */
   tipoPersonaRadioOpcions = TERCEROS_PERSONA_RADIO_OPCIONS;
 
   /**

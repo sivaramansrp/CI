@@ -25,6 +25,12 @@ export class ScianTablaContenedoraComponent {
     // Constructor necesario para inyectar el store del trámite
   }
 
+  /**
+   * @property {TablaScianConfig} scianSeleccionado
+   * @description
+   * Almacena la configuración seleccionada de la tabla SCIAN.
+   * Se usa el operador `!` para indicar que la variable no es nula ni indefinida en el momento de su uso.
+   */
   public scianSeleccionado!: TablaScianConfig;
 
   /**

@@ -6,6 +6,11 @@ import { Destinatario } from '../../../shared/models/terceros-relacionados.model
 import { Otros } from '../models/exporticon-estupefacientes.model';
 import { TablaMercanciasDatos } from '../../../shared/models/datos-solicitud.model';
 
+/**
+ * @const PASOS
+ * @description Pasos configurados para guiar al usuario en el proceso de solicitud.
+ * Cada paso incluye un índice, un título descriptivo, y estados de actividad y completitud.
+ */
 export const PASOS = [
   {
     indice: 1,
@@ -26,10 +31,32 @@ export const PASOS = [
     completado: false,
   },
 ];
+
+/**
+ * @const MENSAJE_TABLA_OBLIGATORIA
+ * @description Mensaje que indica que la tabla es obligatoria.
+ */
 export const TITULOMENSAJE = 'Solicitud Exportación de Materias Primas que sean o contengan Estupefacientes o Psicotrópicos';
+
+
+/**
+ * @const {string} TEXTOS_REQUISITOS
+ * @description La constante `TEXTOS_REQUISITOS` contiene un mensaje informativo que se muestra al usuario
+ * cuando una solicitud ha sido registrada con un número temporal. Este número no tiene validez legal y 
+ * solo sirve para identificar la solicitud. Un folio oficial será asignado cuando la solicitud sea firmada.
+ * 
+ * @usage Utilizado en el proceso de registro de solicitudes para informar al usuario sobre el estado temporal
+ * de su solicitud.
+ */
 export const TEXTOS_REQUISITOS =
   'La solicitud ha quedado registrada con el número temporal [202767640]. Este no tiene validez legal y sirve solamente para efectos de identificar tu Solicitud. Un folio oficial le será asignado a la solicitud al momento en que esta sea firmada.';
 
+
+/**
+ * @const ID_PROCEDIMIENTO
+ * @description Identificador único del procedimiento para el trámite 260302.
+ * @type {number}
+ */
 export const ID_PROCEDIMIENTO = 260302;
 
 /**
@@ -147,6 +174,11 @@ export const OTROS_ENCABEZADO_DE_TABLA: ConfiguracionColumna<Otros>[] =
   },
 ];
 
+/**
+ * @enum TIPO_TABLA_DATOS
+ * @description Tipos de tablas de datos disponibles en la aplicación.
+ * Se utiliza para identificar el tipo de tabla que se está utilizando.
+ */
 export enum TIPO_TABLA_DATOS {
   DESTINATARIO = 'Destinatario(Destino final)',
   OTROS = 'Otros',
@@ -251,11 +283,33 @@ export const PRODUCTO_TABLA_ESTUPEFACIENTES_EXPORTICON = [
   },
 ];
 
+/**
+ * @const TERCEROS_NACIONALIDAD_RADIO_OPCIONS
+ * @description Opciones para el radio de nacionalidad de terceros.
+ * Contiene dos opciones: "Nacional" y "Extranjero".
+ * 
+ * @property {string} label - Etiqueta que describe la opción.
+ * @property {string} value - Valor asociado a la opción. 
+ * "true" para Nacional y "false" para Extranjero.
+ */
 export const TERCEROS_NACIONALIDAD_RADIO_OPCIONS = [
   { label: 'Nacional', value: 'true' },
   { label: 'Extranjero', value: 'false' },
 ];
 
+
+/**
+ * @const TERCEROS_PERSONA_RADIO_OPCIONS
+ * @description Opciones de selección para el tipo de persona (Física o Moral) en un formulario.
+ * @type {Array<{ label: string, value: TipoPersona }>}
+ * 
+ * @property {string} label - Etiqueta que describe el tipo de persona.
+ * @property {TipoPersona} value - Valor asociado al tipo de persona, basado en la enumeración `TipoPersona`.
+ * 
+ * @usage
+ * Este arreglo se utiliza para renderizar opciones de radio button en la interfaz de usuario,
+ * permitiendo al usuario seleccionar entre una persona física o moral.
+ */
 export const TERCEROS_PERSONA_RADIO_OPCIONS = [
   { label: 'Física', value: TipoPersona.FISICA },
   { label: 'Moral', value: TipoPersona.MORAL }

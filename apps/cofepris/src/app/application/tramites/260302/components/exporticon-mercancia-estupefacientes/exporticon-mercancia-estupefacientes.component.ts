@@ -115,6 +115,11 @@ export class ExporticonMercanciaEstupefacientesComponent implements OnInit, OnDe
     derecha: 'Uso específico',
   };
 
+  /**
+   * @property {CrossListLable} formaFaramaceuticaLabel
+   * Etiqueta personalizada para el componente de lista cruzada de forma farmacéutica.
+   * Define los títulos para los elementos disponibles y seleccionados.
+   */
   public formaFaramaceuticaLabel: CrossListLable = {
     tituluDeLaIzquierda: 'Forma farmacéutica',
     derecha: 'Forma farmacéutica',
@@ -328,6 +333,14 @@ export class ExporticonMercanciaEstupefacientesComponent implements OnInit, OnDe
     return control.errors && control.touched;
   }
 
+  /**
+   * Maneja el evento de cambio para las selecciones de forma farmacéutica.
+   *
+   * @param events - Un arreglo de cadenas que representa las selecciones actuales de forma farmacéutica.
+   *
+   * Este método actualiza la propiedad `seleccionadasFormaFormaceuticaDatos` con las selecciones proporcionadas
+   * y actualiza el formulario `mercanciaForm` para reflejar los valores seleccionados en el campo `formaFarmaceutica`.
+   */
   formaFarmaceuticaSeleccionadasChange(events: string[]): void {
     this.seleccionadasFormaFormaceuticaDatos = events;
     if (events.length > 0) {
@@ -396,6 +409,15 @@ export class ExporticonMercanciaEstupefacientesComponent implements OnInit, OnDe
   }
 
 
+  /**
+   * @method mercanciaSeleccionado
+   * @description Maneja la selección de una mercancía en la tabla de mercancías. 
+   * Actualiza el estado de la mercancía seleccionada y la configuración de datos de la tabla.
+   * 
+   * @param {TablaMercanciasDatos} event - Objeto que contiene los datos de la mercancía seleccionada.
+   * 
+   * @returns {void}
+   */
   mercanciaSeleccionado(event: TablaMercanciasDatos): void {
     
 

@@ -65,15 +65,13 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
    * @property {ConfiguracionColumna<Facturador>[]} configuracionTablaDestinatario
    * Configuración de columnas para la tabla de facturadores.
    */
-  configuracionTablaDestinatario: ConfiguracionColumna<Facturador>[] =
-  DESTINATARIO_ENCABEZADO_DE_TABLA;
+  configuracionTablaDestinatario: ConfiguracionColumna<Facturador>[] = DESTINATARIO_ENCABEZADO_DE_TABLA;
 
     /**
    * @property {ConfiguracionColumna<Facturador>[]} configuracionTablaDestinatario
    * Configuración de columnas para la tabla de facturadores.
    */
-    configuracionTablaOtros: ConfiguracionColumna<Otros>[] =
-    OTROS_ENCABEZADO_DE_TABLA;
+    configuracionTablaOtros: ConfiguracionColumna<Otros>[] =OTROS_ENCABEZADO_DE_TABLA;
 
   /**
    * @property {TablaSeleccion} tipoSeleccionTabla
@@ -145,13 +143,13 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Navega a la ruta 'aggregar-datos-generales' con el parámetro `tipo` pasado en la URL.
+   * Navega a la ruta 'agregar-datos-generales' con el parámetro `tipo` pasado en la URL.
    * La navegación se realiza de manera relativa a la ruta activada actual.
    *
    * @param tipo - El tipo de datos que se pasará en la URL.
    */
   navigate(tipo: string): void {
-    this.router.navigate(['..', 'aggregar-datos-generales', tipo], {
+    this.router.navigate(['..', 'agregar-datos-generales', tipo], {
       relativeTo: this.activatedROute,
     });
   }
