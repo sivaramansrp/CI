@@ -28,9 +28,28 @@ export const PASOS = [
     completado: false,
   },
 ];
+
+/**
+ * @const TITULOMENSAJE
+ * @description Título del mensaje que describe el propósito de la solicitud.
+ * Este mensaje se muestra en la interfaz de usuario para informar al usuario
+ * sobre el tipo de solicitud que está realizando.
+ */
 export const TITULOMENSAJE =
   'Solicitud Permiso ordinario para la exportación de sustancias químicas';
+
+/**
+ * @const TEXTOS_REQUISITOS
+ * @description Texto informativo que se muestra al usuario después de registrar
+ * una solicitud. Incluye un número temporal que no tiene validez legal y explica
+ * que un folio oficial será asignado al momento de firmar la solicitud.
+ */
 export const TEXTOS_REQUISITOS =
   'La solicitud ha quedado registrada con el número temporal [202767640]. Este no tiene validez legal y sirve solamente para efectos de identificar tu Solicitud. Un folio oficial le será asignado a la solicitud al momento en que esta sea firmada.';
 
+/**
+ * @const ID_PROCEDIMIENTO
+ * @description Identificador único del procedimiento asociado a esta solicitud.
+ * Este ID se utiliza para identificar el trámite en el sistema.
+ */
 export const ID_PROCEDIMIENTO = 240117;

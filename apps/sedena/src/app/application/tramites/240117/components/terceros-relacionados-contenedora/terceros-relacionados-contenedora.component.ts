@@ -79,7 +79,7 @@ export class TercerosRelacionadosContenedoraComponent implements OnInit, OnDestr
   ) // eslint-disable-next-line no-empty-function
   {}
 
-    /**
+  /**
    * Hook del ciclo de vida que se ejecuta al inicializar el componente.
    * Suscribe a los observables de destinatarios y proveedores para mostrarlos en la vista.
    *
@@ -101,11 +101,33 @@ export class TercerosRelacionadosContenedoraComponent implements OnInit, OnDestr
       });
   }
 
+  /**
+   * Modifica los datos del destinatario final y actualiza la información en el store.
+   * 
+   * @param datos - Objeto de tipo `DestinoFinal` que contiene los datos actualizados del destinatario.
+   * 
+   * @remarks
+   * Este método utiliza el store `tramiteStore` para actualizar los datos del destinatario
+   * y luego redirige a la sección de acciones mediante el método `irAAcciones`.
+   */
   modificarDestinarioDatos(datos: DestinoFinal): void {
     this.tramiteStore.actualizarDatosDestinatario(datos);
     this.irAAcciones();
   }
 
+  /**
+   * Modifica los datos de un proveedor y actualiza el estado correspondiente.
+   * 
+   * @param datos - Objeto de tipo `Proveedor` que contiene la información actualizada del proveedor.
+   * 
+   * @method modificarProveedorDatos
+   * @memberof ClaseContenedora
+   * 
+   * @description
+   * Este método se encarga de actualizar los datos de un proveedor en el estado de la aplicación
+   * utilizando el método `actualizarDatosProveedor` del store. Una vez actualizados los datos,
+   * redirige al usuario a la sección de acciones mediante el método `irAAcciones`.
+   */
   modificarProveedorDatos(datos: Proveedor): void {
     this.tramiteStore.actualizarDatosProveedor(datos);
     this.irAAcciones();
@@ -123,7 +145,7 @@ export class TercerosRelacionadosContenedoraComponent implements OnInit, OnDestr
     });
   }
 
-    /**
+  /**
    * Hook que se ejecuta al destruir el componente.
    * Envía un valor al Subject `unsubscribe$` y lo completa para liberar suscripciones.
    */

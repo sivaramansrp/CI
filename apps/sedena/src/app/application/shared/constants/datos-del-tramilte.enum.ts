@@ -28,7 +28,7 @@ export const CROSLISTA_ADUANAS_DISPONIBLES: string[] = [
  * @description Representa códigos específicos utilizados en el sistema para identificar tipos de permisos definitivos.
  */
 export const PERMISO_DEFINITIVO_TITULO = [
-  240119, 240118, 240107, 240106, 240108, 240308,240117, 240121
+  240119, 240118, 240107, 240106, 240108, 240308,240117, 240121, 240405
 ];
 
 /**
@@ -64,6 +64,8 @@ export const PAISE_DENTINO_EITIQUETA: Map<number, string> = new Map<
   [240119, 'País de procedencia'],
   [240118, 'País de procedencia'],
   [240108, 'paise destino'],
+  [240308, 'paise destino'],
+  [240405, 'paise destino'],
 ]);
 
 /**
@@ -83,7 +85,7 @@ export const PUEDE_MOSTRAR_LA_LISTA_CRUZADA_FOR_MERCANCIA = [240108, 240107, 240
  * @description Contiene un arreglo de números que identifican el semestre habilitado. Este valor puede ser utilizado para validar o configurar funcionalidades relacionadas con el período académico activo.
  */
 export const PERIODO_SEMESTRE_HABILITADO = [
-  240119, 240108, 240107, 240114, 240106, 240308, 240117, 240121
+  240119, 240108, 240107, 240114, 240106, 240308, 240117, 240121, 240405
 ];
 
 /**
@@ -171,7 +173,7 @@ export const AGGREGAR_MERCANCIA_PAISE_OCULTAR = [240108];
  * @description Contiene un arreglo de identificadores numéricos relacionados con permisos de justificación específicos.
  * Este valor es utilizado en el sistema para identificar trámites que requieren justificación.
  */
-export const PERMISO_JUSTIFICACION = [240308];
+export const PERMISO_JUSTIFICACION = [240308, 240405];
 
 /**
  * Constante que define una lista de permisos generales que deben ser ocultados.
@@ -191,3 +193,12 @@ export const OCULTAR_PERMISO_GENERAL = [240102];
  * @description Contiene un arreglo de identificadores numéricos relacionados con RFC en el sistema.
  */
 export const ES_RFC = [240117];
+
+/**
+ * @constant
+ * @name DESACTIVADO_PERMISO_GENERAL
+ * @type {number[]}
+ * @description Contiene un arreglo de identificadores numéricos que representan permisos generales desactivados en el sistema.
+ * Este valor es utilizado para identificar permisos que no están habilitados o disponibles en ciertas funcionalidades.
+ */
+export const DESACTIVADO_PERMISO_GENERAL = [240405];

@@ -16,10 +16,12 @@ import { StoreConfig } from '@datorama/akita';
  * @property {PagoDerechosFormState} pagoDerechos - Información del formulario de pago de derechos.
  * @property {MercanciaDetalle[]} merccancialTablaDatos - Lista de mercancías registradas.
  * @property {DatosDelTramiteFormState} datosDelTramite - Información general del formulario de datos del trámite.
+ * @property {DestinoFinal | null} modificarDestinarioDatos - Datos del destinatario que se está modificando.
+ * @property {Proveedor | null} modificarProveedorDatos - Datos del proveedor que se está modificando.
  */
 export interface Tramite240117State {
   tabSeleccionado?: number;
-  destinatarioFinalTablaDatos: DestinoFinal[];          
+  destinatarioFinalTablaDatos: DestinoFinal[];
   proveedorTablaDatos: Proveedor[];
   pagoDerechos: PagoDerechosFormState;
   merccancialTablaDatos: MercanciaDetalle[];
@@ -60,8 +62,7 @@ export function createInitialState(): Tramite240117State {
 /**
  * Store que maneja el estado del trámite 240117.
  * Utiliza Akita para el control reactivo del estado.
- */
-/**
+ *
  * @fileoverview
  * Este archivo contiene la definición de la clase `Tramite240117Store`, 
  * que extiende la funcionalidad de la clase `Store` para manejar el estado 
@@ -174,19 +175,33 @@ export class Tramite240117Store extends Store<Tramite240117State> {
     }));
   }
 
+  /**
+   * Actualiza los datos del destinatario que se está modificando.
+   *
+   * @method actualizarDatosDestinatario
+   * @param {DestinoFinal} datos - Datos del destinatario a modificar.
+   * @returns {void}
+   */
   public actualizarDatosDestinatario(datos: DestinoFinal): void {
     this.update((state) => ({
       ...state,
       modificarDestinarioDatos: datos,
-      modificarProveedorDatos: null
+      modificarProveedorDatos: null,
     }));
   }
 
+  /**
+   * Actualiza los datos del proveedor que se está modificando.
+   *
+   * @method actualizarDatosProveedor
+   * @param {Proveedor} datos - Datos del proveedor a modificar.
+   * @returns {void}
+   */
   public actualizarDatosProveedor(datos: Proveedor): void {
     this.update((state) => ({
       ...state,
       modificarProveedorDatos: datos,
-      modificarDestinarioDatos: null
+      modificarDestinarioDatos: null,
     }));
   }
 }
