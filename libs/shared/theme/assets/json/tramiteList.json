@@ -1717,8 +1717,8 @@
     {
         "id": 246,
         "tramite": 250101,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "/profepa/flora-fauna/solictud",
+        "linkDepartment": "/pago/flora-fauna/solictud",
         "department": "profepa"
     },
     {
