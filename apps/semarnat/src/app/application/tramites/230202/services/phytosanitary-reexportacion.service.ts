@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
-import { Observable, tap } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Tramite230202Store } from '../estados/tramite230202.store';
 
 @Injectable({

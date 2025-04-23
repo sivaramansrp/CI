@@ -12,7 +12,7 @@ export class Tramite230202Query extends Query<Solicitud230202State> {
   constructor(protected override store: Tramite230202Store) {
     super(store);
   }
-  
+
   /**
    * Selecciona el estado completo de la solicitud
    */
@@ -20,7 +20,4 @@ export class Tramite230202Query extends Query<Solicitud230202State> {
     return state;
   });
 
-  selectFechasSeleccionadas$ = this.select(
-    (state) => state.fechasSeleccionadas
-  );
 }

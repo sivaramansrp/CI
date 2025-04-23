@@ -67,7 +67,6 @@ export class DatosDeLaSolicitudComponent {
   fechasDatos: Catalogo[] = [];
   fecha: FormControl = new FormControl('');
   fechaSeleccionada: FormControl = new FormControl('');
-  // getPaisSubscription!: Subscription;
   @ViewChild(CrosslistComponent) crosslistComponent!: CrosslistComponent;
   @ViewChildren(CrosslistComponent) crossList!: QueryList<CrosslistComponent>;
   public paisDeOrigenBotons = this.getCrossListBtn();
