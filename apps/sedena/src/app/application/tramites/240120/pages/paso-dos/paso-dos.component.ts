@@ -12,9 +12,9 @@ import { CommonModule } from '@angular/common';
 import { TEXTOS_REQUISITOS } from '../../constants/importacion-armas-municiones.enum';
 
 /**
- * @component PasoDosComponent
- * @description Component responsible for managing step two of the procedure.
- * It handles document requirements, retrieves catalog data, and manages user selections.
+ * @componente PasoDosComponent
+ * @descripción Componente responsable de gestionar el segundo paso del procedimiento.
+ * Maneja los requisitos de documentos, recupera datos de catálogos y administra las selecciones del usuario.
  */
 @Component({
   selector: 'app-paso-dos',
@@ -30,71 +30,71 @@ import { TEXTOS_REQUISITOS } from '../../constants/importacion-armas-municiones.
 })
 export class PasoDosComponent implements OnInit, OnDestroy {
   /**
-   * @property TEXTOS
-   * @description Contains static text literals used in this step of the form.
-   * @type {typeof TEXTOS_REQUISITOS}
+   * @propiedad TEXTOS
+   * @descripción Contiene textos estáticos utilizados en este paso del formulario.
+   * @tipo {typeof TEXTOS_REQUISITOS}
    */
   public TEXTOS = TEXTOS_REQUISITOS;
 
   /**
-   * @property tiposDocumentos
-   * @description Local placeholder for document types used in this step.
-   * @type {Catalogo[]}
+   * @propiedad tiposDocumentos
+   * @descripción Espacio reservado local para los tipos de documentos utilizados en este paso.
+   * @tipo {Catalogo[]}
    */
   public tiposDocumentos: Catalogo[] = [];
 
   /**
-   * @property infoAlert
-   * @description Bootstrap alert type used for informational messages.
-   * @type {string}
+   * @propiedad infoAlert
+   * @descripción Tipo de alerta de Bootstrap utilizada para mensajes informativos.
+   * @tipo {string}
    */
   public infoAlert = 'alert-info';
 
   /**
-   * @property catalogoDocumentos
-   * @description Holds the document type catalog fetched from the API.
-   * @type {Catalogo[]}
+   * @propiedad catalogoDocumentos
+   * @descripción Contiene el catálogo de tipos de documentos recuperado de la API.
+   * @tipo {Catalogo[]}
    */
   public catalogoDocumentos: Catalogo[] = [];
 
   /**
-   * @property documentosSeleccionados
-   * @description List of documents selected by the user.
-   * @type {Catalogo[]}
+   * @propiedad documentosSeleccionados
+   * @descripción Lista de documentos seleccionados por el usuario.
+   * @tipo {Catalogo[]}
    */
   public documentosSeleccionados: Catalogo[] = [];
 
   /**
-   * @property destroyNotifier$
-   * @description Notifier used to unsubscribe from observables when the component is destroyed.
-   * Prevents memory leaks.
-   * @type {Subject<void>}
+   * @propiedad destroyNotifier$
+   * @descripción Notificador utilizado para cancelar suscripciones a observables cuando el componente es destruido.
+   * Previene fugas de memoria.
+   * @tipo {Subject<void>}
    */
   private destroyNotifier$: Subject<void> = new Subject();
 
   /**
    * @constructor
-   * @param catalogosServices Service to fetch catalog data needed in the form.
+   * @param catalogosServices Servicio para recuperar datos de catálogos necesarios en el formulario.
    */
   constructor(private catalogosServices: CatalogosService) {
-    // Dependencies are injected here. No initialization logic needed.
+   // Las dependencias se inyectan aquí. No se necesita lógica de inicialización.
   }
 
   /**
-   * @method ngOnInit
-   * @description Angular lifecycle hook triggered on component initialization.
-   * Initiates the fetch of document types.
-   * @returns {void}
+   * @método ngOnInit
+   * @descripción Hook del ciclo de vida de Angular que se activa al inicializar el componente.
+   * Inicia la recuperación de los tipos de documentos.
+   * @retorna {void}
    */
   ngOnInit(): void {
     this.getTiposDocumentos();
   }
 
   /**
-   * @method getTiposDocumentos
-   * @description Fetches the catalog of document types for the procedure.
-   * Updates the `catalogoDocumentos` list if successful.
-   * @returns {void}
+   * @método getTiposDocumentos
+   * @descripción Recupera el catálogo de tipos de documentos para el procedimiento.
+   * Actualiza la lista `catalogoDocumentos` si la operación es exitosa.
+   * @retorna {void}
    */
   public getTiposDocumentos(): void {
     this.catalogosServices
@@ -110,10 +110,10 @@ export class PasoDosComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * @method ngOnDestroy
-   * @description Angular lifecycle hook triggered just before the component is destroyed.
-   * Cleans up active subscriptions to prevent memory leaks.
-   * @returns {void}
+   * @método ngOnDestroy
+   * @descripción Hook del ciclo de vida de Angular que se activa justo antes de que el componente sea destruido.
+   * Limpia las suscripciones activas para prevenir fugas de memoria.
+   * @retorna {void}
    */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
