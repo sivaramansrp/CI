@@ -1,9 +1,9 @@
+import { Component, OnDestroy } from '@angular/core';
 import { CargarDatosIniciales } from '../../models/solicitud-pantallas.model';
 import { CarrosDeFerrocarril } from '../../models/solicitud-pantallas.model';
 import { CarrosDeFerrocarrilComponent } from '../../shared/carros-de-ferrocarril/carros-de-ferrocarril.component';
 import { CatalogosSelect } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy } from '@angular/core';
 import { DatosDeMercancias } from '../../models/solicitud-pantallas.model';
 import { DatosDelTramiteARealizarComponent } from '../../shared/datos-del-tramite-a-realizar/datos-del-tramite-a-realizar.component';
 import { FormBuilder } from '@angular/forms';
@@ -19,8 +19,6 @@ import { Solicitud } from '../../models/solicitud-pantallas.model';
 import { SolicitudDatosComponent } from '../../shared/solicitud-datos/solicitud-datos.component';
 import { SolicitudPantallasService } from '../../services/solicitud-pantallas.service';
 import { Subject } from 'rxjs';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
 
 /**
  * Componente para gestionar la solicitud de trámite.

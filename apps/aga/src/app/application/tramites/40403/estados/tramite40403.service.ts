@@ -1,6 +1,6 @@
-import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, catchError, of, throwError } from 'rxjs';
+import { Observable, catchError, throwError } from 'rxjs';
 import { Catalogo } from '@libs/shared/data-access-user/src';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Tramite40403Store } from './tramite40403.store';
 
@@ -48,8 +48,8 @@ export class Tramite40403Service {
    * @returns Un observable que emite los datos de la solicitud encontrada o un error en caso de fallo.
    */
   buscarSolicitudPorCAATe(claveFolioCAAT: string): Observable<any> {
-    const baseUrl = `/api/solicitud/buscarPorCAAT?claveFolioCAAT=${claveFolioCAAT}`;
-    return this.http.get<any>(baseUrl).pipe(
+    const BASE_URL = `/api/solicitud/buscarPorCAAT?claveFolioCAAT=${claveFolioCAAT}`;
+    return this.http.get<any>(BASE_URL).pipe(
       catchError((error) => {
         return throwError(() => error);
       })

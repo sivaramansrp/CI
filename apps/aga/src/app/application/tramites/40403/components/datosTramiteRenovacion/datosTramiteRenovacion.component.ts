@@ -18,11 +18,11 @@ export class DatosTramiteRenovacionComponent implements OnInit, OnDestroy {
   /**
    * Lista de códigos de transportación obtenidos desde el servicio.
    */
-  codigoTransportacion: any[] = [];
+  codigoTransportacion: Catalogo[] = [];
   /**
    * Lista de tipos de CAAT aéreo obtenidos desde el servicio.
    */
-  tipoCaatAereo: any[] = [];
+  tipoCaatAereo: Catalogo[] = [];
   /**
    * Catálogo de tipos de CAAT aéreo.
    */
@@ -87,8 +87,9 @@ export class DatosTramiteRenovacionComponent implements OnInit, OnDestroy {
    * Convierte el valor del campo `claveFolioCAAT` a mayúsculas.
    * @param event - Evento que contiene el valor ingresado por el usuario.
    */
-  caatConMayusculas(event: any): void {
-    const VALOR = event.target.value;
+  caatConMayusculas(event: Event): void {
+    const TARGET = event.target as HTMLInputElement | null;
+    const VALOR = TARGET?.value || '';
     this.formulario.get('claveFolioCAAT')?.setValue(VALOR.toUpperCase());
   }
   /**
@@ -132,9 +133,9 @@ export class DatosTramiteRenovacionComponent implements OnInit, OnDestroy {
    */
   buscarSolicitudPorCAAT(): void {
     if (this.formulario.valid) {
-      const claveFolio = this.formulario.get('claveFolioCAAT')?.value;
+      const CLAVE_FOLIO = this.formulario.get('claveFolioCAAT')?.value;
       this.tramite40403Service
-        .buscarSolicitudPorCAATe(claveFolio)
+        .buscarSolicitudPorCAATe(CLAVE_FOLIO)
         .pipe(takeUntil(this.destroyNotifier$))
         .subscribe((respuesta) => {
           if (respuesta) {
