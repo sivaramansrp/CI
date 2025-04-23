@@ -56,6 +56,13 @@ const ROUTES: Routes = [
         './tramites/240108/permiso-ordinario-importacion-exlposivo.module'
       ).then((m) => m.PermisoOrdinarioImportacionExlposivoModule),
   },
+  {
+    path: 'aviso-importacion-sustancias-quimicas',
+    loadChildren: () =>
+      import(
+        './tramites/240106/aviso-importacion-sustancias-quimicas.module'
+      ).then((m) => m.AvisoImportacionSustanciasQuimicasModule),
+    },
 ];
 
 @NgModule({

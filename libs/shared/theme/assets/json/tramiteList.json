@@ -1780,8 +1780,8 @@
   {
     "id": 255,
     "tramite": 240106,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/sedena/aviso-importacion-sustancias-quimicas/contenedor-de-pasos",
+    "linkDepartment": "/pago/aviso-importacion-sustancias-quimicas/contenedor-de-pasos",
     "department": "sedena"
   },
   {
