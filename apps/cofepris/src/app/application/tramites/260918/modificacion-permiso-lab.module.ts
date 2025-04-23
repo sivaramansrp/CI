@@ -13,9 +13,9 @@ import { ModificacionPermisoLabComponent } from './pages/modificacion-permiso-la
 import { ModificacionPermisoLabRoutingModule } from './modificacion-permiso-lab-routing.module';
 import { NgModule } from '@angular/core';
 import { PagoDeDerechosEntradaComponent } from '../../shared/components/pago-de-derechos-entrada/pago-de-derechos-entrada.component';
-import { PasoDosComponent } from './pages/modificacion-permiso-lab/paso-dos/paso-dos.component';
-import { PasoTresComponent } from './pages/modificacion-permiso-lab/paso-tres/paso-tres.component';
-import { PasoUnoComponent } from './pages/modificacion-permiso-lab/paso-uno/paso-uno.component';
+import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
+import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
+import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { TercerosRelacionadosFabSeccionComponent } from '../../shared/components/terceros-relacionados-fab-seccion/terceros-relacionados-fab-seccion.component';
 import { TramitesAsociadosSeccionComponent } from '../../shared/components/tramites-asociados-seccion/tramites-asociados-seccion.component';
 
