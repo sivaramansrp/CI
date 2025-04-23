@@ -3802,15 +3802,15 @@
       "department": "sedena"
   },
   {
+    "id": 257,
+    "tramite": 240106,
+    "linkDashboard": "/sedena/aviso-importacion-sustancias-quimicas/contenedor-de-pasos",
+    "linkDepartment": "/pago/aviso-importacion-sustancias-quimicas/contenedor-de-pasos",
+    "department": "sedena"
+},
+{
       "id": 256,
       "tramite": 240105,
-      "linkDashboard": "",
-      "linkDepartment": "",
-      "department": "sedena"
-  },
-  {
-      "id": 257,
-      "tramite": 240106,
       "linkDashboard": "",
       "linkDepartment": "",
       "department": "sedena"
