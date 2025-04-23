@@ -1,4 +1,4 @@
-import { AccionBoton, BtnContinuarComponent } from '@ng-mf/data-access-user';
+import { AVISO, AccionBoton, AlertComponent, BtnContinuarComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { DatosPasos } from '@ng-mf/data-access-user';
@@ -55,6 +55,7 @@ import { WizardComponent } from '@ng-mf/data-access-user';
   selector: 'app-solicitud-page',
   standalone: true,
   imports:[
+    AlertComponent,
     CommonModule,
     WizardComponent,
     PasoUnoComponent,
@@ -111,6 +112,11 @@ export class SolicitudPageComponent {
       txtBtnAnt: 'Anterior',
       txtBtnSig: 'Continuar',
     };
+
+  /**
+   * Asigna el aviso de privacidad simplificado al atributo `TEXTOS`.
+   */
+  TEXTOS = AVISO.Aviso;
 
     /**
    * @method seleccionaTab
