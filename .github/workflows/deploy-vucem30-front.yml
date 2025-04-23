@@ -1,81 +1,398 @@
-name: CI/CD - Microfront Dashboard
+name: CI/CD VUCEM Microfrontends
 
 on:
   workflow_dispatch:
+    inputs:
+      deploymentEnv:
+        description: 'Entorno de despliegue'
+        required: true
+        type: choice
+        options:
+          - dev
+          - staging
+          - prod
+        default: 'dev'
+      deploymentMode:
+        description: 'Modo de despliegue'
+        required: true
+        type: choice
+        options:
+          - changed
+          - selected
+          - all
+        default: 'changed'
+      selectedApps:
+        description: 'Aplicaciones a desplegar (separadas por comas, solo para modo "selected")'
+        required: false
+        type: string
   push:
-    branches: [ develop ]
+    branches: [ develop, main ]
     paths:
       - 'apps/**'
       - 'libs/**'
-      - 'package*.json'
-      - 'Dockerfile'
       - 'docker/**'
+      - 'package.json'
+      - 'nx.json'
+      - '.github/workflows/**'
+
+env:
+  NODE_VERSION: '22.14.0'
+  NX_VERSION: '19.3.1'
+  DOCKER_REGISTRY: 'ghcr.io'
+  AVAILABLE_APPS: 'dashboard,login,aga,agriculture,se,semarnat,agace,funcionario,cofepris,amecafe,sener,inbal,sedena,profepa,crt,inah,bandejas,stps'
+  NX_SKIP_NX_CACHE: true
+  NX_NATIVE_BINDINGS: false
 
 jobs:
-  build-deploy:
+  setup:
     runs-on: ubuntu-latest
+    outputs:
+      env: ${{ steps.set-env.outputs.env }}
+      apps_to_deploy: ${{ steps.determine-apps.outputs.apps_to_deploy }}
+      deployment_matrix: ${{ steps.create-matrix.outputs.matrix }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0 # Needed for git diff
+
+      - name: Set deployment environment
+        id: set-env
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            echo "env=${{ github.event.inputs.deploymentEnv }}" >> $GITHUB_OUTPUT
+          elif [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
+            echo "env=prod" >> $GITHUB_OUTPUT
+          else
+            echo "env=dev" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Detect changed files
+        id: changed-files
+        run: |
+          if [[ "${{ github.event_name }}" == "push" ]]; then
+            # Get the base commit
+            BASE_COMMIT=$(git rev-parse HEAD^)
+            # Get the HEAD commit
+            HEAD_COMMIT=$(git rev-parse HEAD)
+            
+            echo "Comparing changes between $BASE_COMMIT and $HEAD_COMMIT"
+            
+            # Get changed files
+            CHANGED_FILES=$(git diff --name-only $BASE_COMMIT $HEAD_COMMIT)
+            echo "Changed files: $CHANGED_FILES"
+            echo "changed_files<<EOF" >> $GITHUB_OUTPUT
+            echo "$CHANGED_FILES" >> $GITHUB_OUTPUT
+            echo "EOF" >> $GITHUB_OUTPUT
+          else
+            echo "changed_files=" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Setup Node.js for detection
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install NX globally
+        run: npm install -g nx@${{ env.NX_VERSION }}
+
+      - name: Install dependencies for affected detection
+        run: |
+          npm install --no-package-lock --no-save @nx/workspace nx
+          npm install @nx/nx-linux-x64-gnu
+
+      - name: Detect changed apps
+        id: detect-apps
+        run: |
+          # Default to empty
+          CHANGED_APPS=""
+          DEPLOYMENT_MODE="${{ github.event.inputs.deploymentMode }}"
+          
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" && "$DEPLOYMENT_MODE" == "selected" ]]; then
+            # User has manually selected apps
+            CHANGED_APPS="${{ github.event.inputs.selectedApps }}"
+            echo "Manually selected apps: $CHANGED_APPS"
+          elif [[ "${{ github.event_name }}" == "workflow_dispatch" && "$DEPLOYMENT_MODE" == "all" ]]; then
+            # Deploy all apps
+            CHANGED_APPS="${{ env.AVAILABLE_APPS }}"
+            echo "Deploying all available apps: $CHANGED_APPS"
+          else
+            # Auto-detect changed apps
+            # 1. Check for changes in apps/ directory
+            if grep -q "^apps/" <<< "${{ steps.changed-files.outputs.changed_files }}"; then
+              echo "Changes detected in apps/ directory"
+              # Extract app names from changed files
+              APP_DIRS=$(grep "^apps/" <<< "${{ steps.changed-files.outputs.changed_files }}" | cut -d'/' -f2 | sort -u | tr '\n' ',' | sed 's/,$//')
+              CHANGED_APPS="$APP_DIRS"
+              echo "Apps with changes from files: $CHANGED_APPS"
+            fi
+            
+            # 2. Check for changes in k8s manifests
+            if grep -q "^k8s/" <<< "${{ steps.changed-files.outputs.changed_files }}"; then
+              echo "Changes detected in k8s/ directory"
+              K8S_APPS=$(grep "^k8s/" <<< "${{ steps.changed-files.outputs.changed_files }}" | cut -d'/' -f2 | grep -v "README.md\|vucem-microfrontends.yaml" | sort -u | tr '\n' ',' | sed 's/,$//' | sed 's/-microfront//g')
+              
+              if [[ -n "$CHANGED_APPS" && -n "$K8S_APPS" ]]; then
+                CHANGED_APPS="$CHANGED_APPS,$K8S_APPS"
+              elif [[ -n "$K8S_APPS" ]]; then
+                CHANGED_APPS="$K8S_APPS"
+              fi
+              
+              echo "Apps with changes from k8s: $CHANGED_APPS"
+            fi
+            
+            # 3. Check for changes in libs/ directory or shared dependencies
+            if grep -q "^libs/" <<< "${{ steps.changed-files.outputs.changed_files }}" || 
+               grep -q "package.json" <<< "${{ steps.changed-files.outputs.changed_files }}" ||
+               grep -q "nx.json" <<< "${{ steps.changed-files.outputs.changed_files }}"; then
+              echo "Changes detected in shared dependencies, rebuilding all apps"
+              CHANGED_APPS="${{ env.AVAILABLE_APPS }}"
+            fi
+            
+            # 4. Use NX affected if available and we have specific app changes
+            if command -v npx &> /dev/null && [[ -n "$CHANGED_APPS" && "$CHANGED_APPS" != "${{ env.AVAILABLE_APPS }}" ]]; then
+              echo "Using NX to detect affected apps"
+              NX_AFFECTED=$(npx nx show projects --affected --type=app --json | jq -r '.[]' | tr '\n' ',' | sed 's/,$//')
+              
+              if [[ -n "$NX_AFFECTED" ]]; then
+                if [[ -n "$CHANGED_APPS" ]]; then
+                  CHANGED_APPS="$CHANGED_APPS,$NX_AFFECTED"
+                else
+                  CHANGED_APPS="$NX_AFFECTED"
+                fi
+                echo "NX affected apps: $NX_AFFECTED"
+              fi
+            fi
+          fi
+          
+          # Always include dashboard when other apps change
+          if [[ -n "$CHANGED_APPS" && ! "$CHANGED_APPS" =~ (^|,)dashboard(,|$) ]]; then
+            CHANGED_APPS="dashboard,$CHANGED_APPS"
+          fi
+          
+          # Remove duplicates and sort
+          if [[ -n "$CHANGED_APPS" ]]; then
+            CHANGED_APPS=$(echo "$CHANGED_APPS" | tr ',' '\n' | sort -u | tr '\n' ',' | sed 's/,$//')
+          fi
+          
+          echo "Final list of apps to deploy: $CHANGED_APPS"
+          echo "changed_apps=$CHANGED_APPS" >> $GITHUB_OUTPUT
+
+      - name: Determine apps to deploy
+        id: determine-apps
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            DEPLOYMENT_MODE="${{ github.event.inputs.deploymentMode }}"
+            
+            if [[ "$DEPLOYMENT_MODE" == "all" ]]; then
+              # Deploy all available apps
+              echo "apps_to_deploy=${{ env.AVAILABLE_APPS }}" >> $GITHUB_OUTPUT
+            elif [[ "$DEPLOYMENT_MODE" == "selected" && -n "${{ github.event.inputs.selectedApps }}" ]]; then
+              # Deploy selected apps
+              echo "apps_to_deploy=${{ github.event.inputs.selectedApps }}" >> $GITHUB_OUTPUT
+            else
+              # Deploy changed apps
+              echo "apps_to_deploy=${{ steps.detect-apps.outputs.changed_apps }}" >> $GITHUB_OUTPUT
+            fi
+          else
+            # Auto CI mode, deploy detected changed apps
+            echo "apps_to_deploy=${{ steps.detect-apps.outputs.changed_apps }}" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create build matrix
+        id: create-matrix
+        run: |
+          APPS_TO_DEPLOY="${{ steps.determine-apps.outputs.apps_to_deploy }}"
+          
+          if [[ -z "$APPS_TO_DEPLOY" ]]; then
+            echo "No apps to deploy, setting up empty matrix"
+            echo "matrix={\"app\":[]}" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+          
+          # Convert comma-separated list to JSON array
+          APPS_JSON=$(echo "$APPS_TO_DEPLOY" | tr ',' '\n' | jq -R . | jq -s .)
+          echo "matrix={\"app\":$APPS_JSON}" >> $GITHUB_OUTPUT
+          
+          echo "Matrix configuration:"
+          echo "{\"app\":$APPS_JSON}"
+
+  build:
+    needs: setup
+    if: needs.setup.outputs.apps_to_deploy != ''
+    runs-on: ubuntu-latest
+    strategy:
+      matrix: ${{ fromJson(needs.setup.outputs.deployment_matrix) }}
+      fail-fast: false
     env:
-      NX_SKIP_POSTINSTALL: 1   # Evita la ejecución del postinstall de Nx
+      DEPLOYMENT_ENV: ${{ needs.setup.outputs.env }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential libpng-dev
+
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '22.14.0'
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
 
-      - name: Install NX globally
-        run: npm install -g nx@19.3.1
+      - name: Set npm environment variables
+        run: |
+          echo "NX_SKIP_NX_CACHE=true" >> $GITHUB_ENV
+          echo "NX_NATIVE_BINDINGS=false" >> $GITHUB_ENV
 
-      - name: Install native binding for Nx on Linux
-        run: npm install @nx/nx-linux-x64-gnu
-
-      - name: Install SWC native binding for Linux
-        run: npm install @swc/core-linux-x64-gnu
+      - name: Install native bindings for Nx and SWC
+        run: |
+          npm install @nx/nx-linux-x64-gnu
+          npm install @swc/core-linux-x64-gnu
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
+
+      - name: Build ${{ matrix.app }}
+        run: |
+          echo "Building ${{ matrix.app }} for ${{ env.DEPLOYMENT_ENV }} environment"
+          
+          # Set build command based on environment
+          if [[ "${{ env.DEPLOYMENT_ENV }}" == "prod" ]]; then
+            BUILD_CMD="build-prod"
+          else
+            BUILD_CMD="build"
+          fi
+          
+          # Handle special case for dashboard
+          if [[ "${{ matrix.app }}" == "dashboard" ]]; then
+            npx nx $BUILD_CMD ${{ matrix.app }} --configuration=${{ env.DEPLOYMENT_ENV }}
+          else
+            npx nx $BUILD_CMD ${{ matrix.app }} --configuration=${{ env.DEPLOYMENT_ENV }}
+          fi
+
+      - name: Verify build output
+        run: |
+          if [[ "${{ matrix.app }}" == "dashboard" ]]; then
+            BUILD_DIR="dist/apps/${{ matrix.app }}"
+          else
+            BUILD_DIR="dist/apps/${{ matrix.app }}"
+          fi
+          
+          if [[ ! -d "$BUILD_DIR" ]]; then
+            echo "::error::Build failed - output directory $BUILD_DIR does not exist"
+            exit 1
+          fi
+          
+          echo "Build succeeded - files in $BUILD_DIR:"
+          ls -la $BUILD_DIR
 
       - name: Set up Docker Buildx
-        id: buildx
         uses: docker/setup-buildx-action@v2
 
-      - name: Login to GitHub Packages
+      - name: Login to GitHub Container Registry
         uses: docker/login-action@v2
         with:
-          registry: ghcr.io
+          registry: ${{ env.DOCKER_REGISTRY }}
           username: ${{ github.actor }}
-          password: ${{ secrets.GHCR_PAT }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Install Docker Compose
+      - name: Extract Docker metadata
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: ${{ env.DOCKER_REGISTRY }}/${{ github.repository }}/vucem-front-${{ matrix.app }}
+          tags: |
+            type=raw,value=${{ env.DEPLOYMENT_ENV }}
+            type=sha,format=short
+            type=raw,value=latest,enable=${{ env.DEPLOYMENT_ENV == 'dev' }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: ./apps/${{ matrix.app }}/Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          build-args: |
+            ENV=${{ env.DEPLOYMENT_ENV }}
+            APP_NAME=${{ matrix.app }}
+
+  deploy:
+    needs: [setup, build]
+    runs-on: ubuntu-latest
+    env:
+      DEPLOYMENT_ENV: ${{ needs.setup.outputs.env }}
+      APPS_TO_DEPLOY: ${{ needs.setup.outputs.apps_to_deploy }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        
+      - name: Create Kubernetes manifests
         run: |
-          sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-          sudo chmod +x /usr/local/bin/docker-compose
-      - name: Build image and push to GitHub Container Registry
-        run: docker compose -f ./docker/modulefederation-microfrontends.yml build
+          # Make directory for env-specific manifests
+          mkdir -p k8s-${{ env.DEPLOYMENT_ENV }}
+          
+          # Process the template
+          cat k8s/vucem-microfrontends.yaml | \
+          sed "s/\${ENV}/${{ env.DEPLOYMENT_ENV }}/g" | \
+          sed "s/\${REGISTRY}/${{ env.DOCKER_REGISTRY }}\/${{ github.repository }}/g" | \
+          sed "s/\${TAG}/${{ env.DEPLOYMENT_ENV }}/g" | \
+          sed "s/\${REPLICAS}/2/g" | \
+          sed "s/\${MIN_REPLICAS}/2/g" | \
+          sed "s/\${MAX_REPLICAS}/10/g" > k8s-${{ env.DEPLOYMENT_ENV }}/vucem-microfrontends.yaml
+          
+          echo "Created Kubernetes manifest for ${{ env.DEPLOYMENT_ENV }} environment"
+          echo "Manifest includes all microfrontends but will only restart the updated ones"
+      
+      - name: Generate deployment commands
+        id: generate-deployment
+        run: |
+          # Extract app list 
+          IFS=',' read -ra APP_ARRAY <<< "${{ env.APPS_TO_DEPLOY }}"
+          
+          # Create SSH script for deployment
+          echo "cd /home/ubuntu/v30" > deploy_commands.sh
+          echo "cp k8s-${{ env.DEPLOYMENT_ENV }}/vucem-microfrontends.yaml /home/ubuntu/v30/k8s-${{ env.DEPLOYMENT_ENV }}/" >> deploy_commands.sh
+          
+          # Add deployment commands for each app
+          for app in "${APP_ARRAY[@]}"; do
+            # Special handling for dashboard
+            if [[ "$app" == "dashboard" ]]; then
+              echo "microk8s kubectl rollout restart deployment vucem-microfrontends-${{ env.DEPLOYMENT_ENV }} -n vucem-${{ env.DEPLOYMENT_ENV }}" >> deploy_commands.sh
+              break
+            fi
+          done
+          
+          echo "kubectl apply -f /home/ubuntu/v30/k8s-${{ env.DEPLOYMENT_ENV }}/vucem-microfrontends.yaml" >> deploy_commands.sh
+          
+          chmod +x deploy_commands.sh
+          cat deploy_commands.sh
+          
+          # Store deployment script
+          DEPLOY_SCRIPT=$(cat deploy_commands.sh)
+          echo "script<<EOF" >> $GITHUB_OUTPUT
+          echo "$DEPLOY_SCRIPT" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
 
-      - name: Build image and push to GitHub Container Registry
-        run: docker compose -f ./docker/modulefederation-microfrontends.yml push
-
-      - name: Execute remote command (last one)
-        uses: appleboy/ssh-action@v0.1.8
+      - name: Deploy to Kubernetes
+        uses: appleboy/ssh-action@v1.0.0
         with:
           host: ${{ secrets.REMOTE_SRV_IP }}
           username: ${{ secrets.REMOTE_SRV_USER }}
           key: ${{ secrets.REMOTE_SRV_PRIV_KEY }}
           port: 22
+          script_stop: true
           script: |
-            cd /home/ubuntu/v30
-            microk8s kubectl rollout restart deployment modulefederation-dashboard-deployment-dev
-            microk8s kubectl rollout restart deployment modulefederation-login-microfront-deployment-dev
-            microk8s kubectl rollout restart deployment modulefederation-aga-microfront-deployment-dev
-            microk8s kubectl rollout restart deployment modulefederation-agriculture-microfront-deployment-dev
-            microk8s kubectl rollout restart deployment modulefederation-se-microfront-dev
-            microk8s kubectl rollout restart deployment modulefederation-semarnat-microfront-dev
-            microk8s kubectl rollout restart deployment modulefederation-agace-microfront-deployment-dev
-            microk8s kubectl rollout restart deployment modulefederation-funcionario-microfront-deployment-dev
-            microk8s kubectl rollout restart deployment modulefederation-cofepris-microfront-deployment-dev
-            microk8s kubectl rollout restart deployment modulefederation-amecafe-microfront-deployment-dev
-            microk8s kubectl rollout restart deployment modulefederation-inbal-microfront-deployment-dev
-            microk8s kubectl rollout restart deployment modulefederation-sedena-microfront
+            cat << 'EOL' > deploy_commands.sh
+            ${{ steps.generate-deployment.outputs.script }}
+            EOL
+            chmod +x deploy_commands.sh
+            ./deploy_commands.sh
+            
+            # Verify deployment
+            microk8s kubectl get pods -n vucem-${{ env.DEPLOYMENT_ENV }} | grep vucem-microfrontends

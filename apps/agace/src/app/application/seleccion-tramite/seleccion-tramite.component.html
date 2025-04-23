@@ -1,96 +1,30 @@
 <div class="page">
-    <div class="container">
-      <ng-titulo titulo="Selecci&oacute;n de tr&aacute;mite" />
-      <div class="row">
-        <table class="table table-responsive table-striped table-hover">
-          <thead>
-            <tr>
-              <th>
-                Tipo tr&aacute;mite
-              </th>
-              <th>
-                URL
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>32502</td>
-              <td>
-                <a routerLink="/pago/aviso">{{ ruta }}/pago/aviso</a>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                32505
-              </td>
-              <td>
-                <a routerLink="/pago/aviso-procesos-solicitante">{{ruta}}/pago/aviso-procesos-solicitante</a>
-              </td>
-            </tr>
-
-            <tr>
-              <td>
-                32504
-              </td>
-              <td>
-                <a routerLink="/pago/aviso-procesos">{{ruta}}/pago/aviso-procesoss</a>
-              </td>
-            </tr>
-
-            <tr>
-              <td>
-                317
-              </td>
-              <td>
-                <a routerLink="/pago/aviso-unico-renovacion/pantallas">{{ruta}}/pago/aviso-unico-renovacion/pantallas</a></td></tr>
-            <tr>
-              <td>
-                31802
-              </td>
-              <td>
-                <a routerLink="/pago/registro-solicitud/solicitud">{{ruta}}/pago/registro-solicitud/solicitud</a>
-              </tr>
+  <div class="container">
+    <ng-titulo titulo="Selecci&oacute;n de tr&aacute;mite" />
+    <div class="row">
+      <table class="table table-responsive table-striped table-hover">
+        <thead>
+          <tr>
+            <th> #</th>
+            <th> departmento</th>
+            <th>Tipo tr&aacute;mite</th>
+            <th>URL</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for(item of tramiteData; track $index) {
+            @if(item?.linkDepartment) {
               <tr>
-              <td>31501</td>
-              <td>
-                <a routerLink="/pago/autoridad/solicitud">{{ruta}}/pago/autoridad/solicitud</a>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                31803
-              </td>
-              <td>
-                <a routerLink="/pago/registro-solicitud/pagina-uno-acuses-y-resoluciones-busqueda">{{ruta}}/pago/registro-solicitud/pagina-uno-acuses-y-resoluciones-busqueda</a></td>
-                </tr>
-                <tr>
-              <td>32501</td>
-              <td>
-                <a routerLink="/pago/mercancias-desmontadas-o-sin-montar/solicitud">{{ ruta }}/pago/mercancias-desmontadas-o-sin-montar/solicitud</a>
-              </td>
-            </tr>
-            <tr>
-              <td>32503</td>
-              <td>
-                <a routerLink="/pago/aviso-traslado/solicitante">{{ ruta }}/pago/aviso-traslado/solicitante</a>
-              </td>
-            </tr>
-            <tr>
-              <td>32401</td>
-              <td>
-                <a routerLink="/pago/manifiesto-aereo/solicitar-requiremento">{{ ruta }}/pago/manifiesto-aereo/solicitar-requiremento</a>
-              </td>
-            </tr>
-            <tr>
-              <td>32508</td>
-              <td>
-                <a routerLink="/pago/adace/solicitud">{{ ruta }}/pago/adace/solicitud</a>
-              </td>
-            </tr>
+                <td> {{$index + 1}}</td>
+                <td> {{item?.department}}</td>
+                <td> {{item?.tramite}}</td>
+                <td> <a [routerLink]=item.linkDepartment>{{ ruta }}{{item.linkDepartment}}</a>
+                </td>
+              </tr>
+            }
+          }
           </tbody>
-        </table>
-      </div>
-    </div>    
+      </table>
+    </div>
+  </div>
 </div>
-  
