@@ -242,6 +242,12 @@ const ROUTES: Routes = [
     loadChildren: () => 
       import('./tramites/40402/codigo-transportista.module').then(
         (m) => m.CodigoTransportistaModule)
+  },
+  {
+    path: 'desistir-solicitud-informacion-historica',
+    loadChildren: () => 
+      import('./tramites/31910/desistir-solicitud-informacion-historica.module').then(
+        (m) => m.DesistirSolicitudInformacionHistoricaModule)
   }
 ];
 

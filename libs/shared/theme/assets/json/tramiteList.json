@@ -2015,6 +2015,13 @@
         "linkDashboard": "/cofepris/correccion-interna-de-la-cofepris/correccion-interna-de-la-cofepris",
         "linkDepartment": "/pago/correccion-interna-de-la-cofepris/correccion-interna-de-la-cofepris",
         "department": "cofepris"
+     },
+     {
+        "id": 288,
+        "tramite": 31910,
+        "linkDashboard": "/aga/desistir-solicitud-informacion-historica/desistir-informacion-historica",
+        "linkDepartment": "/pago/desistir-solicitud-informacion-historica/desistir-informacion-historica",
+        "department": "aga"
      }
 
     
