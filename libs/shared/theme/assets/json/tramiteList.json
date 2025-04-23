@@ -1542,8 +1542,8 @@
     {
         "id": 221,
         "tramite": 260508,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "/cofepris/permiso-nutrientes/plaguicidas",
+        "linkDepartment": "/pago/permiso-nutrientes/plaguicidas",
         "department": "cofepris"
     },
     {
@@ -3559,8 +3559,8 @@
   {
       "id": 221,
       "tramite": 260508,
-      "linkDashboard": "",
-      "linkDepartment": "",
+      "linkDashboard": "/cofepris/permiso-nutrientes/plaguicidas",
+      "linkDepartment": "/pago/permiso-nutrientes/plaguicidas",
       "department": "cofepris"
   },
   {
