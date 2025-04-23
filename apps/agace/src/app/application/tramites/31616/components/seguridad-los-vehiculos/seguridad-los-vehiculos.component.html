@@ -1,5 +1,5 @@
 <div class="container">
-    <form>
+    <form [formGroup]="seguridad">
         <div class="row mt-2">
             <div class="col-md-12 text-container">
                 <p>
@@ -95,7 +95,7 @@
                     <span class="danger">*</span>De acuerdo a su análisis de riesgo y su proceso logístico, enlista los
                     medios de transporte que están sujetos a la colocación de sellos y/o candados de alta seguridad.
                 </label>
-                <textarea class="custom-textarea" rows="6" cols="100"></textarea>
+                <textarea class="custom-textarea" rows="6" cols="100" formControlName="candadosSeguridad" (change)="setValoresStore(seguridad,'candadosSeguridad', 'setCandadosSeguridad')"></textarea>
             </div>
 
             <div class="row mt-2 alert-text">
@@ -317,16 +317,16 @@
             </div>
 
             <div class="col-md-12 text-container mt-4">
-                <label>
+                <label for="proveedorExterno">
                     <span class="danger">*</span>Indique si la reparación olTantenimiento de las unidades de
                     transporte, contenedores o remolques se realizan en las mismas instalaciones165-son llevados con un
                     proveedor externo.
                 </label>
-                <textarea class="custom-textarea" rows="6" cols="100"></textarea>
+                <textarea class="custom-textarea" rows="6" cols="100" formControlName="proveedorExterno" (change)="setValoresStore(seguridad,'proveedorExterno', 'setProveedorExterno')" ></textarea>
             </div>
 
             <div class="col-md-12 text-container mt-4">
-                <label>
+                <label for="susceptibleContaminacion">
                     <span class="danger">*</span>Indique si la empresa de mensajería y paquetería realiza revisiones
                     aleatorias periódicas de los vehículos de carga después de que el personal de transporte haya
                     realizado inspecciones de seguridad para verificar que se hayan realizado de forma correcta,
@@ -335,7 +335,7 @@
                     en distintos lugares donde el medio de transporte pueda ser susceptible de contaminación.
                 </label>
                 <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'"
-                    class="gap"></app-input-radio>
+                    class="gap" formControlName="susceptibleContaminacion" (change)="setValoresStore(seguridad,'susceptibleContaminacion', 'setSusceptibleContaminacion')"></app-input-radio>
             </div>
         </div>
 
@@ -359,37 +359,37 @@
             </div>
 
             <div class="col-md-12 text-container mt-4">
-                <label>
+                <label for="encuentrenVacios">
                     <span class="danger">*</span>Indique si la empresa almacena los contenedores, remolques y/o
                     semirremolques para su posterior despacho, o en su caso los que se encuentren vacíos.
                 </label>
                 <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'"
-                    class="gap"></app-input-radio>
+                    class="gap" formControlName="encuentrenVacios" (change)="setValoresStore(seguridad,'encuentrenVacios', 'setEncuentrenVacios')"></app-input-radio>
             </div>
 
             <div class="col-md-12 text-container mt-4">
-                <label>
+                <label for="semirremolquesVacios">
                     <span class="danger">*</span>Indique de qué manera mantiene la integridad de los mismos dentro de
                     sus instalaciones En caso de utilizar candado y/o sellos, para los contenedores, remolques y
                     semirremolques vacíos, indique qué tipo utiliza
                 </label>
-                <textarea class="custom-textarea" rows="6" cols="100"></textarea>
+                <textarea class="custom-textarea" rows="6" cols="100" formControlName="semirremolquesVacios" (change)="setValoresStore(seguridad,'semirremolquesVacios', 'setSemirremolquesVacios')"></textarea>
             </div>
 
             <div class="col-md-12 text-container mt-4">
-                <label>
+                <label for="utilizarCandado">
                     <span class="danger">*</span>En caso de utilizar candado y/o sellos, indique qué tipo utiliza.
                 </label>
-                <textarea class="custom-textarea" rows="6" cols="100"></textarea>
+                <textarea class="custom-textarea" rows="6" cols="100" formControlName="utilizarCandado" (change)="setValoresStore(seguridad,'utilizarCandado', 'setUtilizarCandado')"></textarea>
             </div>
 
             <div class="col-md-12 text-container mt-4">
-                <label>
+                <label for="seguridadMismas">
                     <span class="danger">*</span>En caso de utilizar algún contenedor, remolques y/o semirremolques como
                     almacén de materia prima y/o algún otro tipo de mercancías, señale como mantiene la integridad y
                     seguridad de las mismas.
                 </label>
-                <textarea class="custom-textarea" rows="6" cols="100"></textarea>
+                <textarea class="custom-textarea" rows="6" cols="100" formControlName="seguridadMismas" (change)="setValoresStore(seguridad,'seguridadMismas', 'setSeguridadMismas')"></textarea>
             </div>
         </div>
     </form>

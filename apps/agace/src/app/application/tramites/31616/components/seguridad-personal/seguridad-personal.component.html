@@ -1,5 +1,5 @@
 <div class="container">
-    <form>
+    <form [formGroup]="seguridadPersonal">
         <div class="row mt-2">
             <div class="col-md-12 text-container">
                 <p>Se debe contar con procedimientos documentados para el registro y evaluación de personas que desean
@@ -31,68 +31,68 @@
             </div>
 
             <div class="col-md-12 text-container mt-4">
-                <label>
+                <label for="describaContratacion">
                     <span class="danger">*</span>Describa el procedimiento documentado para la contratación del personal
                 </label>
-                <textarea class="custom-textarea" rows="6" cols="100"></textarea>
+                <textarea class="custom-textarea" rows="6" cols="100" formControlName="describaContratacion" (change)="setValoresStore(seguridadPersonal,'describaContratacion', 'setDescribaContratacion')"></textarea>
             </div>
 
             <div class="col-md-12 text-container mt-4">
-                <label>
+                <label for="documentacionExigida">
                     <span class="danger">*</span>Señale los requisitos y documentación exigida
                 </label>
-                <textarea class="custom-textarea" rows="6" cols="100"></textarea>
+                <textarea class="custom-textarea" rows="6" cols="100" formControlName="documentacionExigida" (change)="setValoresStore(seguridadPersonal,'documentacionExigida', 'setDocumentacionExigida')"></textarea>
             </div>
 
             <div class="col-md-12 text-container mt-4">
-                <label>
+                <label for="examenesSolicitados">
                     <span class="danger">*</span>Señale las pruebas y exámenes solicitados.
                 </label>
-                <textarea class="custom-textarea" rows="6" cols="100"></textarea>
+                <textarea class="custom-textarea" rows="6" cols="100" formControlName="examenesSolicitados" (change)="setValoresStore(seguridadPersonal,'examenesSolicitados', 'setExamenesSolicitados')"></textarea>
             </div>
 
             <div class="col-md-12 text-container mt-4">
-                <label>
+                <label for="conformeAnalisis">
                     <span class="danger">*</span>Indique las áreas y/o puestos críticos que se hayan identificado como
                     de riesgo, conforme a su análisis.
                 </label>
-                <textarea class="custom-textarea" rows="6" cols="100"></textarea>
+                <textarea class="custom-textarea" rows="6" cols="100" formControlName="conformeAnalisis" (change)="setValoresStore(seguridadPersonal,'conformeAnalisis', 'setConformeAnalisis')"></textarea>
             </div>
 
             <div class="col-md-12 text-container mt-4">
-                <label>
+                <label for="periodicidad">
                     <span class="danger">*</span>Indique cuales son los requerimientos adicionales para áreas y/o
                     puestos de trabajo específicos, como: antecedentes criminales (si la legislación y las políticas de
                     la empresa lo permiten), carta de antecedentes no penales, estudios socioeconómicos, estudios
                     clínicos, toxicológicos (uso de drogas), etcétera. En su caso, señale los puestos o áreas de trabajo
                     en que se requieren y con qué periodicidad se llevan a cabo.
                 </label>
-                <textarea class="custom-textarea" rows="6" cols="100"></textarea>
+                <textarea class="custom-textarea" rows="6" cols="100" formControlName="periodicidad" (change)="setValoresStore(seguridadPersonal,'periodicidad', 'setPeriodicidad')"></textarea>
             </div>
 
             <div class="col-md-12 text-container mt-4">
-                <label>
+                <label for="confidencialidad">
                     <span class="danger">*</span>Indique si previo a la contratación, el candidato debe firmar un
                     acuerdo de confidencialidad o un documento similar.
                 </label>
-                <textarea class="custom-textarea" rows="6" cols="100"></textarea>
+                <textarea class="custom-textarea" rows="6" cols="100" formControlName="confidencialidad" (change)="setValoresStore(seguridadPersonal,'confidencialidad', 'setConfidencialidad')"></textarea>
             </div>
 
             <div class="col-md-12 text-container mt-4">
-                <label>
+                <label for="contratacionPersonal">
                     <span class="danger">*</span>En caso de contratar una agencia de servicios para la contratación de
                     personal, indique si ésta cuenta con procedimientos documentados para la contratación de personal y
                     cómo se asegura de que cumplan con el mismo.
                 </label>
                 <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'"
-                    class="gap"></app-input-radio>
+                    class="gap" formControlName="contratacionPersonal" (change)="setValoresStore(seguridadPersonal,'contratacionPersonal', 'setContratacionPersonal')"></app-input-radio>
             </div>
 
             <div class="col-md-12 text-container mt-4">
                 <label>
                     <span class="danger">*</span>Explique brevemente en qué consisten
                 </label>
-                <textarea class="custom-textarea" rows="6" cols="100"></textarea>
+                <textarea class="custom-textarea" rows="6" cols="100" formControlName="expliqueBrevemente" (change)="setValoresStore(seguridadPersonal,'expliqueBrevemente', 'setExpliqueBrevemente')"></textarea>
             </div>
         </div>
 
@@ -110,43 +110,43 @@
             </div>
 
             <div class="col-md-12 text-container mt-4">
-                <label>
+                <label for="describaProcedimientoPersonal">
                     <span class="danger">*</span>Describa el procedimiento para la baja del personal
                 </label>
-                <textarea class="custom-textarea" rows="6" cols="100"></textarea>
+                <textarea class="custom-textarea" rows="6" cols="100" formControlName="describaProcedimientoPersonal" (change)="setValoresStore(seguridadPersonal,'describaProcedimientoPersonal', 'setDescribaProcedimientoPersonal')"></textarea>
             </div>
 
             <div class="col-md-12 text-container mt-4">
-                <label>
+                <label for="seguimientoProcedimiento">
                     <span class="danger">*</span>Quién es el responsable de llevar acabo y dar seguimiento a este
                     procedimiento
                 </label>
-                <textarea class="custom-textarea" rows="6" cols="100"></textarea>
+                <textarea class="custom-textarea" rows="6" cols="100" formControlName="seguimientoProcedimiento" (change)="setValoresStore(seguridadPersonal,'seguimientoProcedimiento', 'setSeguimientoProcedimiento')"></textarea>
             </div>
 
             <div class="col-md-12 text-container mt-4">
-                <label>
+                <label for="identificaciones">
                     <span class="danger">*</span>Cómo se realiza y confirma la entrega de identificaciones, uniformes,
                     llaves y demás equipo.
                 </label>
-                <textarea class="custom-textarea" rows="6" cols="100"></textarea>
+                <textarea class="custom-textarea" rows="6" cols="100" formControlName="identificaciones" (change)="setValoresStore(seguridadPersonal,'identificaciones', 'setIdentificaciones')"></textarea>
             </div>
 
             <div class="col-md-12 text-container mt-4">
-                <label>
+                <label for="sistemasInformaticos">
                     <span class="danger">*</span>Indicar el control, registro y/o formato, en el que se identifique y
                     asegure la entrega de material y baja en sistemas informáticos (en su caso, anexar)
                 </label>
-                <textarea class="custom-textarea" rows="6" cols="100"></textarea>
+                <textarea class="custom-textarea" rows="6" cols="100" formControlName="sistemasInformaticos" (change)="setValoresStore(seguridadPersonal,'sistemasInformaticos', 'setSistemasInformaticos')"></textarea>
             </div>
 
             <div class="col-md-12 text-container mt-4">
-                <label>
+                <label for="proveedoresServicios">
                     <span class="danger">*</span>Señalar el tipo de registros del personal que finalizó su relación
                     laboral con la empresa, para que en caso de que haya sido por motivos de seguridad, se prevenga a
                     sus proveedores de servicios y/o asociados de negocio.
                 </label>
-                <textarea class="custom-textarea" rows="6" cols="100"></textarea>
+                <textarea class="custom-textarea" rows="6" cols="100" formControlName="proveedoresServicios" (change)="setValoresStore(seguridadPersonal,'proveedoresServicios', 'setProveedoresServicios')"></textarea>
             </div>
         </div>
 
@@ -196,7 +196,7 @@
                     </ul>
 
                     <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'"
-                        class="gap"></app-input-radio>
+                        class="gap" formControlName="administracionPersonal" (change)="setValoresStore(seguridadPersonal,'administracionPersonal', 'setAdministracionPersonal')"></app-input-radio>
                 </div>
             </div>
         </div>
