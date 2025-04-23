@@ -7,6 +7,7 @@ import { DomicilioFiscalComponent } from './components/domicilio-fiscal/domicili
 import { NgModule } from '@angular/core';
 import { PantallasComponent } from './pages/pantallas/pantallas.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
+import { RepresentacionFederalComponent } from './components/representacion-federal/representacion-federal.component';
 import { SolicitudDeRegistroTplRoutingModule } from './solicitud-de-registro-tpl-routing.module';
 
 
@@ -24,7 +25,8 @@ import { SolicitudDeRegistroTplRoutingModule } from './solicitud-de-registro-tpl
     DomicilioFiscalComponent,
     ConsultarCupoComponent,
     AlertComponent,
-    DescripcionDelCupoComponent
+    DescripcionDelCupoComponent,
+    RepresentacionFederalComponent
   ]
 })
 export class SolicitudDeRegistroTplModule { }

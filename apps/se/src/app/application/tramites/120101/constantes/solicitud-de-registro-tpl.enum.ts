@@ -460,3 +460,32 @@ export const DESCRIPCION_DEL_CUPO = [
     marginTop: 0,
   },
 ];
+
+export const REPRESENTACION_FEDERAL = [
+  {
+    id: 'estado',
+    labelNombre: 'Estado',
+    campo: 'estado',
+    clase: 'col-md-4',
+    tipoInput: 'select-catalogos',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [{ tipo: 'required' }],
+    marcadorDePosicion: 'Selecciona un valor',
+    valorPredeterminado: '',
+    marginTop: 0,
+  },
+  {
+    id: 'representacionFederal',
+    labelNombre: 'Representación federal',
+    campo: 'representacionFederal',
+    clase: 'col-md-4',
+    tipoInput: 'select-catalogos',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [{ tipo: 'required' }],
+    marcadorDePosicion: 'Selecciona un valor',
+    valorPredeterminado: '',
+    marginTop: 0,
+  },
+];
