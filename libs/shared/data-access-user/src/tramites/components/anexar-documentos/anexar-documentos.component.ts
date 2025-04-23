@@ -480,7 +480,6 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-
   ngOnDestroy(): void {
     this.subscription.forEach((sub: Subscription) => sub.unsubscribe());
     this.destroyNotifier$.next();
@@ -490,12 +489,8 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
   mostrarSeccionCargaArchivosAccion(): void {
     this.mostrarSeccionCargaArchivos = true;
     const ARCHIVOS_PARA_CARGAR = this.listadoArchivos.some(item => item.cargado === true);
-    console.log(this.listadoArchivos);
-    
-
-    console.log(ARCHIVOS_PARA_CARGAR);
-    
+  
     this.activarBotonCargaArchivos.emit(ARCHIVOS_PARA_CARGAR);
-
+    this.cargaRealizada.emit(false);
   }
 }
