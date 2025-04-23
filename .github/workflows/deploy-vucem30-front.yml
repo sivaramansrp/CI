@@ -21,10 +21,96 @@ on:
           - selected
           - all
         default: 'changed'
-      selectedApps:
-        description: 'Aplicaciones a desplegar (separadas por comas, solo para modo "selected")'
+      dashboard:
+        description: 'Dashboard'
         required: false
-        type: string
+        type: boolean
+        default: true
+      login:
+        description: 'Login'
+        required: false
+        type: boolean
+        default: false
+      aga:
+        description: 'AGA'
+        required: false
+        type: boolean
+        default: false
+      agriculture:
+        description: 'Agriculture'
+        required: false
+        type: boolean
+        default: false
+      se:
+        description: 'SE'
+        required: false
+        type: boolean
+        default: false
+      semarnat:
+        description: 'SEMARNAT'
+        required: false
+        type: boolean
+        default: false
+      agace:
+        description: 'AGACE'
+        required: false
+        type: boolean
+        default: false
+      funcionario:
+        description: 'Funcionario'
+        required: false
+        type: boolean
+        default: false
+      cofepris:
+        description: 'COFEPRIS'
+        required: false
+        type: boolean
+        default: false
+      amecafe:
+        description: 'AMECAFE'
+        required: false
+        type: boolean
+        default: false
+      sener:
+        description: 'SENER'
+        required: false
+        type: boolean
+        default: false
+      inbal:
+        description: 'INBAL'
+        required: false
+        type: boolean
+        default: false
+      sedena:
+        description: 'SEDENA'
+        required: false
+        type: boolean
+        default: false
+      profepa:
+        description: 'PROFEPA'
+        required: false
+        type: boolean
+        default: false
+      crt:
+        description: 'CRT'
+        required: false
+        type: boolean
+        default: false
+      inah:
+        description: 'INAH'
+        required: false
+        type: boolean
+        default: false
+      bandejas:
+        description: 'Bandejas'
+        required: false
+        type: boolean
+        default: false
+      stps:
+        description: 'STPS'
+        required: false
+        type: boolean
+        default: false
   push:
     branches: [ develop, main ]
     paths:
@@ -109,8 +195,69 @@ jobs:
           DEPLOYMENT_MODE="${{ github.event.inputs.deploymentMode }}"
           
           if [[ "${{ github.event_name }}" == "workflow_dispatch" && "$DEPLOYMENT_MODE" == "selected" ]]; then
-            # User has manually selected apps
-            CHANGED_APPS="${{ github.event.inputs.selectedApps }}"
+            # User has manually selected apps via checkboxes
+            SELECTED_APPS=""
+            
+            # Check each app input and add to list if selected
+            if [[ "${{ github.event.inputs.dashboard }}" == "true" ]]; then
+              SELECTED_APPS+="dashboard,"
+            fi
+            if [[ "${{ github.event.inputs.login }}" == "true" ]]; then
+              SELECTED_APPS+="login,"
+            fi
+            if [[ "${{ github.event.inputs.aga }}" == "true" ]]; then
+              SELECTED_APPS+="aga,"
+            fi
+            if [[ "${{ github.event.inputs.agriculture }}" == "true" ]]; then
+              SELECTED_APPS+="agriculture,"
+            fi
+            if [[ "${{ github.event.inputs.se }}" == "true" ]]; then
+              SELECTED_APPS+="se,"
+            fi
+            if [[ "${{ github.event.inputs.semarnat }}" == "true" ]]; then
+              SELECTED_APPS+="semarnat,"
+            fi
+            if [[ "${{ github.event.inputs.agace }}" == "true" ]]; then
+              SELECTED_APPS+="agace,"
+            fi
+            if [[ "${{ github.event.inputs.funcionario }}" == "true" ]]; then
+              SELECTED_APPS+="funcionario,"
+            fi
+            if [[ "${{ github.event.inputs.cofepris }}" == "true" ]]; then
+              SELECTED_APPS+="cofepris,"
+            fi
+            if [[ "${{ github.event.inputs.amecafe }}" == "true" ]]; then
+              SELECTED_APPS+="amecafe,"
+            fi
+            if [[ "${{ github.event.inputs.sener }}" == "true" ]]; then
+              SELECTED_APPS+="sener,"
+            fi
+            if [[ "${{ github.event.inputs.inbal }}" == "true" ]]; then
+              SELECTED_APPS+="inbal,"
+            fi
+            if [[ "${{ github.event.inputs.sedena }}" == "true" ]]; then
+              SELECTED_APPS+="sedena,"
+            fi
+            if [[ "${{ github.event.inputs.profepa }}" == "true" ]]; then
+              SELECTED_APPS+="profepa,"
+            fi
+            if [[ "${{ github.event.inputs.crt }}" == "true" ]]; then
+              SELECTED_APPS+="crt,"
+            fi
+            if [[ "${{ github.event.inputs.inah }}" == "true" ]]; then
+              SELECTED_APPS+="inah,"
+            fi
+            if [[ "${{ github.event.inputs.bandejas }}" == "true" ]]; then
+              SELECTED_APPS+="bandejas,"
+            fi
+            if [[ "${{ github.event.inputs.stps }}" == "true" ]]; then
+              SELECTED_APPS+="stps,"
+            fi
+            
+            # Remove trailing comma if present
+            SELECTED_APPS=$(echo "$SELECTED_APPS" | sed 's/,$//')
+            
+            CHANGED_APPS="$SELECTED_APPS"
             echo "Manually selected apps: $CHANGED_APPS"
           elif [[ "${{ github.event_name }}" == "workflow_dispatch" && "$DEPLOYMENT_MODE" == "all" ]]; then
             # Deploy all apps
@@ -202,6 +349,7 @@ jobs:
       - name: Create build matrix
         id: create-matrix
         run: |
+          # Get the apps to deploy from the previous step
           APPS_TO_DEPLOY="${{ steps.determine-apps.outputs.apps_to_deploy }}"
           
           if [[ -z "$APPS_TO_DEPLOY" ]]; then
@@ -210,30 +358,40 @@ jobs:
             exit 0
           fi
           
-          # Convert comma-separated list to JSON array more carefully
-          # Creating a temporary file to ensure proper newlines and formatting
-          echo "$APPS_TO_DEPLOY" | tr ',' '\n' > apps_list.txt
-          APPS_JSON=$(jq -R . < apps_list.txt | jq -s .)
+          # Simple approach: directly create a valid JSON array without relying on jq
+          # Remove any whitespace and ensure we have valid app names
+          CLEAN_APPS=$(echo "$APPS_TO_DEPLOY" | tr -d ' ' | sed 's/,$//')
           
-          # Validate the JSON output
-          if ! echo "$APPS_JSON" | jq . > /dev/null 2>&1; then
-            echo "::warning::JSON conversion failed. Falling back to manual JSON construction."
-            # Manually construct JSON array
-            APPS_JSON="["
-            IFS=',' read -ra APP_ARRAY <<< "$APPS_TO_DEPLOY"
-            for ((i=0; i<${#APP_ARRAY[@]}; i++)); do
-              APPS_JSON+="\"${APP_ARRAY[$i]}\""
+          # Create JSON array directly with proper formatting
+          echo "Creating matrix from apps: $CLEAN_APPS"
+          
+          # Start JSON array
+          JSON_ARRAY="["
+          
+          # Split by comma and add each app with proper JSON formatting
+          IFS=',' read -ra APP_ARRAY <<< "$CLEAN_APPS"
+          for ((i=0; i<${#APP_ARRAY[@]}; i++)); do
+            # Skip empty entries
+            if [[ -n "${APP_ARRAY[$i]}" ]]; then
+              # Add quotes around the app name
+              JSON_ARRAY+="\"${APP_ARRAY[$i]}\""
+              
+              # Add comma if not the last element
               if [ $i -lt $((${#APP_ARRAY[@]}-1)) ]; then
-                APPS_JSON+=","
+                JSON_ARRAY+=","
               fi
-            done
-            APPS_JSON+="]"
-          fi
+            fi
+          done
           
-          echo "matrix={\"app\":$APPS_JSON}" >> $GITHUB_OUTPUT
+          # Close JSON array
+          JSON_ARRAY+="]"
           
+          # Set the matrix output
+          echo "matrix={\"app\":$JSON_ARRAY}" >> $GITHUB_OUTPUT
+          
+          # Debug output
           echo "Matrix configuration:"
-          echo "{\"app\":$APPS_JSON}"
+          echo "{\"app\":$JSON_ARRAY}"
 
   build:
     needs: setup
