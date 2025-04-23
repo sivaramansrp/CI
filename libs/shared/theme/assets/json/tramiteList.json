@@ -4032,7 +4032,14 @@
       "linkDashboard": "/cofepris/correccion-interna-de-la-cofepris/correccion-interna-de-la-cofepris",
       "linkDepartment": "/pago/correccion-interna-de-la-cofepris/correccion-interna-de-la-cofepris",
       "department": "cofepris"
-   }
+   },
+   {
+    "id": 288,
+    "tramite": 260302,
+    "linkDashboard": "/cofepris/exportacion-materias-primas-estupefacientes/contenedor-de-pasos",
+    "linkDepartment": "/pago/exportacion-materias-primas-estupefacientes/contenedor-de-pasos",
+    "department": "cofepris"
+    }
 
   
 ]

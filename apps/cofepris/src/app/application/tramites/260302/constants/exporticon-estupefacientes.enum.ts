@@ -314,3 +314,36 @@ export const TERCEROS_PERSONA_RADIO_OPCIONS = [
   { label: 'Física', value: TipoPersona.FISICA },
   { label: 'Moral', value: TipoPersona.MORAL }
 ];
+
+/**
+ * @const ELEMENTOS_REQUERIDOS
+ * @description Lista de elementos requeridos para el trámite 260302.
+ * @type {string[]}
+ * @memberof exporticon-estupefacientes.enum
+ * @usage Utilizado para validar los campos obligatorios en el formulario del trámite.
+ * @example
+ * ELEMENTOS_REQUERIDOS.includes('colonia'); // true
+ */
+export const ELEMENTOS_REQUERIDOS=[
+  'colonia',
+  'localidad',
+  'denominacionRazon',
+  'scian',
+  'correoElectronico',
+]
+
+/**
+ * @const ELEMENTOS_ANADIDOS
+ * @description Constante que define una lista de elementos adicionales utilizados en el trámite 260302.
+ * Contiene los nombres de las propiedades relacionadas con información sanitaria y aduanera.
+ * 
+ * @type {string[]}
+ * @example
+ */
+export const ELEMENTOS_ANADIDOS=[
+  'calleYNumero',
+  'correoElectronico',
+  'rfcSanitario',
+  'regimenLaMercancia',
+  'aduana',
+]
