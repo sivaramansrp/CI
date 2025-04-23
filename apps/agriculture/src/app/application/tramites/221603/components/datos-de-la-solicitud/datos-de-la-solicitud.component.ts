@@ -102,7 +102,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((resp: FormularioDatos) => {
         this.formularioDatos = resp;
-        this.inicializarFormulario();
+        this.rellenarValoresPredeterminados();
       });
     this.sanidadService.inicializaCatalogosRegimen();
     this.sanidadService.inicializaDatosMercancia();
@@ -125,6 +125,13 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       ],
       carro: [this.solicitudState.carro],
     });
+    
+  }
+
+  /**
+   * Método para rellenar valores predeterminados en el formulario.
+   */
+  rellenarValoresPredeterminados(): void {
     this.datosSolicitudForm.get('punto')?.setValue(this.formularioDatos?.punto);
     this.datosSolicitudForm.get('punto')?.disable();
     this.datosSolicitudForm.get('aduana')?.setValue(this.formularioDatos?.aduana);
@@ -132,6 +139,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     this.datosSolicitudForm.get('oficina')?.setValue(this.formularioDatos?.oficina);
     this.datosSolicitudForm.get('oficina')?.disable();
   }
+
   /**
    * Método que abre o cierra el contenido de la solicitud.
    */
