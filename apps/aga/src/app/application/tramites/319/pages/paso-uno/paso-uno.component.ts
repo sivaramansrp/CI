@@ -28,7 +28,7 @@ export class PasoUnoComponent {
      */
     seccionesDeLaSolicitud = [
       { index: 1, title: 'Solicitante', component: 'solicitante' },
-      { index: 2, title: 'Datos de la solicitud', component: 'datos-de-la-solicitud' }
+      { index: 2, title: 'Operaciones de Comercio Exterior', component: 'app-operaciones-de-comercio-exterior' }
     ];
   
     /**
