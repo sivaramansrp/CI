@@ -354,6 +354,8 @@ export const FORMULARIO_DATOS_PROPIETARIO = [
     }
 ];
 
+export const FORMULARIO_DATOS_GENERALES = []
+
 export const FORMULARIO_DATOS_NOMBRE = [
     {
         id: 'calle',

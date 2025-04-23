@@ -28,6 +28,8 @@ import {TipoPropietarioComponent} from './components/tipo-propietario/tipo-propi
 import {FechaDeImportacionComponent } from './components/fecha-de-importacion/fecha-de-importacion.component';
 
 import {DatosDelNombreComponent} from './components/datos-del-nombre/datos-del-nombre.component';
+
+
 @NgModule({
   declarations: [
     EquipoEInstrumentosMusicalesComponent,

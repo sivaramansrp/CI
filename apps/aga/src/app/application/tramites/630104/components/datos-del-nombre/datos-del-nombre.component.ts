@@ -10,6 +10,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { CatalogoSelectComponent, SolicitanteComponent, TituloComponent } from '@ng-mf/data-access-user';
 
 import { Catalogo, ModeloDeFormaDinamica, REGEX_NOMBRE } from '@libs/shared/data-access-user/src';
+import {DatosGeneralesComponent} from '../datos-generales/datos-generales.component';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
 
 import { FORMULARIO_DATOS_NOMBRE } from '../../enums/retorno-importacion-temporal.enum';
@@ -20,10 +21,11 @@ import { EquipoEInstrumentosMusicalesService } from '../../services/equipo-e-ins
 
 
 
+
 @Component({
   selector: 'app-datos-del-nombre',
   standalone: true,
-  imports: [CommonModule, FormasDinamicasComponent, CatalogoSelectComponent, SolicitanteComponent, TituloComponent, ReactiveFormsModule, SolicitanteComponent],
+  imports: [CommonModule, FormasDinamicasComponent, CatalogoSelectComponent,DatosGeneralesComponent, SolicitanteComponent, TituloComponent, ReactiveFormsModule, SolicitanteComponent],
   templateUrl: './datos-del-nombre.component.html',
   styleUrl: './datos-del-nombre.component.scss',
 })

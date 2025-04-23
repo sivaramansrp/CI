@@ -1,0 +1,8 @@
+<div class="container">
+    <ng-titulo [titulo]="'Información general de la autorización (formato en papel)'"></ng-titulo>
+        <div class="row">
+            <formas-dinamicas
+            [forma]="datosGeneralesFormulario" [formularioDatos]="formularioDatosGenerales" [estado]="estadoSeleccionado"
+            (emitirCambioDeValor)="establecerCambioDeValor($event)"></formas-dinamicas>
+        </div>
+    </div>
