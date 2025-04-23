@@ -438,15 +438,14 @@ const ROUTES: Routes = [
       import('./tramites/261103/modificacion-permiso-importacion-medicamentos.module').then(
         (m) => m.ModificacionPermisoImportacionModule
       ),
-}, 
- {
-    path: 'permit-substances',
-    loadChildren: () =>
-      import('./tramites/260515/permit-de-substances.module').then(
-        (m) => m.PermitDeSubstancesModule
-      )
 },
-
+{
+  path: 'permit-substances',
+  loadChildren: () =>
+    import('./tramites/260515/permit-de-substances.module').then(
+      (m) => m.PermitDeSubstancesModule
+    )
+}
 ];
 
 @NgModule({
