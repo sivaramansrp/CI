@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges } from '@angular/core';
+import { AfterViewInit, Component, Input } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { DESCRIPCION_DEL_CUPO } from '../../constantes/solicitud-de-registro-tpl.enum';
@@ -16,7 +16,7 @@ import { InstrumentoCupoTPLForm } from '../../../120201/models/cupos.model';
   templateUrl: './descripcion-del-cupo.component.html',
   styleUrl: './descripcion-del-cupo.component.css',
 })
-export class DescripcionDelCupoComponent implements OnChanges {
+export class DescripcionDelCupoComponent implements AfterViewInit {
 
   @Input() objetoDeFormulario!: InstrumentoCupoTPLForm;
 
@@ -65,11 +65,9 @@ export class DescripcionDelCupoComponent implements OnChanges {
       return this.forma.get('ninoFormGroup') as FormGroup;
     }
 
-    ngOnChanges(): void {
+    ngAfterViewInit(): void {
       if (this.objetoDeFormulario) {
-        console.log('desc', this.objetoDeFormulario)
         this.establecerValorDeFormulario();
-        console.log('form', this.ninoFormGroup)
       }
     }
 
