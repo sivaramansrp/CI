@@ -372,9 +372,6 @@
                 formControlName="enSuCaracterDe"
               ></app-catalogo-select>
             </div>
-            @if(comunesForm.controls['enSuCaracterDe'].invalid && comunesForm.controls['enSuCaracterDe'].touched) {
-              <div class="mensaje-error">Este campo es obligatorio.</div>
-            }
           </div>
           @if(cambioObj.obligadoaTributaren === 'Si') {
             <div class="col-md-4">
@@ -387,7 +384,7 @@
                   class="form-control"
                 />
               </div>
-              @if(comunesForm.controls['rfc'].invalid && comunesForm.controls['rfc'].touched) {
+              @if(agregarMiembroDeLaEmpresaFrom.controls['rfc'].invalid && agregarMiembroDeLaEmpresaFrom.controls['rfc'].touched) {
                 <div class="mensaje-error">Este campo es obligatorio.</div>
               }
             </div>
@@ -413,7 +410,7 @@
                 (valueChange)="onRadioCambio($event,'obligadoaTributaren')"
               ></app-input-radio>
             </div>
-            @if(comunesForm.controls['obligadoaTributarenMexico'].invalid && comunesForm.controls['obligadoaTributarenMexico'].touched) {
+            @if(agregarMiembroDeLaEmpresaFrom.controls['obligadoaTributarenMexico'].invalid && agregarMiembroDeLaEmpresaFrom.controls['obligadoaTributarenMexico'].touched) {
               <div class="mensaje-error">Este campo es obligatorio.</div>
             }
           </div>
@@ -430,7 +427,7 @@
                   class="form-control"
                 />
               </div>
-              @if(comunesForm.controls['registroFederaldeContribuyentes'].invalid && comunesForm.controls['registroFederaldeContribuyentes'].touched) {
+              @if(agregarMiembroDeLaEmpresaFrom.controls['registroFederaldeContribuyentes'].invalid && agregarMiembroDeLaEmpresaFrom.controls['registroFederaldeContribuyentes'].touched) {
                 <div class="mensaje-error">Este campo es obligatorio.</div>
               }
             </div>
@@ -471,7 +468,7 @@
                   formControlName="nombreCompleto"
                 />
               </div>
-              @if(comunesForm.controls['nombreCompleto'].invalid && comunesForm.controls['nombreCompleto'].touched) {
+              @if(agregarMiembroDeLaEmpresaFrom.controls['nombreCompleto'].invalid && agregarMiembroDeLaEmpresaFrom.controls['nombreCompleto'].touched) {
                 <div class="mensaje-error">Este campo es obligatorio.</div>
               }
             </div>
