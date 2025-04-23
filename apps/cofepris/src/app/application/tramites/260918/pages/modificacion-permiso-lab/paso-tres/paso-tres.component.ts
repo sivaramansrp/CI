@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-
+/**
+ * Componente que representa el paso tres del formulario.
+ */
 @Component({
   selector: 'app-paso-tres',
   templateUrl: './paso-tres.component.html',

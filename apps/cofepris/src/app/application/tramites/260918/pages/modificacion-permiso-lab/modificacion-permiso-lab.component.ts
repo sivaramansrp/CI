@@ -1,7 +1,9 @@
 import { AccionBoton, DatosPasos, ListaPasosWizard, WizardComponent } from '@libs/shared/data-access-user/src';
 import { Component, ViewChild } from '@angular/core';
 import { PERMISO_MAQUILA } from '../../constantes/enmienda-permiso-sanitario.enum';
-
+/**
+ * Componente para la modificación del permiso de laboratorio.
+ */
 @Component({
   selector: 'app-modificacion-permiso-lab',
   templateUrl: './modificacion-permiso-lab.component.html',
