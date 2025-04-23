@@ -143,6 +143,15 @@ export const appRoutes: Route[] = [
         }).then((m) => m.AppSedenaModule)
   },
   {
+    path: 'inbal',
+    loadChildren: () =>
+        loadRemoteModule({
+            remoteEntry: 'http://localhost:4218/remoteAppEntry.js',
+            remoteName: 'inbal',
+            exposedModule: './Module'
+        }).then((m) => m.AppInbalModule)
+  },
+  {
     path: 'profepa',
     loadChildren: () =>
         loadRemoteModule({
@@ -150,6 +159,6 @@ export const appRoutes: Route[] = [
             remoteName: 'profepa',
             exposedModule: './Module'
         }).then((m) => m.AppProfepaModule)
-  }          
+  }
 
 ];
