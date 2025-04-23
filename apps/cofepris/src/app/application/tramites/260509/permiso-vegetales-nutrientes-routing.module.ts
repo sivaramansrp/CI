@@ -1,10 +1,21 @@
-import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { NgModule } from '@angular/core';
+import { PlaguicidasComponent } from './pages/plaguicidas/plaguicidas.component';
 
-const routes: Routes = [];
+const ROUTES: Routes = [
+  {
+    path: 'plaguicidas',
+    component: PlaguicidasComponent,
+  },
+  {
+    path: '',
+    pathMatch: 'full',
+    redirectTo: 'plaguicidas',
+  },
+];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  imports: [RouterModule.forChild(ROUTES)],
+  exports: [RouterModule],
 })
-export class PermisoVegetalesNutrientesRoutingModule { }
+export class PermisoVegetalesNutrientesRoutingModule {}
