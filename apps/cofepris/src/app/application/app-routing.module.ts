@@ -440,6 +440,12 @@ const ROUTES: Routes = [
       ),
 },
 {
+  path: 'permiso-importacion-module',
+  loadChildren: () =>
+  import('./tramites/260917/permiso-importacion.module').then(
+    (m) => m.PermisoImportacionModule),
+}
+{
   path: 'permit-substances',
   loadChildren: () =>
     import('./tramites/260515/permit-de-substances.module').then(
