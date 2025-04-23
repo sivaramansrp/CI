@@ -16,6 +16,13 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'registros-de-comercio-exterior',
+    loadChildren: () =>
+      import('./tramites/31602/comercio-exterior/comercio-exterior.module').then(
+        (m) => m.ComercioExteriorModule
+      ),
+  },
+  {
     path: 'aviso',
     loadChildren: () =>
       import('./tramites/32502/aviso.module').then((m) => m.AvisoModule),
@@ -88,7 +95,13 @@ const ROUTES: Routes = [
         (m) => m.AdaceModule
       ),
   },
-
+  {
+    path: 'anexo-veintiocho',
+    loadChildren: () =>
+      import('./tramites/32201/anexo-veintiocho.module').then(
+        (m) => m.AnexoVeintiochoModule
+      ),
+  },
   {
     path: 'entrega-acta-solicitante',
     loadChildren: () =>
