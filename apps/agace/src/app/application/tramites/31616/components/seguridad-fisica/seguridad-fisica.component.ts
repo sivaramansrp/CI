@@ -240,8 +240,33 @@ export class SeguridadFisicaComponent implements OnInit, OnDestroy{
         this.solicitudState?.formaControlan,
         Validators.required,
       ],
+      indiqueTodas: [
+        this.solicitudState?.indiqueTodas,
+        Validators.required,
+      ],
+      indiquePlanta: [
+        this.solicitudState?.indiquePlanta,
+        Validators.required,
+      ],
+      cuentaDocumentado: [
+        this.solicitudState?.cuentaDocumentado,
+        Validators.required,
+      ],
+      indiquePuertas: [
+        this.solicitudState?.indiquePuertas,
+        Validators.required,
+      ],
+      indiqueCerrado: [
+        this.solicitudState?.indiqueCerrado,
+        Validators.required,
+      ],
+      indicarCircuitoCerrado: [
+        this.solicitudState?.indicarCircuitoCerrado,
+        Validators.required,
+      ],
     });
   }
+  
   public setValoresStore(
     form: FormGroup,
     campo: string,
@@ -250,6 +275,7 @@ export class SeguridadFisicaComponent implements OnInit, OnDestroy{
     const VALOR = form.get(campo)?.value;
     (this.tramite31616Store[metodoNombre] as (value: string) => void)(VALOR);
   }
+
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();

@@ -47,7 +47,6 @@ export interface Solicitud31616PerfilesState {
   detalleValida: string;
   comoNumero: string;
   senaleAsociados: string;
-
   indiqueMateriales: string;
   queForma: string;
   personalResponsable: string;
@@ -96,7 +95,37 @@ export interface Solicitud31616PerfilesState {
   indicarCircuito: string;
   describaImplementado: string;
   formaControlan: string;
-
+  indiqueTodas: string;
+  indiquePlanta: string;
+  cuentaDocumentado: string;
+  indiquePuertas: string;
+  indiqueCerrado: string;
+  indicarCircuitoCerrado: string;
+  registroVisitantes:string;
+  casoSocios:string;
+  estosEmpresa:string;
+  comiteSeguridad:string;
+  fuentesInformacion:string;
+  politica:string;
+  indique:string;
+  periodicidad:string;
+  programa:string;
+  capacitacion:string;
+  procedimiento:string;
+  descripcionProcedimiento:string;
+  nombreProcedimiento:string;
+  programacionAuditoria:string;
+  participantesAuditoria:string;
+  enfoqueAuditoria:string;
+  procesosAuditados:string;
+  registrosAuditoria:string;
+  programacion:string;
+  registrosNombre:string;
+  registrosEmpresa:string;
+  planEmergencia:string;
+  situacionesContempladas:string;
+  mecanismosContinuidad:string;
+  simulacrosDocumentacion:string;
 }
 
 export function createInitialState(): Solicitud31616PerfilesState {
@@ -194,6 +223,37 @@ export function createInitialState(): Solicitud31616PerfilesState {
     indicarCircuito: '',
     describaImplementado: '',
     formaControlan: '',
+    indiqueTodas: '',
+    indiquePlanta: '',
+    cuentaDocumentado: '',
+    indiquePuertas: '',
+    indiqueCerrado: '',
+    indicarCircuitoCerrado:'',
+    registroVisitantes:'',
+    casoSocios:'',
+    estosEmpresa:'',
+    comiteSeguridad:'',
+    fuentesInformacion:'',
+    politica:'',
+    indique:'',
+    periodicidad:'',
+    programa:'',
+    capacitacion:'',
+    procedimiento:'',
+    descripcionProcedimiento:'',
+    nombreProcedimiento:'',
+    programacionAuditoria:'',
+    participantesAuditoria:'',
+    enfoqueAuditoria:'',
+    procesosAuditados:'',
+    registrosAuditoria:'',
+    programacion:'',
+    registrosNombre:'',
+    registrosEmpresa:'',
+    planEmergencia:'',
+    situacionesContempladas:'',
+    mecanismosContinuidad:'',
+    simulacrosDocumentacion:'',
   };
 }
 
@@ -854,6 +914,223 @@ export class Tramite31616PerfilesStore extends Store<Solicitud31616PerfilesState
     this.update((state) => ({
       ...state,
       formaControlan,
+    }));
+  }
+
+  public setIndiqueTodas(indiqueTodas: string): void {
+    this.update((state) => ({
+      ...state,
+      indiqueTodas,
+    }));
+  }
+  
+  public setIndiquePlanta(indiquePlanta: string): void {
+    this.update((state) => ({
+      ...state,
+      indiquePlanta,
+    }));
+  }
+  
+  public setCuentaDocumentado(cuentaDocumentado: string): void {
+    this.update((state) => ({
+      ...state,
+      cuentaDocumentado,
+    }));
+  }
+  
+  public setIndiquePuertas(indiquePuertas: string): void {
+    this.update((state) => ({
+      ...state,
+      indiquePuertas,
+    }));
+  }
+  
+  public setIndiqueCerrado(indiqueCerrado: string): void {
+    this.update((state) => ({
+      ...state,
+      indiqueCerrado,
+    }));
+  }
+  
+  public setIndicarCircuitoCerrado(indicarCircuitoCerrado: string): void {
+    this.update((state) => ({
+      ...state,
+      indicarCircuitoCerrado,
+    }));
+  }
+
+  public setRegistroVisitantes(registroVisitantes: string): void {
+    this.update((state) => ({
+      ...state,
+      registroVisitantes,
+    }));
+  }
+
+  public setCasoSocios(casoSocios: string): void {
+    this.update((state) => ({
+      ...state,
+      casoSocios,
+    }));
+  }
+
+  public setEstosEmpresa(estosEmpresa: string): void {
+    this.update((state) => ({
+      ...state,
+      estosEmpresa,
+    }));
+  }
+
+  public setComiteSeguridad(comiteSeguridad: string): void {
+    this.update((state) => ({
+      ...state,
+      comiteSeguridad,
+    }));
+  }
+  
+  public setFuentesInformacion(fuentesInformacion: string): void {
+    this.update((state) => ({
+      ...state,
+      fuentesInformacion,
+    }));
+  }
+  
+  public setPolitica(politica: string): void {
+    this.update((state) => ({
+      ...state,
+      politica,
+    }));
+  }
+  
+  public setIndique(indique: string): void {
+    this.update((state) => ({
+      ...state,
+      indique,
+    }));
+  }
+  
+  public setPeriodicidad(periodicidad: string): void {
+    this.update((state) => ({
+      ...state,
+      periodicidad,
+    }));
+  }
+  
+  public setPrograma(programa: string): void {
+    this.update((state) => ({
+      ...state,
+      programa,
+    }));
+  }
+  
+  public setCapacitacion(capacitacion: string): void {
+    this.update((state) => ({
+      ...state,
+      capacitacion,
+    }));
+  }
+  
+  public setProcedimiento(procedimiento: string): void {
+    this.update((state) => ({
+      ...state,
+      procedimiento,
+    }));
+  }
+  
+  public setDescripcionProcedimiento(descripcionProcedimiento: string): void {
+    this.update((state) => ({
+      ...state,
+      descripcionProcedimiento,
+    }));
+  }
+  
+  public setNombreProcedimiento(nombreProcedimiento: string): void {
+    this.update((state) => ({
+      ...state,
+      nombreProcedimiento,
+    }));
+  }
+
+  public setProgramacionAuditoria(programacionAuditoria: string): void {
+    this.update((state) => ({
+      ...state,
+      programacionAuditoria,
+    }));
+  }
+  
+  public setParticipantesAuditoria(participantesAuditoria: string): void {
+    this.update((state) => ({
+      ...state,
+      participantesAuditoria,
+    }));
+  }
+  
+  public setEnfoqueAuditoria(enfoqueAuditoria: string): void {
+    this.update((state) => ({
+      ...state,
+      enfoqueAuditoria,
+    }));
+  }
+  
+  public setProcesosAuditados(procesosAuditados: string): void {
+    this.update((state) => ({
+      ...state,
+      procesosAuditados,
+    }));
+  }
+  
+  public setRegistrosAuditoria(registrosAuditoria: string): void {
+    this.update((state) => ({
+      ...state,
+      registrosAuditoria,
+    }));
+  }
+  
+  public setProgramacion(programacion: string): void {
+    this.update((state) => ({
+      ...state,
+      programacion,
+    }));
+  }
+  
+  public setRegistrosNombre(registrosNombre: string): void {
+    this.update((state) => ({
+      ...state,
+      registrosNombre,
+    }));
+  }
+  
+  public setRegistrosEmpresa(registrosEmpresa: string): void {
+    this.update((state) => ({
+      ...state,
+      registrosEmpresa,
+    }));
+  }
+  
+  public setPlanEmergencia(planEmergencia: string): void {
+    this.update((state) => ({
+      ...state,
+      planEmergencia,
+    }));
+  }
+  
+  public setSituacionesContempladas(situacionesContempladas: string): void {
+    this.update((state) => ({
+      ...state,
+      situacionesContempladas,
+    }));
+  }
+  
+  public setMecanismosContinuidad(mecanismosContinuidad: string): void {
+    this.update((state) => ({
+      ...state,
+      mecanismosContinuidad,
+    }));
+  }
+  
+  public setSimulacrosDocumentacion(simulacrosDocumentacion: string): void {
+    this.update((state) => ({
+      ...state,
+      simulacrosDocumentacion,
     }));
   }
 }

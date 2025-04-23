@@ -96,6 +96,10 @@ export class SociosComercialesComponent implements OnInit, OnDestroy {
         this.solicitudState?.senalarMedidas,
         Validators.required,
       ],
+      casoSocios: [
+        this.solicitudState?.casoSocios,
+        Validators.required,
+      ],
     });
   }
   public setValoresStore(

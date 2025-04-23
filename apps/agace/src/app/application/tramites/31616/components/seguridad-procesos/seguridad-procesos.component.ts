@@ -100,6 +100,10 @@ export class SeguridadProcesosComponent implements OnInit, OnDestroy{
         this.solicitudState?.senaleAsociados,
         Validators.required,
       ],
+      estosEmpresa: [
+        this.solicitudState?.estosEmpresa,
+        Validators.required,
+      ],
     });
   }
   public setValoresStore(

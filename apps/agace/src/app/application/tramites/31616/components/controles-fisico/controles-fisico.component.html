@@ -179,7 +179,7 @@
             <div class="col-md-12 text-container mt-4">
                 <div class="mt-2">
                     <ul>
-                        <li><span class="danger">*</span>El registro de visitantes y proveedores incluye lo siguiente:
+                        <label for="registroVisitantes"><span class="danger">*</span>El registro de visitantes y proveedores incluye lo siguiente:
                             <div class="centered-list-wrapper">
                                 <ol type="1">
                                     <li>Fecha de la visita.</li>
@@ -192,12 +192,12 @@
                                         particular o de carga (modelo, placa, número de remolque, etcétera)</li>
                                 </ol>
                             </div>
-                        </li>
+                        </label>
                     </ul>
                 </div>
 
                 <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'"
-                    class="gap"></app-input-radio>
+                    class="gap" formControlName="registroVisitantes" (change)="setValoresStore(controlesFisico,'registroVisitantes','setRegistroVisitantes')"></app-input-radio>
             </div>
 
             <div class="col-md-12 text-container mt-4">

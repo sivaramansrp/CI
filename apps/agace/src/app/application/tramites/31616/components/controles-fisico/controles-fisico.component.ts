@@ -115,6 +115,10 @@ export class ControlesFisicoComponent implements OnInit, OnDestroy {
         Validators.required,
       ],
       senaleAccion: [this.solicitudState?.senaleAccion, Validators.required],
+      registroVisitantes: [
+        this.solicitudState?.registroVisitantes,
+        Validators.required,
+      ],
     });
   }
 

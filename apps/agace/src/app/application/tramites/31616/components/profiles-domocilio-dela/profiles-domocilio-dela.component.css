@@ -1,22 +1,43 @@
-/* .form-group {
-  margin-bottom: 1rem;
-} */
+.para-title{
+  color: #0078D4;
+}
 
-.custom-required::before {
-  content: " *";
+.alert-text {
+  color: #0078D4;
+  font-weight: bold;
+}
+
+.danger {
   color: red;
+  margin-right: 5px;
 }
 
-.custom-heading{
-    color: #0078D4;
-    font-weight: bold;
+.container {
+  overflow: hidden;
+  word-wrap: break-word;
+  padding: 15px;
 }
 
-/* textarea.form-control {
+.text-container {
+  width: 96%;
+  box-sizing: border-box;
+}
+
+.custom-textarea {
   width: 100%;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  padding: 0.5rem;
-  font-size: 1rem;
+  box-sizing: border-box;
   resize: vertical;
-} */
+  padding: 10px;
+  font-size: 14px;
+}
+
+.centered-list-wrapper ol li {
+  padding-left: 2%;
+  margin-bottom: 5px;
+}
+
+.centered-list {
+  display: inline-block; 
+  text-align: left; 
+  margin-top: 0;
+}

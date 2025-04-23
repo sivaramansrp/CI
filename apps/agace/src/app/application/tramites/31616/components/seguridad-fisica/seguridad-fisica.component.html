@@ -283,12 +283,12 @@
             </div>
 
             <div class="col-md-12 text-container mt-4">
-                <label>
+                <label for="indiqueTodas">
                     <span class="danger">*</span>Indique si todas las ventanas, puertas y cercas interiores y
                     exteriores, de acuerdo a su análisis de riesgo, disponen de mecanismos de cierre o seguridad.
                 </label>
                 <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'"
-                    class="gap"></app-input-radio>
+                    class="gap" formControlName="indiqueTodas" (change)="setValoresStore(seguridadFisicaForm,'indiqueTodas','setIndiqueTodas')"></app-input-radio>
             </div>
 
             <div class="mt-4 alert-text">
@@ -351,11 +351,11 @@
             </div>
 
             <div class="col-md-12 text-container mt-4">
-                <label>
+                <label for="indiquePlanta">
                     <span class="danger">*</span>Indique si cuenta con una planta de poder auxiliar.
                 </label>
                 <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'"
-                    class="gap"></app-input-radio>
+                    class="gap" formControlName="indiquePlanta" (change)="setValoresStore(seguridadFisicaForm,'indiquePlanta','setIndiquePlanta')"></app-input-radio>
             </div>
 
             <div class="col-md-12 text-container mt-4">
@@ -492,7 +492,7 @@
             </div>
 
             <div class="col-md-12 text-container mt-2">
-                <label>
+                <label for="cuentaDocumentado">
                     <span class="danger">*</span>Indique si cuenta con un procedimiento documentado para la operación
                     del CCTV, que incluya la supervisión del buen estado del equipo, la verificación de la correcta
                     posición de las cámaras, el mantenimiento para el respaldo de las grabaciones al menos por sesenta
@@ -501,16 +501,16 @@
                     grabación al menos de treinta días.
                 </label>
                 <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'"
-                    class="gap"></app-input-radio>
+                    class="gap" formControlName="cuentaDocumentado" (change)="setValoresStore(seguridadFisicaForm,'cuentaDocumentado','setCuentaDocumentado')"></app-input-radio>
             </div>
 
             <div class="col-md-12 text-container mt-4">
-                <label>
+                <label for="indiquePuertas">
                     <span class="danger">*</span> Indique si todas las puertas y ventanas tienen sensores de alarma, así
                     como las áreas donde se cuenta con sensores de movimiento.
                 </label>
                 <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'"
-                    class="gap"></app-input-radio>
+                    class="gap" formControlName="indiquePuertas" (change)="setValoresStore(seguridadFisicaForm,'indiquePuertas','setIndiquePuertas')" ></app-input-radio>
             </div>
 
             <div class="col-md-12 text-container mt-4">
@@ -607,13 +607,13 @@
             </div>
 
             <div class="col-md-12 text-container mt-4">
-                <label>
+                <label for="indiqueCerrado">
                     <span class="danger">*</span>Indique si los sistemas de alarma y de circuito cerrado de televisión y
                     video vigilancia y las tecnologías de seguridad se encuentran respaldadas por una planta de poder
                     eléctrica.
                 </label>
                 <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'"
-                    class="gap"></app-input-radio>
+                    class="gap" formControlName="indiqueCerrado" (change)="setValoresStore(seguridadFisicaForm,'indiqueCerrado','setIndiqueCerrado')"></app-input-radio>
             </div>
 
             <div class="col-md-12 text-container mt-4">
@@ -656,13 +656,13 @@
             </div>
 
             <div class="col-md-12 text-container mt-4">
-                <label>
+                <label for="indicarCircuitoCerrado">
                     <span class="danger">*</span>Indicar si el proveedor de alarmas y sistemas de alarma y de circuito
                     cerrado de televisión y video vigilancia tiene acceso a las cámaras de seguridad, si es el encargado
                     de realizar el monitoreo de las mismas
                 </label>
                 <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'"
-                    class="gap"></app-input-radio>
+                    class="gap" formControlName="indicarCircuitoCerrado" (change)="setValoresStore(seguridadFisicaForm,'indicarCircuitoCerrado','setIndicarCircuitoCerrado')"></app-input-radio>
             </div>
 
             <div class="col-md-12 text-container mt-4">
