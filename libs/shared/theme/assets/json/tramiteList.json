@@ -3697,11 +3697,11 @@
       "department": "cofepris"
   },
   {
-      "id": 241,
-      "tramite": 261402,
-      "linkDashboard": "",
-      "linkDepartment": "",
-      "department": "cofepris"
+    "id": 241,
+    "tramite": 261402,
+    "linkDashboard": "/cofepris/solicitud-modificacion-permiso-internacion/solicitud",
+    "linkDepartment": "/pago/solicitud-modificacion-permiso-internacion/solicitud",
+    "department": "cofepris"
   },
   {
       "id": 242,
