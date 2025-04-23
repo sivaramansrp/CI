@@ -1,6 +1,10 @@
 import {
+  AlertComponent,
+  AnexarDocumentosComponent,
   BtnContinuarComponent,
+  FirmaElectronicaComponent,
   SolicitanteComponent,
+  TituloComponent,
   WizardComponent,
 } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
@@ -31,7 +35,11 @@ import { TramitesAsociadosSeccionComponent } from '../../shared/components/trami
     DatosDelSolicitudModificacionComponent,
     TercerosRelacionadosFabSeccionComponent,
     PagoDeDerechosEntradaComponent,
-    TramitesAsociadosSeccionComponent
+    TramitesAsociadosSeccionComponent,
+    TituloComponent,
+    AlertComponent,
+    AnexarDocumentosComponent,
+    FirmaElectronicaComponent
   ],
 })
 export class ModificacionPermisoLabModule {}
