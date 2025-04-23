@@ -47,7 +47,7 @@ export const PERMISO_ADUNA_TITULO = [240119, 240118];
  * @type {number[]}
  * @description Representa códigos específicos utilizados en el sistema para identificar permisos OCULTAR_BOTONES.
  */
-export const OCULTAR_BOTONES = [240121];
+export const OCULTAR_BOTONES = [240121, 240107 ];
 
 
 /**
@@ -64,6 +64,7 @@ export const PAISE_DENTINO_EITIQUETA: Map<number, string> = new Map<
   [240119, 'País de procedencia'],
   [240118, 'País de procedencia'],
   [240108, 'paise destino'],
+  [240308, 'paise destino']
 ]);
 
 /**

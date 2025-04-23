@@ -22,6 +22,13 @@ const ROUTES: Routes = [
         './tramites/240121/permiso-ordinario-exportacion-explosivo.module'
       ).then((m) => m.PermisoOrdinarioExportacionExplosivoModule),
   },
+  {
+    path: 'permiso-ordinario',
+    loadChildren: () =>
+      import(
+        './tramites/240308/solicitude-de-artificios-pirotecnicos.module'
+      ).then((m) => m.SolicitudeDeArtificiosPirotecnicosModule),
+  }
 ];
 
 @NgModule({
