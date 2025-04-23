@@ -758,7 +758,7 @@
   {
     "id": 109,
     "tramite": 260904,
-    "linkDashboard": "/pago/modificación-del-permiso-sanitario-de-importación-de-insumos/sanitary-permit",
+    "linkDashboard": "/cofepris/modificación-del-permiso-sanitario-de-importación-de-insumos/sanitary-permit",
     "linkDepartment": "/pago/modificación-del-permiso-sanitario-de-importación-de-insumos/sanitary-permit",
     "department": "cofepris"
   },
@@ -1094,8 +1094,8 @@
   {
     "id": 157,
     "tramite": 270201,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/inbal/aviso-siglos/solictud",
+    "linkDepartment": "/pago/aviso-siglos/solictud",
     "department": "inbal"
   },
   {
@@ -1255,8 +1255,8 @@
   {
     "id": 180,
     "tramite": 260915,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/cofepris/permiso-sanitario-dispositivos-medicos/permiso-sanitario-dispositivos-medicos",
+    "linkDepartment": "/pago/permiso-sanitario-dispositivos-medicos/permiso-sanitario-dispositivos-medicos",
     "department": "cofepris"
   },
   {
@@ -1466,14 +1466,14 @@
     "id": 210,
     "tramite": 260201,
     "linkDashboard": "/cofepris/importacion-psicotropicos-poretorno/contenedor-de-pasos",
-    "linkDepartment": "/cofepris/importacion-psicotropicos-poretorno/contenedor-de-pasos",
+    "linkDepartment": "/pago/importacion-psicotropicos-poretorno/contenedor-de-pasos",
     "department": "cofepris"
   },
   {
     "id": 211,
     "tramite": 260207,
     "linkDashboard": "/cofepris/importacion-tratamientos-especiales/contenedor-de-pasos",
-    "linkDepartment": "/cofepris/importacion-tratamientos-especiales/contenedor-de-pasos",
+    "linkDepartment": "/pago/importacion-tratamientos-especiales/contenedor-de-pasos",
     "department": "cofepris"
   },
   {
@@ -1493,8 +1493,8 @@
   {
     "id": 214,
     "tramite": 260219,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/cofepris/importacion-remedios-herbolarios/contenedor-de-pasos",
+    "linkDepartment": "/pago/importacion-remedios-herbolarios/contenedor-de-pasos",
     "department": "cofepris"
   },
   {
@@ -1521,8 +1521,8 @@
   {
     "id": 218,
     "tramite": 260505,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/cofepris/permiso-transformacion-maquila/plaguicidas",
+    "linkDepartment": "/pago/permiso-transformacion-maquila/plaguicidas",
     "department": "cofepris"
   },
   {
@@ -1654,8 +1654,8 @@
   {
     "id": 237,
     "tramite": 261103,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/cofepris/modificacion-permiso-importacion-medicamentos/modificacion-permiso-importacion-medicamentos",
+    "linkDepartment": "/pago/modificacion-permiso-importacion-medicamentos/modificacion-permiso-importacion-medicamentos",
     "department": "cofepris"
   },
   {
@@ -1689,8 +1689,8 @@
   {
     "id": 242,
     "tramite": 270101,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/inbal/informacion-arte-exportar/pantallas",
+    "linkDepartment": "/pago/informacion-arte-exportar/pantallas",
     "department": "inbal"
   },
   {
@@ -1703,8 +1703,8 @@
   {
     "id": 244,
     "tramite": 250101,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/profepa/flora-fauna/solictud",
+    "linkDepartment": "/pago/flora-fauna/solictud",
     "department": "profepa"
   },
   {
@@ -1766,8 +1766,8 @@
   {
     "id": 253,
     "tramite": 240102,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/sedena/permiso-extraordinario-importacion-armamento-fisicas-morales/contenedor-de-pasos",
+    "linkDepartment": "/pago/permiso-extraordinario-importacion-armamento-fisicas-morales/contenedor-de-pasos",
     "department": "sedena"
   },
   {
@@ -1787,15 +1787,15 @@
   {
     "id": 256,
     "tramite": 240107,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/sedena/sustancias-quimicas/sustancias-quimicas",
+    "linkDepartment": "/pago/sustancias-quimicas/sustancias-quimicas",
     "department": "sedena"
   },
   {
     "id": 257,
     "tramite": 240108,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/sedena/permiso-ordinario-importacion-material-explosivo/contenedor-de-pasos",
+    "linkDepartment": "/pago/permiso-ordinario-importacion-material-explosivo/contenedor-de-pasos",
     "department": "sedena"
   },
   {
@@ -1822,8 +1822,8 @@
   {
     "id": 261,
     "tramite": 240118,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/sedena/permiso-extraordinario-para-la-exportacion-de-sustancias-quimicas/contenedor-de-pasos",
+    "linkDepartment": "/pago/permiso-extraordinario-para-la-exportacion-de-sustancias-quimicas/contenedor-de-pasos",
     "department": "sedena"
   },
   {
@@ -1864,8 +1864,8 @@
   {
     "id": 267,
     "tramite": 240308,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/sedena/permiso-ordinario/importacion-de-artificios",
+    "linkDepartment": "/pago/permiso-ordinario/importacion-de-artificios",
     "department": "sedena"
   },
   {
