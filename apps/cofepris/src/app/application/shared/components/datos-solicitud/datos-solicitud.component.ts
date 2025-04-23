@@ -46,12 +46,16 @@ import { RepresentanteLegalRfcComponent } from '../representante-legal-rfc/repre
 })
 export class DatosDeLaComponent implements OnInit, OnDestroy {
   /**
-   * Indica si el campo RFC del solicitante es visible.
+   * Indica si el campo GarantiasOfrecidasVisible es visible.
+   */
+  @Input() isGarantiasOfrecidasVisible: boolean = false;
+  /**
+   * Indica si el campo AvisoLicenciaVisible es visible.
    */
   @Input() isAvisoLicenciaVisible: boolean = true;
 
   /**
-   * Indica si el campo RFC del solicitante es visible.
+   * Indica si el campo AduanasEntradaVisible es visible.
    */
   @Input() isAduanasEntradaVisible: boolean = false;
 
