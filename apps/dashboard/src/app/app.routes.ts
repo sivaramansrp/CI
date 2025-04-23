@@ -1,46 +1,19 @@
 import { Route } from '@angular/router';
+//import { loadRemoteModule } from '@nx/angular/mf';
 import { loadRemoteModule } from '@angular-architects/module-federation';
+
 import { SeleccionTramiteDesdePanelComponent } from './seleccion-tramite-desde-panel/seleccion-tramite-desde-panel.component';
 import { enviroment } from '@libs/shared/data-access-user/src/enviroments/enviroment';
 
-// Helper function para simplificar el código de carga de módulos remotos
-const loadRemoteApp = (remoteName: string, exposedModule: string = './Module', moduleImportName: string | null = null) => {
-  return () => 
-    loadRemoteModule({
-      type: 'manifest',
-      remoteName,
-      exposedModule
-    }).then(m => {
-      // Si no se proporciona un nombre específico para la importación, intentamos usar convenciones comunes
-      if (!moduleImportName) {
-        if (m.RemoteEntryModule) return m.RemoteEntryModule;
-        
-        // Convenciones para diferentes módulos
-        const conventionModuleNames = [
-          `App${remoteName.charAt(0).toUpperCase() + remoteName.slice(1)}Module`, // AppLoginModule
-          remoteName.charAt(0).toUpperCase() + remoteName.slice(1) + 'Module',     // LoginModule
-          `Remote${remoteName.charAt(0).toUpperCase() + remoteName.slice(1)}Module` // RemoteLoginModule
-        ];
-        
-        for (const name of conventionModuleNames) {
-          if (m[name]) return m[name];
-        }
-        
-        // Si no encontramos ninguna convención, usamos la primera exportación que parezca un módulo
-        const possibleModules = Object.keys(m).filter(key => key.includes('Module'));
-        if (possibleModules.length > 0) return m[possibleModules[0]];
-      }
-      
-      // Si se proporcionó un nombre específico, lo usamos
-      return moduleImportName ? m[moduleImportName] : m.RemoteEntryModule;
-    })
-};
-
-// Configuración de las rutas de la aplicación
 export const appRoutes: Route[] = [
   {
     path: 'login',
-    loadChildren: loadRemoteApp('login', './Module', 'RemoteEntryModule')
+    loadChildren: () =>
+      loadRemoteModule({
+        remoteEntry: `${enviroment.WEB_HOST}:4201/remoteAppEntry.js`,
+        remoteName: 'login',
+        exposedModule: './Module'
+      }).then((m) => m.RemoteEntryModule)
   },
   {
     path: '',
@@ -53,66 +26,139 @@ export const appRoutes: Route[] = [
   },
   {
     path: 'aga',
-    loadChildren: loadRemoteApp('aga', './Module', 'AppAgaModule')
+    loadChildren: () =>
+      loadRemoteModule({
+        remoteEntry: `${enviroment.WEB_HOST}:4202/remoteAppEntry.js`,
+        remoteName: 'aga',
+        exposedModule: './Module'
+      }).then((m) => m.AppAgaModule)
   },
   {
     path: 'agace',
-    loadChildren: loadRemoteApp('agace', './Module', 'AppAgaceModule'),
+    loadChildren: () =>
+      // loadRemoteModule('agace', './Routes').then((m) => m.REMOTE_ROUTES),
+      loadRemoteModule({
+        remoteEntry: `${enviroment.WEB_HOST}:4209/remoteAppEntry.js`,
+        remoteName: 'agace',
+        exposedModule: './Module'
+      }).then((m) => m.AppAgaceModule),
   },
   {
     path: 'agriculture',
-    loadChildren: loadRemoteApp('agriculture', './Module', 'AppAgriculturaModule')
+    loadChildren: () =>
+      loadRemoteModule({
+        remoteEntry: `${enviroment.WEB_HOST}:4204/remoteAppEntry.js`,
+        remoteName: 'agriculture',
+        exposedModule: './Module'
+      }).then((m) => m.AppAgriculturaModule)
   },
   {
     path: 'se',
-    loadChildren: loadRemoteApp('se', './Module', 'AppSEModule')
+    loadChildren: () =>
+      loadRemoteModule({
+        remoteEntry: `${enviroment.WEB_HOST}:4205/remoteAppEntry.js`,
+        remoteName: 'se',
+        exposedModule: './Module'
+      }).then((m) => m.AppSEModule)
   },
   {
     path: 'semarnat',
-    loadChildren: loadRemoteApp('semarnat', './Module', 'AppSemarnatModule')
+    loadChildren: () =>
+      loadRemoteModule({
+        remoteEntry: `${enviroment.WEB_HOST}:4206/remoteAppEntry.js`,
+        remoteName: 'semarnat',
+        exposedModule: './Module'
+      }).then((m) => m.AppSemarnatModule)
   },
   {
     path: 'sener',
-    loadChildren: loadRemoteApp('sener', './Module', 'AppSenerModule')
+    loadChildren: () =>
+        loadRemoteModule({
+            remoteEntry: `${enviroment.WEB_HOST}:4217/remoteAppEntry.js`,
+            remoteName: 'sener',
+            exposedModule: './Module'
+        }).then((m) => m.AppSenerModule)
   },
   {
     path: 'funcionario',
-    loadChildren: loadRemoteApp('funcionario', './Module', 'AppFuncionarioModule')
+    loadChildren: () =>
+        loadRemoteModule({
+            remoteEntry: `${enviroment.WEB_HOST}:4210/remoteAppEntry.js`,
+            remoteName: 'funcionario',
+            exposedModule: './Module'
+        }).then((m) => m.AppFuncionarioModule)
+  },
+  {
+    path: 'agace',
+    loadChildren: () =>
+      loadRemoteModule({
+        remoteEntry: `${enviroment.WEB_HOST}:4209/remoteAppEntry.js`,
+        remoteName: 'agace',
+        exposedModule: './Module'
+      }).then((m) => m.AppAgaceModule)
   },
   {
     path: 'cofepris',
-    loadChildren: loadRemoteApp('cofepris', './Module', 'AppCofeprisModule')
+    loadChildren: () =>
+      loadRemoteModule({
+        remoteEntry: `${enviroment.WEB_HOST}:4211/remoteAppEntry.js`,
+        remoteName: 'cofepris',
+        exposedModule: './Module'
+      }).then((m) => m.AppCofeprisModule)
   },
   {
-    path: 'amecafe',
-    loadChildren: loadRemoteApp('amecafe', './Module', 'AppAmecafeModule')
+    path: 'sener',
+    loadChildren: () =>
+        loadRemoteModule({
+            remoteEntry: `${enviroment.WEB_HOST}:4217/remoteAppEntry.js`,
+            remoteName: 'sener',
+            exposedModule: './Module'
+        }).then((m) => m.AppSenerModule)
   },
+  {
+    path: 'cofepris',
+    loadChildren: () =>
+      loadRemoteModule({
+        remoteEntry: `${enviroment.WEB_HOST}:4211/remoteAppEntry.js`,
+        remoteName: 'cofepris',
+        exposedModule: './Module'
+      }).then((m) => m.AppCofeprisModule)
+  },
+  {
+  path: 'amecafe',
+  loadChildren: () =>
+      loadRemoteModule({
+          remoteEntry: `${enviroment.WEB_HOST}:4212/remoteAppEntry.js`,
+          remoteName: 'amecafe',
+          exposedModule: './Module'
+      }).then((m) => m.AppAmecafeModule)
+  } ,
   {
     path: 'sedena',
-    loadChildren: loadRemoteApp('sedena', './Module', 'AppSedenaModule')
+    loadChildren: () =>
+        loadRemoteModule({
+            remoteEntry: `${enviroment.WEB_HOST}:4219/remoteAppEntry.js`,
+            remoteName: 'sedena',
+            exposedModule: './Module'
+        }).then((m) => m.AppSedenaModule)
   },
   {
     path: 'inbal',
-    loadChildren: loadRemoteApp('inbal', './Module', 'AppInbalModule')
+    loadChildren: () =>
+        loadRemoteModule({
+            remoteEntry: 'http://localhost:4218/remoteAppEntry.js',
+            remoteName: 'inbal',
+            exposedModule: './Module'
+        }).then((m) => m.AppInbalModule)
   },
   {
     path: 'profepa',
-    loadChildren: loadRemoteApp('profepa', './Module', 'AppProfepaModule')
-  },
-  {
-    path: 'inah',
-    loadChildren: loadRemoteApp('inah', './Module', 'AppInahModule')
-  },
-  {
-    path: 'crt',
-    loadChildren: loadRemoteApp('crt', './Module', 'AppCrtModule')
-  },
-  {
-    path: 'stps',
-    loadChildren: loadRemoteApp('stps', './Module', 'AppStpsModule')
-  },
-  {
-    path: 'bandejas',
-    loadChildren: loadRemoteApp('bandejas', './Module', 'AppBandejasModule')
+    loadChildren: () =>
+        loadRemoteModule({
+            remoteEntry: 'http://localhost:4220/remoteAppEntry.js',
+            remoteName: 'profepa',
+            exposedModule: './Module'
+        }).then((m) => m.AppProfepaModule)
   }
+
 ];
