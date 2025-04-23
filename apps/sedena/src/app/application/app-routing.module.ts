@@ -41,15 +41,20 @@ const ROUTES: Routes = [
       import(
         './tramites/240107/aviso-importacion-sustancias-quimicas.module'
       ).then((m) => m.AvisoImportacionSustanciasQuimicasModule),
-  },
-  {
+  },{
     path: 'permiso-ordinario',
     loadChildren: () =>
       import(
         './tramites/240308/solicitude-de-artificios-pirotecnicos.module'
       ).then((m) => m.SolicitudeDeArtificiosPirotecnicosModule),
   },
-  {
+    {
+    path: 'importacion-de-sustancias',
+    loadChildren: () =>
+      import(
+        './tramites/240105/importacion-de-material-explosivo.module'
+      ).then((m) => m.ImportacionDeMaterialExplosivoModule),
+  },{
     path: 'permiso-ordinario-importacion-material-explosivo',
     loadChildren: () =>
       import(
