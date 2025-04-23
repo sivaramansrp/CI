@@ -1,16 +1,18 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AlertComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { DESTINO_FINAL_ENCABEZADO_DE_TABLA } from '../../models/terceros-relacionados.model';
 import { DestinoFinal } from '../../models/terceros-relacionados.model';
 import { Input } from '@angular/core';
+import { OCULTAR_BOTONES } from '../../constants/datos-del-tramilte.enum';
 import { PROVEEDOR_ENCABEZADO_DE_TABLA } from '../../models/terceros-relacionados.model';
 import { Proveedor } from '../../models/terceros-relacionados.model';
 import { Router } from '@angular/router';
 import { TERCEROR_TEXTO_DE_ALERTA } from '../../models/terceros-relacionados.model';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
+import { TituloComponent } from '@ng-mf/data-access-user';
 
 /**
  * @title Terceros Relacionados
@@ -21,16 +23,25 @@ import { TablaSeleccion } from '@ng-mf/data-access-user';
 @Component({
   selector: 'app-terceros-relacionados',
   standalone: true,
-  imports: [CommonModule, TablaDinamicaComponent, AlertComponent],
+  imports: [CommonModule, TablaDinamicaComponent, AlertComponent, TituloComponent],
   templateUrl: './terceros-relacionados.component.html',
   styleUrl: './terceros-relacionados.component.scss',
 })
-export class TercerosRelacionadosComponent {
+export class TercerosRelacionadosComponent implements OnInit{
   /**
    * Texto que se muestra en la alerta del componente.
    * @property {string} tercerorTextoDeAlerta
    */
   public tercerorTextoDeAlerta = TERCEROR_TEXTO_DE_ALERTA;
+
+    /**
+   * Indica si el elemento está ocultarBotones o visible.
+   *
+   * @type {boolean}
+   * - `true`: El elemento está ocultarBotones.
+   * - `false`: El elemento está visible.
+   */
+    public ocultarBotones = false;
 
   /**
    * Identificador del procedimiento relacionado.
@@ -169,5 +180,8 @@ export class TercerosRelacionadosComponent {
    */
   modificarProveedor(): void {
     this.modificarProveedorDatos.emit(this.proveedorTablaSeleccionada[0])
+  }
+  ngOnInit(): void {
+    this.ocultarBotones = OCULTAR_BOTONES.includes(this.idProcedimiento);
   }
 }
