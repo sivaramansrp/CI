@@ -835,8 +835,8 @@
     {
         "id": 120,
         "tramite": 110223,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "/se/certificado-alianza-posteriori",
+        "linkDepartment": "/se/certificado-alianza-posteriori",
         "department": "se"
     },
     {
