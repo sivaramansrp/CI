@@ -1521,8 +1521,8 @@
     {
         "id": 218,
         "tramite": 260304,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "/cofepris/exportacion-medicamentos-contengan/contenedor-de-pasos",
+        "linkDepartment": "/pago/exportacion-medicamentos-contengan/contenedor-de-pasos",
         "department": "cofepris"
     },
     {
