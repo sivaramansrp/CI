@@ -210,8 +210,26 @@ jobs:
             exit 0
           fi
           
-          # Convert comma-separated list to JSON array
-          APPS_JSON=$(echo "$APPS_TO_DEPLOY" | tr ',' '\n' | jq -R . | jq -s .)
+          # Convert comma-separated list to JSON array more carefully
+          # Creating a temporary file to ensure proper newlines and formatting
+          echo "$APPS_TO_DEPLOY" | tr ',' '\n' > apps_list.txt
+          APPS_JSON=$(jq -R . < apps_list.txt | jq -s .)
+          
+          # Validate the JSON output
+          if ! echo "$APPS_JSON" | jq . > /dev/null 2>&1; then
+            echo "::warning::JSON conversion failed. Falling back to manual JSON construction."
+            # Manually construct JSON array
+            APPS_JSON="["
+            IFS=',' read -ra APP_ARRAY <<< "$APPS_TO_DEPLOY"
+            for ((i=0; i<${#APP_ARRAY[@]}; i++)); do
+              APPS_JSON+="\"${APP_ARRAY[$i]}\""
+              if [ $i -lt $((${#APP_ARRAY[@]}-1)) ]; then
+                APPS_JSON+=","
+              fi
+            done
+            APPS_JSON+="]"
+          fi
+          
           echo "matrix={\"app\":$APPS_JSON}" >> $GITHUB_OUTPUT
           
           echo "Matrix configuration:"
