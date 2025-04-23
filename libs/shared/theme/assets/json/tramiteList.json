@@ -3958,8 +3958,8 @@
   {
       "id": 278,
       "tramite": 130201,
-      "linkDashboard": "",
-      "linkDepartment": "",
+      "linkDashboard": "/sener/exportacion-petroliferos/solicitud",
+      "linkDepartment": "/pago/exportacion-petroliferos/solicitud",
       "department": "sener"
   },
   {
