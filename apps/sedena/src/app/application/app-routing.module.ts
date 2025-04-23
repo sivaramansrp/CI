@@ -10,6 +10,13 @@ const ROUTES: Routes = [
     component: SeleccionTramiteComponent,
   },
   {
+    path: 'permiso-extraordinario-para-la-exportacion-de-sustancias-quimicas',
+    loadChildren: () =>
+      import(
+        './tramites/240118/permiso-extraordinario-para-la-exportacion-de-sustancias-quimicas.module'
+      ).then((m) => m.PermisoExtraordinarioParaLaExportacionDeSustanciasQuimicasModule),
+  },
+  {
     path: 'permiso-ordinario-importacion-armas-municiones',
     loadChildren: () =>
       import(
