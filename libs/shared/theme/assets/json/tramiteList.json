@@ -472,7 +472,7 @@
     "id": 68,
     "tramite": 150101,
     "linkDashboard": "/se/registro-solicitud-anual/solicitud",
-    "linkDepartment": "/se/registro-solicitud-anual/solicitud",
+    "linkDepartment": "/pago/registro-solicitud-anual/solicitud",
     "department": "se"
   },
   {
@@ -520,8 +520,8 @@
   {
     "id": 75,
     "tramite": 220402,
-    "linkDashboard": "/pantallas-captura/solicitud",
-    "linkDepartment": "/pantallas-captura/solicitud",
+    "linkDashboard": "/agriculture/pantallas-captura/solicitud",
+    "linkDepartment": "/pago/pantallas-captura/solicitud",
     "department": "agriculture"
   },
   {
@@ -569,8 +569,8 @@
   {
     "id": 82,
     "tramite": 230101,
-    "linkDashboard": "/tramites-disponibles/solicitud",
-    "linkDepartment": "/tramites-disponibles/solicitud",
+    "linkDashboard": "/semarnat/tramites-disponibles/solicitud",
+    "linkDepartment": "/pago/tramites-disponibles/solicitud",
     "department": "semarnat"
   },
   {
@@ -1249,7 +1249,7 @@
     "id": 179,
     "tramite": 260910,
     "linkDashboard": "/cofepris/modificacion-permiso-sanitario/solicitante",
-    "linkDepartment": "/cofepris/modificacion-permiso-sanitario/solicitante",
+    "linkDepartment": "/pago/modificacion-permiso-sanitario/solicitante",
     "department": "cofepris"
   },
   {
