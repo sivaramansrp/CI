@@ -29,12 +29,16 @@ export class TercerosRelacionadosContenedoraComponent
 {
   /**
    * Identificador del procedimiento.
-   * @property {number} idProcedimiento
+   * Constante que define el ID único del procedimiento actual.
+   * 
+   * @constant {number} idProcedimiento
    */
   public readonly idProcedimiento = ID_PROCEDIMIENTO;
-  /**
+
+    /**
    * Observable para limpiar las suscripciones activas al destruir el componente.
-   * @property {Subject<void>} destroy$
+   * 
+   * @property {Subject<void>} unsubscribe$
    */
   private unsubscribe$ = new Subject<void>();
 
@@ -52,6 +56,7 @@ export class TercerosRelacionadosContenedoraComponent
 
   /**
    * Constructor del componente.
+   * Inicializa el componente y permite la inyección de dependencias necesarias.
    *
    * @method constructor
    * @param {Tramite240121Store} tramiteStore - Store de Akita que maneja el estado del trámite.
@@ -85,9 +90,13 @@ export class TercerosRelacionadosContenedoraComponent
         this.proveedorTablaDatos = data;
       });
   }
-  /**
-   * Hook que se ejecuta al destruir el componente.
+
+    /**
+   * Hook del ciclo de vida que se ejecuta al destruir el componente.
    * Envía un valor al Subject `unsubscribe$` y lo completa para liberar suscripciones.
+   *
+   * @method ngOnDestroy
+   * @returns {void}
    */
   ngOnDestroy(): void {
     this.unsubscribe$.next();

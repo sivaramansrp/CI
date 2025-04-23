@@ -1,77 +1,61 @@
-// @ts-nocheck
-import { isPlatformBrowser } from '@angular/common';
-import { Component, CUSTOM_ELEMENTS_SCHEMA, Directive, Injectable, Input, NO_ERRORS_SCHEMA, Pipe, PipeTransform } from '@angular/core';
-import { TestBed, ComponentFixture } from '@angular/core/testing';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { Observable, of as observableOf, throwError } from 'rxjs';
-
-import { Tramite240107Store } from '../../estados/tramite240107Store.store';
+import { TestBed } from '@angular/core/testing';
 import { AgregarDestinatarioFinalContenedoraComponent } from './agregar-destinatario-final-contenedora.component';
+import { Tramite240121Store } from '../../estados/tramite240121Store.store';
+import { Tramite240121Query } from '../../estados/tramite240121Query.query';
 
-@Injectable()
-class MockTramite240107Store {
-  updateDestinatarioFinalTablaDatos = jest.fn();
-}
-
-@Directive({ selector: '[myCustom]' })
-class MyCustomDirective {
-  @Input() myCustom;
-}
-
-@Pipe({ name: 'translate' })
-class TranslatePipe implements PipeTransform {
-  transform(value) { return value; }
-}
-
-@Pipe({ name: 'phoneNumber' })
-class PhoneNumberPipe implements PipeTransform {
-  transform(value) { return value; }
-}
-
-@Pipe({ name: 'safeHtml' })
-class SafeHtmlPipe implements PipeTransform {
-  transform(value) { return value; }
-}
-
-describe('AgregarDestinatarioFinalContenedoraComponent', () => {
-  let fixture: ComponentFixture<AgregarDestinatarioFinalContenedoraComponent>;
+describe('AgregarDestinatarioFinalContenedoraComponent (Jest)', () => {
   let component: AgregarDestinatarioFinalContenedoraComponent;
-  let mockStore: MockTramite240107Store;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [FormsModule, ReactiveFormsModule, AgregarDestinatarioFinalContenedoraComponent],
-      declarations: [
-        TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
-        MyCustomDirective
-      ],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
+  const mockTramiteStore = {
+    updateDestinatarioFinalTablaDatos: jest.fn(),
+  };
+
+  const mockTramiteQuery = {
+    obtenerTercerosDatos$: jest.fn(),
+  };
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       providers: [
-        { provide: Tramite240107Store, useClass: MockTramite240107Store }, 
-      ]
-    }).compileComponents();
+        { provide: Tramite240121Store, useValue: mockTramiteStore },
+        { provide: Tramite240121Query, useValue: mockTramiteQuery },
+      ],
+    });
 
-    fixture = TestBed.createComponent(AgregarDestinatarioFinalContenedoraComponent);
-    component = fixture.componentInstance;
-    mockStore = TestBed.inject(Tramite240107Store); 
+    component = new AgregarDestinatarioFinalContenedoraComponent(
+      mockTramiteStore as any,
+      mockTramiteQuery as any
+    );
   });
 
-  afterEach(() => {
-    if (component) {
-      component.ngOnDestroy = () => {}; 
-    }
-    if (fixture) {
-      fixture.destroy();
-    }
-  });
-
-  it('should run #constructor()', () => {
+  it('should be created', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should run #updateDestinatarioFinalTablaDatos()', () => {
-    const mockData = {};
-    component.updateDestinatarioFinalTablaDatos(mockData);
-    expect(mockStore.updateDestinatarioFinalTablaDatos).toHaveBeenCalledWith(mockData);
+  it('should call updateDestinatarioFinalTablaDatos() with given data', () => {
+    const mockDestinatariosFinal = [
+      {
+        nombreRazonSocial: 'Destinatario Ejemplo',
+        rfc: 'RFC123456',
+        direccion: 'Av. Reforma, 123',
+        telefono: '5551234567',
+        correoElectronico: 'destinatario@correo.com',
+        curp: 'CURP123456789',
+        calle: 'Av. Reforma',
+        numeroExterior: '123',
+        numeroInterior: 'A',
+        colonia: 'Centro',
+        codigoPostal: '06000',
+        entidadFederativa: 'CDMX',
+        municipioAlcaldia: 'Cuauhtémoc',
+        pais: 'México',
+        localidad: 'Ciudad de México',
+        estadoLocalidad: 'CDMX',
+      }
+    ];
+
+    component.updateDestinatarioFinalTablaDatos(mockDestinatariosFinal);
+
+    expect(mockTramiteStore.updateDestinatarioFinalTablaDatos).toHaveBeenCalledWith(mockDestinatariosFinal);
   });
 });

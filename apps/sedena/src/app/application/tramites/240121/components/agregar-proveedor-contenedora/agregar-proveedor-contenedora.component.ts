@@ -17,6 +17,12 @@ export class AgregarProveedorContenedoraComponent {
    * Identificador del procedimiento.
    * @property {number} idProcedimiento
    */
+  /**
+   * @readonly
+   * @type {number}
+   * @description Identificador único del procedimiento asociado.
+   * Este valor es constante y se utiliza para referenciar el procedimiento actual.
+   */
   public readonly idProcedimiento = ID_PROCEDIMIENTO;
 
   /**

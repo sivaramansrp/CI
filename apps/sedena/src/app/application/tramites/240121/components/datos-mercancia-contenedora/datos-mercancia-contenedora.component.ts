@@ -19,15 +19,17 @@ import { Tramite240121Store } from '../../estados/tramite240121Store.store';
   styleUrl: './datos-mercancia-contenedora.component.scss',
 })
 export class DatosMercanciaContenedoraComponent {
-
-    /**
+  /**
    * Identificador del procedimiento.
-   * @property {number} idProcedimiento
+   * Constante que define el ID único del procedimiento actual.
+   * 
+   * @constant {number} idProcedimiento
    */
     public readonly idProcedimiento = ID_PROCEDIMIENTO;
 
   /**
    * Constructor del componente.
+   * Inicializa el componente y permite la inyección del store de Akita.
    *
    * @method constructor
    * @param {Tramite240121Store} tramiteStore - Store de Akita para actualizar el estado de la tabla de mercancías.
@@ -40,6 +42,8 @@ export class DatosMercanciaContenedoraComponent {
 
   /**
    * Actualiza los datos de la tabla de mercancía en el store.
+   * Este método se utiliza para recibir los datos actualizados desde el formulario
+   * y sincronizarlos con el estado global del trámite.
    *
    * @method updateMercanciaDetalle
    * @param {MercanciaDetalle[]} event - Lista de mercancías actualizada desde el formulario.

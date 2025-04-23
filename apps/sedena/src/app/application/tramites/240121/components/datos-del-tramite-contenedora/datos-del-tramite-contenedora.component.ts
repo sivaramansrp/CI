@@ -27,36 +27,68 @@ import { takeUntil } from 'rxjs';
   templateUrl: './datos-del-tramite-contenedora.component.html',
   styleUrl: './datos-del-tramite-contenedora.component.scss',
 })
+/**
+ * Componente que representa la contenedora de datos del trámite.
+ * Este componente se encarga de gestionar el formulario y los datos relacionados
+ * con el trámite, incluyendo la tabla de mercancías y el estado del formulario.
+ *
+ * @export
+ * @class DatosDelTramiteContenedoraComponent
+ * @implements {OnInit}
+ * @implements {OnDestroy}
+ */
 export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
+  /**
+   * Formulario reactivo para la combinación de datos del trámite.
+   * 
+   * @type {FormGroup}
+   * @memberof DatosDelTramiteContenedoraComponent
+   */
   public formCombinacion!: FormGroup;
 
   /**
-   * Observable para limpiar suscripciones activas al destruir el componente.
-   * @property {Subject<void>} unsubscribe$
+   * Observable para gestionar la limpieza de suscripciones activas al destruir el componente.
+   * 
+   * @private
+   * @type {Subject<void>}
+   * @memberof DatosDelTramiteContenedoraComponent
    */
   private unsubscribe$ = new Subject<void>();
 
   /**
    * Datos de la tabla de mercancías que se muestran en el formulario.
-   * @property {MercanciaDetalle[]} datosMercanciaTabla
+   * 
+   * @type {MercanciaDetalle[]}
+   * @memberof DatosDelTramiteContenedoraComponent
    */
   public datosMercanciaTabla: MercanciaDetalle[] = [];
 
   /**
    * Estado actual del formulario de datos del trámite.
-   * @property {DatosDelTramiteFormState} datosDelTramiteFormState
+   * 
+   * @type {DatosDelTramiteFormState}
+   * @memberof DatosDelTramiteContenedoraComponent
    */
   public datosDelTramiteFormState!: DatosDelTramiteFormState;
 
+  /**
+   * Identificador del procedimiento actual.
+   * 
+   * @readonly
+   * @type {string}
+   * @memberof DatosDelTramiteContenedoraComponent
+   */
   public readonly idProcedimiento = ID_PROCEDIMIENTO;
- 
+
   /**
    * Constructor del componente.
+   * Inicializa el formulario y configura las dependencias necesarias.
    *
-   * @method constructor
+   * @param {FormBuilder} fb - Servicio para construir formularios reactivos.
    * @param {Tramite240121Query} tramiteQuery - Query de Akita para obtener el estado actual del trámite.
    * @param {Tramite240121Store} tramiteStore - Store de Akita para actualizar el estado del trámite.
-   * @returns {void}
+   * @param {ValidacionesFormularioService} validacionesService - Servicio para validar formularios.
+   * @memberof DatosDelTramiteContenedoraComponent
    */
   constructor(
     private fb: FormBuilder,
@@ -71,8 +103,8 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
    * Hook del ciclo de vida que se ejecuta al inicializar el componente.
    * Suscribe a los observables del estado para mostrar los datos en la vista.
    *
-   * @method ngOnInit
    * @returns {void}
+   * @memberof DatosDelTramiteContenedoraComponent
    */
   ngOnInit(): void {
     this.crearFormCombinacion();
@@ -88,10 +120,24 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
         this.datosDelTramiteFormState = data;
       });
   }
+
+  /**
+   * Verifica si un campo del formulario es válido.
+   *
+   * @param {string} field - Nombre del campo a validar.
+   * @returns {boolean} `true` si el campo es válido, de lo contrario `false`.
+   * @memberof DatosDelTramiteContenedoraComponent
+   */
   public isValid(field: string): boolean {
     return this.validacionesService.isValid(this.formCombinacion, field) ?? false;
   }
 
+  /**
+   * Crea el formulario reactivo para la combinación de datos del trámite.
+   *
+   * @returns {void}
+   * @memberof DatosDelTramiteContenedoraComponent
+   */
   public crearFormCombinacion(): void {
     this.formCombinacion = this.fb.group({
     });
@@ -100,21 +146,20 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
   /**
    * Actualiza el estado del formulario de datos del trámite en el store.
    *
-   * @method updateDatosDelTramiteFormulario
    * @param {DatosDelTramiteFormState} event - Estado actualizado del formulario.
    * @returns {void}
+   * @memberof DatosDelTramiteContenedoraComponent
    */
   updateDatosDelTramiteFormulario(event: DatosDelTramiteFormState): void {
     this.tramiteStore.updateDatosDelTramiteFormState(event);
   }
 
-  
   /**
    * Hook del ciclo de vida que se ejecuta al destruir el componente.
    * Libera las suscripciones activas para evitar fugas de memoria.
    *
-   * @method ngOnDestroy
    * @returns {void}
+   * @memberof DatosDelTramiteContenedoraComponent
    */
   ngOnDestroy(): void {
     this.unsubscribe$.next();

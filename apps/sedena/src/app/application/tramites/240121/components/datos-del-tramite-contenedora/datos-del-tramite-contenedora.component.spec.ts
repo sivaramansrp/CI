@@ -1,133 +1,109 @@
-// @ts-nocheck
-import { isPlatformBrowser } from '@angular/common';
-import {
-  Component,
-  CUSTOM_ELEMENTS_SCHEMA,
-  Directive,
-  Injectable,
-  Input,
-  NO_ERRORS_SCHEMA,
-  Output,
-  Pipe,
-  PipeTransform
-} from '@angular/core';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router'; 
-import { Observable, of as observableOf } from 'rxjs';
-
+import { FormBuilder } from '@angular/forms';
+import { TestBed } from '@angular/core/testing';
+import { DatosDelTramiteContenedoraComponent } from './datos-del-tramite-contenedora.component';
+import { of } from 'rxjs';
+import { Tramite240121Query } from '../../estados/tramite240121Query.query';
+import { Tramite240121Store } from '../../estados/tramite240121Store.store';
 import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
 
-import { Tramite240107Query } from '../../estados/tramite240107Query.query';
-import { Tramite240107Store } from '../../estados/tramite240107Store.store';
-import { DatosDelTramiteContenedoraComponent } from './datos-del-tramite-contenedora.component';
+describe('DatosDelTramiteContenedoraComponent (Jest)', () => {
+  let component: DatosDelTramiteContenedoraComponent;
 
-class MockActivatedRoute {
-  snapshot = {
-    params: {}
+  const mockTramiteQuery = {
+    getMercanciaTablaDatos$: of<{ id: number }[]>([]), 
+    getDatosDelTramite$: of({}), 
   };
-}
 
-@Injectable()
-class MockTramite240107Query {}
+  const mockTramiteStore = {
+    updateDatosDelTramiteFormState: jest.fn(),
+  };
 
-@Injectable()
-class MockTramite240107Store {}
-
-@Directive({ selector: '[myCustom]' })
-class MyCustomDirective {
-  @Input() myCustom;
-}
-
-@Pipe({name: 'translate'})
-class TranslatePipe implements PipeTransform {
-  transform(value) { return value; }
-}
-
-@Pipe({name: 'phoneNumber'})
-class PhoneNumberPipe implements PipeTransform {
-  transform(value) { return value; }
-}
-
-@Pipe({name: 'safeHtml'})
-class SafeHtmlPipe implements PipeTransform {
-  transform(value) { return value; }
-}
-
-describe('DatosDelTramiteContenedoraComponent', () => {
-  let fixture;
-  let component;
+  const mockValidacionesService = {
+    isValid: jest.fn(),
+  };
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule, DatosDelTramiteContenedoraComponent ],
-      declarations: [
-        TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
-        MyCustomDirective
-      ],
-      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
         FormBuilder,
-        { provide: Tramite240107Query, useClass: MockTramite240107Query },
-        { provide: Tramite240107Store, useClass: MockTramite240107Store },
-        { provide: ActivatedRoute, useClass: MockActivatedRoute },
-        ValidacionesFormularioService
-      ]
-    }).compileComponents();
-    fixture = TestBed.createComponent(DatosDelTramiteContenedoraComponent);
-    component = fixture.debugElement.componentInstance;
+        { provide: Tramite240121Query, useValue: mockTramiteQuery },
+        { provide: Tramite240121Store, useValue: mockTramiteStore },
+        {
+          provide: ValidacionesFormularioService,
+          useValue: mockValidacionesService,
+        },
+      ],
+    });
+
+    const fb = TestBed.inject(FormBuilder);
+    component = new DatosDelTramiteContenedoraComponent(
+      fb,
+      mockTramiteQuery as any,
+      mockTramiteStore as any,
+      mockValidacionesService as any
+    );
   });
 
-  afterEach(() => {
-    if (component) {
-      component.ngOnDestroy = function () {};
-    }
-    if (fixture) {
-      fixture.destroy();
-    }
-  });
-
-  it('should run #constructor()', async () => {
+  it('should be created', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should run #ngOnInit()', async () => {
-    component.crearFormCombinacion = jest.fn();
-    component.tramiteQuery = component.tramiteQuery || {};
-    component.tramiteQuery.getMercanciaTablaDatos$ = observableOf({});
-    component.tramiteQuery.getDatosDelTramite$ = observableOf({});
+  it('should initialize form on ngOnInit', () => {
+    mockTramiteQuery.getMercanciaTablaDatos$ = of([]);
+    mockTramiteQuery.getDatosDelTramite$ = of({}); 
+
     component.ngOnInit();
-    expect(component.crearFormCombinacion).toHaveBeenCalled();
+
+    expect(component.formCombinacion).toBeDefined();
   });
 
-  it('should run #isValid()', async () => {
-    component.validacionesService = component.validacionesService || {};
-    component.validacionesService.isValid = jest.fn();
-    component.isValid({});
-    expect(component.validacionesService.isValid).toHaveBeenCalled();
+  it('should subscribe to getMercanciaTablaDatos$', () => {
+    const mockData = [{ id: 1 }];
+    mockTramiteQuery.getMercanciaTablaDatos$ = of(mockData);
+    mockTramiteQuery.getDatosDelTramite$ = of({}); 
+
+    component.ngOnInit();
+
+    expect(component.datosMercanciaTabla).toEqual(mockData);
   });
 
-  it('should run #crearFormCombinacion()', async () => {
-    component.fb = component.fb || {};
-    component.fb.group = jest.fn();
+  it('should subscribe to getDatosDelTramite$', () => {
+    const formState = { campo: 'valor' };
+    mockTramiteQuery.getDatosDelTramite$ = of(formState); 
+    mockTramiteQuery.getMercanciaTablaDatos$ = of([]);
+
+    component.ngOnInit();
+
+    expect(component.datosDelTramiteFormState).toEqual(formState);
+  });
+
+  it('should call updateDatosDelTramiteFormulario()', () => {
+    const event = { campo: 'nuevo valor' };
+    component.updateDatosDelTramiteFormulario(event as any);
+    expect(
+      mockTramiteStore.updateDatosDelTramiteFormState
+    ).toHaveBeenCalledWith(event);
+  });
+
+  it('should check form field validity using ValidacionesFormularioService', () => {
     component.crearFormCombinacion();
-    expect(component.fb.group).toHaveBeenCalled();
+    mockValidacionesService.isValid.mockReturnValue(true);
+
+    const result = component.isValid('campo');
+    expect(mockValidacionesService.isValid).toHaveBeenCalledWith(
+      component.formCombinacion,
+      'campo'
+    );
+    expect(result).toBe(true);
   });
 
-  it('should run #updateDatosDelTramiteFormulario()', async () => {
-    component.tramiteStore = component.tramiteStore || {};
-    component.tramiteStore.updateDatosDelTramiteFormState = jest.fn();
-    component.updateDatosDelTramiteFormulario({});
-    expect(component.tramiteStore.updateDatosDelTramiteFormState).toHaveBeenCalled();
-  });
+  it('should clean up subscriptions on ngOnDestroy', () => {
+    const nextSpy = jest.spyOn(component['unsubscribe$'], 'next');
+    const completeSpy = jest.spyOn(component['unsubscribe$'], 'complete');
 
-  it('should run #ngOnDestroy()', async () => {
-    component.unsubscribe$ = component.unsubscribe$ || {};
-    component.unsubscribe$.next = jest.fn();
-    component.unsubscribe$.complete = jest.fn();
     component.ngOnDestroy();
-    expect(component.unsubscribe$.next).toHaveBeenCalled();
-    expect(component.unsubscribe$.complete).toHaveBeenCalled();
-  });
 
+    expect(nextSpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
+  });
 });

@@ -1,31 +1,16 @@
 // @ts-nocheck
 import { isPlatformBrowser } from '@angular/common';
-import {
-  Component,
-  CUSTOM_ELEMENTS_SCHEMA,
-  Directive,
-  Injectable,
-  Input,
-  NO_ERRORS_SCHEMA,
-  Output,
-  Pipe,
-  PipeTransform
-} from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Injectable, Input, Pipe, PipeTransform } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router'; 
-import { HttpClientModule } from '@angular/common/http'; 
-import { Observable, of as observableOf } from 'rxjs';
+import { of as observableOf } from 'rxjs';
+import { Component } from '@angular/core';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 
+import { TercerosRelacionadosContenedoraComponent } from './terceros-relacionados-contenedora.component';
 import { Tramite240121Query } from '../../estados/tramite240121Query.query';
 import { Tramite240121Store } from '../../estados/tramite240121Store.store';
-import { TercerosRelacionadosContenedoraComponent } from './terceros-relacionados-contenedora.component';
-
-class MockActivatedRoute {
-  snapshot = {
-    params: {}
-  };
-}
+import { ActivatedRoute } from '@angular/router';
 
 @Injectable()
 class MockTramite240121Store {}
@@ -33,44 +18,65 @@ class MockTramite240121Store {}
 @Injectable()
 class MockTramite240121Query {}
 
+@Injectable()
+class MockActivatedRoute {
+  snapshot = {
+    data: {},
+    paramMap: {
+      get: () => null,
+    },
+  };
+}
+
 @Directive({ selector: '[myCustom]' })
 class MyCustomDirective {
   @Input() myCustom;
 }
 
-@Pipe({name: 'translate'})
+@Pipe({ name: 'translate' })
 class TranslatePipe implements PipeTransform {
-  transform(value) { return value; }
+  transform(value) {
+    return value;
+  }
 }
 
-@Pipe({name: 'phoneNumber'})
+@Pipe({ name: 'phoneNumber' })
 class PhoneNumberPipe implements PipeTransform {
-  transform(value) { return value; }
+  transform(value) {
+    return value;
+  }
 }
 
-@Pipe({name: 'safeHtml'})
+@Pipe({ name: 'safeHtml' })
 class SafeHtmlPipe implements PipeTransform {
-  transform(value) { return value; }
+  transform(value) {
+    return value;
+  }
 }
 
 describe('TercerosRelacionadosContenedoraComponent', () => {
-  let fixture;
-  let component;
+  let fixture: ComponentFixture<TercerosRelacionadosContenedoraComponent>;
+  let component: TercerosRelacionadosContenedoraComponent;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule, HttpClientModule, TercerosRelacionadosContenedoraComponent ],
+      imports: [FormsModule, ReactiveFormsModule, TercerosRelacionadosContenedoraComponent],
       declarations: [
-        TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
-        MyCustomDirective
+        TranslatePipe,
+        PhoneNumberPipe,
+        SafeHtmlPipe,
+        MyCustomDirective,
       ],
-      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
       providers: [
         { provide: Tramite240121Store, useClass: MockTramite240121Store },
         { provide: Tramite240121Query, useClass: MockTramite240121Query },
         { provide: ActivatedRoute, useClass: MockActivatedRoute },
-      ]
-    }).compileComponents();
+      ],
+    })
+      .overrideComponent(TercerosRelacionadosContenedoraComponent, {})
+      .compileComponents();
+
     fixture = TestBed.createComponent(TercerosRelacionadosContenedoraComponent);
     component = fixture.debugElement.componentInstance;
   });
@@ -103,5 +109,4 @@ describe('TercerosRelacionadosContenedoraComponent', () => {
     expect(component.unsubscribe$.next).toHaveBeenCalled();
     expect(component.unsubscribe$.complete).toHaveBeenCalled();
   });
-
 });

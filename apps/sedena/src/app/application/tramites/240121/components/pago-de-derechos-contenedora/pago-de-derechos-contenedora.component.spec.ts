@@ -1,68 +1,85 @@
-// @ts-nocheck
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { By } from '@angular/platform-browser';
-import { Observable, of as observableOf, throwError } from 'rxjs';
+import { TestBed } from '@angular/core/testing';
+import { of } from 'rxjs';
 
-import { Component } from '@angular/core';
 import { PagoDeDerechosContenedoraComponent } from './pago-de-derechos-contenedora.component';
-import { Tramite240108Query } from '../../estados/tramite240108Query.query';
-import { Tramite240108Store } from '../../estados/tramite240108Store.store';
-import { DatosSolicitudService } from '../../../../shared/services/datos-solicitud.service';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-@Injectable()
-class MockTramite240108Query {}
+import { Tramite240121Query } from '../../estados/tramite240121Query.query';
+import { Tramite240121Store } from '../../estados/tramite240121Store.store';
 
-@Injectable()
-class MockTramite240108Store {}
+describe('PagoDeDerechosContenedoraComponent (Jest)', () => {
+  let component: PagoDeDerechosContenedoraComponent;
 
-describe('PagoDeDerechosContenedoraComponent', () => {
-  let fixture;
-  let component;
+  const mockTramiteQuery = {
+    getPagoDerechos$: of({
+      claveReferencia: '12345',
+      monto: 5000,
+      estado: 'Pendiente',
+      cadenaDependencia: 'SAT001',
+      banco: 'BBVA',
+      llavePago: 'XYZ123',
+      fechaPago: '2024-01-15',
+      importePago: '5000',
+    }),
+  };
+
+  const mockTramiteStore = {
+    updatePagoDerechosFormState: jest.fn(),
+  };
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule, HttpClientTestingModule ],
-
-      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
-        { provide: Tramite240108Query, useClass: MockTramite240108Query },
-        { provide: Tramite240108Store, useClass: MockTramite240108Store },
-        DatosSolicitudService
-      ]
-    }).overrideComponent(PagoDeDerechosContenedoraComponent, {
+        { provide: Tramite240121Query, useValue: mockTramiteQuery },
+        { provide: Tramite240121Store, useValue: mockTramiteStore },
+      ],
+    });
 
-    }).compileComponents();
-    fixture = TestBed.createComponent(PagoDeDerechosContenedoraComponent);
-    component = fixture.debugElement.componentInstance;
+    component = new PagoDeDerechosContenedoraComponent(
+      mockTramiteQuery as any,
+      mockTramiteStore as any
+    );
   });
 
-  it('should run #constructor()', async () => {
+  it('should be created', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should run #ngOnInit()', async () => {
-    component.tramiteQuery = component.tramiteQuery || {};
-    component.tramiteQuery.getPagoDerechos$ = observableOf({});
+  it('should initialize form with data from getPagoDerechos$', () => {
     component.ngOnInit();
-
+    expect(component.pagoDerechoFormState).toEqual({
+      claveReferencia: '12345',
+      monto: 5000,
+      estado: 'Pendiente',
+      cadenaDependencia: 'SAT001',
+      banco: 'BBVA',
+      llavePago: 'XYZ123',
+      fechaPago: '2024-01-15',
+      importePago: '5000',
+    });
   });
 
-  it('should run #ngOnDestroy()', async () => {
-    component.unsubscribe$ = component.unsubscribe$ || {};
-    component.unsubscribe$.next = jest.fn();
-    component.unsubscribe$.complete = jest.fn();
+  it('should call updatePagoDerechos() with provided data', () => {
+    const mockData = {
+      claveReferencia: '12345',
+      monto: 5000,
+      estado: 'Pendiente',
+      cadenaDependencia: 'SAT001',
+      banco: 'BBVA',
+      llavePago: 'XYZ123',
+      fechaPago: '2024-01-15',
+      importePago: '5000',
+    };
+
+    component.updatePagoDerechos(mockData);
+    expect(mockTramiteStore.updatePagoDerechosFormState).toHaveBeenCalledWith(mockData);
+  });
+
+  it('should clean up subscriptions on ngOnDestroy', () => {
+    const nextSpy = jest.spyOn(component['unsubscribe$'], 'next');
+    const completeSpy = jest.spyOn(component['unsubscribe$'], 'complete');
+
     component.ngOnDestroy();
-    expect(component.unsubscribe$.next).toHaveBeenCalled();
-  });
 
-  it('should run #updatePagoDerechos()', async () => {
-    component.tramiteStore = component.tramiteStore || {};
-    component.tramiteStore.updatePagoDerechosFormState = jest.fn();
-    component.updatePagoDerechos({});
-    expect(component.tramiteStore.updatePagoDerechosFormState).toHaveBeenCalled();
+    expect(nextSpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
   });
-
 });
