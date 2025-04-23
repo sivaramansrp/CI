@@ -95,6 +95,20 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'anexo-veintiocho',
+    loadChildren: () =>
+      import('./tramites/32201/anexo-veintiocho.module').then(
+        (m) => m.AnexoVeintiochoModule
+      ),
+  },
+  {
+    path: 'endoso-garantia',
+    loadChildren: () =>
+      import('./tramites/31301/endoso-garantia.module').then(
+        (m) => m.EndosoGarantiaModule
+      ),
+  },
+  {
     path: 'registros-de-comercio-exterior',
     loadChildren: () =>
       import('./tramites/31603/registros-de-comercio-exterior/registros-de-comercio-exterior.module').then(

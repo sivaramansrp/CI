@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { RouterModule } from '@angular/router';
+import { Routes } from '@angular/router';
 import { SeleccionTramiteComponent } from './seleccion-tramite/seleccion-tramite.component';
 
 const ROUTES: Routes = [
@@ -9,12 +10,59 @@ const ROUTES: Routes = [
     component: SeleccionTramiteComponent,
   },
   {
+    path: 'permiso-extraordinario-para-la-exportacion-de-sustancias-quimicas',
+    loadChildren: () =>
+      import(
+        './tramites/240118/permiso-extraordinario-para-la-exportacion-de-sustancias-quimicas.module'
+      ).then(
+        (m) =>
+          m.PermisoExtraordinarioParaLaExportacionDeSustanciasQuimicasModule
+      ),
+  },
+  {
     path: 'permiso-ordinario-importacion-armas-municiones',
     loadChildren: () =>
       import(
         './tramites/240101/permiso-ordinario-importacion-armas-municiones.module'
       ).then((m) => m.PermisoOrdinarioImportacionArmasMunicionesModule),
   },
+  {
+    path: 'permiso-extraordinario-importacion-armamento-fisicas-morales',
+    loadChildren: () =>
+      import(
+        './tramites/240102/permiso-extraordinario-importacion-armamento-fisicas-morales.module'
+      ).then(
+        (m) => m.PermisoExtraordinarioImportacionArmamentoFisicasMoralesModule
+      ),
+  },
+  {
+    path: 'sustancias-quimicas',
+    loadChildren: () =>
+      import(
+        './tramites/240107/aviso-importacion-sustancias-quimicas.module'
+      ).then((m) => m.AvisoImportacionSustanciasQuimicasModule),
+  },
+  {
+    path: 'permiso-ordinario',
+    loadChildren: () =>
+      import(
+        './tramites/240308/solicitude-de-artificios-pirotecnicos.module'
+      ).then((m) => m.SolicitudeDeArtificiosPirotecnicosModule),
+  },
+  {
+    path: 'permiso-ordinario-importacion-material-explosivo',
+    loadChildren: () =>
+      import(
+        './tramites/240108/permiso-ordinario-importacion-exlposivo.module'
+      ).then((m) => m.PermisoOrdinarioImportacionExlposivoModule),
+  },
+  {
+    path: 'aviso-importacion-sustancias-quimicas',
+    loadChildren: () =>
+      import(
+        './tramites/240106/aviso-importacion-sustancias-quimicas.module'
+      ).then((m) => m.AvisoImportacionSustanciasQuimicasModule),
+    },
 ];
 
 @NgModule({
