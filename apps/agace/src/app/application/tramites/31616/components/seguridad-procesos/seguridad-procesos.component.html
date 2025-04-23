@@ -1,5 +1,5 @@
 <div class="container">
-    <form>
+    <form [formGroup]="seguridadProcesosForm">
         <div class="row mt-2">
             <div class="col-md-12 text-container">
                 <p>Deben establecerse medidas de control para garantizar la integridad y seguridad de la mercancía, y
@@ -101,20 +101,20 @@
             </div>
 
             <div class="col-md-12 text-container mt-4">
-                <label>
+                <label for="indiqueAlmacenes">
                     <span class="danger">*</span>Indique los almacenes y/o centros de distribución que operan en su
                     instalación y estén registrados su R.F.C. y/o autorización y proporcione sus datos generales
                     (Denominación y domicilio).
                 </label>
-                <textarea class="custom-textarea" rows="6" cols="100"></textarea>
+                <textarea class="custom-textarea" rows="6" cols="100" id="indiqueAlmacenes" formControlName="indiqueAlmacenes" (change)="setValoresStore(seguridadProcesosForm,'indiqueAlmacenes','setIndiqueAlmacenes')"></textarea>
             </div>
 
             <div class="col-md-12 text-container mt-4">
-                <label>
+                <label for="expliqueBrevemente">
                     <span class="danger">*</span>Explique brevemente qué actividad se lleva a cabo en cada
                     instalación.(Cross Dock, Almacén temporal, etc.)
                 </label>
-                <textarea class="custom-textarea" rows="6" cols="100"></textarea>
+                <textarea class="custom-textarea" rows="6" cols="100" id="expliqueBrevemente" formControlName="expliqueBrevemente" (change)="setValoresStore(seguridadProcesosForm,'expliqueBrevemente','setExpliqueBrevemente')"></textarea>
             </div>
 
             <div class="col-md-12 text-container mt-4">
@@ -127,11 +127,11 @@
             </div>
 
             <div class="col-md-12 text-container mt-4">
-                <label>
+                <label for="indiqueCerciora">
                     <span class="danger">*</span>Indique de qué forma se cerciora que estos cumplen con los
                     requerimientos mínimos en materia de seguridad.
                 </label>
-                <textarea class="custom-textarea" rows="6" cols="100"></textarea>
+                <textarea class="custom-textarea" rows="6" cols="100" id="indiqueCerciora" formControlName="indiqueCerciora" (change)="setValoresStore(seguridadProcesosForm,'indiqueCerciora','setIndiqueCerciora')"></textarea>
             </div>
 
             <div class="row mt-2">
@@ -147,17 +147,17 @@
             </div>
 
             <div class="col-md-12 text-container mt-4">
-                <label>
+                <label for="indiqueEstos">
                     <span class="danger">*</span>Indique si estos almacenes están registrados ante su R.F.C.
                     proporcionando sus datos generales (Denominación y domicilio) y explicando brevemente qué actividad
                     se lleva a cabo en esa o esas instalaciones (Cross Dock, almacén temporal, etcétera).
                 </label>
-                <textarea class="custom-textarea" rows="6" cols="100"></textarea>
+                <textarea class="custom-textarea" rows="6" cols="100" id="indiqueEstos" formControlName="indiqueEstos" (change)="setValoresStore(seguridadProcesosForm,'indiqueEstos','setIndiqueEstos')"></textarea>
             </div>
 
             <div class="col-md-12 text-container mt-4">
                 <div class="mt-2 alert-text">
-                    <label>
+                    <label for="indiquePertenecen">
                         <span class="danger">*</span>Asimismo, indique si éstos pertenecen a la empresa o es un
                         servicio contratado a través de un tercero y sean parte de un grupo accionista.
                         En este caso, conforme a los criterios de selección de proveedores que se mencionan en lo
@@ -179,7 +179,7 @@
                         </div>
                     </ul>
 
-                    <textarea class="custom-textarea" rows="6" cols="100"></textarea>
+                    <textarea class="custom-textarea" rows="6" cols="100" id="indiquePertenecen" formControlName="indiquePertenecen" (change)="setValoresStore(seguridadProcesosForm,'indiquePertenecen','setIndiquePertenecen')"></textarea>
                 </div>
             </div>
         </div>
@@ -291,22 +291,22 @@
             </div>
 
             <div class="col-md-12 text-container mt-4">
-                <label>
+                <label for="indiqueResponsable">
                     <span class="danger">*</span>Indique quién es el responsable de la supervisión de los números de
                     identificación de los medios de transporte durante la carga o descarga de contenedores, cajas secas,
                     UDLS, en su caso tratándose de mercancía consolidada, proceso de des consolidación y cotejo de la
                     información.
                 </label>
-                <textarea class="custom-textarea" rows="6" cols="100"></textarea>
+                <textarea class="custom-textarea" rows="6" cols="100" id="indiqueResponsable" formControlName="indiqueResponsable" (change)="setValoresStore(seguridadProcesosForm,'indiqueResponsable','setIndiqueResponsable')"></textarea>
             </div>
 
             <div class="col-md-12 text-container mt-4">
-                <label>
+                <label for="indiqueTecnologia">
                     <span class="danger">*</span>Indique si cuenta con tecnología no intrusiva para la revisión y
                     supervisión de entradas y salidas de la empresa de mensajería y paquetería, explicando el plan de
                     mantenimiento para el buen funcionamiento de los equipos. (calibración).
                 </label>
-                <textarea class="custom-textarea" rows="6" cols="100"></textarea>
+                <textarea class="custom-textarea" rows="6" cols="100" id="indiqueTecnologia" formControlName="indiqueTecnologia" (change)="setValoresStore(seguridadProcesosForm,'indiqueTecnologia','setIndiqueTecnologia')"></textarea>
             </div>
 
         </div>
@@ -437,53 +437,53 @@
             </div>
 
             <div class="col-md-12 text-container mt-4">
-                <label>
+                <label for="describirProcesamiento">
                     <span class="danger">*</span>Describir el procedimiento para el procesamiento de la documentación de
                     la carga
                 </label>
-                <textarea class="custom-textarea" rows="6" cols="100"></textarea>
+                <textarea class="custom-textarea" rows="6" cols="100" id="describirProcesamiento" formControlName="describirProcesamiento" (change)="setValoresStore(seguridadProcesosForm,'describirProcesamiento','setDescribirProcesamiento')"></textarea>
             </div>
 
             <div class="col-md-12 text-container mt-4">
-                <label>
+                <label for="detalleComo">
                     <span class="danger">*</span>Detalle como transmite y/o recibe información relacionada al traslado y
                     maniobras de carga en la empresa de mensajería y paquetería.
                 </label>
-                <textarea class="custom-textarea" rows="6" cols="100"></textarea>
+                <textarea class="custom-textarea" rows="6" cols="100" id="detalleComo" formControlName="detalleComo" (change)="setValoresStore(seguridadProcesosForm,'detalleComo','setDetalleComo')"></textarea>
             </div>
 
             <div class="col-md-12 text-container mt-4">
-                <label>
+                <label for="indiqueUtiliza">
                     <span class="danger">*</span>Indique si utiliza un sistema informático de control específico y
                     explique brevemente su función.
                 </label>
-                <textarea class="custom-textarea" rows="6" cols="100"></textarea>
+                <textarea class="custom-textarea" rows="6" cols="100" id="indiqueUtiliza" formControlName="indiqueUtiliza" (change)="setValoresStore(seguridadProcesosForm,'indiqueUtiliza','setIndiqueUtiliza')"></textarea>
             </div>
 
             <div class="col-md-12 text-container mt-4">
-                <label>
+                <label for="detalleValida">
                     <span class="danger">*</span>Detalle cómo valida que la información proporcionada sea legible,
                     completa, exacta y protegida.
                 </label>
-                <textarea class="custom-textarea" rows="6" cols="100"></textarea>
+                <textarea class="custom-textarea" rows="6" cols="100" id="detalleValida" formControlName="detalleValida" (change)="setValoresStore(seguridadProcesosForm,'detalleValida','setDetalleValida')"></textarea>
             </div>
 
             <div class="col-md-12 text-container mt-4">
-                <label>
+                <label for="comoNumero">
                     <span class="danger">*</span>Cómo valida que el número de sello y/o candado con el que se aseguró la
                     carga coincida con la información electrónica de los embarques y carga en general
                 </label>
-                <textarea class="custom-textarea" rows="6" cols="100"></textarea>
+                <textarea class="custom-textarea" rows="6" cols="100" id="comoNumero" formControlName="comoNumero" (change)="setValoresStore(seguridadProcesosForm,'comoNumero','setComoNumero')"></textarea>
             </div>
 
             <div class="col-md-12 text-container mt-4">
-                <label>
+                <label for="senaleAsociados">
                     <span class="danger">*</span>Señale de qué forma los asociados de negocio transmiten información con
                     la empresa de mensajería y paquetería y aseguran la exactitud de las mismas, por ejemplo: el uso de
                     la aplicación institucional "Consulta Remota de Pedimentos" para corroborar el pago de las
                     contribuciones y/o cuotas compensatorias para la autorización de salida.
                 </label>
-                <textarea class="custom-textarea" rows="6" cols="100"></textarea>
+                <textarea class="custom-textarea" rows="6" cols="100" id="senaleAsociados" formControlName="senaleAsociados" (change)="setValoresStore(seguridadProcesosForm,'senaleAsociados','setSenaleAsociados')"></textarea>
             </div>
         </div>
 
