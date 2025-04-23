@@ -2,6 +2,9 @@ import { Store, StoreConfig } from '@datorama/akita';
 import { DatosDeLaTabla } from '../../tramites/32101/models/datos-tramite.model';
 import { Injectable } from '@angular/core';
 
+/**
+ * Representa un catálogo con un identificador único y una descripción.
+ */
 export interface Catalogo {
   id: number;
   descripcion: string;
@@ -99,6 +102,29 @@ export interface Solicitud32101State {
   fechaInicialInput: string;
 }
 
+/**
+ * Crea el estado inicial para la solicitud 32101.
+ * 
+ * @returns {Solicitud32101State} El estado inicial con valores predeterminados.
+ * 
+ * Propiedades del estado inicial:
+ * - `tipoDeInversion`: Tipo de inversión, inicialmente `null`.
+ * - `valorEnPesos`: Valor en pesos, inicialmente `0`.
+ * - `descripcionGeneral`: Descripción general, inicialmente una cadena vacía.
+ * - `listaDeDocumentos`: Lista de documentos, inicialmente una cadena vacía.
+ * - `datosDelContenedor`: Datos del contenedor, inicialmente un arreglo vacío.
+ * - `abc`: Propiedad adicional, inicialmente `null`.
+ * - `manifiesto1`: Manifiesto 1, inicialmente una cadena vacía.
+ * - `manifiesto2`: Manifiesto 2, inicialmente una cadena vacía.
+ * - `manifiesto3`: Manifiesto 3, inicialmente una cadena vacía.
+ * - `claveDeReferencia`: Clave de referencia, inicialmente `0`.
+ * - `importeDePago`: Importe de pago, inicialmente `0`.
+ * - `cadenaDeLaDependencia`: Cadena de la dependencia, inicialmente una cadena vacía.
+ * - `numeroDeOperacion`: Número de operación, inicialmente `0`.
+ * - `banco`: Banco, inicialmente `null`.
+ * - `llaveDePago`: Llave de pago, inicialmente `0`.
+ * - `fechaInicialInput`: Fecha inicial de entrada, inicialmente una cadena vacía.
+ */
 export function createInitialState(): Solicitud32101State {
   return {
     tipoDeInversion: null,

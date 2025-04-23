@@ -8,7 +8,21 @@ import { Injectable } from '@angular/core';
 })
 export class ConsultaAvisoAcreditacionService {
 
+  /**
+   * Fuente observable para la fila seleccionada en la tabla.
+   * 
+   * Este Subject emite objetos de tipo `DatosDeLaTabla` que representan 
+   * la información de la fila seleccionada. Puede ser utilizado para 
+   * notificar a otros componentes o servicios sobre cambios en la selección.
+   */
   public selectedRowSource = new Subject<DatosDeLaTabla>();
+
+
+  /**
+   * Observable que emite los datos del formulario seleccionados.
+   * 
+   * @type {Observable<any>} Observable que proporciona los datos de la fila seleccionada.
+   */
   formData$ = this.selectedRowSource.asObservable();
 
   constructor(private http: HttpClient) {}
@@ -28,12 +42,23 @@ export class ConsultaAvisoAcreditacionService {
     );
   }
 
+    /**
+     * Obtiene los datos de una tabla específica desde un archivo JSON localizado en los activos.
+     *
+     * @param tabla - El nombre de la tabla cuyo contenido se desea obtener.
+     * @returns Un observable que emite un objeto de tipo `RespuestaContenedor` con los datos de la tabla.
+     */
     getDatosDeTabla(tabla: string): Observable<RespuestaContenedor> {
     return this.http.get<RespuestaContenedor>(
       `assets/json/32101/${tabla}.json`
     );
   }
 
+  /**
+   * Establece una nueva fila actualizada y notifica a los suscriptores.
+   * 
+   * @param row - La fila de datos de la tabla que se va a establecer como seleccionada.
+   */
   setUpdatedRow(row: DatosDeLaTabla): void {
     this.selectedRowSource.next(row);
   }

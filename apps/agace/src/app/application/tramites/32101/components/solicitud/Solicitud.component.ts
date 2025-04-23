@@ -8,7 +8,7 @@ import { CommonModule } from '@angular/common';
 import { ConsultaAvisoAcreditacionService } from '../../services/consulta-aviso-acreditacion.service';
 import { FECHA_PAGO } from '../../models/registro.model';
 import { Router } from '@angular/router';
-import { Solicitud32101Enum } from '../../constants/solicitud32101.enum';
+import { ENCABEZADO_TABLA_DATOS, Solicitud32101Enum } from '../../constants/solicitud32101.enum';
 import { Tramite32101Query } from '../../../../estados/queries/tramite32101.query';
 
 /**
@@ -27,14 +27,13 @@ import { Tramite32101Query } from '../../../../estados/queries/tramite32101.quer
     FormsModule,
     CatalogoSelectComponent,
     TablaDinamicaComponent,
-    NotificacionesComponent
+    NotificacionesComponent,
   ],
   providers: [ConsultaAvisoAcreditacionService],
   templateUrl: './Solicitud.component.html',
-  styleUrl: './Solicitud.component.css',
+  styleUrl: './Solicitud.component.scss',
 })
-export class SolicitudComponent implements OnInit,OnDestroy {
-
+export class SolicitudComponent implements OnInit, OnDestroy {
   /**
    * Formulario reactivo para gestionar los datos de la solicitud.
    */
@@ -69,7 +68,7 @@ export class SolicitudComponent implements OnInit,OnDestroy {
 
   /**
    * Representa una lista de trámites con información adicional.
-   * 
+   *
    * @property {TramiteList[]} catalogos - Lista de catálogos relacionados con los trámites.
    * @property {string} labelNombre - Etiqueta que representa el nombre asociado al trámite.
    * @property {string} primerOpcion - Primera opción seleccionable en la lista de trámites.
@@ -91,7 +90,7 @@ export class SolicitudComponent implements OnInit,OnDestroy {
 
   /**
    * Representa la estructura de un banco utilizado en la aplicación.
-   * 
+   *
    * @property {Catalogo[]} catalogos - Lista de catálogos asociados al banco.
    * @property {string} labelNombre - Etiqueta que representa el nombre del banco.
    * @property {string} primerOpcion - Primera opción predeterminada para el banco.
@@ -113,58 +112,31 @@ export class SolicitudComponent implements OnInit,OnDestroy {
    */
   selectedRows: DatosDeLaTabla[] = [];
 
-  // Notificación utilizada para mostrar mensajes o alertas en la interfaz.
+  /**
+   * Notificación utilizada para mostrar mensajes o alertas en la interfaz.
+   */
   public nuevaNotificacion!: Notificacion;
 
-    // Notificación utilizada para mostrar mensajes o alertas en la interfaz.
+  /**
+   * Notificación utilizada para mostrar mensajes o alertas en la interfaz.
+   */
   public nuevaNotificacion2!: Notificacion;
 
-  // Índice del pedimento marcado para eliminación.
+  /** 
+  * Índice del pedimento marcado para eliminación.
+  */
   public elementoParaEliminar!: number;
 
-  // Arreglo que contiene los pedimentos registrados.
+  /** 
+  * Arreglo que contiene los pedimentos registrados.
+  */
   public pedimentos: Array<Pedimento> = [];
 
   /**
-   * Configuración de las columnas para la tabla de datos en el componente de Solicitud.
-   * 
-   * Cada objeto en el arreglo `encabezadoDeTabla` representa una columna de la tabla,
-   * definiendo su encabezado, la clave para acceder al dato correspondiente en los objetos
-   * de la tabla, y el orden en el que se deben mostrar las columnas.
-   * 
-   * Propiedades de cada columna:
-   * - `encabezado`: El texto que se mostrará como encabezado de la columna.
-   * - `clave`: Una función que toma un objeto de tipo `datosDeLaTabla` y devuelve el valor
-   *   que se mostrará en la celda correspondiente.
-   * - `orden`: Un número que indica la posición de la columna en la tabla.
+   * Propiedad que almacena el encabezado de la tabla utilizado en el componente.
+   * Este encabezado define los datos que se mostrarán en la tabla.
    */
-  public encabezadoDeTabla: ConfiguracionColumna<DatosDeLaTabla>[] = [
-    {
-      encabezado: 'Tipo de inversión',
-      clave: (artículo) => artículo.tipoDeInversion,
-      orden: 1,
-    },
-    {
-      encabezado: 'Descripción general',
-      clave: (artículo) => artículo.descripcionGeneral,
-      orden: 2,
-    },
-    {
-      encabezado: 'Valor en pesos',
-      clave: (artículo) => artículo.valorEnPesos,
-      orden: 3,
-    },
-    {
-      encabezado: 'Forma Adquisicion',
-      clave: (artículo) => artículo.formaAdquisicion,
-      orden: 4,
-    },
-    {
-      encabezado: 'Comprobante de pago',
-      clave: (artículo) => artículo.comprobanteDePago,
-      orden: 5,
-    },
-  ];
+  public encabezadoDeTabla = ENCABEZADO_TABLA_DATOS;
 
   /**
    * Constructor del componente.
@@ -203,17 +175,17 @@ export class SolicitudComponent implements OnInit,OnDestroy {
 
   /**
    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
-   * 
+   *
    * - Suscribe al observable `selectSolicitud$` para obtener el estado de la solicitud
    *   y lo asigna a la propiedad `solicitudState`.
    * - Inicializa el formulario llamando a `inicializarFormulario`.
    * - Realiza las solicitudes necesarias para obtener las listas de documentos,
-   *   inversiones y bancos mediante los métodos `fetchListaDeDocumentos`, 
+   *   inversiones y bancos mediante los métodos `fetchListaDeDocumentos`,
    *   `fetchListaDeInversion` y `fetchBancoList`.
-   * - Escucha los cambios en los datos del formulario desde el servicio 
-   *   `consultaAvisoAcreditacionService` y actualiza las filas de la tabla 
+   * - Escucha los cambios en los datos del formulario desde el servicio
+   *   `consultaAvisoAcreditacionService` y actualiza las filas de la tabla
    *   llamando a `updateTableRow` con los datos recibidos.
-   * 
+   *
    * @returns {void}
    */
   ngOnInit(): void {
@@ -229,7 +201,9 @@ export class SolicitudComponent implements OnInit,OnDestroy {
     this.fetchListaDeDocumentos();
     this.fetchListaDeInversion();
     this.fetchBancoList();
-    // Listen for updated row data
+    /**
+    * Escuchar los datos actualizados de la fila
+    */
     this.consultaAvisoAcreditacionService.formData$
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((formData) => {
@@ -237,7 +211,7 @@ export class SolicitudComponent implements OnInit,OnDestroy {
       });
   }
 
-      /**
+  /**
    * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
    * Cancela todas las suscripciones activas.
    */
@@ -248,11 +222,11 @@ export class SolicitudComponent implements OnInit,OnDestroy {
 
   /**
    * Inicializa el formulario `registroForm` con los campos necesarios y sus valores predeterminados.
-   * 
+   *
    * Este método configura un formulario reactivo utilizando `FormBuilder` y asigna valores iniciales
    * a cada campo basado en el estado actual de `solicitudState`. También incluye validadores requeridos
    * y personalizados para ciertos campos.
-   * 
+   *
    * Campos del formulario:
    * - `tipoDeInversion`: Lista de documentos, requerido.
    * - `valorEnPesos`: Valor en pesos, requerido.
@@ -266,7 +240,7 @@ export class SolicitudComponent implements OnInit,OnDestroy {
    * - `llaveDePago`: Llave de pago.
    * - `fechaInicialInput`: Fecha inicial, incluye un validador personalizado para verificar que la fecha no sea mayor a hoy.
    * - `importeDePago`: Importe de pago, deshabilitado por defecto con un valor predeterminado.
-   * 
+   *
    * @returns {void} No retorna ningún valor.
    */
   inicializarFormulario(): void {
@@ -400,20 +374,20 @@ export class SolicitudComponent implements OnInit,OnDestroy {
 
   /**
    * Obtiene la lista de documentos relacionados con el trámite de inversión.
-   * 
-   * Este método realiza una solicitud al servicio `consultaAvisoAcreditacionService` 
-   * para obtener la lista de documentos bajo el identificador 'listaDeInversion'. 
+   *
+   * Este método realiza una solicitud al servicio `consultaAvisoAcreditacionService`
+   * para obtener la lista de documentos bajo el identificador 'listaDeInversion'.
    * Los datos obtenidos se asignan al catálogo de trámites.
-   * 
+   *
    * @remarks
-   * Utiliza el operador `takeUntil` para gestionar la suscripción y evitar 
+   * Utiliza el operador `takeUntil` para gestionar la suscripción y evitar
    * fugas de memoria al destruir el componente.
-   * 
+   *
    * @example
    * ```typescript
    * this.fetchListaDeDocumentos();
    * ```
-   * 
+   *
    * @returns {void} No retorna ningún valor.
    */
   fetchListaDeDocumentos(): void {
@@ -466,20 +440,20 @@ export class SolicitudComponent implements OnInit,OnDestroy {
 
   /**
    * Método para poblar una tabla con los datos ingresados en un formulario.
-   * 
+   *
    * Este método toma los valores del formulario `registroForm`, crea una nueva fila
    * con los datos procesados y la agrega a la tabla representada por `configuracionTablaDatos`.
    * Además, actualiza el estado de la tienda `tramite32101Store` con los datos de la tabla
    * y reinicia el formulario a su estado inicial.
-   * 
+   *
    * @remarks
    * - Los valores del formulario se procesan para obtener etiquetas legibles desde catálogos.
    * - El formulario se reinicia y se marca como no modificado después de agregar la fila.
-   * 
+   *
    * @example
    * // Ejemplo de uso:
    * this.poblarTabla();
-   * 
+   *
    * @returns {void} Este método no retorna ningún valor.
    */
   poblarTabla(): void {
@@ -517,7 +491,7 @@ export class SolicitudComponent implements OnInit,OnDestroy {
     const SELECTED_ITEMS = catalog.find(
       // eslint-disable-next-line no-self-compare
       (item) => item.descripcion === item.descripcion
-);
+    );
     return SELECTED_ITEMS ? SELECTED_ITEMS.descripcion : 'N/A';
   }
 
@@ -525,71 +499,77 @@ export class SolicitudComponent implements OnInit,OnDestroy {
    * Maneja el evento de clic en un checkbox para una fila de la tabla.
    *
    * @param row - La fila de datos seleccionada o `null` si se deselecciona.
-   * 
+   *
    * - Si se proporciona una fila (`row` no es `null`), se agrega a la lista de filas seleccionadas
    *   (`selectedRows`) si aún no está presente.
    * - Si `row` es `null`, se elimina de la lista de filas seleccionadas.
    */
   onCheckboxClicked(row: DatosDeLaTabla | null): void {
     if (row) {
-      // Add the selected row to the selectedRows array if it's not already present
-      if (!this.selectedRows.some(selectedRow => selectedRow.id === row.id)) {
+      if (!this.selectedRows.some((selectedRow) => selectedRow.id === row.id)) {
         this.selectedRows.push(row);
       }
     } else {
-      // Remove the row from the selectedRows array if it is unchecked
       this.selectedRows = this.selectedRows.filter(
         (selectedRow) => selectedRow !== row
       );
     }
   }
 
-  // modify selected row in other component
+  /**
+  * modificar la fila seleccionada en otro componente 
+  */
   modificarFilaSeleccionada(): void {
     const SELECTED_ROW = this.selectedRows[0];
     const CURRENT_URL = this.router.url;
     if (this.selectedRows.length !== 1) {
       this.nuevaNotificacion = {
-      tipoNotificacion: 'alert',
-      categoria: 'danger',
-      modo: 'action',
-      titulo: 'Error',
-      mensaje: 'Por favor, seleccione exactamente una fila para modificar.',
-      cerrar: true,
-      tiempoDeEspera: 3000,
-      txtBtnAceptar: 'De acuerdo',
-      txtBtnCancelar: '',
-    };
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: 'Error',
+        mensaje: 'Por favor, seleccione exactamente una fila para modificar.',
+        cerrar: true,
+        tiempoDeEspera: 3000,
+        txtBtnAceptar: 'De acuerdo',
+        txtBtnCancelar: '',
+      };
       return;
     }
     if (SELECTED_ROW) {
-    this.consultaAvisoAcreditacionService.setUpdatedRow(SELECTED_ROW);
-    this.tramite32101Store.setAbc(SELECTED_ROW);
-    setTimeout(() => {
-      if(CURRENT_URL.includes('agace')){
-        this.router.navigate(['/agace/consulta-aviso-acreditacion/actualizacion']);
-      }
-      if(CURRENT_URL.includes('pago')){
-        this.router.navigate(['/pago/consulta-aviso-acreditacion/actualizacion']);
-      }
-    }, 100);
-  }
+      this.consultaAvisoAcreditacionService.setUpdatedRow(SELECTED_ROW);
+      this.tramite32101Store.setAbc(SELECTED_ROW);
+      setTimeout(() => {
+        if (CURRENT_URL.includes('agace')) {
+          this.router.navigate([
+            '/agace/consulta-aviso-acreditacion/actualizacion',
+          ]);
+        }
+        if (CURRENT_URL.includes('pago')) {
+          this.router.navigate([
+            '/pago/consulta-aviso-acreditacion/actualizacion',
+          ]);
+        }
+      }, 100);
+    }
   }
 
-  // Delete selected rows
+  /**
+  * Eliminar filas seleccionadas 
+  */
   eliminarFilasSeleccionadas(): void {
     if (this.selectedRows.length === 0) {
       this.nuevaNotificacion = {
-      tipoNotificacion: 'alert',
-      categoria: 'danger',
-      modo: 'action',
-      titulo: 'Error',
-      mensaje: 'No se seleccionaron filas para eliminar.',
-      cerrar: true,
-      tiempoDeEspera: 3000,
-      txtBtnAceptar: 'De acuerdo',
-      txtBtnCancelar: '',
-    };
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: 'Error',
+        mensaje: 'No se seleccionaron filas para eliminar.',
+        cerrar: true,
+        tiempoDeEspera: 3000,
+        txtBtnAceptar: 'De acuerdo',
+        txtBtnCancelar: '',
+      };
       return;
     }
     this.configuracionTablaDatos = this.configuracionTablaDatos.filter(
@@ -602,12 +582,12 @@ export class SolicitudComponent implements OnInit,OnDestroy {
 
   /**
    * Actualiza el formulario con los datos ingresados y los envía al servicio correspondiente.
-   * 
+   *
    * @remarks
-   * Este método toma los valores actuales del formulario `registroForm`, 
-   * los encapsula en una constante y los pasa al servicio `consultaAvisoAcreditacionService` 
+   * Este método toma los valores actuales del formulario `registroForm`,
+   * los encapsula en una constante y los pasa al servicio `consultaAvisoAcreditacionService`
    * para actualizar la fila correspondiente.
-   * 
+   *
    * @example
    * // Supongamos que el formulario tiene los siguientes valores:
    * // { nombre: 'Juan', edad: 30 }
@@ -619,7 +599,9 @@ export class SolicitudComponent implements OnInit,OnDestroy {
     this.consultaAvisoAcreditacionService.setUpdatedRow(FORM_DATA);
   }
 
-  // Custom validator to check if the date is less than or equal to the current date
+  /**
+  * Validador personalizado para verificar si la fecha es menor o igual a la fecha actual 
+  */
   static validateFechaMenorIgualHoy(
     control: AbstractControl
   ): ValidationErrors | null {
@@ -635,7 +617,7 @@ export class SolicitudComponent implements OnInit,OnDestroy {
    * Cambia la fecha de ingreso en el formulario.
    *
    * @param nuevo_valor - El nuevo valor de la fecha en formato de cadena.
-   * 
+   *
    * Este método actualiza el campo 'fechaInicialInput' del formulario con el nuevo valor proporcionado
    * y marca el campo como no modificado (untouched).
    */
@@ -647,13 +629,13 @@ export class SolicitudComponent implements OnInit,OnDestroy {
 
   /**
    * Restablece los campos del formulario relacionados con la operación bancaria.
-   * 
+   *
    * Este método reinicia los valores de los siguientes controles del formulario:
    * - `numeroDeOperacion`: Número de operación bancaria.
    * - `banco`: Banco asociado a la operación.
    * - `llaveDePago`: Llave de pago utilizada.
    * - `fechaInicialInput`: Fecha inicial de la operación.
-   * 
+   *
    * Utiliza el método `reset()` para limpiar los valores de cada control.
    */
   borrar(): void {
@@ -683,7 +665,9 @@ export class SolicitudComponent implements OnInit,OnDestroy {
     }
   }
 
-  // Abre el modal y configura la notificación para eliminar un pedimento.
+  /**
+  * Abre el modal y configura la notificación para eliminar un pedimento. 
+  */
   abrirModal(i: number = 0): void {
     this.nuevaNotificacion = {
       tipoNotificacion: 'alert',
@@ -695,11 +679,13 @@ export class SolicitudComponent implements OnInit,OnDestroy {
       tiempoDeEspera: 2000,
       txtBtnAceptar: 'Aceptar',
       txtBtnCancelar: '',
-    }
+    };
     this.elementoParaEliminar = i;
   }
 
-    // Abre el modal y configura la notificación para eliminar un pedimento.
+  /**
+  * Abre el modal y configura la notificación para eliminar un pedimento. 
+  */
   abrirEleminarModal(i: number = 0): void {
     this.nuevaNotificacion = {
       tipoNotificacion: 'alert',
@@ -711,11 +697,13 @@ export class SolicitudComponent implements OnInit,OnDestroy {
       tiempoDeEspera: 2000,
       txtBtnAceptar: 'Aceptar',
       txtBtnCancelar: 'Cancelar',
-    }
+    };
     this.elementoParaEliminar = i;
   }
 
-    // Elimina un pedimento si se confirma la acción.
+  /**
+  * Elimina un pedimento si se confirma la acción. 
+  */
   eliminarPedimento(borrar: boolean): void {
     if (borrar) {
       this.pedimentos.splice(this.elementoParaEliminar, 1);

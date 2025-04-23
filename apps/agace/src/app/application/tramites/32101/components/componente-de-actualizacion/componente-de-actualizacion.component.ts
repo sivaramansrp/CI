@@ -19,7 +19,7 @@ import { Tramite32101Query } from '../../../../estados/queries/tramite32101.quer
     CatalogoSelectComponent,
   ],
   templateUrl: './componente-de-actualizacion.component.html',
-  styleUrl: './componente-de-actualizacion.component.css',
+  styleUrl: './componente-de-actualizacion.component.scss',
 })
 export class ComponenteDeActualizacionComponent implements OnInit, OnDestroy {
   /**
