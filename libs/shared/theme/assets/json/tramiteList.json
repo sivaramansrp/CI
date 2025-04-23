@@ -940,8 +940,8 @@
     {
         "id": 135,
         "tramite": 40402,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "/aga/pago/codigo-transportista",
+        "linkDepartment": "/pago/codigo-transportista",
         "department": "aga"
     },
     {
