@@ -22,7 +22,7 @@ import { takeUntil } from 'rxjs';
   standalone: true,
   imports: [CommonModule, PagoDeDerechosComponent],
   templateUrl: './pago-de-derechos-contenedora.component.html',
-  styleUrl: './pago-de-derechos-contenedora.component.css',
+  styleUrl: './pago-de-derechos-contenedora.component.scss',
 })
 export class PagoDeDerechosContenedoraComponent implements OnInit, OnDestroy {
   /**

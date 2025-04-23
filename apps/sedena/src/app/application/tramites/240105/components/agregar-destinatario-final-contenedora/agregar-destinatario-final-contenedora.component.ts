@@ -17,7 +17,7 @@ import { Tramite240105Store } from '../../estados/tramite240105Store.store';
   standalone: true,
   imports: [CommonModule, AgregarDestinatarioFinalComponent],
   templateUrl: './agregar-destinatario-final-contenedora.component.html',
-  styleUrl: './agregar-destinatario-final-contenedora.component.css',
+  styleUrl: './agregar-destinatario-final-contenedora.component.scss',
 })
 export class AgregarDestinatarioFinalContenedoraComponent {
   public readonly idProcedimiento = ID_PROCEDIMIENTO;
