@@ -1,0 +1,18 @@
+/**
+ * Enumeración que contiene los textos utilizados en el trámite 32201.
+ * Estos textos son utilizados para mostrar mensajes o descripciones específicas en el formulario.
+ */
+export const SOLICITUD_32201_ENUM = {
+  /**
+   * Texto que indica la necesidad de anexar un archivo con el RFC de clientes y proveedores nacionales
+   * con los que se realizan operaciones virtuales.
+   */
+  TEXTO_OPERACIONES_VIRTUALES: `Anexar un archivo que contenga el RFC de sus cliente y proveedores nacionales con los que realiza operaciones virtuales*`,
+
+  /**
+   * Texto que representa una declaración bajo protesta de decir verdad.
+   * Este texto se utiliza para confirmar que los datos proporcionados son ciertos y que las facultades
+   * otorgadas al representante no han sido modificadas o revocadas.
+   */
+  TEXTO_PROVEEDORES_EXISTENTES_ACTUALMENTE: `Bajo protesta de decir verdad, manifiesto que los datos asentados en el presente documento son ciertos y que las facultades que me fueron otorgadas para representar a la solicitante no me han sido modificadas y/o revocadas`,
+};
