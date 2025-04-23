@@ -3016,6 +3016,13 @@ tbody.collapse.in {
         cursor: default;
       }
     }
+
+    &.disabled > a {
+      pointer-events: none;
+      cursor: not-allowed;
+      color: #999;
+      opacity: 0.5;
+    }
   }
 }
 
