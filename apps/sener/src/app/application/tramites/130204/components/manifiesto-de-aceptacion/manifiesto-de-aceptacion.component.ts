@@ -95,6 +95,6 @@ export class ManifiestoDeAceptacionComponent {
  */
 manifestoText = MANIFIESTO_ACEPTACION_HTML;
 }
-
+ 
  
  

@@ -12,15 +12,15 @@ import { ProductoResponse } from '../../../shared/constantes/vehiculos-adaptados
  * representación federal, y opciones de productos.
  * 
  * @export
- * @class ExportacionMineralesDeHierroService
+ * @class ExportacionHidrocarburosService
  */
 @Injectable({
   providedIn: 'root',
 })
-export class ExportacionMineralesDeHierroService {
+export class ExportacionHidrocarburosService {
 
   /**
-   * Crea una instancia del servicio `ExportacionMineralesDeHierroService`.
+   * Crea una instancia del servicio `ExportacionHidrocarburosService`.
    * @param {HttpClient} http - El cliente HTTP que se usa para realizar solicitudes.
    */
   constructor(private http: HttpClient) {
@@ -34,7 +34,7 @@ export class ExportacionMineralesDeHierroService {
    * @returns {Observable<Catalogo[]>} Observable que emite una lista de objetos Catalogo.
    */
   getListaDePaisesDisponibles(): Observable<Catalogo[]> {
-    return this.http.get<Catalogo[]>('/assets/json/130108/pais-procenia.json');
+    return this.http.get<Catalogo[]>('/assets/json/130204/pais-procenia.json');
   }
 
   /**
@@ -44,7 +44,7 @@ export class ExportacionMineralesDeHierroService {
    * @returns {Observable<Catalogo[]>} Observable que emite una lista de objetos Catalogo.
    */
   obtenerListaDeCiudades(): Observable<Catalogo[]> {
-    return this.http.get<Catalogo[]>('/assets/json/130108/todas-las-ciudades.json');
+    return this.http.get<Catalogo[]>('/assets/json/130204/todas-las-ciudades.json');
   }
 
   /**
@@ -57,7 +57,7 @@ export class ExportacionMineralesDeHierroService {
    * @returns {Observable<Catalogo[]>} Observable que emite una lista de países en el bloque.
    */
   getPaisesPorBloque(_bloqueId: number): Observable<Catalogo[]> {
-    return this.http.get<Catalogo[]>('/assets/json/130108/paises-por-bloque.json');
+    return this.http.get<Catalogo[]>('/assets/json/130204/paises-por-bloque.json');
   }
 
   /**
@@ -68,7 +68,7 @@ export class ExportacionMineralesDeHierroService {
    * que representan los estados.
    */
   getEstado(): Observable<Catalogo[]> {
-    return this.http.get<Catalogo[]>('/assets/json/130108/estado.json');
+    return this.http.get<Catalogo[]>('/assets/json/130204/estado.json');
   }
 
   /**
@@ -79,7 +79,7 @@ export class ExportacionMineralesDeHierroService {
    * que representan las representaciones federales.
    */
   getRepresentacionFederal(): Observable<Catalogo[]> {
-    return this.http.get<Catalogo[]>('/assets/json/130108/representacion-federal.json');
+    return this.http.get<Catalogo[]>('/assets/json/130204/representacion-federal.json');
   }
 
   /**
@@ -89,7 +89,7 @@ export class ExportacionMineralesDeHierroService {
    * @returns {Observable<ProductoResponse>} Observable que emite las opciones de solicitud disponibles.
    */
   getSolicitudeOptions(): Observable<ProductoResponse> {
-    return this.http.get<ProductoResponse>('assets/json/130108/solicitude-options.json');
+    return this.http.get<ProductoResponse>('assets/json/130204/solicitude-options.json');
   }
 
   /**
@@ -99,7 +99,7 @@ export class ExportacionMineralesDeHierroService {
    * @returns {Observable<ProductoResponse>} Observable que emite las opciones de producto disponibles.
    */
   getProductoOptions(): Observable<ProductoResponse> {
-    return this.http.get<ProductoResponse>('assets/json/130108/producto-otions.json');
+    return this.http.get<ProductoResponse>('assets/json/130204/plazo-options.json');
   }
 
   /**
@@ -112,13 +112,13 @@ export class ExportacionMineralesDeHierroService {
  *
  * @example
  * // Ejemplo de uso:
- * this.exportacionMineralesDeHierroService.getTablaDatos().subscribe((datos) => {
+ * this.ExportacionHidrocarburosService.getTablaDatos().subscribe((datos) => {
  *   console.log(datos);
  * });
  */
   getTablaDatos(): Observable<PartidasDeLaMercanciaModelo[]> {
     return this.http.get<PartidasDeLaMercanciaModelo[]>(
-          'assets/json/130108/partidas-de-la.json'
+          'assets/json/130204/partidas-de-la.json'
         );
   }
 }
