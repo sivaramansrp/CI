@@ -116,6 +116,13 @@ export class TercerosRelacionadosComponent implements OnInit {
    */
   public habilitarFacturador = true;
 
+    /**
+   * Lista de elementos requeridos en el formulario.
+   * Esta propiedad almacena un arreglo de cadenas que representan
+   * los elementos que deben ser obligatorios en el formulario.
+   */
+    public elementosRequeridos: string[] = [];
+
   /**
    * @constructor
    * Inyecta los servicios de router, rutas activas y store del trámite.
@@ -125,7 +132,9 @@ export class TercerosRelacionadosComponent implements OnInit {
    * @param tramiteStore - Store que administra los datos del trámite.
    * @param tramiteQuery - Servicio para consultar los datos del trámite.
    */
-  constructor(private router: Router, private activatedRoute: ActivatedRoute) {}
+  constructor(private router: Router, private activatedRoute: ActivatedRoute) {
+    // No se necesita lógica de inicialización adicional.
+   }
 
   /**
    * @property {Fabricante[]} fabricanteTablaDatos
@@ -168,6 +177,7 @@ export class TercerosRelacionadosComponent implements OnInit {
    * Crea el formulario, activa la escucha de cambios y sincroniza el estado con el input.
    */
   ngOnInit(): void {
+    this.validarElementos();
     this.habilitarFacturador = OCULTAR_FACTURADOR.includes(this.idProcedimiento)
       ? false
       : true;
@@ -175,4 +185,34 @@ export class TercerosRelacionadosComponent implements OnInit {
       ? false
       : true;
   }
+
+   /**
+   * Valida elementos según el `idProcedimiento` y establece
+   * las listas de elementos no válidos y añadidos.
+   * @returns {void} Lista de elementos no válidos.
+   */
+   validarElementos(): void {
+    switch (this.idProcedimiento) {
+      case 260219:
+        this.elementosRequeridos = [
+          'fabricante',
+          'destinoFinal'
+        ];
+        break;
+     default:
+        this.elementosRequeridos = [];
+        break;
+    }
+  }
+
+  /**
+    * Verifica si un campo es requerido según la configuración de campos requeridos.
+    *
+    * @param {string} campo - Nombre del campo a verificar.
+    * @returns {boolean} Retorna `true` si el campo es requerido, `false` en caso contrario.
+    */
+  esCampoRequerido(campo: string): boolean {
+    return this.elementosRequeridos?.includes(campo) ?? false;
+  }
+  
 }
