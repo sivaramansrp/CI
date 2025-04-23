@@ -18,7 +18,7 @@ import {
 } from '../../constantes/constantes';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, Subscription, map, takeUntil } from 'rxjs';
- 
+
 import { ToastrModule, ToastrService } from 'ngx-toastr';
 
 import { CatalogoDocumento } from '../../../core/models/shared/catalogos.model';
@@ -48,7 +48,6 @@ interface DocumentosParaCargar {
   estatus: string;
 }
 
-
 @Component({
   selector: 'anexar-documentos',
   standalone: true,
@@ -57,51 +56,202 @@ interface DocumentosParaCargar {
   styleUrl: './anexar-documentos.component.scss'
 })
 export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
+  /**
+   * @description Catalogo de documentos obligatorios.
+   * @type {CatalogoDocumento[]}
+   */
   @Input() catalogoDocumentos: CatalogoDocumento[] = [];
+
+  /**
+   * @description Catalogo de documentos opcionales.
+   * @type {CatalogoDocumento[]}
+   */
   @Input() catalogoDocumentosOpcionales: CatalogoDocumento[] = [];
+
+  /**
+   * @description Evento para cargar archivos.
+   * @type {EventEmitter<void>}
+   */
   @Input() cargaArchivosEvento!: EventEmitter<void>;
+
+  /**
+   * @description Evento para regresar a la sección de carga de documentos.
+   * @type {EventEmitter<void>}
+   */
   @Input() regresarSeccionCargarDocumentoEvento!: EventEmitter<void>;
 
+  /**
+   * @description Evento para indicar que la carga de documentos se ha realizado.
+   * @type {EventEmitter<boolean>}
+   */
   @Output() cargaRealizada = new EventEmitter<boolean>();
+
+  /**
+   * @description Evento para activar el botón de carga de archivos.
+   * @type {EventEmitter<boolean>}
+   */
   @Output() activarBotonCargaArchivos = new EventEmitter<boolean>();
 
+  /**
+   * @description Lista de referencias a los elementos del DOM con la etiqueta 'fileInput'.
+   * Utilizada para gestionar múltiples inputs de archivo en el componente.
+   * @type {QueryList<ElementRef>}
+   */
   @ViewChildren('fileInput') fileInputs!: QueryList<ElementRef>;
 
 
+
+  /**
+   * @description Arreglo de suscripciones para gestionar y limpiar observables en el componente.
+   * @type {Subscription[]}
+   */
   subscription: Subscription[] = [];
+
+  /**
+   * @description Formulario reactivo para gestionar la carga de documentos.
+   * @type {FormGroup}
+   */
   documentoForma!: FormGroup;
 
-  PDF = PDF;
-  MB = MB;
-  DPI = DPI;
 
+  /**
+   * @description Constantes para el tipo de archivos que se aceptan en el input.
+   * @type {string}
+   */
+  readonly PDF = PDF;
+
+  /**
+   * @description Constantes para la unidad del tamaño de los archivos.
+   * @type {string}
+   */
+  readonly MB = MB;
+
+  /**
+   * @description Constantes para la unidad de DPI.
+   * @type {string}
+   */
+  readonly DPI = DPI;
+
+  /**
+   * @description Tamaño máximo permitido para los archivos en megabytes.
+   */
   tamMaximo = 0;
+
+  /**
+   * @description Arreglo para almacenar los documentos cargados.
+   * @type {DocumentosCargados[]}
+   */
   documentosCargados: DocumentosCargados[] = [];
+
+  /**
+   * @description Objeto para almacenar el documento seleccionado.
+   * @type {CatalogoDocumento}
+   */
   documentoSeleccionado!: CatalogoDocumento;
+
+
+
+  /**
+   *@description Variable que almacena el identificador o estado del modal.
+   * Se utiliza para controlar la visibilidad o el contenido del modal en el componente.
+   */
   modal = '';
+
+  /**
+   * @description Objeto para almacenar los datos de inicio de sesión.
+   * @type {Login}
+   */
   datosLogin: Login = {
     user: 'user1@example.com',
     password: 'clave1'
   };
+
+  /**
+   * @description VAriable para almacenar el token de autenticación.
+   * @type {string}
+   */
   token!: string;
+
+  /**
+   * @description Arreglo para almacenar los documentos opcionales agregados.
+   * @type {number[]}
+   */
   listDocOpcionalesAgregar: number[] = [];
+
+  /**
+   * @description Arreglo para almacenar los documentos para cargar.
+   * @type {DocumentosParaCargar[]}
+   */
   listadoArchivos: DocumentosParaCargar[] = [];
+
+  /**
+   * @description Arreglo para almacenar los documentos opcionales.
+   * @type {CatalogoDocumento[]}
+   */
   archivosOpcionales: CatalogoDocumento[] = [];
 
+  /**
+   * @description Arreglo para almacenar los documentos opcionales inicial.
+   */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   archivosOpcionalesOriginal: any[] = [];
+
+  /**
+   * @description Arreglo para almacenar los documentos opcionales duplicados.
+   */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   listDocOpcionales: any[] = [];
+
+  /**
+   * @description Arreglo para almacenar los documentos opcionales duplicados.
+   */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   listDocOpcionalesDuplicado: any[] = [];
+
+  /**
+   * @description Variable para almacenar el estado del modal de vista previa.
+   * @type {BsModalRef}
+   */
   bsModalRef?: BsModalRef;
+
+  /**
+   * @description Variable para almacenar el estado del modal de confirmación.
+   * @type {BsModalRef}
+   */
   modalRef?: BsModalRef;
+
+  /**
+   * @description Variable para almacenar el estado de la carga de documentos.
+   * @type {boolean}
+   */
   cargarDocumentos = false;
+
+  /**
+   * @description Objeto para almacenar los archivos que se están cargando.
+   * @type {any}
+   */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   archivosCargando: any = {
     obligatorios: [],
     opcionales: []
   };
 
+  /**
+   * @description Variable para controlar la visibilidad de la sección de carga de archivos.
+   * @type {boolean}
+   */
   mostrarSeccionCargaArchivos: boolean = true;
 
+  /**
+   * @description Notificador utilizado para gestionar la destrucción de suscripciones y evitar fugas de memoria.
+   * @type {Subject<void>}
+   */
   private destroyNotifier$: Subject<void> = new Subject<void>();
+
+  /**
+   * @description Estado de los documentos.
+   * @type {DocumentosState}
+   */
   private documentosState!: DocumentosState;
 
   constructor(
@@ -176,6 +326,10 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
     });
   }
 
+  /**
+   * Crea el formulario reactivo para la carga de documentos.
+   * @returns {void} Esta función no retorna ningún valor.
+   */
   crearFormaDocumento(): void {
     this.documentoForma = this.fb.group({
       documento: ['', [Validators.required]]
@@ -255,11 +409,23 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
+  /**
+   * Verifica si un archivo ya existe en la lista de archivos cargados.
+   * @param {any} id - El ID del archivo a verificar.
+   * @returns {boolean} `true` si el archivo ya existe, de lo contrario `false`.
+   */
+  // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any
   existePreview(id: any): boolean {
     const ENCONTRADO = this.listadoArchivos.find(f => f.id === id);
     return ENCONTRADO !== undefined;
   }
 
+  /**
+   * Sube un archivo al servidor.
+   * @param {any} informacionArchivo - Información del archivo a subir.
+   * @returns {Promise<any>} Promesa que se resuelve cuando la carga se completa.
+   */
+  // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any
   uploadFiles(informacionArchivo: any): Promise<any> {
     return new Promise((resolve) => {
       this.subirDocumentoService.subirDocumento(this.token, informacionArchivo).subscribe({
@@ -336,6 +502,12 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
+  /**
+   * Limpia el archivo seleccionado y lo elimina de la lista de archivos.
+   * @param {CatalogoDocumento} item - El documento a limpiar.
+   * @param {string} tipo - El tipo de documento (obligatorio u opcional).
+   * @returns {void}
+   */
   limpiarFile(item: CatalogoDocumento, tipo: string): void {
     let FILE_INPUT: HTMLInputElement | null = null;
     if (tipo === 'obligatorios') {
@@ -358,6 +530,12 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
     this.activarBotonCargaArchivos.emit(ARCHIVOS_PARA_CARGAR);
   }
 
+  /**
+   * Agrega una parte adicional a un documento.
+   * @param {CatalogoDocumento} item - El documento al que se le agregará la parte.
+   * @param {string} origen - El origen del documento (obligatorios u opcionales).
+   * @returns {void}
+   */
   agregarParte(item: CatalogoDocumento, origen: string): void {
     if (origen === 'obligatorios') {
       const INDICE: number = this.catalogoDocumentos.findIndex(doc => doc.id === item.id);
@@ -390,6 +568,11 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
+  /**
+   * Convierte un tamaño en kilobytes a megabytes.
+   * @param {string | undefined} size - El tamaño en kilobytes como cadena o indefinido.
+   * @returns {string} El tamaño convertido a megabytes como cadena.
+   */
   // eslint-disable-next-line class-methods-use-this
   convertKbToMb(size: string | undefined): string {
     if (size === undefined) {
@@ -398,6 +581,11 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
     return String((parseInt(size, 10) / 1000).toFixed(2));
   }
 
+  /**
+   * Agrega documentos opcionales a la lista de documentos opcionales.
+   * @returns {void}
+   * @description Esta función recorre la lista de documentos opcionales a agregar y verifica si ya existen en la lista de documentos opcionales.
+   */
   agregarOpcionales(): void {
     this.listDocOpcionalesAgregar.forEach((doc: number) => {
 
@@ -421,6 +609,12 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
     this.documentosStore.establecerCatalogoDocumentos(this.listDocOpcionales);
   }
 
+  /**
+   * Carga los archivos seleccionados.
+   * @param {any[]} archivosCargando - Lista de archivos a cargar.
+   * @returns {Promise<void>} Promesa que se resuelve cuando la carga se completa.
+   */
+  // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any
   async cargarArchivos(archivosCargando: any[]): Promise<void> {
     for (const ARCHIVO of archivosCargando) {
       const DATA = await this.uploadFiles(ARCHIVO.archivo);
@@ -430,6 +624,11 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
+  /**
+   * Elimina un documento opcional de la lista de documentos opcionales.
+   * @param {CatalogoDocumento} item - El documento a eliminar.
+   * @returns {void}
+   */
   eliminarOpcional(item: CatalogoDocumento): void {
     const INDICE: number = this.listDocOpcionales.findIndex(f => f.id === item.id);
     if (INDICE !== -1) {
@@ -457,6 +656,13 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
     this.activarBotonCargaArchivos.emit(ARCHIVOS_PARA_CARGAR);
   }
 
+  /**
+   * Elimina un nuevo documento de la lista de documentos.
+   * @param {any} item - El documento a eliminar.
+   * @param {boolean} adicional - Indica si el documento es adicional.
+   * @returns {void}
+   */
+  // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any
   eliminarNuevo(item: any, adicional = false): void {
     if (adicional) {
       const INDICE_ADICIONAL = item.item.adicionales.findIndex((adicional: any) => adicional.id === item.adicional.id);
@@ -492,10 +698,14 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
     this.destroyNotifier$.complete();
   }
 
+  /**
+   * Muestra la sección de carga de archivos y emite un evento para activar el botón de carga de archivos.
+   * @returns {void}
+   */
   mostrarSeccionCargaArchivosAccion(): void {
     this.mostrarSeccionCargaArchivos = true;
     const ARCHIVOS_PARA_CARGAR = this.listadoArchivos.some(item => item.cargado === true);
-  
+
     this.activarBotonCargaArchivos.emit(ARCHIVOS_PARA_CARGAR);
     this.cargaRealizada.emit(false);
   }
