@@ -1878,8 +1878,8 @@
     {
         "id": 269,
         "tramite": 240308,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "/sedena/permiso-ordinario/importacion-de-artificios",
+        "linkDepartment": "/pago/permiso-ordinario/importacion-de-artificios",
         "department": "sedena"
     },
     {
@@ -1981,6 +1981,7 @@
         "department": "aga"
     },
     {
+        "id": 284,
         "tramite": 260913,
         "linkDashboard": "/cofepris/modificacion-del-permiso/pantallas",
         "linkDepartment": "/pago/modificacion-del-permiso/pantallas",
