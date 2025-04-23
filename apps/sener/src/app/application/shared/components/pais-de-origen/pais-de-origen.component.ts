@@ -97,6 +97,21 @@ export class PaisDeOrigenComponent implements OnChanges {
    * @tipo {string[]}
    */
   @Input() selectRangoDias: string[] = [];
+
+  /**
+ * @property
+ * @name titulo
+ * @description
+ * Título que se muestra en el componente. Este valor puede ser configurado desde el componente padre
+ * para personalizar el encabezado o título del componente.
+ * 
+ * @type {string}
+ * @default ''
+ * 
+ * @example
+ * <app-pais-de-origen [titulo]="'Selecciona un país de origen'"></app-pais-de-origen>
+ */
+  @Input() titulo: string = '';
  
   /**
    * @evento
@@ -112,7 +127,7 @@ export class PaisDeOrigenComponent implements OnChanges {
    * @descripcion Evento emitido para establecer valores en el store.
    * @tipo {EventEmitter<{ form: FormGroup; campo: string; metodoNombre: string }>}
    */
-  @Output() setValoresStoreEvent = new EventEmitter<{ form: FormGroup; campo: string; metodoNombre: string }>();
+  @Output() setValoresStoreEvent = new EventEmitter<{ form: FormGroup; campo: string}>();
  
   /**
    * @propiedad
@@ -178,14 +193,6 @@ export class PaisDeOrigenComponent implements OnChanges {
   ];
  
   /**
-   * @constructor
-   * @descripcion Constructor del componente.
-   */
-  constructor() {
-    // Constructor del componente
-  }
- 
-  /**
    * @metodo
    * @nombre ngOnChanges
    * @descripcion Método que se ejecuta cuando hay cambios en las propiedades de entrada del componente.
@@ -221,8 +228,8 @@ export class PaisDeOrigenComponent implements OnChanges {
    * @param {string} campo - El campo a actualizar.
    * @param {string} metodoNombre - El nombre del método.
    */
-  setValoresStore(form: FormGroup, campo: string, metodoNombre: string): void {
-    this.setValoresStoreEvent.emit({ form, campo, metodoNombre });
+  setValoresStore(form: FormGroup, campo: string): void {
+    this.setValoresStoreEvent.emit({ form, campo });
   }
 }
  
