@@ -21,11 +21,6 @@ class MockTramite32102Store {}
 @Injectable()
 class MockTramite32102Query {}
 
-@Directive({ selector: '[myCustom]' })
-class MyCustomDirective {
-  @Input() myCustom;
-}
-
 describe('SolicitudComponent', () => {
   let fixture;
   let component;
@@ -33,9 +28,7 @@ describe('SolicitudComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [ FormsModule, ReactiveFormsModule, SolicitudComponent ],
-      declarations: [
-        MyCustomDirective
-      ],
+      declarations: [ ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
         { provide: AvisoDeAmpliacionService, useClass: MockAvisoDeAmpliacionService },

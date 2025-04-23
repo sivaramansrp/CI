@@ -2,7 +2,6 @@ import {AbstractControl, FormBuilder,FormGroup,FormsModule,ReactiveFormsModule,V
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Solicitud32102State, Tramite32102Store } from '../../../../estados/tramites/tramite32102.store';
 import { Subject, map, takeUntil } from 'rxjs';
-import { AvisoDeAmpliacionService } from '../../services/aviso-de-ampliacion.service';
 import { CommonModule } from '@angular/common';
 import { Solicitud32102Enum } from '../../constants/solicitud32101.enum';
 import {TituloComponent} from '@libs/shared/data-access-user/src';
@@ -16,7 +15,7 @@ import { Tramite32102Query } from '../../../../estados/queries/tramite32102.quer
   selector: 'app-solicitud',
   standalone: true,
   imports: [CommonModule, TituloComponent, ReactiveFormsModule, FormsModule],
-  providers: [AvisoDeAmpliacionService],
+  providers: [],
   templateUrl: './Solicitud.component.html',
   styleUrl: './Solicitud.component.css',
 })

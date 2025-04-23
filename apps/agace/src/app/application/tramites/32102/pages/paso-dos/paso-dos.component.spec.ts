@@ -11,11 +11,6 @@ import { Component } from '@angular/core';
 import { PasoDosComponent } from './paso-dos.component';
 import { CatalogosService } from '@ng-mf/data-access-user';
 
-@Directive({ selector: '[myCustom]' })
-class MyCustomDirective {
-  @Input() myCustom;
-}
-
 describe('PasoDosComponent', () => {
   let fixture;
   let component;
@@ -24,8 +19,7 @@ describe('PasoDosComponent', () => {
     TestBed.configureTestingModule({
       imports: [ FormsModule, ReactiveFormsModule, HttpClientModule ],
       declarations: [
-        PasoDosComponent,
-        MyCustomDirective
+        PasoDosComponent
       ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
