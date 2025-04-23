@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 
-import { CATALOGOS_ID, Catalogo, CatalogosService, PeximService, TEXTOS } from '@ng-mf/data-access-user';
+import { CATALOGOS_ID, Catalogo, CatalogosService, PeximService, RespuestaCatalogos, TEXTOS } from '@ng-mf/data-access-user';
 /**
  * Este componente se muestra en PasaDos
  */
@@ -76,11 +76,11 @@ export class PasoDosComponent implements OnInit, OnDestroy {
   /**
    * Recupera la lista de documentos seleccionados.
    */
-  obtenerDocumentosSeleccionados() {
+  obtenerDocumentosSeleccionados(): void {
     this.peximService.obtenerDocumentosSeleccionados()
     .pipe(takeUntil(this.destruirNotificador$))
     .subscribe({
-      next: (result: any) => {
+      next: (result: RespuestaCatalogos) => {
         this.documentosSeleccionados = result.data;
       }
     })
