@@ -34,12 +34,6 @@ export class PagoDeDerechosContenedoraComponent implements OnInit, OnDestroy {
    */
   public readonly idProcedimiento = ID_PROCEDIMIENTO;
   /**
-   * Observable para liberar suscripciones al destruir el componente.
-   * @property {Subject<void>} unsubscribe$
-   */
-  private unsubscribe$ = new Subject<void>();
-
-  /**
    * Estado actual del formulario de pago de derechos.
    * @property {PagoDerechosFormState} pagoDerechoFormState
    */
@@ -79,19 +73,6 @@ export class PagoDeDerechosContenedoraComponent implements OnInit, OnDestroy {
         this.pagoDerechoFormState = data;
       });
   }
-
-  /**
-   * Hook del ciclo de vida que se ejecuta al destruir el componente.
-   * Libera las suscripciones para evitar fugas de memoria.
-   *
-   * @method ngOnDestroy
-   * @returns {void}
-   */
-  ngOnDestroy(): void {
-    this.unsubscribe$.next();
-    this.unsubscribe$.complete();
-  }
-
   /**
    * Actualiza el estado del formulario de pago de derechos en el store.
    *
@@ -102,4 +83,16 @@ export class PagoDeDerechosContenedoraComponent implements OnInit, OnDestroy {
   updatePagoDerechos(event: PagoDerechosFormState): void {
     this.tramiteStore.updatePagoDerechosFormState(event);
   }
+   /**
+   * Hook del ciclo de vida que se ejecuta al destruir el componente.
+   * Libera las suscripciones para evitar fugas de memoria.
+   *
+   * @method ngOnDestroy
+   * @returns {void}
+   */
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
 }
