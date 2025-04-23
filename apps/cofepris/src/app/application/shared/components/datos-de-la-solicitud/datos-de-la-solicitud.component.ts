@@ -560,6 +560,22 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
           'correoElectronico',
         ];
         break;
+      case 260304:
+        this.elementosAnadidos = [
+          'calleYNumero',
+          'correoElectronico',
+          'rfcSanitario',
+          'regimenLaMercancia',
+          'aduana',
+        ];
+        this.elementosRequeridos = [
+          'colonia',
+          'localidad',
+          'denominacionRazon',
+          'scian',
+          'correoElectronico',
+        ];
+        break;
       case 260208:
         this.elementosRequeridos = [
           'denominacionRazon',
