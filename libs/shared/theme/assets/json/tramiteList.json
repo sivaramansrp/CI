@@ -1981,13 +1981,6 @@
         "department": "aga"
     },
     {
-        "id": 284,
-        "tramite": 570102,
-        "linkDashboard": "/aga/registro-solicitud/solicitud",
-        "linkDepartment": "/pago/registro-solicitud/solicitud",
-        "department": "aga"
-    },
-    {
         "tramite": 260913,
         "linkDashboard": "/cofepris/modificacion-del-permiso/pantallas",
         "linkDepartment": "/pago/modificacion-del-permiso/pantallas",
