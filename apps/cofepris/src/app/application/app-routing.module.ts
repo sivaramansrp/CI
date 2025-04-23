@@ -406,12 +406,12 @@ const ROUTES: Routes = [
       ),
   },
   {
-    path: 'solicitud-modificacion',
-    loadChildren: () =>
-      import('./tramites/261101/datos-solicitude.module').then(
-        (m) => m.DatosSolicitudeModule
-      ),
-  }, 
+      path: 'solicitud-modificacion',
+      loadChildren: () =>
+        import('./tramites/261101/datos-solicitude.module').then(
+          (m) => m.DatosSolicitudeModule
+        ),
+  },
   {
         path: 'importar-suministros-medicos',
         loadChildren: () =>
@@ -420,13 +420,6 @@ const ROUTES: Routes = [
           )
   },
   {
-        path: 'modificacion-permiso-importacion-medicamentos',
-        loadChildren: () =>
-          import('./tramites/261103/modificacion-permiso-importacion-medicamentos.module').then(
-            (m) => m.ModificacionPermisoImportacionModule
-          ),
-    },
-    {
     path: 'correccion-interna-de-la-cofepris',
     loadChildren: () =>
       import('./tramites/261601/correccion-interna-de-la-cofepris.module').then(
@@ -434,11 +427,12 @@ const ROUTES: Routes = [
   },
 
   {
-    path: 'cancelacion-peticion',
+    path: 'modificacion-permiso-importacion-medicamentos',
     loadChildren: () =>
-      import('./tramites/261701/cancelacion-peticion.module').then(
-        (m) => m.CancelacionPeticionModule)
-  },
+      import('./tramites/261103/modificacion-permiso-importacion-medicamentos.module').then(
+        (m) => m.ModificacionPermisoImportacionModule
+      ),
+},
 ];
 
 @NgModule({
