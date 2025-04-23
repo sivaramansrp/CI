@@ -1458,8 +1458,8 @@
     {
         "id": 209,
         "tramite": 32201,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "/agace/anexo-veintiocho/solicitud",
+        "linkDepartment": "/agace/anexo-veintiocho/solicitud",
         "department": "agace"
     },
     {
@@ -1689,8 +1689,8 @@
     {
         "id": 242,
         "tramite": 261701,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "/cofepris/cancelacion-peticion/pantallas",
+        "linkDepartment": "/pago/cancelacion-peticion/pantallas",
         "department": "cofepris"
     },
     {
