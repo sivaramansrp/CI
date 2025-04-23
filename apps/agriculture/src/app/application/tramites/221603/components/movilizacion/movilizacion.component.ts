@@ -1,6 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Solicitud221603State, Tramite221603Store } from '../../estados/tramite221603.store';
+import {
+  Solicitud221603State,
+  Tramite221603Store,
+} from '../../estados/tramite221603.store';
 import { Subject, takeUntil } from 'rxjs';
 import { FormularioDatos } from '../../enum/sanidad.enum';
 import { SanidadService } from '../../service/sanidad.service';
@@ -17,7 +20,7 @@ import { Tramite221603Query } from '../../estados/tramite221603.query';
 @Component({
   selector: 'app-movilizacion',
   templateUrl: './movilizacion.component.html',
-  styleUrls: ['./movilizacion.component.scss']
+  styleUrls: ['./movilizacion.component.scss'],
 })
 /**
  * Componente que representa la sección de movilización.
@@ -54,7 +57,7 @@ export class MovilizacionComponent implements OnInit, OnDestroy {
     private tramite221603Store: Tramite221603Store,
     private Tramite221603Query: Tramite221603Query,
     public sanidadService: SanidadService
-  ) { 
+  ) {
     // Constructor que inyecta las dependencias necesarias
   }
   /**
@@ -69,12 +72,13 @@ export class MovilizacionComponent implements OnInit, OnDestroy {
       });
     this.sanidadService.inicializaMovilizacionDatosCatalogos();
     this.inicializarFormulario();
-    
-    this.sanidadService.obtenerFormularioDatos()
+
+    this.sanidadService
+      .obtenerFormularioDatos()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((formularioDatos: FormularioDatos) => {
         this.formularioDatos = formularioDatos;
-        this.inicializarFormulario();
+        this.rellenarValoresPredeterminados();
       });
   }
   /**
@@ -84,13 +88,34 @@ export class MovilizacionComponent implements OnInit, OnDestroy {
    */
   private inicializarFormulario(): void {
     this.medioForm = this.formBuilder.group({
-      medio: [this.solicitudState?.medio ? this.solicitudState?.medio : 1, Validators.required],
+      medio: [
+        this.solicitudState?.medio ? this.solicitudState?.medio : 1,
+        Validators.required,
+      ],
       transporte: [this.solicitudState?.transporte, Validators.required],
-      verificacion: [this.solicitudState?.verificacion ? this.solicitudState?.verificacion : 14, Validators.required],
-      empresa: [this.solicitudState?.empresa, Validators.required]
+      verificacion: [
+        this.solicitudState?.verificacion
+          ? this.solicitudState?.verificacion
+          : 14,
+        Validators.required,
+      ],
+      empresa: [this.solicitudState?.empresa, Validators.required],
     });
-    this.medioForm.get('empresa')?.setValue(this.formularioDatos?.empresa);
-    this.medioForm.get('transporte')?.setValue(this.formularioDatos?.transporte);
+  }
+
+  /**
+   * Rellena los valores predeterminados en el formulario reactivo.
+   * Asigna valores por defecto a los campos del formulario si no están definidos en el estado actual.
+   */
+  rellenarValoresPredeterminados(): void {
+    if (!this.solicitudState?.transporte) {
+      this.medioForm
+        .get('transporte')
+        ?.setValue(this.formularioDatos?.transporte);
+    }
+    if (!this.solicitudState?.empresa) {
+      this.medioForm.get('empresa')?.setValue(this.formularioDatos?.empresa);
+    }
   }
   /**
    * Actualiza el estado del store con los valores del formulario.
