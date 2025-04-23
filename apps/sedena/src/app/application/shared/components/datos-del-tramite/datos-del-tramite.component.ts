@@ -2,6 +2,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import {
   CROSLISTA_ADUANAS_DISPONIBLES,
   DATOS_DEL_TRAMITE_MAP,
+  DESACTIVADO_PERMISO_GENERAL,
   FETCHA_PAGO,
   MANIFIESTOS_DECLARACIONES,
   OCULTAR_PERMISO_GENERAL,
@@ -69,7 +70,7 @@ import { CommonModule } from '@angular/common';
     InputFechaComponent,
   ],
   templateUrl: './datos-del-tramite.component.html',
-  styleUrl: './datos-del-tramite.component.css',
+  styleUrl: './datos-del-tramite.component.scss',
 })
 export class DatosDelTramiteComponent implements OnInit, OnDestroy {
   /**
@@ -156,6 +157,15 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    */
 
   public ocultarPermisoGeneral = false;
+
+  /**
+   * Indica si el permiso general está desactivado.
+   *
+   * @type {boolean}
+   * - `true`: El permiso general está desactivado.
+   * - `false`: El permiso general está activo.
+   */
+    public esDessactivadoPermisoGeneral = false;
 
   /**
    * @property {Subject<void>} unsubscribe$
@@ -360,6 +370,9 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
     this.ocultarPermisoGeneral = OCULTAR_PERMISO_GENERAL.includes(
       this.idProcedimiento
     );
+    this.esDessactivadoPermisoGeneral = DESACTIVADO_PERMISO_GENERAL.includes(
+      this.idProcedimiento
+    );
     this.crearFormaulario();
     this.manifiestosTexto = MANIFIESTOS_DECLARACION.MANIFIESTOS;
     this.form.patchValue({
@@ -381,6 +394,11 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
       });
     }
 
+    if (this.esDessactivadoPermisoGeneral) {
+      this.form.get('permisoGeneral')?.setValue('5432');
+      this.form.get('permisoGeneral')?.disable();
+    }
+ 
     this.seleccionarAduanasDisponiblesDatos =
       this.datosDelTramiteFormState.aduanasSeleccionadas;
 

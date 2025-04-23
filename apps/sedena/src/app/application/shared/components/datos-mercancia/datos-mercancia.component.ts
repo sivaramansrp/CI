@@ -38,7 +38,7 @@ import { takeUntil } from 'rxjs';
     CrosslistComponent,
   ],
   templateUrl: './datos-mercancia.component.html',
-  styleUrl: './datos-mercancia.component.css',
+  styleUrl: './datos-mercancia.component.scss',
 })
 export class DatosMercanciaComponent implements OnInit {
   /**
@@ -67,6 +67,12 @@ export class DatosMercanciaComponent implements OnInit {
  * @decorador @Input
  */
   @Input() public idProcedimiento!: number;
+
+  /**
+   * Indica si se puede mostrar la lista cruzada.
+   * Esta propiedad controla la visibilidad de la lista cruzada
+   * en el componente de datos de mercancía.
+   */
   public puedeMostrarLaListaCruzada = false;
 
   /**

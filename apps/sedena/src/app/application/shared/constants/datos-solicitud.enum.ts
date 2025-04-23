@@ -96,11 +96,17 @@ export const TERCEROS_NACIONALIDAD_OPCIONES = [
  * - `TRAMITE_240108`: Código para el trámite 240108.
  * - `TRAMITE_240114`: Código para el trámite 240114.
  * - `TRAMITE_240308`: Código para el trámite 240308.
+ * - `TRAMITE_240117`: Código para el trámite 240117.
+ * - `TRAMITE_240121`: Código para el trámite 240121.
+ * - `TRAMITE_240405`: Código para el trámite 240405.
  */
 export const NUMERO_TRAMITE = {
   TRAMITE_240108: 240108,
   TRAMITE_240114: 240114,
-  TRAMITE_240308: 240308
+  TRAMITE_240308: 240308,
+  TRAMITE_240117: 240117,
+  TRAMITE_240121: 240121,
+  TRAMITE_240405: 240405
 }
 
 /**
@@ -122,6 +128,20 @@ export const TERCEROS_NACIONALIDAD_OPCIONES_EXTRANJERO = [
   },
 ];
 
+/*
+**
+ * Opciones disponibles para el tipo de persona no contribuyente.
+ * 
+ * Contiene una opción:
+ * - 'NoContribyunte': Representa a un no contribuyente.
+ * 
+ * Cada opción incluye una etiqueta (`label`) y un valor (`value`).
+ */
+export const TIPO_PERSONA_OPCIONES_NO_CONTRIBUYENTE = [
+  { label: 'NoContribyunte', value: 'NoContribyunte' },
+];
+
+
 /**
  * Constante que define los campos obligatorios para el destinatario.
  * 
@@ -131,6 +151,17 @@ export const TERCEROS_NACIONALIDAD_OPCIONES_EXTRANJERO = [
  * los campos que son obligatorios para el destinatario en el contexto de la solicitud.
  */
 export const CAMPO_OBLIGATORIO_DESTINATARIO = [240111];
+
+/**
+ * @const CAMPO_OBLIGATORIO_DESTINATARIO_PROVEEDOR
+ * @description Representa un arreglo que contiene los identificadores de los campos obligatorios
+ *              relacionados con el destinatario proveedor.
+ * @type {number[]}
+ */
+export const CAMPO_OBLIGATORIO_DESTINATARIO_PROVEEDOR = [240117];
+
+
+
 
 /**
  * Constante que representa los campos obligatorios para el proveedor.
@@ -151,3 +182,16 @@ export const CAMPO_OBLIGATORIO_PROVEEDOR = [240111];
  * los campos que son requeridos para los derechos en el sistema.
  */
 export const CAMPO_OBLIGATORIO_DERECHOS = [240111];
+
+
+/**
+ * Constante que define los valores de bandera para el campo "Colonia".
+ * 
+ * Estos valores se utilizan para identificar y manejar condiciones específicas
+ * relacionadas con el campo "Colonia" en la solicitud.
+ * 
+ * @const
+ * @type {number[]}
+ */
+export const COLONIA_FIELD_FLAG = [240117, 240114];
+
