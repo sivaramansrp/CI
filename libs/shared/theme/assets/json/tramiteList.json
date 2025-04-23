@@ -1619,8 +1619,8 @@
     {
         "id": 232,
         "tramite": 260908,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "/cofepris/modificacion-permiso-meds-uso/solicitante",
+        "linkDepartment": "/pago/modificacion-permiso-meds-uso/solicitante",
         "department": "cofepris"
     },
     {
