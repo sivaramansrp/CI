@@ -97,6 +97,21 @@ export class PaisDeOrigenComponent implements OnChanges {
    * @tipo {string[]}
    */
   @Input() selectRangoDias: string[] = [];
+
+  /**
+ * @property
+ * @name titulo
+ * @description
+ * Título que se muestra en el componente. Este valor puede ser configurado desde el componente padre
+ * para personalizar el encabezado o título del componente.
+ * 
+ * @type {string}
+ * @default ''
+ * 
+ * @example
+ * <app-pais-de-origen [titulo]="'Selecciona un país de origen'"></app-pais-de-origen>
+ */
+  @Input() titulo: string = '';
  
   /**
    * @evento

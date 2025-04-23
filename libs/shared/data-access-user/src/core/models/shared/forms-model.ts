@@ -46,6 +46,8 @@ export interface ModeloDeFormaDinamica {
   marginTop?: number; // margin-top
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   layout?: any; // layout for radio options
+  mostrar?: boolean; // show or hide the field
+  habilitado?: boolean; // enable or disable the field
 }
 
 export interface Validadores {

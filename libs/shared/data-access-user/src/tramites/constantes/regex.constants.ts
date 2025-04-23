@@ -412,3 +412,17 @@ export const REGEX_TEXTO_PREFIJO = /^[\d\s-]+/;
  * - "Juan@Pérez" (contiene un carácter no permitido)
  */
 export const REGEX_NOMBRE = /^(?! )[A-Za-zÑñÄËÏÖÜäëïöüÇç0-9&/\-().'αβ]+(?: [A-Za-zÑñÄËÏÖÜäëïöüÇç0-9&/\-().'αβ]+)*(?<! )$/;
+/**
+ * Expresión regular para validar archivos con formato Excel.
+ * 
+ * Esta expresión regular permite validar que un archivo tenga una extensión válida de Excel:
+ * - `.xls`: Formato de archivo Excel 97-2003.
+ * - `.xlsx`: Formato de archivo Excel 2007 o posterior.
+ * 
+ * Desglose de la expresión regular:
+ * - `\.`: Coincide con el punto literal antes de la extensión del archivo.
+ * - `(xls|xlsx)`: Coincide con las extensiones `xls` o `xlsx`.
+ * - `$`: Aserción para el final de la cadena.
+ * - `i`: Bandera que hace que la validación sea insensible a mayúsculas y minúsculas.
+ */
+export const VALID_FILE_REGEX = /\.(xls|xlsx)$/i;

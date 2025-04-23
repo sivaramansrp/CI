@@ -35,6 +35,13 @@ const ROUTES: Routes = [
       )
   },
   {
+    path: 'exportacion-hidrocarburos',
+    loadChildren: () =>
+      import('./tramites/130204/exportacion-hidrocarburos.module').then(
+        (m) => m.ExportacionHidrocarburosModule
+      ),
+  },
+  {
     path: 'autorizacion-de-rayos-x',
     loadChildren: () =>
       import('./tramites/300105/autorizacion-de-rayos-x.module').then(

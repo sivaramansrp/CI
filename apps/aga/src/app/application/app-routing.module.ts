@@ -244,6 +244,12 @@ const ROUTES: Routes = [
       loadChildren: () =>
         import('./tramites/40401/tramite40401.module').then(
           (m) => m.Tramite40401Module),
+  },
+  {
+    path: 'codigo-transportista',
+    loadChildren: () => 
+      import('./tramites/40402/codigo-transportista.module').then(
+        (m) => m.CodigoTransportistaModule)
   }
 ];
 

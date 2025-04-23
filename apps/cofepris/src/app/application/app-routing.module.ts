@@ -411,7 +411,19 @@ const ROUTES: Routes = [
             (m) => m.ImportarSuministrosMedicosModule
           )
   },
+  {
+    path: 'correccion-interna-de-la-cofepris',
+    loadChildren: () =>
+      import('./tramites/261601/correccion-interna-de-la-cofepris.module').then(
+        (m) => m.CorreccionInternaDeLaCofeprisModule)
+  },
 
+  {
+    path: 'cancelacion-peticion',
+    loadChildren: () =>
+      import('./tramites/261701/cancelacion-peticion.module').then(
+        (m) => m.CancelacionPeticionModule)
+  },
 ];
 
 @NgModule({
