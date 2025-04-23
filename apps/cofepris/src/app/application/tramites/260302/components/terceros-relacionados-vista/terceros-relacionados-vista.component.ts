@@ -39,7 +39,7 @@ import { Tramite260302Query } from '../../estados/tramite260302Query.query';
     TituloComponent,
   ],
   templateUrl: './terceros-relacionados-vista.component.html',
-  styleUrl: './terceros-relacionados-vista.component.css',
+  styleUrl: './terceros-relacionados-vista.component.scss',
 })
 export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
   /**
