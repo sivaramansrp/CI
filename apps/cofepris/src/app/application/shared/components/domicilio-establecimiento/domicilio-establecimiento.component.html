@@ -215,6 +215,21 @@
       </button>
     </div>
   </div>
+<div class="row" *ngIf="isGarantiasOfrecidasVisible">
+  <div class="form-group">
+    <label for="garantiasOfrecidas" class="form-label text-start">
+      Garantías ofrecidas:
+    </label>
+    <textarea
+      id="garantiasOfrecidas"
+      class="form-control"
+      style="height: 200px; width:500px;"
+      formControlName="garantiasOfrecidas"
+      (change)="
+        setValoresStore(formMercancias,'garantiasOfrecidas','setGarantiasOfrecidas')"
+    ></textarea>
+  </div>
+</div>
 </form>
 
 <div
