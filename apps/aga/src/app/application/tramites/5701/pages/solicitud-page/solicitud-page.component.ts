@@ -133,11 +133,12 @@ export class SolicitudPageComponent implements OnInit {
     this.activarBotonCargaArchivos = carga;
   }
 
-  anteriorSeccionCargarDocumento() : void {
+  anteriorSeccionCargarDocumento(): void {
     this.regresarSeccionCargarDocumentoEvento.emit();
+  }
 
-    console.log('Mostrar seccion cargar documento');
-    
+  cargaRealizada(cargaRealizada: boolean): void {
+    this.seccionCargarDocumentos = cargaRealizada ? false : true;
   }
 
 }

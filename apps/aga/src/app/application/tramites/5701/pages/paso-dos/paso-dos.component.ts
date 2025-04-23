@@ -23,6 +23,7 @@ export class PasoDosComponent implements OnInit {
   @Output() reenviarEvento = new EventEmitter<void>();
   @Output() reenviarRegresarSeccion = new EventEmitter<void>();
   @Output() reenviarEventoCarga = new EventEmitter<boolean>();
+  @Output() reenviarCargaRealizada = new EventEmitter<boolean>();
 
   private destroyRef = inject(DestroyRef)
 
@@ -84,6 +85,7 @@ export class PasoDosComponent implements OnInit {
 
   documentosCargados(cargaRealizada: boolean): void {
     this.cargaRealizada = cargaRealizada;
+    this.reenviarCargaRealizada.emit(this.cargaRealizada);
   }
 
   manejarEventoCargaDocumento(existenDocumentosParaCargar: boolean): void {

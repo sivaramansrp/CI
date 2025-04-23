@@ -419,7 +419,7 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
     for (const ARCHIVO of archivosCargando) {
       const DATA = await this.uploadFiles(ARCHIVO.archivo);
       ARCHIVO.mensaje = DATA.mensaje;
-      ARCHIVO.cargado = true;
+      ARCHIVO.cargado = false;
       ARCHIVO.estatus = 'cargado';
     }
   }
@@ -488,8 +488,14 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   mostrarSeccionCargaArchivosAccion(): void {
-    this.mostrarSeccionCargaArchivos = true
-    console.log(this.mostrarSeccionCargaArchivos);
+    this.mostrarSeccionCargaArchivos = true;
+    const ARCHIVOS_PARA_CARGAR = this.listadoArchivos.some(item => item.cargado === true);
+    console.log(this.listadoArchivos);
+    
+
+    console.log(ARCHIVOS_PARA_CARGAR);
+    
+    this.activarBotonCargaArchivos.emit(ARCHIVOS_PARA_CARGAR);
 
   }
 }
