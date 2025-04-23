@@ -4,39 +4,30 @@
  * @module PagoDeDerechosComponent
  */
 
-import {
-  AbstractControl,
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  ValidatorFn,
-  Validators,
-} from '@angular/forms';
-import {
-  AlertComponent,
-  Catalogo,
-  CatalogoSelectComponent,
-  InputCheckComponent,
-  TituloComponent,
-} from '@libs/shared/data-access-user/src';
+import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
+import { AlertComponent, Catalogo, CatalogoSelectComponent, InputCheckComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
-import {
-  Tramite30401Store,
-  Tramites30401State,
-} from '../../estados/tramites30401.store';
+import { Tramite30401Store, Tramites30401State } from '../../estados/tramites30401.store';
 import { CommonModule } from '@angular/common';
 import { NOTA } from '../../enums/registro-empresas-transporte.enum';
 import { RegistroEmpresasTransporteService } from '../../services/registro-empresas-transporte.service';
 import { Tramite30401Query } from '../../estados/tramites30401.query';
 
 /**
- * Selector del componente
- * Habilita el uso independiente de este componente
- * Módulos necesarios
- * Proveedores de servicios para inyección de dependencias
- * Ruta del archivo HTML
- * Ruta del archivo CSS
+ * Componente PagoDeDerechosComponent para la gestión del proceso de pago de derechos.
+ * 
+ * Este componente independiente (`standalone`) permite capturar, validar y gestionar información
+ * relacionada con el pago de derechos. Integra múltiples componentes reutilizables y utiliza servicios
+ * para gestionar la lógica del negocio.
+ * 
+ * @component
+ * @selector app-pago-de-derechos
+ * @standalone true
+ * @imports CommonModule, ReactiveFormsModule, TituloComponent, CatalogoSelectComponent, AlertComponent, InputCheckComponent
+ * @providers RegistroEmpresasTransporteService
+ * @templateUrl ./pago-de-derechos.component.html
+ * @styleUrl ./pago-de-derechos.component.scss
  */
 @Component({
   selector: 'app-pago-de-derechos',

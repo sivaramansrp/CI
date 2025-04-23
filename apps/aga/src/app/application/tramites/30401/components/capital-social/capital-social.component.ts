@@ -39,7 +39,7 @@ export class CapitalSocialComponent implements OnInit {
    */
   constructor(
     public grupoDeFormaRaiz: FormGroupDirective,
-    private tramite30401Store: Tramite30401Store,
+    private tramite30401Store: Tramite30401Store
   ) {
     // No se necesita lógica de inicialización adicional.
   }
@@ -49,7 +49,9 @@ export class CapitalSocialComponent implements OnInit {
    * Inicializa el formulario utilizando el grupo de formulario proporcionado.
    */
   ngOnInit(): void {
-    this.inicializarFormulario = this.grupoDeFormaRaiz.control.get(this.grupoDeFormulario) as FormGroup;
+    this.inicializarFormulario = this.grupoDeFormaRaiz.control.get(
+      this.grupoDeFormulario
+    ) as FormGroup;
   }
 
   /**

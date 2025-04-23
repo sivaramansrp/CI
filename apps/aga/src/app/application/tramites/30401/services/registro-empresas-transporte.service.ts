@@ -77,4 +77,43 @@ coloniaList(): Observable<Catalogo[]> {
     return this.http.get<{id?:number; value: string}>('assets/json/30401/numero-caat.json');
   }
 
+  /**
+   * Obtiene la lista de Entidades Federativas.
+   * 
+   * @returns {Observable<any>} Un observable que contiene los datos de las entidades federativas.
+   */
+  getEntidadesFederativas(): Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>(`assets/json/30401/entidad-federativa-list.json`);
+  }
+
+ /**
+   * Obtiene la lista de Municipios/Alcaldías.
+   * 
+   * @returns {Observable<any>} Un observable que contiene los datos de los municipios o alcaldías.
+   */
+  getMunicipiosAlcaldias(): Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>(`assets/json/30401/municipio-delegacion-list.json`);
+  }
+
+  /**
+   * Obtiene la lista de colonias.
+   * 
+   * @returns {Observable<any>} Un observable que contiene los datos de las colonias.
+   */
+  getColonias(): Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>(`assets/json/30401/colonia-list.json`);
+  }
+
+  /**
+ * Obtiene la lista de aduanas desde un archivo JSON local.
+ * 
+ * @returns {Observable<Catalogo[]>} Un observable que contiene un array con los datos de las aduanas.
+ * 
+ * El archivo JSON está ubicado en `assets/json/30401/aduanas`.
+ */
+  getAduanas(): Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>(`assets/json/30401/tipode-transito-list.json`);
+  }
+  
+
 }

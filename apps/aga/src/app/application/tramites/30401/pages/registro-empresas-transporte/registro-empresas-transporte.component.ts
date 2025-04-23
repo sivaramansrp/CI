@@ -43,8 +43,20 @@ export class RegistroEmpresasTransporteComponent {
    */
   indice: number = 1;
 
+  /**
+ * Referencia al componente `WizardComponent` dentro de la plantilla.
+ * 
+ * @viewChild wizardComponent - Utiliza el decorador `@ViewChild` para acceder al componente `WizardComponent`.
+ * Permite interactuar con sus propiedades y métodos en el código del componente principal.
+ */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
 
+  /**
+ * Constante que almacena el valor de la nota de privacidad.
+ * 
+ * @constant AVISO_PRIVACIDAD_ADJUNTAR - Almacena el valor definido en `NOTA.AVISO_PRIVACIDAD_ADJUNTAR`.
+ * Se utiliza para adjuntar o gestionar el aviso de privacidad dentro del sistema.
+ */
   AVISO_PRIVACIDAD_ADJUNTAR = NOTA.AVISO_PRIVACIDAD_ADJUNTAR;
 
   /**

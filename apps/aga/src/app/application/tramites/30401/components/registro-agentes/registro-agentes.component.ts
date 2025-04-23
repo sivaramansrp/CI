@@ -1,38 +1,30 @@
-import {
-  CategoriaMensaje,
-  Notificacion,
-  NotificacionesComponent,
-  TablaDinamicaComponent,
-  TablaSeleccion,
-  TipoNotificacionEnum,
-  TituloComponent,
-} from '@libs/shared/data-access-user/src';
+import { AGENTES_TABLA_DATOS, NOTA } from '../../enums/registro-empresas-transporte.enum';
+import { CategoriaMensaje, Notificacion, NotificacionesComponent, TablaDinamicaComponent, TablaSeleccion, TipoNotificacionEnum, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { NOTA, VEHICULOS_TABLA_DATOS } from '../../enums/registro-empresas-transporte.enum';
 import { Subject, takeUntil } from 'rxjs';
 import { Tramite30401Store, Tramites30401State } from '../../estados/tramites30401.store';
+import { AgentesTabla } from '../../modelos/registro-empresas-transporte.model';
 import { CommonModule } from '@angular/common';
 import { Modal } from 'bootstrap';
 import { Tramite30401Query } from '../../estados/tramites30401.query';
-import { VehiculosTabla } from '../../modelos/registro-empresas-transporte.model';
 
 /**
- * Componente VehiculosComponent para la gestión de vehículos dentro del sistema.
+ * Componente RegistroAgentesComponent para la gestión del registro de agentes en el sistema.
  * 
- * Este componente independiente (`standalone`) se encarga de la interacción con la tabla dinámica,
- * el manejo de formularios reactivos, y la visualización de notificaciones. Proporciona una interfaz
- * intuitiva para la gestión de vehículos registrados.
+ * Este componente independiente (`standalone`) se encarga de capturar y validar la información
+ * de agentes, así como interactuar con la tabla dinámica y manejar notificaciones.
+ * Proporciona una interfaz clara e intuitiva para registrar agentes de manera eficiente.
  * 
  * @component
- * @selector app-vehiculos
+ * @selector app-registro-agentes
  * @standalone true
  * @imports CommonModule, TablaDinamicaComponent, TituloComponent, ReactiveFormsModule, NotificacionesComponent
- * @templateUrl ./Vehiculos.component.html
- * @styleUrl ./Vehiculos.component.scss
+ * @templateUrl ./registro-agentes.component.html
+ * @styleUrl ./registro-agentes.component.css
  */
 @Component({
-  selector: 'app-vehiculos',
+  selector: 'app-registro-agentes',
   standalone: true,
   imports: [
     CommonModule,
@@ -41,10 +33,10 @@ import { VehiculosTabla } from '../../modelos/registro-empresas-transporte.model
     ReactiveFormsModule,
     NotificacionesComponent,
   ],
-  templateUrl: './Vehiculos.component.html',
-  styleUrl: './Vehiculos.component.scss',
+  templateUrl: './registro-agentes.component.html',
+  styleUrl: './registro-agentes.component.css',
 })
-export class VehiculosComponent implements OnInit {
+export class RegistroAgentesComponent implements OnInit {
   /**
    * Define si el diálogo exitoso está habilitado.
    *
@@ -55,9 +47,9 @@ export class VehiculosComponent implements OnInit {
   esHabilitarElDialogo: boolean = false;
 
   /**
-   * Formulario reactivo para el registro de vehículos.
-   */
-  registroVehiculosForm!: FormGroup;
+ * Formulario reactivo para la gestión de agentes aduanales.
+ */
+  formularioAgentesAduanales!: FormGroup;
 
   /**
    * Formulario para gestionar los archivos adjuntos.
@@ -81,7 +73,7 @@ export class VehiculosComponent implements OnInit {
   /**
    * Lista de vehículos registrados.
    */
-  vehiculosInfoList: VehiculosTabla[] = [] as VehiculosTabla[];
+  agentesInfoList: AgentesTabla[] = [] as AgentesTabla[];
 
   /**
    * Nombre de la pestaña activa.
@@ -89,9 +81,9 @@ export class VehiculosComponent implements OnInit {
   activeTab: string = 'parquevehicular';
 
   /**
-   * Referencia al elemento modal para el registro de vehículos.
+   * Referencia al elemento modal para el registro de Agentes.
    */
-  @ViewChild('registroDeVehiculos') registroDeVehiculosElemento!: ElementRef;
+  @ViewChild('registroDeAgentes') registroDeAgentesElemento!: ElementRef;
 
   /**
    * Referencia al elemento modal de confirmación.
@@ -103,10 +95,10 @@ export class VehiculosComponent implements OnInit {
    */
   CONFIRMACION_VEHICULO = NOTA.CONFIRMACION_VEHICULO;
 
- /**
+  /**
    * Configuración para las columnas de la tabla de vehículos.
    */
-  ParqueVehicular = VEHICULOS_TABLA_DATOS;
+  ParqueAgentes = AGENTES_TABLA_DATOS;
 
   /**
    * Subject utilizado para rastrear la destrucción del componente.
@@ -132,12 +124,12 @@ export class VehiculosComponent implements OnInit {
   /**
    * Fila seleccionada en la tabla de mercancías.
    */
-  filaSeleccionadaVehiculos!: VehiculosTabla;
+  filaSeleccionadaAgentes!: AgentesTabla;
 
   /**
    * Lista de filas seleccionadas en la tabla de mercancías.
    */
-  listaFilaSeleccionadaVehiculos: VehiculosTabla[] = [] as VehiculosTabla[];
+  listaFilaSeleccionadaAgentes: AgentesTabla[] = [] as AgentesTabla[];
 
   /**
    * Indica si el botón de eliminar está habilitado.
@@ -157,7 +149,7 @@ export class VehiculosComponent implements OnInit {
   /**
    * Indica si se debe mostrar el modal de datos de mercancía.
    */
-  mostrarModalDatosVehiculos: boolean = false;
+  mostrarModalDatosAgentes: boolean = false;
 
   /**
    * Indica si el popup está cerrado.
@@ -171,11 +163,12 @@ export class VehiculosComponent implements OnInit {
   public seccionState!: Tramites30401State;
 
   /**
-   * Constructor para VehiculosComponent.
-   * Inicializa el formulario e inyecta los servicios necesarios.
-   * @param fb - FormBuilder para crear formularios reactivos.
-   * @param tramite30401Store - Store para gestionar el estado relacionado con el Trámite 30401.
-   */
+ * Constructor del componente encargado de inicializar dependencias y configurar el formulario.
+ * 
+ * @param fb - Instancia de `FormBuilder` para construir formularios reactivos.
+ * @param tramite30401Store - Servicio de estado para manejar los datos relacionados con el Trámite 30401.
+ * @param tramite30401Query - Servicio para realizar consultas relacionadas con el estado del Trámite 30401.
+ */
   constructor(
     public fb: FormBuilder,
     private tramite30401Store: Tramite30401Store,
@@ -189,7 +182,7 @@ export class VehiculosComponent implements OnInit {
    * Método del ciclo de vida que se ejecuta cuando el componente se inicializa.
    * - Se suscribe a `selectTramite30401$` para obtener datos del estado.
    * - Actualiza `seccionState` con la información más reciente del estado.
-   * - Asigna `VehiculosTablaDatos` a `vehiculosInfoList`.
+   * - Asigna `AgentesTablaDatos` a `agentesInfoList`.
    *
    * La suscripción está gestionada con `takeUntil(this.destroyed$)`
    * para garantizar la limpieza cuando el componente se destruye.
@@ -201,18 +194,19 @@ export class VehiculosComponent implements OnInit {
         this.seccionState = datos;
       });
 
-    this.vehiculosInfoList = this.seccionState.vehiculosTablaDatos;
+    this.agentesInfoList = this.seccionState.agentesTablaDatos;
   }
 
   /**
    * Crea el formulario reactivo para el registro de vehículos.
    */
   crearFormulario(): void {
-    this.registroVehiculosForm = this.fb.group({
+    this.formularioAgentesAduanales = this.fb.group({
       id: [null],
-      marca: ['', [Validators.required]],
-      modelo: ['', [Validators.required]],
-      vin: ['', [Validators.required]],
+      nombreAgente: ['', Validators.required],
+      primerApellido: ['', Validators.required],
+      segundoApellido: ['', Validators.required],
+      patente: ['', Validators.required],
     });
   }
 
@@ -243,9 +237,9 @@ export class VehiculosComponent implements OnInit {
    * Abre el cuadro de diálogo modal para el registro de vehículos.
    */
   agregarDialogoDatos(): void {
-    if (this.registroDeVehiculosElemento) {
+    if (this.registroDeAgentesElemento) {
       const MODAL_INSTANCIA = new Modal(
-        this.registroDeVehiculosElemento?.nativeElement
+        this.registroDeAgentesElemento?.nativeElement
       );
       MODAL_INSTANCIA.show();
     }
@@ -256,7 +250,7 @@ export class VehiculosComponent implements OnInit {
    * Si el formulario es inválido, marca todos los campos como tocados.
    */
   enviarDialogData(): void {
-    if (this.registroVehiculosForm.valid) {
+    if (this.formularioAgentesAduanales.valid) {
       this.nuevaNotificacion = {
         tipoNotificacion: TipoNotificacionEnum.ALERTA,
         categoria: CategoriaMensaje.ALERTA,
@@ -269,11 +263,11 @@ export class VehiculosComponent implements OnInit {
       };
 
       this.esHabilitarElDialogo = true;
-      this.vehiculosInfoDatos();
+      this.agentesInfoDatos();
       this.limpiarFormulario();
       this.cambiarEstadoModal();
     } else {
-      this.registroVehiculosForm.markAllAsTouched();
+      this.formularioAgentesAduanales.markAllAsTouched();
     }
   }
 
@@ -290,7 +284,7 @@ export class VehiculosComponent implements OnInit {
    * Restablece el formulario de registro de vehículos a su estado inicial.
    */
   limpiarFormulario(): void {
-    this.registroVehiculosForm.reset();
+    this.formularioAgentesAduanales.reset();
   }
 
   /**
@@ -299,7 +293,7 @@ export class VehiculosComponent implements OnInit {
    */
   cambiarEstadoModal(): void {
     const MODAL_INSTANCIA = Modal.getInstance(
-      this.registroDeVehiculosElemento.nativeElement
+      this.registroDeAgentesElemento.nativeElement
     );
     if (MODAL_INSTANCIA) {
       MODAL_INSTANCIA.hide();
@@ -308,36 +302,49 @@ export class VehiculosComponent implements OnInit {
 
   /**
    * Agrega los datos actuales del formulario a la lista de vehículos registrados.
-   * Los datos del formulario se añaden al array `vehiculosInfoList`.
+   * Los datos del formulario se añaden al array `agentesInfoList`.
    */
-  vehiculosInfoDatos(): void {
+  agentesInfoDatos(): void {
     const {
-      marca: MARCA,
-      modelo: MODELO,
-      vin: VIN,
-    } = this.registroVehiculosForm.value;
+      nombreAgente: NOMBRES,
+      primerApellido: PRIMERAPELLIDO,
+      segundoApellido: SEGUNDOAPELLIDO,
+      patente: NUMEROPATENTE,
+    } = this.formularioAgentesAduanales.value;
 
     if (
-      !this.filaSeleccionadaVehiculos ||
-      Object.keys(this.filaSeleccionadaVehiculos).length === 0
+      !this.filaSeleccionadaAgentes ||
+      Object.keys(this.filaSeleccionadaAgentes).length === 0
     ) {
-      const ID = this.vehiculosInfoList.length
-        ? this.vehiculosInfoList[this.vehiculosInfoList.length - 1]?.id + 1
+      const ID = this.agentesInfoList.length
+        ? this.agentesInfoList[this.agentesInfoList.length - 1]?.id + 1
         : 1;
 
-      const OBJETO = { id: ID, marca: MARCA, modelo: MODELO, vin: VIN };
+      const OBJETO = {
+        id: ID,
+        nombreAgente: NOMBRES,
+        primerApellido: PRIMERAPELLIDO,
+        segundoApellido: SEGUNDOAPELLIDO,
+        patente: NUMEROPATENTE,
+      };
 
-      this.vehiculosInfoList = [...this.vehiculosInfoList, OBJETO];
-      this.tramite30401Store.setVehiculosTablaDatos([OBJETO]);
+      this.agentesInfoList = [...this.agentesInfoList, OBJETO];
+      this.tramite30401Store.setAgentesTablaDatos([OBJETO]);
     } else {
-      this.vehiculosInfoList = this.vehiculosInfoList.map((elemento) =>
-        elemento.id === this.filaSeleccionadaVehiculos.id
-          ? { ...elemento, marca: MARCA, modelo: MODELO, vin: VIN }
+      this.agentesInfoList = this.agentesInfoList.map((elemento) =>
+        elemento.id === this.filaSeleccionadaAgentes.id
+          ? {
+              ...elemento,
+              nombreAgente: NOMBRES,
+              primerApellido: PRIMERAPELLIDO,
+              segundoApellido: SEGUNDOAPELLIDO,
+              patente: NUMEROPATENTE,
+            }
           : elemento
       );
 
-      this.tramite30401Store.setVehiculosTablaDatos(this.vehiculosInfoList);
-      this.filaSeleccionadaVehiculos = {} as VehiculosTabla;
+      this.tramite30401Store.setAgentesTablaDatos(this.agentesInfoList);
+      this.filaSeleccionadaAgentes = {} as AgentesTabla;
     }
   }
   /**
@@ -352,14 +359,14 @@ export class VehiculosComponent implements OnInit {
    * Maneja la fila seleccionada en la tabla de mercancías.
    * fila Fila seleccionada.
    */
-  manejarFilaSeleccionada(fila: VehiculosTabla[]): void {
+  manejarFilaSeleccionada(fila: AgentesTabla[]): void {
     if (fila.length === 0) {
       this.enableModficarBoton = false;
       this.enableEliminarBoton = false;
       return;
     }
-    this.listaFilaSeleccionadaVehiculos = fila;
-    this.filaSeleccionadaVehiculos = fila[fila.length - 1];
+    this.listaFilaSeleccionadaAgentes = fila;
+    this.filaSeleccionadaAgentes = fila[fila.length - 1];
     this.enableModficarBoton = true;
     this.enableEliminarBoton = true;
   }
@@ -368,12 +375,12 @@ export class VehiculosComponent implements OnInit {
    * Actualiza la fila seleccionada con los datos más recientes de la tabla.
    */
   actualizarFilaSeleccionada(): void {
-    const DATOS_ACTUALIZADOS = this.vehiculosInfoList.find(
-      (item) => item.id === this.filaSeleccionadaVehiculos.id
+    const DATOS_ACTUALIZADOS = this.agentesInfoList.find(
+      (item) => item.id === this.filaSeleccionadaAgentes.id
     );
 
     if (DATOS_ACTUALIZADOS) {
-      this.filaSeleccionadaVehiculos = { ...DATOS_ACTUALIZADOS };
+      this.filaSeleccionadaAgentes = { ...DATOS_ACTUALIZADOS };
     }
   }
 
@@ -381,17 +388,17 @@ export class VehiculosComponent implements OnInit {
    * Filtra y elimina los elementos seleccionados de la tabla de mercancías.
    * Actualiza el estado del almacén y cierra el popup de confirmación de eliminación.
    */
-  eliminarVehiculosItem(): void {
-    const IDS_TO_DELETE = this.listaFilaSeleccionadaVehiculos.map(
+  eliminarAgentesItem(): void {
+    const IDS_TO_DELETE = this.listaFilaSeleccionadaAgentes.map(
       (item) => item.id
     );
 
-    this.vehiculosInfoList = this.vehiculosInfoList.filter(
+    this.agentesInfoList = this.agentesInfoList.filter(
       (item) => !IDS_TO_DELETE.includes(item.id)
     );
 
-    this.listaFilaSeleccionadaVehiculos = [];
-    this.tramite30401Store.setVehiculosTablaDatos(this.vehiculosInfoList);
+    this.listaFilaSeleccionadaAgentes = [];
+    this.tramite30401Store.setAgentesTablaDatos(this.agentesInfoList);
     this.cerrarEliminarConfirmationPopup();
   }
 
@@ -408,10 +415,10 @@ export class VehiculosComponent implements OnInit {
    * Actualiza el formulario de mercancía con los datos de la fila seleccionada
    * y abre el modal para editar los datos.
    */
-  modificarItemVehiculos(): void {
+  modificarItemAgentes(): void {
     if (
-      this.listaFilaSeleccionadaVehiculos &&
-      this.listaFilaSeleccionadaVehiculos?.length === 1
+      this.listaFilaSeleccionadaAgentes &&
+      this.listaFilaSeleccionadaAgentes?.length === 1
     ) {
       this.actualizarFilaSeleccionada();
       this.agregarDialogoDatos();
@@ -427,11 +434,12 @@ export class VehiculosComponent implements OnInit {
    * Este método utiliza `patchValue` para actualizar los valores del formulario.
    */
   patchModifyiedData(): void {
-    this.registroVehiculosForm.patchValue({
-      id: this.filaSeleccionadaVehiculos?.id,
-      marca: this.filaSeleccionadaVehiculos?.marca,
-      modelo: this.filaSeleccionadaVehiculos?.modelo,
-      vin: this.filaSeleccionadaVehiculos?.vin,
+    this.formularioAgentesAduanales.patchValue({
+      id: this.filaSeleccionadaAgentes?.id,
+      nombreAgente: this.filaSeleccionadaAgentes?.nombreAgente,
+      primerApellido: this.filaSeleccionadaAgentes?.primerApellido,
+      segundoApellido: this.filaSeleccionadaAgentes?.segundoApellido,
+      patente: this.filaSeleccionadaAgentes?.patente,
     });
   }
 
@@ -461,8 +469,8 @@ export class VehiculosComponent implements OnInit {
    * Si no hay elementos seleccionados, no realiza ninguna acción.
    * Si hay elementos seleccionados, abre el popup de confirmación de eliminación.
    */
-  confirmEliminarVehiculosItem(): void {
-    if (this.listaFilaSeleccionadaVehiculos.length === 0) {
+  confirmEliminarAgentesItem(): void {
+    if (this.listaFilaSeleccionadaAgentes.length === 0) {
       return;
     }
     this.abrirElimninarConfirmationopup();
@@ -501,7 +509,7 @@ export class VehiculosComponent implements OnInit {
    * @returns Verdadero si el control es inválido, de lo contrario, falso.
    */
   public esInvalido(nombreControl: string): boolean {
-    const CONTROL = this.registroVehiculosForm.get(nombreControl);
+    const CONTROL = this.formularioAgentesAduanales.get(nombreControl);
     return CONTROL
       ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty)
       : false;

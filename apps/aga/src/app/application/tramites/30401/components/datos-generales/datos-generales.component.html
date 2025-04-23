@@ -2,7 +2,7 @@
     <div class="form-wrap">
     <ng-titulo [titulo]="titulo" />
     <div class="row mt-2">
-      <div class="col-lg-4 col-md-6">
+      <div class="col-lg-6 col-md-6">
         <div class="form-group">
           <label class="form-label text-left">Número CAAT:</label>
           <input
@@ -19,7 +19,7 @@
     </div>
 
     <div class="row">
-      <div class="col-lg-4 col-md-6">
+      <div class="col-lg-6 col-md-6">
         <div class="form-group" *ngIf="tipoTransitoList$ | async as tipoDeTransitoList">
             <app-catalogo-select
             [catalogo]="tipoDeTransitoList"

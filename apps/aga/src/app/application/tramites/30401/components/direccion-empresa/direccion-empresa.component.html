@@ -108,7 +108,7 @@
       >
         <app-catalogo-select
           [catalogo]="entidadFederativaList"
-          [label]="'Entidad federativa*:'"
+          [label]="'Entidad federativa'"
           [placeholder]="'Seleccione un valor'"
           [required]="true"
           id="entidadFederativa"
@@ -141,7 +141,7 @@
       >
         <app-catalogo-select
           [catalogo]="delegacionMunicipioList"
-          [label]="'Municipio o delegación*'"
+          [label]="'Municipio o delegación'"
           [placeholder]="'Seleccione un valor'"
           [required]="true"
           id="delegacionMunicipio"
@@ -171,7 +171,7 @@
       <div class="form-group" *ngIf="coloniaList$ | async as coloniaList">
         <app-catalogo-select
           [catalogo]="coloniaList"
-          [label]="'Colonia*:'"
+          [label]="'Colonia'"
           [placeholder]="'Seleccione un valor'"
           [required]="true"
           id="colonia"

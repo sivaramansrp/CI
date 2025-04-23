@@ -1,5 +1,5 @@
 import { Catalogo, CrosslistComponent, TituloComponent } from '@libs/shared/data-access-user/src';
-import { ChangeDetectorRef, Component, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
+import { Component, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Observable, Subject, map, takeUntil } from 'rxjs';
 import { CROSLISTA_ENTRADA } from '../../enums/croslista.enums';
@@ -7,7 +7,7 @@ import { CapitalSocialComponent } from '../capital-social/capital-social.compone
 import { CommonModule } from '@angular/common';
 import { DatosGeneralesComponent } from '../datos-generales/datos-generales.component';
 import { DireccionEmpresaComponent } from '../direccion-empresa/direccion-empresa.component';
-import {NOTA} from '../../enums/registro-empresas-transporte.enum';
+import { NOTA } from '../../enums/registro-empresas-transporte.enum';
 import { RegistroEmpresasTransporteService } from '../../services/registro-empresas-transporte.service';
 import { Tramite30401Query } from '../../estados/tramites30401.query';
 import { Tramites30401State } from '../../estados/tramites30401.store';
@@ -16,7 +16,7 @@ import { permisoComponent } from '../permiso-expedido/permiso-expedido.component
 /**
  * @packageDocumentation
  * @module EmpresasTransportistasComponent
- * 
+ *
  * Este componente es responsable de gestionar el formulario reactivo para las empresas transportistas.
  * Proporciona funcionalidades para la creación, validación y manejo de datos relacionados con las empresas transportistas.
  */
@@ -32,14 +32,21 @@ import { permisoComponent } from '../permiso-expedido/permiso-expedido.component
 @Component({
   selector: 'app-empresas-transportistas',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, TituloComponent, CrosslistComponent, DatosGeneralesComponent, DireccionEmpresaComponent, CapitalSocialComponent, permisoComponent],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    TituloComponent,
+    CrosslistComponent,
+    DatosGeneralesComponent,
+    DireccionEmpresaComponent,
+    CapitalSocialComponent,
+    permisoComponent,
+  ],
   providers: [RegistroEmpresasTransporteService],
   templateUrl: './empresas-transportistas.component.html',
   styleUrl: './empresas-transportistas.component.scss',
 })
 export class EmpresasTransportistasComponent implements OnInit, OnDestroy {
-
-  
   /**
    * @property {FormGroup} empresasForm
    * Formulario reactivo que contiene los controles y validaciones para los datos de las empresas transportistas.
@@ -157,13 +164,11 @@ export class EmpresasTransportistasComponent implements OnInit, OnDestroy {
    * @param {FormBuilder} fb - Servicio para construir formularios reactivos.
    * @param {Tramite30401Query} tramite30401Query - Servicio para consultar datos del estado.
    * @param {RegistroEmpresasTransporteService} Servicio - Servicio para obtener datos relacionados con empresas transportistas.
-   * @param {ChangeDetectorRef} cdr - Servicio para detectar cambios en el DOM.
    */
   constructor(
     public fb: FormBuilder,
     private tramite30401Query: Tramite30401Query,
     private Servicio: RegistroEmpresasTransporteService,
-    private cdr: ChangeDetectorRef,
   ) {}
 
   /**
@@ -198,26 +203,59 @@ export class EmpresasTransportistasComponent implements OnInit, OnDestroy {
         cveFolioCaat: [{ value: '', disabled: true }, Validators.required],
         tipoTransito: [this.seccionState?.tipoTransito, Validators.required],
       }),
-      cboAduanasActuarSeleccionadas: [this.seccionState.cboAduanasActuarSeleccionadas, Validators.required],
+      cboAduanasActuarSeleccionadas: [
+        this.seccionState.cboAduanasActuarSeleccionadas,
+        Validators.required,
+      ],
       domicilio: this.fb.group({
-        calle: [this.seccionState?.calle, [Validators.required, Validators.maxLength(100)]],
-        numeroExterior: [this.seccionState?.numeroExterior, [Validators.required, Validators.maxLength(55)]],
-        numeroInterior: [this.seccionState?.numeroInterior, [Validators.maxLength(55)]],
-        entidadFederativa: [this.seccionState?.entidadFederativa, Validators.required],
-        delegacionMunicipio: [this.seccionState?.delegacionMunicipio, Validators.required],
+        calle: [
+          this.seccionState?.calle,
+          [Validators.required, Validators.maxLength(100)],
+        ],
+        numeroExterior: [
+          this.seccionState?.numeroExterior,
+          [Validators.required, Validators.maxLength(55)],
+        ],
+        numeroInterior: [
+          this.seccionState?.numeroInterior,
+          [Validators.maxLength(55)],
+        ],
+        entidadFederativa: [
+          this.seccionState?.entidadFederativa,
+          Validators.required,
+        ],
+        delegacionMunicipio: [
+          this.seccionState?.delegacionMunicipio,
+          Validators.required,
+        ],
         colonia: [this.seccionState?.colonia, Validators.required],
         localidad: [this.seccionState?.localidad, Validators.required],
-        codigoPostal: [this.seccionState?.codigoPostal, [Validators.required, Validators.maxLength(6)]],
+        codigoPostal: [
+          this.seccionState?.codigoPostal,
+          [Validators.required, Validators.maxLength(6)],
+        ],
       }),
       empresasCapitalSocial: this.fb.group({
         capitalSocial: [this.seccionState?.capitalSocial, Validators.required],
       }),
       permiso: this.fb.group({
-        numeroFolioPermiso: [this.seccionState?.numeroFolioPermiso, [Validators.required, Validators.maxLength(20)]],
-        fechaExpedicion: [this.seccionState?.fechaExpedicion, Validators.required],
-        elCapitalSocial: [this.seccionState?.elCapitalSocial, Validators.requiredTrue],
-        miRepresentada: [this.seccionState?.miRepresentada, Validators.requiredTrue],
-      })
+        numeroFolioPermiso: [
+          this.seccionState?.numeroFolioPermiso,
+          [Validators.required, Validators.maxLength(20)],
+        ],
+        fechaExpedicion: [
+          this.seccionState?.fechaExpedicion,
+          Validators.required,
+        ],
+        elCapitalSocial: [
+          this.seccionState?.elCapitalSocial,
+          Validators.requiredTrue,
+        ],
+        miRepresentada: [
+          this.seccionState?.miRepresentada,
+          Validators.requiredTrue,
+        ],
+      }),
     });
   }
 
@@ -233,7 +271,6 @@ export class EmpresasTransportistasComponent implements OnInit, OnDestroy {
     this.cveFolioCaat$ = this.Servicio.cveFolioCaat().pipe(
       map((datos: { id?: number; value: string }) => datos.value)
     );
-    this.cdr.detectChanges();
   }
 
   /**
@@ -256,7 +293,9 @@ export class EmpresasTransportistasComponent implements OnInit, OnDestroy {
    */
   public esInvalido(nombreControl: string): boolean {
     const CONTROL = this.empresasForm.get(nombreControl);
-    return CONTROL ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty) : false;
+    return CONTROL
+      ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty)
+      : false;
   }
 
   /**
@@ -268,5 +307,4 @@ export class EmpresasTransportistasComponent implements OnInit, OnDestroy {
     this.destroyed$.next();
     this.destroyed$.complete();
   }
-  
 }

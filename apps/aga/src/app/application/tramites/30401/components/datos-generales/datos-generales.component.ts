@@ -6,12 +6,28 @@ import { Observable } from 'rxjs';
 import { Tramite30401Store } from '../../estados/tramites30401.store';
 
 /**
- * Componente para gestionar los datos generales de un trámite.
+ * Componente para la gestión de los datos generales en el sistema.
+ * 
+ * Este componente es independiente (`standalone`) y utiliza formularios reactivos
+ * para la captura y validación de información. También se apoya en componentes reutilizables
+ * como `TituloComponent` y `CatalogoSelectComponent`.
+ * 
+ * @component
+ * @selector app-datos-generales
+ * @standalone true
+ * @imports CommonModule, ReactiveFormsModule, TituloComponent, CatalogoSelectComponent
+ * @templateUrl ./datos-generales.component.html
+ * @styleUrl ./datos-generales.component.scss
  */
 @Component({
   selector: 'app-datos-generales',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, TituloComponent, CatalogoSelectComponent],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    TituloComponent,
+    CatalogoSelectComponent,
+  ],
   templateUrl: './datos-generales.component.html',
   styleUrl: './datos-generales.component.scss',
 })
@@ -48,7 +64,7 @@ export class DatosGeneralesComponent implements OnInit {
    */
   constructor(
     public grupoDeFormaRaiz: FormGroupDirective,
-    private tramite30401Store: Tramite30401Store,
+    private tramite30401Store: Tramite30401Store
   ) {
     // No se necesita lógica de inicialización adicional.
   }
@@ -58,7 +74,9 @@ export class DatosGeneralesComponent implements OnInit {
    * Configura el formulario inicializado con el grupo de formulario proporcionado.
    */
   ngOnInit(): void {
-    this.inicializarFormulario = this.grupoDeFormaRaiz.control.get(this.grupoDeFormulario) as FormGroup;
+    this.inicializarFormulario = this.grupoDeFormaRaiz.control.get(
+      this.grupoDeFormulario
+    ) as FormGroup;
   }
 
   /**

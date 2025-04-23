@@ -1,4 +1,6 @@
 import {
+  Catalogo,
+  CatalogoSelectComponent,
   CategoriaMensaje,
   Notificacion,
   NotificacionesComponent,
@@ -9,30 +11,31 @@ import {
 } from '@libs/shared/data-access-user/src';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { NOTA, VEHICULOS_TABLA_DATOS } from '../../enums/registro-empresas-transporte.enum';
-import { Subject, takeUntil } from 'rxjs';
+import { NOTA, OPCIONES_DE_BOTON_DE_RADIO, REGISTRO_VEHICULOS } from '../../enums/registro-empresas-transporte.enum';
+import { Subject, forkJoin, takeUntil } from 'rxjs';
 import { Tramite30401Store, Tramites30401State } from '../../estados/tramites30401.store';
 import { CommonModule } from '@angular/common';
 import { Modal } from 'bootstrap';
+import { RegistroEmpresasTransporteService } from '../../services/registro-empresas-transporte.service';
+import { RegistroVehiculos } from '../../modelos/registro-empresas-transporte.model';
 import { Tramite30401Query } from '../../estados/tramites30401.query';
-import { VehiculosTabla } from '../../modelos/registro-empresas-transporte.model';
 
 /**
- * Componente VehiculosComponent para la gestión de vehículos dentro del sistema.
+ * Componente RegistroVehiculosComponent para la gestión de vehículos dentro del sistema.
  * 
  * Este componente independiente (`standalone`) se encarga de la interacción con la tabla dinámica,
  * el manejo de formularios reactivos, y la visualización de notificaciones. Proporciona una interfaz
  * intuitiva para la gestión de vehículos registrados.
  * 
  * @component
- * @selector app-vehiculos
+ * @selector app-registro-vehiculos
  * @standalone true
- * @imports CommonModule, TablaDinamicaComponent, TituloComponent, ReactiveFormsModule, NotificacionesComponent
+ * @imports CommonModule, TablaDinamicaComponent, TituloComponent, ReactiveFormsModule, NotificacionesComponent, CatalogoSelectComponent
  * @templateUrl ./Vehiculos.component.html
- * @styleUrl ./Vehiculos.component.scss
+ * @styleUrl ./registro-vehiculos.css
  */
 @Component({
-  selector: 'app-vehiculos',
+  selector: 'app-registro-vehiculos',
   standalone: true,
   imports: [
     CommonModule,
@@ -40,11 +43,12 @@ import { VehiculosTabla } from '../../modelos/registro-empresas-transporte.model
     TituloComponent,
     ReactiveFormsModule,
     NotificacionesComponent,
+    CatalogoSelectComponent,
   ],
-  templateUrl: './Vehiculos.component.html',
-  styleUrl: './Vehiculos.component.scss',
+  templateUrl: './registro-vehiculos.component.html',
+  styleUrl: './registro-vehiculos.component.css',
 })
-export class VehiculosComponent implements OnInit {
+export class RegistroVehiculosComponent implements OnInit {
   /**
    * Define si el diálogo exitoso está habilitado.
    *
@@ -54,7 +58,7 @@ export class VehiculosComponent implements OnInit {
    */
   esHabilitarElDialogo: boolean = false;
 
-  /**
+   /**
    * Formulario reactivo para el registro de vehículos.
    */
   registroVehiculosForm!: FormGroup;
@@ -81,7 +85,7 @@ export class VehiculosComponent implements OnInit {
   /**
    * Lista de vehículos registrados.
    */
-  vehiculosInfoList: VehiculosTabla[] = [] as VehiculosTabla[];
+  registroVehiculosInfoList: RegistroVehiculos[] = [] as RegistroVehiculos[];
 
   /**
    * Nombre de la pestaña activa.
@@ -103,10 +107,10 @@ export class VehiculosComponent implements OnInit {
    */
   CONFIRMACION_VEHICULO = NOTA.CONFIRMACION_VEHICULO;
 
- /**
+  /**
    * Configuración para las columnas de la tabla de vehículos.
    */
-  ParqueVehicular = VEHICULOS_TABLA_DATOS;
+  ParqueVehicular = REGISTRO_VEHICULOS;
 
   /**
    * Subject utilizado para rastrear la destrucción del componente.
@@ -132,12 +136,13 @@ export class VehiculosComponent implements OnInit {
   /**
    * Fila seleccionada en la tabla de mercancías.
    */
-  filaSeleccionadaVehiculos!: VehiculosTabla;
+  filaSeleccionadaVehiculos!: RegistroVehiculos;
 
   /**
    * Lista de filas seleccionadas en la tabla de mercancías.
    */
-  listaFilaSeleccionadaVehiculos: VehiculosTabla[] = [] as VehiculosTabla[];
+  listaFilaSeleccionadaVehiculos: RegistroVehiculos[] =
+    [] as RegistroVehiculos[];
 
   /**
    * Indica si el botón de eliminar está habilitado.
@@ -170,16 +175,36 @@ export class VehiculosComponent implements OnInit {
    */
   public seccionState!: Tramites30401State;
 
+  estados: Catalogo[] = [];
+  municipios: Catalogo[] = [];
+  colonias: Catalogo[] = [];
+  aduanas: Catalogo[] = [];
+
   /**
-   * Constructor para VehiculosComponent.
-   * Inicializa el formulario e inyecta los servicios necesarios.
-   * @param fb - FormBuilder para crear formularios reactivos.
-   * @param tramite30401Store - Store para gestionar el estado relacionado con el Trámite 30401.
+   * Indicates whether the entity is consolidated in ET.
+   *
+   * @type {boolean}
+   * @default false
+   */
+  esConsolidatedET: boolean = false;
+
+  /**
+   * Opciones de botón de radio.
+   */
+  opcionDeBotonDeRadio = OPCIONES_DE_BOTON_DE_RADIO;
+
+  /**
+   * Constructor para inyectar los servicios y las tiendas necesarias.
+   * @param fb - FormBuilder para formularios reactivos.
+   * @param tramite30401Store - Tienda para gestionar el estado del formulario.
+   * @param tramite30401Query - Servicio de consulta para acceder a los datos del store.
+   * @param Servicio - Servicio para obtener la lista de bancos.
    */
   constructor(
     public fb: FormBuilder,
     private tramite30401Store: Tramite30401Store,
-    private tramite30401Query: Tramite30401Query
+    private tramite30401Query: Tramite30401Query,
+    private Servicio: RegistroEmpresasTransporteService
   ) {
     this.crearFormulario();
     this.inicializarFormularioArchivo();
@@ -189,19 +214,20 @@ export class VehiculosComponent implements OnInit {
    * Método del ciclo de vida que se ejecuta cuando el componente se inicializa.
    * - Se suscribe a `selectTramite30401$` para obtener datos del estado.
    * - Actualiza `seccionState` con la información más reciente del estado.
-   * - Asigna `VehiculosTablaDatos` a `vehiculosInfoList`.
+   * - Asigna `RegistroVehiculosDatos` a `registroVehiculosInfoList`.
    *
    * La suscripción está gestionada con `takeUntil(this.destroyed$)`
    * para garantizar la limpieza cuando el componente se destruye.
    */
   ngOnInit(): void {
+    this.obtenerDatosCatalogo();
     this.tramite30401Query.selectTramite30401$
       .pipe(takeUntil(this.destroyed$))
       .subscribe((datos: Tramites30401State) => {
         this.seccionState = datos;
       });
 
-    this.vehiculosInfoList = this.seccionState.vehiculosTablaDatos;
+    this.registroVehiculosInfoList = this.seccionState.registroTablaDatos;
   }
 
   /**
@@ -210,9 +236,42 @@ export class VehiculosComponent implements OnInit {
   crearFormulario(): void {
     this.registroVehiculosForm = this.fb.group({
       id: [null],
-      marca: ['', [Validators.required]],
-      modelo: ['', [Validators.required]],
-      vin: ['', [Validators.required]],
+      solicitud: this.fb.group({
+        marca: ['', [Validators.required, Validators.maxLength(6)]],
+        modelo: ['', [Validators.required, Validators.maxLength(80)]],
+        idVehiculoSerie: ['', [Validators.required, Validators.maxLength(17)]],
+        caja: ['', [Validators.required, Validators.maxLength(30)]],
+      }),
+      direccionVehiculo: this.fb.group({
+        calleVehiculo: ['', [Validators.required, Validators.maxLength(100)]],
+        numExteriorVehiculo: [
+          '',
+          [Validators.required, Validators.maxLength(55)],
+        ],
+        numInteriorVehiculo: ['', [Validators.maxLength(55)]],
+        comboEntidadVehiculo: ['', Validators.required],
+        comboDelegacionVehiculo: ['', Validators.required],
+        comboColoniaVehiculo: ['', Validators.required],
+        localidadVehiculo: [
+          '',
+          [Validators.required, Validators.maxLength(250)],
+        ],
+        codigoPostalVehiculo: [
+          '',
+          [Validators.required, Validators.maxLength(6)],
+        ],
+        comboAduanaVehiculo: [''],
+      }),
+      persona: this.fb.group({
+        nombre: ['', [Validators.required, Validators.maxLength(200)]],
+        apellidoPaterno: ['', [Validators.required, Validators.maxLength(200)]],
+        apellidoMaterno: ['', [Validators.required, Validators.maxLength(200)]],
+        correoElectronico: [
+          '',
+          [Validators.required, Validators.email, Validators.maxLength(50)],
+        ],
+        telefonoContacto: ['', [Validators.required, Validators.maxLength(30)]],
+      }),
     });
   }
 
@@ -308,38 +367,73 @@ export class VehiculosComponent implements OnInit {
 
   /**
    * Agrega los datos actuales del formulario a la lista de vehículos registrados.
-   * Los datos del formulario se añaden al array `vehiculosInfoList`.
+   * Los datos del formulario se añaden al array `registroVehiculosInfoList`.
    */
   vehiculosInfoDatos(): void {
     const {
-      marca: MARCA,
-      modelo: MODELO,
-      vin: VIN,
+      solicitud: SOLICITUD,
+      direccionVehiculo: DIRECCIONVEHICULO,
+      persona: PERSONA,
     } = this.registroVehiculosForm.value;
+    const OBTENER_DESCRIPCION = (array: Catalogo[], index: number): string =>
+      array[index - 1]?.descripcion || '';
+    const DIRECCIONVEHICULO_MODIFICADO = {
+      ...DIRECCIONVEHICULO,
+      comboEntidadVehiculo: OBTENER_DESCRIPCION(
+        this.estados,
+        DIRECCIONVEHICULO.comboEntidadVehiculo
+      ),
+      comboDelegacionVehiculo: OBTENER_DESCRIPCION(
+        this.municipios,
+        DIRECCIONVEHICULO.comboDelegacionVehiculo
+      ),
+      comboColoniaVehiculo: OBTENER_DESCRIPCION(
+        this.colonias,
+        DIRECCIONVEHICULO.comboColoniaVehiculo
+      ),
+      comboAduanaVehiculo: OBTENER_DESCRIPCION(
+        this.aduanas,
+        DIRECCIONVEHICULO.comboAduanaVehiculo
+      ),
+    };
+
+    const NEW_VEHICULO = {
+      id:
+        this.filaSeleccionadaVehiculos?.id ??
+        (this.registroVehiculosInfoList.length
+          ? (this.registroVehiculosInfoList[
+              this.registroVehiculosInfoList.length - 1
+            ]?.id ?? 0) + 1
+          : 1),
+      solicitud: SOLICITUD,
+      direccionVehiculo: DIRECCIONVEHICULO_MODIFICADO,
+      persona: PERSONA,
+    };
 
     if (
       !this.filaSeleccionadaVehiculos ||
       Object.keys(this.filaSeleccionadaVehiculos).length === 0
     ) {
-      const ID = this.vehiculosInfoList.length
-        ? this.vehiculosInfoList[this.vehiculosInfoList.length - 1]?.id + 1
-        : 1;
-
-      const OBJETO = { id: ID, marca: MARCA, modelo: MODELO, vin: VIN };
-
-      this.vehiculosInfoList = [...this.vehiculosInfoList, OBJETO];
-      this.tramite30401Store.setVehiculosTablaDatos([OBJETO]);
+      this.registroVehiculosInfoList = [
+        ...this.registroVehiculosInfoList,
+        NEW_VEHICULO,
+      ];
+      this.tramite30401Store.setRegistroVehiculosDatos([NEW_VEHICULO]);
     } else {
-      this.vehiculosInfoList = this.vehiculosInfoList.map((elemento) =>
-        elemento.id === this.filaSeleccionadaVehiculos.id
-          ? { ...elemento, marca: MARCA, modelo: MODELO, vin: VIN }
-          : elemento
+      this.registroVehiculosInfoList = this.registroVehiculosInfoList.map(
+        (item) =>
+          item.id === this.filaSeleccionadaVehiculos.id
+            ? { ...item, ...NEW_VEHICULO }
+            : item
       );
 
-      this.tramite30401Store.setVehiculosTablaDatos(this.vehiculosInfoList);
-      this.filaSeleccionadaVehiculos = {} as VehiculosTabla;
+      this.tramite30401Store.setRegistroVehiculosDatos(
+        this.registroVehiculosInfoList
+      );
+      this.filaSeleccionadaVehiculos = {} as RegistroVehiculos;
     }
   }
+
   /**
    * Método para cerrar el modal de confirmación.
    * @returns {void}
@@ -352,7 +446,7 @@ export class VehiculosComponent implements OnInit {
    * Maneja la fila seleccionada en la tabla de mercancías.
    * fila Fila seleccionada.
    */
-  manejarFilaSeleccionada(fila: VehiculosTabla[]): void {
+  manejarFilaSeleccionada(fila: RegistroVehiculos[]): void {
     if (fila.length === 0) {
       this.enableModficarBoton = false;
       this.enableEliminarBoton = false;
@@ -368,7 +462,7 @@ export class VehiculosComponent implements OnInit {
    * Actualiza la fila seleccionada con los datos más recientes de la tabla.
    */
   actualizarFilaSeleccionada(): void {
-    const DATOS_ACTUALIZADOS = this.vehiculosInfoList.find(
+    const DATOS_ACTUALIZADOS = this.registroVehiculosInfoList.find(
       (item) => item.id === this.filaSeleccionadaVehiculos.id
     );
 
@@ -386,12 +480,14 @@ export class VehiculosComponent implements OnInit {
       (item) => item.id
     );
 
-    this.vehiculosInfoList = this.vehiculosInfoList.filter(
+    this.registroVehiculosInfoList = this.registroVehiculosInfoList.filter(
       (item) => !IDS_TO_DELETE.includes(item.id)
     );
 
     this.listaFilaSeleccionadaVehiculos = [];
-    this.tramite30401Store.setVehiculosTablaDatos(this.vehiculosInfoList);
+    this.tramite30401Store.setRegistroVehiculosDatos(
+      this.registroVehiculosInfoList
+    );
     this.cerrarEliminarConfirmationPopup();
   }
 
@@ -401,6 +497,35 @@ export class VehiculosComponent implements OnInit {
   cerrarEliminarConfirmationPopup(): void {
     this.confirmEliminarPopupAbierto = false;
     this.confirmEliminarPopupCerrado = false;
+  }
+
+  /**
+   * Obtiene los datos del catálogo de Entidades Federativas, Municipios, Colonias y Aduanas.
+   *
+   * Este método utiliza `forkJoin` de RxJS para ejecutar múltiples solicitudes API en paralelo.
+   * Una vez que todas las respuestas se reciben, los datos se asignan a las variables del componente.
+   *
+   * @returns {void} No devuelve un valor; actualiza el estado del componente con los datos obtenidos.
+   */
+  obtenerDatosCatalogo(): void {
+    forkJoin({
+      estados: this.Servicio.getEntidadesFederativas(),
+      municipios: this.Servicio.getMunicipiosAlcaldias(),
+      colonias: this.Servicio.getColonias(),
+      aduanas: this.Servicio.getAduanas(),
+    })
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(
+        (respuesta) => {
+          this.estados = respuesta.estados;
+          this.municipios = respuesta.municipios;
+          this.colonias = respuesta.colonias;
+          this.aduanas = respuesta.aduanas;
+        },
+        (error) => {
+          console.error('Error al obtener los datos del catálogo:', error);
+        }
+      );
   }
 
   /**
@@ -427,11 +552,57 @@ export class VehiculosComponent implements OnInit {
    * Este método utiliza `patchValue` para actualizar los valores del formulario.
    */
   patchModifyiedData(): void {
+    const OBTENER_INDICE = (array: Catalogo[], value: string): number =>
+      array.findIndex((item) => item.descripcion === value) + 1;
     this.registroVehiculosForm.patchValue({
       id: this.filaSeleccionadaVehiculos?.id,
-      marca: this.filaSeleccionadaVehiculos?.marca,
-      modelo: this.filaSeleccionadaVehiculos?.modelo,
-      vin: this.filaSeleccionadaVehiculos?.vin,
+      solicitud: {
+        marca: this.filaSeleccionadaVehiculos?.solicitud.marca,
+        modelo: this.filaSeleccionadaVehiculos?.solicitud.modelo,
+        idVehiculoSerie:
+          this.filaSeleccionadaVehiculos?.solicitud.idVehiculoSerie,
+        caja: this.filaSeleccionadaVehiculos?.solicitud.caja,
+      },
+      direccionVehiculo: {
+        calleVehiculo:
+          this.filaSeleccionadaVehiculos?.direccionVehiculo.calleVehiculo,
+        numExteriorVehiculo:
+          this.filaSeleccionadaVehiculos?.direccionVehiculo.numExteriorVehiculo,
+        numInteriorVehiculo:
+          this.filaSeleccionadaVehiculos?.direccionVehiculo.numInteriorVehiculo,
+        comboEntidadVehiculo: OBTENER_INDICE(
+          this.estados,
+          this.filaSeleccionadaVehiculos.direccionVehiculo.comboEntidadVehiculo
+        ),
+        comboDelegacionVehiculo: OBTENER_INDICE(
+          this.municipios,
+          this.filaSeleccionadaVehiculos.direccionVehiculo
+            .comboDelegacionVehiculo
+        ),
+        comboColoniaVehiculo: OBTENER_INDICE(
+          this.colonias,
+          this.filaSeleccionadaVehiculos.direccionVehiculo.comboColoniaVehiculo
+        ),
+        localidadVehiculo:
+          this.filaSeleccionadaVehiculos?.direccionVehiculo.localidadVehiculo,
+        codigoPostalVehiculo:
+          this.filaSeleccionadaVehiculos.direccionVehiculo.comboAduanaVehiculo,
+        comboAduanaVehiculo: OBTENER_INDICE(
+          this.aduanas,
+          this.filaSeleccionadaVehiculos?.direccionVehiculo.comboAduanaVehiculo
+        ),
+      },
+      persona: {
+        nombre: this.filaSeleccionadaVehiculos?.persona.nombre,
+        apellidoPaterno:
+          this.filaSeleccionadaVehiculos?.persona.apellidoPaterno,
+        apellidoMaterno:
+          this.filaSeleccionadaVehiculos?.persona.apellidoMaterno,
+        correoElectronico:
+          this.filaSeleccionadaVehiculos?.persona.correoElectronico,
+        telefonoContacto:
+          this.filaSeleccionadaVehiculos?.persona.telefonoContacto,
+      },
     });
   }
 

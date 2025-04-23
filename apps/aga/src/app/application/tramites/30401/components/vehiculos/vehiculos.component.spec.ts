@@ -78,7 +78,7 @@ describe('VehiculosComponent', () => {
     component.registroVehiculosForm.patchValue({
       marca: 'Toyota',
       modelo: 'Corolla',
-      Vin: '123456789ABCDEFG',
+      vin: '123456789ABCDEFG',
     });
     component.vehiculosInfoDatos();
     expect(component.vehiculosInfoList.length).toBe(1);
@@ -106,14 +106,14 @@ describe('VehiculosComponent', () => {
     component.enviarDialogData();
     expect(component.registroVehiculosForm.get('marca')?.touched).toBe(true);
     expect(component.registroVehiculosForm.get('modelo')?.touched).toBe(true);
-    expect(component.registroVehiculosForm.get('Vin')?.touched).toBe(true);
+    expect(component.registroVehiculosForm.get('vin')?.touched).toBe(true);
   });
 
   it('should add a new vehicle and reset the form when enviarDialogData is called with valid form', () => {
     component.registroVehiculosForm.patchValue({
       marca: 'Toyota',
       modelo: 'Corolla',
-      Vin: '123456789ABCDEFG',
+      vin: '123456789ABCDEFG',
     });
     component.enviarDialogData();
     expect(component.vehiculosInfoList.length).toBe(1);
@@ -136,7 +136,7 @@ describe('VehiculosComponent', () => {
       id: 1,
       marca: 'Toyota',
       modelo: 'Corolla',
-      Vin: '123456789ABCDEFG',
+      vin: '123456789ABCDEFG',
     } as any;
     component.patchModifyiedData();
     expect(component.registroVehiculosForm.value.marca).toBe('Toyota');

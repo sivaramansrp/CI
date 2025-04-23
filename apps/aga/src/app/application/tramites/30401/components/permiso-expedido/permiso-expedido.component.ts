@@ -11,7 +11,12 @@ import { Tramite30401Store } from '../../estados/tramites30401.store';
 @Component({
   selector: 'app-permiso-expedido',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, TituloComponent, InputCheckComponent],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    TituloComponent,
+    InputCheckComponent,
+  ],
   templateUrl: './permiso-expedido.component.html',
   styleUrl: './permiso-expedido.component.scss',
 })
@@ -49,9 +54,9 @@ export class permisoComponent implements OnInit {
 
   constructor(
     public grupoDeFormaRaiz: FormGroupDirective,
-    private tramite30401Store: Tramite30401Store,
+    private tramite30401Store: Tramite30401Store
   ) {
-     // No se necesita lógica de inicialización adicional.
+    // No se necesita lógica de inicialización adicional.
   }
 
   /**
@@ -59,14 +64,16 @@ export class permisoComponent implements OnInit {
    * Obtiene el grupo de formulario correspondiente del formulario raíz.
    */
   ngOnInit(): void {
-    this.inicializarFormulario = this.grupoDeFormaRaiz.control.get(this.grupoDeFormulario) as FormGroup;
+    this.inicializarFormulario = this.grupoDeFormaRaiz.control.get(
+      this.grupoDeFormulario
+    ) as FormGroup;
   }
 
   /**
-     * Pasa el valor de un campo del formulario a la tienda para la gestión del estado.
-     * @param form - El formulario reactivo.
-     * @param campo - El nombre del campo en el formulario.
-     */
+   * Pasa el valor de un campo del formulario a la tienda para la gestión del estado.
+   * @param form - El formulario reactivo.
+   * @param campo - El nombre del campo en el formulario.
+   */
   setValoresStore(form: FormGroup | null, campo: string): void {
     if (!form) {
       return;

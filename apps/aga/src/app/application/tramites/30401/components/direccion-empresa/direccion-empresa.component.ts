@@ -11,7 +11,12 @@ import { Tramite30401Store } from '../../estados/tramites30401.store';
 @Component({
   selector: 'app-direccion-empresa',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, TituloComponent, CatalogoSelectComponent],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    TituloComponent,
+    CatalogoSelectComponent,
+  ],
   templateUrl: './direccion-empresa.component.html',
   styleUrl: './direccion-empresa.component.scss',
 })
@@ -53,7 +58,7 @@ export class DireccionEmpresaComponent implements OnInit {
    */
   constructor(
     public grupoDeFormaRaiz: FormGroupDirective,
-    private tramite30401Store: Tramite30401Store,
+    private tramite30401Store: Tramite30401Store
   ) {
     // No se necesita lógica de inicialización adicional.
   }
@@ -62,7 +67,9 @@ export class DireccionEmpresaComponent implements OnInit {
    * Método de inicialización del componente.
    */
   ngOnInit(): void {
-    this.inicializarFormulario = this.grupoDeFormaRaiz.control.get(this.grupoDeFormulario) as FormGroup;
+    this.inicializarFormulario = this.grupoDeFormaRaiz.control.get(
+      this.grupoDeFormulario
+    ) as FormGroup;
   }
 
   /**
