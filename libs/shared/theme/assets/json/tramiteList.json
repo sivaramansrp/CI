@@ -1206,8 +1206,8 @@
   {
     "id": 173,
     "tramite": 130103,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/se/importacion-definitiva/pantallas",
+    "linkDepartment": "/pago/importacion-definitiva/pantallas",
     "department": "se"
   },
   {
