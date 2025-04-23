@@ -1,5 +1,5 @@
 <div class="container">
-    <form>
+    <form [formGroup]="sociosComercialesForm">
         <div class="row mt-2">
             <div class="col-md-12 text-container">
                 <p>La empresa debe contar con procedimientos escritos y verificables para la selección y contratación de
@@ -99,14 +99,14 @@
             </div>
 
             <div class="col-md-12 text-container mt-4">
-                <label>
+                <label for="indiqueLleva">
                     <span class="danger">*</span>Indique cómo lleva a cabo su programa de cumplimiento social entre sus
                     empleados y socios comerciales que, como mínimo, aborde cómo la empresa garantiza que los bienes,
                     insumos o mercancías nacionales e importadas a México para la elaboración de su producto final, no
                     fueron extraídos, producidos o fabricados, total o parcialmente, con formas prohibidas de trabajo,
                     es decir, forzoso u obligado y cómo lo documenta.
                 </label>
-                <textarea class="custom-textarea" rows="6" cols="100"></textarea>
+                <textarea class="custom-textarea" rows="6" cols="100" id="indiqueLleva" formControlName="indiqueLleva" (change)="setValoresStore(sociosComercialesForm,'indiqueLleva','setIndiqueLleva')"></textarea>
             </div>
         </div>
 
@@ -150,51 +150,51 @@
             </div>
 
             <div class="col-md-12 text-container mt-4">
-                <label>
+                <label for="describaProcedimiento">
                     <span class="danger">*</span>Describa el procedimiento que indique cómo lleva a cabo la
                     identificación de socios comerciales que requieran el cumplimiento de estándares mínimos en materia
                     de seguridad.
                 </label>
-                <textarea class="custom-textarea" rows="6" cols="100"></textarea>
+                <textarea class="custom-textarea" rows="6" cols="100" id="describaProcedimiento" formControlName="describaProcedimiento" (change)="setValoresStore(sociosComercialesForm,'describaProcedimiento','setDescribaProcedimiento')"></textarea>
             </div>
 
             <div class="col-md-12 text-container mt-4">
-                <label>
+                <label for="indiqueSocios">
                     <span class="danger">*</span>Indique los socios comerciales que deben cumplir con requisitos en
                     materia de seguridad, y mencione que tipo de proveedores son estos (transportistas para el traslado
                     y/o distribución de mercancías objeto de comercio exterior, almacenes, servicio de custodia, empresa
                     de seguridad privada, agentes aduanales, etcétera).
                 </label>
-                <textarea class="custom-textarea" rows="6" cols="100"></textarea>
+                <textarea class="custom-textarea" rows="6" cols="100" id="indiqueSocios" formControlName="indiqueSocios" (change)="setValoresStore(sociosComercialesForm,'indiqueSocios','setIndiqueSocios')"></textarea>
             </div>
 
             <div class="col-md-12 text-container mt-4">
-                <label>
+                <label for="indiqueForma">
                     <span class="danger">*</span>Indique de qué forma documental (convenios, acuerdos, cláusulas
                     contractuales y/o adendas), asegura que sus socios comerciales cumplan con los requisitos en materia
                     de seguridad.
                 </label>
-                <textarea class="custom-textarea" rows="6" cols="100"></textarea>
+                <textarea class="custom-textarea" rows="6" cols="100" id="indiqueForma" formControlName="indiqueForma" (change)="setValoresStore(sociosComercialesForm,'indiqueForma','setIndiqueForma')"></textarea>
             </div>
 
             <div class="col-md-12 text-container mt-4">
-                <label>
+                <label for="indiqueExisten">
                     <span class="danger">*</span>Indique si existen convenios, acuerdos, cláusulas contractuales y/o
                     adendas, respecto a la implementación de medidas de seguridad con sus proveedores de servicios al
                     interior de su empresa, tales como: seguridad privada, comedor, jardinería, servicios de limpieza y
                     mantenimiento, proveedores de Tecnología de la Información, etcétera.
                 </label>
-                <textarea class="custom-textarea" rows="6" cols="100"></textarea>
+                <textarea class="custom-textarea" rows="6" cols="100" id="indiqueExisten" formControlName="indiqueExisten" (change)="setValoresStore(sociosComercialesForm,'indiqueExisten','setIndiqueExisten')"></textarea>
             </div>
 
             <div class="col-md-12 text-container mt-4">
-                <label>
+                <label for="indiqueCuenta">
                     <span class="danger">*</span>Indique si cuenta con socios comerciales que se les exija pertenecer a
                     un programa de seguridad de la cadena de suministros (por ejemplo: CTPAT o algún otro Programa de
                     Operador Económico Autorizado de la OMA), así como la información y documentación que le son
                     solicitadas.
                 </label>
-                <textarea class="custom-textarea" rows="6" cols="100"></textarea>
+                <textarea class="custom-textarea" rows="6" cols="100" id="indiqueCuenta" formControlName="indiqueCuenta" (change)="setValoresStore(sociosComercialesForm,'indiqueCuenta','setIndiqueCuenta')"></textarea>
             </div>
         </div>
 
@@ -223,52 +223,52 @@
             </div>
 
             <div class="col-md-12 text-container mt-4">
-                <label>
+                <label for="procedimientoRealizar">
                     <span class="danger">*</span>Describir el procedimiento para realizar evaluaciones para verificación
                     de los requisitos materia (procesos e instalaciones) de sus socios comerciales.
                 </label>
-                <textarea class="custom-textarea" rows="6" cols="100"></textarea>
+                <textarea class="custom-textarea" rows="6" cols="100" id="procedimientoRealizar" formControlName="procedimientoRealizar" (change)="setValoresStore(sociosComercialesForm,'procedimientoRealizar','setProcedimientoRealizar')"></textarea>
             </div>
 
             <div class="col-md-12 text-container mt-4">
-                <label>
+                <label id="indiquePeriodicidad">
                     <span class="danger">*</span>Indique la periodicidad con la que realiza las visitas al socio
                     comercial (estas deben de ser por lo menos una vez al año y derivadas de situaciones de riesgo).
                 </label>
-                <textarea class="custom-textarea" rows="6" cols="100"></textarea>
+                <textarea class="custom-textarea" rows="6" cols="100" id="indiquePeriodicidad" formControlName="indiquePeriodicidad" (change)="setValoresStore(sociosComercialesForm,'indiquePeriodicidad','setIndiquePeriodicidad')"></textarea>
             </div>
 
             <div class="col-md-12 text-container mt-4">
-                <label>
+                <label for="describaComo">
                     <span class="danger">*</span>Describa cómo se lleva a cabo el programa o calendario para la
                     ejecución de las revisiones de seguridad.
                 </label>
-                <textarea class="custom-textarea" rows="6" cols="100"></textarea>
+                <textarea class="custom-textarea" rows="6" cols="100" id="describaComo" formControlName="describaComo" (change)="setValoresStore(sociosComercialesForm,'describaComo','setDescribaComo')"></textarea>
             </div>
 
             <div class="col-md-12 text-container mt-4">
-                <label>
+                <label for="comoAseguran">
                     <span class="danger">*</span>Cómo aseguran los formularios y la documentación relacionada con la
                     importación y/o exportación para evitar el uso no autorizado.
                 </label>
-                <textarea class="custom-textarea" rows="6" cols="100"></textarea>
+                <textarea class="custom-textarea" rows="6" cols="100" id="comoAseguran" formControlName="comoAseguran" (change)="setValoresStore(sociosComercialesForm,'comoAseguran','setComoAseguran')"></textarea>
             </div>
 
             <div class="col-md-12 text-container mt-4">
-                <label>
+                <label for="indiqueFormatos">
                     <span class="danger">*</span>Indique el o los formatos de verificación tendrán que estar debidamente
                     requisitados, colocando la fecha, nombre y cargo de quienes participan en la revisión, firmas,
                     etcétera.
                 </label>
-                <textarea class="custom-textarea" rows="6" cols="100"></textarea>
+                <textarea class="custom-textarea" rows="6" cols="100" id="indiqueFormatos" formControlName="indiqueFormatos" (change)="setValoresStore(sociosComercialesForm,'indiqueFormatos','setIndiqueFormatos')"></textarea>
             </div>
 
             <div class="col-md-12 text-container mt-4">
-                <label>
+                <label for="senalarMedidas">
                     <span class="danger">*</span>Señalar qué medidas de acción se toman en caso de que los socios
                     comerciales no cumplan con los requisitos de seguridad establecidos.
                 </label>
-                <textarea class="custom-textarea" rows="6" cols="100"></textarea>
+                <textarea class="custom-textarea" rows="6" cols="100" id="senalarMedidas" formControlName="senalarMedidas" (change)="setValoresStore(sociosComercialesForm,'senalarMedidas','setSenalarMedidas')" ></textarea>
             </div>
 
             <div class="col-md-12 text-container mt-4">
