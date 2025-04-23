@@ -331,6 +331,12 @@ const ROUTES: Routes = [
       
   },
   {
+    path: 'muestras-de-toxicos',
+    loadChildren: () =>
+      import('./tramites/260513/muestras-de-toxicos.module').then(
+        (m) => m.MuestrasDeToxicosModule)
+  },
+  {
     path: 'permiso-sujetos',
     loadChildren: () =>
       import(
@@ -413,7 +419,19 @@ const ROUTES: Routes = [
             (m) => m.ImportarSuministrosMedicosModule
           )
   },
+  {
+    path: 'correccion-interna-de-la-cofepris',
+    loadChildren: () =>
+      import('./tramites/261601/correccion-interna-de-la-cofepris.module').then(
+        (m) => m.CorreccionInternaDeLaCofeprisModule)
+  },
 
+  {
+    path: 'cancelacion-peticion',
+    loadChildren: () =>
+      import('./tramites/261701/cancelacion-peticion.module').then(
+        (m) => m.CancelacionPeticionModule)
+  },
 ];
 
 @NgModule({
