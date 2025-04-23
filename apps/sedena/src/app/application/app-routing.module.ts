@@ -57,10 +57,17 @@ const ROUTES: Routes = [
       ).then((m) => m.PermisoOrdinarioImportacionExlposivoModule),
   },
   {
+    path: 'aviso-importacion-sustancias-quimicas',
+    loadChildren: () =>
+      import(
+        './tramites/240106/aviso-importacion-sustancias-quimicas.module'
+      ).then((m) => m.AvisoImportacionSustanciasQuimicasModule),
+    },
+  {
     path: 'permiso-ordinario-exportacion-de-sustancias-quimicas',
     loadChildren: () =>
       import(
-        './tramites/240117/permiso-ordinario-para-la-exportacion-de-sustancias-quimicas.module'
+      './tramites/240117/permiso-ordinario-para-la-exportacion-de-sustancias-quimicas.module'
       ).then((m) => m.PermisoOrdinarioParaLaExportacionDeSustanciasQuimicasModule),
   }
 ];
