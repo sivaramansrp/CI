@@ -1,4 +1,5 @@
 import {
+  CatalogoDocumento,
   CatalogoPaises,
   CatalogoResponse,
   JSONResponse,
@@ -53,4 +54,5 @@ export class CatalogosService {
   getCatalogoById(id: number): Observable<JSONResponse> {
     return this.http.get<JSONResponse>(`${this.urlServerCatalogos}/${id}`);
   }
+
 }

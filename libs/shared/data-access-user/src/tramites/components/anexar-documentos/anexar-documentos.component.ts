@@ -15,7 +15,7 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { Subject, Subscription, map, takeUntil } from 'rxjs';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
 
-import { Catalogo } from '../../../core/models/shared/catalogos.model';
+import { Catalogo, CatalogoDocumento } from '../../../core/models/shared/catalogos.model';
 import { CommonModule } from '@angular/common';
 import { DocumentosCargados } from '../../../core/models/shared/components.model';
 import { InicioSesionService } from '../../../core/services/shared/inicio-sesion/inicio-sesion.service';
@@ -51,12 +51,14 @@ interface DocumentosParaCargar {
   styleUrl: './anexar-documentos.component.scss'
 })
 export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
-
-  @Input() catalogoDocumentos: Catalogo[] = [];
-  @Input() catalogoDocumentosOpcionales: Catalogo[] = [];
+  @Input() catalogoDocumentos: CatalogoDocumento[] = [];
+  @Input() catalogoDocumentosOpcionales: CatalogoDocumento[] = [];
   @Input() cargaArchivosEvento!: EventEmitter<void>;
+  @Input() regresarSeccionCargarDocumentoEvento!: EventEmitter<void>;
 
   @Output() cargaRealizada = new EventEmitter<boolean>();
+  @Output() activarBotonCargaArchivos = new EventEmitter<boolean>();
+
   @ViewChildren('fileInput') fileInputs!: QueryList<ElementRef>;
 
 
@@ -69,7 +71,7 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
 
   tamMaximo = 0;
   documentosCargados: DocumentosCargados[] = [];
-  documentoSeleccionado!: Catalogo;
+  documentoSeleccionado!: CatalogoDocumento;
   modal = '';
   datosLogin: Login = {
     user: 'user1@example.com',
@@ -78,8 +80,8 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
   token!: string;
   listDocOpcionalesAgregar: number[] = [];
   listadoArchivos: DocumentosParaCargar[] = [];
-  archivosOpcionales: Catalogo[] = [];
-  
+  archivosOpcionales: CatalogoDocumento[] = [];
+
   archivosOpcionalesOriginal: any[] = [];
   listDocOpcionales: any[] = [];
   listDocOpcionalesDuplicado: any[] = [];
@@ -90,6 +92,8 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
     obligatorios: [],
     opcionales: []
   };
+
+  mostrarSeccionCargaArchivos: boolean = true;
 
   private destroyNotifier$: Subject<void> = new Subject<void>();
   private documentosState!: DocumentosState;
@@ -124,7 +128,13 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
 
     this.cargaArchivosEvento
       .pipe(takeUntil(this.destroyNotifier$),
-      map(() => this.confirmUpload())
+        map(() => this.confirmUpload())
+      )
+      .subscribe();
+
+    this.regresarSeccionCargarDocumentoEvento
+      .pipe(takeUntil(this.destroyNotifier$),
+        map(() => this.mostrarSeccionCargaArchivosAccion())
       )
       .subscribe();
   }
@@ -232,6 +242,10 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
         mensaje: '',
         estatus: 'Pendiente'
       });
+
+      const ARCHIVOS_PARA_CARGAR = this.listadoArchivos.some(item => item.archivo !== undefined && item.archivo !== null);
+
+      this.activarBotonCargaArchivos.emit(ARCHIVOS_PARA_CARGAR);
     }
   }
 
@@ -304,6 +318,7 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
         this.modalRef.onHide.subscribe((response: boolean | string) => {
           if (typeof response === 'boolean' && response) {
             this.cargarDocumentos = true;
+            this.mostrarSeccionCargaArchivos = false;
             this.archivosCargando.obligatorios = this.listadoArchivos.filter(f => f.tipo === 'obligatorio');
             this.archivosCargando.opcionales = this.listadoArchivos.filter(f => f.tipo === 'opcional');
             this.cargarArchivos(this.archivosCargando.obligatorios);
@@ -315,7 +330,7 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  limpiarFile(item: Catalogo, tipo: string): void {
+  limpiarFile(item: CatalogoDocumento, tipo: string): void {
     let FILE_INPUT: HTMLInputElement | null = null;
     if (tipo === 'obligatorios') {
       FILE_INPUT = document.getElementById(`formFile${item.id}`) as HTMLInputElement;
@@ -331,9 +346,13 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
     if (INDEX_ARCHIVO !== -1) {
       this.listadoArchivos.splice(INDEX_ARCHIVO, 1);
     }
+
+    const ARCHIVOS_PARA_CARGAR = this.listadoArchivos.some(item => item.archivo !== undefined && item.archivo !== null);
+
+    this.activarBotonCargaArchivos.emit(ARCHIVOS_PARA_CARGAR);
   }
 
-  agregarParte(item: Catalogo, origen: string): void {
+  agregarParte(item: CatalogoDocumento, origen: string): void {
     if (origen === 'obligatorios') {
       const INDICE: number = this.catalogoDocumentos.findIndex(doc => doc.id === item.id);
       if (INDICE !== -1) {
@@ -341,7 +360,6 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
         const PARTE_DOCUMENTO: any = {
           id: `${item.id}-${NUEVO_ID}`,
           descripcion: item.descripcion,
-          clave: item.clave,
           tam: item.tam,
           dpi: item.dpi,
           nuevo: true,
@@ -356,7 +374,6 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
         const PARTE_DOCUMENTO: any = {
           id: `${item.id}-${NUEVO_ID}`,
           descripcion: item.descripcion,
-          clave: item.clave,
           tam: item.tam,
           dpi: item.dpi,
           nuevo: true,
@@ -375,10 +392,10 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
     return String((parseInt(size, 10) / 1000).toFixed(2));
   }
 
-  agregarOpcionales(): void {    
+  agregarOpcionales(): void {
     this.listDocOpcionalesAgregar.forEach((doc: number) => {
-     
-      const INDICE = this.listDocOpcionales.findIndex((f: Catalogo) => f.id === doc);
+
+      const INDICE = this.listDocOpcionales.findIndex((f: CatalogoDocumento) => f.id === doc);
       if (INDICE === -1) {
         const OPCIONAL = {
           ...this.archivosOpcionales.find(f => f.id === doc),
@@ -407,7 +424,7 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  eliminarOpcional(item: Catalogo): void {
+  eliminarOpcional(item: CatalogoDocumento): void {
     const INDICE: number = this.listDocOpcionales.findIndex(f => f.id === item.id);
     if (INDICE !== -1) {
       if (this.listDocOpcionales[INDICE].adicionales?.length > 0) {
@@ -428,6 +445,10 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
       this.listDocOpcionalesAgregar = [...this.listDocOpcionalesAgregar];
     }
     this.cdr.detectChanges();
+
+    const ARCHIVOS_PARA_CARGAR = this.listadoArchivos.some(item => item.archivo !== undefined && item.archivo !== null);
+
+    this.activarBotonCargaArchivos.emit(ARCHIVOS_PARA_CARGAR);
   }
 
   eliminarNuevo(item: any, adicional = false): void {
@@ -436,10 +457,14 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
       item.item.adicionales.splice(INDICE_ADICIONAL, 1);
       const INDICE: number = this.listadoArchivos.findIndex(f => f.id === item.id);
       this.listadoArchivos.splice(INDICE, 1);
+
+      const ARCHIVOS_PARA_CARGAR = this.listadoArchivos.some(item => item.archivo !== undefined && item.archivo !== null);
+
+      this.activarBotonCargaArchivos.emit(ARCHIVOS_PARA_CARGAR);
     }
   }
 
-  ngOnChanges(changes: SimpleChanges): void {    
+  ngOnChanges(changes: SimpleChanges): void {
     if (changes['catalogoDocumentos']) {
       this.catalogoDocumentos = this.catalogoDocumentos.map(item => ({
         ...item,
@@ -447,7 +472,7 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
       }));
     }
 
-    if (changes['catalogoDocumentosOpcionales']) {     
+    if (changes['catalogoDocumentosOpcionales']) {
       this.archivosOpcionales = this.catalogoDocumentosOpcionales.map(item => ({
         ...item,
         adicionales: []
@@ -455,9 +480,16 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
+
   ngOnDestroy(): void {
     this.subscription.forEach((sub: Subscription) => sub.unsubscribe());
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
+  }
+
+  mostrarSeccionCargaArchivosAccion(): void {
+    this.mostrarSeccionCargaArchivos = true
+    console.log(this.mostrarSeccionCargaArchivos);
+
   }
 }

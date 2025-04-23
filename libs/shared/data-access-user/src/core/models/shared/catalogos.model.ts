@@ -20,11 +20,15 @@ export interface Catalogo {
   id: number;
   descripcion: string;
   clave?: string;
+}
+
+export interface CatalogoDocumento extends Catalogo {
   tam?: string;
   dpi?: string;
   nuevo?: boolean;
   uniqueId?: string;
-  adicionales?: Catalogo[];
+  adicionales?: CatalogoDocumento[];
+  cargado?: boolean;
 }
 
 export interface CatalogoPaises {

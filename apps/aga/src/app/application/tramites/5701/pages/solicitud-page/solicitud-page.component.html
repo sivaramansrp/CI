@@ -15,7 +15,8 @@
         <paso-uno></paso-uno>
         }
         @case (2) {
-        <paso-dos [cargaArchivosEvento]="cargarArchivosEvento"></paso-dos>
+        <paso-dos [cargaArchivosEvento]="cargarArchivosEvento" [regresarSeccionCargarDocumentoEvento]="regresarSeccionCargarDocumentoEvento"
+          (reenviarEventoCarga)="manejaEventoCargaDocumentos($event)"></paso-dos>
         }
         @case (3) {
         <paso-tres></paso-tres>
@@ -30,11 +31,21 @@
         <btn-continuar [datos]="datosPasos" (continuarEvento)="getValorIndice($event)"></btn-continuar>
         } @else {
         <div class="mt-5 mb-3 d-flex justify-content-end">
-          <button type="button" class="btn btn-default" (click)="anterior()">
+          <button type="button" class="btn btn-default" (click)="anterior()" *ngIf="seccionCargarDocumentos">
+            Anterior Paso
+          </button>
+
+          <button type="button" class="btn btn-default ms-3" (click)="anteriorSeccionCargarDocumento()" >
             Anterior
           </button>
 
-          <button class="btn btn-primary ms-3" (click)="onClickCargaArchivos()">Cargar archivos</button>
+          <!-- *ngIf="!seccionCargarDocumentos" -->
+
+          <button class="btn btn-primary ms-3" (click)="onClickCargaArchivos() "
+            [disabled]="!activarBotonCargaArchivos" *ngIf="seccionCargarDocumentos">Cargar archivos</button>
+          <button type="button" class="btn btn-primary ms-3" (click)="siguiente()" *ngIf="!seccionCargarDocumentos">
+            Continuar
+          </button>
         </div>
         }
       </div>

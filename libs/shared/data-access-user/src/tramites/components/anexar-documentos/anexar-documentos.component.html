@@ -1,3 +1,4 @@
+@if(mostrarSeccionCargaArchivos) {
 <div class="row mt-5">
   <div class="col-md-12 mb-3">
     <span class="h3">Documentos obligatorios</span>
@@ -8,7 +9,7 @@
       <div class="row py-3">
         <div class="col-md-5 d-flex flex-column">
           <span>Documento {{ item.descripcion }}</span>
-          <small>Tamaño(MB): {{ convertKbToMb(item.tam) }} {{ MB }}, Resolución(dpi) minima para
+          <small>Tamaño(MB): {{ convertKbToMb(item.tam) }} {{ MB }}, Resolución(dpi) mínima para
             imagenes: {{ item.dpi }} {{ DPI }}</small>
         </div>
         <div class="col-md-7">
@@ -22,6 +23,9 @@
             </div>
 
             <div class="col-md-3 d-flex justify-content-end">
+              <span class="text-success d-flex align-items-center" *ngIf="item.cargado"><i
+                  class="bi bi-check-circle-fill"></i></span>
+
               <button type="button" class="btn file-btn-add" title="Agregar documento"
                 (click)="agregarParte(item, 'obligatorios')">
                 <i class="bi bi-plus-circle-fill"></i>
@@ -48,6 +52,8 @@
             </div>
 
             <div class="col-md-3 mt-2 d-flex justify-content-end">
+              <span class="text-success d-flex align-items-center" *ngIf="adicional.cargado"><i
+                  class="bi bi-check-circle-fill"></i></span>
               @if (existePreview(adicional.id)) {
               <button type="button" title="Ver documento" class="btn btn-link" (click)="verPdf(adicional.id)">
                 <i class="bi bi-eye bi-c"></i>
@@ -88,8 +94,11 @@
               </div>
             </div>
             <div class="col-md-3 d-flex justify-content-end">
+              <span class="text-success d-flex align-items-center" *ngIf="item.cargado"><i
+                  class="bi bi-check-circle-fill"></i></span>
+
               <button type="button" title="Agregar documento" class="btn file-btn-add"
-                (click)="agregarParte(item, 'obligatorios')">
+                (click)="agregarParte(item, 'opcionales')">
                 <i class="bi bi-plus-circle-fill"></i>
               </button>
               @if (existePreview(item.id)) {
@@ -119,6 +128,9 @@
               </div>
             </div>
             <div class="col-md-3 mt-2 d-flex justify-content-end">
+              <span class="text-success d-flex align-items-center" *ngIf="adicional.cargado"><i
+                  class="bi bi-check-circle-fill"></i></span>
+
               @if (existePreview(adicional.id)) {
               <button type="button" title="Ver documento" class="btn btn-link" (click)="verPdf(adicional.id)">
                 <i class="bi bi-eye bi-c"></i>
@@ -168,9 +180,10 @@
     </div>
   </div>
 </div>
+}
 
 
-@if (cargarDocumentos) {
+@if (cargarDocumentos && !mostrarSeccionCargaArchivos) {
 <div class="row">
   <span class="h4">Carga de documentos</span>
   <div class="col-md-12">

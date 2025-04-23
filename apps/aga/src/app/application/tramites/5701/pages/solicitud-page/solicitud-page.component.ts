@@ -27,6 +27,7 @@ export class SolicitudPageComponent implements OnInit {
 
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
   @Output() cargarArchivosEvento = new EventEmitter<void>();
+  @Output() regresarSeccionCargarDocumentoEvento = new EventEmitter<void>();
 
   datosPasos: DatosPasos = {
     nroPasos: this.pasos.length,
@@ -34,6 +35,9 @@ export class SolicitudPageComponent implements OnInit {
     txtBtnAnt: 'Anterior',
     txtBtnSig: 'Continuar',
   };
+
+  activarBotonCargaArchivos: boolean = false;
+  seccionCargarDocumentos: boolean = true;
 
   constructor(
     private seccionQuery: SeccionLibQuery,
@@ -117,4 +121,23 @@ export class SolicitudPageComponent implements OnInit {
     this.indice = this.wizardComponent.indiceActual + 1;
     this.datosPasos.indice = this.wizardComponent.indiceActual + 1;
   }
+
+  siguiente(): void {
+    // Aqui se hara la validacion de los documentos cargdados
+    this.wizardComponent.siguiente();
+    this.indice = this.wizardComponent.indiceActual + 1;
+    this.datosPasos.indice = this.wizardComponent.indiceActual + 1;
+  }
+
+  manejaEventoCargaDocumentos(carga: boolean): void {
+    this.activarBotonCargaArchivos = carga;
+  }
+
+  anteriorSeccionCargarDocumento() : void {
+    this.regresarSeccionCargarDocumentoEvento.emit();
+
+    console.log('Mostrar seccion cargar documento');
+    
+  }
+
 }
