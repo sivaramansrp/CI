@@ -44,7 +44,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   constructor(
     private readonly fb: FormBuilder,
     private tramite260917Store: Tramite260917Store,
-    private tramite260701Query: Tramite260917Query
+    private tramite260917Query: Tramite260917Query
   ) {
     // Dependencia inyectada para uso posterior
   }
@@ -257,7 +257,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
  * Suscripción al estado de la sección "solicitud" desde el query de Akita.
  * Se actualiza `solicitudState` cada vez que cambia el estado en el store.
  */
-    this.tramite260701Query.selectSolicitud$
+    this.tramite260917Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyed$),
         map((seccionState) => {

@@ -570,7 +570,7 @@ export function createInitialState(): Solicitud260917State {
 @Injectable({
     providedIn: 'root',
 })
-@StoreConfig({ name: 'tramite260701', resettable: true })
+@StoreConfig({ name: 'tramite260917', resettable: true })
 export class Tramite260917Store extends Store<Solicitud260917State> {
     /**
      * Crea una instancia de Tramite260917Store.
