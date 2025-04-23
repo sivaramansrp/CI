@@ -37,7 +37,7 @@ import { Tramite270101Query } from '../../../../estados/queries/270101/tramite27
     FormasDinamicasComponent
   ],
   templateUrl: './lugar-de-destino.component.html',
-  styleUrl: './lugar-de-destino.component.css',
+  styleUrl: './lugar-de-destino.component.scss',
 })
 
 export class LugarDeDestinoComponent implements OnInit, OnDestroy {
