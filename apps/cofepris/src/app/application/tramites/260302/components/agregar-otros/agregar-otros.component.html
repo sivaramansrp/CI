@@ -1,7 +1,7 @@
 <div class="container mt-4">
-  <ng-titulo titulo="Agregar proveedor"></ng-titulo>
+  <ng-titulo titulo="Agregar Otros"></ng-titulo>
   <form [formGroup]="agregarDatosForm">
-    <div class="row">
+    <div class="row mb-5">
       <div class="col-10">
         <label class="form-label">Tercero nombre descripcion*:</label>
         <div class="col-12">
@@ -14,9 +14,11 @@
       </div>
     </div>
     <!-- Datos Generales -->
-    <h4>Datos generales</h4>
+
     <div class="row">
+      <h4>Datos generales</h4>
       <div class="col-md-6">
+    
         <label class="form-label">Terceros nacionalidad*:</label>
         <div class="form-check">
           <app-input-radio
@@ -48,18 +50,22 @@
     @if(agregarDatosForm.get('nacionalidad')?.value === 'true') {
     <div class="row">
       <div class="form-group col-md-4">
-        <label class="form-label row mt-3 fs-2" for="rfc">R.F.C.*:</label>
+        <label class="form-label mt-3 fs-2" for="rfc">R.F.C.*:</label>
+        <span
+          class="bi bi-question-circle-fill"
+          title="R.F.C"
+          data-bs-toggle="tooltip"
+        ></span>
         <input
           class="form-control"
           id="terceros_rfc"
           type="text"
           maxlength="15"
-          size="29"
           formControlName="rfc"
         />
       </div>
       <div class="form-group col-md-4">
-        <label class="form-label row mt-3 fs-2" for="curp">C.U.R.P.*:</label>
+        <label class="form-label mt-3 fs-2" for="curp">C.U.R.P.*:</label>
         <input
           class="form-control"
           id="terceros_curp"
@@ -94,11 +100,11 @@
     <h4 class="mt-4">Datos personales</h4>
     <div class="row">
       <div class="col-md-4">
-        <label class="form-label">Nombre(s):</label>
+        <label class="form-label">Nombre(s)*:</label>
         <input type="text" class="form-control" formControlName="nombres" />
       </div>
       <div class="col-md-4">
-        <label class="form-label">Primer apellido:</label>
+        <label class="form-label">Primer apellido*:</label>
         <input
           type="text"
           class="form-control"
@@ -133,7 +139,9 @@
       </div>
     </div>
     }
+
     <!-- Domicilio -->
+    <h4>Domicilio</h4>
     <div class="row">
       <div class="col-md-4">
         <label class="form-label">País:</label>
@@ -205,7 +213,12 @@
     </div>
     <div class="row mt-3">
       <div class="col-md-8">
-        <label class="form-label">Calle:</label>
+        <label class="form-label">Calle*:</label>
+        <span
+          class="bi bi-question-circle-fill"
+          title="Calle"
+          data-bs-toggle="tooltip"
+        ></span>
         <input
           id="terceros_calle"
           maxlength="100"
@@ -258,6 +271,11 @@
       </div>
       <div class="col-md-4">
         <label class="form-label">Correo electrónico:</label>
+        <span
+          class="bi bi-question-circle-fill"
+          title="Correo electrónico"
+          data-bs-toggle="tooltip"
+        ></span>
         <input
           id="terceros_correoElec"
           maxlength="320"
@@ -266,7 +284,6 @@
           class="form-control"
           formControlName="correoElectronico"
         />
-        <i class="fas fa-info-circle"></i>
       </div>
     </div>
 

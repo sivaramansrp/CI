@@ -258,6 +258,5 @@ export const TERCEROS_NACIONALIDAD_RADIO_OPCIONS = [
 
 export const TERCEROS_PERSONA_RADIO_OPCIONS = [
   { label: 'Física', value: TipoPersona.FISICA },
-  { label: 'Moral', value: TipoPersona.MORAL },
-  { label: 'No Contribuyente', value: TipoPersona.NO_CONTRIBUYENTE },
+  { label: 'Moral', value: TipoPersona.MORAL }
 ];
