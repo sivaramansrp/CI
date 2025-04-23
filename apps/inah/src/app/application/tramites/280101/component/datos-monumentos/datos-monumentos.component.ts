@@ -7,7 +7,7 @@ import { Subject, map, takeUntil } from 'rxjs';
 
 import { CONFIGURACION_ELEMENTO_TABLA, Elemento, Monumentos } from '../../constantes/permiso-de-exportacion.enum';
 
-import { Catalogo, CatalogoSelectComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, REGEX_SOLO_NUMEROS, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Solicitud280101State, Tramite280101Store } from '../../../../estados/tramite/tramite280101.store';
 import { PermisoDeExportacionService } from '../../services/permiso-de-exportacion.service';
 import { Tramite280101Query } from '../../../../estados/queries/tramite280101.query';
@@ -158,9 +158,9 @@ export class DatosMonumentoComponent implements OnInit, OnDestroy {
       generica2: ['', Validators.required],
       descripcionIdentificacion: ['', Validators.required],
       generica1: ['', Validators.required],
-      cantidadPresentacion: ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
-      componente: ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
-      importeTotalComponente: ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
+      cantidadPresentacion: ['', [Validators.required, Validators.pattern(REGEX_SOLO_NUMEROS)]],
+      componente: ['', [Validators.required, Validators.pattern(REGEX_SOLO_NUMEROS)]],
+      importeTotalComponente: ['', [Validators.required, Validators.pattern(REGEX_SOLO_NUMEROS)]],
       idFraccionGubernamental: ['', Validators.required],
       descripcionUsoMercancia: ['', Validators.required],
     });

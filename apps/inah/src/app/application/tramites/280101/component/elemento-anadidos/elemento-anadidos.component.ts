@@ -5,7 +5,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core'; // Importa las cla
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'; // Importa clases para formularios reactivos.
 import { Subject, takeUntil } from 'rxjs'; // Importa clases para manejar observables y suscripciones.
 
-import { Catalogo, CatalogoSelectComponent, TituloComponent } from '@libs/shared/data-access-user/src'; // Importa componentes y modelos compartidos.
+import { Catalogo, CatalogoSelectComponent, REGEX_SOLO_NUMEROS, TituloComponent } from '@libs/shared/data-access-user/src'; // Importa componentes y modelos compartidos.
 import { Elemento } from '../../constantes/permiso-de-exportacion.enum'; // Importa la interfaz `Elemento`.
 import { PermisoDeExportacionService } from '../../services/permiso-de-exportacion.service'; // Importa el servicio de permisos de exportación.
 import { Tramite280101Query } from '../../../../estados/queries/tramite280101.query'; // Importa la consulta para el estado del trámite.
@@ -85,9 +85,9 @@ export class ElementoAnadidasComponent implements OnInit,OnDestroy {
       descElementoAnadido: [''], // Campo para la descripción del elemento añadido.
       idElementoAnadido: ['', Validators.required], // Campo obligatorio para el ID del elemento añadido.
       descripcionPresentacion: ['', Validators.required], // Campo obligatorio para la descripción de la presentación.
-      alto: ['', [Validators.required, Validators.pattern('^[0-9]+$')]], // Campo obligatorio para el alto, debe ser numérico.
-      ancho: ['', [Validators.required, Validators.pattern('^[0-9]+$')]], // Campo obligatorio para el ancho, debe ser numérico.
-      profundidad: ['', [Validators.required, Validators.pattern('^[0-9]+$')]], // Campo obligatorio para la profundidad, debe ser numérico.
+      alto: ['', [Validators.required, Validators.pattern(REGEX_SOLO_NUMEROS)]], // Campo obligatorio para el alto, debe ser numérico.
+      ancho: ['', [Validators.required, Validators.pattern(REGEX_SOLO_NUMEROS)]], // Campo obligatorio para el ancho, debe ser numérico.
+      profundidad: ['', [Validators.required, Validators.pattern(REGEX_SOLO_NUMEROS)]], // Campo obligatorio para la profundidad, debe ser numérico.
     });
   }
 
