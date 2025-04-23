@@ -716,9 +716,9 @@
     {
         "id": 103,
         "tramite": 260605,
-        "linkDashboard": "/pago/aviso-de-modificacion-module/datos-de-la-solicitud",
+        "linkDashboard": "/cofepris/aviso-de-modificacion-module/datos-de-la-solicitud",
         "linkDepartment": "/pago/aviso-de-modificacion-module/datos-de-la-solicitud",
-        "department": ""
+        "department": "cofepris"
     },
     {
         "id": 104,
@@ -940,8 +940,8 @@
     {
         "id": 135,
         "tramite": 40402,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "/aga/pago/codigo-transportista",
+        "linkDepartment": "/pago/codigo-transportista",
         "department": "aga"
     },
     {
@@ -1458,8 +1458,8 @@
     {
         "id": 209,
         "tramite": 32201,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "/agace/anexo-veintiocho/solicitud",
+        "linkDepartment": "/agace/anexo-veintiocho/solicitud",
         "department": "agace"
     },
     {
@@ -1570,8 +1570,8 @@
     {
         "id": 225,
         "tramite": 260513,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "cofepris/muestras-de-toxicos/plaguicidas",
+        "linkDepartment": "pago/muestras-de-toxicos/plaguicidas",
         "department": "cofepris"
     },
     {
@@ -1689,8 +1689,8 @@
     {
         "id": 242,
         "tramite": 261701,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "/cofepris/cancelacion-peticion/pantallas",
+        "linkDepartment": "/pago/cancelacion-peticion/pantallas",
         "department": "cofepris"
     },
     {
@@ -1948,8 +1948,8 @@
     {
         "id": 279,
         "tramite": 130204,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "/sener/exportacion-hidrocarburos/solicitud",
+        "linkDepartment": "/pago/exportacion-hidrocarburos/solicitud",
         "department": "sener"
     },
     {
@@ -2000,8 +2000,14 @@
         "linkDepartment": "/pago/permiso-sanitario-dispositivos-medicos/permiso-sanitario-dispositivos-medicos",
         "department": "cofepris"
 
+    },
+    {
+        "id": 286,
+        "tramite": 31602,
+        "linkDashboard": "/agace/registros-de-comercio-exterior/registrar-solicitud",
+        "linkDepartment": "/pago/registros-de-comercio-exterior/registrar-solicitud",
+        "department": "cofepris"
     }
-   
 
     
 ]

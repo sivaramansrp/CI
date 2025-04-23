@@ -331,6 +331,12 @@ const ROUTES: Routes = [
       
   },
   {
+    path: 'muestras-de-toxicos',
+    loadChildren: () =>
+      import('./tramites/260513/muestras-de-toxicos.module').then(
+        (m) => m.MuestrasDeToxicosModule)
+  },
+  {
     path: 'permiso-sujetos',
     loadChildren: () =>
       import(
@@ -406,6 +412,12 @@ const ROUTES: Routes = [
           )
   },
 
+  {
+    path: 'cancelacion-peticion',
+    loadChildren: () =>
+      import('./tramites/261701/cancelacion-peticion.module').then(
+        (m) => m.CancelacionPeticionModule)
+  },
 ];
 
 @NgModule({
