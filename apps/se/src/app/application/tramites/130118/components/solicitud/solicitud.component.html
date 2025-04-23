@@ -1,5 +1,5 @@
 <div class="container">
-    <form [formGroup]="FormSolicitud" (ngSubmit)="validarFormulario()">
+    <form [formGroup]="FormSolicitud">
         <!--Datos Regimen-->
         <ng-titulo titulo="Datos del trámite a realizar" />
         <ng-container formGroupName="datosRegimen">
@@ -33,6 +33,13 @@
                             (change)="setValoresStore(datosMercancia,'valueTA', 'setValueTA')"
                             [ngClass]="isValid(datosMercancia, 'valueTA') ? 'required' : ''"></textarea>
                         <input type="hidden" id="valueHidden" name="descripcionMerc" />
+                        @if(datosMercancia.controls['valueTA'].invalid && datosMercancia.controls['valueTA'].touched) {
+                        <div class="d-grid">
+                            @if(datosMercancia.controls['valueTA'].errors?.['required']) {
+                            <span class="mensaje-error">Este campo es obligatorio.</span>
+                            }
+                        </div>
+                        }
                         @if (FormSolicitud.get('datosMercancia.valueTA')?.hasError('maxlength')){
                         <div class="text-danger">
                             Por favor, no escriba más de 1000 caracteres.
@@ -69,6 +76,14 @@
                         formControlName="cantidadTarifaria" maxlength="17" min="0" max="99999999999999.99"
                         (change)="setValoresStore(datosMercancia,'cantidadTarifaria', 'setCantidadTarifaria')"
                         name="cantidadTarifaria" id="cantidadTarifaria" (change)="calcularUmtPrecioUnitario()" />
+                    @if(datosMercancia.controls['cantidadTarifaria'].invalid &&
+                    datosMercancia.controls['cantidadTarifaria'].touched) {
+                    <div class="d-grid">
+                        @if(datosMercancia.controls['cantidadTarifaria'].errors?.['required']) {
+                        <span class="mensaje-error">Este campo es obligatorio.</span>
+                        }
+                    </div>
+                    }
                 </div>
             </div>
             <div class="row mb-3">
@@ -81,6 +96,15 @@
                         type="number" formControlName="valorFacturaUSD" maxlength="17" min="0" max="99999999999999.99"
                         (change)="setValoresStore(datosMercancia,'valorFacturaUSD', 'setValorFacturaUSD')"
                         name="valorFacturaUSD" id="valorFacturaUSD" (change)="calcularUmtPrecioUnitario()" />
+
+                    @if(datosMercancia.controls['valorFacturaUSD'].invalid &&
+                    datosMercancia.controls['valorFacturaUSD'].touched) {
+                    <div class="d-grid">
+                        @if(datosMercancia.controls['valorFacturaUSD'].errors?.['required']) {
+                        <span class="mensaje-error">Este campo es obligatorio.</span>
+                        }
+                    </div>
+                    }
                 </div>
             </div>
             <div class="row mb-3">
@@ -115,6 +139,13 @@
                     <input type="text" [ngClass]="isValid(datosMercancia, 'lote') ? 'required' : ''"
                         class="form-control" id="lote" formControlName="lote" maxlength="60"
                         (change)="setValoresStore(datosMercancia,'lote', 'setLote')" />
+                    @if(datosMercancia.controls['lote'].invalid && datosMercancia.controls['lote'].touched) {
+                    <div class="d-grid">
+                        @if(datosMercancia.controls['lote'].errors?.['required']) {
+                        <span class="mensaje-error">Este campo es obligatorio.</span>
+                        }
+                    </div>
+                    }
                 </div>
                 <div class="col-md-4">
                     <div class="input-group">
@@ -179,6 +210,13 @@
                         <input class="form-control" [ngClass]="isValid(datosProducto, 'nombre') ? 'required' : ''"
                             type="text" name="nombre" id="nombre" formControlName="nombre" maxlength="200"
                             (change)="setValoresStore(datosProducto,'nombre', 'setNombre')" />
+                        @if(datosProducto.controls['nombre'].invalid && datosProducto.controls['nombre'].touched) {
+                        <div class="d-grid">
+                            @if(datosProducto.controls['nombre'].errors?.['required']) {
+                            <span class="mensaje-error">Este campo es obligatorio.</span>
+                            }
+                        </div>
+                        }
                     </div>
                 </div>
                 <div class="col-md-4">
@@ -189,6 +227,14 @@
                             name="apellidoPaterno" id="apellidoPaterno" formControlName="apellidoPaterno"
                             maxlength="200"
                             (change)="setValoresStore(datosProducto,'apellidoPaterno', 'setApellidoPaterno')" />
+                        @if(datosProducto.controls['apellidoPaterno'].invalid &&
+                        datosProducto.controls['apellidoPaterno'].touched) {
+                        <div class="d-grid">
+                            @if(datosProducto.controls['apellidoPaterno'].errors?.['required']) {
+                            <span class="mensaje-error">Este campo es obligatorio.</span>
+                            }
+                        </div>
+                        }
                     </div>
                 </div>
                 <div class="col-md-4">
@@ -206,22 +252,22 @@
             <div class="row mb-3 pm">
                 <div class="col-md-8">
                     <div class="form-group">
-                        <label for="razonSocial" class="form-label">Razón social*:</label>
+                        <label for="razonSocial" class="form-label">Denominación o razón social*:</label>
                         <input class="form-control" [ngClass]="isValid(datosProducto, 'razonSocial') ? 'required' : ''"
                             type="text" name="razonSocial" id="razonSocial" formControlName="razonSocial"
                             maxlength="250" (change)="setValoresStore(datosProducto,'razonSocial', 'setRazonSocial')" />
+                        @if(datosProducto.controls['razonSocial'].invalid &&
+                        datosProducto.controls['razonSocial'].touched) {
+                        <div class="d-grid">
+                            @if(datosProducto.controls['razonSocial'].errors?.['required']) {
+                            <span class="mensaje-error">Este campo es obligatorio.</span>
+                            }
+                        </div>
+                        }
                     </div>
                 </div>
             </div>
             }
-
-            <div class="row mb-3" id="molino">
-                <div class="col-md-8">
-                    <app-catalogo-select [catalogo]="molino" formControlName="molino" [label]="'Molino'"
-                        [required]="true" name="molino" (change)="molinoSeleccion()"></app-catalogo-select>
-                    <input type="hidden" id="selectMolino">
-                </div>
-            </div>
 
             <div class="row mb-3">
                 <br>
@@ -235,6 +281,14 @@
                             id="domicilio" name="domicilio" cols="50" rows="7" formControlName="domicilio"
                             maxlength="1000"
                             (change)="setValoresStore(datosProducto,'domicilio', 'setDomicilio')"></textarea>
+                        @if(datosProducto.controls['domicilio'].invalid && datosProducto.controls['domicilio'].touched)
+                        {
+                        <div class="d-grid">
+                            @if(datosProducto.controls['domicilio'].errors?.['required']) {
+                            <span class="mensaje-error">Este campo es obligatorio.</span>
+                            }
+                        </div>
+                        }
                     </div>
                 </div>
             </div>

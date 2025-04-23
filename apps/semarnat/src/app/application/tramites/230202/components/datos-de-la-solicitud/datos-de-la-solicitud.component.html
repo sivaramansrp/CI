@@ -1,0 +1,49 @@
+<div class="mt-4">
+  <form [formGroup]="solicitudForm">
+    <div class="col-md-12">
+      <ng-container formGroupName="reexportacionForm">
+        <div class="row">
+          <div class="col-md-8">
+            <app-catalogo-select
+              [catalogo]="numeroDeCertificado"
+              [label]="'Número de certificado fitosanitario de reexportación'"
+              formControlName="numeroDeCertificado"
+              [required]="true"
+              (change)="numeroDeCertificadoSeleccion()"
+              name="numeroDeCertificado"
+            >
+            </app-catalogo-select>
+          </div>
+        </div>
+        <ng-titulo titulo="Aduana"></ng-titulo>
+        <div class="row">
+          <div class="col-md-8">
+            <app-catalogo-select
+              [catalogo]="aduana"
+              [label]="'Aduana de salida'"
+              formControlName="aduana"
+              [required]="true"
+              (change)="aduanaSeleccion()"
+              name="aduana"
+            >
+            </app-catalogo-select>
+          </div>
+        </div>
+        <ng-titulo titulo="Pais"></ng-titulo>
+        <label class="form-label">País de origen*</label>
+        <crosslist
+          [fechas]="selectRangoDias"
+          [label]="paisDeOrigenLabel"
+          [botones]="paisDeOrigenBotons"
+        ></crosslist>
+        <br/>
+        <label class="form-label">Lungar de procedencia en el terretorio nacional*</label>
+        <crosslist
+          [fechas]="selectEntidades"
+          [label]="entidadesLabel"
+          [botones]="entidadesBotons"
+        ></crosslist>
+      </ng-container>
+    </div>
+  </form>
+</div>

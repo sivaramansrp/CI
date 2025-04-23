@@ -1,10 +1,10 @@
-import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, DatosPasos, ListaPasosWizard, PASOS, TituloComponent, WizardComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, AnexarDocumentosComponent, AVISO, BtnContinuarComponent, DatosPasos, ListaPasosWizard, PASOS, TituloComponent, WizardComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { Component, ViewChild } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
-import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 
 /**
  * Texto de alerta para terceros.
@@ -64,6 +64,17 @@ export class SolicitudPageComponent {
    * Referencia al componente del asistente.
    */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
+
+  /**
+   * Clase CSS para aplicar estilo a las alertas de información.
+   */
+  public infoAlert = 'alert-info';
+
+  /**
+   * Aviso de privacidad simplificado.
+   * Este texto se utiliza para mostrar el aviso de privacidad al usuario.
+   */
+  TEXTOS = AVISO.Aviso;
 
   /**
    * Datos de los pasos del asistente.
