@@ -1,11 +1,304 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Catalogo, CatalogoSelectComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { ExpedicionCertificadosAsignacion120202State, Tramite120202Store } from '../../../../estados/tramites/tramite120202.store';
+import { Tramite120202Query } from '../../../../estados/queries/tramite120202.query';
+import { map, merge, Subject, takeUntil } from 'rxjs';
+import { ExpedicionCertificadosAsignacionService } from '../../services/expedicion-certificados-asignacion/expedicion-certificados-asignacion.service';
+import { ExpedirMonto, NumeroOficioAsignacionDetalleRespquesta } from '../../models/expedicion-certificados-asignacion.model';
+import { CONFIGURACION_PARA_ENCABEZADO_DE_EXPEDIR_MONTO_TABLA } from '../../constantes/expedicion-certificados-asignacion-constantes.enum';
 
 @Component({
   selector: 'app-expedicion-certificados-asignacion-directa',
   standalone: true,
-  imports: [CommonModule],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    TituloComponent,
+    CatalogoSelectComponent,
+    TablaDinamicaComponent
+  ],
   templateUrl: './expedicion-certificados-asignacion-directa.component.html',
   styleUrl: './expedicion-certificados-asignacion-directa.component.scss',
 })
-export class ExpedicionCertificadosAsignacionDirectaComponent {}
+export class ExpedicionCertificadosAsignacionDirectaComponent implements OnInit, OnDestroy {
+  expedicionCertificadosAsignacionForm!: FormGroup;
+
+  aniosAutorizacion!: Catalogo[];
+
+  mostrarDetalle: boolean = false;
+
+  configuracionParaEncabezadoDeTabla = CONFIGURACION_PARA_ENCABEZADO_DE_EXPEDIR_MONTO_TABLA;
+
+  /**
+   * Configuración de la tabla dinámica.
+   */
+  cuerpoTabla: ExpedirMonto[] = [];
+
+  tipoSeleccionTabla = TablaSeleccion.CHECKBOX;
+
+  public expedicionCertificadoAsignacionState!: ExpedicionCertificadosAsignacion120202State;
+
+  /**
+   * Subject para destruir notificador.
+   */
+  private destruirNotificador$: Subject<void> = new Subject();
+
+  constructor(
+    private fb: FormBuilder,
+    private tramite120202Store: Tramite120202Store,
+    private tramite120202Query: Tramite120202Query,
+    private expedicionCertificadosAsignacionService: ExpedicionCertificadosAsignacionService
+  ) {
+    // El constructor se utiliza para la inyección de dependencias       
+  }
+
+  /**
+   * Método que se ejecuta al inicializar el componente.
+   */
+  ngOnInit(): void {
+    this.inicializaCatalogos();
+
+    this.tramite120202Query.selectSeccionState$
+      .pipe(
+        takeUntil(this.destruirNotificador$),
+        map((seccionState) => {
+          this.expedicionCertificadoAsignacionState = seccionState;
+          this.cuerpoTabla = seccionState.cuerpoTabla ?? [];
+          this.mostrarDetalle = seccionState.mostrarDetalle ?? false;
+        })
+      )
+      .subscribe();
+
+    // Inicializar el formulario principal
+    this.crearExpedicionCertificadosAsignacionForm();
+
+    this.aniosAutorizacionSeleccion();
+  }
+
+  crearExpedicionCertificadosAsignacionForm(): void {
+    this.expedicionCertificadosAsignacionForm = this.fb.group({
+      asignacionOficioNumeroForm: this.fb.group({
+        cveAniosAutorizacion: [
+          this.expedicionCertificadoAsignacionState.cveAniosAutorizacion,
+          [Validators.required]
+        ],
+        numFolioAsignacionAux: [
+          this.expedicionCertificadoAsignacionState.numFolioAsignacionAux,
+          [Validators.required]
+        ]
+      }),
+      representacionFederalForm: this.fb.group({
+        estado: [
+          { value: this.expedicionCertificadoAsignacionState.estado, disabled: true }
+        ],
+        representacionFederal: [
+          { value: this.expedicionCertificadoAsignacionState.representacionFederal, disabled: true }
+        ]
+      }),
+      controlMontosAsignacionForm: this.fb.group({
+        sumaAprobada: [
+          { value: this.expedicionCertificadoAsignacionState.sumaAprobada, disabled: true }
+        ],
+        sumaExpedida: [
+          { value: this.expedicionCertificadoAsignacionState.sumaExpedida, disabled: true }
+        ],
+        montoDisponible: [
+          { value: this.expedicionCertificadoAsignacionState.montoDisponible, disabled: true }
+        ]
+      }),
+      asignacionDatosForm: this.fb.group({
+        numOficio: [
+          { value: this.expedicionCertificadoAsignacionState.numOficio, disabled: true }
+        ],
+        fechaInicio: [
+          { value: this.expedicionCertificadoAsignacionState.fechaInicio, disabled: true }
+        ],
+        fechaFinVigenciaAprobada: [
+          { value: this.expedicionCertificadoAsignacionState.fechaFinVigenciaAprobada, disabled: true }
+        ]
+      }),
+      cupoDescripcionForm: this.fb.group({
+        regimenAduanero: [
+          { value: this.expedicionCertificadoAsignacionState.regimenAduanero, disabled: true }
+        ],
+        descripcionProducto: [
+          { value: this.expedicionCertificadoAsignacionState.descripcionProducto, disabled: true }
+        ],
+        clasificaionSubproducto: [
+          { value: this.expedicionCertificadoAsignacionState.clasificaionSubproducto, disabled: true }
+        ],
+        unidadMedidaOficialCupo: [
+          { value: this.expedicionCertificadoAsignacionState.unidadMedidaOficialCupo, disabled: true }
+        ],
+        fechaInicioVigencia: [
+          { value: this.expedicionCertificadoAsignacionState.fechaInicioVigencia, disabled: true }
+        ],
+        fechaFinVigencia: [
+          { value: this.expedicionCertificadoAsignacionState.fechaFinVigencia, disabled: true }
+        ],
+        mecanismoAsignacion: [
+          { value: this.expedicionCertificadoAsignacionState.mecanismoAsignacion, disabled: true }
+        ],
+        tratado: [
+          { value: this.expedicionCertificadoAsignacionState.tratado, disabled: true }
+        ],
+        fraccionesArancelarias: [
+          { value: this.expedicionCertificadoAsignacionState.fraccionesArancelarias, disabled: true }
+        ],
+        paisesCupo: [
+          { value: this.expedicionCertificadoAsignacionState.paisesCupo, disabled: true }
+        ],
+        observaciones: [
+          { value: this.expedicionCertificadoAsignacionState.observaciones, disabled: true }
+        ],
+        descripcionFundamento: [
+          { value: this.expedicionCertificadoAsignacionState.descripcionFundamento, disabled: true }
+        ]
+      }),
+      distribucionSaldoForm: this.fb.group({
+        montoDisponibleAsignacion: [
+          { value: this.expedicionCertificadoAsignacionState.montoDisponibleAsignacion, disabled: true }
+        ],
+        montoExpedir: [
+          this.expedicionCertificadoAsignacionState.montoExpedir,
+          [Validators.required]
+        ],
+        totalExpedir: [
+          { value: this.expedicionCertificadoAsignacionState.totalExpedir, disabled: true }
+        ]
+      })
+    });
+  }
+
+  /**
+   * Inicializa los catálogos necesarios para el formulario.
+   */
+  inicializaCatalogos(): void {
+    const ANIOS_AUTORIZACION$ = this.expedicionCertificadosAsignacionService
+      .getAniosAutorizacionCatalogo()
+      .pipe(
+        map((resp) => {
+          this.aniosAutorizacion = resp.data;
+        })
+      );
+
+    merge(
+      ANIOS_AUTORIZACION$
+    )
+      .pipe(takeUntil(this.destruirNotificador$))
+      .subscribe();
+  }
+
+  get asignacionOficioNumeroForm(): FormGroup {
+    return this.expedicionCertificadosAsignacionForm.get('asignacionOficioNumeroForm') as FormGroup;
+  }
+
+  get representacionFederalForm(): FormGroup {
+    return this.expedicionCertificadosAsignacionForm.get('representacionFederalForm') as FormGroup;
+  }
+
+  get controlMontosAsignacionForm(): FormGroup {
+    return this.expedicionCertificadosAsignacionForm.get('controlMontosAsignacionForm') as FormGroup;
+  }
+
+  get asignacionDatosForm(): FormGroup {
+    return this.expedicionCertificadosAsignacionForm.get('asignacionOficioNumeroForm') as FormGroup;
+  }
+
+  get cupoDescripcionForm(): FormGroup {
+    return this.expedicionCertificadosAsignacionForm.get('cupoDescripcionForm') as FormGroup;
+  }
+
+  get distribucionSaldoForm(): FormGroup {
+    return this.expedicionCertificadosAsignacionForm.get('distribucionSaldoForm') as FormGroup;
+  }
+
+  aniosAutorizacionSeleccion(): void {
+    const ANIOS_AUTORIZACION = this.expedicionCertificadosAsignacionForm.get('cveAniosAutorizacion')?.value;
+    this.tramite120202Store.setAniosAutorizacion(ANIOS_AUTORIZACION);
+  }
+
+  buscar(): void {
+    this.expedicionCertificadosAsignacionService.getNumeroOficioAsignacionDetalle()
+      .pipe((takeUntil(this.destruirNotificador$)))
+      .subscribe((resp: NumeroOficioAsignacionDetalleRespquesta) => {
+        const DATOS = resp.data[0];
+        this.expedicionCertificadosAsignacionForm.get('representacionFederalForm')?.patchValue({
+          estado: DATOS.estado,
+          representacionFederal: DATOS.representacionFederal
+        });
+        this.expedicionCertificadosAsignacionForm.get('controlMontosAsignacionForm')?.patchValue({
+          sumaAprobada: DATOS.sumaAprobada,
+          sumaExpedida: DATOS.sumaExpedida,
+          montoDisponible: DATOS.montoDisponible
+        });
+        this.expedicionCertificadosAsignacionForm.get('asignacionDatosForm')?.patchValue({
+          numOficio: DATOS.numOficio,
+          fechaInicio: DATOS.fechaInicio,
+          fechaFinVigenciaAprobada: DATOS.fechaFinVigenciaAprobada
+        });
+        this.expedicionCertificadosAsignacionForm.get('cupoDescripcionForm')?.patchValue({
+          regimenAduanero: DATOS.regimenAduanero,
+          descripcionProducto: DATOS.descripcionProducto,
+          clasificaionSubproducto: DATOS.clasificaionSubproducto,
+          unidadMedidaOficialCupo: DATOS.unidadMedidaOficialCupo,
+          fechaInicioVigencia: DATOS.fechaInicioVigencia,
+          fechaFinVigencia: DATOS.fechaFinVigencia,
+          mecanismoAsignacion: DATOS.mecanismoAsignacion,
+          tratado: DATOS.tratado,
+          fraccionesArancelarias: DATOS.fraccionesArancelarias,
+          paisesCupo: DATOS.paisesCupo,
+          observaciones: DATOS.observaciones,
+          descripcionFundamento: DATOS.descripcionFundamento
+        });
+        this.expedicionCertificadosAsignacionForm.get('distribucionSaldoForm')?.patchValue({
+          montoDisponibleAsignacion: DATOS.montoDisponibleAsignacion
+        });
+      });
+    this.mostrarDetalle = true;
+    this.tramite120202Store.setMostrarDetalle(this.mostrarDetalle);
+  }
+
+  /**
+   * Método para agregar un nuevo monto a la tabla.
+   * @param valor - El valor a agregar.
+   */
+  agregar(valor: string): void {
+    const MONTO_EXPEDIR_VALOR = parseInt(valor);
+    this.cuerpoTabla = [
+      ...this.cuerpoTabla,
+      { montoExpedir: MONTO_EXPEDIR_VALOR }
+    ];
+    console.log(this.cuerpoTabla);
+    this.distribucionSaldoForm.get('totalExpedir')?.setValue(MONTO_EXPEDIR_VALOR);
+    this.tramite120202Store.setTotalExpedir(MONTO_EXPEDIR_VALOR);
+    this.tramite120202Store.setCuerpoTabla(this.cuerpoTabla);
+  }
+
+  eliminarSeleccionado(): void {
+  }
+
+  /**
+   * Establece los valores en el store de tramite120202.
+   *
+   * @param {FormGroup} form - El formulario del cual se obtiene el valor.
+   * @param {string} campo - El nombre del campo del formulario cuyo valor se va a obtener.
+   * @param {string} metodoNombre - El nombre del método en el store que se va a invocar con el valor del campo.
+   * @returns {void}
+   */
+  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite120202Store): void {
+    const VALOR = form.get(campo)?.value;
+    (this.tramite120202Store[metodoNombre] as (value: unknown) => void)(VALOR);
+  }
+
+  /**
+   * Se ejecuta al destruir el componente.
+   * Emite un valor y completa el subject `destruirNotificador$` para cancelar las suscripciones.
+   */
+  ngOnDestroy(): void {
+    this.destruirNotificador$.next();
+    this.destruirNotificador$.complete();
+  }
+}

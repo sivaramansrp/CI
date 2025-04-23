@@ -1,3 +1,6 @@
+import { ConfiguracionColumna } from "@libs/shared/data-access-user/src";
+import { ExpedirMonto } from "../models/expedicion-certificados-asignacion.model";
+
 /**
  * Constantes para la asignación de expedición de certificados
  */
@@ -14,4 +17,8 @@ export const EXPEDICION_CERTIFICADO_ASIGNACION_PASOS = [
     activo: false,
     completado: false,
   }
+];
+
+export const CONFIGURACION_PARA_ENCABEZADO_DE_EXPEDIR_MONTO_TABLA: ConfiguracionColumna<ExpedirMonto>[] = [
+  { encabezado: 'Monto a expedir', clave: (fila) => fila.montoExpedir, orden: 1 },
 ];
