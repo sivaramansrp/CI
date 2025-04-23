@@ -1,11 +1,11 @@
 import { CONFIGURACION_MERCANCIA, MERCANCIA_SELECCIONADAS } from '../../constantes/modificacion.enum';
-import { Catalogo, CatalogoSelectComponent, InputFecha, InputFechaComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Catalogo, CatalogoSelectComponent, InputCheckComponent, InputFecha, InputFechaComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
 import { ConfiguracionColumna, MenusDesplegables } from '../../models/modificacion.enum';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Subject, delay, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { Mercancia } from '../../models/modificacion.enum';
+import { Subject } from 'rxjs';
 
 /**
  * Constante que representa la configuración de la fecha de inicio en el componente de certificado de origen.
@@ -47,12 +47,13 @@ export const FECHA_FINAL = {
     TablaDinamicaComponent,
     InputFechaComponent,
     CatalogoSelectComponent,
+    InputCheckComponent
   ],
   templateUrl: './certificado-de-origen.component.html',
   styleUrl: './certificado-de-origen.component.scss'
 })
 
-export class CertificadoDeOrigenComponent implements OnDestroy, OnInit {
+export class CertificadoDeOrigenComponent implements OnDestroy {
   /**
    * Propiedad de entrada que recibe un arreglo de menús desplegables.
    * @type {MenusDesplegables[]}
@@ -99,7 +100,7 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit {
    * Propiedad de salida que emite el valor del formulario cuando se actualiza.
    * @type {EventEmitter<undefined>}
    */
-  @Output() formCertificadoEvent: EventEmitter<undefined> = new EventEmitter<undefined>();
+  @Output() formCertificadoEvent: EventEmitter<{ formGroupName: string; campo: string; valor: undefined; storeStateName: string }> = new EventEmitter<{ formGroupName: string; campo: string; valor: undefined; storeStateName: string }>();
 
   /**
    * Propiedad de salida que emite el estado seleccionado.
@@ -205,36 +206,25 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit {
   constructor(private fb: FormBuilder) {
     // Inicializa el formulario reactivo con los campos y validaciones necesarias.
     this.formCertificado = this.fb.group({
+      si: [false],
       entidadFederativa: ['', [Validators.required, Validators.min(0)]],
       bloque: ['', [Validators.required, Validators.min(0)]],
       fraccionArancelariaForm: [''],
       registroProductoForm: [''],
       nombreComercialForm: [''],
-      fechaFinal: ['', [Validators.required]],
-      fechaInicio: ['', [Validators.required]],
+      fechaInicioInput: ['', [Validators.required]],
+      fechaFinalInput: ['', [Validators.required]],
     });
 
     // Si hay datos del formulario, se los asigna al formulario después de un pequeño retraso.
+    
     setTimeout(() => {
       if (this.datosForm) {
         this.formCertificado.patchValue(this.datosForm);
       }
     }, 100);
   }
-
-  /**
-   * Método del ciclo de vida ngOnInit. Se suscribe a los cambios en el formulario y emite los valores cuando cambian.
-   */
-  ngOnInit(): void {
-    // Se suscribe a los cambios en el formulario y emite los valores cada vez que cambia el formulario.
-    this.formCertificado.valueChanges
-      .pipe(delay(100))
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((_) => {
-        this.formCertificadoEvent.emit(this.formCertificado.value);
-        this.formaValida.emit(this.formCertificado.valid);
-      });
-  }
+  
 
   /**
    * Establece el estado seleccionado en el store.
@@ -260,6 +250,12 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit {
     this.destroyNotifier$.complete();
   }
 
+  setValoresStore(formGroupName: string, campo: string, storeStateName: string):void {    
+    const VALOR = this.formCertificado.get(campo)?.value;    
+    this.formaValida.emit(this.formCertificado.valid);
+    this.formCertificadoEvent.emit({ formGroupName, campo, valor: VALOR, storeStateName });
+  }
+
   /**
    * Getter para obtener el control del formulario de la entidad federativa.
    * @returns {FormControl} El control para la entidad federativa.
@@ -279,9 +275,10 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit {
    * Cambia el valor de la fecha de inicio en el formulario.
    * @param nuevo_valor El nuevo valor de la fecha de inicio.
    */
-  public cambioFechaInicio(nuevo_valor: string): void {
-    this.formCertificado.get('fechaInicio')?.setValue(nuevo_valor);
-    this.formCertificado.get('fechaInicio')?.markAsUntouched();
+  public cambioFechaInicio(nuevo_valor: string): void {    
+    this.formCertificado.get('fechaInicioInput')?.setValue(nuevo_valor);
+    this.setValoresStore('formCertificado','fechaInicioInput',nuevo_valor)
+    this.formCertificado.get('fechaInicioInput')?.markAsUntouched();
   }
 
   /**
@@ -289,8 +286,9 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit {
    * @param nuevo_valor El nuevo valor de la fecha final.
    */
   public cambioFechaFinal(nuevo_valor: string): void {
-    this.formCertificado.get('fechaFinal')?.setValue(nuevo_valor);
-    this.formCertificado.get('fechaFinal')?.markAsUntouched();
+    this.formCertificado.get('fechaFinalInput')?.setValue(nuevo_valor);
+    this.setValoresStore('formCertificado','fechaFinalInput',nuevo_valor)
+    this.formCertificado.get('fechaFinalInput')?.markAsUntouched();
   }
 
   /**
