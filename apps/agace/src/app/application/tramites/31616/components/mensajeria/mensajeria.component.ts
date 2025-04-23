@@ -254,13 +254,13 @@ export class MensajeriaComponent implements OnInit, OnDestroy, AfterViewInit {
     (this.tramite31616Store[metodoNombre] as (value: string) => void)(VALOR);
 
     if (campo === 'laSolicitante') {
-      this.isLaSolicitante = parseInt(VALOR, 10) === 1;
+      this.isLaSolicitante = VALOR === true;
     }
     if (campo === 'susFiliales') {
-      this.isSusFiliales = parseInt(VALOR, 10) === 1;
+      this.isSusFiliales = VALOR === true;
     }
     if (campo === 'lasEmpresas') {
-      this.isLasEmpresas = parseInt(VALOR, 10) === 1;
+      this.isLasEmpresas = VALOR === true;
     }
   }
 
