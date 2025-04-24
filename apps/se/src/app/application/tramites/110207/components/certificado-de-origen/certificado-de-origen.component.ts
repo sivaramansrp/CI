@@ -39,6 +39,7 @@ import { Tramite110207Query } from '../../state/Tramite110207.query';
 import mercanciaDisponsibleTable from '@libs/shared/theme/assets/json/110207/mercancia-disponsible.json';
 import mercanciaSeleccionadasTable from '@libs/shared/theme/assets/json/110207/mercancias-seleccionadas.json';
 import mercanciaTable from '@libs/shared/theme/assets/json/110207/mercancia.json';
+import { Modal } from 'bootstrap';
 
 const TERCEROS_TEXTO_DE_ALERTA =
   'Para continuar con el trámite, debes agregar por lo menos una mercancía.';
@@ -367,8 +368,11 @@ optionsTipoFactura!: Catalogo[];
    */
   manejarClic(row: unknown) {
     this.esFormulario = true;
+    // this.esMercanciaEnEdicion = false;
+    const modalEl = document.getElementById('datosMercancia')!;
+  new Modal(modalEl).show();   
   }
-  
+ 
   /**
    * Establece la selección del aviso de funcionamiento basado en el evento.
    * @param evento Evento del checkbox.
@@ -510,7 +514,7 @@ optionsTipoFactura!: Catalogo[];
    * Modifica una mercancía existente.
    */
   modificar() {
-    this.esFormulario = true;
+    // this.esFormulario = true;
     this.esMercanciaEnEdicion = false;
 
     this.getTratado();
