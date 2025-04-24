@@ -204,7 +204,7 @@ export class ExpedicionCertificadosAsignacionDirectaComponent implements OnInit,
   }
 
   get asignacionDatosForm(): FormGroup {
-    return this.expedicionCertificadosAsignacionForm.get('asignacionOficioNumeroForm') as FormGroup;
+    return this.expedicionCertificadosAsignacionForm.get('asignacionDatosForm') as FormGroup;
   }
 
   get cupoDescripcionForm(): FormGroup {
@@ -216,30 +216,34 @@ export class ExpedicionCertificadosAsignacionDirectaComponent implements OnInit,
   }
 
   aniosAutorizacionSeleccion(): void {
-    const ANIOS_AUTORIZACION = this.expedicionCertificadosAsignacionForm.get('cveAniosAutorizacion')?.value;
+    const ANIOS_AUTORIZACION = this.asignacionOficioNumeroForm.get('cveAniosAutorizacion')?.value;
     this.tramite120202Store.setAniosAutorizacion(ANIOS_AUTORIZACION);
   }
 
   buscar(): void {
+    this.asignacionOficioNumeroForm.reset({cveAniosAutorizacion: '', numFolioAsignacionAux: ''});
+    this.tramite120202Store.setAniosAutorizacion('');
+    this.tramite120202Store.setNumFolioAsignacionAux('');
+
     this.expedicionCertificadosAsignacionService.getNumeroOficioAsignacionDetalle()
       .pipe((takeUntil(this.destruirNotificador$)))
       .subscribe((resp: NumeroOficioAsignacionDetalleRespquesta) => {
         const DATOS = resp.data[0];
-        this.expedicionCertificadosAsignacionForm.get('representacionFederalForm')?.patchValue({
+        this.representacionFederalForm.patchValue({
           estado: DATOS.estado,
           representacionFederal: DATOS.representacionFederal
         });
-        this.expedicionCertificadosAsignacionForm.get('controlMontosAsignacionForm')?.patchValue({
+        this.controlMontosAsignacionForm.patchValue({
           sumaAprobada: DATOS.sumaAprobada,
           sumaExpedida: DATOS.sumaExpedida,
           montoDisponible: DATOS.montoDisponible
         });
-        this.expedicionCertificadosAsignacionForm.get('asignacionDatosForm')?.patchValue({
+        this.asignacionDatosForm.patchValue({
           numOficio: DATOS.numOficio,
           fechaInicio: DATOS.fechaInicio,
           fechaFinVigenciaAprobada: DATOS.fechaFinVigenciaAprobada
         });
-        this.expedicionCertificadosAsignacionForm.get('cupoDescripcionForm')?.patchValue({
+        this.cupoDescripcionForm.patchValue({
           regimenAduanero: DATOS.regimenAduanero,
           descripcionProducto: DATOS.descripcionProducto,
           clasificaionSubproducto: DATOS.clasificaionSubproducto,
@@ -253,12 +257,41 @@ export class ExpedicionCertificadosAsignacionDirectaComponent implements OnInit,
           observaciones: DATOS.observaciones,
           descripcionFundamento: DATOS.descripcionFundamento
         });
-        this.expedicionCertificadosAsignacionForm.get('distribucionSaldoForm')?.patchValue({
+        this.distribucionSaldoForm.patchValue({
           montoDisponibleAsignacion: DATOS.montoDisponibleAsignacion
         });
+        this.mostrarDetalle = true;
+        this.tramite120202Store.setMostrarDetalle(this.mostrarDetalle);
+        this.setEstablecerDatosCampo();
       });
-    this.mostrarDetalle = true;
-    this.tramite120202Store.setMostrarDetalle(this.mostrarDetalle);
+  }
+
+  setEstablecerDatosCampo(): void {
+    this.setValoresStore(this.representacionFederalForm, 'estado', 'setEstado');
+    this.setValoresStore(this.representacionFederalForm, 'representacionFederal', 'setRepresentacionFederal');
+
+    this.setValoresStore(this.controlMontosAsignacionForm, 'sumaAprobada', 'setSumaAprobada');
+    this.setValoresStore(this.controlMontosAsignacionForm, 'sumaExpedida', 'setSumaExpedida');
+    this.setValoresStore(this.controlMontosAsignacionForm, 'montoDisponible', 'setMontoDisponible');
+
+    this.setValoresStore(this.asignacionDatosForm, 'numOficio', 'setNumOficio');
+    this.setValoresStore(this.asignacionDatosForm, 'fechaInicio', 'setFechaInicio');
+    this.setValoresStore(this.asignacionDatosForm, 'fechaFinVigenciaAprobada', 'setFechaFinVigenciaAprobada');
+
+    this.setValoresStore(this.cupoDescripcionForm, 'regimenAduanero', 'setRegimenAduanero');
+    this.setValoresStore(this.cupoDescripcionForm, 'descripcionProducto', 'setDescripcionProducto');
+    this.setValoresStore(this.cupoDescripcionForm, 'clasificaionSubproducto', 'setClasificaionSubproducto');
+    this.setValoresStore(this.cupoDescripcionForm, 'unidadMedidaOficialCupo', 'setUnidadMedidaOficialCupo');
+    this.setValoresStore(this.cupoDescripcionForm, 'fechaInicioVigencia', 'setFechaInicioVigencia');
+    this.setValoresStore(this.cupoDescripcionForm, 'fechaFinVigencia', 'setFechaFinVigencia');
+    this.setValoresStore(this.cupoDescripcionForm, 'mecanismoAsignacion', 'setMecanismoAsignacion');
+    this.setValoresStore(this.cupoDescripcionForm, 'tratado', 'setTratado');
+    this.setValoresStore(this.cupoDescripcionForm, 'fraccionesArancelarias', 'setFraccionesArancelarias');
+    this.setValoresStore(this.cupoDescripcionForm, 'paisesCupo', 'setPaisesCupo');
+    this.setValoresStore(this.cupoDescripcionForm, 'observaciones', 'setObservaciones');
+    this.setValoresStore(this.cupoDescripcionForm, 'descripcionFundamento', 'setDescripcionFundamento');
+
+    this.setValoresStore(this.distribucionSaldoForm, 'montoDisponibleAsignacion', 'setMontoDisponibleAsignacion');
   }
 
   /**
@@ -271,10 +304,9 @@ export class ExpedicionCertificadosAsignacionDirectaComponent implements OnInit,
       ...this.cuerpoTabla,
       { montoExpedir: MONTO_EXPEDIR_VALOR }
     ];
-    console.log(this.cuerpoTabla);
-    this.distribucionSaldoForm.get('totalExpedir')?.setValue(MONTO_EXPEDIR_VALOR);
-    this.tramite120202Store.setTotalExpedir(MONTO_EXPEDIR_VALOR);
     this.tramite120202Store.setCuerpoTabla(this.cuerpoTabla);
+    this.distribucionSaldoForm.get('totalExpedir')?.setValue(valor);
+    this.tramite120202Store.setTotalExpedir(MONTO_EXPEDIR_VALOR);
   }
 
   eliminarSeleccionado(): void {
