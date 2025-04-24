@@ -3,24 +3,10 @@
     "data": [
       {
         "id": 160,
-        "descripcion": "AEROPUERTO INTERNAL",
-        "tam": "Grande",
-        "dpi": "Nacional",
-        "value": "AEROPUERTO"
-      },
-      {
-        "id": 170,
-        "descripcion": "ANZALDUAS, CIUDAD REYNOSA",
-        "tam": "Grande",
-        "dpi": "Nacional",
-        "value": "ANZALDUAS"
-      },
-      {
-        "id": 240,
-        "descripcion": "NUEVO AMANECER, CD. REYNOSA, TAMPS",
-        "tam": "Grande",
-        "dpi": "Nacional",
-        "value": "NUEVO"
+        "descripcion": "Histórica",
+        "tam": "Histórica",
+        "dpi": "Histórica",
+        "value": "Histórica"
       }
     ],
     "message": "Consulta exitosa"
