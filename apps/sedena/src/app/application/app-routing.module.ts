@@ -95,6 +95,13 @@ const ROUTES: Routes = [
       import(
       './tramites/240117/permiso-ordinario-para-la-exportacion-de-sustancias-quimicas.module'
       ).then((m) => m.PermisoOrdinarioParaLaExportacionDeSustanciasQuimicasModule),
+  },
+  {
+    path: 'solicitud-prorroga-aviso-importacion',
+    loadChildren: () =>
+      import(
+        './tramites/240407/solicitud-prorroga-aviso-importacion.module'
+      ).then((m) => m.SolicitudProrrogaAvisoImportacionModule),
   }
 ];
 

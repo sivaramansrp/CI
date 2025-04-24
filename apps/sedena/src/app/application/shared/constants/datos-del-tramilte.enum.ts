@@ -28,7 +28,7 @@ export const CROSLISTA_ADUANAS_DISPONIBLES: string[] = [
  * @description Representa códigos específicos utilizados en el sistema para identificar tipos de permisos definitivos.
  */
 export const PERMISO_DEFINITIVO_TITULO = [
-  240119, 240118, 240107, 240106, 240108, 240308,240117, 240121, 240405, 240111
+  240119, 240118, 240107, 240106, 240108, 240308,240117, 240121, 240405, 240111, 240407
 ];
 
 /**
@@ -47,7 +47,7 @@ export const PERMISO_ADUNA_TITULO = [240119, 240118];
  * @type {number[]}
  * @description Representa códigos específicos utilizados en el sistema para identificar permisos OCULTAR_BOTONES.
  */
-export const OCULTAR_BOTONES = [240121, 240107 ];
+export const OCULTAR_BOTONES = [240121, 240107, 240407];
 
 
 /**
@@ -66,6 +66,7 @@ export const PAISE_DENTINO_EITIQUETA: Map<number, string> = new Map<
   [240108, 'paise destino'],
   [240308, 'paise destino'],
   [240405, 'paise destino'],
+  [240407, 'País destino'],
 ]);
 
 /**
@@ -85,7 +86,7 @@ export const PUEDE_MOSTRAR_LA_LISTA_CRUZADA_FOR_MERCANCIA = [240108, 240107, 240
  * @description Contiene un arreglo de números que identifican el semestre habilitado. Este valor puede ser utilizado para validar o configurar funcionalidades relacionadas con el período académico activo.
  */
 export const PERIODO_SEMESTRE_HABILITADO = [
-  240119, 240108, 240107, 240114, 240106, 240308, 240117, 240121, 240405, 240111
+  240119, 240108, 240107, 240114, 240106, 240308, 240117, 240121, 240405, 240111, 240407
 ];
 
 /**
@@ -96,7 +97,7 @@ export const PERIODO_SEMESTRE_HABILITADO = [
  * @description Contiene un arreglo de identificadores numéricos relacionados con manifiestos y declaraciones en el sistema.
  */
 
-export const MANIFIESTOS_DECLARACIONES = [240107, 240106, 240117];
+export const MANIFIESTOS_DECLARACIONES = [240107, 240106, 240117, 240407];
 
 /**
  * Identificadores numéricos relacionados con fechas de pago.
@@ -105,7 +106,7 @@ export const MANIFIESTOS_DECLARACIONES = [240107, 240106, 240117];
  * @type {number[]}
  * @description Contiene un arreglo de identificadores numéricos relacionados con fechas de pago en el sistema.
  */
-export const FETCHA_PAGO = [240107, 240106];
+export const FETCHA_PAGO = [240107, 240106, 240407];
 
 /**
  * Identificadores numéricos relacionados con CURP.
@@ -173,7 +174,7 @@ export const AGGREGAR_MERCANCIA_PAISE_OCULTAR = [240108];
  * @description Contiene un arreglo de identificadores numéricos relacionados con permisos de justificación específicos.
  * Este valor es utilizado en el sistema para identificar trámites que requieren justificación.
  */
-export const PERMISO_JUSTIFICACION = [240308, 240405];
+export const PERMISO_JUSTIFICACION = [240308, 240405, 240407];
 
 /**
  * Constante que define una lista de permisos generales que deben ser ocultados.

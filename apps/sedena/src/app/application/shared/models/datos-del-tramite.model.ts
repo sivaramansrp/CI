@@ -125,7 +125,7 @@ export const MANIFIESTOS_DECLARACION = {
  * @property {boolean} habilitado - Indica si el campo está habilitado para edición.
  */
 export const FECHA_DE_PAGO = {
-  labelNombre: 'Fecha única de pago',
+  labelNombre: 'Fecha única de entrada',
   required: true,
   habilitado: true,
 };
