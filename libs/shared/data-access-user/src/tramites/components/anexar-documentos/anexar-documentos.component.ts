@@ -541,8 +541,8 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
       const INDICE: number = this.catalogoDocumentos.findIndex(doc => doc.id === item.id);
       if (INDICE !== -1) {
         const NUEVO_ID: number = (this.catalogoDocumentos[INDICE]?.adicionales?.length ?? 0) + 1;
-        const PARTE_DOCUMENTO: any = {
-          id: `${item.id}-${NUEVO_ID}`,
+        const PARTE_DOCUMENTO: CatalogoDocumento = {
+          id: parseInt(`${item.id}0${NUEVO_ID}`, 10),
           descripcion: item.descripcion,
           tam: item.tam,
           dpi: item.dpi,
@@ -555,8 +555,8 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
       const INDICE: number = this.listDocOpcionales.findIndex(doc => doc.id === item.id);
       if (INDICE !== -1) {
         const NUEVO_ID: number = (this.listDocOpcionales[INDICE]?.adicionales?.length ?? 0) + 1;
-        const PARTE_DOCUMENTO: any = {
-          id: `${item.id}-${NUEVO_ID}`,
+        const PARTE_DOCUMENTO: CatalogoDocumento = {
+          id: parseInt(`${item.id}0${NUEVO_ID}`, 10),
           descripcion: item.descripcion,
           tam: item.tam,
           dpi: item.dpi,
