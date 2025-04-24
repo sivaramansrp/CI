@@ -1,7 +1,6 @@
 import { Store, EntityState, EntityStore, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
-import { programaACancelar } from '../../../../../../../libs/shared/data-access-user/src/core/models/140101/programaACancelar.model';
-
+import { ProgramaACancelar} from '../../shared/models/programa-cancelar.model';
 /**
  * Creación del estado inicial para la interfaz de trámite 140101
  * @returns Programa140101State
@@ -24,7 +23,7 @@ export interface Programa140101State {
   /**
    * Información del programa a cancelar
    */
-  programaACancelar: programaACancelar;
+  programaACancelar: ProgramaACancelar;
 
   /**
    * Selección de radio
@@ -103,7 +102,7 @@ export class Tramite140101Store extends Store<Programa140101State> {
    * Actualiza el estado del programa a cancelar.
    * @param estado Nuevo valor para programaACancelar.
    */
-  public setPrograma(estado: programaACancelar) {
+  public setPrograma(estado: ProgramaACancelar) {
     this.update((state) => ({
       ...state,
       programaACancelar: estado,
