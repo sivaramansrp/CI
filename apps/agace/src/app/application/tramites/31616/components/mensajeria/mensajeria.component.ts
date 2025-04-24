@@ -175,19 +175,19 @@ export class MensajeriaComponent implements OnInit, OnDestroy, AfterViewInit {
       cadenaDependencia: [this.solicitudState?.cadenaDependencia, Validators.required],
       banco: [this.solicitudState?.banco, Validators.required],
       llavePago: [this.solicitudState?.llavePago, Validators.required],
-      fechaFactura: [this.solicitudState?.fechaFactura],
+      fechaFactura: [this.solicitudState?.fechaFactura,Validators.required],
       importePago: [this.solicitudState?.importePago, Validators.required]
     });
 
     this.susFilialesForm = this.fb.group({
-      rfc: [this.solicitudState?.rfc],
+      rfc: [this.solicitudState?.rfc,Validators.required],
       rfcDos: [{ value: '', disabled: true }],
       denominacionRazonSocial: [{ value: '', disabled: true }],
       domicilio: [{ value: '', disabled: true }],
     });
 
     this.lasEmpresasForm = this.fb.group({
-      rfcLasEmpresas: [this.solicitudState?.rfcLasEmpresas],
+      rfcLasEmpresas: [this.solicitudState?.rfcLasEmpresas,Validators.required],
       denominacionRazonSocial: [{ value: '', disabled: true }],
       domicilio: [{ value: '', disabled: true }],
     });
