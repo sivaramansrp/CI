@@ -20,10 +20,6 @@ class MockRouter {
 @Injectable()
 class MockTramiteStore {}
 
-@Directive({ selector: '[myCustom]' })
-class MyCustomDirective {
-  @Input() myCustom;
-}
 
 describe('PasoTresComponent', () => {
   let fixture;
@@ -33,8 +29,7 @@ describe('PasoTresComponent', () => {
     TestBed.configureTestingModule({
       imports: [ FormsModule, ReactiveFormsModule, HttpClientModule ],
       declarations: [
-        PasoTresComponent,
-        MyCustomDirective
+        PasoTresComponent
       ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
