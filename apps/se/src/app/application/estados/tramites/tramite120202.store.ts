@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { ExpedirMonto } from '../../tramites/120202/models/expedicion-certificados-asignacion.model';
 
 /**
- * Creacion del estado inicial para la interfaz de tramite 120201
+ * Creacion del estado inicial para la interfaz de tramite 120202
  * @returns ExpedicionCertificadosAsignacion120202State
  */
 export interface ExpedicionCertificadosAsignacion120202State {
