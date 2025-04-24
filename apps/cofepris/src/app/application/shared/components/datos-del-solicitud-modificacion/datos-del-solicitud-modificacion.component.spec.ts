@@ -124,6 +124,7 @@ describe('DatosDelSolicitudModificacionComponent', () => {
       lada: '123',
       telefono: '4567890',
       scian: 'Test SCIAN',
+      descripcionScian: 'Test SCIAN Description', // Added this property
       establishomentoColonias: 'Test Colony',
       noLicenciaSanitaria: '12345',
       avisoCheckbox: 'true',
@@ -132,7 +133,6 @@ describe('DatosDelSolicitudModificacionComponent', () => {
       aduanasEntradas: 'Test Customs',
       aifaCheckbox: 'false',
     };
-
     jest.spyOn(mockQuery, 'select').mockReturnValue(of(mockState));
     component.ngOnInit();
 

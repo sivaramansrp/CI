@@ -216,15 +216,8 @@ eliminarPedimento(borrar: boolean): void {
    */
    public modal: string = 'modal';
 
-   /**
-    * Formulario principal.
-    */
-   form!: FormGroup;
+  
  
-   /**
-    * Formulario de solicitud.
-    */
-   solicitudForm!: FormGroup;
 
   /**
    * Botones de acción para gestionar listas de países en la primera sección.
@@ -376,10 +369,7 @@ eliminarPedimento(borrar: boolean): void {
    */
   estado: Catalogo[] = [];
 
-  /**
-   * Textos de alerta.
-   */
-  TEXTOS = ALERT;
+ 
 
   /**
    * Clase de alerta.
@@ -399,10 +389,7 @@ eliminarPedimento(borrar: boolean): void {
    * Enum para la selección de tablas.
    */
   tipoSeleccionTabla = TablaSeleccion;
-  /**
-   * Formulario de domicilio.
-   */
-  domicilio!: FormGroup;
+  
   /**
    * Formulario de establecimiento.
    */
@@ -440,10 +427,6 @@ eliminarPedimento(borrar: boolean): void {
   }
 
   /**
-   * Formulario para gestionar el representante legal.
-   */
-  representanteLegal!: FormGroup;
-  /**
    * Texto de los manifiestos.
    */
   TEXTOS1 = TEXTOS;
@@ -470,13 +453,11 @@ eliminarPedimento(borrar: boolean): void {
    * Constructor del componente.
    *
    * @param fb FormBuilder para crear formularios.
-   * @param httpServicios Servicio HTTP para realizar peticiones.
    * @param tramite260904Query Consulta de datos del trámite.
    * @param tramite260904Store Almacenamiento de datos del trámite.
    */
   constructor(
     private fb: FormBuilder,
-    private httpServicios: HttpClient,
     private establecimientoService: EstablecimientoService,
     private domicilioEstablecimientoStore: DatosDelSolicituteSeccionStateStore,
     private domicilioEstablecimientoQuery: DatosDelSolicituteSeccionQuery
@@ -491,8 +472,37 @@ eliminarPedimento(borrar: boolean): void {
   ngOnInit(): void {
     this.loadScian();
     this.loadEstadoData();
-    this.crearFormulario();
+    this.crearAgregarFormulario();
+    this.establecerDeshabilitado();
+    this.estadoDelServicio();
   
+  }
+  estadoDelServicio():void{
+    this.establecimientoService
+    .getJustificationData()
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((data: PropietarioTipoPersona[]) => {
+      this.genericOptions = data; // Bind the fetched data
+    });
+    this.domicilioEstablecimientoQuery
+    .select()
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((state) => {
+      this.domicilioEstablecimiento.patchValue(state, { emitEvent: false });
+    });
+    this.domicilioEstablecimientoQuery
+    .select()
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((state) => {
+      this.solicitudEstablecimientoForm.patchValue(state, { emitEvent: false });
+    });
+  }
+  /**
+   * Método de limpieza del componente.
+   * Se utiliza para liberar recursos y evitar fugas de memoria.
+   */
+  crearAgregarFormulario():void{
+
     this.domicilioEstablecimiento = this.fb.group({
       ideGenerica1: ['', Validators.required],
       observaciones: [{ value: '', disabled: true }, [Validators.required, Validators.maxLength(2000)]],
@@ -541,25 +551,6 @@ eliminarPedimento(borrar: boolean): void {
       fechaCaducidad: [''],
       
     });
-   this.establecerDeshabilitado();
-    this.establecimientoService
-      .getJustificationData()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((data: PropietarioTipoPersona[]) => {
-        this.genericOptions = data; // Bind the fetched data
-      });
-      this.domicilioEstablecimientoQuery
-      .select()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((state) => {
-        this.domicilioEstablecimiento.patchValue(state, { emitEvent: false });
-      });
-      this.domicilioEstablecimientoQuery
-      .select()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((state) => {
-        this.solicitudEstablecimientoForm.patchValue(state, { emitEvent: false });
-      });
   }
 /**
  * Deshabilita el campo "observaciones" del formulario de domicilio
@@ -598,23 +589,52 @@ establecerDeshabilitado(): void {
         this.scianJson = resp;
       });
   }
-  loadEstadoData(): void {
-    this.establecimientoService
-      .getEstadodata()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((resp: Catalogo[]) => {
-        this.estado = resp;
-      });
+ /**
+ * @method loadEstadoData
+ * @description
+ * Este método carga los datos del catálogo de estados desde el servicio `EstablecimientoService`.
+ * Utiliza un observable para suscribirse a los datos y los almacena en la propiedad `estado`.
+ * La suscripción se gestiona con `takeUntil` para evitar fugas de memoria al destruir el componente.
+ * 
+ * @returns void
+ */
+loadEstadoData(): void {
+  this.establecimientoService
+    .getEstadodata()
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((resp: Catalogo[]) => {
+      this.estado = resp;
+    });
+}
+
+/**
+ * @method cerrarModal
+ * @description
+ * Este método cierra el modal activo utilizando la instancia del modal de Bootstrap.
+ * Verifica si la instancia del modal (`modalInstance`) está definida antes de intentar cerrarlo.
+ * 
+ * @returns void
+ */
+cerrarModal(): void {
+  if (this.modalInstance) {
+    this.modalInstance.hide();
   }
-  cerrarModal(): void {
-    if (this.modalInstance) {
-      this.modalInstance.hide();
-    }
+}
+  /**
+   * Actualiza el estado del formulario según los cambios en los controles.
+   * @param controlName Nombre del control que cambió.
+   */
+  onContriloChange(controlName: string): void {
+    const UPDATED_VALUE = {
+      [controlName]: this.scianForm.get(controlName)?.value,
+    };
+    
+    this.domicilioEstablecimientoStore.update(UPDATED_VALUE);
   }
   /**
    * Carga los datos del catálogo de justificación.
    */
-  onControlChange(controlName: string): void {
+  enCambioDeControl(controlName: string): void {
     
     const UPDATED_VALUE = {
       [controlName]: this.domicilioEstablecimiento.get(controlName)?.value,
@@ -626,7 +646,7 @@ establecerDeshabilitado(): void {
    * Actualiza el estado del formulario según los cambios en los controles.
    * @param controlName Nombre del control que cambió.
    */
-  onControlChangeForm(controlName: string): void {
+  enControlCambioFormulario(controlName: string): void {
   
     const UPDATED_VALUE = {
       [controlName]: this.solicitudEstablecimientoForm.get(controlName)?.value,
@@ -716,8 +736,6 @@ establecerDeshabilitado(): void {
   
       // Add the new data to the table
       this.mercanciasTablaDatos.push(MERCANCIA);
-  
-  
       // Reset the form
       this.formMercancias.reset();
       this.cerrarModalMercancía();
@@ -762,35 +780,9 @@ establecerDeshabilitado(): void {
     this.destroy$.next();
     this.destroy$.complete();
   }
-  /**
-   * Habilita todos los controles del formulario si están deshabilitados.
-   * @returns {void}
-   */
-  public toggleFormControls(): void {
-    Object.keys(this.solicitudForm.controls).forEach((controlName) => {
-      const CONTROL = this.solicitudForm.get(controlName);
-      if (CONTROL?.disabled) {
-        CONTROL.enable();
-      }
-    });
-  }
+
   /**
    * Método para crear el formulario.
    */
-  crearFormulario(): void {
-    this.solicitudForm = this.fb.group({
-      ideGenerica1: ['', [Validators.required]],
-      justificacionId: ['', [Validators.required]],
-      codigoPostal: ['', [Validators.required]],
-      estado: ['', [Validators.required]],
-      municipioOAlcaldia: ['', [Validators.required]],
-      localidad: [''],
-      colonias: [''],
-      calle: ['', [Validators.required]],
-      lada: [''],
-      telefono: ['', [Validators.required]],
-    });
-
- 
-  }
+  
 }
