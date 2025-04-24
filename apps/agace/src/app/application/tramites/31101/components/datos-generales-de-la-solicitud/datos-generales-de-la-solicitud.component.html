@@ -768,7 +768,14 @@
       </div>
       <div class="col-md-12">
         <div class="d-flex justify-content-end">
-          <button type="button" id="modificarSocio" class="btn btn-secondary">
+          <button
+            type="button"
+            id="modificarSocio"
+            class="btn btn-secondary"
+            data-bs-toggle="modal"
+            data-bs-target="#modificarImmexProgram"
+            (click)="modificarImmexProgram()"
+          >
             Modificar
           </button>
 
@@ -1228,3 +1235,18 @@
     </div>
   </div>
 </div>
+
+<div
+  class="modal fade"
+  id="modificarImmexProgram"
+  tabindex="-1"
+  aria-labelledby="modalModificarImmexProgram"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <app-modificar-immex-program></app-modificar-immex-program>
+    </div>
+  </div>
+</div>
+<app-agregar-immex-program></app-agregar-immex-program>

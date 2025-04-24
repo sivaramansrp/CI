@@ -120,6 +120,8 @@ export interface DatosGeneralesDeLaSolicitudCatologo {
   tipoDePersona: CatalogosSelect;
 
   modalidadDelProgramaIMMEX: CatalogosSelect;
+
+  tipoDeInstalacion: CatalogosSelect;
 }
 
 /**

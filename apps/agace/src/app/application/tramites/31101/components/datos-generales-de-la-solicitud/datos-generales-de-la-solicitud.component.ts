@@ -18,6 +18,8 @@ import { FormGroup } from '@angular/forms';
 import { InputRadio } from '../../models/solicitud.model';
 import { InputRadioComponent } from '@libs/shared/data-access-user/src';
 import { MiembroDeLaEmpresaComponent } from '../miembro-de-la-empresa/miembro-de-la-empresa.component';
+import { Modal } from 'bootstrap';
+import { ModificarImmexProgramComponent } from '../modificar-immex-program/modificar-immex-program.component';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { REGEX_SOLO_NUMEROS } from '@libs/shared/data-access-user/src';
@@ -40,7 +42,7 @@ import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { Validators } from '@angular/forms';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
-import { Modal } from 'bootstrap';
+import { AgregarImmexProgramComponent } from '../agregar-immex-program/agregar-immex-program.component';
 
 @Component({
   selector: 'app-datos-generales-de-la-solicitud',
@@ -54,6 +56,8 @@ import { Modal } from 'bootstrap';
     TablaDinamicaComponent,
     NotificacionesComponent,
     MiembroDeLaEmpresaComponent,
+    ModificarImmexProgramComponent,
+    AgregarImmexProgramComponent
   ],
   providers: [SolicitudService],
   templateUrl: './datos-generales-de-la-solicitud.component.html',
@@ -82,7 +86,7 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
   /** Catálogo de tipos de inversión */
   tipoDeInversionLista: CatalogosSelect = {} as CatalogosSelect;
 
-  modalidadDelProgramaIMMEX : CatalogosSelect = {} as CatalogosSelect;
+  modalidadDelProgramaIMMEX: CatalogosSelect = {} as CatalogosSelect;
 
   /** Tipo de selección en tabla: checkbox */
   tipoSeleccionTabla = TablaSeleccion.CHECKBOX;
@@ -142,7 +146,11 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
   /**
    * Referencia al modal para agregar mercancías.
    */
-  @ViewChild('modalAgregarMiembrosEmpresa', { static: false }) modalElement!: ElementRef;
+  @ViewChild('modalAgregarMiembrosEmpresa', { static: false })
+  modalElement!: ElementRef;
+
+  @ViewChild('modificarImmexProgram', { static: false })
+  modificarImmexProgramElement!: ElementRef;
 
   /** Constructor del componente que inyecta dependencias y obtiene datos iniciales */
   constructor(
@@ -827,6 +835,15 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
   agregarMiembrosEmpresa(): void {
     if (this.modalElement) {
       const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
+      MODAL_INSTANCE.show();
+    }
+  }
+
+  modificarImmexProgram(): void {
+    if (this.modalElement) {
+      const MODAL_INSTANCE = new Modal(
+        this.modificarImmexProgramElement.nativeElement
+      );
       MODAL_INSTANCE.show();
     }
   }

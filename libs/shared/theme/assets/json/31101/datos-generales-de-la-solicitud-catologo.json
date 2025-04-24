@@ -88,5 +88,20 @@
                 "descripcion": "192022 - Autorización Programa Nuevo Industrial"
             }
         ]
+    },
+    "tipoDeInstalacion": {
+        "labelNombre": "Tipo de instalación",
+        "required": true,
+        "primerOpcion": "Selecciona un tipo de instalación",
+        "catalogos": [
+            {
+                "id": 1,
+                "descripcion": "Planta Productiva"
+            },
+            {
+                "id": 2,
+                "descripcion": "Planta Productiva -1"
+            }
+        ]
     }
 }
