@@ -4,7 +4,6 @@ import {
   TipoPersona,
 } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Fabricante, Facturador } from '../../../../shared/models/terceros-relacionados.model';
 import {
   FormBuilder,
   FormGroup,
@@ -19,6 +18,7 @@ import {
 import { CommonModule } from '@angular/common';
 import { DatosSolicitudService } from '../../../../shared/services/datos-solicitud.service';
 import { ExportacionMateriasPrimasService } from '../../service/exportacion-materias-primas.service';
+import { Fabricante } from '../../../../shared/models/terceros-relacionados.model';
 import { Location } from '@angular/common';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { Tramite260103Store } from '../../estados/tramite260103Store.store';

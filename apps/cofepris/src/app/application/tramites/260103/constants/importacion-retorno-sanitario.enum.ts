@@ -306,8 +306,6 @@ export const TERCEROS_PERSONA_RADIO_OPCIONS = [
  * ELEMENTOS_REQUERIDOS.includes('colonia'); // true
  */
 export const ELEMENTOS_REQUERIDOS=[
-  'colonia',
-  'localidad',
   'denominacionRazon',
   'scian',
   'correoElectronico',
@@ -322,9 +320,6 @@ export const ELEMENTOS_REQUERIDOS=[
  * @example
  */
 export const ELEMENTOS_ANADIDOS=[
-  'calleYNumero',
-  'correoElectronico',
-  'rfcSanitario',
   'regimenLaMercancia',
-  'aduana',
+  'domicilio-aduana',
 ]

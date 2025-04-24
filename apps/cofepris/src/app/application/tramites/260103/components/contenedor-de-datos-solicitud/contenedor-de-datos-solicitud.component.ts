@@ -144,12 +144,13 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
    */
   public readonly elementosRequeridos = ELEMENTOS_REQUERIDOS;
 
-  /**
+    /**
    * @property {string[]} elementosAnadidos
    * @description
-   * Lista de elementos añadidos para el trámite.
+   * Lista de elementos adicionales que pueden ser incluidos en el formulario o proceso.
    */
-  public readonly elementosAnadidos = ELEMENTOS_ANADIDOS;
+    public readonly elementosAnadidos = ELEMENTOS_ANADIDOS;
+
   /**
    * @constructor
    * @description
