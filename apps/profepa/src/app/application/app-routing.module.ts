@@ -8,6 +8,13 @@ const ROUTES: Routes = [
     path: 'seleccion-tramite',
     component: SeleccionTramiteComponent,
   },
+  {
+    path: 'flora-fauna',
+    loadChildren: () =>
+      import('./tramites/250101/flora-fauna.module').then(
+        (m) => m.FloraFaunaModule
+      ),
+  },
 ];
 
 @NgModule({
