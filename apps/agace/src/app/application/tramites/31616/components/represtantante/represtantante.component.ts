@@ -82,7 +82,9 @@ export class ReprestantanteComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private tramite31616Store: Tramite31616TercerosStore,
     private tramite31616Query: Tramite31616TercerosQuery
-  ) {}
+  ) {
+    //Añade lógica aquí
+  }
 
   /**
    * Método que se ejecuta al iniciar el componente.

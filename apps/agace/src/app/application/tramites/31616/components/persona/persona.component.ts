@@ -60,7 +60,9 @@ export class PersonaComponent implements OnInit, OnDestroy {
    */
   constructor(
     private service: SolicitudDeRegistroInvocarService,
-  ) {}
+  ) {
+    //Añade lógica aquí
+  }
 
   /**
    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
