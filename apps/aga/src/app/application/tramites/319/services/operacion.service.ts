@@ -6,6 +6,8 @@ import { Observable, map} from 'rxjs';
 import {Catalogo, RespuestaCatalogos} from '@libs/shared/data-access-user/src';
 import { URL } from '../constantes/operaciones-de-comercio-exterior.enum';
 
+import { Personas } from '../models/personas.module';
+
 
 @Injectable({
   providedIn: 'root'
@@ -20,6 +22,12 @@ export class OperacionService {
     const BASEURL = this.url + fileName;
     return this.http.get<RespuestaCatalogos>(BASEURL).pipe(
       map(response => response.data)
+    );
+  }
+  obtenerTablerList(fileName: string): Observable<Personas[]> {
+    const BASEURL = this.url + fileName;
+    return this.http.get<Personas[]>(BASEURL).pipe(
+      map(response => response)
     );
   }
 }

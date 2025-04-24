@@ -1,10 +1,13 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Catalogo } from '@libs/shared/data-access-user/src';
+
+import { Catalogo, ConfiguracionColumna, TablaSeleccion } from '@libs/shared/data-access-user/src';
 
 import { Subject, takeUntil } from 'rxjs';
 
 import { OperacionService } from '../../services/operacion.service';
+
+import { Personas, Solicitar } from '../../models/personas.module';
 
 /**
  * @component
@@ -34,6 +37,22 @@ export class OperacionesDeComercioExteriorComponent implements OnInit,OnDestroy 
   miformulario!: FormGroup;
   optionsPaisList:Catalogo[]=[];
    private destroyNotifier$: Subject<void> = new Subject();
+   tipoPersonasSeleccion: TablaSeleccion = TablaSeleccion.UNDEFINED;
+   configuracionPersonasColumnas: ConfiguracionColumna<Personas>[] = [
+    { encabezado: 'RFC', clave: (fila) => fila.RFC, orden: 1 },
+    { encabezado: 'CURP', clave: (fila) => fila.CURP, orden: 2 },
+    { encabezado: 'Nombre', clave: (fila) => fila.Nombre, orden: 3 },
+    { encabezado: 'Primer apellido', clave: (fila) => fila.Primer_apellido, orden: 4 },
+    { encabezado: 'Segundo apellido', clave: (fila) => fila.Segundo_apellido, orden: 5 },
+    { encabezado: 'Correo electrónico', clave: (fila) => fila.Correo_electronico, orden: 6 },
+  ];
+  tipoSolicitarSeleccion: TablaSeleccion = TablaSeleccion.CHECKBOX;
+  configuracionSolicitarColumnas: ConfiguracionColumna<Solicitar>[] = [
+    { encabezado: 'RFC', clave: (fila) => fila.Periodo, orden: 1 },
+    { encabezado: 'CURP', clave: (fila) => fila.Fechas_sobre_el_periodo, orden: 2 },
+  ];
+  cuerpoPersonasTablaFila: Personas[] = [];  
+  cuerpoSolicitarTablaFila: Solicitar[] = [];  
    /**
  * @constructor
  * @param {FormBuilder} fb - Servicio para construir formularios reactivos.
@@ -42,6 +61,7 @@ export class OperacionesDeComercioExteriorComponent implements OnInit,OnDestroy 
  */
   constructor(private readonly fb: FormBuilder,private readonly operacionService: OperacionService) { 
     this.getOperacionList();
+    this.getPersonasTableeData();
   }
 /**
  * @method ngOnInit
@@ -63,6 +83,17 @@ export class OperacionesDeComercioExteriorComponent implements OnInit,OnDestroy 
       this.optionsPaisList = data;
     })
   }
+
+  getPersonasTableeData() :void{
+    this.operacionService.obtenerTablerList('personas.json').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
+      this.cuerpoPersonasTablaFila = data;
+    })
+  }
+
+
+
+
+
   /**
  * @method ngOnDestroy
  * @description Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
