@@ -1,39 +1,9 @@
-/**
- * Matriz que representa los pasos de un proceso.
- *
- * Cada paso contiene:
- * - `indice`: El índice del paso en el proceso.
- * - `titulo`: El título o descripción del paso.
- * - `activo`: Un booleano que indica si el paso está activo actualmente.
- * - `completado`: Un booleano que indica si el paso ha sido completado.
- */
 
 import {
   AgentesTabla,
   RegistroVehiculos,
   VehiculosTabla,
 } from '../modelos/registro-empresas-transporte.model';
-
-export const PASOS = [
-  {
-    indice: 1,
-    titulo: 'Capturar solicitud',
-    activo: true,
-    completado: true,
-  },
-  {
-    indice: 2,
-    titulo: 'Anexar requisitos',
-    activo: false,
-    completado: false,
-  },
-  {
-    indice: 3,
-    titulo: 'Firmar solicitud',
-    activo: false,
-    completado: false,
-  },
-];
 
 /**
  * Objeto que contiene varias notas utilizadas en la aplicación.

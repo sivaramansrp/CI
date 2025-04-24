@@ -1,7 +1,7 @@
 import { AVISO, DatosPasos } from '@ng-mf/data-access-user';
 import { Component } from '@angular/core';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
-import { PASOS } from '../../enums/registro-empresas-transporte.enum';
+import { PASOS } from '@ng-mf/data-access-user';
 import { ViewChild } from '@angular/core';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
