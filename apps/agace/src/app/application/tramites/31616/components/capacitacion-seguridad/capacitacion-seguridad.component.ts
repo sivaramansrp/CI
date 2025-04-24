@@ -66,14 +66,14 @@ export class CapacitacionSeguridadComponent implements OnInit, OnDestroy {
       )
       .subscribe();
 
-    this.crearFormularioDeGestión();
+    this.crearFormularioDeGestion();
   }
 
   /**
    * Crea el formulario reactivo utilizando los valores actuales del estado.
    * Cada campo incluye una validación requerida para asegurar su completitud.
    */
-  crearFormularioDeGestión(): void {
+  crearFormularioDeGestion(): void {
     this.capacitacion = this.fb.group({
       mediosTransporte: [this.solicitudState?.mediosTransporte, Validators.required],
       estaDifusion: [this.solicitudState?.estaDifusion, Validators.required],

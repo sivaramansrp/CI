@@ -252,10 +252,24 @@
             <div class="col-md-6">
                 <label for="nombreDelSistema"><span class="danger">*</span>Nombre del sistema o datos para su identificación</label>
                 <input type="text" id="nombreDelSistema" formControlName="nombreDelSistema" class="form-control" (change)="setValoresStore(datosComunesForma,'nombreDelSistema', 'setNombreDelSistema')">
+                @if(datosComunesForma.controls['nombreDelSistema'].invalid && datosComunesForma.controls['nombreDelSistema'].touched){
+                    <div class="d-grid">
+                        @if(datosComunesForma.controls['nombreDelSistema'].errors?.['required']) {
+                            <span class="mensaje-error">Este campo es obligatorio</span>
+                        }
+                    </div>
+                }
             </div>
             <div class="col-md-6">
                 <label for="lugarDeRadicacion"><span class="danger">*</span>Lugar de radicación</label>
-                <input type="text" id="lugarDeRadicacion" formControlName="lugarDeRadicacion" class="form-control" (change)="setValoresStore(datosComunesForma,'lugarDeRadicación', 'setLugarDeRadicacion')">
+                <input type="text" id="lugarDeRadicacion" formControlName="lugarDeRadicacion" class="form-control" (change)="setValoresStore(datosComunesForma,'lugarDeRadicacion', 'setLugarDeRadicacion')">
+                @if(datosComunesForma.controls['lugarDeRadicacion'].invalid && datosComunesForma.controls['lugarDeRadicacion'].touched){
+                    <div class="d-grid">
+                        @if(datosComunesForma.controls['lugarDeRadicacion'].errors?.['required']) {
+                            <span class="mensaje-error">Este campo es obligatorio</span>
+                        }
+                    </div>
+                }
             </div>
         </div>
         <div class="row mt-5">
@@ -319,12 +333,28 @@
             <div class="col-md-12">
                 <input class="form-check-input" type="checkbox" id="esquemaIntegralCertificacion"
                     formControlName="esquemaIntegralCertificacion" (change)="setValoresStore(datosComunesForma,'esquemaIntegralCertificacion', 'setEsquemaIntegralCertificacion')"/> &nbsp; <span class="danger">*</span>Una vez manifestado lo anterior, se solicita al SAT, a través de AGACE, que realice las inspecciones a que hace referencia la fracción IX de la regla 7.1.1, a las instalaciones señaladas en las que se realizan las operaciones de comercio exterior con el propósito de verificar la información plasmada en la presente solicitud del Registro en el Esquema Integral de Certificación.
+
+                    @if(datosComunesForma.controls['esquemaIntegralCertificacion'].invalid && datosComunesForma.controls['esquemaIntegralCertificacion'].touched){
+                        <div class="d-grid">
+                            @if(datosComunesForma.controls['esquemaIntegralCertificacion'].errors?.['required']) {
+                                <span class="mensaje-error">Este campo es obligatorio</span>
+                            }
+                        </div>
+                    }
             </div>
         </div>
         <div class="row mt-5">
             <div class="col-md-12">
                 <input class="form-check-input" type="checkbox" id="modificadasRevocadas"
                     formControlName="esquemaIntegralCertificacion" (change)="setValoresStore(datosComunesForma,'modificadasRevocadas', 'setModificadasRevocadas')"/> &nbsp; <span class="danger">*</span>Bajo protesta de decir verdad, manifiesto que los datos asentados en el presente documento son ciertos y que las facultades que me fueron otorgadas para representar al solicitante no me han sido modificadas y/o revocadas.
+
+                    @if(datosComunesForma.controls['modificadasRevocadas'].invalid && datosComunesForma.controls['modificadasRevocadas'].touched){
+                        <div class="d-grid">
+                            @if(datosComunesForma.controls['modificadasRevocadas'].errors?.['required']) {
+                                <span class="mensaje-error">Este campo es obligatorio</span>
+                            }
+                        </div>
+                    }
             </div>
         </div>
     </form>
@@ -377,6 +407,13 @@
                     <div class="form-group">
                         <label for="rfc"><span class="danger">*</span>RFC</label>
                         <input type="text" id="rfc" formControlName="rfc" class="form-control" (change)="setValoresStore(tablaModalForma,'rfc', 'setRfc')">
+                        @if(tablaModalForma.controls['rfc'].invalid && tablaModalForma.controls['rfc'].touched){
+                            <div class="d-grid">
+                                @if(tablaModalForma.controls['rfc'].errors?.['required']) {
+                                    <span class="mensaje-error">Este campo es obligatorio</span>
+                                }
+                            </div>
+                        }
                     </div>
                 </div>
                 <div class="col-md-4 dis-flex-end">
@@ -406,6 +443,13 @@
                     <div class="form-group">
                         <label for="numeroDeEmpleadosForma"><span class="danger">*</span>Número de empleados</label>
                         <input type="text" id="numeroDeEmpleadosForma" formControlName="numeroDeEmpleadosForma" class="form-control" (change)="setValoresStore(tablaModalForma,'numeroDeEmpleadosForma', 'setNumeroDeEmpleadosForma')">
+                        @if(tablaModalForma.controls['numeroDeEmpleadosForma'].invalid && tablaModalForma.controls['numeroDeEmpleadosForma'].touched){
+                            <div class="d-grid">
+                                @if(tablaModalForma.controls['numeroDeEmpleadosForma'].errors?.['required']) {
+                                    <span class="mensaje-error">Este campo es obligatorio</span>
+                                }
+                            </div>
+                        }
                     </div>
                 </div>
             </div>

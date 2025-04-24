@@ -59,13 +59,13 @@ export class MensajeriaComponent implements OnInit, OnDestroy, AfterViewInit {
   public opcionInformacionProporcionada = OPCIONES_INFORMACION;
 
   /** Bandera que indica si es "La Solicitante" */
-  public isLaSolicitante = false;
+  public isLaSolicitante:boolean = false;
 
   /** Bandera que indica si aplica a "Sus Filiales" */
-  public isSusFiliales = false;
+  public isSusFiliales:boolean = false;
 
   /** Bandera que indica si aplica a "Las Empresas" */
-  public isLasEmpresas = false;
+  public isLasEmpresas:boolean = false;
 
   /** Configuración del input de fecha de factura */
   public fechaFacturaInput: InputFecha = FECHA_DE_FACTURA;

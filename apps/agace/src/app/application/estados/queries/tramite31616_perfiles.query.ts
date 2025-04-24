@@ -1,18 +1,20 @@
 import { Solicitud31616PerfilesState, Tramite31616PerfilesStore } from '../../estados/tramites/tramite31616_perfiles.store';
 import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
+
 /**
  * @class Tramite31616PerfilesQuery
  * @description
- * Clase encargada de realizar consultas al estado de la solicitud para perfiles del formulario 31616.
- * Proporciona métodos para seleccionar y observar cambios en el estado de la solicitud.
+ * Servicio que permite realizar consultas sobre el estado de la solicitud 31616 
+ * en la sección de Perfiles. Utiliza Akita para gestionar el estado reactivo.
  */
 @Injectable({ providedIn: 'root' })
 export class Tramite31616PerfilesQuery extends Query<Solicitud31616PerfilesState> {
+
   /**
    * @property {Observable<Solicitud31616PerfilesState>} selectSolicitud$
    * @description
-   * Observable que permite suscribirse a los cambios en el estado completo de la solicitud.
+   * Observable que emite el estado completo de la solicitud de perfiles del trámite 31616.
    */
   selectSolicitud$ = this.select((state) => {
     return state;
@@ -21,8 +23,8 @@ export class Tramite31616PerfilesQuery extends Query<Solicitud31616PerfilesState
   /**
    * @constructor
    * @description
-   * Constructor que inicializa la consulta con el store correspondiente.
-   * @param {Tramite31616PerfilesStore} store - Store que contiene el estado de la solicitud.
+   * Constructor que inyecta el store correspondiente para inicializar la consulta del estado.
+   * @param {Tramite31616PerfilesStore} store - El store que contiene el estado de la solicitud 31616 para perfiles.
    */
   constructor(protected override store: Tramite31616PerfilesStore) {
     super(store);

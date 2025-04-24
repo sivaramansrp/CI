@@ -128,17 +128,17 @@ export class DatoComunesComponent implements OnInit, OnDestroy, AfterViewInit {
   /**
    * Bandera para mostrar campo de número de empleados
    */
-  showSenaleCuentaEmpleados = false;
+  showSenaleCuentaEmpleados:boolean = false;
 
   /**
    * Bandera para mostrar campo "si al momento"
    */
-  showSenaleSiAlMomento = false;
+  showSenaleSiAlMomento:boolean = false;
 
   /**
    * Bandera para indicar cambios en el formulario
    */
-  changed = false;
+  changed:boolean = false;
 
   /**
    * Configuración de columnas para la tabla de mercancías

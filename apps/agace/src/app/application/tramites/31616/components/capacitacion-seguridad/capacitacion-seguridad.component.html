@@ -106,14 +106,14 @@
                     <span class="danger">*</span>Describa el programa de difusión en materia de seguridad en la cadena
                     de suministros enfocada a los operadores de los medios de transporte
                 </label>
-                <textarea class="custom-textarea" rows="6" cols="100" formControlName="mediosTransporte" (change)="setValoresStore(capacitacion,'mediosTransporte', 'setMediosTransporte')"></textarea>
+                <textarea class="custom-textarea" id="mediosTransporte" rows="6" cols="100" formControlName="mediosTransporte" (change)="setValoresStore(capacitacion,'mediosTransporte', 'setMediosTransporte')"></textarea>
             </div>
 
             <div class="col-md-12 text-container mt-4">
                 <label for="estaDifusion">
                     <span class="danger">*</span>Indique cómo se lleva a cabo esta difusión.
                 </label>
-                <textarea class="custom-textarea" rows="6" cols="100"  formControlName="estaDifusion" (change)="setValoresStore(capacitacion,'estaDifusion', 'setEstaDifusion')"></textarea>
+                <textarea class="custom-textarea" id="estaDifusion" rows="6" cols="100"  formControlName="estaDifusion" (change)="setValoresStore(capacitacion,'estaDifusion', 'setEstaDifusion')"></textarea>
             </div>
 
             <div class="row mt-2 alert-text">
@@ -153,7 +153,7 @@
                         </div>
                     </ul>
                 </div>
-                <textarea class="custom-textarea" rows="6" cols="100" formControlName="enunciativaLimitativa" (change)="setValoresStore(capacitacion,'enunciativaLimitativa', 'setEnunciativaLimitativa')"></textarea>
+                <textarea class="custom-textarea" id="enunciativaLimitativa" rows="6" cols="100" formControlName="enunciativaLimitativa" (change)="setValoresStore(capacitacion,'enunciativaLimitativa', 'setEnunciativaLimitativa')"></textarea>
             </div>
 
             <div class="col-md-12 text-container mt-4">
@@ -162,7 +162,7 @@
                     traslado de sus mercancías, indique de qué manera se informa a los operadores las políticas de
                     seguridad y procedimientos de la empresa.
                 </label>
-                <textarea class="custom-textarea" rows="6" cols="100" formControlName="procedimientosEmpresa" (change)="setValoresStore(capacitacion,'procedimientosEmpresa', 'setProcedimientosEmpresa')"></textarea>
+                <textarea id="procedimientosEmpresa" class="custom-textarea" rows="6" cols="100" formControlName="procedimientosEmpresa" (change)="setValoresStore(capacitacion,'procedimientosEmpresa', 'setProcedimientosEmpresa')"></textarea>
             </div>
 
             <div class="col-md-12 text-container mt-4">
@@ -171,7 +171,7 @@
                     capacitaciones de seguridad en la cadena de suministros de los operadores de los medios de
                     transporte (videos, listas de asistencia, folletos, etcétera)
                 </label>
-                <textarea class="custom-textarea" rows="6" cols="100" formControlName="mediosDeTransporte" (change)="setValoresStore(capacitacion,'mediosDeTransporte', 'setMediosDeTransporte')"></textarea>
+                <textarea id="mediosDeTransporte" class="custom-textarea" rows="6" cols="100" formControlName="mediosDeTransporte" (change)="setValoresStore(capacitacion,'mediosDeTransporte', 'setMediosDeTransporte')"></textarea>
             </div>
         </div>
     </form>

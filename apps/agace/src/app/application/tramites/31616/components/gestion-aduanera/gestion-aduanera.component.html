@@ -27,21 +27,21 @@
                     <span class="danger">*</span>Describa el procedimiento de selección y evaluación del agente o
                     apoderado aduanal.
                 </label>
-                <textarea class="custom-textarea" rows="6" cols="100" formControlName="describaProcedimiento" (change)="setValoresStore(gestionAduanera,'describaProcedimiento', 'setDescribaProcedimiento')"></textarea>
+                <textarea id="describaProcedimiento" class="custom-textarea" rows="6" cols="100" formControlName="describaProcedimiento" (change)="setValoresStore(gestionAduanera,'describaProcedimiento', 'setDescribaProcedimiento')"></textarea>
             </div>
 
             <div class="col-md-12 text-container mt-4">
                 <label>
                     <span class="danger">*</span>Indique los criterios de selección
                 </label>
-                <textarea class="custom-textarea" rows="6" cols="100" formControlName="indiqueLosCriterios" (change)="setValoresStore(gestionAduanera,'indiqueLosCriterios', 'setIndiqueLosCriterios')"></textarea>
+                <textarea class="custom-textarea" rows="6" cols="100" formControlName="indiqueLosCriterios" id="indiqueLosCriterios" (change)="setValoresStore(gestionAduanera,'indiqueLosCriterios', 'setIndiqueLosCriterios')"></textarea>
             </div>
 
             <div class="col-md-12 text-container mt-4">
                 <label>
                     <span class="danger">*</span>Indique los métodos de evaluación y periodicidad.
                 </label>
-                <textarea class="custom-textarea" rows="6" cols="100" formControlName="indiqueLosMetodos" (change)="setValoresStore(gestionAduanera,'indiqueLosMetodos', 'setIndiqueLosMetodos')"></textarea>
+                <textarea class="custom-textarea" rows="6" cols="100" formControlName="indiqueLosMetodos" id="indiqueLosCriterios" (change)="setValoresStore(gestionAduanera,'indiqueLosMetodos', 'setIndiqueLosMetodos')"></textarea>
             </div>
 
             <div class="col-md-12 text-container mt-4">
@@ -49,7 +49,7 @@
                     <span class="danger">*</span>Describa los indicadores con los que evalúa el servicio de los agentes
                     aduanales.
                 </label>
-                <textarea class="custom-textarea" rows="6" cols="100" formControlName="describaLosIndicadores" (change)="setValoresStore(gestionAduanera,'describaLosIndicadores', 'setDescribaLosIndicadores')"></textarea>
+                <textarea class="custom-textarea" rows="6" cols="100" formControlName="describaLosIndicadores" id="describaLosIndicadores" (change)="setValoresStore(gestionAduanera,'describaLosIndicadores', 'setDescribaLosIndicadores')"></textarea>
             </div>
 
             <div class="col-md-12 text-container mt-4">
@@ -57,7 +57,7 @@
                     <span class="danger">*</span>Indique el nombre completo y el número de la patente y/o autorización
                     del agente o apoderado aduanal autorizado para promover sus operaciones de comercio exterior.
                 </label>
-                <textarea class="custom-textarea" rows="6" cols="100" formControlName="comercioExterior" (change)="setValoresStore(gestionAduanera,'comercioExterior', 'setComercioExterior')"></textarea>
+                <textarea id="comercioExterior" class="custom-textarea" rows="6" cols="100" formControlName="comercioExterior" (change)="setValoresStore(gestionAduanera,'comercioExterior', 'setComercioExterior')"></textarea>
             </div>
         </div>
 

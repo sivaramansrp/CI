@@ -3,22 +3,22 @@ import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
 
 /**
- * Service to query the state of Solicitud31616.
+ * Servicio para consultar el estado de la solicitud 31616.
  */
 @Injectable({ providedIn: 'root' })
 export class Tramite31616Query extends Query<Solicitud31616State> {
 
   /**
-   * Observable to select the complete state of the solicitud.
-   * @returns {Observable<Solicitud31616State>} The complete state of the solicitud.
+   * Observable que selecciona el estado completo de la solicitud.
+   * @returns {Observable<Solicitud31616State>} El estado completo de la solicitud.
    */
   selectSolicitud$ = this.select((state) => {
     return state;
   });
 
   /**
-   * Constructor for Tramite31616Query.
-   * @param {Tramite31616Store} store - The store that holds the state of Solicitud31616.
+   * Constructor del servicio Tramite31616Query.
+   * @param {Tramite31616Store} store - El store que contiene el estado de la solicitud 31616.
    */
   constructor(
     protected override store: Tramite31616Store) {

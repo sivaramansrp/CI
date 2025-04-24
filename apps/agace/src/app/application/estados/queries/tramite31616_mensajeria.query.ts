@@ -3,25 +3,32 @@ import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
 
 /**
- * Service to query the state of Solicitud31616.
+ * @class Tramite31616MensajeriaQuery
+ * @description
+ * Servicio que permite consultar el estado de la solicitud 31616 en la sección de mensajería.
+ * Utiliza Akita para acceder de forma reactiva al estado almacenado.
  */
 @Injectable({ providedIn: 'root' })
 export class Tramite31616MensajeriaQuery extends Query<Solicitud31616MensajeriaState> {
 
   /**
-   * Observable to select the complete state of the solicitud.
-   * @returns {Observable<Solicitud31616State>} The complete state of the solicitud.
+   * @property {Observable<Solicitud31616MensajeriaState>} selectSolicitud$
+   * @description
+   * Observable que emite el estado completo de la solicitud de mensajería del trámite 31616.
    */
   selectSolicitud$ = this.select((state) => {
     return state;
   });
 
   /**
-   * Constructor for Tramite31616Query.
-   * @param {Tramite31616MensajeriaStore} store - The store that holds the state of Solicitud31616.
+   * @constructor
+   * @description
+   * Constructor que inicializa el servicio de consulta inyectando el store correspondiente.
+   * @param {Tramite31616MensajeriaStore} store - Store que contiene el estado de la solicitud para la mensajería.
    */
   constructor(
-    protected override store: Tramite31616MensajeriaStore) {
+    protected override store: Tramite31616MensajeriaStore
+  ) {
     super(store);
   }
 }

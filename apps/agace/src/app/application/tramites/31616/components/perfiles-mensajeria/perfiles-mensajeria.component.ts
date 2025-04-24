@@ -85,77 +85,77 @@ export class PerfilesMensajeriaComponent implements OnInit, OnDestroy {
    * @type {boolean}
    * @public
    */
-  public mostrarContenido = false;
+  public mostrarContenido:boolean = false;
 
   /**
    * Indica si se debe mostrar la sección de seguridad física.
    * @type {boolean}
    * @public
    */
-  public mostrarSeguridad = false;
+  public mostrarSeguridad:boolean = false;
 
   /**
    * Indica si se debe mostrar la sección de controles de acceso físico.
    * @type {boolean}
    * @public
    */
-  public mostrarAccesoFisico = false;
+  public mostrarAccesoFisico:boolean = false;
 
   /**
    * Indica si se debe mostrar la sección de socios comerciales.
    * @type {boolean}
    * @public
    */
-  public mostrarSociosComeciales = false;
+  public mostrarSociosComeciales:boolean = false;
 
   /**
    * Indica si se debe mostrar la sección de seguridad en los procesos.
    * @type {boolean}
    * @public
    */
-  public mostrarSeguridadProcesos = false;
+  public mostrarSeguridadProcesos:boolean = false;
 
   /**
    * Indica si se debe mostrar la sección de gestión aduanera.
    * @type {boolean}
    * @public
    */
-  public mostrarGestionAduanera = false;
+  public mostrarGestionAduanera:boolean = false;
 
   /**
    * Indica si se debe mostrar la sección de seguridad en los vehículos.
    * @type {boolean}
    * @public
    */
-  public mostrarSeguridadVehiculos = false;
+  public mostrarSeguridadVehiculos:boolean = false;
 
   /**
    * Indica si se debe mostrar la sección de seguridad del personal.
    * @type {boolean}
    * @public
    */
-  public mostrarSeguridadPersonal = false;
+  public mostrarSeguridadPersonal:boolean = false;
 
   /**
    * Indica si se debe mostrar la sección de seguridad de la información y documentación.
    * @type {boolean}
    * @public
    */
-  public mostrarSeguridadInformacion = false;
+  public mostrarSeguridadInformacion:boolean = false;
 
   /**
    * Indica si se debe mostrar la sección de capacitación en seguridad.
    * @type {boolean}
    * @public
    */
-  public mostrarCapacitacionSeguridad = false;
+  public mostrarCapacitacionSeguridad:boolean = false;
 
   /**
    * Indica si se debe mostrar la sección de manejo e investigación de incidentes.
    * @type {boolean}
    * @public
    */
-  public mostrarManejoInvestigacion = false;
+  public mostrarManejoInvestigacion:boolean = false;
 
   /**
    * Indica si se permite agregar secciones adicionales.
@@ -163,7 +163,7 @@ export class PerfilesMensajeriaComponent implements OnInit, OnDestroy {
    * @type {boolean}
    * @memberof PerfilesMensajeriaComponent
    */
-  public hasAgregar = false;
+  public hasAgregar:boolean = false;
 
   /**
    * Estado interno de la solicitud, utilizado para manejar los datos relacionados a perfiles y mensajería.
