@@ -1,10 +1,18 @@
-export const CONFIGURACIONBANDEJAS = {
-    /** Indica si el bloque de filtros está colapsado */
-    colapsable: true,
-    /** Total de elementos (para paginación) */
-    totalItems: 0,
-    /** Cantidad de elementos por página */
-    itemsPerPage: 5,
-    /** Página actual */
-    currentPage: 1,
-}
+import { ListaPendientes } from "../models/pendientes.model"
+import { ListaSolicitudes } from "../models/solicitudes.model"
+export const CONFIGURACION_ENCABEZADO_SOLICITUDES = [
+    { encabezado: 'Id solicitud', clave: (item: ListaSolicitudes) => item.idSolicitud, orden: 1 },
+    { encabezado: 'Tipo de trámite', clave: (item: ListaSolicitudes) => item.tipoTramite, orden: 2 },
+    { encabezado: 'Fecha de asignación', clave: (item: ListaSolicitudes) => item.fechaCreacion, orden: 3 },
+    { encabezado: 'Fecha de actualización', clave: (item: ListaSolicitudes) => item.fechaActualizacion, orden: 4 },
+    { encabezado: 'Dias trascurridos', clave: (item: ListaSolicitudes) => item.diasTrascurridos, orden: 5 }
+]
+
+export const CONFIGURACION_ENCABEZADO_PENDIENTES = [
+    { encabezado: 'Folio tramite', clave: (item: ListaPendientes) => item.folio, orden: 1 },
+    { encabezado: 'Tipo de trámite', clave: (item: ListaPendientes) => item.tipoTramite, orden: 2 },
+    { encabezado: 'Nombre de la tarea', clave: (item: ListaPendientes) => item.nombreTarea, orden: 3 },
+    { encabezado: 'Fecha de asignación', clave: (item: ListaPendientes) => item.fechaAsignacion, orden: 4 },
+    { encabezado: 'Estado de tramite', clave: (item: ListaPendientes) => item.estatusTramite, orden: 5 }
+
+]

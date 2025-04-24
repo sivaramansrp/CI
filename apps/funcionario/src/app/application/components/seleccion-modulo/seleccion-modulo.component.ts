@@ -1,10 +1,10 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { ConfiguracionColumna, InputFecha, InputFechaComponent, TablaAcciones, TablaDinamicaComponent, TablePaginationComponent } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ReplaySubject, catchError, map } from 'rxjs';
+import { CONFIGURACION_ENCABEZADO_PENDIENTES } from '../../core/constantes/constantes-bandejas.constants';
 import { CommonModule } from '@angular/common';
 import { ListaPendientes } from '../../core/models/pendientes.model';
-
 import { TablerosService } from '../../core/service/tabletos.service';
 
 @Component({
@@ -14,7 +14,7 @@ import { TablerosService } from '../../core/service/tabletos.service';
   templateUrl: './seleccion-modulo.component.html',
   styleUrl: './seleccion-modulo.component.scss',
 })
-export class SeleccionModuloComponent implements OnInit, OnDestroy {
+export class SeleccionModuloComponent implements OnInit, OnDestroy, OnChanges {
   /** Configuración del campo de fecha inicial */
   FECHA_INICIO = {
     labelNombre: 'Fecha inicial',
@@ -53,13 +53,7 @@ export class SeleccionModuloComponent implements OnInit, OnDestroy {
   public todosPendientesOriginales: ListaPendientes[] = [];
 
   /** Configuración de columnas de la tabla */
-  public configurarTabla: ConfiguracionColumna<ListaPendientes>[] = [
-    { encabezado: 'Folio tramite', clave: (item: ListaPendientes) => item.folio, orden: 1 },
-    { encabezado: 'Tipo de trámite', clave: (item: ListaPendientes) => item.tipoTramite, orden: 2 },
-    { encabezado: 'Nombre de la tarea', clave: (item: ListaPendientes) => item.nombreTarea, orden: 3 },
-    { encabezado: 'Fecha de asignación', clave: (item: ListaPendientes) => item.fechaAsignacion, orden: 4 },
-    { encabezado: 'Estado de tramite', clave: (item: ListaPendientes) => item.estatusTramite, orden: 5 }
-  ]
+  public configurarTabla: ConfiguracionColumna<ListaPendientes>[] = CONFIGURACION_ENCABEZADO_PENDIENTES;
 
   constructor(
     private fb: FormBuilder,
@@ -125,22 +119,13 @@ export class SeleccionModuloComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Método que se ejecuta cuando se cambia de página en la paginación.
-   * @param {number} page - Número de la página seleccionada.
+   * Método que actualiza la paginacón de la tabla 
+   * @param changes Cambios detectados en las propiedades de entrada.
    */
-  onPageChange(page: number) {
-    this.currentPage = page;
-    this.updatePagination();
-  }
-
-  /**
-   * Método que se ejecuta cuando cambia el número de elementos por página.
-   * @param {number} itemsPerPage - Número de elementos a mostrar por página.
-   */
-  onItemsPerPageChange(itemsPerPage: number) {
-    this.itemsPerPage = itemsPerPage;
-    this.currentPage = 1;
-    this.updatePagination();
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['currentPage'] || changes['itemsPerPage'] || changes['todosPendientes']) {
+      this.updatePagination();
+    }
   }
 
   /** Actualiza los elementos paginados según la página e ítems por página seleccionados */

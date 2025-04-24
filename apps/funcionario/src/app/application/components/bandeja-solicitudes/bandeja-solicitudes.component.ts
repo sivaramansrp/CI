@@ -1,10 +1,12 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { ConfiguracionColumna, InputFecha, InputFechaComponent, TablaAcciones, TablaDinamicaComponent, TablePaginationComponent } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ReplaySubject, catchError, map } from 'rxjs';
+import { CONFIGURACION_ENCABEZADO_SOLICITUDES } from '../../core/constantes/constantes-bandejas.constants';
 import { CommonModule } from '@angular/common';
 import { ListaSolicitudes } from '../../core/models/solicitudes.model';
 import { TablerosService } from '../../core/service/tabletos.service';
+
 
 @Component({
   selector: 'app-bandeja-solicitudes',
@@ -13,7 +15,7 @@ import { TablerosService } from '../../core/service/tabletos.service';
   templateUrl: './bandeja-solicitudes.component.html',
   styleUrl: './bandeja-solicitudes.component.scss',
 })
-export class BandejaSolicitudesComponent implements OnInit, OnDestroy {
+export class BandejaSolicitudesComponent implements OnInit, OnDestroy, OnChanges {
   /** Configuración del campo de fecha inicial */
   FECHA_INICIO = {
     labelNombre: 'Fecha inicial',
@@ -53,13 +55,8 @@ export class BandejaSolicitudesComponent implements OnInit, OnDestroy {
   public todasSolicitudesOriginales: ListaSolicitudes[] = [];
 
   /** Configuración de columnas de la tabla */
-  public configurarTabla: ConfiguracionColumna<ListaSolicitudes>[] = [
-    { encabezado: 'Id solicitud', clave: (item: ListaSolicitudes) => item.idSolicitud, orden: 1 },
-    { encabezado: 'Tipo de trámite', clave: (item: ListaSolicitudes) => item.tipoTramite, orden: 2 },
-    { encabezado: 'Fecha de asignación', clave: (item: ListaSolicitudes) => item.fechaCreacion, orden: 3 },
-    { encabezado: 'Fecha de actualización', clave: (item: ListaSolicitudes) => item.fechaActualizacion, orden: 4 },
-    { encabezado: 'Dias trascurridos', clave: (item: ListaSolicitudes) => item.diasTrascurridos, orden: 5 }
-  ]
+  public configurarTabla: ConfiguracionColumna<ListaSolicitudes>[] = CONFIGURACION_ENCABEZADO_SOLICITUDES;
+
   constructor(
     private fb: FormBuilder,
     private servicioFuncionario: TablerosService,
@@ -107,38 +104,29 @@ export class BandejaSolicitudesComponent implements OnInit, OnDestroy {
   public getSolicitudesTabla(): void {
     this.accionesServcios = [TablaAcciones.VER];
     this.servicioFuncionario.getListaSolicitudes()
-    .pipe(
-      map((data)=>{
-        this.todasSolicitudesOriginales = data;
-        this.todasSolicitudes = [...data];
-        this.totalItems = data.length;
-        this.updatePagination();
-      }),
-      catchError((_error) => {
-        return _error;
-      })
-    )
-    .subscribe();
+      .pipe(
+        map((data) => {
+          this.todasSolicitudesOriginales = data;
+          this.todasSolicitudes = [...data];
+          this.totalItems = data.length;
+          this.updatePagination();
+        }),
+        catchError((_error) => {
+          return _error;
+        })
+      )
+      .subscribe();
   }
 
   /**
-   * Método que se ejecuta cuando se cambia de página en la paginación.
-   * @param {number} page - Número de la página seleccionada.
-   */
-  onPageChange(page: number) {
-    this.currentPage = page;
-    this.updatePagination();
-  }
-
-  /**
-   * Método que se ejecuta cuando cambia el número de elementos por página.
-   * @param {number} itemsPerPage - Número de elementos a mostrar por página.
-   */
-  onItemsPerPageChange(itemsPerPage: number) {
-    this.itemsPerPage = itemsPerPage;
-    this.currentPage = 1;
-    this.updatePagination();
-  }
+    * Método que actualiza la paginacón de la tabla 
+    * @param changes Cambios detectados en las propiedades de entrada.
+    */
+   ngOnChanges(changes: SimpleChanges): void {
+     if (changes['currentPage'] || changes['itemsPerPage'] || changes['todasSolicitudes']) {
+       this.updatePagination();
+     }
+   }
 
   /** Actualiza los elementos paginados según la página e ítems por página seleccionados */
   public updatePagination(): void {
