@@ -23,6 +23,8 @@
     "@datorama/akita": "^8.0.1",
     "@datorama/akita-ngdevtools": "^7.0.0",
     "@nx/angular": "19.3.1",
+    "@nx/nx-linux-x64-gnu": "^20.8.0",
+    "@swc/core-linux-x64-gnu": "^1.11.22",
     "babel-jest": "^29.7.0",
     "bootstrap": "^5.3.3",
     "bootstrap-icons": "^1.11.3",
@@ -34,6 +36,7 @@
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "uuid": "11.1.0",
+    "xlsx": "^0.18.5",
     "zone.js": "~0.14.3"
   },
   "devDependencies": {

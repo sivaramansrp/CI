@@ -232,10 +232,31 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'registro-solicitud',
+    loadChildren: () =>
+      import('./tramites/570102/registro-solicitud-desistimiento.module').then(
+        (m) => m.RegistroSolicitudDesistimientoModule
+      ),
+  },
+  {
     path: 'registro-del-codigo',
     loadChildren: () =>
       import('./tramites/40401/tramite40401.module').then(
         (m) => m.Tramite40401Module
+      ),
+  },
+  {
+    path: 'codigo-transportista',
+    loadChildren: () =>
+      import('./tramites/40402/codigo-transportista.module').then(
+        (m) => m.CodigoTransportistaModule
+      ),
+  },
+  {
+    path: 'registro-transportista',
+    loadChildren: () =>
+      import('./tramites/40302/registro-transportista.module').then(
+        (m) => m.RegistroTransportistaModule
       ),
   },
   {
@@ -244,7 +265,7 @@ const ROUTES: Routes = [
       import('./tramites/11102/modificacion-donaciones-immex.module').then(
         (m) => m.ModificacionDonacionesImmexModule
       ),
-  },
+  }
 ];
 
 @NgModule({
