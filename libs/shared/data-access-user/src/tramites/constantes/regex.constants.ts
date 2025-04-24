@@ -368,3 +368,40 @@ export const REGEX_ALFANUMERICO_CON_ESPACIOS = /^[a-zA-Z0-9 ]*$/;
  * ```
  */
 export const REGEX_ALFANUMERICO_CON_ESPACIOS_REEMPLAZAR = /[^a-zA-Z0-9 ]/g;
+
+/**
+ * Expresión regular para validar o coincidir con cadenas que comienzan con uno o más:
+ * - Dígitos (0-9)
+ * - Espacios en blanco
+ * - Guiones (-)
+ *
+ * Desglose de la expresión regular:
+ * - `^`: Aserta el inicio de la cadena.
+ * - `[\d\s-]`: Coincide con cualquier dígito (`\d`), espacio en blanco (`\s`) o guión (`-`).
+ * - `+`: Indica que el patrón anterior debe aparecer una o más veces.
+ *
+ * Ejemplos de coincidencias:
+ * - "123-456" (coincide con "123-")
+ * - "  -789" (coincide con "  -")
+ * - "42" (coincide con "42")
+ *
+ * Ejemplos de no coincidencias:
+ * - "abc123" (no comienza con un dígito, espacio o guión)
+ * - "!@#" (no comienza con un carácter válido)
+ */
+export const REGEX_TEXTO_PREFIJO = /^[\d\s-]+/;
+
+/**
+ * Expresión regular para validar archivos con formato Excel.
+ * 
+ * Esta expresión regular permite validar que un archivo tenga una extensión válida de Excel:
+ * - `.xls`: Formato de archivo Excel 97-2003.
+ * - `.xlsx`: Formato de archivo Excel 2007 o posterior.
+ * 
+ * Desglose de la expresión regular:
+ * - `\.`: Coincide con el punto literal antes de la extensión del archivo.
+ * - `(xls|xlsx)`: Coincide con las extensiones `xls` o `xlsx`.
+ * - `$`: Aserción para el final de la cadena.
+ * - `i`: Bandera que hace que la validación sea insensible a mayúsculas y minúsculas.
+ */
+export const VALID_FILE_REGEX = /\.(xls|xlsx)$/i;

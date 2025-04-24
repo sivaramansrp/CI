@@ -1,0 +1,115 @@
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { RespuestaCatalogos } from '@ng-mf/data-access-user';
+import { Observable } from 'rxjs';
+import { AvisoTablaDatos, CatalogoLista} from '../models/avios-model';
+
+@Injectable({
+  providedIn: 'any'
+})
+export class AvisoService {
+
+   /**
+   * Obtiene los datos de la tabla de aviso.
+   * 
+   * @returns {Observable<AvisoTablaDatos>} Un observable con los datos de la tabla de aviso.
+   */
+   obtenerAvisoTabla(): Observable<AvisoTablaDatos> {
+    return this.http.get<AvisoTablaDatos>(`assets/json/32505/aviso-tabla.json`);
+  }
+ 
+  /**
+   * Obtiene la lista de columnas para la tabla de aviso.
+   * 
+   * @returns {Observable<ColumnasTabla>} Un observable con la lista de columnas.
+   */
+  obtenerAduana() :Observable<CatalogoLista> {
+    return this.http
+      .get<CatalogoLista>('assets/json/32505/aduana.json');
+  }
+  
+  /**
+   * Obtiene la lista de combustibles.
+   * 
+   * @returns {Observable<CatalogoLista>} Un observable con la lista de combustibles.
+   */
+  obtenerCombustible():Observable<CatalogoLista> {
+    return this.http
+      .get<CatalogoLista>('assets/json/32505/combustible.json');
+  }
+
+  /**
+   * Obtiene la lista de cilindros.
+   * 
+   * @returns {Observable<CatalogoLista>} Un observable con la lista de cilindros.
+   */
+  obtenerCilindros():Observable<CatalogoLista> {
+    return this.http
+      .get<CatalogoLista>('assets/json/32505/cilindros.json');
+  }
+
+  /**
+   * Obtiene la lista de países emitidos.
+   * 
+   * @returns {Observable<CatalogoLista>} Un observable con la lista de países emitidos.
+   */
+  obtenerPaisIssued(): Observable<CatalogoLista> {
+    return this.http
+      .get<CatalogoLista>('assets/json/32505/pais-issued.json');
+  }
+  
+
+    /**
+   * Obtiene la lista de países disponibles.
+   * 
+   * Este método realiza una solicitud HTTP para obtener los datos de países desde un archivo JSON.
+   * 
+   * @returns {Observable<CatalogoLista>} Un observable que emite la lista de países.
+   */
+    obtenerPais(): Observable<CatalogoLista> {
+      return this.http
+        .get<CatalogoLista>('assets/json/32505/pais.json');
+    }
+
+  /**
+   * Obtiene la lista de años disponibles.
+   * @returns {Observable<CatalogoLista>} Un observable que emite la lista de países.
+   */
+    obtenerAnio(): Observable<CatalogoLista> {
+      return this.http
+        .get<CatalogoLista>('assets/json/32505/years.json');
+    }
+
+  /**
+   * Obtiene la lista de tipos de documentos.
+   * @returns {Observable<CatalogoLista>} Un observable que emite la lista de tipos de documentos. 
+   * */
+  constructor(
+    private http: HttpClient
+  ) {
+    //
+   }
+
+   /**
+   * Obtiene la lista de tipos de documentos.
+   * @returns {Observable<CatalogoLista>} Un observable que emite la lista de tipos de documentos.
+   * */
+  getFraccionArancelariaCatalogo(catalogo: string): Observable<RespuestaCatalogos> {
+    return this.http.get<RespuestaCatalogos>('assets/json/32502/fraccion-arancelaria-catalogo.json');
+  }
+/**
+   * Obtiene la lista de tipos de documentos.
+   * @returns {Observable<CatalogoLista>} Un observable que emite la lista de tipos de documentos.
+   * */
+  getFraccionReglaCatalogo(catalogo: string): Observable<RespuestaCatalogos> {
+    return this.http.get<RespuestaCatalogos>('assets/json/32502/fraccion-regla-catalogo.json');
+  }
+/**
+   * Obtiene la lista de tipos de documentos.
+   * @returns {Observable<CatalogoLista>} Un observable que emite la lista de tipos de documentos.
+   * */
+  getTipoDocumento(catalogo: string) : Observable<RespuestaCatalogos> {
+    return this.http.get<RespuestaCatalogos>('assets/json/32502/tipoDocumento.json');
+  }
+
+}

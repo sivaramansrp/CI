@@ -22,6 +22,8 @@ export interface Catalogo {
   clave?: string;
   tam?: string;
   dpi?: string
+  relacionadaUmtId?: number;
+  relacionadaAcotacionId?: number;
 }
 
 export interface CatalogoPaises {

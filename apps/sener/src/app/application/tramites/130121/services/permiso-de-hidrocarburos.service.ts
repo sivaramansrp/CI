@@ -27,8 +27,22 @@ export class PermisoDeHidrocarburosService {
    */
   getListaDePaisesDisponibles(): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>('/assets/json/130121/pais-procenia.json');
-    
   }
+
+  /**
+ * @description
+ * Método para obtener la lista de todas las ciudades disponibles desde un archivo JSON local.
+ * Este método realiza una solicitud HTTP para cargar los datos y los emite como un observable.
+ *
+ * @returns {Observable<Catalogo[]>} Observable que emite un arreglo de objetos
+ * de tipo `Catalogo`, representando las ciudades disponibles.
+ *
+ * @example
+ * // Ejemplo de uso:
+ * this.permisoDeHidrocarburosService.obtenerListaDeCiudades().subscribe((ciudades) => {
+ *   console.log(ciudades);
+ * });
+ */
   obtenerListaDeCiudades (): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>('/assets/json/130121/todas-las-ciudades.json');
   }
@@ -83,6 +97,21 @@ export class PermisoDeHidrocarburosService {
       'assets/json/130121/plazo-options.json'
     );
   }
+
+  /**
+ * @description
+ * Método para obtener los datos de la tabla de partidas de la mercancía desde un archivo JSON local.
+ * Este método realiza una solicitud HTTP para cargar los datos y los emite como un observable.
+ *
+ * @returns {Observable<PartidasDeLaMercanciaModelo[]>} Observable que emite un arreglo de objetos
+ * de tipo `PartidasDeLaMercanciaModelo`, representando las partidas de la mercancía.
+ *
+ * @example
+ * // Ejemplo de uso:
+ * this.permisoDeHidrocarburosService.getTablaDatos().subscribe((datos) => {
+ *   console.log(datos);
+ * });
+ */
   getTablaDatos(): Observable<PartidasDeLaMercanciaModelo[]> {
     return this.http.get<PartidasDeLaMercanciaModelo[]>(
           'assets/json/130121/partidas-de-la.json'

@@ -44,7 +44,7 @@
           [isRequired]="true"
           [layout]="'horizontal'"
           formControlName="ideGenerica1"
-          (change)="onControlChange('ideGenerica1')"
+          (change)="enCambioDeControl('ideGenerica1')"
         ></app-input-radio>
       </div>
 
@@ -62,7 +62,7 @@
               class="form-control"
               formControlName="observaciones" 
               placeholder="Justificación"
-              (change)="onControlChange('observaciones')"
+              (change)="enCambioDeControl('observaciones')"
             ></textarea>
           </div>
         </div>
@@ -92,7 +92,7 @@
               placeholder=""
               type="text"
               formControlName="establecimientoRFCResponsableSanitario"
-              (change)="onControlChange('establecimientoRFCResponsableSanitario')"
+              (change)="enCambioDeControl('establecimientoRFCResponsableSanitario')"
             />
           </div>
         </div>
@@ -107,7 +107,7 @@
               placeholder=""
               type="text"
               formControlName="establecimientoRazonSocial"
-              (change)="onControlChange('establecimientoRazonSocial')"
+              (change)="enCambioDeControl('establecimientoRazonSocial')"
             />
           </div>
         </div>
@@ -115,14 +115,16 @@
       <div class="row">
         <div class="col-md-4">
           <div class="form-group">
-            <label class="form-label" for="establecimientoCorreoElectronico">Correo electrónico*:</label>
+            <label class="form-label" for="establecimientoCorreoElectronico">Correo electrónico*: <span class="bi bi-question-circle-fill"
+              title="Correo electrónico"
+              data-bs-toggle="tooltip"></span></label>
             <input
               class="form-control"
               id="establecimientoCorreoElectronicoId"
               placeholder=""
               type="text"
               formControlName="establecimientoCorreoElectronico"
-              (change)="onControlChange('establecimientoCorreoElectronico')"
+              (change)="enCambioDeControl('establecimientoCorreoElectronico')"
               
             />
           </div>
@@ -139,7 +141,7 @@
               id="establecimientoDomicilioCodigoPostalId"
               appUppercase
            formControlName="establecimientoDomicilioCodigoPostal"
-           (change)="onControlChange('establecimientoDomicilioCodigoPostal')"
+           (change)="enCambioDeControl('establecimientoDomicilioCodigoPostal')"
             />
           </div>
         </div>
@@ -152,7 +154,7 @@
               name="estado"
               [required]="true"
               formControlName="establecimientoEstados"
-              (change)="onControlChange('establecimientoEstados')"
+              (change)="enCambioDeControl('establecimientoEstados')"
             >
             </app-catalogo-select>
           </div>
@@ -169,14 +171,14 @@
               id="descripcionMunicipioId"
               appUppercase
               formControlName="descripcionMunicipio"
-              (change)="onControlChange('descripcionMunicipio')"
+              (change)="enCambioDeControl('descripcionMunicipio')"
             />
           </div>
         </div>
       </div>
 
       <div class="row mt-5">
-        <ng-alert [CONTENIDO]="TEXTOS.ALERTA" [CUSTOMECLASS]="class"></ng-alert>
+        <ng-alert [CONTENIDO]="TEXTOS1.ALERTA" [CUSTOMECLASS]="class"></ng-alert>
       </div>
 
       <div class="row">
@@ -188,7 +190,7 @@
               type="text"
               id="localidad"
               formControlName="localidad"
-              (change)="onControlChange('localidad')"
+              (change)="enCambioDeControl('localidad')"
             />
           </div>
         </div>
@@ -201,7 +203,7 @@
               type="text"
               id="establishomentoColoniasId"
               formControlName="establishomentoColonias"
-              (change)="onControlChange('establishomentoColonias')"
+              (change)="enCambioDeControl('establishomentoColonias')"
             />
           </div>
         </div>
@@ -225,7 +227,7 @@
               id="calle"
               appUppercase
               formControlName="calle"
-               (change)="onControlChange('calle')"
+               (change)="enCambioDeControl('calle')"
             />
           </div>
         </div>
@@ -241,7 +243,7 @@
               id="lada"
               appUppercase
               formControlName ="lada"
-              (change)="onControlChange('lada')"
+              (change)="enCambioDeControl('lada')"
             />
           </div>
         </div>
@@ -254,7 +256,7 @@
               id="telefono"
               appUppercase
               formControlName = "telefono"
-              (change)="onControlChange('telefono')"
+              (change)="enCambioDeControl('telefono')"
             />
           </div>
         </div>
@@ -266,7 +268,7 @@
         <label class="form-label" for="scian">S.C.I.A.N.*:</label>
         <app-tabla-dinamica
           [configuracionTabla]="configuracionTabla"
-          [datos]="datosData"
+          [datos]="personaparas"
           [tipoSeleccionTabla]="tipoSeleccionTabla.CHECKBOX"
           formcontrolname="scian"
         >
@@ -296,7 +298,7 @@
         [id]="'avisoCheckbox'"
         [required]="true"
         formControlName="avisoCheckbox"
-        (change)="toggleNoLicenciaSanitaria($event); onControlChangeForm('avisoCheckbox')"
+        (change)="toggleNoLicenciaSanitaria($event); enControlCambioFormulario('avisoCheckbox')"
       ></lib-input-check>
       </div>
       <div class="col-md-4">
@@ -315,7 +317,7 @@
             placeholder=""
             type="text"
             formControlName="noLicenciaSanitaria"
-            (change)="onControlChangeForm('noLicenciaSanitaria')"
+            (change)="enControlCambioFormulario('noLicenciaSanitaria')"
           />
         </div>
       </div>
@@ -330,7 +332,7 @@
           name="regimen"
           [tooltipQuestionCircle]="true"
           formControlName="regimen"
-          (change)="onControlChangeForm('regimen')"
+          (change)="enControlCambioFormulario('regimen')"
         ></app-catalogo-select>
       </div>
       <div class="col-md-8">
@@ -340,21 +342,21 @@
           [required]="true"
           name="aduanasEntradas"
           formControlName="aduanasEntradas"
-          (change)="onControlChangeForm('aduanasEntradas')"
+          (change)="enControlCambioFormulario('aduanasEntradas')"
         ></app-catalogo-select>
       </div>
     </div>
-    <div class="row mt-5">
-      <div class="col-md-4"></div>
-      <div class="col-md-4"></div>
-      <div class="col-md-4">
+    <div class="row mt-5" *ngIf="showAifaCheckbox">
+     
+      <div class="col-md-6"></div>
+      <div class="col-md-6">
        
         <lib-input-check
         [label]="'Aeropuerto Internacional Felipe Ángeles (AIFA)'"
         [id]="'aifaCheckbox'"
         [required]="true"
         formControlName="aifaCheckbox"
-        (change)="onControlChangeForm('aifaCheckbox')"
+        (change)="enControlCambioFormulario('aifaCheckbox')"
       ></lib-input-check>
       </div>
     </div>
@@ -370,12 +372,12 @@
         [datos]="mercanciasTablaDatos"
       ></app-tabla-dinamica>
       <div class="container text-end mt-5">
-        <button class="btn btn-default me-2">Modificar</button>
         <button class="btn btn-default me-2">Eliminar</button>
+        <button class="btn btn-default me-2">Modificar</button>
         <button
           class="btn btn-primary me-2"
           data-bs-toggle="modal"
-          data-bs-target="#modalAddAgentMercancias"
+          (click)="abrirModalMercancia()"
         >
           Agregar
         </button>
@@ -394,7 +396,13 @@
   }
 
 
-<div class="modal fade" #establecimientoModal>
+<div 
+class="modal fade" 
+#establecimientoModal
+tabindex="-1"
+aria-labelledby="establecimientoModalLabel"
+aria-hidden="true"
+>
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <form [formGroup]="scianForm">
@@ -407,7 +415,7 @@
                 [label]="'Clave S.C.I.A.N.*'"
                 [placeholder]="'Seleccione una valor'"
                 formControlName="scian"
-                (change)="onControlChange('scian')"
+                (change)="onContriloChange('scian')"
               ></app-catalogo-select>
             </div>
           </div>
@@ -419,7 +427,7 @@
                 id="descripcionScianId"
                 formControlName="descripcionScian"
                 class="form-control"
-                (change)="onControlChange('descripcionScian')"
+                (change)="onContriloChange('descripcionScian')"
               />
             </div>
           </div>
@@ -432,7 +440,7 @@
           >
             Limpiar
           </button>
-          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">
+          <button type="button" class="btn btn-primary" (click)="cerrarModal()" >
             Cancelar
           </button>
           <button
@@ -450,7 +458,7 @@
 
 <div
   class="modal fade"
-  id="modalAddAgentMercancias"
+ #modalAddAgentMercancias
   tabindex="-1"
   aria-labelledby="modalAddAgentMercanciasLabel"
   aria-hidden="true"
@@ -709,7 +717,7 @@
         <button type="button" class="btn btn-default" data-bs-dismiss="modal">
           Cancelar
         </button>
-        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">
+        <button type="button" class="btn btn-primary" (click)="guardarMarcancia()" >
           Agregar
         </button>
       </div>
