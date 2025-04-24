@@ -451,9 +451,9 @@ const ROUTES: Routes = [
     import('./tramites/260907/modificacion-permiso-importacion-tratamientos.module').then(
       (m) => m.ModificacionPermisoImportacionTratamientosModule
     ),
-}
+},
 {
-  path: 'permit-substances',
+  path: 'sustancias-permitidas',
   loadChildren: () =>
     import('./tramites/260515/permit-de-substances.module').then(
       (m) => m.PermitDeSubstancesModule

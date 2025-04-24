@@ -1563,8 +1563,8 @@
   {
     "id": 224,
     "tramite": 260515,
-    "linkDashboard": "/cofepris/permit-substances/solicitud",
-    "linkDepartment": "/pago/permit-substances/solicitud",
+    "linkDashboard": "/cofepris/sustancias-permitidas/solicitud",
+    "linkDepartment": "/pago/sustancias-permitidas/solicitud",
     "department": "cofepris"
   },
   {
