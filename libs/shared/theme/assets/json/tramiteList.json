@@ -2256,8 +2256,8 @@
   {
     "id": 323,
     "tramite": 110205,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/se/validar-certificado/peru",
+    "linkDepartment": "/pago/validar-certificado/peru",
     "department": "se"
   },
   {
