@@ -1,0 +1,123 @@
+<div class="container">
+  <form [formGroup]="miembroEmpresaForm">
+    <div class="row mt-4">
+      <div class="col-md-8">
+        <ng-titulo titulo="Miembro de la empresa" />
+      </div>
+      <div class="col-md-4"></div>
+      <div class="col-md-4 mt-4">
+        <app-catalogo-select
+          [catalogo]="enSuCaracterDeLista.catalogos"
+          [label]="enSuCaracterDeLista.labelNombre"
+          [placeholder]="enSuCaracterDeLista.primerOpcion"
+          [required]="tipoDePersonaLista.required"
+          [isDisabled]="false"
+          name="enSuCaracterDe"
+          id="enSuCaracterDe"
+        ></app-catalogo-select>
+      </div>
+      <div class="col-md-8 mt-4"></div>
+      <div class="col-md-4 mt-4">
+        <label class="form-label text-start"
+          >Obligado a tributar en México</label
+        >
+        <app-input-radio
+          [radioOptions]="sinoOpcion.radioOptions"
+          [isRequired]="true"
+          [layout]="'horizontal'"
+          [gap]="'50px'"
+          (valueChange)="seleccionarObligadoTributarEnMexico($event)"
+        ></app-input-radio>
+      </div>
+      <div class="col-md-8 mt-4"></div>
+      <div class="col-md-4 mt-4">
+        <app-catalogo-select
+          [catalogo]="nacionalidadLista.catalogos"
+          [label]="nacionalidadLista.labelNombre"
+          [placeholder]="nacionalidadLista.primerOpcion"
+          [required]="tipoDePersonaLista.required"
+          [isDisabled]="false"
+          name="nacionalidad"
+          id="nacionalidad"
+        ></app-catalogo-select>
+      </div>
+      <div class="col-md-8 mt-4"></div>
+      @if(seleccionarObligadoTributar === 1){
+      <div class="col-md-4 mt-4">
+        <label class="form-label text-start" for="RFC">RFC*:</label>
+        <input class="form-control" type="text" size="80" id="RFC" name="RFC" />
+      </div>
+      <div class="col-md-8 mt-4"></div>
+      <div class="col-md-12 mt-4">
+        <div class="form-group pull-left">
+          <button
+            type="button"
+            name="Buscar"
+            id="btnBusqRfc"
+            (click)="buscarRFCDatos()"
+            class="btn btn-primary me-5"
+          >
+            Buscar
+          </button>
+        </div>
+      </div>
+      <div class="col-md-4 mt-4">
+        <label class="form-label text-start" for="RFC"
+          >Registro Federal de Contribuyentes *:</label
+        >
+        <input class="form-control" type="text" id="" name="" />
+      </div>
+      <div class="col-md-8 mt-4">
+        <label class="form-label text-start" for="RFC"
+          >Nombre completo *:</label
+        >
+        <input class="form-control" type="text" id="" name="" />
+      </div>
+      } @if(seleccionarObligadoTributar === 2){
+      <div class="col-md-4 mt-4">
+        <app-catalogo-select
+          [catalogo]="tipoDePersonaLista.catalogos"
+          [label]="tipoDePersonaLista.labelNombre"
+          [placeholder]="tipoDePersonaLista.primerOpcion"
+          [required]="tipoDePersonaLista.required"
+          [isDisabled]="false"
+          name="tipoDePersona"
+          id="tipoDePersona"
+          (selectionChange)="selectionTipoDePersona($event)"
+        ></app-catalogo-select>
+      </div>
+      <div class="col-md-8 mt-4"></div>
+      @if(seleccionarTipoDePersona === 1){
+      <div class="col-md-4 mt-4">
+        <label class="form-label text-start" for="">Nombre (s) *:</label>
+        <input class="form-control" type="text" id="" name="" />
+      </div>
+      <div class="col-md-4 mt-4">
+        <label class="form-label text-start" for="">Apellido paterno *:</label>
+        <input class="form-control" type="text" id="" name="" />
+      </div>
+      <div class="col-md-4 mt-4">
+        <label class="form-label text-start" for="">Apellido materno *:</label>
+        <input class="form-control" type="text" id="" name="" />
+      </div>
+      } @if(seleccionarTipoDePersona === 2){
+      <div class="col-md-12 mt-4">
+        <label class="form-label text-start" for=""
+          >Nombre de la empresa *:</label
+        >
+        <input class="form-control" type="text" id="" name="" />
+      </div>
+      } }
+      <div class="col-md-12 mt-4">
+        <div class="d-flex justify-content-end" style="margin-right: 15%;">
+          <button type="button" id="Aceptar" (click)="cerrarModal()" class="btn btn-primary me-3">
+            Aceptar
+          </button>
+          <button type="button" id="Cancelar" (click)="cerrarModal()" class="btn btn-danger">
+            Cancelar
+          </button>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

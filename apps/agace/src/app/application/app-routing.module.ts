@@ -108,6 +108,13 @@ const ROUTES: Routes = [
         (m) => m.EndosoGarantiaModule
       ),
   },
+  {
+    path: 'garantia',
+    loadChildren: () =>
+      import('./tramites/31101/garantia.module').then(
+        (m) => m.GarantiaModule
+      ),
+  },
 ];
 
 @NgModule({
