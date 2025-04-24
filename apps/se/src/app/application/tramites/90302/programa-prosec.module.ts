@@ -1,5 +1,5 @@
 import { AlertComponent } from '@ng-mf/data-access-user';
-import { Ampliacion3RsComponent } from './components/ampliacion-3Rs/ampliacion-3rs.component';
+import { Ampliacion3RsComponent } from './components/bitacora/ampliacion-3rs.component';
 import { ModificacionComponent } from './components/modificacion/modificacion.component';
 import { AnexarDocumentosComponent } from '@ng-mf/data-access-user';
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
