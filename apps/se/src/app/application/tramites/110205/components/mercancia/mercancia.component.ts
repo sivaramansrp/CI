@@ -1,13 +1,13 @@
 import { Catalogo, InputFecha, SeccionLibQuery, SeccionLibState, SeccionLibStore } from '@libs/shared/data-access-user/src';
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { PeruState, peruCertificadoStore } from '../../estados/peru-certificado.store';
+import { PeruState, Tramite110205Store } from '../../estados/tramite110205.store';
 import { Subject, delay, map, of, takeUntil } from 'rxjs';
 import { FECHA } from '../../constantes/peru-certificado.module';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Mercancia } from '../../../../shared/models/modificacion.enum';
 import { PeruCertificadoService } from '../../services/peru-certificado.service';
-import { peruCertificadoQuery } from '../../estados/peru-certificado.query';
+import { Tramite110205Query } from '../../estados/tramite110205.query';
 
 
 /**
@@ -112,8 +112,8 @@ export class MercanciaComponent implements OnInit, OnDestroy {
   constructor(
     private readonly fb: FormBuilder,
     private peruCertificadoService: PeruCertificadoService,
-    private store: peruCertificadoStore,
-    private query: peruCertificadoQuery,
+    private store: Tramite110205Store,
+    private query: Tramite110205Query,
     private seccionStore: SeccionLibStore,
     private seccionQuery: SeccionLibQuery
   ) {}
@@ -250,10 +250,10 @@ export class MercanciaComponent implements OnInit, OnDestroy {
   setValoresStore(
     form: FormGroup,
     campo: string,
-    metodoNombre: keyof peruCertificadoStore
+    metodoNombre: keyof Tramite110205Store
   ): void {
     const VALOR = form.get(campo)?.value;
-    (this.store[metodoNombre] as (value: peruCertificadoStore) => void)(VALOR);
+    (this.store[metodoNombre] as (value: Tramite110205Store) => void)(VALOR);
   }
 
   /**

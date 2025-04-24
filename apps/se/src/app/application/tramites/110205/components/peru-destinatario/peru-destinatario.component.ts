@@ -1,9 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { PeruState, peruCertificadoStore } from '../../estados/peru-certificado.store';
+import { PeruState, Tramite110205Store } from '../../estados/tramite110205.store';
 import { SeccionLibQuery, SeccionLibState, SeccionLibStore } from '@libs/shared/data-access-user/src';
 import { Subject, map, takeUntil } from 'rxjs';
-import { peruCertificadoQuery } from '../../estados/peru-certificado.query';
+import { Tramite110205Query } from '../../estados/tramite110205.query';
 
 interface FormValues {
   [key: string]: string | number | boolean | object | undefined;
@@ -66,8 +66,8 @@ export class PeruDestinatarioComponent implements OnInit, OnDestroy {
    */
   constructor(
     private readonly fb: FormBuilder,
-    private store: peruCertificadoStore,
-    private query: peruCertificadoQuery,
+    private store: Tramite110205Store,
+    private query: Tramite110205Query,
     private seccionStore: SeccionLibStore,
     private seccionQuery: SeccionLibQuery
   ) {
@@ -184,10 +184,10 @@ setValoresStoreDe(event: { formGroupName: string, campo: string, valor: undefine
   setValoresStore(
     form: FormGroup,
     campo: string,
-    metodoNombre: keyof peruCertificadoStore
+    metodoNombre: keyof Tramite110205Store
   ): void {
     const VALOR = form.get(campo)?.value;
-    (this.store[metodoNombre] as (value: peruCertificadoStore) => void)(VALOR);
+    (this.store[metodoNombre] as (value: Tramite110205Store) => void)(VALOR);
   }
 
   /**

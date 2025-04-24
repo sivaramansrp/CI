@@ -147,7 +147,7 @@ export function createInitialState(): PeruState {
   providedIn: 'root',
 })
 @StoreConfig({ name: 'perustore', resettable: true })
-export class peruCertificadoStore extends Store<PeruState> {
+export class Tramite110205Store extends Store<PeruState> {
   /**
    * @descripcion
    * Constructor que inicializa el almacén con el estado inicial.

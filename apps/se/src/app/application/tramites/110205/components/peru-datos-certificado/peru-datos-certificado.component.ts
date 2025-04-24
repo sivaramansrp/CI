@@ -4,8 +4,8 @@ import { Catalogo } from '@ng-mf/data-access-user';
 import { FormBuilder } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { PeruCertificadoService } from '../../services/peru-certificado.service';
-import { peruCertificadoQuery } from '../../estados/peru-certificado.query';
-import { peruCertificadoStore } from '../../estados/peru-certificado.store';
+import { Tramite110205Query } from '../../estados/tramite110205.query';
+import { Tramite110205Store } from '../../estados/tramite110205.store';
 
 
 /**
@@ -61,8 +61,8 @@ export class PeruDatosCertificadoComponent implements OnInit, OnDestroy {
   constructor(
     private readonly fb: FormBuilder,
     private peruCertificadoService: PeruCertificadoService,
-    private store: peruCertificadoStore,
-    private query: peruCertificadoQuery,
+    private store: Tramite110205Store,
+    private query: Tramite110205Query,
   ) {
     this.query.formDatosCertificado$.pipe(
       takeUntil(this.destroyNotifier$)

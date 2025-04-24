@@ -1,13 +1,13 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Catalogo, SeccionLibQuery, SeccionLibState, SeccionLibStore } from '@libs/shared/data-access-user/src';
 import { Observable, Subject, delay, map, of, takeUntil } from 'rxjs';
-import { PeruState, peruCertificadoStore } from '../../estados/peru-certificado.store';
+import { PeruState, Tramite110205Store } from '../../estados/tramite110205.store';
 import { FormBuilder } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Mercancia } from '../../../../shared/models/modificacion.enum';
 import { Modal } from 'bootstrap';
 import { PeruCertificadoService } from '../../services/peru-certificado.service';
-import { peruCertificadoQuery } from '../../estados/peru-certificado.query';
+import { Tramite110205Query } from '../../estados/tramite110205.query';
 
 /**
  * @descripcion
@@ -111,8 +111,8 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
   constructor(
     private readonly fb: FormBuilder,
     private peruCertificadoService: PeruCertificadoService,
-    private store: peruCertificadoStore,
-    private query: peruCertificadoQuery,
+    private store: Tramite110205Store,
+    private query: Tramite110205Query,
     private seccionStore: SeccionLibStore,
     private seccionQuery: SeccionLibQuery
   ) {

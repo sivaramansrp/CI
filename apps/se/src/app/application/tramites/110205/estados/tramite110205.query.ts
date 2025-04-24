@@ -1,14 +1,14 @@
 import { Injectable } from "@angular/core";
-import { PeruState } from "../estados/peru-certificado.store";
+import { PeruState } from "./tramite110205.store";
 import { Query } from "@datorama/akita";
-import { peruCertificadoStore } from "../estados/peru-certificado.store";
+import { Tramite110205Store } from "./tramite110205.store";
 
 /**
  * @descripcion
  * Query para gestionar el estado del certificado CAM.
  */
 @Injectable({ providedIn: 'root' })
-export class peruCertificadoQuery extends Query<PeruState> {
+export class Tramite110205Query extends Query<PeruState> {
   /**
    * @descripcion
    * Observable que selecciona el estado completo del certificado.
@@ -62,7 +62,7 @@ export class peruCertificadoQuery extends Query<PeruState> {
    * Constructor que inyecta el almacén `camCertificadoStore`.
    * @param store - Instancia de `camCertificadoStore`.
    */
-  constructor(protected override store: peruCertificadoStore) {
+  constructor(protected override store: Tramite110205Store) {
     super(store);
   }
 }
