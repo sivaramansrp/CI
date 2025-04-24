@@ -1,10 +1,20 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-
-const routes: Routes = [];
+import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
+const ROUTES: Routes = [
+  {
+    path: '',
+    pathMatch: 'full',
+    redirectTo: 'solicitud',
+  },
+  {
+    path: 'solicitud',
+    component: SolicitudPageComponent,
+  },
+];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  imports: [RouterModule.forChild(ROUTES)],
+  exports: [RouterModule],
 })
-export class ModificacionProgramaImmexBajaSubmanufactureraRoutingModule { }
+export class ModificacionProgramaImmexBajaSubmanufactureraRoutingModule {}
