@@ -1,17 +1,32 @@
+import 'reflect-metadata';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PasoDosComponent } from './paso-dos.component';
-import { ToastrService, TOAST_CONFIG } from 'ngx-toastr'; // Adjust import based on your library
+import { CommonModule } from '@angular/common';
+import { TEXTOS } from '@ng-mf/data-access-user';
+import { AlertComponent, AnexarDocumentosComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { ToastrService, TOAST_CONFIG } from 'ngx-toastr';
+import { provideHttpClient } from '@angular/common/http';
+
 
 describe('PasoDosComponent', () => {
   let component: PasoDosComponent;
   let fixture: ComponentFixture<PasoDosComponent>;
 
+  // Mock ToastrService
+  const mockToastrService = {
+    success: jest.fn(),
+    error: jest.fn(),
+    info: jest.fn(),
+    warning: jest.fn(),
+  };
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [PasoDosComponent], // Declare the component
+      imports: [PasoDosComponent],
       providers: [
-        { provide: TOAST_CONFIG, useValue: {} }, // Provide a mock ToastConfig
-        { provide: ToastrService, useValue: { success: jest.fn(), error: jest.fn() } }, // Mock ToastrService
+        { provide: ToastrService, useValue: mockToastrService },
+        { provide: TOAST_CONFIG, useValue: {} }, 
+        provideHttpClient()// Provide a mock configuration
       ],
     }).compileComponents();
 
@@ -20,7 +35,11 @@ describe('PasoDosComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should initialize TEXTOS correctly', () => {
+    expect(component.TEXTOS).toBe(TEXTOS);
   });
 });

@@ -1,26 +1,40 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
+import { Router } from '@angular/router';
 import { PasoTresComponent } from './paso-tres.component';
-import { ToastrService, TOAST_CONFIG } from 'ngx-toastr'; // Adjust import based on your library
 
 describe('PasoTresComponent', () => {
   let component: PasoTresComponent;
-  let fixture: ComponentFixture<PasoTresComponent>;
+  let router: Router;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [PasoTresComponent], // Declare the component
-      providers: [
-        { provide: TOAST_CONFIG, useValue: {} }, // Provide a mock ToastConfig
-        { provide: ToastrService, useValue: { success: jest.fn(), error: jest.fn() } }, // Mock ToastrService
-      ],
+  beforeEach(() => {
+    const routerMock = {
+      navigate: jest.fn(),
+    };
+
+    TestBed.configureTestingModule({
+      imports: [],
+      providers: [{ provide: Router, useValue: routerMock }],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(PasoTresComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    router = TestBed.inject(Router);
+    component = new PasoTresComponent(router);
   });
 
-  it('should create', () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
+  });
+
+  describe('obtieneFirma', () => {
+    it('should navigate to "servicios-extraordinarios/acuse" when FIRMA is valid', () => {
+      const firma = 'valid-firma';
+      component.obtieneFirma(firma);
+      expect(router.navigate).toHaveBeenCalledWith(['servicios-extraordinarios/acuse']);
+    });
+
+    it('should not navigate when FIRMA is invalid', () => {
+      const firma = '';
+      component.obtieneFirma(firma);
+      expect(router.navigate).not.toHaveBeenCalled();
+    });
   });
 });

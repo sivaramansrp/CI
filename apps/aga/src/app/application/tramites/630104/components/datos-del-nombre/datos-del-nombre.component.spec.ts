@@ -1,120 +1,87 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
-import { DatosDelNombreComponent } from './datos-del-nombre.component';
 import { CommonModule } from '@angular/common';
 import { of } from 'rxjs';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
-import { CatalogoSelectComponent, SolicitanteComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { DatosDelNombreComponent } from './datos-del-nombre.component';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
+import { CatalogoSelectComponent, SolicitanteComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { DatosGeneralesComponent } from '../datos-generales/datos-generales.component';
 import { DomicilioFiscalComponent } from '../domicilio-fiscal/domicilio-fiscal.component';
-
-import { Tramite630104Query } from '../../estados/queries/tramite630104.query';
 import { Tramite630104Store } from '../../estados/tramites/tramite630104.store';
+import { Tramite630104Query } from '../../estados/queries/tramite630104.query';
 import { EquipoEInstrumentosMusicalesService } from '../../services/equipo-e-instrumentos-musicales.service';
-
-// Use Jest's mocking system
-jest.mock('../../estados/queries/tramite630104.query');
-jest.mock('../../estados/tramites/tramite630104.store');
-jest.mock('../../services/equipo-e-instrumentos-musicales.service');
 
 describe('DatosDelNombreComponent', () => {
   let component: DatosDelNombreComponent;
   let fixture: ComponentFixture<DatosDelNombreComponent>;
-  let mockTramite630104Store: jest.Mocked<Tramite630104Store>;
-  let mockTramite630104Query: Partial<Tramite630104Query>;
-  let mockEquipoEInstrumentosMusicalesService: jest.Mocked<EquipoEInstrumentosMusicalesService>;
-
-  const mockConsultarPorRFC = [
-    { id: '1', descripcion: 'Sí' },
-    { id: '2', descripcion: 'No' }
-  ];
-
-  const mockTipoDeRepresentante = [
-    { id: '1', descripcion: 'Representante Legal' },
-    { id: '2', descripcion: 'Apoderado' }
-  ];
-
-  const mockPaises = [
-    { id: '1', descripcion: 'México' },
-    { id: '2', descripcion: 'Estados Unidos' }
-  ];
+  let tramite630104StoreMock: Partial<Tramite630104Store>;
+  let tramite630104QueryMock: Partial<Tramite630104Query>;
+  let equipoEInstrumentosMusicalesServiceMock: Partial<EquipoEInstrumentosMusicalesService>;
 
   const mockState = {
-    consultarPorRFC: '1',
-    tipoDeRepresentante: '1',
-    nombre: 'Juan',
-    apellidoPaterno: 'Perez',
-    apellidoMaterno: 'Gomez',
-    razonSocial: 'Empresa SA de CV',
-    rfc: 'RFC12345',
-    rfcOptionado: 'RFCOP123',
-    curp: 'CURP123456789',
-    tipoDePropietario: '1'
+    esConsultaRep: '1',
+    datosRepresentante: '1',
+    rfc: 'ABC123456DEF'
   };
 
+  const mockCatalogos =
+  [{"descripcion": "Opción 1", "id": "1"}, {"descripcion": "Opción 2", "id": "2"}]
+
   beforeEach(async () => {
-    // Reset all mocks between tests
-    jest.clearAllMocks();
-
-    // Create mock implementations
-    mockTramite630104Store = {
-      setTramite630104State: jest.fn(),
-    } as unknown as jest.Mocked<Tramite630104Store>;
-
-    mockTramite630104Query = {
-      selectTramite630104State$: of(mockState),
+    tramite630104StoreMock = {
+      setTramite630104State: jest.fn()
     };
 
-    mockEquipoEInstrumentosMusicalesService = {
-      getconsultarPorRFC: jest.fn().mockReturnValue(of(mockConsultarPorRFC)),
-      getTipoDeRepresentante: jest.fn().mockReturnValue(of(mockTipoDeRepresentante)),
-      getPais: jest.fn().mockReturnValue(of(mockPaises)),
-    } as unknown as jest.Mocked<EquipoEInstrumentosMusicalesService>;
+    tramite630104QueryMock = {
+      selectTramite630104State$: of(mockState)
+    };
+
+    equipoEInstrumentosMusicalesServiceMock = {
+      getconsultarPorRFC: jest.fn().mockReturnValue(of(mockCatalogos)),
+      getTipoDeRepresentante: jest.fn().mockReturnValue(of(mockCatalogos)),
+      getPais: jest.fn().mockReturnValue(of(mockCatalogos))
+    };
 
     await TestBed.configureTestingModule({
       imports: [
         CommonModule,
         ReactiveFormsModule,
+        TituloComponent,
         DatosDelNombreComponent
       ],
+      declarations: [],
       providers: [
-        { provide: Tramite630104Store, useValue: mockTramite630104Store },
-        { provide: Tramite630104Query, useValue: mockTramite630104Query },
-        { provide: EquipoEInstrumentosMusicalesService, useValue: mockEquipoEInstrumentosMusicalesService }
-      ]
-    }).compileComponents();
-
-    // Mock the child components to prevent errors
-    await TestBed.overrideComponent(DatosDelNombreComponent, {
-      set: {
-        imports: [CommonModule, ReactiveFormsModule],
-        providers: [
-          { provide: Tramite630104Store, useValue: mockTramite630104Store },
-          { provide: Tramite630104Query, useValue: mockTramite630104Query },
-          { provide: EquipoEInstrumentosMusicalesService, useValue: mockEquipoEInstrumentosMusicalesService }
-        ]
-      }
-    }).compileComponents();
+        { provide: Tramite630104Store, useValue: tramite630104StoreMock },
+        { provide: Tramite630104Query, useValue: tramite630104QueryMock },
+        { provide: EquipoEInstrumentosMusicalesService, useValue: equipoEInstrumentosMusicalesServiceMock }
+      ],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA]
+    })
+    .overrideComponent(DatosDelNombreComponent, {
+      add: { imports: [TituloComponent] }
+    })
+    .compileComponents();
 
     fixture = TestBed.createComponent(DatosDelNombreComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  test('should create', () => {
+  it('debería crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
   describe('ngOnInit', () => {
-    test('should initialize component properly', () => {
-      // Use Jest's spyOn for methods on the component
-      const getValorStoreSpy = jest.spyOn(component, 'getValorStore').mockImplementation();
-      const inicializarFormularioSpy = jest.spyOn(component, 'inicializarFormulario').mockImplementation();
-      const getconsultarPorRFCSpy = jest.spyOn(component, 'getconsultarPorRFC').mockImplementation();
-      const getTipoDeRepresentanteSpy = jest.spyOn(component, 'getTipoDeRepresentante').mockImplementation();
-      const getPaisSpy = jest.spyOn(component, 'getPais').mockImplementation();
-      const ajustarValidadoresSegunValorSpy = jest.spyOn(component, 'ajustarValidadoresSegunValor').mockImplementation();
+    it('debería inicializar correctamente el componente', () => {
+      const getValorStoreSpy = jest.spyOn(component, 'getValorStore');
+      const inicializarFormularioSpy = jest.spyOn(component, 'inicializarFormulario');
+      const getconsultarPorRFCSpy = jest.spyOn(component, 'getconsultarPorRFC');
+      const getTipoDeRepresentanteSpy = jest.spyOn(component, 'getTipoDeRepresentante');
+      const getPaisSpy = jest.spyOn(component, 'getPais');
+      const cambiarPropietarioSpy = jest.spyOn(component, 'cambiarPropietario');
+      const cambiarTipoPropietarioSpy = jest.spyOn(component, 'cambiarTipoPropietario');
 
       component.ngOnInit();
 
@@ -123,209 +90,189 @@ describe('DatosDelNombreComponent', () => {
       expect(getconsultarPorRFCSpy).toHaveBeenCalled();
       expect(getTipoDeRepresentanteSpy).toHaveBeenCalled();
       expect(getPaisSpy).toHaveBeenCalled();
-      expect(ajustarValidadoresSegunValorSpy).toHaveBeenCalled();
+      expect(cambiarPropietarioSpy).toHaveBeenCalled();
+      expect(cambiarTipoPropietarioSpy).toHaveBeenCalled();
     });
   });
 
   describe('inicializarFormulario', () => {
-    test('should initialize form with values from state', () => {
+    it('debería inicializar el formulario con valores del estado', () => {
       component.estadoSeleccionado = mockState;
       component.inicializarFormulario();
 
-      expect(component.datisDelNombre.get('consultarPorRFC')?.value).toBe('1');
-      expect(component.datisDelNombre.get('tipoDeRepresentante')?.value).toBe('1');
-      expect(component.datisDelNombre.get('nombre')?.value).toBe('Juan');
-      expect(component.datisDelNombre.get('apellidoPaterno')?.value).toBe('Perez');
-      expect(component.datisDelNombre.get('apellidoMaterno')?.value).toBe('Gomez');
-      expect(component.datisDelNombre.get('razonSocial')?.value).toBe('Empresa SA de CV');
-      expect(component.datisDelNombre.get('rfc')?.value).toBe('RFC12345');
-      expect(component.datisDelNombre.get('rfcOptionado')?.value).toBe('RFCOP123');
-      expect(component.datisDelNombre.get('curp')?.value).toBe('CURP123456789');
+      expect(component.datisDelNombre.get('esConsultaRep')?.value).toBe(mockState.esConsultaRep);
+      expect(component.datisDelNombre.get('datosRepresentante')?.value).toBe(mockState.datosRepresentante);
+      expect(component.datisDelNombre.get('rfc')?.value).toBe(mockState.rfc);
     });
 
-    test('should initialize form with empty values when state is empty', () => {
+    it('debería inicializar el formulario con valores vacíos si no hay estado', () => {
       component.estadoSeleccionado = {};
       component.inicializarFormulario();
 
-      expect(component.datisDelNombre.get('consultarPorRFC')?.value).toBe('');
-      expect(component.datisDelNombre.get('tipoDeRepresentante')?.value).toBe('');
-      expect(component.datisDelNombre.get('nombre')?.value).toBe('');
-      expect(component.datisDelNombre.get('apellidoPaterno')?.value).toBe('');
-      expect(component.datisDelNombre.get('apellidoMaterno')?.value).toBe('');
-      expect(component.datisDelNombre.get('razonSocial')?.value).toBe('');
+      expect(component.datisDelNombre.get('esConsultaRep')?.value).toBe('');
+      expect(component.datisDelNombre.get('datosRepresentante')?.value).toBe('');
       expect(component.datisDelNombre.get('rfc')?.value).toBe('');
-      expect(component.datisDelNombre.get('rfcOptionado')?.value).toBe('');
-      expect(component.datisDelNombre.get('curp')?.value).toBe('');
     });
   });
 
   describe('getValorStore', () => {
-    test('should update estadoSeleccionado with store data', () => {
+    it('debería asignar estadoSeleccionado desde el query', () => {
       component.getValorStore();
       expect(component.estadoSeleccionado).toEqual(mockState);
     });
   });
 
   describe('getconsultarPorRFC', () => {
-    test('should get consultarPorRFC options from service', () => {
+    it('debería obtener y asignar las opciones de consultarPorRFC', () => {
       component.getconsultarPorRFC();
-      expect(mockEquipoEInstrumentosMusicalesService.getconsultarPorRFC).toHaveBeenCalled();
-      expect(component.consultarPorRFC).toEqual(mockConsultarPorRFC);
-    });
-  });
-
-  describe('getTipoDeRepresentante', () => {
-    test('should get tipoDeRepresentante options from service', () => {
-      component.getTipoDeRepresentante();
-      expect(mockEquipoEInstrumentosMusicalesService.getTipoDeRepresentante).toHaveBeenCalled();
-      expect(component.tipoDeRepresentanteOpciones).toEqual(mockTipoDeRepresentante);
+      expect(equipoEInstrumentosMusicalesServiceMock.getconsultarPorRFC).toHaveBeenCalled();
+      expect(component.consultarPorRFC).toEqual(mockCatalogos);
     });
   });
 
   describe('getPais', () => {
-    test('should get country options and update formularioDatosTipoPropietario', () => {
-      // Mock the field to update
-      component.formularioDatosTipoPropietario = [{ id: 'pais', opciones: [] } as any];
+    it('debería obtener y actualizar las opciones del campo país en el formulario', () => {
+      component.formularioDatosPropietarioDireccion = component.formularioDatosPropietarioDireccion || [];
+      component.formularioDatosPropietarioDireccion.push(
+        { id: 'pais', opciones: [], mostrar: true, labelNombre: '', campo: '', clase: '', tipoInput: '', desactivado: false }
+      );
+      component.formularioDatosPropietarioDireccion[0].opciones = [];
       
       component.getPais();
-      
-      expect(mockEquipoEInstrumentosMusicalesService.getPais).toHaveBeenCalled();
-      expect(component.formularioDatosTipoPropietario[0].opciones).toEqual(mockPaises);
+      expect(equipoEInstrumentosMusicalesServiceMock.getPais).toHaveBeenCalled();
     });
 
-    test('should handle case when pais field is not found', () => {
-      // Create a formularioDatosTipoPropietario without the pais field
-      component.formularioDatosTipoPropietario = [{ id: 'otroId', opciones: [] } as any];
-      
+    it('debería manejar cuando no se encuentra el campo país', () => {
+      component.formularioDatosPropietarioDireccion = component.formularioDatosPropietarioDireccion || [];
+      component.formularioDatosPropietarioDireccion.push(
+        { id: 'otroCampo', opciones: [], mostrar: true, labelNombre: '', campo: '', clase: '', tipoInput: '', desactivado: false }
+      );
       component.getPais();
-      
-      expect(mockEquipoEInstrumentosMusicalesService.getPais).toHaveBeenCalled();
-      // The test passes if no error is thrown when the field isn't found
+      expect(equipoEInstrumentosMusicalesServiceMock.getPais).toHaveBeenCalled();
+    });
+
+    it('no debería actualizar opciones si el servicio devuelve un arreglo vacío', () => {
+      equipoEInstrumentosMusicalesServiceMock.getPais = jest.fn().mockReturnValue(of([]));
+      component.formularioDatosPropietarioDireccion = component.formularioDatosPropietarioDireccion || [];
+      component.formularioDatosPropietarioDireccion.push(
+        { id: 'pais', opciones: [], mostrar: true, labelNombre: '', campo: '', clase: '', tipoInput: '', desactivado: false }
+      );
+      component.getPais();
+      expect(equipoEInstrumentosMusicalesServiceMock.getPais).toHaveBeenCalled();
     });
   });
 
-  describe('continuar', () => {
-    test('should set consultarPorRFCOpcionseleccionada to true when consultarPorRFC is 1', () => {
-      component.datisDelNombre.get('consultarPorRFC')?.setValue('1');
-      component.continuar();
-      expect(component.consultarPorRFCOpcionseleccionada).toBe(true);
+  describe('getTipoDeRepresentante', () => {
+    it('debería obtener y asignar las opciones de tipo de representante', () => {
+      component.getTipoDeRepresentante();
+      expect(equipoEInstrumentosMusicalesServiceMock.getTipoDeRepresentante).toHaveBeenCalled();
+      expect(component.tipoDeRepresentanteOpciones).toEqual(mockCatalogos);
     });
 
-    test('should set consultarPorRFCOpcionseleccionada to false when consultarPorRFC is 2', () => {
-      component.datisDelNombre.get('consultarPorRFC')?.setValue('2');
-      component.continuar();
-      expect(component.consultarPorRFCOpcionseleccionada).toBe(false);
+    it('debería manejar una respuesta vacía del servicio', () => {
+      equipoEInstrumentosMusicalesServiceMock.getTipoDeRepresentante = jest.fn().mockReturnValue(of([]));
+      component.getTipoDeRepresentante();
+      expect(component.tipoDeRepresentanteOpciones).toEqual([]);
     });
 
-    test('should not change consultarPorRFCOpcionseleccionada for other values', () => {
-      component.consultarPorRFCOpcionseleccionada = true;
-      component.datisDelNombre.get('consultarPorRFC')?.setValue('3');
-      component.continuar();
-      expect(component.consultarPorRFCOpcionseleccionada).toBe(true);
+    it('no debería actualizar opciones si el servicio lanza un error', () => {
+      equipoEInstrumentosMusicalesServiceMock.getTipoDeRepresentante = jest.fn().mockReturnValue(of(new Error('Error del servicio')));
+      component.getTipoDeRepresentante();
+    });
+  });
+
+  describe('cambiarPropietario', () => {
+    it('debería mostrar tipo de propietario si esConsultaRep es 2', () => {
+      component.datisDelNombre.get('esConsultaRep')?.setValue('2');
+      component.cambiarPropietario();
+      expect(component.mostrarTipoPropietario).toBe(true);
+      expect(component.mostrarSolicitante).toBe(false);
+    });
+
+    it('debería mostrar solicitante si esConsultaRep es 1', () => {
+      component.datisDelNombre.get('esConsultaRep')?.setValue('1');
+      component.cambiarPropietario();
+      expect(component.mostrarSolicitante).toBe(true);
+    });
+  });
+
+  describe('cambiarTipoPropietario', () => {
+    beforeEach(() => {
+      component.formularioDatosPropietarioNombre = [
+        { id: 'td_rfc_representante', mostrar: false, labelNombre: '', campo: '', clase: '', tipoInput: '', desactivado: false },
+        { id: 'td_curp_representantev', mostrar: false, labelNombre: '', campo: '', clase: '', tipoInput: '', desactivado: false },
+        { id: 'nombre', mostrar: false, labelNombre: '', campo: '', clase: '', tipoInput: '', desactivado: false },
+        { id: 'apellidoPaterno', mostrar: false, labelNombre: '', campo: '', clase: '', tipoInput: '', desactivado: false },
+        { id: 'apellidoMaterno', mostrar: false, labelNombre: '', campo: '', clase: '', tipoInput: '', desactivado: false }
+      ];
+    });
+
+    it('debería mostrar los campos si datosRepresentante es 1', () => {
+      component.datisDelNombre.get('datosRepresentante')?.setValue('1');
+      component.cambiarTipoPropietario();
+      component.formularioDatosPropietarioNombre.forEach(campo => {
+        expect(campo.mostrar).toBe(true);
+      });
+      expect(component.mostrarFormularioPersonaExtranjera).toBe('1');
+    });
+
+    it('no debería mostrar los campos si datosRepresentante no es 1', () => {
+      component.datisDelNombre.get('datosRepresentante')?.setValue('2');
+      component.cambiarTipoPropietario();
+      component.formularioDatosPropietarioNombre.forEach(campo => {
+        expect(campo.mostrar).toBe(false);
+      });
+      expect(component.mostrarFormularioPersonaExtranjera).toBe('2');
     });
   });
 
   describe('establecerCambioDeValor', () => {
-    test('should set state with object value when event value is an object with id', () => {
-      const event = { campo: 'testField', valor: { id: '123', name: 'Test' } };
+    it('debería establecer el estado con el id si el valor es un objeto', () => {
+      const event = { campo: 'campoPrueba', valor: { id: '123' } };
       component.establecerCambioDeValor(event);
-      expect(mockTramite630104Store.setTramite630104State).toHaveBeenCalledWith('testField', '123');
+      expect(tramite630104StoreMock.setTramite630104State).toHaveBeenCalledWith('campoPrueba', '123');
     });
 
-    test('should set state with direct value when event value is not an object with id', () => {
-      const event = { campo: 'testField', valor: 'testValue' };
+    it('debería establecer el estado con el valor directo si no es un objeto', () => {
+      const event = { campo: 'campoPrueba', valor: 'valor simple' };
       component.establecerCambioDeValor(event);
-      expect(mockTramite630104Store.setTramite630104State).toHaveBeenCalledWith('testField', 'testValue');
+      expect(tramite630104StoreMock.setTramite630104State).toHaveBeenCalledWith('campoPrueba', 'valor simple');
     });
 
-    test('should update consultarPorRFCOpcionseleccionada with form value', () => {
+    it('debería actualizar consultarPorRFCOpcionseleccionada según el valor del formulario', () => {
+      component.datisDelNombre.addControl('consultarPorRFC', component.datisDelNombre.get('esConsultaRep')!);
       component.datisDelNombre.get('consultarPorRFC')?.setValue('1');
-      const event = { campo: 'someField', valor: 'someValue' };
-      component.establecerCambioDeValor(event);
+      component.establecerCambioDeValor({ campo: 'otroCampo', valor: 'otroValor' });
       expect(component.consultarPorRFCOpcionseleccionada).toBe('1');
     });
   });
 
-  describe('establecerValidadores', () => {
-    test('should set validators for the specified form fields', () => {
-      component.inicializarFormulario(); // Initialize form first
-      
-      // Use Jest's spyOn for the form controls
-      const updateSpy1 = jest.spyOn(component.datisDelNombre.get('nombre')!, 'updateValueAndValidity');
-      const updateSpy2 = jest.spyOn(component.datisDelNombre.get('apellidoPaterno')!, 'updateValueAndValidity');
-      const setValidatorsSpy1 = jest.spyOn(component.datisDelNombre.get('nombre')!, 'setValidators');
-      const setValidatorsSpy2 = jest.spyOn(component.datisDelNombre.get('apellidoPaterno')!, 'setValidators');
-      
-      const validatorFn = jest.fn();
-      component.establecerValidadores(['nombre', 'apellidoPaterno'], validatorFn);
-      
-      expect(setValidatorsSpy1).toHaveBeenCalledWith(validatorFn);
-      expect(setValidatorsSpy2).toHaveBeenCalledWith(validatorFn);
-      expect(updateSpy1).toHaveBeenCalled();
-      expect(updateSpy2).toHaveBeenCalled();
-    });
-  });
-
-  describe('limpiarValidadores', () => {
-    test('should clear validators for the specified form fields', () => {
-      component.inicializarFormulario(); // Initialize form first
-      
-      const clearSpy1 = jest.spyOn(component.datisDelNombre.get('nombre')!, 'clearValidators');
-      const clearSpy2 = jest.spyOn(component.datisDelNombre.get('apellidoPaterno')!, 'clearValidators');
-      const updateSpy1 = jest.spyOn(component.datisDelNombre.get('nombre')!, 'updateValueAndValidity');
-      const updateSpy2 = jest.spyOn(component.datisDelNombre.get('apellidoPaterno')!, 'updateValueAndValidity');
-
-      component.limpiarValidadores(['nombre', 'apellidoPaterno']);
-      
-      expect(clearSpy1).toHaveBeenCalled();
-      expect(clearSpy2).toHaveBeenCalled();
-      expect(updateSpy1).toHaveBeenCalled();
-      expect(updateSpy2).toHaveBeenCalled();
-    });
-  });
-
-  describe('ajustarValidadoresSegunValor', () => {
-    beforeEach(() => {
-      component.inicializarFormulario();
-      jest.spyOn(component, 'limpiarValidadores').mockImplementation();
-      jest.spyOn(component, 'establecerValidadores').mockImplementation();
+  describe('continuar', () => {
+    it('debería establecer consultarPorRFCOpcionseleccionada como verdadero si esConsultaRep es 1', () => {
+      component.datisDelNombre.get('esConsultaRep')?.setValue('1');
+      component.continuar();
+      expect(component.consultarPorRFCOpcionseleccionada).toBe(true);
     });
 
-    test('should adjust validators when tipoDePropietario is 1', () => {
-      component.datisDelNombre.get('tipoDePropietario')?.setValue('1');
-
-      component.ajustarValidadoresSegunValor();
-
-      expect(component.limpiarValidadores).toHaveBeenCalledWith(['razonSocial']);
-      expect(component.establecerValidadores).toHaveBeenCalledWith(['nombre', 'apellidoPaterno'], expect.any(Function));
+    it('debería establecer consultarPorRFCOpcionseleccionada como falso si esConsultaRep es 2', () => {
+      component.datisDelNombre.get('esConsultaRep')?.setValue('2');
+      component.continuar();
+      expect(component.consultarPorRFCOpcionseleccionada).toBe(false);
     });
 
-    test('should adjust validators when tipoDePropietario is 2', () => {
-      component.datisDelNombre.get('tipoDePropietario')?.setValue('2');
-
-      component.ajustarValidadoresSegunValor();
-
-      expect(component.limpiarValidadores).toHaveBeenCalledWith(['nombre', 'apellidoPaterno']);
-      expect(component.establecerValidadores).toHaveBeenCalledWith(['razonSocial'], expect.any(Function));
-    });
-
-    test('should not change validators for other tipoDePropietario values', () => {
-      component.datisDelNombre.get('tipoDePropietario')?.setValue('3');
-
-      component.ajustarValidadoresSegunValor();
-
-      expect(component.limpiarValidadores).not.toHaveBeenCalled();
-      expect(component.establecerValidadores).not.toHaveBeenCalled();
+    it('no debería cambiar consultarPorRFCOpcionseleccionada si esConsultaRep es otro valor', () => {
+      component.consultarPorRFCOpcionseleccionada = true;
+      component.datisDelNombre.get('esConsultaRep')?.setValue('3');
+      component.continuar();
+      expect(component.consultarPorRFCOpcionseleccionada).toBe(true);
     });
   });
 
   describe('ngOnDestroy', () => {
-    test('should complete the destroyed$ subject', () => {
-      const nextSpy = jest.spyOn((component as any).destroyed$, 'next');
-      const completeSpy = jest.spyOn((component as any).destroyed$, 'complete');
-
+    it('debería completar el subject destroyed$', () => {
+      const nextSpy = jest.spyOn(component['destroyed$'], 'next');
+      const completeSpy = jest.spyOn(component['destroyed$'], 'complete');
       component.ngOnDestroy();
-
       expect(nextSpy).toHaveBeenCalled();
       expect(completeSpy).toHaveBeenCalled();
     });

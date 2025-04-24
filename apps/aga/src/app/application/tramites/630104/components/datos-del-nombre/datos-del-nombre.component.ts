@@ -1,6 +1,9 @@
 /**
- * Componente que gestiona los datos del tipo de propietario para el trámite 630303.
+ * Componente que gestiona los datos del nombre del propietario para el trámite 630104.
+ * Este componente permite la gestión de formularios dinámicos, la interacción con catálogos,
+ * y la visualización condicional de campos según el tipo de propietario seleccionado.
  */
+
 import { CommonModule } from '@angular/common';
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
@@ -14,16 +17,13 @@ import { DatosGeneralesComponent } from '../datos-generales/datos-generales.comp
 import { DomicilioFiscalComponent } from '../domicilio-fiscal/domicilio-fiscal.component';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
 
-import { FORMULARIO_DATOS_PROPIETARIO_DIRECCION, FORMULARIO_DATOS_PROPIETARIO_NOMBRE, FORMULARIO_FISCAL_CURP } from '../../enums/retorno-importacion-temporal.enum';
+import {FORMULARIO_TIPO_REPRESENTANTE_CURP, FORMULARIO_TIPO_REPRESENTANTE_DIRECCION, FORMULARIO_TIPO_REPRESENTANTE_NOMBRE} from '../../enums/retorno-importacion-temporal.enum';
 import { Tramite630104Query } from '../../estados/queries/tramite630104.query';
 
 import { REGEX_NOMBRE } from "@libs/shared/data-access-user/src/tramites/constantes/regex.constants";
 
 import { Tramite630104State, Tramite630104Store } from '../../estados/tramites/tramite630104.store';
 import { EquipoEInstrumentosMusicalesService } from '../../services/equipo-e-instrumentos-musicales.service';
-
-
-
 
 @Component({
   selector: 'app-datos-del-nombre',
@@ -38,6 +38,7 @@ export class DatosDelNombreComponent implements OnInit, OnDestroy {
    * Indicador para mostrar el formulario de personas extranjeras.
    */
   mostrarFormularioPersonaExtranjera = false;
+
   /**
    * Indica si se debe mostrar el tipo de propietario.
    */
@@ -61,31 +62,34 @@ export class DatosDelNombreComponent implements OnInit, OnDestroy {
   /**
    * Formulario dinámico para gestionar los datos del tipo de propietario.
    */
-  formularioDatosPropietarioDireccion: ModeloDeFormaDinamica[] = FORMULARIO_DATOS_PROPIETARIO_DIRECCION;
+  formularioDatosPropietarioDireccion: ModeloDeFormaDinamica[] = FORMULARIO_TIPO_REPRESENTANTE_DIRECCION;
 
   /**
    * Formulario dinámico para gestionar los datos del nombre del propietario.
    */
-  formularioDatosPropietarioNombre: ModeloDeFormaDinamica[] = FORMULARIO_DATOS_PROPIETARIO_NOMBRE;
+  formularioDatosPropietarioNombre: ModeloDeFormaDinamica[] = FORMULARIO_TIPO_REPRESENTANTE_NOMBRE;
 
-  formularioFiscalCurp: ModeloDeFormaDinamica[] = FORMULARIO_FISCAL_CURP
 
+formularioTipoCurp: ModeloDeFormaDinamica[] = FORMULARIO_TIPO_REPRESENTANTE_CURP;
   /**
    * Formulario reactivo para gestionar los datos del tipo de propietario.
    */
   datisDelNombre!: FormGroup;
 
   /**
-   * Estado seleccionado del trámite 630303.
+   * Estado seleccionado del trámite 630104.
    */
   estadoSeleccionado!: Tramite630104State;
+
+  /**
+   * Indicador para determinar si la opción "Consultar por RFC" está seleccionada.
+   */
+  public consultarPorRFCOpcionseleccionada: boolean = false;
 
   /**
    * Subject utilizado para manejar la destrucción de suscripciones y evitar fugas de memoria.
    */
   private destroyed$ = new Subject<void>();
-
-  public consultarPorRFCOpcionseleccionada: boolean = false;
 
   /**
    * Constructor del componente.
@@ -93,7 +97,7 @@ export class DatosDelNombreComponent implements OnInit, OnDestroy {
    * @param fb - Constructor de formularios reactivos.
    * @param tramite630104Store - Store para manejar el estado del trámite.
    * @param tramite630104Query - Query para consultar el estado del trámite.
-   * @param EquipoEInstrumentosMusicalesService - Servicio para obtener datos de catálogos.
+   * @param equipoEInstrumentosMusicalesService - Servicio para obtener datos de catálogos.
    */
   constructor(
     private fb: FormBuilder,
@@ -116,14 +120,18 @@ export class DatosDelNombreComponent implements OnInit, OnDestroy {
     this.cambiarTipoPropietario();
   }
 
+  /**
+   * Cambia el estado de la opción "Consultar por RFC" según el valor del formulario.
+   */
   continuar(): void {
     if (this.datisDelNombre.get('esConsultaRep')?.value === '1') {
       this.consultarPorRFCOpcionseleccionada = true;
     }
     else if (this.datisDelNombre.get('esConsultaRep')?.value === '2') {
-      this.consultarPorRFCOpcionseleccionada = false
+      this.consultarPorRFCOpcionseleccionada = false;
     }
   }
+
   /**
    * Cambia la visibilidad de los campos según el tipo de propietario seleccionado.
    */
@@ -134,14 +142,17 @@ export class DatosDelNombreComponent implements OnInit, OnDestroy {
     const NOMBRE_CAMPO = this.formularioDatosPropietarioNombre.find((campo) => campo.id === 'nombre');
     const APELLIDO_PATERNO_CAMPO = this.formularioDatosPropietarioNombre.find((campo) => campo.id === 'apellidoPaterno');
     const APELLIDO_MATERNO_CAMPO = this.formularioDatosPropietarioNombre.find((campo) => campo.id === 'apellidoMaterno');
+    const RFC_CAMPO = this.formularioTipoCurp.find((campo) => campo.id === 'datosRepresentanteRFC');
 
 
-    if (REPRESENTANTE_RFC && CURP_CAMPO && NOMBRE_CAMPO && APELLIDO_PATERNO_CAMPO && APELLIDO_MATERNO_CAMPO) {
+    if (REPRESENTANTE_RFC && CURP_CAMPO && NOMBRE_CAMPO && APELLIDO_PATERNO_CAMPO && APELLIDO_MATERNO_CAMPO && RFC_CAMPO) {
       REPRESENTANTE_RFC.mostrar = TIPO_REPRESENTANTE_VALOR === '1';
       CURP_CAMPO.mostrar = TIPO_REPRESENTANTE_VALOR === '1';
       NOMBRE_CAMPO.mostrar = TIPO_REPRESENTANTE_VALOR === '1';
       APELLIDO_PATERNO_CAMPO.mostrar = TIPO_REPRESENTANTE_VALOR === '1';
       APELLIDO_MATERNO_CAMPO.mostrar = TIPO_REPRESENTANTE_VALOR === '1';
+      RFC_CAMPO.mostrar = TIPO_REPRESENTANTE_VALOR === '2';
+  
     }
     this.mostrarFormularioPersonaExtranjera = TIPO_REPRESENTANTE_VALOR;
   }
@@ -162,7 +173,6 @@ export class DatosDelNombreComponent implements OnInit, OnDestroy {
       esConsultaRep: [this.estadoSeleccionado?.['esConsultaRep'] || '', Validators.required],
       datosRepresentante: [this.estadoSeleccionado?.['datosRepresentante'] || '', Validators.required],
       rfc: [this.estadoSeleccionado?.['rfc'] || '', [Validators.required, Validators.pattern(REGEX_NOMBRE)]],
-
     });
   }
 
@@ -218,7 +228,8 @@ export class DatosDelNombreComponent implements OnInit, OnDestroy {
 
   /**
    * Establece un cambio de valor en el store basado en un evento.
-   *  Evento que contiene el campo y el valor a actualizar.
+   * 
+   * @param $event - Evento que contiene el campo y el valor a actualizar.
    */
   establecerCambioDeValor($event: { campo: string; valor: unknown }): void {
     if (typeof $event.valor === 'object' && $event.valor !== null && 'id' in $event.valor) {

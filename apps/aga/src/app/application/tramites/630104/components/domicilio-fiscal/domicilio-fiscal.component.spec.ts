@@ -16,27 +16,27 @@ describe('DomicilioFiscalComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('debería crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the reactive form on ngOnInit', () => {
+  it('debería inicializar el formulario reactivo en ngOnInit', () => {
     const spy = jest.spyOn(component, 'inicializarFormulario');
     component.ngOnInit();
     expect(spy).toHaveBeenCalled();
     expect(component.domicilioFiscalFormulario).toBeDefined();
   });
 
-  it('should initialize the form with default values', () => {
+  it('debería inicializar el formulario con valores por defecto', () => {
     component.inicializarFormulario();
     expect(component.domicilioFiscalFormulario).toBeDefined();
     expect(component.domicilioFiscalFormulario.controls).toBeDefined();
   });
 
-  it('should have the correct form structure', () => {
+  it('debería tener la estructura correcta del formulario', () => {
     component.inicializarFormulario();
     expect(component.domicilioFiscalFormulario instanceof FormGroup).toBe(true);
-    // Add specific form control checks if applicable
-    // Example: expect(component.domicilioFiscalFormulario.get('fieldName')).toBeDefined();
+    // Agrega verificaciones específicas de controles si aplica
+    // Ejemplo: expect(component.domicilioFiscalFormulario.get('nombreCampo')).toBeDefined();
   });
 });

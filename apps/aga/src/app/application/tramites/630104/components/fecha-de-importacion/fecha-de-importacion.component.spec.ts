@@ -15,10 +15,11 @@ describe('FechaDeImportacionComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('debería crearse correctamente', () => {
     expect(component).toBeTruthy();
   });
-  it('should call getValorStore and inizializarFormulario on ngOnInit', () => {
+
+  it('debería llamar a getValorStore e inizializarFormulario en ngOnInit', () => {
     const getValorStoreSpy = jest.spyOn(component, 'getValorStore');
     const inizializarFormularioSpy = jest.spyOn(component, 'inizializarFormulario');
 
@@ -27,7 +28,8 @@ describe('FechaDeImportacionComponent', () => {
     expect(getValorStoreSpy).toHaveBeenCalled();
     expect(inizializarFormularioSpy).toHaveBeenCalled();
   });
-  it('should initialize the form with default values in inizializarFormulario', () => {
+
+  it('debería inicializar el formulario con valores por defecto en inizializarFormulario', () => {
     component.estadoSeleccionado = { fechaLimiteRetorno: '2023-01-01', cuentaProrroga: '2' } as any;
 
     component.inizializarFormulario();
@@ -37,7 +39,8 @@ describe('FechaDeImportacionComponent', () => {
       cuentaProrroga: '2',
     });
   });
-  it('should update estadoSeleccionado when getValorStore emits a value', () => {
+
+  it('debería actualizar estadoSeleccionado cuando getValorStore emite un valor', () => {
     const mockState = { fechaLimiteRetorno: '2023-01-01', cuentaProrroga: '2' } as any;
     jest.spyOn(component['tramite630104Query'].selectTramite630104State$, 'pipe').mockReturnValue({
       subscribe: (callback: (data: any) => void) => callback(mockState),
@@ -47,31 +50,32 @@ describe('FechaDeImportacionComponent', () => {
 
     expect(component.estadoSeleccionado).toEqual(mockState);
   });
-it('should update the store correctly in establecerCambioDeValor for object values', () => {
-  const setTramite630104StateSpy = jest.spyOn(component['tramite630104Store'], 'setTramite630104State');
-  const event = { campo: 'testCampo', valor: { id: '123' } };
 
-  component.establecerCambioDeValor(event);
+  it('debería actualizar el store correctamente en establecerCambioDeValor para valores tipo objeto', () => {
+    const setTramite630104StateSpy = jest.spyOn(component['tramite630104Store'], 'setTramite630104State');
+    const event = { campo: 'testCampo', valor: { id: '123' } };
 
-  expect(setTramite630104StateSpy).toHaveBeenCalledWith('testCampo', '123');
+    component.establecerCambioDeValor(event);
+
+    expect(setTramite630104StateSpy).toHaveBeenCalledWith('testCampo', '123');
+  });
+
+  it('debería actualizar el store correctamente en establecerCambioDeValor para valores primitivos', () => {
+    const setTramite630104StateSpy = jest.spyOn(component['tramite630104Store'], 'setTramite630104State');
+    const event = { campo: 'testCampo', valor: 'testValue' };
+
+    component.establecerCambioDeValor(event);
+
+    expect(setTramite630104StateSpy).toHaveBeenCalledWith('testCampo', 'testValue');
+  });
+
+  it('debería completar destroyed$ al ejecutar ngOnDestroy', () => {
+    const destroyedSpy = jest.spyOn(component['destroyed$'], 'next');
+    const completeSpy = jest.spyOn(component['destroyed$'], 'complete');
+
+    component.ngOnDestroy();
+
+    expect(destroyedSpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
+  });
 });
-
-it('should update the store correctly in establecerCambioDeValor for primitive values', () => {
-  const setTramite630104StateSpy = jest.spyOn(component['tramite630104Store'], 'setTramite630104State');
-  const event = { campo: 'testCampo', valor: 'testValue' };
-
-  component.establecerCambioDeValor(event);
-
-  expect(setTramite630104StateSpy).toHaveBeenCalledWith('testCampo', 'testValue');
-});
-
-it('should complete destroyed$ on ngOnDestroy', () => {
-  const destroyedSpy = jest.spyOn(component['destroyed$'], 'next');
-  const completeSpy = jest.spyOn(component['destroyed$'], 'complete');
-
-  component.ngOnDestroy();
-
-  expect(destroyedSpy).toHaveBeenCalled();
-  expect(completeSpy).toHaveBeenCalled();
-});
-} );

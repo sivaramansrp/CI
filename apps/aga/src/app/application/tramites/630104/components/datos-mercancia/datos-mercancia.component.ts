@@ -1,5 +1,7 @@
 /**
  * Componente que gestiona los datos de la mercancía para el trámite 630303.
+ * Este componente permite inicializar formularios, obtener datos del estado y manejar el estado del formulario.
+ * También se encarga de gestionar los cambios en el estado del trámite y liberar recursos al destruirse.
  */
 import { Component, OnDestroy, OnInit } from '@angular/core';
 
@@ -16,10 +18,7 @@ import { Tramite630104Query } from '../../estados/queries/tramite630104.query';
 import { Subject, takeUntil } from 'rxjs';
 import { FORMULARIO_DATOS_MERCANCIA } from '../../enums/retorno-importacion-temporal.enum';
 import { TituloComponent } from '@ng-mf/data-access-user';
-/**
- * Componente que gestiona los datos de la mercancía para el trámite 630303.
- * Permite inicializar formularios, obtener datos del estado y manejar el estado del formulario.
- */
+
 @Component({
   selector: 'app-datos-mercancia',
   standalone: true,
@@ -82,6 +81,7 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
 
   /**
    * Obtiene el estado actual del trámite desde el store.
+   * Suscribe al estado del trámite y actualiza la propiedad `estadoSeleccionado`.
    */
   getValorStore(): void {
     this.tramite630104Query.selectTramite630104State$
@@ -95,6 +95,8 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
    * Establece un cambio de valor en el store basado en un evento.
    * 
    * @param $event - Evento que contiene el campo y el valor a actualizar.
+   *                 `campo` es el nombre del campo a modificar.
+   *                 `valor` es el nuevo valor que se asignará al campo.
    */
   establecerCambioDeValor($event: { campo: string; valor: unknown }): void {
     this.tramite630104Store.setTramite630104State($event.campo, $event.valor);
@@ -103,6 +105,7 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
   /**
    * Método del ciclo de vida que se ejecuta al destruir el componente.
    * Libera las suscripciones activas para evitar fugas de memoria.
+   * Emite un valor en el Subject `destroyed$` y lo completa.
    */
   ngOnDestroy(): void {
     this.destroyed$.next();

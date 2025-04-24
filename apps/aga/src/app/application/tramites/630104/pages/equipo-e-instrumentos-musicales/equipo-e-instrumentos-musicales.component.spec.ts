@@ -3,6 +3,7 @@ import { EquipoEInstrumentosMusicalesComponent } from './equipo-e-instrumentos-m
 import { BtnContinuarComponent, SolicitanteComponent, WizardComponent } from '@libs/shared/data-access-user/src';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { HttpClientModule } from '@angular/common/http';
+import {  CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 describe('ImportacionDeVehiculosUsadosComponent', () => {
   let component: EquipoEInstrumentosMusicalesComponent;
@@ -12,6 +13,7 @@ describe('ImportacionDeVehiculosUsadosComponent', () => {
     await TestBed.configureTestingModule({
       imports: [WizardComponent, BtnContinuarComponent, SolicitanteComponent,HttpClientModule],
       declarations: [EquipoEInstrumentosMusicalesComponent,PasoUnoComponent],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA] 
     }).compileComponents();
 
     fixture = TestBed.createComponent(EquipoEInstrumentosMusicalesComponent);

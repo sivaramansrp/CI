@@ -4,8 +4,9 @@
  */
 import { Component, OnDestroy, OnInit } from '@angular/core';
 
+import { InputCheckComponent, TituloComponent } from "@ng-mf/data-access-user";
+
 import { CommonModule } from '@angular/common';
-import { TituloComponent } from "@ng-mf/data-access-user";
 
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Tramite630104State, Tramite630104Store } from '../../estados/tramites/tramite630104.store';
@@ -20,7 +21,7 @@ import { Subject, takeUntil } from 'rxjs';
 @Component({
   selector: 'app-manifiesto',
   standalone: true,
-  imports: [CommonModule, TituloComponent, ReactiveFormsModule],
+  imports: [CommonModule, InputCheckComponent, TituloComponent, ReactiveFormsModule],
   templateUrl: './manifiesto.component.html',
   styleUrl: './manifiesto.component.scss',
 })
@@ -45,8 +46,8 @@ export class ManifiestoComponent implements OnInit, OnDestroy {
    * Constructor del componente.
    * 
    * @param fb - Constructor de formularios reactivos.
-   * @param tramite630303Store - Store para manejar el estado del trámite.
-   * @param tramite630303Query - Query para consultar el estado del trámite.
+   * @param tramite630104Store - Store para manejar el estado del trámite.
+   * @param tramite630104Query - Query para consultar el estado del trámite.
    */
   constructor(
     private fb: FormBuilder,
@@ -85,6 +86,7 @@ export class ManifiestoComponent implements OnInit, OnDestroy {
 
   /**
    * Obtiene el estado actual del trámite desde el store.
+   * Suscribe al observable del estado y actualiza la propiedad `estadoSeleccionado`.
    */
   getValorStore(): void {
     this.tramite630104Query.selectTramite630104State$.pipe(

@@ -1,44 +1,25 @@
+/**
+ * Constantes de expresiones regulares utilizadas en la validación de todos los formularios.
+ * @constant {RegExp} REGEX_CORREO_ELECTRONICO - Validación para direcciones de correo electrónico.
+ * @constant {RegExp} REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL - Validación para evitar espacios al inicio o final del texto.
+ * @constant {RegExp} REGEX_POSTAL - Validación para códigos postales.
+ * @constant {RegExp} REGEX_TELEFONO - Validación para números telefónicos.
+ */
 import { 
     REGEX_CORREO_ELECTRONICO, 
     REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, 
-    REGEX_PATRON_ALFANUMERICO, 
     REGEX_POSTAL, 
     REGEX_TELEFONO
   } from "@libs/shared/data-access-user/src/tramites/constantes/regex.constants";
 
-
 /**
- * PASOS_REGISTRO
- * Define los pasos del registro para el trámite 630303.
- * Cada paso contiene un índice, un título, y estados de actividad y completitud.
+ * Configuración para el campo de fecha límite estimada de retorno.
+ * @property {string} labelNombre - Texto que se muestra como etiqueta del campo.
+ * @property {boolean} required - Indica si el campo es obligatorio.
+ * @property {boolean} habilitado - Indica si el campo está habilitado para interacción.
+ * @property {boolean} desactivado - Indica si el campo está desactivado por defecto.
  */
-export const PASOS_REGISTRO = [
-    {
-        indice: 1,
-        titulo: 'Capturar solicitud',
-        activo: true,
-        completado: true,
-    },
-    {
-        indice: 2,
-        titulo: 'Anexar necesarios',
-        activo: false,
-        completado: false,
-    },
-    {
-        indice: 3,
-        titulo: 'Firmar solicitud',
-        activo: false,
-        completado: false,
-    }
-];
-
-/**
- * ESTIMADA_RETORNO
- * Configuración para la fecha límite estimada de retorno.
- * Contiene el nombre de la etiqueta, si es requerido y si está habilitado.
- */
-export const ESTIMADA_RETORNO = {
+  export const ESTIMADA_RETORNO = {
     labelNombre: 'Fecha límite estimada de retorno',
     required: true,
     habilitado: true,
@@ -46,15 +27,11 @@ export const ESTIMADA_RETORNO = {
 };
 
 /**
- * FECHA_INICIO_PRORROGA
- * Configuración para la fecha de inicio de la prórroga.
- * Contiene el nombre de la etiqueta, si es requerido y si está habilitado.
+ * Configuración para el campo de fecha estimada de ingreso.
+ * @property {string} labelNombre - Texto que se muestra como etiqueta del campo.
+ * @property {boolean} required - Indica si el campo es obligatorio.
+ * @property {boolean} habilitado - Indica si el campo está habilitado para interacción.
  */
-export const FECHA_INICIO_PRORROGA = {
-    labelNombre: 'Fecha de inicio prórroga',
-    required: true,
-    habilitado: true
-};
 
 export const FECHA_ESTIMADA_DE_INGRESO = {
     labelNombre: 'Fecha estimada de ingreso',
@@ -62,43 +39,20 @@ export const FECHA_ESTIMADA_DE_INGRESO = {
     habilitado: true
 };
 
-/**
- * FECHA_VENCIMIENTO_PRORROGA
- * Configuración para la fecha de vencimiento de la prórroga.
- * Contiene el nombre de la etiqueta, si es requerido y si está habilitado.
- */
-export const FECHA_VENCIMIENTO_PRORROGA = {
-    labelNombre: 'Fecha de vencimiento prórroga',
-    required: true,
-    habilitado: true
-};
 
 /**
- * FECHA_INGRESO
- * Configuración para la fecha de ingreso.
- * Contiene el nombre de la etiqueta, si es requerido y si está habilitado.
- */
-export const FECHA_INGRESO = {
-    labelNombre: 'Fecha de ingreso',
-    required: true,
-    habilitado: true
-};
-
-/**
- * FECHA_VENCIMIENTO
- * Configuración para la fecha de vencimiento.
- * Contiene el nombre de la etiqueta, si es requerido y si está habilitado.
- */
-export const FECHA_VENCIMIENTO = {
-    labelNombre: 'Fecha de vencimiento',
-    required: true,
-    habilitado: true
-};
-
-/**
- * FORMULARIO_DATOS_MERCANCIA
- * Define los campos del formulario para la mercancía.
- * Cada campo contiene un ID, nombre de etiqueta, campo, clase, tipo de input, validadores y otros atributos.
+ * Definición de campos para el formulario de datos de mercancía.
+ * Contiene los campos necesarios para la descripción y justificación de la mercancía a importar temporalmente.
+ * @property {Array<Object>} - Lista de objetos que representan cada campo del formulario.
+ * 
+ * Los campos incluyen:
+ * - Descripción general de la mercancía (textarea)
+ * - Motivo o justificación de la importación temporal (textarea)
+ * - Nombre comercial del artista o grupo musical (text)
+ * - Observaciones (textarea)
+ * - Lista detallada de la mercancía (textarea)
+ * 
+ * Cada campo incluye validadores para asegurar la correcta entrada de datos.
  */
 
 export const FORMULARIO_DATOS_MERCANCIA = [
@@ -186,12 +140,18 @@ export const FORMULARIO_DATOS_MERCANCIA = [
     }
 ];
 
-/**
- * FORMULARIO_DATOS_SOLICITUD
- * Define los campos del formulario para la solicitud.
- * Cada campo contiene un ID, nombre de etiqueta, campo, clase, tipo de input, validadores y otros atributos.
- **/
 
+/**
+ * Definición de campos para el formulario de datos de solicitud.
+ * Contiene campos relacionados con la aduana de entrada.
+ * @property {Array<Object>} - Lista de objetos que representan cada campo del formulario.
+ * 
+ * Los campos incluyen:
+ * - Aduana de ingreso (select-catalogos)
+ * - Sección aduanera (select-catalogos)
+ * 
+ * La aduana de ingreso es obligatoria, mientras que la sección aduanera es opcional.
+ */
 export const FORMULARIO_DATOS_SOLICITUD = [
     {
         id: 'cveAduana',
@@ -223,142 +183,37 @@ export const FORMULARIO_DATOS_SOLICITUD = [
     },
 ];
 
-
+/**
+ * Definición de campos para el formulario de fecha de importación.
+ * Actualmente está vacío, preparado para futura implementación.
+ * @property {Array<Object>} - Lista de objetos que representan cada campo del formulario.
+ */
 export const FORMULARIO_FECHA_IMPORTACION = [
   
 ];
 
-/**
- * FORMULARIO_DATOS_PROPIETARIO 
- * Define los campos del formulario para los datos del propietario.
- * Cada campo contiene un ID, nombre de etiqueta, campo, clase, tipo de input, validadores y otros atributos.
- * */
 
-export const FORMULARIO_DATOS_PROPIETARIO = [
-    {
-        id: 'calle',
-        labelNombre: 'Calle',
-        campo: 'calle',
-        clase: 'col-md-4',
-        tipoInput: 'text',
-        desactivado: false,
-        soloLectura: false,
-        validadores: [
-            { tipo: 'required' },
-            { tipo: 'pattern', valor:REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija la calle.' }
-        ],
-        marcadorDePosicion: '',
-        valorPredeterminado: '',
-        marginTop: 0
-    },
-    {
-        id: 'numeroExterior',
-        labelNombre: 'Número Exterior',
-        campo: 'numeroExterior',
-        clase: 'col-md-4',
-        tipoInput: 'number',
-        desactivado: false,
-        soloLectura: false,
-        validadores: [
-            { tipo: 'required' }
-        ],
-        marcadorDePosicion: '',
-        valorPredeterminado: '',
-        marginTop: 0
-    },
-    {
-        id: 'numeroInterior',
-        labelNombre: 'Número Interior',
-        campo: 'numeroInterior',
-        clase: 'col-md-4',
-        tipoInput: 'number',
-        desactivado: false,
-        soloLectura: false,
-        validadores: [],
-        marcadorDePosicion: '',
-        valorPredeterminado: '',
-        marginTop: 0
-    },
-    {
-        id: 'pais',
-        labelNombre: 'País',
-        campo: 'pais',
-        clase: 'col-md-4',
-        tipoInput: 'select-catalogos',
-        desactivado: false,
-        soloLectura: false,
-        validadores: [
-            { tipo: 'required' }
-        ],
-        marcadorDePosicion: '',
-        valorPredeterminado: '',
-        marginTop: 0
-    },
-    {
-        id: 'estadoLocalidad',
-        labelNombre: 'Estado y Localidad',
-        campo: 'estadoLocalidad',
-        clase: 'col-md-4',
-        tipoInput: 'text',
-        desactivado: false,
-        soloLectura: false,
-        validadores: [
-            { tipo: 'required' },
-            { tipo: 'pattern', valor:REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija el estado y localidad.' }
-        ],
-        marcadorDePosicion: '',
-        valorPredeterminado: '',
-        marginTop: 0
-    },
-    {
-        id: 'correoElectronico',
-        labelNombre: 'Correo Electrónico',
-        campo: 'correoElectronico',
-        clase: 'col-md-4',
-        tipoInput: 'text',
-        desactivado: false,
-        soloLectura: false,
-        validadores: [
-            { tipo: 'required' },
-            { tipo: 'pattern', valor:REGEX_CORREO_ELECTRONICO, mensaje: 'Por favor, escriba una dirección de correo válida.' }
-        ],
-        marcadorDePosicion: '',
-        valorPredeterminado: '',
-        marginTop: 5
-    },
-    {
-        id: 'telefono',
-        labelNombre: 'Teléfono',
-        campo: 'telefono',
-        clase: 'col-md-4',
-        tipoInput: 'text',
-        desactivado: false,
-        soloLectura: false,
-        validadores: [
-            { tipo: 'required' },
-            { tipo: 'pattern', valor:REGEX_TELEFONO, mensaje: 'Por favor, corrija el teléfono.' }
-        ],
-        marcadorDePosicion: '',
-        valorPredeterminado: '',
-        marginTop: 5
-    },
-    {
-        id: 'codigoPostal',
-        labelNombre: 'Código Postal',
-        campo: 'codigoPostal',
-        clase: 'col-md-4',
-        tipoInput: 'text',
-        desactivado: false,
-        soloLectura: false,
-        validadores: [
-            { tipo: 'required' },
-            { tipo: 'pattern', valor:REGEX_POSTAL, mensaje: 'Debe contener sólo 5 números.' }
-        ],
-        marcadorDePosicion: '',
-        valorPredeterminado: '',
-        marginTop: 5
-    }
-];
+
+/**
+ * Definición de campos para el formulario de domicilio fiscal.
+ * Contiene todos los campos necesarios para registrar un domicilio fiscal completo.
+ * @property {Array<Object>} - Lista de objetos que representan cada campo del formulario.
+ * 
+ * Los campos incluyen:
+ * - Calle (text, desactivado)
+ * - Número exterior (text, desactivado)
+ * - Número interior (text, desactivado)
+ * - Código postal (text, desactivado)
+ * - Colonia (text, desactivado)
+ * - País (text, desactivado)
+ * - Estado (text, desactivado)
+ * - Localidad (text, desactivado)
+ * - Municipio o alcaldía (text, desactivado)
+ * - Teléfono (text, desactivado)
+ * 
+ * Todos los campos están en modo de solo lectura y son pre-completados con valores predeterminados.
+ */
+
 
 export const FORMULARIO_DOMICILIO_FISCAL = [
     {
@@ -526,6 +381,24 @@ export const FORMULARIO_DOMICILIO_FISCAL = [
     },
 ];
 
+
+/**
+ * Definición de campos para el formulario de datos generales.
+ * Contiene campos de información personal y comercial del solicitante.
+ * @property {Array<Object>} - Lista de objetos que representan cada campo del formulario.
+ * 
+ * Los campos incluyen:
+ * - Nombre(s) (text, desactivado)
+ * - Primer Apellido (text, desactivado)
+ * - Segundo Apellido (text, desactivado)
+ * - Actividad económica preponderante (text, desactivado)
+ * - RFC (text, desactivado)
+ * - CURP (text, desactivado)
+ * - Correo electrónico (text, desactivado)
+ * 
+ * Todos los campos están en modo de solo lectura y contienen validadores para asegurar la integridad de los datos.
+ */
+
 export const FORMULARIO_DATOS_GENERALES = [
     {
         id: 'trNombres',
@@ -642,7 +515,268 @@ export const FORMULARIO_DATOS_GENERALES = [
     },
 ]
 
+/**
+ * Definición de campos para el formulario de dirección del propietario.
+ * Contiene todos los campos necesarios para registrar la dirección del propietario de la mercancía.
+ * @property {Array<Object>} - Lista de objetos que representan cada campo del formulario.
+ * 
+ * Los campos incluyen:
+ * - Calle (text)
+ * - Número exterior (number)
+ * - Número interior (number)
+ * - País (select-catalogos)
+ * - Estado y Localidad (text)
+ * - Correo electrónico (text)
+ * - Teléfono (text)
+ * - Código postal (text)
+ * 
+ * Incluye validadores para cada campo, como REGEX_CORREO_ELECTRONICO, REGEX_TELEFONO y REGEX_POSTAL.
+ */
+
 export const FORMULARIO_DATOS_PROPIETARIO_DIRECCION = [
+
+    {
+        id: 'calle',
+        labelNombre: 'Calle',
+        campo: 'calle',
+        clase: 'col-md-4',
+        tipoInput: 'text',
+        desactivado: false,
+        soloLectura: false,
+        validadores: [
+            { tipo: 'required' },
+            { tipo: 'pattern', valor:REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija la calle.' }
+        ],
+        marcadorDePosicion: '',
+        valorPredeterminado: '',
+        marginTop: 0
+    },
+    {
+        id: 'numeroExterior',
+        labelNombre: 'Número exterior',
+        campo: 'numeroExterior',
+        clase: 'col-md-4',
+        tipoInput: 'number',
+        desactivado: false,
+        soloLectura: false,
+        validadores: [
+            { tipo: 'required' }
+        ],
+        marcadorDePosicion: '',
+        valorPredeterminado: '',
+        marginTop: 0
+    },
+    {
+        id: 'numeroInterior',
+        labelNombre: 'Número interior',
+        campo: 'numeroInterior',
+        clase: 'col-md-4',
+        tipoInput: 'number',
+        desactivado: false,
+        soloLectura: false,
+        validadores: [],
+        marcadorDePosicion: '',
+        valorPredeterminado: '',
+        marginTop: 0
+    },
+    {
+        id: 'pais',
+        labelNombre: 'País',
+        campo: 'pais',
+        clase: 'col-md-4',
+        tipoInput: 'select-catalogos',
+        desactivado: false,
+        soloLectura: false,
+        validadores: [
+            { tipo: 'required' }
+        ],
+        marcadorDePosicion: '',
+        valorPredeterminado: '',
+        marginTop: 4
+    },
+    {
+        id: 'estadoLocalidad',
+        labelNombre: 'Estado y Localidad',
+        campo: 'estadoLocalidad',
+        clase: 'col-md-4',
+        tipoInput: 'text',
+        desactivado: false,
+        soloLectura: false,
+        validadores: [
+            { tipo: 'required' },
+            { tipo: 'pattern', valor:REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija el estado y localidad.' }
+        ],
+        marcadorDePosicion: '',
+        valorPredeterminado: '',
+        marginTop: 4
+    },
+    {
+        id: '',
+        labelNombre: '',
+        campo: '',
+        clase: 'col-md-4',
+        tipoInput: '',
+        desactivado: false,
+        soloLectura: false,
+        validadores: [],
+        marcadorDePosicion: '',
+        valorPredeterminado: '',
+        marginTop: 0
+    },
+    {
+        id: 'correoElectronico',
+        labelNombre: 'Correo electrónico',
+        campo: 'correoElectronico',
+        clase: 'col-md-4',
+        tipoInput: 'text',
+        desactivado: false,
+        soloLectura: false,
+        validadores: [
+            { tipo: 'required' },
+            { tipo: 'pattern', valor:REGEX_CORREO_ELECTRONICO, mensaje: 'Por favor, escriba una dirección de correo válida.' }
+        ],
+        marcadorDePosicion: '',
+        valorPredeterminado: '',
+        marginTop: 4
+    },
+    {
+        id: 'telefono',
+        labelNombre: 'Teléfono',
+        campo: 'telefono',
+        clase: 'col-md-4',
+        tipoInput: 'text',
+        desactivado: false,
+        soloLectura: false,
+        validadores: [
+            { tipo: 'required' },
+            { tipo: 'pattern', valor:REGEX_TELEFONO, mensaje: 'Por favor, corrija el teléfono.' }
+        ],
+        marcadorDePosicion: '',
+        valorPredeterminado: '',
+        marginTop: 4
+    },
+    {
+        id: 'codigoPostal',
+        labelNombre: 'Código postal',
+        campo: 'codigoPostal',
+        clase: 'col-md-4',
+        tipoInput: 'text',
+        desactivado: false,
+        soloLectura: false,
+        validadores: [
+            { tipo: 'required' },
+            { tipo: 'pattern', valor:REGEX_POSTAL, mensaje: 'Debe contener sólo 5 números.' }
+        ],
+        marcadorDePosicion: '',
+        valorPredeterminado: '',
+        marginTop: 4
+    }
+];
+
+ 
+/**
+ * Definición de campos para el formulario de nombre del propietario.
+ * Contiene campos para registrar el nombre completo o razón social del propietario.
+ * @property {Array<Object>} - Lista de objetos que representan cada campo del formulario.
+ * 
+ * Los campos incluyen:
+ * - Nombre(s) (text)
+ * - Apellido paterno (text)
+ * - Apellido materno (text)
+ * - Denominación o razón social (text)
+ * 
+ * Los campos obligatorios son nombre, apellido paterno y razón social, con validadores para evitar espacios al inicio o final.
+ */
+
+export const FORMULARIO_DATOS_PROPIETARIO_NOMBRE = [
+    {
+        id: 'nombre',
+        labelNombre: 'Nombre(s)',
+        campo: 'nombre',
+        clase: 'col-md-4',
+        tipoInput: 'text',
+        desactivado: false,
+        soloLectura: false,
+        validadores: [
+            { tipo: 'required' },
+            { tipo: 'pattern', valor: REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija el nombre.' }
+        ],
+        marcadorDePosicion: '',
+        valorPredeterminado: '',
+        marginTop: 0
+    },
+    {
+        id: 'apellidoPaterno',
+        labelNombre: 'Apellido paterno',
+        campo: 'apellidoPaterno',
+        clase: 'col-md-4',
+        tipoInput: 'text',
+        desactivado: false,
+        soloLectura: false,
+        validadores: [
+            { tipo: 'required' },
+            { tipo: 'pattern', valor: REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija el apellido paterno.' }
+        ],
+        marcadorDePosicion: '',
+        valorPredeterminado: '',
+        marginTop: 0
+    },
+    {
+        id: 'apellidoMaterno',
+        labelNombre: 'Apellido materno',
+        campo: 'apellidoMaterno',
+        clase: 'col-md-4',
+        tipoInput: 'text',
+        desactivado: false,
+        soloLectura: false,
+        validadores: [
+            { tipo: 'pattern', valor: REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija el apellido materno.' }
+        ],
+        marcadorDePosicion: '',
+        valorPredeterminado: '',
+        marginTop: 0
+    },
+    {
+        id: 'razonSocial',
+        labelNombre: 'Denominación o razón social',
+        campo: 'razonSocial',
+        clase: 'col-md-8',
+        tipoInput: 'text',
+        desactivado: false,
+        soloLectura: false,
+        validadores: [
+            { tipo: 'required' },
+            { tipo: 'pattern', valor: REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija la denominación o razón social.' }
+        ],
+        marcadorDePosicion: '',
+        valorPredeterminado: '',
+        marginTop: 0,
+    }
+];
+
+
+/**
+ * Definición de campos para el formulario de dirección del representante.
+ * Contiene todos los campos necesarios para registrar la dirección completa del representante legal.
+ * @property {Array<Object>} - Lista de objetos que representan cada campo del formulario.
+ * 
+ * Los campos incluyen:
+ * - Denominación o razón social (text)
+ * - Calle (text)
+ * - Número exterior (number)
+ * - Número interior (number)
+ * - País (select-catalogos, desactivado)
+ * - Entidad federativa (text)
+ * - Municipio o delegación (select-catalogos)
+ * - Localidad (select-catalogos)
+ * - Colonia (select-catalogos)
+ * - Correo electrónico (text)
+ * - Teléfono (text)
+ * - Código postal (text)
+ * 
+ * Incluye validadores específicos para cada tipo de campo utilizando las constantes de expresiones regulares.
+ */
+export const FORMULARIO_TIPO_REPRESENTANTE_DIRECCION = [
     {
         id: 'razonSocial',
         labelNombre: 'Denominación o razón social',
@@ -846,10 +980,25 @@ export const FORMULARIO_DATOS_PROPIETARIO_DIRECCION = [
     }
 ];
 
-export const FORMULARIO_DATOS_PROPIETARIO_NOMBRE = [
+
+/**
+ * Definición de campos para el formulario de nombre del representante.
+ * Contiene campos para registrar los datos personales del representante legal.
+ * @property {Array<Object>} - Lista de objetos que representan cada campo del formulario.
+ * 
+ * Los campos incluyen:
+ * - RFC (text)
+ * - CURP (text)
+ * - Nombre(s) (text)
+ * - Apellido paterno (text)
+ * - Apellido materno (text)
+ * 
+ * Los campos obligatorios son nombre y apellido paterno, mientras que el apellido materno, RFC y CURP son opcionales.
+ */
+export const FORMULARIO_TIPO_REPRESENTANTE_NOMBRE = [
     {
         id: 'td_rfc_representante',
-        labelNombre: 'RFC',
+        labelNombre: 'R F C',
         campo: 'datosRepresentanteRFC',
         clase: 'col-md-6',
         tipoInput: 'text',
@@ -864,7 +1013,7 @@ export const FORMULARIO_DATOS_PROPIETARIO_NOMBRE = [
     },
     {
         id: 'td_curp_representantev',
-        labelNombre: 'CURP',
+        labelNombre: 'C U R P',
         campo: 'datosRepresentantecurp',
         clase: 'col-md-6',
         tipoInput: 'text',
@@ -924,271 +1073,34 @@ export const FORMULARIO_DATOS_PROPIETARIO_NOMBRE = [
         valorPredeterminado: '',
         marginTop: 0
     },
-    {
-        id: 'razonSocial',
-        labelNombre: 'Denominación o razón social',
-        campo: 'razonSocial',
-        clase: 'col-md-8',
-        tipoInput: 'text',
-        desactivado: false,
-        soloLectura: false,
-        validadores: [
-            { tipo: 'required' },
-            { tipo: 'pattern', valor: REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija la denominación o razón social.' }
-        ],
-        marcadorDePosicion: '',
-        valorPredeterminado: '',
-        marginTop: 0,
-    }
 ];
 
-export const FORMULARIO_FISCAL_CURP = [
-  
-    {
-        id: 'razonSocialFiscal',
-        labelNombre: 'Denominación o razón social',
-        campo: 'razonSocial',
-        clase: 'col-md-6',
-        tipoInput: 'text',
-        desactivado: false,
-        soloLectura: false,
-        validadores: [
-            { tipo: 'required' },
-            { tipo: 'pattern', valor: REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija la denominación o razón social.' }
-        ],
-        marcadorDePosicion: '',
-        valorPredeterminado: '',
-        marginTop: 0,
-    },
-]
-export const FORMULARIO_DATOS_NOMBRE = [
-    {
-        id: 'calle',
-        labelNombre: 'Calle',
-        campo: 'calle',
-        clase: 'col-md-4',
-        tipoInput: 'text',
-        desactivado: false,
-        soloLectura: false,
-        validadores: [
-            { tipo: 'required' },
-            { tipo: 'pattern', valor:REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija la calle.' }
-        ],
-        marcadorDePosicion: '',
-        valorPredeterminado: '',
-        marginTop: 0
-    },
-    {
-        id: 'numeroExterior',
-        labelNombre: 'Número Exterior',
-        campo: 'numeroExterior',
-        clase: 'col-md-4',
-        tipoInput: 'number',
-        desactivado: false,
-        soloLectura: false,
-        validadores: [
-            { tipo: 'required' }
-        ],
-        marcadorDePosicion: '',
-        valorPredeterminado: '',
-        marginTop: 0
-    },
-    {
-        id: 'numeroInterior',
-        labelNombre: 'Número Interior',
-        campo: 'numeroInterior',
-        clase: 'col-md-4',
-        tipoInput: 'number',
-        desactivado: false,
-        soloLectura: false,
-        validadores: [],
-        marcadorDePosicion: '',
-        valorPredeterminado: '',
-        marginTop: 0
-    },
-    {
-        id: 'pais',
-        labelNombre: 'País',
-        campo: 'pais',
-        clase: 'col-md-6',
-        tipoInput: 'select-catalogos',
-        desactivado: true,
-        soloLectura: true,
-        validadores: [
-            { tipo: 'required' }
-        ],
-        marcadorDePosicion: '',
-        valorPredeterminado: '',
-        marginTop: 0
-    },
-    {
-        id: 'entidadFederativa',
-        labelNombre: 'Entidad federative',
-        campo: 'entidadFederativa',
-        clase: 'col-md-6',
-        tipoInput: 'select-catalogos',
-        desactivado: false,
-        soloLectura: false,
-        validadores: [
-            { tipo: 'required' },
-            { tipo: 'pattern', valor:REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija el estado y localidad.' }
-        ],
-        marcadorDePosicion: '',
-        valorPredeterminado: '',
-        marginTop: 5
-    },
-    {
-        id: 'municipio',
-        labelNombre: 'Municipio o delegación',
-        campo: 'municipio',
-        clase: 'col-md-6',
-        tipoInput: 'select-catalogos',
-        desactivado: false,
-        soloLectura: false,
-        validadores: [
-            { tipo: 'required' },
-            { tipo: 'pattern', valor:REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija el estado y localidad.' }
-        ],
-        marcadorDePosicion: '',
-        valorPredeterminado: '',
-        marginTop: 0
-    },
-    {
-        id: '',
-        labelNombre: '',
-        campo: '',
-        clase: 'col-md-6',
-        tipoInput: '',
-        desactivado: false,
-        soloLectura: false,
-        validadores: [
-            { tipo: 'required' },
-            { tipo: 'pattern', valor:REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija el estado y localidad.' }
-        ],
-        marcadorDePosicion: '',
-        valorPredeterminado: '',
-        marginTop: 0
-    },
- {
-        id: 'ddlLocalidad',
-        labelNombre: 'Localidad',
-        campo: 'localidad',
-        clase: 'col-md-6',
-        tipoInput: 'select-catalogos',
-        desactivado: false,
-        soloLectura: false,
-        validadores: [
-            { tipo: 'required' },
-            { tipo: 'pattern', valor:REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija el estado y localidad.' }
-        ],
-        marcadorDePosicion: '',
-        valorPredeterminado: '',
-        marginTop: 5
-},
-
-{
-    id: 'ddlColonia',
-    labelNombre: 'Colonia',
-    campo: 'colonia',
-    clase: 'col-md-6',
-    tipoInput: 'select-catalogos',
-    desactivado: false,
-    soloLectura: false,
-    validadores: [
-        { tipo: 'required' },
-        { tipo: 'pattern', valor:REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija el estado y localidad.' }
-    ],
-    marcadorDePosicion: '',
-    valorPredeterminado: '',
-    marginTop: 5
-},
-    {
-        id: 'correoElectronico',
-        labelNombre: 'Correo Electrónico',
-        campo: 'correoElectronico',
-        clase: 'col-md-4',
-        tipoInput: 'text',
-        desactivado: false,
-        soloLectura: false,
-        validadores: [
-            { tipo: 'required' },
-            { tipo: 'pattern', valor:REGEX_CORREO_ELECTRONICO, mensaje: 'Por favor, escriba una dirección de correo válida.' }
-        ],
-        marcadorDePosicion: '',
-        valorPredeterminado: '',
-        marginTop: 5
-    },
-    {
-        id: 'telefono',
-        labelNombre: 'Teléfono',
-        campo: 'telefono',
-        clase: 'col-md-4',
-        tipoInput: 'text',
-        desactivado: false,
-        soloLectura: false,
-        validadores: [
-            { tipo: 'required' },
-            { tipo: 'pattern', valor:REGEX_TELEFONO, mensaje: 'Por favor, corrija el teléfono.' }
-        ],
-        marcadorDePosicion: '',
-        valorPredeterminado: '',
-        marginTop: 5
-    },
-    {
-        id: 'codigoPostal',
-        labelNombre: 'Código Postal',
-        campo: 'codigoPostal',
-        clase: 'col-md-4',
-        tipoInput: 'text',
-        desactivado: false,
-        soloLectura: false,
-        validadores: [
-            { tipo: 'required' },
-            { tipo: 'pattern', valor:REGEX_POSTAL, mensaje: 'Debe contener sólo 5 números.' }
-        ],
-        marcadorDePosicion: '',
-        valorPredeterminado: '',
-        marginTop: 5
-    }
-];
 
 /**
- * FORMULARIO_DATOS_AUTORIZACION
- *  Define los campos del formulario para la autorización.
- * Cada campo contiene un ID, nombre de etiqueta, campo, clase, tipo de input, validadores y otros atributos.
- * */
-
-export const FORMULARIO_DATOS_AUTORIZACION = [
+ * Definición de campos para el formulario de CURP del representante.
+ * Contiene solo el campo de CURP para el representante legal.
+ * @property {Array<Object>} - Lista de objetos que representan cada campo del formulario.
+ * 
+ * Los campos incluyen:
+ * - CURP (text, etiquetado como "C U R P")
+ * 
+ * Incluye un validador para asegurar que no haya espacios al inicio o final del texto.
+ */
+export const FORMULARIO_TIPO_REPRESENTANTE_CURP = [
     {
-        id: 'folioInformacionGeneralAutorizacion',
-        labelNombre: 'Folio de autorización de importación temporal formato en papel',
-        campo: 'folioInformacionGeneralAutorizacion',
-        clase: 'col-md-8',
+        id: 'datosRepresentanteRFC',
+        labelNombre: 'C U R P',
+        campo: 'datosRepresentanteRFC',
+        clase: 'col-md-6',
         tipoInput: 'text',
         desactivado: false,
         soloLectura: false,
         validadores: [
-            { tipo: 'required' },
-            { tipo: 'pattern', valor: REGEX_PATRON_ALFANUMERICO, mensaje: 'Por favor, corrija el folio de autorización de importación temporal formato en papel.' }
+            { tipo: 'pattern', valor: REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija el nombre.' }
         ],
         marcadorDePosicion: '',
         valorPredeterminado: '',
         marginTop: 0
     },
-    {
-        id: 'aduanaDeIngreso',
-        labelNombre: 'Aduana de ingreso',
-        campo: 'aduanaDeIngreso',
-        clase: 'col-md-4',
-        tipoInput: 'select-catalogos',
-        desactivado: false,
-        soloLectura: false,
-        validadores: [
-            { tipo: 'required' }
-        ],
-        marcadorDePosicion: '',
-        valorPredeterminado: '',
-        marginTop: 0
-    },
-    
-];
+   
+]

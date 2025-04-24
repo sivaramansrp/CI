@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SolicitudTabComponentsComponent } from './solicitud-tab-components.component';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 describe('SolicitudTabComponentsComponent', () => {
   let component: SolicitudTabComponentsComponent;
@@ -7,7 +8,8 @@ describe('SolicitudTabComponentsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [SolicitudTabComponentsComponent], // Correctly declare the component here
+      schemas: [CUSTOM_ELEMENTS_SCHEMA]
+      
     }).compileComponents();
 
     fixture = TestBed.createComponent(SolicitudTabComponentsComponent);

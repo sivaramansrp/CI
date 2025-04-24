@@ -44,6 +44,7 @@ export class TipoPropietarioComponent implements OnInit, OnDestroy {
    * Indicador para mostrar el formulario de personas extranjeras.
    */
   mostrarFormularioPersonaExtranjera = false;
+
   /**
    * Indica si se debe mostrar el tipo de propietario.
    */
@@ -207,7 +208,8 @@ export class TipoPropietarioComponent implements OnInit, OnDestroy {
 
   /**
    * Establece un cambio de valor en el store basado en un evento.
-   *  Evento que contiene el campo y el valor a actualizar.
+   * 
+   * @param $event - Evento que contiene el campo y el valor a actualizar.
    */
   establecerCambioDeValor($event: { campo: string; valor: unknown }): void {
     if (typeof $event.valor === 'object' && $event.valor !== null && 'id' in $event.valor) {

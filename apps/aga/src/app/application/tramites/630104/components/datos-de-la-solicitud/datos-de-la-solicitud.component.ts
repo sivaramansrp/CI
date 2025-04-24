@@ -1,22 +1,23 @@
 /**
  * datos-de-la-solicitud.component.ts
- * Componente que gestiona los solicitud para el trámite 630303.
+ * Componente que gestiona los datos de la solicitud para el trámite 630303.
+ * Este componente utiliza formularios reactivos y servicios para manejar la lógica de negocio
+ * relacionada con la importación temporal de equipos e instrumentos musicales.
  */
+
 import { CommonModule } from '@angular/common';
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 
 import { Catalogo, CatalogoSelectComponent, InputFecha, ModeloDeFormaDinamica } from "@ng-mf/data-access-user";
 import { InputFechaComponent } from "@ng-mf/data-access-user";
 
-
 import { ESTIMADA_RETORNO, FORMULARIO_DATOS_SOLICITUD } from '../../enums/retorno-importacion-temporal.enum';
 import { Tramite630104State, Tramite630104Store } from '../../estados/tramites/tramite630104.store';
 import { FormasDinamicasComponent } from "@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component";
 import { TituloComponent } from '@ng-mf/data-access-user';
-
 
 import { EquipoEInstrumentosMusicalesService } from '../../services/equipo-e-instrumentos-musicales.service';
 import { Tramite630104Query } from '../../estados/queries/tramite630104.query';
@@ -73,9 +74,9 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Constructor del componente.
    * 
    * @param fb - Constructor de formularios reactivos.
-   * @param retornoImportacionTemporalService - Servicio para obtener datos de catálogos.
-   * @param tramite630303Store - Store para manejar el estado del trámite.
-   * @param tramite630303Query - Query para consultar el estado del trámite.
+   * @param equipoEInstrumentosMusicalesService - Servicio para obtener datos de catálogos.
+   * @param tramite630104Store - Store para manejar el estado del trámite.
+   * @param tramite630104Query - Query para consultar el estado del trámite.
    */
   constructor(
     public fb: FormBuilder,
@@ -93,7 +94,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     this.inizializarFormulario();
     this.getAduanaDeIngreso();
     this.getSeccionAduanera();
-    this.getProrroga();
+    
   }
 
   /**
@@ -101,12 +102,13 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   inizializarFormulario(): void {
     this.datosImportacionTemporalFormulario = this.fb.group({
-     
+      // Campos del formulario reactivo se inicializan aquí.
     });
   }
 
   /**
    * Obtiene las opciones de aduanas de ingreso desde el servicio.
+   * Actualiza el formulario dinámico con las opciones obtenidas.
    */
   getAduanaDeIngreso(): void {
     this.equipoEInstrumentosMusicalesService.getAduanaDeIngreso()
@@ -121,6 +123,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
 
   /**
    * Obtiene las opciones de secciones aduaneras desde el servicio.
+   * Actualiza el formulario dinámico con las opciones obtenidas.
    */
   getSeccionAduanera(): void {
     this.equipoEInstrumentosMusicalesService.getSeccionAduanera()
@@ -133,19 +136,11 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       });
   }
 
-  /**
-   * Obtiene las opciones de prórrogas desde el servicio.
-   */
-  getProrroga(): void {
-    this.equipoEInstrumentosMusicalesService.getProrroga()
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((data) => {
-        this.prorrogaOpciones = data;
-      });
-  }
+  
 
   /**
    * Obtiene el estado actual del trámite desde el store.
+   * Actualiza el estado seleccionado con los datos obtenidos.
    */
   getValorStore(): void {
     this.tramite630104Query.selectTramite630104State$

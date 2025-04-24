@@ -16,27 +16,27 @@ describe('DatosGeneralesComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('debería crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the reactive form on ngOnInit', () => {
+  it('debería inicializar el formulario reactivo en ngOnInit', () => {
     const spy = jest.spyOn(component, 'inicializarFormulario');
     component.ngOnInit();
     expect(spy).toHaveBeenCalled();
     expect(component.datosGeneralesFormulario).toBeDefined();
   });
 
-  it('should initialize the form with default values', () => {
+  it('debería inicializar el formulario con valores predeterminados', () => {
     component.inicializarFormulario();
     expect(component.datosGeneralesFormulario).toBeDefined();
     expect(component.datosGeneralesFormulario.controls).toBeDefined();
   });
 
-  it('should have the correct form structure', () => {
+  it('debería tener la estructura correcta del formulario', () => {
     component.inicializarFormulario();
     expect(component.datosGeneralesFormulario instanceof FormGroup).toBe(true);
-    // Add specific form control checks if applicable
-    // Example: expect(component.datosGeneralesFormulario.get('fieldName')).toBeDefined();
+    // Agregar verificaciones específicas de los controles del formulario si aplica
+    // Ejemplo: expect(component.datosGeneralesFormulario.get('fieldName')).toBeDefined();
   });
 });
