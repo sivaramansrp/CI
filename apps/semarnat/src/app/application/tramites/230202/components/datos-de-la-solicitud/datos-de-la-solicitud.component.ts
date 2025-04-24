@@ -3,8 +3,10 @@ import { CommonModule } from '@angular/common';
 import {
   Catalogo,
   CatalogoSelectComponent,
+  ConfiguracionColumna,
   CrosslistComponent,
   CrossListLable,
+  TablaDinamicaComponent,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
 import {
@@ -22,6 +24,7 @@ import {
 } from '../../estados/tramite230202.store';
 import { Tramite230202Query } from '../../estados/tramite230202.query';
 import { PhytosanitaryReexportacionService } from '../../services/phytosanitary-reexportacion.service';
+import { DatosSolicitud } from '../../models/datos-tramite.model';
 
 @Component({
   selector: 'app-datos-de-la-solicitud',
@@ -33,6 +36,7 @@ import { PhytosanitaryReexportacionService } from '../../services/phytosanitary-
     ReactiveFormsModule,
     CatalogoSelectComponent,
     CrosslistComponent,
+    TablaDinamicaComponent
   ],
   templateUrl: './datos-de-la-solicitud.component.html',
   styleUrl: './datos-de-la-solicitud.component.scss',
@@ -80,6 +84,13 @@ export class DatosDeLaSolicitudComponent {
     tituluDeLaIzquierda: 'Entidades disponsibles:',
     derecha: 'Entidades seleccionadas*:',
   };
+  public datosSolicitud: DatosSolicitud[] = [];
+  public encabezadoDeTabla: ConfiguracionColumna<DatosSolicitud>[] = [
+    { encabezado: '', clave: (articulo) => articulo.id, orden: 1 },
+    { encabezado: 'Fracción arancelaria', clave: (articulo) => articulo.fracciónArancelaria, orden: 1 },
+    { encabezado: 'Cantidad', clave: (articulo) => articulo.cantidad, orden: 2 },
+    { encabezado: 'Cantidad(letra)', clave: (articulo) => articulo.cantidadLetra, orden: 3 }
+  ];
 
   constructor(
     private phytosanitaryReexportacionService: PhytosanitaryReexportacionService,
@@ -208,6 +219,25 @@ export class DatosDeLaSolicitudComponent {
       { btnNombre: 'Restar selección', class: 'btn-primary', funcion: ():void => this.crossList.toArray()[0].quitar('') },
       { btnNombre: 'Restar todos', class: 'btn-default', funcion: ():void => this.crossList.toArray()[0].quitar('t') },
     ];
+  }
+
+  agregarSolicitud(): void {
+    this.phytosanitaryReexportacionService.agregarSolicitud().pipe(takeUntil(this.destroyNotifier$)).subscribe(
+      (respuesta) => {
+        if (respuesta?.success) {
+          respuesta.datos.id = this.datosSolicitud.length + 1;
+          this.datosSolicitud.push(respuesta.datos);
+          (this.store.setDatosSolicitud as unknown as (valor: DatosSolicitud[]) => void)(this.datosSolicitud);
+          this.solicitudForm.patchValue({
+            fracciónArancelaria: '',
+            cantidad: '',
+            cantidadLetra: ''
+          });
+          this.solicitudForm.markAsUntouched();
+          this.solicitudForm.markAsPristine();
+        }
+      }
+    );
   }
 
   /**
