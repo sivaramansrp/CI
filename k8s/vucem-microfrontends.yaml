@@ -34,7 +34,13 @@ data:
       "cofepris": "https://vucem-${ENV}.example.com/cofepris",
       "amecafe": "https://vucem-${ENV}.example.com/amecafe",
       "sener": "https://vucem-${ENV}.example.com/sener",
-      "inbal": "https://vucem-${ENV}.example.com/inbal"
+      "inbal": "https://vucem-${ENV}.example.com/inbal",
+      "sedena": "https://vucem-${ENV}.example.com/sedena",
+      "profepa": "https://vucem-${ENV}.example.com/profepa",
+      "crt": "https://vucem-${ENV}.example.com/crt",
+      "inah": "https://vucem-${ENV}.example.com/inah",
+      "bandejas": "https://vucem-${ENV}.example.com/bandejas",
+      "stps": "https://vucem-${ENV}.example.com/stps"
     }
 ---
 # Deployment for VUCEM Microfrontends
@@ -393,6 +399,168 @@ spec:
             initialDelaySeconds: 10
             timeoutSeconds: 3
             periodSeconds: 10
+        - name: sedena
+          image: ${REGISTRY}/vucem-front-sedena:${TAG}
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+              name: sedena
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "256Mi"
+              cpu: "500m"
+          livenessProbe:
+            httpGet:
+              path: /health.txt
+              port: 80
+            initialDelaySeconds: 30
+            timeoutSeconds: 3
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /health.txt
+              port: 80
+            initialDelaySeconds: 10
+            timeoutSeconds: 3
+            periodSeconds: 10
+        - name: profepa
+          image: ${REGISTRY}/vucem-front-profepa:${TAG}
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+              name: profepa
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "256Mi"
+              cpu: "500m"
+          livenessProbe:
+            httpGet:
+              path: /health.txt
+              port: 80
+            initialDelaySeconds: 30
+            timeoutSeconds: 3
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /health.txt
+              port: 80
+            initialDelaySeconds: 10
+            timeoutSeconds: 3
+            periodSeconds: 10
+        - name: crt
+          image: ${REGISTRY}/vucem-front-crt:${TAG}
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+              name: crt
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "256Mi"
+              cpu: "500m"
+          livenessProbe:
+            httpGet:
+              path: /health.txt
+              port: 80
+            initialDelaySeconds: 30
+            timeoutSeconds: 3
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /health.txt
+              port: 80
+            initialDelaySeconds: 10
+            timeoutSeconds: 3
+            periodSeconds: 10
+        - name: inah
+          image: ${REGISTRY}/vucem-front-inah:${TAG}
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+              name: inah
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "256Mi"
+              cpu: "500m"
+          livenessProbe:
+            httpGet:
+              path: /health.txt
+              port: 80
+            initialDelaySeconds: 30
+            timeoutSeconds: 3
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /health.txt
+              port: 80
+            initialDelaySeconds: 10
+            timeoutSeconds: 3
+            periodSeconds: 10
+        - name: bandejas
+          image: ${REGISTRY}/vucem-front-bandejas:${TAG}
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+              name: bandejas
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "256Mi"
+              cpu: "500m"
+          livenessProbe:
+            httpGet:
+              path: /health.txt
+              port: 80
+            initialDelaySeconds: 30
+            timeoutSeconds: 3
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /health.txt
+              port: 80
+            initialDelaySeconds: 10
+            timeoutSeconds: 3
+            periodSeconds: 10
+        - name: stps
+          image: ${REGISTRY}/vucem-front-stps:${TAG}
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+              name: stps
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "256Mi"
+              cpu: "500m"
+          livenessProbe:
+            httpGet:
+              path: /health.txt
+              port: 80
+            initialDelaySeconds: 30
+            timeoutSeconds: 3
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /health.txt
+              port: 80
+            initialDelaySeconds: 10
+            timeoutSeconds: 3
+            periodSeconds: 10
 ---
 # Services for each microfrontend
 apiVersion: v1
@@ -623,6 +791,120 @@ spec:
       targetPort: inbal
   type: ClusterIP
 ---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sedena-svc-${ENV}
+  namespace: vucem-${ENV}
+  labels:
+    app: vucem-microfrontends
+    component: sedena
+    env: ${ENV}
+spec:
+  selector:
+    app: vucem-microfrontends
+    env: ${ENV}
+  ports:
+    - name: http
+      port: 80
+      targetPort: sedena
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: profepa-svc-${ENV}
+  namespace: vucem-${ENV}
+  labels:
+    app: vucem-microfrontends
+    component: profepa
+    env: ${ENV}
+spec:
+  selector:
+    app: vucem-microfrontends
+    env: ${ENV}
+  ports:
+    - name: http
+      port: 80
+      targetPort: profepa
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: crt-svc-${ENV}
+  namespace: vucem-${ENV}
+  labels:
+    app: vucem-microfrontends
+    component: crt
+    env: ${ENV}
+spec:
+  selector:
+    app: vucem-microfrontends
+    env: ${ENV}
+  ports:
+    - name: http
+      port: 80
+      targetPort: crt
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: inah-svc-${ENV}
+  namespace: vucem-${ENV}
+  labels:
+    app: vucem-microfrontends
+    component: inah
+    env: ${ENV}
+spec:
+  selector:
+    app: vucem-microfrontends
+    env: ${ENV}
+  ports:
+    - name: http
+      port: 80
+      targetPort: inah
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: bandejas-svc-${ENV}
+  namespace: vucem-${ENV}
+  labels:
+    app: vucem-microfrontends
+    component: bandejas
+    env: ${ENV}
+spec:
+  selector:
+    app: vucem-microfrontends
+    env: ${ENV}
+  ports:
+    - name: http
+      port: 80
+      targetPort: bandejas
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: stps-svc-${ENV}
+  namespace: vucem-${ENV}
+  labels:
+    app: vucem-microfrontends
+    component: stps
+    env: ${ENV}
+spec:
+  selector:
+    app: vucem-microfrontends
+    env: ${ENV}
+  ports:
+    - name: http
+      port: 80
+      targetPort: stps
+  type: ClusterIP
+---
 # Ingress for VUCEM Microfrontends
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -768,6 +1050,54 @@ spec:
             name: inbal-svc-${ENV}
             port:
               number: 80
+      # Sedena microfrontend
+      - path: /sedena
+        pathType: Prefix
+        backend:
+          service:
+            name: sedena-svc-${ENV}
+            port:
+              number: 80
+      # Profepa microfrontend
+      - path: /profepa
+        pathType: Prefix
+        backend:
+          service:
+            name: profepa-svc-${ENV}
+            port:
+              number: 80
+      # CRT microfrontend
+      - path: /crt
+        pathType: Prefix
+        backend:
+          service:
+            name: crt-svc-${ENV}
+            port:
+              number: 80
+      # INAH microfrontend
+      - path: /inah
+        pathType: Prefix
+        backend:
+          service:
+            name: inah-svc-${ENV}
+            port:
+              number: 80
+      # Bandejas microfrontend
+      - path: /bandejas
+        pathType: Prefix
+        backend:
+          service:
+            name: bandejas-svc-${ENV}
+            port:
+              number: 80
+      # STPS microfrontend
+      - path: /stps
+        pathType: Prefix
+        backend:
+          service:
+            name: stps-svc-${ENV}
+            port:
+              number: 80
       # Backend API
       - path: /api
         pathType: Prefix
@@ -859,6 +1189,48 @@ spec:
         backend:
           service:
             name: inbal-svc-${ENV}
+            port:
+              number: 80
+      - path: /sedena/remoteAppEntry.js
+        pathType: Exact
+        backend:
+          service:
+            name: sedena-svc-${ENV}
+            port:
+              number: 80
+      - path: /profepa/remoteAppEntry.js
+        pathType: Exact
+        backend:
+          service:
+            name: profepa-svc-${ENV}
+            port:
+              number: 80
+      - path: /crt/remoteAppEntry.js
+        pathType: Exact
+        backend:
+          service:
+            name: crt-svc-${ENV}
+            port:
+              number: 80
+      - path: /inah/remoteAppEntry.js
+        pathType: Exact
+        backend:
+          service:
+            name: inah-svc-${ENV}
+            port:
+              number: 80
+      - path: /bandejas/remoteAppEntry.js
+        pathType: Exact
+        backend:
+          service:
+            name: bandejas-svc-${ENV}
+            port:
+              number: 80
+      - path: /stps/remoteAppEntry.js
+        pathType: Exact
+        backend:
+          service:
+            name: stps-svc-${ENV}
             port:
               number: 80
 ---
