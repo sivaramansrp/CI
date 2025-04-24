@@ -4,6 +4,11 @@ import { AVISO } from '@libs/shared/data-access-user/src';
 import { AccionBoton } from '../../enums/accion-botton.enum';
 import { PASOS_EXPORTACION } from '../../constants/solicitud-modificacion-permiso-salida-territorio.enum';
 
+/**
+ * DesistirSolicitudInformacionHistoricaComponent
+ * Este componente gestiona el asistente (wizard) para la solicitud de modificación de permisos.
+ * Permite navegar entre los pasos del asistente y gestionar los datos relacionados con cada paso.
+ */
 @Component({
   selector: 'app-desistir-solicitud-informacion-historica',
   templateUrl: './desistir-solicitud-informacion-historica.component.html',
@@ -50,8 +55,7 @@ export class DesistirSolicitudInformacionHistoricaComponent {
    * Cambia el índice del paso actual en el asistente.
    * Si la acción es "cont", avanza al siguiente paso.
    * Si la acción no es "cont", retrocede al paso anterior.
-   * 
-   * Param e Objeto que contiene la acción y el valor del índice.
+   * Objeto que contiene la acción y el valor del índice.
    */
   getValorIndice(e: AccionBoton): void {
     if (e.valor > 0 && e.valor < 4) {
