@@ -431,6 +431,15 @@ const ROUTES: Routes = [
         (m) => m.ModalidadAmpliacionModule
       ),
   },
+  {
+    path: 'programa-prosec',
+    loadChildren: () =>
+      import('./tramites/90302/programa-prosec.module').then(
+        (m) => m.ProgramaProsecModule
+      ),
+  },
+
+  
   
 ];
 

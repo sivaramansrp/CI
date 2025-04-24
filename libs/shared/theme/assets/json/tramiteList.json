@@ -2200,8 +2200,8 @@
   {
     "id": 315,
     "tramite": 90302,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/se/programa-prosec/registro",
+    "linkDepartment": "/pago/programa-prosec/registro",
     "department": "se"
   },
   {
