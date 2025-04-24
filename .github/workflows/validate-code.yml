@@ -2,7 +2,16 @@ name: Validate Code
 
 on:
   pull_request:
-    branches: [ "develop", "main" ]
+    # Solo ejecutar cuando los PRs van hacia ramas principales
+    branches: [ "develop", "staging", "production" ]
+    paths:
+      - 'apps/**'
+      - 'libs/**'
+      - 'package.json'
+      - 'nx.json'
+      - '.eslintrc.json'
+  push:
+    branches: [ "develop", "staging", "production" ]
     paths:
       - 'apps/**'
       - 'libs/**'
@@ -10,6 +19,18 @@ on:
       - 'nx.json'
       - '.eslintrc.json'
   workflow_dispatch:
+    # Permitir ejecución manual con parámetros
+    inputs:
+      validateTarget:
+        description: 'Tipo de validación a ejecutar'
+        required: true
+        type: choice
+        options:
+          - all
+          - lint
+          - test
+          - build
+        default: 'all'
 
 env:
   NODE_VERSION: '22.14.0'
@@ -19,6 +40,8 @@ jobs:
   lint:
     name: Lint and Code Quality
     runs-on: ubuntu-latest
+    # Solo ejecutar este job si la validación es 'all' o 'lint' y cuando es push a develop, staging o production, o un PR a estas ramas
+    if: (github.event_name == 'pull_request' && (github.base_ref == 'develop' || github.base_ref == 'staging' || github.base_ref == 'production')) || (github.event_name == 'push' && (github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/production')) || github.event.inputs.validateTarget == 'all' || github.event.inputs.validateTarget == 'lint'
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -42,8 +65,9 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-
 
+      # Optimización para instalar solo dependencias necesarias y acelerar el proceso
       - name: Install dependencies
-        run: npm install --force
+        run: npm ci --no-audit --prefer-offline
 
       - name: Install NX globally
         run: |
@@ -56,7 +80,15 @@ jobs:
       - name: Detect changed projects
         id: changed-projects
         run: |
-          if [ "${{ github.event_name }}" == "pull_request" ]; then
+          # Verificar si estamos en una rama permitida para push
+          if [ "${{ github.event_name }}" == "push" ]; then
+            if [[ "${{ github.ref }}" != "refs/heads/develop" && "${{ github.ref }}" != "refs/heads/staging" && "${{ github.ref }}" != "refs/heads/production" ]]; then
+              echo "::warning::Este workflow solo se ejecuta en push a develop, staging o production."
+              echo "affected_projects=" >> $GITHUB_OUTPUT
+              exit 0
+            fi
+            CHANGED_FILES=$(git diff --name-only HEAD~1 HEAD)
+          elif [ "${{ github.event_name }}" == "pull_request" ]; then
             CHANGED_FILES=$(git diff --name-only origin/${{ github.base_ref }}...HEAD)
           else
             CHANGED_FILES=$(git diff --name-only HEAD~1 HEAD)
@@ -120,6 +152,8 @@ jobs:
   test:
     name: Unit Tests
     runs-on: ubuntu-latest
+    # Solo ejecutar este job si la validación es 'all' o 'test' y cuando es push a develop, staging o production, o un PR a estas ramas
+    if: (github.event_name == 'pull_request' && (github.base_ref == 'develop' || github.base_ref == 'staging' || github.base_ref == 'production')) || (github.event_name == 'push' && (github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/production')) || github.event.inputs.validateTarget == 'all' || github.event.inputs.validateTarget == 'test'
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -143,8 +177,9 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-
 
+      # Optimización para instalar solo dependencias necesarias y acelerar el proceso
       - name: Install dependencies
-        run: npm install --force
+        run: npm ci --no-audit --prefer-offline
 
       - name: Install NX globally
         run: |
@@ -157,7 +192,15 @@ jobs:
       - name: Detect changed projects
         id: changed-projects
         run: |
-          if [ "${{ github.event_name }}" == "pull_request" ]; then
+          # Verificar si estamos en una rama permitida para push
+          if [ "${{ github.event_name }}" == "push" ]; then
+            if [[ "${{ github.ref }}" != "refs/heads/develop" && "${{ github.ref }}" != "refs/heads/staging" && "${{ github.ref }}" != "refs/heads/production" ]]; then
+              echo "::warning::Este workflow solo se ejecuta en push a develop, staging o production."
+              echo "affected_projects=" >> $GITHUB_OUTPUT
+              exit 0
+            fi
+            CHANGED_FILES=$(git diff --name-only HEAD~1 HEAD)
+          elif [ "${{ github.event_name }}" == "pull_request" ]; then
             CHANGED_FILES=$(git diff --name-only origin/${{ github.base_ref }}...HEAD)
           else
             CHANGED_FILES=$(git diff --name-only HEAD~1 HEAD)
@@ -204,6 +247,8 @@ jobs:
   build-check:
     name: Build Check
     runs-on: ubuntu-latest
+    # Solo ejecutar este job si la validación es 'all' o 'build' y cuando es push a develop, staging o production, o un PR a estas ramas
+    if: (github.event_name == 'pull_request' && (github.base_ref == 'develop' || github.base_ref == 'staging' || github.base_ref == 'production')) || (github.event_name == 'push' && (github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/production')) || github.event.inputs.validateTarget == 'all' || github.event.inputs.validateTarget == 'build'
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -227,8 +272,9 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-
 
+      # Optimización para instalar solo dependencias necesarias y acelerar el proceso
       - name: Install dependencies
-        run: npm install --force
+        run: npm ci --no-audit --prefer-offline
 
       - name: Install NX globally
         run: |
@@ -241,7 +287,15 @@ jobs:
       - name: Detect changed projects
         id: changed-projects
         run: |
-          if [ "${{ github.event_name }}" == "pull_request" ]; then
+          # Verificar si estamos en una rama permitida para push
+          if [ "${{ github.event_name }}" == "push" ]; then
+            if [[ "${{ github.ref }}" != "refs/heads/develop" && "${{ github.ref }}" != "refs/heads/staging" && "${{ github.ref }}" != "refs/heads/production" ]]; then
+              echo "::warning::Este workflow solo se ejecuta en push a develop, staging o production."
+              echo "affected_projects=" >> $GITHUB_OUTPUT
+              exit 0
+            fi
+            CHANGED_FILES=$(git diff --name-only HEAD~1 HEAD)
+          elif [ "${{ github.event_name }}" == "pull_request" ]; then
             CHANGED_FILES=$(git diff --name-only origin/${{ github.base_ref }}...HEAD)
           else
             CHANGED_FILES=$(git diff --name-only HEAD~1 HEAD)
