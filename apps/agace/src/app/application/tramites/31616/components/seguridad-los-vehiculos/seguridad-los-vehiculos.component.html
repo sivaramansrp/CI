@@ -96,6 +96,11 @@
                     medios de transporte que están sujetos a la colocación de sellos y/o candados de alta seguridad.
                 </label>
                 <textarea id="candadosSeguridad" class="custom-textarea" rows="6" cols="100" formControlName="candadosSeguridad" (change)="setValoresStore(seguridad,'candadosSeguridad', 'setCandadosSeguridad')"></textarea>
+                <span
+                    *ngIf="seguridad.controls['candadosSeguridad']?.errors?.['required'] && seguridad.controls['candadosSeguridad']?.touched"
+                    class="mensaje-error">
+                    Este campo es obligatorio.
+                </span>
             </div>
 
             <div class="row mt-2 alert-text">
@@ -323,6 +328,11 @@
                     proveedor externo.
                 </label>
                 <textarea id="proveedorExterno" class="custom-textarea" rows="6" cols="100" formControlName="proveedorExterno" (change)="setValoresStore(seguridad,'proveedorExterno', 'setProveedorExterno')" ></textarea>
+                <span
+                    *ngIf="seguridad.controls['proveedorExterno']?.errors?.['required'] && seguridad.controls['proveedorExterno']?.touched"
+                    class="mensaje-error">
+                    Este campo es obligatorio.
+                </span>
             </div>
 
             <div class="col-md-12 text-container mt-4">
@@ -374,6 +384,11 @@
                     semirremolques vacíos, indique qué tipo utiliza
                 </label>
                 <textarea id="semirremolquesVacios" class="custom-textarea" rows="6" cols="100" formControlName="semirremolquesVacios" (change)="setValoresStore(seguridad,'semirremolquesVacios', 'setSemirremolquesVacios')"></textarea>
+                <span
+                    *ngIf="seguridad.controls['semirremolquesVacios']?.errors?.['required'] && seguridad.controls['semirremolquesVacios']?.touched"
+                    class="mensaje-error">
+                    Este campo es obligatorio.
+                </span>
             </div>
 
             <div class="col-md-12 text-container mt-4">
@@ -381,6 +396,11 @@
                     <span class="danger">*</span>En caso de utilizar candado y/o sellos, indique qué tipo utiliza.
                 </label>
                 <textarea id="utilizarCandado" class="custom-textarea" rows="6" cols="100" formControlName="utilizarCandado" (change)="setValoresStore(seguridad,'utilizarCandado', 'setUtilizarCandado')"></textarea>
+                <span
+                    *ngIf="seguridad.controls['utilizarCandado']?.errors?.['required'] && seguridad.controls['utilizarCandado']?.touched"
+                    class="mensaje-error">
+                    Este campo es obligatorio.
+                </span>
             </div>
 
             <div class="col-md-12 text-container mt-4">
@@ -390,6 +410,11 @@
                     seguridad de las mismas.
                 </label>
                 <textarea id="seguridadMismas" class="custom-textarea" rows="6" cols="100" formControlName="seguridadMismas" (change)="setValoresStore(seguridad,'seguridadMismas', 'setSeguridadMismas')"></textarea>
+                <span
+                    *ngIf="seguridad.controls['seguridadMismas']?.errors?.['required'] && seguridad.controls['seguridadMismas']?.touched"
+                    class="mensaje-error">
+                    Este campo es obligatorio.
+                </span>
             </div>
         </div>
     </form>
