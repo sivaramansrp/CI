@@ -18,7 +18,9 @@ import { NgModule } from '@angular/core';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
+import { PerfilesMensajeriaComponent } from './components/perfiles-mensajeria/perfiles-mensajeria.component';
 import { PersonaComponent } from './components/persona/persona.component';
+import { ProfilesDomocilioDelaComponent } from './components/profiles-domocilio-dela/profiles-domocilio-dela.component';
 import { ReprestantanteComponent } from './components/represtantante/represtantante.component';
 import { ServiciosPantallaService } from '@libs/shared/data-access-user/src/core/services/31601/servicios-pantalla.service';
 import { SolicitudDeRegistroInvocarRoutingModule } from './solicitud-de-registro-invocar-routing.module';
@@ -26,8 +28,6 @@ import { SolicitudDeRegistroInvocarService } from './services/solicitudDeRegistr
 import { SolicitudPasoComponent } from './pages/solicitud-paso/solicitud-paso.component';
 import { ToastrService } from 'ngx-toastr';
 import { provideHttpClient } from '@angular/common/http';
-import { PerfilesMensajeriaComponent } from './components/perfiles-mensajeria/perfiles-mensajeria.component';
-import { ProfilesDomocilioDelaComponent } from './components/profiles-domocilio-dela/profiles-domocilio-dela.component';
 
 @NgModule({
   declarations: [

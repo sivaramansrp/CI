@@ -66,7 +66,9 @@ export class PasoDosComponent implements OnInit, OnDestroy {
    * @param {CatalogosService} catalogosServices - Servicio para obtener catálogos.
    * @memberof PasoDosComponent
    */
-  constructor(public catalogosServices: CatalogosService) {}
+  constructor(public catalogosServices: CatalogosService) {
+    //Añade lógica aquí
+  }
 
   /**
    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.

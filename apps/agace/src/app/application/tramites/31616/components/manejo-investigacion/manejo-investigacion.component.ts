@@ -48,7 +48,9 @@ export class ManejoInvestigacionComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private tramite31616Store: Tramite31616PerfilesMensajeriaStore,
     private tramite31616Query: Tramite31616PerfilesMensajeriaQuery
-  ) {}
+  ) {
+    //Añade lógica aquí
+  }
 
   /**
    * Hook de inicialización del componente.

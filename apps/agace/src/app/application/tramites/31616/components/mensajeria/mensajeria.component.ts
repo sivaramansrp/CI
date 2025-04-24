@@ -106,7 +106,9 @@ export class MensajeriaComponent implements OnInit, OnDestroy, AfterViewInit {
     private service: SolicitudDeRegistroInvocarService,
     private tramite31616Store: Tramite31616MensajeriaStore,
     private tramite31616Query: Tramite31616MensajeriaQuery,
-  ) {}
+  ) {
+    //Añade lógica aquí
+  }
 
   /**
    * Método del ciclo de vida `ngOnInit`.

@@ -178,7 +178,9 @@ export class DatoComunesComponent implements OnInit, OnDestroy, AfterViewInit {
     private service: SolicitudDeRegistroInvocarService,
     private tramite31616Store: Tramite31616Store,
     private tramite31616Query: Tramite31616Query,
-  ) {}
+  ) {
+    //Añade lógica aquí
+  }
 
   /**
    * Método de inicialización del componente

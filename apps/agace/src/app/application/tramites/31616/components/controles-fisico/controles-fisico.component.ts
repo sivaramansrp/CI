@@ -71,7 +71,7 @@ export class ControlesFisicoComponent implements OnInit, OnDestroy {
     private tramite31616Store: Tramite31616PerfilesStore,
     private tramite31616Query: Tramite31616PerfilesQuery
   ) {
-    //
+    //Añade lógica aquí
   }
 
   /**

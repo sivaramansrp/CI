@@ -1,8 +1,8 @@
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitud31616PerfilesMensajeriaState, Tramite31616PerfilesMensajeriaStore } from '../../../../estados/tramites/tramite31616_perfilesMensajeria.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Tramite31616PerfilesMensajeriaQuery } from '../../../../estados/queries/tramite31616_perfilesMensajeria.query';
 
 /**
@@ -48,7 +48,9 @@ export class SeguridadInformacionDocumentacionComponent implements OnInit,OnDest
     private fb: FormBuilder,
     private tramite31616Store: Tramite31616PerfilesMensajeriaStore,
     private tramite31616Query: Tramite31616PerfilesMensajeriaQuery
-  ) {}
+  ) {
+    //Añade lógica aquí
+  }
 
   /**
    * Hook de inicialización del componente.

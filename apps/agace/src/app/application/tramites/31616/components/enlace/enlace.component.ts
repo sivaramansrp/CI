@@ -84,7 +84,9 @@ export class EnlaceComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private tramite31616Store: Tramite31616TercerosStore,
     private tramite31616Query: Tramite31616TercerosQuery
-  ) {}
+  ) {
+    //Añade lógica aquí
+  }
 
   /**
    * Método del ciclo de vida que se ejecuta al iniciar el componente.
