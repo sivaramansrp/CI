@@ -138,7 +138,7 @@ export class AsignciontabComponent implements OnInit, OnDestroy {
   loadComboUnidadMedida(): void {
     this.service.getAsigncion().pipe(
       takeUntil(this.destroyed$)
-    ).subscribe((data): void => {
+    ).subscribe((data) => {
       this.solicitanteList = data as Catalogo[];
     });
   }
