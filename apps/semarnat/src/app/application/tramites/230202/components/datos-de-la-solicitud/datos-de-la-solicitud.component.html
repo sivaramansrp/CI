@@ -59,7 +59,14 @@
           </div>
         </div>
         <ng-titulo titulo="Mercancías"></ng-titulo>
-        
+        <div class="table-responsive">
+          <div class="innercontainer">
+            <app-tabla-dinamica
+              [configuracionTabla]="encabezadoDeTabla"
+              [datos]="datosDelContenedor"
+            ></app-tabla-dinamica>
+          </div>
+        </div>
       </ng-container>
     </div>
   </form>
