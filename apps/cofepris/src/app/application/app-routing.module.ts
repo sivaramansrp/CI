@@ -440,12 +440,25 @@ const ROUTES: Routes = [
       ),
 },
 {
-  path: 'importacion-retorno-sanitario',
+  path: 'permiso-importacion-module',
   loadChildren: () =>
-    import('./tramites/260103/importacion-retorno-sanitario.module').then(
-      (m) => m.ImportacionRetornoSanitarioModule
+  import('./tramites/260917/permiso-importacion.module').then(
+    (m) => m.PermisoImportacionModule),
+},
+{
+  path: 'modificacion-permiso-importacion-tratamientos',
+  loadChildren: () =>
+    import('./tramites/260907/modificacion-permiso-importacion-tratamientos.module').then(
+      (m) => m.ModificacionPermisoImportacionTratamientosModule
     ),
 },
+{
+    path: 'importacion-retorno-sanitario',
+    loadChildren: () =>
+      import('./tramites/260103/importacion-retorno-sanitario.module').then(
+        (m) => m.ImportacionRetornoSanitarioModule
+      ),
+  },
 ];
 
 @NgModule({
