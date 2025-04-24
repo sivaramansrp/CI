@@ -1,22 +1,12 @@
 <div style="margin-top: 40px;">
-    <ng-titulo titulo="Manifiesto de aceptación"></ng-titulo>
-    <div class="row">
-      <div class="alert alert-info">
-        <label style="font-weight: normal">
-          <input type="checkbox" id="manifesto" />   
-          "He leído y acepto expresamente que las notificaciones derivadas del requerimiento de información que en su caso
-          realice la autoridad para el presente trámite de permiso previo, surtirán efecto a partir del momento en que se publique
-          en la VUCEM dicho requerimiento y se envie al correo electrónico que registré en la Ventanilla para la disponibilidad de
-          la notificación, por lo que manifiesto, bajo protesta de decir verdad, que soy responsable de revisar continuamente los
-          requerimientos y notificaciones que me realice la SENER a través de la VUCEM".
-          <span style="display:block;">
-          Lo anterior de conformidad con los artículos 1, 3, fracciones VI, IX, 4 del Acuerdo por el que se establece la clasificación
-          y codificación de Hidrocarburos y Petrolíferos cuya importación y exportación está sujeta a Permiso Previo por parte de
-          la Secretaría de Energía; 35, fracción Il, y 69-C, de la Ley Federal de Procedimiento Administrativo de aplicación
-          supletoria al citado Acuerdo; así como al Acuerdo por el que se modifican los plazos de respuesta de diversos trámites
-          inscritos en el Registro Federal de Trámites y Servicios, que corresponde aplicar à la Secretaría de Energía.</span>
-        </label>
-      </div>
+  <ng-titulo titulo="Manifiesto de aceptación"></ng-titulo>
+  <div class="row">
+    <div class="alert alert-info">
+      <label style="font-weight: normal">
+        <input type="checkbox" id="manifesto" />
+        {{manifestoText.Texto1}}
+        <span style="display:block;"> {{manifestoText.Texto2}}</span>
+      </label>
     </div>
   </div>
-   
+</div>
