@@ -73,7 +73,7 @@ export class PantallasComponent {
       this.cargaUtil = this.datosComponent.obtenerValoresFormulario();
 
     } else {
-      console.error('PasoUnoPagesComponent is not initialized.');
+      console.error('PasoUnoPagesComponent no está inicializado.');
     }
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
