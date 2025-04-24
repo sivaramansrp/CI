@@ -18,7 +18,6 @@ export class SeleccionTramiteComponent implements OnInit, OnDestroy {
    * Cada elemento en el arreglo es de tipo `TramiteDetails`.
    * Estos datos se utilizan para gestionar y mostrar información relacionada con diferentes trámites.
    */
-  
   public tramiteData: TramiteDetails[] = [];
     
   ngOnInit(): void {
@@ -29,11 +28,9 @@ export class SeleccionTramiteComponent implements OnInit, OnDestroy {
     }
 
     this.tramiteData = tramiteDetailsData.filter((v) => v.department === "aga") ;
-
   }
 
   ngOnDestroy(): void {
-
     this.tramiteData = [];
   }
   
