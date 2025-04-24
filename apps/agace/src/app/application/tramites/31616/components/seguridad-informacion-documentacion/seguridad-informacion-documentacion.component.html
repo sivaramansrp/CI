@@ -141,7 +141,16 @@
             </div>
 
             <div class="col-md-12 text-container mt-4">
-                <textarea class="custom-textarea" rows="6" cols="100" formControlName="seguridadDeLaTecnologia" (change)="setValoresStore(seguridadInformacion,'seguridadDeLaTecnologia', 'setSeguridadDeLaTecnologia')"></textarea>
+                <textarea id="seguridadDeLaTecnologia" class="custom-textarea" rows="6" cols="100"
+                    formControlName="seguridadDeLaTecnologia"
+                    (change)="setValoresStore(seguridadInformacion,'seguridadDeLaTecnologia', 'setSeguridadDeLaTecnologia')"></textarea>
+                
+                <span
+                    *ngIf="seguridadInformacion.controls['seguridadDeLaTecnologia']?.errors?.['required'] && seguridadInformacion.controls['seguridadDeLaTecnologia']?.touched"
+                    class="mensaje-error">
+                    Este campo es obligatorio.
+                </span>
+              
             </div>
 
 
@@ -151,7 +160,15 @@
                     empleados conectarse de forma remota a una red (VPN), para permitir que los empleados accedan a la
                     intranet de la empresa de forma remota cuando se encuentran fuera de la oficina
                 </label>
-                <textarea class="custom-textarea" rows="6" cols="100" formControlName="encuentranFuera" (change)="setValoresStore(seguridadInformacion,'encuentranFuera', 'setEncuentranFuera')"></textarea>
+                <textarea id="encuentranFuera" class="custom-textarea" rows="6" cols="100" formControlName="encuentranFuera"
+                    (change)="setValoresStore(seguridadInformacion,'encuentranFuera', 'setEncuentranFuera')"></textarea>
+                
+                <span
+                    *ngIf="seguridadInformacion.controls['encuentranFuera']?.errors?.['required'] && seguridadInformacion.controls['encuentranFuera']?.touched"
+                    class="mensaje-error">
+                    Este campo es obligatorio.
+                </span>
+              
             </div>
 
             <div class="col-md-12 text-container mt-4">
@@ -163,7 +180,16 @@
                     contar
                     con método para acceder de forma segura a la red de la empresa
                 </label>
-                <textarea class="custom-textarea" rows="6" cols="100" formControlName="actualizacionesSeguridad" (change)="setValoresStore(seguridadInformacion,'actualizacionesSeguridad', 'setActualizacionesSeguridad')"></textarea>
+                <textarea id="actualizacionesSeguridad" class="custom-textarea" rows="6" cols="100"
+                    formControlName="actualizacionesSeguridad"
+                    (change)="setValoresStore(seguridadInformacion,'actualizacionesSeguridad', 'setActualizacionesSeguridad')"></textarea>
+                
+                <span
+                    *ngIf="seguridadInformacion.controls['actualizacionesSeguridad']?.errors?.['required'] && seguridadInformacion.controls['actualizacionesSeguridad']?.touched"
+                    class="mensaje-error">
+                    Este campo es obligatorio.
+                </span>
+
             </div>
 
             <div class="col-md-12 text-container mt-4">
@@ -172,7 +198,15 @@
                     informáticos
                     de la empresa. En su caso, indique qué programas y cómo controlan el acceso a los mismos
                 </label>
-                <textarea class="custom-textarea" rows="6" cols="100" formControlName="accesoLosMismos" (change)="setValoresStore(seguridadInformacion,'accesoLosMismos', 'setAccesoLosMismos')"></textarea>
+                <textarea id="accesoLosMismos" class="custom-textarea" rows="6" cols="100" formControlName="accesoLosMismos"
+                    (change)="setValoresStore(seguridadInformacion,'accesoLosMismos', 'setAccesoLosMismos')"></textarea>
+                
+                <span
+                    *ngIf="seguridadInformacion.controls['accesoLosMismos']?.errors?.['required'] && seguridadInformacion.controls['accesoLosMismos']?.touched"
+                    class="mensaje-error">
+                    Este campo es obligatorio.
+                </span>
+
             </div>
 
             <div class="col-md-12 text-container mt-4">
@@ -180,7 +214,15 @@
                     <span class="danger">*</span>Indique si el equipo de cómputo cuenta con un sistema de respaldo de
                     suministro eléctrico que permita la continuidad del negocio
                 </label>
-                <textarea class="custom-textarea" rows="6" cols="100" formControlName="continuidadNegocio" (change)="setValoresStore(seguridadInformacion,'continuidadNegocio', 'setContinuidadNegocio')"></textarea>
+                <textarea id="continuidadNegocio" class="custom-textarea" rows="6" cols="100" formControlName="continuidadNegocio"
+                    (change)="setValoresStore(seguridadInformacion,'continuidadNegocio', 'setContinuidadNegocio')"></textarea>
+                
+                <span
+                    *ngIf="seguridadInformacion.controls['continuidadNegocio']?.errors?.['required'] && seguridadInformacion.controls['continuidadNegocio']?.touched"
+                    class="mensaje-error">
+                    Este campo es obligatorio.
+                </span>
+
             </div>
 
             <div class="col-md-12 text-container mt-4">
@@ -191,7 +233,15 @@
                     respaldarse
                     una vez a la semana o según corresponda).
                 </label>
-                <textarea class="custom-textarea" rows="6" cols="100" formControlName="semanaCorresponda" (change)="setValoresStore(seguridadInformacion,'semanaCorresponda', 'setSemanaCorresponda')"></textarea>
+                <textarea id="semanaCorresponda" class="custom-textarea" rows="6" cols="100" formControlName="semanaCorresponda"
+                    (change)="setValoresStore(seguridadInformacion,'semanaCorresponda', 'setSemanaCorresponda')"></textarea>
+                
+                <span
+                    *ngIf="seguridadInformacion.controls['semanaCorresponda']?.errors?.['required'] && seguridadInformacion.controls['semanaCorresponda']?.touched"
+                    class="mensaje-error">
+                    Este campo es obligatorio.
+                </span>
+
             </div>
 
             <div class="col-md-12 text-container mt-4">
@@ -200,7 +250,15 @@
                     cómo
                     recuperar la información
                 </label>
-                <textarea class="custom-textarea" rows="6" cols="100" formControlName="recuperarInformacion" (change)="setValoresStore(seguridadInformacion,'recuperarInformacion', 'setRecuperarInformacion')"></textarea>
+                <textarea id="recuperarInformacion" class="custom-textarea" rows="6" cols="100" formControlName="recuperarInformacion"
+                    (change)="setValoresStore(seguridadInformacion,'recuperarInformacion', 'setRecuperarInformacion')"></textarea>
+                
+                <span
+                    *ngIf="seguridadInformacion.controls['recuperarInformacion']?.errors?.['required'] && seguridadInformacion.controls['recuperarInformacion']?.touched"
+                    class="mensaje-error">
+                    Este campo es obligatorio.
+                </span>
+
             </div>
 
             <div class="col-md-12 text-container mt-4">
@@ -208,7 +266,15 @@
                     <span class="danger">*</span>Indique la frecuencia y localización de las copias de seguridad y de la
                     información archivada
                 </label>
-                <textarea class="custom-textarea" rows="6" cols="100" formControlName="informacionArchivada" (change)="setValoresStore(seguridadInformacion,'informacionArchivada', 'setInformacionArchivada')"></textarea>
+                <textarea id="informacionArchivada" class="custom-textarea" rows="6" cols="100" formControlName="informacionArchivada"
+                    (change)="setValoresStore(seguridadInformacion,'informacionArchivada', 'setInformacionArchivada')"></textarea>
+                
+                <span
+                    *ngIf="seguridadInformacion.controls['informacionArchivada']?.errors?.['required'] && seguridadInformacion.controls['informacionArchivada']?.touched"
+                    class="mensaje-error">
+                    Este campo es obligatorio.
+                </span>
+
             </div>
 
             <div class="col-md-12 text-container mt-4">
@@ -216,7 +282,15 @@
                     <span class="danger">*</span>Si las copias de seguridad se almacenan en sitios alternativos a las
                     instalaciones, indique donde se encuentra el centro de proceso de datos
                 </label>
-                <textarea class="custom-textarea" rows="6" cols="100" formControlName="procesoDatos" (change)="setValoresStore(seguridadInformacion,'procesoDatos', 'setProcesoDatos')"></textarea>
+                <textarea id="procesoDatos" class="custom-textarea" rows="6" cols="100" formControlName="procesoDatos"
+                    (change)="setValoresStore(seguridadInformacion,'procesoDatos', 'setProcesoDatos')"></textarea>
+                
+                <span
+                    *ngIf="seguridadInformacion.controls['procesoDatos']?.errors?.['required'] && seguridadInformacion.controls['procesoDatos']?.touched"
+                    class="mensaje-error">
+                    Este campo es obligatorio.
+                </span>
+
             </div>
 
             <div class="col-md-12 text-container mt-4">
@@ -225,7 +299,15 @@
                     los
                     datos a partir de copias de seguridad
                 </label>
-                <textarea class="custom-textarea" rows="6" cols="100" formControlName="copiasSeguridad" (change)="setValoresStore(seguridadInformacion,'copiasSeguridad', 'setCopiasSeguridad')"></textarea>
+                <textarea id="copiasSeguridad" class="custom-textarea" rows="6" cols="100" formControlName="copiasSeguridad"
+                    (change)="setValoresStore(seguridadInformacion,'copiasSeguridad', 'setCopiasSeguridad')"></textarea>
+                
+                <span
+                    *ngIf="seguridadInformacion.controls['copiasSeguridad']?.errors?.['required'] && seguridadInformacion.controls['copiasSeguridad']?.touched"
+                    class="mensaje-error">
+                    Este campo es obligatorio.
+                </span>
+              
             </div>
 
             <div class="row mt-2 alert-text">
@@ -284,7 +366,16 @@
                     <span class="danger">*</span>Describa el procedimiento referente a la protección de la información
                     de la empresa
                 </label>
-                <textarea class="custom-textarea" rows="6" cols="100" formControlName="proteccionDeLaInformacion" (change)="setValoresStore(seguridadInformacion,'proteccionDeLaInformacion', 'setProteccionDeLaInformacion')"></textarea>
+                <textarea id="proteccionDeLaInformacion" class="custom-textarea" rows="6" cols="100"
+                    formControlName="proteccionDeLaInformacion"
+                    (change)="setValoresStore(seguridadInformacion,'proteccionDeLaInformacion', 'setProteccionDeLaInformacion')"></textarea>
+                
+                <span
+                    *ngIf="seguridadInformacion.controls['proteccionDeLaInformacion']?.errors?.['required'] && seguridadInformacion.controls['proteccionDeLaInformacion']?.touched"
+                    class="mensaje-error">
+                    Este campo es obligatorio.
+                </span>
+
             </div>
 
             <div class="col-md-12 text-container mt-4">
@@ -292,7 +383,16 @@
                     <span class="danger">*</span>Enuncie la politica para la protección de los sistemas informáticos de
                     la empresa de accesos no autorizados y destrucción deliberada o pérdida de la información
                 </label>
-                <textarea class="custom-textarea" rows="6" cols="100" formControlName="perdidaDeLaInformacion" (change)="setValoresStore(seguridadInformacion,'perdidaDeLaInformacion', 'setPerdidaDeLaInformacion')"></textarea>
+                <textarea id="perdidaDeLaInformacion" class="custom-textarea" rows="6" cols="100"
+                    formControlName="perdidaDeLaInformacion"
+                    (change)="setValoresStore(seguridadInformacion,'perdidaDeLaInformacion', 'setPerdidaDeLaInformacion')"></textarea>
+                
+                <span
+                    *ngIf="seguridadInformacion.controls['perdidaDeLaInformacion']?.errors?.['required'] && seguridadInformacion.controls['perdidaDeLaInformacion']?.touched"
+                    class="mensaje-error">
+                    Este campo es obligatorio.
+                </span>
+
             </div>
 
             <div class="col-md-12 text-container mt-4">
@@ -300,7 +400,15 @@
                     <span class="danger">*</span>Detalle si opera con sistemas múltiples (sedes/sitios) y cómo se
                     controlan dichos sistemas
                 </label>
-                <textarea class="custom-textarea" rows="6" cols="100" formControlName="controlanSistemas" (change)="setValoresStore(seguridadInformacion,'controlanSistemas', 'setControlanSistemas')"></textarea>
+                <textarea id="controlanSistemas" class="custom-textarea" rows="6" cols="100" formControlName="controlanSistemas"
+                    (change)="setValoresStore(seguridadInformacion,'controlanSistemas', 'setControlanSistemas')"></textarea>
+                
+                <span
+                    *ngIf="seguridadInformacion.controls['controlanSistemas']?.errors?.['required'] && seguridadInformacion.controls['controlanSistemas']?.touched"
+                    class="mensaje-error">
+                    Este campo es obligatorio.
+                </span>
+              
             </div>
 
             <div class="col-md-12 text-container mt-4">
@@ -309,7 +417,15 @@
                     de la empresa (la responsabilidad no debería estar limitada a una persona, sino a varias, de forma
                     que cada uno pueda controlar las acciones del resto)
                 </label>
-                <textarea class="custom-textarea" rows="6" cols="100" formControlName="accionesDelResto" (change)="setValoresStore(seguridadInformacion,'accionesDelResto', 'setAccionesDelResto')"></textarea>
+                <textarea id="accionesDelResto" class="custom-textarea" rows="6" cols="100" formControlName="accionesDelResto"
+                    (change)="setValoresStore(seguridadInformacion,'accionesDelResto', 'setAccionesDelResto')"></textarea>
+                
+                <span
+                    *ngIf="seguridadInformacion.controls['accionesDelResto']?.errors?.['required'] && seguridadInformacion.controls['accionesDelResto']?.touched"
+                    class="mensaje-error">
+                    Este campo es obligatorio.
+                </span>
+              
             </div>
 
             <div class="col-md-12 text-container mt-4">
@@ -322,7 +438,16 @@
                     del área responsable de concederlo, para verificar o en su caso reportar que el acceso a los
                     sistemas confidenciales se basa en los requisitos del trabajo
                 </label>
-                <textarea class="custom-textarea" rows="6" cols="100" formControlName="sistemasConfidenciales" (change)="setValoresStore(seguridadInformacion,'sistemasConfidenciales', 'setSistemasConfidenciales')"></textarea>
+                <textarea id="sistemasConfidenciales" class="custom-textarea" rows="6" cols="100"
+                    formControlName="sistemasConfidenciales"
+                    (change)="setValoresStore(seguridadInformacion,'sistemasConfidenciales', 'setSistemasConfidenciales')"></textarea>
+                
+                <span
+                    *ngIf="seguridadInformacion.controls['sistemasConfidenciales']?.errors?.['required'] && seguridadInformacion.controls['sistemasConfidenciales']?.touched"
+                    class="mensaje-error">
+                    Este campo es obligatorio.
+                </span>
+              
             </div>
 
             <div class="col-md-12 text-container mt-4">
@@ -331,7 +456,16 @@
                     acceso a sistemas de Tecnología de la Información y equipos de cómputo, frecuencia de cambios, si
                     existen otros métodos de autenticación y quién o qué área proporciona esas contraseñas.
                 </label>
-                <textarea class="custom-textarea" rows="6" cols="100" formControlName="proporcionaEsasContrasenas" (change)="setValoresStore(seguridadInformacion,'proporcionaEsasContrasenas', 'setProporcionaEsasContrasenas')"></textarea>
+                <textarea id="proporcionaEsasContrasenas" class="custom-textarea" rows="6" cols="100"
+                    formControlName="proporcionaEsasContrasenas"
+                    (change)="setValoresStore(seguridadInformacion,'proporcionaEsasContrasenas', 'setProporcionaEsasContrasenas')"></textarea>
+                
+                <span
+                    *ngIf="seguridadInformacion.controls['proporcionaEsasContrasenas']?.errors?.['required'] && seguridadInformacion.controls['proporcionaEsasContrasenas']?.touched"
+                    class="mensaje-error">
+                    Este campo es obligatorio.
+                </span>
+              
             </div>
 
             <div class="col-md-12 text-container mt-4">
@@ -340,7 +474,16 @@
                     (incluir lo relacionado al licenciamiento),
                     debiendo evidenciar que este software de seguridad está activo y recibe actualizaciones periódicas.
                 </label>
-                <textarea class="custom-textarea" rows="6" cols="100" formControlName="actualizacionesPeriodicas" (change)="setValoresStore(seguridadInformacion,'actualizacionesPeriodicas', 'setActualizacionesPeriodicas')"></textarea>
+                <textarea id="actualizacionesPeriodicas" class="custom-textarea" rows="6" cols="100"
+                    formControlName="actualizacionesPeriodicas"
+                    (change)="setValoresStore(seguridadInformacion,'actualizacionesPeriodicas', 'setActualizacionesPeriodicas')"></textarea>
+                
+                <span
+                    *ngIf="seguridadInformacion.controls['actualizacionesPeriodicas']?.errors?.['required'] && seguridadInformacion.controls['actualizacionesPeriodicas']?.touched"
+                    class="mensaje-error">
+                    Este campo es obligatorio.
+                </span>
+              
             </div>
 
             <div class="col-md-12 text-container mt-4">
@@ -348,7 +491,15 @@
                     <span class="danger">*</span>Indique las medidas para prevenir el uso de productos tecnológicos
                     falsificados o con licencias incorrectas (software y hardware)
                 </label>
-                <textarea class="custom-textarea" rows="6" cols="100" formControlName="falsificadosLicencias" (change)="setValoresStore(seguridadInformacion,'falsificadosLicencias', 'setFalsificadosLicencias')"></textarea>
+                <textarea id="falsificadosLicencias" class="custom-textarea" rows="6" cols="100" formControlName="falsificadosLicencias"
+                    (change)="setValoresStore(seguridadInformacion,'falsificadosLicencias', 'setFalsificadosLicencias')"></textarea>
+                
+                <span
+                    *ngIf="seguridadInformacion.controls['falsificadosLicencias']?.errors?.['required'] && seguridadInformacion.controls['falsificadosLicencias']?.touched"
+                    class="mensaje-error">
+                    Este campo es obligatorio.
+                </span>
+              
             </div>
 
             <div class="col-md-12 text-container mt-4">
@@ -363,7 +514,15 @@
                     equipos de cómputo que contengan información confidencial relacionada con el proceso de importación
                     y exportación.
                 </label>
-                <textarea class="custom-textarea" rows="6" cols="100" formControlName="procesoDeImportacion" (change)="setValoresStore(seguridadInformacion,'procesoDeImportacion', 'setProcesoDeImportacion')"></textarea>
+                <textarea id="procesoDeImportacion" class="custom-textarea" rows="6" cols="100" formControlName="procesoDeImportacion"
+                    (change)="setValoresStore(seguridadInformacion,'procesoDeImportacion', 'setProcesoDeImportacion')"></textarea>
+                
+                <span
+                    *ngIf="seguridadInformacion.controls['procesoDeImportacion']?.errors?.['required'] && seguridadInformacion.controls['procesoDeImportacion']?.touched"
+                    class="mensaje-error">
+                    Este campo es obligatorio.
+                </span>
+
             </div>
 
             <div class="col-md-12 text-container mt-4">
@@ -372,7 +531,15 @@
                     momento de la separacion del empleado, el acceso equipos de cómputo, telecomunicaciones y red, esto
                     incluye cuentas de correo electrónico, cuentas de accesos a sistemas, software, programas, etcétera.
                 </label>
-                <textarea class="custom-textarea" rows="6" cols="100" formControlName="telecomunicaciones" (change)="setValoresStore(seguridadInformacion,'telecomunicaciones', 'setTelecomunicaciones')"></textarea>
+                <textarea id="telecomunicaciones" class="custom-textarea" rows="6" cols="100" formControlName="telecomunicaciones"
+                    (change)="setValoresStore(seguridadInformacion,'telecomunicaciones', 'setTelecomunicaciones')"></textarea>
+                
+                <span
+                    *ngIf="seguridadInformacion.controls['telecomunicaciones']?.errors?.['required'] && seguridadInformacion.controls['telecomunicaciones']?.touched"
+                    class="mensaje-error">
+                    Este campo es obligatorio.
+                </span>
+              
             </div>
 
             <div class="col-md-12 text-container mt-4">
@@ -380,7 +547,15 @@
                     <span class="danger">*</span>Indique las medidas previstas para tratar incidentes en caso de que el
                     sistema se vea comprometido
                 </label>
-                <textarea class="custom-textarea" rows="6" cols="100" formControlName="sistemaComprometido" (change)="setValoresStore(seguridadInformacion,'sistemaComprometido', 'setSistemaComprometido')"></textarea>
+                <textarea id="sistemaComprometido" class="custom-textarea" rows="6" cols="100" formControlName="sistemaComprometido"
+                    (change)="setValoresStore(seguridadInformacion,'sistemaComprometido', 'setSistemaComprometido')"></textarea>
+                
+                <span
+                    *ngIf="seguridadInformacion.controls['sistemaComprometido']?.errors?.['required'] && seguridadInformacion.controls['sistemaComprometido']?.touched"
+                    class="mensaje-error">
+                    Este campo es obligatorio.
+                </span>
+
             </div>
         </div>
     </form>
