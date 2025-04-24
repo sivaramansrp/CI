@@ -108,6 +108,14 @@
                 </label>
                 <textarea class="custom-textarea" rows="6" cols="100" id="indiqueAlmacenes" formControlName="indiqueAlmacenes" (change)="setValoresStore(seguridadProcesosForm,'indiqueAlmacenes','setIndiqueAlmacenes')"></textarea>
             </div>
+            @if(seguridadProcesosForm.controls['indiqueAlmacenes'].invalid &&
+            seguridadProcesosForm.controls['indiqueAlmacenes'].touched){
+            <div class="d-grid">
+              @if(seguridadProcesosForm.controls['indiqueAlmacenes'].errors?.['required']) {
+              <span class="mensaje-error">Este campo es obligatorio</span>
+              }
+            </div>
+            }
 
             <div class="col-md-12 text-container mt-4">
                 <label for="expliqueBrevemente">
@@ -116,6 +124,14 @@
                 </label>
                 <textarea class="custom-textarea" rows="6" cols="100" id="expliqueBrevemente" formControlName="expliqueBrevemente" (change)="setValoresStore(seguridadProcesosForm,'expliqueBrevemente','setExpliqueBrevemente')"></textarea>
             </div>
+            @if(seguridadProcesosForm.controls['expliqueBrevemente'].invalid &&
+            seguridadProcesosForm.controls['expliqueBrevemente'].touched){
+            <div class="d-grid">
+              @if(seguridadProcesosForm.controls['expliqueBrevemente'].errors?.['required']) {
+              <span class="mensaje-error">Este campo es obligatorio</span>
+              }
+            </div>
+            }
 
             <div class="col-md-12 text-container mt-4">
                 <label for="estosEmpresa">
@@ -133,6 +149,14 @@
                 </label>
                 <textarea class="custom-textarea" rows="6" cols="100" id="indiqueCerciora" formControlName="indiqueCerciora" (change)="setValoresStore(seguridadProcesosForm,'indiqueCerciora','setIndiqueCerciora')"></textarea>
             </div>
+            @if(seguridadProcesosForm.controls['indiqueCerciora'].invalid &&
+            seguridadProcesosForm.controls['indiqueCerciora'].touched){
+            <div class="d-grid">
+              @if(seguridadProcesosForm.controls['indiqueCerciora'].errors?.['required']) {
+              <span class="mensaje-error">Este campo es obligatorio</span>
+              }
+            </div>
+            }
 
             <div class="row mt-2">
                 <div class="col-md-12 text-container">
@@ -154,6 +178,14 @@
                 </label>
                 <textarea class="custom-textarea" rows="6" cols="100" id="indiqueEstos" formControlName="indiqueEstos" (change)="setValoresStore(seguridadProcesosForm,'indiqueEstos','setIndiqueEstos')"></textarea>
             </div>
+            @if(seguridadProcesosForm.controls['indiqueEstos'].invalid &&
+            seguridadProcesosForm.controls['indiqueEstos'].touched){
+            <div class="d-grid">
+              @if(seguridadProcesosForm.controls['indiqueEstos'].errors?.['required']) {
+              <span class="mensaje-error">Este campo es obligatorio</span>
+              }
+            </div>
+            }
 
             <div class="col-md-12 text-container mt-4">
                 <div class="mt-2 alert-text">
@@ -181,6 +213,14 @@
 
                     <textarea class="custom-textarea" rows="6" cols="100" id="indiquePertenecen" formControlName="indiquePertenecen" (change)="setValoresStore(seguridadProcesosForm,'indiquePertenecen','setIndiquePertenecen')"></textarea>
                 </div>
+                @if(seguridadProcesosForm.controls['indiquePertenecen'].invalid &&
+                seguridadProcesosForm.controls['indiquePertenecen'].touched){
+                <div class="d-grid">
+                  @if(seguridadProcesosForm.controls['indiquePertenecen'].errors?.['required']) {
+                  <span class="mensaje-error">Este campo es obligatorio</span>
+                  }
+                </div>
+                }
             </div>
         </div>
 
@@ -299,6 +339,14 @@
                 </label>
                 <textarea class="custom-textarea" rows="6" cols="100" id="indiqueResponsable" formControlName="indiqueResponsable" (change)="setValoresStore(seguridadProcesosForm,'indiqueResponsable','setIndiqueResponsable')"></textarea>
             </div>
+            @if(seguridadProcesosForm.controls['indiqueResponsable'].invalid &&
+            seguridadProcesosForm.controls['indiqueResponsable'].touched){
+            <div class="d-grid">
+              @if(seguridadProcesosForm.controls['indiqueResponsable'].errors?.['required']) {
+              <span class="mensaje-error">Este campo es obligatorio</span>
+              }
+            </div>
+            }
 
             <div class="col-md-12 text-container mt-4">
                 <label for="indiqueTecnologia">
@@ -308,6 +356,14 @@
                 </label>
                 <textarea class="custom-textarea" rows="6" cols="100" id="indiqueTecnologia" formControlName="indiqueTecnologia" (change)="setValoresStore(seguridadProcesosForm,'indiqueTecnologia','setIndiqueTecnologia')"></textarea>
             </div>
+            @if(seguridadProcesosForm.controls['indiqueTecnologia'].invalid &&
+            seguridadProcesosForm.controls['indiqueTecnologia'].touched){
+            <div class="d-grid">
+              @if(seguridadProcesosForm.controls['indiqueTecnologia'].errors?.['required']) {
+              <span class="mensaje-error">Este campo es obligatorio</span>
+              }
+            </div>
+            }
 
         </div>
 
@@ -443,6 +499,14 @@
                 </label>
                 <textarea class="custom-textarea" rows="6" cols="100" id="describirProcesamiento" formControlName="describirProcesamiento" (change)="setValoresStore(seguridadProcesosForm,'describirProcesamiento','setDescribirProcesamiento')"></textarea>
             </div>
+            @if(seguridadProcesosForm.controls['describirProcesamiento'].invalid &&
+            seguridadProcesosForm.controls['describirProcesamiento'].touched){
+            <div class="d-grid">
+              @if(seguridadProcesosForm.controls['describirProcesamiento'].errors?.['required']) {
+              <span class="mensaje-error">Este campo es obligatorio</span>
+              }
+            </div>
+            }
 
             <div class="col-md-12 text-container mt-4">
                 <label for="detalleComo">
@@ -451,6 +515,14 @@
                 </label>
                 <textarea class="custom-textarea" rows="6" cols="100" id="detalleComo" formControlName="detalleComo" (change)="setValoresStore(seguridadProcesosForm,'detalleComo','setDetalleComo')"></textarea>
             </div>
+            @if(seguridadProcesosForm.controls['detalleComo'].invalid &&
+            seguridadProcesosForm.controls['detalleComo'].touched){
+            <div class="d-grid">
+              @if(seguridadProcesosForm.controls['detalleComo'].errors?.['required']) {
+              <span class="mensaje-error">Este campo es obligatorio</span>
+              }
+            </div>
+            }
 
             <div class="col-md-12 text-container mt-4">
                 <label for="indiqueUtiliza">
@@ -459,6 +531,14 @@
                 </label>
                 <textarea class="custom-textarea" rows="6" cols="100" id="indiqueUtiliza" formControlName="indiqueUtiliza" (change)="setValoresStore(seguridadProcesosForm,'indiqueUtiliza','setIndiqueUtiliza')"></textarea>
             </div>
+            @if(seguridadProcesosForm.controls['indiqueUtiliza'].invalid &&
+            seguridadProcesosForm.controls['indiqueUtiliza'].touched){
+            <div class="d-grid">
+              @if(seguridadProcesosForm.controls['indiqueUtiliza'].errors?.['required']) {
+              <span class="mensaje-error">Este campo es obligatorio</span>
+              }
+            </div>
+            }
 
             <div class="col-md-12 text-container mt-4">
                 <label for="detalleValida">
@@ -467,6 +547,14 @@
                 </label>
                 <textarea class="custom-textarea" rows="6" cols="100" id="detalleValida" formControlName="detalleValida" (change)="setValoresStore(seguridadProcesosForm,'detalleValida','setDetalleValida')"></textarea>
             </div>
+            @if(seguridadProcesosForm.controls['detalleValida'].invalid &&
+            seguridadProcesosForm.controls['detalleValida'].touched){
+            <div class="d-grid">
+              @if(seguridadProcesosForm.controls['detalleValida'].errors?.['required']) {
+              <span class="mensaje-error">Este campo es obligatorio</span>
+              }
+            </div>
+            }
 
             <div class="col-md-12 text-container mt-4">
                 <label for="comoNumero">
@@ -475,6 +563,14 @@
                 </label>
                 <textarea class="custom-textarea" rows="6" cols="100" id="comoNumero" formControlName="comoNumero" (change)="setValoresStore(seguridadProcesosForm,'comoNumero','setComoNumero')"></textarea>
             </div>
+            @if(seguridadProcesosForm.controls['comoNumero'].invalid &&
+            seguridadProcesosForm.controls['comoNumero'].touched){
+            <div class="d-grid">
+              @if(seguridadProcesosForm.controls['comoNumero'].errors?.['required']) {
+              <span class="mensaje-error">Este campo es obligatorio</span>
+              }
+            </div>
+            }
 
             <div class="col-md-12 text-container mt-4">
                 <label for="senaleAsociados">
@@ -485,6 +581,14 @@
                 </label>
                 <textarea class="custom-textarea" rows="6" cols="100" id="senaleAsociados" formControlName="senaleAsociados" (change)="setValoresStore(seguridadProcesosForm,'senaleAsociados','setSenaleAsociados')"></textarea>
             </div>
+            @if(seguridadProcesosForm.controls['senaleAsociados'].invalid &&
+            seguridadProcesosForm.controls['senaleAsociados'].touched){
+            <div class="d-grid">
+              @if(seguridadProcesosForm.controls['senaleAsociados'].errors?.['required']) {
+              <span class="mensaje-error">Este campo es obligatorio</span>
+              }
+            </div>
+            }
         </div>
 
         <!-- 5.7-Gestión-de-Inventarios -->

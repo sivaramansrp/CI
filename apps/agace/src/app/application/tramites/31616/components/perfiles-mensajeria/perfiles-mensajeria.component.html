@@ -5,6 +5,15 @@
     <textarea class="custom-textarea" rows="6" cols="100" id="domicilio" formControlName="domicilio"
       (change)="setValoresStore(profileForm,'domicilio','setDomicilio')"></textarea>
   </div>
+  @if(profileForm.controls['domicilio'].invalid &&
+  profileForm.controls['domicilio'].touched){
+  <div class="d-grid">
+    @if(profileForm.controls['domicilio'].errors?.['required']) {
+    <span class="mensaje-error">Este campo es obligatorio</span>
+    }
+  </div>
+  }
+
 
   <p>
     El objetivo de este Perfil, es asegurar que las empresas de mensajería y paquetería, cuenten con prácticas y
