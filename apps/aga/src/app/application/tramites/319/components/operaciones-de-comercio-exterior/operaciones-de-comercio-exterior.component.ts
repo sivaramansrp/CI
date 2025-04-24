@@ -9,7 +9,7 @@ import { OperacionService } from '../../services/operacion.service';
 @Component({
   selector: 'app-operaciones-de-comercio-exterior',
   templateUrl: './operaciones-de-comercio-exterior.component.html',
-  styleUrl: './operaciones-de-comercio-exterior.component.css',
+  styleUrl: './operaciones-de-comercio-exterior.component.scss',
 })
 export class OperacionesDeComercioExteriorComponent implements OnInit,OnDestroy {
   miformulario!: FormGroup;
