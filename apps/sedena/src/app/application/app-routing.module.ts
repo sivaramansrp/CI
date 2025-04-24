@@ -36,6 +36,13 @@ const ROUTES: Routes = [
       import(
         './tramites/240308/solicitude-de-artificios-pirotecnicos.module'
       ).then((m) => m.SolicitudeDeArtificiosPirotecnicosModule),
+  },
+  {
+    path: 'permiso-ordinario',
+    loadChildren: () =>
+      import(
+        './tramites/240311/solicitude-de-artificios-pirotecnicos.module'
+      ).then((m) => m.SolicitudeDeArtificiosPirotecnicosModule),
   }
 ];
 
