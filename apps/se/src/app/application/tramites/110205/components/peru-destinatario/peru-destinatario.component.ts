@@ -19,7 +19,7 @@ interface FormValues {
 @Component({
   selector: 'app-peru-destinatario',
   templateUrl: './peru-destinatario.component.html',
-  styleUrl: './peru-destinatario.component.css',
+  styleUrl: './peru-destinatario.component.scss',
 })
 export class PeruDestinatarioComponent implements OnInit, OnDestroy {
   /**

@@ -18,7 +18,7 @@ import { Tramite110205Store } from '../../estados/tramite110205.store';
 @Component({
   selector: 'app-peru-datos-certificado',
   templateUrl: './peru-datos-certificado.component.html',
-  styleUrl: './peru-datos-certificado.component.css',
+  styleUrl: './peru-datos-certificado.component.scss',
 })
 export class PeruDatosCertificadoComponent implements OnInit, OnDestroy {
   /**

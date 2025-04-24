@@ -18,7 +18,7 @@ import { WizardComponent } from '@ng-mf/data-access-user';
 @Component({
   selector: 'app-peru-certificado',
   templateUrl: './peru-certificado.component.html',
-  styleUrl: './peru-certificado.component.css',
+  styleUrl: './peru-certificado.component.scss',
 })
 export class PeruCertificadoComponent {
 
