@@ -1,43 +1,40 @@
-import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { SolicitudDeRegistroTpl120101State, Tramite120101Store } from '../../../../estados/tramites/tramite120101.store';
 import { Subject, map, takeUntil } from 'rxjs';
+import { BIEN_FINAL } from '../../constantes/solicitud-de-registro-tpl.enum';
 import { CommonModule } from '@angular/common';
-import { DESCRIPCION_DEL_CUPO } from '../../constantes/solicitud-de-registro-tpl.enum';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
-import { InstrumentoCupoTPLForm } from '../../../120201/models/cupos.model';
 import { ServicioDeFormularioService } from '../../services/forma-servicio/servicio-de-formulario.service';
 import { Tramite120101Query } from '../../../../estados/queries/tramite120101.query';
 
 @Component({
-  selector: 'descripcion-del-cupo',
+  selector: 'bien-final',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormasDinamicasComponent],
-  templateUrl: './descripcion-del-cupo.component.html',
-  styleUrl: './descripcion-del-cupo.component.scss',
+  imports: [CommonModule, FormasDinamicasComponent, ReactiveFormsModule],
+  templateUrl: './bien-final.component.html',
+  styleUrl: './bien-final.component.scss',
 })
-export class DescripcionDelCupoComponent implements AfterViewInit, OnInit {
-  @Input() objetoDeFormulario!: InstrumentoCupoTPLForm;
-
+export class BienFinalComponent implements OnInit {
   /**
    * compo doc
-   * @property descripcionDelCupoFormData
+   * @property bienFinalFormData
    * @description
    * Esta propiedad contiene la configuración de los campos del formulario dinámico
    * utilizado en el componente. La configuración está basada en la constante
-   * `DATOS_GENERALES_DEL_SOLICITANTE`, que define los detalles de cada campo, como su
+   * `BIEN_FINAL`, que define los detalles de cada campo, como su
    * identificador, etiqueta, tipo de entrada, validadores, y más.
    *
    * Se utiliza para renderizar dinámicamente los campos del formulario y para
    * gestionar su comportamiento, como la validación y la interacción con los datos
    * obtenidos de los servicios.
    */
-  public descripcionDelCupoFormData = DESCRIPCION_DEL_CUPO;
+  public bienFinalFormData = BIEN_FINAL;
 
   /**
    * compo doc
    * @type {FormGroup}
-   * @memberof DatosGeneralesComponent
+   * @memberof BienFinalComponent
    * @description
    * Este es un formulario reactivo de Angular representado por un FormGroup.
    * Se utiliza para manejar y validar los datos del formulario en el componente.
@@ -64,61 +61,43 @@ export class DescripcionDelCupoComponent implements AfterViewInit, OnInit {
     return this.forma.get('ninoFormGroup') as FormGroup;
   }
 
+  /** Subject para destruir el componente */
+  public destroy$ = new Subject<void>();
+
   /**
-   * Estado de la solicitud de la sección 120101.
-   * @type {SolicitudDeRegistroTpl120101State}
-   * @memberof BienFinalComponent
-   */
+  * Estado de la solicitud de la sección 120101.
+  * @type {SolicitudDeRegistroTpl120101State}
+  * @memberof BienFinalComponent
+  */
   public solicitudDeRegistroState!: SolicitudDeRegistroTpl120101State;
 
-  /** Subject para destruir el componente */
-    public destroy$ = new Subject<void>();
+  /**
+  * @constructor
+  * @description
+  * Este constructor inicializa el componente `BienFinalComponent` e inyecta los servicios necesarios 
+  * para gestionar los datos y validaciones del formulario. 
+  * @param tramite120101Store Servicio encargado de gestionar el estado dinámico asociado al trámite 120101.
+  * @param tramite120101Query Consulta que facilita la obtención de datos específicos del estado del trámite 120101.
+  */
+constructor(
+  private tramite120101Store: Tramite120101Store,
+  private tramite120101Query: Tramite120101Query,
+  private servicioDeFormularioService: ServicioDeFormularioService
+ ) {
+  //
+ }
 
-  constructor(
-      private tramite120101Store: Tramite120101Store,
-      private tramite120101Query: Tramite120101Query,
-      private servicioDeFormularioService: ServicioDeFormularioService
-    ) {
-      //
-    }
-
-  ngOnInit(): void {
-    this.tramite120101Query.selectSolicitudDeRegistroTpl$
-      .pipe(
-        takeUntil(this.destroy$),
-        map((seccionState) => {
-          this.solicitudDeRegistroState = seccionState;
-        })
-      )
-      .subscribe();
-    this.servicioDeFormularioService.registerForm('descripcionDelCupoForm', this.ninoFormGroup)
-  }
-
-  ngAfterViewInit(): void {
-    if (this.objetoDeFormulario) {
-      this.establecerValorDeFormulario();
-    }
-  }
-
-  public establecerValorDeFormulario(): void {
-    this.ninoFormGroup.patchValue({
-      fraccionArancelaria: this.objetoDeFormulario.fraccionArancelaria,
-      descripcionProducto: this.objetoDeFormulario.productoDescripcion,
-      tratadoBloque: this.objetoDeFormulario.cveTratado,
-      clasificacionSubproducto:
-        this.objetoDeFormulario.subProductoClasificacion,
-      mecanismo: this.objetoDeFormulario.asignacionMecanismo,
-      categoria: this.objetoDeFormulario.categoriaTextil,
-      clasificacionRegimen: this.objetoDeFormulario.cveRegimenClasificacion,
-      descripcionCategoria: this.objetoDeFormulario.categoriaTextilDescripcion,
-      paisDestino: this.objetoDeFormulario.cvePaisDestino,
-      unidadDeMedida: this.objetoDeFormulario.unidad,
-      factor: this.objetoDeFormulario.conversionFactor,
-      fechaDeInicio: this.objetoDeFormulario.fechaInicioVigencia,
-      fechaDeFin: this.objetoDeFormulario.fechaFinVigencia,
-    });
-    this.ninoFormGroup.updateValueAndValidity();
-  }
+ ngOnInit(): void {
+  this.tramite120101Query.selectSolicitudDeRegistroTpl$
+    .pipe(
+      takeUntil(this.destroy$),
+      map((seccionState) => {
+        this.solicitudDeRegistroState = seccionState;
+      })
+    )
+    .subscribe();
+    this.servicioDeFormularioService.registerForm('bienFinalForm', this.ninoFormGroup)
+ }
 
   /**
   * compo doc
@@ -138,7 +117,7 @@ export class DescripcionDelCupoComponent implements AfterViewInit, OnInit {
   establecerCambioDeValor(event: { campo: string; valor: object | string }): void {
     if (event) {
       this.tramite120101Store.setDynamicFieldValue(event.campo, event.valor);
-      this.servicioDeFormularioService.setFormValue('descripcionDelCupoForm', {
+      this.servicioDeFormularioService.setFormValue('bienFinalForm', {
         [event.campo]: event.valor,
       });
   

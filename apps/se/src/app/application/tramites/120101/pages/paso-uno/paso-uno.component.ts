@@ -25,7 +25,6 @@ export class PasoUnoComponent {
   // eslint-disable-next-line class-methods-use-this
   public fileClicHandler(event: InstrumentoCupoTPLForm): void {
     if (event) {
-      console.log(event)
       this.elementoDeTablaSeleccionado = event;
     }
   }

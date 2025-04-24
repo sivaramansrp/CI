@@ -5,8 +5,9 @@ import {
   ListaPasosWizard,
   WizardComponent,
 } from '@libs/shared/data-access-user/src';
-import { Component, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, ViewChild } from '@angular/core';
 import { CUPOS_PASOS } from '../../constantes/solicitud-de-registro-tpl.enum';
+import { ServicioDeFormularioService } from '../../services/forma-servicio/servicio-de-formulario.service';
 
 @Component({
   selector: 'app-pantallas',
@@ -14,16 +15,16 @@ import { CUPOS_PASOS } from '../../constantes/solicitud-de-registro-tpl.enum';
 })
 export class PantallasComponent {
   /**
-     * 
-     * Una cadena que representa la clase CSS para una alerta de información.
-     * Esta clase se utiliza para aplicar estilo a los mensajes de información en el componente.
-     */
-    public infoAlert = 'alert-info';
-  
-    /**
-     * Asigna el aviso de privacidad simplificado al atributo `TEXTOS`.
-     */
-    TEXTOS = AVISO.Aviso;
+   *
+   * Una cadena que representa la clase CSS para una alerta de información.
+   * Esta clase se utiliza para aplicar estilo a los mensajes de información en el componente.
+   */
+  public infoAlert = 'alert-info';
+
+  /**
+   * Asigna el aviso de privacidad simplificado al atributo `TEXTOS`.
+   */
+  TEXTOS = AVISO.Aviso;
   /**
    * Lista de pasos del wizard.
    * @type {ListaPasosWizard[]}
@@ -55,6 +56,27 @@ export class PantallasComponent {
   @ViewChild(WizardComponent)
   public wizardComponent!: WizardComponent;
 
+  public esFormaValido: boolean = false;
+
+  private cdr = inject(ChangeDetectorRef);
+
+  constructor(
+    private servicioDeFormularioService: ServicioDeFormularioService
+  ) {
+    //
+  }
+
+  verificarLaValidezDelFormulario(): boolean {
+    return (
+      (this.servicioDeFormularioService.isFormValid('bienFinalForm') ??
+        false) &&
+      (this.servicioDeFormularioService.isFormValid('consultarCupoForm') ??
+        false) &&
+      (this.servicioDeFormularioService.isFormValid('representacionFederal') ??
+        false)
+    );
+  }
+
   /**
    * Actualiza el índice del paso y maneja la navegación hacia adelante o atrás.
    *
@@ -62,15 +84,24 @@ export class PantallasComponent {
    * @returns {void}
    */
   public getValorIndice(e: AccionBoton): void {
-    if (e.valor > 0 && e.valor <= this.pantallasPasos.length) {
-      this.indice = e.valor;
-      this.datosPasos.indice = e.valor;
+    setTimeout(() => {
 
-      if (e.accion === 'cont') {
-        this.wizardComponent.siguiente();
-      } else {
-        this.wizardComponent.atras();
-      }
+    this.esFormaValido = this.verificarLaValidezDelFormulario();
+    console.log('esFormaValido', this.esFormaValido)
+    if (e.valor > 0 && e.valor <= this.pantallasPasos.length) {
+        if (e.accion === 'cont') {
+          if (this.esFormaValido) {
+            this.indice = e.valor;
+            this.datosPasos.indice = e.valor;
+            this.wizardComponent.siguiente();
+          }
+        } else if (e.accion === 'ant'){
+          this.indice = e.valor;
+          this.datosPasos.indice = e.valor;
+          this.wizardComponent.atras();
+        }
     }
+    this.cdr.detectChanges();
+  }, 500);
   }
 }

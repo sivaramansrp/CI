@@ -9,6 +9,14 @@
                 <a data-toggle="tab" (click)="seleccionaTab(2)" (keydown.enter)="seleccionaTab(2)"
                     (keydown.space)="seleccionaTab(2)" role="button" tabindex="2">Consultar cupo</a>
             </li>
+            <li [ngClass]="indice === 3 ? 'active' : ''">
+                <a data-toggle="tab" (click)="seleccionaTab(3)" (keydown.enter)="seleccionaTab(3)"
+                    (keydown.space)="seleccionaTab(3)" role="button" tabindex="3">Insumos</a>
+            </li>
+            <li [ngClass]="indice === 4 ? 'active' : ''">
+                <a data-toggle="tab" (click)="seleccionaTab(4)" (keydown.enter)="seleccionaTab(4)"
+                    (keydown.space)="seleccionaTab(4)" role="button" tabindex="4">Proceso productivo</a>
+            </li>
         </ul>
 
         <ng-container>
@@ -22,6 +30,7 @@
                     @if (elementoDeTablaSeleccionado) {
                         <descripcion-del-cupo [objetoDeFormulario]="elementoDeTablaSeleccionado"></descripcion-del-cupo>
                         <representacion-federal></representacion-federal>
+                        <bien-final></bien-final>
                     }
                 }
             }

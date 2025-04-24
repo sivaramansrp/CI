@@ -1,4 +1,5 @@
 import { AlertComponent, BtnContinuarComponent, WizardComponent } from '@libs/shared/data-access-user/src';
+import { BienFinalComponent } from './components/bien-final/bien-final.component';
 import { CommonModule } from '@angular/common';
 import { ConsultarCupoComponent } from './components/consultar-cupo/consultar-cupo.component';
 import { DatosGeneralesComponent } from './components/datos-generales/datos-generales.component';
@@ -26,7 +27,8 @@ import { SolicitudDeRegistroTplRoutingModule } from './solicitud-de-registro-tpl
     ConsultarCupoComponent,
     AlertComponent,
     DescripcionDelCupoComponent,
-    RepresentacionFederalComponent
+    RepresentacionFederalComponent,
+    BienFinalComponent
   ]
 })
 export class SolicitudDeRegistroTplModule { }

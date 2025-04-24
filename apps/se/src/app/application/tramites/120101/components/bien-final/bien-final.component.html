@@ -1,9 +1,9 @@
 <form [formGroup]="forma">
     <div class="row">
       <formas-dinamicas
-        formularioTitulo="Domicilio fiscal del solicitante"
+        formularioTitulo="Bien final"
         [forma]="ninoFormGroup"
-        [formularioDatos]="domicilioFiscalFormData"
+        [formularioDatos]="bienFinalFormData"
         [estado]="solicitudDeRegistroState"
         (emitirCambioDeValor)="establecerCambioDeValor($event)"
       ></formas-dinamicas>

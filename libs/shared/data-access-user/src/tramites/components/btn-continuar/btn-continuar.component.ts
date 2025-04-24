@@ -27,6 +27,7 @@ interface AccionBoton {
 export class BtnContinuarComponent implements OnInit {
   @Input({ required: true }) datos!: DatosPasos;
   @Input() btnGuardar: boolean = false;
+  @Input() esContinuar: boolean = true;
 
   @Output() continuarEvento = new EventEmitter<AccionBoton>();
   @Output() btnGuardarClicked = new EventEmitter<void>();
@@ -77,15 +78,18 @@ export class BtnContinuarComponent implements OnInit {
    * @returns {void} No retorna ningún valor.
    */
   continuar(): void {
-    const CONDICION =
+      const CONDICION =
       this.datos.indice > 0 && this.datos.indice < this.datos.nroPasos;
     if (CONDICION) {
+      setTimeout(() => {
+
       this.wizardService.cambio_indice(this.datos.indice);
       const DATOS_CONTINUAR: AccionBoton = {
-        accion: 'cont',
+        accion: this.esContinuar ? 'cont' : 'inValid',
         valor: (this.datos.indice += 1),
       };
       this.continuarEvento.emit(DATOS_CONTINUAR);
+    }, 500);
     }
   }
 

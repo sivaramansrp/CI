@@ -4,11 +4,13 @@
       formularioTitulo="Consultar instrumento de cupo TPL"
       [forma]="ninoFormGroup"
       [formularioDatos]="consultarCupoFormData"
+      [estado]="solicitudDeRegistroState"
+      (emitirCambioDeValor)="establecerCambioDeValor($event)"
     ></formas-dinamicas>
   </div>
 </form>
 <div class="row mt-5">
-    <div class="col-md-12 text-end">
+    <div class="col-md-8 text-end">
       <button type="button" class="btn btn-primary" (click)="buscar()">
         Buscar
       </button>

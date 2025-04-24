@@ -4,6 +4,8 @@
       formularioTitulo="Descripción del cupo"
       [forma]="ninoFormGroup"
       [formularioDatos]="descripcionDelCupoFormData"
+      [estado]="solicitudDeRegistroState"
+      (emitirCambioDeValor)="establecerCambioDeValor($event)"
     ></formas-dinamicas>
   </div>
 </form>

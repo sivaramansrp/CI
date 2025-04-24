@@ -47,4 +47,24 @@ export class SolicitudDeRegistroTplService {
   obtenerTablaDatos(): Observable<RespuestaCuposTabla> {
     return this.http.get<RespuestaCuposTabla>('assets/json/120201/tabla-cupos.json');
   }
+
+  /**
+   * @method getEstadosDatos
+   * @description
+   * Obtiene los datos del catálogo de monedas desde un archivo JSON.
+   * @returns {Observable<Catalogo[]>} Un observable que emite una lista de datos de monedas.
+   */
+  getEstadosDatos(): Observable<Catalogo> {
+    return this.http.get<Catalogo>('assets/json/120101/estados.json');
+  }
+
+  /**
+   * @method getRepresentacionFederalDatos
+   * @description
+   * Obtiene los datos del catálogo de monedas desde un archivo JSON.
+   * @returns {Observable<Catalogo[]>} Un observable que emite una lista de datos de monedas.
+   */
+  getRepresentacionFederalDatos(): Observable<Catalogo> {
+    return this.http.get<Catalogo>('assets/json/120101/representacion-federal.json');
+  }
 }
