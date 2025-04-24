@@ -1,4 +1,4 @@
-import { CATALOGOS_ID, Catalogo, CatalogosService } from '@libs/shared/data-access-user/src';
+import { CATALOGOS_ID, Catalogo, CatalogosService, TEXTOS } from '@libs/shared/data-access-user/src';
 import { Component, Inject } from '@angular/core';
 
 @Component({
@@ -14,6 +14,12 @@ export class PasoDosComponent {
 
   /** Catálogo completo de documentos disponibles. */
   catalogoDocumentos: Catalogo[] = [];
+
+  /** Textos usados en el componente, provenientes de una fuente centralizada. */
+  TEXTOS = TEXTOS;
+
+  /** Clase de estilo para mensajes de alerta informativa. */
+  infoAlert = 'alert-info';
 
     /**
    * Constructor del componente.
