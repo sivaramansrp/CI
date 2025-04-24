@@ -123,7 +123,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
         this.solicitudState.regimen ? this.solicitudState.regimen : 3,
         Validators.required,
       ],
-      carro: [this.solicitudState.carro],
     });
     
   }
