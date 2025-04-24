@@ -1325,8 +1325,8 @@
   {
     "id": 190,
     "tramite": 30401,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/aga/registro-empresas/transporte",
+    "linkDepartment": "/pago/registro-empresas/transporte",
     "department": "aga"
   },
   {
