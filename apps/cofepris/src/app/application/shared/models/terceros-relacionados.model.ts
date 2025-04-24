@@ -351,6 +351,7 @@ export interface PagoDerechosFormState {
   llavePago: string;
   fechaPago: string;
   importePago: string;
+  banco?: string;
 }
 
 /**
@@ -359,6 +360,14 @@ export interface PagoDerechosFormState {
  */
 export const FECHA_DE_PAGO = {
   labelNombre: 'Fecha de pago',
-  required: true,
+  required: false,
   habilitado: true,
 };
+
+export interface TercerosRelacionadosDatos {
+  fabricanteTablaDatos: Fabricante[];
+  destinatarioFinalTablaDatos: Destinatario[];
+  proveedorTablaDatos: Proveedor[];
+  facturadorTablaDatos: Facturador[];
+}
+ 

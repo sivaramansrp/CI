@@ -1,0 +1,108 @@
+<div class="container">
+  <form [formGroup]="paisForm">
+   
+  <div class="row">
+    <ng-titulo titulo={{titulo}}> </ng-titulo>
+ 
+    <div class="row mb-5">
+      <div class="col-md-4">
+        <app-catalogo-select
+          [catalogo]="elementosDeBloque"
+          [label]="'Bloque'"
+          [placeholder]="'Seleccione un valor'"
+          formControlName="bloque"
+          (change)="enCambioDeBloque($event); setValoresStore(paisForm,'bloque')"
+        ></app-catalogo-select>      
+      </div>
+      <div 
+      class="col-md-4 d-flex  align-items-center mt-5"
+      >
+      <button type="button" class="btn-primary btn" name="todos países" (click)="onObtenerCiudades()">Todos los países</button>
+      </div>
+      <div class="col-md-4"></div>
+    </div>
+    <crosslist
+    [fechas]="selectRangoDias"
+    [showSearchInput1]="true"
+    [showSearchInput2]="true"
+    [botonField]="campoDeBotones"
+    ></crosslist>
+  </div>
+ 
+  <div class="row mt-4">
+    <div class="col-md-6">
+      <div class="form-group">
+        <label for="descripcion" class="form-label"
+          >Uso(s) especÍfico(s) de la mercancÍa*:</label
+        >
+        <textarea
+          class="form-control"
+          cols="80" rows="3"
+          id="usoEspecifico"
+          placeholder=""
+          formControlName="usoEspecifico"
+          (change)="setValoresStore(paisForm,'usoEspecifico')"
+        ></textarea>
+        <div
+        *ngIf="
+          paisForm.controls['usoEspecifico'].invalid &&
+          paisForm.controls['usoEspecifico'].touched
+        "
+        class="text-danger"
+      >
+        <small *ngIf="paisForm.controls['usoEspecifico'].errors?.['required']"
+          >La descripción es obligatoria.</small
+        >
+        </div>
+      </div>
+    </div>
+ 
+ 
+    <div class="col-md-6">
+      <div class="form-group">
+        <label for="justificacionImportacionExportacion" class="form-label"
+          >Justificación y beneficio que se obtiene*:</label
+        >
+        <textarea
+          class="form-control"
+          cols="80" rows="3"
+          id="justificacionImportacionExportacion"
+          placeholder=""
+          formControlName="justificacionImportacionExportacion"
+          (change)="setValoresStore(paisForm,'justificacionImportacionExportacion')"
+        ></textarea>
+        <div
+        *ngIf="
+          paisForm.controls['justificacionImportacionExportacion'].invalid &&
+          paisForm.controls['justificacionImportacionExportacion'].touched
+        "
+        class="text-danger"
+      >
+        <small *ngIf="paisForm.controls['justificacionImportacionExportacion'].errors?.['required']"
+          >La justificación es obligatoria.</small
+        >
+        </div>
+      </div>
+    </div>
+  </div>
+ 
+  <div class="row mt-4">
+    <div class="col-md-12">
+      <div class="form-group">
+        <label for="Observaciones" class="form-label">Observaciones:</label>
+        <textarea
+          class="form-control"
+          cols="80" rows="3"
+          id="Observaciones"
+          placeholder=""
+          formControlName="observaciones"
+          (change)="setValoresStore(paisForm,'observaciones')"
+        ></textarea>
+      </div>
+    </div>
+  </div>
+ 
+  </form>
+</div>
+ 
+ 

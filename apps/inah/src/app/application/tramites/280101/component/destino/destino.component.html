@@ -1,0 +1,117 @@
+<div class="container">
+  <ng-titulo titulo="Destino"/>
+  <form [formGroup]="DestinoForm">
+    <div class="row">
+      <div class="col-md-4">
+        <label class="form-label" for="pais"
+          >País*:
+        </label>
+        <input
+          type="text"
+          class="form-control"
+          id="pais"
+          formControlName="pais"
+          (change)="setValoresStore(DestinoForm, 'pais', 'setPais')"
+        />
+      </div>
+
+      <div class="col-md-4">
+        <label class="form-label" for="codigo-postal"
+          >Código Postal*:</label>
+        <input
+          type="text"
+          class="form-control"
+          id="codigo-postal"
+          formControlName="codigoPostal"
+          (change)="setValoresStore(DestinoForm, 'codigoPostal', 'setCodigoPostal')"
+        />
+      </div>
+      <div class="col-md-4">
+          <label class="form-label" for="estado"
+            >Estado:</label
+          >
+          <input
+            type="text"
+            class="form-control"
+            id="estado"
+            formControlName="estado"
+            (change)="setValoresStore(DestinoForm, 'estado', 'setEstado')"
+          />
+        </div>
+
+      <div class="col-md-4">
+        <label class="form-label" for="municipio-o-alcadia"
+          >Municipio o alcaldía:</label
+        >
+        <input
+          type="text"
+          class="form-control"
+          id="municipio-o-alcadia"
+          formControlName="municipioOAlcadia"
+          (change)="setValoresStore(DestinoForm, 'municipioOAlcadia', 'setMunicipioOAlcadia')"
+        />
+      </div>
+
+      <div class="col-md-4">
+        <label class="form-label" for="localidad"
+          >Localidad*:</label>
+        <input
+          type="text"
+          class="form-control"
+          id="localidad"
+          formControlName="localidad"
+          (change)="setValoresStore(DestinoForm, 'localidad', 'setLocalidad')"
+        />
+      </div>
+      <div class="col-md-4">
+          <label class="form-label" for="colonia"
+            >Colonia:</label
+          >
+          <input
+            type="text"
+            class="form-control"
+            id="colonia"
+            formControlName="colonia"
+            (change)="setValoresStore(DestinoForm, 'colonia', 'setColonia')"
+          />
+        </div>
+         <div class="col-md-4">
+          <label class="form-label" for="numero-exterior"
+            >Número exterior*:</label
+          >
+          <input
+            type="text"
+            class="form-control"
+            id="umero-exterior"
+            formControlName="numeroExterior"
+            (change)="setValoresStore(DestinoForm, 'numeroExterior', 'setNumeroExterior')"
+          />
+        </div>  
+        <div class="col-md-4">
+          <label class="form-label" for="numero-interior"
+            >Número interior:</label
+          >
+          <input
+            type="text"
+            class="form-control"
+            id="numero-interior"
+            formControlName="numeroInterior"
+            (change)="setValoresStore(DestinoForm, 'numeroInterior', 'setNumeroInterior')"
+
+          />
+        </div>
+        <div class="col-md-8">
+          <label class="form-label" for="calle"
+            >Calle:</label
+          >
+          <input
+            type="text"
+            class="form-control"
+            id="calle"
+            formControlName="calle"
+            (change)="setValoresStore(DestinoForm, 'calle', 'setCalle')"
+          />
+        </div>         
+    </div>
+  </form>
+</div>

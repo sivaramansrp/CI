@@ -4,6 +4,8 @@ import { ModeloDeFormaDinamica, Validadores } from '../../../../core/models/shar
 import { CatalogoSelectComponent } from '../../catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
 import { EventEmitter } from '@angular/core';
+import { InputFecha } from '../../../../../src/core/models/shared/components.model';
+import { InputFechaComponent } from '../../input-fecha/input-fecha.component';
 import { InputRadioComponent } from '../../input-radio/input-radio.component';
 import { TituloComponent } from '../../titulo/titulo.component';
 import { ValidacionesFormularioService } from '../../../../core/services/shared/validaciones-formulario/validaciones-formulario.service';
@@ -37,7 +39,8 @@ import { ValidadoresDeFormulariosComponent } from '../../validadores-de-formular
     ValidadoresDeFormulariosComponent,
     CatalogoSelectComponent,
     InputRadioComponent,
-    TituloComponent
+    TituloComponent,
+    InputFechaComponent
   ],
   templateUrl: './formas-dinamicas.component.html',
   styleUrl: './formas-dinamicas.component.scss',
@@ -62,6 +65,12 @@ export class FormasDinamicasComponent implements ControlValueAccessor, OnInit {
   * Entrada para manejar el título del formulario
   */
   @Input() public formularioTitulo!: string;
+
+  /**
+   * Subtítulo del formulario, generalmente utilizado para proporcionar contexto adicional
+   * o información sobre el propósito o contenido del formulario.
+   */
+  @Input() public formularioSubtitulo!: string;
 
   /**
   * compo doc
@@ -123,14 +132,6 @@ export class FormasDinamicasComponent implements ControlValueAccessor, OnInit {
   */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   @Output() emitirCambioDeValor: EventEmitter<{ campo: string; valor: any}> = new EventEmitter<{ campo: string; valor: any}>();
-
-  /**
-  * compo doc
-  * Valor seleccionado del radio.
-  * @type {string}
-  * @memberof FormasDinamicasComponent
-  */
-  public valorSeleccionado!: string;
 
   /**
   * compo doc
@@ -212,20 +213,20 @@ export class FormasDinamicasComponent implements ControlValueAccessor, OnInit {
   * utilizando los datos del formulario pasados como entrada a este componente
   */
   inicializarFormulario(): void {
-    if (!this.formularioDatos || !Array.isArray(this.formularioDatos)) {
+    if (!this.formularioDatos || !Array.isArray(this.formularioDatos) || this.formularioDatos.length === 0) {
       return;
     }
   
     const FORMGROUP: { [key: string]: ReturnType<FormBuilder['control']> } = {};
     this.formularioDatos.forEach(campo => {
-      if (campo.tipo_input === 'button') {
+      if (!campo || !campo.campo || campo.tipoInput === 'button' || campo.tipoInput === '') {
         return;
       }
   
       if (!this.forma?.contains(campo.campo)) {
         const VALIDADORES = FormasDinamicasComponent.obtenerValidadores(campo.validadores ?? []);
         FORMGROUP[campo.campo] = this.fb.control(
-          { value: campo.valor_predeterminado || this.estado[campo.campo], disabled: campo.desactivado },
+          { value: this.estado && this.estado[campo.campo] ? this.estado[campo.campo] : campo.valorPredeterminado, disabled: campo.desactivado },
           { validators: VALIDADORES }
         );
       }
@@ -270,7 +271,7 @@ export class FormasDinamicasComponent implements ControlValueAccessor, OnInit {
       if (validadore.tipo.includes('maxlength') && typeof validadore.valor === 'number') {
         VALIDATORS.push(Validators.maxLength(validadore.valor));
       }
-      if (validadore.tipo.includes('pattern') && typeof validadore.valor === 'string') {
+      if (validadore.tipo.includes('pattern') && validadore.valor instanceof RegExp) {
         VALIDATORS.push(Validators.pattern(validadore.valor));
       }
     });
@@ -356,17 +357,6 @@ export class FormasDinamicasComponent implements ControlValueAccessor, OnInit {
 
   /**
   * compo doc
-  * @method cambiarRadio
-  * @description 
-  * Cambia el valor seleccionado del radio.
-  * @param value Valor seleccionado.
-  */
-  cambiarRadio(value: string | number): void {
-    this.valorSeleccionado = value as string;
-  }
-
-  /**
-  * compo doc
   * @method writeValue
   * @description
   * Este método se utiliza para escribir valores en el formulario reactivo del componente.
@@ -440,6 +430,39 @@ registerOnChange(fn: (value: Record<string, unknown>) => void): void {
   // eslint-disable-next-line class-methods-use-this
   registerOnTouched(fn: () => void): void {
     FormasDinamicasComponent.onTouched = fn;
+  }
+
+  /**
+  * @method obtenerInformacionDeFecha
+  * @description
+  * Este método se utiliza para obtener la información de configuración de un campo de tipo fecha 
+  * en el formulario dinámico. Devuelve un objeto que contiene las propiedades necesarias para 
+  * configurar el campo, como el nombre de la etiqueta, si es requerido y si está habilitado.
+  * 
+  * Funcionalidad:
+  * - Verifica si el evento contiene datos válidos.
+  * - Extrae las propiedades `labelNombre`, `required` y `habilitado` del evento.
+  * - Devuelve un objeto con la configuración del campo de fecha.
+  * - Si el evento no es válido, devuelve un objeto con valores predeterminados.
+  * 
+  * @param {ModeloDeFormaDinamica} event - Objeto que contiene la configuración del campo dinámico.
+  * @returns {InputFecha} Objeto con la configuración del campo de fecha.
+  * 
+  * @example
+  * const configuracionFecha = this.obtenerInformacionDeFecha(campoFecha);
+  * console.log(configuracionFecha);
+  * // { labelNombre: 'Fecha de inicio', required: true, habilitado: false }
+  */
+  obtenerInformacionDeFecha(event: ModeloDeFormaDinamica): InputFecha {
+    if (event) {
+      const DATOS = {
+        labelNombre: event.labelNombre, 
+        required: this.seRequiere(event.campo),
+        habilitado: event.habilitado ?? false,
+      };
+      return DATOS;
+    }
+    return { labelNombre: '', required: false, habilitado: false };
   }
   
 }

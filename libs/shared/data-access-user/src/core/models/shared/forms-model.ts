@@ -24,6 +24,7 @@ export interface FormularioDinamico {
   readonly?: boolean;
   validators: string[];
   tooltip?: string;
+  tooltipTxt?: string;
   placeholder?: string;
   AvailableRadioOptions?: string[];
   listaDesplegable?: Catalogo[];
@@ -31,22 +32,26 @@ export interface FormularioDinamico {
 
 export interface ModeloDeFormaDinamica {
   id?: string; // id
-  label_nombre: string; // label name
+  labelNombre: string; // label name
   campo: string; // field
   clase: string; // class
-  tipo_input: string; // field type
+  tipoInput: string; // field type
   desactivado: boolean; // disabled
-  solo_lectura?: boolean; // readonly
+  soloLectura?: boolean; // readonly
   validadores?: Validadores[]; // validators
-  marcador_de_posicion?: string; // placeholder
-  valor_predeterminado?: string; // default value
+  marcadorDePosicion?: string; // placeholder
+  valorPredeterminado?: string; // default value
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   opciones?: any[]; // opciones for select dropdown, radio
-  margin_top?: number; // margin-top
+  marginTop?: number; // margin-top
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  layout?: any; // layout for radio options
+  mostrar?: boolean; // show or hide the field
+  habilitado?: boolean; // enable or disable the field
 }
 
 export interface Validadores {
   tipo: string; // type
-  valor?: number | string; // value
+  valor?: number | string | RegExp; // value
   mensaje?: string; // message
 }
