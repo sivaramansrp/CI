@@ -1,12 +1,11 @@
-import { Component, QueryList, ViewChild, ViewChildren } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import {
   Catalogo,
   CatalogoSelectComponent,
-  CrosslistComponent,
   CrossListLable,
+  CrosslistComponent,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
+import { Component, QueryList, ViewChildren } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -15,25 +14,26 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { map, merge, Subject, Subscription, takeUntil } from 'rxjs';
 import {
   Solicitud230202State,
   Tramite230202Store,
 } from '../../estados/tramite230202.store';
-import { Tramite230202Query } from '../../estados/tramite230202.query';
+import { Subject, map, merge, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
 import { PhytosanitaryReexportacionService } from '../../services/phytosanitary-reexportacion.service';
+import { Tramite230202Query } from '../../estados/tramite230202.query';
 
 @Component({
   selector: 'app-datos-de-la-solicitud',
-  standalone: true,
-  imports: [
-    CommonModule,
-    TituloComponent,
-    FormsModule,
-    ReactiveFormsModule,
-    CatalogoSelectComponent,
-    CrosslistComponent,
-  ],
+  // standalone: true,
+  // imports: [
+  //   CommonModule,
+  //   TituloComponent,
+  //   FormsModule,
+  //   ReactiveFormsModule,
+  //   CatalogoSelectComponent,
+  //   CrosslistComponent,
+  // ],
   templateUrl: './datos-de-la-solicitud.component.html',
   styleUrl: './datos-de-la-solicitud.component.scss',
 })

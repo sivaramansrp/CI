@@ -11,9 +11,9 @@ import { Router } from '@angular/router';
  */
 @Component({
   selector: 'paso-tres',
-  standalone: true,
+  // standalone: true,
   templateUrl: './paso-tres.component.html',
-  imports: [FirmaElectronicaComponent, CommonModule],
+  // imports: [FirmaElectronicaComponent, CommonModule],
 })
 export class PasoTresComponent {
   /**

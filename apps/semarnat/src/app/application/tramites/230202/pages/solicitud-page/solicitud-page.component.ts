@@ -32,20 +32,20 @@ interface AccionBoton {
 @Component({
   templateUrl: './solicitud-page.component.html',
   styles: ``,
-  standalone: true,
-  imports: [
-    AlertComponent,
-    AnexarDocumentosComponent,
-    BtnContinuarComponent,
-    CommonModule,
-    FormsModule,
-    PasoDosComponent,
-    PasoTresComponent,
-    PasoUnoComponent,
-    ReactiveFormsModule,
-    TituloComponent,
-    WizardComponent,
-  ],
+  // standalone: true,
+  // imports: [
+  //   AlertComponent,
+  //   AnexarDocumentosComponent,
+  //   BtnContinuarComponent,
+  //   CommonModule,
+  //   FormsModule,
+  //   PasoDosComponent,
+  //   PasoTresComponent,
+  //   PasoUnoComponent,
+  //   ReactiveFormsModule,
+  //   TituloComponent,
+  //   WizardComponent,
+  // ],
 })
 export class SolicitudPageComponent {
   TEXTO_DE_ALERTA: string = TERCEROS_TEXTO_DE_ALERTA;
