@@ -1598,8 +1598,8 @@
   {
     "id": 229,
     "tramite": 260907,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/cofepris/modificacion-permiso-importacion-tratamientos/solicitante",
+    "linkDepartment": "/pago/modificacion-permiso-importacion-tratamientos/solicitante",
     "department": "cofepris"
   },
   {
@@ -1773,9 +1773,9 @@
   {
     "id": 254,
     "tramite": 240105,
-    "linkDashboard": "",
-    "linkDepartment": "",
-    "department": "sedena"
+    "linkDashboard": "/sedena/importacion-de-sustancias/ordinario-para",
+    "linkDepartment": "/pago/importacion-de-sustancias/ordinario-para",
+     "department": "sedena"
   },
   {
     "id": 255,
