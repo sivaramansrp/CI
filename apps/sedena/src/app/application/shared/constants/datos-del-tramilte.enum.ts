@@ -49,20 +49,6 @@ export const PERMISO_ADUNA_TITULO = [240119, 240118];
  */
 export const OCULTAR_BOTONES = [240121, 240107 ];
 
-/**
- * @const OCULTAR_BOTONES_PROVEEDOR
- * @description Constante que define una lista de identificadores utilizados para ocultar botones específicos relacionados con proveedores.
- * @type {number[]}
- * @example
- * // Uso:
- * if (OCULTAR_BOTONES_PROVEEDOR.includes(idBoton)) {
- *   // Lógica para ocultar el botón
- * }
- */
-export const OCULTAR_BOTONES_PROVEEDOR: number[] = [
-  240122
- ];
-
  /**
  * @const NO_VISIBILIDAD_UMC
  * @type {number[]}

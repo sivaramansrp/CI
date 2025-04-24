@@ -105,7 +105,7 @@ export class DatosMercanciaComponent implements OnInit {
    * @type {boolean}
    * @default false
    */
-  public visibilidadCampoUMC = false;
+  public visibilidadCampoUMC = true;
 
   /**
    * Lista de países disponibles para seleccionar el país de origen.
@@ -232,7 +232,7 @@ export class DatosMercanciaComponent implements OnInit {
   ngOnInit(): void {
     this.crearFormaulario();
     this.cargarDatos();
-    this.visibilidadCampoUMC = NO_VISIBILIDAD_UMC.includes(this.idProcedimiento)
+    this.visibilidadCampoUMC = NO_VISIBILIDAD_UMC.includes(this.idProcedimiento) ? false : true;
     this.campoObligatorioChange();
     this.puedeMostrarLaListaCruzada = PUEDE_MOSTRAR_LA_LISTA_CRUZADA_FOR_MERCANCIA.includes(this.idProcedimiento);
   }
@@ -279,7 +279,7 @@ export class DatosMercanciaComponent implements OnInit {
      */
     campoObligatorioChange(): void {
       const UMC = this.datosMercancia.get('umc');
-      if (this.visibilidadCampoUMC) {
+      if (!this.visibilidadCampoUMC) {
         UMC?.clearValidators();
       } else {
         UMC?.setValidators([Validators.required]);

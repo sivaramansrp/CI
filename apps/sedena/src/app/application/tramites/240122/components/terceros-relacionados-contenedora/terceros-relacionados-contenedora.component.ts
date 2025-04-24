@@ -2,7 +2,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { DestinoFinal } from '../../../../shared/models/terceros-relacionados.model';
-import { MOCK_DATA_PREFILL_PROVEEDOR_TABLE } from '../../constantes/exportacion-explosivo-enum';
 import { NUMERO_TRAMITE } from '../../../../shared/constants/datos-solicitud.enum';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
@@ -109,11 +108,7 @@ export class TercerosRelacionadosContenedoraComponent implements OnInit, OnDestr
     this.tramiteQuery.getProveedorTablaDatos$
       .pipe(takeUntil(this.destroy$))
       .subscribe((data) => {
-        if (this.prefillProveedorData) {
-          this.proveedorTablaDatos = [MOCK_DATA_PREFILL_PROVEEDOR_TABLE, ...data];
-        } else {
-          this.proveedorTablaDatos = data;
-        }
+        this.proveedorTablaDatos = data;
       });
   }
 
