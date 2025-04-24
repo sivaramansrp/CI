@@ -2,6 +2,7 @@ import { AlertComponent, AnexarDocumentosComponent } from '@ng-mf/data-access-us
 import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
+import { EmpresasTerciarizadasComponent } from './components/empresas-terciarizadas/empresas-terciarizadas.component';
 import { FirmaElectronicaComponent } from '@ng-mf/data-access-user';
 import { FormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
@@ -35,6 +36,7 @@ import { registroSolicitudImmexService } from './services/registro-solicitud-imm
     FormsModule,
     AlertComponent,
     AnexarDocumentosComponent,
+    EmpresasTerciarizadasComponent,
     ToastrModule.forRoot()
   ],
   exports: [
