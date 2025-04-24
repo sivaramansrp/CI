@@ -147,3 +147,4 @@ export * from './core/models/31602/comercio-exterior.model';
 export {AVISO} from './tramites/constantes/aviso-privacidad.enum';
 
 export {TramiteDetails} from './core/models/tramiteDetails'
+export { SolicitanteasigncionserviceService } from './core/services/120404/solicitanteasigncionservice.service';
