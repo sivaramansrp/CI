@@ -232,6 +232,13 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path:'registro-solicitud',
+    loadChildren: () =>
+      import('./tramites/570102/registro-solicitud-desistimiento.module').then(
+        (m) => m.RegistroSolicitudDesistimientoModule
+      ),
+    },
+    {
     path: 'registro-del-codigo',
       loadChildren: () =>
         import('./tramites/40401/tramite40401.module').then(
@@ -248,6 +255,12 @@ const ROUTES: Routes = [
     loadChildren: () => 
       import('./tramites/31910/desistir-solicitud-informacion-historica.module').then(
         (m) => m.DesistirSolicitudInformacionHistoricaModule)
+  },
+  {
+    path: 'registro-transportista',
+    loadChildren: () =>
+      import('./tramites/40302/registro-transportista.module').then(
+        (m) => m.RegistroTransportistaModule),
   }
 ];
 

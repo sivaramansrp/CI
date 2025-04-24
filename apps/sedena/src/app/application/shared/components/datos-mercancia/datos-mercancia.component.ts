@@ -251,6 +251,7 @@ export class DatosMercanciaComponent implements OnInit {
       tipoMoneda: [null, Validators.required],
       paisDeOriginDatos: [null],
     });
+    this.cargarDatos();
   }
 
   /**
