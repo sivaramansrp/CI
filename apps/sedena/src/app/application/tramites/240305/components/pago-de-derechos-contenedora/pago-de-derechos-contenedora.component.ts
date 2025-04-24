@@ -19,7 +19,7 @@ import { takeUntil } from 'rxjs';
   standalone: true,
   imports: [CommonModule, PagoDeDerechosComponent],
   templateUrl: './pago-de-derechos-contenedora.component.html',
-  styleUrl: './pago-de-derechos-contenedora.component.css',
+  styleUrl: './pago-de-derechos-contenedora.component.scss',
 })
 export class PagoDeDerechosContenedoraComponent implements OnInit, OnDestroy {
   /**
@@ -44,8 +44,10 @@ export class PagoDeDerechosContenedoraComponent implements OnInit, OnDestroy {
    */
   constructor(
     private tramite240305Query: Tramite240305Query,
-    private tramite240305Store: Tramite240305Store // eslint-disable-next-line no-empty-function
-  ) {}
+    private tramite240305Store: Tramite240305Store 
+  ) {
+    // Constructor
+  }
 
   /**
    * Hook del ciclo de vida que se ejecuta al inicializar el componente.

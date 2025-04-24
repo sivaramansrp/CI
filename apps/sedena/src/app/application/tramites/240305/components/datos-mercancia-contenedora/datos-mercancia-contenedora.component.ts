@@ -15,7 +15,7 @@ import { Tramite240305Store } from '../../estados/tramite240305Store.store';
   standalone: true,
   imports: [CommonModule, DatosMercanciaComponent],
   templateUrl: './datos-mercancia-contenedora.component.html',
-  styleUrl: './datos-mercancia-contenedora.component.css',
+  styleUrl: './datos-mercancia-contenedora.component.scss',
 })
 export class DatosMercanciaContenedoraComponent {
   /**
@@ -25,8 +25,9 @@ export class DatosMercanciaContenedoraComponent {
    * @param {Tramite240305Store} tramiteStore - Store de Akita para actualizar el estado de la tabla de mercancías.
    * @returns {void}
    */
-  // eslint-disable-next-line no-empty-function
-  constructor(private tramite240305Store: Tramite240305Store) {}
+  constructor(private tramite240305Store: Tramite240305Store) {
+    // Constructor
+  }
 
   /**
    * Actualiza los datos de la tabla de mercancía en el store.

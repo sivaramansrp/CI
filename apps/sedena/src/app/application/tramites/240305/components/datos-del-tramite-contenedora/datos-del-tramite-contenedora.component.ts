@@ -24,7 +24,7 @@ import { takeUntil } from 'rxjs';
   standalone: true,
   imports: [CommonModule, DatosDelTramiteComponent],
   templateUrl: './datos-del-tramite-contenedora.component.html',
-  styleUrl: './datos-del-tramite-contenedora.component.css',
+  styleUrl: './datos-del-tramite-contenedora.component.scss',
 })
 export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
   /**
@@ -64,8 +64,10 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
    */
   constructor(
     private tramite240305Query: Tramite240305Query,
-    private tramite240305Store: Tramite240305Store // eslint-disable-next-line no-empty-function
-  ) {}
+    private tramite240305Store: Tramite240305Store 
+  ) {
+    //constructor
+  }
 
   /**
    * Hook del ciclo de vida que se ejecuta al inicializar el componente.

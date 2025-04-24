@@ -21,7 +21,7 @@ import { takeUntil } from 'rxjs';
   standalone: true,
   imports: [CommonModule, TercerosRelacionadosComponent],
   templateUrl: './terceros-relacionados-contenedora.component.html',
-  styleUrl: './terceros-relacionados-contenedora.component.css',
+  styleUrl: './terceros-relacionados-contenedora.component.scss',
 })
 export class TercerosRelacionadosContenedoraComponent
   implements OnInit, OnDestroy
@@ -54,8 +54,10 @@ export class TercerosRelacionadosContenedoraComponent
    */
   constructor(
     private tramite240305Store: Tramite240305Store,
-    private tramite240305Query: Tramite240305Query // eslint-disable-next-line no-empty-function
-  ) {}
+    private tramite240305Query: Tramite240305Query 
+  ) {
+    // Constructor
+  }
 
   /**
    * Hook del ciclo de vida que se ejecuta al inicializar el componente.

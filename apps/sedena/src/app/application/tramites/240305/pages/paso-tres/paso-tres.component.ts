@@ -10,6 +10,6 @@ import { Component } from '@angular/core';
   selector: 'app-paso-tres',
 
   templateUrl: './paso-tres.component.html',
-  styleUrl: './paso-tres.component.css',
+  styleUrl: './paso-tres.component.scss',
 })
 export class PasoTresComponent {}
