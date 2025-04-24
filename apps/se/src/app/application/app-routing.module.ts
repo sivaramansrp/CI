@@ -431,7 +431,13 @@ const ROUTES: Routes = [
         (m) => m.ModalidadAmpliacionModule
       ),
   },
-  
+  {
+    path: 'expedicion-certificados-asignacion-directa',
+    loadChildren: () =>
+      import('./tramites/120202/expedicion-certificado-asignacion.module').then(
+        (m) => m.ExpedicionCertificadoAsignacionModule
+      ),
+  },  
 ];
 
 @NgModule({
