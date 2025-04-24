@@ -88,13 +88,15 @@
 
         <div class="row">
             <div class="col-md-4">
-                <label for="fechaInicio" class="form-label">Fecha inicio:</label>
+                <label for="fechaInicio" class="form-label">Fecha inicio: <span class="bi bi-question-circle-fill"
+                        title="" data-bs-toggle="tooltip"></span></label>
                 <input type="text" name="fechaInicio" id="fechaInicioVigenciaAsignacion" class="form-control"
                     formControlName="fechaInicio"
                     (change)="setValoresStore(asignacionDatosForm,'fechaInicio', 'setFechaInicio')">
             </div>
             <div class="col-md-4">
-                <label for="fechaFinVigenciaAprobada" class="form-label">Fecha fin:</label>
+                <label for="fechaFinVigenciaAprobada" class="form-label">Fecha fin: <span
+                        class="bi bi-question-circle-fill" title="" data-bs-toggle="tooltip"></span></label>
                 <input type="text" name="fechaFinVigenciaAprobada" id="fechaFinVigenciaAsignacion" class="form-control"
                     formControlName="fechaFinVigenciaAprobada"
                     (change)="setValoresStore(asignacionDatosForm,'fechaFinVigenciaAprobada', 'setFechaFinVigenciaAprobada')">
@@ -241,8 +243,7 @@
         </div>
         <div class="row mt-2">
             <div class="col-md-12 text-end">
-                <button type="button" class="btn btn-default" name="guardarCertificado"
-                    (click)="eliminarSeleccionado()">Eliminar seleccionado</button>
+                <button type="button" class="btn btn-danger" name="guardarCertificado">Eliminar seleccionado</button>
             </div>
         </div>
         <div class="row">

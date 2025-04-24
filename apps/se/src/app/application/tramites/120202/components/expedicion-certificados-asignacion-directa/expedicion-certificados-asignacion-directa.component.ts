@@ -1,14 +1,18 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Catalogo, CatalogoSelectComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Subject, map, merge, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
+
 import { ExpedicionCertificadosAsignacion120202State, Tramite120202Store } from '../../../../estados/tramites/tramite120202.store';
-import { Tramite120202Query } from '../../../../estados/queries/tramite120202.query';
-import { map, merge, Subject, takeUntil } from 'rxjs';
-import { ExpedicionCertificadosAsignacionService } from '../../services/expedicion-certificados-asignacion/expedicion-certificados-asignacion.service';
 import { ExpedirMonto, NumeroOficioAsignacionDetalleRespquesta } from '../../models/expedicion-certificados-asignacion.model';
 import { CONFIGURACION_PARA_ENCABEZADO_DE_EXPEDIR_MONTO_TABLA } from '../../constantes/expedicion-certificados-asignacion-constantes.enum';
+import { ExpedicionCertificadosAsignacionService } from '../../services/expedicion-certificados-asignacion/expedicion-certificados-asignacion.service';
+import { Tramite120202Query } from '../../../../estados/queries/tramite120202.query';
 
+/**
+ * Componente para la expedición de certificados de asignación directa.
+ */
 @Component({
   selector: 'app-expedicion-certificados-asignacion-directa',
   standalone: true,
@@ -23,12 +27,24 @@ import { CONFIGURACION_PARA_ENCABEZADO_DE_EXPEDIR_MONTO_TABLA } from '../../cons
   styleUrl: './expedicion-certificados-asignacion-directa.component.scss',
 })
 export class ExpedicionCertificadosAsignacionDirectaComponent implements OnInit, OnDestroy {
+  /**
+   * Formulario para la expedición de certificados de asignación.
+   */
   expedicionCertificadosAsignacionForm!: FormGroup;
 
+  /**
+   * Catálogo de años de autorización.
+   */
   aniosAutorizacion!: Catalogo[];
 
+  /**
+   * Mostrar detalle de la tabla.
+   */
   mostrarDetalle: boolean = false;
 
+  /**
+   * Configuración para el encabezado de la tabla de expedición de monto.
+   */
   configuracionParaEncabezadoDeTabla = CONFIGURACION_PARA_ENCABEZADO_DE_EXPEDIR_MONTO_TABLA;
 
   /**
@@ -36,8 +52,14 @@ export class ExpedicionCertificadosAsignacionDirectaComponent implements OnInit,
    */
   cuerpoTabla: ExpedirMonto[] = [];
 
+  /**
+   * Configuración de la tabla dinámica.
+   */
   tipoSeleccionTabla = TablaSeleccion.CHECKBOX;
 
+  /**
+   * Estado de la expedición de certificados de asignación.
+   */
   public expedicionCertificadoAsignacionState!: ExpedicionCertificadosAsignacion120202State;
 
   /**
@@ -45,6 +67,13 @@ export class ExpedicionCertificadosAsignacionDirectaComponent implements OnInit,
    */
   private destruirNotificador$: Subject<void> = new Subject();
 
+  /**
+   * Constructor del componente.
+   * @param fb - FormBuilder para crear formularios reactivos.
+   * @param tramite120202Store - Store para gestionar el estado de la aplicación.
+   * @param tramite120202Query - Query para consultar el estado de la aplicación.
+   * @param expedicionCertificadosAsignacionService - Servicio para gestionar la expedición de certificados de asignación.
+   */
   constructor(
     private fb: FormBuilder,
     private tramite120202Store: Tramite120202Store,
@@ -77,6 +106,9 @@ export class ExpedicionCertificadosAsignacionDirectaComponent implements OnInit,
     this.aniosAutorizacionSeleccion();
   }
 
+  /**
+   * Crea el formulario para la expedición de certificados de asignación.
+   */
   crearExpedicionCertificadosAsignacionForm(): void {
     this.expedicionCertificadosAsignacionForm = this.fb.group({
       asignacionOficioNumeroForm: this.fb.group({
@@ -186,42 +218,76 @@ export class ExpedicionCertificadosAsignacionDirectaComponent implements OnInit,
 
     merge(
       ANIOS_AUTORIZACION$
+    ).pipe(
+      takeUntil(this.destruirNotificador$)
     )
-      .pipe(takeUntil(this.destruirNotificador$))
-      .subscribe();
+    .subscribe();
   }
 
+  /**
+   * Método para obtener el formulario de asignación de oficio y número.
+   * @returns {FormGroup} - El formulario de asignación de oficio y número.
+   */
   get asignacionOficioNumeroForm(): FormGroup {
     return this.expedicionCertificadosAsignacionForm.get('asignacionOficioNumeroForm') as FormGroup;
   }
 
+  /**
+   * Método para obtener el formulario de representación federal.
+   * @returns {FormGroup} - El formulario de representación federal.
+   */
   get representacionFederalForm(): FormGroup {
     return this.expedicionCertificadosAsignacionForm.get('representacionFederalForm') as FormGroup;
   }
 
+  /**
+   * Método para obtener el formulario de control de montos de asignación.
+   * @returns {FormGroup} - El formulario de control de montos de asignación.
+   */
   get controlMontosAsignacionForm(): FormGroup {
     return this.expedicionCertificadosAsignacionForm.get('controlMontosAsignacionForm') as FormGroup;
   }
 
+  /**
+   * Método para obtener el formulario de asignación de datos.
+   * @returns {FormGroup} - El formulario de asignación de datos.
+   */
   get asignacionDatosForm(): FormGroup {
     return this.expedicionCertificadosAsignacionForm.get('asignacionDatosForm') as FormGroup;
   }
 
+  /**
+   * Método para obtener el formulario de cupo y descripción.
+   * @returns {FormGroup} - El formulario de cupo y descripción.
+   */
   get cupoDescripcionForm(): FormGroup {
     return this.expedicionCertificadosAsignacionForm.get('cupoDescripcionForm') as FormGroup;
   }
 
+  /**
+   * Método para obtener el formulario de distribución de saldo.
+   * @returns {FormGroup} - El formulario de distribución de saldo.
+   */
   get distribucionSaldoForm(): FormGroup {
     return this.expedicionCertificadosAsignacionForm.get('distribucionSaldoForm') as FormGroup;
   }
 
+  /**
+   * Anteriormente se llamaba `aniosAutorizacionSeleccion`.
+   * Este método se encarga de establecer el año de autorización seleccionado en el store.
+   * @returns {void}
+   */
   aniosAutorizacionSeleccion(): void {
     const ANIOS_AUTORIZACION = this.asignacionOficioNumeroForm.get('cveAniosAutorizacion')?.value;
     this.tramite120202Store.setAniosAutorizacion(ANIOS_AUTORIZACION);
   }
 
+  /**
+   * Método para buscar el número de oficio de asignación.
+   * @returns {void}
+   */
   buscar(): void {
-    this.asignacionOficioNumeroForm.reset({cveAniosAutorizacion: '', numFolioAsignacionAux: ''});
+    this.asignacionOficioNumeroForm.reset();
     this.tramite120202Store.setAniosAutorizacion('');
     this.tramite120202Store.setNumFolioAsignacionAux('');
 
@@ -266,6 +332,10 @@ export class ExpedicionCertificadosAsignacionDirectaComponent implements OnInit,
       });
   }
 
+  /**
+   * Método para establecer los datos en el campo del formulario y en el store.
+   * @returns {void}
+   */
   setEstablecerDatosCampo(): void {
     this.setValoresStore(this.representacionFederalForm, 'estado', 'setEstado');
     this.setValoresStore(this.representacionFederalForm, 'representacionFederal', 'setRepresentacionFederal');
@@ -299,7 +369,7 @@ export class ExpedicionCertificadosAsignacionDirectaComponent implements OnInit,
    * @param valor - El valor a agregar.
    */
   agregar(valor: string): void {
-    const MONTO_EXPEDIR_VALOR = parseInt(valor);
+    const MONTO_EXPEDIR_VALOR = parseInt(valor, 10);
     this.cuerpoTabla = [
       ...this.cuerpoTabla,
       { montoExpedir: MONTO_EXPEDIR_VALOR }
@@ -307,9 +377,6 @@ export class ExpedicionCertificadosAsignacionDirectaComponent implements OnInit,
     this.tramite120202Store.setCuerpoTabla(this.cuerpoTabla);
     this.distribucionSaldoForm.get('totalExpedir')?.setValue(valor);
     this.tramite120202Store.setTotalExpedir(MONTO_EXPEDIR_VALOR);
-  }
-
-  eliminarSeleccionado(): void {
   }
 
   /**

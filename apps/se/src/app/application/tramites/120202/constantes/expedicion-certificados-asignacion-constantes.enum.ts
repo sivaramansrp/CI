@@ -19,6 +19,9 @@ export const EXPEDICION_CERTIFICADO_ASIGNACION_PASOS = [
   }
 ];
 
+/**
+ * Constantes para la configuración de la tabla de expedición de certificados
+ */
 export const CONFIGURACION_PARA_ENCABEZADO_DE_EXPEDIR_MONTO_TABLA: ConfiguracionColumna<ExpedirMonto>[] = [
   { encabezado: 'Monto a expedir', clave: (fila) => fila.montoExpedir, orden: 1 },
 ];

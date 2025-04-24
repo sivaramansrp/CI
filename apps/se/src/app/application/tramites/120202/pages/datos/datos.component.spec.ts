@@ -47,12 +47,12 @@ describe('DatosComponent', () => {
     expect(SOLICITANTE).toBeTruthy();
   });
 
-  it('should render datos de la solicitud tab when indice is 2', () => {
+  it('should render expedicion certificados asignacion directa tab when indice is 2', () => {
     // Establecer el índice en 2 y verificar que se renderiza el componente correspondiente
     component.indice = 2;
     fixture.detectChanges();
-    const DATOS_DE_LA_SOLICITUD = fixture.nativeElement.querySelector('app-datos-de-la-solicitud');
-    expect(DATOS_DE_LA_SOLICITUD).toBeTruthy();
+    const EXPEDICION_CERTIFICADOS_ASIGNACION_DIRECTA = fixture.nativeElement.querySelector('app-expedicion-certificados-asignacion-directa');
+    expect(EXPEDICION_CERTIFICADOS_ASIGNACION_DIRECTA).toBeTruthy();
   });
 
   it('should handle keyboard navigation (Enter key)', () => {
