@@ -60,33 +60,35 @@
   <div class="row mt-5">
     <div class="col-md-12">
       <div class="pull-right">
-        @if(!ocultarBotones){
-        <button
-          type="button"
-          name="modificarMercancias"
-          class="btn btn-default"
-          [disabled]="proveedorTablaSeleccionada.length > 1"
-          (click)="modificarProveedor()"
-        >
-          Modificar
-        </button>
-        <button
-          type="button"
-          name="eliminarMercancias"
-          class="btn btn-danger ms-2"
-          (click)="eliminarProveedorFinal()"
-        >
-          Eliminar
-        </button>
-      }
-        <button
-          type="button"
-          name="agregarMercancias"
-          class="btn btn-primary ms-2"
-          (click)="irAAcciones('../agregar-proveedor')"
-        >
-          Agregar
-        </button>
+        @if(!ocultarBotonesProveedor) {
+          @if(!ocultarBotones ){
+          <button
+            type="button"
+            name="modificarMercancias"
+            class="btn btn-default"
+            [disabled]="proveedorTablaSeleccionada.length > 1"
+            (click)="modificarProveedor()"
+          >
+            Modificar
+          </button>
+          <button
+            type="button"
+            name="eliminarMercancias"
+            class="btn btn-danger ms-2"
+            (click)="eliminarProveedorFinal()"
+          >
+            Eliminar
+          </button>
+          }
+          <button
+            type="button"
+            name="agregarMercancias"
+            class="btn btn-primary ms-2"
+            (click)="irAAcciones('../agregar-proveedor')"
+          >
+            Agregar
+          </button>
+        }
       </div>
     </div>
   </div>

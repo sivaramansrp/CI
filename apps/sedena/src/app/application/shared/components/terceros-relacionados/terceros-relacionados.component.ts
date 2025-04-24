@@ -6,6 +6,7 @@ import { DESTINO_FINAL_ENCABEZADO_DE_TABLA } from '../../models/terceros-relacio
 import { DestinoFinal } from '../../models/terceros-relacionados.model';
 import { Input } from '@angular/core';
 import { OCULTAR_BOTONES } from '../../constants/datos-del-tramilte.enum';
+import { OCULTAR_BOTONES_PROVEEDOR } from '../../constants/datos-del-tramilte.enum';
 import { PROVEEDOR_ENCABEZADO_DE_TABLA } from '../../models/terceros-relacionados.model';
 import { Proveedor } from '../../models/terceros-relacionados.model';
 import { Router } from '@angular/router';
@@ -43,6 +44,12 @@ export class TercerosRelacionadosComponent implements OnInit{
    */
     public ocultarBotones = false;
 
+  /**
+   * Esta propiedad se utiliza para determinar si los botones del proveedor deben estar ocultos.
+   * @type {boolean}
+  */
+  public ocultarBotonesProveedor = false;
+  
   /**
    * Identificador del procedimiento relacionado.
    * @property {number} idProcedimiento
@@ -183,5 +190,7 @@ export class TercerosRelacionadosComponent implements OnInit{
   }
   ngOnInit(): void {
     this.ocultarBotones = OCULTAR_BOTONES.includes(this.idProcedimiento);
+    this.ocultarBotonesProveedor = OCULTAR_BOTONES_PROVEEDOR.includes(this.idProcedimiento);
+
   }
 }
