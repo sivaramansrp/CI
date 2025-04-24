@@ -8,6 +8,13 @@ const ROUTES: Routes = [
     path: 'seleccion-tramite',
     component: SeleccionTramiteComponent,
   },
+  {
+    path: 'permiso-de-exportacion',
+    loadChildren: () =>
+      import('./tramites/280101/permiso-de-exportacion.module').then(
+        (m) => m.PermisoDeExportacionModule
+      )
+    }
 ];
 
 @NgModule({
