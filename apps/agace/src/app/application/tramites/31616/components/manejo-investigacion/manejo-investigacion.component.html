@@ -47,14 +47,30 @@
                     los contenga los mecanismos para informar de forma anónima los problemas relacionados con la
                     seguridad
                 </label>
-                <textarea class="custom-textarea" rows="6" cols="100"  formControlName="relacionadosSeguridad" (change)="setValoresStore(manejo,'relacionadosSeguridad', 'setRelacionadosSeguridad')"></textarea>
+                <textarea id="relacionadosSeguridad" class="custom-textarea" rows="6" cols="100" formControlName="relacionadosSeguridad"
+                    (change)="setValoresStore(manejo,'relacionadosSeguridad', 'setRelacionadosSeguridad')"></textarea>
+                
+                <span
+                    *ngIf="manejo.controls['relacionadosSeguridad']?.errors?.['required'] && manejo.controls['relacionadosSeguridad']?.touched"
+                    class="mensaje-error">
+                    Este campo es obligatorio.
+                </span>
+
             </div>
 
             <div class="col-md-12 text-container mt-4">
                 <label for="reportarIncidentes">
                     <span class="danger">*</span>Quién es el responsable de reportar los incidentes.
                 </label>
-                <textarea class="custom-textarea" rows="6" cols="100" formControlName="reportarIncidentes" (change)="setValoresStore(manejo,'reportarIncidentes', 'setReportarIncidentes')"></textarea>
+                <textarea id="reportarIncidentes" class="custom-textarea" rows="6" cols="100" formControlName="reportarIncidentes"
+                    (change)="setValoresStore(manejo,'reportarIncidentes', 'setReportarIncidentes')"></textarea>
+                
+                <span
+                    *ngIf="manejo.controls['reportarIncidentes']?.errors?.['required'] && manejo.controls['reportarIncidentes']?.touched"
+                    class="mensaje-error">
+                    Este campo es obligatorio.
+                </span>
+              
             </div>
 
             <div class="col-md-12 text-container mt-4">
@@ -62,7 +78,16 @@
                     <span class="danger">*</span>Detalle cómo determina e identifica con qué autoridad comunicarse en
                     distintos supuestos o presunción de actividades sospechosas.
                 </label>
-                <textarea class="custom-textarea" rows="6" cols="100" formControlName="actividadesSospechosas" (change)="setValoresStore(manejo,'actividadesSospechosas', 'setActividadesSospechosas')"></textarea>
+                <textarea id="actividadesSospechosas" class="custom-textarea" rows="6" cols="100"
+                    formControlName="actividadesSospechosas"
+                    (change)="setValoresStore(manejo,'actividadesSospechosas', 'setActividadesSospechosas')"></textarea>
+                
+                <span
+                    *ngIf="manejo.controls['actividadesSospechosas']?.errors?.['required'] && manejo.controls['actividadesSospechosas']?.touched"
+                    class="mensaje-error">
+                    Este campo es obligatorio.
+                </span>
+              
             </div>
 
             <div class="col-md-12 text-container mt-4">
@@ -70,7 +95,15 @@
                     <span class="danger">*</span>Mencione si lleva un registro de reporte de anomalías y/o actividades
                     sospechas y describa brevemente en que sonsiste.
                 </label>
-                <textarea class="custom-textarea" rows="6" cols="100" formControlName="brevementeSonsiste" (change)="setValoresStore(manejo,'brevementeSonsiste', 'setBrevementeSonsiste')"></textarea>
+                <textarea id="brevementeSonsiste" class="custom-textarea" rows="6" cols="100" formControlName="brevementeSonsiste"
+                    (change)="setValoresStore(manejo,'brevementeSonsiste', 'setBrevementeSonsiste')"></textarea>
+                
+                <span
+                    *ngIf="manejo.controls['brevementeSonsiste']?.errors?.['required'] && manejo.controls['brevementeSonsiste']?.touched"
+                    class="mensaje-error">
+                    Este campo es obligatorio.
+                </span>
+
             </div>
         </div>
 
@@ -126,21 +159,46 @@
                     <span class="danger">*</span>Describa el procedimiento documentado para iniciar una investigación en
                     caso de ocurrir algún incidente de seguridad:
                 </label>
-                <textarea class="custom-textarea" rows="6" cols="100" formControlName="incidenteSeguridad" (change)="setValoresStore(manejo,'incidenteSeguridad', 'setIncidenteSeguridad')"></textarea>
+                <textarea id="incidenteSeguridad" class="custom-textarea" rows="6" cols="100" formControlName="incidenteSeguridad"
+                    (change)="setValoresStore(manejo,'incidenteSeguridad', 'setIncidenteSeguridad')"></textarea>
+                
+                <span
+                    *ngIf="manejo.controls['incidenteSeguridad']?.errors?.['required'] && manejo.controls['incidenteSeguridad']?.touched"
+                    class="mensaje-error">
+                    Este campo es obligatorio.
+                </span>
+              
             </div>
 
             <div class="col-md-12 text-container mt-4">
                 <label for="caboInvestigacion">
                     <span class="danger">*</span>Responsable de llevar a cabo la investigación.
                 </label>
-                <textarea class="custom-textarea" rows="6" cols="100" formControlName="caboInvestigacion" (change)="setValoresStore(manejo,'caboInvestigacion', 'setCaboInvestigacion')"></textarea>
+                <textarea id="caboInvestigacion" class="custom-textarea" rows="6" cols="100" formControlName="caboInvestigacion"
+                    (change)="setValoresStore(manejo,'caboInvestigacion', 'setCaboInvestigacion')"></textarea>
+                
+                <span
+                    *ngIf="manejo.controls['caboInvestigacion']?.errors?.['required'] && manejo.controls['caboInvestigacion']?.touched"
+                    class="mensaje-error">
+                    Este campo es obligatorio.
+                </span>
+              
             </div>
 
             <div class="col-md-12 text-container mt-4">
                 <label for="operacionCaboInvestigacion">
                     <span class="danger">*</span>Documentación que integra el expendiente de la investigación de la operación de comercio exterior.
                 </label>
-                <textarea class="custom-textarea" rows="6" cols="100" formControlName="operacionCaboInvestigacion" (change)="setValoresStore(manejo,'operacionCaboInvestigacion', 'setOperacionCaboInvestigacion')"></textarea>
+                <textarea id="operacionCaboInvestigacion" class="custom-textarea" rows="6" cols="100"
+                    formControlName="operacionCaboInvestigacion"
+                    (change)="setValoresStore(manejo,'operacionCaboInvestigacion', 'setOperacionCaboInvestigacion')"></textarea>
+                
+                <span
+                    *ngIf="manejo.controls['operacionCaboInvestigacion']?.errors?.['required'] && manejo.controls['operacionCaboInvestigacion']?.touched"
+                    class="mensaje-error">
+                    Este campo es obligatorio.
+                </span>
+              
             </div>
         </div>
     </form>
