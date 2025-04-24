@@ -358,40 +358,51 @@
         </p>
       </div>
 
-      <div class="form-group">
-        <label class="custom-required" for="planEmergencia">
-          * Indique si cuenta con procedimiento o plan de emergencia documentado, para asegurar la continuidad del
-          negocio
-          en caso de una situación de emergencia o de seguridad.
+      <div class="col-md-12 text-container mt-4">
+        <label for="planEmergencia">
+          <span class="danger">*</span>Indique si cuenta con procedimiento o plan de emergencia documentado, para
+          asegurar la continuidad del
+          negocio en caso de una situación de emergencia o de seguridad.que afecte el desarrollo normal de las
+          actividades de comercio exterior de la empresa
         </label>
-        <div>
-          <input type="radio" id="planEmergenciaSi" formControlName="planEmergencia" value="Si">
-          <label for="planEmergenciaSi">Si</label>
-          <input type="radio" id="planEmergenciaNo" formControlName="planEmergencia" value="No">
-          <label for="planEmergenciaNo">No</label>
+        <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'" class="gap"
+          formControlName="enfoqueAuditoria"
+          (change)="setValoresStore(contingencyForm,'planEmergencia', 'setPlanEmergencia')"
+          (valueChange)="inputChecked($event)"></app-input-radio>
+      </div>
+      @if(anexe){
+      <div>
+        <div class="row mt-4 alert-text">
+          <div class="col-md-12 text-container">
+            <p><span class="danger">*</span>Anexe el procedimiento o plan de contingencia y/o emergencia documentado,
+              para
+              asegurar la continuidad del negocio en caso de una situación de emergencia o de seguridad, que afecte el
+              desarrollo normal de las actividades de comercio exterior de la empresa de mensajería y paquetería.
+              Este procedimiento debe incluir, de manera enunciativa mas no limitativa, lo siguiente:</p>
+          </div>
+        </div>
+
+        <div class="col-md-12 text-container mt-4">
+          <div class="mt-2 alert-text">
+            <ul>
+              <div class="centered-list-wrapper">
+                <ol type="a">
+                  <li>Qué situaciones contempla, describiendo el plan de acción y pasos que hay que seguir en caso de
+                    crisis, así como las tareas que el personal tenga asignadas durante el manejo de dichas
+                    contingencias.
+                  </li>
+                  <li>Qué mecanismos utiliza para garantizar que el plan de continuidad del negocio sea efectivo.</li>
+                  <li>Contemplar la programación y realización de simulacros anuales y cómo se documentan (por ejemplo:
+                    reportes de resultados, minutas o informes, mismos que deberán ir acompañados de videograbaciones,
+                    fotografías, etcétera, que demuestren su ejecución).
+                  </li>
+                </ol>
+              </div>
+            </ul>
+          </div>
         </div>
       </div>
-      <div class="form-group">
-        <label class="custom-required" for="situacionesContempladas">
-          a. ¿Qué situaciones contempla, describiendo el plan de acción y pasos que hay que seguir en caso de crisis?
-        </label>
-        <textarea class="custom-textarea" rows="6" cols="100" id="situacionesContempladas"
-          formControlName="situacionesContempladas"></textarea>
-      </div>
-      <div class="form-group">
-        <label class="custom-required" for="mecanismosContinuidad">
-          b. ¿Qué mecanismos utiliza para garantizar que el plan de continuidad del negocio sea efectivo?
-        </label>
-        <textarea class="custom-textarea" rows="6" cols="100" id="mecanismosContinuidad"
-          formControlName="mecanismosContinuidad"></textarea>
-      </div>
-      <div class="form-group">
-        <label class="custom-required" for="simulacrosDocumentacion">
-          c. Contemplar la programación y realización de simulacros anuales y cómo se documentan.
-        </label>
-        <textarea class="custom-textarea" rows="6" cols="100" id="simulacrosDocumentacion"
-          formControlName="simulacrosDocumentacion"></textarea>
-      </div>
+      }
     </div>
   </form>
 </div>

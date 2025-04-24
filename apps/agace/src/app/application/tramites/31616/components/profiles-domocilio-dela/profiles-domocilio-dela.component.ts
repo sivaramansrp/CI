@@ -188,6 +188,30 @@ export class ProfilesDomocilioDelaComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * @property {boolean} anexe
+   * @description
+   * Propiedad booleana que indica si se debe anexar información adicional.
+   * Se actualiza en función del valor de un checkbox mediante el método `inputChecked`.
+   * Valor inicial: `false`.
+   */
+  public anexe = false;
+
+  /**
+   * @method inputChecked
+   * @description
+   * Método que verifica el valor de un checkbox y actualiza la propiedad `anexe` en función de este.
+   * Si el valor del checkbox es `'1'`, establece `anexe` como `true`. En caso contrario, lo establece como `false`.
+   * @param {string | number} checkBoxValue - Valor del checkbox que se evalúa.
+   */
+  public inputChecked(checkBoxValue: string | number): void {
+    if (checkBoxValue === '1') {
+      this.anexe = true;
+    } else {
+      this.anexe = false;
+    }
+  }
+
+  /**
    * @method ngOnDestroy
    * @description
    * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
