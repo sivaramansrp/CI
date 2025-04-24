@@ -24,7 +24,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Subject, Subscription, map, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { AvisoModifyService } from '../../services/aviso-modify.service';
 import { CommonModule } from '@angular/common';
 import { Modal } from 'bootstrap';
@@ -133,21 +133,6 @@ export class FusionOEscisionComponent
   public correctamenteNotificacion!: Notificacion;
 
   /**
-   * Suscripción para obtener la capacidad de almacenamiento disponible en el sistema.
-   */
-  getCapacidadAlmacenamientoSubscription!: Subscription;
-
-  /**
-   * Suscripción para la gestión de datos relacionados con la fusión o escisión en el grid.
-   */
-  getGridsubFusionOescisionSubscription!: Subscription;
-
-  /**
-   * Suscripción para cargar información de la persona en el proceso de fusión.
-   */
-  cargarDatosPersonaFusionSubscription!: Subscription;
-
-  /**
    * Constructor del componente, inyecta formularios, servicios y manejo de estado.
    */
   constructor(
@@ -171,8 +156,9 @@ export class FusionOEscisionComponent
 
   /** Llama al servicio para obtener opciones de capacidad de almacenamiento */
   getCapacidadAlmacenamiento(): void {
-    this.getCapacidadAlmacenamientoSubscription =
-      this.AvisoModifyService.getCapacidadAlmacenamiento().subscribe((resp) => {
+      this.AvisoModifyService.getCapacidadAlmacenamiento()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((resp) => {
         this.radioOptions = Object.assign([], resp);
       });
   }
@@ -254,15 +240,16 @@ export class FusionOEscisionComponent
 
   /** Carga los datos de persona fusionada desde el servicio y los guarda en el store */
   cargarDatosPersonaFusion(): void {
-    this.cargarDatosPersonaFusionSubscription =
       this.AvisoModifyService.cargarDatosPersonaFusion()
         .pipe(
+          takeUntil(this.destroy$),
           map((resp) => {
             this.personaFusionEscisionDTO.patchValue(resp);
             this.store.SetpersonaFusionEscisionDTO(resp);
           })
         )
         .subscribe();
+        
   }
 
   /** Carga los datos de persona fusionada desde el query del store hacia el modal */
@@ -279,8 +266,9 @@ export class FusionOEscisionComponent
   }
 
   getGridsubFusionOescision(): void {
-    this.getGridsubFusionOescisionSubscription =
-      this.AvisoModifyService.gridsubFusionOescision().subscribe(
+      this.AvisoModifyService.gridsubFusionOescision()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(
         (resp: TableDataNgTable) => {
           this.gridFusionEscisionHeader = resp.tableHeader; // Asigna los encabezados para los domicilios nuevos
         }
@@ -404,26 +392,5 @@ export class FusionOEscisionComponent
      * Completa el flujo de datos, asegurando que no se envíen más valores.
      */
     this.destroy$.complete();
-
-    /**
-     * Cancela la suscripción para obtener la capacidad de almacenamiento si está activa.
-     */
-    if (this.getCapacidadAlmacenamientoSubscription) {
-      this.getCapacidadAlmacenamientoSubscription.unsubscribe();
-    }
-
-    /**
-     * Cancela la suscripción para gestionar datos relacionados con la fusión o escisión en el grid si está activa.
-     */
-    if (this.getGridsubFusionOescisionSubscription) {
-      this.getGridsubFusionOescisionSubscription.unsubscribe();
-    }
-
-    /**
-     * Cancela la suscripción para cargar información de la persona en el proceso de fusión si está activa.
-     */
-    if (this.cargarDatosPersonaFusionSubscription) {
-      this.cargarDatosPersonaFusionSubscription.unsubscribe();
-    }
   }
 }

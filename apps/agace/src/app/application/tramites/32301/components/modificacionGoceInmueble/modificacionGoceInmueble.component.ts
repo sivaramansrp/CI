@@ -15,11 +15,29 @@ import {
   TableComponent,
   TituloComponent,
 } from '@ng-mf/data-access-user';
-import { CVE_TIPO_DOC_DATA, FRACCION_ARANCELARIA_DATA, MESSAGE_NAC, MODIFICACION_PARTES_HEADER, MOSTRAR_GRID_NUEVO_HEADER, RADIO_OPTIONS } from '../../enums/modificacionGoceInmueble.enum';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ModificacionGoceInmueble, TableDataNgTable} from '../../models/avisomodify.model';
-import { REGEX_POSTAL, REGEX_RFC } from '@libs/shared/data-access-user/src/tramites/constantes/regex.constants';
-import { Subject, Subscription, takeUntil } from 'rxjs';
+import {
+  CVE_TIPO_DOC_DATA,
+  FRACCION_ARANCELARIA_DATA,
+  MESSAGE_NAC,
+  MODIFICACION_PARTES_HEADER,
+  MOSTRAR_GRID_NUEVO_HEADER,
+  RADIO_OPTIONS,
+} from '../../enums/modificacionGoceInmueble.enum';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import {
+  ModificacionGoceInmueble,
+  TableDataNgTable,
+} from '../../models/avisomodify.model';
+import {
+  REGEX_POSTAL,
+  REGEX_RFC,
+} from '@libs/shared/data-access-user/src/tramites/constantes/regex.constants';
+import { Subject, takeUntil } from 'rxjs';
 import { AvisoModifyService } from '../../services/aviso-modify.service';
 import { CommonModule } from '@angular/common';
 import { Modal } from 'bootstrap';
@@ -140,22 +158,6 @@ export class ModificacionGoceInmuebleComponent
    * Se usa para manejar notificaciones generales sobre modificaciones dentro del sistema.
    */
   public modificarNotificacion!: Notificacion;
-
-  /**
-   * Suscripción para obtener información sobre entidades federativas.
-   */
-  getEntidadFederativaSubscribe!: Subscription;
-
-  /**
-   * Suscripción para actualizar y gestionar la información modificada de domicilios en el grid.
-   */
-  getGridDomiciliosModificadoSubscription!: Subscription;
-
-  /**
-   * Suscripción para controlar la visualización de datos modificados en el grid.
-   */
-  getGridMostrarGridModificadoSubscription!: Subscription;
-
   constructor(
     private fb: FormBuilder,
     private AvisoModifyService: AvisoModifyService,
@@ -179,32 +181,31 @@ export class ModificacionGoceInmuebleComponent
 
   /** Método para obtener las entidades federativas del servicio */
   getEntidadFederativa(): void {
-    this.getEntidadFederativaSubscribe =
-      this.AvisoModifyService.getEntidadFederativa().subscribe((resp) => {
+    this.AvisoModifyService.getEntidadFederativa()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((resp) => {
         this.entidadFederativa = Object.assign([], resp); // Asigna los datos al catálogo de entidades federativas
       });
   }
 
   /** Método para obtener los domicilios modificados del servicio */
   getGridDomiciliosModificados(): void {
-    this.getGridDomiciliosModificadoSubscription =
-      this.AvisoModifyService.getGridDomiciliosModificados().subscribe(
-        (res: TableDataNgTable) => {
-          this.gridDomiciliosModificadosHeader = res.tableHeader; // Asigna los encabezados de la tabla
-          this.gridDomiciliosModificadosData = res.tableBody; // Asigna los datos de la tabla
-        }
-      );
+    this.AvisoModifyService.getGridDomiciliosModificados()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res: TableDataNgTable) => {
+        this.gridDomiciliosModificadosHeader = res.tableHeader; // Asigna los encabezados de la tabla
+        this.gridDomiciliosModificadosData = res.tableBody; // Asigna los datos de la tabla
+      });
   }
 
   /** Método para obtener los datos de la tabla que se muestra para la modificación */
   getGridMostrarGridModificado(): void {
-    this.getGridMostrarGridModificadoSubscription =
-      this.AvisoModifyService.getGridMostrarGridModificado().subscribe(
-        (resp: TableDataNgTable) => {
-          this.mostrarGridNuevoHeader = resp.tableHeader; // Asigna los encabezados para los domicilios nuevos
-          this.mostrarGridNuevoHeaderData = resp.tableBody; // Asigna los datos de la tabla para domicilios nuevos
-        }
-      );
+    this.AvisoModifyService.getGridMostrarGridModificado()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((resp: TableDataNgTable) => {
+        this.mostrarGridNuevoHeader = resp.tableHeader; // Asigna los encabezados para los domicilios nuevos
+        this.mostrarGridNuevoHeaderData = resp.tableBody; // Asigna los datos de la tabla para domicilios nuevos
+      });
   }
 
   /** Inicializa las instancias de los modales después de que la vista está completamente cargada */
@@ -473,28 +474,10 @@ export class ModificacionGoceInmuebleComponent
 
   /** Maneja la destrucción del componente y la limpieza de observables */
   ngOnDestroy(): void {
-    this.destroy$.next(); // Envía una señal para destruir los observables
-    this.destroy$.complete(); // Completa el Subject para evitar memory leaks
+    /** Envía una señal para destruir los observables */
+    this.destroy$.next();
 
-    /**
-     * Cancela la suscripción a la información de entidades federativas si está activa.
-     */
-    if (this.getEntidadFederativaSubscribe) {
-      this.getEntidadFederativaSubscribe.unsubscribe();
-    }
-
-    /**
-     * Cancela la suscripción a la información de domicilios modificados si está activa.
-     */
-    if (this.getGridDomiciliosModificadoSubscription) {
-      this.getGridDomiciliosModificadoSubscription.unsubscribe();
-    }
-
-    /**
-     * Cancela la suscripción para mostrar datos modificados en el grid si está activa.
-     */
-    if (this.getGridMostrarGridModificadoSubscription) {
-      this.getGridMostrarGridModificadoSubscription.unsubscribe();
-    }
+    /** Completa el Subject para evitar memory leaks */
+    this.destroy$.complete();
   }
 }

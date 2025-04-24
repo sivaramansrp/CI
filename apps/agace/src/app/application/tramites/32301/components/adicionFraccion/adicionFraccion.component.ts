@@ -27,7 +27,7 @@ import {
   GRID_FRACCIONES_HEADER,
   MESSAGE_FRACCION,
 } from '../../constantes/importador-exportador.enum';
-import { Subject, Subscription } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { ALOTO_FRACCIONES } from '../../enums/adicionFraccion.enum';
 import { AvisoModifyService } from '../../services/aviso-modify.service';
 import { CROSLISTA_DE_PAISES } from '../../enums/pantallas-constante.enum';
@@ -191,32 +191,6 @@ export class AdicionFraccionComponent
    * Subject utilizado para destruir suscripciones y evitar fugas de memoria.
    */
   private destroy$: Subject<void> = new Subject<void>();
-
-  /**
-   * Suscripción para obtener opciones adicionales de fracción.
-   */
-  getAdicianFraccionOptionSubscription!: Subscription;
-
-  /**
-   * Suscripción para gestionar opciones del módulo Nico relacionadas con fracciones.
-   */
-  getAdicianFraccionNicoModOptionsSubscription!: Subscription;
-
-  /**
-   * Suscripción para manejar opciones de unidad de medida en el módulo de fracciones.
-   */
-  getAdicianFraccionUnidadMedidaModOptSubscription!: Subscription;
-
-  /**
-   * Suscripción para obtener opciones de procesos relacionados con fracciones.
-   */
-  getAdicianFraccionActivRelProcModOptSubscription!: Subscription;
-
-  /**
-   * Suscripción para gestionar la clave de correlación de fracciones en el módulo correspondiente.
-   */
-  getAdicianFraccioncveFraccionCorrelaModOptSubscription!: Subscription;
-
   /**
    * Constructor donde se inyectan servicios y se inicializa el formulario principal.
    */
@@ -265,8 +239,9 @@ export class AdicionFraccionComponent
    * Obtiene las opciones para los botones de radio relacionados con fracciones.
    */
   getAdicianFraccionOption(): void {
-    this.getAdicianFraccionOptionSubscription =
-      this.AvisoModifyService.getAdicianFraccionOption().subscribe((resp) => {
+    this.AvisoModifyService.getAdicianFraccionOption()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((resp) => {
         this.radioOptions = Object.assign([], resp);
       });
   }
@@ -274,48 +249,44 @@ export class AdicionFraccionComponent
    * Obtiene las opciones de modificación de clave nacional única.
    */
   getAdicianFraccionNicoModOptions(): void {
-    this.getAdicianFraccionNicoModOptionsSubscription =
-      this.AvisoModifyService.getAdicianFraccionNicoModOptions().subscribe(
-        (resp) => {
-          this.cveNicoMod = Object.assign([], resp);
-        }
-      );
+    this.AvisoModifyService.getAdicianFraccionNicoModOptions()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((resp) => {
+        this.cveNicoMod = Object.assign([], resp);
+      });
   }
 
   /**
    * Obtiene las opciones de modificación de unidad de medida.
    */
   getAdicianFraccionUnidadMedidaModOption(): void {
-    this.getAdicianFraccionUnidadMedidaModOptSubscription =
-      this.AvisoModifyService.getAdicianFraccionUnidadMedidaModOption().subscribe(
-        (resp) => {
-          this.unidadMedidaMod = Object.assign([], resp);
-        }
-      );
+    this.AvisoModifyService.getAdicianFraccionUnidadMedidaModOption()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((resp) => {
+        this.unidadMedidaMod = Object.assign([], resp);
+      });
   }
 
   /**
    * Obtiene las opciones de modificación de actividad relacionada con el proceso.
    */
   getAdicianFraccionActivRelProcModOption(): void {
-    this.getAdicianFraccionActivRelProcModOptSubscription =
-      this.AvisoModifyService.getAdicianFraccionActivRelProcModOption().subscribe(
-        (resp) => {
-          this.activRelProcMod = Object.assign([], resp);
-        }
-      );
+    this.AvisoModifyService.getAdicianFraccionActivRelProcModOption()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((resp) => {
+        this.activRelProcMod = Object.assign([], resp);
+      });
   }
 
   /**
    * Obtiene las opciones de modificación de la clave de fracción de correlación.
    */
   getAdicianFraccioncveFraccionCorrelacionModOption(): void {
-    this.getAdicianFraccioncveFraccionCorrelaModOptSubscription =
-      this.AvisoModifyService.getAdicianFraccioncveFraccionCorrelacionModOption().subscribe(
-        (resp) => {
-          this.cveFraccionCorrelacionMod = Object.assign([], resp);
-        }
-      );
+    this.AvisoModifyService.getAdicianFraccioncveFraccionCorrelacionModOption()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((resp) => {
+        this.cveFraccionCorrelacionMod = Object.assign([], resp);
+      });
   }
 
   /**
@@ -469,40 +440,5 @@ export class AdicionFraccionComponent
      * Completa el flujo de datos, asegurando que no se envíen más valores.
      */
     this.destroy$.complete();
-
-    /**
-     * Cancela la suscripción a las opciones adicionales de fracción si está activa.
-     */
-    if (this.getAdicianFraccionOptionSubscription) {
-      this.getAdicianFraccionOptionSubscription.unsubscribe();
-    }
-
-    /**
-     * Cancela la suscripción a las opciones del módulo Nico relacionadas con fracciones si está activa.
-     */
-    if (this.getAdicianFraccionNicoModOptionsSubscription) {
-      this.getAdicianFraccionNicoModOptionsSubscription.unsubscribe();
-    }
-
-    /**
-     * Cancela la suscripción a las opciones de unidad de medida en el módulo de fracciones si está activa.
-     */
-    if (this.getAdicianFraccionUnidadMedidaModOptSubscription) {
-      this.getAdicianFraccionUnidadMedidaModOptSubscription.unsubscribe();
-    }
-
-    /**
-     * Cancela la suscripción a los procesos relacionados con fracciones si está activa.
-     */
-    if (this.getAdicianFraccionActivRelProcModOptSubscription) {
-      this.getAdicianFraccionActivRelProcModOptSubscription.unsubscribe();
-    }
-
-    /**
-     * Cancela la suscripción a la clave de correlación de fracciones si está activa.
-     */
-    if (this.getAdicianFraccioncveFraccionCorrelaModOptSubscription) {
-      this.getAdicianFraccioncveFraccionCorrelaModOptSubscription.unsubscribe();
-    }
   }
 }

@@ -26,7 +26,7 @@ import {
   ModificacionSocios,
   TableDataNgTable,
 } from '../../models/avisomodify.model';
-import { Subject, Subscription, takeUntil } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { AvisoModifyService } from '../../services/aviso-modify.service';
 import { CommonModule } from '@angular/common';
 import { MESSAGE_NAC } from '../../enums/modificacionSocios.enum';
@@ -117,35 +117,6 @@ export class ModificacionSociosComponent
    * Se utiliza para almacenar y gestionar notificaciones que indican acciones exitosas.
    */
   public correctamenteNotificacion!: Notificacion;
-
-  /**
-   * Suscripción para obtener información sobre la característica de una entidad.
-   */
-  getEnSuCaracterDeSubscription!: Subscription;
-
-  /**
-   * Suscripción para la gestión de datos relacionados con la nacionalidad.
-   */
-  getNacionalidadSubscription!: Subscription;
-
-  /**
-   * Suscripción para obtener información sobre el estado preoperativo.
-   */
-  getPreOperativoSubscription!: Subscription;
-
-  /**
-   * Suscripción para cargar información de los miembros de la empresa en el grid.
-   */
-  getGridMiembrosEmpresaSubscription!: Subscription;
-
-  /**
-   * Suscripción para manejar la sección de miembros revocados.
-   */
-  getSeccionMiembrosRevocadoSubscription!: Subscription;
-
-  /**
-   * Constructor de la clase, donde se inyectan los servicios y almacenes necesarios.
-   */
   /**
    * Constructor de la clase, donde se inyectan los servicios y almacenes necesarios
    * para la gestión del trámite 32301 y la manipulación de formularios reactivos.
@@ -306,8 +277,9 @@ export class ModificacionSociosComponent
     /**
      * Suscripción al servicio que obtiene las opciones de "En su carácter de".
      */
-    this.getEnSuCaracterDeSubscription =
-      this.AvisoModifyService.getEnSuCaracterDe().subscribe((resp) => {
+    this.AvisoModifyService.getEnSuCaracterDe()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((resp) => {
         /**
          * Asigna la respuesta recibida a la variable enSuCaracterDeOptions,
          * duplicando su contenido para evitar modificaciones inesperadas.
@@ -324,8 +296,9 @@ export class ModificacionSociosComponent
     /**
      * Suscripción al servicio que obtiene las opciones de nacionalidad.
      */
-    this.getNacionalidadSubscription =
-      this.AvisoModifyService.getNacionalidad().subscribe((resp) => {
+    this.AvisoModifyService.getNacionalidad()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((resp) => {
         /**
          * Asigna la respuesta recibida a la variable nacionalidadOptions,
          * duplicando su contenido para evitar modificaciones inesperadas.
@@ -341,8 +314,9 @@ export class ModificacionSociosComponent
     /**
      * Suscripción al servicio que obtiene las opciones del estado preoperativo.
      */
-    this.getPreOperativoSubscription =
-      this.AvisoModifyService.getPreOperativo().subscribe((resp) => {
+    this.AvisoModifyService.getPreOperativo()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((resp) => {
         /**
          * Asigna la respuesta recibida a la variable radioOptions,
          * duplicando su contenido para evitar modificaciones inesperadas.
@@ -359,20 +333,19 @@ export class ModificacionSociosComponent
     /**
      * Suscripción al servicio que recupera la información de los miembros de la empresa.
      */
-    this.getGridMiembrosEmpresaSubscription =
-      this.AvisoModifyService.getGridMiembrosEmpresas().subscribe(
-        (resp: TableDataNgTable) => {
-          /**
-           * Asigna los encabezados de la tabla a la variable tableColumns.
-           */
-          this.tableColumns = resp.tableHeader;
+    this.AvisoModifyService.getGridMiembrosEmpresas()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((resp: TableDataNgTable) => {
+        /**
+         * Asigna los encabezados de la tabla a la variable tableColumns.
+         */
+        this.tableColumns = resp.tableHeader;
 
-          /**
-           * Asigna los datos del cuerpo de la tabla a la variable mercanciasData.
-           */
-          this.mercanciasData = resp.tableBody;
-        }
-      );
+        /**
+         * Asigna los datos del cuerpo de la tabla a la variable mercanciasData.
+         */
+        this.mercanciasData = resp.tableBody;
+      });
   }
 
   /**
@@ -383,83 +356,76 @@ export class ModificacionSociosComponent
     /**
      * Suscripción al servicio que recupera la información de los miembros revocados.
      */
-    this.getSeccionMiembrosRevocadoSubscription =
-      this.AvisoModifyService.getSeccionMiembrosRevocados().subscribe(
-        (resp: TableDataNgTable) => {
-          /**
-           * Asigna los encabezados de la tabla a la variable declaretableColumns.
-           */
-          this.declaretableColumns = resp.tableHeader;
-        }
-      );
+    this.AvisoModifyService.getSeccionMiembrosRevocados()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((resp: TableDataNgTable) => {
+        /**
+         * Asigna los encabezados de la tabla a la variable declaretableColumns.
+         */
+        this.declaretableColumns = resp.tableHeader;
+      });
   }
 
   /**
- * Método para actualizar la paginación de la tabla de miembros de la empresa.
- * Se calcula el índice de inicio y se ajusta el subconjunto de datos que se mostrará.
- */
-updatePagination(): void {
-
-  /**
-   * Calcula el índice de inicio basado en la página actual y la cantidad de elementos por página.
+   * Método para actualizar la paginación de la tabla de miembros de la empresa.
+   * Se calcula el índice de inicio y se ajusta el subconjunto de datos que se mostrará.
    */
-  const START_INDEX = (this.currentPage - 1) * this.itemsPerPage;
+  updatePagination(): void {
+    /**
+     * Calcula el índice de inicio basado en la página actual y la cantidad de elementos por página.
+     */
+    const START_INDEX = (this.currentPage - 1) * this.itemsPerPage;
+
+    /**
+     * Obtiene un subconjunto de datos de la tabla de miembros de la empresa,
+     * comenzando desde el índice calculado y mostrando únicamente la cantidad de elementos por página.
+     */
+    this.mercanciasData = this.mercanciasData.slice(
+      START_INDEX,
+      START_INDEX + this.itemsPerPage
+    );
+  }
 
   /**
-   * Obtiene un subconjunto de datos de la tabla de miembros de la empresa,
-   * comenzando desde el índice calculado y mostrando únicamente la cantidad de elementos por página.
+   * Método para cambiar el número de elementos mostrados por página en la tabla.
+   * Se actualiza el valor y se reinicia la paginación.
+   *
+   * @param itemsPerPage - Número de elementos por página seleccionados.
    */
-  this.mercanciasData = this.mercanciasData.slice(
-    START_INDEX,
-    START_INDEX + this.itemsPerPage
-  );
-}
+  onItemsPerPageChange(itemsPerPage: number): void {
+    /**
+     * Asigna el número de elementos por página a la variable itemsPerPage.
+     */
+    this.itemsPerPage = itemsPerPage;
 
+    /**
+     * Reinicia la paginación, estableciendo la página actual en la primera.
+     */
+    this.currentPage = 1;
 
- /**
- * Método para cambiar el número de elementos mostrados por página en la tabla.
- * Se actualiza el valor y se reinicia la paginación.
- *
- * @param itemsPerPage - Número de elementos por página seleccionados.
- */
-onItemsPerPageChange(itemsPerPage: number): void {
+    /**
+     * Llama al método para actualizar la paginación de la tabla.
+     */
+    this.updatePagination();
+  }
 
   /**
-   * Asigna el número de elementos por página a la variable itemsPerPage.
+   * Método para cambiar la página actual de la tabla.
+   * Se actualiza el número de página y se llama a la función de paginación.
+   *
+   * @param page - Número de la nueva página seleccionada.
    */
-  this.itemsPerPage = itemsPerPage;
+  onPageChange(page: number): void {
+    /**
+     * Asigna el número de página seleccionada a la variable currentPage.
+     */
+    this.currentPage = page;
 
-  /**
-   * Reinicia la paginación, estableciendo la página actual en la primera.
-   */
-  this.currentPage = 1;
-
-  /**
-   * Llama al método para actualizar la paginación de la tabla.
-   */
-  this.updatePagination();
-}
-
-
-  /**
- * Método para cambiar la página actual de la tabla.
- * Se actualiza el número de página y se llama a la función de paginación.
- *
- * @param page - Número de la nueva página seleccionada.
- */
-onPageChange(page: number): void {
-
-  /**
-   * Asigna el número de página seleccionada a la variable currentPage.
-   */
-  this.currentPage = page;
-
-  /**
-   * Llama al método para actualizar la paginación de la tabla.
-   */
-  this.updatePagination();
-}
-
+    /**
+     * Llama al método para actualizar la paginación de la tabla.
+     */
+    this.updatePagination();
+  }
 
   /**
    * Método que se ejecuta después de que la vista del componente ha sido completamente cargada.
@@ -656,40 +622,5 @@ onPageChange(page: number): void {
      * Completa el flujo de datos, asegurando que no se envíen más valores.
      */
     this.destroy$.complete();
-
-    /**
-     * Cancela la suscripción a la información de "En su carácter de" si está activa.
-     */
-    if (this.getEnSuCaracterDeSubscription) {
-      this.getEnSuCaracterDeSubscription.unsubscribe();
-    }
-
-    /**
-     * Cancela la suscripción a la información de nacionalidad si está activa.
-     */
-    if (this.getNacionalidadSubscription) {
-      this.getNacionalidadSubscription.unsubscribe();
-    }
-
-    /**
-     * Cancela la suscripción a los datos del estado preoperativo si está activa.
-     */
-    if (this.getPreOperativoSubscription) {
-      this.getPreOperativoSubscription.unsubscribe();
-    }
-
-    /**
-     * Cancela la suscripción para la gestión de miembros de la empresa si está activa.
-     */
-    if (this.getGridMiembrosEmpresaSubscription) {
-      this.getGridMiembrosEmpresaSubscription.unsubscribe();
-    }
-
-    /**
-     * Cancela la suscripción para la sección de miembros revocados si está activa.
-     */
-    if (this.getSeccionMiembrosRevocadoSubscription) {
-      this.getSeccionMiembrosRevocadoSubscription.unsubscribe();
-    }
   }
 }
