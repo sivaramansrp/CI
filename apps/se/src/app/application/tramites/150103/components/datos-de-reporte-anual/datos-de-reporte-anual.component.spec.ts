@@ -1,5 +1,5 @@
-// @ts-nocheck
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -22,8 +22,8 @@ class MockSolicitud150103Query {}
 
 
 describe('DatosDeReporteAnualComponent', () => {
-  let fixture;
-  let component;
+  let fixture: ComponentFixture<DatosDeReporteAnualComponent>;
+  let component: { ngOnDestroy: () => void; fb: { group?: any; }; solicitud150103State: { ventasTotales?: any; totalExportaciones?: any; totalImportaciones?: any; saldo?: any; porcentajeExportacion?: any; }; solicitud150103Query: { seleccionarSolicitud$?: any; }; ngOnInit: () => void; formReporteAnnual: { get?: any; }; solicitud150103Store: { actualizarPorcentajeExportacion?: any; actualizarSaldo?: any; actualizarTotalExportaciones?: any; actualizarVentasTotales?: any; actualizarTotalImportaciones?: any; }; calcularReporteAnnual: jest.Mock<any, any, any> | (() => void); obtenerTotalExportaciones: (arg0: { target: { value: {}; }; }) => void; obtenerVentasTotales: (arg0: { target: { value: {}; }; }) => void; obtenerTotalImportaciones: (arg0: { target: { value: {}; }; }) => void; destroyed$: { next?: any; complete?: any; }; };
 
   beforeEach(() => {
     TestBed.configureTestingModule({

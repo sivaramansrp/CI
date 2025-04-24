@@ -114,7 +114,7 @@ porcentajeExportacion: '0',
 /**
  * @description Servicio que gestiona el estado de la solicitud utilizando Akita.
  * Proporciona métodos para actualizar distintas propiedades del estado.
- * @class Solicitud150102Store
+ * @class Solicitud150103Store
  */
 export class Solicitud150103Store extends Store<Solicitud150103State> {
   /**

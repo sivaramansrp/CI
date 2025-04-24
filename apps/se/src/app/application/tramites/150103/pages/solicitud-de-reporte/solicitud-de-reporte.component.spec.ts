@@ -1,12 +1,8 @@
-// @ts-nocheck
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { By } from '@angular/platform-browser';
-import { Observable, of as observableOf, throwError } from 'rxjs';
 
-import { Component } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+
 import { SolicitudDeReporteComponent } from './solicitud-de-reporte.component';
 
 @Directive({ selector: '[myCustom]' })
@@ -15,8 +11,8 @@ class MyCustomDirective {}
 
 
 describe('SolicitudDeReporteComponent', () => {
-  let fixture;
-  let component;
+  let fixture: ComponentFixture<SolicitudDeReporteComponent>;
+  let component: { ngOnDestroy: () => void; wizardComponent: { siguiente?: any; atras?: any; }; getValorIndice: (arg0: { valor: {}; accion: {}; }) => void; };
 
   beforeEach(() => {
     TestBed.configureTestingModule({

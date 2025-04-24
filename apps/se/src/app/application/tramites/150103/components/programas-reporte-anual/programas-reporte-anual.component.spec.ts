@@ -1,5 +1,5 @@
-// @ts-nocheck
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -31,8 +31,8 @@ class MockInformeAnualProgramaService {
 }
 
 describe('ProgramasReporteAnualComponent', () => {
-  let fixture;
-  let component;
+  let fixture: ComponentFixture<ProgramasReporteAnualComponent>;
+  let component: { ngOnDestroy: () => void; fb: { group?: any; }; solicitud150103State: { inicio?: any; fin?: any; folioPrograma?: any; modalidad?: any; tipoPrograma?: any; estatus?: any; }; solicitud150103Query: { seleccionarSolicitud$?: any; }; ngOnInit: () => void; informaAnualPrograma: { obtenerReporteFechas?: any; obtenerProgramasReporte?: any; }; solicitud150103Store: { actualizarInicio?: any; actualizarFin?: any; actualizarFolioPrograma?: any; actualizarModalidad?: any; actualizarTipoPrograma?: any; actualizarEstatus?: any; }; obtenerReporteFechas: () => void; obtenerProgramasReporte: () => void; filaDeInformeSeleccionada: { emit?: any; }; actualizarProgramasReporte: (arg0: { folioPrograma: {}; modalidad: {}; tipoPrograma: {}; estatus: {}; }) => void; destroyed$: { next?: any; complete?: any; }; };
 
   beforeEach(() => {
     TestBed.configureTestingModule({
