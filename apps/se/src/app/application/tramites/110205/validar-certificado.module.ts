@@ -1,13 +1,12 @@
-import { CommonModule } from '@angular/common';
-import { NgModule } from '@angular/core';
-
 import { BtnContinuarComponent, CatalogoSelectComponent, FirmaElectronicaComponent, InputFechaComponent, SharedModule, SolicitanteComponent, TituloComponent, WizardComponent } from '@libs/shared/data-access-user/src';
 import { CertificadoDeOrigenComponent } from '../../shared/components/certificado-de-origen/certificado-de-origen.component';
 import { CertificadoOrigenComponent } from './components/certificado-origen/certificado-origen.component';
+import { CommonModule } from '@angular/common';
 import { DatosCertificadoDeComponent } from '../../shared/components/datos-certificado-de/datos-certificado-de.component';
 import { DatosDelDestinatarioComponent } from '../../shared/components/datos-del-destinatario/datos-del-destinatario.component';
 import { DestinatarioComponent } from '../../shared/components/destinatario/destinatario.component';
 import { MercanciaComponent } from './components/mercancia/mercancia.component';
+import { NgModule } from '@angular/core';
 import { PasoDosComponent } from './page/paso-dos/paso-dos.component';
 import { PasoUnoComponent } from './page/paso-uno/paso-uno.component';
 import { PeruCertificadoComponent } from './page/peru-certificado/peru-certificado.component';
@@ -19,20 +18,16 @@ import { RouterModule } from '@angular/router';
 import { ValidarCertificadoRoutingModule } from './validar-certificado-routing.module';
 
 
-
-
-
-
 @NgModule({
   declarations: [
-    PeruCertificadoComponent,
     PasoUnoComponent,
     PasoDosComponent,
-    CertificadoOrigenComponent,
-    MercanciaComponent,
-    PeruDatosCertificadoComponent,
     PeruDestinatarioComponent,
+    PeruCertificadoComponent,
+    PeruDatosCertificadoComponent,
     PeruHistoricoProductoresComponent,
+    CertificadoOrigenComponent,
+    MercanciaComponent
   ],
   imports: [
     CommonModule,

@@ -1,8 +1,11 @@
+import { CatalogoSelectComponent, SeccionLibQuery, SeccionLibState, SeccionLibStore, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { PeruState, Tramite110205Store } from '../../estados/tramite110205.store';
-import { SeccionLibQuery, SeccionLibState, SeccionLibStore } from '@libs/shared/data-access-user/src';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
+import { Tramite110205State, Tramite110205Store } from '../../estados/tramite110205.store';
+import { CommonModule } from '@angular/common';
+import { DatosDelDestinatarioComponent } from '../../../../shared/components/datos-del-destinatario/datos-del-destinatario.component';
+import { DestinatarioComponent } from '../../../../shared/components/destinatario/destinatario.component';
 import { Tramite110205Query } from '../../estados/tramite110205.query';
 
 interface FormValues {
@@ -47,7 +50,7 @@ export class PeruDestinatarioComponent implements OnInit, OnDestroy {
    * @descripcion
    * Estado actual del formulario de exportador.
    */
-  private exportadoState!: PeruState;
+  private exportadoState!: Tramite110205State;
 
   /**
    * @descripcion
@@ -103,7 +106,7 @@ export class PeruDestinatarioComponent implements OnInit, OnDestroy {
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((state) => {
-          this.exportadoState = state as PeruState;
+          this.exportadoState = state as Tramite110205State;
         })
       )
       .subscribe();

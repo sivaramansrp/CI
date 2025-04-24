@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
-import { PeruState } from "./tramite110205.store";
 import { Query } from "@datorama/akita";
+import { Tramite110205State } from "./tramite110205.store";
 import { Tramite110205Store } from "./tramite110205.store";
 
 /**
@@ -8,7 +8,7 @@ import { Tramite110205Store } from "./tramite110205.store";
  * Query para gestionar el estado del certificado CAM.
  */
 @Injectable({ providedIn: 'root' })
-export class Tramite110205Query extends Query<PeruState> {
+export class Tramite110205Query extends Query<Tramite110205State> {
   /**
    * @descripcion
    * Observable que selecciona el estado completo del certificado.

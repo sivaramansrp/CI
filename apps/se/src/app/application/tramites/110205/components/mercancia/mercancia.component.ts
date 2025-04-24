@@ -1,8 +1,9 @@
 import { Catalogo, InputFecha, SeccionLibQuery, SeccionLibState, SeccionLibStore } from '@libs/shared/data-access-user/src';
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { PeruState, Tramite110205Store } from '../../estados/tramite110205.store';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, delay, map, of, takeUntil } from 'rxjs';
+import { Tramite110205State, Tramite110205Store } from '../../estados/tramite110205.store';
+import { CommonModule } from '@angular/common';
 import { FECHA } from '../../constantes/peru-certificado.module';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Mercancia } from '../../../../shared/models/modificacion.enum';
@@ -91,7 +92,7 @@ export class MercanciaComponent implements OnInit, OnDestroy {
    * @descripcion
    * Estado actual de la mercancía.
    */
-  private mercanciaState!: PeruState;
+  private mercanciaState!: Tramite110205State;
 
   /**
    * @descripcion
@@ -137,7 +138,7 @@ export class MercanciaComponent implements OnInit, OnDestroy {
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((state) => {
-          this.mercanciaState = state as PeruState;
+          this.mercanciaState = state as Tramite110205State;
         })
       )
       .subscribe();

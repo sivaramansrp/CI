@@ -1,10 +1,13 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Catalogo, SeccionLibQuery, SeccionLibState, SeccionLibStore } from '@libs/shared/data-access-user/src';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { Observable, Subject, delay, map, of, takeUntil } from 'rxjs';
-import { PeruState, Tramite110205Store } from '../../estados/tramite110205.store';
-import { FormBuilder } from '@angular/forms';
+import { Tramite110205State, Tramite110205Store } from '../../estados/tramite110205.store';
+import { CertificadoDeOrigenComponent } from '../../../../shared/components/certificado-de-origen/certificado-de-origen.component';
+import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Mercancia } from '../../../../shared/models/modificacion.enum';
+import { MercanciaComponent } from '../mercancia/mercancia.component';
 import { Modal } from 'bootstrap';
 import { PeruCertificadoService } from '../../services/peru-certificado.service';
 import { Tramite110205Query } from '../../estados/tramite110205.query';
@@ -78,7 +81,7 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
    * @descripcion
    * Estado actual del certificado.
    */
-  private certificadoState!: PeruState;
+  private certificadoState!: Tramite110205State;
 
   /**
    * @descripcion
@@ -142,7 +145,7 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((state) => {
-          this.certificadoState = state as PeruState;
+          this.certificadoState = state as Tramite110205State;
         })
       )
       .subscribe();

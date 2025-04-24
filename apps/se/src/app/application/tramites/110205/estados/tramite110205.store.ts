@@ -7,7 +7,7 @@ import { Mercancia } from '../../../shared/models/modificacion.enum';
  * @descripcion
  * Interfaz que define el estado del certificado PERU.
  */
-export interface PeruState {
+export interface Tramite110205State {
   formCertificado: { [key: string]: undefined | boolean | string | number | object };
   estado: Catalogo;
   paisBloques: Catalogo[];
@@ -45,7 +45,7 @@ export interface PeruState {
  * @descripcion
  * Función que crea el estado inicial del certificado PERU.
  */
-export function createInitialState(): PeruState {
+export function createInitialState(): Tramite110205State {
   return {
     formCertificado: {
       si: false,
@@ -147,7 +147,7 @@ export function createInitialState(): PeruState {
   providedIn: 'root',
 })
 @StoreConfig({ name: 'perustore', resettable: true })
-export class Tramite110205Store extends Store<PeruState> {
+export class Tramite110205Store extends Store<Tramite110205State> {
   /**
    * @descripcion
    * Constructor que inicializa el almacén con el estado inicial.
