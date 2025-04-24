@@ -1,30 +1,24 @@
-import { BodyTablaDictamenes, BodyTablaDocumentos, BodyTablaEnvioDigital, BodyTablaOpinion, BodyTablaOpiniones, BodyTablaRequerimiento, BodyTablaTareasTramite } from "../models/shared/consulta-generica.model";
+import { BodyTablaAcuses, BodyTablaDictamenes, BodyTablaDocumentos, BodyTablaEnvioDigital, BodyTablaOpinion, BodyTablaOpiniones, BodyTablaRequerimiento, BodyTablaResolucion, BodyTablaTareasTramite } from "../models/shared/consulta-generica.model";
 
+/*
+  * ============================
+  * Constantes para la bandeja de acuses.
+  * Se utiliza para mostrar la tabla de acuses en el componente acuses.
+  * 
+  */
 export const TITULO_ACUSES = 'Acuse(s)';
-export const TXT_ALERTA_ACUSES = (folio: string) => {
-  return `Tu solicitud ha sido registrada con el siguiente número de folio:  < ${folio} >`;
-};
-
 export const CONSULTA_ACUSES = {
     txtAlerta:
       'Tu solicitud ha sido registrada con el siguiente número de folio:',
     tituloSeccionAcuse: 'Acuse(s)',
     encabezadoTablaAcuse: [
       {
-        key: 'id',
+        key: 'id' as keyof BodyTablaAcuses,
         valor: 'No.',
       },
       {
-        key: 'documento',
+        key: 'documento' as keyof BodyTablaAcuses,
         valor: 'Documento.',
-      },
-    ],
-    datosTablaAcuses: [
-      {
-        id: 1,
-        idDocumento: 'doc12',
-        documento: 'Acuse de recepción de trámite',
-        urlPdf: 'assets/pdf/Test03.pdf',
       },
     ],
     accionesTablaAcuses: [
@@ -36,26 +30,22 @@ export const CONSULTA_ACUSES = {
     ],
   };
 
+  /**
+   * Constantes para la bandeja de resoluciones.
+   * Se utiliza para mostrar la tabla de resoluciones en el componente resoluciones.
+   */
   export const CONSULTA_RESOLUCIONES = {
     txtAlerta:
       'Tu solicitud ha sido registrada con el siguiente número de folio:',
     tituloSeccionResolucion: 'Resolucion(es)',
     encabezadoTablaResolucion: [
       {
-        key: 'id',
+        key: 'id' as keyof BodyTablaResolucion,
         valor: 'No.',
       },
       {
-        key: 'documento',
+        key: 'documento' as keyof BodyTablaResolucion,
         valor: 'Documento.',
-      },
-    ],
-    datosTablaResolucion: [
-      {
-        id: 1,
-        idDocumento: 'doc12',
-        documento: 'Acuse de recepción de trámite',
-        urlPdf: 'assets/pdf/Test03.pdf',
       },
     ],
     accionesTablaResolucion: [
@@ -67,6 +57,10 @@ export const CONSULTA_ACUSES = {
     ],
   };
 
+  /**
+   * Constantes para la bandeja de requerimientos.
+   * Se utiliza para mostrar la tabla de requerimientos en el componente requerimientos.
+   */
   export const CONSULTA_REQUERIMIENTOS = {
     encabezadoTablaRequerimiento: [
       {
@@ -90,32 +84,6 @@ export const CONSULTA_ACUSES = {
         valor: 'Estatus',
       },
     ],
-    datosTablaRequerimiento: [
-      {
-        id: 1,
-        fechaCreacion: '2025-03-01',
-        fechaGeneracion: '2025-03-02',
-        fechaAtencion: '2025-03-03',
-        estatus: 'Pendiente',
-        urlPdf: 'assets/pdf/Test03.pdf'
-      },
-      {
-        id: 2,
-        fechaCreacion: '2025-03-04',
-        fechaGeneracion: '2025-03-05',
-        fechaAtencion: '2025-03-06',
-        estatus: 'Atendido',
-        urlPdf: 'assets/pdf/Test03.pdf',
-      },
-      {
-        id:3,
-        fechaCreacion: '2025-03-07',
-        fechaGeneracion: '2025-03-08',
-        fechaAtencion: '2025-03-09',
-        estatus: 'En proceso',
-        urlPdf: 'assets/pdf/Test03.pdf',
-      }
-    ],
     accionesTablaRequerimiento: [
       {
         tipo: 'descargar',
@@ -125,6 +93,10 @@ export const CONSULTA_ACUSES = {
     ],
   };
 
+  /**
+   * Constantes para la bandeja de tareas de trámite.
+   * Se utiliza para mostrar la tabla de tareas de trámite en el componente tareas de trámite.
+   */
   export const CONSULTA_TAREASTRAMITE = {
     encabezadoTablaTareasTramite: [
       {
@@ -152,48 +124,6 @@ export const CONSULTA_ACUSES = {
         valor: 'Fecha de atención',
       },
     ],
-    datosTablaTareasTramite: [
-      {
-        id: 1,
-        nombreTarea: 'Revisión de documentos',
-        nombreUsuarioAsignado: 'Juan Pérez',
-        claveUsuarioAsignado: 'JP123',
-        fechaAsignacion: '2025-03-01',
-        fechaAtencion: '2025-03-02'
-      },
-      {
-        id: 2,
-        nombreTarea: 'Validación de datos',
-        nombreUsuarioAsignado: 'María López',
-        claveUsuarioAsignado: 'ML456',
-        fechaAsignacion: '2025-03-03',
-        fechaAtencion: null
-      },
-      {
-        id: 3,
-        nombreTarea: 'Autorización de trámite',
-        nombreUsuarioAsignado: 'Carlos Sánchez',
-        claveUsuarioAsignado: 'CS789',
-        fechaAsignacion: '2025-03-05',
-        fechaAtencion: '2025-03-06'
-      },
-      {
-        id: 4,
-        nombreTarea: 'Generación de dictamen',
-        nombreUsuarioAsignado: 'Ana Gómez',
-        claveUsuarioAsignado: 'AG321',
-        fechaAsignacion: '2025-03-07',
-        fechaAtencion: '2025-03-08'
-      },
-      {
-        id: 5,
-        nombreTarea: 'Entrega de resultados',
-        nombreUsuarioAsignado: 'Luis Fernández',
-        claveUsuarioAsignado: 'LF654',
-        fechaAsignacion: '2025-03-09',
-        fechaAtencion: '2025-03-10'
-      }
-    ],
     accionesTablaTareasTramite: [
       {
         tipo: 'descargar',
@@ -203,6 +133,10 @@ export const CONSULTA_ACUSES = {
     ],
   };
 
+  /**
+   * Constantes para la bandeja de dictámenes.
+   * Se utiliza para mostrar la tabla de dictámenes en el componente dictámenes.
+   */
   export const CONSULTA_DICTAMENES = {
     encabezadoTablaDictamen: [
       {
@@ -234,58 +168,6 @@ export const CONSULTA_ACUSES = {
         valor: 'Sentido',
       },
     ],
-    datosTablaDictamen: [
-      {
-        id:1,
-        fechaCreacion: '2025-03-01',
-        fechaGeneracion: '2025-03-02',
-        fechaAutorizacion: '2025-03-03',
-        tipo: 'Acta de nacimiento',
-        estatus: 'Autorizado',
-        sentido: 'Positivo',
-        urlPdf: 'assets/pdf/Test03.pdf',
-      },
-      {
-        id:2,
-        fechaCreacion: '2025-03-05',
-        fechaGeneracion: '2025-03-06',
-        fechaAutorizacion: '2025-03-07',
-        tipo: 'Comprobante de domicilio',
-        estatus: 'Pendiente',
-        sentido: 'Negativo',
-        urlPdf: 'assets/pdf/Test03.pdf',
-      },
-      {
-        id:3,
-        fechaCreacion: '2025-03-10',
-        fechaGeneracion: '2025-03-11',
-        fechaAutorizacion: '2025-03-12',
-        tipo: 'Identificación oficial',
-        estatus: 'Rechazado',
-        sentido: 'Negativo',
-        urlPdf: 'assets/pdf/Test03.pdf',
-      },
-      {
-        id:4,
-        fechaCreacion: '2025-03-15',
-        fechaGeneracion: '2025-03-16',
-        fechaAutorizacion: '2025-03-17',
-        tipo: 'CURP',
-        estatus: 'Autorizado',
-        sentido: 'Positivo',
-        urlPdf: 'assets/pdf/Test03.pdf',
-      },
-      {
-        id:5,
-        fechaCreacion: '2025-03-20',
-        fechaGeneracion: '2025-03-21',
-        fechaAutorizacion: '2025-03-22',
-        tipo: 'RFC',
-        estatus: 'Pendiente',
-        sentido: 'Positivo',
-        urlPdf: 'assets/pdf/Test03.pdf',
-      }
-    ],
     accionesTablaDictamen: [
       {
         tipo: 'descargar',
@@ -295,6 +177,10 @@ export const CONSULTA_ACUSES = {
     ],
   };
  
+  /**
+   * Constantes para la bandeja de documentos.
+   * Se utiliza para mostrar la tabla de documentos en el componente documentos.
+   */
   export const CONSULTA_DOCUMENTOS = {
     encabezadoTablaDocumento: [
       {
@@ -314,43 +200,6 @@ export const CONSULTA_ACUSES = {
         valor: 'Nombre del documento',
       },
     ],
-    datosTablaDocumento: [
-      {
-        tipoDocumento: 'Contrato de maquila',
-        estatus: 'Autorizado',
-        fechaAdjunto: '2025-03-02',
-        nombreArchivo: 'acta_nacimiento.pdf',
-        urlPdf: 'assets/pdf/Test03.pdf',
-      },
-      {
-        tipoDocumento: 'Para acreditar el requisito de inversión',
-        estatus: 'Autorizado',
-        fechaAdjunto: '2025-03-02',
-        nombreArchivo: 'titulo.pdf',
-        urlPdf: 'assets/pdf/Test03.pdf',
-      },
-      {
-        tipoDocumento: 'Comprobante de pago',
-        estatus: 'Autorizado',
-        fechaAdjunto: '2025-03-02',
-        nombreArchivo: 'salario.pdf',
-        urlPdf: 'assets/pdf/Test03.pdf',
-      },
-      {
-        tipoDocumento: 'Diagrama de flujo con una descripción de los procesos',
-        estatus: 'Autorizado',
-        fechaAdjunto: '2025-03-02',
-        nombreArchivo: 'solicitud.pdf',
-        urlPdf: 'assets/pdf/Test03.pdf',
-      },
-      {
-        tipoDocumento: 'Ultimo comprobante de pago',
-        estatus: 'Pendiente',
-        fechaAdjunto: '2025-03-02',
-        nombreArchivo: 'comprobante_domicilio.pdf',
-        urlPdf: 'assets/pdf/Test03.pdf',
-      }
-    ],
     accionesTablaDocumento: [
       {
         tipo: 'Acciones',
@@ -360,6 +209,10 @@ export const CONSULTA_ACUSES = {
     ],
   };
 
+  /**
+   * Constantes para la bandeja de envío digital.
+   * Se utiliza para mostrar la tabla de envío digital en el componente envío digital.
+   */
   export const CONSULTA_ENVIODIGITAL = {
     encabezadoTablaEnvioDigital: [
       {
@@ -383,33 +236,15 @@ export const CONSULTA_ACUSES = {
         valor: 'Observaciones',
       },
     ],
-    datosTablaEnvioDigitalEnvio: [
-      {
-        id: 1,
-        fecha: '2025-03-01',
-        transaccion: 'Mx1810240000005',
-        estado: 'Certificado Enviado a IOP',
-        observaciones: 'Observaciones 1',
-      },
-      {
-        id: 2,
-        fecha: '2025-03-01',
-        transaccion: 'Mx1810240000005',
-        estado: 'Certificado Recibido a IOP',
-        observaciones: 'Observaciones 2',
-      },
-      {
-        id: 3,
-        fecha: '2025-03-01',
-        transaccion: 'Mx1810240000005',
-        estado: 'Certificado Recibido por VUCE',
-        observaciones: 'Observaciones 3',
-      }
-    ],
     datosTablaEnvioDigitalRevision: [      
     ]
   };
 
+  /**
+   * Constantes para la tabla de documentos en el detalle de la opinion.
+   * Se utiliza para mostrar la tabla de documentos de la opinion en el componente detalle-opinion.
+   * 
+   */
   export const CONSULTA_DETALLEOPINIONES = {
     encabezadoTablaOpinion: [
       {
@@ -419,13 +254,6 @@ export const CONSULTA_ACUSES = {
       {
         key: 'documento' as keyof BodyTablaOpinion,
         valor: 'Documento.',
-      },
-    ],
-    datosTablaOpinion: [
-      {
-        id: 1,
-        documento: 'Documento_prueba.pdf',
-        urlPdf: 'assets/pdf/Test03.pdf',
       },
     ],
     accionesTablaOpinion: [
@@ -438,8 +266,8 @@ export const CONSULTA_ACUSES = {
   };
 
   /**
-   * Constantes para la consulta de opiniones.
-   * Se utiliza para mostrar la tabla de opiniones en el componente opinion.
+   * Constantes para la bandeja de opiniones.
+   * Se utiliza para mostrar la tabla de opiniones en el componente opiniones.
    * 
    */
 
@@ -465,32 +293,6 @@ export const CONSULTA_ACUSES = {
         key: 'estatus' as keyof BodyTablaOpiniones,
         valor: 'Estatus',
       },
-    ],
-    datosTablaOpinion: [
-      {
-        id: 1,
-        fechaSolicitud: '2025-03-01',
-        areaSolicitante: 'Área de Finanzas',
-        areaResponsable: 'Área de Recursos Humanos',
-        estatus: 'Pendiente',
-        urlPdf: 'assets/pdf/Test03.pdf'
-      },
-      {
-        id: 2,
-        fechaSolicitud: '2025-03-01',
-        areaSolicitante: 'Aeropuerto Internacional',
-        areaResponsable: 'Aeropuesto Internacional de Cancún',
-        estatus: 'Pendiente',
-        urlPdf: 'assets/pdf/Test03.pdf',
-      },
-      {
-        id:3,
-        fechaSolicitud: '2025-03-01',
-        areaSolicitante: 'Aeropuesto Internacional de Los Cabos',
-        areaResponsable: 'Aeropuerto Internacional de san José del Cabo',
-        estatus: 'Pendiente',
-        urlPdf: 'assets/pdf/Test03.pdf',
-      }
     ],
     accionesTablaOpinion: [
       {

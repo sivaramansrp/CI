@@ -1,22 +1,43 @@
+/**
+ * ============================
+ * Interfaces para la Tabla de Resolución
+ * Se utiliza para mostrar la Tabla de Resolución en el componente Resolución de la Consulta Generica.
+ * ============================
+ */
+export interface HeaderTablaResolucion {
+  key: keyof BodyTablaResolucion;
+  valor: string;
+}
+export interface BodyTablaResolucion {
+  id: number;
+  idDocumento: string;
+  documento: string;
+  urlPdf: string;
+}
+
+/**
+ * ============================
+ * Interfaces para la Tabla de Acuses
+ * Se utiliza para mostrar la Tabla de Acuses en el componente Acuses de la Consulta Generica.
+ * ============================
+ */
 export interface HeaderTablaAcuses {
     key: keyof BodyTablaAcuses;
     valor: string;
-  }
-  
+  }  
   export interface BodyTablaAcuses {
     id: number;
     idDocumento: string;
     documento: string;
     urlPdf: string;
-  }
+  }  
 
-  export interface BodyTablaResolucion {
-    id: number;
-    idDocumento: string;
-    documento: string;
-    urlPdf: string;
-  }
-
+/**
+ * ============================
+ * Interfaces para la Tabla de Requerimientos
+ * Se utiliza para mostrar la Tabla de Requerimientos en el componente Requerimientos de la Consulta Generica.
+ * ============================
+ */
   export interface HeaderTablaRequerimientos {
     key: keyof BodyTablaRequerimiento;
     valor: string;
@@ -30,6 +51,12 @@ export interface HeaderTablaAcuses {
     urlPdf: string;
 }
 
+/**
+ * ============================
+ * Interfaces para la Tabla de Tareas de Trámite
+ * Se utiliza para mostrar la Tabla de Tareas de Trámite en el componente Tareas de Trámite de la Consulta Generica.
+ * ============================
+ */
 export interface HeaderTablaTareasTramite {
   key: keyof BodyTablaTareasTramite;
   valor: string;
@@ -43,6 +70,12 @@ export interface BodyTablaTareasTramite {
   fechaAtencion: string|null;
 }
 
+/**
+ * ============================
+ * Interfaces para la Tabla de Dictámenes
+ * Se utiliza para mostrar la Tabla de Dictámenes en el componente Dictámenes de la Consulta Generica.
+ * ============================
+ */
 export interface HeaderTablaDictamenes {
   key: keyof BodyTablaDictamenes;
   valor: string;
@@ -58,6 +91,12 @@ export interface BodyTablaDictamenes {
   urlPdf: string;
 }
 
+/**
+ * ============================
+ * Interfaces para la Tabla de Documentos
+ * Se utiliza para mostrar la Tabla de Documentos en el componente Documentos de la Consulta Generica.
+ * ============================
+ */
 export interface HeaderTablaDocumentos {
   key: keyof BodyTablaDocumentos;
   valor: string;
@@ -70,6 +109,12 @@ export interface BodyTablaDocumentos {
   urlPdf: string;
 }
 
+/**
+ * ============================
+ * Interfaces para la Tabla de Envio Digital
+ * Se utiliza para mostrar la Tabla de Envio Digital en el componente Envio Digital.
+ * ============================
+ */
 export interface HeaderTablaEnvioDigital {
   key: keyof BodyTablaEnvioDigital;
   valor: string;
@@ -82,20 +127,9 @@ export interface BodyTablaEnvioDigital {
   observaciones: string;
 }
 
-export interface HeaderTablaOpinion {
-  key: keyof BodyTablaOpinion;
-  valor: string;
-}
-export interface BodyTablaOpinion {
-  id: number;
-  documento: string;
-  urlPdf: string;
-}
-
 /*
-* Tabla de opiniones
-* Se utiliza para mostrar la tabla de opiniones en el componente opinion.  
-* Es la primera pestaña que se muestra al abrir el componente.
+* Interfaces para la Tabla de opiniones (primera pestaña de la bandeja de opiniones)
+* Se utiliza para mostrar la tabla de opiniones del componente opinion.  
 */ 
 export interface HeaderTablaOpiniones {
   key: keyof BodyTablaOpiniones;
@@ -110,7 +144,29 @@ export interface BodyTablaOpiniones {
   urlPdf: string;
 }
 
-export interface SolicitudDetalleOpiniones {
+/**
+ * ============================
+ * Interfaces para las secciones de opiniones (pestaña de detalles de la bandeja de opiniones)
+ * Se utiliza una tabla en la tercera seccion de la pestaña detalles de Opiniones.
+ * ============================
+ */
+export interface HeaderTablaOpinion {
+  key: keyof BodyTablaOpinion;
+  valor: string;
+}
+export interface BodyTablaOpinion {
+  id: number;
+  documento: string;
+  urlPdf: string;
+}
+/**
+ * ============================
+ * Interfaces para las secciones de opiniones (pestaña de detalles de la bandeja de opiniones)
+ * Se utiliza un formulario en la primera seccion de la pestaña detalles de Opiniones.
+ * ============================
+ */
+
+export interface SolicitudDetalleOpinion {
   id: number;
   areaSolicitante: string;
   estatus: string;
@@ -118,7 +174,13 @@ export interface SolicitudDetalleOpiniones {
   fechaSolicitud: string;
   justificacionOpinion: string;  
 }
-export interface OpinionDetalleOpiniones {
+/**
+ * ============================
+ * Interfaces para las secciones de opiniones (pestaña de detalles de la bandeja de opiniones)
+ * Se utiliza un formulario en la segunda seccion de la pestaña detalles de Opiniones.
+ * ============================
+ */
+export interface OpinionDetalleOpinion {
   id: number;
   areaResponsable: string;
   sentido: string;

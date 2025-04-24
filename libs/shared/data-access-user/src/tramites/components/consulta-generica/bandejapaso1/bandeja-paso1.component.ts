@@ -8,12 +8,18 @@ import { TercerosComponent } from "../../terceros/terceros.component";
   standalone: true,
   imports: [CommonModule, SolicitanteComponent, TercerosComponent],
   templateUrl: './bandeja-paso1.component.html',
-  styleUrl: './bandeja-paso1.component.css',
+  styleUrl: './bandeja-paso1.component.scss',
 })
-export class BandejaPaso1Component {
-  
-  
+export class BandejaPaso1Component {  
+  /**
+   * Índice de la pestaña seleccionada
+   */
   indice: number = 1;
+  
+  /**
+   * Método para seleccionar la pestaña
+   * @param i indica el número de la pestaña seleccionada
+   */
   seleccionaTab(i: number): void {
     this.indice = i;
   }
