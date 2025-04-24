@@ -2,7 +2,6 @@ import { DatosDelTramiteFormState } from '../../../shared/models/datos-del-trami
 import { DestinoFinal } from '../../../shared/models/terceros-relacionados.model';
 import { Injectable } from '@angular/core';
 import { MercanciaDetalle } from '../../../shared/models/datos-del-tramite.model';
-import { PagoDerechosFormState } from '../../../shared/models/pago-de-derechos.model';
 import { Proveedor } from '../../../shared/models/terceros-relacionados.model';
 import { Store } from '@datorama/akita';
 import { StoreConfig } from '@datorama/akita';
@@ -13,15 +12,15 @@ import { StoreConfig } from '@datorama/akita';
  * @property {number} [tabSeleccionado] - Pestaña actualmente activa en el flujo.
  * @property {DestinoFinal[]} destinatarioFinalTablaDatos - Lista de destinatarios finales registrados.
  * @property {Proveedor[]} proveedorTablaDatos - Lista de proveedores registrados.
- * @property {PagoDerechosFormState} pagoDerechos - Información del formulario de pago de derechos.
  * @property {MercanciaDetalle[]} merccancialTablaDatos - Lista de mercancías registradas.
  * @property {DatosDelTramiteFormState} datosDelTramite - Información general del formulario de datos del trámite.
+ * @property {DestinoFinal | null} modificarDestinarioDatos - Datos del destinatario final a modificar.
+ * @property {Proveedor | null} modificarProveedorDatos - Datos del proveedor a modificar.
  */
 export interface Tramite240122State {
   tabSeleccionado?: number;
-  destinatarioFinalTablaDatos: DestinoFinal[];          
+  destinatarioFinalTablaDatos: DestinoFinal[];
   proveedorTablaDatos: Proveedor[];
-  // pagoDerechos: PagoDerechosFormState;
   merccancialTablaDatos: MercanciaDetalle[];
   datosDelTramite: DatosDelTramiteFormState;
   modificarDestinarioDatos?: DestinoFinal | null;
@@ -39,14 +38,6 @@ export function createInitialState(): Tramite240122State {
     tabSeleccionado: 1,
     destinatarioFinalTablaDatos: [],
     proveedorTablaDatos: [],
-    // pagoDerechos: {
-    //   claveReferencia: '',
-    //   cadenaDependencia: '',
-    //   banco: '',
-    //   llavePago: '',
-    //   fechaPago: '',
-    //   importePago: '',
-    // },
     merccancialTablaDatos: [],
     datosDelTramite: {
       permisoGeneral: '',
@@ -61,22 +52,15 @@ export function createInitialState(): Tramite240122State {
  * Store que maneja el estado del trámite 240122.
  * Utiliza Akita para el control reactivo del estado.
  */
-/**
- * @fileoverview
- * Este archivo contiene la definición de la clase `Tramite240122Store`, 
- * que extiende la funcionalidad de la clase `Store` para manejar el estado 
- * de la aplicación relacionado con el trámite 240122. 
- * Proporciona métodos para actualizar diferentes partes del estado, 
- * como pestañas seleccionadas, datos de formularios y tablas de datos.
- * 
- * @author [Tu Nombre]
- * @version 1.0
- */
 @Injectable({
   providedIn: 'root',
 })
 @StoreConfig({ name: 'tramite240122', resettable: true })
 export class Tramite240122Store extends Store<Tramite240122State> {
+  /**
+   * Constructor del store.
+   * Inicializa el estado con los valores definidos en `createInitialState`.
+   */
   constructor() {
     super(createInitialState());
   }
@@ -110,22 +94,6 @@ export class Tramite240122Store extends Store<Tramite240122State> {
       datosDelTramite: datosDelTramiteFormState,
     }));
   }
-
-  /**
-   * Actualiza los datos del formulario de pago de derechos.
-   *
-   * @method updatePagoDerechosFormState
-   * @param {PagoDerechosFormState} pagoDerechosFormState - Estado actualizado del formulario de pago.
-   * @returns {void}
-   */
-  // public updatePagoDerechosFormState(
-  //   pagoDerechosFormState: PagoDerechosFormState
-  // ): void {
-  //   this.update((state) => ({
-  //     ...state,
-  //     pagoDerechos: pagoDerechosFormState,
-  //   }));
-  // }
 
   /**
    * Agrega nuevos registros a la tabla de destinatarios finales.
@@ -174,19 +142,33 @@ export class Tramite240122Store extends Store<Tramite240122State> {
     }));
   }
 
+  /**
+   * Actualiza los datos del destinatario final en el estado.
+   *
+   * @method actualizarDatosDestinatario
+   * @param {DestinoFinal} datos - Datos del destinatario final a modificar.
+   * @returns {void}
+   */
   public actualizarDatosDestinatario(datos: DestinoFinal): void {
     this.update((state) => ({
       ...state,
       modificarDestinarioDatos: datos,
-      modificarProveedorDatos: null
+      modificarProveedorDatos: null,
     }));
   }
 
+  /**
+   * Actualiza los datos del proveedor en el estado.
+   *
+   * @method actualizarDatosProveedor
+   * @param {Proveedor} datos - Datos del proveedor a modificar.
+   * @returns {void}
+   */
   public actualizarDatosProveedor(datos: Proveedor): void {
     this.update((state) => ({
       ...state,
       modificarProveedorDatos: datos,
-      modificarDestinarioDatos: null
+      modificarDestinarioDatos: null,
     }));
   }
 }

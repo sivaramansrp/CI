@@ -54,44 +54,43 @@ import { WizardComponent } from '@ng-mf/data-access-user';
 @Component({
   selector: 'app-solicitud-page',
   standalone: true,
-  imports:[
+  imports: [
     AlertComponent,
     CommonModule,
     WizardComponent,
     PasoUnoComponent,
     PasoDosComponent,
     PasoTresComponent,
-    BtnContinuarComponent
+    BtnContinuarComponent,
   ],
   templateUrl: './solicitud-page.component.html',
   styleUrl: './solicitud-page.component.scss',
 })
 export class SolicitudPageComponent {
+  /**
+   * @property tituloMensaje
+   * @description Título que se muestra en la parte superior del wizard.
+   * Se actualiza dependiendo del paso seleccionado.
+   * @type {string | null}
+   */
+  public tituloMensaje: string | null = TITULOMENSAJE;
 
-   /**
-     * @property tituloMensaje
-     * @description Título que se muestra en la parte superior del wizard.
-     * Se actualiza dependiendo del paso seleccionado.
-     * @type {string | null}
-     */
-    public tituloMensaje: string | null = TITULOMENSAJE
-  
-    /**
-       * @property pasos
-       * @description Listado de pasos definidos para el wizard, incluyendo
-       * información y componentes asociados.
-       * @type {ListaPasosWizard[]}
-       */
-    public pasos: ListaPasosWizard[] = PASOS;
-    
-    /**
-     * @property indice
-     * @description Índice del paso actual en el wizard.
-     * @type {number}
-     */
-    public indice: number = 1;
+  /**
+   * @property pasos
+   * @description Listado de pasos definidos para el wizard, incluyendo
+   * información y componentes asociados.
+   * @type {ListaPasosWizard[]}
+   */
+  public pasos: ListaPasosWizard[] = PASOS;
 
-      /**
+  /**
+   * @property indice
+   * @description Índice del paso actual en el wizard.
+   * @type {number}
+   */
+  public indice: number = 1;
+
+  /**
    * @property wizardComponent
    * @description Referencia al componente `WizardComponent`, utilizada
    * para invocar métodos de navegación interna como `siguiente()` y `atras()`.
@@ -100,25 +99,27 @@ export class SolicitudPageComponent {
   @ViewChild(WizardComponent)
   public wizardComponent!: WizardComponent;
 
-    /**
+  /**
    * @property datosPasos
    * @description Configuración de la barra de navegación del wizard:
    * número de pasos, índice actual y textos de los botones.
    * @type {DatosPasos}
    */
-    public datosPasos: DatosPasos = {
-      nroPasos: this.pasos.length,
-      indice: this.indice,
-      txtBtnAnt: 'Anterior',
-      txtBtnSig: 'Continuar',
-    };
+  public datosPasos: DatosPasos = {
+    nroPasos: this.pasos.length,
+    indice: this.indice,
+    txtBtnAnt: 'Anterior',
+    txtBtnSig: 'Continuar',
+  };
 
   /**
-   * Asigna el aviso de privacidad simplificado al atributo `TEXTOS`.
+   * @property TEXTOS
+   * @description Asigna el aviso de privacidad simplificado al atributo `TEXTOS`.
+   * @type {string}
    */
-  TEXTOS = AVISO.Aviso;
+  public TEXTOS = AVISO.Aviso;
 
-    /**
+  /**
    * @method seleccionaTab
    * @description Permite cambiar el paso actual de forma manual
    * al hacer clic en las pestañas (tabs) del wizard.
@@ -129,8 +130,7 @@ export class SolicitudPageComponent {
     this.indice = i;
   }
 
-
-   /**
+  /**
    * @method getValorIndice
    * @description Controla la navegación del wizard en función
    * de la acción recibida (`cont` o `atras`). Actualiza el paso
@@ -140,7 +140,7 @@ export class SolicitudPageComponent {
    * y la acción a realizar.
    * @returns {void}
    */
-   public getValorIndice(e: AccionBoton): void {
+  public getValorIndice(e: AccionBoton): void {
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
       this.tituloMensaje = SolicitudPageComponent.obtenerNombreDelTítulo(
@@ -156,23 +156,22 @@ export class SolicitudPageComponent {
   }
 
   /**
-     * @method obtenerNombreDelTítulo
-     * @description Método estático que determina el título
-     * a mostrar de acuerdo al índice del paso actual.
-     * @param {number} valor - Índice del paso.
-     * @returns {string} Título correspondiente al paso.
-     */
-    public static obtenerNombreDelTítulo(valor: number): string {
-      switch (valor) {
-        case 1:
-          return TITULOMENSAJE;
-        case 2:
-          return 'Anexar requisitos';
-        case 3:
-          return 'Firmar';
-        default:
-          return TITULOMENSAJE;
-      }
+   * @method obtenerNombreDelTítulo
+   * @description Método estático que determina el título
+   * a mostrar de acuerdo al índice del paso actual.
+   * @param {number} valor - Índice del paso.
+   * @returns {string} Título correspondiente al paso.
+   */
+  public static obtenerNombreDelTítulo(valor: number): string {
+    switch (valor) {
+      case 1:
+        return TITULOMENSAJE;
+      case 2:
+        return 'Anexar requisitos';
+      case 3:
+        return 'Firmar';
+      default:
+        return TITULOMENSAJE;
     }
-
+  }
 }

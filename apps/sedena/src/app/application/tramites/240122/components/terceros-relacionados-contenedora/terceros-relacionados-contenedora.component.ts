@@ -36,7 +36,7 @@ import { takeUntil } from 'rxjs';
   templateUrl: './terceros-relacionados-contenedora.component.html',
   styleUrl: './terceros-relacionados-contenedora.component.scss',
 })
-export class TercerosRelacionadosContenedoraComponent implements OnInit, OnDestroy{
+export class TercerosRelacionadosContenedoraComponent implements OnInit, OnDestroy {
 
   /**
    * Identificador del procedimiento asignado al trámite específico.
@@ -44,27 +44,35 @@ export class TercerosRelacionadosContenedoraComponent implements OnInit, OnDestr
    * @property {NUMERO_TRAMITE} idProcedimiento - Representa el identificador único del trámite.
    * @value TRAMITE_240122 - Código correspondiente al trámite específico.
    */
-    idProcedimiento = NUMERO_TRAMITE.TRAMITE_240122;
+  idProcedimiento = NUMERO_TRAMITE.TRAMITE_240122;
 
   /**
    * Observable para limpiar las suscripciones activas al destruir el componente.
+   * 
    * @property {Subject<void>} destroy$
    */
   private destroy$ = new Subject<void>();
 
   /**
    * Datos de la tabla de destinatarios finales.
+   * 
    * @property {DestinoFinal[]} destinatarioFinalTablaDatos
    */
   destinatarioFinalTablaDatos: DestinoFinal[] = [];
 
   /**
    * Datos de la tabla de proveedores.
+   * 
    * @property {Proveedor[]} proveedorTablaDatos
    */
   proveedorTablaDatos: Proveedor[] = [];
 
-//consoel.log()
+  /**
+   * Indica si se deben prellenar los datos del proveedor automáticamente.
+   * 
+   * @property {boolean} prefillProveedorData
+   * @default true
+   */
   prefillProveedorData: boolean = true;
 
   /**
@@ -73,6 +81,8 @@ export class TercerosRelacionadosContenedoraComponent implements OnInit, OnDestr
    * @method constructor
    * @param {Tramite240122Store} tramiteStore - Store de Akita que maneja el estado del trámite.
    * @param {Tramite240122Query} tramiteQuery - Query de Akita para obtener datos del trámite.
+   * @param {Router} router - Servicio de Angular Router para la navegación.
+   * @param {ActivatedRoute} activatedRoute - Ruta activa para obtener información del contexto actual.
    * @returns {void}
    */
   constructor(
@@ -80,17 +90,15 @@ export class TercerosRelacionadosContenedoraComponent implements OnInit, OnDestr
     private tramiteStore: Tramite240122Store,
     private router: Router,
     private activatedRoute: ActivatedRoute
-  ) // eslint-disable-next-line no-empty-function
-  {}
+  ) {}
 
-    /**
+  /**
    * Hook del ciclo de vida que se ejecuta al inicializar el componente.
    * Suscribe a los observables de destinatarios y proveedores para mostrarlos en la vista.
    *
    * @method ngOnInit
    * @returns {void}
    */
-
   ngOnInit(): void {
     this.tramiteQuery.getDestinatarioFinalTablaDatos$
       .pipe(takeUntil(this.destroy$))
@@ -109,11 +117,25 @@ export class TercerosRelacionadosContenedoraComponent implements OnInit, OnDestr
       });
   }
 
+  /**
+   * Modifica los datos del destinatario final en el store.
+   * 
+   * @method modificarDestinarioDatos
+   * @param {DestinoFinal} datos - Datos del destinatario final a modificar.
+   * @returns {void}
+   */
   modificarDestinarioDatos(datos: DestinoFinal): void {
     this.tramiteStore.actualizarDatosDestinatario(datos);
     this.irAAcciones();
   }
 
+  /**
+   * Modifica los datos del proveedor en el store.
+   * 
+   * @method modificarProveedorDatos
+   * @param {Proveedor} datos - Datos del proveedor a modificar.
+   * @returns {void}
+   */
   modificarProveedorDatos(datos: Proveedor): void {
     this.tramiteStore.actualizarDatosProveedor(datos);
     this.irAAcciones();
@@ -121,8 +143,8 @@ export class TercerosRelacionadosContenedoraComponent implements OnInit, OnDestr
 
   /**
    * Navega a una ruta relativa dentro del flujo actual.
+   * 
    * @method irAAcciones
-   * @param {string} accionesPath - Ruta relativa a la que se desea navegar.
    * @returns {void}
    */
   irAAcciones(): void {
@@ -131,12 +153,15 @@ export class TercerosRelacionadosContenedoraComponent implements OnInit, OnDestr
     });
   }
 
-    /**
+  /**
    * Hook que se ejecuta al destruir el componente.
-   * Envía un valor al Subject `unsubscribe$` y lo completa para liberar suscripciones.
+   * Envía un valor al Subject `destroy$` y lo completa para liberar suscripciones.
+   * 
+   * @method ngOnDestroy
+   * @returns {void}
    */
-    ngOnDestroy(): void {
-      this.destroy$.next();
-      this.destroy$.complete();
-    }
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 }

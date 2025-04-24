@@ -10,6 +10,7 @@ import { Subject } from 'rxjs';
 import { Tramite240122Query } from '../../estados/tramite240122Query.query';
 import { Tramite240122Store } from '../../estados/tramite240122Store.store';
 import { takeUntil } from 'rxjs';
+
 /**
  * @component
  * @name DatosDelTramiteContenedoraComponent
@@ -34,27 +35,31 @@ import { takeUntil } from 'rxjs';
 })
 export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy { 
 
-  
   /**
-   * @property {boolean} estaOculto - Indica si el elemento está oculto o visible.
-   * @remarks Este valor determina la visibilidad del componente en la interfaz de usuario.
-   * @command Cambiar el valor de esta propiedad para alternar la visibilidad.
+   * Identificador único del procedimiento asociado al trámite.
+   * 
+   * @property {number} idProcedimiento
+   * @remarks Este valor se utiliza para identificar el trámite específico.
    */
-  public readonly idProcedimiento:number = ID_PROCEDIMIENTO;
+  public readonly idProcedimiento: number = ID_PROCEDIMIENTO;
+
   /**
    * Observable para limpiar suscripciones activas al destruir el componente.
+   * 
    * @property {Subject<void>} unsubscribe$
    */
   private unsubscribe$ = new Subject<void>();
 
   /**
    * Datos de la tabla de mercancías que se muestran en el formulario.
+   * 
    * @property {MercanciaDetalle[]} datosMercanciaTabla
    */
   public datosMercanciaTabla: MercanciaDetalle[] = [];
 
   /**
    * Estado actual del formulario de datos del trámite.
+   * 
    * @property {DatosDelTramiteFormState} datosDelTramiteFormState
    */
   public datosDelTramiteFormState!: DatosDelTramiteFormState;
@@ -79,41 +84,40 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
    * @method ngOnInit
    * @returns {void}
    */
+  ngOnInit(): void {
+    this.tramiteQuery.getMercanciaTablaDatos$
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((data) => {
+        this.datosMercanciaTabla = data;
+      });
 
-    ngOnInit(): void {
-      this.tramiteQuery.getMercanciaTablaDatos$
-        .pipe(takeUntil(this.unsubscribe$))
-        .subscribe((data) => {
-          this.datosMercanciaTabla = data;
-        });
-  
-      this.tramiteQuery.getDatosDelTramite$
-        .pipe(takeUntil(this.unsubscribe$))
-        .subscribe((data) => {
-          this.datosDelTramiteFormState = data;
-        });
-    }
-  
-    /**
-     * Hook del ciclo de vida que se ejecuta al destruir el componente.
-     * Libera las suscripciones activas para evitar fugas de memoria.
-     *
-     * @method ngOnDestroy
-     * @returns {void}
-     */
-    ngOnDestroy(): void {
-      this.unsubscribe$.next();
-      this.unsubscribe$.complete();
-    }
-  
-    /**
-     * Actualiza el estado del formulario de datos del trámite en el store.
-     *
-     * @method updateDatosDelTramiteFormulario
-     * @param {DatosDelTramiteFormState} event - Estado actualizado del formulario.
-     * @returns {void}
-     */
-    updateDatosDelTramiteFormulario(event: DatosDelTramiteFormState): void {
-      this.tramiteStore.updateDatosDelTramiteFormState(event);
-    }
+    this.tramiteQuery.getDatosDelTramite$
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((data) => {
+        this.datosDelTramiteFormState = data;
+      });
+  }
+
+  /**
+   * Hook del ciclo de vida que se ejecuta al destruir el componente.
+   * Libera las suscripciones activas para evitar fugas de memoria.
+   *
+   * @method ngOnDestroy
+   * @returns {void}
+   */
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+  }
+
+  /**
+   * Actualiza el estado del formulario de datos del trámite en el store.
+   *
+   * @method updateDatosDelTramiteFormulario
+   * @param {DatosDelTramiteFormState} event - Estado actualizado del formulario.
+   * @returns {void}
+   */
+  updateDatosDelTramiteFormulario(event: DatosDelTramiteFormState): void {
+    this.tramiteStore.updateDatosDelTramiteFormState(event);
+  }
 }

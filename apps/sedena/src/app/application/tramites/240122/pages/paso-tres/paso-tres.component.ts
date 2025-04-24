@@ -13,17 +13,24 @@ import { FirmaElectronicaComponent } from '@libs/shared/data-access-user/src';
  * @name PasoTresComponent
  * @description
  * Componente correspondiente al paso tres de un trámite específico en la aplicación.
- * Este componente utiliza una plantilla HTML y un archivo CSS para su presentación.
+ * Este componente encapsula la funcionalidad de la firma electrónica, que es el paso final del flujo de solicitud.
+ * Utiliza una plantilla HTML y un archivo CSS para su presentación.
  * 
  * @selector app-paso-tres
  * @template ./paso-tres.component.html
  * @style ./paso-tres.component.scss
+ * 
+ * @remarks
+ * Este componente es independiente y utiliza el componente `FirmaElectronicaComponent` para gestionar
+ * la firma electrónica del usuario.
  */
 @Component({
   selector: 'app-paso-tres',
   standalone: true,
-  imports:[CommonModule ,FirmaElectronicaComponent],
+  imports: [CommonModule, FirmaElectronicaComponent],
   templateUrl: './paso-tres.component.html',
   styleUrl: './paso-tres.component.scss',
 })
-export class PasoTresComponent {}
+export class PasoTresComponent {
+  // Este componente no contiene lógica adicional, ya que actúa como un contenedor para la firma electrónica.
+}

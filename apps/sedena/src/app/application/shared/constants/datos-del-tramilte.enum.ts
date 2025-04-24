@@ -59,7 +59,20 @@ export const OCULTAR_BOTONES = [240121, 240107 ];
  *   // Lógica para ocultar el botón
  * }
  */
-export const OCULTAR_BOTONES_PROVEEDOR = [240122 ];
+export const OCULTAR_BOTONES_PROVEEDOR: number[] = [
+  240122
+ ];
+
+ /**
+ * @const NO_VISIBILIDAD_UMC
+ * @type {number[]}
+ * @description Arreglo que contiene los identificadores numéricos de las UMC (Unidades de Medida y Clasificación) 
+ * que no deben ser visibles en la aplicación.
+ * @author [Tu Nombre o Equipo]
+ */
+ export const NO_VISIBILIDAD_UMC: number[] = [
+  240122
+];
 
 
 /**

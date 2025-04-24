@@ -42,44 +42,40 @@ import { Tramite240122Store } from '../../estados/tramite240122Store.store';
 })
 export class AgregarDestinatarioFinalContenedoraComponent {
   
-    /**
-   * @property {boolean} estaOculto - Indica si el elemento está oculto o visible.
-   * @remarks Este valor determina la visibilidad del componente en la interfaz de usuario.
-   * @command Cambiar el valor de esta propiedad para alternar la visibilidad.
+  /**
+   * @property {number} idProcedimiento - Identificador del procedimiento asociado al trámite.
+   * @remarks Este valor se utiliza para identificar el trámite 240122.
    */
-    public readonly idProcedimiento:number = NUMERO_TRAMITE.TRAMITE_240122;
+  public readonly idProcedimiento:number = NUMERO_TRAMITE.TRAMITE_240122;
 
-    /**
-     * Observable que emite información sobre el destino final, proveedor o un valor nulo/indefinido.
-     * 
-     * @type {Observable<DestinoFinal | Proveedor | null | undefined>}
-     * 
-     * @remarks
-     * Este observable se utiliza para gestionar los datos relacionados con los derechos
-     * y destinatarios finales en el contexto de la aplicación.
-     */
-    public terechosDatos$!: Observable<DestinoFinal | Proveedor | null | undefined>;
-    /**
-     * Constructor del componente.
-     *
-     * @method constructor
-     * @param {Tramite240122Store} tramiteStore - Store que administra el estado del trámite.
-     * @returns {void}
-     */
-    constructor(public tramiteStore: Tramite240122Store, public tramiteQuery: Tramite240122Query) {
-      this.terechosDatos$ = this.tramiteQuery.obtenerTercerosDatos$;
-    }
-  
-    /**
-     * Actualiza la lista de destinatarios finales en el store del trámite.
-     *
-     * @method updateDestinatarioFinalTablaDatos
-     * @param {DestinoFinal[]} event - Lista de destinatarios finales actualizada.
-     * @returns {void}
-     */
-    updateDestinatarioFinalTablaDatos(event: DestinoFinal[]): void {
-      this.tramiteStore.updateDestinatarioFinalTablaDatos(event);
-    }
+  /**
+   * @property {Observable<DestinoFinal | Proveedor | null | undefined>} terechosDatos$ - Observable que emite información sobre el destino final, proveedor o un valor nulo/indefinido.
+   * @remarks Este observable se utiliza para gestionar los datos relacionados con los derechos
+   * y destinatarios finales en el contexto de la aplicación.
+   */
+  public terechosDatos$!: Observable<DestinoFinal | Proveedor | null | undefined>;
 
-    
+  /**
+   * Constructor del componente.
+   *
+   * @method constructor
+   * @param {Tramite240122Store} tramiteStore - Store que administra el estado del trámite.
+   * @param {Tramite240122Query} tramiteQuery - Query que permite obtener datos relacionados con el trámite.
+   * @returns {void}
+   */
+  constructor(public tramiteStore: Tramite240122Store, public tramiteQuery: Tramite240122Query) {
+    this.terechosDatos$ = this.tramiteQuery.obtenerTercerosDatos$;
+  }
+
+  /**
+   * Actualiza la lista de destinatarios finales en el store del trámite.
+   *
+   * @method updateDestinatarioFinalTablaDatos
+   * @param {DestinoFinal[]} event - Lista de destinatarios finales actualizada.
+   * @returns {void}
+   * @remarks Este método se utiliza para propagar los cambios en la lista de destinatarios finales al estado global.
+   */
+  updateDestinatarioFinalTablaDatos(event: DestinoFinal[]): void {
+    this.tramiteStore.updateDestinatarioFinalTablaDatos(event);
+  }
 }

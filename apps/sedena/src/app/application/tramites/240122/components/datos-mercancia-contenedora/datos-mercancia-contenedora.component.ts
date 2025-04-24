@@ -30,7 +30,14 @@ import { Tramite240122Store } from '../../estados/tramite240122Store.store';
   styleUrl: './datos-mercancia-contenedora.component.scss',
 })
 export class DatosMercanciaContenedoraComponent {
+    /**
+     * Identificador único del procedimiento asociado al trámite.
+     * 
+     * @property {number} idProcedimiento
+     * @remarks Este valor se utiliza para identificar el trámite específico.
+     */
     idProcedimiento = NUMERO_TRAMITE.TRAMITE_240122;
+
     /**
      * Constructor del componente.
      *
@@ -39,9 +46,8 @@ export class DatosMercanciaContenedoraComponent {
      * @returns {void}
      */
     // eslint-disable-next-line no-empty-function
-    constructor(private tramiteStore: Tramite240122Store) {
-    }
-  
+    constructor(private tramiteStore: Tramite240122Store) {}
+
     /**
      * Actualiza los datos de la tabla de mercancía en el store.
      *

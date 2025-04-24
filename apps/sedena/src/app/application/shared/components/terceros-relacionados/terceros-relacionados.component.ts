@@ -191,6 +191,5 @@ export class TercerosRelacionadosComponent implements OnInit{
   ngOnInit(): void {
     this.ocultarBotones = OCULTAR_BOTONES.includes(this.idProcedimiento);
     this.ocultarBotonesProveedor = OCULTAR_BOTONES_PROVEEDOR.includes(this.idProcedimiento);
-
   }
 }

@@ -19,6 +19,7 @@ import { Tramite240122Store } from '../../estados/tramite240122Store.store';
  * @styleUrl ./agregar-proveedor-contenedora.component.scss
  * 
  * @property {number} idProcedimiento - Identificador único del procedimiento asociado al trámite 240122.
+ * @remarks Este valor se utiliza para identificar el trámite 240122.
  * 
  * @constructor
  * @param {Tramite240122Store} tramite240122Store - Store que administra el estado del trámite 240122.
@@ -37,15 +38,18 @@ import { Tramite240122Store } from '../../estados/tramite240122Store.store';
 })
 export class AgregarProveedorContenedoraComponent {
 
-    public readonly idProcedimiento:number = NUMERO_TRAMITE.TRAMITE_240122;
+    /**
+     * @property {number} idProcedimiento - Identificador único del procedimiento asociado al trámite 240122.
+     * @remarks Este valor se utiliza para identificar el trámite 240122.
+     */
+    public readonly idProcedimiento: number = NUMERO_TRAMITE.TRAMITE_240122;
   
     /**
      * @constructor
-     * @description Constructor que inyecta el store `Tramite260117Store` para gestionar el estado del trámite.
+     * @description Constructor que inyecta el store `Tramite240122Store` para gestionar el estado del trámite.
      *
-     * @param tramite240122Store - Store que administra el estado del trámite 260214.
+     * @param {Tramite240122Store} tramite240122Store - Store que administra el estado del trámite 240122.
      */
-    // eslint-disable-next-line no-empty-function
     constructor(public tramite240122Store: Tramite240122Store) {}
   
     /**

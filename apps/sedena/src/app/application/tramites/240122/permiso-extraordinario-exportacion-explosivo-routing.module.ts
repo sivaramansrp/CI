@@ -6,6 +6,14 @@ import { RouterModule } from '@angular/router';
 import { Routes } from '@angular/router';
 import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
 
+/**
+ * @constant ROUTES
+ * @description Define las rutas de navegación para el módulo de permiso extraordinario de exportación de explosivos.
+ * 
+ * @property {string} path - Ruta de acceso para cada componente.
+ * @property {any} component - Componente asociado a la ruta.
+ * @property {string} [pathMatch] - Define cómo se debe comparar la ruta (opcional).
+ */
 const ROUTES: Routes = [
   {
     path: 'contenedor-de-pasos',
@@ -30,6 +38,11 @@ const ROUTES: Routes = [
   },
 ];
 
+/**
+ * @module PermisoExtraordinarioExportacionExplosivoRoutingModule
+ * @description Módulo de enrutamiento para el trámite de permiso extraordinario de exportación de explosivos.
+ * Define las rutas necesarias para navegar entre los diferentes componentes del flujo.
+ */
 @NgModule({
   imports: [RouterModule.forChild(ROUTES)],
   exports: [RouterModule]
