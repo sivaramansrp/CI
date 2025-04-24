@@ -1647,8 +1647,8 @@
   {
     "id": 236,
     "tramite": 261101,
-    "linkDashboard": "/cofepris/solicitude-modification/solitud-modification",
-    "linkDepartment": "/pago/solicitude-modification/solitud-modification",
+    "linkDashboard": "/cofepris/solicitud-modificacion",
+    "linkDepartment": "/pago/solicitud-modificacion",
     "department": "cofepris"
   },
   {
