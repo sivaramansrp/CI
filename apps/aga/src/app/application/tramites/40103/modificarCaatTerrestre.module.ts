@@ -1,13 +1,14 @@
 import { AgregarTransporteComponent, CatalogosService } from '@ng-mf/data-access-user';
-import { AlertComponent } from '@ng-mf/data-access-user';
 import { AnexarDocumentosComponent, TablaDinamicaComponent } from '@ng-mf/data-access-user';
+import { AlertComponent } from '@ng-mf/data-access-user';
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { Chofer40103Service } from './estados/chofer40103.service';
+import { ChoferesComponent } from './components/choferes/choferes.component';
 import { CommonModule } from '@angular/common';
 import { CrosslistComponent } from '@ng-mf/data-access-user';
 import { DirectorGeneralComponent } from './components/director-general/director-general.component';
 import { FirmaElectronicaComponent } from '@ng-mf/data-access-user';
-import { forwardRef } from '@angular/core';
 import { InputCheckComponent } from '@ng-mf/data-access-user';
 import { InputFechaComponent } from '@ng-mf/data-access-user';
 import { InputHoraComponent } from '@ng-mf/data-access-user';
@@ -26,8 +27,8 @@ import { TituloComponent } from '@ng-mf/data-access-user';
 import { ToastrService } from 'ngx-toastr';
 import { VehiculosComponent } from './components/vehiculos/vehiculos.component';
 import { WizardComponent } from '@ng-mf/data-access-user';
-import { Chofer40103Service } from './estados/chofer40103.service';
-import { ChoferesComponent } from './components/choferes/choferes.component';
+import { forwardRef } from '@angular/core';
+
 
 @NgModule({
   declarations: [

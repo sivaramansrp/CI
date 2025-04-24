@@ -13,31 +13,30 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { Chofer40103Store, Choferesnacionales40103State } from '../../estados/chofer40103.store';
+import { Observable, Subject } from 'rxjs';
+import { CHOFERES_PAGE } from '../../enum/transportista-terrestre.enum';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { ChangeDetectorRef } from '@angular/core';
 import { Chofer40103Query } from '../../estados/chofer40103.query';
 import { Chofer40103Service } from '../../estados/chofer40103.service';
-import { Chofer40103Store, Choferesnacionales40103State } from '../../estados/chofer40103.store';
 import { CommonModule } from '@angular/common';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
-
-import { CHOFERES_PAGE } from '../../enum/transportista-terrestre.enum';
+import { DatosDelChoferNacional } from '../../../40103/models/registro-muestras-mercancias.model';
 import { HttpClient } from '@angular/common/http';
 import { Modal } from 'bootstrap';
 import { Nacional } from '@libs/shared/data-access-user/src/core/models/40103/transportista-terrestre.model';
-import { Observable, Subject } from 'rxjs';
 import { ReplaySubject } from 'rxjs';
 import { SharedModule } from '@ng-mf/data-access-user';
-import { choferesExtranjeros } from '../../../40103/models/registro-muestras-mercancias.model';
-import { DatosDelChoferNacional } from '../../../40103/models/registro-muestras-mercancias.model';
-import { extranjero } from '@libs/shared/data-access-user/src/core/models/40103/transportista-terrestre.model';
-import { takeUntil } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
 import { ToastrService } from 'ngx-toastr';
+import { choferesExtranjeros } from '../../../40103/models/registro-muestras-mercancias.model';
+import { extranjero } from '@libs/shared/data-access-user/src/core/models/40103/transportista-terrestre.model';
+import { map } from 'rxjs/operators';
 import mockData from '@libs/shared/theme/assets/json/40103/director-general-mockdata.json';
+import { takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-choferes',
@@ -617,7 +616,7 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
       return;
     }
 
-    const submittedData = this.DatosDelChoferNacional.map((item) => ({
+    const SUBMITTEDDATA = this.DatosDelChoferNacional.map((item) => ({
       ...item,
       clave: item?.calle || '',
       descripcion: item?.rfc || '',
@@ -627,7 +626,7 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
         ...state,
         DatosDelChoferNacional: [
           ...(state.datosDelChoferNacional || []),
-          ...submittedData,
+          ...SUBMITTEDDATA,
         ],
       };
     });

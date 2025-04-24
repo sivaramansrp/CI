@@ -1,12 +1,9 @@
 import { BehaviorSubject, Observable } from 'rxjs'; 
-import { Chofer40103Store } from './chofer40103.store';
-import { Injectable } from '@angular/core';
-
-import {
-  DatosDelVehículo,
-} from '@libs/shared/data-access-user/src/core/models/40103/transportista-terrestre.model';
 import { Catalogo } from '@libs/shared/data-access-user/src';
+import { Chofer40103Store } from './chofer40103.store';
+import { DatosDelVehículo } from '@libs/shared/data-access-user/src/core/models/40103/transportista-terrestre.model';
 import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 
 /**
  * Servicio para gestionar datos relacionados con choferes y vehículos en el contexto del trámite 40103.
