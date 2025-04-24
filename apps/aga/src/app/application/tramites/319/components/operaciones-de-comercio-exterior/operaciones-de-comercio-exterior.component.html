@@ -2,4 +2,13 @@
     <div class="row">
         <ng-titulo [titulo]="'Operaciones de Comercio Exterior'"></ng-titulo>
       </div>
+      <div class="row">
+        <form [formGroup]="miformulario" >
+          <div class="col-md-4">
+            <app-catalogo-select [catalogo]="optionsPaisList" [label]="'Operación'" [required]="true" id="operacion"
+            formControlName="operacion" 
+          ></app-catalogo-select>
+        </div>
+          </form>
+      </div>
 </div>

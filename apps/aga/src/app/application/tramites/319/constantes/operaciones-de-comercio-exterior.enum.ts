@@ -12,3 +12,4 @@ export const PASOS = [
       completado: false,
     },
   ];
+  export const URL = '../../../../../assets/json/319/';
