@@ -32,10 +32,10 @@ export const PASOS = [
 /**
  * @const TITULOMENSAJE
  * @description Título del mensaje que describe el propósito de la solicitud.
- * @value {string} 'Solicitud Permiso ordinario para la exportación de sustancias químicas'
+ * @value {string} 'Solicitud Permiso ordinario para la exportación de para la exportación de material explosivo'
  */
 export const TITULOMENSAJE =
-  'Solicitud Permiso ordinario para la exportación de sustancias químicas';
+  'Solicitud Permiso extraordinario para la exportación de material explosivo';
 
 /**
  * @const TEXTOS_REQUISITOS
