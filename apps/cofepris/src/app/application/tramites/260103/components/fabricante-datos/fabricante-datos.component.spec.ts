@@ -7,7 +7,7 @@ import { By } from '@angular/platform-browser';
 import { Observable, of as observableOf, throwError } from 'rxjs';
 
 import { Component } from '@angular/core';
-import { AgregarOtrosComponent } from './agregar-otros.component';
+import { FabricanteDatosComponent } from './fabricante-datos.component';
 import { FormBuilder } from '@angular/forms';
 import { DatosSolicitudService } from '../../../../shared/services/datos-solicitud.service';
 import { Location } from '@angular/common';
@@ -22,7 +22,7 @@ class MockDatosSolicitudService {
 
 @Injectable()
 class MockTramite260103Store {
-  updateOtrosTablaDatos() {}
+  updateFabricanteTablaDatos() {}
 }
 
 @Injectable()
@@ -30,13 +30,13 @@ class MockImportacionMateriasPrimasService {
   obtenerOstro() {}
 }
 
-describe('AgregarOtrosComponent', () => {
+describe('FabricanteDatosComponent', () => {
   let fixture;
   let component;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule,HttpClientModule ],
+      imports: [ FormsModule, ReactiveFormsModule,HttpClientModule,FabricanteDatosComponent ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
         FormBuilder,
@@ -45,10 +45,10 @@ describe('AgregarOtrosComponent', () => {
         { provide: Tramite260103Store, useClass: MockTramite260103Store },
         { provide: ImportacionMateriasPrimasService, useClass: MockImportacionMateriasPrimasService }
       ]
-    }).overrideComponent(AgregarOtrosComponent, {
+    }).overrideComponent(FabricanteDatosComponent, {
 
     }).compileComponents();
-    fixture = TestBed.createComponent(AgregarOtrosComponent);
+    fixture = TestBed.createComponent(FabricanteDatosComponent);
     component = fixture.debugElement.componentInstance;
   });
 
@@ -86,13 +86,13 @@ describe('AgregarOtrosComponent', () => {
 
   it('should run #guardar()', async () => {
     component.tramiteStore = component.tramiteStore || {};
-    component.tramiteStore.updateOtrosTablaDatos = jest.fn();
+    component.tramiteStore.updateFabricanteTablaDatos = jest.fn();
     component.agregarDatosForm = component.agregarDatosForm || {};
     component.agregarDatosForm.value = 'value';
     component.ubicaccion = component.ubicaccion || {};
     component.ubicaccion.back = jest.fn();
     component.guardar();
-    expect(component.tramiteStore.updateOtrosTablaDatos).toHaveBeenCalled();
+    expect(component.tramiteStore.updateFabricanteTablaDatos).toHaveBeenCalled();
   });
 
   it('should run #changeNacionalidad()', async () => {

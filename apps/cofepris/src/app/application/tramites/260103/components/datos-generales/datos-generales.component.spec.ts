@@ -8,24 +8,37 @@ import { Observable, of as observableOf, throwError } from 'rxjs';
 
 import { Component } from '@angular/core';
 import { DatosGeneralesComponent } from './datos-generales.component';
-import { ActivatedRoute, Router, ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { DatosSolicitudService } from '../../../../shared/services/datos-solicitud.service';
 import { FormBuilder } from '@angular/forms';
-import { Tramite260302Store } from '../../estados/tramite260304Store.store';
-import { Tramite260302Query } from '../../estados/tramite260304Query.query';
+import { Tramite260103Store } from '../../estados/tramite260103Store.store';
+import { Location } from '@angular/common';
+
 
 @Injectable()
 class MockDatosSolicitudService {
-  obtenerListaPaises(): Observable<any>{
-    return observableOf([])
+  obtenerListaPaises(): Observable<any> {
+    return observableOf([]);
+  }
+  obtenerListaEstados(): Observable<any> {
+    return observableOf([]);
+  }
+  obtenerListaMunicipios(): Observable<any> {
+    return observableOf([]);
+  }
+  obtenerListaCodigosPostales(): Observable<any> {
+    return observableOf([]);
+  }
+  obtenerListaColonias(): Observable<any> {
+    return observableOf([]);
+  }
+  obtenerListaLocalidades(): Observable<any> {
+    return observableOf([]);
   }
 }
 
 @Injectable()
-class MockTramite260302Store {}
-
-@Injectable()
-class MockTramite260302Query {}
+class MockTramite260103Store {}
 
 @Injectable()
 class MockRouter {
@@ -44,8 +57,7 @@ describe('DatosGeneralesComponent', () => {
       providers: [
         { provide: DatosSolicitudService, useClass: MockDatosSolicitudService },
         FormBuilder,
-        { provide: Tramite260302Store, useClass: MockTramite260302Store },
-        { provide: Tramite260302Query, useClass: MockTramite260302Query },
+        { provide: Tramite260103Store, useClass: MockTramite260103Store },
         { provide: Router, useClass: MockRouter },
         {
           provide: ActivatedRoute,
@@ -78,42 +90,17 @@ describe('DatosGeneralesComponent', () => {
     expect(component.datosSolicitudService.obtenerListaPaises).toHaveBeenCalled();
   });
 
+  it('should run #cancelar()', async () => {
+    component.router = component.router || {};
+    component.router.navigate = jest.fn();
+    component.cancelar();
+    expect(component.router.navigate).toBeTruthy();
+  });
+
   it('should run #limpiarFormulario()', async () => {
     component.agregarDatosForm = component.agregarDatosForm || {};
     component.agregarDatosForm.reset = jest.fn();
     component.limpiarFormulario();
     expect(component.agregarDatosForm.reset).toHaveBeenCalled();
   });
-
-  it('should run #guardarDatos()', async () => {
-    component.tipoTablaDatos = component.tipoTablaDatos || {};
-    component.tipoTablaDatos.OTROS = 'OTROS';
-    component.addFabricantes = jest.fn();
-    component.agregarDatosForm = component.agregarDatosForm || {};
-    component.agregarDatosForm.value = 'value';
-    component.addFacturadores = jest.fn();
-    component.addCertificadoTablaDatos = jest.fn();
-    component.addProveedores = jest.fn();
-    component.addOtros = jest.fn();
-    component.router = component.router || {};
-    component.router.navigate = jest.fn();
-    component.guardarDatos();
-
-  });
-
-  it('should run #addDestinario()', async () => {
-    component.tramiteStore = component.tramiteStore || {};
-    component.tramiteStore.updateDestinatarioTablaDatos = jest.fn();
-    component.addDestinatario({});
-  });
-
-
-  it('should run #addOtros()', async () => {
-    component.tramiteStore = component.tramiteStore || {};
-    component.tramiteStore.updateOtrosTablaDatos = jest.fn();
-    component.addOtros({});
-  });
-
-
-
 });

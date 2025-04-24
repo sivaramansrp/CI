@@ -8,19 +8,35 @@ import { Observable, of as observableOf, throwError } from 'rxjs';
 
 import { Component } from '@angular/core';
 import { TercerosRelacionadosVistaComponent } from './terceros-relacionados-vista.component';
-import { Tramite260302Store } from '../../estados/tramite260302Store.store';
-import { Tramite260302Query } from '../../estados/tramite260103Query.query';
+import { Tramite260103Query } from '../../estados/tramite260103Query.query';
 import { Router, ActivatedRoute } from '@angular/router';
 
 @Injectable()
-class MockTramite260302Store {}
-
-@Injectable()
-class MockTramite260302Query {}
+class MockTramite260103Query {}
 
 @Injectable()
 class MockRouter {
   navigate() {};
+}
+
+@Directive({ selector: '[myCustom]' })
+class MyCustomDirective {
+  @Input() myCustom;
+}
+
+@Pipe({name: 'translate'})
+class TranslatePipe implements PipeTransform {
+  transform(value) { return value; }
+}
+
+@Pipe({name: 'phoneNumber'})
+class PhoneNumberPipe implements PipeTransform {
+  transform(value) { return value; }
+}
+
+@Pipe({name: 'safeHtml'})
+class SafeHtmlPipe implements PipeTransform {
+  transform(value) { return value; }
 }
 
 describe('TercerosRelacionadosVistaComponent', () => {
@@ -29,12 +45,15 @@ describe('TercerosRelacionadosVistaComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule ],
-
+      imports: [ FormsModule, ReactiveFormsModule, TercerosRelacionadosVistaComponent, ],
+      declarations: [
+      
+        TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
+        MyCustomDirective
+      ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
-        { provide: Tramite260302Store, useClass: MockTramite260302Store },
-        { provide: Tramite260302Query, useClass: MockTramite260302Query },
+        { provide: Tramite260103Query, useClass: MockTramite260103Query },
         { provide: Router, useClass: MockRouter },
         {
           provide: ActivatedRoute,
@@ -55,6 +74,10 @@ describe('TercerosRelacionadosVistaComponent', () => {
     component = fixture.debugElement.componentInstance;
   });
 
+  afterEach(() => {
+    component.ngOnDestroy = function() {};
+    fixture.destroy();
+  });
 
   it('should run #constructor()', async () => {
     expect(component).toBeTruthy();
@@ -62,11 +85,8 @@ describe('TercerosRelacionadosVistaComponent', () => {
 
   it('should run #ngOnInit()', async () => {
     component.tramiteQuery = component.tramiteQuery || {};
+    component.tramiteQuery.getdestinatarioTablaDatos$ = 'getdestinatarioTablaDatos$';
     component.tramiteQuery.getFabricanteTablaDatos$ = 'getFabricanteTablaDatos$';
-    component.tramiteQuery.getCertificadoTablaDatos$ = 'getCertificadoTablaDatos$';
-    component.tramiteQuery.getProveedorTablaDatos$ = 'getProveedorTablaDatos$';
-    component.tramiteQuery.getFacturadorTablaDatos$ = 'getFacturadorTablaDatos$';
-    component.tramiteQuery.getOtrasTablaDatos$ = 'getOtrasTablaDatos$';
     component.ngOnInit();
 
   });
@@ -75,13 +95,14 @@ describe('TercerosRelacionadosVistaComponent', () => {
     component.router = component.router || {};
     component.router.navigate = jest.fn();
     component.navigate({});
+    expect(component.router.navigate).toHaveBeenCalled();
   });
 
-  it('should run #navigateOtros()', async () => {
+  it('should run #navigateFabricante()', async () => {
     component.router = component.router || {};
     component.router.navigate = jest.fn();
-    component.navigateOtros();
-    expect(component.router.navigate).toHaveBeenCalled();
+    component.navigateFabricante();
+     expect(component.router.navigate).toHaveBeenCalled();
   });
 
   it('should run #ngOnDestroy()', async () => {
@@ -89,6 +110,8 @@ describe('TercerosRelacionadosVistaComponent', () => {
     component.destroy$.next = jest.fn();
     component.destroy$.complete = jest.fn();
     component.ngOnDestroy();
+     expect(component.destroy$.next).toHaveBeenCalled();
+    expect(component.destroy$.complete).toHaveBeenCalled();
   });
 
 });

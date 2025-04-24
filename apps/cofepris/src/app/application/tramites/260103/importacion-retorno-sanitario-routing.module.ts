@@ -2,7 +2,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { ContenedorDePasosComponent } from './pages/contenedor-de-paso/contenedor-de-pasos.component';
 import { DatosGeneralesComponent } from './components/datos-generales/datos-generales.component';
 import { FabricanteDatosComponent } from './components/fabricante-datos/fabricante-datos.component';
-import { ImporticonMercanciaSanitarioComponent } from './components/exporticon-mercancia-estupefacientes/importicon-mercancia-sanitario.component';
+import { ImporticonMercanciaSanitarioComponent } from './components/importicon-mercancia-sanitario/importicon-mercancia-sanitario.component';
 import { NgModule } from '@angular/core';
 import { ScianTablaContenedoraComponent } from './components/scian-tabla-contenedora/scian-tabla-contenedora.component';
 

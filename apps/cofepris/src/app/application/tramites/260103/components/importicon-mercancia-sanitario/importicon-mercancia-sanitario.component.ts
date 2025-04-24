@@ -307,14 +307,6 @@ public paisDeProcedenciaDatos = CROSLISTA_DE_PAISES;
         this.mercanciaFormState.denominacionEspecificaProducto,
         Validators.required,
       ],
-      denominacionDistintiva: [
-        this.mercanciaFormState.denominacionDistintiva,
-        Validators.required,
-      ],
-      denominacionComun: [
-        this.mercanciaFormState.denominacionComun,
-        Validators.required,
-      ],
       tipoProducto: [this.mercanciaFormState.tipoProducto, Validators.required],
       fraccionArancelaria: [
         this.mercanciaFormState.fraccionArancelaria,
