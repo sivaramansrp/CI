@@ -464,5 +464,51 @@ registerOnChange(fn: (value: Record<string, unknown>) => void): void {
     }
     return { labelNombre: '', required: false, habilitado: false };
   }
+
+  /**
+  * @method obtenerFilas
+  * @description
+  * Este método obtiene un arreglo de números que representan las filas únicas definidas en los datos del formulario dinámico.
+  * 
+  * Funcionalidad:
+  * - Recorre los datos del formulario (`formularioDatos`) y extrae el valor de la propiedad `row` de cada control.
+  * - Si el valor de `row` no está definido, se asigna el valor predeterminado de `0`.
+  * - Utiliza un conjunto (`Set`) para garantizar que las filas sean únicas.
+  * - Convierte el conjunto en un arreglo y lo devuelve.
+  * 
+  * @returns {number[]} Un arreglo de números que representan las filas únicas en el formulario dinámico.
+  * 
+  * @example
+  * const filas = this.obtenerFilas();
+  * console.log(filas); // Salida: [0, 1, 2]
+  */
+  public obtenerFilas(): number[] {
+    const FILAS = new Set<number>();
+    this.formularioDatos.forEach(control => {
+      FILAS.add(control.row !== undefined ? control.row : 0);
+    });
+    return Array.from(FILAS);
+  }
+
+  /**
+  * @method obtenerControlsPorFilas
+  * @description
+  * Este método obtiene un arreglo de controles dinámicos que pertenecen a una fila específica en el formulario dinámico.
+  * 
+  * Funcionalidad:
+  * - Filtra los datos del formulario (`formularioDatos`) para encontrar los controles que coinciden con la fila especificada.
+  * - Si la propiedad `row` de un control no está definida, se asigna el valor predeterminado de `0`.
+  * - Devuelve un arreglo de controles que pertenecen a la fila especificada.
+  * 
+  * @param {number} row - Número de la fila para la cual se desean obtener los controles.
+  * @returns {ModeloDeFormaDinamica[]} Un arreglo de controles dinámicos que pertenecen a la fila especificada.
+  * 
+  * @example
+  * const controles = this.obtenerControlsPorFilas(1);
+  * console.log(controles); // Salida: [{ campo: 'nombre', row: 1 }, { campo: 'apellido', row: 1 }]
+  */
+  public obtenerControlsPorFilas(row: number): ModeloDeFormaDinamica[] {
+    return this.formularioDatos.filter(control => (control.row !== undefined ? control.row : 0) === row);
+  }
   
 }

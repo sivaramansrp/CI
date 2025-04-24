@@ -48,6 +48,7 @@ export interface ModeloDeFormaDinamica {
   layout?: any; // layout for radio options
   mostrar?: boolean; // show or hide the field
   habilitado?: boolean; // enable or disable the field
+  row?: number; // row number for the corresponding control
 }
 
 export interface Validadores {
