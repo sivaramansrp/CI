@@ -14,6 +14,13 @@
                             type="text"
                             (change)="setValoresStore(represtantante,'resigtro', 'setResigtro')"
                         />
+                        @if(represtantante.controls['resigtro'].invalid && represtantante.controls['resigtro'].touched){
+                            <div class="d-grid">
+                                @if(represtantante.controls['resigtro'].errors?.['required']) {
+                                    <span class="mensaje-error">Este campo es obligatorio</span>
+                                }
+                            </div>
+                        }
                     </div>
                 </div>
             </div>
