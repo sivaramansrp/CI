@@ -1,4 +1,4 @@
-import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, CatalogoSelectComponent, CrosslistComponent, FirmaElectronicaComponent, SolicitanteComponent, TituloComponent, WizardComponent } from '@libs/shared/data-access-user/src';
+import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, CatalogoSelectComponent, CrosslistComponent, FirmaElectronicaComponent, SolicitanteComponent, TablaDinamicaComponent, TituloComponent, WizardComponent } from '@libs/shared/data-access-user/src';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { CommonModule } from '@angular/common';
@@ -10,6 +10,7 @@ import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { PhytosanitaryRexportationRoutingModule } from './phytosanitary-rexportation-routing.module';
 import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
+import { TercerosComponent } from './components/terceros/terceros.component';
 
 
 @NgModule({
@@ -19,7 +20,8 @@ import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.co
     PasoDosComponent, 
     PasoTresComponent, 
     SolicitudPageComponent,
-    DatosDeLaSolicitudComponent
+    DatosDeLaSolicitudComponent,
+    TercerosComponent
   ], 
   imports: [
     CommonModule,
@@ -35,7 +37,8 @@ import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.co
     WizardComponent,
     FirmaElectronicaComponent,
     CrosslistComponent,
-    SolicitanteComponent
+    SolicitanteComponent,
+    TablaDinamicaComponent
   ],
   providers:[ToastrService]
 })
