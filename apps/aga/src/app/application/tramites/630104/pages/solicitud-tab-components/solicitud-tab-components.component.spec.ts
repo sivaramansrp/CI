@@ -7,7 +7,7 @@ describe('SolicitudTabComponentsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SolicitudTabComponentsComponent],
+      declarations: [SolicitudTabComponentsComponent], // Correctly declare the component here
     }).compileComponents();
 
     fixture = TestBed.createComponent(SolicitudTabComponentsComponent);

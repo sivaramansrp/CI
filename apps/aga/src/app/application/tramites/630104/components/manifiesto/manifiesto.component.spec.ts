@@ -1,34 +1,34 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
-import { of } from 'rxjs';
+import { of, Subject } from 'rxjs';
 
 import { ManifiestoComponent } from './manifiesto.component';
-import { Tramite630303Store } from '../../estados/tramite630303.store';
-import { Tramite630303Query } from '../../estados/tramite630303.query';
+import { Tramite630104Store } from '../../estados/tramites/tramite630104.store';
+import { Tramite630104Query } from '../../estados/queries/tramite630104.query';
 
 describe('ManifiestoComponent', () => {
   let component: ManifiestoComponent;
   let fixture: ComponentFixture<ManifiestoComponent>;
-  let mockStore: jest.Mocked<Tramite630303Store>;
-  let mockQuery: jest.Mocked<Tramite630303Query>;
+  let mockStore: jest.Mocked<Tramite630104Store>;
+  let mockQuery: jest.Mocked<Tramite630104Query>;
 
   beforeEach(async () => {
     mockStore = {
-      setTramite630303State: jest.fn(),
-    } as unknown as jest.Mocked<Tramite630303Store>;
+      setTramite630104State: jest.fn(),
+    } as unknown as jest.Mocked<Tramite630104Store>;
 
     mockQuery = {
-      selectTramite630303State$: of({
+      selectTramite630104State$: of({
         declaracion: 'Declaración de prueba',
       }),
-    } as unknown as jest.Mocked<Tramite630303Query>;
+    } as unknown as jest.Mocked<Tramite630104Query>;
 
     await TestBed.configureTestingModule({
-      declarations: [],
-      imports: [ReactiveFormsModule,ManifiestoComponent],
+      declarations: [ManifiestoComponent],
+      imports: [ReactiveFormsModule],
       providers: [
-        { provide: Tramite630303Store, useValue: mockStore },
-        { provide: Tramite630303Query, useValue: mockQuery },
+        { provide: Tramite630104Store, useValue: mockStore },
+        { provide: Tramite630104Query, useValue: mockQuery },
       ],
     }).compileComponents();
   });
@@ -55,7 +55,7 @@ describe('ManifiestoComponent', () => {
 
     component.setValorStore(component.manifiestoFormulario, 'declaracion');
 
-    expect(mockStore.setTramite630303State).toHaveBeenCalledWith({
+    expect(mockStore.setTramite630104State).toHaveBeenCalledWith({
       declaracion: newValue,
     });
   });

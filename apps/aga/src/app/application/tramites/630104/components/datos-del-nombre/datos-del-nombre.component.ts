@@ -4,17 +4,20 @@
 import { CommonModule } from '@angular/common';
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 
 import { CatalogoSelectComponent, SolicitanteComponent, TituloComponent } from '@ng-mf/data-access-user';
 
-import { Catalogo, ModeloDeFormaDinamica, REGEX_NOMBRE } from '@libs/shared/data-access-user/src';
-import {DatosGeneralesComponent} from '../datos-generales/datos-generales.component';
+import { Catalogo, ModeloDeFormaDinamica } from '@libs/shared/data-access-user/src';
+import { DatosGeneralesComponent } from '../datos-generales/datos-generales.component';
+import { DomicilioFiscalComponent } from '../domicilio-fiscal/domicilio-fiscal.component';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
 
-import { FORMULARIO_DATOS_NOMBRE } from '../../enums/retorno-importacion-temporal.enum';
+import { FORMULARIO_DATOS_PROPIETARIO_DIRECCION, FORMULARIO_DATOS_PROPIETARIO_NOMBRE, FORMULARIO_FISCAL_CURP } from '../../enums/retorno-importacion-temporal.enum';
 import { Tramite630104Query } from '../../estados/queries/tramite630104.query';
+
+import { REGEX_NOMBRE } from "@libs/shared/data-access-user/src/tramites/constantes/regex.constants";
 
 import { Tramite630104State, Tramite630104Store } from '../../estados/tramites/tramite630104.store';
 import { EquipoEInstrumentosMusicalesService } from '../../services/equipo-e-instrumentos-musicales.service';
@@ -25,27 +28,47 @@ import { EquipoEInstrumentosMusicalesService } from '../../services/equipo-e-ins
 @Component({
   selector: 'app-datos-del-nombre',
   standalone: true,
-  imports: [CommonModule, FormasDinamicasComponent, CatalogoSelectComponent,DatosGeneralesComponent, SolicitanteComponent, TituloComponent, ReactiveFormsModule, SolicitanteComponent],
+  imports: [CommonModule, FormasDinamicasComponent, CatalogoSelectComponent, DatosGeneralesComponent, DomicilioFiscalComponent, SolicitanteComponent, TituloComponent, ReactiveFormsModule, SolicitanteComponent],
   templateUrl: './datos-del-nombre.component.html',
   styleUrl: './datos-del-nombre.component.scss',
 })
 export class DatosDelNombreComponent implements OnInit, OnDestroy {
 
+  /**
+   * Indicador para mostrar el formulario de personas extranjeras.
+   */
+  mostrarFormularioPersonaExtranjera = false;
+  /**
+   * Indica si se debe mostrar el tipo de propietario.
+   */
+  mostrarTipoPropietario = false;
 
-  public consultarPorRFCOpcionseleccionada: boolean = false;
+  /**
+   * Indica si se debe mostrar el solicitante.
+   */
+  mostrarSolicitante = false;
+
+  /**
+   * Opciones de propietarios obtenidas desde un catálogo.
+   */
   consultarPorRFC: Catalogo[] = [];
-
-  tipoDeRepresentanteOpciones: Catalogo[] = [];
 
   /**
    * Opciones de tipos de propietarios obtenidas desde un catálogo.
    */
-  tipoDePropietarioOpciones: Catalogo[] = [];
+  tipoDeRepresentanteOpciones: Catalogo[] = [];
 
   /**
    * Formulario dinámico para gestionar los datos del tipo de propietario.
    */
-  formularioDatosTipoPropietario: ModeloDeFormaDinamica[] = FORMULARIO_DATOS_NOMBRE;
+  formularioDatosPropietarioDireccion: ModeloDeFormaDinamica[] = FORMULARIO_DATOS_PROPIETARIO_DIRECCION;
+
+  /**
+   * Formulario dinámico para gestionar los datos del nombre del propietario.
+   */
+  formularioDatosPropietarioNombre: ModeloDeFormaDinamica[] = FORMULARIO_DATOS_PROPIETARIO_NOMBRE;
+
+  formularioFiscalCurp: ModeloDeFormaDinamica[] = FORMULARIO_FISCAL_CURP
 
   /**
    * Formulario reactivo para gestionar los datos del tipo de propietario.
@@ -62,30 +85,73 @@ export class DatosDelNombreComponent implements OnInit, OnDestroy {
    */
   private destroyed$ = new Subject<void>();
 
+  public consultarPorRFCOpcionseleccionada: boolean = false;
+
   /**
    * Constructor del componente.
    * 
    * @param fb - Constructor de formularios reactivos.
    * @param tramite630104Store - Store para manejar el estado del trámite.
    * @param tramite630104Query - Query para consultar el estado del trámite.
-   * @param retornoImportacionTemporalService - Servicio para obtener datos de catálogos.
+   * @param EquipoEInstrumentosMusicalesService - Servicio para obtener datos de catálogos.
    */
-  constructor(private fb: FormBuilder, private tramite630104Store: Tramite630104Store,
-    private tramite630104Query: Tramite630104Query, private equipoEInstrumentosMusicalesService: EquipoEInstrumentosMusicalesService) {
-    //
-  }
+  constructor(
+    private fb: FormBuilder,
+    private tramite630104Store: Tramite630104Store,
+    private tramite630104Query: Tramite630104Query,
+    private equipoEInstrumentosMusicalesService: EquipoEInstrumentosMusicalesService
+  ) { }
 
   /**
- * Método del ciclo de vida que se ejecuta al inicializar el componente.
- * Inicializa el formulario y obtiene datos de catálogos.
- */
+   * Método del ciclo de vida que se ejecuta al inicializar el componente.
+   * Inicializa el formulario y obtiene datos de catálogos.
+   */
   ngOnInit(): void {
     this.getValorStore();
     this.inicializarFormulario();
     this.getconsultarPorRFC();
     this.getTipoDeRepresentante();
     this.getPais();
-    this.ajustarValidadoresSegunValor();
+    this.cambiarPropietario();
+    this.cambiarTipoPropietario();
+  }
+
+  continuar(): void {
+    if (this.datisDelNombre.get('esConsultaRep')?.value === '1') {
+      this.consultarPorRFCOpcionseleccionada = true;
+    }
+    else if (this.datisDelNombre.get('esConsultaRep')?.value === '2') {
+      this.consultarPorRFCOpcionseleccionada = false
+    }
+  }
+  /**
+   * Cambia la visibilidad de los campos según el tipo de propietario seleccionado.
+   */
+  cambiarTipoPropietario(): void {
+    const TIPO_REPRESENTANTE_VALOR = this.datisDelNombre.get('datosRepresentante')?.value;
+    const REPRESENTANTE_RFC = this.formularioDatosPropietarioNombre.find((campo) => campo.id === 'td_rfc_representante');
+    const CURP_CAMPO = this.formularioDatosPropietarioNombre.find((campo) => campo.id === 'td_curp_representantev');
+    const NOMBRE_CAMPO = this.formularioDatosPropietarioNombre.find((campo) => campo.id === 'nombre');
+    const APELLIDO_PATERNO_CAMPO = this.formularioDatosPropietarioNombre.find((campo) => campo.id === 'apellidoPaterno');
+    const APELLIDO_MATERNO_CAMPO = this.formularioDatosPropietarioNombre.find((campo) => campo.id === 'apellidoMaterno');
+
+
+    if (REPRESENTANTE_RFC && CURP_CAMPO && NOMBRE_CAMPO && APELLIDO_PATERNO_CAMPO && APELLIDO_MATERNO_CAMPO) {
+      REPRESENTANTE_RFC.mostrar = TIPO_REPRESENTANTE_VALOR === '1';
+      CURP_CAMPO.mostrar = TIPO_REPRESENTANTE_VALOR === '1';
+      NOMBRE_CAMPO.mostrar = TIPO_REPRESENTANTE_VALOR === '1';
+      APELLIDO_PATERNO_CAMPO.mostrar = TIPO_REPRESENTANTE_VALOR === '1';
+      APELLIDO_MATERNO_CAMPO.mostrar = TIPO_REPRESENTANTE_VALOR === '1';
+    }
+    this.mostrarFormularioPersonaExtranjera = TIPO_REPRESENTANTE_VALOR;
+  }
+
+  /**
+   * Cambia la visibilidad de los componentes según el propietario seleccionado.
+   */
+  cambiarPropietario(): void {
+    this.mostrarTipoPropietario = this.datisDelNombre.get('esConsultaRep')?.value === '2';
+    this.mostrarSolicitante = this.datisDelNombre.get('esConsultaRep')?.value === '1';
   }
 
   /**
@@ -93,15 +159,10 @@ export class DatosDelNombreComponent implements OnInit, OnDestroy {
    */
   inicializarFormulario(): void {
     this.datisDelNombre = this.fb.group({
-      consultarPorRFC: [this.estadoSeleccionado?.['consultarPorRFC'] || '', Validators.required],
-      tipoDeRepresentante: [this.estadoSeleccionado?.['tipoDeRepresentante'] || '', Validators.required],
-      nombre: [this.estadoSeleccionado?.['nombre'] || '', [Validators.required, Validators.pattern(REGEX_NOMBRE)]],
-      apellidoPaterno: [this.estadoSeleccionado?.['apellidoPaterno'] || '', [Validators.required, Validators.pattern(REGEX_NOMBRE)]],
-      apellidoMaterno: [this.estadoSeleccionado?.['apellidoMaterno'] || '', Validators.pattern(REGEX_NOMBRE)],
-      razonSocial: [this.estadoSeleccionado?.['razonSocial'] || '', [Validators.required, Validators.pattern(REGEX_NOMBRE)]],
+      esConsultaRep: [this.estadoSeleccionado?.['esConsultaRep'] || '', Validators.required],
+      datosRepresentante: [this.estadoSeleccionado?.['datosRepresentante'] || '', Validators.required],
       rfc: [this.estadoSeleccionado?.['rfc'] || '', [Validators.required, Validators.pattern(REGEX_NOMBRE)]],
-      rfcOptionado: [this.estadoSeleccionado?.['rfcOptionado'] || '', [Validators.required, Validators.pattern(REGEX_NOMBRE)]],
-      curp: [this.estadoSeleccionado?.['curp'] || '', [Validators.required, Validators.pattern(REGEX_NOMBRE)]],
+
     });
   }
 
@@ -148,26 +209,16 @@ export class DatosDelNombreComponent implements OnInit, OnDestroy {
       .getPais()
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data) => {
-        const PAIS_FIELD = this.formularioDatosTipoPropietario.find((field) => field.id === 'pais');
+        const PAIS_FIELD = this.formularioDatosPropietarioDireccion.find((campo) => campo.id === 'pais');
         if (PAIS_FIELD) {
           PAIS_FIELD.opciones = data;
         }
       });
   }
 
-
-  continuar(): void {
-    if (this.datisDelNombre.get('consultarPorRFC')?.value === '1') {
-      this.consultarPorRFCOpcionseleccionada = true;
-    }
-    else if (this.datisDelNombre.get('consultarPorRFC')?.value === '2') {
-      this.consultarPorRFCOpcionseleccionada = false
-    }
-    }
   /**
    * Establece un cambio de valor en el store basado en un evento.
-   * 
-   * @param $event - Evento que contiene el campo y el valor a actualizar.
+   *  Evento que contiene el campo y el valor a actualizar.
    */
   establecerCambioDeValor($event: { campo: string; valor: unknown }): void {
     if (typeof $event.valor === 'object' && $event.valor !== null && 'id' in $event.valor) {
@@ -176,50 +227,7 @@ export class DatosDelNombreComponent implements OnInit, OnDestroy {
       this.tramite630104Store.setTramite630104State($event.campo, $event.valor);
     }
     this.consultarPorRFCOpcionseleccionada = this.datisDelNombre.get('consultarPorRFC')?.value;
-    }
-
-  /**
-   * Establece validadores a un conjunto de campos del formulario.
-   * 
-   * @param campos - Lista de nombres de los campos.
-   * @param validador - Validador o lista de validadores a aplicar.
-   */
-  establecerValidadores(campos: string[], validador: ValidatorFn | ValidatorFn[]): void {
-    campos.forEach((nombreCampo) => {
-      const CAMPO = this.datisDelNombre.get(nombreCampo);
-      CAMPO?.setValidators(validador);
-      CAMPO?.updateValueAndValidity();
-    });
   }
-
-  /**
-   * Elimina todos los validadores de un conjunto de campos del formulario.
-   * 
-   * @param campos - Lista de nombres de los campos.
-   */
-  limpiarValidadores(campos: string[]): void {
-    campos.forEach((nombreCampo) => {
-      const CAMPO = this.datisDelNombre.get(nombreCampo);
-      CAMPO?.clearValidators();
-      CAMPO?.updateValueAndValidity();
-    });
-  }
-
-  /**
-   * Ajusta los validadores según el valor seleccionado.
-   */
-  ajustarValidadoresSegunValor(): void {
-    const TIPO_DE_PROPIETARIO = this.datisDelNombre.get('tipoDePropietario')?.value;
-    if (TIPO_DE_PROPIETARIO === '1') {
-      this.limpiarValidadores(['razonSocial']);
-      this.establecerValidadores(['nombre', 'apellidoPaterno'], Validators.required);
-    } else if (TIPO_DE_PROPIETARIO === '2') {
-      this.limpiarValidadores(['nombre', 'apellidoPaterno']);
-      this.establecerValidadores(['razonSocial'], Validators.required);
-    }
-}
-
-
 
   /**
    * Método del ciclo de vida que se ejecuta al destruir el componente.
@@ -230,4 +238,3 @@ export class DatosDelNombreComponent implements OnInit, OnDestroy {
     this.destroyed$.complete();
   }
 }
-

@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PasoDosComponent } from './paso-dos.component';
+import { ToastrService, TOAST_CONFIG } from 'ngx-toastr'; // Adjust import based on your library
 
 describe('PasoDosComponent', () => {
   let component: PasoDosComponent;
@@ -7,7 +8,11 @@ describe('PasoDosComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [PasoDosComponent],
+      declarations: [PasoDosComponent], // Declare the component
+      providers: [
+        { provide: TOAST_CONFIG, useValue: {} }, // Provide a mock ToastConfig
+        { provide: ToastrService, useValue: { success: jest.fn(), error: jest.fn() } }, // Mock ToastrService
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(PasoDosComponent);

@@ -1,4 +1,10 @@
-import { REGEX_CORREO_ELECTRONICO, REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, REGEX_PATRON_ALFANUMERICO, REGEX_POSTAL, REGEX_TELEFONO_DIGITOS } from "@libs/shared/data-access-user/src/tramites/constantes/regex.constants";
+import { 
+    REGEX_CORREO_ELECTRONICO, 
+    REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, 
+    REGEX_PATRON_ALFANUMERICO, 
+    REGEX_POSTAL, 
+    REGEX_TELEFONO
+  } from "@libs/shared/data-access-user/src/tramites/constantes/regex.constants";
 
 
 /**
@@ -318,7 +324,7 @@ export const FORMULARIO_DATOS_PROPIETARIO = [
         ],
         marcadorDePosicion: '',
         valorPredeterminado: '',
-        marginTop: 0
+        marginTop: 5
     },
     {
         id: 'telefono',
@@ -330,11 +336,11 @@ export const FORMULARIO_DATOS_PROPIETARIO = [
         soloLectura: false,
         validadores: [
             { tipo: 'required' },
-            { tipo: 'pattern', valor:REGEX_TELEFONO_DIGITOS, mensaje: 'Por favor, corrija el teléfono.' }
+            { tipo: 'pattern', valor:REGEX_TELEFONO, mensaje: 'Por favor, corrija el teléfono.' }
         ],
         marcadorDePosicion: '',
         valorPredeterminado: '',
-        marginTop: 0
+        marginTop: 5
     },
     {
         id: 'codigoPostal',
@@ -350,12 +356,611 @@ export const FORMULARIO_DATOS_PROPIETARIO = [
         ],
         marcadorDePosicion: '',
         valorPredeterminado: '',
-        marginTop: 0
+        marginTop: 5
     }
 ];
 
-export const FORMULARIO_DATOS_GENERALES = []
+export const FORMULARIO_DOMICILIO_FISCAL = [
+    {
+        id: 'calle',
+        labelNombre: 'Calle',
+        campo: 'calle',
+        clase: 'col-md-3',
+        tipoInput: 'text',
+        desactivado: true,
+        soloLectura: true,
+        validadores: [
+            { tipo: 'required' },
+            { tipo: 'pattern', valor:REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija la calle.' }
+        ],
+        marcadorDePosicion: '',
+        valorPredeterminado: 'LIBERTAD',
+        marginTop: 0
+    },
+    {
+        id: 'numeroExterior',
+        labelNombre: 'Número y/o letra exterior',
+        campo: 'numeroExterior',
+        clase: 'col-md-3',
+        tipoInput: 'text',
+        desactivado: true,
+        soloLectura: true,
+        validadores: [
+            { tipo: 'required' },
+            { tipo: 'pattern', valor:REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija la calle.' }
+        ],
+        marcadorDePosicion: '',
+        valorPredeterminado: 'SN',
+        marginTop: 0
+    },
+    {
+        id: 'numeroInterior',
+        labelNombre: 'Número interior',
+        campo: 'numeroInterior',
+        clase: 'col-md-3',
+        tipoInput: 'text',
+        desactivado: true,
+        soloLectura: true,
+        validadores: [
+            { tipo: 'required' },
+            { tipo: 'pattern', valor:REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija la calle.' }
+        ],
+        marcadorDePosicion: '',
+        valorPredeterminado: '',
+        marginTop: 0
+    },
 
+    {
+        id: 'codigoPostal',
+        labelNombre: 'Código postal',
+        campo: 'codigoPostal',
+        clase: 'col-md-3',
+        tipoInput: 'text',
+        desactivado: true,
+        soloLectura: true,
+        validadores: [
+            { tipo: 'required' },
+            { tipo: 'pattern', valor:REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija la calle.' }
+        ],
+        marcadorDePosicion: '',
+        valorPredeterminado: '',
+        marginTop: 0
+    },
+    {
+        id: 'colonia',
+        labelNombre: 'Colonia',
+        campo: 'colonia',
+        clase: 'col-md-6',
+        tipoInput: 'text',
+        desactivado: true,
+        soloLectura: true,
+        validadores: [
+            { tipo: 'required' },
+            { tipo: 'pattern', valor:REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija la calle.' }
+        ],
+        marcadorDePosicion: '',
+        valorPredeterminado: 'VICTORIA DE DURANGO CENTRO',
+        marginTop: 0
+    },
+    {
+        id: 'pais',
+        labelNombre: 'País',
+        campo: 'pais',
+        clase: 'col-md-6',
+        tipoInput: 'text',
+        desactivado: true,
+        soloLectura: true,
+        validadores: [
+            { tipo: 'required' },
+            { tipo: 'pattern', valor:REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija la calle.' }
+        ],
+        marcadorDePosicion: '',
+        valorPredeterminado: 'ESTADOS UNIDOS MEXICANOS',
+        marginTop: 0
+    },
+
+    {
+        id: 'td_estadoLocalidad_representante_rep',
+        labelNombre: 'Estado',
+        campo: 'td_estadoLocalidad_representante_rep',
+        clase: 'col-md-6',
+        tipoInput: 'text',
+        desactivado: true,
+        soloLectura: true,
+        validadores: [
+            { tipo: 'required' },
+            { tipo: 'pattern', valor:REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija la calle.' }
+        ],
+        marcadorDePosicion: '',
+        valorPredeterminado: 'DURANGO',
+        marginTop: 0
+    },
+    {
+        id: 'td_estadoLocalidad',
+        labelNombre: 'Localidad',
+        campo: 'estadoLocalidad',
+        clase: 'col-md-6',
+        tipoInput: 'text',
+        desactivado: true,
+        soloLectura: true,
+        validadores: [
+            { tipo: 'required' },
+            { tipo: 'pattern', valor:REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija la calle.' }
+        ],
+        marcadorDePosicion: '',
+        valorPredeterminado: 'VICTORIA DE DURANGO',
+        marginTop: 0
+    },
+
+    {
+        id: 'delegacionMunicipio',
+        labelNombre: 'Municipio o alcaldia',
+        campo: 'delegacionMunicipio',
+        clase: 'col-md-6',
+        tipoInput: 'text',
+        desactivado: true,
+        soloLectura: true,
+        validadores: [
+            { tipo: 'required' },
+            { tipo: 'pattern', valor:REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija la calle.' }
+        ],
+        marcadorDePosicion: '',
+        valorPredeterminado: 'DURANGO',
+        marginTop: 0
+    },
+    {
+        id: 'telefono',
+        labelNombre: 'Teléfono',
+        campo: 'telefono',
+        clase: 'col-md-6',
+        tipoInput: 'text',
+        desactivado: true,
+        soloLectura: true,
+        validadores: [
+            { tipo: 'required' },
+            { tipo: 'pattern', valor:REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija la calle.' }
+        ],
+        marcadorDePosicion: '',
+        valorPredeterminado: '618-256-2532',
+        marginTop: 0
+    },
+];
+
+export const FORMULARIO_DATOS_GENERALES = [
+    {
+        id: 'trNombres',
+        labelNombre: 'Nombre(s)',
+        campo: 'nombre',
+        clase: 'col-md-4',
+        tipoInput: 'text',
+        desactivado: true,
+        soloLectura: true,
+        validadores: [
+            { tipo: 'required' },
+            { tipo: 'pattern', valor:REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija la calle.' }
+        ],
+        marcadorDePosicion: '',
+        valorPredeterminado: 'EUROFOODS DE MEXICO',
+        marginTop: 0
+    },
+
+    {
+        id: 'apellidoPaterno',
+        labelNombre: 'Primer Apellido',
+        campo: 'apellidoPaterno',
+        clase: 'col-md-4',
+        tipoInput: 'text',
+        desactivado: true,
+        soloLectura: true,
+        validadores: [
+            { tipo: 'required' },
+            { tipo: 'pattern', valor:REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija la calle.' }
+        ],
+        marcadorDePosicion: '',
+        valorPredeterminado: 'GONZALEZ',
+        marginTop: 0
+    },
+    {
+        id: 'segundoApellido',
+        labelNombre: 'Segundo Apellido',
+        campo: 'segundoApellido',
+        clase: 'col-md-4',
+        tipoInput: 'text',
+        desactivado: true,
+        soloLectura: true,
+        validadores: [
+            { tipo: 'required' },
+            { tipo: 'pattern', valor:REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija la calle.' }
+        ],
+        marcadorDePosicion: '',
+        valorPredeterminado: 'PINAL',
+        marginTop: 0
+    },
+    {
+        id: 'descripcionGiro',
+        labelNombre: 'Actividad económica preponderante',
+        campo: 'descripcionGiro',
+        clase: 'col-md-12',
+        tipoInput: 'text',
+        desactivado: true,
+        soloLectura: true,
+        validadores: [
+            { tipo: 'required' },
+            { tipo: 'pattern', valor:REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija la calle.' }
+        ],
+        marcadorDePosicion: '',
+        valorPredeterminado: 'Consultorios de medicina general pertenecientes al sector privado que cuenten con título de médico conforme a las leyes',
+        marginTop: 0
+    },
+    {
+        id: 'rfc',
+        labelNombre: 'RFC',
+        campo: 'rfc',
+        clase: 'col-md-3',
+        tipoInput: 'text',
+        desactivado: true,
+        soloLectura: true,
+        validadores: [
+            { tipo: 'required' },
+            { tipo: 'pattern', valor:REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija la calle.' }
+        ],
+        marcadorDePosicion: '',
+        valorPredeterminado: 'MAVL621207C95',
+        marginTop: 0
+    },
+    {
+        id: 'curpolicitante',
+        labelNombre: 'Clave Única de Registro de Población',
+        campo: 'curp',
+        clase: 'col-md-5',
+        tipoInput: 'text',
+        desactivado: true,
+        soloLectura: true,
+        validadores: [
+            { tipo: 'required' },
+            { tipo: 'pattern', valor:REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija la calle.' }
+        ],
+        marcadorDePosicion: '',
+        valorPredeterminado: 'MAVL621207HDGRLS06',
+        marginTop: 0
+    },
+    {
+        id: 'correoElectronico',
+        labelNombre: 'Correo electrónico',
+        campo: 'correoElectronico',
+        clase: 'col-md-4',
+        tipoInput: 'text',
+        desactivado: true,
+        soloLectura: true,
+        validadores: [
+            { tipo: 'required' },
+            { tipo: 'pattern', valor:REGEX_CORREO_ELECTRONICO, mensaje: 'Por favor, escriba una dirección de correo válida.' }
+        ],
+        marcadorDePosicion: '',
+        valorPredeterminado: '',
+        marginTop:5
+    },
+]
+
+export const FORMULARIO_DATOS_PROPIETARIO_DIRECCION = [
+    {
+        id: 'razonSocial',
+        labelNombre: 'Denominación o razón social',
+        campo: 'razonSocial',
+        clase: 'col-md-12',
+        tipoInput: 'text',
+        desactivado: false,
+        soloLectura: false,
+        validadores: [
+            { tipo: 'required' },
+            { tipo: 'pattern', valor: REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija la denominación o razón social.' }
+        ],
+        marcadorDePosicion: '',
+        valorPredeterminado: '',
+        marginTop: 0,
+    },
+    {
+        id: 'calle',
+        labelNombre: 'Calle',
+        campo: 'calle',
+        clase: 'col-md-4',
+        tipoInput: 'text',
+        desactivado: false,
+        soloLectura: false,
+        validadores: [
+            { tipo: 'required' },
+            { tipo: 'pattern', valor:REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija la calle.' }
+        ],
+        marcadorDePosicion: '',
+        valorPredeterminado: '',
+        marginTop: 0
+    },
+    {
+        id: 'numeroExterior',
+        labelNombre: 'Número exterior',
+        campo: 'numeroExterior',
+        clase: 'col-md-4',
+        tipoInput: 'number',
+        desactivado: false,
+        soloLectura: false,
+        validadores: [
+            { tipo: 'required' }
+        ],
+        marcadorDePosicion: '',
+        valorPredeterminado: '',
+        marginTop: 0
+    },
+    {
+        id: 'numeroInterior',
+        labelNombre: 'Número interior',
+        campo: 'numeroInterior',
+        clase: 'col-md-4',
+        tipoInput: 'number',
+        desactivado: false,
+        soloLectura: false,
+        validadores: [],
+        marcadorDePosicion: '',
+        valorPredeterminado: '',
+        marginTop: 0
+    },
+    {
+        id: 'pais',
+        labelNombre: 'País',
+        campo: 'pais',
+        clase: 'col-md-6',
+        tipoInput: 'select-catalogos',
+        desactivado: true,
+        soloLectura: false,
+        validadores: [
+            { tipo: 'required' }
+        ],
+        marcadorDePosicion: '',
+        valorPredeterminado: '',
+        marginTop: 4
+    },
+    {
+        id: 'td_entidadFederativa_representante',
+        labelNombre: 'Entidad federativa',
+        campo: 'entidadFederativa',
+        clase: 'col-md-6',
+        tipoInput: 'text',
+        desactivado: false,
+        soloLectura: false,
+        validadores: [
+            { tipo: 'required' },
+            { tipo: 'pattern', valor:REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija el estado y localidad.' }
+        ],
+        marcadorDePosicion: '',
+        valorPredeterminado: '',
+        marginTop: 4
+    },
+    {
+        id: 'td_municipio_representante',
+        labelNombre: 'Municipio o delegación',
+        campo: 'municipio',
+        clase: 'col-md-6',
+        tipoInput: 'select-catalogos',
+        desactivado: false,
+        soloLectura: false,
+        validadores: [
+            { tipo: 'required' },
+            { tipo: 'pattern', valor:REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija el estado y localidad.' }
+        ],
+        marcadorDePosicion: '',
+        valorPredeterminado: '',
+        marginTop: 0
+    },
+    {
+        id: '',
+        labelNombre: '',
+        campo: '',
+        clase: 'col-md-4',
+        tipoInput: '',
+        desactivado: false,
+        soloLectura: false,
+        validadores: [],
+        marcadorDePosicion: '',
+        valorPredeterminado: '',
+        marginTop: 0
+    },
+    {
+        id: 'ddlLocalidad',
+        labelNombre: 'Localidad',
+        campo: 'localidad',
+        clase: 'col-md-6',
+        tipoInput: 'select-catalogos',
+        desactivado: false,
+        soloLectura: false,
+        validadores: [
+            { tipo: 'required' },
+            { tipo: 'pattern', valor:REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija el estado y localidad.' }
+        ],
+        marcadorDePosicion: '',
+        valorPredeterminado: '',
+        marginTop: 5
+},
+
+{
+    id: 'ddlColonia',
+    labelNombre: 'Colonia',
+    campo: 'colonia',
+    clase: 'col-md-6',
+    tipoInput: 'select-catalogos',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [
+        { tipo: 'required' },
+        { tipo: 'pattern', valor:REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija el estado y localidad.' }
+    ],
+    marcadorDePosicion: '',
+    valorPredeterminado: '',
+    marginTop: 5
+},
+    {
+        id: 'correoElectronico',
+        labelNombre: 'Correo electrónico',
+        campo: 'correoElectronico',
+        clase: 'col-md-4',
+        tipoInput: 'text',
+        desactivado: false,
+        soloLectura: false,
+        validadores: [
+            { tipo: 'required' },
+            { tipo: 'pattern', valor:REGEX_CORREO_ELECTRONICO, mensaje: 'Por favor, escriba una dirección de correo válida.' }
+        ],
+        marcadorDePosicion: '',
+        valorPredeterminado: '',
+        marginTop: 4
+    },
+    {
+        id: 'telefono',
+        labelNombre: 'Teléfono',
+        campo: 'telefono',
+        clase: 'col-md-4',
+        tipoInput: 'text',
+        desactivado: false,
+        soloLectura: false,
+        validadores: [
+            { tipo: 'required' },
+            { tipo: 'pattern', valor:REGEX_TELEFONO, mensaje: 'Por favor, corrija el teléfono.' }
+        ],
+        marcadorDePosicion: '',
+        valorPredeterminado: '',
+        marginTop: 4
+    },
+    {
+        id: 'codigoPostal',
+        labelNombre: 'Código postal',
+        campo: 'codigoPostal',
+        clase: 'col-md-4',
+        tipoInput: 'text',
+        desactivado: false,
+        soloLectura: false,
+        validadores: [
+            { tipo: 'required' },
+            { tipo: 'pattern', valor:REGEX_POSTAL, mensaje: 'Debe contener sólo 5 números.' }
+        ],
+        marcadorDePosicion: '',
+        valorPredeterminado: '',
+        marginTop: 4
+    }
+];
+
+export const FORMULARIO_DATOS_PROPIETARIO_NOMBRE = [
+    {
+        id: 'td_rfc_representante',
+        labelNombre: 'RFC',
+        campo: 'datosRepresentanteRFC',
+        clase: 'col-md-6',
+        tipoInput: 'text',
+        desactivado: false,
+        soloLectura: false,
+        validadores: [
+            { tipo: 'pattern', valor: REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija el nombre.' }
+        ],
+        marcadorDePosicion: '',
+        valorPredeterminado: '',
+        marginTop: 0
+    },
+    {
+        id: 'td_curp_representantev',
+        labelNombre: 'CURP',
+        campo: 'datosRepresentantecurp',
+        clase: 'col-md-6',
+        tipoInput: 'text',
+        desactivado: false,
+        soloLectura: false,
+        validadores: [
+            { tipo: 'pattern', valor: REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija el nombre.' }
+        ],
+        marcadorDePosicion: '',
+        valorPredeterminado: '',
+        marginTop: 0
+    },
+    {
+        id: 'nombre',
+        labelNombre: 'Nombre(s)',
+        campo: 'nombre',
+        clase: 'col-md-4',
+        tipoInput: 'text',
+        desactivado: false,
+        soloLectura: false,
+        validadores: [
+            { tipo: 'required' },
+            { tipo: 'pattern', valor: REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija el nombre.' }
+        ],
+        marcadorDePosicion: '',
+        valorPredeterminado: '',
+        marginTop: 0
+    },
+    {
+        id: 'apellidoPaterno',
+        labelNombre: 'Apellido paterno',
+        campo: 'apellidoPaterno',
+        clase: 'col-md-4',
+        tipoInput: 'text',
+        desactivado: false,
+        soloLectura: false,
+        validadores: [
+            { tipo: 'required' },
+            { tipo: 'pattern', valor: REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija el apellido paterno.' }
+        ],
+        marcadorDePosicion: '',
+        valorPredeterminado: '',
+        marginTop: 0
+    },
+    {
+        id: 'apellidoMaterno',
+        labelNombre: 'Apellido materno',
+        campo: 'apellidoMaterno',
+        clase: 'col-md-4',
+        tipoInput: 'text',
+        desactivado: false,
+        soloLectura: false,
+        validadores: [
+            { tipo: 'pattern', valor: REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija el apellido materno.' }
+        ],
+        marcadorDePosicion: '',
+        valorPredeterminado: '',
+        marginTop: 0
+    },
+    {
+        id: 'razonSocial',
+        labelNombre: 'Denominación o razón social',
+        campo: 'razonSocial',
+        clase: 'col-md-8',
+        tipoInput: 'text',
+        desactivado: false,
+        soloLectura: false,
+        validadores: [
+            { tipo: 'required' },
+            { tipo: 'pattern', valor: REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija la denominación o razón social.' }
+        ],
+        marcadorDePosicion: '',
+        valorPredeterminado: '',
+        marginTop: 0,
+    }
+];
+
+export const FORMULARIO_FISCAL_CURP = [
+  
+    {
+        id: 'razonSocialFiscal',
+        labelNombre: 'Denominación o razón social',
+        campo: 'razonSocial',
+        clase: 'col-md-6',
+        tipoInput: 'text',
+        desactivado: false,
+        soloLectura: false,
+        validadores: [
+            { tipo: 'required' },
+            { tipo: 'pattern', valor: REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija la denominación o razón social.' }
+        ],
+        marcadorDePosicion: '',
+        valorPredeterminado: '',
+        marginTop: 0,
+    },
+]
 export const FORMULARIO_DATOS_NOMBRE = [
     {
         id: 'calle',
@@ -430,7 +1035,7 @@ export const FORMULARIO_DATOS_NOMBRE = [
         ],
         marcadorDePosicion: '',
         valorPredeterminado: '',
-        marginTop: 0
+        marginTop: 5
     },
     {
         id: 'municipio',
@@ -448,12 +1053,12 @@ export const FORMULARIO_DATOS_NOMBRE = [
         valorPredeterminado: '',
         marginTop: 0
     },
- {
-        id: 'ddlLocalidad',
-        labelNombre: 'Localidad',
-        campo: 'localidad',
-        clase: 'col-md-6 break-line',
-        tipoInput: 'select-catalogos',
+    {
+        id: '',
+        labelNombre: '',
+        campo: '',
+        clase: 'col-md-6',
+        tipoInput: '',
         desactivado: false,
         soloLectura: false,
         validadores: [
@@ -463,6 +1068,22 @@ export const FORMULARIO_DATOS_NOMBRE = [
         marcadorDePosicion: '',
         valorPredeterminado: '',
         marginTop: 0
+    },
+ {
+        id: 'ddlLocalidad',
+        labelNombre: 'Localidad',
+        campo: 'localidad',
+        clase: 'col-md-6',
+        tipoInput: 'select-catalogos',
+        desactivado: false,
+        soloLectura: false,
+        validadores: [
+            { tipo: 'required' },
+            { tipo: 'pattern', valor:REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija el estado y localidad.' }
+        ],
+        marcadorDePosicion: '',
+        valorPredeterminado: '',
+        marginTop: 5
 },
 
 {
@@ -479,7 +1100,7 @@ export const FORMULARIO_DATOS_NOMBRE = [
     ],
     marcadorDePosicion: '',
     valorPredeterminado: '',
-    marginTop: 0
+    marginTop: 5
 },
     {
         id: 'correoElectronico',
@@ -495,7 +1116,7 @@ export const FORMULARIO_DATOS_NOMBRE = [
         ],
         marcadorDePosicion: '',
         valorPredeterminado: '',
-        marginTop: 0
+        marginTop: 5
     },
     {
         id: 'telefono',
@@ -507,11 +1128,11 @@ export const FORMULARIO_DATOS_NOMBRE = [
         soloLectura: false,
         validadores: [
             { tipo: 'required' },
-            { tipo: 'pattern', valor:REGEX_TELEFONO_DIGITOS, mensaje: 'Por favor, corrija el teléfono.' }
+            { tipo: 'pattern', valor:REGEX_TELEFONO, mensaje: 'Por favor, corrija el teléfono.' }
         ],
         marcadorDePosicion: '',
         valorPredeterminado: '',
-        marginTop: 0
+        marginTop: 5
     },
     {
         id: 'codigoPostal',
@@ -527,7 +1148,7 @@ export const FORMULARIO_DATOS_NOMBRE = [
         ],
         marcadorDePosicion: '',
         valorPredeterminado: '',
-        marginTop: 0
+        marginTop: 5
     }
 ];
 

@@ -3,34 +3,34 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { of, Subject } from 'rxjs';
 
 import { DatosMercanciaComponent } from './datos-mercancia.component';
-import { Tramite630303Store } from '../../estados/tramite630303.store';
-import { Tramite630303Query } from '../../estados/tramite630303.query';
+import { Tramite630104Store } from '../../estados/tramites/tramite630104.store';
+import { Tramite630104Query } from '../../estados/queries/tramite630104.query';
 
 describe('DatosMercanciaComponent', () => {
   let component: DatosMercanciaComponent;
   let fixture: ComponentFixture<DatosMercanciaComponent>;
-  let mockStore: jest.Mocked<Tramite630303Store>;
-  let mockQuery: jest.Mocked<Tramite630303Query>;
+  let mockStore: jest.Mocked<Tramite630104Store>;
+  let mockQuery: jest.Mocked<Tramite630104Query>;
 
   beforeEach(async () => {
     mockStore = {
-      setTramite630303State: jest.fn(),
-    } as unknown as jest.Mocked<Tramite630303Store>;
+      setTramite630104State: jest.fn(),
+    } as unknown as jest.Mocked<Tramite630104Store>;
 
     mockQuery = {
-      selectTramite630303State$: of({
+      selectTramite630104State$: of({
         descripcionMercancia: 'Mercancía de prueba',
         motivo: 'Motivo de prueba',
         listaMercancia: 'Lista de prueba',
       }),
-    } as unknown as jest.Mocked<Tramite630303Query>;
+    } as unknown as jest.Mocked<Tramite630104Query>;
 
     await TestBed.configureTestingModule({
       declarations: [],
       imports: [ReactiveFormsModule,DatosMercanciaComponent],
       providers: [
-        { provide: Tramite630303Store, useValue: mockStore },
-        { provide: Tramite630303Query, useValue: mockQuery },
+        { provide: Tramite630104Store, useValue: mockStore },
+        { provide: Tramite630104Query, useValue: mockQuery },
       ],
     }).compileComponents();
   });
@@ -61,11 +61,11 @@ describe('DatosMercanciaComponent', () => {
     });
   });
 
-  it('should call setTramite630303State when establecerCambioDeValor is called', () => {
+  it('should call setTramite630104State when establecerCambioDeValor is called', () => {
     const event = { campo: 'descripcionMercancia', valor: 'Nueva descripción' };
     component.establecerCambioDeValor(event);
 
-    expect(mockStore.setTramite630303State).toHaveBeenCalledWith(
+    expect(mockStore.setTramite630104State).toHaveBeenCalledWith(
       event.campo,
       event.valor
     );

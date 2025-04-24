@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule, FormGroup } from '@angular/forms';
-import { DatosGeneralesComponent } from './datos-generales.component';
+import { DomicilioFiscalComponent } from './domicilio-fiscal.component';
 
-describe('DatosGeneralesComponent', () => {
-  let component: DatosGeneralesComponent;
-  let fixture: ComponentFixture<DatosGeneralesComponent>;
+describe('DomicilioFiscalComponent', () => {
+  let component: DomicilioFiscalComponent;
+  let fixture: ComponentFixture<DomicilioFiscalComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule, DatosGeneralesComponent],
+      imports: [ReactiveFormsModule, DomicilioFiscalComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(DatosGeneralesComponent);
+    fixture = TestBed.createComponent(DomicilioFiscalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -24,19 +24,19 @@ describe('DatosGeneralesComponent', () => {
     const spy = jest.spyOn(component, 'inicializarFormulario');
     component.ngOnInit();
     expect(spy).toHaveBeenCalled();
-    expect(component.datosGeneralesFormulario).toBeDefined();
+    expect(component.domicilioFiscalFormulario).toBeDefined();
   });
 
   it('should initialize the form with default values', () => {
     component.inicializarFormulario();
-    expect(component.datosGeneralesFormulario).toBeDefined();
-    expect(component.datosGeneralesFormulario.controls).toBeDefined();
+    expect(component.domicilioFiscalFormulario).toBeDefined();
+    expect(component.domicilioFiscalFormulario.controls).toBeDefined();
   });
 
   it('should have the correct form structure', () => {
     component.inicializarFormulario();
-    expect(component.datosGeneralesFormulario instanceof FormGroup).toBe(true);
+    expect(component.domicilioFiscalFormulario instanceof FormGroup).toBe(true);
     // Add specific form control checks if applicable
-    // Example: expect(component.datosGeneralesFormulario.get('fieldName')).toBeDefined();
+    // Example: expect(component.domicilioFiscalFormulario.get('fieldName')).toBeDefined();
   });
 });

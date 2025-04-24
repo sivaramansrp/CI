@@ -78,7 +78,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @param tramite630303Query - Query para consultar el estado del trámite.
    */
   constructor(
-    private fb: FormBuilder,
+    public fb: FormBuilder,
     private equipoEInstrumentosMusicalesService: EquipoEInstrumentosMusicalesService,
     private tramite630104Store: Tramite630104Store,
     private tramite630104Query: Tramite630104Query

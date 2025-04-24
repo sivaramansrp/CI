@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PasoUnoComponent } from './paso-uno.component';
 import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
-import { SolicitudComponent } from '../../components/solicitud/solicitud.component';
+import { DatosDeLaSolicitudComponent } from '../../components/datos-de-la-solicitud/datos-de-la-solicitud.component';
 import { HttpClientModule } from '@angular/common/http';
 describe('PasoUnoComponent', () => {
   let component: PasoUnoComponent;
@@ -9,8 +9,8 @@ describe('PasoUnoComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [PasoUnoComponent,SolicitudComponent],
-      imports: [SolicitanteComponent,HttpClientModule],
+      declarations: [PasoUnoComponent],
+      imports: [SolicitanteComponent,DatosDeLaSolicitudComponent],
     }).compileComponents();
 
     fixture = TestBed.createComponent(PasoUnoComponent);
