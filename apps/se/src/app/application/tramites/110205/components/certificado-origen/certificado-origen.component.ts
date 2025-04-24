@@ -1,13 +1,10 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Catalogo, SeccionLibQuery, SeccionLibState, SeccionLibStore } from '@libs/shared/data-access-user/src';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { Observable, Subject, delay, map, of, takeUntil } from 'rxjs';
 import { Tramite110205State, Tramite110205Store } from '../../estados/tramite110205.store';
-import { CertificadoDeOrigenComponent } from '../../../../shared/components/certificado-de-origen/certificado-de-origen.component';
-import { CommonModule } from '@angular/common';
+import { FormBuilder } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Mercancia } from '../../../../shared/models/modificacion.enum';
-import { MercanciaComponent } from '../mercancia/mercancia.component';
 import { Modal } from 'bootstrap';
 import { PeruCertificadoService } from '../../services/peru-certificado.service';
 import { Tramite110205Query } from '../../estados/tramite110205.query';
@@ -20,7 +17,7 @@ import { Tramite110205Query } from '../../estados/tramite110205.query';
 @Component({
   selector: 'app-certificado-origen',
   templateUrl: './certificado-origen.component.html',
-  styleUrl: './certificado-origen.component.scss',
+  styleUrl: './certificado-origen.component.css',
 })
 export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDestroy {
   /**

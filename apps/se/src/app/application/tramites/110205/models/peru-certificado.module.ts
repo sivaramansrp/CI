@@ -28,3 +28,36 @@ export interface TablaDatosModal {
   fechaVencimiento: string,
   nombreComercial: string
 }
+/**
+ * Representa las columnas del histórico de productores.
+ */
+export interface HistoricoColumnas {
+  id: number;
+  nombreProductor: string;
+  numeroRegistroFiscal: string;
+  direccion: string;
+  correoElectronico: string;
+  telefono: string;
+  fax: string;
+}
+/**
+ * Representa los datos del productor exportador.
+ */
+export interface ProductorExportador {
+  datos: HistoricoColumnas[];
+}
+
+/**
+ * Representa los datos de la tabla de mercancías disponibles.
+ */
+export interface MercanciaTabla {
+  fraccionArancelaria: string;
+  nombreTecnico: string;
+  nombreComercial: string;
+  numeroRegistroProductos: string;
+  fechaExpedicion: string;
+  fechaVencimiento: string;
+}
+export interface MercanciasHistorico {
+  datos: MercanciaTabla[];
+}

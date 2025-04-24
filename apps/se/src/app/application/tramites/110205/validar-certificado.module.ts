@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { DatosCertificadoDeComponent } from '../../shared/components/datos-certificado-de/datos-certificado-de.component';
 import { DatosDelDestinatarioComponent } from '../../shared/components/datos-del-destinatario/datos-del-destinatario.component';
 import { DestinatarioComponent } from '../../shared/components/destinatario/destinatario.component';
+import { HistoricoProductoresComponent } from '../../shared/components/historico-productores/historico-productores.component';
 import { MercanciaComponent } from './components/mercancia/mercancia.component';
 import { NgModule } from '@angular/core';
 import { PasoDosComponent } from './page/paso-dos/paso-dos.component';
@@ -27,7 +28,7 @@ import { ValidarCertificadoRoutingModule } from './validar-certificado-routing.m
     PeruDatosCertificadoComponent,
     PeruHistoricoProductoresComponent,
     CertificadoOrigenComponent,
-    MercanciaComponent
+    MercanciaComponent,
   ],
   imports: [
     CommonModule,
@@ -44,6 +45,7 @@ import { ValidarCertificadoRoutingModule } from './validar-certificado-routing.m
     CertificadoDeOrigenComponent,
     DatosCertificadoDeComponent,
     DatosDelDestinatarioComponent,
+    HistoricoProductoresComponent,
     DestinatarioComponent,
     TituloComponent
   ]

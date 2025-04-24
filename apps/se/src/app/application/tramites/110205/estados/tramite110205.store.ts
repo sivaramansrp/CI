@@ -39,6 +39,10 @@ export interface Tramite110205State {
   correo: string;
   formaValida: { [key: string]: boolean };
   formDestinatario: { [key: string]: undefined | boolean | string | number | object };
+  datosConfidencialesProductor?: boolean;
+  productorMismoExportador?: boolean;
+  agregarDatosProductorFormulario: { [key: string]: undefined | boolean | string | number | object };
+  formulario: { [key: string]: undefined | boolean | string | number | object };
 }
 
 /**
@@ -136,6 +140,14 @@ export function createInitialState(): Tramite110205State {
       fax: '',
       correoElectronico: '',
     },
+    formulario:{
+      datosConfidencialesProductor: '',
+      productorMismoExportador: '',
+    },
+    agregarDatosProductorFormulario: {
+      numeroRegistroFiscal: '',
+      fax: '',      
+    }
   };
 }
 
@@ -170,6 +182,34 @@ export class Tramite110205Store extends Store<Tramite110205State> {
     }));
   }
 
+
+    /**
+   * @descripcion
+   * Actualiza los datos del formulario de formulario.
+   * @param values - Valores a actualizar en el formulario.
+   */
+    setFormHistorico(values: { [key: string]: undefined | boolean | string | number | object }): void {
+      this.update((state) => ({
+        formulario: {
+          ...state.formulario,
+          ...values,
+        },
+      }));
+    }
+
+    /**
+     * @descripcion
+     * Actualiza los datos del formulario de productor.
+     * @param values - Valores a actualizar en el formulario.
+     * */
+    setAgregarFormDatosProductor(values: { [key: string]: undefined | boolean | string | number | object }): void {
+      this.update((state) => ({
+        agregarDatosProductorFormulario: {
+          ...state.agregarDatosProductorFormulario,
+          ...values,
+        },
+      }));
+    }
       /**
      * @descripcion
      * Actualiza el estado seleccionado en el almacén.
