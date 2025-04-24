@@ -1,7 +1,7 @@
-import { NOTA, PASOS } from '../../enums/registro-empresas-transporte.enum';
+import { AVISO, DatosPasos } from '@ng-mf/data-access-user';
 import { Component } from '@angular/core';
-import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
+import { PASOS } from '../../enums/registro-empresas-transporte.enum';
 import { ViewChild } from '@angular/core';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
@@ -57,7 +57,7 @@ export class RegistroEmpresasTransporteComponent {
  * @constant AVISO_PRIVACIDAD_ADJUNTAR - Almacena el valor definido en `NOTA.AVISO_PRIVACIDAD_ADJUNTAR`.
  * Se utiliza para adjuntar o gestionar el aviso de privacidad dentro del sistema.
  */
-  AVISO_PRIVACIDAD_ADJUNTAR = NOTA.AVISO_PRIVACIDAD_ADJUNTAR;
+  AVISO_PRIVACIDAD_ADJUNTAR = AVISO.Aviso;
 
   /**
    * Datos relacionados con los pasos.
