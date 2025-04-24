@@ -1598,8 +1598,8 @@
   {
     "id": 229,
     "tramite": 260907,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/cofepris/modificacion-permiso-importacion-tratamientos/solicitante",
+    "linkDepartment": "/pago/modificacion-permiso-importacion-tratamientos/solicitante",
     "department": "cofepris"
   },
   {
@@ -1640,15 +1640,15 @@
   {
     "id": 235,
     "tramite": 260917,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/cofepris/permiso-importacion-module/modificacion-permiso",
+    "linkDepartment": "/pago/permiso-importacion-module/modificacion-permiso",
     "department": "cofepris"
   },
   {
     "id": 236,
     "tramite": 261101,
-    "linkDashboard": "/cofepris/solicitude-modification/solitud-modification",
-    "linkDepartment": "/pago/solicitude-modification/solitud-modification",
+    "linkDashboard": "/cofepris/solicitud-modificacion",
+    "linkDepartment": "/pago/solicitud-modificacion",
     "department": "cofepris"
   },
   {
@@ -1682,8 +1682,8 @@
   {
     "id": 241,
     "tramite": 280101,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/inah/permiso-de-exportacion/permiso",
+    "linkDepartment": "/pago/permiso-de-exportacion/permiso",
     "department": "inah"
   },
   {
@@ -1773,9 +1773,9 @@
   {
     "id": 254,
     "tramite": 240105,
-    "linkDashboard": "",
-    "linkDepartment": "",
-    "department": "sedena"
+    "linkDashboard": "/sedena/importacion-de-sustancias/ordinario-para",
+    "linkDepartment": "/pago/importacion-de-sustancias/ordinario-para",
+     "department": "sedena"
   },
   {
     "id": 255,
@@ -1801,22 +1801,22 @@
   {
     "id": 258,
     "tramite": 240111,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/sedena/importacion-de-material-explosivo/ordinario-para",
+    "linkDepartment": "/pago/importacion-de-material-explosivo/ordinario-para",
     "department": "sedena"
   },
   {
     "id": 259,
     "tramite": 240114,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/sedena/armas-municiones-para-la-gente/contenedor-de-pasos",
+    "linkDepartment": "/pago/armas-municiones-para-la-gente/contenedor-de-pasos",
     "department": "sedena"
   },
   {
     "id": 260,
     "tramite": 240117,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/sedena/permiso-ordinario-exportacion-de-sustancias-quimicas/contenedor-de-pasos",
+    "linkDepartment": "/pago/permiso-ordinario-exportacion-de-sustancias-quimicas/contenedor-de-pasos",
     "department": "sedena"
   },
   {
@@ -1829,8 +1829,8 @@
   {
     "id": 262,
     "tramite": 240119,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/sedena/artefactos-pirotecnicos-ordinarios/contenedor-de-pasos",
+    "linkDepartment": "/pago/artefactos-pirotecnicos-ordinarios/contenedor-de-pasos",
     "department": "sedena"
   },
   {
