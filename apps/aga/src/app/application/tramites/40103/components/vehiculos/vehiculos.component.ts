@@ -98,22 +98,22 @@ export class VehiculosComponent implements AfterViewInit, OnInit, OnDestroy {
   /**
    * Lista de vehículos.
    */
-  vehiculos: any[] = [];
+  vehiculos: unknown[] = [];
 
   /**
    * Observable que contiene la lista de vehículos.
    */
-  vehiculosList$: Observable<any[]> = new Observable();
+  vehiculosList$: Observable<unknown[]> = new Observable();
   private subscriptions: Subscription = new Subscription();
    /**
    * Lista de unidades de arrastre.
    */
-  unidadesdearrastre: any[] = [];
+  unidadesdearrastre: unknown[] = [];
 
   /**
    * Observable que contiene la lista de unidades de arrastre.
    */
-  unidadesdearrastreList$: Observable<any[]> = new Observable();
+  unidadesdearrastreList$: Observable<unknown[]> = new Observable();
 
   /**
    * Pestaña seleccionada actualmente.
@@ -128,7 +128,7 @@ export class VehiculosComponent implements AfterViewInit, OnInit, OnDestroy {
   /**
    * Lista de vehículos con arrastre.
    */
-  vehiculoArrastr: any[] = [];
+  vehiculoArrastr: unknown[] = [];
 
   /**
    * Catálogo de vehículos.
@@ -311,7 +311,7 @@ export class VehiculosComponent implements AfterViewInit, OnInit, OnDestroy {
    * - `clave`: Una función que toma un objeto de tipo `PagoDerechosLista` y devuelve el valor correspondiente.
    * - `orden`: El orden en el que se deben mostrar las columnas.
    * 
-   * @type {Array<{ encabezado: string; clave: (item: PagoDerechosLista) => any; orden: number }>}
+   * @type {Array<{ encabezado: string; clave: (item: PagoDerechosLista) => unknown; orden: number }>}
    */
   ParqueVehicular = [
     {
@@ -544,7 +544,7 @@ export class VehiculosComponent implements AfterViewInit, OnInit, OnDestroy {
 
     this.vehiculosList$ = this.chofer40103Query.getvehiculos$;
     this.subscriptions.add(
-      this.chofer40103Query.getvehiculos$.subscribe((vehiculos: any) => {
+      this.chofer40103Query.getvehiculos$.subscribe((vehiculos: unknown[]) => {
         this.vehiculos = vehiculos;
       })
     );
@@ -552,7 +552,7 @@ export class VehiculosComponent implements AfterViewInit, OnInit, OnDestroy {
     this.unidadesDearrastre();
     this.subscriptions.add(
       this.chofer40103Query.getUnidadesdeArrastre$.subscribe(
-        (unidadesdearrastre: any) => {
+        (unidadesdearrastre: unknown[]) => {
           this.unidadesdearrastre = unidadesdearrastre;
         }
       )
@@ -608,7 +608,7 @@ export class VehiculosComponent implements AfterViewInit, OnInit, OnDestroy {
 
     // Comprueba si el VIN ya existe en el estado de Akita
     const VIN_EXISTS = this.vehiculos?.some(
-      (item) =>
+      (item:any) =>
         item.solicitudVehiculoVin2 === NEW_VEHICULO.solicitudVehiculoVin2
     );
 
@@ -623,7 +623,7 @@ export class VehiculosComponent implements AfterViewInit, OnInit, OnDestroy {
     }
 
     // Actualizar el estado de Akita
-    this.chofer40103Store.setVehiculos([...this.vehiculos, NEW_VEHICULO]);
+    this.chofer40103Store.setVehiculos([...(this.vehiculos as string[]), JSON.stringify(NEW_VEHICULO)]);
     this.formVehiculo.reset();
     this.toastr.success('¡Vehículo añadido exitosamente!');
     this.closeModal();

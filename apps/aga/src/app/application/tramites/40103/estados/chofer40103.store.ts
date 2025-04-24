@@ -17,8 +17,8 @@ export interface Choferesnacionales40103State {
   nombre: string;
   primerApellido: string;
   segundoApellido: string;
-  datosDelChoferNacional: any[];
-  PagoDerechosLista:any[];
+  datosDelChoferNacional: unknown[]; // Replaced `any[]` with `unknown[]`
+  PagoDerechosLista: unknown[]; // Replaced `any[]` with `unknown[]`
   curp: string;
   rfc: string;
   // Form Controls
@@ -114,8 +114,9 @@ export class Chofer40103Store extends Store<Choferesnacionales40103State> {
   /**
    * Establece la lista de choferes nacionales.
    * @param nacionalArray La lista de choferes nacionales.
+   * @returns void
    */
-  set(nacionalArray: string[]) {
+  set(nacionalArray: string[]): void {
     this.update((state) => ({
       ...state,
       choferes: nacionalArray,
@@ -125,6 +126,7 @@ export class Chofer40103Store extends Store<Choferesnacionales40103State> {
   /**
    * Establece el CURP del chofer.
    * @param curp El CURP del chofer.
+   * @returns void
    */
   public setCurp(curp: string): void {
     this.update((state) => ({
@@ -136,6 +138,7 @@ export class Chofer40103Store extends Store<Choferesnacionales40103State> {
   /**
    * Establece el primer apellido del chofer.
    * @param primerApellido El primer apellido del chofer.
+   * @returns void
    */
   public setPrimerApellido(primerApellido: string): void {
     this.update((state) => ({
@@ -147,6 +150,7 @@ export class Chofer40103Store extends Store<Choferesnacionales40103State> {
   /**
    * Establece el RFC del chofer.
    * @param rfc El RFC del chofer.
+   * @returns void
    */
   public setRfc(rfc: string): void {
     this.update((state) => ({
@@ -158,6 +162,7 @@ export class Chofer40103Store extends Store<Choferesnacionales40103State> {
   /**
    * Establece el segundo apellido del chofer.
    * @param segundoApellido El segundo apellido del chofer.
+   * @returns void
    */
   public setSegundoApellido(segundoApellido: string): void {
     this.update((state) => ({
@@ -169,6 +174,7 @@ export class Chofer40103Store extends Store<Choferesnacionales40103State> {
   /**
    * Establece el apellido paterno del chofer.
    * @param apellidoPaterno El apellido paterno del chofer.
+   * @returns void
    */
   public setApellidoPaterno(apellidoPaterno: string): void {
     this.update((state) => ({ ...state, apellidoPaterno }));
@@ -177,6 +183,7 @@ export class Chofer40103Store extends Store<Choferesnacionales40103State> {
   /**
    * Establece el apellido materno del chofer nacional.
    * @param apellidoMaternoCHN El apellido materno del chofer nacional.
+   * @returns void
    */
   public setApellidoMaternoCHN(apellidoMaternoCHN: string): void {
     this.update((state) => ({ ...state, apellidoMaternoCHN }));
@@ -185,6 +192,7 @@ export class Chofer40103Store extends Store<Choferesnacionales40103State> {
   /**
    * Establece el gafete del chofer.
    * @param gafete El gafete del chofer.
+   * @returns void
    */
   public setGafete(gafete: string): void {
     this.update((state) => ({ ...state, gafete }));
@@ -193,6 +201,7 @@ export class Chofer40103Store extends Store<Choferesnacionales40103State> {
   /**
    * Establece la vigencia del gafete del chofer.
    * @param vigenciagafete La vigencia del gafete.
+   * @returns void
    */
   public setVigenciaGafete(vigenciagafete: string): void {
     this.update((state) => ({ ...state, vigenciagafete }));
@@ -201,6 +210,7 @@ export class Chofer40103Store extends Store<Choferesnacionales40103State> {
   /**
    * Establece la calle del domicilio del chofer.
    * @param calle La calle del domicilio.
+   * @returns void
    */
   public setCalle(calle: string): void {
     this.update((state) => ({ ...state, calle }));
@@ -209,6 +219,7 @@ export class Chofer40103Store extends Store<Choferesnacionales40103State> {
   /**
    * Establece el número exterior del domicilio del chofer.
    * @param numeroExterior El número exterior del domicilio.
+   * @returns void
    */
   public setNumeroExterior(numeroExterior: string): void {
     this.update((state) => ({ ...state, numeroExterior }));
@@ -217,6 +228,7 @@ export class Chofer40103Store extends Store<Choferesnacionales40103State> {
   /**
    * Establece el número interior del domicilio del chofer.
    * @param numeroInterior El número interior del domicilio.
+   * @returns void
    */
   public setNumeroInterior(numeroInterior: string): void {
     this.update((state) => ({ ...state, numeroInterior }));
@@ -225,6 +237,7 @@ export class Chofer40103Store extends Store<Choferesnacionales40103State> {
   /**
    * Establece la ciudad del domicilio del chofer.
    * @param ciudad La ciudad del domicilio.
+   * @returns void
    */
   public setCiudad(ciudad: string): void {
     this.update((state) => ({ ...state, ciudad }));
@@ -233,6 +246,7 @@ export class Chofer40103Store extends Store<Choferesnacionales40103State> {
   /**
    * Establece la localidad del domicilio del chofer.
    * @param localidad La localidad del domicilio.
+   * @returns void
    */
   public setLocalidad(localidad: string): void {
     this.update((state) => ({ ...state, localidad }));
@@ -241,6 +255,7 @@ export class Chofer40103Store extends Store<Choferesnacionales40103State> {
   /**
    * Establece el código postal del domicilio del chofer.
    * @param codigoPostal El código postal del domicilio.
+   * @returns void
    */
   public setCodigoPostal(codigoPostal: string): void {
     this.update((state) => ({ ...state, codigoPostal }));
@@ -249,6 +264,7 @@ export class Chofer40103Store extends Store<Choferesnacionales40103State> {
   /**
    * Establece el país del chofer nacional.
    * @param paisChn El país del chofer nacional.
+   * @returns void
    */
   public setPaisChn(paisChn: string): void {
     this.update((state) => ({ ...state, paisChn }));
@@ -257,6 +273,7 @@ export class Chofer40103Store extends Store<Choferesnacionales40103State> {
   /**
    * Establece el estado del control del chofer.
    * @param estadoControl El estado del control.
+   * @returns void
    */
   public setEstadoControl(estadoControl: string): void {
     this.update((state) => ({ ...state, estadoControl }));
@@ -265,6 +282,7 @@ export class Chofer40103Store extends Store<Choferesnacionales40103State> {
   /**
    * Establece el número del seguro social del chofer.
    * @param numerodelsegurosocial El número del seguro social.
+   * @returns void
    */
   public setNumeroDelSeguroSocial(numerodelsegurosocial: string): void {
     this.update((state) => ({ ...state, numerodelsegurosocial }));
@@ -273,6 +291,7 @@ export class Chofer40103Store extends Store<Choferesnacionales40103State> {
   /**
    * Establece la entidad federativa del chofer nacional.
    * @param entidadFederativaCHN La entidad federativa del chofer nacional.
+   * @returns void
    */
   public setEntidadFederativaCHN(entidadFederativaCHN: string): void {
     this.update((state) => ({ ...state, entidadFederativaCHN }));
@@ -281,6 +300,7 @@ export class Chofer40103Store extends Store<Choferesnacionales40103State> {
   /**
    * Establece la delegación del chofer nacional.
    * @param delegacionCHN La delegación del chofer nacional.
+   * @returns void
    */
   public setDelegacionCHN(delegacionCHN: string): void {
     this.update((state) => ({ ...state, delegacionCHN }));
@@ -289,6 +309,7 @@ export class Chofer40103Store extends Store<Choferesnacionales40103State> {
   /**
    * Establece la colonia del chofer nacional.
    * @param coloniaCHN La colonia del chofer nacional.
+   * @returns void
    */
   public setColoniaCHN(coloniaCHN: string): void {
     this.update((state) => ({ ...state, coloniaCHN }));
@@ -297,6 +318,7 @@ export class Chofer40103Store extends Store<Choferesnacionales40103State> {
   /**
    * Establece el país de origen del chofer nacional.
    * @param paisOrigenCHN El país de origen del chofer nacional.
+   * @returns void
    */
   public setPaisOrigenCHN(paisOrigenCHN: string): void {
     this.update((state) => ({ ...state, paisOrigenCHN }));
@@ -305,6 +327,7 @@ export class Chofer40103Store extends Store<Choferesnacionales40103State> {
   /**
    * Establece el correo electrónico del chofer.
    * @param correo El correo electrónico del chofer.
+   * @returns void
    */
   public setCorreo(correo: string): void {
     this.update((state) => ({ ...state, correo }));
@@ -313,6 +336,7 @@ export class Chofer40103Store extends Store<Choferesnacionales40103State> {
   /**
    * Establece el número de teléfono del chofer.
    * @param telefono El número de teléfono del chofer.
+   * @returns void
    */
   public setTelefono(telefono: string): void {
     this.update((state) => ({ ...state, telefono }));
@@ -321,6 +345,7 @@ export class Chofer40103Store extends Store<Choferesnacionales40103State> {
   /**
    * Establece el apellido materno del chofer extranjero.
    * @param apellidoMaternoCHE El apellido materno del chofer extranjero.
+   * @returns void
    */
   public setApellidoMaternoCHE(apellidoMaternoCHE: string): void {
     this.update((state) => ({ ...state, apellidoMaternoCHE }));
@@ -329,6 +354,7 @@ export class Chofer40103Store extends Store<Choferesnacionales40103State> {
   /**
    * Establece la nacionalidad del chofer extranjero.
    * @param nacionalidadCHE La nacionalidad del chofer extranjero.
+   * @returns void
    */
   public setNacionalidadCHE(nacionalidadCHE: string): void {
     this.update((state) => ({ ...state, nacionalidadCHE }));
@@ -337,6 +363,7 @@ export class Chofer40103Store extends Store<Choferesnacionales40103State> {
   /**
    * Establece el número de seguro social del chofer extranjero.
    * @param nss El número de seguro social del chofer extranjero.
+   * @returns void
    */
   public setNss(nss: string): void {
     this.update((state) => ({ ...state, nss }));
@@ -345,6 +372,7 @@ export class Chofer40103Store extends Store<Choferesnacionales40103State> {
   /**
    * Establece el identificador fiscal del chofer extranjero.
    * @param ideFiscal El identificador fiscal del chofer extranjero.
+   * @returns void
    */
   public setIdeFiscal(ideFiscal: string): void {
     this.update((state) => ({ ...state, ideFiscal }));
@@ -353,6 +381,7 @@ export class Chofer40103Store extends Store<Choferesnacionales40103State> {
   /**
    * Establece el país del chofer extranjero.
    * @param paisCHE El país del chofer extranjero.
+   * @returns void
    */
   public setPaisCHE(paisCHE: string): void {
     this.update((state) => ({ ...state, paisCHE }));
@@ -361,6 +390,7 @@ export class Chofer40103Store extends Store<Choferesnacionales40103State> {
   /**
    * Establece la entidad federativa del chofer extranjero.
    * @param entidadFederativaCHE La entidad federativa del chofer extranjero.
+   * @returns void
    */
   public setEntidadFederativaCHE(entidadFederativaCHE: string): void {
     this.update((state) => ({ ...state, entidadFederativaCHE }));
@@ -369,6 +399,7 @@ export class Chofer40103Store extends Store<Choferesnacionales40103State> {
   /**
    * Establece el país de origen del chofer extranjero.
    * @param paisOrigenCHE El país de origen del chofer extranjero.
+   * @returns void
    */
   public setPaisOrigenCHE(paisOrigenCHE: string): void {
     this.update((state) => ({ ...state, paisOrigenCHE }));
@@ -377,6 +408,7 @@ export class Chofer40103Store extends Store<Choferesnacionales40103State> {
   /**
    * Establece el apellido paterno del chofer.
    * @param apellidoPaternos El apellido paterno del chofer.
+   * @returns void
    */
   public setApellidoPaternos(apellidoPaternos: string): void {
     this.update((state) => ({ ...state, apellidoPaternos }));
@@ -385,6 +417,7 @@ export class Chofer40103Store extends Store<Choferesnacionales40103State> {
   /**
    * Establece los nombres del chofer.
    * @param nombres Los nombres del chofer.
+   * @returns void
    */
   public setNombres(nombres: string): void {
     this.update((state) => ({ ...state, nombres }));
@@ -393,6 +426,7 @@ export class Chofer40103Store extends Store<Choferesnacionales40103State> {
   /**
    * Establece el nombre del chofer.
    * @param nombre El nombre del chofer.
+   * @returns void
    */
   public setNombre(nombre: string): void {
     this.update((state) => ({ ...state, nombre }));
@@ -401,8 +435,9 @@ export class Chofer40103Store extends Store<Choferesnacionales40103State> {
   /**
    * Establece la lista de vehículos.
    * @param vehiculosArray La lista de vehículos.
+   * @returns void
    */
-  setVehiculos(vehiculosArray: string[]) {
+  setVehiculos(vehiculosArray: string[]): void {
     this.update((state) => ({
       ...state,
       vehiculos: [...vehiculosArray],
@@ -412,8 +447,9 @@ export class Chofer40103Store extends Store<Choferesnacionales40103State> {
   /**
    * Establece la lista de unidades de arrastre.
    * @param unidadesdearrastreArray La lista de unidades de arrastre.
+   * @returns void
    */
-  setUnidadesdeArrastre(unidadesdearrastreArray: string[]) {
+  setUnidadesdeArrastre(unidadesdearrastreArray: string[]): void {
     this.update((state) => ({
       ...state,
       unidadesdearrastre: unidadesdearrastreArray,
@@ -423,8 +459,9 @@ export class Chofer40103Store extends Store<Choferesnacionales40103State> {
   /**
    * Establece el tipo de vehículo de la solicitud.
    * @param solicitudVehiculo El tipo de vehículo de la solicitud.
+   * @returns void
    */
-  public setsolicitudVehiculoTipoVehiculo(solicitudVehiculo: string) {
+  public setsolicitudVehiculoTipoVehiculo(solicitudVehiculo: string): void {
     this.update((state) => ({
       ...state,
       solicitudVehiculo,
@@ -434,8 +471,9 @@ export class Chofer40103Store extends Store<Choferesnacionales40103State> {
   /**
    * Establece el país emisor del vehículo de la solicitud.
    * @param solicitudVehiculo El país emisor del vehículo de la solicitud.
+   * @returns void
    */
-  public setsolicitudVehiculoPaisEmisor(solicitudVehiculo: string) {
+  public setsolicitudVehiculoPaisEmisor(solicitudVehiculo: string): void {
     this.update((state) => ({
       ...state,
       solicitudVehiculo,
@@ -445,8 +483,9 @@ export class Chofer40103Store extends Store<Choferesnacionales40103State> {
   /**
    * Establece el color del vehículo de la solicitud.
    * @param vehiculoColor El color del vehículo de la solicitud.
+   * @returns void
    */
-  public solicitudVehiculoColor(vehiculoColor: string) {
+  public solicitudVehiculoColor(vehiculoColor: string): void {
     this.update((state) => ({
       ...state,
       vehiculoColor,
@@ -456,8 +495,9 @@ export class Chofer40103Store extends Store<Choferesnacionales40103State> {
   /**
    * Establece el país emisor de la segunda placa del vehículo.
    * @param PaisEmisor2daPlaca El país emisor de la segunda placa del vehículo.
+   * @returns void
    */
-  public VehiculoPaisEmisor2daPlaca(PaisEmisor2daPlaca: string) {
+  public VehiculoPaisEmisor2daPlaca(PaisEmisor2daPlaca: string): void {
     this.update((state) => ({
       ...state,
       PaisEmisor2daPlaca,
@@ -467,8 +507,9 @@ export class Chofer40103Store extends Store<Choferesnacionales40103State> {
   /**
    * Establece el año del vehículo.
    * @param VehiculoVEH El año del vehículo.
+   * @returns void
    */
-  public setanioVehiculoVEH(VehiculoVEH: string) {
+  public setanioVehiculoVEH(VehiculoVEH: string): void {
     this.update((state) => ({
       ...state,
       VehiculoVEH,
@@ -478,8 +519,9 @@ export class Chofer40103Store extends Store<Choferesnacionales40103State> {
   /**
    * Establece la lista de estados.
    * @param estado La lista de estados.
+   * @returns void
    */
-  setEstado(estado: Catalogo[]) {
+  setEstado(estado: Catalogo[]): void {
     this.update((state) => ({
       ...state,
       estado,
@@ -489,8 +531,9 @@ export class Chofer40103Store extends Store<Choferesnacionales40103State> {
   /**
    * Guarda un elemento por cada sección que se encuentre.
    * @param seccion La validación de la sección.
+   * @returns void
    */
-  public establecerSeccion(seccion: boolean[]) {
+  public establecerSeccion(seccion: boolean[]): void {
     this.update((state) => ({
       ...state,
       seccion,
@@ -500,8 +543,9 @@ export class Chofer40103Store extends Store<Choferesnacionales40103State> {
   /**
    * Agrega elementos por cada sección indicando si el formulario es válido o no.
    * @param formaValida La validación del formulario.
+   * @returns void
    */
-  public establecerFormaValida(formaValida: boolean[]) {
+  public establecerFormaValida(formaValida: boolean[]): void {
     this.update((state) => ({
       ...state,
       formaValida,
@@ -510,6 +554,7 @@ export class Chofer40103Store extends Store<Choferesnacionales40103State> {
 
   /**
    * Limpia la lista de choferes.
+   * @returns void
    */
   public clearChoferes(): void {
     this.reset();

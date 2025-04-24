@@ -1,4 +1,4 @@
-export const chofereData = {
+export const CHOFER_DATA = {
   nombre: 'Juan',
   apellidoPaterno: 'Pérez',
   apellidoMaternoCHN: 'González',

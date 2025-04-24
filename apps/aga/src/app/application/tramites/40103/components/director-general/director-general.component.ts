@@ -100,9 +100,9 @@ export class DirectorGeneralComponent implements OnInit, OnDestroy {
 
   /**
    * Actualiza la tienda con los datos del formulario actualizados.
-   * @param updatedData Los datos actualizados del formulario.
+   * @param _actualizarTienda Los datos actualizados del formulario (intencionalmente no utilizado).
    */
-  actualizarTienda(actualizarTienda: unknown): void {
+  actualizarTienda(_actualizarTienda: unknown): void {
     const DATOS_EXISTENTES = this.chofer40103Query.getValue().choferes;
     // Aquí puedes agregar la lógica para actualizar la tienda con los datos actualizados
   }

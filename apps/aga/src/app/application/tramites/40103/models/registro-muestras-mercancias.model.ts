@@ -64,7 +64,7 @@ export interface ImportanteCatalogoSeleccion {
    * Lista de pagos de derechos asociados a la solicitud.
    * Contiene información sobre los pagos realizados o pendientes.
    */
-  datosDelChoferNacional: datosDelChoferNacional[];
+  datosDelChoferNacional: DatosDelChoferNacional[];
 }
 /**
  * Representa un registro de muestras de mercancías.
@@ -201,7 +201,8 @@ export interface MuestrasMercanciasStore {
  * Interfaz que representa la lista de pagos de derechos.
  * Contiene la información de la línea de captura y el monto correspondiente.
  */
-export interface datosDelChoferNacional {
+export interface DatosDelChoferNacional {
+  id: unknown;
   /** Línea de captura del pago. */
   curp?: string;
   rfc?: string;
