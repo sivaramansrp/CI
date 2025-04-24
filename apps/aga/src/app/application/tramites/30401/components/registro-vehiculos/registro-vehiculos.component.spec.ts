@@ -134,7 +134,6 @@ describe('RegistroVehiculosComponent', () => {
   });
 
   it('should add a new vehicle and reset the form when enviarDialogData is called with valid form', () => {
-    // Set valid form values
     component.registroVehiculosForm.patchValue({
       id: 1,
       solicitud: {
@@ -147,12 +146,12 @@ describe('RegistroVehiculosComponent', () => {
         calleVehiculo: "Av. Principal",
         numExteriorVehiculo: "123",
         numInteriorVehiculo: "A",
-        comboEntidadVehiculo: '1', // Mock index from 'estados'
-        comboDelegacionVehiculo: '2', // Mock index from 'municipios'
-        comboColoniaVehiculo: '3', // Mock index from 'colonias'
+        comboEntidadVehiculo: '1', 
+        comboDelegacionVehiculo: '2',
+        comboColoniaVehiculo: '3',
         localidadVehiculo: "Ciudad Demo",
         codigoPostalVehiculo: "110001",
-        comboAduanaVehiculo: '4' // Mock index from 'aduanas'
+        comboAduanaVehiculo: '4'
       },
       persona: {
         nombre: "Juan",
@@ -163,10 +162,8 @@ describe('RegistroVehiculosComponent', () => {
       }
     });
   
-    // Call the method
     component.enviarDialogData();
   
-    // Ensure the vehicle is added to the list
     expect(component.registroVehiculosInfoList.length).toBe(1);
     expect(component.registroVehiculosInfoList[0].solicitud.marca).toBe('Toyota');
   });
@@ -239,14 +236,11 @@ describe('RegistroVehiculosComponent', () => {
   });
 
   it('should set multipleSeleccionPopupAbierto and multipleSeleccionPopupCerrado to false when cerrarMultipleSeleccionPopup is called', () => {
-    // Set initial values
     component.multipleSeleccionPopupAbierto = true;
     component.multipleSeleccionPopupCerrado = true;
   
-    // Call the method
     component.cerrarMultipleSeleccionPopup();
   
-    // Assert that the values are set to false
     expect(component.multipleSeleccionPopupAbierto).toBe(false);
     expect(component.multipleSeleccionPopupCerrado).toBe(false);
   });
@@ -255,7 +249,7 @@ describe('RegistroVehiculosComponent', () => {
     component.manejarFilaSeleccionada([]);
     expect(component.enableModficarBoton).toBe(false);
     expect(component.enableEliminarBoton).toBe(false);
-    expect(component.listaFilaSeleccionadaVehiculos).toStrictEqual([]); // Fixed assertion
+    expect(component.listaFilaSeleccionadaVehiculos).toStrictEqual([]); 
     expect(component.filaSeleccionadaVehiculos).toBeUndefined();
   });
   

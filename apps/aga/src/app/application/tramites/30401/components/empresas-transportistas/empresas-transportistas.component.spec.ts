@@ -49,8 +49,8 @@ describe('EmpresasTransportistasComponent', () => {
     await TestBed.configureTestingModule({
       imports: [
         ReactiveFormsModule,
-        HttpClientModule, // Add HttpClientModule to provide _HttpClient
-        EmpresasTransportistasComponent, // Standalone component
+        HttpClientModule,
+        EmpresasTransportistasComponent,
       ],
       providers: [
         FormBuilder,

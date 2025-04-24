@@ -95,14 +95,6 @@ describe('CapitalSocialComponent', () => {
     expect(result).toBe(false);
   });
 
-  // it('should handle empty form group in ngOnInit gracefully', () => {
-  //   component.grupoDeFormulario = 'nonExistentGroup';
-  //   component.inicializarFormulario = 'empresasCapitalSocial' as unknown as FormGroup;
-  //   component.ngOnInit();
-
-  //   expect(component.inicializarFormulario).toBeDefined();
-  // });
-
   it('should not call establecerDatos if control value is null in setValoresStore', () => {
     const mockFormGroup = new FormGroup({});
     const mockField = 'testField';
