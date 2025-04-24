@@ -849,8 +849,8 @@
   {
     "id": 122,
     "tramite": 150103,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/se/informe-anual-programa/solicitud-de-reporte",
+    "linkDepartment": "/pago/informe-anual-programa/solicitud-de-reporte",
     "department": "se"
   },
   {
@@ -2228,8 +2228,8 @@
   {
     "id": 319,
     "tramite": 150103,
-    "linkDashboard": "",
-    "linkDepartment": "",
+   "linkDashboard": "/se/informe-anual-programa/solicitud-de-reporte",
+    "linkDepartment": "/pago/informe-anual-programa/solicitud-de-reporte",
     "department": "se"
   },
   {
