@@ -1,4 +1,3 @@
-/* eslint-disable sort-imports */
 import { AnexarDocumentosComponent, TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { AlertComponent } from '@ng-mf/data-access-user';
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
@@ -18,7 +17,6 @@ import { forwardRef } from '@angular/core';
 import { WizardComponent } from '@ng-mf/data-access-user';
 import { VehiculosComponent } from './components/vehiculos/vehiculos.component';
 import { FirmaElectronicaComponent } from '@ng-mf/data-access-user';
-import { SelectCatalogosComponent } from '@ng-mf/data-access-user';
 import { SharedModule } from '@ng-mf/data-access-user';
 import { InputCheckComponent } from '@ng-mf/data-access-user';
 import { InputFechaComponent } from '@ng-mf/data-access-user';
@@ -53,7 +51,6 @@ import { ToastrService } from 'ngx-toastr';
     ReactiveFormsModule,
     forwardRef(() => AlertComponent),
     forwardRef(() => FirmaElectronicaComponent),
-    forwardRef(() => SelectCatalogosComponent),
     forwardRef(() => AnexarDocumentosComponent),
     forwardRef(() => InputCheckComponent),
     forwardRef(() => InputFechaComponent),

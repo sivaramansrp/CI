@@ -2,6 +2,10 @@ import { Catalogo } from '@libs/shared/data-access-user/src/core/models/shared/c
 import { Injectable } from '@angular/core';
 import { Store } from '@datorama/akita';
 import { StoreConfig } from '@datorama/akita';
+
+/**
+ * Interfaz que define el estado de los choferes nacionales y extranjeros.
+ */
 export interface Choferesnacionales40103State {
   choferes: string[];
   choferesExtranjero: string[];
@@ -48,6 +52,10 @@ export interface Choferesnacionales40103State {
   nombres: string;
 }
 
+/**
+ * Crea el estado inicial de los choferes nacionales y extranjeros.
+ * @returns El estado inicial.
+ */
 export function createChoferState(): Choferesnacionales40103State {
   const STORED_DATA = localStorage.getItem('choferesList');
   return {
@@ -114,6 +122,10 @@ export class Chofer40103Store extends Store<Choferesnacionales40103State> {
     }));
   }
 
+  /**
+   * Establece el CURP del chofer.
+   * @param curp El CURP del chofer.
+   */
   public setCurp(curp: string): void {
     this.update((state) => ({
       ...state,
@@ -121,6 +133,10 @@ export class Chofer40103Store extends Store<Choferesnacionales40103State> {
     }));
   }
 
+  /**
+   * Establece el primer apellido del chofer.
+   * @param primerApellido El primer apellido del chofer.
+   */
   public setPrimerApellido(primerApellido: string): void {
     this.update((state) => ({
       ...state,
@@ -128,6 +144,10 @@ export class Chofer40103Store extends Store<Choferesnacionales40103State> {
     }));
   }
 
+  /**
+   * Establece el RFC del chofer.
+   * @param rfc El RFC del chofer.
+   */
   public setRfc(rfc: string): void {
     this.update((state) => ({
       ...state,
@@ -135,6 +155,10 @@ export class Chofer40103Store extends Store<Choferesnacionales40103State> {
     }));
   }
 
+  /**
+   * Establece el segundo apellido del chofer.
+   * @param segundoApellido El segundo apellido del chofer.
+   */
   public setSegundoApellido(segundoApellido: string): void {
     this.update((state) => ({
       ...state,
@@ -142,118 +166,234 @@ export class Chofer40103Store extends Store<Choferesnacionales40103State> {
     }));
   }
 
+  /**
+   * Establece el apellido paterno del chofer.
+   * @param apellidoPaterno El apellido paterno del chofer.
+   */
   public setApellidoPaterno(apellidoPaterno: string): void {
     this.update((state) => ({ ...state, apellidoPaterno }));
   }
 
+  /**
+   * Establece el apellido materno del chofer nacional.
+   * @param apellidoMaternoCHN El apellido materno del chofer nacional.
+   */
   public setApellidoMaternoCHN(apellidoMaternoCHN: string): void {
     this.update((state) => ({ ...state, apellidoMaternoCHN }));
   }
 
+  /**
+   * Establece el gafete del chofer.
+   * @param gafete El gafete del chofer.
+   */
   public setGafete(gafete: string): void {
     this.update((state) => ({ ...state, gafete }));
   }
 
+  /**
+   * Establece la vigencia del gafete del chofer.
+   * @param vigenciagafete La vigencia del gafete.
+   */
   public setVigenciaGafete(vigenciagafete: string): void {
     this.update((state) => ({ ...state, vigenciagafete }));
   }
 
+  /**
+   * Establece la calle del domicilio del chofer.
+   * @param calle La calle del domicilio.
+   */
   public setCalle(calle: string): void {
     this.update((state) => ({ ...state, calle }));
   }
 
+  /**
+   * Establece el número exterior del domicilio del chofer.
+   * @param numeroExterior El número exterior del domicilio.
+   */
   public setNumeroExterior(numeroExterior: string): void {
     this.update((state) => ({ ...state, numeroExterior }));
   }
 
+  /**
+   * Establece el número interior del domicilio del chofer.
+   * @param numeroInterior El número interior del domicilio.
+   */
   public setNumeroInterior(numeroInterior: string): void {
     this.update((state) => ({ ...state, numeroInterior }));
   }
 
+  /**
+   * Establece la ciudad del domicilio del chofer.
+   * @param ciudad La ciudad del domicilio.
+   */
   public setCiudad(ciudad: string): void {
     this.update((state) => ({ ...state, ciudad }));
   }
 
+  /**
+   * Establece la localidad del domicilio del chofer.
+   * @param localidad La localidad del domicilio.
+   */
   public setLocalidad(localidad: string): void {
     this.update((state) => ({ ...state, localidad }));
   }
 
+  /**
+   * Establece el código postal del domicilio del chofer.
+   * @param codigoPostal El código postal del domicilio.
+   */
   public setCodigoPostal(codigoPostal: string): void {
     this.update((state) => ({ ...state, codigoPostal }));
   }
 
+  /**
+   * Establece el país del chofer nacional.
+   * @param paisChn El país del chofer nacional.
+   */
   public setPaisChn(paisChn: string): void {
     this.update((state) => ({ ...state, paisChn }));
   }
 
+  /**
+   * Establece el estado del control del chofer.
+   * @param estadoControl El estado del control.
+   */
   public setEstadoControl(estadoControl: string): void {
     this.update((state) => ({ ...state, estadoControl }));
   }
 
+  /**
+   * Establece el número del seguro social del chofer.
+   * @param numerodelsegurosocial El número del seguro social.
+   */
   public setNumeroDelSeguroSocial(numerodelsegurosocial: string): void {
     this.update((state) => ({ ...state, numerodelsegurosocial }));
   }
 
+  /**
+   * Establece la entidad federativa del chofer nacional.
+   * @param entidadFederativaCHN La entidad federativa del chofer nacional.
+   */
   public setEntidadFederativaCHN(entidadFederativaCHN: string): void {
     this.update((state) => ({ ...state, entidadFederativaCHN }));
   }
 
+  /**
+   * Establece la delegación del chofer nacional.
+   * @param delegacionCHN La delegación del chofer nacional.
+   */
   public setDelegacionCHN(delegacionCHN: string): void {
     this.update((state) => ({ ...state, delegacionCHN }));
   }
 
+  /**
+   * Establece la colonia del chofer nacional.
+   * @param coloniaCHN La colonia del chofer nacional.
+   */
   public setColoniaCHN(coloniaCHN: string): void {
     this.update((state) => ({ ...state, coloniaCHN }));
   }
 
+  /**
+   * Establece el país de origen del chofer nacional.
+   * @param paisOrigenCHN El país de origen del chofer nacional.
+   */
   public setPaisOrigenCHN(paisOrigenCHN: string): void {
     this.update((state) => ({ ...state, paisOrigenCHN }));
   }
 
+  /**
+   * Establece el correo electrónico del chofer.
+   * @param correo El correo electrónico del chofer.
+   */
   public setCorreo(correo: string): void {
     this.update((state) => ({ ...state, correo }));
   }
 
+  /**
+   * Establece el número de teléfono del chofer.
+   * @param telefono El número de teléfono del chofer.
+   */
   public setTelefono(telefono: string): void {
     this.update((state) => ({ ...state, telefono }));
   }
 
+  /**
+   * Establece el apellido materno del chofer extranjero.
+   * @param apellidoMaternoCHE El apellido materno del chofer extranjero.
+   */
   public setApellidoMaternoCHE(apellidoMaternoCHE: string): void {
     this.update((state) => ({ ...state, apellidoMaternoCHE }));
   }
 
+  /**
+   * Establece la nacionalidad del chofer extranjero.
+   * @param nacionalidadCHE La nacionalidad del chofer extranjero.
+   */
   public setNacionalidadCHE(nacionalidadCHE: string): void {
     this.update((state) => ({ ...state, nacionalidadCHE }));
   }
 
+  /**
+   * Establece el número de seguro social del chofer extranjero.
+   * @param nss El número de seguro social del chofer extranjero.
+   */
   public setNss(nss: string): void {
     this.update((state) => ({ ...state, nss }));
   }
 
+  /**
+   * Establece el identificador fiscal del chofer extranjero.
+   * @param ideFiscal El identificador fiscal del chofer extranjero.
+   */
   public setIdeFiscal(ideFiscal: string): void {
     this.update((state) => ({ ...state, ideFiscal }));
   }
 
+  /**
+   * Establece el país del chofer extranjero.
+   * @param paisCHE El país del chofer extranjero.
+   */
   public setPaisCHE(paisCHE: string): void {
     this.update((state) => ({ ...state, paisCHE }));
   }
 
+  /**
+   * Establece la entidad federativa del chofer extranjero.
+   * @param entidadFederativaCHE La entidad federativa del chofer extranjero.
+   */
   public setEntidadFederativaCHE(entidadFederativaCHE: string): void {
     this.update((state) => ({ ...state, entidadFederativaCHE }));
   }
 
+  /**
+   * Establece el país de origen del chofer extranjero.
+   * @param paisOrigenCHE El país de origen del chofer extranjero.
+   */
   public setPaisOrigenCHE(paisOrigenCHE: string): void {
     this.update((state) => ({ ...state, paisOrigenCHE }));
   }
 
+  /**
+   * Establece el apellido paterno del chofer.
+   * @param apellidoPaternos El apellido paterno del chofer.
+   */
   public setApellidoPaternos(apellidoPaternos: string): void {
     this.update((state) => ({ ...state, apellidoPaternos }));
   }
 
+  /**
+   * Establece los nombres del chofer.
+   * @param nombres Los nombres del chofer.
+   */
   public setNombres(nombres: string): void {
     this.update((state) => ({ ...state, nombres }));
   }
 
+  /**
+   * Establece el nombre del chofer.
+   * @param nombre El nombre del chofer.
+   */
   public setNombre(nombre: string): void {
     this.update((state) => ({ ...state, nombre }));
   }
