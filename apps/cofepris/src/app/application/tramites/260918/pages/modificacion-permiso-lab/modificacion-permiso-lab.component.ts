@@ -40,8 +40,6 @@ export class ModificacionPermisoLabComponent {
       txtBtnAnt: 'Anterior',
       txtBtnSig: 'Continuar',
     };
-  
-    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     /**
      * @descripción
      * Método para actualizar el índice del paso actual basado en la acción y el valor proporcionados.
