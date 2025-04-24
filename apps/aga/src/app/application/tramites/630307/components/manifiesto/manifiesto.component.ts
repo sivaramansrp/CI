@@ -8,7 +8,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 
-import { TituloComponent } from '@ng-mf/data-access-user';
+import { InputCheckComponent, TituloComponent } from '@ng-mf/data-access-user';
 
 import { Tramite630307Query } from '../../estados/tramite630307.query';
 
@@ -20,7 +20,7 @@ import { Tramite630307State, Tramite630307Store } from '../../estados/tramite630
 @Component({
   selector: 'app-manifiesto',
   standalone: true,
-  imports: [CommonModule, TituloComponent, ReactiveFormsModule],
+  imports: [CommonModule, TituloComponent, ReactiveFormsModule, InputCheckComponent],
   templateUrl: './manifiesto.component.html',
   styleUrl: './manifiesto.component.scss',
 })

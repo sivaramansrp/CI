@@ -1,29 +1,27 @@
 /**
  * Componente que gestiona los datos de la mercancía para el trámite 630307.
+ * Permite inicializar formularios, obtener datos del estado y manejar el estado del formulario.
  */
 import { CommonModule } from '@angular/common';
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { Subject, takeUntil } from 'rxjs';
-
 import { ModeloDeFormaDinamica } from '@ng-mf/data-access-user';
 
-import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
-import { TituloComponent } from '@ng-mf/data-access-user';
+import { Subject, takeUntil } from 'rxjs';
 
 import { FORMULARIO_DATOS_MERCANCIA } from '../../enum/retorno-importacion-temporal.enum';
 import { Tramite630307Query } from '../../estados/tramite630307.query';
 
 import { Tramite630307State, Tramite630307Store } from '../../estados/tramite630307.store';
+import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
 /**
  * Componente que gestiona los datos de la mercancía para el trámite 630307.
- * Permite inicializar formularios, obtener datos del estado y manejar el estado del formulario.
  */
 @Component({
   selector: 'app-datos-mercancia',
   standalone: true,
-  imports: [CommonModule, FormasDinamicasComponent, TituloComponent],
+  imports: [CommonModule, FormasDinamicasComponent],
   templateUrl: './datos-mercancia.component.html',
   styleUrl: './datos-mercancia.component.scss',
 })
@@ -75,7 +73,6 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
    */
   inicializarFormulario(): void {
     this.datosMercancia = this.formBuilder.group({
-      // Define los controles del formulario aquí
     });
   }
 

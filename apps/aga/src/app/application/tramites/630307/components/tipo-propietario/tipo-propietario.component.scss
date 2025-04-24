@@ -1,3 +1,6 @@
-:host ::ng-deep .break-line{
-    clear: both !important;
+:host ::ng-deep .form-group {
+    position: relative !important;
+    min-height: 97px !important;
 }
+
+

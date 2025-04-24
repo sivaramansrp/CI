@@ -1,48 +1,8 @@
 <div class="container">
-    <ng-titulo [titulo]="'Información general de la prórroga (formato en papel)'"></ng-titulo>
-    <form [formGroup]="datosImportacionRetornoProrrogaGeneralFormulario">
-        <div class="row">
-            <div class="col-md-8">
-                <div class="form-group">
-                    <label for="folioInformacionGeneralProrroga" class="form-label">Folio de prórroga de importación
-                        temporal formato en
-                        papel *:</label>
-                    <input id="folioInformacionGeneralProrroga" formControlName="folioInformacionGeneralProrroga"
-                        type="text" class="form-control"
-                        (change)="setValorStore(datosImportacionRetornoProrrogaGeneralFormulario,'folioInformacionGeneralProrroga')" />
-                    <div *ngIf="datosImportacionRetornoProrrogaGeneralFormulario.get('folioInformacionGeneralProrroga')?.invalid 
-                    && datosImportacionRetornoProrrogaGeneralFormulario.get('folioInformacionGeneralProrroga')?.touched"
-                        class="text-danger">
-                        <small
-                            *ngIf="datosImportacionRetornoProrrogaGeneralFormulario.get('folioInformacionGeneralProrroga')?.hasError('required')">
-                            Este campo es obligatorio.
-                        </small>
-                        <small
-                            *ngIf="datosImportacionRetornoProrrogaGeneralFormulario.get('folioInformacionGeneralProrroga')?.hasError('pattern')">
-                            Por favor, corrija el folio de prórroga de importación temporal formato en papel.
-                        </small>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-4">
-                <div class="form-group">
-                    <input-fecha
-                        [setFecha]="datosImportacionRetornoProrrogaGeneralFormulario.get('fechaInicioProrroga')?.value"
-                        [datos]="inputFechaInicioProrroga"
-                        (valorCambiado)="cambioFechaInicioProrroga($event)"></input-fecha>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="form-group">
-                    <input-fecha
-                        [setFecha]="datosImportacionRetornoProrrogaGeneralFormulario.get('fechaVencimientoProrroga')?.value"
-                        [datos]="inputFechaVencimientoProrroga"
-                        (valorCambiado)="cambioFechaVencimientoProrroga($event)"></input-fecha>
-                </div>
-            </div>
-
-        </div>
-    </form>
+    <div class="row">
+        <formas-dinamicas [forma]="datosImportacionRetornoProrrogaGeneralFormulario"
+            [formularioTitulo]="'Información general de la prórroga (formato en papel)'"
+            [formularioDatos]="formularioDatosProrroga" [estado]="estadoSeleccionado"
+            (emitirCambioDeValor)="establecerCambioDeValor($event)"></formas-dinamicas>
+    </div>
 </div>

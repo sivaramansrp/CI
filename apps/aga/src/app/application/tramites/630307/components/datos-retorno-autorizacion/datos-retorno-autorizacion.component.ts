@@ -1,25 +1,25 @@
 /**
  * datos-retorno-autorizacion.component.ts
  * Componente que gestiona los datos de retorno de autorización para el trámite 630307.
+ * Permite inicializar formularios, obtener datos de catálogos y manejar el estado del formulario.
  */
+
 import { CommonModule } from '@angular/common';
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 
-import { Catalogo, InputFecha, ModeloDeFormaDinamica } from '@libs/shared/data-access-user/src';
+import { ModeloDeFormaDinamica } from '@libs/shared/data-access-user/src';
+
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
 
-import { CatalogoSelectComponent, InputFechaComponent ,TituloComponent} from '@ng-mf/data-access-user';
-
-import { FECHA_INGRESO, FECHA_VENCIMIENTO, FORMULARIO_DATOS_AUTORIZACION } from '../../enum/retorno-importacion-temporal.enum';
+import { FORMULARIO_DATOS_AUTORIZACION } from '../../enum/retorno-importacion-temporal.enum';
 import { Tramite630307Query } from '../../estados/tramite630307.query';
 
 import { Tramite630307State, Tramite630307Store } from '../../estados/tramite630307.store';
 import { RetornoImportacionTemporalService } from '../../services/retorno-importacion-temporal.service';
 /**
- * datos-retorno-autorizacion.component.ts
  * Componente que gestiona los datos de retorno de autorización para el trámite 630307.
  * Permite inicializar formularios, obtener datos de catálogos y manejar el estado del formulario.
  */
@@ -28,21 +28,12 @@ import { RetornoImportacionTemporalService } from '../../services/retorno-import
   standalone: true,
   imports: [
     CommonModule,
-    ReactiveFormsModule,
-    InputFechaComponent,
-    FormasDinamicasComponent,
-    CatalogoSelectComponent,
-    TituloComponent,
+    FormasDinamicasComponent
   ],
   templateUrl: './datos-retorno-autorizacion.component.html',
   styleUrl: './datos-retorno-autorizacion.component.scss',
 })
 export class DatosRetornoAutorizacionComponent implements OnInit, OnDestroy {
-  /**
-   * Opciones de secciones aduaneras obtenidas desde un catálogo.
-   */
-  seccionAduaneraOpciones: Catalogo[] = [];
-
   /**
    * Formulario dinámico para gestionar los datos de autorización.
    */
@@ -62,16 +53,6 @@ export class DatosRetornoAutorizacionComponent implements OnInit, OnDestroy {
    * Subject utilizado para manejar la destrucción de suscripciones y evitar fugas de memoria.
    */
   private destroyed$ = new Subject<void>();
-
-  /**
-   * Configuración para el componente de fecha de ingreso.
-   */
-  inputFechaIngreso: InputFecha = FECHA_INGRESO;
-
-  /**
-   * Configuración para el componente de fecha de vencimiento.
-   */
-  inputFechaVencimiento: InputFecha = FECHA_VENCIMIENTO;
 
   /**
    * Constructor del componente.
@@ -104,9 +85,6 @@ export class DatosRetornoAutorizacionComponent implements OnInit, OnDestroy {
    */
   inicializarFormulario(): void {
     this.datosImportacionRetornoAutorizacionGeneralFormulario = this.fb.group({
-      seccionAduanera: [this.estadoSeleccionado?.['seccionAduanera'] || ''],
-      fechaIngreso: [this.estadoSeleccionado?.['fechaIngreso'] || '', Validators.required],
-      fechaVencimiento: [this.estadoSeleccionado?.['fechaVencimiento'] || '', Validators.required],
     });
   }
 
@@ -131,7 +109,10 @@ export class DatosRetornoAutorizacionComponent implements OnInit, OnDestroy {
     this.retornoImportacionTemporalService.getSeccionAduanera()
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data) => {
-        this.seccionAduaneraOpciones = data;
+        const SECCION_ADUANERA = this.formularioDatosAutorizacion.find((item) => item.id === 'seccionAduanera');
+        if (SECCION_ADUANERA) {
+          SECCION_ADUANERA.opciones = data;
+        }
       });
   }
 

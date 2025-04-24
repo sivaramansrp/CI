@@ -1,30 +1,11 @@
 <div class="container">
-    <ng-titulo [titulo]="'Datos de la solicitud'"></ng-titulo>
     <div class="row">
-        <formas-dinamicas [forma]="datosImportacionTemporalFormulario" [formularioDatos]="formularioDatosSolicitud"
-            [estado]="estadoSeleccionado" (emitirCambioDeValor)="establecerCambioDeValor($event)"></formas-dinamicas>
-    </div>
-
-    <div class="row">
-        <form [formGroup]="datosImportacionTemporalFormulario">
-            <div class="col-md-4">
-                <input-fecha [setFecha]="datosImportacionTemporalFormulario.get('fechaLimiteRetorno')?.value"
-                    [datos]="datosfecha" (valorCambiado)="this.establecerCambioDeValor({
-                        campo: 'fechaLimiteRetorno',
-                      valor: $event})"></input-fecha>
-            </div>
-            <div class="col-md-4">
-                <app-catalogo-select [catalogo]="prorrogaOpciones" [label]="'Cuenta con prórroga'" [required]="true"
-                    formControlName="cuentaProrroga" (selectionChange)="this.establecerCambioDeValor({
-                        campo: 'cuentaProrroga',
-                        valor: $event
-                      });"></app-catalogo-select>
-                <input type="hidden" id="hidMostrarSeccionRetorno" formControlName="cuentaProrroga" />
-            </div>
-        </form>
+        <formas-dinamicas [formularioTitulo]="'Datos de la solicitud'" [forma]="datosImportacionTemporalFormulario"
+            [formularioDatos]="formularioDatosSolicitud" [estado]="estadoSeleccionado"
+            (emitirCambioDeValor)="establecerCambioDeValor($event)"></formas-dinamicas>
     </div>
 </div>
-    @if(datosImportacionTemporalFormulario.get('cuentaProrroga')?.value === '1'){
-        <app-datos-retorno-prorroga></app-datos-retorno-prorroga>
-    }
-    <app-datos-retorno-autorizacion></app-datos-retorno-autorizacion>
+@if(showDatosRetornoProrroga){
+<app-datos-retorno-prorroga></app-datos-retorno-prorroga>
+}
+<app-datos-retorno-autorizacion></app-datos-retorno-autorizacion>

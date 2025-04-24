@@ -1,29 +1,26 @@
 /**
+ * tipo-propietario.component.ts
  * Componente que gestiona los datos del tipo de propietario para el trámite 630307.
+ * Permite inicializar formularios, obtener datos de catálogos y manejar el estado del formulario.
  */
 import { CommonModule } from '@angular/common';
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 
-import { CatalogoSelectComponent, TituloComponent } from '@ng-mf/data-access-user';
-
-import { Catalogo, ModeloDeFormaDinamica, REGEX_NOMBRE } from '@libs/shared/data-access-user/src';
+import { Catalogo, ModeloDeFormaDinamica } from '@libs/shared/data-access-user/src';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
-import { SolicitanteComponent } from '@ng-mf/data-access-user';
 
+import { CatalogoSelectComponent, SolicitanteComponent, TituloComponent } from '@ng-mf/data-access-user';
 
-
-import { FORMULARIO_DATOS_PROPIETARIO } from '../../enum/retorno-importacion-temporal.enum';
+import { FORMULARIO_DATOS_PROPIETARIO_DIRECCION, FORMULARIO_DATOS_PROPIETARIO_NOMBRE } from '../../enum/retorno-importacion-temporal.enum';
 import { Tramite630307Query } from '../../estados/tramite630307.query';
 
 import { Tramite630307State, Tramite630307Store } from '../../estados/tramite630307.store';
 import { RetornoImportacionTemporalService } from '../../services/retorno-importacion-temporal.service';
 /**
- * tipo-propietario.component.ts
  * Componente que gestiona los datos del tipo de propietario para el trámite 630307.
- * Permite inicializar formularios, obtener datos de catálogos y manejar el estado del formulario.
  */
 @Component({
   selector: 'app-tipo-propietario',
@@ -40,6 +37,21 @@ import { RetornoImportacionTemporalService } from '../../services/retorno-import
   styleUrls: ['./tipo-propietario.component.scss'],
 })
 export class TipoPropietarioComponent implements OnInit, OnDestroy {
+
+  /**
+   * Indicador para mostrar el formulario de personas extranjeras.
+   */
+  mostrarFormularioPersonaExtranjera = false;
+  /**
+   * Indica si se debe mostrar el tipo de propietario.
+   */
+  mostrarTipoPropietario = false;
+
+  /**
+   * Indica si se debe mostrar el solicitante.
+   */
+  mostrarSolicitante = false;
+
   /**
    * Opciones de propietarios obtenidas desde un catálogo.
    */
@@ -53,7 +65,12 @@ export class TipoPropietarioComponent implements OnInit, OnDestroy {
   /**
    * Formulario dinámico para gestionar los datos del tipo de propietario.
    */
-  formularioDatosTipoPropietario: ModeloDeFormaDinamica[] = FORMULARIO_DATOS_PROPIETARIO;
+  formularioDatosPropietarioDireccion: ModeloDeFormaDinamica[] = FORMULARIO_DATOS_PROPIETARIO_DIRECCION;
+
+  /**
+   * Formulario dinámico para gestionar los datos del nombre del propietario.
+   */ 
+  formularioDatosPropietarioNombre: ModeloDeFormaDinamica[] = FORMULARIO_DATOS_PROPIETARIO_NOMBRE;
 
   /**
    * Formulario reactivo para gestionar los datos del tipo de propietario.
@@ -95,7 +112,35 @@ export class TipoPropietarioComponent implements OnInit, OnDestroy {
     this.getPropietario();
     this.getTipoDePropietario();
     this.getPais();
-    this.ajustarValidadoresSegunValor();
+    this.cambiarPropietario();
+    this.cambiarTipoPropietario();
+  }
+
+  /**
+   * Cambia la visibilidad de los campos según el tipo de propietario seleccionado.
+   */
+  cambiarTipoPropietario(): void {
+    const TIPO_PROPIETARIO_VALOR = this.tipoPropietarioFormulario.get('tipoDePropietario')?.value;
+    const NOMBRE_CAMPO = this.formularioDatosPropietarioNombre.find((campo) => campo.id === 'nombre');
+    const APELLIDO_PATERNO_CAMPO = this.formularioDatosPropietarioNombre.find((campo) => campo.id === 'apellidoPaterno');
+    const APELLIDO_MATERNO_CAMPO = this.formularioDatosPropietarioNombre.find((campo) => campo.id === 'apellidoMaterno');
+    const RAZON_SOCIAL_CAMPO = this.formularioDatosPropietarioNombre.find((campo) => campo.id === 'razonSocial');
+
+    if (NOMBRE_CAMPO && APELLIDO_PATERNO_CAMPO && APELLIDO_MATERNO_CAMPO && RAZON_SOCIAL_CAMPO) {
+      NOMBRE_CAMPO.mostrar = TIPO_PROPIETARIO_VALOR === '1';
+      APELLIDO_PATERNO_CAMPO.mostrar = TIPO_PROPIETARIO_VALOR === '1';
+      APELLIDO_MATERNO_CAMPO.mostrar = TIPO_PROPIETARIO_VALOR === '1';
+      RAZON_SOCIAL_CAMPO.mostrar = TIPO_PROPIETARIO_VALOR === '2';
+    }
+    this.mostrarFormularioPersonaExtranjera = TIPO_PROPIETARIO_VALOR ;
+  }
+
+  /**
+   * Cambia la visibilidad de los componentes según el propietario seleccionado.
+   */
+  cambiarPropietario(): void {
+    this.mostrarTipoPropietario = this.tipoPropietarioFormulario.get('propietario')?.value === '2';
+    this.mostrarSolicitante = this.tipoPropietarioFormulario.get('propietario')?.value === '1';
   }
 
   /**
@@ -105,10 +150,6 @@ export class TipoPropietarioComponent implements OnInit, OnDestroy {
     this.tipoPropietarioFormulario = this.fb.group({
       propietario: [this.estadoSeleccionado?.['propietario'] || '', Validators.required],
       tipoDePropietario: [this.estadoSeleccionado?.['tipoDePropietario'] || '', Validators.required],
-      nombre: [this.estadoSeleccionado?.['nombre'] || '', [Validators.required, Validators.pattern(REGEX_NOMBRE)]],
-      apellidoPaterno: [this.estadoSeleccionado?.['apellidoPaterno'] || '', [Validators.required, Validators.pattern(REGEX_NOMBRE)]],
-      apellidoMaterno: [this.estadoSeleccionado?.['apellidoMaterno'] || '', Validators.pattern(REGEX_NOMBRE)],
-      razonSocial: [this.estadoSeleccionado?.['razonSocial'] || '', [Validators.required, Validators.pattern(REGEX_NOMBRE)]],
     });
   }
 
@@ -155,7 +196,7 @@ export class TipoPropietarioComponent implements OnInit, OnDestroy {
       .getPais()
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data) => {
-        const PAIS_FIELD = this.formularioDatosTipoPropietario.find((field) => field.id === 'pais');
+        const PAIS_FIELD = this.formularioDatosPropietarioDireccion.find((campo) => campo.id === 'pais');
         if (PAIS_FIELD) {
           PAIS_FIELD.opciones = data;
         }
@@ -164,55 +205,13 @@ export class TipoPropietarioComponent implements OnInit, OnDestroy {
 
   /**
    * Establece un cambio de valor en el store basado en un evento.
-   * 
-   * @param $event - Evento que contiene el campo y el valor a actualizar.
+   *  Evento que contiene el campo y el valor a actualizar.
    */
   establecerCambioDeValor($event: { campo: string; valor: unknown }): void {
     if (typeof $event.valor === 'object' && $event.valor !== null && 'id' in $event.valor) {
       this.tramite630307Store.setTramite630307State($event.campo, String(($event.valor as { id: unknown }).id));
     } else {
       this.tramite630307Store.setTramite630307State($event.campo, $event.valor);
-    }
-  }
-
-  /**
-   * Establece validadores a un conjunto de campos del formulario.
-   * 
-   * @param campos - Lista de nombres de los campos.
-   * @param validador - Validador o lista de validadores a aplicar.
-   */
-  establecerValidadores(campos: string[], validador: ValidatorFn | ValidatorFn[]): void {
-    campos.forEach((nombreCampo) => {
-      const CAMPO = this.tipoPropietarioFormulario.get(nombreCampo);
-      CAMPO?.setValidators(validador);
-      CAMPO?.updateValueAndValidity();
-    });
-  }
-
-  /**
-   * Elimina todos los validadores de un conjunto de campos del formulario.
-   * 
-   * @param campos - Lista de nombres de los campos.
-   */
-  limpiarValidadores(campos: string[]): void {
-    campos.forEach((nombreCampo) => {
-      const CAMPO = this.tipoPropietarioFormulario.get(nombreCampo);
-      CAMPO?.clearValidators();
-      CAMPO?.updateValueAndValidity();
-    });
-  }
-
-  /**
-   * Ajusta los validadores según el valor seleccionado.
-   */
-  ajustarValidadoresSegunValor(): void {
-    const TIPO_DE_PROPIETARIO = this.tipoPropietarioFormulario.get('tipoDePropietario')?.value;
-    if (TIPO_DE_PROPIETARIO === '1') {
-      this.limpiarValidadores(['razonSocial']);
-      this.establecerValidadores(['nombre', 'apellidoPaterno'], Validators.required);
-    } else if (TIPO_DE_PROPIETARIO === '2') {
-      this.limpiarValidadores(['nombre', 'apellidoPaterno']);
-      this.establecerValidadores(['razonSocial'], Validators.required);
     }
   }
 
