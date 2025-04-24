@@ -34,21 +34,42 @@
                 <label for="describaContratacion">
                     <span class="danger">*</span>Describa el procedimiento documentado para la contratación del personal
                 </label>
-                <textarea class="custom-textarea" rows="6" cols="100" formControlName="describaContratacion" (change)="setValoresStore(seguridadPersonal,'describaContratacion', 'setDescribaContratacion')"></textarea>
+                <textarea  id="describaContratacion" class="custom-textarea" rows="6" cols="100" formControlName="describaContratacion" (change)="setValoresStore(seguridadPersonal,'describaContratacion', 'setDescribaContratacion')"></textarea>
+                <span
+                    *ngIf="seguridadPersonal.controls['describaContratacion']?.errors?.['required'] && seguridadPersonal.controls['describaContratacion']?.touched"
+                    class="mensaje-error">
+                    Este campo es obligatorio.
+                </span>
             </div>
 
             <div class="col-md-12 text-container mt-4">
                 <label for="documentacionExigida">
                     <span class="danger">*</span>Señale los requisitos y documentación exigida
                 </label>
-                <textarea class="custom-textarea" rows="6" cols="100" formControlName="documentacionExigida" (change)="setValoresStore(seguridadPersonal,'documentacionExigida', 'setDocumentacionExigida')"></textarea>
+                <textarea id="documentacionExigida" class="custom-textarea" rows="6" cols="100" formControlName="documentacionExigida"
+                    (change)="setValoresStore(seguridadPersonal, 'documentacionExigida', 'setDocumentacionExigida')"></textarea>
+                
+                <span
+                    *ngIf="seguridadPersonal.controls['documentacionExigida']?.errors?.['required'] && seguridadPersonal.controls['documentacionExigida']?.touched"
+                    class="mensaje-error">
+                    Este campo es obligatorio.
+                </span>
+
             </div>
 
             <div class="col-md-12 text-container mt-4">
                 <label for="examenesSolicitados">
                     <span class="danger">*</span>Señale las pruebas y exámenes solicitados.
                 </label>
-                <textarea class="custom-textarea" rows="6" cols="100" formControlName="examenesSolicitados" (change)="setValoresStore(seguridadPersonal,'examenesSolicitados', 'setExamenesSolicitados')"></textarea>
+                <textarea id="examenesSolicitados" class="custom-textarea" rows="6" cols="100" formControlName="examenesSolicitados"
+                    (change)="setValoresStore(seguridadPersonal, 'examenesSolicitados', 'setExamenesSolicitados')"></textarea>
+                
+                <span
+                    *ngIf="seguridadPersonal.controls['examenesSolicitados']?.errors?.['required'] && seguridadPersonal.controls['examenesSolicitados']?.touched"
+                    class="mensaje-error">
+                    Este campo es obligatorio.
+                </span>
+              
             </div>
 
             <div class="col-md-12 text-container mt-4">
@@ -56,7 +77,15 @@
                     <span class="danger">*</span>Indique las áreas y/o puestos críticos que se hayan identificado como
                     de riesgo, conforme a su análisis.
                 </label>
-                <textarea class="custom-textarea" rows="6" cols="100" formControlName="conformeAnalisis" (change)="setValoresStore(seguridadPersonal,'conformeAnalisis', 'setConformeAnalisis')"></textarea>
+                <textarea id="conformeAnalisis" class="custom-textarea" rows="6" cols="100" formControlName="conformeAnalisis"
+                    (change)="setValoresStore(seguridadPersonal, 'conformeAnalisis', 'setConformeAnalisis')"></textarea>
+                
+                <span
+                    *ngIf="seguridadPersonal.controls['conformeAnalisis']?.errors?.['required'] && seguridadPersonal.controls['conformeAnalisis']?.touched"
+                    class="mensaje-error">
+                    Este campo es obligatorio.
+                </span>
+              
             </div>
 
             <div class="col-md-12 text-container mt-4">
@@ -67,7 +96,15 @@
                     clínicos, toxicológicos (uso de drogas), etcétera. En su caso, señale los puestos o áreas de trabajo
                     en que se requieren y con qué periodicidad se llevan a cabo.
                 </label>
-                <textarea class="custom-textarea" rows="6" cols="100" formControlName="periodicidad" (change)="setValoresStore(seguridadPersonal,'periodicidad', 'setPeriodicidad')"></textarea>
+                <textarea id="periodicidad" class="custom-textarea" rows="6" cols="100" formControlName="periodicidad"
+                    (change)="setValoresStore(seguridadPersonal, 'periodicidad', 'setPeriodicidad')"></textarea>
+                
+                <span
+                    *ngIf="seguridadPersonal.controls['periodicidad']?.errors?.['required'] && seguridadPersonal.controls['periodicidad']?.touched"
+                    class="mensaje-error">
+                    Este campo es obligatorio.
+                </span>
+
             </div>
 
             <div class="col-md-12 text-container mt-4">
@@ -75,7 +112,15 @@
                     <span class="danger">*</span>Indique si previo a la contratación, el candidato debe firmar un
                     acuerdo de confidencialidad o un documento similar.
                 </label>
-                <textarea class="custom-textarea" rows="6" cols="100" formControlName="confidencialidad" (change)="setValoresStore(seguridadPersonal,'confidencialidad', 'setConfidencialidad')"></textarea>
+                <textarea id="confidencialidad" class="custom-textarea" rows="6" cols="100" formControlName="confidencialidad"
+                    (change)="setValoresStore(seguridadPersonal, 'confidencialidad', 'setConfidencialidad')"></textarea>
+                
+                <span
+                    *ngIf="seguridadPersonal.controls['confidencialidad']?.errors?.['required'] && seguridadPersonal.controls['confidencialidad']?.touched"
+                    class="mensaje-error">
+                    Este campo es obligatorio.
+                </span>
+              
             </div>
 
             <div class="col-md-12 text-container mt-4">
@@ -92,7 +137,15 @@
                 <label>
                     <span class="danger">*</span>Explique brevemente en qué consisten
                 </label>
-                <textarea class="custom-textarea" rows="6" cols="100" formControlName="expliqueBrevemente" (change)="setValoresStore(seguridadPersonal,'expliqueBrevemente', 'setExpliqueBrevemente')"></textarea>
+                <textarea id="expliqueBrevemente" class="custom-textarea" rows="6" cols="100" formControlName="expliqueBrevemente"
+                    (change)="setValoresStore(seguridadPersonal, 'expliqueBrevemente', 'setExpliqueBrevemente')"></textarea>
+                
+                <span
+                    *ngIf="seguridadPersonal.controls['expliqueBrevemente']?.errors?.['required'] && seguridadPersonal.controls['expliqueBrevemente']?.touched"
+                    class="mensaje-error">
+                    Este campo es obligatorio.
+                </span>
+              
             </div>
         </div>
 
@@ -113,7 +166,16 @@
                 <label for="describaProcedimientoPersonal">
                     <span class="danger">*</span>Describa el procedimiento para la baja del personal
                 </label>
-                <textarea class="custom-textarea" rows="6" cols="100" formControlName="describaProcedimientoPersonal" (change)="setValoresStore(seguridadPersonal,'describaProcedimientoPersonal', 'setDescribaProcedimientoPersonal')"></textarea>
+                <textarea id="describaProcedimientoPersonal" class="custom-textarea" rows="6" cols="100"
+                    formControlName="describaProcedimientoPersonal"
+                    (change)="setValoresStore(seguridadPersonal,'describaProcedimientoPersonal', 'setDescribaProcedimientoPersonal')"></textarea>
+                
+                <span
+                    *ngIf="seguridadPersonal.controls['describaProcedimientoPersonal']?.errors?.['required'] && seguridadPersonal.controls['describaProcedimientoPersonal']?.touched"
+                    class="mensaje-error">
+                    Este campo es obligatorio.
+                </span>
+
             </div>
 
             <div class="col-md-12 text-container mt-4">
@@ -121,7 +183,16 @@
                     <span class="danger">*</span>Quién es el responsable de llevar acabo y dar seguimiento a este
                     procedimiento
                 </label>
-                <textarea class="custom-textarea" rows="6" cols="100" formControlName="seguimientoProcedimiento" (change)="setValoresStore(seguridadPersonal,'seguimientoProcedimiento', 'setSeguimientoProcedimiento')"></textarea>
+                <textarea id="seguimientoProcedimiento" class="custom-textarea" rows="6" cols="100"
+                    formControlName="seguimientoProcedimiento"
+                    (change)="setValoresStore(seguridadPersonal,'seguimientoProcedimiento', 'setSeguimientoProcedimiento')"></textarea>
+                
+                <span
+                    *ngIf="seguridadPersonal.controls['seguimientoProcedimiento']?.errors?.['required'] && seguridadPersonal.controls['seguimientoProcedimiento']?.touched"
+                    class="mensaje-error">
+                    Este campo es obligatorio.
+                </span>
+
             </div>
 
             <div class="col-md-12 text-container mt-4">
@@ -129,7 +200,15 @@
                     <span class="danger">*</span>Cómo se realiza y confirma la entrega de identificaciones, uniformes,
                     llaves y demás equipo.
                 </label>
-                <textarea class="custom-textarea" rows="6" cols="100" formControlName="identificaciones" (change)="setValoresStore(seguridadPersonal,'identificaciones', 'setIdentificaciones')"></textarea>
+                <textarea id="identificaciones" class="custom-textarea" rows="6" cols="100" formControlName="identificaciones"
+                    (change)="setValoresStore(seguridadPersonal,'identificaciones', 'setIdentificaciones')"></textarea>
+                
+                <span
+                    *ngIf="seguridadPersonal.controls['identificaciones']?.errors?.['required'] && seguridadPersonal.controls['identificaciones']?.touched"
+                    class="mensaje-error">
+                    Este campo es obligatorio.
+                </span>
+
             </div>
 
             <div class="col-md-12 text-container mt-4">
@@ -137,7 +216,15 @@
                     <span class="danger">*</span>Indicar el control, registro y/o formato, en el que se identifique y
                     asegure la entrega de material y baja en sistemas informáticos (en su caso, anexar)
                 </label>
-                <textarea class="custom-textarea" rows="6" cols="100" formControlName="sistemasInformaticos" (change)="setValoresStore(seguridadPersonal,'sistemasInformaticos', 'setSistemasInformaticos')"></textarea>
+                <textarea id="sistemasInformaticos" class="custom-textarea" rows="6" cols="100" formControlName="sistemasInformaticos"
+                    (change)="setValoresStore(seguridadPersonal,'sistemasInformaticos', 'setSistemasInformaticos')"></textarea>
+                
+                <span
+                    *ngIf="seguridadPersonal.controls['sistemasInformaticos']?.errors?.['required'] && seguridadPersonal.controls['sistemasInformaticos']?.touched"
+                    class="mensaje-error">
+                    Este campo es obligatorio.
+                </span>
+
             </div>
 
             <div class="col-md-12 text-container mt-4">
@@ -146,7 +233,15 @@
                     laboral con la empresa, para que en caso de que haya sido por motivos de seguridad, se prevenga a
                     sus proveedores de servicios y/o asociados de negocio.
                 </label>
-                <textarea class="custom-textarea" rows="6" cols="100" formControlName="proveedoresServicios" (change)="setValoresStore(seguridadPersonal,'proveedoresServicios', 'setProveedoresServicios')"></textarea>
+                <textarea id="proveedoresServicios" class="custom-textarea" rows="6" cols="100" formControlName="proveedoresServicios"
+                    (change)="setValoresStore(seguridadPersonal,'proveedoresServicios', 'setProveedoresServicios')"></textarea>
+                
+                <span
+                    *ngIf="seguridadPersonal.controls['proveedoresServicios']?.errors?.['required'] && seguridadPersonal.controls['proveedoresServicios']?.touched"
+                    class="mensaje-error">
+                    Este campo es obligatorio.
+                </span>
+
             </div>
         </div>
 
