@@ -1,36 +1,35 @@
-/* eslint-disable sort-imports */
-import { AnexarDocumentosComponent } from '@ng-mf/data-access-user';
-import { AlertComponent } from '@ng-mf/data-access-user';
-import { BtnContinuarComponent } from '@ng-mf/data-access-user';
-import { CommonModule } from '@angular/common';
-import { AttentionOfRenewalRoutingModule } from './attentionOfRenewal-routing.module';
-import { NgModule } from '@angular/core';
-import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
-import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
-import { ReactiveFormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
-import { SolicitantePageComponent } from './pages/solicitante-page/solicitante-page.component';
-import { forwardRef } from '@angular/core';
-import { WizardComponent } from '@ng-mf/data-access-user';
-import { FirmaElectronicaComponent } from '@ng-mf/data-access-user';
-import { SelectCatalogosComponent } from '@ng-mf/data-access-user';
-import { SharedModule } from '@ng-mf/data-access-user';
-import { InputCheckComponent } from '@ng-mf/data-access-user';
-import { InputFechaComponent } from '@ng-mf/data-access-user';
-import { InputHoraComponent } from '@ng-mf/data-access-user';
-import { CrosslistComponent } from '@ng-mf/data-access-user';
 import {
   AgregarTransporteComponent,
   CatalogosService,
 } from '@ng-mf/data-access-user';
-import { RepresentanteFiscalComponent } from '@ng-mf/data-access-user';
-import { SelectPaisesComponent } from '@ng-mf/data-access-user';
+import { AlertComponent } from '@ng-mf/data-access-user';
+import { AnexarDocumentosComponent } from '@ng-mf/data-access-user';
+import { AttentionOfRenewalRoutingModule } from './attentionOfRenewal-routing.module';
+import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { CommonModule } from '@angular/common';
+import { CrosslistComponent } from '@ng-mf/data-access-user';
+import { FirmaElectronicaComponent } from '@ng-mf/data-access-user';
+import { InputCheckComponent } from '@ng-mf/data-access-user';
+import { InputFechaComponent } from '@ng-mf/data-access-user';
+import { InputHoraComponent } from '@ng-mf/data-access-user';
+import { NgModule } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
+import { RepresentanteFiscalComponent } from '@ng-mf/data-access-user';
+import { RouterModule } from '@angular/router';
+import { SelectPaisesComponent } from '@ng-mf/data-access-user';
+import { SharedModule } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
-import { ToastrModule, ToastrService } from 'ngx-toastr';
+import { ToastrService } from 'ngx-toastr';
+import { WizardComponent } from '@ng-mf/data-access-user';
+import { forwardRef } from '@angular/core';
+
 import { ContenidoTabsWizardComponent } from './components/contenidoTabsWizard/contenido-tabs-wizard.component';
 import { DatosTramiteRenovacionComponent } from './components/datosTramiteRenovacion/datosTramiteRenovacion.component';
+import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
+import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { SolicitanteComponent } from './components/solicitante/solicitante.component';
+import { SolicitantePageComponent } from './pages/solicitante-page/solicitante-page.component';
 @NgModule({
   declarations: [
     SolicitantePageComponent,
@@ -51,7 +50,6 @@ import { SolicitanteComponent } from './components/solicitante/solicitante.compo
     ReactiveFormsModule,
     forwardRef(() => AlertComponent),
     forwardRef(() => FirmaElectronicaComponent),
-    forwardRef(() => SelectCatalogosComponent),
     forwardRef(() => AnexarDocumentosComponent),
     forwardRef(() => InputCheckComponent),
     forwardRef(() => InputFechaComponent),

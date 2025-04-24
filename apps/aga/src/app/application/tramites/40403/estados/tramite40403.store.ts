@@ -1,4 +1,3 @@
-import { Catalogo } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 import { Injectable } from '@angular/core';
 import { Store } from '@datorama/akita';
 import { StoreConfig } from '@datorama/akita';

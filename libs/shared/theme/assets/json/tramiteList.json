@@ -793,8 +793,8 @@
     {
         "id": 114,
         "tramite": 40403,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "/aga/attention-Of-Renewal/solicitante",
+        "linkDepartment": "/pago/attention-Of-Renewal/solicitante",
         "department": "aga"
     },
     {
