@@ -1647,8 +1647,8 @@
   {
     "id": 236,
     "tramite": 261101,
-    "linkDashboard": "/cofepris/solicitude-modification/solitud-modification",
-    "linkDepartment": "/pago/solicitude-modification/solitud-modification",
+    "linkDashboard": "/cofepris/solicitud-modificacion",
+    "linkDepartment": "/pago/solicitud-modificacion",
     "department": "cofepris"
   },
   {
@@ -1871,8 +1871,8 @@
   {
     "id": 268,
     "tramite": 240311,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/sedena/permiso-ordinario/importacion-artificios", 
+    "linkDepartment": "/pago/permiso-ordinario/importacion-artificios",
     "department": "sedena"
   },
   {
