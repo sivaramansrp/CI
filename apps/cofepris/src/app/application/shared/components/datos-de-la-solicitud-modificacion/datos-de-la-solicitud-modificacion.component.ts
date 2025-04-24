@@ -6,6 +6,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { MANIFIESTOS_DECLARACION, MERCANCIAS_DATA } from '../../constantes/aviso-de-funcionamiento.enum';
 import { MercanciasInfo, PropietarioTipoPersona, ScianModel } from '../../models/datos-de-la-solicitud.model';
 import { Subject, map, takeUntil } from 'rxjs';
+import { ALERT_INSUMOS } from '../../constantes/datos-domicilio-legal.enum';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { DatosDelEstablecimientoRFCComponent } from '../datos-del-establecimiento-rfc/datos-del-establecimiento-rfc.component';
@@ -99,6 +100,11 @@ export class DatosDeLaSolicitudModificacionComponent implements OnInit, AfterVie
    * Textos de alerta utilizados en el componente.
    */
   TEXTOS = ALERT;
+  /**
+   * @description
+   * Mensaje de alerta para insumos.
+   */
+  TEXTOS_INSUMOS = ALERT_INSUMOS;
 
   /**
    * @description
@@ -295,14 +301,6 @@ abrirModal(i: number = 0): void {
     });
   }
 
-  getAllFormsData(): any {
-    return {
-      datosSolicitudform: this.datosSolicitudform.value,
-      manifiestosRepresentanteForm: this.manifiestosRepresentanteForm.value,
-      scianForm: this.scianForm.value,
-    }
-  }
-  
   /**
    * @description
    * Actualiza el estado del store con los valores del formulario.

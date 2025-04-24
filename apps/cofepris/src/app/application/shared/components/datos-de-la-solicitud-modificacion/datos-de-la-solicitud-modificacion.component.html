@@ -116,10 +116,12 @@
           </div>
         </div>
       </div>
-      <div class="row mt-5">
+      <div class="row mt-5" *ngIf="!insumos">
         <ng-alert [CONTENIDO]="TEXTOS.ALERTA" [CUSTOMECLASS]="class"></ng-alert>
       </div>
-
+      <div class="row mt-5" *ngIf="insumos">
+        <ng-alert [CONTENIDO]="TEXTOS_INSUMOS.ALERTA" [CUSTOMECLASS]="class"></ng-alert>
+      </div>
       <div class="row">
         <div class="col-md-4">
           <div class="form-group">

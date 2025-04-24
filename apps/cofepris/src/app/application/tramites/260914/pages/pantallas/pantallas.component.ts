@@ -1,7 +1,8 @@
+import { CompleteForm, PagoDeDerechos, SolicitanteData, Tramite } from '../../models/mod-permiso.model';
 import { Component, ViewChild } from '@angular/core';
 import { DatosPasos, ListaPasosWizard } from '@libs/shared/data-access-user/src';
 import { AccionBoton } from '@libs/shared/data-access-user/src/core/models/260604/aviso-exportacion.model';
-import { DatosDeLaSolicitudModificacionComponent } from '../../../../shared/components/datos-de-la-solicitud-modificacion/datos-de-la-solicitud-modificacion.component';
+import { DatosComponent } from '../datos/datos.component';
 import { PANTA_PASOS } from '@libs/shared/data-access-user/src/core/enums/260604/aviso-exportacion.enum';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
@@ -34,9 +35,8 @@ export class PantallasComponent {
    * Referencia al componente del wizard para controlar la navegación entre pasos.
    */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
+  @ViewChild(DatosComponent) datosComponent!: DatosComponent;
 
-  @ViewChild(DatosDeLaSolicitudModificacionComponent) datosDeLaSolicitudModificacionComponent!: DatosDeLaSolicitudModificacionComponent;
-  groupedPayload: any = null;
   /**
    * @description
    * Datos relacionados con los pasos del wizard, como el número total de pasos,
@@ -52,7 +52,15 @@ export class PantallasComponent {
     txtBtnAnt: 'Anterior',
     txtBtnSig: 'Continuar',
   };
-
+  /**
+  * Objeto para almacenar todos los valores recopilados de los formularios.
+  */
+  cargaUtil : {
+    solicitante?: SolicitanteData;
+    datosSolicitud?: CompleteForm[];
+    pagoDeDerechos?: PagoDeDerechos[];
+    tramitesAsociados?: Tramite[];
+  } = {};
   /**
    * @description
    * Método que actualiza el índice del paso seleccionado en el wizard.
@@ -60,17 +68,14 @@ export class PantallasComponent {
    * @param {AccionBoton} e - Objeto que contiene la acción (`cont` o `atras`) y el valor del paso.
    */
   getValorIndice(e: AccionBoton): void {
- 
+    if (this.datosComponent) {
+      // Call collectFormValues() from PasoUnoPagesComponent
+      this.cargaUtil = this.datosComponent.obtenerValoresFormulario();
+
+    } else {
+      console.error('PasoUnoPagesComponent is not initialized.');
+    }
     if (e.valor > 0 && e.valor < 5) {
-      const DATOS_DE_LA_SOLICITUD_MODIFICACION_COMPONENT = this.datosDeLaSolicitudModificacionComponent.getAllFormsData();
-
-      this.groupedPayload = {
-        DatosDeLaSolicitudModificacionComponent: DATOS_DE_LA_SOLICITUD_MODIFICACION_COMPONENT
-      };
-    
-      // eslint-disable-next-line no-console
-      console.log('Grouped Payload:', this.groupedPayload);
-
       this.indice = e.valor;
       if (e.accion === 'cont') {
         this.wizardComponent.siguiente();
@@ -79,15 +84,42 @@ export class PantallasComponent {
       }
     }
   }
-  onSave(): void {
-    const DATOS_DE_LA_SOLICITUD_MODIFICACION_COMPONENT = this.datosDeLaSolicitudModificacionComponent.getAllFormsData();
-
-      this.groupedPayload = {
-        DatosDeLaSolicitudModificacionComponent: DATOS_DE_LA_SOLICITUD_MODIFICACION_COMPONENT
-      };
-    
-      // eslint-disable-next-line no-console
-      console.log('Grouped Payload:', this.groupedPayload);
-
+/**
+ * @description
+ * Método que recopila y devuelve todos los valores de los formularios presentes en el componente `DatosComponent`.
+ * Este método obtiene los datos del solicitante, los datos de la solicitud, los pagos de derechos
+ * y los trámites asociados, consolidándolos en un único objeto.
+ * 
+ * @returns Un objeto que contiene:
+ * - `solicitante`: Datos del formulario del solicitante.
+ * - `datosSolicitud`: Lista de datos de las solicitudes de modificación.
+ * - `pagoDeDerechos`: Lista de datos de los pagos de derechos.
+ * - `tramitesAsociados`: Lista de trámites asociados.
+ */
+  obtenerValoresDelFormulario(): {
+    datos?: {
+     solicitante?: SolicitanteData;
+     datosSolicitud?: CompleteForm[];
+      pagoDeDerechos?: PagoDeDerechos[];
+      tramitesAsociados?: Tramite[];
+    };
   }
+  {
+    const TODOS_VALORES_FORM: {
+      datos?: {
+        solicitante?: SolicitanteData;
+        datosSolicitud?: CompleteForm[];
+        pagoDeDerechos?: PagoDeDerechos[];
+        tramitesAsociados?: Tramite[];
+      };
+    } = {};
+     // Verifica si el componente `DatosComponent` está disponible
+    if (this.datosComponent) {
+       // Obtiene los valores del formulario desde el componente `DatosComponent`
+      const VALORES_DATOS = this.datosComponent.obtenerValoresFormulario();
+      TODOS_VALORES_FORM.datos = VALORES_DATOS ;
+    }
+  
+    return TODOS_VALORES_FORM;
+}
 }

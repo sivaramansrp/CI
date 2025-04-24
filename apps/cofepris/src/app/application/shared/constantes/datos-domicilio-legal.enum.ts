@@ -44,3 +44,7 @@ export const CROSLISTA_DE_ADUANAS_ENTRADA: string[] = [
   'CD. JUAREZ',
   'CHIHUAHUA, CHIH.'
 ];
+
+export const ALERT_INSUMOS = {
+  ALERTA: `¡Precaución! Debes capturar localidad y colonia`,
+}
