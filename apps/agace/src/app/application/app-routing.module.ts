@@ -108,6 +108,13 @@ const ROUTES: Routes = [
         (m) => m.EndosoGarantiaModule
       ),
   },
+  {
+    path: 'aviso-de-ampliacion',
+    loadChildren: () =>
+      import('./tramites/32102/Aviso-De-Ampliacion.module').then(
+        (m) => m.AvisoDeAmpliacionModule
+      ),
+  },
 ];
 
 @NgModule({
