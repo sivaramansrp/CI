@@ -1,5 +1,7 @@
 
 
+
+
 export { AcusesYResolucionesFolioDelTramiteBusquedaComponent } from './tramites/components/acuses-y-resoluciones-folio-del-tramite-busqueda/acuses-y-resoluciones-folio-del-tramite-busqueda.component';
 export { AcusesYResolucionesFolioDelTramiteDetallesComponent } from './tramites/components/acuses-y-resoluciones-folio-del-tramite-detalles/acuses-y-resoluciones-folio-del-tramite-detalles.component';
 export { ASIGNACION_REGISTRO } from './tramites/constantes/120404/entidad.enum';
@@ -10,6 +12,7 @@ export { PASOS as PASOS_303 } from './tramites/constantes/303/pasos.enums';
 export { PASOS as PASOS_CUATRO_STEPS } from './tramites/constantes/paso-cuatro-steps.enum';
 export { PASOS as PASOS_TRES_STEPS } from './tramites/constantes/paso-tres-steps.enum';
 export { RespuestaCatalogos } from './core/models/shared/catalogos.model';
+export { SolicitanteasigncionserviceService } from './core/services/120404/solicitanteasigncionservice.service';
 export { TablaConEntradaComponent } from './tramites/components/tabla-con-entrada/tabla-con-entrada.component';
 export { TablaDinamicaComponent } from './tramites/components/tabla-dinamica/tabla-dinamica.component';
 export { TablaSeleccion } from './core/enums/tabla-seleccion.enum';
@@ -121,6 +124,7 @@ export * from './tramites/constantes/regex.constants';
 export * from './tramites/constantes/registro-como-empresa.enum';
 export * from './tramites/constantes/seccionesTramites';
 export * from './tramites/constantes/solicitante-constantes.enum';
+export * from './tramites/directives/solo-numeros/solo-numeros.directive'
 export * from './tramites/directives/solo-numeros/solo-numeros.directive'
 export * from './tramites/directives/Uppercase/uppercase.directive';
 export * from './tramites/pages/acuse-page/acuse-page.component';
