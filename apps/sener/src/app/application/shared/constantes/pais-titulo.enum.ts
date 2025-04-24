@@ -5,12 +5,12 @@
  * Constante que define el título utilizado para representar los países de destino.
  * 
  * @type {string}
- * @default 'Pais(es) de destino'
+ * @default 'País(es) de destino'
  * 
  * @example
- * console.log(TITULO_DESTINO); // Output: 'Pais(es) de destino'
+ * console.log(TITULO_DESTINO); // Output: 'País(es) de destino'
  */
-export const TITULO_DESTINO = 'Pais(es) de destino';
+export const TITULO_DESTINO = 'País(es) de destino';
 
 /**
  * @constant
@@ -19,9 +19,9 @@ export const TITULO_DESTINO = 'Pais(es) de destino';
  * Constante que define el título utilizado para representar los países de origen.
  * 
  * @type {string}
- * @default 'Pais(es) de origen'
+ * @default 'País(es) de origen'
  * 
  * @example
- * console.log(TITULO_ORIGEN); // Output: 'Pais(es) de origen'
+ * console.log(TITULO_ORIGEN); // Output: 'País(es) de origen'
  */
-export const TITULO_ORIGEN = 'Pais(es) de origen';
+export const TITULO_ORIGEN = 'País(es) de origen';
