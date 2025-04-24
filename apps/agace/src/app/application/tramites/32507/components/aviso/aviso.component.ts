@@ -1,11 +1,9 @@
 import {
   CatalogoSelectComponent,
-  InputFecha,
   REGEX_IMPORTE_PAGO,
   REGEX_NUMEROS,
   REGEX_NUMEROS_USD,
   REGEX_REEMPLAZAR,
-  REGEX_SOLO_NUMEROS,
   REGEX_ALFANUMERICO_CON_ESPACIOS_REEMPLAZAR,
   TablaDinamicaComponent,
   TablaSeleccion,

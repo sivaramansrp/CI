@@ -49,11 +49,7 @@ export const TEXTOS = {
   CARGA_DE_ARCHIVO_DE_TEXTO_EXITOSO: `El formato del archivo es correcto. Se enviará un correo de notificación con el resultado.`,
 };
 
-/**
- * @constant ALPHANUMERIC_PATTERN
- * @description Expresión regular para validar cadenas alfanuméricas.
- */
-export const ALPHANUMERIC_PATTERN = '^[a-zA-Z0-9]*$';
+
 
 /**
  * Configuración para la fecha de ingreso.
