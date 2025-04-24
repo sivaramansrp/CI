@@ -1,3 +1,5 @@
+import { AvisoTabla, DesperdicioTabla, PedimentoTabla, ProcesoTabla } from "../models/aviso-destruccion.model";
+
 /**
  * Constante que define los pasos del wizard en el trámite.
  * 
@@ -81,4 +83,143 @@ export const TIPACA = [
     label: 'Carga Masiva',
   }
 ];
+
+/**
+   * @property {object} tablaDeDatos
+   * @description Configuración de la tabla de datos utilizada en el componente.
+   * Contiene las definiciones de las columnas (encabezados) y los datos que se mostrarán en la tabla.
+  */
+export const TABLA_DE_DATOS: {
+  encabezadas: {
+    encabezado: string,
+    clave: (ele: AvisoTabla) => string,
+    orden: number
+  }[],
+  datos: AvisoTabla[],
+} = {
+  encabezadas: [
+    {
+      encabezado: 'Nombre comercial',
+      clave: (ele: AvisoTabla) => ele.nombreComercial,
+      orden: 1,
+    },
+    {
+      encabezado: 'Entidad federativa',
+      clave: (ele: AvisoTabla) => ele.entidadFederativa,
+      orden: 2
+    },
+    {
+      encabezado: 'Alcaldía o Municipio',
+      clave: (ele: AvisoTabla) => ele.alcaldioOMuncipio,
+      orden: 3
+    },
+    {
+      encabezado: 'Colonia',
+      clave: (ele: AvisoTabla) => ele.colonia,
+      orden: 4
+    },
+    {
+      encabezado: 'Hora Destrucción',
+      clave: (ele: AvisoTabla) => ele.horaDestruccion,
+      orden: 5
+    },
+    {
+      encabezado: 'Fecha Destrucción',
+      clave: (ele: AvisoTabla) => ele.fechaDestruccion,
+      orden: 5
+    }
+  ],
+  datos: []
+};
+
+/**
+   * @property {object} tablaPedimento
+   * @description Configuración de la tabla de Pedimento utilizada en el componente.
+   * Contiene las definiciones de las columnas (encabezados) y los datos que se mostrarán en la tabla.
+   */
+export const TABLA_PEDIMENTO: {
+  encabezadas: {
+    encabezado: string,
+    clave: (ele: PedimentoTabla) => string,
+    orden: number
+  }[],
+  datos: PedimentoTabla[],
+} = {
+  encabezadas: [
+    {
+      encabezado: 'Número de patente',
+      clave: (ele: PedimentoTabla) => ele.patenteAutorizacion,
+      orden: 1
+    },
+    {
+      encabezado: 'Número de pedimento',
+      clave: (ele: PedimentoTabla) => ele.pedimento,
+      orden: 2,
+    },
+    {
+      encabezado: 'Aduana del pedimento',
+      clave: (ele: PedimentoTabla) => ele.claveAduanaPedimento,
+      orden: 3,
+    },
+    {
+      encabezado: 'Fracción de la mercancía',
+      clave: (ele: PedimentoTabla) => ele.claveFraccionArancelariaPedimento,
+      orden: 4,
+    },
+    {
+      encabezado: 'NICO de la mercancía',
+      clave: (ele: PedimentoTabla) => ele.nicoPedimento,
+      orden: 5,
+    },
+    {
+      encabezado: 'Cantidad de la mercancía',
+      clave: (ele: PedimentoTabla) => ele.cantidadPedimento,
+      orden: 6,
+    },
+    {
+      encabezado: 'Unidad de medida de la mercancía',
+      clave: (ele: PedimentoTabla) => ele.claveUnidadMedidaPedimento,
+      orden: 6,
+    }
+  ],
+  datos: []
+};
+
+/**
+   * @property {object} tablaProceso
+   * @description Configuración de la tabla de Proceso utilizada en el componente.
+   * Contiene las definiciones de las columnas (encabezados) y los datos que se mostrarán en la tabla.
+   */
+export const TABLA_PROCESO: {
+  encabezadas: {
+    encabezado: string,
+    clave: (ele: ProcesoTabla) => string,
+    orden: number
+  }[],
+  datos: ProcesoTabla[],
+} = {
+  encabezadas: [
+    { encabezado: 'Descripción del proceso destructivo', clave: (ele: ProcesoTabla) => ele.descripcionProcesoDestruccion, orden: 1 }
+  ],
+  datos: []
+};
+
+/**
+   * @property {object} tablaDesperdicio
+   * @description Configuración de la tabla de Desperdicio utilizada en el componente.
+   * Contiene las definiciones de las columnas (encabezados) y los datos que se mostrarán en la tabla.
+   */
+export const TABLA_DESPERDICIO: {
+  encabezadas: {
+    encabezado: string,
+    clave: (ele: DesperdicioTabla) => string,
+    orden: number
+  }[],
+  datos: DesperdicioTabla[],
+} = {
+    encabezadas: [
+      { encabezado: 'Datos de los desperdicios a destruir', clave: (ele: DesperdicioTabla) => ele.descripcionProcesoDestruccion, orden: 1 }
+    ],
+    datos: []
+  };
 

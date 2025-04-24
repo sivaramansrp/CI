@@ -17,7 +17,7 @@ import {
   ValidacionesFormularioService
 } from "@libs/shared/data-access-user/src";
 import { AvisoTabla, AvisoTablaDatos, Catalogo, CatalogoLista, DesperdicioTabla, DesperdicioTablaDatos, PedimentoTabla, PedimentoTablaDatos, ProcesoTabla, ProcesoTablaDatos } from "../../models/aviso-destruccion.model";
-import { FECHA_INGRESO, TEXTOS, TIPACA, TIPAVI } from "../../constants/aviso-destruccion.enum";
+import { FECHA_INGRESO, TABLA_DESPERDICIO, TABLA_DE_DATOS, TABLA_PEDIMENTO, TABLA_PROCESO, TEXTOS, TIPACA, TIPAVI } from "../../constants/aviso-destruccion.enum";
 import { AvisoDestruccionService } from "../../services/aviso-destruccion.service";
 import { CommonModule } from "@angular/common";
 import { Component } from "@angular/core";
@@ -108,54 +108,28 @@ export class AvisoComponent implements OnInit, OnDestroy {
    * @property {TablaSeleccion} tablaSeleccion
    * @description Propiedad que representa la tabla de selección utilizada en el componente.
   */
+  /**
+   * @property {string} INPUT
+   * @description Cadena de texto utilizada como entrada en el componente.
+   * 
+   * Esta propiedad puede ser utilizada para almacenar valores temporales
+   * o como referencia en diferentes métodos del componente.
+   */
+  INPUT: HTMLInputElement = document.createElement('input');
+
+  /**
+   * @property {TablaSeleccion} tablaSeleccion
+   * @description Propiedad que representa la tabla de selección utilizada en el componente.
+   */
   tablaSeleccion = TablaSeleccion;
+
   /**
    * @property {object} tablaDeDatos
    * @description Configuración de la tabla de datos utilizada en el componente.
    * Contiene las definiciones de las columnas (encabezados) y los datos que se mostrarán en la tabla.
-  */
-  tablaDeDatos: {
-    encabezadas: {
-      encabezado: string,
-      clave: (ele: AvisoTabla) => string,
-      orden: number
-    }[],
-    datos: AvisoTabla[],
-  } = {
-      encabezadas: [
-        {
-          encabezado: 'Nombre comercial',
-          clave: (ele: AvisoTabla) => ele.nombreComercial,
-          orden: 1,
-        },
-        {
-          encabezado: 'Entidad federativa',
-          clave: (ele: AvisoTabla) => ele.entidadFederativa,
-          orden: 2
-        },
-        {
-          encabezado: 'Alcaldía o Municipio',
-          clave: (ele: AvisoTabla) => ele.alcaldioOMuncipio,
-          orden: 3
-        },
-        {
-          encabezado: 'Colonia',
-          clave: (ele: AvisoTabla) => ele.colonia,
-          orden: 4
-        },
-        {
-          encabezado: 'Hora Destrucción',
-          clave: (ele: AvisoTabla) => ele.horaDestruccion,
-          orden: 5
-        },
-        {
-          encabezado: 'Fecha Destrucción',
-          clave: (ele: AvisoTabla) => ele.fechaDestruccion,
-          orden: 5
-        }
-      ],
-      datos: []
-    };
+   */
+  tablaDeDatos = TABLA_DE_DATOS;
+  
   /**
    * @property {AvisoTabla[]} filaSeleccionadaLista
    * @description Lista de filas seleccionadas en la tabla de avisos. 
@@ -227,94 +201,22 @@ export class AvisoComponent implements OnInit, OnDestroy {
    * Este formulario incluye campos como nombre comercial, entidad federativa, municipio, colonia, calle, número exterior, número interior, código postal, RFC, hora y fecha de destrucción.
    */
   domicilioFormulario!: FormGroup;
+
   /**
    * @property {object} tablaPedimento
    * @description Configuración de la tabla de Pedimento utilizada en el componente.
    * Contiene las definiciones de las columnas (encabezados) y los datos que se mostrarán en la tabla.
    */
-  tablaPedimento: {
-    encabezadas: {
-      encabezado: string,
-      clave: (ele: PedimentoTabla) => string,
-      orden: number
-    }[],
-    datos: PedimentoTabla[],
-  } = {
-      encabezadas: [
-        {
-          encabezado: 'Número de patente',
-          clave: (ele: PedimentoTabla) => ele.patenteAutorizacion,
-          orden: 1
-        },
-        {
-          encabezado: 'Número de pedimento',
-          clave: (ele: PedimentoTabla) => ele.pedimento,
-          orden: 2,
-        },
-        {
-          encabezado: 'Aduana del pedimento',
-          clave: (ele: PedimentoTabla) => ele.claveAduanaPedimento,
-          orden: 3,
-        },
-        {
-          encabezado: 'Fracción de la mercancía',
-          clave: (ele: PedimentoTabla) => ele.claveFraccionArancelariaPedimento,
-          orden: 4,
-        },
-        {
-          encabezado: 'NICO de la mercancía',
-          clave: (ele: PedimentoTabla) => ele.nicoPedimento,
-          orden: 5,
-        },
-        {
-          encabezado: 'Cantidad de la mercancía',
-          clave: (ele: PedimentoTabla) => ele.cantidadPedimento,
-          orden: 6,
-        },
-        {
-          encabezado: 'Unidad de medida de la mercancía',
-          clave: (ele: PedimentoTabla) => ele.claveUnidadMedidaPedimento,
-          orden: 6,
-        }
-      ],
-      datos: []
-    };
-/**
+  tablaPedimento = TABLA_PEDIMENTO;
+  
+  /**
    * @property {object} tablaProceso
    * @description Configuración de la tabla de Proceso utilizada en el componente.
    * Contiene las definiciones de las columnas (encabezados) y los datos que se mostrarán en la tabla.
    */
-  tablaProceso: {
-    encabezadas: {
-      encabezado: string,
-      clave: (ele: ProcesoTabla) => string,
-      orden: number
-    }[],
-    datos: ProcesoTabla[],
-  } = {
-      encabezadas: [
-        { encabezado: 'Descripción del proceso destructivo', clave: (ele: ProcesoTabla) => ele.descripcionProcesoDestruccion, orden: 1 }
-      ],
-      datos: []
-    };
-/**
-   * @property {object} tablaDesperdicio
-   * @description Configuración de la tabla de Desperdicio utilizada en el componente.
-   * Contiene las definiciones de las columnas (encabezados) y los datos que se mostrarán en la tabla.
-   */
-  tablaDesperdicio: {
-    encabezadas: {
-      encabezado: string,
-      clave: (ele: DesperdicioTabla) => string,
-      orden: number
-    }[],
-    datos: DesperdicioTabla[],
-  } = {
-      encabezadas: [
-        { encabezado: 'Datos de los desperdicios a destruir', clave: (ele: DesperdicioTabla) => ele.descripcionProcesoDestruccion, orden: 1 }
-      ],
-      datos: []
-    };
+  tablaProceso = TABLA_PROCESO;
+
+  tablaDesperdicio = TABLA_DESPERDICIO;
 
   /**
    * @property {PedimentoTabla[]} filaSeleccionadaPedimentoLista
@@ -1047,10 +949,9 @@ export class AvisoComponent implements OnInit, OnDestroy {
    * @param {Event} event - Evento que contiene el valor ingresado por el usuario.
    * @returns {void}
    */
-  // eslint-disable-next-line class-methods-use-this
   sanitizeAlphanumeric(form: FormGroup, control: string, event: Event): void {
-    const INPUT = event?.target as HTMLInputElement;
-    const REEMPLAZAR = INPUT?.value.replace(REGEX_REEMPLAZAR, '');
+    this.INPUT = event?.target as HTMLInputElement;
+    const REEMPLAZAR = this.INPUT?.value.replace(REGEX_REEMPLAZAR, '');
     form.get(control)?.setValue(REEMPLAZAR, { emitEvent: false });
   }
   /**
@@ -1064,10 +965,9 @@ export class AvisoComponent implements OnInit, OnDestroy {
    * @param {Event} event - Evento que contiene el valor ingresado por el usuario.
    * @returns {void}
    */
-  // eslint-disable-next-line class-methods-use-this
   sanitizeAlphanumericWithSpace(form: FormGroup, control: string, event: Event): void {
-    const INPUT = event?.target as HTMLInputElement;
-    const REEMPLAZAR = INPUT?.value.replace(REGEX_ALFANUMERICO_CON_ESPACIOS_REEMPLAZAR, '');
+    this.INPUT = event?.target as HTMLInputElement;
+    const REEMPLAZAR = this.INPUT?.value.replace(REGEX_ALFANUMERICO_CON_ESPACIOS_REEMPLAZAR, '');
     form.get(control)?.setValue(REEMPLAZAR, { emitEvent: false });
   }
   /**
@@ -1081,10 +981,9 @@ export class AvisoComponent implements OnInit, OnDestroy {
    * @param {Event} event - Evento que contiene el valor ingresado por el usuario.
    * @returns {void}
    */
-  // eslint-disable-next-line class-methods-use-this
   sanitizeNumeric(form: FormGroup, control: string, event: Event): void {
-    const INPUT = event?.target as HTMLInputElement;
-    const REEMPLAZAR = INPUT?.value.replace(REGEX_NUMEROS, '');
+    this.INPUT = event?.target as HTMLInputElement;
+    const REEMPLAZAR = this.INPUT?.value.replace(REGEX_NUMEROS, '');
     form.get(control)?.setValue(REEMPLAZAR, { emitEvent: false });
   }
   /**

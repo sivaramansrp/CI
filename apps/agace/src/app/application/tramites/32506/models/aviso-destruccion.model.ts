@@ -59,7 +59,7 @@ export interface CatalogoLista {
   datos: Catalogo[];
 }
 /**
- * Modelos utilizados en el trámite 32503.
+ * Modelos utilizados en el trámite 32506.
  * 
  * Este archivo contiene las interfaces que definen las estructuras de datos utilizadas
  * en el trámite de aviso de traslado, incluyendo catálogos, datos del solicitante,

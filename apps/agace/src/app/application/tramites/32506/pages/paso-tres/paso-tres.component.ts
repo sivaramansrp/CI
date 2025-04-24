@@ -3,7 +3,7 @@ import { Component} from '@angular/core';
 import { FirmaElectronicaComponent } from '@libs/shared/data-access-user/src';
 import { Router } from '@angular/router';
 /**
- * Componente para gestionar el paso cuatro del trámite 32503.
+ * Componente para gestionar el paso cuatro del trámite 32506.
  * 
  * Este componente permite al usuario realizar la firma electrónica y, en caso de éxito,
  * redirigirlo a la página de acuse.
