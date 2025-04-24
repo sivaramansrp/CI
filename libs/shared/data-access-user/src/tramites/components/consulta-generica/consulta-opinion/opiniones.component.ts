@@ -16,80 +16,90 @@ import { Router } from '@angular/router';
 })
 export class OpinionComponent implements OnInit, OnDestroy {
   /**
-   * Variable para almacenar el folio
+   * Variable para almacenar el folio recuperado desde el store.
+   * @type {string}
    */
   public folio!: string;
-  public unsubscribe$ = new Subject<void>();
-    /**
-     * Subject para notificar la destrucción del componente.
-     */
-    public destroyNotifier$: Subject<void> = new Subject();
-    
+
   /**
-   * Implementación para la tabla de documentos de Opiniones.
-   *
+   * Subject utilizado para manejar la cancelación de suscripciones.
+   * @type {Subject<void>}
    */
-  readonly encabezadoTablaOpiniones : HeaderTablaOpiniones[] = CONSULTA_OPINIONES.encabezadoTablaOpinion;  
+  public unsubscribe$ = new Subject<void>();
+
   /**
-     * Variable para almacenar los documentos
+   * Encabezado de la tabla de opiniones.
+   * Contiene las columnas que se mostrarán en la tabla.
+   * @type {HeaderTablaOpiniones[]}
+   */
+  readonly encabezadoTablaOpiniones: HeaderTablaOpiniones[] = CONSULTA_OPINIONES.encabezadoTablaOpinion;
+
+  /**
+   * Datos de la tabla de opiniones.
+   * Contiene los registros que se mostrarán en la tabla.
+   * @type {BodyTablaOpiniones[]}
+   */
+  public datosTablaOpiniones: BodyTablaOpiniones[] = [];
+
+  /**
+   * Constructor de la clase OpinionComponent.
+   * @param router Router para navegar a la vista de detalle de opinión.
+   * @param folioQuery Consulta del folio desde el store.
+   * @param opinionesService Servicio para obtener las opiniones.
+   */
+  constructor(
+    private router: Router,
+    private folioQuery: FolioQuery,
+    private opinionesService: OpinionesService
+  ) {}
+
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Recupera el folio y obtiene las opiniones desde el servicio.
+   */
+  ngOnInit(): void {
+    /** 
+     * Recuperar el folio desde el store.
      */
-  datosTablaOpiniones: BodyTablaOpiniones[] = [];
+    this.folioQuery.getFolio().subscribe((folio) => {
+      this.folio = folio || '';
+    });
 
-  constructor(private router: Router, private folioQuery: FolioQuery, private opinionesService: OpinionesService) {
-      /** 
-       * Se inyecta el Router para navegar a la vista de detalle de opinion
-       * Se inyecta el FolioQuery para recuperar el folio desde el store
-       * Se inyecta el CommonModule para usar las directivas de Angular
-       * Se inyecta el HeaderTablaOpiniones y BodyTablaOpiniones para crear la tabla de opiniones
-       * Se inyecta el CONSULTA_OPINIONES para crear la tabla de opiniones
-       * Se inyecta el Validators para validar los campos del formulario
-       */
-    }
-
-    ngOnInit(): void {
-        /**
-       * Recuperar el folio desde el store
-       */
-      this.folioQuery.getFolio().subscribe(folio => {
-        this.folio = folio || '';
-      });
-      /**
-     * Llamar al método para obtener las opiniones al inicializar el componente
+    /** 
+     * Llamar al método para obtener las opiniones al inicializar el componente.
      */
     this.getOpiniones();
-    }
-    
-    /**
-     * Abre una pestaña del navegador con las opiniones.
-     *
-     * @param {number} id - ID de la opinion.
-     * @returns {void}
-     */
-    verDetalleOpinion(id: number): void {
-      this.router.navigate(['/lib-detalle-opinion', id]);
-    }
-    /**
-       * Método para obtener la lista de opiniones desde el servicio.
-       * unsubscribe$ - Subject para manejar la cancelación de suscripciones.
-       * suscribe - Se suscribe al observable del servicio para obtener los datos.
-       */
-    getOpiniones(): void {
-        this.opinionesService
-          .getOpiniones()
-          .pipe(takeUntil(this.unsubscribe$))
-          .subscribe((data) => {
-            this.datosTablaOpiniones = data;
-          });
-      }
-      /**
-       * Método `ngOnDestroy()`.
-       * Este método se ejecuta cuando el componente se destruye y realiza las siguientes acciones:
-       * - Desuscribe la suscripción a los cambios en el formulario reactivo.
-       *
-       * @memberof OpinionComponent
-       */
-      ngOnDestroy(): void {
-        this.destroyNotifier$.next();
-        this.destroyNotifier$.complete();
-      }
+  }
+
+  /**
+   * Abre una pestaña del navegador con el detalle de la opinión.
+   * @param {number} id - ID de la opinión.
+   * @returns {void}
+   */
+  verDetalleOpinion(id: number): void {
+    this.router.navigate(['/lib-detalle-opinion', id]);
+  }
+
+  /**
+   * Método para obtener la lista de opiniones desde el servicio.
+   * Se suscribe al observable del servicio para obtener los datos.
+   * @returns {void}
+   */
+  getOpiniones(): void {
+    this.opinionesService
+      .getOpiniones()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((data) => {
+        this.datosTablaOpiniones = data;
+      });
+  }
+
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta cuando el componente se destruye.
+   * Cancela todas las suscripciones activas para evitar fugas de memoria.
+   */
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+  }
 }

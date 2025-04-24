@@ -16,120 +16,139 @@ import { FolioQuery } from '../../../../core/queries/folio.query';
 })
 export class EnvioDigitalComponent implements OnInit, OnDestroy {
   /**
-   * Variable para almacenar el folio
+   * Variable para almacenar el folio recuperado desde el store.
+   * @type {string}
    */
-  public folio!: string;    
-  envioDigitalForm!: FormGroup;
-  public unsubscribe$ = new Subject<void>();
-    /**
-     * Subject para notificar la destrucción del componente.
-     */
-    public destroyNotifier$: Subject<void> = new Subject();
-    /**
-     * Implementación para la tabla de documentos de requerimientos.
-     *
-     */
-  
-  constructor(private fb: FormBuilder, private folioQuery: FolioQuery, private envioDigitalService: EnviosDigitalesService) {
-      /**
-       * * Se inyecta el FormBuilder para crear el formulario de envio digital
-       * * Se inyecta el FolioQuery para recuperar el folio desde el store
-       * * Se inyecta el CommonModule para usar las directivas de Angular
-       * * Se inyecta el ReactiveFormsModule para usar los formularios reactivos
-       * * Se inyecta el Validators para validar los campos del formulario  
-       * * Se inyecta el HeaderTablaEnvioDigital y BodyTablaEnvioDigital para crear la tabla de envio digital
-       * * Se inyecta el CONSULTA_ENVIODIGITAL para crear la tabla de envio digital
-       * 
-       */
-    }
+  public folio!: string;
 
+  /**
+   * Formulario reactivo para el envío digital.
+   * @type {FormGroup}
+   */
+  public envioDigitalForm!: FormGroup;
+
+  /**
+   * Subject utilizado para manejar la cancelación de suscripciones.
+   * @type {Subject<void>}
+   */
+  public unsubscribe$ = new Subject<void>();
+
+  /**
+   * Encabezado de la tabla de envíos digitales.
+   * Contiene las columnas que se mostrarán en la tabla.
+   * @type {HeaderTablaEnvioDigital[]}
+   */
+  readonly encabezadoTablaDigital: HeaderTablaEnvioDigital[] = CONSULTA_ENVIODIGITAL.encabezadoTablaEnvioDigital;
+
+  /**
+   * Datos de la tabla de envíos digitales en estado de envío.
+   * Contiene los registros que se mostrarán en la tabla.
+   * @type {BodyTablaEnvioDigital[]}
+   */
+  public datosTablaDigital: BodyTablaEnvioDigital[] = [];
+
+  /**
+   * Datos de la tabla de envíos digitales en estado de revisión.
+   * Contiene los registros que se mostrarán en la tabla.
+   * @type {BodyTablaEnvioDigital[]}
+   */
+  public datosTablaDigitalRevision: BodyTablaEnvioDigital[] = [];
+
+  /**
+   * Constructor de la clase EnvioDigitalComponent.
+   * @param fb FormBuilder para crear formularios reactivos.
+   * @param folioQuery Consulta del folio desde el store.
+   * @param envioDigitalService Servicio para obtener los datos de envíos digitales.
+   */
+  constructor(
+    private fb: FormBuilder,
+    private folioQuery: FolioQuery,
+    private envioDigitalService: EnviosDigitalesService
+  ) {}
+
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Configura el formulario reactivo, recupera el folio y obtiene los datos de envíos digitales.
+   */
   ngOnInit(): void {
-    this.crearEnvioDigitalFormForm();
-    /**
-     * Recuperar el folio desde el store
+    /** 
+     * Crear el formulario reactivo para el envío digital.
      */
-    this.folioQuery.getFolio().subscribe(folio => {
+    this.crearEnvioDigitalFormForm();
+
+    /** 
+     * Recuperar el folio desde el store.
+     */
+    this.folioQuery.getFolio().subscribe((folio) => {
       this.folio = folio || '';
     });
-    /**
-     * Llamar al método para obtener los envios con estado envio al inicializar el componente
+
+    /** 
+     * Llamar al método para obtener los envíos digitales en estado de envío.
      */
     this.getListaEnviosDigitales();
-    /**
-     * Llamar al método para obtener los envios con estado revisión al inicializar el componente
+
+    /** 
+     * Llamar al método para obtener los envíos digitales en estado de revisión.
      */
     this.getListaRevisionDigitales();
   }
-  /**
-       * Implementación para la tabla Estado de envio.
-       *
-       */
-      readonly encabezadoTablaDigital : HeaderTablaEnvioDigital[] = CONSULTA_ENVIODIGITAL.encabezadoTablaEnvioDigital;  
-      /**
-         * Variable para almacenar los documentos con estado de envio.
-         */
-      datosTablaDigital: BodyTablaEnvioDigital[] = [];
-
-      /**
-         * Variable para almacenar los documentos con estado de envio.
-         */
-      datosTablaDigitalRevision: BodyTablaEnvioDigital[] = [];
 
   /**
-     * Crea el formulario para envio Digital
-     * @returns {void}
-     */
-    crearEnvioDigitalFormForm(): void {
-      this.envioDigitalForm = this.fb.group({        
-        tipoDocumento: [
-          { value: '', disabled: true },
-          [Validators.required, Validators.maxLength(250)],
-        ],
-        pais: [
-          { value: '', disabled: true },
-          [Validators.required, Validators.maxLength(250)],
-        ],
-        numero: [
-          { value: '', disabled: true },
-          [Validators.required, Validators.maxLength(250)],
-        ],
+   * Crea el formulario para el envío digital.
+   * @returns {void}
+   */
+  crearEnvioDigitalFormForm(): void {
+    this.envioDigitalForm = this.fb.group({
+      tipoDocumento: [
+        { value: '', disabled: true },
+        [Validators.required, Validators.maxLength(250)],
+      ],
+      pais: [
+        { value: '', disabled: true },
+        [Validators.required, Validators.maxLength(250)],
+      ],
+      numero: [
+        { value: '', disabled: true },
+        [Validators.required, Validators.maxLength(250)],
+      ],
+    });
+  }
+
+  /**
+   * Método para obtener los envíos digitales en estado de envío desde el servicio.
+   * Se suscribe al observable del servicio para obtener los datos.
+   * @returns {void}
+   */
+  getListaEnviosDigitales(): void {
+    this.envioDigitalService
+      .getEnvioDigital()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((data) => {
+        this.datosTablaDigital = data;
       });
-    }
-    /**
-       * Método para obtener los envios digitales en estado en envío desde el servicio.
-       * unsubscribe$ - Subject para manejar la cancelación de suscripciones.
-       * suscribe - Se suscribe al observable del servicio para obtener los datos.
-       */
-    getListaEnviosDigitales(): void {
-        this.envioDigitalService
-          .getEnvioDigital()
-          .pipe(takeUntil(this.unsubscribe$))
-          .subscribe((data) => {
-            this.datosTablaDigital = data;
-          });
-      }
-      /**
-       * Método para obtener los envios digitales en estado de revisión desde el servicio.
-       * unsubscribe$ - Subject para manejar la cancelación de suscripciones.
-       * suscribe - Se suscribe al observable del servicio para obtener los datos.
-       */
-      getListaRevisionDigitales(): void {
-      this.envioDigitalService
-        .getRevisionDigital()
-        .pipe(takeUntil(this.unsubscribe$))
-        .subscribe((data) => {
-          this.datosTablaDigitalRevision = data;
-        });
-    }
-      /**
-       * Método `ngOnDestroy()`.
-       * Este método se ejecuta cuando el componente se destruye y realiza las siguientes acciones:
-       * - Desuscribe la suscripción a los cambios en el formulario reactivo.
-       *
-       * @memberof EnvioDigitalComponent
-       */
-      ngOnDestroy(): void {
-        this.destroyNotifier$.next();
-        this.destroyNotifier$.complete();
-      }
+  }
+
+  /**
+   * Método para obtener los envíos digitales en estado de revisión desde el servicio.
+   * Se suscribe al observable del servicio para obtener los datos.
+   * @returns {void}
+   */
+  getListaRevisionDigitales(): void {
+    this.envioDigitalService
+      .getRevisionDigital()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((data) => {
+        this.datosTablaDigitalRevision = data;
+      });
+  }
+
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta cuando el componente se destruye.
+   * Cancela todas las suscripciones activas para evitar fugas de memoria.
+   */
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+  }
 }

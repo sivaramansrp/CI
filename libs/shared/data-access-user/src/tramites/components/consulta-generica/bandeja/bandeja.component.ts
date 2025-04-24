@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Subject, takeUntil } from 'rxjs';
 import { AMBIENTES } from '../../../../core/ambientes';
 import { AcusesResolucionesComponent } from "../bandeja-acuses-resoluciones/acuses-resoluciones.component";
 import { BandejaPaso1Component } from '../bandejapaso1/bandeja-paso1.component';
@@ -22,50 +23,71 @@ import { TareasTramiteComponent } from '../bandeja-tareas-tramite/tareas-tramite
 })
 export class BandejaComponent implements OnInit {
   /**
-   * Variable para asingar el endpoint de la ruta
+   * Variable para almacenar el folio recuperado desde el store.
+   * @type {string}
    */
   public folio!: string;
+
+  /**
+   * Variable para asignar el endpoint de la ruta dependiendo del ambiente.
+   * @type {string}
+   */
   public ruta: string = '';
+
+  /**
+   * Texto de alerta que se muestra en el componente.
+   * @type {string}
+   */
   txtAlerta!: string;
+
+  /**
+   * Subtítulo del componente.
+   * @type {string}
+   */
   subtitulo = TITULO_ACUSES;
 
-  constructor(private folioQuery: FolioQuery) {
-    /**
-       * constructor de la clase BandejaComponent
-       * @param folioQuery consulta del folio
-       * 
-       * @description
-       * Se inicializa la variable ruta dependiendo del ambiente en el que se encuentre la aplicación.  
-       * Si la aplicación se encuentra en localhost, se asigna la ruta de localhost,
-       * de lo contrario se asigna la ruta de desarrollo.
-       * Se recupera el folio desde el store y se asigna a la variable folio.
-       * Se asigna el texto de alerta a la variable txtAlerta utilizando la función TXT_ALERTA_ACUSES.
-       * Contiene las pestañas de acuses, documentos, detalles de dictamen y tareas de trámite.
-       * Cada pestaña se carga de manera independiente utilizando lazy loading.
-       * Se utiliza el enrutador de Angular para navegar entre las diferentes pestañas.
-       */
-  }
+  /**
+   * Índice de la pestaña seleccionada.
+   * @type {number}
+   */
+  indice: number = 1;
+  /**
+     * Subject utilizado para manejar la cancelación de suscripciones.
+     * @type {Subject<void>}
+     */
+    public unsubscribe$ = new Subject<void>();
+
+  /**
+   * Constructor de la clase BandejaComponent.
+   * @param folioQuery Consulta del folio desde el store.
+   */
+  constructor(private folioQuery: FolioQuery) {}
+
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Configura la ruta dependiendo del ambiente y recupera el folio desde el store.
+   */
   ngOnInit(): void {
+    /**
+   * Configurar la ruta dependiendo del ambiente.
+   */
     if (window.location.host.indexOf('localhost') !== -1) {
       this.ruta = AMBIENTES.LOCALHOST;
     } else {
-      this.ruta = AMBIENTES.DESARROLLO
+      this.ruta = AMBIENTES.DESARROLLO;
     }
+
     /**
-       * Recuperar el folio desde el store
-       */
-    this.folioQuery.getFolio().subscribe(folio => {
+   * Recuperar el folio desde el store y asignarlo a la variable folio.
+   */
+    this.folioQuery.getFolio().pipe(takeUntil(this.unsubscribe$)).subscribe((folio) => {
       this.folio = folio || '';
     });
   }
+
   /**
-   * Índice de la pestaña seleccionada
-   */
-  indice: number = 1;
-  
-  /**
-   * Método para seleccionar la pestaña
-   * @param i indica el número de la pestaña seleccionada
+   * Método para seleccionar la pestaña.
+   * @param i Número de la pestaña seleccionada.
    */
   seleccionaTab(i: number): void {
     this.indice = i;

@@ -13,33 +13,40 @@ import { OpinionComponent } from "../consulta-opinion/opiniones.component";
 })
 export class OpinionesComponent implements OnInit {
   /**
-   * Variable para almacenar el folio
+   * Variable para almacenar el folio recuperado desde el store.
+   * @type {string}
    */
   public folio!: string;
-  constructor(private folioQuery: FolioQuery) {
-    /**
-     * Se inyecta el FolioQuery para recuperar el folio desde el store
-     * Se inyecta el HeaderTablaOpiniones y BodyTablaOpiniones para crear la tabla de opiniones
-     * Se inyecta el CONSULTA_OPINIONES para crear la tabla de opiniones
-     * Se inyecta el Validators para validar los campos del formulario
-     */
-  }
-  ngOnInit(): void {
-      /**
-       * Recuperar el folio desde el store
-       */
-      this.folioQuery.getFolio().subscribe(folio => {
-        this.folio = folio || '';
-      });
-  }
+
   /**
-   * Índice de la pestaña seleccionada
+   * Índice de la pestaña seleccionada.
+   * @type {number}
    */
-  indice: number = 1;
-  
+  public indice: number = 1;
+
   /**
-   * Método para seleccionar la pestaña
-   * @param i indica el número de la pestaña seleccionada
+   * Constructor de la clase OpinionesComponent.
+   * @param folioQuery Consulta del folio desde el store.
+   */
+  constructor(private folioQuery: FolioQuery) {}
+
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Recupera el folio desde el store.
+   */
+  ngOnInit(): void {
+    /** 
+     * Recuperar el folio desde el store.
+     */
+    this.folioQuery.getFolio().subscribe((folio) => {
+      this.folio = folio || '';
+    });
+  }
+
+  /**
+   * Método para seleccionar la pestaña.
+   * @param {number} i - Número de la pestaña seleccionada.
+   * @returns {void}
    */
   seleccionaTab(i: number): void {
     this.indice = i;

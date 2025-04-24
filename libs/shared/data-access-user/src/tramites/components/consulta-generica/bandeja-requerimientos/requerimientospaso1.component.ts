@@ -13,49 +13,62 @@ import { FolioQuery } from '../../../../core/queries/folio.query';
 })
 export class Requerimientospaso1Component implements OnInit, OnDestroy {
   /**
-     * Variable para almacenar el folio
-     */
-  public folio!: string;   
-  private unsubscribe$ = new Subject<void>();
-  /**
-   * Subject para notificar la destrucción del componente.
+   * Variable para almacenar el folio recuperado desde el store.
+   * @type {string}
    */
-  public destroyNotifier$: Subject<void> = new Subject();
+  public folio!: string;
 
-  constructor(private folioQuery: FolioQuery) {
-    /**
-   * Constructor para la bandeja de requerimientos
-   * @param folioQuery Consulta del folio
-   * 
+  /**
+   * Subject utilizado para manejar la cancelación de suscripciones.
+   * @type {Subject<void>}
    */
-  }
+  private unsubscribe$ = new Subject<void>();
+
+  /**
+   * Índice de la pestaña seleccionada.
+   * @type {number}
+   */
+  public indice: number = 1;
+
+  /**
+   * Constructor de la clase Requerimientospaso1Component.
+   * @param folioQuery Consulta del folio desde el store.
+   */
+  constructor(private folioQuery: FolioQuery) {}
+
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Recupera el folio desde el store.
+   */
   ngOnInit(): void {
-    /**
-     * Recuperar el folio desde el store
-     */    
+    /** 
+     * Recuperar el folio desde el store.
+     */
     this.folioQuery.getFolio()
       .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(folio => {
+      .subscribe((folio) => {
         this.folio = folio || '';
       });
   }
+
   /**
-   * Índice de la pestaña seleccionada
-   */
-  indice: number = 1;
-  
-  /**
-   * Método para seleccionar la pestaña
-   * @param i indica el número de la pestaña seleccionada
+   * Método para seleccionar la pestaña.
+   * @param {number} i - Número de la pestaña seleccionada.
+   * @returns {void}
    */
   seleccionaTab(i: number): void {
     this.indice = i;
   }
+
   /**
-   * Método que se ejecuta cuando el componente se destruye
+   * Método del ciclo de vida de Angular que se ejecuta cuando el componente se destruye.
+   * Cancela todas las suscripciones activas para evitar fugas de memoria.
+   * @returns {void}
    */
   ngOnDestroy(): void {
-    // Emitir un valor para completar todas las suscripciones activas
+    /** 
+     * Emitir un valor para completar todas las suscripciones activas.
+     */
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
   }

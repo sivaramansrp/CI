@@ -20,13 +20,4 @@ export class FolioQuery extends Query<FolioState> {
     return this.select(state => state.folio);
   }
   
-  /**
-   * @method getFolioSync
-   * @description Este método obtiene el folio de forma sincrónica desde el estado del store.   
-   * @returns {string | null} - El folio actual o null si no está definido.
-   * 
-   */
-  getFolioSync(): string | null {
-    return this.getValue().folio;
-  }
 }
