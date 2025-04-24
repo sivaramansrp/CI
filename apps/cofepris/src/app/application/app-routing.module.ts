@@ -399,6 +399,12 @@ const ROUTES: Routes = [
       (m) => m.PermisoSanitarioDispositivosMedicosModule)
 },
 {
+  path: 'solicitud-modificacion-permiso-internacion',
+  loadChildren: () =>
+    import('./tramites/261402/solicitud-modificacion-permiso-internacion.module').then(
+      (m) => m.SolicitudModificacionPermisoInternacionModule)
+},
+{
     path: 'enmienda-permiso-sanitario',
     loadChildren: () =>
       import('./tramites/260905/enmienda-permiso-sanitario.module').then(
@@ -427,11 +433,25 @@ const ROUTES: Routes = [
   },
 
   {
-    path: 'cancelacion-peticion',
+    path: 'modificacion-permiso-importacion-medicamentos',
     loadChildren: () =>
-      import('./tramites/261701/cancelacion-peticion.module').then(
-        (m) => m.CancelacionPeticionModule)
-  },
+      import('./tramites/261103/modificacion-permiso-importacion-medicamentos.module').then(
+        (m) => m.ModificacionPermisoImportacionModule
+      ),
+},
+{
+  path: 'permiso-importacion-module',
+  loadChildren: () =>
+  import('./tramites/260917/permiso-importacion.module').then(
+    (m) => m.PermisoImportacionModule),
+},
+{
+  path: 'modificacion-permiso-importacion-tratamientos',
+  loadChildren: () =>
+    import('./tramites/260907/modificacion-permiso-importacion-tratamientos.module').then(
+      (m) => m.ModificacionPermisoImportacionTratamientosModule
+    ),
+}
 ];
 
 @NgModule({
