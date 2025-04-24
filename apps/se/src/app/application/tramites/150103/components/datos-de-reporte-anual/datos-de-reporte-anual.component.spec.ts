@@ -18,9 +18,6 @@ class MockSolicitud150103Store {}
 @Injectable()
 class MockSolicitud150103Query {}
 
-
-
-
 describe('DatosDeReporteAnualComponent', () => {
   let fixture: ComponentFixture<DatosDeReporteAnualComponent>;
   let component: { ngOnDestroy: () => void; fb: { group?: any; }; solicitud150103State: { ventasTotales?: any; totalExportaciones?: any; totalImportaciones?: any; saldo?: any; porcentajeExportacion?: any; }; solicitud150103Query: { seleccionarSolicitud$?: any; }; ngOnInit: () => void; formReporteAnnual: { get?: any; }; solicitud150103Store: { actualizarPorcentajeExportacion?: any; actualizarSaldo?: any; actualizarTotalExportaciones?: any; actualizarVentasTotales?: any; actualizarTotalImportaciones?: any; }; calcularReporteAnnual: jest.Mock<any, any, any> | (() => void); obtenerTotalExportaciones: (arg0: { target: { value: {}; }; }) => void; obtenerVentasTotales: (arg0: { target: { value: {}; }; }) => void; obtenerTotalImportaciones: (arg0: { target: { value: {}; }; }) => void; destroyed$: { next?: any; complete?: any; }; };
