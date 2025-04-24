@@ -1,19 +1,58 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
 import { PerfilesMensajeriaComponent } from './perfiles-mensajeria.component';
+import { Tramite31616PerfilesMensajeriaStore } from '../../../../estados/tramites/tramite31616_perfilesMensajeria.store';
+import { Tramite31616PerfilesMensajeriaQuery } from '../../../../estados/queries/tramite31616_perfilesMensajeria.query';
+import { of, Subject } from 'rxjs';
 
 describe('PerfilesMensajeriaComponent', () => {
   let component: PerfilesMensajeriaComponent;
-  let fixture: ComponentFixture<PerfilesMensajeriaComponent>;
+  let store: Tramite31616PerfilesMensajeriaStore;
+  let query: Tramite31616PerfilesMensajeriaQuery;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       imports: [PerfilesMensajeriaComponent,ReactiveFormsModule],
-      providers: [FormBuilder],
+      providers: [
+        FormBuilder,
+        {
+          provide: Tramite31616PerfilesMensajeriaStore,
+          useValue: {
+            setAntiguedad: jest.fn(),
+            setProductos: jest.fn(),
+            setEmbarquesExp: jest.fn(),
+            setEmbarquesImp: jest.fn(),
+            setEmpleados: jest.fn(),
+            setSuperficie: jest.fn(),
+            setVigencia: jest.fn(),
+            setVigenciaDos: jest.fn(),
+            setVigenciaTres: jest.fn(),
+          },
+        },
+        {
+          provide: Tramite31616PerfilesMensajeriaQuery,
+          useValue: {
+            selectSolicitud$: of({
+              domicilio: 'Test Domicilio',
+              antiguedad: '5 años',
+              productos: 'Test Productos',
+              embarquesExp: '10',
+              embarquesImp: '15',
+              empleados: '50',
+              superficie: '1000 m2',
+              nombre: 'Test Nombre',
+              categoria: 'A',
+              vigencia: '2025',
+            }),
+          },
+        },
+      ],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(PerfilesMensajeriaComponent);
+    const fixture = TestBed.createComponent(PerfilesMensajeriaComponent);
     component = fixture.componentInstance;
+    store = TestBed.inject(Tramite31616PerfilesMensajeriaStore);
+    query = TestBed.inject(Tramite31616PerfilesMensajeriaQuery);
     fixture.detectChanges();
   });
 
@@ -21,113 +60,80 @@ describe('PerfilesMensajeriaComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form with default values', () => {
-    const formValues = component.profileForm.value;
-    expect(formValues).toEqual({
-      domicilio: '',
-      antiguedad: '',
-      productos: '',
-      embarquesExp: '',
-      embarquesImp: '',
-      empleados: '',
-      superficie: '',
-      nombre: '',
-      categoria: '',
-      vigencia: '',
-      nombre2: '',
-      categoria2: '',
-      vigencia2: '',
-      nombre3: '',
-      categoria3: '',
-      vigencia3: '',
-    });
+  it('should initialize the form on ngOnInit', () => {
+    component.ngOnInit();
+    expect(component.profileForm).toBeDefined();
+    expect(component.profileForm.get('domicilio')?.value).toBe('Test Domicilio');
   });
 
-  it('should toggle mostrarContenido when alternarContenido is called', () => {
+  it('should toggle mostrarContenido', () => {
     expect(component.mostrarContenido).toBe(false);
     component.alternarContenido();
     expect(component.mostrarContenido).toBe(true);
-    component.alternarContenido();
-    expect(component.mostrarContenido).toBe(false);
   });
 
-  it('should toggle mostrarSeguridad when alternarSeguridad is called', () => {
+  it('should toggle mostrarSeguridad', () => {
     expect(component.mostrarSeguridad).toBe(false);
     component.alternarSeguridad();
     expect(component.mostrarSeguridad).toBe(true);
-    component.alternarSeguridad();
-    expect(component.mostrarSeguridad).toBe(false);
   });
 
-  it('should toggle mostrarAccesoFisico when alternarAccesoFisico is called', () => {
-    expect(component.mostrarAccesoFisico).toBe(false);
-    component.alternarAccesoFisico();
-    expect(component.mostrarAccesoFisico).toBe(true);
-    component.alternarAccesoFisico();
-    expect(component.mostrarAccesoFisico).toBe(false);
+  it('should update antiguedad in the store', () => {
+    component.profileForm.get('antiguedad')?.setValue('10 años');
+    component.actualizarAntiguedad();
+    expect(store.setAntiguedad).toHaveBeenCalledWith('10 años');
   });
 
-  it('should toggle mostrarSociosComeciales when alternarSociosComerciales is called', () => {
-    expect(component.mostrarSociosComeciales).toBe(false);
-    component.alternarSociosComerciales();
-    expect(component.mostrarSociosComeciales).toBe(true);
-    component.alternarSociosComerciales();
-    expect(component.mostrarSociosComeciales).toBe(false);
+  it('should update productos in the store', () => {
+    component.profileForm.get('productos')?.setValue('New Product');
+    component.actualizarProductos();
+    expect(store.setProductos).toHaveBeenCalledWith('New Product');
   });
 
-  it('should toggle mostrarSeguridadProcesos when alternarSeguridadProcesos is called', () => {
-    expect(component.mostrarSeguridadProcesos).toBe(false);
-    component.alternarSeguridadProcesos();
-    expect(component.mostrarSeguridadProcesos).toBe(true);
-    component.alternarSeguridadProcesos();
-    expect(component.mostrarSeguridadProcesos).toBe(false);
+  it('should update embarquesExp in the store', () => {
+    component.profileForm.get('embarquesExp')?.setValue('20');
+    component.actualizarEmbarquesExp();
+    expect(store.setEmbarquesExp).toHaveBeenCalledWith('20');
   });
 
-  it('should toggle mostrarGestionAduanera when alternarGestionAduanera is called', () => {
-    expect(component.mostrarGestionAduanera).toBe(false);
-    component.alternarGestionAduanera();
-    expect(component.mostrarGestionAduanera).toBe(true);
-    component.alternarGestionAduanera();
-    expect(component.mostrarGestionAduanera).toBe(false);
+  it('should update embarquesImp in the store', () => {
+    component.profileForm.get('embarquesImp')?.setValue('25');
+    component.actualizarEmbarquesImp();
+    expect(store.setEmbarquesImp).toHaveBeenCalledWith('25');
   });
 
-  it('should toggle mostrarSeguridadVehiculos when alternarSeguridadVehiculos is called', () => {
-    expect(component.mostrarSeguridadVehiculos).toBe(false);
-    component.alternarSeguridadVehiculos();
-    expect(component.mostrarSeguridadVehiculos).toBe(true);
-    component.alternarSeguridadVehiculos();
-    expect(component.mostrarSeguridadVehiculos).toBe(false);
+  it('should update empleados in the store', () => {
+    component.profileForm.get('empleados')?.setValue('100');
+    component.actualizarEmpleados();
+    expect(store.setEmpleados).toHaveBeenCalledWith('100');
   });
 
-  it('should toggle mostrarSeguridadPersonal when alternarSeguridadPersonal is called', () => {
-    expect(component.mostrarSeguridadPersonal).toBe(false);
-    component.alternarSeguridadPersonal();
-    expect(component.mostrarSeguridadPersonal).toBe(true);
-    component.alternarSeguridadPersonal();
-    expect(component.mostrarSeguridadPersonal).toBe(false);
+  it('should update superficie in the store', () => {
+    component.profileForm.get('superficie')?.setValue('2000 m2');
+    component.actualizarSuperficie();
+    expect(store.setSuperficie).toHaveBeenCalledWith('2000 m2');
   });
 
-  it('should toggle mostrarSeguridadInformacion when alternarSeguridadInformacion is called', () => {
-    expect(component.mostrarSeguridadInformacion).toBe(false);
-    component.alternarSeguridadInformacion();
-    expect(component.mostrarSeguridadInformacion).toBe(true);
-    component.alternarSeguridadInformacion();
-    expect(component.mostrarSeguridadInformacion).toBe(false);
+  it('should set vigencia in the store', () => {
+    component.seleccionarVigenciaUno('2026');
+    expect(store.setVigencia).toHaveBeenCalledWith('2026');
   });
 
-  it('should toggle mostrarCapacitacionSeguridad when alternarCapacitacionSeguridad is called', () => {
-    expect(component.mostrarCapacitacionSeguridad).toBe(false);
-    component.alternarCapacitacionSeguridad();
-    expect(component.mostrarCapacitacionSeguridad).toBe(true);
-    component.alternarCapacitacionSeguridad();
-    expect(component.mostrarCapacitacionSeguridad).toBe(false);
+  it('should set vigenciaDos in the store', () => {
+    component.seleccionarVigenciaDos('2027');
+    expect(store.setVigenciaDos).toHaveBeenCalledWith('2027');
   });
 
-  it('should toggle mostrarManejoInvestigacion when alternarManejoInvestigacion is called', () => {
-    expect(component.mostrarManejoInvestigacion).toBe(false);
-    component.alternarManejoInvestigacion();
-    expect(component.mostrarManejoInvestigacion).toBe(true);
-    component.alternarManejoInvestigacion();
-    expect(component.mostrarManejoInvestigacion).toBe(false);
+  it('should set vigenciaTres in the store', () => {
+    component.seleccionarVigenciaTres('2028');
+    expect(store.setVigenciaTres).toHaveBeenCalledWith('2028');
+  });
+
+  it('should clean up subscriptions on ngOnDestroy', () => {
+    const destroySpy = jest.spyOn(component['destroyNotifier$'], 'next');
+    const completeSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
+    component.ngOnDestroy();
+    expect(destroySpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
   });
 });

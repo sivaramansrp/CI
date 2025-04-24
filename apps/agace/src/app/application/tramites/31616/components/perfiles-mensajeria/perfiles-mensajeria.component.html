@@ -2,7 +2,8 @@
   <h4>Información General</h4>
   <div class="row">
     <label for="domicilio">* Domicilio de la Instalación:</label>
-    <textarea class="custom-textarea" rows="6" cols="100" id="domicilio" formControlName="domicilio"></textarea>
+    <textarea class="custom-textarea" rows="6" cols="100" id="domicilio" formControlName="domicilio"
+      (change)="setValoresStore(profileForm,'domicilio','setDomicilio')"></textarea>
   </div>
 
   <p>
@@ -32,27 +33,28 @@
   <h6>Indique la siguiente información de la instalación:</h6>
   <div class="form-row">
     <label class="custom-label" for="antiguedad">Antigüedad de la instalación (años de operación):</label>
-    <input class="custom-input" id="antiguedad" formControlName="antiguedad" type="number" />
+    <input class="custom-input" id="antiguedad" formControlName="antiguedad" type="number" (input)="actualizarAntiguedad()"/>
   </div>
   <div class="form-row">
-    <label class="custom-label" for="productos">Productos preponderantes que manejan en la instalación:</label>
-    <input class="custom-input" id="productos" formControlName="productos" type="text" />
+    <label class="custom-label" for="productos">Productos preponderantes que manejan en la instalación de la empresa de
+      mensajería y paquetería:</label>
+    <input class="custom-input" id="productos" formControlName="productos" type="number" (input)="actualizarProductos()"/>
   </div>
   <div class="form-row">
     <label class="custom-label" for="embarquesExp">No. de embarques promedio mensual (EXP):</label>
-    <input class="custom-input" id="embarquesExp" formControlName="embarquesExp" type="number" />
+    <input class="custom-input" id="embarquesExp" formControlName="embarquesExp" type="number" (input)="actualizarEmbarquesExp()"/>
   </div>
   <div class="form-row">
     <label class="custom-label" for="embarquesImp">No. de embarques promedio mensual (IMP):</label>
-    <input class="custom-input" id="embarquesImp" formControlName="embarquesImp" type="number" />
+    <input class="custom-input" id="embarquesImp" formControlName="embarquesImp" type="number" (input)="actualizarEmbarquesImp()"/>
   </div>
   <div class="form-row">
     <label class="custom-label" for="empleados">Número de empleados total de esta instalación:</label>
-    <input class="custom-input" id="empleados" formControlName="empleados" type="number" />
+    <input class="custom-input" id="empleados" formControlName="empleados" type="number" (input)="actualizarEmpleados()"/>
   </div>
   <div class="form-row">
     <label class="custom-label" for="superficie">Superficie de la instalación (m²):</label>
-    <input class="custom-input" id="superficie" formControlName="superficie" type="number" />
+    <input class="custom-input" id="superficie" formControlName="superficie" type="number" (input)="actualizarSuperficie()"/>
   </div>
   <p class="fw-bold">Indique si cuenta con certificaciones que consideren que impactan en el proceso de su cadena de
     suministros, por ejemplo: ISO 9000; Procesos Logísticos Confiables, entre otros.</p>
@@ -63,46 +65,50 @@
   <div class="row">
     <div class="col-md-12">
       <label class="form-label" for="nombre">Nombre</label>
-      <input type="text" class="form-control" id="nombre" formControlName="nombre">
+      <input type="text" class="form-control" id="nombre" formControlName="nombre"
+        (change)="setValoresStore(profileForm,'nombre','setNombre')">
     </div>
 
     <div class="col-md-12">
       <label class="form-label" for="categoria">Categoría</label>
-      <input type="text" class="form-control" id="categoria" formControlName="categoria">
+      <input type="text" class="form-control" id="categoria" formControlName="categoria"
+        (change)="setValoresStore(profileForm,'categoria','setCategoria')">
     </div>
 
     <div class="col-md-4">
-      <label class="form-label" for="nombre">Vigencia:</label>
-      <input type="date" class="form-control" id="vigencia" formControlName="vigencia">
+      <input-fecha [datos]="fechaInicioInput" [setFecha]="profileForm.get('vigencia')?.value" (valorCambiado)="seleccionarVigenciaUno($event)"></input-fecha>
     </div>
 
     <div class="col-md-12">
       <label class="form-label" for="nombre2">Nombre</label>
-      <input type="text" class="form-control" id="nombre2" formControlName="nombre2">
+      <input type="text" class="form-control" id="nombre2" formControlName="nombre2"
+        (change)="setValoresStore(profileForm,'nombre2','setNombre2')">
     </div>
 
     <div class="col-md-12">
       <label class="form-label" for="categoria2">Categoría</label>
-      <input type="text" class="form-control" id="categoria2" formControlName="categoria2">
+      <input type="text" class="form-control" id="categoria2" formControlName="categoria2"
+        (change)="setValoresStore(profileForm,'categoria2','setCategoria2')">
     </div>
 
     <div class="col-md-4">
-      <label class="form-label" for="vigencia2">Vigencia:</label>
-      <input type="date" class="form-control" id="vigencia2" formControlName="vigencia2">
+      <input-fecha [datos]="fechaInicioInput" [setFecha]="profileForm.get('vigencia2')?.value" (valorCambiado)="seleccionarVigenciaDos($event)"></input-fecha>
     </div>
+
     <div class="col-md-12">
       <label class="form-label" for="nombre3">Nombre</label>
-      <input type="text" class="form-control" id="nombre3" formControlName="nombre3">
+      <input type="text" class="form-control" id="nombre3" formControlName="nombre3"
+        (change)="setValoresStore(profileForm,'nombre3','setNombre3')">
     </div>
 
     <div class="col-md-12">
       <label class="form-label" for="categoria3">Categoría</label>
-      <input type="text" class="form-control" id="categoria3" formControlName="categoria3">
+      <input type="text" class="form-control" id="categoria3" formControlName="categoria3"
+        (change)="setValoresStore(profileForm,'categoria3','setCategoria3')">
     </div>
 
     <div class="col-md-4">
-      <label class="form-label" for="vigencia3">Vigencia:</label>
-      <input type="date" class="form-control" id="vigencia3" formControlName="vigencia3">
+      <input-fecha [datos]="fechaInicioInput" [setFecha]="profileForm.get('vigencia3')?.value" (valorCambiado)="seleccionarVigenciaTres($event)"></input-fecha>
     </div>
   </div>
 
@@ -122,7 +128,7 @@
       <app-profiles-domocilio-dela></app-profiles-domocilio-dela>
     </div>
   </div>
- 
+
 
   <!-- 2.Seguridad-fisica-->
   <div class="table-container">
