@@ -109,6 +109,13 @@
         <textarea class="custom-textarea" rows="6" cols="100" id="comiteSeguridad" formControlName="comiteSeguridad"
           (change)="setValoresStore(contingencyForm,'comiteSeguridad', 'setComiteSeguridad')"></textarea>
       </div>
+      @if(contingencyForm.controls['comiteSeguridad'].invalid && contingencyForm.controls['comiteSeguridad'].touched){
+      <div class="d-grid">
+        @if(contingencyForm.controls['comiteSeguridad'].errors?.['required']) {
+        <span class="mensaje-error">Este campo es obligatorio</span>
+        }
+      </div>
+      }
 
       <div class="col-md-12 text-container mt-4">
         <label for="fuentesInformacion">
@@ -119,6 +126,14 @@
           formControlName="fuentesInformacion"
           (change)="setValoresStore(contingencyForm,'fuentesInformacion', 'setFuentesInformacion')"></textarea>
       </div>
+      @if(contingencyForm.controls['fuentesInformacion'].invalid &&
+      contingencyForm.controls['fuentesInformacion'].touched){
+      <div class="d-grid">
+        @if(contingencyForm.controls['fuentesInformacion'].errors?.['required']) {
+        <span class="mensaje-error">Este campo es obligatorio</span>
+        }
+      </div>
+      }
     </div>
 
     <!-- 1.2-Políticas-de-seguridad -->
@@ -157,6 +172,14 @@
         <textarea class="custom-textarea" rows="6" cols="100" id="politica" formControlName="politica"
           (change)="setValoresStore(contingencyForm,'politica', 'setPolitica')"></textarea>
       </div>
+      @if(contingencyForm.controls['politica'].invalid &&
+      contingencyForm.controls['politica'].touched){
+      <div class="d-grid">
+        @if(contingencyForm.controls['politica'].errors?.['required']) {
+        <span class="mensaje-error">Este campo es obligatorio</span>
+        }
+      </div>
+      }
 
       <div class="col-md-12 text-container mt-4">
         <label for="indique">
@@ -166,6 +189,14 @@
         <textarea class="custom-textarea" rows="6" cols="100" id="indique" formControlName="indique"
           (change)="setValoresStore(contingencyForm,'indique','setIndique')"></textarea>
       </div>
+      @if(contingencyForm.controls['indique'].invalid &&
+      contingencyForm.controls['indique'].touched){
+      <div class="d-grid">
+        @if(contingencyForm.controls['indique'].errors?.['required']) {
+        <span class="mensaje-error">Este campo es obligatorio</span>
+        }
+      </div>
+      }
 
       <div class="col-md-12 text-container mt-4">
         <label for="periodicidad">
@@ -175,6 +206,14 @@
         <textarea class="custom-textarea" rows="6" cols="100" id="periodicidad" formControlName="periodicidad"
           (change)="setValoresStore(contingencyForm,'periodicidad','setPeriodicidad')"></textarea>
       </div>
+      @if(contingencyForm.controls['periodicidad'].invalid &&
+      contingencyForm.controls['periodicidad'].touched){
+      <div class="d-grid">
+        @if(contingencyForm.controls['periodicidad'].errors?.['required']) {
+        <span class="mensaje-error">Este campo es obligatorio</span>
+        }
+      </div>
+      }
 
       <div class="col-md-12 text-container mt-4">
         <label for="programa">
@@ -185,6 +224,14 @@
         <textarea class="custom-textarea" rows="6" cols="100" id="programa" formControlName="programa"
           (change)="setValoresStore(contingencyForm,'programa','setPrograma')"></textarea>
       </div>
+      @if(contingencyForm.controls['programa'].invalid &&
+      contingencyForm.controls['programa'].touched){
+      <div class="d-grid">
+        @if(contingencyForm.controls['programa'].errors?.['required']) {
+        <span class="mensaje-error">Este campo es obligatorio</span>
+        }
+      </div>
+      }
 
       <div class="col-md-12 text-container mt-4">
         <label for="capacitacion">
@@ -231,6 +278,14 @@
           formControlName="descripcionProcedimiento"
           (change)="setValoresStore(contingencyForm,'descripcionProcedimiento','setDescripcionProcedimiento')"></textarea>
       </div>
+      @if(contingencyForm.controls['descripcionProcedimiento'].invalid &&
+      contingencyForm.controls['descripcionProcedimiento'].touched){
+      <div class="d-grid">
+        @if(contingencyForm.controls['descripcionProcedimiento'].errors?.['required']) {
+        <span class="mensaje-error">Este campo es obligatorio</span>
+        }
+      </div>
+      }
 
       <div class="col-md-12 text-container mt-4">
         <label for="nombreProcedimiento">
@@ -242,6 +297,14 @@
           formControlName="nombreProcedimiento"
           (change)="setValoresStore(contingencyForm,'nombreProcedimiento','setNombreProcedimiento')"></textarea>
       </div>
+      @if(contingencyForm.controls['nombreProcedimiento'].invalid &&
+      contingencyForm.controls['nombreProcedimiento'].touched){
+      <div class="d-grid">
+        @if(contingencyForm.controls['nombreProcedimiento'].errors?.['required']) {
+        <span class="mensaje-error">Este campo es obligatorio</span>
+        }
+      </div>
+      }
 
       <div class="col-md-12 text-container mt-4">
         <label for="programacionAuditoria">
@@ -253,6 +316,14 @@
           formControlName="programacionAuditoria"
           (change)="setValoresStore(contingencyForm,'programacionAuditoria','setProgramacionAuditoria')"></textarea>
       </div>
+      @if(contingencyForm.controls['programacionAuditoria'].invalid &&
+      contingencyForm.controls['programacionAuditoria'].touched){
+      <div class="d-grid">
+        @if(contingencyForm.controls['programacionAuditoria'].errors?.['required']) {
+        <span class="mensaje-error">Este campo es obligatorio</span>
+        }
+      </div>
+      }
 
       <div class="col-md-12 text-container mt-4">
         <label for="participantesAuditoria">
@@ -264,6 +335,14 @@
           formControlName="participantesAuditoria"
           (change)="setValoresStore(contingencyForm,'participantesAuditoria','setParticipantesAuditoria')"></textarea>
       </div>
+      @if(contingencyForm.controls['participantesAuditoria'].invalid &&
+      contingencyForm.controls['participantesAuditoria'].touched){
+      <div class="d-grid">
+        @if(contingencyForm.controls['participantesAuditoria'].errors?.['required']) {
+        <span class="mensaje-error">Este campo es obligatorio</span>
+        }
+      </div>
+      }
 
       <div class="col-md-12 text-container mt-4">
         <label for="enfoqueAuditoria">
@@ -281,6 +360,14 @@
         <textarea class="custom-textarea" rows="6" cols="100" id="procesosAuditados" formControlName="procesosAuditados"
           (change)="setValoresStore(contingencyForm,'procesosAuditados','setProcesosAuditados')"></textarea>
       </div>
+      @if(contingencyForm.controls['procesosAuditados'].invalid &&
+      contingencyForm.controls['procesosAuditados'].touched){
+      <div class="d-grid">
+        @if(contingencyForm.controls['procesosAuditados'].errors?.['required']) {
+        <span class="mensaje-error">Este campo es obligatorio</span>
+        }
+      </div>
+      }
 
       <div class="col-md-12 text-container mt-4">
         <label for="registrosAuditoria">
@@ -290,6 +377,14 @@
           formControlName="registrosAuditoria"
           (change)="setValoresStore(contingencyForm,'registrosAuditoria','setRegistrosAuditoria')"></textarea>
       </div>
+      @if(contingencyForm.controls['registrosAuditoria'].invalid &&
+      contingencyForm.controls['registrosAuditoria'].touched){
+      <div class="d-grid">
+        @if(contingencyForm.controls['registrosAuditoria'].errors?.['required']) {
+        <span class="mensaje-error">Este campo es obligatorio</span>
+        }
+      </div>
+      }
 
 
       <div class="col-md-12 text-container mt-4">
@@ -301,6 +396,14 @@
         <textarea class="custom-textarea" rows="6" cols="100" id="programacion" formControlName="programacion"
           (change)="setValoresStore(contingencyForm,'programacion','setProgramacion')"></textarea>
       </div>
+      @if(contingencyForm.controls['programacion'].invalid &&
+      contingencyForm.controls['programacion'].touched){
+      <div class="d-grid">
+        @if(contingencyForm.controls['programacion'].errors?.['required']) {
+        <span class="mensaje-error">Este campo es obligatorio</span>
+        }
+      </div>
+      }
 
       <div class="col-md-12 text-container mt-4">
         <label for="registrosNombre">
@@ -311,6 +414,14 @@
         <textarea class="custom-textarea" rows="6" cols="100" id="registrosNombre" formControlName="registrosNombre"
           (change)="setValoresStore(contingencyForm,'registrosNombre','setRegistrosNombre')"></textarea>
       </div>
+      @if(contingencyForm.controls['registrosNombre'].invalid &&
+      contingencyForm.controls['registrosNombre'].touched){
+      <div class="d-grid">
+        @if(contingencyForm.controls['registrosNombre'].errors?.['required']) {
+        <span class="mensaje-error">Este campo es obligatorio</span>
+        }
+      </div>
+      }
 
       <div class="col-md-12 text-container mt-4">
         <label for="registrosEmpresa">
@@ -322,6 +433,14 @@
         <textarea class="custom-textarea" rows="6" cols="100" id="registrosEmpresa" formControlName="registrosEmpresa"
           (change)="setValoresStore(contingencyForm,'registrosEmpresa','setRegistrosEmpresa')"></textarea>
       </div>
+      @if(contingencyForm.controls['registrosEmpresa'].invalid &&
+      contingencyForm.controls['registrosEmpresa'].touched){
+      <div class="d-grid">
+        @if(contingencyForm.controls['registrosEmpresa'].errors?.['required']) {
+        <span class="mensaje-error">Este campo es obligatorio</span>
+        }
+      </div>
+      }
     </div>
 
     <!-- 1.4 Planes de contingencia -->
