@@ -28,7 +28,7 @@ export const CROSLISTA_ADUANAS_DISPONIBLES: string[] = [
  * @description Representa códigos específicos utilizados en el sistema para identificar tipos de permisos definitivos.
  */
 export const PERMISO_DEFINITIVO_TITULO = [
-  240119, 240118, 240107, 240106, 240108, 240308,240117, 240121, 240405, 240411
+  240119, 240118, 240107, 240106, 240108, 240308,240117, 240121, 240405, 240111, 240411
 ];
 
 /**
@@ -76,7 +76,7 @@ export const PAISE_DENTINO_EITIQUETA: Map<number, string> = new Map<
  * @type {number[]}
  * @description Contiene un arreglo de identificadores numéricos que representan mercancías específicas para las cuales se permite mostrar la lista cruzada.
  */
-export const PUEDE_MOSTRAR_LA_LISTA_CRUZADA_FOR_MERCANCIA = [240108, 240107, 240117, 240121];
+export const PUEDE_MOSTRAR_LA_LISTA_CRUZADA_FOR_MERCANCIA = [240108, 240107, 240117, 240121, 240111];
 
 /**
  * Período del semestre habilitado.
@@ -86,7 +86,7 @@ export const PUEDE_MOSTRAR_LA_LISTA_CRUZADA_FOR_MERCANCIA = [240108, 240107, 240
  * @description Contiene un arreglo de números que identifican el semestre habilitado. Este valor puede ser utilizado para validar o configurar funcionalidades relacionadas con el período académico activo.
  */
 export const PERIODO_SEMESTRE_HABILITADO = [
-  240119, 240108, 240107, 240114, 240106, 240308, 240117, 240121, 240405, 240411
+  240119, 240108, 240107, 240114, 240106, 240308, 240117, 240121, 240405, 240111, 240411
 ];
 
 /**
