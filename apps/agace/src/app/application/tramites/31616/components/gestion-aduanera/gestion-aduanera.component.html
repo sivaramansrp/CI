@@ -28,6 +28,11 @@
                     apoderado aduanal.
                 </label>
                 <textarea id="describaProcedimiento" class="custom-textarea" rows="6" cols="100" formControlName="describaProcedimiento" (change)="setValoresStore(gestionAduanera,'describaProcedimiento', 'setDescribaProcedimiento')"></textarea>
+                <span
+                    *ngIf="gestionAduanera.controls['describaProcedimiento']?.errors?.['required'] && gestionAduanera.controls['describaProcedimiento']?.touched"
+                    class="mensaje-error">
+                    Este campo es obligatorio.
+                </span>
             </div>
 
             <div class="col-md-12 text-container mt-4">
@@ -35,6 +40,11 @@
                     <span class="danger">*</span>Indique los criterios de selección
                 </label>
                 <textarea class="custom-textarea" rows="6" cols="100" formControlName="indiqueLosCriterios" id="indiqueLosCriterios" (change)="setValoresStore(gestionAduanera,'indiqueLosCriterios', 'setIndiqueLosCriterios')"></textarea>
+                <span
+                    *ngIf="gestionAduanera.controls['indiqueLosCriterios']?.errors?.['required'] && gestionAduanera.controls['indiqueLosCriterios']?.touched"
+                    class="mensaje-error">
+                    Este campo es obligatorio.
+                </span>
             </div>
 
             <div class="col-md-12 text-container mt-4">
@@ -42,6 +52,11 @@
                     <span class="danger">*</span>Indique los métodos de evaluación y periodicidad.
                 </label>
                 <textarea class="custom-textarea" rows="6" cols="100" formControlName="indiqueLosMetodos" id="indiqueLosCriterios" (change)="setValoresStore(gestionAduanera,'indiqueLosMetodos', 'setIndiqueLosMetodos')"></textarea>
+                <span
+                    *ngIf="gestionAduanera.controls['indiqueLosMetodos']?.errors?.['required'] && gestionAduanera.controls['indiqueLosMetodos']?.touched"
+                    class="mensaje-error">
+                    Este campo es obligatorio.
+                </span>
             </div>
 
             <div class="col-md-12 text-container mt-4">
@@ -50,6 +65,11 @@
                     aduanales.
                 </label>
                 <textarea class="custom-textarea" rows="6" cols="100" formControlName="describaLosIndicadores" id="describaLosIndicadores" (change)="setValoresStore(gestionAduanera,'describaLosIndicadores', 'setDescribaLosIndicadores')"></textarea>
+                <span
+                    *ngIf="gestionAduanera.controls['describaLosIndicadores']?.errors?.['required'] && gestionAduanera.controls['describaLosIndicadores']?.touched"
+                    class="mensaje-error">
+                    Este campo es obligatorio.
+                </span>
             </div>
 
             <div class="col-md-12 text-container mt-4">
@@ -58,6 +78,11 @@
                     del agente o apoderado aduanal autorizado para promover sus operaciones de comercio exterior.
                 </label>
                 <textarea id="comercioExterior" class="custom-textarea" rows="6" cols="100" formControlName="comercioExterior" (change)="setValoresStore(gestionAduanera,'comercioExterior', 'setComercioExterior')"></textarea>
+                <span
+                    *ngIf="gestionAduanera.controls['comercioExterior']?.errors?.['required'] && gestionAduanera.controls['comercioExterior']?.touched"
+                    class="mensaje-error">
+                    Este campo es obligatorio.
+                </span>
             </div>
         </div>
 
