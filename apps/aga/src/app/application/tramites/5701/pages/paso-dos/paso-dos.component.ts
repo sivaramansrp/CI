@@ -9,7 +9,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import documentosOpcionales from 'libs/shared/theme/assets/json/shared/documentosOpcionales.json';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import documentosObligatorios from 'libs/shared/theme/assets/json/shared/documentosObligatorios.json';
-import { map } from 'rxjs';
+import { catchError, map } from 'rxjs';
 
 @Component({
   selector: 'paso-dos',
@@ -127,14 +127,19 @@ export class PasoDosComponent implements OnInit {
   getTiposDocumentos(): void {
     this.catalogosServices
       .getCatalogo(CATALOGOS_ID.CAT_TIPO_DOCUMENTO)
-      .subscribe({
-        next: (resp): void => {
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        map((resp: CatalogoDocumento[]) => {
           if (resp.length > 0) {
             this.catalogoDocumentos = resp;
           }
-        },
-        error: (_error): void => { return _error; },
-      });
+        }),
+        catchError(_error => {
+          return [] as CatalogoDocumento[];
+        }
+        )
+      )
+      .subscribe();
   }
 
   /**
