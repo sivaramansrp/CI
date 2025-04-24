@@ -2011,8 +2011,8 @@
   {
     "id": 288,
     "tramite": 80210,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/se/registro-solicitud-immex/confirmacion",
+    "linkDepartment": "/pago/registro-solicitud-immex/confirmacion",
     "department": "se"
   },
   {

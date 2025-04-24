@@ -431,6 +431,13 @@ const ROUTES: Routes = [
         (m) => m.ModalidadAmpliacionModule
       ),
   },
+  {
+    path: 'registro-solicitud-immex',
+    loadChildren: () =>
+      import('./tramites/80210/registro-solicitud-immex.module').then(
+        (m) => m.registroSolicitudImmexModule
+      ),
+  },
   
 ];
 
