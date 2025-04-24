@@ -2,6 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '../../modelos/exportacion-explosivo.model';
 import { PASOS } from '../../constantes/exportacion-armas-explosivo.enum';
+import { TITULOMENSAJE } from '../../constantes/exportacion-armas-explosivo.enum';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
 interface AccionBoton {
@@ -62,7 +63,22 @@ export class SolicitudPageComponent {
   }
 
   /**
-   * Obtener un título para todas las páginas.
-   * @param valor - valor del índice de página. --240121
+   * @method obtenerNombreDelTítulo
+   * @description Método estático que determina el título
+   * a mostrar de acuerdo al índice del paso actual.
+   * @param {number} valor - Índice del paso.
+   * @returns {string} Título correspondiente al paso.
    */
+  public static obtenerNombreDelTítulo(valor: number): string {
+    switch (valor) {
+      case 1:
+        return TITULOMENSAJE;
+      case 2:
+        return 'Anexar requisitos';
+      case 3:
+        return 'Firmar';
+      default:
+        return TITULOMENSAJE;
+    }
+  }
 }
