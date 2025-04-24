@@ -192,7 +192,7 @@
     "id": 28,
     "tramite": 80203,
     "linkDashboard": "/se/immex-registro-solicitud-modality/immex-registro",
-    "linkDepartment": "/se/immex-registro-solicitud-modality/immex-registro",
+    "linkDepartment": "/pago/immex-registro-solicitud-modality/immex-registro",
     "department": "se"
   },
   {
@@ -549,7 +549,7 @@
     "id": 79,
     "tramite": 220701,
     "linkDashboard": "/agriculture/inspeccion-fisica/inspeccion-fisica-zoosanitario",
-    "linkDepartment": "/agriculture/inspeccion-fisica/inspeccion-fisica-zoosanitario",
+    "linkDepartment": "/pago/inspeccion-fisica/inspeccion-fisica-zoosanitario",
     "department": "agriculture"
   },
   {
@@ -716,8 +716,8 @@
   {
     "id": 103,
     "tramite": 290101,
-    "linkDashboard": "/cafe-exportadores/cafe-exportadores",
-    "linkDepartment": "/cafe-exportadores/cafe-exportadores",
+    "linkDashboard": "/amecafe/cafe-exportadores/cafe-exportadores",
+    "linkDepartment": "/pago/cafe-exportadores/cafe-exportadores",
     "department": "amecafe"
   },
   {
