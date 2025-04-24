@@ -1871,8 +1871,8 @@
   {
     "id": 268,
     "tramite": 240311,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/sedena/permiso-ordinario/importacion-artificios", 
+    "linkDepartment": "/pago/permiso-ordinario/importacion-artificios",
     "department": "sedena"
   },
   {
