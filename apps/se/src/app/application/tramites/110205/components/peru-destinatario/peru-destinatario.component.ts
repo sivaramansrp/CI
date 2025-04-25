@@ -22,11 +22,6 @@ interface FormValues {
   styleUrl: './peru-destinatario.component.scss',
 })
 export class PeruDestinatarioComponent implements OnInit, OnDestroy {
-  /**
-   * @descripcion
-   * Formulario para capturar los datos del exportador.
-   */
-  exportadorForm!: FormGroup;
 
   /**
    * @descripcion
@@ -39,6 +34,14 @@ export class PeruDestinatarioComponent implements OnInit, OnDestroy {
    * Valores actuales del formulario de datos del destinatario.
    */
   formDatosDelDestinatarioValues!: FormValues;
+
+  /**
+   * @property {FormValues} formExportadorValues
+   * @description Almacena los valores del formulario relacionados con el exportador.
+   * @memberof PeruDestinatarioComponent
+   * @see FormValues
+   */
+  formExportadorValues!: FormValues;
 
   /**
    * @descripcion
@@ -85,6 +88,11 @@ export class PeruDestinatarioComponent implements OnInit, OnDestroy {
       .subscribe((estado) => {
         this.formDestinatarioValues = estado;
       });
+    this.query.selectFormExportador$
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((estado) => {
+        this.formExportadorValues = estado;
+    });
   }
 
   /**
@@ -110,25 +118,6 @@ export class PeruDestinatarioComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-
-    this.initActionFormBuild();
-  }
-
-  /**
-   * @descripcion
-   * Inicializa el formulario de exportador con los valores actuales del estado.
-   */
-  initActionFormBuild(): void {
-    this.exportadorForm = this.fb.group({
-      lugar: [this.exportadoState.lugar, Validators.required],
-      exportador: [this.exportadoState.exportador, Validators.required],
-      empresa: [this.exportadoState.empresa, Validators.required],
-      cargo: [this.exportadoState.cargo, Validators.required],
-      lada: [this.exportadoState.lada],
-      telfono: [this.exportadoState.telfono, Validators.required],
-      fax: [this.exportadoState.fax, Validators.required],
-      correo: [this.exportadoState.correo, Validators.required],
-    });
   }
 
   /**
@@ -150,6 +139,16 @@ setValoresStoreDatos(event: { formGroupName: string, campo: string, valor: undef
   this.store.setFormDatosDelDestinatario({ [CAMPO]: VALOR });
 }
 
+  /**
+   * @descripcion
+   * Actualiza el almacén con los datos del formulario de exportador.
+   * @param event - Objeto que contiene el nombre del grupo de formulario, el campo, el valor y el nombre del estado del almacén.
+   */
+  setValoresStoreExportador(event: { formGroupName: string, campo: string, valor: undefined, storeStateName: string }): void {
+    const { campo: CAMPO, valor: VALOR } = event;
+    this.store.setFormExportador({ [CAMPO]: VALOR });
+  }
+
 /**
  * @descripcion
  * Actualiza el almacén con los datos del formulario de destinatario.
@@ -166,6 +165,15 @@ setValoresStoreDe(event: { formGroupName: string, campo: string, valor: undefine
    */
   setFormValida(valida: boolean): void {
     this.store.setFormValida({ destinatrio: valida });
+  }
+
+  /**
+   * @descripcion
+   * Actualiza el almacén con el estado de validación del formulario de exportador.
+   * @param valida - El estado de validación del formulario.
+   */
+  setFormValidaExportador(valida: boolean): void {
+    this.store.setFormValida({ exportador: valida });
   }
 
   /**

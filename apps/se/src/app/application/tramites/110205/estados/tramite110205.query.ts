@@ -65,6 +65,10 @@ export class Tramite110205Query extends Query<Tramite110205State> {
     return state.formDatosDelDestinatario;
   });
 
+  selectFormExportador$ = this.select((state) => {
+    return state.formExportor;
+  });
+
   /**
    * @descripcion
    * Observable que selecciona el formulario de destinatario.

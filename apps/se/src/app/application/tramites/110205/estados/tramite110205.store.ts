@@ -18,6 +18,7 @@ export interface Tramite110205State {
   entidadFederativaSeleccion: Catalogo;
   representacionFederalSeleccion: Catalogo;
   formDatosDelDestinatario: { [key: string]: undefined | boolean | string | number | object };
+  formExportor: { [key: string]: undefined | boolean | string | number | object };
   fraccionArancelaria: string;
   nombreComercialMercancia: string;
   nombreTecnico: string;
@@ -29,14 +30,14 @@ export interface Tramite110205State {
   complementoClasificacion: string;
   numeroFactura: string;
   tipoFactura: Catalogo[];
-  lugar: string;
-  exportador: string;
-  empresa: string;
-  cargo: string;
-  lada: string;
-  telfono: string;
-  fax: string;
-  correo: string;
+  // lugar: string;
+  // exportador: string;
+  // empresa: string;
+  // cargo: string;
+  // lada: string;
+  // telfono: string;
+  // fax: string;
+  // correo: string;
   formaValida: { [key: string]: boolean };
   formDestinatario: { [key: string]: undefined | boolean | string | number | object };
   datosConfidencialesProductor?: boolean;
@@ -116,19 +117,22 @@ export function createInitialState(): Tramite110205State {
     complementoClasificacion: '',
     numeroFactura: '',
     tipoFactura: [],
-    lugar: '',
-    exportador: '',
-    empresa: '',
-    cargo: '',
-    lada: '',
-    telfono: '',
-    fax: '',
-    correo: '',
+    formExportor: {
+      lugar: '',
+      exportador: '',
+      empresa: '',
+      cargo: '',
+      lada: '',
+      telfono: '',
+      fax: '',
+      correo: '',
+    },
     formaValida: {
       certificado: false,
       datos: false,
       destinatrio: false,
       datosDestinatario: false,
+      exportador: false,
     },
     formDestinatario: {
       paisDestin: '',
@@ -326,6 +330,20 @@ export class Tramite110205Store extends Store<Tramite110205State> {
 
       /**
        * @descripcion
+       * Actualiza los datos del formulario de exportador en el almacén.
+       * @param values - Objeto que contiene los valores a actualizar en el formulario de exportador.
+       */
+      setFormExportador(values: { [key: string]: undefined | boolean | string | number | object }): void {
+        this.update((state) => ({
+          formExportor: {
+            ...state.formExportor,
+            ...values,
+          },
+        }));
+      }
+
+      /**
+       * @descripcion
        * Actualiza el número de fraccionArancelaria en el almacén.
        * @param telfono - Cadena que representa el número de fraccionArancelaria a actualizar.
        */
@@ -461,96 +479,96 @@ export class Tramite110205Store extends Store<Tramite110205State> {
        * Actualiza el número de lugar en el almacén.
        * @param telfono - Cadena que representa el número de lugar a actualizar.
        */
-      setLugar(lugar: string): void {
-        this.update((state) => ({
-            ...state,
-            lugar,
-        }))
-      }
+      // setLugar(lugar: string): void {
+      //   this.update((state) => ({
+      //       ...state,
+      //       lugar,
+      //   }))
+      // }
 
       /**
        * @descripcion
        * Actualiza el número de exportador en el almacén.
        * @param telfono - Cadena que representa el número de exportador a actualizar.
        */
-      setExportador(exportador: string): void {
-        this.update((state) => ({
-            ...state,
-            exportador,
-        }))
-      }
+      // setExportador(exportador: string): void {
+      //   this.update((state) => ({
+      //       ...state,
+      //       exportador,
+      //   }))
+      // }
 
       /**
        * @descripcion
        * Actualiza el número de empresa en el almacén.
        * @param telfono - Cadena que representa el número de empresa a actualizar.
        */
-      setEmpresa(empresa: string): void {
-        this.update((state) => ({
-            ...state,
-            empresa,
-        }))
-      }
+      // setEmpresa(empresa: string): void {
+      //   this.update((state) => ({
+      //       ...state,
+      //       empresa,
+      //   }))
+      // }
 
       /**
        * @descripcion
        * Actualiza el número de cargo en el almacén.
        * @param telfono - Cadena que representa el número de cargo a actualizar.
        */
-      setCargo(cargo: string): void {
-        this.update((state) => ({
-            ...state,
-            cargo
-        }))
-      }
+      // setCargo(cargo: string): void {
+      //   this.update((state) => ({
+      //       ...state,
+      //       cargo
+      //   }))
+      // }
 
       /**
        * @descripcion
        * Actualiza el número de lada en el almacén.
        * @param telfono - Cadena que representa el número de lada a actualizar.
        */
-      setLada(lada: string): void {
-        this.update((state) => ({
-            ...state,
-            lada
-        }))
-      }
+      // setLada(lada: string): void {
+      //   this.update((state) => ({
+      //       ...state,
+      //       lada
+      //   }))
+      // }
 
       /**
        * @descripcion
        * Actualiza el número de teléfono en el almacén.
        * @param telfono - Cadena que representa el número de teléfono a actualizar.
        */
-      setTelfono(telfono: string): void {
-        this.update((state) => ({
-            ...state,
-            telfono,
-        }))
-      }
+      // setTelfono(telfono: string): void {
+      //   this.update((state) => ({
+      //       ...state,
+      //       telfono,
+      //   }))
+      // }
 
       /**
        * @descripcion
        * Actualiza el número de fax en el almacén.
        * @param fax - Cadena que representa el número de fax a actualizar.
        */
-      setFax(fax: string): void {
-        this.update((state) => ({
-            ...state,
-            fax,
-        }))
-      }
+      // setFax(fax: string): void {
+      //   this.update((state) => ({
+      //       ...state,
+      //       fax,
+      //   }))
+      // }
 
       /**
        * @descripcion
        * Actualiza el correo electrónico en el almacén.
        * @param correo - Cadena que representa el correo electrónico a actualizar.
        */
-      setCorreo(correo: string): void {
-        this.update((state) => ({
-            ...state,
-            correo,
-        }))
-      }
+      // setCorreo(correo: string): void {
+      //   this.update((state) => ({
+      //       ...state,
+      //       correo,
+      //   }))
+      // }
 
       /**
        * @descripcion
