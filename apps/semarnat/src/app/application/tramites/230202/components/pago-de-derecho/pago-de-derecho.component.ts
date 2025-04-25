@@ -1,9 +1,10 @@
+import { Catalogo, CatalogoSelectComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Solicitud230101State, Solicitud230101Store } from '../../../230101/estados/tramites/tramites230101.store';
 import { CapturaSolicitudeService } from '../../../230101/services/captura-solicitud.service';
-import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogosSelect } from '@ng-mf/data-access-user';
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { MediodetransporteService } from '../../../230101/services/medio-de-transporte.service';
 import { OnDestroy } from '@angular/core';
@@ -17,11 +18,18 @@ import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
 
 
-
 @Component({
   selector: 'app-pago-de-derecho',
   templateUrl: './pago-de-derecho.component.html',
   styleUrl: './pago-de-derecho.component.scss',
+  standalone: true,
+  imports: [
+    CommonModule, 
+    FormsModule, 
+    ReactiveFormsModule,
+    CatalogoSelectComponent,
+    TituloComponent
+  ],
 })
 export class PagoDeDerechoComponent implements OnInit, OnDestroy {
   

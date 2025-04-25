@@ -18,8 +18,8 @@ import documentList from '@libs/shared/theme/assets/json/10302/document-list.jso
   selector: 'paso-dos',
   templateUrl: './paso-dos.component.html',
   styleUrl: './paso-dos.component.scss',
-  // standalone: true,
-  // imports: [AnexarDocumentosComponent, AlertComponent, TituloComponent],
+  standalone: true,
+  imports: [AnexarDocumentosComponent, AlertComponent, TituloComponent],
 })
 export class PasoDosComponent implements OnInit {
   /**

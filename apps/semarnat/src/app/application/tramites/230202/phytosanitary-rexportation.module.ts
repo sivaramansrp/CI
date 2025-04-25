@@ -15,13 +15,13 @@ import { TercerosComponent } from './components/terceros/terceros.component';
 
 @NgModule({
   declarations: [
-    PagoDeDerechoComponent, 
-    PasoUnoComponent, 
-    PasoDosComponent, 
-    PasoTresComponent, 
-    SolicitudPageComponent,
-    DatosDeLaSolicitudComponent,
-    TercerosComponent
+    // PagoDeDerechoComponent, 
+    // PasoUnoComponent, 
+    // PasoDosComponent, 
+    // PasoTresComponent, 
+    // SolicitudPageComponent,
+    // DatosDeLaSolicitudComponent,
+    // TercerosComponent
   ], 
   imports: [
     CommonModule,

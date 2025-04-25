@@ -1,18 +1,17 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   ConfiguracionColumna,
+  TablaDinamicaComponent,
   TablaSeleccion,
+  TituloComponent,
 } from '@libs/shared/data-access-user/src';
-// import { DESTINATARIO_TABLA_CONFIGURACION, DESTINATARIO_TABLE_ENTRY, DestinatarioConfiguracionItem } from '../../enum/destinatario-tabla.enum';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-// import { Solicitud230901State, Tramite230901Store } from '../../estados/store/tramite230901.store';
 import { DESTINATARIO_TABLA_CONFIGURACION, DESTINATARIO_TABLE_ENTRY, DestinatarioConfiguracionItem } from '../../../230901/enum/destinatario-tabla.enum';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitud230901State, Tramite230901Store } from '../../../230901/estados/store/tramite230901.store';
 import { Subject, takeUntil } from 'rxjs';
 import { AutorizacionesDeVidaSilvestreService } from '../../../230901/services/autorizaciones-de-vida-silvestre.service';
+import { CommonModule } from '@angular/common';
 import { Tramite230901Query } from '../../../230901/estados/query/tramite230901.query';
-// import { AutorizacionesDeVidaSilvestreService } from '../../services/autorizaciones-de-vida-silvestre.service';
-// import { Tramite230901Query } from '../../estados/query/tramite230901.query';
 
 /**
  * Componente que gestiona los datos relacionados con terceros en el trámite "230901".
@@ -23,6 +22,13 @@ import { Tramite230901Query } from '../../../230901/estados/query/tramite230901.
   selector: 'app-terceros',
   templateUrl: './terceros.component.html',
   styleUrl: './terceros.component.scss',
+  standalone: true,
+  imports: [
+      CommonModule, 
+      FormsModule, 
+      ReactiveFormsModule, 
+      TituloComponent, 
+      TablaDinamicaComponent],
 })
 export class TercerosComponent implements OnInit, OnDestroy {
   /**

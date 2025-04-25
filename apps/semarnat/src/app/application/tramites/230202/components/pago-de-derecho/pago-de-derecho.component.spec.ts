@@ -1,12 +1,12 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { of, ReplaySubject, Subject } from 'rxjs';
+import { of } from 'rxjs';
 import { PagoDeDerechoComponent } from './pago-de-derecho.component';
-import { CapturaSolicitudeService } from '../../services/captura-solicitud.service';
-import { MediodetransporteService } from '../../services/medio-de-transporte.service';
-import { Solicitud230101Query } from '../../estados/queries/tramites230101.query';
-import { Solicitud230101Store } from '../../estados/tramites/tramites230101.store';
+import { Tramite230202Query } from '../../estados/tramite230202.query';
+import { Tramite230202Store } from '../../estados/tramite230202.store';
 import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
+import { CapturaSolicitudeService } from '../../../230101/services/captura-solicitud.service';
+import { MediodetransporteService } from '../../../230101/services/medio-de-transporte.service';
 
 describe('PagoDeDerechoComponent', () => {
   let component: PagoDeDerechoComponent;
@@ -50,8 +50,8 @@ describe('PagoDeDerechoComponent', () => {
         FormBuilder,
         { provide: CapturaSolicitudeService, useValue: mockCapturaSolicitudeService },
         { provide: MediodetransporteService, useValue: mockMedioDeTransporteService },
-        { provide: Solicitud230101Query, useValue: mockSolicitudQuery },
-        { provide: Solicitud230101Store, useValue: mockSolicitudStore },
+        { provide: Tramite230202Query, useValue: mockSolicitudQuery },
+        { provide: Tramite230202Store, useValue: mockSolicitudStore },
         { provide: ValidacionesFormularioService, useValue: mockValidacionesService },
       ],
     }).compileComponents();
