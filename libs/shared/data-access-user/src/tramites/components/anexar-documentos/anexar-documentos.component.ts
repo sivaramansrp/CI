@@ -26,7 +26,7 @@ import { CommonModule } from '@angular/common';
 import { DocumentosCargados } from '../../../core/models/shared/components.model';
 import { InicioSesionService } from '../../../core/services/shared/inicio-sesion/inicio-sesion.service';
 import { Login } from '../../../core/models/shared/inicio-sesion.model';
-import { MensajesDocumentos } from '../../../core/enums/mensajes-documentos.enum';
+import { MENSAJES_DOCUMENTOS } from '../../../core/enums/mensajes-documentos.enum';
 import { ModalConfirmarComponent } from '../modal-confirmar/modal-confirmar.component';
 import { NgSelectModule } from '@ng-select/ng-select';
 import {
@@ -380,7 +380,7 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
     if (INFORMACION_ARCHIVO) {
       const EXTENSION_ARCHIVO = INFORMACION_ARCHIVO.name.split('.').pop()?.toLowerCase();
       if (EXTENSION_ARCHIVO !== this.PDF.toLowerCase()) {
-        this.toastr.error(MensajesDocumentos.ONLYPDF);
+        this.toastr.error(MENSAJES_DOCUMENTOS.ONLYPDF);
         fileInput.value = '';
         return;
       }
@@ -388,7 +388,7 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
       const TAMANIO_REQUERIDO: number = 10 * 1048576;
       const TAMANIO_ARCHIVO: number = INFORMACION_ARCHIVO.size;
       if (TAMANIO_ARCHIVO > TAMANIO_REQUERIDO) {
-        this.toastr.error(MensajesDocumentos.MAXSIZE);
+        this.toastr.error(MENSAJES_DOCUMENTOS.MAXSIZE);
         fileInput.value = '';
         return;
       }
