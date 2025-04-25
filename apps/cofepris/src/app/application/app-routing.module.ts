@@ -439,6 +439,15 @@ const ROUTES: Routes = [
         (m) => m.ModificacionPermisoImportacionModule
       ),
 },
+
+{
+  path: 'exportacion-medicamentos-contengan',
+  loadChildren: () =>
+    import('./tramites/260304/exportacion-medicamentos-contengan.module').then(
+      (m) => m.ExportacionMedicamentosContenganModule
+    ),
+},
+
 {
   path: 'permiso-importacion-module',
   loadChildren: () =>
