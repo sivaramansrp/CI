@@ -42,7 +42,7 @@ export class TercerosRelacionadosComponent implements OnInit{
    * - `false`: El elemento está visible.
    */
     public ocultarBotones = false;
-    
+
   /**
    * Identificador del procedimiento relacionado.
    * @property {number} idProcedimiento
