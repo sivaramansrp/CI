@@ -1,0 +1,15 @@
+{
+  "code": 200,
+  "data": [
+    {
+      "claveFolioCAAT": "ABCD",
+      "cveFolioCaat": "ABCD",
+      "descripcionTipoCaat": "Tipo 1",
+      "tipoDeCaatAerea": "CAAT03",
+      "ideCodTransportacionAerea": "",
+      "codIataIcao": ""
+    }
+  ],
+  "message": "Consulta exitosa"
+}
+
