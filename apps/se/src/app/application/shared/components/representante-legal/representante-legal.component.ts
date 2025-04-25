@@ -9,7 +9,7 @@ import { TituloComponent } from '@libs/shared/data-access-user/src';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, TituloComponent],
   templateUrl: './representante-legal.component.html',
-  styleUrl: './representante-legal.component.css',
+  styleUrl: './representante-legal.component.scss',
 })
 export class RepresentanteLegalComponent implements OnDestroy {
   
