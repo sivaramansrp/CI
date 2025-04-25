@@ -35,7 +35,9 @@ export class OperacionesDeComercioExteriorComponent implements OnInit,OnDestroy 
  */
 
   miformulario!: FormGroup;
+  periodoForm!: FormGroup;
   optionsPaisList:Catalogo[]=[];
+  periodoList:Catalogo[]=[]; 
    private destroyNotifier$: Subject<void> = new Subject();
    tipoPersonasSeleccion: TablaSeleccion = TablaSeleccion.UNDEFINED;
    configuracionPersonasColumnas: ConfiguracionColumna<Personas>[] = [
@@ -48,9 +50,10 @@ export class OperacionesDeComercioExteriorComponent implements OnInit,OnDestroy 
   ];
   tipoSolicitarSeleccion: TablaSeleccion = TablaSeleccion.CHECKBOX;
   configuracionSolicitarColumnas: ConfiguracionColumna<Solicitar>[] = [
-    { encabezado: 'RFC', clave: (fila) => fila.Periodo, orden: 1 },
-    { encabezado: 'CURP', clave: (fila) => fila.Fechas_sobre_el_periodo, orden: 2 },
+    { encabezado: 'Periodo', clave: (fila) => fila.Periodo, orden: 1 },
+    { encabezado: 'Fechas sobre el periodo', clave: (fila) => fila.Fechas_sobre_el_periodo, orden: 2 },
   ];
+  acciones:string[] =[];
   cuerpoPersonasTablaFila: Personas[] = [];  
   cuerpoSolicitarTablaFila: Solicitar[] = [];  
    /**
@@ -62,6 +65,7 @@ export class OperacionesDeComercioExteriorComponent implements OnInit,OnDestroy 
   constructor(private readonly fb: FormBuilder,private readonly operacionService: OperacionService) { 
     this.getOperacionList();
     this.getPersonasTableeData();
+    this.getperiodoList();
   }
 /**
  * @method ngOnInit
@@ -72,6 +76,11 @@ export class OperacionesDeComercioExteriorComponent implements OnInit,OnDestroy 
   this.miformulario = this.fb.group({
   operacion:['',Validators.required],
   });
+  this.periodoForm =this.fb.group({
+    periodo: ['', Validators.required],
+    periodoInicial: ['', Validators.required],
+    periodoFinal: ['', Validators.required]
+  });
   }
   /**
  * @method getOperacionList
@@ -81,6 +90,11 @@ export class OperacionesDeComercioExteriorComponent implements OnInit,OnDestroy 
   getOperacionList(): void {
     this.operacionService.obtenerSelectorList('optionsPais.json').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
       this.optionsPaisList = data;
+    })
+  }
+  getperiodoList(): void {
+    this.operacionService.obtenerSelectorList('periodo.json').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
+      this.periodoList = data;
     })
   }
 
