@@ -24,7 +24,7 @@ import { map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DatosDeLaSolicitudComponent } from '../../../../shared/components/datos-de-la-solicitud/datos-de-la-solicitud.component';
 import { Subject } from 'rxjs';
-import {TablaMercanciasImporticon} from '../../models/importicon-retorno.model';
+import {TablaMercanciasImportacion} from '../../models/importicon-retorno.model';
 import { Tramite260103Query } from '../../estados/tramite260103Query.query';
 
 /**
@@ -92,7 +92,7 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
   public tablaMercanciasConfig = {
     tipoSeleccionTabla: TablaSeleccion.CHECKBOX,
     configuracionTabla: PRODUCTO_TABLA_IMPORTACION,
-    datos: [] as TablaMercanciasImporticon[],
+    datos: [] as TablaMercanciasImportacion[],
   };
 
   /**
@@ -103,11 +103,11 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
   public scianConfigDatos: TablaScianConfig[] = [];
 
   /**
-   * @property {TablaMercanciasImporticon[]} tablaMercanciasConfigDatos
+   * @property {TablaMercanciasImportacion[]} tablaMercanciasConfigDatos
    * @description
    * Datos seleccionados de la tabla de mercancías.
    */
-  public tablaMercanciasConfigDatos: TablaMercanciasImporticon[] = [];
+  public tablaMercanciasConfigDatos: TablaMercanciasImportacion[] = [];
 
   /**
    * @property {TablaOpcionConfig[]} seleccionadoopcionDatos
@@ -124,11 +124,11 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
   public seleccionadoScianDatos: TablaScianConfig[] = [];
 
   /**
-   * @property {TablaMercanciasImporticon[]} seleccionadoTablaMercanciasImporticon
+   * @property {TablaMercanciasImportacion[]} seleccionadoTablaMercanciasImportacion
    * @description
    * Datos seleccionados en la tabla de mercancías.
    */
-  public seleccionadoTablaMercanciasImporticon: TablaMercanciasImporticon[] = [];
+  public seleccionadoTablaMercanciasImportacion: TablaMercanciasImportacion[] = [];
 
   /**
    * @property {string} idProcedimiento
@@ -217,9 +217,9 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
    * @description
    * Maneja el evento de selección de mercancías en la tabla.
    *
-   * @param {TablaMercanciasImporticon[]} event - Datos seleccionados en la tabla de mercancías.
+   * @param {TablaMercanciasImportacion[]} event - Datos seleccionados en la tabla de mercancías.
    */
-  mercanciasSeleccionado(event: TablaMercanciasImporticon[]): void {
+  mercanciasSeleccionado(event: TablaMercanciasImportacion[]): void {
     this.tramite260103Store.updateTablaMercanciasConfigDatos(event);
   }
 
@@ -246,7 +246,7 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
       ...state,
       seleccionadoopcionDatos: event.opcionSeleccionados,
       seleccionadoScianDatos: event.scianSeleccionados,
-      seleccionadoTablaMercanciasImporticon: event.mercanciasSeleccionados,
+      seleccionadoTablaMercanciasImportacion: event.mercanciasSeleccionados,
       opcionesColapsableState: event.opcionesColapsableState,
     }));
   }

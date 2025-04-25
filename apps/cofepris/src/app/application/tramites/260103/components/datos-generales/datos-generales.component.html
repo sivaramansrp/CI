@@ -1,7 +1,6 @@
 <div class="container">
   @if(tipoDatos) {
   <ng-titulo titulo="Agregar {{ tipoDatos }}"></ng-titulo>
-  <!-- Datos Generales -->
   <form class="row col-12" [formGroup]="agregarDatosForm">
     <!-- Datos Generales -->
     <h4>Datos generales</h4>
@@ -104,14 +103,6 @@
           [isDisabled]="false"
         ></app-catalogo-select>
       </div>
-      <!-- <div class="col-md-4">
-        <label class="form-label">Código postal o equivalente:</label>
-        <input
-          type="text"
-          class="form-control"
-          formControlName="codigoPostal"
-        />
-      </div> -->
     </div>
 
     <div class="row mt-3">

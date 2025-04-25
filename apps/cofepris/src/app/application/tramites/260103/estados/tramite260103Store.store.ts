@@ -9,7 +9,7 @@ import { PagoDerechosFormState } from '../../../shared/models/terceros-relaciona
 import { Store } from '@datorama/akita';
 import { StoreConfig } from '@datorama/akita';
 import { TABLA_OPCION_DATA } from '../../../shared/constantes/datos-solicitud.enum'
-import { TablaMercanciasImporticon } from '../models/importicon-retorno.model';
+import { TablaMercanciasImportacion } from '../models/importicon-retorno.model';
 import { TablaOpcionConfig } from '../../../shared/models/datos-solicitud.model';
 import { TablaScianConfig } from '../../../shared/models/datos-solicitud.model';
 
@@ -26,10 +26,10 @@ import { TablaScianConfig } from '../../../shared/models/datos-solicitud.model';
  * @property {MercanciaForm} mercanciaForm - Formulario relacionado con la mercancía de estupefacientes.
  * @property {TablaOpcionConfig[]} opcionConfigDatos - Datos de configuración de opciones.
  * @property {TablaScianConfig[]} scianConfigDatos - Datos de configuración SCIAN.
- * @property {TablaMercanciasImporticon[]} tablaMercanciasConfigDatos - Datos de configuración de mercancías.
+ * @property {TablaMercanciasImportacion[]} tablaMercanciasConfigDatos - Datos de configuración de mercancías.
  * @property {TablaOpcionConfig[]} seleccionadoopcionDatos - Datos de selección de opciones.
  * @property {TablaScianConfig[]} seleccionadoScianDatos - Datos de selección SCIAN.
- * @property {TablaMercanciasImporticon[]} seleccionadoTablaMercanciasImporticon - Datos de selección de mercancías.
+ * @property {TablaMercanciasImportacion[]} seleccionadoTablaMercanciasImportacion - Datos de selección de mercancías.
  * @property {boolean} opcionesColapsableState - Estado de las opciones colapsables (si están expandidas o colapsadas).
  * @property {PagoDerechosFormState} pagoDerechos - Estado del formulario de pago de derechos.
  * @property {number} [tabSeleccionado] - Índice del tab seleccionado (opcional).
@@ -42,10 +42,10 @@ export interface Tramite260103State {
   mercanciaForm: MercanciaForm;
   opcionConfigDatos: TablaOpcionConfig[];
   scianConfigDatos: TablaScianConfig[];
-  tablaMercanciasConfigDatos: TablaMercanciasImporticon[];
+  tablaMercanciasConfigDatos: TablaMercanciasImportacion[];
   seleccionadoopcionDatos: TablaOpcionConfig[];
   seleccionadoScianDatos: TablaScianConfig[];
-  seleccionadoTablaMercanciasImporticon: TablaMercanciasImporticon[];
+  seleccionadoTablaMercanciasImportacion: TablaMercanciasImportacion[];
   opcionesColapsableState: boolean;
   pagoDerechos: PagoDerechosFormState;
   tabSeleccionado?: number;
@@ -114,7 +114,7 @@ export function createInitialState(): Tramite260103State {
     tablaMercanciasConfigDatos: [],
     seleccionadoopcionDatos: [],
     seleccionadoScianDatos: [],
-    seleccionadoTablaMercanciasImporticon: [],
+    seleccionadoTablaMercanciasImportacion: [],
     opcionesColapsableState: false,
     pagoDerechos: {
       claveReferencia: '',
@@ -215,7 +215,7 @@ export class Tramite260103Store extends Store<Tramite260103State> {
    * @param {TablaOpcionConfig[]} seleccionadoOpcionDatos - Nueva opción seleccionada.
    */
   public updateTablaMercanciasConfigDatos(
-    tablaMercanciasConfigDatos: TablaMercanciasImporticon[]
+    tablaMercanciasConfigDatos: TablaMercanciasImportacion[]
   ): void {
     this.update((state) => ({
       ...state,

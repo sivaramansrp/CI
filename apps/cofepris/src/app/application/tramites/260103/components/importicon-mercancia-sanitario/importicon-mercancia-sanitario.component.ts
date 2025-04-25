@@ -32,7 +32,7 @@ import {
   Tramite260103Store,
 } from '../../estados/tramite260103Store.store';
 import { DatosSolicitudService } from '../../../../shared/services/datos-solicitud.service';
-import { TablaMercanciasImporticon } from '../../models/importicon-retorno.model';
+import { TablaMercanciasImportacion } from '../../models/importicon-retorno.model';
 import { Tramite260103Query } from '../../estados/tramite260103Query.query';
 
 /**
@@ -437,14 +437,14 @@ public paisDeProcedenciaDatos = CROSLISTA_DE_PAISES;
    * @description Maneja la selección de una mercancía en la tabla de mercancías. 
    * Actualiza el estado de la mercancía seleccionada y la configuración de datos de la tabla.
    * 
-   * @param {TablaMercanciasImporticon} event - Objeto que contiene los datos de la mercancía seleccionada.
+   * @param {TablaMercanciasImportacion} event - Objeto que contiene los datos de la mercancía seleccionada.
    * 
    * @returns {void}
    */
-  mercanciaSeleccionado(event: TablaMercanciasImporticon): void {
+  mercanciaSeleccionado(event: TablaMercanciasImportacion): void {
     
 
-    const SELECCIONADO_MERCANCIA :TablaMercanciasImporticon= {
+    const SELECCIONADO_MERCANCIA :TablaMercanciasImportacion= {
       clasificacionProducto: event.clasificacionProducto,
       especificarClasificacionProducto: event.especificarClasificacionProducto,
       denominacionEspecificaProducto: event.denominacionEspecificaProducto,

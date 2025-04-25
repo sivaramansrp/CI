@@ -50,12 +50,6 @@ export class FabricanteDatosComponent implements OnInit, OnDestroy {
    */
   private unsubscribe$ = new Subject<void>();
 
-  // /**
-  //  * @property {Proveedor[]} proveedores
-  //  * Arreglo de proveedores capturados en el formulario.
-  //  */
-  // datos: Facturador[] = [];
-
   /**
    * @property {FormGroup} agregarDatosForm
    * Formulario reactivo utilizado para capturar los datos del proveedor.
@@ -188,7 +182,6 @@ export class FabricanteDatosComponent implements OnInit, OnDestroy {
       nombreRazonSocial = '';
     }
 
-    // 👇 Replace only nombreRazonSocial, keeping rest of the object the same
      const NUEVO_VALOR_FORMULARIO = {
       ...VALOR_FORMULARIO,
       nombreRazonSocial: nombreRazonSocial,
