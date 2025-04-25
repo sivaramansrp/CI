@@ -578,9 +578,9 @@ jobs:
           # Buscar la sección que verifica el secreto y reemplazarla
           sed -i '/echo "Verificando secreto para pull de imágenes..."/,/fi/c\
           echo "Verificando secreto para pull de imágenes..."\
-          microk8s kubectl get secret vucem30registrykey -n vucem-$DEPLOYMENT_ENV >/dev/null 2>\&1\
+          microk8s kubectl get secret vucem30registrykey -n default >/dev/null 2>\&1\
           if [ $? -ne 0 ]; then\
-            echo "Creando secreto vucem30registrykey en el namespace vucem-$DEPLOYMENT_ENV..."\
+            echo "Creando secreto vucem30registrykey en el namespace default..."\
             \
             # Si GITHUB_TOKEN está disponible, usarlo para crear el secreto\
             if [ -n "${GITHUB_TOKEN}" ]; then\
@@ -589,7 +589,7 @@ jobs:
                 --docker-username=vucem30-dev \\\
                 --docker-password=${GITHUB_TOKEN} \\\
                 --docker-email=admin@vucem.com \\\
-                -n vucem-$DEPLOYMENT_ENV\
+                -n default\
               \
               if [ $? -ne 0 ]; then\
                 echo "ADVERTENCIA: No se pudo crear el secreto automáticamente."\
@@ -599,19 +599,19 @@ jobs:
                 echo "  --docker-username=USUARIO \\\\"\
                 echo "  --docker-password=TOKEN \\\\"\
                 echo "  --docker-email=EMAIL \\\\"\
-                echo "  -n vucem-$DEPLOYMENT_ENV"\
+                echo "  -n default"\
               else\
                 echo "Secreto creado correctamente."\
               fi\
             else\
-              echo "ADVERTENCIA: El secreto vucem30registrykey no existe en el namespace vucem-$DEPLOYMENT_ENV."\
+              echo "ADVERTENCIA: El secreto vucem30registrykey no existe en el namespace default."\
               echo "El despliegue podría fallar. Cree el secreto con:"\
               echo "kubectl create secret docker-registry vucem30registrykey \\\\"\
-              echo "  --docker-server=ghcr.io \\\\"\
-              echo "  --docker-username=USUARIO \\\\"\
-              echo "  --docker-password=TOKEN \\\\"\
-              echo "  --docker-email=EMAIL \\\\"\
-              echo "  -n vucem-$DEPLOYMENT_ENV"\
+                echo "  --docker-server=ghcr.io \\\\"\
+                echo "  --docker-username=USUARIO \\\\"\
+                echo "  --docker-password=TOKEN \\\\"\
+                echo "  --docker-email=EMAIL \\\\"\
+                echo "  -n default"\
             fi\
           fi' deploy_commands.sh
 
@@ -723,17 +723,17 @@ jobs:
             
             # Verificación final (opcional, ya que el script ya incluye verificaciones)
             echo "=== Resumen final del despliegue ===" | tee -a $LOG_FILE
-            microk8s kubectl get pods -n vucem-${{ env.DEPLOYMENT_ENV }} | grep vucem-microfrontends | tee -a $LOG_FILE || echo "No se encontraron pods, puede ser que el despliegue aún no haya creado los pods"
+            microk8s kubectl get pods -n default | grep vucem-microfrontends | tee -a $LOG_FILE || echo "No se encontraron pods, puede ser que el despliegue aún no haya creado los pods"
             
             # Verificar estado de los servicios
             echo "" | tee -a $LOG_FILE
             echo "=== Estado de los servicios ===" | tee -a $LOG_FILE
-            microk8s kubectl get services -n vucem-${{ env.DEPLOYMENT_ENV }} | grep -v "kubernetes" | tee -a $LOG_FILE || echo "No se encontraron servicios"
+            microk8s kubectl get services -n default | grep -v "kubernetes" | tee -a $LOG_FILE || echo "No se encontraron servicios"
             
             # Verificar ingress
             echo "" | tee -a $LOG_FILE
             echo "=== Estado del ingress ===" | tee -a $LOG_FILE
-            microk8s kubectl get ingress -n vucem-${{ env.DEPLOYMENT_ENV }} | tee -a $LOG_FILE || echo "No se encontraron ingress"
+            microk8s kubectl get ingress -n default | tee -a $LOG_FILE || echo "No se encontraron ingress"
             
             # Mostrar ubicación del log
             echo "" | tee -a $LOG_FILE
