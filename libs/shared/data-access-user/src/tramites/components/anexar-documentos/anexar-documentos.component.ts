@@ -32,6 +32,8 @@ import { SubirDocumentoService } from '../../../core/services/shared/subir-docum
 import { DocumentosState, DocumentosStore } from '../../../core/estados/documentos.store';
 import { DocumentosQuery } from '../../../core/queries/documentos.query';
 
+import { Notificacion, NotificacionesComponent } from '../notificaciones/notificaciones.component';
+
 interface DocumentosParaCargar {
   name: string;
   id: number;
@@ -46,7 +48,7 @@ interface DocumentosParaCargar {
 @Component({
   selector: 'anexar-documentos',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, ToastrModule, ModalModule, NgSelectModule, FormsModule],
+  imports: [CommonModule, ReactiveFormsModule, ToastrModule, ModalModule, NgSelectModule, FormsModule, NotificacionesComponent],
   templateUrl: './anexar-documentos.component.html',
   styleUrl: './anexar-documentos.component.scss'
 })
@@ -250,6 +252,8 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
    */
   private documentosState!: DocumentosState;
 
+  public nuevaNotificacion!: Notificacion;
+
   constructor(
     private documentosQuery: DocumentosQuery,
     private documentosStore: DocumentosStore,
@@ -352,7 +356,16 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
     if (DOCUMENTO_ENCONTRADO) {
       this.documentoSeleccionado = DOCUMENTO_ENCONTRADO;
     } else {
-      this.toastr.error('Documento no encontrado');
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'toastr',
+        categoria: 'danger',
+        modo: '',
+        titulo: '',
+        mensaje: 'Documento no encontrado',
+        cerrar: false,
+        txtBtnAceptar: '',
+        txtBtnCancelar: '',
+      }
       return;
     }
     this.tamMaximo = this.documentoSeleccionado?.tam
@@ -376,15 +389,35 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
     if (INFORMACION_ARCHIVO) {
       const EXTENSION_ARCHIVO = INFORMACION_ARCHIVO.name.split('.').pop()?.toLowerCase();
       if (EXTENSION_ARCHIVO !== UNIDADES_DOCUMENTOS.PDF.toLowerCase()) {
-        this.toastr.error(MENSAJES_DOCUMENTOS.ONLYPDF);
+        this.nuevaNotificacion = {
+          tipoNotificacion: 'toastr',
+          categoria: 'danger',
+          modo: '',
+          titulo: '',
+          mensaje: MENSAJES_DOCUMENTOS.ONLYPDF,
+          cerrar: false,
+          txtBtnAceptar: '',
+          txtBtnCancelar: '',
+        }
         fileInput.value = '';
         return;
       }
+      console.log(this.documentoSeleccionado);
+      
 
-      const TAMANIO_REQUERIDO: number = 10 * 1048576;
+      const TAMANIO_REQUERIDO: number = parseInt(this.documentoSeleccionado.tam, 10) * 1048576;
       const TAMANIO_ARCHIVO: number = INFORMACION_ARCHIVO.size;
       if (TAMANIO_ARCHIVO > TAMANIO_REQUERIDO) {
-        this.toastr.error(MENSAJES_DOCUMENTOS.MAXSIZE);
+        this.nuevaNotificacion = {
+          tipoNotificacion: 'toastr',
+          categoria: 'danger',
+          modo: '',
+          titulo: '',
+          mensaje: MENSAJES_DOCUMENTOS.MAXSIZE,
+          cerrar: false,
+          txtBtnAceptar: '',
+          txtBtnCancelar: '',
+        }
         fileInput.value = '';
         return;
       }
@@ -704,5 +737,9 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
 
     this.activarBotonCargaArchivos.emit(ARCHIVOS_PARA_CARGAR);
     this.cargaRealizada.emit(false);
+  }
+
+  aceptarModal(aceptar: boolean) {
+
   }
 }
