@@ -1,6 +1,7 @@
 import {
   Catalogo,
   CatalogoSelectComponent,
+  REGEX_SOLO_DIGITOS,
   TituloComponent,
   ValidacionesFormularioService,
 } from '@ng-mf/data-access-user';
@@ -215,8 +216,8 @@ options!: Catalogo[];
         calle: [this.solicitudState?.calle, [Validators.required]],
         numeroLetra: [this.solicitudState?.numeroLetra, [Validators.required]],
         lada: [this.solicitudState?.lada, [Validators.required]],
-        telefono: [this.solicitudState?.telefono, [Validators.required, Validators.pattern(/^\d+$/)],],
-        fax: [this.solicitudState?.fax, [Validators.pattern(/^\d+$/)]],
+        telefono: [this.solicitudState?.telefono, [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS)],],
+        fax: [this.solicitudState?.fax, [Validators.pattern(REGEX_SOLO_DIGITOS)]],
         correoElectronico: [this.solicitudState?.correoElectronico,[Validators.required, Validators.email],],
         rutaCompleta: [this.solicitudState?.rutaCompleta,Validators.required, ],
         puertoEmbarque: [ this.solicitudState?.puertoEmbarque,Validators.required, ],
