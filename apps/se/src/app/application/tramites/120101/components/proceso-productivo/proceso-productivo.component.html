@@ -1,10 +1,12 @@
 <div class="container" [formGroup]="procesoProductivoForm">
     <ng-titulo titulo="Proceso productivo"></ng-titulo>
-    <h6>Indicar el(los) país(es) donde se realizó o realizaron el(los) siguiente(s) proceso(s) productivo(s), según
+    <h6 class="mb-5">Indicar el(los) país(es) donde se realizó o realizaron el(los) siguiente(s) proceso(s) productivo(s), según
         corresponda al bien final a exportar o importar</h6>
+        <div class="mb-5">
     <app-input-radio [radioOptions]="opcionesDeRadioIndicar" id="indicar" formControlName="indicar"
         [layout]="'horizontal'">
     </app-input-radio>
+    </div>
 
     <div class="row" *ngIf="procesoProductivoForm.get('indicar')?.value === '1'">
         <div class="col-md-4">

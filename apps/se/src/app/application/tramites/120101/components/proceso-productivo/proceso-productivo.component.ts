@@ -1,12 +1,13 @@
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { Catalogo, TituloComponent } from '@libs/shared/data-access-user/src';
-import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
-import { InputRadioComponent } from '@libs/shared/data-access-user/src';
-import { ServicioDeFormularioService } from '../../services/forma-servicio/servicio-de-formulario.service';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
+import { CommonModule } from '@angular/common';
+import { InputRadioComponent } from '@libs/shared/data-access-user/src';
 import { RADIO_INDICAR } from '../../constantes/solicitud-de-registro-tpl.enum';
+import { ServicioDeFormularioService } from '../../services/forma-servicio/servicio-de-formulario.service';
+
 
 @Component({
   selector: 'app-proceso-productivo',
@@ -39,7 +40,7 @@ export class ProcesoProductivoComponent implements OnInit , OnDestroy{
       paisEnQueSeRealizoElEnsamble: ['', Validators.required],
     });
     this.obtenerDatosEstados();
-    console.log(this.procesoProductivoForm.get('indicar')?.value)
+
   }
 
     obtenerDatosEstados(): void {
