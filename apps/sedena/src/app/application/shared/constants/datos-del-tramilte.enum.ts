@@ -28,7 +28,7 @@ export const CROSLISTA_ADUANAS_DISPONIBLES: string[] = [
  * @description Representa códigos específicos utilizados en el sistema para identificar tipos de permisos definitivos.
  */
 export const PERMISO_DEFINITIVO_TITULO = [
-  240119, 240118, 240107, 240106, 240108, 240308,240117, 240121, 240405, 240111, 240311, 240411, 240407
+  240119, 240118, 240107, 240106, 240108, 240308,240117, 240121, 240405, 240111, 240311, 240411, 240122, 240407
 ];
 
 /**
@@ -47,7 +47,18 @@ export const PERMISO_ADUNA_TITULO = [240119, 240118];
  * @type {number[]}
  * @description Representa códigos específicos utilizados en el sistema para identificar permisos OCULTAR_BOTONES.
  */
-export const OCULTAR_BOTONES = [240121, 240107, 240311, 240407];
+export const OCULTAR_BOTONES = [240121, 240107,240311, 240407];
+
+ /**
+ * @const NO_VISIBILIDAD_UMC
+ * @type {number[]}
+ * @description Arreglo que contiene los identificadores numéricos de las UMC (Unidades de Medida y Clasificación) 
+ * que no deben ser visibles en la aplicación.
+ * @author [Tu Nombre o Equipo]
+ */
+ export const NO_VISIBILIDAD_UMC: number[] = [
+  240122
+];
 
 /**
  * Mapa de etiquetas asociadas a países.
@@ -76,7 +87,7 @@ export const PAISE_DENTINO_EITIQUETA: Map<number, string> = new Map<
  * @type {number[]}
  * @description Contiene un arreglo de identificadores numéricos que representan mercancías específicas para las cuales se permite mostrar la lista cruzada.
  */
-export const PUEDE_MOSTRAR_LA_LISTA_CRUZADA_FOR_MERCANCIA = [240108, 240107, 240117, 240121, 240111, 240311];
+export const PUEDE_MOSTRAR_LA_LISTA_CRUZADA_FOR_MERCANCIA = [240108, 240107, 240117, 240121, 240111, 240311, 240122];
 
 /**
  * Período del semestre habilitado.
