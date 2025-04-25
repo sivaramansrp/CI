@@ -25,6 +25,7 @@ import { CommonModule } from '@angular/common';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
 
 import { CHOFERES_PAGE } from '../../enum/transportista-terrestre.enum';
+import { Extranjero } from '@libs/shared/data-access-user/src/core/models/40103/transportista-terrestre.model';
 import { HttpClient } from '@angular/common/http';
 import { Modal } from 'bootstrap';
 import { Nacional } from '@libs/shared/data-access-user/src/core/models/40103/transportista-terrestre.model';
@@ -34,7 +35,6 @@ import { SharedModule } from '@ng-mf/data-access-user';
 import { choferesEnum } from '../constantes/choferes.enum';
 import { choferesExtranjeros } from '../../../40103/models/registro-muestras-mercancias.model';
 import { datosDelChoferNacional } from '../../../40103/models/registro-muestras-mercancias.model';
-import { extranjero } from '@libs/shared/data-access-user/src/core/models/40103/transportista-terrestre.model';
 import { takeUntil } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { take } from 'rxjs/operators';
@@ -62,7 +62,7 @@ export class ChoferesComponent implements OnInit, OnDestroy {
   CHOFERES_PAGE = CHOFERES_PAGE;
   modal: string = this.CHOFERES_PAGE.MODAL;
   nacional: Array<Nacional> = [];
-  extranjero: Array<extranjero> = [];
+  extranjero: Array<Extranjero> = [];
   activeTab: string = 'nacional';
   /**
    * Observable que contiene la lista de estados disponibles.

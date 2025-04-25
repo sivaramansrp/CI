@@ -1,5 +1,5 @@
 
-export interface tablaDatos {
+export interface TablaDatos {
   /**
    * Datos de la fila representados por un arreglo de cadenas.
    *

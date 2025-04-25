@@ -1,7 +1,7 @@
 import { BtnContinuarComponent, DatosPasos, ListaPasosWizard, TituloComponent } from '@ng-mf/data-access-user';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder,FormGroup,FormsModule,ReactiveFormsModule,Validators } from '@angular/forms';
-import { certificadosCancelar} from 'libs/shared/data-access-user/src/core/models/140103/cancelacion.model';
+import { CertificadosCancelar} from 'libs/shared/data-access-user/src/core/models/140103/cancelacion.model';
 
 import { ConfiguracionColumna } from 'libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
 import { DetalleComponent } from '../detalle/detalle.component';
@@ -88,7 +88,7 @@ export class OficioComponent implements OnInit {
   /**
    * Lista de datos de oficios, cada uno representando un certificado que será mostrado en la tabla.
    */
-  oficio: certificadosCancelar[] = oficiodata;
+  oficio: CertificadosCancelar[] = oficiodata;
 
   /**
    * Configuración de las columnas para la tabla de oficios.
