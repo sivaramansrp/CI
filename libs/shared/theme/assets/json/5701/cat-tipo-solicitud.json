@@ -1,17 +1,17 @@
 {
   "code": 200,
-  "data": [
+  "datos": [
     {
       "id": 1,
-      "value": "Individual"
+      "descripcion": "Individual"
     },
     {
       "id": 2,
-      "value": "Semanal"
+      "descripcion": "Semanal"
     },
     {
       "id": 3,
-      "value": "Mensual"
+      "descripcion": "Mensual"
     }
   ],
   "message": "Consulta exitosa"

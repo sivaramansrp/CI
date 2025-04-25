@@ -25,6 +25,7 @@ import {
   SeccionLibState,
   SeccionLibStore,
   TIPO_SOLICITUD,
+  TipoSolicitudService,
   ValidacionesFormularioService,
 } from '@ng-mf/data-access-user';
 import { Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
@@ -34,12 +35,12 @@ import {
   Solicitud5701State,
   Tramite5701Store,
 } from '../../../../core/estados/tramites/tramite5701.store';
+import { CatalogoLista } from '@libs/shared/data-access-user/src/core/models/shared/tipo-solicitud.model';
 import { DatosCheckInputText } from '../../../../core/models/shared/check-input-text.model';
 import { DatosComponentePedimento } from '../../../../core/models/5701/tramite5701.model';
 import { Modal } from 'bootstrap';
 import { ServiciosExtraordinariosService } from '../../../../core/services/5701/servicios-extraordinarios.service';
 import { Tramite5701Query } from '../../../../core/queries/tramite5701.query';
-
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import patentes from 'libs/shared/theme/assets/json/5701/patentes.json';
 // eslint-disable-next-line @nx/enforce-module-boundaries
@@ -50,7 +51,7 @@ import rfcs from 'libs/shared/theme/assets/json/5701/rfcs.json';
   templateUrl: './solicitud.component.html',
   styleUrl: './solicitud.component.scss',
 })
-export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
+export class SolicitudComponent implements OnInit, OnChanges, OnDestroy{
 
   /**
    * Índice de tabulación para el control de enfoque en la interfaz.
@@ -249,7 +250,8 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
     private fb: FormBuilder,
     private catalogosServices: CatalogosService,
     private validacionesService: ValidacionesFormularioService,
-    private serviciosExtraordinariosService: ServiciosExtraordinariosService
+    private serviciosExtraordinariosService: ServiciosExtraordinariosService,
+    private tipoSolicitudService: TipoSolicitudService, 
   ) { }
 
   ngOnInit(): void {
@@ -498,14 +500,12 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    */
   private inicializaCatalogos(): void {
 
-    const CAT_TIPO_SOLICITUD$ = this.catalogosServices
-      .getCatalogo(CATALOGOS_ID.CAT_TIPO_SOL)
-      .pipe(
-        map((resp) => {
-          this.tiposSolicitud = resp;
-        }),
-        takeUntil(this.destroyNotifier$)
-      );
+    const CAT_TIPO_SOLICITUD$ = this.tipoSolicitudService.getListaTipoSolicitud().pipe(
+      map((datos: CatalogoLista) => {
+        this.tiposSolicitud = datos.datos;
+      }),
+      takeUntil(this.destroyNotifier$)
+    );
 
     const CATALOGO_PAISES$ = this.catalogosServices
       .getCatalogoPaises(CATALOGOS_ID.CAT_PAISES)
