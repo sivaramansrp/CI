@@ -1,0 +1,51 @@
+<div class="container">
+  <ng-titulo titulo="Concluir relación con industria automotriz" />
+
+  <form [formGroup]="concluirRelacionForm">
+    <div class="row">
+      <div class="">
+        <div class="mb-3 row">
+          <label for="rfc" class="col-sm-2 col-form-label">RFC:</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" id="rfc">
+          </div>
+        </div>
+        <button class="col-md-offset-2" (click)="buscarConcluirRelacionDatos()">BUSAR</button>
+      </div>
+    </div>
+
+    <div class="row mt-5">
+      <div class="col-md-6">
+        <div class="mb-3 row">
+          <div class="col-sm-7">
+            <input-fecha
+        class="width"
+        [setFecha]="concluirRelacionForm.get('fechaInicial')?.value"
+        [datos]="configuracionFechaInicial"
+        (valorCambiado)="onFechaFinVigenciaChange($event)"
+      ></input-fecha>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="mb-3 row">
+          <div class="col-sm-7">
+            <input-fecha
+            class="width"
+            [setFecha]="concluirRelacionForm.get('fechaInicial')?.value"
+            [datos]="configuracionfechaFinal"
+            (valorCambiado)="onFechaFinVigenciaChange($event)"
+          ></input-fecha>
+          </div>
+        </div>
+      </div>
+    </div> 
+  </form>
+
+  <div class="row mt-5">
+    <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.RADIO" [configuracionTabla]="configuracionTabla"
+      [datos]="configuracionTablaDatos"></app-tabla-dinamica>
+  </div>
+  <button class="col-md-offset-11">Limpiar</button>
+</div>
