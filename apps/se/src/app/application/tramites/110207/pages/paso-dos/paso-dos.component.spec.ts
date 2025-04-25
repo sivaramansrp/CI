@@ -18,7 +18,8 @@ describe('PasoDosComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, PasoDosComponent],
+      imports: [HttpClientTestingModule],
+      declarations: [PasoDosComponent],
       providers: [
         { provide: CatalogosService, useValue: mockCatalogosService },
       ],

@@ -1,10 +1,7 @@
-import {
-  FirmaElectronicaComponent,
-  TramiteFolioService,
-} from '@ng-mf/data-access-user';
-import { catchError, map, Subscription } from 'rxjs';
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
+import { Subscription, catchError, map } from 'rxjs';
 import { Router } from '@angular/router';
+import { TramiteFolioService } from '@ng-mf/data-access-user';
 import { TramiteStore } from '../../../../estados/tramite.store';
 /**
  * Componente que representa el paso tres del trámite.
@@ -15,7 +12,7 @@ import { TramiteStore } from '../../../../estados/tramite.store';
   styleUrl: './paso-tres.component.scss',
   standalone: false,
 })
-export class PasoTresComponent {
+export class PasoTresComponent implements OnDestroy {
    /**
    * Suscripción para obtener el trámite.
    */
@@ -52,7 +49,7 @@ export class PasoTresComponent {
         .pipe(
           map((tramite) => {
             this.tramiteStore.establecerTramite(tramite.data, FIRMA);
-            this.router.navigate(['servicios-extraordinarios/acuse']);
+            this.router.navigate(['pago/reportes/acuse']);
           }),
           catchError((_error) => {
             return _error;

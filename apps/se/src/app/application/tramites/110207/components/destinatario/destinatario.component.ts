@@ -11,11 +11,11 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { ReplaySubject, Subject, map, takeUntil } from 'rxjs';
 import {
   Solicitud110207State,
   Tramite110207Store,
 } from '../../state/Tramite110207.store';
-import { ReplaySubject, Subject, map, takeUntil } from 'rxjs';
 import { CatalogosSelect } from '@libs/shared/data-access-user/src/core/models/shared/components.model';
 import { CommonModule } from '@angular/common';
 import { RegistroService } from '../../services/registro.service';

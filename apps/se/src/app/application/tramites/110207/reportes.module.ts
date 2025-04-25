@@ -1,15 +1,14 @@
-import { NgModule } from '@angular/core';
+import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, FirmaElectronicaComponent, SharedModule, SolicitanteComponent, TituloComponent, WizardComponent } from '@libs/shared/data-access-user/src';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { NO_ERRORS_SCHEMA, NgModule } from '@angular/core';
+import { CertificadoDeOrigenComponent } from './components/certificado-de-origen/certificado-de-origen.component';
 import { CommonModule } from '@angular/common';
-
-import { ReportesRoutingModule } from './reportes-routing.module';
+import { DatosCertificadoComponent } from './components/datos-certificado/datos_certificado.component';
+import { DestinatarioComponent } from './components/destinatario/destinatario.component';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { WizardComponent, BtnContinuarComponent, SolicitanteComponent, FirmaElectronicaComponent, AlertComponent, AnexarDocumentosComponent, TituloComponent, SharedModule } from '@libs/shared/data-access-user/src';
-import { CertificadoDeOrigenComponent } from './components/certificado-de-origen/certificado-de-origen.component';
-import { DatosCertificadoComponent } from './components/datos-certificado/datos_certificado.component';
-import { DestinatarioComponent } from './components/destinatario/destinatario.component';
+import { ReportesRoutingModule } from './reportes-routing.module';
 import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
 
 
@@ -35,6 +34,8 @@ import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.co
     AnexarDocumentosComponent,
     WizardComponent,
     BtnContinuarComponent,
+    SolicitanteComponent
   ],
+  schemas: [NO_ERRORS_SCHEMA],
 })
 export class ReportesModule { }

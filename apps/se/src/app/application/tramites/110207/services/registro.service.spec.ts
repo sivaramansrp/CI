@@ -1,97 +1,185 @@
-// @ts-nocheck
-import { async } from '@angular/core/testing';
-import { Injectable } from '@angular/core';
-import { Observable, of as observableOf, throwError } from 'rxjs';
-
+import { TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { RegistroService } from './registro.service';
-import { HttpClient } from '@angular/common/http';
-
-@Injectable()
-class MockHttpClient {
-  post() {}
-}
+import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
+import { ColumnasTabla, SeleccionadasTabla } from '../models/registro.model';
 
 describe('RegistroService', () => {
-  let service;
+  let service: RegistroService;
+  let httpMock: HttpTestingController;
 
   beforeEach(() => {
-    service = new RegistroService({});
+    TestBed.configureTestingModule({
+      imports: [HttpClientTestingModule],
+      providers: [RegistroService],
+    });
+
+    service = TestBed.inject(RegistroService);
+    httpMock = TestBed.inject(HttpTestingController);
   });
 
-  it('should run #getTratado()', async () => {
-    service.http = service.http || {};
-    service.http.get = jest.fn();
-    service.getTratado();
-    expect(service.http.get).toHaveBeenCalled();
+  afterEach(() => {
+    httpMock.verify();
   });
 
-  it('should run #getPais()', async () => {
-    service.http = service.http || {};
-    service.http.get = jest.fn();
-    service.getPais();
-    expect(service.http.get).toHaveBeenCalled();
+  it('should be created', () => {
+    expect(service).toBeTruthy();
   });
 
-  it('should run #getIdioma()', async () => {
-    service.http = service.http || {};
-    service.http.get = jest.fn();
-    service.getIdioma();
-    expect(service.http.get).toHaveBeenCalled();
+  it('should fetch tratado catalog', () => {
+    const mockResponse: RespuestaCatalogos = { code: 200, data: [], message: 'Success' };
+
+    service.getTratado().subscribe((response) => {
+      expect(response).toEqual(mockResponse);
+    });
+
+    const req = httpMock.expectOne('assets/json/110207/tratado.json');
+    expect(req.request.method).toBe('GET');
+    req.flush(mockResponse);
   });
 
-  it('should run #getPaisDestino()', async () => {
-    service.http = service.http || {};
-    service.http.get = jest.fn();
-    service.getPaisDestino();
-    expect(service.http.get).toHaveBeenCalled();
+  it('should fetch pais catalog', () => {
+    const mockResponse: RespuestaCatalogos = { code: 200, data: [], message: 'Success' };
+
+    service.getPais().subscribe((response) => {
+      expect(response).toEqual(mockResponse);
+    });
+
+    const req = httpMock.expectOne('assets/json/110207/pais.json');
+    expect(req.request.method).toBe('GET');
+    req.flush(mockResponse);
   });
 
-  it('should run #getTransporte()', async () => {
-    service.http = service.http || {};
-    service.http.get = jest.fn();
-    service.getTransporte();
-    expect(service.http.get).toHaveBeenCalled();
+  it('should fetch idioma catalog', () => {
+    const mockResponse: RespuestaCatalogos = { code: 200, data: [], message: 'Success' };
+
+    service.getIdioma().subscribe((response) => {
+      expect(response).toEqual(mockResponse);
+    });
+
+    const req = httpMock.expectOne('assets/json/110207/idioma.json');
+    expect(req.request.method).toBe('GET');
+    req.flush(mockResponse);
   });
 
-  it('should run #getEntidad()', async () => {
-    service.http = service.http || {};
-    service.http.get = jest.fn();
-    service.getEntidad();
-    expect(service.http.get).toHaveBeenCalled();
+  it('should fetch pais destino catalog', () => {
+    const mockResponse: RespuestaCatalogos = { code: 200, data: [], message: 'Success' };
+
+    service.getPaisDestino().subscribe((response) => {
+      expect(response).toEqual(mockResponse);
+    });
+
+    const req = httpMock.expectOne('assets/json/110207/pais.json');
+    expect(req.request.method).toBe('GET');
+    req.flush(mockResponse);
   });
 
-  it('should run #getRepresentacion()', async () => {
-    service.http = service.http || {};
-    service.http.get = jest.fn();
-    service.getRepresentacion();
-    expect(service.http.get).toHaveBeenCalled();
+  it('should fetch transporte catalog', () => {
+    const mockResponse: RespuestaCatalogos = { code: 200, data: [], message: 'Success' };
+
+    service.getTransporte().subscribe((response) => {
+      expect(response).toEqual(mockResponse);
+    });
+
+    const req = httpMock.expectOne('assets/json/110207/pais.json');
+    expect(req.request.method).toBe('GET');
+    req.flush(mockResponse);
   });
 
-  it('should run #getTipoFactura()', async () => {
-    service.http = service.http || {};
-    service.http.get = jest.fn();
-    service.getTipoFactura();
-    expect(service.http.get).toHaveBeenCalled();
+  it('should fetch entidad catalog', () => {
+    const mockResponse: RespuestaCatalogos = { code: 200, data: [], message: 'Success' };
+
+    service.getEntidad().subscribe((response) => {
+      expect(response).toEqual(mockResponse);
+    });
+
+    const req = httpMock.expectOne('assets/json/110207/entidad.json');
+    expect(req.request.method).toBe('GET');
+    req.flush(mockResponse);
   });
 
-  it('should run #getUMC()', async () => {
-    service.http = service.http || {};
-    service.http.get = jest.fn();
-    service.getUMC();
-    expect(service.http.get).toHaveBeenCalled();
+  it('should fetch representacion catalog', () => {
+    const mockResponse: RespuestaCatalogos = { code: 200, data: [], message: 'Success' };
+
+    service.getRepresentacion().subscribe((response) => {
+      expect(response).toEqual(mockResponse);
+    });
+
+    const req = httpMock.expectOne('assets/json/110207/entidad.json');
+    expect(req.request.method).toBe('GET');
+    req.flush(mockResponse);
   });
 
-  it('should run #getUnidadMedida()', async () => {
-    service.http = service.http || {};
-    service.http.get = jest.fn();
-    service.getUnidadMedida();
-    expect(service.http.get).toHaveBeenCalled();
+  it('should fetch tipo factura catalog', () => {
+    const mockResponse: RespuestaCatalogos = { code: 200, data: [], message: 'Success' };
+
+    service.getTipoFactura().subscribe((response) => {
+      expect(response).toEqual(mockResponse);
+    });
+
+    const req = httpMock.expectOne('assets/json/110207/tipofactura.json');
+    expect(req.request.method).toBe('GET');
+    req.flush(mockResponse);
   });
 
-  it('should run #getCatalogoById()', async () => {
-    service.http = service.http || {};
-    service.http.get = jest.fn();
-    service.getCatalogoById({});
-    expect(service.http.get).toHaveBeenCalled();
+  it('should fetch UMC catalog', () => {
+    const mockResponse: RespuestaCatalogos = { code: 200, data: [], message: 'Success' };
+
+    service.getUMC().subscribe((response) => {
+      expect(response).toEqual(mockResponse);
+    });
+
+    const req = httpMock.expectOne('assets/json/110207/umc.json');
+    expect(req.request.method).toBe('GET');
+    req.flush(mockResponse);
+  });
+
+  it('should fetch unidad medida catalog', () => {
+    const mockResponse: RespuestaCatalogos = { code: 200, data: [], message: 'Success' };
+
+    service.getUnidadMedida().subscribe((response) => {
+      expect(response).toEqual(mockResponse);
+    });
+
+    const req = httpMock.expectOne('assets/json/110207/umc.json');
+    expect(req.request.method).toBe('GET');
+    req.flush(mockResponse);
+  });
+
+  it('should fetch catalog by ID', () => {
+    const mockResponse = { code: 200, data: [], message: 'Success' };
+    const catalogId = 1;
+
+    service.getCatalogoById(catalogId).subscribe((response) => {
+      expect(response).toEqual(mockResponse);
+    });
+
+    const req = httpMock.expectOne(`${service.urlServerCatalogos}/${catalogId}`);
+    expect(req.request.method).toBe('GET');
+    req.flush(mockResponse);
+  });
+
+  it('should fetch solicitudes tabla', () => {
+    const mockResponse: ColumnasTabla[] = [];
+
+    service.getSolicitudesTabla().subscribe((response) => {
+      expect(response).toEqual(mockResponse);
+    });
+
+    const req = httpMock.expectOne('assets/json/110207/mercancia-disponsible.json');
+    expect(req.request.method).toBe('GET');
+    req.flush(mockResponse);
+  });
+
+  it('should fetch solicitudes data tabla', () => {
+    const mockResponse: SeleccionadasTabla[] = [];
+
+    service.getSolicitudesDataTabla().subscribe((response) => {
+      expect(response).toEqual(mockResponse);
+    });
+
+    const req = httpMock.expectOne('assets/json/110207/mercancia-seleccionadas.json');
+    expect(req.request.method).toBe('GET');
+    req.flush(mockResponse);
   });
 });

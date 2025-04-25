@@ -1,94 +1,89 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import {
-  ReactiveFormsModule,
-  FormBuilder,
-  FormGroup,
-  FormsModule,
-} from '@angular/forms';
-import { of, Subject } from 'rxjs';
+import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
+import { of, Subject, ReplaySubject } from 'rxjs';
 import { DestinatarioComponent } from './destinatario.component';
 import { RegistroService } from '../../services/registro.service';
-import { Tramite110201Store } from '../../state/Tramite110201.store';
-import { Tramite110201Query } from '../../state/Tramite110201.query';
-import { ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
+import { Tramite110207Store } from '../../state/Tramite110207.store';
+import { Tramite110207Query } from '../../state/Tramite110207.query';
+import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
+import { Catalogo } from '@ng-mf/data-access-user';
 
 describe('DestinatarioComponent', () => {
   let component: DestinatarioComponent;
   let fixture: ComponentFixture<DestinatarioComponent>;
-  let registroService: RegistroService;
-  let tramiteStore: Tramite110201Store;
-  let tramiteQuery: Tramite110201Query;
-  let validacionesService: ValidacionesFormularioService;
+  let mockRegistroService: jest.Mocked<RegistroService>;
+  let mockStore: jest.Mocked<Tramite110207Store>;
+  let mockQuery: jest.Mocked<Tramite110207Query>;
+  let mockValidacionesService: jest.Mocked<ValidacionesFormularioService>;
 
   beforeEach(async () => {
+    mockRegistroService = {
+      getPaisDestino: jest.fn().mockReturnValue(of({ code: 200, data: [] })),
+      getTransporte: jest.fn().mockReturnValue(of({ code: 200, data: [] })),
+    } as unknown as jest.Mocked<RegistroService>;
+
+    mockStore = {
+      setEntidad: jest.fn(),
+      setRepresentacion: jest.fn(),
+      setIdioma: jest.fn(),
+    } as unknown as jest.Mocked<Tramite110207Store>;
+
+    mockQuery = {
+      selectSolicitud$: of({
+        nacion: 'Test Nacion',
+        transporte: 'Test Transporte',
+        nombre: 'Test Nombre',
+        apellidoPrimer: 'Test Apellido Primer',
+        apellidoSegundo: 'Test Apellido Segundo',
+        numeroFiscal: 'Test Numero Fiscal',
+        razonSocial: 'Test Razon Social',
+        ciudad: 'Test Ciudad',
+        calle: 'Test Calle',
+        numeroLetra: 'Test Numero Letra',
+        lada: 'Test Lada',
+        telefono: '1234567890',
+        fax: '0987654321',
+        correoElectronico: 'test@example.com',
+        rutaCompleta: 'Test Ruta Completa',
+        puertoEmbarque: 'Test Puerto Embarque',
+        puertoDesembarque: 'Test Puerto Desembarque',
+      }),
+    } as unknown as jest.Mocked<Tramite110207Query>;
+
+    mockValidacionesService = {
+      isValid: jest.fn().mockReturnValue(true),
+    } as unknown as jest.Mocked<ValidacionesFormularioService>;
+
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule, FormsModule, DestinatarioComponent],
       declarations: [],
+      imports: [ReactiveFormsModule,DestinatarioComponent],
       providers: [
         FormBuilder,
-        {
-          provide: RegistroService,
-          useValue: {
-            getPaisDestino: jest
-              .fn()
-              .mockReturnValue(of({ code: 200, data: [] })),
-            getTransporte: jest
-              .fn()
-              .mockReturnValue(of({ code: 200, data: [] })),
-          },
-        },
-        {
-          provide: Tramite110201Store,
-          useValue: {
-            setNacion: jest.fn(),
-            setTransporte: jest.fn(),
-          },
-        },
-        {
-          provide: Tramite110201Query,
-          useValue: {
-            selectSolicitud$: of({}),
-            selectNacion$: of([]),
-            selectTransporte$: of([]),
-          },
-        },
-        {
-          provide: ValidacionesFormularioService,
-          useValue: {
-            isValid: jest.fn().mockReturnValue(true),
-          },
-        },
+        { provide: RegistroService, useValue: mockRegistroService },
+        { provide: Tramite110207Store, useValue: mockStore },
+        { provide: Tramite110207Query, useValue: mockQuery },
+        { provide: ValidacionesFormularioService, useValue: mockValidacionesService },
       ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(DestinatarioComponent);
     component = fixture.componentInstance;
-    registroService = TestBed.inject(RegistroService);
-    tramiteStore = TestBed.inject(Tramite110201Store);
-    tramiteQuery = TestBed.inject(Tramite110201Query);
-    validacionesService = TestBed.inject(ValidacionesFormularioService);
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize component and call necessary methods on ngOnInit', () => {
-    const getPaisDestinoSpy = jest.spyOn(component, 'getPaisDestino');
-    const getTransporteSpy = jest.spyOn(component, 'getTransporte');
-    const donanteDomicilioSpy = jest.spyOn(component, 'donanteDomicilio');
-
-    component.ngOnInit();
-
-    expect(getPaisDestinoSpy).toHaveBeenCalled();
-    expect(getTransporteSpy).toHaveBeenCalled();
-    expect(donanteDomicilioSpy).toHaveBeenCalled();
+  it('should initialize the form with default values', () => {
+    component.donanteDomicilio();
+    expect(component.registroForm.value.validacionForm.nacion).toBe('Test Nacion');
+    expect(component.registroForm.value.validacionForm.transporte).toBe('Test Transporte');
   });
 
-  it('should validate destinatario formulario', () => {
-    component.registroForm = component.fb.group({
-      validacionForm: component.fb.group({
+  it('should validate the destinatario form', () => {
+    component.registroForm = new FormBuilder().group({
+      validacionForm: new FormBuilder().group({
         nacion: [''],
       }),
     });
@@ -96,55 +91,50 @@ describe('DestinatarioComponent', () => {
     expect(component.registroForm.touched).toBe(true);
   });
 
-  it('should call getPaisDestino and set nacion in store', () => {
-    const spy = jest.spyOn(registroService, 'getPaisDestino');
+  it('should fetch pais destino catalog', () => {
     component.getPaisDestino();
-    expect(spy).toHaveBeenCalled();
-    expect(tramiteStore.setNacion).toHaveBeenCalled();
+    expect(mockRegistroService.getPaisDestino).toHaveBeenCalled();
   });
 
-  it('should call getTransporte and set transporte in store', () => {
-    const spy = jest.spyOn(registroService, 'getTransporte');
+  it('should fetch transporte catalog', () => {
     component.getTransporte();
-    expect(spy).toHaveBeenCalled();
-    expect(tramiteStore.setTransporte).toHaveBeenCalled();
+    expect(mockRegistroService.getTransporte).toHaveBeenCalled();
   });
 
-  it('should validate form field', () => {
-    const form = component.fb.group({
-      field: [''],
+  it('should validate a form field', () => {
+    const form = new FormBuilder().group({
+      field: ['value'],
     });
     const isValid = component.isValid(form, 'field');
     expect(isValid).toBe(true);
+    expect(mockValidacionesService.isValid).toHaveBeenCalledWith(form, 'field');
   });
 
-  it('should set valores in store', () => {
-    const form = component.fb.group({
-      nacion: ['test'],
+  it('should set values in the store', () => {
+    const form = new FormBuilder().group({
+      field: ['value'],
     });
-    component.setValoresStore(form, 'nacion', 'setNacion');
-    expect(tramiteStore.setNacion).toHaveBeenCalledWith('test');
+    component.setValoresStore(form, 'field', 'setEntidad');
+    expect(mockStore.setEntidad).toHaveBeenCalledWith('value');
   });
 
-  it('should unsubscribe from all subscriptions on ngOnDestroy', () => {
+  it('should handle form submission', () => {
+    component.registroForm = new FormBuilder().group({
+      validacionForm: new FormBuilder().group({
+        nacion: ['Test Nacion', [Validators.required]],
+      }),
+    });
+    component.onSubmit();
+    expect(component.registroForm.valid).toBe(true);
+  });
+
+  it('should destroy subscriptions on ngOnDestroy', () => {
     const destroyNotifierSpy = jest.spyOn(component.destroyNotifier$, 'next');
-    const paisDestinoUnsubscribeSpy = jest.spyOn(
-      component.getPaisDestinoSubscription,
-      'unsubscribe'
-    );
-    const transporteUnsubscribeSpy = jest.spyOn(
-      component.getTransporteSubscription,
-      'unsubscribe'
-    );
+    const destroyNotifierCompleteSpy = jest.spyOn(component.destroyNotifier$, 'complete');
 
     component.ngOnDestroy();
 
-    expect(destroyNotifierSpy).toHaveBeenCalled();
-    expect(paisDestinoUnsubscribeSpy).toHaveBeenCalled();
-    expect(transporteUnsubscribeSpy).toHaveBeenCalled();
-  });
-
-  afterEach(() => {
-    jest.clearAllMocks();
+    expect(destroyNotifierSpy).toHaveBeenCalledWith();
+    expect(destroyNotifierCompleteSpy).toHaveBeenCalled();
   });
 });

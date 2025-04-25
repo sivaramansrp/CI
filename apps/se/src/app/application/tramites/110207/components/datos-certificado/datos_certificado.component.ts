@@ -12,11 +12,11 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { ReplaySubject, Subject, map, takeUntil } from 'rxjs';
 import {
   Solicitud110207State,
   Tramite110207Store,
 } from '../../state/Tramite110207.store';
-import { ReplaySubject, Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { RegistroService } from '../../services/registro.service';
 import { Tramite110207Query } from '../../state/Tramite110207.query';
@@ -71,7 +71,7 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
   /**
    * Datos de la entidad federativa proporcionados como entrada.
    */
-  @Input() entidadFederativaData: any;
+  @Input() entidadFederativaData: unknown;
 
   /**
    * Indica si se requiere justificación.
@@ -230,7 +230,7 @@ optionsRepresentacion!: Catalogo[];
     const VALOR = form.get(campo)?.value;
     (this.store[metodoNombre] as (value: unknown) => void)(VALOR);
 
-    if (VALOR == 8 && metodoNombre == 'setEntidad' && this.entidadFederativaData === 'DURANGO'
+    if (VALOR === 8 && metodoNombre === 'setEntidad' && this.entidadFederativaData === 'DURANGO'
     ) {
       this.isJustificacion = true;
     } else {

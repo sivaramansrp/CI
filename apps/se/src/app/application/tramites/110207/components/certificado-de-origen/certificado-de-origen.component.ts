@@ -28,19 +28,18 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { ReplaySubject, map, takeUntil } from 'rxjs';
 import {
   Solicitud110207State,
   Tramite110207Store,
 } from '../../state/Tramite110207.store';
-import { ReplaySubject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { InputFechaComponent } from '@libs/shared/data-access-user/src/tramites/components/input-fecha/input-fecha.component';
+import { Modal } from 'bootstrap';
 import { RegistroService } from '../../services/registro.service';
 import { Tramite110207Query } from '../../state/Tramite110207.query';
 import mercanciaDisponsibleTable from '@libs/shared/theme/assets/json/110207/mercancia-disponsible.json';
 import mercanciaSeleccionadasTable from '@libs/shared/theme/assets/json/110207/mercancias-seleccionadas.json';
-import mercanciaTable from '@libs/shared/theme/assets/json/110207/mercancia.json';
-import { Modal } from 'bootstrap';
 
 const TERCEROS_TEXTO_DE_ALERTA =
   'Para continuar con el trámite, debes agregar por lo menos una mercancía.';
@@ -134,11 +133,6 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
    * Datos de la tabla de mercancías seleccionadas.
    */
   public getmercanciaSeleccionadasTable = mercanciaSeleccionadasTable;
-
-  /**
-   * Datos de la tabla de mercancías.
-   */
-  public getMercanciaTable = mercanciaTable;
 
   /**
    * Lista de mercancías disponibles.
@@ -292,8 +286,8 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
    */
   manejarClic(row: unknown) {
     this.esFormulario = true;
-    const modalEl = document.getElementById('datosMercancia')!;
-    new Modal(modalEl).show();
+    const MODALEI = document.getElementById('datosMercancia')!;
+    new Modal(MODALEI).show();
   }
 
   /**
@@ -328,7 +322,6 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
    * Configura los formularios y obtiene los catálogos necesarios.
    */
   ngOnInit(): void {
-    this.mercanciatable();
     this.getTratado();
     this.getPais();
     this.getUMC();
@@ -388,7 +381,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
    * Además, actualiza los catálogos necesarios llamando a los métodos `getTratado`, `getPais`, `getUMC`, `getUnidadMedida` y `getTipoFactura`.
    */
   buscarMercancias() {
-    if (this.registroForm.get('validacionForm.tratado')?.value == 0) {
+    if (this.registroForm.get('validacionForm.tratado')?.value === 0) {
       this.hayMercanciasDisponibles = false;
     } else {
       this.hayMercanciasDisponibles = true;
@@ -443,14 +436,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
     this.getUnidadMedida();
     this.getTipoFactura();
   }
-  /**
-   * Configura los encabezados y el cuerpo de la tabla de mercancías.
-   * Asigna los valores de los encabezados y el cuerpo de la tabla desde los datos obtenidos.
-   */
-  public mercanciatable(): void {
-    this.mercanciasHeader = this.getMercanciaTable.tableHeader;
-    this.mercanciasBody = this.getMercanciaTable.tableBody;
-  }
+  
   /**
    * Activa el formulario para cargar un archivo.
    * Cambia el estado de la variable `cargarArchivo` a `true` para mostrar el formulario de carga de archivos.
@@ -544,8 +530,8 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
    * Si no se selecciona ningún archivo, asigna el mensaje "No se eligió ningún archivo".
    * @param event Evento que contiene la información del archivo seleccionado.
    */
-  alSeleccionarArchivo(event: any) {
-    const FILE = event.target.files[0];
+  alSeleccionarArchivo(event: Event) {
+    const FILE = (event.target as HTMLInputElement).files?.[0];
     this.nombreArchivo = FILE ? FILE.name : 'No se eligió ningún archivo';
   }
   /**

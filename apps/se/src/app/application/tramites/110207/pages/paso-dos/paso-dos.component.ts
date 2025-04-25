@@ -1,13 +1,7 @@
-import {
-  AlertComponent,
-  AnexarDocumentosComponent,
-  CATALOGOS_ID,
-  TituloComponent,
-} from '@ng-mf/data-access-user';
 import { Catalogo, CatalogosService, TEXTOS } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { Subscription } from 'rxjs';
+import { ReplaySubject, takeUntil } from 'rxjs';
+import { CATALOGOS_ID } from '@ng-mf/data-access-user';
 
 /**
  * Componente que representa el segundo paso del trámite.
@@ -39,10 +33,12 @@ export class PasoDosComponent implements OnInit,OnDestroy {
    * Catálogo de documentos disponibles.
    */
   catalogoDocumentos: Catalogo[] = [];
-   /**
-   * Suscripción para obtener los tipos de documentos.
-   */
-   getTiposDocumentosSubscription!: Subscription;
+  
+     /**
+    * Notificador para destruir observables al destruir el componente.
+    * Se utiliza para gestionar la cancelación de suscripciones activas y evitar fugas de memoria.
+    */
+     private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   /**
    * Constructor del componente.
    * @param catalogosServices Servicio para obtener los catálogos necesarios para el trámite.
@@ -65,6 +61,7 @@ export class PasoDosComponent implements OnInit,OnDestroy {
   getTiposDocumentos(): void {
     this.catalogosServices
       .getCatalogo(CATALOGOS_ID.CAT_TIPO_DOCUMENTO)
+      .pipe(takeUntil(this.destroyed$))
       .subscribe({
         next: (resp): void => {
           if (resp.length > 0) {
@@ -80,9 +77,8 @@ export class PasoDosComponent implements OnInit,OnDestroy {
    * Método de limpieza que se ejecuta cuando el componente se destruye.
    */
   ngOnDestroy(): void {
-    if (this.getTiposDocumentosSubscription) {
-      this.getTiposDocumentosSubscription.unsubscribe();
-    }
+   this.destroyed$.next(true);
+   this.destroyed$.complete();
   }
 
 }

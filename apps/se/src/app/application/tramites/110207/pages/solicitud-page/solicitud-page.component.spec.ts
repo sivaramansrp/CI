@@ -18,31 +18,6 @@ import { Observable, of as observableOf, throwError } from 'rxjs';
 import { Component } from '@angular/core';
 import { SolicitudPageComponent } from './solicitud-page.component';
 
-@Directive({ selector: '[myCustom]' })
-class MyCustomDirective {
-  @Input() myCustom;
-}
-
-@Pipe({ name: 'translate' })
-class TranslatePipe implements PipeTransform {
-  transform(value) {
-    return value;
-  }
-}
-
-@Pipe({ name: 'phoneNumber' })
-class PhoneNumberPipe implements PipeTransform {
-  transform(value) {
-    return value;
-  }
-}
-
-@Pipe({ name: 'safeHtml' })
-class SafeHtmlPipe implements PipeTransform {
-  transform(value) {
-    return value;
-  }
-}
 
 describe('SolicitudPageComponent', () => {
   let fixture;
@@ -50,12 +25,9 @@ describe('SolicitudPageComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [FormsModule, ReactiveFormsModule, SolicitudPageComponent],
+      imports: [FormsModule, ReactiveFormsModule],
       declarations: [
-        TranslatePipe,
-        PhoneNumberPipe,
-        SafeHtmlPipe,
-        MyCustomDirective,
+        SolicitudPageComponent
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
       providers: [],

@@ -1,10 +1,11 @@
-import { enviroment } from '../../../../enviroments/enviroment';
-import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
-import { JSONResponse } from 'libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 import { ColumnasTabla, SeleccionadasTabla } from '../models/registro.model';
 import { Observable, catchError, throwError } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { JSONResponse } from '@ng-mf/data-access-user';
+import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
+import { enviroment } from '../../../../enviroments/enviroment';
+
 
 /**
  * Servicio para gestionar las solicitudes relacionadas con los catálogos y datos del trámite 110207.
