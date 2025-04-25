@@ -457,8 +457,8 @@
   {
     "id": 66,
     "tramite": 140105,
-    "linkDashboard": "/se/pago/desistimiento-de-permiso/solicitante",
-    "linkDepartment": "/se/pago/desistimiento-de-permiso/solicitante",
+    "linkDashboard": "/se/desistimiento-de-permiso/solicitante",
+    "linkDepartment": "/se/desistimiento-de-permiso/solicitante",
     "department": "se"
   },
   {
@@ -1836,8 +1836,8 @@
   {
     "id": 263,
     "tramite": 240120,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/sedena/permiso-exportacion-pirotecnia/contenedor-de-pasos",
+    "linkDepartment": "/pago/permiso-exportacion-pirotecnia/contenedor-de-pasos",
     "department": "sedena"
   },
   {
