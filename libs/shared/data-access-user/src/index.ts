@@ -2,10 +2,13 @@
 
 
 
+
+
 export { AcusesYResolucionesFolioDelTramiteBusquedaComponent } from './tramites/components/acuses-y-resoluciones-folio-del-tramite-busqueda/acuses-y-resoluciones-folio-del-tramite-busqueda.component';
 export { AcusesYResolucionesFolioDelTramiteDetallesComponent } from './tramites/components/acuses-y-resoluciones-folio-del-tramite-detalles/acuses-y-resoluciones-folio-del-tramite-detalles.component';
 export { ASIGNACION_REGISTRO } from './tramites/constantes/120404/entidad.enum';
 export { ConfiguracionColumna } from './core/models/shared/configuracion-columna.model';
+export { enviroment } from './enviroments/enviroment';
 export { InputConfig, LabelValueDatos, ListaPasosWizard, MenuConfig, Props } from './core/models/forma-render.model';
 export { PANTAPASOS } from './core/services/220471/servicios-pantallas.enum';
 export { PASOS as PASOS_303 } from './tramites/constantes/303/pasos.enums';
@@ -102,6 +105,7 @@ export * from './tramites/components/input-radio/input-radio.component';
 export * from './tramites/components/modal-confirmar/modal-confirmar.component';
 export * from './tramites/components/nav/nav.component';
 export * from './tramites/components/notificaciones/notificaciones.component';
+export * from './tramites/components/notificaciones/notificaciones.component';
 export * from './tramites/components/representante-fiscal/representante-fiscal.component';
 export * from './tramites/components/requerimiento-informacion/requerimiento-informacion.component';
 export * from './tramites/components/select-catalogos/select-catalogos.component';
@@ -124,7 +128,6 @@ export * from './tramites/constantes/regex.constants';
 export * from './tramites/constantes/registro-como-empresa.enum';
 export * from './tramites/constantes/seccionesTramites';
 export * from './tramites/constantes/solicitante-constantes.enum';
-export * from './tramites/directives/solo-numeros/solo-numeros.directive'
 export * from './tramites/directives/solo-numeros/solo-numeros.directive'
 export * from './tramites/directives/Uppercase/uppercase.directive';
 export * from './tramites/pages/acuse-page/acuse-page.component';

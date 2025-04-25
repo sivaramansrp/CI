@@ -138,11 +138,12 @@
 
       <!-- UMC, Tipo moneda -->
       <div class="row mb-3">
-        <div class="col-md-4">
+        @if(visibilidadCampoUMC) {
+          <div class="col-md-4">
           <app-catalogo-select
             formControlName="umc"
             [catalogo]="umcCatalogo"
-            [label]="'UMC*'"
+            [label]="'UMC'"
             [required]="true"
           ></app-catalogo-select>
           <div
@@ -155,12 +156,13 @@
             ¡Seleccione una UMC!
           </div>
         </div>
+      }
 
         <div class="col-md-4">
           <app-catalogo-select
             formControlName="tipoMoneda"
             [catalogo]="monedaCatalogo"
-            [label]="'Tipo moneda*'"
+            [label]="'Tipo moneda'"
             [required]="true"
           ></app-catalogo-select>
           <div
