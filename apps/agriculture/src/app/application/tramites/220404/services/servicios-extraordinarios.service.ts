@@ -1,7 +1,8 @@
 import {Observable, catchError, throwError } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { enviroment } from '@libs/shared/data-access-user/src/enviroments/enviroment';
+
+import { ENVIRONMENT } from '@libs/shared/data-access-user/src/enviroments/enviroment';
 
 export interface JSONResponse {
   id: number;
@@ -19,7 +20,7 @@ export class ServiciosExtraordinariosService {
   * URL base del servidor para obtener datos auxiliares en formato JSON.
   * Se asigna desde la configuración en el archivo de entorno (environment).
   */
-  urlServer = enviroment.URL_SERVER_JSON_AUXILIAR;
+  urlServer = ENVIRONMENT.URL_SERVER_JSON_AUXILIAR;
 
   /**
   * Constructor de la clase del servicio.

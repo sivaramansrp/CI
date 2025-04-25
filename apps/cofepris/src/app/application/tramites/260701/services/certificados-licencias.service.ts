@@ -2,7 +2,8 @@ import { Observable,catchError, throwError } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { JSONResponse } from '@libs/shared/data-access-user/src';
-import { enviroment } from '@libs/shared/data-access-user/src/enviroments/enviroment';
+
+import { ENVIRONMENT } from '@libs/shared/data-access-user/src/enviroments/enviroment';
 
 /**
  * Servicio para gestionar operaciones relacionadas con certificados y licencias.
@@ -19,7 +20,7 @@ export class CertificadosLicenciasService {
    * La URL del servidor utilizada para operaciones auxiliares con JSON.
    * Este valor se obtiene de la configuración del entorno.
    */
-  urlServer = enviroment.URL_SERVER_JSON_AUXILIAR;
+  urlServer = ENVIRONMENT.URL_SERVER_JSON_AUXILIAR;
   
   /**
    * Inicializa una nueva instancia del servicio CertificadosLicenciasService.

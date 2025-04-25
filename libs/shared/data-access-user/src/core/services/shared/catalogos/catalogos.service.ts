@@ -5,16 +5,17 @@ import {
 } from '../../../models/shared/catalogos.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { JSONResponse } from '../../../models/shared/catalogos.model';
 import { Observable } from 'rxjs';
-import { enviroment } from '../../../../enviroments/enviroment';
+
+import { ENVIRONMENT } from '../../../../enviroments/enviroment';
+import { JSONResponse } from '../../../models/shared/catalogos.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CatalogosService {
-  urlServer = enviroment.URL_SERVER;
-  urlServerCatalogos = enviroment.URL_SERVER_JSON_AUXILIAR;
+  urlServer = ENVIRONMENT.URL_SERVER;
+  urlServerCatalogos = ENVIRONMENT.URL_SERVER_JSON_AUXILIAR;
 
   constructor(private http: HttpClient) { 
     // Lógica de inicialización si es necesario

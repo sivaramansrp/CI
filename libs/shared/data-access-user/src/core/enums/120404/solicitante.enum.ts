@@ -1,4 +1,4 @@
-export const Entidad = [
+export const ENTIDAD = [
     {
       indice: 1,
       titulo: 'Capturar solicitud',

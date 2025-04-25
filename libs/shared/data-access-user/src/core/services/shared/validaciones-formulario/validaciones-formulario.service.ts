@@ -44,8 +44,8 @@ export class ValidacionesFormularioService {
     campo?: string
   ): boolean | null {
     if (control instanceof FormGroup && campo) {
-      const campoControl = control.controls[campo];
-      return campoControl?.errors?.['required'] && campoControl.touched;
+      const CAMPO_CONTROL = control.controls[campo];
+      return CAMPO_CONTROL?.errors?.['required'] && CAMPO_CONTROL.touched;
     }
     return control.errors && control.errors['required'] && control.touched;
   }
@@ -78,8 +78,8 @@ export class ValidacionesFormularioService {
     campo?: string
   ): boolean | null {
     if (control instanceof FormGroup && campo) {
-      const campoControl = control.controls[campo];
-      return campoControl?.errors?.['pattern'] && campoControl.touched;
+      const CAMPO_CONTROL = control.controls[campo];
+      return CAMPO_CONTROL?.errors?.['pattern'] && CAMPO_CONTROL.touched;
     }
     return control.errors && control.errors['pattern'] && control.touched;
   }

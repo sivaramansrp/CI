@@ -1,8 +1,9 @@
 import { Observable,catchError, throwError } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+
+import { ENVIRONMENT } from '@libs/shared/data-access-user/src/enviroments/enviroment';
 import { JSONResponse } from '@libs/shared/data-access-user/src';
-import { enviroment } from '@libs/shared/data-access-user/src/enviroments/enviroment';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +14,7 @@ export class ComercioExteriorService {
    * La URL del servidor utilizada para operaciones auxiliares con JSON.
    * Este valor se obtiene de la configuración del entorno.
    */
-    urlServer = enviroment.URL_SERVER_JSON_AUXILIAR;
+    urlServer = ENVIRONMENT.URL_SERVER_JSON_AUXILIAR;
 
   constructor(private http: HttpClient) {
     //

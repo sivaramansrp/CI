@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { AlDar, AlertComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { AL_DAR, AlertComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import {
@@ -65,9 +65,9 @@ export class DatosEstablecimientoComponent implements OnInit, OnDestroy {
  
   /**
    * Constantes importadas desde el archivo de enumeración que contienen textos importantes y advertencias.
-   * @type {typeof AlDar}
+   * @type {typeof AL_DAR}
    */
-  public TEXTOS = AlDar;
+  public TEXTOS = AL_DAR;
  /**
 * @constructor
 * Inicializa el componente y gestiona la inyección de dependencias necesarias.

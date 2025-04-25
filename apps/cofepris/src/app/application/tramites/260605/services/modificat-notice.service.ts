@@ -2,8 +2,9 @@ import { Observable, catchError, throwError } from 'rxjs';
 import { Aduana } from '../models/aduaneras-informaciones.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+
+import { ENVIRONMENT } from '@libs/shared/data-access-user/src/enviroments/enviroment';
 import { ReprestantanteData } from '../models/aduaneras-informaciones.model';
-import { enviroment } from '@libs/shared/data-access-user/src/enviroments/enviroment';
 
 /**
  * Servicio para manejar las solicitudes relacionadas con los datos de representantes y aduanas.
@@ -23,7 +24,7 @@ export class ModificatNoticeService {
    * @type {string}
    * @memberof ModificatNoticeService
    */
-  urlServer = enviroment.URL_SERVER_JSON_AUXILIAR;
+  urlServer = ENVIRONMENT.URL_SERVER_JSON_AUXILIAR;
 
   /**
    * Construye una instancia de `ModificatNoticeService`.

@@ -5,7 +5,7 @@ import {
   JSONResponse,
   RespuestaCatalogos,
 } from '../../models/shared/catalogos.model';
-import { enviroment } from '../../../enviroments/enviroment';
+import { ENVIRONMENT } from '../../../enviroments/enviroment';
 import { catchError, Observable, throwError } from 'rxjs';
 import { Personas, Tipos } from '../../models/31601/servicios-pantallas.model';
 
@@ -13,7 +13,7 @@ import { Personas, Tipos } from '../../models/31601/servicios-pantallas.model';
   providedIn: 'root',
 })
 export class ServiciosPantallaService {
-  urlServer = enviroment.URL_SERVER_JSON_AUXILIAR;
+  urlServer = ENVIRONMENT.URL_SERVER_JSON_AUXILIAR;
 
   constructor(private http: HttpClient) {
     // Lógica de inicialización si es necesario

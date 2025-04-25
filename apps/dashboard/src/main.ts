@@ -1,4 +1,4 @@
-import { enviroment } from "@libs/shared/data-access-user/src/enviroments/enviroment";
+import { ENVIRONMENT } from "@libs/shared/data-access-user/src/enviroments/enviroment";
 import { setRemoteDefinitions } from "@nx/angular/mf";
 
 // Helper para manejar errores de forma elegante
@@ -37,10 +37,10 @@ const loadManifest = (retryCount = 0, maxRetries = 3): Promise<Record<string, st
       
       // Solo procesar las URLs si el WEB_HOST está definido
       if (enviroment.WEB_HOST) {
-        console.log('Processing URLs with WEB_HOST:', enviroment.WEB_HOST);
+        console.log('Processing URLs with WEB_HOST:', ENVIRONMENT.WEB_HOST);
         Object.keys(manifest).forEach((key) => {
           if (manifest[key].startsWith('http://localhost')) {
-            manifest[key] = manifest[key].replace('http://localhost', enviroment.WEB_HOST);
+            manifest[key] = manifest[key].replace('http://localhost', ENVIRONMENT.WEB_HOST);
           }
         });
       } else {

@@ -1,14 +1,16 @@
 import { Observable, catchError, throwError } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+
+import { ENVIRONMENT } from '../../../../enviroments/enviroment';
 import { JSONResponse } from '../../../models/shared/catalogos.model';
-import { enviroment } from '../../../../enviroments/enviroment';
+
 
 @Injectable({
   providedIn: 'any',
 })
 export class TramiteFolioService {
-  urlServer = enviroment.URL_SERVER_JSON_AUXILIAR;
+  urlServer = ENVIRONMENT.URL_SERVER_JSON_AUXILIAR;
 
   constructor(private http: HttpClient) {
     // Lógica de inicialización si es necesario

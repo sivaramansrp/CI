@@ -1,6 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http'
 import { Injectable } from '@angular/core';
-import { enviroment } from '../../../../enviroments/enviroment';
+
+import { ENVIRONMENT } from '../../../../enviroments/enviroment';
 
 /**
  * This service is used to make http requests & handle the response.
@@ -19,7 +20,7 @@ export class HttpCoreService {
    * @param http: HttpClient constructor
    */
   constructor(public http: HttpClient) {
-    this.url = !enviroment.MOCK ? enviroment.URL_SERVER : '';
+    this.url = !ENVIRONMENT.MOCK ? ENVIRONMENT.URL_SERVER : '';
   }
   /**
    * This method is used to make a post request & handle the response.
@@ -67,9 +68,9 @@ export class HttpCoreService {
    * @example getHttpHeaders().set('Content-Type', 'application/json')
    */
   getHttpHeaders(): HttpHeaders {
-    let headers: HttpHeaders = new HttpHeaders({
+    const HEADERS: HttpHeaders = new HttpHeaders({
         'Content-Type': 'application/x-www-form-urlencoded'
     });
-    return headers;
+    return HEADERS;
   }
 }

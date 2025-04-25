@@ -3,7 +3,7 @@ import { CatalogosSelect } from '@ng-mf/data-access-user';
 import { Component } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
-import { Importante } from '@ng-mf/data-access-user';
+import { IMPORTANTE } from '@ng-mf/data-access-user';
 import { ImportanteCatalogoSeleccion } from '../../models/registro-muestras-mercancias.model';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
@@ -44,7 +44,7 @@ export class RegistroRenovacionesMuestrasMercanciasComponent
   /**
    * Constante que contiene los textos importantes.
    */
-  TEXTOS = Importante;
+  TEXTOS = IMPORTANTE;
   /**
    * Variable que contiene las opciones del importador.
    */

@@ -1,4 +1,4 @@
-import { AlDar, AlertComponent, InputRadioComponent, Notificacion, NotificacionesComponent, Pedimento, TituloComponent } from '@libs/shared/data-access-user/src';
+import { AL_DAR, AlertComponent, InputRadioComponent, Notificacion, NotificacionesComponent, Pedimento, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitud260906State, Tramite260906Store } from '../../../../estados/tramites/tramite260906.store';
@@ -82,9 +82,9 @@ export class DatosEstablecimientoComponent implements OnInit, OnDestroy {
 
   /**
    * Constantes importadas desde el archivo de enumeración que contienen textos importantes y advertencias.
-   * @type {typeof AlDar}
+   * @type {typeof AL_DAR}
    */
-  public TEXTOS = AlDar;
+  public TEXTOS = AL_DAR;
 
   /**
    * @constructor
