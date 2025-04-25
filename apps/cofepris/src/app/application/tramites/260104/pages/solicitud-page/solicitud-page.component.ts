@@ -1,5 +1,6 @@
 import { AccionBoton, DatosPasos, ListaPasosWizard, PASOS, WizardComponent } from '@libs/shared/data-access-user/src';
 import { Component, ViewChild } from '@angular/core';
+import { ALERTA_COM } from '@libs/shared/data-access-user/src/tramites/constantes/260104/certificado.enum';
 
 @Component({
   selector: 'app-solicitud-page',
@@ -11,6 +12,12 @@ export class SolicitudPageComponent {
    * Utiliza la configuración predefinida en el objeto `PASOS`.
    */
   pasos: ListaPasosWizard[] = PASOS;
+  
+  /**
+   * Constante de alerta utilizada en el componente.
+   * @type {typeof ALERTA_COM}
+   */
+  alerta = ALERTA_COM;
 
   /**
    * Índice actual del paso activo en el wizard.

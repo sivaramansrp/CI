@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { PermisoSanitarioProductosRoutingModule } from './permiso-sanitario-productos-routing.module';
 import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
-import { BtnContinuarComponent, SolicitanteComponent, WizardComponent } from '@libs/shared/data-access-user/src';
+import { AlertComponent, BtnContinuarComponent, SolicitanteComponent, WizardComponent } from '@libs/shared/data-access-user/src';
 
 @NgModule({
   declarations: [SolicitudPageComponent, PasoUnoComponent],
@@ -13,7 +13,8 @@ import { BtnContinuarComponent, SolicitanteComponent, WizardComponent } from '@l
     PermisoSanitarioProductosRoutingModule,
     SolicitanteComponent,
     WizardComponent,
-    BtnContinuarComponent
+    BtnContinuarComponent,
+    AlertComponent
   ],
 })
 export class PermisoSanitarioProductosModule {}
