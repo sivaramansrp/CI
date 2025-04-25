@@ -1458,8 +1458,8 @@
   {
     "id": 209,
     "tramite": 260103,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/cofepris/importacion-retorno-sanitario/contenedor-de-pasos",
+    "linkDepartment": "/pago/importacion-retorno-sanitario/contenedor-de-pasos",
     "department": "cofepris"
   },
   {
