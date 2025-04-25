@@ -61,12 +61,12 @@ export class OperacionesDeComercioExteriorComponent implements OnInit, OnDestroy
    * @propiedad {ConfiguracionColumna<Personas>[]} configuracionPersonasColumnas - Configuración de columnas para la tabla de personas.
    */
   configuracionPersonasColumnas: ConfiguracionColumna<Personas>[] = [
-    { encabezado: 'RFC', clave: (fila) => fila.RFC, orden: 1 },
-    { encabezado: 'CURP', clave: (fila) => fila.CURP, orden: 2 },
-    { encabezado: 'Nombre', clave: (fila) => fila.Nombre, orden: 3 },
-    { encabezado: 'Primer apellido', clave: (fila) => fila.Primer_apellido, orden: 4 },
-    { encabezado: 'Segundo apellido', clave: (fila) => fila.Segundo_apellido, orden: 5 },
-    { encabezado: 'Correo electrónico', clave: (fila) => fila.Correo_electronico, orden: 6 },
+    { encabezado: 'RFC', clave: (fila) => fila.rfc, orden: 1 },
+    { encabezado: 'CURP', clave: (fila) => fila.curp, orden: 2 },
+    { encabezado: 'Nombre', clave: (fila) => fila.nombre, orden: 3 },
+    { encabezado: 'Primer apellido', clave: (fila) => fila.primer_apellido, orden: 4 },
+    { encabezado: 'Segundo apellido', clave: (fila) => fila.segundo_apellido, orden: 5 },
+    { encabezado: 'Correo electrónico', clave: (fila) => fila.correo_electronico, orden: 6 },
   ];
 
   /**
@@ -78,8 +78,8 @@ export class OperacionesDeComercioExteriorComponent implements OnInit, OnDestroy
    * @propiedad {ConfiguracionColumna<Solicitar>[]} configuracionSolicitarColumnas - Configuración de columnas para la tabla de solicitudes.
    */
   configuracionSolicitarColumnas: ConfiguracionColumna<Solicitar>[] = [
-    { encabezado: 'Periodo', clave: (fila) => fila.Periodo, orden: 1 },
-    { encabezado: 'Fechas sobre el periodo', clave: (fila) => fila.Fechas_sobre_el_periodo, orden: 2 },
+    { encabezado: 'Periodo', clave: (fila) => fila.periodo, orden: 1 },
+    { encabezado: 'Fechas sobre el periodo', clave: (fila) => fila.fechas_sobre_el_periodo, orden: 2 },
   ];
 
   /**
@@ -186,8 +186,8 @@ export class OperacionesDeComercioExteriorComponent implements OnInit, OnDestroy
       id: this.cuerpoSolicitarTablaFila.length > 0
         ? (this.cuerpoSolicitarTablaFila[this.cuerpoSolicitarTablaFila.length - 1]?.id ?? 0) + 1
         : 1,
-      Periodo: this.periodoForm.value.periodo,
-      Fechas_sobre_el_periodo: this.periodoForm.value.periodoInicial + ' al ' + this.periodoForm.value.periodoFinal,
+      periodo: this.periodoForm.value.periodo,
+      fechas_sobre_el_periodo: this.periodoForm.value.periodoInicial + ' al ' + this.periodoForm.value.periodoFinal,
     });
     this.periodoView = false;
   }
