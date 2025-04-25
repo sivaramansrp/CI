@@ -4,14 +4,14 @@ import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ReplaySubject, catchError, map } from 'rxjs';
 import { CONFIGURACION_ENCABEZADO_SOLICITUDES } from '../../core/constantes/constantes-bandejas.constants';
 import { CommonModule } from '@angular/common';
+import { HttpClientModule } from '@angular/common/http';
 import { ListaSolicitudes } from '../../core/models/solicitudes.model';
 import { TablerosService } from '../../core/service/tabletos.service';
-
 
 @Component({
   selector: 'app-bandeja-solicitudes',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, InputFechaComponent, TablaDinamicaComponent, TablePaginationComponent],
+  imports: [CommonModule, ReactiveFormsModule, HttpClientModule, InputFechaComponent, TablaDinamicaComponent, TablePaginationComponent],
   templateUrl: './bandeja-solicitudes.component.html',
   styleUrl: './bandeja-solicitudes.component.scss',
 })
@@ -122,11 +122,11 @@ export class BandejaSolicitudesComponent implements OnInit, OnDestroy, OnChanges
     * Método que actualiza la paginacón de la tabla 
     * @param changes Cambios detectados en las propiedades de entrada.
     */
-   ngOnChanges(changes: SimpleChanges): void {
-     if (changes['currentPage'] || changes['itemsPerPage'] || changes['todasSolicitudes']) {
-       this.updatePagination();
-     }
-   }
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['currentPage'] || changes['itemsPerPage'] || changes['todasSolicitudes']) {
+      this.updatePagination();
+    }
+  }
 
   /** Actualiza los elementos paginados según la página e ítems por página seleccionados */
   public updatePagination(): void {

@@ -4,13 +4,14 @@ import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ReplaySubject, catchError, map } from 'rxjs';
 import { CONFIGURACION_ENCABEZADO_PENDIENTES } from '../../core/constantes/constantes-bandejas.constants';
 import { CommonModule } from '@angular/common';
+import { HttpClientModule } from '@angular/common/http';
 import { ListaPendientes } from '../../core/models/pendientes.model';
 import { TablerosService } from '../../core/service/tabletos.service';
 
 @Component({
   selector: 'app-seleccion-modulo',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, InputFechaComponent, TablaDinamicaComponent, TablePaginationComponent],
+  imports: [CommonModule, HttpClientModule, ReactiveFormsModule, InputFechaComponent, TablaDinamicaComponent, TablePaginationComponent],
   templateUrl: './seleccion-modulo.component.html',
   styleUrl: './seleccion-modulo.component.scss',
 })
