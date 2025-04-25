@@ -191,7 +191,7 @@ export class DatosDeLaSolicitudComponent {
           {
             value: this.solicitudState?.descripcionFraccionArancelaria,
             disabled: true,
-          }
+          },
         ],
         cantidad: [this.solicitudState?.cantidad, Validators.required],
         cantidadLetra: [
@@ -395,33 +395,29 @@ export class DatosDeLaSolicitudComponent {
   }
 
   agregarSolicitud() {
-    if (!this.solicitudForm.valid) {
-      this.solicitudForm.markAllAsTouched();
-    } else {
-      this.phytosanitaryReexportacionService
-        .agregarSolicitud()
-        .pipe(takeUntil(this.destroyNotifier$))
-        .subscribe((respuesta) => {
-          if (respuesta?.success) {
-            console.log(respuesta.datos);
-            respuesta.datos.id = this.datosSolicitud.length + 1;
-            this.datosSolicitud.push(respuesta.datos);
-            (
-              this.store.setDatosSolicitud as unknown as (
-                valor: DatosSolicitud[]
-              ) => void
-            )(this.datosSolicitud);
-            this.solicitudForm.patchValue({
-              fraccionArancelaria: '',
-              cantidad: '',
-            });
-            this.solicitudForm.reset();
-            this.solicitudForm.markAsUntouched();
-            this.solicitudForm.markAsPristine();
-            this.cerrarModal();
-          }
-        });
-    }
+    this.phytosanitaryReexportacionService
+      .agregarSolicitud()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((respuesta) => {
+        if (respuesta?.success) {
+          console.log(respuesta.datos);
+          respuesta.datos.id = this.datosSolicitud.length + 1;
+          this.datosSolicitud.push(respuesta.datos);
+          (
+            this.store.setDatosSolicitud as unknown as (
+              valor: DatosSolicitud[]
+            ) => void
+          )(this.datosSolicitud);
+          this.solicitudForm.patchValue({
+            fraccionArancelaria: '',
+            cantidad: '',
+          });
+          this.solicitudForm.reset();
+          this.solicitudForm.markAsUntouched();
+          this.solicitudForm.markAsPristine();
+          this.cerrarModal();
+        }
+      });
   }
 
   /**
