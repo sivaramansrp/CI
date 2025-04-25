@@ -1,11 +1,8 @@
-import { CatalogoSelectComponent, SeccionLibQuery, SeccionLibState, SeccionLibStore, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { SeccionLibQuery, SeccionLibState, SeccionLibStore } from '@libs/shared/data-access-user/src';
 import { Subject, map, takeUntil } from 'rxjs';
 import { Tramite110205State, Tramite110205Store } from '../../estados/tramite110205.store';
-import { CommonModule } from '@angular/common';
-import { DatosDelDestinatarioComponent } from '../../../../shared/components/datos-del-destinatario/datos-del-destinatario.component';
-import { DestinatarioComponent } from '../../../../shared/components/destinatario/destinatario.component';
 import { Tramite110205Query } from '../../estados/tramite110205.query';
 
 interface FormValues {

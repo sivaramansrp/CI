@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Subject } from 'rxjs';
@@ -11,7 +11,7 @@ import { TituloComponent } from '@libs/shared/data-access-user/src';
   templateUrl: './representante-legal.component.html',
   styleUrl: './representante-legal.component.scss',
 })
-export class RepresentanteLegalComponent implements OnDestroy {
+export class RepresentanteLegalComponent implements OnInit, OnDestroy {
   
     /**
      * Datos del formulario para inicializar los valores
@@ -55,6 +55,35 @@ export class RepresentanteLegalComponent implements OnDestroy {
      * @param {FormBuilder} fb - Servicio para crear formularios reactivos
      */
     constructor(private fb: FormBuilder) {
+      
+  
+      // Parcheo de valores iniciales con retraso para asegurar la renderización
+      setTimeout(() => {
+        if (this.datosForm) {
+          this.formExportor.patchValue(this.datosForm);
+        }
+      }, 100);
+    }
+  
+    /**
+     * @override
+     * @method ngOnInit
+     * @description Método de ciclo de vida de Angular que se ejecuta después de que Angular inicializa el componente.
+     * Aquí se inicializa el formulario de acciones llamando al método `initActionFormBuilder`.
+     * @see https://angular.io/guide/lifecycle-hooks#oninit
+     */
+    ngOnInit(): void {
+      this.initActionFormBuilder();
+    }
+
+    /**
+     * Inicializa el formulario reactivo para el componente.
+     * 
+     * @remarks
+     * Este método configura los controles del formulario `formExportor` con sus validaciones
+     * correspondientes. Es llamado durante el ciclo de vida `ngOnInit` del componente.
+     */
+    initActionFormBuilder(): void {
       this.formExportor = this.fb.group({
         lugar: ['',Validators.required],
         exportador: ['',Validators.required],
@@ -65,15 +94,8 @@ export class RepresentanteLegalComponent implements OnDestroy {
         fax: ['',Validators.required],
         correo: ['',Validators.required]
       });
-  
-      // Parcheo de valores iniciales con retraso para asegurar la renderización
-      setTimeout(() => {
-        if (this.datosForm) {
-          this.formExportor.patchValue(this.datosForm);
-        }
-      }, 100);
     }
-  
+
     /**
      * Establece valores en el store y emite eventos relacionados con el formulario.
      *
