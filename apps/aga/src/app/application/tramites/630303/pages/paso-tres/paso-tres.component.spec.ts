@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { By } from '@angular/platform-browser';
 
-// Mock of firma-electronica component
+// Mock del componente firma-electronica
 @Component({
   selector: 'firma-electronica',
   template: '<button (click)="simulateFirma()">Simular Firma</button>',
@@ -15,12 +15,12 @@ class MockFirmaElectronicaComponent {
   @Output() firma = new EventEmitter<string>();
 
   simulateFirma() {
-    this.firma.emit('mock-signature');  // Simulate emitting a valid signature
+    this.firma.emit('mock-signature'); // Simula la emisión de una firma válida
   }
 }
 
 describe('PasoTresComponent', () => {
-  let component: PasoTresComponent;
+  let componente: PasoTresComponent;
   let fixture: ComponentFixture<PasoTresComponent>;
   let mockRouter: any;
 
@@ -28,40 +28,40 @@ describe('PasoTresComponent', () => {
     mockRouter = { navigate: jest.fn() };
 
     await TestBed.configureTestingModule({
-      imports: [ MockFirmaElectronicaComponent],
-      declarations: [ PasoTresComponent ],
+      imports: [MockFirmaElectronicaComponent],
+      declarations: [PasoTresComponent],
       providers: [
         { provide: Router, useValue: mockRouter }
       ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(PasoTresComponent);
-    component = fixture.componentInstance;
+    componente = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
-    expect(component).toBeTruthy();
+  it('debería crear el componente', () => {
+    expect(componente).toBeTruthy();
   });
 
-  it('should call obtieneFirma when firma is emitted from firma-electronica', () => {
-    // Trigger the firma event manually by simulating it
+  it('debería llamar a obtieneFirma cuando se emita firma desde firma-electronica', () => {
+    // Simula manualmente el evento firma
     const firmaComponent = fixture.debugElement.query(By.directive(MockFirmaElectronicaComponent)).componentInstance;
-    
-    // Emit a valid signature
+
+    // Emite una firma válida
     firmaComponent.simulateFirma();
-    
-    // Expect the router to navigate after the event
+
+    // Verifica que el router navegue después del evento
     expect(mockRouter.navigate).toHaveBeenCalledWith(['servicios-extraordinarios/acuse']);
   });
 
-  it('should NOT call navigate if firma is an empty string', () => {
-    // Manually call obtieneFirma with an empty string to test the case where firma is not valid
-    component.obtieneFirma('');
+  it('NO debería llamar a navigate si firma es una cadena vacía', () => {
+    // Llama manualmente a obtieneFirma con una cadena vacía para probar el caso donde firma no es válida
+    componente.obtieneFirma('');
     expect(mockRouter.navigate).not.toHaveBeenCalled();
   });
 
-  it('should render firma-electronica component', () => {
+  it('debería renderizar el componente firma-electronica', () => {
     const firmaElement = fixture.debugElement.query(By.directive(MockFirmaElectronicaComponent));
     expect(firmaElement).toBeTruthy();
   });

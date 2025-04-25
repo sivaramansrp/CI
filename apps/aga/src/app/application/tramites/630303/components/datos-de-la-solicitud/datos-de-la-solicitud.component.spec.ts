@@ -7,7 +7,7 @@ import { Tramite630303Query } from '../../estados/tramite630303.query';
 import { of } from 'rxjs';
 
 describe('DatosDeLaSolicitudComponent', () => {
-  let component: DatosDeLaSolicitudComponent;
+  let componente: DatosDeLaSolicitudComponent;
   let fixture: ComponentFixture<DatosDeLaSolicitudComponent>;
   let mockService: jest.Mocked<RetornoImportacionTemporalService>;
   let mockStore: jest.Mocked<Tramite630303Store>;
@@ -39,14 +39,13 @@ describe('DatosDeLaSolicitudComponent', () => {
     }).compileComponents();
 
     fixture = TestBed.createComponent(DatosDeLaSolicitudComponent);
-    component = fixture.componentInstance;
+    componente = fixture.componentInstance;
 
     mockService.getAduanaDeIngreso.mockReturnValue(of([]));
     mockService.getSeccionAduanera.mockReturnValue(of([]));
     mockService.getProrroga.mockReturnValue(of([]));
 
-    
-    component.formularioDatosSolicitud = [
+    componente.formularioDatosSolicitud = [
       {
         id: 'cveAduana', opciones: [],
         labelNombre: '',
@@ -76,19 +75,19 @@ describe('DatosDeLaSolicitudComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
-    expect(component).toBeTruthy();
+  it('debería crear el componente', () => {
+    expect(componente).toBeTruthy();
   });
 
-  it('should initialize the form and fetch data on ngOnInit', () => {
-    const getValorStoreSpy = jest.spyOn(component, 'getValorStore');
-    const inizializarFormularioSpy = jest.spyOn(component, 'inizializarFormulario');
-    const getAduanaDeIngresoSpy = jest.spyOn(component, 'getAduanaDeIngreso');
-    const getSeccionAduaneraSpy = jest.spyOn(component, 'getSeccionAduanera');
-    const getProrrogaSpy = jest.spyOn(component, 'getProrroga');
-    const cambiarCuentaProrrogaSpy = jest.spyOn(component, 'cambiarCuentaProrroga');
+  it('debería inicializar el formulario y obtener datos en ngOnInit', () => {
+    const getValorStoreSpy = jest.spyOn(componente, 'getValorStore');
+    const inizializarFormularioSpy = jest.spyOn(componente, 'inizializarFormulario');
+    const getAduanaDeIngresoSpy = jest.spyOn(componente, 'getAduanaDeIngreso');
+    const getSeccionAduaneraSpy = jest.spyOn(componente, 'getSeccionAduanera');
+    const getProrrogaSpy = jest.spyOn(componente, 'getProrroga');
+    const cambiarCuentaProrrogaSpy = jest.spyOn(componente, 'cambiarCuentaProrroga');
 
-    component.ngOnInit();
+    componente.ngOnInit();
 
     expect(getValorStoreSpy).toHaveBeenCalled();
     expect(inizializarFormularioSpy).toHaveBeenCalled();
@@ -98,74 +97,74 @@ describe('DatosDeLaSolicitudComponent', () => {
     expect(cambiarCuentaProrrogaSpy).toHaveBeenCalled();
   });
 
-  it('should initialize the form with default values', () => {
-    component.inizializarFormulario();
-    expect(component.datosImportacionTemporalFormulario).toBeTruthy();
+  it('debería inicializar el formulario con valores predeterminados', () => {
+    componente.inizializarFormulario();
+    expect(componente.datosImportacionTemporalFormulario).toBeTruthy();
   });
 
-  it('should fetch aduana de ingreso options', () => {
+  it('debería obtener las opciones de aduana de ingreso', () => {
     const mockData = [{ id: 1, descripcion: 'Aduana 1' }];
     mockService.getAduanaDeIngreso.mockReturnValue(of(mockData));
 
-    component.getAduanaDeIngreso();
+    componente.getAduanaDeIngreso();
 
     expect(mockService.getAduanaDeIngreso).toHaveBeenCalled();
-    const aduanaIngreso = component.formularioDatosSolicitud.find((item) => item.id === 'cveAduana');
+    const aduanaIngreso = componente.formularioDatosSolicitud.find((item) => item.id === 'cveAduana');
     expect(aduanaIngreso?.opciones).toEqual(mockData);
   });
 
-  it('should fetch seccion aduanera options', () => {
+  it('debería obtener las opciones de sección aduanera', () => {
     const mockData = [{ id: 2, descripcion: 'Sección 1' }];
     mockService.getSeccionAduanera.mockReturnValue(of(mockData));
 
-    component.getSeccionAduanera();
+    componente.getSeccionAduanera();
 
     expect(mockService.getSeccionAduanera).toHaveBeenCalled();
-    const seccionAduanera = component.formularioDatosSolicitud.find((item) => item.id === 'cveSeccionAduanera');
+    const seccionAduanera = componente.formularioDatosSolicitud.find((item) => item.id === 'cveSeccionAduanera');
     expect(seccionAduanera?.opciones).toEqual(mockData);
   });
 
-  it('should fetch prorroga options', () => {
+  it('debería obtener las opciones de prórroga', () => {
     const mockData = [{ id: 3, descripcion: 'Prórroga 1' }];
     mockService.getProrroga.mockReturnValue(of(mockData));
 
-    component.getProrroga();
+    componente.getProrroga();
 
     expect(mockService.getProrroga).toHaveBeenCalled();
-    const prorroga = component.formularioDatosSolicitud.find((item) => item.id === 'cuentaProrroga');
+    const prorroga = componente.formularioDatosSolicitud.find((item) => item.id === 'cuentaProrroga');
     expect(prorroga?.opciones).toEqual(mockData);
   });
 
-  it('should fetch the current state from the store', () => {
-    component.getValorStore();
-    expect(component.estadoSeleccionado).toEqual({ cuentaProrroga: '1' });
+  it('debería obtener el estado actual del store', () => {
+    componente.getValorStore();
+    expect(componente.estadoSeleccionado).toEqual({ cuentaProrroga: '1' });
   });
 
-  it('should update the store and call cambiarCuentaProrroga when establecerCambioDeValor is called', () => {
+  it('debería actualizar el store y llamar a cambiarCuentaProrroga cuando se invoque establecerCambioDeValor', () => {
     const mockEvent = { campo: 'cuentaProrroga', valor: '1' };
-    const cambiarCuentaProrrogaSpy = jest.spyOn(component, 'cambiarCuentaProrroga');
+    const cambiarCuentaProrrogaSpy = jest.spyOn(componente, 'cambiarCuentaProrroga');
 
-    component.establecerCambioDeValor(mockEvent);
+    componente.establecerCambioDeValor(mockEvent);
 
     expect(mockStore.setTramite630303State).toHaveBeenCalledWith('cuentaProrroga', '1');
     expect(cambiarCuentaProrrogaSpy).toHaveBeenCalled();
   });
 
-  it('should toggle showDatosRetornoProrroga based on cuentaProrroga value', () => {
-    component.estadoSeleccionado = { cuentaProrroga: '1' } as any;
-    component.cambiarCuentaProrroga();
-    expect(component.showDatosRetornoProrroga).toBe(true);
+  it('debería alternar showDatosRetornoProrroga según el valor de cuentaProrroga', () => {
+    componente.estadoSeleccionado = { cuentaProrroga: '1' } as any;
+    componente.cambiarCuentaProrroga();
+    expect(componente.showDatosRetornoProrroga).toBe(true);
 
-    component.estadoSeleccionado = { cuentaProrroga: '0' } as any;
-    component.cambiarCuentaProrroga();
-    expect(component.showDatosRetornoProrroga).toBe(false);
+    componente.estadoSeleccionado = { cuentaProrroga: '0' } as any;
+    componente.cambiarCuentaProrroga();
+    expect(componente.showDatosRetornoProrroga).toBe(false);
   });
 
-  it('should clean up subscriptions on ngOnDestroy', () => {
-    const destroyedSpy = jest.spyOn((component as any).destroyed$, 'next');
-    const completeSpy = jest.spyOn((component as any).destroyed$, 'complete');
+  it('debería limpiar las suscripciones en ngOnDestroy', () => {
+    const destroyedSpy = jest.spyOn((componente as any).destroyed$, 'next');
+    const completeSpy = jest.spyOn((componente as any).destroyed$, 'complete');
 
-    component.ngOnDestroy();
+    componente.ngOnDestroy();
 
     expect(destroyedSpy).toHaveBeenCalled();
     expect(completeSpy).toHaveBeenCalled();

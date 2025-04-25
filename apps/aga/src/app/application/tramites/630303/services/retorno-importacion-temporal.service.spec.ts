@@ -4,7 +4,7 @@ import { RetornoImportacionTemporalService } from './retorno-importacion-tempora
 import { Catalogo } from '@libs/shared/data-access-user/src';
 
 describe('RetornoImportacionTemporalService', () => {
-  let service: RetornoImportacionTemporalService;
+  let servicio: RetornoImportacionTemporalService;
   let httpMock: HttpTestingController;
 
   beforeEach(() => {
@@ -13,7 +13,7 @@ describe('RetornoImportacionTemporalService', () => {
       providers: [RetornoImportacionTemporalService],
     });
 
-    service = TestBed.inject(RetornoImportacionTemporalService);
+    servicio = TestBed.inject(RetornoImportacionTemporalService);
     httpMock = TestBed.inject(HttpTestingController);
   });
 
@@ -21,80 +21,79 @@ describe('RetornoImportacionTemporalService', () => {
     httpMock.verify();
   });
 
-  it('should be created', () => {
-    expect(service).toBeTruthy();
+  it('debería crear el servicio', () => {
+    expect(servicio).toBeTruthy();
   });
 
-  it('should fetch seccion aduanera data', () => {
-    const mockData: Catalogo[] = [{ id: 1, descripcion: 'Sección 1' }];
+  it('debería obtener los datos de sección aduanera', () => {
+    const datosMock: Catalogo[] = [{ id: 1, descripcion: 'Sección 1' }];
 
-    service.getSeccionAduanera().subscribe((data) => {
-      expect(data).toEqual(mockData);
+    servicio.getSeccionAduanera().subscribe((datos) => {
+      expect(datos).toEqual(datosMock);
     });
 
     const req = httpMock.expectOne('/assets/json/630303/seccion-aduanera.json');
     expect(req.request.method).toBe('GET');
-    req.flush(mockData);
+    req.flush(datosMock);
   });
 
-  it('should fetch aduana de ingreso data', () => {
-    const mockData: Catalogo[] = [{ id: 2, descripcion: 'Aduana 1' }];
+  it('debería obtener los datos de aduana de ingreso', () => {
+    const datosMock: Catalogo[] = [{ id: 2, descripcion: 'Aduana 1' }];
 
-    service.getAduanaDeIngreso().subscribe((data) => {
-      expect(data).toEqual(mockData);
+    servicio.getAduanaDeIngreso().subscribe((datos) => {
+      expect(datos).toEqual(datosMock);
     });
 
     const req = httpMock.expectOne('/assets/json/630303/aduana-de-ingreso.json');
     expect(req.request.method).toBe('GET');
-    req.flush(mockData);
+    req.flush(datosMock);
   });
 
-  it('should fetch prorroga data', () => {
-    const mockData: Catalogo[] = [{ id: 3, descripcion: 'Prórroga 1' }];
+  it('debería obtener los datos de prórroga', () => {
+    const datosMock: Catalogo[] = [{ id: 3, descripcion: 'Prórroga 1' }];
 
-    service.getProrroga().subscribe((data) => {
-      expect(data).toEqual(mockData);
+    servicio.getProrroga().subscribe((datos) => {
+      expect(datos).toEqual(datosMock);
     });
 
     const req = httpMock.expectOne('/assets/json/630303/prorroga.json');
     expect(req.request.method).toBe('GET');
-    req.flush(mockData);
+    req.flush(datosMock);
   });
 
-  it('should fetch propietario data', () => {
-    const mockData: Catalogo[] = [{ id: 4, descripcion: 'Propietario 1' }];
+  it('debería obtener los datos de propietario', () => {
+    const datosMock: Catalogo[] = [{ id: 4, descripcion: 'Propietario 1' }];
 
-    service.getPropietario().subscribe((data) => {
-      expect(data).toEqual(mockData);
+    servicio.getPropietario().subscribe((datos) => {
+      expect(datos).toEqual(datosMock);
     });
 
     const req = httpMock.expectOne('/assets/json/630303/propietario.json');
     expect(req.request.method).toBe('GET');
-    req.flush(mockData);
+    req.flush(datosMock);
   });
 
-  it('should fetch tipo de propietario data', () => {
-    const mockData: Catalogo[] = [{ id: 5, descripcion: 'Tipo Propietario 1' }];
+  it('debería obtener los datos de tipo de propietario', () => {
+    const datosMock: Catalogo[] = [{ id: 5, descripcion: 'Tipo Propietario 1' }];
 
-    service.getTipoDePropietario().subscribe((data) => {
-      expect(data).toEqual(mockData);
+    servicio.getTipoDePropietario().subscribe((datos) => {
+      expect(datos).toEqual(datosMock);
     });
 
     const req = httpMock.expectOne('/assets/json/630303/tipo-de-propietario.json');
     expect(req.request.method).toBe('GET');
-    req.flush(mockData);
+    req.flush(datosMock);
   });
 
-  it('should fetch pais data', () => {
-    const mockData: Catalogo[] = [{ id: 6, descripcion: 'País 1' }];
+  it('debería obtener los datos de país', () => {
+    const datosMock: Catalogo[] = [{ id: 6, descripcion: 'País 1' }];
 
-    service.getPais().subscribe((data) => {
-      expect(data).toEqual(mockData);
+    servicio.getPais().subscribe((datos) => {
+      expect(datos).toEqual(datosMock);
     });
 
     const req = httpMock.expectOne('/assets/json/630303/pais.json');
     expect(req.request.method).toBe('GET');
-    req.flush(mockData);
+    req.flush(datosMock);
   });
-
 });

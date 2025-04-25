@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SolicitudComponent } from './solicitud.component';
 
 describe('SolicitudComponent', () => {
-  let component: SolicitudComponent;
+  let componente: SolicitudComponent;
   let fixture: ComponentFixture<SolicitudComponent>;
 
   beforeEach(async () => {
@@ -11,11 +11,11 @@ describe('SolicitudComponent', () => {
     }).compileComponents();
 
     fixture = TestBed.createComponent(SolicitudComponent);
-    component = fixture.componentInstance;
+    componente = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
+  it('debería crear el componente', () => {
+    expect(componente).toBeTruthy();
   });
 });

@@ -7,7 +7,7 @@ import { Tramite630303Store } from '../../estados/tramite630303.store';
 import { Tramite630303Query } from '../../estados/tramite630303.query';
 
 describe('ManifiestoComponent', () => {
-  let component: ManifiestoComponent;
+  let componente: ManifiestoComponent;
   let fixture: ComponentFixture<ManifiestoComponent>;
   let mockStore: jest.Mocked<Tramite630303Store>;
   let mockQuery: jest.Mocked<Tramite630303Query>;
@@ -25,7 +25,7 @@ describe('ManifiestoComponent', () => {
 
     await TestBed.configureTestingModule({
       declarations: [],
-      imports: [ReactiveFormsModule,ManifiestoComponent],
+      imports: [ReactiveFormsModule, ManifiestoComponent],
       providers: [
         { provide: Tramite630303Store, useValue: mockStore },
         { provide: Tramite630303Query, useValue: mockQuery },
@@ -35,41 +35,41 @@ describe('ManifiestoComponent', () => {
 
   beforeEach(() => {
     fixture = TestBed.createComponent(ManifiestoComponent);
-    component = fixture.componentInstance;
+    componente = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
-    expect(component).toBeTruthy();
+  it('debería crear el componente', () => {
+    expect(componente).toBeTruthy();
   });
 
-  it('should initialize the form with default values', () => {
-    expect(component.manifiestoFormulario.value).toEqual({
+  it('debería inicializar el formulario con valores predeterminados', () => {
+    expect(componente.manifiestoFormulario.value).toEqual({
       declaracion: 'Declaración de prueba',
     });
   });
 
-  it('should update declaracion in the form and store when setValorStore is called', () => {
-    const newValue = 'Nueva declaración';
-    component.manifiestoFormulario.patchValue({ declaracion: newValue });
+  it('debería actualizar la declaración en el formulario y en el store cuando se invoque setValorStore', () => {
+    const nuevoValor = 'Nueva declaración';
+    componente.manifiestoFormulario.patchValue({ declaracion: nuevoValor });
 
-    component.setValorStore(component.manifiestoFormulario, 'declaracion');
+    componente.setValorStore(componente.manifiestoFormulario, 'declaracion');
 
-    expect(mockStore.setTramite630303State).toHaveBeenCalledWith('declaracion', newValue);
+    expect(mockStore.setTramite630303State).toHaveBeenCalledWith('declaracion', nuevoValor);
   });
 
-  it('should fetch the state from the store and set estadoSeleccionado', () => {
-    component.getValorStore();
-    expect(component.estadoSeleccionado).toEqual({
+  it('debería obtener el estado del store y establecer estadoSeleccionado', () => {
+    componente.getValorStore();
+    expect(componente.estadoSeleccionado).toEqual({
       declaracion: 'Declaración de prueba',
     });
   });
 
-  it('should clean up subscriptions on ngOnDestroy', () => {
-    const destroyedSpy = jest.spyOn(component['destroyed$'], 'next');
-    const completeSpy = jest.spyOn(component['destroyed$'], 'complete');
+  it('debería limpiar las suscripciones en ngOnDestroy', () => {
+    const destroyedSpy = jest.spyOn(componente['destroyed$'], 'next');
+    const completeSpy = jest.spyOn(componente['destroyed$'], 'complete');
 
-    component.ngOnDestroy();
+    componente.ngOnDestroy();
 
     expect(destroyedSpy).toHaveBeenCalled();
     expect(completeSpy).toHaveBeenCalled();

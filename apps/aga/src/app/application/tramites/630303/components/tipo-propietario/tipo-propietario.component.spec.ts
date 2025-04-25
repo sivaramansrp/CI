@@ -8,7 +8,7 @@ import { RetornoImportacionTemporalService } from '../../services/retorno-import
 import { FORMULARIO_DATOS_PROPIETARIO_NOMBRE } from '../../enum/retorno-importacion-temporal.enum';
 
 describe('TipoPropietarioComponent', () => {
-  let component: TipoPropietarioComponent;
+  let componente: TipoPropietarioComponent;
   let fixture: ComponentFixture<TipoPropietarioComponent>;
   let storeMock: Partial<Tramite630303Store>;
   let queryMock: Partial<Tramite630303Query>;
@@ -33,7 +33,7 @@ describe('TipoPropietarioComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule,TipoPropietarioComponent],
+      imports: [ReactiveFormsModule, TipoPropietarioComponent],
       declarations: [],
       providers: [
         FormBuilder,
@@ -44,58 +44,58 @@ describe('TipoPropietarioComponent', () => {
     }).compileComponents();
 
     fixture = TestBed.createComponent(TipoPropietarioComponent);
-    component = fixture.componentInstance;
+    componente = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
-    expect(component).toBeTruthy();
+  it('debería crear el componente', () => {
+    expect(componente).toBeTruthy();
   });
 
-  it('should initialize the form with data from state', () => {
-    expect(component.tipoPropietarioFormulario.value).toEqual({
+  it('debería inicializar el formulario con datos del estado', () => {
+    expect(componente.tipoPropietarioFormulario.value).toEqual({
       propietario: '1',
       tipoDePropietario: '2',
     });
   });
 
-  it('should call getPropietario and populate propietarioOpciones', () => {
-    expect(component.propietarioOpciones.length).toBeGreaterThan(0);
+  it('debería llamar a getPropietario y llenar propietarioOpciones', () => {
+    expect(componente.propietarioOpciones.length).toBeGreaterThan(0);
   });
 
-  it('should call getTipoDePropietario and populate tipoDePropietarioOpciones', () => {
-    expect(component.tipoDePropietarioOpciones.length).toBeGreaterThan(0);
+  it('debería llamar a getTipoDePropietario y llenar tipoDePropietarioOpciones', () => {
+    expect(componente.tipoDePropietarioOpciones.length).toBeGreaterThan(0);
   });
 
-  it('should update field visibility in cambiarTipoPropietario()', () => {
-    component.tipoPropietarioFormulario.get('tipoDePropietario')?.setValue('1');
-    component.formularioDatosPropietarioNombre = structuredClone(FORMULARIO_DATOS_PROPIETARIO_NOMBRE);
-    component.cambiarTipoPropietario();
+  it('debería actualizar la visibilidad de los campos en cambiarTipoPropietario()', () => {
+    componente.tipoPropietarioFormulario.get('tipoDePropietario')?.setValue('1');
+    componente.formularioDatosPropietarioNombre = structuredClone(FORMULARIO_DATOS_PROPIETARIO_NOMBRE);
+    componente.cambiarTipoPropietario();
 
-    const nombreCampo = component.formularioDatosPropietarioNombre.find(c => c.id === 'nombre');
+    const nombreCampo = componente.formularioDatosPropietarioNombre.find(c => c.id === 'nombre');
     expect(nombreCampo?.mostrar).toBe(true);
   });
 
-  it('should toggle mostrarTipoPropietario and mostrarSolicitante in cambiarPropietario()', () => {
-    component.tipoPropietarioFormulario.get('propietario')?.setValue('2');
-    component.cambiarPropietario();
-    expect(component.mostrarSolicitante).toBe(true);
-    expect(component.mostrarTipoPropietario).toBe(false);
+  it('debería alternar mostrarTipoPropietario y mostrarSolicitante en cambiarPropietario()', () => {
+    componente.tipoPropietarioFormulario.get('propietario')?.setValue('2');
+    componente.cambiarPropietario();
+    expect(componente.mostrarSolicitante).toBe(true);
+    expect(componente.mostrarTipoPropietario).toBe(false);
   });
 
-  it('should set value in store with establecerCambioDeValor (primitive)', () => {
-    component.establecerCambioDeValor({ campo: 'propietario', valor: '1' });
+  it('debería establecer un valor en el store con establecerCambioDeValor (primitivo)', () => {
+    componente.establecerCambioDeValor({ campo: 'propietario', valor: '1' });
     expect(storeMock.setTramite630303State).toHaveBeenCalledWith('propietario', '1');
   });
 
-  it('should set value in store with establecerCambioDeValor (object with id)', () => {
-    component.establecerCambioDeValor({ campo: 'tipoDePropietario', valor: { id: 5 } });
+  it('debería establecer un valor en el store con establecerCambioDeValor (objeto con id)', () => {
+    componente.establecerCambioDeValor({ campo: 'tipoDePropietario', valor: { id: 5 } });
     expect(storeMock.setTramite630303State).toHaveBeenCalledWith('tipoDePropietario', '5');
   });
 
-  it('should complete destroyed$ on destroy', () => {
-    const completeSpy = jest.spyOn(component['destroyed$'], 'complete');
-    component.ngOnDestroy();
+  it('debería completar destroyed$ al destruir el componente', () => {
+    const completeSpy = jest.spyOn(componente['destroyed$'], 'complete');
+    componente.ngOnDestroy();
     expect(completeSpy).toHaveBeenCalled();
   });
 });

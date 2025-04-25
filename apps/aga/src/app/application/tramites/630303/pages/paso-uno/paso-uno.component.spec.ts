@@ -4,7 +4,7 @@ import { PasoUnoComponent } from './paso-uno.component';
 import { Component, NO_ERRORS_SCHEMA } from '@angular/core';
 
 /**
- * Mock component for 'solicitante' to avoid dependency errors
+ * Componente mock para 'solicitante' para evitar errores de dependencias
  */
 @Component({
   selector: 'solicitante',
@@ -13,21 +13,21 @@ import { Component, NO_ERRORS_SCHEMA } from '@angular/core';
 class MockSolicitanteComponent {}
 
 describe('PasoUnoComponent', () => {
-  let component: PasoUnoComponent;
+  let componente: PasoUnoComponent;
   let fixture: ComponentFixture<PasoUnoComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [PasoUnoComponent, MockSolicitanteComponent], // Declare the mock
-      schemas: [NO_ERRORS_SCHEMA], // Ignore unknown elements
+      declarations: [PasoUnoComponent, MockSolicitanteComponent], // Declarar el mock
+      schemas: [NO_ERRORS_SCHEMA], // Ignorar elementos desconocidos
     }).compileComponents();
 
     fixture = TestBed.createComponent(PasoUnoComponent);
-    component = fixture.componentInstance;
+    componente = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
+  it('debería crear el componente', () => {
+    expect(componente).toBeTruthy();
   });
 });
