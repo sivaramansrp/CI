@@ -29,6 +29,7 @@
 .btn {
   white-space: nowrap;
 }
+
 .table-container {
   max-height: 400px;
   overflow-x: auto;
@@ -39,6 +40,7 @@
 table td {
   word-wrap: break-word;
 }
+
 table {
   margin-bottom: 0;
   table-layout: fixed;
@@ -69,7 +71,7 @@ table {
 }
 
 #bi-1-square {
-  margin-left: 506px width= '25' height= '25';
+  margin-left: 506px width='25' height='25';
 }
 
 .custome-file-label {
@@ -88,10 +90,12 @@ table {
   cursor: pointer;
   transition: background-color 0.15s ease, border-color 0.15s ease;
 }
+
 .custome-file-label:hover {
   background-color: #a5a8ab;
   border-color: #a5a8ab;
 }
+
 .visually-hidden-file {
   opacity: 0;
   position: absolute;
@@ -103,6 +107,7 @@ table {
   clip: rect(0, 0, 0, 0);
   border: 0;
 }
+
 .custom-table {
   white-space: nowrap;
 }
@@ -116,16 +121,10 @@ table {
   display: none !important;
 }
 
-.hide-checkbox
-  .table-responsive
-  table
-  thead
-  tr
-  th:first-child
-  input[aria-label='Select All'] {
+.hide-checkbox .table-responsive table thead tr th:first-child input[aria-label='Select All'] {
   display: none !important;
 }
-.grisColor{
+
+.grisColor {
   background-color: lightgrey;
 }
-

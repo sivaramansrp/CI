@@ -3,7 +3,6 @@ import {
   Catalogo,
   CatalogoSelectComponent,
   CatalogosSelect,
-  ConfiguracionColumna,
   InputCheckComponent,
   InputFecha,
   TablaDinamicaComponent,
@@ -17,6 +16,8 @@ import {
   FECHAFACTURA,
   FECHAFINAL,
   FECHAINICIAL,
+  HEADERS,
+  HEADERS_DATA,
   SeleccionadasTabla,
 } from '../../models/registro.model';
 import { Component, OnDestroy, OnInit } from '@angular/core';
@@ -31,7 +32,7 @@ import {
   Solicitud110207State,
   Tramite110207Store,
 } from '../../state/Tramite110207.store';
-import { ReplaySubject, Subject, map, takeUntil } from 'rxjs';
+import { ReplaySubject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { InputFechaComponent } from '@libs/shared/data-access-user/src/tramites/components/input-fecha/input-fecha.component';
 import { RegistroService } from '../../services/registro.service';
@@ -165,11 +166,6 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
   public solicitudState!: Solicitud110207State;
 
   /**
-   * Notificador para destruir observables al destruir el componente.
-   */
-  public destroyNotifier$: Subject<void> = new Subject();
-
-  /**
    * Tabla de selección de mercancías.
    */
   TablaSeleccion = TablaSeleccion;
@@ -218,37 +214,37 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
  * Notificador para destruir observables al destruir el componente.
  * Se utiliza para gestionar la cancelación de suscripciones activas y evitar fugas de memoria.
  */
-private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
-/**
- * Opciones del catálogo de tratados.
- * Contiene una lista de objetos del catálogo de tratados obtenidos desde el servicio.
- */
-optionsTratado!: Catalogo[];
+  /**
+   * Opciones del catálogo de tratados.
+   * Contiene una lista de objetos del catálogo de tratados obtenidos desde el servicio.
+   */
+  optionsTratado!: Catalogo[];
 
-/**
- * Opciones del catálogo de países.
- * Contiene una lista de objetos del catálogo de países obtenidos desde el servicio.
- */
-optionsPais!: Catalogo[];
+  /**
+   * Opciones del catálogo de países.
+   * Contiene una lista de objetos del catálogo de países obtenidos desde el servicio.
+   */
+  optionsPais!: Catalogo[];
 
-/**
- * Opciones del catálogo de unidades de medida comercial (UMC).
- * Contiene una lista de objetos del catálogo de UMC obtenidos desde el servicio.
- */
-optionsUMC!: Catalogo[];
+  /**
+   * Opciones del catálogo de unidades de medida comercial (UMC).
+   * Contiene una lista de objetos del catálogo de UMC obtenidos desde el servicio.
+   */
+  optionsUMC!: Catalogo[];
 
-/**
- * Opciones del catálogo de unidades de medida.
- * Contiene una lista de objetos del catálogo de unidades de medida obtenidos desde el servicio.
- */
-optionsUnidadMedida!: Catalogo[];
+  /**
+   * Opciones del catálogo de unidades de medida.
+   * Contiene una lista de objetos del catálogo de unidades de medida obtenidos desde el servicio.
+   */
+  optionsUnidadMedida!: Catalogo[];
 
-/**
- * Opciones del catálogo de tipos de factura.
- * Contiene una lista de objetos del catálogo de tipos de factura obtenidos desde el servicio.
- */
-optionsTipoFactura!: Catalogo[];
+  /**
+   * Opciones del catálogo de tipos de factura.
+   * Contiene una lista de objetos del catálogo de tipos de factura obtenidos desde el servicio.
+   */
+  optionsTipoFactura!: Catalogo[];
 
   /**
    * Datos de la tabla de mercancías disponibles.
@@ -262,88 +258,16 @@ optionsTipoFactura!: Catalogo[];
    * por el usuario en el formulario.
    */
   public mercanciaSeleccionadasTablaData: SeleccionadasTabla[] = [];
+
   /**
-   * Configuración de las columnas de la tabla de mercancías disponibles.
-   * Define los encabezados y las claves asociadas a cada columna de la tabla de mercancías disponibles.
-   */
-  public headers: ConfiguracionColumna<ColumnasTabla>[] = [
-    {
-      encabezado: 'Fracción arancelaria',
-      clave: (ele: ColumnasTabla) => ele.fraccionArancelaria,
-      orden: 1,
-    },
-    {
-      encabezado: 'Nombre técnico',
-      clave: (ele: ColumnasTabla) => ele.nombreTecnico,
-      orden: 2,
-    },
-    {
-      encabezado: 'Nombre comercial',
-      clave: (ele: ColumnasTabla) => ele.nombreComercial,
-      orden: 3,
-    },
-    {
-      encabezado: 'Número de registro de productos',
-      clave: (ele: ColumnasTabla) => ele.numeroRegistroProductos,
-      orden: 4,
-    },
-    {
-      encabezado: 'Fecha expedición',
-      clave: (ele: ColumnasTabla) => ele.fechaExpedicion,
-      orden: 5,
-    },
-    {
-      encabezado: 'Fecha vencimíento',
-      clave: (ele: ColumnasTabla) => ele.fechaVencimiento,
-      orden: 6,
-    },
-  ];
+    * Configuración de las columnas de la tabla de mercancías disponibles.
+    */
+  public headers = HEADERS;
   /**
    * Configuración de las columnas de la tabla de mercancías seleccionadas.
-   * Define los encabezados y las claves asociadas a cada columna de la tabla de mercancías seleccionadas.
    */
-  public headersData: ConfiguracionColumna<SeleccionadasTabla>[] = [
-    {
-      encabezado: 'Fracción arancelaria',
-      clave: (ele: SeleccionadasTabla) => ele.fraccionArancelaria,
-      orden: 1,
-    },
-    {
-      encabezado: 'Cantidad',
-      clave: (ele: SeleccionadasTabla) => ele.cantidad,
-      orden: 2,
-    },
-    {
-      encabezado: 'Unidad de medida',
-      clave: (ele: SeleccionadasTabla) => ele.unidadMedida,
-      orden: 3,
-    },
-    {
-      encabezado: 'Valor mercancía',
-      clave: (ele: SeleccionadasTabla) => ele.valorMercancia,
-      orden: 4,
-    },
-    {
-      encabezado: 'Tipo de factura',
-      clave: (ele: SeleccionadasTabla) => ele.tipoFactura,
-      orden: 5,
-    },
-    {
-      encabezado: 'Número factura',
-      clave: (ele: SeleccionadasTabla) => ele.numFactura,
-      orden: 6,
-    },
-    {
-      encabezado: 'Complemento descripción',
-      clave: (ele: SeleccionadasTabla) => ele.complementoDescripcion,
-      orden: 7,
-    },
-    {
-      encabezado: 'Fecha factura',
-      clave: (ele: SeleccionadasTabla) => ele.fechaFactura,
-      orden: 8,
-    },
-  ];
+  public headersData = HEADERS_DATA;
+
 
   /**
    * Constructor del componente.
@@ -368,11 +292,10 @@ optionsTipoFactura!: Catalogo[];
    */
   manejarClic(row: unknown) {
     this.esFormulario = true;
-    // this.esMercanciaEnEdicion = false;
     const modalEl = document.getElementById('datosMercancia')!;
-  new Modal(modalEl).show();   
+    new Modal(modalEl).show();
   }
- 
+
   /**
    * Establece la selección del aviso de funcionamiento basado en el evento.
    * @param evento Evento del checkbox.
@@ -415,7 +338,7 @@ optionsTipoFactura!: Catalogo[];
 
     this.query.selectSolicitud$
       .pipe(
-        takeUntil(this.destroyNotifier$),
+        takeUntil(this.destroyed$),
         map((seccionState) => {
           this.solicitudState = seccionState;
         })
@@ -423,22 +346,20 @@ optionsTipoFactura!: Catalogo[];
       .subscribe();
     this.donanteDomicilio();
   }
-/**
- * Actualiza la fecha inicial en el formulario reactivo y en el estado de la tienda.
- * @param nuevo_fechaIncial Nueva fecha inicial seleccionada.
- */
+  /**
+   * Actualiza la fecha inicial en el formulario reactivo y en el estado de la tienda.
+   * @param nuevo_fechaIncial Nueva fecha inicial seleccionada.
+   */
   cambioFechaInicial(nuevo_fechaIncial: string): void {
     this.registroForm.patchValue({
-      validacionForm: {
-        fechaInicial: nuevo_fechaIncial,
-      },
+      validacionForm: { fechaInicial: nuevo_fechaIncial },
     });
     this.setValoresStore(this.validacionForm, 'fechaInicial', 'setFechInicioB');
   }
-/**
- * Actualiza la fecha final en el formulario reactivo y en el estado de la tienda.
- * @param nuevo_fechaFinal Nueva fecha final seleccionada.
- */
+  /**
+   * Actualiza la fecha final en el formulario reactivo y en el estado de la tienda.
+   * @param nuevo_fechaFinal Nueva fecha final seleccionada.
+   */
   cambioFechaFinal(nuevo_fechaFinal: string): void {
     this.registroForm.patchValue({
       validacionForm: {
@@ -448,10 +369,10 @@ optionsTipoFactura!: Catalogo[];
 
     this.setValoresStore(this.validacionForm, 'fechaFinal', 'setFechFinB');
   }
-/**
- * Actualiza la fecha de la factura en el formulario reactivo y en el estado de la tienda.
- * @param nuevo_fechaFin Nueva fecha de la factura seleccionada.
- */
+  /**
+   * Actualiza la fecha de la factura en el formulario reactivo y en el estado de la tienda.
+   * @param nuevo_fechaFin Nueva fecha de la factura seleccionada.
+   */
   cambioFechaFactura(nuevo_fechaFin: string): void {
     this.mercanciaForm.patchValue({
       validacionMercanciaForm: {
@@ -514,7 +435,6 @@ optionsTipoFactura!: Catalogo[];
    * Modifica una mercancía existente.
    */
   modificar() {
-    // this.esFormulario = true;
     this.esMercanciaEnEdicion = false;
 
     this.getTratado();
@@ -679,22 +599,10 @@ optionsTipoFactura!: Catalogo[];
       validacionForm: this.fb.group({
         tratado: [this.solicitudState?.tratado, [Validators.required]],
         pais: [this.solicitudState?.pais, [Validators.required]],
-        fraccionArancelaria: [
-          this.solicitudState?.fraccionArancelaria,
-          [Validators.required, Validators.pattern(/^\d+$/)],
-        ],
-        numeroRegistro: [
-          this.solicitudState?.numeroRegistro,
-          [Validators.required],
-        ],
-        nombreComercial: [
-          this.solicitudState?.nombreComercial,
-          [Validators.required],
-        ],
-        fechaInicial: [
-          this.solicitudState?.fechaInicial,
-          [Validators.required],
-        ],
+        fraccionArancelaria: [this.solicitudState?.fraccionArancelaria, [Validators.required, Validators.pattern(/^\d+$/)],],
+        numeroRegistro: [this.solicitudState?.numeroRegistro, [Validators.required],],
+        nombreComercial: [this.solicitudState?.nombreComercial, [Validators.required],],
+        fechaInicial: [this.solicitudState?.fechaInicial, [Validators.required],],
         fechaFinal: [this.solicitudState?.fechaFinal, [Validators.required]],
         archivo: [this.solicitudState?.archivo, [Validators.required]],
         siCasilla: [this.solicitudState?.siCasilla, [Validators.required]],
@@ -745,7 +653,7 @@ optionsTipoFactura!: Catalogo[];
    * y asigna los datos obtenidos a la propiedad `mercanciaDisponsiblesTablaDatos`.
    */
   public getSolicitudesTabla(): void {
-    this.registroService.getSolicitudesTabla().subscribe((data) => {
+    this.registroService.getSolicitudesTabla().pipe(takeUntil(this.destroyed$)).subscribe((data) => {
       this.mercanciaDisponsiblesTablaDatos = data;
     });
   }
@@ -755,7 +663,7 @@ optionsTipoFactura!: Catalogo[];
    * y asigna los datos obtenidos a la propiedad `mercanciaSeleccionadasTablaData`.
    */
   public getSolicitudesDataTabla(): void {
-    this.registroService.getSolicitudesDataTabla().subscribe((data) => {
+    this.registroService.getSolicitudesDataTabla().pipe(takeUntil(this.destroyed$)).subscribe((data) => {
       this.mercanciaSeleccionadasTablaData = data;
     });
   }
@@ -765,7 +673,7 @@ optionsTipoFactura!: Catalogo[];
    * Cancela todas las suscripciones activas.
    */
   ngOnDestroy(): void {
-    this.destroyNotifier$.next();
-    this.destroyNotifier$.complete();
+    this.destroyed$.next(true);
+    this.destroyed$.complete();
   }
 }
