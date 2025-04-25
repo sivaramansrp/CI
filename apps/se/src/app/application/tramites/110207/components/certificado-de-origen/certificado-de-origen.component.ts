@@ -13,9 +13,9 @@ import {
 } from '@libs/shared/data-access-user/src';
 import {
   ColumnasTabla,
-  FECHAFACTURA,
-  FECHAFINAL,
-  FECHAINICIAL,
+  FECHA_FACTURA,
+  FECHA_FINAL,
+  FECHA_INICIAL,
   HEADERS,
   HEADERS_DATA,
   SeleccionadasTabla,
@@ -41,6 +41,7 @@ import { Tramite110207Query } from '../../state/Tramite110207.query';
 import mercanciaDisponsibleTable from '@libs/shared/theme/assets/json/110207/mercancia-disponsible.json';
 import mercanciaSeleccionadasTable from '@libs/shared/theme/assets/json/110207/mercancias-seleccionadas.json';
 
+// Texto de alerta que se muestra cuando no se ha agregado al menos una mercancía al trámite.
 const TERCEROS_TEXTO_DE_ALERTA =
   'Para continuar con el trámite, debes agregar por lo menos una mercancía.';
 /**
@@ -138,12 +139,6 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
    * Lista de mercancías disponibles.
    */
   public mercanciasdisponibles: string[] = [];
-
-  /**
-   * Encabezados de las tablas.
-   */
-  public encabezadosTablas: string[] = [];
-
   /**
    * Encabezados de la tabla de mercancías.
    */
@@ -170,11 +165,6 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
   Tratadodescripcion: unknown[] = [];
 
   /**
-   * Valores de las unidades de medida.
-   */
-  unidadMedidaValue: unknown[] = [];
-
-  /**
    * Tratado seleccionado.
    */
   seleccioneTratado: string | null = null;
@@ -187,19 +177,19 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
    * Configuración de la fecha inicial.
    * Representa la configuración del campo de entrada para la fecha inicial en el formulario.
    */
-  fechaInicialInput: InputFecha = FECHAINICIAL;
+  fechaInicialInput: InputFecha = FECHA_INICIAL;
 
   /**
    * Configuración de la fecha final.
    * Representa la configuración del campo de entrada para la fecha final en el formulario.
    */
-  fechaFinalInput: InputFecha = FECHAFINAL;
+  fechaFinalInput: InputFecha = FECHA_FINAL;
 
   /**
    * Configuración de la fecha de la factura.
    * Representa la configuración del campo de entrada para la fecha de la factura en el formulario.
    */
-  fechaFacturaInput: InputFecha = FECHAFACTURA;
+  fechaFacturaInput: InputFecha = FECHA_FACTURA;
   /**
    * Indica si se está mostrando el formulario.
    */
@@ -405,21 +395,13 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
     if (this.mercanciaForm.valid) {
       this.esMercanciaEnEdicion = true;
       this.mercanciaSeleccionadasTablaData.splice(0, 1, {
-        fraccionArancelaria:
-          this.mercanciaForm?.value.validacionMercanciaForm
-            .fraccionMercanArancelaria,
+        fraccionArancelaria: this.mercanciaForm?.value.validacionMercanciaForm.fraccionMercanArancelaria,
         cantidad: this.mercanciaForm?.value.validacionMercanciaForm.cantidad,
-        unidadMedida:
-          this.mercanciaForm?.value.validacionMercanciaForm.unidadMedida,
-        valorMercancia:
-          this.mercanciaForm?.value.validacionMercanciaForm.valordelamercancia,
-        tipoFactura:
-          this.mercanciaForm?.value.validacionMercanciaForm.tipoFactura,
-        numFactura:
-          this.mercanciaForm?.value.validacionMercanciaForm.numeroFactura,
-        complementoDescripcion:
-          this.mercanciaForm?.value.validacionMercanciaForm
-            .complementoDelaDescripcion,
+        unidadMedida: this.mercanciaForm?.value.validacionMercanciaForm.unidadMedida,
+        valorMercancia: this.mercanciaForm?.value.validacionMercanciaForm.valordelamercancia,
+        tipoFactura: this.mercanciaForm?.value.validacionMercanciaForm.tipoFactura,
+        numFactura:this.mercanciaForm?.value.validacionMercanciaForm.numeroFactura,
+        complementoDescripcion: this.mercanciaForm?.value.validacionMercanciaForm.complementoDelaDescripcion,
         fechaFactura: this.mercanciaForm?.value.validacionMercanciaForm.fecha,
       });
     }
@@ -436,7 +418,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
     this.getUnidadMedida();
     this.getTipoFactura();
   }
-  
+
   /**
    * Activa el formulario para cargar un archivo.
    * Cambia el estado de la variable `cargarArchivo` a `true` para mostrar el formulario de carga de archivos.
@@ -457,8 +439,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
    */
   getTratado(): void {
     this.registroService
-      .getTratado()
-      .pipe(takeUntil(this.destroyed$))
+      .getTratado().pipe(takeUntil(this.destroyed$))
       .subscribe((resp) => {
         if (resp.code === 200) {
           this.optionsTratado = resp.data as Catalogo[];
@@ -470,8 +451,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
    */
   getPais(): void {
     this.registroService
-      .getPais()
-      .pipe(takeUntil(this.destroyed$))
+      .getPais().pipe(takeUntil(this.destroyed$))
       .subscribe((resp) => {
         if (resp.code === 200) {
           this.optionsPais = resp.data as Catalogo[];
@@ -483,8 +463,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
    */
   getUMC(): void {
     this.registroService
-      .getUMC()
-      .pipe(takeUntil(this.destroyed$))
+      .getUMC().pipe(takeUntil(this.destroyed$))
       .subscribe((resp) => {
         if (resp.code === 200) {
           this.optionsUMC = resp.data as Catalogo[];
@@ -496,8 +475,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
    */
   getUnidadMedida(): void {
     this.registroService
-      .getUnidadMedida()
-      .pipe(takeUntil(this.destroyed$))
+      .getUnidadMedida().pipe(takeUntil(this.destroyed$))
       .subscribe((resp) => {
         if (resp.code === 200) {
           this.optionsUnidadMedida = resp.data as Catalogo[];
@@ -509,8 +487,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
    */
   getTipoFactura(): void {
     this.registroService
-      .getTipoFactura()
-      .pipe(takeUntil(this.destroyed$))
+      .getTipoFactura().pipe(takeUntil(this.destroyed$))
       .subscribe((resp) => {
         if (resp.code === 200) {
           this.optionsTipoFactura = resp.data as Catalogo[];
@@ -557,11 +534,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
    * @param campo Nombre del campo del formulario.
    * @param metodoNombre Método de la tienda para actualizar el estado.
    */
-  setValoresStore(
-    form: FormGroup,
-    campo: string,
-    metodoNombre: keyof Tramite110207Store
-  ): void {
+  setValoresStore(form: FormGroup,campo: string, metodoNombre: keyof Tramite110207Store): void {
     const VALOR = form.get(campo)?.value;
     (this.store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
@@ -599,37 +572,18 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
         fraccionMercanciaArancelaria: ['', [Validators.required]],
         nombreTecnico: ['', [Validators.required]],
         nombreComercialDelaMercancia: ['', [Validators.required]],
-
         criterioParaConferir: ['', [Validators.required]],
         nombreEnIngles: ['', [Validators.required]],
         marca: [this.solicitudState?.marca, [Validators.required]],
-        cantidad: [
-          this.solicitudState?.cantidad,
-          [Validators.required, Validators.pattern(/^\d+$/)],
-        ],
+        cantidad: [this.solicitudState?.cantidad,[Validators.required, Validators.pattern(/^\d+$/)],],
         umc: [this.solicitudState?.umc, [Validators.required]],
-        valorDelaMercancia: [
-          this.solicitudState?.valorDelaMercancia,
-          [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)],
-        ],
-        complementoDelaDescripcion: [
-          this.solicitudState?.complementoDelaDescripcion,
-          [Validators.required],
-        ],
-        masaBruta: [
-          this.solicitudState?.masaBruta,
-          [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)],
-        ],
-        unidadMedida: [
-          this.solicitudState?.unidadMedida,
-          [Validators.required],
-        ],
+        valorDelaMercancia: [this.solicitudState?.valorDelaMercancia,[Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)],],
+        complementoDelaDescripcion: [this.solicitudState?.complementoDelaDescripcion,[Validators.required],],
+        masaBruta: [this.solicitudState?.masaBruta,[Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)],],
+        unidadMedida: [this.solicitudState?.unidadMedida,[Validators.required],],
         tipoFactura: [this.solicitudState?.tipoFactura, [Validators.required]],
         fecha: [this.solicitudState?.fecha, [Validators.required]],
-        numeroFactura: [
-          this.solicitudState?.numeroFactura,
-          [Validators.required],
-        ],
+        numeroFactura: [this.solicitudState?.numeroFactura,[Validators.required],],
       }),
     });
   }

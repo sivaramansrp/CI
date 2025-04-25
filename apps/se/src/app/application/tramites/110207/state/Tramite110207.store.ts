@@ -4,61 +4,112 @@ import { Injectable } from '@angular/core';
  * Representa un catálogo con un identificador y una descripción.
  */
 export interface Catalogo {
-  id: number;
-  descripcion: string;
+ /** Identificador único del catálogo. */
+ id: number;
+ /** Descripción del catálogo. */
+ descripcion: string;
 }
 /**
  * Estado inicial para la interfaz del trámite 110207.
  */
 export interface Solicitud110207State {
+  /** Lista de tratados disponibles. */
   tratado: Catalogo[] | null;
+  /** Lista de países disponibles. */
   pais: Catalogo[] | null;
+  /** Fracción arancelaria seleccionada. */
   fraccionArancelaria: string;
+  /** Número de registro del producto. */
   numeroRegistro: string;
+  /** Nombre comercial del producto. */
   nombreComercial: string;
+  /** Fecha inicial del trámite. */
   fechaInicial: string;
+  /** Fecha final del trámite. */
   fechaFinal: string;
+  /** Archivo adjunto al trámite. */
   archivo: string;
+  /** Observaciones adicionales del trámite. */
   observaciones: string;
+  /** Valor de presica. */
   presica: string;
+  /** Valor de presenta. */
   presenta: string;
+  /** Lista de idiomas disponibles. */
   idioma: Catalogo[] | null;
+  /** Lista de entidades disponibles. */
   entidad: Catalogo[] | null;
+  /** Lista de representaciones disponibles. */
   representacion: Catalogo[] | null;
+  /** Nombre del solicitante. */
   nombre: string;
+  /** Primer apellido del solicitante. */
   apellidoPrimer: string;
+  /** Segundo apellido del solicitante. */
   apellidoSegundo: string;
+  /** Número fiscal del solicitante. */
   numeroFiscal: string;
+  /** Razón social del solicitante. */
   razonSocial: string;
+  /** Ciudad del solicitante. */
   ciudad: string;
+  /** Calle del solicitante. */
   calle: string;
+  /** Número o letra de la dirección del solicitante. */
   numeroLetra: string;
+  /** Lada del número telefónico. */
   lada: string;
+  /** Número telefónico del solicitante. */
   telefono: string;
+  /** Número de fax del solicitante. */
   fax: string;
+  /** Correo electrónico del solicitante. */
   correoElectronico: string;
+  /** Lista de naciones disponibles. */
   nacion: Catalogo[] | null;
+  /** Lista de transportes disponibles. */
   transporte: Catalogo[] | null;
+  /** Fracción arancelaria de la mercancía. */
   fraccionMercanciaArancelaria: string;
+  /** Nombre técnico de la mercancía. */
   nombreTecnico: string;
+  /** Nombre en inglés de la mercancía. */
   nombreEnIngles: string;
+  /** Criterio para conferir origen. */
   criterioParaConferir: string;
+  /** Marca de la mercancía. */
   marca: string;
+  /** Cantidad de la mercancía. */
   cantidad: string;
+  /** Lista de unidades de medida comercial (UMC). */
   umc: Catalogo[] | null;
+  /** Valor de la mercancía. */
   valorDelaMercancia: string;
+  /** Complemento de la descripción de la mercancía. */
   complementoDelaDescripcion: string;
+  /** Masa bruta de la mercancía. */
   masaBruta: string;
+  /** Nombre comercial de la mercancía. */
   nombreComercialDelaMercancia: string;
+  /** Lista de unidades de medida disponibles. */
   unidadMedida: Catalogo[] | null;
+  /** Lista de tipos de factura disponibles. */
   tipoFactura: Catalogo[] | null;
+  /** Fecha de la factura. */
   fecha: string;
+  /** Número de la factura. */
   numeroFactura: string;
+  /** Justificación del trámite. */
   justificacion: string;
+  /** Valor de la casilla de verificación. */
   casillaVerificacion: string;
+  /** Indica si la casilla está marcada. */
   siCasilla: boolean;
+  /** Ruta completa del trámite. */
   rutaCompleta: string;
+  /** Puerto de embarque. */
   puertoEmbarque: string;
+  /** Puerto de desembarque. */
   puertoDesembarque: string;
 }
 /**
@@ -127,6 +178,10 @@ export class Tramite110207Store extends Store<Solicitud110207State> {
   constructor() {
     super(createInitialState());
   }
+  /**
+   * Establece el valor de la casilla de verificación.
+   * @param siCasilla Indica si la casilla está marcada.
+   */
   setEstablecerSiCasilla(siCasilla: boolean): void {
     this.update((state) => ({
       ...state,
@@ -583,19 +638,30 @@ export class Tramite110207Store extends Store<Solicitud110207State> {
       casillaVerificacion,
     }));
   }
+  /**
+   * Establece la ruta completa del trámite.
+   * @param rutaCompleta Cadena que representa la ruta completa.
+   */
   public setRutaCompleta(rutaCompleta: string) {
     this.update((state) => ({
       ...this.getValue(),
       rutaCompleta,
     }));
   }
+  /**
+  * Establece el puerto de embarque.
+  * @param puertoEmbarque Cadena que representa el puerto de embarque.
+  */
   public setPuertoEmbarque(puertoEmbarque: string) {
     this.update((state) => ({
       ...state,
       puertoEmbarque,
     }));
   }
-
+  /**
+     * Establece el puerto de desembarque.
+     * @param puertoDesembarque Cadena que representa el puerto de desembarque.
+     */
   public setPuertoDesembarque(puertoDesembarque: string) {
     this.update((state) => ({
       ...state,

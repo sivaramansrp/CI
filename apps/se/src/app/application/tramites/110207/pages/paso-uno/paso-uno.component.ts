@@ -1,18 +1,12 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import {
   DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL,
   PERSONA_MORAL_NACIONAL,
 } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
 import { FormularioDinamico, TIPO_PERSONA } from '@ng-mf/data-access-user';
-import {
-  SharedModule,
-  SolicitanteComponent,
-} from '@libs/shared/data-access-user/src';
-import { CertificadoDeOrigenComponent } from '../../components/certificado-de-origen/certificado-de-origen.component';
-import { CommonModule } from '@angular/common';
-import { DatosCertificadoComponent } from '../../components/datos-certificado/datos_certificado.component';
-import { DestinatarioComponent } from '../../components/destinatario/destinatario.component';
 import { RegistroService } from '../../services/registro.service';
+import { SolicitanteComponent} from '@libs/shared/data-access-user/src';
+import { ReplaySubject, takeUntil } from 'rxjs';
 
 /**
  * Componente que representa el primer paso del trámite.
@@ -23,12 +17,16 @@ import { RegistroService } from '../../services/registro.service';
   styles: ``,
   standalone: false,
 })
-export class PasoUnoComponent implements AfterViewInit, OnInit {
+export class PasoUnoComponent implements AfterViewInit, OnInit,OnDestroy {
   /**
    * Catálogo de entidades federativas.
    */
   entidadFederativa!: any;
-
+ /**
+ * Notificador para destruir observables al destruir el componente.
+ * Se utiliza para gestionar la cancelación de suscripciones activas y evitar fugas de memoria.
+ */
+  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   /**
    * Constructor del componente.
    * @param registro Servicio para obtener datos de catálogos.
@@ -42,11 +40,9 @@ export class PasoUnoComponent implements AfterViewInit, OnInit {
    * Obtiene el catálogo de entidades federativas y lo procesa.
    */
   ngOnInit(): void {
-    this.registro.getCatalogoById(21).subscribe((resp) => {
+    this.registro.getCatalogoById(21).pipe(takeUntil(this.destroyed$)).subscribe((resp) => {
       this.entidadFederativa = resp;
-     
       const DATA = JSON.parse(this.entidadFederativa.data);
-
       this.entidadFederativa = DATA?.domicilioFiscal?.entidadFederativa;
      
     });
@@ -93,5 +89,13 @@ export class PasoUnoComponent implements AfterViewInit, OnInit {
    */
   seleccionaTab(i: number): void {
     this.indice = i;
+  }
+  /**
+   * Método que se ejecuta al destruir el componente.
+   * Cancela todas las suscripciones activas.
+   */
+  ngOnDestroy(): void {
+    this.destroyed$.next(true);
+    this.destroyed$.complete();
   }
 }

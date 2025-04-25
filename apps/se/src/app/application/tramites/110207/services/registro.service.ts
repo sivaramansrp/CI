@@ -137,7 +137,11 @@ export class RegistroService {
     })
   );
 }
-
+/**
+   * Recupera la lista de "Datos de Solicitudes Seleccionadas" desde un archivo JSON.
+   * @returns Observable con un array de objetos que representan las columnas de la tabla seleccionada.
+   * @throws Lanzará un error si la solicitud HTTP falla.
+   */
 public getSolicitudesDataTabla():Observable<SeleccionadasTabla[]> {
   return this.http.get<SeleccionadasTabla[]>('assets/json/110207/mercancia-seleccionadas.json').pipe(
     catchError((error) => {

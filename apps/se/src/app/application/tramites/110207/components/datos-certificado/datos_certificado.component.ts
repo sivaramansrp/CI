@@ -62,12 +62,6 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
    * Estado actual de la solicitud.
    */
   public solicitudState!: Solicitud110207State;
-
-  /**
-   * Notificador para destruir observables al destruir el componente.
-   */
-  public destroyNotifier$: Subject<void> = new Subject();
-
   /**
    * Datos de la entidad federativa proporcionados como entrada.
    */
@@ -143,14 +137,10 @@ optionsRepresentacion!: Catalogo[];
     this.getEntidad();
     this.getRepresentacion();
 
-    this.query.selectSolicitud$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
+    this.query.selectSolicitud$.pipe(takeUntil(this.destroyed$),
         map((seccionState) => {
           this.solicitudState = seccionState;
-        })
-      )
-      .subscribe();
+        })).subscribe();
     this.donanteDomicilio();
 
     if (
@@ -174,7 +164,6 @@ optionsRepresentacion!: Catalogo[];
       .subscribe((resp) => {
         if (resp.code === 200) {
           this.optionsIdioma = resp.data as Catalogo [];
-          
         }
       });
   }
@@ -222,11 +211,7 @@ optionsRepresentacion!: Catalogo[];
    * @param campo Nombre del campo del formulario.
    * @param metodoNombre Método de la tienda para actualizar el estado.
    */
-  setValoresStore(
-    form: FormGroup,
-    campo: string,
-    metodoNombre: keyof Tramite110207Store
-  ): void {
+  setValoresStore(form: FormGroup,campo: string,metodoNombre: keyof Tramite110207Store): void {
     const VALOR = form.get(campo)?.value;
     (this.store[metodoNombre] as (value: unknown) => void)(VALOR);
 
@@ -236,8 +221,6 @@ optionsRepresentacion!: Catalogo[];
     } else {
       this.isJustificacion = false;
     }
-
-
   }
 
   /**
@@ -253,26 +236,14 @@ optionsRepresentacion!: Catalogo[];
   donanteDomicilio(): void {
     this.registroForm = this.fb.group({
       validacionForm: this.fb.group({
-        observaciones: [
-          this.solicitudState?.observaciones,
-          [Validators.required],
-        ],
+        observaciones: [this.solicitudState?.observaciones,[Validators.required], ],
         presica: [this.solicitudState?.presica, [Validators.required]],
         presenta: [this.solicitudState?.presenta, [Validators.required]],
         idioma: [this.solicitudState?.idioma, [Validators.required]],
         entidad: [this.solicitudState?.entidad, [Validators.required]],
-        representacion: [
-          this.solicitudState?.representacion,
-          [Validators.required],
-        ],
-        casillaVerificacion: [
-          this.solicitudState?.casillaVerificacion,
-          [Validators.requiredTrue],
-        ],
-        justificacion: [
-          this.solicitudState?.justificacion,
-          [Validators.required],
-        ],
+        representacion: [ this.solicitudState?.representacion,[Validators.required],],
+        casillaVerificacion: [this.solicitudState?.casillaVerificacion,[Validators.requiredTrue],],
+        justificacion: [ this.solicitudState?.justificacion,[Validators.required], ],
       }),
     });
   }
@@ -283,7 +254,7 @@ optionsRepresentacion!: Catalogo[];
    */
   ngOnDestroy(): void {
     
-    this.destroyNotifier$.next();
-    this.destroyNotifier$.complete();
+    this.destroyed$.next(true);
+    this.destroyed$.complete();
   }
 }

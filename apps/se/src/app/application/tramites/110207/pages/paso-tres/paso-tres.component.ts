@@ -1,5 +1,5 @@
 import { Component, OnDestroy } from '@angular/core';
-import { Subscription, catchError, map } from 'rxjs';
+import { ReplaySubject, Subscription, catchError, map, takeUntil } from 'rxjs';
 import { Router } from '@angular/router';
 import { TramiteFolioService } from '@ng-mf/data-access-user';
 import { TramiteStore } from '../../../../estados/tramite.store';
@@ -13,15 +13,17 @@ import { TramiteStore } from '../../../../estados/tramite.store';
   standalone: false,
 })
 export class PasoTresComponent implements OnDestroy {
-   /**
-   * Suscripción para obtener el trámite.
-   */
-   obtienerTramiteSubscriber!: Subscription;
+ 
    /**
     * Tipo de persona.
     */
    tipoPersona!: number;
- 
+ /**
+  * Notificador para destruir observables al destruir el componente.
+  * Se utiliza para gestionar la cancelación de suscripciones activas y evitar fugas de memoria.
+  */
+   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+   
   constructor(
     private router: Router,
     private serviciosExtraordinariosServices: TramiteFolioService,
@@ -46,7 +48,7 @@ export class PasoTresComponent implements OnDestroy {
       // Obtiene el número de trámite
       this.serviciosExtraordinariosServices
         .obtenerTramite(19)
-        .pipe(
+        .pipe(takeUntil(this.destroyed$),
           map((tramite) => {
             this.tramiteStore.establecerTramite(tramite.data, FIRMA);
             this.router.navigate(['pago/reportes/acuse']);
@@ -62,9 +64,8 @@ export class PasoTresComponent implements OnDestroy {
    * Método de limpieza que se ejecuta cuando el componente se destruye.
    */
    ngOnDestroy(): void {
-    if (this.obtienerTramiteSubscriber) {
-      this.obtienerTramiteSubscriber.unsubscribe();
-    }
+   this.destroyed$.next(true);
+   this.destroyed$.complete();
   }
 
 }

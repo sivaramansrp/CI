@@ -58,11 +58,6 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
   public solicitudState!: Solicitud110207State;
 
   /**
-   * Notificador para destruir observables al destruir el componente.
-   */
-  public destroyNotifier$: Subject<void> = new Subject();
-
-  /**
    * Indica si el formulario está deshabilitado.
    */
   isDisabled: boolean = false;
@@ -128,8 +123,7 @@ options!: Catalogo[];
     this.getTransporte();
 
     this.query.selectSolicitud$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
+      .pipe(takeUntil(this.destroyed$),
         map((seccionState) => {
           this.solicitudState = seccionState;
         })
@@ -143,8 +137,7 @@ options!: Catalogo[];
    * Obtiene el catálogo de países de destino desde el servicio.
    */
   getPaisDestino(): void {
-    this.registroService
-      .getPaisDestino().pipe(takeUntil(this.destroyed$))
+    this.registroService.getPaisDestino().pipe(takeUntil(this.destroyed$))
       .subscribe((resp) => {
         if (resp.code === 200) {
           this.options = resp.data as Catalogo[];
@@ -156,8 +149,7 @@ options!: Catalogo[];
    * Obtiene el catálogo de medios de transporte desde el servicio.
    */
   getTransporte(): void {
-    this.registroService
-      .getTransporte().pipe(takeUntil(this.destroyed$))
+    this.registroService.getTransporte().pipe(takeUntil(this.destroyed$))
       .subscribe((resp) => {
         if (resp.code === 200) {
           this.options = resp.data as Catalogo[];
@@ -215,40 +207,20 @@ options!: Catalogo[];
         nacion: [this.solicitudState?.nacion, [Validators.required]],
         transporte: [this.solicitudState?.transporte, [Validators.required]],
         nombre: [this.solicitudState?.nombre, [Validators.required]],
-        apellidoPrimer: [
-          this.solicitudState?.apellidoPrimer,
-          [Validators.required],
-        ],
-        apellidoSegundo: [
-          this.solicitudState?.apellidoSegundo,
-          [Validators.required],
-        ],
-        numeroFiscal: [
-          this.solicitudState?.numeroFiscal,
-          [Validators.required],
-        ],
+        apellidoPrimer: [this.solicitudState?.apellidoPrimer,[Validators.required],],
+        apellidoSegundo: [this.solicitudState?.apellidoSegundo,[Validators.required], ],
+        numeroFiscal: [this.solicitudState?.numeroFiscal,[Validators.required],],
         razonSocial: [this.solicitudState?.razonSocial, [Validators.required]],
         ciudad: [this.solicitudState?.ciudad, [Validators.required]],
         calle: [this.solicitudState?.calle, [Validators.required]],
         numeroLetra: [this.solicitudState?.numeroLetra, [Validators.required]],
         lada: [this.solicitudState?.lada, [Validators.required]],
-        telefono: [
-          this.solicitudState?.telefono,
-          [Validators.required, Validators.pattern(/^\d+$/)],
-        ],
+        telefono: [this.solicitudState?.telefono, [Validators.required, Validators.pattern(/^\d+$/)],],
         fax: [this.solicitudState?.fax, [Validators.pattern(/^\d+$/)]],
-        correoElectronico: [
-          this.solicitudState?.correoElectronico,
-          [Validators.required, Validators.email],
-        ],
-        rutaCompleta: [
-          this.solicitudState?.rutaCompleta,Validators.required,
-        ],
-        puertoEmbarque: [
-          this.solicitudState?.puertoEmbarque,Validators.required,
-        ],
-        puertoDesembarque: [
-          this.solicitudState?.puertoDesembarque,Validators.required, ],
+        correoElectronico: [this.solicitudState?.correoElectronico,[Validators.required, Validators.email],],
+        rutaCompleta: [this.solicitudState?.rutaCompleta,Validators.required, ],
+        puertoEmbarque: [ this.solicitudState?.puertoEmbarque,Validators.required, ],
+        puertoDesembarque: [this.solicitudState?.puertoDesembarque,Validators.required, ],
       }),
     });
   }
@@ -259,7 +231,7 @@ options!: Catalogo[];
    */
   ngOnDestroy(): void {
    
-    this.destroyNotifier$.next();
-    this.destroyNotifier$.complete();
+    this.destroyed$.next(true);
+    this.destroyed$.complete();
   }
 }
