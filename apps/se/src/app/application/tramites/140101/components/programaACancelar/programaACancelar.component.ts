@@ -6,7 +6,7 @@ import { CommonModule } from '@angular/common';
 
 import { ConfiguracionColumna, TablaDinamicaComponent, TablaSeleccion, TablePaginationComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Programa140101State, Tramite140101Store } from '../../../../estados/tramites/tramite140101.store';
-import { programaACancelar,tableId} from '../../../../shared/models/ProgramaACancelar.model';
+import { ProgramaACancelar,TABLE_ID} from '../../../../shared/models/programa-cancelar.model';
 import { ProgramaACancelarService } from '../../services/programACancelar.service';
 import { Tramite140101Query } from '../../../../estados/queries/tramite140101.query';
 import { ValidacionesFormularioService } from '@libs/shared/data-access-user/src/core/services/shared/validaciones-formulario/validaciones-formulario.service';
@@ -68,23 +68,23 @@ export class ProgramaACancelarComponent implements OnInit, OnDestroy {
    * Identificador único asociado a la tabla.
    * Este valor se inicializa con el identificador proporcionado por `TableId`.
    */
-  Id:string = tableId;
+  Id:string = TABLE_ID;
   /**
    * Configuración de las columnas de la tabla mostrada en el componente.
    */
 
-  public encabezadoDeTabla: ConfiguracionColumna<programaACancelar>[] = [
-    { encabezado: 'Folio Programa', clave: (item:programaACancelar) => item.folioPrograma, orden: 1 },
-    { encabezado: 'Selección de Modalidad',clave: (item:programaACancelar) => item.modalidad, orden: 2 },
-    { encabezado: 'Representación Federal', clave: (item:programaACancelar) => item.representacionFederal, orden: 3 },
-    { encabezado: 'Tipo Programa', clave: (item:programaACancelar) => item.tipoPrograma, orden: 4 },
-    { encabezado: 'Estatus', clave: (item:programaACancelar) => item.estatus, orden: 5 },
+  public encabezadoDeTabla: ConfiguracionColumna<ProgramaACancelar>[] = [
+    { encabezado: 'Folio Programa', clave: (item:ProgramaACancelar) => item.folioPrograma, orden: 1 },
+    { encabezado: 'Selección de Modalidad',clave: (item:ProgramaACancelar) => item.modalidad, orden: 2 },
+    { encabezado: 'Representación Federal', clave: (item:ProgramaACancelar) => item.representacionFederal, orden: 3 },
+    { encabezado: 'Tipo Programa', clave: (item:ProgramaACancelar) => item.tipoPrograma, orden: 4 },
+    { encabezado: 'Estatus', clave: (item:ProgramaACancelar) => item.estatus, orden: 5 },
   ];
 
   /**
    * Datos que se mostrarán en la tabla.
    */
-  datosTabla: programaACancelar[] = [];
+  datosTabla: ProgramaACancelar[] = [];
 
   /**
    * Número total de elementos en la tabla.
@@ -207,7 +207,7 @@ export class ProgramaACancelarComponent implements OnInit, OnDestroy {
    * 
    * @param row - Los datos de la fila seleccionada.
    */
-  valorDeAlternancia(row: programaACancelar): void {
+  valorDeAlternancia(row: ProgramaACancelar): void {
     this.tramite140101Store.setPrograma(row);
     const INDEX = this.datosTabla.findIndex((x) => x.idProgramaSeleccionado === row.idProgramaSeleccionado);
     this.radioId = INDEX;
