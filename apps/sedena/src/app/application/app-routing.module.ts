@@ -116,7 +116,16 @@ const ROUTES: Routes = [
       import(
         './tramites/240311/solicitude-de-artificios-pirotecnicos.module'
       ).then((m) => m.SolicitudeDeArtificiosPirotecnicosModule),
-    }
+  },
+  {
+    path: 'permiso-ordinario-prorroga-importacion-material-explosivo',
+    loadChildren: () =>
+      import(
+        './tramites/240411/permiso-ordinario-prorroga-importacion-material-explosivo.module'
+      ).then(
+        (m) => m.PermisoOrdinarioProrrogaImportacionMaterialExplosivoModule
+      ),
+  }
 ];
 
 @NgModule({

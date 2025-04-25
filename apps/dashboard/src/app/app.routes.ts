@@ -2,7 +2,7 @@ import { Route } from '@angular/router';
 //import { loadRemoteModule } from '@nx/angular/mf';
 import { loadRemoteModule } from '@angular-architects/module-federation';
 
-import { ENVIRONMENT } from '@libs/shared/data-access-user/src/enviroments/enviroment';
+import { ENVIRONMENT } from '@libs/shared/data-access-user/src';
 import { SeleccionTramiteDesdePanelComponent } from './seleccion-tramite-desde-panel/seleccion-tramite-desde-panel.component';
 
 export const appRoutes: Route[] = [

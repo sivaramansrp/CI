@@ -168,11 +168,13 @@ export class TablaDinamicaComponent<T> {
   cambiarEstadoCheckbox(event: Event, indice: number): void {
     // Obtener el checkbox desde el evento
     const CHECKBOX = event.target as HTMLInputElement;
+    const ROW = this.datos[indice];
     // Verificamos si el checkbox está seleccionado
     if (CHECKBOX?.checked) {
       if (!this.filasSeleccionadas.includes(indice)) {
         this.filasSeleccionadas.push(indice);
       }
+      this.filaSeleccionada.emit(ROW);
     } else {
       const IDX = this.filasSeleccionadas.indexOf(indice);
       if (IDX > -1) {
