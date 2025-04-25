@@ -5,12 +5,15 @@ import { ConsultarCupoComponent } from './components/consultar-cupo/consultar-cu
 import { DatosGeneralesComponent } from './components/datos-generales/datos-generales.component';
 import { DescripcionDelCupoComponent } from './components/descripcion-del-cupo/descripcion-del-cupo.component';
 import { DomicilioFiscalComponent } from './components/domicilio-fiscal/domicilio-fiscal.component';
+import { InsumosComponent } from './components/insumos/insumos.component';
 import { NgModule } from '@angular/core';
 import { PantallasComponent } from './pages/pantallas/pantallas.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
+import { ProcesoProductivoComponent } from './components/proceso-productivo/proceso-productivo.component';
 import { RepresentacionFederalComponent } from './components/representacion-federal/representacion-federal.component';
+import { ServicioDeFormularioService } from './services/forma-servicio/servicio-de-formulario.service';
 import { SolicitudDeRegistroTplRoutingModule } from './solicitud-de-registro-tpl-routing.module';
-
+//import { provideHttpClient } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -28,7 +31,12 @@ import { SolicitudDeRegistroTplRoutingModule } from './solicitud-de-registro-tpl
     AlertComponent,
     DescripcionDelCupoComponent,
     RepresentacionFederalComponent,
-    BienFinalComponent
-  ]
+    BienFinalComponent,
+    InsumosComponent,
+    ProcesoProductivoComponent
+  ],
+  providers: [ServicioDeFormularioService,
+    //provideHttpClient()
+  ],
 })
 export class SolicitudDeRegistroTplModule { }

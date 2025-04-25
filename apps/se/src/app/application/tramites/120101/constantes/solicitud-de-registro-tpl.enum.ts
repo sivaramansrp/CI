@@ -720,3 +720,23 @@ export const BIEN_FINAL = [
     marginTop: 0,
   },
 ]
+
+export const RADIO_INDICAR = [
+  {
+      label: 'Hilo',
+      value: '1',
+  },
+  {
+      label: 'Tela',
+      value: '2',
+  },
+  {
+      label: 'Bienes tejidos a forma',
+      value: '3',
+  },
+  {
+      label: 'prendas y otras manufacturas',
+      value: '4',
+  }
+];
+

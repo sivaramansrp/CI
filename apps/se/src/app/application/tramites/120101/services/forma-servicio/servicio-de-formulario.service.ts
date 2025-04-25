@@ -1,5 +1,9 @@
 import { FormGroup } from '@angular/forms';
 import { Injectable } from '@angular/core';
+import { InsumosTabla } from '../../models/insumos.model';
+import { Observable } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { Catalogo } from '@libs/shared/data-access-user/src';
 
 @Injectable({
   providedIn: 'root'
@@ -8,7 +12,8 @@ export class ServicioDeFormularioService {
   
   private forms = new Map<string, FormGroup>();
 
-  constructor() {
+
+  constructor( private http: HttpClient) {
     //
   }
 
@@ -52,4 +57,17 @@ export class ServicioDeFormularioService {
     return FORMA?.valid;
   }
 
+  
+  obtenerDatosTablaInsumos(): Observable<InsumosTabla[]> {
+     return this.http.get<InsumosTabla[]>('assets/json/120101/insumos-tabla.json');
+   }  
+
+  obtenerDatosFraccionArancelaria(): Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>('assets/json/120101/pais.json');  
+   }
+
+    obtenerDatosEstados(): Observable<Catalogo[]> {
+      return this.http.get<Catalogo[]>('assets/json/120101/estados.json');  
+    }
+   
 }
