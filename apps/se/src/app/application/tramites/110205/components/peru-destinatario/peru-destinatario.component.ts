@@ -59,6 +59,22 @@ export class PeruDestinatarioComponent implements OnInit, OnDestroy {
   private seccionState!: SeccionLibState;
 
   /**
+   * @ignore
+   * @description Indica si se debe ocultar el campo de LADA en el formulario.
+   * @type {boolean}
+   * @default true
+   */
+  ocultarLada: boolean = true;
+
+  /**
+   * @property {boolean} ocultarFax
+   * @description Indica si el campo de fax debe estar oculto en la interfaz de usuario.
+   * @default true
+   * @memberof PeruDestinatarioComponent
+   */
+  ocultarFax: boolean = true;
+
+  /**
    * @descripcion
    * Constructor que inicializa los servicios y dependencias requeridas.
    * @param fb - Instancia de FormBuilder para gestionar formularios.
