@@ -1,4 +1,4 @@
-import { DatosDelTramiteFormState, JustificacionTramiteFormState } from '../../../shared/models/datos-del-tramite.model';
+import { DatosDelTramiteFormState } from '../../../shared/models/datos-del-tramite.model';
 import { DestinoFinal } from '../../../shared/models/terceros-relacionados.model';
 import { Injectable } from '@angular/core';
 import { MercanciaDetalle } from '../../../shared/models/datos-del-tramite.model';
@@ -16,8 +16,7 @@ import { StoreConfig } from '@datorama/akita';
  * @property {PagoDerechosFormState} pagoDerechos - Información del formulario de pago de derechos.
  * @property {MercanciaDetalle[]} merccancialTablaDatos - Lista de mercancías registradas.
  * @property {DatosDelTramiteFormState} datosDelTramite - Información general del formulario de datos del trámite.
- *  @property {JustificacionTramiteFormState} justificacionTramiteFormState - Información del formulario de justificación del trámite.
-*/
+ */
 export interface Tramite240123State {
   tabSeleccionado?: number;
   destinatarioFinalTablaDatos: DestinoFinal[];
@@ -25,7 +24,8 @@ export interface Tramite240123State {
   pagoDerechos: PagoDerechosFormState;
   merccancialTablaDatos: MercanciaDetalle[];
   datosDelTramite: DatosDelTramiteFormState;
-  justificacionTramiteFormState: JustificacionTramiteFormState;
+  modificarDestinarioDatos?: DestinoFinal | null;
+  modificarProveedorDatos?: Proveedor | null;
 }
 
 /**
@@ -54,9 +54,8 @@ export function createInitialState(): Tramite240123State {
       aduanasSeleccionadas: [],
       paisDestino: '',
     },
-    justificacionTramiteFormState :{
-      justificacion:''
-    }
+    modificarDestinarioDatos: null,
+    modificarProveedorDatos: null
   };
 }
 
@@ -72,7 +71,21 @@ export class Tramite240123Store extends Store<Tramite240123State> {
   constructor() {
     super(createInitialState());
   }
-  
+
+  /**
+   * Cambia la pestaña actualmente seleccionada.
+   *
+   * @method updateTabSeleccionado
+   * @param {number} tabSeleccionado - Índice de la nueva pestaña seleccionada.
+   * @returns {void}
+   */
+  public updateTabSeleccionado(tabSeleccionado: number): void {
+    this.update((state) => ({
+      ...state,
+      tabSeleccionado: tabSeleccionado,
+    }));
+  }
+
   /**
    * Actualiza los datos generales del formulario de trámite.
    *
@@ -88,22 +101,7 @@ export class Tramite240123Store extends Store<Tramite240123State> {
       datosDelTramite: datosDelTramiteFormState,
     }));
   }
-/**
- * @method updateJustificacionFormulario
- * @description Actualiza el estado del formulario de justificación del trámite.
- * Permite modificar los datos capturados en el formulario de justificación.
- * 
- * @param {JustificacionTramiteFormState} justificacionTramiteFormState - Estado actualizado del formulario de justificación.
- * @returns {void}
- */
-  public updateJustificacionFormulario(
-    justificacionTramiteFormState: JustificacionTramiteFormState
-  ): void {
-    this.update((state) => ({
-      ...state,
-      justificacionTramiteFormState: justificacionTramiteFormState,
-    }));
-  }
+
   /**
    * Actualiza los datos del formulario de pago de derechos.
    *
@@ -136,6 +134,7 @@ export class Tramite240123Store extends Store<Tramite240123State> {
         ...state.destinatarioFinalTablaDatos,
         ...newDestinatarios,
       ],
+      modificarDestinarioDatos: null
     }));
   }
 
@@ -150,6 +149,7 @@ export class Tramite240123Store extends Store<Tramite240123State> {
     this.update((state) => ({
       ...state,
       proveedorTablaDatos: [...state.proveedorTablaDatos, ...newProveedores],
+      modificarProveedorDatos: null
     }));
   }
 
@@ -166,4 +166,67 @@ export class Tramite240123Store extends Store<Tramite240123State> {
       merccancialTablaDatos: [...state.merccancialTablaDatos, ...newMercancia],
     }));
   }
+
+  public actualizarDatosDestinatario(datos: DestinoFinal): void {
+    this.update((state) => ({
+      ...state,
+      modificarDestinarioDatos: datos,
+      modificarProveedorDatos: null
+    }));
+  }
+
+  public actualizarDatosProveedor(datos: Proveedor): void {
+    this.update((state) => ({
+      ...state,
+      modificarProveedorDatos: datos,
+      modificarDestinarioDatos: null
+    }));
+  }
+
+  /**
+   * Elimina un destinatario de la tabla de destinatarios.
+   *
+   * @param destinatarioFinal - El destinatario que se eliminará de la tabla de destinatarios.
+   * @returns void
+   */
+  eliminarDestinatarioFinal(destinatarioFinal: DestinoFinal): void {
+    this.update(state => {
+      const INDICE_A_ELIMINAR = state.destinatarioFinalTablaDatos.findIndex(ele =>
+        Object.keys(destinatarioFinal).some(key => destinatarioFinal[key as keyof DestinoFinal] === ele[key as keyof DestinoFinal])
+      );
+ 
+      if (INDICE_A_ELIMINAR !== -1) {
+        state.destinatarioFinalTablaDatos.splice(INDICE_A_ELIMINAR, 1);
+      }
+ 
+      return {
+        ...state,
+        destinatarioFinalTablaDatos: [...state.destinatarioFinalTablaDatos],
+      };
+    });
+  }
+ 
+  /**
+* Elimina un Proveedor de la tabla de Proveedor.
+*
+* @param proveedorFinal - El Proveedor que se eliminará de la tabla de Proveedor.
+* @returns void
+*/
+  eliminareliminarProveedorFinal(proveedorFinal: Proveedor): void {
+    this.update(state => {
+      const INDICE_A_ELIMINAR = state.proveedorTablaDatos.findIndex(ele =>
+        Object.keys(proveedorFinal).some(key => proveedorFinal[key as keyof Proveedor] === ele[key as keyof Proveedor])
+      );
+ 
+      if (INDICE_A_ELIMINAR !== -1) {
+        state.proveedorTablaDatos.splice(INDICE_A_ELIMINAR, 1);
+      }
+ 
+      return {
+        ...state,
+        proveedorTablaDatos: [...state.proveedorTablaDatos],
+      };
+    });
+  }
+ 
 }

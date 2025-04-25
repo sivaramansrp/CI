@@ -1,19 +1,15 @@
-import { Component, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CrosslistComponent } from '@libs/shared/data-access-user/src';
+import { Component } from '@angular/core';
 import { DatosDelTramiteComponent } from '../../../../shared/components/datos-del-tramite/datos-del-tramite.component';
 import { DatosDelTramiteFormState } from '../../../../shared/models/datos-del-tramite.model';
-import { JustificacionTramiteFormState } from '../../../../shared/models/datos-del-tramite.model';
+import { ID_PROCEDIMIENTO } from '../../constants/exportacion-sustancias-quimicas.enum';
 import { MercanciaDetalle } from '../../../../shared/models/datos-del-tramite.model';
-import { NUMERO_TRAMITE } from '../../../../shared/constants/datos-solicitud.enum';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
 import { Tramite240123Query } from '../../estados/tramite240123Query.query';
 import { Tramite240123Store } from '../../estados/tramite240123Store.store';
-import { construirAduanasBotones } from '../../constants/solicitude-de-artificios-pirotecnicos.enum';
 import { takeUntil } from 'rxjs';
-
 /**
  * @title Datos del Trámite Contenedora
  * @description Componente contenedor que se encarga de enlazar el estado del trámite con el componente de datos del trámite.
@@ -28,6 +24,8 @@ import { takeUntil } from 'rxjs';
   styleUrl: './datos-del-tramite-contenedora.component.scss',
 })
 export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
+
+  idProcedimiento = ID_PROCEDIMIENTO;
   /**
    * Observable para limpiar suscripciones activas al destruir el componente.
    * @property {Subject<void>} unsubscribe$
@@ -45,46 +43,19 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
    * @property {DatosDelTramiteFormState} datosDelTramiteFormState
    */
   public datosDelTramiteFormState!: DatosDelTramiteFormState;
-  /**
-   * @property {JustificacionTramiteFormState} justificacionTramiteFormState
-   * Estado actual del formulario de justificación del trámite.
-   * Contiene los datos capturados en el formulario de justificación.
-   */
-  public justificacionTramiteFormState!: JustificacionTramiteFormState;
 
-  /**
-   * @property {number} idProcedimiento
-   * Identificador numérico del procedimiento asociado al trámite.
-   * En este caso, corresponde al trámite 240123.
-   */
-  idProcedimiento: number = NUMERO_TRAMITE.TRAMITE_240123;
-
-  /**
-   * Referencia al componente Crosslist para manejar la selección de aduanas.
-   */
-  @ViewChild(CrosslistComponent) crossList!: CrosslistComponent;
-
-  /**
-  * @property {Array<{ btnNombre: string; class: string }>} aduanasBotones
-  * Lista de botones configurados para manejar las acciones relacionadas con las aduanas.
-  * Cada botón incluye un nombre y una clase CSS para su estilo.
-  */
-  aduanasBotones: { btnNombre: string; class: string }[] = [];
-  
   /**
    * Constructor del componente.
    *
    * @method constructor
-   * @param {Tramite240123Query} tramiteQuery - Query de Akita para obtener el estado actual del trámite.
-   * @param {Tramite240123Store} tramiteStore - Store de Akita para actualizar el estado del trámite.
+   * @param {Tramite240101Query} tramiteQuery - Query de Akita para obtener el estado actual del trámite.
+   * @param {Tramite240101Store} tramiteStore - Store de Akita para actualizar el estado del trámite.
    * @returns {void}
    */
   constructor(
     private tramiteQuery: Tramite240123Query,
-    private tramiteStore: Tramite240123Store
-  ) {
-    //
-  }
+    private tramiteStore: Tramite240123Store // eslint-disable-next-line no-empty-function
+  ) {}
 
   /**
    * Hook del ciclo de vida que se ejecuta al inicializar el componente.
@@ -94,7 +65,6 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   ngOnInit(): void {
-    this.aduanasBotones = construirAduanasBotones(this);
     this.tramiteQuery.getMercanciaTablaDatos$
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((data) => {
@@ -105,12 +75,6 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((data) => {
         this.datosDelTramiteFormState = data;
-      });
-
-    this.tramiteQuery.getJustificacionTramite$
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe((data) => {
-        this.justificacionTramiteFormState = data;
       });
   }
 
@@ -135,17 +99,5 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
    */
   updateDatosDelTramiteFormulario(event: DatosDelTramiteFormState): void {
     this.tramiteStore.updateDatosDelTramiteFormState(event);
-  }
-
-  /**
-  * @method updateJustificacionFormulario
-  * @description Actualiza el estado del formulario de justificación del trámite en el store.
-  * Permite guardar los datos capturados en el formulario de justificación.
-  *
-  * @param {JustificacionTramiteFormState} event - Estado actualizado del formulario de justificación.
-  * @returns {void}
-  */
-  updateJustificacionFormulario(event: JustificacionTramiteFormState): void {
-    this.tramiteStore.updateJustificacionFormulario(event);
   }
 }

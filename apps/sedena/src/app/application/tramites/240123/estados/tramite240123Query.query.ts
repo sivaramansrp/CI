@@ -1,5 +1,7 @@
-
-import { Tramite240123State, Tramite240123Store } from './tramite240123Store.store';
+import {
+  Tramite240123State,
+  Tramite240123Store,
+} from './tramite240123Store.store';
 import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
 
@@ -41,12 +43,6 @@ export class Tramite240123Query extends Query<Tramite240123State> {
    * @property {Observable<DatosDelTramiteFormState>} getDatosDelTramite$
    */
   public getDatosDelTramite$ = this.select((state) => state.datosDelTramite);
-  /**
-   * @property {Observable<JustificacionTramiteFormState>} getJustificacionTramite$
-   * Observable que emite el estado del formulario de justificación del trámite.
-   * Permite suscribirse a los cambios realizados en dicho formulario.
-   */
-  public getJustificacionTramite$ = this.select((state) => state.justificacionTramiteFormState);
 
   /**
    * Observable que emite el estado del formulario de pago de derechos.
@@ -81,4 +77,8 @@ export class Tramite240123Query extends Query<Tramite240123State> {
   public getMercanciaTablaDatos$ = this.select(
     (state) => state.merccancialTablaDatos
   );
+
+  public obtenerTercerosDatos$ = this.select((state) => {
+    return state.modificarDestinarioDatos || state.modificarProveedorDatos || null;
+  });
 }

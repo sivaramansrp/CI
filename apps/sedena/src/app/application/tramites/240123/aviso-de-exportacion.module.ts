@@ -23,32 +23,30 @@ import { AvisoDeExportacionRoutingModule } from './aviso-de-exportacion-routing.
 
 @NgModule({
   declarations: [
-    PasoUnoComponent,
-    PasoDosComponent,
-    PasoTresComponent,
-    SolicitudPageComponent,
+        PasoUnoComponent,
+        PasoDosComponent,
+        PasoTresComponent,
+        SolicitudPageComponent,
   ],
   imports: [
-    CommonModule,
-    AvisoDeExportacionRoutingModule,
-    SolicitanteComponent,
-    DatosDelTramiteContenedoraComponent,
-    TercerosRelacionadosContenedoraComponent,
-    PagoDeDerechosContenedoraComponent,
-    AlertComponent,
-    TituloComponent,
-    AnexarDocumentosComponent,
-    FirmaElectronicaComponent,
-    WizardComponent,
-    BtnContinuarComponent,
-  ],
-  exports: [
-    PasoUnoComponent,
-    PasoDosComponent,
-    PasoTresComponent,
-    SolicitudPageComponent,
-  ],
-})
-export class AvisoDeExportacionModule { 
-
-}
+      CommonModule,
+      AvisoDeExportacionRoutingModule,
+      SolicitanteComponent,
+      DatosDelTramiteContenedoraComponent,
+      TercerosRelacionadosContenedoraComponent,
+      PagoDeDerechosContenedoraComponent,
+      AlertComponent,
+      TituloComponent,
+      AnexarDocumentosComponent,
+      FirmaElectronicaComponent,
+      WizardComponent,
+      BtnContinuarComponent,
+    ],
+    exports: [
+      PasoUnoComponent,
+      PasoDosComponent,
+      PasoTresComponent,
+      SolicitudPageComponent,
+    ],
+  })
+export class AvisoDeExportacionModule { }

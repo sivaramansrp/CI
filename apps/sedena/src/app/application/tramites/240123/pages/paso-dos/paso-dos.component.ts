@@ -9,7 +9,7 @@ import { CatalogosService } from '@ng-mf/data-access-user';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs';
 
-import { TEXTOS_REQUISITOS } from '../../constants/solicitude-de-artificios-pirotecnicos.enum';
+import { TEXTOS_REQUISITOS } from '../../constants/exportacion-sustancias-quimicas.enum';
 
 /**
  * @component PasoDosComponent

@@ -2,8 +2,8 @@ import { AccionBoton } from '@ng-mf/data-access-user';
 import { Component } from '@angular/core';
 import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
-import { PASOS } from '@ng-mf/data-access-user';
-import { TITULOMENSAJE } from '../../constants/solicitude-de-artificios-pirotecnicos.enum';
+import { PASOS } from '../../constants/exportacion-sustancias-quimicas.enum';
+import { TITULOMENSAJE } from '../../constants/exportacion-sustancias-quimicas.enum';
 import { ViewChild } from '@angular/core';
 import { WizardComponent } from '@ng-mf/data-access-user';
 

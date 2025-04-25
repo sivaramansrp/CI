@@ -1,9 +1,10 @@
-import { ActivatedRoute, Router } from '@angular/router';
 import {
+  ADUANA_TEXTO,
   CROSLISTA_ADUANAS_DISPONIBLES,
   DATOS_DEL_TRAMITE_MAP,
   DESACTIVADO_PERMISO_GENERAL,
   FETCHA_PAGO,
+  FETCHA_SALIDA,
   MANIFIESTOS_DECLARACIONES,
   OCULTAR_PERMISO_GENERAL,
   PAISE_DENTINO_EITIQUETA,
@@ -14,6 +15,7 @@ import {
   PERMISO_DEFINITIVO_TITULO,
   PERMISO_JUSTIFICACION,
 } from '../../constants/datos-del-tramilte.enum';
+import { ActivatedRoute, Router } from '@angular/router';
 import {
   Component,
   EventEmitter,
@@ -36,6 +38,7 @@ import {
 import {
   DatosDelTramiteFormState,
   FECHA_DE_PAGO,
+  FECHA_DE_SALIDA,
   JustificacionTramiteFormState,
   MANIFIESTOS_DECLARACION,
   MERCANCIA_ENCABEZADO_DE_TABLA,
@@ -111,6 +114,15 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    * @default false
    */
   public esAduna = false;
+
+  /**
+   * @property {boolean} esAdunaTexto
+   * @description Indica si el trámite está relacionado con el texto de aduanas específicas.
+   * - `true`: El trámite está relacionado con el texto de aduanas.
+   * - `false`: El trámite no está relacionado con el texto de aduanas.
+   * @default false
+  */
+  public esAdunaTexto = false;
   /**
    * Indica si el trámite está relacionado con manifiestos y declaraciones.
    *
@@ -125,6 +137,14 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    * @default false
    */
   public fetchaPago = false;
+  /**
+   * Indica si la fecha de salida está habilitada.
+   *
+   * @type {boolean}
+   * @default false
+   */
+  public fetchaSalida = false;
+  
   /**
    * Opciones para el campo de periodo de un semestre.
    *
@@ -165,7 +185,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    * - `true`: El permiso general está desactivado.
    * - `false`: El permiso general está activo.
    */
-    public esDessactivadoPermisoGeneral = false;
+  public esDessactivadoPermisoGeneral = false;
 
   /**
    * @property {Subject<void>} unsubscribe$
@@ -215,6 +235,11 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    */
   fechaInicioInput: InputFecha = FECHA_DE_PAGO;
   /**
+   * @property {InputFecha} fechaInicioInput
+   * Objeto con la configuración de la fecha inicial del componente.
+   */
+  fechaSalidaInput: InputFecha = FECHA_DE_SALIDA;  
+  /**
    * @method onReset
    * @description Limpia todos los campos del formulario de pago de derechos.
    */
@@ -232,7 +257,15 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
   onFechaCambiada(fecha: string): void {
     this.form.patchValue({ fechaPago: fecha });
   }
-
+  /**
+   * @method onFechaSalidaCambiada
+   * @description Actualiza la Fecha única de salida de la marcancia en el formulario.
+   *
+   * @param {string} fecha - Fecha seleccionada en el componente `InputFecha`.
+   */
+  onFechaSalidaCambiada(fecha: string): void {
+    this.form.patchValue({ fechaSalida: fecha });
+  }
   /**
    * Estado inicial del formulario del trámite, recibido desde el componente padre.
    * @property {DatosDelTramiteFormState} datosDelTramiteFormState
@@ -295,7 +328,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private activatedRoute: ActivatedRoute,
     private router: Router // eslint-disable-next-line no-empty-function
-  ) {}
+  ) { }
   /**
    * Crea el formulario reactivo `agregarDestinatarioFinal` utilizando `FormBuilder`.
    * Define los campos y sus validaciones.
@@ -310,6 +343,10 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
       usoFinal: ['', Validators.required],
       fechaPago: [
         this.datosDelTramiteFormState?.fechaPago || '',
+        Validators.required,
+      ],
+      fechaSalida: [
+        this.datosDelTramiteFormState?.fechaSalida || '',
         Validators.required,
       ],
       unoSemestre: [this.datosDelTramiteFormState.unoSemestre ?? null],
@@ -398,7 +435,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
       this.form.get('permisoGeneral')?.setValue('5432');
       this.form.get('permisoGeneral')?.disable();
     }
- 
+
     this.seleccionarAduanasDisponiblesDatos =
       this.datosDelTramiteFormState.aduanasSeleccionadas;
 
@@ -412,6 +449,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
           aduanasSeleccionadas: this.seleccionarAduanasDisponiblesDatos,
           anoEnCurso: formValue.anoEnCurso,
           fechaPago: formValue.fechaPago,
+          fechaSalida: formValue.fechaSalida,
           informacionConfidencial: formValue.informacionConfidencial,
           dosSemestre: formValue.dosSemestre,
           unoSemestre: formValue.unoSemestre,
@@ -430,6 +468,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
     }
     this.estaOculto = PERMISO_DEFINITIVO_TITULO.includes(this.idProcedimiento);
     this.esAduna = PERMISO_ADUNA_TITULO.includes(this.idProcedimiento);
+    this.esAdunaTexto = ADUANA_TEXTO.includes(this.idProcedimiento);
     this.periodoHabilitado = PERIODO_SEMESTRE_HABILITADO.includes(
       this.idProcedimiento
     );
@@ -437,6 +476,8 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
       this.idProcedimiento
     );
     this.fetchaPago = FETCHA_PAGO.includes(this.idProcedimiento);
+    this.fetchaSalida = FETCHA_SALIDA.includes(this.idProcedimiento);
+
   }
 
   /**

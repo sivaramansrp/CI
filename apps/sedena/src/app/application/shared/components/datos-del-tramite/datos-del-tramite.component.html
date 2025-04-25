@@ -15,16 +15,19 @@
     </form>
   </div>
   } @if(!estaOculto){
-  <!-- <div class="row mt-5">
+  <div class="row mt-5">
     <ng-titulo titulo="Permiso definitivo (no temporal)"></ng-titulo>
-  </div> -->
+  </div>
   } @if(!esAduna){
   <div class="row">
     <ng-titulo
       titulo="Aduana de entrada
       "
     ></ng-titulo>
-  </div>
+  </div>} @if(esAdunaTexto){
+    <div class="row mt-5">
+      <b>Aduana</b>
+    </div>
   }
 
   <div class="row mt-3">
@@ -84,6 +87,19 @@
         </div>
       </div>
       }
+      @if(fetchaSalida){
+        <div class="row mb-3">
+          <!-- Fecha única de salida de la mercancía -->
+          <div class="col-md-4">
+            <input-fecha
+              [datos]="fechaSalidaInput"
+              name="fetchaSalida"
+              (valorCambiado)="onFechaSalidaCambiada($event)"
+              [setFecha]="form.get('fechaSalida')?.value"
+            ></input-fecha>
+          </div>
+        </div>
+        }
       <div class="mb-3">
         <label for="usoFinal" class="form-label">
           Uso final de la mercancía*
