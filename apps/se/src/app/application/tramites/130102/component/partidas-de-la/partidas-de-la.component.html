@@ -22,7 +22,12 @@
                         <input class="form-control" type="text" id="fraccionArancelariaTIGIE"
                             formControlName="fraccionArancelariaTIGIE" aria-labelledby="fraccionArancelariaTIGIE" (change)="setValoresStore(form,'fraccionArancelariaTIGIE', 'setFraccionArancelariaTIGIE')">
                             <div *ngIf="esInvalido('fraccionArancelariaTIGIE')" class="text-danger">
-                                <small>Debe seleccionar una fracción.</small>
+                                <small *ngIf="form.controls['fraccionArancelariaTIGIE'].errors?.['required']">
+                                    La fracción arancelaria es obligatoria.
+                                </small>
+                                <small *ngIf="form.controls['fraccionArancelariaTIGIE'].errors?.['pattern']">
+                                    Debe ingresar una fracción válida (por ejemplo: 0101.21.01).
+                                </small>
                             </div>
                     </div>
                 </div>
@@ -38,7 +43,7 @@
                 <div class="col-md-8">
                     <div class="form-group">
                         <label class="form-label" for="descripcion">Descripción*:</label>
-                        <textarea class="form-control height" rows="3" id="descripcion" formControlName="descripcion"
+                        <textarea class="form-control height" rows="3" id="descripcion" formControlName="descripcion" maxlength="255"
                             aria-labelledby="descripcion" (change)="setValoresStore(form,'descripcion', 'setdescripcion_partidas')"></textarea>
                             <div *ngIf="esInvalido('descripcion')" class="text-danger">
                                 <small *ngIf="form.controls['descripcion'].hasError('required')">Descripción es obligatoria.</small>

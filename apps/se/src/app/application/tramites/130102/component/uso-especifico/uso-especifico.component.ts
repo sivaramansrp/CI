@@ -105,7 +105,7 @@ export class UsoEspicificoComponent implements OnInit {
 
     this.usoEspicificoForm = this.formbuilt.group({
       fraccionArancelariaProsec: [ this.solicitudState?.fraccionArancelariaProsec, Validators.required],
-      descripción: [{ value: '', disabled: true }]
+      descripción: ['']
     });
   }
 

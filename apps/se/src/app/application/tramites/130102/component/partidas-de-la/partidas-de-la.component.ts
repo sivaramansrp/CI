@@ -147,7 +147,7 @@ export class PartidasDeLaComponent implements OnInit, OnDestroy {
           Validators.maxLength(18),
         ],
       ],
-      fraccionArancelariaTIGIE: [ this.solicitudState?.fraccionArancelariaTIGIE, [Validators.required]],
+      fraccionArancelariaTIGIE: [ this.solicitudState?.fraccionArancelariaTIGIE, [Validators.required,Validators.pattern(/^\d{4}\.\d{2}\.\d{2}$/)]],
       fraccionArancelariaTIGIE_TIGIE: [ this.solicitudState?.fraccionArancelariaTIGIE_TIGIE, [Validators.required]],
       descripcion: [ this.solicitudState?.descripcionPartidas, [Validators.required, Validators.maxLength(255)]],
       valorPartidaUSD: [
