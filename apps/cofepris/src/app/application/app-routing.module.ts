@@ -467,6 +467,13 @@ const ROUTES: Routes = [
     import(
       './tramites/260302/exportacion-materias-primas-estupefacientes.module'
     ).then((m) => m.ExportacionMateriasPrimasEstupefacientesModule),
+},
+{
+  path: 'modificacion-permiso-lab',
+  loadChildren: () =>
+    import('./tramites/260918/modificacion-permiso-lab.module').then(
+      (m) => m.ModificacionPermisoLabModule
+    )
 }
 {
   path: 'permiso-vegetales-nutrientes',
