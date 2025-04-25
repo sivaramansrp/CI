@@ -319,3 +319,32 @@ export interface DestinatarioTablaDatos {
   columns: string[];
 }
 
+/**
+ * Representa la estructura de los datos de una fila de certificados.
+ */
+export interface CertificadosFilaTableDatos {
+  /**
+   * Datos de la tabla asociados al certificado.
+   */
+  data: TablaDatos;
+}
+
+/**
+ * Representa la estructura de los datos de una fila de certificados fitosanitarios.
+ */
+export interface CertificadosFitoFilaTableDatos {
+  /**
+   * Datos de la tabla asociados al certificado fitosanitario.
+   */
+  data: TablaDatos;
+}
+
+/**
+ * Representa la estructura de los datos de permisos relacionados con certificados fitosanitarios.
+ */
+export interface PermisosCertificadosFitoFilaTableDatos {
+  /**
+   * Datos de la tabla asociados a los permisos de certificados fitosanitarios.
+   */
+  data: TablaDatos;
+}
