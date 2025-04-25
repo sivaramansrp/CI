@@ -278,6 +278,13 @@ export class DatosDeLaSolicitudComponent {
         })
       );
 
+    const UNIDADDEMEDIDA$ = this.phytosanitaryReexportacionService
+      .getUnidadDeMedida().pipe(
+        map((resp) => {
+          this.nombreComun = resp.data;
+        })
+      );
+
     merge(
       NUMERODECERTIFICADO$,
       ADUANA$,
@@ -287,7 +294,8 @@ export class DatosDeLaSolicitudComponent {
       FRACCION$,
       GENERO$,
       ESPECIE$,
-      NOMBRECOMUN$
+      NOMBRECOMUN$,
+      UNIDADDEMEDIDA$
     )
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe();
@@ -350,6 +358,13 @@ export class DatosDeLaSolicitudComponent {
       'datosMercancia.nombreComun'
     )?.value;
     this.store.setNombreComun(NOMBRECOMUN);
+  }
+
+  unidadDeMedidaSeleccion() {
+    const UNIDADDEMEDIDA = this.solicitudForm.get(
+      'datosMercancia.unidadDeMedida'
+    )?.value;
+    this.store.setUnidadDeMedida(UNIDADDEMEDIDA);
   }
 
   public getCrossListBtn() {
