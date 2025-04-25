@@ -36,7 +36,7 @@ const loadManifest = (retryCount = 0, maxRetries = 3): Promise<Record<string, st
       console.log('Manifest loaded successfully');
       
       // Solo procesar las URLs si el WEB_HOST está definido
-      if (enviroment.WEB_HOST) {
+      if (ENVIRONMENT.WEB_HOST) {
         console.log('Processing URLs with WEB_HOST:', ENVIRONMENT.WEB_HOST);
         Object.keys(manifest).forEach((key) => {
           if (manifest[key].startsWith('http://localhost')) {
