@@ -27,6 +27,13 @@ const ROUTES: Routes = [
       ).then((m) => m.PermisoOrdinarioImportacionArmasMunicionesModule),
   },
   {
+    path: 'permiso-ordinario-exportacion-explosivo',
+    loadChildren: () =>
+      import(
+        './tramites/240121/permiso-ordinario-exportacion-explosivo.module'
+      ).then((m) => m.PermisoOrdinarioExportacionExplosivoModule),
+  },
+  {
     path: 'permiso-exportacion-pirotecnia',
     loadChildren: () =>
       import(
