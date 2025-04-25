@@ -216,6 +216,11 @@ export class AvisoComponent implements OnInit, OnDestroy {
    */
   tablaProceso = TABLA_PROCESO;
 
+  /**
+   * @property {object} tablaDesperdicio
+   * @description Configuración de la tabla de desperdicios utilizada en el componente.
+   * Contiene las definiciones de las columnas (encabezados) y los datos que se mostrarán en la tabla.
+   */
   tablaDesperdicio = TABLA_DESPERDICIO;
 
   /**
