@@ -128,14 +128,26 @@ fi
 echo "Verificando secreto para pull de imágenes..."
 microk8s kubectl get secret vucem30registrykey -n vucem-$DEPLOYMENT_ENV >/dev/null 2>&1
 if [ $? -ne 0 ]; then
-  echo "ADVERTENCIA: El secreto vucem30registrykey no existe en el namespace vucem-$DEPLOYMENT_ENV."
-  echo "El despliegue podría fallar. Cree el secreto con:"
-  echo "kubectl create secret docker-registry vucem30registrykey \\"
-  echo "  --docker-server=ghcr.io \\"
-  echo "  --docker-username=USUARIO \\"
-  echo "  --docker-password=TOKEN \\"
-  echo "  --docker-email=EMAIL \\"
-  echo "  -n vucem-$DEPLOYMENT_ENV"
+  echo "Creando secreto vucem30registrykey en el namespace vucem-$DEPLOYMENT_ENV..."
+  microk8s kubectl create secret docker-registry vucem30registrykey \
+    --docker-server=ghcr.io \
+    --docker-username=vucem30-dev \
+    --docker-password=${GITHUB_TOKEN} \
+    --docker-email=admin@vucem.com \
+    -n vucem-$DEPLOYMENT_ENV
+  
+  if [ $? -ne 0 ]; then
+    echo "ADVERTENCIA: No se pudo crear el secreto automáticamente."
+    echo "El despliegue podría fallar. Cree el secreto manualmente con:"
+    echo "kubectl create secret docker-registry vucem30registrykey \\"
+    echo "  --docker-server=ghcr.io \\"
+    echo "  --docker-username=USUARIO \\"
+    echo "  --docker-password=TOKEN \\"
+    echo "  --docker-email=EMAIL \\"
+    echo "  -n vucem-$DEPLOYMENT_ENV"
+  else
+    echo "Secreto creado correctamente."
+  fi
 fi
 
 # Verificar si encontramos el manifiesto
@@ -153,17 +165,32 @@ if [ -z "$MANIFEST_FILE" ]; then
   exit 1
 fi
 
+# Crear una copia temporal del manifiesto para procesarlo
+TMP_MANIFEST="$K8S_TEMP_DIR/tmp-manifest-$DEPLOYMENT_ENV.yaml"
+cp "$MANIFEST_FILE" "$TMP_MANIFEST"
+
+# Reemplazar variables del entorno en el manifiesto
+sed -i "s/\${ENV}/$DEPLOYMENT_ENV/g" "$TMP_MANIFEST"
+sed -i "s/\${REGISTRY}/ghcr.io\/vucem30-dev\/frontend/g" "$TMP_MANIFEST"
+sed -i "s/\${TAG}/$DEPLOYMENT_ENV/g" "$TMP_MANIFEST"
+sed -i "s/\${REPLICAS}/1/g" "$TMP_MANIFEST"
+sed -i "s/\${MIN_REPLICAS}/1/g" "$TMP_MANIFEST"
+sed -i "s/\${MAX_REPLICAS}/3/g" "$TMP_MANIFEST"
+
+# Eliminar la anotación conflictiva del Ingress
+sed -i '/kubernetes.io\/ingress.class/d' "$TMP_MANIFEST"
+
 # Aplicar manifiesto con validación previa
-echo "Validando manifiesto Kubernetes desde: $MANIFEST_FILE" | tee -a "$LOG_FILE"
-microk8s kubectl apply --validate=true --dry-run=client -f "$MANIFEST_FILE" | tee -a "$LOG_FILE"
+echo "Validando manifiesto Kubernetes desde: $TMP_MANIFEST" | tee -a "$LOG_FILE"
+microk8s kubectl apply --validate=true --dry-run=client -f "$TMP_MANIFEST" | tee -a "$LOG_FILE"
 if [ $? -ne 0 ]; then
   echo "Error: Falló la validación del manifiesto Kubernetes." | tee -a "$LOG_FILE"
   exit 1
 fi
 
 # Aplicar manifiesto
-echo "Aplicando manifiesto Kubernetes desde: $MANIFEST_FILE" | tee -a "$LOG_FILE"
-microk8s kubectl apply -f "$MANIFEST_FILE" | tee -a "$LOG_FILE"
+echo "Aplicando manifiesto Kubernetes desde: $TMP_MANIFEST" | tee -a "$LOG_FILE"
+microk8s kubectl apply -f "$TMP_MANIFEST" | tee -a "$LOG_FILE"
 if [ $? -ne 0 ]; then
   echo "Error: Falló la aplicación del manifiesto Kubernetes." | tee -a "$LOG_FILE"
   exit 1
