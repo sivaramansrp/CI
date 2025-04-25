@@ -1,4 +1,5 @@
 <div class="container">
+  <div class="row">
     <div class="row">
         <ng-titulo [titulo]="'Operaciones de Comercio Exterior'"></ng-titulo>
       </div>
@@ -22,6 +23,11 @@
             [datos]="cuerpoSolicitarTablaFila"
           >
           </app-tabla-dinamica>
+          <div class="col-md-12 mt-5 d-flex justify-content-end">
+            <button type="button" class="btn btn-primary ">Agregar</button>
+            <button type="button" class="btn btn-default ms-2">Eliminar</button>
+           
+            </div>
         </div>
       </div>
       <div class="row">
@@ -35,8 +41,10 @@
         [datos]="cuerpoPersonasTablaFila"
       >
       </app-tabla-dinamica>
+   
        </div>
 
+      </div>
       </div>
       <div class="row">
         <form [formGroup]="periodoForm">
@@ -63,6 +71,10 @@
             </div>
             </div>
         </div>
+        <div class="col-md-12 mt-5 d-flex justify-content-end">
+          <button type="button" class="btn btn-default">Cancelar</button>
+          <button type="button" class="btn btn-primary ms-3">Agregar</button>
+          </div>
       </form>
         </div>
 
