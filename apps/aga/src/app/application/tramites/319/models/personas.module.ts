@@ -28,3 +28,12 @@ export interface Personas {
   periodo : string;
   fechas_sobre_el_periodo :string;
   }
+  export interface FinalDataToSend {
+    datos: Solicitar[];
+}
+  export function createDatosState(params: Partial<FinalDataToSend> = {}): FinalDataToSend {
+    return {
+        datos: params as Solicitar[]
+    }
+
+}
