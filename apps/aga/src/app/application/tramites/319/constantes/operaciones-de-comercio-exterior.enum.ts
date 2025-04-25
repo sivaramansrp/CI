@@ -1,3 +1,7 @@
+import {Personas, Solicitar } from "../models/personas.module";
+import { ConfiguracionColumna } from "@libs/shared/data-access-user/src";
+
+
 /**
  * @const PASOS
  * @description Arreglo que define los pasos de un proceso en una solicitud de operaciones de comercio exterior.
@@ -29,3 +33,56 @@ export const PASOS = [
    * Esta constante define la ubicación de los recursos JSON específicos para el trámite 319.
    */
   export const URL = '../../../../../assets/json/319/';
+
+  /**
+   * @const CONFIGURACION_PERSONAS_COLUMNAS
+   * @description Configuración de las columnas para la tabla de personas en el módulo de operaciones de comercio exterior.
+   * Cada objeto en el arreglo representa una columna con su encabezado, clave para acceder al valor en la fila, y el orden de aparición.
+   * 
+   * @type {ConfiguracionColumna<Personas>[]}
+   * 
+   * @property {string} encabezado - El texto que se mostrará como encabezado de la columna.
+   * @property {Function} clave - Una función que recibe una fila y retorna el valor correspondiente a la columna.
+   * @property {number} orden - El orden en el que la columna aparecerá en la tabla.
+   * 
+   * @example
+   * // Ejemplo de uso:
+   * CONFIGURACION_PERSONAS_COLUMNAS.forEach(columna => {
+   *   console.log(columna.encabezado);
+   * });
+   * 
+   * @module OperacionesDeComercioExterior
+   */
+  export const CONFIGURACION_PERSONAS_COLUMNAS: ConfiguracionColumna<Personas>[] =[
+      { encabezado: 'RFC', clave: (fila) => fila.rfc, orden: 1 },
+      { encabezado: 'CURP', clave: (fila) => fila.curp, orden: 2 },
+      { encabezado: 'Nombre', clave: (fila) => fila.nombre, orden: 3 },
+      { encabezado: 'Primer apellido', clave: (fila) => fila.primer_apellido, orden: 4 },
+      { encabezado: 'Segundo apellido', clave: (fila) => fila.segundo_apellido, orden: 5 },
+      { encabezado: 'Correo electrónico', clave: (fila) => fila.correo_electronico, orden: 6 },
+  ]
+
+  /**
+   * @const CONFIGURACION_SOLICITAR_COLUMNAS
+   * @description Configuración de las columnas para la tabla de solicitudes en el módulo de operaciones de comercio exterior.
+   * Cada objeto en el arreglo representa una columna con su encabezado, clave para acceder al valor en la fila, y el orden de aparición.
+   * 
+   * @type {ConfiguracionColumna<Solicitar>[]}
+   * 
+   * @property {string} encabezado - El texto que se mostrará como encabezado de la columna.
+   * @property {Function} clave - Una función que recibe una fila y retorna el valor correspondiente a la columna.
+   * @property {number} orden - El orden en el que la columna aparecerá en la tabla.
+   * 
+   * @example
+   * // Ejemplo de uso:
+   * CONFIGURACION_SOLICITAR_COLUMNAS.forEach(columna => {
+   *   console.log(columna.encabezado);
+   * });
+   * 
+   * @module OperacionesDeComercioExterior
+   */
+  export const CONFIGURACION_SOLICITAR_COLUMNAS: ConfiguracionColumna<Solicitar>[] = [
+    { encabezado: 'Periodo', clave: (fila) => fila.periodo, orden: 1 },
+    { encabezado: 'Fechas sobre el periodo', clave: (fila) => fila.fechas_sobre_el_periodo, orden: 2 },
+  ];
+

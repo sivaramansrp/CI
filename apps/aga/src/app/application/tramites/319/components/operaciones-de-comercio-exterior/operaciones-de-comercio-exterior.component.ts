@@ -9,6 +9,8 @@ import { OperacionService } from '../../services/operacion.service';
 
 import { Personas, Solicitar } from '../../models/personas.module';
 
+import {CONFIGURACION_PERSONAS_COLUMNAS, CONFIGURACION_SOLICITAR_COLUMNAS } from '../../constantes/operaciones-de-comercio-exterior.enum';
+
 /**
  * @componente
  * @nombre OperacionesDeComercioExteriorComponent
@@ -60,14 +62,7 @@ export class OperacionesDeComercioExteriorComponent implements OnInit, OnDestroy
   /**
    * @propiedad {ConfiguracionColumna<Personas>[]} configuracionPersonasColumnas - Configuración de columnas para la tabla de personas.
    */
-  configuracionPersonasColumnas: ConfiguracionColumna<Personas>[] = [
-    { encabezado: 'RFC', clave: (fila) => fila.rfc, orden: 1 },
-    { encabezado: 'CURP', clave: (fila) => fila.curp, orden: 2 },
-    { encabezado: 'Nombre', clave: (fila) => fila.nombre, orden: 3 },
-    { encabezado: 'Primer apellido', clave: (fila) => fila.primer_apellido, orden: 4 },
-    { encabezado: 'Segundo apellido', clave: (fila) => fila.segundo_apellido, orden: 5 },
-    { encabezado: 'Correo electrónico', clave: (fila) => fila.correo_electronico, orden: 6 },
-  ];
+  configuracionPersonasColumnas: ConfiguracionColumna<Personas>[] = CONFIGURACION_PERSONAS_COLUMNAS;
 
   /**
    * @propiedad {TablaSeleccion} tipoSolicitarSeleccion - Tipo de selección para la tabla de solicitudes.
@@ -77,10 +72,7 @@ export class OperacionesDeComercioExteriorComponent implements OnInit, OnDestroy
   /**
    * @propiedad {ConfiguracionColumna<Solicitar>[]} configuracionSolicitarColumnas - Configuración de columnas para la tabla de solicitudes.
    */
-  configuracionSolicitarColumnas: ConfiguracionColumna<Solicitar>[] = [
-    { encabezado: 'Periodo', clave: (fila) => fila.periodo, orden: 1 },
-    { encabezado: 'Fechas sobre el periodo', clave: (fila) => fila.fechas_sobre_el_periodo, orden: 2 },
-  ];
+  configuracionSolicitarColumnas: ConfiguracionColumna<Solicitar>[] =CONFIGURACION_SOLICITAR_COLUMNAS;
 
   /**
    * @propiedad {string[]} acciones - Lista de acciones disponibles.
