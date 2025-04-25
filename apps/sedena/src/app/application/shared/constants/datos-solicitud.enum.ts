@@ -100,6 +100,7 @@ export const TERCEROS_NACIONALIDAD_OPCIONES = [
  * - `TRAMITE_240121`: Código para el trámite 240121.
  * - `TRAMITE_240405`: Código para el trámite 240405.
  *  -`TRAMITE_240311`: Código para el trámite 240311.
+ * - `TRAMITE_240411`: Código para el trámite 240411.
  */
 export const NUMERO_TRAMITE = {
   TRAMITE_240108: 240108,
@@ -109,6 +110,7 @@ export const NUMERO_TRAMITE = {
   TRAMITE_240121: 240121,
   TRAMITE_240405: 240405,
   TRAMITE_240311: 240311,
+  TRAMITE_240411: 240411,
 }
 
 /**
