@@ -1,10 +1,11 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild,} from '@angular/core';
 import { ALERTA_COM } from '@libs/shared/data-access-user/src/tramites/constantes/110208/certificado.enum';
 import{AccionBoton} from '@libs/shared/data-access-user/src/core/models/140103/cancelacion.model';
 import { DatosPasos } from '@libs/shared/data-access-user/src';
 import { ListaPasosWizard } from '@libs/shared/data-access-user/src';
 import { PASOS} from '@libs/shared/data-access-user/src/core/models/221602/mercancia.model';
 import { WizardComponent } from '@libs/shared/data-access-user/src';
+import { ZoosanitarioService } from '../../service/zoosanitario.service';
 
 @Component({
   selector: 'app-zoosanitario-para-importacion', 
@@ -12,7 +13,7 @@ import { WizardComponent } from '@libs/shared/data-access-user/src';
  
 })
 
-export class ZoosanitarioParaImportacionComponent {
+export class ZoosanitarioParaImportacionComponent{
     /**
    * @property {ListaPasosWizard[]} pantallasPasos - Array para almacenar los pasos del wizard.
    */
@@ -32,7 +33,7 @@ export class ZoosanitarioParaImportacionComponent {
     txtBtnAnt: 'Anterior',
     txtBtnSig: 'Continuar',
   };
- 
+  constructor(private zoosanitarioService: ZoosanitarioService) { }
  /**
    * Actualiza la propiedad `indice` según el valor del objeto `AccionBoton` proporcionado.
    * Si la propiedad `valor` de `AccionBoton` está entre 1 y 4 (inclusive), establece `indice` en `valor`.
@@ -41,7 +42,14 @@ export class ZoosanitarioParaImportacionComponent {
    * @param {AccionBoton} e - El objeto del botón de acción que contiene las propiedades `valor` y `accion`.
    * @returns {void}
    */
+//  ngOnInit(): void {
+    
+//  this.zoosanitarioService.initializeForms();
+  
+// }
   getValorIndice(e: AccionBoton): void {
+   
+    this.zoosanitarioService.getPayload().subscribe()
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
       if (e.accion === 'cont') {
