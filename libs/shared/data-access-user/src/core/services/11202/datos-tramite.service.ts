@@ -9,6 +9,8 @@ import { Injectable } from '@angular/core';
 })
 export class DatosTramiteService {
   private readonly url = './assets/json/11202/contenedor-mockdata.json';
+  public uploadArchivo = DatosTramiteService.uploadArchivo;
+  public submitSolicitud = DatosTramiteService.submitSolicitud;
 
   constructor(private http: HttpClient) {
     this.getAduanas();
@@ -33,7 +35,7 @@ Obtenga una lista ficticia de Contenedores
   /**
    * Simular carga de archivos
    */
-  uploadArchivo(archivo?: File): Observable<any> {
+  static uploadArchivo(archivo?: File): Observable<{ success: boolean; message: string }> {
     return of({
       success: true,
       message: `Archivo ${archivo?.name} cargado exitosamente`,
@@ -43,11 +45,11 @@ Obtenga una lista ficticia de Contenedores
   /**
    * Simular un envío exitoso de formulario
    */
-  submitSolicitud(_solicitudData?: FormGroup): Observable<any> {
+  static submitSolicitud(_solicitudData?: FormGroup): Observable<{ success: boolean; message: string }> {
     return of({ success: true, message: 'Solicitud enviada exitosamente' });
   }
 
-  getDatosTableData(): Observable<any[]> {
-    return this.http.get<any[]>(`assets/json/11202/datosTabla.json`);
+  getDatosTableData(): Observable<unknown[]> {
+    return this.http.get<unknown[]>(`assets/json/11202/datosTabla.json`);
   }
 }

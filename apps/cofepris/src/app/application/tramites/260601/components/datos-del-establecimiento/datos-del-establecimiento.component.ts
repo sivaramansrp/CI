@@ -5,7 +5,7 @@ import { CommonModule } from '@angular/common';
 
 import { AvisoSanitarioState, Tramite260601Store } from '../../../../estados/tramites/tramite260601.store';
 import { CATALOGOS_ID, OPCIONES_DE_BOTON_DE_RADIO } from '../../constantes/aviso-enum';
-import { CatalogoSelectComponent, InputCheckComponent, InputRadioComponent, TableComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { CatalogoSelectComponent, InputCheckComponent, InputRadioComponent, TableBodyData, TableComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Manifiestos, ManifiestosRespuesta } from '../../models/aviso-model';
 import { AvisoSanitarioService } from '../../services/aviso-sanitario.service';
 import { Catalogo } from '@ng-mf/data-access-user';
@@ -103,7 +103,7 @@ export class DatosDelEstablecimientoComponent implements OnInit, OnDestroy {
   /**
    * Cuerpo de datos de la tabla SCIAN.
    */
-  public scianBodyData: unknown = null;
+  public scianBodyData: TableBodyData[] = [];
 
   /**
    * Cabeceras de la tabla de productos.
@@ -113,7 +113,7 @@ export class DatosDelEstablecimientoComponent implements OnInit, OnDestroy {
   /**
    * Cuerpo de datos de la tabla de productos.
    */
-  public productoBodyData: unknown = null;
+  public productoBodyData: TableBodyData[] = [];
 
   /**
    * Datos de la tabla SCIAN desde un archivo JSON.

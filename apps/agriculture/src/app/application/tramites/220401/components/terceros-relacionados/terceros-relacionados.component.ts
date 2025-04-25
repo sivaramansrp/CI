@@ -1,7 +1,7 @@
 /* eslint-disable no-empty-function */
 import { Component, OnInit } from '@angular/core';
 
-import { MENSAJEDEALERTA, TituloComponent } from '@ng-mf/data-access-user';
+import { MENSAJEDEALERTA, TableBodyData, TituloComponent } from '@ng-mf/data-access-user';
 
 import { TableComponent } from '@ng-mf/data-access-user';
 
@@ -30,11 +30,11 @@ export class TercerosRelacionadosComponent implements OnInit {
 
 
   public establecimientoHeaderData: string[] = [];
-  public establecimientoBodyData: unknown = [];
+  public establecimientoBodyData: TableBodyData[] = [];
   public destinatarioHeaderData: string[] = [];
-  public destinatarioBodyData: unknown = [];
+  public destinatarioBodyData: TableBodyData[] = [];
   public importadorHeaderData: string[] = [];
-  public importadorBodyData: unknown = [];
+  public importadorBodyData: TableBodyData[] = [];
   public getEstablecimientoTableData = establecimientoTable;
   public getDestinatarioTableData = destinatarioTable;
   public getImportadorTableData = importardorTable;

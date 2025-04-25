@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
-import { Catalogo, ConfiguracionColumna, TablaSeleccion } from '@ng-mf/data-access-user';
+import { Catalogo, ConfiguracionColumna, TablaSeleccion, TableBodyData } from '@ng-mf/data-access-user';
 
 import { MENSAJE_DOBLE_CLIC } from '../../constantes/220203/importacion-de-acuicultura.enum';
 
@@ -188,9 +188,9 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit {
 
   /**
    * @description Datos de la tabla de detalles.
-   * @type {string[]}
+   * @type {TableBodyData[]}
    */
-  detallecuerpoTabla: string[] = [];
+  detallecuerpoTabla: TableBodyData[] = [];
 
   /**
    * @description Datos de la tabla principal.

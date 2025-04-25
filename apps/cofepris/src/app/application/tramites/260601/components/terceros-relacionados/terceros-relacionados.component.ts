@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { AlertComponent, TableComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { AlertComponent, TableBodyData, TableComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { AgregarFabricanteComponent } from '../agregar-fabricante/agregar-fabricante.component';
 import { AgregarProveedorComponent } from '../agregar-proveedor/agregar-proveedor.component';
 import { AvisoSanitarioService } from '../../services/aviso-sanitario.service';
@@ -42,7 +42,7 @@ export class TercerosRelacionadosComponent implements OnInit {
   /**
    * Cuerpo de datos de la tabla de proveedores.
    */
-  public proveedorBodyData: unknown = null;
+  public proveedorBodyData: TableBodyData[] = [];
 
   /**
    * Cabeceras de la tabla de fabricantes.
@@ -52,7 +52,7 @@ export class TercerosRelacionadosComponent implements OnInit {
   /**
    * Cuerpo de datos de la tabla de fabricantes.
    */
-  public fabricanteBodyData: unknown = null;
+  public fabricanteBodyData: TableBodyData[] = [];
 
   /**
    * Datos de la tabla de fabricantes desde un archivo JSON.

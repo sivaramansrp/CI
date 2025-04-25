@@ -1,7 +1,7 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { InputRadioComponent, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { InputRadioComponent, TableBodyData, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { Subject, Subscription, distinctUntilChanged, take, takeUntil } from 'rxjs';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
@@ -110,11 +110,11 @@ export class DatosBusquedaComponent implements OnInit, OnDestroy {
 
   /**
    * Datos del cuerpo de la tabla para el establecimiento.
-   * Se inicializa como un arreglo de tipo desconocido (unknown).
+   * Se inicializa como un arreglo de tipo desconocido (TableBodyData).
    *
-   * @property {unknown} establecimientoBodyData - Datos del cuerpo de la tabla.
+   * @property {TableBodyData} establecimientoBodyData - Datos del cuerpo de la tabla.
    */
-  public establecimientoBodyData: unknown = [];
+  public establecimientoBodyData: TableBodyData[] = [];
 
 
   destinatarioTableData: TableData = { encabezadoDeTabla: [], cuerpoTabla: [] };

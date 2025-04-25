@@ -3,8 +3,10 @@
  */
 
 import { Injectable } from '@angular/core';
-import { HttpCoreService } from '../../shared/http/http.service';
 import { Observable } from 'rxjs';
+
+import { Catalogo } from '../../../models/shared/catalogos.model';
+import { HttpCoreService } from '../../shared/http/http.service';
 
 @Injectable({
   providedIn: 'root'
@@ -20,18 +22,18 @@ export class BuscarCertificadoDeOrigenService {
   /**
    * @method getPaisBloque
    *  Obtiene los datos de la entidad federativa desde un archivo JSON.
-   * @returns {Observable<any>} Un observable que emite los datos obtenidos.
+   * @returns {Observable<Catalogo[]>} Un observable que emite los datos obtenidos.
    */
-  getPaisBloque(): Observable<any> {
+  getPaisBloque(): Observable<Catalogo[]> {
     return this.http.get('./assets/json/110210/pais-bloque.json');
   }
 
   /**
    * @method getTratadoAcuerdo
    *  Obtiene los datos de la representación federal desde un archivo JSON.
-   * @returns {Observable<any>} Un observable que emite los datos obtenidos.
+   * @returns {Observable<Catalogo[]>} Un observable que emite los datos obtenidos.
    */
-  getTratadoAcuerdo(): Observable<any> {
+  getTratadoAcuerdo(): Observable<Catalogo[]> {
     return this.http.get('./assets/json/110210/tratado-acuerdo.json');
   }
 }

@@ -1,8 +1,9 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { ConfiguracionColumna, TablaAcciones } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { TablaSeleccion } from '@ng-mf/data-access-user';
+
+import { TablaAcciones, TablaSeleccion } from '../../../core/enums/tabla-seleccion.enum';
+import { ConfiguracionColumna } from '../../../core/models/shared/configuracion-columna.model';
 
 @Component({
   selector: 'app-tabla-dinamica',
@@ -108,7 +109,7 @@ export class TablaDinamicaComponent<T> {
    * 
    * @event
    */
-  @Output() alternarValor: EventEmitter<{ row: any; column: string }> = new EventEmitter();
+  @Output() alternarValor: EventEmitter<T> = new EventEmitter();
 
 
   /**
@@ -222,7 +223,7 @@ export class TablaDinamicaComponent<T> {
    *
    * @param row - La fila cuyos valores se desean cambiar.
    */
-  cambiarValor(row: any): void {
+  cambiarValor(row: T): void {
     this.alternarValor.emit(row);
   }
 }

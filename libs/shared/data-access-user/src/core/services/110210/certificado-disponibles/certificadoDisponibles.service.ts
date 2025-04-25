@@ -3,8 +3,9 @@
  */
 
 import { Injectable } from '@angular/core';
-import { HttpCoreService } from '../../shared/http/http.service';
 import { Observable } from 'rxjs';
+
+import { HttpCoreService } from '../../shared/http/http.service';
 
 @Injectable({
   providedIn: 'root'
@@ -19,9 +20,9 @@ export class CertificadoDisponiblesService {
   /**
    * @method getData
    *  Obtiene los datos de tratados y acuerdos desde un archivo JSON.
-   * @returns {Observable<any>} Un observable que emite los datos obtenidos.
+   * @returns {Observable<unknown>} Un observable que emite los datos obtenidos.
    */
-  getData(): Observable<any> {
+  getData(): Observable<unknown> {
     return this.http.get('./assets/json/110210/certificado-disponibles.json');
   }
 }

@@ -90,7 +90,7 @@ export class BuscarCertificadoDeOrigenComponent implements OnInit, OnDestroy {
     this.service.getPaisBloque().pipe(
       takeUntil(this.destroyed$)
     ).subscribe(
-      (data) => {
+      (data: Catalogo[]) => {
         this.paisBloque = data;
       }
     );

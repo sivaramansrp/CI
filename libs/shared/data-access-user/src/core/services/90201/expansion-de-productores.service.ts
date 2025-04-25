@@ -25,7 +25,7 @@ export class ExpansionDeProductoresService {
    }
 
 
-  getSectorCatalog() {
+  getSectorCatalog(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>('assets/json/90201/sector.json');
   }
 

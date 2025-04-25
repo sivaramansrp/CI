@@ -24,7 +24,7 @@ export class ServiciosPantallaService {
    * @param catalogo - El nombre del catálogo a obtener.
    * @returns Un observable de `RespuestaCatalogos` que contiene los datos del catálogo.
    */
-  getBimestreUnoCatalogo(catalogo: string) {
+  getBimestreUnoCatalogo(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>(
       'assets/json/31601/bimestre-catalog-one.json'
     );
@@ -35,7 +35,7 @@ export class ServiciosPantallaService {
    * @param catalogo - El nombre del catálogo a obtener.
    * @returns Un observable de `RespuestaCatalogos` que contiene los datos del catálogo.
    */
-  getBimestreDosCatalogo(catalogo: string) {
+  getBimestreDosCatalogo(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>(
       'assets/json/31601/bimestre-catalog-two.json'
     );

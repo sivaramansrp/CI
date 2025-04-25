@@ -33,9 +33,9 @@ export class SubirDocumentoService {
    * @param id
    * @returns JSONResponse
    */
-    generarAcuse(cuerpoAcuse: any): Observable<any> {
+    generarAcuse(cuerpoAcuse: unknown): Observable<unknown> {
       return this.http
-        .put<any>(`${this.urlServer}/create-pdf`, cuerpoAcuse)
+        .put<unknown>(`${this.urlServer}/create-pdf`, cuerpoAcuse)
         .pipe(
           catchError((error) => {
             return throwError(() => error);

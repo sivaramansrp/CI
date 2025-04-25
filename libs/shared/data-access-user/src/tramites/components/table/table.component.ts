@@ -7,7 +7,7 @@ import {
   OnInit,
   SimpleChanges,
 } from '@angular/core';
-import { TableData } from '../../../core/models/shared/components.model';
+import { TableBodyData, TableData } from '../../../core/models/shared/components.model';
 
 import { CommonModule } from '@angular/common';
 
@@ -32,8 +32,7 @@ export class TableComponent implements OnInit, OnChanges {
    * @description
    * commonTableBody se utiliza para obtener datos del cuerpo de la tabla de la componente
    */
-  @Input() commonTableBody: any = [];
-
+  @Input() commonTableBody: TableBodyData[] = [];
   /**
   * @description
   * Si no se pasa ningún valor desde el componente padre, tomará el valor predeterminado como verdadero

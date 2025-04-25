@@ -1,4 +1,4 @@
-import { CatalogoSelectComponent, TableComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { CatalogoSelectComponent, TableBodyData, TableComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, distinctUntilChanged, takeUntil } from 'rxjs';
@@ -72,9 +72,9 @@ export class DatosDelInmuebleComponent implements OnInit, OnDestroy {
    * **Datos del cuerpo de la tabla de establecimientos**  
    * 
    * Contiene la información detallada de los establecimientos.  
-   * Se usa `unknown` hasta definir su estructura específica.
+   * Se usa `TableBodyData[]` hasta definir su estructura específica.
    */
-  public establecimientoBodyData: unknown = [];
+  public establecimientoBodyData: TableBodyData[] = [];
 
   /**
    * **Datos de la tabla de destinatarios**  

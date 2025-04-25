@@ -4,7 +4,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import { TEXTOS } from '../../constantes/certificado-zoosanitario.enum';
 
-import { Catalogo, RespuestaCatalogos } from '@ng-mf/data-access-user';
+import { Catalogo, RespuestaCatalogos, TableBodyData } from '@ng-mf/data-access-user';
 
 import { HttpClient } from '@angular/common/http';
 
@@ -127,7 +127,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   };
 
   encabezadoDeTabla: string[] = this.tableData.header;
-  mesaCuerpo: string[] = [];
+  mesaCuerpo: TableBodyData[] = [];
 
 
 
