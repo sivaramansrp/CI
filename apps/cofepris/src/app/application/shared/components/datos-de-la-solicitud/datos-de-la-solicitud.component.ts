@@ -295,19 +295,16 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   public mostrarRegimenYAdunasDeEntradasDatos: boolean = true;
 
   /**
-   * Arreglo que almacena los elementos añadidos.
-   *
-   * Este arreglo se utiliza para guardar una lista de cadenas que representan
-   * los elementos que han sido agregados en el componente.
+   * @property {string[]} elementosAnadidos
+   * Lista de elementos adicionales que se deben mostrar en el formulario.
    */
-  public elementosAnadidos: string[] = [];
+  @Input() public elementosAnadidos!: string[];
 
   /**
-   * Lista de elementos requeridos en el formulario.
-   * Esta propiedad almacena un arreglo de cadenas que representan
-   * los elementos que deben ser obligatorios en el formulario.
+   * @property {string[]} elementosRequeridos
+   * Lista de elementos que son obligatorios en el formulario.
    */
-  public elementosRequeridos: string[] = [];
+  @Input() public elementosRequeridos!: string[];
 
   /**
    * @constructor
@@ -356,7 +353,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Crea el formulario, activa la escucha de cambios y sincroniza el estado con el input.
    */
   ngOnInit(): void {
-    this.validarElementos();
     this.crearDatosSolicitudForm();
     this.actualizarDatosFormularioSolicitud();
     this.mostrarCorreoElectronico =
@@ -533,59 +529,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       regimenLaMercancia: ['101', [Validators.required]],
       aduana: [this.datosSolicitudFormState.aduana, [Validators.required]],
     });
-  }
-
-  /**
-   * Valida elementos según el `idProcedimiento` y establece
-   * las listas de elementos no válidos y añadidos.
-   * @returns {void} Lista de elementos no válidos.
-   */
-  validarElementos(): void {
-    this.elementosAnadidos = [];
-    switch (this.idProcedimiento) {
-      case 260301:
-      case 260302:
-        this.elementosAnadidos = [
-          'calleYNumero',
-          'correoElectronico',
-          'rfcSanitario',
-          'regimenLaMercancia',
-          'aduana',
-        ];
-        this.elementosRequeridos = [
-          'colonia',
-          'localidad',
-          'denominacionRazon',
-          'scian',
-          'correoElectronico',
-        ];
-        break;
-      case 260208:
-        this.elementosRequeridos = [
-          'denominacionRazon',
-          'scian',
-          'correoElectronico',
-        ];
-        break;
-      case 260209:
-        this.elementosRequeridos = ['denominacionRazon', 'correoElectronico'];
-        break;
-      case 260207:
-        this.elementosRequeridos = ['denominacionRazon'];
-        break;
-      case 260219:
-        this.elementosRequeridos = [
-          'denominacionRazon',
-          'scian',
-          'correoElectronico',
-          'rfcSanitario',
-        ];
-        break;
-      default:
-        this.elementosAnadidos = [];
-        this.elementosRequeridos = [];
-        break;
-    }
   }
 
   /**
