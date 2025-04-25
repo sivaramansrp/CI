@@ -1,9 +1,9 @@
-import { CatalogoSelectComponent, CatalogosService, FirmaPageComponent, SelectCatalogosComponent } from '@libs/shared/data-access-user/src';
-import { NgModule, forwardRef } from '@angular/core';
+import { CatalogoSelectComponent, CatalogosService, FirmaPageComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { forwardRef, NgModule } from '@angular/core';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { CommonModule } from '@angular/common';
 import { FuncionarioRoutingModule } from './funcionario-routing.module';
-
+import { HttpClientModule } from '@angular/common/http';
 @NgModule({
   declarations: [
   ],
@@ -12,7 +12,9 @@ import { FuncionarioRoutingModule } from './funcionario-routing.module';
     FuncionarioRoutingModule,
     forwardRef(() => CatalogoSelectComponent),
     forwardRef(() => FirmaPageComponent),
-    ToastrModule.forRoot()
+    ToastrModule.forRoot(),
+    HttpClientModule,
+    TituloComponent,
   ],
   providers: [
     ToastrService,

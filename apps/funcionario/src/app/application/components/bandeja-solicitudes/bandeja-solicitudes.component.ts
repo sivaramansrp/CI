@@ -1,21 +1,27 @@
-import { Component, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
-import { ConfiguracionColumna, InputFecha, InputFechaComponent, TablaAcciones, TablaDinamicaComponent, TablePaginationComponent } from '@libs/shared/data-access-user/src';
+import { catchError, map, ReplaySubject } from 'rxjs';
+import { Component, OnInit } from '@angular/core';
+import { ConfiguracionColumna,
+         InputFecha,
+         InputFechaComponent,
+         TablaAcciones,
+         TablaDinamicaComponent,
+         TablePaginationComponent
+       } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { ReplaySubject, catchError, map } from 'rxjs';
-import { CONFIGURACION_ENCABEZADO_SOLICITUDES } from '../../core/constantes/constantes-bandejas.constants';
 import { CommonModule } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
+import { CONFIGURACION_ENCABEZADO_SOLICITUDES } from '../../core/constantes/constantes-bandejas.constants';
 import { ListaSolicitudes } from '../../core/models/solicitudes.model';
-import { TablerosService } from '../../core/service/tabletos.service';
+import { TablerosService } from '../../core/service/tableros.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-bandeja-solicitudes',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, HttpClientModule, InputFechaComponent, TablaDinamicaComponent, TablePaginationComponent],
+  imports: [CommonModule, ReactiveFormsModule, InputFechaComponent, TablaDinamicaComponent, TablePaginationComponent],
   templateUrl: './bandeja-solicitudes.component.html',
   styleUrl: './bandeja-solicitudes.component.scss',
 })
-export class BandejaSolicitudesComponent implements OnInit, OnDestroy, OnChanges {
+export class BandejaSolicitudesComponent implements OnInit {
   /** Configuración del campo de fecha inicial */
   FECHA_INICIO = {
     labelNombre: 'Fecha inicial',
@@ -59,9 +65,11 @@ export class BandejaSolicitudesComponent implements OnInit, OnDestroy, OnChanges
 
   constructor(
     private fb: FormBuilder,
-    private servicioFuncionario: TablerosService,
+    private tableroService: TablerosService,
   ) {
+
   }
+
   /** Al inicializar el componente, se cargan las solicitudes */
   ngOnInit(): void {
     this.inicializaFormConsulta();
@@ -103,8 +111,9 @@ export class BandejaSolicitudesComponent implements OnInit, OnDestroy, OnChanges
   /** Obtiene todos las solicitudes desde el backend y aplica la paginación inicial */
   public getSolicitudesTabla(): void {
     this.accionesServcios = [TablaAcciones.VER];
-    this.servicioFuncionario.getListaSolicitudes()
+    this.tableroService.getListaSolicitudes()
       .pipe(
+        takeUntilDestroyed(),
         map((data) => {
           this.todasSolicitudesOriginales = data;
           this.todasSolicitudes = [...data];
@@ -118,16 +127,6 @@ export class BandejaSolicitudesComponent implements OnInit, OnDestroy, OnChanges
       .subscribe();
   }
 
-  /**
-    * Método que actualiza la paginacón de la tabla 
-    * @param changes Cambios detectados en las propiedades de entrada.
-    */
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['currentPage'] || changes['itemsPerPage'] || changes['todasSolicitudes']) {
-      this.updatePagination();
-    }
-  }
-
   /** Actualiza los elementos paginados según la página e ítems por página seleccionados */
   public updatePagination(): void {
     const STARTINDEX = (this.currentPage - 1) * this.itemsPerPage;
@@ -136,16 +135,17 @@ export class BandejaSolicitudesComponent implements OnInit, OnDestroy, OnChanges
   }
 
   /** Ejecuta la búsqueda de solicitudes con los filtros del formulario */
-  buscarSolicitudes() {
+  buscarSolicitudes():void {
     /**
      * Se salta la regla de UPPER_CASE, ya que los valores que se recuperan en la constante 
      * son valores predefinidos como el formulario fueron declarados
      */
     // eslint-disable-next-line @typescript-eslint/naming-convention
     const { idSolicitud, fechaInicio, fechaFinal } = this.FormBusqueda.value;
-    this.servicioFuncionario
+    this.tableroService
       .getListaSolicitudes(idSolicitud || undefined, fechaInicio || undefined, fechaFinal || undefined)
       .pipe(
+        takeUntilDestroyed(),
         map((data) => {
           this.todasSolicitudesOriginales = data;
           this.todasSolicitudes = [...data];
@@ -172,10 +172,21 @@ export class BandejaSolicitudesComponent implements OnInit, OnDestroy, OnChanges
   }
 
   /**
- * Método que se ejecuta al destruir el componente.
- */
-  ngOnDestroy(): void {
-    this.destroyed$.next(true);
-    this.destroyed$.complete();
+  * Maneja el cambio de página
+  * @param page Página seleccionada
+  */
+  public cambioDePagina(page: number): void {
+    this.currentPage = page;
+    this.updatePagination();
+  }
+
+  /**
+   * Maneja el cambio de número de ítems por página
+   * @param itemsPerPage Nuevo valor de ítems por página
+   */
+  public elementosPorCambioDePagina(itemsPerPage: number): void {
+    this.itemsPerPage = itemsPerPage;
+    this.currentPage = 1;
+    this.updatePagination();
   }
 }

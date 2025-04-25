@@ -1,8 +1,7 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { InputFecha, InputFechaComponent } from '@libs/shared/data-access-user/src';
-
+import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
 
 export const FECHA_INICIO = {
   labelNombre: 'Fecha inicial',
@@ -25,37 +24,36 @@ export const FECHA_FINAL = {
 })
 export class BandejaPendientesComponent {
 
-   public FormBusqueda!: FormGroup;
-    public fechaInicioInput: InputFecha = FECHA_INICIO;
-    public fechaFinalInput: InputFecha = FECHA_FINAL;
-  
-    public constructor(
-      protected readonly formBuilder: FormBuilder,
-    ) {
-      this.FormBusqueda = this.inicializaFormulario();
-    }
-  
-    /**
-     * Método para crear el formulario y sus campos
-     * @returns Un form group con los campos necesarios
-     */
-    private inicializaFormulario(): FormGroup {
-      const camposFomulario = {
-        folio: [],
-        fechaInicial: [],
-        fechaFinal: [],
-      };
-      return this.formBuilder.group(camposFomulario);
-    }
-  
-    public cambioFechaInicio(nuevo_valor: string) {
-      this.FormBusqueda.get('fechaInicio')?.setValue(nuevo_valor);
-      this.FormBusqueda.get('fechaInicio')?.markAsUntouched();
-    }
-  
-    public cambioFechaFinal(nuevo_valor: string) {
-      this.FormBusqueda.get('fechaFinal')?.setValue(nuevo_valor);
-      this.FormBusqueda.get('fechaFinal')?.markAsUntouched();
-    }
+  public FormBusqueda!: FormGroup;
+  public fechaInicioInput: InputFecha = FECHA_INICIO;
+  public fechaFinalInput: InputFecha = FECHA_FINAL;
 
+  public constructor(
+    protected readonly formBuilder: FormBuilder,
+  ) {
+    this.FormBusqueda = this.inicializaFormulario();
+  }
+
+  /**
+   * Método para crear el formulario y sus campos
+   * @returns Un form group con los campos necesarios
+   */
+  private inicializaFormulario(): FormGroup {
+    const CAMPOS_FORMULARIO = {
+      folio: [],
+      fechaInicial: [],
+      fechaFinal: [],
+    };
+    return this.formBuilder.group(CAMPOS_FORMULARIO);
+  }
+
+  public cambioFechaInicio(nuevo_valor: string) {
+    this.FormBusqueda.get('fechaInicio')?.setValue(nuevo_valor);
+    this.FormBusqueda.get('fechaInicio')?.markAsUntouched();
+  }
+
+  public cambioFechaFinal(nuevo_valor: string) {
+    this.FormBusqueda.get('fechaFinal')?.setValue(nuevo_valor);
+    this.FormBusqueda.get('fechaFinal')?.markAsUntouched();
+  }
 }

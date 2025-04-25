@@ -83,8 +83,8 @@
             [totalItems]="totalItems" 
             [itemsPerPage]="itemsPerPage" 
             [currentPage]="currentPage"
-            (pageChange)="currentPage = $event" 
-            (itemsPerPageChange)="itemsPerPage = $event; currentPage = 1">
+            (pageChange)="cambioDePagina($event)" 
+            (itemsPerPageChange)="elementosPorCambioDePagina($event)">
             </app-table-pagination>
         </div>
     </div>

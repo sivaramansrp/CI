@@ -10,6 +10,7 @@ import { SeleccionModuloComponent } from './seleccion-modulo/seleccion-modulo.co
 import { SolicitudPageComponent } from './evaluar-solicitud/solicitud-page/solicitud-page.component';
 
 const ROUTES: Routes = [
+  { path: '', pathMatch: 'full', redirectTo: 'seleccion-modulo' },
   {
     path: 'bandeja',
     component: BandejaPendientesComponent,
