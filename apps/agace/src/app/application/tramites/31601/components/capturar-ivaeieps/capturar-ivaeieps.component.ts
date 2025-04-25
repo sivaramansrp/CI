@@ -5,8 +5,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { REGEX_LLAVE_DE_PAGO, REGEX_RFC, TituloComponent } from '@ng-mf/data-access-user';
 
-import { SelectCatalogosComponent } from '@ng-mf/data-access-user';
-
 import { CommonModule } from '@angular/common';
 
 import { TableComponent } from '@ng-mf/data-access-user';
@@ -49,7 +47,6 @@ import { Tramite31601Query } from '../../../../estados/queries/tramite31601.quer
   standalone: true,
   imports: [
     TituloComponent,
-    SelectCatalogosComponent,
     TableComponent,
     ReactiveFormsModule,
     CatalogoSelectComponent,

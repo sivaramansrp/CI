@@ -3,13 +3,11 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { AlertComponent } from '@ng-mf/data-access-user';
-import { SelectCatalogosComponent } from '@ng-mf/data-access-user';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { DatosAdicionalesStore } from '../../estados/tramites/datos-adicionales110101.store';
 import { DatosAdicionalesQuery } from '../../estados/queries/datos-adicionales110101.query'
 import { PROTESTA } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-
 import { distinctUntilChanged, Subject, take, takeUntil } from 'rxjs';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 
@@ -24,7 +22,6 @@ import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
   imports: [TituloComponent,
     CommonModule,
     AlertComponent,
-    SelectCatalogosComponent,
     CatalogoSelectComponent,
     ReactiveFormsModule]
 })

@@ -11,9 +11,6 @@ import aduanasJson from '../../../../../../../../../libs/shared/theme/assets/jso
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import sexoJson from '../../../../../../../../../libs/shared/theme/assets/json/220401/sexo.json';
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { SelectCatalogosComponent } from '@ng-mf/data-access-user';
-
 import {
   AbstractControl,
   FormBuilder,
