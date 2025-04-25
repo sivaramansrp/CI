@@ -1262,8 +1262,8 @@
   {
     "id": 181,
     "tramite": 260918,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/cofepris/modificacion-permiso-lab/modificacion-permiso-lab",
+    "linkDepartment": "/pago/modificacion-permiso-lab/modificacion-permiso-lab",
     "department": "cofepris"
   },
   {
@@ -1430,8 +1430,8 @@
   {
     "id": 205,
     "tramite": 32101,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/agace/consulta-aviso-acreditacion/solicitud",
+    "linkDepartment": "/pago/consulta-aviso-acreditacion/solicitud",
     "department": "agace"
   },
   {
@@ -1563,8 +1563,8 @@
   {
     "id": 224,
     "tramite": 260515,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/cofepris/sustancias-permitidas/solicitud",
+    "linkDepartment": "/pago/sustancias-permitidas/solicitud",
     "department": "cofepris"
   },
   {
