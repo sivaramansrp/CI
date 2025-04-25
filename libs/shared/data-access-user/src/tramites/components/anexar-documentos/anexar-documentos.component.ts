@@ -11,11 +11,6 @@ import {
   SimpleChanges,
   ViewChildren
 } from '@angular/core';
-import {
-  DPI,
-  MB,
-  PDF
-} from '../../constantes/constantes';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, Subscription, map, takeUntil } from 'rxjs';
 
@@ -26,7 +21,7 @@ import { CommonModule } from '@angular/common';
 import { DocumentosCargados } from '../../../core/models/shared/components.model';
 import { InicioSesionService } from '../../../core/services/shared/inicio-sesion/inicio-sesion.service';
 import { Login } from '../../../core/models/shared/inicio-sesion.model';
-import { MENSAJES_DOCUMENTOS } from '../../../core/enums/mensajes-documentos.enum';
+import { ESTATUS_CARGA_DOCUMENTO, MENSAJES_DOCUMENTOS, UNIDADES_DOCUMENTOS } from '../../../core/enums/mensajes-documentos.enum';
 import { ModalConfirmarComponent } from '../modal-confirmar/modal-confirmar.component';
 import { NgSelectModule } from '@ng-select/ng-select';
 import {
@@ -115,22 +110,23 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
 
 
   /**
-   * @description Constantes para el tipo de archivos que se aceptan en el input.
-   * @type {string}
-   */
-  readonly PDF = PDF;
-
-  /**
    * @description Constantes para la unidad del tamaño de los archivos.
    * @type {string}
    */
-  readonly MB = MB;
+  readonly MB = UNIDADES_DOCUMENTOS.MB;
 
   /**
    * @description Constantes para la unidad de DPI.
    * @type {string}
    */
-  readonly DPI = DPI;
+  readonly DPI = UNIDADES_DOCUMENTOS.DPI;
+
+  /**
+   * @description Estatus de la carga del documento
+   * @type {string}
+   */
+
+  readonly ESTATUS_CARGA_DOCUMENTO = ESTATUS_CARGA_DOCUMENTO;
 
   /**
    * @description Tamaño máximo permitido para los archivos en megabytes.
@@ -379,7 +375,7 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
 
     if (INFORMACION_ARCHIVO) {
       const EXTENSION_ARCHIVO = INFORMACION_ARCHIVO.name.split('.').pop()?.toLowerCase();
-      if (EXTENSION_ARCHIVO !== this.PDF.toLowerCase()) {
+      if (EXTENSION_ARCHIVO !== UNIDADES_DOCUMENTOS.PDF.toLowerCase()) {
         this.toastr.error(MENSAJES_DOCUMENTOS.ONLYPDF);
         fileInput.value = '';
         return;

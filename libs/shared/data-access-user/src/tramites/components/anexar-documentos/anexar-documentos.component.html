@@ -200,7 +200,7 @@
         <tr>
           <td>{{ doc.name }}</td>
           <td>
-            @if (doc.estatus !== 'Pendiente') {
+            @if (doc.estatus !== ESTATUS_CARGA_DOCUMENTO.PENDIENTE) {
             @if (doc.cargado) {
             <span class="text-success"><i class="bi bi-check-circle-fill"></i> {{ doc.mensaje }}</span>
             } @else {
@@ -217,7 +217,7 @@
     <table class="table table-bordered mt-3">
       <thead>
         <tr>
-          <th>Documento opcionales</th>
+          <th>Documentos opcionales</th>
           <th>Estatus</th>
           <th>Mensaje</th>
         </tr>
@@ -227,7 +227,7 @@
         <tr>
           <td>{{ doc.name }}</td>
           <td>
-            @if (doc.estatus !== 'Pendiente') {
+            @if (doc.estatus !== ESTATUS_CARGA_DOCUMENTO.PENDIENTE) {
             @if (doc.cargado) {
             <span class="text-success"><i class="bi bi-check-circle-fill"></i> {{ doc.mensaje }}</span>
             } @else {

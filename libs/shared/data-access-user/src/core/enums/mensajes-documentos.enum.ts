@@ -1,3 +1,4 @@
+import { UNIDADES, PDF } from '../../tramites/constantes/constantes';
 /**
  * Enum `MENSAJES_DOCUMENTOS` que define los mensajes relacionados con la gestión de documentos.
  */
@@ -21,4 +22,43 @@ export enum MENSAJES_DOCUMENTOS {
    * Mensaje que indica que el documento se ha subido exitosamente.
    */
   UPLOAD = 'Documento subido'
+}
+
+export enum ESTATUS_CARGA_DOCUMENTO {
+  /**
+   * Estado que indica que el documento ha sido cargado exitosamente.
+   */
+  CARGADO = 'Cargado',
+
+  /**
+   * Estado que indica que el documento esta pendiente de carga.
+
+   */
+  PENDIENTE = 'Pendiente'
+}
+
+/**
+ * Enumera las unidades utilizadas para los documentos en el sistema.
+ * Este enum define los tipos de unidades que pueden ser asociadas con los documentos.
+ */
+export enum UNIDADES_DOCUMENTOS {
+  /**
+   * Representa un documento en formato PDF.
+   */
+  PDF = 'PDF',
+
+  /**
+   * Representa la unidad de resolución en puntos por pulgada (DPI).
+   */
+  DPI = 'DPIs',
+
+  /**
+   * Representa el tamaño de un documento en megabytes (MB).
+   */
+  MB = 'MB',
+
+  /**
+   * Representa el tamaño de un documento en kilobytes (KB).
+   */
+  KB = 'KB'
 }
