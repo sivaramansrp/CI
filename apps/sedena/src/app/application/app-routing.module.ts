@@ -27,6 +27,13 @@ const ROUTES: Routes = [
       ).then((m) => m.PermisoOrdinarioImportacionArmasMunicionesModule),
   },
   {
+    path: 'permiso-ordinario-exportacion-explosivo',
+    loadChildren: () =>
+      import(
+        './tramites/240121/permiso-ordinario-exportacion-explosivo.module'
+      ).then((m) => m.PermisoOrdinarioExportacionExplosivoModule),
+  },
+  {
     path: 'permiso-exportacion-pirotecnia',
     loadChildren: () =>
       import(
@@ -116,7 +123,16 @@ const ROUTES: Routes = [
       import(
         './tramites/240311/solicitude-de-artificios-pirotecnicos.module'
       ).then((m) => m.SolicitudeDeArtificiosPirotecnicosModule),
-    }
+  },
+  {
+    path: 'permiso-ordinario-prorroga-importacion-material-explosivo',
+    loadChildren: () =>
+      import(
+        './tramites/240411/permiso-ordinario-prorroga-importacion-material-explosivo.module'
+      ).then(
+        (m) => m.PermisoOrdinarioProrrogaImportacionMaterialExplosivoModule
+      ),
+  }
 ];
 
 @NgModule({
