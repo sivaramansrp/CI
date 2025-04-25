@@ -21,11 +21,12 @@
             [tipoSeleccionTabla]="tipoSolicitarSeleccion"
             [configuracionTabla]="configuracionSolicitarColumnas"
             [datos]="cuerpoSolicitarTablaFila"
+            (listaDeFilaSeleccionada)="onListaDeFilaSeleccionada($event)"
           >
           </app-tabla-dinamica>
           <div class="col-md-12 mt-5 d-flex justify-content-end">
             <button type="button" class="btn btn-primary" (click)="abrirModuloPersonasNotificaciones(true)">Agregar</button>
-            <button type="button" class="btn btn-default ms-2" (click)="abrirModuloPersonasNotificaciones(false)">Eliminar</button>
+            <button type="button" class="btn btn-default ms-2" (click)="eliminarPeriodoPorId()">Eliminar</button>
            
             </div>
         </div>

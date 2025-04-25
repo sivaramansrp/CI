@@ -7,6 +7,7 @@ export interface Personas {
     Correo_electronico: string;
   }
   export interface Solicitar{
+    id?:number;
     Periodo : string;
     Fechas_sobre_el_periodo :string;
   }
