@@ -474,6 +474,13 @@ const ROUTES: Routes = [
     import('./tramites/260918/modificacion-permiso-lab.module').then(
       (m) => m.ModificacionPermisoLabModule
     )
+},
+{
+  path: 'sustancias-permitidas',
+  loadChildren: () =>
+    import('./tramites/260515/permit-de-substances.module').then(
+      (m) => m.PermitDeSubstancesModule
+    )
 }
 {
   path: 'permiso-vegetales-nutrientes',
