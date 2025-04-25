@@ -31,4 +31,18 @@ export class RegistrosDeComercioExteriorService {
        })
      );
    }
+
+/**
+ * Obtiene los datos del JSON "banco-catalog" desde la ruta especificada en assets.
+ *
+ * @returns {Observable<JSONResponse>} Un observable que emite la respuesta JSON.
+ * @throws Propagará cualquier error HTTP encontrado durante la solicitud.
+ */
+   getBancoDatos(): Observable<JSONResponse> {
+    return this.http.get<JSONResponse>('assets/json/31603/banco-catalog.json').pipe(
+      catchError((error) => {
+        return throwError(() => error);
+      })
+    );
+  }
 }

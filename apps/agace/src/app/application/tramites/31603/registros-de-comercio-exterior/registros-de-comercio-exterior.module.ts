@@ -14,6 +14,7 @@ import { DatosComunesComponent } from '../../../shared/components/datos-comunes/
 import { TercerosRelacionadosComponent } from '../../../shared/components/terceros-relacionados/terceros-relacionados.component';
 import { PasoDosComponent } from '../pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from '../pages/paso-tres/paso-tres.component';
+import { DatosPorRegimenComponent } from '../components/datos-por-regimen/datos-por-regimen.component';
 
 
 @NgModule({
@@ -29,7 +30,8 @@ import { PasoTresComponent } from '../pages/paso-tres/paso-tres.component';
     TituloComponent,
     AlertComponent,
     AnexarDocumentosComponent,
-    FirmaElectronicaComponent
+    FirmaElectronicaComponent,
+    DatosPorRegimenComponent
   ],
     providers: [
     provideHttpClient(),
