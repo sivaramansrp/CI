@@ -18,14 +18,14 @@
       @if(showSearchInput1){
         @for (btn of botonField; track $index) {
           <div class="d-flex justify-content-center">
-            <button type="button" class="btn" [ngClass]="btn.class" (click)="btn.funcion()">{{btn.btnNombre}}</button>
+            <button type="button" class="btn" [ngClass]="btn.class" (click)="btn.funcion ? btn.funcion() : null">{{btn.btnNombre}}</button>
           </div>
         }
       }
       @else {
         @for (btn of botones; track $index) {
           <div class="d-flex justify-content-center">
-            <button type="button" class="btn" [ngClass]="btn.class" (click)="btn.funcion()">{{btn.btnNombre}}</button>
+            <button type="button" class="btn" [ngClass]="btn.class" (click)="btn.funcion ? btn.funcion() : null">{{btn.btnNombre}}</button>
           </div>
         }
       }

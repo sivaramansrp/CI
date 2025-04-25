@@ -4,7 +4,6 @@ import { AlertComponent } from '../alert/alert.component';
 import { BodyTablaAcuse } from '../../../core/models/shared/catalogos.model';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { TituloComponent } from '../titulo/titulo.component';
 
 @Component({
   selector: 'lib-component-acuse',
@@ -31,6 +30,7 @@ export class AcuseComponent implements OnChanges {
     },
   ];  
   readonly datosTablaAcuse: BodyTablaAcuse[] = ACUSE_SERVICIOS_EXTRAORDINARIOS.datosTablaAcuse;
+  public verPdf = AcuseComponent.verPdf;
 
   constructor(private router: Router) {
     // Lógica de inicialización si es necesario
@@ -53,7 +53,7 @@ export class AcuseComponent implements OnChanges {
    * @param {string} url - La URL del archivo PDF que se va a abrir.
    * @returns {void}
    */
-  verPdf(url: string): void {
+  static verPdf(url: string): void {
     window.open(url, '_blank');
   }
 

@@ -57,6 +57,7 @@ export class AnexarDocumentosComponent implements OnInit {
 
   readonly url: string = URL_PRUEBA;
 
+  public verPdf = AnexarDocumentosComponent.verPdf;
 
   @ViewChild('modalConfirmacion') modalConfirmacion!: ElementRef;
 
@@ -135,7 +136,7 @@ export class AnexarDocumentosComponent implements OnInit {
       return;
     }
     this.tamMaximo = this.documentoSeleccionado?.tam
-      ? this.convertirKilobytesAMegabytes(
+      ? AnexarDocumentosComponent.convertirKilobytesAMegabytes(
         parseInt(this.documentoSeleccionado.tam, 10)
       )
       : 0;
@@ -161,7 +162,7 @@ export class AnexarDocumentosComponent implements OnInit {
       }
 
       const TAMANIO_REQUERIDO = this.documentoSeleccionado.tam
-        ? this.convertirKilobytesABytes(
+        ? AnexarDocumentosComponent.convertirKilobytesABytes(
           parseInt(this.documentoSeleccionado.tam, 10)
         )
         : 0;
@@ -198,7 +199,7 @@ export class AnexarDocumentosComponent implements OnInit {
    * @param {number} kilobytes - El tamaño en kilobytes.
    * @returns {number} El tamaño en megabytes.
    */
-   convertirKilobytesAMegabytes(kilobytes: number): number {
+  static convertirKilobytesAMegabytes(kilobytes: number): number {
     return Math.round(kilobytes / 1024);
   }
 
@@ -207,7 +208,7 @@ export class AnexarDocumentosComponent implements OnInit {
    * @param {number} kilobytes - El tamaño en kilobytes.
    * @returns {number} El tamaño en bytes.
    */
-  convertirKilobytesABytes(kilobytes: number): number {
+  static convertirKilobytesABytes(kilobytes: number): number {
     return kilobytes * 1024;
   }
 
@@ -217,7 +218,7 @@ export class AnexarDocumentosComponent implements OnInit {
    * @param {string} url - La URL del archivo PDF que se va a abrir.
    * @returns {void}
    */
-  verPdf(url: string): void {
+  static verPdf(url: string): void {
     window.open(url, '_blank');
   }
 
