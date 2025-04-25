@@ -2214,8 +2214,8 @@
   {
     "id": 317,
     "tramite": 260104,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/cofepris/permiso-sanitario-productos/solicitud",
+    "linkDepartment": "/pago/permiso-sanitario-productos/solicitud",
     "department": "cofepris"
   },
   {
