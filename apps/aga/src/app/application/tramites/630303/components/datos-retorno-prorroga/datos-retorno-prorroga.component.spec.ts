@@ -42,13 +42,13 @@ describe('DatosRetornoProrrogaComponent', () => {
   });
 
   it('debería inicializar el formulario en ngOnInit', () => {
-    const inicializarFormularioSpy = jest.spyOn(componente, 'inicializarFormulario');
-    const getValorStoreSpy = jest.spyOn(componente, 'getValorStore');
+    const INICIALIZAR_FORMULARIO_SPY = jest.spyOn(componente, 'inicializarFormulario');
+    const GET_VALOR_STORE_SPY = jest.spyOn(componente, 'getValorStore');
 
     componente.ngOnInit();
 
-    expect(inicializarFormularioSpy).toHaveBeenCalled();
-    expect(getValorStoreSpy).toHaveBeenCalled();
+    expect(INICIALIZAR_FORMULARIO_SPY).toHaveBeenCalled();
+    expect(GET_VALOR_STORE_SPY).toHaveBeenCalled();
   });
 
   it('debería inicializar el formulario con valores predeterminados', () => {
@@ -62,20 +62,20 @@ describe('DatosRetornoProrrogaComponent', () => {
   });
 
   it('debería actualizar el store cuando se invoque establecerCambioDeValor', () => {
-    const mockEvent = { campo: 'campoPrueba', valor: 'valorPrueba' };
+    const MOCK_EVENT = { campo: 'campoPrueba', valor: 'valorPrueba' };
 
-    componente.establecerCambioDeValor(mockEvent);
+    componente.establecerCambioDeValor(MOCK_EVENT);
 
     expect(mockStore.setTramite630303State).toHaveBeenCalledWith('campoPrueba', 'valorPrueba');
   });
 
   it('debería limpiar las suscripciones en ngOnDestroy', () => {
-    const destroyedSpy = jest.spyOn((componente as any).destroyed$, 'next');
-    const completeSpy = jest.spyOn((componente as any).destroyed$, 'complete');
+    const DESTROYED_SPY = jest.spyOn((componente as any).destroyed$, 'next');
+    const COMPLETE_SPY = jest.spyOn((componente as any).destroyed$, 'complete');
 
     componente.ngOnDestroy();
 
-    expect(destroyedSpy).toHaveBeenCalled();
-    expect(completeSpy).toHaveBeenCalled();
+    expect(DESTROYED_SPY).toHaveBeenCalled();
+    expect(COMPLETE_SPY).toHaveBeenCalled();
   });
 });

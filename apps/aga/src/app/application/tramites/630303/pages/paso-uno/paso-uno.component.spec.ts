@@ -13,8 +13,8 @@ import { Component, NO_ERRORS_SCHEMA } from '@angular/core';
 class MockSolicitanteComponent {}
 
 describe('PasoUnoComponent', () => {
-  let componente: PasoUnoComponent;
-  let fixture: ComponentFixture<PasoUnoComponent>;
+  let COMPONENTE: PasoUnoComponent;
+  let FIXTURE: ComponentFixture<PasoUnoComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -22,12 +22,12 @@ describe('PasoUnoComponent', () => {
       schemas: [NO_ERRORS_SCHEMA], // Ignorar elementos desconocidos
     }).compileComponents();
 
-    fixture = TestBed.createComponent(PasoUnoComponent);
-    componente = fixture.componentInstance;
-    fixture.detectChanges();
+    FIXTURE = TestBed.createComponent(PasoUnoComponent);
+    COMPONENTE = FIXTURE.componentInstance;
+    FIXTURE.detectChanges();
   });
 
   it('debería crear el componente', () => {
-    expect(componente).toBeTruthy();
+    expect(COMPONENTE).toBeTruthy();
   });
 });

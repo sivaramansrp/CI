@@ -20,49 +20,49 @@ class MockFirmaElectronicaComponent {
 }
 
 describe('PasoTresComponent', () => {
-  let componente: PasoTresComponent;
-  let fixture: ComponentFixture<PasoTresComponent>;
-  let mockRouter: any;
+  let COMPONENTE: PasoTresComponent;
+  let FIXTURE: ComponentFixture<PasoTresComponent>;
+  let MOCK_ROUTER: any;
 
   beforeEach(async () => {
-    mockRouter = { navigate: jest.fn() };
+    MOCK_ROUTER = { navigate: jest.fn() };
 
     await TestBed.configureTestingModule({
       imports: [MockFirmaElectronicaComponent],
       declarations: [PasoTresComponent],
       providers: [
-        { provide: Router, useValue: mockRouter }
+        { provide: Router, useValue: MOCK_ROUTER }
       ]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(PasoTresComponent);
-    componente = fixture.componentInstance;
-    fixture.detectChanges();
+    FIXTURE = TestBed.createComponent(PasoTresComponent);
+    COMPONENTE = FIXTURE.componentInstance;
+    FIXTURE.detectChanges();
   });
 
   it('debería crear el componente', () => {
-    expect(componente).toBeTruthy();
+    expect(COMPONENTE).toBeTruthy();
   });
 
   it('debería llamar a obtieneFirma cuando se emita firma desde firma-electronica', () => {
     // Simula manualmente el evento firma
-    const firmaComponent = fixture.debugElement.query(By.directive(MockFirmaElectronicaComponent)).componentInstance;
+    const FIRMA_COMPONENT = FIXTURE.debugElement.query(By.directive(MockFirmaElectronicaComponent)).componentInstance;
 
     // Emite una firma válida
-    firmaComponent.simulateFirma();
+    FIRMA_COMPONENT.simulateFirma();
 
     // Verifica que el router navegue después del evento
-    expect(mockRouter.navigate).toHaveBeenCalledWith(['servicios-extraordinarios/acuse']);
+    expect(MOCK_ROUTER.navigate).toHaveBeenCalledWith(['servicios-extraordinarios/acuse']);
   });
 
   it('NO debería llamar a navigate si firma es una cadena vacía', () => {
     // Llama manualmente a obtieneFirma con una cadena vacía para probar el caso donde firma no es válida
-    componente.obtieneFirma('');
-    expect(mockRouter.navigate).not.toHaveBeenCalled();
+    COMPONENTE.obtieneFirma('');
+    expect(MOCK_ROUTER.navigate).not.toHaveBeenCalled();
   });
 
   it('debería renderizar el componente firma-electronica', () => {
-    const firmaElement = fixture.debugElement.query(By.directive(MockFirmaElectronicaComponent));
-    expect(firmaElement).toBeTruthy();
+    const FIRMA_ELEMENT = FIXTURE.debugElement.query(By.directive(MockFirmaElectronicaComponent));
+    expect(FIRMA_ELEMENT).toBeTruthy();
   });
 });

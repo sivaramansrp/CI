@@ -10,23 +10,23 @@ import { FORMULARIO_DATOS_PROPIETARIO_NOMBRE } from '../../enum/retorno-importac
 describe('TipoPropietarioComponent', () => {
   let componente: TipoPropietarioComponent;
   let fixture: ComponentFixture<TipoPropietarioComponent>;
-  let storeMock: Partial<Tramite630303Store>;
-  let queryMock: Partial<Tramite630303Query>;
-  let serviceMock: Partial<RetornoImportacionTemporalService>;
+  let STORE_MOCK: Partial<Tramite630303Store>;
+  let QUERY_MOCK: Partial<Tramite630303Query>;
+  let SERVICE_MOCK: Partial<RetornoImportacionTemporalService>;
 
   beforeEach(async () => {
-    storeMock = {
+    STORE_MOCK = {
       setTramite630303State: jest.fn(),
     };
 
-    queryMock = {
+    QUERY_MOCK = {
       selectTramite630303State$: of({
         propietario: '1',
         tipoDePropietario: '2',
       }),
     };
 
-    serviceMock = {
+    SERVICE_MOCK = {
       getPropietario: jest.fn().mockReturnValue(of([{ id: '1', descripcion: 'Persona' }])),
       getTipoDePropietario: jest.fn().mockReturnValue(of([{ id: '1', descripcion: 'Física' }])),
       getPais: jest.fn().mockReturnValue(of([{ id: 'MX', descripcion: 'México' }])),
@@ -37,9 +37,9 @@ describe('TipoPropietarioComponent', () => {
       declarations: [],
       providers: [
         FormBuilder,
-        { provide: Tramite630303Store, useValue: storeMock },
-        { provide: Tramite630303Query, useValue: queryMock },
-        { provide: RetornoImportacionTemporalService, useValue: serviceMock },
+        { provide: Tramite630303Store, useValue: STORE_MOCK },
+        { provide: Tramite630303Query, useValue: QUERY_MOCK },
+        { provide: RetornoImportacionTemporalService, useValue: SERVICE_MOCK },
       ],
     }).compileComponents();
 
@@ -72,8 +72,8 @@ describe('TipoPropietarioComponent', () => {
     componente.formularioDatosPropietarioNombre = structuredClone(FORMULARIO_DATOS_PROPIETARIO_NOMBRE);
     componente.cambiarTipoPropietario();
 
-    const nombreCampo = componente.formularioDatosPropietarioNombre.find(c => c.id === 'nombre');
-    expect(nombreCampo?.mostrar).toBe(true);
+    const NOMBRE_CAMPO = componente.formularioDatosPropietarioNombre.find(c => c.id === 'nombre');
+    expect(NOMBRE_CAMPO?.mostrar).toBe(true);
   });
 
   it('debería alternar mostrarTipoPropietario y mostrarSolicitante en cambiarPropietario()', () => {
@@ -85,17 +85,17 @@ describe('TipoPropietarioComponent', () => {
 
   it('debería establecer un valor en el store con establecerCambioDeValor (primitivo)', () => {
     componente.establecerCambioDeValor({ campo: 'propietario', valor: '1' });
-    expect(storeMock.setTramite630303State).toHaveBeenCalledWith('propietario', '1');
+    expect(STORE_MOCK.setTramite630303State).toHaveBeenCalledWith('propietario', '1');
   });
 
   it('debería establecer un valor en el store con establecerCambioDeValor (objeto con id)', () => {
     componente.establecerCambioDeValor({ campo: 'tipoDePropietario', valor: { id: 5 } });
-    expect(storeMock.setTramite630303State).toHaveBeenCalledWith('tipoDePropietario', '5');
+    expect(STORE_MOCK.setTramite630303State).toHaveBeenCalledWith('tipoDePropietario', '5');
   });
 
   it('debería completar destroyed$ al destruir el componente', () => {
-    const completeSpy = jest.spyOn(componente['destroyed$'], 'complete');
+    const COMPLETE_SPY = jest.spyOn(componente['destroyed$'], 'complete');
     componente.ngOnDestroy();
-    expect(completeSpy).toHaveBeenCalled();
+    expect(COMPLETE_SPY).toHaveBeenCalled();
   });
 });

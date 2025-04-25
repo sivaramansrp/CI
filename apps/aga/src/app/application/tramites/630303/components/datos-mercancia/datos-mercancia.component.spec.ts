@@ -6,17 +6,17 @@ import { Tramite630303Query } from '../../estados/tramite630303.query';
 import { of } from 'rxjs';
 
 describe('DatosMercanciaComponent', () => {
-  let componente: DatosMercanciaComponent;
-  let fixture: ComponentFixture<DatosMercanciaComponent>;
-  let mockStore: jest.Mocked<Tramite630303Store>;
-  let mockQuery: jest.Mocked<Tramite630303Query>;
+  let COMPONENTE: DatosMercanciaComponent;
+  let FIXTURE: ComponentFixture<DatosMercanciaComponent>;
+  let MOCK_STORE: jest.Mocked<Tramite630303Store>;
+  let MOCK_QUERY: jest.Mocked<Tramite630303Query>;
 
   beforeEach(async () => {
-    mockStore = {
+    MOCK_STORE = {
       setTramite630303State: jest.fn(),
     } as unknown as jest.Mocked<Tramite630303Store>;
 
-    mockQuery = {
+    MOCK_QUERY = {
       selectTramite630303State$: of({
         campo: 'valor',
       }),
@@ -27,55 +27,55 @@ describe('DatosMercanciaComponent', () => {
       declarations: [],
       providers: [
         FormBuilder,
-        { provide: Tramite630303Store, useValue: mockStore },
-        { provide: Tramite630303Query, useValue: mockQuery },
+        { provide: Tramite630303Store, useValue: MOCK_STORE },
+        { provide: Tramite630303Query, useValue: MOCK_QUERY },
       ],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(DatosMercanciaComponent);
-    componente = fixture.componentInstance;
-    fixture.detectChanges();
+    FIXTURE = TestBed.createComponent(DatosMercanciaComponent);
+    COMPONENTE = FIXTURE.componentInstance;
+    FIXTURE.detectChanges();
   });
 
   it('debería crear el componente', () => {
-    expect(componente).toBeTruthy();
+    expect(COMPONENTE).toBeTruthy();
   });
 
   it('debería inicializar el formulario en ngOnInit', () => {
-    const inicializarFormularioSpy = jest.spyOn(componente, 'inicializarFormulario');
-    const getValorStoreSpy = jest.spyOn(componente, 'getValorStore');
+    const INICIALIZAR_FORMULARIO_SPY = jest.spyOn(COMPONENTE, 'inicializarFormulario');
+    const GET_VALOR_STORE_SPY = jest.spyOn(COMPONENTE, 'getValorStore');
 
-    componente.ngOnInit();
+    COMPONENTE.ngOnInit();
 
-    expect(inicializarFormularioSpy).toHaveBeenCalled();
-    expect(getValorStoreSpy).toHaveBeenCalled();
+    expect(INICIALIZAR_FORMULARIO_SPY).toHaveBeenCalled();
+    expect(GET_VALOR_STORE_SPY).toHaveBeenCalled();
   });
 
   it('debería inicializar el formulario con valores predeterminados', () => {
-    componente.inicializarFormulario();
-    expect(componente.datosMercancia).toBeTruthy();
+    COMPONENTE.inicializarFormulario();
+    expect(COMPONENTE.datosMercancia).toBeTruthy();
   });
 
   it('debería obtener el estado actual del store', () => {
-    componente.getValorStore();
-    expect(componente.estadoSeleccionado).toEqual({ campo: 'valor' });
+    COMPONENTE.getValorStore();
+    expect(COMPONENTE.estadoSeleccionado).toEqual({ campo: 'valor' });
   });
 
   it('debería actualizar el store cuando se invoque establecerCambioDeValor', () => {
-    const mockEvent = { campo: 'campoPrueba', valor: 'valorPrueba' };
+    const MOCK_EVENT = { campo: 'campoPrueba', valor: 'valorPrueba' };
 
-    componente.establecerCambioDeValor(mockEvent);
+    COMPONENTE.establecerCambioDeValor(MOCK_EVENT);
 
-    expect(mockStore.setTramite630303State).toHaveBeenCalledWith('campoPrueba', 'valorPrueba');
+    expect(MOCK_STORE.setTramite630303State).toHaveBeenCalledWith('campoPrueba', 'valorPrueba');
   });
 
   it('debería limpiar las suscripciones en ngOnDestroy', () => {
-    const destroyedSpy = jest.spyOn((componente as any).destroyed$, 'next');
-    const completeSpy = jest.spyOn((componente as any).destroyed$, 'complete');
+    const DESTROYED_SPY = jest.spyOn((COMPONENTE as any).destroyed$, 'next');
+    const COMPLETE_SPY = jest.spyOn((COMPONENTE as any).destroyed$, 'complete');
 
-    componente.ngOnDestroy();
+    COMPONENTE.ngOnDestroy();
 
-    expect(destroyedSpy).toHaveBeenCalled();
-    expect(completeSpy).toHaveBeenCalled();
+    expect(DESTROYED_SPY).toHaveBeenCalled();
+    expect(COMPLETE_SPY).toHaveBeenCalled();
   });
 });

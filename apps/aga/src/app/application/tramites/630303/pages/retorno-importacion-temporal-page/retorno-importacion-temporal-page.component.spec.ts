@@ -43,8 +43,8 @@ class MockNgAlertComponent {
 }
 
 describe('RetornoImportacionTemporalComponent', () => {
-  let componente: RetornoImportacionTemporalComponent;
-  let fixture: ComponentFixture<RetornoImportacionTemporalComponent>;
+  let COMPONENTE: RetornoImportacionTemporalComponent;
+  let FIXTURE: ComponentFixture<RetornoImportacionTemporalComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -59,26 +59,26 @@ describe('RetornoImportacionTemporalComponent', () => {
       ]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(RetornoImportacionTemporalComponent);
-    componente = fixture.componentInstance;
+    FIXTURE = TestBed.createComponent(RetornoImportacionTemporalComponent);
+    COMPONENTE = FIXTURE.componentInstance;
 
-    const wizardDebugEl = fixture.debugElement.query(By.directive(MockWizardComponent));
-    componente.wizardComponent = wizardDebugEl?.componentInstance;
+    const WIZARD_DEBUG_EL = FIXTURE.debugElement.query(By.directive(MockWizardComponent));
+    COMPONENTE.wizardComponent = WIZARD_DEBUG_EL?.componentInstance;
 
-    fixture.detectChanges();
+    FIXTURE.detectChanges();
   });
 
   it('debería crear el componente', () => {
-    expect(componente).toBeTruthy();
+    expect(COMPONENTE).toBeTruthy();
   });
 
   it('debería inicializar pasos y pantallasPasos con PASOS_REGISTRO', () => {
-    expect(componente.pasos).toEqual(PASOS_REGISTRO);
-    expect(componente.pantallasPasos).toEqual(PASOS_REGISTRO);
+    expect(COMPONENTE.pasos).toEqual(PASOS_REGISTRO);
+    expect(COMPONENTE.pantallasPasos).toEqual(PASOS_REGISTRO);
   });
 
   it('debería inicializar datosPasos correctamente', () => {
-    expect(componente.datosPasos).toEqual({
+    expect(COMPONENTE.datosPasos).toEqual({
       nroPasos: PASOS_REGISTRO.length,
       indice: 1,
       txtBtnAnt: 'Anterior',
@@ -87,81 +87,81 @@ describe('RetornoImportacionTemporalComponent', () => {
   });
 
   it('debería tener el valor predeterminado de infoAlert como "alert-info"', () => {
-    expect(componente.infoAlert).toBe('alert-info');
+    expect(COMPONENTE.infoAlert).toBe('alert-info');
   });
 
   it('debería inicializar TEXTOS desde AVISO.Aviso', () => {
-    expect(componente.TEXTOS).toBeDefined();
+    expect(COMPONENTE.TEXTOS).toBeDefined();
   });
 
   it('debería establecer el índice y llamar a siguiente() cuando la acción sea "cont" y el valor sea válido', () => {
-    componente.getValorIndice({ accion: 'cont', valor: 2 });
-    expect(componente.indice).toBe(2);
-    expect(componente.wizardComponent.siguiente).toHaveBeenCalled();
+    COMPONENTE.getValorIndice({ accion: 'cont', valor: 2 });
+    expect(COMPONENTE.indice).toBe(2);
+    expect(COMPONENTE.wizardComponent.siguiente).toHaveBeenCalled();
   });
 
   it('debería establecer el índice y llamar a atras() cuando la acción no sea "cont" y el valor sea válido', () => {
-    componente.getValorIndice({ accion: 'back', valor: 3 });
-    expect(componente.indice).toBe(3);
-    expect(componente.wizardComponent.atras).toHaveBeenCalled();
+    COMPONENTE.getValorIndice({ accion: 'back', valor: 3 });
+    expect(COMPONENTE.indice).toBe(3);
+    expect(COMPONENTE.wizardComponent.atras).toHaveBeenCalled();
   });
 
   it('debería ignorar valores inválidos (<1 o >4)', () => {
-    const inicial = componente.indice;
-    componente.getValorIndice({ accion: 'cont', valor: -1 });
-    componente.getValorIndice({ accion: 'cont', valor: 5 });
-    expect(componente.indice).toBe(inicial);
-    expect(componente.wizardComponent.siguiente).not.toHaveBeenCalled();
-    expect(componente.wizardComponent.atras).not.toHaveBeenCalled();
+    const INICIAL = COMPONENTE.indice;
+    COMPONENTE.getValorIndice({ accion: 'cont', valor: -1 });
+    COMPONENTE.getValorIndice({ accion: 'cont', valor: 5 });
+    expect(COMPONENTE.indice).toBe(INICIAL);
+    expect(COMPONENTE.wizardComponent.siguiente).not.toHaveBeenCalled();
+    expect(COMPONENTE.wizardComponent.atras).not.toHaveBeenCalled();
   });
 
   it('debería pasar pantallasPasos al input de app-wizard', () => {
-    const wizard = fixture.debugElement.query(By.css('app-wizard'));
-    expect(wizard.componentInstance.listaPasos).toEqual(componente.pantallasPasos);
+    const WIZARD = FIXTURE.debugElement.query(By.css('app-wizard'));
+    expect(WIZARD.componentInstance.listaPasos).toEqual(COMPONENTE.pantallasPasos);
   });
 
   it('debería llamar a getValorIndice cuando btn-continuar emita un evento', () => {
-    jest.spyOn(componente, 'getValorIndice');
-    const btn = fixture.debugElement.query(By.css('btn-continuar'));
-    btn.componentInstance.continuarEvento.emit({ accion: 'cont', valor: 2 });
-    fixture.detectChanges();
-    expect(componente.getValorIndice).toHaveBeenCalledWith({ accion: 'cont', valor: 2 });
+    jest.spyOn(COMPONENTE, 'getValorIndice');
+    const BTN = FIXTURE.debugElement.query(By.css('btn-continuar'));
+    BTN.componentInstance.continuarEvento.emit({ accion: 'cont', valor: 2 });
+    FIXTURE.detectChanges();
+    expect(COMPONENTE.getValorIndice).toHaveBeenCalledWith({ accion: 'cont', valor: 2 });
   });
 
   it('debería renderizar app-paso-uno cuando el índice sea 1', () => {
-    componente.indice = 1;
-    fixture.detectChanges();
-    const paso = fixture.debugElement.query(By.css('app-paso-uno'));
-    expect(paso).toBeTruthy();
+    COMPONENTE.indice = 1;
+    FIXTURE.detectChanges();
+    const PASO = FIXTURE.debugElement.query(By.css('app-paso-uno'));
+    expect(PASO).toBeTruthy();
   });
 
   it('debería renderizar app-paso-dos cuando el índice sea 2', () => {
-    componente.indice = 2;
-    fixture.detectChanges();
-    const paso = fixture.debugElement.query(By.css('app-paso-dos'));
-    expect(paso).toBeTruthy();
+    COMPONENTE.indice = 2;
+    FIXTURE.detectChanges();
+    const PASO = FIXTURE.debugElement.query(By.css('app-paso-dos'));
+    expect(PASO).toBeTruthy();
   });
 
   it('debería renderizar app-paso-tres cuando el índice sea 3', () => {
-    componente.indice = 3;
-    fixture.detectChanges();
-    const paso = fixture.debugElement.query(By.css('app-paso-tres'));
-    expect(paso).toBeTruthy();
+    COMPONENTE.indice = 3;
+    FIXTURE.detectChanges();
+    const PASO = FIXTURE.debugElement.query(By.css('app-paso-tres'));
+    expect(PASO).toBeTruthy();
   });
 
   it('debería renderizar ng-alert cuando el índice sea 1', () => {
-    componente.indice = 1;
-    fixture.detectChanges();
-    const alert = fixture.debugElement.query(By.css('ng-alert'));
-    expect(alert).toBeTruthy();
-    expect(alert.componentInstance.CONTENIDO).toBe(componente.TEXTOS);
-    expect(alert.componentInstance.CUSTOMECLASS).toBe(componente.infoAlert);
+    COMPONENTE.indice = 1;
+    FIXTURE.detectChanges();
+    const ALERT = FIXTURE.debugElement.query(By.css('ng-alert'));
+    expect(ALERT).toBeTruthy();
+    expect(ALERT.componentInstance.CONTENIDO).toBe(COMPONENTE.TEXTOS);
+    expect(ALERT.componentInstance.CUSTOMECLASS).toBe(COMPONENTE.infoAlert);
   });
 
   it('NO debería renderizar ng-alert cuando el índice no sea 1', () => {
-    componente.indice = 2;
-    fixture.detectChanges();
-    const alert = fixture.debugElement.query(By.css('ng-alert'));
-    expect(alert).toBeFalsy();
+    COMPONENTE.indice = 2;
+    FIXTURE.detectChanges();
+    const ALERT = FIXTURE.debugElement.query(By.css('ng-alert'));
+    expect(ALERT).toBeFalsy();
   });
 });

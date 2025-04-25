@@ -2,20 +2,20 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SolicitudComponent } from './solicitud.component';
 
 describe('SolicitudComponent', () => {
-  let componente: SolicitudComponent;
-  let fixture: ComponentFixture<SolicitudComponent>;
+  let COMPONENTE: SolicitudComponent;
+  let FIXTURE: ComponentFixture<SolicitudComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [SolicitudComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(SolicitudComponent);
-    componente = fixture.componentInstance;
-    fixture.detectChanges();
+    FIXTURE = TestBed.createComponent(SolicitudComponent);
+    COMPONENTE = FIXTURE.componentInstance;
+    FIXTURE.detectChanges();
   });
 
-  it('debería crear el componente', () => {
-    expect(componente).toBeTruthy();
+  it('DEBERÍA CREAR EL COMPONENTE', () => {
+    expect(COMPONENTE).toBeTruthy();
   });
 });
