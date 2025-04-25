@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { PASOS } from '../../constantes/operaciones-de-comercio-exterior.enum';
 
 import { Subject, map, takeUntil } from 'rxjs';
@@ -54,7 +54,7 @@ import { AccionBoton, DatosPasos, ListaPasosWizard, SeccionLibQuery, SeccionLibS
  * @param {SeccionLibQuery} seccionQuery - Consulta de la sección.
  * @param {SeccionLibStore} seccionStore - Almacenamiento de la sección.
  */
-export class SolicitudPageComponent implements OnInit{
+export class SolicitudPageComponent implements OnInit, OnDestroy {
   /**
      * Lista de pasos del wizard.
      */
@@ -138,8 +138,17 @@ export class SolicitudPageComponent implements OnInit{
     }
   
     /**
-     * Método para asignar las secciones existentes al store.
+     * @override
+     * @method ngOnDestroy
+     * @description Este método se ejecuta automáticamente cuando el componente se destruye. 
+     * Emite un valor en el observable `destroyNotifier$` para notificar a los suscriptores que deben limpiar recursos 
+     * y luego completa el observable para liberar memoria.
+     * 
      */
+    ngOnDestroy(): void {
+      this.destroyNotifier$.next();
+      this.destroyNotifier$.complete();
+    }
   
 }
 
