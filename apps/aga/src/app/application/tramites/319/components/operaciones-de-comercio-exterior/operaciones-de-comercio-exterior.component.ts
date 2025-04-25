@@ -56,6 +56,8 @@ export class OperacionesDeComercioExteriorComponent implements OnInit,OnDestroy 
   acciones:string[] =[];
   cuerpoPersonasTablaFila: Personas[] = [];  
   cuerpoSolicitarTablaFila: Solicitar[] = [];  
+  periodoView:boolean=false;
+
    /**
  * @constructor
  * @param {FormBuilder} fb - Servicio para construir formularios reactivos.
@@ -76,11 +78,7 @@ export class OperacionesDeComercioExteriorComponent implements OnInit,OnDestroy 
   this.miformulario = this.fb.group({
   operacion:['',Validators.required],
   });
-  this.periodoForm =this.fb.group({
-    periodo: ['', Validators.required],
-    periodoInicial: ['', Validators.required],
-    periodoFinal: ['', Validators.required]
-  });
+
   }
   /**
  * @method getOperacionList
@@ -104,6 +102,24 @@ export class OperacionesDeComercioExteriorComponent implements OnInit,OnDestroy 
     })
   }
 
+  abrirModuloPersonasNotificaciones(status:boolean) :void{
+    this.periodoView =status;
+    if(status){
+      this.periodoForm =this.fb.group({
+        periodo: ['', Validators.required],
+        periodoInicial: ['', Validators.required],
+        periodoFinal: ['', Validators.required]
+      });
+    }
+  }
+
+  agregarPersona():void {
+    this.cuerpoSolicitarTablaFila.push({
+      Periodo: this.periodoForm.value.periodo,
+      Fechas_sobre_el_periodo: this.periodoForm.value.periodoInicial + ' al ' + this.periodoForm.value.periodoFinal
+    })
+this.periodoView=false;
+  }
 
 
 
