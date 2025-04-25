@@ -1,19 +1,14 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import {
-  Pipe,
-  PipeTransform,
   Injectable,
   CUSTOM_ELEMENTS_SCHEMA,
-  NO_ERRORS_SCHEMA,
-  Directive,
-  Input,
+  NO_ERRORS_SCHEMA
 } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { of as observableOf } from 'rxjs';
 import { SolicitantePageComponent } from './solicitante-page.component';
 import { Tramite40403Store } from '../../estados/tramite40403.store';
 import { Tramite40403Query } from '../../estados/tramite40403.query';
-import { WizardComponent } from '@ng-mf/data-access-user';
 
 @Injectable()
 class MockTramite40403Store {

@@ -1,80 +1,69 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { CATALOGOS_ID } from '@ng-mf/data-access-user';
-import { Catalogo } from '@ng-mf/data-access-user';
-import { CatalogosService } from '@ng-mf/data-access-user';
-import { Subject } from 'rxjs';
-import { TEXTOS } from '@ng-mf/data-access-user';
-import { takeUntil } from 'rxjs/operators';
+import { Component, OnDestroy } from '@angular/core';
+import { Subject, catchError, map, takeUntil } from 'rxjs';
+import { Router } from '@angular/router';
+
+import { TramiteFolioService, TramiteStore } from '@ng-mf/data-access-user';
+
+/**
+ * Componente para gestionar el paso dos del trámite.
+ */
 @Component({
   selector: 'app-paso-dos',
   templateUrl: './paso-dos.component.html',
   styleUrl: './paso-dos.component.scss',
 })
-export class PasoDosComponent implements OnInit, OnDestroy {
-  /**
-   * Constante que contiene los textos utilizados en el componente.
-   */
-  TEXTOS = TEXTOS;
 
+export class PasoDosComponent implements OnDestroy {
   /**
-   * Lista de tipos de documentos disponibles para el trámite.
+   * Subject para destruir notificador.
    */
-  tiposDocumentos: Catalogo[] = [];
-
-  /**
-   * Clase CSS utilizada para mostrar un mensaje de alerta informativa.
-   */
-  infoAlert = 'alert-info';
-
-  /**
-   * Catálogo de documentos disponibles para el trámite.
-   */
-  catalogoDocumentos: Catalogo[] = [];
-
-  /**
-   * Lista de documentos seleccionados por el usuario.
-   */
-  documentosSeleccionados: Catalogo[] = [];
-
-  /**
-   * Notificador para gestionar la destrucción de suscripciones activas y evitar fugas de memoria.
-   */
-  private destroyNotifier$ = new Subject<void>();
+  private destruirNotificador$: Subject<void> = new Subject();
 
   /**
    * Constructor del componente.
-   * @param catalogosServices - Servicio para obtener los catálogos necesarios para el trámite.
-   */
-  constructor(private catalogosServices: CatalogosService) {}
-  /**
    * 
-Gancho del ciclo de vida angular que se llama después de que se inicializan las propiedades enlazadas a datos.
+   * @param router Servicio de enrutamiento.
+   * @param serviciosExtraordinariosServices Servicio para gestionar los servicios extraordinarios.
+   * @param tramiteStore Almacén para gestionar el estado del trámite.
    */
-  ngOnInit(): void {
-    this.getTiposDocumentos();
+  constructor(
+    private router: Router,
+    private tramiteFolioService: TramiteFolioService,
+    private tramiteStore: TramiteStore
+  ) {
+    // El constructor se utiliza para la inyección de dependencias.
   }
 
   /**
-   * Obtiene el catalgoso de los tipos de documentos disponibles para el trámite.
+   * Maneja el evento para obtener la firma y realiza acciones adicionales.
+   * @param ev - La cadena de texto que representa la firma obtenida.
    */
-  getTiposDocumentos(): void {
-    this.catalogosServices
-      .getCatalogo(CATALOGOS_ID.CAT_TIPO_DOCUMENTO)
-      .pipe(takeUntil(this.destroyNotifier$)) 
-      .subscribe({
-        next: (resp): void => {
-          if (resp.length > 0) {
-            this.catalogoDocumentos = resp;
-          }
-        },
-      });
+  obtieneFirma(ev: string): void {
+    const FIRMA: string = ev;
+    if (FIRMA) {
+      // Obtiene el número de trámite
+      this.tramiteFolioService
+        .obtenerTramite(19)
+        .pipe(
+          map((tramite) => {
+            this.tramiteStore.establecerTramite(tramite.data, FIRMA);
+            this.router.navigate(['servicios-extraordinarios/acuse']);
+          }),
+          catchError((_error) => {
+            return _error;
+          }),
+          takeUntil(this.destruirNotificador$)
+        )
+        .subscribe();
+    }
   }
+
   /**
-   * Gancho del ciclo de vida angular que se llama antes de que se destruya el componente.
-   * Se utiliza para limpiar las suscripciones y evitar fugas de memoria.
+   * Se ejecuta al destruir el componente.
+   * Emite un valor y completa el subject `destruirNotificador$` para cancelar las suscripciones.
    */
   ngOnDestroy(): void {
-    this.destroyNotifier$.next();
-    this.destroyNotifier$.complete();
+    this.destruirNotificador$.next();
+    this.destruirNotificador$.complete();
   }
 }
