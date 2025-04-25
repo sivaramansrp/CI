@@ -28,8 +28,8 @@ const TERCEROS_TEXTO_DE_ALERTA =
   selector: 'app-terceros-relacionados',
   standalone: true,
   imports: [CommonModule, CatalogoSelectComponent, TituloComponent, TableComponent, ReactiveFormsModule, AlertComponent, FormsModule, ModalComponent, InputRadioComponent],
-  templateUrl: './terceros-relacionados.component.html',
-  styleUrl: './terceros-relacionados.component.scss',
+  templateUrl: './terceros-Relacionados.component.html',
+  styleUrl: './terceros-Relacionados.component.scss',
 
 })
 export class TercerosRelacionadoesComponent implements OnInit {
