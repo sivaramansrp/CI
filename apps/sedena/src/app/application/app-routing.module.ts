@@ -27,6 +27,13 @@ const ROUTES: Routes = [
       ).then((m) => m.PermisoOrdinarioImportacionArmasMunicionesModule),
   },
   {
+    path: 'permiso-exportacion-pirotecnia',
+    loadChildren: () =>
+      import(
+        './tramites/240120/permiso-exportacion-pirotecnia.module'
+      ).then((m) => m.PermisoExportacionPirotecniaModule),
+  },
+{
     path: 'permiso-extraordinario-importacion-armamento-fisicas-morales',
     loadChildren: () =>
       import(
@@ -89,20 +96,27 @@ const ROUTES: Routes = [
           './tramites/240114/armas-municiones-para-la-gente.module'
         ).then((m) => m.ArmasMunicionesParaLaGenteModule),
     },
-  {
-    path: 'permiso-ordinario-exportacion-de-sustancias-quimicas',
+    {
+      path: 'permiso-ordinario-exportacion-de-sustancias-quimicas',
+      loadChildren: () =>
+        import(
+        './tramites/240117/permiso-ordinario-para-la-exportacion-de-sustancias-quimicas.module'
+        ).then((m) => m.PermisoOrdinarioParaLaExportacionDeSustanciasQuimicasModule),
+    },
+    {
+      path: 'permiso-ordinario-importacion-substancias-quimicas',
+      loadChildren: () =>
+        import(
+          './tramites/240305/permiso-ordinario-importacion-substancias-quimicas.module'
+        ).then((m) => m.PermisoOrdinarioImportacionSubstanciasQuimicasModule),
+    },
+    {
+    path: 'permiso-ordinario',
     loadChildren: () =>
       import(
-      './tramites/240117/permiso-ordinario-para-la-exportacion-de-sustancias-quimicas.module'
-      ).then((m) => m.PermisoOrdinarioParaLaExportacionDeSustanciasQuimicasModule),
-  },
-  {
-    path: 'permiso-ordinario-importacion-substancias-quimicas',
-    loadChildren: () =>
-      import(
-        './tramites/240305/permiso-ordinario-importacion-substancias-quimicas.module'
-      ).then((m) => m.PermisoOrdinarioImportacionSubstanciasQuimicasModule),
-  },
+        './tramites/240311/solicitude-de-artificios-pirotecnicos.module'
+      ).then((m) => m.SolicitudeDeArtificiosPirotecnicosModule),
+    }
 ];
 
 @NgModule({

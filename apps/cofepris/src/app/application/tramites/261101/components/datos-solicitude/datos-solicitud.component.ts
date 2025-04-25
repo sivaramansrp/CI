@@ -12,12 +12,12 @@ import { DomicilioEstablecimientosComponent } from '../domicilio-establecimiento
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { InputRadioComponent } from '@libs/shared/data-access-user/src';
-import { ManifiestosComponent } from '../manifiestos/manifiestos.component';
-import { MercanciasComponent } from '../mercancias/mercancias.component';
+import { ManifiestosComponent } from '../manifiestos-solicitude/manifiestos.component';
+import { MercanciasComponent } from '../mercancias-solicitude/mercancias.component';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { RepresentanteLegalComponent } from '../representantelegal/representante-legal.component';
+import { RepresentanteLegalComponent } from '../representante-legal/representante-legal.component';
 import { Subject } from 'rxjs';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { Validators } from '@angular/forms';
