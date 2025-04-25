@@ -5,6 +5,8 @@ import {
   CatalogosSelect,
   InputCheckComponent,
   InputFecha,
+  REGEX_PATRON_DECIMAL_2,
+  REGEX_SOLO_DIGITOS,
   TablaDinamicaComponent,
   TablaSeleccion,
   TableComponent,
@@ -157,12 +159,8 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
   /**
    * Tabla de selección de mercancías.
    */
-  TablaSeleccion = TablaSeleccion;
+  tablaSeleccion = TablaSeleccion;
 
-  /**
-   * Descripciones de los tratados.
-   */
-  Tratadodescripcion: unknown[] = [];
 
   /**
    * Tratado seleccionado.
@@ -558,7 +556,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
       validacionForm: this.fb.group({
         tratado: [this.solicitudState?.tratado, [Validators.required]],
         pais: [this.solicitudState?.pais, [Validators.required]],
-        fraccionArancelaria: [this.solicitudState?.fraccionArancelaria, [Validators.required, Validators.pattern(/^\d+$/)],],
+        fraccionArancelaria: [this.solicitudState?.fraccionArancelaria, [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS)],],
         numeroRegistro: [this.solicitudState?.numeroRegistro, [Validators.required],],
         nombreComercial: [this.solicitudState?.nombreComercial, [Validators.required],],
         fechaInicial: [this.solicitudState?.fechaInicial, [Validators.required],],
@@ -575,11 +573,11 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
         criterioParaConferir: ['', [Validators.required]],
         nombreEnIngles: ['', [Validators.required]],
         marca: [this.solicitudState?.marca, [Validators.required]],
-        cantidad: [this.solicitudState?.cantidad,[Validators.required, Validators.pattern(/^\d+$/)],],
+        cantidad: [this.solicitudState?.cantidad,[Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS)],],
         umc: [this.solicitudState?.umc, [Validators.required]],
-        valorDelaMercancia: [this.solicitudState?.valorDelaMercancia,[Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)],],
+        valorDelaMercancia: [this.solicitudState?.valorDelaMercancia,[Validators.required, Validators.pattern(REGEX_PATRON_DECIMAL_2)],],
         complementoDelaDescripcion: [this.solicitudState?.complementoDelaDescripcion,[Validators.required],],
-        masaBruta: [this.solicitudState?.masaBruta,[Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)],],
+        masaBruta: [this.solicitudState?.masaBruta,[Validators.required, Validators.pattern(REGEX_PATRON_DECIMAL_2)],],
         unidadMedida: [this.solicitudState?.unidadMedida,[Validators.required],],
         tipoFactura: [this.solicitudState?.tipoFactura, [Validators.required]],
         fecha: [this.solicitudState?.fecha, [Validators.required]],
