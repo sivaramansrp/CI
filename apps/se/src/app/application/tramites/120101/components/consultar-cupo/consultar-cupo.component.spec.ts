@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ConsultarCupoComponent } from './consultar-cupo.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('ConsultarCupoComponent', () => {
   let component: ConsultarCupoComponent;
@@ -7,7 +8,7 @@ describe('ConsultarCupoComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ConsultarCupoComponent],
+      imports: [ConsultarCupoComponent, HttpClientTestingModule],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ConsultarCupoComponent);
@@ -17,5 +18,13 @@ describe('ConsultarCupoComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should complete destroy$ on destroy', () => {
+    const completeSpy = jest.spyOn(component.destroy$, 'complete');
+    const nextSpy = jest.spyOn(component.destroy$, 'next');
+    component.ngOnDestroy();
+    expect(nextSpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
   });
 });

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { SolicitudDeRegistroTpl120101State, Tramite120101Store } from '../../../../estados/tramites/tramite120101.store';
 import { Subject, map, takeUntil } from 'rxjs';
@@ -8,6 +8,23 @@ import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tram
 import { ServicioDeFormularioService } from '../../services/forma-servicio/servicio-de-formulario.service';
 import { Tramite120101Query } from '../../../../estados/queries/tramite120101.query';
 
+/**
+ * @component BienFinalComponent
+ * @description
+ * Este componente representa la sección "Bien Final" del trámite 120101. 
+ * Utiliza un formulario dinámico para capturar y gestionar los datos relacionados con el bien final.
+ * 
+ * Funcionalidad:
+ * - Renderiza dinámicamente los campos del formulario basados en la configuración definida en `BIEN_FINAL`.
+ * - Maneja la validación y el estado del formulario utilizando formularios reactivos de Angular.
+ * - Interactúa con el estado global del trámite a través de `Tramite120101Store` y `Tramite120101Query`.
+ * - Permite registrar y actualizar los valores del formulario dinámico en el servicio correspondiente.
+ * 
+ * @selector bien-final
+ * @imports CommonModule, FormasDinamicasComponent, ReactiveFormsModule
+ * @templateUrl ./bien-final.component.html
+ * @styleUrl ./bien-final.component.scss
+ */
 @Component({
   selector: 'bien-final',
   standalone: true,
@@ -15,7 +32,7 @@ import { Tramite120101Query } from '../../../../estados/queries/tramite120101.qu
   templateUrl: './bien-final.component.html',
   styleUrl: './bien-final.component.scss',
 })
-export class BienFinalComponent implements OnInit {
+export class BienFinalComponent implements OnInit, OnDestroy {
   /**
    * compo doc
    * @property bienFinalFormData
@@ -87,7 +104,26 @@ constructor(
   //
  }
 
- ngOnInit(): void {
+ /**
+ * @method ngOnInit
+ * @description
+ * Este método se ejecuta al inicializar el componente `BienFinalComponent`. 
+ * Realiza las siguientes acciones:
+ * 
+ * Funcionalidad:
+ * - Se suscribe al observable `selectSolicitudDeRegistroTpl$` del servicio `Tramite120101Query` 
+ *   para obtener el estado de la sección "Solicitud de Registro".
+ * - Utiliza el operador `takeUntil` para cancelar la suscripción cuando el componente se destruye.
+ * - Actualiza la propiedad `solicitudDeRegistroState` con el estado obtenido.
+ * - Registra el formulario dinámico `bienFinalForm` en el servicio `ServicioDeFormularioService` 
+ *   para su gestión y validación.
+ * 
+ * @example
+ * // Al inicializar el componente:
+ * this.ngOnInit();
+ * // El estado de la solicitud se actualiza y el formulario se registra.
+ */
+ngOnInit(): void {
   this.tramite120101Query.selectSolicitudDeRegistroTpl$
     .pipe(
       takeUntil(this.destroy$),
@@ -96,8 +132,8 @@ constructor(
       })
     )
     .subscribe();
-    this.servicioDeFormularioService.registerForm('bienFinalForm', this.ninoFormGroup)
- }
+  this.servicioDeFormularioService.registerForm('bienFinalForm', this.ninoFormGroup);
+}
 
   /**
   * compo doc
@@ -120,7 +156,28 @@ constructor(
       this.servicioDeFormularioService.setFormValue('bienFinalForm', {
         [event.campo]: event.valor,
       });
-  
     }
+  }
+
+  /**
+  * @method ngOnDestroy
+  * @description
+  * Este método es parte del ciclo de vida del componente y se ejecuta automáticamente 
+  * cuando el componente está a punto de ser destruido. Se utiliza para limpiar las suscripciones 
+  * activas y evitar fugas de memoria en la aplicación.
+  * 
+  * Funcionalidad:
+  * - Notifica a través del `Subject` `destroy$` que el componente será destruido.
+  * - Completa el `Subject` para liberar los recursos asociados.
+  * 
+  * @example
+  * ngOnDestroy(): void {
+  *   this.destroy$.next();
+  *   this.destroy$.complete();
+  * }
+  */
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

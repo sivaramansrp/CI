@@ -17,6 +17,26 @@ export const CUPOS_PASOS = [
   },
 ];
 
+/**
+ * @constant DATOS_GENERALES_DEL_SOLICITANTE
+ * @description
+ * Configuración de los campos del formulario dinámico para la sección "Datos Generales del Solicitante".
+ * 
+ * Funcionalidad:
+ * - Define los campos que se renderizan dinámicamente en el formulario.
+ * - Cada campo incluye propiedades como `id`, `labelNombre`, `campo`, `tipoInput`, entre otras.
+ * - Los valores predeterminados y las propiedades de validación están configurados para cada campo.
+ * 
+ * Campos:
+ * - `rfc`: Campo de texto desactivado que muestra el RFC del solicitante.
+ * - `denominacion`: Campo de texto desactivado que muestra la denominación o razón social.
+ * - `actividad`: Campo de texto desactivado que muestra la actividad económica preponderante.
+ * - `correoElectronico`: Campo de texto desactivado que muestra el correo electrónico del solicitante.
+ * 
+ * @example
+ * // Uso en un formulario dinámico:
+ * const formulario = DATOS_GENERALES_DEL_SOLICITANTE.map(campo => crearControl(campo));
+ */
 export const DATOS_GENERALES_DEL_SOLICITANTE = [
   {
     id: 'rfc',
@@ -74,6 +94,33 @@ export const DATOS_GENERALES_DEL_SOLICITANTE = [
   },
 ];
 
+/**
+ * @constant DOMICILIO_FISCAL_DEL_SOLICITANTE
+ * @description
+ * Configuración de los campos del formulario dinámico para la sección "Domicilio Fiscal del Solicitante".
+ * 
+ * Funcionalidad:
+ * - Define los campos que se renderizan dinámicamente en el formulario.
+ * - Cada campo incluye propiedades como `id`, `labelNombre`, `campo`, `tipoInput`, entre otras.
+ * - Los valores predeterminados y las propiedades de validación están configurados para cada campo.
+ * 
+ * Campos:
+ * - `pais`: Campo de texto desactivado que muestra el país del domicilio fiscal.
+ * - `codigoPostal`: Campo de texto desactivado que muestra el código postal.
+ * - `estado`: Campo de texto desactivado que muestra el estado del domicilio fiscal.
+ * - `municipio`: Campo de texto desactivado que muestra el municipio o alcaldía.
+ * - `localidad`: Campo de texto desactivado que muestra la localidad.
+ * - `colonia`: Campo de texto desactivado que muestra la colonia.
+ * - `calle`: Campo de texto desactivado que muestra la calle.
+ * - `numeroExterior`: Campo de texto desactivado que muestra el número exterior.
+ * - `numeroInterior`: Campo de texto desactivado que muestra el número interior.
+ * - `lada`: Campo de texto desactivado que muestra la lada.
+ * - `telephono`: Campo de texto desactivado que muestra el teléfono.
+ * 
+ * @example
+ * // Uso en un formulario dinámico:
+ * const formulario = DOMICILIO_FISCAL_DEL_SOLICITANTE.map(campo => crearControl(campo));
+ */
 export const DOMICILIO_FISCAL_DEL_SOLICITANTE = [
   {
     id: 'pais',
@@ -220,290 +267,151 @@ export const DOMICILIO_FISCAL_DEL_SOLICITANTE = [
   },
 ];
 
+/**
+ * @constant CONSULTAR_CUPO
+ * @description
+ * Configuración de los campos del formulario dinámico para la sección "Consultar Cupo".
+ * 
+ * Funcionalidad:
+ * - Define los campos que se renderizan dinámicamente en el formulario.
+ * - Cada campo incluye propiedades como `id`, `labelNombre`, `campo`, `tipoInput`, entre otras.
+ * - Los valores predeterminados y las propiedades de validación están configurados para cada campo.
+ * 
+ * Campos:
+ * - `tratado`: Campo de selección para elegir el tratado o acuerdo.
+ * - `clasificacion`: Campo de selección para clasificar el régimen.
+ * - `pais`: Campo de selección para especificar el país destino/origen.
+ * - `fraccionArancelaria`: Campo de texto para ingresar la fracción arancelaria.
+ * - `descripcion`: Campo de selección desactivado para mostrar la descripción de la fracción arancelaria.
+ * 
+ * @example
+ * // Uso en un formulario dinámico:
+ * const formulario = CONSULTAR_CUPO.map(campo => crearControl(campo));
+ */
 export const CONSULTAR_CUPO = [
   {
-    id: 'calle',
-    labelNombre: 'Calle',
-    campo: 'calle',
+    id: 'tratado',
+    labelNombre: 'Tratado 0 acuerado',
+    campo: 'tratado',
     clase: 'col-md-4',
-    tipoInput: 'text',
+    tipoInput: 'select-catalogos',
     desactivado: false,
     soloLectura: false,
-    validadores: [
-        { tipo: 'required' },
-        { tipo: 'pattern', valor:0, mensaje: 'Por favor, corrija la calle.' }
-    ],
-    marcadorDePosicion: '',
-    valorPredeterminado: '',
+    validadores: [{ tipo: 'required' }],
+    marcadorDePosicion: 'Selecciona un valor',
+    valorPredeterminado: '1',
     marginTop: 0,
-},
-{
-    id: 'numeroExterior',
-    labelNombre: 'Número Exterior',
-    campo: 'numeroExterior',
+    opciones: [{ id: 1, descripcion: 'TMEC' }],
+  },
+  {
+    id: 'clasificacion',
+    labelNombre: 'Clasificación del regimen',
+    campo: 'clasificacion',
     clase: 'col-md-4',
-    tipoInput: 'number',
+    tipoInput: 'select-catalogos',
     desactivado: false,
     soloLectura: false,
-    validadores: [
-        { tipo: 'required' }
-    ],
-    marcadorDePosicion: '',
+    validadores: [{ tipo: 'required' }],
+    marcadorDePosicion: 'Selecciona un valor',
     valorPredeterminado: '',
     marginTop: 0,
-},
-{
-    id: 'numeroInterior',
-    labelNombre: 'Número Interior',
-    campo: 'numeroInterior',
+  },
+  {
+    id: '',
+    labelNombre: '',
+    campo: '',
     clase: 'col-md-4',
-    tipoInput: 'number',
+    tipoInput: '',
     desactivado: false,
     soloLectura: false,
     validadores: [],
     marcadorDePosicion: '',
     valorPredeterminado: '',
     marginTop: 0,
-},
-{
+  },
+  {
     id: 'pais',
-    labelNombre: 'País',
+    labelNombre: 'País destino/origen',
     campo: 'pais',
-    clase: 'col-md-6',
-    tipoInput: 'select-catalogos',
-    desactivado: true,
-    soloLectura: true,
-    validadores: [
-        { tipo: 'required' }
-    ],
-    marcadorDePosicion: '',
-    valorPredeterminado: '',
-    marginTop: 0,
-},
-{
-    id: 'entidadFederativa',
-    labelNombre: 'Entidad federative',
-    campo: 'entidadFederativa',
-    clase: 'col-md-6',
+    clase: 'col-md-4',
     tipoInput: 'select-catalogos',
     desactivado: false,
     soloLectura: false,
-    validadores: [
-        { tipo: 'required' },
-        { tipo: 'pattern', valor:0, mensaje: 'Por favor, corrija el estado y localidad.' }
-    ],
-    marcadorDePosicion: '',
+    validadores: [{ tipo: 'required' }],
+    marcadorDePosicion: 'Selecciona un valor',
     valorPredeterminado: '',
     marginTop: 0,
-},
-{
-    id: 'municipio',
-    labelNombre: 'Municipio o delegación',
-    campo: 'municipio',
-    clase: 'col-md-6',
-    tipoInput: 'select-catalogos',
+  },
+  {
+    id: 'fraccionArancelaria',
+    labelNombre: 'Fraccion arancelaria',
+    campo: 'fraccionArancelaria',
+    clase: 'col-md-4',
+    tipoInput: 'text',
     desactivado: false,
     soloLectura: false,
-    validadores: [
-        { tipo: 'required' },
-        { tipo: 'pattern', valor:0, mensaje: 'Por favor, corrija el estado y localidad.' }
-    ],
+    validadores: [{ tipo: 'required' }],
     marcadorDePosicion: '',
     valorPredeterminado: '',
     marginTop: 0,
-},
-{
+  },
+  {
     id: '',
     labelNombre: '',
     campo: '',
-    clase: 'col-md-6',
+    clase: 'col-md-4',
     tipoInput: '',
     desactivado: false,
     soloLectura: false,
-    validadores: [
-        { tipo: 'required' },
-        { tipo: 'pattern', valor:0, mensaje: 'Por favor, corrija el estado y localidad.' }
-    ],
+    validadores: [],
     marcadorDePosicion: '',
     valorPredeterminado: '',
     marginTop: 0,
-},
-{
-    id: 'ddlLocalidad',
-    labelNombre: 'Localidad',
-    campo: 'localidad',
-    clase: 'col-md-6',
+  },
+  {
+    id: 'descripcion',
+    labelNombre: 'Descripción Fracción arancelaria',
+    campo: 'descripcion',
+    clase: 'col-md-4',
     tipoInput: 'select-catalogos',
-    desactivado: false,
+    desactivado: true,
     soloLectura: false,
-    validadores: [
-        { tipo: 'required' },
-        { tipo: 'pattern', valor:0, mensaje: 'Por favor, corrija el estado y localidad.' }
-    ],
-    marcadorDePosicion: '',
+    validadores: [],
+    marcadorDePosicion: 'Selecciona un valor',
     valorPredeterminado: '',
     marginTop: 0,
-},
-
-{
-id: 'ddlColonia',
-labelNombre: 'Colonia',
-campo: 'colonia',
-clase: 'col-md-6',
-tipoInput: 'select-catalogos',
-desactivado: false,
-soloLectura: false,
-validadores: [
-    { tipo: 'required' },
-    { tipo: 'pattern', valor:0, mensaje: 'Por favor, corrija el estado y localidad.' }
-],
-marcadorDePosicion: '',
-valorPredeterminado: '',
-marginTop: 0,
-},
-{
-    id: 'correoElectronico',
-    labelNombre: 'Correo Electrónico',
-    campo: 'correoElectronico',
-    clase: 'col-md-4',
-    tipoInput: 'text',
-    desactivado: false,
-    soloLectura: false,
-    validadores: [
-        { tipo: 'required' },
-        { tipo: 'pattern', valor:0, mensaje: 'Por favor, escriba una dirección de correo válida.' }
-    ],
-    marcadorDePosicion: '',
-    valorPredeterminado: '',
-    marginTop: 0,
-},
-{
-    id: 'telefono',
-    labelNombre: 'Teléfono',
-    campo: 'telefono',
-    clase: 'col-md-4',
-    tipoInput: 'text',
-    desactivado: false,
-    soloLectura: false,
-    validadores: [
-        { tipo: 'required' },
-        { tipo: 'pattern', valor:0, mensaje: 'Por favor, corrija el teléfono.' }
-    ],
-    marcadorDePosicion: '',
-    valorPredeterminado: '',
-    marginTop: 0,
-},
-{
-    id: 'codigoPostal',
-    labelNombre: 'Código Postal',
-    campo: 'codigoPostal',
-    clase: 'col-md-4',
-    tipoInput: 'text',
-    desactivado: false,
-    soloLectura: false,
-    validadores: [
-        { tipo: 'required' },
-        { tipo: 'pattern', valor:0, mensaje: 'Debe contener sólo 5 números.' }
-    ],
-    marcadorDePosicion: '',
-    valorPredeterminado: '',
-    marginTop: 0,
-}
-  // {
-  //   id: 'tratado',
-  //   labelNombre: 'Tratado 0 acuerado',
-  //   campo: 'tratado',
-  //   clase: 'col-md-4',
-  //   tipoInput: 'select-catalogos',
-  //   desactivado: false,
-  //   soloLectura: false,
-  //   validadores: [{ tipo: 'required' }],
-  //   marcadorDePosicion: 'Selecciona un valor',
-  //   valorPredeterminado: '1',
-  //   marginTop: 0,
-  //   opciones: [{ id: 1, descripcion: 'TMEC' }],
-  // },
-  // {
-  //   id: 'clasificacion',
-  //   labelNombre: 'Clasificación del regimen',
-  //   campo: 'clasificacion',
-  //   clase: 'col-md-4',
-  //   tipoInput: 'select-catalogos',
-  //   desactivado: false,
-  //   soloLectura: false,
-  //   validadores: [{ tipo: 'required' }],
-  //   marcadorDePosicion: 'Selecciona un valor',
-  //   valorPredeterminado: '',
-  //   marginTop: 0,
-  // },
-  // {
-  //   id: '',
-  //   labelNombre: '',
-  //   campo: '',
-  //   clase: 'col-md-4',
-  //   tipoInput: '',
-  //   desactivado: false,
-  //   soloLectura: false,
-  //   validadores: [],
-  //   marcadorDePosicion: '',
-  //   valorPredeterminado: '',
-  //   marginTop: 0,
-  // },
-  // {
-  //   id: 'pais',
-  //   labelNombre: 'País destino/origen',
-  //   campo: 'pais',
-  //   clase: 'col-md-4',
-  //   tipoInput: 'select-catalogos',
-  //   desactivado: false,
-  //   soloLectura: false,
-  //   validadores: [{ tipo: 'required' }],
-  //   marcadorDePosicion: 'Selecciona un valor',
-  //   valorPredeterminado: '',
-  //   marginTop: 0,
-  // },
-  // {
-  //   id: 'fraccionArancelaria',
-  //   labelNombre: 'Fraccion arancelaria',
-  //   campo: 'fraccionArancelaria',
-  //   clase: 'col-md-4',
-  //   tipoInput: 'text',
-  //   desactivado: false,
-  //   soloLectura: false,
-  //   validadores: [{ tipo: 'required' }],
-  //   marcadorDePosicion: '',
-  //   valorPredeterminado: '',
-  //   marginTop: 0,
-  // },
-  // {
-  //   id: '',
-  //   labelNombre: '',
-  //   campo: '',
-  //   clase: 'col-md-4',
-  //   tipoInput: '',
-  //   desactivado: false,
-  //   soloLectura: false,
-  //   validadores: [],
-  //   marcadorDePosicion: '',
-  //   valorPredeterminado: '',
-  //   marginTop: 0,
-  // },
-  // {
-  //   id: 'descripcion',
-  //   labelNombre: 'Descripción Fracción arancelaria',
-  //   campo: 'descripcion',
-  //   clase: 'col-md-4',
-  //   tipoInput: 'select-catalogos',
-  //   desactivado: true,
-  //   soloLectura: false,
-  //   validadores: [],
-  //   marcadorDePosicion: 'Selecciona un valor',
-  //   valorPredeterminado: '',
-  //   marginTop: 0,
-  //   mostrar: false
-  // },
+    mostrar: false
+  },
 ];
-
+/**
+ * @constant DESCRIPCION_DEL_CUPO
+ * @description
+ * Configuración de los campos del formulario dinámico para la sección "Descripción del Cupo".
+ * 
+ * Funcionalidad:
+ * - Define los campos que se renderizan dinámicamente en el formulario.
+ * - Cada campo incluye propiedades como `id`, `labelNombre`, `campo`, `tipoInput`, entre otras.
+ * - Los valores predeterminados y las propiedades de validación están configurados para cada campo.
+ * 
+ * Campos:
+ * - `fraccionArancelaria`: Campo de texto desactivado que muestra la fracción arancelaria.
+ * - `descripcionProducto`: Campo de texto desactivado que muestra la descripción del producto.
+ * - `tratadoBloque`: Campo de texto desactivado que muestra el tratado o bloque.
+ * - `clasificacionSubproducto`: Campo de texto desactivado que muestra la clasificación del subproducto.
+ * - `mecanismo`: Campo de texto desactivado que muestra el mecanismo de asignación.
+ * - `categoria`: Campo de texto desactivado que muestra la categoría textil.
+ * - `clasificacionRegimen`: Campo de texto desactivado que muestra la clasificación de régimen.
+ * - `descripcionCategoria`: Campo de texto desactivado que muestra la descripción de la categoría textil.
+ * - `paisDestino`: Campo de texto desactivado que muestra el país destino/origen.
+ * - `unidadDeMedida`: Campo de texto desactivado que muestra la unidad de medida de la categoría textil.
+ * - `factor`: Campo de texto desactivado que muestra el factor de conversión de la categoría textil.
+ * - `fechaDeInicio`: Campo de texto desactivado que muestra la fecha de inicio de vigencia.
+ * - `fechaDeFin`: Campo de texto desactivado que muestra la fecha de fin de vigencia.
+ * 
+ * @example
+ * // Uso en un formulario dinámico:
+ * const formulario = DESCRIPCION_DEL_CUPO.map(campo => crearControl(campo));
+ */
 export const DESCRIPCION_DEL_CUPO = [
   {
     id: 'fraccionArancelaria',
@@ -676,6 +584,24 @@ export const DESCRIPCION_DEL_CUPO = [
   },
 ];
 
+/**
+ * @constant REPRESENTACION_FEDERAL
+ * @description
+ * Configuración de los campos del formulario dinámico para la sección "Representación Federal".
+ * 
+ * Funcionalidad:
+ * - Define los campos que se renderizan dinámicamente en el formulario.
+ * - Cada campo incluye propiedades como `id`, `labelNombre`, `campo`, `tipoInput`, entre otras.
+ * - Los valores predeterminados y las propiedades de validación están configurados para cada campo.
+ * 
+ * Campos:
+ * - `estado`: Campo de selección para elegir el estado.
+ * - `representacionFederal`: Campo de selección para especificar la representación federal.
+ * 
+ * @example
+ * // Uso en un formulario dinámico:
+ * const formulario = REPRESENTACION_FEDERAL.map(campo => crearControl(campo));
+ */
 export const REPRESENTACION_FEDERAL = [
   {
     id: 'estado',
@@ -705,6 +631,23 @@ export const REPRESENTACION_FEDERAL = [
   },
 ];
 
+/**
+ * @constant BIEN_FINAL
+ * @description
+ * Configuración de los campos del formulario dinámico para la sección "Bien Final".
+ * 
+ * Funcionalidad:
+ * - Define los campos que se renderizan dinámicamente en el formulario.
+ * - Cada campo incluye propiedades como `id`, `labelNombre`, `campo`, `tipoInput`, entre otras.
+ * - Los valores predeterminados y las propiedades de validación están configurados para cada campo.
+ * 
+ * Campos:
+ * - `descripcion`: Campo de texto para ingresar la descripción del bien final.
+ * 
+ * @example
+ * // Uso en un formulario dinámico:
+ * const formulario = BIEN_FINAL.map(campo => crearControl(campo));
+ */
 export const BIEN_FINAL = [
   {
     id: 'descripcion',

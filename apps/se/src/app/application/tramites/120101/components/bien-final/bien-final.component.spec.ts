@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { BienFinalComponent } from './bien-final.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('BienFinalComponent', () => {
   let component: BienFinalComponent;
@@ -7,7 +8,7 @@ describe('BienFinalComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [BienFinalComponent],
+      imports: [BienFinalComponent, HttpClientTestingModule],
     }).compileComponents();
 
     fixture = TestBed.createComponent(BienFinalComponent);

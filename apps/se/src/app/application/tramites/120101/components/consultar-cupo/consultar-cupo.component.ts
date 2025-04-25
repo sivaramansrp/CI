@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ModeloDeFormaDinamica, TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 import { SolicitudDeRegistroTpl120101State, Tramite120101Store } from '../../../../estados/tramites/tramite120101.store';
@@ -12,6 +12,25 @@ import { ServicioDeFormularioService } from '../../services/forma-servicio/servi
 import { SolicitudDeRegistroTplService } from '../../services/solicitud-de-registro-tpl.service';
 import { Tramite120101Query } from '../../../../estados/queries/tramite120101.query';
 
+/**
+ * @component ConsultarCupoComponent
+ * @description
+ * Este componente representa la sección "Consultar Cupo" del trámite 120101. 
+ * Permite al usuario consultar información relacionada con los cupos mediante un formulario dinámico y una tabla interactiva.
+ * 
+ * Funcionalidad:
+ * - Renderiza dinámicamente los campos del formulario basados en la configuración definida en `CONSULTAR_CUPO`.
+ * - Muestra una tabla dinámica con los datos obtenidos de los servicios relacionados con los cupos.
+ * - Maneja la validación y el estado del formulario utilizando formularios reactivos de Angular.
+ * - Interactúa con el estado global del trámite a través de `Tramite120101Store` y `Tramite120101Query`.
+ * - Permite registrar y actualizar los valores del formulario dinámico en el servicio correspondiente.
+ * - Proporciona métodos para buscar datos, manejar eventos de clic en filas de la tabla y gestionar cambios en los valores del formulario.
+ * 
+ * @selector consultar-cupo
+ * @imports CommonModule, ReactiveFormsModule, FormasDinamicasComponent, TablaDinamicaComponent
+ * @templateUrl ./consultar-cupo.component.html
+ * @styleUrl ./consultar-cupo.component.scss
+ */
 @Component({
   selector: 'consultar-cupo',
   standalone: true,
@@ -24,7 +43,8 @@ import { Tramite120101Query } from '../../../../estados/queries/tramite120101.qu
   templateUrl: './consultar-cupo.component.html',
   styleUrl: './consultar-cupo.component.scss',
 })
-export class ConsultarCupoComponent implements OnInit {
+
+export class ConsultarCupoComponent implements OnInit, OnDestroy {
   @Output() public emitFilaClicHandler =
     new EventEmitter<InstrumentoCupoTPLForm>();
   /**
@@ -92,6 +112,22 @@ export class ConsultarCupoComponent implements OnInit {
    */
   cuerpoTabla: InstrumentoCupoTPLForm[] = [];
 
+  /**
+ * @constructor
+ * @description
+ * Constructor del componente `ConsultarCupoComponent`. Inicializa las dependencias necesarias para el funcionamiento del componente.
+ * 
+ * Funcionalidad:
+ * - `SolicitudDeRegistroTplService`: Servicio para interactuar con los datos relacionados con la solicitud de registro.
+ * - `Tramite120101Store`: Store para gestionar el estado global del trámite 120101.
+ * - `Tramite120101Query`: Query para consultar el estado global del trámite 120101.
+ * - `ServicioDeFormularioService`: Servicio para registrar y gestionar formularios dinámicos.
+ * 
+ * @param {SolicitudDeRegistroTplService} solicitudDeRegistroTplService - Servicio para manejar datos de la solicitud de registro.
+ * @param {Tramite120101Store} tramite120101Store - Store para gestionar el estado global del trámite.
+ * @param {Tramite120101Query} tramite120101Query - Query para consultar el estado global del trámite.
+ * @param {ServicioDeFormularioService} servicioDeFormularioService - Servicio para gestionar formularios dinámicos.
+ */
   constructor(
     private solicitudDeRegistroTplService: SolicitudDeRegistroTplService,
     private tramite120101Store: Tramite120101Store,
@@ -101,12 +137,45 @@ export class ConsultarCupoComponent implements OnInit {
     //
   }
 
+  /**
+ * @method ngOnInit
+ * @description
+ * Este método se ejecuta al inicializar el componente `ConsultarCupoComponent`. 
+ * Realiza las siguientes acciones:
+ * 
+ * Funcionalidad:
+ * - Se suscribe al observable `selectSolicitudDeRegistroTpl$` del servicio `Tramite120101Query` 
+ *   para obtener el estado de la sección "Solicitud de Registro".
+ * - Verifica si el estado contiene la propiedad `cuerpoTabla` y agrega los elementos únicos a la tabla dinámica.
+ * - Registra el formulario dinámico `consultarCupoForm` en el servicio `ServicioDeFormularioService`.
+ * - Llama a los métodos `obtenerClasificacionRegimenDatos` y `obtenerPaisDatos` para cargar datos adicionales.
+ * 
+ * @example
+ * // Al inicializar el componente:
+ * this.ngOnInit();
+ * // El estado de la solicitud se actualiza, el formulario se registra y los datos adicionales se cargan.
+ */
   ngOnInit(): void {
     this.tramite120101Query.selectSolicitudDeRegistroTpl$
       .pipe(
         takeUntil(this.destroy$),
         map((seccionState) => {
           this.solicitudDeRegistroState = seccionState;
+
+          if (
+            this.solicitudDeRegistroState &&
+            typeof this.solicitudDeRegistroState === 'object' &&
+            this.solicitudDeRegistroState !== null &&
+            'cuerpoTabla' in this.solicitudDeRegistroState
+          ) {
+            const DATOS = this.solicitudDeRegistroState['cuerpoTabla'] || [];
+            DATOS.forEach((item: InstrumentoCupoTPLForm) => {
+              const IS_ALREADY_ADDED = this.cuerpoTabla.some((i: InstrumentoCupoTPLForm) => i.id === (item.id ?? -1));
+              if (!IS_ALREADY_ADDED) {
+                this.cuerpoTabla.push(item);
+              }
+            });
+          }
         })
       )
       .subscribe();
@@ -115,6 +184,22 @@ export class ConsultarCupoComponent implements OnInit {
     this.obtenerPaisDatos();
   }
 
+  /**
+ * @method obtenerClasificacionRegimenDatos
+ * @description
+ * Este método obtiene los datos de clasificación de régimen desde el servicio `SolicitudDeRegistroTplService` 
+ * y los asigna al campo correspondiente en el formulario dinámico.
+ * 
+ * Funcionalidad:
+ * - Llama al método `getClasificacionRegimenData` del servicio para obtener los datos.
+ * - Utiliza `takeUntil` para cancelar la suscripción cuando el componente se destruye.
+ * - Busca el campo `clasificacion` en la configuración del formulario dinámico (`consultarCupoFormData`).
+ * - Si el campo existe y no tiene opciones asignadas, asigna las opciones obtenidas del servicio.
+ * 
+ * @example
+ * this.obtenerClasificacionRegimenDatos();
+ * // El campo `clasificacion` se actualiza con las opciones obtenidas del servicio.
+ */
   public obtenerClasificacionRegimenDatos(): void {
     this.solicitudDeRegistroTplService
       .getClasificacionRegimenData()
@@ -134,6 +219,22 @@ export class ConsultarCupoComponent implements OnInit {
       });
   }
 
+  /**
+ * @method obtenerPaisDatos
+ * @description
+ * Este método obtiene los datos de los países desde el servicio `SolicitudDeRegistroTplService` 
+ * y los asigna al campo correspondiente en el formulario dinámico.
+ * 
+ * Funcionalidad:
+ * - Llama al método `getPaisData` del servicio para obtener los datos.
+ * - Utiliza `takeUntil` para cancelar la suscripción cuando el componente se destruye.
+ * - Busca el campo `pais` en la configuración del formulario dinámico (`consultarCupoFormData`).
+ * - Si el campo existe y no tiene opciones asignadas, asigna las opciones obtenidas del servicio.
+ * 
+ * @example
+ * this.obtenerPaisDatos();
+ * // El campo `pais` se actualiza con las opciones obtenidas del servicio.
+ */
   public obtenerPaisDatos(): void {
     this.solicitudDeRegistroTplService
       .getPaisData()
@@ -169,6 +270,7 @@ export class ConsultarCupoComponent implements OnInit {
           const TABLA_DATOS = resp.data;
           const NUEVO_CUERPO_TABLA = TABLA_DATOS.map(
             (item: InstrumentoCupoTPLForm) => ({
+              id: 1,
               cveTratado: item.cveTratado,
               cveRegimenClasificacion: item.cveRegimenClasificacion,
               cvePaisDestino: item.cvePaisDestino,
@@ -186,10 +288,26 @@ export class ConsultarCupoComponent implements OnInit {
             })
           );
           this.cuerpoTabla = NUEVO_CUERPO_TABLA;
+          this.tramite120101Store.setDynamicFieldValue('cuerpoTabla', this.cuerpoTabla);
         });
     }
   }
 
+  /**
+ * @method mostrarCampoDeDescripcion
+ * @description
+ * Este método verifica si el campo `fraccionArancelaria` tiene un valor en el formulario dinámico.
+ * Si el valor existe, actualiza la configuración del campo `descripcion` para que sea visible en el formulario.
+ * 
+ * Funcionalidad:
+ * - Obtiene el valor del campo `fraccionArancelaria` del grupo de formularios `ninoFormGroup`.
+ * - Busca el índice del campo `descripcion` en la configuración del formulario dinámico (`consultarCupoFormData`).
+ * - Si el campo `descripcion` existe, actualiza su propiedad `mostrar` a `true` para hacerlo visible.
+ * 
+ * @example
+ * this.mostrarCampoDeDescripcion();
+ * // Si `fraccionArancelaria` tiene un valor, el campo `descripcion` se muestra en el formulario.
+ */
   public mostrarCampoDeDescripcion(): void {
     if (this.ninoFormGroup.get('fraccionArancelaria')?.value) {
       const INDEX = this.consultarCupoFormData.findIndex(item => item.campo === 'descripcion');
@@ -199,6 +317,22 @@ export class ConsultarCupoComponent implements OnInit {
     }
   }
 
+  /**
+ * @method onFilaClicHandler
+ * @description
+ * Este método maneja el evento de clic en una fila de la tabla dinámica.
+ * Cuando se selecciona una fila, emite el evento con los datos de la fila seleccionada.
+ * 
+ * Funcionalidad:
+ * - Verifica si el evento contiene datos válidos.
+ * - Emite el evento utilizando el `EventEmitter` `emitFilaClicHandler`.
+ * 
+ * @param {InstrumentoCupoTPLForm} event - Objeto que representa los datos de la fila seleccionada.
+ * 
+ * @example
+ * this.onFilaClicHandler(filaSeleccionada);
+ * // Emite el evento con los datos de la fila seleccionada.
+ */
   public onFilaClicHandler(event: InstrumentoCupoTPLForm): void {
     if (event) {
       this.emitFilaClicHandler.emit(event);
@@ -228,5 +362,27 @@ export class ConsultarCupoComponent implements OnInit {
       });
   
     }
+  }
+
+  /**
+  * @method ngOnDestroy
+  * @description
+  * Este método es parte del ciclo de vida del componente y se ejecuta automáticamente 
+  * cuando el componente está a punto de ser destruido. Se utiliza para limpiar las suscripciones 
+  * activas y evitar fugas de memoria en la aplicación.
+  * 
+  * Funcionalidad:
+  * - Notifica a través del `Subject` `destroy$` que el componente será destruido.
+  * - Completa el `Subject` para liberar los recursos asociados.
+  * 
+  * @example
+  * ngOnDestroy(): void {
+  *   this.destroy$.next();
+  *   this.destroy$.complete();
+  * }
+  */
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

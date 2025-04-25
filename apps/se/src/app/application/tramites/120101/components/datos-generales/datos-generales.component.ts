@@ -4,6 +4,22 @@ import { Component } from '@angular/core';
 import { DATOS_GENERALES_DEL_SOLICITANTE } from '../../constantes/solicitud-de-registro-tpl.enum';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
 
+/**
+ * @component DatosGeneralesComponent
+ * @description
+ * Este componente representa la sección "Datos Generales" del trámite 120101. 
+ * Utiliza un formulario dinámico para capturar y gestionar los datos generales del solicitante.
+ * 
+ * Funcionalidad:
+ * - Renderiza dinámicamente los campos del formulario basados en la configuración definida en `DATOS_GENERALES_DEL_SOLICITANTE`.
+ * - Maneja la validación y el estado del formulario utilizando formularios reactivos de Angular.
+ * - Proporciona acceso al grupo de formularios anidado `ninoFormGroup` para gestionar controles específicos.
+ * 
+ * @selector datos-generales
+ * @imports CommonModule, ReactiveFormsModule, FormasDinamicasComponent
+ * @templateUrl ./datos-generales.component.html
+ * @styleUrl ./datos-generales.component.scss
+ */
 @Component({
   selector: 'datos-generales',
   standalone: true,
@@ -15,6 +31,7 @@ import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tram
   templateUrl: './datos-generales.component.html',
   styleUrl: './datos-generales.component.scss',
 })
+
 export class DatosGeneralesComponent {
   /**
     * compo doc

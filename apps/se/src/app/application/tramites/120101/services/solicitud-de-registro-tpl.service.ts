@@ -4,6 +4,12 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { RespuestaCuposTabla } from '../../120201/models/cupos.model';
 
+/**
+ * @Injectable
+ * @description
+ * Marca la clase `SolicitudDeRegistroTplService` como un servicio inyectable en Angular.
+ * @providedIn 'root' - Indica que el servicio está disponible en el inyector raíz.
+ */
 @Injectable({
   providedIn: 'root'
 })

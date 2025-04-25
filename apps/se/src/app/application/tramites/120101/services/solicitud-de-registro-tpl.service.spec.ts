@@ -1,12 +1,16 @@
 import { TestBed } from '@angular/core/testing';
 
 import { SolicitudDeRegistroTplService } from './solicitud-de-registro-tpl.service';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('SolicitudDeRegistroTplService', () => {
   let service: SolicitudDeRegistroTplService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
+    TestBed.configureTestingModule({
+      imports: [HttpClientTestingModule],
+      providers: [SolicitudDeRegistroTplService],
+    });
     service = TestBed.inject(SolicitudDeRegistroTplService);
   });
 

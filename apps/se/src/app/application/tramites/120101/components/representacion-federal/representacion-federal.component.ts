@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { SolicitudDeRegistroTpl120101State, Tramite120101Store } from '../../../../estados/tramites/tramite120101.store';
 import { Subject, map, takeUntil } from 'rxjs';
@@ -10,6 +10,23 @@ import { ServicioDeFormularioService } from '../../services/forma-servicio/servi
 import { SolicitudDeRegistroTplService } from '../../services/solicitud-de-registro-tpl.service';
 import { Tramite120101Query } from '../../../../estados/queries/tramite120101.query';
 
+/**
+ * @component RepresentacionFederalComponent
+ * @description
+ * Este componente representa la sección "Representación Federal" del trámite 120101. 
+ * Utiliza un formulario dinámico para capturar y gestionar los datos relacionados con la representación federal.
+ * 
+ * Funcionalidad:
+ * - Renderiza dinámicamente los campos del formulario basados en la configuración definida en `REPRESENTACION_FEDERAL`.
+ * - Maneja la validación y el estado del formulario utilizando formularios reactivos de Angular.
+ * - Proporciona métodos para obtener datos de estados y representación federal desde servicios externos.
+ * - Permite manejar cambios en los valores del formulario y actualizar el estado global del trámite.
+ * 
+ * @selector representacion-federal
+ * @imports CommonModule, ReactiveFormsModule, FormasDinamicasComponent
+ * @templateUrl ./representacion-federal.component.html
+ * @styleUrl ./representacion-federal.component.scss
+ */
 @Component({
   selector: 'representacion-federal',
   standalone: true,
@@ -17,7 +34,7 @@ import { Tramite120101Query } from '../../../../estados/queries/tramite120101.qu
   templateUrl: './representacion-federal.component.html',
   styleUrl: './representacion-federal.component.scss',
 })
-export class RepresentacionFederalComponent implements OnInit {
+export class RepresentacionFederalComponent implements OnInit, OnDestroy {
   /**
    * compo doc
    * @property representacionFederalFormData
@@ -73,6 +90,22 @@ export class RepresentacionFederalComponent implements OnInit {
   /** Subject para destruir el componente */
   public destroy$ = new Subject<void>();
 
+  /**
+ * @constructor
+ * @description
+ * Constructor del componente `RepresentacionFederalComponent`. Inicializa las dependencias necesarias para el funcionamiento del componente.
+ * 
+ * Funcionalidad:
+ * - `SolicitudDeRegistroTplService`: Servicio para interactuar con los datos relacionados con la solicitud de registro.
+ * - `Tramite120101Store`: Store para gestionar el estado global del trámite 120101.
+ * - `Tramite120101Query`: Query para consultar el estado global del trámite 120101.
+ * - `ServicioDeFormularioService`: Servicio para registrar y gestionar formularios dinámicos.
+ * 
+ * @param {SolicitudDeRegistroTplService} solicitudDeRegistroTplService - Servicio para manejar datos de la solicitud de registro.
+ * @param {Tramite120101Store} tramite120101Store - Store para gestionar el estado global del trámite.
+ * @param {Tramite120101Query} tramite120101Query - Query para consultar el estado global del trámite.
+ * @param {ServicioDeFormularioService} servicioDeFormularioService - Servicio para gestionar formularios dinámicos.
+ */
   constructor(
     private solicitudDeRegistroTplService: SolicitudDeRegistroTplService,
     private tramite120101Store: Tramite120101Store,
@@ -82,6 +115,24 @@ export class RepresentacionFederalComponent implements OnInit {
     //
   }
 
+  /**
+ * @method ngOnInit
+ * @description
+ * Este método se ejecuta al inicializar el componente `RepresentacionFederalComponent`. 
+ * Realiza las siguientes acciones:
+ * 
+ * Funcionalidad:
+ * - Se suscribe al observable `selectSolicitudDeRegistroTpl$` del servicio `Tramite120101Query` 
+ *   para obtener el estado de la sección "Solicitud de Registro".
+ * - Actualiza la propiedad `solicitudDeRegistroState` con el estado obtenido.
+ * - Registra el formulario dinámico `representacionFederal` en el servicio `ServicioDeFormularioService`.
+ * - Llama a los métodos `obtenerEstadosDatos` y `obtenerRepresentacionFederalDatos` para cargar datos adicionales.
+ * 
+ * @example
+ * // Al inicializar el componente:
+ * this.ngOnInit();
+ * // El estado de la solicitud se actualiza, el formulario se registra y los datos adicionales se cargan.
+ */
   ngOnInit(): void {
     this.tramite120101Query.selectSolicitudDeRegistroTpl$
       .pipe(
@@ -99,6 +150,22 @@ export class RepresentacionFederalComponent implements OnInit {
     this.obtenerRepresentacionFederalDatos();
   }
 
+  /**
+ * @method obtenerEstadosDatos
+ * @description
+ * Este método obtiene los datos de los estados desde el servicio `SolicitudDeRegistroTplService` 
+ * y los asigna al campo correspondiente en el formulario dinámico.
+ * 
+ * Funcionalidad:
+ * - Llama al método `getEstadosDatos` del servicio para obtener los datos.
+ * - Utiliza `takeUntil` para cancelar la suscripción cuando el componente se destruye.
+ * - Busca el campo `estado` en la configuración del formulario dinámico (`representacionFederalFormData`).
+ * - Si el campo existe y no tiene opciones asignadas, asigna las opciones obtenidas del servicio.
+ * 
+ * @example
+ * this.obtenerEstadosDatos();
+ * // El campo `estado` se actualiza con las opciones obtenidas del servicio.
+ */
   public obtenerEstadosDatos(): void {
     this.solicitudDeRegistroTplService
       .getEstadosDatos()
@@ -120,6 +187,22 @@ export class RepresentacionFederalComponent implements OnInit {
       });
   }
 
+  /**
+ * @method obtenerRepresentacionFederalDatos
+ * @description
+ * Este método obtiene los datos de la representación federal desde el servicio `SolicitudDeRegistroTplService` 
+ * y los asigna al campo correspondiente en el formulario dinámico.
+ * 
+ * Funcionalidad:
+ * - Llama al método `getRepresentacionFederalDatos` del servicio para obtener los datos.
+ * - Utiliza `takeUntil` para cancelar la suscripción cuando el componente se destruye.
+ * - Busca el campo `representacionFederal` en la configuración del formulario dinámico (`representacionFederalFormData`).
+ * - Si el campo existe y no tiene opciones asignadas, asigna las opciones obtenidas del servicio.
+ * 
+ * @example
+ * this.obtenerRepresentacionFederalDatos();
+ * // El campo `representacionFederal` se actualiza con las opciones obtenidas del servicio.
+ */
   public obtenerRepresentacionFederalDatos(): void {
     this.solicitudDeRegistroTplService
       .getRepresentacionFederalDatos()
@@ -165,5 +248,27 @@ export class RepresentacionFederalComponent implements OnInit {
       });
   
     }
+  }
+
+   /**
+  * @method ngOnDestroy
+  * @description
+  * Este método es parte del ciclo de vida del componente y se ejecuta automáticamente 
+  * cuando el componente está a punto de ser destruido. Se utiliza para limpiar las suscripciones 
+  * activas y evitar fugas de memoria en la aplicación.
+  * 
+  * Funcionalidad:
+  * - Notifica a través del `Subject` `destroy$` que el componente será destruido.
+  * - Completa el `Subject` para liberar los recursos asociados.
+  * 
+  * @example
+  * ngOnDestroy(): void {
+  *   this.destroy$.next();
+  *   this.destroy$.complete();
+  * }
+  */
+   ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

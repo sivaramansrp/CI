@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import {
   SolicitudDeRegistroTpl120101State,
@@ -11,6 +11,22 @@ import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tram
 import { ServicioDeFormularioService } from '../../services/forma-servicio/servicio-de-formulario.service';
 import { Tramite120101Query } from '../../../../estados/queries/tramite120101.query';
 
+/**
+ * @component DomicilioFiscalComponent
+ * @description
+ * Este componente representa la sección "Domicilio Fiscal" del trámite 120101. 
+ * Utiliza un formulario dinámico para capturar y gestionar los datos relacionados con el domicilio fiscal del solicitante.
+ * 
+ * Funcionalidad:
+ * - Renderiza dinámicamente los campos del formulario basados en la configuración definida en `DOMICILIO_FISCAL_DEL_SOLICITANTE`.
+ * - Maneja la validación y el estado del formulario utilizando formularios reactivos de Angular.
+ * - Proporciona métodos para manejar cambios en los valores del formulario y actualizar el estado global del trámite.
+ * 
+ * @selector domicilio-fiscal
+ * @imports CommonModule, ReactiveFormsModule, FormasDinamicasComponent
+ * @templateUrl ./domicilio-fiscal.component.html
+ * @styleUrl ./domicilio-fiscal.component.scss
+ */
 @Component({
   selector: 'domicilio-fiscal',
   standalone: true,
@@ -18,7 +34,7 @@ import { Tramite120101Query } from '../../../../estados/queries/tramite120101.qu
   templateUrl: './domicilio-fiscal.component.html',
   styleUrl: './domicilio-fiscal.component.scss',
 })
-export class DomicilioFiscalComponent implements OnInit {
+export class DomicilioFiscalComponent implements OnInit, OnDestroy {
   /**
    * compo doc
    * @property domicilioFiscalFormData
@@ -74,6 +90,20 @@ export class DomicilioFiscalComponent implements OnInit {
   /** Subject para destruir el componente */
   public destroy$ = new Subject<void>();
 
+  /**
+ * @constructor
+ * @description
+ * Constructor del componente `DomicilioFiscalComponent`. Inicializa las dependencias necesarias para el funcionamiento del componente.
+ * 
+ * Funcionalidad:
+ * - `Tramite120101Store`: Store para gestionar el estado global del trámite 120101.
+ * - `Tramite120101Query`: Query para consultar el estado global del trámite 120101.
+ * - `ServicioDeFormularioService`: Servicio para registrar y gestionar formularios dinámicos.
+ * 
+ * @param {Tramite120101Store} tramite120101Store - Store para gestionar el estado global del trámite.
+ * @param {Tramite120101Query} tramite120101Query - Query para consultar el estado global del trámite.
+ * @param {ServicioDeFormularioService} servicioDeFormularioService - Servicio para gestionar formularios dinámicos.
+ */
   constructor(
     private tramite120101Store: Tramite120101Store,
     private tramite120101Query: Tramite120101Query,
@@ -82,6 +112,23 @@ export class DomicilioFiscalComponent implements OnInit {
     //
   }
 
+  /**
+ * @method ngOnInit
+ * @description
+ * Este método se ejecuta al inicializar el componente `DomicilioFiscalComponent`. 
+ * Realiza las siguientes acciones:
+ * 
+ * Funcionalidad:
+ * - Se suscribe al observable `selectSolicitudDeRegistroTpl$` del servicio `Tramite120101Query` 
+ *   para obtener el estado de la sección "Solicitud de Registro".
+ * - Actualiza la propiedad `solicitudDeRegistroState` con el estado obtenido.
+ * - Registra el formulario dinámico `domicilioFiscalForm` en el servicio `ServicioDeFormularioService`.
+ * 
+ * @example
+ * // Al inicializar el componente:
+ * this.ngOnInit();
+ * // El estado de la solicitud se actualiza y el formulario se registra.
+ */
   ngOnInit(): void {
     this.tramite120101Query.selectSolicitudDeRegistroTpl$
       .pipe(
@@ -120,5 +167,27 @@ export class DomicilioFiscalComponent implements OnInit {
       });
   
     }
+  }
+
+   /**
+  * @method ngOnDestroy
+  * @description
+  * Este método es parte del ciclo de vida del componente y se ejecuta automáticamente 
+  * cuando el componente está a punto de ser destruido. Se utiliza para limpiar las suscripciones 
+  * activas y evitar fugas de memoria en la aplicación.
+  * 
+  * Funcionalidad:
+  * - Notifica a través del `Subject` `destroy$` que el componente será destruido.
+  * - Completa el `Subject` para liberar los recursos asociados.
+  * 
+  * @example
+  * ngOnDestroy(): void {
+  *   this.destroy$.next();
+  *   this.destroy$.complete();
+  * }
+  */
+   ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }
