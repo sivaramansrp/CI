@@ -1,0 +1,21 @@
+<div class="container">
+  <div class="row mt-5">
+    <form [formGroup]="formulario" class="pl-16">
+      <div class="row">
+        <div class="col-md-8">
+          <div class="form-group">
+            <label for="justificacionId">Justificación*:</label>
+            <textarea
+              rows="5"
+              cols="70"
+              formControlName="observaciones"
+              id="justificacionId"
+              (change)="setValoresStore(formulario,'observaciones')"
+            ></textarea>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<app-propietario></app-propietario>

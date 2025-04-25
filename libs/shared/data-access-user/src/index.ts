@@ -132,6 +132,20 @@ export * from './tramites/pages/acuse-page/acuse-page.component';
 export * from './tramites/pages/firma-page/firma-page.component';
 export * from './tramites/pipes/booleanoSiNo/booleano-si-no.pipe';
 export * from './tramites/shared.module';
+export * from './core/models/shared/datos-generales.model';
+export * from './core/enums/constantes-alertas.enum';
+export * from './tramites/directives/solo-numeros/solo-numeros.directive'
+export * from './core/services/231001/materia-prima-formservice.service';
+export * from './core/services/231001/administrar-residuos.service';
+export * from './core/services/shared/tramite-folio/tramite-folio.service';
+export * from './core/models/260303/certificados-licencias-permisos.model';
+export * from './core/models/260701/certificados-licencias.model';
+export * from './tramites/components/notificaciones/notificaciones.component';
+
+export * from './tramites/components/select-catalogos/select-catalogos.component';
+export * from './core/models/31602/comercio-exterior.model';
+export {AVISO} from './tramites/constantes/aviso-privacidad.enum';
 
 export {TramiteDetails} from './core/models/tramiteDetails'
-export {AVISO} from './tramites/constantes/aviso-privacidad.enum';
+export { SolicitanteasigncionserviceService } from './core/services/120404/solicitanteasigncionservice.service';
+export { enviroment } from './enviroments/enviroment';

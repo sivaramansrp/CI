@@ -16,6 +16,13 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'registros-de-comercio-exterior',
+    loadChildren: () =>
+      import('./tramites/31602/comercio-exterior/comercio-exterior.module').then(
+        (m) => m.ComercioExteriorModule
+      ),
+  },
+  {
     path: 'aviso',
     loadChildren: () =>
       import('./tramites/32502/aviso.module').then((m) => m.AvisoModule),
@@ -68,10 +75,44 @@ const ROUTES: Routes = [
       ).then((m) => m.ManifiestoAereoModule),
   },
   {
+    path: 'consulta-aviso-acreditacion',
+    loadChildren: () =>
+      import(
+        './tramites/32101/Consulta-Aviso-Acreditacion.module'
+      ).then((m) => m.ConsultaAvisoAcreditacionModule),
+  },
+  {
     path: 'aviso-traslado',
     loadChildren: () =>
       import('./tramites/32503/aviso-traslado.module').then(
         (m) => m.AvisoTrasladoModule
+      ),
+  },
+  {
+    path: 'aviso-procesos-solicitante',
+    loadChildren: () =>
+      import('./tramites/32505/aviso-procesos.module').then(
+        (m) => m.AvisoProcesosModule)
+  },
+  {
+    path: 'adace',
+    loadChildren: () =>
+      import('./tramites/32508/adace.module').then(
+        (m) => m.AdaceModule
+      ),
+  },
+  {
+    path: 'anexo-veintiocho',
+    loadChildren: () =>
+      import('./tramites/32201/anexo-veintiocho.module').then(
+        (m) => m.AnexoVeintiochoModule
+      ),
+  },
+  {
+    path: 'endoso-garantia',
+    loadChildren: () =>
+      import('./tramites/31301/endoso-garantia.module').then(
+        (m) => m.EndosoGarantiaModule
       ),
   },
 ];

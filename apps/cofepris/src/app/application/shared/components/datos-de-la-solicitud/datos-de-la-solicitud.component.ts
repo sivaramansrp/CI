@@ -1,8 +1,6 @@
 import {
   ALERTA_DE_MANIFESTO_Y_DECLARACIONES,
   ALERTA_OPCIONS,
-  CAMPOS_ADICIONALES_POR_PROCEDIMIENTO_MAP,
-  CAMPOS_REQUERIDOS_FORMULARIO_MAP,
   NUMERO_TRAMITE,
   PROCEDIMIENTOS_NO_PARA_ELEMENTO_CALLE,
   PROCEDIMIENTOS_NO_PARA_ELEMENTO_COLAPSABLE,
@@ -17,7 +15,10 @@ import {
   REPRESENTANTE_LEGAL,
 } from '../../constantes/datos-solicitud.enum';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AlertComponent, REGEX_SOLO_NUMEROS } from '@libs/shared/data-access-user/src';
+import {
+  AlertComponent,
+  REGEX_SOLO_NUMEROS,
+} from '@libs/shared/data-access-user/src';
 import {
   Catalogo,
   DatosDeTablaSeleccionados,
@@ -242,7 +243,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @type {boolean}
    */
   public mostrarRepresentanteLegal = true;
-  
 
   /**
    * @property {boolean} mostrarRFCSanitario
@@ -284,7 +284,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   public aduanaDatos: Catalogo[] = [];
 
-
   /**
    * @property {boolean} mostrarRegimenYAdunasDeEntradasDatos
    * Controla la visibilidad de los campos de régimen y aduanas de entrada en el formulario.
@@ -294,6 +293,18 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * deben ser visibles o no, dependiendo de la lógica implementada en el componente.
    */
   public mostrarRegimenYAdunasDeEntradasDatos: boolean = true;
+
+  /**
+   * @property {string[]} elementosAnadidos
+   * Lista de elementos adicionales que se deben mostrar en el formulario.
+   */
+  @Input() public elementosAnadidos!: string[];
+
+  /**
+   * @property {string[]} elementosRequeridos
+   * Lista de elementos que son obligatorios en el formulario.
+   */
+  @Input() public elementosRequeridos!: string[];
 
   /**
    * @constructor
@@ -350,7 +361,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       )
         ? false
         : true;
-  
+
     this.datosSolicitudForm.valueChanges
       .pipe(takeUntil(this.destroyNotifier$), delay(10))
       .subscribe((value) => {
@@ -377,17 +388,25 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       ? false
       : true;
 
-    this.mostrarCorreoElectronicoenMismaFila = PROCEDIMIENTOS_PARA_CORREO_ELECTRONICO_EN_MISMA_FILA.includes(this.idProcedimiento)
-      ? true
-      : false;
+    this.mostrarCorreoElectronicoenMismaFila =
+      PROCEDIMIENTOS_PARA_CORREO_ELECTRONICO_EN_MISMA_FILA.includes(
+        this.idProcedimiento
+      )
+        ? true
+        : false;
 
-    this.mostrarRepresentanteLegal = REPRESENTANTE_LEGAL.includes(this.idProcedimiento)
+    this.mostrarRepresentanteLegal = REPRESENTANTE_LEGAL.includes(
+      this.idProcedimiento
+    )
       ? false
       : true;
 
-    this.mostrarRegimenYAdunasDeEntradasDatos=PROCEDIMIENTOS_NO_PARA_ELEMENTO_REGIMEN_Y_ADUNADEENTRADAS.includes(this.idProcedimiento)
-    ? false
-    : true;
+    this.mostrarRegimenYAdunasDeEntradasDatos =
+      PROCEDIMIENTOS_NO_PARA_ELEMENTO_REGIMEN_Y_ADUNADEENTRADAS.includes(
+        this.idProcedimiento
+      )
+        ? false
+        : true;
   }
 
   /**
@@ -426,7 +445,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
           Validators.required,
           Validators.minLength(2),
           Validators.maxLength(150),
-          Validators.pattern(REGEX_SOLO_NUMEROS)
+          Validators.pattern(REGEX_SOLO_NUMEROS),
         ],
       ],
       estado: [
@@ -519,15 +538,15 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
  
  */
   actualizarDatosFormularioSolicitud(): void {
-    CAMPOS_REQUERIDOS_FORMULARIO_MAP.forEach((procedimientos, campo) => {
-      if (procedimientos?.includes(this.idProcedimiento)) {
+
+    this.elementosRequeridos?.forEach((campo) => {
         const CONTROL = this.datosSolicitudForm.get(campo);
         if (CONTROL) {
           CONTROL.setValidators(Validators.required);
           CONTROL.updateValueAndValidity();
         }
-      }
     });
+
   }
 
   /**
@@ -539,7 +558,9 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   // eslint-disable-next-line class-methods-use-this
   public isValid(control: AbstractControl, campo?: string): boolean | null {
     if (control instanceof FormGroup && campo) {
-      return control.controls[campo]?.errors && control.controls[campo]?.touched;
+      return (
+        control.controls[campo]?.errors && control.controls[campo]?.touched
+      );
     }
     return control?.errors && control?.touched;
   }
@@ -725,8 +746,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @returns {boolean} Retorna `true` si el campo es requerido, `false` en caso contrario.
    */
   esCampoRequerido(campo: string): boolean {
-    const PROCEDIMIENTOS = CAMPOS_REQUERIDOS_FORMULARIO_MAP.get(campo);
-    return PROCEDIMIENTOS?.includes(this.idProcedimiento) ?? false;
+    return this.elementosRequeridos?.includes(campo) ?? false;
   }
 
   /**
@@ -736,8 +756,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @returns {boolean} Retorna `true` si el campo adicional debe mostrarse, `false` en caso contrario.
    */
   mostrarCamposDelProcedimiento(campo: string): boolean {
-    const PROCEDIMIENTOS = CAMPOS_ADICIONALES_POR_PROCEDIMIENTO_MAP.get(campo);
-    return PROCEDIMIENTOS?.includes(this.idProcedimiento) ?? false;
+    return this.elementosAnadidos?.includes(campo) ?? false;
   }
 
   /**
