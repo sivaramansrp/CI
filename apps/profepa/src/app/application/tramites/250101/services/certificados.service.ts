@@ -1,4 +1,4 @@
-import { CertificadosTablaDatos } from '../models/flora-fauna.models';
+import { CertificadosFilaTableDatos, CertificadosFitoFilaTableDatos, CertificadosTablaDatos, PermisosCertificadosFitoFilaTableDatos } from '../models/flora-fauna.models';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -50,4 +50,32 @@ export class CertificadosService {
   getCertificadosDeTabla(): Observable<CertificadosTablaDatos> {
     return this.http.get<CertificadosTablaDatos>('assets/json/250101/certificados.json');
   }
+
+/**
+ * Obtiene los datos de una fila de certificados desde un archivo JSON.
+ *
+ * @returns Un Observable con los datos de tipo `CertificadosFilaTableDatos`.
+ */
+getCertificadosFilaDeTabla(): Observable<CertificadosFilaTableDatos> {
+  return this.http.get<CertificadosFilaTableDatos>('assets/json/250101/certificado-row.json');
+}
+
+/**
+ * Obtiene los datos de una fila de certificados fitosanitarios desde un archivo JSON.
+ *
+ * @returns Un Observable con los datos de tipo `CertificadosFitoFilaTableDatos`.
+ */
+getCertificadosFitoFilaDeTabla(): Observable<CertificadosFitoFilaTableDatos> {
+  return this.http.get<CertificadosFitoFilaTableDatos>('assets/json/250101/certificados-fito-row.json');
+}
+
+/**
+ * Obtiene los datos de permisos relacionados con certificados fitosanitarios desde un archivo JSON.
+ *
+ * @returns Un Observable con los datos de tipo `PermisosCertificadosFitoFilaTableDatos`.
+ */
+getPermisoCertificadosFilaDeTabla(): Observable<PermisosCertificadosFitoFilaTableDatos> {
+  return this.http.get<PermisosCertificadosFitoFilaTableDatos>('assets/json/250101/permisos-certificados-row.json');
+}
+
 }
