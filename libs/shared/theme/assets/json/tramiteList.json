@@ -1430,8 +1430,8 @@
   {
     "id": 205,
     "tramite": 32101,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/agace/consulta-aviso-acreditacion/solicitud",
+    "linkDepartment": "/pago/consulta-aviso-acreditacion/solicitud",
     "department": "agace"
   },
   {
@@ -1563,8 +1563,8 @@
   {
     "id": 224,
     "tramite": 260515,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/cofepris/sustancias-permitidas/solicitud",
+    "linkDepartment": "/pago/sustancias-permitidas/solicitud",
     "department": "cofepris"
   },
   {
@@ -1892,8 +1892,8 @@
   {
     "id": 271,
     "tramite": 240411,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/sedena/permiso-ordinario-prorroga-importacion-material-explosivo/contenedor-de-pasos",
+    "linkDepartment": "/pago/permiso-ordinario-prorroga-importacion-material-explosivo/contenedor-de-pasos",
     "department": "sedena"
   },
   {
@@ -1927,8 +1927,8 @@
   {
     "id": 276,
     "tramite": 130201,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/sener/exportacion-petroliferos/solicitud",
+    "linkDepartment": "/pago/exportacion-petroliferos/solicitud",
     "department": "sener"
   },
   {
