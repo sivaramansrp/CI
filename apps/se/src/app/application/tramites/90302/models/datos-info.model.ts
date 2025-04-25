@@ -333,3 +333,48 @@ export interface AccionBoton {
    */
   valor: number;
 }
+
+export interface Plantas{
+  calle: string;
+  numeroExterior: string;
+  numeroInterior: string;
+  codingPostal: string;
+  colonia: string;
+  municipio: string;
+  estado: string;
+  pais: string;
+  rfc: string;
+  razonSocial: string;
+  domicilioFisical: string;
+  estatus: string;
+
+
+
+}
+
+export interface MercancíasAProducir{
+  fraccionArancelaria:string,
+  claveSector:string,
+  estatus:string,
+}
+export interface Sector1{
+  listaSectores:string;
+  claveSector:string;
+  estatus:string;
+
+}
+
+export interface ProductorIndirecto{
+  rfc:string;
+  denominacion:string;
+  correo:string;
+  estatus:string;
+}
+export interface Bitacora{
+  tipoModificacion:string;
+  fechaModificacion:string;
+  valoresAnteriores:string;
+  valoresNuevos:string;
+
+
+}

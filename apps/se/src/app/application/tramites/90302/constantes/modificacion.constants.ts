@@ -12,7 +12,12 @@
 import {
   Arancelaria,
   ArancelariaImportacion,
+  Bitacora,
+  MercancíasAProducir,
+  Plantas,
+  ProductorIndirecto,
   Sector,
+  Sector1
 } from '../models/datos-info.model';
 
 /**
@@ -118,6 +123,164 @@ export const CONFIGURACION_ARANCELARIAS = [
     orden: 11,
   },
 ];
+export const CONFIGURACION_BITCORA = [
+  {
+    encabezado: 'Tipo modificación ',
+    clave: (ele: Bitacora): string | undefined => ele.tipoModificacion,
+    orden: 1,
+  },
+  {
+    encabezado: 'Fecha modificación  ',
+    clave: (ele: Bitacora): string | undefined => ele.fechaModificacion,
+    orden: 2,
+  },
+  {
+    encabezado: 'Valores anteriores',
+    clave: (ele: Bitacora): string | undefined => ele.valoresAnteriores,
+    orden: 3,
+    
+  },
+  {
+    encabezado: 'Valores nuevos ',
+    clave: (ele: Bitacora): string | undefined => ele.valoresNuevos,
+    orden: 4,
+    
+  },
+   
+
+]
+
+export const CONFIGURACION_SECTOR1 = [
+  {
+    encabezado: 'Lista de sectores',
+    clave: (ele: Sector1): string | undefined => ele.listaSectores,
+    orden: 1,
+  },
+  {
+    encabezado: 'Clave del sector ',
+    clave: (ele: Sector1): string | undefined => ele.claveSector,
+    orden: 2,
+  },
+  {
+    encabezado: 'Estatus',
+    clave: (ele: Sector1): string | undefined => ele.estatus,
+    orden: 3,
+
+  }
+];
+
+export const CONFIGURACION_PRODUCTOR_INDIRECTO  = [
+  {
+    encabezado: 'Registro federal de contribuyentes  ',
+    clave: (ele: ProductorIndirecto): string | undefined => ele.rfc,
+    orden: 1,
+  },
+  {
+    encabezado: 'Denominación o razón social  ',
+    clave: (ele: ProductorIndirecto): string | undefined => ele.denominacion,
+    orden: 2,
+  },
+  {
+    encabezado: 'Correo ',
+    clave: (ele: ProductorIndirecto): string | undefined => ele.correo,
+    orden: 3,
+  },
+  {
+    encabezado: 'Estatus',
+    clave: (ele: ProductorIndirecto): string | undefined => ele.estatus,
+    orden: 4,
+  },
+  
+]
+
+export const CONFIGURACION_MERCANCIAS_A_PRODUCIR = [
+  {
+    encabezado: 'Fracción arancelaria  ',
+    clave: (ele: MercancíasAProducir): string | undefined => ele.fraccionArancelaria,
+    orden: 1,
+  },
+  {
+    encabezado: 'Clave del sector ',
+    clave: (ele: MercancíasAProducir): string | undefined => ele.claveSector,
+    orden: 2,
+  },
+  {
+    encabezado: 'Estatus',
+    clave: (ele: MercancíasAProducir): string | undefined => ele.estatus,
+    orden: 3,
+  },
+  
+]
+
+export const CONFIGURACION_PLANTAS=[
+
+  {
+    encabezado: 'Calle',
+    clave: (ele: Plantas): string | undefined => ele.calle,
+    orden: 1,
+  }, 
+  {
+    encabezado: 'Número exterior',
+    clave: (ele: Plantas): string | undefined => ele.numeroExterior,
+    orden: 2,
+  },
+  {
+    encabezado: 'Número interior ',
+    clave: (ele: Plantas): string | undefined => ele.numeroInterior,
+    orden: 3,
+  },
+  {
+    encabezado: 'Código postal ',
+    clave: (ele: Plantas): string | undefined => ele.codingPostal,
+    orden: 4,
+  },
+  {
+    encabezado: 'Colonia',
+    clave: (ele: Plantas): string | undefined => ele.colonia,
+    orden: 4,
+  },
+  {
+    encabezado:'Municipio o alcaldía',
+    clave: (ele: Plantas): string | undefined => ele.municipio,
+    orden: 5,
+  },
+  {
+    encabezado:'Estado',
+    clave: (ele: Plantas): string | undefined => ele.estado,
+    orden: 6,
+  },
+  {
+    encabezado:'País',
+    clave: (ele: Plantas): string | undefined => ele.pais,
+    orden: 7,
+  },
+  {
+    encabezado:'Registro federal de contribuyentes ',
+    clave: (ele: Plantas): string | undefined => ele.rfc,
+    orden:8,
+  },
+  {
+    encabezado:'Razón social',
+    clave: (ele: Plantas): string | undefined => ele.razonSocial,
+    orden:8,
+  },
+  {
+    encabezado:'Domicilio fiscal del solicitante',
+    clave: (ele: Plantas): string | undefined => ele.domicilioFisical,
+    orden:9,
+  },
+  {
+    encabezado:'Estatus ',
+    clave: (ele: Plantas): string | undefined => ele.estatus,
+    orden:9,
+  }
+
+
+
+]
+
+
+
 
 /**
  * Configuración de la tabla para fracciones de importación.
