@@ -1,6 +1,6 @@
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
-
+import { state } from '@angular/animations';
 
 /**
  * @interfaz
@@ -10,19 +10,19 @@ import { Injectable } from '@angular/core';
  * Contiene propiedades relacionadas con los datos del trámite, como información de pago, datos de vehículos, agentes y más.
  */
 export interface Tramites80210State {
-  rfc: string,
-  estados: string,
-  plantasDisponibles: number[],
-  plantasSeleccionadas: number[]
+  rfc: string;
+  estados: string;
+  plantasDisponibles: number[];
+  plantasSeleccionadas: number[];
+  showPlantas: boolean;
 }
-
 
 /**
  * @función
  * @nombre createInitialState
  * @descripción
  * Crea y devuelve el estado inicial para el trámite 80210.
- * 
+ *
  * @retorna {Tramites80210State} El estado inicial del trámite.
  */
 export function createInitialState(): Tramites80210State {
@@ -30,7 +30,8 @@ export function createInitialState(): Tramites80210State {
     rfc: '',
     estados: '',
     plantasDisponibles: [],
-    plantasSeleccionadas:[]
+    plantasSeleccionadas: [],
+    showPlantas: false,
   };
 }
 
@@ -40,7 +41,7 @@ export function createInitialState(): Tramites80210State {
  * @descripción
  * Clase que extiende de `Store` de Akita para gestionar el estado del trámite 80210.
  * Proporciona métodos para actualizar diferentes partes del estado, como datos de vehículos, agentes y registros.
- * 
+ *
  * @decorador @Injectable
  * @decorador @StoreConfig
  */
@@ -49,7 +50,6 @@ export function createInitialState(): Tramites80210State {
 })
 @StoreConfig({ name: 'tramites80210', resettable: true })
 export class Tramite80210Store extends Store<Tramites80210State> {
-   
   /**
    * @constructor
    * @descripción
@@ -59,17 +59,38 @@ export class Tramite80210Store extends Store<Tramites80210State> {
     super(createInitialState());
   }
 
-  public setRFC(values: Partial<Tramite80210Store>):void {
-    this.update((state)=>({
+  public setRFC(values: Partial<Tramite80210Store>): void {
+    this.update((state) => ({
       ...state,
       ...values,
     }));
   }
 
-  public setEstado(values: Partial<Tramite80210Store>):void {
-    this.update((state)=>({
+  public setEstado(values: Partial<Tramite80210Store>): void {
+    this.update((state) => ({
       ...state,
       ...values,
+    }));
+  }
+
+  public setShowPlantas(values: boolean): void {
+    this.update((state) => ({
+      ...state,
+      showPlantas: values,
+    }));
+  }
+
+  public setPlantasDisponibles(values: number[]): void {
+    this.update((state) => ({
+      ...state,
+      plantasDisponibles: values,
+    }));
+  }
+
+  public setPlantasSeleccionada(values: number[]): void {
+    this.update((state) => ({
+      ...state,
+      plantasSeleccionadas: values,
     }));
   }
 }
