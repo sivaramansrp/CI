@@ -1,4 +1,5 @@
 import { Catalogo } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
+import { Chofer } from '../models/registro-muestras-mercancias.model';
 import { Injectable } from '@angular/core';
 import { Store } from '@datorama/akita';
 import { StoreConfig } from '@datorama/akita';
@@ -7,8 +8,8 @@ import { StoreConfig } from '@datorama/akita';
  * Interfaz que define el estado de los choferes nacionales y extranjeros.
  */
 export interface Choferesnacionales40103State {
-  choferes: string[];
-  choferesExtranjero: string[];
+  choferes: Chofer[];
+  choferesExtranjero: Chofer[];
   vehiculos: string[];
   unidadesDeArrastre: string[];
   estado: Catalogo[];
@@ -116,7 +117,7 @@ export class Chofer40103Store extends Store<Choferesnacionales40103State> {
    * @param nacionalArray La lista de choferes nacionales.
    * @returns void
    */
-  set(nacionalArray: string[]): void {
+  set(nacionalArray: Chofer[]): void {
     this.update((state) => ({
       ...state,
       choferes: nacionalArray,

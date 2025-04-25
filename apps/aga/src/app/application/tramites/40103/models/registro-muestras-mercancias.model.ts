@@ -302,3 +302,37 @@ export interface Vehiculo {
   solicitudVehiculoPaisEmisorSegundaPlaca?: string;
   solicitudVehiculoDesc?: string;
 }
+
+export interface Chofer {
+  descripcion: string;
+  clave: string;
+  id: number;
+  curp?: string;
+  rfc?: string;
+  nombre?: string;
+  apellidoPaterno?: string;
+  apellidoMaterno?: string;
+  gafete?: string;
+  vigenciagafete?: string;
+  calle?: string;
+  numeroExterior?: string;
+  numeroInterior?: string;
+  ciudad?: string;
+  localidad?: string;
+  codigoPostal?: string;
+  paisChn?: string;
+  estado?: string;
+  numerodelsegurosocial?: string;
+  entidadFederativaCHN?: string;
+  delegacionCHN?: string;
+  coloniaCHN?: string;
+  paisOrigenCHN?: string;
+  correo?: string;
+  telefono?: string;
+  nacionalidadCHE?: string;
+  nss?: string;
+  ideFiscal?: string;
+  paisCHE?: string;
+  entidadFederativaCHE?: string;
+  paisOrigenCHE?: string;
+}

@@ -1,5 +1,6 @@
 import { BehaviorSubject, Observable } from 'rxjs'; 
 import { Catalogo } from '@libs/shared/data-access-user/src';
+import { Chofer } from '../models/registro-muestras-mercancias.model';
 import { Chofer40103Store } from './chofer40103.store';
 import { DatosDelVehículo } from '@libs/shared/data-access-user/src/core/models/40103/transportista-terrestre.model';
 import { HttpClient } from '@angular/common/http';
@@ -57,7 +58,7 @@ export class Chofer40103Service {
    * @param isExtranjero Indica si el chofer es extranjero. Por defecto es `false`.
    */
   addChofer(
-    nuevoMiembro: DatosDelVehículo,
+    nuevoMiembro: Chofer,
     isExtranjero: boolean = false
   ): void {
     if (!nuevoMiembro) {
@@ -67,7 +68,7 @@ export class Chofer40103Service {
       ? 'choferesextranjeroList'
       : 'choferesList';
     const STORE_DATA = localStorage.getItem(STORAGE_KEY);
-    const CHOFER_ARRAY: any[] = STORE_DATA ? JSON.parse(STORE_DATA) : [];
+    const CHOFER_ARRAY: Chofer[] = STORE_DATA ? JSON.parse(STORE_DATA) : [];
     CHOFER_ARRAY.push(nuevoMiembro);
     localStorage.setItem(STORAGE_KEY, JSON.stringify(CHOFER_ARRAY));
 
