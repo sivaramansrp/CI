@@ -3,76 +3,76 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: vucem-${ENV}
+  name: default
 ---
 # ConfigMap for environment variables
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: vucem-frontend-config
-  namespace: vucem-${ENV}
+  namespace: default
 data:
   NODE_ENV: "production"
-  API_URL: "https://api-vucem-${ENV}.example.com"
+  API_URL: "https://api-vucem-dev.example.com"
 ---
 # ConfigMap for Module Federation Manifest
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: module-federation-manifest
-  namespace: vucem-${ENV}
+  namespace: default
 data:
   module-federation.manifest.json: |
     {
-      "login": "https://vucem-${ENV}.example.com/login",
-      "aga": "https://vucem-${ENV}.example.com/aga", 
-      "agriculture": "https://vucem-${ENV}.example.com/agriculture",
-      "se": "https://vucem-${ENV}.example.com/se",
-      "semarnat": "https://vucem-${ENV}.example.com/semarnat",
-      "agace": "https://vucem-${ENV}.example.com/agace",
-      "funcionario": "https://vucem-${ENV}.example.com/funcionario",
-      "cofepris": "https://vucem-${ENV}.example.com/cofepris",
-      "amecafe": "https://vucem-${ENV}.example.com/amecafe",
-      "sener": "https://vucem-${ENV}.example.com/sener",
-      "inbal": "https://vucem-${ENV}.example.com/inbal",
-      "sedena": "https://vucem-${ENV}.example.com/sedena",
-      "profepa": "https://vucem-${ENV}.example.com/profepa",
-      "crt": "https://vucem-${ENV}.example.com/crt",
-      "inah": "https://vucem-${ENV}.example.com/inah",
-      "bandejas": "https://vucem-${ENV}.example.com/bandejas",
-      "stps": "https://vucem-${ENV}.example.com/stps"
+      "login": "https://vucem-dev.example.com/login",
+      "aga": "https://vucem-dev.example.com/aga", 
+      "agriculture": "https://vucem-dev.example.com/agriculture",
+      "se": "https://vucem-dev.example.com/se",
+      "semarnat": "https://vucem-dev.example.com/semarnat",
+      "agace": "https://vucem-dev.example.com/agace",
+      "funcionario": "https://vucem-dev.example.com/funcionario",
+      "cofepris": "https://vucem-dev.example.com/cofepris",
+      "amecafe": "https://vucem-dev.example.com/amecafe",
+      "sener": "https://vucem-dev.example.com/sener",
+      "inbal": "https://vucem-dev.example.com/inbal",
+      "sedena": "https://vucem-dev.example.com/sedena",
+      "profepa": "https://vucem-dev.example.com/profepa",
+      "crt": "https://vucem-dev.example.com/crt",
+      "inah": "https://vucem-dev.example.com/inah",
+      "bandejas": "https://vucem-dev.example.com/bandejas",
+      "stps": "https://vucem-dev.example.com/stps"
     }
 ---
 # Deployment for VUCEM Microfrontends
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: vucem-microfrontends-${ENV}
-  namespace: vucem-${ENV}
+  name: vucem-microfrontends-dev
+  namespace: default
   labels:
     app: vucem-microfrontends
-    env: ${ENV}
+    env: dev
 spec:
-  replicas: ${REPLICAS}
+  replicas: 1
   selector:
     matchLabels:
       app: vucem-microfrontends
-      env: ${ENV}
+      env: dev
   template:
     metadata:
       labels:
         app: vucem-microfrontends
-        env: ${ENV}
+        env: dev
     spec:
       imagePullSecrets:
-        - name: github-container-registry
+        - name: vucem30registrykey
       volumes:
         - name: module-federation-manifest
           configMap:
             name: module-federation-manifest
       containers:
         - name: dashboard
-          image: ${REGISTRY}/vucem-front-dashboard:${TAG}
+          image: ghcr.io/vucem30-dev/frontend/vucem-front-dashboard:dev
           imagePullPolicy: Always
           ports:
             - containerPort: 80
@@ -103,7 +103,7 @@ spec:
             timeoutSeconds: 3
             periodSeconds: 10
         - name: login
-          image: ${REGISTRY}/vucem-front-login:${TAG}
+          image: ghcr.io/vucem30-dev/frontend/vucem-front-login:dev
           imagePullPolicy: Always
           ports:
             - containerPort: 80
@@ -130,7 +130,7 @@ spec:
             timeoutSeconds: 3
             periodSeconds: 10
         - name: aga
-          image: ${REGISTRY}/vucem-front-aga:${TAG}
+          image: ghcr.io/vucem30-dev/frontend/vucem-front-aga:dev
           imagePullPolicy: Always
           ports:
             - containerPort: 80
@@ -157,7 +157,7 @@ spec:
             timeoutSeconds: 3
             periodSeconds: 10
         - name: agriculture
-          image: ${REGISTRY}/vucem-front-agriculture:${TAG}
+          image: ghcr.io/vucem30-dev/frontend/vucem-front-agriculture:dev
           imagePullPolicy: Always
           ports:
             - containerPort: 80
@@ -184,7 +184,7 @@ spec:
             timeoutSeconds: 3
             periodSeconds: 10
         - name: se
-          image: ${REGISTRY}/vucem-front-se:${TAG}
+          image: ghcr.io/vucem30-dev/frontend/vucem-front-se:dev
           imagePullPolicy: Always
           ports:
             - containerPort: 80
@@ -211,7 +211,7 @@ spec:
             timeoutSeconds: 3
             periodSeconds: 10
         - name: semarnat
-          image: ${REGISTRY}/vucem-front-semarnat:${TAG}
+          image: ghcr.io/vucem30-dev/frontend/vucem-front-semarnat:dev
           imagePullPolicy: Always
           ports:
             - containerPort: 80
@@ -238,7 +238,7 @@ spec:
             timeoutSeconds: 3
             periodSeconds: 10
         - name: agace
-          image: ${REGISTRY}/vucem-front-agace:${TAG}
+          image: ghcr.io/vucem30-dev/frontend/vucem-front-agace:dev
           imagePullPolicy: Always
           ports:
             - containerPort: 80
@@ -265,7 +265,7 @@ spec:
             timeoutSeconds: 3
             periodSeconds: 10
         - name: funcionario
-          image: ${REGISTRY}/vucem-front-funcionario:${TAG}
+          image: ghcr.io/vucem30-dev/frontend/vucem-front-funcionario:dev
           imagePullPolicy: Always
           ports:
             - containerPort: 80
@@ -292,7 +292,7 @@ spec:
             timeoutSeconds: 3
             periodSeconds: 10
         - name: cofepris
-          image: ${REGISTRY}/vucem-front-cofepris:${TAG}
+          image: ghcr.io/vucem30-dev/frontend/vucem-front-cofepris:dev
           imagePullPolicy: Always
           ports:
             - containerPort: 80
@@ -319,7 +319,7 @@ spec:
             timeoutSeconds: 3
             periodSeconds: 10
         - name: amecafe
-          image: ${REGISTRY}/vucem-front-amecafe:${TAG}
+          image: ghcr.io/vucem30-dev/frontend/vucem-front-amecafe:dev
           imagePullPolicy: Always
           ports:
             - containerPort: 80
@@ -346,7 +346,7 @@ spec:
             timeoutSeconds: 3
             periodSeconds: 10
         - name: sener
-          image: ${REGISTRY}/vucem-front-sener:${TAG}
+          image: ghcr.io/vucem30-dev/frontend/vucem-front-sener:dev
           imagePullPolicy: Always
           ports:
             - containerPort: 80
@@ -373,7 +373,7 @@ spec:
             timeoutSeconds: 3
             periodSeconds: 10
         - name: inbal
-          image: ${REGISTRY}/vucem-front-inbal:${TAG}
+          image: ghcr.io/vucem30-dev/frontend/vucem-front-inbal:dev
           imagePullPolicy: Always
           ports:
             - containerPort: 80
@@ -400,7 +400,7 @@ spec:
             timeoutSeconds: 3
             periodSeconds: 10
         - name: sedena
-          image: ${REGISTRY}/vucem-front-sedena:${TAG}
+          image: ghcr.io/vucem30-dev/frontend/vucem-front-sedena:dev
           imagePullPolicy: Always
           ports:
             - containerPort: 80
@@ -427,7 +427,7 @@ spec:
             timeoutSeconds: 3
             periodSeconds: 10
         - name: profepa
-          image: ${REGISTRY}/vucem-front-profepa:${TAG}
+          image: ghcr.io/vucem30-dev/frontend/vucem-front-profepa:dev
           imagePullPolicy: Always
           ports:
             - containerPort: 80
@@ -454,7 +454,7 @@ spec:
             timeoutSeconds: 3
             periodSeconds: 10
         - name: crt
-          image: ${REGISTRY}/vucem-front-crt:${TAG}
+          image: ghcr.io/vucem30-dev/frontend/vucem-front-crt:dev
           imagePullPolicy: Always
           ports:
             - containerPort: 80
@@ -481,7 +481,7 @@ spec:
             timeoutSeconds: 3
             periodSeconds: 10
         - name: inah
-          image: ${REGISTRY}/vucem-front-inah:${TAG}
+          image: ghcr.io/vucem30-dev/frontend/vucem-front-inah:dev
           imagePullPolicy: Always
           ports:
             - containerPort: 80
@@ -508,7 +508,7 @@ spec:
             timeoutSeconds: 3
             periodSeconds: 10
         - name: bandejas
-          image: ${REGISTRY}/vucem-front-bandejas:${TAG}
+          image: ghcr.io/vucem30-dev/frontend/vucem-front-bandejas:dev
           imagePullPolicy: Always
           ports:
             - containerPort: 80
@@ -535,7 +535,7 @@ spec:
             timeoutSeconds: 3
             periodSeconds: 10
         - name: stps
-          image: ${REGISTRY}/vucem-front-stps:${TAG}
+          image: ghcr.io/vucem30-dev/frontend/vucem-front-stps:dev
           imagePullPolicy: Always
           ports:
             - containerPort: 80
@@ -567,15 +567,15 @@ apiVersion: v1
 kind: Service
 metadata:
   name: dashboard-svc-${ENV}
-  namespace: vucem-${ENV}
+  namespace: default
   labels:
     app: vucem-microfrontends
     component: dashboard
-    env: ${ENV}
+    env: dev
 spec:
   selector:
     app: vucem-microfrontends
-    env: ${ENV}
+    env: dev
   ports:
     - name: http
       port: 80
@@ -586,15 +586,15 @@ apiVersion: v1
 kind: Service
 metadata:
   name: login-svc-${ENV}
-  namespace: vucem-${ENV}
+  namespace: default
   labels:
     app: vucem-microfrontends
     component: login
-    env: ${ENV}
+    env: dev
 spec:
   selector:
     app: vucem-microfrontends
-    env: ${ENV}
+    env: dev
   ports:
     - name: http
       port: 80
@@ -605,15 +605,15 @@ apiVersion: v1
 kind: Service
 metadata:
   name: aga-svc-${ENV}
-  namespace: vucem-${ENV}
+  namespace: default
   labels:
     app: vucem-microfrontends
     component: aga
-    env: ${ENV}
+    env: dev
 spec:
   selector:
     app: vucem-microfrontends
-    env: ${ENV}
+    env: dev
   ports:
     - name: http
       port: 80
@@ -624,15 +624,15 @@ apiVersion: v1
 kind: Service
 metadata:
   name: agriculture-svc-${ENV}
-  namespace: vucem-${ENV}
+  namespace: default
   labels:
     app: vucem-microfrontends
     component: agriculture
-    env: ${ENV}
+    env: dev
 spec:
   selector:
     app: vucem-microfrontends
-    env: ${ENV}
+    env: dev
   ports:
     - name: http
       port: 80
@@ -643,15 +643,15 @@ apiVersion: v1
 kind: Service
 metadata:
   name: se-svc-${ENV}
-  namespace: vucem-${ENV}
+  namespace: default
   labels:
     app: vucem-microfrontends
     component: se
-    env: ${ENV}
+    env: dev
 spec:
   selector:
     app: vucem-microfrontends
-    env: ${ENV}
+    env: dev
   ports:
     - name: http
       port: 80
@@ -662,15 +662,15 @@ apiVersion: v1
 kind: Service
 metadata:
   name: semarnat-svc-${ENV}
-  namespace: vucem-${ENV}
+  namespace: default
   labels:
     app: vucem-microfrontends
     component: semarnat
-    env: ${ENV}
+    env: dev
 spec:
   selector:
     app: vucem-microfrontends
-    env: ${ENV}
+    env: dev
   ports:
     - name: http
       port: 80
@@ -681,15 +681,15 @@ apiVersion: v1
 kind: Service
 metadata:
   name: agace-svc-${ENV}
-  namespace: vucem-${ENV}
+  namespace: default
   labels:
     app: vucem-microfrontends
     component: agace
-    env: ${ENV}
+    env: dev
 spec:
   selector:
     app: vucem-microfrontends
-    env: ${ENV}
+    env: dev
   ports:
     - name: http
       port: 80
@@ -700,15 +700,15 @@ apiVersion: v1
 kind: Service
 metadata:
   name: funcionario-svc-${ENV}
-  namespace: vucem-${ENV}
+  namespace: default
   labels:
     app: vucem-microfrontends
     component: funcionario
-    env: ${ENV}
+    env: dev
 spec:
   selector:
     app: vucem-microfrontends
-    env: ${ENV}
+    env: dev
   ports:
     - name: http
       port: 80
@@ -719,15 +719,15 @@ apiVersion: v1
 kind: Service
 metadata:
   name: cofepris-svc-${ENV}
-  namespace: vucem-${ENV}
+  namespace: default
   labels:
     app: vucem-microfrontends
     component: cofepris
-    env: ${ENV}
+    env: dev
 spec:
   selector:
     app: vucem-microfrontends
-    env: ${ENV}
+    env: dev
   ports:
     - name: http
       port: 80
@@ -738,15 +738,15 @@ apiVersion: v1
 kind: Service
 metadata:
   name: amecafe-svc-${ENV}
-  namespace: vucem-${ENV}
+  namespace: default
   labels:
     app: vucem-microfrontends
     component: amecafe
-    env: ${ENV}
+    env: dev
 spec:
   selector:
     app: vucem-microfrontends
-    env: ${ENV}
+    env: dev
   ports:
     - name: http
       port: 80
@@ -757,15 +757,15 @@ apiVersion: v1
 kind: Service
 metadata:
   name: sener-svc-${ENV}
-  namespace: vucem-${ENV}
+  namespace: default
   labels:
     app: vucem-microfrontends
     component: sener
-    env: ${ENV}
+    env: dev
 spec:
   selector:
     app: vucem-microfrontends
-    env: ${ENV}
+    env: dev
   ports:
     - name: http
       port: 80
@@ -776,15 +776,15 @@ apiVersion: v1
 kind: Service
 metadata:
   name: inbal-svc-${ENV}
-  namespace: vucem-${ENV}
+  namespace: default
   labels:
     app: vucem-microfrontends
     component: inbal
-    env: ${ENV}
+    env: dev
 spec:
   selector:
     app: vucem-microfrontends
-    env: ${ENV}
+    env: dev
   ports:
     - name: http
       port: 80
@@ -795,15 +795,15 @@ apiVersion: v1
 kind: Service
 metadata:
   name: sedena-svc-${ENV}
-  namespace: vucem-${ENV}
+  namespace: default
   labels:
     app: vucem-microfrontends
     component: sedena
-    env: ${ENV}
+    env: dev
 spec:
   selector:
     app: vucem-microfrontends
-    env: ${ENV}
+    env: dev
   ports:
     - name: http
       port: 80
@@ -814,15 +814,15 @@ apiVersion: v1
 kind: Service
 metadata:
   name: profepa-svc-${ENV}
-  namespace: vucem-${ENV}
+  namespace: default
   labels:
     app: vucem-microfrontends
     component: profepa
-    env: ${ENV}
+    env: dev
 spec:
   selector:
     app: vucem-microfrontends
-    env: ${ENV}
+    env: dev
   ports:
     - name: http
       port: 80
@@ -833,15 +833,15 @@ apiVersion: v1
 kind: Service
 metadata:
   name: crt-svc-${ENV}
-  namespace: vucem-${ENV}
+  namespace: default
   labels:
     app: vucem-microfrontends
     component: crt
-    env: ${ENV}
+    env: dev
 spec:
   selector:
     app: vucem-microfrontends
-    env: ${ENV}
+    env: dev
   ports:
     - name: http
       port: 80
@@ -852,15 +852,15 @@ apiVersion: v1
 kind: Service
 metadata:
   name: inah-svc-${ENV}
-  namespace: vucem-${ENV}
+  namespace: default
   labels:
     app: vucem-microfrontends
     component: inah
-    env: ${ENV}
+    env: dev
 spec:
   selector:
     app: vucem-microfrontends
-    env: ${ENV}
+    env: dev
   ports:
     - name: http
       port: 80
@@ -871,15 +871,15 @@ apiVersion: v1
 kind: Service
 metadata:
   name: bandejas-svc-${ENV}
-  namespace: vucem-${ENV}
+  namespace: default
   labels:
     app: vucem-microfrontends
     component: bandejas
-    env: ${ENV}
+    env: dev
 spec:
   selector:
     app: vucem-microfrontends
-    env: ${ENV}
+    env: dev
   ports:
     - name: http
       port: 80
@@ -890,15 +890,15 @@ apiVersion: v1
 kind: Service
 metadata:
   name: stps-svc-${ENV}
-  namespace: vucem-${ENV}
+  namespace: default
   labels:
     app: vucem-microfrontends
     component: stps
-    env: ${ENV}
+    env: dev
 spec:
   selector:
     app: vucem-microfrontends
-    env: ${ENV}
+    env: dev
   ports:
     - name: http
       port: 80
@@ -909,10 +909,9 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: vucem-frontend-ingress-${ENV}
-  namespace: vucem-${ENV}
+  name: vucem-frontend-ingress-dev
+  namespace: default
   annotations:
-    kubernetes.io/ingress.class: "nginx"
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
     nginx.ingress.kubernetes.io/use-regex: "true"
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
@@ -941,10 +940,10 @@ spec:
   ingressClassName: nginx
   tls:
   - hosts:
-    - vucem-${ENV}.example.com
+    - vucem-dev.example.com
     secretName: vucem-tls-cert
   rules:
-  - host: vucem-${ENV}.example.com
+  - host: vucem-dev.example.com
     http:
       paths:
       # Dashboard app (Shell)
@@ -1238,15 +1237,15 @@ spec:
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: vucem-microfrontends-hpa-${ENV}
-  namespace: vucem-${ENV}
+  name: vucem-microfrontends-hpa-dev
+  namespace: default
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: vucem-microfrontends-${ENV}
-  minReplicas: ${MIN_REPLICAS}
-  maxReplicas: ${MAX_REPLICAS}
+    name: vucem-microfrontends-dev
+  minReplicas: 1
+  maxReplicas: 3
   metrics:
   - type: Resource
     resource:
