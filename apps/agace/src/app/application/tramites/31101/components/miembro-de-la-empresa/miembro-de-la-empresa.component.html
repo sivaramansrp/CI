@@ -7,6 +7,7 @@
       <div class="col-md-4"></div>
       <div class="col-md-4 mt-4">
         <app-catalogo-select
+          formControlName="miembroCaracterDe"
           [catalogo]="enSuCaracterDeLista.catalogos"
           [label]="enSuCaracterDeLista.labelNombre"
           [placeholder]="enSuCaracterDeLista.primerOpcion"
@@ -14,6 +15,7 @@
           [isDisabled]="false"
           name="enSuCaracterDe"
           id="enSuCaracterDe"
+          (selectionChange)="actualizarMiembroCaracterDe($event)"
         ></app-catalogo-select>
       </div>
       <div class="col-md-8 mt-4"></div>
@@ -22,16 +24,18 @@
           >Obligado a tributar en México</label
         >
         <app-input-radio
+          formControlName="miembroTributarMexico"
           [radioOptions]="sinoOpcion.radioOptions"
           [isRequired]="true"
           [layout]="'horizontal'"
           [gap]="'50px'"
-          (valueChange)="seleccionarObligadoTributarEnMexico($event)"
+          (valueChange)="actualizarMiembroTributarMexico($event)"
         ></app-input-radio>
       </div>
       <div class="col-md-8 mt-4"></div>
       <div class="col-md-4 mt-4">
         <app-catalogo-select
+          formControlName="miembroNacionalidad"
           [catalogo]="nacionalidadLista.catalogos"
           [label]="nacionalidadLista.labelNombre"
           [placeholder]="nacionalidadLista.primerOpcion"
@@ -39,13 +43,22 @@
           [isDisabled]="false"
           name="nacionalidad"
           id="nacionalidad"
+          (selectionChange)="actualizarMiembroNacionalidad($event)"
         ></app-catalogo-select>
       </div>
       <div class="col-md-8 mt-4"></div>
       @if(seleccionarObligadoTributar === 1){
       <div class="col-md-4 mt-4">
         <label class="form-label text-start" for="RFC">RFC*:</label>
-        <input class="form-control" type="text" size="80" id="RFC" name="RFC" />
+        <input
+          class="form-control"
+          formControlName="miembroRfc"
+          type="text"
+          size="80"
+          id="miembroRfc"
+          name="miembroRfc"
+          (change)="actualizarMiembroRFC($event)"
+        />
       </div>
       <div class="col-md-8 mt-4"></div>
       <div class="col-md-12 mt-4">
@@ -62,20 +75,33 @@
         </div>
       </div>
       <div class="col-md-4 mt-4">
-        <label class="form-label text-start" for="RFC"
+        <label class="form-label text-start" for="miembroRegistroFederal"
           >Registro Federal de Contribuyentes *:</label
         >
-        <input class="form-control" type="text" id="" name="" />
+        <input
+          class="form-control"
+          formControlName="miembroRegistroFederal"
+          type="text"
+          id="registroFederal"
+          name="registroFederal"
+        />
       </div>
       <div class="col-md-8 mt-4">
-        <label class="form-label text-start" for="RFC"
+        <label class="form-label text-start" for="miembroNombreCompleto"
           >Nombre completo *:</label
         >
-        <input class="form-control" type="text" id="" name="" />
+        <input
+          class="form-control"
+          formControlName="miembroNombreCompleto"
+          type="text"
+          id="miembroNombreCompleto"
+          name="miembroNombreCompleto"
+        />
       </div>
       } @if(seleccionarObligadoTributar === 2){
       <div class="col-md-4 mt-4">
         <app-catalogo-select
+          formControlName="miembroTipoPersonaMuestra"
           [catalogo]="tipoDePersonaLista.catalogos"
           [label]="tipoDePersonaLista.labelNombre"
           [placeholder]="tipoDePersonaLista.primerOpcion"
@@ -83,37 +109,75 @@
           [isDisabled]="false"
           name="tipoDePersona"
           id="tipoDePersona"
-          (selectionChange)="selectionTipoDePersona($event)"
+          (selectionChange)="actualizarMiembroTipoPersonaMuestra($event)"
         ></app-catalogo-select>
       </div>
       <div class="col-md-8 mt-4"></div>
       @if(seleccionarTipoDePersona === 1){
       <div class="col-md-4 mt-4">
-        <label class="form-label text-start" for="">Nombre (s) *:</label>
-        <input class="form-control" type="text" id="" name="" />
+        <label class="form-label text-start" for="miembroNombre">Nombre (s) *:</label>
+        <input
+          class="form-control"
+          type="text"
+          formControlName="miembroNombre"
+          id="miembroNombre"
+          name="miembroNombre"
+          (change)="actualizarMiembroNombre($event)"
+        />
       </div>
       <div class="col-md-4 mt-4">
-        <label class="form-label text-start" for="">Apellido paterno *:</label>
-        <input class="form-control" type="text" id="" name="" />
+        <label class="form-label text-start" for="apellidoPaterno">Apellido paterno *:</label>
+        <input
+          class="form-control"
+          type="text"
+          formControlName="miembroApellidoPaterno"
+          id="apellidoPaterno"
+          name="apellidoPaterno"
+          (change)="actualizarMiembroApellidoPaterno($event)"
+        />
       </div>
       <div class="col-md-4 mt-4">
-        <label class="form-label text-start" for="">Apellido materno *:</label>
-        <input class="form-control" type="text" id="" name="" />
+        <label class="form-label text-start" for="apellidoMaterno">Apellido materno *:</label>
+        <input
+          class="form-control"
+          type="text"
+          formControlName="miembroApellidoMaterno"
+          id="apellidoMaterno"
+          name="apellidoMaterno"
+          (change)="actualizarMiembroApellidoMaterno($event)"
+        />
       </div>
       } @if(seleccionarTipoDePersona === 2){
       <div class="col-md-12 mt-4">
-        <label class="form-label text-start" for=""
+        <label class="form-label text-start" for="nombreEmpresa"
           >Nombre de la empresa *:</label
         >
-        <input class="form-control" type="text" id="" name="" />
+        <input
+          class="form-control"
+          formControlName="miembroNombreEmpresa"
+          type="text"
+          id="nombreEmpresa"
+          name="nombreEmpresa"
+          (change)="actualizarMiembroNombreEmpresa($event)"
+        />
       </div>
       } }
       <div class="col-md-12 mt-4">
-        <div class="d-flex justify-content-end" style="margin-right: 15%;">
-          <button type="button" id="Aceptar" (click)="cerrarModal()" class="btn btn-primary me-3">
+        <div class="d-flex justify-content-end" style="margin-right: 15%">
+          <button
+            type="button"
+            id="Aceptar"
+            (click)="cerrarModal()"
+            class="btn btn-primary me-3"
+          >
             Aceptar
           </button>
-          <button type="button" id="Cancelar" (click)="cerrarModal()" class="btn btn-danger">
+          <button
+            type="button"
+            id="Cancelar"
+            (click)="cerrarModal()"
+            class="btn btn-danger"
+          >
             Cancelar
           </button>
         </div>

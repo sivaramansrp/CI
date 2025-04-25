@@ -3,15 +3,6 @@
     <div class="row mt-5">
       <div class="col-md-12">
         <ng-titulo titulo="Tipo de garantía" />
-        <!-- <label class="form-label">Tipo de endoso *:</label>
-        <app-input-radio
-          formControlName="tipoDeEndoso"
-          [selectedValue]="datosGeneralesForm.get('tipoDeEndoso')?.value"
-          [radioOptions]="tipoDeEndosoOpcion.radioOptions"
-          [isRequired]="tipoDeEndosoOpcion.isRequired"
-          [layout]="'vertical'"
-          (valueChange)="getTipoDeEndoso($event)"
-        ></app-input-radio> -->
       </div>
       <div class="col-md-12">
         <label class="form-label">Tipo de Garantía *:</label>
@@ -22,6 +13,7 @@
           [isRequired]="tipoDeGarantiaOpcion.isRequired"
           [layout]="'horizontal'"
           [gap]="'50px'"
+          (valueChange)="actualizarTipoDeGarantia($event)"
         ></app-input-radio>
       </div>
       <div class="col-md-12">
@@ -52,6 +44,7 @@
           [isRequired]="modalidadDeLaGarantiaOpcion.isRequired"
           [layout]="'horizontal'"
           [gap]="'50px'"
+          (valueChange)="actualizarModalidadDeLaGarantia($event)"
         ></app-input-radio>
       </div>
       <div class="col-md-12">
@@ -64,11 +57,11 @@
           [isRequired]="tipoSectorOpcion.isRequired"
           [layout]="'horizontal'"
           [gap]="'50px'"
-          (valueChange)="seleccionarTipoSector($event)"
+          (valueChange)="actualizarTipoSector($event)"
         ></app-input-radio>
       </div>
       <div class="col-md-4">
-        @if(datosGeneralesForm.get('tipoSector')?.value > 0){
+        <!-- @if(datosGeneralesForm?.get('tipoSector')?.value > 0){ -->
         <app-catalogo-select
           formControlName="concepto"
           [catalogo]="conceptoLista.catalogos"
@@ -78,8 +71,9 @@
           [isDisabled]="false"
           name="concepto"
           id="concepto"
+          (selectionChange)="actualizarConcepto($event)"
         ></app-catalogo-select>
-        }
+        <!-- } -->
       </div>
       <div class="col-md-12">
         <ng-titulo titulo="Manifiesto bajo protesta" />
@@ -88,6 +82,7 @@
             type="checkbox"
             class="form-check-input"
             formControlName="alerta2"
+            (change)="actualizarAlerta2($event)"
           />
           Bajo protesta de decir la verdad, manifiesto que los datos asentados
           en el presente documento son ciertos y que las facultades que me
@@ -110,6 +105,7 @@
           [layout]="'horizontal'"
           [gap]="'50px'"
           formControlName="3500"
+          (valueChange)="actualizar3500($event)"
         ></app-input-radio>
       </div>
 
@@ -124,6 +120,7 @@
           [layout]="'horizontal'"
           [gap]="'50px'"
           formControlName="3501"
+          (valueChange)="actualizar3501($event)"
         ></app-input-radio>
       </div>
 
@@ -140,6 +137,7 @@
           [layout]="'horizontal'"
           [gap]="'50px'"
           formControlName="3502"
+          (valueChange)="actualizar3502($event)"
         ></app-input-radio>
       </div>
 
@@ -159,6 +157,7 @@
           id="RFC"
           name="RFC"
           formControlName="datosGeneralesRFC"
+          (change)="actualizarDatosGeneralesRFC($event)"
         />
       </div>
       <div class="col-md-8"></div>
@@ -209,6 +208,7 @@
           [layout]="'horizontal'"
           [gap]="'50px'"
           formControlName="3503"
+          (valueChange)="actualizar3503($event)"
         ></app-input-radio>
       </div>
 
@@ -224,6 +224,7 @@
           [layout]="'horizontal'"
           [gap]="'50px'"
           formControlName="3504"
+          (valueChange)="actualizar3504($event)"
         ></app-input-radio>
       </div>
       <div class="col-md-12 mt-4">
@@ -238,6 +239,7 @@
           [layout]="'horizontal'"
           [gap]="'50px'"
           formControlName="3505"
+          (valueChange)="actualizar3505($event)"
         ></app-input-radio>
       </div>
       <div class="col-md-12 mt-4">
@@ -250,8 +252,26 @@
           [layout]="'horizontal'"
           [gap]="'50px'"
           formControlName="3506"
+          (valueChange)="actualizar3506($event)"
         ></app-input-radio>
       </div>
+      <!-- @if(datosGeneralesForm && datosGeneralesForm?.get('3506') && datosGeneralesForm?.get('3506')?.value === 2){ -->
+      <div class="col-md-12 mt-4">
+        <label class="form-label text-start"
+          >En caso negativo señale si se infringió alguno de los supuestos
+          previstos en el artículo 17-H Bis del CFF, durante los últimos doce
+          meses.</label
+        >
+        <app-input-radio
+          [radioOptions]="sinoOpcion.radioOptions"
+          [isRequired]="sinoOpcion.isRequired"
+          [layout]="'horizontal'"
+          [gap]="'50px'"
+          formControlName="3507"
+          (valueChange)="actualizar3507($event)"
+        ></app-input-radio>
+      </div>
+      <!-- } -->
       <div class="col-md-12 mt-4">
         <label class="form-label text-start"
           >Señale si tiene actualizado sus medios de contacto para efectos del
@@ -263,7 +283,8 @@
           [isRequired]="sinoOpcion.isRequired"
           [layout]="'horizontal'"
           [gap]="'50px'"
-          formControlName="3507"
+          formControlName="3508"
+          (valueChange)="actualizar3508($event)"
         ></app-input-radio>
       </div>
 
@@ -278,7 +299,8 @@
           [isRequired]="sinoOpcion.isRequired"
           [layout]="'horizontal'"
           [gap]="'50px'"
-          formControlName="3508"
+          formControlName="3509"
+          (valueChange)="actualizar3509($event)"
         ></app-input-radio>
       </div>
 
@@ -306,7 +328,7 @@
               class="form-control sfile"
               name="archivoExtranjero"
               id="archivoExtranjero"
-              disabled="true"
+              formControlName="file1"
               title="Examinar"
             />
           </div>
@@ -347,8 +369,8 @@
               class="form-control sfile"
               name="archivoExtranjero"
               id="archivoExtranjero"
-              disabled="true"
               title="Examinar"
+              formControlName="file2"
             />
           </div>
           <div class="col-md-8"></div>
@@ -381,6 +403,7 @@
           [layout]="'horizontal'"
           [gap]="'50px'"
           formControlName="3511"
+          (valueChange)="actualizar3511($event)"
         ></app-input-radio>
       </div>
 
@@ -389,15 +412,6 @@
       </div>
 
       <div class="col-md-12 mt-4">
-        <!-- <label class="form-label text-start"
-          >Señale si el SAT ha interpuesto querella o denuncia penal en contra
-          de los socios, accionistas, representante legal con facultad para
-          actos de administración o de dominio, o integrantes de la
-          administración de la empresa solicitante o, en su caso declaratoria de
-          perjuicio, durante los últimos tres años anteriores a la presentación
-          de la solicitud.</label
-        > -->
-
         <label class="form-label text-start"
           >Indique si cuenta con un sistema de control de inventarios, para el
           registro de sus operaciones de comercio exterior de conformidad con el
@@ -409,6 +423,7 @@
           [layout]="'horizontal'"
           [gap]="'50px'"
           formControlName="3512"
+          (valueChange)="actualizar3512($event)"
         ></app-input-radio>
       </div>
 
@@ -423,6 +438,7 @@
           [layout]="'horizontal'"
           [gap]="'50px'"
           formControlName="3513"
+          (valueChange)="actualizar3513($event)"
         ></app-input-radio>
       </div>
 
@@ -448,6 +464,7 @@
           class="form-control"
           rows="3"
           style="height: 50px"
+          (change)="actualizarTextoGenerico1($event)"
         ></textarea>
       </div>
 
@@ -459,6 +476,7 @@
           class="form-control"
           rows="3"
           style="height: 50px"
+          (change)="actualizarTextoGenerico2($event)"
         ></textarea>
       </div>
 
@@ -474,6 +492,7 @@
           [layout]="'horizontal'"
           [gap]="'50px'"
           formControlName="3514"
+          (valueChange)="actualizar3514($event)"
         ></app-input-radio>
       </div>
 
@@ -489,6 +508,7 @@
           [layout]="'horizontal'"
           [gap]="'50px'"
           formControlName="3515"
+          (valueChange)="actualizar3515($event)"
         ></app-input-radio>
       </div>
 
@@ -510,6 +530,7 @@
           [layout]="'horizontal'"
           [gap]="'50px'"
           formControlName="3516"
+          (valueChange)="actualizar3516($event)"
         ></app-input-radio>
       </div>
 
@@ -527,6 +548,7 @@
           rows="3"
           style="height: 70px"
           formControlName="textoGenerico3"
+          (change)="actualizarTextoGenerico3($event)"
         ></textarea>
       </div>
 
@@ -575,6 +597,7 @@
           [layout]="'horizontal'"
           [gap]="'50px'"
           formControlName="3517"
+          (valueChange)="actualizar3517($event)"
         ></app-input-radio>
       </div>
 
@@ -591,6 +614,7 @@
           [layout]="'horizontal'"
           [gap]="'50px'"
           formControlName="3518"
+          (valueChange)="actualizar3518($event)"
         ></app-input-radio>
       </div>
 
@@ -606,6 +630,7 @@
           [layout]="'horizontal'"
           [gap]="'50px'"
           formControlName="3519"
+          (valueChange)="actualizar3519($event)"
         ></app-input-radio>
       </div>
 
@@ -621,6 +646,7 @@
           [layout]="'horizontal'"
           [gap]="'50px'"
           formControlName="3520"
+          (valueChange)="actualizar3520($event)"
         ></app-input-radio>
       </div>
       <div class="col-md-4 mt-4">
@@ -633,6 +659,7 @@
           [isDisabled]="false"
           name="tipoInversion"
           id="tipoInversion"
+          (selectionChange)="actualizarTipoInversion($event)"
         ></app-catalogo-select>
       </div>
       <div class="col-md-4 mt-4">
@@ -646,6 +673,7 @@
           id="valorenpesos"
           name="valorenpesos"
           formControlName="cantidadInversion"
+          (change)="actualizarCantidadInversion($event)"
         />
       </div>
       <div class="col-md-4 mt-4"></div>
@@ -660,6 +688,7 @@
           id="valorenpesos"
           name="valorenpesos"
           formControlName="descInversion"
+          (change)="actualizarDescInversion($event)"
         />
       </div>
       <div class="col-md-12 mt-5">
@@ -695,6 +724,7 @@
           [layout]="'horizontal'"
           [gap]="'50px'"
           formControlName="3521"
+          (valueChange)="actualizar3521($event)"
         ></app-input-radio>
       </div>
 
@@ -710,6 +740,7 @@
           [layout]="'horizontal'"
           [gap]="'50px'"
           formControlName="3522"
+          (valueChange)="actualizar3522($event)"
         ></app-input-radio>
       </div>
 
@@ -747,7 +778,7 @@
       </div>
       <div class="col-md-4 mt-4 text-start">
         <app-catalogo-select
-          formContorlName="tipoInversion"
+          formContorlName="modalidadProgramaImmex"
           [catalogo]="modalidadDelProgramaIMMEX.catalogos"
           [label]="modalidadDelProgramaIMMEX.labelNombre"
           [placeholder]="modalidadDelProgramaIMMEX.primerOpcion"
@@ -755,6 +786,7 @@
           [isDisabled]="false"
           name="modalidadDelProgramaIMMEX"
           id="modalidadDelProgramaIMMEX"
+          (selectionChange)="actualizarModalidadProgramaImmex($event)"
         ></app-catalogo-select>
       </div>
       <div class="col-md-8 mt-4"></div>
@@ -783,7 +815,14 @@
             Eliminar
           </button>
 
-          <button type="button" id="agregarSocio" class="btn btn-primary ms-3">
+          <button
+            type="button"
+            id="agregarSocio"
+            class="btn btn-primary ms-3"
+            data-bs-toggle="modal"
+            data-bs-target="#agregarImmexProgram"
+            (click)="agregarImmexProgram()"
+          >
             Agregar
           </button>
         </div>
@@ -799,6 +838,7 @@
           size="80"
           id="textoGenerico4"
           name="textoGenerico4"
+          (change)="actualizarTextoGenerico4($event)"
         />
       </div>
       <div class="col-md-6 mt-5">
@@ -812,6 +852,7 @@
           size="80"
           id="textoGenerico5"
           name="textoGenerico5"
+          (change)="actualizarTextoGenerico5($event)"
         />
       </div>
       <div class="col-md-12 mt-4">
@@ -825,6 +866,136 @@
           [layout]="'horizontal'"
           [gap]="'50px'"
           formControlName="3523"
+          (valueChange)="actualizar3523($event)"
+        ></app-input-radio>
+      </div>
+      <div class="col-md-12 mt-4">
+        <label class="form-label text-start"
+          >Señale si al momento de la presentación de su solicitud cuenta con la
+          autorización para operar el régimen de depósito fiscal para someterse
+          al proceso de ensamble y fabricación de vehículos, a empresas de la
+          industria automotriz terminal.</label
+        >
+        <app-input-radio
+          [radioOptions]="sinoOpcion.radioOptions"
+          [isRequired]="sinoOpcion.isRequired"
+          [layout]="'horizontal'"
+          [gap]="'50px'"
+          formControlName="3524"
+          (valueChange)="actualizar3524($event)"
+        ></app-input-radio>
+      </div>
+
+      <div class="col-md-12 mt-4">
+        <label class="form-label text-start"
+          >Indique el fin de vigencia y el número de oficio con el cual se le
+          otorgó la autorización para operar el régimen de depósito fiscal para
+          someterse al proceso de ensamble y fabricación de vehículos, a
+          empresas de la industria automotriz terminal.</label
+        >
+      </div>
+      <div class="col-md-4 mt-4">
+        <input-fecha
+          [datos]="fechaDeFinDeVigencia"
+          [setFecha]="datosGeneralesForm.get('fechaFinVigencia1')?.value"
+          (valorCambiado)="actualizarFechaFinVigencia1($event)"
+        >
+        </input-fecha>
+      </div>
+      <div class="col-md-4 mt-4">
+        <label class="form-label text-start" for=""
+          >Numero de oficio de autorización *:</label
+        >
+        <input
+          class="form-control"
+          formControlName="numeroAutorizacion1"
+          type="text"
+          id="numeroAutorizacion1"
+          name="numeroAutorizacion1"
+          (change)="actualizarNumeroAutorizacion1($event)"
+        />
+      </div>
+      <div class="col-md-4 mt-4"></div>
+      <div class="col-md-12 mt-4">
+        <label class="form-label text-start"
+          >Señale si al momento de la presentación de su solicitud se encuentra
+          sujeto a un proceso de cancelación de la autorización para operar el
+          régimen de depósito fiscal para someterse al proceso de ensamble y
+          fabricación de vehículos, a empresas de la industria automotriz
+          terminal.</label
+        >
+        <app-input-radio
+          [radioOptions]="sinoOpcion.radioOptions"
+          [isRequired]="sinoOpcion.isRequired"
+          [layout]="'horizontal'"
+          [gap]="'50px'"
+          formControlName="3525"
+          (valueChange)="actualizar3525($event)"
+        ></app-input-radio>
+      </div>
+
+      <div class="col-md-12 mt-4">
+        <label class="form-label text-start"
+          >Señale si al momento de la presentación de su solicitud cuenta con la
+          autorización para operar el régimen de elaboración, transformación o
+          reparación en Recinto Fiscalizado y/o Recinto Fiscalizado
+          Estratégico.</label
+        >
+        <app-input-radio
+          [radioOptions]="sinoOpcion.radioOptions"
+          [isRequired]="sinoOpcion.isRequired"
+          [layout]="'horizontal'"
+          [gap]="'50px'"
+          formControlName="3526"
+          (valueChange)="actualizar3526($event)"
+        ></app-input-radio>
+      </div>
+
+      <div class="col-md-12 mt-4">
+        <label class="form-label text-start"
+          >Indique el fin de vigencia y el número de oficio con el cual se le
+          otorgó la autorización para operar el régimen de elaboración,
+          transformación o reparación en Recinto Fiscalizado y/o Recinto
+          Fiscalizado Estratégico.</label
+        >
+      </div>
+      <div class="col-md-4 mt-4">
+        <input-fecha
+          [datos]="fechaDeFinDeVigencia"
+          [setFecha]="datosGeneralesForm.get('fechaFinVigencia2')?.value"
+          (valorCambiado)="actualizarFechaFinVigencia2($event)"
+        >
+        </input-fecha>
+      </div>
+      <div class="col-md-4 mt-4">
+        <label class="form-label text-start" for=""
+          >Número de oficio de autorización *:</label
+        >
+        <input
+          class="form-control"
+          formControlName="numeroAutorizacion2"
+          type="text"
+          id="numeroAutorizacion2"
+          name="numeroAutorizacion2"
+          (change)="actualizarNumeroAutorizacion2($event)"
+        />
+      </div>
+      <div class="col-md-4 mt-4"></div>
+
+      <div class="col-md-12 mt-4">
+        <label class="form-label text-start"
+          >Indique si se encuentra sujeto a un proceso de cancelación de la
+          autorización para operar el régimen de elaboración, transformación o
+          reparación en Recinto Fiscalizado y/o Recinto Fiscalizado
+          Estratégico.</label
+        >
+        <app-input-radio
+          [radioOptions]="sinoOpcion.radioOptions"
+          [isRequired]="sinoOpcion.isRequired"
+          [layout]="'horizontal'"
+          [gap]="'50px'"
+          formControlName="3527"
+          (valueChange)="actualizar3527($event)"
         ></app-input-radio>
       </div>
 
@@ -845,6 +1016,7 @@
           [layout]="'horizontal'"
           [gap]="'50px'"
           formControlName="3528"
+          (valueChange)="actualizar3528($event)"
         ></app-input-radio>
       </div>
 
@@ -863,6 +1035,7 @@
           [layout]="'horizontal'"
           [gap]="'50px'"
           formControlName="3529"
+          (valueChange)="actualizar3529($event)"
         ></app-input-radio>
       </div>
 
@@ -881,8 +1054,9 @@
           class="form-control"
           formControlName="textoGenerico6"
           type="text"
-          id="textoGenerico6"
-          name="textoGenerico6"
+          id="textoGenerico"
+          name="textoGenerico"
+          (change)="actualizarTextoGenerico6($event)"
         />
       </div>
       <div class="col-md-4 mt-4">
@@ -895,6 +1069,7 @@
           type="text"
           id="textoGenerico7"
           name="textoGenerico7"
+          (change)="actualizarTextoGenerico7($event)"
         />
       </div>
       <div class="col-md-4 mt-4"></div>
@@ -911,6 +1086,7 @@
           [layout]="'horizontal'"
           [gap]="'50px'"
           formControlName="3530"
+          (valueChange)="actualizar3530($event)"
         ></app-input-radio>
       </div>
 
@@ -920,6 +1096,10 @@
           por fracción arancelaria. El monto deberá ser acorde en su capacidad
           productiva y financiera.</label
         >
+        <div class="mt-3">
+          <b>Para descargar plantilla del archivo de excel de click </b>
+          <a href="/assets/pdf/carga_proveedoresExtranjeros_aviso.xlsx">aquí</a>
+        </div>
         <div class="row" style="margin-top: 20px">
           <div class="col-md-4">
             <input
@@ -927,9 +1107,9 @@
               accept=".xlsx"
               class="form-control sfile"
               name=""
-              disabled="true"
               id=""
               title="Examinar"
+              formControlName="file3"
             />
           </div>
           <div class="col-md-8"></div>
@@ -961,6 +1141,7 @@
           [layout]="'horizontal'"
           [gap]="'50px'"
           formControlName="3531"
+          (valueChange)="actualizar3531($event)"
         ></app-input-radio>
       </div>
 
@@ -976,6 +1157,7 @@
           type="text"
           id="textoGenerico9"
           name="textoGenerico9"
+          (change)="actualizarTextoGenerico9($event)"
         />
       </div>
 
@@ -1020,6 +1202,7 @@
             class="form-control"
             name="textoGenerico10"
             id="textoGenerico10"
+            (change)="actualizarTextoGenerico10($event)"
           />
         </div>
         <div class="col-md-3 mt-4">
@@ -1029,6 +1212,7 @@
             class="form-control"
             name="textoGenerico11"
             id="textoGenerico11"
+            (change)="actualizarTextoGenerico11($event)"
           />
         </div>
         <div class="col-md-3 mt-4">
@@ -1038,6 +1222,7 @@
             class="form-control"
             name="textoGenerico12"
             id="textoGenerico12"
+            (change)="actualizarTextoGenerico12($event)"
           />
         </div>
       </div>
@@ -1055,6 +1240,7 @@
             formControlName="textoGenerico13"
             name="textoGenerico13"
             id="textoGenerico13"
+            (change)="actualizarTextoGenerico13($event)"
           />
         </div>
         <div class="col-md-3 mt-4">
@@ -1064,6 +1250,7 @@
             formControlName="textoGenerico14"
             name="textoGenerico14"
             id="textoGenerico14"
+            (change)="actualizarTextoGenerico14($event)"
           />
         </div>
         <div class="col-md-3 mt-4">
@@ -1073,6 +1260,7 @@
             formControlName="textoGenerico15"
             name="textoGenerico15"
             id="textoGenerico15"
+            (change)="actualizarTextoGenerico15($event)"
           />
         </div>
       </div>
@@ -1088,6 +1276,7 @@
             formControlName="textoGenerico16"
             name="textoGenerico16"
             id="textoGenerico16"
+            (change)="actualizarTextoGenerico16($event)"
           />
         </div>
         <div class="col-md-3 mt-4">
@@ -1097,6 +1286,7 @@
             formControlName="textoGenerico17"
             name="textoGenerico17"
             id="textoGenerico17"
+            (change)="actualizarTextoGenerico17($event)"
           />
         </div>
         <div class="col-md-3 mt-4">
@@ -1106,6 +1296,7 @@
             formControlName="textoGenerico18"
             name="textoGenerico18"
             id="textoGenerico18"
+            (change)="actualizarTextoGenerico18($event)"
           />
         </div>
       </div>
@@ -1123,6 +1314,7 @@
             formControlName="textoGenerico19"
             name="textoGenerico19"
             id="textoGenerico19"
+            (change)="actualizarTextoGenerico19($event)"
           />
         </div>
         <div class="col-md-3 mt-4">
@@ -1132,6 +1324,7 @@
             formControlName="textoGenerico20"
             name="textoGenerico20"
             id="textoGenerico20"
+            (change)="actualizarTextoGenerico20($event)"
           />
         </div>
         <div class="col-md-3 mt-4">
@@ -1141,6 +1334,7 @@
             formControlName="textoGenerico21"
             name="textoGenerico21"
             id="textoGenerico21"
+            (change)="actualizarTextoGenerico21($event)"
           />
         </div>
       </div>
@@ -1190,24 +1384,6 @@
           </div>
         </div>
       </div>
-
-      <div class="col-md-12">
-        <ng-titulo
-          titulo="Manifestaciones de acuerdo a lo establecido en la regla 7.4.2 en las RGCE"
-        />
-        <div class="alert alert-info">
-          <div class="form-check text-start">
-            <input
-              type="checkbox"
-              class="form-check-input"
-              formControlName="alerta1"
-            />
-            &nbsp; <b>*</b> Bajo protesta de decir verdad manifiesto, que
-            continúo cumpliendo los requisitos establecidos en la regla 7.4.1.,
-            7.4.2., 7.4.3. y 7.4.7.
-          </div>
-        </div>
-      </div>
     </div>
   </form>
 </div>
@@ -1249,4 +1425,17 @@
     </div>
   </div>
 </div>
-<app-agregar-immex-program></app-agregar-immex-program>
+
+<div
+  class="modal fade"
+  id="agregarImmexProgram"
+  tabindex="-1"
+  aria-labelledby="modalAgregarImmexProgram"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <app-agregar-immex-program></app-agregar-immex-program>
+    </div>
+  </div>
+</div>

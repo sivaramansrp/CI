@@ -1,5 +1,8 @@
-import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
-import { Domicilios } from '../models/solicitud.model';
+import {
+  ConfiguracionColumna,
+  InputFecha,
+} from '@libs/shared/data-access-user/src';
+import { Domicilios, EntidadFederativa } from '../models/solicitud.model';
 import { RecibirNotificaciones } from '../models/solicitud.model';
 import { SeccionSociosIC } from '../models/solicitud.model';
 import { SubContratistas } from '../models/solicitud.model';
@@ -179,3 +182,38 @@ export const RECIBIR_NOTIFICACIONES_CONFIGURACION: ConfiguracionColumna<RecibirN
       orden: 5,
     },
   ];
+
+export const AGREGAR_IMMEX_CONFIGURACION: ConfiguracionColumna<EntidadFederativa>[] =
+  [
+    {
+      encabezado: 'Entidad federativa',
+      clave: (item: EntidadFederativa) => item.entidadFederativa,
+      orden: 1,
+    },
+    {
+      encabezado: 'Municipio o delegación',
+      clave: (item: EntidadFederativa) => item.municipioDelegacion,
+      orden: 2,
+    },
+    {
+      encabezado: 'Colonia, calle y número',
+      clave: (item: EntidadFederativa) => item.direccion,
+      orden: 3,
+    },
+    {
+      encabezado: 'Código postal',
+      clave: (item: EntidadFederativa) => item.codigoPostal,
+      orden: 4,
+    },
+    {
+      encabezado: 'Registro ante SE/SAT',
+      clave: (item: EntidadFederativa) => item.registroSESAT,
+      orden: 5,
+    },
+  ];
+
+export const FECHA_DE_FIN_VIGENCIA: InputFecha = {
+  labelNombre: 'Fecha de fin de vigencia',
+  required: true,
+  habilitado: true,
+};

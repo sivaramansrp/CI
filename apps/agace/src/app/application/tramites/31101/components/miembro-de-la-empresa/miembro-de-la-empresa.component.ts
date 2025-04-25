@@ -1,25 +1,28 @@
+import { Catalogo } from '@libs/shared/data-access-user/src';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
+import { CatalogosSelect } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import {
-  Catalogo,
-  CatalogoSelectComponent,
-  CatalogosSelect,
-  InputRadioComponent,
-  TituloComponent,
-} from '@libs/shared/data-access-user/src';
-import {
-  Solicitud31101State,
-  Solicitud31101Store,
-} from '../../estados/solicitud31101.store';
-import { SolicitudService } from '../../services/solicitud.service';
+import { Component } from '@angular/core';
+import { DatosGeneralesDeLaSolicitudCatologo } from '../../models/solicitud.model';
+import { DatosGeneralesDeLaSolicitudRadioLista } from '../../models/solicitud.model';
+import { EventEmitter } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
+import { InputRadio } from '../../models/solicitud.model';
+import { InputRadioComponent } from '@libs/shared/data-access-user/src';
+import { OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
+import { Output } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
 import { Solicitud31101Query } from '../../estados/solicitud31101.query';
-import { Subject, takeUntil } from 'rxjs';
-import {
-  DatosGeneralesDeLaSolicitudCatologo,
-  DatosGeneralesDeLaSolicitudRadioLista,
-  InputRadio,
-} from '../../models/solicitud.model';
+import { Solicitud31101State } from '../../estados/solicitud31101.store';
+import { Solicitud31101Store } from '../../estados/solicitud31101.store';
+import { SolicitudService } from '../../services/solicitud.service';
+import { Subject } from 'rxjs';
+import { TituloComponent } from '@libs/shared/data-access-user/src';
+import { Validators } from '@angular/forms';
+import { map } from 'rxjs';
+import { takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-miembro-de-la-empresa',
@@ -64,7 +67,104 @@ export class MiembroDeLaEmpresaComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.miembroEmpresaForm = this.fb.group({});
+    this.miembroEmpresaForm = this.fb.group({
+      miembroCaracterDe: [
+        { value: this.solicitud31101State.miembroCaracterDe, disabled: false },
+        [Validators.required],
+      ],
+      miembroTributarMexico: [
+        {
+          value: this.solicitud31101State.miembroTributarMexico,
+          disabled: false,
+        },
+        [Validators.required],
+      ],
+      miembroNacionalidad: [
+        {
+          value: this.solicitud31101State.miembroNacionalidad,
+          disabled: false,
+        },
+        [Validators.required],
+      ],
+      miembroRfc: [
+        { value: this.solicitud31101State.miembroRfc, disabled: false },
+        [Validators.required],
+      ],
+      miembroRegistroFederal: [
+        {
+          value: this.solicitud31101State.miembroRegistroFederal,
+          disabled: true,
+        },
+        [Validators.required],
+      ],
+      miembroNombreCompleto: [
+        {
+          value: this.solicitud31101State.miembroNombreCompleto,
+          disabled: true,
+        },
+        [Validators.required],
+      ],
+      miembroTipoPersonaMuestra: [
+        {
+          value: this.solicitud31101State.miembroTipoPersonaMuestra,
+          disabled: false,
+        },
+        [Validators.required],
+      ],
+      miembroNombre: [
+        { value: this.solicitud31101State.miembroNombre, disabled: false },
+        [Validators.required],
+      ],
+      miembroApellidoPaterno: [
+        {
+          value: this.solicitud31101State.miembroApellidoPaterno,
+          disabled: false,
+        },
+        [Validators.required],
+      ],
+      miembroApellidoMaterno: [
+        {
+          value: this.solicitud31101State.miembroApellidoMaterno,
+          disabled: false,
+        },
+        [Validators.required],
+      ],
+      miembroNombreEmpresa: [
+        {
+          value: this.solicitud31101State.miembroNombreEmpresa,
+          disabled: false,
+        },
+        [Validators.required],
+      ],
+    });
+
+    this.solicitud31101Query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((respuesta: Solicitud31101State) => {
+          this.solicitud31101State = respuesta;
+          this.miembroEmpresaForm.patchValue({
+            miembroCaracterDe: this.solicitud31101State.miembroCaracterDe,
+            miembroTributarMexico:
+              this.solicitud31101State.miembroTributarMexico,
+            miembroNacionalidad: this.solicitud31101State.miembroNacionalidad,
+            miembroRfc: this.solicitud31101State.miembroRfc,
+            miembroRegistroFederal:
+              this.solicitud31101State.miembroRegistroFederal,
+            miembroNombreCompleto:
+              this.solicitud31101State.miembroNombreCompleto,
+            miembroTipoPersonaMuestra:
+              this.solicitud31101State.miembroTipoPersonaMuestra,
+            miembroNombre: this.solicitud31101State.miembroNombre,
+            miembroApellidoPaterno:
+              this.solicitud31101State.miembroApellidoPaterno,
+            miembroApellidoMaterno:
+              this.solicitud31101State.miembroApellidoMaterno,
+            miembroNombreEmpresa: this.solicitud31101State.miembroNombreEmpresa,
+          });
+        })
+      )
+      .subscribe();
   }
 
   conseguirDatosGeneralesCatologo(): void {
@@ -95,20 +195,71 @@ export class MiembroDeLaEmpresaComponent implements OnInit, OnDestroy {
       });
   }
 
-  seleccionarObligadoTributarEnMexico(evento: string | number): void {
+  cerrarModal(): void {
+    this.eventoCerrarModal.emit();
+  }
+
+  actualizarMiembroCaracterDe(evento: Catalogo): void {
+    this.solicitud31101Store.actualizarMiembroCaracterDe(evento.id);
+  }
+
+  actualizarMiembroTributarMexico(evento: number | string): void {
     this.seleccionarObligadoTributar = evento;
+    this.solicitud31101Store.actualizarMiembroTributarMexico(evento);
   }
 
-  buscarRFCDatos(): void{
-    //
+  actualizarMiembroNacionalidad(evento: Catalogo): void {
+    this.solicitud31101Store.actualizarMiembroNacionalidad(evento.id);
   }
 
-  selectionTipoDePersona(evento : Catalogo): void{
+  actualizarMiembroRFC(evento: Event): void {
+    const VALOR = (evento.target as HTMLInputElement).value;
+    this.solicitud31101Store.actualizarMiembroRFC(VALOR);
+  }
+
+  // actualizarMiembroRegistroFederal(evento: string): void {
+  //   this.solicitud31101Store.actualizarMiembroCaracterDe(evento);
+  // }
+
+  // actualizarMiembroNombreCompleto(evento: string): void {
+  //   this.solicitud31101Store.actualizarMiembroCaracterDe(evento);
+  // }
+
+  actualizarMiembroTipoPersonaMuestra(evento: Catalogo): void {
+    this.solicitud31101Store.actualizarMiembroTipoPersonaMuestra(evento.id);
     this.seleccionarTipoDePersona = evento.id;
   }
 
-  cerrarModal(): void {
-    this.eventoCerrarModal.emit(); // Emitir evento para notificar al padre.
+  actualizarMiembroNombre(evento: Event): void {
+    const VALOR = (evento.target as HTMLInputElement).value;
+    this.solicitud31101Store.actualizarMiembroNombre(VALOR);
+  }
+
+  actualizarMiembroApellidoPaterno(evento: Event): void {
+    const VALOR = (evento.target as HTMLInputElement).value;
+    this.solicitud31101Store.actualizarMiembroApellidoPaterno(VALOR);
+  }
+
+  actualizarMiembroApellidoMaterno(evento: Event): void {
+    const VALOR = (evento.target as HTMLInputElement).value;
+    this.solicitud31101Store.actualizarMiembroApellidoMaterno(VALOR);
+  }
+
+  actualizarMiembroNombreEmpresa(evento: Event): void {
+    const VALOR = (evento.target as HTMLInputElement).value;
+    this.solicitud31101Store.actualizarMiembroNombreEmpresa(VALOR);
+  }
+
+  buscarRFCDatos(): void {
+    const VALOR = this.miembroEmpresaForm.get('miembroRfc')?.value;
+    if (VALOR) {
+      this.solicitud31101Store.actualizarMiembroRegistroFederal(
+        'MAVL621207C95'
+      );
+      this.solicitud31101Store.actualizarMiembroNombreCompleto(
+        'EUROFOODS DE MEXICO GONZALEZ PINAL'
+      );
+    }
   }
 
   /**

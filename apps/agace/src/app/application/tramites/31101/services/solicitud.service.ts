@@ -1,9 +1,9 @@
 import { CatalogosSelect } from '@libs/shared/data-access-user/src';
 import { DatosGeneralesDeLaSolicitudCatologo } from '../models/solicitud.model';
-import { DatosGeneralesDeLaSolicitudDatos } from '../models/solicitud.model';
 import { DatosGeneralesDeLaSolicitudRadioLista } from '../models/solicitud.model';
 import { DatosPorGarantia } from '../models/solicitud.model';
 import { Domicilios } from '../models/solicitud.model';
+import { EntidadFederativa } from '../models/solicitud.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ModificacionDenominacionRazonSocial } from '../models/solicitud.model';
@@ -127,9 +127,15 @@ export class SolicitudService {
   /**
    * Obtiene todos los datos generales de la solicitud necesarios para el llenado del formulario.
    */
-  conseguirDatosGeneralesDeLaSolicitudDatos(): Observable<DatosGeneralesDeLaSolicitudDatos> {
-    return this.http.get<DatosGeneralesDeLaSolicitudDatos>(
-      'assets/json/31101/datos-generales-de-la-solicitud-datos.json'
+  // conseguirDatosGeneralesDeLaSolicitudDatos(): Observable<DatosGeneralesDeLaSolicitudDatos> {
+  //   return this.http.get<DatosGeneralesDeLaSolicitudDatos>(
+  //     'assets/json/31101/datos-generales-de-la-solicitud-datos.json'
+  //   );
+  // }
+
+  conseguirEntidadFederativaDatos(): Observable<EntidadFederativa[]> {
+    return this.http.get<EntidadFederativa[]>(
+      'assets/json/31101/entidad-federativa-datos.json'
     );
   }
 }

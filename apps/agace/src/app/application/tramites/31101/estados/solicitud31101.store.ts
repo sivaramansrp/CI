@@ -3,14 +3,11 @@ import { Store } from '@datorama/akita';
 import { StoreConfig } from '@datorama/akita';
 /** Tipo de endoso, puede ser cadena o número */
 export interface Solicitud31101State {
-  /** Tipo de endoso, puede ser cadena o número */
-  tipoDeEndoso: string | number;
-
   /** Tipo de garantía, valor numérico */
-  tipoDeGarantia: number;
+  tipoDeGarantia: number | string;
 
   /** Modalidad de la garantía, valor numérico */
-  modalidadDeLaGarantia: number;
+  modalidadDeLaGarantia: number | string;
 
   /** Tipo de sector, valor en cadena */
   tipoSector: string | number;
@@ -19,46 +16,46 @@ export interface Solicitud31101State {
   concepto: number;
 
   /** Número 3500, valor numérico */
-  '3500': number;
+  '3500': number | string;
 
   /** Número 3501, valor numérico */
-  '3501': number;
+  '3501': number | string;
 
   /** Número 3502, valor numérico */
-  '3502': number;
+  '3502': number | string;
 
   /** RFC de los datos generales */
   datosGeneralesRFC: string;
 
   /** Número 3503, valor numérico */
-  '3503': number;
+  '3503': number | string;
 
   /** Número 3504, valor numérico */
-  '3504': number;
+  '3504': number | string;
 
   /** Número 3505, valor numérico */
-  '3505': number;
+  '3505': number | string;
 
   /** Número 3506, valor numérico */
-  '3506': number;
+  '3506': number | string;
 
   /** Número 3507, valor numérico */
-  '3507': number;
+  '3507': number | string;
 
   /** Número 3508, valor numérico */
-  '3508': number;
+  '3508': number | string;
 
   /** Número 3509, valor numérico */
-  '3509': number;
+  '3509': number | string;
 
   /** Número 3511, valor numérico */
-  '3511': number;
+  '3511': number | string;
 
   /** Número 3512, valor numérico */
-  '3512': number;
+  '3512': number | string;
 
   /** Número 3513, valor numérico */
-  '3513': number;
+  '3513': number | string;
 
   /** Texto genérico 1, valor en cadena */
   textoGenerico1: string;
@@ -67,28 +64,28 @@ export interface Solicitud31101State {
   textoGenerico2: string;
 
   /** Número 3514, valor numérico */
-  '3514': number;
+  '3514': number | string;
 
   /** Número 3515, valor numérico */
-  '3515': number;
+  '3515': number | string;
 
   /** Número 3516, valor numérico */
-  '3516': number;
+  '3516': number | string;
 
   /** Texto genérico 3, valor en cadena */
   textoGenerico3: string;
 
   /** Número 3517, valor numérico */
-  '3517': number;
+  '3517': number | string;
 
   /** Número 3518, valor numérico */
-  '3518': number;
+  '3518': number | string;
 
   /** Número 3519, valor numérico */
-  '3519': number;
+  '3519': number | string;
 
   /** Número 3520, valor numérico */
-  '3520': number;
+  '3520': number | string;
 
   /** Tipo de inversión, valor numérico */
   tipoInversion: number;
@@ -100,10 +97,10 @@ export interface Solicitud31101State {
   descInversion: string;
 
   /** Número 3521, valor numérico */
-  '3521': number;
+  '3521': number | string;
 
   /** Número 3522, valor numérico */
-  '3522': number;
+  '3522': number | string;
 
   /** Clave de enumeración D0 */
   claveEnumeracionD0: string;
@@ -120,6 +117,8 @@ export interface Solicitud31101State {
   /** Clave de enumeración H */
   claveEnumeracionH: string;
 
+  modalidadProgramaImmex: string | number;
+
   /** Texto genérico 4, valor en cadena */
   textoGenerico4: string;
 
@@ -127,13 +126,29 @@ export interface Solicitud31101State {
   textoGenerico5: string;
 
   /** Número 3523, valor numérico */
-  '3523': number;
+  '3523': number | string;
+
+  '3524': number | string;
+
+  fechaFinVigencia1: string;
+
+  numeroAutorizacion1: string;
+
+  '3525': number | string;
+
+  '3526': number | string;
+
+  fechaFinVigencia2: string;
+
+  numeroAutorizacion2: string;
+
+  '3527': number | string;
 
   /** Número 3528, valor numérico */
-  '3528': number;
+  '3528': number | string;
 
   /** Número 3529, valor numérico */
-  '3529': number;
+  '3529': number | string;
 
   /** Texto genérico 6, valor en cadena */
   textoGenerico6: string;
@@ -142,61 +157,58 @@ export interface Solicitud31101State {
   textoGenerico7: string;
 
   /** Número 3530, valor numérico */
-  '3530': number;
+  '3530': number | string;
 
   /** Número 3531, valor numérico */
-  '3531': number;
+  '3531': number | string;
 
   /** Texto genérico 9, valor en cadena */
   textoGenerico9: string;
 
   /** Texto genérico 10, valor numérico */
-  textoGenerico10: number;
+  textoGenerico10: number | string;
 
   /** Texto genérico 11, valor numérico */
-  textoGenerico11: number;
+  textoGenerico11: number | string;
 
   /** Texto genérico 12, valor numérico */
-  textoGenerico12: number;
+  textoGenerico12: number | string;
 
   /** Texto genérico 13, valor numérico */
-  textoGenerico13: number;
+  textoGenerico13: number | string;
 
   /** Texto genérico 14, valor numérico */
-  textoGenerico14: number;
+  textoGenerico14: number | string;
 
   /** Texto genérico 15, valor numérico */
-  textoGenerico15: number;
+  textoGenerico15: number | string;
 
   /** Texto genérico 16, valor numérico */
-  textoGenerico16: number;
+  textoGenerico16: number | string;
 
   /** Texto genérico 17, valor numérico */
-  textoGenerico17: number;
+  textoGenerico17: number | string;
 
   /** Texto genérico 18, valor numérico */
-  textoGenerico18: number;
+  textoGenerico18: number | string;
 
   /** Texto genérico 19, valor numérico */
-  textoGenerico19: number;
+  textoGenerico19: number | string;
 
   /** Texto genérico 20, valor numérico */
-  textoGenerico20: number;
+  textoGenerico20: number | string;
 
   /** Texto genérico 21, valor numérico */
-  textoGenerico21: number;
+  textoGenerico21: number | string;
 
   /** Texto genérico 22, valor numérico */
-  textoGenerico22: number;
+  textoGenerico22: number | string;
 
   /** Texto genérico 23, valor numérico */
-  textoGenerico23: number;
+  textoGenerico23: number | string;
 
   /** Texto genérico 24, valor numérico */
-  textoGenerico24: number;
-
-  /** Alerta 1, valor booleano */
-  alerta1: boolean;
+  textoGenerico24: number | string;
 
   /** Alerta 2, valor booleano */
   alerta2: boolean;
@@ -248,18 +260,29 @@ export interface Solicitud31101State {
 
   /** Apellido materno, valor en cadena */
   apellidoMaterno: string;
+
+  miembroCaracterDe: string | number;
+  miembroTributarMexico: number | string;
+  miembroNacionalidad: string | number;
+  miembroRfc: string;
+  miembroRegistroFederal: string;
+  miembroNombreCompleto: string;
+  miembroTipoPersonaMuestra: string | number;
+  miembroNombre: string;
+  miembroApellidoPaterno: string;
+  miembroApellidoMaterno: string;
+  miembroNombreEmpresa: string;
 }
 
-/** 
+/**
  * Función que crea el estado inicial de la solicitud.
- * Esta función devuelve un objeto vacío que representa el estado inicial 
+ * Esta función devuelve un objeto vacío que representa el estado inicial
  * de la solicitud, el cual puede ser modificado posteriormente.
- * 
+ *
  * @returns {Solicitud31101State} Estado inicial de la solicitud.
  */
 export function createInitialSolicitudState(): Solicitud31101State {
   return {
-    tipoDeEndoso: '',
     tipoDeGarantia: 0,
     modalidadDeLaGarantia: 0,
     tipoSector: '',
@@ -298,9 +321,18 @@ export function createInitialSolicitudState(): Solicitud31101State {
     claveEnumeracionD2: '',
     claveEnumeracionD3: '',
     claveEnumeracionH: '',
+    modalidadProgramaImmex: '',
     textoGenerico4: '',
     textoGenerico5: '',
     '3523': 0,
+    '3524': 0,
+    fechaFinVigencia1: '',
+    numeroAutorizacion1: '',
+    '3525': 0,
+    '3526': 0,
+    fechaFinVigencia2: '',
+    numeroAutorizacion2: '',
+    '3527': 0,
     '3528': 0,
     '3529': 0,
     textoGenerico6: '',
@@ -308,22 +340,21 @@ export function createInitialSolicitudState(): Solicitud31101State {
     '3530': 0,
     '3531': 0,
     textoGenerico9: '',
-    textoGenerico10: 0,
-    textoGenerico11: 0,
-    textoGenerico12: 0,
-    textoGenerico13: 0,
-    textoGenerico14: 0,
-    textoGenerico15: 0,
-    textoGenerico16: 0,
-    textoGenerico17: 0,
-    textoGenerico18: 0,
-    textoGenerico19: 0,
-    textoGenerico20: 0,
-    textoGenerico21: 0,
-    textoGenerico22: 0,
-    textoGenerico23: 0,
-    textoGenerico24: 0,
-    alerta1: false,
+    textoGenerico10: '',
+    textoGenerico11: '',
+    textoGenerico12: '',
+    textoGenerico13: '',
+    textoGenerico14: '',
+    textoGenerico15: '',
+    textoGenerico16: '',
+    textoGenerico17: '',
+    textoGenerico18: '',
+    textoGenerico19: '',
+    textoGenerico20: '',
+    textoGenerico21: '',
+    textoGenerico22: '',
+    textoGenerico23: '',
+    textoGenerico24: '',
     alerta2: false,
     polizaDeFianzaActual: 1,
     numeroFolio: '',
@@ -341,6 +372,18 @@ export function createInitialSolicitudState(): Solicitud31101State {
     nombre: '',
     apellidoPaterno: '',
     apellidoMaterno: '',
+
+    miembroCaracterDe: '',
+    miembroTributarMexico: 0,
+    miembroNacionalidad: '',
+    miembroRfc: '',
+    miembroRegistroFederal: '',
+    miembroNombreCompleto: '',
+    miembroTipoPersonaMuestra: '',
+    miembroNombre: '',
+    miembroApellidoPaterno: '',
+    miembroApellidoMaterno: '',
+    miembroNombreEmpresa: '',
   };
 }
 @Injectable({
@@ -356,18 +399,15 @@ export class Solicitud31101Store extends Store<Solicitud31101State> {
     super(createInitialSolicitudState());
   }
 
-  /** Actualiza el tipo de endoso en el estado */
-  actualizarTipoDeEndoso(tipoDeEndoso: string | number): void {
-    this.update((state) => ({ ...state, tipoDeEndoso }));
-  }
-
   /** Actualiza el tipo de garantía en el estado */
-  actualizarTipoDeGarantia(tipoDeGarantia: number): void {
+  actualizarTipoDeGarantia(tipoDeGarantia: number | string): void {
     this.update((state) => ({ ...state, tipoDeGarantia }));
   }
 
   /** Actualiza la modalidad de la garantía en el estado */
-  actualizarModalidadDeLaGarantia(modalidadDeLaGarantia: number): void {
+  actualizarModalidadDeLaGarantia(
+    modalidadDeLaGarantia: number | string
+  ): void {
     this.update((state) => ({ ...state, modalidadDeLaGarantia }));
   }
 
@@ -382,17 +422,17 @@ export class Solicitud31101Store extends Store<Solicitud31101State> {
   }
 
   /** Actualiza el valor de 3500 en el estado */
-  actualizar3500(valor: number): void {
+  actualizar3500(valor: number | string): void {
     this.update((state) => ({ ...state, '3500': valor }));
   }
 
   /** Actualiza el valor de 3501 en el estado */
-  actualizar3501(valor: number): void {
+  actualizar3501(valor: number | string): void {
     this.update((state) => ({ ...state, '3501': valor }));
   }
 
   /** Actualiza el valor de 3502 en el estado */
-  actualizar3502(valor: number): void {
+  actualizar3502(valor: number | string): void {
     this.update((state) => ({ ...state, '3502': valor }));
   }
 
@@ -402,52 +442,52 @@ export class Solicitud31101Store extends Store<Solicitud31101State> {
   }
 
   /** Actualiza el valor de 3503 en el estado */
-  actualizar3503(valor: number): void {
+  actualizar3503(valor: number | string): void {
     this.update((state) => ({ ...state, '3503': valor }));
   }
 
   /** Actualiza el valor de 3504 en el estado */
-  actualizar3504(valor: number): void {
+  actualizar3504(valor: number | string): void {
     this.update((state) => ({ ...state, '3504': valor }));
   }
 
   /** Actualiza el valor de 3505 en el estado */
-  actualizar3505(valor: number): void {
+  actualizar3505(valor: number | string): void {
     this.update((state) => ({ ...state, '3505': valor }));
   }
 
   /** Actualiza el valor de 3506 en el estado */
-  actualizar3506(valor: number): void {
+  actualizar3506(valor: number | string): void {
     this.update((state) => ({ ...state, '3506': valor }));
   }
 
   /** Actualiza el valor de 3507 en el estado */
-  actualizar3507(valor: number): void {
+  actualizar3507(valor: number | string): void {
     this.update((state) => ({ ...state, '3507': valor }));
   }
 
   /** Actualiza el valor de 3508 en el estado */
-  actualizar3508(valor: number): void {
+  actualizar3508(valor: number | string): void {
     this.update((state) => ({ ...state, '3508': valor }));
   }
 
   /** Actualiza el valor de 3509 en el estado */
-  actualizar3509(valor: number): void {
+  actualizar3509(valor: number | string): void {
     this.update((state) => ({ ...state, '3509': valor }));
   }
 
   /** Actualiza el valor de 3511 en el estado */
-  actualizar3511(valor: number): void {
+  actualizar3511(valor: number | string): void {
     this.update((state) => ({ ...state, '3511': valor }));
   }
 
   /** Actualiza el valor de 3512 en el estado */
-  actualizar3512(valor: number): void {
+  actualizar3512(valor: number | string): void {
     this.update((state) => ({ ...state, '3512': valor }));
   }
 
   /** Actualiza el valor de 3513 en el estado */
-  actualizar3513(valor: number): void {
+  actualizar3513(valor: number | string): void {
     this.update((state) => ({ ...state, '3513': valor }));
   }
 
@@ -462,17 +502,17 @@ export class Solicitud31101Store extends Store<Solicitud31101State> {
   }
 
   /** Actualiza el valor de 3514 en el estado */
-  actualizar3514(valor: number): void {
+  actualizar3514(valor: number | string): void {
     this.update((state) => ({ ...state, '3514': valor }));
   }
 
   /** Actualiza el valor de 3515 en el estado */
-  actualizar3515(valor: number): void {
+  actualizar3515(valor: number | string): void {
     this.update((state) => ({ ...state, '3515': valor }));
   }
 
   /** Actualiza el valor de 3516 en el estado */
-  actualizar3516(valor: number): void {
+  actualizar3516(valor: number | string): void {
     this.update((state) => ({ ...state, '3516': valor }));
   }
 
@@ -482,22 +522,22 @@ export class Solicitud31101Store extends Store<Solicitud31101State> {
   }
 
   /** Actualiza el valor de 3517 en el estado */
-  actualizar3517(valor: number): void {
+  actualizar3517(valor: number | string): void {
     this.update((state) => ({ ...state, '3517': valor }));
   }
 
   /** Actualiza el valor de 3518 en el estado */
-  actualizar3518(valor: number): void {
+  actualizar3518(valor: number | string): void {
     this.update((state) => ({ ...state, '3518': valor }));
   }
 
   /** Actualiza el valor de 3519 en el estado */
-  actualizar3519(valor: number): void {
+  actualizar3519(valor: number | string): void {
     this.update((state) => ({ ...state, '3519': valor }));
   }
 
   /** Actualiza el valor de 3520 en el estado */
-  actualizar3520(valor: number): void {
+  actualizar3520(valor: number | string): void {
     this.update((state) => ({ ...state, '3520': valor }));
   }
 
@@ -517,12 +557,12 @@ export class Solicitud31101Store extends Store<Solicitud31101State> {
   }
 
   /** Actualiza el valor de 3521 en el estado */
-  actualizar3521(valor: number): void {
+  actualizar3521(valor: number | string): void {
     this.update((state) => ({ ...state, '3521': valor }));
   }
 
   /** Actualiza el valor de 3522 en el estado */
-  actualizar3522(valor: number): void {
+  actualizar3522(valor: number | string): void {
     this.update((state) => ({ ...state, '3522': valor }));
   }
 
@@ -551,6 +591,10 @@ export class Solicitud31101Store extends Store<Solicitud31101State> {
     this.update((state) => ({ ...state, claveEnumeracionH: valor }));
   }
 
+  actualizarModalidadProgramaImmex(valor: string | number): void {
+    this.update((state) => ({ ...state, modalidadProgramaImmex: valor }));
+  }
+
   /** Actualiza el valor del texto genérico 4 en el estado */
   actualizarTextoGenerico4(valor: string): void {
     this.update((state) => ({ ...state, textoGenerico4: valor }));
@@ -562,17 +606,49 @@ export class Solicitud31101Store extends Store<Solicitud31101State> {
   }
 
   /** Actualiza el valor de 3523 en el estado */
-  actualizar3523(valor: number): void {
+  actualizar3523(valor: number | string): void {
     this.update((state) => ({ ...state, '3523': valor }));
   }
 
+  actualizar3524(valor: number | string): void {
+    this.update((state) => ({ ...state, '3524': valor }));
+  }
+
+  actualizar3525(valor: number | string): void {
+    this.update((state) => ({ ...state, '3525': valor }));
+  }
+
+  actualizar3526(valor: number | string): void {
+    this.update((state) => ({ ...state, '3526': valor }));
+  }
+
+  actualizar3527(valor: number | string): void {
+    this.update((state) => ({ ...state, '3527': valor }));
+  }
+
+  actualizarFechaFinVigencia1(valor: string): void {
+    this.update((state) => ({ ...state, fechaFinVigencia1: valor }));
+  }
+
+  actualizarNumeroAutorizacion1(valor: string): void {
+    this.update((state) => ({ ...state, numeroAutorizacion1: valor }));
+  }
+
+  actualizarFechaFinVigencia2(valor: string): void {
+    this.update((state) => ({ ...state, fechaFinVigencia2: valor }));
+  }
+
+  actualizarNumeroAutorizacion2(valor: string): void {
+    this.update((state) => ({ ...state, numeroAutorizacion2: valor }));
+  }
+
   /** Actualiza el valor de 3528 en el estado */
-  actualizar3528(valor: number): void {
+  actualizar3528(valor: number | string): void {
     this.update((state) => ({ ...state, '3528': valor }));
   }
 
   /** Actualiza el valor de 3529 en el estado */
-  actualizar3529(valor: number): void {
+  actualizar3529(valor: number | string): void {
     this.update((state) => ({ ...state, '3529': valor }));
   }
 
@@ -587,12 +663,12 @@ export class Solicitud31101Store extends Store<Solicitud31101State> {
   }
 
   /** Actualiza el valor de 3530 en el estado */
-  actualizar3530(valor: number): void {
+  actualizar3530(valor: number | string): void {
     this.update((state) => ({ ...state, '3530': valor }));
   }
 
   /** Actualiza el valor de 3531 en el estado */
-  actualizar3531(valor: number): void {
+  actualizar3531(valor: number | string): void {
     this.update((state) => ({ ...state, '3531': valor }));
   }
 
@@ -602,83 +678,78 @@ export class Solicitud31101Store extends Store<Solicitud31101State> {
   }
 
   /** Actualiza el valor del texto genérico 10 en el estado */
-  actualizarTextoGenerico10(valor: number): void {
+  actualizarTextoGenerico10(valor: number | string): void {
     this.update((state) => ({ ...state, textoGenerico10: valor }));
   }
 
   /** Actualiza el valor del texto genérico 11 en el estado */
-  actualizarTextoGenerico11(valor: number): void {
+  actualizarTextoGenerico11(valor: number | string): void {
     this.update((state) => ({ ...state, textoGenerico11: valor }));
   }
 
   /** Actualiza el valor del texto genérico 12 en el estado */
-  actualizarTextoGenerico12(valor: number): void {
+  actualizarTextoGenerico12(valor: number | string): void {
     this.update((state) => ({ ...state, textoGenerico12: valor }));
   }
 
   /** Actualiza el valor del texto genérico 13 en el estado */
-  actualizarTextoGenerico13(valor: number): void {
+  actualizarTextoGenerico13(valor: number | string): void {
     this.update((state) => ({ ...state, textoGenerico13: valor }));
   }
 
   /** Actualiza el valor del texto genérico 14 en el estado */
-  actualizarTextoGenerico14(valor: number): void {
+  actualizarTextoGenerico14(valor: number | string): void {
     this.update((state) => ({ ...state, textoGenerico14: valor }));
   }
 
   /** Actualiza el valor del texto genérico 15 en el estado */
-  actualizarTextoGenerico15(valor: number): void {
+  actualizarTextoGenerico15(valor: number | string): void {
     this.update((state) => ({ ...state, textoGenerico15: valor }));
   }
 
   /** Actualiza el valor del texto genérico 16 en el estado */
-  actualizarTextoGenerico16(valor: number): void {
+  actualizarTextoGenerico16(valor: number | string): void {
     this.update((state) => ({ ...state, textoGenerico16: valor }));
   }
 
   /** Actualiza el valor del texto genérico 17 en el estado */
-  actualizarTextoGenerico17(valor: number): void {
+  actualizarTextoGenerico17(valor: number | string): void {
     this.update((state) => ({ ...state, textoGenerico17: valor }));
   }
 
   /** Actualiza el valor del texto genérico 18 en el estado */
-  actualizarTextoGenerico18(valor: number): void {
+  actualizarTextoGenerico18(valor: number | string): void {
     this.update((state) => ({ ...state, textoGenerico18: valor }));
   }
 
   /** Actualiza el valor del texto genérico 19 en el estado */
-  actualizarTextoGenerico19(valor: number): void {
+  actualizarTextoGenerico19(valor: number | string): void {
     this.update((state) => ({ ...state, textoGenerico19: valor }));
   }
 
   /** Actualiza el valor del texto genérico 20 en el estado */
-  actualizarTextoGenerico20(valor: number): void {
+  actualizarTextoGenerico20(valor: number | string): void {
     this.update((state) => ({ ...state, textoGenerico20: valor }));
   }
 
   /** Actualiza el valor del texto genérico 21 en el estado */
-  actualizarTextoGenerico21(valor: number): void {
+  actualizarTextoGenerico21(valor: number | string): void {
     this.update((state) => ({ ...state, textoGenerico21: valor }));
   }
 
   /** Actualiza el valor del texto genérico 22 en el estado */
-  actualizarTextoGenerico22(valor: number): void {
+  actualizarTextoGenerico22(valor: number | string): void {
     this.update((state) => ({ ...state, textoGenerico22: valor }));
   }
 
   /** Actualiza el valor del texto genérico 23 en el estado */
-  actualizarTextoGenerico23(valor: number): void {
+  actualizarTextoGenerico23(valor: number | string): void {
     this.update((state) => ({ ...state, textoGenerico23: valor }));
   }
 
   /** Actualiza el valor del texto genérico 24 en el estado */
-  actualizarTextoGenerico24(valor: number): void {
+  actualizarTextoGenerico24(valor: number | string): void {
     this.update((state) => ({ ...state, textoGenerico24: valor }));
-  }
-
-  /** Actualiza el valor de alerta1 en el estado */
-  actualizarAlerta1(valor: boolean): void {
-    this.update((state) => ({ ...state, alerta1: valor }));
   }
 
   /** Actualiza el valor de alerta2 en el estado */
@@ -812,6 +883,50 @@ export class Solicitud31101Store extends Store<Solicitud31101State> {
       ...state,
       apellidoMaterno,
     }));
+  }
+
+  actualizarMiembroCaracterDe(valor: string | number): void {
+    this.update((state) => ({ ...state, miembroCaracterDe: valor }));
+  }
+
+  actualizarMiembroTributarMexico(valor: number | string): void {
+    this.update((state) => ({ ...state, miembroTributarMexico: valor }));
+  }
+
+  actualizarMiembroNacionalidad(valor: string | number): void {
+    this.update((state) => ({ ...state, miembroNacionalidad: valor }));
+  }
+
+  actualizarMiembroRFC(valor: string): void {
+    this.update((state) => ({ ...state, miembroRfc: valor }));
+  }
+
+  actualizarMiembroRegistroFederal(valor: string): void {
+    this.update((state) => ({ ...state, miembroRegistroFederal: valor }));
+  }
+
+  actualizarMiembroNombreCompleto(valor: string): void {
+    this.update((state) => ({ ...state, miembroNombreCompleto: valor }));
+  }
+
+  actualizarMiembroTipoPersonaMuestra(valor: string | number): void {
+    this.update((state) => ({ ...state, miembroTipoPersonaMuestra: valor }));
+  }
+
+  actualizarMiembroNombre(valor: string): void {
+    this.update((state) => ({ ...state, miembroNombre: valor }));
+  }
+
+  actualizarMiembroApellidoPaterno(valor: string): void {
+    this.update((state) => ({ ...state, miembroApellidoPaterno: valor }));
+  }
+
+  actualizarMiembroApellidoMaterno(valor: string): void {
+    this.update((state) => ({ ...state, miembroApellidoMaterno: valor }));
+  }
+
+  actualizarMiembroNombreEmpresa(valor: string): void {
+    this.update((state) => ({ ...state, miembroNombreEmpresa: valor }));
   }
 
   /**

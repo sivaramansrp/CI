@@ -1,27 +1,30 @@
-import {
-  CatalogoSelectComponent,
-  Notificacion,
-  NotificacionesComponent,
-  Pedimento,
-} from '@libs/shared/data-access-user/src';
+import { AgregarImmexProgramComponent } from '../agregar-immex-program/agregar-immex-program.component';
+import { Catalogo } from '@libs/shared/data-access-user/src';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CatalogosSelect } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
 import { DOMICILIOS_CONFIGURACION_COLUMNAS } from '../../constants/solicitud.enum';
 import { DatosGeneralesDeLaSolicitudCatologo } from '../../models/solicitud.model';
-import { DatosGeneralesDeLaSolicitudDatos } from '../../models/solicitud.model';
 import { DatosGeneralesDeLaSolicitudRadioLista } from '../../models/solicitud.model';
 import { Domicilios } from '../../models/solicitud.model';
+import { ElementRef } from '@angular/core';
+import { FECHA_DE_FIN_VIGENCIA } from '../../constants/solicitud.enum';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
+import { InputFecha } from '@libs/shared/data-access-user/src';
+import { InputFechaComponent } from '@libs/shared/data-access-user/src';
 import { InputRadio } from '../../models/solicitud.model';
 import { InputRadioComponent } from '@libs/shared/data-access-user/src';
 import { MiembroDeLaEmpresaComponent } from '../miembro-de-la-empresa/miembro-de-la-empresa.component';
 import { Modal } from 'bootstrap';
 import { ModificarImmexProgramComponent } from '../modificar-immex-program/modificar-immex-program.component';
+import { Notificacion } from '@libs/shared/data-access-user/src';
+import { NotificacionesComponent } from '@libs/shared/data-access-user/src';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
+import { Pedimento } from '@libs/shared/data-access-user/src';
 import { REGEX_SOLO_NUMEROS } from '@libs/shared/data-access-user/src';
 import { REG_X } from '@libs/shared/data-access-user/src';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -40,9 +43,9 @@ import { TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { TipoDeInversion } from '../../models/solicitud.model';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { Validators } from '@angular/forms';
+import { ViewChild } from '@angular/core';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
-import { AgregarImmexProgramComponent } from '../agregar-immex-program/agregar-immex-program.component';
 
 @Component({
   selector: 'app-datos-generales-de-la-solicitud',
@@ -57,7 +60,8 @@ import { AgregarImmexProgramComponent } from '../agregar-immex-program/agregar-i
     NotificacionesComponent,
     MiembroDeLaEmpresaComponent,
     ModificarImmexProgramComponent,
-    AgregarImmexProgramComponent
+    AgregarImmexProgramComponent,
+    InputFechaComponent,
   ],
   providers: [SolicitudService],
   templateUrl: './datos-generales-de-la-solicitud.component.html',
@@ -69,7 +73,7 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
 
   /** Subject utilizado para destruir observables y evitar fugas de memoria */
   private destroy$: Subject<void> = new Subject<void>();
-
+  fechaDeFinDeVigencia: InputFecha = FECHA_DE_FIN_VIGENCIA;
   /** Opciones para el tipo de endoso */
   // tipoDeEndosoOpcion: InputRadio = {} as InputRadio;
   /** Opciones para el tipo de garantía */
@@ -152,6 +156,9 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
   @ViewChild('modificarImmexProgram', { static: false })
   modificarImmexProgramElement!: ElementRef;
 
+  @ViewChild('agregarImmexProgram', { static: false })
+  agregarImmexProgramElement!: ElementRef;
+
   /** Constructor del componente que inyecta dependencias y obtiene datos iniciales */
   constructor(
     public fb: FormBuilder,
@@ -166,7 +173,6 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
     this.conseguirMiembrosDeLaEmpresa();
     this.conseguirTipoDeInversionDatos();
     this.conseguirDomicilios();
-    this.conseguirDatosGeneralesDeLaSolicitudDatos();
   }
 
   /**
@@ -178,12 +184,7 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
    * - Emite el cambio de `tipoDeEndoso` una vez que los datos se actualizan.
    */
   ngOnInit(): void {
-    // Inicialización del formulario con los valores actuales del estado
     this.datosGeneralesForm = this.fb.group({
-      // tipoDeEndoso: [
-      //   this.solicitud31101State.tipoDeEndoso,
-      //   [Validators.required],
-      // ],
       tipoDeGarantia: [
         { value: this.solicitud31101State.tipoDeGarantia, disabled: false },
       ],
@@ -197,6 +198,7 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
         { value: this.solicitud31101State.tipoSector, disabled: false },
       ],
       concepto: [{ value: this.solicitud31101State.concepto, disabled: false }],
+      alerta2: [this.solicitud31101State.alerta2],
       '3500': [{ value: this.solicitud31101State['3500'], disabled: false }],
       '3501': [{ value: this.solicitud31101State['3501'], disabled: false }],
       '3502': [{ value: this.solicitud31101State['3502'], disabled: false }],
@@ -210,6 +212,9 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
       '3507': [{ value: this.solicitud31101State['3507'], disabled: false }],
       '3508': [{ value: this.solicitud31101State['3508'], disabled: false }],
       '3509': [{ value: this.solicitud31101State['3509'], disabled: false }],
+      file1: [],
+      file2: [],
+      file3: [],
       '3511': [{ value: this.solicitud31101State['3511'], disabled: false }],
       '3512': [{ value: this.solicitud31101State['3512'], disabled: false }],
       '3513': [{ value: this.solicitud31101State['3513'], disabled: false }],
@@ -263,6 +268,10 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
         this.solicitud31101State.claveEnumeracionH,
         Validators.required,
       ],
+      modalidadProgramaImmex: [
+        this.solicitud31101State.modalidadProgramaImmex,
+        [Validators.required],
+      ],
       textoGenerico4: [
         { value: this.solicitud31101State.textoGenerico4, disabled: false },
         [Validators.required, Validators.maxLength(30)],
@@ -272,6 +281,28 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
         [Validators.required, Validators.maxLength(30)],
       ],
       '3523': [{ value: this.solicitud31101State['3523'], disabled: false }],
+      '3524': [{ value: this.solicitud31101State['3524'], disabled: false }],
+      fechaFinVigencia1: [
+        this.solicitud31101State.fechaFinVigencia1,
+        [Validators.required, Validators.pattern('dd/MM/yyyy')],
+      ],
+      numeroAutorizacion1: [
+        this.solicitud31101State.numeroAutorizacion1,
+        Validators.required,
+        Validators.maxLength(50),
+      ],
+      '3525': [{ value: this.solicitud31101State['3525'], disabled: false }],
+      '3526': [{ value: this.solicitud31101State['3526'], disabled: false }],
+      fechaFinVigencia2: [
+        this.solicitud31101State.fechaFinVigencia2,
+        [Validators.required, Validators.pattern('dd/MM/yyyy')],
+      ],
+      numeroAutorizacion2: [
+        this.solicitud31101State.numeroAutorizacion2,
+        Validators.required,
+        Validators.maxLength(50),
+      ],
+      '3527': [{ value: this.solicitud31101State['3527'], disabled: false }],
       '3528': [{ value: this.solicitud31101State['3528'], disabled: false }],
       '3529': [{ value: this.solicitud31101State['3529'], disabled: false }],
       textoGenerico6: [
@@ -393,8 +424,6 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
       textoGenerico24: [
         { value: this.solicitud31101State.textoGenerico24, disabled: false },
       ],
-      alerta1: [this.solicitud31101State.alerta1],
-      alerta2: [this.solicitud31101State.alerta2],
     });
 
     /**
@@ -408,12 +437,12 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
         map((respuesta: Solicitud31101State) => {
           this.solicitud31101State = respuesta;
           this.datosGeneralesForm.patchValue({
-            // tipoDeEndoso: this.solicitud31101State.tipoDeEndoso,
             tipoDeGarantia: this.solicitud31101State.tipoDeGarantia,
             modalidadDeLaGarantia:
               this.solicitud31101State.modalidadDeLaGarantia,
             tipoSector: this.solicitud31101State.tipoSector,
             concepto: this.solicitud31101State.concepto,
+            alerta2: this.solicitud31101State.alerta2,
             '3500': this.solicitud31101State['3500'],
             '3501': this.solicitud31101State['3501'],
             '3502': this.solicitud31101State['3502'],
@@ -448,9 +477,19 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
             claveEnumeracionD2: this.solicitud31101State.claveEnumeracionD2,
             claveEnumeracionD3: this.solicitud31101State.claveEnumeracionD3,
             claveEnumeracionH: this.solicitud31101State.claveEnumeracionH,
+            modalidadProgramaImmex:
+              this.solicitud31101State.modalidadProgramaImmex,
             textoGenerico4: this.solicitud31101State.textoGenerico4,
             textoGenerico5: this.solicitud31101State.textoGenerico5,
             '3523': this.solicitud31101State['3523'],
+            '3524': this.solicitud31101State['3524'],
+            fechaFinVigencia1: this.solicitud31101State.fechaFinVigencia1,
+            numeroAutorizacion1: this.solicitud31101State.numeroAutorizacion1,
+            '3525': this.solicitud31101State['3525'],
+            '3526': this.solicitud31101State['3526'],
+            fechaFinVigencia2: this.solicitud31101State.fechaFinVigencia2,
+            numeroAutorizacion2: this.solicitud31101State.numeroAutorizacion2,
+            '3527': this.solicitud31101State['3527'],
             '3528': this.solicitud31101State['3528'],
             '3529': this.solicitud31101State['3529'],
             textoGenerico6: this.solicitud31101State.textoGenerico6,
@@ -473,8 +512,6 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
             textoGenerico22: this.solicitud31101State.textoGenerico22,
             textoGenerico23: this.solicitud31101State.textoGenerico23,
             textoGenerico24: this.solicitud31101State.textoGenerico24,
-            alerta1: this.solicitud31101State.alerta1,
-            alerta2: this.solicitud31101State.alerta2,
           });
         })
       )
@@ -591,168 +628,338 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
         },
       });
   }
-  /**
-   * Obtiene los datos generales de la solicitud desde el servicio.
-   * Luego, actualiza el store `solicitud31101Store` con todos los valores obtenidos.
-   * Esta función centraliza y distribuye una gran cantidad de información
-   * relacionada con la solicitud 31101.
-   */
-  conseguirDatosGeneralesDeLaSolicitudDatos(): void {
-    this.solicitudService
-      .conseguirDatosGeneralesDeLaSolicitudDatos()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (respuesta: DatosGeneralesDeLaSolicitudDatos) => {
-          // Se actualizan múltiples propiedades en el store a partir de la respuesta del servicio
-          this.solicitud31101Store.actualizarTipoDeGarantia(
-            respuesta.tipoDeGarantia
-          );
-          this.solicitud31101Store.actualizarModalidadDeLaGarantia(
-            respuesta.modalidadDeLaGarantia
-          );
-          this.solicitud31101Store.actualizarTipoSector(respuesta.tipoSector);
-          this.solicitud31101Store.actualizarConcepto(respuesta.concepto);
-          this.solicitud31101Store.actualizar3500(respuesta['3500']);
-          this.solicitud31101Store.actualizar3501(respuesta['3501']);
-          this.solicitud31101Store.actualizar3502(respuesta['3502']);
-          this.solicitud31101Store.actualizarDatosGeneralesRFC(
-            respuesta.datosGeneralesRFC
-          );
-          this.solicitud31101Store.actualizar3503(respuesta['3503']);
-          this.solicitud31101Store.actualizar3504(respuesta['3504']);
-          this.solicitud31101Store.actualizar3505(respuesta['3505']);
-          this.solicitud31101Store.actualizar3506(respuesta['3506']);
-          this.solicitud31101Store.actualizar3507(respuesta['3507']);
-          this.solicitud31101Store.actualizar3508(respuesta['3508']);
-          this.solicitud31101Store.actualizar3509(respuesta['3509']);
-          this.solicitud31101Store.actualizar3511(respuesta['3511']);
-          this.solicitud31101Store.actualizar3512(respuesta['3512']);
-          this.solicitud31101Store.actualizar3513(respuesta['3513']);
-          this.solicitud31101Store.actualizarTextoGenerico1(
-            respuesta.textoGenerico1
-          );
-          this.solicitud31101Store.actualizarTextoGenerico2(
-            respuesta.textoGenerico2
-          );
-          this.solicitud31101Store.actualizar3514(respuesta['3514']);
-          this.solicitud31101Store.actualizar3515(respuesta['3515']);
-          this.solicitud31101Store.actualizar3516(respuesta['3516']);
-          this.solicitud31101Store.actualizarTextoGenerico3(
-            respuesta.textoGenerico3
-          );
-          this.solicitud31101Store.actualizar3517(respuesta['3517']);
-          this.solicitud31101Store.actualizar3518(respuesta['3518']);
-          this.solicitud31101Store.actualizar3519(respuesta['3519']);
-          this.solicitud31101Store.actualizar3520(respuesta['3520']);
-          this.solicitud31101Store.actualizarTipoInversion(
-            respuesta.tipoInversion
-          );
-          this.solicitud31101Store.actualizarCantidadInversion(
-            respuesta.cantidadInversion
-          );
-          this.solicitud31101Store.actualizarDescInversion(
-            respuesta.descInversion
-          );
-          this.solicitud31101Store.actualizar3521(respuesta['3521']);
-          this.solicitud31101Store.actualizar3522(respuesta['3522']);
-          this.solicitud31101Store.actualizarClaveEnumeracionD0(
-            respuesta.claveEnumeracionD0
-          );
-          this.solicitud31101Store.actualizarClaveEnumeracionD1(
-            respuesta.claveEnumeracionD1
-          );
-          this.solicitud31101Store.actualizarClaveEnumeracionD2(
-            respuesta.claveEnumeracionD2
-          );
-          this.solicitud31101Store.actualizarClaveEnumeracionD3(
-            respuesta.claveEnumeracionD3
-          );
-          this.solicitud31101Store.actualizarClaveEnumeracionH(
-            respuesta.claveEnumeracionH
-          );
-          this.solicitud31101Store.actualizarTextoGenerico4(
-            respuesta.textoGenerico4
-          );
-          this.solicitud31101Store.actualizarTextoGenerico5(
-            respuesta.textoGenerico5
-          );
-          this.solicitud31101Store.actualizar3523(respuesta['3523']);
-          this.solicitud31101Store.actualizar3528(respuesta['3528']);
-          this.solicitud31101Store.actualizar3529(respuesta['3529']);
-          this.solicitud31101Store.actualizarTextoGenerico6(
-            respuesta.textoGenerico6
-          );
-          this.solicitud31101Store.actualizarTextoGenerico7(
-            respuesta.textoGenerico7
-          );
-          this.solicitud31101Store.actualizar3530(respuesta['3530']);
-          this.solicitud31101Store.actualizar3531(respuesta['3531']);
-          this.solicitud31101Store.actualizarTextoGenerico9(
-            respuesta.textoGenerico9
-          );
-          this.solicitud31101Store.actualizarTextoGenerico10(
-            respuesta.textoGenerico10
-          );
-          this.solicitud31101Store.actualizarTextoGenerico11(
-            respuesta.textoGenerico11
-          );
-          this.solicitud31101Store.actualizarTextoGenerico12(
-            respuesta.textoGenerico12
-          );
-          this.solicitud31101Store.actualizarTextoGenerico13(
-            respuesta.textoGenerico13
-          );
-          this.solicitud31101Store.actualizarTextoGenerico14(
-            respuesta.textoGenerico14
-          );
-          this.solicitud31101Store.actualizarTextoGenerico15(
-            respuesta.textoGenerico15
-          );
-          this.solicitud31101Store.actualizarTextoGenerico16(
-            respuesta.textoGenerico16
-          );
-          this.solicitud31101Store.actualizarTextoGenerico17(
-            respuesta.textoGenerico17
-          );
-          this.solicitud31101Store.actualizarTextoGenerico18(
-            respuesta.textoGenerico18
-          );
-          this.solicitud31101Store.actualizarTextoGenerico19(
-            respuesta.textoGenerico19
-          );
-          this.solicitud31101Store.actualizarTextoGenerico20(
-            respuesta.textoGenerico20
-          );
-          this.solicitud31101Store.actualizarTextoGenerico21(
-            respuesta.textoGenerico21
-          );
-          this.solicitud31101Store.actualizarTextoGenerico22(
-            respuesta.textoGenerico22
-          );
-          this.solicitud31101Store.actualizarTextoGenerico23(
-            respuesta.textoGenerico23
-          );
-          this.solicitud31101Store.actualizarTextoGenerico24(
-            respuesta.textoGenerico24
-          );
-          this.solicitud31101Store.actualizarAlerta1(respuesta.alerta1);
-          this.solicitud31101Store.actualizarAlerta2(respuesta.alerta2);
-        },
-      });
+
+  actualizarTipoDeGarantia(evento: string | number): void {
+    this.solicitud31101Store.actualizarTipoDeGarantia(evento);
   }
 
-  /**
-   * Maneja el cambio del tipo de endoso desde el formulario.
-   * Emite el nuevo valor y lo actualiza en el store.
-   *
-   * @param evento Valor seleccionado de tipo de endoso.
-   */
-  // getTipoDeEndoso(evento: string | number): void {
-  //   this.solicitud31101Store.actualizarTipoDeEndoso(evento);
+  actualizarModalidadDeLaGarantia(evento: number | string): void {
+    this.solicitud31101Store.actualizarModalidadDeLaGarantia(evento);
+  }
+
+  actualizarTipoSector(evento: string | number): void {
+    this.solicitud31101Store.actualizarTipoSector(evento);
+  }
+
+  actualizarConcepto(evento: Catalogo): void {
+    this.solicitud31101Store.actualizarConcepto(evento.id);
+  }
+
+  actualizar3500(evento: number | string): void {
+    this.solicitud31101Store.actualizar3500(evento);
+  }
+
+  actualizar3501(evento: number | string): void {
+    this.solicitud31101Store.actualizar3501(evento);
+  }
+
+  actualizar3502(evento: number | string): void {
+    this.solicitud31101Store.actualizar3502(evento);
+  }
+
+  actualizarDatosGeneralesRFC(evento: Event): void {
+    const VALOR = (evento.target as HTMLInputElement).value;
+    this.solicitud31101Store.actualizarDatosGeneralesRFC(VALOR);
+  }
+
+  actualizar3503(evento: number | string): void {
+    this.solicitud31101Store.actualizar3503(evento);
+  }
+
+  actualizar3504(evento: number | string): void {
+    this.solicitud31101Store.actualizar3504(evento);
+  }
+
+  actualizar3505(evento: number | string): void {
+    this.solicitud31101Store.actualizar3505(evento);
+  }
+
+  actualizar3506(evento: number | string): void {
+    this.solicitud31101Store.actualizar3506(evento);
+  }
+
+  actualizar3507(evento: number | string): void {
+    this.solicitud31101Store.actualizar3507(evento);
+  }
+
+  actualizar3508(evento: number | string): void {
+    this.solicitud31101Store.actualizar3508(evento);
+  }
+
+  actualizar3509(evento: number | string): void {
+    this.solicitud31101Store.actualizar3509(evento);
+  }
+
+  actualizar3511(evento: number | string): void {
+    this.solicitud31101Store.actualizar3511(evento);
+  }
+
+  actualizar3512(evento: number | string): void {
+    this.solicitud31101Store.actualizar3512(evento);
+  }
+
+  actualizar3513(evento: number | string): void {
+    this.solicitud31101Store.actualizar3513(evento);
+  }
+
+  actualizarTextoGenerico1(evento: Event): void {
+    const VALOR = (evento.target as HTMLInputElement).value;
+    this.solicitud31101Store.actualizarTextoGenerico1(VALOR);
+  }
+
+  actualizarTextoGenerico2(evento: Event): void {
+    const VALOR = (evento.target as HTMLInputElement).value;
+    this.solicitud31101Store.actualizarTextoGenerico2(VALOR);
+  }
+
+  actualizar3514(evento: number | string): void {
+    this.solicitud31101Store.actualizar3514(evento);
+  }
+
+  actualizar3515(evento: number | string): void {
+    this.solicitud31101Store.actualizar3515(evento);
+  }
+
+  actualizar3516(evento: number | string): void {
+    this.solicitud31101Store.actualizar3516(evento);
+  }
+
+  actualizarTextoGenerico3(evento: Event): void {
+    const VALOR = (evento.target as HTMLInputElement).value;
+    this.solicitud31101Store.actualizarTextoGenerico3(VALOR);
+  }
+
+  actualizar3517(evento: number | string): void {
+    this.solicitud31101Store.actualizar3517(evento);
+  }
+
+  actualizar3518(evento: number | string): void {
+    this.solicitud31101Store.actualizar3518(evento);
+  }
+
+  actualizar3519(evento: number | string): void {
+    this.solicitud31101Store.actualizar3519(evento);
+  }
+
+  actualizar3520(evento: number | string): void {
+    this.solicitud31101Store.actualizar3520(evento);
+  }
+
+  actualizarTipoInversion(evento: Catalogo): void {
+    this.solicitud31101Store.actualizarTipoInversion(evento.id);
+  }
+
+  actualizarCantidadInversion(evento: Event): void {
+    const VALOR = (evento.target as HTMLInputElement).value;
+    this.solicitud31101Store.actualizarCantidadInversion(VALOR);
+  }
+
+  actualizarDescInversion(evento: Event): void {
+    const VALOR = (evento.target as HTMLInputElement).value;
+    this.solicitud31101Store.actualizarDescInversion(VALOR);
+  }
+
+  actualizar3521(evento: number | string): void {
+    this.solicitud31101Store.actualizar3521(evento);
+  }
+
+  actualizar3522(evento: number | string): void {
+    this.solicitud31101Store.actualizar3522(evento);
+  }
+
+  actualizarClaveEnumeracionD0(evento: string): void {
+    this.solicitud31101Store.actualizarClaveEnumeracionD0(evento);
+  }
+
+  actualizarClaveEnumeracionD1(evento: string): void {
+    this.solicitud31101Store.actualizarClaveEnumeracionD1(evento);
+  }
+
+  actualizarClaveEnumeracionD2(evento: string): void {
+    this.solicitud31101Store.actualizarClaveEnumeracionD2(evento);
+  }
+
+  actualizarClaveEnumeracionD3(evento: string): void {
+    this.solicitud31101Store.actualizarClaveEnumeracionD3(evento);
+  }
+
+  actualizarClaveEnumeracionH(evento: string): void {
+    this.solicitud31101Store.actualizarClaveEnumeracionH(evento);
+  }
+
+  actualizarModalidadProgramaImmex(evento: Catalogo): void {
+    this.solicitud31101Store.actualizarModalidadProgramaImmex(evento.id);
+  }
+
+  actualizarTextoGenerico4(evento: Event): void {
+    const VALOR = (evento.target as HTMLInputElement).value;
+    this.solicitud31101Store.actualizarTextoGenerico4(VALOR);
+  }
+
+  actualizarTextoGenerico5(evento: Event): void {
+    const VALOR = (evento.target as HTMLInputElement).value;
+    this.solicitud31101Store.actualizarTextoGenerico5(VALOR);
+  }
+
+  actualizar3523(evento: number | string): void {
+    this.solicitud31101Store.actualizar3523(evento);
+  }
+
+  actualizar3524(evento: number | string): void {
+    this.solicitud31101Store.actualizar3524(evento);
+  }
+
+  actualizar3525(evento: number | string): void {
+    this.solicitud31101Store.actualizar3525(evento);
+  }
+
+  actualizar3526(evento: number | string): void {
+    this.solicitud31101Store.actualizar3526(evento);
+  }
+
+  actualizar3527(evento: number | string): void {
+    this.solicitud31101Store.actualizar3527(evento);
+  }
+
+  actualizarFechaFinVigencia1(evento: string): void {
+    this.solicitud31101Store.actualizarFechaFinVigencia1(evento);
+  }
+
+  actualizarNumeroAutorizacion1(evento: Event): void {
+    const VALOR = (evento.target as HTMLInputElement).value;
+    this.solicitud31101Store.actualizarNumeroAutorizacion1(VALOR);
+  }
+
+  actualizarFechaFinVigencia2(evento: string): void {
+    this.solicitud31101Store.actualizarFechaFinVigencia2(evento);
+  }
+
+  actualizarNumeroAutorizacion2(evento: Event): void {
+    const VALOR = (evento.target as HTMLInputElement).value;
+    this.solicitud31101Store.actualizarNumeroAutorizacion2(VALOR);
+  }
+
+  actualizar3528(evento: number | string): void {
+    this.solicitud31101Store.actualizar3528(evento);
+  }
+
+  actualizar3529(evento: number | string): void {
+    this.solicitud31101Store.actualizar3529(evento);
+  }
+
+  actualizarTextoGenerico6(evento: Event): void {
+    const VALOR = (evento.target as HTMLInputElement).value;
+    this.solicitud31101Store.actualizarTextoGenerico6(VALOR);
+  }
+
+  actualizarTextoGenerico7(evento: Event): void {
+    const VALOR = (evento.target as HTMLInputElement).value;
+    this.solicitud31101Store.actualizarTextoGenerico7(VALOR);
+  }
+
+  actualizar3530(evento: number | string): void {
+    this.solicitud31101Store.actualizar3530(evento);
+  }
+
+  actualizar3531(evento: number | string): void {
+    this.solicitud31101Store.actualizar3531(evento);
+  }
+
+  actualizarTextoGenerico9(evento: Event): void {
+    const VALOR = (evento.target as HTMLInputElement).value;
+    this.solicitud31101Store.actualizarTextoGenerico9(VALOR);
+  }
+
+  actualizarTextoGenerico10(evento: Event): void {
+    const VALOR = (evento.target as HTMLInputElement).value;
+    this.solicitud31101Store.actualizarTextoGenerico10(VALOR);
+    this.calcularValorComercial();
+  }
+
+  actualizarTextoGenerico11(evento: Event): void {
+    const VALOR = (evento.target as HTMLInputElement).value;
+    this.solicitud31101Store.actualizarTextoGenerico11(VALOR);
+    this.calcularValorAduana();
+  }
+
+  actualizarTextoGenerico12(evento: Event): void {
+    const VALOR = (evento.target as HTMLInputElement).value;
+    this.solicitud31101Store.actualizarTextoGenerico12(VALOR);
+    this.calcularValorPorcentaje();
+  }
+
+  actualizarTextoGenerico13(evento: Event): void {
+    const VALOR = (evento.target as HTMLInputElement).value;
+    this.solicitud31101Store.actualizarTextoGenerico13(VALOR);
+    this.calcularValorComercial();
+  }
+
+  actualizarTextoGenerico14(evento: Event): void {
+    const VALOR = (evento.target as HTMLInputElement).value;
+    this.solicitud31101Store.actualizarTextoGenerico14(VALOR);
+    this.calcularValorAduana();
+  }
+
+  actualizarTextoGenerico15(evento: Event): void {
+    const VALOR = (evento.target as HTMLInputElement).value;
+    this.solicitud31101Store.actualizarTextoGenerico15(VALOR);
+    this.calcularValorPorcentaje();
+  }
+
+  actualizarTextoGenerico16(evento: Event): void {
+    const VALOR = (evento.target as HTMLInputElement).value;
+    this.solicitud31101Store.actualizarTextoGenerico16(VALOR);
+    this.calcularValorComercial();
+  }
+
+  actualizarTextoGenerico17(evento: Event): void {
+    const VALOR = (evento.target as HTMLInputElement).value;
+    this.solicitud31101Store.actualizarTextoGenerico17(VALOR);
+    this.calcularValorAduana();
+  }
+
+  actualizarTextoGenerico18(evento: Event): void {
+    const VALOR = (evento.target as HTMLInputElement).value;
+    this.solicitud31101Store.actualizarTextoGenerico18(VALOR);
+    this.calcularValorPorcentaje();
+  }
+
+  actualizarTextoGenerico19(evento: Event): void {
+    const VALOR = (evento.target as HTMLInputElement).value;
+    this.solicitud31101Store.actualizarTextoGenerico19(VALOR);
+    this.calcularValorComercial();
+  }
+
+  actualizarTextoGenerico20(evento: Event): void {
+    const VALOR = (evento.target as HTMLInputElement).value;
+    this.solicitud31101Store.actualizarTextoGenerico20(VALOR);
+    this.calcularValorAduana();
+  }
+
+  actualizarTextoGenerico21(evento: Event): void {
+    const VALOR = (evento.target as HTMLInputElement).value;
+    this.solicitud31101Store.actualizarTextoGenerico21(VALOR);
+    this.calcularValorPorcentaje();
+  }
+
+  // actualizarTextoGenerico22(evento: Event): void {
+  //   const VALOR = (evento.target as HTMLInputElement).value;
+  //   this.solicitud31101Store.actualizarTextoGenerico22(VALOR);
   // }
 
-  seleccionarTipoSector(evento: string | number): void {
-    this.solicitud31101Store.actualizarTipoSector(evento);
+  // actualizarTextoGenerico23(evento: Event): void {
+  //   const VALOR = (evento.target as HTMLInputElement).value;
+  //   this.solicitud31101Store.actualizarTextoGenerico23(VALOR);
+  // }
+
+  // actualizarTextoGenerico24(evento: Event): void {
+  //   const VALOR = (evento.target as HTMLInputElement).value;
+  //   this.solicitud31101Store.actualizarTextoGenerico24(VALOR);
+  // }
+
+  actualizarAlerta2(evento: Event): void {
+    const IS_CHECKED = (evento.target as HTMLInputElement).checked;
+    this.solicitud31101Store.actualizarAlerta2(IS_CHECKED);
   }
 
   agregarRFCDatos(): void {
@@ -821,6 +1028,45 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
     this.elementoParaEliminar = i;
   }
 
+  calcularValorComercial(): void {
+    const VALOR1 = this.datosGeneralesForm.get('textoGenerico10')?.value;
+    const VALOR2 = this.datosGeneralesForm.get('textoGenerico13')?.value;
+    const VALOR3 = this.datosGeneralesForm.get('textoGenerico16')?.value;
+    const VALOR4 = this.datosGeneralesForm.get('textoGenerico19')?.value;
+
+    if (VALOR1 || VALOR2 || VALOR3 || VALOR4) {
+      const VALOR_COMERCIAL =
+        Number(VALOR1) + Number(VALOR2) + Number(VALOR3) + Number(VALOR4);
+      this.solicitud31101Store.actualizarTextoGenerico22(VALOR_COMERCIAL);
+    }
+  }
+
+  calcularValorAduana(): void {
+    const VALOR1 = this.datosGeneralesForm.get('textoGenerico11')?.value;
+    const VALOR2 = this.datosGeneralesForm.get('textoGenerico14')?.value;
+    const VALOR3 = this.datosGeneralesForm.get('textoGenerico17')?.value;
+    const VALOR4 = this.datosGeneralesForm.get('textoGenerico20')?.value;
+
+    if (VALOR1 || VALOR2 || VALOR3 || VALOR4) {
+      const VALOR_COMERCIAL =
+        Number(VALOR1) + Number(VALOR2) + Number(VALOR3) + Number(VALOR4);
+      this.solicitud31101Store.actualizarTextoGenerico23(VALOR_COMERCIAL);
+    }
+  }
+
+  calcularValorPorcentaje(): void {
+    const VALOR1 = this.datosGeneralesForm.get('textoGenerico12')?.value;
+    const VALOR2 = this.datosGeneralesForm.get('textoGenerico15')?.value;
+    const VALOR3 = this.datosGeneralesForm.get('textoGenerico18')?.value;
+    const VALOR4 = this.datosGeneralesForm.get('textoGenerico21')?.value;
+
+    if (VALOR1 || VALOR2 || VALOR3 || VALOR4) {
+      const VALOR_COMERCIAL =
+        Number(VALOR1) + Number(VALOR2) + Number(VALOR3) + Number(VALOR4);
+      this.solicitud31101Store.actualizarTextoGenerico24(VALOR_COMERCIAL);
+    }
+  }
+
   /**
    * Elimina un elemento de la tabla de pedimento, si se confirma la acción.
    * @param borrar Indica si se debe proceder con la eliminación.
@@ -848,10 +1094,15 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
     }
   }
 
-  /**
-   * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
-   * Finaliza todas las suscripciones observables usando el subject destroy$.
-   */
+  agregarImmexProgram(): void {
+    if (this.modalElement) {
+      const MODAL_INSTANCE = new Modal(
+        this.agregarImmexProgramElement.nativeElement
+      );
+      MODAL_INSTANCE.show();
+    }
+  }
+
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
