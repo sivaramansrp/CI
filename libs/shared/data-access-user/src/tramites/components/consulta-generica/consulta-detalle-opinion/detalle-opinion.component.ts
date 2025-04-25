@@ -99,9 +99,12 @@ export class DetalleOpinionComponent implements OnInit, OnDestroy {
     /** 
      * Recuperar el folio desde el store.
      */
-    this.folioQuery.getFolio().subscribe((folio) => {
-      this.folio = folio || '';
-    });
+    this.folioQuery
+      .getFolio()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((folio) => {
+        this.folio = folio || '';
+      });
 
     /** 
      * Formulario reactivo para la solicitud de opinión.
