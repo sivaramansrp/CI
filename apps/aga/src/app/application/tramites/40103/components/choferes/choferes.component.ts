@@ -1,4 +1,16 @@
 import {
+  AbstractControl,
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import {
+  Chofer40103Store,
+  Choferesnacionales40103State,
+} from '../../estados/chofer40103.store';
+import {
   Component,
   ElementRef,
   Input,
@@ -6,14 +18,6 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
-import {
-  FormBuilder,
-  FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-import { Chofer40103Store, Choferesnacionales40103State } from '../../estados/chofer40103.store';
 import { Observable, Subject } from 'rxjs';
 import { CHOFERES_PAGE } from '../../enum/transportista-terrestre.enum';
 import { Catalogo } from '@ng-mf/data-access-user';
@@ -53,7 +57,6 @@ import { takeUntil } from 'rxjs';
   ],
 })
 export class ChoferesComponent implements OnInit, OnDestroy {
-
   CHOFERES_PAGE = CHOFERES_PAGE;
   modal: string = this.CHOFERES_PAGE.MODAL;
   nacional: Array<Nacional> = [];
@@ -437,7 +440,8 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
       });
 
     this.choferesList$ = this.chofer40103Query.getChoferes$;
-    this.choferesextranjerosList$ = this.chofer40103Query.getchoferesextranjero$;
+    this.choferesextranjerosList$ =
+      this.chofer40103Query.getchoferesextranjero$;
     this.choferesList$.pipe(takeUntil(this.destroyed$)).subscribe();
 
     this.choferesextranjerosList$.pipe(takeUntil(this.destroyed$)).subscribe();
@@ -574,7 +578,7 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
   /**
    * Obtiene los controles de formulario del formulario choferes.
    */
-  get getFormValues() {
+  get getFormValues(): { [key: string]: AbstractControl } {
     return this.formChoferes.controls;
   }
 
@@ -737,8 +741,11 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
    * @returns void
    */
   actualizarDesplegables(choferData: unknown): void {
-    const ESTADO_CLAVE = (choferData as { datosGenerales: { estados: string } }).datosGenerales.estados;
-    const MUNICIPIO_CLAVE = (choferData as { datosGenerales: { municipio: string } }).datosGenerales.municipio;
+    const ESTADO_CLAVE = (choferData as { datosGenerales: { estados: string } })
+      .datosGenerales.estados;
+    const MUNICIPIO_CLAVE = (
+      choferData as { datosGenerales: { municipio: string } }
+    ).datosGenerales.municipio;
 
     if (ESTADO_CLAVE) {
       this.loadMunicipios(ESTADO_CLAVE);
@@ -872,12 +879,17 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
       const UPDATE_ROWS = { ...this.selectedRow, ...this.formChoferes.value };
       this.choferesList$ = this.choferesList$.pipe(
         map((choferes: unknown) => {
-          return (choferes as DatosDelChoferNacional[]).map((chofer: DatosDelChoferNacional) => {
-            if ((chofer as DatosDelChoferNacional).id === (this.selectedRow as DatosDelChoferNacional).id) {
-              return UPDATE_ROWS;
+          return (choferes as DatosDelChoferNacional[]).map(
+            (chofer: DatosDelChoferNacional) => {
+              if (
+                (chofer as DatosDelChoferNacional).id ===
+                (this.selectedRow as DatosDelChoferNacional).id
+              ) {
+                return UPDATE_ROWS;
+              }
+              return chofer;
             }
-            return chofer;
-          });
+          );
         })
       );
 

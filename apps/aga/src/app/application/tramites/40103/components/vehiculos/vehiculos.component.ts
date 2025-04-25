@@ -1,3 +1,4 @@
+import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
 import {
   AfterViewInit,
   Component,
@@ -12,8 +13,6 @@ import { Chofer40103Query } from '../../estados/chofer40103.query';
 import { Chofer40103Service } from '../../estados/chofer40103.service';
 import { Chofer40103Store } from '../../estados/chofer40103.store';
 import { DatosDelVehículoPaisEmisor } from '@libs/shared/data-access-user/src/core/models/40103/transportista-terrestre.model';
-import { FormBuilder } from '@angular/forms';
-import { FormGroup } from '@angular/forms';
 import { Modal } from 'bootstrap';
 import { Observable } from 'rxjs/internal/Observable';
 import { PagoDerechosLista } from '../../../40103/models/registro-muestras-mercancias.model';
@@ -707,7 +706,7 @@ export class VehiculosComponent implements AfterViewInit, OnInit, OnDestroy {
   /**
    * Obtiene los valores del formulario.
    */
-  get getFormValues() {
+  get getFormValues(): { [key: string]: AbstractControl } {
     return this.formVehiculo.controls;
   }
 
