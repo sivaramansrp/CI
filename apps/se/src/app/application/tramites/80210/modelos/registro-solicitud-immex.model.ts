@@ -82,3 +82,24 @@ export interface RegistroVehiculos {
     telefonoContacto: string; // Teléfono de contacto de la persona.
   };
 }
+
+export interface FormularioDatos{
+  modalidad:string,
+  folio:string,
+  ano:string
+}
+
+export interface Plantas {
+    id: number,
+    calle: string,
+    numeroExterio: string,
+    numeroInterio: string,
+    codiogoPostal: string,
+    colonia:string,
+    municipio: string,
+    entidadFederativa:string,
+    pais: string,
+    registroFederal: string,
+    domicilio: string,
+    razon: string
+}

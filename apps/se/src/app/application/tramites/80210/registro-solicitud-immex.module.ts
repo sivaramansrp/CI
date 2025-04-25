@@ -1,4 +1,9 @@
-import { AlertComponent, AnexarDocumentosComponent } from '@ng-mf/data-access-user';
+import {
+  AlertComponent,
+  AnexarDocumentosComponent,
+  CatalogoSelectComponent,
+  TablaDinamicaComponent,
+} from '@ng-mf/data-access-user';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
@@ -11,6 +16,7 @@ import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { SolicitanteComponent } from '@ng-mf/data-access-user';
+import { SolicitarTransferenciaCuposModule } from '../120501/solicitar-transferencia-cupos.module';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { WizardComponent } from '@ng-mf/data-access-user';
 import { registroSolicitudImmexComponent } from './pages/registro-solicitud-immex/registro-solicitud-immex.component';
@@ -23,6 +29,7 @@ import { registroSolicitudImmexService } from './services/registro-solicitud-imm
     PasoDosComponent,
     PasoTresComponent,
     registroSolicitudImmexComponent,
+    EmpresasTerciarizadasComponent,
   ],
   imports: [
     CommonModule,
@@ -36,14 +43,12 @@ import { registroSolicitudImmexService } from './services/registro-solicitud-imm
     FormsModule,
     AlertComponent,
     AnexarDocumentosComponent,
-    EmpresasTerciarizadasComponent,
-    ToastrModule.forRoot()
+    ToastrModule.forRoot(),
+    CatalogoSelectComponent,
+    SolicitarTransferenciaCuposModule,
+    TablaDinamicaComponent,
   ],
-  exports: [
-    PasoUnoComponent, 
-    PasoDosComponent, 
-    PasoTresComponent,
-  ],
+  exports: [PasoUnoComponent, PasoDosComponent, PasoTresComponent],
   providers: [registroSolicitudImmexService, ToastrService],
 })
 export class registroSolicitudImmexModule {}

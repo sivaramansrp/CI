@@ -10,7 +10,10 @@ import { Injectable } from '@angular/core';
  * Contiene propiedades relacionadas con los datos del trámite, como información de pago, datos de vehículos, agentes y más.
  */
 export interface Tramites80210State {
-  data: null; // Datos del trámite 80210
+  rfc: string,
+  estados: string,
+  plantasDisponibles: number[],
+  plantasSeleccionadas: number[]
 }
 
 
@@ -24,7 +27,10 @@ export interface Tramites80210State {
  */
 export function createInitialState(): Tramites80210State {
   return {
-    data: null,
+    rfc: '',
+    estados: '',
+    plantasDisponibles: [],
+    plantasSeleccionadas:[]
   };
 }
 
@@ -53,16 +59,15 @@ export class Tramite80210Store extends Store<Tramites80210State> {
     super(createInitialState());
   }
 
-  /**
-   * @método
-   * @nombre establecerDatos
-   * @descripción
-   * Actualiza el estado con los valores proporcionados.
-   * 
-   * @param {Partial<Tramites80210State>} values - Valores parciales para actualizar el estado.
-   */
-  public establecerDatos(values: Partial<Tramites80210State>): void {    
-    this.update((state) => ({
+  public setRFC(values: Partial<Tramite80210Store>):void {
+    this.update((state)=>({
+      ...state,
+      ...values,
+    }));
+  }
+
+  public setEstado(values: Partial<Tramite80210Store>):void {
+    this.update((state)=>({
       ...state,
       ...values,
     }));
