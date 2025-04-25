@@ -74,8 +74,8 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
   /** Subject utilizado para destruir observables y evitar fugas de memoria */
   private destroy$: Subject<void> = new Subject<void>();
   fechaDeFinDeVigencia: InputFecha = FECHA_DE_FIN_VIGENCIA;
-  /** Opciones para el tipo de endoso */
-  // tipoDeEndosoOpcion: InputRadio = {} as InputRadio;
+  espectaculoConcepto: boolean = false;
+  espectaculoEnCasoNegativo: boolean = false;
   /** Opciones para el tipo de garantía */
   tipoDeGarantiaOpcion: InputRadio = {} as InputRadio;
   /** Opciones para la modalidad de la garantía */
@@ -94,6 +94,8 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
 
   /** Tipo de selección en tabla: checkbox */
   tipoSeleccionTabla = TablaSeleccion.CHECKBOX;
+
+  tipoSeleccionListo: TipoDeInversion[] = [] as TipoDeInversion[];
 
   /** Configuración de columnas para la tabla de subcontratistas */
   configuracionColumnas: ConfiguracionColumna<SubContratistas>[] =
@@ -638,6 +640,11 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
   }
 
   actualizarTipoSector(evento: string | number): void {
+    if (Number(evento) > 0) {
+      this.espectaculoConcepto = true;
+    } else {
+      this.espectaculoConcepto = false;
+    }
     this.solicitud31101Store.actualizarTipoSector(evento);
   }
 
@@ -675,6 +682,11 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
   }
 
   actualizar3506(evento: number | string): void {
+    if (evento === 2) {
+      this.espectaculoEnCasoNegativo = true;
+    } else {
+      this.espectaculoEnCasoNegativo = false;
+    }
     this.solicitud31101Store.actualizar3506(evento);
   }
 
@@ -1100,6 +1112,61 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
         this.agregarImmexProgramElement.nativeElement
       );
       MODAL_INSTANCE.show();
+    }
+  }
+
+  agregarMiembrosDeLaEmpresa(): void {
+    if (
+      this.datosGeneralesForm.get('tipoInversion')?.value &&
+      this.datosGeneralesForm.get('cantidadInversion')?.value &&
+      this.datosGeneralesForm.get('descInversion')?.value
+    ) {
+      let TIPO_INVERSION = '';
+      for (const VALOR in this.tipoDeInversionLista.catalogos) {
+        if (
+          this.tipoDeInversionLista.catalogos[VALOR].id ===
+          this.datosGeneralesForm.get('tipoInversion')?.value
+        ) {
+          TIPO_INVERSION =
+            this.tipoDeInversionLista.catalogos[VALOR].descripcion;
+        }
+      }
+      const OBJETO_JSON: TipoDeInversion = {
+        idRegistro: '',
+        tipoInversion: TIPO_INVERSION,
+        valor: this.datosGeneralesForm.get('cantidadInversion')?.value,
+        descripcion: this.datosGeneralesForm.get('descInversion')?.value,
+        cveTipoInversion: '',
+      };
+      this.tipoDeInversionDatos.push(OBJETO_JSON);
+    }
+  }
+
+  seleccionarTipoSeleccionTabla(evento: TipoDeInversion[]): void {
+    this.tipoSeleccionListo = evento;
+  }
+
+  eliminarMiembrosDeLaEmpresa(): void {
+    const PEDIMENTO = {
+      patente: 0,
+      pedimento: 0,
+      aduana: 0,
+      idTipoPedimento: 0,
+      descTipoPedimento: 'Por evaluar',
+      numero: '',
+      comprobanteValor: '',
+      pedimentoValidado: false,
+    };
+
+    if (this.tipoDeInversionDatos.length > 0) {
+      this.tipoDeInversionDatos = this.tipoDeInversionDatos.filter(
+        (dato) =>
+          dato.tipoInversion !== this.tipoSeleccionListo[0].tipoInversion
+      );
+
+      this.tipoDeInversionDatos = [];
+      this.abrirModal('El registro seleccionado fue eliminado correctamente');
+      this.pedimentos.push(PEDIMENTO);
     }
   }
 
