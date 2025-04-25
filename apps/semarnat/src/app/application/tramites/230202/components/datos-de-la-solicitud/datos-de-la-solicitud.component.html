@@ -122,13 +122,15 @@
                     setValoresStore(
                       datosMercancia,
                       'descripcionfraccionArancelaria',
-                      'setDescripcionFraccionArancelaria')"
+                      'setDescripcionFraccionArancelaria'
+                    )
+                  "
                 />
               </div>
             </div>
             <div class="row">
               <div class="col-md-4">
-                <label for="cantidadComercial">Cantidad:</label>
+                <label for="cantidad">Cantidad:</label>
                 <span class="require">*</span>
                 <input
                   type="text"
@@ -136,11 +138,7 @@
                   formControlName="cantidad"
                   id="cantidad"
                   [required]="true"
-                  (change)="
-                    setValoresStore(
-                      datosMercancia,
-                      'cantidad',
-                      'setCantidad')"
+                  (change)="setValoresStore(datosMercancia, 'cantidad', 'setCantidad')"
                 />
               </div>
               <div class="col-md-8">
@@ -154,9 +152,86 @@
                     setValoresStore(
                       datosMercancia,
                       'cantidadLetra',
-                      'setCantidadLetra')"
+                      'setCantidadLetra'
+                    )
+                  "
                 />
               </div>
+            </div>
+            <ng-titulo titulo="Detalle"></ng-titulo>
+            <div class="row">
+              <div class="col-md-4">
+                <div class="form-group">
+                  <app-catalogo-select
+                    [catalogo]="genero"
+                    formControlName="genero"
+                    [label]="'Género'"
+                    [required]="true"
+                    name="genero"
+                  ></app-catalogo-select>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <app-catalogo-select
+                    [catalogo]="especie"
+                    formControlName="especie"
+                    [label]="'Especie'"
+                    [required]="true"
+                    name="especie"
+                  ></app-catalogo-select>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <app-catalogo-select
+                    [catalogo]="nombreComun"
+                    formControlName="nombreComun"
+                    [label]="'Nombre común'"
+                    [required]="true"
+                    name="nombreComun"
+                  ></app-catalogo-select>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer justify-content-end">
+              <button
+                type="button"
+                class="btn btn-default"
+                data-bs-dismiss="modal"
+                #closeModal
+              >
+                Eliminar detalle
+              </button>
+              <button
+                type="button"
+                class="btn btn-primary"
+                (click)="agregarDetalle()"
+              >
+                Agregar dettalle
+              </button>
+            </div>
+            <div class="col-md-12">
+              <label class="form-label">Detalle</label>
+            </div>
+            <div class="col-md-6">
+              <app-tabla-dinamica
+                [configuracionTabla]="encabezadoDeTablaDetalle"
+                [datos]="datosDetalle"
+              ></app-tabla-dinamica>
+            </div>
+            <div class="col-md-12 mt-5 d-flex justify-content-end">
+              <button type="button" class="btn btn-default">Limpiar</button>
+              <button type="button" class="btn btn-danger ms-3" data-bs-dismiss="modal" #closeModal>
+                Cancelar
+              </button>
+              <button
+                type="button"
+                class="btn btn-primary ms-3"
+                (click)="agregarSolicitud()"
+              >
+                Agregar
+              </button>
             </div>
           </ng-container>
         </form>

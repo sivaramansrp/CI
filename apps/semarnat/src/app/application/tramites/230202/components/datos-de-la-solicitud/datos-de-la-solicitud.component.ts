@@ -1,4 +1,10 @@
-import { Component, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  QueryList,
+  ViewChild,
+  ViewChildren,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   Catalogo,
@@ -7,6 +13,7 @@ import {
   CrosslistComponent,
   CrossListLable,
   TablaDinamicaComponent,
+  TableComponent,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
 import {
@@ -17,14 +24,14 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { map, merge, Subject, Subscription, takeUntil } from 'rxjs';
+import { map, merge, Subject, takeUntil } from 'rxjs';
 import {
   Solicitud230202State,
   Tramite230202Store,
 } from '../../estados/tramite230202.store';
 import { Tramite230202Query } from '../../estados/tramite230202.query';
 import { PhytosanitaryReexportacionService } from '../../services/phytosanitary-reexportacion.service';
-import { DatosSolicitud } from '../../models/datos-tramite.model';
+import { DatosSolicitud, DatosDetalle } from '../../models/datos-tramite.model';
 
 @Component({
   selector: 'app-datos-de-la-solicitud',
@@ -73,10 +80,13 @@ export class DatosDeLaSolicitudComponent {
   selectEntidades: string[] = [];
   fechasSeleccionadas: Catalogo[] = [];
   fechasDatos: Catalogo[] = [];
+  genero!: Catalogo[];
+  especie!: Catalogo[];
+  nombreComun!: Catalogo[];
   fecha: FormControl = new FormControl('');
   fechaSeleccionada: FormControl = new FormControl('');
-  // @ViewChild(CrosslistComponent) crosslistComponent!: CrosslistComponent;
   @ViewChildren(CrosslistComponent) crossList!: QueryList<CrosslistComponent>;
+  @ViewChild('closeModal') closeModal!: ElementRef;
   public paisDeOrigenBotons = this.getCrossListBtn();
   public entidadesBotons = this.getCrossListBtn();
   public paisDeOrigenLabel: CrossListLable = {
@@ -88,6 +98,8 @@ export class DatosDeLaSolicitudComponent {
     derecha: 'Entidades seleccionadas*:',
   };
   public datosSolicitud: DatosSolicitud[] = [];
+  public datosDetalle: DatosDetalle[] = [];
+
   public encabezadoDeTabla: ConfiguracionColumna<DatosSolicitud>[] = [
     { encabezado: '', clave: (articulo) => articulo.id, orden: 1 },
     {
@@ -104,6 +116,20 @@ export class DatosDeLaSolicitudComponent {
       encabezado: 'Cantidad(letra)',
       clave: (articulo) => articulo.cantidadLetra,
       orden: 3,
+    },
+  ];
+
+  public encabezadoDeTablaDetalle: ConfiguracionColumna<DatosDetalle>[] = [
+    { encabezado: '', clave: (articulo) => articulo.id, orden: 1 },
+    {
+      encabezado: 'Nombre cietifico',
+      clave: (articulo) => articulo.nombreCientifico,
+      orden: 1,
+    },
+    {
+      encabezado: 'Nombre común',
+      clave: (articulo) => articulo.nombreComunDetalle,
+      orden: 2,
     },
   ];
 
@@ -161,13 +187,19 @@ export class DatosDeLaSolicitudComponent {
           this.solicitudState?.fraccionArancelaria,
           [Validators.required],
         ],
-        // { value: '', disabled: true },
         descripcionfraccionArancelaria: [
-          this.solicitudState?.descripcionFraccionArancelaria,
-          [Validators.required],
+          {
+            value: this.solicitudState?.descripcionFraccionArancelaria,
+            disabled: true,
+          }
         ],
-        cantidad: [this.solicitudState?.cantidad, [Validators.required]],
-        cantidadLetra: [this.solicitudState?.cantidadLetra],
+        cantidad: [this.solicitudState?.cantidad, Validators.required],
+        cantidadLetra: [
+          { value: this.solicitudState?.cantidadLetra, disabled: true },
+        ],
+        genero: [this.solicitudState?.genero, Validators.required],
+        especie: [this.solicitudState?.especie, Validators.required],
+        nombreComun: [this.solicitudState?.nombreComun, Validators.required],
       }),
     });
   }
@@ -226,13 +258,36 @@ export class DatosDeLaSolicitudComponent {
         })
       );
 
+    const GENERO$ = this.phytosanitaryReexportacionService.getGenero().pipe(
+      map((resp) => {
+        this.genero = resp.data;
+      })
+    );
+
+    const ESPECIE$ = this.phytosanitaryReexportacionService.getEspecie().pipe(
+      map((resp) => {
+        this.especie = resp.data;
+      })
+    );
+
+    const NOMBRECOMUN$ = this.phytosanitaryReexportacionService
+      .getNombreComun()
+      .pipe(
+        map((resp) => {
+          this.nombreComun = resp.data;
+        })
+      );
+
     merge(
       NUMERODECERTIFICADO$,
       ADUANA$,
       PAIS$,
       ENTIDADES$,
       DESCRIPCIONPRODUCTO$,
-      FRACCION$
+      FRACCION$,
+      GENERO$,
+      ESPECIE$,
+      NOMBRECOMUN$
     )
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe();
@@ -280,6 +335,23 @@ export class DatosDeLaSolicitudComponent {
     this.store.setFraccionArancelaria(FRACCION);
   }
 
+  generoSeleccion() {
+    const GENERO = this.solicitudForm.get('datosMercancia.genero')?.value;
+    this.store.setGenero(GENERO);
+  }
+
+  especieSeleccion() {
+    const ESPECIE = this.solicitudForm.get('datosMercancia.especie')?.value;
+    this.store.setEspecie(ESPECIE);
+  }
+
+  nombreComunSeleccion() {
+    const NOMBRECOMUN = this.solicitudForm.get(
+      'datosMercancia.nombreComun'
+    )?.value;
+    this.store.setNombreComun(NOMBRECOMUN);
+  }
+
   public getCrossListBtn() {
     return [
       {
@@ -305,28 +377,60 @@ export class DatosDeLaSolicitudComponent {
     ];
   }
 
-  agregarSolicitud(): void {
+  agregarDetalle() {
     this.phytosanitaryReexportacionService
-      .agregarSolicitud()
+      .agregarDetalle()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((respuesta) => {
         if (respuesta?.success) {
-          respuesta.datos.id = this.datosSolicitud.length + 1;
-          this.datosSolicitud.push(respuesta.datos);
+          respuesta.datos.id = this.datosDetalle.length + 1;
+          this.datosDetalle.push(respuesta.datos);
           (
-            this.store.setDatosSolicitud as unknown as (
-              valor: DatosSolicitud[]
+            this.store.setDatosDetalle as unknown as (
+              valor: DatosDetalle[]
             ) => void
-          )(this.datosSolicitud);
-          this.solicitudForm.patchValue({
-            fraccionArancelaria: '',
-            cantidad: '',
-            cantidadLetra: '',
-          });
-          this.solicitudForm.markAsUntouched();
-          this.solicitudForm.markAsPristine();
+          )(this.datosDetalle);
         }
       });
+  }
+
+  agregarSolicitud() {
+    if (!this.solicitudForm.valid) {
+      this.solicitudForm.markAllAsTouched();
+    } else {
+      this.phytosanitaryReexportacionService
+        .agregarSolicitud()
+        .pipe(takeUntil(this.destroyNotifier$))
+        .subscribe((respuesta) => {
+          if (respuesta?.success) {
+            console.log(respuesta.datos);
+            respuesta.datos.id = this.datosSolicitud.length + 1;
+            this.datosSolicitud.push(respuesta.datos);
+            (
+              this.store.setDatosSolicitud as unknown as (
+                valor: DatosSolicitud[]
+              ) => void
+            )(this.datosSolicitud);
+            this.solicitudForm.patchValue({
+              fraccionArancelaria: '',
+              cantidad: '',
+            });
+            this.solicitudForm.reset();
+            this.solicitudForm.markAsUntouched();
+            this.solicitudForm.markAsPristine();
+            this.cerrarModal();
+          }
+        });
+    }
+  }
+
+  /**
+   * Cierra el modal actual.
+   */
+  cerrarModal() {
+    if (this.closeModal) {
+      this.closeModal.nativeElement.click();
+    }
   }
 
   /**

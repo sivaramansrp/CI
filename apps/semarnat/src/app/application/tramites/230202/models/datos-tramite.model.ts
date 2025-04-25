@@ -14,3 +14,18 @@ export interface RespuestaSolicitud {
   datos: DatosSolicitud;
   message: string;
 }
+
+export interface DatosDetalle {
+
+  id: number;
+  nombreCientifico: string;
+  nombreComunDetalle: string;
+  
+}
+
+export interface RespuestaDetalle {
+
+  success: boolean;
+  datos: DatosDetalle;
+  message: string;
+}
