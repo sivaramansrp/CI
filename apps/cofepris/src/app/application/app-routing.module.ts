@@ -483,12 +483,19 @@ const ROUTES: Routes = [
     )
 },
 {
-  path: 'importacion-materias-primas',
-  loadChildren: () =>
-    import(
-      './tramites/260202/importacion-materias-primas.module'
-    ).then((m) => m.ImportacionMateriasPrimasModule),
+      path: 'importacion-retorno-sanitario',
+      loadChildren: () =>
+        import('./tramites/260103/importacion-retorno-sanitario.module').then(
+          (m) => m.ImportacionRetornoSanitarioModule
+        ),
 },
+{
+      path: 'importacion-materias-primas',
+      loadChildren: () =>
+        import(
+          './tramites/260202/importacion-materias-primas.module'
+        ).then((m) => m.ImportacionMateriasPrimasModule),
+}
 ];
 
 @NgModule({
