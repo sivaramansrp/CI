@@ -72,11 +72,95 @@
           <button type="button" class="btn btn-danger ms-3">Eliminar</button>
           <button
             type="button"
-            class="btn btn-primary ms-3">
-            Agregar 
+            class="btn btn-primary ms-3"
+            data-bs-toggle="modal"
+            data-bs-target="#modalAgregarMercancias"
+          >
+            Agregar
           </button>
         </div>
       </ng-container>
     </div>
   </form>
+</div>
+
+<div
+  class="modal fade"
+  id="modalAgregarMercancias"
+  tabindex="-1"
+  aria-labelledby="modalAgregarMercanciasLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-body mb-4">
+        <form [formGroup]="agregarMercanciasForm">
+          <!--Datos de la mercancía-->
+          <ng-container formGroupName="datosMercancia">
+            <ng-titulo titulo="Mercancía"></ng-titulo>
+            <div class="row">
+              <div class="col-md-4">
+                <app-catalogo-select
+                  [catalogo]="fraccionArancelaria"
+                  [label]="'Fracción arancelaria'"
+                  formControlName="fraccionArancelaria"
+                  [required]="true"
+                  (change)="fraccionArancelariaSeleccion()"
+                  name="fraccionArancelaria"
+                ></app-catalogo-select>
+              </div>
+              <div class="col-md-8">
+                <label>Descripción de la fracción arancelaria:</label>
+                <span class="require">*</span>
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="descripcionfraccionArancelaria"
+                  id="descripcionfraccionArancelaria"
+                  [required]="true"
+                  (change)="
+                    setValoresStore(
+                      datosMercancia,
+                      'descripcionfraccionArancelaria',
+                      'setDescripcionFraccionArancelaria')"
+                />
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-4">
+                <label for="cantidadComercial">Cantidad:</label>
+                <span class="require">*</span>
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="cantidad"
+                  id="cantidad"
+                  [required]="true"
+                  (change)="
+                    setValoresStore(
+                      datosMercancia,
+                      'cantidad',
+                      'setCantidad')"
+                />
+              </div>
+              <div class="col-md-8">
+                <label for="cantidadComercial">Cantidad(letra)</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="cantidadLetra"
+                  id="cantidadLetra"
+                  (change)="
+                    setValoresStore(
+                      datosMercancia,
+                      'cantidadLetra',
+                      'setCantidadLetra')"
+                />
+              </div>
+            </div>
+          </ng-container>
+        </form>
+      </div>
+    </div>
+  </div>
 </div>

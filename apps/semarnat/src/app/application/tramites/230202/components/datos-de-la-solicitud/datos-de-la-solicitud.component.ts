@@ -36,7 +36,7 @@ import { DatosSolicitud } from '../../models/datos-tramite.model';
     ReactiveFormsModule,
     CatalogoSelectComponent,
     CrosslistComponent,
-    TablaDinamicaComponent
+    TablaDinamicaComponent,
   ],
   templateUrl: './datos-de-la-solicitud.component.html',
   styleUrl: './datos-de-la-solicitud.component.scss',
@@ -46,6 +46,8 @@ export class DatosDeLaSolicitudComponent {
    * Formulario principal del trámite.
    */
   solicitudForm!: FormGroup;
+
+  agregarMercanciasForm!: FormGroup;
 
   /**
    * Estado actual de la solicitud.
@@ -66,6 +68,7 @@ export class DatosDeLaSolicitudComponent {
   pais!: Catalogo[];
   entidades!: Catalogo[];
   descripcionProducto!: Catalogo[];
+  fraccionArancelaria!: Catalogo[];
   selectRangoDias: string[] = [];
   selectEntidades: string[] = [];
   fechasSeleccionadas: Catalogo[] = [];
@@ -87,9 +90,21 @@ export class DatosDeLaSolicitudComponent {
   public datosSolicitud: DatosSolicitud[] = [];
   public encabezadoDeTabla: ConfiguracionColumna<DatosSolicitud>[] = [
     { encabezado: '', clave: (articulo) => articulo.id, orden: 1 },
-    { encabezado: 'Fracción arancelaria', clave: (articulo) => articulo.fracciónArancelaria, orden: 1 },
-    { encabezado: 'Cantidad', clave: (articulo) => articulo.cantidad, orden: 2 },
-    { encabezado: 'Cantidad(letra)', clave: (articulo) => articulo.cantidadLetra, orden: 3 }
+    {
+      encabezado: 'Fracción arancelaria',
+      clave: (articulo) => articulo.fraccionArancelaria,
+      orden: 1,
+    },
+    {
+      encabezado: 'Cantidad',
+      clave: (articulo) => articulo.cantidad,
+      orden: 2,
+    },
+    {
+      encabezado: 'Cantidad(letra)',
+      clave: (articulo) => articulo.cantidadLetra,
+      orden: 3,
+    },
   ];
 
   constructor(
@@ -133,7 +148,26 @@ export class DatosDeLaSolicitudComponent {
         aduana: [this.solicitudState?.aduana, [Validators.required]],
         pais: [this.solicitudState?.pais, [Validators.required]],
         entidades: [this.solicitudState?.entidades, [Validators.required]],
-        descripcionProducto: [this.solicitudState?.descripcionProducto, [Validators.required]],
+        descripcionProducto: [
+          this.solicitudState?.descripcionProducto,
+          [Validators.required],
+        ],
+      }),
+    });
+
+    this.agregarMercanciasForm = this.fb.group({
+      datosMercancia: this.fb.group({
+        fraccionArancelaria: [
+          this.solicitudState?.fraccionArancelaria,
+          [Validators.required],
+        ],
+        // { value: '', disabled: true },
+        descripcionfraccionArancelaria: [
+          this.solicitudState?.descripcionFraccionArancelaria,
+          [Validators.required],
+        ],
+        cantidad: [this.solicitudState?.cantidad, [Validators.required]],
+        cantidadLetra: [this.solicitudState?.cantidadLetra],
       }),
     });
   }
@@ -160,29 +194,52 @@ export class DatosDeLaSolicitudComponent {
       map((resp) => {
         this.pais = resp.data;
         this.selectRangoDias = this.pais.map(
-            (pais: Catalogo) => pais.descripcion
-          );
+          (pais: Catalogo) => pais.descripcion
+        );
       })
     );
 
-    const ENTIDADES$ = this.phytosanitaryReexportacionService.getEntidades().pipe(
-      map((resp) => {
-        this.entidades = resp.data;
-        this.selectEntidades = this.entidades.map(
+    const ENTIDADES$ = this.phytosanitaryReexportacionService
+      .getEntidades()
+      .pipe(
+        map((resp) => {
+          this.entidades = resp.data;
+          this.selectEntidades = this.entidades.map(
             (entidades: Catalogo) => entidades.descripcion
           );
-      })
-    );
+        })
+      );
 
-    const DESCRIPCIONPRODUCTO$ = this.phytosanitaryReexportacionService.getDescripcionProducto().pipe(
-      map((resp) => {
-        this.descripcionProducto = resp.data;
-      })
-    );
-    
-    merge(NUMERODECERTIFICADO$, ADUANA$, PAIS$, ENTIDADES$, DESCRIPCIONPRODUCTO$)
+    const DESCRIPCIONPRODUCTO$ = this.phytosanitaryReexportacionService
+      .getDescripcionProducto()
+      .pipe(
+        map((resp) => {
+          this.descripcionProducto = resp.data;
+        })
+      );
+
+    const FRACCION$ = this.phytosanitaryReexportacionService
+      .getFraccionArancelaria()
+      .pipe(
+        map((resp) => {
+          this.fraccionArancelaria = resp.data;
+        })
+      );
+
+    merge(
+      NUMERODECERTIFICADO$,
+      ADUANA$,
+      PAIS$,
+      ENTIDADES$,
+      DESCRIPCIONPRODUCTO$,
+      FRACCION$
+    )
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe();
+  }
+
+  get datosMercancia(): FormGroup {
+    return this.solicitudForm.get('datosMercancia') as FormGroup;
   }
 
   numeroDeCertificadoSeleccion(): void {
@@ -203,41 +260,88 @@ export class DatosDeLaSolicitudComponent {
   }
 
   entidadesSeleccion(): void {
-    const ENTIDADES = this.solicitudForm.get('reexportacionForm.entidades')?.value;
+    const ENTIDADES = this.solicitudForm.get(
+      'reexportacionForm.entidades'
+    )?.value;
     this.store.setEntidades(ENTIDADES);
   }
 
   descripcionProductoSeleccion() {
-    const DESCRIPCIONPRODUCTO = this.solicitudForm.get('reexportacionForm.descripcionProducto')?.value;
+    const DESCRIPCIONPRODUCTO = this.solicitudForm.get(
+      'reexportacionForm.descripcionProducto'
+    )?.value;
     this.store.setDescripcionProducto(DESCRIPCIONPRODUCTO);
+  }
+
+  fraccionArancelariaSeleccion() {
+    const FRACCION = this.solicitudForm.get(
+      'datosMercancia.fraccionArancelaria'
+    )?.value;
+    this.store.setFraccionArancelaria(FRACCION);
   }
 
   public getCrossListBtn() {
     return [
-      { btnNombre: 'Agregar todos', class: 'btn-default', funcion: ():void => this.crossList.toArray()[0].agregar('t') },
-      { btnNombre: 'Agregar selección', class: 'btn-primary', funcion: ():void => this.crossList.toArray()[0].agregar('') },
-      { btnNombre: 'Restar selección', class: 'btn-primary', funcion: ():void => this.crossList.toArray()[0].quitar('') },
-      { btnNombre: 'Restar todos', class: 'btn-default', funcion: ():void => this.crossList.toArray()[0].quitar('t') },
+      {
+        btnNombre: 'Agregar todos',
+        class: 'btn-default',
+        funcion: (): void => this.crossList.toArray()[0].agregar('t'),
+      },
+      {
+        btnNombre: 'Agregar selección',
+        class: 'btn-primary',
+        funcion: (): void => this.crossList.toArray()[0].agregar(''),
+      },
+      {
+        btnNombre: 'Restar selección',
+        class: 'btn-primary',
+        funcion: (): void => this.crossList.toArray()[0].quitar(''),
+      },
+      {
+        btnNombre: 'Restar todos',
+        class: 'btn-default',
+        funcion: (): void => this.crossList.toArray()[0].quitar('t'),
+      },
     ];
   }
 
   agregarSolicitud(): void {
-    this.phytosanitaryReexportacionService.agregarSolicitud().pipe(takeUntil(this.destroyNotifier$)).subscribe(
-      (respuesta) => {
+    this.phytosanitaryReexportacionService
+      .agregarSolicitud()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((respuesta) => {
         if (respuesta?.success) {
           respuesta.datos.id = this.datosSolicitud.length + 1;
           this.datosSolicitud.push(respuesta.datos);
-          (this.store.setDatosSolicitud as unknown as (valor: DatosSolicitud[]) => void)(this.datosSolicitud);
+          (
+            this.store.setDatosSolicitud as unknown as (
+              valor: DatosSolicitud[]
+            ) => void
+          )(this.datosSolicitud);
           this.solicitudForm.patchValue({
-            fracciónArancelaria: '',
+            fraccionArancelaria: '',
             cantidad: '',
-            cantidadLetra: ''
+            cantidadLetra: '',
           });
           this.solicitudForm.markAsUntouched();
           this.solicitudForm.markAsPristine();
         }
-      }
-    );
+      });
+  }
+
+  /**
+   * Establece valores en el store del trámite.
+   * @param form Formulario del cual se obtiene el valor.
+   * @param campo Nombre del campo del formulario.
+   * @param metodoNombre Nombre del método en el store.
+   */
+  setValoresStore(
+    form: FormGroup,
+    campo: string,
+    metodoNombre: keyof Tramite230202Store
+  ): void {
+    const VALOR = form.get(campo)?.value;
+    (this.store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
 
   /**

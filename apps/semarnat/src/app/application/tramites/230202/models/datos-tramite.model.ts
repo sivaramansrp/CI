@@ -2,7 +2,7 @@
 export interface DatosSolicitud {
   
   id: number;
-  fracciónArancelaria: number;
+  fraccionArancelaria: number;
   cantidad: number;
   cantidadLetra: string;
 

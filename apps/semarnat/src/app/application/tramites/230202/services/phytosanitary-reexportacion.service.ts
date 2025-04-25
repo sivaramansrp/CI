@@ -43,4 +43,8 @@ export class PhytosanitaryReexportacionService {
     return this.http.get<RespuestaSolicitud>(`assets/json/230202/solicitudDatos.json`);
   }
 
+  getFraccionArancelaria(): Observable<RespuestaCatalogos> {
+    return this.http.get<RespuestaCatalogos>('assets/json/230202/fraccionArancelaria.json');
+  }
+
 }

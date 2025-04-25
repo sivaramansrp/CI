@@ -1,0 +1,29 @@
+{
+
+    "code": 200,
+    "data": [
+        {
+            "id": 1,
+            "descripcion": "01039101 - Con pedigree o certificado de alto registro"
+        },
+        {
+            "id": 2,
+            "descripcion": "98020001 - Otra fracción"
+        },
+        {
+            "id": 3,
+            "descripcion": "01039102"
+        },
+        {
+            "id": 4,
+            "descripcion": "01039103"
+        },
+        {
+            "id": 5,
+            "descripcion": "98020002 - Otra fracción"
+        }
+      
+    ],
+    "message": "Fracción arancelaria"
+   
+}
