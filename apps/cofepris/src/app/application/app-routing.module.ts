@@ -460,6 +460,13 @@ const ROUTES: Routes = [
     import('./tramites/260907/modificacion-permiso-importacion-tratamientos.module').then(
       (m) => m.ModificacionPermisoImportacionTratamientosModule
     ),
+},
+{   
+  path: 'exportacion-materias-primas-estupefacientes',
+  loadChildren: () =>
+    import(
+      './tramites/260302/exportacion-materias-primas-estupefacientes.module'
+    ).then((m) => m.ExportacionMateriasPrimasEstupefacientesModule),
 }
 ];
 

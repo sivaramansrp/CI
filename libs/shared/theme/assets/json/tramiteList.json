@@ -1500,8 +1500,8 @@
   {
     "id": 215,
     "tramite": 260302,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/cofepris/exportacion-materias-primas-estupefacientes/contenedor-de-pasos",
+    "linkDepartment": "/pago/exportacion-materias-primas-estupefacientes/contenedor-de-pasos",
     "department": "cofepris"
   },
   {
