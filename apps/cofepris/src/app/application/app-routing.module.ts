@@ -439,6 +439,15 @@ const ROUTES: Routes = [
         (m) => m.ModificacionPermisoImportacionModule
       ),
 },
+
+{
+  path: 'exportacion-medicamentos-contengan',
+  loadChildren: () =>
+    import('./tramites/260304/exportacion-medicamentos-contengan.module').then(
+      (m) => m.ExportacionMedicamentosContenganModule
+    ),
+},
+
 {
   path: 'permiso-importacion-module',
   loadChildren: () =>
@@ -452,13 +461,34 @@ const ROUTES: Routes = [
       (m) => m.ModificacionPermisoImportacionTratamientosModule
     ),
 },
-  {
-    path: 'importacion-materias-primas',
-    loadChildren: () =>
-      import(
-        './tramites/260202/importacion-materias-primas.module'
-      ).then((m) => m.ImportacionMateriasPrimasModule),
-  },
+{   
+  path: 'exportacion-materias-primas-estupefacientes',
+  loadChildren: () =>
+    import(
+      './tramites/260302/exportacion-materias-primas-estupefacientes.module'
+    ).then((m) => m.ExportacionMateriasPrimasEstupefacientesModule),
+},
+{
+  path: 'modificacion-permiso-lab',
+  loadChildren: () =>
+    import('./tramites/260918/modificacion-permiso-lab.module').then(
+      (m) => m.ModificacionPermisoLabModule
+    )
+},
+{
+  path: 'sustancias-permitidas',
+  loadChildren: () =>
+    import('./tramites/260515/permit-de-substances.module').then(
+      (m) => m.PermitDeSubstancesModule
+    )
+},
+{
+  path: 'importacion-materias-primas',
+  loadChildren: () =>
+    import(
+      './tramites/260202/importacion-materias-primas.module'
+    ).then((m) => m.ImportacionMateriasPrimasModule),
+},
 ];
 
 @NgModule({
