@@ -300,7 +300,8 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
   donanteDomicilio(): void {
     this.tramiteForm = this.formBuilder.group({
       retiradaDeDonaciones: this.formBuilder.group({
-        aduana: [{ value: '', disabled: true }, [Validators.required]],
+        aduana: [{ value: '', disabled: false }, [Validators.required]],
+        finAlCualdesinaralaMercancía: [{ value: '', disabled: false }, [Validators.required]],
         nombre: [
           { value: '', disabled: true },
           [Validators.required, Validators.maxLength(50)],
