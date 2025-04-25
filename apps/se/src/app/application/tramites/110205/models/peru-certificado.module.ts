@@ -52,11 +52,13 @@ export interface ProductorExportador {
  */
 export interface MercanciaTabla {
   fraccionArancelaria: string;
+  tipoFactura: string;
+  cantidad: string;
+  unidadMedida: string;
   nombreTecnico: string;
   nombreComercial: string;
-  numeroRegistroProductos: string;
-  fechaExpedicion: string;
-  fechaVencimiento: string;
+  valorMercancia: string;
+  rfcProductor: string;
 }
 export interface MercanciasHistorico {
   datos: MercanciaTabla[];
