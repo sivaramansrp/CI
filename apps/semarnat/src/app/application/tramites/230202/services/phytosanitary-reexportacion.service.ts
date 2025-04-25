@@ -40,7 +40,6 @@ export class PhytosanitaryReexportacionService {
   }
 
   agregarSolicitud(): Observable<RespuestaSolicitud> {
-    console.log('hi service');
     return this.http.get<RespuestaSolicitud>(`assets/json/230202/solicitudDatos.json`);
   }
 

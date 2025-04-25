@@ -105,17 +105,17 @@ export class DatosDeLaSolicitudComponent {
     {
       encabezado: 'Fracción arancelaria',
       clave: (articulo) => articulo.fraccionArancelaria,
-      orden: 1,
+      orden: 2,
     },
     {
       encabezado: 'Cantidad',
       clave: (articulo) => articulo.cantidad,
-      orden: 2,
+      orden: 3,
     },
     {
       encabezado: 'Cantidad(letra)',
       clave: (articulo) => articulo.cantidadLetra,
-      orden: 3,
+      orden: 4,
     },
   ];
 
@@ -124,12 +124,12 @@ export class DatosDeLaSolicitudComponent {
     {
       encabezado: 'Nombre cietifico',
       clave: (articulo) => articulo.nombreCientifico,
-      orden: 1,
+      orden: 2,
     },
     {
       encabezado: 'Nombre común',
       clave: (articulo) => articulo.nombreComunDetalle,
-      orden: 2,
+      orden: 3,
     },
   ];
 
@@ -400,7 +400,6 @@ export class DatosDeLaSolicitudComponent {
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((respuesta) => {
         if (respuesta?.success) {
-          console.log(respuesta.datos);
           respuesta.datos.id = this.datosSolicitud.length + 1;
           this.datosSolicitud.push(respuesta.datos);
           (
