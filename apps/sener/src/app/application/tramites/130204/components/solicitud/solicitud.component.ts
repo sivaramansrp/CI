@@ -1,6 +1,6 @@
 import { Catalogo, REGEX_NUMERO_DECIMAL_ENTERO, REGEX_TEXTO_PREFIJO, REG_X } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { DATOS_INPUT_FIELDS, MERCANCIA_INPUT_VALUES } from '@libs/shared/data-access-user/src/tramites/constantes/valores-constantes.enum';
+import { DATOS_INPUT_FIELDS, MERCANCIA_INPUT_VALUES } from '../../../../shared/constantes/valores-constantes.enum';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 import { Tramite130204State, Tramite130204Store } from '../../estados/tramites/tramites130204.store';
@@ -21,7 +21,7 @@ import { PARTIDASDELAMERCANCIA_TABLA } from '../../../../shared/constantes/parti
 import acotacionOptions from '@libs/shared/theme/assets/json/130204/acotacion.json';
 
 import { TEXTOS } from '../../../../shared/constantes/representacion-federal.enum';
-import { TITULO_DESTINO } from '@libs/shared/data-access-user/src/tramites/constantes/Pais-titulo.enum';
+import { TITULO_DESTINO } from '../../../../shared/constantes/pais-titulo.enum';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
 import { Tramite130204Query } from '../../estados/queries/tramite130204.query';
 import mercanciaCatalogoVal from '@libs/shared/theme/assets/json/130204/mercancia-select.json';

@@ -3,7 +3,7 @@ import { Route } from '@angular/router';
 import { loadRemoteModule } from '@angular-architects/module-federation';
 
 import { SeleccionTramiteDesdePanelComponent } from './seleccion-tramite-desde-panel/seleccion-tramite-desde-panel.component';
-import { enviroment } from '@libs/shared/data-access-user/src/enviroments/enviroment';
+import { enviroment } from '@libs/shared/data-access-user/src';
 
 export const appRoutes: Route[] = [
   {
@@ -143,6 +143,15 @@ export const appRoutes: Route[] = [
         }).then((m) => m.AppSedenaModule)
   },
   {
+    path: 'inbal',
+    loadChildren: () =>
+        loadRemoteModule({
+            remoteEntry: 'http://localhost:4218/remoteAppEntry.js',
+            remoteName: 'inbal',
+            exposedModule: './Module'
+        }).then((m) => m.AppInbalModule)
+  },
+  {
     path: 'profepa',
     loadChildren: () =>
         loadRemoteModule({
@@ -150,6 +159,6 @@ export const appRoutes: Route[] = [
             remoteName: 'profepa',
             exposedModule: './Module'
         }).then((m) => m.AppProfepaModule)
-  }          
+  }
 
 ];

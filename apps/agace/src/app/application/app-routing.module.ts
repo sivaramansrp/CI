@@ -75,6 +75,13 @@ const ROUTES: Routes = [
       ).then((m) => m.ManifiestoAereoModule),
   },
   {
+    path: 'consulta-aviso-acreditacion',
+    loadChildren: () =>
+      import(
+        './tramites/32101/Consulta-Aviso-Acreditacion.module'
+      ).then((m) => m.ConsultaAvisoAcreditacionModule),
+  },
+  {
     path: 'aviso-traslado',
     loadChildren: () =>
       import('./tramites/32503/aviso-traslado.module').then(
