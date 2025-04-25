@@ -12,7 +12,7 @@ import { FormBuilder } from '@angular/forms';
 import { DatosSolicitudService } from '../../../../shared/services/datos-solicitud.service';
 import { Location } from '@angular/common';
 import { Tramite260103Store } from '../../estados/tramite260103Store.store';
-import { ImportacionMateriasPrimasService } from '../../service/exportacion-materias-primas.service';
+import { ImportacionMateriasPrimasService } from '../../service/importacion-retorno-sanitario.service';
 import { HttpClientModule } from '@angular/common/http';
 
 @Injectable()

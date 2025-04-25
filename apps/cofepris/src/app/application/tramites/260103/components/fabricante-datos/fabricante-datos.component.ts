@@ -17,8 +17,8 @@ import {
 } from '../../constants/importacion-retorno-sanitario.enum';
 import { CommonModule } from '@angular/common';
 import { DatosSolicitudService } from '../../../../shared/services/datos-solicitud.service';
-import { ExportacionMateriasPrimasService } from '../../service/exportacion-materias-primas.service';
 import { Fabricante } from '../../../../shared/models/terceros-relacionados.model';
+import { ImportacionRetornoSanitarioService } from '../../service/importacion-retorno-sanitario.service';
 import { Location } from '@angular/common';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { Tramite260103Store } from '../../estados/tramite260103Store.store';
@@ -89,7 +89,7 @@ export class FabricanteDatosComponent implements OnInit, OnDestroy {
     private datosSolicitudService: DatosSolicitudService,
     private ubicaccion: Location,
     private tramiteStore: Tramite260103Store,
-    private exportacionMateriasPrimasService: ExportacionMateriasPrimasService
+    private importacionRetornoSanitarioService: ImportacionRetornoSanitarioService
   ) {
     this.crearFormulario();
     this.changeNacionalidad();
@@ -122,7 +122,7 @@ export class FabricanteDatosComponent implements OnInit, OnDestroy {
       telefono: [''],
       correoElectronico: ['', [Validators.required, Validators.email]],
       localidad: [''],
-      municipio: [''],
+      municipioAlcaldia: [''],
       denominacionRazon: [''],
     });
   }
@@ -231,10 +231,10 @@ export class FabricanteDatosComponent implements OnInit, OnDestroy {
 
   /**
    * Realiza una búsqueda para obtener datos de importación y los asigna al formulario.
-   * Hace una petición al servicio 'exportacionMateriasPrimasService' y actualiza los valores del formulario con los datos obtenidos.
+   * Hace una petición al servicio 'ImportacionRetornoSanitarioService' y actualiza los valores del formulario con los datos obtenidos.
    */
   seBuscaRfc(): void {
-    this.exportacionMateriasPrimasService
+    this.importacionRetornoSanitarioService
       .obtenerOstro()
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((data) => {

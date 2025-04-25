@@ -155,16 +155,16 @@
     <div class="row">
       <div class="col-md-5">
         <div class="form-group">
-          <label class="form-label" for="cantidadUmcValor"
+          <label class="form-label" for="cantidadUMC"
             >Cantidad UMC*:</label
           >
           <input
             class="form-control"
-            id="cantidadUmcValor"
+            id="cantidadUMC"
             type="text"
-            formControlName="cantidadUmcValor"
+            formControlName="cantidadUMC"
             [ngClass]="
-              isValid(mercanciaForm, 'cantidadUmcValor') ? 'required' : ''
+              isValid(mercanciaForm, 'cantidadUMC') ? 'required' : ''
             "
           />
         </div>
@@ -172,7 +172,7 @@
       <div class="col-md-5 ml-2">
         <app-catalogo-select
           [catalogo]="cantidadUmcDatos"
-          formControlName="cantidadUmc"
+          formControlName="cantidadUmcValor"
           [label]="'UMC'"
           [required]="true"
           [tooltipQuestionCircle]="true"

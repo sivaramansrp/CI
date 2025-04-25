@@ -98,19 +98,14 @@ export const DESTINATARIO_ENCABEZADO_DE_TABLA: ConfiguracionColumna<Destinatario
     },
     { encabezado: 'Localidad', clave: (fila) => fila.localidad, orden: 12 },
     {
-      encabezado: 'Entidad Federativa',
-      clave: (fila) => fila.entidadFederativa,
-      orden: 13,
-    },
-    {
       encabezado: 'Estado/Localidad',
       clave: (fila) => fila.localidad,
-      orden: 14,
+      orden: 13,
     },
     {
       encabezado: 'Código Postal',
       clave: (fila) => fila.codigoPostal,
-      orden: 15,
+      orden: 14,
     },
   ];
 
@@ -154,19 +149,14 @@ export const FABRICANTE_ENCABEZADO_DE_TABLA: ConfiguracionColumna<Fabricante>[] 
   },
   { encabezado: 'Localidad', clave: (fila) => fila.localidad, orden: 12 },
   {
-    encabezado: 'Entidad Federativa',
-    clave: (fila) => fila.entidadFederativa,
-    orden: 13,
-  },
-  {
     encabezado: 'Estado/Localidad',
     clave: (fila) => fila.localidad,
-    orden: 14,
+    orden: 13,
   },
   {
     encabezado: 'Código Postal',
     clave: (fila) => fila.codigoPostal,
-    orden: 15,
+    orden: 14,
   },
 ];
 
@@ -214,53 +204,46 @@ export const PRODUCTO_TABLA_IMPORTACION = [
       ele.descripcionFraccion, // Reemplaza 'ele.descripcionFraccion' con la clave correcta
     orden: 6,
   },
-
-  {
-    encabezado: 'Cantidad de lotes ',
-    clave: (ele: TablaMercanciasImportacion): string | undefined =>
-      ele.cantidadDeLotes, // Reemplaza 'ele.descripcionFraccion' con la clave correcta
-    orden: 7,
-  },
   {
     encabezado: 'Unidad de medida de tarifa (UMT)',
-    clave: (ele: TablaMercanciasImportacion): string | undefined => ele.cantidadUmtValor, // Reemplaza 'ele.unidadMedidaTarifa' con la clave correcta
-    orden: 8,
+    clave: (ele: TablaMercanciasImportacion): string | undefined => ele.unidadMedidaTarifa, // Reemplaza 'ele.unidadMedidaTarifa' con la clave correcta
+    orden: 7,
   },
   {
     encabezado: 'Cantidad UMT',
     clave: (ele: TablaMercanciasImportacion): string => ele.cantidadUMT, // Reemplaza 'ele.cantidadUMT' con la clave correcta
-    orden: 9,
+    orden: 8,
   },
   {
-    encabezado: 'UMC',
+    encabezado: 'Unidad de medida de comercialización (UMC)',
     clave: (ele: TablaMercanciasImportacion): string | undefined =>
-      ele.cantidadUmcValor, // Reemplaza 'ele.unidadMedidaTarifa' con la clave correcta
-    orden: 10,
+      ele.unidadMedidaComercializacion,
+    orden: 9,
   },
   {
     encabezado: 'Cantidad UMC',
     clave: (ele: TablaMercanciasImportacion): string => ele.cantidadUMC, // Reemplaza 'ele.cantidadUMT' con la clave correcta
-    orden: 11,
+    orden: 10,
   },
   {
     encabezado: 'Pais de origen',
     clave: (ele: TablaMercanciasImportacion): string => ele.paisOrigen, // Reemplaza 'ele.cantidadUMT' con la clave correcta
-    orden: 12,
+    orden: 11,
   },
   {
     encabezado: 'Pais de procedencia',
     clave: (ele: TablaMercanciasImportacion): string => ele.paisProcedencia, // Reemplaza 'ele.cantidadUMT' con la clave correcta
-    orden: 13,
+    orden: 12,
   },
   {
     encabezado: 'Tipo producto',
     clave: (ele: TablaMercanciasImportacion): string => ele.tipoProducto, // Reemplaza 'ele.tipoProducto' con la clave correcta
-    orden: 14,
+    orden: 13,
   },
   {
     encabezado: 'Uso especifico',
     clave: (ele: TablaMercanciasImportacion): string => ele.usoEspecifico, // Reemplaza 'ele.usoEspecifico' con la clave correcta
-    orden: 15,
+    orden: 14,
   },
 ];
 

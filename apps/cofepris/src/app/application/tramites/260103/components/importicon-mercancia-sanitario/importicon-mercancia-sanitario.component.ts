@@ -333,7 +333,7 @@ public paisDeProcedenciaDatos = CROSLISTA_DE_PAISES;
         this.mercanciaFormState.cantidadUmcValor,
         Validators.required,
       ],
-      cantidadUmc: [this.mercanciaFormState.cantidadUmc, Validators.required],
+      cantidadUMC: [this.mercanciaFormState.cantidadUmc, Validators.required],
       claveDeLos:[this.mercanciaFormState.claveDeLos,Validators.required],
       fechaDeFabricacio:[this.mercanciaFormState.fechaDeFabricacio],
       fechaDeCaducidad:[this.mercanciaFormState.fechaDeCaducidad],
@@ -410,7 +410,7 @@ public paisDeProcedenciaDatos = CROSLISTA_DE_PAISES;
    * @returns {void} Este método no devuelve ningún valor.
    */
   agregarMercancia(): void {
-    this.mercanciaSeleccionado(this.mercanciaForm.value);
+    this.mercanciaSeleccionado(this.mercanciaForm.getRawValue());
     this.ubicaccion.back();
   }
 

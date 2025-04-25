@@ -161,6 +161,7 @@ export class DatosGeneralesComponent implements OnDestroy {
           Validators.maxLength(150),
         ],
       ],
+      denominacionRazon:['', Validators.required],
       nombres: ['', Validators.required],
       primerApellido: ['', Validators.required],
       segundoApellido: [''],
