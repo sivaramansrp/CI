@@ -1430,8 +1430,8 @@
   {
     "id": 205,
     "tramite": 32101,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/agace/consulta-aviso-acreditacion/solicitud",
+    "linkDepartment": "/pago/consulta-aviso-acreditacion/solicitud",
     "department": "agace"
   },
   {
