@@ -469,11 +469,18 @@ const ROUTES: Routes = [
     ).then((m) => m.ExportacionMateriasPrimasEstupefacientesModule),
 },
 {
-  path: 'importacion-retorno-sanitario',
+  path: 'modificacion-permiso-lab',
   loadChildren: () =>
-    import('./tramites/260103/importacion-retorno-sanitario.module').then(
-      (m) => m.ImportacionRetornoSanitarioModule
-    ),
+    import('./tramites/260918/modificacion-permiso-lab.module').then(
+      (m) => m.ModificacionPermisoLabModule
+    )
+},
+{
+    path: 'importacion-retorno-sanitario',
+    loadChildren: () =>
+      import('./tramites/260103/importacion-retorno-sanitario.module').then(
+        (m) => m.ImportacionRetornoSanitarioModule
+      ),
 },
 ];
 
