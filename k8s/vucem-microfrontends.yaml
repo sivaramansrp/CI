@@ -65,7 +65,7 @@ spec:
         env: ${ENV}
     spec:
       imagePullSecrets:
-        - name: github-container-registry
+        - name: vucem30registrykey
       volumes:
         - name: module-federation-manifest
           configMap:
@@ -912,7 +912,6 @@ metadata:
   name: vucem-frontend-ingress-${ENV}
   namespace: vucem-${ENV}
   annotations:
-    kubernetes.io/ingress.class: "nginx"
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
     nginx.ingress.kubernetes.io/use-regex: "true"
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
