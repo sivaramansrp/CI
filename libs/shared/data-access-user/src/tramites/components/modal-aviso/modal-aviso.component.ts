@@ -1,5 +1,4 @@
-import { Component, ElementRef, Input, input, OnDestroy, OnInit } from '@angular/core';
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { Component, ElementRef, Input, OnDestroy, OnInit } from '@angular/core';
 import { ModalAvisoService } from '../../../core/services/shared/modal-aviso/modal-aviso.service';
 
 @Component({

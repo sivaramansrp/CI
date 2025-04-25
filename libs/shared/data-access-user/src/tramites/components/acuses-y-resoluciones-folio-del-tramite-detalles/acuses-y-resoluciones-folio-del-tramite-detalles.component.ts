@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { InputFecha,  } from '@libs/shared/data-access-user/src';
+import { InputFecha } from '../../../core/models/shared/components.model';
 import {TituloComponent } from '../titulo/titulo.component';
 
 /**

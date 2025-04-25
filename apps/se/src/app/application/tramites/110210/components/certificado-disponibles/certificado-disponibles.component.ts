@@ -65,7 +65,7 @@ export class CertificadoDisponiblesComponent implements OnInit, OnDestroy {
     this.service.getData().pipe(
       takeUntil(this.destroyed$)
     ).subscribe(
-      (data: string[]) => {
+      (data: unknown) => {
         this.datosTabla = data;
       }
     );

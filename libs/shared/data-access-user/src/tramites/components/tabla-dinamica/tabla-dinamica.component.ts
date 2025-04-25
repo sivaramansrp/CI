@@ -68,12 +68,12 @@ export class TablaDinamicaComponent<T> {
    * @param {number} value - El nuevo valor que se asignará a `inputSelection` y `idFilaSeleccionada`.
    */
   @Input()
+  get inputSelection(): number {
+    return this._inputSelection; // Devuelve el valor interno de `_inputSelection`
+  }
   set inputSelection(value: number) {
-
     this._inputSelection = value; // Actualiza el valor interno de `_inputSelection`
-
     this.idFilaSeleccionada = value; // Sincroniza el valor con `idFilaSeleccionada`
-
   }
   /**
    *   Array que recibe que acciones va a tener la tabla
