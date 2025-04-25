@@ -39,9 +39,7 @@ export function createInitialState(): Solicitud32102State {
 })
 @StoreConfig({ name: 'tramite32102', resettable: true })
 export class Tramite32102Store extends Store<Solicitud32102State> {
-  static setFraccionRegla(arg0: string): void {
-    throw new Error('Method not implemented.');
-  }
+
   constructor() {
     super(createInitialState());
   }
