@@ -9,13 +9,13 @@ import {
   ViewChild,
 } from '@angular/core';
 import { Catalogo, TablaSeleccion } from '@ng-mf/data-access-user';
+import { PagoDerechosLista, Vehiculo } from '../../../40103/models/registro-muestras-mercancias.model';
 import { Chofer40103Query } from '../../estados/chofer40103.query';
 import { Chofer40103Service } from '../../estados/chofer40103.service';
 import { Chofer40103Store } from '../../estados/chofer40103.store';
 import { DatosDelVehículoPaisEmisor } from '@libs/shared/data-access-user/src/core/models/40103/transportista-terrestre.model';
 import { Modal } from 'bootstrap';
 import { Observable } from 'rxjs/internal/Observable';
-import { PagoDerechosLista } from '../../../40103/models/registro-muestras-mercancias.model';
 import { ReplaySubject } from 'rxjs';
 import { Subject } from 'rxjs';
 import { Subscription } from 'rxjs';
@@ -102,11 +102,6 @@ export class VehiculosComponent implements AfterViewInit, OnInit, OnDestroy {
   formVehiculo!: FormGroup;
 
   /**
-   * Lista de vehículos.
-   */
-  vehiculos: unknown[] = [];
-
-  /**
    * Observable que contiene la lista de vehículos.
    */
   vehiculosList$: Observable<unknown[]> = new Observable();
@@ -150,6 +145,11 @@ export class VehiculosComponent implements AfterViewInit, OnInit, OnDestroy {
    * Catálogo de colores de vehículos.
    */
   VehiculoColors: Catalogo[] = [];
+
+  /**
+   * Lista de vehículos.
+   */
+  vehiculos: Vehiculo[] = [];
 
   /**
    * Lista de países emisores para la segunda placa.
@@ -551,8 +551,8 @@ export class VehiculosComponent implements AfterViewInit, OnInit, OnDestroy {
 
     this.vehiculosList$ = this.chofer40103Query.getvehiculos$;
     this.subscriptions.add(
-      this.chofer40103Query.getvehiculos$.subscribe((vehiculos: unknown[]) => {
-        this.vehiculos = vehiculos;
+      this.chofer40103Query.getvehiculos$.subscribe((vehiculos) => {
+        this.vehiculos = vehiculos.map((vehiculo) => JSON.parse(vehiculo) as Vehiculo);
       })
     );
     this.unidadesdearrastreList$ = this.chofer40103Query.getUnidadesdeArrastre$;
@@ -580,7 +580,7 @@ export class VehiculosComponent implements AfterViewInit, OnInit, OnDestroy {
     if (this.modalInstance) {
       this.modalInstance.hide();
     }
-    const NEW_VEHICULO = {
+    const NEW_VEHICULO: Vehiculo = {
       id: (this.vehiculos?.length || 0) + 1,
       solicitudVehiculoVin2:
         this.formVehiculo.value.solicitudVehiculoVin2?.trim(),
@@ -615,7 +615,7 @@ export class VehiculosComponent implements AfterViewInit, OnInit, OnDestroy {
 
     // Comprueba si el VIN ya existe en el estado de Akita
     const VIN_EXISTS = this.vehiculos?.some(
-      (item: any) =>
+      (item: Vehiculo) =>
         item.solicitudVehiculoVin2 === NEW_VEHICULO.solicitudVehiculoVin2
     );
 
@@ -631,7 +631,7 @@ export class VehiculosComponent implements AfterViewInit, OnInit, OnDestroy {
 
     // Actualizar el estado de Akita
     this.chofer40103Store.setVehiculos([
-      ...(this.vehiculos as string[]),
+      ...(this.vehiculos as unknown as string[]),
       JSON.stringify(NEW_VEHICULO),
     ]);
     this.formVehiculo.reset();

@@ -283,3 +283,22 @@ export interface PagoDerechosLista {
   municipioAlcaldía?: string;
   PaísDeResidencia?: string;
 }
+
+export interface Vehiculo {
+  id: number;
+  solicitudVehiculoVin2: string;
+  solicitudVehiculoTipoVehiculo: string;
+  solicitudVehiculoNumeroEconomico: string;
+  solicitudVehiculoNumeroPlacas: string;
+  solicitudVehiculoPaisEmisor: string;
+  solicitudDomicilioEstado: string;
+  solicitudVehiculoMarca: string;
+  solicitudVehiculoModelo: string;
+  anioVehiculoVEH: string;
+  solicitudVehiculoTransponder: string;
+  solicitudVehiculoColor: string;
+  solicitudVehiculoNumero2daPlaca?: string;
+  solicitudVehiculoEmisor2daPlaca?: string;
+  solicitudVehiculoPaisEmisorSegundaPlaca?: string;
+  solicitudVehiculoDesc?: string;
+}
