@@ -18,7 +18,7 @@ import { Tramite31616PerfilesMensajeriaQuery } from '../../../../estados/queries
     CommonModule
   ],
   templateUrl: './seguridad-informacion-documentacion.component.html',
-  styleUrl: './seguridad-informacion-documentacion.component.css'
+  styleUrl: './seguridad-informacion-documentacion.component.scss'
 })
 export class SeguridadInformacionDocumentacionComponent implements OnInit,OnDestroy{
 

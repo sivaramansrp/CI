@@ -18,7 +18,7 @@ import { Tramite31616PerfilesMensajeriaQuery } from '../../../../estados/queries
     CommonModule
   ],
   templateUrl: './capacitacion-seguridad.component.html',
-  styleUrl: './capacitacion-seguridad.component.css'
+  styleUrl: './capacitacion-seguridad.component.scss'
 })
 export class CapacitacionSeguridadComponent implements OnInit, OnDestroy {
 

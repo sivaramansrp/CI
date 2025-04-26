@@ -20,7 +20,7 @@ import { Tramite31616PerfilesMensajeriaQuery } from '../../../../estados/queries
     CommonModule
   ],
   templateUrl: './seguridad-los-vehiculos.component.html',
-  styleUrl: './seguridad-los-vehiculos.component.css',
+  styleUrl: './seguridad-los-vehiculos.component.scss',
 })
 export class SeguridadLosVehiculosComponent implements OnInit, OnDestroy {
 

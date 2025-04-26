@@ -26,7 +26,7 @@ import { Tramite31616PerfilesQuery } from '../../../../estados/queries/tramite31
   standalone: true,
   imports: [InputRadioComponent, CommonModule, ReactiveFormsModule],
   templateUrl: './socios-comerciales.component.html',
-  styleUrl: './socios-comerciales.component.css',
+  styleUrl: './socios-comerciales.component.scss',
 })
 export class SociosComercialesComponent implements OnInit, OnDestroy {
   /**

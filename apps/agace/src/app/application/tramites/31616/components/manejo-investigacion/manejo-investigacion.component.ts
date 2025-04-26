@@ -18,7 +18,7 @@ import { Tramite31616PerfilesMensajeriaQuery } from '../../../../estados/queries
     CommonModule
   ],
   templateUrl: './manejo-investigacion.component.html',
-  styleUrl: './manejo-investigacion.component.css'
+  styleUrl: './manejo-investigacion.component.scss'
 })
 export class ManejoInvestigacionComponent implements OnInit, OnDestroy {
 

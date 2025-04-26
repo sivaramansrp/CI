@@ -25,7 +25,7 @@ import { Tramite31616PerfilesQuery } from '../../../../estados/queries/tramite31
   standalone: true,
   imports: [InputRadioComponent, CommonModule, ReactiveFormsModule],
   templateUrl: './profiles-domocilio-dela.component.html',
-  styleUrls: ['./profiles-domocilio-dela.component.css'],
+  styleUrls: ['./profiles-domocilio-dela.component.scss'],
 })
 export class ProfilesDomocilioDelaComponent implements OnInit, OnDestroy {
   /**

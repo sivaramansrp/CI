@@ -26,7 +26,7 @@ import { Tramite31616PerfilesQuery } from '../../../../estados/queries/tramite31
   standalone: true,
   imports: [InputRadioComponent, CommonModule, ReactiveFormsModule],
   templateUrl: './controles-fisico.component.html',
-  styleUrl: './controles-fisico.component.css',
+  styleUrl: './controles-fisico.component.scss',
 })
 export class ControlesFisicoComponent implements OnInit, OnDestroy {
   /**

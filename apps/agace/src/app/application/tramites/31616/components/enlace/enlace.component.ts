@@ -25,7 +25,7 @@ import enlaceData from '@libs/shared/theme/assets/json/31601/enlace-data.json';
     FormsModule,
   ],
   templateUrl: './enlace.component.html',
-  styleUrl: './enlace.component.css',
+  styleUrl: './enlace.component.scss',
 })
 export class EnlaceComponent implements OnInit, OnDestroy {
   /**

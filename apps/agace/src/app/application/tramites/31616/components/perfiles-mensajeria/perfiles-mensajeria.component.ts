@@ -69,7 +69,7 @@ import { Tramite31616PerfilesMensajeriaQuery } from '../../../../estados/queries
     InputFechaComponent,
   ],
   templateUrl: './perfiles-mensajeria.component.html',
-  styleUrls: ['./perfiles-mensajeria.component.css'],
+  styleUrls: ['./perfiles-mensajeria.component.scss'],
 })
 export class PerfilesMensajeriaComponent implements OnInit, OnDestroy {
   /**

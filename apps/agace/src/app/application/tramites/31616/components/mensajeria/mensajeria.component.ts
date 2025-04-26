@@ -29,7 +29,7 @@ import productivo from '@libs/shared/theme/assets/json/31616/productivo.json';
     InputFechaComponent
   ],
   templateUrl: './mensajeria.component.html',
-  styleUrl: './mensajeria.component.css',
+  styleUrl: './mensajeria.component.scss',
   encapsulation: ViewEncapsulation.None
 })
 export class MensajeriaComponent implements OnInit, OnDestroy, AfterViewInit {

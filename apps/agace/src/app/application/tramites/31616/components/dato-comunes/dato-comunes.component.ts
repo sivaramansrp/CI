@@ -31,7 +31,7 @@ import serviciosAgace from '@libs/shared/theme/assets/json/31616/serviciosAgace.
     TituloComponent
   ],
   templateUrl: './dato-comunes.component.html',
-  styleUrl: './dato-comunes.component.css',
+  styleUrl: './dato-comunes.component.scss',
   encapsulation: ViewEncapsulation.None
 })
 export class DatoComunesComponent implements OnInit, OnDestroy, AfterViewInit {

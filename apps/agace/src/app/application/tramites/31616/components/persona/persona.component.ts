@@ -22,7 +22,7 @@ import { SolicitudDeRegistroInvocarService } from '../../services/solicitudDeReg
     TituloComponent
   ],
   templateUrl: './persona.component.html',
-  styleUrl: './persona.component.css',
+  styleUrl: './persona.component.scss',
 })
 export class PersonaComponent implements OnInit, OnDestroy {
 

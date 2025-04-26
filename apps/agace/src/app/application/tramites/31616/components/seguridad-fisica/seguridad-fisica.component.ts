@@ -25,7 +25,7 @@ import { Tramite31616PerfilesQuery } from '../../../../estados/queries/tramite31
   standalone: true,
   imports: [InputRadioComponent, CommonModule, ReactiveFormsModule],
   templateUrl: './seguridad-fisica.component.html',
-  styleUrl: './seguridad-fisica.component.css',
+  styleUrl: './seguridad-fisica.component.scss',
 })
 export class SeguridadFisicaComponent implements OnInit, OnDestroy {
   /**

@@ -27,7 +27,7 @@ import { Tramite31616PerfilesQuery } from '../../../../estados/queries/tramite31
   standalone: true,
   imports: [InputRadioComponent, CommonModule, ReactiveFormsModule],
   templateUrl: './seguridad-procesos.component.html',
-  styleUrl: './seguridad-procesos.component.css',
+  styleUrl: './seguridad-procesos.component.scss',
 })
 export class SeguridadProcesosComponent implements OnInit, OnDestroy {
   /**

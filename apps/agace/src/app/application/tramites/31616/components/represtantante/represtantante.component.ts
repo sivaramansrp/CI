@@ -33,7 +33,7 @@ import representanteDatos from '@libs/shared/theme/assets/json/31601/represtanta
     FormsModule
   ],
   templateUrl: './represtantante.component.html',
-  styleUrl: './represtantante.component.css',
+  styleUrl: './represtantante.component.scss',
 })
 export class ReprestantanteComponent implements OnInit, OnDestroy {
 

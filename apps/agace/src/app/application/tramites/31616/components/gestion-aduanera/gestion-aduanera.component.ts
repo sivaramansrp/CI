@@ -17,7 +17,7 @@ import { Tramite31616PerfilesMensajeriaQuery } from '../../../../estados/queries
     ReactiveFormsModule,
   ],
   templateUrl: './gestion-aduanera.component.html',
-  styleUrl: './gestion-aduanera.component.css'
+  styleUrl: './gestion-aduanera.component.scss'
 })
 export class GestionAduaneraComponent implements OnInit, OnDestroy {
 
