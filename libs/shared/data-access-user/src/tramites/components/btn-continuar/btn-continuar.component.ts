@@ -27,7 +27,14 @@ interface AccionBoton {
 export class BtnContinuarComponent implements OnInit {
   @Input({ required: true }) datos!: DatosPasos;
   @Input() btnGuardar: boolean = false;
-  @Input() esContinuar: boolean = true;
+  /**
+ * @Input dePadre
+ * @description
+ * Indica si el componente `BtnContinuarComponent` está siendo controlado por un componente padre.
+ * @type {boolean}
+ * @default false
+ */
+  @Input() public dePadre: boolean = false;
 
   @Output() continuarEvento = new EventEmitter<AccionBoton>();
   @Output() btnGuardarClicked = new EventEmitter<void>();
@@ -36,7 +43,6 @@ export class BtnContinuarComponent implements OnInit {
   public seccion!: SeccionLibState;
   private destroyNotifier$: Subject<void> = new Subject();
   public habilitarBoton: boolean = false;
-
   constructor(private seccionQuery: SeccionLibQuery) {
     // Lógica de inicialización si es necesario
    }
@@ -78,19 +84,21 @@ export class BtnContinuarComponent implements OnInit {
    * @returns {void} No retorna ningún valor.
    */
   continuar(): void {
-      const CONDICION =
-      this.datos.indice > 0 && this.datos.indice < this.datos.nroPasos;
-    if (CONDICION) {
-      setTimeout(() => {
-
-      this.wizardService.cambio_indice(this.datos.indice);
-      const DATOS_CONTINUAR: AccionBoton = {
-        accion: this.esContinuar ? 'cont' : 'inValid',
-        valor: (this.datos.indice += 1),
-      };
-      this.continuarEvento.emit(DATOS_CONTINUAR);
-    }, 500);
+    const PUEDE_CONTINUAR = this.datos.indice > 0 && this.datos.indice < this.datos.nroPasos;
+    let valor = this.datos.indice;
+    if (!PUEDE_CONTINUAR) {
+      return;
     }
+    if (!this.dePadre) {
+      this.wizardService.cambio_indice(valor);
+      valor += 1;
+      this.datos.indice = valor;
+    }
+    const DATOS_CONTINUAR: AccionBoton = {
+      accion: 'cont',
+      valor,
+    };
+    this.continuarEvento.emit(DATOS_CONTINUAR);
   }
 
   /**
@@ -99,16 +107,20 @@ export class BtnContinuarComponent implements OnInit {
    * @returns {void} No retorna ningún valor.
    */
   anterior(): void {
-    const CONDICION =
-      this.datos.indice > 1 && this.datos.indice < this.datos.nroPasos + 1;
-    if (CONDICION) {
-      const DATOS_ANTERIOR: AccionBoton = {
-        accion: 'ant',
-        valor: (this.datos.indice -= 1),
-      };
-
-      this.continuarEvento.emit(DATOS_ANTERIOR);
+    const PUEDE_RETROCEDER = this.datos.indice > 1 && this.datos.indice <= this.datos.nroPasos;
+    let valor = this.datos.indice;
+    if (!PUEDE_RETROCEDER) {
+      return
     }
+    if (!this.dePadre) {
+      valor -= 1;
+      this.datos.indice = valor;
+    }
+    const DATOS_ANTERIOR: AccionBoton = {
+      accion: 'ant',
+      valor,
+    };
+    this.continuarEvento.emit(DATOS_ANTERIOR);
   }
 
   /**

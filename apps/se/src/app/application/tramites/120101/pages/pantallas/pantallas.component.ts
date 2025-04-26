@@ -4,9 +4,10 @@ import {
   DatosPasos,
   ListaPasosWizard,
   WizardComponent,
+  WizardService,
 } from '@libs/shared/data-access-user/src';
-import { ChangeDetectorRef, Component, ViewChild, inject } from '@angular/core';
-import { CUPOS_PASOS } from '../../constantes/solicitud-de-registro-tpl.enum';
+import { CUPOS_PASOS, FORMA_VALIDO_ALERT } from '../../constantes/solicitud-de-registro-tpl.enum';
+import { Component, ViewChild, inject } from '@angular/core';
 import { ServicioDeFormularioService } from '../../services/forma-servicio/servicio-de-formulario.service';
 
 /**
@@ -27,7 +28,7 @@ import { ServicioDeFormularioService } from '../../services/forma-servicio/servi
   selector: 'app-pantallas',
   templateUrl: './pantallas.component.html',
 })
-export class PantallasComponent {
+export class PantallasComponent{
   /**
    *
    * Una cadena que representa la clase CSS para una alerta de información.
@@ -39,6 +40,8 @@ export class PantallasComponent {
    * Asigna el aviso de privacidad simplificado al atributo `TEXTOS`.
    */
   TEXTOS = AVISO.Aviso;
+
+  public formaValidoAlert = FORMA_VALIDO_ALERT.message;
   /**
    * Lista de pasos del wizard.
    * @type {ListaPasosWizard[]}
@@ -79,13 +82,9 @@ export class PantallasComponent {
  */
   public esFormaValido: boolean = false;
 
-  /**
- * @property cdr
- * @description
- * Inyección del servicio `ChangeDetectorRef` para detectar y aplicar cambios manualmente en el ciclo de detección de Angular.
- * @type {ChangeDetectorRef}
- */
-  private cdr = inject(ChangeDetectorRef);
+  wizardService = inject(WizardService);
+
+  public subpestanaSeleccionada!: number;
 
   /**
  * @constructor
@@ -116,6 +115,12 @@ export class PantallasComponent {
     );
   }
 
+  public pestanaCambiado(event: number): void {
+    if (event) {
+      this.subpestanaSeleccionada = event;
+    }
+  }
+
   /**
    * Actualiza el índice del paso y maneja la navegación hacia adelante o atrás.
    *
@@ -123,23 +128,21 @@ export class PantallasComponent {
    * @returns {void}
    */
   public getValorIndice(e: AccionBoton): void {
-    setTimeout(() => {
-
     this.esFormaValido = this.verificarLaValidezDelFormulario();
     if (e.valor > 0 && e.valor <= this.pantallasPasos.length) {
-        if (e.accion === 'cont') {
-          if (this.esFormaValido) {
-            this.indice = e.valor;
-            this.datosPasos.indice = e.valor;
-            this.wizardComponent.siguiente();
-          }
-        } else if (e.accion === 'ant'){
+        if (e.accion === 'cont' && this.esFormaValido) {
+          this.wizardService.cambio_indice(this.datosPasos.indice);
+          this.indice = e.valor + 1;
+          this.datosPasos.indice = e.valor + 1;
+          this.wizardComponent.siguiente();
+        } else if (e.accion === 'ant' && this.esFormaValido){
+          this.indice = e.valor - 1;
+          this.datosPasos.indice = e.valor - 1;
+          this.wizardComponent.atras();
+        } else if (!this.esFormaValido) {
           this.indice = e.valor;
           this.datosPasos.indice = e.valor;
-          this.wizardComponent.atras();
         }
     }
-    this.cdr.detectChanges();
-  }, 500);
   }
 }

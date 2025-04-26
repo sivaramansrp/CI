@@ -1,4 +1,4 @@
-import { AlertComponent, BtnContinuarComponent, WizardComponent } from '@libs/shared/data-access-user/src';
+import { AlertComponent, BtnContinuarComponent, FirmaElectronicaComponent, WizardComponent } from '@libs/shared/data-access-user/src';
 import { BienFinalComponent } from './components/bien-final/bien-final.component';
 import { CommonModule } from '@angular/common';
 import { ConsultarCupoComponent } from './components/consultar-cupo/consultar-cupo.component';
@@ -7,6 +7,7 @@ import { DescripcionDelCupoComponent } from './components/descripcion-del-cupo/d
 import { DomicilioFiscalComponent } from './components/domicilio-fiscal/domicilio-fiscal.component';
 import { NgModule } from '@angular/core';
 import { PantallasComponent } from './pages/pantallas/pantallas.component';
+import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { RepresentacionFederalComponent } from './components/representacion-federal/representacion-federal.component';
 import { SolicitudDeRegistroTplRoutingModule } from './solicitud-de-registro-tpl-routing.module';
@@ -15,7 +16,8 @@ import { SolicitudDeRegistroTplRoutingModule } from './solicitud-de-registro-tpl
 @NgModule({
   declarations: [
     PantallasComponent,
-    PasoUnoComponent
+    PasoUnoComponent,
+    PasoDosComponent
   ],
   imports: [
     CommonModule,
@@ -28,7 +30,8 @@ import { SolicitudDeRegistroTplRoutingModule } from './solicitud-de-registro-tpl
     AlertComponent,
     DescripcionDelCupoComponent,
     RepresentacionFederalComponent,
-    BienFinalComponent
+    BienFinalComponent,
+    FirmaElectronicaComponent
   ]
 })
 export class SolicitudDeRegistroTplModule { }

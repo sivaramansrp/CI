@@ -663,3 +663,8 @@ export const BIEN_FINAL = [
     marginTop: 0,
   },
 ]
+
+export const FORMA_VALIDO_ALERT = {
+  message: `
+  <p>La solicitud ha quedado registrada con el número temporal 202770947. Este no tiene validez legal y sirve solamente para efectos de identificar tu solicitud. Un folio oficial será asignado a la solicitud en el momento en que esta sea firmada.</a>`
+};

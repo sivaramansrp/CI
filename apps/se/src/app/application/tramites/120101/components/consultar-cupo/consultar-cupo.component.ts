@@ -360,7 +360,6 @@ export class ConsultarCupoComponent implements OnInit, OnDestroy {
       this.servicioDeFormularioService.setFormValue('consultarCupoForm', {
         [event.campo]: event.valor,
       });
-  
     }
   }
 

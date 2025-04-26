@@ -1,15 +1,9 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
-import {
-  SolicitudDeRegistroTpl120101State,
-  Tramite120101Store,
-} from '../../../../estados/tramites/tramite120101.store';
-import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DOMICILIO_FISCAL_DEL_SOLICITANTE } from '../../constantes/solicitud-de-registro-tpl.enum';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
 import { ServicioDeFormularioService } from '../../services/forma-servicio/servicio-de-formulario.service';
-import { Tramite120101Query } from '../../../../estados/queries/tramite120101.query';
 
 /**
  * @component DomicilioFiscalComponent
@@ -34,7 +28,7 @@ import { Tramite120101Query } from '../../../../estados/queries/tramite120101.qu
   templateUrl: './domicilio-fiscal.component.html',
   styleUrl: './domicilio-fiscal.component.scss',
 })
-export class DomicilioFiscalComponent implements OnInit, OnDestroy {
+export class DomicilioFiscalComponent implements OnInit {
   /**
    * compo doc
    * @property domicilioFiscalFormData
@@ -81,32 +75,12 @@ export class DomicilioFiscalComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Estado de la solicitud de la sección 120101.
-   * @type {SolicitudDeRegistroTpl120101State}
-   * @memberof BienFinalComponent
-   */
-  public solicitudDeRegistroState!: SolicitudDeRegistroTpl120101State;
-
-  /** Subject para destruir el componente */
-  public destroy$ = new Subject<void>();
-
-  /**
  * @constructor
  * @description
  * Constructor del componente `DomicilioFiscalComponent`. Inicializa las dependencias necesarias para el funcionamiento del componente.
- * 
- * Funcionalidad:
- * - `Tramite120101Store`: Store para gestionar el estado global del trámite 120101.
- * - `Tramite120101Query`: Query para consultar el estado global del trámite 120101.
- * - `ServicioDeFormularioService`: Servicio para registrar y gestionar formularios dinámicos.
- * 
- * @param {Tramite120101Store} tramite120101Store - Store para gestionar el estado global del trámite.
- * @param {Tramite120101Query} tramite120101Query - Query para consultar el estado global del trámite.
  * @param {ServicioDeFormularioService} servicioDeFormularioService - Servicio para gestionar formularios dinámicos.
  */
   constructor(
-    private tramite120101Store: Tramite120101Store,
-    private tramite120101Query: Tramite120101Query,
     private servicioDeFormularioService: ServicioDeFormularioService
   ) {
     //
@@ -130,64 +104,9 @@ export class DomicilioFiscalComponent implements OnInit, OnDestroy {
  * // El estado de la solicitud se actualiza y el formulario se registra.
  */
   ngOnInit(): void {
-    this.tramite120101Query.selectSolicitudDeRegistroTpl$
-      .pipe(
-        takeUntil(this.destroy$),
-        map((seccionState) => {
-          this.solicitudDeRegistroState = seccionState;
-        })
-      )
-      .subscribe();
     this.servicioDeFormularioService.registerForm(
       'domicilioFiscalForm',
       this.ninoFormGroup
     );
-  }
-
-  /**
-  * compo doc
-  * @method establecerCambioDeValor
-  * @description
-  * Este método se utiliza para manejar los cambios en los valores de un formulario dinámico.
-  * Recibe un evento que contiene el nombre del campo y su nuevo valor, y actualiza el estado
-  * dinámico del formulario en el store correspondiente.
-  * 
-  * @param event - Un objeto que contiene el campo que ha cambiado y su nuevo valor.
-  * El objeto tiene la estructura: `{ campo: string; valor: any }`.
-  * 
-  * @example
-  * establecerCambioDeValor({ campo: 'nombre', valor: 'Juan' });
-  * // Actualiza el campo 'nombre' con el valor 'Juan' en el store dinámico.
-  */
-  establecerCambioDeValor(event: { campo: string; valor: object | string }): void {
-    if (event) {
-      this.tramite120101Store.setDynamicFieldValue(event.campo, event.valor);
-      this.servicioDeFormularioService.setFormValue('domicilioFiscalForm', {
-        [event.campo]: event.valor,
-      });
-  
-    }
-  }
-
-   /**
-  * @method ngOnDestroy
-  * @description
-  * Este método es parte del ciclo de vida del componente y se ejecuta automáticamente 
-  * cuando el componente está a punto de ser destruido. Se utiliza para limpiar las suscripciones 
-  * activas y evitar fugas de memoria en la aplicación.
-  * 
-  * Funcionalidad:
-  * - Notifica a través del `Subject` `destroy$` que el componente será destruido.
-  * - Completa el `Subject` para liberar los recursos asociados.
-  * 
-  * @example
-  * ngOnDestroy(): void {
-  *   this.destroy$.next();
-  *   this.destroy$.complete();
-  * }
-  */
-   ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
   }
 }

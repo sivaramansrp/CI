@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { InstrumentoCupoTPLForm } from '../../../120201/models/cupos.model';
 /**
  * @component PasoUnoComponent
@@ -12,6 +12,18 @@ import { InstrumentoCupoTPLForm } from '../../../120201/models/cupos.model';
   templateUrl: './paso-uno.component.html',
 })
 export class PasoUnoComponent {
+
+  @Input() esFormaValido!: boolean;
+   /**
+   * compo doc
+   * Emisor de eventos que notifica el cambio de pestaña.
+   * Emite un número correspondiente al índice de la pestaña seleccionada.
+   * 
+   * @type {EventEmitter<number>}
+   * @memberof PasoUnoComponent
+   */
+   @Output() pestanaCambiado = new EventEmitter<number>();
+
   /**
    * Índice de la pestaña seleccionada.
    */
@@ -32,6 +44,7 @@ export class PasoUnoComponent {
    */
   seleccionaTab(i: number): void {
     this.indice = i;
+    this.pestanaCambiado.emit(this.indice);
   }
 /**
  * @method fileClicHandler
