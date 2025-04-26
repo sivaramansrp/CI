@@ -1,4 +1,4 @@
-import { catchError, map, ReplaySubject } from 'rxjs';
+import { catchError, map } from 'rxjs';
 import { Component, OnInit } from '@angular/core';
 import { ConfiguracionColumna,
          InputFecha,
@@ -34,8 +34,6 @@ export class BandejaSolicitudesComponent implements OnInit {
     required: false,
     habilitado: true,
   };
-  /** Observable para manejar la destrucción del componente */
-  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
   /** Indica si el bloque de filtros está colapsado */
   colapsable: boolean = false;
@@ -113,7 +111,6 @@ export class BandejaSolicitudesComponent implements OnInit {
     this.accionesServcios = [TablaAcciones.VER];
     this.tableroService.getListaSolicitudes()
       .pipe(
-        takeUntilDestroyed(),
         map((data) => {
           this.todasSolicitudesOriginales = data;
           this.todasSolicitudes = [...data];

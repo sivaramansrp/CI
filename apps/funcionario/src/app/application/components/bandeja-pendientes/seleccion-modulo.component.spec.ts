@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { BandejaPendientesComponent } from './bandeja-pendientes.component';
+import { BandejaPendientesComponent } from './seleccion-modulo.component';
 
 describe('BandejaPendientesComponent', () => {
   let component: BandejaPendientesComponent;
