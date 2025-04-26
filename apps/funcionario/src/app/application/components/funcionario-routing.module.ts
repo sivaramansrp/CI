@@ -13,7 +13,7 @@ import { SolicitudPageComponent } from './evaluar-solicitud/solicitud-page/solic
 const ROUTES: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'seleccion-modulo' },
   {
-    path: 'bandeja',
+    path: 'bandeja-pendientes',
     component: BandejaPendientesComponent,
   },
   {
