@@ -94,5 +94,4 @@ export class ServicioDeFormularioService {
     const FORMA = this.getForm(name);
     return FORMA?.valid;
   }
-
 }

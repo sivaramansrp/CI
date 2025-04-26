@@ -1,0 +1,61 @@
+<div class="container form-container">
+ <div class="mt-5">
+<app-tabla-dinamica [tipoSeleccionTabla]="tipoSeleccionTabla" [configuracionTabla]="tableHeaderExtranjeros"
+[datos]="tablaInsumos"></app-tabla-dinamica>
+</div>
+
+<div class=" text-end mt-5">
+<button type="button" class="btn btn-primary">Eliminar</button>
+<button type="button" class="btn btn-primary">Modificar</button>
+<button type="button" class="btn btn-primary"  data-bs-toggle="modal" data-bs-target="#modalAddAgentMercancias">Agregar</button>
+</div>
+</div>
+
+    <div class="modal fade" id="modalAddAgentMercancias" tabindex="-1" aria-labelledby="modalAddAgentMercanciasLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" style="max-width: 80vw">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Información de la materia prima que determina la clasificación del bien final</h4>
+      </div>
+      <div class="modal-body modal-height">
+        <form [formGroup]="insumoForm">
+            <div class="row">
+            <div class="col-md-6">
+                <label for="descripcionDelInsumo" class="form-label">Descripción del insumo*:</label>
+                <input type="text" id="descripcionDelInsumo" formControlName="descripcionDelInsumo" class="form-control" required />
+                <div *ngIf="insumoForm.get('descripcionDelInsumo')?.touched && insumoForm.get('descripcionDelInsumo')?.invalid" class="text-danger">
+                    Este campo es obligatorio.
+                </div>
+            </div>
+            <div class="col-md-6">
+                <label for="fraccionArancelaria" class="form-label">Fracción arancelaria*:</label>
+                <input type="text" id="fraccionArancelaria" formControlName="fraccionArancelaria" class="form-control" />
+                <div *ngIf="insumoForm.get('fraccionArancelaria')?.touched && insumoForm.get('fraccionArancelaria')?.invalid" class="text-danger">
+                    Este campo es obligatorio.
+                </div>
+            </div>
+            </div>
+            <div class="row">
+            <div class="col-md-6">
+                <app-catalogo-select [catalogo]="fraccionArancelaria" [label]="'Descripción Fracción arancelaria'" [required]="true" name="Descripción Fracción arancelaria"
+                formControlName="descripcionFraccionArancelaria"></app-catalogo-select>
+            </div>
+            <div class="col-md-6">
+                <app-catalogo-select [catalogo]="paisDeOrigen" [label]="'País de origen'" [required]="true" name="País de origen"
+                formControlName="paisDeOrigen"></app-catalogo-select>
+            </div>
+            </div>
+        </form>
+</div>
+  <div class="modal-footer custom-footer">
+        <button type="button" class="btn btn-default" data-bs-dismiss="modal">
+          Cerrar
+        </button>
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">
+          Agregar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
