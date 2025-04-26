@@ -4,6 +4,7 @@ import { AutorizarDictamenComponent } from './autorizar/autorizar-dictamen/autor
 import { BandejaPendientesComponent } from './bandeja-pendientes/bandeja-pendientes.component';
 import { BandejaSolicitudesComponent } from './bandeja-solicitudes/bandeja-solicitudes.component';
 import { ConfirmarNotificacionComponent } from './confirmar-notificacion/confirmar-notificacion.component';
+import { ConsultaComponent } from './consulta/consulta.component';
 import { NgModule } from '@angular/core';
 import { ObservacionesDictamenComponent } from './autorizar/observaciones/observaciones-dictamen.component';
 import { SeleccionModuloComponent } from './seleccion-modulo/seleccion-modulo.component';
@@ -34,6 +35,14 @@ const ROUTES: Routes = [
   {
     path: 'autorizar-dictamen',
     component: AutorizarDictamenComponent,
+  },
+  {
+    path: 'consulta',
+    component: ConsultaComponent,
+  },
+  {
+    path: 'observaciones-dictamen',
+    component: ObservacionesDictamenComponent,
   },
   {
     path: 'observaciones-dictamen',
