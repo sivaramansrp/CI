@@ -1,0 +1,11 @@
+<form [formGroup]="forma">
+  <div class="row">
+    <formas-dinamicas
+      formularioTitulo="Período en el que permanecerá la obra de arte en el extranjero"
+      [forma]="ninoFormGroup"
+      [formularioDatos]="periodoPermaneceraFormData"
+      [estado]="exportarIlustracionesState"
+      (emitirCambioDeValor)="establecerCambioDeValor($event)"
+    ></formas-dinamicas>
+  </div>
+</form>

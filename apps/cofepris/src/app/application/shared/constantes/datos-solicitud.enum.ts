@@ -377,7 +377,8 @@ export const TABLA_OPCION_DATA: TablaOpcionConfig[] = [
  * @type {number[]}
 */
 export const PROCEDIMIENTOS_NO_PARA_ELEMENTO_COLAPSABLE = [
-  260214, 260216, 260205, 260217, 260218, 260102,260301, 260208,260207, 260209,260201
+  260214, 260216, 260205, 260217, 260218, 260102,260301, 260208,260207, 260209,260201, 
+  260219,260302, 260304 , 260103
 ];
 
 /**
@@ -418,7 +419,7 @@ export const PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE = [260216, 260208, 260209];
  *   // Lógica para ocultar o deshabilitar el elemento "Correo Electrónico"
  * }
  */
-export const PROCEDIMIENTOS_NO_PARA_ELEMENTO_CORREO_ELECTRONIC = [260102, 260301];
+export const PROCEDIMIENTOS_NO_PARA_ELEMENTO_CORREO_ELECTRONIC = [260102, 260301,260302, 260304];
 
 
 /**
@@ -432,7 +433,7 @@ export const PROCEDIMIENTOS_NO_PARA_ELEMENTO_CORREO_ELECTRONIC = [260102, 260301
  *   // Lógica para ocultar o deshabilitar el elemento "RFC del Sanitario"
  * }
  */
-export const PROCEDIMIENTOS_NO_PARA_ELEMENTO_RFC_DEL_SANITARIO = [260301, 260208];
+export const PROCEDIMIENTOS_NO_PARA_ELEMENTO_RFC_DEL_SANITARIO = [260301, 260208,260302,260304,260103];
 
 
 /**
@@ -445,7 +446,7 @@ export const PROCEDIMIENTOS_NO_PARA_ELEMENTO_RFC_DEL_SANITARIO = [260301, 260208
  *   // Lógica para manejar procedimientos no aplicables
  * }
  */
-export const PROCEDIMIENTOS_NO_PARA_ELEMENTO_CALLE = [260301]
+export const PROCEDIMIENTOS_NO_PARA_ELEMENTO_CALLE = [260301,260302, 260304]
 
 
 /**
@@ -459,7 +460,7 @@ export const PROCEDIMIENTOS_NO_PARA_ELEMENTO_CALLE = [260301]
  *   // Lógica para ocultar o deshabilitar los elementos "Régimen" y "Aduana de Entradas"
  * }
  */
-export const PROCEDIMIENTOS_NO_PARA_ELEMENTO_REGIMEN_Y_ADUNADEENTRADAS = [260301];
+export const PROCEDIMIENTOS_NO_PARA_ELEMENTO_REGIMEN_Y_ADUNADEENTRADAS = [260301,260302, 260304,260103];
 
 /**
  * @const PROCEDIMIENTOS_PARA_DESHABILITAR_MUNICIPIO_ALCALDIA
@@ -485,7 +486,7 @@ export const PROCEDIMIENTOS_PARA_DESHABILITAR_MUNICIPIO_ALCALDIA=[260301]
  *   // Lógica para mostrar el elemento "Correo Electrónico" en la misma fila
  * }
  */
-export const PROCEDIMIENTOS_PARA_CORREO_ELECTRONICO_EN_MISMA_FILA = [260208];
+export const PROCEDIMIENTOS_PARA_CORREO_ELECTRONICO_EN_MISMA_FILA = [260208,260103];
 
 /**
  * @const REPRESENTANTE_LEGAL
@@ -505,7 +506,7 @@ export const REPRESENTANTE_LEGAL = [260208];
  *   // Lógica para manejar procedimientos relacionados con el banco
  * }
  */
-export const BANCO = [260208, 260209, 260207, 260201];
+export const BANCO = [260208, 260209, 260207, 260201, 260219,260302, 260304,260103];
 
 /**
  * @const DATOS_MERCANCIA_CAMPO
@@ -526,7 +527,7 @@ export const DATOS_MERCANCIA_CAMPO = [260208, 260209];
  *   deshabilitarCampoApellidoMaterno();
  * }
  */
-export const PROCEDIMIENTOS_PARA_DESHABILITAR_APELLIDO_MATERNO=[260301,260207,260201]
+export const PROCEDIMIENTOS_PARA_DESHABILITAR_APELLIDO_MATERNO=[260301,260207,260201,260302, 260304,260103]
 
 
 /**
@@ -539,7 +540,7 @@ export const PROCEDIMIENTOS_PARA_DESHABILITAR_APELLIDO_MATERNO=[260301,260207,26
  *   // Lógica para deshabilitar el campo de apellido paterno
  * }
  */
-export const PROCEDIMIENTOS_PARA_DESHABILITAR_APELLIDO_PATERNO=[260301,260207,260201]
+export const PROCEDIMIENTOS_PARA_DESHABILITAR_APELLIDO_PATERNO=[260301,260207,260201,260302, 260304,260103]
 
 /**
  * @const PROCEDIMIENTOS_PARA_DESHABILITAR_NOMBRE_RAZON_SOCIAL
@@ -552,7 +553,7 @@ export const PROCEDIMIENTOS_PARA_DESHABILITAR_APELLIDO_PATERNO=[260301,260207,26
  *   deshabilitarCampoNombreRazonSocial();
  * }
  */
-export const PROCEDIMIENTOS_PARA_DESHABILITAR_NOMBRE_RAZON_SOCIAL=[260301,260207,260201]
+export const PROCEDIMIENTOS_PARA_DESHABILITAR_NOMBRE_RAZON_SOCIAL=[260301,260207,260201,260302, 260304,260103]
 
 /**
  * @const PROCEDIMIENTOS_PARA_COLONIA_O_EQUIVALENTE
@@ -560,7 +561,7 @@ export const PROCEDIMIENTOS_PARA_DESHABILITAR_NOMBRE_RAZON_SOCIAL=[260301,260207
  *              relacionados con colonias o equivalentes en el sistema.
  * @type {number[]}
  */
-export const PROCEDIMIENTOS_PARA_COLONIA_O_EQUIVALENTE=[260207,260208, 260209]
+export const PROCEDIMIENTOS_PARA_COLONIA_O_EQUIVALENTE=[260207,260208, 260209, 260219]
 
 /**
  * @enum {number}
@@ -571,7 +572,8 @@ export const PROCEDIMIENTOS_PARA_COLONIA_O_EQUIVALENTE=[260207,260208, 260209]
  */
 export enum NUMERO_TRAMITE {
   TRAMITE_260205 = 260205,
-  TRAMITE_260301 = 260301
+  TRAMITE_260301 = 260301,
+  TRAMITE_260103 = 260103,
 }
 
 /**
@@ -650,39 +652,6 @@ export const DETALLE_MERCANCIA_TABLA_ESTUPEFACIENTES = [
  * @usage Utilizada para identificar solicitudes de ámbito nacional.
  */
 export const STR_NACIONAL = 'Nacional';
-
-/**
- * @const {Map<string, number[]>} CAMPOS_REQUERIDOS_FORMULARIO_MAP
- * @description Mapa que asocia los nombres de los campos del formulario con los códigos numéricos requeridos.
- * Este mapa se utiliza para validar los campos obligatorios en diferentes contextos de la aplicación.
- * 
- * @property {string} key - Nombre del campo del formulario.
- * @property {number[]} value - Lista de códigos numéricos asociados al campo.
- */
-export const CAMPOS_REQUERIDOS_FORMULARIO_MAP: Map<string, number[]> = new Map([
-  ['colonia', [260301]],
-  ['localidad', [260301]],
-  ['denominacionRazon',[260301, 260208,260207,260209]],
-  ['scian', [260301, 260208]],
-  ['correoElectronico', [260208,260207,260209]],
-]);
-
-/**
- * @const
- * @name CAMPOS_ADICIONALES_POR_PROCEDIMIENTO_MAP
- * @type {Map<string, number[]>}
- * @description
- * Mapa que asocia nombres de campos adicionales con un arreglo de números que representan procedimientos específicos.
- * @property {string} key - Nombre del campo adicional.
- * @property {number[]} value - Arreglo de números que representan procedimientos asociados al campo.
- */
-export const CAMPOS_ADICIONALES_POR_PROCEDIMIENTO_MAP: Map<string, number[]> = new Map([
-  ['calleYNumero', [260301]],
-  ['correoElectronico', [260301]],
-  ['rfcSanitario', [260301]],
-  ['regimenLaMercancia',[260301]],
-  ['aduana',[260301]]
-]);
 
 /**
  * @const DESCRIPCION_FRACCION_DESHABILITADO_VALOR

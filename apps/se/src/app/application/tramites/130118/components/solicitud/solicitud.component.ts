@@ -55,11 +55,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   estado!: Catalogo[];
 
   /**
-   * Lista de catálogos de molino.
-   */
-  molino!: Catalogo[];
-
-  /**
    * Lista de catálogos de unidad de medida tarifaria.
    */
   unidadMedidaTarifaria!: Catalogo[];
@@ -129,7 +124,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * 1. Inicializa los catálogos necesarios para el formulario.
    * 2. Selecciona los valores iniciales para los catálogos de régimen de mercancía, 
    *    clasificación de régimen, fracción arancelaria, NICO, país de origen, país de destino, 
-   *    estado, molino, unidad de medida tarifaria y representación federal.
+   *    estado, unidad de medida tarifaria y representación federal.
    * 3. Muestra los campos correspondientes a la persona seleccionada (física o moral).
    * 
    * @returns {void}
@@ -156,7 +151,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.paisOrigenSeleccion();
     this.paisDestinoSeleccion();
     this.estadoSeleccion();
-    this.molinoSeleccion();
     this.unidadMedidaTarifariaSeleccion();
     this.representacionFederalSeleccion();
 
@@ -321,12 +315,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
             Validators.maxLength(250)
           ]
         ],
-        molino: [
-          this.solicitudState?.molino,
-          [
-            Validators.required
-          ],
-        ],
         domicilio: [
           this.solicitudState?.domicilio,
           [
@@ -408,14 +396,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         })
       );
 
-    const MOLINO$ = this.peximService
-      .getMolinoCatalogo(CATALOGOS_ID.CAT_MOLINO)
-      .pipe(
-        map((resp) => {
-          this.molino = resp.data;
-        })
-      );
-
     const ESTADO$ = this.peximService
       .getEstadoCatalogo(CATALOGOS_ID.CAT_ESTADO)
       .pipe(
@@ -440,7 +420,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       UNIDAD_MEDIDA_TARIFARIA$,
       PAIS_ORIGEN$,
       PAIS_DESTINO$,
-      MOLINO$,
       ESTADO$,
       REPRESENTACION_FEDERAL$
     )
@@ -518,14 +497,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Selecciona el molino.
-   */
-  molinoSeleccion(): void {
-    const MOLINO = this.FormSolicitud.get('datosProducto.molino')?.value;
-    this.tramite130118Store.setMolino(MOLINO);
-  }
-
-  /**
    * Selecciona el estado.
    */
   estadoSeleccion(): void {
@@ -543,12 +514,13 @@ export class SolicitudComponent implements OnInit, OnDestroy {
 
   /**
    * Método para validar el formulario.
-   * @returns void
+   * @returns boolean
    */
-  validarFormulario(): void {
+  validarFormulario(): boolean {
     if (this.FormSolicitud.invalid) {
       this.FormSolicitud.markAllAsTouched();
     }
+    return this.FormSolicitud.valid;
   }
 
   /**

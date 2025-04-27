@@ -87,7 +87,6 @@ export interface DatosGenerales {
   export interface CompleteForm {
     domicilioEstablecimiento: DomicilioEstablecimiento;
     scianForm: ScianForm;
-    solicitudForm: SolicitudForm;
     solicitudEstablecimientoForm: SolicitudEstablecimientoForm;
     formMercancias: FormMercancias;
   }
