@@ -5,8 +5,8 @@ import { ReactiveFormsModule, FormsModule, FormBuilder } from '@angular/forms';
 import { of, Subject } from 'rxjs';
 import { RegistroService } from '../../services/registro.service';
 import { ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
-import { Tramite110221Query } from '../../../../estados/queries/Tramite110221.query';
-import { Tramite110221Store } from '../../../../estados/tramites/Tramite110221.store';
+import { Tramite110223Query } from '../../../../estados/queries/Tramite110223.query';
+import { Tramite110223Store } from '../../../../estados/tramites/Tramite110223.store';
 
 describe('CertificadoDeOrigenComponent', () => {
   let component: CertificadoDeOrigenComponent;
@@ -62,8 +62,8 @@ describe('CertificadoDeOrigenComponent', () => {
       providers: [
         FormBuilder,
         { provide: RegistroService, useValue: registroServiceMock },
-        { provide: Tramite110221Store, useValue: storeMock },
-        { provide: Tramite110221Query, useValue: queryMock },
+        { provide: Tramite110223Store, useValue: storeMock },
+        { provide: Tramite110223Query, useValue: queryMock },
         { provide: ValidacionesFormularioService, useValue: validacionesServiceMock },
       ],
     }).compileComponents();

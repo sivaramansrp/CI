@@ -6,12 +6,12 @@ import { ReplaySubject, Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { InputFechaComponent } from '@libs/shared/data-access-user/src/tramites/components/input-fecha/input-fecha.component';
 import { RegistroService } from '../../services/registro.service';
-import { Solicitud110221State } from '../../../../estados/tramites/Tramite110221.store';
-import { Tramite110221Query } from '../../../../estados/queries/Tramite110221.query';
-import { Tramite110221Store } from '../../../../estados/tramites/Tramite110221.store';
-import mercanciaDisponsibleTable from '@libs/shared/theme/assets/json/110221/mercancia-disponsible.json';
-import mercanciaSeleccionadasTable from '@libs/shared/theme/assets/json/110221/mercancias-seleccionadas.json';
-import mercanciaTable from '@libs/shared/theme/assets/json/110221/mercancia.json';
+import { Solicitud110223State } from '../../../../estados/tramites/Tramite110223.store';
+import { Tramite110223Query } from '../../../../estados/queries/tramite110223.query';
+import { Tramite110223Store } from '../../../../estados/tramites/Tramite110223.store';
+import mercanciaDisponsibleTable from '@libs/shared/theme/assets/json/110223/mercancia-disponsible.json';
+import mercanciaSeleccionadasTable from '@libs/shared/theme/assets/json/110223/mercancias-seleccionadas.json';
+import mercanciaTable from '@libs/shared/theme/assets/json/110223/mercancia.json';
 
 
 const TERCEROS_TEXTO_DE_ALERTA =
@@ -129,7 +129,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
   /**
    * Estado actual de la solicitud.
    */
-  public solicitudState!: Solicitud110221State;
+  public solicitudState!: Solicitud110223State;
 
   /**
    * Notificador para destruir observables al destruir el componente.
@@ -318,8 +318,8 @@ optionsTipoFactura!: Catalogo[];
   constructor(
     private registroService: RegistroService,
     public fb: FormBuilder,
-    private store: Tramite110221Store,
-    private query: Tramite110221Query,
+    private store: Tramite110223Store,
+    private query: Tramite110223Query,
     private validacionesService: ValidacionesFormularioService
   ) {
     // El constructor se utiliza para la inyección de dependencias.
@@ -610,7 +610,7 @@ optionsTipoFactura!: Catalogo[];
   setValoresStore(
     form: FormGroup,
     campo: string,
-    metodoNombre: keyof Tramite110221Store
+    metodoNombre: keyof Tramite110223Store
   ): void {
     const VALOR = form.get(campo)?.value;
     (this.store[metodoNombre] as (value: unknown) => void)(VALOR);
@@ -662,8 +662,9 @@ optionsTipoFactura!: Catalogo[];
         nombreTecnico: ['', [Validators.required]],
         nombreComercialDelaMercancia: ['', [Validators.required]],
 
-        criterioParaConferir: ['', [Validators.required]],
-        nombreEnIngles: ['', [Validators.required]],
+        criterioParaPreferencial: ['', [Validators.required]],
+        valorContenidoRegional: ['', [Validators.required]],
+        otrasInstancias: ['', [Validators.required]],
         cantidad: [
           this.solicitudState?.cantidad,
           [Validators.required, Validators.pattern(/^\d+$/)],
@@ -683,6 +684,10 @@ optionsTipoFactura!: Catalogo[];
           this.solicitudState?.numeroFactura,
           [Validators.required],
         ],
+        numeroSerie: [
+          this.solicitudState?.numeroSerie,
+          [Validators.required],
+        ]
       }),
     });
   }

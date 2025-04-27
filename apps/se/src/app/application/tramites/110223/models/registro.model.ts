@@ -31,7 +31,7 @@ export interface ColumnasTabla {
   };
   
   export const FECHA_FACTURA = {
-    labelNombre: 'Fecha fin',
+    labelNombre: 'Fecha de factura / Referencia',
     required: true,
     habilitado: true,
   };

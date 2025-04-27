@@ -6,7 +6,7 @@ import { Injectable } from '@angular/core';
 import { enviroment } from '../../../../enviroments/enviroment';
 
 /**
- * Servicio para gestionar las solicitudes relacionadas con los catálogos y datos del trámite 110221.
+ * Servicio para gestionar las solicitudes relacionadas con los catálogos y datos del trámite 110223.
  */
 @Injectable({
   providedIn: 'root',
@@ -35,7 +35,7 @@ export class RegistroService {
    * @returns Observable con la respuesta del catálogo de tratados.
    */
   getTratado() {
-    return this.http.get<RespuestaCatalogos>('assets/json/110221/tratado.json');
+    return this.http.get<RespuestaCatalogos>('assets/json/110223/tratado.json');
   }
 
   /**
@@ -43,7 +43,7 @@ export class RegistroService {
    * @returns Observable con la respuesta del catálogo de países.
    */
   getPais() {
-    return this.http.get<RespuestaCatalogos>('assets/json/110221/pais.json');
+    return this.http.get<RespuestaCatalogos>('assets/json/110223/pais.json');
   }
 
   /**
@@ -51,7 +51,7 @@ export class RegistroService {
    * @returns Observable con la respuesta del catálogo de idiomas.
    */
   getIdioma() {
-    return this.http.get<RespuestaCatalogos>('assets/json/110221/idioma.json');
+    return this.http.get<RespuestaCatalogos>('assets/json/110223/idioma.json');
   }
 
   /**
@@ -59,7 +59,7 @@ export class RegistroService {
    * @returns Observable con la respuesta del catálogo de países de destino.
    */
   getPaisDestino() {
-    return this.http.get<RespuestaCatalogos>('assets/json/110221/pais.json');
+    return this.http.get<RespuestaCatalogos>('assets/json/110223/pais.json');
   }
 
   /**
@@ -67,7 +67,7 @@ export class RegistroService {
    * @returns Observable con la respuesta del catálogo de transportes.
    */
   getTransporte() {
-    return this.http.get<RespuestaCatalogos>('assets/json/110221/pais.json');
+    return this.http.get<RespuestaCatalogos>('assets/json/110223/pais.json');
   }
 
   /**
@@ -75,7 +75,7 @@ export class RegistroService {
    * @returns Observable con la respuesta del catálogo de entidades.
    */
   getEntidad() {
-    return this.http.get<RespuestaCatalogos>('assets/json/110221/entidad.json');
+    return this.http.get<RespuestaCatalogos>('assets/json/110223/entidad.json');
   }
 
   /**
@@ -83,7 +83,7 @@ export class RegistroService {
    * @returns Observable con la respuesta del catálogo de representaciones.
    */
   getRepresentacion() {
-    return this.http.get<RespuestaCatalogos>('assets/json/110221/entidad.json');
+    return this.http.get<RespuestaCatalogos>('assets/json/110223/entidad.json');
   }
 
   /**
@@ -92,7 +92,7 @@ export class RegistroService {
    */
   getTipoFactura() {
     return this.http.get<RespuestaCatalogos>(
-      'assets/json/110221/tipofactura.json'
+      'assets/json/110223/tipofactura.json'
     );
   }
 
@@ -101,7 +101,7 @@ export class RegistroService {
    * @returns Observable con la respuesta del catálogo de UMC.
    */
   getUMC() {
-    return this.http.get<RespuestaCatalogos>('assets/json/110221/umc.json');
+    return this.http.get<RespuestaCatalogos>('assets/json/110223/umc.json');
   }
 
   /**
@@ -109,7 +109,7 @@ export class RegistroService {
    * @returns Observable con la respuesta del catálogo de unidades de medida.
    */
   getUnidadMedida() {
-    return this.http.get<RespuestaCatalogos>('assets/json/110221/umc.json');
+    return this.http.get<RespuestaCatalogos>('assets/json/110223/umc.json');
   }
 
   /**
@@ -129,7 +129,7 @@ export class RegistroService {
    * @throws Lanzará un error si la solicitud HTTP falla.
    */
  public getSolicitudesTabla():Observable<ColumnasTabla[]> {
-  return this.http.get<ColumnasTabla[]>('assets/json/110221/mercancia-disponsible.json').pipe(
+  return this.http.get<ColumnasTabla[]>('assets/json/110223/mercancia-disponsible.json').pipe(
     catchError((error) => {
       return throwError(() => error);
     })
@@ -137,7 +137,7 @@ export class RegistroService {
 }
 
 public getSolicitudesDataTabla():Observable<SeleccionadasTabla[]> {
-  return this.http.get<SeleccionadasTabla[]>('assets/json/110221/mercancia-seleccionadas.json').pipe(
+  return this.http.get<SeleccionadasTabla[]>('assets/json/110223/mercancia-seleccionadas.json').pipe(
     catchError((error) => {
       return throwError(() => error);
     })

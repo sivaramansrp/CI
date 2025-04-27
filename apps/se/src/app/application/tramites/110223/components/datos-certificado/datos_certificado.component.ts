@@ -4,9 +4,9 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { RegistroService } from '../../services/registro.service';
-import { Solicitud110221State } from '../../../../estados/tramites/Tramite110221.store';
-import { Tramite110221Query } from '../../../../estados/queries/Tramite110221.query';
-import { Tramite110221Store } from '../../../../estados/tramites/Tramite110221.store';
+import { Solicitud110223State } from '../../../../estados/tramites/Tramite110223.store';
+import { Tramite110223Query } from '../../../../estados/queries/tramite110223.query';
+import { Tramite110223Store } from '../../../../estados/tramites/Tramite110223.store';
 
 /**
  * Componente que representa el formulario de datos del certificado en el trámite.
@@ -47,7 +47,7 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
   /**
    * Estado actual de la solicitud.
    */
-  public solicitudState!: Solicitud110221State;
+  public solicitudState!: Solicitud110223State;
 
   /**
    * Notificador para destruir observables al destruir el componente.
@@ -98,8 +98,8 @@ optionsRepresentacion!: Catalogo[];
   constructor(
     private registroService: RegistroService,
     public fb: FormBuilder,
-    private store: Tramite110221Store,
-    private query: Tramite110221Query,
+    private store: Tramite110223Store,
+    private query: Tramite110223Query,
     private validacionesService: ValidacionesFormularioService
   ) {
     // El constructor se utiliza para la inyección de dependencias.
@@ -204,7 +204,7 @@ optionsRepresentacion!: Catalogo[];
   setValoresStore(
     form: FormGroup,
     campo: string,
-    metodoNombre: keyof Tramite110221Store
+    metodoNombre: keyof Tramite110223Store
   ): void {
     const VALOR = form.get(campo)?.value;
     (this.store[metodoNombre] as (value: unknown) => void)(VALOR);
