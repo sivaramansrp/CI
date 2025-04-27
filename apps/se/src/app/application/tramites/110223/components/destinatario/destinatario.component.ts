@@ -25,12 +25,6 @@ import { Tramite110223Store } from '../../../../estados/tramites/Tramite110223.s
   styleUrl: './destinatario.component.css',
 })
 export class DestinatarioComponent implements OnInit, OnDestroy {
-    /**
-   * Indica si un campo es requerido o no.
-   * @type {boolean}
-   * @default false
-   */
-    noRequerido: boolean = false;
   /**
  * 
  * Una cadena que representa la clase CSS para una alerta de información.
@@ -201,23 +195,13 @@ options!: Catalogo[];
     this.registroForm = this.fb.group({
       validacionForm: this.fb.group({
         nombre: [this.solicitudState?.nombre, [Validators.required]],
-        apellidoPrimer: [
-          this.solicitudState?.apellidoPrimer,
-          [Validators.required],
-        ],
-        apellidoSegundo: [
-          this.solicitudState?.apellidoSegundo,
-          [Validators.required],
-        ],
         numeroFiscal: [
           this.solicitudState?.numeroFiscal,
           [Validators.required],
         ],
-        razonSocial: [this.solicitudState?.razonSocial, [Validators.required]],
         ciudad: [this.solicitudState?.ciudad, [Validators.required]],
         calle: [this.solicitudState?.calle, [Validators.required]],
         numeroLetra: [this.solicitudState?.numeroLetra, [Validators.required]],
-        lada: [this.solicitudState?.lada, [Validators.required]],
         numeroDeRegistroFiscal: [this.solicitudState?.numeroDeRegistroFiscal, [Validators.required]],
         telefono: [
           this.solicitudState?.telefono,

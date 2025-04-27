@@ -6,23 +6,9 @@
         <label>Nombre(s)*:</label>
         <input type="text" class="form-control" formControlName="nombre" (change)="setValoresStore(validacionForm, 'nombre', 'setNombre')" />
       </div>
-      <div class="col-md-4 mb-3" *ngIf="noRequerido">
-        <label>Primer apellido:</label>
-        <input type="text" class="form-control" id="primerApellido" formControlName="apellidoPrimer" (click)="onClick()" (change)=" setValoresStore( validacionForm, 'apellidoPrimer', 'setApellidoPrimer' ) " />
-      </div>
-      <div class="col-md-4 mb-3" *ngIf="noRequerido">
-        <label>Segundo apellido:</label>
-        <input type="text" class="form-control" id="segundoApellido" formControlName="apellidoSegundo" (change)=" setValoresStore( validacionForm, 'apellidoSegundo', 'setApellidoSegundo' ) " />
-      </div>
       <div class="col-md-4 mb-3">
         <label>Número de registro fiscal*:</label>
         <input type="text" class="form-control" id="denominacion" formControlName="numeroFiscal" (change)=" setValoresStore(validacionForm, 'numeroFiscal', 'setNumeroFiscal') " />
-      </div>
-    </div>
-    <div class="row" *ngIf="noRequerido">
-      <div class="col-md-8 mb-3">
-        <label>Razón social:</label>
-        <input type="text" class="form-control" [ngClass]="{ 'gray-class': registroForm.get('validacionForm.apellidoPrimer')?.value !== '' }" id="denominacion" [readonly]=" registroForm.get('validacionForm.apellidoPrimer')?.value !== '' " formControlName="razonSocial" (change)=" setValoresStore(validacionForm, 'razonSocial', 'setRazonSocial') " />
       </div>
     </div>
     <ng-titulo titulo="Domicilio del destinatario" />
@@ -35,10 +21,6 @@
         <label>Número y/o letra*:</label>
         <input type="text" class="form-control" id="primerApellido" formControlName="numeroLetra" (change)=" setValoresStore(validacionForm, 'numeroLetra', 'setNumeroLetra') " />
       </div>
-      <div class="col-md-1 mb-3" *ngIf="noRequerido">
-        <label>Lada:</label>
-        <input type="text" class="form-control" id="segundoApellido" formControlName="lada" (change)="setValoresStore(validacionForm, 'lada', 'setLada')" />
-      </div>
     </div>
     <div class="row">
       <div class="col-md-8 mb-3">
@@ -46,13 +28,7 @@
         <input type="text" class="form-control" id="denominacion" formControlName="ciudad" (change)="setValoresStore(validacionForm, 'ciudad', 'setCiudad')" />
       </div>
       <div class="col-md-4 mb-3">
-        <app-catalogo-select
-          [catalogo]="options"
-          [label]="'País destino'"
-          [required]="true"
-          formControlName="nacion"
-          (change)="setValoresStore(validacionForm, 'nacion', 'setNacion')"
-            ></app-catalogo-select>
+        <app-catalogo-select [catalogo]="options" [label]="'País destino'" [required]="true" formControlName="nacion" (change)="setValoresStore(validacionForm, 'nacion', 'setNacion')"></app-catalogo-select>
       </div>
     </div>
     <div class="row">
@@ -91,14 +67,12 @@
         <label>Cargo*:</label>
         <input type="text" class="form-control" id="primerApellido" formControlName="numeroLetra" (change)=" setValoresStore(validacionForm, 'numeroLetra', 'setNumeroLetra') " />
       </div>
-      <div class="col-md-4 mb-3" >
+      <div class="col-md-4 mb-3">
         <label>Número de registro fiscal*:</label>
         <input type="text" class="form-control" id="segundoApellido" formControlName="numeroDeRegistroFiscal" (change)="setValoresStore(validacionForm, 'numeroDeRegistroFiscal', 'setnumeroDeRegistroFiscal')" />
       </div>
-
     </div>
     <div class="row">
-
       <div class="col-md-4 mb-3">
         <label>Correo electrónico*:</label>
         <input type="text" class="form-control" id="primerApellido" formControlName="correoElectronico" (change)=" setValoresStore( validacionForm, 'correoElectronico', 'setCorreoElectronico' ) " />
@@ -107,15 +81,9 @@
         <label>Teléfono*:</label>
         <input type="text" class="form-control" id="segundoApellido" formControlName="telefono" (change)="setValoresStore(validacionForm, 'telefono', 'setTelefono')" />
       </div>
-
       <div class="col-md-4 mb-3">
         <label>Fax:</label>
         <input type="text" class="form-control" id="nombre" formControlName="fax" (change)="setValoresStore(validacionForm, 'fax', 'setFax')" />
-      </div>
-    </div>
-    <div class="mt-5" *ngIf="noRequerido">
-      <div class="mt-5">
-        <ng-alert [CONTENIDO]="TEXTOS.ADJUNTAR" [CUSTOMECLASS]="infoAlert"></ng-alert>
       </div>
     </div>
   </ng-container>
