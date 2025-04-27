@@ -35,6 +35,7 @@ export interface Solicitud110223State {
   calle: string;
   numeroLetra: string;
   lada: string;
+  numeroDeRegistroFiscal: string;
   telefono: string;
   fax: string;
   correoElectronico: string;
@@ -90,6 +91,7 @@ export function createInitialState(): Solicitud110223State {
     calle: '',
     numeroLetra: '',
     lada: '',
+    numeroDeRegistroFiscal: '',
     telefono: '',
     fax: '',
     correoElectronico: '',
@@ -541,6 +543,17 @@ export class Tramite110223Store extends Store<Solicitud110223State> {
       lada,
     }));
   }
+  /**
+   * Establece la numeroDeRegistroFiscal del número telefónico.
+   * @param numeroDeRegistroFiscal Cadena que representa la numeroDeRegistroFiscal.
+   */
+  public setnumeroDeRegistroFiscal(numeroDeRegistroFiscal: string) {
+    this.update((state) => ({
+      ...state,
+      numeroDeRegistroFiscal,
+    }));
+  }
+  
   /**
    * Establece el número telefónico.
    * @param telefono Cadena que representa el número telefónico.

@@ -25,6 +25,12 @@ import { Tramite110223Store } from '../../../../estados/tramites/Tramite110223.s
   styleUrl: './destinatario.component.css',
 })
 export class DestinatarioComponent implements OnInit, OnDestroy {
+    /**
+   * Indica si un campo es requerido o no.
+   * @type {boolean}
+   * @default false
+   */
+    noRequerido: boolean = false;
   /**
  * 
  * Una cadena que representa la clase CSS para una alerta de información.
@@ -212,6 +218,7 @@ options!: Catalogo[];
         calle: [this.solicitudState?.calle, [Validators.required]],
         numeroLetra: [this.solicitudState?.numeroLetra, [Validators.required]],
         lada: [this.solicitudState?.lada, [Validators.required]],
+        numeroDeRegistroFiscal: [this.solicitudState?.numeroDeRegistroFiscal, [Validators.required]],
         telefono: [
           this.solicitudState?.telefono,
           [Validators.required, Validators.pattern(/^\d+$/)],

@@ -429,7 +429,7 @@ optionsTipoFactura!: Catalogo[];
     this.getTipoFactura();
   }
   cancelar() {
-    this.esFormulario = false; // Added `this` to comply with `class-methods-use-this`.
+    this.esFormulario = false; // Se agregó `this` para cumplir con `class-methods-use-this`.
     this.esMercanciaEnEdicion = true;
   }
   /**

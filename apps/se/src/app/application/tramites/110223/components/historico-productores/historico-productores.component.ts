@@ -9,7 +9,8 @@ import { REGEX_SOLO_DIGITOS } from '@libs/shared/data-access-user/src';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
-import { TablaSeleccion } from '@libs/shared/data-access-user/src';
+import { TablaSeleccion, TableComponent } from '@libs/shared/data-access-user/src';
+import { ColumnasTabla, FECHA_FACTURA, FECHA_FINAL, FECHA_INICIAL, SeleccionadasTabla } from '../../models/registro.model';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { Tramite110216Query } from '../../../../estados/queries/tramite110216.query';
 import { Tramite110216State } from '../../../../estados/tramites/tramite110216.store';
@@ -112,6 +113,14 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
    */
   destroyNotifier$: Subject<void> = new Subject();
 
+  /**
+   * Indica si se está editando una mercancía.
+   */
+  esMercanciaEnEdicion = false;
+  /**
+   * Tabla de selección de mercancías.
+   */
+  tablaSeleccion = TablaSeleccion;
   /**
    * Estado actual del trámite.
    */
@@ -258,6 +267,7 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
    * Agrega un productor si el formulario es válido.
    */
   agregarExportador(): void {
+    this.esMercanciaEnEdicion = true;
     this.agregarDatosProductorFormulario.markAllAsTouched();
     if (this.agregarDatosProductorFormulario.valid) {
       this.cerrarModal();
@@ -296,4 +306,52 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
+
+    /**
+     * Configuración de las columnas de la tabla de mercancías seleccionadas.
+     * Define los encabezados y las claves asociadas a cada columna de la tabla de mercancías seleccionadas.
+     */
+    public headersData: ConfiguracionColumna<SeleccionadasTabla>[] = [
+      {
+        encabezado: 'Fracción arancelaria',
+        clave: (ele: SeleccionadasTabla) => ele.fraccionArancelaria,
+        orden: 1,
+      },
+      {
+        encabezado: 'Cantidad',
+        clave: (ele: SeleccionadasTabla) => ele.cantidad,
+        orden: 2,
+      },
+      {
+        encabezado: 'Unidad de medida',
+        clave: (ele: SeleccionadasTabla) => ele.unidadMedida,
+        orden: 3,
+      },
+      {
+        encabezado: 'Valor mercancía',
+        clave: (ele: SeleccionadasTabla) => ele.valorMercancia,
+        orden: 4,
+      },
+      {
+        encabezado: 'Tipo de factura',
+        clave: (ele: SeleccionadasTabla) => ele.tipoFactura,
+        orden: 5,
+      },
+      {
+        encabezado: 'Número factura',
+        clave: (ele: SeleccionadasTabla) => ele.numFactura,
+        orden: 6,
+      },
+      {
+        encabezado: 'Complemento descripción',
+        clave: (ele: SeleccionadasTabla) => ele.complementoDescripcion,
+        orden: 7,
+      },
+      {
+        encabezado: 'Fecha factura',
+        clave: (ele: SeleccionadasTabla) => ele.fechaFactura,
+        orden: 8,
+      },
+    ];
+  
 }

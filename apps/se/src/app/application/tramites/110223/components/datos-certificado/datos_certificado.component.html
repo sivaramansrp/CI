@@ -10,9 +10,6 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-md-4 mb-3">
-        <app-catalogo-select [catalogo]="optionsIdioma" [label]="'Idioma'" [required]="true" id="idioma" formControlName="idioma" (change)="setValoresStore(validacionForm, 'idioma', 'setIdioma')"></app-catalogo-select>
-      </div>
       <ng-container *ngIf="isJustificacion">
         <ng-titulo titulo="Justificación para obtención del certificado" />
         <div class="row">
