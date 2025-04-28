@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { ConfiguracionColumna, TablaAcciones } from '@ng-mf/data-access-user';
+import { ConfiguracionColumna, ESTADO_REGISTRO, TablaAcciones, TEXTO_FILA_REGISTRO } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
@@ -226,5 +226,14 @@ export class TablaDinamicaComponent<T> {
    */
   cambiarValor(row: any): void {
     this.alternarValor.emit(row);
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+obtenerTextoBoton(fila:any):string{
+ if(fila?.desEstatus && fila?.desEstatus===TEXTO_FILA_REGISTRO.BAJA){
+     return ESTADO_REGISTRO.ACTIVAR
+  }
+  return ESTADO_REGISTRO.BAJA;
+ 
   }
 }
