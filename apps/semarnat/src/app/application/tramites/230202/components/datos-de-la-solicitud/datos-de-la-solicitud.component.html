@@ -102,7 +102,33 @@
               formControlName="lungarDeEntrada"
               id="lungarDeEntrada"
               [required]="true"
-              (change)="setValoresStore(datosMercancia, 'lungarDeEntrada', 'setLungarDeEntrada')"
+              (change)="setValoresStore(reexportacionForm, 'lungarDeEntrada', 'setLungarDeEntrada')"
+            />
+          </div>
+        </div>
+        <ng-titulo titulo="Datos del transporte"></ng-titulo>
+        <div class="row">
+          <div class="col-md-4">
+            <app-catalogo-select
+              [catalogo]="medioDeTransporte"
+              [label]="'Medio de transporte'"
+              formControlName="medioDeTransporte"
+              [required]="true"
+              (change)="medioDeTransporteSeleccion()"
+              name="medioDeTransporte"
+            >
+            </app-catalogo-select>
+          </div>
+          <div class="col-md-8">
+            <label for="cantidad">Número y descripción de los bultos y/o contenedores</label>
+            <span class="require">*</span>
+            <input
+              type="text"
+              class="form-control"
+              formControlName="numeroYDescripcion"
+              id="numeroYDescripcion"
+              [required]="true"
+              (change)="setValoresStore(reexportacionForm, 'numeroYDescripcion', 'setNumeroYDescripcion')"
             />
           </div>
         </div>

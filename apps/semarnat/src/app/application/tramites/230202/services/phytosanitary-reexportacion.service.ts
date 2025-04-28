@@ -63,4 +63,11 @@ export class PhytosanitaryReexportacionService {
     return this.http.get<RespuestaCatalogos>('assets/json/230202/nombreComun.json');
   }
 
+  getUnidadDeMedida(): Observable<RespuestaCatalogos> {
+    return this.http.get<RespuestaCatalogos>('assets/json/230202/unidadDeMedida.json');
+  }
+
+  getMedioDeTransporte(): Observable<RespuestaCatalogos> {
+    return this.http.get<RespuestaCatalogos>('assets/json/230202/medioDeTransporte.json');
+  }
 }

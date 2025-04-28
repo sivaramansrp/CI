@@ -38,7 +38,10 @@ export interface Solicitud230202State {
   genero: Catalogo[] | null;
   especie: Catalogo[] | null;
   nombreComun: Catalogo[] | null;
-  
+  unidadDeMedida: Catalogo[] | null;
+  lungarDeEntrada: string;
+  medioDeTransporte: Catalogo[] | null;
+  numeroYDescripcion: string;
 }
 
 /**
@@ -62,6 +65,10 @@ export function createInitialState(): Solicitud230202State {
     genero: null,
     especie: null,
     nombreComun: null,
+    unidadDeMedida: null,
+    lungarDeEntrada: '',
+    medioDeTransporte: null,
+    numeroYDescripcion: '',
   };
 }
 
@@ -193,6 +200,34 @@ export class Tramite230202Store extends Store<Solicitud230202State> {
     this.update((state) => ({
       ...state,
       nombreComun,
+    }));
+  }
+
+  public setUnidadDeMedida(unidadDeMedida: Catalogo[]) {
+    this.update((state) => ({
+      ...this.getValue(),
+      unidadDeMedida,
+    }));
+  }
+
+  public setLungarDeEntrada(lungarDeEntrada: string) {
+    this.update((state) => ({
+      ...state,
+      lungarDeEntrada: lungarDeEntrada,
+    }));
+  }
+
+  public setMedioDeTransporte(medioDeTransporte: Catalogo[]) {
+    this.update((state) => ({
+      ...state,
+      medioDeTransporte: medioDeTransporte,
+    }));
+  }
+
+  public setNumeroYDescripcion(numeroYDescripcion: string) {
+    this.update((state) => ({
+      ...state,
+      numeroYDescripcion: numeroYDescripcion,
     }));
   }
 

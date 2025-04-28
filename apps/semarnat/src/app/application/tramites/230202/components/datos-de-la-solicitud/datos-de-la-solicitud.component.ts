@@ -83,6 +83,8 @@ export class DatosDeLaSolicitudComponent {
   genero!: Catalogo[];
   especie!: Catalogo[];
   nombreComun!: Catalogo[];
+  unidadDeMedida!: Catalogo[];
+  medioDeTransporte!: Catalogo[];
   fecha: FormControl = new FormControl('');
   fechaSeleccionada: FormControl = new FormControl('');
   @ViewChildren(CrosslistComponent) crossList!: QueryList<CrosslistComponent>;
@@ -178,6 +180,22 @@ export class DatosDeLaSolicitudComponent {
           this.solicitudState?.descripcionProducto,
           [Validators.required],
         ],
+        unidadDeMedida: [
+          this.solicitudState?.unidadDeMedida,
+          Validators.required,
+        ],
+        lungarDeEntrada: [
+          this.solicitudState?.lungarDeEntrada,
+          Validators.required,
+        ],
+        medioDeTransporte: [
+          this.solicitudState?.medioDeTransporte,
+          Validators.required,
+        ],
+        numeroYDescripcion: [
+          this.solicitudState?.numeroYDescripcion,
+          Validators.required,
+        ],
       }),
     });
 
@@ -200,6 +218,7 @@ export class DatosDeLaSolicitudComponent {
         genero: [this.solicitudState?.genero, Validators.required],
         especie: [this.solicitudState?.especie, Validators.required],
         nombreComun: [this.solicitudState?.nombreComun, Validators.required],
+       
       }),
     });
   }
@@ -281,7 +300,15 @@ export class DatosDeLaSolicitudComponent {
     const UNIDADDEMEDIDA$ = this.phytosanitaryReexportacionService
       .getUnidadDeMedida().pipe(
         map((resp) => {
-          this.nombreComun = resp.data;
+          this.unidadDeMedida = resp.data;
+        })
+      );
+
+    const MEDIODETRANSPORTE$ = this.phytosanitaryReexportacionService
+      .getMedioDeTransporte()
+      .pipe(
+        map((resp) => {
+          this.medioDeTransporte = resp.data;
         })
       );
 
@@ -295,7 +322,8 @@ export class DatosDeLaSolicitudComponent {
       GENERO$,
       ESPECIE$,
       NOMBRECOMUN$,
-      UNIDADDEMEDIDA$
+      UNIDADDEMEDIDA$,
+      MEDIODETRANSPORTE$
     )
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe();
@@ -362,9 +390,16 @@ export class DatosDeLaSolicitudComponent {
 
   unidadDeMedidaSeleccion() {
     const UNIDADDEMEDIDA = this.solicitudForm.get(
-      'datosMercancia.unidadDeMedida'
+      'reexportacionForm.unidadDeMedida'
     )?.value;
     this.store.setUnidadDeMedida(UNIDADDEMEDIDA);
+  }
+
+  medioDeTransporteSeleccion() {
+    const MEDIODETRANSPORTE = this.solicitudForm.get(
+      'reexportacionForm.medioDeTransporte'
+    )?.value;
+    this.store.setMedioDeTransporte(MEDIODETRANSPORTE);
   }
 
   public getCrossListBtn() {
