@@ -664,10 +664,26 @@ export const BIEN_FINAL = [
   },
 ]
 
-export const FORMA_VALIDO_ALERT = {
+export const ALERTA_DE_APLICACION_REGISTRADA = {
   message: `
   <p>La solicitud ha quedado registrada con el número temporal 202770947. Este no tiene validez legal y sirve solamente para efectos de identificar tu solicitud. Un folio oficial será asignado a la solicitud en el momento en que esta sea firmada.</a>`
 };
+
+export const PAIS_ELEGIDO_ALERT = {
+  message: `
+  <p>Corrija los siguientes errores</p>
+  <p>El pais elegido para el hilado no es valido para el regimen seleccionado</p>`
+};
+
+/**
+  * @constant ERROR_FORMA_ALERT
+  * @type {string}
+  * @description
+  * Este mensaje de alerta informa al usuario sobre el proceso para agregar datos del traslado y la sede, 
+  * indicando que a cada traslado le corresponde una sede con un máximo de dos itinerarios.
+  */
+export const ERROR_FORMA_ALERT =
+'<strong>¡Error de registro! </strong>Faltan campos por capturar.';
 
 export const RADIO_INDICAR = [
   {

@@ -7,6 +7,7 @@ import { CommonModule } from '@angular/common';
 import { InputRadioComponent } from '@libs/shared/data-access-user/src';
 import { RADIO_INDICAR } from '../../constantes/solicitud-de-registro-tpl.enum';
 import { ServicioDeFormularioService } from '../../services/forma-servicio/servicio-de-formulario.service';
+import { SolicitudDeRegistroTplService } from '../../services/solicitud-de-registro-tpl.service';
 
 
 @Component({
@@ -23,7 +24,8 @@ export class ProcesoProductivoComponent implements OnInit , OnDestroy{
     paisDeOrigen: Catalogo[] = [];
     opcionesDeRadioIndicar = RADIO_INDICAR;
   constructor(private fb: FormBuilder,
-    private servicioDeFormularioService: ServicioDeFormularioService,
+    private solicitudDeRegistroTplService: SolicitudDeRegistroTplService,
+    private servicioDeFormularioService: ServicioDeFormularioService
   ) {
     // Reservado para futuras inyecciones de dependencias o inicializaciones.
   }
@@ -40,11 +42,14 @@ export class ProcesoProductivoComponent implements OnInit , OnDestroy{
       paisEnQueSeRealizoElEnsamble: ['', Validators.required],
     });
     this.obtenerDatosEstados();
-
+    this.servicioDeFormularioService.registerForm(
+      'procesoProductivoForm',
+      this.procesoProductivoForm
+    );
   }
 
     obtenerDatosEstados(): void {
-        this.servicioDeFormularioService
+        this.solicitudDeRegistroTplService
           .obtenerDatosEstados()
           .pipe(takeUntil(this.destroy$))
           .subscribe((resp: Catalogo[]) => { 

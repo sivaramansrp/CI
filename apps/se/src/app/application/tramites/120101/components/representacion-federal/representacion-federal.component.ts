@@ -143,7 +143,7 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
       )
       .subscribe();
     this.servicioDeFormularioService.registerForm(
-      'representacionFederal',
+      'representacionFederalForm',
       this.ninoFormGroup
     );
     this.obtenerEstadosDatos();

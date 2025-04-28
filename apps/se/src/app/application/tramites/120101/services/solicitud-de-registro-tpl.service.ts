@@ -1,6 +1,7 @@
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { InsumosTabla } from '../models/insumos.model';
 import { Observable } from 'rxjs';
 import { RespuestaCuposTabla } from '../../120201/models/cupos.model';
 
@@ -72,5 +73,17 @@ export class SolicitudDeRegistroTplService {
    */
   getRepresentacionFederalDatos(): Observable<Catalogo> {
     return this.http.get<Catalogo>('assets/json/120101/representacion-federal.json');
+  }
+
+  obtenerDatosTablaInsumos(): Observable<InsumosTabla[]> {
+    return this.http.get<InsumosTabla[]>('assets/json/120101/insumos-tabla.json');
+  }  
+
+ obtenerDatosFraccionArancelaria(): Observable<Catalogo[]> {
+   return this.http.get<Catalogo[]>('assets/json/120101/pais.json');  
+  }
+
+  obtenerDatosEstados(): Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>('assets/json/120101/estados.json');  
   }
 }

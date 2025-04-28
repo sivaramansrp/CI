@@ -9,7 +9,7 @@
                 <a data-toggle="tab" (click)="seleccionaTab(2)" (keydown.enter)="seleccionaTab(2)"
                     (keydown.space)="seleccionaTab(2)" role="button" tabindex="2">Consultar cupo</a>
             </li>
-            @if (esFormaValido) {
+            @if (pestanaDosFormularioValido) {
                 <li [ngClass]="indice === 3 ? 'active' : ''">
                     <a data-toggle="tab" (click)="seleccionaTab(3)" (keydown.enter)="seleccionaTab(3)"
                         (keydown.space)="seleccionaTab(3)" role="button" tabindex="3">Insumos</a>

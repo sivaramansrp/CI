@@ -6,6 +6,7 @@ import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { InsumosTabla } from '../../models/insumos.model';
 import { ServicioDeFormularioService } from '../../services/forma-servicio/servicio-de-formulario.service';
+import { SolicitudDeRegistroTplService } from '../../services/solicitud-de-registro-tpl.service';
 
 @Component({
   selector: 'app-insumos',
@@ -27,18 +28,20 @@ export class InsumosComponent implements OnInit , OnDestroy{
 
   public tipoSeleccionTabla: TablaSeleccion = TablaSeleccion.CHECKBOX;
 
-    /**
-     * Configuración de columnas para la tabla de extranjeros.
-     */
-  
-    public tableHeaderExtranjeros: ConfiguracionColumna<InsumosTabla>[] = [
-      { encabezado: 'Descripción del insumo', clave: (item) => item.descripcionFraccionArancelaria, orden: 1 },
-      { encabezado: 'Fracción arancelaria', clave: (item) => item.fraccionArancelaria, orden: 2 },
-      { encabezado: 'País de origen', clave: (item) => item.paisDeOrigen, orden: 3 },
-    ];
+  /**
+   * Configuración de columnas para la tabla de extranjeros.
+   */
 
-constructor( private servicioDeFormularioService: ServicioDeFormularioService,
+  public tableHeaderExtranjeros: ConfiguracionColumna<InsumosTabla>[] = [
+    { encabezado: 'Descripción del insumo', clave: (item) => item.descripcionFraccionArancelaria, orden: 1 },
+    { encabezado: 'Fracción arancelaria', clave: (item) => item.fraccionArancelaria, orden: 2 },
+    { encabezado: 'País de origen', clave: (item) => item.paisDeOrigen, orden: 3 },
+  ];
+
+constructor(
+  private solicitudDeRegistroTplService: SolicitudDeRegistroTplService,
   private fb: FormBuilder,
+  private servicioDeFormularioService: ServicioDeFormularioService
   
 ) {
   //Reservado para futuras inyecciones de dependencias o inicializaciones.
@@ -57,22 +60,25 @@ constructor( private servicioDeFormularioService: ServicioDeFormularioService,
     paisDeOrigen: ['', Validators.required],
 
   })
+
+  this.servicioDeFormularioService.registerForm(
+    'insumosForm',
+    this.insumoForm
+  );
   }
    /**
      * Obtiene los datos de cancelación de autorizaciones del servicio.
      */
     obtenerDatosTablaInsumos(): void {
-      this.servicioDeFormularioService
+      this.solicitudDeRegistroTplService
         .obtenerDatosTablaInsumos()
         .pipe(takeUntil(this.destroy$))
         .subscribe((resp: InsumosTabla[]) => { 
           this.tablaInsumos = resp;
-          // eslint-disable-next-line no-console
-          console.log(resp)
         });
     }
     obtenerDatosFraccionArancelaria(): void {
-      this.servicioDeFormularioService
+      this.solicitudDeRegistroTplService
         .obtenerDatosFraccionArancelaria()
         .pipe(takeUntil(this.destroy$))
         .subscribe((resp: Catalogo[]) => { 
@@ -81,7 +87,7 @@ constructor( private servicioDeFormularioService: ServicioDeFormularioService,
     }
     
     obtenerDatosEstados(): void {
-      this.servicioDeFormularioService
+      this.solicitudDeRegistroTplService
         .obtenerDatosEstados()
         .pipe(takeUntil(this.destroy$))
         .subscribe((resp: Catalogo[]) => { 

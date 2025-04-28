@@ -13,7 +13,21 @@ import { InstrumentoCupoTPLForm } from '../../../120201/models/cupos.model';
 })
 export class PasoUnoComponent {
 
-  @Input() esFormaValido!: boolean;
+  /**
+ * @Input pestanaDosFormularioValido
+ * @description
+ * Indica si los formularios asociados a la pestaña dos del wizard son válidos.
+ * 
+ * Funcionalidad:
+ * - Recibe un valor booleano desde el componente padre para determinar la validez de los formularios en la pestaña dos.
+ * - Este valor puede ser utilizado para habilitar o deshabilitar acciones relacionadas con la pestaña dos.
+ * 
+ * @type {boolean}
+ * 
+ * @example
+ * <paso-uno [pestanaDosFormularioValido]="true"></paso-uno>
+ */
+  @Input() pestanaDosFormularioValido!: boolean;
    /**
    * compo doc
    * Emisor de eventos que notifica el cambio de pestaña.

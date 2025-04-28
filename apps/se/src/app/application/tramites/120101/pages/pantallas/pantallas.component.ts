@@ -1,3 +1,4 @@
+import { ALERTA_DE_APLICACION_REGISTRADA, CUPOS_PASOS, ERROR_FORMA_ALERT } from '../../constantes/solicitud-de-registro-tpl.enum';
 import {
   AVISO,
   AccionBoton,
@@ -6,7 +7,6 @@ import {
   WizardComponent,
   WizardService,
 } from '@libs/shared/data-access-user/src';
-import { CUPOS_PASOS, FORMA_VALIDO_ALERT } from '../../constantes/solicitud-de-registro-tpl.enum';
 import { Component, ViewChild, inject } from '@angular/core';
 import { ServicioDeFormularioService } from '../../services/forma-servicio/servicio-de-formulario.service';
 
@@ -41,7 +41,41 @@ export class PantallasComponent{
    */
   TEXTOS = AVISO.Aviso;
 
-  public formaValidoAlert = FORMA_VALIDO_ALERT.message;
+  /**
+ * @property applicacionRegistradaAlerta
+ * @description
+ * Contiene el mensaje de alerta que se muestra cuando la aplicación ha sido registrada.
+ * @type {string}
+  * @memberof PantallasComponent
+ */
+  public applicacionRegistradaAlerta = ALERTA_DE_APLICACION_REGISTRADA.message;
+
+  /**
+ * @property formErrorAlert
+ * @description
+ * Contiene el mensaje de alerta que se muestra cuando ocurre un error en el formulario.
+ * 
+ * Funcionalidad:
+ * - Utiliza el mensaje definido en la constante `ERROR_FORMA_ALERT`.
+ * - Este mensaje informa al usuario sobre los errores que deben corregirse en el formulario antes de continuar.
+ * 
+ * @type {string}
+ * 
+ * @example
+ * <div *ngIf="!esFormaValido">
+ *   {{ formErrorAlert }}
+ * </div>
+ */
+  public formErrorAlert = ERROR_FORMA_ALERT;
+
+  /**
+ * @property mostrarAplicacionRegistradaAlerta
+ * @description
+ * Indica si se debe mostrar el mensaje de alerta relacionado con el registro exitoso de la aplicación.
+ * @type {boolean}
+ * @default false
+ */
+  public mostrarAplicacionRegistradaAlerta: boolean = false;
   /**
    * Lista de pasos del wizard.
    * @type {ListaPasosWizard[]}
@@ -80,11 +114,32 @@ export class PantallasComponent{
  * @type {boolean}
  * @default false
  */
-  public esFormaValido: boolean = false;
+  public esFormaValido!: boolean;
 
+  /**
+ * @property wizardService
+ * @description
+ * Inyección del servicio `WizardService` para gestionar la lógica y el estado del componente wizard.
+ * @type {WizardService}
+ */
   wizardService = inject(WizardService);
 
+  /**
+ * @property subpestanaSeleccionada
+ * @description
+ * Almacena el índice de la subpestaña seleccionada dentro de un paso del wizard.
+ * @type {number}
+ */
   public subpestanaSeleccionada!: number;
+
+  /**
+ * @property pestanaDosFormularioValido
+ * @description
+ * Indica si los formularios asociados a la pestaña dos del wizard son válidos.
+ * @type {boolean}
+ * @default false
+ */
+  public pestanaDosFormularioValido: boolean = false;
 
   /**
  * @constructor
@@ -110,11 +165,78 @@ export class PantallasComponent{
         false) &&
       (this.servicioDeFormularioService.isFormValid('consultarCupoForm') ??
         false) &&
-      (this.servicioDeFormularioService.isFormValid('representacionFederal') ??
-        false)
+      (this.servicioDeFormularioService.isFormValid('representacionFederalForm') ??
+        false) &&
+      (this.servicioDeFormularioService.isFormValid('insumosForm') ??
+      false) &&
+      (this.servicioDeFormularioService.isFormValid('procesoProductivoForm') ??
+      false)
     );
   }
 
+  /**
+ * @getter esConsultarCupoFormValid
+ * @description
+ * Verifica si el formulario `consultarCupoForm` es válido.
+ * @returns {boolean} - `true` si el formulario es válido, de lo contrario `false`.
+ */
+  get esConsultarCupoFormValid(): boolean {
+    return this.servicioDeFormularioService.isFormValid('consultarCupoForm') ?? false;
+  }
+
+  /**
+ * @getter esBienFinalFormValid
+ * @description
+ * Verifica si el formulario `esBienFinalFormValid` es válido.
+ * @returns {boolean} - `true` si el formulario es válido, de lo contrario `false`.
+ */
+  get esBienFinalFormValid(): boolean {
+    return this.servicioDeFormularioService.isFormValid('bienFinalForm') ?? false;
+  }
+
+  /**
+ * @getter esRepresentacionFederalFormValid
+ * @description
+ * Verifica si el formulario `esRepresentacionFederalFormValid` es válido.
+ * @returns {boolean} - `true` si el formulario es válido, de lo contrario `false`.
+ */
+  get esRepresentacionFederalFormValid(): boolean {
+    return this.servicioDeFormularioService.isFormValid('representacionFederalForm') ?? false;
+  }
+
+  /**
+ * @getter esInsumosFormValid
+ * @description
+ * Verifica si el formulario `esInsumosFormValid` es válido.
+ * @returns {boolean} - `true` si el formulario es válido, de lo contrario `false`.
+ */
+  get esInsumosFormValid(): boolean {
+    return this.servicioDeFormularioService.isFormValid('insumosForm') ?? false;
+  }
+
+  /**
+ * @getter esProcesoProductivoFormValid
+ * @description
+ * Verifica si el formulario `esProcesoProductivoFormValid` es válido.
+ * @returns {boolean} - `true` si el formulario es válido, de lo contrario `false`.
+ */
+  get esProcesoProductivoFormValid(): boolean {
+    return this.servicioDeFormularioService.isFormValid('procesoProductivoForm') ?? false;
+  }
+
+/**
+ * @method pestanaCambiado
+ * @description
+ * Maneja el evento de cambio de pestaña en el wizard.
+ * 
+ * Funcionalidad:
+ * - Actualiza el índice de la subpestaña seleccionada con el valor proporcionado por el evento.
+ * 
+ * @param {number} event - El índice de la nueva subpestaña seleccionada.
+ * 
+ * @example
+ * this.pestanaCambiado(2); // Cambia a la subpestaña con índice 2.
+ */
   public pestanaCambiado(event: number): void {
     if (event) {
       this.subpestanaSeleccionada = event;
@@ -130,12 +252,9 @@ export class PantallasComponent{
   public getValorIndice(e: AccionBoton): void {
     this.esFormaValido = this.verificarLaValidezDelFormulario();
     if (e.valor > 0 && e.valor <= this.pantallasPasos.length) {
-        if (e.accion === 'cont' && this.esFormaValido) {
-          this.wizardService.cambio_indice(this.datosPasos.indice);
-          this.indice = e.valor + 1;
-          this.datosPasos.indice = e.valor + 1;
-          this.wizardComponent.siguiente();
-        } else if (e.accion === 'ant' && this.esFormaValido){
+        if (e.accion === 'cont') {
+          this.continuar(e);
+        } else if (e.accion === 'ant' && this.esFormaValido) {
           this.indice = e.valor - 1;
           this.datosPasos.indice = e.valor - 1;
           this.wizardComponent.atras();
@@ -143,6 +262,37 @@ export class PantallasComponent{
           this.indice = e.valor;
           this.datosPasos.indice = e.valor;
         }
+    }
+  }
+
+  /**
+ * @method continuar
+ * @description
+ * Maneja la lógica para continuar al siguiente paso del wizard o mostrar alertas según la validez de los formularios.
+ * 
+ * Funcionalidad:
+ * - Verifica si los formularios asociados a la pestaña seleccionada son válidos.
+ * - Si la subpestaña seleccionada es `2` y los formularios son válidos, muestra una alerta de registro exitoso.
+ * - Si el formulario general es válido, avanza al siguiente paso del wizard.
+ * - Si los formularios no son válidos, oculta la alerta de registro exitoso.
+ * 
+ * @param {AccionBoton} e - Objeto que contiene el valor del paso y la acción a realizar.
+ * 
+ * @example
+ * this.continuar({ valor: 2, accion: 'cont' });
+ */
+  public continuar(e: AccionBoton): void {
+    if (this.subpestanaSeleccionada===2 && this.esConsultarCupoFormValid && this.esBienFinalFormValid && this.esRepresentacionFederalFormValid && !this.esFormaValido) {
+      this.mostrarAplicacionRegistradaAlerta = true;
+      this.pestanaDosFormularioValido = true;
+    } else if (this.esFormaValido) {
+      this.pestanaDosFormularioValido = true;
+      this.wizardService.cambio_indice(this.datosPasos.indice);
+      this.indice = e.valor + 1;
+      this.datosPasos.indice = e.valor + 1;
+      this.wizardComponent.siguiente();
+    } else {
+      this.mostrarAplicacionRegistradaAlerta = false;
     }
   }
 }
