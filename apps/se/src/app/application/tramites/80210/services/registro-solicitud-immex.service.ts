@@ -1,5 +1,5 @@
 import { Catalogo, RespuestaCatalogos } from '@libs/shared/data-access-user/src';
-import { FormularioDatos, Plantas } from '../modelos/registro-solicitud-immex.model';
+import { FormularioDatos, Plantas, RespuestaPlantas } from '../modelos/registro-solicitud-immex.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -15,30 +15,65 @@ import { Observable } from 'rxjs';
 })
 export class registroSolicitudImmexService {
 
-  estados:Catalogo[]= [];
-  plantas: Plantas[]=[];
+  /**
+   * Lista de estados obtenidos desde la API.
+   * 
+   * @type {Catalogo[]}
+   */
+  estados: Catalogo[] = [];
 
+  /**
+   * Lista de plantas obtenidas desde la API.
+   * 
+   * @type {Plantas[]}
+   */
+  plantas: Plantas[] = [];
+
+  /**
+   * Obtiene los datos del formulario desde un archivo JSON local.
+   * 
+   * @returns {Observable<FormularioDatos>} Un observable que emite los datos del formulario.
+   */
   public obtenerFormularioDatos(): Observable<FormularioDatos> {
-    return this.http.get<FormularioDatos>('assets/json/80210/formularioDatos.json')
+    return this.http.get<FormularioDatos>('assets/json/80210/formularioDatos.json');
   }
 
+  /**
+   * Obtiene la lista de estados desde un archivo JSON local y los asigna a la variable `estados`.
+   * 
+   * @returns {void}
+   */
   public obtenerEstados(): void {
     this.obtenerRespuestaPorUrl(this, 'estados', '/80210/estados.json');
   }
 
-  public obtenerPlantasDatos(): void {
-    this.obtenerRespuestaPorUrl(this,'plantas','/80210/plantasDatos.json')
+  /**
+   * Obtiene los datos de las plantas desde un archivo JSON local.
+   * 
+   * @returns {Observable<RespuestaPlantas>} Un observable que emite los datos de las plantas.
+   */
+  public obtenerPlantasDatos(): Observable<RespuestaPlantas> {
+    return this.http.get<RespuestaPlantas>('assets/json/80210/plantasDatos.json');
   }
 
   /**
    * Constructor del servicio registroSolicitudImmexService.
    * 
-   * @param httpClient - Cliente HTTP inyectado para realizar solicitudes HTTP.
+   * @param http - Cliente HTTP inyectado para realizar solicitudes HTTP.
    */
   constructor(private http: HttpClient) {
-       // Si es necesario, se puede agregar aquí la lógica de inicialización
+    // Si es necesario, se puede agregar aquí la lógica de inicialización
   }
 
+  /**
+   * Método genérico para obtener una respuesta desde una URL y asignarla a una variable del servicio.
+   * 
+   * @param self - Instancia del servicio actual.
+   * @param variable - Nombre de la variable del servicio donde se asignará la respuesta.
+   * @param url - URL desde donde se obtendrán los datos.
+   * 
+   * @returns {void}
+   */
   obtenerRespuestaPorUrl(
     self: registroSolicitudImmexService,
     variable: keyof registroSolicitudImmexService,
@@ -50,5 +85,4 @@ export class registroSolicitudImmexService {
       });
     }
   }
-
 }
