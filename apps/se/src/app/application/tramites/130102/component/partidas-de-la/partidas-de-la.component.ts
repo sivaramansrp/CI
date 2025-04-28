@@ -2,9 +2,11 @@
 import { CommonModule } from '@angular/common';
  
 import {
+  AbstractControl,
   FormBuilder,
   FormGroup,
   ReactiveFormsModule,
+  ValidationErrors,
   Validators,
 } from '@angular/forms';
 import { AlertComponent } from 'libs/shared/data-access-user/src/tramites/components/alert/alert.component';
@@ -145,18 +147,19 @@ export class PartidasDeLaComponent implements OnInit, OnDestroy {
           Validators.required,
           Validators.pattern('^[0-9]+$'),
           Validators.maxLength(18),
+          PartidasDeLaComponent.noLeadingSpacesValidator,
         ],
       ],
-      fraccionArancelariaTIGIE: [ this.solicitudState?.fraccionArancelariaTIGIE, [Validators.required,Validators.pattern(/^\d{4}\.\d{2}\.\d{2}$/)]],
+      fraccionArancelariaTIGIE: [ this.solicitudState?.fraccionArancelariaTIGIE, [Validators.required,Validators.pattern(/^\d{4}\.\d{2}\.\d{2}$/),PartidasDeLaComponent.noLeadingSpacesValidator]],
       fraccionArancelariaTIGIE_TIGIE: [ this.solicitudState?.fraccionArancelariaTIGIE_TIGIE, [Validators.required]],
-      descripcion: [ this.solicitudState?.descripcionPartidas, [Validators.required, Validators.maxLength(255)]],
+      descripcion: [ this.solicitudState?.descripcionPartidas, [Validators.required, Validators.maxLength(255),PartidasDeLaComponent.noLeadingSpacesValidator,]],
       valorPartidaUSD: [
         this.solicitudState?.valorPartidaUSD,
         [
           Validators.required,
           Validators.min(0),
           Validators.pattern('^[0-9]+(\\.[0-9]{1,2})?$'),
-          Validators.maxLength(20),
+          Validators.maxLength(20)
         ],
       ],
     });
@@ -234,6 +237,13 @@ this.formForTotalCount.controls['valorTotalUSD'].setValue(VALOR_TOTAL_USD);
     return CONTROL
       ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty)
       : false;
+  }
+
+  private static noLeadingSpacesValidator(control: AbstractControl): ValidationErrors | null {
+    if (control.value && control.value.trim() !== control.value) {
+      return { leadingSpaces: true };
+    }
+    return null;
   }
 
   ngOnDestroy(): void {

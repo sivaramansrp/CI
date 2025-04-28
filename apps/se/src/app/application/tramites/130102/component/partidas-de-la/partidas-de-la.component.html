@@ -13,6 +13,9 @@
                                 <small *ngIf="form.controls['cantidad'].hasError('required')">Cantidad es obligatoria.</small>
                                 <small *ngIf="form.controls['cantidad'].hasError('pattern')">Solo se permiten números.</small>
                                 <small *ngIf="form.controls['cantidad'].hasError('maxlength')">Máximo 18 caracteres.</small>
+                                <small *ngIf="form.controls['cantidad'].hasError('leadingSpaces')">No se permiten espacios al inicio del campo.</small>
+
+
                             </div>    
                     </div>
                 </div>
@@ -28,6 +31,7 @@
                                 <small *ngIf="form.controls['fraccionArancelariaTIGIE'].errors?.['pattern']">
                                     Debe ingresar una fracción válida (por ejemplo: 0101.21.01).
                                 </small>
+                                <small *ngIf="form.controls['fraccionArancelariaTIGIE'].errors?.['leadingSpaces']">No se permiten espacios al inicio del campo.</small>
                             </div>
                     </div>
                 </div>
@@ -48,6 +52,7 @@
                             <div *ngIf="esInvalido('descripcion')" class="text-danger">
                                 <small *ngIf="form.controls['descripcion'].hasError('required')">Descripción es obligatoria.</small>
                                 <small *ngIf="form.controls['descripcion'].hasError('maxlength')">Máximo 255 caracteres.</small>
+                                <small *ngIf="form.controls['descripcion'].hasError('leadingSpaces')">No se permiten espacios al inicio del campo.</small>
                             </div>
                     </div>
                 </div>
