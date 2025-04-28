@@ -1,17 +1,25 @@
 <div class="container">
     <div class="row mt-5">
-      <form [formGroup]="formulario" class="pl-16">
+      <form [formGroup]="solicitud" class="pl-16">
         <div class="row">
           <div class="col-md-8">
             <div class="form-group">
-              <label for="justificacionId">Justificación*:</label>
+              <label for="justificacion">Justificación*:</label>
               <textarea
                 rows="5"
                 cols="70"
-                formControlName="observaciones"
-                id="justificacionId"
-                (change)="setValoresStore(formulario,'observaciones')"
+                formControlName="justificacion"
+                id="justificacion"
+                (change)="setValoresStore(solicitud,'justificacion')"
               ></textarea>
+                <div *ngIf="solicitud.get('justificacion')?.touched && solicitud.get('justificacion')?.invalid" class="text-danger">
+                  <div *ngIf="solicitud.get('justificacion')?.errors?.['required']">
+                    El campo Justificación es obligatorio.
+                  </div>
+                  <div *ngIf="solicitud.get('justificacion')?.errors?.['maxlength']">
+                    La justificación no puede tener más de 4000 caracteres.
+                  </div>
+                </div>
             </div>
           </div>
         </div>

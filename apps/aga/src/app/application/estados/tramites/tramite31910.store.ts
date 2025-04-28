@@ -3,13 +3,13 @@ import { Injectable } from '@angular/core';
 
 /**
  * Interfaz que representa el estado de la Solicitud31910.
- * Contiene los datos relacionados con la solicitud, como observaciones, destinatarios y detalles de pago.
+ * Contiene los datos relacionados con la solicitud, como justificacion, destinatarios y detalles de pago.
  */
 export interface Solicitud31910State {
   /**
-   * Observaciones relacionadas con la solicitud.
+   * justificacion relacionadas con la solicitud.
    */
-  observaciones: string;
+  justificacion: string;
 }
 
 /**
@@ -18,7 +18,7 @@ export interface Solicitud31910State {
  */
 export function createInitialState(): Solicitud31910State {
   return {
-    observaciones: '',
+    justificacion: '',
   };
 }
 
