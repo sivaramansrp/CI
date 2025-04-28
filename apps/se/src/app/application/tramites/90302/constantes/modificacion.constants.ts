@@ -169,7 +169,7 @@ export const CONFIGURACION_SECTOR1 = [
   }
 ];
 
-export const CONFIGURACION_PRODUCTOR_INDIRECTO  = [
+export const CONFIGURACION_PRODUCTOR_INDIRECTO = [
   {
     encabezado: 'Registro federal de contribuyentes  ',
     clave: (ele: ProductorIndirecto): string | undefined => ele.rfc,
@@ -355,10 +355,10 @@ export const CONFIGURACION_ARANCELARIASIMPORTACION = [
 ];
 
 /**
- * Textos constantes para el módulo 80206.
- * @constant {Object} TEXTOS_80206
+ * Textos constantes para el módulo 90302.
+ * @constant {Object} TEXTOS_90302
  */
-export const TEXTOS_80206 = {
+export const TEXTOS_90302 = {
   ALERTA_TEXTOS:
     'Materias primas, partes, componentes, materiales auxiliares, envases, material de empaque, etiquetas, folletos, combustibles y lubricantes que se utilicen en el proceso de producción o de servicios de las mercancías de exportación.',
 };

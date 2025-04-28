@@ -29,7 +29,7 @@ import {
 import {
   CONFIGURACION_ARANCELARIAS,
   CONFIGURACION_ARANCELARIASIMPORTACION,
-  TEXTOS_80206
+  TEXTOS_90302
 } from "../../constantes/modificacion.constants";
 
 import { OnDestroy, OnInit } from '@angular/core';
@@ -42,7 +42,7 @@ import { Component } from '@angular/core';
 import { ConfiguracionColumna } from '../../models/configuracion-columna.model';
 import { HttpClient } from '@angular/common/http';
 import { Subject } from 'rxjs';
-import { Tramite80206Store } from '../../estados/tramite90302.store';
+import { Tramite90302Store } from '../../estados/tramite90302.store';
 
 
 @Component({
@@ -184,7 +184,7 @@ export class ModificacionComponent implements OnInit, OnDestroy {
    * Textos constantes para el componente.
    * @property {any} TEXTOS
    */
-  TEXTOS = TEXTOS_80206;
+  TEXTOS = TEXTOS_90302;
 
   /**
    * Notificador para gestionar la destrucción o desuscripción de observables.
@@ -204,7 +204,7 @@ export class ModificacionComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private ampliacionServiciosService: AmpliacionServiciosService,
     private ampliacionServiciosQuery: AmpliacionServiciosQuery, 
-    private tramite80206Store: Tramite80206Store,
+    private tramite90302Store: Tramite90302Store,
     private readonly httpServicios: HttpClient
   ) {
    
@@ -247,21 +247,21 @@ export class ModificacionComponent implements OnInit, OnDestroy {
   enCambioDeCampo(fieldName: string, newValue: string): void {
     switch (fieldName) {
       case 'fraccionArancelaria':
-        this.tramite80206Store.setFraccionArancelaria(newValue);
+        this.tramite90302Store.setFraccionArancelaria(newValue);
         break;
       
       case 'fraccion':
-        this.tramite80206Store.setRfcEmpresa(newValue);
+        this.tramite90302Store.setRfcEmpresa(newValue);
         break;
       case 'cantidad':
-        this.tramite80206Store.setCantidad(newValue);
+        this.tramite90302Store.setCantidad(newValue);
         break;
       
       case 'valor':
-        this.tramite80206Store.setValor(newValue);
+        this.tramite90302Store.setValor(newValue);
         break;
       case 'importacion':
-          this.tramite80206Store.setImportacion(newValue);
+          this.tramite90302Store.setImportacion(newValue);
           break;
       default:
         break;
@@ -305,7 +305,7 @@ export class ModificacionComponent implements OnInit, OnDestroy {
     this.ampliacionServiciosService.getDatos().pipe(takeUntil(this.destroyNotifier$)).subscribe((respuesta) => {
        const RESPONSE = respuesta as unknown as ApiResponse;
       if (RESPONSE) {
-        this.tramite80206Store.setInfoRegistro(RESPONSE.data.infoServicios);
+        this.tramite90302Store.setInfoRegistro(RESPONSE.data.infoServicios);
         this.inicializarFormularioDesdeAlmacen();
       }
     })
@@ -366,7 +366,7 @@ export class ModificacionComponent implements OnInit, OnDestroy {
     if (INDICE !== -1) {
       const DATOS_IMMEX_ACTUALIZADOS = [...this.datosImmex];
       DATOS_IMMEX_ACTUALIZADOS.splice(INDICE, 1); 
-      this.tramite80206Store.setDatosImmex(DATOS_IMMEX_ACTUALIZADOS); 
+      this.tramite90302Store.setDatosImmex(DATOS_IMMEX_ACTUALIZADOS); 
       this.domiciliosSeleccionados = [];
     }
   }
@@ -379,7 +379,7 @@ export class ModificacionComponent implements OnInit, OnDestroy {
     if (INDICE !== -1) {
       const DATOS_IMPORTACION_ACTUALIZADOS = [...this.datosImportacion];
       DATOS_IMPORTACION_ACTUALIZADOS.splice(INDICE, 1); 
-      this.tramite80206Store.setDatosImportacion(DATOS_IMPORTACION_ACTUALIZADOS); 
+      this.tramite90302Store.setDatosImportacion(DATOS_IMPORTACION_ACTUALIZADOS); 
       this.domiciliosSeleccionados = [];
     }
   }
@@ -402,7 +402,7 @@ export class ModificacionComponent implements OnInit, OnDestroy {
       volumenAnual: "",
     };
 
-    this.tramite80206Store.setDatosImmex([...this.datosImmex, CUERPODATOS]);
+    this.tramite90302Store.setDatosImmex([...this.datosImmex, CUERPODATOS]);
 
   }
   
@@ -438,7 +438,7 @@ export class ModificacionComponent implements OnInit, OnDestroy {
       volumenrMensual: this.domiciliosSeleccionados[0]?.volumenrMensual,
       volumenAnual: this.domiciliosSeleccionados[0]?.volumenAnual,
     }
-    this.tramite80206Store.setDatosImportacion([...this.datosImportacion, CUERPODATOS]);
+    this.tramite90302Store.setDatosImportacion([...this.datosImportacion, CUERPODATOS]);
 
   }
 }
@@ -460,7 +460,7 @@ export class ModificacionComponent implements OnInit, OnDestroy {
    */
   procesarDatosDelHijo(data: Catalogo | Catalogo[]): void {
     
-    this.tramite80206Store.setAduanaDeIngresoSeleccion(data as Catalogo);
+    this.tramite90302Store.setAduanaDeIngresoSeleccion(data as Catalogo);
   }
   
 

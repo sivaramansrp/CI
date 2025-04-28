@@ -1,9 +1,9 @@
 /**
  * @fileoverview
- * El `Tramite80206Store` es una clase de Angular que utiliza Akita para gestionar el estado relacionado con la ampliación de servicios.
+ * El `Tramite90302Store` es una clase de Angular que utiliza Akita para gestionar el estado relacionado con la ampliación de servicios.
  * Proporciona métodos para actualizar y gestionar datos como información de registro, aduanas, sectores, empresas y otros campos relacionados.
  * 
- * @module Tramite80206Store
+ * @module Tramite90302Store
  * @description
  * Este archivo define la estructura del estado inicial, las interfaces necesarias y los métodos para actualizar el estado de la ampliación de servicios.
  */
@@ -174,12 +174,12 @@ export const INITIAL_AMPLIACION_SERVICIOS_STATE: AmpliacionServiciosState = {
 /**
  * Clase que representa el store de ampliación de servicios.
  * @export
- * @class Tramite80206Store
+ * @class Tramite90302Store
  * @extends {Store<AmpliacionServiciosState>}
  */
 @Injectable({ providedIn: 'root' })
-@StoreConfig({ name: 'tramite-80206', resettable: true })
-export class Tramite80206Store extends Store<AmpliacionServiciosState> {
+@StoreConfig({ name: 'tramite-90302', resettable: true })
+export class Tramite90302Store extends Store<AmpliacionServiciosState> {
   /**
    * Constructor del store.
    * @constructor

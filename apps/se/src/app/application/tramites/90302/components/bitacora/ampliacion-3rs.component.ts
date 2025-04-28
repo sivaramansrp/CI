@@ -29,7 +29,7 @@ import { ConfiguracionColumna } from '../../models/configuracion-columna.model';
 import { HttpClient } from '@angular/common/http';
 import { Sector } from "../../models/datos-info.model";
 import { Subject } from 'rxjs';
-import { Tramite80206Store } from '../../estados/tramite90302.store';
+import { Tramite90302Store } from '../../estados/tramite90302.store';
 
 @Component({
   selector: 'app-ampliacion-3rs',
@@ -120,7 +120,7 @@ export class Ampliacion3RsComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private ampliacionServiciosService: AmpliacionServiciosService,
     private ampliacionServiciosQuery: AmpliacionServiciosQuery,
-    private tramite80206Store: Tramite80206Store,
+    private tramite90302Store: Tramite90302Store,
     private readonly httpServicios: HttpClient
   ) {
     this.inicializarFormularioInfoRegistro();
@@ -182,7 +182,7 @@ export class Ampliacion3RsComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data) => {
         const DATOS = data.data;
-        this.tramite80206Store.setReglaSeleccionada(DATOS);
+        this.tramite90302Store.setReglaSeleccionada(DATOS);
         this.ampliacionServiciosQuery.selectSolicitudTramite$
           .pipe(takeUntil(this.destroyNotifier$))
           .subscribe((sector: AmpliacionServiciosState) => {
@@ -201,7 +201,7 @@ export class Ampliacion3RsComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data) => {
         const DATOS = data.data;
-        this.tramite80206Store.setSectorDesplegable(DATOS);
+        this.tramite90302Store.setSectorDesplegable(DATOS);
         this.ampliacionServiciosQuery.selectSolicitudTramite$
           .pipe(takeUntil(this.destroyNotifier$))
           .subscribe((sector: AmpliacionServiciosState) => {
@@ -224,7 +224,7 @@ export class Ampliacion3RsComponent implements OnInit, OnDestroy {
         DATOS_IMMEX_ACTUALIZADOS.splice(INDICE, 1);
       }
     });
-    this.tramite80206Store.setDatosSector(DATOS_IMMEX_ACTUALIZADOS);
+    this.tramite90302Store.setDatosSector(DATOS_IMMEX_ACTUALIZADOS);
     this.domiciliosSeleccionados = [];
   }
 
@@ -237,7 +237,7 @@ export class Ampliacion3RsComponent implements OnInit, OnDestroy {
       descripcion: this.recibioSector[0]?.descripcion,
       descripcionSector: this.recibioSector[0]?.descripcionSector,
     };
-    this.tramite80206Store.setDatosSector([...this.datosSector, CUERPODATOS]);
+    this.tramite90302Store.setDatosSector([...this.datosSector, CUERPODATOS]);
   }
 
   /**
@@ -259,8 +259,8 @@ export class Ampliacion3RsComponent implements OnInit, OnDestroy {
   procesarDatosDelHijo(data: Catalogo | Catalogo[]): void {
     this.isSelectedRegla = true;
     this.ampliacionServiciosService.enviarDeberiaMostrar(this.isSelectedRegla);
-    this.tramite80206Store.setIsSelectedRegla(this.isSelectedRegla);
-    this.tramite80206Store.setAduanaDeIngresoSeleccion(data as Catalogo);
+    this.tramite90302Store.setIsSelectedRegla(this.isSelectedRegla);
+    this.tramite90302Store.setAduanaDeIngresoSeleccion(data as Catalogo);
   }
 
   /**
@@ -270,7 +270,7 @@ export class Ampliacion3RsComponent implements OnInit, OnDestroy {
    */
   cambioDeSector(data: Catalogo | Catalogo[]): void {
     this.recibioSector = Array.isArray(data) ? data : [data];
-    this.tramite80206Store.setSectorSeleccion(data as Catalogo);
+    this.tramite90302Store.setSectorSeleccion(data as Catalogo);
   }
 
   /**
