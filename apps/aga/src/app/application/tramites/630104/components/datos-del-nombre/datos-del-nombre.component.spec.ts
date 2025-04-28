@@ -199,7 +199,6 @@ describe('DatosDelNombreComponent', () => {
   describe('cambiarTipoPropietario', () => {
     beforeEach(() => {
       component.formularioDatosPropietarioNombre = [
-        { id: 'td_rfc_representante', mostrar: false, labelNombre: '', campo: '', clase: '', tipoInput: '', desactivado: false },
         { id: 'td_curp_representantev', mostrar: false, labelNombre: '', campo: '', clase: '', tipoInput: '', desactivado: false },
         { id: 'nombre', mostrar: false, labelNombre: '', campo: '', clase: '', tipoInput: '', desactivado: false },
         { id: 'apellidoPaterno', mostrar: false, labelNombre: '', campo: '', clase: '', tipoInput: '', desactivado: false },

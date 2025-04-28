@@ -17,7 +17,7 @@ import { DatosGeneralesComponent } from '../datos-generales/datos-generales.comp
 import { DomicilioFiscalComponent } from '../domicilio-fiscal/domicilio-fiscal.component';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
 
-import {FORMULARIO_TIPO_REPRESENTANTE_CURP, FORMULARIO_TIPO_REPRESENTANTE_DIRECCION, FORMULARIO_TIPO_REPRESENTANTE_NOMBRE} from '../../enums/retorno-importacion-temporal.enum';
+import { FORMULARIO_TIPO_REPRESENTANTE_DIRECCION, FORMULARIO_TIPO_REPRESENTANTE_NOMBRE} from '../../enums/retorno-importacion-temporal.enum';
 import { Tramite630104Query } from '../../estados/queries/tramite630104.query';
 
 import { REGEX_NOMBRE } from "@libs/shared/data-access-user/src/tramites/constantes/regex.constants";
@@ -69,8 +69,6 @@ export class DatosDelNombreComponent implements OnInit, OnDestroy {
    */
   formularioDatosPropietarioNombre: ModeloDeFormaDinamica[] = FORMULARIO_TIPO_REPRESENTANTE_NOMBRE;
 
-
-formularioTipoCurp: ModeloDeFormaDinamica[] = FORMULARIO_TIPO_REPRESENTANTE_CURP;
   /**
    * Formulario reactivo para gestionar los datos del tipo de propietario.
    */
@@ -137,23 +135,19 @@ formularioTipoCurp: ModeloDeFormaDinamica[] = FORMULARIO_TIPO_REPRESENTANTE_CURP
    */
   cambiarTipoPropietario(): void {
     const TIPO_REPRESENTANTE_VALOR = this.datisDelNombre.get('datosRepresentante')?.value;
-    const REPRESENTANTE_RFC = this.formularioDatosPropietarioNombre.find((campo) => campo.id === 'td_rfc_representante');
     const CURP_CAMPO = this.formularioDatosPropietarioNombre.find((campo) => campo.id === 'td_curp_representantev');
     const NOMBRE_CAMPO = this.formularioDatosPropietarioNombre.find((campo) => campo.id === 'nombre');
     const APELLIDO_PATERNO_CAMPO = this.formularioDatosPropietarioNombre.find((campo) => campo.id === 'apellidoPaterno');
     const APELLIDO_MATERNO_CAMPO = this.formularioDatosPropietarioNombre.find((campo) => campo.id === 'apellidoMaterno');
-    const RFC_CAMPO = this.formularioTipoCurp.find((campo) => campo.id === 'datosRepresentanteRFC');
+    
 
 
-    if (REPRESENTANTE_RFC && CURP_CAMPO && NOMBRE_CAMPO && APELLIDO_PATERNO_CAMPO && APELLIDO_MATERNO_CAMPO && RFC_CAMPO) {
-      REPRESENTANTE_RFC.mostrar = TIPO_REPRESENTANTE_VALOR === '1';
-      CURP_CAMPO.mostrar = TIPO_REPRESENTANTE_VALOR === '1';
+    if ( CURP_CAMPO && NOMBRE_CAMPO && APELLIDO_PATERNO_CAMPO && APELLIDO_MATERNO_CAMPO) {
+        CURP_CAMPO.mostrar = TIPO_REPRESENTANTE_VALOR === '1';
       NOMBRE_CAMPO.mostrar = TIPO_REPRESENTANTE_VALOR === '1';
       APELLIDO_PATERNO_CAMPO.mostrar = TIPO_REPRESENTANTE_VALOR === '1';
       APELLIDO_MATERNO_CAMPO.mostrar = TIPO_REPRESENTANTE_VALOR === '1';
-      RFC_CAMPO.mostrar = TIPO_REPRESENTANTE_VALOR === '2';
-  
-    }
+      }
     this.mostrarFormularioPersonaExtranjera = TIPO_REPRESENTANTE_VALOR;
   }
 

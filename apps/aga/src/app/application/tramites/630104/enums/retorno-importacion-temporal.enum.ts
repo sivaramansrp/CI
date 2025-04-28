@@ -189,7 +189,39 @@ export const FORMULARIO_DATOS_SOLICITUD = [
  * @property {Array<Object>} - Lista de objetos que representan cada campo del formulario.
  */
 export const FORMULARIO_FECHA_IMPORTACION = [
-  
+    {
+        id: 'fechaIngreso',
+        labelNombre: 'Fecha estimada de ingreso',
+        campo: 'fechaIngreso',
+        clase: 'col-md-4',
+        tipoInput: 'date',
+        desactivado: false,
+        soloLectura: false,
+        validadores: [
+            { tipo: 'required' }
+        ],
+        tooltipQuestionCircle:"true",
+        marcadorDePosicion: '',
+        valorPredeterminado: '',
+        marginTop: 4,
+        habilitado: true
+    },
+    {
+        id: 'fechaLimiteRetorno',
+        labelNombre: 'Fecha limite estimada de retorno',
+        campo: 'fechaLimiteRetorno',
+        clase: 'col-md-4',
+        tipoInput: 'date',
+        desactivado: false,
+        soloLectura: false,
+        validadores: [
+            { tipo: 'required' }
+        ],
+        marcadorDePosicion: '',
+        valorPredeterminado: '',
+        marginTop: 4,
+        habilitado: true
+    }
 ];
 
 
@@ -242,7 +274,7 @@ export const FORMULARIO_DOMICILIO_FISCAL = [
         soloLectura: true,
         validadores: [
             { tipo: 'required' },
-            { tipo: 'pattern', valor:REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija la calle.' }
+            { tipo: 'pattern', valor:REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija la numeroExterior.' }
         ],
         marcadorDePosicion: '',
         valorPredeterminado: 'SN',
@@ -258,7 +290,7 @@ export const FORMULARIO_DOMICILIO_FISCAL = [
         soloLectura: true,
         validadores: [
             { tipo: 'required' },
-            { tipo: 'pattern', valor:REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija la calle.' }
+            { tipo: 'pattern', valor:REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija la numeroInterior.' }
         ],
         marcadorDePosicion: '',
         valorPredeterminado: '',
@@ -275,7 +307,7 @@ export const FORMULARIO_DOMICILIO_FISCAL = [
         soloLectura: true,
         validadores: [
             { tipo: 'required' },
-            { tipo: 'pattern', valor:REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija la calle.' }
+            { tipo: 'pattern', valor:REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija la codigoPostal.' }
         ],
         marcadorDePosicion: '',
         valorPredeterminado: '',
@@ -291,7 +323,7 @@ export const FORMULARIO_DOMICILIO_FISCAL = [
         soloLectura: true,
         validadores: [
             { tipo: 'required' },
-            { tipo: 'pattern', valor:REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija la calle.' }
+            { tipo: 'pattern', valor:REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija la colonia.' }
         ],
         marcadorDePosicion: '',
         valorPredeterminado: 'VICTORIA DE DURANGO CENTRO',
@@ -302,12 +334,12 @@ export const FORMULARIO_DOMICILIO_FISCAL = [
         labelNombre: 'País',
         campo: 'pais',
         clase: 'col-md-6',
-        tipoInput: 'text',
+        tipoInput: 'select-catalogos',
         desactivado: true,
         soloLectura: true,
         validadores: [
             { tipo: 'required' },
-            { tipo: 'pattern', valor:REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija la calle.' }
+            { tipo: 'pattern', valor:REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija la pais.' }
         ],
         marcadorDePosicion: '',
         valorPredeterminado: 'ESTADOS UNIDOS MEXICANOS',
@@ -324,7 +356,7 @@ export const FORMULARIO_DOMICILIO_FISCAL = [
         soloLectura: true,
         validadores: [
             { tipo: 'required' },
-            { tipo: 'pattern', valor:REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija la calle.' }
+            { tipo: 'pattern', valor:REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija la td_estadoLocalidad_representante_rep.' }
         ],
         marcadorDePosicion: '',
         valorPredeterminado: 'DURANGO',
@@ -340,7 +372,7 @@ export const FORMULARIO_DOMICILIO_FISCAL = [
         soloLectura: true,
         validadores: [
             { tipo: 'required' },
-            { tipo: 'pattern', valor:REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija la calle.' }
+            { tipo: 'pattern', valor:REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija la estadoLocalidad.' }
         ],
         marcadorDePosicion: '',
         valorPredeterminado: 'VICTORIA DE DURANGO',
@@ -357,7 +389,7 @@ export const FORMULARIO_DOMICILIO_FISCAL = [
         soloLectura: true,
         validadores: [
             { tipo: 'required' },
-            { tipo: 'pattern', valor:REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija la calle.' }
+            { tipo: 'pattern', valor:REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija la delegacionMunicipio.' }
         ],
         marcadorDePosicion: '',
         valorPredeterminado: 'DURANGO',
@@ -373,7 +405,7 @@ export const FORMULARIO_DOMICILIO_FISCAL = [
         soloLectura: true,
         validadores: [
             { tipo: 'required' },
-            { tipo: 'pattern', valor:REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija la calle.' }
+            { tipo: 'pattern', valor:REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija la telefono.' }
         ],
         marcadorDePosicion: '',
         valorPredeterminado: '618-256-2532',
@@ -410,7 +442,7 @@ export const FORMULARIO_DATOS_GENERALES = [
         soloLectura: true,
         validadores: [
             { tipo: 'required' },
-            { tipo: 'pattern', valor:REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija la calle.' }
+            { tipo: 'pattern', valor:REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija la nombre.' }
         ],
         marcadorDePosicion: '',
         valorPredeterminado: 'EUROFOODS DE MEXICO',
@@ -427,7 +459,7 @@ export const FORMULARIO_DATOS_GENERALES = [
         soloLectura: true,
         validadores: [
             { tipo: 'required' },
-            { tipo: 'pattern', valor:REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija la calle.' }
+            { tipo: 'pattern', valor:REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija la apellidoPaterno.' }
         ],
         marcadorDePosicion: '',
         valorPredeterminado: 'GONZALEZ',
@@ -443,7 +475,7 @@ export const FORMULARIO_DATOS_GENERALES = [
         soloLectura: true,
         validadores: [
             { tipo: 'required' },
-            { tipo: 'pattern', valor:REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija la calle.' }
+            { tipo: 'pattern', valor:REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija la segundoApellido.' }
         ],
         marcadorDePosicion: '',
         valorPredeterminado: 'PINAL',
@@ -459,7 +491,7 @@ export const FORMULARIO_DATOS_GENERALES = [
         soloLectura: true,
         validadores: [
             { tipo: 'required' },
-            { tipo: 'pattern', valor:REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija la calle.' }
+            { tipo: 'pattern', valor:REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija la descripcionGiro.' }
         ],
         marcadorDePosicion: '',
         valorPredeterminado: 'Consultorios de medicina general pertenecientes al sector privado que cuenten con título de médico conforme a las leyes',
@@ -475,7 +507,7 @@ export const FORMULARIO_DATOS_GENERALES = [
         soloLectura: true,
         validadores: [
             { tipo: 'required' },
-            { tipo: 'pattern', valor:REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija la calle.' }
+            { tipo: 'pattern', valor:REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija la rfc.' }
         ],
         marcadorDePosicion: '',
         valorPredeterminado: 'MAVL621207C95',
@@ -491,7 +523,7 @@ export const FORMULARIO_DATOS_GENERALES = [
         soloLectura: true,
         validadores: [
             { tipo: 'required' },
-            { tipo: 'pattern', valor:REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija la calle.' }
+            { tipo: 'pattern', valor:REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija la curp.' }
         ],
         marcadorDePosicion: '',
         valorPredeterminado: 'MAVL621207HDGRLS06',
@@ -878,7 +910,7 @@ export const FORMULARIO_TIPO_REPRESENTANTE_DIRECCION = [
         soloLectura: false,
         validadores: [
             { tipo: 'required' },
-            { tipo: 'pattern', valor:REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija el estado y localidad.' }
+            { tipo: 'pattern', valor:REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija el municipio.' }
         ],
         marcadorDePosicion: '',
         valorPredeterminado: '',
@@ -907,7 +939,7 @@ export const FORMULARIO_TIPO_REPRESENTANTE_DIRECCION = [
         soloLectura: false,
         validadores: [
             { tipo: 'required' },
-            { tipo: 'pattern', valor:REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija el estado y localidad.' }
+            { tipo: 'pattern', valor:REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija el localidad.' }
         ],
         marcadorDePosicion: '',
         valorPredeterminado: '',
@@ -1020,7 +1052,7 @@ export const FORMULARIO_TIPO_REPRESENTANTE_NOMBRE = [
         desactivado: false,
         soloLectura: false,
         validadores: [
-            { tipo: 'pattern', valor: REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija el nombre.' }
+            { tipo: 'pattern', valor: REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija el datosRepresentantecurp.' }
         ],
         marcadorDePosicion: '',
         valorPredeterminado: '',
@@ -1074,33 +1106,3 @@ export const FORMULARIO_TIPO_REPRESENTANTE_NOMBRE = [
         marginTop: 0
     },
 ];
-
-
-/**
- * Definición de campos para el formulario de CURP del representante.
- * Contiene solo el campo de CURP para el representante legal.
- * @property {Array<Object>} - Lista de objetos que representan cada campo del formulario.
- * 
- * Los campos incluyen:
- * - CURP (text, etiquetado como "C U R P")
- * 
- * Incluye un validador para asegurar que no haya espacios al inicio o final del texto.
- */
-export const FORMULARIO_TIPO_REPRESENTANTE_CURP = [
-    {
-        id: 'datosRepresentanteRFC',
-        labelNombre: 'C U R P',
-        campo: 'datosRepresentanteRFC',
-        clase: 'col-md-6',
-        tipoInput: 'text',
-        desactivado: false,
-        soloLectura: false,
-        validadores: [
-            { tipo: 'pattern', valor: REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, mensaje: 'Por favor, corrija el nombre.' }
-        ],
-        marcadorDePosicion: '',
-        valorPredeterminado: '',
-        marginTop: 0
-    },
-   
-]
