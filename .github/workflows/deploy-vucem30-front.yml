@@ -637,8 +637,7 @@ jobs:
           sed -i 's/microk8s kubectl apply -f "\$MANIFEST_FILE"/microk8s kubectl apply -f "\$TMP_MANIFEST"/g' deploy_commands.sh
           sed -i 's/microk8s kubectl apply --validate=true --dry-run=client -f "\$MANIFEST_FILE"/microk8s kubectl apply --validate=true --dry-run=client -f "\$TMP_MANIFEST"/g' deploy_commands.sh
           
-          # Modificación 4: Usar la variable de entorno DEPLOYMENT_ENV en los comandos de rollout
-          sed -i 's/vucem-microfrontends-dev/vucem-microfrontends-${DEPLOYMENT_ENV}/g' deploy_commands.sh
+          # Modificación 4: Ya no es necesaria porque se reemplazó la sección de rollout con una nueva implementación
 
           echo "Script deploy_commands.sh actualizado con éxito."
           echo "Se ha creado una copia de seguridad en deploy_commands.sh.bak"
@@ -738,10 +737,17 @@ jobs:
             echo "=== Estado del ingress ===" | tee -a $LOG_FILE
             microk8s kubectl get ingress -n default | tee -a $LOG_FILE || echo "No se encontraron ingress"
             
-            # Reinicio explícito del deployment (asegurando que siempre se reinicie después del despliegue)
+            # Reinicio explícito de los deployments de microservicios (dashboard y login son prioritarios)
             echo "" | tee -a $LOG_FILE
-            echo "=== Reiniciando explícitamente el deployment ===" | tee -a $LOG_FILE
-            microk8s kubectl rollout restart deployment vucem-microfrontends-${{ env.DEPLOYMENT_ENV }} -n default | tee -a $LOG_FILE
+            echo "=== Reiniciando explícitamente los deployments ===" | tee -a $LOG_FILE
+            
+            # Reiniciar dashboard y login primero
+            microk8s kubectl rollout restart deployment modulefederation-dashboard-deployment-${{ env.DEPLOYMENT_ENV }} -n default | tee -a $LOG_FILE
+            microk8s kubectl rollout restart deployment modulefederation-login-microfront-deployment-${{ env.DEPLOYMENT_ENV }} -n default | tee -a $LOG_FILE
+            
+            # Verificar estado de los principales
+            sleep 10
+            microk8s kubectl get deployments -n default | grep modulefederation | grep -E 'dashboard|login' | tee -a $LOG_FILE
             
             # Mostrar ubicación del log
             echo "" | tee -a $LOG_FILE
