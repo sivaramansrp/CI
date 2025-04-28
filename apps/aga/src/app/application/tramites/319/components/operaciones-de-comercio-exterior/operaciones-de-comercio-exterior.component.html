@@ -26,7 +26,7 @@
           </app-tabla-dinamica>
           <div class="col-md-12 mt-5 d-flex justify-content-end">
             <button type="button" class="btn btn-primary" (click)="abrirModuloPersonasNotificaciones(true)">Agregar</button>
-            <button type="button" class="btn btn-default ms-2" (click)="eliminarPeriodoPorId()">Eliminar</button>
+            <button type="button" class="btn btn-default ms-2" (click)="eliminarPeriodoPorId()" [disabled]="cuerpoSolicitarTablaFila.length === 0 ? true : false">Eliminar</button>
            
             </div>
         </div>

@@ -177,6 +177,7 @@ export class OperacionesDeComercioExteriorComponent implements OnInit, OnDestroy
    * @descripcion Agrega una nueva persona a la tabla de solicitudes.
    */
   agregarPersona(): void {
+    if (this.periodoForm.valid) {
     this.cuerpoSolicitarTablaFila.push({
       id: this.cuerpoSolicitarTablaFila.length > 0
         ? (this.cuerpoSolicitarTablaFila[this.cuerpoSolicitarTablaFila.length - 1]?.id ?? 0) + 1
@@ -186,6 +187,10 @@ export class OperacionesDeComercioExteriorComponent implements OnInit, OnDestroy
     });
     this.tramite319Store.actualizarDatosForma(this.cuerpoSolicitarTablaFila);
     this.periodoView = false;
+  }
+else{
+  this.periodoForm.markAllAsTouched();
+}
   }
 
   /**
