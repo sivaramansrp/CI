@@ -767,7 +767,7 @@ export const FORMULARIO_MODAL_INSUMOS = [
   {
       id: 'descripcion',
       labelNombre: 'Descripción del insumo',
-      campo: 'descripcion',
+      campo: 'descripcionInsumo',
       clase: 'col-md-4',
       tipoInput: 'text',
       desactivado: false,

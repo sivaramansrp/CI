@@ -1,7 +1,7 @@
-import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { InsumosComponent } from './insumos.component';
-import { ReactiveFormsModule, FormGroup, FormControl } from '@angular/forms';
-import { of, Subject } from 'rxjs';
+import { ReactiveFormsModule } from '@angular/forms';
+import { of } from 'rxjs';
 import { SolicitudDeRegistroTplService } from '../../services/solicitud-de-registro-tpl.service';
 import { ServicioDeFormularioService } from '../../services/forma-servicio/servicio-de-formulario.service';
 import { Tramite120101Store } from '../../../../estados/tramites/tramite120101.store';
@@ -26,6 +26,8 @@ describe('InsumosComponent', () => {
     servicioDeFormularioServiceMock = {
       registerForm: jest.fn(),
       setFormValue: jest.fn(),
+      establecerTablaInsumos: jest.fn(),
+      obtenerTablaInsumos: jest.fn().mockReturnValue([]),
     };
 
     tramite120101StoreMock = {
@@ -78,33 +80,57 @@ describe('InsumosComponent', () => {
     expect(component.tablaInsumos).toEqual(mockData);
   });
 
-  it('should fetch and set fraccionArancelaria options when obtenerDatosFraccionArancelaria is called', fakeAsync(() => {
+  it('should handle empty response in obtenerDatosTablaInsumos', () => {
+    solicitudDeRegistroTplServiceMock.obtenerDatosTablaInsumos.mockReturnValue(of([]));
+
+    component.obtenerDatosTablaInsumos();
+
+    expect(component.tablaInsumos).toEqual([]);
+  });
+
+  it('should fetch and set fraccionArancelaria options when obtenerDatosFraccionArancelaria is called', () => {
     const mockData = [{ id: 1, descripcion: 'Test Fracción' }];
     solicitudDeRegistroTplServiceMock.obtenerDatosFraccionArancelaria.mockReturnValue(of(mockData));
 
     component.obtenerDatosFraccionArancelaria();
-    tick();
 
     const fraccionField = component.insumosFormData.find((field) => field.campo === 'descfraccion');
     expect(fraccionField?.opciones).toEqual([{ id: 1, descripcion: 'Test Fracción' }]);
-  }));
+  });
 
-  it('should fetch and set paisDeOrigen options when obtenerDatosEstados is called', fakeAsync(() => {
+  it('should handle empty response in obtenerDatosFraccionArancelaria', () => {
+    solicitudDeRegistroTplServiceMock.obtenerDatosFraccionArancelaria.mockReturnValue(of([]));
+
+    component.obtenerDatosFraccionArancelaria();
+
+    const fraccionField = component.insumosFormData.find((field) => field.campo === 'descfraccion');
+    expect(fraccionField?.opciones).toBeUndefined();
+  });
+
+  it('should fetch and set paisDeOrigen options when obtenerDatosEstados is called', () => {
     const mockData = [{ id: 1, descripcion: 'Mexico' }];
     solicitudDeRegistroTplServiceMock.obtenerDatosEstados.mockReturnValue(of(mockData));
 
     component.obtenerDatosEstados();
-    tick();
 
     const paisField = component.insumosFormData.find((field) => field.campo === 'Pais');
     expect(paisField?.opciones).toEqual([{ id: 1, descripcion: 'Mexico' }]);
-  }));
+  });
+
+  it('should handle empty response in obtenerDatosEstados', () => {
+    solicitudDeRegistroTplServiceMock.obtenerDatosEstados.mockReturnValue(of([]));
+
+    component.obtenerDatosEstados();
+
+    const paisField = component.insumosFormData.find((field) => field.campo === 'Pais');
+    expect(paisField?.opciones).toBeUndefined();
+  });
 
   it('should add a new insumo to tablaInsumos when agregarInsumo is called', () => {
     component.ninoFormGroup.setValue({
-      descripcion: 'Test Descripción',
+      descripcionInsumo: 'Test Descripción',
       fraccion: 'Test Fracción',
-      paisOrigen: 'Test País',
+      Pais: 'Test País',
     });
 
     component.agregarInsumo();
@@ -116,18 +142,20 @@ describe('InsumosComponent', () => {
         PaisDeOrigen: 'Test País',
       },
     ]);
+    expect(servicioDeFormularioServiceMock.establecerTablaInsumos).toHaveBeenCalledWith(component.tablaInsumos);
   });
 
   it('should not add a new insumo if the form is invalid', () => {
     component.ninoFormGroup.setValue({
-      descripcion: '',
+      descripcionInsumo: '',
       fraccion: '',
-      paisOrigen: '',
+      Pais: '',
     });
 
     component.agregarInsumo();
 
     expect(component.tablaInsumos).toEqual([]);
+    expect(servicioDeFormularioServiceMock.establecerTablaInsumos).not.toHaveBeenCalled();
   });
 
   it('should call setDynamicFieldValue and setFormValue when establecerCambioDeValor is called', () => {

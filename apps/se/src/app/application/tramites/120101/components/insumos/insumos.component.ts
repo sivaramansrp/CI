@@ -109,7 +109,22 @@ export class InsumosComponent implements OnInit, OnDestroy {
    * Configura las suscripciones y carga los datos iniciales.
    */
   ngOnInit(): void {
-    this.tramite120101Query.selectSolicitudDeRegistroTpl$
+      const INSUMOS_GUARDADOS = this.servicioDeFormularioService.obtenerTablaInsumos();
+
+      if (INSUMOS_GUARDADOS && INSUMOS_GUARDADOS.length > 0) {
+       
+        const INSUMOS_VALIDOS = INSUMOS_GUARDADOS.filter(item => 
+          Object.values(item).some(value => value !== null && value !== '' && value !== undefined)
+        );
+        
+        if (INSUMOS_VALIDOS.length > 0) {
+          this.tablaInsumos = INSUMOS_VALIDOS;
+        } else {
+          this.tablaInsumos = [];
+        }
+      }
+
+      this.tramite120101Query.selectSolicitudDeRegistroTpl$
       .pipe(
         takeUntil(this.destroy$),
         map((seccionState) => {
@@ -118,10 +133,10 @@ export class InsumosComponent implements OnInit, OnDestroy {
       )
       .subscribe();
 
-    this.obtenerDatosTablaInsumos();
+  
     this.obtenerDatosFraccionArancelaria();
     this.obtenerDatosEstados();
-
+    this.agregarInsumo();
     this.servicioDeFormularioService.registerForm('insumosForm', this.ninoFormGroup);
   }
 
@@ -210,13 +225,14 @@ export class InsumosComponent implements OnInit, OnDestroy {
       const VALORES_NINO = this.ninoFormGroup.value;
 
       const NUEVA_FILA = {
-        DescripcionDelInsumo: VALORES_NINO.descripcion,
+        DescripcionDelInsumo: VALORES_NINO.descripcionInsumo,
         FraccionArancelaria: VALORES_NINO.fraccion,
-        PaisDeOrigen: VALORES_NINO.paisOrigen,
+        PaisDeOrigen: VALORES_NINO.Pais,
       };
-
       this.tablaInsumos.push(NUEVA_FILA);
       this.tablaInsumos = [...this.tablaInsumos];
+
+      this.servicioDeFormularioService.establecerTablaInsumos(this.tablaInsumos);
     }
   }
 
