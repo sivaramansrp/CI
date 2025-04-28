@@ -451,6 +451,13 @@ const ROUTES: Routes = [
     import('./tramites/260907/modificacion-permiso-importacion-tratamientos.module').then(
       (m) => m.ModificacionPermisoImportacionTratamientosModule
     ),
+},
+{
+  path: 'operación-de-maquila-submaquila',
+  loadChildren: () =>
+    import('./tramites/260516/operación-de-maquila-submaquila.module').then(
+      (m) => m.OperaciónDeMaquilaSubmaquilaModule
+    ),
 }
 ];
 
