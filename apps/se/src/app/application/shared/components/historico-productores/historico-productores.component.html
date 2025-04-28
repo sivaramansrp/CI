@@ -66,6 +66,12 @@
             </div>
             <app-tabla-dinamica [configuracionTabla]="mercanciaTablaConfiguracion" [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [datos]="mercanciaDatos"
              ></app-tabla-dinamica>
+             <div class="container text-end mt-5">
+                <button type="button" name="agregarMercancia" class="btn btn-primary"
+                (click)="agregarMercancia()">
+                    Agregar Productor
+                </button>
+            </div>
           </div>
     </form>
 </div>
@@ -84,12 +90,6 @@
                             formControlName="numeroRegistroFiscal"
                             [ngClass]="isValid(agregarDatosProductorFormulario, 'numeroRegistroFiscal') ? 'required' : ''">
                     </div>
-                    <div class="col-md-4">
-                        <label class="form-label" for="fax">Fax:</label>
-                        <input type="text" class="form-control" name="fax" id="fax" formControlName="fax"
-                            (change)="setValoresStoreAgregarForm('agregarDatosProductorFormulario','fax')"
-                            [ngClass]=" isValid(agregarDatosProductorFormulario, 'fax') ? 'required' : ''">
-                    </div>
                 </form>
 
             </div>
@@ -100,3 +100,19 @@
         </div>
     </div>
 </div>
+
+<div class="modal" id="modalBuscar" tabindex="-1" #modalBuscar aria-labelledby="modalBuscar" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style="max-width: 300px !important;">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="btn-close" data-bs-dismiss="modal" #closeModalMercancia (click)="cerrarModalMercancia()"></button>
+        </div>
+        <div class="modal-body m-3 p-2">
+          <p class="m-0">{{ mensajeDeAlerta }}</p>
+        </div>
+        <div class="modal-footer justify-content-center m-0">
+          <button type="button" class="btn btn-primary"  data-bs-dismiss="modal" #closeModalMercancia (click)="cerrarModalMercancia()">Aceptar</button>
+        </div>
+      </div>
+    </div>
+  </div>

@@ -30,14 +30,6 @@ export interface Tramite110205State {
   complementoClasificacion: string;
   numeroFactura: string;
   tipoFactura: Catalogo[];
-  // lugar: string;
-  // exportador: string;
-  // empresa: string;
-  // cargo: string;
-  // lada: string;
-  // telfono: string;
-  // fax: string;
-  // correo: string;
   formaValida: { [key: string]: boolean };
   formDestinatario: { [key: string]: undefined | boolean | string | number | object };
   datosConfidencialesProductor?: boolean;
@@ -473,103 +465,6 @@ export class Tramite110205Store extends Store<Tramite110205State> {
             tipoFactura,
         }))
       }
-
-      /**
-       * @descripcion
-       * Actualiza el número de lugar en el almacén.
-       * @param telfono - Cadena que representa el número de lugar a actualizar.
-       */
-      // setLugar(lugar: string): void {
-      //   this.update((state) => ({
-      //       ...state,
-      //       lugar,
-      //   }))
-      // }
-
-      /**
-       * @descripcion
-       * Actualiza el número de exportador en el almacén.
-       * @param telfono - Cadena que representa el número de exportador a actualizar.
-       */
-      // setExportador(exportador: string): void {
-      //   this.update((state) => ({
-      //       ...state,
-      //       exportador,
-      //   }))
-      // }
-
-      /**
-       * @descripcion
-       * Actualiza el número de empresa en el almacén.
-       * @param telfono - Cadena que representa el número de empresa a actualizar.
-       */
-      // setEmpresa(empresa: string): void {
-      //   this.update((state) => ({
-      //       ...state,
-      //       empresa,
-      //   }))
-      // }
-
-      /**
-       * @descripcion
-       * Actualiza el número de cargo en el almacén.
-       * @param telfono - Cadena que representa el número de cargo a actualizar.
-       */
-      // setCargo(cargo: string): void {
-      //   this.update((state) => ({
-      //       ...state,
-      //       cargo
-      //   }))
-      // }
-
-      /**
-       * @descripcion
-       * Actualiza el número de lada en el almacén.
-       * @param telfono - Cadena que representa el número de lada a actualizar.
-       */
-      // setLada(lada: string): void {
-      //   this.update((state) => ({
-      //       ...state,
-      //       lada
-      //   }))
-      // }
-
-      /**
-       * @descripcion
-       * Actualiza el número de teléfono en el almacén.
-       * @param telfono - Cadena que representa el número de teléfono a actualizar.
-       */
-      // setTelfono(telfono: string): void {
-      //   this.update((state) => ({
-      //       ...state,
-      //       telfono,
-      //   }))
-      // }
-
-      /**
-       * @descripcion
-       * Actualiza el número de fax en el almacén.
-       * @param fax - Cadena que representa el número de fax a actualizar.
-       */
-      // setFax(fax: string): void {
-      //   this.update((state) => ({
-      //       ...state,
-      //       fax,
-      //   }))
-      // }
-
-      /**
-       * @descripcion
-       * Actualiza el correo electrónico en el almacén.
-       * @param correo - Cadena que representa el correo electrónico a actualizar.
-       */
-      // setCorreo(correo: string): void {
-      //   this.update((state) => ({
-      //       ...state,
-      //       correo,
-      //   }))
-      // }
-
       /**
        * @descripcion
        * Actualiza el estado de validación de los formularios en el almacén.
@@ -612,5 +507,4 @@ export class Tramite110205Store extends Store<Tramite110205State> {
           },
         }));
       }
-      // Additional methods follow the same pattern with appropriate comments...
 }

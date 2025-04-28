@@ -1,19 +1,11 @@
 import { AgregarDatosProductorFormulario, FormularioHistorico, HistoricoColumnas, MercanciaTabla } from '../../models/certificado-origen.model';
 import { CONFIGURACION_MERCANCIA, CONFIGURACION_PRODUCTOR_EXPORTADOR } from '../../constantes/certificado-tabla.enum';
 import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
-import { ConfiguracionColumna, InputCheckComponent, REGEX_SOLO_DIGITOS } from '@libs/shared/data-access-user/src';
-import { FormBuilder, Validators } from '@angular/forms';
+import { ConfiguracionColumna, InputCheckComponent, REGEX_SOLO_DIGITOS, TablaDinamicaComponent, TablaSeleccion, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { FormGroup } from '@angular/forms';
-import { FormsModule } from '@angular/forms';
 import { Modal } from 'bootstrap';
-import { ReactiveFormsModule } from '@angular/forms';
 import { Subject } from 'rxjs';
-import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
-import { TablaSeleccion } from '@libs/shared/data-access-user/src';
-import { TituloComponent } from '@libs/shared/data-access-user/src';
-import { ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
-
 
 /**
  * Componente para gestionar el histórico de productores.
@@ -34,10 +26,43 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
    * Formulario principal para gestionar los datos de los productores.
    */
   formulario!: FormGroup;
+  /**
+   * @input tramiteState - Representa el estado del formulario histórico.
+   * Este objeto contiene los datos relacionados con el historial de productores.
+   * 
+   * @command Este decorador permite que el componente reciba datos desde su componente padre.
+   */
   @Input() tramiteState: FormularioHistorico = {};
+  /**
+   * @input mercanciaDatos
+   * 
+   * Arreglo de objetos de tipo `MercanciaTabla` que contiene los datos de mercancías
+   * para ser utilizados en el componente. Este input permite pasar información desde
+   * un componente padre.
+   * 
+   * @type {MercanciaTabla[]}
+   * @default []
+   */
   @Input() mercanciaDatos: MercanciaTabla[] = [];
-  @Input() agregarDatosProductor: AgregarDatosProductorFormulario = {};
+  /**
+   * @method agregarDatosProductor
+   * @description Este decorador de entrada (@Input) se utiliza para recibir un objeto 
+   * de tipo `AgregarDatosProductorFormulario` que contiene los datos necesarios 
+   * para agregar información del productor en el formulario.
+   * 
+   * @command Este objeto debe ser proporcionado por el componente padre que utiliza 
+   * este componente hijo.
+   */
 
+  @Input() agregarDatosProductor: AgregarDatosProductorFormulario = {};
+  /**
+   * @property {string} mensajeDeAlerta - Mensaje de alerta que indica 
+   * la necesidad de agregar al menos un productor por exportador.
+   * 
+   * @command Este mensaje se utiliza para notificar al usuario 
+   * sobre la validación requerida en la asignación de productores.
+   */
+  mensajeDeAlerta: string = 'Es necesario agregar al menos un productor por exportador';
   /**
    * Propiedad de entrada que recibe los datos de la tabla de mercancia.
    * @type {Mercancia[]}
@@ -74,7 +99,6 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
  */
   TablaSeleccion = TablaSeleccion;
 
-
   /**
    * Configuración de las columnas de la tabla dinámica.
    */
@@ -95,25 +119,42 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
    */
   seleccionadoAgregarProductoresExportador: HistoricoColumnas[] = [];
 
+  /**
+   * @property {ConfiguracionColumna<MercanciaTabla>[]} mercanciaTablaConfiguracion
+   * 
+   * Configuración de las columnas para la tabla de mercancías.
+   * 
+   * @remarks
+   * Este arreglo utiliza la configuración definida en `CONFIGURACION_MERCANCIA` 
+   * para establecer las propiedades de las columnas que se mostrarán en la tabla.
+   * 
+   * @comando
+   * Utilice esta propiedad para personalizar o acceder a la configuración de las columnas.
+   */
   mercanciaTablaConfiguracion: ConfiguracionColumna<MercanciaTabla>[] = CONFIGURACION_MERCANCIA;
-
   /**
    * Notificador para destruir las suscripciones y evitar fugas de memoria.
    */
   destroyNotifier$: Subject<void> = new Subject();
-
-
-
   /**
    * Referencia al modal para agregar datos del productor.
    */
   @ViewChild('modalAgregarDatosProductorPorExportador') modalElement!: ElementRef;
 
   /**
+   * Referencia al elemento del DOM asociado al modal de búsqueda.
+   */
+  @ViewChild('modalBuscar') modalElements!: ElementRef;
+
+  /**
    * Referencia al botón para cerrar el modal.
    */
   @ViewChild('closeModal') closeModal!: ElementRef;
 
+  /**
+   * Referencia al botón para cerrar el modal.
+   */
+  @ViewChild('closeModalMercancia') closeModalMercancia!: ElementRef;
   /**
    * Formulario para agregar datos del productor.
    */
@@ -207,7 +248,7 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
    * Abre el modal para agregar datos del productor.
    */
   agregarDatosProductorPorExportador(): void {
-    if (this.modalElement) {
+    if (this.modalElement?.nativeElement) {
       const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
       MODAL_INSTANCE.show();
     }
@@ -269,6 +310,31 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
     this.agregarDatosProductorFormularioEvent.emit({ formGroupName, campo, valor: VALOR, storeStateName: storeStateName || '' });
 
   }
+  /**
+   * Abre un modal para agregar mercancía.
+   * 
+   * @remarks
+   * Este método verifica si los elementos del modal están disponibles 
+   * y, de ser así, crea una instancia del modal y lo muestra.
+   * 
+   * @comando
+   * - Llama a este método para abrir el modal de mercancía.
+   */
+  agregarMercancia(): void {
+    if (this.modalElements?.nativeElement) {
+      const MODAL_INSTANCE = new Modal(this.modalElements.nativeElement);
+      MODAL_INSTANCE.show();
+    }
+  }
+  /**
+   * Cierra el modal para agregar datos del productor.
+   */
+  cerrarModalMercancia(): void {
+    if (this.closeModalMercancia?.nativeElement) {
+      this.closeModalMercancia.nativeElement.click();
+    }
+  }
+  
   /**
     * Método que se ejecuta al destruir el componente.
     * 

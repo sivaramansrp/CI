@@ -92,11 +92,35 @@ export class PeruHistoricoProductoresComponent implements OnInit, OnDestroy {
         });
     }
   
+    /**
+     * Establece valores en el estado del store para un formulario histórico.
+     * 
+     * @param event - Objeto que contiene los datos necesarios para actualizar el store.
+     * @param event.formGroupName - Nombre del grupo de formulario (no utilizado en este método).
+     * @param event.campo - Nombre del campo que se actualizará en el store.
+     * @param event.valor - Valor que se asignará al campo en el store.
+     * @param event.storeStateName - Nombre del estado del store (no utilizado en este método).
+     * 
+     * @returns void
+     */
     setValoresStore(event: { formGroupName: string, campo: string, valor: undefined, storeStateName: string }) :void{
       const { campo: CAMPO, valor: VALOR } = event;
       this.store.setFormHistorico({ [CAMPO]: VALOR });
     }
 
+    /**
+     * Establece valores en el store para agregar datos del formulario del productor.
+     * 
+     * @param event - Objeto que contiene los datos necesarios para actualizar el store.
+     * @param event.formGroupName - Nombre del grupo de formulario (no utilizado en este método).
+     * @param event.campo - Nombre del campo que se actualizará en el store.
+     * @param event.valor - Valor que se asignará al campo en el store.
+     * @param event.storeStateName - Nombre del estado del store (no utilizado en este método).
+     * 
+     * @returns void
+     * 
+     * @command Actualiza el estado del store con los valores proporcionados.
+     */
     setValoresStoreAgregarForm(event: { formGroupName: string, campo: string, valor: undefined, storeStateName: string }) :void{
       const { campo: CAMPO, valor: VALOR } = event; 
       this.store.setAgregarFormDatosProductor({ [CAMPO]: VALOR });
