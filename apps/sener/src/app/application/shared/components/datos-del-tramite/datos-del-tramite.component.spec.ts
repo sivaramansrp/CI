@@ -1,88 +1,91 @@
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DatosDelTramiteComponent } from './datos-del-tramite.component';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { EventEmitter } from '@angular/core';
+import { Catalogo } from '@ng-mf/data-access-user';
 
 describe('DatosDelTramiteComponent', () => {
   let component: DatosDelTramiteComponent;
+  let fixture: ComponentFixture<DatosDelTramiteComponent>;
+  let formBuilder: FormBuilder;
 
-  beforeEach(() => {
-    component = new DatosDelTramiteComponent();
-    component.form = new FormGroup({
-      testControl: new FormControl('', [Validators.required]),
+  const MOCK_INPUT_FIELDS = [
+    { label: 'Campo 1', placeholder: 'Ingrese valor', required: true, controlName: 'campo1' },
+    { label: 'Campo 2', placeholder: 'Ingrese valor', required: false, controlName: 'campo2' },
+  ];
+
+  const MOCK_CATALOGOS_ARRAY: Catalogo[][] = [
+    [{ id: 1, descripcion: 'Opción 1' }, { id: 2, descripcion: 'Opción 2' }],
+    [{ id: 3, descripcion: 'Opción 3' }, { id: 4, descripcion: 'Opción 4' }],
+  ];
+
+  const MOCK_SOLICITUD_OPCIONES = [
+    { label: 'Opción A', value: 'A' },
+    { label: 'Opción B', value: 'B' },
+  ];
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [ReactiveFormsModule, DatosDelTramiteComponent],
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(DatosDelTramiteComponent);
+    component = fixture.componentInstance;
+    formBuilder = TestBed.inject(FormBuilder);
+
+    // Initialize the form
+    component.form = formBuilder.group({
+      campo1: ['', Validators.required],
+      campo2: [''],
+      solicitud: [''],
     });
-    component.inputFields = [
-      {
-        label: 'Test Label',
-        placeholder: 'Test Placeholder',
-        required: true,
-        controlName: 'testControl',
-      },
-    ];
-    component.catalogosArray = [[{ id: 1, nombre: 'Test Catalog' }]];
-    component.solicitudOpciones = ['Option1', 'Option2'];
-    component.setValoresStoreEvent = new EventEmitter();
+
+    component.inputFields = MOCK_INPUT_FIELDS;
+    component.catalogosArray = MOCK_CATALOGOS_ARRAY;
+    component.solicitudOpciones = MOCK_SOLICITUD_OPCIONES;
+
+    fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('debería crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  describe('esInvalido', () => {
-    it('should return true if the control is invalid and touched', () => {
-      const CONTROL = component.form.get('testControl');
-      CONTROL?.markAsTouched();
-      expect(component.esInvalido('testControl')).toBe(true);
-    });
+  it('debería verificar si un control es inválido', () => {
+    const CONTROL_NAME = 'campo1';
+    const CONTROL = component.form.get(CONTROL_NAME);
+    CONTROL?.markAsTouched();
+    CONTROL?.setValue('');
+    expect(component.esInvalido(CONTROL_NAME)).toBe(true);
 
-    it('should return true if the control is invalid and dirty', () => {
-      const CONTROL = component.form.get('testControl');
-      CONTROL?.markAsDirty();
-      expect(component.esInvalido('testControl')).toBe(true);
-    });
+    CONTROL?.setValue('Valor válido');
+    expect(component.esInvalido(CONTROL_NAME)).toBe(false);
+  });
 
-    it('should return false if the control is valid', () => {
-      const CONTROL = component.form.get('testControl');
-      CONTROL?.setValue('Valid Value');
-      expect(component.esInvalido('testControl')).toBe(false);
-    });
+  it('debería emitir el evento setValoresStoreEvent al llamar a setValoresStore', () => {
+    jest.spyOn(component.setValoresStoreEvent, 'emit');
+    const MOCK_CAMPO = 'campo1';
+    component.setValoresStore(component.form, MOCK_CAMPO);
 
-    it('should return false if the control does not exist', () => {
-      expect(component.esInvalido('nonExistentControl')).toBe(false);
+    expect(component.setValoresStoreEvent.emit).toHaveBeenCalledWith({
+      form: component.form,
+      campo: MOCK_CAMPO,
     });
   });
 
-  describe('setValoresStore', () => {
-    it('should emit the setValoresStoreEvent with the correct payload', () => {
-      const EMITSPY = jest.spyOn(component.setValoresStoreEvent, 'emit');
-      const FORM = component.form;
-      const COMPO = 'testControl';
-
-      component.setValoresStore(FORM, COMPO);
-
-      expect(EMITSPY).toHaveBeenCalledWith({ FORM, COMPO });
-    });
+  it('debería inicializar correctamente los campos de entrada', () => {
+    expect(component.inputFields).toEqual(MOCK_INPUT_FIELDS);
   });
 
-  describe('Input properties', () => {
-    it('should have default values for inputFields', () => {
-      const DEFAULTCOMPONENT  = new DatosDelTramiteComponent();
-      expect(DEFAULTCOMPONENT.inputFields).toEqual([]);
-    });
-
-    it('should have default values for catalogosArray', () => {
-      const DEFAULTCOMPONENT = new DatosDelTramiteComponent();
-      expect(DEFAULTCOMPONENT.catalogosArray).toEqual([]);
-    });
-
-    it('should have default values for solicitudOpciones', () => {
-      const DEFAULTCOMPONENT = new DatosDelTramiteComponent();
-      expect(DEFAULTCOMPONENT.solicitudOpciones).toEqual([]);
-    });
+  it('debería inicializar correctamente los catálogos', () => {
+    expect(component.catalogosArray).toEqual(MOCK_CATALOGOS_ARRAY);
   });
 
-  describe('Output properties', () => {
-    it('should initialize setValoresStoreEvent as an EventEmitter', () => {
-      expect(component.setValoresStoreEvent).toBeInstanceOf(EventEmitter);
-    });
+  it('debería inicializar correctamente las opciones de solicitud', () => {
+    expect(component.solicitudOpciones).toEqual(MOCK_SOLICITUD_OPCIONES);
+  });
+
+  it('debería devolver false si el control no existe en esInvalido', () => {
+    expect(component.esInvalido('controlInexistente')).toBe(false);
   });
 });

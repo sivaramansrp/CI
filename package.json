@@ -23,6 +23,8 @@
     "@datorama/akita": "^8.0.1",
     "@datorama/akita-ngdevtools": "^7.0.0",
     "@nx/angular": "19.3.1",
+    "@nx/nx-linux-x64-gnu": "^20.8.0",
+    "@swc/core-linux-x64-gnu": "^1.11.22",
     "babel-jest": "^29.7.0",
     "bootstrap": "^5.3.3",
     "bootstrap-icons": "^1.11.3",

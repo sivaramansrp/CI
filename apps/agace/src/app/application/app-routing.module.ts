@@ -18,9 +18,9 @@ const ROUTES: Routes = [
   {
     path: 'registros-de-comercio-exterior',
     loadChildren: () =>
-      import('./tramites/31602/comercio-exterior/comercio-exterior.module').then(
-        (m) => m.ComercioExteriorModule
-      ),
+      import(
+        './tramites/31602/comercio-exterior/comercio-exterior.module'
+      ).then((m) => m.ComercioExteriorModule),
   },
   {
     path: 'aviso',
@@ -38,9 +38,10 @@ const ROUTES: Routes = [
     path: 'aviso-unico-renovacion',
     loadChildren: () =>
       import('./tramites/317/aviso-unico-renovacion.module').then(
-        (m) => m.AvisoUnicoRenovacionModule)
-      },
-      {
+        (m) => m.AvisoUnicoRenovacionModule
+      ),
+  },
+  {
     path: 'registro-solicitud',
     loadChildren: () =>
       import('./tramites/31802/registro-solicitud.module').then(
@@ -71,9 +72,16 @@ const ROUTES: Routes = [
   {
     path: 'manifiesto-aereo',
     loadChildren: () =>
-      import(
-        './tramites/32401/manifiesto-aereo.module'
-      ).then((m) => m.ManifiestoAereoModule),
+      import('./tramites/32401/manifiesto-aereo.module').then(
+        (m) => m.ManifiestoAereoModule
+      ),
+  },
+  {
+    path: 'consulta-aviso-acreditacion',
+    loadChildren: () =>
+      import('./tramites/32101/Consulta-Aviso-Acreditacion.module').then(
+        (m) => m.ConsultaAvisoAcreditacionModule
+      ),
   },
   {
     path: 'aviso-traslado',
@@ -86,14 +94,13 @@ const ROUTES: Routes = [
     path: 'aviso-procesos-solicitante',
     loadChildren: () =>
       import('./tramites/32505/aviso-procesos.module').then(
-        (m) => m.AvisoProcesosModule)
+        (m) => m.AvisoProcesosModule
+      ),
   },
   {
     path: 'adace',
     loadChildren: () =>
-      import('./tramites/32508/adace.module').then(
-        (m) => m.AdaceModule
-      ),
+      import('./tramites/32508/adace.module').then((m) => m.AdaceModule),
   },
   {
     path: 'anexo-veintiocho',
@@ -102,6 +109,14 @@ const ROUTES: Routes = [
         (m) => m.AnexoVeintiochoModule
       ),
   },
+  {
+    path: 'endoso-garantia',
+    loadChildren: () =>
+      import('./tramites/31301/endoso-garantia.module').then(
+        (m) => m.EndosoGarantiaModule
+      ),
+  },
+
   {
     path: 'entrega-acta-solicitante',
     loadChildren: () =>
