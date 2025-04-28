@@ -50,8 +50,8 @@
       </div>
       </div>
       <div class="row" *ngIf="periodoView">
-        <div class="col-md-12 mt-5" *ngIf="alertView">
-          <ng-alert [CONTENIDO]="textos"  [CUSTOMECLASS]="infoAlert"></ng-alert>
+        <div class="col-md-12 mt-5" *ngIf="vistaAlerta">
+          <ng-alert [CONTENIDO]="textos"  [CUSTOMECLASS]="infoAlerta"></ng-alert>
         </div>
         <form [formGroup]="periodoForm">
     <div class="col-md-12">

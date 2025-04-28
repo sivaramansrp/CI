@@ -98,7 +98,10 @@ export class SolicitudPageComponent implements OnInit, OnDestroy {
     constructor(
       private seccionQuery: SeccionLibQuery,
       private seccionStore: SeccionLibStore,
-    ) {}
+    ) {
+      this.seccionStore.establecerFormaValida([false]);
+      this.seccionStore.establecerSeccion([true]);
+    }
   
     /**
      * Inicializa el componente.

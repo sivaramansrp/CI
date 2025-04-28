@@ -130,11 +130,20 @@ export class OperacionesDeComercioExteriorComponent implements OnInit, OnDestroy
    */
   listaDeTablasSeleccionadas: Solicitar[] = [];
 
-  textos:string='';
+  /**
+   * @propiedad {string} textos - Texto utilizado para mostrar mensajes en la alerta.
+   */
+  textos: string = '';
 
-  infoAlert:string = INFO_ALERT;
+  /**
+   * @propiedad {string} infoAlerta - Información utilizada para mostrar en la alerta.
+   */
+  infoAlerta: string = INFO_ALERT;
 
-  alertView:boolean = false;
+  /**
+   * @propiedad {boolean} vistaAlerta - Indica si se muestra la alerta.
+   */
+  vistaAlerta: boolean = false;
 
   /**
    * @constructor
@@ -222,11 +231,11 @@ export class OperacionesDeComercioExteriorComponent implements OnInit, OnDestroy
     });
     this.tramite319Store.actualizarDatosForma(this.cuerpoSolicitarTablaFila);
     this.periodoView = false;
-    this.alertView = false;
+    this.vistaAlerta = false;
     this.periodoForm.reset();
   }
 else{
-  this.alertView=true;
+  this.vistaAlerta=true;
   this.textos=TEXTOS + this.periodoForm.value.periodoInicial + ' al ' + this.periodoForm.value.periodoFinal;
 }
   }
