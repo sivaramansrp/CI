@@ -18,6 +18,10 @@ export class PeruHistoricoProductoresComponent implements OnInit, OnDestroy {
      * Lista de productores disponibles para el exportador.
      */
     productoresExportador: HistoricoColumnas[] = [];
+    /**
+     * @property {MercanciaTabla[]} mercancia - Arreglo que contiene información de las mercancías.
+     * @command Este arreglo se utiliza para almacenar y gestionar los datos relacionados con las mercancías en el componente.
+     */
     mercancia: MercanciaTabla[] = [];
   
     /**
@@ -26,9 +30,17 @@ export class PeruHistoricoProductoresComponent implements OnInit, OnDestroy {
     destroyNotifier$: Subject<void> = new Subject();
   
     /**
-     * Estado actual del trámite.
+     * @property tramiteState
+     * @command
+     * Este objeto se utiliza para almacenar y gestionar el estado actual del trámite.
      */
     public tramiteState!:{ [key: string]: string | number | boolean | object | undefined };
+    /**
+     * @public
+     * @property {Object} agregarDatosProductor - Objeto utilizado para agregar datos relacionados con un productor.
+     * @description Este objeto puede contener claves con valores de diferentes tipos, incluyendo cadenas, números, booleanos, objetos o indefinidos.
+     * @command Este objeto es utilizado para gestionar la información de los productores en el componente.
+     */
     public agregarDatosProductor!: { [key: string]: string | number | boolean | object | undefined };
 
     /**
