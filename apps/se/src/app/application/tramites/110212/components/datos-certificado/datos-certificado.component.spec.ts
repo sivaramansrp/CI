@@ -2,35 +2,35 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule, FormsModule, FormBuilder } from '@angular/forms';
 import { of } from 'rxjs';
 import { DatosCertificadoComponent } from './datos-certificado.component';
-import { Tramite110216Store } from '../../../../estados/tramites/tramite110216.store';
-import { Tramite110216Query } from '../../../../estados/queries/tramite110216.query';
+import { Tramite110212Store } from '../../../../estados/tramites/tramite110212.store';
+import { Tramite110212Query } from '../../../../estados/queries/tramite110212.query';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { provideToastr, ToastrService } from 'ngx-toastr';
-import { CertificadosOrigenService } from '../../services/certificado-origen.service';
+import { ValidacionPosterioriService } from '../../service/validacion-posteriori.service';
 
 describe('DatosCertificadoComponent', () => {
   let component: DatosCertificadoComponent;
   let fixture: ComponentFixture<DatosCertificadoComponent>;
-  let certificadosOrigenServiceMock: any;
-  let tramite110216StoreMock: any;
-  let tramite110216QueryMock: any;
+  let validacionPosterioriServiceMock: any;
+  let tramite110212StoreMock: any;
+  let tramite110212QueryMock: any;
 
   beforeEach(async () => {
-    certificadosOrigenServiceMock = {
+    validacionPosterioriServiceMock = {
       obtenerIdioma: jest.fn().mockReturnValue(of({ datos: [{ id: 1, descripcion: 'Español' }] })),
       obtenerEntidadFederativa: jest.fn().mockReturnValue(of({ datos: [{ id: 1, descripcion: 'Entidad 1' }] })),
       obtenerRepresentacionFederal: jest.fn().mockReturnValue(of({ datos: [{ id: 1, descripcion: 'Representación 1' }] }))
     };
 
-    tramite110216StoreMock = {
+    tramite110212StoreMock = {
       setIdioma: jest.fn(),
       setEntidadFederativa: jest.fn(),
       setRepresentacionFederal: jest.fn()
     };
 
-    tramite110216QueryMock = {
+    tramite110212QueryMock = {
       selectSolicitud$: of({
         observaciones: 'Observaciones de prueba',
         idioma: 1,
@@ -54,9 +54,9 @@ describe('DatosCertificadoComponent', () => {
           positionClass: 'toast-top-right',
         }),
         FormBuilder,
-        { provide: CertificadosOrigenService, useValue: certificadosOrigenServiceMock },
-        { provide: Tramite110216Store, useValue: tramite110216StoreMock },
-        { provide: Tramite110216Query, useValue: tramite110216QueryMock }
+        { provide: ValidacionPosterioriService, useValue: validacionPosterioriServiceMock },
+        { provide: Tramite110212Store, useValue: tramite110212StoreMock },
+        { provide: Tramite110212Query, useValue: tramite110212QueryMock }
       ]
     }).compileComponents();
 
@@ -106,19 +106,19 @@ describe('DatosCertificadoComponent', () => {
 
   it('should load idiomas on cargarIdioma', () => {
     component.cargarIdioma();
-    expect(certificadosOrigenServiceMock.obtenerIdioma).toHaveBeenCalled();
+    expect(validacionPosterioriServiceMock.obtenerIdioma).toHaveBeenCalled();
     expect(component.idiomas).toEqual([{ id: 1, descripcion: 'Español' }]);
   });
 
   it('should load entidadFederativas on cargarEntidadFederativa', () => {
     component.cargarEntidadFederativa();
-    expect(certificadosOrigenServiceMock.obtenerEntidadFederativa).toHaveBeenCalled();
+    expect(validacionPosterioriServiceMock.obtenerEntidadFederativa).toHaveBeenCalled();
     expect(component.entidadFederativas).toEqual([{ id: 1, descripcion: 'Entidad 1' }]);
   });
 
   it('should load representacionFederal on cargarRepresentacionFederal', () => {
     component.cargarRepresentacionFederal();
-    expect(certificadosOrigenServiceMock.obtenerRepresentacionFederal).toHaveBeenCalled();
+    expect(validacionPosterioriServiceMock.obtenerRepresentacionFederal).toHaveBeenCalled();
     expect(component.representacionFederal).toEqual([{ id: 1, descripcion: 'Representación 1' }]);
   });
   it('should call setValoresStore for representacionFederalSeleccion', () => {
@@ -141,13 +141,13 @@ describe('DatosCertificadoComponent', () => {
 
   it('should load idiomas on cargarIdioma', () => {
     component.cargarIdioma();
-    expect(certificadosOrigenServiceMock.obtenerIdioma).toHaveBeenCalled();
+    expect(validacionPosterioriServiceMock.obtenerIdioma).toHaveBeenCalled();
     expect(component.idiomas).toEqual([{ id: 1, descripcion: 'Español' }]);
   });
 
   it('should load entidadFederativas on cargarEntidadFederativa', () => {
     component.cargarEntidadFederativa();
-    expect(certificadosOrigenServiceMock.obtenerEntidadFederativa).toHaveBeenCalled();
+    expect(validacionPosterioriServiceMock.obtenerEntidadFederativa).toHaveBeenCalled();
     expect(component.entidadFederativas).toEqual([{ id: 1, descripcion: 'Entidad 1' }]);
   });
 });

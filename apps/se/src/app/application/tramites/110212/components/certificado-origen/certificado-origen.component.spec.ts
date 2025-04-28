@@ -1,18 +1,18 @@
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { CertificadoOrigenComponent } from './certificado-origen.component';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { Tramite110216Store } from '../../../../estados/tramites/tramite110216.store';
-import { Tramite110216Query } from '../../../../estados/queries/tramite110216.query';
+import { Tramite110212Store } from '../../../../estados/tramites/tramite110212.store';
+import { Tramite110212Query } from '../../../../estados/queries/tramite110212.query';
 import { ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
-import { of, Subject } from 'rxjs';
-import { CertificadosOrigenService } from '../../services/certificado-origen.service';
-import { DisponiblesTabla, SeleccionadasTabla } from '../../models/certificado-origen.model';
+import { of } from 'rxjs';
+import { ValidacionPosterioriService } from '../../service/validacion-posteriori.service';
+import { DisponiblesTabla, SeleccionadasTabla } from '../../models/validacion-posteriori.model';
 import { Modal } from 'bootstrap';
 
 describe('CertificadoOrigenComponent', () => {
   let component: CertificadoOrigenComponent;
   let fixture: ComponentFixture<CertificadoOrigenComponent>;
-  let certificadosOrigenServiceMock: any;
+  let validacionPosterioriService: any;
   let tramiteQueryMock: any;
   let validacionesServiceMock: any;
   let mercanciaSeleccionadasTablaDatos: SeleccionadasTabla;
@@ -22,7 +22,7 @@ describe('CertificadoOrigenComponent', () => {
 
 
   beforeEach(async () => {
-    certificadosOrigenServiceMock = {
+    validacionPosterioriService = {
       obtenerTratado: jest.fn().mockReturnValue(of({ datos: [{ id: 1, nombre: 'Tratado 1' }] })),
       obtenerPais: jest.fn().mockReturnValue(of({ datos: [{ id: 1, nombre: 'País 1' }] })),
       obtenerMercanciasDisponibles: jest.fn().mockReturnValue(of([{ id: 1, nombre: 'Mercancía Disponible' }])),
@@ -73,9 +73,9 @@ describe('CertificadoOrigenComponent', () => {
       imports: [ReactiveFormsModule, CertificadoOrigenComponent],
       providers: [
         FormBuilder,
-        { provide: CertificadosOrigenService, useValue: certificadosOrigenServiceMock },
-        { provide: Tramite110216Store, useValue: tramiteStoreMock },
-        { provide: Tramite110216Query, useValue: tramiteQueryMock },
+        { provide: ValidacionPosterioriService, useValue: validacionPosterioriService },
+        { provide: Tramite110212Store, useValue: tramiteStoreMock },
+        { provide: Tramite110212Query, useValue: tramiteQueryMock },
         { provide: ValidacionesFormularioService, useValue: validacionesServiceMock },
       ],
     }).compileComponents();
@@ -97,26 +97,26 @@ describe('CertificadoOrigenComponent', () => {
 
   it('should call cargarTratado and set optionsTratado', () => {
     component.cargarTratado();
-    expect(certificadosOrigenServiceMock.obtenerTratado).toHaveBeenCalled();
+    expect(validacionPosterioriService.obtenerTratado).toHaveBeenCalled();
     expect(component.optionsTratado).toEqual([{ id: 1, nombre: 'Tratado 1' }]);
   });
 
   it('should call cargarPais and set optionsPais and optionsTipoFactura', () => {
     component.cargarPais();
-    expect(certificadosOrigenServiceMock.obtenerPais).toHaveBeenCalled();
+    expect(validacionPosterioriService.obtenerPais).toHaveBeenCalled();
     expect(component.optionsPais).toEqual([{ id: 1, nombre: 'País 1' }]);
     expect(component.optionsTipoFactura).toEqual([{ id: 1, nombre: 'País 1' }]);
   });
 
   it('should call cargarMercanciasDisponibles and set mercanciaDisponsiblesTablaDatos', () => {
     component.cargarMercanciasDisponibles();
-    expect(certificadosOrigenServiceMock.obtenerMercanciasDisponibles).toHaveBeenCalled();
+    expect(validacionPosterioriService.obtenerMercanciasDisponibles).toHaveBeenCalled();
     expect(component.mercanciaDisponsiblesTablaDatos).toEqual([{ id: 1, nombre: 'Mercancía Disponible' }]);
   });
 
   it('should call cargarMercanciasSeleccionadas and set mercanciaSeleccionadasTablaDatos', () => {
     component.cargarMercanciasSeleccionadas();
-    expect(certificadosOrigenServiceMock.obtenerMercanciasSeleccionadas).toHaveBeenCalled();
+    expect(validacionPosterioriService.obtenerMercanciasSeleccionadas).toHaveBeenCalled();
     expect(component.mercanciaSeleccionadasTablaDatos).toEqual([{ id: 1, nombre: 'Mercancía Seleccionada' }]);
   });
 

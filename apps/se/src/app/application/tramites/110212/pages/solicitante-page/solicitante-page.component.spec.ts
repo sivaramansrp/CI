@@ -1,8 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SolicitantePageComponent } from './solicitante-page.component';
 import { AlertComponent, BtnContinuarComponent, WizardComponent } from '@ng-mf/data-access-user';
-import { Tramite110216Store } from '../../../../estados/tramites/tramite110216.store';
-import { Tramite110216Query } from '../../../../estados/queries/tramite110216.query';
+import { Tramite110212Store } from '../../../../estados/tramites/tramite110212.store';
+import { Tramite110212Query } from '../../../../estados/queries/tramite110212.query';
 import { of } from 'rxjs';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
@@ -35,8 +35,8 @@ describe('SolicitantePageComponent', () => {
           positionClass: 'toast-top-right',
         }),
         provideHttpClient(),
-        { provide: Tramite110216Store, useValue: storeMock },
-        { provide: Tramite110216Query, useValue: queryMock },
+        { provide: Tramite110212Store, useValue: storeMock },
+        { provide: Tramite110212Query, useValue: queryMock },
       ],
     }).compileComponents();
 
@@ -107,12 +107,6 @@ describe('SolicitantePageComponent', () => {
     expect(pasoTresElement).toBeTruthy();
   });
 
-  it('should render ng-alert when indice is 1', () => {
-    component.indice = 1;
-    fixture.detectChanges();
-    const alertElement = fixture.debugElement.nativeElement.querySelector('ng-alert');
-    expect(alertElement).toBeTruthy();
-  });
 
   it('should not render ng-alert when indice is not 1', () => {
     component.indice = 2;

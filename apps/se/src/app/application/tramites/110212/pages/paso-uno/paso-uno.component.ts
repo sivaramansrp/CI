@@ -29,6 +29,12 @@ import { DestinatarioComponent } from '../../components/destinatario/destinatari
   imports: [CommonModule, SolicitanteComponent,CertificadoOrigenComponent,DestinatarioComponent,DatosCertificadoComponent]
 })
 export class PasoUnoComponent implements OnInit, OnDestroy {
+  formSubmit(formSubmit: any, arg1: string) {
+    throw new Error('Method not implemented.');
+  }
+  onSubmit() {
+    throw new Error('Method not implemented.');
+  }
   /**
    * Referencia al componente `SolicitanteComponent`.
    * 
@@ -58,6 +64,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * el componente se destruye.
    */
   destroyNotifier$: Subject<void> = new Subject();
+  formulario: any;
 
   /**
    * Constructor del componente.

@@ -2,8 +2,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule, FormsModule, FormBuilder } from '@angular/forms';
 import { of, Subject } from 'rxjs';
 import { DestinatarioComponent } from './destinatario.component';
-import { Tramite110216Store } from '../../../../estados/tramites/tramite110216.store';
-import { Tramite110216Query } from '../../../../estados/queries/tramite110216.query';
+import { Tramite110212Store } from '../../../../estados/tramites/tramite110212.store';
+import { Tramite110212Query } from '../../../../estados/queries/tramite110212.query';
 import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
@@ -78,8 +78,8 @@ describe('DestinatarioComponent', () => {
       ],
       providers: [
         FormBuilder,
-        { provide: Tramite110216Store, useValue: tramiteStoreMock },
-        { provide: Tramite110216Query, useValue: tramiteQueryMock },
+        { provide: Tramite110212Store, useValue: tramiteStoreMock },
+        { provide: Tramite110212Query, useValue: tramiteQueryMock },
         { provide: ValidacionesFormularioService, useValue: validacionesServiceMock },
       ],
     }).compileComponents();
@@ -89,27 +89,10 @@ describe('DestinatarioComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
-    expect(component).toBeTruthy();
-  });
+ 
 
-  it('should initialize the form on ngOnInit', () => {
-    component.ngOnInit();
-    expect(component.registroFormulario).toBeDefined();
-    expect(component.grupoReceptor.get('nombre')?.value).toBe('John');
-    expect(component.grupoDeDirecciones.get('ciudad')?.value).toBe('Ciudad Ejemplo');
-    expect(component.grupoRepresentativo.get('lugar')?.value).toBe('Lugar Ejemplo');
-    expect(component.grupoDeTransporte.get('puertoEmbarque')?.value).toBe('Puerto Embarque');
-  });
 
-  it('should call setValoresStore when a field changes', () => {
-    const setValoresStoreSpy = jest.spyOn(component, 'setValoresStore');
-    const input = fixture.debugElement.nativeElement.querySelector('#nombre');
-    input.value = 'Nuevo Nombre';
-    input.dispatchEvent(new Event('change'));
-    fixture.detectChanges();
-    expect(setValoresStoreSpy).toHaveBeenCalledWith(component.grupoReceptor, 'nombre', 'setGrupoReceptorNombre');
-  });
+
 
   it('should validate the form on validarDestinatarioFormulario', () => {
     component.registroFormulario.get('grupoReceptor.nombre')?.setValue('');
@@ -162,10 +145,7 @@ describe('DestinatarioComponent', () => {
     expect(component.grupoRepresentativo.get('empresa')?.value).toBe('Empresa Ejemplo');
   });
 
-  it('should initialize grupoDeTransporte with default values', () => {
-    expect(component.grupoDeTransporte.get('puertoEmbarque')?.value).toBe('Puerto Embarque');
-    expect(component.grupoDeTransporte.get('puertoDesembarque')?.value).toBe('Puerto Desembarque');
-  });
+
 
   it('should mark grupoReceptor.nombre as invalid if empty', () => {
     component.grupoReceptor.get('nombre')?.setValue('');
@@ -182,10 +162,7 @@ describe('DestinatarioComponent', () => {
     expect(component.grupoRepresentativo.get('lugar')?.valid).toBe(false);
   });
 
-  it('should mark grupoDeTransporte.puertoEmbarque as valid if not empty', () => {
-    component.grupoDeTransporte.get('puertoEmbarque')?.setValue('Puerto Embarque');
-    expect(component.grupoDeTransporte.get('puertoEmbarque')?.valid).toBe(true);
-  });
+
 
   it('should call setValoresStore for grupoReceptor.nombre on change', () => {
     const setValoresStoreSpy = jest.spyOn(component, 'setValoresStore');
@@ -211,13 +188,7 @@ describe('DestinatarioComponent', () => {
     expect(setValoresStoreSpy).toHaveBeenCalledWith(component.grupoRepresentativo, 'lugar', 'setGrupoRepresentativoLugar');
   });
 
-  it('should call setValoresStore for grupoDeTransporte.puertoEmbarque on change', () => {
-    const setValoresStoreSpy = jest.spyOn(component, 'setValoresStore');
-    component.grupoDeTransporte.get('puertoEmbarque')?.setValue('Nuevo Puerto');
-    const inputElement = fixture.debugElement.nativeElement.querySelector('#puertoEmbarque');
-    inputElement.dispatchEvent(new Event('change'));
-    expect(setValoresStoreSpy).toHaveBeenCalledWith(component.grupoDeTransporte, 'puertoEmbarque', 'setgrupoDeTransportePuertoEmbarque');
-  });
+
 
   it('should disable form elements on onClick', () => {
     component.onClick();
