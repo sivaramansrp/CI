@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+
+import { AbstractControl, FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 
 import { Catalogo, ConfiguracionColumna, TablaSeleccion } from '@libs/shared/data-access-user/src';
 
@@ -13,6 +14,34 @@ import {CONFIGURACION_PERSONAS_COLUMNAS, CONFIGURACION_SOLICITAR_COLUMNAS } from
 import { Tramite319Query } from '../../estados/tramite319Query.query';
 import { Tramite319Store } from '../../estados/tramite319Store.store';
 
+/**
+ * @description
+ * Validador personalizado para verificar si un valor cumple con el formato de mes y año (MM/YYYY).
+ * Este validador se puede usar en formularios para asegurarse de que el valor ingresado sea válido.
+ * Si el valor está vacío, se delega la validación a `Validators.required`.
+ * Si el valor no coincide con el formato esperado, devuelve un error con la clave `invalidMonthYear`.
+ *
+ * @returns {ValidatorFn} Una función de validación que verifica el formato de mes y año.
+ *
+ * @example
+ * ```typescript
+ * const control = new FormControl('12/2023', monthYearValidator());
+ * console.log(control.errors); // null (válido)
+ *
+ * const invalidControl = new FormControl('13/2023', monthYearValidator());
+ * console.log(invalidControl.errors); // { invalidMonthYear: true } (inválido)
+ * ```
+ */
+export function validadorDeMesyAno(): ValidatorFn {
+  return (control: AbstractControl) => {
+    const VALUE = control.value;
+    if (!VALUE) {
+      return null; // If empty, leave to Validators.required
+    }
+    const REGEX = /^(0[1-9]|1[0-2])\/\d{4}$/; // Matches MM/YYYY
+    return REGEX.test(VALUE) ? null : { invalidMonthYear: true };
+  };
+}
 /**
  * @componente
  * @nombre OperacionesDeComercioExteriorComponent
@@ -166,8 +195,8 @@ export class OperacionesDeComercioExteriorComponent implements OnInit, OnDestroy
     if (status) {
       this.periodoForm = this.fb.group({
         periodo: ['', Validators.required],
-        periodoInicial: ['', Validators.required],
-        periodoFinal: ['', Validators.required],
+        periodoInicial: ['', [Validators.required, validadorDeMesyAno()]],
+        periodoFinal: ['', [Validators.required, validadorDeMesyAno()]],
       });
     }
   }
