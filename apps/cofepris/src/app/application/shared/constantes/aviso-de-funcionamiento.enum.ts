@@ -347,6 +347,7 @@ export const CROSLISTA_DE_PAISES: string[] = [
  * Textos utilizados en la aplicación.
  */
 export const TEXTOS = {
+  ALERTA: `¡Precaución! Debes capturar localidad y colonia`,
   /**
    * Texto para la solicitud.
    */

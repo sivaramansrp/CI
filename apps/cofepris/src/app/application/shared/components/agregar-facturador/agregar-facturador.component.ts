@@ -1,7 +1,7 @@
+import { Component, Input } from '@angular/core';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 import { EventEmitter } from '@angular/core';
 import { Facturador } from '../../models/terceros-relacionados.model';
@@ -34,6 +34,20 @@ import { takeUntil } from 'rxjs';
   styleUrl: './agregar-facturador.component.css',
 })
 export class AgregarFacturadorComponent implements OnInit, OnDestroy {
+   /**
+     * Identificador del procedimiento actual.
+     * Utilizado para controlar el flujo de la vista dependiendo del tipo de procedimiento.
+     *
+     * @input idProcedimiento - Cadena que representa el ID del procedimiento (por ejemplo: '260102').
+     */
+   @Input()
+   idProcedimiento!: number;
+   /**
+   * Lista de elementos deshabilitados en el formulario.
+   * Esta propiedad almacena un arreglo de cadenas que representan
+   * los elementos que deben estar deshabilitados en el formulario.
+   */
+   public elementosDeshabilitados: string[] = [];
   /**
    * @property tipoPersona
    * @description Proporciona acceso al enum `TipoPersona` para su uso en la clase.
@@ -44,7 +58,7 @@ export class AgregarFacturadorComponent implements OnInit, OnDestroy {
    * Formulario reactivo para capturar los datos del facturador.
    * @property {FormGroup} agregarFacturadorForm
    */
-  agregarFacturadorForm: FormGroup;
+  agregarFacturadorForm!: FormGroup;
 
   /**
    * Subject utilizado para desuscribirse automáticamente de observables al destruir el componente.
@@ -85,6 +99,23 @@ export class AgregarFacturadorComponent implements OnInit, OnDestroy {
     private datosSolicitudService: DatosSolicitudService,
     private ubicaccion: Location
   ) {
+   // Constructor vacío, se inyectan las dependencias para su uso en el componente.
+  }
+
+  /**
+   * Hook de inicialización del componente. Carga los catálogos necesarios.
+   */
+  ngOnInit(): void {
+    this.cargarDatos();
+    this.validarElementos();
+    this.crearAgregarFormularioFacturador();
+  }
+
+  /**
+   * Método que inicializa el formulario reactivo y valida los elementos según el procedimiento.
+   * @returns {void}
+   */
+  crearAgregarFormularioFacturador():void{
     this.agregarFacturadorForm = this.fb.group({
       tipoPersona: ['Fisica', Validators.required],
       nombres: ['', Validators.required],
@@ -98,16 +129,43 @@ export class AgregarFacturadorComponent implements OnInit, OnDestroy {
       numeroExterior: ['', Validators.required],
       numeroInterior: [''],
       lada: [''],
-      telefono: [''],
-      correoElectronico: ['', [Validators.required, Validators.email]],
+      telefono: [
+        {
+          value: this.elementosDeshabilitados.includes('telefono')
+            ? '3461235'
+            : '',
+          disabled: this.elementosDeshabilitados.includes('telefono'),
+        },
+      ],
+      correoElectronico: [
+        {
+          value: this.elementosDeshabilitados.includes('correoElectronico')
+            ? 'abc@njk.com'
+            : '',
+          disabled: this.elementosDeshabilitados.includes('correoElectronico'),
+        },
+        [Validators.email],
+      ],
     });
   }
 
-  /**
-   * Hook de inicialización del componente. Carga los catálogos necesarios.
+   /**
+   * Valida elementos según el `idProcedimiento` y establece
+   * las listas de elementos no válidos y añadidos.
+   * @returns {void} Lista de elementos no válidos.
    */
-  ngOnInit(): void {
-    this.cargarDatos();
+   validarElementos(): void {
+    switch (this.idProcedimiento) {
+      case 260201:
+        this.elementosDeshabilitados = [
+          'telefono',
+          'correoElectronico'
+        ];
+      
+        break;
+      default:
+        this.elementosDeshabilitados = [];
+    }
   }
 
   /**
@@ -128,25 +186,36 @@ export class AgregarFacturadorComponent implements OnInit, OnDestroy {
    * Después, limpia el formulario y regresa a la vista anterior.
    */
   guardarFacturador(): void {
+    const VALOR_FORMULARIO = this.agregarFacturadorForm.getRawValue();
+
+    let nombreRazonSocial: string;
+
+    if (VALOR_FORMULARIO.tipoPersona === this.tipoPersona.MORAL) {
+      nombreRazonSocial = VALOR_FORMULARIO.denominacionRazon;
+    } else if (VALOR_FORMULARIO.tipoPersona === this.tipoPersona.FISICA) {
+      nombreRazonSocial = `${VALOR_FORMULARIO.nombres} ${
+        VALOR_FORMULARIO.primerApellido
+      } ${VALOR_FORMULARIO.segundoApellido || ''}`.trim();
+    } else {
+      nombreRazonSocial = ''; // Valor por defecto si tipoPersona es otro
+    }
     const NUEVO_FACTURADOR: Facturador = {
-      nombreRazonSocial: `${this.agregarFacturadorForm.value.nombres} ${
-        this.agregarFacturadorForm.value.primerApellido
-      } ${this.agregarFacturadorForm.value.segundoApellido || ''}`.trim(),
+      nombreRazonSocial:nombreRazonSocial,
       rfc: '',
       curp: '',
-      telefono: this.agregarFacturadorForm.value.telefono || '',
+      telefono: VALOR_FORMULARIO.telefono || '',
       correoElectronico:
-        this.agregarFacturadorForm.value.correoElectronico || '',
-      calle: this.agregarFacturadorForm.value.calle || '',
-      numeroExterior: this.agregarFacturadorForm.value.numeroExterior || '',
-      numeroInterior: this.agregarFacturadorForm.value.numeroInterior || '',
-      pais: this.agregarFacturadorForm.value.pais || '',
-      colonia: this.agregarFacturadorForm.value.colonia || '',
+        VALOR_FORMULARIO.correoElectronico || '',
+      calle: VALOR_FORMULARIO.calle || '',
+      numeroExterior: VALOR_FORMULARIO.numeroExterior || '',
+      numeroInterior: VALOR_FORMULARIO.numeroInterior || '',
+      pais: VALOR_FORMULARIO.pais || '',
+      colonia: VALOR_FORMULARIO.colonia || '',
       municipioAlcaldia: '',
       localidad: '',
-      entidadFederativa: this.agregarFacturadorForm.value.estado || '',
+      entidadFederativa: VALOR_FORMULARIO.estado || '',
       estadoLocalidad: '',
-      codigoPostal: this.agregarFacturadorForm.value.codigoPostal || '',
+      codigoPostal: VALOR_FORMULARIO.codigoPostal || '',
       coloniaEquivalente: '',
     };
 

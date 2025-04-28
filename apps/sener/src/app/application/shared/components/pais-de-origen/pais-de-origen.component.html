@@ -2,7 +2,7 @@
   <form [formGroup]="paisForm">
    
   <div class="row">
-    <ng-titulo titulo="País(es) de origen"> </ng-titulo>
+    <ng-titulo titulo={{titulo}}> </ng-titulo>
  
     <div class="row mb-5">
       <div class="col-md-4">
@@ -11,7 +11,7 @@
           [label]="'Bloque'"
           [placeholder]="'Seleccione un valor'"
           formControlName="bloque"
-          (change)="enCambioDeBloque($event); setValoresStore(paisForm,'bloque', 'setBloque')"
+          (change)="enCambioDeBloque($event); setValoresStore(paisForm,'bloque')"
         ></app-catalogo-select>      
       </div>
       <div 
@@ -37,11 +37,11 @@
         >
         <textarea
           class="form-control"
-          rows="2"
+          cols="80" rows="3"
           id="usoEspecifico"
           placeholder=""
           formControlName="usoEspecifico"
-          (change)="setValoresStore(paisForm,'usoEspecifico', 'setUsoEspecifico')"
+          (change)="setValoresStore(paisForm,'usoEspecifico')"
         ></textarea>
         <div
         *ngIf="
@@ -65,11 +65,11 @@
         >
         <textarea
           class="form-control"
-          rows="2"
+          cols="80" rows="3"
           id="justificacionImportacionExportacion"
           placeholder=""
           formControlName="justificacionImportacionExportacion"
-          (change)="setValoresStore(paisForm,'justificacionImportacionExportacion', 'setJustificacionImportacionExportacion')"
+          (change)="setValoresStore(paisForm,'justificacionImportacionExportacion')"
         ></textarea>
         <div
         *ngIf="
@@ -87,16 +87,16 @@
   </div>
  
   <div class="row mt-4">
-    <div class="col-md-8">
+    <div class="col-md-12">
       <div class="form-group">
         <label for="Observaciones" class="form-label">Observaciones:</label>
         <textarea
           class="form-control"
-          rows="2"
+          cols="80" rows="3"
           id="Observaciones"
           placeholder=""
           formControlName="observaciones"
-          (change)="setValoresStore(paisForm,'observaciones', 'setObservaciones')"
+          (change)="setValoresStore(paisForm,'observaciones')"
         ></textarea>
       </div>
     </div>

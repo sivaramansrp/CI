@@ -1,0 +1,51 @@
+<div class="container">
+  <h6 class="mt-4">Seleccione el tipo de operación que desea realizar*:</h6>
+  <form [formGroup]="preOperativeForm">
+    <div class="row mt-5">
+      <div class="col-md-12">
+        <app-input-radio
+          [radioOptions]="radioOptions"
+          formControlName="ideGenerica1"
+          (change)="setValoresStore('ideGenerica1')"
+          [layout]="'horizontal'"
+        ></app-input-radio>
+      </div>
+    </div>
+
+    <div class="row mt-5">
+      <label for="observaciones">justificacion*:</label>
+      <div class="col-md-8">
+    
+      <textarea
+        formControlName="observaciones"
+        id="observaciones"
+        name="observaciones"
+        rows="4"
+        cols="50"
+        [class.is-invalid]="
+          preOperativeForm.get('observaciones')?.touched &&
+          preOperativeForm.get('observaciones')?.invalid
+        "
+        (change)="setValoresStore('observaciones')"
+      ></textarea>
+          
+    </div>
+      <div
+        class="invalid-feedback"
+        *ngIf="
+          preOperativeForm.get('observaciones')?.touched &&
+          preOperativeForm.get('observaciones')?.invalid
+        "
+      >
+        <span
+          *ngIf="preOperativeForm.get('observaciones')?.hasError('required')"
+          >Favor de seleccionar el Motivo observaciones.</span
+        >
+      </div>
+    </div>
+  </form>
+  <app-datos-del-establecimiento></app-datos-del-establecimiento>
+  <app-domicilio-del-establecimiento></app-domicilio-del-establecimiento>
+  <app-manifiestos-y-declaraciones></app-manifiestos-y-declaraciones>
+  <app-representante-legal></app-representante-legal>
+</div>

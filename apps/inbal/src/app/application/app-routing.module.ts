@@ -22,6 +22,13 @@ const ROUTES: Routes = [
         (m) => m.AvisoImportacionPlasticaModule
       ),
   },
+  {
+    path: 'informacion-arte-exportar',
+    loadChildren: () =>
+      import('./tramites/270101/exportar-ilustraciones.module').then(
+        (m) => m.ExportarIlustracionesModule
+      ),
+  }
 ];
 
 @NgModule({
