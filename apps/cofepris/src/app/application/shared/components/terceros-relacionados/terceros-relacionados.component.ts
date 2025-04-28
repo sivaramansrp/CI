@@ -116,12 +116,11 @@ export class TercerosRelacionadosComponent implements OnInit {
    */
   public habilitarFacturador = true;
 
-    /**
-   * Lista de elementos requeridos en el formulario.
-   * Esta propiedad almacena un arreglo de cadenas que representan
-   * los elementos que deben ser obligatorios en el formulario.
+  /**
+   * @property {string[]} elementosRequeridos
+   * Lista de elementos que son obligatorios en el formulario.
    */
-    public elementosRequeridos: string[] = [];
+  @Input() public elementosRequeridos!: string[];
 
   /**
    * @constructor
@@ -177,32 +176,12 @@ export class TercerosRelacionadosComponent implements OnInit {
    * Crea el formulario, activa la escucha de cambios y sincroniza el estado con el input.
    */
   ngOnInit(): void {
-    this.validarElementos();
     this.habilitarFacturador = OCULTAR_FACTURADOR.includes(this.idProcedimiento)
       ? false
       : true;
     this.habilitarProveedor = OCULTAR_PROVEEDOR.includes(this.idProcedimiento)
       ? false
       : true;
-  }
-
-   /**
-   * Valida elementos según el `idProcedimiento` y establece
-   * las listas de elementos no válidos y añadidos.
-   * @returns {void} Lista de elementos no válidos.
-   */
-   validarElementos(): void {
-    switch (this.idProcedimiento) {
-      case 260219:
-        this.elementosRequeridos = [
-          'fabricante',
-          'destinoFinal'
-        ];
-        break;
-     default:
-        this.elementosRequeridos = [];
-        break;
-    }
   }
 
   /**
