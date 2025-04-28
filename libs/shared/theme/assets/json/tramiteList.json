@@ -800,8 +800,8 @@
   {
     "id": 115,
     "tramite": 110207,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/se/reportes/solicitud",
+    "linkDepartment": "/pago/reportes/solicitud",
     "department": "se"
   },
   {
