@@ -106,7 +106,6 @@ http {
     video/x-msvideo                                  avi;
 }
 
-        # Health check para Docker y Kubernetesn        location ~ ^/health(.txt)?$ {n            access_log off;n            add_header Content-Type text/plain;n            return 200 'OK';n        }n
         location / {
             try_files $uri $uri/ /index.html;
         }
