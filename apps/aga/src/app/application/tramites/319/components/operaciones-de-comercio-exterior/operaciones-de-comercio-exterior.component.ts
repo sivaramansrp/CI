@@ -258,12 +258,12 @@ else{
    * @descripcion Elimina los periodos seleccionados de la tabla de solicitudes.
    */
   eliminarPeriodoPorId(): void {
-    this.cuerpoSolicitarTablaFila = this.cuerpoSolicitarTablaFila.filter(
-      item => !this.listaDeTablasSeleccionadas.some(seleccionado => seleccionado?.id === item?.id)
-    );
-  if(this.cuerpoSolicitarTablaFila.length === 0){
+    this.cuerpoSolicitarTablaFila = this.cuerpoSolicitarTablaFila?.filter(item => 
+      this.listaDeTablasSeleccionadas?.some(seleccionado => seleccionado?.id === item?.id) === false
+    ) ?? [];
+  if(this.cuerpoSolicitarTablaFila?.length === 0){
     this.seccionStore.establecerFormaValida([false]);
-    this.seccionStore.establecerSeccion([false]);
+    this.seccionStore.establecerSeccion([true]);
   }
   else{
     this.seccionStore.establecerFormaValida([true]);
