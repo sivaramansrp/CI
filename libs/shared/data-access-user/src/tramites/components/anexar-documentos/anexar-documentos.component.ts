@@ -1,4 +1,3 @@
-import { BsModalRef, BsModalService, ModalModule, ModalOptions } from 'ngx-bootstrap/modal';
 import {
   ChangeDetectorRef,
   Component,
@@ -11,22 +10,17 @@ import {
   SimpleChanges,
   ViewChildren
 } from '@angular/core';
+import { ESTATUS_CARGA_DOCUMENTO, MENSAJES_DOCUMENTOS, MENSAJES_MODAL, UNIDADES_DOCUMENTOS } from '../../../core/enums/mensajes-documentos.enum';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Subject, Subscription, map, takeUntil } from 'rxjs';
-
-import { ToastrModule, ToastrService } from 'ngx-toastr';
+import { Subject, map, takeUntil } from 'rxjs';
 
 import { CatalogoDocumento } from '../../../core/models/shared/catalogos.model';
 import { CommonModule } from '@angular/common';
 import { DocumentosCargados } from '../../../core/models/shared/components.model';
 import { InicioSesionService } from '../../../core/services/shared/inicio-sesion/inicio-sesion.service';
 import { Login } from '../../../core/models/shared/inicio-sesion.model';
-import { ESTATUS_CARGA_DOCUMENTO, MENSAJES_DOCUMENTOS, UNIDADES_DOCUMENTOS } from '../../../core/enums/mensajes-documentos.enum';
-import { ModalConfirmarComponent } from '../modal-confirmar/modal-confirmar.component';
+
 import { NgSelectModule } from '@ng-select/ng-select';
-import {
-  PreviewDocumentoComponent
-} from '../preview-documento/preview-documento.component';
 import { SubirDocumentoService } from '../../../core/services/shared/subir-documento/subir-documento.service';
 
 import { DocumentosState, DocumentosStore } from '../../../core/estados/documentos.store';
@@ -48,7 +42,7 @@ interface DocumentosParaCargar {
 @Component({
   selector: 'anexar-documentos',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, ToastrModule, ModalModule, NgSelectModule, FormsModule, NotificacionesComponent],
+  imports: [CommonModule, ReactiveFormsModule, NgSelectModule, FormsModule, NotificacionesComponent],
   templateUrl: './anexar-documentos.component.html',
   styleUrl: './anexar-documentos.component.scss'
 })
@@ -97,19 +91,11 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
   @ViewChildren('fileInput') fileInputs!: QueryList<ElementRef>;
 
 
-
-  /**
-   * @description Arreglo de suscripciones para gestionar y limpiar observables en el componente.
-   * @type {Subscription[]}
-   */
-  subscription: Subscription[] = [];
-
   /**
    * @description Formulario reactivo para gestionar la carga de documentos.
    * @type {FormGroup}
    */
   documentoForma!: FormGroup;
-
 
   /**
    * @description Constantes para la unidad del tamaño de los archivos.
@@ -131,11 +117,6 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
   readonly ESTATUS_CARGA_DOCUMENTO = ESTATUS_CARGA_DOCUMENTO;
 
   /**
-   * @description Tamaño máximo permitido para los archivos en megabytes.
-   */
-  tamMaximo = 0;
-
-  /**
    * @description Arreglo para almacenar los documentos cargados.
    * @type {DocumentosCargados[]}
    */
@@ -147,13 +128,6 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
    */
   documentoSeleccionado!: CatalogoDocumento;
 
-
-
-  /**
-   *@description Variable que almacena el identificador o estado del modal.
-   * Se utiliza para controlar la visibilidad o el contenido del modal en el componente.
-   */
-  modal = '';
 
   /**
    * @description Objeto para almacenar los datos de inicio de sesión.
@@ -189,12 +163,6 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
   archivosOpcionales: CatalogoDocumento[] = [];
 
   /**
-   * @description Arreglo para almacenar los documentos opcionales inicial.
-   */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  archivosOpcionalesOriginal: any[] = [];
-
-  /**
    * @description Arreglo para almacenar los documentos opcionales duplicados.
    */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -206,17 +174,6 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   listDocOpcionalesDuplicado: any[] = [];
 
-  /**
-   * @description Variable para almacenar el estado del modal de vista previa.
-   * @type {BsModalRef}
-   */
-  bsModalRef?: BsModalRef;
-
-  /**
-   * @description Variable para almacenar el estado del modal de confirmación.
-   * @type {BsModalRef}
-   */
-  modalRef?: BsModalRef;
 
   /**
    * @description Variable para almacenar el estado de la carga de documentos.
@@ -257,14 +214,11 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
   constructor(
     private documentosQuery: DocumentosQuery,
     private documentosStore: DocumentosStore,
-    private toastr: ToastrService,
     private inicioSesionService: InicioSesionService,
     private subirDocumentoService: SubirDocumentoService,
     private fb: FormBuilder,
-    private modalService: BsModalService,
     private cdr: ChangeDetectorRef,
   ) { }
-
 
   ngOnInit(): void {
     this.documentosQuery.selectDocumentoState$
@@ -278,7 +232,6 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
 
     this.listDocOpcionales = (this.documentosState.catalogoDocumentos.length > 0) ? this.documentosState.catalogoDocumentos : [];
 
-    this.archivosOpcionalesOriginal = [...this.archivosOpcionales];
     this.obtenerToken(this.datosLogin);
     this.crearFormaDocumento();
 
@@ -349,15 +302,8 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
       }
 
       this.documentoSeleccionado = this.catalogoDocumentos.find(doc => doc.id === id) as CatalogoDocumento;
-      console.log(this.documentoSeleccionado);
-
-
       const TAMANIO_REQUERIDO: number = AnexarDocumentosComponent.convertirKbaBytes(this.documentoSeleccionado.tam);
-
-      console.log(TAMANIO_REQUERIDO);
-
       const TAMANIO_ARCHIVO: number = INFORMACION_ARCHIVO.size;
-      console.log(TAMANIO_ARCHIVO);
 
       if (TAMANIO_ARCHIVO > TAMANIO_REQUERIDO) {
         this.nuevaNotificacion = {
@@ -433,53 +379,46 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
    */
   verPdf(id: number): void {
     const RUTA = this.listadoArchivos.find(f => f.id === id)?.ruta;
-    const ESTADO_INICIAL: ModalOptions = {
-      initialState: {
-        ruta: RUTA ? RUTA.toString() : '',
-        title: 'Vista previa documento'
-      }
-    };
-    this.bsModalRef = this.modalService.show(PreviewDocumentoComponent, ESTADO_INICIAL);
+    this.limpiarNotificacion();
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: '',
+      modo: 'pdf',
+      titulo: 'Vista previa documento',
+      mensaje: RUTA ? RUTA.toString() : '',
+      cerrar: false,
+      txtBtnAceptar: 'Cargar archivos',
+      txtBtnCancelar: 'Cerrar',
+      tamanioModal: 'modal-lg'
+    }
   }
 
   /**
    * Abre el modal para confirmar la carga de documentos
    */
   confirmUpload(): void {
-    const ESTADO_INICIAL: ModalOptions = {
-      initialState: {
-        cancelarBtnTxt: 'Cerrar',
-        confirmarBtnTxt: 'Cargar archivos',
-        titulo: 'Carga de archivos',
-        txtCuerpoHtml: `
-          <div class="d-flex flex-column">
-            <div class="mb-3">
-              <span>Para poder adjuntar sus documentos, deberá cumplir con las siguientes caracteristicas:</span>
-            </div>
-            <div class="px-3">
-              <ul>
-                <li>Formato PDF, que no contenga formulario, objetos OLE incrustados, codigo javascript, etc.</li>
-                <li>No debe contener páginas en blanco</li>
-              </ul>
-            </div>
-          </div>`
-      }
-    };
-    this.modalRef = this.modalService.show(ModalConfirmarComponent, ESTADO_INICIAL);
-    if (this.modalRef?.onHide) {
-      this.subscription.push(
-        this.modalRef.onHide.subscribe((response: boolean | string) => {
-          if (typeof response === 'boolean' && response) {
-            this.cargarDocumentos = true;
-            this.mostrarSeccionCargaArchivos = false;
-            this.archivosCargando.obligatorios = this.listadoArchivos.filter(f => f.tipo === 'obligatorio');
-            this.archivosCargando.opcionales = this.listadoArchivos.filter(f => f.tipo === 'opcional');
-            this.cargarArchivos(this.archivosCargando.obligatorios);
-            this.cargarArchivos(this.archivosCargando.opcionales);
-            this.cargaRealizada.emit(this.cargarDocumentos);
-          }
-        })
-      );
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: '',
+      modo: 'html',
+      titulo: 'Carga de archivos',
+      mensaje: MENSAJES_MODAL.INFORMACION_SUBIR_DOCUMENTOS,
+      cerrar: false,
+      txtBtnAceptar: 'Cargar archivos',
+      txtBtnCancelar: 'Cerrar',
+      tamanioModal: 'modal-lg'
+    }
+  }
+
+  confirmarCargaArchivos(acepta: boolean): void {
+    if (acepta) {
+      this.cargarDocumentos = true;
+      this.mostrarSeccionCargaArchivos = false;
+      this.archivosCargando.obligatorios = this.listadoArchivos.filter(f => f.tipo === 'obligatorio');
+      this.archivosCargando.opcionales = this.listadoArchivos.filter(f => f.tipo === 'opcional');
+      this.cargarArchivos(this.archivosCargando.obligatorios);
+      this.cargarArchivos(this.archivosCargando.opcionales);
+      this.cargaRealizada.emit(this.cargarDocumentos);
     }
   }
 
@@ -681,7 +620,6 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.subscription.forEach((sub: Subscription) => sub.unsubscribe());
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
@@ -698,7 +636,18 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
     this.cargaRealizada.emit(false);
   }
 
-  aceptarModal(aceptar: boolean) {
-
+  limpiarNotificacion(): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: '',
+      categoria: '',
+      modo: '',
+      titulo: '',
+      mensaje: '',
+      cerrar: false,
+      txtBtnAceptar: '',
+      txtBtnCancelar: '',
+      tamanioModal: ''
+    }
   }
+
 }

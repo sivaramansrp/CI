@@ -62,3 +62,18 @@ export enum UNIDADES_DOCUMENTOS {
    */
   KB = 'KB'
 }
+
+export enum MENSAJES_MODAL {
+  INFORMACION_SUBIR_DOCUMENTOS = `
+          <div class="d-flex flex-column">
+             <div class="mb-3">
+               <span>Para poder adjuntar sus documentos, deberá cumplir con las siguientes caracteristicas:</span>
+             </div>
+            <div class="px-3">
+               <ul>
+                 <li>Formato PDF, que no contenga formulario, objetos OLE incrustados, codigo javascript, etc.</li>
+               <li>No debe contener páginas en blanco</li>
+               </ul>
+             </div>
+           </div>`
+}
