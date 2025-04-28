@@ -14,6 +14,7 @@ import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Output } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
+import { SeccionSociosIC } from '../../models/solicitud.model';
 import { Solicitud31101Query } from '../../estados/solicitud31101.query';
 import { Solicitud31101State } from '../../estados/solicitud31101.store';
 import { Solicitud31101Store } from '../../estados/solicitud31101.store';
@@ -56,6 +57,8 @@ export class MiembroDeLaEmpresaComponent implements OnInit, OnDestroy {
   nacionalidadLista: CatalogosSelect = {} as CatalogosSelect;
 
   tipoDePersonaLista: CatalogosSelect = {} as CatalogosSelect;
+
+  @Output() eventoActualizarMiembro = new EventEmitter<SeccionSociosIC>();
   constructor(
     public fb: FormBuilder,
     public solicitudService: SolicitudService,
@@ -260,6 +263,61 @@ export class MiembroDeLaEmpresaComponent implements OnInit, OnDestroy {
         'EUROFOODS DE MEXICO GONZALEZ PINAL'
       );
     }
+  }
+
+  aceptarModal(): void {
+    let CARACTER_DE_VALOR = '';
+    let NACIONALIDAD_VALOR = '';
+    let TIPO_PERSONA_VALOR = '';
+    let TRIBUTAR_MEXICO_VALOR = '';
+
+    this.enSuCaracterDeLista?.catalogos.forEach((element: Catalogo) => {
+      if (
+        element.id === this.miembroEmpresaForm.get('miembroCaracterDe')?.value
+      ) {
+        CARACTER_DE_VALOR = element.descripcion;
+      }
+    });
+
+    this.nacionalidadLista.catalogos.forEach((element: Catalogo) => {
+      if (
+        element.id === this.miembroEmpresaForm.get('miembroNacionalidad')?.value
+      ) {
+        NACIONALIDAD_VALOR = element.descripcion;
+      }
+    });
+
+    this.tipoDePersonaLista.catalogos.forEach((element: Catalogo) => {
+      if (
+        element.id ===
+        this.miembroEmpresaForm.get('miembroTipoPersonaMuestra')?.value
+      ) {
+        TIPO_PERSONA_VALOR = element.descripcion;
+      }
+    });
+
+    this.sinoOpcion.radioOptions.forEach((element: any) => {
+      if (
+        element.id ===
+        this.miembroEmpresaForm.get('miembroTributarMexico')?.value
+      ) {
+        TRIBUTAR_MEXICO_VALOR = element.descripcion;
+      }
+    });
+
+    const VALORES = {
+      tipoPersonaMuestra: TIPO_PERSONA_VALOR,
+      nombreCompleto: this.miembroEmpresaForm.get('miembroNombreCompleto')
+        ?.value,
+      rfc: this.miembroEmpresaForm.get('miembroRfc')?.value,
+      caracterDe: CARACTER_DE_VALOR,
+      nacionalidad: NACIONALIDAD_VALOR,
+      paisNombre: this.miembroEmpresaForm.get('miembroNombre')?.value,
+      nombreEmpresa: this.miembroEmpresaForm.get('miembroNombreEmpresa')?.value,
+      tributarMexico: TRIBUTAR_MEXICO_VALOR,
+      razonSocial: this.miembroEmpresaForm.get('miembroRegistroFederal')?.value,
+    };
+    this.eventoActualizarMiembro.emit(VALORES);
   }
 
   /**

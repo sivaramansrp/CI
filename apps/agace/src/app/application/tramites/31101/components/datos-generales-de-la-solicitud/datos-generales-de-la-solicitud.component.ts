@@ -125,6 +125,8 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
   /** Datos de los domicilios */
   domiciliosDatos: Domicilios[] = [] as Domicilios[];
 
+  seleccionarDomiciliosDatos: Domicilios[] = [] as Domicilios[];
+
   /** Lista de régimen aduanero */
   listaRegimenAduanero: string[] = [];
 
@@ -1097,12 +1099,54 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
     }
   }
 
+  seleccionarDomiciliosLista(evento: Domicilios[]): void {
+    this.seleccionarDomiciliosDatos = evento;
+  }
+
   modificarImmexProgram(): void {
-    if (this.modalElement) {
-      const MODAL_INSTANCE = new Modal(
-        this.modificarImmexProgramElement.nativeElement
-      );
-      MODAL_INSTANCE.show();
+    if (this.seleccionarDomiciliosDatos.length > 0) {
+      if (this.modalElement) {
+        const MODAL_INSTANCE = new Modal(
+          this.modificarImmexProgramElement.nativeElement
+        );
+        MODAL_INSTANCE.show();
+      }
+    }
+  }
+
+  eliminarImmexProgram(): void {
+    if (this.seleccionarDomiciliosDatos.length > 0) {
+      const PEDIMENTO = {
+        patente: 0,
+        pedimento: 0,
+        aduana: 0,
+        idTipoPedimento: 0,
+        descTipoPedimento: 'Por evaluar',
+        numero: '',
+        comprobanteValor: '',
+        pedimentoValidado: false,
+      };
+
+      this.abrirModal('¿Desea eliminar el registro seleccionado?');
+      this.pedimentos.push(PEDIMENTO);
+    }
+  }
+
+  modificarImmexValor(evento: boolean): void {
+    if (evento) {
+      const PEDIMENTO = {
+        patente: 0,
+        pedimento: 0,
+        aduana: 0,
+        idTipoPedimento: 0,
+        descTipoPedimento: 'Por evaluar',
+        numero: '',
+        comprobanteValor: '',
+        pedimentoValidado: false,
+      };
+
+      this.abrirModal('Datos guardados correctamente');
+      this.pedimentos.push(PEDIMENTO);
     }
   }
 
@@ -1168,6 +1212,26 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
       this.abrirModal('El registro seleccionado fue eliminado correctamente');
       this.pedimentos.push(PEDIMENTO);
     }
+  }
+
+  eventoActualizarMiembro(evento: SeccionSociosIC): void {
+    this.listaSeccionSociosIC.push(evento);
+    const PEDIMENTO = {
+      patente: 0,
+      pedimento: 0,
+      aduana: 0,
+      idTipoPedimento: 0,
+      descTipoPedimento: 'Por evaluar',
+      numero: '',
+      comprobanteValor: '',
+      pedimentoValidado: false,
+    };
+    this.abrirModal('Datos guardados correctamente.');
+    this.pedimentos.push(PEDIMENTO);
+  }
+
+  agregarImmexValor(evento: Domicilios): void {
+    this.domiciliosDatos.push(evento);
   }
 
   ngOnDestroy(): void {

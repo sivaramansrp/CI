@@ -167,7 +167,9 @@
           <button
             type="button"
             id="Aceptar"
-            (click)="cerrarModal()"
+            (click)="aceptarModal()"
+            data-bs-dismiss="modal"
+            #closeModal
             class="btn btn-primary me-3"
           >
             Aceptar
@@ -176,6 +178,8 @@
             type="button"
             id="Cancelar"
             (click)="cerrarModal()"
+            data-bs-dismiss="modal"
+            #closeModal
             class="btn btn-danger"
           >
             Cancelar
