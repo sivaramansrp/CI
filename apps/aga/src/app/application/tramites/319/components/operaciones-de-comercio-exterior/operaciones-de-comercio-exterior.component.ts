@@ -130,9 +130,9 @@ export class OperacionesDeComercioExteriorComponent implements OnInit, OnDestroy
    */
   listaDeTablasSeleccionadas: Solicitar[] = [];
 
-  TEXTOS:string=TEXTOS;
+  textos:string='';
 
-  infoAlert:string = INFO_ALERT + this.periodoForm?.value.periodoInicial + ' al ' + this.periodoForm?.value.periodoFinal; 
+  infoAlert:string = INFO_ALERT;
 
   alertView:boolean = false;
 
@@ -222,11 +222,12 @@ export class OperacionesDeComercioExteriorComponent implements OnInit, OnDestroy
     });
     this.tramite319Store.actualizarDatosForma(this.cuerpoSolicitarTablaFila);
     this.periodoView = false;
-    this.alertView=false;
+    this.alertView = false;
     this.periodoForm.reset();
   }
 else{
   this.alertView=true;
+  this.textos=TEXTOS + this.periodoForm.value.periodoInicial + ' al ' + this.periodoForm.value.periodoFinal;
 }
   }
 
