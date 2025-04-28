@@ -1,0 +1,5 @@
+<div class="container">
+    <app-datos-del-destinatario (formDatosDelDestinatarioEvent)="setValoresStoreDatos($event)" (formaValida)="setFormValida($event)" [datosForm]="formDatosDelDestinatarioValues"></app-datos-del-destinatario>
+    <app-destinatario [ocultarLada]="ocultarLada" [ocultarFax]="ocultarFax" (formaValida)="setFormValidaDestinatario($event)" [datosForm]="formDestinatarioValues" (formDestinatarioEvent)="setValoresStoreDe($event)"></app-destinatario>
+    <app-representante-legal (formExportorEvent)="setValoresStoreExportador($event)" (formaValida)="setFormValidaExportador($event)"  [datosForm]="formExportadorValues" ></app-representante-legal>
+</div>

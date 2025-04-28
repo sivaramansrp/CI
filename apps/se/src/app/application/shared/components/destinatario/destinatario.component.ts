@@ -25,6 +25,25 @@ export class DestinatarioComponent implements OnDestroy {
   @Input() paisDestino!: boolean;
 
   /**
+   * @input
+   * Indica si se debe ocultar la lada (código de área telefónico).
+   * 
+   * @type {boolean}
+   * @memberof DestinatarioComponent
+   */
+  @Input() ocultarLada!: boolean;
+
+
+  /**
+   * @input
+   * Indica si se debe ocultar el campo de fax.
+   * 
+   * @type {boolean}
+   * @memberof DestinatarioComponent
+   */
+  @Input() ocultarFax!: boolean;
+  
+  /**
    * Datos para los menús desplegables
    * @type {MenusDesplegables[]}
    */

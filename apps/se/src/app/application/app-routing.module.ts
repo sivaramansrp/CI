@@ -431,6 +431,13 @@ const ROUTES: Routes = [
         (m) => m.ModalidadAmpliacionModule
       ),
   },
+  {
+    path: 'validar-certificado-inicalmente',
+    loadChildren: () =>
+      import('./tramites/110222/validar-inicialmente-certificado.module').then(
+        (m) => m.ValidarInicialmenteCertificadoModule
+      ),
+  },
   
 ];
 
