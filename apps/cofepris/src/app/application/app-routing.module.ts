@@ -467,7 +467,28 @@ const ROUTES: Routes = [
     import(
       './tramites/260302/exportacion-materias-primas-estupefacientes.module'
     ).then((m) => m.ExportacionMateriasPrimasEstupefacientesModule),
-}
+},
+{
+  path: 'modificacion-permiso-lab',
+  loadChildren: () =>
+    import('./tramites/260918/modificacion-permiso-lab.module').then(
+      (m) => m.ModificacionPermisoLabModule
+    )
+},
+{
+  path: 'sustancias-permitidas',
+  loadChildren: () =>
+    import('./tramites/260515/permit-de-substances.module').then(
+      (m) => m.PermitDeSubstancesModule
+    )
+},
+{
+      path: 'importacion-retorno-sanitario',
+      loadChildren: () =>
+        import('./tramites/260103/importacion-retorno-sanitario.module').then(
+          (m) => m.ImportacionRetornoSanitarioModule
+        ),
+},
 ];
 
 @NgModule({
