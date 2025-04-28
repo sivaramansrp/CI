@@ -5,14 +5,12 @@ import { PagoDeDerechoComponent } from './pago-de-derecho.component';
 import { Tramite230202Query } from '../../estados/tramite230202.query';
 import { Tramite230202Store } from '../../estados/tramite230202.store';
 import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
-import { CapturaSolicitudeService } from '../../../230101/services/captura-solicitud.service';
-import { MediodetransporteService } from '../../../230101/services/medio-de-transporte.service';
+import { MediodetransporteService } from '../../services/medio-de-transporte.service';
 
 describe('PagoDeDerechoComponent', () => {
   let component: PagoDeDerechoComponent;
   let fixture: ComponentFixture<PagoDeDerechoComponent>;
   let mockMedioDeTransporteService: any;
-  let mockCapturaSolicitudeService: any;
   let mockSolicitudQuery: any;
   let mockSolicitudStore: any;
   let mockValidacionesService: any;
@@ -21,8 +19,6 @@ describe('PagoDeDerechoComponent', () => {
     mockMedioDeTransporteService = {
       getMedioDeTransporte: jest.fn(),
     };
-
-    mockCapturaSolicitudeService = {};
 
     mockSolicitudQuery = {
       selectSolicitud$: of({
@@ -48,7 +44,6 @@ describe('PagoDeDerechoComponent', () => {
       declarations: [PagoDeDerechoComponent],
       providers: [
         FormBuilder,
-        { provide: CapturaSolicitudeService, useValue: mockCapturaSolicitudeService },
         { provide: MediodetransporteService, useValue: mockMedioDeTransporteService },
         { provide: Tramite230202Query, useValue: mockSolicitudQuery },
         { provide: Tramite230202Store, useValue: mockSolicitudStore },

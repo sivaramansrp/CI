@@ -48,6 +48,38 @@ export interface Solicitud230202State {
   numeroExterior: string;
   numeroInterior: string;
   colonia: string;
+
+
+  /**
+   * Clave de referencia del trámite.
+   */
+  claveDeReferencia: string;
+
+  /**
+   * Cadena de dependencia asociada al trámite.
+   */
+  cadenaPagoDependencia: string;
+
+  /**
+   * Banco relacionado con el trámite.
+   */
+  banco: string;
+
+  /**
+   * Llave de pago del trámite.
+   */
+  llaveDePago: string;
+
+  /**
+   * Fecha de pago del trámite.
+   */
+  fecPago: string;
+
+  /**
+   * Importe del pago realizado.
+   */
+  impPago: string;
+
 }
 
 /**
@@ -80,7 +112,13 @@ export function createInitialState(): Solicitud230202State {
     calle: '',
     numeroExterior: '',
     numeroInterior: '',
-    colonia: ''
+    colonia: '',
+    claveDeReferencia: '',
+    cadenaPagoDependencia: '',
+    banco: '',
+    llaveDePago: '',
+    fecPago: '',
+    impPago: ''
   };
 }
 
@@ -290,5 +328,71 @@ export class Tramite230202Store extends Store<Solicitud230202State> {
    */
   public limpiarSolicitud(): void {
     this.reset();
+  }
+
+  /**
+   * Actualiza la clave de referencia.
+   * @param {string} claveDeReferencia - Nueva clave de referencia.
+   */
+  public setClaveDeReferencia(claveDeReferencia: string): void {
+    this.update((state) => ({
+      ...state,
+      claveDeReferencia
+    }));
+  }
+
+  /**
+   * Actualiza la cadena de dependencia.
+   * @param {string} cadenaPagoDependencia - Nueva cadena de dependencia.
+   */
+  public setCadenaPagoDependencia(cadenaPagoDependencia: string): void {
+    this.update((state) => ({
+      ...state,
+      cadenaPagoDependencia
+    }));
+  }
+
+  /**
+   * Actualiza el banco.
+   * @param {string} banco - Nuevo banco.
+   */
+  public setBanco(banco: string): void {
+    this.update((state) => ({
+      ...state,
+      banco
+    }));
+  }
+
+  /**
+   * Actualiza la llave de pago.
+   * @param {string} llaveDePago - Nueva llave de pago.
+   */
+  public setllaveDePago(llaveDePago: string): void {
+    this.update((state) => ({
+      ...state,
+      llaveDePago
+    }));
+  }
+
+  /**
+   * Actualiza la fecha de pago.
+   * @param {string} fecPago - Nueva fecha de pago.
+   */
+  public setFecPago(fecPago: string): void {
+    this.update((state) => ({
+      ...state,
+      fecPago
+    }));
+  }
+
+  /**
+   * Actualiza el importe de pago.
+   * @param {string} impPago - Nuevo importe de pago.
+   */
+  public setImpPago(impPago: string): void {
+    this.update((state) => ({
+      ...state,
+      impPago
+    }));
   }
 }

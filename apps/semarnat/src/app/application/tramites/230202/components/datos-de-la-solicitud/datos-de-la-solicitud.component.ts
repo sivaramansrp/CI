@@ -20,7 +20,8 @@ import {
   ViewChild,
   ViewChildren,
 } from '@angular/core';
-import { DatosDetalle, 
+import { 
+  DatosDetalle, 
   DatosSolicitud } from '../../models/datos-tramite.model';
 import {
   FormBuilder,

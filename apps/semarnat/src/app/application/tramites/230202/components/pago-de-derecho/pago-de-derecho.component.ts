@@ -1,17 +1,16 @@
 import { Catalogo, CatalogoSelectComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { Solicitud230101State, Solicitud230101Store } from '../../../230101/estados/tramites/tramites230101.store';
-import { CapturaSolicitudeService } from '../../../230101/services/captura-solicitud.service';
+import { Solicitud230202State, Tramite230202Store } from '../../estados/tramite230202.store';
 import { CatalogosSelect } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { MediodetransporteService } from '../../../230101/services/medio-de-transporte.service';
+import { MediodetransporteService } from '../../services/medio-de-transporte.service';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { ReplaySubject } from 'rxjs';
-import { Solicitud230101Query } from '../../../230101/estados/queries/tramites230101.query';
 import { Subject } from 'rxjs';
+import { Tramite230202Query } from '../../estados/tramite230202.query';
 import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
 import { Validators } from '@angular/forms';
 import { map } from 'rxjs';
@@ -24,15 +23,15 @@ import { takeUntil } from 'rxjs';
   styleUrl: './pago-de-derecho.component.scss',
   standalone: true,
   imports: [
-    CommonModule, 
-    FormsModule, 
+    CommonModule,
+    FormsModule,
     ReactiveFormsModule,
     CatalogoSelectComponent,
     TituloComponent
   ],
 })
 export class PagoDeDerechoComponent implements OnInit, OnDestroy {
-  
+
   /**
    * @property {ReplaySubject<boolean>} destroyed$
    * @description Sujeto que emite un valor booleano para indicar la destrucción del componente.
@@ -41,11 +40,11 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
   /**
-   * @property {Solicitud230101State} derechoState
-   * @description Estado actual del trámite 230101, que contiene información relevante
+   * @property {Solicitud230202State} derechoState
+   * @description Estado actual del trámite 230202, que contiene información relevante
    * para la sección de pago de derechos.
    */
-  public derechoState!: Solicitud230101State;
+  public derechoState!: Solicitud230202State;
 
   /**
    * @property {Subject<void>} destroyNotifier$
@@ -101,16 +100,15 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
    * 
    * @param fb - Servicio `FormBuilder` para la creación y gestión de formularios reactivos.
    * @param captuaservice - Servicio `CapturaSolicitudeService` para manejar la captura de solicitudes.
-   * @param solicitud230101Store - Almacén `Solicitud230101Store` para gestionar el estado de la solicitud 230101.
-   * @param solicitud230101Query - Consulta `Solicitud230101Query` para obtener datos del estado de la solicitud 230101.
+   * @param solicitud230202Store - Almacén `Tramite230202Store` para gestionar el estado de la solicitud 230202.
+   * @param solicitud230202Query - Consulta `Solicitud230202Query` para obtener datos del estado de la solicitud 230202.
    * @param validacionesService - Servicio `ValidacionesFormularioService` para realizar validaciones personalizadas en formularios.
    * @param mediodetransporteService - Servicio `MediodetransporteService` para gestionar datos relacionados con medios de transporte.
    */
   constructor(
     private fb: FormBuilder,
-    private captuaservice: CapturaSolicitudeService,
-    private solicitud230101Store: Solicitud230101Store,
-    private solicitud230101Query: Solicitud230101Query,
+    private solicitud230202Store: Tramite230202Store,
+    private solicitud230202Query: Tramite230202Query,
     private validacionesService: ValidacionesFormularioService,
     private mediodetransporteService: MediodetransporteService
   ) {
@@ -139,6 +137,7 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
         this.bancoCatalogo.catalogos = data as Catalogo[];
       });
   }
+
   /**
    * Hook del ciclo de vida de Angular que se llama después de que la vista del componente se ha inicializado completamente.
    *
@@ -146,9 +145,8 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
    * - Llama al método `getMercancia` para inicializar el objeto `mercancia`.
    * - Inicializa el grupo de formularios `FormSolicitud` con controles de formulario anidados y validadores.
    */
-
   ngOnInit(): void {
-    this.solicitud230101Query.selectSolicitud$
+    this.solicitud230202Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
@@ -164,7 +162,7 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
         banco: [this.derechoState?.banco, Validators.required],
         llaveDePago: [this.derechoState?.llaveDePago, [Validators.required, Validators.maxLength(10)]],
         fecPago: [this.derechoState?.fecPago, Validators.required],
-        impPago: [{ value: this.derechoState?.impPago, disabled: true}, [Validators.required, Validators.maxLength(16)]]
+        impPago: [{ value: this.derechoState?.impPago, disabled: true }, [Validators.required, Validators.maxLength(16)]]
       }),
     });
 
@@ -181,23 +179,23 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
   }
 
   /**
-       * Establece los valores en el store de tramite5701.
-       *
-       * @param {FormGroup} form - El formulario del cual se obtiene el valor.
-       * @param {string} campo - El nombre del campo del formulario cuyo valor se va a obtener.
-       * @param {string} metodoNombre - El nombre del método en el store que se va a invocar con el valor del campo.
-       * @returns {void}
-       */
-  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Solicitud230101Store): void {
+   * Establece los valores en el store de tramite5701.
+   *
+   * @param {FormGroup} form - El formulario del cual se obtiene el valor.
+   * @param {string} campo - El nombre del campo del formulario cuyo valor se va a obtener.
+   * @param {string} metodoNombre - El nombre del método en el store que se va a invocar con el valor del campo.
+   * @returns {void}
+   */
+  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite230202Store): void {
     const VALOR = form.get(campo)?.value;
-    (this.solicitud230101Store[metodoNombre] as (value: string | number | boolean) => void)(VALOR);
+    (this.solicitud230202Store[metodoNombre] as (value: string | number | boolean) => void)(VALOR);
   }
 
   /**
-* Obtiene el grupo de formulario 'pagodeDerechos' del formulario principal 'FormSolicitud'.
-*
-* @returns {FormGroup} El grupo de formulario 'pagodeDerechos'.
-*/
+  * Obtiene el grupo de formulario 'pagodeDerechos' del formulario principal 'FormSolicitud'.
+  *
+  * @returns {FormGroup} El grupo de formulario 'pagodeDerechos'.
+  */
   get pagodeDerechos(): FormGroup {
     return this.FormSolicitud.get('pagodeDerechos') as FormGroup;
   }
