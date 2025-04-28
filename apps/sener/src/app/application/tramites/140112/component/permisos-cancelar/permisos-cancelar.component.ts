@@ -158,6 +158,6 @@ export class PermisosCancelarComponent implements OnInit, OnDestroy {
      * @returns Booleano que indica si el campo es válido
      */
   isValid(field: string): boolean {
-    return Boolean(this.PermisosCancelarService.isValid(this.solicitud, field));
+    return Boolean(PermisosCancelarService.isValid(this.solicitud, field));
   }
 }
