@@ -1,22 +1,27 @@
 import {
+Catalogo,
+Solicitud230202State,
+Tramite230202Store,
+} from '../../estados/tramite230202.store';
+import { 
+  CatalogoSelectComponent, 
+  ConfiguracionColumna, 
+  CrossListLable, 
+  CrosslistComponent, 
+  TablaDinamicaComponent, 
+  TablaSeleccion, 
+  TituloComponent } from '@libs/shared/data-access-user/src';
+import {
   Component,
   ElementRef,
+  OnDestroy,
+  OnInit,
   QueryList,
   ViewChild,
   ViewChildren,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import {
-  Catalogo,
-  CatalogoSelectComponent,
-  ConfiguracionColumna,
-  CrosslistComponent,
-  CrossListLable,
-  TablaDinamicaComponent,
-  TablaSeleccion,
-  TituloComponent,
-} from '@libs/shared/data-access-user/src';
-import { Component, QueryList, ViewChildren } from '@angular/core';
+import { DatosDetalle, 
+  DatosSolicitud } from '../../models/datos-tramite.model';
 import {
   FormBuilder,
   FormControl,
@@ -25,15 +30,14 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { map, merge, Subject, takeUntil } from 'rxjs';
-import {
-  Solicitud230202State,
-  Tramite230202Store,
-} from '../../estados/tramite230202.store';
-import { Subject, map, merge, takeUntil } from 'rxjs';
+import { 
+  Subject, 
+  map, 
+  merge, 
+  takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { PhytosanitaryReexportacionService } from '../../services/phytosanitary-reexportacion.service';
-import { DatosSolicitud, DatosDetalle } from '../../models/datos-tramite.model';
+import { Tramite230202Query } from '../../estados/tramite230202.query';
 
 @Component({
   selector: 'app-datos-de-la-solicitud',
@@ -50,7 +54,7 @@ import { DatosSolicitud, DatosDetalle } from '../../models/datos-tramite.model';
   templateUrl: './datos-de-la-solicitud.component.html',
   styleUrl: './datos-de-la-solicitud.component.scss',
 })
-export class DatosDeLaSolicitudComponent {
+export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   /**
    * Formulario principal del trámite.
    */
