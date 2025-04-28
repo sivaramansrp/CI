@@ -7,7 +7,7 @@
         <form [formGroup]="miformulario" >
           <div class="col-md-4">
             <app-catalogo-select [catalogo]="optionsPaisList" [label]="'Operación'" [required]="true" id="operacion"
-            formControlName="operacion"   
+            formControlName="operacion"  (change)="actualizarOperacionDesdeSeleccion()" 
           ></app-catalogo-select>
         </div>
           </form>
@@ -52,7 +52,7 @@
     <div class="col-md-12">
       <div class="col-md-4">
         <app-catalogo-select [catalogo]="periodoList" [label]="'Periodo'" [required]="true" id="operacion"
-        formControlName="periodo"></app-catalogo-select>
+        formControlName="periodo"  ></app-catalogo-select>
         </div>
       </div>
       <div class="col-md-12"> <label class="form-label" for="periodoInicial">Fecha sobre el periodo :</label>

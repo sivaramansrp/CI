@@ -10,6 +10,8 @@ import { OperacionService } from '../../services/operacion.service';
 import { Personas, Solicitar } from '../../models/personas.module';
 
 import {CONFIGURACION_PERSONAS_COLUMNAS, CONFIGURACION_SOLICITAR_COLUMNAS } from '../../constantes/operaciones-de-comercio-exterior.enum';
+import { Tramite319Query } from '../../estados/tramite319Query.query';
+import { Tramite319Store } from '../../estados/tramite319Store.store';
 
 /**
  * @componente
@@ -105,7 +107,7 @@ export class OperacionesDeComercioExteriorComponent implements OnInit, OnDestroy
    * @param {OperacionService} operacionService - Servicio para obtener datos relacionados con operaciones.
    * @descripcion Inicializa el componente y obtiene la lista de operaciones al crearlo.
    */
-  constructor(private readonly fb: FormBuilder, private readonly operacionService: OperacionService) {
+  constructor(private readonly fb: FormBuilder, private readonly operacionService: OperacionService,private readonly tramite319Query: Tramite319Query,private tramite319Store: Tramite319Store) {
     this.getOperacionList();
     this.getPersonasTableeData();
     this.getperiodoList();
@@ -118,7 +120,7 @@ export class OperacionesDeComercioExteriorComponent implements OnInit, OnDestroy
    */
   ngOnInit(): void {
     this.miformulario = this.fb.group({
-      operacion: ['', Validators.required],
+      operacion: [ this.tramite319Query.operacion||'', Validators.required],
     });
   }
 
@@ -203,7 +205,9 @@ export class OperacionesDeComercioExteriorComponent implements OnInit, OnDestroy
     );
     this.periodoView = false;
   }
-
+  actualizarOperacionDesdeSeleccion() :void{
+      this.tramite319Store.actualizarOperacion(this.miformulario?.value?.operacion|| '')
+  }
   /**
    * @metodo ngOnDestroy
    * @descripcion Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
