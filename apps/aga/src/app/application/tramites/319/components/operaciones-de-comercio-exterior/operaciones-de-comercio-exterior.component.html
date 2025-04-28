@@ -54,6 +54,8 @@
           <ng-alert [CONTENIDO]="textos"  [CUSTOMECLASS]="infoAlerta"></ng-alert>
         </div>
         <form [formGroup]="periodoForm">
+          <lib-notificaciones [notificacionInput]="nuevaAlertaNotificacion" *ngIf="modalEmergente" (confirmacionModal)="eliminarPedimento($event)">
+          </lib-notificaciones>
     <div class="col-md-12">
       <div class="col-md-4">
         <app-catalogo-select [catalogo]="periodoList" [label]="'Periodo'" [required]="true" id="operacion"

@@ -8,7 +8,7 @@ import { PasoDocComponent } from './pages/paso-doc/paso-doc.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
 
-import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, CatalogoSelectComponent, CrosslistComponent, FirmaElectronicaComponent, InputCheckComponent, InputFechaComponent, InputRadioComponent,SharedModule, SolicitanteComponent, TablaDinamicaComponent, TituloComponent, WizardComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, CatalogoSelectComponent, CrosslistComponent, FirmaElectronicaComponent, InputCheckComponent, InputFechaComponent, InputRadioComponent,NotificacionesComponent,SharedModule, SolicitanteComponent, TablaDinamicaComponent, TituloComponent, WizardComponent } from '@ng-mf/data-access-user';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ToastrModule } from 'ngx-toastr';
 
@@ -38,7 +38,8 @@ import { ToastrModule } from 'ngx-toastr';
     InputRadioComponent,
     CatalogoSelectComponent,
     ToastrModule.forRoot(),
-    TablaDinamicaComponent
+    TablaDinamicaComponent,
+    NotificacionesComponent
     
     
   ]

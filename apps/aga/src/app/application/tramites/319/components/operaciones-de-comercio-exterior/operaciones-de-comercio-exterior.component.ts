@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import { AbstractControl, FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 
-import { Catalogo, ConfiguracionColumna, SeccionLibStore, TablaSeleccion } from '@libs/shared/data-access-user/src';
+import { Catalogo, ConfiguracionColumna, Notificacion, SeccionLibStore, TablaSeleccion } from '@ng-mf/data-access-user';
 
 import { Subject, takeUntil } from 'rxjs';
 
@@ -145,6 +145,16 @@ export class OperacionesDeComercioExteriorComponent implements OnInit, OnDestroy
    */
   vistaAlerta: boolean = false;
 
+
+  /**
+   * @description Indica si el modal emergente está visible o no.
+   * @type {boolean}
+   * @default false
+   * @memberof OperacionesDeComercioExteriorComponent
+   */
+  modalEmergente:boolean=false;
+
+  public nuevaAlertaNotificacion!: Notificacion;  
   /**
    * @constructor
    * @param {FormBuilder} fb - Servicio para construir formularios reactivos.
@@ -209,6 +219,7 @@ export class OperacionesDeComercioExteriorComponent implements OnInit, OnDestroy
    */
   abrirModuloPersonasNotificaciones(status: boolean): void {
     this.periodoView = status;
+    this.modalEmergente=!status;
     if (status) {
       this.periodoForm = this.fb.group({
         periodo: ['', Validators.required],
@@ -231,18 +242,33 @@ export class OperacionesDeComercioExteriorComponent implements OnInit, OnDestroy
       periodo: this.periodoForm.value.periodo,
       fechas_sobre_el_periodo: this.periodoForm.value.periodoInicial + ' al ' + this.periodoForm.value.periodoFinal,
     });
-    this.tramite319Store.actualizarDatosForma(this.cuerpoSolicitarTablaFila);
+    this.modalEmergente=true;
+    this.abrirAlertaSeleccionModal();
     this.seccionStore.establecerFormaValida([true]);
     this.seccionStore.establecerSeccion([true]);
-    this.periodoView = false;
-    this.vistaAlerta = false;
-    this.periodoForm.reset();
+
   }
 else{
   this.vistaAlerta=true;
   this.textos=TEXTOS + this.periodoForm.value.periodoInicial + ' al ' + this.periodoForm.value.periodoFinal;
 }
   }
+
+
+    /**
+   * Elimina un elemento de la tabla de pedimento, si se confirma la acción.
+   * @param borrar Indica si se debe proceder con la eliminación.
+   * @returns {void}
+   */
+    eliminarPedimento(borrar: boolean): void {
+      if(borrar){
+        this.periodoForm.reset();
+        this.tramite319Store.actualizarDatosForma(this.cuerpoSolicitarTablaFila);
+     this.periodoView = false;
+    this.vistaAlerta = false;
+   
+      }
+    }
 
   /**
    * @metodo onListaDeFilaSeleccionada
@@ -273,6 +299,20 @@ else{
   }
   actualizarOperacionDesdeSeleccion() :void{
       this.tramite319Store.actualizarOperacion(this.miformulario?.value?.operacion|| '')
+  }
+
+  abrirAlertaSeleccionModal(): void {
+    this.nuevaAlertaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: 'Alerta',
+      mensaje: 'Selecciona un elemento.',
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    }
   }
   /**
    * @metodo ngOnDestroy
