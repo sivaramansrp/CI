@@ -192,7 +192,7 @@
     "id": 28,
     "tramite": 80203,
     "linkDashboard": "/se/immex-registro-solicitud-modality/immex-registro",
-    "linkDepartment": "/se/immex-registro-solicitud-modality/immex-registro",
+    "linkDepartment": "/pago/immex-registro-solicitud-modality/immex-registro",
     "department": "se"
   },
   {
@@ -457,8 +457,8 @@
   {
     "id": 66,
     "tramite": 140105,
-    "linkDashboard": "/se/pago/desistimiento-de-permiso/solicitante",
-    "linkDepartment": "/se/pago/desistimiento-de-permiso/solicitante",
+    "linkDashboard": "/se/desistimiento-de-permiso/solicitante",
+    "linkDepartment": "/se/desistimiento-de-permiso/solicitante",
     "department": "se"
   },
   {
@@ -549,7 +549,7 @@
     "id": 79,
     "tramite": 220701,
     "linkDashboard": "/agriculture/inspeccion-fisica/inspeccion-fisica-zoosanitario",
-    "linkDepartment": "/agriculture/inspeccion-fisica/inspeccion-fisica-zoosanitario",
+    "linkDepartment": "/pago/inspeccion-fisica/inspeccion-fisica-zoosanitario",
     "department": "agriculture"
   },
   {
@@ -716,8 +716,8 @@
   {
     "id": 103,
     "tramite": 290101,
-    "linkDashboard": "/cafe-exportadores/cafe-exportadores",
-    "linkDepartment": "/cafe-exportadores/cafe-exportadores",
+    "linkDashboard": "/amecafe/cafe-exportadores/cafe-exportadores",
+    "linkDepartment": "/pago/cafe-exportadores/cafe-exportadores",
     "department": "amecafe"
   },
   {
@@ -1262,8 +1262,8 @@
   {
     "id": 181,
     "tramite": 260918,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/cofepris/modificacion-permiso-lab/modificacion-permiso-lab",
+    "linkDepartment": "/pago/modificacion-permiso-lab/modificacion-permiso-lab",
     "department": "cofepris"
   },
   {
@@ -1430,8 +1430,8 @@
   {
     "id": 205,
     "tramite": 32101,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/agace/consulta-aviso-acreditacion/solicitud",
+    "linkDepartment": "/pago/consulta-aviso-acreditacion/solicitud",
     "department": "agace"
   },
   {
@@ -1458,8 +1458,8 @@
   {
     "id": 209,
     "tramite": 260103,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/cofepris/importacion-retorno-sanitario/contenedor-de-pasos",
+    "linkDepartment": "/pago/importacion-retorno-sanitario/contenedor-de-pasos",
     "department": "cofepris"
   },
   {
@@ -1500,15 +1500,15 @@
   {
     "id": 215,
     "tramite": 260302,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/cofepris/exportacion-materias-primas-estupefacientes/contenedor-de-pasos",
+    "linkDepartment": "/pago/exportacion-materias-primas-estupefacientes/contenedor-de-pasos",
     "department": "cofepris"
   },
   {
     "id": 216,
     "tramite": 260304,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/cofepris/exportacion-medicamentos-contengan/contenedor-de-pasos",
+    "linkDepartment": "/pago/exportacion-medicamentos-contengan/contenedor-de-pasos",
     "department": "cofepris"
   },
   {
@@ -1563,8 +1563,8 @@
   {
     "id": 224,
     "tramite": 260515,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/cofepris/sustancias-permitidas/solicitud",
+    "linkDepartment": "/pago/sustancias-permitidas/solicitud",
     "department": "cofepris"
   },
   {
@@ -1836,22 +1836,22 @@
   {
     "id": 263,
     "tramite": 240120,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/sedena/permiso-exportacion-pirotecnia/contenedor-de-pasos",
+    "linkDepartment": "/pago/permiso-exportacion-pirotecnia/contenedor-de-pasos",
     "department": "sedena"
   },
   {
     "id": 264,
     "tramite": 240121,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/sedena/permiso-ordinario-exportacion-explosivo/permiso-exportacion-explosivo",
+    "linkDepartment": "/pago/permiso-ordinario-exportacion-explosivo/permiso-exportacion-explosivo",
     "department": "sedena"
   },
   {
     "id": 265,
     "tramite": 240122,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/sedena/permiso-extraordinario-exportacion-explosivo/contenedor-de-pasos",
+    "linkDepartment": "/pago/permiso-extraordinario-exportacion-explosivo/contenedor-de-pasos",
     "department": "sedena"
   },
   {
@@ -1892,8 +1892,8 @@
   {
     "id": 271,
     "tramite": 240411,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/sedena/permiso-ordinario-prorroga-importacion-material-explosivo/contenedor-de-pasos",
+    "linkDepartment": "/pago/permiso-ordinario-prorroga-importacion-material-explosivo/contenedor-de-pasos",
     "department": "sedena"
   },
   {
@@ -1927,8 +1927,8 @@
   {
     "id": 276,
     "tramite": 130201,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/sener/exportacion-petroliferos/solicitud",
+    "linkDepartment": "/pago/exportacion-petroliferos/solicitud",
     "department": "sener"
   },
   {
