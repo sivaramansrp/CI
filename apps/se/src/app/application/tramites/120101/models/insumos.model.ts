@@ -1,5 +1,5 @@
 export interface InsumosTabla{
-    descripcionFraccionArancelaria: string;
-    fraccionArancelaria: string;
-    paisDeOrigen: string;
+    DescripcionDelInsumo: string;
+    FraccionArancelaria: string;
+    PaisDeOrigen: string;
 }
