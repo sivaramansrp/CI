@@ -19,6 +19,7 @@ import {
 import { map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DatosDeLaSolicitudComponent } from '../../../../shared/components/datos-de-la-solicitud/datos-de-la-solicitud.component';
+import { ELEMENTOS_REQUERIDOS} from '../../constants/destinados-donacio.enum';
 import { ID_PROCEDIMIENTO } from '../../constants/destinados-donacio.enum';
 import { Subject } from 'rxjs';
 import { Tramite260209Query } from '../../estados/tramite260209Query.query';
@@ -132,6 +133,13 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
    * Identificador del procedimiento.
    */
   public readonly idProcedimiento = ID_PROCEDIMIENTO;
+
+  /**
+ * @property {string[]} elementosRequeridos
+ * @description
+ * Lista de elementos requeridos para completar el formulario o proceso.
+ */
+  public readonly elementosRequeridos = ELEMENTOS_REQUERIDOS;
 
   /**
    * @constructor
