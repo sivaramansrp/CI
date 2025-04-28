@@ -4,6 +4,13 @@ import { RegistrosDeComercioExteriorService } from '../../services/registros-de-
 import { Router } from '@angular/router';
 import { TramiteAgaceStore } from '../../../../estados/tramite.store';
 
+/**
+ * Componente PasoTresComponent.
+ *
+ * Este componente maneja la lógica para el paso tres de un trámite específico.
+ * Incluye la obtención de la firma del usuario, la gestión del estado del trámite
+ * y la navegación hacia la pantalla de acuse.
+ */
 @Component({
   selector: 'app-paso-tres',
   templateUrl: './paso-tres.component.html',

@@ -1,5 +1,9 @@
 import { Component } from '@angular/core';
 
+/**
+ * Representa el PasoUnoComponent, que es responsable de gestionar
+ * el primer paso de un proceso específico en la aplicación.
+ */
 @Component({
   selector: 'app-paso-uno',
   templateUrl: './paso-uno.component.html',

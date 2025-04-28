@@ -3,18 +3,18 @@ import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
 
 /**
- * Representa el estado de Solicitud31602State.
+ * Representa el estado de Solicitud31603State.
  * Es un objeto dinámico donde las claves son cadenas y los valores pueden ser de cualquier tipo.
  * 
  */
-export interface Solicitud31602State {
+export interface Solicitud31603State {
     [key: string]: string | number | boolean;
 }
 
 /**
  * Crea el estado inicial para Solicitud31602State.
  */
-export function createInitialState(): Solicitud31602State {
+export function createInitialState(): Solicitud31603State {
     return {};
 }
 
@@ -36,12 +36,12 @@ export function createInitialState(): Solicitud31602State {
  * @property {string} name - Nombre del store, utilizado para identificarlo.
  * @property {boolean} resettable - Indica si el estado del store puede ser reiniciado.
  */
-@StoreConfig({ name: 'tramite31602Store', resettable: true })
+@StoreConfig({ name: 'tramite31603Store', resettable: true })
 
-export class Tramite31602Store extends Store<Solicitud31602State> {
+export class Tramite31603Store extends Store<Solicitud31603State> {
 
     /**
-     * Constructor de la clase Tramite31602Store.
+     * Constructor de la clase Tramite31603Store.
      * 
      * Este constructor inicializa el estado del store utilizando la función `createInitialState`.
      * La función `createInitialState` devuelve un objeto vacío que representa el estado inicial.

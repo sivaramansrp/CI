@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 /**
  * Interfaz que representa el estado de DatosComunes.
  */
-export interface Solicitud31602IvaeiepsState {
+export interface Solicitud31603IvaeiepsState {
   
   /**
    * El valor de indiqueCheck.
@@ -239,7 +239,7 @@ export interface Solicitud31602IvaeiepsState {
 
 }
 
-export function createInitialState(): Solicitud31602IvaeiepsState {
+export function createInitialState(): Solicitud31603IvaeiepsState {
   return {
      
      /**
@@ -479,8 +479,8 @@ export function createInitialState(): Solicitud31602IvaeiepsState {
 @Injectable({
   providedIn: 'root',
 })
-@StoreConfig({ name: 'solicitud31602IvaeiepsState', resettable: true })
-export class Tramite31602IvaeiepsStore extends Store<Solicitud31602IvaeiepsState> {
+@StoreConfig({ name: 'solicitud31603IvaeiepsState', resettable: true })
+export class Tramite31603IvaeiepsStore extends Store<Solicitud31603IvaeiepsState> {
     /**
      * Crea una instancia de DatosComunesStore.
      * Inicializa la tienda con el estado inicial.

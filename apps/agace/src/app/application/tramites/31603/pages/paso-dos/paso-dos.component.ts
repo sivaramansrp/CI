@@ -2,6 +2,13 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Catalogo, CATALOGOS_ID, CatalogosService, TEXTOS } from '@libs/shared/data-access-user/src';
 import { Subject, takeUntil } from 'rxjs';
 
+/**
+ * Componente Angular que representa el paso dos de un trámite.
+ * 
+ * Este componente se encarga de inicializar y gestionar un catálogo de documentos
+ * disponibles para el usuario, utilizando un servicio inyectado para obtener los datos.
+ * También implementa la limpieza de suscripciones al destruirse.
+ */
 @Component({
   selector: 'app-paso-dos',
   templateUrl: './paso-dos.component.html',

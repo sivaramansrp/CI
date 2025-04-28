@@ -1,4 +1,4 @@
-import { Solicitud31602State, Tramite31602Store } from '../stores/tramite31602.store';
+import { Solicitud31603IvaeiepsState, Tramite31603IvaeiepsStore } from '../stores/tramite31603ivaeieps.store';
 import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
 
@@ -9,10 +9,10 @@ import { Query } from '@datorama/akita';
 @Injectable({ providedIn: 'root' })
 
 /**
- * Clase que representa una consulta para el estado de TercerosRelacionadosStore.
+ * Clase que representa una consulta para el estado de Tramite31603IvaeiepsStore.
  * Proporciona métodos para seleccionar y observar el estado completo del formulario de la solicitud.
  */
-export class Tramite31602Query extends Query<Solicitud31602State> {
+export class Tramite31603IvaeiepsQuery extends Query<Solicitud31603IvaeiepsState> {
   /**
    * Observable que selecciona el estado completo de la solicitud.
    * Permite observar los cambios en el estado del formulario CertiRegistro302.
@@ -25,9 +25,9 @@ export class Tramite31602Query extends Query<Solicitud31602State> {
    * Constructor de la clase TercerosRelacionadosStore.
    * Inicializa la consulta con el almacén proporcionado.
    * 
-   * @param store - Instancia del almacén Tramite31602Store.
+   * @param store - Instancia del almacén Tramite31603IvaeiepsStore.
    */
-  constructor(protected override store: Tramite31602Store) {
+  constructor(protected override store: Tramite31603IvaeiepsStore) {
     super(store);
   }
 }

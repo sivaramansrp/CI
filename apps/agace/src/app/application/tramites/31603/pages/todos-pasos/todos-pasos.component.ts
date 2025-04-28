@@ -3,6 +3,12 @@ import { AccionBoton, DatosPasos, ListaPasosWizard, WizardComponent } from '@lib
 import { PANTA_PASOS, TITULO_PASO_DOS, TITULO_PASO_TRES, TITULO_PASO_UNO } from '../../services/registros-de-comercio-exterior.enum';
 import { Subject } from 'rxjs';
 
+/**
+ * Componente que representa la página "Todos Pasos".
+ * 
+ * Este componente gestiona los pasos en un proceso tipo asistente, incluyendo la navegación entre pasos,
+ * la actualización del título basado en el paso actual y el manejo de eventos del ciclo de vida.
+ */
 @Component({
   selector: 'app-todos-pasos',
   templateUrl: './todos-pasos.component.html',

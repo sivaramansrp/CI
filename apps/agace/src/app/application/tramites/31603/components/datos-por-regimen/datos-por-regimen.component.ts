@@ -6,11 +6,16 @@ import { InputRadioComponent } from '@libs/shared/data-access-user/src';
 import { ConceptosComponent } from '../conceptos/conceptos.component';
 import { map, Subject, takeUntil } from 'rxjs';
 import { CONFIGURACION_DATOS, DEPOSITO_FISCAL, ELABORACION, IMPORTACION_TEMPORAL, RECINTO_FISCALIZADO } from '../../constantes/datos-por-regimen.enum';
-import { Solicitud31602State, Tramite31602Store } from '../../estados/stores/tramite31602.store';
-import { Tramite31602Query } from '../../estados/queries/tramite31602.query';
+import { Solicitud31603State, Tramite31603Store } from '../../estados/stores/tramite31603.store';
+import { Tramite31603Query } from '../../estados/queries/tramite31603.query';
 import radio_si_no from '@libs/shared/theme/assets/json/31601/radio_si_no.json';
 
 
+/**
+ * Este componente es responsable de gestionar y mostrar los datos relacionados con los diferentes regímenes
+ * dentro de la aplicación. Utiliza formularios reactivos para capturar y validar la entrada del usuario,
+ * y se integra con un store y un query para manejar el estado y las consultas relacionadas con el Trámite 31603.
+ */
 @Component({
   selector: 'app-datos-por-regimen',
   standalone: true,
@@ -112,19 +117,19 @@ export class DatosPorRegimenComponent implements OnInit, OnDestroy {
    * Esta propiedad se utiliza para gestionar y almacenar el estado actual
    * de la solicitud dentro del componente DatosPorRegimen.
    */
-  public solicitudState!: Solicitud31602State;
+  public solicitudState!: Solicitud31603State;
 
   /**
    * Constructor del componente DatosPorRegimenComponent.
    * 
    * @param fb - Una instancia de FormBuilder utilizada para crear y gestionar formularios reactivos.
-   * @param tramite31602Store - Un servicio de store para gestionar el estado del Trámite 31602.
-   * @param tramite31602Query - Un servicio de consulta para recuperar datos relacionados con el Trámite 31602.
+   * @param tramite31603Store - Un servicio de store para gestionar el estado del Trámite 31602.
+   * @param tramite31603Query - Un servicio de consulta para recuperar datos relacionados con el Trámite 31602.
    */
   constructor(
     private fb: FormBuilder,
-    private tramite31602Store: Tramite31602Store,
-    private tramite31602Query: Tramite31602Query
+    private tramite31603Store: Tramite31603Store,
+    private tramite31603Query: Tramite31603Query
   ) {
     //
   }
@@ -138,7 +143,7 @@ export class DatosPorRegimenComponent implements OnInit, OnDestroy {
    * - Inicializa el formulario de importaciones llamando al método `cerarImportacionesForm`.
    */
   ngOnInit(): void {
-    this.tramite31602Query.selectSolicitud$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
+    this.tramite31603Query.selectSolicitud$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
         this.solicitudState = seccionState;
       })).subscribe();
     this.cerarImportacionesForm();
@@ -211,9 +216,9 @@ export class DatosPorRegimenComponent implements OnInit, OnDestroy {
   public establecerCambioDeValor(event: { campo: string; valor: any }): void {
     if (event && typeof event.valor === 'object' && event.valor !== null && 'id' in event.valor) {
       const VALOR = event.valor.id;
-      this.tramite31602Store.setDynamicFieldValue(event.campo, VALOR);
+      this.tramite31603Store.setDynamicFieldValue(event.campo, VALOR);
     } else if (event) {
-      this.tramite31602Store.setDynamicFieldValue(event.campo, event.valor);
+      this.tramite31603Store.setDynamicFieldValue(event.campo, event.valor);
     }
   }
 

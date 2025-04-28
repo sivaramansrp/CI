@@ -6,12 +6,18 @@ import { ConfiguracionColumna, EMPRESAS_TABLA, EmpresasDelGrupo, InputCheckCompo
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { PERMISO_A_DESISTIR } from '../../constantes/ivaeieps.enum';
 import { map, Subject, takeUntil } from 'rxjs';
-import { Solicitud31602IvaeiepsState, Tramite31602IvaeiepsStore } from '../../estados/stores/tramite31602ivaeieps.store';
-import { Tramite31602IvaeiepsQuery } from '../../estados/queries/tramite31602ivaeieps.query';
+import { Solicitud31603IvaeiepsState, Tramite31603IvaeiepsStore } from '../../estados/stores/tramite31603ivaeieps.store';
+import { Tramite31603IvaeiepsQuery } from '../../estados/queries/tramite31603ivaeieps.query';
 import { RegistrosDeComercioExteriorService } from '../../services/registros-de-comercio-exterior.service';
 import radio_si_no from '@libs/shared/theme/assets/json/31601/radio_si_no.json';
 import { IvaeiepsDosComponent } from '../ivaeieps-dos/ivaeieps-dos.component';
 
+/**
+ * Este componente representa la sección de IVA e IEPS de la aplicación.
+ * Es responsable de gestionar los controles del formulario, validaciones e interacciones
+ * relacionadas con el proceso de IVA/IEPS. El componente utiliza formularios reactivos de Angular
+ * e integra varios servicios y stores para manejar el estado y las operaciones de datos.
+ */
 @Component({
   selector: 'app-ivaeieps',
   standalone: true,
@@ -97,7 +103,7 @@ export class IvaeiepsComponent implements OnInit,OnDestroy {
     * This property holds the current state of the solicitud (request)
     * for the IVA and IEPS process in the application.
     */
-   public solicitudState!: Solicitud31602IvaeiepsState;
+   public solicitudState!: Solicitud31603IvaeiepsState;
  
  
    /**
@@ -106,15 +112,15 @@ export class IvaeiepsComponent implements OnInit,OnDestroy {
     * @param fb - Instancia de FormBuilder utilizada para crear y gestionar formularios reactivos.
     * @param comercioExteriorSvc - Servicio para manejar operaciones relacionadas con comercio exterior.
     * @param modalService - Servicio para gestionar cuadros de diálogo modales.
-    * @param tramite31602Store - Store de gestión de estado para Tramite 31602 Ivaeieps.
+    * @param tramite31603Store - Store de gestión de estado para Tramite 31602 Ivaeieps.
     * @param tramite31602Query - Servicio de consulta para acceder al estado de Tramite 31602 Ivaeieps.
     */
    constructor(
      private fb: FormBuilder,
      private comercioExteriorSvc: RegistrosDeComercioExteriorService,
      private modalService: BsModalService,
-     private tramite31602Store: Tramite31602IvaeiepsStore,
-     private tramite31602Query: Tramite31602IvaeiepsQuery
+     private tramite31603Store: Tramite31603IvaeiepsStore,
+     private tramite31603Query: Tramite31603IvaeiepsQuery
    ) {
      //
    }
@@ -123,7 +129,7 @@ export class IvaeiepsComponent implements OnInit,OnDestroy {
     * Gancho del ciclo de vida que se llama después de que Angular ha inicializado todas las propiedades enlazadas a datos de una directiva.
     * 
     * Este método realiza las siguientes acciones:
-    * - Se suscribe al observable `selectSolicitud$` de `tramite31602Query` para actualizar la propiedad `solicitudState`.
+    * - Se suscribe al observable `selectSolicitud$` de `tramite31603Query` para actualizar la propiedad `solicitudState`.
     * - Inicializa el formulario de IVA/IEPS llamando a `crearIvaEiepsForm`.
     * - Obtiene datos de las empresas del grupo invocando `getEmpresasDelGrupoDatos`.
     * - Crea el formulario de IVA llamando a `crearIvaForm`.
@@ -131,7 +137,7 @@ export class IvaeiepsComponent implements OnInit,OnDestroy {
     * La suscripción a `selectSolicitud$` se desuscribe automáticamente cuando el observable `destroyNotifier$` emite un valor.
     */
    ngOnInit(): void {
-     this.tramite31602Query.selectSolicitud$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
+     this.tramite31603Query.selectSolicitud$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
          this.solicitudState = seccionState;
      })).subscribe();
      this.crearIvaEiepsForm();
@@ -232,9 +238,9 @@ export class IvaeiepsComponent implements OnInit,OnDestroy {
     * @param metodoNombre - La clave del método de Tramite31602IvaeiepsStore que será invocado
     *                       para actualizar el store con el valor obtenido.
     */
-   public setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite31602IvaeiepsStore): void {
+   public setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite31603IvaeiepsStore): void {
      const VALOR = form.get(campo)?.value;
-     (this.tramite31602Store[metodoNombre] as (value: unknown) => void)(VALOR);
+     (this.tramite31603Store[metodoNombre] as (value: unknown) => void)(VALOR);
    }
  
    /**

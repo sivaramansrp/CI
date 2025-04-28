@@ -2,13 +2,21 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Catalogo, CatalogoSelectComponent, InputRadioComponent } from '@libs/shared/data-access-user/src';
-import { map, Subject, takeUntil } from 'rxjs';
-import { Solicitud31602IvaeiepsState, Tramite31602IvaeiepsStore } from '../../estados/stores/tramite31602ivaeieps.store';
+import { Subject,map,takeUntil } from 'rxjs';
+import { Solicitud31603IvaeiepsState, Tramite31603IvaeiepsStore } from '../../estados/stores/tramite31603ivaeieps.store';
 import { RegistrosDeComercioExteriorService } from '../../services/registros-de-comercio-exterior.service';
-import { Tramite31602IvaeiepsQuery } from '../../estados/queries/tramite31602ivaeieps.query';
+import { Tramite31603IvaeiepsQuery } from '../../estados/queries/tramite31603ivaeieps.query';
 import radio_si_no from '@libs/shared/theme/assets/json/31601/radio_si_no.json';
+import { NumeroDeEmpleadosComponent } from '../numero-de-empleados/numero-de-empleados.component';
 
 
+/**
+ * @fileoverview
+ * Este archivo contiene la definición del componente `ConceptosComponent`, el cual es parte
+ * del módulo de trámites de la aplicación. Este componente gestiona la sección de "conceptos"
+ * dentro del flujo del trámite 31603 IVA/IEPS. Incluye la configuración del formulario reactivo,
+ * la interacción con el estado global de la aplicación y la obtención de datos de catálogos.
+ */
 @Component({
   selector: 'app-conceptos',
   standalone: true,
@@ -17,7 +25,7 @@ import radio_si_no from '@libs/shared/theme/assets/json/31601/radio_si_no.json';
     ReactiveFormsModule,
     InputRadioComponent,
     CatalogoSelectComponent,
-    // NumeroDeEmpleadosComponent
+    NumeroDeEmpleadosComponent
   ],
   templateUrl: './conceptos.component.html',
   styleUrl: './conceptos.component.scss',
@@ -69,23 +77,23 @@ export class ConceptosComponent implements OnInit, OnDestroy {
     * Representa el estado de la Solicitud31602Ivaeieps, que contiene
     * los datos y propiedades relacionados con el proceso actual de solicitud.
     * Este estado se utiliza para gestionar y rastrear el flujo de trabajo y los datos
-    * de la aplicación para el trámite específico 31602.
+    * de la aplicación para el trámite específico 31603.
     */
-   public solicitudState!: Solicitud31602IvaeiepsState;
+   public solicitudState!: Solicitud31603IvaeiepsState;
  
    /**
     * Construye una instancia del ConceptosComponent.
     * 
     * @param fb - Una instancia de FormBuilder utilizada para crear y gestionar formularios reactivos.
     * @param comercioExteriorSvc - Servicio para manejar operaciones relacionadas con comercio exterior.
-    * @param tramite31602Store - Almacén de gestión de estado para el Trámite 31602 IVA/IEPS.
-    * @param tramite31602Query - Servicio de consulta para acceder al estado del Trámite 31602 IVA/IEPS.
+    * @param tramite31603Store - Almacén de gestión de estado para el Trámite 31602 IVA/IEPS.
+    * @param tramite31603Query - Servicio de consulta para acceder al estado del Trámite 31602 IVA/IEPS.
     */
    constructor(
      private fb: FormBuilder,
      private comercioExteriorSvc: RegistrosDeComercioExteriorService,
-     private tramite31602Store: Tramite31602IvaeiepsStore,
-     private tramite31602Query: Tramite31602IvaeiepsQuery
+     private tramite31603Store: Tramite31603IvaeiepsStore,
+     private tramite31603Query: Tramite31603IvaeiepsQuery
    ) {
      // Constructor vacío
    }
@@ -100,7 +108,7 @@ export class ConceptosComponent implements OnInit, OnDestroy {
     * - Obtiene datos del catálogo de bancos invocando `getBancoCatalogDatos`.
     */
    ngOnInit(): void {
-     this.tramite31602Query.selectSolicitud$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
+     this.tramite31603Query.selectSolicitud$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
          this.solicitudState = seccionState;
      })).subscribe();
      this.crearConceptosForm();
@@ -196,12 +204,12 @@ export class ConceptosComponent implements OnInit, OnDestroy {
     *
     * @param form - La instancia de `FormGroup` que contiene los controles del formulario.
     * @param campo - El nombre del control del formulario cuyo valor será recuperado.
-    * @param metodoNombre - La clave del método en el `Tramite31602IvaeiepsStore` 
+    * @param metodoNombre - La clave del método en el `Tramite31603IvaeiepsStore` 
     *                       que será invocado para actualizar el store.
     */
-   public setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite31602IvaeiepsStore): void {
+   public setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite31603IvaeiepsStore): void {
      const VALOR = form.get(campo)?.value;
-     (this.tramite31602Store[metodoNombre] as (value: unknown) => void)(VALOR);
+     (this.tramite31603Store[metodoNombre] as (value: unknown) => void)(VALOR);
    }
  
    /**

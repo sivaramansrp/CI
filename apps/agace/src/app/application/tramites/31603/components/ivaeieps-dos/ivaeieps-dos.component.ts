@@ -4,11 +4,20 @@ import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tram
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CONFIGURACION_IVAEIEPS_DOS, PAGO_DE_DERECHOS, PERMISO_A_DESISTIR_DOS, PERMISO_A_DESISTIR_TRES } from '../../constantes/ivaeieps.enum';
 import { map, Subject, takeUntil } from 'rxjs';
-import { Solicitud31602State, Tramite31602Store } from '../../estados/stores/tramite31602.store';
-import { Tramite31602Query } from '../../estados/queries/tramite31602.query';
+import { Solicitud31603State, Tramite31603Store } from '../../estados/stores/tramite31603.store';
+import { Tramite31603Query } from '../../estados/queries/tramite31603.query';
 import { RegistrosDeComercioExteriorService } from '../../services/registros-de-comercio-exterior.service';
 import { ModeloDeFormaDinamica } from '@libs/shared/data-access-user/src';
 
+/**
+ * Componente `IvaeiepsDosComponent` que gestiona la funcionalidad relacionada con el proceso de IVA e IEPS.
+ * Este componente utiliza formularios reactivos para manejar datos dinámicos y realiza operaciones
+ * relacionadas con el estado del trámite 31603.
+ * 
+ * @remarks
+ * - Este componente es standalone y utiliza módulos como `CommonModule`, `ReactiveFormsModule` y `FormasDinamicasComponent`.
+ * - Implementa los ciclos de vida `OnInit` y `OnDestroy` para inicializar y limpiar recursos.
+ */
 @Component({
   selector: 'app-ivaeieps-dos',
   standalone: true,
@@ -96,7 +105,7 @@ export class IvaeiepsDosComponent implements OnInit,OnDestroy {
      * Esta propiedad se utiliza para gestionar y rastrear el estado de la 
      * solicitud dentro del proceso de IVA/IEPS.
      */
-    public solicitudState!: Solicitud31602State;
+    public solicitudState!: Solicitud31603State;
   
   
     /**
@@ -104,14 +113,14 @@ export class IvaeiepsDosComponent implements OnInit,OnDestroy {
      * 
      * @param fb - Una instancia de FormBuilder utilizada para crear y gestionar formularios reactivos.
      * @param comercioExteriorSvc - Servicio para manejar operaciones relacionadas con comercio exterior.
-     * @param tramite31602Store - Store de gestión de estado para el Trámite 31602.
-     * @param tramite31602Query - Servicio de consulta para acceder a los datos del estado del Trámite 31602.
+     * @param tramite31603Store - Store de gestión de estado para el Trámite 31602.
+     * @param tramite31603Query - Servicio de consulta para acceder a los datos del estado del Trámite 31602.
      */
     constructor(
         private fb: FormBuilder,
         private comercioExteriorSvc: RegistrosDeComercioExteriorService,
-        private tramite31602Store: Tramite31602Store,
-        private tramite31602Query: Tramite31602Query
+        private tramite31603Store: Tramite31603Store,
+        private tramite31603Query: Tramite31603Query
       ) {
       //
     }
@@ -119,14 +128,14 @@ export class IvaeiepsDosComponent implements OnInit,OnDestroy {
     /**
      * Gancho del ciclo de vida que se llama después de que el componente se inicializa.
      * 
-     * - Se suscribe al observable `selectSolicitud$` de `tramite31602Query` para actualizar la propiedad `solicitudState`
+     * - Se suscribe al observable `selectSolicitud$` de `tramite31603Query` para actualizar la propiedad `solicitudState`
      *   cada vez que el observable emite un nuevo valor. La suscripción se cancela automáticamente cuando el componente
      *   se destruye utilizando el subject `destroyNotifier$`.
      * - Inicializa el formulario para porcentaje y monto utilizando el método `crearPorcentajeMontoForm`.
      * - Obtiene los datos del catálogo de bancos invocando el método `getBancoCatalogDatos`.
      */
     ngOnInit(): void {
-      this.tramite31602Query.selectSolicitud$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
+      this.tramite31603Query.selectSolicitud$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
          this.solicitudState = seccionState;
        })).subscribe();
       this.crearPorcentajeMontoForm();
@@ -232,9 +241,9 @@ export class IvaeiepsDosComponent implements OnInit,OnDestroy {
     public establecerCambioDeValor(event: { campo: string; valor: any }): void {
       if (event && typeof event.valor === 'object' && event.valor !== null && 'id' in event.valor) {
         const VALOR = event.valor.id;
-        this.tramite31602Store.setDynamicFieldValue(event.campo, VALOR);
+        this.tramite31603Store.setDynamicFieldValue(event.campo, VALOR);
       } else if (event) {
-        this.tramite31602Store.setDynamicFieldValue(event.campo, event.valor);
+        this.tramite31603Store.setDynamicFieldValue(event.campo, event.valor);
       }
     }
   
