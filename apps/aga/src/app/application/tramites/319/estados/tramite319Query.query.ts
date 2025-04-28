@@ -5,13 +5,13 @@ import { Tramite319Store } from "./tramite319Store.store";
 import { FinalDataToSend, Solicitar } from "../models/personas.module";
 
 /**
- * @description
+ * @descripcion
  * Servicio de consulta para el estado del formulario del trámite 319.
  * 
  * Este servicio extiende la clase `Query` de Akita y proporciona métodos
  * para acceder al estado actual de los datos del formulario.
  * 
- * @example
+ * @ejemplo
  * constructor(private tramite319Query: Tramite319Query) {}
  * 
  * const datos = this.tramite319Query.selectDatos$.subscribe(data => {
@@ -24,7 +24,7 @@ import { FinalDataToSend, Solicitar } from "../models/personas.module";
 export class Tramite319Query extends Query<FinalDataToSend> {
 
     /**
-     * @description
+     * @descripcion
      * Constructor del servicio `Tramite319Query`.
      * 
      * @param {Tramite319Store} store - La tienda de estado asociada al trámite 319.
@@ -34,23 +34,23 @@ export class Tramite319Query extends Query<FinalDataToSend> {
     }
 
     /**
-     * @description
+     * @descripcion
      * Observable para obtener la lista de datos (`Solicitar[]`).
      * 
      * @returns {Observable<Solicitar[]>}
      */
-    selectDatos$ = this.select(state => state.datos);
+    selectDatos$ = this.select(estado => estado.datos);
 
     /**
-     * @description
+     * @descripcion
      * Observable para obtener la operación actual (`string`).
      * 
      * @returns {Observable<string>}
      */
-    selectOperacion$ = this.select(state => state.operacion);
+    selectOperacion$ = this.select(estado => estado.operacion);
 
     /**
-     * @description
+     * @descripcion
      * Getter síncrono para obtener directamente todos los datos (`Solicitar[]`) actuales del estado.
      * 
      * @returns {Solicitar[]}
@@ -60,7 +60,7 @@ export class Tramite319Query extends Query<FinalDataToSend> {
     }
 
     /**
-     * @description
+     * @descripcion
      * Getter síncrono para obtener directamente la operación actual del estado.
      * 
      * @returns {string}
