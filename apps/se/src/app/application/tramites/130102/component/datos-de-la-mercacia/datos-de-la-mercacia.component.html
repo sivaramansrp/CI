@@ -43,6 +43,7 @@
           <small *ngIf="formDelLa.controls['descripcion'].errors?.['maxlength']"
             >Por favor corrija la descripción.</small
           >
+          <small *ngIf="formDelLa.controls['descripcion'].errors?.['leadingSpaces']">No se permiten espacios al inicio del campo.</small>
         </div>
       </div>
     </div>
@@ -118,6 +119,7 @@
           <small *ngIf="formDelLa.controls['cantidad'].errors?.['min']"
             >Debe ser mayor que 0.</small
           >
+          <small *ngIf="formDelLa.controls['cantidad'].errors?.['leadingSpaces']">No se permiten espacios al inicio del campo.</small>
         </div>
       </div>
       <div class="col-md-4 form-group">
@@ -152,6 +154,7 @@
           <small *ngIf="formDelLa.controls['valorFacturaUSD'].errors?.['min']"
             >Debe ser mayor que 0.</small
           >
+          <small *ngIf="formDelLa.controls['valorFacturaUSD'].errors?.['leadingSpaces']">No se permiten espacios al inicio del campo.</small>
         </div>
       </div>
     </div>

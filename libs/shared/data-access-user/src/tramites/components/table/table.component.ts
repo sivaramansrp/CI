@@ -7,9 +7,10 @@ import {
   OnInit,
   SimpleChanges,
 } from '@angular/core';
-import { TableData } from '../../../core/models/shared/components.model';
+import { TableData} from '../../../core/models/shared/components.model';
 
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'ng-table',
@@ -17,7 +18,8 @@ import { CommonModule } from '@angular/common';
   styleUrl: './table.component.scss',
   standalone: true,
   imports: [
-    CommonModule
+    CommonModule,
+    FormsModule
   ],
   host: {}
 })
@@ -55,7 +57,7 @@ export class TableComponent implements OnInit, OnChanges {
   ngOnInit(): void {
     this.tableData = {
       tableHeader: this.commonTableHeader,
-      tableBody: this.commonTableBody,
+      tableBody: this.agregarSeleccion(this.commonTableBody)
     };
   }
 
@@ -64,12 +66,32 @@ export class TableComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     const TBODYKEY = 'commonTableHeader';
     const TBODYDATA = 'commonTableBody';
+    
     if (changes[TBODYKEY]?.currentValue) {
       this.tableData.tableHeader = changes[TBODYKEY]?.currentValue;
     }
     if (changes[TBODYDATA]?.currentValue) {
-      this.tableData.tableBody = changes[TBODYDATA]?.currentValue;
+      this.tableData.tableBody = this.agregarSeleccion(changes[TBODYDATA]?.currentValue);
     }
+  }
 
+  private agregarSeleccion(data: any[]): any[] {
+    if (!this.tableData) {
+      this.tableData = { tableHeader: [], tableBody: [] };
+    }
+    
+    return data?.map(item => ({ ...item, selected: item.selected ?? false })) || [];
+  }
+
+  todasSeleccionadas(): boolean {
+    return this.tableData.tableBody?.length > 0 && this.tableData.tableBody.every(item => item.selected);
+  }
+
+  alternarSeleccionTodo(event: Event): void {
+    const CHECKED = (event.target as HTMLInputElement).checked;
+    this.tableData.tableBody = this.tableData.tableBody.map(item => ({
+      ...item,
+      selected: CHECKED,
+    }));
   }
 }

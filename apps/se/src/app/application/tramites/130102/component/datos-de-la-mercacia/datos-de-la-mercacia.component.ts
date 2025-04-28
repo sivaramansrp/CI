@@ -9,9 +9,11 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 
 import {
+  AbstractControl,
   FormBuilder,
   FormGroup,
   ReactiveFormsModule, 
+  ValidationErrors,  
   Validators,
 } from '@angular/forms';
 
@@ -131,6 +133,7 @@ export class DetosDelLaMarcaciaComponent implements OnInit , OnDestroy {
           Validators.required,
           Validators.minLength(10),
           Validators.maxLength(500),
+          DetosDelLaMarcaciaComponent.noLeadingSpacesValidator
         ],
       ],
       fraccionArancelaria: [this.solicitudState?.fraccionArancelaria, [Validators.required]],
@@ -140,7 +143,8 @@ export class DetosDelLaMarcaciaComponent implements OnInit , OnDestroy {
         [
           Validators.required,
           Validators.min(1),
-          Validators.pattern(REG_X.SOLO_NUMEROS), 
+          Validators.pattern(REG_X.SOLO_NUMEROS),
+          DetosDelLaMarcaciaComponent.noLeadingSpacesValidator 
         ],
       ],
       valorFacturaUSD: [
@@ -149,6 +153,7 @@ export class DetosDelLaMarcaciaComponent implements OnInit , OnDestroy {
           Validators.required,
           Validators.min(0.01),
           Validators.pattern(REG_X.DECIMALES_DOS_LUGARES),
+          DetosDelLaMarcaciaComponent.noLeadingSpacesValidator 
         ],
       ],
     });
@@ -205,6 +210,15 @@ export class DetosDelLaMarcaciaComponent implements OnInit , OnDestroy {
   fetchUnidad(): void {
     this.selectedValue = 'Nuevo';
   }
+
+  // Custom validator for leading spaces
+  private static noLeadingSpacesValidator(control: AbstractControl): ValidationErrors | null {
+    if (control.value && control.value.trim() !== control.value) {
+      return { leadingSpaces: true };
+    }
+    return null;
+  }
+
 
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
