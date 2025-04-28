@@ -1,30 +1,24 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { map, takeUntil } from 'rxjs';
+import { CertificadosOrigenService } from '../../../110216/services/certificado-origen.service';
 import { CommonModule } from '@angular/common';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
-import { FormBuilder } from '@angular/forms';
-import { FormGroup } from '@angular/forms';
-import { FormsModule } from '@angular/forms';
+import { HistoricoColumnas } from '../../../110216/models/certificado-origen.model';
 import { Modal } from 'bootstrap';
 import { REGEX_SOLO_DIGITOS } from '@libs/shared/data-access-user/src';
-import { ReactiveFormsModule } from '@angular/forms';
+import { SeleccionadasTabla } from '../../models/registro.model';
 import { Subject } from 'rxjs';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
-import { TablaSeleccion, TableComponent } from '@libs/shared/data-access-user/src';
-import { ColumnasTabla, FECHA_FACTURA, FECHA_FINAL, FECHA_INICIAL, SeleccionadasTabla } from '../../models/registro.model';
+import { TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { Tramite110216Query } from '../../../../estados/queries/tramite110216.query';
 import { Tramite110216State } from '../../../../estados/tramites/tramite110216.store';
 import { Tramite110216Store } from '../../../../estados/tramites/tramite110216.store';
 import { ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
-import { Validators } from '@angular/forms';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
-import { HistoricoColumnas } from '../../../110216/models/certificado-origen.model';
-import { CertificadosOrigenService } from '../../../110216/services/certificado-origen.service';
 
 /**
  * Componente para gestionar el histórico de productores.
- * 
  * Este componente permite al usuario visualizar, seleccionar y gestionar productores relacionados
  * con el trámite. También incluye la funcionalidad para agregar nuevos productores y gestionar
  * datos confidenciales.
@@ -34,7 +28,7 @@ import { CertificadosOrigenService } from '../../../110216/services/certificado-
   standalone: true,
   imports: [CommonModule, TituloComponent, FormsModule, ReactiveFormsModule, TablaDinamicaComponent],
   templateUrl: './historico-productores.component.html',
-  styleUrl: './historico-productores.component.scss',
+  styleUrls: ['./historico-productores.component.scss'],
 })
 export class HistoricoProductoresComponent implements OnInit, OnDestroy {
   /**
@@ -43,49 +37,20 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
   formulario!: FormGroup;
 
   /**
- * Configuración de la tabla de selección.
- * 
- * Esta propiedad se utiliza para gestionar la configuración y el comportamiento
- * de la tabla de selección en el componente.
- * 
- * @type {TablaSeleccion}
- */
+   * Configuración de la tabla de selección.
+   */
   TablaSeleccion = TablaSeleccion;
 
   /**
    * Configuración de las columnas de la tabla dinámica.
    */
   tableColumns: ConfiguracionColumna<HistoricoColumnas>[] = [
-    {
-      encabezado: 'Nombre del productor',
-      clave: (elementos) => elementos.nombreProductor,
-      orden: 1
-    },
-    {
-      encabezado: 'Número de registro fiscal',
-      clave: (elementos) => elementos.numeroRegistroFiscal,
-      orden: 2,
-    },
-    {
-      encabezado: 'Dirección',
-      clave: (elementos) => elementos.direccion,
-      orden: 3,
-    },
-    {
-      encabezado: 'Correo Electrónico',
-      clave: (elementos) => elementos.correoElectronico,
-      orden: 4,
-    },
-    {
-      encabezado: 'Teléfono',
-      clave: (elementos) => elementos.telefono,
-      orden: 5,
-    },
-    {
-      encabezado: 'Fax',
-      clave: (elementos) => elementos.fax,
-      orden: 6,
-    },
+    { encabezado: 'Nombre del productor', clave: (elementos) => elementos.nombreProductor, orden: 1 },
+    { encabezado: 'Número de registro fiscal', clave: (elementos) => elementos.numeroRegistroFiscal, orden: 2 },
+    { encabezado: 'Dirección', clave: (elementos) => elementos.direccion, orden: 3 },
+    { encabezado: 'Correo Electrónico', clave: (elementos) => elementos.correoElectronico, orden: 4 },
+    { encabezado: 'Teléfono', clave: (elementos) => elementos.telefono, orden: 5 },
+    { encabezado: 'Fax', clave: (elementos) => elementos.fax, orden: 6 },
   ];
 
   /**
@@ -117,10 +82,7 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
    * Indica si se está editando una mercancía.
    */
   esMercanciaEnEdicion = false;
-  /**
-   * Tabla de selección de mercancías.
-   */
-  tablaSeleccion = TablaSeleccion;
+
   /**
    * Estado actual del trámite.
    */
@@ -143,7 +105,7 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
 
   /**
    * Constructor del componente.
-   * 
+   *
    * @param {FormBuilder} fb - Constructor para crear formularios reactivos.
    * @param {CertificadosOrigenService} certificadosOrigenService - Servicio para obtener datos relacionados con los productores.
    * @param {Tramite110216Store} store - Store para gestionar el estado del trámite.
@@ -156,12 +118,12 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
     public store: Tramite110216Store,
     public tramiteQuery: Tramite110216Query,
     private validacionesService: ValidacionesFormularioService
-  ) { }
+  ) {
+    // El constructor se utiliza para la inyección de dependencias.
+  }
 
   /**
    * Método que se ejecuta al inicializar el componente.
-   * 
-   * Carga los datos iniciales, configura los formularios y suscribe al estado del trámite.
    */
   ngOnInit(): void {
     this.cargarProductorPorExportador();
@@ -193,7 +155,7 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
   initAgregarDatosProductorFormulario(): void {
     this.agregarDatosProductorFormulario = this.fb.group({
       numeroRegistroFiscal: [this.tramiteState?.agregarDatosProductorFormulario?.numeroRegistroFiscal, [Validators.required]],
-      fax: [this.tramiteState?.agregarDatosProductorFormulario?.fax, [Validators.pattern(REGEX_SOLO_DIGITOS)]]
+      fax: [this.tramiteState?.agregarDatosProductorFormulario?.fax, [Validators.pattern(REGEX_SOLO_DIGITOS)]],
     });
   }
 
@@ -201,16 +163,16 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
    * Carga la lista de productores disponibles para el exportador desde el servicio.
    */
   cargarProductorPorExportador(): void {
-    this.certificadosOrigenService.obtenerProductorPorExportador()
+    this.certificadosOrigenService
+      .obtenerProductorPorExportador()
       .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe(respuesta => {
+      .subscribe((respuesta) => {
         this.productoresExportador = respuesta.datos;
       });
   }
 
   /**
    * Obtiene los productores seleccionados en la tabla.
-   * 
    * @param {HistoricoColumnas[]} evento - Lista de productores seleccionados.
    */
   obtenerSeleccionadoProductores(evento: HistoricoColumnas[]): void {
@@ -219,7 +181,6 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
 
   /**
    * Obtiene los productores seleccionados para agregar.
-   * 
    * @param {HistoricoColumnas[]} evento - Lista de productores seleccionados para agregar.
    */
   obtenerAnadirProductosSeleccionados(evento: HistoricoColumnas[]): void {
@@ -230,8 +191,16 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
    * Agrega los productores seleccionados a la lista de productores agregados.
    */
   productoresSeleccionados(): void {
-    this.agregarProductoresExportador = [...this.agregarProductoresExportador, ...this.seleccionadoProductoresExportador];
-    this.productoresExportador = this.productoresExportador.filter(elementos => !this.seleccionadoProductoresExportador.some(elementosSecundarios => elementosSecundarios.id === elementos.id));
+    this.agregarProductoresExportador = [
+      ...this.agregarProductoresExportador,
+      ...this.seleccionadoProductoresExportador,
+    ];
+    this.productoresExportador = this.productoresExportador.filter(
+      (elementos) =>
+        !this.seleccionadoProductoresExportador.some(
+          (elementosSecundarios) => elementosSecundarios.id === elementos.id
+        )
+    );
     this.seleccionadoProductoresExportador = [];
   }
 
@@ -239,8 +208,16 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
    * Elimina los productores seleccionados de la lista de productores agregados.
    */
   eliminarProductoresSeleccionados(): void {
-    this.productoresExportador = [...this.productoresExportador, ...this.seleccionadoAgregarProductoresExportador];
-    this.agregarProductoresExportador = this.agregarProductoresExportador.filter(elementos => !this.seleccionadoAgregarProductoresExportador.some(elementosSecundarios => elementosSecundarios.id === elementos.id));
+    this.productoresExportador = [
+      ...this.productoresExportador,
+      ...this.seleccionadoAgregarProductoresExportador,
+    ];
+    this.agregarProductoresExportador = this.agregarProductoresExportador.filter(
+      (elementos) =>
+        !this.seleccionadoAgregarProductoresExportador.some(
+          (elementosSecundarios) => elementosSecundarios.id === elementos.id
+        )
+    );
     this.seleccionadoAgregarProductoresExportador = [];
   }
 
@@ -276,7 +253,6 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
 
   /**
    * Valida un campo del formulario.
-   * 
    * @param {FormGroup} form - El formulario reactivo.
    * @param {string} field - El nombre del campo a validar.
    * @returns {boolean} `true` si el campo es válido, de lo contrario `false`.
@@ -287,7 +263,6 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
 
   /**
    * Actualiza el estado del store con el valor seleccionado en el formulario.
-   * 
    * @param {FormGroup} form - El formulario reactivo.
    * @param {string} campo - El nombre del campo en el formulario.
    * @param {keyof Tramite110216Store} metodoNombre - El nombre del método en el store para actualizar el estado.
@@ -299,59 +274,23 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
 
   /**
    * Método que se ejecuta al destruir el componente.
-   * 
-   * Libera los recursos y cancela las suscripciones activas.
    */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
 
-    /**
-     * Configuración de las columnas de la tabla de mercancías seleccionadas.
-     * Define los encabezados y las claves asociadas a cada columna de la tabla de mercancías seleccionadas.
-     */
-    public headersData: ConfiguracionColumna<SeleccionadasTabla>[] = [
-      {
-        encabezado: 'Fracción arancelaria',
-        clave: (ele: SeleccionadasTabla) => ele.fraccionArancelaria,
-        orden: 1,
-      },
-      {
-        encabezado: 'Cantidad',
-        clave: (ele: SeleccionadasTabla) => ele.cantidad,
-        orden: 2,
-      },
-      {
-        encabezado: 'Unidad de medida',
-        clave: (ele: SeleccionadasTabla) => ele.unidadMedida,
-        orden: 3,
-      },
-      {
-        encabezado: 'Valor mercancía',
-        clave: (ele: SeleccionadasTabla) => ele.valorMercancia,
-        orden: 4,
-      },
-      {
-        encabezado: 'Tipo de factura',
-        clave: (ele: SeleccionadasTabla) => ele.tipoFactura,
-        orden: 5,
-      },
-      {
-        encabezado: 'Número factura',
-        clave: (ele: SeleccionadasTabla) => ele.numFactura,
-        orden: 6,
-      },
-      {
-        encabezado: 'Complemento descripción',
-        clave: (ele: SeleccionadasTabla) => ele.complementoDescripcion,
-        orden: 7,
-      },
-      {
-        encabezado: 'Fecha factura',
-        clave: (ele: SeleccionadasTabla) => ele.fechaFactura,
-        orden: 8,
-      },
-    ];
-  
+  /**
+   * Configuración de las columnas de la tabla de mercancías seleccionadas.
+   */
+  public headersData: ConfiguracionColumna<SeleccionadasTabla>[] = [
+    { encabezado: 'Fracción arancelaria', clave: (ele: SeleccionadasTabla) => ele.fraccionArancelaria, orden: 1 },
+    { encabezado: 'Cantidad', clave: (ele: SeleccionadasTabla) => ele.cantidad, orden: 2 },
+    { encabezado: 'Unidad de medida', clave: (ele: SeleccionadasTabla) => ele.unidadMedida, orden: 3 },
+    { encabezado: 'Valor mercancía', clave: (ele: SeleccionadasTabla) => ele.valorMercancia, orden: 4 },
+    { encabezado: 'Tipo de factura', clave: (ele: SeleccionadasTabla) => ele.tipoFactura, orden: 5 },
+    { encabezado: 'Número factura', clave: (ele: SeleccionadasTabla) => ele.numFactura, orden: 6 },
+    { encabezado: 'Complemento descripción', clave: (ele: SeleccionadasTabla) => ele.complementoDescripcion, orden: 7 },
+    { encabezado: 'Fecha factura', clave: (ele: SeleccionadasTabla) => ele.fechaFactura, orden: 8 },
+  ];
 }

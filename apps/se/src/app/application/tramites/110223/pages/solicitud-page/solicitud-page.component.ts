@@ -7,10 +7,11 @@ import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 
 /**
- * Texto de alerta para terceros.
+ * TEXTO DE ALERTA PARA TERCEROS.
  */
 const TERCEROS_TEXTO_DE_ALERTA =
-  'La solicitud ha quedado registrada con el número temporal 202757598 Éste no tiene validez legal y sirve solamente para efectos de identificar tu solicitud. Un folio oficial le será asignado a la solicitud al momento en que ésta sea firmada.';
+  'La solicitud ha quedado registrada con el número temporal 202757598. Éste no tiene validez legal y sirve solamente para efectos de identificar tu solicitud. Un folio oficial le será asignado a la solicitud al momento en que ésta sea firmada.';
+
 /**
  * Interfaz que define la estructura de una acción de botón.
  */
@@ -25,6 +26,7 @@ interface AccionBoton {
    */
   valor: number;
 }
+
 /**
  * Componente que representa la página de solicitud.
  */
@@ -42,11 +44,12 @@ interface AccionBoton {
     ReactiveFormsModule,
   ],
 })
-/**
- * Componente que representa la página de solicitud.
- */
 export class SolicitudPageComponent {
+  /**
+   * Texto de alerta para terceros.
+   */
   TEXTO_DE_ALERTA: string = TERCEROS_TEXTO_DE_ALERTA;
+
   /**
    * Lista de pasos del asistente.
    */
@@ -84,7 +87,7 @@ export class SolicitudPageComponent {
    * Obtiene el valor del índice de la acción del botón.
    * @param e Acción del botón.
    */
-  getValorIndice(e: AccionBoton) {
+  getValorIndice(e: AccionBoton): void {
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
       if (e.accion === 'cont') {

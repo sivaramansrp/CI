@@ -13,9 +13,8 @@ import mercanciaDisponsibleTable from '@libs/shared/theme/assets/json/110223/mer
 import mercanciaSeleccionadasTable from '@libs/shared/theme/assets/json/110223/mercancias-seleccionadas.json';
 import mercanciaTable from '@libs/shared/theme/assets/json/110223/mercancia.json';
 
+const TERCEROS_TEXTO_DE_ALERTA = 'Para continuar con el trámite, debes agregar por lo menos una mercancía.';
 
-const TERCEROS_TEXTO_DE_ALERTA =
-  'Para continuar con el trámite, debes agregar por lo menos una mercancía.';
 /**
  * Componente que representa el formulario de certificado de origen en el trámite.
  */
@@ -51,6 +50,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
    * Formulario reactivo para los datos de la mercancía.
    */
   mercanciaForm!: FormGroup;
+
   /**
    * Catálogo de países.
    */
@@ -74,17 +74,17 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
   /**
    * Indica si se debe mostrar el formulario para cargar un archivo.
    */
-  cargarArchivo: boolean = false;
+  cargarArchivo = false;
 
   /**
    * Indica si se deben mostrar errores en el formulario.
    */
-  mostrarErrores: boolean = false;
+  mostrarErrores = false;
 
   /**
    * Indica si hay mercancías disponibles.
    */
-  hayMercanciasDisponibles: boolean = false;
+  hayMercanciasDisponibles = false;
 
   /**
    * Indica si se está editando una mercancía.
@@ -154,7 +154,8 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
   /**
    * Nombre del archivo seleccionado.
    */
-  nombreArchivo: string = '';
+  nombreArchivo = '';
+
   /**
    * Configuración de la fecha inicial.
    * Representa la configuración del campo de entrada para la fecha inicial en el formulario.
@@ -172,45 +173,47 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
    * Representa la configuración del campo de entrada para la fecha de la factura en el formulario.
    */
   fechaFacturaInput: InputFecha = FECHA_FACTURA;
+
   /**
    * Indica si se está mostrando el formulario.
    */
-  esFormulario: boolean = false;
+  esFormulario = false;
+
   /**
- * Notificador para destruir observables al destruir el componente.
- * Se utiliza para gestionar la cancelación de suscripciones activas y evitar fugas de memoria.
- */
-private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+   * Notificador para destruir observables al destruir el componente.
+   * Se utiliza para gestionar la cancelación de suscripciones activas y evitar fugas de memoria.
+   */
+  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
-/**
- * Opciones del catálogo de tratados.
- * Contiene una lista de objetos del catálogo de tratados obtenidos desde el servicio.
- */
-optionsTratado!: Catalogo[];
+  /**
+   * Opciones del catálogo de tratados.
+   * Contiene una lista de objetos del catálogo de tratados obtenidos desde el servicio.
+   */
+  optionsTratado!: Catalogo[];
 
-/**
- * Opciones del catálogo de países.
- * Contiene una lista de objetos del catálogo de países obtenidos desde el servicio.
- */
-optionsPais!: Catalogo[];
+  /**
+   * Opciones del catálogo de países.
+   * Contiene una lista de objetos del catálogo de países obtenidos desde el servicio.
+   */
+  optionsPais!: Catalogo[];
 
-/**
- * Opciones del catálogo de unidades de medida comercial (UMC).
- * Contiene una lista de objetos del catálogo de UMC obtenidos desde el servicio.
- */
-optionsUMC!: Catalogo[];
+  /**
+   * Opciones del catálogo de unidades de medida comercial (UMC).
+   * Contiene una lista de objetos del catálogo de UMC obtenidos desde el servicio.
+   */
+  optionsUMC!: Catalogo[];
 
-/**
- * Opciones del catálogo de unidades de medida.
- * Contiene una lista de objetos del catálogo de unidades de medida obtenidos desde el servicio.
- */
-optionsUnidadMedida!: Catalogo[];
+  /**
+   * Opciones del catálogo de unidades de medida.
+   * Contiene una lista de objetos del catálogo de unidades de medida obtenidos desde el servicio.
+   */
+  optionsUnidadMedida!: Catalogo[];
 
-/**
- * Opciones del catálogo de tipos de factura.
- * Contiene una lista de objetos del catálogo de tipos de factura obtenidos desde el servicio.
- */
-optionsTipoFactura!: Catalogo[];
+  /**
+   * Opciones del catálogo de tipos de factura.
+   * Contiene una lista de objetos del catálogo de tipos de factura obtenidos desde el servicio.
+   */
+  optionsTipoFactura!: Catalogo[];
 
   /**
    * Datos de la tabla de mercancías disponibles.
@@ -218,12 +221,14 @@ optionsTipoFactura!: Catalogo[];
    * para ser seleccionadas en el formulario.
    */
   public mercanciaDisponsiblesTablaDatos: ColumnasTabla[] = [];
+
   /**
    * Datos de la tabla de mercancías seleccionadas.
    * Representa una lista de objetos que contienen información sobre las mercancías que han sido seleccionadas
    * por el usuario en el formulario.
    */
   public mercanciaSeleccionadasTablaData: SeleccionadasTabla[] = [];
+
   /**
    * Configuración de las columnas de la tabla de mercancías disponibles.
    * Define los encabezados y las claves asociadas a cada columna de la tabla de mercancías disponibles.
@@ -260,6 +265,7 @@ optionsTipoFactura!: Catalogo[];
       orden: 6,
     },
   ];
+
   /**
    * Configuración de las columnas de la tabla de mercancías seleccionadas.
    * Define los encabezados y las claves asociadas a cada columna de la tabla de mercancías seleccionadas.
@@ -322,15 +328,16 @@ optionsTipoFactura!: Catalogo[];
     private query: Tramite110223Query,
     private validacionesService: ValidacionesFormularioService
   ) {
-    // El constructor se utiliza para la inyección de dependencias.
+        // El constructor se utiliza para la inyección de dependencias.
   }
+
   /**
    * Maneja el evento de clic para habilitar el formulario de edición.
-   * @param row Fila seleccionada.
    */
-  manejarClic(row: unknown) {
+  manejarClic(): void {
     this.esFormulario = true;
   }
+
   /**
    * Valida el formulario del destinatario.
    * Marca todos los campos como tocados si el formulario es inválido.
@@ -350,6 +357,7 @@ optionsTipoFactura!: Catalogo[];
       this.mercanciaForm.markAllAsTouched();
     }
   }
+
   /**
    * Método que se ejecuta al inicializar el componente.
    * Configura los formularios y obtiene los catálogos necesarios.
@@ -373,50 +381,54 @@ optionsTipoFactura!: Catalogo[];
       .subscribe();
     this.donanteDomicilio();
   }
-/**
- * Actualiza la fecha inicial en el formulario reactivo y en el estado de la tienda.
- * @param nuevo_fechaIncial Nueva fecha inicial seleccionada.
- */
-  cambioFechaInicial(nuevo_fechaIncial: string): void {
+
+  /**
+   * Actualiza la fecha inicial en el formulario reactivo y en el estado de la tienda.
+   * @param nuevoFechaIncial Nueva fecha inicial seleccionada.
+   */
+  cambioFechaInicial(nuevoFechaIncial: string): void {
     this.registroForm.patchValue({
       validacionForm: {
-        fechaInicial: nuevo_fechaIncial,
+        fechaInicial: nuevoFechaIncial,
       },
     });
     this.setValoresStore(this.validacionForm, 'fechaInicial', 'setFechInicioB');
   }
-/**
- * Actualiza la fecha final en el formulario reactivo y en el estado de la tienda.
- * @param nuevo_fechaFinal Nueva fecha final seleccionada.
- */
-  cambioFechaFinal(nuevo_fechaFinal: string): void {
+
+  /**
+   * Actualiza la fecha final en el formulario reactivo y en el estado de la tienda.
+   * @param nuevoFechaFinal Nueva fecha final seleccionada.
+   */
+  cambioFechaFinal(nuevoFechaFinal: string): void {
     this.registroForm.patchValue({
       validacionForm: {
-        fechaFinal: nuevo_fechaFinal,
+        fechaFinal: nuevoFechaFinal,
       },
     });
 
     this.setValoresStore(this.validacionForm, 'fechaFinal', 'setFechFinB');
   }
-/**
- * Actualiza la fecha de la factura en el formulario reactivo y en el estado de la tienda.
- * @param nuevo_fechaFin Nueva fecha de la factura seleccionada.
- */
-  cambioFechaFactura(nuevo_fechaFin: string): void {
+
+  /**
+   * Actualiza la fecha de la factura en el formulario reactivo y en el estado de la tienda.
+   * @param nuevoFechaFin Nueva fecha de la factura seleccionada.
+   */
+  cambioFechaFactura(nuevoFechaFin: string): void {
     this.mercanciaForm.patchValue({
       validacionMercanciaForm: {
-        fecha: nuevo_fechaFin,
+        fecha: nuevoFechaFin,
       },
     });
     this.setValoresStore(this.validacionMercanciaForm, 'fecha', 'setFecha');
   }
+
   /**
    * Busca mercancías disponibles basándose en la descripción del tratado.
    * Verifica si la lista `Tratadodescripcion` incluye el valor '1' para determinar si hay mercancías disponibles.
    * Si el valor está presente, establece `hayMercanciasDisponibles` en `true`; de lo contrario, lo establece en `false`.
    * Además, actualiza los catálogos necesarios llamando a los métodos `getTratado`, `getPais`, `getUMC`, `getUnidadMedida` y `getTipoFactura`.
    */
-  buscarMercancias() {
+  buscarMercancias(): void {
     if (this.registroForm.get('validacionForm.tratado')?.value === 0) {
       this.hayMercanciasDisponibles = false;
     } else {
@@ -428,14 +440,19 @@ optionsTipoFactura!: Catalogo[];
     this.getUnidadMedida();
     this.getTipoFactura();
   }
-  cancelar() {
-    this.esFormulario = false; // Se agregó `this` para cumplir con `class-methods-use-this`.
+
+  /**
+   * Cancela la edición del formulario.
+   */
+  cancelar(): void {
+    this.esFormulario = false;
     this.esMercanciaEnEdicion = true;
   }
+
   /**
    * Agrega una mercancía al formulario.
    */
-  agregar() {
+  agregar(): void {
     this.getTratado();
     this.getPais();
     this.getUMC();
@@ -447,8 +464,7 @@ optionsTipoFactura!: Catalogo[];
       this.esFormulario = false;
       this.mercanciaSeleccionadasTablaData.splice(0, 1, {
         fraccionArancelaria:
-          this.mercanciaForm?.value.validacionMercanciaForm
-            .fraccionMercanArancelaria,
+          this.mercanciaForm?.value.validacionMercanciaForm.fraccionMercanArancelaria,
         cantidad: this.mercanciaForm?.value.validacionMercanciaForm.cantidad,
         unidadMedida:
           this.mercanciaForm?.value.validacionMercanciaForm.unidadMedida,
@@ -459,16 +475,16 @@ optionsTipoFactura!: Catalogo[];
         numFactura:
           this.mercanciaForm?.value.validacionMercanciaForm.numeroFactura,
         complementoDescripcion:
-          this.mercanciaForm?.value.validacionMercanciaForm
-            .complementoDelaDescripcion,
+          this.mercanciaForm?.value.validacionMercanciaForm.complementoDelaDescripcion,
         fechaFactura: this.mercanciaForm?.value.validacionMercanciaForm.fecha,
       });
     }
   }
+
   /**
    * Modifica una mercancía existente.
    */
-  modificar() {
+  modificar(): void {
     this.esFormulario = true;
     this.esMercanciaEnEdicion = false;
 
@@ -478,6 +494,7 @@ optionsTipoFactura!: Catalogo[];
     this.getUnidadMedida();
     this.getTipoFactura();
   }
+
   /**
    * Configura los encabezados y el cuerpo de la tabla de mercancías.
    * Asigna los valores de los encabezados y el cuerpo de la tabla desde los datos obtenidos.
@@ -486,21 +503,24 @@ optionsTipoFactura!: Catalogo[];
     this.mercanciasHeader = this.getMercanciaTable?.tableHeader;
     this.mercanciasBody = this.getMercanciaTable?.tableBody;
   }
+
   /**
    * Activa el formulario para cargar un archivo.
    * Cambia el estado de la variable `cargarArchivo` a `true` para mostrar el formulario de carga de archivos.
    */
-  cargaArchivo() {
+  cargaArchivo(): void {
     this.cargarArchivo = true;
   }
+
   /**
    * Muestra errores en el formulario y desactiva la carga de archivos.
    * Cambia el estado de las variables `mostrarErrores` a `true` y `cargarArchivo` a `false`.
    */
-  darError() {
+  darError(): void {
     this.mostrarErrores = true;
     this.cargarArchivo = false;
   }
+
   /**
    * Obtiene el catálogo de tratados desde el servicio.
    */
@@ -514,6 +534,7 @@ optionsTipoFactura!: Catalogo[];
         }
       });
   }
+
   /**
    * Obtiene el catálogo de países desde el servicio.
    */
@@ -527,6 +548,7 @@ optionsTipoFactura!: Catalogo[];
         }
       });
   }
+
   /**
    * Obtiene el catálogo de UMC desde el servicio.
    */
@@ -540,6 +562,7 @@ optionsTipoFactura!: Catalogo[];
         }
       });
   }
+
   /**
    * Obtiene el catálogo de unidades de medida desde el servicio.
    */
@@ -553,6 +576,7 @@ optionsTipoFactura!: Catalogo[];
         }
       });
   }
+
   /**
    * Obtiene el catálogo de tipos de factura desde el servicio.
    */
@@ -566,6 +590,7 @@ optionsTipoFactura!: Catalogo[];
         }
       });
   }
+
   /**
    * Cierra el formulario para adjuntar un archivo de mercancías.
    * Cambia el estado de la variable `cargarArchivo` a `false` para ocultar el formulario de carga de archivos.
@@ -573,6 +598,7 @@ optionsTipoFactura!: Catalogo[];
   cerrarAdjuntarArchivoMercancias(): void {
     this.cargarArchivo = false;
   }
+
   /**
    * Maneja el evento de selección de un archivo.
    * Obtiene el archivo seleccionado por el usuario y asigna su nombre a la propiedad `nombreArchivo`.
@@ -584,6 +610,7 @@ optionsTipoFactura!: Catalogo[];
     const FILE = INPUT.files?.[0];
     this.nombreArchivo = FILE ? FILE.name : 'No se eligió ningún archivo';
   }
+
   /**
    * Maneja el envío del formulario.
    */
@@ -592,6 +619,7 @@ optionsTipoFactura!: Catalogo[];
       // Aquí se implementará la lógica para manejar el envío del formulario.
     }
   }
+
   /**
    * Verifica si un campo del formulario es válido.
    * @param form Formulario reactivo.
@@ -601,6 +629,7 @@ optionsTipoFactura!: Catalogo[];
   isValid(form: FormGroup, field: string): boolean {
     return this.validacionesService.isValid(form, field) || false;
   }
+
   /**
    * Establece valores en el estado de la tienda.
    * @param form Formulario reactivo.
@@ -615,18 +644,21 @@ optionsTipoFactura!: Catalogo[];
     const VALOR = form.get(campo)?.value;
     (this.store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
+
   /**
    * Obtiene el formulario de validación.
    */
   get validacionForm(): FormGroup {
     return this.registroForm.get('validacionForm') as FormGroup;
   }
+
   /**
    * Obtiene el formulario de validación de mercancías.
    */
   get validacionMercanciaForm(): FormGroup {
     return this.mercanciaForm.get('validacionMercanciaForm') as FormGroup;
   }
+
   /**
    * Configura el formulario reactivo con los valores iniciales del estado.
    */
@@ -656,12 +688,12 @@ optionsTipoFactura!: Catalogo[];
         archivo: [this.solicitudState?.archivo, [Validators.required]],
       }),
     });
+
     this.mercanciaForm = this.fb.group({
       validacionMercanciaForm: this.fb.group({
         fraccionMercanciaArancelaria: ['', [Validators.required]],
         nombreTecnico: ['', [Validators.required]],
         nombreComercialDelaMercancia: ['', [Validators.required]],
-
         criterioParaPreferencial: ['', [Validators.required]],
         valorContenidoRegional: ['', [Validators.required]],
         otrasInstancias: ['', [Validators.required]],
@@ -687,10 +719,11 @@ optionsTipoFactura!: Catalogo[];
         numeroSerie: [
           this.solicitudState?.numeroSerie,
           [Validators.required],
-        ]
+        ],
       }),
     });
   }
+
   /**
    * Obtiene los datos de la tabla de mercancías disponibles desde el servicio.
    * Realiza una suscripción al método `getSolicitudesTabla` del servicio `RegistroService`
@@ -701,6 +734,7 @@ optionsTipoFactura!: Catalogo[];
       this.mercanciaDisponsiblesTablaDatos = data;
     });
   }
+
   /**
    * Obtiene los datos de la tabla de mercancías seleccionadas desde el servicio.
    * Realiza una suscripción al método `getSolicitudesDataTabla` del servicio `RegistroService`
@@ -720,6 +754,4 @@ optionsTipoFactura!: Catalogo[];
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
-
-
 }

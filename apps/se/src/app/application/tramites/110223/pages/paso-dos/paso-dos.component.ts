@@ -5,20 +5,21 @@ import { Router } from '@angular/router';
 import { TramiteStore } from '../../../../estados/tramite.store';
 
 /**
- * Componente que representa el paso tres del trámite.
+ * Componente que representa el paso dos del trámite.
  */
 @Component({
   selector: 'app-paso-dos',
   templateUrl: './paso-dos.component.html',
-  styleUrl: './paso-dos.component.scss',
+  styleUrls: ['./paso-dos.component.scss'],
   standalone: true,
   imports: [FirmaElectronicaComponent],
 })
 export class PasoDosComponent implements OnDestroy {
   private destroy$: Subject<void> = new Subject<void>();
-  
+
   /**
    * Tipo de persona.
+   * @type {number}
    */
   tipoPersona!: number;
 
@@ -32,7 +33,7 @@ export class PasoDosComponent implements OnDestroy {
 
   /**
    * Obtiene el tipo de persona.
-   * @param tipo Tipo de persona.
+   * @param tipo - Tipo de persona a asignar.
    */
   obtenerTipoPersona(tipo: number): void {
     this.tipoPersona = tipo;

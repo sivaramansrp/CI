@@ -19,7 +19,7 @@ import { Tramite110223Store } from '../../../../estados/tramites/Tramite110223.s
     CommonModule,
     ReactiveFormsModule,
     TituloComponent,
-],
+  ],
   templateUrl: './datos_certificado.component.html',
   styleUrl: './datos_certificado.component.css',
 })
@@ -69,23 +69,23 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
    */
   entidadDescripcion: unknown[] = [];
 
-/**
- * Opciones del catálogo de idiomas.
- * Contiene una lista de objetos del catálogo de idiomas obtenidos desde el servicio.
- */
-optionsIdioma!: Catalogo[];
+  /**
+   * Opciones del catálogo de idiomas.
+   * Contiene una lista de objetos del catálogo de idiomas obtenidos desde el servicio.
+   */
+  optionsIdioma!: Catalogo[];
 
-/**
- * Opciones del catálogo de entidades federativas.
- * Contiene una lista de objetos del catálogo de entidades federativas obtenidos desde el servicio.
- */
-optionsEntidad!: Catalogo[];
+  /**
+   * Opciones del catálogo de entidades federativas.
+   * Contiene una lista de objetos del catálogo de entidades federativas obtenidos desde el servicio.
+   */
+  optionsEntidad!: Catalogo[];
 
-/**
- * Opciones del catálogo de representaciones federales.
- * Contiene una lista de objetos del catálogo de representaciones federales obtenidos desde el servicio.
- */
-optionsRepresentacion!: Catalogo[];
+  /**
+   * Opciones del catálogo de representaciones federales.
+   * Contiene una lista de objetos del catálogo de representaciones federales obtenidos desde el servicio.
+   */
+  optionsRepresentacion!: Catalogo[];
 
   /**
    * Constructor del componente.
@@ -130,30 +130,26 @@ optionsRepresentacion!: Catalogo[];
         })
       )
       .subscribe();
+
     this.donanteDomicilio();
 
-    if (
-      this.entidadDescripcion.includes('8') &&
-      this.entidadFederativaData === 'DURANGO'
-    ) {
+    if (this.entidadDescripcion.includes('8') && this.entidadFederativaData === 'DURANGO') {
       this.isJustificacion = true;
     } else {
       this.isJustificacion = false;
     }
-
-   
   }
 
   /**
    * Obtiene el catálogo de idiomas desde el servicio.
    */
   getIdioma(): void {
-   this.registroService
-      .getIdioma().pipe(takeUntil(this.destroyNotifier$))
+    this.registroService
+      .getIdioma()
+      .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((resp) => {
         if (resp.code === 200) {
-          this.optionsIdioma = resp.data as Catalogo [];
-          
+          this.optionsIdioma = resp.data as Catalogo[];
         }
       });
   }
@@ -163,10 +159,11 @@ optionsRepresentacion!: Catalogo[];
    */
   getEntidad(): void {
     this.registroService
-      .getEntidad().pipe(takeUntil(this.destroyNotifier$))
+      .getEntidad()
+      .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((resp) => {
         if (resp.code === 200) {
-          this.optionsEntidad = resp.data as Catalogo [];
+          this.optionsEntidad = resp.data as Catalogo[];
         }
       });
   }
@@ -175,12 +172,12 @@ optionsRepresentacion!: Catalogo[];
    * Obtiene el catálogo de representaciones desde el servicio.
    */
   getRepresentacion(): void {
-    
     this.registroService
-      .getRepresentacion().pipe(takeUntil(this.destroyNotifier$))
+      .getRepresentacion()
+      .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((resp) => {
         if (resp.code === 200) {
-          this.optionsRepresentacion = resp.data= resp.data as Catalogo [];
+          this.optionsRepresentacion = resp.data as Catalogo[];
         }
       });
   }
@@ -214,7 +211,6 @@ optionsRepresentacion!: Catalogo[];
     } else {
       this.isJustificacion = false;
     }
-
   }
 
   /**
@@ -256,7 +252,6 @@ optionsRepresentacion!: Catalogo[];
    * Cancela todas las suscripciones activas.
    */
   ngOnDestroy(): void {
-    
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }

@@ -6,11 +6,13 @@ import { CertificadoDeOrigenComponent } from '../../components/certificado-de-or
 import { CommonModule } from '@angular/common';
 import { DatosCertificadoComponent } from '../../components/datos-certificado/datos_certificado.component';
 import { DestinatarioComponent } from '../../components/destinatario/destinatario.component';
-import { RegistroService } from '../../services/registro.service';
 import { HistoricoProductoresComponent } from '../../components/historico-productores/historico-productores.component';
+import { RegistroService } from '../../services/registro.service';
 
 /**
  * Componente que representa el primer paso del trámite.
+ * Se encarga de gestionar la información del solicitante,
+ * el domicilio fiscal y otros datos asociados al certificado.
  */
 @Component({
   selector: 'app-paso-uno',
@@ -24,65 +26,67 @@ import { HistoricoProductoresComponent } from '../../components/historico-produc
     CertificadoDeOrigenComponent,
     DatosCertificadoComponent,
     DestinatarioComponent,
-    HistoricoProductoresComponent
+    HistoricoProductoresComponent,
   ],
 })
-export class PasoUnoComponent implements AfterViewInit, OnInit {
+export class PasoUnoComponent implements OnInit, AfterViewInit {
   /**
-   * Catálogo de entidades federativas.
+   * Catálogo de entidades federativas obtenido desde el servicio de registros.
    */
-  entidadFederativa!: { data: string; domicilioFiscal?: { entidadFederativa?: string } };
+  entidadFederativa!: {
+    data: string;
+    domicilioFiscal?: { entidadFederativa?: string };
+  };
+
+  /**
+   * Tipo de persona (física o moral) seleccionada en el formulario.
+   */
+  tipoPersona!: number;
+
+  /**
+   * Configuración del formulario dinámico correspondiente a la persona.
+   */
+  persona: FormularioDinamico[] = [];
+
+  /**
+   * Configuración del formulario dinámico correspondiente al domicilio fiscal.
+   */
+  domicilioFiscal: FormularioDinamico[] = [];
+
+  /**
+   * Índice del paso actual en el flujo del asistente.
+   */
+  indice: number = 1;
+
+  /**
+   * Referencia al componente hijo `SolicitanteComponent`,
+   * usado para obtener y manipular información del solicitante.
+   */
+  @ViewChild(SolicitanteComponent) solicitante!: SolicitanteComponent;
 
   /**
    * Constructor del componente.
-   * @param registro Servicio para obtener datos de catálogos.
+   * @param registro Servicio para obtener datos de catálogos, como entidades federativas.
    */
-  constructor(private registro: RegistroService) {
-    // El constructor se utiliza para la inyección de dependencias.
-  }
+  constructor(private registro: RegistroService) {}
 
   /**
-   * Método que se ejecuta al inicializar el componente.
-   * Obtiene el catálogo de entidades federativas y lo procesa.
+   * Ciclo de vida de Angular que se ejecuta una vez que el componente ha sido inicializado.
+   * Carga el catálogo de entidades federativas desde el servicio.
    */
   ngOnInit(): void {
     this.registro.getCatalogoById(21).subscribe((resp) => {
       this.entidadFederativa = resp;
 
       const DATA = JSON.parse(this.entidadFederativa.data);
-
       this.entidadFederativa = DATA?.domicilioFiscal?.entidadFederativa;
     });
   }
 
   /**
-   * Referencia al componente de solicitante.
-   */
-  @ViewChild(SolicitanteComponent) solicitante!: SolicitanteComponent;
-
-  /**
-   * Tipo de persona seleccionada.
-   */
-  tipoPersona!: number;
-
-  /**
-   * Configuración del formulario dinámico para la persona.
-   */
-  persona: FormularioDinamico[] = [];
-
-  /**
-   * Configuración del formulario dinámico para el domicilio fiscal.
-   */
-  domicilioFiscal: FormularioDinamico[] = [];
-
-  /**
-   * Índice del paso actual.
-   */
-  indice: number = 1;
-
-  /**
-   * Método que se ejecuta después de que las vistas del componente han sido inicializadas.
-   * Configura los formularios dinámicos y obtiene el tipo de persona.
+   * Ciclo de vida de Angular que se ejecuta después de que las vistas hijas han sido inicializadas.
+   * Configura los formularios dinámicos de persona y domicilio fiscal,
+   * y obtiene el tipo de persona a través del componente solicitante.
    */
   ngAfterViewInit(): void {
     this.persona = PERSONA_MORAL_NACIONAL;
@@ -91,7 +95,7 @@ export class PasoUnoComponent implements AfterViewInit, OnInit {
   }
 
   /**
-   * Selecciona una pestaña del asistente.
+   * Método que permite seleccionar una pestaña del asistente.
    * @param i Índice de la pestaña a seleccionar.
    */
   seleccionaTab(i: number): void {

@@ -26,17 +26,15 @@ import { Tramite110223Store } from '../../../../estados/tramites/Tramite110223.s
 })
 export class DestinatarioComponent implements OnInit, OnDestroy {
   /**
- * 
- * Una cadena que representa la clase CSS para una alerta de información.
- * Esta clase se utiliza para aplicar estilo a los mensajes de información en el componente.
- */
-  public infoAlert = 'alert-info';
-  /**
-   * Una constante que contiene el valor del objeto 'PROTESTA'.
-   * Se utiliza para almacenar datos adicionales relacionados con el componente.
+   * Clase CSS para una alerta de información.
    */
+  public infoAlert = 'alert-info';
 
+  /**
+   * Constante que contiene los textos de pago de derechos.
+   */
   TEXTOS = PAGO_DE_DERECHOS;
+
   /**
    * Formulario reactivo para el destinatario.
    */
@@ -55,18 +53,17 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
   /**
    * Indica si el formulario está deshabilitado.
    */
-  isDisabled: boolean = false;
+  isDisabled = false;
 
   /**
    * Indica si el formulario está vacío.
    */
-  estaVacio: boolean = false;
-/**
- * Opciones del catálogo.
- * Contiene una lista de objetos del catálogo obtenidos desde el servicio.
- * Estas opciones se utilizan para poblar los selectores en el formulario.
- */
-options!: Catalogo[];
+  estaVacio = false;
+
+  /**
+   * Opciones del catálogo.
+   */
+  public options!: Catalogo[];
 
   /**
    * Constructor del componente.
@@ -117,8 +114,8 @@ options!: Catalogo[];
         })
       )
       .subscribe();
-    this.donanteDomicilio();
 
+    this.donanteDomicilio();
   }
 
   /**
@@ -126,7 +123,8 @@ options!: Catalogo[];
    */
   getPaisDestino(): void {
     this.registroService
-      .getPaisDestino().pipe(takeUntil(this.destroyNotifier$))
+      .getPaisDestino()
+      .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((resp) => {
         if (resp.code === 200) {
           this.options = resp.data as Catalogo[];
@@ -139,7 +137,8 @@ options!: Catalogo[];
    */
   getTransporte(): void {
     this.registroService
-      .getTransporte().pipe(takeUntil(this.destroyNotifier$))
+      .getTransporte()
+      .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((resp) => {
         if (resp.code === 200) {
           this.options = resp.data as Catalogo[];
@@ -152,7 +151,7 @@ options!: Catalogo[];
    */
   onSubmit(): void {
     if (this.registroForm.valid) {
-      // Aquí se implementará la lógica para manejar el envío del formulario.
+      // Implementar lógica para manejar el envío del formulario.
     }
   }
 
@@ -202,7 +201,10 @@ options!: Catalogo[];
         ciudad: [this.solicitudState?.ciudad, [Validators.required]],
         calle: [this.solicitudState?.calle, [Validators.required]],
         numeroLetra: [this.solicitudState?.numeroLetra, [Validators.required]],
-        numeroDeRegistroFiscal: [this.solicitudState?.numeroDeRegistroFiscal, [Validators.required]],
+        numeroDeRegistroFiscal: [
+          this.solicitudState?.numeroDeRegistroFiscal,
+          [Validators.required],
+        ],
         telefono: [
           this.solicitudState?.telefono,
           [Validators.required, Validators.pattern(/^\d+$/)],
@@ -221,7 +223,6 @@ options!: Catalogo[];
    * Cancela todas las suscripciones activas.
    */
   ngOnDestroy(): void {
-   
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }

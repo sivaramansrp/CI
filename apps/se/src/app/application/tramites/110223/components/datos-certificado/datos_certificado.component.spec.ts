@@ -4,7 +4,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { of, Subject } from 'rxjs';
 import { RegistroService } from '../../services/registro.service';
 import { ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
-import { Tramite110223Query } from '../../../../estados/queries/Tramite110223.query';
+import { Tramite110223Query } from '../../../../estados/queries/tramite110223.query';
 import { Tramite110223Store } from '../../../../estados/tramites/Tramite110223.store';
 
 describe('DatosCertificadoComponent', () => {
@@ -101,12 +101,6 @@ describe('DatosCertificadoComponent', () => {
     expect(registroServiceMock.getRepresentacion).toHaveBeenCalled();
     expect(component.optionsRepresentacion).toEqual([]);
   });
-
-  // it('should set isJustificacion to true if conditions are met in setValoresStore', () => {
-  //   component.entidadFederativaData = 'DURANGO';
-  //   component.setValoresStore(component.fb.group({ entidad: ['8'] }), 'entidad', 'setEntidad');
-  //   expect(component.isJustificacion).toBe(true);
-  // });
 
   it('should set isJustificacion to false if conditions are not met in setValoresStore', () => {
     component.entidadFederativaData = 'OTHER';

@@ -61,7 +61,7 @@
           <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion.UNDEFINED" [configuracionTabla]="headers"></app-tabla-dinamica>
         </div>
         <div class="table-container mt-5" *ngIf="hayMercanciasDisponibles">
-          <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion.UNDEFINED" [configuracionTabla]="headers" [datos]="mercanciaDisponsiblesTablaDatos" (click)="manejarClic(mercanciaDisponsiblesTablaDatos)"></app-tabla-dinamica>
+          <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion.UNDEFINED" [configuracionTabla]="headers" [datos]="mercanciaDisponsiblesTablaDatos" (click)="manejarClic()"></app-tabla-dinamica>
         </div>
         <i id="bi-1-square" class="bi bi-1-square" viewBox="0 0 16 16"></i>
       </ng-container>
