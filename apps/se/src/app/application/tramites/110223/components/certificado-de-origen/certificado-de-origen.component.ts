@@ -4,6 +4,8 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ReplaySubject, Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { HEADER_DATA_MERCANCIA } from '../../enums/constantes-alertas.enum';
+import { HEADER_DISPONIBLES } from '../../enums/constantes-alertas.enum';
 import { InputFechaComponent } from '@libs/shared/data-access-user/src/tramites/components/input-fecha/input-fecha.component';
 import { RegistroService } from '../../services/registro.service';
 import { Solicitud110223State } from '../../../../estados/tramites/Tramite110223.store';
@@ -233,85 +235,13 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
    * Configuración de las columnas de la tabla de mercancías disponibles.
    * Define los encabezados y las claves asociadas a cada columna de la tabla de mercancías disponibles.
    */
-  public headers: ConfiguracionColumna<ColumnasTabla>[] = [
-    {
-      encabezado: 'Fracción arancelaria',
-      clave: (ele: ColumnasTabla) => ele.fraccionArancelaria,
-      orden: 1,
-    },
-    {
-      encabezado: 'Nombre técnico',
-      clave: (ele: ColumnasTabla) => ele.nombreTecnico,
-      orden: 2,
-    },
-    {
-      encabezado: 'Nombre comercial',
-      clave: (ele: ColumnasTabla) => ele.nombreComercial,
-      orden: 3,
-    },
-    {
-      encabezado: 'Número de registro de productos',
-      clave: (ele: ColumnasTabla) => ele.numeroRegistroProductos,
-      orden: 4,
-    },
-    {
-      encabezado: 'Fecha expedición',
-      clave: (ele: ColumnasTabla) => ele.fechaExpedicion,
-      orden: 5,
-    },
-    {
-      encabezado: 'Fecha vencimíento',
-      clave: (ele: ColumnasTabla) => ele.fechaVencimiento,
-      orden: 6,
-    },
-  ];
+  public headers: ConfiguracionColumna<ColumnasTabla>[] = HEADER_DISPONIBLES
 
   /**
    * Configuración de las columnas de la tabla de mercancías seleccionadas.
    * Define los encabezados y las claves asociadas a cada columna de la tabla de mercancías seleccionadas.
    */
-  public headersData: ConfiguracionColumna<SeleccionadasTabla>[] = [
-    {
-      encabezado: 'Fracción arancelaria',
-      clave: (ele: SeleccionadasTabla) => ele.fraccionArancelaria,
-      orden: 1,
-    },
-    {
-      encabezado: 'Cantidad',
-      clave: (ele: SeleccionadasTabla) => ele.cantidad,
-      orden: 2,
-    },
-    {
-      encabezado: 'Unidad de medida',
-      clave: (ele: SeleccionadasTabla) => ele.unidadMedida,
-      orden: 3,
-    },
-    {
-      encabezado: 'Valor mercancía',
-      clave: (ele: SeleccionadasTabla) => ele.valorMercancia,
-      orden: 4,
-    },
-    {
-      encabezado: 'Tipo de factura',
-      clave: (ele: SeleccionadasTabla) => ele.tipoFactura,
-      orden: 5,
-    },
-    {
-      encabezado: 'Número factura',
-      clave: (ele: SeleccionadasTabla) => ele.numFactura,
-      orden: 6,
-    },
-    {
-      encabezado: 'Complemento descripción',
-      clave: (ele: SeleccionadasTabla) => ele.complementoDescripcion,
-      orden: 7,
-    },
-    {
-      encabezado: 'Fecha factura',
-      clave: (ele: SeleccionadasTabla) => ele.fechaFactura,
-      orden: 8,
-    },
-  ];
+  public headersData: ConfiguracionColumna<SeleccionadasTabla>[] = HEADER_DATA_MERCANCIA;
 
   /**
    * Constructor del componente.
