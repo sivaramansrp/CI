@@ -116,26 +116,34 @@ cd $REMOTE_DIR || { echo "Error: No se pudo cambiar al directorio $REMOTE_DIR"; 
 echo "Creando directorio temporal para manifiestos..."
 mkdir -p "$K8S_TEMP_DIR"
 
-# Verificar namespace de Kubernetes
-echo "Verificando namespace vucem-$DEPLOYMENT_ENV..."
-microk8s kubectl get namespace vucem-$DEPLOYMENT_ENV >/dev/null 2>&1
-if [ $? -ne 0 ]; then
-  echo "Creando namespace vucem-$DEPLOYMENT_ENV..."
-  microk8s kubectl create namespace vucem-$DEPLOYMENT_ENV
-fi
+# No se necesita verificar namespace de Kubernetes ya que usaremos el namespace default
+echo "Usando namespace default..."
+# El namespace default ya existe por defecto en Kubernetes
 
 # Verificar secreto de registro de imágenes
 echo "Verificando secreto para pull de imágenes..."
-microk8s kubectl get secret vucem30registrykey -n vucem-$DEPLOYMENT_ENV >/dev/null 2>&1
+microk8s kubectl get secret vucem30registrykey -n default >/dev/null 2>&1
 if [ $? -ne 0 ]; then
-  echo "ADVERTENCIA: El secreto vucem30registrykey no existe en el namespace vucem-$DEPLOYMENT_ENV."
-  echo "El despliegue podría fallar. Cree el secreto con:"
-  echo "kubectl create secret docker-registry vucem30registrykey \\"
-  echo "  --docker-server=ghcr.io \\"
-  echo "  --docker-username=USUARIO \\"
-  echo "  --docker-password=TOKEN \\"
-  echo "  --docker-email=EMAIL \\"
-  echo "  -n vucem-$DEPLOYMENT_ENV"
+  echo "Creando secreto vucem30registrykey en el namespace default..."
+  microk8s kubectl create secret docker-registry vucem30registrykey \
+    --docker-server=ghcr.io \
+    --docker-username=vucem30-dev \
+    --docker-password=${GITHUB_TOKEN} \
+    --docker-email=admin@vucem.com \
+    -n default
+  
+  if [ $? -ne 0 ]; then
+    echo "ADVERTENCIA: No se pudo crear el secreto automáticamente."
+    echo "El despliegue podría fallar. Cree el secreto manualmente con:"
+    echo "kubectl create secret docker-registry vucem30registrykey \\"
+    echo "  --docker-server=ghcr.io \\"
+    echo "  --docker-username=USUARIO \\"
+    echo "  --docker-password=TOKEN \\"
+    echo "  --docker-email=EMAIL \\"
+    echo "  -n default"
+  else
+    echo "Secreto creado correctamente."
+  fi
 fi
 
 # Verificar si encontramos el manifiesto
@@ -153,25 +161,34 @@ if [ -z "$MANIFEST_FILE" ]; then
   exit 1
 fi
 
+# Crear una copia temporal del manifiesto para procesarlo
+TMP_MANIFEST="$K8S_TEMP_DIR/tmp-manifest-$DEPLOYMENT_ENV.yaml"
+cp "$MANIFEST_FILE" "$TMP_MANIFEST"
+
+# Ya no necesitamos reemplazar variables pues tienen valores fijos en el manifiesto
+
+# Eliminar la anotación conflictiva del Ingress
+sed -i '/kubernetes.io\/ingress.class/d' "$TMP_MANIFEST"
+
 # Aplicar manifiesto con validación previa
-echo "Validando manifiesto Kubernetes desde: $MANIFEST_FILE" | tee -a "$LOG_FILE"
-microk8s kubectl apply --validate=true --dry-run=client -f "$MANIFEST_FILE" | tee -a "$LOG_FILE"
+echo "Validando manifiesto Kubernetes desde: $TMP_MANIFEST" | tee -a "$LOG_FILE"
+microk8s kubectl apply --validate=true --dry-run=client -f "$TMP_MANIFEST" | tee -a "$LOG_FILE"
 if [ $? -ne 0 ]; then
   echo "Error: Falló la validación del manifiesto Kubernetes." | tee -a "$LOG_FILE"
   exit 1
 fi
 
 # Aplicar manifiesto
-echo "Aplicando manifiesto Kubernetes desde: $MANIFEST_FILE" | tee -a "$LOG_FILE"
-microk8s kubectl apply -f "$MANIFEST_FILE" | tee -a "$LOG_FILE"
+echo "Aplicando manifiesto Kubernetes desde: $TMP_MANIFEST" | tee -a "$LOG_FILE"
+microk8s kubectl apply -f "$TMP_MANIFEST" | tee -a "$LOG_FILE"
 if [ $? -ne 0 ]; then
   echo "Error: Falló la aplicación del manifiesto Kubernetes." | tee -a "$LOG_FILE"
   exit 1
 fi
 
 # Reiniciar despliegue para aplicar cambios
-echo "Reiniciando deployment vucem-microfrontends-$DEPLOYMENT_ENV..." | tee -a "$LOG_FILE"
-microk8s kubectl rollout restart deployment vucem-microfrontends-$DEPLOYMENT_ENV -n vucem-$DEPLOYMENT_ENV | tee -a "$LOG_FILE"
+echo "Reiniciando deployment vucem-microfrontends-dev..." | tee -a "$LOG_FILE"
+microk8s kubectl rollout restart deployment vucem-microfrontends-dev -n default | tee -a "$LOG_FILE"
 if [ $? -ne 0 ]; then
   echo "Error: Falló el reinicio del deployment." | tee -a "$LOG_FILE"
   exit 1
@@ -179,29 +196,29 @@ fi
 
 # Verificar estado del despliegue
 echo "=== Verificando estado del despliegue ===" | tee -a "$LOG_FILE"
-echo "Pods en el namespace vucem-$DEPLOYMENT_ENV:" | tee -a "$LOG_FILE"
-microk8s kubectl get pods -n vucem-$DEPLOYMENT_ENV | grep vucem-microfrontends | tee -a "$LOG_FILE"
+echo "Pods en el namespace default:" | tee -a "$LOG_FILE"
+microk8s kubectl get pods -n default | grep vucem-microfrontends | tee -a "$LOG_FILE"
 
 echo "Información del deployment:" | tee -a "$LOG_FILE"
-microk8s kubectl get deployment vucem-microfrontends-$DEPLOYMENT_ENV -n vucem-$DEPLOYMENT_ENV | tee -a "$LOG_FILE"
+microk8s kubectl get deployment vucem-microfrontends-dev -n default | tee -a "$LOG_FILE"
 
 # Verificar los servicios
 echo "Información de servicios:" | tee -a "$LOG_FILE"
-microk8s kubectl get services -n vucem-$DEPLOYMENT_ENV | grep -v kubernetes | tee -a "$LOG_FILE"
+microk8s kubectl get services -n default | grep -v kubernetes | tee -a "$LOG_FILE"
 
 # Verificar ingress
 echo "Información de ingress:" | tee -a "$LOG_FILE"
-microk8s kubectl get ingress -n vucem-$DEPLOYMENT_ENV | tee -a "$LOG_FILE"
+microk8s kubectl get ingress -n default | tee -a "$LOG_FILE"
 
 # Esperar a que el despliegue esté disponible
 echo "Esperando a que el despliegue esté disponible..." | tee -a "$LOG_FILE"
-microk8s kubectl rollout status deployment/vucem-microfrontends-$DEPLOYMENT_ENV -n vucem-$DEPLOYMENT_ENV --timeout=180s | tee -a "$LOG_FILE"
+microk8s kubectl rollout status deployment/vucem-microfrontends-dev -n default --timeout=180s | tee -a "$LOG_FILE"
 
 # Verificar readiness/liveness de los pods
 echo "Verificando estado de readiness/liveness de los pods:" | tee -a "$LOG_FILE"
-POD_NAMES=$(microk8s kubectl get pods -n vucem-$DEPLOYMENT_ENV -l app=vucem-microfrontends -o name | head -1)
+POD_NAMES=$(microk8s kubectl get pods -n default -l app=vucem-microfrontends -o name | head -1)
 if [ -n "$POD_NAMES" ]; then
-  microk8s kubectl describe $POD_NAMES -n vucem-$DEPLOYMENT_ENV | grep -A 5 "Readiness\|Liveness" | tee -a "$LOG_FILE"
+  microk8s kubectl describe $POD_NAMES -n default | grep -A 5 "Readiness\|Liveness" | tee -a "$LOG_FILE"
 fi
 
 echo "=== Despliegue completado ===" | tee -a "$LOG_FILE"
