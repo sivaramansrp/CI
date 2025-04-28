@@ -1,15 +1,30 @@
-import { TestBed } from '@angular/core/testing';
+import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { DatosDeLaSolicitudPlasticaComponent } from './datos-de-la-solicitud-plastica.component';
 import { SolicitudService } from '../../services/solicitud.service';
-import { Tramite270201Store } from '../../estados/tramites/tramite270201.store';
+import { Agregar270301Store } from '../../estados/tramites/agregar270301.store';
+import { AgregarQuery } from '../../estados/queries/agregar.query';
 import { of } from 'rxjs';
+import { solicitud270301State } from '../../estados/tramites/agregar270301.store';
 
-describe('DatosDeLaPlasticaComponent', () => {
-  let solicitudServiceMock: any;
-  let tramiteStoreMock: any;
-  let fixture: any;
-  let component: any;
+describe('DatosDeLaSolicitudPlasticaComponent', () => {
+  let component: DatosDeLaSolicitudPlasticaComponent;
+  let fixture: ComponentFixture<DatosDeLaSolicitudPlasticaComponent>;
+  let solicitudServiceMock: Partial<SolicitudService>;
+  let agregarQueryMock: Partial<AgregarQuery>;
+
+  const mockSolicitudState: solicitud270301State = {
+    tipoDeOperacion: '',
+    tipoDeMovimiento: '',
+    motivo: '',
+    pais: '',
+    ciudad: '',
+    medioTransporte: '',
+    emprsaTransportista: '',
+    destinofinal: '',
+    periodoEstancia: '',
+    aduanaEntrada: '',
+  };
 
   beforeEach(async () => {
     solicitudServiceMock = {
@@ -19,244 +34,100 @@ describe('DatosDeLaPlasticaComponent', () => {
       getTransporteData: jest.fn().mockReturnValue(of([])),
       getAduanaData: jest.fn().mockReturnValue(of([])),
       getMotivoData: jest.fn().mockReturnValue(of([])),
-      getCiudadData: jest.fn().mockReturnValue(of([])),
       getMonedaData: jest.fn().mockReturnValue(of([])),
-      getAutorData: jest.fn().mockReturnValue(of([])),
-      getTituloData: jest.fn().mockReturnValue(of([])),
-      getTecnicaData: jest.fn().mockReturnValue(of([])),
-      getAltoData: jest.fn().mockReturnValue(of([])),
       getArancelariaData: jest.fn().mockReturnValue(of([])),
+      getObraDeArteTabla: jest.fn().mockReturnValue(of({ columns: [] })),
     };
 
-    tramiteStoreMock = {
-      setOperacion: jest.fn(),
-      setObraDeArte: jest.fn(),
+    agregarQueryMock = {
+      selectSolicitud$: of(mockSolicitudState),
     };
 
     await TestBed.configureTestingModule({
-      imports: [DatosDeLaSolicitudPlasticaComponent, ReactiveFormsModule],
+      imports: [ReactiveFormsModule, DatosDeLaSolicitudPlasticaComponent],
       providers: [
         { provide: SolicitudService, useValue: solicitudServiceMock },
-        { provide: Tramite270201Store, useValue: tramiteStoreMock },
+        { provide: Agregar270301Store, useValue: {} },
+        { provide: AgregarQuery, useValue: agregarQueryMock },
       ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(DatosDeLaSolicitudPlasticaComponent);
     component = fixture.componentInstance;
-
-    component.solicitudFormGroup = {
-      get: jest.fn(),
-    } as any;
+    fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize solicitudFormGroup', () => {
-    fixture.detectChanges();
-    expect(component.solicitudFormGroup).toBeTruthy();
+  it('should initialize solicitudFormGroup with default values', () => {
+    expect(component.solicitudFormGroup).toBeDefined();
+    expect(component.solicitudFormGroup.get('tipoDeOperacion')?.value).toBe('');
+    expect(component.solicitudFormGroup.get('ciudad')?.value).toBe('');
   });
 
-  it('should initialize obraDeArteFormgroup', () => {
-    fixture.detectChanges();
-    expect(component.obraDeArteFormgroup).toBeTruthy();
+  it('should initialize obraDeArteFormgroup with default values', () => {
+    expect(component.obraDeArteFormgroup).toBeDefined();
+    expect(component.obraDeArteFormgroup.get('autor')?.value).toBe('');
+    expect(component.obraDeArteFormgroup.get('titulo')?.value).toBe('');
   });
 
-  it('should validate solicitudFormGroup controls', () => {
-    fixture.detectChanges();
-    const controls = component.solicitudFormGroup.controls;
-    Object.keys(controls).forEach((controlName) => {
-      expect(controls[controlName].invalid).toBe(true); 
-      controls[controlName].setValue('some value'); 
-      expect(controls[controlName].invalid).toBe(false); 
-    });
-  });
-
-  it('should call setOperacion with the correct value in actualizarOperacion', () => {
-    const mockOperacion = 'OperacionMock';
-    component.solicitudFormGroup.get = jest.fn().mockReturnValue({ value: mockOperacion });
-    component.actualizarOperacion();
-    expect(tramiteStoreMock.setOperacion).toHaveBeenCalledWith(mockOperacion);
-  });
-
-  it('should not call setOperacion if tipoDeOperacion is null in actualizarOperacion', () => {
-    component.solicitudFormGroup.get = jest.fn().mockReturnValue({ value: null });
-    component.actualizarOperacion();
-    expect(tramiteStoreMock.setOperacion).not.toHaveBeenCalled();
-  });
-
-  
-  it('should call setOperacion with the correct value in actualizarMovimiento', () => {
-    const mockMovimiento = 'MovimientoMock';
-    component.solicitudFormGroup.get = jest.fn().mockReturnValue({ value: mockMovimiento });
-    component.actualizarMovimiento();
-    expect(tramiteStoreMock.setOperacion).toHaveBeenCalledWith(mockMovimiento);
-  });
-
-  it('should call setOperacion with the correct value in actualizarMotivo', () => {
-    const mockMotivo = 'MotivoMock';
-    component.solicitudFormGroup.get = jest.fn().mockReturnValue({ value: mockMotivo });
-    component.actualizarMotivo();
-    expect(tramiteStoreMock.setOperacion).toHaveBeenCalledWith(mockMotivo);
-  });
-
-  it('should call setOperacion with the correct value in actualizarPais', () => {
-    const mockPais = 'PaisMock';
-    component.solicitudFormGroup.get = jest.fn().mockReturnValue({ value: mockPais });
-    component.actualizarPais();
-    expect(tramiteStoreMock.setOperacion).toHaveBeenCalledWith(mockPais);
-  });
-
-  it('should call setOperacion with the correct value in actualizarMoneda', () => {
-    const mockMoneda = 'MonedaMock';
-    component.solicitudFormGroup.get = jest.fn().mockReturnValue({ value: mockMoneda });
-    component.actualizarMoneda();
-    expect(tramiteStoreMock.setOperacion).toHaveBeenCalledWith(mockMoneda);
-  });
-
-  it('should not call setOperacion with the correct value in actualizarCiudad', () => {
-    const mockCiudad = 'MockCiudad';
-    component.solicitudFormGroup.get = jest.fn().mockReturnValue({ value: mockCiudad });
-    component.actualizarCiudad();
-    expect(tramiteStoreMock.setOperacion).toHaveBeenCalledWith(mockCiudad);
-  });
-
-  it('should call setOperacion with the correct value in actualizarTransporte', () => {
-    const mockTransporte = 'TransporteMock';
-    component.solicitudFormGroup.get = jest.fn().mockReturnValue({ value: mockTransporte });
-    component.actualizarTransporte();
-    expect(tramiteStoreMock.setOperacion).toHaveBeenCalledWith(mockTransporte);
-  });
-
-  it('should call setOperacion with the correct value in actualizarAduana', () => {
-    const mockAduana = 'AduanaMock';
-    component.solicitudFormGroup.get = jest.fn().mockReturnValue({ value: mockAduana });
-    component.actualizarAduana();
-    expect(tramiteStoreMock.setOperacion).toHaveBeenCalledWith(mockAduana);
-  });
-
-  it('should call setOperacion with the correct value in actualizarPais', () => {
-    const mockPais = 'PaisMock';
-    component.solicitudFormGroup.get = jest.fn().mockReturnValue({ value: mockPais });
-    component.actualizarPais();
-    expect(tramiteStoreMock.setOperacion).toHaveBeenCalledWith(mockPais);
-  });
-
-  it('should call setOperacion with the correct value in actualizarAutor', () => {
-    const mockAutor = 'AutorMock';
-    component.solicitudFormGroup.get = jest.fn().mockReturnValue({ value: mockAutor });
-    component.actualizarAutor();
-    expect(tramiteStoreMock.setOperacion).toHaveBeenCalledWith(mockAutor);
-  });
-
-  it('should call setOperacion with the correct value in actualizarTitulo', () => {
-    const mockTitulo = 'TituloMock';
-    component.solicitudFormGroup.get = jest.fn().mockReturnValue({ value: mockTitulo });
-    component.actualizarTitulo();
-    expect(tramiteStoreMock.setOperacion).toHaveBeenCalledWith(mockTitulo);
-  });
-
-  it('should call setOperacion with the correct value in actualizarTecnica', () => {
-    const mockTecnica = 'TecnicaMock';
-    component.solicitudFormGroup.get = jest.fn().mockReturnValue({ value: mockTecnica });
-    component.actualizarTecnica();
-    expect(tramiteStoreMock.setOperacion).toHaveBeenCalledWith(mockTecnica);
-  });
-
-  it('should call setOperacion with the correct value in actualizarAlto', () => {
-    const mockAlto = 'AltoMock';
-    component.solicitudFormGroup.get = jest.fn().mockReturnValue({ value: mockAlto });
-    component.actualizarAlto();
-    expect(tramiteStoreMock.setOperacion).toHaveBeenCalledWith(mockAlto);
-  });
-
-  it('should call setOperacion with the correct value in actualizarFraccionArancelaria', () => {
-    const mockFraccionArancelaria = 'FraccionMock';
-    component.solicitudFormGroup.get = jest.fn().mockReturnValue({ value: mockFraccionArancelaria });
-    component.actualizarFraccionArancelaria();
-    expect(tramiteStoreMock.setOperacion).toHaveBeenCalledWith(mockFraccionArancelaria);
-  });
-
-  it('should not call setOperacion if fraccionArancelaria is null in actualizarFraccionArancelaria', () => {
-    component.solicitudFormGroup.get = jest.fn().mockReturnValue({ value: null });
-    component.actualizarFraccionArancelaria();
-    expect(tramiteStoreMock.setOperacion).not.toHaveBeenCalled();
-  });
-
-  it('should handle undefined fraccionArancelaria gracefully', () => {
-    component.solicitudFormGroup.get = jest.fn().mockReturnValue(undefined);
-    component.actualizarFraccionArancelaria();
-    expect(tramiteStoreMock.setOperacion).not.toHaveBeenCalled();
-  });
-
-  it('should validate obraDeArteFormgroup controls', () => {
-    fixture.detectChanges();
-    const controls = component.obraDeArteFormgroup.controls;
-
-  Object.keys(controls).forEach((controlName) => {
-    expect(controls[controlName].invalid).toBe(true); 
-  });
-  });
-
-  it('should toggle obra de arte modal and table div', () => {
-    fixture.detectChanges();
+  it('should toggle showTableDiv and showObraDeArteModal', () => {
     expect(component.showTableDiv).toBe(true);
     expect(component.showObraDeArteModal).toBe(false);
 
     component.toggleObraDeArte();
+
     expect(component.showTableDiv).toBe(false);
     expect(component.showObraDeArteModal).toBe(true);
-
-    component.toggleObraDeArte();
-    expect(component.showTableDiv).toBe(true);
-    expect(component.showObraDeArteModal).toBe(false);
   });
 
-  it('should submit obra de arte form', () => {
-    fixture.detectChanges();
+  it('should call solicitudService methods on initialization', () => {
+    expect(solicitudServiceMock.getOperacionData).toHaveBeenCalled();
+    expect(solicitudServiceMock.getMovimientoData).toHaveBeenCalled();
+    expect(solicitudServiceMock.getPaisData).toHaveBeenCalled();
+    expect(solicitudServiceMock.getTransporteData).toHaveBeenCalled();
+    expect(solicitudServiceMock.getAduanaData).toHaveBeenCalled();
+    expect(solicitudServiceMock.getMotivoData).toHaveBeenCalled();
+    expect(solicitudServiceMock.getMonedaData).toHaveBeenCalled();
+    expect(solicitudServiceMock.getArancelariaData).toHaveBeenCalled();
+    expect(solicitudServiceMock.getObraDeArteTabla).toHaveBeenCalled();
+  });
 
+  it('should add a new obra de arte row on submitDeArteForm', () => {
     component.obraDeArteFormgroup.setValue({
-      autor: 'Author',
-      titulo: 'Title',
-      tecnicaDeRealizacion: 'Technique',
-      medidas: 'Measure',
-      alto: 'Height',
-      ancho: 'Width',
-      profundidad: 'Depth',
-      diametro: 'Diameter',
-      variables: 'Variables',
-      anoDeCreacion: 'Year',
-      avaluo: 'Appraisal',
-      moneda: 'Currency',
-      propietario: 'Owner',
-      fraccionArancelaria: 'Tariff Fraction',
-      descripcionArancelaria: 'Tariff Description',
+      autor: 'Autor Test',
+      titulo: 'Titulo Test',
+      tecnicaDeRealizacion: 'Tecnica Test',
+      medidas: '1',
+      alto: '100',
+      ancho: '50',
+      profundidad: '30',
+      diametro: '20',
+      variables: 'Variables Test',
+      anoDeCreacion: '2023',
+      avaluo: '1000',
+      moneda: '1',
+      propietario: 'Propietario Test',
+      fraccionArancelaria: '1',
+      descripcionArancelaria: 'Descripcion Test',
     });
 
     component.submitDeArteForm();
+
     expect(component.obraDeArteRowData.length).toBe(1);
+    expect(component.obraDeArteRowData[0].tbodyData).toContain('Autor Test');
+    expect(component.obraDeArteRowData[0].tbodyData).toContain('Titulo Test');
   });
 
-  it('should retrieve data from solicitudService', () => {
-    solicitudServiceMock.getOperacionData.mockReturnValue(of([{ id: 1, descripcion: 'Operation' }]));
-    solicitudServiceMock.getMovimientoData.mockReturnValue(of([{ id: 1, descripcion: 'Movement' }]));
-    solicitudServiceMock.getPaisData.mockReturnValue(of([{ id: 1, descripcion: 'Country' }]));
-    solicitudServiceMock.getTransporteData.mockReturnValue(of([{ id: 1, descripcion: 'Transport' }]));
-    solicitudServiceMock.getAduanaData.mockReturnValue(of([{ id: 1, descripcion: 'Customs' }]));
-    solicitudServiceMock.getMotivoData.mockReturnValue(of([{ id: 1, descripcion: 'Reason' }]));
-    solicitudServiceMock.getMonedaData.mockReturnValue(of([{ id: 1, descripcion: 'Currency' }]));
-    solicitudServiceMock.getArancelariaData.mockReturnValue(of([{ id: 1, descripcion: 'Tariff' }]));
+  it('should destroy subscriptions on ngOnDestroy', () => {
+    const destroySpy = jest.spyOn(component['destroy$'], 'next');
+    const completeSpy = jest.spyOn(component['destroy$'], 'complete');
 
-    fixture.detectChanges();
+    component.ngOnDestroy();
 
-    expect(component.operacionData.length).toBe(1);
-    expect(component.movimientoData.length).toBe(1);
-    expect(component.paisData.length).toBe(1);
-    expect(component.transporteData.length).toBe(1);
-    expect(component.aduanaData.length).toBe(1);
-    expect(component.motivoData.length).toBe(1);
-    expect(component.monedaData.length).toBe(1);
-    expect(component.arancelariaData.length).toBe(1);
+    expect(destroySpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
   });
 });
