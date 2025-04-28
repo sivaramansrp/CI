@@ -33,3 +33,34 @@ export const OPCIONES_DE_BOTON_DE_RADIO = [
         value: '0',
       }
   ];
+
+
+  export const MERCANCIA = [
+    {
+      Partida: '1',
+      Tiporequisito: 'Inspección ocular',
+      Requisito: 'Requisito',
+      Certificado: 123456,
+      Fraccion: '01039201',
+      Descripcion: 'Con pedigree o certificado de alto registro.',
+      Nico: '00',
+    },
+    {
+      Partida: '2',
+      Tiporequisito: 'inspección de oído',
+      Requisito: 'Requisito',
+      Certificado: 123456,
+      Fraccion: '01039201',
+      Descripcion: 'Con pedigree o certificado de alto registro.',
+      Nico: '00',
+    },
+    {
+      Partida: '3',
+      Tiporequisito: 'inspección de nariz',
+      Requisito: 'Requisito',
+      Certificado: 123456,
+      Fraccion: '01039201',
+      Descripcion: 'Con pedigree o certificado de alto registro.',
+      Nico: '00',
+    },
+  ];

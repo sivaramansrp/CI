@@ -69,11 +69,11 @@ export class ResponsableInspeccionEnPuntoComponent
    */
   private destroyed$ = new Subject<void>();
 
-/**
- * Variable que almacena el estado actual de la solicitud.
- * Se inicializa como un objeto vacío de tipo `Solicitud220503State`.
- */
-Solicitud220503State: Solicitud220503State = {} as Solicitud220503State;
+  /**
+   * Variable que almacena el estado actual de la solicitud.
+   * Se inicializa como un objeto vacío de tipo `Solicitud220503State`.
+   */
+  Solicitud220503State: Solicitud220503State = {} as Solicitud220503State;
 
   constructor(
     private solicitud220503Store: Solicitud220503Store,
@@ -96,10 +96,21 @@ Solicitud220503State: Solicitud220503State = {} as Solicitud220503State;
             Validators.required,
             Validators.maxLength(150),
           ]),
-          primerapellido: new FormControl(this.Solicitud220503State.primerapellido, [Validators.maxLength(80)]),
-          segundoapellido: new FormControl(this.Solicitud220503State.segundoapellido, [Validators.maxLength(80)]),
-          mercancia: new FormControl(this.Solicitud220503State.mercancia, [Validators.required]),
-          tipocontenedor: new FormControl(this.Solicitud220503State.tipocontenedor, []),
+          primerapellido: new FormControl(
+            this.Solicitud220503State.primerapellido,
+            [Validators.maxLength(80)]
+          ),
+          segundoapellido: new FormControl(
+            this.Solicitud220503State.segundoapellido,
+            [Validators.maxLength(80)]
+          ),
+          mercancia: new FormControl(this.Solicitud220503State.mercancia, [
+            Validators.required,
+          ]),
+          tipocontenedor: new FormControl(
+            this.Solicitud220503State.tipocontenedor,
+            []
+          ),
         })
       );
     }
@@ -146,61 +157,63 @@ Solicitud220503State: Solicitud220503State = {} as Solicitud220503State;
    * Carga datos del catálogo inicial para el tipo de contenedor.
    */
   cargarDatosIniciales(): void {
-    this.solicitudService.getDataResponsableInspeccion().subscribe({
-      next: (data: TipoContenedor) => {
-        this.tipoContenedor = data.tipoContenedor;
-      },
-    });
+    this.solicitudService
+      .getDataResponsableInspeccion()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe({
+        next: (data: TipoContenedor) => {
+          this.tipoContenedor = data.tipoContenedor;
+        },
+      });
   }
-/**
- * Actualiza el nombre en el estado de la solicitud.
- * 
- * @param event - Evento del input que contiene el nuevo valor del nombre.
- */
-setNombre(event: Event): void {
-  const VALUE = (event.target as HTMLInputElement).value;
-  this.Solicitud220503State.nombre = VALUE;
-}
+  /**
+   * Actualiza el nombre en el estado de la solicitud.
+   *
+   * @param event - Evento del input que contiene el nuevo valor del nombre.
+   */
+  setNombre(event: Event): void {
+    const VALUE = (event.target as HTMLInputElement).value;
+    this.Solicitud220503State.nombre = VALUE;
+  }
 
-/**
- * Actualiza el primer apellido en el estado de la solicitud.
- * 
- * @param event - Evento del input que contiene el nuevo valor del primer apellido.
- */
-setPrimerapellido(event: Event): void {
-  const VALUE = (event.target as HTMLInputElement).value;
-  this.Solicitud220503State.primerapellido = VALUE;
-}
+  /**
+   * Actualiza el primer apellido en el estado de la solicitud.
+   *
+   * @param event - Evento del input que contiene el nuevo valor del primer apellido.
+   */
+  setPrimerapellido(event: Event): void {
+    const VALUE = (event.target as HTMLInputElement).value;
+    this.Solicitud220503State.primerapellido = VALUE;
+  }
 
-/**
- * Actualiza el segundo apellido en el estado de la solicitud.
- * 
- * @param event - Evento del input que contiene el nuevo valor del segundo apellido.
- */
-setSegundoapellido(event: Event): void {
-  const VALUE = (event.target as HTMLInputElement).value;
-  this.Solicitud220503State.segundoapellido = VALUE;
-}
+  /**
+   * Actualiza el segundo apellido en el estado de la solicitud.
+   *
+   * @param event - Evento del input que contiene el nuevo valor del segundo apellido.
+   */
+  setSegundoapellido(event: Event): void {
+    const VALUE = (event.target as HTMLInputElement).value;
+    this.Solicitud220503State.segundoapellido = VALUE;
+  }
 
-/**
- * Actualiza la mercancía en el estado de la solicitud.
- * 
- * @param event - Evento del input que contiene la descripción de la mercancía.
- */
-setMercancia(event: Event): void {
-  const VALUE = (event.target as HTMLInputElement).value;
-  this.Solicitud220503State.mercancia = VALUE;
-}
+  /**
+   * Actualiza la mercancía en el estado de la solicitud.
+   *
+   * @param event - Evento del input que contiene la descripción de la mercancía.
+   */
+  setMercancia(event: Event): void {
+    const VALUE = (event.target as HTMLInputElement).value;
+    this.Solicitud220503State.mercancia = VALUE;
+  }
 
-/**
- * Actualiza el tipo de contenedor en el estado de la solicitud.
- * 
- * @param event - Objeto de tipo Catalogo que contiene el identificador del tipo de contenedor.
- */
-setTipoContenedor(event: Catalogo): void {
-  this.Solicitud220503State.tipocontenedor = event.id;
-}
-
+  /**
+   * Actualiza el tipo de contenedor en el estado de la solicitud.
+   *
+   * @param event - Objeto de tipo Catalogo que contiene el identificador del tipo de contenedor.
+   */
+  setTipoContenedor(event: Catalogo): void {
+    this.Solicitud220503State.tipocontenedor = event.id;
+  }
 
   /**
    * Gancho de ciclo de vida que limpia el componente.

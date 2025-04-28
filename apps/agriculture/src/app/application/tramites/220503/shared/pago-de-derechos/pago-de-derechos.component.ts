@@ -153,7 +153,7 @@ export class PagoDeDerechosComponent implements OnInit , OnDestroy{
  * y actualiza el store con la respuesta recibida.
  */
   getPagoDeDerechos(): void {
-    this.revisionService.getPagoDeDerechos().subscribe({
+    this.revisionService.getPagoDeDerechos().pipe(takeUntil(this.destroyed$)).subscribe({
       next: (resp: PagoDeDerechos) => {
         this.Solicitud220503Store.setJustificacion(resp.justificacion);
         this.Solicitud220503Store.setClaveReferencia(resp.claveReferencia);
@@ -172,7 +172,7 @@ export class PagoDeDerechosComponent implements OnInit , OnDestroy{
    * @returns {void}
    */
   getJustificacion(): void {
-    this.revisionService.getJustificacion().subscribe((resp) => {
+    this.revisionService.getJustificacion().pipe(takeUntil(this.destroyed$)).subscribe((resp) => {
       if (resp.code === 200) {
         const RESPONSE = resp.data;
 
@@ -275,7 +275,7 @@ export class PagoDeDerechosComponent implements OnInit , OnDestroy{
    * @returns {void}
    */
   getBanco(): void {
-    this.revisionService.getBanco().subscribe((resp) => {
+    this.revisionService.getBanco().pipe(takeUntil(this.destroyed$)).subscribe((resp) => {
       if (resp.code === 200) {
         const RESPONSE = resp.data;
 

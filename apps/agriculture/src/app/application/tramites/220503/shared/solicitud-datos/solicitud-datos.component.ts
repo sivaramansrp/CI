@@ -1,6 +1,6 @@
-import { Component, Input} from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { AlertComponent } from '@ng-mf/data-access-user';
-import { Solicitud } from '../../models/solicitud-pantallas.model'
+import { Solicitud } from '../../models/solicitud-pantallas.model';
 import { Subject } from 'rxjs';
 import { TEXTOS } from '../../enums/texto-enum';
 import { TituloComponent } from '@ng-mf/data-access-user';
@@ -17,7 +17,7 @@ import { TituloComponent } from '@ng-mf/data-access-user';
 })
 /**
  * Componente que representa los datos de la solicitud
- */ 
+ */
 export class SolicitudDatosTabComponent {
   /**
    * Obtiene los datos de enumeración y establece valores de TEXTOS
@@ -40,11 +40,11 @@ export class SolicitudDatosTabComponent {
   /**
    * Alterna el panel plegable (expandir/contraer)
    */
-    /**
-     * Subject para desuscribirse de los observables.
-     * @type {Subject<void>}
-     */
-    private destroyed$ = new Subject<void>();
+  /**
+   * Subject para desuscribirse de los observables.
+   * @type {Subject<void>}
+   */
+  private destroyed$ = new Subject<void>();
   mostrarColapsable(): void {
     this.colapsable = !this.colapsable;
   }

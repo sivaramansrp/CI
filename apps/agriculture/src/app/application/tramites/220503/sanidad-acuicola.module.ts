@@ -3,12 +3,8 @@ import { NgModule } from '@angular/core';
 
 import { SanidadAcuicolaRoutingModule } from './sanidad-acuicola-routing.module';
 
-
 @NgModule({
   declarations: [],
-  imports: [
-    CommonModule,
-    SanidadAcuicolaRoutingModule
-  ]
+  imports: [CommonModule, SanidadAcuicolaRoutingModule],
 })
-export class SanidadAcuicolaModule { }
+export class SanidadAcuicolaModule {}

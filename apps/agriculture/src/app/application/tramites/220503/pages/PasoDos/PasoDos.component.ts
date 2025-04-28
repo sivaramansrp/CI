@@ -1,4 +1,8 @@
-import { AlertComponent, TEXTOS, TituloComponent } from "@ng-mf/data-access-user";
+import {
+  AlertComponent,
+  TEXTOS,
+  TituloComponent,
+} from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { AnexarDocumentosComponent } from '@ng-mf/data-access-user';
@@ -6,26 +10,65 @@ import { CATALOGOS_ID } from '@ng-mf/data-access-user';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogosService } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
+import { INFO_ALERT } from '../../enums/texto-enum';
 import { ReactiveFormsModule } from '@angular/forms';
 import documentList from '@libs/shared/theme/assets/json/220503/document-list.json';
+
 @Component({
   selector: 'app-paso-dos',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, AnexarDocumentosComponent, TituloComponent, AlertComponent],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    AnexarDocumentosComponent,
+    TituloComponent,
+    AlertComponent,
+  ],
   templateUrl: './PasoDos.component.html',
 })
-export class PasoDosComponent implements OnInit, OnDestroy{
-  TEXTOS = TEXTOS; // Constantes de textos definidas en otro lugar
-  tiposDocumentos: Catalogo[] = []; // Lista de tipos de documentos
-  infoAlert = 'alert-info'; // Clase CSS para mostrar alertas de información
-  catalogoDocumentos: Catalogo[] = []; // Catálogo de documentos
-  documentosSeleccionados = documentList.documentosSeleccionados; // Lista de documentos seleccionados desde un archivo JSON
-  private destroy$: Subject<void> = new Subject<void>(); // Sujeto para manejar el ciclo de vida y evitar fugas de memoria
+export class PasoDosComponent implements OnInit, OnDestroy {
+  /**
+   * Referencia a una constante de textos predefinidos en otra parte del código.
+   */
+  TEXTOS = TEXTOS;
 
-  constructor(
-    private catalogosServices: CatalogosService, // Servicio para obtener los catálogos
-  ) { 
-    // Constructor
+  /**
+   * Lista de tipos de documentos disponibles dentro del sistema.
+   * Se inicializa como un array vacío y será poblado con datos posteriormente.
+   */
+  tiposDocumentos: Catalogo[] = [];
+
+  /**
+   * Clase CSS utilizada para mostrar alertas de información en la interfaz de usuario.
+   */
+  infoAlert = INFO_ALERT;
+
+  /**
+   * Catálogo de documentos que almacena distintos tipos de documentos disponibles.
+   * Se inicia como un array vacío y se llenará con información en tiempo de ejecución.
+   */
+  catalogoDocumentos: Catalogo[] = [];
+
+  /**
+   * Lista de documentos seleccionados obtenidos desde un archivo JSON.
+   * Se almacena dentro de `documentList.documentosSeleccionados`.
+   */
+  documentosSeleccionados = documentList.documentosSeleccionados;
+
+  /**
+   * Sujeto para manejar el ciclo de vida de la suscripción.
+   * Se utiliza para evitar fugas de memoria al momento de destruir observables.
+   */
+  private destroy$: Subject<void> = new Subject<void>();
+
+  /**
+   * Constructor de la clase.
+   * Se inyecta el servicio `CatalogosService` para acceder a los catálogos del sistema.
+   */
+  constructor(private catalogosServices: CatalogosService) {
+    /**
+     * Inicialización del constructor de la clase.
+     */
   }
 
   /** Método para inicializar el componente */
@@ -56,6 +99,4 @@ export class PasoDosComponent implements OnInit, OnDestroy{
     this.destroy$.next(); // Emitir señal para completar la destrucción
     this.destroy$.complete(); // Completar el sujeto
   }
-
-
 }

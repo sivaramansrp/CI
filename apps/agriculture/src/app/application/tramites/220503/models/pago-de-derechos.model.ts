@@ -1,5 +1,5 @@
-/** 
- * Interfaz que representa los datos del pago de derechos. 
+/**
+ * Interfaz que representa los datos del pago de derechos.
  */
 export interface PagoDeDerechos {
   /** Indica si el pago no está exento. */

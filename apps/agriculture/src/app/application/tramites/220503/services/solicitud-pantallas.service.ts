@@ -12,7 +12,7 @@ import { Observable } from 'rxjs';
 export class SolicitudPantallasService {
   /** URL para obtener los datos de la solicitud */
   private dataUrl =
-    '../../../assets/json/220502/solicitud-pantallas-mock-data.json';
+    '../../../assets/json/220503/solicitud-pantallas-mock-data.json';
 
   /** Constructor para inyectar el servicio HttpClient */
   constructor(public http: HttpClient) {

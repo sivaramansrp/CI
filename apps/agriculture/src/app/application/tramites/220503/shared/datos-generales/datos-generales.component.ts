@@ -1,5 +1,13 @@
-import {CatalogoSelectComponent, CatalogosSelect, InputRadioComponent, TituloComponent} from '@ng-mf/data-access-user';
-import { CAPTURA_OPCIONES_DE_BOTON_DE_RADIO } from '../../enums/sagarpa.enum';
+import {
+  CAPTURA_OPCIONES_DE_BOTON_DE_RADIO,
+  MERCANCIA,
+} from '../../enums/sagarpa.enum';
+import {
+  CatalogoSelectComponent,
+  CatalogosSelect,
+  InputRadioComponent,
+  TituloComponent,
+} from '@ng-mf/data-access-user';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
@@ -9,6 +17,7 @@ import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RevisionService } from '../../services/revision.service';
+import { Row } from '../../models/datos-generales.model';
 import { Solicitud220503Query } from '../../estados/tramites220503.query';
 import { Solicitud220503State } from '../../estados/tramites220503.store';
 import { Solicitud220503Store } from '../../estados/tramites220503.store';
@@ -17,18 +26,6 @@ import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
 import { Validators } from '@angular/forms';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
-/**
- * Interfaz para definir la estructura de las filas.
- */
-interface Row {
-  Partida: string;
-  Tiporequisito: string;
-  Requisito: string;
-  Certificado: number;
-  Fraccion: string;
-  Descripcion: string;
-  Nico: string;
-}
 
 /**
  * Componente para gestionar los datos generales.
@@ -39,13 +36,13 @@ interface Row {
   styleUrls: ['./datos-generales.component.scss'],
   standalone: true,
   imports: [
-      CommonModule,
-      ReactiveFormsModule,
-      TituloComponent,
-      CatalogoSelectComponent,
-      // TableComponent,
-       InputRadioComponent
-    ],
+    CommonModule,
+    ReactiveFormsModule,
+    TituloComponent,
+    CatalogoSelectComponent,
+    // TableComponent,
+    InputRadioComponent,
+  ],
 })
 export class DatosGeneralesComponent implements OnInit, OnDestroy {
   /**
@@ -179,7 +176,7 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
    */
   empresadeTransportista!: Catalogo;
 
-  Solicitud220503State : Solicitud220503State = {} as Solicitud220503State;
+  Solicitud220503State: Solicitud220503State = {} as Solicitud220503State;
 
   /**
    * Subject para desuscribirse de los observables.
@@ -187,16 +184,15 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
    */
   private destroyed$ = new Subject<void>();
 
-  /** 
-   * Variable para almacenar el valor de la opción seleccionada en el botón de radio. 
+  /**
+   * Variable para almacenar el valor de la opción seleccionada en el botón de radio.
    */
   esSolicitudFerrosValor!: string;
 
-  /** 
-   * Variable que almacena las opciones disponibles para el botón de radio. 
+  /**
+   * Variable que almacena las opciones disponibles para el botón de radio.
    */
   opcionDeBotonDeRadio = CAPTURA_OPCIONES_DE_BOTON_DE_RADIO;
-
 
   constructor(
     private readonly fb: FormBuilder,
@@ -205,26 +201,55 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
     public Solicitud220503Store: Solicitud220503Store,
     public Solicitud220503Query: Solicitud220503Query
   ) {
-  //
+    //
   }
 
   ngOnInit(): void {
     this.forma = this.fb.group({
-      foliodel: [{ value: this.Solicitud220503State.fetchapago, disabled: true }],
-      aduanaIngreso: [this.Solicitud220503State.aduanaIngreso, Validators.required],
-      oficinaInspeccion: [this.Solicitud220503State.oficinaInspeccion, Validators.required],
-      puntoInspeccion: [this.Solicitud220503State.puntoInspeccion, Validators.required],
-      claveUCON: [{ value: this.Solicitud220503State.claveUCON, disabled: true }],
-      establecimientoTIF: [this.Solicitud220503State.establecimientoTIF, Validators.required],
+      foliodel: [
+        { value: this.Solicitud220503State.fetchapago, disabled: true },
+      ],
+      aduanaIngreso: [
+        this.Solicitud220503State.aduanaIngreso,
+        Validators.required,
+      ],
+      oficinaInspeccion: [
+        this.Solicitud220503State.oficinaInspeccion,
+        Validators.required,
+      ],
+      puntoInspeccion: [
+        this.Solicitud220503State.puntoInspeccion,
+        Validators.required,
+      ],
+      claveUCON: [
+        { value: this.Solicitud220503State.claveUCON, disabled: true },
+      ],
+      establecimientoTIF: [
+        this.Solicitud220503State.establecimientoTIF,
+        Validators.required,
+      ],
       nombre: [this.Solicitud220503State.nombre, Validators.required],
-      numeroguia:[{value:this.Solicitud220503State.numeroguia, disabled: true},Validators.required],
-      regimen:[this.Solicitud220503State.regimen,Validators.required],
+      numeroguia: [
+        { value: this.Solicitud220503State.numeroguia, disabled: true },
+        Validators.required,
+      ],
+      regimen: [this.Solicitud220503State.regimen, Validators.required],
       capturaDatosMercancia: [this.Solicitud220503State.capturaDatosMercancia],
-      coordenadas: [{ value: this.Solicitud220503State.coordenadas, disabled: true }],
-      movilizacion: [this.Solicitud220503State.movilizacion, Validators.required],
-      transporte: [{ value: this.Solicitud220503State.transporte, disabled: true }],
+      coordenadas: [
+        { value: this.Solicitud220503State.coordenadas, disabled: true },
+      ],
+      movilizacion: [
+        this.Solicitud220503State.movilizacion,
+        Validators.required,
+      ],
+      transporte: [
+        { value: this.Solicitud220503State.transporte, disabled: true },
+      ],
       punto: [this.Solicitud220503State.punto, [Validators.required]],
-      nombreEmpresa: [this.Solicitud220503State.nombreEmpresa, Validators.required],
+      nombreEmpresa: [
+        this.Solicitud220503State.nombreEmpresa,
+        Validators.required,
+      ],
     });
 
     this.Solicitud220503Query.selectSolicitud$
@@ -242,7 +267,8 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
             nombre: this.Solicitud220503State.nombre,
             numeroguia: this.Solicitud220503State.numeroguia,
             regimen: this.Solicitud220503State.regimen,
-            capturaDatosMercancia: this.Solicitud220503State.capturaDatosMercancia,
+            capturaDatosMercancia:
+              this.Solicitud220503State.capturaDatosMercancia,
             coordenadas: this.Solicitud220503State.coordenadas,
             movilizacion: this.Solicitud220503State.movilizacion,
             transporte: this.Solicitud220503State.transporte,
@@ -270,54 +296,30 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
    * y luego actualiza el store con la respuesta recibida.
    */
   actualizarDatosDelaSolicitud(): void {
-    this.revisionService.getDatosDelaSolicitud().subscribe({
-      next: (resp:Solicitud220503State) => {
-        this.Solicitud220503Store.setFoliodel(resp.foliodel);
-        this.Solicitud220503Store.setClaveUCON(resp.claveUCON);
-        this.Solicitud220503Store.setEstablecimientoTIF(resp.establecimientoTIF);
-        this.Solicitud220503Store.setNombre(resp.nombre);
-        this.Solicitud220503Store.setNumeroguia(resp.numeroguia);
-        this.Solicitud220503Store.setCoordenadas(resp.coordenadas);
-        this.Solicitud220503Store.setTransporte(resp.transporte);
-        this.Solicitud220503Store.setNombreEmpresa(resp.nombreEmpresa);
-      }
-    });
+    this.revisionService
+      .getDatosDelaSolicitud()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe({
+        next: (resp: Solicitud220503State) => {
+          this.Solicitud220503Store.setFoliodel(resp.foliodel);
+          this.Solicitud220503Store.setClaveUCON(resp.claveUCON);
+          this.Solicitud220503Store.setEstablecimientoTIF(
+            resp.establecimientoTIF
+          );
+          this.Solicitud220503Store.setNombre(resp.nombre);
+          this.Solicitud220503Store.setNumeroguia(resp.numeroguia);
+          this.Solicitud220503Store.setCoordenadas(resp.coordenadas);
+          this.Solicitud220503Store.setTransporte(resp.transporte);
+          this.Solicitud220503Store.setNombreEmpresa(resp.nombreEmpresa);
+        },
+      });
   }
 
   /**
    * Filas de datos.
    * @type {Row[]}
    */
-  rows: Row[] = [
-    {
-      Partida: '1',
-      Tiporequisito: 'Inspección ocular',
-      Requisito: 'Requisito',
-      Certificado: 123456,
-      Fraccion: '01039201',
-      Descripcion: 'Con pedigree o certificado de alto registro.',
-      Nico: '00',
-    },
-    {
-      Partida: '2',
-      Tiporequisito: 'inspección de oído',
-      Requisito: 'Requisito',
-      Certificado: 123456,
-      Fraccion: '01039201',
-      Descripcion: 'Con pedigree o certificado de alto registro.',
-      Nico: '00',
-    },
-    {
-      Partida: '3',
-      Tiporequisito: 'inspección de nariz',
-      Requisito: 'Requisito',
-      Certificado: 123456,
-      Fraccion: '01039201',
-      Descripcion: 'Con pedigree o certificado de alto registro.',
-      Nico: '00',
-    },
-  ];
-
+  rows: Row[] = MERCANCIA;
 
   /**
    * Muestra u oculta el contenido colapsable.
@@ -359,18 +361,21 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   getAduanaIngreso(): void {
-    this.revisionService.getAduanaIngreso().subscribe((resp) => {
-      if (resp.code === 200) {
-        const RESPONSE = resp.data;
+    this.revisionService
+      .getAduanaIngreso()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((resp) => {
+        if (resp.code === 200) {
+          const RESPONSE = resp.data;
 
-        this.aduanaIngreso = {
-          labelNombre: 'Aduana de ingreso',
-          required: false,
-          primerOpcion: 'Selecciona un valor',
-          catalogos: RESPONSE,
-        };
-      }
-    });
+          this.aduanaIngreso = {
+            labelNombre: 'Aduana de ingreso',
+            required: false,
+            primerOpcion: 'Selecciona un valor',
+            catalogos: RESPONSE,
+          };
+        }
+      });
   }
 
   /**
@@ -379,18 +384,21 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   getOficianaInspeccion(): void {
-    this.revisionService.getOficianaInspeccion().subscribe((resp) => {
-      if (resp.code === 200) {
-        const RESPONSE = resp.data;
+    this.revisionService
+      .getOficianaInspeccion()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((resp) => {
+        if (resp.code === 200) {
+          const RESPONSE = resp.data;
 
-        this.oficianaInspeccion = {
-          labelNombre: 'Oficina de Inspección de Sanidad Agropecuaria',
-          required: false,
-          primerOpcion: 'Selecciona un valor',
-          catalogos: RESPONSE,
-        };
-      }
-    });
+          this.oficianaInspeccion = {
+            labelNombre: 'Oficina de Inspección de Sanidad Agropecuaria',
+            required: false,
+            primerOpcion: 'Selecciona un valor',
+            catalogos: RESPONSE,
+          };
+        }
+      });
   }
 
   /**
@@ -399,18 +407,21 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   getPuntoInspeccion(): void {
-    this.revisionService.getPuntoInspeccion().subscribe((resp) => {
-      if (resp.code === 200) {
-        const RESPONSE = resp.data;
+    this.revisionService
+      .getPuntoInspeccion()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((resp) => {
+        if (resp.code === 200) {
+          const RESPONSE = resp.data;
 
-        this.puntoInspeccion = {
-          labelNombre: 'Punto de inspección',
-          required: false,
-          primerOpcion: 'Selecciona un valor',
-          catalogos: RESPONSE,
-        };
-      }
-    });
+          this.puntoInspeccion = {
+            labelNombre: 'Punto de inspección',
+            required: false,
+            primerOpcion: 'Selecciona un valor',
+            catalogos: RESPONSE,
+          };
+        }
+      });
   }
 
   /**
@@ -419,18 +430,21 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   getEstablecimiento(): void {
-    this.revisionService.getEstablecimiento().subscribe((resp) => {
-      if (resp.code === 200) {
-        const RESPONSE = resp.data;
+    this.revisionService
+      .getEstablecimiento()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((resp) => {
+        if (resp.code === 200) {
+          const RESPONSE = resp.data;
 
-        this.establecimiento = {
-          labelNombre: 'Establecimiento TIF',
-          required: false,
-          primerOpcion: 'Selecciona un valor',
-          catalogos: RESPONSE,
-        };
-      }
-    });
+          this.establecimiento = {
+            labelNombre: 'Establecimiento TIF',
+            required: false,
+            primerOpcion: 'Selecciona un valor',
+            catalogos: RESPONSE,
+          };
+        }
+      });
   }
   /**
    * Obtiene el régimen al que se destinarán las mercancías.
@@ -438,18 +452,21 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   getRegimenDestinaran(): void {
-    this.revisionService.getRegimenDestinaran().subscribe((resp) => {
-      if (resp.code === 200) {
-        const RESPONSE = resp.data;
+    this.revisionService
+      .getRegimenDestinaran()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((resp) => {
+        if (resp.code === 200) {
+          const RESPONSE = resp.data;
 
-        this.regimenDestinaran = {
-          labelNombre: 'Régimen al que se destinarán las mercancías',
-          required: false,
-          primerOpcion: 'Selecciona un valor',
-          catalogos: RESPONSE,
-        };
-      }
-    });
+          this.regimenDestinaran = {
+            labelNombre: 'Régimen al que se destinarán las mercancías',
+            required: false,
+            primerOpcion: 'Selecciona un valor',
+            catalogos: RESPONSE,
+          };
+        }
+      });
   }
 
   /**
@@ -458,18 +475,21 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   getMovilizacionNacional(): void {
-    this.revisionService.getMovilizacionNacional().subscribe((resp) => {
-      if (resp.code === 200) {
-        const RESPONSE = resp.data;
+    this.revisionService
+      .getMovilizacionNacional()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((resp) => {
+        if (resp.code === 200) {
+          const RESPONSE = resp.data;
 
-        this.movilizacionNacional = {
-          labelNombre: 'Movilización Nacional',
-          required: false,
-          primerOpcion: 'Selecciona un valor',
-          catalogos: RESPONSE,
-        };
-      }
-    });
+          this.movilizacionNacional = {
+            labelNombre: 'Movilización Nacional',
+            required: false,
+            primerOpcion: 'Selecciona un valor',
+            catalogos: RESPONSE,
+          };
+        }
+      });
   }
 
   /**
@@ -478,18 +498,21 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   getPuntoVerificacion(): void {
-    this.revisionService.getPuntoVerificacion().subscribe((resp) => {
-      if (resp.code === 200) {
-        const RESPONSE = resp.data;
+    this.revisionService
+      .getPuntoVerificacion()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((resp) => {
+        if (resp.code === 200) {
+          const RESPONSE = resp.data;
 
-        this.puntoVerificacion = {
-          labelNombre: 'Punto de verificación federal',
-          required: false,
-          primerOpcion: 'Selecciona un valor',
-          catalogos: RESPONSE,
-        };
-      }
-    });
+          this.puntoVerificacion = {
+            labelNombre: 'Punto de verificación federal',
+            required: false,
+            primerOpcion: 'Selecciona un valor',
+            catalogos: RESPONSE,
+          };
+        }
+      });
   }
   /**
    * Obtiene la empresa transportista.
@@ -497,18 +520,21 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   getEmpresaTransportista(): void {
-    this.revisionService.getEmpresaTransportista().subscribe((resp) => {
-      if (resp.code === 200) {
-        const RESPONSE = resp.data;
+    this.revisionService
+      .getEmpresaTransportista()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((resp) => {
+        if (resp.code === 200) {
+          const RESPONSE = resp.data;
 
-        this.empresaTransportista = {
-          labelNombre: 'Nombre de la empresa transportista',
-          required: false,
-          primerOpcion: 'Selecciona un valor',
-          catalogos: RESPONSE,
-        };
-      }
-    });
+          this.empresaTransportista = {
+            labelNombre: 'Nombre de la empresa transportista',
+            required: false,
+            primerOpcion: 'Selecciona un valor',
+            catalogos: RESPONSE,
+          };
+        }
+      });
   }
   /**
    * Selecciona una aduana de ingreso y actualiza el store con la descripción correspondiente.
@@ -534,16 +560,15 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
     this.Solicitud220503Store.setPuntoInspeccion(event.id);
   }
 
-  /** 
-   * Método para seleccionar el régimen de la solicitud. 
+  /**
+   * Método para seleccionar el régimen de la solicitud.
    * Actualiza el estado con el ID del régimen seleccionado.
-   * 
+   *
    * @param event - Objeto de tipo Catalogo que contiene la información del régimen seleccionado.
    */
   seleccionarRegimen(event: Catalogo): void {
     this.Solicitud220503Store.setRegimen(event.id);
   }
-
 
   /**
    * Selecciona una movilización nacional y actualiza el store con la descripción correspondiente.
@@ -553,26 +578,25 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
     this.Solicitud220503Store.setMovilizacion(event.id);
   }
 
-  /** 
-   * Método para establecer el valor de captura de datos de mercancía. 
+  /**
+   * Método para establecer el valor de captura de datos de mercancía.
    * Actualiza el estado con el valor proporcionado.
-   * 
+   *
    * @param value - Valor de tipo string o number que representa la captura de datos de la mercancía.
    */
   setCapturaDatosMercancia(value: string | number): void {
     this.Solicitud220503Store.setCapturaDatosMercancia(value);
   }
 
-  /** 
-   * Método para seleccionar el punto de verificación. 
+  /**
+   * Método para seleccionar el punto de verificación.
    * Actualiza el estado con el ID del punto seleccionado.
-   * 
+   *
    * @param event - Objeto de tipo Catalogo que contiene la información del punto de verificación seleccionado.
    */
   seleccionarPuntoVerificacion(event: Catalogo): void {
     this.Solicitud220503Store.setPunto(event.id);
   }
-
 
   /**
    * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
