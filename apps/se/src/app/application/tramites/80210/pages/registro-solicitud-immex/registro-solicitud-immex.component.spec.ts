@@ -2,39 +2,39 @@ import { registroSolicitudImmexComponent } from './registro-solicitud-immex.comp
 import { WizardComponent } from '@ng-mf/data-access-user';
 
 describe('registroSolicitudImmexComponent', () => {
-  let component: registroSolicitudImmexComponent;
+  let componente: registroSolicitudImmexComponent;
 
   beforeEach(() => {
-    component = new registroSolicitudImmexComponent();
-    component.wizardComponent = {
+    componente = new registroSolicitudImmexComponent();
+    componente.wizardComponent = {
       siguiente: jest.fn(),
       atras: jest.fn(),
     } as unknown as WizardComponent;
   });
 
-  it('should initialize with default values', () => {
-    expect(component.indice).toBe(1);
-    expect(component.datosPasos.nroPasos).toBe(component.pasos.length);
-    expect(component.datosPasos.indice).toBe(component.indice);
-    expect(component.datosPasos.txtBtnAnt).toBe('Anterior');
-    expect(component.datosPasos.txtBtnSig).toBe('Continuar');
-    expect(component.AVISO_PRIVACIDAD_ADJUNTAR).toBeDefined();
+  it('debería inicializarse con valores predeterminados', () => {
+    expect(componente.indice).toBe(1);
+    expect(componente.datosPasos.nroPasos).toBe(componente.pasos.length);
+    expect(componente.datosPasos.indice).toBe(componente.indice);
+    expect(componente.datosPasos.txtBtnAnt).toBe('Anterior');
+    expect(componente.datosPasos.txtBtnSig).toBe('Continuar');
+    expect(componente.AVISO_PRIVACIDAD_ADJUNTAR).toBeDefined();
   });
 
-  it('should update indice and call siguiente when accion is "cont"', () => {
-    const event = { accion: 'cont', valor: 2 };
-    component.getValorIndice(event);
-    expect(component.indice).toBe(2);
-    expect(component.wizardComponent.siguiente).toHaveBeenCalled();
-    expect(component.wizardComponent.atras).not.toHaveBeenCalled();
+  it('debería actualizar el índice y llamar a siguiente cuando la acción sea "cont"', () => {
+    const EVENTO = { accion: 'cont', valor: 2 };
+    componente.getValorIndice(EVENTO);
+    expect(componente.indice).toBe(2);
+    expect(componente.wizardComponent.siguiente).toHaveBeenCalled();
+    expect(componente.wizardComponent.atras).not.toHaveBeenCalled();
   });
 
-  it('should update indice and call atras when accion is not "cont"', () => {
-    const event = { accion: 'prev', valor: 2 };
-    component.getValorIndice(event);
-    expect(component.indice).toBe(2);
-    expect(component.wizardComponent.atras).toHaveBeenCalled();
-    expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
+  it('debería actualizar el índice y llamar a atrás cuando la acción no sea "cont"', () => {
+    const EVENTO = { accion: 'prev', valor: 2 };
+    componente.getValorIndice(EVENTO);
+    expect(componente.indice).toBe(2);
+    expect(componente.wizardComponent.atras).toHaveBeenCalled();
+    expect(componente.wizardComponent.siguiente).not.toHaveBeenCalled();
   });
 
 });

@@ -17,12 +17,12 @@ import { Plantas } from '../../modelos/registro-solicitud-immex.model';
 class MockCatalogoSelectComponent {}
 
 describe('EmpresasTerciarizadasComponent', () => {
-  let component: EmpresasTerciarizadasComponent;
+  let componente: EmpresasTerciarizadasComponent;
   let fixture: ComponentFixture<EmpresasTerciarizadasComponent>;
   let tramite80210StoreMock: Partial<Tramite80210Store>;
   let tramite80210QueryMock: Partial<Tramite80210Query>;
   let registroSolicitudServiceMock: Partial<registroSolicitudImmexService>;
-  let mockDatos: Plantas[];
+  let DATOS_MOCK: Plantas[];
   beforeEach(async () => {
     tramite80210StoreMock = {
       setPlantasDisponibles: jest.fn(),
@@ -40,33 +40,36 @@ describe('EmpresasTerciarizadasComponent', () => {
         showPlantas: false,
       }),
     };
-    mockDatos = [{
-      id: 1,
-      calle: '',
-      numeroExterio: '',
-      numeroInterio: '',
-      codiogoPostal: '',
-      colonia: '',
-      municipio: '',
-      entidadFederativa: '',
-      pais: '',
-      registroFederal: '',
-      domicilio: '',
-      razon: ''
-    }, {
-      id: 2,
-      calle: '',
-      numeroExterio: '',
-      numeroInterio: '',
-      codiogoPostal: '',
-      colonia: '',
-      municipio: '',
-      entidadFederativa: '',
-      pais: '',
-      registroFederal: '',
-      domicilio: '',
-      razon: ''
-    }]
+    DATOS_MOCK = [
+      {
+        id: 1,
+        calle: '',
+        numeroExterio: '',
+        numeroInterio: '',
+        codiogoPostal: '',
+        colonia: '',
+        municipio: '',
+        entidadFederativa: '',
+        pais: '',
+        registroFederal: '',
+        domicilio: '',
+        razon: '',
+      },
+      {
+        id: 2,
+        calle: '',
+        numeroExterio: '',
+        numeroInterio: '',
+        codiogoPostal: '',
+        colonia: '',
+        municipio: '',
+        entidadFederativa: '',
+        pais: '',
+        registroFederal: '',
+        domicilio: '',
+        razon: '',
+      },
+    ];
 
     registroSolicitudServiceMock = {
       obtenerEstados: jest.fn(),
@@ -89,92 +92,90 @@ describe('EmpresasTerciarizadasComponent', () => {
 
   beforeEach(() => {
     fixture = TestBed.createComponent(EmpresasTerciarizadasComponent);
-    component = fixture.componentInstance;
+    componente = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
+  it('debería crear el componente', () => {
+    expect(componente).toBeTruthy();
   });
 
-  it('should initialize the reactive form', () => {
-    expect(component.empresasForm).toBeDefined();
-    expect(component.empresasForm.get('rfc')).toBeDefined();
-    expect(component.empresasForm.get('estado')).toBeDefined();
+  it('debería inicializar el formulario reactivo', () => {
+    expect(componente.empresasForm).toBeDefined();
+    expect(componente.empresasForm.get('rfc')).toBeDefined();
+    expect(componente.empresasForm.get('estado')).toBeDefined();
   });
 
-  it('should update the form with provided data', () => {
-    const datos = { modalidad: 'A', folio: '123', ano: '2025' };
-    component.actualizarFormulario(datos);
-    expect(component.empresasForm.get('modalidad')?.value).toBe('A');
-    expect(component.empresasForm.get('folio')?.value).toBe('123');
-    expect(component.empresasForm.get('ano')?.value).toBe('2025');
+  it('debería actualizar el formulario con los datos proporcionados', () => {
+    const DATOS = { modalidad: 'A', folio: '123', ano: '2025' };
+    componente.actualizarFormulario(DATOS);
+    expect(componente.empresasForm.get('modalidad')?.value).toBe('A');
+    expect(componente.empresasForm.get('folio')?.value).toBe('123');
+    expect(componente.empresasForm.get('ano')?.value).toBe('2025');
   });
 
-  it('should search controladoras and update the state of plants', () => {
-    component.empresasForm.get('rfc')?.setValue('RFC123');
-    component.empresasForm.get('estado')?.setValue('Estado1');
-    component.buscarControladoras();
-    expect(component.showPlantas).toBe(true);
+  it('debería buscar controladoras y actualizar el estado de las plantas', () => {
+    componente.empresasForm.get('rfc')?.setValue('RFC123');
+    componente.empresasForm.get('estado')?.setValue('Estado1');
+    componente.buscarControladoras();
+    expect(componente.showPlantas).toBe(true);
     expect(tramite80210StoreMock.setPlantasDisponibles).toHaveBeenCalledWith([]);
     expect(tramite80210StoreMock.setShowPlantas).toHaveBeenCalledWith(true);
-    expect(component.empresasForm.get('rfc')?.value).toBeNull();
-    expect(component.empresasForm.get('estado')?.value).toBe('1');
+    expect(componente.empresasForm.get('rfc')?.value).toBeNull();
+    expect(componente.empresasForm.get('estado')?.value).toBe('1');
   });
 
-  it('should segregate available and selected plants', () => {
-    component.tramites80210State = {
+  it('debería segregar plantas disponibles y seleccionadas', () => {
+    componente.tramites80210State = {
       rfc: 'RFC123',
       estados: 'Estado1',
-      plantasDisponibles: [mockDatos[0]],
-      plantasSeleccionadas: [mockDatos[1]],
+      plantasDisponibles: [DATOS_MOCK[0]],
+      plantasSeleccionadas: [DATOS_MOCK[1]],
       showPlantas: true,
     };
-    component.segregatePlantasDatos();
-    expect(component.plantasDisponibles).toEqual([
-      mockDatos[0]
-    ]);
-    expect(component.plantasSeleccionadas).toEqual([mockDatos[1]]);
+    componente.segregatePlantasDatos();
+    expect(componente.plantasDisponibles).toEqual([DATOS_MOCK[0]]);
+    expect(componente.plantasSeleccionadas).toEqual([DATOS_MOCK[1]]);
   });
 
-  it('should add selected plants avoiding duplicates', () => {
-    component.listaFilaDisponibles = [mockDatos[0]];
-    component.plantasSeleccionadas = [mockDatos[1]];
-    component.plantasDisponibles = [mockDatos[0]];
-  
-    component.agregarPlantas();
-  
-    expect(component.plantasSeleccionadas).toEqual([mockDatos[1], mockDatos[0]]);
-    expect(component.plantasDisponibles).toEqual([]);
+  it('debería agregar plantas seleccionadas evitando duplicados', () => {
+    componente.listaFilaDisponibles = [DATOS_MOCK[0]];
+    componente.plantasSeleccionadas = [DATOS_MOCK[1]];
+    componente.plantasDisponibles = [DATOS_MOCK[0]];
+
+    componente.agregarPlantas();
+
+    expect(componente.plantasSeleccionadas).toEqual([DATOS_MOCK[1], DATOS_MOCK[0]]);
+    expect(componente.plantasDisponibles).toEqual([]);
     expect(tramite80210StoreMock.setPlantasSeleccionada).toHaveBeenCalledWith([
-      mockDatos[1],
-      mockDatos[0],
+      DATOS_MOCK[1],
+      DATOS_MOCK[0],
     ]);
   });
 
-  it('should remove selected plants avoiding duplicates', () => {
-    component.listaFilaSeleccionada = [mockDatos[1]];
-    component.plantasSeleccionadas = mockDatos;
-    component.plantasDisponibles = [];
-  
-    component.eliminarPlantas();
-  
-    expect(component.plantasSeleccionadas).toEqual([mockDatos[0]]);
-    expect(component.plantasDisponibles).toEqual([mockDatos[1]]);
+  it('debería eliminar plantas seleccionadas evitando duplicados', () => {
+    componente.listaFilaSeleccionada = [DATOS_MOCK[1]];
+    componente.plantasSeleccionadas = DATOS_MOCK;
+    componente.plantasDisponibles = [];
+
+    componente.eliminarPlantas();
+
+    expect(componente.plantasSeleccionadas).toEqual([DATOS_MOCK[0]]);
+    expect(componente.plantasDisponibles).toEqual([DATOS_MOCK[1]]);
     expect(tramite80210StoreMock.setPlantasDisponibles).toHaveBeenCalledWith([
-      mockDatos[1],
+      DATOS_MOCK[1],
     ]);
   });
 
-  it('should set values in the global state from the form', () => {
-    component.empresasForm.get('rfc')?.setValue('RFC123');
-    component.setValoresStore('rfc', 'setRFC');
+  it('debería establecer valores en el estado global desde el formulario', () => {
+    componente.empresasForm.get('rfc')?.setValue('RFC123');
+    componente.setValoresStore('rfc', 'setRFC');
     expect(tramite80210StoreMock.setRFC).toHaveBeenCalledWith('RFC123');
   });
 
-  it('should clean up observables on component destroy', () => {
-    const destroySpy = jest.spyOn(component.destoryNotification$, 'next');
-    component.ngOnDestroy();
-    expect(destroySpy).toHaveBeenCalled();
+  it('debería limpiar los observables al destruir el componente', () => {
+    const DESTROY_SPY = jest.spyOn(componente.destoryNotification$, 'next');
+    componente.ngOnDestroy();
+    expect(DESTROY_SPY).toHaveBeenCalled();
   });
 });

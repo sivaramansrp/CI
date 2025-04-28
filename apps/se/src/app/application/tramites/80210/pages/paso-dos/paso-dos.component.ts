@@ -1,6 +1,8 @@
 import { CATALOGOS_ID, Catalogo, CatalogosService, TEXTOS } from '@libs/shared/data-access-user/src';
 import { Component, Inject } from '@angular/core';
-
+/**
+ * Componente para gestionar el paso dos del trámite 80210.
+ */
 @Component({
   selector: 'app-paso-dos',
   templateUrl: './paso-dos.component.html',
