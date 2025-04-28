@@ -257,7 +257,7 @@ const ROUTES: Routes = [
         (m) => m.RegistroTransportistaModule),
   },
   {
-    path: 'donaciones-fronteriza',
+    path: 'Fronteriza',
     loadChildren: () =>
       import('./tramites/11101/Donación-Franja-Fronteriza.module').then(
         (m) => m.DonacionFranjaFronterizaModule),
