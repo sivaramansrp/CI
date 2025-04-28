@@ -53,9 +53,7 @@ export interface GrupoDeDirecciones {
   ciudad: string;
   calle: string;
   numeroLetra: string;
-  lada: string;
   telefono: string;
-  fax: string;
   correoElectronico: string;
 }
 /**
@@ -66,20 +64,8 @@ export interface GrupoRepresentativo {
   nombreExportador: string;
   empresa: string;
   cargo: string;
-  lada: string;
   telefono: string;
-  fax: string;
   correoElectronico: string;
-}
-/**
- * Representa los datos del grupo de transporte.
- */
-export interface GrupoDeTransporte {
-  puertoEmbarque: string;
-  puertoDesembarque: string;
-  puertoTransito: string;
-  nombreEmbarcacion: string;
-  numeroVuelo: string;
 }
 /**
  * Representa una acción de un botón.

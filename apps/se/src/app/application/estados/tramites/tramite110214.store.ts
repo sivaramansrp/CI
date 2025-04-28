@@ -1,7 +1,6 @@
 import { AgregarDatosProductorFormulario, FormularioMercancia, GrupoDeDomicilio, GrupoTratado } from '../../tramites/110214/models/validar-inicialmente-certificado.model';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { GrupoDeDirecciones } from '../../tramites/110214/models/validar-inicialmente-certificado.model';
-import { GrupoDeTransporte } from '../../tramites/110214/models/validar-inicialmente-certificado.model';
 import { GrupoOperador } from '../../tramites/110214/models/validar-inicialmente-certificado.model';
 import { GrupoReceptor } from '../../tramites/110214/models/validar-inicialmente-certificado.model';
 import { GrupoRepresentativo } from '../../tramites/110214/models/validar-inicialmente-certificado.model';
@@ -64,11 +63,6 @@ export interface Tramite110214State {
    * Información representativa del trámite.
    */
   grupoRepresentativo: GrupoRepresentativo;
-
-  /**
-   * Información del transporte utilizado.
-   */
-  grupoDeTransporte: GrupoDeTransporte;
 
   /**
    * Paso activo en el flujo del trámite.
@@ -136,9 +130,7 @@ export function createInitialState(): Tramite110214State {
       ciudad: '',
       calle: '',
       numeroLetra: '',
-      lada: '',
       telefono: '',
-      fax: '',
       correoElectronico: '',
     },
     grupoRepresentativo: {
@@ -146,17 +138,8 @@ export function createInitialState(): Tramite110214State {
       nombreExportador: '',
       empresa: '',
       cargo: '',
-      lada: '',
       telefono: '',
-      fax: '',
       correoElectronico: '',
-    },
-    grupoDeTransporte: {
-      puertoEmbarque: '',
-      puertoDesembarque: '',
-      puertoTransito: '',
-      nombreEmbarcacion: '',
-      numeroVuelo: '',
     },
     tercerOperador: false,
     grupoOperador: {
@@ -473,20 +456,6 @@ export class Tramite110214Store extends Store<Tramite110214State> {
   }
 
   /**
-   * Actualiza la lada en el grupo de direcciones.
-   * 
-   * Este método permite establecer la lada en el grupo de direcciones del receptor.
-   * 
-   * @param {string} lada - La lada a establecer.
-   */
-  public setGrupoDeDireccionesLada(lada: string): void {
-    this.update((state) => ({
-      ...state,
-      grupoDeDirecciones: { ...state.grupoDeDirecciones, lada },
-    }));
-  }
-
-  /**
    * Actualiza el teléfono en el grupo de direcciones.
    * 
    * Este método permite establecer el teléfono en el grupo de direcciones del receptor.
@@ -499,21 +468,6 @@ export class Tramite110214Store extends Store<Tramite110214State> {
       grupoDeDirecciones: { ...state.grupoDeDirecciones, telefono },
     }));
   }
-
-  /**
-   * Actualiza el fax en el grupo de direcciones.
-   * 
-   * Este método permite establecer el fax en el grupo de direcciones del receptor.
-   * 
-   * @param {string} fax - El fax a establecer.
-   */
-  public setGrupoDeDireccionesFax(fax: string): void {
-    this.update((state) => ({
-      ...state,
-      grupoDeDirecciones: { ...state.grupoDeDirecciones, fax },
-    }));
-  }
-
   /**
    * Actualiza el correo electrónico en el grupo de direcciones.
    * 
@@ -584,20 +538,6 @@ export class Tramite110214Store extends Store<Tramite110214State> {
   }
 
   /**
-   * Actualiza la lada en el grupo representativo.
-   * 
-   * Este método permite establecer la lada en el grupo representativo del trámite.
-   * 
-   * @param {string} lada - La lada a establecer.
-   */
-  public setGrupoRepresentativoLada(lada: string): void {
-    this.update((state) => ({
-      ...state,
-      grupoRepresentativo: { ...state.grupoRepresentativo, lada },
-    }));
-  }
-
-  /**
    * Actualiza el teléfono en el grupo representativo.
    * 
    * Este método permite establecer el teléfono en el grupo representativo del trámite.
@@ -612,20 +552,6 @@ export class Tramite110214Store extends Store<Tramite110214State> {
   }
 
   /**
-   * Actualiza el fax en el grupo representativo.
-   * 
-   * Este método permite establecer el fax en el grupo representativo del trámite.
-   * 
-   * @param {string} fax - El fax a establecer.
-   */
-  public setGrupoRepresentativoFax(fax: string): void {
-    this.update((state) => ({
-      ...state,
-      grupoRepresentativo: { ...state.grupoRepresentativo, fax },
-    }));
-  }
-
-  /**
    * Actualiza el correo electrónico en el grupo representativo.
    * 
    * Este método permite establecer el correo electrónico en el grupo representativo del trámite.
@@ -636,76 +562,6 @@ export class Tramite110214Store extends Store<Tramite110214State> {
     this.update((state) => ({
       ...state,
       grupoRepresentativo: { ...state.grupoRepresentativo, correoElectronico },
-    }));
-  }
-
-  /**
-   * Actualiza el puerto de embarque en el grupo de transporte.
-   * 
-   * Este método permite establecer el puerto de embarque en el grupo de transporte del trámite.
-   * 
-   * @param {string} puertoEmbarque - El puerto de embarque a establecer.
-   */
-  public setgrupoDeTransportePuertoEmbarque(puertoEmbarque: string): void {
-    this.update((state) => ({
-      ...state,
-      grupoDeTransporte: { ...state.grupoDeTransporte, puertoEmbarque },
-    }));
-  }
-
-  /**
-   * Actualiza el puerto de desembarque en el grupo de transporte.
-   * 
-   * Este método permite establecer el puerto de desembarque en el grupo de transporte del trámite.
-   * 
-   * @param {string} puertoDesembarque - El puerto de desembarque a establecer.
-   */
-  public setgrupoDeTransportePuertoDesembarque(puertoDesembarque: string): void {
-    this.update((state) => ({
-      ...state,
-      grupoDeTransporte: { ...state.grupoDeTransporte, puertoDesembarque },
-    }));
-  }
-
-  /**
-   * Actualiza el puerto de tránsito en el grupo de transporte.
-   * 
-   * Este método permite establecer el puerto de tránsito en el grupo de transporte del trámite.
-   * 
-   * @param {string} puertoTransito - El puerto de tránsito a establecer.
-   */
-  public setgrupoDeTransportePuertoTransito(puertoTransito: string): void {
-    this.update((state) => ({
-      ...state,
-      grupoDeTransporte: { ...state.grupoDeTransporte, puertoTransito },
-    }));
-  }
-
-  /**
-   * Actualiza el nombre de la embarcación en el grupo de transporte.
-   * 
-   * Este método permite establecer el nombre de la embarcación en el grupo de transporte del trámite.
-   * 
-   * @param {string} nombreEmbarcacion - El nombre de la embarcación a establecer.
-   */
-  public setgrupoDeTransporteNombreEmbarcacion(nombreEmbarcacion: string): void {
-    this.update((state) => ({
-      ...state,
-      grupoDeTransporte: { ...state.grupoDeTransporte, nombreEmbarcacion },
-    }));
-  }
-
-  /**
-   * Actualiza el número de vuelo en el grupo de transporte.
-   * 
-   * Este método permite establecer el número de vuelo en el grupo de transporte del trámite.
-   * 
-   * @param {string} numeroVuelo - El número de vuelo a establecer.
-   */
-  public setgrupoDeTransporteNumeroVuelo(numeroVuelo: string): void {
-    this.update((state) => ({
-      ...state,
-      grupoDeTransporte: { ...state.grupoDeTransporte, numeroVuelo },
     }));
   }
 

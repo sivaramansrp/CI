@@ -128,9 +128,7 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
         ciudad: [this.solicitudState?.grupoDeDirecciones?.ciudad, [Validators.required]],
         calle: [this.solicitudState?.grupoDeDirecciones?.calle, [Validators.required]],
         numeroLetra: [this.solicitudState?.grupoDeDirecciones?.numeroLetra, [Validators.required]],
-        lada: [this.solicitudState?.grupoDeDirecciones?.lada, []],
         telefono: [this.solicitudState?.grupoDeDirecciones?.telefono, [Validators.pattern(REGEX_SOLO_DIGITOS)]],
-        fax: [this.solicitudState?.grupoDeDirecciones?.fax, [Validators.pattern(REGEX_SOLO_DIGITOS)]],
         correoElectronico: [this.solicitudState?.grupoDeDirecciones?.correoElectronico, [Validators.required, Validators.email]],
       }),
 
@@ -139,18 +137,8 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
         nombreExportador: [this.solicitudState?.grupoRepresentativo?.nombreExportador, [Validators.required, Validators.maxLength(40)]],
         empresa: [this.solicitudState?.grupoRepresentativo?.empresa, [Validators.required, Validators.maxLength(40)]],
         cargo: [this.solicitudState?.grupoRepresentativo?.cargo, [Validators.required, Validators.maxLength(40)]],
-        lada: [this.solicitudState?.grupoRepresentativo?.lada, []],
         telefono: [this.solicitudState?.grupoRepresentativo?.telefono, [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS)]],
-        fax: [this.solicitudState?.grupoRepresentativo?.fax, [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS)]],
         correoElectronico: [this.solicitudState?.grupoRepresentativo?.correoElectronico, [Validators.required, Validators.email]],
-      }),
-
-      grupoDeTransporte: this.fb.group({
-        puertoEmbarque: [this.solicitudState?.grupoDeTransporte?.puertoEmbarque, [Validators.maxLength(40)]],
-        puertoDesembarque: [this.solicitudState?.grupoDeTransporte?.puertoDesembarque, [Validators.maxLength(40)]],
-        puertoTransito: [this.solicitudState?.grupoDeTransporte?.puertoTransito, [Validators.maxLength(30)]],
-        nombreEmbarcacion: [this.solicitudState?.grupoDeTransporte?.nombreEmbarcacion, [Validators.maxLength(30)]],
-        numeroVuelo: [this.solicitudState?.grupoDeTransporte?.numeroVuelo, [Validators.maxLength(15)]]
       }),
     });
   }

@@ -59,22 +59,12 @@
           [ngClass]="isValid(grupoDeDirecciones,'numeroLetra') ? 'required' : ''"
           (change)="setValoresStore(grupoDeDirecciones, 'numeroLetra', 'setGrupoDeDireccionesNumeroLetra')" />
       </div>
-      <div class="col-md-1 mb-3">
-        <label>Lada:</label>
-        <input type="text" class="form-control" id="lada" formControlName="lada"
-          (change)="setValoresStore(grupoDeDirecciones, 'lada', 'setGrupoDeDireccionesLada')" />
-      </div>
-      <div class="col-md-3 mb-3">
+      <div class="col-md-4 mb-3">
         <label>Teléfono:</label>
         <input type="text" class="form-control" id="telefono" formControlName="telefono"
           (change)="setValoresStore(grupoDeDirecciones, 'telefono', 'setGrupoDeDireccionesTelefono')" />
       </div>
       <div class="row">
-        <div class="col-md-4 mb-3">
-          <label>Fax:</label>
-          <input type="text" class="form-control" id="fax" formControlName="fax"
-            (change)="setValoresStore(grupoDeDirecciones, 'fax', 'setGrupoDeDireccionesFax')" />
-        </div>
         <div class="col-md-4 mb-3">
           <label>Correo electrónico*:</label><span class="bi bi-question-circle-fill" title="ejemplo@dominio.com"
             data-bs-toggle="tooltip"></span>
@@ -86,7 +76,7 @@
     </div>
   </ng-container>
 
-  <ng-titulo titulo="Datos del Representante Legal exportador" />
+  <ng-titulo titulo="Datos del representante legal del exportador" />
   <ng-container formGroupName="grupoRepresentativo">
     <div class="row">
       <div class="col-md-8 mb-3">
@@ -117,25 +107,13 @@
           [ngClass]="isValid(grupoRepresentativo,'cargo') ? 'required' : ''"
           (change)="setValoresStore(grupoRepresentativo, 'cargo', 'setGrupoRepresentativoCargo')" />
       </div>
-      <div class="col-md-1 mb-3">
-        <label>Lada:</label>
-        <input type="text" class="form-control" id="lada" formControlName="lada"
-          (change)="setValoresStore(grupoRepresentativo, 'lada', 'setGrupoRepresentativoLada')" />
-      </div>
-      <div class="col-md-3 mb-3">
+      <div class="col-md-4 mb-3">
         <label>Teléfono*:</label>
         <input type="text" class="form-control" id="telefono" formControlName="telefono"
           [ngClass]="isValid(grupoRepresentativo,'telefono') ? 'required' : ''"
           (change)="setValoresStore(grupoRepresentativo, 'telefono', 'setGrupoRepresentativoTelefono')" />
       </div>
-
       <div class="row">
-        <div class="col-md-4 mb-3">
-          <label>Fax*:</label>
-          <input type="text" class="form-control" id="fax" formControlName="fax"
-            [ngClass]="isValid(grupoRepresentativo,'fax') ? 'required' : ''"
-            (change)="setValoresStore(grupoRepresentativo, 'fax', 'setGrupoRepresentativoFax')" />
-        </div>
         <div class="col-md-4 mb-3">
           <label>Correo electrónico*:</label><span class="bi bi-question-circle-fill" title="ejemplo@dominio.com"
             data-bs-toggle="tooltip"></span>
@@ -143,41 +121,6 @@
             [ngClass]="isValid(grupoRepresentativo,'correoElectronico') ? 'required' : ''"
             (change)="setValoresStore( grupoRepresentativo,'correoElectronico','setGrupoRepresentativoCorreoElectronico')" />
         </div>
-      </div>
-    </div>
-  </ng-container>
-
-  <ng-titulo titulo="Detalles de Transporte" />
-  <ng-container formGroupName="grupoDeTransporte">
-    <div class="row">
-      <div class="col-md-5 mb-3">
-        <label>Puerto de Embarque:</label>
-        <input type="text" class="form-control" id="puertoEmbarque" formControlName="puertoEmbarque"
-          (change)="setValoresStore(grupoDeTransporte, 'puertoEmbarque', 'setgrupoDeTransportePuertoEmbarque')" />
-      </div>
-      <div class="col-md-5 mb-3">
-        <label>Puerto de Desembarque:</label>
-        <input type="text" class="form-control" id="puertoDesembarque" formControlName="puertoDesembarque"
-          (change)="setValoresStore(grupoDeTransporte, 'puertoDesembarque', 'setgrupoDeTransportePuertoDesembarque')" />
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-5 mb-3">
-        <label>Puerto de Tránsito:</label>
-        <input type="text" class="form-control" id="puertoTransito" formControlName="puertoTransito"
-          (change)="setValoresStore(grupoDeTransporte, 'puertoTransito', 'setgrupoDeTransportePuertoTransito')" />
-      </div>
-      <div class="col-md-5 mb-3">
-        <label>Nombre de la Embarcación:</label>
-        <input type="text" class="form-control" id="nombreEmbarcacion" formControlName="nombreEmbarcacion"
-          (change)="setValoresStore(grupoDeTransporte, 'nombreEmbarcacion', 'setgrupoDeTransporteNombreEmbarcacion')" />
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-5 mb-3">
-        <label>Número de Vuelo:</label>
-        <input type="text" class="form-control" id="numeroVuelo" formControlName="numeroVuelo"
-          (change)="setValoresStore(grupoDeTransporte, 'numeroVuelo', 'setgrupoDeTransporteNumeroVuelo')" />
       </div>
     </div>
   </ng-container>
