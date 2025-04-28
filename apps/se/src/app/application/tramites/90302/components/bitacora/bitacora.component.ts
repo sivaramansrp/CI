@@ -31,7 +31,7 @@ import { Sector } from "../../models/datos-info.model";
 import { Bitacora,MercanciasAProducir, Plantas,ProductorIndirecto,Sector1} from "../../models/datos-info.model";
 
 import { Subject } from 'rxjs';
-import { Tramite80206Store } from '../../estados/tramite90302.store';
+import { Tramite90302Store } from '../../estados/tramite90302.store';
 
 @Component({
   selector: 'app-bitacora',
@@ -137,7 +137,7 @@ export class BitacoraComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private ampliacionServiciosService: AmpliacionServiciosService,
     private ampliacionServiciosQuery: AmpliacionServiciosQuery,
-    private tramite80206Store: Tramite80206Store,
+    private tramite80206Store: Tramite90302Store,
     private readonly httpServicios: HttpClient
   ) {
     this.inicializarFormularioInfoRegistro();
@@ -148,10 +148,7 @@ export class BitacoraComponent implements OnInit, OnDestroy {
    * @method ngOnInit
    */
   ngOnInit(): void {
-    this.obtenerReglaSelectList();
-    this.inicializarFormularioDesdeAlmacen();
-    this.obtenerSectorSelectList();
-    
+   
     this.getBitacoraProsec();
     this.getMercanciasProsec();
     this.getPlantasProsec();
@@ -213,29 +210,6 @@ export class BitacoraComponent implements OnInit, OnDestroy {
   
 
 
-  /**
-   * Inicializa el formulario con datos del store.
-   * @method inicializarFormularioDesdeAlmacen
-   */
-  inicializarFormularioDesdeAlmacen(): void {
-    this.ampliacionServiciosQuery.selectSolicitudTramite$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((datos: AmpliacionServiciosState) => {
-          this.tramiteState = datos;
-          this.datosSector = datos.datosSector;
-          this.isSelectedRegla = datos.isSelectedRegla;
-          this.ampliacionServiciosService.enviarDeberiaMostrar(this.isSelectedRegla);
-
-          this.formularioInfoRegistro.patchValue({
-            seleccionaLaModalidad: this.tramiteState.seleccionaLaModalidad,
-            seleccionarRegla: this.tramiteState.aduanaDeIngresoSelecion.id,
-            sector: this.tramiteState.sectorSelecion.id,
-          });
-        })
-      )
-      .subscribe();
-  }
 
   /**
    * Inicializa el formulario de información de registro.
@@ -249,106 +223,24 @@ export class BitacoraComponent implements OnInit, OnDestroy {
     });
   }
 
-  /**
-   * Obtiene la lista de reglas para selección.
-   * @method obtenerReglaSelectList
-   */
-  obtenerReglaSelectList(): void {
-    this.ampliacionServiciosService
-      .obtenerReglaSelectList()
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((data) => {
-        const DATOS = data.data;
-        this.tramite80206Store.setReglaSeleccionada(DATOS);
-        this.ampliacionServiciosQuery.selectSolicitudTramite$
-          .pipe(takeUntil(this.destroyNotifier$))
-          .subscribe((sector: AmpliacionServiciosState) => {
-            this.reglaSeleccionada = sector.reglaSeleccionada;
-          });
-      });
-  }
+ 
 
-  /**
-   * Obtiene la lista de sectores para selección.
-   * @method obtenerSectorSelectList
-   */
-  obtenerSectorSelectList(): void {
-    this.ampliacionServiciosService
-      .obtenerSectorSelectList()
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((data) => {
-        const DATOS = data.data;
-        this.tramite80206Store.setSectorDesplegable(DATOS);
-        this.ampliacionServiciosQuery.selectSolicitudTramite$
-          .pipe(takeUntil(this.destroyNotifier$))
-          .subscribe((sector: AmpliacionServiciosState) => {
-            this.sectorDesplegable = sector.sectorDesplegable;
-          });
-      });
-  }
 
-  /**
-   * Elimina servicios seleccionados del grid.
-   * @method eliminarServiciosGrid
-   */
-  eliminarServiciosGrid(): void {
-    const DATOS_IMMEX_ACTUALIZADOS = [...this.datosSector];
-    this.domiciliosSeleccionados.forEach((selectedItem) => {
-      const INDICE = DATOS_IMMEX_ACTUALIZADOS.findIndex(
-        (item: Sector) => item.descripcion === selectedItem['descripcion']
-      );
-      if (INDICE !== -1) {
-        DATOS_IMMEX_ACTUALIZADOS.splice(INDICE, 1);
-      }
-    });
-    this.tramite80206Store.setDatosSector(DATOS_IMMEX_ACTUALIZADOS);
-    this.domiciliosSeleccionados = [];
-  }
-
-  /**
-   * Agrega servicios a la ampliación.
-   * @method agregarServiciosAmpliacion
-   */
-  agregarServiciosAmpliacion(): void {
-    const CUERPODATOS = {
-      descripcion: this.recibioSector[0]?.descripcion,
-      descripcionSector: this.recibioSector[0]?.descripcionSector,
-    };
-    this.tramite80206Store.setDatosSector([...this.datosSector, CUERPODATOS]);
-  }
-
+  
   /**
    * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
    * Limpia las suscripciones.
    * @method ngOnDestroy
    */
   ngOnDestroy(): void {
-    this.ampliacionServiciosService.enviarDeberiaMostrar(true);
+    
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
 
-  /**
-   * Maneja los datos recibidos del componente hijo.
-   * @method procesarDatosDelHijo
-   * @param {Catalogo | Catalogo[]} data - Datos recibidos.
-   */
-  procesarDatosDelHijo(data: Catalogo | Catalogo[]): void {
-    this.isSelectedRegla = true;
-    this.ampliacionServiciosService.enviarDeberiaMostrar(this.isSelectedRegla);
-    this.tramite80206Store.setIsSelectedRegla(this.isSelectedRegla);
-    this.tramite80206Store.setAduanaDeIngresoSeleccion(data as Catalogo);
-  }
+  
 
-  /**
-   * Actualiza el sector seleccionado basado en la entrada del usuario.
-   * @method cambioDeSector
-   * @param {Catalogo | Catalogo[]} data - Datos del sector seleccionado.
-   */
-  cambioDeSector(data: Catalogo | Catalogo[]): void {
-    this.recibioSector = Array.isArray(data) ? data : [data];
-    this.tramite80206Store.setSectorSeleccion(data as Catalogo);
-  }
+ 
 
   /**
    * Actualiza la lista de domicilios seleccionados.

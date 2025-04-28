@@ -1,4 +1,5 @@
 import { AlertComponent } from '@ng-mf/data-access-user';
+import { BitacoraComponent } from './components/bitacora/bitacora.component';
 
 import { AnexarDocumentosComponent } from '@ng-mf/data-access-user';
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
@@ -43,6 +44,7 @@ import { ToastrService } from 'ngx-toastr';
     PasoTresComponent,
     PasoUnoComponent,
     RegistroPageComponent,
+    BitacoraComponent,
     ModificacionComponent
 
   ],

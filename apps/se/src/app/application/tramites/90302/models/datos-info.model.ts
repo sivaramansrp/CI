@@ -307,10 +307,10 @@ export interface Plantas {
   estatus: string;
 }
 
-export interface MercancíasAProducir {
-  fraccionArancelaria: string;
-  claveSector: string;
-  estatus: string;
+export interface MercanciasAProducir{
+  fraccionArancelaria:string,
+  claveSector:string,
+  estatus:string,
 }
 export interface Sector1 {
   listaSectores: string;
@@ -324,9 +324,36 @@ export interface ProductorIndirecto {
   correo: string;
   estatus: string;
 }
-export interface Bitacora {
-  tipoModificacion: string;
-  fechaModificacion: string;
-  valoresAnteriores: string;
-  valoresNuevos: string;
+export interface Bitacora{
+  tipoModificacion:string;
+  fechaModificacion:string;
+  valoresAnteriores:string;
+  valoresNuevos:string;
+
+
+}
+export interface BitacoraRespuesta {
+  code: number;
+  data: Bitacora[];
+  message: string;
+}
+export interface PlantasRespuesta {
+  code: number;
+  data: Plantas[];
+  message: string;
+}
+export interface MercanciasRespuesta {
+  code: number;
+  data: MercanciasAProducir[];
+  message: string;
+}
+export interface SectorRespuesta {
+  code: number;
+  data: Sector1[];
+  message: string;
+}
+export interface ProductorIndirectoRespuesta {
+  code: number;
+  data: ProductorIndirecto[];
+  message: string;
 }

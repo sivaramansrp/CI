@@ -8,8 +8,8 @@
  * Este servicio utiliza el cliente HTTP de Angular para realizar solicitudes a archivos JSON locales y expone observables para manejar datos y eventos.
  */
 
-import { Observable, map } from 'rxjs';
-import { DatosResponse } from '../models/datos-info.model';
+import { Observable, Subject, map } from 'rxjs';
+import { DatosResponse, BitacoraRespuesta, SectorRespuesta, PlantasRespuesta, MercanciasRespuesta, ProductorIndirectoRespuesta} from '../models/datos-info.model';
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 
@@ -18,6 +18,14 @@ import { Injectable } from "@angular/core";
   providedIn: 'root',
 })
 export class AmpliacionServiciosService {
+
+  
+  /**
+   * @description
+   * URL base para acceder a los archivos JSON que contienen los datos.
+   */
+  private apiUrl = 'assets/json/90302/';
+
   /**
    * Constructor del servicio.
    * @constructor
@@ -37,6 +45,34 @@ export class AmpliacionServiciosService {
     return this.http
       .get<DatosResponse[]>("assets/json/90302/info-registro-datos.json")
       .pipe(map((res) => res));
+  }
+
+  
+  
+  getBitacoraProsec(): Observable<BitacoraRespuesta> {
+    return this.http.get<BitacoraRespuesta>(`${this.apiUrl}bitacora.json`).pipe(
+      map((res) => res)
+    );
+  }
+  getSectoresProsec(): Observable<SectorRespuesta> {
+    return this.http.get<SectorRespuesta>(`${this.apiUrl}sectores.json`).pipe(
+      map((res) => res)
+    );
+  }
+  getPlantasProsec(): Observable<PlantasRespuesta> {
+    return this.http.get<PlantasRespuesta>(`${this.apiUrl}plantas.json`).pipe(
+      map((res) => res)
+    );
+  }
+  getMercanciasProsec(): Observable<MercanciasRespuesta> {
+    return this.http.get<MercanciasRespuesta>(`${this.apiUrl}mercancias.json`).pipe(
+      map((res) => res)
+    );
+  }
+  getProductorIndirectoProsec(): Observable<ProductorIndirectoRespuesta> {
+    return this.http.get<ProductorIndirectoRespuesta>(`${this.apiUrl}productor.json`).pipe(
+      map((res) => res)
+    );
   }
 
 }

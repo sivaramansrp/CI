@@ -13,7 +13,7 @@ import {
   Arancelaria,
   ArancelariaImportacion,
   Bitacora,
-  MercancíasAProducir,
+  MercanciasAProducir,
   Plantas,
   ProductorIndirecto,
   Sector,
@@ -196,17 +196,17 @@ export const CONFIGURACION_PRODUCTOR_INDIRECTO = [
 export const CONFIGURACION_MERCANCIAS_A_PRODUCIR = [
   {
     encabezado: 'Fracción arancelaria  ',
-    clave: (ele: MercancíasAProducir): string | undefined => ele.fraccionArancelaria,
+    clave: (ele: MercanciasAProducir): string | undefined => ele.fraccionArancelaria,
     orden: 1,
   },
   {
     encabezado: 'Clave del sector ',
-    clave: (ele: MercancíasAProducir): string | undefined => ele.claveSector,
+    clave: (ele: MercanciasAProducir): string | undefined => ele.claveSector,
     orden: 2,
   },
   {
     encabezado: 'Estatus',
-    clave: (ele: MercancíasAProducir): string | undefined => ele.estatus,
+    clave: (ele: MercanciasAProducir): string | undefined => ele.estatus,
     orden: 3,
   },
   
