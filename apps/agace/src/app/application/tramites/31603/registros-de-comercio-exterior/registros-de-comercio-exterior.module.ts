@@ -15,6 +15,7 @@ import { TercerosRelacionadosComponent } from '../../../shared/components/tercer
 import { PasoDosComponent } from '../pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from '../pages/paso-tres/paso-tres.component';
 import { DatosPorRegimenComponent } from '../components/datos-por-regimen/datos-por-regimen.component';
+import { IvaeiepsComponent } from '../components/ivaeieps/ivaeieps.component';
 
 
 @NgModule({
@@ -31,7 +32,8 @@ import { DatosPorRegimenComponent } from '../components/datos-por-regimen/datos-
     AlertComponent,
     AnexarDocumentosComponent,
     FirmaElectronicaComponent,
-    DatosPorRegimenComponent
+    DatosPorRegimenComponent,
+    IvaeiepsComponent
   ],
     providers: [
     provideHttpClient(),
