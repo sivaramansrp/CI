@@ -66,8 +66,8 @@ describe('RepresentacionFederalComponent', () => {
 
   it('debe inicializar el formulario con valores predeterminados', () => {
     expect(component.formularioRepresentacionFederalForm).toBeDefined();
-    expect(component.formularioRepresentacionFederalForm.get('estado')?.value).toBe('Estado 1'); // Updated expectation
-    expect(component.formularioRepresentacionFederalForm.get('representacionFederal')?.value).toBe('Representación 1'); // Updated expectation
+    expect(component.formularioRepresentacionFederalForm.get('estado')?.value).toBe('Estado 1'); 
+    expect(component.formularioRepresentacionFederalForm.get('representacionFederal')?.value).toBe('Representación 1'); 
   });
   
 
