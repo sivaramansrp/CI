@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import { AbstractControl, FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 
-import { Catalogo, ConfiguracionColumna, TablaSeleccion } from '@libs/shared/data-access-user/src';
+import { Catalogo, ConfiguracionColumna, SeccionLibStore, TablaSeleccion } from '@libs/shared/data-access-user/src';
 
 import { Subject, takeUntil } from 'rxjs';
 
@@ -151,7 +151,9 @@ export class OperacionesDeComercioExteriorComponent implements OnInit, OnDestroy
    * @param {OperacionService} operacionService - Servicio para obtener datos relacionados con operaciones.
    * @descripcion Inicializa el componente y obtiene la lista de operaciones al crearlo.
    */
-  constructor(private readonly fb: FormBuilder, private readonly operacionService: OperacionService,private readonly tramite319Query: Tramite319Query,private tramite319Store: Tramite319Store) {
+  constructor(private readonly fb: FormBuilder, private readonly operacionService: OperacionService,private readonly tramite319Query: Tramite319Query,private tramite319Store: Tramite319Store,
+     private seccionStore: SeccionLibStore
+  ) {
     this.getOperacionList();
     this.getPersonasTableeData();
     this.getperiodoList();
@@ -230,6 +232,8 @@ export class OperacionesDeComercioExteriorComponent implements OnInit, OnDestroy
       fechas_sobre_el_periodo: this.periodoForm.value.periodoInicial + ' al ' + this.periodoForm.value.periodoFinal,
     });
     this.tramite319Store.actualizarDatosForma(this.cuerpoSolicitarTablaFila);
+    this.seccionStore.establecerFormaValida([true]);
+    this.seccionStore.establecerSeccion([true]);
     this.periodoView = false;
     this.vistaAlerta = false;
     this.periodoForm.reset();
@@ -257,6 +261,14 @@ else{
     this.cuerpoSolicitarTablaFila = this.cuerpoSolicitarTablaFila.filter(
       item => !this.listaDeTablasSeleccionadas.some(seleccionado => seleccionado?.id === item?.id)
     );
+  if(this.cuerpoSolicitarTablaFila.length === 0){
+    this.seccionStore.establecerFormaValida([false]);
+    this.seccionStore.establecerSeccion([false]);
+  }
+  else{
+    this.seccionStore.establecerFormaValida([true]);
+    this.seccionStore.establecerSeccion([true]);
+  }
     this.periodoView = false;
   }
   actualizarOperacionDesdeSeleccion() :void{
