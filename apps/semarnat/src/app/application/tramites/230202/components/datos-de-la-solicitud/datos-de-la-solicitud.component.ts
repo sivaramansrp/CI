@@ -90,8 +90,8 @@ export class DatosDeLaSolicitudComponent {
   fechaSeleccionada: FormControl = new FormControl('');
   @ViewChildren(CrosslistComponent) crossList!: QueryList<CrosslistComponent>;
   @ViewChild('closeModal') closeModal!: ElementRef;
-  public paisDeOrigenBotons = this.getCrossListBtn();
-  public entidadesBotons = this.getCrossListBtn();
+  public paisDeOrigenBotons = this.getCrossListBtn(0);
+  public entidadesBotons = this.getCrossListBtn(1);
   public paisDeOrigenLabel: CrossListLable = {
     tituluDeLaIzquierda: 'País de origen:',
     derecha: 'País(es) seleccionado(s)*:',
@@ -441,27 +441,27 @@ export class DatosDeLaSolicitudComponent {
     this.store.setEstado(ESTADO);
   }
 
-  public getCrossListBtn() {
+  public getCrossListBtn(index: number) {
     return [
       {
         btnNombre: 'Agregar todos',
         class: 'btn-default',
-        funcion: (): void => this.crossList.toArray()[0].agregar('t'),
+        funcion: (): void => this.crossList.toArray()[index].agregar('t'),
       },
       {
         btnNombre: 'Agregar selección',
         class: 'btn-primary',
-        funcion: (): void => this.crossList.toArray()[0].agregar(''),
+        funcion: (): void => this.crossList.toArray()[index].agregar(''),
       },
       {
         btnNombre: 'Restar selección',
         class: 'btn-primary',
-        funcion: (): void => this.crossList.toArray()[0].quitar(''),
+        funcion: (): void => this.crossList.toArray()[index].quitar(''),
       },
       {
         btnNombre: 'Restar todos',
         class: 'btn-default',
-        funcion: (): void => this.crossList.toArray()[0].quitar('t'),
+        funcion: (): void => this.crossList.toArray()[index].quitar('t'),
       },
     ];
   }
