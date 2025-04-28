@@ -94,7 +94,7 @@
         </div>
         <div class="row">
           <div class="col-md-8">
-            <label for="cantidad">Lungar de entrada en el pais importador:</label>
+            <label>Lungar de entrada en el pais importador:</label>
             <span class="require">*</span>
             <input
               type="text"
@@ -120,7 +120,7 @@
             </app-catalogo-select>
           </div>
           <div class="col-md-8">
-            <label for="cantidad">Número y descripción de los bultos y/o contenedores</label>
+            <label>Número y descripción de los bultos y/o contenedores</label>
             <span class="require">*</span>
             <input
               type="text"
@@ -129,6 +129,44 @@
               id="numeroYDescripcion"
               [required]="true"
               (change)="setValoresStore(reexportacionForm, 'numeroYDescripcion', 'setNumeroYDescripcion')"
+            />
+          </div>
+        </div>
+        <ng-titulo titulo="Datos de la ubicación de la Mercancía"></ng-titulo>
+        <div class="row">
+          <div class="col-md-4">
+            <label>Código Postal o equivalente</label>
+            <span class="require">*</span>
+            <input
+              type="text"
+              class="form-control"
+              formControlName="codigoPostal"
+              id="codigoPostal"
+              [required]="true"
+              (change)="setValoresStore(reexportacionForm, 'codigoPostal', 'setCodigoPostal')"
+            />
+          </div>
+          <div class="col-md-4">
+            <app-catalogo-select
+              [catalogo]="estado"
+              [label]="'Estado'"
+              formControlName="estado"
+              [required]="true"
+              (change)="estadoSeleccion()"
+              name="estado"
+            >
+            </app-catalogo-select>
+          </div>
+          <div class="col-md-4">
+            <label for="cantidad">Calle</label>
+            <span class="require">*</span>
+            <input
+              type="text"
+              class="form-control"
+              formControlName="calle"
+              id="calle"
+              [required]="true"
+              (change)="setValoresStore(reexportacionForm, 'calle', 'setCalle')"
             />
           </div>
         </div>
