@@ -23,7 +23,6 @@ export interface Catalogo {
  * Interfaz que representa el estado inicial de la solicitud 230202.
  */
 export interface Solicitud230202State {
-  
   numeroDeCertificado: Catalogo[] | null;
   aduana: Catalogo[] | null;
   fechasSeleccionadas: Catalogo[] | null;
@@ -31,11 +30,24 @@ export interface Solicitud230202State {
   entidades: Catalogo[] | null;
   descripcionProducto: Catalogo[] | null;
   datosSolicitud: Catalogo[] | null;
+  datosDetalle: Catalogo[] | null;
   fraccionArancelaria: string;
   descripcionFraccionArancelaria: string;
   cantidad: string;
   cantidadLetra: string;
-
+  genero: Catalogo[] | null;
+  especie: Catalogo[] | null;
+  nombreComun: Catalogo[] | null;
+  unidadDeMedida: Catalogo[] | null;
+  lungarDeEntrada: string;
+  medioDeTransporte: Catalogo[] | null;
+  numeroYDescripcion: string;
+  codigoPostal: string;
+  estado: Catalogo[] | null;
+  calle: string;
+  numeroExterior: string;
+  numeroInterior: string;
+  colonia: string;
 }
 
 /**
@@ -51,11 +63,24 @@ export function createInitialState(): Solicitud230202State {
     entidades: null,
     descripcionProducto: null,
     datosSolicitud: [],
+    datosDetalle: [],
     fraccionArancelaria: '',
     descripcionFraccionArancelaria: '',
     cantidad: '',
     cantidadLetra: '',
-
+    genero: null,
+    especie: null,
+    nombreComun: null,
+    unidadDeMedida: null,
+    lungarDeEntrada: '',
+    medioDeTransporte: null,
+    numeroYDescripcion: '',
+    codigoPostal: '',
+    estado: null,
+    calle: '',
+    numeroExterior: '',
+    numeroInterior: '',
+    colonia: ''
   };
 }
 
@@ -111,14 +136,14 @@ export class Tramite230202Store extends Store<Solicitud230202State> {
     }));
   }
 
-  public setEntidades (entidades: Catalogo[]) {
+  public setEntidades(entidades: Catalogo[]) {
     this.update((state) => ({
       ...state,
       entidades,
     }));
   }
 
-  public setDescripcionProducto (descripcionProducto: Catalogo[]) {
+  public setDescripcionProducto(descripcionProducto: Catalogo[]) {
     this.update((state) => ({
       ...state,
       descripcionProducto,
@@ -131,6 +156,13 @@ export class Tramite230202Store extends Store<Solicitud230202State> {
       datosSolicitud,
     }));
   }
+  
+  public setDatosDetalle(datosDetalle: Catalogo[]) {
+    this.update((state) => ({
+      ...this.getValue(),
+      datosDetalle,
+    }));
+  }
 
   public setFraccionArancelaria(fraccionArancelaria: string) {
     this.update((state) => ({
@@ -139,7 +171,9 @@ export class Tramite230202Store extends Store<Solicitud230202State> {
     }));
   }
 
-  public setDescripcionFraccionArancelaria(descripcionFraccionArancelaria: string) {
+  public setDescripcionFraccionArancelaria(
+    descripcionFraccionArancelaria: string
+  ) {
     this.update((state) => ({
       ...state,
       descripcionFraccionArancelaria,
@@ -157,6 +191,97 @@ export class Tramite230202Store extends Store<Solicitud230202State> {
     this.update((state) => ({
       ...state,
       cantidadLetra,
+    }));
+  }
+
+  public setGenero(genero: Catalogo[]) {
+    this.update((state) => ({
+      ...state,
+      genero,
+    }));
+  }
+
+  public setEspecie(especie: Catalogo[]) {
+    this.update((state) => ({
+      ...state,
+      especie,
+    }));
+  }
+
+  public setNombreComun(nombreComun: Catalogo[]) {
+    this.update((state) => ({
+      ...state,
+      nombreComun,
+    }));
+  }
+
+  public setUnidadDeMedida(unidadDeMedida: Catalogo[]) {
+    this.update((state) => ({
+      ...this.getValue(),
+      unidadDeMedida,
+    }));
+  }
+
+  public setLungarDeEntrada(lungarDeEntrada: string) {
+    this.update((state) => ({
+      ...state,
+      lungarDeEntrada: lungarDeEntrada,
+    }));
+  }
+
+  public setMedioDeTransporte(medioDeTransporte: Catalogo[]) {
+    this.update((state) => ({
+      ...state,
+      medioDeTransporte: medioDeTransporte,
+    }));
+  }
+
+  public setNumeroYDescripcion(numeroYDescripcion: string) {
+    this.update((state) => ({
+      ...state,
+      numeroYDescripcion: numeroYDescripcion,
+    }));
+  }
+
+  public setCodigoPostal(codigoPostal: string) {
+    this.update((state) => ({
+      ...state,
+      codigoPostal: codigoPostal,
+    }));
+  }
+
+  public setEstado(estado: Catalogo[]) {
+    this.update((state) => ({
+      ...state,
+      estado: estado,
+    }));
+  }
+
+  public setCalle(calle: string) {
+    this.update((state) => ({
+      ...state,
+      calle: calle,
+    }));
+  }
+
+  public setNumeroExterior(numeroExterior: string) {
+    this.update((state) => ({
+      ...state,
+      numeroExterior: numeroExterior,
+    }));
+  }
+
+  public setNumeroInterior(numeroInterior: string) {
+    this.update((state) => ({
+      ...state,
+      numeroInterior: numeroInterior,
+    }));
+  }
+
+  public setColonia(colonia: string) {
+    this.update((state) => ({
+      ...state,
+      colonia: colonia,
     }));
   }
 

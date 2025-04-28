@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
 import { Observable } from 'rxjs';
 import { Tramite230202Store } from '../estados/tramite230202.store';
-import { RespuestaSolicitud } from '../models/datos-tramite.model';
+import { RespuestaDetalle, RespuestaSolicitud } from '../models/datos-tramite.model';
 
 @Injectable({
   providedIn: 'root'
@@ -43,8 +43,35 @@ export class PhytosanitaryReexportacionService {
     return this.http.get<RespuestaSolicitud>(`assets/json/230202/solicitudDatos.json`);
   }
 
+  agregarDetalle(): Observable<RespuestaDetalle> {
+    return this.http.get<RespuestaDetalle>(`assets/json/230202/detalleDatos.json`);
+  }
+
   getFraccionArancelaria(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>('assets/json/230202/fraccionArancelaria.json');
   }
 
+  getGenero(): Observable<RespuestaCatalogos> {
+    return this.http.get<RespuestaCatalogos>('assets/json/230202/genero.json');
+  }
+
+  getEspecie(): Observable<RespuestaCatalogos> {
+    return this.http.get<RespuestaCatalogos>('assets/json/230202/especie.json');
+  }
+
+  getNombreComun(): Observable<RespuestaCatalogos> {
+    return this.http.get<RespuestaCatalogos>('assets/json/230202/nombreComun.json');
+  }
+
+  getUnidadDeMedida(): Observable<RespuestaCatalogos> {
+    return this.http.get<RespuestaCatalogos>('assets/json/230202/unidadDeMedida.json');
+  }
+
+  getMedioDeTransporte(): Observable<RespuestaCatalogos> {
+    return this.http.get<RespuestaCatalogos>('assets/json/230202/medioDeTransporte.json');
+  }
+
+  getEstado(): Observable<RespuestaCatalogos> {
+    return this.http.get<RespuestaCatalogos>('assets/json/230202/estado.json');
+  }
 }

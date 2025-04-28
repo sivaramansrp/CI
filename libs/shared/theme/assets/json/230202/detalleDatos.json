@@ -3,8 +3,8 @@
     "message": "Solicitud enviada exitosamente",
     "datos": {
         "id": 1,
-        "fraccionArancelaria": 4668768,
-        "cantidad": 111,
-        "cantidadLetra": "CIEN"
+        "nombreCientifico": "Juan Pérez",
+        "nombreComunDetalle": "Maguey"
+
     }
 }
