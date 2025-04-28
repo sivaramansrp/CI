@@ -3,7 +3,7 @@
     "message": "Solicitud enviada exitosamente",
     "datos": {
         "id": 1,
-        "fracciónArancelaria": 4668768,
+        "fraccionArancelaria": 4668768,
         "cantidad": 111,
         "cantidadLetra": "CIEN"
     }
