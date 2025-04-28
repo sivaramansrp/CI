@@ -296,22 +296,6 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   /**
-   * Verifica si hay documentos cargados.
-   * @returns {boolean} `true` si hay documentos cargados, de lo contrario `false`.
-   */
-  get docCargados(): boolean {
-    return this.documentosCargados.length > 0;
-  }
-
-  /**
-   * Determina si el botón de carga debe estar desactivado.
-   * @returns {boolean} `true` si no hay un documento seleccionado, de lo contrario `false`.
-   */
-  get btnDesactivado(): boolean {
-    return !(this.documentoSeleccionado && this.documentoSeleccionado.id !== 0);
-  }
-
-  /**
    * Obtiene el token de autenticación.
    * @param {Login} body - Datos de inicio de sesión.
    */
@@ -334,45 +318,6 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
     this.documentoForma = this.fb.group({
       documento: ['', [Validators.required]]
     });
-  }
-
-  /**
-   * Selecciona un documento de la lista de documentos disponibles y actualiza
-   * las propiedades `documentoSeleccionado` y `tamMaximo` en base al documento seleccionado.
-   *
-   * @remarks
-   * - Obtiene el valor del documento desde el formulario `documentoForma`.
-   * - Busca el documento en el catálogo de documentos `catalogoDocumentos` por su ID.
-   * - Si el documento tiene un tamaño definido, lo convierte de kilobytes a megabytes
-   *   y lo asigna a `tamMaximo`. Si no, asigna 0 a `tamMaximo`.
-   *
-   * @returns {void} Esta función no retorna ningún valor.
-   */
-  seleccionarDocumento(): void {
-    const DOCUMENTO = this.documentoForma.get('documento')?.value;
-    const DOCUMENTO_ENCONTRADO = this.catalogoDocumentos.find(
-      (doc) => doc.id === DOCUMENTO
-    );
-    if (DOCUMENTO_ENCONTRADO) {
-      this.documentoSeleccionado = DOCUMENTO_ENCONTRADO;
-    } else {
-      this.nuevaNotificacion = {
-        tipoNotificacion: 'toastr',
-        categoria: 'danger',
-        modo: '',
-        titulo: '',
-        mensaje: 'Documento no encontrado',
-        cerrar: false,
-        txtBtnAceptar: '',
-        txtBtnCancelar: '',
-      }
-      return;
-    }
-    this.tamMaximo = this.documentoSeleccionado?.tam
-      ? this.convertirKilobytesAMegabytes(
-        parseInt(this.documentoSeleccionado.tam, 10)
-      )
-      : 0;
   }
 
   /**
@@ -402,11 +347,18 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
         fileInput.value = '';
         return;
       }
-      console.log(this.documentoSeleccionado);
-      
 
-      const TAMANIO_REQUERIDO: number = parseInt(this.documentoSeleccionado.tam, 10) * 1048576;
+      this.documentoSeleccionado = this.catalogoDocumentos.find(doc => doc.id === id) as CatalogoDocumento;
+      console.log(this.documentoSeleccionado);
+
+
+      const TAMANIO_REQUERIDO: number = AnexarDocumentosComponent.convertirKbaBytes(this.documentoSeleccionado.tam);
+
+      console.log(TAMANIO_REQUERIDO);
+
       const TAMANIO_ARCHIVO: number = INFORMACION_ARCHIVO.size;
+      console.log(TAMANIO_ARCHIVO);
+
       if (TAMANIO_ARCHIVO > TAMANIO_REQUERIDO) {
         this.nuevaNotificacion = {
           tipoNotificacion: 'toastr',
@@ -608,6 +560,13 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
       return '0';
     }
     return String((parseInt(size, 10) / 1000).toFixed(2));
+  }
+
+  static convertirKbaBytes(size: string | undefined): number {
+    if (size === undefined) {
+      return 0;
+    }
+    return (parseInt(size, 10) * 1000);
   }
 
   /**
