@@ -1,9 +1,9 @@
 /**
  * Importaciones necesarias para el funcionamiento del componente.
  */
-import { Component,OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 
-import { map, Subject } from 'rxjs';
+import { Subject, map } from 'rxjs';
 
 import { REGEX_ALTO, REGEX_ANCHO, REGEX_ANO_DE_CREACION, REGEX_AVALUO, REGEX_DIAMETRO, REGEX_PROFUNDIDAD } from '@libs/shared/data-access-user/src';
 import { takeUntil } from 'rxjs';
@@ -65,6 +65,13 @@ const MANIFIESTO_ALERT =
 const OBRA_DE_ARTE_ALERT =
   'Nota: Es indispensable proporcionar las medidas de cada pieza, ya que de no hacerlo se puede afectar la dictaminación de su solicitud';
 
+/**
+ * @component DatosDeLaSolicitudPlasticaComponent
+ * @description
+ * Este componente gestiona los datos relacionados con la solicitud de trámite 270301.
+ * Proporciona funcionalidad para mostrar información en tablas, modales y formularios reactivos.
+ * También interactúa con servicios y almacenes para obtener y actualizar datos.
+ */
 @Component({
   selector: 'app-datos-de-la-solicitud-plastica',
   standalone: true,
@@ -83,17 +90,19 @@ const OBRA_DE_ARTE_ALERT =
   templateUrl: './datos-de-la-solicitud-plastica.component.html',
   styleUrl: './datos-de-la-solicitud-plastica.component.scss',
 })
-
-/**
- * @component DatosDeLaSolicitudComponent
- * @description
- * Componente que gestiona los datos relacionados con la solicitud de trámite.
- * Proporciona funcionalidad para mostrar información de tablas, modales y formularios.
- */
 export class DatosDeLaSolicitudPlasticaComponent implements OnInit, OnDestroy {
-  /** Subject para destruir el componente */
+  /**
+   * @property {Subject<void>} destroy$
+   * @description
+   * Subject utilizado para manejar la destrucción del componente y cancelar suscripciones activas.
+   */
   private destroy$ = new Subject<void>();
 
+  /**
+   * @property {solicitud270301State} solicitudState
+   * @description
+   * Estado actual de la solicitud, obtenido desde el almacén.
+   */
   public solicitudState!: solicitud270301State;
 
   /**
@@ -244,19 +253,8 @@ export class DatosDeLaSolicitudPlasticaComponent implements OnInit, OnDestroy {
   /**
    * @method ngOnInit
    * @description
-   * Método del ciclo de vida que se ejecuta una vez que el componente ha sido inicializado.
-   * Este método realiza múltiples acciones, como la suscripción a servicios para obtener datos,
-   * la inicialización de formularios reactivos y la configuración de textos de alerta.
-   *
-   * @example
-   * Uso dentro del componente:
-   * ```
-   * ngOnInit(): void {
-   *   this.solicitudService.getOperacionData().subscribe((data) => {
-   *     this.operacionData = data;
-   *   });
-   * }
-   * ```
+   * Método del ciclo de vida que se ejecuta al inicializar el componente.
+   * Configura formularios, obtiene datos desde servicios y almacenes, y suscribe a cambios de estado.
    */
   ngOnInit(): void {
     /**
@@ -268,7 +266,7 @@ export class DatosDeLaSolicitudPlasticaComponent implements OnInit, OnDestroy {
       .pipe(
         takeUntil(this.destroy$),
         map((seccionState) => {
-          this.solicitudState = seccionState as solicitud270301State ;
+          this.solicitudState = seccionState as solicitud270301State;
         })
       )
       .subscribe();
@@ -283,73 +281,73 @@ export class DatosDeLaSolicitudPlasticaComponent implements OnInit, OnDestroy {
      * Obtiene los datos de operación desde el servicio y los asigna a `operacionData`.
      */
     this.solicitudService.getOperacionData()
-    .pipe(takeUntil(this.destroy$))
-    .subscribe((data) => {
-      this.operacionData = data;
-    });
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((data) => {
+        this.operacionData = data;
+      });
 
     /**
      * Obtiene los datos de movimiento desde el servicio y los asigna a `movimientoData`.
      */
     this.solicitudService.getMovimientoData()
-    .pipe(takeUntil(this.destroy$))
-    .subscribe((data) => {
-      this.movimientoData = data;
-    });
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((data) => {
+        this.movimientoData = data;
+      });
 
     /**
      * Obtiene los datos de país desde el servicio y los asigna a `paisData`.
      */
     this.solicitudService.getPaisData()
-    .pipe(takeUntil(this.destroy$))
-    .subscribe((data) => {
-      this.paisData = data;
-    });
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((data) => {
+        this.paisData = data;
+      });
 
     /**
      * Obtiene los datos de transporte desde el servicio y los asigna a `transporteData`.
      */
     this.solicitudService.getTransporteData()
-    .pipe(takeUntil(this.destroy$))
-    .subscribe((data) => {
-      this.transporteData = data;
-    });
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((data) => {
+        this.transporteData = data;
+      });
 
     /**
      * Obtiene los datos de aduana desde el servicio y los asigna a `aduanaData`.
      */
     this.solicitudService.getAduanaData()
-    .pipe(takeUntil(this.destroy$))
-    .subscribe((data) => {
-      this.aduanaData = data;
-    });
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((data) => {
+        this.aduanaData = data;
+      });
 
     /**
      * Obtiene los datos de motivo desde el servicio y los asigna a `motivoData`.
      */
     this.solicitudService.getMotivoData()
-    .pipe(takeUntil(this.destroy$))
-    .subscribe((data) => {
-      this.motivoData = data;
-    });
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((data) => {
+        this.motivoData = data;
+      });
 
     /**
      * Obtiene los datos de moneda desde el servicio y los asigna a `monedaData`.
      */
     this.solicitudService.getMonedaData()
-    .pipe(takeUntil(this.destroy$))
-    .subscribe((data) => {
-      this.monedaData = data;
-    });
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((data) => {
+        this.monedaData = data;
+      });
 
     /**
      * Obtiene los datos de fracciones arancelarias desde el servicio y los asigna a `arancelariaData`.
      */
     this.solicitudService.getArancelariaData()
-    .pipe(takeUntil(this.destroy$))
-    .subscribe((data) => {
-      this.arancelariaData = data;
-    });
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((data) => {
+        this.arancelariaData = data;
+      });
 
     /**
      * Inicializa el formulario reactivo principal para gestionar la solicitud.
@@ -377,16 +375,8 @@ export class DatosDeLaSolicitudPlasticaComponent implements OnInit, OnDestroy {
   /**
    * @method initializeSolicitudFormGroup
    * @description
-   * Método encargado de inicializar el grupo de formularios reactivos para la solicitud.
-   * Define los controles y validaciones requeridas para cada campo del formulario.
-   * Este formulario se utiliza para capturar datos clave relacionados con el trámite 270201.
-   *
-   * @example
-   * Uso del método:
-   * ```
-   * this.initializeSolicitudFormGroup();
-   * console.log(this.solicitudFormGroup.value);
-   * ```
+   * Inicializa el formulario reactivo principal para gestionar los datos de la solicitud.
+   * Define controles y validaciones para cada campo.
    */
   initializeSolicitudFormGroup(): void {
     /**
@@ -412,8 +402,7 @@ export class DatosDeLaSolicitudPlasticaComponent implements OnInit, OnDestroy {
        * Es obligatorio y debe ser completado.
        * @default ''
        */
-      // nombre: [this.solicitudState?.nombre || '', [Validators.required]],
-      tipoDeOperacion: new FormControl( this.solicitudState?.tipoDeOperacion ||'', [Validators.required]),
+      tipoDeOperacion: new FormControl(this.solicitudState?.tipoDeOperacion || '', [Validators.required]),
 
       /**
        * @control tipoDeMovimiento
@@ -422,7 +411,7 @@ export class DatosDeLaSolicitudPlasticaComponent implements OnInit, OnDestroy {
        * Es obligatorio y debe ser completado.
        * @default ''
        */
-      tipoDeMovimiento: new FormControl( this.solicitudState?.tipoDeMovimiento ||'', [Validators.required]),
+      tipoDeMovimiento: new FormControl(this.solicitudState?.tipoDeMovimiento || '', [Validators.required]),
 
       /**
        * @control motivo
@@ -431,7 +420,7 @@ export class DatosDeLaSolicitudPlasticaComponent implements OnInit, OnDestroy {
        * Es obligatorio y debe ser completado.
        * @default ''
        */
-      motivo: new FormControl(this.solicitudState?.motivo ||'', [Validators.required]),
+      motivo: new FormControl(this.solicitudState?.motivo || '', [Validators.required]),
 
       /**
        * @control pais
@@ -440,7 +429,7 @@ export class DatosDeLaSolicitudPlasticaComponent implements OnInit, OnDestroy {
        * Es obligatorio y debe ser completado.
        * @default ''
        */
-      pais: new FormControl(this.solicitudState?.pais ||'', [Validators.required]),
+      pais: new FormControl(this.solicitudState?.pais || '', [Validators.required]),
 
       /**
        * @control ciudad
@@ -449,12 +438,10 @@ export class DatosDeLaSolicitudPlasticaComponent implements OnInit, OnDestroy {
        * Es obligatorio y debe ser completado.
        * @default ''
        */
-      ciudad: new FormControl(this.solicitudState?.ciudad ||'', [
+      ciudad: new FormControl(this.solicitudState?.ciudad || '', [
         Validators.required,
         Validators.maxLength(250),
       ]),
-
-      medioTransporte: new FormControl(this.solicitudState?.medioTransporte ||'', [Validators.required]),
 
       /**
        * @control medioTransporte
@@ -463,11 +450,13 @@ export class DatosDeLaSolicitudPlasticaComponent implements OnInit, OnDestroy {
        * Es obligatorio y debe ser completado.
        * @default ''
        */
-      emprsaTransportista: new FormControl(this.solicitudState?.emprsaTransportista ||'', [Validators.required]),
+      medioTransporte: new FormControl(this.solicitudState?.medioTransporte || '', [Validators.required]),
 
-      destinofinal: new FormControl(this.solicitudState?.destinofinal ||'', [Validators.required]),
+      emprsaTransportista: new FormControl(this.solicitudState?.emprsaTransportista || '', [Validators.required]),
 
-      periodoEstancia: new FormControl(this.solicitudState?.periodoEstancia ||'', [Validators.required]),
+      destinofinal: new FormControl(this.solicitudState?.destinofinal || '', [Validators.required]),
+
+      periodoEstancia: new FormControl(this.solicitudState?.periodoEstancia || '', [Validators.required]),
 
       /**
        * @control aduanaEntrada
@@ -476,24 +465,15 @@ export class DatosDeLaSolicitudPlasticaComponent implements OnInit, OnDestroy {
        * Es obligatorio y debe ser completado.
        * @default ''
        */
-      aduanaEntrada: new FormControl(this.solicitudState?.aduanaEntrada ||'', [Validators.required]),
+      aduanaEntrada: new FormControl(this.solicitudState?.aduanaEntrada || '', [Validators.required]),
     });
   }
 
   /**
    * @method initializeObraDeArteFormGroup
    * @description
-   * Método encargado de inicializar el grupo de formularios reactivos para capturar los datos
-   * de una obra de arte. Define los controles y las validaciones requeridas para cada campo del
-   * formulario. Este formulario asegura que los datos relacionados con la obra de arte sean
-   * registrados de manera precisa y cumplan con las reglas de validación.
-   *
-   * @example
-   * Uso del método:
-   * ```
-   * this.initializeObraDeArteFormGroup();
-   * console.log(this.obraDeArteFormgroup.value);
-   * ```
+   * Inicializa el formulario reactivo para gestionar los datos de las obras de arte.
+   * Define controles y validaciones para cada campo.
    */
   initializeObraDeArteFormGroup(): void {
     /**
@@ -687,12 +667,20 @@ export class DatosDeLaSolicitudPlasticaComponent implements OnInit, OnDestroy {
     });
   }
 
- setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Agregar270301Store): void {
+  /**
+   * @method setValoresStore
+   * @description
+   * Actualiza el almacén con los valores del formulario.
+   * @param {FormGroup} form - Formulario reactivo.
+   * @param {string} campo - Nombre del campo en el formulario.
+   * @param {keyof Agregar270301Store} metodoNombre - Método del almacén a invocar.
+   */
+  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Agregar270301Store): void {
     const VALOR = form.get(campo)?.value;
     (this.Agregar270301Store[metodoNombre] as (value: string) => void)(VALOR);
   }
 
-/**
+  /**
    * Arreglo que almacena los datos de las filas de la tabla de obras de arte.
    *
    * @type {TablaDatos[]}
@@ -700,10 +688,9 @@ export class DatosDeLaSolicitudPlasticaComponent implements OnInit, OnDestroy {
   obraDeArteRowData: TablaDatos[] = [];
 
   /**
-   * Función que alterna la visibilidad del div de la tabla y el modal de obras de arte.
-   * Cambia el estado de `showTableDiv` y `showObraDeArteModal` a su valor opuesto.
-   *
-   * @returns {void}
+   * @method toggleObraDeArte
+   * @description
+   * Alterna la visibilidad del div de la tabla y el modal de obras de arte.
    */
   toggleObraDeArte(): void {
     this.showTableDiv = !this.showTableDiv;
@@ -711,11 +698,10 @@ export class DatosDeLaSolicitudPlasticaComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Función que maneja el envío del formulario de obra de arte.
-   * Esta función procesa los datos del formulario, crea un objeto con los datos de la obra de arte,
-   * y actualiza la lista de obras de arte en la tabla.
-   *
-   * @returns {void}
+   * @method submitDeArteForm
+   * @description
+   * Maneja el envío del formulario de obra de arte.
+   * Procesa los datos del formulario y actualiza la lista de obras de arte.
    */
   submitDeArteForm(): void {
     /**
@@ -780,8 +766,12 @@ export class DatosDeLaSolicitudPlasticaComponent implements OnInit, OnDestroy {
     this.showTableDiv = !this.showTableDiv;
     this.showObraDeArteModal = !this.showObraDeArteModal;
   }
-  /*
-   * Método del ciclo de vida de Angular - destruye el componente
+
+  /**
+   * @method ngOnDestroy
+   * @description
+   * Método del ciclo de vida que se ejecuta al destruir el componente.
+   * Cancela todas las suscripciones activas.
    */
   ngOnDestroy(): void {
     this.destroy$.next();

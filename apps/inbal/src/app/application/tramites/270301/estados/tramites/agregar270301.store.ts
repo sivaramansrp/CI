@@ -111,7 +111,7 @@ export class Agregar270301Store extends Store<solicitud270301State> {
    * @description Establece el valor de 'certificada'.
    * @param {string} tipoDeOperacion - El valor de 'certificada'.
    */
-  public settipoDeOperacion(tipoDeOperacion: string) {
+  public settipoDeOperacion(tipoDeOperacion: string): void {
     this.update((state) => ({
       ...state,
       tipoDeOperacion,
@@ -123,7 +123,7 @@ export class Agregar270301Store extends Store<solicitud270301State> {
    * @description Establece el valor de 'identificationDelTransporte'.
    * @param {string} identificationDelTransporte - El valor de 'identificationDelTransporte'.
    */
-  public settipoDeMovimiento(tipoDeMovimiento: string) {
+  public settipoDeMovimiento(tipoDeMovimiento: string): void {
     this.update((state) => ({
       ...state,
       tipoDeMovimiento,
@@ -136,7 +136,7 @@ export class Agregar270301Store extends Store<solicitud270301State> {
    * @description Establece el valor de 'numerodeContenedor'.
    * @param {string} numerodeContenedor - El valor de 'numerodeContenedor'.
    */
-  public setmotivo(motivo: string) {
+  public setmotivo(motivo: string): void {
     this.update((state) => ({
       ...state,
       
@@ -149,7 +149,7 @@ export class Agregar270301Store extends Store<solicitud270301State> {
    * @description Establece el valor de 'fechdeEmbarque'.
    * @param {string} fechdeEmbarque - El valor de 'fechdeEmbarque'.
    */
-  public setpais(pais: string) {
+  public setpais(pais: string):void {
     this.update((state) => ({
       ...state,
       pais,
@@ -161,7 +161,7 @@ export class Agregar270301Store extends Store<solicitud270301State> {
    * @description Establece el valor de 'numerodeFlejes'.
    * @param {string} numerodeFlejes - El valor de 'numerodeFlejes'.
    */
-  public setciudad(ciudad: string) {
+  public setciudad(ciudad: string): void {
     this.update((state) => ({
       ...state,
       ciudad,
@@ -173,7 +173,7 @@ export class Agregar270301Store extends Store<solicitud270301State> {
    * @description Establece el valor de 'datoscertificado'.
    * @param {string} datoscertificado - El valor de 'datoscertificado'.
    */
-  public setmedioTransporte(medioTransporte: string) {
+  public setmedioTransporte(medioTransporte: string) : void {
     this.update((state) => ({
       ...state,
       medioTransporte,
@@ -185,7 +185,7 @@ export class Agregar270301Store extends Store<solicitud270301State> {
    * @description Establece el valor de 'fraccionArancelaria'.
    * @param {string} fraccionArancelaria - El valor de 'fraccionArancelaria'.
    */
-  public setemprsaTransportista(emprsaTransportista: string) {
+  public setemprsaTransportista(emprsaTransportista: string) : void {
     this.update((state) => ({
       ...state,
       emprsaTransportista,
@@ -197,7 +197,7 @@ export class Agregar270301Store extends Store<solicitud270301State> {
    * @description Establece el valor de 'fechaCaducidad'.
    * @param {string} fechaCaducidad - El valor de 'fechaCaducidad'.
    */
-  public setdestinofinal(destinofinal: string) {
+  public setdestinofinal(destinofinal: string) :void{
     this.update((state) => ({
       ...state,
       destinofinal,
@@ -209,7 +209,7 @@ export class Agregar270301Store extends Store<solicitud270301State> {
    * @description Establece el valor de 'nombreIdentificacion'.
    * @param {string} nombreIdentificacion - El valor de 'nombreIdentificacion'.
    */
-  public setperiodoEstancia(periodoEstancia: string) {
+  public setperiodoEstancia(periodoEstancia: string): void {
     this.update((state) => ({
       ...state,
       periodoEstancia,
@@ -221,7 +221,7 @@ export class Agregar270301Store extends Store<solicitud270301State> {
    * @description Establece el valor de 'raza'.
    * @param {string} raza - El valor de 'raza'.
    */
-  public setaduanaEntrada(aduanaEntrada: string) {
+  public setaduanaEntrada(aduanaEntrada: string): void {
     this.update((state) => ({
       ...state,
       aduanaEntrada,

@@ -33,7 +33,7 @@ export class SolicitudService {
    * @returns {Observable<Catalogo[]>} Un observable que emite una lista de datos de operaciones.
    */
   getOperacionData(): Observable<Catalogo[]> {
-    return this.http.get<Catalogo[]>('assets/json/270201/operacion.json');
+    return this.http.get<Catalogo[]>('assets/json/270301/operacion.json');
   }
 
   /**
@@ -43,7 +43,7 @@ export class SolicitudService {
    * @returns {Observable<Catalogo[]>} Un observable que emite una lista de datos de movimientos.
    */
   getMovimientoData(): Observable<Catalogo[]> {
-    return this.http.get<Catalogo[]>('assets/json/270201/movimiento.json');
+    return this.http.get<Catalogo[]>('assets/json/270301/movimiento.json');
   }
 
   /**
@@ -53,7 +53,7 @@ export class SolicitudService {
    * @returns {Observable<Catalogo[]>} Un observable que emite una lista de datos de países.
    */
   getPaisData(): Observable<Catalogo[]> {
-    return this.http.get<Catalogo[]>('assets/json/270201/pais.json');
+    return this.http.get<Catalogo[]>('assets/json/270301/pais.json');
   }
 
   /**
@@ -63,7 +63,7 @@ export class SolicitudService {
    * @returns {Observable<Catalogo[]>} Un observable que emite una lista de datos de transportes.
    */
   getTransporteData(): Observable<Catalogo[]> {
-    return this.http.get<Catalogo[]>('assets/json/270201/transporte.json');
+    return this.http.get<Catalogo[]>('assets/json/270301/transporte.json');
   }
 
   /**
@@ -73,7 +73,7 @@ export class SolicitudService {
    * @returns {Observable<Catalogo[]>} Un observable que emite una lista de datos de aduanas.
    */
   getAduanaData(): Observable<Catalogo[]> {
-    return this.http.get<Catalogo[]>('assets/json/270201/aduana.json');
+    return this.http.get<Catalogo[]>('assets/json/270301/aduana.json');
   }
 
   /**
@@ -83,7 +83,7 @@ export class SolicitudService {
    * @returns {Observable<Catalogo[]>} Un observable que emite una lista de datos de motivos.
    */
   getMotivoData(): Observable<Catalogo[]> {
-    return this.http.get<Catalogo[]>('assets/json/270201/motivo.json');
+    return this.http.get<Catalogo[]>('assets/json/270301/motivo.json');
   }
 
   /**
@@ -93,7 +93,7 @@ export class SolicitudService {
    * @returns {Observable<Catalogo[]>} Un observable que emite una lista de datos de monedas.
    */
   getMonedaData(): Observable<Catalogo[]> {
-    return this.http.get<Catalogo[]>('assets/json/270201/moneda.json');
+    return this.http.get<Catalogo[]>('assets/json/270301/moneda.json');
   }
 
   /**
@@ -103,7 +103,7 @@ export class SolicitudService {
    * @returns {Observable<Catalogo[]>} Un observable que emite una lista de datos arancelarios.
    */
   getArancelariaData(): Observable<Catalogo[]> {
-    return this.http.get<Catalogo[]>('assets/json/270201/arancelaria.json');
+    return this.http.get<Catalogo[]>('assets/json/270301/arancelaria.json');
   }
 
   /**
@@ -113,6 +113,6 @@ export class SolicitudService {
  * @returns {Observable<string[]>} Un observable que emite un arreglo de cadenas (`string[]`) representando los datos de las columnas.
  */
   getObraDeArteTabla(): Observable<ObraTablaDatos> {
-    return this.http.get<ObraTablaDatos>('assets/json/270201/obra-de-arte.json');
+    return this.http.get<ObraTablaDatos>('assets/json/270301/obra-de-arte.json');
   }
 }
