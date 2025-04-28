@@ -122,6 +122,7 @@ export class OperacionesDeComercioExteriorComponent implements OnInit, OnDestroy
     this.miformulario = this.fb.group({
       operacion: [ this.tramite319Query.operacion||'', Validators.required],
     });
+    this.cuerpoSolicitarTablaFila = this.tramite319Query.datos.length > 0 ? this.tramite319Query.datos : [];
   }
 
   /**
@@ -183,6 +184,7 @@ export class OperacionesDeComercioExteriorComponent implements OnInit, OnDestroy
       periodo: this.periodoForm.value.periodo,
       fechas_sobre_el_periodo: this.periodoForm.value.periodoInicial + ' al ' + this.periodoForm.value.periodoFinal,
     });
+    this.tramite319Store.actualizarDatosForma(this.cuerpoSolicitarTablaFila);
     this.periodoView = false;
   }
 
