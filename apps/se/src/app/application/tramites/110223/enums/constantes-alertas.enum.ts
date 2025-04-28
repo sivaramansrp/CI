@@ -79,32 +79,32 @@ export const HEADER_DATA_MERCANCIA = [
     export const HEADER_DISPONIBLES = [
       {
         encabezado: 'Fracción arancelaria',
-        clave: (ele: ColumnasTabla) => ele.fraccionArancelaria,
+        clave: (ele: ColumnasTabla): string => ele.fraccionArancelaria,
         orden: 1,
       },
       {
         encabezado: 'Nombre técnico',
-        clave: (ele: ColumnasTabla) => ele.nombreTecnico,
+        clave: (ele: ColumnasTabla): string => ele.nombreTecnico,
         orden: 2,
       },
       {
         encabezado: 'Nombre comercial',
-        clave: (ele: ColumnasTabla) => ele.nombreComercial,
+        clave: (ele: ColumnasTabla): string => ele.nombreComercial,
         orden: 3,
       },
       {
         encabezado: 'Número de registro de productos',
-        clave: (ele: ColumnasTabla) => ele.numeroRegistroProductos,
+        clave: (ele: ColumnasTabla): string => ele.numeroRegistroProductos,
         orden: 4,
       },
       {
         encabezado: 'Fecha expedición',
-        clave: (ele: ColumnasTabla) => ele.fechaExpedicion,
+        clave: (ele: ColumnasTabla): string => ele.fechaExpedicion,
         orden: 5,
       },
       {
         encabezado: 'Fecha vencimíento',
-        clave: (ele: ColumnasTabla) => ele.fechaVencimiento,
+        clave: (ele: ColumnasTabla): string => ele.fechaVencimiento,
         orden: 6,
       },
     ];
