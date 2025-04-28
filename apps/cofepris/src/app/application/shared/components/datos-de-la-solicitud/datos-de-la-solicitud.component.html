@@ -100,7 +100,7 @@
         <ng-container *ngTemplateOutlet="campoCorreoElectronico"></ng-container>
       </div>
     </div>
-    
+
     <div *ngIf="mostrarCorreoElectronico && !mostrarCorreoElectronicoenMismaFila" class="row mt-5">
       <div class="col-md-4">
         <ng-container *ngTemplateOutlet="campoCorreoElectronico"></ng-container>
@@ -139,7 +139,7 @@
       <div class="col-md-4">
         <div class="form-group">
           <label class="form-label" for="municipioAlcaldia"
-            >Municipio o alcaldía*:</label
+            >{{ etiquetaMunicipio }}*:</label
           >
           <input
             class="form-control"
@@ -427,6 +427,21 @@
           ></app-catalogo-select>
         </div>
       </div>
+
+      <div
+        class="col-md-4"
+        *ngIf="mostrarCamposDelProcedimiento('domicilio-aduana')"
+      >
+        <div class="form-group">
+          <app-catalogo-select
+            [catalogo]="aduanaDatos"
+            formControlName="aduana"
+            [label]="'Aduana'"
+            [required]="true"
+            name="aduanaDatos"
+          ></app-catalogo-select>
+        </div>
+      </div>
     </div>
     @if (datosSolicitudForm.get('adunasDeEntradas')?.value) {
     <div class="row mt-2">
@@ -661,6 +676,7 @@
           id="correoElectronico"
           type="text"
           formControlName="correoElectronico"
+          (change)="cambireCorreoElectronico()"
           [ngClass]="
             isValid(datosSolicitudForm, 'correoElectronico') ? 'required' : ''
           "
