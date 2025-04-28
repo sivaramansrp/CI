@@ -940,10 +940,10 @@ spec:
   ingressClassName: nginx
   tls:
   - hosts:
-    - vucem-dev.example.com
+    - front.v30.ultrasist.net
     secretName: vucem-tls-cert
   rules:
-  - host: vucem-dev.example.com
+  - host: front.v30.ultrasist.net
     http:
       paths:
       # Dashboard app (Shell)
@@ -1107,6 +1107,13 @@ spec:
               number: 8080
       # Module Federation specific paths
       - path: /remoteAppEntry.js
+        pathType: Exact
+        backend:
+          service:
+            name: dashboard-svc-${ENV}
+            port:
+              number: 80
+      - path: /assets/module-federation.manifest.json
         pathType: Exact
         backend:
           service:
