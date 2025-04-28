@@ -5,7 +5,7 @@ import { SolicitudService } from '../../services/solicitud.service';
 import { Agregar270301Store } from '../../estados/tramites/agregar270301.store';
 import { AgregarQuery } from '../../estados/queries/agregar.query';
 import { of } from 'rxjs';
-import { solicitud270301State } from '../../estados/tramites/agregar270301.store';
+import { Solicitud270301State } from '../../estados/tramites/agregar270301.store';
 
 describe('DatosDeLaSolicitudPlasticaComponent', () => {
   let component: DatosDeLaSolicitudPlasticaComponent;
@@ -13,7 +13,7 @@ describe('DatosDeLaSolicitudPlasticaComponent', () => {
   let solicitudServiceMock: Partial<SolicitudService>;
   let agregarQueryMock: Partial<AgregarQuery>;
 
-  const mockSolicitudState: solicitud270301State = {
+  const mockSolicitudState: Solicitud270301State = {
     tipoDeOperacion: '',
     tipoDeMovimiento: '',
     motivo: '',

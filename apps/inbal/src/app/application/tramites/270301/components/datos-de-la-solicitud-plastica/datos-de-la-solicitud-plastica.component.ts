@@ -40,7 +40,7 @@ import { SolicitudService } from '../../services/solicitud.service';
 
 import { TablaDatos } from '../../models/aviso-siglos.models';
 
-import { Agregar270301Store, solicitud270301State } from '../../estados/tramites/agregar270301.store';
+import { Agregar270301Store, Solicitud270301State } from '../../estados/tramites/agregar270301.store';
 
 import { AgregarQuery } from '../../estados/queries/agregar.query';
 
@@ -103,7 +103,7 @@ export class DatosDeLaSolicitudPlasticaComponent implements OnInit, OnDestroy {
    * @description
    * Estado actual de la solicitud, obtenido desde el almacén.
    */
-  public solicitudState!: solicitud270301State;
+  public solicitudState!: Solicitud270301State;
 
   /**
    * @property {boolean} showTableDiv
@@ -266,7 +266,7 @@ export class DatosDeLaSolicitudPlasticaComponent implements OnInit, OnDestroy {
       .pipe(
         takeUntil(this.destroy$),
         map((seccionState) => {
-          this.solicitudState = seccionState as solicitud270301State;
+          this.solicitudState = seccionState as Solicitud270301State;
         })
       )
       .subscribe();

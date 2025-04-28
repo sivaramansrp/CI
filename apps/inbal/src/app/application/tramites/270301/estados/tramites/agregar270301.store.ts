@@ -1,115 +1,92 @@
 /**
  * @module Agregar270301Store
- * @description Módulo que define el estado y las acciones para la solicitud 270301.
+ * @description
+ * Este módulo define el estado y las acciones para la gestión de la solicitud 270301.
+ * Utiliza Akita para manejar el estado de la aplicación de manera reactiva.
  */
 
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
 
-import { CatalogoResponse } from '@libs/shared/data-access-user/src';
-
 /**
  * @interface solicitud270301State
- * @description Interfaz que define la estructura del estado para la solicitud 270301.
+ * @description
+ * Interfaz que define la estructura del estado para la solicitud 270301.
  */
-
-/**
- * Interfaz que define el estado de la solicitud 270301.
- */
-// eslint-disable-next-line @typescript-eslint/naming-convention
-export interface solicitud270301State {
-  /** Certificación asociada a la solicitud. */
+export interface Solicitud270301State {
+  /** Tipo de operación seleccionada. */
   tipoDeOperacion: string;
 
-  /** Identificación del medio de transporte. */
+  /** Tipo de movimiento seleccionado. */
   tipoDeMovimiento: string;
 
-   /** Número de contenedor para el transporte de la mercancía. */
+  /** Motivo asociado a la solicitud. */
   motivo: string;
 
-  /** Fecha de embarque de la mercancía. */
+  /** País relacionado con la solicitud. */
   pais: string;
 
-  /** Número de flejes de seguridad. */
+  /** Ciudad asociada a la solicitud. */
   ciudad: string;
 
-  /** Datos del certificado asociado a la solicitud. */
+  /** Medio de transporte utilizado. */
   medioTransporte: string;
 
-  /** Fracción arancelaria correspondiente a la mercancía. */
+  /** Empresa transportista asociada. */
   emprsaTransportista: string;
 
-  /** Fecha de caducidad de la mercancía o certificado. */
+  /** Destino final de la solicitud. */
   destinofinal: string;
 
-  /** Nombre o identificación del animal o producto. */
+  /** Periodo de estancia relacionado con la solicitud. */
   periodoEstancia: string;
 
-  /** Raza del animal, en caso de aplicar. */
+  /** Aduana de entrada seleccionada. */
   aduanaEntrada: string;
-
-  
 }
 
 /**
  * @function createInitialState
- * @description Función que crea el estado inicial para la solicitud 270301.
- * @returns {solicitud270301State} El estado inicial.
+ * @description
+ * Función que crea el estado inicial para la solicitud 270301.
+ * @returns {solicitud270301State} El estado inicial con valores predeterminados.
  */
-export function createInitialState(): solicitud270301State {
+export function createInitialState(): Solicitud270301State {
   return {
-  
-   /** Certificación asociada a la solicitud. */
-   tipoDeOperacion: '',
-
-    /** Identificación del medio de transporte. */
+    tipoDeOperacion: '',
     tipoDeMovimiento: '',
-  
-   /** Número de contenedor para el transporte de la mercancía. */
     motivo: '',
-  
-    /** Fecha de embarque de la mercancía. */
     pais: '',
-  
-    /** Número de flejes de seguridad. */
     ciudad: '',
-  
-    /** Datos del certificado asociado a la solicitud. */
     medioTransporte: '',
-  
-    /** Fracción arancelaria correspondiente a la mercancía. */
     emprsaTransportista: '',
-  
-    /** Fecha de caducidad de la mercancía o certificado. */
     destinofinal: '',
-  
-    /** Nombre o identificación del animal o producto. */
     periodoEstancia: '',
-  
-    /** Raza del animal, en caso de aplicar. */
     aduanaEntrada: '',
   };
-  
 }
 
 /**
  * @class Agregar270301Store
  * @extends {Store<solicitud270301State>}
- * @description Clase que maneja el estado y las acciones para la solicitud 270301.
+ * @description
+ * Clase que maneja el estado y las acciones para la solicitud 270301.
+ * Utiliza Akita para proporcionar un estado reactivo y centralizado.
  */
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 @StoreConfig({ name: 'agregar270301', resettable: true })
-export class Agregar270301Store extends Store<solicitud270301State> {
+export class Agregar270301Store extends Store<Solicitud270301State> {
   constructor() {
     super(createInitialState());
   }
 
   /**
    * @method settipoDeOperacion
-   * @description Establece el valor de 'certificada'.
-   * @param {string} tipoDeOperacion - El valor de 'certificada'.
+   * @description
+   * Actualiza el estado con el tipo de operación seleccionado.
+   * @param {string} tipoDeOperacion - El tipo de operación seleccionado.
    */
   public settipoDeOperacion(tipoDeOperacion: string): void {
     this.update((state) => ({
@@ -119,9 +96,10 @@ export class Agregar270301Store extends Store<solicitud270301State> {
   }
 
   /**
-   * @method setidentificationDelTransporte
-   * @description Establece el valor de 'identificationDelTransporte'.
-   * @param {string} identificationDelTransporte - El valor de 'identificationDelTransporte'.
+   * @method settipoDeMovimiento
+   * @description
+   * Actualiza el estado con el tipo de movimiento seleccionado.
+   * @param {string} tipoDeMovimiento - El tipo de movimiento seleccionado.
    */
   public settipoDeMovimiento(tipoDeMovimiento: string): void {
     this.update((state) => ({
@@ -130,26 +108,26 @@ export class Agregar270301Store extends Store<solicitud270301State> {
     }));
   }
 
-  
-/**
-   * @method setnumerodeContenedor
-   * @description Establece el valor de 'numerodeContenedor'.
-   * @param {string} numerodeContenedor - El valor de 'numerodeContenedor'.
+  /**
+   * @method setmotivo
+   * @description
+   * Actualiza el estado con el motivo asociado a la solicitud.
+   * @param {string} motivo - El motivo asociado.
    */
   public setmotivo(motivo: string): void {
     this.update((state) => ({
       ...state,
-      
       motivo,
     }));
   }
 
   /**
-   * @method setfetchdeEmbarque
-   * @description Establece el valor de 'fechdeEmbarque'.
-   * @param {string} fechdeEmbarque - El valor de 'fechdeEmbarque'.
+   * @method setpais
+   * @description
+   * Actualiza el estado con el país relacionado con la solicitud.
+   * @param {string} pais - El país relacionado.
    */
-  public setpais(pais: string):void {
+  public setpais(pais: string): void {
     this.update((state) => ({
       ...state,
       pais,
@@ -157,9 +135,10 @@ export class Agregar270301Store extends Store<solicitud270301State> {
   }
 
   /**
-   * @method setnumerodeFlejes
-   * @description Establece el valor de 'numerodeFlejes'.
-   * @param {string} numerodeFlejes - El valor de 'numerodeFlejes'.
+   * @method setciudad
+   * @description
+   * Actualiza el estado con la ciudad asociada a la solicitud.
+   * @param {string} ciudad - La ciudad asociada.
    */
   public setciudad(ciudad: string): void {
     this.update((state) => ({
@@ -169,11 +148,12 @@ export class Agregar270301Store extends Store<solicitud270301State> {
   }
 
   /**
-   * @method setdatoscertificado
-   * @description Establece el valor de 'datoscertificado'.
-   * @param {string} datoscertificado - El valor de 'datoscertificado'.
+   * @method setmedioTransporte
+   * @description
+   * Actualiza el estado con el medio de transporte utilizado.
+   * @param {string} medioTransporte - El medio de transporte utilizado.
    */
-  public setmedioTransporte(medioTransporte: string) : void {
+  public setmedioTransporte(medioTransporte: string): void {
     this.update((state) => ({
       ...state,
       medioTransporte,
@@ -181,11 +161,12 @@ export class Agregar270301Store extends Store<solicitud270301State> {
   }
 
   /**
-   * @method setfraccionArancelaria
-   * @description Establece el valor de 'fraccionArancelaria'.
-   * @param {string} fraccionArancelaria - El valor de 'fraccionArancelaria'.
+   * @method setemprsaTransportista
+   * @description
+   * Actualiza el estado con la empresa transportista asociada.
+   * @param {string} emprsaTransportista - La empresa transportista asociada.
    */
-  public setemprsaTransportista(emprsaTransportista: string) : void {
+  public setemprsaTransportista(emprsaTransportista: string): void {
     this.update((state) => ({
       ...state,
       emprsaTransportista,
@@ -193,11 +174,12 @@ export class Agregar270301Store extends Store<solicitud270301State> {
   }
 
   /**
-   * @method setfechaCaducidad
-   * @description Establece el valor de 'fechaCaducidad'.
-   * @param {string} fechaCaducidad - El valor de 'fechaCaducidad'.
+   * @method setdestinofinal
+   * @description
+   * Actualiza el estado con el destino final de la solicitud.
+   * @param {string} destinofinal - El destino final.
    */
-  public setdestinofinal(destinofinal: string) :void{
+  public setdestinofinal(destinofinal: string): void {
     this.update((state) => ({
       ...state,
       destinofinal,
@@ -205,9 +187,10 @@ export class Agregar270301Store extends Store<solicitud270301State> {
   }
 
   /**
-   * @method setnombreIdentificacion
-   * @description Establece el valor de 'nombreIdentificacion'.
-   * @param {string} nombreIdentificacion - El valor de 'nombreIdentificacion'.
+   * @method setperiodoEstancia
+   * @description
+   * Actualiza el estado con el periodo de estancia relacionado con la solicitud.
+   * @param {string} periodoEstancia - El periodo de estancia.
    */
   public setperiodoEstancia(periodoEstancia: string): void {
     this.update((state) => ({
@@ -217,9 +200,10 @@ export class Agregar270301Store extends Store<solicitud270301State> {
   }
 
   /**
-   * @method setraza
-   * @description Establece el valor de 'raza'.
-   * @param {string} raza - El valor de 'raza'.
+   * @method setaduanaEntrada
+   * @description
+   * Actualiza el estado con la aduana de entrada seleccionada.
+   * @param {string} aduanaEntrada - La aduana de entrada seleccionada.
    */
   public setaduanaEntrada(aduanaEntrada: string): void {
     this.update((state) => ({
