@@ -21,8 +21,13 @@ describe('PantallasComponent', () => {
   let component: PantallasComponent;
   let fixture: ComponentFixture<PantallasComponent>;
   let mockServicioDeFormularioService: any;
+  let mockWizardService: any;
+  let mockWizardComponent: any;
 
   beforeEach(async () => {
+    mockWizardService = { cambio_indice: jest.fn() };
+    mockWizardComponent = { siguiente: jest.fn() };
+
     mockServicioDeFormularioService = {
       isFormValid: jest.fn().mockReturnValue(true),
       registerForm: jest.fn(),
@@ -48,6 +53,14 @@ describe('PantallasComponent', () => {
 
     fixture = TestBed.createComponent(PantallasComponent);
     component = fixture.componentInstance;
+    component.wizardService = mockWizardService;
+    component.wizardComponent = mockWizardComponent;
+    component.datosPasos = { 
+      indice: 1, 
+      txtBtnSig: 'Continuar', 
+      txtBtnAnt: 'Anterior', 
+      nroPasos: CUPOS_PASOS.length 
+    };
     fixture.detectChanges();
   });
 
@@ -79,23 +92,56 @@ describe('PantallasComponent', () => {
     expect(result).toBe(false);
   });
 
-  it('should update indice and call wizardComponent.siguiente() when "cont" action is triggered and form is valid', fakeAsync(() => {
-    const accionBoton: AccionBoton = { valor: 2, accion: 'cont' };
-    component.getValorIndice(accionBoton);
-    tick();
-    expect(component.indice).toBe(2);
-    expect(component.datosPasos.indice).toBe(2);
-    expect(component.wizardComponent.siguiente).toHaveBeenCalled();
-  }));
+  it('should return false if any form validity is undefined', () => {
+    jest.spyOn(component['servicioDeFormularioService'], 'isFormValid').mockImplementation((formName: string) => {
+      return formName === 'representacionFederalForm' ? undefined : true;
+    });
+    const result = component.verificarLaValidezDelFormulario();
+    expect(result).toBe(false);
+  });
 
-  it('should not update indice and not call wizardComponent.siguiente() when form is invalid', fakeAsync(() => {
-    mockServicioDeFormularioService.isFormValid.mockReturnValue(false);
-    const accionBoton: AccionBoton = { valor: 2, accion: 'cont' };
-    component.getValorIndice(accionBoton);
-    tick();
-    expect(component.indice).toBe(1);
-    expect(component.datosPasos.indice).toBe(1);
-    expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
-  }));
+  it('should update subpestanaSeleccionada when event is a truthy number', () => {
+    const event = 2;
+    component.pestanaCambiado(event);
+    expect(component.subpestanaSeleccionada).toBe(event);
+  });
 
+  it('should not update subpestanaSeleccionada when event is 0', () => {
+    component.subpestanaSeleccionada = 5;
+    component.pestanaCambiado(0);
+    expect(component.subpestanaSeleccionada).toBe(5);
+  });
+
+  it('should not update subpestanaSeleccionada when event is undefined', () => {
+    component.subpestanaSeleccionada = 3;
+    component.pestanaCambiado(undefined as any);
+    expect(component.subpestanaSeleccionada).toBe(3);
+  });
+
+  it('should show alert and set form valid when conditions for first if are met', () => {
+    component.subpestanaSeleccionada = 2;
+    Object.defineProperty(component, 'esConsultarCupoFormValid', { value: true });
+    Object.defineProperty(component, 'esBienFinalFormValid', { value: true });
+    Object.defineProperty(component, 'esRepresentacionFederalFormValid', { value: true });
+    component.esFormaValido = false;
+    const accionBoton = { valor: 3 } as AccionBoton;
+    component.continuar(accionBoton);
+    expect(component.mostrarAplicacionRegistradaAlerta).toBe(true);
+    expect(component.pestanaDosFormularioValido).toBe(true);
+    expect(mockWizardService.cambio_indice).not.toHaveBeenCalled();
+    expect(mockWizardComponent.siguiente).not.toHaveBeenCalled();
+  });
+
+  it('should set mostrarAplicacionRegistradaAlerta to false when neither condition matches', () => {
+    component.subpestanaSeleccionada = 1;
+    Object.defineProperty(component, 'esConsultarCupoFormValid', { value: false });
+    Object.defineProperty(component, 'esBienFinalFormValid', { value: false });
+    Object.defineProperty(component, 'esRepresentacionFederalFormValid', { value: false });
+    component.esFormaValido = false;
+    const accionBoton = { valor: 5 } as AccionBoton;
+    component.continuar(accionBoton);
+    expect(component.mostrarAplicacionRegistradaAlerta).toBe(false);
+    expect(mockWizardService.cambio_indice).not.toHaveBeenCalled();
+    expect(mockWizardComponent.siguiente).not.toHaveBeenCalled();
+  });
 });

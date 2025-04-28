@@ -86,4 +86,8 @@ export class SolicitudDeRegistroTplService {
   obtenerDatosEstados(): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>('assets/json/120101/estados.json');  
   }
+
+  obtenerIndicarData(): Observable<{label: string, value: string}[]> {
+    return this.http.get<{label: string, value: string}[]>('assets/json/120101/proceso-productivo.json'); 
+  }
 }

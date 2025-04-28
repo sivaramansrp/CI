@@ -1,6 +1,20 @@
 /**
- * Constantes para el manejo de los pasos del wizard de cupos
- *
+ * @constant CUPOS_PASOS
+ * @description
+ * Configuración de los pasos del wizard para el trámite de cupos.
+ * 
+ * Funcionalidad:
+ * - Define los pasos que se renderizan dinámicamente en el wizard.
+ * - Cada paso incluye propiedades como `indice`, `titulo`, `activo` y `completado`.
+ * 
+ * Campos:
+ * - `indice`: Número que identifica el orden del paso.
+ * - `titulo`: Título descriptivo del paso.
+ * - `activo`: Indica si el paso está activo.
+ * - `completado`: Indica si el paso ha sido completado.
+ * 
+ * @example
+ * const pasos = CUPOS_PASOS.map(paso => paso.titulo);
  */
 export const CUPOS_PASOS = [
   {
@@ -664,11 +678,41 @@ export const BIEN_FINAL = [
   },
 ]
 
+/**
+ * @constant ALERTA_DE_APLICACION_REGISTRADA
+ * @description
+ * Mensaje de alerta que se muestra al usuario cuando la solicitud ha sido registrada con éxito.
+ * 
+ * Funcionalidad:
+ * - Informa al usuario que la solicitud ha sido registrada con un número temporal.
+ * - Aclara que el número temporal no tiene validez legal y que un folio oficial será asignado al momento de firmar la solicitud.
+ * 
+ * @type {object}
+ * @property {string} message - Contiene el mensaje HTML que se muestra en la alerta.
+ * 
+ * @example
+ * console.log(ALERTA_DE_APLICACION_REGISTRADA.message);
+ */
 export const ALERTA_DE_APLICACION_REGISTRADA = {
   message: `
   <p>La solicitud ha quedado registrada con el número temporal 202770947. Este no tiene validez legal y sirve solamente para efectos de identificar tu solicitud. Un folio oficial será asignado a la solicitud en el momento en que esta sea firmada.</a>`
 };
 
+/**
+ * @constant PAIS_ELEGIDO_ALERT
+ * @description
+ * Mensaje de alerta que se muestra al usuario cuando el país elegido para el hilado no es válido para el régimen seleccionado.
+ * 
+ * Funcionalidad:
+ * - Informa al usuario sobre los errores relacionados con la selección del país en el formulario.
+ * - Proporciona un mensaje claro para que el usuario corrija los errores antes de continuar.
+ * 
+ * @type {object}
+ * @property {string} message - Contiene el mensaje HTML que se muestra en la alerta.
+ * 
+ * @example
+ * console.log(PAIS_ELEGIDO_ALERT.message);
+ */
 export const PAIS_ELEGIDO_ALERT = {
   message: `
   <p>Corrija los siguientes errores</p>
@@ -685,6 +729,21 @@ export const PAIS_ELEGIDO_ALERT = {
 export const ERROR_FORMA_ALERT =
 '<strong>¡Error de registro! </strong>Faltan campos por capturar.';
 
+/**
+ * @constant RADIO_INDICAR
+ * @description
+ * Configuración de las opciones de selección para el control de tipo radio en el formulario.
+ * 
+ * Funcionalidad:
+ * - Define las opciones disponibles para el usuario en el formulario `procesoProductivoForm`.
+ * - Cada opción incluye una etiqueta (`label`) y un valor (`value`) que se utiliza para identificar la selección.
+ * 
+ * @type {Array<{label: string, value: string}>}
+ * 
+ * @example
+ * const opciones = RADIO_INDICAR.map(opcion => opcion.label);
+ * console.log(opciones); // ['Hilo', 'Tela', 'Bienes tejidos a forma', 'prendas y otras manufacturas']
+ */
 export const RADIO_INDICAR = [
   {
       label: 'Hilo',
@@ -771,4 +830,44 @@ export const FORMULARIO_MODAL_INSUMOS = [
     marginTop: 0,
   }
 ];
+
+/**
+ * @constant PROCESO_PRODUCTIVO
+ * @description
+ * Configuración de los campos del formulario dinámico para la sección "Proceso Productivo".
+ * 
+ * Funcionalidad:
+ * - Define los campos que se renderizan dinámicamente en el formulario.
+ * - Cada campo incluye propiedades como `id`, `labelNombre`, `campo`, `tipoInput`, entre otras.
+ * 
+ * Campos:
+ * - `id`: Identificador único del campo.
+ * - `labelNombre`: Etiqueta descriptiva del campo.
+ * - `campo`: Nombre del campo en el formulario.
+ * - `tipoInput`: Tipo de entrada del campo (en este caso, `radio`).
+ * - `desactivado`: Indica si el campo está deshabilitado.
+ * - `soloLectura`: Indica si el campo es de solo lectura.
+ * - `validadores`: Lista de validaciones aplicadas al campo.
+ * - `marcadorDePosicion`: Texto de marcador de posición para el campo.
+ * - `valorPredeterminado`: Valor inicial del campo.
+ * 
+ * @type {Array<{id: string, labelNombre: string, campo: string, clase: string, tipoInput: string, desactivado: boolean, soloLectura: boolean, validadores: any[], marcadorDePosicion: string, valorPredeterminado: string}>}
+ * 
+ * @example
+ * const formulario = PROCESO_PRODUCTIVO.map(campo => crearControl(campo));
+ */
+export const PROCESO_PRODUCTIVO = [
+  {
+    id: 'indicar',
+    labelNombre: 'Indicar el(los) país(es) donde se realizó o realizaron el(los) siguiente(s) proceso(s) productivo(s), segúncorresponda al bien final a exportar o importar',
+    campo: 'indicar',
+    clase: 'col-md-4',
+    tipoInput: 'radio',
+    desactivado: false,
+    soloLectura: false,
+    validadores: [],
+    marcadorDePosicion: '',
+    valorPredeterminado: '',
+  },
+]
 

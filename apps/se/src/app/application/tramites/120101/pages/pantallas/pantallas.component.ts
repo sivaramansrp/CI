@@ -148,7 +148,7 @@ export class PantallasComponent{
  * @param {ServicioDeFormularioService} servicioDeFormularioService - Servicio para gestionar formularios dinámicos.
  */
   constructor(
-    private servicioDeFormularioService: ServicioDeFormularioService
+    public servicioDeFormularioService: ServicioDeFormularioService
   ) {
     //
   }
@@ -253,17 +253,17 @@ export class PantallasComponent{
     this.esFormaValido = this.verificarLaValidezDelFormulario();
     if (e.valor > 0 && e.valor <= this.pantallasPasos.length) {
         if (e.accion === 'cont') {
-          this.continuar(e);
+            this.continuar(e);
         } else if (e.accion === 'ant' && this.esFormaValido) {
-          this.indice = e.valor - 1;
-          this.datosPasos.indice = e.valor - 1;
-          this.wizardComponent.atras();
+            this.indice = e.valor - 1;
+            this.datosPasos.indice = e.valor - 1;
+            this.wizardComponent.atras();
         } else if (!this.esFormaValido) {
-          this.indice = e.valor;
-          this.datosPasos.indice = e.valor;
+            this.indice = e.valor;
+            this.datosPasos.indice = e.valor;
         }
     }
-  }
+}
 
   /**
  * @method continuar
@@ -282,14 +282,14 @@ export class PantallasComponent{
  * this.continuar({ valor: 2, accion: 'cont' });
  */
   public continuar(e: AccionBoton): void {
-    if (this.subpestanaSeleccionada===2 && this.esConsultarCupoFormValid && this.esBienFinalFormValid && this.esRepresentacionFederalFormValid && !this.esFormaValido) {
+    if (this.subpestanaSeleccionada === 2 && this.esConsultarCupoFormValid && this.esBienFinalFormValid && this.esRepresentacionFederalFormValid && !this.esFormaValido) {
       this.mostrarAplicacionRegistradaAlerta = true;
       this.pestanaDosFormularioValido = true;
     } else if (this.esFormaValido) {
       this.pestanaDosFormularioValido = true;
       this.wizardService.cambio_indice(this.datosPasos.indice);
-      this.indice = e.valor + 1;
-      this.datosPasos.indice = e.valor + 1;
+      this.indice = e.valor;
+      this.datosPasos.indice = e.valor;
       this.wizardComponent.siguiente();
     } else {
       this.mostrarAplicacionRegistradaAlerta = false;

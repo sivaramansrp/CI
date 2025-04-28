@@ -94,4 +94,19 @@ export class ServicioDeFormularioService {
     const FORMA = this.getForm(name);
     return FORMA?.valid;
   }
+
+  /**
+ * @method removeControl
+ * @description
+ * Elimina un control específico de un formulario dinámico registrado en el servicio.
+ * @param {string} formName - El nombre único del formulario.
+ * @param {string} controlName - El nombre del control a eliminar del formulario.
+ */
+removeControl(formName: string, controlName: string): void {
+  const FORMA = this.getForm(formName);
+  if (FORMA && FORMA.contains(controlName)) {
+    FORMA.removeControl(controlName);
+  }
+}
+
 }
