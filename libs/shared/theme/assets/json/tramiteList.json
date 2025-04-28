@@ -2053,8 +2053,8 @@
   {
     "id": 294,
     "tramite": 90303,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/se/catalogos/solicitud",
+    "linkDepartment": "/pago/catalogos/solicitud",
     "department": "se"
   },
   {
