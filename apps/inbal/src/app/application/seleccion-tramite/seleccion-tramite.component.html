@@ -12,27 +12,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>270201</td>
-              <td>
-                <a routerLink="/pago/"
-                  >{{ ruta }}/pago/</a
-                >
-              </td>
-            </tr>
-            <tr>
-              <td>270201</td>
-              <td>
-                <a routerLink="/pago/aviso-siglos/solictud">{{ruta}}/aviso-siglos/solictud</a>
-              </td>
-            </tr>
-            <tr>
-              <td>270301</td>
-              <td>
-                <a routerLink="/pago/aviso-importacion-plastica/Pantallas">{{ruta}}/aviso-importacion-plastica/Pantallas</a>
-              </td>
-            </tr>
-          </tbody>
+            
             @for(item of tramiteData; track $index) {
               @if(item?.linkDepartment) {
                 <tr>
