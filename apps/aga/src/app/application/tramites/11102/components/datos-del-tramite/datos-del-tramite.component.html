@@ -73,15 +73,6 @@
             >
               Modificar
             </button>
-            <!-- <button
-              type="button"
-              class="btn btn-primary ms-3"
-              data-bs-toggle="modal"
-              data-bs-target="#modalAgregarMercancias"
-              (click)="abrirDialogoMercancias()"
-            >
-              Agregar
-            </button> -->
           </div>
         </div>
 
@@ -322,12 +313,15 @@
             </div>
           </div>
         </div>
-        <ng-alert
-        [CONTENIDO]="TEXTOS"
-        [CUSTOMECLASS]="infoAlert"
-      ></ng-alert>
+        <div class="row">
+          <div class="col-md-12">
+            <ng-alert
+              [CONTENIDO]="TEXTOS"
+              [CUSTOMECLASS]="infoAlert"
+            ></ng-alert>
+          </div>
+        </div>
       </ng-container>
-      
     </div>
   </form>
 </div>
@@ -495,7 +489,7 @@
         <button
           type="button"
           class="btn btn-primary"
-          (click)="agregarConfirmarModal()"
+          (click)="modificarConfirmarModal()"
         >
           Modificar
         </button>

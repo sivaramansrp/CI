@@ -1,15 +1,11 @@
+import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
 import {
-  BtnContinuarComponent,
   DatosPasos,
   FormularioDinamico,
   ListaPasosWizard,
   SolicitanteComponent,
   WizardComponent,
 } from '@ng-mf/data-access-user';
-import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
-import { DatosDelTramiteComponent } from '../../components/datos-del-tramite/datos-del-tramite.component';
 import { PASOS } from '@libs/shared/data-access-user/src/tramites/constantes/11105/pasos.enum';
 
 interface AccionBoton {
@@ -28,17 +24,8 @@ interface AccionBoton {
  * Componente que representa el paso uno del trámite.
  */
 @Component({
-  standalone: true,
   selector: 'paso-uno',
   templateUrl: './paso-uno.component.html',
-  imports: [
-    SolicitanteComponent,
-    CommonModule,
-    DatosDelTramiteComponent,
-    FormsModule,
-    ReactiveFormsModule,
-    BtnContinuarComponent,
-  ],
 })
 export class PasoUnoComponent {
   /**

@@ -8,7 +8,6 @@ export interface RespuestaMercancia {
    */
   success: boolean;
 
-  
   datos: DatosDelMercancia;
 
   /**

@@ -19,13 +19,14 @@ import { CommonModule } from '@angular/common';
 import { DatosDelTramiteComponent } from './components/datos-del-tramite/datos-del-tramite.component';
 import { ModificacionDonacionesImmexRoutingModule } from './modificacion-donaciones-immex-routing.module';
 import { ModificacionDonacionesImmexService } from './services/modificacion-donaciones-immex.service';
+import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { SolicitantePageComponent } from './pages/solicitante-page/solicitante-page.component';
 import { ToastrService } from 'ngx-toastr';
 
 @NgModule({
-  declarations: [],
+  declarations: [PasoDosComponent, PasoUnoComponent, PasoTresComponent],
   imports: [
     CommonModule,
     FormsModule,
@@ -42,10 +43,8 @@ import { ToastrService } from 'ngx-toastr';
     InputRadioComponent,
     CrosslistComponent,
     ReactiveFormsModule,
-    PasoUnoComponent,
     SolicitantePageComponent,
-    PasoTresComponent,
-    DatosDelTramiteComponent
+    DatosDelTramiteComponent,
   ],
   exports: [],
   providers: [

@@ -1,6 +1,6 @@
-import { CommonModule } from '@angular/common';
+//import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { FirmaElectronicaComponent } from '@libs/shared/data-access-user/src';
+//import { FirmaElectronicaComponent } from '@libs/shared/data-access-user/src';
 import { Router } from '@angular/router';
 
 /**
@@ -11,9 +11,7 @@ import { Router } from '@angular/router';
  */
 @Component({
   selector: 'paso-tres',
-  standalone: true,
   templateUrl: './paso-tres.component.html',
-  imports: [FirmaElectronicaComponent, CommonModule],
 })
 export class PasoTresComponent {
   /**

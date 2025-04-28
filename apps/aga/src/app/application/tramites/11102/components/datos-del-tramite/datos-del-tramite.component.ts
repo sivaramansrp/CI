@@ -1,4 +1,18 @@
-import { CommonModule } from '@angular/common';
+import {
+  AlertComponent,
+  CatalogoSelectComponent,
+  InputCheckComponent,
+  REGEX_POSTAL,
+  REGEX_TELEFONO_DIGITOS,
+  TableComponent,
+  TituloComponent,
+  ValidacionesFormularioService,
+} from '@libs/shared/data-access-user/src';
+import {
+  Catalogo,
+  Solicitud11102State,
+  Tramite11102Store,
+} from '../../estados/tramite11102.store';
 import {
   Component,
   ElementRef,
@@ -13,30 +27,14 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Modal } from 'bootstrap';
-import { map, merge, Subject, takeUntil } from 'rxjs';
-import {
-  AlertComponent,
-  CatalogoSelectComponent,
-  InputCheckComponent,
-  REGEX_POSTAL,
-  REGEX_TELEFONO_DIGITOS,
-  TablaDinamicaComponent,
-  TableComponent,
-  TituloComponent,
-  ValidacionesFormularioService,
-} from '@libs/shared/data-access-user/src';
-import mercanciaTable from 'libs/shared/theme/assets/json/11102/mercancia-table.json';
-import { DatosDelMercancia } from '../../models/modificacion-donaciones-immex.model';
-import { ModificacionDonacionesImmexService } from '../../services/modificacion-donaciones-immex.service';
-import {
-  Catalogo,
-  Solicitud11102State,
-  Tramite11102Store,
-} from '../../estados/tramite11102.store';
-import { Tramite11102Query } from '../../estados/tramite11102.query';
+import { Subject,Subscription, map, merge, takeUntil } from 'rxjs';
 import { AVISO } from '@libs/shared/data-access-user/src/tramites/constantes/aviso-privacidad.enum';
-
+import { CommonModule } from '@angular/common';
+import { DatosDelMercancia } from '../../models/modificacion-donaciones-immex.model';
+import { Modal } from 'bootstrap';
+import { ModificacionDonacionesImmexService } from '../../services/modificacion-donaciones-immex.service';
+import { Tramite11102Query } from '../../estados/tramite11102.query';
+import mercanciaTable from '@libs/shared/theme/assets/json/11102/mercancia-table.json';
 
 /**
  * Componente que representa la funcionalidad de datos del trámite.
@@ -53,17 +51,40 @@ import { AVISO } from '@libs/shared/data-access-user/src/tramites/constantes/avi
     ReactiveFormsModule,
     AlertComponent,
     InputCheckComponent,
-    TablaDinamicaComponent,
   ],
   templateUrl: './datos-del-tramite.component.html',
   styleUrls: ['./datos-del-tramite.component.scss'],
 })
 export class DatosDelTramiteComponent implements OnInit, OnDestroy {
 
+  /**
+   * Suscripciones a observables.
+   */
+  private subscriptions: Subscription[] = [];
+
+   /**
+   * Suscripción para obtener el catálogo de aduanas.
+   */
+   getAduanaIngresaraSubscription!: Subscription;
+
+   /**
+    * Suscripción para obtener el catálogo de años.
+    */
+   getAnoSubscription!: Subscription;
+ 
+   /**
+    * Suscripción para obtener el catálogo de condiciones.
+    */
+   getCondicionSubscription!: Subscription;
+ 
+   /**
+    * Suscripción para obtener el catálogo de países.
+    */
+   getPaisSubscription!: Subscription;
 
   TEXTOS = AVISO.Aviso;
 
-  infoAlert:string ='info-alert';
+  infoAlert: string = 'info-alert';
   /**
    * Formulario principal del trámite.
    */
@@ -457,16 +478,6 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Abre el modal para agregar mercancías.
-   */
-  abrirDialogoMercancias(): void {
-    if (this.modalElement) {
-      const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
-      MODAL_INSTANCE.show();
-    }
-  }
-
-  /**
    * Cierra el modal actual.
    */
   cerrarModal(): void {
@@ -478,13 +489,19 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
   /**
    * Abre el modal de confirmación si el formulario es válido.
    */
-  agregarConfirmarModal(): void {
+  modificarConfirmarModal(): void {
     this.cerrarModal();
   }
 
   /**
-   * @method openAgregarModal
-   *  Abre el modal de agregar miembro de la empresa.
+   * @method modifySeleccionada
+   * @description Muestra un modal utilizando la instancia de `Modal` si el elemento del modal está disponible.
+   * 
+   * @example
+   * // Supongamos que `modalElement` está definido:
+   * this.modifySeleccionada();
+   * 
+   * @returns {void} Este método no retorna ningún valor.
    */
   modifySeleccionada(): void {
     if (this.modalElement) {

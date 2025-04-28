@@ -4,7 +4,7 @@ import { SolicitantePageComponent } from './pages/solicitante-page/solicitante-p
 
 export const MODIFICACION_DONACIONES_IMMEX: Routes = [
   {
-    path: 'solicitud',
+    path: 'solicitante',
     component: SolicitantePageComponent,
   },
   {
@@ -15,9 +15,7 @@ export const MODIFICACION_DONACIONES_IMMEX: Routes = [
 ];
 
 @NgModule({
-  imports: [
-    RouterModule.forChild(MODIFICACION_DONACIONES_IMMEX),
-  ],
+  imports: [RouterModule.forChild(MODIFICACION_DONACIONES_IMMEX)],
   exports: [RouterModule],
 })
 export class ModificacionDonacionesImmexRoutingModule {}
