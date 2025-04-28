@@ -10,10 +10,12 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 
 import {
+  AbstractControl,
   FormBuilder,
   FormControl,
   FormGroup,
   ReactiveFormsModule,
+  ValidationErrors,
   Validators,
 } from '@angular/forms';
 
@@ -138,8 +140,8 @@ export class PaisProcendenciaComponent implements OnInit {
 
     this.paisForm = this.fb.group({
       bloque: [this.solicitudState?.bloque],
-      descripcionJustificacion: [this.solicitudState?.descripcionJustificacion, [Validators.required]],
-      observaciones: [this.solicitudState?.observaciones],
+      descripcionJustificacion: [this.solicitudState?.descripcionJustificacion, [Validators.required,PaisProcendenciaComponent.noLeadingSpacesValidator]],
+      observaciones: [this.solicitudState?.observaciones,[PaisProcendenciaComponent.noLeadingSpacesValidator]]
     });
     this.fetchPaisProc();
   }
@@ -194,5 +196,12 @@ export class PaisProcendenciaComponent implements OnInit {
       .subscribe((data) => {
         this.paisProc = data;
       });
+  }
+
+  private static noLeadingSpacesValidator(control: AbstractControl): ValidationErrors | null {
+    if (control.value && control.value.trim() !== control.value) {
+      return { leadingSpaces: true };
+    }
+    return null;
   }
 }

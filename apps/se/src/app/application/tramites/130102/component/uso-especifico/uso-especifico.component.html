@@ -22,6 +22,15 @@
                 </label>
                 <textarea id="descripcionFraccionProsec" class="form-control height" rows="3"
                     formControlName="descripción"></textarea>
+                    <div
+                    *ngIf="
+                      usoEspicificoForm.controls['descripción'].invalid &&
+                      usoEspicificoForm.controls['descripción'].touched
+                    "
+                    class="text-danger"
+                  >
+                    <small *ngIf="usoEspicificoForm.controls['descripción'].errors?.['leadingSpaces']">No se permiten espacios al inicio del campo.</small>
+                  </div>
             </div>
         </div>
          

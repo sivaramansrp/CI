@@ -7,7 +7,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Catalogo } from 'libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, ValidationErrors } from '@angular/forms';
 import { ReactiveFormsModule, Validators } from '@angular/forms';
 import { TableComponent } from 'libs/shared/data-access-user/src/tramites/components/table/table.component';
 import { TituloComponent } from "libs/shared/data-access-user/src/tramites/components/titulo/titulo.component";
@@ -105,7 +105,8 @@ export class UsoEspicificoComponent implements OnInit {
 
     this.usoEspicificoForm = this.formbuilt.group({
       fraccionArancelariaProsec: [ this.solicitudState?.fraccionArancelariaProsec, Validators.required],
-      descripción: ['']
+      descripción: ['',UsoEspicificoComponent.noLeadingSpacesValidator],
+
     });
   }
 
@@ -129,4 +130,12 @@ export class UsoEspicificoComponent implements OnInit {
   obtenerRequisitosFraccionArancelariaEsquema(): void {
     this.usoEspicificoForm.get('descripción')?.setValue('Descripción fraccion PROSEC (Especificar el nombre comercial o técnico del producto en el que se utilizará la mercancía a importar) ');
   }
+
+  private static noLeadingSpacesValidator(control: AbstractControl): ValidationErrors | null {
+    if (control.value && control.value.trim() !== control.value) {
+      return { leadingSpaces: true };
+    }
+    return null;
+  }
+
 }
