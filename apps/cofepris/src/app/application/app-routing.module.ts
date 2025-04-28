@@ -481,6 +481,13 @@ const ROUTES: Routes = [
     import('./tramites/260515/permit-de-substances.module').then(
       (m) => m.PermitDeSubstancesModule
     )
+},
+{
+  path: 'medicamentos-donacion',
+  loadChildren: () =>
+    import('./tramites/260909/medicamentos-donacion.module').then(
+      (m) => m.MedicamentosDonacionModule
+    )
 }
 ];
 
