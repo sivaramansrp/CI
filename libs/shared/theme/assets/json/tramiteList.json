@@ -807,7 +807,7 @@
   {
     "id": 116,
     "tramite": 110212,
-    "linkDashboard": "/agace/validacion-posteriori/solicitante",
+    "linkDashboard": "/pago/validacion-posteriori/solicitante",
     "linkDepartment": "/pago/validacion-posteriori/solicitante",
     "department": "se"
   },
