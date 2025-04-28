@@ -1,9 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 import { Catalogo } from '@ng-mf/data-access-user';
-import { CommonModule } from '@angular/common';
-import { DatosCertificadoDeComponent } from '../../../../shared/components/datos-certificado-de/datos-certificado-de.component';
+import { FormBuilder } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { PeruCertificadoService } from '../../services/peru-certificado.service';
 import { Tramite110205Query } from '../../estados/tramite110205.query';

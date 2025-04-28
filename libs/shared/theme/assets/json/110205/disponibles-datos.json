@@ -6,7 +6,8 @@
       "numeroDeRegistrodeProductos": "254021028845",
       "fechaExpedicion": "2021-11-22",
       "fechaVencimiento": "2041-11-22",
-      "nombreComercial": "Las demás."
+      "nombreComercial": "Las demás.",
+      "criterioParaConferirOrigen":"C"
     },
     {
       "id": 2,
@@ -15,7 +16,8 @@
       "numeroDeRegistrodeProductos": "254021028851",
       "fechaExpedicion": "2021-11-22",
       "fechaVencimiento": "2041-11-22",
-      "nombreComercial": "prueba ACESS ARG."
+      "nombreComercial": "prueba ACESS ARG.",
+      "criterioParaConferirOrigen":"C"
     },
     {
       "id": 3,
@@ -24,7 +26,8 @@
       "numeroDeRegistrodeProductos": "254021028850",
       "fechaExpedicion": "2021-02-23",
       "fechaVencimiento": "2021-02-23",
-      "nombreComercial": "GRASA ANIMAL"
+      "nombreComercial": "GRASA ANIMAL",
+      "criterioParaConferirOrigen":"C"
     },
     {
       "id": 4,
@@ -33,6 +36,7 @@
       "numeroDeRegistrodeProductos": "254021028850",
       "fechaExpedicion": "2021-02-23",
       "fechaVencimiento": "2021-02-23",
-      "nombreComercial": "GRASA ANIMAL"
+      "nombreComercial": "GRASA ANIMAL",
+      "criterioParaConferirOrigen":"C"
     }
 ]

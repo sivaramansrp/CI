@@ -73,6 +73,50 @@ export const MERCANCIA_SELECCIONADAS = [
   }
 ];
 
+export const CARGA_MERCANCIA_SELECCIONADAS = [
+  {
+    encabezado: 'Fracción arancelaria', // Título de la columna
+    clave: (ele: Mercancia): string | undefined => ele.fraccionArancelaria, // Función que devuelve la fracción Naladi
+    orden: 1, // Orden en que se mostrará la columna
+  },
+  {
+    encabezado: 'Cantidad', // Título de la columna
+    clave: (ele: Mercancia): string | undefined => ele.cantidad, // Función que devuelve la fracción Naladi SA93
+    orden: 2, // Orden en que se mostrará la columna
+  },
+  {
+    encabezado: 'Unidad de medida', // Título de la columna
+    clave: (ele: Mercancia): string | undefined => ele.unidadMedidaMasaBruta, // Función que devuelve la fracción Naladi SA96
+    orden: 3, // Orden en que se mostrará la columna
+  },
+  {
+    encabezado: 'Valor mercancía', // Título de la columna
+    clave: (ele: Mercancia): string | undefined => ele.valorMercancia, // Función que devuelve la fracción Naladi SA02
+    orden: 4, // Orden en que se mostrará la columna
+  },
+  {
+    encabezado: 'Tipo de fractura', // Título de la columna
+    clave: (ele: Mercancia): string | undefined => ele.tipoFactura, // Función que devuelve el nombre técnico de la mercancía
+    orden: 5, // Orden en que se mostrará la columna
+  },
+  {
+    encabezado: 'Número factura', // Título de la columna
+    clave: (ele: Mercancia): string | undefined => ele.numeroFactura, // Función que devuelve el nombre comercial de la mercancía
+    orden: 6, // Orden en que se mostrará la columna
+  },
+  {
+    encabezado: 'Complemento descripción', // Título de la columna
+    clave: (ele: Mercancia): string | undefined => ele.complementoDescripcion, // Función que devuelve el nombre comercial de la mercancía
+    orden: 7, // Orden en que se mostrará la columna
+  },
+  {
+    encabezado: 'Fecha factura', // Título de la columna
+    clave: (ele: Mercancia): string | undefined => ele.fechaFinalInput, // Función que devuelve el nombre comercial de la mercancía
+    orden: 8, // Orden en que se mostrará la columna
+  }
+];
+
+
 /**
 * Clave para identificar la entidad federativa.
 * @type {string}

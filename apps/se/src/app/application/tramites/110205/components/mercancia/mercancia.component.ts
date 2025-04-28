@@ -1,9 +1,8 @@
 import { Catalogo, InputFecha, SeccionLibQuery, SeccionLibState, SeccionLibStore } from '@libs/shared/data-access-user/src';
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject, delay, map, of, takeUntil } from 'rxjs';
 import { Tramite110205State, Tramite110205Store } from '../../estados/tramite110205.store';
-import { CommonModule } from '@angular/common';
 import { FECHA } from '../../constantes/peru-certificado.module';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Mercancia } from '../../../../shared/models/modificacion.enum';
@@ -80,7 +79,7 @@ export class MercanciaComponent implements OnInit, OnDestroy {
    * @descripcion
    * Fecha final para el formulario.
    */
-  fechaFinalInput: InputFecha = FECHA;
+  fechaFactura: InputFecha = FECHA;
 
   /**
    * @descripcion
@@ -139,13 +138,13 @@ export class MercanciaComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((state) => {
           this.mercanciaState = state as Tramite110205State;
+          this.initActionFormBuild();
         })
       )
       .subscribe();
 
     this.umcOpcion();
     this.facturasOpcion();
-    this.initActionFormBuild();
   }
 
   /**
@@ -154,15 +153,16 @@ export class MercanciaComponent implements OnInit, OnDestroy {
    */
   initActionFormBuild(): void {
     this.mercanciaForm = this.fb.group({
-      fraccionArancelaria: [this.mercanciaState.fraccionArancelaria],
-      nombreComercialMercancia: [this.mercanciaState.nombreComercialMercancia],
-      nombreTecnico: [this.mercanciaState.nombreTecnico],
-      nombreIngles: [this.mercanciaState.nombreIngles],
-      criterioClasificacion: [this.mercanciaState.criterioClasificacion],
+      fraccionArancelaria: [this.mercanciaState.mercanciaForm['fraccionArancelaria']],
+      nombreComercialMercancia: [{ value: this.mercanciaState.mercanciaForm['nombreComercialMercancia'], disabled: true }],
+      nombreTecnico: [{ value: this.mercanciaState.mercanciaForm['nombreTecnico'], disabled: true }],
+      nombreIngles: [{ value: this.mercanciaState.mercanciaForm['nombreIngles'], disabled: true }],
+      otrasInstancias: [{ value: this.mercanciaState.mercanciaForm['otrasInstancias'], disabled: true }],
+      criterioParaConferirOrigen: [{ value: this.mercanciaState.mercanciaForm['criterioParaConferirOrigen'], disabled: true }],
       cantidad: [this.mercanciaState.cantidad, Validators.required],
       umc: [this.mercanciaState.umc, Validators.required],
       valorMercancia: [this.mercanciaState.valorMercancia, Validators.required],
-      complementoClasificacion: [this.mercanciaState.complementoClasificacion, Validators.required],
+      complementoDescripcion: [this.mercanciaState.complementoDescripcion, Validators.required],
       numeroFactura: [this.mercanciaState.numeroFactura, Validators.required],
       tipoFactura: [this.mercanciaState.tipoFactura, Validators.required],
     });

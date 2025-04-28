@@ -55,14 +55,26 @@
                 'setNombreIngles'
                 )">
             </div>
+
             <div class="col-md-6">
-              <label for="criterioClasificacion">Criterio para clasificación:</label>
-              <input type="text" class="form-control" formControlName="criterioClasificacion"
+              <label for="otrasInstancias">Otras instancias:</label>
+              <input type="text" class="form-control" formControlName="otrasInstancias"
               (change)="
                 setValoresStore(
                 mercanciaForm,
-                'criterioClasificacion',
-                'setCriterioClasificacion'
+                'otrasInstancias',
+                'setOtrasInstancias'
+                )">
+            </div>
+
+            <div class="col-md-6 mt-2">
+              <label for="criterioParaConferirOrigen">Criterio para conferir origen:</label>
+              <input type="text" class="form-control" formControlName="criterioParaConferirOrigen"
+              (change)="
+                setValoresStore(
+                mercanciaForm,
+                'criterioParaConferirOrigen',
+                'setCriterioParaConferirOrigen'
                 )">
             </div>
           </div>
@@ -101,22 +113,22 @@
                 )">
             </div>
             <div class="col-md-6">
-              <label for="complementoClasificacion">Complemento de la clasificación*:</label>
-              <textarea class="mb-4 h-20 w-100 form-control" formControlName="complementoClasificacion" rows="2"
+              <label for="complementoDescripcion">Complemento de la descripción*:</label>
+              <textarea class="mb-4 h-20 w-100 form-control" formControlName="complementoDescripcion" rows="2"
               (change)="
                 setValoresStore(
                 mercanciaForm,
-                'complementoClasificacion',
-                'setComplementoClasificacion'
+                'complementoDescripcion',
+                'setComplementoDescripcion'
                 )"></textarea>
             </div>
           </div>
           <div class="row mb-3">
-            <div class="col-md-3">
-              <input-fecha [datos]="fechaFinalInput" ></input-fecha>
+            <div class="col-md-4">
+              <input-fecha [datos]="fechaFactura"></input-fecha>
             </div>
             <div class="col-md-4">
-              <label for="numeroFactura">N° factura*:</label>
+              <label for="numeroFactura">N° factura / Referencia:</label>
               <input type="text" class="form-control" formControlName="numeroFactura"
               (change)="
                 setValoresStore(

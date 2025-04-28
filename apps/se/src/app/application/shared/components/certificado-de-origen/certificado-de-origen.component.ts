@@ -1,11 +1,12 @@
-import { CONFIGURACION_MERCANCIA, MERCANCIA_SELECCIONADAS } from '../../constantes/modificacion.enum';
-import { Catalogo, CatalogoSelectComponent, InputCheckComponent, InputFecha, InputFechaComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { AlertComponent, Catalogo, CatalogoSelectComponent, InputCheckComponent, InputFecha, InputFechaComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { CARGA_MERCANCIA_SELECCIONADAS, CONFIGURACION_MERCANCIA } from '../../constantes/modificacion.enum';
 import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
 import { ConfiguracionColumna, MenusDesplegables } from '../../models/modificacion.enum';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Mercancia } from '../../models/modificacion.enum';
 import { Subject } from 'rxjs';
+import { TEXTOS_REQUISITOS } from '../../../tramites/110205/constantes/peru-certificado.module';
 
 /**
  * Constante que representa la configuración de la fecha de inicio en el componente de certificado de origen.
@@ -47,7 +48,8 @@ export const FECHA_FINAL = {
     TablaDinamicaComponent,
     InputFechaComponent,
     CatalogoSelectComponent,
-    InputCheckComponent
+    InputCheckComponent,
+    AlertComponent
   ],
   templateUrl: './certificado-de-origen.component.html',
   styleUrl: './certificado-de-origen.component.scss'
@@ -71,6 +73,18 @@ export class CertificadoDeOrigenComponent implements OnDestroy {
    * @type {boolean}
    */
   @Input() tablaSeleccionEvent!: boolean;
+
+  /**
+   * Indica si el componente está configurado para el manejo de carga de mercancías.
+   * @type {boolean}
+   */
+  @Input() cargoDeMercancias!: boolean;
+
+  /**
+   * Indica si hay mercancías disponibles para su procesamiento o visualización.
+   * @type {boolean}
+   */
+  @Input() mercanciasDisponibles!: boolean;
 
   /**
    * Propiedad de entrada que recibe los datos de los tratados/acuerdos.
@@ -140,6 +154,12 @@ export class CertificadoDeOrigenComponent implements OnDestroy {
   public fechaFinalInput: InputFecha = FECHA_FINAL;
 
   /**
+  * Texto que contiene los requisitos y mensajes informativos.
+  * @type {string}
+  */
+  TEXTOS = TEXTOS_REQUISITOS;
+
+  /**
    * Subject para gestionar el ciclo de vida del componente y cancelar las suscripciones.
    * @type {Subject<void>}
    */
@@ -155,7 +175,7 @@ export class CertificadoDeOrigenComponent implements OnDestroy {
    * Configuración de las columnas de la tabla de mercancia seleccionada.
    * @type {ConfiguracionColumna<Mercancia>[]}
    */
-  configuracionTablaMercancia: ConfiguracionColumna<Mercancia>[] = MERCANCIA_SELECCIONADAS;
+  configuracionTablaMercancia: ConfiguracionColumna<Mercancia>[] = CARGA_MERCANCIA_SELECCIONADAS;
 
   /**
    * Datos de la bitácora obtenidos desde el servicio.

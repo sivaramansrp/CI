@@ -45,7 +45,7 @@ export const FECHA = {
    * @descripcion
    * Etiqueta asociada al campo de fecha.
    */
-  labelNombre: 'Fecha de pago',
+  labelNombre: 'Fecha de factura',
 
   /**
    * @descripcion
@@ -57,5 +57,13 @@ export const FECHA = {
    * @descripcion
    * Indica si el campo de fecha está habilitado.
    */
-  habilitado: false,
+  habilitado: true,
 };
+
+/**
+ * Texto que describe los requisitos y proporciona información sobre el número temporal de solicitud.
+ * @type {string}
+ * @constant
+ */
+export const TEXTOS_REQUISITOS =
+  'Para continuar con el trámite, debes agregar por lo menos una mercancía.';

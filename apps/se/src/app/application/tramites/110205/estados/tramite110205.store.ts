@@ -23,11 +23,12 @@ export interface Tramite110205State {
   nombreComercialMercancia: string;
   nombreTecnico: string;
   nombreIngles: string;
-  criterioClasificacion: string;
+  otrasInstancias: string;
+  criterioParaConferirOrigen: string;
   cantidad: string;
   umc: Catalogo[];
   valorMercancia: string;
-  complementoClasificacion: string;
+  complementoDescripcion: string;
   numeroFactura: string;
   tipoFactura: Catalogo[];
   formaValida: { [key: string]: boolean };
@@ -64,12 +65,13 @@ export function createInitialState(): Tramite110205State {
       nombreComercialMercancia: '',
       nombreTecnico: '',
       nombreIngles: '',
-      criterioClasificacion: '',
+      otrasInstancias: '',
+      criterioParaConferirOrigen: '',
       marca: '',
       cantidad: '',
       umc: '',
       valorMercancia: '',
-      complementoClasificacion: '',
+      complementoDescripcion: '',
       masaBruta: '',
       unidadMedidaMasaBruta: '',
       numeroFactura: '',
@@ -102,11 +104,12 @@ export function createInitialState(): Tramite110205State {
     nombreComercialMercancia: '',
     nombreTecnico: '',
     nombreIngles: '',
-    criterioClasificacion: '',
+    otrasInstancias: '',
+    criterioParaConferirOrigen: '',
     cantidad: '',
     umc: [],
     valorMercancia: '',
-    complementoClasificacion: '',
+    complementoDescripcion: '',
     numeroFactura: '',
     tipoFactura: [],
     formExportor: {
@@ -381,16 +384,28 @@ export class Tramite110205Store extends Store<Tramite110205State> {
             nombreIngles
         }))
       }
+      
+      /**
+       * @descripcion
+       * Actualiza el valor de `otrasInstancias` en el almacén.
+       * @param otrasInstancias - Cadena que representa el nuevo valor de `otrasInstancias`.
+       */
+      setOtrasInstancias(otrasInstancias: string): void {
+        this.update((state) => ({
+            ...state,
+            otrasInstancias
+        }))
+      }
 
       /**
        * @descripcion
-       * Actualiza el número de criterioClasificacion en el almacén.
-       * @param telfono - Cadena que representa el número de criterioClasificacion a actualizar.
+       * Actualiza el número de criterioParaConferirOrigen en el almacén.
+       * @param telfono - Cadena que representa el número de criterioParaConferirOrigen a actualizar.
        */
-      setCriterioClasificacion(criterioClasificacion: string): void {
+      setCriterioParaConferirOrigen(criterioParaConferirOrigen: string): void {
         this.update((state) => ({
             ...state,
-            criterioClasificacion,
+            criterioParaConferirOrigen,
         }))
       }
 
@@ -432,13 +447,13 @@ export class Tramite110205Store extends Store<Tramite110205State> {
 
       /**
        * @descripcion
-       * Actualiza el número de complementoClasificacion en el almacén.
-       * @param telfono - Cadena que representa el número de complementoClasificacion a actualizar.
+       * Actualiza el número de complementoDescripcion en el almacén.
+       * @param telfono - Cadena que representa el número de complementoDescripcion a actualizar.
        */
-      setComplementoClasificacion(complementoClasificacion: string): void {
+      setComplementoDescripcion(complementoDescripcion: string): void {
         this.update((state) => ({
             ...state,
-            complementoClasificacion,
+            complementoDescripcion,
         }))
       }
 

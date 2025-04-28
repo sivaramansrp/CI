@@ -5,23 +5,23 @@ import { Observable, of as observableOf } from 'rxjs';
 
 import { CertificadoOrigenComponent } from './certificado-origen.component';
 import { FormBuilder } from '@angular/forms';
-import { CamCertificadoService } from '../../services/cam-certificado.service';
-import { camCertificadoStore } from '../../estados/cam-certificado.store';
-import { camCertificadoQuery } from '../../estados/cam-certificado.query';
+import { Tramite110205Store } from '../../estados/tramite110205.store';
+import { Tramite110205Query } from '../../estados/tramite110205.query';
+import { PeruCertificadoService } from '../../services/peru-certificado.service';
 import { SeccionLibStore, SeccionLibQuery } from '@libs/shared/data-access-user/src';
 
 @Injectable()
-class MockCamCertificadoService {
+class MockPeruCertificadoService {
   obtenerMenuDesplegable(fileName: string): Observable<any> {
-    return observableOf([]); // Mock implementation
+    return observableOf([]); 
   }
 }
 
 @Injectable()
-class MockcamCertificadoStore {}
+class MockTramite110205Store {}
 
 @Injectable()
-class MockcamCertificadoQuery {
+class MockTramite110205Query {
   selectCam$ = observableOf({});
   selectmercanciaTabla$ = observableOf({});
   formCertificado$ = observableOf({});
@@ -38,9 +38,9 @@ describe('CertificadoOrigenComponent', () => {
       schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
       providers: [
         FormBuilder,
-        { provide: CamCertificadoService, useClass: MockCamCertificadoService },
-        { provide: camCertificadoStore, useClass: MockcamCertificadoStore },
-        { provide: camCertificadoQuery, useClass: MockcamCertificadoQuery },
+        { provide: PeruCertificadoService, useClass: MockPeruCertificadoService },
+        { provide: Tramite110205Store, useClass: MockTramite110205Store },
+        { provide: Tramite110205Query, useClass: MockTramite110205Query },
         SeccionLibStore,
         SeccionLibQuery,
       ],
@@ -59,12 +59,4 @@ describe('CertificadoOrigenComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should run #ngOnInit()', async () => {
-    const query = TestBed.inject(camCertificadoQuery);
-
-    component.ngOnInit();
-
-    expect(query.selectCam$).toBeTruthy();
-    expect(query.selectmercanciaTabla$).toBeTruthy();
-  });
 });

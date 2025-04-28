@@ -17,6 +17,7 @@ export interface Mercancia {
   numeroFactura?: string;
   unidadMedidaMasaBruta?: string;
   complementoClasificacion?: string;
+  complementoDescripcion?: string;
 }
 
 export interface ConfiguracionColumna<T> {

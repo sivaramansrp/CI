@@ -60,7 +60,19 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
    * @descripcion
    * Evento para indicar si se seleccionó una fila en la tabla.
    */
-  tablaSeleccionEvent: boolean = false;
+  tablaSeleccionEvent: boolean = true;
+
+  /**
+   * @descripcion
+   * Indica si el campo de mercancías está activo.
+   */
+  cargoDeMercancias: boolean = true;
+
+  /**
+   * @descripcion
+   * Indica si hay mercancías disponibles.
+   */
+  mercanciasDisponibles: boolean = true;
 
   /**
    * @descripcion
