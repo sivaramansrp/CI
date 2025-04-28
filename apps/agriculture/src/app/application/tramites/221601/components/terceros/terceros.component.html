@@ -35,7 +35,7 @@
   <form [formGroup]="tipoPersonaForm" class="form">
   <ng-titulo titulo="Agregar destinatario (destino final)" />
   <div class="row mb-3">
-    <div class="col-md-6s">
+    <div class="col-md-6">
       <label class="form-label" for="tipoPersona">Tipo persona*:</label>
     </div>
   </div>
@@ -156,14 +156,7 @@
         <input class="form-control" id="codigo" type="number" formControlName="codigo"           
           (change)="setValoresStore(datosPersonales,'codigo', 'setCodigo')" />
       </div>
-      @if(datosPersonales.controls['codigo'].invalid && datosPersonales.controls['codigo'].touched) {
-        <div class="d-grid">
-          @if(datosPersonales.controls['codigo'].errors?.['required']) {
-            <span class="mensaje-error">Este campo es obligatorio</span>
-          }
-        </div>
-      }
-    </div>
+         </div>
     <div class="col-md-4">
       <div class="form-group"> 
         <app-catalogo-select [catalogo]="estadoCatalogo" formControlName="estado" [label]="'Estado'" [isDisabled]="showPlantaRow"
@@ -239,13 +232,7 @@
       <input class="form-control" id="lada" type="number" formControlName="lada"        
         (change)="setValoresStore(datosPersonales,'lada', 'setLada')" />
     </div>
-    @if(datosPersonales.controls['lada'].invalid && datosPersonales.controls['lada'].touched) {
-      <div class="d-grid">
-        @if(datosPersonales.controls['lada'].errors?.['required']) {
-          <span class="mensaje-error">Este campo es obligatorio</span>
-        }
-      </div>
-    }
+  
   </div>
     <div class="col-md-3 mb-3">
       <div class="form-group">
@@ -253,13 +240,7 @@
       <input class="form-control" id="telefono" type="number" formControlName="telefono"        
         (change)="setValoresStore(datosPersonales,'telefono', 'setTelefono')" />
     </div>
-    @if(datosPersonales.controls['telefono'].invalid && datosPersonales.controls['telefono'].touched) {
-      <div class="d-grid">
-        @if(datosPersonales.controls['telefono'].errors?.['required']) {
-          <span class="mensaje-error">Este campo es obligatorio</span>
-        }
-      </div>
-    }
+   
     </div>
     <div class="col-md-4 mb-3">
       <label class="form-label" for="correoElectronico">Correo electrónico:</label>

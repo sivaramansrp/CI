@@ -181,7 +181,16 @@ export class TercerosComponent implements OnInit, OnDestroy {
    * 
    * Inicializa el formulario reactivo con los valores actuales de la solicitud.
    */
-    ngOnInit(): void {
+  ngOnInit(): void {
+    this.inicializarFormulario();
+  }
+   /**
+   * Inicializa el formulario reactivo con los valores actuales de la solicitud.
+   * 
+   * Configura el formulario para gestionar los campos relacionados con el pago de derechos, como clave, 
+   * dependencia, banco, llave, fecha e importe. También asigna valores predeterminados a algunos campos.
+   */
+  private inicializarFormulario(): void {
      this.tramite221601Query.selectSolicitud$
           .pipe(
             takeUntil(this.destroyNotifier$),

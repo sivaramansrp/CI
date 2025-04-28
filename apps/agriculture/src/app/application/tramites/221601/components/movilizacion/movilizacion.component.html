@@ -7,14 +7,7 @@
         <input class="form-control" id="coordenadas" formControlName="coordenadas" type="number"
           (change)="setValoresStore(MedioForm, 'coordenadas', 'setCoordenadas')" />
       </div>
-      @if(MedioForm.controls['coordenadas'].invalid && MedioForm.controls['coordenadas'].touched) {
-        <div class="d-grid">
-          @if(MedioForm.controls['coordenadas'].errors?.['required']) {
-            <span class="mensaje-error">Este campo es obligatorio</span>
-          }
-        </div>
-      }
-      </div>
+          </div>
     </div>  
     <ng-titulo titulo="Medio de transporte" />    
     <div class="row">
@@ -31,14 +24,7 @@
           <input class="form-control" id="transporte" formControlName="transporte" type="number"
             (change)="setValoresStore(MedioForm, 'transporte', 'setTransporte')" />
         </div>
-        @if(MedioForm.controls['transporte'].invalid && MedioForm.controls['transporte'].touched) {
-          <div class="d-grid">
-            @if(MedioForm.controls['transporte'].errors?.['required']) {
-              <span class="mensaje-error">Este campo es obligatorio</span>
-            }
           </div>
-        }
-      </div>
     </div>   
     <div class="row">
       <div class="col-md-8">

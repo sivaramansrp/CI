@@ -2247,13 +2247,6 @@
     "department": "agricultura"
   },
   {
-    "id": 322,
-    "tramite": 221601,
-    "linkDashboard": "agriculture/inspeccion-fisica/pantallas",
-    "linkDepartment": "paso/inspeccion-fisica/pantallas",
-    "department": "agricultura"
-  },
-  {
     "id": 323,
     "tramite": 110205,
     "linkDashboard": "",

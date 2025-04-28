@@ -130,10 +130,10 @@ export class MovilizacionComponent implements OnInit, OnDestroy {
 
     this.MedioForm = this.fb.group({
       medio: [this.solicitudState.medio, Validators.required],
-      transporte: [this.solicitudState.transporte, Validators.required],
+      transporte: [this.solicitudState.transporte],
       verificacion: [this.solicitudState.verificacion, Validators.required],
       empresa: [this.solicitudState.empresa, Validators.required],
-      coordenadas:[this.solicitudState.coordenadas, Validators.required]
+      coordenadas:[this.solicitudState.coordenadas]
     });
 
     this.MedioForm.get('empresa')?.setValue(realizar.formData.empresa);
