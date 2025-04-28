@@ -28,15 +28,9 @@
 
     <ng-container>
       @switch (indice) { @case (1) {
-      <solicitante (continuarEvento)="continuar()"></solicitante>
-      <btn-continuar
-        [datos]="datosPasos"
-        (continuarEvento)="getValorIndice($event)"
-      ></btn-continuar>
+      <solicitante></solicitante>
       } @case (2) {
-      <app-datos-del-tramite
-        (continuarEvento)="continuar()"
-      ></app-datos-del-tramite>
+      <app-datos-del-tramite></app-datos-del-tramite>
       }}
     </ng-container>
   </div>

@@ -1,19 +1,10 @@
-import {
-  CatalogoSelectComponent,
-  CatalogosSelect,
-  ConfiguracionColumna,
-  InputRadioComponent,
-  TablaDinamicaComponent,
-  TablaSeleccion,
-  TituloComponent,
-  ValidacionesFormularioService,
-} from '@ng-mf/data-access-user';
+import { CommonModule } from '@angular/common';
 import {
   Component,
-  EventEmitter,
+  ElementRef,
   OnDestroy,
   OnInit,
-  Output,
+  ViewChild,
 } from '@angular/core';
 import {
   FormBuilder,
@@ -22,354 +13,427 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { ReplaySubject, takeUntil } from 'rxjs';
-import { Catalogo } from '@libs/shared/data-access-user/src/core/models/40102/transportista-terrestre.model';
-import { CommonModule } from '@angular/common';
-import { DATOS_DEL_TRAMITE } from '../../constants/modificacion-donaciones-immex.enum';
-import { DetallesDelMercancia } from '@libs/shared/data-access-user/src/core/models/11105/detalles-del-merchancia.model';
+import { Modal } from 'bootstrap';
+import { map, merge, Subject, takeUntil } from 'rxjs';
+import {
+  AlertComponent,
+  CatalogoSelectComponent,
+  InputCheckComponent,
+  REGEX_POSTAL,
+  REGEX_TELEFONO_DIGITOS,
+  TablaDinamicaComponent,
+  TableComponent,
+  TituloComponent,
+  ValidacionesFormularioService,
+} from '@libs/shared/data-access-user/src';
+import mercanciaTable from 'libs/shared/theme/assets/json/11102/mercancia-table.json';
+import { DatosDelMercancia } from '../../models/modificacion-donaciones-immex.model';
 import { ModificacionDonacionesImmexService } from '../../services/modificacion-donaciones-immex.service';
+import {
+  Catalogo,
+  Solicitud11102State,
+  Tramite11102Store,
+} from '../../estados/tramite11102.store';
+import { Tramite11102Query } from '../../estados/tramite11102.query';
+import { AVISO } from '@libs/shared/data-access-user/src/tramites/constantes/aviso-privacidad.enum';
+
 
 /**
- * Texto de adjuntar para terceros.
- */
-const TERCEROS_TEXTO_DE_ADJUNTAR =
-  'Debes capturar la descripción de la mercancía en los mismos términos de la carta de donación';
-
-/**
- * Componente que representa los datos generales de la solicitud.
+ * Componente que representa la funcionalidad de datos del trámite.
  */
 @Component({
   selector: 'app-datos-del-tramite',
-  templateUrl: './datos-del-tramite.component.html',
-  styleUrls: ['./datos-del-tramite.component.scss'],
   standalone: true,
   imports: [
     CommonModule,
-    CatalogoSelectComponent,
+    TableComponent,
     TituloComponent,
-    InputRadioComponent,
+    CatalogoSelectComponent,
     FormsModule,
     ReactiveFormsModule,
+    AlertComponent,
+    InputCheckComponent,
     TablaDinamicaComponent,
   ],
+  templateUrl: './datos-del-tramite.component.html',
+  styleUrls: ['./datos-del-tramite.component.scss'],
 })
 export class DatosDelTramiteComponent implements OnInit, OnDestroy {
-  /**
-   * Evento de salida que emite un valor de tipo cadena.
-   * Este evento se utiliza para notificar cuando se debe continuar con una acción específica.
-   */
-  @Output() continuarEvento = new EventEmitter<string>();
 
-  /**
-   * Subject para manejar la destrucción del componente.
-   */
-  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
-  /**
-   * Configuración de la tabla de selección.
-   */
-  TablaSeleccion = TablaSeleccion;
+  TEXTOS = AVISO.Aviso;
 
+  infoAlert:string ='info-alert';
   /**
-   * Texto de adjuntar para terceros.
-   */
-  TEXTO_DE_ADJUNTAR: string = TERCEROS_TEXTO_DE_ADJUNTAR;
-
-  /**
-   * Indica si la tabla debe mostrarse.
-   */
-  mostrarTabla = true;
-
-  /**
-   * Indica si el popup está abierto.
-   */
-  isPopupOpen = false;
-
-  /**
-   * Indica si el popup está cerrado.
-   */
-  isPopupClose = true;
-
-  /**
-   * Lista de fines elegidos.
-   */
-  finesElegidos: string[] = [];
-
-  /**
-   * Lista de fines seleccionados.
-   */
-  elegidosSeleccionados: string[] = [];
-
-  /**
-   * Catálogo de aduanas.
-   */
-  public aduana: CatalogosSelect = {
-    labelNombre: 'Aduana por la que ingresará la mercancía',
-    required: false,
-    primerOpcion: 'Seleccione un Valor',
-    catalogos: [],
-  };
-
-  /**
-   * Catálogo del propósito de la mercancía.
-   */
-  public propositoDeLaMercancia: CatalogosSelect = {
-    labelNombre:
-      DATOS_DEL_TRAMITE.PROPOSITO_DE_LA_MERCANCIA_LABEL_NOMBRE,
-    required: false,
-    primerOpcion: DATOS_DEL_TRAMITE.PRIMAR_OPCION,
-    catalogos: [],
-  };
-
-  /**
-   * Configuración de la tabla.
-   */
-  configuracionTabla: ConfiguracionColumna<DetallesDelMercancia>[] = [
-    {
-      encabezado: DATOS_DEL_TRAMITE.ADUANA_LABEL_NOMBRE,
-      clave: (item: DetallesDelMercancia) => item.tipoDeMercancia,
-      orden: 1,
-    },
-    {
-      encabezado: DATOS_DEL_TRAMITE.CANTIDAD,
-      clave: (item: DetallesDelMercancia) => item.cantidad,
-      orden: 2,
-    },
-    {
-      encabezado:
-        DATOS_DEL_TRAMITE.UNIDAD_DE_MEDIDA_DE_COMERCIALIZACION,
-      clave: (item: DetallesDelMercancia) => item.unidadDeMedida,
-      orden: 3,
-    },
-    {
-      encabezado:
-        DATOS_DEL_TRAMITE.ANO_DE_IMPORTACION_TEMPORAL,
-      clave: (item: DetallesDelMercancia) => item.anoDeImportacionTemporal,
-      orden: 4,
-    },
-    {
-      encabezado: DATOS_DEL_TRAMITE.MODEL,
-      clave: (item: DetallesDelMercancia) => item.modelo,
-      orden: 5,
-    },
-    {
-      encabezado: DATOS_DEL_TRAMITE.MARCA,
-      clave: (item: DetallesDelMercancia) => item.marca,
-      orden: 6,
-    },
-    {
-      encabezado: DATOS_DEL_TRAMITE.NUMBERO_DE_SERIE,
-      clave: (item: DetallesDelMercancia) => item.numeroDeSerie,
-      orden: 7,
-    },
-  ];
-
-  /**
-   * Formulario de trámite.
+   * Formulario principal del trámite.
    */
   tramiteForm!: FormGroup;
 
   /**
-   * Valor seleccionado del radio.
+   * Formulario para agregar mercancías.
    */
-  valorSeleccionado!: string;
+  agregarMercanciasForm!: FormGroup;
 
   /**
-   * Datos configurados para la tabla.
+   * Sujeto para manejar la destrucción de observables.
    */
-  configuracionTablaDatos: DetallesDelMercancia[] = [];
+  private destroyNotifier$: Subject<void> = new Subject();
 
   /**
-   * Opciones para el radio button.
+   * Estado actual de la solicitud.
    */
-  radioOpcions = [
-    { label: 'Sí', value: 'sí' },
-    { label: 'No', value: 'no' },
-  ];
+  public solicitudState!: Solicitud11102State;
 
   /**
-   * Constructor de la clase.
-   * @param retiradaDeLaAutorizacionDeDonacionesService Servicio para manejar datos relacionados con la autorización de donaciones.
-   * @param formBuilder FormBuilder para construir formularios reactivos.
-   * @param validacionesService Servicio para manejar validaciones de formularios.
+   * Encabezado de la tabla de mercancías.
    */
+  public mercanciaHeaderData: string[] = [];
+
+  /**
+   * Cuerpo de la tabla de mercancías.
+   */
+  public mercanciaBodyData: unknown = [];
+
+  /**
+   * Datos de la tabla de mercancías.
+   */
+  public getMercanciaTableData = mercanciaTable;
+
+  /**
+   * Catálogos seleccionados.
+   * @type {Catalogo[]}
+   */
+  fechasSeleccionadas: Catalogo[] = [];
+
+  /**
+   * Lista de tipos de mercancía disponibles.
+   * @type {Catalogo[]}
+   */
+  tipoDeMercancia!: Catalogo[];
+
+  /**
+   * Lista de condiciones de mercancía disponibles.
+   * @type {Catalogo[]}
+   */
+  condicionMercancia!: Catalogo[];
+
+  /**
+   * Lista de unidades de medida disponibles.
+   * @type {Catalogo[]}
+   */
+  unidadMedida!: Catalogo[];
+
+  /**
+   * Lista de años disponibles.
+   * @type {Catalogo[]}
+   */
+  ano!: Catalogo[];
+
+  /**
+   * Lista de países disponibles.
+   * @type {Catalogo[]}
+   */
+  pais!: Catalogo[];
+
+  /**
+   * Lista de aduanas disponibles.
+   * @type {Catalogo[]}
+   */
+  aduana!: Catalogo[];
+
+  /**
+   * Referencia al elemento del modal para agregar mercancías.
+   */
+  @ViewChild('modalAgregarMercancias') modalElement!: ElementRef;
+
+  /**
+   * Referencia al modal de confirmación.
+   */
+  @ViewChild('confirmarModal') confirmarModalElement!: ElementRef;
+
+  /**
+   * Referencia al botón para cerrar el modal.
+   */
+  @ViewChild('closeModal') closeModal!: ElementRef;
+
+  /**
+   * Referencia al botón para cerrar el modal de confirmación.
+   */
+  @ViewChild('closeConfirmarModal') closeConfirmarModal!: ElementRef;
+
+  /**
+   * Datos de las mercancías.
+   */
+  public datosDelMercancia: DatosDelMercancia[] = [];
+
   constructor(
     private modificacionDonacionesImmexService: ModificacionDonacionesImmexService,
+    private store: Tramite11102Store,
+    private query: Tramite11102Query,
     public formBuilder: FormBuilder,
     private validacionesService: ValidacionesFormularioService
-  ) {
-    // El constructor se utiliza para la inyección de dependencias.
-  }
+  ) {}
 
   /**
    * Método de inicialización del componente.
    */
   ngOnInit(): void {
+    this.inicializaCatalogos();
+
+    this.query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+        })
+      )
+      .subscribe();
     this.donanteDomicilio();
-    this.buscarAduanaDatos();
-    this.buscarpropositoDeLaMercanciaDatos();
-    this.buscarDetallesDelMercanciaDatos();
+    this.obtenerMercancia();
   }
 
   /**
-   * Busca los datos de la aduana.
+   * Inicializa los catálogos necesarios para el formulario.
    */
-  buscarAduanaDatos(): void {
-    this.modificacionDonacionesImmexService
-      .getAduanaIngresara()
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((response) => {
-        this.aduana.catalogos = response as Catalogo[];
-      });
+  private inicializaCatalogos(): void {
+    const ADUANA$ = this.modificacionDonacionesImmexService.getAduana().pipe(
+      map((resp) => {
+        this.aduana = resp.data;
+      })
+    );
+
+    const TIPO_DE_MERCANCIA$ = this.modificacionDonacionesImmexService
+      .getTipoDeMercancia()
+      .pipe(
+        map((resp) => {
+          this.tipoDeMercancia = resp.data;
+        })
+      );
+
+    const CONDICION_MERCANCIA$ = this.modificacionDonacionesImmexService
+      .getCondicionMercancia()
+      .pipe(
+        map((resp) => {
+          this.condicionMercancia = resp.data;
+        })
+      );
+
+    const UNIDAD_MEDIDA$ = this.modificacionDonacionesImmexService
+      .getUnidadMedida()
+      .pipe(
+        map((resp) => {
+          this.unidadMedida = resp.data;
+        })
+      );
+
+    const ANO$ = this.modificacionDonacionesImmexService.getAno().pipe(
+      map((resp) => {
+        this.ano = resp.data;
+      })
+    );
+
+    const PAIS$ = this.modificacionDonacionesImmexService.getPais().pipe(
+      map((resp) => {
+        this.pais = resp.data;
+      })
+    );
+
+    merge(
+      ADUANA$,
+      TIPO_DE_MERCANCIA$,
+      CONDICION_MERCANCIA$,
+      UNIDAD_MEDIDA$,
+      ANO$,
+      PAIS$
+    )
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe();
   }
 
   /**
-   * Busca los datos del propósito de la mercancía.
-   */
-  buscarpropositoDeLaMercanciaDatos(): void {
-    this.modificacionDonacionesImmexService
-      .getAduanaIngresara()
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((response) => {
-        this.propositoDeLaMercancia.catalogos = response as Catalogo[];
-      });
-  }
-
-  /**
-   * Busca los detalles de la mercancía.
-   */
-  buscarDetallesDelMercanciaDatos(): void {
-    this.modificacionDonacionesImmexService
-      .getDetallesDelMercanciaDatos()
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((datos: DetallesDelMercancia) => {
-        this.configuracionTablaDatos = [datos];
-      });
-  }
-
-  /**
-   * Cambia el valor seleccionado del radio button.
-   * @param value Valor seleccionado.
-   */
-  cambiarRadio(value: string | number): void {
-    this.valorSeleccionado = value as string;
-  }
-
-  /**
-   * Abre el popup.
-   */
-  openPopup(): void {
-    this.isPopupOpen = true;
-  }
-
-  /**
-   * Cierra el popup.
-   */
-  closePopup(): void {
-    this.isPopupOpen = false;
-    this.isPopupClose = false;
-  }
-
-  /**
-   * Muestra la siguiente tabla.
-   */
-  nextTabla(): void {
-    this.mostrarTabla = false;
-  }
-
-  /**
-   * Valida si un campo del formulario es válido.
-   * @param form Formulario reactivo.
-   * @param field Nombre del campo.
-   * @returns `true` si el campo es válido, de lo contrario `false`.
-   */
-  isValid(form: FormGroup, field: string): boolean {
-    return this.validacionesService.isValid(form, field) || false;
-  }
-
-  /**
-   * Obtiene el grupo de formulario de importador/exportador.
-   */
-  get retiradaDeDonaciones(): FormGroup {
-    return this.tramiteForm.get('retiradaDeDonaciones') as FormGroup;
-  }
-
-  /**
-   * Inicializa el formulario de donante y domicilio con los valores del estado de la solicitud.
+   * Inicializa el formulario de donante y domicilio.
    */
   donanteDomicilio(): void {
     this.tramiteForm = this.formBuilder.group({
-      retiradaDeDonaciones: this.formBuilder.group({
-        aduana: [{ value: '', disabled: false }, [Validators.required]],
-        finAlCualdesinaralaMercancía: [{ value: '', disabled: false }, [Validators.required]],
-        nombre: [
-          { value: '', disabled: true },
-          [Validators.required, Validators.maxLength(50)],
-        ],
-        tipoMercancia: [
-          { value: '', disabled: true },
-          [Validators.required, Validators.maxLength(100)],
+      modificacionDonacionesImmex: this.formBuilder.group({
+        aduana: [this.solicitudState?.aduana, [Validators.required]],
+        organismoPublico: [
+          { value: true, disabled: true },
+          [this.solicitudState?.organismoPublico],
         ],
         usoEspecifico: [
-          { value: '', disabled: true },
+          this.solicitudState?.usoEspecifico,
           [Validators.required, Validators.maxLength(512)],
         ],
-        condicion: [{ value: '', disabled: true }, Validators.required],
-        marca: [
-          { value: '', disabled: true },
-          [Validators.required, Validators.maxLength(50)],
+        pais: [this.solicitudState?.pais, Validators.required],
+        rfc: [this.solicitudState?.rfc, Validators.required],
+        numeroProgramaImmex: [
+          this.solicitudState?.numeroProgramaImmex,
+          Validators.required,
         ],
-        ano: [{ value: '', disabled: true }, [Validators.required]],
-        modelo: [
+        razonSocial: [
           { value: '', disabled: true },
-          [Validators.required, Validators.maxLength(50)],
+          [this.solicitudState?.razonSocial, Validators.required],
         ],
-        serie: [
-          { value: '', disabled: true },
-          [Validators.required, Validators.maxLength(50)],
+        correoElectronicoOpcional: [
+          this.solicitudState?.correoElectronicoOpcional,
+          [Validators.required, Validators.email, Validators.maxLength(50)],
         ],
-        manifesto: [{ value: '', disabled: true }, Validators.required],
+        telefonoOpcional: [
+          this.solicitudState?.telefonoOpcional,
+          [Validators.required, Validators.maxLength(30)],
+        ],
         calle: [
           { value: '', disabled: true },
-          [Validators.required, Validators.maxLength(100)],
+          this.solicitudState?.calle,
+          [Validators.required, Validators.maxLength(80)],
         ],
         numeroExterior: [
           { value: '', disabled: true },
-          [Validators.required, Validators.maxLength(10)],
+          this.solicitudState?.numeroExterior,
+          [Validators.required, Validators.maxLength(40)],
         ],
         numeroInterior: [
           { value: '', disabled: true },
-          [Validators.maxLength(10)],
+          this.solicitudState?.numeroInterior,
+          [Validators.maxLength(30)],
         ],
         telefono: [
           { value: '', disabled: true },
-          [Validators.required, Validators.pattern(/^\d{10}$/)],
+          this.solicitudState?.telefono,
+          [Validators.required, Validators.pattern(REGEX_TELEFONO_DIGITOS)],
         ],
         correoElectronico: [
           { value: '', disabled: true },
-          [Validators.required, Validators.email],
+          this.solicitudState?.correoElectronico,
+          [Validators.required, Validators.email, Validators.maxLength(50)],
         ],
-        pais: [{ value: '', disabled: true }, Validators.required],
         codigoPostal: [
           { value: '', disabled: true },
-          [Validators.required, Validators.pattern(/^\d{5}$/)],
+          this.solicitudState?.codigoPostal,
+          [
+            Validators.required,
+            Validators.pattern(REGEX_POSTAL),
+            Validators.maxLength(8),
+          ],
         ],
         estado: [
           { value: '', disabled: true },
-          [Validators.required, Validators.maxLength(50)],
+          this.solicitudState?.estado,
+          [Validators.required, Validators.maxLength(80)],
         ],
         colonia: [
           { value: '', disabled: true },
+          this.solicitudState?.colonia,
           [Validators.required, Validators.maxLength(50)],
         ],
-        opcion: [{ value: 'false' }, Validators.maxLength(50)],
+      }),
+    });
+
+    this.agregarMercanciasForm = this.formBuilder.group({
+      datosMercancia: this.formBuilder.group({
+        tipoDeMercancia: [
+          this.solicitudState?.tipoDeMercancia,
+          Validators.required,
+        ],
+        condicionMercancia: [
+          this.solicitudState?.condicionMercancia,
+          Validators.required,
+        ],
+        unidadMedida: [this.solicitudState?.unidadMedida, Validators.required],
+        ano: [this.solicitudState?.ano, Validators.required],
+        cantidad: [this.solicitudState?.ano, Validators.required],
+        marca: [this.solicitudState?.ano],
+        modelo: [this.solicitudState?.ano],
+        serie: [this.solicitudState?.ano],
       }),
     });
   }
 
   /**
-   * Valida el formulario del destinatario.
-   * Si el formulario es inválido, marca todos los campos como tocados.
+   * Obtiene el grupo de formulario de exención de impuestos.
+   */
+  get modificacionDonacionesImmex(): FormGroup {
+    return this.tramiteForm.get('modificacionDonacionesImmex') as FormGroup;
+  }
+
+  /**
+   * Obtiene el grupo de formulario de datos de mercancía.
+   */
+  get datosMercancia(): FormGroup {
+    return this.tramiteForm.get('datosMercancia') as FormGroup;
+  }
+
+  /**
+   * Maneja la selección de aduana.
+   */
+  aduanaSeleccion(): void {
+    const ADUANA = this.tramiteForm.get(
+      'modificacionDonacionesImmex.aduana'
+    )?.value;
+    this.store.setAduana(ADUANA);
+  }
+
+  /**
+   * Maneja la selección del tipo de mercancía.
+   */
+  tipoDeMercanciaSeleccion(): void {
+    const TIPO_DE_MERCANCIA = this.agregarMercanciasForm.get(
+      'datosMercancia.tipoDeMercancia'
+    )?.value;
+    this.store.setTipoDeMercancia(TIPO_DE_MERCANCIA);
+  }
+
+  /**
+   * Maneja la selección de la condición de mercancía.
+   */
+  condicionMercanciaSeleccion(): void {
+    const CONDICION_MERCANCIA = this.agregarMercanciasForm.get(
+      'datosMercancia.condicionMercancia'
+    )?.value;
+    this.store.setCondicionMercancia(CONDICION_MERCANCIA);
+  }
+
+  /**
+   * Maneja la selección de la unidad de medida.
+   */
+  unidadMedidaSeleccion(): void {
+    const UNIDAD_MEDIDA = this.agregarMercanciasForm.get(
+      'datosMercancia.unidadMedida'
+    )?.value;
+    this.store.setUnidadMedida(UNIDAD_MEDIDA);
+  }
+
+  /**
+   * Maneja la selección del año.
+   */
+  anoSeleccion(): void {
+    const ANO = this.agregarMercanciasForm.get('datosMercancia.ano')?.value;
+    this.store.setAno(ANO);
+  }
+
+  /**
+   * Maneja la selección del país.
+   */
+  paisSeleccion(): void {
+    const PAIS = this.tramiteForm.get(
+      'modificacionDonacionesImmex.pais'
+    )?.value;
+    this.store.setPais(PAIS);
+  }
+
+  /**
+   * Actualiza el indicador de aviso de funcionamiento en el Store.
+   * @param evento - Evento que contiene el valor del indicador.
+   */
+  organismoPublico(): void {
+    const ORGANISMOPUBLICO = this.tramiteForm.get(
+      'modificacionDonacionesImmex.organismoPublico'
+    )?.value;
+    this.store.setOrganismoPublico(ORGANISMOPUBLICO);
+  }
+  /**
+   * Valida el formulario de destinatario.
    */
   validarDestinatarioFormulario(): void {
     if (this.tramiteForm.invalid) {
@@ -378,18 +442,73 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Método que se ejecuta al destruir el componente.
+   * Establece valores en el store del trámite.
+   * @param form Formulario del cual se obtiene el valor.
+   * @param campo Nombre del campo del formulario.
+   * @param metodoNombre Nombre del método en el store.
    */
-  ngOnDestroy(): void {
-    this.destroyed$.next(true);
-    this.destroyed$.complete();
+  setValoresStore(
+    form: FormGroup,
+    campo: string,
+    metodoNombre: keyof Tramite11102Store
+  ): void {
+    const VALOR = form.get(campo)?.value;
+    (this.store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
 
   /**
-   * Método que emite un evento para continuar con el flujo de la solicitud.
-   * Este evento no envía ningún dato adicional, solo notifica que se debe proceder.
+   * Abre el modal para agregar mercancías.
    */
-  continuar(): void {
-    this.continuarEvento.emit('');
+  abrirDialogoMercancias(): void {
+    if (this.modalElement) {
+      const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
+      MODAL_INSTANCE.show();
+    }
+  }
+
+  /**
+   * Cierra el modal actual.
+   */
+  cerrarModal(): void {
+    if (this.closeModal) {
+      this.closeModal.nativeElement.click();
+    }
+  }
+
+  /**
+   * Abre el modal de confirmación si el formulario es válido.
+   */
+  agregarConfirmarModal(): void {
+    this.cerrarModal();
+  }
+
+  /**
+   * @method openAgregarModal
+   *  Abre el modal de agregar miembro de la empresa.
+   */
+  modifySeleccionada(): void {
+    if (this.modalElement) {
+      const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
+      MODAL_INSTANCE.show();
+    }
+  }
+
+  /**
+   * Obtiene los datos de mercancías.
+   */
+  public obtenerMercancia(): void {
+    this.mercanciaHeaderData =
+      this.getMercanciaTableData?.mercanciaTable?.tableHeader;
+    this.mercanciaBodyData =
+      this.getMercanciaTableData?.mercanciaTable?.tableBody;
+  }
+
+  /**
+   * Método que se ejecuta al destruir el componente.
+   * Se utiliza para limpiar las suscripciones.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

@@ -1,13 +1,18 @@
-import { BtnContinuarComponent, DatosPasos } from '@ng-mf/data-access-user';
+import {
+  AlertComponent,
+  BtnContinuarComponent,
+  DatosPasos,
+} from '@ng-mf/data-access-user';
 import { Component, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
-import { PASOS } from '@libs/shared/data-access-user/src/tramites/constantes/11105/pasos.enum';
+import { PASOS } from '../../constants/pasos.enum';
+import { PasoDosComponent } from '../../../11102/pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from '../../../11102/pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from '../../../11102/pages/paso-uno/paso-uno.component';
 import { ReactiveFormsModule } from '@angular/forms';
+//import { TERCEROS_TEXTO_DE_ALERTA} from '../../constants/modificacion-donaciones-immex.enum';
 import { WizardComponent } from '@ng-mf/data-access-user';
-
 
 /**
  * Interfaz para definir la estructura de una acción de botón.
@@ -30,11 +35,13 @@ interface AccionBoton {
 @Component({
   standalone: true,
   imports: [
+    AlertComponent,
     WizardComponent,
     CommonModule,
     BtnContinuarComponent,
     PasoTresComponent,
     PasoUnoComponent,
+    PasoDosComponent,
     ReactiveFormsModule,
   ],
   selector: 'app-solicitante-page',
@@ -42,6 +49,10 @@ interface AccionBoton {
   styleUrl: './solicitante-page.component.scss',
 })
 export class SolicitantePageComponent {
+
+  infoAlert = 'alert-info';
+
+  TEXTO_DE_ALERTA= 'La solicitud ha quedado registrada con el número temporal 202768251 Éste no tiene validez legal y sirve solamente para efectos de identificar tu solicitud. Un folio oficial le será asignado a la solicitud al momento en que ésta sea firmada.';
   /**
    * Lista de pasos del wizard.
    */
