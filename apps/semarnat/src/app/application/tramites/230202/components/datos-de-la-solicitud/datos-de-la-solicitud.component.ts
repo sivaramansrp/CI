@@ -13,6 +13,7 @@ import {
   CrosslistComponent,
   CrossListLable,
   TablaDinamicaComponent,
+  TablaSeleccion,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
 import {
@@ -101,6 +102,7 @@ export class DatosDeLaSolicitudComponent {
   };
   public datosSolicitud: DatosSolicitud[] = [];
   public datosDetalle: DatosDetalle[] = [];
+  TablaSeleccion = TablaSeleccion;
 
   public encabezadoDeTabla: ConfiguracionColumna<DatosSolicitud>[] = [
     { encabezado: '', clave: (articulo) => articulo.id, orden: 1 },
