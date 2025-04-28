@@ -113,6 +113,7 @@ export const NUMERO_TRAMITE = {
   TRAMITE_240305: 240305,
   TRAMITE_240311: 240311,
   TRAMITE_240411: 240411,
+  TRAMITE_240122: 240122
 }
 
 /**
@@ -199,5 +200,5 @@ export const CAMPO_OBLIGATORIO_DERECHOS = [240111];
  * @const
  * @type {number[]}
  */
-export const COLONIA_FIELD_FLAG = [240117, 240114];
+export const COLONIA_FIELD_FLAG = [240117, 240114, 240122];
 

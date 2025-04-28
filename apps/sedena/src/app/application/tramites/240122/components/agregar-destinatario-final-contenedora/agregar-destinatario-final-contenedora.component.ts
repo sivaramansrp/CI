@@ -1,0 +1,81 @@
+import { DestinoFinal, Proveedor } from '../../../../shared/models/terceros-relacionados.model';
+import { AgregarDestinatarioCustomComponent } from '../../../../shared/components/agregar-destinatario-custom/agregar-destinatario-custom.component';
+import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
+import { NUMERO_TRAMITE } from '../../../../shared/constants/datos-solicitud.enum';
+import { Observable } from 'rxjs';
+import { Tramite240122Query } from '../../estados/tramite240122Query.query';
+import { Tramite240122Store } from '../../estados/tramite240122Store.store';
+
+/**
+ * @title Agregar Destinatario Final Contenedora
+ * @description Componente contenedor que gestiona la integración del componente de destinatario final con el store.
+ * @summary Encapsula el componente de agregar destinatario final y propaga los datos al estado global.
+ */
+/**
+ * @component
+ * @name AgregarDestinatarioFinalContenedoraComponent
+ * @description
+ * Componente encargado de gestionar la interfaz de usuario para agregar destinatarios finales
+ * en el contexto del trámite 240122. Este componente es independiente y utiliza otros módulos
+ * y componentes para su funcionalidad.
+ * 
+ * @selector app-agregar-destinatario-final-contenedora
+ * @standalone true
+ * @imports
+ * - CommonModule
+ * - AgregarDestinatarioCustomComponent
+ * 
+ * @templateUrl ./agregar-destinatario-final-contenedora.component.html
+ * @styleUrl ./agregar-destinatario-final-contenedora.component.scss
+ * 
+ * @remarks
+ * Este componente interactúa con el store y las consultas del trámite para gestionar
+ * los datos relacionados con los destinatarios finales.
+ */
+@Component({
+  selector: 'app-agregar-destinatario-final-contenedora',
+  standalone: true,
+  imports: [CommonModule, AgregarDestinatarioCustomComponent],
+  templateUrl: './agregar-destinatario-final-contenedora.component.html',
+  styleUrl: './agregar-destinatario-final-contenedora.component.scss',
+})
+export class AgregarDestinatarioFinalContenedoraComponent {
+  
+  /**
+   * @property {number} idProcedimiento - Identificador del procedimiento asociado al trámite.
+   * @remarks Este valor se utiliza para identificar el trámite 240122.
+   */
+  public readonly idProcedimiento:number = NUMERO_TRAMITE.TRAMITE_240122;
+
+  /**
+   * @property {Observable<DestinoFinal | Proveedor | null | undefined>} terechosDatos$ - Observable que emite información sobre el destino final, proveedor o un valor nulo/indefinido.
+   * @remarks Este observable se utiliza para gestionar los datos relacionados con los derechos
+   * y destinatarios finales en el contexto de la aplicación.
+   */
+  public terechosDatos$!: Observable<DestinoFinal | Proveedor | null | undefined>;
+
+  /**
+   * Constructor del componente.
+   *
+   * @method constructor
+   * @param {Tramite240122Store} tramiteStore - Store que administra el estado del trámite.
+   * @param {Tramite240122Query} tramiteQuery - Query que permite obtener datos relacionados con el trámite.
+   * @returns {void}
+   */
+  constructor(public tramiteStore: Tramite240122Store, public tramiteQuery: Tramite240122Query) {
+    this.terechosDatos$ = this.tramiteQuery.obtenerTercerosDatos$;
+  }
+
+  /**
+   * Actualiza la lista de destinatarios finales en el store del trámite.
+   *
+   * @method updateDestinatarioFinalTablaDatos
+   * @param {DestinoFinal[]} event - Lista de destinatarios finales actualizada.
+   * @returns {void}
+   * @remarks Este método se utiliza para propagar los cambios en la lista de destinatarios finales al estado global.
+   */
+  updateDestinatarioFinalTablaDatos(event: DestinoFinal[]): void {
+    this.tramiteStore.updateDestinatarioFinalTablaDatos(event);
+  }
+}

@@ -1458,8 +1458,8 @@
   {
     "id": 209,
     "tramite": 260103,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/cofepris/importacion-retorno-sanitario/contenedor-de-pasos",
+    "linkDepartment": "/pago/importacion-retorno-sanitario/contenedor-de-pasos",
     "department": "cofepris"
   },
   {
@@ -1850,8 +1850,8 @@
   {
     "id": 265,
     "tramite": 240122,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/sedena/permiso-extraordinario-exportacion-explosivo/contenedor-de-pasos",
+    "linkDepartment": "/pago/permiso-extraordinario-exportacion-explosivo/contenedor-de-pasos",
     "department": "sedena"
   },
   {
@@ -1927,8 +1927,8 @@
   {
     "id": 276,
     "tramite": 130201,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/sener/exportacion-petroliferos/solicitud",
+    "linkDepartment": "/pago/exportacion-petroliferos/solicitud",
     "department": "sener"
   },
   {
