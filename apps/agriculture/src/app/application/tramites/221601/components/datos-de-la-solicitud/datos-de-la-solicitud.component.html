@@ -38,6 +38,13 @@
           <textarea class="form-control custom-textarea" id="justificacion" formControlName="justificacion"
             (change)="setValoresStore(datosSolicitudForm, 'justificacion', 'setJustificacion')"></textarea>
         </div>
+        @if(datosSolicitudForm.controls['justificacion'].invalid && datosSolicitudForm.controls['justificacion'].touched) {
+          <div class="d-grid">
+            @if(datosSolicitudForm.controls['justificacion'].errors?.['required']) {
+              <span class="mensaje-error">Este campo es obligatorio</span>
+            }
+          </div>
+        }
       </div>
     </div>
 
@@ -47,7 +54,7 @@
     <div class="row pb-20">
       <div class="col-md-8">
         <div class="form-group">
-          <label class="form-label" for="aduana">Aduana de ingreso*:</label>
+          <label class="form-label" for="aduana">Aduana de ingreso:</label>
           <input class="form-control" id="aduana" formControlName="aduana" type="text"
             (change)="setValoresStore(datosSolicitudForm, 'aduana', 'setAduana')" />
         </div>
@@ -58,7 +65,7 @@
     <div class="row">
       <div class="col-md-8">
         <div class="form-group">
-          <label class="form-label" for="oficina">Oficina de inspección de Sanidad Agropecuaria*:</label>
+          <label class="form-label" for="oficina">Oficina de inspección de Sanidad Agropecuaria:</label>
           <input class="form-control" id="oficina" formControlName="oficina" type="text"
             (change)="setValoresStore(datosSolicitudForm, 'oficina', 'setOficina')" />
         </div>
@@ -69,7 +76,7 @@
     <div class="row">
       <div class="col-md-8">
         <div class="form-group">
-          <label class="form-label" for="punto">Punto de inspección*:</label>
+          <label class="form-label" for="punto">Punto de inspección:</label>
           <input class="form-control" id="punto" formControlName="punto" type="text"
             (change)="setValoresStore(datosSolicitudForm, 'punto', 'setPunto')" />
         </div>
@@ -83,6 +90,13 @@
           <input class="form-control" id="clave" formControlName="clave" type="number"
             (change)="setValoresStore(datosSolicitudForm, 'clave', 'setClave')" />
         </div>
+        @if(datosSolicitudForm.controls['clave'].invalid && datosSolicitudForm.controls['clave'].touched) {
+          <div class="d-grid">
+            @if(datosSolicitudForm.controls['clave'].errors?.['required']) {
+              <span class="mensaje-error">Este campo es obligatorio</span>
+            }
+          </div>
+        }
       </div>
 
       <div class="col-md-4">
@@ -132,6 +146,13 @@
           <input class="form-control" id="carro" formControlName="carro" type="text"
             (change)="setValoresStore(datosSolicitudForm, 'carro', 'setCarro')" />
         </div>
+        @if(datosSolicitudForm.controls['carro'].invalid && datosSolicitudForm.controls['carro'].touched) {
+          <div class="d-grid">
+            @if(datosSolicitudForm.controls['carro'].errors?.['required']) {
+              <span class="mensaje-error">Este campo es obligatorio</span>
+            }
+          </div>
+        }
       </div>
     </div>
 
