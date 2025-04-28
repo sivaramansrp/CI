@@ -45,7 +45,7 @@ export class Tramite319Store extends Store<FinalDataToSend> {
      public actualizarDatosForma(datos: Solicitar[]): void {
         this.update(state => ({
             ...state,
-            datos 
+            datos : datos as Solicitar[],
         }));
     }
 
@@ -69,5 +69,24 @@ export class Tramite319Store extends Store<FinalDataToSend> {
             datos: state.datos.filter(dato => dato.id !== id),
         }));
     }
+
+    /**
+     * @method actualizarOperacion
+     * @description Actualiza el estado de la operación con un nuevo valor.
+     * @param {string} nuevaOperacion - El nuevo valor de la operación que se establecerá en el estado.
+     * @returns {void}
+     * 
+     * @example
+     * // Ejemplo de uso:
+     * tramite319Store.actualizarOperacion('nuevaOperacion');
+     * 
+     * @category Estados
+     */
+    public actualizarOperacion(nuevaOperacion: string): void {
+        this.update(state => ({
+          ...state,
+          operacion: nuevaOperacion as string,
+        }));
+      }
 
 }
