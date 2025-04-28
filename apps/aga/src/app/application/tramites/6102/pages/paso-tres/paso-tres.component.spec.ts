@@ -1,14 +1,10 @@
-// @ts-nocheck
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpClientModule } from '@angular/common/http';
-import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
+import { Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { By } from '@angular/platform-browser';
-import { Observable, of as observableOf, throwError } from 'rxjs';
-
-import { Component, TramiteStore } from '@angular/core';
+import { of as observableOf } from 'rxjs';
 import { PasoTresComponent } from './paso-tres.component';
+import { TramiteStore } from '@ng-mf/data-access-user';
 import { Router } from '@angular/router';
 import { TramiteFolioService } from '@ng-mf/data-access-user';
 
@@ -22,8 +18,8 @@ class MockTramiteStore {}
 
 
 describe('PasoTresComponent', () => {
-  let fixture;
-  let component;
+  let fixture: ComponentFixture<PasoTresComponent>;
+  let component: { ngOnDestroy: () => void; obtenerTipoPersona: (arg0: {}) => void; serviciosExtraordinariosServices: { obtenerTramite?: any; }; tramiteStore: { establecerTramite?: any; }; router: { navigate?: any; }; obtieneFirma: (arg0: {}) => void; destroy$: { next?: any; complete?: any; }; };
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -67,9 +63,9 @@ describe('PasoTresComponent', () => {
     component.router = component.router || {};
     component.router.navigate = jest.fn();
     component.obtieneFirma({});
-    // expect(component.serviciosExtraordinariosServices.obtenerTramite).toHaveBeenCalled();
-    // expect(component.tramiteStore.establecerTramite).toHaveBeenCalled();
-    // expect(component.router.navigate).toHaveBeenCalled();
+    expect(component.serviciosExtraordinariosServices.obtenerTramite).toHaveBeenCalled();
+    expect(component.tramiteStore.establecerTramite).toHaveBeenCalled();
+    expect(component.router.navigate).toHaveBeenCalled();
   });
 
   it('should run #ngOnDestroy()', async () => {
@@ -77,8 +73,8 @@ describe('PasoTresComponent', () => {
     component.destroy$.next = jest.fn();
     component.destroy$.complete = jest.fn();
     component.ngOnDestroy();
-    // expect(component.destroy$.next).toHaveBeenCalled();
-    // expect(component.destroy$.complete).toHaveBeenCalled();
+    expect(component.destroy$.next).toHaveBeenCalled();
+    expect(component.destroy$.complete).toHaveBeenCalled();
   });
 
 });

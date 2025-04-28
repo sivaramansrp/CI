@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
 import { Observable } from 'rxjs';
+import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
 
 /**
  * Servicio para gestionar las operaciones relacionadas con la Junta Técnica de Registro.

@@ -1,17 +1,13 @@
-// @ts-nocheck
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { By } from '@angular/platform-browser';
-import { Observable, of as observableOf, throwError } from 'rxjs';
-
-import { Component } from '@angular/core';
 import { SolicitudComponent } from './solicitud.component';
 import { FormBuilder } from '@angular/forms';
 import { Solicitud6102Store } from '../../estados/solicitud6102.store';
 import { Solicitud6102Query } from '../../estados/solicitud6102.query';
 import { JuntaTecnicaRegistroService } from '../../service/junta-tecnica-registro.service';
+import { of as observableOf } from 'rxjs';
+
 
 @Injectable()
 class MockSolicitud6102Store {}
@@ -23,8 +19,8 @@ class MockSolicitud6102Query {}
 class MockJuntaTecnicaRegistroService {}
 
 describe('SolicitudComponent', () => {
-  let fixture;
-  let component;
+  let fixture: ComponentFixture<SolicitudComponent>;
+  let component: { ngOnDestroy: () => void; query: { seleccionarSolicitud$?: any; }; inicializarFormulario: jest.Mock<any, any, any> | (() => void); cargarContenedoresOpciones: jest.Mock<any, any, any> | (() => void); cargarAduanaOpciones: jest.Mock<any, any, any> | (() => void); ngOnInit: () => void; destroyNotifier$: { next?: any; complete?: any; }; fb: { group?: any; }; solicitudState: { contenedores?: any; aduana?: any; observaciones?: any; }; juntaTecnicaRegistroService: { getOptionLista?: any; }; contenedores: { catalogos?: any; }; aduana: { catalogos?: any; }; };
 
   beforeEach(() => {
     TestBed.configureTestingModule({

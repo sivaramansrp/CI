@@ -1,14 +1,14 @@
+import { Catalogo, CatalogoSelectComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { Catalogo, CatalogoSelectComponent, InputRadioComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitud6102State, Solicitud6102Store } from '../../estados/solicitud6102.store';
-import { Solicitud6102Query } from '../../estados/solicitud6102.query';
-import { map, Subject, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
 import { JuntaTecnicaRegistroService } from '../../service/junta-tecnica-registro.service';
+import { Solicitud6102Query } from '../../estados/solicitud6102.query';
 
 /**
- * Componente que gestiona la solicitud del trámite 31803.
+ * Componente que gestiona la solicitud del trámite 6102.
  * Contiene la lógica para inicializar el formulario, manejar eventos y comunicarse con el estado global.
  */
 @Component({
@@ -125,7 +125,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * Se utiliza el servicio `FormBuilder` para crear el grupo de controles 
    * y se aplican validaciones donde corresponda.
    */
-  inicializarFormulario() {
+  inicializarFormulario(): void {
     this.tecnicaForm = this.fb.group({
       contenedores: [this.solicitudState?.contenedores, [Validators.required]],
       aduana: [this.solicitudState?.aduana, [Validators.required]],
@@ -159,7 +159,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * @returns {void} No retorna ningún valor.
    */
   cargarContenedoresOpciones(): void {
-    this.juntaTecnicaRegistroService.getOptionLista("contenedorLista").pipe(takeUntil(this.destroyNotifier$)).pipe(takeUntil(this.destroyNotifier$)).subscribe(
+    this.juntaTecnicaRegistroService.getOptionLista("contenedorLista").pipe(takeUntil(this.destroyNotifier$)).subscribe(
       (data) => {
         this.contenedores.catalogos = data.data;
       },
@@ -178,7 +178,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * @returns {void} No retorna ningún valor.
    */
   cargarAduanaOpciones(): void {
-    this.juntaTecnicaRegistroService.getOptionLista("aduanaLista").pipe(takeUntil(this.destroyNotifier$)).pipe(takeUntil(this.destroyNotifier$)).subscribe(
+    this.juntaTecnicaRegistroService.getOptionLista("aduanaLista").pipe(takeUntil(this.destroyNotifier$)).subscribe(
       (data) => {
         this.aduana.catalogos = data.data;
       },

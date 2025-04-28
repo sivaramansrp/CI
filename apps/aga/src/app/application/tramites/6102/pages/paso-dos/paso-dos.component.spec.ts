@@ -1,19 +1,14 @@
-// @ts-nocheck
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpClientModule } from '@angular/common/http';
-import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
+import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { By } from '@angular/platform-browser';
-import { Observable, of as observableOf, throwError } from 'rxjs';
-
-import { Component } from '@angular/core';
+import { of as observableOf } from 'rxjs';
 import { PasoDosComponent } from './paso-dos.component';
 import { CatalogosService } from '@ng-mf/data-access-user';
 
 describe('PasoDosComponent', () => {
-  let fixture;
-  let component;
+  let fixture: ComponentFixture<PasoDosComponent>;
+  let component: { ngOnDestroy: () => void; getTiposDocumentos: jest.Mock<any, any, any> | (() => void); ngOnInit: () => void; destroy$: { next?: any; complete?: any; }; catalogosServices: { getCatalogo?: any; }; };
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -44,7 +39,7 @@ describe('PasoDosComponent', () => {
   it('should run #ngOnInit()', async () => {
     component.getTiposDocumentos = jest.fn();
     component.ngOnInit();
-    // expect(component.getTiposDocumentos).toHaveBeenCalled();
+    expect(component.getTiposDocumentos).toHaveBeenCalled();
   });
 
   it('should run #ngOnDestroy()', async () => {
@@ -52,15 +47,15 @@ describe('PasoDosComponent', () => {
     component.destroy$.next = jest.fn();
     component.destroy$.complete = jest.fn();
     component.ngOnDestroy();
-    // expect(component.destroy$.next).toHaveBeenCalled();
-    // expect(component.destroy$.complete).toHaveBeenCalled();
+    expect(component.destroy$.next).toHaveBeenCalled();
+    expect(component.destroy$.complete).toHaveBeenCalled();
   });
 
   it('should run #getTiposDocumentos()', async () => {
     component.catalogosServices = component.catalogosServices || {};
     component.catalogosServices.getCatalogo = jest.fn().mockReturnValue(observableOf({}));
     component.getTiposDocumentos();
-    // expect(component.catalogosServices.getCatalogo).toHaveBeenCalled();
+    expect(component.catalogosServices.getCatalogo).toHaveBeenCalled();
   });
 
 });

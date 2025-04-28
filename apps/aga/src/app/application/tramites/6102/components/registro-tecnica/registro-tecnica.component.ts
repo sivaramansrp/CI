@@ -1,12 +1,12 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import {InputRadioComponent,TituloComponent} from '@libs/shared/data-access-user/src';
-import {FormBuilder,FormGroup,FormsModule,ReactiveFormsModule,Validators} from '@angular/forms';
 import {AprovechamientoTextos,RADIO_PARCIAL} from '../../constantes/adace6102.enum';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import {FormBuilder,FormGroup,FormsModule,ReactiveFormsModule,Validators} from '@angular/forms';
+import {InputRadioComponent,TituloComponent} from '@libs/shared/data-access-user/src';
 import {Solicitud6102State,Solicitud6102Store} from '../../estados/solicitud6102.store';
-import { Solicitud6102Query } from '../../estados/solicitud6102.query';
-import { map, Subject, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { Solicitud6102Query } from '../../estados/solicitud6102.query';
 @Component({
   selector: 'app-registro-tecnica',
   standalone: true,
@@ -20,7 +20,7 @@ import { Router } from '@angular/router';
   templateUrl: './registro-tecnica.component.html',
   styleUrl: './registro-tecnica.component.scss',
 })
-export class RegistroTecnicaComponent {
+export class RegistroTecnicaComponent implements OnInit, OnDestroy {
   /**
    * Variable que almacena el texto relacionado con la pregunta de reunión.
    * Se obtiene de la enumeración `AprovechamientoTextos.PREGUNTA_DE_REUNION`.
@@ -109,7 +109,7 @@ export class RegistroTecnicaComponent {
    * Controles del formulario:
    * - `radioParcial`: Campo obligatorio que toma su valor inicial de `solicitudState.radioParcial`.
    */
-  inicializarFormulario() {
+  inicializarFormulario(): void {
     this.reunionForm = this.fb.group({
       radioParcial: [this.solicitudState?.radioParcial, [Validators.required]],
     });
@@ -142,7 +142,7 @@ export class RegistroTecnicaComponent {
    * Este método utiliza el servicio de enrutamiento Angular para realizar 
    * la navegación basada en la URL actual.
    */
-  onSiguienteClick() {
+  onSiguienteClick(): void {
     const URL = this.router.url;
     if (URL.includes('aga')) {
       this.router.navigate(['/aga/junta-tecnica-registro/solicitud']);

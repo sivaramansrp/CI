@@ -941,7 +941,7 @@
     "id": 135,
     "tramite": 31501,
     "linkDashboard": "/agace/autoridad/solicitud",
-    "linkDepartment": "/pago/autoridad/solicitud",
+    "linkDepartment": "/agace/autoridad/solicitud",
     "department": "agace"
   },
   {
@@ -1305,7 +1305,7 @@
     "id": 187,
     "tramite": 6101,
     "linkDashboard": "/aga/junta-tecnica/solicitud",
-    "linkDepartment": "/pago/junta-tecnica/solicitud",
+    "linkDepartment": "/aga/junta-tecnica/solicitud",
     "department": "aga"
   },
   {

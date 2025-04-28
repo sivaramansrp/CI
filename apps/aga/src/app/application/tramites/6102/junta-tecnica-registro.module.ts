@@ -3,15 +3,15 @@ import { AcuseYResolucionesFolioTramiteService } from '@libs/shared/data-access-
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { JuntaTecnicaRegistroRoutingModule } from './junta-tecnica-registro-routing.module.';
+import { JuntaTecnicaRegistroService } from './service/junta-tecnica-registro.service';
 import { NgModule } from '@angular/core';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
+import { SolicitudComponent } from './components/solicitud/Solicitud.component';
 import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
 import { ToastrService } from 'ngx-toastr';
-import { SolicitudComponent } from './components/solicitud/Solicitud.component';
-import { JuntaTecnicaRegistroRoutingModule } from './junta-tecnica-registro-routing.module.';
-import { JuntaTecnicaRegistroService } from './service/junta-tecnica-registro.service';
 
 
 @NgModule({
