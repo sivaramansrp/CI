@@ -30,10 +30,12 @@ export interface Personas {
   }
   export interface FinalDataToSend {
     datos: Solicitar[];
+    operacion: string;
 }
   export function createDatosState(params: Partial<FinalDataToSend> = {}): FinalDataToSend {
     return {
-        datos: params as Solicitar[]
+        datos: params as Solicitar[],
+        operacion:''
     }
 
 }

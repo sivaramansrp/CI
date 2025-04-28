@@ -44,6 +44,7 @@ export class Tramite319Store extends Store<FinalDataToSend> {
      */
      public actualizarDatosForma(datos: Solicitar[]): void {
         this.update(state => ({
+            ...state,
             datos 
         }));
     }
