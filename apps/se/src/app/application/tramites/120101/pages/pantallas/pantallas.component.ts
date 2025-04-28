@@ -287,9 +287,9 @@ export class PantallasComponent{
       this.pestanaDosFormularioValido = true;
     } else if (this.esFormaValido) {
       this.pestanaDosFormularioValido = true;
+      this.indice = e.valor + 1;
+      this.datosPasos.indice = e.valor + 1;
       this.wizardService.cambio_indice(this.datosPasos.indice);
-      this.indice = e.valor;
-      this.datosPasos.indice = e.valor;
       this.wizardComponent.siguiente();
     } else {
       this.mostrarAplicacionRegistradaAlerta = false;
