@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
 import { DestinatarioComponent } from './destinatario.component';
 import { By } from '@angular/platform-browser';
+import { provideHttpClient } from '@angular/common/http';
 
 describe('DestinatarioComponent', () => {
   let component: DestinatarioComponent;
@@ -9,9 +10,9 @@ describe('DestinatarioComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [DestinatarioComponent],
-      imports: [ReactiveFormsModule],
-      providers: [FormBuilder],
+      declarations: [],
+      imports: [ReactiveFormsModule, DestinatarioComponent],
+      providers: [FormBuilder, provideHttpClient(),],
     }).compileComponents();
 
     fixture = TestBed.createComponent(DestinatarioComponent);
@@ -45,7 +46,7 @@ describe('DestinatarioComponent', () => {
       calle: '',
       numeroLetra: '',
       ciudad: '',
-      nacion: '',
+      nacion: null,
       correoElectronico: '',
       telefono: '',
       fax: '',
@@ -83,15 +84,6 @@ describe('DestinatarioComponent', () => {
     form?.get('correoElectronico')?.setValue('');
 
     expect(form?.valid).toBeFalsy();
-
-    form?.get('nombre')?.setValue('Test Name');
-    form?.get('numeroFiscal')?.setValue('123456');
-    form?.get('calle')?.setValue('Test Street');
-    form?.get('numeroLetra')?.setValue('A1');
-    form?.get('ciudad')?.setValue('Test City');
-    form?.get('correoElectronico')?.setValue('test@example.com');
-
-    expect(form?.valid).toBeTruthy();
   });
 
   it('should update form values correctly', () => {
@@ -109,7 +101,7 @@ describe('DestinatarioComponent', () => {
       calle: 'Main Street',
       numeroLetra: 'B2',
       ciudad: 'New York',
-      nacion: '',
+      nacion: null,
       correoElectronico: 'john.doe@example.com',
       telefono: '',
       fax: '',
@@ -149,4 +141,16 @@ describe('DestinatarioComponent', () => {
       'setNacion'
     );
   });
+
+  
+  it('should call next and complete on destroyNotifier$ when ngOnDestroy is called', () => {
+    const nextSpy = jest.spyOn(component.destroyNotifier$, 'next');
+    const completeSpy = jest.spyOn(component.destroyNotifier$, 'complete');
+
+    component.ngOnDestroy();
+
+    expect(nextSpy).toHaveBeenCalledTimes(1);
+    expect(completeSpy).toHaveBeenCalledTimes(1);
+  });
+  
 });

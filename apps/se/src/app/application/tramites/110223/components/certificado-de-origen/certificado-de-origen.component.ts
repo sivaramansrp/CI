@@ -1,4 +1,4 @@
-import { AlertComponent, Catalogo, CatalogoSelectComponent, CatalogosSelect, ConfiguracionColumna, InputFecha, TablaDinamicaComponent, TablaSeleccion, TableComponent, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
+import { AlertComponent, Catalogo, CatalogoSelectComponent, CatalogosSelect, ConfiguracionColumna, InputFecha, REGEX_PATRON_DECIMAL_2, REGEX_SOLO_DIGITOS, TablaDinamicaComponent, TablaSeleccion, TableComponent, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { ColumnasTabla, FECHA_FACTURA, FECHA_FINAL, FECHA_INICIAL, SeleccionadasTabla } from '../../models/registro.model';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -600,7 +600,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
         pais: [this.solicitudState?.pais, [Validators.required]],
         fraccionArancelaria: [
           this.solicitudState?.fraccionArancelaria,
-          [Validators.required, Validators.pattern(/^\d+$/)],
+          [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS)],
         ],
         numeroRegistro: [
           this.solicitudState?.numeroRegistro,
@@ -629,12 +629,12 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
         otrasInstancias: ['', [Validators.required]],
         cantidad: [
           this.solicitudState?.cantidad,
-          [Validators.required, Validators.pattern(/^\d+$/)],
+          [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS)],
         ],
         umc: [this.solicitudState?.umc, [Validators.required]],
         valorDelaMercancia: [
           this.solicitudState?.valorDelaMercancia,
-          [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)],
+          [Validators.required, Validators.pattern(REGEX_PATRON_DECIMAL_2)],
         ],
         complementoDelaDescripcion: [
           this.solicitudState?.complementoDelaDescripcion,

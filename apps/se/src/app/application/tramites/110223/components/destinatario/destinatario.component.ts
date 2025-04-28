@@ -1,4 +1,4 @@
-import { AlertComponent, Catalogo, CatalogoSelectComponent, PAGO_DE_DERECHOS, TituloComponent, ValidacionesFormularioService } from '@ng-mf/data-access-user';
+import { AlertComponent, Catalogo, CatalogoSelectComponent, PAGO_DE_DERECHOS, REGEX_SOLO_DIGITOS, TituloComponent, ValidacionesFormularioService } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
@@ -207,13 +207,14 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
         ],
         telefono: [
           this.solicitudState?.telefono,
-          [Validators.required, Validators.pattern(/^\d+$/)],
+          [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS)],
         ],
-        fax: [this.solicitudState?.fax, [Validators.pattern(/^\d+$/)]],
+        fax: [this.solicitudState?.fax, [Validators.pattern(REGEX_SOLO_DIGITOS)]],
         correoElectronico: [
           this.solicitudState?.correoElectronico,
           [Validators.required, Validators.email],
         ],
+        nacion: [this.solicitudState?.nacion]
       }),
     });
   }
