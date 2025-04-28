@@ -124,15 +124,6 @@ export class SolicitudService {
     return this.http.get<Domicilios[]>('assets/json/31101/domicilios.json');
   }
 
-  /**
-   * Obtiene todos los datos generales de la solicitud necesarios para el llenado del formulario.
-   */
-  // conseguirDatosGeneralesDeLaSolicitudDatos(): Observable<DatosGeneralesDeLaSolicitudDatos> {
-  //   return this.http.get<DatosGeneralesDeLaSolicitudDatos>(
-  //     'assets/json/31101/datos-generales-de-la-solicitud-datos.json'
-  //   );
-  // }
-
   conseguirEntidadFederativaDatos(): Observable<EntidadFederativa[]> {
     return this.http.get<EntidadFederativa[]>(
       'assets/json/31101/entidad-federativa-datos.json'

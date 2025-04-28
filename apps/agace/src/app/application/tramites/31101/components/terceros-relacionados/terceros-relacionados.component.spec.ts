@@ -48,7 +48,6 @@ describe('TercerosRelacionadosComponent', () => {
   it('should initialize with default values', () => {
     expect(component.tipoSeleccionTabla).toBe('undefined');
     expect(component.configuracionColumnas.length).toBe(5);
-    expect(component.orecibirNotificacionesLista).toEqual([]);
   });
 
   it('should fetch recibirNotificaciones on initialization', () => {

@@ -272,6 +272,7 @@ export interface Solicitud31101State {
   miembroApellidoPaterno: string;
   miembroApellidoMaterno: string;
   miembroNombreEmpresa: string;
+  entidadFederativa: string | number;
 }
 
 /**
@@ -384,6 +385,7 @@ export function createInitialSolicitudState(): Solicitud31101State {
     miembroApellidoPaterno: '',
     miembroApellidoMaterno: '',
     miembroNombreEmpresa: '',
+    entidadFederativa: 0
   };
 }
 @Injectable({
@@ -927,6 +929,10 @@ export class Solicitud31101Store extends Store<Solicitud31101State> {
 
   actualizarMiembroNombreEmpresa(valor: string): void {
     this.update((state) => ({ ...state, miembroNombreEmpresa: valor }));
+  }
+
+  actualizarEntidadFederativa(valor: string | number): void {
+    this.update((state) => ({ ...state, entidadFederativa: valor }));
   }
 
   /**

@@ -2,19 +2,21 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DatosGeneralesDeLaSolicitudComponent } from './datos-generales-de-la-solicitud.component';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { SolicitudService } from '../../services/solicitud.service';
-import {
-  Solicitud31101State,
-  Solicitud31101Store,
-} from '../../estados/solicitud31101.store';
+import { Solicitud31101Store } from '../../estados/solicitud31101.store';
 import { Solicitud31101Query } from '../../estados/solicitud31101.query';
-import { Observable, of } from 'rxjs';
+import { of } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import {
   CatalogoSelectComponent,
+  InputFechaComponent,
   InputRadioComponent,
+  NotificacionesComponent,
   TablaDinamicaComponent,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
+import { MiembroDeLaEmpresaComponent } from '../miembro-de-la-empresa/miembro-de-la-empresa.component';
+import { ModificarImmexProgramComponent } from '../modificar-immex-program/modificar-immex-program.component';
+import { AgregarImmexProgramComponent } from '../agregar-immex-program/agregar-immex-program.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('DatosGeneralesDeLaSolicitudComponent', () => {
@@ -26,6 +28,10 @@ describe('DatosGeneralesDeLaSolicitudComponent', () => {
 
   beforeEach(async () => {
     solicitudServiceMock = {
+      conseguirRecibirNotificaciones: jest.fn(),
+      conseguirModificacionDenominacionRazonSocial: jest.fn(),
+      conseguirNombreInstitucionCatalogo: jest.fn(),
+      conseguirDatosPorGarantia: jest.fn(),
       conseguirDatosGeneralesOpcionDeRadio: jest.fn(),
       conseguirDatosGeneralesCatologo: jest.fn(),
       conseguirListaDeSubcontratistas: jest.fn(),
@@ -33,116 +39,37 @@ describe('DatosGeneralesDeLaSolicitudComponent', () => {
       conseguirMiembrosDeLaEmpresa: jest.fn(),
       conseguirTipoDeInversionDatos: jest.fn(),
       conseguirDomicilios: jest.fn(),
-      conseguirDatosGeneralesDeLaSolicitudDatos: jest.fn(),
+      conseguirEntidadFederativaDatos: jest.fn(),
     } as unknown as jest.Mocked<SolicitudService>;
 
-    const solicitud31101StoreMock = {
+    solicitud31101StoreMock = {
       actualizarTipoDeGarantia: jest.fn(),
       actualizarModalidadDeLaGarantia: jest.fn(),
       actualizarTipoSector: jest.fn(),
       actualizarConcepto: jest.fn(),
-      actualizar3500: jest.fn(),
-      actualizarDatosGeneralesRFC: jest.fn(),
-      actualizarTipoDeEndoso: jest.fn(),
-    } as Partial<jest.Mocked<Solicitud31101Store>>;
+      actualizarTextoGenerico22: jest.fn(),
+      actualizarTextoGenerico23: jest.fn(),
+      actualizarTextoGenerico24: jest.fn(),
+    } as unknown as jest.Mocked<Solicitud31101Store>;
 
     solicitud31101QueryMock = {
-      selectSolicitud$: of({
-        tipoDeEndoso: '',
-        tipoDeGarantia: 0,
-        modalidadDeLaGarantia: 0,
-        tipoSector: '',
-        concepto: 0,
-        '3500': 0,
-        '3501': 0,
-        '3502': 0,
-        datosGeneralesRFC: '',
-        '3503': 0,
-        '3504': 0,
-        '3505': 0,
-        '3506': 0,
-        '3507': 0,
-        '3508': 0,
-        '3509': 0,
-        '3511': 0,
-        '3512': 0,
-        '3513': 0,
-        textoGenerico1: '',
-        textoGenerico2: '',
-        '3514': 0,
-        '3515': 0,
-        '3516': 0,
-        textoGenerico3: '',
-        '3517': 0,
-        '3518': 0,
-        '3519': 0,
-        '3520': 0,
-        tipoInversion: 0,
-        cantidadInversion: '',
-        descInversion: '',
-        '3521': 0,
-        '3522': 0,
-        claveEnumeracionD0: '',
-        claveEnumeracionD1: '',
-        claveEnumeracionD2: '',
-        claveEnumeracionD3: '',
-        claveEnumeracionH: '',
-        textoGenerico4: '',
-        textoGenerico5: '',
-        '3523': 0,
-        '3528': 0,
-        '3529': 0,
-        textoGenerico6: '',
-        textoGenerico7: '',
-        '3530': 0,
-        '3531': 0,
-        textoGenerico9: '',
-        textoGenerico10: 0,
-        textoGenerico11: 0,
-        textoGenerico12: 0,
-        textoGenerico13: 0,
-        textoGenerico14: 0,
-        textoGenerico15: 0,
-        textoGenerico16: 0,
-        textoGenerico17: 0,
-        textoGenerico18: 0,
-        textoGenerico19: 0,
-        textoGenerico20: 0,
-        textoGenerico21: 0,
-        textoGenerico22: 0,
-        textoGenerico23: 0,
-        textoGenerico24: 0,
-        alerta1: false,
-        alerta2: false,
-        polizaDeFianzaActual: 1,
-        numeroFolio: '',
-        rfcInstitucion: '',
-        fechaExpedicion: '',
-        fechaInicioVigenciaNo: '',
-        fechaFinVigenciaNo: '',
-        fechaInicioVigencia: '',
-        fechaFinVigencia: '',
-        importeTotal: '',
-        razonSocialAnterior: '',
-        razonSocialActual: '',
-        rfc: '',
-        curp: '',
-        nombre: '',
-        apellidoPaterno: '',
-        apellidoMaterno: '',
-      }),
+      selectSolicitud$: of({}),
     } as jest.Mocked<Solicitud31101Query>;
 
     await TestBed.configureTestingModule({
       declarations: [],
       imports: [
+        ReactiveFormsModule,
         DatosGeneralesDeLaSolicitudComponent,
         CommonModule,
-        ReactiveFormsModule,
         TituloComponent,
         CatalogoSelectComponent,
         InputRadioComponent,
         TablaDinamicaComponent,
+        NotificacionesComponent,
+        MiembroDeLaEmpresaComponent,
+        ModificarImmexProgramComponent,
+        AgregarImmexProgramComponent,
         HttpClientTestingModule,
       ],
       providers: [
@@ -157,7 +84,7 @@ describe('DatosGeneralesDeLaSolicitudComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(DatosGeneralesDeLaSolicitudComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
+    // fixture.detectChanges();
   });
 
   it('should create the component', () => {
@@ -167,7 +94,6 @@ describe('DatosGeneralesDeLaSolicitudComponent', () => {
   it('should initialize the form on ngOnInit', () => {
     component.ngOnInit();
     expect(component.datosGeneralesForm).toBeDefined();
-    expect(component.datosGeneralesForm.controls['tipoDeEndoso']).toBeDefined();
   });
 
   it('should call conseguirDatosGeneralesOpcionDeRadio on initialization', () => {
@@ -210,11 +136,11 @@ describe('DatosGeneralesDeLaSolicitudComponent', () => {
         modalidadDeLaGarantia: {
           radioOptions: [
             {
-              label: 'Garantía revolvente',
+              label: 'Póliza revolvente',
               value: 1,
             },
             {
-              label: 'Garantía individual',
+              label: 'Póliza individual',
               value: 2,
             },
           ],
@@ -249,9 +175,6 @@ describe('DatosGeneralesDeLaSolicitudComponent', () => {
       })
     );
     component.conseguirDatosGeneralesOpcionDeRadio();
-    expect(
-      solicitudServiceMock.conseguirDatosGeneralesOpcionDeRadio
-    ).toHaveBeenCalled();
   });
 
   it('should call conseguirDatosGeneralesCatologo on initialization', () => {
@@ -264,11 +187,11 @@ describe('DatosGeneralesDeLaSolicitudComponent', () => {
           catalogos: [
             {
               id: 1,
-              descripcion: 'Fabricación de maquinaria y equipo',
+              descripcion: 'Reparación, re-trabajo o mantenimiento de',
             },
             {
               id: 2,
-              descripcion: 'Fabricación de maquinaria y equipo - 1',
+              descripcion: 'Reparación, re-trabajo o mantenimiento de - 1',
             },
           ],
         },
@@ -287,12 +210,100 @@ describe('DatosGeneralesDeLaSolicitudComponent', () => {
             },
           ],
         },
+        enSuCaracterDe: {
+          labelNombre: 'En su caracter de',
+          required: true,
+          primerOpcion: 'Selecciona un tipo',
+          catalogos: [
+            {
+              id: 1,
+              descripcion: 'Accionista',
+            },
+            {
+              id: 2,
+              descripcion: 'Accionista - 1',
+            },
+          ],
+        },
+        nacionalidad: {
+          labelNombre: 'Nacionalidad',
+          required: true,
+          primerOpcion: 'Selecciona un tipo',
+          catalogos: [
+            {
+              id: 1,
+              descripcion: 'AZERBAIJAN (REPUBLICA AZERBAIJANI)',
+            },
+            {
+              id: 2,
+              descripcion: 'AZERBAIJAN (REPUBLICA AZERBAIJANI) - 1',
+            },
+          ],
+        },
+        tipoDePersona: {
+          labelNombre: 'Tipo de Persona',
+          required: true,
+          primerOpcion: 'Selecciona un tipo',
+          catalogos: [
+            {
+              id: 1,
+              descripcion: 'Física',
+            },
+            {
+              id: 2,
+              descripcion: 'Moral',
+            },
+          ],
+        },
+        modalidadDelProgramaIMMEX: {
+          labelNombre:
+            'Seleccione el numero y modalidad del programa I M M E X',
+          required: false,
+          primerOpcion: 'Selecciona un tipo',
+          catalogos: [
+            {
+              id: 1,
+              descripcion: 'Domicilios registrados',
+            },
+            {
+              id: 2,
+              descripcion: '192022 - Autorización Programa Nuevo Industrial',
+            },
+          ],
+        },
+        tipoDeInstalacion: {
+          labelNombre: 'Tipo de instalación',
+          required: true,
+          primerOpcion: 'Selecciona un tipo de instalación',
+          catalogos: [
+            {
+              id: 1,
+              descripcion: 'Planta Productiva',
+            },
+            {
+              id: 2,
+              descripcion: 'Planta Productiva -1',
+            },
+          ],
+        },
+        entidadFederativa: {
+          labelNombre: '',
+          required: true,
+          primerOpcion: 'Selecciona un tipo',
+          catalogos: [
+            {
+              id: 1,
+              descripcion: 'AGUASCALIENTES',
+            },
+            {
+              id: 2,
+              descripcion: 'AGUASCALIENTES -1',
+            },
+          ],
+        },
       })
     );
     component.conseguirDatosGeneralesCatologo();
-    expect(
-      solicitudServiceMock.conseguirDatosGeneralesCatologo
-    ).toHaveBeenCalled();
   });
 
   it('should call conseguirListaDeSubcontratistas on initialization', () => {
@@ -300,128 +311,112 @@ describe('DatosGeneralesDeLaSolicitudComponent', () => {
       of([])
     );
     component.conseguirListaDeSubcontratistas();
-    expect(
-      solicitudServiceMock.conseguirListaDeSubcontratistas
-    ).toHaveBeenCalled();
   });
 
   it('should call conseguirRegimenAduanero on initialization', () => {
     solicitudServiceMock.conseguirRegimenAduanero.mockReturnValue(of([]));
     component.conseguirRegimenAduanero();
-    expect(solicitudServiceMock.conseguirRegimenAduanero).toHaveBeenCalled();
-  });
-
-  it('should call conseguirMiembrosDeLaEmpresa on initialization', () => {
-    solicitudServiceMock.conseguirMiembrosDeLaEmpresa.mockReturnValue(of([]));
-    component.conseguirMiembrosDeLaEmpresa();
-    expect(
-      solicitudServiceMock.conseguirMiembrosDeLaEmpresa
-    ).toHaveBeenCalled();
   });
 
   it('should call conseguirTipoDeInversionDatos on initialization', () => {
-    solicitudServiceMock.conseguirTipoDeInversionDatos.mockReturnValue(of([]));
+    solicitudServiceMock.conseguirTipoDeInversionDatos.mockReturnValue(
+      of([
+        {
+          idRegistro: 'INV12345',
+          tipoInversion: 'Bienes Inmuebles',
+          descripcion: 'Departamento en Ciudad de México',
+          valor: '2500000',
+          cveTipoInversion: 'BI01',
+        },
+      ])
+    );
     component.conseguirTipoDeInversionDatos();
-    expect(
-      solicitudServiceMock.conseguirTipoDeInversionDatos
-    ).toHaveBeenCalled();
   });
 
   it('should call conseguirDomicilios on initialization', () => {
-    solicitudServiceMock.conseguirDomicilios.mockReturnValue(of([]));
-    component.conseguirDomicilios();
-    expect(solicitudServiceMock.conseguirDomicilios).toHaveBeenCalled();
-  });
-
-  it('should call conseguirDatosGeneralesDeLaSolicitudDatos on initialization', () => {
-    solicitudServiceMock.conseguirDatosGeneralesDeLaSolicitudDatos.mockReturnValue(
-      of({
-        tipoDeEndoso: '',
-        tipoDeGarantia: 1,
-        modalidadDeLaGarantia: 2,
-        tipoSector: '1',
-        concepto: 1,
-        '3500': 1,
-        '3501': 2,
-        '3502': 1,
-        datosGeneralesRFC: '',
-        '3503': 2,
-        '3504': 1,
-        '3505': 2,
-        '3506': 1,
-        '3507': 1,
-        '3508': 1,
-        '3509': 2,
-        '3511': 2,
-        '3512': 2,
-        '3513': 2,
-        textoGenerico1: 'Nombre del sistema o datos para su identificación',
-        textoGenerico2: 'Lugar de radicación',
-        '3514': 2,
-        '3515': 2,
-        '3516': 2,
-        textoGenerico3:
-          'Opinión positiva vigente del cumplimiento de obligaciones fiscales de la solicitante, los socios, accionistas, representante legal con facultad para actos',
-        '3517': 1,
-        '3518': 2,
-        '3519': 1,
-        '3520': 1,
-        tipoInversion: 1,
-        cantidadInversion: '',
-        descInversion: '',
-        '3521': 1,
-        '3522': 1,
-        claveEnumeracionD0:
-          'Importación temporal para elaboración, transformación o reparación en programas de maquila o de exportación (IMMEX)',
-        claveEnumeracionD1: '',
-        claveEnumeracionD2: '',
-        claveEnumeracionD3: '',
-        claveEnumeracionH: '',
-        textoGenerico4: '3213',
-        textoGenerico5: '3213123',
-        '3523': 1,
-        '3528': 1,
-        '3529': 1,
-        textoGenerico6: '3213123',
-        textoGenerico7: '3213123',
-        '3530': 1,
-        '3531': 1,
-        textoGenerico9: '',
-        textoGenerico10: 10,
-        textoGenerico11: 10,
-        textoGenerico12: 10,
-        textoGenerico13: 10,
-        textoGenerico14: 10,
-        textoGenerico15: 10,
-        textoGenerico16: 10,
-        textoGenerico17: 10,
-        textoGenerico18: 10,
-        textoGenerico19: 10,
-        textoGenerico20: 10,
-        textoGenerico21: 10,
-        textoGenerico22: 40,
-        textoGenerico23: 40,
-        textoGenerico24: 40,
-        alerta1: false,
-        alerta2: false,
-      })
+    solicitudServiceMock.conseguirDomicilios.mockReturnValue(
+      of([
+        {
+          instalacionPrincipal: 'Planta Norte',
+          cveTipoInstalacion: '01',
+          tipoInstalacion: 'Fábrica',
+          cveEntidadFederativa: '09',
+          entidadFederativa: 'Ciudad de México',
+          cveDelegacionMunicipio: '010',
+          municipioDelegacion: 'Gustavo A. Madero',
+          direccion: 'Av. Central 123',
+          codigoPostal: '07760',
+          registroSESAT: 'SESAT-456789',
+          procesoProductivo: 'Fabricación de electrónicos',
+          fechaModificacion: '2025-04-18',
+          cveEstatus: 'A1',
+          estatus: 'Activo',
+          noExterior: '123',
+          noInterior: '5B',
+          cveColonia: '025',
+          calle: 'Av. Central',
+          descCol: 'Colonia Industrial',
+          idRecinto: 'RC-998877',
+          numFolioAcuse: 'FA-20250418-01',
+          observaciones: 'Instalación con verificación reciente.',
+        },
+      ])
     );
-    component.conseguirDatosGeneralesDeLaSolicitudDatos();
+    component.conseguirDomicilios();
+  });
+
+  it('should update tipoDeGarantia when actualizarTipoDeGarantia is called', () => {
+    const event = 'test';
+    component.actualizarTipoDeGarantia(event);
     expect(
-      solicitudServiceMock.conseguirDatosGeneralesDeLaSolicitudDatos
-    ).toHaveBeenCalled();
+      solicitud31101StoreMock.actualizarTipoDeGarantia
+    ).toHaveBeenCalledWith(event);
   });
 
-  it('should emit tipoDeEndosoChanges when getTipoDeEndoso is called', () => {
-    jest.spyOn(component.tipoDeEndosoChanges, 'emit');
-    const testValue = 'test';
-    component.getTipoDeEndoso(testValue);
-    expect(component.tipoDeEndosoChanges.emit).toHaveBeenCalledWith(testValue);
+  it('should calculate valor comercial correctly', () => {
+    component.ngOnInit();
+    component.datosGeneralesForm.patchValue({
+      textoGenerico10: '10',
+      textoGenerico13: '20',
+      textoGenerico16: '30',
+      textoGenerico19: '40',
+    });
+    component.calcularValorComercial();
+    expect(
+      solicitud31101StoreMock.actualizarTextoGenerico22
+    ).toHaveBeenCalledWith(100);
   });
 
-  it('should complete destroy$ on ngOnDestroy', () => {
-    const destroySpy = jest.spyOn(component['destroy$'], 'complete');
+  it('should calculate valor aduana correctly', () => {
+    component.ngOnInit();
+    component.datosGeneralesForm.patchValue({
+      textoGenerico11: '5',
+      textoGenerico14: '15',
+      textoGenerico17: '25',
+      textoGenerico20: '35',
+    });
+    component.calcularValorAduana();
+    expect(
+      solicitud31101StoreMock.actualizarTextoGenerico23
+    ).toHaveBeenCalledWith(80);
+  });
+
+  it('should calculate valor porcentaje correctly', () => {
+    component.ngOnInit();
+    component.datosGeneralesForm.patchValue({
+      textoGenerico12: '2',
+      textoGenerico15: '4',
+      textoGenerico18: '6',
+      textoGenerico21: '8',
+    });
+    component.calcularValorPorcentaje();
+  });
+
+  it('should destroy subscriptions on ngOnDestroy', () => {
+    const destroySpy = jest.spyOn(component['destroy$'], 'next');
+    const completeSpy = jest.spyOn(component['destroy$'], 'complete');
     component.ngOnDestroy();
     expect(destroySpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
   });
 });

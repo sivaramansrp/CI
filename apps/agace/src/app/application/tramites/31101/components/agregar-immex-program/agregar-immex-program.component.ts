@@ -12,12 +12,17 @@ import { EventEmitter } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
 import { Output } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
+import { Solicitud31101Query } from '../../estados/solicitud31101.query';
+import { Solicitud31101State } from '../../estados/solicitud31101.store';
+import { Solicitud31101Store } from '../../estados/solicitud31101.store';
 import { SolicitudService } from '../../services/solicitud.service';
 import { Subject } from 'rxjs';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src';
+import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
 
 @Component({
@@ -32,7 +37,7 @@ import { takeUntil } from 'rxjs';
   templateUrl: './agregar-immex-program.component.html',
   styleUrl: './agregar-immex-program.component.scss',
 })
-export class AgregarImmexProgramComponent implements OnDestroy {
+export class AgregarImmexProgramComponent implements OnInit, OnDestroy {
   agregarImmexProgramForm!: FormGroup;
   private destroy$: Subject<void> = new Subject<void>();
   tipoSeleccionTabla = TablaSeleccion.CHECKBOX;
@@ -42,18 +47,38 @@ export class AgregarImmexProgramComponent implements OnDestroy {
   domiciliosDatos: EntidadFederativa[] = [] as EntidadFederativa[];
   entidadFederativa: CatalogosSelect = {} as CatalogosSelect;
   domicilioslista: EntidadFederativa[] = [] as EntidadFederativa[];
+  solicitud31101State: Solicitud31101State = {} as Solicitud31101State;
   constructor(
     public fb: FormBuilder,
-    public solicitudService: SolicitudService
+    public solicitudService: SolicitudService,
+    public solicitud31101Store: Solicitud31101Store,
+    public solicitud31101Query: Solicitud31101Query
   ) {
     this.conseguirDatosGeneralesCatologo();
     this.conseguirEntidadFederativaDatos();
   }
 
+  ngOnInit(): void {
+    this.agregarImmexProgramForm = this.fb.group({
+      entidadFederativa: [this.solicitud31101State.entidadFederativa],
+    });
+
+    this.solicitud31101Query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((respuesta: Solicitud31101State) => {
+          this.solicitud31101State = respuesta;
+          this.agregarImmexProgramForm.patchValue({
+            entidadFederativa: this.solicitud31101State.entidadFederativa,
+          });
+        })
+      )
+      .subscribe();
+  }
+
   conseguirDatosGeneralesCatologo(): void {
     this.solicitudService
-      .conseguirDatosGeneralesCatologo()
-      .pipe(takeUntil(this.destroy$))
+      .conseguirDatosGeneralesCatologo().pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (respuesta: DatosGeneralesDeLaSolicitudCatologo) => {
           this.entidadFederativa = respuesta.entidadFederativa;
@@ -63,6 +88,7 @@ export class AgregarImmexProgramComponent implements OnDestroy {
 
   seleccionArentidadFederativa(evento: Catalogo): void {
     this.domicilioslista = this.domiciliosDatos;
+    this.solicitud31101Store.actualizarEntidadFederativa(evento.id);
   }
 
   agregarImmexProgram(): void {
