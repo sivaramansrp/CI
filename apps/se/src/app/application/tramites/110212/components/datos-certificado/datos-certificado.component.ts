@@ -77,8 +77,7 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
     private validacionPosterioriService: ValidacionPosterioriService,
     public store: Tramite110212Store,
     public tramiteQuery: Tramite110212Query,
-    // eslint-disable-next-line no-empty-function
-  ) { }
+      ) { }
 
   /**
    * Método que se ejecuta al inicializar el componente.

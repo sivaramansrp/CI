@@ -103,41 +103,14 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
    *
    * Define los encabezados y las claves para mostrar los datos de las mercancías disponibles.
    */
-  public disponiblesEncabezados: ConfiguracionColumna<DisponiblesTabla>[] = [
-    {
-      encabezado: 'Fracción arancelaria',
-      clave: (ele: DisponiblesTabla) => ele.fraccionArancelaria,
-      orden: 1,
-    },
-    {
-      encabezado: 'Nombre técnico',
-      clave: (ele: DisponiblesTabla) => ele.nombreTecnico,
-      orden: 2,
-    },
-    {
-      encabezado: 'Nombre comercial',
-      clave: (ele: DisponiblesTabla) => ele.nombreComercial,
-      orden: 3,
-    },
-    {
-      encabezado: 'Número de registro de productos',
-      clave: (ele: DisponiblesTabla) => ele.numeroRegistroProductos,
-      orden: 4,
-    },
-    {
-      encabezado: 'Fecha expedición',
-      clave: (ele: DisponiblesTabla) => ele.fechaExpedicion,
-      orden: 5,
-    },
-    {
-      encabezado: 'Fecha vencimiento',
-      clave: (ele: DisponiblesTabla) => ele.fechaVencimiento,
-      orden: 6,
-    },
-  ];
+  public disponiblesEncabezados: ConfiguracionColumna<DisponiblesTabla>[] = COLUMNAS_SELECCIONADAS.map((col) => ({
+    encabezado: col.encabezado,
+    clave: (ele: DisponiblesTabla) => col.clave(ele as unknown as SeleccionadasTabla),
+    orden: col.orden,
+  }));
 
-  /**
-   * Datos de la tabla de mercancías disponibles.
+    /**
+   * Datos de la tabla de mercancías disponibles
    *
    * Contiene la lista de mercancías que están disponibles para selección.
    */
@@ -286,7 +259,7 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
     public store: Tramite110212Store,
     public tramiteQuery: Tramite110212Query,
     private validacionesService: ValidacionesFormularioService
-  ) // eslint-disable-next-line no-empty-function
+  ) 
   {}
 
   /**
