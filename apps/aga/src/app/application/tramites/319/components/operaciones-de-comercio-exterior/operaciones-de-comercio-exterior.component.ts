@@ -10,7 +10,7 @@ import { OperacionService } from '../../services/operacion.service';
 
 import { Personas, Solicitar } from '../../models/personas.module';
 
-import {CONFIGURACION_PERSONAS_COLUMNAS, CONFIGURACION_SOLICITAR_COLUMNAS, INFO_ALERT, TEXTOS } from '../../constantes/operaciones-de-comercio-exterior.enum';
+import {CONFIGURACION_PERSONAS_COLUMNAS, CONFIGURACION_SOLICITAR_COLUMNAS, INFO_ALERT, REGEX_FECHA_MES_ANO, TEXTOS } from '../../constantes/operaciones-de-comercio-exterior.enum';
 import { Tramite319Query } from '../../estados/tramite319Query.query';
 import { Tramite319Store } from '../../estados/tramite319Store.store';
 
@@ -36,9 +36,9 @@ export function validadorDeMesyAno(): ValidatorFn {
   return (control: AbstractControl) => {
     const VALUE = control.value;
     if (!VALUE) {
-      return null; // If empty, leave to Validators.required
+      return null; 
     }
-    const REGEX = /^(0[1-9]|1[0-2])\/\d{4}$/; // Matches MM/YYYY
+    const REGEX = REGEX_FECHA_MES_ANO; 
     return REGEX.test(VALUE) ? null : { invalidMonthYear: true };
   };
 }
@@ -297,10 +297,30 @@ else{
   }
     this.periodoView = false;
   }
+  /**
+   * @method actualizarOperacionDesdeSeleccion
+   * @description Actualiza la operación seleccionada desde el formulario actual y la envía al store de trámite 319.
+   * 
+   * @compodoc
+   * Este método toma el valor de la operación desde el formulario asociado y lo utiliza para actualizar 
+   * el estado en el store correspondiente. Si no se encuentra un valor válido, se utiliza una cadena vacía por defecto.
+   * 
+   * @returns {void} Este método no retorna ningún valor.
+   */
   actualizarOperacionDesdeSeleccion() :void{
       this.tramite319Store.actualizarOperacion(this.miformulario?.value?.operacion|| '')
   }
 
+  /**
+   * @description Abre una alerta modal de selección con un mensaje predefinido.
+   * La alerta es de tipo "peligro" y requiere que el usuario seleccione un elemento.
+   * 
+   * @componente OperacionesDeComercioExteriorComponent
+   * @uso Este método se utiliza para mostrar una notificación de alerta
+   * cuando no se ha seleccionado un elemento en una operación.
+   * 
+   * @returns {void} No retorna ningún valor.
+   */
   abrirAlertaSeleccionModal(): void {
     this.nuevaAlertaNotificacion = {
       tipoNotificacion: 'alert',
