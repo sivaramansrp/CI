@@ -42,6 +42,12 @@ export interface Solicitud230202State {
   lungarDeEntrada: string;
   medioDeTransporte: Catalogo[] | null;
   numeroYDescripcion: string;
+  codigoPostal: string;
+  estado: Catalogo[] | null;
+  calle: string;
+  numeroExterior: string;
+  numeroInterior: string;
+  colonia: string;
 }
 
 /**
@@ -69,6 +75,12 @@ export function createInitialState(): Solicitud230202State {
     lungarDeEntrada: '',
     medioDeTransporte: null,
     numeroYDescripcion: '',
+    codigoPostal: '',
+    estado: null,
+    calle: '',
+    numeroExterior: '',
+    numeroInterior: '',
+    colonia: ''
   };
 }
 
@@ -228,6 +240,48 @@ export class Tramite230202Store extends Store<Solicitud230202State> {
     this.update((state) => ({
       ...state,
       numeroYDescripcion: numeroYDescripcion,
+    }));
+  }
+
+  public setCodigoPostal(codigoPostal: string) {
+    this.update((state) => ({
+      ...state,
+      codigoPostal: codigoPostal,
+    }));
+  }
+
+  public setEstado(estado: Catalogo[]) {
+    this.update((state) => ({
+      ...state,
+      estado: estado,
+    }));
+  }
+
+  public setCalle(calle: string) {
+    this.update((state) => ({
+      ...state,
+      calle: calle,
+    }));
+  }
+
+  public setNumeroExterior(numeroExterior: string) {
+    this.update((state) => ({
+      ...state,
+      numeroExterior: numeroExterior,
+    }));
+  }
+
+  public setNumeroInterior(numeroInterior: string) {
+    this.update((state) => ({
+      ...state,
+      numeroInterior: numeroInterior,
+    }));
+  }
+
+  public setColonia(colonia: string) {
+    this.update((state) => ({
+      ...state,
+      colonia: colonia,
     }));
   }
 

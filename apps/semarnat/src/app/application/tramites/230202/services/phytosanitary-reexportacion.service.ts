@@ -70,4 +70,8 @@ export class PhytosanitaryReexportacionService {
   getMedioDeTransporte(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>('assets/json/230202/medioDeTransporte.json');
   }
+
+  getEstado(): Observable<RespuestaCatalogos> {
+    return this.http.get<RespuestaCatalogos>('assets/json/230202/estado.json');
+  }
 }

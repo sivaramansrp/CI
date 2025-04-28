@@ -13,7 +13,6 @@ import {
   CrosslistComponent,
   CrossListLable,
   TablaDinamicaComponent,
-  TableComponent,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
 import {
@@ -85,6 +84,7 @@ export class DatosDeLaSolicitudComponent {
   nombreComun!: Catalogo[];
   unidadDeMedida!: Catalogo[];
   medioDeTransporte!: Catalogo[];
+  estado!: Catalogo[];
   fecha: FormControl = new FormControl('');
   fechaSeleccionada: FormControl = new FormControl('');
   @ViewChildren(CrosslistComponent) crossList!: QueryList<CrosslistComponent>;
@@ -196,6 +196,30 @@ export class DatosDeLaSolicitudComponent {
           this.solicitudState?.numeroYDescripcion,
           Validators.required,
         ],
+        codigoPostal: [
+          this.solicitudState?.codigoPostal, 
+          Validators.required,
+        ],
+        estado: [
+          this.solicitudState?.estado,
+          Validators.required,
+        ],
+        calle: [
+          this.solicitudState?.calle,
+          Validators.required,
+        ],
+        numeroExterior: [
+          this.solicitudState?.numeroExterior,
+          Validators.required,
+        ],
+        numeroInterior: [
+          this.solicitudState?.numeroInterior,
+          Validators.required,
+        ],
+        colonia: [
+          this.solicitudState?.colonia,
+          Validators.required,
+        ]
       }),
     });
 
@@ -312,6 +336,13 @@ export class DatosDeLaSolicitudComponent {
         })
       );
 
+    const ESTADO$ = this.phytosanitaryReexportacionService
+      .getEstado().pipe(
+        map((resp) => {
+          this.estado = resp.data;
+        })
+      );
+
     merge(
       NUMERODECERTIFICADO$,
       ADUANA$,
@@ -323,7 +354,8 @@ export class DatosDeLaSolicitudComponent {
       ESPECIE$,
       NOMBRECOMUN$,
       UNIDADDEMEDIDA$,
-      MEDIODETRANSPORTE$
+      MEDIODETRANSPORTE$,
+      ESTADO$
     )
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe();
@@ -400,6 +432,11 @@ export class DatosDeLaSolicitudComponent {
       'reexportacionForm.medioDeTransporte'
     )?.value;
     this.store.setMedioDeTransporte(MEDIODETRANSPORTE);
+  }
+
+  estadoSeleccion() {
+    const ESTADO = this.solicitudForm.get('reexportacionForm.estado')?.value;
+    this.store.setEstado(ESTADO);
   }
 
   public getCrossListBtn() {

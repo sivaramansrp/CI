@@ -158,7 +158,7 @@
             </app-catalogo-select>
           </div>
           <div class="col-md-4">
-            <label for="cantidad">Calle</label>
+            <label>Calle</label>
             <span class="require">*</span>
             <input
               type="text"
@@ -167,6 +167,44 @@
               id="calle"
               [required]="true"
               (change)="setValoresStore(reexportacionForm, 'calle', 'setCalle')"
+            />
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4">
+            <label>Colonia</label>
+            <span class="require">*</span>
+            <input
+              type="text"
+              class="form-control"
+              formControlName="colonia"
+              id="colonia"
+              [required]="true"
+              (change)="setValoresStore(reexportacionForm, 'colonia', 'setColonia')"
+            />
+          </div>
+          <div class="col-md-4">
+            <label>Número exterior</label>
+            <span class="require">*</span>
+            <input
+              type="text"
+              class="form-control"
+              formControlName="numeroExterior"
+              id="numeroExterior"
+              [required]="true"
+              (change)="setValoresStore(reexportacionForm, 'numeroExterior', 'setNumeroExterior')"
+            />
+          </div>
+          <div class="col-md-4">
+            <label>Número interior</label>
+            <span class="require">*</span>
+            <input
+              type="text"
+              class="form-control"
+              formControlName="numeroInterior"
+              id="numeroInterior"
+              [required]="true"
+              (change)="setValoresStore(reexportacionForm, 'numeroInterior', 'setNumeroInterior')"
             />
           </div>
         </div>
