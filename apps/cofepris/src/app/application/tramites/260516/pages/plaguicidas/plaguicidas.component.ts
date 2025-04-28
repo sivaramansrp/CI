@@ -1,5 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { ListaPasosWizard, PASOS } from '@libs/shared/data-access-user/src';
+import { DatosDomicilioLegalService } from '../../../../shared/services/datos-domicilio-legal.service';
+import { DatosDomicilioLegalState } from '../../../../shared/estados/stores/datos-domicilio-legal.store';
 import { DatosPasos } from '@libs/shared/data-access-user/src/core/models/shared/components.model';
 import { WizardComponent } from '@libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
 
@@ -20,6 +22,10 @@ interface AccionBoton {
   templateUrl: './plaguicidas.component.html',
 })
 export class PlaguicidasComponent {
+constructor(private datosDomicilioLegalService: DatosDomicilioLegalService) {
+
+}
+
   /**
    * Lista de pasos del asistente.
    * Se obtiene de una constante definida en otro archivo.
@@ -55,6 +61,7 @@ export class PlaguicidasComponent {
    */
   getValorIndice(e: AccionBoton): void {
     if (e.valor > 0 && e.valor < 5) {
+      this.datosDomicilioLegalState();
       this.indice = e.valor;
       if (e.accion === 'cont') {
         this.wizardComponent.siguiente();
@@ -62,5 +69,14 @@ export class PlaguicidasComponent {
         this.wizardComponent.atras();
       }
     }
+  }
+
+  public datosDomicilioLegal!: DatosDomicilioLegalState;
+
+  datosDomicilioLegalState():void{
+    this.datosDomicilioLegalService.getDatosDomicilioLegalState().subscribe((state) => {
+      this.datosDomicilioLegal = state;
+      console.log(this.datosDomicilioLegal);
+    });
   }
 }
