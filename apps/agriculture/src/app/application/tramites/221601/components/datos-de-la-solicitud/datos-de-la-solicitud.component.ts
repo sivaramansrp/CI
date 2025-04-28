@@ -232,7 +232,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       clave: [this.solicitudState.clave,Validators.required],
       establecimiento: [this.solicitudState.establecimiento, Validators.required],
       regimen: [this.solicitudState.regimen, Validators.required],
-      carro: [this.solicitudState.carro],
       veterinario: [this.solicitudState.veterinario, Validators.required],
       capturaMercancia: [this.solicitudState.capturaMercancia, Validators.required]
     });

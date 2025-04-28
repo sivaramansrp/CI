@@ -86,7 +86,7 @@
     <div class="row">
       <div class="col-md-4">
         <div class="form-group">
-          <label class="form-label" for="clave">Clave UCON:</label>
+          <label class="form-label" for="clave">Clave UCON*:</label>
           <input class="form-control" id="clave" formControlName="clave" type="number"
             (change)="setValoresStore(datosSolicitudForm, 'clave', 'setClave')" />
         </div>
@@ -137,25 +137,6 @@
         </div>
       </div>
     </div>
-
-
-    <div class="row pb-20">
-      <div class="col-md-4">
-        <div class="form-group">
-          <label class="form-label" for="carro">Número de Carro de Ferrocarril:</label>
-          <input class="form-control" id="carro" formControlName="carro" type="text"
-            (change)="setValoresStore(datosSolicitudForm, 'carro', 'setCarro')" />
-        </div>
-        @if(datosSolicitudForm.controls['carro'].invalid && datosSolicitudForm.controls['carro'].touched) {
-          <div class="d-grid">
-            @if(datosSolicitudForm.controls['carro'].errors?.['required']) {
-              <span class="mensaje-error">Este campo es obligatorio</span>
-            }
-          </div>
-        }
-      </div>
-    </div>
-
     
     <div class="row m-0">
       <ng-titulo titulo="Tipo de mercancía*:" />
