@@ -23,26 +23,29 @@ import { map, takeUntil } from 'rxjs/operators';
 import { AmpliacionServiciosQuery } from '../../estados/tramite90302.query';
 import { AmpliacionServiciosService } from '../../services/ampliacion-servicios.service';
 import { AmpliacionServiciosState } from '../../estados/tramite90302.store';
-import { CONFIGURACION_SECTOR } from "../../constantes/modificacion.constants";
-import { Component } from '@angular/core';
+import { CONFIGURACION_BITCORA, CONFIGURACION_MERCANCIAS_A_PRODUCIR, CONFIGURACION_PLANTAS, CONFIGURACION_PRODUCTOR_INDIRECTO, CONFIGURACION_SECTOR, CONFIGURACION_SECTOR1 } from "../../constantes/modificacion.constants";
+import { Component,Input } from '@angular/core';
 import { ConfiguracionColumna } from '../../models/configuracion-columna.model';
 import { HttpClient } from '@angular/common/http';
 import { Sector } from "../../models/datos-info.model";
+import { Bitacora,MercanciasAProducir, Plantas,ProductorIndirecto,Sector1} from "../../models/datos-info.model";
+
 import { Subject } from 'rxjs';
-import { Tramite90302Store } from '../../estados/tramite90302.store';
+import { Tramite80206Store } from '../../estados/tramite90302.store';
 
 @Component({
-  selector: 'app-ampliacion-3rs',
-  templateUrl: './ampliacion-3rs.component.html',
-  styleUrl: './ampliacion-3rs.component.scss',
+  selector: 'app-bitacora',
+  templateUrl: './bitacora.component.html',
+  styleUrl: './bitacora.component.scss',
 })
-export class Ampliacion3RsComponent implements OnInit, OnDestroy {
+export class BitacoraComponent implements OnInit, OnDestroy {
   /**
    * Indica si una regla ha sido seleccionada.
    * @property {boolean} isSelectedRegla
    */
   isSelectedRegla: boolean = false;
-
+  
+@Input() esDeSolicitante: boolean = false; 
   /**
    * Lista de sectores recibidos.
    * @property {Sector[]} recibioSector
@@ -67,11 +70,25 @@ export class Ampliacion3RsComponent implements OnInit, OnDestroy {
    */
   configuracionTablaSector: ConfiguracionColumna<Sector>[] = CONFIGURACION_SECTOR;
 
+  configuracionTablaBitacora: ConfiguracionColumna<Bitacora>[] = CONFIGURACION_BITCORA;
+
+  configuracionTablaMercancias: ConfiguracionColumna<MercanciasAProducir>[] = CONFIGURACION_MERCANCIAS_A_PRODUCIR;
+
+  configuracionTablaPlantas: ConfiguracionColumna<Plantas>[] = CONFIGURACION_PLANTAS;
+  configuracionTablaProductor: ConfiguracionColumna<ProductorIndirecto>[] = CONFIGURACION_PRODUCTOR_INDIRECTO;
+  configuracionTablaSector1: ConfiguracionColumna<Sector1>[] = CONFIGURACION_SECTOR1;
+
   /**
    * Lista de datos de sectores.
    * @property {Sector[]} datosSector
    */
   datosSector: Sector[] = [];
+
+  datosBitacora: Bitacora[] = [];
+  datosMercancias: MercanciasAProducir[] = [];
+  datosPlantas: Plantas[] = [];
+  datosProductor: ProductorIndirecto[] = [];
+  datosSector1: Sector1[] = [];
 
   /**
    * Lista de domicilios seleccionados.
@@ -120,7 +137,7 @@ export class Ampliacion3RsComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private ampliacionServiciosService: AmpliacionServiciosService,
     private ampliacionServiciosQuery: AmpliacionServiciosQuery,
-    private tramite90302Store: Tramite90302Store,
+    private tramite80206Store: Tramite80206Store,
     private readonly httpServicios: HttpClient
   ) {
     this.inicializarFormularioInfoRegistro();
@@ -134,7 +151,67 @@ export class Ampliacion3RsComponent implements OnInit, OnDestroy {
     this.obtenerReglaSelectList();
     this.inicializarFormularioDesdeAlmacen();
     this.obtenerSectorSelectList();
+    
+    this.getBitacoraProsec();
+    this.getMercanciasProsec();
+    this.getPlantasProsec();
+    this.getProductorProsec();
+    this.getSectoresProsec();
+    
+
   }
+  getBitacoraProsec(): void {
+    this.ampliacionServiciosService.getBitacoraProsec()
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe((resp) => {
+      if (resp.code === 200) {
+        const RESPONSE = resp.data;
+        this.datosBitacora = RESPONSE;
+      }
+    });
+  }
+  getMercanciasProsec(): void {
+    this.ampliacionServiciosService.getMercanciasProsec()
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe((resp) => {
+      if (resp.code === 200) {
+        const RESPONSE = resp.data;
+        this.datosMercancias = RESPONSE;
+      }
+    });
+  }
+  getPlantasProsec(): void {
+    this.ampliacionServiciosService.getPlantasProsec()
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe((resp) => {
+      if (resp.code === 200) {
+        const RESPONSE = resp.data;
+        this.datosPlantas = RESPONSE;
+      }
+    });
+  }
+  getProductorProsec(): void {
+    this.ampliacionServiciosService.getProductorIndirectoProsec()
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe((resp) => {
+      if (resp.code === 200) {
+        const RESPONSE = resp.data;
+        this.datosProductor = RESPONSE;
+      }
+    });
+  }
+  getSectoresProsec(): void {
+    this.ampliacionServiciosService.getSectoresProsec()
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe((resp) => {
+      if (resp.code === 200) {
+        const RESPONSE = resp.data;
+        this.datosSector1 = RESPONSE;
+      }
+    });
+  }
+  
+
 
   /**
    * Inicializa el formulario con datos del store.
@@ -182,7 +259,7 @@ export class Ampliacion3RsComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data) => {
         const DATOS = data.data;
-        this.tramite90302Store.setReglaSeleccionada(DATOS);
+        this.tramite80206Store.setReglaSeleccionada(DATOS);
         this.ampliacionServiciosQuery.selectSolicitudTramite$
           .pipe(takeUntil(this.destroyNotifier$))
           .subscribe((sector: AmpliacionServiciosState) => {
@@ -201,7 +278,7 @@ export class Ampliacion3RsComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data) => {
         const DATOS = data.data;
-        this.tramite90302Store.setSectorDesplegable(DATOS);
+        this.tramite80206Store.setSectorDesplegable(DATOS);
         this.ampliacionServiciosQuery.selectSolicitudTramite$
           .pipe(takeUntil(this.destroyNotifier$))
           .subscribe((sector: AmpliacionServiciosState) => {
@@ -224,7 +301,7 @@ export class Ampliacion3RsComponent implements OnInit, OnDestroy {
         DATOS_IMMEX_ACTUALIZADOS.splice(INDICE, 1);
       }
     });
-    this.tramite90302Store.setDatosSector(DATOS_IMMEX_ACTUALIZADOS);
+    this.tramite80206Store.setDatosSector(DATOS_IMMEX_ACTUALIZADOS);
     this.domiciliosSeleccionados = [];
   }
 
@@ -237,7 +314,7 @@ export class Ampliacion3RsComponent implements OnInit, OnDestroy {
       descripcion: this.recibioSector[0]?.descripcion,
       descripcionSector: this.recibioSector[0]?.descripcionSector,
     };
-    this.tramite90302Store.setDatosSector([...this.datosSector, CUERPODATOS]);
+    this.tramite80206Store.setDatosSector([...this.datosSector, CUERPODATOS]);
   }
 
   /**
@@ -259,8 +336,8 @@ export class Ampliacion3RsComponent implements OnInit, OnDestroy {
   procesarDatosDelHijo(data: Catalogo | Catalogo[]): void {
     this.isSelectedRegla = true;
     this.ampliacionServiciosService.enviarDeberiaMostrar(this.isSelectedRegla);
-    this.tramite90302Store.setIsSelectedRegla(this.isSelectedRegla);
-    this.tramite90302Store.setAduanaDeIngresoSeleccion(data as Catalogo);
+    this.tramite80206Store.setIsSelectedRegla(this.isSelectedRegla);
+    this.tramite80206Store.setAduanaDeIngresoSeleccion(data as Catalogo);
   }
 
   /**
@@ -270,7 +347,7 @@ export class Ampliacion3RsComponent implements OnInit, OnDestroy {
    */
   cambioDeSector(data: Catalogo | Catalogo[]): void {
     this.recibioSector = Array.isArray(data) ? data : [data];
-    this.tramite90302Store.setSectorSeleccion(data as Catalogo);
+    this.tramite80206Store.setSectorSeleccion(data as Catalogo);
   }
 
   /**

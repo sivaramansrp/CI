@@ -7,7 +7,7 @@ import { By } from '@angular/platform-browser';
 import { Observable, of as observableOf,Subject, throwError } from 'rxjs';
 
 import { Component } from '@angular/core';
-import { Ampliacion3RsComponent } from './ampliacion-3rs.component';
+import { Ampliacion3RsComponent } from './bitacora.component';
 import { FormBuilder } from '@angular/forms';
 import { AmpliacionServiciosService } from '../../services/ampliacion-servicios.service';
 import { AmpliacionServiciosQuery } from '../../estados/tramite80206.query';

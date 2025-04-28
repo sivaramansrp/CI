@@ -9,17 +9,15 @@
  * relacionados con el registro de la solicitud IMMEX.
  */
 
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { Subject, takeUntil } from 'rxjs';
+import { Component, OnDestroy, ViewChild } from '@angular/core';
 import { ALERT } from '../../constantes/modificacion.constants';
-import { AmpliacionServiciosQuery } from '../../estados/tramite90302.query';
-import { AmpliacionServiciosService } from '../../services/ampliacion-servicios.service';
+import { Subject, } from 'rxjs';
+
 import { Aviso } from '@ng-mf/data-access-user';
-import { ChangeDetectorRef } from '@angular/core';
+
 import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS } from '../../constantes/modificacion.constants';
-import { SeccionLibStore } from '@libs/shared/data-access-user/src/core/estados/seccion.store';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
 /**
@@ -44,7 +42,7 @@ interface AccionBoton {
   selector: 'app-registro-page',
   templateUrl: './registro-page.component.html',
 })
-export class RegistroPageComponent implements OnInit, OnDestroy {
+export class RegistroPageComponent implements OnDestroy {
   /**
    * Array de pasos del asistente.
    * @property {ListaPasosWizard[]} pasos - Lista de los pasos del asistente, incluyendo título y componente asociado.
@@ -110,45 +108,6 @@ export class RegistroPageComponent implements OnInit, OnDestroy {
    */
   mensajeDeTextoDeExito: string = "MENSAJE_DE_ÉXITO_ETAPA_UNO";
 
-  /**
-   * Controla la visibilidad de las alertas.
-   * @property {boolean} mostrarAlerta
-   */
-  mostrarAlerta: boolean = false;
-
-  /**
-   * Constructor del componente.
-   * @constructor
-   * @param {AmpliacionServiciosQuery} tramiteQuery - Servicio para consultar el estado del trámite.
-   * @param {SeccionLibStore} seccion - Servicio para gestionar las secciones del formulario.
-   * @param {AmpliacionServiciosService} ampliacionServiciosService - Servicio para gestionar la lógica de ampliación de servicios.
-   * @param {ChangeDetectorRef} cdRef - Servicio para detectar cambios en la vista.
-   */
-  constructor(
-    private tramiteQuery: AmpliacionServiciosQuery,
-    private seccion: SeccionLibStore,
-    private ampliacionServiciosService: AmpliacionServiciosService,
-    private cdRef: ChangeDetectorRef
-  ) {
-    this.tramiteQuery.FormaValida$.pipe(takeUntil(this.destroyNotifier$)).subscribe((res) => {
-      this.seccion.establecerSeccion([true]);
-      this.seccion.establecerFormaValida([res]);
-    });
-  }
-
-  /**
-   * Método de inicialización del componente.
-   * Suscribe a los cambios en el servicio de ampliación de servicios para mostrar u ocultar alertas.
-   * @method ngOnInit
-   */
-  ngOnInit(): void {
-    this.ampliacionServiciosService.deberiaMostrar$
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((res) => {
-        this.mostrarAlerta = !res;
-        this.cdRef.detectChanges();
-      });
-  }
 
   /**
    * Maneja la acción del botón y navega entre los pasos.

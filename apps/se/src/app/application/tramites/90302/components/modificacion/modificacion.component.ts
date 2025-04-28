@@ -11,12 +11,6 @@
  */
 
 import {
-  Arancelaria,
-  ArancelariaImportacion,
-  Servicios
-} from "../../models/datos-info.model";
-
-import {
   FormBuilder,
   FormGroup,
 } from '@angular/forms';
@@ -26,14 +20,14 @@ import {
 } from "../../constantes/modificacion.constants";
 
 import { OnDestroy, OnInit } from '@angular/core';
-import { map,takeUntil} from 'rxjs/operators';
 import { AmpliacionServiciosQuery } from '../../estados/tramite90302.query';
 import { AmpliacionServiciosService } from '../../services/ampliacion-servicios.service';
-import { AmpliacionServiciosState } from '../../estados/tramite90302.store';
 import { ApiResponse } from "../../models/datos-info.model";
+
 import { Component } from '@angular/core';
 import { Subject } from 'rxjs';
 import { Tramite90302Store } from '../../estados/tramite90302.store';
+import { takeUntil} from 'rxjs/operators';
 
 
 @Component({
@@ -48,11 +42,6 @@ export class ModificacionComponent implements OnInit, OnDestroy {
    */
   formularioInfoRegistro!: FormGroup;
 
-  /**
-   * Información sobre el registro actual.
-   * @property {Servicios} infoRegistro
-   */
-  infoRegistro!: Servicios;
 
   /**
    * Textos constantes para el componente.
@@ -80,9 +69,6 @@ export class ModificacionComponent implements OnInit, OnDestroy {
     private ampliacionServiciosQuery: AmpliacionServiciosQuery, 
     private tramite90302Store: Tramite90302Store,
   ) {
-   
-    this.inicializarFormularioInfoRegistro();
-  
   }
 
   /**
@@ -90,7 +76,9 @@ export class ModificacionComponent implements OnInit, OnDestroy {
    * @method ngOnInit
    */
   ngOnInit():void {
-   this.getDatos();
+    this.getDatos();
+   this.inicializarFormularioInfoRegistro();
+   this.inicializarFormularioDesdeAlmacen();
   }
   
   /**
@@ -103,15 +91,11 @@ export class ModificacionComponent implements OnInit, OnDestroy {
        const RESPONSE = respuesta as unknown as ApiResponse;
       if (RESPONSE) {
         this.tramite90302Store.setInfoRegistro(RESPONSE.data.infoServicios);
-       // this.inicializarFormularioDesdeAlmacen();
       }
     })
   
   } 
- 
   
-  
-
   /**
    * Inicializa el formulario de información de registro.
    * @method inicializarFormularioInfoRegistro
@@ -123,6 +107,17 @@ export class ModificacionComponent implements OnInit, OnDestroy {
       representacionFederal: [{ value: '', disabled: true }],
       tipoModificacion: [{ value: '', disabled: true }],
       modificacionPrograma: [{ value: '', disabled: true }],
+    });
+  }
+
+  inicializarFormularioDesdeAlmacen():void{
+    this.ampliacionServiciosQuery.selectInfoRegistro$.pipe(takeUntil(this.destroyNotifier$)).subscribe((infoRegistro) => {
+      this.formularioInfoRegistro.patchValue({
+        rfc: infoRegistro.rfc,
+        representacionFederal: infoRegistro.representacionFederal,
+        tipoModificacion: infoRegistro.tipoModificacion,
+        modificacionPrograma: infoRegistro.modificacionPrograma,
+      });
     });
   }
 

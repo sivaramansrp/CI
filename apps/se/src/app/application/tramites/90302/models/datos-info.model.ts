@@ -2,7 +2,7 @@
  * @fileoverview
  * Este archivo define las interfaces utilizadas en el módulo de ampliación de servicios.
  * Proporciona estructuras de datos para sectores, fracciones arancelarias, importaciones, respuestas de API y otros modelos relacionados.
- * 
+ *
  * @module DatosInfoModel
  * @description
  * Este archivo contiene las definiciones de las interfaces necesarias para manejar los datos relacionados con sectores, fracciones arancelarias,
@@ -221,54 +221,12 @@ export interface DatosResponse {
   };
 }
 
-/**
- * Interfaz que representa la información de los servicios.
- * @export
- * @interface InfoServicios
- */
+
 export interface InfoServicios {
-  /**
-   * Modalidad seleccionada.
-   * @property {string} seleccionaLaModalidad
-   */
-  seleccionaLaModalidad: string;
-
-  /**
-   * Folio del servicio.
-   * @property {string} folio
-   */
-  folio: string;
-
-  /**
-   * Año del servicio.
-   * @property {string} ano
-   */
-  ano: string;
-}
-
-/**
- * Interfaz que representa los servicios.
- * @export
- * @interface Servicios
- */
-export interface Servicios {
-  /**
-   * Modalidad seleccionada.
-   * @property {string} seleccionaLaModalidad
-   */
-  seleccionaLaModalidad: string;
-
-  /**
-   * Folio del servicio.
-   * @property {string} folio
-   */
-  folio: string;
-
-  /**
-   * Año del servicio.
-   * @property {string} ano
-   */
-  ano: string;
+  rfc: string;
+  representacionFederal: string;
+  tipoModificacion: string;
+  modificacionPrograma: string;
 }
 
 /**
@@ -334,7 +292,7 @@ export interface AccionBoton {
   valor: number;
 }
 
-export interface Plantas{
+export interface Plantas {
   calle: string;
   numeroExterior: string;
   numeroInterior: string;
@@ -347,34 +305,28 @@ export interface Plantas{
   razonSocial: string;
   domicilioFisical: string;
   estatus: string;
-
-
-
 }
 
-export interface MercancíasAProducir{
-  fraccionArancelaria:string,
-  claveSector:string,
-  estatus:string,
+export interface MercancíasAProducir {
+  fraccionArancelaria: string;
+  claveSector: string;
+  estatus: string;
 }
-export interface Sector1{
-  listaSectores:string;
-  claveSector:string;
-  estatus:string;
-
+export interface Sector1 {
+  listaSectores: string;
+  claveSector: string;
+  estatus: string;
 }
 
-export interface ProductorIndirecto{
-  rfc:string;
-  denominacion:string;
-  correo:string;
-  estatus:string;
+export interface ProductorIndirecto {
+  rfc: string;
+  denominacion: string;
+  correo: string;
+  estatus: string;
 }
-export interface Bitacora{
-  tipoModificacion:string;
-  fechaModificacion:string;
-  valoresAnteriores:string;
-  valoresNuevos:string;
-
-
+export interface Bitacora {
+  tipoModificacion: string;
+  fechaModificacion: string;
+  valoresAnteriores: string;
+  valoresNuevos: string;
 }

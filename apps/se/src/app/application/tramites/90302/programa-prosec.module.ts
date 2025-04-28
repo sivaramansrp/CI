@@ -1,6 +1,5 @@
 import { AlertComponent } from '@ng-mf/data-access-user';
-import { Ampliacion3RsComponent } from './components/bitacora/ampliacion-3rs.component';
-import { ModificacionComponent } from './components/modificacion/modificacion.component';
+
 import { AnexarDocumentosComponent } from '@ng-mf/data-access-user';
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
@@ -11,6 +10,7 @@ import { FirmaElectronicaComponent } from '@ng-mf/data-access-user';
 import { FormsModule} from '@angular/forms';
 import { InputCheckComponent } from '@ng-mf/data-access-user';
 import { InputFechaComponent } from '@ng-mf/data-access-user';
+import { ModificacionComponent } from './components/modificacion/modificacion.component';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from '@ng-mf/data-access-user';
@@ -43,7 +43,6 @@ import { ToastrService } from 'ngx-toastr';
     PasoTresComponent,
     PasoUnoComponent,
     RegistroPageComponent,
-    Ampliacion3RsComponent,
     ModificacionComponent
 
   ],

@@ -22,32 +22,6 @@ export class AmpliacionServiciosQuery extends Query<AmpliacionServiciosState> {
   selectInfoRegistro$ = this.select((state) => state.infoRegistro);
 
   /**
-   * Selector para obtener los datos IMMEX del estado.
-   * @property {Observable<Arancelaria[]>} selectDatosImmex$
-   */
-  selectDatosImmex$ = this.select((state) => state.datosImmex);
-
-  /**
-   * Selector para obtener los datos generales del estado.
-   * @property {Observable<Arancelaria[]>} selectDatos$
-   */
-  selectDatos$ = this.select((state) => state.datos);
-
-  /**
-   * Selector para obtener la aduana de ingreso seleccionada del estado.
-   * @property {Observable<Catalogo>} selectAduanaDeIngresoSelecion$
-   */
-  selectAduanaDeIngresoSelecion$ = this.select((state) => state.aduanaDeIngresoSelecion);
-
-  /**
-   * Selector para verificar si todos los campos del formulario son válidos.
-   * @property {Observable<boolean>} FormaValida$
-   */
-  FormaValida$ = this.select((state) => {
-    return Object.values(state.formaValida).every(value => value === true);
-  });
-
-  /**
    * Constructor de la clase `AmpliacionServiciosQuery`.
    * @constructor
    * @param {Tramite90302Store} store - Instancia del store de ampliación de servicios.
