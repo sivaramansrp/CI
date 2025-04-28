@@ -20,30 +20,22 @@
         >
         <textarea
           id="message"
-          class="form-control mb-5"
+          class="form-control"
           placeholder="Descripcion de la mercancia"
           rows="8"
           formControlName="descripcion"
           maxlength="500"
           (change)="setValoresStore(formDelLa,'descripcion', 'setDescripcion')"
         ></textarea>
-        <div
-          *ngIf="
-            formDelLa.controls['descripcion'].invalid &&
-            formDelLa.controls['descripcion'].touched
-          "
-          class="text-danger"
-        >
-          <small *ngIf="formDelLa.controls['descripcion'].errors?.['required']"
-            >La descripción es obligatoria.</small
-          >
-          <small *ngIf="formDelLa.controls['descripcion'].errors?.['minlength']"
-            >Debe tener al menos 10 caracteres.</small
-          >
-          <small *ngIf="formDelLa.controls['descripcion'].errors?.['maxlength']"
-            >Por favor corrija la descripción.</small
-          >
-          <small *ngIf="formDelLa.controls['descripcion'].errors?.['leadingSpaces']">No se permiten espacios al inicio del campo.</small>
+        <div *ngIf="
+                    formDelLa.controls['descripcion'].invalid &&
+                    formDelLa.controls['descripcion'].touched
+                  " class="text-danger">
+          <small *ngIf="formDelLa.controls['descripcion'].errors?.['required']">La descripción es obligatoria.</small>
+          <small *ngIf="formDelLa.controls['descripcion'].errors?.['minlength']">Debe tener al menos 10 caracteres.</small>
+          <small *ngIf="formDelLa.controls['descripcion'].errors?.['maxlength']">Por favor corrija la descripción.</small>
+          <small *ngIf="formDelLa.controls['descripcion'].errors?.['leadingSpaces']">No se permiten espacios al inicio del
+            campo.</small>
         </div>
       </div>
     </div>
