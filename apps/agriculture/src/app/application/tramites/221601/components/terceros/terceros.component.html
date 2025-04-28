@@ -98,16 +98,10 @@
       <input class="form-control" id="segundoApellido" type="text" formControlName="segundoApellido"       
         (change)="setValoresStore(datosPersonales,'segundoApellido', 'setSegundoApellido')" />
     </div>
-    @if(datosPersonales.controls['segundoApellido'].invalid && datosPersonales.controls['segundoApellido'].touched) {
-      <div class="d-grid">
-        @if(datosPersonales.controls['segundoApellido'].errors?.['required']) {
-          <span class="mensaje-error">Este campo es obligatorio</span>
-        }
-      </div>
+     </div>
+     </div>
     }
-    </div>
-  </div>
-}
+
 @if (showPlantaRow) {
 <div class="row" >
   <div class="col-md-4 mb-3">
@@ -115,13 +109,6 @@
     <input class="form-control" id="tif" type="number" formControlName="tif"      
       (change)="setValoresStore(datosPersonales,'tif', 'setTif')" />
   </div>
-  @if(datosPersonales.controls['tif'].invalid && datosPersonales.controls['tif'].touched) {
-    <div class="d-grid">
-      @if(datosPersonales.controls['tif'].errors?.['required']) {
-        <span class="mensaje-error">Este campo es obligatorio</span>
-      }
-    </div>
-  }
 </div>
 }
   @if (showMoralRow) {
@@ -212,17 +199,11 @@
     </div>
     <div class="col-md-4">
       <div class="form-group">
-        <label class="form-label" for="interior">Número interior*:</label>
+        <label class="form-label" for="interior">Número interior:</label>
         <input class="form-control" id="interior" type="number" formControlName="interior"          
           (change)="setValoresStore(datosPersonales,'interior', 'setInterior')" />
       </div>
-      @if(datosPersonales.controls['interior'].invalid && datosPersonales.controls['interior'].touched) {
-        <div class="d-grid">
-          @if(datosPersonales.controls['interior'].errors?.['required']) {
-            <span class="mensaje-error">Este campo es obligatorio</span>
-          }
-        </div>
-      }
+     
     </div>  
   </div>
   <div class="row">
@@ -243,7 +224,7 @@
    
     </div>
     <div class="col-md-4 mb-3">
-      <label class="form-label" for="correoElectronico">Correo electrónico:</label>
+      <label class="form-label" for="correoElectronico">Correo electrónico*:</label>
       <div class="input-group">
        <input class="form-control" id="correoElectronico" type="email" formControlName="correoElectronico"        
         (change)="setValoresStore(datosPersonales,'correoElectronico', 'setCorreoElectronico')" />

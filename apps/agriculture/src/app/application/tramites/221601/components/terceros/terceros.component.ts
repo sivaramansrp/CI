@@ -211,14 +211,14 @@ export class TercerosComponent implements OnInit, OnDestroy {
             codigo: [this.solicitudState.codigo],
             estado: [this.solicitudState.estado, Validators.required],
             municipio: [this.solicitudState.municipio, Validators.required],
-            colonia: [this.solicitudState.colonia, Validators.required],
+            colonia: [this.solicitudState.colonia],
             calle: [this.solicitudState.calle, Validators.required],
             exterior: [this.solicitudState.exterior, Validators.required],
-            interior: [this.solicitudState.interior, Validators.required],
+            interior: [this.solicitudState.interior],
             lada: [this.solicitudState.lada],
             telefono: [this.solicitudState.telefono],
             correoElectronico: [this.solicitudState.correoElectronico,Validators.required],
-            tif: [this.solicitudState.tif,Validators.required],
+            tif: [this.solicitudState.tif],
           });
          
           this.datosPersonales.get('pais')?.setValue(this.paisCatalogo[0].id);

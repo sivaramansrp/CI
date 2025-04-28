@@ -3,8 +3,10 @@ import { Component,OnDestroy,OnInit} from '@angular/core';
 import { FormBuilder,FormGroup,FormsModule,ReactiveFormsModule,Validators } from '@angular/forms';
 import { Solicitud221601State, Tramite221601Store } from '../../../../estados/tramites/tramite221601.store';
 import { Subject,map,takeUntil } from 'rxjs';
+import { INPUT_FECHA_CONFIG } from '@libs/shared/data-access-user/src/core/enums/221601/fecha.enum';
 import { Tramite221601Query } from '../../../../estados/queries/tramite221601.query';
 import realizar from '@libs/shared/theme/assets/json/221601/zoosanitario.json';
+
 /**
  * Componente encargado de gestionar el pago de derechos dentro del trámite 221601.
  * Permite al usuario ingresar los datos correspondientes al pago de derechos, como clave, dependencia, banco,
@@ -132,7 +134,7 @@ export class PagoDeDerechos221601Component implements OnInit, OnDestroy {
       fecha: [this.solicitudState.fecha, Validators.required],
       importe: [this.solicitudState.importe, [Validators.required, Validators.min(1)]]
     });
-
+    
     this.pagoDerechosForm.get('claves')?.disable();
     this.pagoDerechosForm.get('dependencia')?.disable();
     this.pagoDerechosForm.get('importe')?.disable();
@@ -177,25 +179,7 @@ export class PagoDeDerechos221601Component implements OnInit, OnDestroy {
    * Constante para configurar el input de fecha.
    * Define las propiedades del campo de entrada de fecha.
    */
-    INPUT_FECHA_CONFIG = {
-      /**
-       * Propiedad labelNombre
-       * Descripción: Etiqueta que se muestra como nombre del campo.
-       */
-      labelNombre: 'Fecha de pago',
-    
-      /**
-       * Propiedad required
-       * Descripción: Indica si el campo es obligatorio.
-       */
-      required: true,
-    
-      /**
-       * Propiedad habilitado
-       * Descripción: Indica si el campo está habilitado para su edición.
-       */
-      habilitado: true,
-    };
+    INPUT_FECHA_CONFIG = INPUT_FECHA_CONFIG;
   /**
    * Método que se ejecuta cuando el componente es destruido.
    * 
