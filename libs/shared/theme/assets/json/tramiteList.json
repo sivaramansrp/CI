@@ -2088,8 +2088,8 @@
   {
     "id": 299,
     "tramite": 6102,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/aga/junta-tecnica-registro/registro-tecnica",
+    "linkDepartment": "/pago/junta-tecnica-registro/registro-tecnica",
     "department": "aga"
   },
   {
