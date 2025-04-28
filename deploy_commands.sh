@@ -187,8 +187,8 @@ if [ $? -ne 0 ]; then
 fi
 
 # Reiniciar despliegue para aplicar cambios
-echo "Reiniciando deployment vucem-microfrontends-dev..." | tee -a "$LOG_FILE"
-microk8s kubectl rollout restart deployment vucem-microfrontends-dev -n default | tee -a "$LOG_FILE"
+echo "Reiniciando deployment vucem-microfrontends-${DEPLOYMENT_ENV}..." | tee -a "$LOG_FILE"
+microk8s kubectl rollout restart deployment vucem-microfrontends-${DEPLOYMENT_ENV} -n default | tee -a "$LOG_FILE"
 if [ $? -ne 0 ]; then
   echo "Error: Falló el reinicio del deployment." | tee -a "$LOG_FILE"
   exit 1
@@ -212,7 +212,7 @@ microk8s kubectl get ingress -n default | tee -a "$LOG_FILE"
 
 # Esperar a que el despliegue esté disponible
 echo "Esperando a que el despliegue esté disponible..." | tee -a "$LOG_FILE"
-microk8s kubectl rollout status deployment/vucem-microfrontends-dev -n default --timeout=180s | tee -a "$LOG_FILE"
+microk8s kubectl rollout status deployment/vucem-microfrontends-${DEPLOYMENT_ENV} -n default --timeout=180s | tee -a "$LOG_FILE"
 
 # Verificar readiness/liveness de los pods
 echo "Verificando estado de readiness/liveness de los pods:" | tee -a "$LOG_FILE"
