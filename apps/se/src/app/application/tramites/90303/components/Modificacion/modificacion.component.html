@@ -1,1 +1,55 @@
-<p>modificacion works!</p>
+<div class="row mt-5">
+    <div class="col-md-6">
+        <div class="form-group">
+            <label class="form-label" for="registroFederalContribuyentes">Registro Federal de Contribuyentes:</label>
+            <input class="form-control gris-color" type="text" id="registroFederalContribuyentes"
+                formControlName="registroFederalContribuyentes">
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="form-group">
+            <label class="form-label" for="representacionFederal">Representación federal:</label>
+            <input class="form-control gris-color" type="text" id="representacionFederal"
+                formControlName="representacionFederal">
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <div class="form-group">
+            <label class="form-label" for="tipoModificacion">Tipo de modificación:</label>
+            <input class="form-control gris-color" type="text" id="tipoModificacion" formControlName="tipoModificacion">
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="form-group">
+            <label class="form-label" for="modificacionPrograma">Modificación de programa:</label>
+            <input class="form-control gris-color" type="text" id="modificacionPrograma"
+                formControlName="modificacionPrograma">
+        </div>
+    </div>
+</div>
+<!-- Lista de domicilios -->
+<ng-titulo titulo="Lista de domicilios"/>
+<app-tabla-dinamica
+[tipoSeleccionTabla]="TablaSeleccion.BUTTON"
+  [configuracionTabla]="listaTabla"
+  [datos]="listaTablaDatos">
+</app-tabla-dinamica>
+<!-- Plantas -->
+<ul class="nav nav-tabs">
+    <li class="nav-item">
+      <span class="nav-link active" aria-current="page" >Complementaria</span>
+    </li>
+  </ul>
+  <ng-titulo titulo="Plantas"/>
+  <app-tabla-dinamica></app-tabla-dinamica>
+  <!-- Sector -->
+  <ng-titulo titulo="Sector"/>
+  <app-tabla-dinamica></app-tabla-dinamica>
+  <!-- Mercancias a producir -->
+  <ng-titulo titulo="Mercancias a producir"/>
+  <app-tabla-dinamica></app-tabla-dinamica>
+  <!-- Productor indirecto -->
+  <ng-titulo titulo="Productor indirecto"/>
+  <app-tabla-dinamica></app-tabla-dinamica>

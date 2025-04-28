@@ -19,6 +19,24 @@
       @switch (indice) {
       @case (1) {
       <solicitante [tabindex]="1" #Solicitante></solicitante>
+      <div class="row mt-5">
+      <!-- Plantas -->
+<ul class="nav nav-tabs">
+  <li class="nav-item">
+    <span class="nav-link active" aria-current="page" >Complementaria</span>
+  </li>
+</ul></div>
+<ng-titulo titulo="Plantas"/>
+<app-tabla-dinamica></app-tabla-dinamica>
+<!-- Sector -->
+<ng-titulo titulo="Sector"/>
+<app-tabla-dinamica></app-tabla-dinamica>
+<!-- Mercancias a producir -->
+<ng-titulo titulo="Mercancias a producir"/>
+<app-tabla-dinamica></app-tabla-dinamica>
+<!-- Productor indirecto -->
+<ng-titulo titulo="Productor indirecto"/>
+<app-tabla-dinamica></app-tabla-dinamica>
       }
       @case (2) {
       <app-modificacion [tabIndex]="2"></app-modificacion>

@@ -1,45 +1,66 @@
-export interface ColumnasTabla {
-  fraccionArancelaria: string;
-  nombreTecnico: string;
-  nombreComercial: string;
-  numeroRegistroProductos: string;
-  fechaExpedicion: string;
-  fechaVencimiento: string;
-}
+export interface ListaTabla{
+  estatus:string;
+  claveDeSector:string;
+  sector:string;
+  }
 
-export interface SeleccionadasTabla {
-  fraccionArancelaria: string;
-  cantidad: string;
-  unidadMedida: string;
-  valorMercancia: string;
-  tipoFactura: string;
-  numFactura: string;
-  complementoDescripcion: string;
-  fechaFactura: string;
-}
+  export interface PlantasTabla{
+    calle:string;
+    numeroExterior:number;
+    numeroInterior:number;
+    codigoPostal:number;
+    colonia:string;
+    municipioOAlcaldia:string;
+    estado:string;
+    pais:string;
+    registroFederal:string;
+    razonSocial:string;
+    domicilioFiscal:string;
+    estatus:string;
+    }
 
-export const FECHAINICIAL = {
-  labelNombre: 'Fecha inicio',
-  required: false,
-  habilitado: true,
-};
+// export interface ColumnasTabla {
+//   fraccionArancelaria: string;
+//   nombreTecnico: string;
+//   nombreComercial: string;
+//   numeroRegistroProductos: string;
+//   fechaExpedicion: string;
+//   fechaVencimiento: string;
+// }
 
-export const FECHAFINAL = {
-  labelNombre: 'Fecha fin',
-  required: false,
-  habilitado: true,
-};
+// export interface SeleccionadasTabla {
+//   fraccionArancelaria: string;
+//   cantidad: string;
+//   unidadMedida: string;
+//   valorMercancia: string;
+//   tipoFactura: string;
+//   numFactura: string;
+//   complementoDescripcion: string;
+//   fechaFactura: string;
+// }
 
-export const FECHAFACTURA = {
-  labelNombre: 'Fecha fin',
-  required: true,
-  habilitado: true,
-};
+// export const FECHAINICIAL = {
+//   labelNombre: 'Fecha inicio',
+//   required: false,
+//   habilitado: true,
+// };
 
-export const DESPACHO_LDA = {
-    labelNombre: 'Sí',
-    maxlength: 10,
-    minlenght: 0,
-    required: false,
-    alfanumerico: true,
-  };
+// export const FECHAFINAL = {
+//   labelNombre: 'Fecha fin',
+//   required: false,
+//   habilitado: true,
+// };
+
+// export const FECHAFACTURA = {
+//   labelNombre: 'Fecha fin',
+//   required: true,
+//   habilitado: true,
+// };
+
+// export const DESPACHO_LDA = {
+//     labelNombre: 'Sí',
+//     maxlength: 10,
+//     minlenght: 0,
+//     required: false,
+//     alfanumerico: true,
+//   };
