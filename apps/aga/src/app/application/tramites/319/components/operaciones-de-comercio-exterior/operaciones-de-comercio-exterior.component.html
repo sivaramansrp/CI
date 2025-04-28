@@ -1,4 +1,6 @@
 <div class="container" >
+  <div class="row">
+ 
   <div class="row" *ngIf="!periodoView" >
     <div class="row">
         <ng-titulo [titulo]="'Operaciones de Comercio Exterior'"></ng-titulo>
@@ -48,6 +50,9 @@
       </div>
       </div>
       <div class="row" *ngIf="periodoView">
+        <div class="col-md-12 mt-5" *ngIf="alertView">
+          <ng-alert [CONTENIDO]="TEXTOS"  [CUSTOMECLASS]="infoAlert"></ng-alert>
+        </div>
         <form [formGroup]="periodoForm">
     <div class="col-md-12">
       <div class="col-md-4">

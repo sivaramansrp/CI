@@ -85,4 +85,26 @@ export const PASOS = [
     { encabezado: 'Periodo', clave: (fila) => fila.periodo, orden: 1 },
     { encabezado: 'Fechas sobre el periodo', clave: (fila) => fila.fechas_sobre_el_periodo, orden: 2 },
   ];
+  /**
+   * @const TEXTOS
+   * @description La constante `TEXTOS` contiene un mensaje de texto que indica que la fecha proporcionada no es válida 
+   * porque aún no ha concluido el período especificado.
+   * 
+   * @example
+   * ```typescript
+   * console.log(TEXTOS);
+   * // Output: "La fecha indicada NO es correcta por que aún no concluye: 04/2025"
+   * ```
+   * 
+   */
+  export const TEXTOS="La fecha indicada NO es correcta por que aún no concluye:"
+  /**
+   * @const INFO_ALERT
+   * @description Constante que define el estilo de alerta para operaciones de comercio exterior.
+   * @type {string}
+   * @value "alert-danger"
+   * @remarks Esta constante se utiliza para aplicar una clase CSS que representa un mensaje de alerta de tipo peligro.
+   * @since Versión inicial.
+   */
+  export const INFO_ALERT="alert-danger"
 

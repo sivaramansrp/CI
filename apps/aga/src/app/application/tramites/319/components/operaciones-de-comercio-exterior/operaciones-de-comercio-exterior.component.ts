@@ -10,7 +10,7 @@ import { OperacionService } from '../../services/operacion.service';
 
 import { Personas, Solicitar } from '../../models/personas.module';
 
-import {CONFIGURACION_PERSONAS_COLUMNAS, CONFIGURACION_SOLICITAR_COLUMNAS } from '../../constantes/operaciones-de-comercio-exterior.enum';
+import {CONFIGURACION_PERSONAS_COLUMNAS, CONFIGURACION_SOLICITAR_COLUMNAS, INFO_ALERT, TEXTOS } from '../../constantes/operaciones-de-comercio-exterior.enum';
 import { Tramite319Query } from '../../estados/tramite319Query.query';
 import { Tramite319Store } from '../../estados/tramite319Store.store';
 
@@ -130,6 +130,12 @@ export class OperacionesDeComercioExteriorComponent implements OnInit, OnDestroy
    */
   listaDeTablasSeleccionadas: Solicitar[] = [];
 
+  TEXTOS:string=TEXTOS;
+
+  infoAlert:string = INFO_ALERT + this.periodoForm?.value.periodoInicial + ' al ' + this.periodoForm?.value.periodoFinal; 
+
+  alertView:boolean = false;
+
   /**
    * @constructor
    * @param {FormBuilder} fb - Servicio para construir formularios reactivos.
@@ -216,9 +222,11 @@ export class OperacionesDeComercioExteriorComponent implements OnInit, OnDestroy
     });
     this.tramite319Store.actualizarDatosForma(this.cuerpoSolicitarTablaFila);
     this.periodoView = false;
+    this.alertView=false;
+    this.periodoForm.reset();
   }
 else{
-  this.periodoForm.markAllAsTouched();
+  this.alertView=true;
 }
   }
 
