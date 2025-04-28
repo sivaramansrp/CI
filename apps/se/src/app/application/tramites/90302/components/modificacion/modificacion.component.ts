@@ -11,11 +11,6 @@
  */
 
 import {
-  Catalogo,
-  TablaSeleccion,
-} from '@ng-mf/data-access-user';
-
-import {
   Arancelaria,
   ArancelariaImportacion,
   Servicios
@@ -27,8 +22,6 @@ import {
 } from '@angular/forms';
 
 import {
-  CONFIGURACION_ARANCELARIAS,
-  CONFIGURACION_ARANCELARIASIMPORTACION,
   TEXTOS_90302
 } from "../../constantes/modificacion.constants";
 
@@ -39,8 +32,6 @@ import { AmpliacionServiciosService } from '../../services/ampliacion-servicios.
 import { AmpliacionServiciosState } from '../../estados/tramite90302.store';
 import { ApiResponse } from "../../models/datos-info.model";
 import { Component } from '@angular/core';
-import { ConfiguracionColumna } from '../../models/configuracion-columna.model';
-import { HttpClient } from '@angular/common/http';
 import { Subject } from 'rxjs';
 import { Tramite90302Store } from '../../estados/tramite90302.store';
 
@@ -51,128 +42,11 @@ import { Tramite90302Store } from '../../estados/tramite90302.store';
   styleUrl: './modificacion.component.scss',
 })
 export class ModificacionComponent implements OnInit, OnDestroy {
-
-  
-
-  /**
-   * Controla la visibilidad del modal de alerta.
-   * @property {boolean} mostrarAlerta
-   */
-  mostrarAlerta: boolean = false;
-
-  /**
-   * Mensaje mostrado en el modal de alerta.
-   * @property {string} mensajeDeAlerta
-   */
-  mensajeDeAlerta: string = 'Debe seleccionar una fracción de exportación';
-  
-    /**
-     * Estado actual del trámite.
-     * @property {AmpliacionServiciosState} tramiteState
-     */
-    tramiteState: AmpliacionServiciosState = {} as AmpliacionServiciosState;
-  
-
   /**
    * Formulario reactivo para la información de registro.
    * @property {FormGroup} formularioInfoRegistro
    */
   formularioInfoRegistro!: FormGroup;
-
-  /**
-   * Tipo de selección de tabla (radio button).
-   * @property {TablaSeleccion} tablaSeleccion
-   */
-  tablaSeleccion: TablaSeleccion = TablaSeleccion.RADIO;
-
-  /**
-   * Fracción arancelaria.
-   * @property {string} fraccion
-   */
-  fraccion: string = '';
-
-  /**
-   * Cantidad de bienes.
-   * @property {string} cantidad
-   */
-  cantidad: string = '';
-
-  /**
-   * Fracción arancelaria para servicios IMMEX.
-   * @property {string} fraccionArancelaria
-   */
-  fraccionArancelaria: string = '';
-
-  /**
-   * Datos relacionados con la importación.
-   * @property {string} importacion
-   */
-  importacion: string = '';
-
-  /**
-   * Valor de los bienes.
-   * @property {string} valor
-   */
-  valor: string = '';
-
-  /**
-   * Configuración de la tabla para servicios IMMEX.
-   * @property {ConfiguracionColumna<Arancelaria>[]} configuracionTablaServicio
-   */
-  configuracionTablaServicio: ConfiguracionColumna<Arancelaria>[] = CONFIGURACION_ARANCELARIAS;
-
-  /**
-   * Configuración de la tabla para importaciones.
-   * @property {ConfiguracionColumna<ArancelariaImportacion>[]} configuracionTablaImportacion
-   */
-  configuracionTablaImportacion: ConfiguracionColumna<ArancelariaImportacion>[] = CONFIGURACION_ARANCELARIASIMPORTACION;
-
-  /**
-   * Lista de datos de servicios IMMEX.
-   * @property {Arancelaria[]} datos
-   */
-  datos: Arancelaria[] = [];
-
-  /**
-   * Datos de servicios IMMEX para el grid.
-   * @property {Arancelaria[]} datosImmex
-   */
-  datosImmex: Arancelaria[] = [];
-
-  /**
-   * Datos de importación para el grid.
-   * @property {ArancelariaImportacion[]} datosImportacion
-   */
-  datosImportacion: ArancelariaImportacion[] = [];
-
-  /**
-   * Lista de domicilios seleccionados.
-   * @property {Arancelaria[]} domiciliosSeleccionados
-   */
-  domiciliosSeleccionados: Arancelaria[] = [];
-
-  /**
-   * Lista de empresas seleccionadas.
-   * @property {ServicioInmex[]} empresasSeleccionados
-   */
-  
-  /**
-   * Formulario reactivo para datos adicionales.
-   * @property {FormGroup} forma
-   */
-  forma!: FormGroup;
-
-  /**
-   * Lista de aduanas de ingreso.
-   * @property {Catalogo[]} aduanaDeIngreso
-   */
-  aduanaDeIngreso!: Catalogo[];
-
-  /**
-   * Datos de entidades autorizadas.
-   * @property {[]} autorizadosBodyData
-   */
-  autorizadosBodyData: [] = [];
 
   /**
    * Información sobre el registro actual.
@@ -205,7 +79,6 @@ export class ModificacionComponent implements OnInit, OnDestroy {
     private ampliacionServiciosService: AmpliacionServiciosService,
     private ampliacionServiciosQuery: AmpliacionServiciosQuery, 
     private tramite90302Store: Tramite90302Store,
-    private readonly httpServicios: HttpClient
   ) {
    
     this.inicializarFormularioInfoRegistro();
@@ -218,83 +91,7 @@ export class ModificacionComponent implements OnInit, OnDestroy {
    */
   ngOnInit():void {
    this.getDatos();
-    this.suscribirseADatosImmex();
-   // this.suscribirseADatos();
-    this.suscribirseAFields();
   }
-  /**
-   * Activa el modal de alerta.
-   * @method activarModal
-   * @returns {void}
-   */
-  activarModal(): void {
-    this.mostrarAlerta = true;
-  }
-  /**
-   * Cierra el modal de alerta.
-   * @method cerrarModal
-   * @returns {void}
-   */
-  aceptar(): void {
-    this.mostrarAlerta = false;
-  }
-  /**
-   * Cambia el valor de un campo específico en el estado.
-   * @method enCambioDeCampo
-   * @param {string} fieldName - Nombre del campo.
-   * @param {string} newValue - Nuevo valor del campo.
-   */
-  enCambioDeCampo(fieldName: string, newValue: string): void {
-    switch (fieldName) {
-      case 'fraccionArancelaria':
-        this.tramite90302Store.setFraccionArancelaria(newValue);
-        break;
-      
-      case 'fraccion':
-        this.tramite90302Store.setRfcEmpresa(newValue);
-        break;
-      case 'cantidad':
-        this.tramite90302Store.setCantidad(newValue);
-        break;
-      
-      case 'valor':
-        this.tramite90302Store.setValor(newValue);
-        break;
-      case 'importacion':
-          this.tramite90302Store.setImportacion(newValue);
-          break;
-      default:
-        break;
-    }
-  }
-
-  
-
-  /**
- * Se suscribe a los suscribirseAFields cambios en los campos del estado y actualiza las propiedades locales.
- * @method suscribirseAFields
- */
-
-  suscribirseAFields(): void {
-   
-    this.ampliacionServiciosQuery.selectSolicitudTramite$
-         .pipe(
-           takeUntil(this.destroyNotifier$),
-           map((todosDatos: AmpliacionServiciosState) => {
-             this.tramiteState = todosDatos;
-             this.fraccion = todosDatos.fraccion;
-             this.cantidad = todosDatos.cantidad;
-             this.fraccionArancelaria = todosDatos.fraccionArancelaria;
-             this.importacion = todosDatos.importacion;
-             this.valor = todosDatos.valor;
-             this.datos=this.tramiteState.datos;
-          
-           })
-         )
-         .subscribe();
-  
-  }
-    
   
   /**
    * Obtiene los datos del servicio y actualiza el estado del formulario.
@@ -306,36 +103,12 @@ export class ModificacionComponent implements OnInit, OnDestroy {
        const RESPONSE = respuesta as unknown as ApiResponse;
       if (RESPONSE) {
         this.tramite90302Store.setInfoRegistro(RESPONSE.data.infoServicios);
-        this.inicializarFormularioDesdeAlmacen();
+       // this.inicializarFormularioDesdeAlmacen();
       }
     })
   
-  }
-  /**
- * Se suscribe a los datos de IMMEX desde el store para mantener el componente actualizado.
- * @method suscribirseADatosImmex
- */
-  suscribirseADatosImmex(): void {
-    
-    this.ampliacionServiciosQuery.selectSolicitudTramite$.pipe(takeUntil(this.destroyNotifier$)).subscribe((datos) => {
-      this.datosImmex = datos.datosImmex;
-      this.datosImportacion = datos.datosImportacion;
-     
-    });
-  }
-  
-  /**
-   * Inicializa el formulario a partir de los datos del store.
-   * @method inicializarFormularioDesdeAlmacen
-   */
-  inicializarFormularioDesdeAlmacen(): void {
-      this.formularioInfoRegistro = this.fb.group({
-        seleccionaLaModalidad: [{ value: this.tramiteState.infoRegistro.seleccionaLaModalidad, disabled: true }],
-        folio: [{ value: this.tramiteState.infoRegistro.folio, disabled: true }],
-        ano: [{ value: this.tramiteState.infoRegistro.ano, disabled: true }],
-      })
-   
-  }
+  } 
+ 
   
   
 
@@ -346,102 +119,14 @@ export class ModificacionComponent implements OnInit, OnDestroy {
   
   inicializarFormularioInfoRegistro(): void {
     this.formularioInfoRegistro = this.fb.group({
-      seleccionaLaModalidad: [{ value: '', disabled: true }],
-      folio: [{ value: '', disabled: true }],
-      ano: [{ value: '', disabled: true }],
+      rfc: [{ value: '', disabled: true }],
+      representacionFederal: [{ value: '', disabled: true }],
+      tipoModificacion: [{ value: '', disabled: true }],
+      modificacionPrograma: [{ value: '', disabled: true }],
     });
   }
 
-
-  
-  
-
-  /**
-   * Elimina servicios del grid.
-   * @method eliminarServiciosGrid
-   */
-  eliminarServiciosGrid(): void {
-    
-    const INDICE = this.datosImmex.findIndex((item:Arancelaria) => item.fraccionArancelaria === this.domiciliosSeleccionados[0]?.['fraccionArancelaria']);
-    if (INDICE !== -1) {
-      const DATOS_IMMEX_ACTUALIZADOS = [...this.datosImmex];
-      DATOS_IMMEX_ACTUALIZADOS.splice(INDICE, 1); 
-      this.tramite90302Store.setDatosImmex(DATOS_IMMEX_ACTUALIZADOS); 
-      this.domiciliosSeleccionados = [];
-    }
-  }
-  /**
-   * Elimina datos de importación seleccionados del grid.
-   * @method eliminarImportacion
-   */
-  eliminarImportacion(): void {
-    const INDICE = this.datosImportacion.findIndex((item:ArancelariaImportacion) => item.fraccionArancelaria === this.domiciliosSeleccionados[0]?.['fraccionArancelaria']);
-    if (INDICE !== -1) {
-      const DATOS_IMPORTACION_ACTUALIZADOS = [...this.datosImportacion];
-      DATOS_IMPORTACION_ACTUALIZADOS.splice(INDICE, 1); 
-      this.tramite90302Store.setDatosImportacion(DATOS_IMPORTACION_ACTUALIZADOS); 
-      this.domiciliosSeleccionados = [];
-    }
-  }
-  /**
-   * Actualiza el grid de empresas nacionales.
-   * @method actualizaGridEmpresasNacionales
-   */
-  actualizaGridEmpresasNacionales(): void {
-    const CUERPODATOS = {
-      fraccion: "1",
-      fraccionArancelaria: this.fraccionArancelaria,
-      descripcionComercial:"Usados",
-      anexoII: "NO SENSIBLE",
-      tipo: "",
-      umt: "",
-      categoria: "",
-      valorMensual: "",
-      valorAnual: "",
-      volumenrMensual: "",
-      volumenAnual: "",
-    };
-
-    this.tramite90302Store.setDatosImmex([...this.datosImmex, CUERPODATOS]);
-
-  }
-  
-  /**
-   * Cierra el modal de alerta.
-   * @method cerrarModal
-   */
-  cerrarModal():void{
-    this.mostrarAlerta = false;
-
-  }
-   /**
-   * Agrega datos de importación al grid.
-   * @method agregarImportacion
-   */
-  agregarImportacion(): void {
-    if(this.domiciliosSeleccionados.length === 0) {
-      this.activarModal();
-    }
-    else{
-    const CUERPODATOS = {
-      fraccion: this.domiciliosSeleccionados[0]?.fraccion,
-      fraccionArancelaria: this.domiciliosSeleccionados[0]?.fraccionArancelaria,
-      descripcionComercial:this.domiciliosSeleccionados[0]?.descripcionComercial,
-      fraccionArancelariaImportacion: this.importacion,
-      descripcionComercialImportacion:"Mercancias destinadas a procesos tales como reparacion, reacondicionamiento o remanufactura, cuando las empresas cuenten con registro otorgado conforme a los lineamientos establecidos por la Secretaria de Economia.  ", 
-      anexoII: this.domiciliosSeleccionados[0]?.anexoII,
-      tipo: this.domiciliosSeleccionados[0]?.tipo,
-      umt:this.domiciliosSeleccionados[0]?.umt,
-      categoria: this.domiciliosSeleccionados[0]?.categoria,
-      valorMensual: this.domiciliosSeleccionados[0]?.valorMensual,
-      valorAnual: this.domiciliosSeleccionados[0]?.valorAnual,
-      volumenrMensual: this.domiciliosSeleccionados[0]?.volumenrMensual,
-      volumenAnual: this.domiciliosSeleccionados[0]?.volumenAnual,
-    }
-    this.tramite90302Store.setDatosImportacion([...this.datosImportacion, CUERPODATOS]);
-
-  }
-}
+ 
 
   /**
    * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
@@ -452,26 +137,5 @@ export class ModificacionComponent implements OnInit, OnDestroy {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
-
- /**
-   * Maneja los datos recibidos del componente hijo.
-   * @method procesarDatosDelHijo
-   * @param {Catalogo | Catalogo[]} data - Datos recibidos.
-   */
-  procesarDatosDelHijo(data: Catalogo | Catalogo[]): void {
-    
-    this.tramite90302Store.setAduanaDeIngresoSeleccion(data as Catalogo);
-  }
-  
-
-  /**
-   * Actualiza la lista de domicilios seleccionados.
-   * @method seleccionarDomicilios
-   * @param {Arancelaria} domicilios - Domicilios seleccionados.
-   */
-  seleccionarDomicilios(domicilios: Arancelaria): void {
-    this.domiciliosSeleccionados = [domicilios];
-  }
-
   
 }
