@@ -10,7 +10,7 @@ import { Mercancia } from '../../../shared/models/modificacion.enum';
 })
 
 export class CertificadoDeService {
-  url: string = '../../../../../assets/json/110205/';
+  url: string = '../../../../../assets/json/110222/';
 
   constructor(private readonly http: HttpClient) { }
  
@@ -68,7 +68,7 @@ export class CertificadoDeService {
      */
     obtenerProductorPorExportador(): Observable<ProductorExportador> {
       return this.http
-        .get<ProductorExportador>('assets/json/110205/productor-exportador.json');
+        .get<ProductorExportador>('assets/json/110222/productor-exportador.json');
     }
 
   
@@ -81,6 +81,6 @@ export class CertificadoDeService {
      */
      obtenerMercancia(): Observable<MercanciasHistorico> {
       return this.http
-        .get<MercanciasHistorico>('assets/json/110205/mercancias-seleccionadas.json');
+        .get<MercanciasHistorico>('assets/json/110222/mercancias-seleccionadas.json');
     }
 }
