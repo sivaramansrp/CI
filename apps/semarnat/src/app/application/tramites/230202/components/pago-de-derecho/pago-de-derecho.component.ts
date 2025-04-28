@@ -133,8 +133,8 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
     this.mediodetransporteService
       .getMedioDeTransporte()
       .pipe(takeUntil(this.destroyed$))
-      .subscribe((data): void => {
-        this.bancoCatalogo.catalogos = data as Catalogo[];
+      .subscribe((request): void => {
+        this.bancoCatalogo.catalogos = request?.data ;
       });
   }
 

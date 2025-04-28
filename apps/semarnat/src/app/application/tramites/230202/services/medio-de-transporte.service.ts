@@ -1,7 +1,7 @@
-import { Catalogo } from '@ng-mf/data-access-user';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
 
 /**
  * Servicio para gestionar los medios de transporte.
@@ -19,7 +19,7 @@ export class MediodetransporteService {
    * URL del archivo JSON que contiene los datos de medios de transporte.
    * @type {string}
    */
-  private readonly url = './assets/json/230202/mediodetransporte.json';
+  private readonly url = './assets/json/230202/medioDeTransporte.json';
 
   /**
    * Constructor del servicio MediodetransporteService.
@@ -33,7 +33,7 @@ export class MediodetransporteService {
    * @descripcion Obtiene una lista de medios de transporte desde el servidor.
    * @retorna Un observable que emite un arreglo de objetos de tipo `Catalogo`.
    */
-  getMedioDeTransporte(): Observable<Catalogo[]> {
-    return this.http.get<Catalogo[]>(this.url);
+  getMedioDeTransporte(): Observable<RespuestaCatalogos> {
+    return this.http.get<RespuestaCatalogos>(this.url);
   }
 }
