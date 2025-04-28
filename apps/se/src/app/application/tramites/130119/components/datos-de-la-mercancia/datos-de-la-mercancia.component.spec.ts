@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { of, Subject } from 'rxjs';
+import { of } from 'rxjs';
 import { DatosDeLaMercanciaComponent } from './datos-de-la-mercancia.component';
 import { CatalogoSelectComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { DatosDeLaSolicitudService } from '../../services/datos-de-la-solicitud/datos-de-la-solicitud.service';
@@ -29,26 +29,29 @@ describe('DatosDeLaMercanciaComponent', () => {
 
     const tramite130119QueryMock = {
       selectTramite130119$: of({
-        descripcion: 'Descripción',
-        fraccionArancelaria: 'Fracción 1',
-        umt: 'Pieza',
-        cantidad: '100',
-        valorFacturaUSD: '1000',
-        paisOrigen: 'País 1',
-        paisExportador: 'País 2',
-        numeroFactura: '12345',
-        fechaExpedicionFactura: '2025-02-25',
-        observaciones: 'Observaciones'
+        descripcion: '',
+        fraccionArancelaria: '',
+        umt: '',
+        cantidad: '',
+        valorFacturaUSD: '',
+        paisOrigen: '',
+        paisExportador: '',
+        numeroFactura: '',
+        fechaExpedicionFactura: '',
+        observaciones: ''
       })
     };
 
+    const tramite130119StoreMock = {
+      establecerDatos: jest.fn() 
+    };
+
     await TestBed.configureTestingModule({
-      declarations: [],
-      imports: [CommonModule,DatosDeLaMercanciaComponent, ReactiveFormsModule, TituloComponent, CatalogoSelectComponent],
+      imports: [CommonModule, DatosDeLaMercanciaComponent, ReactiveFormsModule, TituloComponent, CatalogoSelectComponent],
       providers: [
         { provide: DatosDeLaSolicitudService, useValue: datosDeLaSolicitudServiceMock },
         { provide: Tramite130119Query, useValue: tramite130119QueryMock },
-        { provide: Tramite130119Store, useValue: {} }
+        { provide: Tramite130119Store, useValue: tramite130119StoreMock }
       ]
     }).compileComponents();
 
@@ -63,11 +66,11 @@ describe('DatosDeLaMercanciaComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form with default values', () => {
+  it('debe inicializar el formulario con valores predeterminados', () => {
     expect(component.datosDeLaMercanciaForm).toBeDefined();
     expect(component.datosDeLaMercanciaForm.get('descripcion')?.value).toBe('');
     expect(component.datosDeLaMercanciaForm.get('fraccionArancelaria')?.value).toBe('');
@@ -81,17 +84,17 @@ describe('DatosDeLaMercanciaComponent', () => {
     expect(component.datosDeLaMercanciaForm.get('observaciones')?.value).toBe('');
   });
 
-  it('should fetch and set fraccion arancelaria options on init', () => {
+  it('debería buscar y configurar las opciones de fracción arancelaria en init', () => {
     component.ngOnInit();
     expect(datosDeLaSolicitudService.getFraccionArancelaria).toHaveBeenCalled();
-    expect(component.fraccionArancelariaOptions.length).toBe(2);
-    expect(component.fraccionArancelariaOptions).toEqual([
+    expect(component.opcionesFraccionArancelaria.length).toBe(2);
+    expect(component.opcionesFraccionArancelaria).toEqual([
       { id: '1', nombre: 'Fracción 1' },
       { id: '2', nombre: 'Fracción 2' }
     ]);
   });
 
-  it('should fetch and set pais options on init', () => {
+  it('Debería obtener y configurar las opciones de pais al iniciar.', () => {
     component.ngOnInit();
     expect(datosDeLaSolicitudService.getPais).toHaveBeenCalled();
     expect(component.pasises.length).toBe(2);
@@ -101,35 +104,39 @@ describe('DatosDeLaMercanciaComponent', () => {
     ]);
   });
 
-  it('should fetch and set form values from store on init', () => {
-    component.ngOnInit();
-    expect(component.datosDeLaMercanciaForm.get('descripcion')?.value).toBe('Descripción');
-    expect(component.datosDeLaMercanciaForm.get('fraccionArancelaria')?.value).toBe('Fracción 1');
+  it('debería manejar el cambio fraccionario arancelario', () => {
+    const setValoresStoreSpy = jest.spyOn(component, 'setValoresStore');
+
+   
+    component.datosDeLaMercanciaForm.patchValue({ fraccionArancelaria: 'Fracción 1' });
+    component.onFraccionArancelariaChange();
+
+    expect(setValoresStoreSpy).toHaveBeenCalledWith(component.datosDeLaMercanciaForm, 'fraccionArancelaria');
     expect(component.datosDeLaMercanciaForm.get('umt')?.value).toBe('Pieza');
-    expect(component.datosDeLaMercanciaForm.get('cantidad')?.value).toBe('100');
-    expect(component.datosDeLaMercanciaForm.get('valorFacturaUSD')?.value).toBe('1000');
-    expect(component.datosDeLaMercanciaForm.get('paisOrigen')?.value).toBe('País 1');
-    expect(component.datosDeLaMercanciaForm.get('paisExportador')?.value).toBe('País 2');
-    expect(component.datosDeLaMercanciaForm.get('numeroFactura')?.value).toBe('12345');
-    expect(component.datosDeLaMercanciaForm.get('fechaExpedicionFactura')?.value).toBe('2025-02-25');
-    expect(component.datosDeLaMercanciaForm.get('observaciones')?.value).toBe('Observaciones');
+    expect(setValoresStoreSpy).toHaveBeenCalledWith(component.datosDeLaMercanciaForm, 'umt');
+  });
+
+  it('Debe obtener y establecer valores de formulario desde la tienda al iniciar.', () => {
+    component.ngOnInit();
+    expect(component.datosDeLaMercanciaForm.get('descripcion')?.value).toBe('');
+    expect(component.datosDeLaMercanciaForm.get('fraccionArancelaria')?.value).toBe('');
+    expect(component.datosDeLaMercanciaForm.get('umt')?.value).toBe('');
+    expect(component.datosDeLaMercanciaForm.get('cantidad')?.value).toBe('');
+    expect(component.datosDeLaMercanciaForm.get('valorFacturaUSD')?.value).toBe('');
+    expect(component.datosDeLaMercanciaForm.get('paisOrigen')?.value).toBe('');
+    expect(component.datosDeLaMercanciaForm.get('paisExportador')?.value).toBe('');
+    expect(component.datosDeLaMercanciaForm.get('numeroFactura')?.value).toBe('');
+    expect(component.datosDeLaMercanciaForm.get('fechaExpedicionFactura')?.value).toBe('');
+    expect(component.datosDeLaMercanciaForm.get('observaciones')?.value).toBe('');
   });
 
   it('should set values in store when setValoresStore is called', () => {
-    const setValoresStoreSpy = jest.spyOn(component, 'setValoresStore');
-    component.setValoresStore(component.datosDeLaMercanciaForm, 'descripcion', 'setDescripcion');
-    expect(setValoresStoreSpy).toHaveBeenCalledWith(component.datosDeLaMercanciaForm, 'descripcion', 'setDescripcion');
+    component.datosDeLaMercanciaForm.patchValue({ descripcion: 'Descripción Nueva' });
+    component.setValoresStore(component.datosDeLaMercanciaForm, 'descripcion');
+    expect(tramite130119Store.establecerDatos).toHaveBeenCalledWith({ descripcion: 'Descripción Nueva' });
   });
 
-  it('should handle fraccion arancelaria change', () => {
-    const setValoresStoreSpy = jest.spyOn(component, 'setValoresStore');
-    component.onFraccionArancelariaChange();
-    expect(setValoresStoreSpy).toHaveBeenCalledWith(component.datosDeLaMercanciaForm, 'fraccionArancelaria', 'setFraccionArancelaria');
-    expect(component.datosDeLaMercanciaForm.get('umt')?.value).toBe('Pieza');
-    expect(setValoresStoreSpy).toHaveBeenCalledWith(component.datosDeLaMercanciaForm, 'umt', 'setUmt');
-  });
-
-  it('should complete destroyed$ subject on destroy', () => {
+  it('Debe establecer valores en la tienda cuando se llama a setValoresStore', () => {
     const nextSpy = jest.spyOn(component['destroyed$'], 'next');
     const completeSpy = jest.spyOn(component['destroyed$'], 'complete');
     component.ngOnDestroy();

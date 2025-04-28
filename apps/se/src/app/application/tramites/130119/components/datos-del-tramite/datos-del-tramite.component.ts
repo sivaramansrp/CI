@@ -101,11 +101,10 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    * @param {string} campo - El nombre del campo del formulario.
    * @param {keyof Tramite130119Store} metodoNombre - El nombre del método del store.
    */
-  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite130119Store): void {
+  setValoresStore(form: FormGroup, campo: string): void {
     const VALOR = form.get(campo)?.value;
-    (this.tramite130119Store[metodoNombre] as (value: unknown) => void)(VALOR);
+    this.tramite130119Store.establecerDatos({[campo]: VALOR});
   }
-
   /**
    * Obtiene los valores del store y los asigna al formulario.
    */

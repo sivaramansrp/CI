@@ -107,9 +107,9 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
    * @param campo Nombre del campo del formulario.
    * @param metodoNombre Nombre del método del store que se utilizará para establecer el valor.
    */
-  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite130119Store): void {
+  setValoresStore(form: FormGroup, campo: string): void {
     const VALOR = form.get(campo)?.value;
-    (this.tramite130119Store[metodoNombre] as (value: unknown) => void)(VALOR);
+    this.tramite130119Store.establecerDatos({[campo]: VALOR});
   }
 
   /**

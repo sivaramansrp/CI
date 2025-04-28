@@ -6,19 +6,33 @@ import { Injectable } from '@angular/core';
  * Interfaz que define el estado del trámite 130119.
  */
 export interface Tramite130119State {
+  /** Régimen del trámite */
   regimen: string;
+  /** Clasificación del régimen */
   clasificacionDeRegimen: string;
+  /** Descripción del trámite */
   descripcion: string;
+  /** Fracción arancelaria */
   fraccionArancelaria: string;
+  /** Unidad de medida de trabajo (UMT) */
   umt: string;
+  /** Cantidad de unidades */
   cantidad: string;
+  /** Valor de la factura en USD */
   valorFacturaUSD: string;
+  /** País de origen */
   paisOrigen: string;
+  /** País exportador */
   paisExportador: string;
+  /** Número de factura */
   numeroFactura: string;
+  /** Fecha de expedición de la factura */
   fechaExpedicionFactura: string;
+  /** Observaciones adicionales */
   observaciones: string;
+  /** Estado del trámite */
   estado: string,
+  /** Representación federal */
   representacionFederal: string
 }
 
@@ -58,157 +72,15 @@ export class Tramite130119Store extends Store<Tramite130119State> {
   constructor() {
     super(createInitialState());
   }
-
   /**
-   * Establece el régimen en el estado.
-   * @param {string} regimen - El régimen.
+   * Método establecerDatos
+   * Actualiza el estado del trámite con los nuevos datos proporcionados.
+   * {Partial<Tramite130119State>} datos - Datos parciales para actualizar el estado.
    */
-  public setRegimen(regimen: string): void {
-    this.update((state) => ({
-      ...state,
-      regimen,
-    }));
-  }
-
-  /**
-   * Establece la clasificación de régimen en el estado.
-   * @param {string} clasificacionDeRegimen - La clasificación de régimen.
-   */
-  public setClasificacionDeRegimen(clasificacionDeRegimen: string): void {
-    this.update((state) => ({
-      ...state,
-      clasificacionDeRegimen,
-    }));
-  }
-
-  /**
-   * Establece la descripción en el estado.
-   * @param {string} descripcion - La descripción.
-   */
-  public setDescripcion(descripcion: string): void {
-    this.update((state) => ({
-      ...state,
-      descripcion,
-    }));
-  }
-
-  /**
-   * Establece la fracción arancelaria en el estado.
-   * @param {string} fraccionArancelaria - La fracción arancelaria.
-   */
-  public setFraccionArancelaria(fraccionArancelaria: string): void {
-    this.update((state) => ({
-      ...state,
-      fraccionArancelaria,
-    }));
-  }
-
-  /**
-   * Establece la unidad de medida en el estado.
-   * @param {string} umt - La unidad de medida.
-   */
-  public setUmt(umt: string): void {
-    this.update((state) => ({
-      ...state,
-      umt,
-    }));
-  }
-
-  /**
-   * Establece la cantidad en el estado.
-   * @param {string} cantidad - La cantidad.
-   */
-  public setCantidad(cantidad: string): void {
-    this.update((state) => ({
-      ...state,
-      cantidad,
-    }));
-  }
-
-  /**
-   * Establece el valor de la factura en USD en el estado.
-   * @param {string} valorFacturaUSD - El valor de la factura en USD.
-   */
-  public setValorFacturaUSD(valorFacturaUSD: string): void {
-    this.update((state) => ({
-      ...state,
-      valorFacturaUSD,
-    }));
-  }
-
-  /**
-   * Establece el país de origen en el estado.
-   * @param {string} paisOrigen - El país de origen.
-   */
-  public setPaisOrigen(paisOrigen: string): void {
-    this.update((state) => ({
-      ...state,
-      paisOrigen,
-    }));
-  }
-
-  /**
-   * Establece el país exportador en el estado.
-   * @param {string} paisExportador - El país exportador.
-   */
-  public setPaisExportador(paisExportador: string): void {
-    this.update((state) => ({
-      ...state,
-      paisExportador,
-    }));
-  }
-
-  /**
-   * Establece el número de factura en el estado.
-   * @param {string} numeroFactura - El número de factura.
-   */
-  public setNumeroFactura(numeroFactura: string): void {
-    this.update((state) => ({
-      ...state,
-      numeroFactura,
-    }));
-  }
-
-  /**
-   * Establece la fecha de expedición de la factura en el estado.
-   * @param {string} fechaExpedicionFactura - La fecha de expedición de la factura.
-   */
-  public setFechaExpedicionFactura(fechaExpedicionFactura: string): void {
-    this.update((state) => ({
-      ...state,
-      fechaExpedicionFactura,
-    }));
-  }
-
-  /**
-   * Establece las observaciones en el estado.
-   * @param {string} observaciones - Las observaciones.
-   */
-  public setObservaciones(observaciones: string): void {
-    this.update((state) => ({
-      ...state,
-      observaciones,
-    }));
-  }
- /**
- * Establece el estado en el estado actual del objeto.
- * @param {string} estado - El nuevo estado que se va a asignar.
- */
-public setEstado(estado: string): void {
+public establecerDatos(datos: Partial<Tramite130119State>): void {
   this.update((state) => ({
     ...state,
-    estado
-  }));
-}
-
-/**
- * Establece la representación federal en el estado actual del objeto.
- * @param {string} representacionFederal - La nueva representación federal que se va a asignar.
- */
-public setRepresentacionFederal(representacionFederal: string): void {
-  this.update((state) => ({
-    ...state,
-    representacionFederal
+    ...datos,
   }));
 }
 }
