@@ -50,24 +50,31 @@ export class OctavaTemporalComponent {
   };
 
   
+  /**
+   * Bandera que indica si se deben mostrar los errores del formulario.
+   */
   mostrarErrorFormularios: boolean = false;
 
-  registroAlert=ERROR_DE_REGISTRO_ALERT
+  /**
+   * Alerta que se muestra en caso de error en el registro.
+   */
+  registroAlert = ERROR_DE_REGISTRO_ALERT;
+
 
   constructor(private formularioRegistroService: FormularioRegistroService) {}
 
   /**
-   * Método que maneja el evento del botón continuar o anterior,
-   * valida todos los formularios antes de avanzar.
+   * Maneja el cambio de índice en el flujo del wizard.
+   * Valida los formularios antes de avanzar o retroceder.
    * 
-   * @param {AccionBoton} e - Objeto que contiene la acción y el valor del paso.
+   * @param e - Objeto que contiene la acción y el nuevo valor del índice.
    */
   getValorIndice(e: AccionBoton): void {
     const TODOS_VALIDOS = this.formularioRegistroService.validarTodosFormularios();
 
     if (!TODOS_VALIDOS) {
       this.mostrarErrorFormularios = true;
-      return; 
+      return;
     }
 
     this.mostrarErrorFormularios = false;
