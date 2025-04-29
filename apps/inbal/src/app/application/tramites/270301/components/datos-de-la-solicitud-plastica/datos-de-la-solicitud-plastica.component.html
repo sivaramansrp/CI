@@ -64,6 +64,18 @@
                         <label class="form-label" for="ciudad">Ciudad*:</label>
                         <input type="text" class="form-control" id="ciudad" formControlName="ciudad" [required]="true"
                             (change)="setValoresStore(solicitudFormGroup,'ciudad','setciudad')">
+                        <div class="d-grid">
+                            <div *ngIf="solicitudFormGroup.get('ciudad')?.touched">
+                                <small class="mensaje-error"
+                                    *ngIf="solicitudFormGroup.get('ciudad')?.hasError('required')">
+                                    Este campo es obligatorio.
+                                </small>
+                                <small class="text-danger"
+                                    *ngIf="solicitudFormGroup.get('ciudad')?.hasError('maxlength')">
+                                    El código postal no puede exceder los 250 caracteres.
+                                </small>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="col-md-4">
@@ -81,6 +93,14 @@
                         <input type="text" class="form-control" id="emprsaTransportista"
                             formControlName="emprsaTransportista" [required]="true"
                             (change)="setValoresStore(solicitudFormGroup,'emprsaTransportista','setemprsaTransportista')">
+                        <div class="d-grid">
+                            <div *ngIf="solicitudFormGroup.get('emprsaTransportista')?.touched">
+                                <small class="mensaje-error"
+                                    *ngIf="solicitudFormGroup.get('emprsaTransportista')?.hasError('required')">
+                                    Este campo es obligatorio.
+                                </small>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -143,6 +163,16 @@
                     <label class="form-label" for="autor">Autor*:</label>
                     <input type="text" class="form-control" id="autor" formControlName="autor" name="autor"
                         placeholder="Inserta autor" [required]=true>
+                    <div class="d-grid">
+                        <div *ngIf="obraDeArteFormgroup.get('autor')?.touched">
+                            <small class="mensaje-error" *ngIf="obraDeArteFormgroup.get('autor')?.hasError('required')">
+                                Este campo es obligatorio.
+                            </small>
+                            <small class="text-danger" *ngIf="solicitudFormGroup.get('autor')?.hasError('maxlength')">
+                                El código postal no puede exceder los 250 caracteres.
+                            </small>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="col-md-4">
@@ -150,11 +180,34 @@
                     <input type="text" class="form-control" id="tecnicaDeRealizacion"
                         formControlName="tecnicaDeRealizacion" name="tecnicaDeRealizacion"
                         placeholder="Inserta tecnica de realizacion">
+                    <div class="d-grid">
+                        <div *ngIf="obraDeArteFormgroup.get('tecnicaDeRealizacion')?.touched">
+                            <small class="mensaje-error"
+                                *ngIf="obraDeArteFormgroup.get('tecnicaDeRealizacion')?.hasError('required')">
+                                Este campo es obligatorio.
+                            </small>
+                            <small class="text-danger"
+                                *ngIf="solicitudFormGroup.get('tecnicaDeRealizacion')?.hasError('maxlength')">
+                                El código postal no puede exceder los 250 caracteres.
+                            </small>
+                        </div>
+                    </div>
                 </div>
                 <div class="col-md-8">
                     <label class="form-label" for="titulo">Título*:</label>
                     <input type="text" class="form-control" id="titulo" formControlName="titulo" name="titulo"
                         placeholder="Inserta titulo">
+                    <div class="d-grid">
+                        <div *ngIf="obraDeArteFormgroup.get('titulo')?.touched">
+                            <small class="mensaje-error"
+                                *ngIf="obraDeArteFormgroup.get('titulo')?.hasError('required')">
+                                Este campo es obligatorio.
+                            </small>
+                            <small class="text-danger" *ngIf="solicitudFormGroup.get('titulo')?.hasError('maxlength')">
+                                El código postal no puede exceder los 250 caracteres.
+                            </small>
+                        </div>
+                    </div>
                 </div>
                 <div>
                     <ng-titulo titulo="Medidas" />
@@ -198,18 +251,46 @@
                         <label class="form-label" for="variables">Variables:</label>
                         <input type="text" class="form-control" id="variables" formControlName="variables"
                             name="variables" placeholder="Inserta variables">
+                        <div class="d-grid">
+                            <div *ngIf="obraDeArteFormgroup.get('variables')?.touched">
+                                <small class="mensaje-error"
+                                    *ngIf="obraDeArteFormgroup.get('variables')?.hasError('required')">
+                                    Este campo es obligatorio.
+                                </small>
+                                <small class="text-danger"
+                                    *ngIf="solicitudFormGroup.get('variables')?.hasError('maxlength')">
+                                    El código postal no puede exceder los 150 caracteres.
+                                </small>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <label class="form-label" for="anoDeCreacion">Año de creación*:</label>
                     <input type="text" class="form-control" id="anoDeCreacion" formControlName="anoDeCreacion"
                         name="anoDeCreacion" placeholder="aaaa">
+                    <div class="d-grid">
+                        <div *ngIf="obraDeArteFormgroup.get('anoDeCreacion')?.touched">
+                            <small class="mensaje-error"
+                                *ngIf="obraDeArteFormgroup.get('anoDeCreacion')?.hasError('required')">
+                                Este campo es obligatorio.
+                            </small>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="col-md-4">
                     <label class="form-label" for="avaluo">Avalúo*:</label>
                     <input type="text" class="form-control" id="avaluo" formControlName="avaluo" name="avaluo"
                         placeholder="0">
+                    <div class="d-grid">
+                        <div *ngIf="obraDeArteFormgroup.get('avaluo')?.touched">
+                            <small class="mensaje-error"
+                                *ngIf="obraDeArteFormgroup.get('avaluo')?.hasError('required')">
+                                Este campo es obligatorio.
+                            </small>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="col-md-4">
@@ -223,6 +304,18 @@
                     <label class="form-label" for="propietario">Propietario*:</label>
                     <input type="text" class="form-control" id="propietario" formControlName="propietario"
                         name="propietario" placeholder="Inserta propietario">
+                    <div class="d-grid">
+                        <div *ngIf="obraDeArteFormgroup.get('propietario')?.touched">
+                            <small class="mensaje-error"
+                                *ngIf="obraDeArteFormgroup.get('propietario')?.hasError('required')">
+                                Este campo es obligatorio.
+                            </small>
+                            <small class="text-danger"
+                                *ngIf="solicitudFormGroup.get('variables')?.hasError('maxlength')">
+                                El código postal no puede exceder los 250 caracteres.
+                            </small>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="clearfix"></div>
