@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { BtnContinuarComponent, CatalogoSelectComponent, SharedModule, SolicitanteComponent, WizardComponent } from '@libs/shared/data-access-user/src';
+import { AlertComponent, BtnContinuarComponent, CatalogoSelectComponent, SharedModule, SolicitanteComponent, WizardComponent } from '@libs/shared/data-access-user/src';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CertificadoDeOrigenComponent } from '../../../110201/components/certificado-de-origen/certificado-de-origen.component';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
@@ -22,7 +22,8 @@ describe('PeruCertificadoComponent', () => {
     CatalogoSelectComponent,
     CertificadoDeOrigenComponent,
     SolicitanteComponent,
-    HttpClientTestingModule
+    HttpClientTestingModule,
+    AlertComponent
       ],
     }).compileComponents();
 
