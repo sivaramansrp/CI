@@ -32,6 +32,7 @@ import {
 import { Tramite230202Query } from '../../estados/tramite230202.query';
 import { PhytosanitaryReexportacionService } from '../../services/phytosanitary-reexportacion.service';
 import { DatosSolicitud, DatosDetalle } from '../../models/datos-tramite.model';
+import { Modal } from 'bootstrap';
 
 @Component({
   selector: 'app-datos-de-la-solicitud',
@@ -89,6 +90,8 @@ export class DatosDeLaSolicitudComponent {
   fecha: FormControl = new FormControl('');
   fechaSeleccionada: FormControl = new FormControl('');
   @ViewChildren(CrosslistComponent) crossList!: QueryList<CrosslistComponent>;
+  @ViewChild('modalAgregarMercancias', { static: false }) modalRef!: ElementRef;
+  @ViewChild('modalConfirmacion', { static: false }) modalConfirmacion!: ElementRef;
   @ViewChild('closeModal') closeModal!: ElementRef;
   public paisDeOrigenBotons = this.getCrossListBtn(0);
   public entidadesBotons = this.getCrossListBtn(1);
@@ -101,6 +104,8 @@ export class DatosDeLaSolicitudComponent {
     derecha: 'Entidades seleccionadas*:',
   };
   public datosSolicitud: DatosSolicitud[] = [];
+  tableData: DatosSolicitud[] = [];
+  selectedRows: Set<number> = new Set();
   public datosDetalle: DatosDetalle[] = [];
   TablaSeleccion = TablaSeleccion;
 
@@ -149,8 +154,6 @@ export class DatosDeLaSolicitudComponent {
    */
   ngOnInit(): void {
     this.inicializaCatalogos();
-    this.inicializarFormulario();
-
     this.query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -159,6 +162,7 @@ export class DatosDeLaSolicitudComponent {
         })
       )
       .subscribe();
+    this.inicializarFormulario();
   }
 
   /**
@@ -508,6 +512,75 @@ export class DatosDeLaSolicitudComponent {
       });
   }
 
+  onSelectedRowsChange(selectedRows: DatosSolicitud[]): void {
+    this.selectedRows = new Set(selectedRows.map(row => row.id)); // Update selected rows
+    console.log(this.selectedRows);
+  }
+
+  eliminar(): void {
+    if (this.selectedRows && this.selectedRows.size > 0) {
+      console.log(this.selectedRows);
+      this.tableData = this.tableData.filter(row => !this.selectedRows.has(row.id));
+      console.log(this.tableData);
+      this.selectedRows.clear();
+    } else {
+      if (this.modalConfirmacion) {
+        const MODEL = new Modal(this.modalConfirmacion.nativeElement);
+        MODEL.show();
+      }
+    }
+  }
+
+  modificar(): void {
+    if (this.selectedRows && this.selectedRows.size > 0) {
+      this.agregarMercanciasForm.patchValue(this.selectedRows);
+      if (this.modalRef) {
+        const MODEL = new Modal(this.modalRef.nativeElement);
+        MODEL.show();
+      }
+    } else {
+      if (this.modalConfirmacion) {
+        const MODEL = new Modal(this.modalConfirmacion.nativeElement);
+        MODEL.show();
+      }
+    }
+  }
+
+  // public eliminar(): void {
+  //   if (this.datosSolicitud.length === 0) {
+  //     console.warn('No rows selected for deletion.');
+  //     return;
+  //   }
+  //   // Filter out the selected rows from datosSolicitud
+  //   this.datosSolicitud = this.datosSolicitud.filter(
+  //     (solicitud) => !this.datosSeleccionados.some((selected) => selected.id === solicitud.id)
+  //   );
+  
+  //   // // Clear the datosSeleccionados array
+  //   this.datosSolicitud = [];
+
+  //   // Update the store with the new datosSolicitud array
+  //   // this.store.setDatosSolicitud(
+  //   //   this.datosSolicitud.map((solicitud) => ({
+  //   //     id: solicitud.id,
+  //   //     descripcion: solicitud.descripcion || '', // Ensure descripcion is provided
+  //   //   }))
+  //   // );
+  
+  //   console.log('Rows deleted successfully.');
+  //   // this.datosSeleccionados.forEach((item) => {
+  //   //   const INDICE = this.datosSolicitud?.findIndex(
+  //   //     (obj) => obj.id === item.id
+  //   //   );
+  //   //   console.log(INDICE);
+  //   //   if (INDICE !== -1) {
+  //   //     this.datosSolicitud?.splice(INDICE, 1);
+  //   //     // this.store.setDatosSolicitud(this.datosSolicitud);
+  //   //   }
+  //   // });
+  // }
+
+  
   /**
    * Cierra el modal actual.
    */

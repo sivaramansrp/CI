@@ -1,6 +1,6 @@
 
 export interface DatosSolicitud {
-  
+
   id: number;
   fraccionArancelaria: number;
   cantidad: number;
