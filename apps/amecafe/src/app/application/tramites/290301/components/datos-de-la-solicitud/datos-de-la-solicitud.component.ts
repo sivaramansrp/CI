@@ -83,10 +83,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-      
-
     this.createForm();  
-    // this.subscribeToProductorDeCafeChanges();
     this.getRegionsData();
     this.getBeneficiosData();
     this.getBodegasData();
@@ -107,30 +104,23 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       informacionConfidencial: [this.dataDeLaSolicitudState?.informacionConfidencial],
     });
   }
-
- /** Método para suscribirse a los cambios en el campo "productorDeCafe" */
-// private subscribeToProductorDeCafeChanges(): void {
-//   const PRODUCTOR_DE_CAFE_CONTROL = this.datosSolicitudForma.get('productorDeCafe');
-//   const CLAVE_DEL_PADRON_CONTROL = this.datosSolicitudForma.get('claveDelPadron');
-
-//   if (PRODUCTOR_DE_CAFE_CONTROL?.value === 'true' || PRODUCTOR_DE_CAFE_CONTROL?.value === true) {
-//     CLAVE_DEL_PADRON_CONTROL?.disable();
-//   } else {
-//     CLAVE_DEL_PADRON_CONTROL?.enable();
-//   }
-// }
-
-/** Método para manejar el cambio del campo "productorDeCafe" */
+/**
+ * Método para manejar el cambio del campo "productorDeCafe".
+ * Este método habilita o deshabilita el campo "claveDelPadron"
+ * dependiendo del valor seleccionado en el radio button.
+ * 
+ * @param event Evento que se dispara al cambiar la selección del radio button.
+ */
 handleProductorDeCafeChange(event: any): void {
-  const VALUE = this.datosSolicitudForma.get('productorDeCafe')?.value; // Get the value from the form control
+  const VALUE = this.datosSolicitudForma.get('productorDeCafe')?.value; 
   const CLAVE_DEL_PADRON_CONTROL = this.datosSolicitudForma.get('claveDelPadron');
 
   if (VALUE === 'true') {
     CLAVE_DEL_PADRON_CONTROL?.enable();
 
   } else if (VALUE === 'false') {
-    CLAVE_DEL_PADRON_CONTROL?.disable(); // Disable the field if "No" is selected
-    CLAVE_DEL_PADRON_CONTROL?.setValue(''); // Clear the field value
+    CLAVE_DEL_PADRON_CONTROL?.disable(); 
+    CLAVE_DEL_PADRON_CONTROL?.setValue(''); 
   }
 }
   /** Método para obtener los datos de las regiones */
