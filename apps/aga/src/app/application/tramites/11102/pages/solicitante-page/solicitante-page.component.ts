@@ -1,16 +1,9 @@
 import {
-  AlertComponent,
-  BtnContinuarComponent,
   DatosPasos,
 } from '@ng-mf/data-access-user';
 import { Component, ViewChild } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS } from '../../constants/pasos.enum';
-import { PasoDosComponent } from '../../../11102/pages/paso-dos/paso-dos.component';
-import { PasoTresComponent } from '../../../11102/pages/paso-tres/paso-tres.component';
-import { PasoUnoComponent } from '../../../11102/pages/paso-uno/paso-uno.component';
-import { ReactiveFormsModule } from '@angular/forms';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
 /**
@@ -32,17 +25,6 @@ interface AccionBoton {
  * Componente para gestionar la página del solicitante.
  */
 @Component({
-  //standalone: true,
-  // imports: [
-  //   AlertComponent,
-  //   WizardComponent,
-  //   CommonModule,
-  //   BtnContinuarComponent,
-  //   PasoTresComponent,
-  //   PasoUnoComponent,
-  //   PasoDosComponent,
-  //   ReactiveFormsModule,
-  // ],
   selector: 'app-solicitante-page',
   templateUrl: './solicitante-page.component.html',
   styleUrl: './solicitante-page.component.scss',
