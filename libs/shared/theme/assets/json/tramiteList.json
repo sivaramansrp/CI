@@ -1381,8 +1381,8 @@
   {
     "id": 198,
     "tramite": 31101,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/agace/garantia/solicitud",
+    "linkDepartment": "/pago/garantia/solicitud",
     "department": "agace"
   },
   {
