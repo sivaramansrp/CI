@@ -5,7 +5,6 @@ import { CatalogosSelect } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
-import { DatosGeneralesDeLaSolicitudCatologo } from '../../models/solicitud.model';
 import { Domicilios } from '../../models/solicitud.model';
 import { EntidadFederativa } from '../../models/solicitud.model';
 import { EventEmitter } from '@angular/core';
