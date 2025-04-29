@@ -88,8 +88,8 @@ export class DatosDeLaSolicitudComponent {
     derecha: 'Entidades seleccionadas*:',
   };
   public datosSolicitud: DatosSolicitud[] = [];
-  tableData: DatosSolicitud[] = [];
-  selectedRows: Set<number> = new Set();
+  selectedRows:number[] = [];
+  selectedRowsDetalle:number[] = [];
   public datosDetalle: DatosDetalle[] = [];
   TablaSeleccion = TablaSeleccion;
 
@@ -497,16 +497,14 @@ export class DatosDeLaSolicitudComponent {
   }
 
   onSelectedRowsChange(selectedRows: DatosSolicitud[]): void {
-    this.selectedRows = new Set(selectedRows.map(row => row.id)); // Update selected rows
-    console.log(this.selectedRows);
+    this.selectedRows = selectedRows.map(row => row.id);
   }
 
   eliminar(): void {
-    if (this.selectedRows && this.selectedRows.size > 0) {
-      console.log(this.selectedRows);
-      this.tableData = this.tableData.filter(row => !this.selectedRows.has(row.id));
-      console.log(this.tableData);
-      this.selectedRows.clear();
+    if (this.selectedRows && this.selectedRows.length > 0) {
+      this.datosSolicitud = this.datosSolicitud.filter(row => !this.selectedRows.includes(row.id));
+      this.store.setDatosSolicitud(this.datosSolicitud);
+      this.selectedRows = [];
     } else {
       if (this.modalConfirmacion) {
         const MODEL = new Modal(this.modalConfirmacion.nativeElement);
@@ -516,7 +514,7 @@ export class DatosDeLaSolicitudComponent {
   }
 
   modificar(): void {
-    if (this.selectedRows && this.selectedRows.size > 0) {
+    if (this.selectedRows && this.selectedRows.length > 0) {
       this.agregarMercanciasForm.patchValue(this.selectedRows);
       if (this.modalRef) {
         const MODEL = new Modal(this.modalRef.nativeElement);
@@ -530,41 +528,18 @@ export class DatosDeLaSolicitudComponent {
     }
   }
 
-  // public eliminar(): void {
-  //   if (this.datosSolicitud.length === 0) {
-  //     console.warn('No rows selected for deletion.');
-  //     return;
-  //   }
-  //   // Filter out the selected rows from datosSolicitud
-  //   this.datosSolicitud = this.datosSolicitud.filter(
-  //     (solicitud) => !this.datosSeleccionados.some((selected) => selected.id === solicitud.id)
-  //   );
-  
-  //   // // Clear the datosSeleccionados array
-  //   this.datosSolicitud = [];
+  onSelectedRows(selectedRowsDetalle: DatosDetalle[]): void {
+    this.selectedRowsDetalle = selectedRowsDetalle.map(row => row.id);
+  }
 
-  //   // Update the store with the new datosSolicitud array
-  //   // this.store.setDatosSolicitud(
-  //   //   this.datosSolicitud.map((solicitud) => ({
-  //   //     id: solicitud.id,
-  //   //     descripcion: solicitud.descripcion || '', // Ensure descripcion is provided
-  //   //   }))
-  //   // );
-  
-  //   console.log('Rows deleted successfully.');
-  //   // this.datosSeleccionados.forEach((item) => {
-  //   //   const INDICE = this.datosSolicitud?.findIndex(
-  //   //     (obj) => obj.id === item.id
-  //   //   );
-  //   //   console.log(INDICE);
-  //   //   if (INDICE !== -1) {
-  //   //     this.datosSolicitud?.splice(INDICE, 1);
-  //   //     // this.store.setDatosSolicitud(this.datosSolicitud);
-  //   //   }
-  //   // });
-  // }
+  eliminarDetalle(): void {
+    if (this.selectedRowsDetalle && this.selectedRowsDetalle.length > 0) { 
+      this.datosDetalle = this.datosDetalle.filter(row => !this.selectedRowsDetalle.includes(row.id));
+      this.store.setDatosDetalle(this.datosDetalle);
+      this.selectedRowsDetalle = [];
+    }
+  }
 
-  
   /**
    * Cierra el modal actual.
    */

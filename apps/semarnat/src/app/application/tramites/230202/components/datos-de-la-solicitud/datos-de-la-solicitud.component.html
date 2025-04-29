@@ -330,8 +330,7 @@
               <button
                 type="button"
                 class="btn btn-default"
-                data-bs-dismiss="modal"
-                #closeModal
+                (click)="eliminarDetalle()"
               >
                 Eliminar detalle
               </button>
@@ -351,6 +350,7 @@
                 [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX"
                 [configuracionTabla]="encabezadoDeTablaDetalle"
                 [datos]="datosDetalle"
+                (listaDeFilaSeleccionada)="onSelectedRows($event)"
               ></app-tabla-dinamica>
             </div>
             <div class="col-md-12 mt-5 d-flex justify-content-end">

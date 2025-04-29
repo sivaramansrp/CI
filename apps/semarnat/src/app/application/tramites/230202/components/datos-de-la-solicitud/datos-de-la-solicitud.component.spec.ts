@@ -89,7 +89,7 @@ describe('DatosDeLaSolicitudComponent', () => {
 
     component.onSelectedRowsChange(mockSelectedRows);
 
-    expect(component.selectedRows).toEqual(new Set([1, 2]));
+    expect(component.selectedRows).toEqual([1, 2]);
   });
 
   it('should call agregarSolicitud and update datosSolicitud', () => {
