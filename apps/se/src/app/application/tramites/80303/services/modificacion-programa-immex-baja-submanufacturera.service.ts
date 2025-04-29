@@ -1,13 +1,16 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
+import { Tramite80303Store } from '../estados/tramite80303Store.store';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ModificacionProgramaImmexBajaSubmanufactureraService {
 
-  constructor(public httpServicios: HttpClient) { }
+  constructor(public httpServicios: HttpClient,
+    public tramite80303Store: Tramite80303Store,
+  ) { }
 
     /**
    * Obtiene una respuesta desde una URL y asigna los datos a una variable.
@@ -23,12 +26,21 @@ export class ModificacionProgramaImmexBajaSubmanufactureraService {
    * Si la variable o la URL no son válidas, se asigna un arreglo vacío a la variable.
    */
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    obtenerRespuestaPorUrl(self: any, variable: string, url: string) :void {
-      if (self && variable && url) {
-        this.httpServicios.get<RespuestaCatalogos>(`assets/json${url}`).subscribe((resp): void => {
-          self[variable] = resp?.code === 200 && resp.data ? resp.data : [];
-        });
-      }
+  obtenerRespuestaPorUrl(self: any, variable: string, url: string): void {
+    if (self && variable && url) {
+      this.httpServicios.get<RespuestaCatalogos>(`assets/json${url}`).subscribe((resp): void => {
+        const VALOR = resp?.code === 200 && resp.data ? resp.data : [];
+        if (self[variable] !== undefined) {
+          self[variable] = VALOR
+        }
+        this.tramite80303Store.update((state) => (
+          {
+            ...state,
+            [variable]: VALOR,
+          }
+        ));
+      });
     }
+  }
     
 }

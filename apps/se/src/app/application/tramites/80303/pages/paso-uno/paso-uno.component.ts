@@ -26,7 +26,7 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
 
   /**
  * @property subIndice
- * @description Indica el índice de la pestaña seleccionada dentro del paso del formulario.
+ * @description subIndica el índice de la pestaña seleccionada dentro del paso del formulario.
  * @type {number | undefined}
  */
   public subIndice: number | undefined = 1;

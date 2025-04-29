@@ -9,11 +9,18 @@ import { TramiteStore } from '../../../../estados/tramite.store';
   templateUrl: './paso-tres.component.html',
   styleUrl: './paso-tres.component.scss',
 })
-export class PasoTresComponent implements OnDestroy{
+export class PasoTresComponent implements OnDestroy {
   /**
    * Tipo de persona.
    */
   tipoPersona!: number;
+
+
+  /**
+   * Sujeto utilizado para manejar la destrucción de suscripciones en el componente.
+   * Este observable se emite cuando el componente se destruye, permitiendo
+   * cancelar suscripciones activas y prevenir fugas de memoria.
+   */
   private destroy$: Subject<void> = new Subject<void>();
 
   /**
@@ -61,6 +68,11 @@ export class PasoTresComponent implements OnDestroy{
     }
   }
 
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta cuando el componente se destruye.
+   * Aquí se utiliza para emitir un valor en el observable `destroy$` y completar el mismo,
+   * asegurando la limpieza adecuada de suscripciones y evitando posibles fugas de memoria.
+   */
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();

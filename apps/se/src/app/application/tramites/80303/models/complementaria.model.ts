@@ -7,70 +7,70 @@
  * @property {string} [PrimerApellido] - Primer apellido del contribuyente.
  * @property {string} [SegundoApellido] - Segundo apellido del contribuyente.
  */
-  export interface DatosContribuyente {
-      RFC?: string;
-      Nombres?: string;
-      PrimerApellido?: string;
-      SegundoApellido?: string;
-    }
+export interface DatosContribuyente {
+  RFC?: string;
+  Nombres?: string;
+  PrimerApellido?: string;
+  SegundoApellido?: string;
+}
 
 
-  /**
- * Representa la información de un federatario.
- * 
- * @interface Federatario
- * @property {string} [Nombre] - Nombre del federatario.
- * @property {string} [PrimerApellido] - Primer apellido.
- * @property {string} [SegundoApellido] - Segundo apellido.
- * @property {string} [NumeroActa] - Número de acta.
- * @property {string} [FechaActa] - Fecha del acta.
- * @property {string} [NumeroNotaria] - Número de notaría.
- * @property {string} [MunicipioDelegacion] - Municipio o Delegación.
- * @property {string} [EstadoDistrito] - Estado o Distrito Federal.
- */
+/**
+* Representa la información de un federatario.
+* 
+* @interface Federatario
+* @property {string} [Nombre] - Nombre del federatario.
+* @property {string} [PrimerApellido] - Primer apellido.
+* @property {string} [SegundoApellido] - Segundo apellido.
+* @property {string} [NumeroActa] - Número de acta.
+* @property {string} [FechaActa] - Fecha del acta.
+* @property {string} [NumeroNotaria] - Número de notaría.
+* @property {string} [MunicipioDelegacion] - Municipio o Delegación.
+* @property {string} [EstadoDistrito] - Estado o Distrito Federal.
+*/
 export interface Federatario {
-    Nombre?: string;
-    PrimerApellido?: string;
-    SegundoApellido?: string;
-    NumeroActa?: string;
-    FechaActa?: string;
-    NumeroNotaria?: string;
-    MunicipioDelegacion?: string;
-    EstadoDistrito?: string;
-  }
-  
-  /**
- * Representa la información de un federatario.
- * 
- * @interface FederatarioRealizaranLasOperaciones
- * @property {string} [Calle] - Calle del federatario.
- * @property {string} [NumeroExterior] - Número exterior.
- * @property {string} [NumeroInterior] - Número interior.
- * @property {string} [CodigoPostal] - Código postal.
- * @property {string} [Colonia] - Colonia.
- * @property {string} [Localidad] - Localidad.
- * @property {string} [MunicipioDelegacion] - Municipio o Delegación.
- * @property {string} [EstadoDistrito] - Estado o Distrito Federal.
- * @property {string} [Pais] - País.
- * @property {string} [RFC] - Registro Federal de Contribuyente (RFC).
- * @property {string} [DomicilioFiscal] - Domicilio fiscal del solicitante.
- * @property {string} [DenominacionSocial] - Denominación o razón social.
- * @property {string} [Estatus] - Estatus.
- */
+  Nombre?: string;
+  PrimerApellido?: string;
+  SegundoApellido?: string;
+  NumeroActa?: string;
+  FechaActa?: string;
+  NumeroNotaria?: string;
+  MunicipioDelegacion?: string;
+  EstadoDistrito?: string;
+}
+
+/**
+* Representa la información de un federatario.
+* 
+* @interface FederatarioRealizaranLasOperaciones
+* @property {string} [Calle] - Calle del federatario.
+* @property {string} [NumeroExterior] - Número exterior.
+* @property {string} [NumeroInterior] - Número interior.
+* @property {string} [CodigoPostal] - Código postal.
+* @property {string} [Colonia] - Colonia.
+* @property {string} [Localidad] - Localidad.
+* @property {string} [MunicipioDelegacion] - Municipio o Delegación.
+* @property {string} [EstadoDistrito] - Estado o Distrito Federal.
+* @property {string} [Pais] - País.
+* @property {string} [RFC] - Registro Federal de Contribuyente (RFC).
+* @property {string} [DomicilioFiscal] - Domicilio fiscal del solicitante.
+* @property {string} [DenominacionSocial] - Denominación o razón social.
+* @property {string} [Estatus] - Estatus.
+*/
 export interface FederatarioRealizaranLasOperaciones {
-    Calle?: string;
-    NumeroExterior?: string;
-    NumeroInterior?: string;
-    CodigoPostal?: string;
-    Colonia?: string;
-    Localidad?: string;
-    MunicipioDelegacion?: string;
-    EstadoDistrito?: string;
-    Pais?: string;
-    RFC?: string;
-    DomicilioFiscal?: string;
-    DenominacionSocial?: string;
-    Estatus?: string;
+  Calle?: string;
+  NumeroExterior?: string;
+  NumeroInterior?: string;
+  CodigoPostal?: string;
+  Colonia?: string;
+  Localidad?: string;
+  MunicipioDelegacion?: string;
+  EstadoDistrito?: string;
+  Pais?: string;
+  RFC?: string;
+  DomicilioFiscal?: string;
+  DenominacionSocial?: string;
+  Estatus?: string;
 }
 
 
@@ -91,85 +91,108 @@ export interface FederatarioRealizaranLasOperaciones {
  * @property estatus - (Opcional) Estatus actual de la empresa.
  */
 export interface DatosEmpresaSubmanufacturera {
-    rfc?: string;
-    razonSocial?: string;
-    calle?: string;
-    numeroInterior?: string;
-    numeroExterior?: string;
-    codigoPostal?: string;
-    colonia?: string;
-    municipioDelegacion?: string;
-    entidadFederativa?: string;
-    pais?: string;
-    telefono?: string;
-    estatus?: string;
-  }
+  rfc?: string;
+  razonSocial?: string;
+  calle?: string;
+  numeroInterior?: string;
+  numeroExterior?: string;
+  codigoPostal?: string;
+  colonia?: string;
+  municipioDelegacion?: string;
+  entidadFederativa?: string;
+  pais?: string;
+  telefono?: string;
+  estatus?: string;
+}
 
-  export interface DatosPlantaManufacturera {
-    Calle?: string;
-    NumeroExterior?: string;
-    NumeroInterior?: string;
-    CodigoPostal?: string;
-    Colonia?: string;
-    MunicipioDelegacion?: string;
-    EntidadFederativa?: string;
-    Pais?: string;
-    RFC?: string;
-    DomicilioFiscal?: string;
-    Estatus?: string;
-  }
-
-export interface ServicioImmex {
-    descripcionServicio?: string;
-    tipoServicio?: string;
-    testado?: string;
-    estatus?: string;
-  }
-  
-  /**
- * Representa la información de una fracción arancelaria en el anexo de exportación.
+/**
+ * Representa los datos de una planta manufacturera.
  * 
- * @interface AnexoExportacion
- * @property {string} [fraccionArancelaria] - Fracción arancelaria del producto.
- * @property {string} [descripcion] - Descripción del producto.
- * @property {string} [tipoFraccion] - Tipo de fracción.
+ * @property {string} [Calle] - La calle donde se encuentra la planta manufacturera.
+ * @property {string} [NumeroExterior] - El número exterior del domicilio de la planta.
+ * @property {string} [NumeroInterior] - El número interior del domicilio de la planta, si aplica.
+ * @property {string} [CodigoPostal] - El código postal del domicilio de la planta.
+ * @property {string} [Colonia] - La colonia donde se ubica la planta manufacturera.
+ * @property {string} [MunicipioDelegacion] - El municipio o delegación donde se encuentra la planta.
+ * @property {string} [EntidadFederativa] - La entidad federativa (estado) donde se ubica la planta.
+ * @property {string} [Pais] - El país donde se encuentra la planta manufacturera.
+ * @property {string} [RFC] - El Registro Federal de Contribuyentes (RFC) asociado a la planta.
+ * @property {string} [DomicilioFiscal] - El domicilio fiscal registrado de la planta manufacturera.
+ * @property {string} [Estatus] - El estatus actual de la planta manufacturera.
  */
-export interface AnexoExportacion {
-    fraccionArancelaria?: string;
-    descripcion?: string;
-    tipoFraccion?: string;
-  }
-  
-  /**
- * Representa una relación de fracción arancelaria entre exportación e importación.
- * 
- * @interface AnexoImportacion
- * @property {string} [fraccionExportacion] - Fracción arancelaria del producto exportado.
- * @property {string} [fraccionImportacion] - Fracción arancelaria de la mercancía importada.
- * @property {string} [descripcion] - Descripción de la mercancía.
- * @property {string} [tipoFraccion] - Tipo de fracción.
- */
-export interface AnexoImportacion {
-    fraccionExportacion?: string;
-    fraccionImportacion?: string;
-    descripcion?: string;
-    tipoFraccion?: string;
-  }
-  
+export interface DatosPlantaManufacturera {
+  Calle?: string;
+  NumeroExterior?: string;
+  NumeroInterior?: string;
+  CodigoPostal?: string;
+  Colonia?: string;
+  MunicipioDelegacion?: string;
+  EntidadFederativa?: string;
+  Pais?: string;
+  RFC?: string;
+  DomicilioFiscal?: string;
+  Estatus?: string;
+}
 
-  /**
- * Representa un producto sensible en la tabla de importación.
+/**
+ * Representa un servicio IMMEX con información relevante sobre su descripción,
+ * tipo, estado y estatus.
  *
- * @interface Sensible
- * @property {string} [fraccionImportacion] - Fracción arancelaria de importación.
- * @property {string} [cantidad] - Cantidad importada.
- * @property {string} [valor] - Valor de la importación.
- * @property {string} [unidadMedida] - Unidad de medida tarifaria.
+ * @property descripcionServicio - Una descripción del servicio proporcionado.
+ * @property tipoServicio - El tipo de servicio IMMEX.
+ * @property testado - El estado actual del servicio.
+ * @property estatus - El estatus del servicio.
  */
+export interface ServicioImmex {
+  descripcionServicio?: string;
+  tipoServicio?: string;
+  testado?: string;
+  estatus?: string;
+}
+
+/**
+* Representa la información de una fracción arancelaria en el anexo de exportación.
+* 
+* @interface AnexoExportacion
+* @property {string} [fraccionArancelaria] - Fracción arancelaria del producto.
+* @property {string} [descripcion] - Descripción del producto.
+* @property {string} [tipoFraccion] - Tipo de fracción.
+*/
+export interface AnexoExportacion {
+  fraccionArancelaria?: string;
+  descripcion?: string;
+  tipoFraccion?: string;
+}
+
+/**
+* Representa una relación de fracción arancelaria entre exportación e importación.
+* 
+* @interface AnexoImportacion
+* @property {string} [fraccionExportacion] - Fracción arancelaria del producto exportado.
+* @property {string} [fraccionImportacion] - Fracción arancelaria de la mercancía importada.
+* @property {string} [descripcion] - Descripción de la mercancía.
+* @property {string} [tipoFraccion] - Tipo de fracción.
+*/
+export interface AnexoImportacion {
+  fraccionExportacion?: string;
+  fraccionImportacion?: string;
+  descripcion?: string;
+  tipoFraccion?: string;
+}
+
+
+/**
+* Representa un producto sensible en la tabla de importación.
+*
+* @interface Sensible
+* @property {string} [fraccionImportacion] - Fracción arancelaria de importación.
+* @property {string} [cantidad] - Cantidad importada.
+* @property {string} [valor] - Valor de la importación.
+* @property {string} [unidadMedida] - Unidad de medida tarifaria.
+*/
 export interface Sensible {
-    fraccionImportacion?: string;
-    cantidad?: string;
-    valor?: string;
-    unidadMedida?: string;
-  }
-  
+  fraccionImportacion?: string;
+  cantidad?: string;
+  valor?: string;
+  unidadMedida?: string;
+}

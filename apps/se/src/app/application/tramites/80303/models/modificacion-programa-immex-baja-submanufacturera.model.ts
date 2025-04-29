@@ -1,3 +1,23 @@
+import { ConfiguracionColumna } from '@ng-mf/data-access-user'; // adjust the import path if needed
+
+/**
+ * Representa la información de una empresa submanufacturera.
+ * 
+ * @property estatus - El estado actual de la empresa submanufacturera.
+ * @property rfc - El Registro Federal de Contribuyentes (RFC) de la empresa.
+ * @property razonSocial - La razón social de la empresa.
+ * @property calle - La calle donde se encuentra ubicada la empresa.
+ * @property numeroInterior - El número interior del domicilio de la empresa.
+ * @property numeroExterior - El número exterior del domicilio de la empresa.
+ * @property codigoPostal - El código postal del domicilio de la empresa.
+ * @property localidad - La localidad donde se encuentra la empresa.
+ * @property municipioAlcaldia - El municipio o alcaldía donde se encuentra la empresa.
+ * @property entidadFederativa - La entidad federativa (estado) donde se encuentra la empresa.
+ * @property pais - El país donde se encuentra la empresa.
+ * @property telefono - El número de teléfono de contacto de la empresa.
+ * @property fax - El número de fax de la empresa.
+ * @property correoElectronico - La dirección de correo electrónico de la empresa.
+ */
 export interface EmpresaSubmanufacturera {
   estatus: string;
   rfc: string;
@@ -14,7 +34,6 @@ export interface EmpresaSubmanufacturera {
   fax: string;
   correoElectronico: string;
 }
-import { ConfiguracionColumna } from '@ng-mf/data-access-user'; // adjust the import path if needed
 
 /**
  * Constante que define la configuración de columnas para la tabla de empresas submanufactureras.

@@ -1,11 +1,11 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import {
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
 } from '@ng-mf/data-access-user';
+import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
 import { EMPRESA_SUBMANUFACTURERA_ENCABEZADO_DE_TABLA } from '../../models/modificacion-programa-immex-baja-submanufacturera.model';
 
 @Component({
@@ -18,7 +18,7 @@ import { EMPRESA_SUBMANUFACTURERA_ENCABEZADO_DE_TABLA } from '../../models/modif
     TablaDinamicaComponent,
   ],
   templateUrl: './modificacion.component.html',
-  styleUrl: './modificacion.component.css',
+  styleUrl: './modificacion.component.scss',
 })
 export class ModificacionComponent {
   modificacionForm!: FormGroup;

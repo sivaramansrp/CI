@@ -27,7 +27,7 @@ export class PasoDosComponent implements OnInit, OnDestroy {
    * Cada elemento es de tipo `Catalogo`, que representa un catálogo de opciones.
    */
   tiposDocumentos: Catalogo[] = [];
-  
+
   /**
    * Clase CSS utilizada para mostrar una alerta informativa en la interfaz de usuario.
    * 
@@ -67,7 +67,7 @@ export class PasoDosComponent implements OnInit, OnDestroy {
    */
   constructor(
     private catalogosServices: CatalogosService,
-  ) { 
+  ) {
     // Constructor
   }
 
@@ -103,7 +103,7 @@ export class PasoDosComponent implements OnInit, OnDestroy {
         },
         error: (_error): void => {
           // Manejo de error
-         },
+        },
       });
   }
 }
