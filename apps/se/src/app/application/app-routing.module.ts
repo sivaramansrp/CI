@@ -431,6 +431,13 @@ const ROUTES: Routes = [
         (m) => m.ModalidadAmpliacionModule
       ),
   },
+  {
+    path: 'asignacion-directa-cupo-personas-fisicas',
+    loadChildren: () =>
+      import('./tramites/120401/asignacion-directa-cupo-personas-fisicas-primera-vez.module').then(
+        (m) => m.AsignacionDirectaCupoPersonasFisicasPrimeraVezModule
+      ),
+  },
   
 ];
 

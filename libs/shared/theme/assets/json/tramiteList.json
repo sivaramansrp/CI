@@ -2207,8 +2207,8 @@
   {
     "id": 316,
     "tramite": 120401,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/se/asignacion-directa-cupo-personas-fisicas/solicitante",
+    "linkDepartment": "/pago/asignacion-directa-cupo-personas-fisicas/solicitante",
     "department": "se"
   },
   {
