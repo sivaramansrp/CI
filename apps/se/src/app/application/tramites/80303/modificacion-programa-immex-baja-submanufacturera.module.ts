@@ -12,6 +12,8 @@ import { AnexarDocumentosComponent } from '@ng-mf/data-access-user';
 import { FirmaElectronicaComponent } from '@ng-mf/data-access-user';
 import { WizardComponent } from '@ng-mf/data-access-user';
 import { SolicitanteComponent } from '@ng-mf/data-access-user';
+import { ModificacionComponent } from '../80303/components/modificacion/modificacion.component';
+import { BitacoraComponent } from '../80303/components/bitacora/bitacora.component';
 @NgModule({
   declarations: [
     SolicitudPageComponent,
@@ -29,6 +31,8 @@ import { SolicitanteComponent } from '@ng-mf/data-access-user';
     WizardComponent,
     BtnContinuarComponent,
     SolicitanteComponent,
+    ModificacionComponent,
+    BitacoraComponent,
   ],
   exports: [
     PasoUnoComponent,

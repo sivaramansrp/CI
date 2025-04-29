@@ -41,7 +41,12 @@
     <ng-container>
       @switch (indice) { @case (1) {
       <solicitante [tabindex]="1"></solicitante>
-      } @case (2) { } @case (3) { } }
+      } @case (2) {
+      <app-modificacion></app-modificacion>
+      } @case (3) {
+
+      <app-bitacora></app-bitacora>
+      } }
     </ng-container>
   </div>
 </div>
