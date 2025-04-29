@@ -1,4 +1,4 @@
-import { CATALOGOS_ID, Catalogo, CatalogosService, TEXTOS } from '@ng-mf/data-access-user';
+import { CATALOGOS_ID, Catalogo, CatalogoResponse, CatalogosService, TEXTOS } from '@ng-mf/data-access-user';
 import { Component, OnInit } from '@angular/core';
 
 
@@ -65,7 +65,7 @@ export class PasoDosComponent implements OnInit {
     this.catalogosServices
       .getCatalogo(CATALOGOS_ID.CAT_TIPO_DOCUMENTO)
       .subscribe({
-        next: (resp): void => {
+        next: (resp:CatalogoResponse[]): void => {
           if (resp.length > 0) {
             this.catalogoDocumentos = resp;
           }

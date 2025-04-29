@@ -21,10 +21,10 @@ describe('PasoUnoComponent', () => {
         SolicitanteComponent,
         DatosDelTramiteComponent,
         BtnContinuarComponent,
-        PasoUnoComponent,
+        WizardComponent
       ],
       declarations: [PasoUnoComponent],
-      providers:[provideHttpClient]
+      providers:[provideHttpClient()]
     }).compileComponents();
 
     fixture = TestBed.createComponent(PasoUnoComponent);
