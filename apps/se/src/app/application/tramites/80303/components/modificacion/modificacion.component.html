@@ -59,4 +59,15 @@
   <div class="row mt-5">
     <ng-titulo titulo="Empresas submanufactureras"></ng-titulo>
   </div>
+  <div class="row">
+    <app-tabla-dinamica
+      [configuracionTabla]="
+        submanufacturerasTablaConfiguracion.configuracionTabla
+      "
+      [tipoSeleccionTabla]="
+        submanufacturerasTablaConfiguracion.tipoSeleccionTabla
+      "
+      [datos]="submanufacturerasTablaDatos"
+    ></app-tabla-dinamica>
+  </div>
 </div>
