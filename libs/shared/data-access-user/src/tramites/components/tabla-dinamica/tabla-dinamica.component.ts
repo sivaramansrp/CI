@@ -228,7 +228,10 @@ export class TablaDinamicaComponent<T> {
     this.alternarValor.emit(row);
   }
 
-  // eslint-disable-next-line class-methods-use-this
+// Justificación: La estructura del objeto 'row' varía dinámicamente según los datos de la tabla, 
+// y no es viable aplicar tipado estricto en este momento. Se refactorizará con una interfaz adecuada más adelante.
+// eslint-disable-next-line class-methods-use-this
+// eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any
 obtenerTextoBoton(fila:any):string{
  if(fila?.desEstatus && fila?.desEstatus===TEXTO_FILA_REGISTRO.BAJA){
      return ESTADO_REGISTRO.ACTIVAR
