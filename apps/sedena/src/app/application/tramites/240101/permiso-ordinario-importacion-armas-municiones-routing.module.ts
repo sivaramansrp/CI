@@ -11,7 +11,6 @@ const ROUTES: Routes = [
     path: 'contenedor-de-pasos',
     component: SolicitudPageComponent,
   },
-
   {
     path: '',
     pathMatch: 'full',
