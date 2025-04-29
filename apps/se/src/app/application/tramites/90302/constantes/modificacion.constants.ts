@@ -43,6 +43,23 @@ export const PASOS = [
   },
 ];
 
+/**
+ * Configuration array for the bitacora (logbook) table in the application.
+ * Each object in the array represents a column configuration for the table.
+ * 
+ * @constant
+ * @type {Array<Object>}
+ * @property {string} encabezado - The header text for the column.
+ * @property {Function} clave - A function that extracts the value for the column from a `Bitacora` object.
+ * @property {number} orden - The order in which the column should appear in the table.
+ * 
+ * Example usage:
+ * ```typescript
+ * CONFIGURACION_BITCORA.forEach(config => {
+ *   console.log(config.encabezado, config.orden);
+ * });
+ * ```
+ */
 export const CONFIGURACION_BITCORA = [
   {
     encabezado: 'Tipo modificación ',
@@ -66,13 +83,40 @@ export const CONFIGURACION_BITCORA = [
   },
 ];
 
+/**
+ * @const CONFIGURACION_SECTOR
+ * @description Configuración utilizada para definir las propiedades de los sectores en la aplicación.
+ * Contiene una lista de objetos que especifican encabezados, claves y el orden de las columnas.
+ * 
+ * @property {string} encabezado - El título o encabezado que se mostrará en la interfaz de usuario.
+ * @property {(ele: Sector) => string | undefined} clave - Una función que toma un objeto de tipo `Sector` 
+ * y devuelve el valor correspondiente a la clave especificada.
+ * @property {number} orden - El orden en el que se deben mostrar las columnas en la interfaz.
+ * 
+ * @example
+ * // Ejemplo de uso:
+ * CONFIGURACION_SECTOR.forEach(config => {
+ *   console.log(config.encabezado);
+ * });
+ */
 export const CONFIGURACION_SECTOR = [
   {
     encabezado: 'Lista de sectores',
     clave: (ele: Sector): string | undefined => ele.listaSectores,
     orden: 1,
   },
+  {
+    encabezado: 'Clave del sector ',
+    clave: (ele: Sector): string | undefined => ele.claveSector,
+    orden: 2,
+  },
+  {
+    encabezado: 'Estatus',
+    clave: (ele: Sector): string | undefined => ele.estatus,
+    orden: 3,
+  },
 ];
+
 /**
  * @const CONFIGURACION_PRODUCTOR_INDIRECTO
  * @description Configuración utilizada para definir las propiedades de los productores indirectos en el sistema.
@@ -212,7 +256,23 @@ export const CONFIGURACION_PLANTAS = [
   },
 ];
 
-
+/**
+ * @const CONFIGURACION_MODIFICACION
+ * @description Configuración utilizada para definir las propiedades de modificación en una lista de datos.
+ * Cada objeto dentro del arreglo representa una columna con su encabezado, clave de acceso y orden.
+ * 
+ * @type {Array<{encabezado: string, clave: (ele: DatosDelModificacion) => string | number | undefined, orden: number}>}
+ * 
+ * @property {string} encabezado - El título de la columna que se mostrará en la interfaz de usuario.
+ * @property {(ele: DatosDelModificacion) => string | number | undefined} clave - Una función que toma un objeto de tipo `DatosDelModificacion` y devuelve el valor correspondiente a la columna.
+ * @property {number} orden - El orden en el que se mostrará la columna en la tabla.
+ * 
+ * @example
+ * // Ejemplo de uso:
+ * CONFIGURACION_MODIFICACION.forEach(config => {
+ *   console.log(config.encabezado); // Muestra el encabezado de cada columna
+ * });
+ */
 export const CONFIGURACION_MODIFICACION = [
   {
     encabezado: 'Estatus',

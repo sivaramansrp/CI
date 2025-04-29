@@ -14,9 +14,14 @@ import { takeUntil } from 'rxjs/operators';
   styleUrl: './bitacora.component.scss',
 })
 export class BitacoraComponent implements OnInit, OnDestroy {
- 
   
-@Input() esDeSolicitante: boolean = false; 
+/**
+ * @property {boolean} esDeSolicitante
+ * @description Indica si el componente pertenece al solicitante. 
+ * Este valor se recibe como entrada desde el componente padre.
+ * @memberof BitacoraComponent
+ */
+@Input() esDeSolicitante: boolean = false;
   
 
   /**
@@ -42,11 +47,34 @@ export class BitacoraComponent implements OnInit, OnDestroy {
   configuracionTablaMercancias: ConfiguracionColumna<MercanciasAProducir>[] =
     CONFIGURACION_MERCANCIAS_A_PRODUCIR;
 
+  /**
+   * @description Configuración de la tabla para mostrar las plantas.
+   * Esta propiedad utiliza una configuración predefinida que se encuentra en `CONFIGURACION_PLANTAS`.
+   * 
+   * @type {ConfiguracionColumna<Plantas>[]} 
+   * @see CONFIGURACION_PLANTAS
+   */
   configuracionTablaPlantas: ConfiguracionColumna<Plantas>[] = CONFIGURACION_PLANTAS;
+
+  /**
+   * @description Configuración de la tabla para mostrar los productores indirectos.
+   * Esta propiedad utiliza una configuración predefinida que se encuentra en `CONFIGURACION_PRODUCTOR_INDIRECTO`.
+   * 
+   * @type {ConfiguracionColumna<ProductorIndirecto>[]} 
+   * @see CONFIGURACION_PRODUCTOR_INDIRECTO
+   */
   configuracionTablaProductor: ConfiguracionColumna<ProductorIndirecto>[] = CONFIGURACION_PRODUCTOR_INDIRECTO;
+  
+  /**
+   * @var configuracionTablaSector
+   * @type {ConfiguracionColumna<Sector>[]}
+   * @description Configuración de la tabla para el sector. Utiliza la constante `CONFIGURACION_SECTOR` 
+   * para definir las columnas y su configuración.
+   * 
+   * @see CONFIGURACION_SECTOR
+   */
   configuracionTablaSector: ConfiguracionColumna<Sector>[] = CONFIGURACION_SECTOR;
 
-  
 
   /**
    * @property {Bitacora[]} datosBitacora

@@ -181,6 +181,15 @@ export interface MercanciasAProducir {
   claveSector: string;
   estatus: string;
 }
+
+/**
+ * Representa un sector con información relevante.
+ * 
+ * @interface Sector
+ * @property {string} listaSectores - Lista de sectores asociados.
+ * @property {string} claveSector - Clave única que identifica al sector.
+ * @property {string} estatus - Estado actual del sector.
+ */
 export interface Sector {
   listaSectores: string;
   claveSector: string;
