@@ -431,6 +431,14 @@ const ROUTES: Routes = [
         (m) => m.ModalidadAmpliacionModule
       ),
   },
+
+  {
+    path: 'validacion-posteriori',
+    loadChildren: () =>
+      import('./tramites/110212/validacion-posteriori.module').then(
+        (m) => m.ValidacionPosterioriModuleModule
+      ),
+  },
   
 ];
 
