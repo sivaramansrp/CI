@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CAMPO_DE_DESTINATARIO } from '../../constantes/modificacion.enum';
 import { CommonModule } from '@angular/common';
@@ -12,7 +12,7 @@ import { TituloComponent } from '@libs/shared/data-access-user/src';
   templateUrl: './datos-del-destinatario.component.html',
   styleUrl: './datos-del-destinatario.component.scss',
 })
-export class DatosDelDestinatarioComponent implements OnDestroy {
+export class DatosDelDestinatarioComponent implements OnDestroy,OnInit {
 
   /**
    * Datos del formulario para inicializar los valores
@@ -27,7 +27,7 @@ export class DatosDelDestinatarioComponent implements OnDestroy {
    *
    * @type {number}
    */
-  @Input() idProcedimiento!: any;
+  @Input() idProcedimiento!: number;
 
   /**
    * Evento que se emite cuando cambian los datos del formulario del destinatario
@@ -76,13 +76,12 @@ public campoDestinatario = false;
       razonSocial: [''],
     });
 
-    this.campoDestinatario = CAMPO_DE_DESTINATARIO.includes(this.idProcedimiento)
+  
+  }
+  ngOnInit(): void {
     // Parcheo de valores iniciales con retraso para asegurar la renderización
-    setTimeout(() => {
-      if (this.datosForm) {
-        this.formDatosDelDestinatario.patchValue(this.datosForm);
-      }
-    }, 100);
+    this.campoDestinatario = CAMPO_DE_DESTINATARIO.includes(this.idProcedimiento);
+    this.formDatosDelDestinatario.patchValue(this.datosForm);
   }
 
   /**
