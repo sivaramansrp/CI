@@ -1,18 +1,18 @@
+import {
+  PASOS,
+  TITULOMENSAJE,
+} from '../../constants/modificacion-programa-immex-baja-submanufacturera.enum';
 import { AccionBoton } from '@ng-mf/data-access-user';
 import { Component } from '@angular/core';
 import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { ViewChild } from '@angular/core';
 import { WizardComponent } from '@ng-mf/data-access-user';
-import {
-  PASOS,
-  TITULOMENSAJE,
-} from '../../constants/modificacion-programa-immex-baja-submanufacturera.enum';
 
 @Component({
   selector: 'app-solicitud-page',
   templateUrl: './solicitud-page.component.html',
-  styleUrl: './solicitud-page.component.css',
+  styleUrl: './solicitud-page.component.scss',
 })
 export class SolicitudPageComponent {
   /**
