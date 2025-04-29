@@ -56,7 +56,7 @@ describe('DatosPorGarantiaComponent', () => {
         CommonModule,
         TituloComponent,
         CatalogoSelectComponent,
-        // InputFechaComponent,
+        InputFechaComponent,
         HttpClientTestingModule,
       ],
       declarations: [],

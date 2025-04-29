@@ -1,70 +1,91 @@
-import { TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { of } from 'rxjs';
-import { TercerosRelacionadosComponent } from './terceros-relacionados.component';
+import { TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { SolicitudService } from '../../services/solicitud.service';
+import { TercerosRelacionadosComponent } from './terceros-relacionados.component';
+import { RECIBIR_NOTIFICACIONES_CONFIGURACION } from '../../constants/solicitud.enum';
 import { RecibirNotificaciones } from '../../models/solicitud.model';
-import { TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
-import { CommonModule } from '@angular/common';
+import { of } from 'rxjs';
 
 describe('TercerosRelacionadosComponent', () => {
   let component: TercerosRelacionadosComponent;
-  let solicitudService: SolicitudService;
-
-  const mockRecibirNotificaciones: RecibirNotificaciones[] = [
-    {
-      rfc: 'RFC123',
-      curp: 'CURP123',
-      nombre: 'John',
-      apellidoPaterno: 'Doe',
-      apellidoMaterno: 'Smith',
-    },
-  ];
+  let solicitudServiceMock: jest.Mocked<SolicitudService>;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [
-        HttpClientTestingModule,
-        CommonModule,
-        TituloComponent,
-        TablaDinamicaComponent,
-        TercerosRelacionadosComponent
-      ],
-      providers: [SolicitudService],
-    });
+    solicitudServiceMock = {
+      conseguirRecibirNotificaciones: jest.fn(() =>
+        of([
+          {
+            rfc: 'LEQI8101314S7',
+            curp: 'LEQI810131HDGSXG05',
+            nombre: 'MISAEL',
+            apellidoPaterno: 'BARRAGAN',
+            apellidoMaterno: 'RUIZ',
+          },
+          {
+            rfc: 'MAJIth621207C95',
+            curp: 'MAVL621207HDGRLS06',
+            nombre: 'EUROFOODS DE MEXICO',
+            apellidoPaterno: 'GONZALEZ',
+            apellidoMaterno: 'PINAL',
+          },
+        ])
+      ),
+    } as unknown as jest.Mocked<SolicitudService>;
 
-    solicitudService = TestBed.inject(SolicitudService);
-    jest
-      .spyOn(solicitudService, 'conseguirRecibirNotificaciones')
-      .mockReturnValue(of(mockRecibirNotificaciones));
-
-    component = new TercerosRelacionadosComponent(solicitudService);
+    component = new TercerosRelacionadosComponent(solicitudServiceMock);
   });
 
   it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize with default values', () => {
-    expect(component.tipoSeleccionTabla).toBe('undefined');
-    expect(component.configuracionColumnas.length).toBe(5);
+  it('should initialize tipoSeleccionTabla as UNDEFINED', () => {
+    expect(component.tipoSeleccionTabla).toBe(TablaSeleccion.UNDEFINED);
   });
 
-  it('should fetch recibirNotificaciones on initialization', () => {
-    component.conseguirRecibirNotificaciones();
-    expect(solicitudService.conseguirRecibirNotificaciones).toHaveBeenCalled();
-    expect(component.orecibirNotificacionesLista).toEqual(
-      mockRecibirNotificaciones
+  it('should initialize configuracionColumnas with RECIBIR_NOTIFICACIONES_CONFIGURACION', () => {
+    expect(component.configuracionColumnas).toBe(
+      RECIBIR_NOTIFICACIONES_CONFIGURACION
     );
   });
 
-  it('should clean up subscriptions on destroy', () => {
-    const destroySpy = jest
-      .spyOn(component['destroy$'], 'next')
-      .mockImplementation();
-    const completeSpy = jest
-      .spyOn(component['destroy$'], 'complete')
-      .mockImplementation();
+  it('should call conseguirRecibirNotificaciones on initialization', () => {
+    const spy = jest.spyOn(component, 'conseguirRecibirNotificaciones');
+    component = new TercerosRelacionadosComponent(solicitudServiceMock);
+    expect(spy).toHaveBeenCalled();
+  });
+
+  it('should populate orecibirNotificacionesLista when conseguirRecibirNotificaciones is called', () => {
+    const mockData: RecibirNotificaciones[] = [
+      {
+        rfc: 'LEQI8101314S7',
+        curp: 'LEQI810131HDGSXG05',
+        nombre: 'MISAEL',
+        apellidoPaterno: 'BARRAGAN',
+        apellidoMaterno: 'RUIZ',
+      },
+      {
+        rfc: 'MAJIth621207C95',
+        curp: 'MAVL621207HDGRLS06',
+        nombre: 'EUROFOODS DE MEXICO',
+        apellidoPaterno: 'GONZALEZ',
+        apellidoMaterno: 'PINAL',
+      },
+    ];
+    solicitudServiceMock.conseguirRecibirNotificaciones.mockReturnValue({
+      pipe: jest.fn().mockReturnValue({
+        subscribe: (callback: (data: RecibirNotificaciones[]) => void) =>
+          callback(mockData),
+      }),
+    } as any);
+
+    component.conseguirRecibirNotificaciones();
+
+    expect(component.orecibirNotificacionesLista).toEqual(mockData);
+  });
+
+  it('should clean up subscriptions on ngOnDestroy', () => {
+    const destroySpy = jest.spyOn(component['destroy$'], 'next');
+    const completeSpy = jest.spyOn(component['destroy$'], 'complete');
 
     component.ngOnDestroy();
 

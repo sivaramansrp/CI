@@ -83,7 +83,7 @@ export class AgregarImmexProgramComponent implements OnInit, OnDestroy {
     public solicitud31101Query: Solicitud31101Query
   ) {
     /** Obtiene los datos generales del catálogo */
-    this.conseguirDatosGeneralesCatologo();
+    this.entidadFederativaCatalogo();
 
     /** Obtiene los datos de la entidad federativa */
     this.conseguirEntidadFederativaDatos();
@@ -110,13 +110,13 @@ export class AgregarImmexProgramComponent implements OnInit, OnDestroy {
   }
 
   /** Obtiene los datos generales del catálogo desde el servicio */
-  conseguirDatosGeneralesCatologo(): void {
+  entidadFederativaCatalogo(): void {
     this.solicitudService
-      .conseguirDatosGeneralesCatologo()
+      .entidadFederativaCatalogo()
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next: (respuesta: DatosGeneralesDeLaSolicitudCatologo) => {
-          this.entidadFederativa = respuesta.entidadFederativa;
+        next: (respuesta: CatalogosSelect) => {
+          this.entidadFederativa = respuesta;
         },
       });
   }

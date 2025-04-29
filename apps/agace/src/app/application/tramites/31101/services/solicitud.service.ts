@@ -133,4 +133,10 @@ export class SolicitudService {
       'assets/json/31101/entidad-federativa-datos.json'
     );
   }
+
+  entidadFederativaCatalogo():Observable<CatalogosSelect>{
+    return this.http.get<CatalogosSelect>(
+      'assets/json/31101/entidad-federativa-catalogo.json'
+    );
+  }
 }

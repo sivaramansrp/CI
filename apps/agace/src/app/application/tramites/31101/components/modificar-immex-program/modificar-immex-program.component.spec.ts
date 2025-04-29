@@ -1,45 +1,113 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ModificarImmexProgramComponent } from './modificar-immex-program.component';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { SolicitudService } from '../../services/solicitud.service';
+import { Solicitud31101Store } from '../../estados/solicitud31101.store';
+import { Solicitud31101Query } from '../../estados/solicitud31101.query';
 import { of } from 'rxjs';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import {
-  DatosGeneralesDeLaSolicitudRadioLista,
-  DatosGeneralesDeLaSolicitudCatologo,
-} from '../../models/solicitud.model';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { CatalogoSelectComponent, InputRadioComponent } from '@libs/shared/data-access-user/src';
+  Catalogo,
+  CatalogoSelectComponent,
+  InputRadioComponent,
+} from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('ModificarImmexProgramComponent', () => {
   let component: ModificarImmexProgramComponent;
   let fixture: ComponentFixture<ModificarImmexProgramComponent>;
-  let solicitudServiceMock: jest.Mocked<SolicitudService>;
+  let solicitudService: SolicitudService;
+  let solicitud31101Store: Solicitud31101Store;
+  let solicitud31101Query: Solicitud31101Query;
 
   beforeEach(async () => {
-    solicitudServiceMock = {
-      conseguirDatosGeneralesOpcionDeRadio: jest.fn(),
-      conseguirDatosGeneralesCatologo: jest.fn(),
-    } as unknown as jest.Mocked<SolicitudService>;
+    const solicitudServiceMock = {
+      conseguirDatosGeneralesOpcionDeRadio: jest.fn().mockReturnValue(
+        of({
+          requisitos: {
+            radioOptions: [
+              {
+                label: 'Sí',
+                value: 1,
+              },
+              {
+                label: 'No',
+                value: 2,
+              },
+            ],
+            isRequired: true,
+          },
+        })
+      ),
+      conseguirDatosGeneralesCatologo: jest.fn().mockReturnValue(
+        of({
+          tipoDeInstalacion: {
+            labelNombre: 'Tipo de instalación',
+            required: true,
+            primerOpcion: 'Selecciona un tipo de instalación',
+            catalogos: [
+              {
+                id: 1,
+                descripcion: 'Planta Productiva',
+              },
+              {
+                id: 2,
+                descripcion: 'Planta Productiva -1',
+              },
+            ],
+          },
+        })
+      ),
+    };
+
+    const solicitud31101StoreMock = {
+      actualizarInstalacionesPrincipales: jest.fn(),
+      actualizarMunicipio: jest.fn(),
+      actualizarTipoDeInstalacion: jest.fn(),
+      actualizarFederativa: jest.fn(),
+      actualizarRegistroSE: jest.fn(),
+      actualizarDesceripe: jest.fn(),
+      actualizarCodigoPostal: jest.fn(),
+      actualizarProcesoProductivo: jest.fn(),
+    };
+
+    const solicitud31101QueryMock = {
+      selectSolicitud$: of({
+        instalacionesPrincipales: '',
+        municipio: '',
+        tipoDeInstalacion: '',
+        federativa: '',
+        registroSE: '',
+        desceripe: '',
+        codigoPostal: '',
+        procesoProductivo: '',
+      }),
+    };
 
     await TestBed.configureTestingModule({
       imports: [
+        CommonModule,
         ReactiveFormsModule,
-        ModificarImmexProgramComponent,
         CatalogoSelectComponent,
         InputRadioComponent,
-        CommonModule,
+        ModificarImmexProgramComponent,
         HttpClientTestingModule,
       ],
       declarations: [],
       providers: [
         FormBuilder,
         { provide: SolicitudService, useValue: solicitudServiceMock },
+        { provide: Solicitud31101Store, useValue: solicitud31101StoreMock },
+        { provide: Solicitud31101Query, useValue: solicitud31101QueryMock },
       ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ModificarImmexProgramComponent);
     component = fixture.componentInstance;
+    solicitudService = TestBed.inject(SolicitudService);
+    solicitud31101Store = TestBed.inject(Solicitud31101Store);
+    solicitud31101Query = TestBed.inject(Solicitud31101Query);
+    fixture.detectChanges();
   });
 
   it('should create the component', () => {
@@ -49,237 +117,106 @@ describe('ModificarImmexProgramComponent', () => {
   it('should initialize the form on ngOnInit', () => {
     component.ngOnInit();
     expect(component.modificarImmexProgramForm).toBeDefined();
+    expect(
+      component.modificarImmexProgramForm.controls['instalacionesPrincipales']
+    ).toBeDefined();
   });
 
-  it('should fetch radio options on conseguirDatosGeneralesOpcionDeRadio', () => {
-    const mockResponse: DatosGeneralesDeLaSolicitudRadioLista = {
-      tipoDeEndoso: {
-        radioOptions: [
-          {
-            label: 'Aumento de monto',
-            value: 1,
-          },
-          {
-            label: 'Aumento de monto y renovación/ampliación de vigencia',
-            value: 2,
-          },
-          {
-            label: 'Modificación de denominación o razórrsocial',
-            value: 3,
-          },
-          {
-            label: 'Renovación/ampliación de vigencia',
-            value: 4,
-          },
-        ],
-        isRequired: true,
-      },
-      tipoDeGarantia: {
-        radioOptions: [
-          {
-            label: 'Fianza',
-            value: 1,
-          },
-          {
-            label: 'Carta de crédito',
-            value: 2,
-          },
-        ],
-        isRequired: true,
-      },
-      modalidadDeLaGarantia: {
-        radioOptions: [
-          {
-            label: 'Póliza revolvente',
-            value: 1,
-          },
-          {
-            label: 'Póliza individual',
-            value: 2,
-          },
-        ],
-        isRequired: true,
-      },
-      tipoSector: {
-        radioOptions: [
-          {
-            label: 'Sector productivo',
-            value: 1,
-          },
-          {
-            label: 'Sector servicio',
-            value: 2,
-          },
-        ],
-        isRequired: true,
-      },
-      requisitos: {
-        radioOptions: [
-          {
-            label: 'Sí',
-            value: 1,
-          },
-          {
-            label: 'No',
-            value: 2,
-          },
-        ],
-        isRequired: true,
-      },
-    };
-    solicitudServiceMock.conseguirDatosGeneralesOpcionDeRadio.mockReturnValue(
-      of(mockResponse)
+  it('should call conseguirDatosGeneralesOpcionDeRadio on initialization', () => {
+    const spy = jest.spyOn(
+      solicitudService,
+      'conseguirDatosGeneralesOpcionDeRadio'
     );
-
     component.conseguirDatosGeneralesOpcionDeRadio();
+    expect(spy).toHaveBeenCalled();
   });
 
-  it('should fetch catalog data on conseguirDatosGeneralesCatologo', () => {
-    const mockResponse: DatosGeneralesDeLaSolicitudCatologo = {
-      concepto: {
-        labelNombre: 'Concepto',
-        required: false,
-        primerOpcion: 'Seleccione un valor',
-        catalogos: [
-          {
-            id: 1,
-            descripcion: 'Reparación, re-trabajo o mantenimiento de',
-          },
-          {
-            id: 2,
-            descripcion: 'Reparación, re-trabajo o mantenimiento de - 1',
-          },
-        ],
-      },
-      tipoDeInversion: {
-        labelNombre: 'Tipo de inversión',
-        required: true,
-        primerOpcion: 'Selecciona un tipo',
-        catalogos: [
-          {
-            id: 1,
-            descripcion: 'Test',
-          },
-          {
-            id: 2,
-            descripcion: 'Test - 1',
-          },
-        ],
-      },
-      enSuCaracterDe: {
-        labelNombre: 'En su caracter de',
-        required: true,
-        primerOpcion: 'Selecciona un tipo',
-        catalogos: [
-          {
-            id: 1,
-            descripcion: 'Accionista',
-          },
-          {
-            id: 2,
-            descripcion: 'Accionista - 1',
-          },
-        ],
-      },
-      nacionalidad: {
-        labelNombre: 'Nacionalidad',
-        required: true,
-        primerOpcion: 'Selecciona un tipo',
-        catalogos: [
-          {
-            id: 1,
-            descripcion: 'AZERBAIJAN (REPUBLICA AZERBAIJANI)',
-          },
-          {
-            id: 2,
-            descripcion: 'AZERBAIJAN (REPUBLICA AZERBAIJANI) - 1',
-          },
-        ],
-      },
-      tipoDePersona: {
-        labelNombre: 'Tipo de Persona',
-        required: true,
-        primerOpcion: 'Selecciona un tipo',
-        catalogos: [
-          {
-            id: 1,
-            descripcion: 'Física',
-          },
-          {
-            id: 2,
-            descripcion: 'Moral',
-          },
-        ],
-      },
-      modalidadDelProgramaIMMEX: {
-        labelNombre: 'Seleccione el numero y modalidad del programa I M M E X',
-        required: false,
-        primerOpcion: 'Selecciona un tipo',
-        catalogos: [
-          {
-            id: 1,
-            descripcion: 'Domicilios registrados',
-          },
-          {
-            id: 2,
-            descripcion: '192022 - Autorización Programa Nuevo Industrial',
-          },
-        ],
-      },
-      tipoDeInstalacion: {
-        labelNombre: 'Tipo de instalación',
-        required: true,
-        primerOpcion: 'Selecciona un tipo de instalación',
-        catalogos: [
-          {
-            id: 1,
-            descripcion: 'Planta Productiva',
-          },
-          {
-            id: 2,
-            descripcion: 'Planta Productiva -1',
-          },
-        ],
-      },
-      entidadFederativa: {
-        labelNombre: '',
-        required: true,
-        primerOpcion: 'Selecciona un tipo',
-        catalogos: [
-          {
-            id: 1,
-            descripcion: 'AGUASCALIENTES',
-          },
-          {
-            id: 2,
-            descripcion: 'AGUASCALIENTES -1',
-          },
-        ],
-      },
-    };
-    solicitudServiceMock.conseguirDatosGeneralesCatologo.mockReturnValue(
-      of(mockResponse)
-    );
-
+  it('should call conseguirDatosGeneralesCatologo on initialization', () => {
+    const spy = jest.spyOn(solicitudService, 'conseguirDatosGeneralesCatologo');
     component.conseguirDatosGeneralesCatologo();
-
+    expect(spy).toHaveBeenCalled();
   });
 
-  it('should emit true on aceptarImmexProgram', () => {
-    const emitSpy = jest.spyOn(component.modificarImmexValor, 'emit');
-
+  it('should emit modificarImmexValor when aceptarImmexProgram is called', () => {
+    const spy = jest.spyOn(component.modificarImmexValor, 'emit');
     component.aceptarImmexProgram();
-
-    expect(emitSpy).toHaveBeenCalledWith(true);
+    expect(spy).toHaveBeenCalledWith(true);
   });
 
-  it('should clean up subscriptions on ngOnDestroy', () => {
-    const destroySpy = jest.spyOn(component['destroy$'], 'next');
+  it('should return true if a form control is invalid and touched', () => {
+    component.modificarImmexProgramForm.controls[
+      'instalacionesPrincipales'
+    ].setErrors({ required: true });
+    component.modificarImmexProgramForm.controls[
+      'instalacionesPrincipales'
+    ].markAsTouched();
+    expect(component.noEsValido('instalacionesPrincipales')).toBe(true);
+  });
+
+  it('should call actualizarInstalacionesPrincipales in the store', () => {
+    const spy = jest.spyOn(
+      solicitud31101Store,
+      'actualizarInstalacionesPrincipales'
+    );
+    component.actualizarInstalacionesPrincipales('value');
+    expect(spy).toHaveBeenCalledWith('value');
+  });
+
+  it('should call actualizarMunicipio in the store', () => {
+    const spy = jest.spyOn(solicitud31101Store, 'actualizarMunicipio');
+    const event = { target: { value: 'municipio' } } as unknown as Event;
+    component.actualizarMunicipio(event);
+    expect(spy).toHaveBeenCalledWith('municipio');
+  });
+
+  it('should call actualizarTipoDeInstalacion in the store', () => {
+    const spy = jest.spyOn(solicitud31101Store, 'actualizarTipoDeInstalacion');
+    component.actualizarTipoDeInstalacion({
+      id: 1,
+      descripcion: 'Test',
+    } as Catalogo);
+    expect(spy).toHaveBeenCalledWith(1);
+  });
+
+  it('should call actualizarFederativa in the store', () => {
+    const spy = jest.spyOn(solicitud31101Store, 'actualizarFederativa');
+    const event = { target: { value: 'federativa' } } as unknown as Event;
+    component.actualizarFederativa(event);
+    expect(spy).toHaveBeenCalledWith('federativa');
+  });
+
+  it('should call actualizarRegistroSE in the store', () => {
+    const spy = jest.spyOn(solicitud31101Store, 'actualizarRegistroSE');
+    const event = { target: { value: 'registroSE' } } as unknown as Event;
+    component.actualizarRegistroSE(event);
+    expect(spy).toHaveBeenCalledWith('registroSE');
+  });
+
+  it('should call actualizarDesceripe in the store', () => {
+    const spy = jest.spyOn(solicitud31101Store, 'actualizarDesceripe');
+    const event = { target: { value: 'desceripe' } } as unknown as Event;
+    component.actualizarDesceripe(event);
+    expect(spy).toHaveBeenCalledWith('desceripe');
+  });
+
+  it('should call actualizarCodigoPostal in the store', () => {
+    const spy = jest.spyOn(solicitud31101Store, 'actualizarCodigoPostal');
+    const event = { target: { value: '12345' } } as unknown as Event;
+    component.actualizarCodigoPostal(event);
+    expect(spy).toHaveBeenCalledWith('12345');
+  });
+
+  it('should call actualizarProcesoProductivo in the store', () => {
+    const spy = jest.spyOn(solicitud31101Store, 'actualizarProcesoProductivo');
+    component.actualizarProcesoProductivo('value');
+    expect(spy).toHaveBeenCalledWith('value');
+  });
+
+  it('should complete destroy$ on ngOnDestroy', () => {
+    const spy = jest.spyOn(component['destroy$'], 'next');
     const completeSpy = jest.spyOn(component['destroy$'], 'complete');
-
     component.ngOnDestroy();
-
-    expect(destroySpy).toHaveBeenCalled();
+    expect(spy).toHaveBeenCalled();
     expect(completeSpy).toHaveBeenCalled();
   });
 });

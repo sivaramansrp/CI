@@ -5,17 +5,9 @@ import { SolicitudService } from '../../services/solicitud.service';
 import { Solicitud31101Store } from '../../estados/solicitud31101.store';
 import { Solicitud31101Query } from '../../estados/solicitud31101.query';
 import { of } from 'rxjs';
-import {
-  Catalogo,
-  CatalogoSelectComponent,
-  TablaDinamicaComponent,
-} from '@libs/shared/data-access-user/src';
-import {
-  DatosGeneralesDeLaSolicitudCatologo,
-  EntidadFederativa,
-} from '../../models/solicitud.model';
+import { Catalogo, CatalogosSelect } from '@libs/shared/data-access-user/src';
+import { EntidadFederativa } from '../../models/solicitud.model';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { CommonModule } from '@angular/common';
 
 describe('AgregarImmexProgramComponent', () => {
   let component: AgregarImmexProgramComponent;
@@ -26,16 +18,35 @@ describe('AgregarImmexProgramComponent', () => {
 
   beforeEach(async () => {
     solicitudServiceMock = {
-      conseguirDatosGeneralesCatologo: jest.fn(),
-      conseguirEntidadFederativaDatos: jest.fn(),
+      entidadFederativaCatalogo: jest.fn(() =>
+        of({
+          labelNombre: '',
+          required: true,
+          primerOpcion: 'Selecciona un tipo',
+          catalogos: [
+            {
+              id: 1,
+              descripcion: 'AGUASCALIENTES',
+            },
+            {
+              id: 2,
+              descripcion: 'AGUASCALIENTES -1',
+            },
+          ],
+        })
+      ),
+      conseguirEntidadFederativaDatos: jest.fn(() =>
+        of([
+          {
+            entidadFederativa: 'SINALOA',
+            municipioDelegacion: 'AHOME',
+            direccion: 'MIGUEL HIDALGO CAMINO VIEJO 1353',
+            codigoPostal: '81210',
+            registroSESAT: 'SAT',
+          },
+        ])
+      ),
     } as unknown as jest.Mocked<SolicitudService>;
-
-    solicitudServiceMock.conseguirDatosGeneralesCatologo.mockReturnValue(
-      of({} as DatosGeneralesDeLaSolicitudCatologo)
-    );
-    solicitudServiceMock.conseguirEntidadFederativaDatos.mockReturnValue(
-      of([])
-    );
 
     solicitud31101StoreMock = {
       actualizarEntidadFederativa: jest.fn(),
@@ -50,9 +61,6 @@ describe('AgregarImmexProgramComponent', () => {
         ReactiveFormsModule,
         AgregarImmexProgramComponent,
         HttpClientTestingModule,
-        CommonModule,
-        CatalogoSelectComponent,
-        TablaDinamicaComponent,
       ],
       declarations: [],
       providers: [
@@ -67,6 +75,7 @@ describe('AgregarImmexProgramComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(AgregarImmexProgramComponent);
     component = fixture.componentInstance;
+    fixture.detectChanges();
   });
 
   it('should create the component', () => {
@@ -75,171 +84,111 @@ describe('AgregarImmexProgramComponent', () => {
 
   it('should initialize the form on ngOnInit', () => {
     component.ngOnInit();
+    expect(component.agregarImmexProgramForm).toBeDefined();
+    expect(
+      component.agregarImmexProgramForm.get('entidadFederativa')
+    ).toBeTruthy();
   });
 
-  it('should call conseguirDatosGeneralesCatologo and set entidadFederativa', () => {
-    const mockResponse: DatosGeneralesDeLaSolicitudCatologo = {
-      concepto: {
-        labelNombre: 'Concepto',
-        required: false,
-        primerOpcion: 'Seleccione un valor',
-        catalogos: [
-          {
-            id: 1,
-            descripcion: 'Reparación, re-trabajo o mantenimiento de',
-          },
-          {
-            id: 2,
-            descripcion: 'Reparación, re-trabajo o mantenimiento de - 1',
-          },
-        ],
-      },
-      tipoDeInversion: {
-        labelNombre: 'Tipo de inversión',
-        required: true,
-        primerOpcion: 'Selecciona un tipo',
-        catalogos: [
-          {
-            id: 1,
-            descripcion: 'Test',
-          },
-          {
-            id: 2,
-            descripcion: 'Test - 1',
-          },
-        ],
-      },
-      enSuCaracterDe: {
-        labelNombre: 'En su caracter de',
-        required: true,
-        primerOpcion: 'Selecciona un tipo',
-        catalogos: [
-          {
-            id: 1,
-            descripcion: 'Accionista',
-          },
-          {
-            id: 2,
-            descripcion: 'Accionista - 1',
-          },
-        ],
-      },
-      nacionalidad: {
-        labelNombre: 'Nacionalidad',
-        required: true,
-        primerOpcion: 'Selecciona un tipo',
-        catalogos: [
-          {
-            id: 1,
-            descripcion: 'AZERBAIJAN (REPUBLICA AZERBAIJANI)',
-          },
-          {
-            id: 2,
-            descripcion: 'AZERBAIJAN (REPUBLICA AZERBAIJANI) - 1',
-          },
-        ],
-      },
-      tipoDePersona: {
-        labelNombre: 'Tipo de Persona',
-        required: true,
-        primerOpcion: 'Selecciona un tipo',
-        catalogos: [
-          {
-            id: 1,
-            descripcion: 'Física',
-          },
-          {
-            id: 2,
-            descripcion: 'Moral',
-          },
-        ],
-      },
-      modalidadDelProgramaIMMEX: {
-        labelNombre: 'Seleccione el numero y modalidad del programa I M M E X',
-        required: false,
-        primerOpcion: 'Selecciona un tipo',
-        catalogos: [
-          {
-            id: 1,
-            descripcion: 'Domicilios registrados',
-          },
-          {
-            id: 2,
-            descripcion: '192022 - Autorización Programa Nuevo Industrial',
-          },
-        ],
-      },
-      tipoDeInstalacion: {
-        labelNombre: 'Tipo de instalación',
-        required: true,
-        primerOpcion: 'Selecciona un tipo de instalación',
-        catalogos: [
-          {
-            id: 1,
-            descripcion: 'Planta Productiva',
-          },
-          {
-            id: 2,
-            descripcion: 'Planta Productiva -1',
-          },
-        ],
-      },
-      entidadFederativa: {
-        labelNombre: '',
-        required: true,
-        primerOpcion: 'Selecciona un tipo',
-        catalogos: [
-          {
-            id: 1,
-            descripcion: 'AGUASCALIENTES',
-          },
-          {
-            id: 2,
-            descripcion: 'AGUASCALIENTES -1',
-          },
-        ],
-      },
+  it('should call entidadFederativaCatalogo and update entidadFederativa', () => {
+    const mockCatalogosSelect: CatalogosSelect = {
+      labelNombre: '',
+      required: true,
+      primerOpcion: 'Selecciona un tipo',
+      catalogos: [
+        {
+          id: 1,
+          descripcion: 'AGUASCALIENTES',
+        },
+        {
+          id: 2,
+          descripcion: 'AGUASCALIENTES -1',
+        },
+      ],
     };
+    solicitudServiceMock.entidadFederativaCatalogo = jest
+      .fn()
+      .mockReturnValue(of(mockCatalogosSelect));
+
+    component.entidadFederativaCatalogo();
+
+    expect(solicitudServiceMock.entidadFederativaCatalogo).toHaveBeenCalled();
+    expect(component.entidadFederativa).toEqual(mockCatalogosSelect);
   });
 
-  it('should call conseguirEntidadFederativaDatos and set domiciliosDatos', () => {
-    const mockResponse: EntidadFederativa[] = [
-      {
-        entidadFederativa: 'SINALOA',
-        municipioDelegacion: 'AHOME',
-        direccion: 'MIGUEL HIDALGO CAMINO VIEJO 1353',
-        codigoPostal: '81210',
-        registroSESAT: 'SAT',
-      },
-    ];
+  it('should call conseguirEntidadFederativaDatos on initialization', () => {
+    solicitudServiceMock.conseguirEntidadFederativaDatos.mockReturnValue(
+      of([
+        {
+          entidadFederativa: 'SINALOA',
+          municipioDelegacion: 'AHOME',
+          direccion: 'MIGUEL HIDALGO CAMINO VIEJO 1353',
+          codigoPostal: '81210',
+          registroSESAT: 'SAT',
+        },
+      ])
+    );
+    component.conseguirEntidadFederativaDatos();
+    expect(
+      solicitudServiceMock.conseguirEntidadFederativaDatos
+    ).toHaveBeenCalled();
   });
 
-  it('should update domicilioslista and call actualizarEntidadFederativa on seleccionArentidadFederativa', () => {
+  it('should handle seleccionArentidadFederativa correctly', () => {
     const mockCatalogo: Catalogo = { id: 1, descripcion: 'Test' };
     component.domiciliosDatos = [
-      {
-        instalacionPrincipal: 'Planta Norte',
-        cveTipoInstalacion: '01',
-        tipoInstalacion: 'Fábrica',
-        cveEntidadFederativa: '09',
-        entidadFederativa: 'Ciudad de México',
-        cveDelegacionMunicipio: '010',
-        municipioDelegacion: 'Gustavo A. Madero',
-        direccion: 'Av. Central 123',
-        codigoPostal: '07760',
-        registroSESAT: 'SESAT-456789',
-        noExterior: '123',
-        noInterior: '5B',
-        cveColonia: '025',
-        calle: 'Av. Central',
-      },
+      { cveEntidadFederativa: '1' } as EntidadFederativa,
     ];
+    component.seleccionArentidadFederativa(mockCatalogo);
+    expect(component.domicilioslista).toEqual(component.domiciliosDatos);
+    expect(
+      solicitud31101StoreMock.actualizarEntidadFederativa
+    ).toHaveBeenCalledWith(1);
   });
 
-  it('should complete destroy$ on ngOnDestroy', () => {
+  it('should emit agregarImmexValor on agregarImmexProgram', () => {
+    const emitSpy = jest.spyOn(component.agregarImmexValor, 'emit');
+    component.domicilioslista = [
+      {
+        cveEntidadFederativa: '1',
+        municipioDelegacion: 'Test',
+        direccion: 'Test Address',
+        codigoPostal: '12345',
+        registroSESAT: 'Test SESAT',
+      } as EntidadFederativa,
+    ];
+    component.agregarImmexProgram();
+    expect(emitSpy).toHaveBeenCalledWith({
+      instalacionPrincipal: '',
+      cveTipoInstalacion: '',
+      tipoInstalacion: '',
+      cveEntidadFederativa: '1',
+      entidadFederativa: '',
+      cveDelegacionMunicipio: '',
+      municipioDelegacion: 'Test',
+      direccion: 'Test Address',
+      codigoPostal: '12345',
+      registroSESAT: 'Test SESAT',
+      procesoProductivo: '',
+      fechaModificacion: '',
+      cveEstatus: '',
+      estatus: '',
+      noExterior: '',
+      noInterior: '',
+      cveColonia: '',
+      calle: '',
+      descCol: '',
+      idRecinto: '',
+      numFolioAcuse: '',
+      observaciones: '',
+    });
+  });
+
+  it('should clean up subscriptions on ngOnDestroy', () => {
     const destroySpy = jest.spyOn(component['destroy$'], 'next');
     const completeSpy = jest.spyOn(component['destroy$'], 'complete');
-
     component.ngOnDestroy();
+    expect(destroySpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
   });
 });
