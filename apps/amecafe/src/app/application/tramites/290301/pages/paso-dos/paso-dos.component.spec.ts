@@ -45,5 +45,4 @@ describe('PasoDosComponent', () => {
     component.ngOnInit();
     expect(spy).toHaveBeenCalled();
   });
-  
 });

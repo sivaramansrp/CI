@@ -20,8 +20,6 @@ class MockSolicitud290301Store {}
 @Injectable()
 class MockSolicitud290301Query {}
 
-
-
 describe('DatosDeLaSolicitudComponent', () => {
   let fixture: ComponentFixture<DatosDeLaSolicitudComponent>;
   let component: { ngOnDestroy: () => void; solicitud290301Query: { selectSolicitud$?: any; }; createForm: jest.Mock<any, any, any> | (() => void); subscribeToProductorDeCafeChanges: jest.Mock<any, any, any> | (() => void); getRegionsData: jest.Mock<any, any, any> | (() => void); getBeneficiosData: jest.Mock<any, any, any> | (() => void); getBodegasData: jest.Mock<any, any, any> | (() => void); getCafeExportadoresData: jest.Mock<any, any, any> | (() => void); ngOnInit: () => void; fb: { group?: any; }; dataDeLaSolicitudState: { justificacion?: any; productorDeCafe?: any; claveDelPadron?: any; observaciones?: any; requiereInspeccionInmediata?: any; informacionConfidencial?: any; }; datosSolicitudForma: { get?: any; }; subscriptions: { push?: any; }; nacionalRegistroDelCafeExportadoresService: { getRegionsData?: any; getBeneficiosData?: any; getBodegasData?: any; getCafeExportadoresData?: any; }; solicitud290301Store: { metodoNombre?: any; }; setValoresStore: (arg0: { get: () => { value: {}; }; }, arg1: {}, arg2: {}) => void; destroyed$: { next?: any; complete?: any; }; };
