@@ -1,7 +1,8 @@
+import { UsuarioState, UsuarioStore } from '../estados/usuario.store';
+import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
-import { UsuarioState } from 'apps/login/src/app/estados/usuario.store';
-import { UsuarioStore } from 'apps/login/src/app/estados/usuario.store';
 
+@Injectable({ providedIn: 'root' })
 export class SessionQuery extends Query<UsuarioState> {
 
     /**

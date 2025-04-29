@@ -13,9 +13,9 @@ import {
 } from '../../../../core/enums/5701/tramite5701.enum';
 import {
   ALFANUMERICO_ESPACIO,
-  CATALOGOS_ID,
   Catalogo,
   CatalogoPaises,
+  CATALOGOS_ID,
   CatalogosService,
   DatosAgregarFormulario,
   FechasService,
@@ -24,13 +24,14 @@ import {
   SeccionLibQuery,
   SeccionLibState,
   SeccionLibStore,
+  SessionQuery,
   TIPO_SOLICITUD,
   TipoSolicitudService,
   ValidacionesFormularioService,
 } from '@ng-mf/data-access-user';
 import { Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import { delay, filter, map, merge, Observable, of, Subject, switchMap, take, takeUntil, tap } from 'rxjs';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { Observable, Subject, delay, map, merge, takeUntil, tap } from 'rxjs';
 import {
   Solicitud5701State,
   Tramite5701Store,
@@ -39,12 +40,16 @@ import { CatalogoLista } from '@libs/shared/data-access-user/src/core/models/sha
 import { DatosCheckInputText } from '../../../../core/models/shared/check-input-text.model';
 import { DatosComponentePedimento } from '../../../../core/models/5701/tramite5701.model';
 import { Modal } from 'bootstrap';
+import { PatenteApoderadoService } from '../../../../core/services/5701/patente-apoderado.service';
+import { PatenteService } from '../../../../core/services/5701/patente.service';
 import { ServiciosExtraordinariosService } from '../../../../core/services/5701/servicios-extraordinarios.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Tramite5701Query } from '../../../../core/queries/tramite5701.query';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import patentes from 'libs/shared/theme/assets/json/5701/patentes.json';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import rfcs from 'libs/shared/theme/assets/json/5701/rfcs.json';
+import { UsuarioState } from '@libs/shared/data-access-user/src/core/estados/usuario.store';
 
 @Component({
   selector: 'app-solicitud',
@@ -242,6 +247,11 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy{
    */
   public solicitudState!: Solicitud5701State;
 
+  /**
+   * Estado del usuario firmado en la aplicación
+   */
+  private usuarioState!: UsuarioState;
+
   constructor(
     private seccionQuery: SeccionLibQuery,
     private seccionStore: SeccionLibStore,
@@ -251,13 +261,23 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy{
     private catalogosServices: CatalogosService,
     private validacionesService: ValidacionesFormularioService,
     private serviciosExtraordinariosService: ServiciosExtraordinariosService,
-    private tipoSolicitudService: TipoSolicitudService, 
+    private tipoSolicitudService: TipoSolicitudService,
+    private readonly patenteService: PatenteService,
+    private readonly patenteApoderadoService: PatenteApoderadoService,
+    private readonly usuarioQuery: SessionQuery,
   ) { }
 
   ngOnInit(): void {
-
     // Peticiones a las apis
     this.inicializaCatalogos();
+
+    this.usuarioQuery.selectUsuarioState$.pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState) => {
+        this.usuarioState = seccionState;
+      })
+    )
+    .subscribe();
 
     this.tramite5701Query.selectSolicitud$
       .pipe(
@@ -279,42 +299,17 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy{
 
     this.crearFormSolicitud();
 
-    this.FormSolicitud.statusChanges
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        delay(10),
-        tap((_value) => {
-          let seccion: number | null = 0;
-          const FORMAS_VALIDADAS = this.seccion.formaValida;
-
-          for (let i = 0; i < this.seccion.seccion.length; i++) {
-            if (
-              this.seccion.seccion[i] === true &&
-              this.seccion.formaValida[i] === false
-            ) {
-              seccion = i;
-              break;
-            } else {
-              seccion = null;
-            }
-          }
-
-          if (seccion !== null) {
-            if (this.FormSolicitud.valid) {
-              FORMAS_VALIDADAS[seccion] = true;
-              this.seccionStore.establecerFormaValida(FORMAS_VALIDADAS);
-            } else {
-              FORMAS_VALIDADAS[seccion] = false;
-              this.seccionStore.establecerFormaValida(FORMAS_VALIDADAS);
-            }
-          }
-
-        })
-      )
-      .subscribe();
+    this.FormSolicitud.statusChanges.pipe(
+      takeUntil(this.destroyNotifier$),
+      delay(10),
+      tap((_) => {
+        this.configuraSeccion();
+      })
+    ).subscribe();
 
     // Aqui se busca el nro de patente o autorizacion
-    this.obtenerPatente();
+    //
+     this.obtenerPatente();
     this.tipoSolicitudSeleccion();
 
     this.desactivarSelectSeccionAduanera = (this.seccionAduanera && this.seccionAduanera.length === 0) ? true : false;
@@ -329,6 +324,36 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy{
     }
 
 
+  }
+
+  /**
+   * Método para actualizar las secciones una vez que contengan toda la información marcada como requerida
+   */
+  private configuraSeccion(): void {
+    let seccion: number | null = 0;
+    const FORMAS_VALIDADAS = this.seccion.formaValida;
+
+    for (let i = 0; i < this.seccion.seccion.length; i++) {
+      if (
+        this.seccion.seccion[i] === true &&
+        this.seccion.formaValida[i] === false
+      ) {
+        seccion = i;
+        break;
+      } else {
+        seccion = null;
+      }
+    }
+
+    if (seccion !== null) {
+      if (this.FormSolicitud.valid) {
+        FORMAS_VALIDADAS[seccion] = true;
+        this.seccionStore.establecerFormaValida(FORMAS_VALIDADAS);
+      } else {
+        FORMAS_VALIDADAS[seccion] = false;
+        this.seccionStore.establecerFormaValida(FORMAS_VALIDADAS);
+      }
+    }
   }
 
   /**
@@ -607,13 +632,35 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy{
    * @private
    */
   private obtenerPatente(): void {
-    // Busqueda de la patente a algun endpoint
-    const DATOS_PATENTE: DatosAgregarFormulario = {
-      form: this.despacho,
-      field: 'patente',
-      valor: '3061',
-    };
-    FormulariosService.agregarValorCamposDesactivados(DATOS_PATENTE);
+    let patente: string = '';
+
+    console.log('el valor ' +  this.usuarioState?.perfilUsuario?.rfc);
+    this.patenteService.getListaPatente(this.usuarioState.perfilUsuario.rfc).pipe(
+    //this.patenteService.getListaPatente('SAAA980822LP1').pipe(
+      tap(response => response.datos),
+      switchMap(pantenteResponse => {
+        if (pantenteResponse) {
+          patente = pantenteResponse.datos?.patente;
+          // Busqueda de la patente a algun endpoint
+          const DATOS_PATENTE: DatosAgregarFormulario = {
+            form: this.despacho,
+            field: 'patente',
+            valor: patente,
+          };
+          FormulariosService.agregarValorCamposDesactivados(DATOS_PATENTE);
+          return of(null);
+        }
+        
+        return this.patenteApoderadoService.getListaPatente(this.usuarioState?.perfilUsuario?.rfc).pipe(
+        //return this.patenteApoderadoService.getListaPatente('SAAA980822LP1').pipe(
+          tap(_ => {
+            this.isApoderado = true;
+          })
+        );
+      }),
+      takeUntil(this.destroyNotifier$),
+    ).subscribe();
+
   }
 
   /**

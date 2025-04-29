@@ -1,5 +1,5 @@
 import { AgregarTransporteComponent, CatalogosService, InputRadioComponent, UppercaseDirective } from '@ng-mf/data-access-user';
-import { NgModule, forwardRef } from '@angular/core';
+import { forwardRef, NgModule } from '@angular/core';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
 
 import { AgregaPersonasComponent } from './components/agrega-personas/agrega-personas.component';

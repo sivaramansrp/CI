@@ -1,7 +1,7 @@
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
-import { PerfilUsuario } from '@ng-mf/data-access-user';
-import { Rol } from '@ng-mf/data-access-user';
+import { PerfilUsuario } from '../models/usuario/perfilUsuario.model';
+import { Rol } from '../models/usuario/rol.model';
 
 /**
  * Estado para la información de usuario obtenida del inicio de sesión
