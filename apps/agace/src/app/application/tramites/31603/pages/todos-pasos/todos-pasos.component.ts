@@ -42,22 +42,8 @@ export class TodosPasosComponent implements OnDestroy {
   */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
 
-   /**
-    * Esta variable se utiliza para almacenar los datos de los pasos.
-    * @param datosPasos - Los datos de los pasos.
-    * @param nroPasos - El número de pasos.
-    * @param indice - El índice.
-    * @param txtBtnAnt - El texto del botón anterior.
-    * @param txtBtnSig - El texto del botón siguiente.
-    */
-
   /**
    * Represents the data for the steps in the process.
-   * 
-   * @property {number} nroPasos - The number of steps.
-   * @property {number} indice - The current index of the step.
-   * @property {string} txtBtnAnt - The text for the "Previous" button.
-   * @property {string} txtBtnSig - The text for the "Continue" button.
    */
    public datosPasos: DatosPasos = {
      nroPasos: this.pantallasPasos.length,
@@ -65,10 +51,6 @@ export class TodosPasosComponent implements OnDestroy {
      txtBtnAnt: 'Anterior',
      txtBtnSig: 'Continuar',
    };
-
-  constructor() {
-//
-  }
 
 
    /**

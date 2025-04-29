@@ -4,6 +4,10 @@ import { Injectable } from '@angular/core';
 import { JSONResponse } from '@libs/shared/data-access-user/src';
 import { enviroment } from '@libs/shared/data-access-user/src/enviroments/enviroment';
 
+/**
+ * Servicio para manejar operaciones relacionadas con registros de comercio exterior.
+ * Proporciona métodos para obtener datos desde el servidor y archivos JSON locales.
+ */
 @Injectable({
   providedIn: 'root'
 })
@@ -15,6 +19,11 @@ export class RegistrosDeComercioExteriorService {
  */
   urlServer = enviroment.URL_SERVER_JSON_AUXILIAR;
 
+  /**
+   * Inicializa una nueva instancia del servicio.
+   * 
+   * @param http - La instancia de HttpClient utilizada para realizar solicitudes HTTP.
+   */
   constructor(private http: HttpClient) { 
     
   }

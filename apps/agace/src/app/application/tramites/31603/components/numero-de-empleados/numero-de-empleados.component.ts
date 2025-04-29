@@ -6,6 +6,15 @@ import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { RegistrosDeComercioExteriorService } from '../../services/registros-de-comercio-exterior.service';
 
+/**
+ * Componente Angular que gestiona la funcionalidad relacionada con el número de empleados.
+ * 
+ * Este componente incluye:
+ * - Una tabla dinámica para mostrar datos de empleados anteriores.
+ * - Formularios reactivos para agregar nuevos datos.
+ * - Catálogos para seleccionar valores relacionados con bimestres.
+ * - Funcionalidad para abrir cuadros de diálogo modales.
+ */
 @Component({
   selector: 'app-numero-de-empleados',
   standalone: true,

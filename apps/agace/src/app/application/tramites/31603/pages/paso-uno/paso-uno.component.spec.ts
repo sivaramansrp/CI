@@ -18,4 +18,21 @@ describe('PasoUnoComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should have initial indice value as 1', () => {
+    expect(component.indice).toBe(1);
+  });
+
+  it('should update indice when seleccionaTab is called', () => {
+    component.seleccionaTab(2);
+    expect(component.indice).toBe(2);
+
+    component.seleccionaTab(3);
+    expect(component.indice).toBe(3);
+  });
+
+  it('should not throw error when seleccionaTab is called with invalid input', () => {
+    expect(() => component.seleccionaTab(null as unknown as number)).not.toThrow();
+    expect(() => component.seleccionaTab(undefined as unknown as number)).not.toThrow();
+  });
 });
