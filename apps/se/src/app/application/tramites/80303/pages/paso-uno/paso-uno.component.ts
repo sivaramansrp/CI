@@ -25,6 +25,13 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
   public indice: number | undefined = 1;
 
   /**
+ * @property subIndice
+ * @description Indica el índice de la pestaña seleccionada dentro del paso del formulario.
+ * @type {number | undefined}
+ */
+  public subIndice: number | undefined = 1;
+
+  /**
    * @property destroyNotifier$
    * @description Notificador observable que permite cancelar las suscripciones activas cuando se destruye el componente.
    * Ayuda a prevenir fugas de memoria.
@@ -55,6 +62,11 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
       .subscribe((tab) => {
         this.indice = tab;
       });
+      this.tramite80303Query.getSubTabSeleccionado$
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((tab) => {
+        this.subIndice = tab;
+      });
   }
 
   /**
@@ -66,6 +78,16 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
   public seleccionaTab(i: number): void {
     this.tramite80303Store.updateTabSeleccionado(i);
   }
+
+    /**
+   * Actualiza el índice de la pestaña seleccionada en el store.
+   *
+   * @param i Índice de la pestaña seleccionada.
+   * @returns {void}
+   */
+    public seleccionaSubTab(i: number): void {
+      this.tramite80303Store.updateSubTabSeleccionado(i);
+    }
 
   /**
    * Método del ciclo de vida de Angular que se ejecuta justo antes de destruir el componente.

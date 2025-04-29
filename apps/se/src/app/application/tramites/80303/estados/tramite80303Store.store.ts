@@ -14,6 +14,7 @@ import { StoreConfig } from '@datorama/akita';
  */
 export interface Tramite80303State {
   tabSeleccionado?: number;
+  subTabSeleccionado?: number;
 }
 
 /**
@@ -25,6 +26,7 @@ export interface Tramite80303State {
 export function createInitialState(): Tramite80303State {
   return {
     tabSeleccionado: 1,
+    subTabSeleccionado: 1
   };
 }
 
@@ -54,4 +56,18 @@ export class Tramite80303Store extends Store<Tramite80303State> {
       tabSeleccionado: tabSeleccionado,
     }));
   }
+
+    /**
+   * Cambia la pestaña actualmente seleccionada.
+   *
+   * @method updateSubTabSeleccionado
+   * @param {number} tabSeleccionado - Índice de la nueva pestaña seleccionada.
+   * @returns {void}
+   */
+    public updateSubTabSeleccionado(subTabSeleccionado: number): void {
+      this.update((state) => ({
+        ...state,
+        subTabSeleccionado,
+      }));
+    }
 }

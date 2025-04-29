@@ -36,4 +36,11 @@ export class Tramite80303Query extends Query<Tramite80303State> {
    * @property {Observable<string>} getTabSeleccionado$
    */
   public getTabSeleccionado$ = this.select((state) => state.tabSeleccionado);
+
+    /**
+   * Observable que emite la pestaña actualmente seleccionada por el usuario.
+   *
+   * @property {Observable<string>} getSubTabSeleccionado$
+   */
+    public getSubTabSeleccionado$ = this.select((state) => state.subTabSeleccionado);
 }

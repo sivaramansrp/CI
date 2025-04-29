@@ -1,0 +1,33 @@
+{
+    "code": 200,
+    "message": "Domicilios donde se realizarán las operaciones",
+    "data": [
+      {
+        "Calle": "Av. Insurgentes Sur",
+        "NumeroExterior": "1234",
+        "NumeroInterior": "5B",
+        "CodigoPostal": "03100",
+        "Colonia": "Del Valle Centro",
+        "MunicipioDelegacion": "Benito Juárez",
+        "EntidadFederativa": "Ciudad de México",
+        "Pais": "México",
+        "RFC": "JUAN850102MDF",
+        "DomicilioFiscal": "Av. Insurgentes Sur 1234, Col. Del Valle Centro, CDMX",
+        "Estatus": "Activo"
+      },
+      {
+        "Calle": "Calle Hidalgo",
+        "NumeroExterior": "78",
+        "NumeroInterior": "",
+        "CodigoPostal": "44100",
+        "Colonia": "Centro",
+        "MunicipioDelegacion": "Guadalajara",
+        "EntidadFederativa": "Jalisco",
+        "Pais": "México",
+        "RFC": "GARC920304JAL",
+        "DomicilioFiscal": "Calle Hidalgo 78, Col. Centro, Guadalajara, Jalisco",
+        "Estatus": "Activo"
+      }
+    ]
+  }
+  
