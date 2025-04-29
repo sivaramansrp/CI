@@ -45,8 +45,25 @@ import { Tramite120101Query } from '../../../../estados/queries/tramite120101.qu
 })
 
 export class ConsultarCupoComponent implements OnInit, OnDestroy {
+  
+  /**
+ * @property emitFilaClicHandler
+ * @description
+ * Emisor de eventos que se utiliza para manejar el clic en una fila de la tabla dinámica.
+ * 
+ * Funcionalidad:
+ * - Emite un evento con los datos de la fila seleccionada en la tabla.
+ * - Permite que el componente padre reciba y procese los datos de la fila seleccionada.
+ * 
+ * @type {EventEmitter<InstrumentoCupoTPLForm>}
+ * 
+ * @example
+ * this.emitFilaClicHandler.emit(filaSeleccionada);
+ * // Emite los datos de la fila seleccionada al componente padre.
+ */
   @Output() public emitFilaClicHandler =
     new EventEmitter<InstrumentoCupoTPLForm>();
+
   /**
    * compo doc
    * @property consultarCupoFormData
