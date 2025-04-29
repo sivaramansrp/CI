@@ -92,3 +92,9 @@ export const API_GET_CONSULTA_RESPONSABLE = `gafete/responsable/${NUMERO_GAFETE_
  * @see http://api-vucem-1069277193.us-east-1.elb.amazonaws.com/api/patente/swagger-ui/index.html
  */
 export const API_GET_RECINTO = `catalogo/recintos-fiscalizados/${CLAVE_ADUANA_QUERY}`;
+
+/**
+ * API para validar el horario de una aduana y sección
+ * @see http://api-vucem-1069277193.us-east-1.elb.amazonaws.com/api/sat-t5701/horario/swagger-ui/index.html
+ */
+export const API_VALIDA_HORARIO = 'sat-t5701/horario/valida';
