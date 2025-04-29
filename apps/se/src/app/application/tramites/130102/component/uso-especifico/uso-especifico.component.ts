@@ -107,7 +107,7 @@ export class UsoEspicificoComponent implements OnInit {
 
     this.usoEspicificoForm = this.formbuilt.group({
       fraccionArancelariaProsec: [ this.solicitudState?.fraccionArancelariaProsec, Validators.required],
-      descripción: ['',UsoEspicificoComponent.noLeadingSpacesValidator],
+      descripción: ['',Validators.required,UsoEspicificoComponent.noLeadingSpacesValidator],
 
     });
     this.formularioRegistroService.registrarFormulario('usoEspicificoForm', this.usoEspicificoForm);

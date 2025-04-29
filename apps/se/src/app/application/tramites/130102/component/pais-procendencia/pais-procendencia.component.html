@@ -49,6 +49,7 @@
                   paisForm.controls['descripcionJustificacion'].invalid &&
                   paisForm.controls['descripcionJustificacion'].touched
                 " class="text-danger">
+          <small *ngIf="paisForm.controls['descripcionJustificacion'].errors?.['required']">La justificación es obligatoria.</small>
           <small *ngIf="paisForm.controls['descripcionJustificacion'].errors?.['leadingSpaces']">No se permiten espacios al inicio
             del campo.</small>
         </div>

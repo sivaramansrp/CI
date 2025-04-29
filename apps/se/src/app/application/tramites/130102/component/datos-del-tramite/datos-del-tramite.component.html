@@ -24,6 +24,12 @@
             formControlName="fraccion"
             (change)="setValoresStore(formDelTramite,'fraccion', 'setFraccion')">
         </app-catalogo-select>
+        <div *ngIf="
+                formDelTramite.controls['fraccion'].invalid &&
+                formDelTramite.controls['fraccion'].touched
+              " class="text-danger">
+          <small *ngIf="formDelTramite.controls['fraccion'].errors?.['required']">Debe seleccionar un valor.</small>
+        </div>
         </div>
       </div>
     </div>
