@@ -1,12 +1,12 @@
 import { AlertComponent, Catalogo, CatalogoSelectComponent, InputCheckComponent, InputFecha, InputFechaComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
-import { CARGA_MERCANCIA_SELECCIONADAS, CONFIGURACION_MERCANCIA } from '../../constantes/modificacion.enum';
+import { CARGA_MERCANCIA_SELECCIONADAS, CONFIGURACION_MERCANCIA, MERCANCIA_SELECCIONADAS, TEXTOS_REQUISITOS } from '../../constantes/modificacion.enum';
 import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
 import { ConfiguracionColumna, MenusDesplegables } from '../../models/modificacion.enum';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Mercancia } from '../../models/modificacion.enum';
 import { Subject } from 'rxjs';
-import { TEXTOS_REQUISITOS } from '../../../tramites/110205/constantes/peru-certificado.module';
+
 
 /**
  * Constante que representa la configuración de la fecha de inicio en el componente de certificado de origen.
@@ -175,7 +175,13 @@ export class CertificadoDeOrigenComponent implements OnDestroy {
    * Configuración de las columnas de la tabla de mercancia seleccionada.
    * @type {ConfiguracionColumna<Mercancia>[]}
    */
-  configuracionTablaMercancia: ConfiguracionColumna<Mercancia>[] = CARGA_MERCANCIA_SELECCIONADAS;
+    configuracionTablaMercancia: ConfiguracionColumna<Mercancia>[] = MERCANCIA_SELECCIONADAS;
+
+  /**
+   * Configuración de las columnas de la tabla de mercancia seleccionada.
+   * @type {ConfiguracionColumna<Mercancia>[]}
+   */
+  cargaMercanciaConfiguracionTabla: ConfiguracionColumna<Mercancia>[] = CARGA_MERCANCIA_SELECCIONADAS;
 
   /**
    * Datos de la bitácora obtenidos desde el servicio.
