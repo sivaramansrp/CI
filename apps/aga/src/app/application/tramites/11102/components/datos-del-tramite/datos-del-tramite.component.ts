@@ -63,6 +63,11 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
     */
    getPaisSubscription!: Subscription;
 
+  /**
+   * @var {typeof AVISO.Aviso} TEXTOS
+   * @description Contiene los textos utilizados en el componente, provenientes de la constante `AVISO.Aviso`.
+   * @see AVISO.Aviso
+   */
   TEXTOS = AVISO.Aviso;
 
   infoAlert: string = 'info-alert';
@@ -168,6 +173,15 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    */
   public datosDelMercancia: DatosDelMercancia[] = [];
 
+  /**
+   * Constructor de la clase DatosDelTramiteComponent.
+   * 
+   * @param modificacionDonacionesImmexService Servicio para manejar las modificaciones de donaciones IMMEX.
+   * @param store Almacén de estado específico para el trámite 11102.
+   * @param query Consulta para obtener datos del estado del trámite 11102.
+   * @param formBuilder Constructor de formularios reactivos.
+   * @param validacionesService Servicio para realizar validaciones personalizadas en formularios.
+   */
   constructor(
     private modificacionDonacionesImmexService: ModificacionDonacionesImmexService,
     private store: Tramite11102Store,
