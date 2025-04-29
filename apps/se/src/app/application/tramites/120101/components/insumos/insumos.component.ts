@@ -1,6 +1,6 @@
 import { Catalogo, ConfiguracionColumna, ModeloDeFormaDinamica, TablaDinamicaComponent, TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { SolicitudDeRegistroTpl120101State, Tramite120101Store } from '../../../../estados/tramites/tramite120101.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
@@ -96,7 +96,6 @@ export class InsumosComponent implements OnInit, OnDestroy {
    */
   constructor(
     private solicitudDeRegistroTplService: SolicitudDeRegistroTplService,
-    private fb: FormBuilder,
     private servicioDeFormularioService: ServicioDeFormularioService,
     private tramite120101Store: Tramite120101Store,
     private tramite120101Query: Tramite120101Query,
