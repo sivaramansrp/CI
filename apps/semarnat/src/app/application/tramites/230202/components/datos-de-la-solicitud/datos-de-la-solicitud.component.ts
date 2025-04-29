@@ -1,3 +1,42 @@
+// import {
+// Catalogo,
+// Solicitud230202State,
+// Tramite230202Store,
+// } from '../../estados/tramite230202.store';
+// import { 
+//   CatalogoSelectComponent, 
+//   ConfiguracionColumna, 
+//   CrossListLable, 
+//   CrosslistComponent, 
+//   TablaDinamicaComponent, 
+//   TablaSeleccion, 
+//   TituloComponent } from '@libs/shared/data-access-user/src';
+// import {
+//   Component,
+//   ElementRef,
+//   OnDestroy,
+//   OnInit,
+//   QueryList,
+//   ViewChild,
+//   ViewChildren,
+// } from '@angular/core';
+// import { 
+//   DatosDetalle, 
+//   DatosSolicitud } from '../../models/datos-tramite.model';
+// import {
+//   FormBuilder,
+//   FormControl,
+//   FormGroup,
+//   FormsModule,
+//   ReactiveFormsModule,
+//   Validators,
+// } from '@angular/forms';
+// import { 
+//   Subject, 
+//   map, 
+//   merge, 
+//   takeUntil } from 'rxjs';
+// import { CommonModule } from '@angular/common';
 import {
   Catalogo,
   CatalogoSelectComponent,
@@ -8,7 +47,7 @@ import {
   TablaSeleccion,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
-import { Component, ElementRef, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { DatosSolicitud, DatosDetalle } from '../../models/datos-tramite.model';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitud230202State, Tramite230202Store } from '../../estados/tramite230202.store';
@@ -33,7 +72,7 @@ import { map, merge, Subject, takeUntil } from 'rxjs';
   templateUrl: './datos-de-la-solicitud.component.html',
   styleUrl: './datos-de-la-solicitud.component.scss',
 })
-export class DatosDeLaSolicitudComponent {
+export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   /**
    * Formulario principal del trámite.
    */
