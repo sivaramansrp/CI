@@ -2,7 +2,7 @@
  * @fileoverview
  * Este archivo contiene constantes y configuraciones utilizadas en el módulo de ampliación de servicios.
  * Proporciona configuraciones para tablas, textos, pasos del proceso y alertas que se utilizan en la interfaz de usuario.
- * 
+ *
  * @module ModificacionEnum
  * @description
  * Este archivo define configuraciones para sectores, fracciones arancelarias, fracciones de importación, textos de instrucciones,
@@ -18,7 +18,7 @@ import {
   Plantas,
   ProductorIndirecto,
   Sector,
-  Sector1
+  Sector1,
 } from '../models/datos-info.model';
 
 /**
@@ -139,17 +139,13 @@ export const CONFIGURACION_BITCORA = [
     encabezado: 'Valores anteriores',
     clave: (ele: Bitacora): string | undefined => ele.valoresAnteriores,
     orden: 3,
-    
   },
   {
     encabezado: 'Valores nuevos ',
     clave: (ele: Bitacora): string | undefined => ele.valoresNuevos,
     orden: 4,
-    
   },
-   
-
-]
+];
 
 export const CONFIGURACION_SECTOR1 = [
   {
@@ -166,8 +162,7 @@ export const CONFIGURACION_SECTOR1 = [
     encabezado: 'Estatus',
     clave: (ele: Sector1): string | undefined => ele.estatus,
     orden: 3,
-
-  }
+  },
 ];
 
 export const CONFIGURACION_PRODUCTOR_INDIRECTO = [
@@ -191,13 +186,13 @@ export const CONFIGURACION_PRODUCTOR_INDIRECTO = [
     clave: (ele: ProductorIndirecto): string | undefined => ele.estatus,
     orden: 4,
   },
-  
-]
+];
 
 export const CONFIGURACION_MERCANCIAS_A_PRODUCIR = [
   {
     encabezado: 'Fracción arancelaria  ',
-    clave: (ele: MercanciasAProducir): string | undefined => ele.fraccionArancelaria,
+    clave: (ele: MercanciasAProducir): string | undefined =>
+      ele.fraccionArancelaria,
     orden: 1,
   },
   {
@@ -210,16 +205,14 @@ export const CONFIGURACION_MERCANCIAS_A_PRODUCIR = [
     clave: (ele: MercanciasAProducir): string | undefined => ele.estatus,
     orden: 3,
   },
-  
-]
+];
 
-export const CONFIGURACION_PLANTAS=[
-
+export const CONFIGURACION_PLANTAS = [
   {
     encabezado: 'Calle',
     clave: (ele: Plantas): string | undefined => ele.calle,
     orden: 1,
-  }, 
+  },
   {
     encabezado: 'Número exterior',
     clave: (ele: Plantas): string | undefined => ele.numeroExterior,
@@ -241,47 +234,41 @@ export const CONFIGURACION_PLANTAS=[
     orden: 4,
   },
   {
-    encabezado:'Municipio o alcaldía',
+    encabezado: 'Municipio o alcaldía',
     clave: (ele: Plantas): string | undefined => ele.municipio,
     orden: 5,
   },
   {
-    encabezado:'Estado',
+    encabezado: 'Estado',
     clave: (ele: Plantas): string | undefined => ele.estado,
     orden: 6,
   },
   {
-    encabezado:'País',
+    encabezado: 'País',
     clave: (ele: Plantas): string | undefined => ele.pais,
     orden: 7,
   },
   {
-    encabezado:'Registro federal de contribuyentes ',
+    encabezado: 'Registro federal de contribuyentes ',
     clave: (ele: Plantas): string | undefined => ele.rfc,
-    orden:8,
+    orden: 8,
   },
   {
-    encabezado:'Razón social',
+    encabezado: 'Razón social',
     clave: (ele: Plantas): string | undefined => ele.razonSocial,
-    orden:8,
+    orden: 8,
   },
   {
-    encabezado:'Domicilio fiscal del solicitante',
+    encabezado: 'Domicilio fiscal del solicitante',
     clave: (ele: Plantas): string | undefined => ele.domicilioFisical,
-    orden:9,
+    orden: 9,
   },
   {
-    encabezado:'Estatus ',
+    encabezado: 'Estatus ',
     clave: (ele: Plantas): string | undefined => ele.estatus,
-    orden:9,
-  }
-
-
-
-]
-
-
-
+    orden: 9,
+  },
+];
 
 /**
  * Configuración de la tabla para fracciones de importación.
@@ -295,22 +282,26 @@ export const CONFIGURACION_ARANCELARIASIMPORTACION = [
   },
   {
     encabezado: 'Fracción arancelaria del producto de exportación',
-    clave: (ele: ArancelariaImportacion): string | undefined => ele.fraccionArancelaria,
+    clave: (ele: ArancelariaImportacion): string | undefined =>
+      ele.fraccionArancelaria,
     orden: 2,
   },
   {
     encabezado: 'Descripción comercial',
-    clave: (ele: ArancelariaImportacion): string | undefined => ele.descripcionComercial,
+    clave: (ele: ArancelariaImportacion): string | undefined =>
+      ele.descripcionComercial,
     orden: 3,
   },
   {
     encabezado: 'Fracción arancelaria de la mercancía de importación',
-    clave: (ele: ArancelariaImportacion): string | undefined => ele.fraccionArancelariaImportacion,
+    clave: (ele: ArancelariaImportacion): string | undefined =>
+      ele.fraccionArancelariaImportacion,
     orden: 4,
   },
   {
     encabezado: 'Descripción comercial de importación',
-    clave: (ele: ArancelariaImportacion): string | undefined => ele.descripcionComercialImportacion,
+    clave: (ele: ArancelariaImportacion): string | undefined =>
+      ele.descripcionComercialImportacion,
     orden: 5,
   },
   {
@@ -335,7 +326,8 @@ export const CONFIGURACION_ARANCELARIASIMPORTACION = [
   },
   {
     encabezado: 'Valor en moneda mensual',
-    clave: (ele: ArancelariaImportacion): string | undefined => ele.valorMensual,
+    clave: (ele: ArancelariaImportacion): string | undefined =>
+      ele.valorMensual,
     orden: 10,
   },
   {
@@ -345,66 +337,74 @@ export const CONFIGURACION_ARANCELARIASIMPORTACION = [
   },
   {
     encabezado: 'Volumen mensual',
-    clave: (ele: ArancelariaImportacion): string | undefined => ele.volumenrMensual,
+    clave: (ele: ArancelariaImportacion): string | undefined =>
+      ele.volumenrMensual,
     orden: 12,
   },
   {
     encabezado: 'Volumen anual',
-    clave: (ele: ArancelariaImportacion): string | undefined => ele.volumenAnual,
+    clave: (ele: ArancelariaImportacion): string | undefined =>
+      ele.volumenAnual,
     orden: 13,
   },
 ];
 
-
 export const CONFIGURACION_MODIFICACION = [
-    { encabezado: 'Id', 
-      clave: (ele: DatosDelModificacion) :number | undefined => ele.id, 
-      orden: 0 },
-    { encabezado: 'Calle', 
-      clave: (ele: DatosDelModificacion):string | undefined => ele.calle, 
-      orden: 2 },
-    {
-      encabezado: 'Número exterior',
-      clave: (ele: DatosDelModificacion):number | undefined => ele.numeroExterior,
-      orden: 4,
-    },
-    {
-      encabezado: 'Número interior',
-      clave: (ele: DatosDelModificacion):number | undefined => ele.numeroInterior,
-      orden: 3,
-    },
-    {
-      encabezado: 'Código Postal',
-      clave: (ele: DatosDelModificacion):number | undefined => ele.codigoPosta,
-      orden: 5,
-    },
-    { encabezado: 'Colonia', 
-      clave: (ele: DatosDelModificacion):string | undefined => ele.colonia, 
-      orden: 6 },
-    {
-      encabezado: 'Municipio o alcaldía',
-      clave: (ele: DatosDelModificacion):string | undefined => ele.municipioOAlcaldia,
-      orden: 7,
-    },
-    {
-      encabezado: 'Entidad Federativa',
-      clave: (ele: DatosDelModificacion):string | undefined => ele.entidadFederativa,
-      orden: 8,
-    },
-    { encabezado: 'País', 
-      clave: (ele: DatosDelModificacion):string | undefined => ele.pais, 
-      orden: 9 },
-    {
-      encabezado: 'Teléfono',
-      clave: (ele: DatosDelModificacion):string | undefined => ele.telefono,
-      orden: 10,
-    },
-    
-    {
-      encabezado: 'Estatus',
-      clave: (ele: DatosDelModificacion) :string | undefined=> ele.desEstatus,
-      orden: 1,
-    },
+  {
+    encabezado: 'Estatus',
+    clave: (ele: DatosDelModificacion): string | undefined => ele.desEstatus,
+    orden: 1,
+  },
+  {
+    encabezado: 'Calle',
+    clave: (ele: DatosDelModificacion): string | undefined => ele.calle,
+    orden: 2,
+  },
+  {
+    encabezado: 'Número interior',
+    clave: (ele: DatosDelModificacion): number | undefined =>
+      ele.numeroInterior,
+    orden: 3,
+  },
+  {
+    encabezado: 'Número exterior',
+    clave: (ele: DatosDelModificacion): number | undefined =>
+      ele.numeroExterior,
+    orden: 4,
+  },
+
+  {
+    encabezado: 'Código Postal',
+    clave: (ele: DatosDelModificacion): number | undefined => ele.codigoPostal,
+    orden: 5,
+  },
+  {
+    encabezado: 'Colonia',
+    clave: (ele: DatosDelModificacion): string | undefined => ele.colonia,
+    orden: 6,
+  },
+  {
+    encabezado: 'Municipio o alcaldía',
+    clave: (ele: DatosDelModificacion): string | undefined =>
+      ele.municipioOAlcaldia,
+    orden: 7,
+  },
+  {
+    encabezado: 'Entidad Federativa',
+    clave: (ele: DatosDelModificacion): string | undefined =>
+      ele.entidadFederativa,
+    orden: 8,
+  },
+  {
+    encabezado: 'País',
+    clave: (ele: DatosDelModificacion): string | undefined => ele.pais,
+    orden: 9,
+  },
+  {
+    encabezado: 'Teléfono',
+    clave: (ele: DatosDelModificacion): string | undefined => ele.telefono,
+    orden: 10,
+  },
 ];
 
 /**

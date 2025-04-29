@@ -1,5 +1,5 @@
 <div class="container my-4">
-  <!-- Formulario dinamico de tipo de personas -->
+
   <form [formGroup]="formularioInfoRegistro">
     <div class="row">
       <div class="col-md-6">
@@ -71,6 +71,5 @@
   <div classs="row mt-3 mb-3">
     <ng-titulo titulo="Lista de domicilios" />
     <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.BUTTON" [configuracionTabla]="encabezadoDeTabla" [datos]="datosTabla" (alternarValor)="valorDeAlternancia($event)"></app-tabla-dinamica>
-
     </div>
 </div>

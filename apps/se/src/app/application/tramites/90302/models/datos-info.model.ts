@@ -363,7 +363,7 @@ export interface DatosDelModificacion {
   calle?: string;
   numeroExterior?: number;
   numeroInterior?: number;
-  codigoPosta?: number;
+  codigoPostal?: number;
   colonia?: string;
   municipioOAlcaldia?: string;
   entidadFederativa?: string;

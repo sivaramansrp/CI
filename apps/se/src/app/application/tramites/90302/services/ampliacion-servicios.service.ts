@@ -43,7 +43,7 @@ export class AmpliacionServiciosService {
    */
   getDatos(): Observable<DatosResponse[]> {
     return this.http
-      .get<DatosResponse[]>("assets/json/90302/info-registro-datos.json")
+      .get<DatosResponse[]>(`${this.apiUrl}info-registro-datos.json`)
       .pipe(map((res) => res));
   }
 
@@ -82,7 +82,7 @@ export class AmpliacionServiciosService {
      */
     getModificacionTableData(): Observable<DatosDelModificacion[]> {
       return this.http.get<DatosDelModificacion[]>(
-        `assets/json/90302/datosTabla.json`
+        `${this.apiUrl}modificacion-tabla-datos.json`
       );
     }
 
