@@ -357,3 +357,17 @@ export interface ProductorIndirectoRespuesta {
   data: ProductorIndirecto[];
   message: string;
 }
+
+export interface DatosDelModificacion {
+  id?: number;
+  calle?: string;
+  numeroExterior?: number;
+  numeroInterior?: number;
+  codigoPosta?: number;
+  colonia?: string;
+  municipioOAlcaldia?: string;
+  entidadFederativa?: string;
+  pais?: string;
+  telefono?: string;
+  desEstatus?: string;
+}

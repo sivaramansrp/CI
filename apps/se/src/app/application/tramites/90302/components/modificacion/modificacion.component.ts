@@ -16,16 +16,19 @@ import {
 } from '@angular/forms';
 
 import {
+  CONFIGURACION_MODIFICACION,
   TEXTOS_90302
 } from "../../constantes/modificacion.constants";
 
+import { ApiResponse, DatosDelModificacion } from "../../models/datos-info.model";
 import { OnDestroy, OnInit } from '@angular/core';
 import { AmpliacionServiciosQuery } from '../../estados/tramite90302.query';
 import { AmpliacionServiciosService } from '../../services/ampliacion-servicios.service';
-import { ApiResponse } from "../../models/datos-info.model";
 
 import { Component } from '@angular/core';
+import { ConfiguracionColumna } from '../../models/configuracion-columna.model';
 import { Subject } from 'rxjs';
+import { TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { Tramite90302Store } from '../../estados/tramite90302.store';
 import { takeUntil} from 'rxjs/operators';
 
@@ -55,6 +58,24 @@ export class ModificacionComponent implements OnInit, OnDestroy {
    */
   private destroyNotifier$: Subject<void> = new Subject();
 
+    /**
+     * Representa la tabla de selección utilizada en el componente de modificación.
+     * Esta tabla se utiliza para gestionar y mostrar los datos seleccionados
+     * en el contexto de los trámites específicos.
+     */
+    TablaSeleccion = TablaSeleccion;
+
+    /**
+       * Configuración de las columnas de la tabla dinámica.
+       * Define las propiedades de cada columna, como encabezado, clave y orden.
+       */
+      public encabezadoDeTabla: ConfiguracionColumna<DatosDelModificacion>[] = CONFIGURACION_MODIFICACION;
+
+        /**
+         * Define los datos que se mostrarán en la tabla dinámica.
+         */
+        datosTabla: DatosDelModificacion[] = [];
+  
   /**
    * Constructor del componente.
    * @constructor
@@ -79,6 +100,7 @@ export class ModificacionComponent implements OnInit, OnDestroy {
     this.getDatos();
    this.inicializarFormularioInfoRegistro();
    this.inicializarFormularioDesdeAlmacen();
+   this.loadDatosTablaData();
   }
   
   /**
@@ -119,6 +141,48 @@ export class ModificacionComponent implements OnInit, OnDestroy {
         modificacionPrograma: infoRegistro.modificacionPrograma,
       });
     });
+  }
+
+   /**
+   * Cargar datos de la tabla.
+   *
+   * Este método obtiene los datos de la tabla desde el servicio `datosTramiteService`
+   * y los almacena en la propiedad `datosTabla`. Utiliza `takeUntil` para cancelar la suscripción
+   * cuando el componente se destruye, evitando fugas de memoria.
+   *
+   * @example
+   * // Llamar al método para cargar los datos de la tabla
+   * this.loadDatosTablaData();
+   */
+   loadDatosTablaData(): void {
+    this.ampliacionServiciosService.getModificacionTableData().pipe(takeUntil(this.destroyNotifier$)).subscribe((data) =>
+    {
+      this.datosTabla = data;
+    });
+  }
+
+   /**
+   * Alterna el estado de un registro en la tabla entre 'Baja' y 'Activada'.
+   *
+   * @param row - El registro de la tabla que se desea modificar. Debe contener un identificador único (`id`).
+   *
+   * @remarks
+   * Este método busca el índice del registro en la tabla `datosTabla` utilizando el identificador (`id`) del registro proporcionado.
+   * Luego, cambia el valor de la propiedad `desEstatus` del registro encontrado:
+   * - Si el estado actual es 'Baja', se cambia a 'Activada'.
+   * - Si el estado actual es diferente de 'Baja', se cambia a 'Baja'.
+   *
+   * @example
+   * ```typescript
+   * const registro = { id: 1, desEstatus: 'Baja' };
+   * this.valorDeAlternancia(registro);
+   * // Ahora, registro.desEstatus será 'Activada'.
+   * ```
+   */
+   // eslint-disable-next-line @typescript-eslint/no-explicit-any
+   valorDeAlternancia(row: any): void {
+    const INDEX = this.datosTabla.findIndex((x) => x.id === row.id);
+    this.datosTabla[INDEX].desEstatus = this.datosTabla[INDEX].desEstatus === 'Baja' ? 'Activada' : 'Baja';
   }
 
  

@@ -8,8 +8,8 @@
  * Este servicio utiliza el cliente HTTP de Angular para realizar solicitudes a archivos JSON locales y expone observables para manejar datos y eventos.
  */
 
-import { Observable, Subject, map } from 'rxjs';
-import { DatosResponse, BitacoraRespuesta, SectorRespuesta, PlantasRespuesta, MercanciasRespuesta, ProductorIndirectoRespuesta} from '../models/datos-info.model';
+import {BitacoraRespuesta,DatosDelModificacion,DatosResponse,MercanciasRespuesta,PlantasRespuesta,ProductorIndirectoRespuesta, SectorRespuesta, } from '../models/datos-info.model';
+import { Observable, map } from 'rxjs';
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 
@@ -74,5 +74,16 @@ export class AmpliacionServiciosService {
       map((res) => res)
     );
   }
+
+    /**
+     * Obtener datos de la tabla
+     *
+     * @returns {Observable<RespuestaCatalogos[]>} Un observable con la respuesta de los datos de la tabla.
+     */
+    getModificacionTableData(): Observable<DatosDelModificacion[]> {
+      return this.http.get<DatosDelModificacion[]>(
+        `assets/json/90302/datosTabla.json`
+      );
+    }
 
 }

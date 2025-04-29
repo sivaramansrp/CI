@@ -13,6 +13,7 @@ import {
   Arancelaria,
   ArancelariaImportacion,
   Bitacora,
+  DatosDelModificacion,
   MercanciasAProducir,
   Plantas,
   ProductorIndirecto,
@@ -352,6 +353,58 @@ export const CONFIGURACION_ARANCELARIASIMPORTACION = [
     clave: (ele: ArancelariaImportacion): string | undefined => ele.volumenAnual,
     orden: 13,
   },
+];
+
+
+export const CONFIGURACION_MODIFICACION = [
+    { encabezado: 'Id', 
+      clave: (ele: DatosDelModificacion) :number | undefined => ele.id, 
+      orden: 0 },
+    { encabezado: 'Calle', 
+      clave: (ele: DatosDelModificacion):string | undefined => ele.calle, 
+      orden: 2 },
+    {
+      encabezado: 'Número exterior',
+      clave: (ele: DatosDelModificacion):number | undefined => ele.numeroExterior,
+      orden: 4,
+    },
+    {
+      encabezado: 'Número interior',
+      clave: (ele: DatosDelModificacion):number | undefined => ele.numeroInterior,
+      orden: 3,
+    },
+    {
+      encabezado: 'Código Postal',
+      clave: (ele: DatosDelModificacion):number | undefined => ele.codigoPosta,
+      orden: 5,
+    },
+    { encabezado: 'Colonia', 
+      clave: (ele: DatosDelModificacion):string | undefined => ele.colonia, 
+      orden: 6 },
+    {
+      encabezado: 'Municipio o alcaldía',
+      clave: (ele: DatosDelModificacion):string | undefined => ele.municipioOAlcaldia,
+      orden: 7,
+    },
+    {
+      encabezado: 'Entidad Federativa',
+      clave: (ele: DatosDelModificacion):string | undefined => ele.entidadFederativa,
+      orden: 8,
+    },
+    { encabezado: 'País', 
+      clave: (ele: DatosDelModificacion):string | undefined => ele.pais, 
+      orden: 9 },
+    {
+      encabezado: 'Teléfono',
+      clave: (ele: DatosDelModificacion):string | undefined => ele.telefono,
+      orden: 10,
+    },
+    
+    {
+      encabezado: 'Estatus',
+      clave: (ele: DatosDelModificacion) :string | undefined=> ele.desEstatus,
+      orden: 1,
+    },
 ];
 
 /**
