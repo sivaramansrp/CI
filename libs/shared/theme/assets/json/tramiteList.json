@@ -2074,8 +2074,8 @@
   {
     "id": 297,
     "tramite": 130302,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/sener/parmiso-importacion-petroleo/pantallas",
+    "linkDepartment": "/pago/parmiso-importacion-petroleo/pantallas",
     "department": "sener"
   },
   {

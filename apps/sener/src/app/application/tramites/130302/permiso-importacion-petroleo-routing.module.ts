@@ -1,16 +1,18 @@
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
-import { ImportacionExportacionPetroleoComponent } from './components/importacion-exportacion-petroleo/importacion-exportacion-petroleo.component';
 
-const routes: Routes = [
+import { RouterModule, Routes } from '@angular/router';
+
+import { PantallasComponent } from './pages/pantallas/pantallas.component';
+
+const ROUTES: Routes = [
   {
       path: 'pantallas',
-      component: ImportacionExportacionPetroleoComponent
+      component:PantallasComponent
     },
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
+  imports: [RouterModule.forChild(ROUTES)],
   exports: [RouterModule]
 })
 export class PermisoImportacionPetroleoRoutingModule { }
