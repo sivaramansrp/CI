@@ -11,6 +11,7 @@
     [tablaSeleccionEvent]="tablaSeleccionEvent"
     [guardarClicado]="(datosTabla$ | async) ||  []"
     (formaValida)="setFormValida($event)"
+    (guardarClicadoEvent)="guardarClicado($event)"
     [datosForm]="formCertificadoValues"
     [cargoDeMercancias]="cargoDeMercancias"
     [mercanciasDisponibles]="mercanciasDisponibles"
