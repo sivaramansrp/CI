@@ -1,12 +1,13 @@
-import { Injectable } from "@angular/core";
 import { Store, StoreConfig } from "@datorama/akita";
+import { Injectable } from "@angular/core";
 
 /**
  * Estado para almacenar la información de cada documento
  */
 
 export interface DocumentosState {
-    catalogoDocumentos: DocumentoState[];
+    catalogoDocumentosRequeridos: DocumentoState[];
+    catalogoDocumentosOpcionales: DocumentoState[];
 }
 export interface DocumentoState {
     id: number;
@@ -17,6 +18,7 @@ export interface DocumentoState {
     nuevo?: boolean;
     uniqueId?: string;
     adicionales?: DocumentoState[];
+    cargado?: boolean;
 }
 
 /**
@@ -25,7 +27,8 @@ export interface DocumentoState {
  */
 export function createInitialStateDocumentos(): DocumentosState {
     return {
-        catalogoDocumentos: [],
+        catalogoDocumentosRequeridos: [],
+        catalogoDocumentosOpcionales: [],
     }
 }
 
