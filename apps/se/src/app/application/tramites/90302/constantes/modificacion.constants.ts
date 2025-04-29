@@ -406,22 +406,3 @@ export const CONFIGURACION_MODIFICACION = [
     orden: 10,
   },
 ];
-
-/**
- * Textos constantes para el módulo 90302.
- * @constant {Object} TEXTOS_90302
- */
-export const TEXTOS_90302 = {
-  ALERTA_TEXTOS:
-    'Materias primas, partes, componentes, materiales auxiliares, envases, material de empaque, etiquetas, folletos, combustibles y lubricantes que se utilicen en el proceso de producción o de servicios de las mercancías de exportación.',
-};
-
-/**
- * Mensajes de alerta utilizados en la aplicación.
- * @constant {Object} ALERT
- */
-export const ALERT = {
-  ERRORMESSAGE: `<p>Corrija los siguientes errores: </p>
-      <p style="color:#d0021b; display: flex; justify-content: center; position: relative;"><span style="position: absolute; left: 2px;">1</span>(Toda fracción de exportación debe tener al menos una fracción de importación) es un campo requerido </p>
-      <p style="color:#d0021b; display: flex; justify-content: center; position: relative;"><span style="position: absolute; left: 2px;">2</span>(Regla Tres Rs) es un campo requerido </p>`,
-};

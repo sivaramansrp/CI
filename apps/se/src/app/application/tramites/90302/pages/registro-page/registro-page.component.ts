@@ -10,7 +10,6 @@
  */
 
 import { Component, OnDestroy, ViewChild } from '@angular/core';
-import { ALERT } from '../../constantes/modificacion.constants';
 import { Subject, } from 'rxjs';
 
 import { Aviso } from '@ng-mf/data-access-user';
@@ -60,12 +59,6 @@ export class RegistroPageComponent implements OnDestroy {
    * @property {string | null} tituloMensaje
    */
   tituloMensaje: string | null = "Registro de solicitud modificación programa PROSEC (Modificación Baja de domicilio de una planta, bodega o almacén) ";
-
-  /**
-   * Constantes de alerta.
-   * @property {any} alert
-   */
-  alert = ALERT;
 
   /**
    * Clase CSS para mensajes de alerta.

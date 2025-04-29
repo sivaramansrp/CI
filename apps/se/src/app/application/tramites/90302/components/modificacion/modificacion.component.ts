@@ -14,7 +14,6 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 
 import {
   CONFIGURACION_MODIFICACION,
-  TEXTOS_90302,
 } from '../../constantes/modificacion.constants';
 
 import {
@@ -45,12 +44,6 @@ export class ModificacionComponent implements OnInit, OnDestroy {
    * @property {FormGroup} formularioInfoRegistro
    */
   formularioInfoRegistro!: FormGroup;
-
-  /**
-   * Textos constantes para el componente.
-   * @property {any} TEXTOS
-   */
-  TEXTOS = TEXTOS_90302;
 
   /**
    * Notificador para gestionar la destrucción o desuscripción de observables.
@@ -133,7 +126,7 @@ export class ModificacionComponent implements OnInit, OnDestroy {
     });
   }
 
-  
+
   /**
    * @method inicializarFormularioDesdeAlmacen
    * @description Inicializa el formulario con los datos almacenados en el estado de la aplicación.
