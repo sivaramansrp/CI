@@ -49,12 +49,14 @@ export interface AccionBoton {
  * Representa los datos de la tabla de mercancías disponibles.
  */
 export interface MercanciaTabla {
-  fraccionArancelaria: string;
-  tipoFactura: string;
-  cantidad: string;
-  unidadMedida: string;
-  nombreTecnico: string;
-  nombreComercial: string;
+  fraccionArancelaria?: string;
+  tipoFactura?: string;
+  cantidad?: string;
+  unidadMedida?:string;
+  nombreTecnico?:string;
+  nombreComercial?: string;
   valorMercancia: string;
-  rfcProductor: string;
+  rfcProductor?: string;
+  numeroFactura?:string;
+  complemento?:string;
 }

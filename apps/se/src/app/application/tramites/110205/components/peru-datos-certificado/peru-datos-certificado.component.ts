@@ -89,7 +89,7 @@ export class PeruDatosCertificadoComponent implements OnInit, OnDestroy {
  */
 setValoresStore(event: { formGroupName: string, campo: string, valor: undefined, storeStateName: string }): void {
   const { campo: CAMPO, valor: VALOR } = event;
-  this.store.setFormCertificadoGenric({ [CAMPO]: VALOR });
+  this.store.setFormDatosCertificado({ [CAMPO]: VALOR });
 }
 
   /**
@@ -150,15 +150,6 @@ setValoresStore(event: { formGroupName: string, campo: string, valor: undefined,
         this.representacionFederal = [];
       },
     });
-  }
-
-  /**
-   * @descripcion
-   * Actualiza el almacén con los datos del formulario.
-   * @param e - Los datos del formulario a almacenar.
-   */
-  obtenerDatosFormulario(e: unknown): void {
-    this.store.setFormDatosCertificado(e as { [key: string]: string | number | boolean | object | undefined });
   }
 
   /**

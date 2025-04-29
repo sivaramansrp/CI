@@ -1,5 +1,6 @@
-import { AgregarDatosProductorFormulario, FormularioHistorico, HistoricoColumnas, MercanciaTabla } from '../../models/certificado-origen.model';
+import { AgregarDatosProductorFormulario, Catalogo, FormularioHistorico, HistoricoColumnas, MercanciaTabla } from '../../models/certificado-origen.model';
 import { CONFIGURACION_MERCANCIA, CONFIGURACION_PRODUCTOR_EXPORTADOR } from '../../constantes/certificado-tabla.enum';
+import { CatalogoSelectComponent, InputFechaComponent } from "@ng-mf/data-access-user";
 import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { ConfiguracionColumna, InputCheckComponent, REGEX_SOLO_DIGITOS, TablaDinamicaComponent, TablaSeleccion, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -17,7 +18,7 @@ import { Subject } from 'rxjs';
 @Component({
   selector: 'app-historico-productores',
   standalone: true,
-  imports: [CommonModule, TituloComponent, FormsModule, ReactiveFormsModule, TablaDinamicaComponent, InputCheckComponent],
+  imports: [CommonModule, TituloComponent, FormsModule, ReactiveFormsModule, TablaDinamicaComponent, InputCheckComponent, CatalogoSelectComponent, InputFechaComponent],
   templateUrl: './historico-productores.component.html',
   styleUrl: './historico-productores.component.scss',
 })
@@ -26,6 +27,20 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
    * Formulario principal para gestionar los datos de los productores.
    */
   formulario!: FormGroup;
+  /**
+ * Formulario para gestionar los datos de mercancías.
+ * 
+ * Permite capturar y validar los datos relacionados con las mercancías.
+ */
+  formularioMercancia!: FormGroup;
+
+  /**
+   * Propiedad de entrada que contiene una lista de opciones de catálogo para el "Tipo Factura".
+   * Esta propiedad se espera que sea llenada con un arreglo de objetos `Catalogo`.
+   * 
+   * @comando Utilizada para proporcionar las opciones disponibles de tipo de factura al componente.
+   */
+  @Input() optionsTipoFactura!: Catalogo[];
   /**
    * @input tramiteState - Representa el estado del formulario histórico.
    * Este objeto contiene los datos relacionados con el historial de productores.
@@ -44,6 +59,8 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
    * @default []
    */
   @Input() mercanciaDatos: MercanciaTabla[] = [];
+
+  mercanciaDatosSeleccionada:MercanciaTabla[] = [];
   /**
    * @method agregarDatosProductor
    * @description Este decorador de entrada (@Input) se utiliza para recibir un objeto 
@@ -67,6 +84,14 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
    * Propiedad de entrada que recibe los datos de la tabla de mercancia.
    * @type {Mercancia[]}
    */
+  /**
+   * @input productoresExportador
+   * 
+   * Lista de productores asociados a un exportador, representada como un arreglo de objetos 
+   * del tipo `HistoricoColumnas`. Este dato es proporcionado como entrada al componente.
+   * 
+   * @type {HistoricoColumnas[]}
+   */
   @Input() productoresExportador!: HistoricoColumnas[];
 
   /**
@@ -82,6 +107,19 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
  */
   @Output() formHistoricoEvent: EventEmitter<{ formGroupName: string; campo: string; valor: undefined; storeStateName: string }> = new EventEmitter<{ formGroupName: string; campo: string; valor: undefined; storeStateName: string }>();
 
+  /**
+   * Propiedad de entrada que indica si se debe ocultar el campo de fax.
+   * 
+   * @type {boolean}
+   * @default false
+   */
+  @Input() ocultarFax!: boolean;
+
+  /**
+   * @input esTipoDeSeleccionado Indica si el tipo seleccionado es válido o no.
+   * @type {boolean}
+   */
+  @Input() esTipoDeSeleccionado!: boolean;
 
   /**
  * Propiedad de salida que emite el valor del formulario cuando se actualiza.
@@ -108,6 +146,7 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
    * Lista de productores seleccionados para agregar.
    */
   seleccionadoProductoresExportador: HistoricoColumnas[] = [];
+  
 
   /**
    * Lista de productores ya agregados.
@@ -147,6 +186,10 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
   @ViewChild('modalBuscar') modalElements!: ElementRef;
 
   /**
+ * Referencia al elemento del DOM asociado al modalMercancia.
+ */
+  @ViewChild('modalMercancia') modalElementsMercancia!: ElementRef;
+  /**
    * Referencia al botón para cerrar el modal.
    */
   @ViewChild('closeModal') closeModal!: ElementRef;
@@ -178,6 +221,7 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.initFormulario();
+    this.inicializarFormularioMercancia()
     this.initAgregarDatosProductorFormulario();
     if (this.tramiteState) {
       this.formulario.patchValue(this.tramiteState);
@@ -196,7 +240,23 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
       productorMismoExportador: [],
     });
   }
-
+  /**
+   * Inicializa el formulario relacionado con las mercancías.
+   * 
+   * Este método configura los campos y validaciones del formulario de mercancías utilizando los datos del estado actual del trámite.
+   */
+  inicializarFormularioMercancia(): void {
+    this.formularioMercancia = this.fb.group({
+      fraccionArancelaria: [{ value: [], disabled: true }],
+      nombreComercial: [{ value: [[]], disabled: true }],
+      nombreTecnico: [{ value: [[]], disabled: true }],
+      numeroDeRegistroFiscal: [],
+      valorMercancia: [{ value: '', disabled: true }],
+      complemento: [{ value: '', disabled: true }],
+      numeroFactura: [{ value: [[]], disabled: true }],
+      tipoFactura: [[]],
+    });
+  }
   /**
    * Inicializa el formulario para agregar datos del productor.
    */
@@ -216,6 +276,7 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
   obtenerSeleccionadoProductores(evento: HistoricoColumnas[]): void {
     this.seleccionadoProductoresExportador = evento;
   }
+ 
 
   /**
    * Obtiene los productores seleccionados para agregar.
@@ -321,9 +382,18 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
    * - Llama a este método para abrir el modal de mercancía.
    */
   agregarMercancia(): void {
-    if (this.modalElements?.nativeElement) {
-      const MODAL_INSTANCE = new Modal(this.modalElements.nativeElement);
-      MODAL_INSTANCE.show();
+    if (this.esTipoDeSeleccionado) {
+      if (this.modalElementsMercancia?.nativeElement) {
+        const MODAL_INSTANCE = new Modal(this.modalElementsMercancia.nativeElement);
+        MODAL_INSTANCE.show();
+        this.formularioMercancia.patchValue(this.mercanciaDatosSeleccionada[0])
+      }
+    }
+    else {
+      if (this.modalElements?.nativeElement) {
+        const MODAL_INSTANCE = new Modal(this.modalElements.nativeElement);
+        MODAL_INSTANCE.show();
+      }
     }
   }
   /**
@@ -334,7 +404,16 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
       this.closeModalMercancia.nativeElement.click();
     }
   }
-  
+
+  obtenerSeleccionadoMercancia(evento: MercanciaTabla): void {        
+    this.mercanciaDatosSeleccionada = [evento];
+  }
+  mercanciaAgregarSeleccionada(): void {
+    if (this.modalElements?.nativeElement) {
+      const MODAL_INSTANCE = new Modal(this.modalElements.nativeElement);
+      MODAL_INSTANCE.show();
+    }
+  }
   /**
     * Método que se ejecuta al destruir el componente.
     * 
