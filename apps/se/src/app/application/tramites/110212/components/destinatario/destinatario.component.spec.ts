@@ -74,13 +74,16 @@ describe('DestinatarioComponent', () => {
         FormsModule,
         CommonModule,
         TituloComponent,
-        DestinatarioComponent
+        DestinatarioComponent,
       ],
       providers: [
         FormBuilder,
         { provide: Tramite110212Store, useValue: tramiteStoreMock },
         { provide: Tramite110212Query, useValue: tramiteQueryMock },
-        { provide: ValidacionesFormularioService, useValue: validacionesServiceMock },
+        {
+          provide: ValidacionesFormularioService,
+          useValue: validacionesServiceMock,
+        },
       ],
     }).compileComponents();
 
@@ -89,22 +92,21 @@ describe('DestinatarioComponent', () => {
     fixture.detectChanges();
   });
 
- 
-
-
-
-
   it('should validate the form on validarDestinatarioFormulario', () => {
     component.registroFormulario.get('grupoReceptor.nombre')?.setValue('');
     component.validarDestinatarioFormulario();
-    expect(component.registroFormulario.get('grupoReceptor.nombre')?.touched).toBe(true);
+    expect(
+      component.registroFormulario.get('grupoReceptor.nombre')?.touched
+    ).toBe(true);
     expect(component.registroFormulario.valid).toBe(false);
   });
 
   it('should mark all fields as touched if form is invalid on onSubmit', () => {
     component.registroFormulario.get('grupoReceptor.nombre')?.setValue('');
     component.validarDestinatarioFormulario();
-    expect(component.registroFormulario.get('grupoReceptor.nombre')?.touched).toBe(true);
+    expect(
+      component.registroFormulario.get('grupoReceptor.nombre')?.touched
+    ).toBe(true);
     expect(component.registroFormulario.valid).toBe(false);
   });
 
@@ -134,18 +136,26 @@ describe('DestinatarioComponent', () => {
   });
 
   it('should initialize grupoDeDirecciones with default values', () => {
-    expect(component.grupoDeDirecciones.get('ciudad')?.value).toBe('Ciudad Ejemplo');
-    expect(component.grupoDeDirecciones.get('calle')?.value).toBe('Calle Ejemplo');
+    expect(component.grupoDeDirecciones.get('ciudad')?.value).toBe(
+      'Ciudad Ejemplo'
+    );
+    expect(component.grupoDeDirecciones.get('calle')?.value).toBe(
+      'Calle Ejemplo'
+    );
     expect(component.grupoDeDirecciones.get('numeroLetra')?.value).toBe('123A');
   });
 
   it('should initialize grupoRepresentativo with default values', () => {
-    expect(component.grupoRepresentativo.get('lugar')?.value).toBe('Lugar Ejemplo');
-    expect(component.grupoRepresentativo.get('nombreExportador')?.value).toBe('Exportador Ejemplo');
-    expect(component.grupoRepresentativo.get('empresa')?.value).toBe('Empresa Ejemplo');
+    expect(component.grupoRepresentativo.get('lugar')?.value).toBe(
+      'Lugar Ejemplo'
+    );
+    expect(component.grupoRepresentativo.get('nombreExportador')?.value).toBe(
+      'Exportador Ejemplo'
+    );
+    expect(component.grupoRepresentativo.get('empresa')?.value).toBe(
+      'Empresa Ejemplo'
+    );
   });
-
-
 
   it('should mark grupoReceptor.nombre as invalid if empty', () => {
     component.grupoReceptor.get('nombre')?.setValue('');
@@ -162,33 +172,44 @@ describe('DestinatarioComponent', () => {
     expect(component.grupoRepresentativo.get('lugar')?.valid).toBe(false);
   });
 
-
-
   it('should call setValoresStore for grupoReceptor.nombre on change', () => {
     const setValoresStoreSpy = jest.spyOn(component, 'setValoresStore');
     component.grupoReceptor.get('nombre')?.setValue('Nuevo Nombre');
-    const inputElement = fixture.debugElement.nativeElement.querySelector('#nombre');
+    const inputElement =
+      fixture.debugElement.nativeElement.querySelector('#nombre');
     inputElement.dispatchEvent(new Event('change'));
-    expect(setValoresStoreSpy).toHaveBeenCalledWith(component.grupoReceptor, 'nombre', 'setGrupoReceptorNombre');
+    expect(setValoresStoreSpy).toHaveBeenCalledWith(
+      component.grupoReceptor,
+      'nombre',
+      'setGrupoReceptorNombre'
+    );
   });
 
   it('should call setValoresStore for grupoDeDirecciones.ciudad on change', () => {
     const setValoresStoreSpy = jest.spyOn(component, 'setValoresStore');
     component.grupoDeDirecciones.get('ciudad')?.setValue('Nueva Ciudad');
-    const inputElement = fixture.debugElement.nativeElement.querySelector('#ciudad');
+    const inputElement =
+      fixture.debugElement.nativeElement.querySelector('#ciudad');
     inputElement.dispatchEvent(new Event('change'));
-    expect(setValoresStoreSpy).toHaveBeenCalledWith(component.grupoDeDirecciones, 'ciudad', 'setGrupoDeDireccionesCiudad');
+    expect(setValoresStoreSpy).toHaveBeenCalledWith(
+      component.grupoDeDirecciones,
+      'ciudad',
+      'setGrupoDeDireccionesCiudad'
+    );
   });
 
   it('should call setValoresStore for grupoRepresentativo.lugar on change', () => {
     const setValoresStoreSpy = jest.spyOn(component, 'setValoresStore');
     component.grupoRepresentativo.get('lugar')?.setValue('Nuevo Lugar');
-    const inputElement = fixture.debugElement.nativeElement.querySelector('#lugar');
+    const inputElement =
+      fixture.debugElement.nativeElement.querySelector('#lugar');
     inputElement.dispatchEvent(new Event('change'));
-    expect(setValoresStoreSpy).toHaveBeenCalledWith(component.grupoRepresentativo, 'lugar', 'setGrupoRepresentativoLugar');
+    expect(setValoresStoreSpy).toHaveBeenCalledWith(
+      component.grupoRepresentativo,
+      'lugar',
+      'setGrupoRepresentativoLugar'
+    );
   });
-
-
 
   it('should disable form elements on onClick', () => {
     component.onClick();
