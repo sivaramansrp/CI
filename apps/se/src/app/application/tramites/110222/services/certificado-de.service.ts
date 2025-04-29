@@ -19,14 +19,14 @@ export class CertificadoDeService {
    * @param fileName The name of the JSON file to fetch data from.
    * @returns An `Observable` that emits an array of `Catalogo` objects.
    * @method obtenerMenuDesplegable
-   * @memberof PeruCertificadoService
+   * @memberof CertificadoDeService
    * @usageNotes
    * This method constructs the full URL by appending the `fileName` to the base URL (`this.url`) 
    * and performs an HTTP GET request to retrieve the data.
    * 
    * Example:
    * ```typescript
-   * this.PeruCertificadoService.obtenerMenuDesplegable('menu.json').subscribe(menu => {
+   * this.CertificadoDeService.obtenerMenuDesplegable('menu.json').subscribe(menu => {
    *   console.log(menu);
    * });
    * ```
@@ -43,14 +43,14 @@ export class CertificadoDeService {
    * @param fileName The name of the JSON file to fetch data from.
    * @returns An `Observable` that emits an array of `Mercancia` objects.
    * @method obtenerTablaDatos
-   * @memberof PeruCertificadoService
+   * @memberof CertificadoDeService
    * @usageNotes
    * This method constructs the full URL by appending the `fileName` to the base URL (`this.url`) 
    * and performs an HTTP GET request to retrieve the data.
    * 
    * Example:
    * ```typescript
-   * this.PeruCertificadoService.obtenerTablaDatos('data.json').subscribe(data => {
+   * this.CertificadoDeService.obtenerTablaDatos('data.json').subscribe(data => {
    *   console.log(data);
    * });
    * ```
@@ -83,4 +83,5 @@ export class CertificadoDeService {
       return this.http
         .get<MercanciasHistorico>('assets/json/110222/mercancias-seleccionadas.json');
     }
+ 
 }

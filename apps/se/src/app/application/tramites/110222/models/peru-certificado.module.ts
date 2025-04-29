@@ -1,3 +1,4 @@
+
 export interface ListaPasoWizard {
   /** Index of the step */
   indice: number;
@@ -62,4 +63,12 @@ export interface MercanciaTabla {
 }
 export interface MercanciasHistorico {
   datos: MercanciaTabla[];
+}
+
+/**
+ * Representa un elemento de un catálogo.
+ */
+export interface Catalogo {
+  id: number;
+  descripcion: string;
 }

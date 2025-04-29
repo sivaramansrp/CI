@@ -1,8 +1,9 @@
+import { Catalogo, HistoricoColumnas, MercanciaTabla } from '../../models/peru-certificado.module';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { HistoricoColumnas, MercanciaTabla } from '../../models/peru-certificado.module';
 import { Subject ,map,takeUntil} from 'rxjs';
 import { CertificadoDeService } from '../../services/certificado-de.service';
 import { FormBuilder } from '@angular/forms';
+import { HttpErrorResponse } from '@angular/common/http';
 import { Tramite110222Query } from '../../estados/tramite110222.query';
 import { Tramite110222Store } from '../../estados/tramite110222.store';
 
@@ -14,10 +15,29 @@ import { Tramite110222Store } from '../../estados/tramite110222.store';
 
 export class HistoricoDeProductoresComponent implements OnInit, OnDestroy {
 
+  /**
+   * @property {boolean} ocultarFax
+   * Indica si el campo de fax debe estar oculto o visible en la interfaz de usuario.
+    * @default true
+   */
+  ocultarFax:boolean = true;
+  
+  /**
+   * @property esTipoDeSeleccionado
+   * @type {boolean}
+   * @description Indica si el tipo seleccionado es válido o está activo.
+   */
+  esTipoDeSeleccionado: boolean = true;
+
+  optionsTipoFactura: Catalogo[] = [];
     /**
      * Lista de productores disponibles para el exportador.
      */
     productoresExportador: HistoricoColumnas[] = [];
+    /**
+     * @property {MercanciaTabla[]} mercancia - Arreglo que contiene información de las mercancías.
+     * @command Este arreglo se utiliza para almacenar y gestionar los datos relacionados con las mercancías en el componente.
+     */
     mercancia: MercanciaTabla[] = [];
   
     /**
@@ -29,6 +49,13 @@ export class HistoricoDeProductoresComponent implements OnInit, OnDestroy {
      * Estado actual del trámite.
      */
     public tramiteState!:{ [key: string]: string | number | boolean | object | undefined };
+    /**
+     * @public
+     * @property
+     * @type {{ [key: string]: string | number | boolean | object | undefined }}
+     * @comando
+     * Este objeto debe ser inicializado antes de su uso para evitar errores.
+     */
     public agregarDatosProductor!: { [key: string]: string | number | boolean | object | undefined };
 
     /**
@@ -54,6 +81,7 @@ export class HistoricoDeProductoresComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
       this.cargarProductorPorExportador();
       this.cargarMercancia();
+      this.facturaOpcion();
       this.tramiteQuery.formulario$
         .pipe(
           takeUntil(this.destroyNotifier$),
@@ -79,15 +107,32 @@ export class HistoricoDeProductoresComponent implements OnInit, OnDestroy {
           this.productoresExportador = respuesta.datos;
         });
     }
+     /**
+      * @descripcion
+      * Obtiene la lista de países disponibles.
+      */
+     facturaOpcion(): void {
+       this.certificadoDeService.obtenerMenuDesplegable('factura.json')
+       .pipe(
+         takeUntil(this.destroyNotifier$),
+       )
+       .subscribe({
+         next: (data) => {
 
+           this.optionsTipoFactura = data as Catalogo[];
+         },
+         error: (error: HttpErrorResponse) => {
+           console.error('Error al obtener los datos:', error);
+
+         },
+       });
+     }
     
     /**
      * Carga la lista de productores disponibles para el exportador desde el servicio.
      */
     cargarMercancia(): void {
-      this.certificadoDeService.obtenerMercancia()
-        .pipe(takeUntil(this.destroyNotifier$))
-        .subscribe(respuesta => {
+      this.certificadoDeService.obtenerMercancia().pipe(takeUntil(this.destroyNotifier$)).subscribe(respuesta => {
           this.mercancia = respuesta.datos;
         });
     }
