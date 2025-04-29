@@ -6,21 +6,35 @@
           >Instalaciones principales *:</label
         >
         <app-input-radio
+          formControlName="instalacionesPrincipales"
+          [selectedValue]="modificarImmexProgramForm.get('instalacionesPrincipales')?.value"
           [radioOptions]="sinoOpcion.radioOptions"
           [isRequired]="sinoOpcion.isRequired"
           [layout]="'horizontal'"
           [gap]="'50px'"
+          (valueChange)="actualizarInstalacionesPrincipales($event)"
         ></app-input-radio>
       </div>
       <div class="col-md-4 mt-4">
-        <label class="form-label text-start" for=""
+        <label class="form-label text-start" for="municipio"
           >Municipio o alcaldía *:</label
         >
-        <input type="text" class="form-control" name="" id="" />
+        <input
+          type="text"
+          class="form-control"
+          formControlName="municipio"
+          name="municipioAlcaldía"
+          id="municipioAlcaldía"
+          (change)="actualizarMunicipio($event)"
+        />
+        <div *ngIf="noEsValido('municipio')" class="text-danger">
+          Este campo es obligatorio
+        </div>
       </div>
       <div class="col-md-4 mt-4"></div>
       <div class="col-md-4 mt-4">
         <app-catalogo-select
+          formControlName="tipoDeInstalacion"
           [catalogo]="tipoDeInstalacion.catalogos"
           [label]="tipoDeInstalacion.labelNombre"
           [placeholder]="tipoDeInstalacion.primerOpcion"
@@ -28,38 +42,84 @@
           [isDisabled]="false"
           name="tipoDeInstalacion"
           id="tipoDeInstalacion"
+          (selectionChange)="actualizarTipoDeInstalacion($event)"
         ></app-catalogo-select>
       </div>
       <div class="col-md-4 mt-4">
-        <label class="form-label text-start" for=""
+        <label class="form-label text-start" for="federativa"
           >Entidad federativa *:</label
         >
-        <input type="text" class="form-control" name="" id="" />
+        <input
+          type="text"
+          class="form-control"
+          formControlName="federativa"
+          name="federativa"
+          id="federativa"
+          (change)="actualizarFederativa($event)"
+        />
+        <div *ngIf="noEsValido('federativa')" class="text-danger">
+          Este campo es obligatorio
+        </div>
       </div>
       <div class="col-md-4 mt-4">
-        <label class="form-label text-start" for=""
+        <label class="form-label text-start" for="registroSESAT"
           >Registro ante S E/ S A T *:</label
         >
-        <input type="text" class="form-control" name="" id="" />
+        <input
+          type="text"
+          class="form-control"
+          formControlName="registroSE"
+          name="registroSESAT"
+          id="registroSESAT"
+          (change)="actualizarRegistroSE($event)"
+        />
+        <div *ngIf="noEsValido('registroSE')" class="text-danger">
+          Este campo es obligatorio
+        </div>
       </div>
       <div class="col-md-4 mt-4">
-        <label class="form-label text-start" for=""
+        <label class="form-label text-start" for="desceripe"
           >Colonia, calle y número *:</label
         >
-        <input type="text" class="form-control" name="" id="" />
+        <input
+          type="text"
+          class="form-control"
+          formControlName="desceripe"
+          name="desceripe"
+          id="desceripe"
+          (change)="actualizarDesceripe($event)"
+        />
+        <div *ngIf="noEsValido('desceripe')" class="text-danger">
+          Este campo es obligatorio
+        </div>
       </div>
       <div class="col-md-4 mt-4">
-        <label class="form-label text-start" for="">Código postal *:</label>
-        <input type="text" class="form-control" name="" id="" />
+        <label class="form-label text-start" for="codigoPostal"
+          >Código postal *:</label
+        >
+        <input
+          type="text"
+          class="form-control"
+          fromControlName="codigoPostal"
+          name="codigoPostal"
+          id="codigoPostal"
+          (change)="actualizarCodigoPostal($event)"
+        />
+        <div *ngIf="noEsValido('codigoPostal')" class="text-danger">
+          Este campo es obligatorio
+        </div>
       </div>
       <div class="col-md-4 mt-4"></div>
       <div class="col-md-4 mt-4">
         <label class="form-label text-start">Proceso productivo *:</label>
         <app-input-radio
+          formControlName="procesoProductivo"
+          [selectedValue]="modificarImmexProgramForm.get('procesoProductivo')?.value"
           [radioOptions]="sinoOpcion.radioOptions"
           [isRequired]="sinoOpcion.isRequired"
           [layout]="'horizontal'"
           [gap]="'50px'"
+          (valueChange)="actualizarProcesoProductivo($event)"
         ></app-input-radio>
       </div>
 

@@ -36,7 +36,7 @@ export class PasoUnoComponent {
    * Índice utilizado para identificar la pestaña activa dentro del paso.
    * @type {number}
    */
-  indice: number = 2;
+  indice: number = 1;
 
 
   /**

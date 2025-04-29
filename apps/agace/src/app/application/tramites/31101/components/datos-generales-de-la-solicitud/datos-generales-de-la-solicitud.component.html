@@ -675,6 +675,9 @@
           formControlName="cantidadInversion"
           (change)="actualizarCantidadInversion($event)"
         />
+        <div *ngIf="noEsValido('cantidadInversion')" class="text-danger">
+          Este campo es obligatorio
+        </div>
       </div>
       <div class="col-md-4 mt-4"></div>
       <div class="col-md-12 mt-4">
@@ -690,6 +693,9 @@
           formControlName="descInversion"
           (change)="actualizarDescInversion($event)"
         />
+        <div *ngIf="noEsValido('descInversion')" class="text-danger">
+          Este campo es obligatorio
+        </div>
       </div>
       <div class="col-md-12 mt-5">
         <app-tabla-dinamica
@@ -854,6 +860,9 @@
           name="textoGenerico4"
           (change)="actualizarTextoGenerico4($event)"
         />
+        <div *ngIf="noEsValido('textoGenerico4')" class="text-danger">
+          Este campo es obligatorio
+        </div>
       </div>
       <div class="col-md-6 mt-5">
         <label class="form-label text-start" for=""
@@ -868,6 +877,9 @@
           name="textoGenerico5"
           (change)="actualizarTextoGenerico5($event)"
         />
+        <div *ngIf="noEsValido('textoGenerico5')" class="text-danger">
+          Este campo es obligatorio
+        </div>
       </div>
       <div class="col-md-12 mt-4">
         <label class="form-label text-start"
@@ -928,6 +940,9 @@
           name="numeroAutorizacion1"
           (change)="actualizarNumeroAutorizacion1($event)"
         />
+        <div *ngIf="noEsValido('numeroAutorizacion1')" class="text-danger">
+          Este campo es obligatorio
+        </div>
       </div>
       <div class="col-md-4 mt-4"></div>
       <div class="col-md-12 mt-4">
@@ -993,6 +1008,9 @@
           name="numeroAutorizacion2"
           (change)="actualizarNumeroAutorizacion2($event)"
         />
+        <div *ngIf="noEsValido('numeroAutorizacion2')" class="text-danger">
+          Este campo es obligatorio
+        </div>
       </div>
       <div class="col-md-4 mt-4"></div>
 
@@ -1072,6 +1090,9 @@
           name="textoGenerico"
           (change)="actualizarTextoGenerico6($event)"
         />
+        <div *ngIf="noEsValido('textoGenerico6')" class="text-danger">
+          Este campo es obligatorio
+        </div>
       </div>
       <div class="col-md-4 mt-4">
         <label class="form-label text-start" for="textoGenerico7"
@@ -1085,6 +1106,9 @@
           name="textoGenerico7"
           (change)="actualizarTextoGenerico7($event)"
         />
+        <div *ngIf="noEsValido('textoGenerico7')" class="text-danger">
+          Este campo es obligatorio
+        </div>
       </div>
       <div class="col-md-4 mt-4"></div>
 
@@ -1173,6 +1197,9 @@
           name="textoGenerico9"
           (change)="actualizarTextoGenerico9($event)"
         />
+        <div *ngIf="noEsValido('textoGenerico9')" class="text-danger">
+          Este campo es obligatorio
+        </div>
       </div>
 
       <div class="row">

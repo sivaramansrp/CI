@@ -406,6 +406,16 @@ export class MiembroDeLaEmpresaComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Verifica si un campo del formulario no es válido.
+   * @param id Identificador del campo en el formulario.
+   * @returns true si el campo es inválido y ha sido tocado, de lo contrario undefined.
+   */
+  noEsValido(id: string): boolean | undefined {
+    const CONTROL = this.miembroEmpresaForm.get(id);
+    return CONTROL?.invalid && CONTROL?.touched;
+  }
+
+  /**
    * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
    * Finaliza todas las suscripciones observables usando el subject destroy$.
    */

@@ -320,6 +320,30 @@ export interface Solicitud31101State {
    * @description Entidad federativa correspondiente al miembro.
    */
   entidadFederativa: string | number;
+
+  /** Descripción de las principales instalaciones, puede ser un texto o un número */
+  instalacionesPrincipales: string | number;
+
+  /** Nombre del municipio donde se encuentra la instalación */
+  municipio: string;
+
+  /** Tipo de instalación representado por un número */
+  tipoDeInstalacion: number;
+
+  /** Nombre de la entidad federativa donde se ubica */
+  federativa: string;
+
+  /** Número de registro en la Secretaría correspondiente */
+  registroSE: string;
+
+  /** Descripción detallada de la instalación */
+  desceripe: string;
+
+  /** Código postal de la ubicación */
+  codigoPostal: string;
+
+  /** Identificador del proceso productivo, puede ser un número o una descripción */
+  procesoProductivo: number | string;
 }
 
 /**
@@ -432,6 +456,14 @@ export function createInitialSolicitudState(): Solicitud31101State {
     miembroApellidoMaterno: '',
     miembroNombreEmpresa: '',
     entidadFederativa: 0,
+    instalacionesPrincipales: 0,
+    municipio: '',
+    tipoDeInstalacion: 0,
+    federativa: '',
+    registroSE: '',
+    desceripe: '',
+    codigoPostal: '',
+    procesoProductivo: 0,
   };
 }
 @Injectable({
@@ -1026,6 +1058,46 @@ export class Solicitud31101Store extends Store<Solicitud31101State> {
    */
   actualizarEntidadFederativa(valor: string | number): void {
     this.update((state) => ({ ...state, entidadFederativa: valor }));
+  }
+
+  /** Actualiza el valor de las instalaciones principales */
+  actualizarInstalacionesPrincipales(valor: string | number): void {
+    this.update((state) => ({ ...state, instalacionesPrincipales: valor }));
+  }
+
+  /** Establece el municipio donde se encuentra la instalación */
+  actualizarMunicipio(valor: string): void {
+    this.update((state) => ({ ...state, municipio: valor }));
+  }
+
+  /** Define el tipo de instalación según un identificador numérico */
+  actualizarTipoDeInstalacion(valor: number): void {
+    this.update((state) => ({ ...state, tipoDeInstalacion: valor }));
+  }
+
+  /** Establece la entidad federativa donde está ubicada la instalación */
+  actualizarFederativa(valor: string): void {
+    this.update((state) => ({ ...state, federativa: valor }));
+  }
+
+  /** Actualiza el número de registro en la Secretaría correspondiente */
+  actualizarRegistroSE(valor: string): void {
+    this.update((state) => ({ ...state, registroSE: valor }));
+  }
+
+  /** Modifica la descripción detallada de la instalación */
+  actualizarDesceripe(valor: string): void {
+    this.update((state) => ({ ...state, desceripe: valor }));
+  }
+
+  /** Asigna el código postal de la ubicación */
+  actualizarCodigoPostal(valor: string): void {
+    this.update((state) => ({ ...state, codigoPostal: valor }));
+  }
+
+  /** Especifica el proceso productivo relacionado con la instalación */
+  actualizarProcesoProductivo(valor: string | number): void {
+    this.update((state) => ({ ...state, procesoProductivo: valor }));
   }
 
   /**

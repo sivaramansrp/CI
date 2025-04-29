@@ -1322,6 +1322,16 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
     this.domiciliosDatos.push(evento);
   }
 
+  /**
+   * Verifica si un campo del formulario no es válido.
+   * @param id Identificador del campo en el formulario.
+   * @returns true si el campo es inválido y ha sido tocado, de lo contrario undefined.
+   */
+  noEsValido(id: string): boolean | undefined {
+    const CONTROL = this.datosGeneralesForm.get(id);
+    return CONTROL?.invalid && CONTROL?.touched;
+  }
+
   /** Se ejecuta al destruir el componente */
   ngOnDestroy(): void {
     this.destroy$.next();
