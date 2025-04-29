@@ -151,3 +151,11 @@ export const ENTIDAD_FEDREATIVE_DATES = 'EntidadFederativaDates';
 * @constant
 */
 export const REPRESENTACION_FEDERALDATES = 'representacionFederalDates';
+
+/**
+ * Texto que describe los requisitos y proporciona información sobre el número temporal de solicitud.
+ * @type {string}
+ * @constant
+ */
+export const TEXTOS_REQUISITOS =
+  'Para continuar con el trámite, debes agregar por lo menos una mercancía.';
