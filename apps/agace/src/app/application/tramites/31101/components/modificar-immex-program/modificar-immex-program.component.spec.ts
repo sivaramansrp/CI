@@ -122,6 +122,11 @@ describe('ModificarImmexProgramComponent', () => {
     ).toBeDefined();
   });
 
+  it('should call conseguirDatosGeneralesCatologo on initialization', () => {
+    const spy = jest.spyOn(solicitudService, 'conseguirDatosGeneralesCatologo');
+    solicitudService.conseguirDatosGeneralesCatologo();
+    expect(spy).toHaveBeenCalled();
+  });
 
   it('should emit modificarImmexValor when aceptarImmexProgram is called', () => {
     const spy = jest.spyOn(component.modificarImmexValor, 'emit');

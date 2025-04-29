@@ -466,6 +466,223 @@ describe('DatosGeneralesDeLaSolicitudComponent', () => {
     expect(component.datosGeneralesForm).toBeDefined();
   });
 
+  it('should call conseguirDatosGeneralesOpcionDeRadio on initialization', () => {
+    solicitudServiceMock.conseguirDatosGeneralesOpcionDeRadio.mockReturnValue(
+      of({
+        tipoDeEndoso: {
+          radioOptions: [
+            {
+              label: 'Aumento de monto',
+              value: 1,
+            },
+            {
+              label: 'Aumento de monto y renovación/ampliación de vigencia',
+              value: 2,
+            },
+            {
+              label: 'Modificación de denominación o razórrsocial',
+              value: 3,
+            },
+            {
+              label: 'Renovación/ampliación de vigencia',
+              value: 4,
+            },
+          ],
+          isRequired: true,
+        },
+        tipoDeGarantia: {
+          radioOptions: [
+            {
+              label: 'Fianza',
+              value: 1,
+            },
+            {
+              label: 'Carta de crédito',
+              value: 2,
+            },
+          ],
+          isRequired: true,
+        },
+        modalidadDeLaGarantia: {
+          radioOptions: [
+            {
+              label: 'Póliza revolvente',
+              value: 1,
+            },
+            {
+              label: 'Póliza individual',
+              value: 2,
+            },
+          ],
+          isRequired: true,
+        },
+        tipoSector: {
+          radioOptions: [
+            {
+              label: 'Sector productivo',
+              value: 1,
+            },
+            {
+              label: 'Sector servicio',
+              value: 2,
+            },
+          ],
+          isRequired: true,
+        },
+        requisitos: {
+          radioOptions: [
+            {
+              label: 'Sí',
+              value: 1,
+            },
+            {
+              label: 'No',
+              value: 2,
+            },
+          ],
+          isRequired: true,
+        },
+      })
+    );
+    solicitudServiceMock.conseguirDatosGeneralesOpcionDeRadio();
+    expect(
+      solicitudServiceMock.conseguirDatosGeneralesOpcionDeRadio
+    ).toHaveBeenCalled();
+  });
+
+  it('should call conseguirDatosGeneralesCatologo on initialization', () => {
+    solicitudServiceMock.conseguirDatosGeneralesCatologo.mockReturnValue(
+      of({
+        concepto: {
+          labelNombre: 'Concepto',
+          required: false,
+          primerOpcion: 'Seleccione un valor',
+          catalogos: [
+            {
+              id: 1,
+              descripcion: 'Reparación, re-trabajo o mantenimiento de',
+            },
+            {
+              id: 2,
+              descripcion: 'Reparación, re-trabajo o mantenimiento de - 1',
+            },
+          ],
+        },
+        tipoDeInversion: {
+          labelNombre: 'Tipo de inversión',
+          required: true,
+          primerOpcion: 'Selecciona un tipo',
+          catalogos: [
+            {
+              id: 1,
+              descripcion: 'Test',
+            },
+            {
+              id: 2,
+              descripcion: 'Test - 1',
+            },
+          ],
+        },
+        enSuCaracterDe: {
+          labelNombre: 'En su caracter de',
+          required: true,
+          primerOpcion: 'Selecciona un tipo',
+          catalogos: [
+            {
+              id: 1,
+              descripcion: 'Accionista',
+            },
+            {
+              id: 2,
+              descripcion: 'Accionista - 1',
+            },
+          ],
+        },
+        nacionalidad: {
+          labelNombre: 'Nacionalidad',
+          required: true,
+          primerOpcion: 'Selecciona un tipo',
+          catalogos: [
+            {
+              id: 1,
+              descripcion: 'AZERBAIJAN (REPUBLICA AZERBAIJANI)',
+            },
+            {
+              id: 2,
+              descripcion: 'AZERBAIJAN (REPUBLICA AZERBAIJANI) - 1',
+            },
+          ],
+        },
+        tipoDePersona: {
+          labelNombre: 'Tipo de Persona',
+          required: true,
+          primerOpcion: 'Selecciona un tipo',
+          catalogos: [
+            {
+              id: 1,
+              descripcion: 'Física',
+            },
+            {
+              id: 2,
+              descripcion: 'Moral',
+            },
+          ],
+        },
+        modalidadDelProgramaIMMEX: {
+          labelNombre:
+            'Seleccione el numero y modalidad del programa I M M E X',
+          required: false,
+          primerOpcion: 'Selecciona un tipo',
+          catalogos: [
+            {
+              id: 1,
+              descripcion: 'Domicilios registrados',
+            },
+            {
+              id: 2,
+              descripcion: '192022 - Autorización Programa Nuevo Industrial',
+            },
+          ],
+        },
+        tipoDeInstalacion: {
+          labelNombre: 'Tipo de instalación',
+          required: true,
+          primerOpcion: 'Selecciona un tipo de instalación',
+          catalogos: [
+            {
+              id: 1,
+              descripcion: 'Planta Productiva',
+            },
+            {
+              id: 2,
+              descripcion: 'Planta Productiva -1',
+            },
+          ],
+        },
+        entidadFederativa: {
+          labelNombre: '',
+          required: true,
+          primerOpcion: 'Selecciona un tipo',
+          catalogos: [
+            {
+              id: 1,
+              descripcion: 'AGUASCALIENTES',
+            },
+            {
+              id: 2,
+              descripcion: 'AGUASCALIENTES -1',
+            },
+          ],
+        },
+      })
+    );
+    solicitudServiceMock.conseguirDatosGeneralesCatologo();
+
+    expect(
+      solicitudServiceMock.conseguirDatosGeneralesCatologo
+    ).toHaveBeenCalled();
+  });
+
   it('should call actualizarTipoDeGarantia when updating tipoDeGarantia', () => {
     const mockEvent = 'test';
     component.actualizarTipoDeGarantia(mockEvent);
