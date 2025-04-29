@@ -270,6 +270,10 @@ export class DatosDeLaSolicitudPlasticaComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
+      this.getObraDeArte()
+    }
+
+   getObraDeArte(): void {   
     this.solicitudService
       .getObraDeArteTabla()
       .pipe(takeUntil(this.destroy$))
