@@ -108,7 +108,7 @@ export class InsumosComponent implements OnInit, OnDestroy {
    * Configura las suscripciones y carga los datos iniciales.
    */
   ngOnInit(): void {
-      const INSUMOS_GUARDADOS = this.servicioDeFormularioService.obtenerTablaInsumos();
+      const INSUMOS_GUARDADOS = this.solicitudDeRegistroTplService.obtenerTablaInsumos();
 
       if (INSUMOS_GUARDADOS && INSUMOS_GUARDADOS.length > 0) {
        
@@ -231,7 +231,7 @@ export class InsumosComponent implements OnInit, OnDestroy {
       this.tablaInsumos.push(NUEVA_FILA);
       this.tablaInsumos = [...this.tablaInsumos];
 
-      this.servicioDeFormularioService.establecerTablaInsumos(this.tablaInsumos);
+      this.solicitudDeRegistroTplService.establecerTablaInsumos(this.tablaInsumos);
     }
   }
 

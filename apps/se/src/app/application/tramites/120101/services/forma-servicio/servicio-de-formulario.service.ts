@@ -1,6 +1,5 @@
 import { FormGroup } from '@angular/forms';
 import { Injectable } from '@angular/core';
-import { InsumosTabla } from '../../models/insumos.model';
 
 /**
  * @Injectable
@@ -108,15 +107,5 @@ removeControl(formName: string, controlName: string): void {
   if (FORMA && FORMA.contains(controlName)) {
     FORMA.removeControl(controlName);
   }
-}
-
-private tablaInsumosTemp: InsumosTabla[] = [];
-
-establecerTablaInsumos(data: InsumosTabla[]): void {
-  this.tablaInsumosTemp = data;
-}
-
-obtenerTablaInsumos(): InsumosTabla[] {
-  return this.tablaInsumosTemp;
 }
 }
