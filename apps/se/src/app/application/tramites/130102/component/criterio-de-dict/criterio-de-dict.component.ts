@@ -105,8 +105,7 @@ export class CriterioDeDictComponent implements OnInit {
    this.tramite130102Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
-        map((seccionState) => {  
-          console.log('Solicitud130102State', seccionState);
+        map((seccionState) => { 
           this.solicitudState = seccionState;
         })
       )
