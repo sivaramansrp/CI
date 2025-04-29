@@ -131,9 +131,6 @@ describe('SolicitantePageComponent', () => {
 
     const alertElement = fixture.nativeElement.querySelector('ng-alert');
     expect(alertElement).toBeTruthy();
-    // expect(alertElement.getAttribute('ng-reflect-contenido')).toBe(
-    //   component.TEXTO_DE_ALERTA
-    // );
   });
 
   it('should render the correct step component based on indice', () => {
