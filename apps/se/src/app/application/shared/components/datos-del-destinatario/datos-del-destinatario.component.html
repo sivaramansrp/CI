@@ -3,7 +3,7 @@
       <div class="row mt-5">
           <ng-titulo titulo="Datos del destinatario"></ng-titulo>
           <div *ngIf="campoDestinatario; else defaultTemplate">
-            <div class="col-md-4 form-group">
+            <div class="col-md-8 form-group">
               <label class="form-label" for="nombres">Nombre(s):</label>
               <input type="text" id="nombres" class="form-control" formControlName="nombres" (change)="setValoresStore('formDatosDelDestinatario','nombres','setFormDatosDelDestinatario')" />
             </div>

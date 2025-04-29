@@ -1,8 +1,11 @@
 import { Catalogo, CatalogoSelectComponent, TituloComponent } from '@libs/shared/data-access-user/src';
-import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { CAMPO_DE_DESTINATARIO } from '../../constantes/modificacion.enum';
+import { CommonModule } from '@angular/common';
 import { MenusDesplegables } from '../../models/modificacion.enum';
 import { Subject } from 'rxjs';
+
 
 
 @Component({
@@ -11,12 +14,22 @@ import { Subject } from 'rxjs';
   imports: [
     TituloComponent,
     ReactiveFormsModule,
-    CatalogoSelectComponent
+    CatalogoSelectComponent,
+    CommonModule
   ],
   templateUrl: './destinatario.component.html',
   styleUrl: './destinatario.component.scss'
 })
-export class DestinatarioComponent implements OnDestroy {
+export class DestinatarioComponent implements OnInit, OnDestroy {
+
+  /**
+   * Identificador del procedimiento asociado al componente.
+   * 
+   * @type {number}
+   * @remarks
+   * Este identificador se utiliza para enlazar el componente con un procedimiento específico.
+   */
+  @Input() idProcedimiento!: number;
 
   /**
    * Indica si el país de destino está habilitado
@@ -104,6 +117,15 @@ export class DestinatarioComponent implements OnDestroy {
   @Output() formaValida: EventEmitter<boolean> = new EventEmitter<boolean>(
     false
   );
+
+  /**
+   * @description Indica si el campo relacionado con el destinatario está activo o no.
+   * @type {boolean}
+   * @default false
+   * @memberof DestinatarioComponent
+   */
+  campoDestinatario = false;
+
   /**
    * Constructor del componente
    * @param {FormBuilder} fb - Servicio para construir formularios reactivos
@@ -129,6 +151,16 @@ export class DestinatarioComponent implements OnDestroy {
     }, 100);
   }
 
+  /**
+   * Método del ciclo de vida ngOnInit. Se ejecuta al inicializar el componente.
+   * 
+   * @remarks
+   * Este método se utiliza para inicializar el estado del componente y realizar configuraciones iniciales.
+   */
+  ngOnInit(): void {
+    this.campoDestinatario = CAMPO_DE_DESTINATARIO.includes(this.idProcedimiento);
+    this.formDestinatario.patchValue(this.datosForm);
+  }
 
   /**
    * Maneja la selección de un país de destino
