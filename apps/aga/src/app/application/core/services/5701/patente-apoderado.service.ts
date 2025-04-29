@@ -3,7 +3,7 @@ import { catchError, map, Observable, throwError } from 'rxjs';
 import { enviroment } from '@libs/shared/data-access-user/src';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { PatenteResponse } from '../../models/5701/Patente.model';
+import { PatenteResponse } from '../../models/5701/patente.model';
 
 @Injectable({
   providedIn: 'root',
@@ -29,7 +29,7 @@ export class PatenteApoderadoService {
    * @param rfcApoderado - El RFC del apoderado.
    * @returns Observable con la lista de patentes asociadas.
    */
-  getListaPatente(rfcApoderado: string): Observable<PatenteResponse> {
+  getListaPatentesApoderado(rfcApoderado: string): Observable<PatenteResponse> {
     const ENDPOINT = `${this.host}`+API_GET_PATENTE_APODERADO.replace(RFC_QUERY, rfcApoderado);
 
     return this.http.get<PatenteResponse>(ENDPOINT).pipe(

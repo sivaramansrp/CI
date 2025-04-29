@@ -268,14 +268,34 @@
     <div formGroupName="despacho">
       <div class="row">
         <div class="col-md-4">
-          <app-catalogo-select [catalogo]="aduanas" formControlName="idAduanaDespacho" [label]="'Aduana'"
-            [required]="true"
-            (change)="setValoresStore(despacho, 'idAduanaDespacho', 'setIdAduanaDespacho')"></app-catalogo-select>
+          <div>
+            <label for="">Aduana:</label>
+            <span class="required">*</span>
+          </div>
+          <select class="form-control" formControlName="idAduanaDespacho" (change)="changeAduana()" >
+            <option
+              *ngFor="let aduana of aduanas"
+              [value]="aduana.clave">
+              {{ aduana.descripcion }}
+            </option>
+          </select>
         </div>
         <div class="col-md-4">
-          <app-catalogo-select [catalogo]="seccionAduanera" formControlName="idSeccionDespacho"
-            [label]="'Sección aduanera'" [required]="false" [isDisabled]="desactivarSelectSeccionAduanera"
-            (change)="changeSeccionAduanera()"></app-catalogo-select>
+          <div>
+            <label for="">Sección aduanera:</label>
+          </div>
+          <select 
+            class="form-control"
+            formControlName="idSeccionDespacho"
+            (change)="changeSeccionAduanera()"
+            [required]="false"
+            [disabled]="desactivarSelectSeccionAduanera">
+            <option
+              *ngFor="let seccion of seccionAduanera"
+              [value]="seccion.clave">
+              {{ seccion.descripcion }}
+            </option>
+          </select>
         </div>
         @if (!tipoDespacho) {
         <div class="col-md-4">

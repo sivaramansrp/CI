@@ -35,6 +35,7 @@ export * from './core/models/260701/certificados-licencias.model';
 export * from './core/models/301/servicios-pantallas.model';
 export * from './core/models/303/secciones.model';
 export * from './core/models/shared/agregar-trasnporte.model'
+export * from './core/models/shared/catalogo.model';
 export * from './core/models/shared/catalogos.model';
 export * from './core/models/shared/components.model';
 export * from './core/models/shared/configuracion-columna.model';

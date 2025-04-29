@@ -1,14 +1,14 @@
-import { API_GET_PATENTE, RFC_QUERY } from '../../../shared/constants/api-constants';
 import { catchError, map, Observable, throwError } from 'rxjs';
+import { API_GET_EMPRESA } from '../../../shared/constants/api-constants';
+import { EmpresaResponse } from '../../models/5701/empresa.model';
 import { enviroment } from '@libs/shared/data-access-user/src';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { PatenteResponse } from '../../models/5701/patente.model';
 
 @Injectable({
   providedIn: 'root',
 })
-export class PatenteService {
+export class PatenteEmpresaService {
 
   private readonly host: string;
 
@@ -26,18 +26,17 @@ export class PatenteService {
    *
    * En algunos escenarios puede devolver más de un registro.
    *
-   * @param rfcSolicitante - El RFC del solicitante.
-   * @returns Observable con la lista de patentes asociadas.
+   * @returns Observable con la lista de empresas
    */
-  getListaPatente(rfcSolicitante: string): Observable<PatenteResponse> {
-    const ENDPOINT = `${this.host}`+API_GET_PATENTE.replace(RFC_QUERY, rfcSolicitante);
+  getListaEmpresas(): Observable<EmpresaResponse> {
+    const ENDPOINT = `${this.host}`+API_GET_EMPRESA;
 
-    return this.http.get<PatenteResponse>(ENDPOINT).pipe(
+    return this.http.get<EmpresaResponse>(ENDPOINT).pipe(
       map((response) => {
         return response;
-      }), 
+      }),
       catchError(() => {
-        const ERROR = new Error(`Ocurrió un error al devolver la información ${ENDPOINT} `); 
+        const ERROR = new Error(`Ocurrió un error al devolver la información ${ENDPOINT} `);
         return throwError(() => ERROR);
       })
     );

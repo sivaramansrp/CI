@@ -20,12 +20,14 @@ import {
   DatosAgregarFormulario,
   FechasService,
   FormulariosService,
+  ICatalogo,
   REGEX_RFC,
   SeccionLibQuery,
   SeccionLibState,
   SeccionLibStore,
   SessionQuery,
   TIPO_SOLICITUD,
+  TipoPersona,
   TipoSolicitudService,
   ValidacionesFormularioService,
 } from '@ng-mf/data-access-user';
@@ -43,13 +45,15 @@ import { Modal } from 'bootstrap';
 import { PatenteApoderadoService } from '../../../../core/services/5701/patente-apoderado.service';
 import { PatenteService } from '../../../../core/services/5701/patente.service';
 import { ServiciosExtraordinariosService } from '../../../../core/services/5701/servicios-extraordinarios.service';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Tramite5701Query } from '../../../../core/queries/tramite5701.query';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import patentes from 'libs/shared/theme/assets/json/5701/patentes.json';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import rfcs from 'libs/shared/theme/assets/json/5701/rfcs.json';
 import { UsuarioState } from '@libs/shared/data-access-user/src/core/estados/usuario.store';
+import { AduanaService } from '../../../../core/services/5701/aduana.service';
+import { PatenteEmpresaService } from '../../../../core/services/5701/patente-empresas.service';
+import { SeccionAduanaService } from '../../../../core/services/5701/seccion-aduanas.service';
 
 @Component({
   selector: 'app-solicitud',
@@ -87,12 +91,12 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy{
   /**
    * Catalogo de aduanas disponibles.
    */
-  aduanas!: Catalogo[];
+  aduanas!: ICatalogo[];
 
   /**
    * Catalogo de secciones aduaneras disponibles.
    */
-  seccionAduanera!: Catalogo[];
+  seccionAduanera!: ICatalogo[];
 
   /**
    * Catalogo de tipos de operación.
@@ -252,6 +256,13 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy{
    */
   private usuarioState!: UsuarioState;
 
+  /**
+   * Bandera para saber el tipo de persona del usuario. 
+   * Por el momento esta bandera está hardcodeada, la información se deberá tomar del store de la aplicación,
+   * en cuanto esa implementación esté realizada, esta línea deberá borrarse.
+   */
+  private tipoPersona: TipoPersona = TipoPersona.FISICA;
+
   constructor(
     private seccionQuery: SeccionLibQuery,
     private seccionStore: SeccionLibStore,
@@ -262,12 +273,15 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy{
     private validacionesService: ValidacionesFormularioService,
     private serviciosExtraordinariosService: ServiciosExtraordinariosService,
     private tipoSolicitudService: TipoSolicitudService,
+    private readonly aduanaService: AduanaService,
     private readonly patenteService: PatenteService,
     private readonly patenteApoderadoService: PatenteApoderadoService,
-    private readonly usuarioQuery: SessionQuery,
+    private readonly patenteEmpresasService: PatenteEmpresaService,
+    private readonly seccionAduanaService: SeccionAduanaService,
   ) { }
 
   ngOnInit(): void {
+    this.validaTipoPersona();
     // Peticiones a las apis
     this.inicializaCatalogos();
 
@@ -299,9 +313,6 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy{
       })
     ).subscribe();
 
-    // Aqui se busca el nro de patente o autorizacion
-    //
-     this.obtenerPatente();
     this.tipoSolicitudSeleccion();
 
     this.desactivarSelectSeccionAduanera = (this.seccionAduanera && this.seccionAduanera.length === 0) ? true : false;
@@ -316,6 +327,13 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy{
     }
 
 
+  }
+
+  private validaTipoPersona(){
+    // TODO: Esta validación debería cambiar y validar contra el valor almacenado en el store
+    if (this.tipoPersona === TipoPersona.FISICA) {
+      this.obtenerPatente();
+    }
   }
 
   /**
@@ -535,21 +553,11 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy{
         })
       );
 
-    const CATALOGO_ADUANAS$ = this.catalogosServices
-      .getCatalogo(CATALOGOS_ID.CAT_ADUANAS)
+    const CATALOGO_ADUANAS$ = this.aduanaService
+      .getListaAduanas()
       .pipe(
         map((resp) => {
-          if (resp.length > 0) {
-            this.aduanas = resp;
-          }
-        })
-      );
-
-    const SECCIONES_ADUANERAS$ = this.catalogosServices
-      .getCatalogoById(CATALOGOS_ID.CAT_SECCION_ADUANAS)
-      .pipe(
-        map((resp) => {
-          this.seccionAduanera = JSON.parse(resp.data);
+          this.aduanas = resp.datos;
         })
       );
 
@@ -575,14 +583,6 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy{
         })
       );
 
-    const RECINTO$ = this.catalogosServices
-      .getCatalogoById(CATALOGOS_ID.CAT_RECINTO)
-      .pipe(
-        map((resp) => {
-          this.recintoCatalogo = JSON.parse(resp.data);
-        })
-      );
-
     const CAT_DESPACHO_LDA$ = this.catalogosServices
       .getCatalogoById(CATALOGOS_ID.CAT_DESPACHO_LDA)
       .pipe(
@@ -604,10 +604,8 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy{
       CAT_TIPO_SOLICITUD$,
       CATALOGO_PAISES$,
       CATALOGO_ADUANAS$,
-      SECCIONES_ADUANERAS$,
       TIPO_OPERACION$,
       TIPO_TRANSPORTE$,
-      RECINTO$,
       CAT_DESPACHO_LDA$,
       CAT_DESPACHO_DD$
     )
@@ -626,7 +624,6 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy{
   private obtenerPatente(): void {
     let patente: string = '';
     this.patenteService.getListaPatente('SAAA980822LP1').pipe(
-      tap(response => response.datos),
       switchMap(pantenteResponse => {
         if (pantenteResponse) {
           patente = pantenteResponse.datos?.patente;
@@ -638,11 +635,24 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy{
           FormulariosService.agregarValorCamposDesactivados(DATOS_PATENTE);
           return of(null);
         }
-        return this.patenteApoderadoService.getListaPatente('SAAA980822LP1').pipe(
-          tap(_ => {
-            this.isApoderado = true;
-          })
-        );
+        return this.patenteApoderadoService.getListaPatentesApoderado('SAAA980822LP1');
+      }),
+      switchMap(patenteApoderadoResponse => {
+        if (patenteApoderadoResponse) {
+          this.isApoderado = true;
+          if (patenteApoderadoResponse.datos.patente.length > 1) {
+            this.masDeUnaPatente = true;
+            return of(null);
+          }
+        }
+        return this.patenteEmpresasService.getListaEmpresas();
+      }),
+      tap(empresaResponse => {
+        if (empresaResponse) {
+          if (empresaResponse.datos.length > 1) {
+            this.masDeUnaEmpresa = true;
+          }
+        }
       }),
       takeUntil(this.destroyNotifier$),
     ).subscribe();
@@ -1458,6 +1468,31 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy{
     }
 
     this.colapsable = (this.solicitudState.fechasSeleccionadas.length > 0 || this.selectRangoDias.length > 0) ? true : false;
+  }
 
+  /**
+   * 
+   */
+  public changeAduana() {
+    const ADUANA = this.despacho.get('idAduanaDespacho')?.value;
+
+    if (ADUANA) {
+      this.desactivarSelectRecinto = true;
+
+      this.seccionAduanaService.getListaSeccionesAduanas().pipe(
+        tap(response => {
+          if (response) {
+            this.seccionAduanera = response.datos;
+          }
+        }),
+        takeUntil(this.destroyNotifier$),
+      ).subscribe();
+
+      this.setValoresStore(
+        this.despacho,
+        'idAduanaDespacho',
+        'setIdAduanaDespacho'
+      )
+    }
   }
 }
