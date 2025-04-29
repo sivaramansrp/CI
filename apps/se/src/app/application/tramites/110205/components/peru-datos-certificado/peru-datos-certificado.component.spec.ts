@@ -1,51 +1,48 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
+import {Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA} from '@angular/core';
+
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { By } from '@angular/platform-browser';
-import { Observable, of as observableOf, throwError } from 'rxjs';
-
-import { Component } from '@angular/core';
-import { CamDatosCertificadoComponent } from './cam-datos-certificado.component';
+import { of as observableOf } from 'rxjs';
+import { PeruDatosCertificadoComponent } from './peru-datos-certificado.component';
 import { FormBuilder } from '@angular/forms';
-import { CamCertificadoService } from '../../services/cam-certificado.service';
-import { camCertificadoStore } from '../../estados/cam-certificado.store';
-import { camCertificadoQuery } from '../../estados/cam-certificado.query';
+import { PeruCertificadoService } from '../../services/peru-certificado.service';
+import { Tramite110205Store } from '../../estados/tramite110205.store';
+import { Tramite110205Query } from '../../estados/tramite110205.query';
 
 @Injectable()
-class MockCamCertificadoService {}
+class MockPeruCertificadoService {}
 
 @Injectable()
-class MockcamCertificadoStore {}
+class MockTramite110205Store {}
 
 @Injectable()
-class MockcamCertificadoQuery {
+class MockTramite110205Query {
   selectCam$ = observableOf({});
   selectmercanciaTabla$ = observableOf({});
   formDatosCertificado$ = observableOf({});
 }
 
-describe('CamDatosCertificadoComponent', () => {
-  let fixture: ComponentFixture<CamDatosCertificadoComponent>;
-  let component: CamDatosCertificadoComponent;
+describe('PeruDatosCertificadoComponent', () => {
+  let fixture: ComponentFixture<PeruDatosCertificadoComponent>;
+  let component: PeruDatosCertificadoComponent;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [ FormsModule, ReactiveFormsModule ],
       declarations: [
-        CamDatosCertificadoComponent,
+        PeruDatosCertificadoComponent,
       ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
         FormBuilder,
-        { provide: CamCertificadoService, useClass: MockCamCertificadoService },
-        { provide: camCertificadoStore, useClass: MockcamCertificadoStore },
-        { provide: camCertificadoQuery, useClass: MockcamCertificadoQuery }
+        { provide: PeruCertificadoService, useClass: MockPeruCertificadoService },
+        { provide: Tramite110205Store, useClass: MockTramite110205Store },
+        { provide: Tramite110205Query, useClass: MockTramite110205Query }
       ]
-    }).overrideComponent(CamDatosCertificadoComponent, {
+    }).overrideComponent(PeruDatosCertificadoComponent, {
 
     }).compileComponents();
-    fixture = TestBed.createComponent(CamDatosCertificadoComponent);
+    fixture = TestBed.createComponent(PeruDatosCertificadoComponent);
     component = fixture.debugElement.componentInstance;
   });
 
@@ -63,9 +60,9 @@ describe('CamDatosCertificadoComponent', () => {
     component.entidadFederativasOpcion = jest.fn();
     component.representacionFederalOpcion = jest.fn();
     component.ngOnInit();
-    // expect(component.idiomOpcion).toHaveBeenCalled();
-    // expect(component.entidadFederativasOpcion).toHaveBeenCalled();
-    // expect(component.representacionFederalOpcion).toHaveBeenCalled();
+    expect(component.idiomOpcion).toHaveBeenCalled();
+    expect(component.entidadFederativasOpcion).toHaveBeenCalled();
+    expect(component.representacionFederalOpcion).toHaveBeenCalled();
   });
 
 });

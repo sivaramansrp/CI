@@ -405,9 +405,21 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Método para manejar la selección de una mercancía en la tabla.
+   * 
+   * @param evento - Objeto de tipo `MercanciaTabla` que representa la mercancía seleccionada.
+   * 
+   * @command Este método actualiza la propiedad `mercanciaDatosSeleccionada` con la mercancía seleccionada.
+   */
   obtenerSeleccionadoMercancia(evento: MercanciaTabla): void {        
     this.mercanciaDatosSeleccionada = [evento];
   }
+  /**
+   * @method mercanciaAgregarSeleccionada
+   * @description Muestra un modal utilizando la instancia de `Modal` si el elemento modal está disponible.
+   * @command Abre el modal para agregar una mercancía seleccionada.
+   */
   mercanciaAgregarSeleccionada(): void {
     if (this.modalElements?.nativeElement) {
       const MODAL_INSTANCE = new Modal(this.modalElements.nativeElement);

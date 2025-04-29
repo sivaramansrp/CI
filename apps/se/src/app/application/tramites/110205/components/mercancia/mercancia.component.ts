@@ -1,4 +1,4 @@
-import { Catalogo, InputFecha, SeccionLibQuery, SeccionLibState, SeccionLibStore } from '@libs/shared/data-access-user/src';
+import { Catalogo, InputFecha, SeccionLibQuery, SeccionLibState } from '@libs/shared/data-access-user/src';
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject, delay, map, of, takeUntil } from 'rxjs';
@@ -114,7 +114,6 @@ export class MercanciaComponent implements OnInit, OnDestroy {
     private peruCertificadoService: PeruCertificadoService,
     private store: Tramite110205Store,
     private query: Tramite110205Query,
-    private seccionStore: SeccionLibStore,
     private seccionQuery: SeccionLibQuery
   ) {}
 

@@ -33,21 +33,21 @@ export class Tramite110205Query extends Query<Tramite110205State> {
     return state.formCertificado;
   });
 
-    /**
-   * @descripcion
-   * Observable que selecciona los datos del formulario de certificado.
-   */
-    formulario$ = this.select((state) => {
-      return state.formulario;
-    });
+  /**
+ * @descripcion
+ * Observable que selecciona los datos del formulario de certificado.
+ */
+  formulario$ = this.select((state) => {
+    return state.formulario;
+  });
 
-    /**
-   * @descripcion
-   *  Observable que selecciona los datos del formulario de certificado.
-   */ 
-    agregarDatosProductorFormulario$ = this.select((state) => {
-      return state.agregarDatosProductorFormulario;
-    });
+  /**
+ * @descripcion
+ *  Observable que selecciona los datos del formulario de certificado.
+ */
+  agregarDatosProductorFormulario$ = this.select((state) => {
+    return state.agregarDatosProductorFormulario;
+  });
 
   /**
    * @descripcion
@@ -65,6 +65,13 @@ export class Tramite110205Query extends Query<Tramite110205State> {
     return state.formDatosDelDestinatario;
   });
 
+  /**
+   * Observable que selecciona la propiedad `formExportor` del estado.
+   * Esto se puede usar para recuperar el estado actual de `formExportor`
+   * en la aplicación.
+   *
+   * @observable
+   */
   selectFormExportador$ = this.select((state) => {
     return state.formExportor;
   });

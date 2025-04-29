@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { SeccionLibQuery, SeccionLibState, SeccionLibStore } from '@libs/shared/data-access-user/src';
+import { SeccionLibQuery, SeccionLibState } from '@libs/shared/data-access-user/src';
 import { Subject, map, takeUntil } from 'rxjs';
 import { Tramite110205State, Tramite110205Store } from '../../estados/tramite110205.store';
 import { Tramite110205Query } from '../../estados/tramite110205.query';
@@ -87,7 +87,6 @@ export class PeruDestinatarioComponent implements OnInit, OnDestroy {
     private readonly fb: FormBuilder,
     private store: Tramite110205Store,
     private query: Tramite110205Query,
-    private seccionStore: SeccionLibStore,
     private seccionQuery: SeccionLibQuery
   ) {
     this.query.selectFormDatosDelDestinatario$

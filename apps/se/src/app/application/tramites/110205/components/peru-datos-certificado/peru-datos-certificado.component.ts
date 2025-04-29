@@ -43,6 +43,14 @@ export class PeruDatosCertificadoComponent implements OnInit, OnDestroy {
    */
   representacionFederal: Catalogo[] = [];
 
+  /**
+   * @private
+   * Sujeto utilizado como notificador para destruir suscripciones y evitar fugas de memoria.
+   * Este observable se completa cuando el componente se destruye.
+   * 
+   * @command Utilice `this.destroyNotifier$.next()` seguido de `this.destroyNotifier$.complete()` 
+   * en el método `ngOnDestroy` para liberar recursos.
+   */
   private destroyNotifier$: Subject<void> = new Subject();
 
   /**

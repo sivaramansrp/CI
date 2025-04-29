@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { Catalogo, SeccionLibQuery, SeccionLibState, SeccionLibStore } from '@libs/shared/data-access-user/src';
+import { Catalogo, SeccionLibQuery, SeccionLibState } from '@libs/shared/data-access-user/src';
 import { Observable, Subject, delay, map, of, takeUntil } from 'rxjs';
 import { Tramite110205State, Tramite110205Store } from '../../estados/tramite110205.store';
 import { FormBuilder } from '@angular/forms';
@@ -125,7 +125,6 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
     private peruCertificadoService: PeruCertificadoService,
     private store: Tramite110205Store,
     private query: Tramite110205Query,
-    private seccionStore: SeccionLibStore,
     private seccionQuery: SeccionLibQuery
   ) {
     this.query.formCertificado$
@@ -236,15 +235,6 @@ setValoresStore(event: { formGroupName: string, campo: string, valor: undefined,
         console.error('Error al obtener los datos:', error);
       },
     });
-  }
-
-  /**
-   * @descripcion
-   * Actualiza el almacén con los datos del formulario.
-   * @param e - Los datos del formulario a almacenar.
-   */
-  obtenerDatosFormulario(e: unknown): void {
-    this.store.setFormCertificado(e as { [key: string]: string | number | boolean | object | undefined });
   }
 
   /**
