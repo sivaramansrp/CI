@@ -1,7 +1,7 @@
 import { BENEFICIOS_TABLA, BODEGAS_TABLA, CAFE_EXPORTADORES_TABLA, RADIO_OPCION, REGIONES_TABLA } from '../../constants/constants.enum';
 import { BeneficiosData, BodegasData, CafeExportadoresData, RegionesData } from '../../models/filadata.model';
 import { InputRadioComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
-import { ReplaySubject, Subscription, map, takeUntil } from 'rxjs';
+import { ReplaySubject, map, takeUntil } from 'rxjs';
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
@@ -111,7 +111,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
  * 
  * @param event Evento que se dispara al cambiar la selección del radio button.
  */
-handleProductorDeCafeChange(event: any): void {
+handleProductorDeCafeChange(_event: Event): void {
   const VALUE = this.datosSolicitudForma.get('productorDeCafe')?.value; 
   const CLAVE_DEL_PADRON_CONTROL = this.datosSolicitudForma.get('claveDelPadron');
 
