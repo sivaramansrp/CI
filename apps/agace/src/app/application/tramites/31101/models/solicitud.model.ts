@@ -62,22 +62,24 @@ export interface DatosPorGarantia {
   importeTotal: string;
 }
 
+export interface RadioOptions {
+  /** Etiqueta visible de la opción */
+  label: string;
+
+  /** Valor asociado a la opción */
+  value: string | number;
+
+  /** Texto auxiliar u orientativo */
+  hint?: string;
+}
+
 /**
  * Representa un grupo de opciones de tipo radio.
  */
 
 export interface InputRadio {
   /** Opciones disponibles para seleccionar */
-  radioOptions: {
-    /** Etiqueta visible de la opción */
-    label: string;
-
-    /** Valor asociado a la opción */
-    value: string | number;
-
-    /** Texto auxiliar u orientativo */
-    hint?: string;
-  }[];
+  radioOptions: RadioOptions[];
 
   /** Indica si la selección es obligatoria */
   isRequired: boolean;
@@ -283,208 +285,6 @@ export interface Domicilios {
   observaciones?: string;
 }
 
-/**
- * Representa los datos generales proporcionados en una solicitud.
- */
-// export interface DatosGeneralesDeLaSolicitudDatos {
-//   /** Tipo de endoso de la solicitud */
-//   tipoDeEndoso: string;
-
-//   /** Tipo de garantía de la solicitud */
-//   tipoDeGarantia: number;
-
-//   /** Modalidad de la garantía */
-//   modalidadDeLaGarantia: number;
-
-//   /** Tipo de sector relacionado con la solicitud */
-//   tipoSector: string;
-
-//   /** Concepto relacionado con la solicitud */
-//   concepto: number;
-
-//   /** Valor o campo específico relacionado con la solicitud */
-//   '3500': number;
-
-//   /** Otro campo específico (3501) de la solicitud */
-//   '3501': number;
-
-//   /** Otro campo específico (3502) de la solicitud */
-//   '3502': number;
-
-//   /** RFC del solicitante */
-//   datosGeneralesRFC: string;
-
-//   /** Otro campo específico (3503) de la solicitud */
-//   '3503': number;
-
-//   /** Otro campo específico (3504) de la solicitud */
-//   '3504': number;
-
-//   /** Otro campo específico (3505) de la solicitud */
-//   '3505': number;
-
-//   /** Otro campo específico (3506) de la solicitud */
-//   '3506': number;
-
-//   /** Otro campo específico (3507) de la solicitud */
-//   '3507': number;
-
-//   /** Otro campo específico (3508) de la solicitud */
-//   '3508': number;
-
-//   /** Otro campo específico (3509) de la solicitud */
-//   '3509': number;
-
-//   /** Otro campo específico (3511) de la solicitud */
-//   '3511': number;
-
-//   /** Otro campo específico (3512) de la solicitud */
-//   '3512': number;
-
-//   /** Otro campo específico (3513) de la solicitud */
-//   '3513': number;
-
-//   /** Texto adicional (1) para la solicitud */
-//   textoGenerico1: string;
-
-//   /** Texto adicional (2) para la solicitud */
-//   textoGenerico2: string;
-
-//   /** Otro campo específico (3514) de la solicitud */
-//   '3514': number;
-
-//   /** Otro campo específico (3515) de la solicitud */
-//   '3515': number;
-
-//   /** Otro campo específico (3516) de la solicitud */
-//   '3516': number;
-
-//   /** Texto adicional (3) para la solicitud */
-//   textoGenerico3: string;
-
-//   /** Otro campo específico (3517) de la solicitud */
-//   '3517': number;
-
-//   /** Otro campo específico (3518) de la solicitud */
-//   '3518': number;
-
-//   /** Otro campo específico (3519) de la solicitud */
-//   '3519': number;
-
-//   /** Otro campo específico (3520) de la solicitud */
-//   '3520': number;
-
-//   /** Tipo de inversión para la solicitud */
-//   tipoInversion: number;
-
-//   /** Cantidad de la inversión */
-//   cantidadInversion: string;
-
-//   /** Descripción de la inversión */
-//   descInversion: string;
-
-//   /** Otro campo específico (3521) de la solicitud */
-//   '3521': number;
-
-//   /** Otro campo específico (3522) de la solicitud */
-//   '3522': number;
-
-//   /** Clave de enumeración D0 */
-//   claveEnumeracionD0: string;
-
-//   /** Clave de enumeración D1 */
-//   claveEnumeracionD1: string;
-
-//   /** Clave de enumeración D2 */
-//   claveEnumeracionD2: string;
-
-//   /** Clave de enumeración D3 */
-//   claveEnumeracionD3: string;
-
-//   /** Clave de enumeración H */
-//   claveEnumeracionH: string;
-
-//   /** Texto adicional (4) para la solicitud */
-//   textoGenerico4: string;
-
-//   /** Texto adicional (5) para la solicitud */
-//   textoGenerico5: string;
-
-//   /** Otro campo específico (3523) de la solicitud */
-//   '3523': number;
-
-//   /** Otro campo específico (3528) de la solicitud */
-//   '3528': number;
-
-//   /** Otro campo específico (3529) de la solicitud */
-//   '3529': number;
-
-//   /** Texto adicional (6) para la solicitud */
-//   textoGenerico6: string;
-
-//   /** Texto adicional (7) para la solicitud */
-//   textoGenerico7: string;
-
-//   /** Otro campo específico (3530) de la solicitud */
-//   '3530': number;
-
-//   /** Otro campo específico (3531) de la solicitud */
-//   '3531': number;
-
-//   /** Texto adicional (9) para la solicitud */
-//   textoGenerico9: string;
-
-//   /** Otro campo específico (10) de la solicitud */
-//   textoGenerico10: number;
-
-//   /** Otro campo específico (11) de la solicitud */
-//   textoGenerico11: number;
-
-//   /** Otro campo específico (12) de la solicitud */
-//   textoGenerico12: number;
-
-//   /** Otro campo específico (13) de la solicitud */
-//   textoGenerico13: number;
-
-//   /** Otro campo específico (14) de la solicitud */
-//   textoGenerico14: number;
-
-//   /** Otro campo específico (15) de la solicitud */
-//   textoGenerico15: number;
-
-//   /** Otro campo específico (16) de la solicitud */
-//   textoGenerico16: number;
-
-//   /** Otro campo específico (17) de la solicitud */
-//   textoGenerico17: number;
-
-//   /** Otro campo específico (18) de la solicitud */
-//   textoGenerico18: number;
-
-//   /** Otro campo específico (19) de la solicitud */
-//   textoGenerico19: number;
-
-//   /** Otro campo específico (20) de la solicitud */
-//   textoGenerico20: number;
-
-//   /** Otro campo específico (21) de la solicitud */
-//   textoGenerico21: number;
-
-//   /** Otro campo específico (22) de la solicitud */
-//   textoGenerico22: number;
-
-//   /** Otro campo específico (23) de la solicitud */
-//   textoGenerico23: number;
-
-//   /** Otro campo específico (24) de la solicitud */
-//   textoGenerico24: number;
-
-//   /** Alerta relacionada con la solicitud (1) */
-//   alerta1: boolean;
-
-//   /** Alerta relacionada con la solicitud (2) */
-//   alerta2: boolean;
-// }
 
 export interface EntidadFederativa {
   instalacionPrincipal?: string;

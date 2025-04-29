@@ -13,6 +13,7 @@ import { InputRadioComponent } from '@libs/shared/data-access-user/src';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Output } from '@angular/core';
+import { RadioOptions } from '../../models/solicitud.model';
 import { ReactiveFormsModule } from '@angular/forms';
 import { SeccionSociosIC } from '../../models/solicitud.model';
 import { Solicitud31101Query } from '../../estados/solicitud31101.query';
@@ -220,14 +221,6 @@ export class MiembroDeLaEmpresaComponent implements OnInit, OnDestroy {
     this.solicitud31101Store.actualizarMiembroRFC(VALOR);
   }
 
-  // actualizarMiembroRegistroFederal(evento: string): void {
-  //   this.solicitud31101Store.actualizarMiembroCaracterDe(evento);
-  // }
-
-  // actualizarMiembroNombreCompleto(evento: string): void {
-  //   this.solicitud31101Store.actualizarMiembroCaracterDe(evento);
-  // }
-
   actualizarMiembroTipoPersonaMuestra(evento: Catalogo): void {
     this.solicitud31101Store.actualizarMiembroTipoPersonaMuestra(evento.id);
     this.seleccionarTipoDePersona = evento.id;
@@ -296,12 +289,12 @@ export class MiembroDeLaEmpresaComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.sinoOpcion.radioOptions.forEach((element: any) => {
+    this.sinoOpcion.radioOptions.forEach((element: RadioOptions) => {
       if (
-        element.id ===
+        element.value ===
         this.miembroEmpresaForm.get('miembroTributarMexico')?.value
       ) {
-        TRIBUTAR_MEXICO_VALOR = element.descripcion;
+        TRIBUTAR_MEXICO_VALOR = element.label;
       }
     });
 
