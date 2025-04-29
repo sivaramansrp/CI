@@ -26,10 +26,9 @@
     
       <div [ngStyle]="{ display: indice === 1 ? 'block' : 'none' }">
         <solicitante [tabindex]="1"></solicitante>
-      
       </div>
       <div [ngStyle]="{ display: indice === 2 ? 'block' : 'none' }">
-        <app-datos-del-solicitud-modificacion  [showAifaCheckbox]="true" [showPreFillingOptions]="false"></app-datos-del-solicitud-modificacion>
+        <app-datos-del-solicitud-modificacion></app-datos-del-solicitud-modificacion>
       </div>
       <div [ngStyle]="{ display: indice === 3 ? 'block' : 'none' }">
         <app-terceros-relacionados-fab-seccion></app-terceros-relacionados-fab-seccion>

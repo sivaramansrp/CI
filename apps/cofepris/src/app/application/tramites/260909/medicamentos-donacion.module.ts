@@ -15,7 +15,6 @@ import { provideHttpClient } from '@angular/common/http';
 
 
 import { DatosDeLaSolicitudComponent } from '../../shared/components/datos-de-la-solicitud/datos-de-la-solicitud.component';
-import { DatosDelSolicitudModificacionComponent } from '../../shared/components/datos-del-solicitud-modificacion/datos-del-solicitud-modificacion.component';
 import { MedicamentosDonacionComponent } from './pages/medicamentos-donacion/medicamentos-donacion.component';
 
 
@@ -31,6 +30,7 @@ import { ToastrService } from 'ngx-toastr';
 import { TercerosRelacionadosFabSeccionComponent } from '../../shared/components/terceros-relacionados-fab-seccion/terceros-relacionados-fab-seccion.component';
 
 import { TramitesAsociadosSeccionComponent } from '../../shared/components/tramites-asociados-seccion/tramites-asociados-seccion.component';
+import { DatosDelSolicitudModificacionComponent } from './components/datos-del-solicitud-modificacion/datos-del-solicitud-modificacion.component';
 /*
   * Modulo para la modificación de permisos de importación de tratamientos.
   * Este módulo contiene los componentes y servicios necesarios para la funcionalidad de modificación de permisos.
