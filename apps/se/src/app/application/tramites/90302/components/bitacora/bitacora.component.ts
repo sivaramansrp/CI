@@ -1,11 +1,11 @@
-import { OnDestroy, OnInit } from '@angular/core';
-import { takeUntil } from 'rxjs/operators';
-import { AmpliacionServiciosService } from '../../services/ampliacion-servicios.service';
+import { Bitacora,MercanciasAProducir, Plantas,ProductorIndirecto,Sector} from "../../models/datos-info.model";
 import { CONFIGURACION_BITCORA, CONFIGURACION_MERCANCIAS_A_PRODUCIR, CONFIGURACION_PLANTAS, CONFIGURACION_PRODUCTOR_INDIRECTO,CONFIGURACION_SECTOR } from "../../constantes/modificacion.constants";
 import { Component,Input } from '@angular/core';
+import { OnDestroy, OnInit } from '@angular/core';
+import { AmpliacionServiciosService } from '../../services/ampliacion-servicios.service';
 import { ConfiguracionColumna } from '../../models/configuracion-columna.model';
-import { Bitacora,MercanciasAProducir, Plantas,ProductorIndirecto,Sector} from "../../models/datos-info.model";
 import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 
 @Component({
