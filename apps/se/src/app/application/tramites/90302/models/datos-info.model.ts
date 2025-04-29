@@ -9,182 +9,9 @@
  * importaciones, servicios y respuestas de API en el módulo de ampliación de servicios.
  */
 
-/**
- * Interfaz que representa un sector.
- * @export
- * @interface Sector
- */
-export interface Sector {
-  /**
-   * Descripción del sector.
-   * @property {string} [descripcion]
-   */
-  descripcion?: string;
 
-  /**
-   * Descripción detallada del sector.
-   * @property {string} [descripcionSector]
-   */
-  descripcionSector?: string;
-}
 
-/**
- * Interfaz que representa una fracción arancelaria.
- * @export
- * @interface Arancelaria
- */
-export interface Arancelaria {
-  /**
-   * Número de fracción.
-   * @property {string} fraccion
-   */
-  fraccion: string;
 
-  /**
-   * Fracción arancelaria.
-   * @property {string} fraccionArancelaria
-   */
-  fraccionArancelaria: string;
-
-  /**
-   * Descripción comercial de la fracción.
-   * @property {string} descripcionComercial
-   */
-  descripcionComercial: string;
-
-  /**
-   * Información del Anexo II.
-   * @property {string} anexoII
-   */
-  anexoII: string;
-
-  /**
-   * Tipo de fracción.
-   * @property {string} tipo
-   */
-  tipo: string;
-
-  /**
-   * Unidad de medida de la fracción.
-   * @property {string} umt
-   */
-  umt: string;
-
-  /**
-   * Categoría de la fracción.
-   * @property {string} categoria
-   */
-  categoria: string;
-
-  /**
-   * Valor mensual de la fracción.
-   * @property {string} valorMensual
-   */
-  valorMensual: string;
-
-  /**
-   * Valor anual de la fracción.
-   * @property {string} valorAnual
-   */
-  valorAnual: string;
-
-  /**
-   * Volumen mensual de la fracción.
-   * @property {string} volumenrMensual
-   */
-  volumenrMensual: string;
-
-  /**
-   * Volumen anual de la fracción.
-   * @property {string} volumenAnual
-   */
-  volumenAnual: string;
-}
-
-/**
- * Interfaz que representa una fracción arancelaria de importación.
- * @export
- * @interface ArancelariaImportacion
- */
-export interface ArancelariaImportacion {
-  /**
-   * Número de fracción.
-   * @property {string} fraccion
-   */
-  fraccion: string;
-
-  /**
-   * Fracción arancelaria del producto de exportación.
-   * @property {string} fraccionArancelaria
-   */
-  fraccionArancelaria: string;
-
-  /**
-   * Descripción comercial del producto de exportación.
-   * @property {string} descripcionComercial
-   */
-  descripcionComercial: string;
-
-  /**
-   * Fracción arancelaria de la mercancía de importación.
-   * @property {string} fraccionArancelariaImportacion
-   */
-  fraccionArancelariaImportacion: string;
-
-  /**
-   * Descripción comercial de la mercancía de importación.
-   * @property {string} descripcionComercialImportacion
-   */
-  descripcionComercialImportacion: string;
-
-  /**
-   * Información del Anexo II.
-   * @property {string} anexoII
-   */
-  anexoII: string;
-
-  /**
-   * Tipo de fracción.
-   * @property {string} tipo
-   */
-  tipo: string;
-
-  /**
-   * Unidad de medida de la fracción.
-   * @property {string} umt
-   */
-  umt: string;
-
-  /**
-   * Categoría de la fracción.
-   * @property {string} categoria
-   */
-  categoria: string;
-
-  /**
-   * Valor mensual de la fracción.
-   * @property {string} valorMensual
-   */
-  valorMensual: string;
-
-  /**
-   * Valor anual de la fracción.
-   * @property {string} valorAnual
-   */
-  valorAnual: string;
-
-  /**
-   * Volumen mensual de la fracción.
-   * @property {string} volumenrMensual
-   */
-  volumenrMensual: string;
-
-  /**
-   * Volumen anual de la fracción.
-   * @property {string} volumenAnual
-   */
-  volumenAnual: string;
-}
 
 /**
  * Interfaz que representa la respuesta de datos de una API.
@@ -354,16 +181,7 @@ export interface MercanciasAProducir {
   claveSector: string;
   estatus: string;
 }
-
-/**
- * Representa la información del sector en el modelo de datos.
- * 
- * @interface Sector1
- * @property {string} listaSectores - Lista de sectores asociados.
- * @property {string} claveSector - Clave única que identifica el sector.
- * @property {string} estatus - Estado o estatus del sector.
- */
-export interface Sector1 {
+export interface Sector {
   listaSectores: string;
   claveSector: string;
   estatus: string;
@@ -450,7 +268,7 @@ export interface MercanciasRespuesta {
  */
 export interface SectorRespuesta {
   code: number;
-  data: Sector1[];
+  data: Sector[];
   message: string;
 }
 

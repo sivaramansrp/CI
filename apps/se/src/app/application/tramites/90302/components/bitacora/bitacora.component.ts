@@ -1,43 +1,12 @@
-/**
- * @fileoverview
- * El `Ampliacion3RsComponent` es un componente de Angular diseñado para gestionar la funcionalidad del módulo "Ampliación de Servicios".
- * Maneja formularios reactivos, catálogos y la interacción con el estado para la gestión de datos relacionados con sectores y servicios.
- *
- * @module Ampliacion3RsComponent
- * @description
- * Este componente proporciona funcionalidad para la ampliación de servicios, incluyendo la inicialización de formularios,
- * la obtención de datos y la interacción con el estado para la gestión de sectores y reglas.
- */
-import {
-  CONFIGURACION_BITCORA,
-  CONFIGURACION_MERCANCIAS_A_PRODUCIR,
-  CONFIGURACION_PLANTAS,
-  CONFIGURACION_PRODUCTOR_INDIRECTO,
-  CONFIGURACION_SECTOR,
-  CONFIGURACION_SECTOR1,
-} from '../../constantes/modificacion.constants';
-import { Catalogo, TablaSeleccion } from '@ng-mf/data-access-user';
-
-import {
-  Bitacora,
-  MercanciasAProducir,
-  Plantas,
-  ProductorIndirecto,
-  Sector1,
-} from '../../models/datos-info.model';
-import { Component, Input } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { Bitacora,MercanciasAProducir, Plantas,ProductorIndirecto,Sector} from "../../models/datos-info.model";
+import { CONFIGURACION_BITCORA, CONFIGURACION_MERCANCIAS_A_PRODUCIR, CONFIGURACION_PLANTAS, CONFIGURACION_PRODUCTOR_INDIRECTO,CONFIGURACION_SECTOR } from "../../constantes/modificacion.constants";
+import { Component,Input } from '@angular/core';
 import { OnDestroy, OnInit } from '@angular/core';
-import { AmpliacionServiciosQuery } from '../../estados/tramite90302.query';
 import { AmpliacionServiciosService } from '../../services/ampliacion-servicios.service';
-import { AmpliacionServiciosState } from '../../estados/tramite90302.store';
 import { ConfiguracionColumna } from '../../models/configuracion-columna.model';
-import { HttpClient } from '@angular/common/http';
-import { Sector } from '../../models/datos-info.model';
+import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
-import { Subject } from 'rxjs';
-import { Tramite90302Store } from '../../estados/tramite90302.store';
 
 @Component({
   selector: 'app-bitacora',
@@ -45,37 +14,10 @@ import { Tramite90302Store } from '../../estados/tramite90302.store';
   styleUrl: './bitacora.component.scss',
 })
 export class BitacoraComponent implements OnInit, OnDestroy {
-  /**
-   * Indica si una regla ha sido seleccionada.
-   * @property {boolean} isSelectedRegla
-   */
-  isSelectedRegla: boolean = false;
-
-  @Input() esDeSolicitante: boolean = false;
-  /**
-   * Lista de sectores recibidos.
-   * @property {Sector[]} recibioSector
-   */
-  recibioSector: Sector[] = [];
-
-  /**
-   * Formulario reactivo para la información de registro.
-   * @property {FormGroup} formularioInfoRegistro
-   */
-  formularioInfoRegistro!: FormGroup;
-
-  /**
-   * Tipo de selección de tabla (checkbox).
-   * @property {TablaSeleccion} tablaSeleccion
-   */
-  tablaSeleccion: TablaSeleccion = TablaSeleccion.CHECKBOX;
-
-  /**
-   * Configuración de la tabla para sectores.
-   * @property {ConfiguracionColumna<Sector>[]} configuracionTablaSector
-   */
-  configuracionTablaSector: ConfiguracionColumna<Sector>[] =
-    CONFIGURACION_SECTOR;
+ 
+  
+@Input() esDeSolicitante: boolean = false; 
+  
 
   /**
    * @variable configuracionTablaBitacora
@@ -100,40 +42,11 @@ export class BitacoraComponent implements OnInit, OnDestroy {
   configuracionTablaMercancias: ConfiguracionColumna<MercanciasAProducir>[] =
     CONFIGURACION_MERCANCIAS_A_PRODUCIR;
 
-  /**
-   * @description Configuración de la tabla para mostrar las plantas.
-   * Esta propiedad utiliza una configuración predefinida que se encuentra en `CONFIGURACION_PLANTAS`.
-   *
-   * @type {ConfiguracionColumna<Plantas>[]} - Arreglo de configuraciones de columnas específicas para las plantas.
-   */
-  configuracionTablaPlantas: ConfiguracionColumna<Plantas>[] =
-    CONFIGURACION_PLANTAS;
+  configuracionTablaPlantas: ConfiguracionColumna<Plantas>[] = CONFIGURACION_PLANTAS;
+  configuracionTablaProductor: ConfiguracionColumna<ProductorIndirecto>[] = CONFIGURACION_PRODUCTOR_INDIRECTO;
+  configuracionTablaSector: ConfiguracionColumna<Sector>[] = CONFIGURACION_SECTOR;
 
-  /**
-   * @var configuracionTablaProductor
-   * @type {ConfiguracionColumna<ProductorIndirecto>[]}
-   * @description Configuración de la tabla para los productores indirectos.
-   * Contiene las columnas y sus configuraciones específicas definidas en `CONFIGURACION_PRODUCTOR_INDIRECTO`.
-   * @see CONFIGURACION_PRODUCTOR_INDIRECTO
-   */
-  configuracionTablaProductor: ConfiguracionColumna<ProductorIndirecto>[] =
-    CONFIGURACION_PRODUCTOR_INDIRECTO;
-
-  /**
-   * @variable configuracionTablaSector1
-   * @type {ConfiguracionColumna<Sector1>[]}
-   * @description Configuración de la tabla para el sector 1. Este arreglo contiene las columnas
-   * definidas para mostrar los datos específicos del sector 1 en la tabla.
-   * @see CONFIGURACION_SECTOR1 - Configuración predeterminada de las columnas para el sector 1.
-   */
-  configuracionTablaSector1: ConfiguracionColumna<Sector1>[] =
-    CONFIGURACION_SECTOR1;
-
-  /**
-   * Lista de datos de sectores.
-   * @property {Sector[]} datosSector
-   */
-  datosSector: Sector[] = [];
+  
 
   /**
    * @property {Bitacora[]} datosBitacora
@@ -164,44 +77,8 @@ export class BitacoraComponent implements OnInit, OnDestroy {
    * con los productores indirectos en el componente de bitácora.
    */
   datosProductor: ProductorIndirecto[] = [];
+  datosSector: Sector[] = [];
 
-  /**
-   * @name datosSector1
-   * @type {Sector1[]}
-   * @description Arreglo que contiene los datos relacionados con el Sector 1.
-   * @memberof BitacoraComponent
-   */
-  datosSector1: Sector1[] = [];
-
-  /**
-   * Lista de domicilios seleccionados.
-   * @property {Sector[]} domiciliosSeleccionados
-   */
-  domiciliosSeleccionados: Sector[] = [];
-
-  /**
-   * Formulario reactivo para datos adicionales.
-   * @property {FormGroup} forma
-   */
-  forma!: FormGroup;
-
-  /**
-   * Lista de reglas seleccionadas.
-   * @property {Catalogo[]} reglaSeleccionada
-   */
-  reglaSeleccionada!: Catalogo[];
-
-  /**
-   * Lista desplegable de sectores.
-   * @property {Catalogo[]} sectorDesplegable
-   */
-  sectorDesplegable!: Catalogo[];
-
-  /**
-   * Estado actual del trámite.
-   * @property {AmpliacionServiciosState} tramiteState
-   */
-  tramiteState: AmpliacionServiciosState = {} as AmpliacionServiciosState;
 
   /**
    * Notificador para gestionar la destrucción o desuscripción de observables.
@@ -217,13 +94,9 @@ export class BitacoraComponent implements OnInit, OnDestroy {
    * @param {HttpClient} httpServicios - Servicio HTTP para realizar peticiones.
    */
   constructor(
-    private fb: FormBuilder,
     private ampliacionServiciosService: AmpliacionServiciosService,
-    private ampliacionServiciosQuery: AmpliacionServiciosQuery,
-    private tramite80206Store: Tramite90302Store,
-    private readonly httpServicios: HttpClient
   ) {
-    this.inicializarFormularioInfoRegistro();
+    // No se necesita lógica de inicialización adicional.
   }
 
   /**
@@ -348,44 +221,22 @@ export class BitacoraComponent implements OnInit, OnDestroy {
    * @throws {Error} Si el código de respuesta no es 200, no se realiza ninguna acción.
    */
   getSectoresProsec(): void {
-    this.ampliacionServiciosService
-      .getSectoresProsec()
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((resp) => {
-        if (resp.code === 200) {
-          const RESPONSE = resp.data;
-          this.datosSector1 = RESPONSE;
-        }
-      });
-  }
-
-  /**
-   * Inicializa el formulario de información de registro.
-   * @method inicializarFormularioInfoRegistro
-   */
-  inicializarFormularioInfoRegistro(): void {
-    this.formularioInfoRegistro = this.fb.group({
-      seleccionaLaModalidad: [{ value: '', disabled: true }],
-      seleccionarRegla: [{ value: '', disabled: false }],
-      sector: [{ value: '', disabled: false }],
+    this.ampliacionServiciosService.getSectoresProsec()
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe((resp) => {
+      if (resp.code === 200) {
+        const RESPONSE = resp.data;
+        this.datosSector = RESPONSE;
+      }
     });
   }
-
-  /**
-   * Actualiza la lista de domicilios seleccionados.
-   * @method seleccionarDomicilios
-   * @param {Sector[]} domicilios - Domicilios seleccionados.
-   */
-  seleccionarDomicilios(domicilios: Sector[]): void {
-    this.domiciliosSeleccionados = [...domicilios];
-  }
-
   /**
    * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
    * Limpia las suscripciones.
    * @method ngOnDestroy
    */
   ngOnDestroy(): void {
+    
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }

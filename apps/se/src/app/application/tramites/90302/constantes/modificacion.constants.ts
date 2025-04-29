@@ -16,7 +16,6 @@ import {
   Plantas,
   ProductorIndirecto,
   Sector,
-  Sector1,
 } from '../models/datos-info.model';
 
 /**
@@ -44,34 +43,6 @@ export const PASOS = [
   },
 ];
 
-/**
- * Configuración de la tabla para sectores.
- * @constant {Array<Object>} CONFIGURACION_SECTOR
- */
-export const CONFIGURACION_SECTOR = [
-  {
-    encabezado: '',
-    clave: (ele: Sector): string | undefined => ele.descripcion,
-    orden: 1,
-  },
-  {
-    encabezado: 'Descripción',
-    clave: (ele: Sector): string | undefined => ele.descripcionSector,
-    orden: 2,
-  },
-];
-
-/**
- * @const CONFIGURACION_BITCORA
- * @description Configuración de la bitácora utilizada para mostrar información de modificaciones en la aplicación.
- * 
- * Cada objeto en el arreglo representa una columna en la bitácora, con su encabezado, clave para obtener el valor correspondiente
- * de un objeto de tipo `Bitacora`, y el orden en el que debe aparecer.
- * 
- * @property {string} encabezado - El título de la columna que se mostrará en la interfaz de usuario.
- * @property {(ele: Bitacora) => string | undefined} clave - Una función que toma un objeto de tipo `Bitacora` y devuelve el valor correspondiente para la columna.
- * @property {number} orden - El orden en el que la columna debe aparecer en la tabla.
- */
 export const CONFIGURACION_BITCORA = [
   {
     encabezado: 'Tipo modificación ',
@@ -95,33 +66,13 @@ export const CONFIGURACION_BITCORA = [
   },
 ];
 
-/**
- * @const CONFIGURACION_SECTOR1
- * @description Configuración utilizada para definir las propiedades de los sectores en el módulo de trámites.
- * Contiene un arreglo de objetos que especifican encabezados, claves y el orden de las columnas.
- * 
- * @property {string} encabezado - El título que se mostrará en la columna.
- * @property {(ele: Sector1) => string | undefined} clave - Una función que toma un objeto de tipo `Sector1` y devuelve el valor correspondiente a la clave especificada.
- * @property {number} orden - El orden en el que se mostrará la columna.
- */
-export const CONFIGURACION_SECTOR1 = [
+export const CONFIGURACION_SECTOR = [
   {
     encabezado: 'Lista de sectores',
-    clave: (ele: Sector1): string | undefined => ele.listaSectores,
+    clave: (ele: Sector): string | undefined => ele.listaSectores,
     orden: 1,
   },
-  {
-    encabezado: 'Clave del sector ',
-    clave: (ele: Sector1): string | undefined => ele.claveSector,
-    orden: 2,
-  },
-  {
-    encabezado: 'Estatus',
-    clave: (ele: Sector1): string | undefined => ele.estatus,
-    orden: 3,
-  },
 ];
-
 /**
  * @const CONFIGURACION_PRODUCTOR_INDIRECTO
  * @description Configuración utilizada para definir las propiedades de los productores indirectos en el sistema.
@@ -261,17 +212,7 @@ export const CONFIGURACION_PLANTAS = [
   },
 ];
 
-/**
- * @const CONFIGURACION_MODIFICACION
- * @description Configuración utilizada para definir las propiedades de modificación en una lista.
- * Cada objeto dentro del arreglo representa una columna con su encabezado, clave y orden.
- * 
- * @property {string} encabezado - El nombre del encabezado que se mostrará en la columna.
- * @property {(ele: DatosDelModificacion) => string | number | undefined} clave - 
- *   Una función que toma un objeto de tipo `DatosDelModificacion` y devuelve el valor correspondiente
- *   a la clave de la columna.
- * @property {number} orden - El orden en el que se mostrará la columna.
- */
+
 export const CONFIGURACION_MODIFICACION = [
   {
     encabezado: 'Estatus',
