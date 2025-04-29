@@ -25,75 +25,79 @@
         formControlName="informacionConfidencialRadio"
       ></app-input-radio>
       </div>
-      <ng-titulo titulo="Representante legal" class="mt-4"></ng-titulo>
-      <div class="row">
-        <div class="col-md-4">
-          <div class="form-group">
-            <label class="form-label" for="representanteRfc">RFC*:</label>
-            <input
-              class="form-control"
-              id="representanteRfc"
-              type="text"
-              formControlName="representanteRfc"
-              (change)="onControlChange('representanteRfc')"
-             
-            />
-          </div>
-        </div>
-        <div class="col-md-2 mt-5">
-          <button
-            type="button"
-            name="representanteRfcBuscar"
-            class="btn btn-default"
-            (click)="buscarRepresentanteRfc()"
-          >
-            Buscar
-          </button>
-        </div>
+ <div *ngIf="showRepresentanteLegal">
+  <ng-titulo titulo="Representante legal" class="mt-4"></ng-titulo>
+  <div class="row">
+    <div class="col-md-4">
+      <div class="form-group">
+        <label class="form-label" for="representanteRfc">RFC*:</label>
+        <input
+          class="form-control"
+          id="representanteRfc"
+          type="text"
+          formControlName="representanteRfc"
+          (change)="onControlChange('representanteRfc')"
+         
+        />
       </div>
-      <div class="row mt-2">
-        <div class="col-md-4">
-          <div class="form-group">
-            <label class="form-label" for="representanteNombre"
-              >Nombre o Razón Social*:</label
-            >
-            <input
-              class="form-control"
-              id="representanteNombre"
-              type="text"
-              formControlName="representanteNombre"
-              (change)="onControlChange('representanteNombre')"
-            />
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="form-group">
-            <label class="form-label" for="apellidoPaterno"
-              >Apellido paterno*:</label
-            >
-            <input
-              class="form-control"
-              id="apellidoPaterno"
-              type="text"
-              formControlName="apellidoPaterno"
-              (change)="onControlChange('apellidoPaterno')"
-            />
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="form-group">
-            <label class="form-label" for="apellidoMaterno"
-              >Apellido materno:</label
-            >
-            <input
-              class="form-control"
-              id="apellidoMaterno"
-              type="text"
-              formControlName="apellidoMaterno"
-              (change)="onControlChange('apellidoMaterno')"
-            />
-          </div>
-        </div>
+    </div>
+    <div class="col-md-2 mt-5">
+      <button
+        type="button"
+        name="representanteRfcBuscar"
+        class="btn btn-default"
+        (click)="buscarRepresentanteRfc()"
+      >
+        Buscar
+      </button>
+    </div>
+  </div>
+  <div class="row mt-2">
+    <div class="col-md-4">
+      <div class="form-group">
+        <label class="form-label" for="representanteNombre"
+          >Nombre o Razón Social*:</label
+        >
+        <input
+          class="form-control"
+          id="representanteNombre"
+          type="text"
+          formControlName="representanteNombre"
+          (change)="onControlChange('representanteNombre')"
+        />
       </div>
+    </div>
+    <div class="col-md-4">
+      <div class="form-group">
+        <label class="form-label" for="apellidoPaterno"
+          >Apellido paterno*:</label
+        >
+        <input
+          class="form-control"
+          id="apellidoPaterno"
+          type="text"
+          formControlName="apellidoPaterno"
+          (change)="onControlChange('apellidoPaterno')"
+        />
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="form-group">
+        <label class="form-label" for="apellidoMaterno"
+          >Apellido materno:</label
+        >
+        <input
+          class="form-control"
+          id="apellidoMaterno"
+          type="text"
+          formControlName="apellidoMaterno"
+          (change)="onControlChange('apellidoMaterno')"
+        />
+      </div>
+    </div>
+  </div>
+
+</div>
+     
 </form>
 

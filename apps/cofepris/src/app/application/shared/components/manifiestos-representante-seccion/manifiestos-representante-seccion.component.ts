@@ -7,7 +7,7 @@
 
 import { CommonModule } from '@angular/common';
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 
 import { EstablecimientoService } from '../../services/establecimiento.service';
 
@@ -49,6 +49,7 @@ import { Manifiestistos, PropietarioTipoPersona } from '../../models/datos-de-la
 export class ManifiestosRepresentanteSeccionComponent
   implements OnInit, OnDestroy
 {
+@Input() showRepresentanteLegal: boolean = true;
   /**
    * Subject utilizado para destruir las suscripciones y evitar fugas de memoria.
    */

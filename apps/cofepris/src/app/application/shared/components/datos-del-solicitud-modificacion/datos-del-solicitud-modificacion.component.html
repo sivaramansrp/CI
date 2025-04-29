@@ -44,7 +44,7 @@
           [isRequired]="true"
           [layout]="'horizontal'"
           formControlName="ideGenerica1"
-          (change)="enCambioDeControl('ideGenerica1')"
+          (change)="enCambioDeControl('domicilioEstablecimiento', 'ideGenerica1')"
         ></app-input-radio>
       </div>
 
@@ -62,74 +62,115 @@
               class="form-control"
               formControlName="observaciones" 
               placeholder="Justificación"
-              (change)="enCambioDeControl('observaciones')"
+              (change)="enCambioDeControl('domicilioEstablecimiento','observaciones')"
             ></textarea>
           </div>
         </div>
       </div>
       <ng-titulo titulo="Datos del establecimiento"></ng-titulo>
-      <div class="row">
-        <div class="col-md-8"></div>
-        <div class="col-md-4 d-flex justify-content-end">
-          <button
-            type="button"
-            class="btn btn-primary"
-            (click)="abrirModal()"
-          >
-            Seleccionar establecimiento
-          </button>
+      @if (showCodigoPostalCorreoElectronico) {
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="form-label" for="establecimientoRazonSocial">
+                Denominación o razón social*:
+              </label>
+              <input
+                class="form-control"
+                id="establecimientoRazonSocialId"
+                placeholder=""
+                type="text"
+                formControlName="establecimientoRazonSocial"
+                (change)="enCambioDeControl('domicilioEstablecimiento', 'establecimientoRazonSocial')"
+              />
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="form-label" for="establecimientoCorreoElectronico">
+                Correo electrónico*:
+                <span
+                  class="bi bi-question-circle-fill"
+                  title="Correo electrónico"
+                  data-bs-toggle="tooltip"
+                ></span>
+              </label>
+              <input
+                class="form-control"
+                id="establecimientoCorreoElectronicoId"
+                placeholder=""
+                type="text"
+                formControlName="establecimientoCorreoElectronico"
+                (change)="enCambioDeControl('domicilioEstablecimiento','establecimientoCorreoElectronico')"
+              />
+            </div>
+          </div>
         </div>
-      </div>
-      <div class="row">
-        <div class="col-md-4">
-          <div class="form-group">
-            <label class="form-label" for="establecimientoRFCResponsableSanitario"
-              >RFC del responsable sanitario:</label
+      }
+      @else {
+        <div class="row">
+          <div class="col-md-8"></div>
+          <div class="col-md-4 d-flex justify-content-end">
+            <button
+              type="button"
+              class="btn btn-primary"
+              (click)="abrirModal()"
             >
-            <input
-              class="form-control"
-              id="establecimientoRFCResponsableSanitarioId"
-              placeholder=""
-              type="text"
-              formControlName="establecimientoRFCResponsableSanitario"
-              (change)="enCambioDeControl('establecimientoRFCResponsableSanitario')"
-            />
+              Seleccionar establecimiento
+            </button>
           </div>
         </div>
-        <div class="col-md-8">
-          <div class="form-group">
-            <label class="form-label" for="establecimientoRazonSocial"
-              >Denominación o razón social*:</label
-            >
-            <input
-              class="form-control"
-              id="establecimientoRazonSocialId"
-              placeholder=""
-              type="text"
-              formControlName="establecimientoRazonSocial"
-              (change)="enCambioDeControl('establecimientoRazonSocial')"
-            />
+        <div class="row">
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="form-label" for="establecimientoRFCResponsableSanitario"
+                >RFC del responsable sanitario:</label
+              >
+              <input
+                class="form-control"
+                id="establecimientoRFCResponsableSanitarioId"
+                placeholder=""
+                type="text"
+                formControlName="establecimientoRFCResponsableSanitario"
+                (change)="enCambioDeControl('domicilioEstablecimiento','establecimientoRFCResponsableSanitario')"
+              />
+            </div>
+          </div>
+          <div class="col-md-8">
+            <div class="form-group">
+              <label class="form-label" for="establecimientoRazonSocial"
+                >Denominación o razón social*:</label
+              >
+              <input
+                class="form-control"
+                id="establecimientoRazonSocialId"
+                placeholder=""
+                type="text"
+                formControlName="establecimientoRazonSocial"
+                (change)="enCambioDeControl('domicilioEstablecimiento','establecimientoRazonSocial')"
+              />
+            </div>
           </div>
         </div>
-      </div>
-      <div class="row">
-        <div class="col-md-4">
-          <div class="form-group">
-            <label class="form-label" for="establecimientoCorreoElectronico">Correo electrónico*: <span class="bi bi-question-circle-fill"
-              title="Correo electrónico"
-              data-bs-toggle="tooltip"></span></label>
-            <input
-              class="form-control"
-              id="establecimientoCorreoElectronicoId"
-              placeholder=""
-              type="text"
-              formControlName="establecimientoCorreoElectronico"
-              (change)="enCambioDeControl('establecimientoCorreoElectronico')"
-              
-            />
+        <div class="row">
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="form-label" for="establecimientoCorreoElectronico">Correo electrónico*: <span class="bi bi-question-circle-fill"
+                title="Correo electrónico"
+                data-bs-toggle="tooltip"></span></label>
+              <input
+                class="form-control"
+                id="establecimientoCorreoElectronicoId"
+                placeholder=""
+                type="text"
+                formControlName="establecimientoCorreoElectronico"
+                (change)="enCambioDeControl('domicilioEstablecimiento','establecimientoCorreoElectronico')"
+                
+              />
+            </div>
           </div>
         </div>
-      </div>
+      }
       <ng-titulo titulo="Domicilio del establecimiento"></ng-titulo>
       <div class="row">
         <div class="col-md-4">
@@ -141,7 +182,7 @@
               id="establecimientoDomicilioCodigoPostalId"
               appUppercase
            formControlName="establecimientoDomicilioCodigoPostal"
-           (change)="enCambioDeControl('establecimientoDomicilioCodigoPostal')"
+           (change)="enCambioDeControl('domicilioEstablecimiento','establecimientoDomicilioCodigoPostal')"
             />
           </div>
         </div>
@@ -154,7 +195,7 @@
               name="estado"
               [required]="true"
               formControlName="establecimientoEstados"
-              (change)="enCambioDeControl('establecimientoEstados')"
+              (change)="enCambioDeControl('domicilioEstablecimiento','establecimientoEstados')"
             >
             </app-catalogo-select>
           </div>
@@ -171,7 +212,7 @@
               id="descripcionMunicipioId"
               appUppercase
               formControlName="descripcionMunicipio"
-              (change)="enCambioDeControl('descripcionMunicipio')"
+              (change)="enCambioDeControl('domicilioEstablecimiento','descripcionMunicipio')"
             />
           </div>
         </div>
@@ -190,7 +231,7 @@
               type="text"
               id="localidad"
               formControlName="localidad"
-              (change)="enCambioDeControl('localidad')"
+              (change)="enCambioDeControl('domicilioEstablecimiento','localidad')"
             />
           </div>
         </div>
@@ -203,7 +244,7 @@
               type="text"
               id="establishomentoColoniasId"
               formControlName="establishomentoColonias"
-              (change)="enCambioDeControl('establishomentoColonias')"
+              (change)="enCambioDeControl('domicilioEstablecimiento','establishomentoColonias')"
             />
           </div>
         </div>
@@ -227,7 +268,7 @@
               id="calle"
               appUppercase
               formControlName="calle"
-               (change)="enCambioDeControl('calle')"
+               (change)="enCambioDeControl('domicilioEstablecimiento','calle')"
             />
           </div>
         </div>
@@ -243,7 +284,7 @@
               id="lada"
               appUppercase
               formControlName ="lada"
-              (change)="enCambioDeControl('lada')"
+              (change)="enCambioDeControl('domicilioEstablecimiento','lada')"
             />
           </div>
         </div>
@@ -256,7 +297,7 @@
               id="telefono"
               appUppercase
               formControlName = "telefono"
-              (change)="enCambioDeControl('telefono')"
+              (change)="enCambioDeControl('domicilioEstablecimiento','telefono')"
             />
           </div>
         </div>
@@ -298,7 +339,7 @@
         [id]="'avisoCheckbox'"
         [required]="true"
         formControlName="avisoCheckbox"
-        (change)="toggleNoLicenciaSanitaria($event); enControlCambioFormulario('avisoCheckbox')"
+        (change)="toggleNoLicenciaSanitaria($event); enCambioDeControl('solicitudEstablecimientoForm', 'avisoCheckbox')"
       ></lib-input-check>
       </div>
       <div class="col-md-4">
@@ -317,7 +358,7 @@
             placeholder=""
             type="text"
             formControlName="noLicenciaSanitaria"
-            (change)="enControlCambioFormulario('noLicenciaSanitaria')"
+            (change)="enCambioDeControl('solicitudEstablecimientoForm','noLicenciaSanitaria')"
           />
         </div>
       </div>
@@ -332,7 +373,7 @@
           name="regimen"
           [tooltipQuestionCircle]="true"
           formControlName="regimen"
-          (change)="enControlCambioFormulario('regimen')"
+          (change)="enCambioDeControl('solicitudEstablecimientoForm','regimen')"
         ></app-catalogo-select>
       </div>
       <div class="col-md-8">
@@ -342,7 +383,7 @@
           [required]="true"
           name="aduanasEntradas"
           formControlName="aduanasEntradas"
-          (change)="enControlCambioFormulario('aduanasEntradas')"
+          (change)="enCambioDeControl('solicitudEstablecimientoForm','aduanasEntradas')"
         ></app-catalogo-select>
       </div>
     </div>
@@ -356,7 +397,7 @@
         [id]="'aifaCheckbox'"
         [required]="true"
         formControlName="aifaCheckbox"
-        (change)="enControlCambioFormulario('aifaCheckbox')"
+        (change)="enCambioDeControl('solicitudEstablecimientoForm','aifaCheckbox')"
       ></lib-input-check>
       </div>
     </div>
@@ -370,6 +411,7 @@
         [tipoSeleccionTabla]="tablaSeleccionCheckbox"
         [configuracionTabla]="mercanciasTabla"
         [datos]="mercanciasTablaDatos"
+        
       ></app-tabla-dinamica>
       <div class="container text-end mt-5">
         <button class="btn btn-default me-2">Eliminar</button>
@@ -384,7 +426,7 @@
       </div>
     </div>
 
-    <app-manifiestos-representante-seccion></app-manifiestos-representante-seccion>
+    <app-manifiestos-representante-seccion [showRepresentanteLegal]="hideRepresentanteLegal"  ></app-manifiestos-representante-seccion>
   
   </form>
 </div>
@@ -415,7 +457,7 @@ aria-hidden="true"
                 [label]="'Clave S.C.I.A.N.*'"
                 [placeholder]="'Seleccione una valor'"
                 formControlName="scian"
-                (change)="onContriloChange('scian')"
+                (change)="enCambioDeControl('scianForm','scian')"
               ></app-catalogo-select>
             </div>
           </div>
@@ -427,7 +469,7 @@ aria-hidden="true"
                 id="descripcionScianId"
                 formControlName="descripcionScian"
                 class="form-control"
-                (change)="onContriloChange('descripcionScian')"
+                (change)="enCambioDeControl('scianForm','descripcionScian')"
               />
             </div>
           </div>
@@ -477,6 +519,7 @@ aria-hidden="true"
               [label]="'Clasificación del producto'"
               [required]="true"
               name="clasificacion"
+              
             ></app-catalogo-select>
           </div>
           <div class="form-group">

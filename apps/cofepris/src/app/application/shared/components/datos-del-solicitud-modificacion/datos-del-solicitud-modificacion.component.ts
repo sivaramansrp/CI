@@ -56,6 +56,7 @@ import { EstablecimientoService } from '../../services/establecimiento.service';
 import { ManifiestosRepresentanteSeccionComponent } from '../manifiestos-representante-seccion/manifiestos-representante-seccion.component';/*
 ** component 
 */
+
 @Component({
   selector: 'app-datos-del-solicitud-modificacion',
   standalone: true,
@@ -82,6 +83,11 @@ import { ManifiestosRepresentanteSeccionComponent } from '../manifiestos-represe
 export class DatosDelSolicitudModificacionComponent
   implements OnInit, OnDestroy ,AfterViewInit
 {
+ @Input() hideRepresentanteLegal: boolean =true;
+  /**
+  *
+  */
+  @Input() showCodigoPostalCorreoElectronico: boolean = false;
   /**
  * Notificación actual que se muestra en el componente.
  * 
@@ -497,6 +503,7 @@ eliminarPedimento(borrar: boolean): void {
       this.solicitudEstablecimientoForm.patchValue(state, { emitEvent: false });
     });
   }
+  
   /**
    * Método de limpieza del componente.
    * Se utiliza para liberar recursos y evitar fugas de memoria.
@@ -517,7 +524,7 @@ eliminarPedimento(borrar: boolean): void {
       lada: ['', [Validators.maxLength(5), Validators.pattern(REGEX_SOLO_DIGITOS)]],
       telefono: ['', [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS)]],
       establecimientoDomicilioCodigoPostal :['', Validators.required],
-      scian :['', Validators.required]
+      scian: this.fb.array([]),
     });
     this.scianForm = this.fb.group({
       scian: ['', Validators.required],
@@ -551,6 +558,7 @@ eliminarPedimento(borrar: boolean): void {
       fechaCaducidad: [''],
       
     });
+    
   }
 /**
  * Deshabilita el campo "observaciones" del formulario de domicilio
@@ -620,40 +628,34 @@ cerrarModal(): void {
     this.modalInstance.hide();
   }
 }
-  /**
-   * Actualiza el estado del formulario según los cambios en los controles.
-   * @param controlName Nombre del control que cambió.
-   */
-  onContriloChange(controlName: string): void {
-    const UPDATED_VALUE = {
-      [controlName]: this.scianForm.get(controlName)?.value,
-    };
-    
-    this.domicilioEstablecimientoStore.update(UPDATED_VALUE);
+enCambioDeControl(formName: string, controlName: string): void {
+  let formGroup: FormGroup;
+
+  // Determine which form group to use
+  switch (formName) {
+    case 'scianForm':
+      formGroup = this.scianForm;
+      break;
+    case 'domicilioEstablecimiento':
+      formGroup = this.domicilioEstablecimiento;
+      break;
+    case 'solicitudEstablecimientoForm':
+      formGroup = this.solicitudEstablecimientoForm;
+      break;
+    default:
+      return;
   }
-  /**
-   * Carga los datos del catálogo de justificación.
-   */
-  enCambioDeControl(controlName: string): void {
-    
-    const UPDATED_VALUE = {
-      [controlName]: this.domicilioEstablecimiento.get(controlName)?.value,
-    };
-    
-    this.domicilioEstablecimientoStore.update(UPDATED_VALUE);
-  }
-  /**
-   * Actualiza el estado del formulario según los cambios en los controles.
-   * @param controlName Nombre del control que cambió.
-   */
-  enControlCambioFormulario(controlName: string): void {
+
+  // Get the updated value of the control
+  const UPDATED_VALUE = {
+    [controlName]: formGroup.get(controlName)?.value,
+  };
+
+  // Update the store or service with the updated value
+  this.domicilioEstablecimientoStore.update(UPDATED_VALUE);
   
-    const UPDATED_VALUE = {
-      [controlName]: this.solicitudEstablecimientoForm.get(controlName)?.value,
-    };
-   
-    this.domicilioEstablecimientoStore.update(UPDATED_VALUE);
-  }
+}
+
   /**
    * Habilita o deshabilita el campo "No Licencia Sanitaria" según el estado del checkbox.
    * @param event Evento del checkbox.
