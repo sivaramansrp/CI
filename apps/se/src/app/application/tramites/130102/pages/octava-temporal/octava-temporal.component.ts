@@ -7,11 +7,10 @@
 
 import { Component, ViewChild } from '@angular/core';
 import { DatosPasos, WizardComponent } from '@libs/shared/data-access-user/src';
-
+import {ERROR_DE_REGISTRO_ALERT} from '../../constantes/octava-temporal.enum';
+import { FormularioRegistroService } from '../../services/octava-temporal.service';
 import { ListaPasosWizard } from '@libs/shared/data-access-user/src';
 import { OCTA_TEMPO } from 'libs/shared/data-access-user/src/core/services/130102/octava-temporal.enum';
-
-
 
 /**
  * @class OctavaTemporalComponent
@@ -27,10 +26,9 @@ interface AccionBoton {
   selector: 'app-octava-temporal',
   templateUrl: './octava-temporal.component.html',
 })
-
 export class OctavaTemporalComponent {
-  
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
+
   /**
    * @property {ListaPasosWizard[]} pantallasPasos - Array para almacenar los pasos del wizard.
    */
@@ -41,15 +39,41 @@ export class OctavaTemporalComponent {
    */
   indice: number = 1;
 
+  /**
+   * @property {DatosPasos} datosPasos - Objeto con la información para el botón de continuar.
+   */
   datosPasos: DatosPasos = {
     nroPasos: this.pantallasPasos.length,
     indice: this.indice,
     txtBtnAnt: 'Anterior',
     txtBtnSig: 'Continuar',
   };
-  getValorIndice(e: AccionBoton) :void{
+
+  
+  mostrarErrorFormularios: boolean = false;
+
+  registroAlert=ERROR_DE_REGISTRO_ALERT
+
+  constructor(private formularioRegistroService: FormularioRegistroService) {}
+
+  /**
+   * Método que maneja el evento del botón continuar o anterior,
+   * valida todos los formularios antes de avanzar.
+   * 
+   * @param {AccionBoton} e - Objeto que contiene la acción y el valor del paso.
+   */
+  getValorIndice(e: AccionBoton): void {
+    const TODOS_VALIDOS = this.formularioRegistroService.validarTodosFormularios();
+
+    if (!TODOS_VALIDOS) {
+      this.mostrarErrorFormularios = true;
+      return; 
+    }
+
+    this.mostrarErrorFormularios = false;
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
+
       if (e.accion === 'cont') {
         this.wizardComponent.siguiente();
       } else {
@@ -57,5 +81,4 @@ export class OctavaTemporalComponent {
       }
     }
   }
-
 }
