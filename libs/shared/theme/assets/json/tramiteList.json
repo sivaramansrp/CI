@@ -2060,8 +2060,8 @@
   {
     "id": 295,
     "tramite": 90304,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/se/modificaciones-immex-prosec/solicitud-modificaciones",
+    "linkDepartment": "/pago/modificaciones-immex-prosec/solicitud-modificaciones",
     "department": "se"
   },
   {
