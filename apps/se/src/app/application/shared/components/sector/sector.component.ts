@@ -1,5 +1,5 @@
-import { TablaDinamicaComponent, TablaSeleccion } from '@libs/shared/data-access-user/src';
-import { Component } from '@angular/core';
+import { TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Component,Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SECTOR } from '../../constantes/complementaria.enum';
 import { SectorTabla } from '../../models/complementaria.model';
@@ -11,9 +11,9 @@ import { SectorTabla } from '../../models/complementaria.model';
 @Component({
   selector: 'app-sector',
   standalone: true,
-  imports: [CommonModule, TablaDinamicaComponent],
+  imports: [CommonModule, TablaDinamicaComponent,TituloComponent],
   templateUrl: './sector.component.html',
-  styleUrl: './sector.component.css',
+  styleUrl: './sector.component.scss',
 })
 export class SectorComponent {
   /**
@@ -32,5 +32,5 @@ export class SectorComponent {
    * Arreglo que almacena los datos de la tabla de sectores.
    * Este arreglo se utiliza para mostrar la información dinámica en la tabla.
    */
-  sectorTablaDatos: SectorTabla[] = [];
+ @Input() sectorTablaDatos: SectorTabla[] = [];
 }

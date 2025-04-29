@@ -1,5 +1,5 @@
 import { ConfiguracionColumna } from "@libs/shared/data-access-user/src";
-import { ListaTabla, PlantasTabla } from "../models/registro.model";
+import { ListaTabla } from "../models/registro.model";
 
 export const LISTA_DE_SECTORS: ConfiguracionColumna<ListaTabla>[] = [
     {

@@ -1,5 +1,5 @@
-import { TablaDinamicaComponent, TablaSeleccion } from '@libs/shared/data-access-user/src';
-import { Component } from '@angular/core';
+import { TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Component,Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PLANTAS } from '../../constantes/complementaria.enum';
 import { PlantasTabla } from '../../models/complementaria.model';
@@ -11,9 +11,9 @@ import { PlantasTabla } from '../../models/complementaria.model';
 @Component({
   selector: 'app-plantas',
   standalone: true,
-  imports: [CommonModule, TablaDinamicaComponent],
+  imports: [CommonModule, TablaDinamicaComponent,TituloComponent],
   templateUrl: './plantas.component.html',
-  styleUrl: './plantas.component.css',
+  styleUrl: './plantas.component.scss',
 })
 export class PlantasComponent {
   /**
@@ -32,5 +32,5 @@ export class PlantasComponent {
    * Arreglo que almacena los datos de la tabla de plantas.
    * Este arreglo se utiliza para mostrar la información dinámica en la tabla.
    */
-  plantasTablaDatos: PlantasTabla[] = [];
+  @Input() plantasTablaDatos: PlantasTabla[] = [];
 }

@@ -10,6 +10,10 @@ import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ModificacionComponent } from './components/Modificacion/modificacion.component';
 import { BitacoraComponent } from './components/bitacora/bitacora.component';
+import { SectorComponent } from '../../shared/components/sector/sector.component';
+import { PlantasComponent } from '../../shared/components/plantas/plantas.component';
+import { ProducirMercanciasComponent } from '../../shared/components/producir-mercancias/producir-mercancias.component';
+import { ProductorIndirectoComponent } from '../../shared/components/productor-indirecto/productor-indirecto.component';
 
 
 @NgModule({
@@ -30,7 +34,8 @@ import { BitacoraComponent } from './components/bitacora/bitacora.component';
     BitacoraComponent,
     ModificacionComponent,
     TituloComponent,
-    TablaDinamicaComponent
+    TablaDinamicaComponent,
+    PlantasComponent, SectorComponent, ProducirMercanciasComponent, ProductorIndirectoComponent
   ]
 })
 export class CatalogosModule { }

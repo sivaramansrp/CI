@@ -1,5 +1,5 @@
 import { ConfiguracionColumna } from "@libs/shared/data-access-user/src";
-import { PlantasTabla, SectorTabla } from "../models/complementaria.model";
+import { Mercancias, PlantasTabla, ProductorIndirecto, SectorTabla } from "../models/complementaria.model";
 
 export const PLANTAS: ConfiguracionColumna<PlantasTabla>[] = [
         { encabezado: 'Calle', clave: (item: PlantasTabla) => item.calle, orden: 1 },
@@ -21,3 +21,45 @@ export const PLANTAS: ConfiguracionColumna<PlantasTabla>[] = [
         { encabezado: 'Clave del sector', clave: (item: SectorTabla) => item.claveDelSector, orden: 2 },
         { encabezado: 'Estatus', clave: (item: SectorTabla) => item.estatus, orden: 3 }
       ];
+
+      export const TABLA_PRODUCIR_MERCANCIAS: ConfiguracionColumna<Mercancias>[] = [
+        {
+            encabezado: 'Fracción arancelaria',
+            clave: (item: Mercancias) => item.fraccionArancelaria,
+            orden: 1,
+        },
+        {
+            encabezado: 'Clave del sector',
+            clave: (item: Mercancias) => item.claveDelSector,
+            orden: 2,
+        },
+        {
+            encabezado: 'Estatus',
+            clave: (item: Mercancias) => item.eStatus,
+            orden: 3,
+        }
+    ];
+    
+    export const TABLA_PRODUCTOR_INDIRECTO: ConfiguracionColumna<ProductorIndirecto>[] = [
+        {
+            encabezado: 'Registro federal de contribuyentes',
+            clave: (item: ProductorIndirecto) => item.registroFederal,
+            orden: 1
+        },
+        {
+            encabezado: 'Denominación o razón social',
+            clave: (item: ProductorIndirecto) => item.denominacion,
+            orden: 2
+        },
+        {
+            encabezado: 'Correo',
+            clave: (item: ProductorIndirecto) => item.correo,
+            orden: 3
+        },
+        {
+            encabezado: 'Estatus',
+            clave: (item: ProductorIndirecto) => item.eStatus,
+            orden: 4
+        }
+    ];
+   

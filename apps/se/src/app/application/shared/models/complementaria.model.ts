@@ -18,3 +18,28 @@ export interface SectorTabla{
     claveDelSector: string;
     estatus: string;
 }
+
+export interface Mercancias {
+    fraccionArancelaria: string;
+    claveDelSector: string;
+    eStatus: string;
+}
+
+export interface MercanciasResquesta {
+    code: number;
+    data: Mercancias[];
+    message: string;
+}
+
+export interface ProductorIndirecto {
+    registroFederal: string;
+    denominacion: string;
+    correo: string;
+    eStatus: string;
+}
+
+export interface ProductorIndirectoResquesta {
+    code: number;
+    data: ProductorIndirecto[];
+    message: string;
+}
