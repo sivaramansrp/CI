@@ -9,6 +9,7 @@
     (filaClics)="abrirModificarModal($event)"
     [tablaSeleccionEvent]="tablaSeleccionEvent"
     [guardarClicado]="(datosTabla$ | async) ||  []"
+    (guardarClicadoEvent)="guardarClicado($event)"
     (formaValida)="setFormValida($event)"
     [datosForm]="formCertificadoValues"
     [cargoDeMercancias]="cargoDeMercancias"

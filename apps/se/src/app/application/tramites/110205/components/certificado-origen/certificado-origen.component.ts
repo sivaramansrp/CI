@@ -299,6 +299,16 @@ setValoresStore(event: { formGroupName: string, campo: string, valor: undefined,
     this.store.setFormValida({ certificado: valida });
   }
 
+
+  /**
+   * @descripcion
+   * Método que actualiza el observable `datosTabla$` con un nuevo arreglo de objetos de tipo `Mercancia`.
+   * @param {Mercancia[]} event - Arreglo de objetos de tipo `Mercancia` que han sido seleccionados o procesados.
+   */
+  guardarClicado(event: Mercancia[]): void {
+    this.datosTabla$ = of(event);
+  }
+
   /**
    * @descripcion
    * Hook del ciclo de vida que se llama cuando el componente se destruye.

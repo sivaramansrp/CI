@@ -225,6 +225,20 @@ export class CertificadoDeOrigenComponent implements OnDestroy {
  @Output() formaValida: EventEmitter<boolean> = new EventEmitter<boolean>(
   false
 );  
+
+  /**
+  * Este evento emite un arreglo de objetos de tipo `Mercancia` que han sido seleccionados o procesados.
+  * @type {EventEmitter<Mercancia[]>}
+  */
+  @Output() guardarClicadoEvent: EventEmitter<Mercancia[]> = new EventEmitter<Mercancia[]>();
+  
+  /**
+   * Propiedad que almacena un arreglo de objetos de tipo `Mercancia` seleccionados para ser guardados.
+   * 
+   * @type {Mercancia[]}
+   */
+  public seleccionadaguardarClicado: Mercancia[] = [];
+
   /**
    * Constructor del componente. Inicializa el formulario reactivo con los controles necesarios y sus validaciones.
    * @param fb FormBuilder para la creación del formulario reactivo.
@@ -336,4 +350,24 @@ export class CertificadoDeOrigenComponent implements OnDestroy {
   abrirModal(tableData: Mercancia): void {
     this.filaClics.emit(tableData);
   }
+
+  /**
+   * Método que asigna un objeto de tipo `Mercancia` al arreglo de mercancías seleccionadas para guardar.
+   * @param {Mercancia} evento - Objeto de tipo `Mercancia` que ha sido seleccionado.
+   */
+  obtenerSeleccionadoMercancia(evento: Mercancia): void {
+    this.seleccionadaguardarClicado = [evento];
+  }
+
+  /**
+  * Método que elimina los objetos seleccionados del arreglo de mercancías guardadas.
+  * @remarks
+  * Este método verifica si hay elementos seleccionados antes de vaciar el arreglo `guardarClicado`.
+  */
+  eliminarSeleccionados(): void {
+    if (this.seleccionadaguardarClicado.length > 0) {
+        this.guardarClicado = [];
+    }
+  }
+
 }
