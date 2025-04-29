@@ -11,6 +11,10 @@
           />
           <span class="fw-bold align-middle"> *</span>
           <div>{{ manifiestosText }} </div>
+          <div *ngIf="hasError('manifests', 'required')" class="text-danger mt-1">
+            Debe aceptar el manifiesto.
+          </div>
+          
         </div>
       </div>
       <div class="row">
@@ -24,6 +28,9 @@
         [gap]="'50px'"
         formControlName="informacionConfidencialRadio"
       ></app-input-radio>
+      <div *ngIf="hasError('informacionConfidencialRadio', 'required')" class="text-danger mt-1">
+        Seleccione una opción sobre la información confidencial.
+      </div>
       </div>
  <div *ngIf="showRepresentanteLegal">
   <ng-titulo titulo="Representante legal" class="mt-4"></ng-titulo>
@@ -39,6 +46,9 @@
           (change)="onControlChange('representanteRfc')"
          
         />
+        <div *ngIf="hasError('representanteNombre', 'required')" class="text-danger mt-1">
+          El nombre o razón social del representante legal es obligatorio.
+        </div>
       </div>
     </div>
     <div class="col-md-2 mt-5">
@@ -65,6 +75,9 @@
           formControlName="representanteNombre"
           (change)="onControlChange('representanteNombre')"
         />
+        <div *ngIf="hasError('representanteNombre', 'required')" class="text-danger mt-1">
+          El nombre o razón social del representante legal es obligatorio.
+        </div>
       </div>
     </div>
     <div class="col-md-4">
@@ -79,6 +92,9 @@
           formControlName="apellidoPaterno"
           (change)="onControlChange('apellidoPaterno')"
         />
+        <div *ngIf="hasError('apellidoPaterno', 'required')" class="text-danger mt-1">
+          El apellido paterno es obligatorio.
+        </div>
       </div>
     </div>
     <div class="col-md-4">

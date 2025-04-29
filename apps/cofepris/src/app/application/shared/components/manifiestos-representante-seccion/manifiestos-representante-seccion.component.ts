@@ -98,7 +98,7 @@ export class ManifiestosRepresentanteSeccionComponent
       informacionConfidencialRadio: ['', Validators.required],
       representanteNombre: ['', Validators.required],
       apellidoPaterno: ['', Validators.required],
-      apellidoMaterno: ['', Validators.required],
+      apellidoMaterno: [''],
     });
 
     // Cargar el estado inicial en el formulario
@@ -120,6 +120,10 @@ export class ManifiestosRepresentanteSeccionComponent
         this.informacionConfidencialRadioOption = data; // Bind the fetched data
        
       });
+  }
+  hasError(controlName: string, errorName: string) {
+    return this.manifiestosRepresentanteForm.get(controlName)?.touched &&
+           this.manifiestosRepresentanteForm.get(controlName)?.hasError(errorName);
   }
    /**
    * Maneja los cambios en los controles del formulario y actualiza el estado global.

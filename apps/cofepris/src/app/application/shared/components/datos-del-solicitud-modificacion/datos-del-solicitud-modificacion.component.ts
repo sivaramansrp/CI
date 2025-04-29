@@ -36,7 +36,7 @@ import { DatosDelSolicituteSeccionStateStore } from '../../estados/stores/datos-
 
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 
-import { HttpClient } from '@angular/common/http';
+import {VALIDATION_MESSAGE} from '../../../shared/constantes/aviso-de-funcionamiento.enum';
 
 import { Modal } from 'bootstrap';
 
@@ -483,6 +483,8 @@ eliminarPedimento(borrar: boolean): void {
     this.estadoDelServicio();
   
   }
+
+  
   estadoDelServicio():void{
     this.establecimientoService
     .getJustificationData()
@@ -528,15 +530,15 @@ eliminarPedimento(borrar: boolean): void {
     });
     this.scianForm = this.fb.group({
       scian: ['', Validators.required],
-      descripcionScian: ['', Validators.required],
+      descripcionScian: [''],
     });
 
     this.solicitudEstablecimientoForm = this.fb.group({
-      noLicenciaSanitaria: ['', Validators.required],
+      noLicenciaSanitaria: [''],
       avisoCheckbox: [false],
        licenciaSanitaria: [{ value: '', disabled: true }],
-       regimen: [''],
-       aduanasEntradas: [''],
+       regimen: ['', Validators.required],
+       aduanasEntradas: ['', Validators.required],
        aifaCheckbox: [false],
     });
     this.formMercancias = this.fb.group({
@@ -547,6 +549,7 @@ eliminarPedimento(borrar: boolean): void {
       denominacionComun: ['', Validators.required],
       tipoDeProducto: ['', Validators.required],
       estadoFisico: ['', Validators.required],
+      estadoFormaFarmaceutica: ['', Validators.required],
       fraccionArancelaria: ['', Validators.required],
       descripcionFraccion: [ { value: '', disabled: true }, Validators.required],
       cantidadUMT: ['', Validators.required],
@@ -722,6 +725,7 @@ enCambioDeControl(formName: string, controlName: string): void {
         denominacionComun: this.formMercancias.get('denominacionComun')?.value,
         formaFarmaceutica: this.formMercancias.get('tipoDeProducto')?.value,
         estadoFisico: this.formMercancias.get('estadoFisico')?.value,
+        estadoFormaFarmaceutica: this.formMercancias.get('estadoFormaFarmaceutica')?.value,
         fraccionArancelaria: this.formMercancias.get('fraccionArancelaria')?.value,
         descripcionFraccion: this.formMercancias.get('descripcionFraccion')?.value,
         unidadUMT: this.formMercancias.get('UMT')?.value,
@@ -743,6 +747,18 @@ enCambioDeControl(formName: string, controlName: string): void {
       this.cerrarModalMercancía();
     }
   }
+/*
+*
+*/
+validationMessages = VALIDATION_MESSAGE;
+  getErrorMessage(controlName: string): string | null {
+    const CONTROL = this.formMercancias.get(controlName);
+    if (CONTROL && CONTROL.hasError('required') && (CONTROL.touched || CONTROL.dirty)) {
+      return this.validationMessages[controlName]
+    }
+    return null;
+  }
+  
   /**
    * Abre el modal SCIAN.
    */
@@ -775,6 +791,7 @@ enCambioDeControl(formName: string, controlName: string): void {
    * Configuración de columnas para la tabla de datos SCIAN.
    */
   configuracionTabla: ConfiguracionColumna<ScianModel>[] = SCIAN_TABLE_CONFIG;
+  
   /**
    * Método de ciclo de vida de Angular que se ejecuta al destruir el componente.
    */
@@ -786,5 +803,8 @@ enCambioDeControl(formName: string, controlName: string): void {
   /**
    * Método para crear el formulario.
    */
+  hasError(form: FormGroup, controlName: string, error: string) {
+    return form.get(controlName)?.touched && form.get(controlName)?.hasError(error);
+  }
   
 }
