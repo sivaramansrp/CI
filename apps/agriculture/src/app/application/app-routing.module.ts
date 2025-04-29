@@ -105,6 +105,12 @@ const ROUTES: Routes = [
       import('./tramites/221602/fitosanitario.module').then(
         (m) => m.FitosanitarioModule
       ),
+  },
+  { path: 'sanidadacuicola',
+    loadChildren: () =>
+      import('./tramites/220503/sanidad-acuicola.module').then(
+        (m) => m.SanidadAcuicolaModule
+      ),
   }
 ];
 
