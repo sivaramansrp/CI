@@ -10,8 +10,6 @@
  */
 
 import {
-  Arancelaria,
-  ArancelariaImportacion,
   Bitacora,
   DatosDelModificacion,
   MercanciasAProducir,
@@ -64,66 +62,16 @@ export const CONFIGURACION_SECTOR = [
 ];
 
 /**
- * Configuración de la tabla para fracciones arancelarias.
- * @constant {Array<Object>} CONFIGURACION_ARANCELARIAS
+ * @const CONFIGURACION_BITCORA
+ * @description Configuración de la bitácora utilizada para mostrar información de modificaciones en la aplicación.
+ * 
+ * Cada objeto en el arreglo representa una columna en la bitácora, con su encabezado, clave para obtener el valor correspondiente
+ * de un objeto de tipo `Bitacora`, y el orden en el que debe aparecer.
+ * 
+ * @property {string} encabezado - El título de la columna que se mostrará en la interfaz de usuario.
+ * @property {(ele: Bitacora) => string | undefined} clave - Una función que toma un objeto de tipo `Bitacora` y devuelve el valor correspondiente para la columna.
+ * @property {number} orden - El orden en el que la columna debe aparecer en la tabla.
  */
-export const CONFIGURACION_ARANCELARIAS = [
-  {
-    encabezado: '#Fracción',
-    clave: (ele: Arancelaria): string | undefined => ele.fraccion,
-    orden: 1,
-  },
-  {
-    encabezado: 'Fracción arancelaria',
-    clave: (ele: Arancelaria): string | undefined => ele.fraccionArancelaria,
-    orden: 2,
-  },
-  {
-    encabezado: 'Descripción comercial',
-    clave: (ele: Arancelaria): string | undefined => ele.descripcionComercial,
-    orden: 3,
-  },
-  {
-    encabezado: 'Anexo II',
-    clave: (ele: Arancelaria): string | undefined => ele.anexoII,
-    orden: 4,
-  },
-  {
-    encabezado: 'Tipo',
-    clave: (ele: Arancelaria): string | undefined => ele.tipo,
-    orden: 5,
-  },
-  {
-    encabezado: 'UMT',
-    clave: (ele: Arancelaria): string | undefined => ele.umt,
-    orden: 6,
-  },
-  {
-    encabezado: 'Categoría',
-    clave: (ele: Arancelaria): string | undefined => ele.categoria,
-    orden: 7,
-  },
-  {
-    encabezado: 'Valor en moneda mensual',
-    clave: (ele: Arancelaria): string | undefined => ele.valorMensual,
-    orden: 8,
-  },
-  {
-    encabezado: 'Valor en moneda anual',
-    clave: (ele: Arancelaria): string | undefined => ele.valorAnual,
-    orden: 9,
-  },
-  {
-    encabezado: 'Volumen mensual',
-    clave: (ele: Arancelaria): string | undefined => ele.volumenrMensual,
-    orden: 10,
-  },
-  {
-    encabezado: 'Volumen anual',
-    clave: (ele: Arancelaria): string | undefined => ele.volumenAnual,
-    orden: 11,
-  },
-];
 export const CONFIGURACION_BITCORA = [
   {
     encabezado: 'Tipo modificación ',
@@ -147,6 +95,15 @@ export const CONFIGURACION_BITCORA = [
   },
 ];
 
+/**
+ * @const CONFIGURACION_SECTOR1
+ * @description Configuración utilizada para definir las propiedades de los sectores en el módulo de trámites.
+ * Contiene un arreglo de objetos que especifican encabezados, claves y el orden de las columnas.
+ * 
+ * @property {string} encabezado - El título que se mostrará en la columna.
+ * @property {(ele: Sector1) => string | undefined} clave - Una función que toma un objeto de tipo `Sector1` y devuelve el valor correspondiente a la clave especificada.
+ * @property {number} orden - El orden en el que se mostrará la columna.
+ */
 export const CONFIGURACION_SECTOR1 = [
   {
     encabezado: 'Lista de sectores',
@@ -165,6 +122,18 @@ export const CONFIGURACION_SECTOR1 = [
   },
 ];
 
+/**
+ * @const CONFIGURACION_PRODUCTOR_INDIRECTO
+ * @description Configuración utilizada para definir las propiedades de los productores indirectos en el sistema.
+ * Cada objeto en el arreglo representa una columna con su encabezado, clave de acceso y orden de aparición.
+ * 
+ * @type {Array<{encabezado: string, clave: (ele: ProductorIndirecto) => string | undefined, orden: number}>}
+ * 
+ * @property {string} encabezado - El título o nombre de la columna que se mostrará en la interfaz de usuario.
+ * @property {(ele: ProductorIndirecto) => string | undefined} clave - Una función que toma un objeto de tipo `ProductorIndirecto` 
+ * y devuelve el valor correspondiente a la columna.
+ * @property {number} orden - El orden en el que la columna debe aparecer en la tabla.
+ */
 export const CONFIGURACION_PRODUCTOR_INDIRECTO = [
   {
     encabezado: 'Registro federal de contribuyentes  ',
@@ -188,6 +157,17 @@ export const CONFIGURACION_PRODUCTOR_INDIRECTO = [
   },
 ];
 
+
+/**
+ * @const CONFIGURACION_MERCANCIAS_A_PRODUCIR
+ * @description Configuración utilizada para definir las propiedades de las mercancías a producir.
+ * Contiene información sobre el encabezado, la clave y el orden de las columnas.
+ * 
+ * @property {string} encabezado - El título de la columna que se mostrará en la interfaz de usuario.
+ * @property {Function} clave - Una función que toma un objeto de tipo `MercanciasAProducir` y devuelve
+ * un valor de tipo `string` o `undefined`, correspondiente a la clave específica de la columna.
+ * @property {number} orden - El orden en el que se deben mostrar las columnas.
+ */
 export const CONFIGURACION_MERCANCIAS_A_PRODUCIR = [
   {
     encabezado: 'Fracción arancelaria  ',
@@ -207,6 +187,17 @@ export const CONFIGURACION_MERCANCIAS_A_PRODUCIR = [
   },
 ];
 
+/**
+ * @const CONFIGURACION_PLANTAS
+ * @description Configuración de las columnas para la visualización de datos relacionados con las plantas.
+ * Cada objeto en el arreglo representa una columna con su encabezado, clave de acceso a los datos y orden de aparición.
+ * 
+ * @type {Array<{encabezado: string, clave: (ele: Plantas) => string | undefined, orden: number}>}
+ * 
+ * @property {string} encabezado - El nombre de la columna que se mostrará en la interfaz de usuario.
+ * @property {(ele: Plantas) => string | undefined} clave - Una función que toma un objeto de tipo `Plantas` y devuelve el valor correspondiente a la columna.
+ * @property {number} orden - El orden en el que se mostrará la columna en la tabla.
+ */
 export const CONFIGURACION_PLANTAS = [
   {
     encabezado: 'Calle',
@@ -271,84 +262,16 @@ export const CONFIGURACION_PLANTAS = [
 ];
 
 /**
- * Configuración de la tabla para fracciones de importación.
- * @constant {Array<Object>} CONFIGURACION_ARANCELARIASIMPORTACION
+ * @const CONFIGURACION_MODIFICACION
+ * @description Configuración utilizada para definir las propiedades de modificación en una lista.
+ * Cada objeto dentro del arreglo representa una columna con su encabezado, clave y orden.
+ * 
+ * @property {string} encabezado - El nombre del encabezado que se mostrará en la columna.
+ * @property {(ele: DatosDelModificacion) => string | number | undefined} clave - 
+ *   Una función que toma un objeto de tipo `DatosDelModificacion` y devuelve el valor correspondiente
+ *   a la clave de la columna.
+ * @property {number} orden - El orden en el que se mostrará la columna.
  */
-export const CONFIGURACION_ARANCELARIASIMPORTACION = [
-  {
-    encabezado: '#Fracción',
-    clave: (ele: ArancelariaImportacion): string | undefined => ele.fraccion,
-    orden: 1,
-  },
-  {
-    encabezado: 'Fracción arancelaria del producto de exportación',
-    clave: (ele: ArancelariaImportacion): string | undefined =>
-      ele.fraccionArancelaria,
-    orden: 2,
-  },
-  {
-    encabezado: 'Descripción comercial',
-    clave: (ele: ArancelariaImportacion): string | undefined =>
-      ele.descripcionComercial,
-    orden: 3,
-  },
-  {
-    encabezado: 'Fracción arancelaria de la mercancía de importación',
-    clave: (ele: ArancelariaImportacion): string | undefined =>
-      ele.fraccionArancelariaImportacion,
-    orden: 4,
-  },
-  {
-    encabezado: 'Descripción comercial de importación',
-    clave: (ele: ArancelariaImportacion): string | undefined =>
-      ele.descripcionComercialImportacion,
-    orden: 5,
-  },
-  {
-    encabezado: 'Anexo II',
-    clave: (ele: ArancelariaImportacion): string | undefined => ele.anexoII,
-    orden: 6,
-  },
-  {
-    encabezado: 'Tipo',
-    clave: (ele: ArancelariaImportacion): string | undefined => ele.tipo,
-    orden: 7,
-  },
-  {
-    encabezado: 'UMT',
-    clave: (ele: ArancelariaImportacion): string | undefined => ele.umt,
-    orden: 8,
-  },
-  {
-    encabezado: 'Categoría',
-    clave: (ele: ArancelariaImportacion): string | undefined => ele.categoria,
-    orden: 9,
-  },
-  {
-    encabezado: 'Valor en moneda mensual',
-    clave: (ele: ArancelariaImportacion): string | undefined =>
-      ele.valorMensual,
-    orden: 10,
-  },
-  {
-    encabezado: 'Valor en moneda anual',
-    clave: (ele: ArancelariaImportacion): string | undefined => ele.valorAnual,
-    orden: 11,
-  },
-  {
-    encabezado: 'Volumen mensual',
-    clave: (ele: ArancelariaImportacion): string | undefined =>
-      ele.volumenrMensual,
-    orden: 12,
-  },
-  {
-    encabezado: 'Volumen anual',
-    clave: (ele: ArancelariaImportacion): string | undefined =>
-      ele.volumenAnual,
-    orden: 13,
-  },
-];
-
 export const CONFIGURACION_MODIFICACION = [
   {
     encabezado: 'Estatus',

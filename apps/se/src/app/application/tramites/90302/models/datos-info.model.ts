@@ -221,11 +221,29 @@ export interface DatosResponse {
   };
 }
 
+/**
+ * Interfaz que representa la información de los servicios.
+ *
+ * @interface InfoServicios
+ */
 
 export interface InfoServicios {
+  /**
+   * @property {string} rfc - El Registro Federal de Contribuyentes asociado al servicio.
+   */
   rfc: string;
+  /**
+   * @property {string} representacionFederal - La representación federal correspondiente.
+   */
   representacionFederal: string;
+  /**
+   * @property {string} tipoModificacion - El tipo de modificación realizada.
+   */
   tipoModificacion: string;
+
+  /**
+   * @property {string} modificacionPrograma - La descripción de la modificación del programa.
+   */
   modificacionPrograma: string;
 }
 
@@ -292,6 +310,23 @@ export interface AccionBoton {
   valor: number;
 }
 
+/**
+ * @interface Plantas
+ * @description Representa la estructura de datos para las plantas.
+ * 
+ * @property {string} calle - La calle donde se encuentra la planta.
+ * @property {string} numeroExterior - El número exterior del domicilio de la planta.
+ * @property {string} numeroInterior - El número interior del domicilio de la planta.
+ * @property {string} codingPostal - El código postal del domicilio de la planta.
+ * @property {string} colonia - La colonia donde se encuentra la planta.
+ * @property {string} municipio - El municipio donde se encuentra la planta.
+ * @property {string} estado - El estado donde se encuentra la planta.
+ * @property {string} pais - El país donde se encuentra la planta.
+ * @property {string} rfc - El Registro Federal de Contribuyentes (RFC) de la planta.
+ * @property {string} razonSocial - La razón social de la planta.
+ * @property {string} domicilioFisical - El domicilio fiscal de la planta.
+ * @property {string} estatus - El estatus actual de la planta.
+ */
 export interface Plantas {
   calle: string;
   numeroExterior: string;
@@ -307,67 +342,158 @@ export interface Plantas {
   estatus: string;
 }
 
-export interface MercanciasAProducir{
-  fraccionArancelaria:string,
-  claveSector:string,
-  estatus:string,
+/**
+ * Representa la información de las mercancías a producir.
+ * 
+ * @property {string} fraccionArancelaria - La fracción arancelaria asociada a la mercancía.
+ * @property {string} claveSector - La clave del sector al que pertenece la mercancía.
+ * @property {string} estatus - El estado actual de la mercancía.
+ */
+export interface MercanciasAProducir {
+  fraccionArancelaria: string;
+  claveSector: string;
+  estatus: string;
 }
+
+/**
+ * Representa la información del sector en el modelo de datos.
+ * 
+ * @interface Sector1
+ * @property {string} listaSectores - Lista de sectores asociados.
+ * @property {string} claveSector - Clave única que identifica el sector.
+ * @property {string} estatus - Estado o estatus del sector.
+ */
 export interface Sector1 {
   listaSectores: string;
   claveSector: string;
   estatus: string;
 }
 
+/**
+ * Representa un productor indirecto con su información relevante.
+ *
+ * @interface ProductorIndirecto
+ * @property {string} rfc - El Registro Federal de Contribuyentes (RFC) del productor indirecto.
+ * @property {string} denominacion - La denominación o nombre del productor indirecto.
+ * @property {string} correo - La dirección de correo electrónico del productor indirecto.
+ * @property {string} estatus - El estado o estatus actual del productor indirecto.
+ */
 export interface ProductorIndirecto {
   rfc: string;
   denominacion: string;
   correo: string;
   estatus: string;
 }
-export interface Bitacora{
-  tipoModificacion:string;
-  fechaModificacion:string;
-  valoresAnteriores:string;
-  valoresNuevos:string;
 
-
+/**
+ * @interface Bitacora
+ * @description Representa un registro de bitácora que contiene información sobre modificaciones realizadas.
+ * @property {string} tipoModificacion - Tipo de modificación realizada.
+ * @property {string} fechaModificacion - Fecha en la que se realizó la modificación.
+ * @property {string} valoresAnteriores - Valores anteriores antes de la modificación.
+ * @property {string} valoresNuevos - Nuevos valores después de la modificación.
+ */
+export interface Bitacora {
+  tipoModificacion: string;
+  fechaModificacion: string;
+  valoresAnteriores: string;
+  valoresNuevos: string;
 }
+
+/**
+ * Representa la respuesta de la bitácora.
+ * 
+ * @property {number} code - Código de estado de la respuesta.
+ * @property {Bitacora[]} data - Lista de objetos de tipo Bitacora que contiene los datos de la respuesta.
+ * @property {string} message - Mensaje descriptivo de la respuesta.
+ */
 export interface BitacoraRespuesta {
   code: number;
   data: Bitacora[];
   message: string;
 }
+
+
+/**
+ * @interface PlantasRespuesta
+ * @description Representa la estructura de la respuesta para las plantas.
+ * @property {number} code - Código de estado de la respuesta.
+ * @property {Plantas[]} data - Lista de plantas devueltas en la respuesta.
+ * @property {string} message - Mensaje descriptivo de la respuesta.
+ */
 export interface PlantasRespuesta {
   code: number;
   data: Plantas[];
   message: string;
 }
+
+/**
+ * @interface MercanciasRespuesta
+ * @description Representa la respuesta que contiene información sobre las mercancías a producir.
+ * @property {number} code - Código de estado de la respuesta.
+ * @property {MercanciasAProducir[]} data - Lista de mercancías a producir.
+ * @property {string} message - Mensaje descriptivo de la respuesta.
+ */
 export interface MercanciasRespuesta {
   code: number;
   data: MercanciasAProducir[];
   message: string;
 }
+
+/**
+ * Representa la respuesta del sector con información relevante.
+ * 
+ * @interface SectorRespuesta
+ * @property {number} code - Código de estado de la respuesta.
+ * @property {Sector1[]} data - Lista de datos del sector.
+ * @property {string} message - Mensaje descriptivo de la respuesta.
+ */
 export interface SectorRespuesta {
   code: number;
   data: Sector1[];
   message: string;
 }
+
+/**
+ * Representa la respuesta de un productor indirecto.
+ * 
+ * @interface ProductorIndirectoRespuesta
+ * @property {number} code - Código de estado de la respuesta.
+ * @property {ProductorIndirecto[]} data - Lista de productores indirectos incluidos en la respuesta.
+ * @property {string} message - Mensaje descriptivo de la respuesta.
+ */
 export interface ProductorIndirectoRespuesta {
   code: number;
   data: ProductorIndirecto[];
   message: string;
 }
 
+/**
+ * Interfaz que representa los datos de modificación.
+ * 
+ * @interface DatosDelModificacion
+ * @property {number} id - Identificador único del registro.
+ * @property {string} calle - Nombre de la calle.
+ * @property {number} numeroExterior - Número exterior del domicilio.
+ * @property {number} numeroInterior - Número interior del domicilio.
+ * @property {number} codigoPostal - Código postal del domicilio.
+ * @property {string} colonia - Nombre de la colonia.
+ * @property {string} municipioOAlcaldia - Nombre del municipio o alcaldía.
+ * @property {string} entidadFederativa - Nombre de la entidad federativa.
+ * @property {string} pais - Nombre del país.
+ * @property {string} telefono - Número de teléfono de contacto.
+ * @property {string} desEstatus - Descripción del estatus.
+ */
 export interface DatosDelModificacion {
-  id?: number;
-  calle?: string;
-  numeroExterior?: number;
-  numeroInterior?: number;
-  codigoPostal?: number;
-  colonia?: string;
-  municipioOAlcaldia?: string;
-  entidadFederativa?: string;
-  pais?: string;
-  telefono?: string;
-  desEstatus?: string;
+  id: number;
+  calle: string;
+  numeroExterior: number;
+  numeroInterior: number;
+  codigoPostal: number;
+  colonia: string;
+  municipioOAlcaldia: string;
+  entidadFederativa: string;
+  pais: string;
+  telefono: string;
+  desEstatus: string;
 }
