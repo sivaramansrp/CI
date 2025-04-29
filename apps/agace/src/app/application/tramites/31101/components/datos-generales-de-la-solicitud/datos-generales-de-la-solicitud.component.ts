@@ -309,8 +309,7 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
       ],
       numeroAutorizacion1: [
         this.solicitud31101State.numeroAutorizacion1,
-        Validators.required,
-        Validators.maxLength(50),
+        [Validators.required, Validators.maxLength(50)],
       ],
       '3525': [{ value: this.solicitud31101State['3525'], disabled: false }],
       '3526': [{ value: this.solicitud31101State['3526'], disabled: false }],
@@ -320,8 +319,7 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
       ],
       numeroAutorizacion2: [
         this.solicitud31101State.numeroAutorizacion2,
-        Validators.required,
-        Validators.maxLength(50),
+        [Validators.required, Validators.maxLength(50)],
       ],
       '3527': [{ value: this.solicitud31101State['3527'], disabled: false }],
       '3528': [{ value: this.solicitud31101State['3528'], disabled: false }],
