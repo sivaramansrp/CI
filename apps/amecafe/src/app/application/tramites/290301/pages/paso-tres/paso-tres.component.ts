@@ -12,11 +12,7 @@ import { TramiteStore } from '@ng-mf/data-access-user';
   styleUrl: './paso-tres.component.scss',
  
 })
-export class PasoTresComponent implements OnDestroy {
-   /**
-   * Suscripción para obtener el trámite.
-   */
-   obtienerTramiteSubscriber!: Subscription;
+export class PasoTresComponent {
    /**
     * Tipo de persona.
     */
@@ -61,14 +57,6 @@ export class PasoTresComponent implements OnDestroy {
           })
         )
         .subscribe();
-    }
-  }
-   /**
-   * Método de limpieza que se ejecuta cuando el componente se destruye.
-   */
-   ngOnDestroy(): void {
-    if (this.obtienerTramiteSubscriber) {
-      this.obtienerTramiteSubscriber.unsubscribe();
     }
   }
 

@@ -21,7 +21,8 @@
                         [radioOptions]="radioOpcion" 
                         formControlName="productorDeCafe"
                         [layout]="'horizontal'"
-                        (change)="setValoresStore(datosSolicitudForma,'productorDeCafe', 'setProductorDeCafe')">
+                        (change)="handleProductorDeCafeChange($event)"
+                        >
                     </app-input-radio>
                     </div>
             </div>
@@ -31,8 +32,10 @@
                     <div class="form-group">
                         <label class="form-label" for="claveControlUnico">Clave del padrón*:</label>
                         <input formControlName="claveDelPadron" class="form-control" id="claveDelPadron" placeholder=""
-                            type="text" 
-                            (change)="setValoresStore(datosSolicitudForma,'claveDelPadron', 'setClaveDelPadron')"/>
+                            type="text"
+
+                            (change)="setValoresStore(datosSolicitudForma,'claveDelPadron', 'setClaveDelPadron')"
+                          />
                     </div>
                 </div>
         </div>
