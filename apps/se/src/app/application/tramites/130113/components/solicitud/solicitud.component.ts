@@ -392,7 +392,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (data) => {
           this.opcionesSolicitud = data.options;
-          this.tramite130113Store.updateState({
+          this.tramite130113Store.actualizarEstado({
             solicitud: data.options[0]?.value || '',
             defaultSelect: data.defaultSelect || 'Inicial',
           });
@@ -407,7 +407,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (data) => {
           this.productoOpciones = data.options;
-          this.tramite130113Store.updateState({
+          this.tramite130113Store.actualizarEstado({
             producto: data.options[0]?.value || 'Nuevo',
             defaultProducto: data.options[0]?.value || 'Nuevo',
           });
@@ -522,59 +522,18 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.fetchPaisesPorBloque(bloqueId);
   }
 
-  /**
- * Mapping object for store methods.
- */
-  private mapaDeMetodosDelStore: { [key: string]: (valor: any) => void } = {
-    updateSolicitud: (valor) => this.tramite130113Store.updateSolicitud(valor),
-    setDescripcionPartidasDeLaMercancia: (valor) =>
-      this.tramite130113Store.setDescripcionPartidasDeLaMercancia(valor),
-    setCantidadPartidasDeLaMercancia: (valor) =>
-      this.tramite130113Store.setCantidadPartidasDeLaMercancia(valor),
-    setFraccionTigiePartidasDeLaMercancia: (valor) =>
-      this.tramite130113Store.setFraccionTigiePartidasDeLaMercancia(valor),
-    setFraccionDescripcionPartidasDeLaMercancia: (valor) =>
-      this.tramite130113Store.setFraccionDescripcionPartidasDeLaMercancia(valor),
-    setFraccion: (valor) =>
-      this.tramite130113Store.setFraccion(valor),
-    setValorPartidaUSDPartidasDeLaMercancia: (valor) =>
-      this.tramite130113Store.setValorPartidaUSDPartidasDeLaMercancia(valor),
-    setregimen: (valor) => this.tramite130113Store.setRegimen(valor),
-    setclasificacion: (valor) => this.tramite130113Store.setClasificacion(valor),
-    setProducto: (valor) => this.tramite130113Store.setProducto(valor),
-    setDescripcion: (valor) => this.tramite130113Store.setDescripcion(valor),
-    setCantidad: (valor) => this.tramite130113Store.setCantidad(valor),
-    setValorFacturaUSD: (valor) => this.tramite130113Store.setValorFacturaUSD(valor),
-    setValorPartidaUSD: (valor) =>
-      this.tramite130113Store.setValorPartidaUSD(parseFloat(valor) || 0),
-    setUnidadMedida: (valor) => this.tramite130113Store.setUnidadMedida(valor),
-    setBloque: (valor) => this.tramite130113Store.setBloque(valor),
-    setUsoEspecifico: (valor) =>
-      this.tramite130113Store.setUsoEspecifico(valor),
-    setJustificacionImportacionExportacion: (valor) =>
-      this.tramite130113Store.setJustificacionImportacionExportacion(valor),
-    setObservaciones: (valor) =>
-      this.tramite130113Store.setObservaciones(valor),
-    setEntidad: (valor) => this.tramite130113Store.setEntidad(valor),
-    setRepresentacion: (valor) =>
-      this.tramite130113Store.setRepresentacion(valor),
-  };
-  
 
-  /**
-   * setValoresStore
-   * Establece valores en el store.
+    /**
+   * @description Actualiza el almacén con nuevos valores basados en eventos de formulario.
+   * @param event Evento que incluye el formulario, el campo y el método a ejecutar.
    */
-  setValoresStore(event: { form: FormGroup; campo: string; metodoNombre: string }): void {
-    const VALOR_CAMPO = event.form.get(event.campo)?.value;
-    const FUNCION_METODO_STORE = this.mapaDeMetodosDelStore[event.metodoNombre];
-
-    if (FUNCION_METODO_STORE) {
-      FUNCION_METODO_STORE(VALOR_CAMPO);
-    } else {
-      console.error(`Método ${event.metodoNombre} no existe en Tramite130113Store`);
+    setValoresStore($event: { form: FormGroup; campo: string }): void {
+      const VALOR = $event.form.get($event.campo)?.value;
+      this.tramite130113Store.actualizarEstado({ [$event.campo]: VALOR });
+      if($event.campo === 'fraccion'){
+        this.tramite130113Store.actualizarEstado({'unidadMedida': '1'});
+      }
     }
-  }
 
   /**
    *  Ciclo de vida de Angular: limpia las suscripciones al destruir el componente.

@@ -62,12 +62,12 @@ describe('DetosDeLaMercanciaComponent', () => {
     const campo = 'testCampo';
     const metodoNombre = 'testMetodoNombre';
 
-    component.setValoresStore(testForm, campo, metodoNombre);
+    component.setValoresStore(testForm, campo);
 
     expect(emitSpy).toHaveBeenCalledWith({
       form: testForm,
-      campo,
-      metodoNombre,
+      campo
+     
     });
   });
 });

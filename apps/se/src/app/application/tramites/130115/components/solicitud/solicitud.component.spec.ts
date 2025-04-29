@@ -29,14 +29,6 @@ class PaisProcendenciaStubComponent {
 @Component({ selector: 'app-representacion', template: '' })
 class RepresentacionStubComponent {}
 
-const mockPartidasdelaTable = {
-  cantidad :"10",
-  unidadDeMedida :"kg",
-  fraccionFrancelaria :"1234",
-  descripcion:"Item",
-  precioUnitarioUSD :"50",
-  totalUSD:"100",
-};
 
 describe('SolicitudComponent', () => {
   let component: SolicitudComponent;
@@ -46,18 +38,18 @@ describe('SolicitudComponent', () => {
   let mockService: jest.Mocked<any>;
   let mockImportacionDeVehiculosService: Partial<ImportacionVehiculosNuevosService>;
 
-  const mockProductoOptions: ProductoOpción[] = [
+  const MOCK_PRODUCTO_OPTIONS: ProductoOpción[] = [
     { label: 'Nuevo', value: 'Nuevo' },
     { label: 'Usado', value: 'Usado' },
   ];
-  const mockCatalogo: Catalogo[] = [
+  const MOCK_CATALOGO: Catalogo[] = [
     { id: 1, descripcion: 'Option 1' },
     { id: 2, descripcion: 'Option 2' },
   ];
 
   beforeEach(async () => {
     mockStore = {
-      updateState: jest.fn(),
+      actualizarEstado: jest.fn(),
       setMostrarTabla: jest.fn(),
       storeTableValues: jest.fn(),
       updateSolicitud: jest.fn(),
@@ -107,10 +99,10 @@ describe('SolicitudComponent', () => {
 
     mockService = {
    
-      getEntidadFederativa: jest.fn().mockReturnValue(of(mockCatalogo)),
-      getRepresentacionFederal: jest.fn().mockReturnValue(of(mockCatalogo)),
-      getListaDePaisesDisponibles: jest.fn().mockReturnValue(of(mockCatalogo)),
-      getPaisesPorBloque: jest.fn().mockReturnValue(of(mockCatalogo)),
+      getEntidadFederativa: jest.fn().mockReturnValue(of(MOCK_CATALOGO)),
+      getRepresentacionFederal: jest.fn().mockReturnValue(of(MOCK_CATALOGO)),
+      getListaDePaisesDisponibles: jest.fn().mockReturnValue(of(MOCK_CATALOGO)),
+      getPaisesPorBloque: jest.fn().mockReturnValue(of(MOCK_CATALOGO)),
     };
     jest.spyOn(mockService, 'getEntidadFederativa'); // Ensure the spy is set up
 
@@ -135,19 +127,19 @@ describe('SolicitudComponent', () => {
 
   beforeEach(async () => {
     mockImportacionDeVehiculosService = {
-      getEntidadFederativa: jest.fn().mockReturnValue(of(mockCatalogo)),
-      getRepresentacionFederal: jest.fn().mockReturnValue(of(mockCatalogo)),
-      getListaDePaisesDisponibles: jest.fn().mockReturnValue(of(mockCatalogo)),
-      getPaisesPorBloque: jest.fn().mockReturnValue(of(mockCatalogo)),
+      getEntidadFederativa: jest.fn().mockReturnValue(of(MOCK_CATALOGO)),
+      getRepresentacionFederal: jest.fn().mockReturnValue(of(MOCK_CATALOGO)),
+      getListaDePaisesDisponibles: jest.fn().mockReturnValue(of(MOCK_CATALOGO)),
+      getPaisesPorBloque: jest.fn().mockReturnValue(of(MOCK_CATALOGO)),
       getSolicitudeOptions: jest.fn().mockReturnValue(
         of({
-          options: mockProductoOptions,
+          options: MOCK_PRODUCTO_OPTIONS,
           defaultSelect: 'Inicial',
         })
       ),
       getProductoOptions: jest.fn().mockReturnValue(
         of({
-          options: mockProductoOptions,
+          options: MOCK_PRODUCTO_OPTIONS,
         })
       ),
       getTablaDatos: jest.fn().mockReturnValue(of([{ cantidad: 10, totalUSD: 1000 }])), // Mock implementation
@@ -192,11 +184,11 @@ describe('SolicitudComponent', () => {
     });
 
     it('Debería actualizar mostrarTabla según la consulta', () => {
-      const mostrarTablaSubject = new Subject<boolean>();
-      mockQuery.mostrarTabla$ = mostrarTablaSubject.asObservable();
+      const MONSTER_TABLA_SUBJECT = new Subject<boolean>();
+      mockQuery.mostrarTabla$ = MONSTER_TABLA_SUBJECT.asObservable();
 
       component.ngOnInit();
-      mostrarTablaSubject.next(true);
+      MONSTER_TABLA_SUBJECT.next(true);
 
       expect(component.mostrarTabla).toBe(true);
     });
@@ -226,12 +218,12 @@ describe('SolicitudComponent', () => {
       component.opcionesDeBusqueda();
 
       expect(mockImportacionDeVehiculosService.getSolicitudeOptions).toHaveBeenCalled();
-      expect(mockStore.updateState).toHaveBeenCalledWith({
+      expect(mockStore.actualizarEstado).toHaveBeenCalledWith({
         solicitud: 'Nuevo',
         defaultSelect: 'Inicial',
       });
       expect(mockImportacionDeVehiculosService.getProductoOptions).toHaveBeenCalled();
-      expect(mockStore.updateState).toHaveBeenCalledWith({
+      expect(mockStore.actualizarEstado).toHaveBeenCalledWith({
         producto: 'Nuevo',
         defaultProducto: 'Nuevo',
       });
@@ -282,7 +274,7 @@ describe('SolicitudComponent', () => {
       component.fetchEntidadFederativa(); // Explicitly call the method
     
       expect(mockImportacionDeVehiculosService.getEntidadFederativa).toHaveBeenCalled(); // Correct the mock service reference
-      expect(component.entidadFederativa).toEqual(mockCatalogo);
+      expect(component.entidadFederativa).toEqual(MOCK_CATALOGO);
     });
   });
 
@@ -291,7 +283,7 @@ describe('SolicitudComponent', () => {
       component.fetchRepresentacionFederal();
 
       expect(mockImportacionDeVehiculosService.getRepresentacionFederal).toHaveBeenCalled();
-      expect(component.representacionFederal).toEqual(mockCatalogo);
+      expect(component.representacionFederal).toEqual(MOCK_CATALOGO);
     });
   });
 
@@ -300,7 +292,7 @@ describe('SolicitudComponent', () => {
       component.listaDePaisesDisponibles();
 
       expect(mockImportacionDeVehiculosService.getListaDePaisesDisponibles).toHaveBeenCalled();
-      expect(component.elementosDeBloque).toEqual(mockCatalogo);
+      expect(component.elementosDeBloque).toEqual(MOCK_CATALOGO);
     });
   });
 
@@ -309,7 +301,7 @@ describe('SolicitudComponent', () => {
       component.fetchPaisesPorBloque(1);
 
       expect(mockImportacionDeVehiculosService.getPaisesPorBloque).toHaveBeenCalledWith(1);
-      expect(component.paisesPorBloque).toEqual(mockCatalogo);
+      expect(component.paisesPorBloque).toEqual(MOCK_CATALOGO);
       expect(component.selectRangoDias).toEqual(['Option 1', 'Option 2']);
     });
   });
@@ -333,22 +325,22 @@ describe('SolicitudComponent', () => {
       component.setValoresStore({
         form: component.mercanciaForm,
         campo: 'producto',
-        metodoNombre: 'setProducto',
+        
       });
   
-      expect(mockStore.setProducto).toHaveBeenCalledWith('Nuevo');
+      expect(mockStore.actualizarEstado).toHaveBeenCalledWith({ producto: 'Nuevo' });
     });
   });
 
   describe('ngOnDestroy', () => {
     it('Debería completar el tema destruido$', () => {
-      const destroyedSpy = jest.spyOn(component['destroyed$'], 'next');
-      const completeSpy = jest.spyOn(component['destroyed$'], 'complete');
+      const DESTROY_SPY = jest.spyOn(component['destroyed$'], 'next');
+      const COMPLETE_SPY = jest.spyOn(component['destroyed$'], 'complete');
 
       component.ngOnDestroy();
 
-      expect(destroyedSpy).toHaveBeenCalled();
-      expect(completeSpy).toHaveBeenCalled();
+      expect(DESTROY_SPY).toHaveBeenCalled();
+      expect(COMPLETE_SPY).toHaveBeenCalled();
     });
   });
 });

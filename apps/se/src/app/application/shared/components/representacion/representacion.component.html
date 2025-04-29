@@ -9,7 +9,7 @@
             [required]="true"
             [placeholder]="'Seleccione un valor'"
             formControlName="entidad"
-            (change)="setValoresStore(frmRepresentacionForm, 'entidad', 'setEntidad')"
+            (change)="setValoresStore(frmRepresentacionForm, 'entidad')"
           ></app-catalogo-select>
           <div
             *ngIf="frmRepresentacionForm.controls['entidad'].invalid && frmRepresentacionForm.controls['entidad'].touched"
@@ -25,7 +25,7 @@
             [required]="true"
             [placeholder]="'Seleccione un valor'"
             formControlName="representacion"
-            (change)="setValoresStore(frmRepresentacionForm, 'representacion', 'setRepresentacion')"
+            (change)="setValoresStore(frmRepresentacionForm, 'representacion')"
           ></app-catalogo-select>
           <div
             *ngIf="frmRepresentacionForm.controls['representacion'].invalid && frmRepresentacionForm.controls['representacion'].touched"

@@ -57,26 +57,9 @@ describe('SolicitudComponent', () => {
 
   beforeEach(async () => {
     mockStore = {
-      updateState: jest.fn(),
+      actualizarEstado: jest.fn(),
       setMostrarTabla: jest.fn(),
       storeTableValues: jest.fn(),
-      updateSolicitud: jest.fn(),
-      setDescripcionPartidasDeLaMercancia: jest.fn(),
-      setCantidadPartidasDeLaMercancia: jest.fn(),
-      setValorPartidaUSDPartidasDeLaMercancia: jest.fn(),
-      setregimen: jest.fn(),
-      setclasificacion: jest.fn(),
-      setProducto: jest.fn(),
-      setDescripcion: jest.fn(),
-      setCantidad: jest.fn(),
-      setValorPartidaUSD: jest.fn(),
-      setUnidadMedida: jest.fn(),
-      setBloque: jest.fn(),
-      setUsoEspecifico: jest.fn(),
-      setJustificacionImportacionExportacion: jest.fn(),
-      setObservaciones: jest.fn(),
-      setEntidad: jest.fn(),
-      setRepresentacion: jest.fn(),
     } as any;
 
     mockQuery = {
@@ -226,12 +209,12 @@ describe('SolicitudComponent', () => {
       component.opcionesDeBusqueda();
 
       expect(mockImportacionDeVehiculosService.getSolicitudeOptions).toHaveBeenCalled();
-      expect(mockStore.updateState).toHaveBeenCalledWith({
+      expect(mockStore.actualizarEstado).toHaveBeenCalledWith({
         solicitud: 'Nuevo',
         defaultSelect: 'Inicial',
       });
       expect(mockImportacionDeVehiculosService.getProductoOptions).toHaveBeenCalled();
-      expect(mockStore.updateState).toHaveBeenCalledWith({
+      expect(mockStore.actualizarEstado).toHaveBeenCalledWith({
         producto: 'Nuevo',
         defaultProducto: 'Nuevo',
       });
@@ -279,9 +262,9 @@ describe('SolicitudComponent', () => {
 
   describe('fetchEntidadFederativa', () => {
     it('Debería obtener la lista de entidades federativas', () => {
-      component.fetchEntidadFederativa(); // Explicitly call the method
+      component.fetchEntidadFederativa(); 
     
-      expect(mockImportacionDeVehiculosService.getEntidadFederativa).toHaveBeenCalled(); // Correct the mock service reference
+      expect(mockImportacionDeVehiculosService.getEntidadFederativa).toHaveBeenCalled(); 
       expect(component.entidadFederativa).toEqual(mockCatalogo);
     });
   });
@@ -333,10 +316,10 @@ describe('SolicitudComponent', () => {
       component.setValoresStore({
         form: component.mercanciaForm,
         campo: 'producto',
-        metodoNombre: 'setProducto',
+        
       });
   
-      expect(mockStore.setProducto).toHaveBeenCalledWith('Nuevo');
+      expect(mockStore.actualizarEstado).toHaveBeenCalledWith({ producto: 'Nuevo' });
     });
   });
 

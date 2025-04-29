@@ -99,222 +99,29 @@ export class Tramite130217Store extends Store<Tramite130217State> {
     super(createInitialState());
   }
 
+  
   /**
-   * Actualiza el atributo `fraccion` en el estado.
-   * @param fraccion El nuevo valor para `fraccion`.
+   * Actualiza el estado del store con los valores proporcionados.
+   * Valores a actualizar en el estado.
    */
-  public setFraccion(fraccion: string): void {
+  public actualizarEstado(valores: Partial<Tramite130217State>): void {
     this.update((state) => ({
       ...state,
-      fraccion,
+      ...valores,
     }));
   }
 
   /**
-   * Actualiza el atributo `solicitud` en el estado.
-   * @param solicitud El nuevo valor para `solicitud`.
-   */
-  public updateSolicitud(solicitud: string): void {
-    this.update((state) => ({
-      ...state,
-      solicitud,
-    }));
-  }
-
-  /**
-   * Actualiza el atributo `defaultSelect` en el estado.
-   * @param defaultSelect El nuevo valor para `defaultSelect`.
-   */
-  public updateDefaultSelect(defaultSelect: string): void {
-    this.update((state) => ({
-      ...state,
-      defaultSelect,
-    }));
-  }
-
-  /**
-   * Actualiza múltiples atributos en el estado.
-   * @param updates Objeto parcial del estado con las actualizaciones.
-   */
-  public updateState(updates: Partial<Tramite130217State>): void {
-    this.update(updates);
-  }
-
-  /**
-   * Actualiza el atributo `producto` en el estado.
-   * @param producto El nuevo valor para `producto`.
-   */
-  public setProducto(producto: string): void {
-    this.update({ producto });
-  }
-
-  /**
-   * Actualiza el atributo `descripcion` en el estado.
-   * @param descripcion El nuevo valor para `descripcion`.
-   */
-  public setDescripcion(descripcion: string): void {
-    this.update({ descripcion });
-  }
-
-  /**
-   * Actualiza el atributo `cantidad` en el estado.
-   * @param cantidad El nuevo valor para `cantidad`.
-   */
-  public setCantidad(cantidad: string): void {
-    this.update({ cantidad });
-  }
-
-  /**
-   * Actualiza el atributo `valorPartidaUSD` en el estado.
-   * @param valorPartidaUSD El nuevo valor para `valorPartidaUSD`.
-   */
-  public setValorPartidaUSD(valorPartidaUSD: number): void {
-    this.update({ valorPartidaUSD });
-  }
-
-  /**
-   * Actualiza el atributo `unidadMedida` en el estado.
-   * @param unidadMedida El nuevo valor para `unidadMedida`.
-   */
-  public setUnidadMedida(unidadMedida: string): void {
-    this.update({ unidadMedida });
-  }
-
-  /**
-   * Actualiza el atributo `defaultProducto` en el estado.
-   * @param defaultProducto El nuevo valor para `defaultProducto`.
-   */
-  public updateDefaultProducto(defaultProducto: string): void {
-    this.update({ defaultProducto });
-  }
-
-  /**
-   * Actualiza el atributo `regimen` en el estado.
-   * @param regimen El nuevo valor para `regimen`.
-   */
-  public setregimen(regimen: string): void {
-    this.update({ regimen });
-  }
-
-  /**
-   * Actualiza el atributo `clasificacion` en el estado.
-   * @param clasificacion El nuevo valor para `clasificacion`.
-   */
-  public setclasificacion(clasificacion: string): void {
-    this.update({ clasificacion });
-  }
-
-  /**
-   * Actualiza el atributo `mostrarTabla` en el estado.
-   * @param mostrar El nuevo valor para `mostrarTabla`.
+   * Establece el valor de `mostrarTabla` en el estado.
+   * Valor booleano para mostrar u ocultar la tabla.
    */
   public setMostrarTabla(mostrar: boolean): void {
     this.update({ mostrarTabla: mostrar });
   }
 
   /**
-   * Actualiza el atributo `valorFacturaUSD` en el estado.
-   * @param valorFacturaUSD El nuevo valor para `valorFacturaUSD`.
-   */
-  public setValorFacturaUSD(valorFacturaUSD: string): void {
-    this.update((state) => ({
-      ...state,
-      valorFacturaUSD,
-    }));
-  }
-
-  /**
-   * Actualiza el atributo `descripcionPartidasDeLaMercancia` en el estado.
-   * @param descripcionPartidasDeLaMercancia El nuevo valor para `descripcionPartidasDeLaMercancia`.
-   */
-  public setDescripcionPartidasDeLaMercancia(
-    descripcionPartidasDeLaMercancia: string
-  ): void {
-    this.update((state) => ({
-      ...state,
-      descripcionPartidasDeLaMercancia,
-    }));
-  }
-
-  /**
-   * Actualiza el atributo `cantidadPartidasDeLaMercancia` en el estado.
-   * @param cantidadPartidasDeLaMercancia El nuevo valor para `cantidadPartidasDeLaMercancia`.
-   */
-  public setCantidadPartidasDeLaMercancia(
-    cantidadPartidasDeLaMercancia: string
-  ): void {
-    this.update((state) => ({
-      ...state,
-      cantidadPartidasDeLaMercancia,
-    }));
-  }
-
-  /**
-   * Actualiza el atributo `valorPartidaUSDPartidasDeLaMercancia` en el estado.
-   * @param valorPartidaUSDPartidasDeLaMercancia El nuevo valor para `valorPartidaUSDPartidasDeLaMercancia`.
-   */
-  public setValorPartidaUSDPartidasDeLaMercancia(
-    valorPartidaUSDPartidasDeLaMercancia: number
-  ): void {
-    this.update((state) => ({
-      ...state,
-      valorPartidaUSDPartidasDeLaMercancia,
-    }));
-  }
-
-  /**
-   * Actualiza el atributo `bloque` en el estado.
-   * @param bloque El nuevo valor para `bloque`.
-   */
-  public setBloque(bloque: string): void {
-    this.update({ bloque });
-  }
-
-  /**
-   * Actualiza el atributo `usoEspecifico` en el estado.
-   * @param usoEspecifico El nuevo valor para `usoEspecifico`.
-   */
-  public setUsoEspecifico(usoEspecifico: string): void {
-    this.update({ usoEspecifico });
-  }
-
-  /**
-   * Actualiza el atributo `justificacionImportacionExportacion` en el estado.
-   * @param justificacionImportacionExportacion El nuevo valor para `justificacionImportacionExportacion`.
-   */
-  public setJustificacionImportacionExportacion(
-    justificacionImportacionExportacion: string
-  ): void {
-    this.update({ justificacionImportacionExportacion });
-  }
-
-  /**
-   * Actualiza el atributo `observaciones` en el estado.
-   * @param observaciones El nuevo valor para `observaciones`.
-   */
-  public setObservaciones(observaciones: string): void {
-    this.update({ observaciones });
-  }
-
-  /**
-   * Actualiza el atributo `entidad` en el estado.
-   * @param entidad El nuevo valor para `entidad`.
-   */
-  public setEntidad(entidad: string): void {
-    this.update({ entidad });
-  }
-
-  /**
-   * Actualiza el atributo `representacion` en el estado.
-   * @param representacion El nuevo valor para `representacion`.
-   */
-  public setRepresentacion(representacion: string): void {
-    this.update({ representacion });
-  }
-
-  /**
-   * Almacena la fila seleccionada en la tabla.
-   * @param fila La fila seleccionada.
+   * Almacena los valores de las filas seleccionadas en el estado.
+   * Lista de filas seleccionadas.
    */
   public storeTableValues(fila: PartidasDeLaMercanciaModelo[]): void {
     this.update({
