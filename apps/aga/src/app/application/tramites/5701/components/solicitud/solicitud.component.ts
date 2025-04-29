@@ -271,14 +271,6 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy{
     // Peticiones a las apis
     this.inicializaCatalogos();
 
-    this.usuarioQuery.selectUsuarioState$.pipe(
-      takeUntil(this.destroyNotifier$),
-      map((seccionState) => {
-        this.usuarioState = seccionState;
-      })
-    )
-    .subscribe();
-
     this.tramite5701Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -633,15 +625,11 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy{
    */
   private obtenerPatente(): void {
     let patente: string = '';
-
-    console.log('el valor ' +  this.usuarioState?.perfilUsuario?.rfc);
-    this.patenteService.getListaPatente(this.usuarioState.perfilUsuario.rfc).pipe(
-    //this.patenteService.getListaPatente('SAAA980822LP1').pipe(
+    this.patenteService.getListaPatente('SAAA980822LP1').pipe(
       tap(response => response.datos),
       switchMap(pantenteResponse => {
         if (pantenteResponse) {
           patente = pantenteResponse.datos?.patente;
-          // Busqueda de la patente a algun endpoint
           const DATOS_PATENTE: DatosAgregarFormulario = {
             form: this.despacho,
             field: 'patente',
@@ -650,9 +638,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy{
           FormulariosService.agregarValorCamposDesactivados(DATOS_PATENTE);
           return of(null);
         }
-        
-        return this.patenteApoderadoService.getListaPatente(this.usuarioState?.perfilUsuario?.rfc).pipe(
-        //return this.patenteApoderadoService.getListaPatente('SAAA980822LP1').pipe(
+        return this.patenteApoderadoService.getListaPatente('SAAA980822LP1').pipe(
           tap(_ => {
             this.isApoderado = true;
           })
@@ -660,7 +646,6 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy{
       }),
       takeUntil(this.destroyNotifier$),
     ).subscribe();
-
   }
 
   /**
