@@ -10,8 +10,6 @@
  */
 
 import {
-  Arancelaria,
-  ArancelariaImportacion,
   Bitacora,
   DatosDelModificacion,
   MercanciasAProducir,
@@ -47,67 +45,7 @@ export const PASOS = [
 
 
 
-/**
- * Configuración de la tabla para fracciones arancelarias.
- * @constant {Array<Object>} CONFIGURACION_ARANCELARIAS
- */
-export const CONFIGURACION_ARANCELARIAS = [
-  {
-    encabezado: '#Fracción',
-    clave: (ele: Arancelaria): string | undefined => ele.fraccion,
-    orden: 1,
-  },
-  {
-    encabezado: 'Fracción arancelaria',
-    clave: (ele: Arancelaria): string | undefined => ele.fraccionArancelaria,
-    orden: 2,
-  },
-  {
-    encabezado: 'Descripción comercial',
-    clave: (ele: Arancelaria): string | undefined => ele.descripcionComercial,
-    orden: 3,
-  },
-  {
-    encabezado: 'Anexo II',
-    clave: (ele: Arancelaria): string | undefined => ele.anexoII,
-    orden: 4,
-  },
-  {
-    encabezado: 'Tipo',
-    clave: (ele: Arancelaria): string | undefined => ele.tipo,
-    orden: 5,
-  },
-  {
-    encabezado: 'UMT',
-    clave: (ele: Arancelaria): string | undefined => ele.umt,
-    orden: 6,
-  },
-  {
-    encabezado: 'Categoría',
-    clave: (ele: Arancelaria): string | undefined => ele.categoria,
-    orden: 7,
-  },
-  {
-    encabezado: 'Valor en moneda mensual',
-    clave: (ele: Arancelaria): string | undefined => ele.valorMensual,
-    orden: 8,
-  },
-  {
-    encabezado: 'Valor en moneda anual',
-    clave: (ele: Arancelaria): string | undefined => ele.valorAnual,
-    orden: 9,
-  },
-  {
-    encabezado: 'Volumen mensual',
-    clave: (ele: Arancelaria): string | undefined => ele.volumenrMensual,
-    orden: 10,
-  },
-  {
-    encabezado: 'Volumen anual',
-    clave: (ele: Arancelaria): string | undefined => ele.volumenAnual,
-    orden: 11,
-  },
-];
+
 export const CONFIGURACION_BITCORA = [
   {
     encabezado: 'Tipo modificación ',
@@ -254,84 +192,7 @@ export const CONFIGURACION_PLANTAS = [
   },
 ];
 
-/**
- * Configuración de la tabla para fracciones de importación.
- * @constant {Array<Object>} CONFIGURACION_ARANCELARIASIMPORTACION
- */
-export const CONFIGURACION_ARANCELARIASIMPORTACION = [
-  {
-    encabezado: '#Fracción',
-    clave: (ele: ArancelariaImportacion): string | undefined => ele.fraccion,
-    orden: 1,
-  },
-  {
-    encabezado: 'Fracción arancelaria del producto de exportación',
-    clave: (ele: ArancelariaImportacion): string | undefined =>
-      ele.fraccionArancelaria,
-    orden: 2,
-  },
-  {
-    encabezado: 'Descripción comercial',
-    clave: (ele: ArancelariaImportacion): string | undefined =>
-      ele.descripcionComercial,
-    orden: 3,
-  },
-  {
-    encabezado: 'Fracción arancelaria de la mercancía de importación',
-    clave: (ele: ArancelariaImportacion): string | undefined =>
-      ele.fraccionArancelariaImportacion,
-    orden: 4,
-  },
-  {
-    encabezado: 'Descripción comercial de importación',
-    clave: (ele: ArancelariaImportacion): string | undefined =>
-      ele.descripcionComercialImportacion,
-    orden: 5,
-  },
-  {
-    encabezado: 'Anexo II',
-    clave: (ele: ArancelariaImportacion): string | undefined => ele.anexoII,
-    orden: 6,
-  },
-  {
-    encabezado: 'Tipo',
-    clave: (ele: ArancelariaImportacion): string | undefined => ele.tipo,
-    orden: 7,
-  },
-  {
-    encabezado: 'UMT',
-    clave: (ele: ArancelariaImportacion): string | undefined => ele.umt,
-    orden: 8,
-  },
-  {
-    encabezado: 'Categoría',
-    clave: (ele: ArancelariaImportacion): string | undefined => ele.categoria,
-    orden: 9,
-  },
-  {
-    encabezado: 'Valor en moneda mensual',
-    clave: (ele: ArancelariaImportacion): string | undefined =>
-      ele.valorMensual,
-    orden: 10,
-  },
-  {
-    encabezado: 'Valor en moneda anual',
-    clave: (ele: ArancelariaImportacion): string | undefined => ele.valorAnual,
-    orden: 11,
-  },
-  {
-    encabezado: 'Volumen mensual',
-    clave: (ele: ArancelariaImportacion): string | undefined =>
-      ele.volumenrMensual,
-    orden: 12,
-  },
-  {
-    encabezado: 'Volumen anual',
-    clave: (ele: ArancelariaImportacion): string | undefined =>
-      ele.volumenAnual,
-    orden: 13,
-  },
-];
+
 
 export const CONFIGURACION_MODIFICACION = [
   {
