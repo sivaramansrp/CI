@@ -1,4 +1,4 @@
-import { SeleccionadasTabla } from "../models/validacion-posteriori.model";
+import { DisponiblesTabla, SeleccionadasTabla } from "../models/validacion-posteriori.model";
 
 /**
  * Constante que define los pasos del wizard en el trámite.
@@ -76,50 +76,80 @@ export const FECHAFACTURA = {
 };
 
 
-export const COLUMNAS_SELECCIONADAS: {
-  encabezado: string;
-  clave: (ele: SeleccionadasTabla) => any;
-  orden: number;
-}[] =[{
-      encabezado: 'Fracción arancelaria',
-      clave: (ele: SeleccionadasTabla) => ele.fraccionArancelaria,
-      orden: 1,
-    },
-    {
-      encabezado: 'Cantidad',
-      clave: (ele: SeleccionadasTabla) => ele.cantidad,
-      orden: 2,
-    },
-    {
-      encabezado: 'Unidad de medida',
-      clave: (ele: SeleccionadasTabla) => ele.unidadMedida,
-      orden: 3,
-    },
-    {
-      encabezado: 'Valor mercancía',
-      clave: (ele: SeleccionadasTabla) => ele.valorMercancia,
-      orden: 4,
-    },
-    {
-      encabezado: 'Tipo de factura',
-      clave: (ele: SeleccionadasTabla) => ele.tipoFactura,
-      orden: 5,
-    },
-    {
-      encabezado: 'Número factura',
-      clave: (ele: SeleccionadasTabla) => ele.numFactura,
-      orden: 6,
-    },
-    {
-      encabezado: 'Complemento descripción',
-      clave: (ele: SeleccionadasTabla) => ele.complementoDescripcion,
-      orden: 7,
-    },
-    {
-      encabezado: 'Fecha factura',
-      clave: (ele: SeleccionadasTabla) => ele.fechaFactura,
-      orden: 8,
-    },
-  ];
+export const COLUMNAS_SELECCIONADAS =[
+     {
+       encabezado: 'Fracción arancelaria',
+       clave: (ele: SeleccionadasTabla) => ele.fraccionArancelaria,
+       orden: 1,
+     },
+     {
+       encabezado: 'Cantidad',
+       clave: (ele: SeleccionadasTabla) => ele.cantidad,
+       orden: 2,
+     },
+     {
+       encabezado: 'Unidad de medida',
+       clave: (ele: SeleccionadasTabla) => ele.unidadMedida,
+       orden: 3,
+     },
+     {
+       encabezado: 'Valor mercancía',
+       clave: (ele: SeleccionadasTabla) => ele.valorMercancia,
+       orden: 4,
+     },
+     {
+       encabezado: 'Tipo de factura',
+       clave: (ele: SeleccionadasTabla) => ele.tipoFactura,
+       orden: 5,
+     },
+     {
+       encabezado: 'Número factura',
+       clave: (ele: SeleccionadasTabla) => ele.numFactura,
+       orden: 6,
+     },
+     {
+       encabezado: 'Complemento descripción',
+       clave: (ele: SeleccionadasTabla) => ele.complementoDescripcion,
+       orden: 7,
+     },
+     {
+       encabezado: 'Fecha factura',
+       clave: (ele: SeleccionadasTabla) => ele.fechaFactura,
+       orden: 8,
+     },
+   ];
 
   
+
+  export const COLUMNAS_DSPONIBLES =[
+       {
+         encabezado: 'Fracción arancelaria',
+         clave: (ele: DisponiblesTabla) => ele.fraccionArancelaria,
+         orden: 1,
+       },
+       {
+         encabezado: 'Nombre técnico',
+         clave: (ele: DisponiblesTabla) => ele.nombreTecnico,
+         orden: 2,
+       },
+       {
+         encabezado: 'Nombre comercial',
+         clave: (ele: DisponiblesTabla) => ele.nombreComercial,
+         orden: 3,
+       },
+       {
+         encabezado: 'Número de registro de productos',
+         clave: (ele: DisponiblesTabla) => ele.numeroRegistroProductos,
+         orden: 4,
+       },
+       {
+         encabezado: 'Fecha expedición',
+         clave: (ele: DisponiblesTabla) => ele.fechaExpedicion,
+         orden: 5,
+       },
+       {
+         encabezado: 'Fecha vencimiento',
+         clave: (ele: DisponiblesTabla) => ele.fechaVencimiento,
+         orden: 6,
+       },
+     ];

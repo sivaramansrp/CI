@@ -12,6 +12,7 @@ import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
 import { DisponiblesTabla } from '../../models/validacion-posteriori.model';
 import { ElementRef } from '@angular/core';
 import {
+  COLUMNAS_DSPONIBLES,
   COLUMNAS_SELECCIONADAS,
   FECHAFACTURA,
 } from '../../constants/validacion-posteriori.enum';
@@ -103,13 +104,10 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
    *
    * Define los encabezados y las claves para mostrar los datos de las mercancías disponibles.
    */
-  public disponiblesEncabezados: ConfiguracionColumna<DisponiblesTabla>[] = COLUMNAS_SELECCIONADAS.map((col) => ({
-    encabezado: col.encabezado,
-    clave: (ele: DisponiblesTabla) => col.clave(ele as unknown as SeleccionadasTabla),
-    orden: col.orden,
-  }));
+  public disponiblesEncabezados: ConfiguracionColumna<DisponiblesTabla>[] =
+    COLUMNAS_DSPONIBLES;
 
-    /**
+  /**
    * Datos de la tabla de mercancías disponibles
    *
    * Contiene la lista de mercancías que están disponibles para selección.
@@ -259,8 +257,7 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
     public store: Tramite110212Store,
     public tramiteQuery: Tramite110212Query,
     private validacionesService: ValidacionesFormularioService
-  ) 
-  {}
+  ) {}
 
   /**
    * Inicializa el componente.
