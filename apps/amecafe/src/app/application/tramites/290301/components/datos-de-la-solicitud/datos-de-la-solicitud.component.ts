@@ -122,13 +122,13 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
 
 /** Método para manejar el cambio del campo "productorDeCafe" */
 handleProductorDeCafeChange(event: any): void {
-  const VALUE = event.target?.value === 'true';
+  const VALUE = this.datosSolicitudForma.get('productorDeCafe')?.value; // Get the value from the form control
   const CLAVE_DEL_PADRON_CONTROL = this.datosSolicitudForma.get('claveDelPadron');
-  
-  if (VALUE === true) {
+
+  if (VALUE === 'true') {
     CLAVE_DEL_PADRON_CONTROL?.enable();
 
-  } else if (VALUE === false) {
+  } else if (VALUE === 'false') {
     CLAVE_DEL_PADRON_CONTROL?.disable(); // Disable the field if "No" is selected
     CLAVE_DEL_PADRON_CONTROL?.setValue(''); // Clear the field value
   }
