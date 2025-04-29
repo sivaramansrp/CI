@@ -11,7 +11,7 @@
 
 import { AccionBoton, ListaPasoWizard } from '../../models/peru-certificado.module';
 import { Component, ViewChild } from '@angular/core';
-import { DatosPasos } from '@ng-mf/data-access-user';
+import { DatosPasos, PAGO_DE_DERECHOS } from '@ng-mf/data-access-user';
 import { PASOS } from '../../constantes/peru-certificado.module';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
@@ -26,6 +26,11 @@ export class PeruCertificadoComponent {
    * @property {Array<LISTAPASOWIZARD>} pasos - Array de pasos del wizard.
    */
   pasos: ListaPasoWizard[] = PASOS;
+   /**
+   * @description Propiedad pública que almacena los textos relacionados con el pago de derechos.
+   * @command PAGO_DE_DERECHOS
+   */
+   public TEXTOS = PAGO_DE_DERECHOS;
 
   /**
    * @property {string | null} tituloMensaje - El título del mensaje.
