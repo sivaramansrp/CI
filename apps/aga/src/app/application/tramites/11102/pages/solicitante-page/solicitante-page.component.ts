@@ -32,17 +32,17 @@ interface AccionBoton {
  * Componente para gestionar la página del solicitante.
  */
 @Component({
-  standalone: true,
-  imports: [
-    AlertComponent,
-    WizardComponent,
-    CommonModule,
-    BtnContinuarComponent,
-    PasoTresComponent,
-    PasoUnoComponent,
-    PasoDosComponent,
-    ReactiveFormsModule,
-  ],
+  //standalone: true,
+  // imports: [
+  //   AlertComponent,
+  //   WizardComponent,
+  //   CommonModule,
+  //   BtnContinuarComponent,
+  //   PasoTresComponent,
+  //   PasoUnoComponent,
+  //   PasoDosComponent,
+  //   ReactiveFormsModule,
+  // ],
   selector: 'app-solicitante-page',
   templateUrl: './solicitante-page.component.html',
   styleUrl: './solicitante-page.component.scss',
@@ -50,7 +50,7 @@ interface AccionBoton {
 export class SolicitantePageComponent {
   infoAlert = 'alert-info';
 
-  TEXTO_DE_ALERTA =
+  TEXTO_DE_ALERTA: string =
     'La solicitud ha quedado registrada con el número temporal 202768251 Éste no tiene validez legal y sirve solamente para efectos de identificar tu solicitud. Un folio oficial le será asignado a la solicitud al momento en que ésta sea firmada.';
   /**
    * Lista de pasos del wizard.

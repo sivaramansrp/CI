@@ -6,7 +6,7 @@ import { Component, OnInit } from '@angular/core';
  * Componente para gestionar el paso dos del trámite.
  */
 @Component({
-  selector: 'app-paso-dos',
+  selector: 'paso-dos',
   templateUrl: './paso-dos.component.html',
   styleUrl: './paso-dos.component.scss',
 })

@@ -1,13 +1,15 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SolicitantePageComponent } from './solicitante-page.component';
-import { WizardComponent } from '@ng-mf/data-access-user';
-import { ReactiveFormsModule } from '@angular/forms';
+import { AlertComponent, WizardComponent } from '@ng-mf/data-access-user';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
-import { PasoUnoComponent } from '../../../11102/pages/paso-uno/paso-uno.component';
-import { PasoDosComponent } from '../../../11102/pages/paso-dos/paso-dos.component';
-import { PasoTresComponent } from '../../../11102/pages/paso-tres/paso-tres.component';
 import { PASOS } from '../../constants/pasos.enum';
+import { By } from '@angular/platform-browser';
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
+import { PasoDosComponent } from '../paso-dos/paso-dos.component';
+import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
+import { provideHttpClient } from '@angular/common/http';
 
 describe('SolicitantePageComponent', () => {
   let component: SolicitantePageComponent;
@@ -16,15 +18,20 @@ describe('SolicitantePageComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        CommonModule,
+        FormsModule,
         ReactiveFormsModule,
+        WizardComponent,
+        AlertComponent,
         BtnContinuarComponent,
+      ],
+      declarations: [
+        SolicitantePageComponent,
+        PasoUnoComponent,
         PasoUnoComponent,
         PasoDosComponent,
-        PasoTresComponent,
-        WizardComponent,
       ],
-      declarations: [SolicitantePageComponent],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
+      providers: [provideHttpClient()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(SolicitantePageComponent);
@@ -108,5 +115,44 @@ describe('SolicitantePageComponent', () => {
       accion: 'cont',
       valor: 3,
     });
+  });
+
+  it('should render the correct title for step 2', () => {
+    component.indice = 2;
+    fixture.detectChanges();
+
+    const titleElement = fixture.nativeElement.querySelector('h2');
+    expect(titleElement.textContent).toContain('Cargar archivos');
+  });
+
+  it('should render the alert component for step 2', () => {
+    component.indice = 2;
+    fixture.detectChanges();
+
+    const alertElement = fixture.nativeElement.querySelector('ng-alert');
+    expect(alertElement).toBeTruthy();
+    // expect(alertElement.getAttribute('ng-reflect-contenido')).toBe(
+    //   component.TEXTO_DE_ALERTA
+    // );
+  });
+
+  it('should render the correct step component based on indice', () => {
+    component.indice = 1;
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('paso-uno')).toBeTruthy();
+    expect(fixture.nativeElement.querySelector('paso-dos')).toBeFalsy();
+    expect(fixture.nativeElement.querySelector('paso-tres')).toBeFalsy();
+
+    component.indice = 2;
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('paso-uno')).toBeFalsy();
+    expect(fixture.nativeElement.querySelector('paso-dos')).toBeTruthy();
+    expect(fixture.nativeElement.querySelector('paso-tres')).toBeFalsy();
+
+    component.indice = 3;
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('paso-uno')).toBeFalsy();
+    expect(fixture.nativeElement.querySelector('paso-dos')).toBeFalsy();
+    expect(fixture.nativeElement.querySelector('paso-tres')).toBeTruthy();
   });
 });

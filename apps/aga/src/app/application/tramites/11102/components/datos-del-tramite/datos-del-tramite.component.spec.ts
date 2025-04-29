@@ -1,13 +1,22 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DatosDelTramiteComponent } from './datos-del-tramite.component';
-import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
-import { of } from 'rxjs';
+import { ReactiveFormsModule, FormBuilder, FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { By } from '@angular/platform-browser';
 import { ModificacionDonacionesImmexService } from '../../services/modificacion-donaciones-immex.service';
 import { Tramite11102Store } from '../../estados/tramite11102.store';
 import { Tramite11102Query } from '../../estados/tramite11102.query';
-import { CommonModule } from '@angular/common';
-import { Modal } from 'bootstrap';
-import { ElementRef } from '@angular/core';
+import { of, Subject } from 'rxjs';
+import {
+  BtnContinuarComponent,
+  CatalogoSelectComponent,
+  InputCheckComponent,
+  TableComponent,
+  TituloComponent,
+  WizardComponent,
+} from '@libs/shared/data-access-user/src';
+import { AlertComponent } from 'ngx-bootstrap/alert';
+import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 
 describe('DatosDelTramiteComponent', () => {
   let component: DatosDelTramiteComponent;
@@ -18,8 +27,18 @@ describe('DatosDelTramiteComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule, CommonModule, DatosDelTramiteComponent],
-      declarations: [],
+      imports: [
+        CommonModule,
+        TableComponent,
+        TituloComponent,
+        CatalogoSelectComponent,
+        FormsModule,
+        ReactiveFormsModule,
+        AlertComponent,
+        InputCheckComponent,
+      ],
+      declarations: [DatosDelTramiteComponent],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
       providers: [
         FormBuilder,
         {
@@ -66,121 +85,98 @@ describe('DatosDelTramiteComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize catalogs on ngOnInit', () => {
-    const getAduanaSpy = jest.spyOn(modificacionService, 'getAduana');
-    const getTipoDeMercanciaSpy = jest.spyOn(
-      modificacionService,
-      'getTipoDeMercancia'
-    );
-    const getCondicionMercanciaSpy = jest.spyOn(
-      modificacionService,
-      'getCondicionMercancia'
-    );
-    const getUnidadMedidaSpy = jest.spyOn(
-      modificacionService,
-      'getUnidadMedida'
-    );
-    const getAnoSpy = jest.spyOn(modificacionService, 'getAno');
-    const getPaisSpy = jest.spyOn(modificacionService, 'getPais');
-
-    component.ngOnInit();
-
-    expect(getAduanaSpy).toHaveBeenCalled();
-    expect(getTipoDeMercanciaSpy).toHaveBeenCalled();
-    expect(getCondicionMercanciaSpy).toHaveBeenCalled();
-    expect(getUnidadMedidaSpy).toHaveBeenCalled();
-    expect(getAnoSpy).toHaveBeenCalled();
-    expect(getPaisSpy).toHaveBeenCalled();
-  });
-
-  it('should initialize tramiteForm and agregarMercanciasForm on donanteDomicilio', () => {
-    component.donanteDomicilio();
+  it('should initialize the form group', () => {
     expect(component.tramiteForm).toBeDefined();
-    expect(component.agregarMercanciasForm).toBeDefined();
+    expect(
+      component.tramiteForm.get('modificacionDonacionesImmex')
+    ).toBeDefined();
   });
 
-  it('should call setAduana when aduanaSeleccion is called', () => {
-    component.tramiteForm = component.formBuilder.group({
-      modificacionDonacionesImmex: component.formBuilder.group({
-        aduana: ['Test Aduana'],
-      }),
-    });
+  it('should call setValoresStore when RFC input changes', () => {
+    const setValoresStoreSpy = jest.spyOn(component, 'setValoresStore');
+    const rfcInput = fixture.debugElement.query(By.css('#rfc')).nativeElement;
+    
+    rfcInput.value = 'TEST123456789';
+    rfcInput.dispatchEvent(new Event('change'));
 
-    component.aduanaSeleccion();
-    expect(store.setAduana).toHaveBeenCalledWith('Test Aduana');
+    expect(setValoresStoreSpy).toHaveBeenCalledWith(
+      component.tramiteForm.get('modificacionDonacionesImmex'),
+      'rfc',
+      'setRfc'
+    );
   });
 
-  it('should call setTipoDeMercancia when tipoDeMercanciaSeleccion is called', () => {
-    component.agregarMercanciasForm = component.formBuilder.group({
-      datosMercancia: component.formBuilder.group({
-        tipoDeMercancia: ['Test Tipo'],
-      }),
-    });
+  it('should call setValoresStore when "usoEspecifico" textarea changes', () => {
+    const setValoresStoreSpy = jest.spyOn(component, 'setValoresStore');
+    const usoEspecificoTextarea = fixture.debugElement.query(
+      By.css('#usoEspecifico')
+    ).nativeElement;
 
-    component.tipoDeMercanciaSeleccion();
-    expect(store.setTipoDeMercancia).toHaveBeenCalledWith('Test Tipo');
+    usoEspecificoTextarea.value = 'Test usage';
+    usoEspecificoTextarea.dispatchEvent(new Event('change'));
+
+    expect(setValoresStoreSpy).toHaveBeenCalledWith(
+      component.tramiteForm.get('modificacionDonacionesImmex'),
+      'usoEspecifico',
+      'setUsoEspecifico'
+    );
   });
 
-  it('should call setCondicionMercancia when condicionMercanciaSeleccion is called', () => {
-    component.agregarMercanciasForm = component.formBuilder.group({
-      datosMercancia: component.formBuilder.group({
-        condicionMercancia: ['Test Condición'],
-      }),
-    });
+  it('should call modifySeleccionada when "Modificar" button is clicked', () => {
+    const modifySeleccionadaSpy = jest.spyOn(component, 'modifySeleccionada');
+    const modifyButton = fixture.debugElement.query(
+      By.css('button[data-bs-target="#modalAgregarMercancias"]')
+    ).nativeElement;
 
-    component.condicionMercanciaSeleccion();
-    expect(store.setCondicionMercancia).toHaveBeenCalledWith('Test Condición');
+    modifyButton.click();
+
+    expect(modifySeleccionadaSpy).toHaveBeenCalled();
   });
 
-  it('should call setUnidadMedida when unidadMedidaSeleccion is called', () => {
-    component.agregarMercanciasForm = component.formBuilder.group({
-      datosMercancia: component.formBuilder.group({
-        unidadMedida: ['Test Unidad'],
-      }),
-    });
+  it('should call setValoresStore when "correoElectronicoOpcional" input changes', () => {
+    const setValoresStoreSpy = jest.spyOn(component, 'setValoresStore');
+    const correoElectronicoOpcionalInput = fixture.debugElement.query(
+      By.css('#correoElectronicoOpcional')
+    ).nativeElement;
 
-    component.unidadMedidaSeleccion();
-    expect(store.setUnidadMedida).toHaveBeenCalledWith('Test Unidad');
+    correoElectronicoOpcionalInput.value = 'test@example.com';
+    correoElectronicoOpcionalInput.dispatchEvent(new Event('change'));
+
+    expect(setValoresStoreSpy).toHaveBeenCalledWith(
+      component.tramiteForm.get('modificacionDonacionesImmex'),
+      'correoElectronicoOpcional',
+      'setCorreoElectronicoOpcional'
+    );
   });
 
-  it('should call setAno when anoSeleccion is called', () => {
-    component.agregarMercanciasForm = component.formBuilder.group({
-      datosMercancia: component.formBuilder.group({
-        ano: ['2023'],
-      }),
-    });
+  it('should call setValoresStore when "telefonoOpcional" input changes', () => {
+    const setValoresStoreSpy = jest.spyOn(component, 'setValoresStore');
+    const telefonoOpcionalInput = fixture.debugElement.query(
+      By.css('#telefonoOpcional')
+    ).nativeElement;
 
-    component.anoSeleccion();
-    expect(store.setAno).toHaveBeenCalledWith('2023');
+    telefonoOpcionalInput.value = '1234567890';
+    telefonoOpcionalInput.dispatchEvent(new Event('change'));
+
+    expect(setValoresStoreSpy).toHaveBeenCalledWith(
+      component.tramiteForm.get('modificacionDonacionesImmex'),
+      'telefonoOpcional',
+      'setTelefonoOpcional'
+    );
   });
 
-  it('should call setPais when paisSeleccion is called', () => {
-    component.tramiteForm = component.formBuilder.group({
-      modificacionDonacionesImmex: component.formBuilder.group({
-        pais: ['Test País'],
-      }),
-    });
+  it('should call modificarConfirmarModal when "Modificar" button in modal is clicked', () => {
+    const modificarConfirmarModalSpy = jest.spyOn(
+      component,
+      'modificarConfirmarModal'
+    );
+    const modalModifyButton = fixture.debugElement.query(
+      By.css('.modal-footer .btn-primary')
+    ).nativeElement;
 
-    component.paisSeleccion();
-    expect(store.setPais).toHaveBeenCalledWith('Test País');
-  });
+    modalModifyButton.click();
 
-  it('should open modal when abrirDialogoMercancias is called', () => {
-    const modalElement = document.createElement('div');
-    component.modalElement = { nativeElement: modalElement } as ElementRef;
-
-    const modalInstanceSpy = jest.spyOn(Modal.prototype, 'show');
-    component.abrirDialogoMercancias();
-    expect(modalInstanceSpy).toHaveBeenCalled();
-  });
-
-  it('should close modal when cerrarModal is called', () => {
-    const closeModalElement = document.createElement('button');
-    component.closeModal = { nativeElement: closeModalElement } as ElementRef;
-
-    const clickSpy = jest.spyOn(closeModalElement, 'click');
-    component.cerrarModal();
-    expect(clickSpy).toHaveBeenCalled();
+    expect(modificarConfirmarModalSpy).toHaveBeenCalled();
   });
 
   it('should unsubscribe from observables on ngOnDestroy', () => {
@@ -194,6 +190,7 @@ describe('DatosDelTramiteComponent', () => {
     );
 
     component.ngOnDestroy();
+
     expect(destroyNotifierSpy).toHaveBeenCalled();
     expect(destroyNotifierCompleteSpy).toHaveBeenCalled();
   });

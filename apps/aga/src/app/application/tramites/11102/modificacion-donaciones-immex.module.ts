@@ -26,7 +26,7 @@ import { SolicitantePageComponent } from './pages/solicitante-page/solicitante-p
 import { ToastrService } from 'ngx-toastr';
 
 @NgModule({
-  declarations: [PasoDosComponent, PasoUnoComponent, PasoTresComponent],
+  declarations: [PasoDosComponent, PasoUnoComponent, PasoTresComponent,SolicitantePageComponent,DatosDelTramiteComponent],
   imports: [
     CommonModule,
     FormsModule,
@@ -42,9 +42,7 @@ import { ToastrService } from 'ngx-toastr';
     TableComponent,
     InputRadioComponent,
     CrosslistComponent,
-    ReactiveFormsModule,
-    SolicitantePageComponent,
-    DatosDelTramiteComponent,
+    ReactiveFormsModule
   ],
   exports: [],
   providers: [

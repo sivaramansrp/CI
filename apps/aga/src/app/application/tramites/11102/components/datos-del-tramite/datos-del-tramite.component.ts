@@ -1,14 +1,4 @@
 import {
-  AlertComponent,
-  CatalogoSelectComponent,
-  InputCheckComponent,
-  REGEX_POSTAL,
-  REGEX_TELEFONO_DIGITOS,
-  TableComponent,
-  TituloComponent,
-  ValidacionesFormularioService,
-} from '@libs/shared/data-access-user/src';
-import {
   Catalogo,
   Solicitud11102State,
   Tramite11102Store,
@@ -23,13 +13,15 @@ import {
 import {
   FormBuilder,
   FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import {
+  REGEX_POSTAL,
+  REGEX_TELEFONO_DIGITOS,
+  ValidacionesFormularioService,
+} from '@libs/shared/data-access-user/src';
 import { Subject,Subscription, map, merge, takeUntil } from 'rxjs';
 import { AVISO } from '@libs/shared/data-access-user/src/tramites/constantes/aviso-privacidad.enum';
-import { CommonModule } from '@angular/common';
 import { DatosDelMercancia } from '../../models/modificacion-donaciones-immex.model';
 import { Modal } from 'bootstrap';
 import { ModificacionDonacionesImmexService } from '../../services/modificacion-donaciones-immex.service';
@@ -41,17 +33,6 @@ import mercanciaTable from '@libs/shared/theme/assets/json/11102/mercancia-table
  */
 @Component({
   selector: 'app-datos-del-tramite',
-  standalone: true,
-  imports: [
-    CommonModule,
-    TableComponent,
-    TituloComponent,
-    CatalogoSelectComponent,
-    FormsModule,
-    ReactiveFormsModule,
-    AlertComponent,
-    InputCheckComponent,
-  ],
   templateUrl: './datos-del-tramite.component.html',
   styleUrls: ['./datos-del-tramite.component.scss'],
 })
