@@ -51,13 +51,16 @@ describe('HistoricoDeProductoresComponent', () => {
   it('should run #ngOnInit()', async () => {
     component.cargarProductorPorExportador = jest.fn();
     component.cargarMercancia = jest.fn();
+    component.facturaOpcion = jest.fn();
     component.tramiteQuery = component.tramiteQuery || {};
     component.tramiteQuery.formulario$ = observableOf({});
     component.tramiteQuery.agregarDatosProductorFormulario$ = observableOf({});
     component.ngOnInit();
     expect(component.cargarProductorPorExportador).toHaveBeenCalled();
     expect(component.cargarMercancia).toHaveBeenCalled();
+    expect(component.facturaOpcion).toHaveBeenCalled();
   });
+
 
   it('should run #cargarProductorPorExportador()', async () => {
     component.certificadoDeService = component.certificadoDeService || {};
@@ -67,7 +70,12 @@ describe('HistoricoDeProductoresComponent', () => {
     component.cargarProductorPorExportador();
     expect(component.certificadoDeService.obtenerProductorPorExportador).toHaveBeenCalled();
   });
-
+  it('should run #facturaOpcion()', async () => {
+    component.certificadoDeService = component.certificadoDeService || {};
+    component.certificadoDeService.obtenerMenuDesplegable = jest.fn().mockReturnValue(observableOf({}));
+    component.facturaOpcion();
+    expect(component.certificadoDeService.obtenerMenuDesplegable).toHaveBeenCalled();
+  });
   it('should run #cargarMercancia()', async () => {
     component.certificadoDeService = component.certificadoDeService || {};
     component.certificadoDeService.obtenerMercancia = jest.fn().mockReturnValue(observableOf({
