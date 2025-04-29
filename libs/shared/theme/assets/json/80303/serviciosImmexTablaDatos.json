@@ -1,0 +1,19 @@
+{
+    "code": 200,
+    "message": "Listado de servicios IMMEX",
+    "data": [
+      {
+        "descripcionServicio": "Maquilado de componentes electrónicos",
+        "tipoServicio": "Manufactura",
+        "testado": "Jalisco",
+        "estatus": "Activo"
+      },
+      {
+        "descripcionServicio": "Ensamblaje de autopartes",
+        "tipoServicio": "Submanufactura",
+        "testado": "Nuevo León",
+        "estatus": "Inactivo"
+      }
+    ]
+  }
+  

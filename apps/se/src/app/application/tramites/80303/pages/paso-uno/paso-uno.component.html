@@ -49,4 +49,56 @@
       } }
     </ng-container>
   </div>
+
+
+  <div class="row mt-5">
+    <ul class="nav nav-tabs">
+      <li [ngClass]="subIndice === 1 ? 'active' : ''">
+        <a
+          data-toggle="tab"
+          (click)="seleccionaSubTab(1)"
+          (keydown.enter)="seleccionaSubTab(1)"
+          (keydown.space)="seleccionaSubTab(1)"
+          role="button"
+          tabindex="0"
+          >Complimentario</a
+        >
+      </li>
+      <li [ngClass]="subIndice === 2 ? 'active' : ''">
+        <a
+          data-toggle="tab"
+          (click)="seleccionaSubTab(2)"
+          (keydown.enter)="seleccionaSubTab(2)"
+          (keydown.space)="seleccionaSubTab(2)"
+          role="button"
+          tabindex="1"
+          >Anexo</a>
+      </li>
+      <li [ngClass]="subIndice === 3 ? 'active' : ''">
+        <a
+          data-toggle="tab"
+          (click)="seleccionaSubTab(3)"
+          (keydown.enter)="seleccionaSubTab(3)"
+          (keydown.space)="seleccionaSubTab(3)"
+          role="button"
+          tabindex="2"
+          >Monto y factor</a>
+      </li>
+    </ul>
+
+    <ng-container>
+      @switch (subIndice) { @case (1) {
+      <app-complementaria/>
+      } @case (2) {
+      <app-anexo-uno-pestana/>
+      } @case (3) {
+      <app-monto-y-factor/>
+      }
+      }
+    </ng-container>
+
+    
+  </div>
+
+
 </div>
