@@ -9,7 +9,7 @@ const ROUTES: Routes = [
     component: registroSolicitudImmexComponent,
   },
   {
-    path: 'confirmacion',
+    path: '',
     pathMatch: 'full',
     redirectTo: 'confirmacion',
   },
