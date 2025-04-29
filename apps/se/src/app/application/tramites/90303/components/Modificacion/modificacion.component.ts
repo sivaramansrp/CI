@@ -5,11 +5,13 @@ import { LISTA_DE_SECTORS } from '../../constantes/constantes90303.enum';
 import { ListaTabla } from '../../models/registro.model';
 import { CatalogosService } from '../../service/catalogos.service';
 import { ReplaySubject, takeUntil } from 'rxjs';
+import { PlantasComponent } from "../../../../shared/components/plantas/plantas.component";
+import { SectorComponent } from "../../../../shared/components/sector/sector.component";
 
 @Component({
   selector: 'app-modificacion',
   standalone: true,
-  imports: [CommonModule,TablaDinamicaComponent,TituloComponent],
+  imports: [CommonModule, TablaDinamicaComponent, TituloComponent, PlantasComponent, SectorComponent],
   templateUrl: './modificacion.component.html',
   styleUrl: './modificacion.component.css',
 })
