@@ -89,7 +89,7 @@ export class Solicitud6102Store extends Store<Solicitud6102State> {
    *
    * @param radioParcial - Un valor booleano que indica el estado de `radioParcial`.
    */
-  public setRadioParcial(radioParcial: boolean) {
+  public setRadioParcial(radioParcial: boolean): void {
     this.update((state) => ({ ...state, radioParcial }));
   }
 
@@ -98,7 +98,7 @@ export class Solicitud6102Store extends Store<Solicitud6102State> {
    *
    * @param contenedores - Una cadena que representa los contenedores a establecer.
    */
-  public setContenedores(contenedores: string) {
+  public setContenedores(contenedores: string): void {
     this.update((state) => ({ ...state, contenedores }));
   }
 
@@ -107,7 +107,7 @@ export class Solicitud6102Store extends Store<Solicitud6102State> {
    *
    * @param aduana - El valor de la aduana que se desea establecer.
    */
-  public setAduana(aduana: string) {
+  public setAduana(aduana: string): void {
     this.update((state) => ({ ...state, aduana }));
   }
 
@@ -116,7 +116,7 @@ export class Solicitud6102Store extends Store<Solicitud6102State> {
    *
    * @param observaciones - Las observaciones que se deben actualizar en el estado.
    */
-  public setObservaciones(observaciones: string) {
+  public setObservaciones(observaciones: string): void {
     this.update((state) => ({ ...state, observaciones }));
   }
 

@@ -1,6 +1,6 @@
+import { Solicitud6102State, Solicitud6102Store } from './solicitud6102.store';
 import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
-import { Solicitud6102State, Solicitud6102Store } from './solicitud6102.store';
 
 
 /**
