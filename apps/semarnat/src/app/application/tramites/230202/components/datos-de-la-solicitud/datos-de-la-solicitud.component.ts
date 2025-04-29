@@ -1,12 +1,4 @@
 import {
-  Component,
-  ElementRef,
-  QueryList,
-  ViewChild,
-  ViewChildren,
-} from '@angular/core';
-import { CommonModule } from '@angular/common';
-import {
   Catalogo,
   CatalogoSelectComponent,
   ConfiguracionColumna,
@@ -16,23 +8,15 @@ import {
   TablaSeleccion,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
-import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-import { map, merge, Subject, takeUntil } from 'rxjs';
-import {
-  Solicitud230202State,
-  Tramite230202Store,
-} from '../../estados/tramite230202.store';
-import { Tramite230202Query } from '../../estados/tramite230202.query';
-import { PhytosanitaryReexportacionService } from '../../services/phytosanitary-reexportacion.service';
+import { Component, ElementRef, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { DatosSolicitud, DatosDetalle } from '../../models/datos-tramite.model';
+import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Solicitud230202State, Tramite230202Store } from '../../estados/tramite230202.store';
+import { CommonModule } from '@angular/common';
 import { Modal } from 'bootstrap';
+import { PhytosanitaryReexportacionService } from '../../services/phytosanitary-reexportacion.service';
+import { Tramite230202Query } from '../../estados/tramite230202.query';
+import { map, merge, Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-datos-de-la-solicitud',
@@ -143,9 +127,9 @@ export class DatosDeLaSolicitudComponent {
   ];
 
   constructor(
-    private phytosanitaryReexportacionService: PhytosanitaryReexportacionService,
-    private store: Tramite230202Store,
-    private query: Tramite230202Query,
+    public phytosanitaryReexportacionService: PhytosanitaryReexportacionService,
+    public store: Tramite230202Store,
+    public query: Tramite230202Query,
     public fb: FormBuilder
   ) {}
 
