@@ -87,10 +87,10 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
  * Actualiza el almacén con los datos del formulario de certificado.
  * @param event - Objeto que contiene el nombre del grupo de formulario, el campo, el valor y el nombre del estado del almacén.
  */
-setValoresStore(event: { formGroupName: string, campo: string, valor: undefined, storeStateName: string }): void {
-  const { campo: CAMPO, valor: VALOR } = event;
-  this.store.setFormCertificadoGenric({ [CAMPO]: VALOR });
-}
+  setValoresStore(event: { formGroupName: string, campo: string, valor: undefined, storeStateName: string }): void {
+    const { campo: CAMPO, valor: VALOR } = event;
+    this.store.setFormDatosCertificado({ [CAMPO]: VALOR });
+  }
 
   /**
    * @descripcion

@@ -107,3 +107,5 @@ export const ENTIDAD_FEDREATIVE_DATES = 'EntidadFederativaDates';
 * @constant
 */
 export const REPRESENTACION_FEDERALDATES = 'representacionFederalDates';
+
+export const CAMPO_DE_DESTINATARIO = [110222]

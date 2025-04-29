@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { CAMPO_DE_DESTINATARIO } from '../../constantes/modificacion.enum';
 import { CommonModule } from '@angular/common';
 import { Subject } from 'rxjs';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
@@ -18,6 +19,15 @@ export class DatosDelDestinatarioComponent implements OnDestroy {
    * @type {{ [key: string]: string | number | boolean | object | undefined }}
    */
   @Input() datosForm!: { [key: string]: string | number | boolean | object | undefined };
+
+  /**
+   * @Input
+   * Identificador único del procedimiento asociado.
+   * Este valor es requerido y se utiliza para determinar el procedimiento actual.
+   *
+   * @type {number}
+   */
+  @Input() idProcedimiento!: any;
 
   /**
    * Evento que se emite cuando cambian los datos del formulario del destinatario
@@ -45,6 +55,14 @@ export class DatosDelDestinatarioComponent implements OnDestroy {
  @Output() formaValida: EventEmitter<boolean> = new EventEmitter<boolean>(
   false
 );  
+
+/**
+ * Indica si el campo destinatario está habilitado o no.
+ * 
+ * @type {boolean}
+ */
+public campoDestinatario = false;
+
   /**
    * Constructor del componente
    * @param {FormBuilder} fb - Servicio para crear formularios reactivos
@@ -58,6 +76,7 @@ export class DatosDelDestinatarioComponent implements OnDestroy {
       razonSocial: [''],
     });
 
+    this.campoDestinatario = CAMPO_DE_DESTINATARIO.includes(this.idProcedimiento)
     // Parcheo de valores iniciales con retraso para asegurar la renderización
     setTimeout(() => {
       if (this.datosForm) {

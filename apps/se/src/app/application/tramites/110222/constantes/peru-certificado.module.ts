@@ -59,3 +59,9 @@ export const FECHA = {
    */
   habilitado: false,
 };
+
+/**
+ * @descripcion
+ * Identificador único del procedimiento.
+ */
+export const ID_PROCEDIMIENTO = 110222;

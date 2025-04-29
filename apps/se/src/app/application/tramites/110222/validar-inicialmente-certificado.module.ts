@@ -26,7 +26,6 @@ import { ValidarInicialmenteCertificadoRoutingModule } from './validar-inicialme
     PasoDosComponent,
     DatosCertificadoComponent,
     CertificadoComponent,
-    DatosCertificadoComponent,
     DestinatarioDeComponent,
     CertificadoOrigenComponent,
     HistoricoDeProductoresComponent,

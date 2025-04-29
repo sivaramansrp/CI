@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { SeccionLibQuery, SeccionLibState, SeccionLibStore } from '@libs/shared/data-access-user/src';
 import { Subject, map, takeUntil } from 'rxjs';
 import { Tramite110222State, Tramite110222Store } from '../../estados/tramite110222.store';
+import { ID_PROCEDIMIENTO } from '../../constantes/peru-certificado.module';
 import { Tramite110222Query } from '../../estados/tramite110222.query';
 
 interface FormValues {
@@ -73,6 +74,14 @@ export class DestinatarioDeComponent implements OnInit, OnDestroy {
    * @memberof PeruDestinatarioComponent
    */
   ocultarFax: boolean = true;
+
+  /**
+   * @descripcion
+   * Identificador único del procedimiento asociado al formulario.
+   * @type {string}
+   * @readonly
+   */
+  public readonly idProcedimiento:number = ID_PROCEDIMIENTO;
 
   /**
    * @descripcion

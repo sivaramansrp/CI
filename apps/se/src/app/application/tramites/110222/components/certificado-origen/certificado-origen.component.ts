@@ -17,7 +17,7 @@ import { Tramite110222Query } from '../../estados/tramite110222.query';
 @Component({
   selector: 'app-certificado-origen',
   templateUrl: './certificado-origen.component.html',
-  styleUrl: './certificado-origen.component.css',
+  styleUrl: './certificado-origen.component.scss',
 })
 export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDestroy {
   /**
