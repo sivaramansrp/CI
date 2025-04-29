@@ -30,8 +30,8 @@ describe('PasoUnoComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should have default indice value as 2', () => {
-    expect(component.indice).toBe(2);
+  it('should have default indice value as 1', () => {
+    expect(component.indice).toBe(1);
   });
 
   it('should update indice when seleccionaTab is called', () => {
