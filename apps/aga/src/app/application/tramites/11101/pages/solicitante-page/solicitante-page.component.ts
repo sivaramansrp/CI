@@ -6,9 +6,9 @@ import { WizardComponent } from '@ng-mf/data-access-user';
 import { Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { takeUntil } from 'rxjs/operators';
+import { SECCIONES_TRAMITE_11101 } from '../../constants/solicitud.enums';
 // import { Tramite40402Store, Tramitenacionales40402State } from '../../estados/tramite40402.store';
 // import { Tramite40402Query } from '../../estados/tramite40402.query';
-import { SECCIONES_TRAMITE_40402 } from '../../../40402/constants/solicitud.enums';
 /**
  * Interfaz que define la estructura de un botón de acción en el asistente.
  */
@@ -64,6 +64,8 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
     txtBtnAnt: 'Anterior',
     txtBtnSig: 'Continuar',
   };
+  tramite40402Query: any;
+  seccion: unknown;
 
   /**
    * Constructor del componente.
@@ -80,16 +82,16 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
    * Configura los pasos del asistente y asigna las secciones al store.
    */
   ngOnInit(): void {
-    // this.tramite40402Query.selectSeccionState$
-    //   .pipe(
-    //     takeUntil(this.destroyNotifier$),
-    //     map((seccionState) => {
-    //       this.seccion = seccionState;
-    //     })
-    //   )
-    //   .subscribe();
+    this.tramite40402Query.selectSeccionState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.seccion = seccionState;
+        })
+      )
+      .subscribe();
 
-    // this.asignarSecciones();
+    this.asignarSecciones();
   }
 
   /**
@@ -133,9 +135,9 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
     const FORMA_VALIDA: boolean[] = [];
 
     for (const LLAVE_SECCION of Object.keys(
-      SECCIONES_TRAMITE_40402.PASO_1
-    ) as Array<keyof typeof SECCIONES_TRAMITE_40402.PASO_1>) {
-      SECCIONES.push(SECCIONES_TRAMITE_40402.PASO_1[LLAVE_SECCION]);
+      SECCIONES_TRAMITE_11101.PASO_1
+    ) as Array<keyof typeof SECCIONES_TRAMITE_11101.PASO_1>) {
+      SECCIONES.push(SECCIONES_TRAMITE_11101.PASO_1[LLAVE_SECCION]);
       FORMA_VALIDA.push(false);
     }
 

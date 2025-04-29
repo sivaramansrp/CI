@@ -1,6 +1,6 @@
     import { NgModule } from '@angular/core';
     import { RouterModule, Routes } from '@angular/router';
-import { SolicitantePageComponent } from './pages/solicitante-page/solicitante-page.component';
+    import { SolicitantePageComponent } from './pages/solicitante-page/solicitante-page.component';
     export const ROUTES_ATTENTION: Routes = [
         {
             path: '',

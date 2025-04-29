@@ -9,7 +9,7 @@ import mockData from '@libs/shared/theme/assets/json/40402/solicitante-mockdata.
   selector: 'app-solicitante',
   templateUrl: './solicitante.component.html',
   styleUrl: './solicitante.component.scss',
-  standalone:true,
+   standalone:true,
   imports:[TituloComponent, ReactiveFormsModule]
 })
 export class SolicitanteComponent implements OnInit {
