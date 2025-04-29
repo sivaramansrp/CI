@@ -337,7 +337,7 @@ export class Tramite5701Store extends Store<Solicitud5701State> {
    *
    * @param tipoSolicitud - El tipo de solicitud que se va a guardar.
    */
-  public setTipoSolicitud(tipoSolicitud: string) {
+  public setTipoSolicitud(tipoSolicitud: string): void {
     this.update((state) => ({
       ...state,
       tipoSolicitud,
@@ -348,7 +348,7 @@ export class Tramite5701Store extends Store<Solicitud5701State> {
    * @param rfcImportExport - RFC del importador/exportador.
    * @description Guarda el RFC del importador/exportador en el estado.
    */
-  public setRfcImportExport(rfcImportExport: string) {
+  public setRfcImportExport(rfcImportExport: string): void {
     this.update((state) => ({
       ...state,
       rfcImportExport,
@@ -360,7 +360,7 @@ export class Tramite5701Store extends Store<Solicitud5701State> {
    * @param nombreImportExport - Nombre del importador/exportador.
    * @description Guarda el nombre del importador/exportador en el estado.
    */
-  public setNombreImportExport(nombreImportExport: string) {
+  public setNombreImportExport(nombreImportExport: string): void {
     this.update((state) => ({
       ...state,
       nombreImportExport,
@@ -371,7 +371,7 @@ export class Tramite5701Store extends Store<Solicitud5701State> {
    * @param nroRegistro - Número de registro.
    * @description Guarda el número de registro en el estado.
    */
-  public setNroRegistro(nroRegistro: string) {
+  public setNroRegistro(nroRegistro: string): void {
     this.update((state) => ({
       ...state,
       nroRegistro,
@@ -382,7 +382,7 @@ export class Tramite5701Store extends Store<Solicitud5701State> {
    * @param programaFomento - Programa de fomento asociado.
    * @description Guarda el programa de fomento en el estado.
    */
-  public setProgramaFomento(programaFomento: string) {
+  public setProgramaFomento(programaFomento: string): void {
     this.update((state) => ({
       ...state,
       programaFomento,
@@ -394,7 +394,7 @@ export class Tramite5701Store extends Store<Solicitud5701State> {
    * @param immex - IMMEX asociado.
    * @description Guarda el IMMEX en el estado.
    */
-  public setImmex(immex: string) {
+  public setImmex(immex: string): void {
     this.update((state) => ({
       ...state,
       immex,
@@ -406,7 +406,7 @@ export class Tramite5701Store extends Store<Solicitud5701State> {
    * @param immexValue - Valor del IMMEX.
    * @description Guarda el valor del IMMEX en el estado.
    */
-  public setImmexValue(immexValue: string) {
+  public setImmexValue(immexValue: string): void {
     this.update((state) => ({
       ...state,
       immexValue,
@@ -418,7 +418,7 @@ export class Tramite5701Store extends Store<Solicitud5701State> {
    * @param industriaAutomotriz - Industria automotriz asociada.
    * @description Guarda la industria automotriz en el estado.
    */
-  public setIndustriaAutomotriz(industriaAutomotriz: string) {
+  public setIndustriaAutomotriz(industriaAutomotriz: string): void {
     this.update((state) => ({
       ...state,
       industriaAutomotriz,
@@ -430,7 +430,7 @@ export class Tramite5701Store extends Store<Solicitud5701State> {
    * @param tipoEmpresaCertificada - Tipo de empresa certificada.
    * @description Guarda el tipo de empresa certificada en el estado.
    */
-  public setTipoEmpresaCertificada(tipoEmpresaCertificada: string) {
+  public setTipoEmpresaCertificada(tipoEmpresaCertificada: string): void {
     this.update((state) => ({
       ...state,
       tipoEmpresaCertificada,
@@ -442,7 +442,7 @@ export class Tramite5701Store extends Store<Solicitud5701State> {
    * @param idSocioComercial - Identificador del socio comercial.
    * @description Guarda el ID del socio comercial en el estado.
    */
-  public setIdSocioComercial(idSocioComercial: string) {
+  public setIdSocioComercial(idSocioComercial: string): void {
     this.update((state) => ({
       ...state,
       idSocioComercial,
@@ -453,7 +453,7 @@ export class Tramite5701Store extends Store<Solicitud5701State> {
  * @param socioComercial - Indica si hay un socio comercial asociado.
  * @description Guarda el estado del socio comercial en el estado.
  */
-  public setSocioComercial(socioComercial: boolean) {
+  public setSocioComercial(socioComercial: boolean): void {
     this.update((state) => ({
       ...state,
       socioComercial,
@@ -464,7 +464,7 @@ export class Tramite5701Store extends Store<Solicitud5701State> {
  * @param opEconomicoAut - Indica si hay una operación económica autorizada.
  * @description Guarda el estado de la operación económica autorizada en el estado.
  */
-  public setOpEconomicoAut(opEconomicoAut: boolean) {
+  public setOpEconomicoAut(opEconomicoAut: boolean): void {
     this.update((state) => ({
       ...state,
       opEconomicoAut,
@@ -475,7 +475,7 @@ export class Tramite5701Store extends Store<Solicitud5701State> {
  * @param revisionOrigen - Indica si se requiere revisión de origen.
  * @description Guarda el estado de la revisión de origen en el estado.
  */
-  public setRevisionOrigen(revisionOrigen: boolean) {
+  public setRevisionOrigen(revisionOrigen: boolean): void {
     this.update((state) => ({
       ...state,
       revisionOrigen,
@@ -487,7 +487,7 @@ export class Tramite5701Store extends Store<Solicitud5701State> {
    * @param fechaInicio - Fecha de inicio de la solicitud.
    * @description Guarda la fecha de inicio en el estado.
    */
-  public setFechaInicio(fechaInicio: string) {
+  public setFechaInicio(fechaInicio: string): void {
     this.update((state) => ({
       ...state,
       fechaInicio,
@@ -499,7 +499,7 @@ export class Tramite5701Store extends Store<Solicitud5701State> {
    * @param horaInicio - Hora de inicio de la solicitud.
    * @description Guarda la hora de inicio en el estado.
    */
-  public setHoraInicio(horaInicio: string) {
+  public setHoraInicio(horaInicio: string): void {
     this.update((state) => ({
       ...state,
       horaInicio,
@@ -511,7 +511,7 @@ export class Tramite5701Store extends Store<Solicitud5701State> {
    * @param fechaFinal - Fecha de finalización de la solicitud.
    * @description Guarda la fecha de finalización en el estado.
    */
-  public setFechaFinal(fechaFinal: string) {
+  public setFechaFinal(fechaFinal: string): void {
     this.update((state) => ({
       ...state,
       fechaFinal,
@@ -523,7 +523,7 @@ export class Tramite5701Store extends Store<Solicitud5701State> {
    * @param horaFinal - Hora de finalización de la solicitud.
    * @description Guarda la hora de finalización en el estado.
    */
-  public setHoraFinal(horaFinal: string) {
+  public setHoraFinal(horaFinal: string): void {
     this.update((state) => ({
       ...state,
       horaFinal,
@@ -535,7 +535,7 @@ export class Tramite5701Store extends Store<Solicitud5701State> {
    * @param fechasSeleccionadas - Fechas seleccionadas para la solicitud.
    * @description Guarda las fechas seleccionadas en el estado.
    */
-  public setFechasSeleccionadas(fechasSeleccionadas: string[]) {
+  public setFechasSeleccionadas(fechasSeleccionadas: string[]): void {
     this.update((state) => ({
       ...state,
       fechasSeleccionadas,
@@ -547,7 +547,7 @@ export class Tramite5701Store extends Store<Solicitud5701State> {
    * @param despacho - Despacho asociado a la solicitud.
    * @description Guarda el despacho en el estado.
    */
-  public setDespacho(despacho: string) {
+  public setDespacho(despacho: string): void {
     this.update((state) => ({
       ...state,
       despacho,
@@ -559,7 +559,7 @@ export class Tramite5701Store extends Store<Solicitud5701State> {
    * @param rfcAutorizacion - RFC de autorización.
    * @description Guarda el RFC de autorización en el estado.
    *    */
-  public setRfcAutorizacion(rfcAutorizacion: string) {
+  public setRfcAutorizacion(rfcAutorizacion: string): void {
     this.update((state) => ({
       ...state,
       rfcAutorizacion,
@@ -571,7 +571,7 @@ export class Tramite5701Store extends Store<Solicitud5701State> {
    * @param ddexAutorizacion - DDEX de autorización.
    * @description Guarda el DDEX de autorización en el estado.
    */
-  public setDdexAutorizacion(ddexAutorizacion: string) {
+  public setDdexAutorizacion(ddexAutorizacion: string): void {
     this.update((state) => ({
       ...state,
       ddexAutorizacion,
@@ -583,7 +583,7 @@ export class Tramite5701Store extends Store<Solicitud5701State> {
    * @param idAduana - Identificador de la aduana.
    * @description Guarda el ID de la aduana en el estado.
    */
-  public setIdAduana(idAduana: string) {
+  public setIdAduana(idAduana: string): void {
     this.update((state) => ({
       ...state,
       idAduana,
@@ -595,7 +595,7 @@ export class Tramite5701Store extends Store<Solicitud5701State> {
    * @param descripcionAduana - Descripción de la aduana.
    * @description Guarda la descripción de la aduana en el estado.
    */
-  public setDescripcionAduana(descripcionAduana: string) {
+  public setDescripcionAduana(descripcionAduana: string): void {
     this.update((state) => ({
       ...state,
       descripcionAduana,
@@ -607,7 +607,7 @@ export class Tramite5701Store extends Store<Solicitud5701State> {
    * @param idSeccionAduanera - Identificador de la sección aduanera.
    * @description Guarda el ID de la sección aduanera en el estado.
    */
-  public setIdSeccionAduanera(idSeccionAduanera: string) {
+  public setIdSeccionAduanera(idSeccionAduanera: string): void {
     this.update((state) => ({
       ...state,
       idSeccionAduanera,
@@ -618,7 +618,7 @@ export class Tramite5701Store extends Store<Solicitud5701State> {
    * @description Guarda la sección aduanera en el estado.
    * @param seccionAduanera - Sección aduanera asociada.
    */
-  public setSeccionAduanera(seccionAduanera: string) {
+  public setSeccionAduanera(seccionAduanera: string): void {
     this.update((state) => ({
       ...state,
       seccionAduanera,
@@ -629,7 +629,7 @@ export class Tramite5701Store extends Store<Solicitud5701State> {
    * @param nombreRecinto - Nombre del recinto fiscal.
    * @description Guarda el nombre del recinto fiscal en el estado.
    */
-  public setNombreRecinto(nombreRecinto: string) {
+  public setNombreRecinto(nombreRecinto: string): void {
     this.update((state) => ({
       ...state,
       nombreRecinto,
@@ -641,7 +641,7 @@ export class Tramite5701Store extends Store<Solicitud5701State> {
    * @param tipoDespacho - Tipo de despacho.
    * @description Guarda el tipo de despacho en el estado.
    */
-  public setTipoDespacho(tipoDespacho: string) {
+  public setTipoDespacho(tipoDespacho: string): void {
     this.update((state) => ({
       ...state,
       tipoDespacho,
@@ -652,7 +652,7 @@ export class Tramite5701Store extends Store<Solicitud5701State> {
  * @param tipoOperacion - Tipo de operación.
  * @description Guarda el tipo de operación en el estado.
  */
-  public setTipoOperacion(tipoOperacion: string) {
+  public setTipoOperacion(tipoOperacion: string): void {
     this.update((state) => ({
       ...state,
       tipoOperacion,
@@ -664,7 +664,7 @@ export class Tramite5701Store extends Store<Solicitud5701State> {
    * @param patente - Patente asociada.
    * @description Guarda la patente en el estado.
    */
-  public setPatente(patente: string) {
+  public setPatente(patente: string): void {
     this.update((state) => ({
       ...state,
       patente,
@@ -676,7 +676,7 @@ export class Tramite5701Store extends Store<Solicitud5701State> {
    * @param relacionSociedad - Indica si hay relación de sociedad.
    * @description Guarda el estado de la relación de sociedad en el estado.
    */
-  public setRelacionSociedad(relacionSociedad: boolean) {
+  public setRelacionSociedad(relacionSociedad: boolean): void {
     this.update((state) => ({
       ...state,
       relacionSociedad,
@@ -688,7 +688,7 @@ export class Tramite5701Store extends Store<Solicitud5701State> {
    * @param encargoConferido - Indica si hay encargo conferido.
    * @description Guarda el estado del encargo conferido en el estado.
    */
-  public setEncargoConferido(encargoConferido: boolean) {
+  public setEncargoConferido(encargoConferido: boolean): void {
     this.update((state) => ({
       ...state,
       encargoConferido,
@@ -700,7 +700,7 @@ export class Tramite5701Store extends Store<Solicitud5701State> {
    * @param domicilio - Domicilio asociado.
    * @description Guarda el domicilio en el estado.
    */
-  public setDomicilio(domicilio: string) {
+  public setDomicilio(domicilio: string): void {
     this.update((state) => ({
       ...state,
       domicilio,
@@ -712,7 +712,7 @@ export class Tramite5701Store extends Store<Solicitud5701State> {
    * @param paisOrigen - País de origen.
    * @description Guarda el país de origen en el estado.
    */
-  public setPaisOrigen(paisOrigen: number) {
+  public setPaisOrigen(paisOrigen: number): void {
     this.update((state) => ({
       ...state,
       paisOrigen,
@@ -723,7 +723,7 @@ export class Tramite5701Store extends Store<Solicitud5701State> {
    * @param paisProcedencia - País de procedencia.
    * @description Guarda el país de procedencia en el estado.
    */
-  public setPaisProcedencia(paisProcedencia: number) {
+  public setPaisProcedencia(paisProcedencia: number): void {
     this.update((state) => ({
       ...state,
       paisProcedencia,
@@ -735,7 +735,7 @@ export class Tramite5701Store extends Store<Solicitud5701State> {
    * @param descripcion - Descripción de la solicitud.
    * @description Guarda la descripción de la solicitud en el estado.
    */
-  public setDescripcion(descripcion: string) {
+  public setDescripcion(descripcion: string): void {
     this.update((state) => ({
       ...state,
       descripcion,
@@ -747,7 +747,7 @@ export class Tramite5701Store extends Store<Solicitud5701State> {
    * @param justificacion - Justificación de la solicitud.
    * @description Guarda la justificación de la solicitud en el estado.
    */
-  public setJustificacion(justificacion: string) {
+  public setJustificacion(justificacion: string): void {
     this.update((state) => ({
       ...state,
       justificacion,
@@ -759,7 +759,7 @@ export class Tramite5701Store extends Store<Solicitud5701State> {
    * @param idPedimento - Identificador del pedimento.
    * @description Guarda el ID del pedimento en el estado.
    */
-  public setidPedimento(idPedimento: number) {
+  public setidPedimento(idPedimento: number): void {
     this.update((state) => ({
       ...state,
       idPedimento,
@@ -771,7 +771,7 @@ export class Tramite5701Store extends Store<Solicitud5701State> {
    * @param patentePedimento - Patente del pedimento.
    * @description Guarda la patente del pedimento en el estado.
    */
-  public setPatentePedimento(patentePedimento: number) {
+  public setPatentePedimento(patentePedimento: number): void {
     this.update((state) => ({
       ...state,
       patentePedimento,
@@ -783,7 +783,7 @@ export class Tramite5701Store extends Store<Solicitud5701State> {
    * @param pedimento - Identificador del pedimento.
    * @description Guarda el pedimento en el estado. 
    */
-  public setPedimento(pedimento: string) {
+  public setPedimento(pedimento: string): void {
     this.update((state) => ({
       ...state,
       pedimento,
@@ -794,7 +794,7 @@ export class Tramite5701Store extends Store<Solicitud5701State> {
  * @param aduana - Aduana asociada al pedimento.
  * @description Guarda la aduana en el estado.
  */
-  public setAduana(aduana: number) {
+  public setAduana(aduana: number): void {
     this.update((state) => ({
       ...state,
       aduana,
@@ -806,7 +806,7 @@ export class Tramite5701Store extends Store<Solicitud5701State> {
    * @param tipoPedimento - Tipo de pedimento.
    * @description Guarda el tipo de pedimento en el estado.
    */
-  public setTipoPedimento(tipoPedimento: string) {
+  public setTipoPedimento(tipoPedimento: string): void {
     this.update((state) => ({
       ...state,
       tipoPedimento,
@@ -817,7 +817,7 @@ export class Tramite5701Store extends Store<Solicitud5701State> {
  * @param numero - Número asociado al pedimento.
  * @description Guarda el número asociado al pedimento en el estado.
  */
-  public setNumero(numero: number) {
+  public setNumero(numero: number): void {
     this.update((state) => ({
       ...state,
       numero,
@@ -829,7 +829,7 @@ export class Tramite5701Store extends Store<Solicitud5701State> {
    * @param comprobanteValor - Comprobante de valor asociado.
    * @description Guarda el comprobante de valor en el estado.
    */
-  public setComprobanteValor(comprobanteValor: string) {
+  public setComprobanteValor(comprobanteValor: string): void {
     this.update((state) => ({
       ...state,
       comprobanteValor,
@@ -840,7 +840,7 @@ export class Tramite5701Store extends Store<Solicitud5701State> {
    * @param pedimentoValidado - Indica si el pedimento ha sido validado.
    * @description Guarda el estado de validación del pedimento en el estado.
    */
-  public setPedimentoValidado(pedimentoValidado: boolean) {
+  public setPedimentoValidado(pedimentoValidado: boolean): void {
     this.update((state) => ({
       ...state,
       pedimentoValidado,
@@ -853,7 +853,7 @@ export class Tramite5701Store extends Store<Solicitud5701State> {
  */
   public setPersonasResponsablesDespacho(
     personasResponsablesDespacho: ResponsablesDespacho[]
-  ) {
+  ): void {
     this.update((state) => ({
       ...state,
       personasResponsablesDespacho,
@@ -865,7 +865,7 @@ export class Tramite5701Store extends Store<Solicitud5701State> {
    * @param transporte - Lista de transportes asociados.
    * @description Guarda la lista de transportes en el estado.
    */
-  public setTransporte(transporte: string[]) {
+  public setTransporte(transporte: string[]): void {
     this.update((state) => ({
       ...state,
       transporte,
@@ -876,7 +876,7 @@ export class Tramite5701Store extends Store<Solicitud5701State> {
    * @param montoPagar - Monto a pagar.
    * @description Guarda el monto a pagar en el estado.
    */
-  public setMontoPagar(montoPagar: string) {
+  public setMontoPagar(montoPagar: string): void {
     this.update((state) => ({
       ...state,
       montoPagar,
@@ -888,7 +888,7 @@ export class Tramite5701Store extends Store<Solicitud5701State> {
    * @param lineaCaptura - Línea de captura asociada.
    * @description Guarda la línea de captura en el estado.
    */
-  public setLineaCaptura(lineaCaptura: string) {
+  public setLineaCaptura(lineaCaptura: string): void {
     this.update((state) => ({
       ...state,
       lineaCaptura,
@@ -900,7 +900,7 @@ export class Tramite5701Store extends Store<Solicitud5701State> {
    * @param montoModal - Monto modal asociado.
    * @description Guarda el monto modal en el estado.
    */
-  public setMonto(montoModal: string) {
+  public setMonto(montoModal: string): void {
     this.update((state) => ({
       ...state,
       montoModal,
@@ -912,7 +912,7 @@ export class Tramite5701Store extends Store<Solicitud5701State> {
    * @param tercerosRelacionados - Lista de terceros relacionados.
    * @description Guarda la lista de terceros relacionados en el estado.
    */
-  public setTercerosRelacionados(tercerosRelacionados: Personas[]) {
+  public setTercerosRelacionados(tercerosRelacionados: Personas[]): void {
     this.update((state) => ({
       ...state,
       tercerosRelacionados,
@@ -922,7 +922,7 @@ export class Tramite5701Store extends Store<Solicitud5701State> {
   /**
    * Limpia los datos de la solicitud
    */
-  public limpiarSolicitud() {
+  public limpiarSolicitud(): void {
     this.reset();
   }
 }
