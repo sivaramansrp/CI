@@ -29,9 +29,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   /** Opciones de radio para el formulario */
   radioOpcion = RADIO_OPCION;
 
-  /** Lista de suscripciones activas */
-  private subscriptions: Subscription[] = [];
-
   /** Tabla de regiones */
   regionesTabla = REGIONES_TABLA;
 
@@ -89,7 +86,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       
 
     this.createForm();  
-    this.subscribeToProductorDeCafeChanges();
+    // this.subscribeToProductorDeCafeChanges();
     this.getRegionsData();
     this.getBeneficiosData();
     this.getBodegasData();
@@ -100,7 +97,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   createForm(): void {
     this.datosSolicitudForma = this.fb.group({
       justificacion: [this.dataDeLaSolicitudState?.justificacion],
-      productorDeCafe: [this.dataDeLaSolicitudState?.productorDeCafe || 'false'], 
+      productorDeCafe: [this.dataDeLaSolicitudState?.productorDeCafe || ''], 
       claveDelPadron: [{ 
         value: this.dataDeLaSolicitudState?.claveDelPadron || '', 
         disabled: this.dataDeLaSolicitudState?.productorDeCafe === 'false' 
@@ -112,28 +109,28 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   }
 
  /** Método para suscribirse a los cambios en el campo "productorDeCafe" */
-private subscribeToProductorDeCafeChanges(): void {
-  const PRODUCTOR_DE_CAFE_CONTROL = this.datosSolicitudForma.get('productorDeCafe');
-  const CLAVE_DEL_PADRON_CONTROL = this.datosSolicitudForma.get('claveDelPadron');
+// private subscribeToProductorDeCafeChanges(): void {
+//   const PRODUCTOR_DE_CAFE_CONTROL = this.datosSolicitudForma.get('productorDeCafe');
+//   const CLAVE_DEL_PADRON_CONTROL = this.datosSolicitudForma.get('claveDelPadron');
 
-  if (PRODUCTOR_DE_CAFE_CONTROL?.value === 'true' || PRODUCTOR_DE_CAFE_CONTROL?.value === true) {
-    CLAVE_DEL_PADRON_CONTROL?.disable();
-  } else {
-    CLAVE_DEL_PADRON_CONTROL?.enable();
-  }
-}
+//   if (PRODUCTOR_DE_CAFE_CONTROL?.value === 'true' || PRODUCTOR_DE_CAFE_CONTROL?.value === true) {
+//     CLAVE_DEL_PADRON_CONTROL?.disable();
+//   } else {
+//     CLAVE_DEL_PADRON_CONTROL?.enable();
+//   }
+// }
 
 /** Método para manejar el cambio del campo "productorDeCafe" */
 handleProductorDeCafeChange(event: any): void {
   const VALUE = event.target?.value === 'true';
   const CLAVE_DEL_PADRON_CONTROL = this.datosSolicitudForma.get('claveDelPadron');
   
-  if (VALUE) {
+  if (VALUE === true) {
     CLAVE_DEL_PADRON_CONTROL?.enable();
 
-  } else {
-    CLAVE_DEL_PADRON_CONTROL?.disable();
-    CLAVE_DEL_PADRON_CONTROL?.reset(); 
+  } else if (VALUE === false) {
+    CLAVE_DEL_PADRON_CONTROL?.disable(); // Disable the field if "No" is selected
+    CLAVE_DEL_PADRON_CONTROL?.setValue(''); // Clear the field value
   }
 }
   /** Método para obtener los datos de las regiones */
