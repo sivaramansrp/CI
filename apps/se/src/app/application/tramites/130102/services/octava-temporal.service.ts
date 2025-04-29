@@ -1,6 +1,8 @@
 import { FormGroup } from '@angular/forms';
 import { Injectable } from '@angular/core';
-
+/**
+ * Servicio inyectable disponible en toda la aplicación.
+ */
 @Injectable({
   providedIn: 'root'
 })

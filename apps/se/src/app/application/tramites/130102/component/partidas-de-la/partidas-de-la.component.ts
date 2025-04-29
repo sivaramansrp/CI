@@ -223,12 +223,7 @@ this.formForTotalCount.controls['valorTotalUSD'].setValue(VALOR_TOTAL_USD);
   validarYEnviarFormulario(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
-      console.log(
-        'El formulario tiene errores. Corríjalos antes de continuar.'
-      );
-    } else {
-      console.log('Formulario enviado con éxito', this.form.value);
-    }
+    } 
   }
  
   /**
@@ -243,6 +238,12 @@ this.formForTotalCount.controls['valorTotalUSD'].setValue(VALOR_TOTAL_USD);
       : false;
   }
 
+   /**
+   * Validador que verifica que el valor del campo no tenga espacios al inicio ni al final.
+   * 
+   * @param control - Control del formulario a validar.
+   * @returns Un objeto con el error 'leadingSpaces' si hay espacios al inicio o final, o null si es válido.
+   */
   private static noLeadingSpacesValidator(control: AbstractControl): ValidationErrors | null {
     if (control.value && control.value.trim() !== control.value) {
       return { leadingSpaces: true };
@@ -250,6 +251,10 @@ this.formForTotalCount.controls['valorTotalUSD'].setValue(VALOR_TOTAL_USD);
     return null;
   }
 
+  /**
+ * Método del ciclo de vida que se ejecuta al destruir el componente.
+ * Emite y completa el observable para evitar fugas de memoria.
+ */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();

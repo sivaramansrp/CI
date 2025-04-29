@@ -214,14 +214,20 @@ export class DetosDelLaMarcaciaComponent implements OnInit , OnDestroy {
     this.selectedValue = 'Nuevo';
   }
 
-  // Custom validator for leading spaces
+  /**
+ * Validador personalizado que verifica si un campo comienza con espacios en blanco.
+ * Retorna un error si se detectan espacios al inicio.
+ */
   private static noLeadingSpacesValidator(control: AbstractControl): ValidationErrors | null {
     if (control.value && control.value.trim() !== control.value) {
       return { leadingSpaces: true };
     }
     return null;
   }
-
+  /**
+   * Método del ciclo de vida que se ejecuta al destruir el componente.
+   * Emite y completa el observable para evitar fugas de memoria.
+   */
 
   ngOnDestroy(): void {
     this.destroyNotifier$.next();

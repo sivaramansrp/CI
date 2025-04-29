@@ -27,6 +27,9 @@ interface AccionBoton {
   templateUrl: './octava-temporal.component.html',
 })
 export class OctavaTemporalComponent {
+  /**
+   * Referencia al componente del asistente (wizard) para controlar su navegación.
+   */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
 
   /**

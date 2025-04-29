@@ -84,8 +84,16 @@ export class PaisProcendenciaComponent implements OnInit {
    */
   paisProc: Catalogo[] = paisProcJson;
 
+  /**
+   * Estado actual de la solicitud 130102, obtenido desde el store.
+   */
   public solicitudState!: Solicitud130102State;
+
+  /**
+   * Observable utilizado para cancelar suscripciones al destruir el componente.
+   */
   private destroyNotifier$: Subject<void> = new Subject();
+
 
   /**
    * Botones de acción disponibles para gestionar las listas de fechas.
@@ -201,6 +209,12 @@ export class PaisProcendenciaComponent implements OnInit {
       });
   }
 
+   /**
+   * Validador que verifica que el valor del campo no tenga espacios al inicio ni al final.
+   * 
+   * @param control - Control del formulario a validar.
+   * @returns Un objeto con el error 'leadingSpaces' si hay espacios al inicio o final, o null si es válido.
+   */
   private static noLeadingSpacesValidator(control: AbstractControl): ValidationErrors | null {
     if (control.value && control.value.trim() !== control.value) {
       return { leadingSpaces: true };
