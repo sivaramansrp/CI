@@ -1,5 +1,5 @@
+import { CATALOGOS_ID,Catalogo, CatalogosService, TEXTOS } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Catalogo, CATALOGOS_ID, CatalogosService, TEXTOS } from '@libs/shared/data-access-user/src';
 import { Subject, takeUntil } from 'rxjs';
 
 /**

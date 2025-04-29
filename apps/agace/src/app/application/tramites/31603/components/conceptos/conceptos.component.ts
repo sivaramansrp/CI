@@ -1,13 +1,13 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Catalogo, CatalogoSelectComponent, InputRadioComponent } from '@libs/shared/data-access-user/src';
-import { Subject,map,takeUntil } from 'rxjs';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Solicitud31603IvaeiepsState, Tramite31603IvaeiepsStore } from '../../estados/stores/tramite31603ivaeieps.store';
+import { Subject,map,takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { NumeroDeEmpleadosComponent } from '../numero-de-empleados/numero-de-empleados.component';
 import { RegistrosDeComercioExteriorService } from '../../services/registros-de-comercio-exterior.service';
 import { Tramite31603IvaeiepsQuery } from '../../estados/queries/tramite31603ivaeieps.query';
 import radio_si_no from '@libs/shared/theme/assets/json/31601/radio_si_no.json';
-import { NumeroDeEmpleadosComponent } from '../numero-de-empleados/numero-de-empleados.component';
 
 
 /**

@@ -1,12 +1,12 @@
+import { CONFIGURACION_DATOS, DEPOSITO_FISCAL, ELABORACION, IMPORTACION_TEMPORAL, RECINTO_FISCALIZADO } from '../../constantes/datos-por-regimen.enum';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { Solicitud31603State, Tramite31603Store } from '../../estados/stores/tramite31603.store';
+import { Subject,map, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { ConceptosComponent } from '../conceptos/conceptos.component';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
 import { InputRadioComponent } from '@libs/shared/data-access-user/src';
-import { ConceptosComponent } from '../conceptos/conceptos.component';
-import { map, Subject, takeUntil } from 'rxjs';
-import { CONFIGURACION_DATOS, DEPOSITO_FISCAL, ELABORACION, IMPORTACION_TEMPORAL, RECINTO_FISCALIZADO } from '../../constantes/datos-por-regimen.enum';
-import { Solicitud31603State, Tramite31603Store } from '../../estados/stores/tramite31603.store';
 import { Tramite31603Query } from '../../estados/queries/tramite31603.query';
 import radio_si_no from '@libs/shared/theme/assets/json/31601/radio_si_no.json';
 

@@ -1,5 +1,5 @@
-import { Component, OnDestroy, ViewChild } from '@angular/core';
 import { AccionBoton, DatosPasos, ListaPasosWizard, WizardComponent } from '@libs/shared/data-access-user/src';
+import { Component, OnDestroy, ViewChild } from '@angular/core';
 import { PANTA_PASOS, TITULO_PASO_DOS, TITULO_PASO_TRES, TITULO_PASO_UNO } from '../../services/registros-de-comercio-exterior.enum';
 import { Subject } from 'rxjs';
 

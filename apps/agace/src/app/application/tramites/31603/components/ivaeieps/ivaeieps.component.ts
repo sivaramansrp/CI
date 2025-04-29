@@ -1,16 +1,16 @@
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { Component, OnDestroy, OnInit, TemplateRef } from '@angular/core';
+import { ConfiguracionColumna, EMPRESAS_TABLA, EmpresasDelGrupo, InputCheckComponent, InputRadioComponent, REGEX_RFC, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Solicitud31603IvaeiepsState, Tramite31603IvaeiepsStore } from '../../estados/stores/tramite31603ivaeieps.store';
+import { Subject,map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ConfiguracionColumna, EMPRESAS_TABLA, EmpresasDelGrupo, InputCheckComponent, InputRadioComponent, REGEX_RFC, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
-import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import { PERMISO_A_DESISTIR } from '../../constantes/ivaeieps.enum';
-import { map, Subject, takeUntil } from 'rxjs';
-import { Solicitud31603IvaeiepsState, Tramite31603IvaeiepsStore } from '../../estados/stores/tramite31603ivaeieps.store';
-import { Tramite31603IvaeiepsQuery } from '../../estados/queries/tramite31603ivaeieps.query';
-import { RegistrosDeComercioExteriorService } from '../../services/registros-de-comercio-exterior.service';
-import radio_si_no from '@libs/shared/theme/assets/json/31601/radio_si_no.json';
 import { IvaeiepsDosComponent } from '../ivaeieps-dos/ivaeieps-dos.component';
+import { PERMISO_A_DESISTIR } from '../../constantes/ivaeieps.enum';
+import { RegistrosDeComercioExteriorService } from '../../services/registros-de-comercio-exterior.service';
+import { Tramite31603IvaeiepsQuery } from '../../estados/queries/tramite31603ivaeieps.query';
+import radio_si_no from '@libs/shared/theme/assets/json/31601/radio_si_no.json';
 
 /**
  * Este componente representa la sección de IVA e IEPS de la aplicación.

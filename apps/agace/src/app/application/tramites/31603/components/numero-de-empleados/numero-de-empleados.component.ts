@@ -1,10 +1,10 @@
-import { Component, OnDestroy, OnInit, TemplateRef } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Anteriores, ANTERIORES_TABLA, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
+import { ANTERIORES_TABLA,Anteriores, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import { RegistrosDeComercioExteriorService } from '../../services/registros-de-comercio-exterior.service';
+import { Component, OnDestroy, OnInit, TemplateRef } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { RegistrosDeComercioExteriorService } from '../../services/registros-de-comercio-exterior.service';
 
 @Component({
   selector: 'app-numero-de-empleados',

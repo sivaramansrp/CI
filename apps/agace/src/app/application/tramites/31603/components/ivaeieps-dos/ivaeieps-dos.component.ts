@@ -1,13 +1,13 @@
+import { CONFIGURACION_IVAEIEPS_DOS, PAGO_DE_DERECHOS, PERMISO_A_DESISTIR_DOS, PERMISO_A_DESISTIR_TRES } from '../../constantes/ivaeieps.enum';
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { Solicitud31603State, Tramite31603Store } from '../../estados/stores/tramite31603.store';
+import { Subject,map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { CONFIGURACION_IVAEIEPS_DOS, PAGO_DE_DERECHOS, PERMISO_A_DESISTIR_DOS, PERMISO_A_DESISTIR_TRES } from '../../constantes/ivaeieps.enum';
-import { map, Subject, takeUntil } from 'rxjs';
-import { Solicitud31603State, Tramite31603Store } from '../../estados/stores/tramite31603.store';
-import { Tramite31603Query } from '../../estados/queries/tramite31603.query';
-import { RegistrosDeComercioExteriorService } from '../../services/registros-de-comercio-exterior.service';
 import { ModeloDeFormaDinamica } from '@libs/shared/data-access-user/src';
+import { RegistrosDeComercioExteriorService } from '../../services/registros-de-comercio-exterior.service';
+import { Tramite31603Query } from '../../estados/queries/tramite31603.query';
 
 /**
  * Componente `IvaeiepsDosComponent` que gestiona la funcionalidad relacionada con el proceso de IVA e IEPS.
@@ -27,7 +27,7 @@ import { ModeloDeFormaDinamica } from '@libs/shared/data-access-user/src';
       FormasDinamicasComponent
   ],
   templateUrl: './ivaeieps-dos.component.html',
-  styleUrl: './ivaeieps-dos.component.css',
+  styleUrl: './ivaeieps-dos.component.scss',
 })
 export class IvaeiepsDosComponent implements OnInit,OnDestroy {
 
