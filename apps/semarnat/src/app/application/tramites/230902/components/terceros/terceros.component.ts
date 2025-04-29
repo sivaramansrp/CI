@@ -210,7 +210,7 @@ export class TercerosComponent implements OnInit, OnDestroy {
   onEntidadFederativaChange(): void {
     const ENTIDAD_FEDERATIVA = this.destinatarioForm.get('entidadFederativa')?.value;
     if (ENTIDAD_FEDERATIVA && this.tablaDatos.length === 0) {
-      this.tramite230902Store.setEntidadFederativa(ENTIDAD_FEDERATIVA);
+      this.tramite230902Store.establecerDatos({ entidadFederativa: ENTIDAD_FEDERATIVA });
       this.tablaDatos.push(DESTINARIO_TABLE_ENTRY);
     }
   }
