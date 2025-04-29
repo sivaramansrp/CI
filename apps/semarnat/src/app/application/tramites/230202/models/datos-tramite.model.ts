@@ -1,10 +1,11 @@
 
 export interface DatosSolicitud {
-  
+
   id: number;
   fraccionArancelaria: number;
   cantidad: number;
   cantidadLetra: string;
+  descripcion: string
 
 }
 
@@ -20,6 +21,7 @@ export interface DatosDetalle {
   id: number;
   nombreCientifico: string;
   nombreComunDetalle: string;
+  descripcion: string;
   
 }
 

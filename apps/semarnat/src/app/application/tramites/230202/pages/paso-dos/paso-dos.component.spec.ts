@@ -10,7 +10,8 @@ describe('PasoDosComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [PasoDosComponent,TituloComponent, AlertComponent, AnexarDocumentosComponent], // Import standalone components
+      imports: [PasoDosComponent, TituloComponent, AlertComponent, AnexarDocumentosComponent], // Import standalone components
+      declarations: [],
       providers: [
         CatalogosService,
         provideHttpClient(), // Provide HttpClient

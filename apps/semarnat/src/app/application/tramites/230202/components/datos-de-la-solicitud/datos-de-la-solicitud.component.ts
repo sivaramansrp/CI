@@ -39,6 +39,7 @@ import {
 import { CommonModule } from '@angular/common';
 import { PhytosanitaryReexportacionService } from '../../services/phytosanitary-reexportacion.service';
 import { Tramite230202Query } from '../../estados/tramite230202.query';
+import { Modal } from 'bootstrap';
 
 @Component({
   selector: 'app-datos-de-la-solicitud',
@@ -96,6 +97,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   fecha: FormControl = new FormControl('');
   fechaSeleccionada: FormControl = new FormControl('');
   @ViewChildren(CrosslistComponent) crossList!: QueryList<CrosslistComponent>;
+  @ViewChild('modalAgregarMercancias', { static: false }) modalRef!: ElementRef;
+  @ViewChild('modalConfirmacion', { static: false }) modalConfirmacion!: ElementRef;
   @ViewChild('closeModal') closeModal!: ElementRef;
   public paisDeOrigenBotons = this.getCrossListBtn(0);
   public entidadesBotons = this.getCrossListBtn(1);
@@ -108,6 +111,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     derecha: 'Entidades seleccionadas*:',
   };
   public datosSolicitud: DatosSolicitud[] = [];
+  selectedRows:number[] = [];
+  selectedRowsDetalle:number[] = [];
   public datosDetalle: DatosDetalle[] = [];
   TablaSeleccion = TablaSeleccion;
 
@@ -145,9 +150,9 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   ];
 
   constructor(
-    private phytosanitaryReexportacionService: PhytosanitaryReexportacionService,
-    private store: Tramite230202Store,
-    private query: Tramite230202Query,
+    public phytosanitaryReexportacionService: PhytosanitaryReexportacionService,
+    public store: Tramite230202Store,
+    public query: Tramite230202Query,
     public fb: FormBuilder
   ) {}
 
@@ -156,8 +161,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.inicializaCatalogos();
-    this.inicializarFormulario();
-
     this.query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -166,6 +169,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
+    this.inicializarFormulario();
   }
 
   /**
@@ -513,6 +517,50 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
           this.cerrarModal();
         }
       });
+  }
+
+  onSelectedRowsChange(selectedRows: DatosSolicitud[]): void {
+    this.selectedRows = selectedRows.map(row => row.id);
+  }
+
+  eliminar(): void {
+    if (this.selectedRows && this.selectedRows.length > 0) {
+      this.datosSolicitud = this.datosSolicitud.filter(row => !this.selectedRows.includes(row.id));
+      this.store.setDatosSolicitud(this.datosSolicitud);
+      this.selectedRows = [];
+    } else {
+      if (this.modalConfirmacion) {
+        const MODEL = new Modal(this.modalConfirmacion.nativeElement);
+        MODEL.show();
+      }
+    }
+  }
+
+  modificar(): void {
+    if (this.selectedRows && this.selectedRows.length > 0) {
+      this.agregarMercanciasForm.patchValue(this.selectedRows);
+      if (this.modalRef) {
+        const MODEL = new Modal(this.modalRef.nativeElement);
+        MODEL.show();
+      }
+    } else {
+      if (this.modalConfirmacion) {
+        const MODEL = new Modal(this.modalConfirmacion.nativeElement);
+        MODEL.show();
+      }
+    }
+  }
+
+  onSelectedRows(selectedRowsDetalle: DatosDetalle[]): void {
+    this.selectedRowsDetalle = selectedRowsDetalle.map(row => row.id);
+  }
+
+  eliminarDetalle(): void {
+    if (this.selectedRowsDetalle && this.selectedRowsDetalle.length > 0) { 
+      this.datosDetalle = this.datosDetalle.filter(row => !this.selectedRowsDetalle.includes(row.id));
+      this.store.setDatosDetalle(this.datosDetalle);
+      this.selectedRowsDetalle = [];
+    }
   }
 
   /**
