@@ -42,34 +42,46 @@
                 'setNombreTecnico'
                 )">
             </div>
-          </div>
-      
-          <div class="row mt-3 mb-3">
-            <div class="col-md-6">
-              <label for="nombreIngles">Nombre en inglés:</label>
-              <input type="text" class="form-control" formControlName="nombreIngles"
+
+            <div class="col-md-4">
+              <label for="criterioParaTratoPreferencial">Criterio para trato preferencial:</label>
+              <input type="text" class="form-control" formControlName="criterioParaTratoPreferencial"
               (change)="
                 setValoresStore(
                 mercanciaForm,
-                'nombreIngles',
-                'setNombreIngles'
-                )">
-            </div>
-            <div class="col-md-6">
-              <label for="criterioClasificacion">Criterio para clasificación:</label>
-              <input type="text" class="form-control" formControlName="criterioClasificacion"
-              (change)="
-                setValoresStore(
-                mercanciaForm,
-                'criterioClasificacion',
-                'setCriterioClasificacion'
+                'criterioParaTratoPreferencial',
+                'setCriterioParaTratoPreferencial'
                 )">
             </div>
           </div>
       
           <div class="row mt-3 mb-3">
             <div class="col-md-6">
-              <label for="cantidad">Cantidad:</label>
+              <label for="valorDeContenidoRegional">Valor de contenido regional:</label>
+              <input type="text" class="form-control" formControlName="valorDeContenidoRegional"
+              (change)="
+                setValoresStore(
+                mercanciaForm,
+                'valorDeContenidoRegional',
+                'setValorDeContenidoRegional'
+                )">
+            </div>
+
+            <div class="col-md-6">
+              <label for="otrasInstancias">Otras instancias:</label>
+              <input type="text" class="form-control" formControlName="otrasInstancias"
+              (change)="
+                setValoresStore(
+                mercanciaForm,
+                'otrasInstancias',
+                'setOtrasInstancias'
+                )">
+            </div>
+          </div>
+      
+          <div class="row mt-3 mb-3">
+            <div class="col-md-6">
+              <label for="cantidad">Cantidad*:</label>
               <input type="number" class="form-control" formControlName="cantidad"
               (change)="
                 setValoresStore(
@@ -101,22 +113,22 @@
                 )">
             </div>
             <div class="col-md-6">
-              <label for="complementoClasificacion">Complemento de la clasificación*:</label>
-              <textarea class="mb-4 h-20 w-100 form-control" formControlName="complementoClasificacion" rows="2"
+              <label for="complementoDescripcion">Complemento de la descripción:</label>
+              <textarea class="mb-4 h-20 w-100 form-control" formControlName="complementoDescripcion" rows="2"
               (change)="
                 setValoresStore(
                 mercanciaForm,
-                'complementoClasificacion',
-                'setComplementoClasificacion'
+                'complementoDescripcion',
+                'setComplementoDescripcion'
                 )"></textarea>
             </div>
           </div>
           <div class="row mb-3">
-            <div class="col-md-3">
-              <input-fecha [datos]="fechaFinalInput" ></input-fecha>
+            <div class="col-md-6">
+              <input-fecha [datos]="fechaFactura"></input-fecha>
             </div>
-            <div class="col-md-4">
-              <label for="numeroFactura">N° factura*:</label>
+            <div class="col-md-6">
+              <label for="numeroFactura">N° factura / Referencia*:</label>
               <input type="text" class="form-control" formControlName="numeroFactura"
               (change)="
                 setValoresStore(
@@ -125,14 +137,24 @@
                 'setNumeroFactura'
                 )" >
             </div>
-            <div class="col-md-4 mr-2">
-              <app-catalogo-select [catalogo]="factura || []" [label]="'Tipo de factura'" [required]="true" name="tipoFactura" formControlName="tipoFactura" 
+            <div class="col-md-6 mr-2">
+              <app-catalogo-select [catalogo]="factura || []" [label]="'Tipo de factura / Referencia'" [required]="true" name="tipoFactura" formControlName="tipoFactura" 
               (change)="
                 setValoresStore(
                 mercanciaForm,
                 'tipoFactura',
                 'setTipoFactura'
                 )"></app-catalogo-select>
+            </div>
+            <div class="col-md-6">
+              <label for="numeroDeSerie">Número de serie:</label>
+              <input type="text" class="form-control" formControlName="numeroDeSerie"
+              (change)="
+                setValoresStore(
+                mercanciaForm,
+                'numeroDeSerie',
+                'setNumeroDeSerie'
+                )" >
             </div>
           </div>
         </form>

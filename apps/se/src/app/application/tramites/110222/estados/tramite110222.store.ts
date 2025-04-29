@@ -23,7 +23,10 @@ export interface Tramite110222State {
   nombreComercialMercancia: string;
   nombreTecnico: string;
   nombreIngles: string;
-  criterioClasificacion: string;
+  complementoDescripcion: string;
+  criterioParaTratoPreferencial: string;
+  valorDeContenidoRegional: string;
+  numeroDeSerie: string;
   cantidad: string;
   umc: Catalogo[];
   valorMercancia: string;
@@ -33,6 +36,7 @@ export interface Tramite110222State {
   formaValida: { [key: string]: boolean };
   formDestinatario: { [key: string]: undefined | boolean | string | number | object };
   datosConfidencialesProductor?: boolean;
+  si?: boolean;
   productorMismoExportador?: boolean;
   agregarDatosProductorFormulario: { [key: string]: undefined | boolean | string | number | object };
   formulario: { [key: string]: undefined | boolean | string | number | object };
@@ -53,6 +57,11 @@ export function createInitialState(): Tramite110222State {
       fraccionArancelariaForm: '',
       fechaInicioInput: '',
       fechaFinalInput: '',
+      nombres: '',
+      primerApellido: '',
+      segundoApellido: '',
+      numeroDeRegistroFiscal: '',
+      razonSocial: '',
     },
     estado: {
       id: -1,
@@ -64,7 +73,10 @@ export function createInitialState(): Tramite110222State {
       nombreComercialMercancia: '',
       nombreTecnico: '',
       nombreIngles: '',
-      criterioClasificacion: '',
+      complementoDescripcion: '',
+      criterioParaTratoPreferencial: '',
+      valorDeContenidoRegional: '',
+      numeroDeSerie: '',
       marca: '',
       cantidad: '',
       umc: '',
@@ -102,7 +114,10 @@ export function createInitialState(): Tramite110222State {
     nombreComercialMercancia: '',
     nombreTecnico: '',
     nombreIngles: '',
-    criterioClasificacion: '',
+    complementoDescripcion: '',
+    criterioParaTratoPreferencial: '',
+    valorDeContenidoRegional: '',
+    numeroDeSerie: '',
     cantidad: '',
     umc: [],
     valorMercancia: '',
@@ -384,13 +399,61 @@ export class Tramite110222Store extends Store<Tramite110222State> {
 
       /**
        * @descripcion
-       * Actualiza el número de criterioClasificacion en el almacén.
-       * @param telfono - Cadena que representa el número de criterioClasificacion a actualizar.
+       * Actualiza el número de nombreIngles en el almacén.
+       * @param telfono - Cadena que representa el número de nombreIngles a actualizar.
        */
-      setCriterioClasificacion(criterioClasificacion: string): void {
+      setCriterioParaTratoPreferencial(criterioParaTratoPreferencial: string): void {
         this.update((state) => ({
             ...state,
-            criterioClasificacion,
+            criterioParaTratoPreferencial
+        }))
+      }
+
+      /**
+       * @descripcion
+       * Actualiza el valor de `otrasInstancias` en el almacén.
+       * @param otrasInstancias - Cadena que representa el nuevo valor de `otrasInstancias`.
+       */
+      setOtrasInstancias(otrasInstancias: string): void {
+        this.update((state) => ({
+            ...state,
+            otrasInstancias
+        }))
+      }
+
+      /**
+       * @descripcion
+       * Actualiza el número de criterioParaConferirOrigen en el almacén.
+       * @param criterioParaConferirOrigen - Cadena que representa el número de criterioParaConferirOrigen a actualizar.
+       */
+      setCriterioParaConferirOrigen(criterioParaConferirOrigen: string): void {
+        this.update((state) => ({
+            ...state,
+            criterioParaConferirOrigen,
+        }))
+      }
+
+      /**
+       * @descripcion
+       * Actualiza el número de valorDeContenidoRegional en el almacén.
+       * @param valorDeContenidoRegional - Cadena que representa el número de valorDeContenidoRegional a actualizar.
+       */
+      setValorDeContenidoRegional(valorDeContenidoRegional: string): void {
+        this.update((state) => ({
+            ...state,
+            valorDeContenidoRegional,
+        }))
+      }
+
+      /**
+       * @descripcion
+       * Actualiza el número de numeroDeSerie en el almacén.
+       * @param numeroDeSerie - Cadena que representa el número de numeroDeSerie a actualizar.
+       */
+      setNumeroDeSerie(numeroDeSerie: string): void {
+        this.update((state) => ({
+            ...state,
+            numeroDeSerie,
         }))
       }
 
@@ -432,13 +495,13 @@ export class Tramite110222Store extends Store<Tramite110222State> {
 
       /**
        * @descripcion
-       * Actualiza el número de complementoClasificacion en el almacén.
-       * @param telfono - Cadena que representa el número de complementoClasificacion a actualizar.
+       * Actualiza el número de complementoDescripcion en el almacén.
+       * @param telfono - Cadena que representa el número de complementoDescripcion a actualizar.
        */
-      setComplementoClasificacion(complementoClasificacion: string): void {
+      setComplementoDescripcion(complementoDescripcion: string): void {
         this.update((state) => ({
             ...state,
-            complementoClasificacion,
+            complementoDescripcion,
         }))
       }
 

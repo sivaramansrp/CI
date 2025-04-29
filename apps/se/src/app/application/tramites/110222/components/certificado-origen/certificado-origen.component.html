@@ -12,6 +12,10 @@
     [guardarClicado]="(datosTabla$ | async) ||  []"
     (formaValida)="setFormValida($event)"
     [datosForm]="formCertificadoValues"
+    [cargoDeMercancias]="cargoDeMercancias"
+    [mercanciasDisponibles]="mercanciasDisponibles"
+    [tramiteState]="tramiteState"
+    [elementosRequeridos]="elementosRequeridos"
     (formCertificadoEvent)="setValoresStore($event)" >
 </app-certificado-de-origen>
 

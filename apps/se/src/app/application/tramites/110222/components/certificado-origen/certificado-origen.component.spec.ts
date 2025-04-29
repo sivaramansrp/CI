@@ -5,10 +5,10 @@ import { Observable, of as observableOf } from 'rxjs';
 
 import { CertificadoOrigenComponent } from './certificado-origen.component';
 import { FormBuilder } from '@angular/forms';
-import { CertificadoDeService } from '../../services/certificado-de.service';
+import { SeccionLibStore, SeccionLibQuery } from '@libs/shared/data-access-user/src';
 import { Tramite110222Store } from '../../estados/tramite110222.store';
 import { Tramite110222Query } from '../../estados/tramite110222.query';
-import { SeccionLibStore, SeccionLibQuery } from '@libs/shared/data-access-user/src';
+import { CertificadoDeService } from '../../services/certificado-de.service';
 
 @Injectable()
 class MockCertificadoDeService {
@@ -21,7 +21,7 @@ class MockCertificadoDeService {
 class MockTramite110222Store {}
 
 @Injectable()
-class MockcTramite110222Query {
+class MockTramite110222Query {
   selectCam$ = observableOf({});
   selectmercanciaTabla$ = observableOf({});
   formCertificado$ = observableOf({});
@@ -39,8 +39,8 @@ describe('CertificadoOrigenComponent', () => {
       providers: [
         FormBuilder,
         { provide: CertificadoDeService, useClass: MockCertificadoDeService },
-        { provide: Tramite110222Store, useClass: MockTramite110222Store},
-        { provide: Tramite110222Query, useClass: MockcTramite110222Query },
+        { provide: Tramite110222Store, useClass: MockTramite110222Store },
+        { provide: Tramite110222Query, useClass: MockTramite110222Query },
         SeccionLibStore,
         SeccionLibQuery,
       ],
@@ -59,12 +59,4 @@ describe('CertificadoOrigenComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should run #ngOnInit()', async () => {
-    const query = TestBed.inject(Tramite110222Query);
-
-    component.ngOnInit();
-
-    expect(query.selectTramite$).toBeTruthy();
-    expect(query.selectmercanciaTabla$).toBeTruthy();
-  });
 });

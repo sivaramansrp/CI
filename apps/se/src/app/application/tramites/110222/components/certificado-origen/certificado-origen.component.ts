@@ -3,6 +3,7 @@ import { Catalogo, SeccionLibQuery, SeccionLibState, SeccionLibStore } from '@li
 import { Observable, Subject, delay, map, of, takeUntil } from 'rxjs';
 import { Tramite110222State, Tramite110222Store } from '../../estados/tramite110222.store';
 import { CertificadoDeService } from '../../services/certificado-de.service';
+import { ELEMENTOS_REQUERIDOS } from '../../constantes/peru-certificado.module';
 import { FormBuilder } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Mercancia } from '../../../../shared/models/modificacion.enum';
@@ -60,8 +61,25 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
    * @descripcion
    * Evento para indicar si se seleccionó una fila en la tabla.
    */
-  tablaSeleccionEvent: boolean = false;
+  tablaSeleccionEvent: boolean = true;
 
+  /**
+   * @descripcion
+   * Indica si el campo de mercancías está activo.
+   */
+  cargoDeMercancias: boolean = true;
+
+  /**
+   * @descripcion
+   * Indica si hay mercancías disponibles.
+   */
+  mercanciasDisponibles: boolean = true;
+
+  /**
+   * Estado actual del trámite.
+   */
+  public tramiteState!: { [key: string]: string | number | boolean | object | undefined };
+  
   /**
    * @descripcion
    * Observable para los datos de la tabla.
@@ -93,6 +111,12 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
   private seccionState!: SeccionLibState;
 
   /**
+   * @description
+   * Lista de elementos requeridos para completar el formulario o proceso.
+   */
+  public readonly elementosRequeridos = ELEMENTOS_REQUERIDOS;
+
+  /**
    * @descripcion
    * Referencia al elemento del modal de modificación.
    */
@@ -120,6 +144,7 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
       .pipe(takeUntil(this.destroyNotifier$), delay(100))
       .subscribe((estado) => {
         this.formCertificadoValues = estado;
+        this.tramiteState = estado;
       });
   }
 

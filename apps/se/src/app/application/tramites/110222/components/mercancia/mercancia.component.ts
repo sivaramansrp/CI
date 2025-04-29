@@ -79,7 +79,7 @@ export class MercanciaComponent implements OnInit, OnDestroy {
    * @descripcion
    * Fecha final para el formulario.
    */
-  fechaFinalInput: InputFecha = FECHA;
+  fechaFactura: InputFecha = FECHA;
 
   /**
    * @descripcion
@@ -138,13 +138,13 @@ export class MercanciaComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((state) => {
           this.mercanciaState = state as Tramite110222State;
+          this.initActionFormBuild();
         })
       )
       .subscribe();
 
     this.umcOpcion();
     this.facturasOpcion();
-    this.initActionFormBuild();
   }
 
   /**
@@ -153,17 +153,20 @@ export class MercanciaComponent implements OnInit, OnDestroy {
    */
   initActionFormBuild(): void {
     this.mercanciaForm = this.fb.group({
-      fraccionArancelaria: [this.mercanciaState.fraccionArancelaria],
-      nombreComercialMercancia: [this.mercanciaState.nombreComercialMercancia],
-      nombreTecnico: [this.mercanciaState.nombreTecnico],
-      nombreIngles: [this.mercanciaState.nombreIngles],
-      criterioClasificacion: [this.mercanciaState.criterioClasificacion],
+      fraccionArancelaria: [this.mercanciaState.mercanciaForm['fraccionArancelaria']],
+      nombreComercialMercancia: [{ value: this.mercanciaState.mercanciaForm['nombreComercialMercancia'], disabled: true }],
+      nombreTecnico: [{ value: this.mercanciaState.mercanciaForm['nombreTecnico'], disabled: true }],
+      criterioParaTratoPreferencial: [{ value: this.mercanciaState.mercanciaForm['criterioParaTratoPreferencial'], disabled: true }],
+      valorDeContenidoRegional: [{ value: this.mercanciaState.mercanciaForm['valorDeContenidoRegional'], disabled: true }],
+      otrasInstancias: [{ value: this.mercanciaState.mercanciaForm['otrasInstancias'], disabled: true }],
+      criterioParaConferirOrigen: [{ value: this.mercanciaState.mercanciaForm['criterioParaConferirOrigen'], disabled: true }],
       cantidad: [this.mercanciaState.cantidad, Validators.required],
       umc: [this.mercanciaState.umc, Validators.required],
       valorMercancia: [this.mercanciaState.valorMercancia, Validators.required],
-      complementoClasificacion: [this.mercanciaState.complementoClasificacion, Validators.required],
+      complementoDescripcion: [this.mercanciaState.complementoDescripcion],
       numeroFactura: [this.mercanciaState.numeroFactura, Validators.required],
       tipoFactura: [this.mercanciaState.tipoFactura, Validators.required],
+      numeroDeSerie: [this.mercanciaState.numeroDeSerie]
     });
   }
 

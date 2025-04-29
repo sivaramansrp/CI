@@ -3,11 +3,11 @@
     "data": [
       {
           "id": 1,
-          "descripcion": "Tratado de Libre Comercio México-Unión Europea"
+          "descripcion": "Selecciona un valor"
       },
       {
           "id": 2,
-          "descripcion": "Tratado de Libre Comercio México-Asociación Europea de Libre Comercio"
+          "descripcion": "Acuerdo Mexico-Perú"
       }
   ],
     "message": "Consulta exitosa"
