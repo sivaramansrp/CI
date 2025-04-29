@@ -182,38 +182,97 @@ export const RECIBIR_NOTIFICACIONES_CONFIGURACION: ConfiguracionColumna<RecibirN
       orden: 5,
     },
   ];
-
+/**
+ * Configuración de columnas para agregar IMMEX.
+ */
 export const AGREGAR_IMMEX_CONFIGURACION: ConfiguracionColumna<EntidadFederativa>[] =
   [
     {
+      /**
+       *Encabezado de la columna para la entidad federativa.
+       */
       encabezado: 'Entidad federativa',
+      /**
+       *Clave que obtiene la entidad federativa del objeto.
+       */
       clave: (item: EntidadFederativa) => item.entidadFederativa,
+      /**
+       * Orden de la columna en la tabla.
+       */
       orden: 1,
     },
     {
+      /**
+       * Encabezado de la columna para el municipio o delegación.
+       */
       encabezado: 'Municipio o delegación',
+      /**
+       * Clave que obtiene el municipio o delegación del objeto.
+       */
       clave: (item: EntidadFederativa) => item.municipioDelegacion,
+      /**
+       * Orden de la columna en la tabla.
+       */
       orden: 2,
     },
     {
+      /**
+       * Encabezado de la columna para la dirección completa.
+       */
       encabezado: 'Colonia, calle y número',
+      /**
+       * Clave que obtiene la dirección del objeto.
+       */
       clave: (item: EntidadFederativa) => item.direccion,
+      /**
+       * Orden de la columna en la tabla.
+       */
       orden: 3,
     },
     {
+      /**
+       * Encabezado de la columna para el código postal.
+       */
       encabezado: 'Código postal',
+      /**
+       * Clave que obtiene el código postal del objeto.
+       */
       clave: (item: EntidadFederativa) => item.codigoPostal,
+      /**
+       * Orden de la columna en la tabla.
+       */
       orden: 4,
     },
     {
+      /**
+       * Encabezado de la columna para el registro ante SE/SAT.
+       */
       encabezado: 'Registro ante SE/SAT',
+      /**
+       * Clave que obtiene el registro ante SE/SAT del objeto.
+       */
       clave: (item: EntidadFederativa) => item.registroSESAT,
+      /**
+       * Orden de la columna en la tabla.
+       */
       orden: 5,
     },
   ];
 
+/**
+ * Configuración de fecha de fin de vigencia.
+ */
 export const FECHA_DE_FIN_VIGENCIA: InputFecha = {
+  /**
+   * Etiqueta del campo de fecha de fin de vigencia.
+   */
   labelNombre: 'Fecha de fin de vigencia',
+  /**
+   * Indica si el campo es obligatorio.
+   */
   required: true,
+  /**
+   * Indica si el campo está habilitado.
+   */
   habilitado: true,
 };

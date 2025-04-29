@@ -62,6 +62,7 @@ export interface DatosPorGarantia {
   importeTotal: string;
 }
 
+/** Radio Options  */
 export interface RadioOptions {
   /** Etiqueta visible de la opción */
   label: string;
@@ -115,16 +116,34 @@ export interface DatosGeneralesDeLaSolicitudCatologo {
   /** Tipo de inversión a realizar */
   tipoDeInversion: CatalogosSelect;
 
+  /**
+   * Catálogo de opciones sobre el carácter del miembro.
+   */
   enSuCaracterDe: CatalogosSelect;
 
+  /**
+   * Catálogo de nacionalidades disponibles.
+   */
   nacionalidad: CatalogosSelect;
 
+  /**
+   * Catálogo del tipo de persona en la solicitud.
+   */
   tipoDePersona: CatalogosSelect;
 
+  /**
+   * Catálogo de modalidades del programa IMMEX.
+   */
   modalidadDelProgramaIMMEX: CatalogosSelect;
 
+  /**
+   * Catálogo de tipos de instalación.
+   */
   tipoDeInstalacion: CatalogosSelect;
 
+  /**
+   * Catálogo de entidades federativas.
+   */
   entidadFederativa: CatalogosSelect;
 }
 
@@ -132,6 +151,7 @@ export interface DatosGeneralesDeLaSolicitudCatologo {
  * Representa la información de un subcontratista.
  */
 export interface SubContratistas {
+  /** idRegistro del SubContratistas */
   idRegistro?: string;
 
   /** RFC del subcontratista */
@@ -284,21 +304,77 @@ export interface Domicilios {
   /** Observaciones adicionales del domicilio */
   observaciones?: string;
 }
-
-
+/**
+ * Interfaz que representa una entidad federativa.
+ */
 export interface EntidadFederativa {
+  /**
+   * Indica si es la instalación principal.
+   */
   instalacionPrincipal?: string;
+
+  /**
+   * Clave del tipo de instalación.
+   */
   cveTipoInstalacion?: string;
+
+  /**
+   * Tipo de instalación.
+   */
   tipoInstalacion?: string;
+
+  /**
+   * Clave de la entidad federativa.
+   */
   cveEntidadFederativa?: string;
+
+  /**
+   * Nombre de la entidad federativa.
+   */
   entidadFederativa: string;
+
+  /**
+   * Clave del municipio o delegación.
+   */
   cveDelegacionMunicipio?: string;
+
+  /**
+   * Nombre del municipio o delegación.
+   */
   municipioDelegacion: string;
+
+  /**
+   * Dirección de la entidad federativa.
+   */
   direccion: string;
+
+  /**
+   * Código postal de la entidad federativa.
+   */
   codigoPostal: string;
+
+  /**
+   * Registro ante la Secretaría de Economía y el SAT.
+   */
   registroSESAT: string;
+
+  /**
+   * Número exterior de la dirección.
+   */
   noExterior?: string;
+
+  /**
+   * Número interior de la dirección.
+   */
   noInterior?: string;
+
+  /**
+   * Clave de la colonia.
+   */
   cveColonia?: string;
+
+  /**
+   * Nombre de la calle.
+   */
   calle?: string;
 }

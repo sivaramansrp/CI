@@ -26,56 +26,75 @@ import { Validators } from '@angular/forms';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
 
+/** Componente que representa un miembro de la empresa */
 @Component({
-  selector: 'app-miembro-de-la-empresa',
-  standalone: true,
+  selector: 'app-miembro-de-la-empresa', // /** Identificador del componente en la plantilla */
+  standalone: true, // /** Indica que el componente es independiente */
   imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    TituloComponent,
-    CatalogoSelectComponent,
-    InputRadioComponent,
+    CommonModule, // /** Módulo común de Angular */
+    ReactiveFormsModule, // /** Módulo para formularios reactivos */
+    TituloComponent, // /** Componente para mostrar el título */
+    CatalogoSelectComponent, // /** Componente para selección de catálogo */
+    InputRadioComponent, // /** Componente para botones de opción */
   ],
-  templateUrl: './miembro-de-la-empresa.component.html',
-  styleUrl: './miembro-de-la-empresa.component.scss',
+  templateUrl: './miembro-de-la-empresa.component.html', // /** Ruta de la plantilla HTML del componente */
+  styleUrl: './miembro-de-la-empresa.component.scss', // /** Ruta del archivo de estilos SCSS */
 })
+/** Componente que representa un miembro de la empresa */
 export class MiembroDeLaEmpresaComponent implements OnInit, OnDestroy {
+  /** Evento para cerrar el modal */
   @Output() eventoCerrarModal = new EventEmitter<void>();
+
+  /** Formulario para gestionar datos del miembro de la empresa */
   miembroEmpresaForm!: FormGroup;
 
+  /** Valor seleccionado para obligación de tributar */
   seleccionarObligadoTributar: number | string = 0;
+
+  /** Valor seleccionado para tipo de persona */
   seleccionarTipoDePersona: number = 0;
+
   /** Subject utilizado para destruir observables y evitar fugas de memoria */
   private destroy$: Subject<void> = new Subject<void>();
 
+  /** Opción seleccionada para "Sí" o "No" */
   sinoOpcion: InputRadio = {} as InputRadio;
 
   /** Estado actual de la solicitud 31101 */
   solicitud31101State: Solicitud31101State = {} as Solicitud31101State;
 
+  /** Lista de opciones para el carácter del miembro */
   enSuCaracterDeLista: CatalogosSelect = {} as CatalogosSelect;
 
+  /** Lista de opciones de nacionalidad */
   nacionalidadLista: CatalogosSelect = {} as CatalogosSelect;
 
+  /** Lista de opciones para el tipo de persona */
   tipoDePersonaLista: CatalogosSelect = {} as CatalogosSelect;
 
+  /** Evento para actualizar los datos del miembro de la empresa */
   @Output() eventoActualizarMiembro = new EventEmitter<SeccionSociosIC>();
+
+  /** Constructor del componente */
   constructor(
-    public fb: FormBuilder,
-    public solicitudService: SolicitudService,
-    public solicitud31101Store: Solicitud31101Store,
-    public solicitud31101Query: Solicitud31101Query
+    public fb: FormBuilder, // /** Servicio para manejar formularios reactivos */
+    public solicitudService: SolicitudService, // /** Servicio para manejar solicitudes */
+    public solicitud31101Store: Solicitud31101Store, // /** Estado de la solicitud */
+    public solicitud31101Query: Solicitud31101Query // /** Consultas sobre la solicitud */
   ) {
-    this.conseguirDatosGeneralesCatologo();
-    this.conseguirDatosGeneralesOpcionDeRadio();
+    this.conseguirDatosGeneralesCatologo(); // /** Obtiene los datos generales del catálogo */
+    this.conseguirDatosGeneralesOpcionDeRadio(); // /** Obtiene las opciones de radio */
   }
 
+  /** Inicializa el formulario para gestionar datos del miembro de la empresa */
   ngOnInit(): void {
     this.miembroEmpresaForm = this.fb.group({
+      /** Caracter del miembro dentro de la empresa */
       miembroCaracterDe: [
         { value: this.solicitud31101State.miembroCaracterDe, disabled: false },
         [Validators.required],
       ],
+      /** Indica si el miembro está obligado a tributar en México */
       miembroTributarMexico: [
         {
           value: this.solicitud31101State.miembroTributarMexico,
@@ -83,6 +102,7 @@ export class MiembroDeLaEmpresaComponent implements OnInit, OnDestroy {
         },
         [Validators.required],
       ],
+      /** Nacionalidad del miembro */
       miembroNacionalidad: [
         {
           value: this.solicitud31101State.miembroNacionalidad,
@@ -90,10 +110,12 @@ export class MiembroDeLaEmpresaComponent implements OnInit, OnDestroy {
         },
         [Validators.required],
       ],
+      /** RFC del miembro */
       miembroRfc: [
         { value: this.solicitud31101State.miembroRfc, disabled: false },
         [Validators.required],
       ],
+      /** Registro federal del miembro */
       miembroRegistroFederal: [
         {
           value: this.solicitud31101State.miembroRegistroFederal,
@@ -101,6 +123,7 @@ export class MiembroDeLaEmpresaComponent implements OnInit, OnDestroy {
         },
         [Validators.required],
       ],
+      /** Nombre completo del miembro */
       miembroNombreCompleto: [
         {
           value: this.solicitud31101State.miembroNombreCompleto,
@@ -108,6 +131,7 @@ export class MiembroDeLaEmpresaComponent implements OnInit, OnDestroy {
         },
         [Validators.required],
       ],
+      /** Tipo de persona (física o moral) */
       miembroTipoPersonaMuestra: [
         {
           value: this.solicitud31101State.miembroTipoPersonaMuestra,
@@ -115,10 +139,12 @@ export class MiembroDeLaEmpresaComponent implements OnInit, OnDestroy {
         },
         [Validators.required],
       ],
+      /** Nombre del miembro */
       miembroNombre: [
         { value: this.solicitud31101State.miembroNombre, disabled: false },
         [Validators.required],
       ],
+      /** Apellido paterno del miembro */
       miembroApellidoPaterno: [
         {
           value: this.solicitud31101State.miembroApellidoPaterno,
@@ -126,6 +152,7 @@ export class MiembroDeLaEmpresaComponent implements OnInit, OnDestroy {
         },
         [Validators.required],
       ],
+      /** Apellido materno del miembro */
       miembroApellidoMaterno: [
         {
           value: this.solicitud31101State.miembroApellidoMaterno,
@@ -133,6 +160,7 @@ export class MiembroDeLaEmpresaComponent implements OnInit, OnDestroy {
         },
         [Validators.required],
       ],
+      /** Nombre de la empresa asociada al miembro */
       miembroNombreEmpresa: [
         {
           value: this.solicitud31101State.miembroNombreEmpresa,
@@ -142,6 +170,7 @@ export class MiembroDeLaEmpresaComponent implements OnInit, OnDestroy {
       ],
     });
 
+    /** Escucha cambios en el estado de la solicitud y actualiza el formulario */
     this.solicitud31101Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroy$),
@@ -171,15 +200,17 @@ export class MiembroDeLaEmpresaComponent implements OnInit, OnDestroy {
       .subscribe();
   }
 
+  /** Obtiene los datos generales del catálogo */
   conseguirDatosGeneralesCatologo(): void {
     this.solicitudService
       .conseguirDatosGeneralesCatologo()
       .pipe(takeUntil(this.destroy$))
       .subscribe({
+        /** Procesa la respuesta y asigna los valores correspondientes */
         next: (respuesta: DatosGeneralesDeLaSolicitudCatologo) => {
-          this.enSuCaracterDeLista = respuesta.enSuCaracterDe;
-          this.nacionalidadLista = respuesta.nacionalidad;
-          this.tipoDePersonaLista = respuesta.tipoDePersona;
+          this.enSuCaracterDeLista = respuesta.enSuCaracterDe; // /** Lista de opciones para el carácter del miembro */
+          this.nacionalidadLista = respuesta.nacionalidad; // /** Lista de opciones de nacionalidad */
+          this.tipoDePersonaLista = respuesta.tipoDePersona; // /** Lista de opciones para el tipo de persona */
         },
       });
   }
@@ -199,53 +230,95 @@ export class MiembroDeLaEmpresaComponent implements OnInit, OnDestroy {
       });
   }
 
+  /**
+   * Cierra el modal y emite el evento correspondiente.
+   */
   cerrarModal(): void {
     this.eventoCerrarModal.emit();
   }
 
+  /**
+   * Actualiza el carácter del miembro.
+   * @param {Catalogo} evento - Datos del catálogo seleccionados.
+   */
   actualizarMiembroCaracterDe(evento: Catalogo): void {
     this.solicitud31101Store.actualizarMiembroCaracterDe(evento.id);
   }
 
+  /**
+   * Actualiza la obligación de tributar en México.
+   * @param {number | string} evento - Identificador de la obligación.
+   */
   actualizarMiembroTributarMexico(evento: number | string): void {
     this.seleccionarObligadoTributar = evento;
     this.solicitud31101Store.actualizarMiembroTributarMexico(evento);
   }
 
+  /**
+   * Actualiza la nacionalidad del miembro.
+   * @param {Catalogo} evento - Datos del catálogo seleccionados.
+   */
   actualizarMiembroNacionalidad(evento: Catalogo): void {
     this.solicitud31101Store.actualizarMiembroNacionalidad(evento.id);
   }
 
+  /**
+   * Actualiza el RFC del miembro.
+   * @param {Event} evento - Evento de entrada con el nuevo valor.
+   */
   actualizarMiembroRFC(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
     this.solicitud31101Store.actualizarMiembroRFC(VALOR);
   }
 
+  /**
+   * Actualiza el tipo de persona muestra.
+   * @param {Catalogo} evento - Datos del catálogo seleccionados.
+   */
   actualizarMiembroTipoPersonaMuestra(evento: Catalogo): void {
     this.solicitud31101Store.actualizarMiembroTipoPersonaMuestra(evento.id);
     this.seleccionarTipoDePersona = evento.id;
   }
 
+  /**
+   * Actualiza el nombre del miembro.
+   * @param {Event} evento - Evento de entrada con el nuevo valor.
+   */
   actualizarMiembroNombre(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
     this.solicitud31101Store.actualizarMiembroNombre(VALOR);
   }
 
+  /**
+   * Actualiza el apellido paterno del miembro.
+   * @param {Event} evento - Evento de entrada con el nuevo valor.
+   */
   actualizarMiembroApellidoPaterno(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
     this.solicitud31101Store.actualizarMiembroApellidoPaterno(VALOR);
   }
 
+  /**
+   * Actualiza el apellido materno del miembro.
+   * @param {Event} evento - Evento de entrada con el nuevo valor.
+   */
   actualizarMiembroApellidoMaterno(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
     this.solicitud31101Store.actualizarMiembroApellidoMaterno(VALOR);
   }
 
+  /**
+   * Actualiza el nombre de la empresa del miembro.
+   * @param {Event} evento - Evento de entrada con el nuevo valor.
+   */
   actualizarMiembroNombreEmpresa(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
     this.solicitud31101Store.actualizarMiembroNombreEmpresa(VALOR);
   }
 
+  /**
+   * Busca los datos del RFC del miembro y actualiza la información en la solicitud.
+   */
   buscarRFCDatos(): void {
     const VALOR = this.miembroEmpresaForm.get('miembroRfc')?.value;
     if (VALOR) {
@@ -258,12 +331,18 @@ export class MiembroDeLaEmpresaComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Acepta el modal y recopila los valores seleccionados.
+   */
   aceptarModal(): void {
     let CARACTER_DE_VALOR = '';
     let NACIONALIDAD_VALOR = '';
     let TIPO_PERSONA_VALOR = '';
     let TRIBUTAR_MEXICO_VALOR = '';
 
+    /**
+     * Obtiene la descripción del carácter del miembro.
+     */
     this.enSuCaracterDeLista?.catalogos.forEach((element: Catalogo) => {
       if (
         element.id === this.miembroEmpresaForm.get('miembroCaracterDe')?.value
@@ -272,6 +351,9 @@ export class MiembroDeLaEmpresaComponent implements OnInit, OnDestroy {
       }
     });
 
+    /**
+     * Obtiene la descripción de la nacionalidad del miembro.
+     */
     this.nacionalidadLista.catalogos.forEach((element: Catalogo) => {
       if (
         element.id === this.miembroEmpresaForm.get('miembroNacionalidad')?.value
@@ -280,6 +362,9 @@ export class MiembroDeLaEmpresaComponent implements OnInit, OnDestroy {
       }
     });
 
+    /**
+     * Obtiene la descripción del tipo de persona.
+     */
     this.tipoDePersonaLista.catalogos.forEach((element: Catalogo) => {
       if (
         element.id ===
@@ -289,6 +374,9 @@ export class MiembroDeLaEmpresaComponent implements OnInit, OnDestroy {
       }
     });
 
+    /**
+     * Obtiene la etiqueta de la opción de tributar en México.
+     */
     this.sinoOpcion.radioOptions.forEach((element: RadioOptions) => {
       if (
         element.value ===
@@ -298,6 +386,9 @@ export class MiembroDeLaEmpresaComponent implements OnInit, OnDestroy {
       }
     });
 
+    /**
+     * Conjunto de valores recopilados y emitidos en el evento de actualización.
+     */
     const VALORES = {
       tipoPersonaMuestra: TIPO_PERSONA_VALOR,
       nombreCompleto: this.miembroEmpresaForm.get('miembroNombreCompleto')
@@ -310,6 +401,7 @@ export class MiembroDeLaEmpresaComponent implements OnInit, OnDestroy {
       tributarMexico: TRIBUTAR_MEXICO_VALOR,
       razonSocial: this.miembroEmpresaForm.get('miembroRegistroFederal')?.value,
     };
+
     this.eventoActualizarMiembro.emit(VALORES);
   }
 

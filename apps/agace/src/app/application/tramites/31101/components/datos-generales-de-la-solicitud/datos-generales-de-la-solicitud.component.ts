@@ -47,6 +47,11 @@ import { ViewChild } from '@angular/core';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
 
+/** Identificador del componente en la plantilla
+ * Indica que el componente es independiente
+ * Proveedor de servicio de solicitud
+ * Ruta de la plantilla HTML del componente
+ */
 @Component({
   selector: 'app-datos-generales-de-la-solicitud',
   standalone: true,
@@ -67,14 +72,21 @@ import { takeUntil } from 'rxjs';
   templateUrl: './datos-generales-de-la-solicitud.component.html',
   styleUrl: './datos-generales-de-la-solicitud.component.scss',
 })
+/** Identificador del componente en la plantilla
+ * Indica que el componente es independiente
+ * Proveedor de servicio de solicitud
+ * Ruta de la plantilla HTML del componente
+ */
 export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
   /** Formulario principal que contiene los datos generales */
   datosGeneralesForm!: FormGroup;
-
   /** Subject utilizado para destruir observables y evitar fugas de memoria */
   private destroy$: Subject<void> = new Subject<void>();
+  /** Fecha en que finaliza la vigencia */
   fechaDeFinDeVigencia: InputFecha = FECHA_DE_FIN_VIGENCIA;
+  /** Indica si el concepto es un espectáculo */
   espectaculoConcepto: boolean = false;
+  /** Define qué hacer si el espectáculo no se realiza */
   espectaculoEnCasoNegativo: boolean = false;
   /** Opciones para el tipo de garantía */
   tipoDeGarantiaOpcion: InputRadio = {} as InputRadio;
@@ -84,17 +96,18 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
   tipoSectorOpcion: InputRadio = {} as InputRadio;
   /** Opciones de sí/no */
   sinoOpcion: InputRadio = {} as InputRadio;
-
   /** Catálogo de conceptos */
   conceptoLista: CatalogosSelect = {} as CatalogosSelect;
   /** Catálogo de tipos de inversión */
   tipoDeInversionLista: CatalogosSelect = {} as CatalogosSelect;
 
+  /** Modalidad del programa IMMEX seleccionada */
   modalidadDelProgramaIMMEX: CatalogosSelect = {} as CatalogosSelect;
 
   /** Tipo de selección en tabla: checkbox */
   tipoSeleccionTabla = TablaSeleccion.CHECKBOX;
 
+  /** Lista de tipos de inversión seleccionados */
   tipoSeleccionListo: TipoDeInversion[] = [] as TipoDeInversion[];
 
   /** Configuración de columnas para la tabla de subcontratistas */
@@ -125,6 +138,7 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
   /** Datos de los domicilios */
   domiciliosDatos: Domicilios[] = [] as Domicilios[];
 
+  /** Lista de domicilios seleccionados */
   seleccionarDomiciliosDatos: Domicilios[] = [] as Domicilios[];
 
   /** Lista de régimen aduanero */
@@ -139,16 +153,17 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
   public nuevaNotificacion!: Notificacion;
 
   /**
-   * @description Elemento a eliminar de la tabla de pedimentos.
+   * Elemento a eliminar de la tabla de pedimentos.
    */
   elementoParaEliminar!: number;
 
   /**
-   * @description Array con los datos de los pedimentos.
+   * Array con los datos de los pedimentos.
    * Se utiliza para almacenar los pedimentos ingresados por el usuario.
    */
   pedimentos: Array<Pedimento> = [];
 
+  /** Lista de subcontratistas asociados */
   subContratistasDatos: SubContratistas[] = [];
 
   /**
@@ -157,9 +172,11 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
   @ViewChild('modalAgregarMiembrosEmpresa', { static: false })
   modalElement!: ElementRef;
 
+  /** Referencia al elemento del DOM para modificar el programa IMMEX */
   @ViewChild('modificarImmexProgram', { static: false })
   modificarImmexProgramElement!: ElementRef;
 
+  /** Referencia al elemento del DOM para agregar un nuevo programa IMMEX */
   @ViewChild('agregarImmexProgram', { static: false })
   agregarImmexProgramElement!: ElementRef;
 
@@ -532,7 +549,6 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (respuesta: DatosGeneralesDeLaSolicitudRadioLista) => {
-          // this.tipoDeEndosoOpcion = respuesta.tipoDeEndoso;
           this.tipoDeGarantiaOpcion = respuesta.tipoDeGarantia;
           this.modalidadDeLaGarantiaOpcion = respuesta.modalidadDeLaGarantia;
           this.tipoSectorOpcion = respuesta.tipoSector;
@@ -633,14 +649,17 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
       });
   }
 
+  /** Actualiza el tipo de garantía */
   actualizarTipoDeGarantia(evento: string | number): void {
     this.solicitud31101Store.actualizarTipoDeGarantia(evento);
   }
 
+  /** Actualiza la modalidad de la garantía */
   actualizarModalidadDeLaGarantia(evento: number | string): void {
     this.solicitud31101Store.actualizarModalidadDeLaGarantia(evento);
   }
 
+  /** Actualiza el tipo de sector basado en el evento */
   actualizarTipoSector(evento: string | number): void {
     if (Number(evento) > 0) {
       this.espectaculoConcepto = true;
@@ -650,39 +669,48 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
     this.solicitud31101Store.actualizarTipoSector(evento);
   }
 
+  /** Actualiza el concepto basado en el catálogo */
   actualizarConcepto(evento: Catalogo): void {
     this.solicitud31101Store.actualizarConcepto(evento.id);
   }
 
+  /** Actualiza el valor de 3500 */
   actualizar3500(evento: number | string): void {
     this.solicitud31101Store.actualizar3500(evento);
   }
 
+  /** Actualiza el valor de 3501 */
   actualizar3501(evento: number | string): void {
     this.solicitud31101Store.actualizar3501(evento);
   }
 
+  /** Actualiza el valor de 3502 */
   actualizar3502(evento: number | string): void {
     this.solicitud31101Store.actualizar3502(evento);
   }
 
+  /** Actualiza los datos generales del RFC */
   actualizarDatosGeneralesRFC(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
     this.solicitud31101Store.actualizarDatosGeneralesRFC(VALOR);
   }
 
+  /** Actualiza el valor de 3503 */
   actualizar3503(evento: number | string): void {
     this.solicitud31101Store.actualizar3503(evento);
   }
 
+  /** Actualiza el valor de 3504 */
   actualizar3504(evento: number | string): void {
     this.solicitud31101Store.actualizar3504(evento);
   }
 
+  /** Actualiza el valor de 3505 */
   actualizar3505(evento: number | string): void {
     this.solicitud31101Store.actualizar3505(evento);
   }
 
+  /** Actualiza el valor de 3506 y ajusta espectáculo en caso negativo */
   actualizar3506(evento: number | string): void {
     if (evento === 2) {
       this.espectaculoEnCasoNegativo = true;
@@ -692,290 +720,334 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
     this.solicitud31101Store.actualizar3506(evento);
   }
 
+  /** Actualiza el valor de 3507 */
   actualizar3507(evento: number | string): void {
     this.solicitud31101Store.actualizar3507(evento);
   }
 
+  /** Actualiza el valor de 3508 */
   actualizar3508(evento: number | string): void {
     this.solicitud31101Store.actualizar3508(evento);
   }
 
+  /** Actualiza el valor de 3509 */
   actualizar3509(evento: number | string): void {
     this.solicitud31101Store.actualizar3509(evento);
   }
 
+  /** Actualiza el valor de 3511 */
   actualizar3511(evento: number | string): void {
     this.solicitud31101Store.actualizar3511(evento);
   }
 
+  /** Actualiza el valor de 3512 */
   actualizar3512(evento: number | string): void {
     this.solicitud31101Store.actualizar3512(evento);
   }
 
+  /** Actualiza el valor de 3513 */
   actualizar3513(evento: number | string): void {
     this.solicitud31101Store.actualizar3513(evento);
   }
 
+  /** Actualiza el primer texto genérico */
   actualizarTextoGenerico1(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
     this.solicitud31101Store.actualizarTextoGenerico1(VALOR);
   }
 
+  /** Actualiza el segundo texto genérico */
   actualizarTextoGenerico2(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
     this.solicitud31101Store.actualizarTextoGenerico2(VALOR);
   }
 
+  /** Actualiza el valor de 3514 */
   actualizar3514(evento: number | string): void {
     this.solicitud31101Store.actualizar3514(evento);
   }
 
+  /** Actualiza el valor de 3515 */
   actualizar3515(evento: number | string): void {
     this.solicitud31101Store.actualizar3515(evento);
   }
 
+  /** Actualiza el valor de 3516 */
   actualizar3516(evento: number | string): void {
     this.solicitud31101Store.actualizar3516(evento);
   }
 
+  /** Actualiza el tercer texto genérico */
   actualizarTextoGenerico3(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
     this.solicitud31101Store.actualizarTextoGenerico3(VALOR);
   }
 
+  /** Actualiza el valor de 3517 */
   actualizar3517(evento: number | string): void {
     this.solicitud31101Store.actualizar3517(evento);
   }
 
+  /** Actualiza el valor de 3518 */
   actualizar3518(evento: number | string): void {
     this.solicitud31101Store.actualizar3518(evento);
   }
 
+  /** Actualiza el valor de 3519 */
   actualizar3519(evento: number | string): void {
     this.solicitud31101Store.actualizar3519(evento);
   }
 
+  /** Actualiza el valor de 3520 */
   actualizar3520(evento: number | string): void {
     this.solicitud31101Store.actualizar3520(evento);
   }
 
+  /** Actualiza el tipo de inversión */
   actualizarTipoInversion(evento: Catalogo): void {
     this.solicitud31101Store.actualizarTipoInversion(evento.id);
   }
 
+  /** Actualiza la cantidad de inversión */
   actualizarCantidadInversion(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
     this.solicitud31101Store.actualizarCantidadInversion(VALOR);
   }
 
+  /** Actualiza la descripción de la inversión */
   actualizarDescInversion(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
     this.solicitud31101Store.actualizarDescInversion(VALOR);
   }
 
+  /** Actualiza el valor de 3521 */
   actualizar3521(evento: number | string): void {
     this.solicitud31101Store.actualizar3521(evento);
   }
 
+  /** Actualiza el valor de 3522 */
   actualizar3522(evento: number | string): void {
     this.solicitud31101Store.actualizar3522(evento);
   }
 
+  /** Actualiza la clave de enumeración D0 */
   actualizarClaveEnumeracionD0(evento: string): void {
     this.solicitud31101Store.actualizarClaveEnumeracionD0(evento);
   }
 
+  /** Actualiza la clave de enumeración D1 */
   actualizarClaveEnumeracionD1(evento: string): void {
     this.solicitud31101Store.actualizarClaveEnumeracionD1(evento);
   }
 
+  /** Actualiza la clave de enumeración D2 */
   actualizarClaveEnumeracionD2(evento: string): void {
     this.solicitud31101Store.actualizarClaveEnumeracionD2(evento);
   }
 
+  /** Actualiza la clave de enumeración D3 */
   actualizarClaveEnumeracionD3(evento: string): void {
     this.solicitud31101Store.actualizarClaveEnumeracionD3(evento);
   }
 
+  /** Actualiza la clave de enumeración H */
   actualizarClaveEnumeracionH(evento: string): void {
     this.solicitud31101Store.actualizarClaveEnumeracionH(evento);
   }
 
+  /** Actualiza la modalidad del programa IMMEX */
   actualizarModalidadProgramaImmex(evento: Catalogo): void {
     this.solicitud31101Store.actualizarModalidadProgramaImmex(evento.id);
   }
 
+  /** Actualiza el cuarto texto genérico */
   actualizarTextoGenerico4(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
     this.solicitud31101Store.actualizarTextoGenerico4(VALOR);
   }
 
+  /** Actualiza el quinto texto genérico */
   actualizarTextoGenerico5(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
     this.solicitud31101Store.actualizarTextoGenerico5(VALOR);
   }
 
+  /** Actualiza el valor de 3523 */
   actualizar3523(evento: number | string): void {
     this.solicitud31101Store.actualizar3523(evento);
   }
 
+  /** Actualiza el valor de 3524 */
   actualizar3524(evento: number | string): void {
     this.solicitud31101Store.actualizar3524(evento);
   }
 
+  /** Actualiza el valor de 3525 */
   actualizar3525(evento: number | string): void {
     this.solicitud31101Store.actualizar3525(evento);
   }
 
+  /** Actualiza el valor de 3526 */
   actualizar3526(evento: number | string): void {
     this.solicitud31101Store.actualizar3526(evento);
   }
 
+  /** Actualiza el valor de 3527 */
   actualizar3527(evento: number | string): void {
     this.solicitud31101Store.actualizar3527(evento);
   }
 
+  /** Actualiza la fecha de fin de vigencia 1 */
   actualizarFechaFinVigencia1(evento: string): void {
     this.solicitud31101Store.actualizarFechaFinVigencia1(evento);
   }
 
+  /** Actualiza el número de autorización 1 */
   actualizarNumeroAutorizacion1(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
     this.solicitud31101Store.actualizarNumeroAutorizacion1(VALOR);
   }
 
+  /** Actualiza la fecha de fin de vigencia 2 */
   actualizarFechaFinVigencia2(evento: string): void {
     this.solicitud31101Store.actualizarFechaFinVigencia2(evento);
   }
 
+  /** Actualiza el número de autorización 2 */
   actualizarNumeroAutorizacion2(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
     this.solicitud31101Store.actualizarNumeroAutorizacion2(VALOR);
   }
 
+  /** Actualiza el valor de 3528 */
   actualizar3528(evento: number | string): void {
     this.solicitud31101Store.actualizar3528(evento);
   }
 
+  /** Actualiza el valor de 3529 */
   actualizar3529(evento: number | string): void {
     this.solicitud31101Store.actualizar3529(evento);
   }
 
+  /** Actualiza el sexto texto genérico */
   actualizarTextoGenerico6(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
     this.solicitud31101Store.actualizarTextoGenerico6(VALOR);
   }
 
+  /** Actualiza el séptimo texto genérico */
   actualizarTextoGenerico7(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
     this.solicitud31101Store.actualizarTextoGenerico7(VALOR);
   }
 
+  /** Actualiza el valor de 3530 */
   actualizar3530(evento: number | string): void {
     this.solicitud31101Store.actualizar3530(evento);
   }
 
+  /** Actualiza el valor de 3531 */
   actualizar3531(evento: number | string): void {
     this.solicitud31101Store.actualizar3531(evento);
   }
 
+  /** Actualiza el noveno texto genérico */
   actualizarTextoGenerico9(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
     this.solicitud31101Store.actualizarTextoGenerico9(VALOR);
   }
 
+  /** Actualiza el décimo texto genérico y recalcula el valor comercial */
   actualizarTextoGenerico10(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
     this.solicitud31101Store.actualizarTextoGenerico10(VALOR);
     this.calcularValorComercial();
   }
 
+  /** Actualiza el undécimo texto genérico y recalcula el valor aduanero */
   actualizarTextoGenerico11(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
     this.solicitud31101Store.actualizarTextoGenerico11(VALOR);
     this.calcularValorAduana();
   }
 
+  /** Actualiza el duodécimo texto genérico y recalcula el porcentaje */
   actualizarTextoGenerico12(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
     this.solicitud31101Store.actualizarTextoGenerico12(VALOR);
     this.calcularValorPorcentaje();
   }
 
+  /** Actualiza el decimotercer texto genérico y recalcula el valor comercial */
   actualizarTextoGenerico13(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
     this.solicitud31101Store.actualizarTextoGenerico13(VALOR);
     this.calcularValorComercial();
   }
 
+  /** Actualiza el decimocuarto texto genérico y recalcula el valor aduanero */
   actualizarTextoGenerico14(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
     this.solicitud31101Store.actualizarTextoGenerico14(VALOR);
     this.calcularValorAduana();
   }
 
+  /** Actualiza el decimoquinto texto genérico y recalcula el porcentaje */
   actualizarTextoGenerico15(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
     this.solicitud31101Store.actualizarTextoGenerico15(VALOR);
     this.calcularValorPorcentaje();
   }
 
+  /** Actualiza el decimosexto texto genérico y recalcula el valor comercial */
   actualizarTextoGenerico16(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
     this.solicitud31101Store.actualizarTextoGenerico16(VALOR);
     this.calcularValorComercial();
   }
 
+  /** Actualiza el decimoséptimo texto genérico y recalcula el valor aduanero */
   actualizarTextoGenerico17(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
     this.solicitud31101Store.actualizarTextoGenerico17(VALOR);
     this.calcularValorAduana();
   }
 
+  /** Actualiza el decimoctavo texto genérico y recalcula el porcentaje */
   actualizarTextoGenerico18(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
     this.solicitud31101Store.actualizarTextoGenerico18(VALOR);
     this.calcularValorPorcentaje();
   }
 
+  /** Actualiza el decimonoveno texto genérico y recalcula el valor comercial */
   actualizarTextoGenerico19(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
     this.solicitud31101Store.actualizarTextoGenerico19(VALOR);
     this.calcularValorComercial();
   }
 
+  /** Actualiza el vigésimo texto genérico y recalcula el valor aduanero */
   actualizarTextoGenerico20(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
     this.solicitud31101Store.actualizarTextoGenerico20(VALOR);
     this.calcularValorAduana();
   }
 
+  /** Actualiza el vigesimoprimer texto genérico y recalcula el porcentaje */
   actualizarTextoGenerico21(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).value;
     this.solicitud31101Store.actualizarTextoGenerico21(VALOR);
     this.calcularValorPorcentaje();
   }
 
-  // actualizarTextoGenerico22(evento: Event): void {
-  //   const VALOR = (evento.target as HTMLInputElement).value;
-  //   this.solicitud31101Store.actualizarTextoGenerico22(VALOR);
-  // }
-
-  // actualizarTextoGenerico23(evento: Event): void {
-  //   const VALOR = (evento.target as HTMLInputElement).value;
-  //   this.solicitud31101Store.actualizarTextoGenerico23(VALOR);
-  // }
-
-  // actualizarTextoGenerico24(evento: Event): void {
-  //   const VALOR = (evento.target as HTMLInputElement).value;
-  //   this.solicitud31101Store.actualizarTextoGenerico24(VALOR);
-  // }
-
+  /** Actualiza el estado de la alerta 2 */
   actualizarAlerta2(evento: Event): void {
     const IS_CHECKED = (evento.target as HTMLInputElement).checked;
     this.solicitud31101Store.actualizarAlerta2(IS_CHECKED);
   }
 
+  /** Agrega un nuevo RFC a la lista de subcontratistas */
   agregarRFCDatos(): void {
     if (this.datosGeneralesForm.get('datosGeneralesRFC')?.value) {
       this.listaDeSubcontratistas.push({
@@ -986,10 +1058,12 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
     }
   }
 
+  /** Selecciona los datos de los subcontratistas */
   seleccionarSubContratistasDatos(evento: SubContratistas[]): void {
     this.subContratistasDatos = evento;
   }
 
+  /** Elimina un RFC de la lista de subcontratistas */
   eliminarRFCDatos(): void {
     const PEDIMENTO = {
       patente: 0,
@@ -1042,6 +1116,7 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
     this.elementoParaEliminar = i;
   }
 
+  /** Calcula el valor comercial sumando los valores ingresados */
   calcularValorComercial(): void {
     const VALOR1 = this.datosGeneralesForm.get('textoGenerico10')?.value;
     const VALOR2 = this.datosGeneralesForm.get('textoGenerico13')?.value;
@@ -1055,6 +1130,7 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
     }
   }
 
+  /** Calcula el valor aduanero sumando los valores ingresados */
   calcularValorAduana(): void {
     const VALOR1 = this.datosGeneralesForm.get('textoGenerico11')?.value;
     const VALOR2 = this.datosGeneralesForm.get('textoGenerico14')?.value;
@@ -1068,6 +1144,7 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
     }
   }
 
+  /** Calcula el porcentaje basado en los valores ingresados */
   calcularValorPorcentaje(): void {
     const VALOR1 = this.datosGeneralesForm.get('textoGenerico12')?.value;
     const VALOR2 = this.datosGeneralesForm.get('textoGenerico15')?.value;
@@ -1092,6 +1169,7 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
     }
   }
 
+  /** Muestra el modal para agregar miembros de la empresa */
   agregarMiembrosEmpresa(): void {
     if (this.modalElement) {
       const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
@@ -1099,10 +1177,12 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
     }
   }
 
+  /** Guarda la lista de domicilios seleccionados */
   seleccionarDomiciliosLista(evento: Domicilios[]): void {
     this.seleccionarDomiciliosDatos = evento;
   }
 
+  /** Muestra el modal para modificar el programa IMMEX si hay domicilios seleccionados */
   modificarImmexProgram(): void {
     if (this.seleccionarDomiciliosDatos.length > 0) {
       if (this.modalElement) {
@@ -1114,6 +1194,7 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
     }
   }
 
+  /** Abre un modal de confirmación y agrega un pedimento si hay domicilios seleccionados */
   eliminarImmexProgram(): void {
     if (this.seleccionarDomiciliosDatos.length > 0) {
       const PEDIMENTO = {
@@ -1132,6 +1213,7 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
     }
   }
 
+  /** Guarda los datos modificados en el programa IMMEX y agrega un pedimento */
   modificarImmexValor(evento: boolean): void {
     if (evento) {
       const PEDIMENTO = {
@@ -1150,6 +1232,7 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
     }
   }
 
+  /** Muestra el modal para agregar un programa IMMEX */
   agregarImmexProgram(): void {
     if (this.modalElement) {
       const MODAL_INSTANCE = new Modal(
@@ -1159,6 +1242,7 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
     }
   }
 
+  /** Agrega miembros de la empresa con detalles de inversión */
   agregarMiembrosDeLaEmpresa(): void {
     if (
       this.datosGeneralesForm.get('tipoInversion')?.value &&
@@ -1186,10 +1270,12 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
     }
   }
 
+  /** Selecciona datos de inversión en la tabla */
   seleccionarTipoSeleccionTabla(evento: TipoDeInversion[]): void {
     this.tipoSeleccionListo = evento;
   }
 
+  /** Elimina miembros de la empresa seleccionados */
   eliminarMiembrosDeLaEmpresa(): void {
     const PEDIMENTO = {
       patente: 0,
@@ -1214,6 +1300,7 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
     }
   }
 
+  /** Actualiza los datos de un miembro de la empresa */
   eventoActualizarMiembro(evento: SeccionSociosIC): void {
     this.listaSeccionSociosIC.push(evento);
     const PEDIMENTO = {
@@ -1230,10 +1317,12 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
     this.pedimentos.push(PEDIMENTO);
   }
 
+  /** Agrega información de domicilio */
   agregarImmexValor(evento: Domicilios): void {
     this.domiciliosDatos.push(evento);
   }
 
+  /** Se ejecuta al destruir el componente */
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();

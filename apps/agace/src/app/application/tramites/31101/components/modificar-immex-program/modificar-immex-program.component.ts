@@ -16,7 +16,9 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { SolicitudService } from '../../services/solicitud.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs';
-
+/**
+ * Componente para modificar el programa IMMEX.
+ */
 @Component({
   selector: 'app-modificar-immex-program',
   standalone: true,
@@ -30,12 +32,40 @@ import { takeUntil } from 'rxjs';
   templateUrl: './modificar-immex-program.component.html',
   styleUrl: './modificar-immex-program.component.scss',
 })
+/**
+ *  Componente para modificar el programa IMMEX.
+ */
 export class ModificarImmexProgramComponent implements OnInit, OnDestroy {
+  /**
+   *  Formulario reactivo para modificar el programa IMMEX.
+   */
   modificarImmexProgramForm!: FormGroup;
+
+  /**
+   *  Opciones de radio para selección de sí o no.
+   */
   sinoOpcion: InputRadio = {} as InputRadio;
+
+  /**
+   *  Observable para gestionar la destrucción del componente.
+   */
   private destroy$: Subject<void> = new Subject<void>();
+
+  /**
+   *  Catálogo de tipos de instalación.
+   */
   tipoDeInstalacion: CatalogosSelect = {} as CatalogosSelect;
+
+  /**
+   *  Evento de salida para modificar el valor del programa IMMEX.
+   */
   @Output() modificarImmexValor = new EventEmitter<boolean>();
+
+  /**
+   *  Constructor del componente.
+   * @param {FormBuilder} fb - Servicio de construcción de formularios reactivos.
+   * @param {SolicitudService} solicitudService - Servicio de solicitud de datos.
+   */
   constructor(
     public fb: FormBuilder,
     public solicitudService: SolicitudService
@@ -44,10 +74,16 @@ export class ModificarImmexProgramComponent implements OnInit, OnDestroy {
     this.conseguirDatosGeneralesCatologo();
   }
 
+  /**
+   *  Inicializa el formulario al montar el componente.
+   */
   ngOnInit(): void {
     this.modificarImmexProgramForm = this.fb.group({});
   }
 
+  /**
+   *  Obtiene los datos generales de las opciones de radio.
+   */
   conseguirDatosGeneralesOpcionDeRadio(): void {
     this.solicitudService
       .conseguirDatosGeneralesOpcionDeRadio()
@@ -59,6 +95,9 @@ export class ModificarImmexProgramComponent implements OnInit, OnDestroy {
       });
   }
 
+  /**
+   *  Obtiene los datos generales del catálogo.
+   */
   conseguirDatosGeneralesCatologo(): void {
     this.solicitudService
       .conseguirDatosGeneralesCatologo()
@@ -70,10 +109,16 @@ export class ModificarImmexProgramComponent implements OnInit, OnDestroy {
       });
   }
 
+  /**
+   *  Acepta y emite el evento para modificar el programa IMMEX.
+   */
   aceptarImmexProgram(): void {
-    this.modificarImmexValor.emit(true)
+    this.modificarImmexValor.emit(true);
   }
 
+  /**
+   *  Se ejecuta al destruir el componente, limpiando los observables.
+   */
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();

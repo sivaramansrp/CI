@@ -124,6 +124,10 @@ export class SolicitudService {
     return this.http.get<Domicilios[]>('assets/json/31101/domicilios.json');
   }
 
+  /**
+   * @description Obtiene los datos de la entidad federativa desde un archivo JSON.
+   * @returns {Observable<EntidadFederativa[]>} Observable con la lista de entidades federativas.
+   */
   conseguirEntidadFederativaDatos(): Observable<EntidadFederativa[]> {
     return this.http.get<EntidadFederativa[]>(
       'assets/json/31101/entidad-federativa-datos.json'

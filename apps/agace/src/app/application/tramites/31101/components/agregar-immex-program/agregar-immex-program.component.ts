@@ -25,6 +25,11 @@ import { TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
 
+/** Configuración del componente AgregarImmexProgram
+ * Archivo de plantilla que define la vista del componente
+ * Archivo de estilos específico del componente
+ * Módulos importados necesarios para el funcionamiento del componente
+ */
 @Component({
   selector: 'app-agregar-immex-program',
   standalone: true,
@@ -37,32 +42,60 @@ import { takeUntil } from 'rxjs';
   templateUrl: './agregar-immex-program.component.html',
   styleUrl: './agregar-immex-program.component.scss',
 })
+/** Configuración del componente AgregarImmexProgram
+ * Archivo de plantilla que define la vista del componente
+ * Archivo de estilos específico del componente
+ * Módulos importados necesarios para el funcionamiento del componente
+ */
 export class AgregarImmexProgramComponent implements OnInit, OnDestroy {
+  /** Formulario para agregar un programa IMMEX */
   agregarImmexProgramForm!: FormGroup;
+
+  /** Sujeto para manejar la destrucción de suscripciones */
   private destroy$: Subject<void> = new Subject<void>();
+
+  /** Tipo de selección en la tabla */
   tipoSeleccionTabla = TablaSeleccion.CHECKBOX;
+
+  /** Configuración de columnas para la tabla de domicilios */
   agregarImmexProgramConfiguracionColumnas: ConfiguracionColumna<EntidadFederativa>[] =
     AGREGAR_IMMEX_CONFIGURACION;
+
+  /** Evento de salida para emitir el valor agregado */
   @Output() agregarImmexValor = new EventEmitter<Domicilios>();
+
+  /** Datos de domicilios */
   domiciliosDatos: EntidadFederativa[] = [] as EntidadFederativa[];
+
+  /** Entidad federativa seleccionada */
   entidadFederativa: CatalogosSelect = {} as CatalogosSelect;
+
+  /** Lista de domicilios seleccionados */
   domicilioslista: EntidadFederativa[] = [] as EntidadFederativa[];
+
+  /** Estado de la solicitud */
   solicitud31101State: Solicitud31101State = {} as Solicitud31101State;
+
   constructor(
     public fb: FormBuilder,
     public solicitudService: SolicitudService,
     public solicitud31101Store: Solicitud31101Store,
     public solicitud31101Query: Solicitud31101Query
   ) {
+    /** Obtiene los datos generales del catálogo */
     this.conseguirDatosGeneralesCatologo();
+
+    /** Obtiene los datos de la entidad federativa */
     this.conseguirEntidadFederativaDatos();
   }
 
+  /** Inicializa el formulario */
   ngOnInit(): void {
     this.agregarImmexProgramForm = this.fb.group({
       entidadFederativa: [this.solicitud31101State.entidadFederativa],
     });
 
+    /**Suscripción para obtener la solicitud y actualizar el formulario */
     this.solicitud31101Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroy$),
@@ -76,9 +109,11 @@ export class AgregarImmexProgramComponent implements OnInit, OnDestroy {
       .subscribe();
   }
 
+  /** Obtiene los datos generales del catálogo desde el servicio */
   conseguirDatosGeneralesCatologo(): void {
     this.solicitudService
-      .conseguirDatosGeneralesCatologo().pipe(takeUntil(this.destroy$))
+      .conseguirDatosGeneralesCatologo()
+      .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (respuesta: DatosGeneralesDeLaSolicitudCatologo) => {
           this.entidadFederativa = respuesta.entidadFederativa;
@@ -86,11 +121,13 @@ export class AgregarImmexProgramComponent implements OnInit, OnDestroy {
       });
   }
 
+  /** Maneja la selección de entidad federativa */
   seleccionArentidadFederativa(evento: Catalogo): void {
     this.domicilioslista = this.domiciliosDatos;
     this.solicitud31101Store.actualizarEntidadFederativa(evento.id);
   }
 
+  /** Agrega un programa IMMEX y emite los datos */
   agregarImmexProgram(): void {
     const VALOR = {
       instalacionPrincipal: '',
@@ -116,9 +153,12 @@ export class AgregarImmexProgramComponent implements OnInit, OnDestroy {
       numFolioAcuse: '',
       observaciones: '',
     };
+
+    /** Emite el valor agregado */
     this.agregarImmexValor.emit(VALOR);
   }
 
+  /** Obtiene los datos de la entidad federativa desde el servicio */
   conseguirEntidadFederativaDatos(): void {
     this.solicitudService
       .conseguirEntidadFederativaDatos()
@@ -130,6 +170,7 @@ export class AgregarImmexProgramComponent implements OnInit, OnDestroy {
       });
   }
 
+  /** Maneja la destrucción de suscripciones */
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();

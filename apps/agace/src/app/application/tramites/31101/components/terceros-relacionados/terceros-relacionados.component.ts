@@ -44,7 +44,8 @@ export class TercerosRelacionadosComponent implements OnDestroy {
    * Cada columna tiene un encabezado, una clave para obtener
    * el valor desde el modelo y un orden para su disposición.
    */
-  configuracionColumnas: ConfiguracionColumna<RecibirNotificaciones>[] = RECIBIR_NOTIFICACIONES_CONFIGURACION;
+  configuracionColumnas: ConfiguracionColumna<RecibirNotificaciones>[] =
+    RECIBIR_NOTIFICACIONES_CONFIGURACION;
 
   /** Lista de objetos `RecibirNotificaciones` que se mostrarán en la tabla */
   orecibirNotificacionesLista: RecibirNotificaciones[] =
