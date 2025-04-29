@@ -1,15 +1,6 @@
 <div class="container">
   <ng-titulo titulo="Terceros" />
   <form [formGroup]="formularioDestinatario">
-    <!-- <div class="row">
-      <app-catalogo-select
-        [catalogo]="autorizacionesDeVidaSilvestreService.entidadFederativa"
-        formControlName="entidadFederativa"
-        class="col-md-4"
-        [label]="'Entidad federativa'"
-        (change)="manejarCambioEntidadFederativa()"
-      ></app-catalogo-select>
-    </div> -->
     <label class="row mt-5">Destinatarios*:</label>
     <div class="row mt-4">
       <app-tabla-dinamica
@@ -20,6 +11,7 @@
       ></app-tabla-dinamica>
     </div>
 
+@if(datosTabla.length > 0){
     <div
       class="row"
       style="padding-bottom: 20px; text-align: right"
@@ -41,16 +33,19 @@
         </button>
       </div>
     </div>
-
+  } 
+  @if(datosTabla.length ===0) {
     <div
       class="row justify-content-end"
       style="padding-bottom: 20px; text-align: right"
-      *ngIf="datosTabla.length === 0"
     >
       <div class="col-md-6">
-        <button type="button" class="btn btn-primary">Agregar</button>
+        <button type="button" class="btn btn-primary" 
+          data-bs-toggle="modal"
+          data-bs-target="#modalAgregarMercancias">Agregar</button>
       </div>
     </div>
+}
     <div
       class="modal"
       tabindex="-1"
@@ -71,7 +66,6 @@
             <button
               type="button"
               class="btn btn-primary"
-              (click)="cerrarPopup()"
             >
               Aceptar
             </button>
@@ -81,4 +75,116 @@
     </div>
     <div class="modal-backdrop fade show" *ngIf="popupAbierto"></div>
   </form>
+</div>
+
+<div
+  class="modal fade"
+  id="modalAgregarMercancias"
+  tabindex="-1"
+  aria-labelledby="modalAgregarMercanciasLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-body mb-4">
+      <form [formGroup]="agregarMercanciasForm">
+        <!--Datos de la mercancía-->
+        <ng-container >
+          <ng-titulo titulo="Mercancía"></ng-titulo>
+          <div class="row">
+            <div class="col-md-4">
+              
+            </div>
+            <div class="col-md-8">
+              <label>Descripción de la fracción arancelaria:</label>
+              <span class="require">*</span>
+              <input
+                type="text"
+                class="form-control"
+                id="descripcionfraccionArancelaria"
+                [required]="true"
+
+              />
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4">
+              <label for="cantidad">Cantidad:</label>
+              <span class="require">*</span>
+              <input
+                type="text"
+                class="form-control"
+                id="cantidad"
+                [required]="true"
+                />
+            </div>
+            <div class="col-md-8">
+              <label for="cantidadComercial">Cantidad(letra)</label>
+              <input
+                type="text"
+                class="form-control"
+                id="cantidadLetra"
+                
+              />
+            </div>
+          </div>
+          <ng-titulo titulo="Detalle"></ng-titulo>
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-group">
+
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer justify-content-end">
+            <button
+              type="button"
+              class="btn btn-default"
+              data-bs-dismiss="modal"
+              #closeModal
+            >
+              Eliminar detalle
+            </button>
+            <button
+              type="button"
+              class="btn btn-primary"
+            >
+              Agregar dettalle
+            </button>
+          </div>
+          <div class="col-md-12">
+            <label class="form-label">Detalle</label>
+          </div>
+          <div class="col-md-6">
+            <!-- <app-tabla-dinamica
+              [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX"
+              [configuracionTabla]="encabezadoDeTablaDetalle"
+              [datos]="datosDetalle"
+            ></app-tabla-dinamica> -->
+          </div>
+          <div class="col-md-12 mt-5 d-flex justify-content-end">
+            <button type="button" class="btn btn-default">Limpiar</button>
+            <button type="button" class="btn btn-danger ms-3" data-bs-dismiss="modal" #closeModal>
+              Cancelar
+            </button>
+            <button
+              type="button"
+              class="btn btn-primary ms-3"
+            >
+              Agregar
+            </button>
+          </div>
+        </ng-container>
+      </form>
+      </div>
+    </div>
+  </div>
 </div>

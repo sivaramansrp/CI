@@ -395,4 +395,33 @@ export class Tramite230202Store extends Store<Solicitud230202State> {
       impPago
     }));
   }
+  
+
+  /**
+   * 
+   * Actualiza el estado con la entidad federativa seleccionada.
+   *
+   * {string} entidadFederativa - La entidad federativa seleccionada.
+   */
+  public setEntidadFederativa(entidadFederativa: string): void {
+    this.update((state) => ({
+      ...state,
+      entidadFederativa,
+    }));
+  }
+
+  /**
+   * 
+   * Actualiza el estado con el estado del popup de terceros.
+   *
+   * {boolean} tercerosPopupState - El estado del popup de terceros.
+   */
+
+  public setTercerosPopupState(tercerosPopupState: boolean): void {
+    this.update((state) => ({
+      ...state,
+      tercerosPopupState,
+    }));
+  }
+  
 }

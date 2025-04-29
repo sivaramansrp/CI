@@ -5,16 +5,15 @@ import {
   TablaSeleccion,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
-import { DESTINATARIO_TABLA_CONFIGURACION, DESTINATARIO_TABLE_ENTRY, DestinatarioConfiguracionItem } from '../../../230901/enum/destinatario-tabla.enum';
+import { DESTINATARIO_TABLA_CONFIGURACION, DESTINATARIO_TABLE_ENTRY, DestinatarioConfiguracionItem } from '../../../230202/enum/destinatario-tabla.enum';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Solicitud230901State, Tramite230901Store } from '../../../230901/estados/store/tramite230901.store';
+import { Solicitud230202State, Tramite230202Store } from '../../estados/tramite230202.store';
 import { Subject, takeUntil } from 'rxjs';
-import { AutorizacionesDeVidaSilvestreService } from '../../../230901/services/autorizaciones-de-vida-silvestre.service';
 import { CommonModule } from '@angular/common';
-import { Tramite230901Query } from '../../../230901/estados/query/tramite230901.query';
+import { Tramite230202Query } from '../../estados/tramite230202.query';
 
 /**
- * Componente que gestiona los datos relacionados con terceros en el trámite "230901".
+ * Componente que gestiona los datos relacionados con terceros en el trámite "230202".
  * Incluye la configuración de formularios, tablas dinámicas y la interacción con servicios
  * relacionados con autorizaciones de vida silvestre.
  */
@@ -36,11 +35,13 @@ export class TercerosComponent implements OnInit, OnDestroy {
    */
   formularioDestinatario!: FormGroup;
 
+  agregarMercanciasForm!: FormGroup;
+
   /**
-   * Estado actual de la solicitud "230901".
+   * Estado actual de la solicitud "230202".
    * Este estado se actualiza al suscribirse al observable selectSolicitud$.
    */
-  estadoSolicitud!: Solicitud230901State;
+  estadoSolicitud!: Solicitud230202State;
 
   /**
    * Observable utilizado para limpiar las suscripciones al destruir el componente.
@@ -85,9 +86,8 @@ export class TercerosComponent implements OnInit, OnDestroy {
    * y los datos relacionados con terceros.
    */
   constructor(
-    public autorizacionesDeVidaSilvestreService: AutorizacionesDeVidaSilvestreService,
-    private tramite230901Store: Tramite230901Store,
-    private tramite230901Query: Tramite230901Query,
+    private tramite230202Store: Tramite230202Store,
+    private tramite230202Query: Tramite230202Query,
     private formBuilder: FormBuilder
   ) {
     // No se realiza ninguna acción aquí.
@@ -99,15 +99,14 @@ export class TercerosComponent implements OnInit, OnDestroy {
    * y crea el formulario del destinatario.
    */
   ngOnInit(): void {
-    this.autorizacionesDeVidaSilvestreService.inicializaTercerosDatosCatalogos();
-    this.tramite230901Query.selectSolicitud$
+    this.tramite230202Query.selectSolicitud$
       .pipe(takeUntil(this.notificadorDestruccion$))
       .subscribe((state) => {
         this.estadoSolicitud = state;
       });
 
     this.crearFormularioDestinatario();
-    this.manejarCambioEntidadFederativa();
+    // this.manejarCambioEntidadFederativa();
   }
 
   /**
@@ -116,10 +115,14 @@ export class TercerosComponent implements OnInit, OnDestroy {
    */
   crearFormularioDestinatario(): void {
     this.formularioDestinatario = this.formBuilder.group({
-      entidadFederativa: [
-        this.estadoSolicitud.entidadFederativa,
-        Validators.required,
-      ],
+      // entidadFederativa: [
+      //   this.estadoSolicitud.entidadFederativa,
+      //   Validators.required,
+      // ],
+    });
+
+    this.agregarMercanciasForm = this.formBuilder.group({
+      
     });
   }
 
@@ -129,11 +132,11 @@ export class TercerosComponent implements OnInit, OnDestroy {
    * si la entidad federativa es válida y la tabla está vacía.
    */
   manejarCambioEntidadFederativa(): void {
-    const ENTIDAD_FEDERATIVA = this.formularioDestinatario.get('entidadFederativa')?.value;
-    if (ENTIDAD_FEDERATIVA && this.datosTabla.length === 0) {
-      this.tramite230901Store.setEntidadFederativa(ENTIDAD_FEDERATIVA);
+    // const ENTIDAD_FEDERATIVA = this.formularioDestinatario.get('entidadFederativa')?.value ?? "Test";
+    // if (ENTIDAD_FEDERATIVA && this.datosTabla.length === 0) {
+    //   this.tramite230202Store.setEntidadFederativa(ENTIDAD_FEDERATIVA);
       this.datosTabla.push(DESTINATARIO_TABLE_ENTRY);
-    }
+    // }
   }
 
   /**
@@ -150,8 +153,18 @@ export class TercerosComponent implements OnInit, OnDestroy {
   abrirPopup(): void {
     if (this.botonModificarHabilitado) {
       this.popupAbierto = true;
-      this.tramite230901Store.setTercerosPopupState(this.popupAbierto);
+      this.tramite230202Store.setTercerosPopupState(this.popupAbierto);
     }
+  }
+
+  /**
+   * Abre el popup si el botón de modificar está habilitado.
+   */
+  addPopup(): void {
+    // if (this.botonModificarHabilitado) {
+      this.popupAbierto = true;
+      this.tramite230202Store.setTercerosPopupState(this.popupAbierto);
+    // }
   }
 
   /**
@@ -160,8 +173,8 @@ export class TercerosComponent implements OnInit, OnDestroy {
   cerrarPopup(): void {
     this.popupAbierto = false;
     this.popupCerrado = false;
-    this.tramite230901Store.setTercerosPopupState(this.popupAbierto);
-    this.tramite230901Store.setTercerosPopupState(this.popupCerrado);
+    this.tramite230202Store.setTercerosPopupState(this.popupAbierto);
+    this.tramite230202Store.setTercerosPopupState(this.popupCerrado);
   }
 
   /**
