@@ -1,10 +1,10 @@
 import { OnDestroy, OnInit } from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
 import { AmpliacionServiciosService } from '../../services/ampliacion-servicios.service';
-import { CONFIGURACION_BITCORA, CONFIGURACION_MERCANCIAS_A_PRODUCIR, CONFIGURACION_PLANTAS, CONFIGURACION_PRODUCTOR_INDIRECTO, CONFIGURACION_SECTOR, CONFIGURACION_SECTOR1 } from "../../constantes/modificacion.constants";
+import { CONFIGURACION_BITCORA, CONFIGURACION_MERCANCIAS_A_PRODUCIR, CONFIGURACION_PLANTAS, CONFIGURACION_PRODUCTOR_INDIRECTO,CONFIGURACION_SECTOR } from "../../constantes/modificacion.constants";
 import { Component,Input } from '@angular/core';
 import { ConfiguracionColumna } from '../../models/configuracion-columna.model';
-import { Bitacora,MercanciasAProducir, Plantas,ProductorIndirecto,Sector1} from "../../models/datos-info.model";
+import { Bitacora,MercanciasAProducir, Plantas,ProductorIndirecto,Sector} from "../../models/datos-info.model";
 import { Subject } from 'rxjs';
 
 
@@ -25,7 +25,7 @@ export class BitacoraComponent implements OnInit, OnDestroy {
 
   configuracionTablaPlantas: ConfiguracionColumna<Plantas>[] = CONFIGURACION_PLANTAS;
   configuracionTablaProductor: ConfiguracionColumna<ProductorIndirecto>[] = CONFIGURACION_PRODUCTOR_INDIRECTO;
-  configuracionTablaSector1: ConfiguracionColumna<Sector1>[] = CONFIGURACION_SECTOR1;
+  configuracionTablaSector: ConfiguracionColumna<Sector>[] = CONFIGURACION_SECTOR;
 
   
 
@@ -33,7 +33,7 @@ export class BitacoraComponent implements OnInit, OnDestroy {
   datosMercancias: MercanciasAProducir[] = [];
   datosPlantas: Plantas[] = [];
   datosProductor: ProductorIndirecto[] = [];
-  datosSector1: Sector1[] = [];
+  datosSector: Sector[] = [];
 
 
   /**
@@ -115,7 +115,7 @@ export class BitacoraComponent implements OnInit, OnDestroy {
     .subscribe((resp) => {
       if (resp.code === 200) {
         const RESPONSE = resp.data;
-        this.datosSector1 = RESPONSE;
+        this.datosSector = RESPONSE;
       }
     });
   }

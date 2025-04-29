@@ -9,24 +9,7 @@
  * importaciones, servicios y respuestas de API en el módulo de ampliación de servicios.
  */
 
-/**
- * Interfaz que representa un sector.
- * @export
- * @interface Sector
- */
-export interface Sector {
-  /**
-   * Descripción del sector.
-   * @property {string} [descripcion]
-   */
-  descripcion?: string;
 
-  /**
-   * Descripción detallada del sector.
-   * @property {string} [descripcionSector]
-   */
-  descripcionSector?: string;
-}
 
 /**
  * Interfaz que representa una fracción arancelaria.
@@ -312,7 +295,7 @@ export interface MercanciasAProducir{
   claveSector:string,
   estatus:string,
 }
-export interface Sector1 {
+export interface Sector {
   listaSectores: string;
   claveSector: string;
   estatus: string;
@@ -349,7 +332,7 @@ export interface MercanciasRespuesta {
 }
 export interface SectorRespuesta {
   code: number;
-  data: Sector1[];
+  data: Sector[];
   message: string;
 }
 export interface ProductorIndirectoRespuesta {

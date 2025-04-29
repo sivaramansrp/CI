@@ -18,7 +18,6 @@ import {
   Plantas,
   ProductorIndirecto,
   Sector,
-  Sector1,
 } from '../models/datos-info.model';
 
 /**
@@ -46,22 +45,7 @@ export const PASOS = [
   },
 ];
 
-/**
- * Configuración de la tabla para sectores.
- * @constant {Array<Object>} CONFIGURACION_SECTOR
- */
-export const CONFIGURACION_SECTOR = [
-  {
-    encabezado: '',
-    clave: (ele: Sector): string | undefined => ele.descripcion,
-    orden: 1,
-  },
-  {
-    encabezado: 'Descripción',
-    clave: (ele: Sector): string | undefined => ele.descripcionSector,
-    orden: 2,
-  },
-];
+
 
 /**
  * Configuración de la tabla para fracciones arancelarias.
@@ -147,20 +131,20 @@ export const CONFIGURACION_BITCORA = [
   },
 ];
 
-export const CONFIGURACION_SECTOR1 = [
+export const CONFIGURACION_SECTOR = [
   {
     encabezado: 'Lista de sectores',
-    clave: (ele: Sector1): string | undefined => ele.listaSectores,
+    clave: (ele: Sector): string | undefined => ele.listaSectores,
     orden: 1,
   },
   {
     encabezado: 'Clave del sector ',
-    clave: (ele: Sector1): string | undefined => ele.claveSector,
+    clave: (ele: Sector): string | undefined => ele.claveSector,
     orden: 2,
   },
   {
     encabezado: 'Estatus',
-    clave: (ele: Sector1): string | undefined => ele.estatus,
+    clave: (ele: Sector): string | undefined => ele.estatus,
     orden: 3,
   },
 ];
