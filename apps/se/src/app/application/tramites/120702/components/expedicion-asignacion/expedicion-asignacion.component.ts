@@ -1,10 +1,42 @@
-import { Component } from '@angular/core';
-
+import {
+  Catalogo,
+  CatalogoSelectComponent,
+  TituloComponent,
+} from '@libs/shared/data-access-user/src';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subject, takeUntil } from 'rxjs';
+import { DescripcionCupoComponent } from '../descripcion-cupo/descripcion-cupo.component';
+import { ExpedicionCertificadosFronteraService } from '../../services/expedicion-certificados-frontera.service';
 @Component({
   selector: 'app-expedicion-asignacion',
   standalone: true,
-  imports: [],
+  imports: [TituloComponent, CatalogoSelectComponent,DescripcionCupoComponent],
   templateUrl: './expedicion-asignacion.component.html',
-  styleUrl: './expedicion-asignacion.component.css',
+  styleUrl: './expedicion-asignacion.component.scss',
 })
-export class ExpedicionAsignacionComponent {}
+export class ExpedicionAsignacionComponent implements OnInit, OnDestroy {
+  private destroy$ = new Subject<void>();
+
+  anoOficioDatos: Catalogo[] = [];
+  numeroOficioDatos: Catalogo[] = [];
+
+  constructor(
+    private expedicionCertificadosFronteraService: ExpedicionCertificadosFronteraService
+  ) {
+    //
+  }
+
+  ngOnInit(): void {
+    this.expedicionCertificadosFronteraService
+      .getAnoOficioDatos()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((data) => {
+        this.anoOficioDatos = data;
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+}
