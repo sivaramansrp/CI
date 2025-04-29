@@ -10,8 +10,10 @@
                     <ng-alert [CUSTOMECLASS]="'alert-danger'" [CONTENIDO]="registroAlert"></ng-alert>
                   </div>
               }
-            <app-wizard [listaPasos]="pantallasPasos"></app-wizard>
         </div>
+            <div class="row">
+                <app-wizard [listaPasos]="pantallasPasos"></app-wizard>
+            </div>
         <div class="row">
             @switch (indice) {
             @case (1) {

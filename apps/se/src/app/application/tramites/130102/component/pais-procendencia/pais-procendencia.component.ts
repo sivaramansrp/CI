@@ -31,6 +31,7 @@ import { Solicitud130102State, Tramite130102Store } from '../../../../estados/tr
 import { Tramite130102Query } from '../../../../estados/queries/tramite130102.query';
 
 import { Subject, map, takeUntil } from 'rxjs';
+import { FormularioRegistroService } from '../../services/octava-temporal.service';
 /**
  * Componente para la gestión de la selección de países de procedencia.
  */
@@ -120,7 +121,8 @@ export class PaisProcendenciaComponent implements OnInit {
   // eslint-disable-next-line no-empty-function
   constructor(private http: HttpClient, private fb: FormBuilder,
     private tramite130102Store: Tramite130102Store,
-    private tramite130102Query: Tramite130102Query
+    private tramite130102Query: Tramite130102Query,
+    private formularioRegistroService: FormularioRegistroService
   ) {
     //constructor
   }
@@ -144,6 +146,7 @@ export class PaisProcendenciaComponent implements OnInit {
       observaciones: [this.solicitudState?.observaciones,[PaisProcendenciaComponent.noLeadingSpacesValidator]]
     });
     this.fetchPaisProc();
+    this.formularioRegistroService.registrarFormulario('paisForm', this.paisForm);
   }
   /**
    * Asigna un valor del formulario al store.

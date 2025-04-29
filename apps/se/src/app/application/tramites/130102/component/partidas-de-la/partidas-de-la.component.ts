@@ -27,6 +27,7 @@ import { Solicitud130102State, Tramite130102Store } from '../../../../estados/tr
 import { Tramite130102Query } from '../../../../estados/queries/tramite130102.query';
 
 import { Subject, map, takeUntil } from 'rxjs'; 
+import { FormularioRegistroService } from '../../services/octava-temporal.service';
 
 @Component({
   selector: 'app-partidas-de-la',
@@ -96,7 +97,8 @@ export class PartidasDeLaComponent implements OnInit, OnDestroy {
   // eslint-disable-next-line no-empty-function
   constructor(private fb: FormBuilder,
       private tramite130102Store: Tramite130102Store,
-      private tramite130102Query: Tramite130102Query
+      private tramite130102Query: Tramite130102Query,
+      private formularioRegistroService: FormularioRegistroService
   ) {
     //constructor
   }
@@ -114,6 +116,8 @@ export class PartidasDeLaComponent implements OnInit, OnDestroy {
     this.formForTotalCount.controls['cantidadTotal'].disable();
     // eslint-disable-next-line dot-notation
     this.formForTotalCount.controls['valorTotalUSD'].disable();
+    this.formularioRegistroService.registrarFormulario('form', this.form);
+    this.formularioRegistroService.registrarFormulario('formForTotalCount', this.formForTotalCount);
   }
  
     /**

@@ -22,6 +22,7 @@ import { Solicitud130102State, Tramite130102Store } from '../../../../estados/tr
 import { Tramite130102Query } from '../../../../estados/queries/tramite130102.query';
 
 import { Subject, map, takeUntil } from 'rxjs'; 
+import { FormularioRegistroService } from '../../services/octava-temporal.service';
 
 @Component({
   selector: 'app-uso-especifico',
@@ -82,7 +83,8 @@ export class UsoEspicificoComponent implements OnInit {
   // eslint-disable-next-line no-empty-function
   constructor(private formbuilt: FormBuilder,
     private tramite130102Store: Tramite130102Store,
-    private tramite130102Query: Tramite130102Query
+    private tramite130102Query: Tramite130102Query,
+    private formularioRegistroService: FormularioRegistroService
   ) { 
     // constructor
   }
@@ -108,6 +110,7 @@ export class UsoEspicificoComponent implements OnInit {
       descripción: ['',UsoEspicificoComponent.noLeadingSpacesValidator],
 
     });
+    this.formularioRegistroService.registrarFormulario('usoEspicificoForm', this.usoEspicificoForm);
   }
 
     /**
