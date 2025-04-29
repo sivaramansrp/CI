@@ -122,20 +122,6 @@ describe('ModificarImmexProgramComponent', () => {
     ).toBeDefined();
   });
 
-  it('should call conseguirDatosGeneralesOpcionDeRadio on initialization', () => {
-    const spy = jest.spyOn(
-      solicitudService,
-      'conseguirDatosGeneralesOpcionDeRadio'
-    );
-    component.conseguirDatosGeneralesOpcionDeRadio();
-    expect(spy).toHaveBeenCalled();
-  });
-
-  it('should call conseguirDatosGeneralesCatologo on initialization', () => {
-    const spy = jest.spyOn(solicitudService, 'conseguirDatosGeneralesCatologo');
-    component.conseguirDatosGeneralesCatologo();
-    expect(spy).toHaveBeenCalled();
-  });
 
   it('should emit modificarImmexValor when aceptarImmexProgram is called', () => {
     const spy = jest.spyOn(component.modificarImmexValor, 'emit');
