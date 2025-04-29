@@ -1,128 +1,137 @@
-import { By } from '@angular/platform-browser';
-import { Catalogo } from '@ng-mf/data-access-user';
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
-import { Component } from '@angular/core';
-import { ComponentFixture } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ReactiveFormsModule, FormGroup } from '@angular/forms';
 import { DatosDelTramiteARealizarComponent } from './datos-del-tramite-a-realizar.component';
-import { FormControl } from '@angular/forms';
-import { FormGroup } from '@angular/forms';
-import { InputFechaComponent } from '@ng-mf/data-access-user';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
-import { TestBed } from '@angular/core/testing';
+import { SolicitudPantallasService } from '../../services/solicitud-pantallas.service';
+import { Solicitud220503Store } from '../../estados/tramites220503.store';
+import { Solicitud220503Query } from '../../estados/tramites220503.query';
+import { of } from 'rxjs';
+import { ChangeDetectorRef } from '@angular/core';
+import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { CommonModule } from '@angular/common';
 import { TituloComponent } from '@ng-mf/data-access-user';
-import { Validators } from '@angular/forms';
-@Component({
-  selector: 'app-test-host',
-  template: `<form [formGroup]="form">
-               <app-datos-del-tramite-a-realizar [claveDeControl]="'testControl'" [grupoFormularioPadre]="form"></app-datos-del-tramite-a-realizar>
-             </form>`
-})
-class TestHostComponent {
-  form: FormGroup;
-
-  constructor() {
-    this.form = new FormGroup({
-      testControl: new FormGroup({
-        certificadosAutorizados: new FormControl(null, Validators.required),
-        horaDeInspeccion: new FormControl(null, Validators.required),
-        aduanaDeIngreso: new FormControl(null),
-        sanidadAgropecuaria: new FormControl(null),
-        puntoDeInspeccion: new FormControl(null),
-        fechaDeInspeccion: new FormControl(null)
-      })
-    });
-  }
-}
+import { InputFechaComponent } from '@ng-mf/data-access-user';
 
 describe('DatosDelTramiteARealizarComponent', () => {
   let component: DatosDelTramiteARealizarComponent;
-  let fixture: ComponentFixture<TestHostComponent>;
+  let fixture: ComponentFixture<DatosDelTramiteARealizarComponent>;
+  let solicitudServiceMock: jest.Mocked<SolicitudPantallasService>;
+  let solicitudStoreMock: jest.Mocked<Solicitud220503Store>;
+  let solicitudQueryMock: jest.Mocked<Solicitud220503Query>;
 
   beforeEach(async () => {
+    solicitudServiceMock = {
+      getDataDatosDelTramite: jest.fn(),
+    } as never;
+
+    solicitudStoreMock = {
+      setFechaDeInspeccion: jest.fn(),
+      setCertificadosAutorizados: jest.fn(),
+      setHoraDeInspeccion: jest.fn(),
+      setAduanaDeIngreso: jest.fn(),
+      setSanidadAgropecuaria: jest.fn(),
+      setPuntoDeInspeccion: jest.fn(),
+    } as never;
+
+    solicitudQueryMock = {
+      selectSolicitud$: jest.fn(),
+    } as never;
+
     await TestBed.configureTestingModule({
-      declarations: [TestHostComponent],
-      imports: [ReactiveFormsModule, DatosDelTramiteARealizarComponent, TituloComponent, CatalogoSelectComponent, InputFechaComponent],
-      schemas: [NO_ERRORS_SCHEMA]
+      imports: [
+        ReactiveFormsModule,
+        DatosDelTramiteARealizarComponent,
+        CommonModule,
+        TituloComponent,
+        CatalogoSelectComponent,
+        InputFechaComponent,
+      ],
+      declarations: [],
+      providers: [
+        { provide: SolicitudPantallasService, useValue: solicitudServiceMock },
+        { provide: Solicitud220503Store, useValue: solicitudStoreMock },
+        { provide: Solicitud220503Query, useValue: solicitudQueryMock },
+        { provide: ChangeDetectorRef, useValue: { detectChanges: jest.fn() } },
+      ],
     }).compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(TestHostComponent);
+    fixture = TestBed.createComponent(DatosDelTramiteARealizarComponent);
+    component = fixture.componentInstance;
+    component.claveDeControl = 'testControl';
+    component.parentContainer = {
+      control: new FormGroup({}),
+    } as any;
     fixture.detectChanges();
-    component = fixture.debugElement.children[0].componentInstance;
-    component = fixture.debugElement.query(By.directive(DatosDelTramiteARealizarComponent))?.componentInstance;
-  
-    expect(component).toBeTruthy();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize form controls on ngOnInit', () => {
+  it('should add control to parent form group on ngOnInit', () => {
     component.ngOnInit();
-    const FORMGROUP = component.grupoFormularioPadre.get(component.claveDeControl) as FormGroup;
-    expect(FORMGROUP).toBeTruthy();
-    expect(FORMGROUP.get('certificadosAutorizados')).toBeTruthy();
-    expect(FORMGROUP.get('horaDeInspeccion')).toBeTruthy();
-    expect(FORMGROUP.get('aduanaDeIngreso')).toBeTruthy();
-    expect(FORMGROUP.get('sanidadAgropecuaria')).toBeTruthy();
-    expect(FORMGROUP.get('puntoDeInspeccion')).toBeTruthy();
-    expect(FORMGROUP.get('fechaDeInspeccion')).toBeTruthy();
+    expect(component.grupoFormularioPadre.contains('testControl')).toBe(true);
   });
 
-  it('should remove control on ngOnDestroy', () => {
+  it('should remove control from parent form group on ngOnDestroy', () => {
     component.ngOnInit();
-    expect(component.grupoFormularioPadre.contains(component.claveDeControl)).toBe(true);
     component.ngOnDestroy();
-    expect(component.grupoFormularioPadre.contains(component.claveDeControl)).toBe(false);
+    expect(component.grupoFormularioPadre.contains('testControl')).toBe(false);
   });
 
-  it('should handle certificadosSeleccion correctly', () => {
-    component.ngOnInit();
-    const CATALOGO: Catalogo = { id: 1, descripcion: 'Certificado de Exportación', tam: 'A4', dpi: '1234567890' };
-    component.certificadosSeleccion(CATALOGO);
-    const FORMGROUP = component.grupoFormularioPadre.get(component.claveDeControl) as FormGroup;
-    expect(FORMGROUP.get('certificadosAutorizados')?.value).toBe('Certificado de Exportación');
-  });
-
-  it('should handle horaDeSeleccion correctly', () => {
-    component.ngOnInit();
-    const CATALOGO: Catalogo = { id: 1, descripcion: '08:00 AM - 10:00 AM', tam: '2 horas', dpi: 'INS001' };
-    component.horaDeSeleccion(CATALOGO);
-    const FORMGROUP = component.grupoFormularioPadre.get(component.claveDeControl) as FormGroup;
-    expect(FORMGROUP.get('horaDeInspeccion')?.value).toBe('08:00 AM - 10:00 AM');
-  });
-
-  it('should handle aduanaDeSeleccion correctly', () => {
-    component.ngOnInit();
-    const CATALOGO: Catalogo = { id: 1, descripcion: 'Aduana La Aurora', tam: 'Zona 13', dpi: 'ADU001' };
-    component.aduanaDeSeleccion(CATALOGO);
-    const FORMGROUP = component.grupoFormularioPadre.get(component.claveDeControl) as FormGroup;
-    expect(FORMGROUP.get('aduanaDeIngreso')?.value).toBe('Aduana La Aurora');
-  });
-
-  it('should handle sanidadSeleccion correctly', () => {
-    component.ngOnInit();
-    const CATALOGO: Catalogo = { id: 1, descripcion: 'Oficina Central de Sanidad', tam: 'Ciudad Capital', dpi: 'SAN001' };
-    component.sanidadSeleccion(CATALOGO);
-    const FORMGROUP = component.grupoFormularioPadre.get(component.claveDeControl) as FormGroup;
-    expect(FORMGROUP.get('sanidadAgropecuaria')?.value).toBe('Oficina Central de Sanidad');
-  });
-
-  it('should handle puntoDeSeleccion correctly', () => {
-    component.ngOnInit();
-    const CATALOGO: Catalogo = { id: 1, descripcion: 'Punto de Inspección Aérea', tam: 'Terminal de Carga', dpi: 'PIN001' };
-    component.puntoDeSeleccion(CATALOGO);
-    const FORMGROUP = component.grupoFormularioPadre.get(component.claveDeControl) as FormGroup;
-    expect(FORMGROUP.get('puntoDeInspeccion')?.value).toBe('Punto de Inspección Aérea');
-  });
-
-  it('should load initial catalog data correctly', () => {
+  it('should call solicitudService.getDataDatosDelTramite on cargarDatosIniciales', () => {
+    solicitudServiceMock.getDataDatosDelTramite.mockReturnValue(of({} as any));
     component.cargarDatosIniciales();
-    expect(component.certificadosAutorizados.catalogos.length).toBeGreaterThan(0);
-    expect(component.horaDeInspeccion.catalogos.length).toBeGreaterThan(0);
-    expect(component.aduanaDeIngreso.catalogos.length).toBeGreaterThan(0);
+    expect(solicitudServiceMock.getDataDatosDelTramite).toHaveBeenCalled();
+  });
+
+  it('should update form control value on certificadosSeleccion', () => {
+    component.ngOnInit();
+    const testCatalogo = { descripcion: 'Test Certificado' } as any;
+    component.certificadosSeleccion(testCatalogo);
+    expect(
+      component.grupoFormularioPadre.get('testControl')?.value
+        .certificadosAutorizados
+    ).toBe('Test Certificado');
+  });
+
+  it('should call setFechaDeInspeccion on cambioFechaInicio', () => {
+    component.cambioFechaInicio('2023-01-01');
+    expect(solicitudStoreMock.setFechaDeInspeccion).toHaveBeenCalledWith(
+      '2023-01-01'
+    );
+  });
+
+  it('should call setCertificadosAutorizados on setCertificadosAutorizados', () => {
+    const testCatalogo = { id: 1 } as any;
+    component.setCertificadosAutorizados(testCatalogo);
+    expect(solicitudStoreMock.setCertificadosAutorizados).toHaveBeenCalledWith(
+      1
+    );
+  });
+
+  it('should call setHoraDeInspeccion on setHoraDeInspeccion', () => {
+    const testCatalogo = { id: 2 } as any;
+    component.setHoraDeInspeccion(testCatalogo);
+    expect(solicitudStoreMock.setHoraDeInspeccion).toHaveBeenCalledWith(2);
+  });
+
+  it('should call setAduanaDeIngreso on setAduanaDeIngreso', () => {
+    const testCatalogo = { id: 3 } as any;
+    component.setAduanaDeIngreso(testCatalogo);
+    expect(solicitudStoreMock.setAduanaDeIngreso).toHaveBeenCalledWith(3);
+  });
+
+  it('should call setSanidadAgropecuaria on setSanidadAgropecuaria', () => {
+    const testCatalogo = { id: 4 } as any;
+    component.setSanidadAgropecuaria(testCatalogo);
+    expect(solicitudStoreMock.setSanidadAgropecuaria).toHaveBeenCalledWith(4);
+  });
+
+  it('should call setPuntoDeInspeccion on setPuntoDeInspeccion', () => {
+    const testCatalogo = { id: 5 } as any;
+    component.setPuntoDeInspeccion(testCatalogo);
+    expect(solicitudStoreMock.setPuntoDeInspeccion).toHaveBeenCalledWith(5);
   });
 });

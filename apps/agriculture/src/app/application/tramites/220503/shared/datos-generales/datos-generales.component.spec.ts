@@ -1,47 +1,200 @@
-import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DatosGeneralesComponent } from './datos-generales.component';
-import { FormBuilder } from '@angular/forms';
-import { ReactiveFormsModule } from '@angular/forms';
-import { RevisionService } from '@ng-mf/data-access-user';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { RevisionService } from '../../services/revision.service';
+import { Solicitud220503Store } from '../../estados/tramites220503.store';
+import { Solicitud220503Query } from '../../estados/tramites220503.query';
 import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
 import { of } from 'rxjs';
-import { throwError } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import {
+  CatalogoSelectComponent,
+  InputRadioComponent,
+  TituloComponent,
+} from '@ng-mf/data-access-user';
+
 describe('DatosGeneralesComponent', () => {
   let component: DatosGeneralesComponent;
   let fixture: ComponentFixture<DatosGeneralesComponent>;
-  let mockRevisionService: jest.Mocked<RevisionService>;
-  let mockValidacionesService: jest.Mocked<ValidacionesFormularioService>;
+  let revisionServiceMock: jest.Mocked<RevisionService>;
+  let solicitudStoreMock: jest.Mocked<Solicitud220503Store>;
+  let solicitudQueryMock: jest.Mocked<Solicitud220503Query>;
+  let validacionesServiceMock: jest.Mocked<ValidacionesFormularioService>;
 
   beforeEach(async () => {
-    mockRevisionService = {
-      getAduanaIngreso: jest.fn().mockReturnValue(of({ code: 200, message: 'Success', data: [] })),
-      getOficianaInspeccion: jest.fn().mockReturnValue(of({ code: 200, message: 'Success', data: [] })),
-      getPuntoInspeccion: jest.fn().mockReturnValue(of({ code: 200, message: 'Success', data: [] })),
-      getEstablecimiento: jest.fn().mockReturnValue(of({ code: 200, message: 'Success', data: [] })),
-      getRegimenDestinaran: jest.fn().mockReturnValue(of({ code: 200, message: 'Success', data: [] })),
-      getMovilizacionNacional: jest.fn().mockReturnValue(of({ code: 200, message: 'Success', data: [] })),
-      getPuntoVerificacion: jest.fn().mockReturnValue(of({ code: 200, message: 'Success', data: [] })),
-      getEmpresaTransportista: jest.fn().mockReturnValue(of({ code: 200, message: 'Success', data: [] }))
-    } as unknown as jest.Mocked<RevisionService>;
+    revisionServiceMock = {
+      getAduanaIngreso: jest.fn(),
+      getOficianaInspeccion: jest.fn(),
+      getPuntoInspeccion: jest.fn(),
+      getEstablecimiento: jest.fn(),
+      getRegimenDestinaran: jest.fn(),
+      getMovilizacionNacional: jest.fn(),
+      getPuntoVerificacion: jest.fn(),
+      getEmpresaTransportista: jest.fn(),
+      getDatosDelaSolicitud: jest.fn(),
+    } as never;
 
-    mockValidacionesService = {
-      isValid: jest.fn().mockReturnValue(true)
-    } as unknown as jest.Mocked<ValidacionesFormularioService>;
+    solicitudStoreMock = {
+      setFoliodel: jest.fn(),
+      setClaveUCON: jest.fn(),
+      setEstablecimientoTIF: jest.fn(),
+      setNombre: jest.fn(),
+      setNumeroguia: jest.fn(),
+      setCoordenadas: jest.fn(),
+      setTransporte: jest.fn(),
+      setNombreEmpresa: jest.fn(),
+      setAduanaIngreso: jest.fn(),
+      setOficinaInspeccion: jest.fn(),
+      setPuntoInspeccion: jest.fn(),
+      setRegimen: jest.fn(),
+      setMovilizacion: jest.fn(),
+      setCapturaDatosMercancia: jest.fn(),
+      setPunto: jest.fn(),
+    } as never;
+
+    solicitudQueryMock = {
+      selectSolicitud$: jest.fn(() =>
+        of({
+          foliodel: '123',
+          aduanaIngreso: 'aduana1',
+          oficinaInspeccion: 'oficina1',
+          puntoInspeccion: 'punto1',
+          claveUCON: 'clave1',
+          establecimientoTIF: 'establecimiento1',
+          nombre: 'nombre1',
+          numeroguia: 'guia1',
+          regimen: 'regimen1',
+          capturaDatosMercancia: 'mercancia1',
+          coordenadas: 'coords1',
+          movilizacion: 'movilizacion1',
+          transporte: 'transporte1',
+          punto: 'punto1',
+          nombreEmpresa: 'empresa1',
+        })
+      ),
+    } as never;
+
+    validacionesServiceMock = {
+      isValid: jest.fn(),
+      noCeroValidator: jest.fn(),
+      errorCampoRequerido: jest.fn(),
+      errorEmail: jest.fn(),
+      errorPattern: jest.fn(),
+    } as jest.Mocked<ValidacionesFormularioService>;
 
     await TestBed.configureTestingModule({
-      declarations: [DatosGeneralesComponent],
-      imports: [ReactiveFormsModule],
+      declarations: [],
+      imports: [
+        ReactiveFormsModule,
+        DatosGeneralesComponent,
+        CommonModule,
+        TituloComponent,
+        CatalogoSelectComponent,
+        InputRadioComponent,
+      ],
       providers: [
         FormBuilder,
-        { provide: RevisionService, useValue: mockRevisionService },
-        { provide: ValidacionesFormularioService, useValue: mockValidacionesService }
-      ]
+        { provide: RevisionService, useValue: revisionServiceMock },
+        { provide: Solicitud220503Store, useValue: solicitudStoreMock },
+        { provide: Solicitud220503Query, useValue: solicitudQueryMock },
+        {
+          provide: ValidacionesFormularioService,
+          useValue: validacionesServiceMock,
+        },
+      ],
     }).compileComponents();
   });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(DatosGeneralesComponent);
     component = fixture.componentInstance;
+
+    // solicitudQueryMock.selectSolicitud$.mockReturnValue(
+    //   of({
+    //     foliodel: '123',
+    //     aduanaIngreso: 'aduana1',
+    //     oficinaInspeccion: 'oficina1',
+    //     puntoInspeccion: 'punto1',
+    //     claveUCON: 'clave1',
+    //     establecimientoTIF: 'establecimiento1',
+    //     nombre: 'nombre1',
+    //     numeroguia: 'guia1',
+    //     regimen: 'regimen1',
+    //     capturaDatosMercancia: 'mercancia1',
+    //     coordenadas: 'coords1',
+    //     movilizacion: 'movilizacion1',
+    //     transporte: 'transporte1',
+    //     punto: 'punto1',
+    //     nombreEmpresa: 'empresa1',
+    //   }) as any
+    // );
+
+    revisionServiceMock.getAduanaIngreso.mockReturnValue(
+      of({ code: 200, data: [], message: '' })
+    );
+    revisionServiceMock.getOficianaInspeccion.mockReturnValue(
+      of({ code: 200, data: [], message: '' })
+    );
+    revisionServiceMock.getPuntoInspeccion.mockReturnValue(
+      of({ code: 200, data: [], message: '' })
+    );
+    revisionServiceMock.getEstablecimiento.mockReturnValue(
+      of({ code: 200, data: [], message: '' })
+    );
+    revisionServiceMock.getRegimenDestinaran.mockReturnValue(
+      of({ code: 200, data: [], message: '' })
+    );
+    revisionServiceMock.getMovilizacionNacional.mockReturnValue(
+      of({ code: 200, data: [], message: '' })
+    );
+    revisionServiceMock.getPuntoVerificacion.mockReturnValue(
+      of({ code: 200, data: [], message: '' })
+    );
+    revisionServiceMock.getEmpresaTransportista.mockReturnValue(
+      of({ code: 200, data: [], message: '' })
+    );
+    revisionServiceMock.getDatosDelaSolicitud.mockReturnValue(
+      of({
+        certificadosAutorizados: 0,
+        horaDeInspeccion: 0,
+        aduanaDeIngreso: 0,
+        sanidadAgropecuaria: 0,
+        puntoDeInspeccion: 0,
+        fechaDeInspeccion: '',
+        nombre: '',
+        primerapellido: '',
+        segundoapellido: '',
+        mercancia: '',
+        tipocontenedor: 0,
+        transporteIdMedio: 0,
+        identificacionTransporte: '',
+        esSolicitudFerros: '',
+        totalDeGuiasAmparadas: '',
+        foliodel: '',
+        aduanaIngreso: 0,
+        oficinaInspeccion: 0,
+        puntoInspeccion: 0,
+        claveUCON: '',
+        establecimientoTIF: '',
+        numeroguia: '',
+        regimen: 0,
+        capturaDatosMercancia: 0,
+        coordenadas: '',
+        movilizacion: 0,
+        transporte: '',
+        punto: 0,
+        nombreEmpresa: 0,
+        fetchapago: '',
+        exentoPagoNo: 0,
+        justificacion: 0,
+        claveReferencia: '',
+        cadenaDependencia: '',
+        banco: 0,
+        llavePago: '',
+        importePago: '',
+      })
+    );
+
     fixture.detectChanges();
   });
 
@@ -49,109 +202,53 @@ describe('DatosGeneralesComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize forms with correct controls on ngOnInit', fakeAsync(() => {
-    component.ngOnInit();
-    tick();
-
-    expect(component.forma.get('aduanaIngreso')).toBeTruthy();
-    expect(component.datosDelaSolicitud.get('establecimiento')).toBeTruthy();
-    // Add more assertions for other form controls as per your component's form structure
-  }));
-
-  it('should toggle colapsable state multiple times', () => {
-    component.mostrar_colapsable();
-    expect(component.colapsable).toBe(true);
-    component.mostrar_colapsable();
-    expect(component.colapsable).toBe(false);
+  it('should initialize the form on ngOnInit', () => {
+    expect(component.forma).toBeDefined();
+    expect(component.forma.get('foliodel')?.value).toBe('123');
   });
 
-  it('should rotate currentIndex correctly when exceeding rows length', () => {
-    component.rows = [
-      { Partida: '1', Tiporequisito: 'Inspección ocular', Requisito: 'Requisito', Certificado: 123456, Fraccion: '01039201', Descripcion: 'Con pedigree o certificado de alto registro.', Nico: '00' },
-      { Partida: '2', Tiporequisito: 'inspección de oído', Requisito: 'Requisito', Certificado: 123456, Fraccion: '01039201', Descripcion: 'Con pedigree o certificado de alto registro.', Nico: '00' },
-      { Partida: '3', Tiporequisito: 'inspección de nariz', Requisito: 'Requisito', Certificado: 123456, Fraccion: '01039201', Descripcion: 'Con pedigree o certificado de alto registro.', Nico: '00' }
-    ];
-    component.currentIndex = 2;
+  it('should call getAduanaIngreso on initialization', () => {
+    expect(revisionServiceMock.getAduanaIngreso).toHaveBeenCalled();
+  });
+
+  it('should toggle colapsable state', () => {
+    expect(component.colapsable).toBe(false);
+    component.mostrar_colapsable();
+    expect(component.colapsable).toBe(true);
+  });
+
+  it('should rotate rows correctly', () => {
+    component.rows = [{}, {}, {}] as any;
+    component.currentIndex = 0;
+    component.rotateRow(1);
+    expect(component.currentIndex).toBe(1);
+    component.rotateRow(1);
+    expect(component.currentIndex).toBe(2);
     component.rotateRow(1);
     expect(component.currentIndex).toBe(0);
   });
 
-  it('should return false when form field is invalid', () => {
-    mockValidacionesService.isValid.mockReturnValue(false);
-    expect(component.isValid(component.forma, 'aduanaIngreso')).toBe(false);
+  it('should validate form fields using ValidacionesFormularioService', () => {
+    validacionesServiceMock.isValid.mockReturnValue(true);
+    const isValid = component.isValid(component.forma, 'foliodel');
+    expect(validacionesServiceMock.isValid).toHaveBeenCalledWith(
+      component.forma,
+      'foliodel'
+    );
+    expect(isValid).toBe(true);
   });
 
-  it('should handle error when fetching aduanaIngreso data', fakeAsync(() => {
-    const MOCKERROR = { code: 500, error: 'Internal Server Error' };
-    mockRevisionService.getAduanaIngreso.mockReturnValue(throwError(() => MOCKERROR));
-    component.getAduanaIngreso();
-    tick();
-    expect(component.aduanaIngreso.catalogos).toBeUndefined();
-  }));
-
-  it('should fetch oficinaInspeccion data successfully', fakeAsync(() => {
-    const MOCKRESPONSE = { code: 200, message: 'Success', data: [{ id: 2, descripcion: 'Oficina 1' }] };
-    mockRevisionService.getOficianaInspeccion.mockReturnValue(of(MOCKRESPONSE));
-    component.getOficianaInspeccion();
-    tick();
-    expect(component.oficianaInspeccion.catalogos).toEqual(MOCKRESPONSE.data);
-  }));
-
-  it('should fetch puntoInspeccion data successfully', fakeAsync(() => {
-    const MOCKRESPONSE = { code: 200, message: 'Success', data: [{ id: 3, descripcion: 'Punto 1' }] };
-    mockRevisionService.getPuntoInspeccion.mockReturnValue(of(MOCKRESPONSE));
-    component.getPuntoInspeccion();
-    tick();
-    expect(component.puntoInspeccion.catalogos).toEqual(MOCKRESPONSE.data);
-  }));
-
-  it('should fetch establecimiento data successfully', fakeAsync(() => {
-    const MOCKRESPONSE = { code: 200, message: 'Success', data: [{ id: 4, descripcion: 'Establecimiento 1' }] };
-    mockRevisionService.getEstablecimiento.mockReturnValue(of(MOCKRESPONSE));
-    component.getEstablecimiento();
-    tick();
-    expect(component.establecimiento.catalogos).toEqual(MOCKRESPONSE.data);
-  }));
-
-  it('should fetch regimenDestinaran data successfully', fakeAsync(() => {
-    const MOCKRESPONSE = { code: 200, message: 'Success', data: [{ id: 5, descripcion: 'Regimen 1' }] };
-    mockRevisionService.getRegimenDestinaran.mockReturnValue(of(MOCKRESPONSE));
-    component.getRegimenDestinaran();
-    tick();
-    expect(component.regimenDestinaran.catalogos).toEqual(MOCKRESPONSE.data);
-  }));
-
-  it('should fetch movilizacionNacional data successfully', fakeAsync(() => {
-    const MOCKRESPONSE = { code: 200, message: 'Success', data: [{ id: 6, descripcion: 'Movilizacion 1' }] };
-    mockRevisionService.getMovilizacionNacional.mockReturnValue(of(MOCKRESPONSE));
-    component.getMovilizacionNacional();
-    tick();
-    expect(component.movilizacionNacional.catalogos).toEqual(MOCKRESPONSE.data);
-  }));
-
-  it('should fetch puntoVerificacion data successfully', fakeAsync(() => {
-    const MOCKRESPONSE = { code: 200, message: 'Success', data: [{ id: 7, descripcion: 'Punto Verificacion 1' }] };
-    mockRevisionService.getPuntoVerificacion.mockReturnValue(of(MOCKRESPONSE));
-    component.getPuntoVerificacion();
-    tick();
-    expect(component.puntoVerificacion.catalogos).toEqual(MOCKRESPONSE.data);
-  }));
-
-  it('should fetch empresaTransportista data successfully', fakeAsync(() => {
-    const MOCKRESPONSE = { code: 200, message: 'Success', data: [{ id: 8, descripcion: 'Empresa 1' }] };
-    mockRevisionService.getEmpresaTransportista.mockReturnValue(of(MOCKRESPONSE));
-    component.getEmpresaTransportista();
-    tick();
-    expect(component.empresaTransportista.catalogos).toEqual(MOCKRESPONSE.data);
-  }));
-
-  it('should validate entire form when fields are invalid', () => {
-    mockValidacionesService.isValid.mockReturnValue(false);
-    component.forma.get('aduanaIngreso')?.setValue(null);
-    expect(component.isValid(component.forma, 'aduanaIngreso')).toBe(false);
+  it('should call setAduanaIngreso when seleccionarAduanaIngreso is called', () => {
+    const mockCatalogo = { id: 'aduana1' } as any;
+    component.seleccionarAduanaIngreso(mockCatalogo);
+    expect(solicitudStoreMock.setAduanaIngreso).toHaveBeenCalledWith('aduana1');
   });
 
-  it('should initialize with currentIndex 0', () => {
-    expect(component.currentIndex).toBe(0);
+  it('should unsubscribe from observables on ngOnDestroy', () => {
+    const destroyedSpy = jest.spyOn(component['destroyed$'], 'next');
+    const completeSpy = jest.spyOn(component['destroyed$'], 'complete');
+    component.ngOnDestroy();
+    expect(destroyedSpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
   });
 });

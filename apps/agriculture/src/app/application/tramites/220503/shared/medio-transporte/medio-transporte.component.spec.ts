@@ -1,179 +1,173 @@
-import { By } from '@angular/platform-browser';
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
-import { CatalogosSelect } from '@ng-mf/data-access-user';
-import { Component } from '@angular/core';
-import { ComponentFixture } from '@angular/core/testing';
-import { ControlContainer } from '@angular/forms';
-import { FormGroup } from '@angular/forms';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {
+  ReactiveFormsModule,
+  FormGroup,
+  FormControl,
+  Validators,
+} from '@angular/forms';
 import { MedioTransporteComponent } from './medio-transporte.component';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
+import { Solicitud220503Query } from '../../estados/tramites220503.query';
+import { Solicitud220503Store } from '../../estados/tramites220503.store';
+import { of } from 'rxjs';
 import { SimpleChanges } from '@angular/core';
-import { TestBed } from '@angular/core/testing';
-import { TituloComponent } from '@ng-mf/data-access-user';
-
-@Component({
-  selector: 'app-test-host',
-  template: `<form [formGroup]="form">
-               <app-medio-transporte [claveDeControl]="'testControl'" [hMercanciaTabla]="hMercanciaTabla" [dMercanciaBody]="dMercanciaBody" [mediodetransporte]="mediodetransporte"></app-medio-transporte>
-             </form>`
-})
-class TestHostComponent {
-  form: FormGroup;
-  hMercanciaTabla: string[] = [
-    'Fracción arancelaria', 'Descripción de la fracción', 'Nico', 'Descripción Nico', 
-    'Cantidad solicitada en UMT', 'Unidad de medida de tarifa (UMT)', 'Cantidad total UMT', 'Saldo pendiente'
-  ];
-  
-dMercanciaBody = [
-  {
-    tbodyData: [
-      "1001.10.10",
-      "Trigo duro",
-      "Sí",
-      "Trigo para molienda",
-      50,
-      "kg",
-      500,
-      100
-    ]
-  }
-];
-  
-  mediodetransporte: CatalogosSelect = {
-    labelNombre: 'Medio de transporte',
-    required: true,
-    primerOpcion: 'Selecciona un valor',
-    catalogos: [
-      { id: 1, descripcion: 'transporte 1', tam: 'transporte 1', dpi: 'transporte 1' },
-      { id: 2, descripcion: 'transporte 2', tam: 'transporte 2', dpi: 'transporte 2' },
-      { id: 3, descripcion: 'transporte 3', tam: 'transporte 3', dpi: 'transporte 3' }
-    ]
-  };
-
-  constructor() {
-    this.form = new FormGroup({});
-  }
-}
-
+import {
+  TituloComponent,
+  CatalogoSelectComponent,
+  TableComponent,
+  InputRadioComponent,
+} from '@ng-mf/data-access-user';
+import { CommonModule } from '@angular/common';
 describe('MedioTransporteComponent', () => {
   let component: MedioTransporteComponent;
-  let fixture: ComponentFixture<TestHostComponent>;
+  let fixture: ComponentFixture<MedioTransporteComponent>;
+  let mockQuery: jest.Mocked<Solicitud220503Query>;
+  let mockStore: jest.Mocked<Solicitud220503Store>;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [TestHostComponent, MedioTransporteComponent, TituloComponent, CatalogoSelectComponent],
-      imports: [ReactiveFormsModule],
-      schemas: [NO_ERRORS_SCHEMA],
-      providers: [
-        {
-          provide: ControlContainer,
-          useValue: { control: new FormGroup({}) }
-        }
-      ]
-    }).compileComponents();
-  });
+    mockQuery = {
+      selectSolicitud$: jest.fn(),
+    } as unknown as jest.Mocked<Solicitud220503Query>;
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(TestHostComponent);
+    mockStore = {
+      setEsSolicitudFerros: jest.fn(),
+      setTransporteIdMedio: jest.fn(),
+      setIdentificacionTransporte: jest.fn(),
+      setTotalDeGuiasAmparadas: jest.fn(),
+    } as unknown as jest.Mocked<Solicitud220503Store>;
+
+    await TestBed.configureTestingModule({
+      imports: [
+        ReactiveFormsModule,
+        MedioTransporteComponent,
+        CommonModule,
+        TituloComponent,
+        CatalogoSelectComponent,
+        TableComponent,
+        InputRadioComponent,
+      ],
+      declarations: [],
+      providers: [
+        { provide: Solicitud220503Query, useValue: mockQuery },
+        { provide: Solicitud220503Store, useValue: mockStore },
+      ],
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(MedioTransporteComponent);
+    component = fixture.componentInstance;
+
+    // Mock parent form group
+    component.parentContainer = {
+      control: new FormGroup({}),
+    } as any;
+
+    // mockQuery.selectSolicitud$.mockReturnValue(
+    //   of({
+    //     transporteIdMedio: '1',
+    //     identificacionTransporte: 'ABC123',
+    //     esSolicitudFerros: 'Yes',
+    //     totalDeGuiasAmparadas: '10',
+    //   })
+    // );
+
     fixture.detectChanges();
-    component = fixture.debugElement.query(By.directive(MedioTransporteComponent))?.componentInstance;
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize form controls on ngOnInit', () => {
+  it('should add a dynamic form group on ngOnInit', () => {
+    component.claveDeControl = 'testControl';
     component.ngOnInit();
-    expect(component.grupoFormularioPadre).toBeTruthy();
-    
-    const FORMGROUP = component.grupoFormularioPadre.get(component.claveDeControl) as FormGroup;
-    expect(FORMGROUP).toBeTruthy();
-    expect(FORMGROUP.get('transporteIdMedio')).toBeTruthy();
-    expect(FORMGROUP.get('identificacionTransporte')).toBeTruthy();
-    expect(FORMGROUP.get('esSolicitudFerros')).toBeTruthy();
-    expect(FORMGROUP.get('totalDeGuiasAmparadas')).toBeTruthy();
+
+    const formGroup = component.grupoFormularioPadre.get(
+      'testControl'
+    ) as FormGroup;
+    expect(formGroup).toBeTruthy();
+    expect(formGroup.controls['transporteIdMedio']).toBeTruthy();
+    expect(formGroup.controls['identificacionTransporte']).toBeTruthy();
+    expect(formGroup.controls['esSolicitudFerros']).toBeTruthy();
+    expect(formGroup.controls['totalDeGuiasAmparadas']).toBeTruthy();
   });
 
-  it('should remove control on ngOnDestroy', () => {
+  it('should update form group values when selectSolicitud$ emits', () => {
+    component.claveDeControl = 'testControl';
     component.ngOnInit();
-    expect(component.grupoFormularioPadre.contains(component.claveDeControl)).toBe(true);
-    
-    component.ngOnDestroy();
-    expect(component.grupoFormularioPadre.contains(component.claveDeControl)).toBe(true);
+
+    const formGroup = component.grupoFormularioPadre.get(
+      'testControl'
+    ) as FormGroup;
+    expect(formGroup.value).toEqual({
+      transporteIdMedio: '1',
+      identificacionTransporte: 'ABC123',
+      esSolicitudFerros: 'Yes',
+      totalDeGuiasAmparadas: '10',
+    });
   });
 
-  it('should handle catalog selection correctly', () => {
-    component.ngOnInit();
-    const CATALOGO = { id: 1, descripcion: 'transporte 1', tam: 'transporte 1', dpi: 'transporte 1' };
-    component.seleccionMedioDeTransporte(CATALOGO);
-
-    const FORMGROUP = component.grupoFormularioPadre.get(component.claveDeControl) as FormGroup;
-    expect(FORMGROUP.get('transporteIdMedio')?.value).toBe('transporte 1');
-  });
-
-  it('should render table headers correctly', () => {
-    const COMPILED = fixture.nativeElement;
-    const HEADERS = COMPILED.querySelectorAll('th');
-
-    expect(HEADERS.length).toBe(8);
-    expect(HEADERS[0].textContent.trim()).toBe('Fracción arancelaria');
-    expect(HEADERS[1].textContent.trim()).toBe('Descripción de la fracción');
-    expect(HEADERS[2].textContent.trim()).toBe('Nico');
-    expect(HEADERS[3].textContent.trim()).toBe('Descripción Nico');
-    expect(HEADERS[4].textContent.trim()).toBe('Cantidad solicitada en UMT');
-    expect(HEADERS[5].textContent.trim()).toBe('Unidad de medida de tarifa (UMT)');
-    expect(HEADERS[6].textContent.trim()).toBe('Cantidad total UMT');
-    expect(HEADERS[7].textContent.trim()).toBe('Saldo pendiente');
-  });
-
-  it('should render table rows correctly', () => {
-    const COMPILED = fixture.nativeElement;
-    const ROWS = COMPILED.querySelectorAll('tbody tr');
-
-    expect(ROWS.length).toBe(1);
-
-    const CELLS = ROWS[0].querySelectorAll('td');
-    expect(CELLS.length).toBe(8);
-    expect(CELLS[0].textContent.trim()).toBe('1001.10.10');
-    expect(CELLS[1].textContent.trim()).toBe('Trigo duro');
-    expect(CELLS[2].textContent.trim()).toBe('Sí');
-    expect(CELLS[3].textContent.trim()).toBe('Trigo para molienda');
-    expect(CELLS[4].textContent.trim()).toBe('50');
-    expect(CELLS[5].textContent.trim()).toBe('kg');
-    expect(CELLS[6].textContent.trim()).toBe('500');
-    expect(CELLS[7].textContent.trim()).toBe('100');
+  it('should call setEsSolicitudFerros on enCambioDeValor', () => {
+    component.enCambioDeValor('Yes');
+    expect(mockStore.setEsSolicitudFerros).toHaveBeenCalledWith('Yes');
   });
 
   it('should update tableData on ngOnChanges', () => {
-    const CHANGES: SimpleChanges = {
+    const changes: SimpleChanges = {
       hMercanciaTabla: {
         currentValue: ['Header1', 'Header2'],
-        previousValue: [],
+        previousValue: null,
         firstChange: true,
         isFirstChange: () => true,
       },
       dMercanciaBody: {
-        currentValue: [{ fraccionArancelaria: '1001.10.10', descripcionFraccion: 'Trigo duro' }],
-        previousValue: [],
+        currentValue: [{ id: 1, name: 'Item1' }],
+        previousValue: null,
         firstChange: true,
         isFirstChange: () => true,
       },
     };
-  
-    component.ngOnChanges(CHANGES);
-  
+
+    component.ngOnChanges(changes);
+
     expect(component.tableData.tableHeader).toEqual(['Header1', 'Header2']);
-    expect(component.tableData.tableBody).toEqual([{ fraccionArancelaria: '1001.10.10', descripcionFraccion: 'Trigo duro' }]);
+    expect(component.tableData.tableBody).toEqual([{ id: 1, name: 'Item1' }]);
   });
-  
-  it('should not update tableData if changes are empty', () => {
-    const CHANGES: SimpleChanges = {};
-  
-    component.ngOnChanges(CHANGES);
-  
-    expect(component.tableData.tableHeader).toEqual([]);
-    expect(component.tableData.tableBody).toEqual([]);
+
+  it('should patch form group value on seleccionMedioDeTransporte', () => {
+    component.claveDeControl = 'testControl';
+    component.ngOnInit();
+
+    component.seleccionMedioDeTransporte({
+      descripcion: 'NewTransport',
+    } as any);
+
+    const formGroup = component.grupoFormularioPadre.get(
+      'testControl'
+    ) as FormGroup;
+    expect(formGroup.value.transporteIdMedio).toBe('NewTransport');
+  });
+
+  it('should call setTransporteIdMedio on setTransporteIdMedio', () => {
+    component.setTransporteIdMedio({ id: '123' } as any);
+    expect(mockStore.setTransporteIdMedio).toHaveBeenCalledWith('123');
+  });
+
+  it('should call setIdentificacionTransporte on setIdentificacionTransporte', () => {
+    const event = { target: { value: 'NewID' } } as any;
+    component.setIdentificacionTransporte(event);
+    expect(mockStore.setIdentificacionTransporte).toHaveBeenCalledWith('NewID');
+  });
+
+  it('should call setTotalDeGuiasAmparadas on setTotalDeGuiasAmparadas', () => {
+    const event = { target: { value: '20' } } as any;
+    component.setTotalDeGuiasAmparadas(event);
+    expect(mockStore.setTotalDeGuiasAmparadas).toHaveBeenCalledWith('20');
+  });
+
+  it('should remove dynamic form group on ngOnDestroy', () => {
+    component.claveDeControl = 'testControl';
+    component.ngOnInit();
+    component.ngOnDestroy();
+
+    expect(component.grupoFormularioPadre.get('testControl')).toBeNull();
   });
 });

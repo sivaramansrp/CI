@@ -1,68 +1,69 @@
-import { AlertComponent } from '@ng-mf/data-access-user';
-import { ComponentFixture } from '@angular/core/testing';
-import { ReactiveFormsModule } from '@angular/forms';
-import { Solicitud } from '@ng-mf/data-access-user';
-import { SolicitudDatosComponent } from './solicitud-datos.component';
-import { TestBed } from '@angular/core/testing';
-import { TituloComponent } from '@ng-mf/data-access-user';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { SolicitudDatosTabComponent } from './solicitud-datos.component';
+import { TituloComponent, AlertComponent } from '@ng-mf/data-access-user';
+import { TEXTOS } from '../../enums/texto-enum';
+import { Solicitud } from '../../models/solicitud-pantallas.model';
 
-describe('SolicitudDatosComponent', () => {
-  let component: SolicitudDatosComponent;
-  let fixture: ComponentFixture<SolicitudDatosComponent>;
+describe('SolicitudDatosTabComponent', () => {
+  let component: SolicitudDatosTabComponent;
+  let fixture: ComponentFixture<SolicitudDatosTabComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
+      imports: [TituloComponent, AlertComponent, SolicitudDatosTabComponent],
       declarations: [],
-      imports: [ReactiveFormsModule,TituloComponent, AlertComponent,SolicitudDatosComponent],
     }).compileComponents();
-  });
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(SolicitudDatosComponent);
+    fixture = TestBed.createComponent(SolicitudDatosTabComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  test('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should have default colapsable value as true', () => {
+  test('should have TEXTOS defined', () => {
+    expect(component.TEXTOS).toEqual(TEXTOS);
+  });
+
+  test('should have colapsable set to true by default', () => {
     expect(component.colapsable).toBe(true);
   });
 
-  it('should toggle colapsable when mostrarColapsable is called', () => {
+  test('should toggle colapsable when mostrarColapsable is called', () => {
     component.colapsable = true;
     component.mostrarColapsable();
     expect(component.colapsable).toBe(false);
+
     component.mostrarColapsable();
     expect(component.colapsable).toBe(true);
   });
 
-  it('should have tablaHeadData as input', () => {
-    const TESTHEADDATA = ['Fecha Creación', 'Mercancía','Cantidad','Proovedor'];
-    component.tablaHeadData = TESTHEADDATA;
-    fixture.detectChanges();
-    expect(component.tablaHeadData).toEqual(TESTHEADDATA);
+  test('should have tablaHeadData as an empty array by default', () => {
+    expect(component.tablaHeadData).toEqual([]);
   });
 
-  it('should have tablaFilaDatos as input', () => {
-    const TESTFILEDATOS: Solicitud[] = [
+  test('should have tablaFilaDatos as an empty array by default', () => {
+    expect(component.tablaFilaDatos).toEqual([]);
+  });
+
+  test('should accept tablaHeadData as input', () => {
+    const mockHeadData = ['Column1', 'Column2'];
+    component.tablaHeadData = mockHeadData;
+    expect(component.tablaHeadData).toEqual(mockHeadData);
+  });
+
+  test('should accept tablaFilaDatos as input', () => {
+    const mockFilaDatos: Solicitud[] = [
       {
-        fechaCreacion: '2025-02-02 19:50:08:0',
-        mercancia: 'descripcion',
-        cantidad: '1000000',
-        proovedor: 'erick',
-      },
-      {
-        fechaCreacion: '2025-02-02 19:50:08:0',
-        mercancia: 'descripcion',
-        cantidad: '1000000',
-        proovedor: 'erick',
+        fechaCreacion: 'string',
+        mercancia: 'string',
+        cantidad: 'string',
+        proovedor: 'string',
       },
     ];
-    component.tablaFilaDatos = TESTFILEDATOS;
-    fixture.detectChanges();
-    expect(component.tablaFilaDatos).toEqual(TESTFILEDATOS);
+    component.tablaFilaDatos = mockFilaDatos;
+    expect(component.tablaFilaDatos).toEqual(mockFilaDatos);
   });
 });
