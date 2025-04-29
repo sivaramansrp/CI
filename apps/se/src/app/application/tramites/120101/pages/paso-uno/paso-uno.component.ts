@@ -61,13 +61,13 @@ export class PasoUnoComponent {
     this.pestanaCambiado.emit(this.indice);
   }
 /**
- * @method fileClicHandler
+ * @method archivoHagaClicControlador
  * @description
  * Maneja el evento de clic en un archivo o elemento de la tabla en el paso uno del flujo del trámite 120101.
  * @param {InstrumentoCupoTPLForm} event - El elemento seleccionado de la tabla.
  */
   // eslint-disable-next-line class-methods-use-this
-  public fileClicHandler(event: InstrumentoCupoTPLForm): void {
+  public archivoHagaClicControlador(event: InstrumentoCupoTPLForm): void {
     if (event) {
       this.elementoDeTablaSeleccionado = event;
     }

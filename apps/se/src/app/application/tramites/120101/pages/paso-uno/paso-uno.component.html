@@ -28,7 +28,7 @@
                     <domicilio-fiscal></domicilio-fiscal>
                 }
                 @case (2) {
-                    <consultar-cupo (emitFilaClicHandler)="fileClicHandler($event)"></consultar-cupo>
+                    <consultar-cupo (emitirFilaClicControlador)="archivoHagaClicControlador($event)"></consultar-cupo>
                     @if (elementoDeTablaSeleccionado) {
                         <descripcion-del-cupo [objetoDeFormulario]="elementoDeTablaSeleccionado"></descripcion-del-cupo>
                         <representacion-federal></representacion-federal>

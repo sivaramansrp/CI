@@ -45,9 +45,9 @@ import { Tramite120101Query } from '../../../../estados/queries/tramite120101.qu
 })
 
 export class ConsultarCupoComponent implements OnInit, OnDestroy {
-  
+
   /**
- * @property emitFilaClicHandler
+ * @property emitirFilaClicControlador
  * @description
  * Emisor de eventos que se utiliza para manejar el clic en una fila de la tabla dinámica.
  * 
@@ -58,10 +58,10 @@ export class ConsultarCupoComponent implements OnInit, OnDestroy {
  * @type {EventEmitter<InstrumentoCupoTPLForm>}
  * 
  * @example
- * this.emitFilaClicHandler.emit(filaSeleccionada);
+ * this.emitirFilaClicControlador.emit(filaSeleccionada);
  * // Emite los datos de la fila seleccionada al componente padre.
  */
-  @Output() public emitFilaClicHandler =
+  @Output() public emitirFilaClicControlador =
     new EventEmitter<InstrumentoCupoTPLForm>();
 
   /**
@@ -335,24 +335,24 @@ export class ConsultarCupoComponent implements OnInit, OnDestroy {
   }
 
   /**
- * @method onFilaClicHandler
+ * @method controladorDeClicsArchivo
  * @description
  * Este método maneja el evento de clic en una fila de la tabla dinámica.
  * Cuando se selecciona una fila, emite el evento con los datos de la fila seleccionada.
  * 
  * Funcionalidad:
  * - Verifica si el evento contiene datos válidos.
- * - Emite el evento utilizando el `EventEmitter` `emitFilaClicHandler`.
+ * - Emite el evento utilizando el `EventEmitter` `emitirFilaClicControlador`.
  * 
  * @param {InstrumentoCupoTPLForm} event - Objeto que representa los datos de la fila seleccionada.
  * 
  * @example
- * this.onFilaClicHandler(filaSeleccionada);
+ * this.controladorDeClicsArchivo(filaSeleccionada);
  * // Emite el evento con los datos de la fila seleccionada.
  */
-  public onFilaClicHandler(event: InstrumentoCupoTPLForm): void {
+  public controladorDeClicsArchivo(event: InstrumentoCupoTPLForm): void {
     if (event) {
-      this.emitFilaClicHandler.emit(event);
+      this.emitirFilaClicControlador.emit(event);
     }
   }
 
