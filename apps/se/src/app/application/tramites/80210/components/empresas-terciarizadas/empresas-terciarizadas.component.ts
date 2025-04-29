@@ -27,7 +27,7 @@ import { registroSolicitudImmexService } from '../../services/registro-solicitud
 @Component({
   selector: 'app-empresas-terciarizadas',
   templateUrl: './empresas-terciarizadas.component.html',
-  styleUrl: './empresas-terciarizadas.component.css',
+  styleUrl: './empresas-terciarizadas.component.scss',
 })
 export class EmpresasTerciarizadasComponent implements OnInit, OnDestroy {
   /**

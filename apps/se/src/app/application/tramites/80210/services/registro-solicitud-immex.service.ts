@@ -1,8 +1,8 @@
 import { Catalogo, RespuestaCatalogos } from '@libs/shared/data-access-user/src';
 import { FormularioDatos, Plantas, RespuestaPlantas } from '../modelos/registro-solicitud-immex.model';
+import { Injectable, OnDestroy } from '@angular/core';
+import { Observable, Subject, takeUntil } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
 
 /**
  * Servicio para manejar las renovaciones de muestras de mercancías.
@@ -13,7 +13,7 @@ import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root',
 })
-export class registroSolicitudImmexService {
+export class registroSolicitudImmexService implements OnDestroy {
 
   /**
    * Lista de estados obtenidos desde la API.
@@ -29,6 +29,14 @@ export class registroSolicitudImmexService {
    */
   plantas: Plantas[] = [];
 
+  /**
+ * Notificación para destruir observables al destruir el componente o servicio.
+ * 
+ * @remarks
+ * Este Subject emite un valor cuando el componente o servicio se destruye,
+ * permitiendo limpiar suscripciones activas y prevenir fugas de memoria.
+ */
+  private destroy$: Subject<void> = new Subject<void>();
   /**
    * Obtiene los datos del formulario desde un archivo JSON local.
    * 
@@ -80,9 +88,21 @@ export class registroSolicitudImmexService {
     url: string
   ): void {
     if (self && variable && url) {
-      this.http.get<RespuestaCatalogos>(`assets/json${url}`).subscribe((resp): void => {
+      this.http.get<RespuestaCatalogos>(`assets/json${url}`).pipe(takeUntil(this.destroy$)).subscribe((resp): void => {
         (self[variable] as Catalogo[]) = resp?.code === 200 && resp.data ? resp.data : [];
       });
     }
+  }
+
+  /**
+ * Método llamado al destruir el componente o servicio.
+ * 
+ * @remarks
+ * Emite un valor al Subject `destroy$` y lo completa para limpiar suscripciones activas
+ * y evitar fugas de memoria.
+ */
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

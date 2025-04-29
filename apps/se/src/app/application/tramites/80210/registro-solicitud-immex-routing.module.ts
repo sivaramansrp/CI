@@ -11,7 +11,7 @@ const ROUTES: Routes = [
   {
     path: 'confirmacion',
     pathMatch: 'full',
-    redirectTo: '',
+    redirectTo: 'confirmacion',
   },
 ];
 
