@@ -37,10 +37,23 @@ export interface AgregarDatosProductorFormulario {
   fax?: string;
 }
 
+/**
+ * Representa el modelo de un formulario histórico con información confidencial
+ * y la relación entre productor y exportador.
+ *
+ * @property datosConfidencialesProductor - Indica si los datos del productor son confidenciales.
+ * @property productorMismoExportador - Indica si el productor es el mismo que el exportador.
+ */
 export interface FormularioHistorico {
   datosConfidencialesProductor?: boolean;
-productorMismoExportador?: boolean;
+  productorMismoExportador?: boolean;
 } 
+/**
+ * Interfaz que representa una acción de botón con un nombre de acción y un valor asociado.
+ * 
+ * @property {string} accion - Nombre de la acción que representa el botón.
+ * @property {number} valor - Valor numérico asociado a la acción del botón.
+ */
 export interface AccionBoton {
   accion: string;
   valor: number;

@@ -18,5 +18,8 @@
         [datos]="datosPasos"
         (continuarEvento)="getValorIndice($event)"
       ></btn-continuar>
+      @if(indice ===1){
+        <ng-alert [CONTENIDO]="TEXTOS.ADJUNTAR"></ng-alert>
+        }
     </div>
   </div>

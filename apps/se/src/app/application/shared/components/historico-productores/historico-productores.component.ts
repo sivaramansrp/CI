@@ -7,7 +7,6 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { CommonModule } from '@angular/common';
 import { Modal } from 'bootstrap';
 import { Subject } from 'rxjs';
-import { log } from 'node:console';
 
 /**
  * Componente para gestionar el histórico de productores.
@@ -61,6 +60,15 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
    */
   @Input() mercanciaDatos: MercanciaTabla[] = [];
 
+  /**
+   * @property {MercanciaTabla[]} mercanciaDatosSeleccionada
+   * 
+   * @description
+   * Arreglo que almacena los datos seleccionados de mercancías.
+   * 
+   * @command
+   * Utilice esta propiedad para gestionar la selección de mercancías en la tabla.
+   */
   mercanciaDatosSeleccionada:MercanciaTabla[] = [];
   /**
    * @method agregarDatosProductor
@@ -406,9 +414,21 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Método para manejar la selección de una mercancía en la tabla.
+   * 
+   * @param evento - Objeto de tipo `MercanciaTabla` que representa la mercancía seleccionada.
+   * 
+   * @command Este método actualiza la propiedad `mercanciaDatosSeleccionada` con la mercancía seleccionada.
+   */
   obtenerSeleccionadoMercancia(evento: MercanciaTabla): void {        
     this.mercanciaDatosSeleccionada = [evento];
   }
+  /**
+   * @method mercanciaAgregarSeleccionada
+   * @description Muestra un modal utilizando la instancia de `Modal` si el elemento modal está disponible.
+   * @command Abre el modal para agregar una mercancía seleccionada.
+   */
   mercanciaAgregarSeleccionada(): void {
     if (this.modalElements?.nativeElement) {
       const MODAL_INSTANCE = new Modal(this.modalElements.nativeElement);
