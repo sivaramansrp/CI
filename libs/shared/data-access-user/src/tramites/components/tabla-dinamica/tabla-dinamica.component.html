@@ -49,7 +49,7 @@
         @else if(tipoSeleccionTabla === TablaSeleccion.BUTTON) {
         <td>
           <button id="button" class="cursor-pointer btn btn-primary" type="button" name="filaSeleccionada" [value]="i"
-            (click)="cambiarValor(fila)" aria-label="Seleccionar">BAJA</button>
+            (click)="cambiarValor(fila)" aria-label="Seleccionar">{{obtenerTextoBoton(fila)}}</button>
         </td>
         }
 

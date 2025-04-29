@@ -87,4 +87,14 @@ export const MILISEGUNDOS = {
   MES: 2592000000,
 };
 
+export const enum ESTADO_REGISTRO {
+  ACTIVAR = 'Activar',
+  BAJA = 'Baja',
+}
+
+export const enum TEXTO_FILA_REGISTRO{
+  ACTIVADA = 'Activada',
+  BAJA = 'Baja',
+}
+
 
