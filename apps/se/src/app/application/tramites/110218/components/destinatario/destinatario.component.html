@@ -10,7 +10,7 @@
                     <input type="text" class="form-control bg-white" id="nombre" placeholder="Pedro"
                         formControlName="nombre"
                         [class.is-invalid]="datosDelDestinatario.get('nombre')?.touched && datosDelDestinatario.get('nombre')?.invalid"
-                        (change)="onDatosdeldestinatarioChange('nombre')">
+                        (change)="setValorStore(datosDelDestinatario,'nombre')">
                     <div class="invalid-feedback">
                         Corrija el nombre.
                     </div>
@@ -21,7 +21,7 @@
                     <input type="text" class="form-control bg-white" id="primerApellido" placeholder="Juarez"
                         formControlName="primerApellido"
                         [class.is-invalid]="datosDelDestinatario.get('primerApellido')?.touched && datosDelDestinatario.get('primerApellido')?.invalid"
-                        (change)="onDatosdeldestinatarioChange('primerApellido')">
+                        (change)="setValorStore(datosDelDestinatario,'primerApellido')">
                     <div class="invalid-feedback">
                         Corrija el nombre.
                     </div>
@@ -38,7 +38,7 @@
                     <input type="text" class="form-control bg-white" id="numeroderegistroFiscal"
                         placeholder="OEAE800904JL9" formControlName="numeroderegistroFiscal"
                         [class.is-invalid]="datosDelDestinatario.get('numeroderegistroFiscal')?.touched && datosDelDestinatario.get('numeroderegistroFiscal')?.invalid"
-                        (change)="onDatosdeldestinatarioChange('numeroderegistroFiscal')">
+                        (change)="setValorStore(datosDelDestinatario,'numeroderegistroFiscal')">
                     <div class="invalid-feedback">
                         Corrija el RFC.
                     </div>
@@ -48,7 +48,7 @@
                     <label class="form-label" for="razonSocial">Razón social:</label>
                     <input type="text" class="form-control bg-white" id="razonSocial" formControlName="razonSocial"
                         [class.is-invalid]="datosDelDestinatario.get('razonSocial')?.touched && datosDelDestinatario.get('razonSocial')?.invalid"
-                        (change)="onDatosdeldestinatarioChange('razonSocial')">
+                        (change)="setValorStore(datosDelDestinatario,'razonSocial')">
                     <div class="invalid-feedback">
                         Este campo es obligatorio.
                     </div>
@@ -70,7 +70,7 @@
                     <input type="text" class="form-control bg-white" id="calle" placeholder="CALLE"
                         formControlName="calle"
                         [class.is-invalid]="domicilioDelDestinatario.get('calle')?.touched && domicilioDelDestinatario.get('calle')?.invalid"
-                        (change)="onDomiciliodeldestinatarioChange('calle')">
+                        (change)="setValorStore(domicilioDelDestinatario,'calle')">
                     <div class="invalid-feedback">Este campo es obligatorio.</div>
                 </div>
 
@@ -79,7 +79,7 @@
                     <input type="text" class="form-control bg-white" id="numeroLetra" placeholder="NUMERO"
                         formControlName="numeroLetra"
                         [class.is-invalid]="domicilioDelDestinatario.get('numeroLetra')?.touched && domicilioDelDestinatario.get('numeroLetra')?.invalid"
-                        (change)="onDomiciliodeldestinatarioChange('numeroLetra')">
+                        (change)="setValorStore(domicilioDelDestinatario,'numeroLetra')">
                     <div class="invalid-feedback">Este campo es obligatorio.</div>
                 </div>
 
@@ -88,7 +88,7 @@
                     <input type="text" class="form-control bg-white" id="ciudad" placeholder="CIUDAD"
                         formControlName="ciudad"
                         [class.is-invalid]="domicilioDelDestinatario.get('ciudad')?.touched && domicilioDelDestinatario.get('ciudad')?.invalid"
-                        (change)="onDomiciliodeldestinatarioChange('ciudad')">
+                        (change)="setValorStore(domicilioDelDestinatario,'ciudad')">
                     <div class="invalid-feedback">Este campo es obligatorio.</div>
                 </div>
 
@@ -97,7 +97,7 @@
                     <input type="email" class="form-control bg-white" id="correoElectronico"
                         placeholder="correo@correo.com" formControlName="correoElectronico"
                         [class.is-invalid]="domicilioDelDestinatario.get('correoElectronico')?.touched && domicilioDelDestinatario.get('correoElectronico')?.invalid"
-                        (change)="onDomiciliodeldestinatarioChange('correoElectronico')">
+                        (change)="setValorStore(domicilioDelDestinatario,'correoElectronico')">
                     <div class="invalid-feedback">Ingrese una dirección de correo válida.</div>
                 </div>
 
@@ -105,7 +105,7 @@
                     <label class="form-label" for="fax">Fax:</label>
                     <input type="text" class="form-control bg-white" id="fax" placeholder="546456" formControlName="fax"
                         [class.is-invalid]="domicilioDelDestinatario.get('fax')?.touched && domicilioDelDestinatario.get('fax')?.invalid"
-                        (change)="onDomiciliodeldestinatarioChange('fax')">
+                        (change)="setValorStore(domicilioDelDestinatario,'fax')">
                     <div class="invalid-feedback">Ingrese solo dígitos.</div>
                 </div>
 
@@ -114,7 +114,7 @@
                     <input type="text" class="form-control bg-white" id="telefono" placeholder="5555687"
                         formControlName="telefono"
                         [class.is-invalid]="domicilioDelDestinatario.get('telefono')?.touched && domicilioDelDestinatario.get('telefono')?.invalid"
-                        (change)="onDomiciliodeldestinatarioChange('telefono')">
+                        (change)="setValorStore(domicilioDelDestinatario,'telefono')">
                     <div class="invalid-feedback">Ingrese solo dígitos.</div>
                 </div>
 
