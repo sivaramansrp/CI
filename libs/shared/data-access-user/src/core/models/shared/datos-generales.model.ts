@@ -55,7 +55,3 @@ export interface ListaPasosWizard {
   activo: boolean;
   completado: boolean;
 }
-export interface VistaEmergente {
-  abierto: boolean;
-  indice: number;
-}
