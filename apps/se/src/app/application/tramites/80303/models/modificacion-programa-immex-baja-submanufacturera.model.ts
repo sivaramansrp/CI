@@ -2,7 +2,7 @@ import { ConfiguracionColumna } from '@ng-mf/data-access-user'; // adjust the im
 
 /**
  * Representa la información de una empresa submanufacturera.
- * 
+ *
  * @property estatus - El estado actual de la empresa submanufacturera.
  * @property rfc - El Registro Federal de Contribuyentes (RFC) de la empresa.
  * @property razonSocial - La razón social de la empresa.
@@ -82,3 +82,49 @@ export const EMPRESA_SUBMANUFACTURERA_ENCABEZADO_DE_TABLA: ConfiguracionColumna<
       orden: 14,
     },
   ];
+
+/**
+ * Representa la información de una bitácora de modificaciones.
+ *
+ * @property tipoModificacion - El tipo de modificación realizada.
+ * @property fechaModificacion - La fecha en que se realizó la modificación.
+ * @property valoresAnteriores - Los valores anteriores antes de la modificación.
+ * @property valoresNuevos - Los nuevos valores después de la modificación.
+ *
+ */
+
+export interface Bitacora {
+  tipoModificacion: string;
+  fechaModificacion: string;
+  valoresAnteriores: string;
+  valoresNuevos: string;
+}
+
+/**
+ * Constante que define la configuración de columnas para la tabla de bitácora.
+ *
+ * @const
+ * @type {ConfiguracionColumna<Bitacora>[]}
+ */
+export const BITACORA_ENCABEZADO_DE_TABLA: ConfiguracionColumna<Bitacora>[] = [
+  {
+    encabezado: 'Tipo modificación',
+    clave: (fila) => fila.tipoModificacion,
+    orden: 1,
+  },
+  {
+    encabezado: 'Fecha modificación',
+    clave: (fila) => fila.fechaModificacion,
+    orden: 2,
+  },
+  {
+    encabezado: 'Valores anteriores',
+    clave: (fila) => fila.valoresAnteriores,
+    orden: 3,
+  },
+  {
+    encabezado: 'Valores nuevos',
+    clave: (fila) => fila.valoresNuevos,
+    orden: 4,
+  },
+];
