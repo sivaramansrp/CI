@@ -10,7 +10,7 @@ import { SolicitudDespachoExportacionRoutingModule } from './solicitud-despacho-
     SolicitudDespachoExportacionComponent,
     PasoUnoComponent,
     PasoDosComponent,
-    PasoTresComponent,
+    PasoTresComponent
   ],
   imports: [CommonModule, SolicitudDespachoExportacionRoutingModule],
 })
