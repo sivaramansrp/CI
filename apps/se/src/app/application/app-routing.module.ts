@@ -431,6 +431,13 @@ const ROUTES: Routes = [
         (m) => m.ModalidadAmpliacionModule
       ),
   },
+  {
+    path: 'importaciones-agropecuarias',
+    loadChildren: () =>
+      import('./tramites/130107/importaciones-agropecuarias/importaciones-agropecuarias.module').then(
+        (m) => m.ImportacionesAgropecuariasModule
+      ),
+  }
   
 ];
 
