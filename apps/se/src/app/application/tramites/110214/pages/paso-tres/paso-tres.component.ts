@@ -53,7 +53,7 @@ export class PasoTresComponent {
   obtieneFirma(ev: string): void {
     const FIRMA = ev;
     if (FIRMA) {
-      this.router.navigate(['inicialmente-certificado-origen/acuse']);
+      this.router.navigate(['validar-inicialmente-certificado/acuse']);
     }
   }
 }

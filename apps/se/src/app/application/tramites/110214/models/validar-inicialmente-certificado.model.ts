@@ -34,7 +34,6 @@ export interface CatalogoLista {
  */
 export interface AgregarDatosProductorFormulario {
   numeroRegistroFiscal: string;
-  fax: string;
 }
 /**
  * Representa los datos del grupo receptor.
@@ -73,17 +72,6 @@ export interface GrupoRepresentativo {
 export interface AccionBoton {
   accion: string;
   valor: number;
-}
-
-/**
- * Representa los datos del grupo operador.
- */
-export interface GrupoOperador {
-  nombre: string;
-  apellidoPrimer: string;
-  apellidoSegundo: string;
-  numeroFiscal: string;
-  razonSocial: string;
 }
 /**
  * Representa los datos del grupo de domicilio.
@@ -127,6 +115,7 @@ export interface DisponiblesTabla {
  */
 export interface SeleccionadasTabla {
   id: number;
+  rfcProductor: string;
   fraccionArancelaria: string;
   cantidad: string;
   unidadMedida: string;
@@ -140,17 +129,19 @@ export interface SeleccionadasTabla {
  * Representa los datos del formulario de mercancías.
  */
 export interface FormularioMercancia {
-  fraccionMercanciaArancelaria: string;
-  nombreTecnico: string;
-  nombreComercialDelaMercancia: string;
-  criterioParaConferir: string;
-  nombreEnIngles: string;
-  otrasInstancias: string;
-  cantidad: string;
-  pais: string;
-  valorDelaMercancia: string;
-  complementoDelaDescripcion: string;
-  tipoFactura: string;
-  fecha: string;
-  numeroFactura: string;
+  fraccionMercanciaArancelaria: string
+  nombreComercialDelaMercancia: string
+  nombreTecnico: string
+  nombreEnIngles: string
+  criterioTratoPreferencial: string
+  valorContenidoRegional: string
+  otrasInstancias: string
+  cantidad: string
+  pais: string
+  valorDelaMercancia: string
+  complementoDelaDescripcion: string
+  numeroSerie: string
+  fecha: string
+  numeroFactura: string
+  tipoFactura: string
 }

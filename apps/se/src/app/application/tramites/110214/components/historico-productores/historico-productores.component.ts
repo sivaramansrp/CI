@@ -4,9 +4,8 @@ import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
-import { HistoricoColumnas } from '../../models/validar-inicialmente-certificado.model';
+import { HistoricoColumnas, SeleccionadasTabla } from '../../models/validar-inicialmente-certificado.model';
 import { Modal } from 'bootstrap';
-import { REGEX_SOLO_DIGITOS } from '@libs/shared/data-access-user/src';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
@@ -49,7 +48,7 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
  * 
  * @type {TablaSeleccion}
  */
-  TablaSeleccion = TablaSeleccion;
+  tablaSeleccion = TablaSeleccion;
 
   /**
    * Configuración de las columnas de la tabla dinámica.
@@ -131,6 +130,57 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
    * Formulario para agregar datos del productor.
    */
   agregarDatosProductorFormulario!: FormGroup;
+  mercanciaSeleccionadasTablaDatos: SeleccionadasTabla[] = [];
+
+  public seleccionadasEncabezados: ConfiguracionColumna<SeleccionadasTabla>[] = [
+    {
+      encabezado: 'RFC productor',
+      clave: (ele: SeleccionadasTabla) => ele.rfcProductor,
+      orden: 1,
+    },
+    {
+      encabezado: 'Fracción arancelaria',
+      clave: (ele: SeleccionadasTabla) => ele.fraccionArancelaria,
+      orden: 2,
+    },
+    {
+      encabezado: 'Cantidad',
+      clave: (ele: SeleccionadasTabla) => ele.cantidad,
+      orden: 3,
+    },
+    {
+      encabezado: 'Unidad de medida',
+      clave: (ele: SeleccionadasTabla) => ele.unidadMedida,
+      orden: 4,
+    },
+    {
+      encabezado: 'Valor mercancía',
+      clave: (ele: SeleccionadasTabla) => ele.valorMercancia,
+      orden: 5,
+    },
+    {
+      encabezado: 'Tipo de factura',
+      clave: (ele: SeleccionadasTabla) => ele.tipoFactura,
+      orden: 6,
+    },
+    {
+      encabezado: 'Número factura',
+      clave: (ele: SeleccionadasTabla) => ele.numFactura,
+      orden: 7,
+    },
+    {
+      encabezado: 'Complemento descripción',
+      clave: (ele: SeleccionadasTabla) => ele.complementoDescripcion,
+      orden: 8,
+    },
+    {
+      encabezado: 'Fecha factura',
+      clave: (ele: SeleccionadasTabla) => ele.fechaFactura,
+      orden: 9,
+    },
+  ];
+  mercanciaSeleccionadasFila!: SeleccionadasTabla[] | null;
+
 
   /**
    * Constructor del componente.
@@ -156,6 +206,7 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.cargarProductorPorExportador();
+    this.cargarMercanciasSeleccionadas()
     this.tramiteQuery.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -184,7 +235,6 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
   initAgregarDatosProductorFormulario(): void {
     this.agregarDatosProductorFormulario = this.fb.group({
       numeroRegistroFiscal: [this.tramiteState?.agregarDatosProductorFormulario?.numeroRegistroFiscal, [Validators.required]],
-      fax: [this.tramiteState?.agregarDatosProductorFormulario?.fax, [Validators.pattern(REGEX_SOLO_DIGITOS)]]
     });
   }
 
@@ -196,6 +246,13 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe(respuesta => {
         this.productoresExportador = respuesta.datos;
+      });
+  }
+  cargarMercanciasSeleccionadas(): void {
+    this.validarInicialmenteCertificadoService.obtenerMercanciasSeleccionadas()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe(respuesta => {
+        this.mercanciaSeleccionadasTablaDatos = respuesta;
       });
   }
 
@@ -254,6 +311,10 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
     }
   }
 
+  seleccionDeFilas(evento: SeleccionadasTabla[]): void {
+    this.mercanciaSeleccionadasFila = evento;
+  }
+
   /**
    * Agrega un productor si el formulario es válido.
    */
@@ -262,6 +323,10 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
     if (this.agregarDatosProductorFormulario.valid) {
       this.cerrarModal();
     }
+  }
+  asignarProductor(): void {
+    const VALOR: SeleccionadasTabla[] | null = this.mercanciaSeleccionadasFila ? this.mercanciaSeleccionadasFila : this.mercanciaSeleccionadasTablaDatos;
+    this.store.setAsignarProductor(VALOR);
   }
 
   /**

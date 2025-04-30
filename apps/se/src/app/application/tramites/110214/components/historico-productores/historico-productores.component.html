@@ -19,19 +19,19 @@
         </div>
         <div class="row" *ngIf="tramiteState?.datosConfidencialesProductor">
             <div class="col-md-12">
-                <label for="certificadoTituloDatosConfidencialesProductor">
+                <label for="certificadoTituloDatosProductorMismoExportador">
                     ¿El exportador y el productor son la misma persona?</label>
             </div>
             <div class="col-md-12">
                 <div class="checkbox">
                     <input type="checkbox" id="idProductorMismoExportador" formControlName="productorMismoExportador"
                         (change)="setValoresStore(formulario,'productorMismoExportador', 'setProductorMismoExportador')" />
-                    <label for="idConfidencialesProductores">No</label>
+                    <label for="idProductorMismoExportador">No</label>
                 </div>
             </div>
             <div class="col-md-12" *ngIf="tramiteState?.productorMismoExportador">
                 <h6>Productores por exportador</h6>
-                <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="tableColumns"
+                <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion.CHECKBOX" [configuracionTabla]="tableColumns"
                     [datos]="productoresExportador"
                     (listaDeFilaSeleccionada)="obtenerSeleccionadoProductores($event)"></app-tabla-dinamica>
                 <div class="container text-end mt-5">
@@ -45,7 +45,7 @@
                     </button>
                 </div>
                 <h6>Productores por exportador</h6>
-                <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="tableColumns"
+                <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion.CHECKBOX" [configuracionTabla]="tableColumns"
                     [datos]="agregarProductoresExportador"
                     (listaDeFilaSeleccionada)="obtenerAnadirProductosSeleccionados($event)"></app-tabla-dinamica>
                 <div class="container text-end mt-5">
@@ -54,6 +54,18 @@
                         Eliminar
                     </button>
                 </div>
+                <h6>Mercancías seleccionadas</h6>
+                <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion.CHECKBOX"
+                    [configuracionTabla]="seleccionadasEncabezados" [datos]="mercanciaSeleccionadasTablaDatos"
+                    (listaDeFilaSeleccionada)="seleccionDeFilas($event)"></app-tabla-dinamica>
+
+                <div class="container text-end mt-5">
+                    <button type="button" name="agregarProductorPorExportador" class="btn btn-primary"
+                        (click)="asignarProductor()">
+                        Asignar productor
+                    </button>
+                </div>
+
             </div>
         </div>
     </form>
@@ -73,16 +85,10 @@
                             formControlName="numeroRegistroFiscal"
                             [ngClass]="isValid(agregarDatosProductorFormulario, 'numeroRegistroFiscal') ? 'required' : ''">
                     </div>
-                    <div class="col-md-4">
-                        <label class="form-label" for="fax">Fax:</label>
-                        <input type="text" class="form-control" name="fax" id="fax" formControlName="fax"
-                            (change)="setValoresStore(agregarDatosProductorFormulario,'fax', 'setAgregarDatosProductorFax')"
-                            [ngClass]=" isValid(agregarDatosProductorFormulario, 'fax') ? 'required' : ''">
-                    </div>
                 </form>
 
             </div>
-            <div class="modal-footer custom-footer">
+            <div class="modal-footer custom-footer justify-content-end">
                 <button type="button" class="btn btn-default ms-3" data-bs-dismiss="modal" #closeModal>Cancelar</button>
                 <button type="button" class="btn btn-primary" (click)="agregarExportador()">Agregar</button>
             </div>

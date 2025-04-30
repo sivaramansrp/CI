@@ -1,6 +1,7 @@
 [
   {
     "id": 0,
+    "rfcProductor": "",
     "fraccionArancelaria": "08888888",
     "cantidad": "100.00",
     "unidadMedida": "Caja",
@@ -12,6 +13,7 @@
   },
   {
     "id": 1,
+    "rfcProductor": "",
     "fraccionArancelaria": "08888888",
     "cantidad": "100.00",
     "unidadMedida": "Caja",
