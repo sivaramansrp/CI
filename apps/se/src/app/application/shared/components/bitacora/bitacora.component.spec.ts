@@ -1,23 +1,50 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { TestBed } from '@angular/core/testing';
 import { BitacoraTablaComponent } from './bitacora.component';
+import { TituloComponent, TablaDinamicaComponent, TablaSeleccion } from '@libs/shared/data-access-user/src';
+import { Bitacora } from '../../models/bitacora.model';
+import { TABLA_BITACORA } from '../../constantes/bitacora.enum';
 
-describe('BitacoraComponent', () => {
+describe('BitacoraTablaComponent', () => {
   let component: BitacoraTablaComponent;
-  let fixture: ComponentFixture<BitacoraTablaComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [BitacoraTablaComponent]
-    })
-    .compileComponents();
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [
+        TituloComponent, 
+        TablaDinamicaComponent,
+        BitacoraTablaComponent
+      ],
+    });
 
-    fixture = TestBed.createComponent(BitacoraTablaComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    component = TestBed.createComponent(BitacoraTablaComponent).componentInstance;
   });
 
-  it('should create', () => {
+  test('should create the component', () => {
     expect(component).toBeTruthy();
+  });
+
+  test('should initialize with empty bitacoraDatos array', () => {
+    expect(component.bitacoraDatos).toEqual([]);
+  });
+
+  test('should set configuracionTabla correctly', () => {
+    expect(component.configuracionTabla).toEqual(TABLA_BITACORA);
+  });
+
+  test('should set TablaSeleccion correctly', () => {
+    expect(component.TablaSeleccion).toBe(TablaSeleccion);
+  });
+
+  test('should accept input data', () => {
+    const mockData: Bitacora[] = [
+      {
+        "tipoModificacion": "Alta de domicilio de una planta",
+        "fechaModificacion": "05/04/2025",
+        "valoresAnteriores": " ",
+        "valoresNuevos": "LOMBARDINI PTE 1353 81124 OTRA NO ESPECIFICADA EN EL CATALOGO VENUSTIANO CARRANZA PUEBLA"
+      }
+    ];
+    component.bitacoraDatos = mockData;
+    expect(component.bitacoraDatos).toEqual(mockData);
   });
 });

@@ -58,7 +58,7 @@ describe('BitacoraComponent', () => {
           "fechaModificacion": "05/04/2025",
           "valoresAnteriores": " ",
           "valoresNuevos": "LOMBARDINI PTE 1353 81124 OTRA NO ESPECIFICADA EN EL CATALOGO VENUSTIANO CARRANZA PUEBLA"
-      }
+        }
       ],
       message: 'Success'
     };
