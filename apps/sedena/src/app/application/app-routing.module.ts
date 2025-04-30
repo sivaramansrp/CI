@@ -127,12 +127,19 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'permiso-extraordinario-exportacion-explosivo',
+    loadChildren: () =>
+      import(
+      './tramites/240122/permiso-extraordinario-exportacion-explosivo.module'
+      ).then((m) => m.PermisoExtraordinarioExportacionExplosivoModule),
+  },
+  {
     path: 'aviso-de-exportacion',
     loadChildren: () =>
       import(
         './tramites/240123/aviso-de-exportacion.module'
       ).then((m) => m.AvisoDeExportacionModule),
-  },
+  }
 ];
 
 @NgModule({
