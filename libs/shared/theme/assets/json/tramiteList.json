@@ -1612,8 +1612,8 @@
   {
     "id": 231,
     "tramite": 260909,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/cofepris/medicamentos-donacion/solicitante",
+    "linkDepartment": "/pago/medicamentos-donacion/solicitante",
     "department": "cofepris"
   },
   {
