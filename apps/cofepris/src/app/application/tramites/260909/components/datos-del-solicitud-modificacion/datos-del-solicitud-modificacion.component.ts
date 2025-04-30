@@ -7,7 +7,6 @@
  * También incluye funcionalidades para manejar modales, tablas dinámicas y listas cruzadas.
  */
 import {
-  ALERT,
   AlertComponent,
   Catalogo,
   CatalogoSelectComponent,
@@ -27,26 +26,26 @@ import {
   TablaSeleccion,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
-import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 
 import { CommonModule } from '@angular/common';
 
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { Modal } from 'bootstrap';
-import {
-  MercanciasInfo,
-  PropietarioTipoPersona,
-  ScianModel,
-} from '../../models/datos-de-la-solicitud.model';
+
+import { MercanciasInfo,PropietarioTipoPersona,ScianModel} from '../../models/datos-de-la-solicitud.model';
 import { Subject, takeUntil } from 'rxjs';
 
-import { ManifiestosRepresentanteSeccionComponent } from '../../../../shared/components/manifiestos-representante-seccion/manifiestos-representante-seccion.component';
 import { EstablecimientoService } from '../../service/establecimiento.service';
+
 import { DatosDelSolicituteSeccionStateStore } from '../../estados/datos-del-solicitute-seccion.store';
+
 import { DatosDelSolicituteSeccionQuery } from '../../estados/datos-del-solicitute-seccion.query';
 import { ManifiestosComponent } from '../../../../shared/components/manifiestos-declaraciones/manifiestos-declaraciones.component';
 import { RepresentanteLegalComponent } from '../../../../shared/components/representante-legal/representante-legal.component';
+
 import { CROSLISTA_DE_PAISES, FECHA_DE_PAGO, MERCANCIAS_DATA, SCIAN_TABLE_CONFIG } from '../../constantes/medicamentos-donacion.enum';
 
 

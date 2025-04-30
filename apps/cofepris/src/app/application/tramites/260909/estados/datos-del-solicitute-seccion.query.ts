@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
+
 import { DatosDelSolicituteSeccionState, DatosDelSolicituteSeccionStateStore } from './datos-del-solicitute-seccion.store';
-
-
 
 /**
  * Clase `DatosDelSolicituteSeccionQuery`
@@ -16,7 +15,7 @@ import { DatosDelSolicituteSeccionState, DatosDelSolicituteSeccionStateStore } f
 export class DatosDelSolicituteSeccionQuery extends Query<DatosDelSolicituteSeccionState> {
 
   establecimientoCorreoElectronico$ = this.select('establecimientoCorreoElectronico');
-  establecimientoDomicilioCodigoPostal$ = this.select('establecimientoDomicilioCodigoPostal');;
+  establecimientoDomicilioCodigoPostal$ = this.select('establecimientoDomicilioCodigoPostal');
   ideGenerica1$ = this.select('ideGenerica1');
   observaciones$ = this.select('observaciones');
   establecimientoRFCResponsableSanitario$ = this.select('establecimientoRFCResponsableSanitario');

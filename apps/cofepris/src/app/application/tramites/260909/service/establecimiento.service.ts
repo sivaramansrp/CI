@@ -6,7 +6,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
-import { Observable ,map} from 'rxjs';
+import { Observable} from 'rxjs';
 
 import { Catalogo } from '@libs/shared/data-access-user/src';
 
@@ -27,7 +27,6 @@ export class EstablecimientoService {
   constructor(private http: HttpClient) {
     //constructor
   }
-
 
   /**
    * Obtiene los datos del catálogo de SCIAN.

@@ -9,6 +9,7 @@ import { TercerosRelacionadosFabSeccionComponent } from '../../../../shared/comp
 
 import { PagoDeDerechosEntradaComponent } from '../../../../shared/components/pago-de-derechos-entrada/pago-de-derechos-entrada.component';
 import { TramitesAsociadosSeccionComponent } from '../../../../shared/components/tramites-asociados-seccion/tramites-asociados-seccion.component';
+
 import { DatosDelSolicitudModificacionComponent } from '../../components/datos-del-solicitud-modificacion/datos-del-solicitud-modificacion.component';
 /**
  * Clase que representa el componente de modificación de permisos de importación de tratamientos.

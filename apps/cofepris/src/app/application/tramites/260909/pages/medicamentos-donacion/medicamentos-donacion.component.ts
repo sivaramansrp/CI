@@ -30,7 +30,7 @@ import { PasoUnoPagesComponent } from '../paso-uno-pages/paso-uno-pages.componen
  * Componente que representa la primera sección de un formulario de modificación de permisos de importación.
  * Este componente incluye varios subcomponentes para recopilar información del solicitante, datos de la solicitud,
  * terceros relacionados, pagos de derechos y trámites asociados.
- * 
+ *
  * @export
  * @class MedicamentosDonacionComponent
  */
@@ -180,8 +180,6 @@ export class MedicamentosDonacionComponent {
       }
     }
   }
-
-
 
   /**
    * Recopila todos los valores de los formularios de los diferentes pasos del componente.
