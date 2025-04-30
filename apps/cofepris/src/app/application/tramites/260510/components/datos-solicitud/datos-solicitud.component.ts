@@ -23,4 +23,9 @@ export class DatosSolicitudComponent {
    * Indica si se debe mostrar la sección de Aduanas de Entrada
    */
   isAduanasEntradaVisible: boolean = true;
+
+   /**
+   * Indica si se debe mostrar la sección de isGarantiasOfrecidasVisible
+   */
+   isGarantiasOfrecidasVisible: boolean = true;
 }
