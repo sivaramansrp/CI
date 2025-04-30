@@ -1,6 +1,13 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnDestroy, ViewChild } from '@angular/core';
 import { ListaPasosWizard, PASOS } from '@libs/shared/data-access-user/src';
+import { Subject, takeUntil } from 'rxjs';
+import { DatosDomicilioLegalService } from '../../../../shared/services/datos-domicilio-legal.service';
+import { DatosDomicilioLegalState } from '../../../../shared/estados/stores/datos-domicilio-legal.store';
 import { DatosPasos } from '@libs/shared/data-access-user/src/core/models/shared/components.model';
+import { PagoBancoService } from '../../../../shared/services/pago-banco.service';
+import { SolicitudPagoBancoState } from '../../../../shared/estados/stores/pago-banco.store';
+import { TercerosFabricanteService } from '../../../../shared/services/terceros-fabricante.service';
+import { TercerosFabricanteState } from '../../../../shared/estados/stores/terceros-fabricante.store';
 import { WizardComponent } from '@libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
 
 interface AccionBoton {
@@ -16,7 +23,7 @@ interface AccionBoton {
   selector: 'app-plaguicidas',
   templateUrl: './plaguicidas.component.html',
 })
-export class PlaguicidasComponent {
+export class PlaguicidasComponent implements OnDestroy{
   /**
    * Lista de pasos del asistente.
    * Se obtiene de una constante definida en otro archivo.
@@ -44,6 +51,16 @@ export class PlaguicidasComponent {
     txtBtnSig: 'Continuar',
   };
 
+constructor(private datosDomicilioLegalService: DatosDomicilioLegalService,private pagoBancoService:PagoBancoService,private tercerosFabricanteService:TercerosFabricanteService) {
+  
+}
+
+
+/**
+   * Notificador para destruir observables al destruir el componente.
+   */
+  private destroyNotifier$: Subject<void> = new Subject();
+
   /**
    * Maneja la acción del botón en el asistente.
    * Cambia el paso actual según la acción del botón.
@@ -53,11 +70,73 @@ export class PlaguicidasComponent {
   getValorIndice(e: AccionBoton): void {
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
-      if (e.accion === 'cont') {
+      this.getDatosDomicilioLegalState();
+      this.getSolicitudPagoBancoState();
+      this.getTercerosFabricanteState();  
+      if (e.accion === 'cont') {  
         this.wizardComponent.siguiente();
       } else {
         this.wizardComponent.atras();
       }
     }
   }
+
+    /**
+     * Método que obtiene el estado de los datos del domicilio legal desde el servicio
+     * `datosDomicilioLegalService` y los asigna a la propiedad `datosDomicilioLegal`.
+     * 
+     * @returns {void} Este método no retorna ningún valor.
+     */
+    
+  
+    getDatosDomicilioLegalState(): DatosDomicilioLegalState {
+      let PAYLOAD={} as DatosDomicilioLegalState;
+       this.datosDomicilioLegalService.getDatosDomicilioLegalState()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((state) => {
+           PAYLOAD = state;
+          
+        });
+        return PAYLOAD;
+    }
+  
+    /**
+     * Retrieves the state of the "Solicitud Pago Banco" from the service and processes it.
+     * 
+     * This method subscribes to the `getSolicitudPagoBancoState` observable from the `pagoBancoService`,
+     * filters out any properties in the state object that have empty string, null, or undefined values,
+     * and logs the resulting payload to the console.
+     * 
+     * The subscription is automatically unsubscribed when the `destroyNotifier$` observable emits a value,
+     * ensuring proper cleanup of resources.
+     * 
+     * @returns {void} This method does not return a value.
+     */
+    getSolicitudPagoBancoState():SolicitudPagoBancoState{
+      let PAYLOAD={} as SolicitudPagoBancoState;
+      this.pagoBancoService.getSolicitudPagoBancoState()
+        .pipe(takeUntil(this.destroyNotifier$))
+        .subscribe((state) => {
+           PAYLOAD = state;
+        });
+        return PAYLOAD;
+    }
+
+    getTercerosFabricanteState():TercerosFabricanteState{
+      let PAYLOAD={} as TercerosFabricanteState;
+      this.tercerosFabricanteService.getTercerosFabricanteState()
+        .pipe(takeUntil(this.destroyNotifier$))
+        .subscribe((state) => {
+           PAYLOAD = state;
+        }); 
+        return PAYLOAD;
+    }
+
+    /**
+     * Cleanup logic to unsubscribe from observables when the component is destroyed.
+     */
+    ngOnDestroy(): void {
+      this.destroyNotifier$.next();
+      this.destroyNotifier$.complete();
+    }
 }
