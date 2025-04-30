@@ -1,10 +1,9 @@
 /**
  *  Servicio encargado de gestionar los datos de la solicitud.
  */
-/* eslint-disable @typescript-eslint/no-explicit-any */
+import { CatalogoResponse} from '@libs/shared/data-access-user/src';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-
-import { HttpCoreService } from '@libs/shared/data-access-user/src';
 import { Observable } from 'rxjs';
 /**
  * Servicio encargado de gestionar los datos de la solicitud.
@@ -22,58 +21,58 @@ export class DatosDeLaSolicitudService {
    * 
    * @param {HttpCoreService} http - El servicio HTTP para realizar peticiones.
    */
-  constructor(private http: HttpCoreService) { 
+  constructor(private http: HttpClient) { 
     //
   }
 
   /**
    * Obtiene las opciones de régimen desde un archivo JSON.
    * 
-   * @returns {Observable<any>} - Un observable con las opciones de régimen.
+   * @returns {Observable<CatalogoResponse[]>} - Un observable con las opciones de régimen.
    */
-  getRegimen(): Observable<any> {
-    return this.http.get('./assets/json/130119/regimen.json');
+  getRegimen(): Observable<CatalogoResponse[]> {
+    return this.http.get<CatalogoResponse[]>('./assets/json/130119/regimen.json');
   }
 
   /**
    * Obtiene las opciones de clasificación de régimen desde un archivo JSON.
    * 
-   * @returns {Observable<any>} - Un observable con las opciones de clasificación de régimen.
+   * @returns {Observable<CatalogoResponse[]>} - Un observable con las opciones de clasificación de régimen.
    */
-  getClasificacionDeRegimen(): Observable<any> {
-    return this.http.get('./assets/json/130119/clasificacion-de-regimen.json');
+  getClasificacionDeRegimen(): Observable<CatalogoResponse[]> {
+    return this.http.get<CatalogoResponse[]>('./assets/json/130119/clasificacion-de-regimen.json');
   }
 
   /**
    * Obtiene las opciones de fracción arancelaria desde un archivo JSON.
    * 
-   * @returns {Observable<any>} - Un observable con las opciones de fracción arancelaria.
+   * @returns {Observable<CatalogoResponse[]>} - Un observable con las opciones de fracción arancelaria.
    */
-  getFraccionArancelaria(): Observable<any> {
-    return this.http.get('./assets/json/130119/fraccion-arancelaria.json');
+  getFraccionArancelaria(): Observable<CatalogoResponse[]> {
+    return this.http.get<CatalogoResponse[]>('./assets/json/130119/fraccion-arancelaria.json');
   }
   
   /**
    * Obtiene las opciones de países desde un archivo JSON.
    * 
-   * @returns {Observable<any>} - Un observable con las opciones de países.
+   * @returns {Observable<CatalogoResponse[]>} - Un observable con las opciones de países.
    */
-  getPais(): Observable<any> {
-    return this.http.get('./assets/json/130119/pais.json');
+  getPais(): Observable<CatalogoResponse[]> {
+    return this.http.get<CatalogoResponse[]>('./assets/json/130119/pais.json');
   }
  /**
   * 
   * estado opciones
   */
-  getEstado(): Observable<any> {
-    return this.http.get('./assets/json/130119/estado.json');
+  getEstado(): Observable<CatalogoResponse[]> {
+    return this.http.get<CatalogoResponse[]>('./assets/json/130119/estado.json');
   }
   /**
    * 
    * representacionfederal opciones
    */
-  getRepresentacionfederal(): Observable<any> {
-    return this.http.get('./assets/json/130119/representacion-federal.json');
+  getRepresentacionfederal(): Observable<CatalogoResponse[]> {
+    return this.http.get<CatalogoResponse[]>('./assets/json/130119/representacion-federal.json');
   }
 
 }
