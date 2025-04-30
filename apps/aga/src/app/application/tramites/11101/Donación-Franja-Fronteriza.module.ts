@@ -12,10 +12,11 @@ import { TipodeAvisoComponent } from './components/aviso/tipode-aviso.component'
 // import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 // import { Tramite40402Store } from '../../estados/tramite40402.store'; 
 @NgModule({
-     declarations: [TipodeAvisoComponent,SolicitantePageComponent, PasoUnoComponent, PasoDosComponent, ],
+     declarations: [SolicitantePageComponent, PasoUnoComponent, PasoDosComponent, ],
 
      imports: [
           FirmaElectronicaComponent,
+          TipodeAvisoComponent,
           TituloComponent,
           BtnContinuarComponent,
           SolicitanteComponent,
