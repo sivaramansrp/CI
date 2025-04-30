@@ -34,12 +34,33 @@ export class ModificacionComponent implements OnInit, OnDestroy {
    */
   private destroyNotifier$: Subject<void> = new Subject();
 
+  /**
+   * Formulario reactivo utilizado para gestionar los datos de modificación.
+   * Este formulario contiene los controles necesarios para capturar y validar
+   * la información requerida en el proceso de modificación.
+   */
   modificacionForm!: FormGroup;
+  /**
+   * Configuración para la tabla de submanufactureras.
+   * 
+   * Esta configuración incluye el tipo de selección de la tabla y 
+   * los encabezados definidos para la tabla de empresas submanufactureras.
+   * 
+   * Propiedades:
+   * - `tipoSeleccionTabla`: Define el tipo de selección que se utilizará en la tabla.
+   * - `configuracionTabla`: Contiene la configuración de los encabezados de la tabla.
+   */
   submanufacturerasTablaConfiguracion = {
     tipoSeleccionTabla: TablaSeleccion.BUTTON,
     configuracionTabla: EMPRESA_SUBMANUFACTURERA_ENCABEZADO_DE_TABLA,
   };
 
+  /**
+   * Arreglo que almacena datos de empresas submanufactureras.
+   * 
+   * Este arreglo se utiliza para gestionar y mostrar información
+   * relacionada con las empresas submanufactureras en la tabla de datos.
+   */
   submanufacturerasTablaDatos: EmpresaSubmanufacturera[] = [];
 
   constructor(
@@ -63,6 +84,14 @@ export class ModificacionComponent implements OnInit, OnDestroy {
       });
   }
 
+  /**
+   * Crea y configura un formulario reactivo para la modificación de datos.
+   * 
+   * Este método inicializa un formulario con campos predefinidos y deshabilitados,
+   * incluyendo información como RFC, representación federal, tipo de modificación
+   * y programa de modificación. Los valores de los campos están establecidos de 
+   * manera predeterminada y no son editables por el usuario.
+   */
   crearFormaulario(): void {
     this.modificacionForm = this.fb.group({
       rfc: [{ value: 'AAL0409235E6', disabled: true }],
