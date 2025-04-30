@@ -127,7 +127,7 @@ constructor(private datosDomicilioLegalService: DatosDomicilioLegalService,priva
   }
 
   /**
-   * Cleanup logic to unsubscribe from observables when the component is destroyed.
+   * Lógica de limpieza para desuscribirse de los observables cuando el componente es destruido.
    */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
