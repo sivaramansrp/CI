@@ -224,4 +224,4 @@ export const DESACTIVADO_PERMISO_GENERAL = [240405, 240411];
  * @description Contiene un arreglo de identificadores numéricos relacionados con aduanas específicas.
  * Este valor es utilizado en el sistema para identificar trámites o permisos asociados a estas aduanas.
  */
-export const ADUANA_TEXTO = [240123]
+export const ADUANA_TEXTO = [240123];
