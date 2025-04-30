@@ -5,9 +5,9 @@ import { Observable, Subject, map, takeUntil } from 'rxjs';
 import { Solicitud80302State, Tramite80302Store } from '../../../../estados/tramites/tramite80302.store';
 import { CONFIGURACION_MODIFICACION } from '../../constantes/modificacion.enum';
 import { CommonModule } from '@angular/common';
-import { DatosDelModificacion } from '../../estados/models/datos-tramite.model';
-import { SolicitudService } from '../../service/solicitud.service';
+import { SolicitudService } from '../../services/solicitud.service';
 import { Tramite80302Query } from '../../../../estados/queries/tramite80302.query';
+import { DatosDelModificacion } from '../../models/datos-tramite.model';
 
 @Component({
   selector: 'app-modificacion',
