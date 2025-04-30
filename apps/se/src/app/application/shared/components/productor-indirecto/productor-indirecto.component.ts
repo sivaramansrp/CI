@@ -35,5 +35,5 @@ export class ProductorIndirectoComponent {
    * Tabla de selección de mercancías
    * @type {TablaSeleccion}
    */
-  TablaSeleccion = TablaSeleccion;
+  tablaSeleccion = TablaSeleccion;
 }

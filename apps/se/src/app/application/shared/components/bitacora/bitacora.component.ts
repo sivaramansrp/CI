@@ -34,5 +34,5 @@ export class BitacoraTablaComponent {
    * Tabla de selección de bitácoras
    * @type {TablaSeleccion}
    */
-  TablaSeleccion = TablaSeleccion;
+  tablaSeleccion = TablaSeleccion;
 }

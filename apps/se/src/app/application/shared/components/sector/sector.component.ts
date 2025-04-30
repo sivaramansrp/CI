@@ -21,7 +21,7 @@ export class SectorComponent {
    * Enumeración que define las opciones de selección para la tabla.
    * Se utiliza para configurar el comportamiento de la tabla dinámica.
    */
-  TablaSeleccion = TablaSeleccion;
+  tablaSeleccion = TablaSeleccion;
 
   /**
    * Constante que contiene los datos de configuración para la tabla de sectores.

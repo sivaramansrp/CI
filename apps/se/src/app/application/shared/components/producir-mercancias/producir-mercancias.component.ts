@@ -22,7 +22,7 @@ export class ProducirMercanciasComponent {
    * Tabla de selección de mercancías
    * @type {TablaSeleccion}
    */
-  TablaSeleccion = TablaSeleccion;
+  tablaSeleccion = TablaSeleccion;
 
   /**
    * Configuración de la tabla de mercancías

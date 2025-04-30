@@ -32,7 +32,7 @@ describe('ProducirMercanciasComponent', () => {
   });
 
   test('should set TablaSeleccion correctly', () => {
-    expect(component.TablaSeleccion).toBe(TablaSeleccion);
+    expect(component.tablaSeleccion).toBe(TablaSeleccion);
   });
 
   test('should accept input data', () => {
