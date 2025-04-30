@@ -1,5 +1,6 @@
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
+import { AgregarDatosProductorFormulario } from '../../tramites/110223/models/certificado-origen.model';
 
 /** CONSTANTES PARA VALORES PREDEFINIDOS */
 const VALOR_POR_DEFECTO = '';
@@ -66,6 +67,9 @@ export interface Solicitud110223State {
   justificacion: string;
   casillaVerificacion: string;
   numeroSerie: string;
+  datosConfidencialesProductor: boolean;
+  productorMismoExportador: boolean;
+  agregarDatosProductorFormulario: AgregarDatosProductorFormulario;
 }
 
 /**
@@ -122,7 +126,13 @@ export function createInitialState(): Solicitud110223State {
     numeroFactura: VALOR_POR_DEFECTO,
     justificacion: VALOR_POR_DEFECTO,
     casillaVerificacion: VALOR_POR_DEFECTO,
-    numeroSerie: VALOR_POR_DEFECTO
+    numeroSerie: VALOR_POR_DEFECTO,
+    datosConfidencialesProductor: false,
+    productorMismoExportador: false,
+    agregarDatosProductorFormulario: {
+      numeroRegistroFiscal: '',
+      fax: ''
+    }
   };
 }
 
@@ -671,6 +681,63 @@ export class Tramite110223Store extends Store<Solicitud110223State> {
     this.update(state => ({
       ...state,
       casillaVerificacion
+    }));
+  }
+
+
+  /**
+   * Actualiza si los datos del productor son confidenciales.
+   * 
+   * Este método permite establecer si los datos del productor son confidenciales.
+   * 
+   * @param {boolean} datosConfidencialesProductor - Valor booleano que indica si los datos son confidenciales.
+   */
+  public setDatosConfidencialesProductor(datosConfidencialesProductor: boolean): void {
+    this.update((state) => ({
+      ...state,
+      datosConfidencialesProductor,
+    }));
+  }
+
+    /**
+   * Actualiza el número de registro fiscal del productor en el formulario de agregar datos.
+   * 
+   * Este método permite establecer el número de registro fiscal en el formulario de agregar datos del productor.
+   * 
+   * @param {string} numeroRegistroFiscal - El número de registro fiscal a establecer.
+   */
+    public setAgregarDatosProductorNumeroRegistroFiscal(numeroRegistroFiscal: string): void {
+      this.update((state) => ({
+        ...state,
+        agregarDatosProductorFormulario: { ...state.agregarDatosProductorFormulario, numeroRegistroFiscal },
+      }));
+    }
+  
+
+  /**
+   * Actualiza si el productor es el mismo que el exportador.
+   * 
+   * Este método permite establecer si el productor es el mismo que el exportador.
+   * 
+   * @param {boolean} productorMismoExportador - Valor booleano que indica si el productor es el mismo que el exportador.
+   */
+  public setProductorMismoExportador(productorMismoExportador: boolean): void {
+    this.update((state) => ({
+      ...state,
+      productorMismoExportador,
+    }));
+  }
+  /**
+ * Actualiza el fax del productor en el formulario de agregar datos.
+ * 
+ * Este método permite establecer el valor del fax en el formulario de agregar datos del productor.
+ * 
+ * @param {string} fax - El número de fax a establecer.
+ */
+  public setAgregarDatosProductorFax(fax: string): void {
+    this.update((state) => ({
+      ...state,
+      agregarDatosProductorFormulario: { ...state.agregarDatosProductorFormulario, fax },
     }));
   }
 

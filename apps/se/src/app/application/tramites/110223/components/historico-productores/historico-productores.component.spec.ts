@@ -2,14 +2,14 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { HistoricoProductoresComponent } from './historico-productores.component';
 import { ReactiveFormsModule, FormsModule, FormBuilder, Validators } from '@angular/forms';
 import { of, Subject } from 'rxjs';
-import { Tramite110216Store } from '../../../../estados/tramites/tramite110216.store';
-import { Tramite110216Query } from '../../../../estados/queries/tramite110216.query';
+import { Tramite110223Store } from '../../../../estados/tramites/tramite110223.store';
+import { Tramite110223Query } from '../../../../estados/queries/tramite110223.query';
 import { ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { TituloComponent, TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 import { Modal } from 'bootstrap';
-import { HistoricoColumnas } from '../../../110216/models/certificado-origen.model';
-import { CertificadosOrigenService } from '../../../110216/services/certificado-origen.service';
+import { HistoricoColumnas } from '../../../110223/models/certificado-origen.model';
+import { CertificadosOrigenService } from '../../../110223/services/certificado-origen.service';
 
 describe('HistoricoProductoresComponent', () => {
   let component: HistoricoProductoresComponent;
@@ -71,8 +71,8 @@ describe('HistoricoProductoresComponent', () => {
       providers: [
         FormBuilder,
         { provide: CertificadosOrigenService, useValue: certificadosOrigenServiceMock },
-        { provide: Tramite110216Store, useValue: tramiteStoreMock },
-        { provide: Tramite110216Query, useValue: tramiteQueryMock },
+        { provide: Tramite110223Store, useValue: tramiteStoreMock },
+        { provide: Tramite110223Query, useValue: tramiteQueryMock },
         { provide: ValidacionesFormularioService, useValue: validacionesServiceMock }
       ]
     }).compileComponents();

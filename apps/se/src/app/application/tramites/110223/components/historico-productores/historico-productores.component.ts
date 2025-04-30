@@ -1,10 +1,10 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { map, takeUntil } from 'rxjs';
-import { CertificadosOrigenService } from '../../../110216/services/certificado-origen.service';
+import { CertificadosOrigenService } from '../../../110223/services/certificado-origen.service';
 import { CommonModule } from '@angular/common';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
-import { HistoricoColumnas } from '../../../110216/models/certificado-origen.model';
+import { HistoricoColumnas } from '../../../110223/models/certificado-origen.model';
 import { Modal } from 'bootstrap';
 import { REGEX_SOLO_DIGITOS } from '@libs/shared/data-access-user/src';
 import { SeleccionadasTabla } from '../../models/registro.model';
@@ -12,9 +12,9 @@ import { Subject } from 'rxjs';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
-import { Tramite110216Query } from '../../../../estados/queries/tramite110216.query';
-import { Tramite110216State } from '../../../../estados/tramites/tramite110216.store';
-import { Tramite110216Store } from '../../../../estados/tramites/tramite110216.store';
+import { Solicitud110223State } from '../../../../estados/tramites/Tramite110223.store';
+import { Tramite110223Query } from '../../../../estados/queries/tramite110223.query';
+import { Tramite110223Store } from '../../../../estados/tramites/Tramite110223.store';
 import { ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 
 /**
@@ -86,7 +86,7 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
   /**
    * Estado actual del trámite.
    */
-  public tramiteState!: Tramite110216State;
+  public tramiteState!: Solicitud110223State;
 
   /**
    * Referencia al modal para agregar datos del productor.
@@ -108,15 +108,15 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
    *
    * @param {FormBuilder} fb - Constructor para crear formularios reactivos.
    * @param {CertificadosOrigenService} certificadosOrigenService - Servicio para obtener datos relacionados con los productores.
-   * @param {Tramite110216Store} store - Store para gestionar el estado del trámite.
-   * @param {Tramite110216Query} tramiteQuery - Query para obtener el estado del trámite.
+   * @param {Tramite110223Store} store - Store para gestionar el estado del trámite.
+   * @param {Tramite110223Query} tramiteQuery - Query para obtener el estado del trámite.
    * @param {ValidacionesFormularioService} validacionesService - Servicio para validar formularios.
    */
   constructor(
     public fb: FormBuilder,
     private certificadosOrigenService: CertificadosOrigenService,
-    public store: Tramite110216Store,
-    public tramiteQuery: Tramite110216Query,
+    public store: Tramite110223Store,
+    public tramiteQuery: Tramite110223Query,
     private validacionesService: ValidacionesFormularioService
   ) {
     // El constructor se utiliza para la inyección de dependencias.
@@ -265,9 +265,9 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
    * Actualiza el estado del store con el valor seleccionado en el formulario.
    * @param {FormGroup} form - El formulario reactivo.
    * @param {string} campo - El nombre del campo en el formulario.
-   * @param {keyof Tramite110216Store} metodoNombre - El nombre del método en el store para actualizar el estado.
+   * @param {keyof Tramite110223Store} metodoNombre - El nombre del método en el store para actualizar el estado.
    */
-  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite110216Store): void {
+  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite110223Store): void {
     const VALOR = form.get(campo)?.value;
     (this.store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
