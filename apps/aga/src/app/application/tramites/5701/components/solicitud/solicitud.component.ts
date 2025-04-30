@@ -42,7 +42,7 @@ import { CatalogoLista } from '@libs/shared/data-access-user/src/core/models/sha
 import { DatosCheckInputText } from '../../../../core/models/shared/check-input-text.model';
 import { DatosComponentePedimento } from '../../../../core/models/5701/tramite5701.model';
 import { Modal } from 'bootstrap';
-import { Patente } from '../../../../core/models/5701/Patente.model';
+import { Patente } from '../../../../core/models/5701/patente.model';
 import { PatenteApoderadoService } from '../../../../core/services/5701/patente-apoderado.service';
 import { PatenteEmpresaService } from '../../../../core/services/5701/patente-empresas.service';
 // eslint-disable-next-line @nx/enforce-module-boundaries

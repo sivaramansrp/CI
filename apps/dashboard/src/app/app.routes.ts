@@ -10,7 +10,7 @@ export const appRoutes: Route[] = [
     path: 'login',
     loadChildren: () =>
       loadRemoteModule({
-        remoteEntry: `${enviroment.WEB_HOST}:4201/remoteAppEntry.js`,
+        remoteEntry: 'http://localhost:4201/remoteAppEntry.js',
         remoteName: 'login',
         exposedModule: './Module'
       }).then((m) => m.RemoteEntryModule)
@@ -28,7 +28,7 @@ export const appRoutes: Route[] = [
     path: 'aga',
     loadChildren: () =>
       loadRemoteModule({
-        remoteEntry: `${enviroment.WEB_HOST}:4202/remoteAppEntry.js`,
+        remoteEntry: 'http://localhost:4202/remoteAppEntry.js',
         remoteName: 'aga',
         exposedModule: './Module'
       }).then((m) => m.AppAgaModule)
@@ -38,7 +38,7 @@ export const appRoutes: Route[] = [
     loadChildren: () =>
       // loadRemoteModule('agace', './Routes').then((m) => m.REMOTE_ROUTES),
       loadRemoteModule({
-        remoteEntry: `${enviroment.WEB_HOST}:4209/remoteAppEntry.js`,
+        remoteEntry: 'http://localhost:4209/remoteAppEntry.js',
         remoteName: 'agace',
         exposedModule: './Module'
       }).then((m) => m.AppAgaceModule),
@@ -47,7 +47,7 @@ export const appRoutes: Route[] = [
     path: 'agriculture',
     loadChildren: () =>
       loadRemoteModule({
-        remoteEntry: `${enviroment.WEB_HOST}:4204/remoteAppEntry.js`,
+        remoteEntry: 'http://localhost:4204/remoteAppEntry.js',
         remoteName: 'agriculture',
         exposedModule: './Module'
       }).then((m) => m.AppAgriculturaModule)
@@ -56,7 +56,7 @@ export const appRoutes: Route[] = [
     path: 'se',
     loadChildren: () =>
       loadRemoteModule({
-        remoteEntry: `${enviroment.WEB_HOST}:4205/remoteAppEntry.js`,
+        remoteEntry: 'http://localhost:4205/remoteAppEntry.js',
         remoteName: 'se',
         exposedModule: './Module'
       }).then((m) => m.AppSEModule)
@@ -65,7 +65,7 @@ export const appRoutes: Route[] = [
     path: 'semarnat',
     loadChildren: () =>
       loadRemoteModule({
-        remoteEntry: `${enviroment.WEB_HOST}:4206/remoteAppEntry.js`,
+        remoteEntry: 'http://localhost:4206/remoteAppEntry.js',
         remoteName: 'semarnat',
         exposedModule: './Module'
       }).then((m) => m.AppSemarnatModule)
@@ -74,7 +74,7 @@ export const appRoutes: Route[] = [
     path: 'sener',
     loadChildren: () =>
         loadRemoteModule({
-            remoteEntry: `${enviroment.WEB_HOST}:4217/remoteAppEntry.js`,
+            remoteEntry: 'http://localhost:4217/remoteAppEntry.js',
             remoteName: 'sener',
             exposedModule: './Module'
         }).then((m) => m.AppSenerModule)
@@ -83,7 +83,7 @@ export const appRoutes: Route[] = [
     path: 'funcionario',
     loadChildren: () =>
         loadRemoteModule({
-            remoteEntry: `${enviroment.WEB_HOST}:4210/remoteAppEntry.js`,
+            remoteEntry: 'http://localhost:4210/remoteAppEntry.js',
             remoteName: 'funcionario',
             exposedModule: './Module'
         }).then((m) => m.AppFuncionarioModule)
@@ -92,7 +92,7 @@ export const appRoutes: Route[] = [
     path: 'agace',
     loadChildren: () =>
       loadRemoteModule({
-        remoteEntry: `${enviroment.WEB_HOST}:4209/remoteAppEntry.js`,
+        remoteEntry: 'http://localhost:4209/remoteAppEntry.js',
         remoteName: 'agace',
         exposedModule: './Module'
       }).then((m) => m.AppAgaceModule)
@@ -101,7 +101,7 @@ export const appRoutes: Route[] = [
     path: 'cofepris',
     loadChildren: () =>
       loadRemoteModule({
-        remoteEntry: `${enviroment.WEB_HOST}:4211/remoteAppEntry.js`,
+        remoteEntry: 'http://localhost:4211/remoteAppEntry.js',
         remoteName: 'cofepris',
         exposedModule: './Module'
       }).then((m) => m.AppCofeprisModule)
@@ -110,7 +110,7 @@ export const appRoutes: Route[] = [
     path: 'sener',
     loadChildren: () =>
         loadRemoteModule({
-            remoteEntry: `${enviroment.WEB_HOST}:4217/remoteAppEntry.js`,
+            remoteEntry: 'http://localhost:4217/remoteAppEntry.js',
             remoteName: 'sener',
             exposedModule: './Module'
         }).then((m) => m.AppSenerModule)
@@ -119,7 +119,7 @@ export const appRoutes: Route[] = [
     path: 'cofepris',
     loadChildren: () =>
       loadRemoteModule({
-        remoteEntry: `${enviroment.WEB_HOST}:4211/remoteAppEntry.js`,
+        remoteEntry: 'http://localhost:4211/remoteAppEntry.js',
         remoteName: 'cofepris',
         exposedModule: './Module'
       }).then((m) => m.AppCofeprisModule)
@@ -128,7 +128,7 @@ export const appRoutes: Route[] = [
   path: 'amecafe',
   loadChildren: () =>
       loadRemoteModule({
-          remoteEntry: `${enviroment.WEB_HOST}:4212/remoteAppEntry.js`,
+          remoteEntry: 'http://localhost:4212/remoteAppEntry.js',
           remoteName: 'amecafe',
           exposedModule: './Module'
       }).then((m) => m.AppAmecafeModule)
@@ -137,7 +137,7 @@ export const appRoutes: Route[] = [
     path: 'sedena',
     loadChildren: () =>
         loadRemoteModule({
-            remoteEntry: `${enviroment.WEB_HOST}:4219/remoteAppEntry.js`,
+            remoteEntry: 'http://localhost:4219/remoteAppEntry.js',
             remoteName: 'sedena',
             exposedModule: './Module'
         }).then((m) => m.AppSedenaModule)
