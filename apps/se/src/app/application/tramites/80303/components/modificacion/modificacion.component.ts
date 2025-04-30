@@ -5,8 +5,14 @@ import {
   TituloComponent,
 } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { EMPRESA_SUBMANUFACTURERA_ENCABEZADO_DE_TABLA } from '../../models/modificacion-programa-immex-baja-submanufacturera.model';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import {
+  EMPRESA_SUBMANUFACTURERA_ENCABEZADO_DE_TABLA,
+  EmpresaSubmanufacturera,
+} from '../../models/modificacion-programa-immex-baja-submanufacturera.model';
+import { Tramite80303Query } from '../../estados/tramite80303Query.query';
+import { ModificacionProgramaImmexBajaSubmanufactureraService } from '../../services/modificacion-programa-immex-baja-submanufacturera.service';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-modificacion',
@@ -20,47 +26,41 @@ import { EMPRESA_SUBMANUFACTURERA_ENCABEZADO_DE_TABLA } from '../../models/modif
   templateUrl: './modificacion.component.html',
   styleUrl: './modificacion.component.scss',
 })
-export class ModificacionComponent {
+export class ModificacionComponent implements OnInit, OnDestroy {
+  /**
+   * Notificador utilizado para gestionar la destrucción de suscripciones en el componente.
+   * Este Subject emite un valor cuando el componente se destruye, permitiendo cancelar
+   * suscripciones activas y prevenir fugas de memoria.
+   */
+  private destroyNotifier$: Subject<void> = new Subject();
+
   modificacionForm!: FormGroup;
   submanufacturerasTablaConfiguracion = {
     tipoSeleccionTabla: TablaSeleccion.BUTTON,
     configuracionTabla: EMPRESA_SUBMANUFACTURERA_ENCABEZADO_DE_TABLA,
   };
 
-  //estatus: string;
-  // rfc: string;
-  // razonSocial: string;
-  // calle: string;
-  // numeroInterior: string;
-  // numeroExterior: string;
-  // codigoPostal: string;
-  // localidad: string;
-  // municipioAlcaldia: string;
-  // entidadFederativa: string;
-  // pais: string;
-  // telefono: string;
-  // fax: string;
-  // correoElectronico: string;
-  submanufacturerasTablaDatos = [
-    {
-      estatus: 'Activo',
-      rfc: 'AAL0409235E6',
-      razonSocial: 'AEROPUERTO INTERNACIONAL DE CULIACAN S.A. DE C.V.',
-      calle: 'AVENIDA EJERCITO MEXICANO',
-      numeroInterior: 'S/N',
-      numeroExterior: 'S/N',
-      codigoPostal: '80000',
-      localidad: 'CULIACAN',
-      municipioAlcaldia: 'CULIACAN',
-      entidadFederativa: 'SINALOA',
-      pais: 'MEXICO',
-      telefono: '667 716 00 00',
-      fax: '667 716 00 00',
-      correoElectronico: '',
-    },
-  ];
-  constructor(private fb: FormBuilder) {
+  submanufacturerasTablaDatos: EmpresaSubmanufacturera[] = [];
+
+  constructor(
+    private fb: FormBuilder,
+    public modificacionProgramaImmexBajaSubmanufactureraService: ModificacionProgramaImmexBajaSubmanufactureraService,
+    public tramite80303Querry: Tramite80303Query
+  ) {}
+
+  ngOnInit(): void {
     this.crearFormaulario();
+    this.modificacionProgramaImmexBajaSubmanufactureraService.obtenerRespuestaPorUrl(
+      this,
+      'submanufacturerasTablaDatos',
+      '/80303/subManufacturerasTablaDatos.json'
+    );
+
+    this.tramite80303Querry.selectTramiteState$
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((state) => {
+        this.submanufacturerasTablaDatos = state.submanufacturerasTablaDatos;
+      });
   }
 
   crearFormaulario(): void {
@@ -72,5 +72,14 @@ export class ModificacionComponent {
         { value: 'Empresa submanufacturera', disabled: true },
       ],
     });
+  }
+
+  /**
+   * Método que se ejecuta cuando el componente es destruido.
+   * Notifica a todos los observables que deben completarse y limpia las suscripciones.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next(); // Notifica a todos los observables que deben completar.
+    this.destroyNotifier$.unsubscribe(); // Cancela cualquier suscripción activa.
   }
 }
