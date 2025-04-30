@@ -95,10 +95,10 @@
         </div>
 
         <div class="col-md-4">
-          <lib-check-input-text [checkboxValor]="solicitudState.checkIMMEX" [textoValor]="solicitudState.descripcionImmex"
-            [idCheckbox]="'checkIMMEX'" [idInputTexto]="'desImmex'" [label]="'Immex (Número/aaaa):'" [required]="false"
-            [reverse]="true" [hidden]="false" [maxLengthValidacion]="300"
-            (checkboxChange)="checkImmex($event)"></lib-check-input-text>
+          <lib-check-input-text [checkboxValor]="solicitudState.checkIMMEX"
+            [textoValor]="solicitudState.descripcionImmex" [idCheckbox]="'checkIMMEX'" [idInputTexto]="'desImmex'"
+            [label]="'Immex (Número/aaaa):'" [required]="false" [reverse]="true" [hidden]="false"
+            [maxLengthValidacion]="300" (checkboxChange)="checkImmex($event)"></lib-check-input-text>
         </div>
 
         <div class="col-md-4">
@@ -272,10 +272,8 @@
             <label for="">Aduana:</label>
             <span class="required">*</span>
           </div>
-          <select class="form-control" formControlName="idAduanaDespacho" (change)="changeAduana()" >
-            <option
-              *ngFor="let aduana of aduanas"
-              [value]="aduana">
+          <select class="form-control" formControlName="idAduanaDespacho" (change)="changeAduana()">
+            <option *ngFor="let aduana of aduanas" [value]="aduana">
               {{ aduana.descripcion }}
             </option>
           </select>
@@ -284,15 +282,9 @@
           <div>
             <label for="">Sección aduanera:</label>
           </div>
-          <select 
-            class="form-control"
-            formControlName="idSeccionDespacho"
-            (change)="changeSeccionAduanera()"
-            [required]="false"
-            [disabled]="desactivarSelectSeccionAduanera">
-            <option
-              *ngFor="let seccion of seccionAduanera"
-              [value]="seccion.clave">
+          <select class="form-control" formControlName="idSeccionDespacho" (change)="changeSeccionAduanera()"
+            [required]="false" [disabled]="desactivarSelectSeccionAduanera">
+            <option *ngFor="let seccion of seccionAduanera" [value]="seccion.clave">
               {{ seccion.descripcion }}
             </option>
           </select>

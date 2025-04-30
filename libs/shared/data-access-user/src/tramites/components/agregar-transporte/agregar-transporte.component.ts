@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -14,7 +14,9 @@ import { CommonModule } from '@angular/common';
 import { InputCheckComponent } from '../input-check/input-check.component';
 import { InputHoraComponent } from '../input-hora/input-hora.component';
 import { Modal } from 'bootstrap';
-import { Subject } from 'rxjs';
+import { Subject, take, takeUntil, tap } from 'rxjs';
+import { TipoEquipoService } from '../../../core/services/shared/catalogos/tipo-equipo.service';
+import { ICatalogo } from '../../../core/models/shared/catalogo.model';
 
 @Component({
   selector: 'lib-agregar-transporte',
@@ -29,7 +31,7 @@ import { Subject } from 'rxjs';
   templateUrl: './agregar-transporte.component.html',
   styleUrl: './agregar-transporte.component.scss',
 })
-export class AgregarTransporteComponent implements OnChanges {
+export class AgregarTransporteComponent implements OnChanges, OnInit {
 
   /**
    * Tipo de trasnporte seleccionado.
@@ -137,6 +139,8 @@ export class AgregarTransporteComponent implements OnChanges {
    */
   formaSeleccionada!: string;
 
+  public tipoEquipoCatalogo: ICatalogo[] = [];
+
   /**
    * Control para las observaciones.
    */
@@ -149,7 +153,12 @@ export class AgregarTransporteComponent implements OnChanges {
 
   constructor(
     private fb: FormBuilder,
+    private tipoEquipoServicio: TipoEquipoService,
   ) { }
+
+  ngOnInit(): void {
+    this.getTipoEquipo();
+  }
 
   /**
    * Detecta y maneja los cambios en las propiedades de entrada del componente.
@@ -419,5 +428,21 @@ export class AgregarTransporteComponent implements OnChanges {
     this.datosTabla.emit(this.bodyTabla);
   }
 
+  //#Servicios
 
+  /**
+   * Obtiene el catálogo de tipo de equipo para el tipo de transporte ferroviario.
+   * return {void} No retorna ningún valor.
+   */
+  getTipoEquipo(): void {
+    this.tipoEquipoServicio.getTipoEquipo()
+      .pipe(
+        tap((response) => {
+          if (response) {
+            this.tipoEquipoCatalogo = response.datos;
+          }
+        }),
+        takeUntil(this.destroyNotifier$),
+      ).subscribe();
+  }
 }
