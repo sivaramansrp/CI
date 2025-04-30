@@ -1,4 +1,5 @@
 import { ActivatedRoute, Router } from '@angular/router';
+import { DATOS_ESTATICOS, ID_PROCEDIMIENTO } from '../../constants/exportacion-sustancias-quimicas.enum';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { DestinoFinal } from '../../../../shared/models/terceros-relacionados.model';
@@ -26,6 +27,14 @@ import { takeUntil } from 'rxjs';
 export class TercerosRelacionadosContenedoraComponent
   implements OnInit
 {
+  /**
+ * @property
+ * @name idProcedimiento
+ * @type {number}
+ * @description Identificador único del procedimiento actual. Este valor se utiliza para asociar el componente con un trámite específico en el sistema.
+ */
+    idProcedimiento = ID_PROCEDIMIENTO;
+  
   /**
    * Observable para limpiar las suscripciones activas al destruir el componente.
    * @property {Subject<void>} destroy$
@@ -57,9 +66,7 @@ export class TercerosRelacionadosContenedoraComponent
     private tramiteQuery: Tramite240123Query,
     private router: Router,
     private activatedRoute: ActivatedRoute
-     // eslint-disable-next-line no-empty-function
   ) {}
-
   
   /**
    * Hook del ciclo de vida que se ejecuta al inicializar el componente.
@@ -74,12 +81,9 @@ export class TercerosRelacionadosContenedoraComponent
       .subscribe((data) => {
         this.destinatarioFinalTablaDatos = data;
       });
+      
+      this.proveedorTablaDatos = DATOS_ESTATICOS;
 
-    this.tramiteQuery.getProveedorTablaDatos$
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe((data) => {
-        this.proveedorTablaDatos = data;
-      });
   }
   
   modificarDestinarioDatos(datos: DestinoFinal): void {

@@ -1,3 +1,5 @@
+import { Proveedor } from "../../../shared/models/terceros-relacionados.model";
+
 export const PASOS = [
   {
     indice: 1,
@@ -27,5 +29,40 @@ export const TITULOMENSAJE =
  */
 export const TEXTOS_REQUISITOS =
   '';
-  // Constante que representa el identificador único del procedimiento
+
+  /**
+ * @constant
+ * @name ID_PROCEDIMIENTO
+ * @type {number}
+ * @description Identificador único del procedimiento asociado al trámite de exportación de sustancias químicas.
+ * Este valor se utiliza para relacionar el trámite con su configuración y datos específicos en el sistema.
+ */
 export const ID_PROCEDIMIENTO = 240123;
+
+/**
+ * @constant
+ * @name DATOS_ESTATICOS
+ * @type {Proveedor[]}
+ * @description Contiene un arreglo de datos estáticos de proveedores. 
+ * Este valor se utiliza para prellenar información de proveedores en el sistema.
+ * Cada objeto incluye información como nombre o razón social, RFC, CURP, teléfono, correo electrónico, dirección, entre otros.
+ */
+export const DATOS_ESTATICOS: Proveedor[] = [
+  {
+    nombreRazonSocial: 'INTEGRADORA DEURBANIZACIONES SIGNUM S DE RL DE CV',
+    rfc: 'AAL0409235E6',
+    curp: '',
+    telefono: '55-98764532',
+    correoElectronico: 'vucem2.5@hotmail.com',
+    calle: 'CAMINO',
+    numeroExterior: '123',
+    numeroInterior: '',
+    pais: '',
+    colonia: '',
+    municipioAlcaldia: '',
+    localidad: '',
+    entidadFederativa: '',
+    estadoLocalidad: '',
+    codigoPostal: '',
+  }
+];

@@ -25,8 +25,8 @@
       "
     ></ng-titulo>
   </div>} @if(esAdunaTexto){
-    <div class="row mt-5">
-      <b>Aduana</b>
+    <div class="row mt-5 titulo">
+      Aduana
     </div>
   }
 
@@ -90,14 +90,14 @@
       @if(fetchaSalida){
         <div class="row mb-3">
           <!-- Fecha única de salida de la mercancía -->
-          <div class="col-md-4">
-            <input-fecha
-              [datos]="fechaSalidaInput"
-              name="fetchaSalida"
-              (valorCambiado)="onFechaSalidaCambiada($event)"
-              [setFecha]="form.get('fechaSalida')?.value"
-            ></input-fecha>
-          </div>
+      <div class="col-md-5">
+          <input-fecha
+            [datos]="fechaSalidaInput"
+            name="fechaSalida"
+            (valorCambiado)="onFechaSalidaCambiada($event)"
+            [setFecha]="form.get('fechaSalida')?.value"
+          ></input-fecha>
+         </div>
         </div>
         }
       <div class="mb-3">

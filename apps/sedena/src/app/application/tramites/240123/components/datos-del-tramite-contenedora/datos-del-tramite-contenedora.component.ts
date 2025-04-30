@@ -1,7 +1,8 @@
+import { DatosDelTramiteFormState, MERCANCIA_ENCABEZADO_DE_TABLA } from '../../../../shared/models/datos-del-tramite.model';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
 import { DatosDelTramiteComponent } from '../../../../shared/components/datos-del-tramite/datos-del-tramite.component';
-import { DatosDelTramiteFormState } from '../../../../shared/models/datos-del-tramite.model';
 import { ID_PROCEDIMIENTO } from '../../constants/exportacion-sustancias-quimicas.enum';
 import { MercanciaDetalle } from '../../../../shared/models/datos-del-tramite.model';
 import { OnDestroy } from '@angular/core';
@@ -24,8 +25,15 @@ import { takeUntil } from 'rxjs';
   styleUrl: './datos-del-tramite-contenedora.component.scss',
 })
 export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
-
+  
+/**
+ * @property
+ * @name idProcedimiento
+ * @type {number}
+ * @description Identificador único del procedimiento actual. Este valor se utiliza para asociar el componente con un trámite específico en el sistema.
+ */
   idProcedimiento = ID_PROCEDIMIENTO;
+
   /**
    * Observable para limpiar suscripciones activas al destruir el componente.
    * @property {Subject<void>} unsubscribe$
@@ -45,6 +53,31 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
   public datosDelTramiteFormState!: DatosDelTramiteFormState;
 
   /**
+ * @property
+ * @name selectedColumns
+ * @type {string[]}
+ * @description Arreglo que contiene los encabezados de las columnas seleccionadas para la tabla de mercancías.
+ * Este valor se utiliza para filtrar y mostrar únicamente las columnas especificadas en la tabla dinámica.
+ */
+    public selectedColumns: string[] = [
+      'Fracción arancelaria',
+      'Descripción de la fracción',
+      'Unidad de medida de tarifa (UMT)',
+      'Cantidad en UMT',
+      'Valor comercial',
+      'Tipo moneda'
+    ];
+  
+  /**
+ * @property
+ * @name configuracionTablaFiltrada
+ * @type {ConfiguracionColumna<MercanciaDetalle>[]}
+ * @description Configuración filtrada de las columnas de la tabla de mercancías.
+ * Este arreglo contiene únicamente las columnas seleccionadas para ser mostradas en la tabla dinámica.
+ */
+    public configuracionTablaFiltrada: ConfiguracionColumna<MercanciaDetalle>[] = [];
+
+  /**
    * Constructor del componente.
    *
    * @method constructor
@@ -54,7 +87,7 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
    */
   constructor(
     private tramiteQuery: Tramite240123Query,
-    private tramiteStore: Tramite240123Store // eslint-disable-next-line no-empty-function
+    private tramiteStore: Tramite240123Store
   ) {}
 
   /**
@@ -75,6 +108,10 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((data) => {
         this.datosDelTramiteFormState = data;
+      });
+
+      this.configuracionTablaFiltrada = MERCANCIA_ENCABEZADO_DE_TABLA.filter((col) => {
+      return this.selectedColumns.includes(col.encabezado)
       });
   }
 

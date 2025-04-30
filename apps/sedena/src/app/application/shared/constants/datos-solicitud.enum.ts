@@ -200,3 +200,14 @@ export const CAMPO_OBLIGATORIO_DERECHOS = [240111];
  */
 export const COLONIA_FIELD_FLAG = [240117, 240114];
 
+/**
+ * @constant
+ * @name TERCEROS_NACIONALIDAD
+ * @type {number[]}
+ * @description Contiene un arreglo de identificadores numéricos relacionados con la nacionalidad de terceros.
+ * Este valor se utiliza en el sistema para identificar trámites o procesos asociados a terceros con una nacionalidad específica.
+ */
+export const TERCEROS_NACIONALIDAD = [ 240123 ];
+
+
+

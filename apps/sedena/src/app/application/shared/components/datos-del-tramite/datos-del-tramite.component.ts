@@ -25,6 +25,7 @@ import {
   Output,
 } from '@angular/core';
 import {
+  ConfiguracionColumna,
   CrossListLable,
   CrosslistComponent,
   InputCheckComponent,
@@ -285,12 +286,26 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
   @Input() datosMercanciaTabla: MercanciaDetalle[] = [];
 
   /**
+ * @property
+ * @name configuracionTabla
+ * @type {ConfiguracionColumna<MercanciaDetalle>[]}
+ * @description Configuración de las columnas utilizadas en la tabla dinámica de mercancías.
+ * Este valor es recibido como un input desde el componente padre.
+ * Permite personalizar las columnas que se mostrarán en la tabla.
+ */
+  @Input() configuracionTabla: ConfiguracionColumna<MercanciaDetalle>[] = [];
+
+  /**
    * Configuración utilizada para construir la tabla dinámica de mercancías.
    * @property {any} mercanciaTablaConfiguracion
    */
-  public mercanciaTablaConfiguracion = {
+  public mercanciaTablaConfiguracion: {
+    tipoSeleccionTabla: TablaSeleccion;
+    configuracionTabla: ConfiguracionColumna<MercanciaDetalle>[];
+    datos: MercanciaDetalle[];
+  } = {
     tipoSeleccionTabla: TablaSeleccion.CHECKBOX,
-    configuracionTabla: MERCANCIA_ENCABEZADO_DE_TABLA,
+    configuracionTabla: [],
     datos: [],
   };
 
@@ -403,6 +418,11 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   ngOnInit(): void {
+    if (this.configuracionTabla.length > 0) {
+      this.mercanciaTablaConfiguracion.configuracionTabla = this.configuracionTabla;
+    } else {
+      this.mercanciaTablaConfiguracion.configuracionTabla = MERCANCIA_ENCABEZADO_DE_TABLA;      
+    }
     this.esJustificacion = PERMISO_JUSTIFICACION.includes(this.idProcedimiento);
     this.ocultarPermisoGeneral = OCULTAR_PERMISO_GENERAL.includes(
       this.idProcedimiento

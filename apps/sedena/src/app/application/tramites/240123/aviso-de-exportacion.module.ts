@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 
-import { AlertComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, NotificacionesComponent } from '@ng-mf/data-access-user';
 import { AnexarDocumentosComponent } from '@ng-mf/data-access-user';
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 import { FirmaElectronicaComponent } from '@ng-mf/data-access-user';
@@ -41,6 +41,7 @@ import { AvisoDeExportacionRoutingModule } from './aviso-de-exportacion-routing.
       FirmaElectronicaComponent,
       WizardComponent,
       BtnContinuarComponent,
+      NotificacionesComponent
     ],
     exports: [
       PasoUnoComponent,

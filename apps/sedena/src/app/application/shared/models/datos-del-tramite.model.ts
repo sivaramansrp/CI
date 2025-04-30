@@ -46,12 +46,12 @@ export interface MercanciaDetalle {
   fraccionArancelaria: string;
   descripcionFraccion: string;
   unidadMedidaTarifa: string;
-  umc: string;
+  umc?: string;
   cantidadUMT: number;
   valorComercial: number;
   tipoMoneda: string;
   descripcion: string;
-  paisOrigen: string;
+  paisOrigen?: string;
 }
 
 /**

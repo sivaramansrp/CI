@@ -22,4 +22,11 @@
       (continuarEvento)="getValorIndice($event)"
     ></btn-continuar>
   </div>
+  <div class="mt-5">
+    @if (notificacionPrivacidad) {
+      <section>
+    <lib-notificaciones [notificacionInput]="notificacionPrivacidad"></lib-notificaciones>
+    </section>
+  }
+  </div>
 </div>
