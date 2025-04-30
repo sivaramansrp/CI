@@ -17,10 +17,10 @@ import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
  */
 export interface DestinatarioConfiguracionItem {
 
-  Nombre: string;
-  ApellidoPaterno: string;
-  ApellidoMaterno: string;
-  RazonSocial: string;
+  nombre: string;
+  apellidoPaterno: string;
+  apellidoMaterno: string;
+  razonSocial: string;
 
   /**
    * País del destinatario.
@@ -52,14 +52,14 @@ export const DESTINATARIO_TABLA_CONFIGURACION: ConfiguracionColumna<Destinatario
 
     encabezado: 'Nombre',
 
-    clave: (item: DestinatarioConfiguracionItem) => item.pais,
+    clave: (item: DestinatarioConfiguracionItem) => item.nombre,
     orden: 1,
   },
   {
 
     encabezado: 'Apellido Paterno',
 
-    clave: (item: DestinatarioConfiguracionItem) => item.pais,
+    clave: (item: DestinatarioConfiguracionItem) => item.apellidoPaterno,
 
     orden: 2,
   },
@@ -67,7 +67,7 @@ export const DESTINATARIO_TABLA_CONFIGURACION: ConfiguracionColumna<Destinatario
 
     encabezado: 'Apellido materno',
 
-    clave: (item: DestinatarioConfiguracionItem) => item.pais,
+    clave: (item: DestinatarioConfiguracionItem) => item.apellidoMaterno,
 
     orden: 3,
   },
@@ -75,7 +75,7 @@ export const DESTINATARIO_TABLA_CONFIGURACION: ConfiguracionColumna<Destinatario
 
     encabezado: 'Razon Social',
 
-    clave: (item: DestinatarioConfiguracionItem) => item.pais,
+    clave: (item: DestinatarioConfiguracionItem) => item.razonSocial,
 
     orden: 4,
   },
