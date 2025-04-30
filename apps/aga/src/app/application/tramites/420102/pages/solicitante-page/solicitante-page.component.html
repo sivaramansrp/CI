@@ -11,11 +11,6 @@
         @switch (indice) {
             @case (1) {
             <app-paso-uno></app-paso-uno>
-                @if (modalEmergente) {
-                        <lib-notificaciones [notificacionInput]="nuevaAlertaNotificacion"
-                        (confirmacionModal)="eliminarPedimento($event)">
-                        </lib-notificaciones>
-                }
             } @case (2) {
             <app-paso-dos></app-paso-dos>
             }
@@ -24,8 +19,8 @@
         <btn-continuar
             [datos]="datosPasos"
             (continuarEvento)="getValorIndice($event)"
-            [popView]="popUpView"
-            [notification]="nuevaAlertaNotificacion"
+            [vistaEmergente]="vistaEmergente"
+            [notificacion]="nuevaAlertaNotificacion"
             >
         </btn-continuar>
         </div>
