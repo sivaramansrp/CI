@@ -7,7 +7,7 @@
     ></div>
     <div class="row">
       <div class="col-md-8">
-        <label class="form-label" for="foliodel">Folio del trámite:</label>
+        <label class="form-label" for="foliodel">{{ foliodelLbl }}</label>
         <input
           formControlName="foliodel"
           value="1502200200120240301000015"
@@ -139,13 +139,13 @@
       </div>
       <div class="col-md-12">
         <app-input-radio
-        [radioOptions]="opcionDeBotonDeRadio"
-        [isRequired]="true"
-        [selectedValue]="esSolicitudFerrosValor"
-        [layout]="'vertical'"
-        formControlName="capturaDatosMercancia"
-        (valueChange)="setCapturaDatosMercancia($event)"
-      ></app-input-radio>
+          [radioOptions]="opcionDeBotonDeRadio"
+          [isRequired]="true"
+          [selectedValue]="esSolicitudFerrosValor"
+          [layout]="'vertical'"
+          formControlName="capturaDatosMercancia"
+          (valueChange)="setCapturaDatosMercancia($event)"
+        ></app-input-radio>
       </div>
     </div>
     <div class="row">
@@ -225,67 +225,67 @@
         </div>
       </div>
       <div class="container">
-          <ng-titulo titulo="Destino" />
-          <div class="row">
-            <div class="col-md-4 form-group">
-              <label class="form-label" for="coordenadas"
-                >Coordenadas geográficas:</label
-              >
-              <input
-                class="form-control"
-                id="coordenadas"
-                readonly
-                formControlName="coordenadas"
-                placeholder=""
-                type="text"
-              />
-            </div>
+        <ng-titulo titulo="Destino" />
+        <div class="row">
+          <div class="col-md-4 form-group">
+            <label class="form-label" for="coordenadas"
+              >Coordenadas geográficas:</label
+            >
+            <input
+              class="form-control"
+              id="coordenadas"
+              readonly
+              formControlName="coordenadas"
+              placeholder=""
+              type="text"
+            />
           </div>
-          <ng-titulo titulo="Medio de transporte" />
-          <div class="row">
-            <div class="col-md-4">
-              <app-catalogo-select
-                [catalogo]="movilizacionNacional.catalogos"
-                [label]="movilizacionNacional.labelNombre"
-                [placeholder]="movilizacionNacional.primerOpcion"
-                [isDisabled]="false"
-                formControlName="movilizacion"
-                (selectionChange)="seleccionarMovilizacionNacional($event)"
-              ></app-catalogo-select>
-            </div>
-            <div class="col-md-8 form-group">
-              <label class="form-label" for="identificacionTransporte"
-                >Identificación del transporte:</label
-              >
-              <input
-                class="form-control"
-                id="identificacionTransporte"
-                readonly
-                placeholder=""
-                type="text"
-                formControlName="transporte"
-              />
-            </div>
-            <div class="col-md-4">
-              <app-catalogo-select
-                [catalogo]="puntoVerificacion.catalogos"
-                [label]="puntoVerificacion.labelNombre"
-                [placeholder]="puntoVerificacion.primerOpcion"
-                [isDisabled]="false"
-                formControlName="punto"
-                (selectionChange)="seleccionarPuntoVerificacion($event)"
-              ></app-catalogo-select>
-            </div>
-            <div class="col-md-8">
-              <app-catalogo-select
-                [catalogo]="empresaTransportista.catalogos"
-                [label]="empresaTransportista.labelNombre"
-                [placeholder]="empresaTransportista.primerOpcion"
-                [isDisabled]="true"
-                formControlName="nombreEmpresa"
-              ></app-catalogo-select>
-            </div>
+        </div>
+        <ng-titulo titulo="Medio de transporte" />
+        <div class="row">
+          <div class="col-md-4">
+            <app-catalogo-select
+              [catalogo]="movilizacionNacional.catalogos"
+              [label]="movilizacionNacional.labelNombre"
+              [placeholder]="movilizacionNacional.primerOpcion"
+              [isDisabled]="false"
+              formControlName="movilizacion"
+              (selectionChange)="seleccionarMovilizacionNacional($event)"
+            ></app-catalogo-select>
           </div>
+          <div class="col-md-8 form-group">
+            <label class="form-label" for="identificacionTransporte"
+              >Identificación del transporte:</label
+            >
+            <input
+              class="form-control"
+              id="identificacionTransporte"
+              readonly
+              placeholder=""
+              type="text"
+              formControlName="transporte"
+            />
+          </div>
+          <div class="col-md-4">
+            <app-catalogo-select
+              [catalogo]="puntoVerificacion.catalogos"
+              [label]="puntoVerificacion.labelNombre"
+              [placeholder]="puntoVerificacion.primerOpcion"
+              [isDisabled]="false"
+              formControlName="punto"
+              (selectionChange)="seleccionarPuntoVerificacion($event)"
+            ></app-catalogo-select>
+          </div>
+          <div class="col-md-8">
+            <app-catalogo-select
+              [catalogo]="empresaTransportista.catalogos"
+              [label]="empresaTransportista.labelNombre"
+              [placeholder]="empresaTransportista.primerOpcion"
+              [isDisabled]="true"
+              formControlName="nombreEmpresa"
+            ></app-catalogo-select>
+          </div>
+        </div>
       </div>
       <div class="row my-5">
         <div class="col-md-12 d-flex justify-content-end"></div>

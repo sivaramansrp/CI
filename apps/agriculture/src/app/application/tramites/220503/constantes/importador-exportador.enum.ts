@@ -63,3 +63,4 @@ export const PASOS = [
     completado: false,
   },
 ];
+export const FOLIODELLBL = 'Folio del trámite'

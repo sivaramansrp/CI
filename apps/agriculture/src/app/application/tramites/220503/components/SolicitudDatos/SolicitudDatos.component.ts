@@ -69,7 +69,7 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
    * Subject para desuscribirse de los observables.
    * @type {Subject<void>}
    */
-  private destroyed$ = new Subject<void>();
+  public destroyed$ = new Subject<void>();
 
   /** Constructor para inyectar dependencias */
   constructor(

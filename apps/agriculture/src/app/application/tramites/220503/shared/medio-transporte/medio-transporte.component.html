@@ -3,15 +3,16 @@
   <div class="row">
     <div class="col-md-4">
       <div class="form-field">
-        <app-catalogo-select 
-        id="Mediodetransporte" 
-        [catalogo]="mediodetransporte.catalogos" 
-        [label]="mediodetransporte.labelNombre" 
-        [placeholder]="mediodetransporte.primerOpcion" 
-        [required]="mediodetransporte.required" 
-        formControlName="transporteIdMedio"
-        (selectionChange)="setTransporteIdMedio($event)"
-        [isDisabled]="false"></app-catalogo-select>
+        <app-catalogo-select
+          id="Mediodetransporte"
+          [catalogo]="mediodetransporte.catalogos"
+          [label]="mediodetransporte.labelNombre"
+          [placeholder]="mediodetransporte.primerOpcion"
+          [required]="mediodetransporte.required"
+          formControlName="transporteIdMedio"
+          (selectionChange)="setTransporteIdMedio($event)"
+          [isDisabled]="false"
+        ></app-catalogo-select>
       </div>
     </div>
     <div class="col-md-4">
@@ -42,13 +43,13 @@
         Ferrocarril o por Partes II?*:</label
       >
       <app-input-radio
-          [radioOptions]="opcionDeBotonDeRadio"
-          [isRequired]="true"
-          [selectedValue]="esSolicitudFerrosValor"
-          [layout]="'vertical'"
-          formControlName="esSolicitudFerros"
-          (valueChange)="enCambioDeValor($event)"
-        ></app-input-radio>
+        [radioOptions]="opcionDeBotonDeRadio"
+        [isRequired]="true"
+        [selectedValue]="esSolicitudFerrosValor"
+        [layout]="'vertical'"
+        formControlName="esSolicitudFerros"
+        (valueChange)="enCambioDeValor($event)"
+      ></app-input-radio>
     </div>
     <div class="col-md-12">
       <div class="form-field">
@@ -58,23 +59,10 @@
       </div>
     </div>
     <div class="col-md-12">
-      <ng-table [commonTableHeader]="tableData.tableHeader" [commonTableBody]="tableData.tableBody"></ng-table>
-
+      <ng-table
+        [commonTableHeader]="tableData.tableHeader"
+        [commonTableBody]="tableData.tableBody"
+      ></ng-table>
     </div>
-    <!-- <div class="col-md-4">
-      <div class="form-field">
-        <label for="totalDeGuiasAmparadas" class="form-label"
-          >Total de guías amparadas:<span class="bi bi-question-circle-fill" title="" data-bs-toggle="tooltip"></span></label
-        >
-        <input
-          class="form-control"
-          type="number"
-          formControlName="totalDeGuiasAmparadas"
-          id="totalDeGuiasAmparadas"
-          (change)="setTotalDeGuiasAmparadas($event)"
-          formControlName="totalDeGuiasAmparadas"
-        />
-      </div>
-    </div> -->
   </div>
 </fieldset>
