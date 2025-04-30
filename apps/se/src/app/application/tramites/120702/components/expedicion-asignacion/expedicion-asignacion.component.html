@@ -1,18 +1,18 @@
 <div class="container">
     <div>
-        <form>
+        <form [formGroup]="asignacionForm">
             <div class="numero-oficio mt-5">
                 <ng-titulo titulo="Número de oficio de asignación" />
                 <div class="col-md-4">
                     <div class="form-group">
                         <app-catalogo-select [catalogo]="anoOficioDatos" [label]="'Año del oficio de asignación'"
-                            [required]="true" for="anoDelOficio" id="anoDelOficio"></app-catalogo-select>
+                            [required]="true" formControlName="anoDelOficio" for="anoDelOficio" id="anoDelOficio"></app-catalogo-select>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
                         <label class="form-label" for="numeroOficio">Número de oficio de asignación*:</label>
-                        <input type="text" class="form-control" id="numeroOficio" name="numeroOficio" [required]="true">
+                        <input type="text" class="form-control" id="numeroOficio" formControlName="numeroOficio" name="numeroOficio" [required]="true">
                     </div>
                 </div>
                 <div class="col-md-8 mt-5 d-flex justify-content-end">
@@ -27,13 +27,13 @@
                 <div class="col-md-4">
                     <div class="form-group">
                         <label class="form-label" for="estado">Estado:</label>
-                        <input type="text" class="form-control" id="estado" name="estado">
+                        <input type="text" class="form-control" id="estado" formControlName="estado" name="estado">
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
                         <label class="form-label" for="representacionFederal">Representación federal:</label>
-                        <input type="text" class="form-control" id="representacionFederal" name="representacionFederal">
+                        <input type="text" class="form-control" id="representacionFederal" formControlName="representacionFederal" name="representacionFederal">
                     </div>
                 </div>
             </div>
@@ -45,19 +45,19 @@
                 <div class="col-md-4">
                     <div class="form-group">
                         <label class="form-label" for="monteAsignado">Monto asignado:</label>
-                        <input type="text" class="form-control" id="monteAsignado" name="monteAsignado">
+                        <input type="number" class="form-control" id="monteAsignado" formControlName="monteAsignado" name="monteAsignado">
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
                         <label class="form-label" for="monteExpedido">Monto expedido:</label>
-                        <input type="text" class="form-control" id="monteExpedido" name="monteExpedido">
+                        <input type="number" class="form-control" id="monteExpedido" formControlName="monteExpedido" name="monteExpedido">
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
                         <label class="form-label" for="monteDisponible">Monto disponible:</label>
-                        <input type="text" class="form-control" id="monteDisponible" name="monteDisponible">
+                        <input type="number" class="form-control" id="monteDisponible" formControlName="monteDisponible" name="monteDisponible">
                     </div>
                 </div>
             </div>
@@ -69,7 +69,7 @@
                 <div class="col-md-8">
                     <div class="form-group">
                         <label class="form-label" for="datosNumeroOficio">Número de oficio:</label>
-                        <input type="text" class="form-control" id="datosNumeroOficio" name="datosNumeroOficio">
+                        <input type="number" class="form-control" id="datosNumeroOficio" formControlName="datosNumeroOficio" name="datosNumeroOficio">
                     </div>
                 </div>
             </div>
@@ -78,18 +78,28 @@
 
             <div class="datos-asignacion mt-5">
                 <ng-titulo titulo="Vigencia de la asignación" />
-                <div class="col-md-8">
-                    <div class="form-group">
-                        <label class="form-label" for="datosNumeroOficio">Número de oficio:</label>
-                        <input type="text" class="form-control" id="datosNumeroOficio" name="datosNumeroOficio">
-                    </div>
+                <div class="col-md-4">
+                    <input-fecha class="width" [datos]="FECHA_INICIO">
+                    </input-fecha>
+                </div>
+                <div class="col-md-4">
+                    <input-fecha class="width" [datos]="FECHA_FIN">
+                    </input-fecha>
                 </div>
             </div>
 
             <div class="clearfix"></div>
-            
+
             <div>
                 <app-descripcion-cupo></app-descripcion-cupo>
+            </div>
+
+            <div>
+                <formas-dinamicas 
+                formularioTitulo="Información de la obra de arte que se pretende exportar"
+                [forma]="asignacionForm"
+                [formularioDatos]="informacionFormData"
+                ></formas-dinamicas>
             </div>
         </form>
     </div>

@@ -18,7 +18,8 @@
                 <div class="col-md-4">
                     <div class="form-group">
                         <label class="form-label" for="clasificacionSubProducto">Clasificacion del subproducto:</label>
-                        <input type="text" class="form-control" id="clasificacionSubProducto" name="clasificacionSubProducto">
+                        <input type="text" class="form-control" id="clasificacionSubProducto"
+                            name="clasificacionSubProducto">
                     </div>
                 </div>
                 <div class="col-md-4">
@@ -28,16 +29,12 @@
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <div class="form-group">
-                        <label class="form-label" for="fechaInicio">Fecha inicio vigencia del cupo:</label>
-                        <input type="text" class="form-control" id="fechaInicio" name="fechaInicio">
-                    </div>
+                    <input-fecha class="width" [datos]="FECHA_INICIO_CUPO">
+                    </input-fecha>
                 </div>
                 <div class="col-md-4">
-                    <div class="form-group">
-                        <label class="form-label" for="fechaFin">Fecha fin vigencia del cupo:</label>
-                        <input type="text" class="form-control" id="fechaFin" name="fechaFin">
-                    </div>
+                    <input-fecha class="width" [datos]="FECHA_FIN_CUPO">
+                    </input-fecha>
                 </div>
                 <div class="col-md-8">
                     <div class="form-group">
@@ -54,7 +51,8 @@
                 <div class="col-md-8">
                     <div class="form-group">
                         <label class="form-label" for="fraccionesArancelarias">Fracciones arancelarias:</label>
-                        <textarea cols="8" rows="6" class="form-control" id="fraccionesArancelarias" name="fraccionesArancelarias"></textarea>
+                        <textarea cols="8" rows="6" class="form-control" id="fraccionesArancelarias"
+                            name="fraccionesArancelarias"></textarea>
                     </div>
                 </div>
                 <div class="col-md-8">
@@ -66,7 +64,8 @@
                 <div class="col-md-8">
                     <div class="form-group">
                         <label class="form-label" for="observaciones">Observaciones:</label>
-                        <textarea cols="8" rows="6" class="form-control" id="observaciones" name="observaciones"></textarea>
+                        <textarea cols="8" rows="6" class="form-control" id="observaciones"
+                            name="observaciones"></textarea>
                     </div>
                 </div>
                 <div class="col-md-8">
@@ -83,8 +82,8 @@
                 <ng-titulo titulo="Distribución de saldo" />
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label class="form-label" for="motnoDisponible">Monto disponible:</label>
-                        <input type="text" class="form-control" id="motnoDisponible" name="motnoDisponible">
+                        <label class="form-label" for="montoDisponible">Monto disponible:</label>
+                        <input type="text" class="form-control" id="montoDisponible" name="motnoDisponible">
                     </div>
                 </div>
                 <div class="col-md-4">
@@ -96,6 +95,17 @@
                 <div class="col-md-8 mt-5 d-flex justify-content-end">
                     <button type="button" class="btn btn-primary">Agregar</button>
                 </div>
+
+                <div class="demo">
+                    <!-- <formas-dinamicas 
+                    formularioTitulo="Información de la obra de arte que se pretende exportar"
+                    [forma]="forma"
+                    [formularioDatos]="informacionFormData"
+                    ></formas-dinamicas> -->
+                </div>
+
+                <!-- have to implement forma-dinamicas in cupo component, fix console errors -->
+
             </div>
         </form>
     </div>
