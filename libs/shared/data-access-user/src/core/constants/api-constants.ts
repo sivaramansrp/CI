@@ -107,7 +107,3 @@ export const API_VALIDA_HORARIO = 'sat-t5701/horario/valida';
  */
 export const API_CERTIFICACION = `programa-se/certificacion/${RFC_QUERY}`;
 
-/**
- * 
- */
-export const API_CONSULTAR_FERRO = `privado/ferro/valida`
