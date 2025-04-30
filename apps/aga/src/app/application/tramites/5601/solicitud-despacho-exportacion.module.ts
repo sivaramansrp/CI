@@ -1,3 +1,4 @@
+import { BtnContinuarComponent, SolicitanteComponent, WizardComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
@@ -12,6 +13,6 @@ import { SolicitudDespachoExportacionRoutingModule } from './solicitud-despacho-
     PasoDosComponent,
     PasoTresComponent
   ],
-  imports: [CommonModule, SolicitudDespachoExportacionRoutingModule],
+  imports: [CommonModule, SolicitudDespachoExportacionRoutingModule,WizardComponent,BtnContinuarComponent,SolicitanteComponent],
 })
 export class SolicitudDespachoExportacionModule {}
