@@ -95,7 +95,7 @@ describe('PermisoRenunciaDeDerechosComponent', () => {
 
   it('debe llamar a establecerDatos en la tienda cuando se llama a setValoresStore', () => {
     component.setValoresStore(component.formulario, 'motivoRenunciaDeDerechos');
-    expect(tramite140111Store.establecerDatos).toHaveBeenCalledWith({ motivoRenunciaDeDerechos: 'Motivo de prueba' }); // Updated expectation
+    expect(tramite140111Store.establecerDatos).toHaveBeenCalledWith({ motivoRenunciaDeDerechos: 'Motivo de prueba' }); 
   });
   
 
