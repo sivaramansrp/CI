@@ -31,7 +31,7 @@ export class CertificadosOrigenService {
    */
   obtenerIdioma(): Observable<CatalogoLista> {
     return this.http
-      .get<CatalogoLista>('assets/json/110216/idioma.json');
+      .get<CatalogoLista>('assets/json/110223/idioma.json');
   }
 
   /**
@@ -43,7 +43,7 @@ export class CertificadosOrigenService {
    */
   obtenerEntidadFederativa(): Observable<CatalogoLista> {
     return this.http
-      .get<CatalogoLista>('assets/json/110216/entidad-federativa.json');
+      .get<CatalogoLista>('assets/json/110223/entidad-federativa.json');
   }
 
   /**
@@ -55,7 +55,7 @@ export class CertificadosOrigenService {
    */
   obtenerRepresentacionFederal(): Observable<CatalogoLista> {
     return this.http
-      .get<CatalogoLista>('assets/json/110216/representacion-federal.json');
+      .get<CatalogoLista>('assets/json/110223/representacion-federal.json');
   }
 
   /**
@@ -67,7 +67,7 @@ export class CertificadosOrigenService {
    */
   obtenerProductorPorExportador(): Observable<ProductorExportador> {
     return this.http
-      .get<ProductorExportador>('assets/json/110216/productor-exportador.json');
+      .get<ProductorExportador>('assets/json/110223/productor-exportador.json');
   }
 
   /**
@@ -79,7 +79,7 @@ export class CertificadosOrigenService {
    */
   obtenerMercanciasDisponibles(): Observable<DisponiblesTabla[]> {
     return this.http
-      .get<DisponiblesTabla[]>('assets/json/110216/mercancia-disponsible.json');
+      .get<DisponiblesTabla[]>('assets/json/110223/mercancia-disponsible.json');
   }
 
   /**
@@ -91,7 +91,7 @@ export class CertificadosOrigenService {
    */
   obtenerMercanciasSeleccionadas(): Observable<SeleccionadasTabla[]> {
     return this.http
-      .get<SeleccionadasTabla[]>('assets/json/110216/mercancias-seleccionadas.json');
+      .get<SeleccionadasTabla[]>('assets/json/110223/mercancias-seleccionadas.json');
   }
 
   /**
@@ -103,7 +103,7 @@ export class CertificadosOrigenService {
    */
   obtenerTratado(): Observable<CatalogoLista> {
     return this.http
-      .get<CatalogoLista>('assets/json/110216/pais.json');
+      .get<CatalogoLista>('assets/json/110223/pais.json');
   }
 
   /**
@@ -115,6 +115,6 @@ export class CertificadosOrigenService {
    */
   obtenerPais(): Observable<CatalogoLista> {
     return this.http
-      .get<CatalogoLista>('assets/json/110216/pais.json');
+      .get<CatalogoLista>('assets/json/110223/pais.json');
   }
 }

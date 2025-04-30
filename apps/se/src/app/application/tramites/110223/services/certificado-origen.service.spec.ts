@@ -34,7 +34,7 @@ describe('CertificadosOrigenService', () => {
             expect(response).toEqual(mockResponse);
         });
 
-        const req = httpMock.expectOne('assets/json/110216/idioma.json');
+        const req = httpMock.expectOne('assets/json/110223/idioma.json');
         expect(req.request.method).toBe('GET');
         req.flush(mockResponse);
     });
@@ -48,7 +48,7 @@ describe('CertificadosOrigenService', () => {
             expect(response).toEqual(mockResponse);
         });
 
-        const req = httpMock.expectOne('assets/json/110216/entidad-federativa.json');
+        const req = httpMock.expectOne('assets/json/110223/entidad-federativa.json');
         expect(req.request.method).toBe('GET');
         req.flush(mockResponse);
     });
@@ -62,7 +62,7 @@ describe('CertificadosOrigenService', () => {
             expect(response).toEqual(mockResponse);
         });
 
-        const req = httpMock.expectOne('assets/json/110216/representacion-federal.json');
+        const req = httpMock.expectOne('assets/json/110223/representacion-federal.json');
         expect(req.request.method).toBe('GET');
         req.flush(mockResponse);
     });
@@ -86,7 +86,7 @@ describe('CertificadosOrigenService', () => {
             expect(response).toEqual(mockResponse);
         });
 
-        const req = httpMock.expectOne('assets/json/110216/productor-exportador.json');
+        const req = httpMock.expectOne('assets/json/110223/productor-exportador.json');
         expect(req.request.method).toBe('GET');
         req.flush(mockResponse);
     });
@@ -107,7 +107,7 @@ describe('CertificadosOrigenService', () => {
             expect(response).toEqual(mockResponse);
         });
 
-        const req = httpMock.expectOne('assets/json/110216/mercancia-disponsible.json');
+        const req = httpMock.expectOne('assets/json/110223/mercancia-disponsible.json');
         expect(req.request.method).toBe('GET');
         req.flush(mockResponse);
     });
@@ -131,7 +131,7 @@ describe('CertificadosOrigenService', () => {
             expect(response).toEqual(mockResponse);
         });
 
-        const req = httpMock.expectOne('assets/json/110216/mercancias-seleccionadas.json');
+        const req = httpMock.expectOne('assets/json/110223/mercancias-seleccionadas.json');
         expect(req.request.method).toBe('GET');
         req.flush(mockResponse);
     });
@@ -145,7 +145,7 @@ describe('CertificadosOrigenService', () => {
             expect(response).toEqual(mockResponse);
         });
 
-        const req = httpMock.expectOne('assets/json/110216/pais.json');
+        const req = httpMock.expectOne('assets/json/110223/pais.json');
         expect(req.request.method).toBe('GET');
         req.flush(mockResponse);
     });
@@ -159,7 +159,7 @@ describe('CertificadosOrigenService', () => {
             expect(response).toEqual(mockResponse);
         });
 
-        const req = httpMock.expectOne('assets/json/110216/pais.json');
+        const req = httpMock.expectOne('assets/json/110223/pais.json');
         expect(req.request.method).toBe('GET');
         req.flush(mockResponse);
     });
