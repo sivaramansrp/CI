@@ -1,1 +1,67 @@
-<p>importacion-exportacion-petroleo works!</p>
+<form [formGroup]="form">
+    <ng-titulo titulo="Permiso a prorrogar" />
+    
+  <div class="col-md-4">
+    <label class="form-label" for="folioTramite">Folio trámite:</label>
+    <input type="text" class="form-control" id="folioTramite" fromControlName="folioTramite" name="folioTramite">
+
+</div>
+  <div class="col-md-2">
+    <label class="form-label" for="folioTramite">Tipo de solicitud:</label>
+    <input type="text" class="form-control" id="tipoSolicitud" fromControlName="tipoSolicitud" name="tipoSolicitud">
+  </div>
+  <div class="col-md-4">
+    <label class="form-label" for="regimen">Régimen:</label>
+    <input type="text" class="form-control" id="regimen" fromControlName="regimen" name="regimen">
+  </div>
+
+  <div class="col-md-6">
+   
+    <label class="form-label" for="regimen">Clasificación del régimen:</label>
+    
+    <textarea id="clasificacionRegimen" formControlName="clasificacionRegimen" ></textarea> 
+  </div>
+  <div class="col-md-2">
+    
+    <label class="form-label" for="periodoVigencia">Periodo de vigencia:</label>
+    <input type="text" class="form-control" id="periodoVigencia" fromControlName="periodoVigencia" name="periodoVigencia">
+  </div>
+  <div class="col-md-4">
+    
+    <label class="form-label" for="unidadMedida">Unidad de medida:</label>
+    <input type="text" class="form-control" id="unidadMedida" fromControlName="unidadMedida" name="unidadMedida">
+  </div>
+  <div>
+    <label for="fraccionArancelaria">Fracción arancelaria:</label>
+    <input id="fraccionArancelaria" formControlName="fraccionArancelaria" type="text" />
+  </div>
+  <div>
+    <label for="cantidadAutorizada">Cantidad autorizada:</label>
+    <input id="cantidadAutorizada" formControlName="cantidadAutorizada" type="text" />
+  </div>
+  <div>
+    <label for="valorAutorizado">Valor autorizado:</label>
+    <input id="valorAutorizado" formControlName="valorAutorizado" type="text" />
+  </div>
+  <div>
+    <label for="nico">NICO:</label>
+    <input id="nico" formControlName="nico" type="text" />
+  </div>
+  <div>
+    <label for="descripcionNico">Descripción NICO:</label>
+    <textarea id="descripcionNico" formControlName="descripcionNico"></textarea>
+  </div>
+  <div>
+    <label for="acotacion">Acotación:</label>
+    <textarea id="acotacion" formControlName="acotacion"></textarea>
+  </div>
+  <div>
+    <label for="permisoValidoDesde">Permiso válido desde:</label>
+    <input id="permisoValidoDesde" formControlName="permisoValidoDesde" type="date" />
+  </div>
+  <div>
+    <label for="permisoValidoHasta">Permiso válido hasta:</label>
+    <input id="permisoValidoHasta" formControlName="permisoValidoHasta" type="date" />
+  </div>
+  <button type="submit" [disabled]="form.invalid">Guardar</button>
+</form>
