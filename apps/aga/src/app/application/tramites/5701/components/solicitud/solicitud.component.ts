@@ -42,18 +42,22 @@ import { CatalogoLista } from '@libs/shared/data-access-user/src/core/models/sha
 import { DatosCheckInputText } from '../../../../core/models/shared/check-input-text.model';
 import { DatosComponentePedimento } from '../../../../core/models/5701/tramite5701.model';
 import { Modal } from 'bootstrap';
-import { Patente } from '../../../../core/models/5701/patente.model';
+import { Patente } from '../../../../core/models/5701/Patente.model';
 import { PatenteApoderadoService } from '../../../../core/services/5701/patente-apoderado.service';
 import { PatenteEmpresaService } from '../../../../core/services/5701/patente-empresas.service';
-import { PatenteService } from '../../../../core/services/5701/patente.service';
-import { ServiciosExtraordinariosService } from '../../../../core/services/5701/servicios-extraordinarios.service';
-import { Tramite5701Query } from '../../../../core/queries/tramite5701.query';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import patentes from 'libs/shared/theme/assets/json/5701/patentes.json';
+import { PatenteService } from '../../../../core/services/5701/patente.service';
+import { Recinto } from '../../../../core/models/5701/recinto.model';
+import { RecintoService } from '../../../../core/services/5701/recinto.service';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import rfcs from 'libs/shared/theme/assets/json/5701/rfcs.json';
 import { SeccionAduanaService } from '../../../../core/services/5701/seccion-aduanas.service';
+import { ServiciosExtraordinariosService } from '../../../../core/services/5701/servicios-extraordinarios.service';
+import { Tramite5701Query } from '../../../../core/queries/tramite5701.query';
 import { UsuarioState } from '@libs/shared/data-access-user/src/core/estados/usuario.store';
+import { SocioComercialService } from '../../../../core/services/5701/socio-comercial.service';
+
 
 
 @Component({
@@ -113,7 +117,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy{
   /**
    * Catalogo de recinto aduanero.
    */
-  recintoCatalogo!: Catalogo[];
+  recintoCatalogo!: Recinto[];
 
   /**
    * Catalogo de despacho LDA y DD.
@@ -279,6 +283,8 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy{
     private readonly patenteApoderadoService: PatenteApoderadoService,
     private readonly patenteEmpresasService: PatenteEmpresaService,
     private readonly seccionAduanaService: SeccionAduanaService,
+    private readonly recintoService: RecintoService,
+    private readonly socioComercial: SocioComercialService,
   ) { }
 
   ngOnInit(): void {
@@ -628,6 +634,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy{
     this.patenteService.getListaPatente('SAAA980822LP1').pipe(
       switchMap(pantenteResponse => {
         if (pantenteResponse) {
+          this.tramite5701Store.setPatente(patente);
           patente = pantenteResponse.datos;
           const DATOS_PATENTE: DatosAgregarFormulario = {
             form: this.despacho,
@@ -641,18 +648,23 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy{
       }),
       switchMap(patenteApoderadoResponse => {
         if (patenteApoderadoResponse) {
+          this.tramite5701Store.setPatenteApoderado(patenteApoderadoResponse.datos);
           this.isApoderado = true;
-          if (patenteApoderadoResponse.datos?.patente.length > 1) {
+          if (patenteApoderadoResponse.datos?.length > 1) {
             this.masDeUnaPatente = true;
             return EMPTY;
           }
+          this.tramite5701Store.setPatente(patenteApoderadoResponse.datos[0]);
+          return this.patenteEmpresasService.getListaEmpresas(patente);
         }
-        return this.patenteEmpresasService.getListaEmpresas(patente);
+        return EMPTY;
       }),
       tap(empresaResponse => {
         if (empresaResponse) {
           if (empresaResponse.datos.length > 1) {
             this.masDeUnaEmpresa = true;
+          } else {
+            this.tramite5701Store.setRFCImportadorExportador(empresaResponse.datos[0]); 
           }
         }
       }),
@@ -1475,17 +1487,19 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy{
   /**
    * 
    */
-  public changeAduana() {
+  public changeAduana(): void {
     const ADUANA: ICatalogo = this.despacho.get('idAduanaDespacho')?.value;
 
     if (ADUANA) {
       this.desactivarSelectRecinto = true;
 
       this.seccionAduanaService.getListaSeccionesAduanas(ADUANA.clave).pipe(
-        tap(response => {
-          if (response) {
-            this.seccionAduanera = response.datos;
-          }
+        switchMap(response => {
+          this.seccionAduanera = response?.datos;
+          return this.recintoService.getListaRecintos(ADUANA.clave);
+        }),
+        tap(responseRecinto => {
+          this.recintoCatalogo = responseRecinto?.datos;
         }),
         takeUntil(this.destroyNotifier$),
       ).subscribe();
@@ -1496,5 +1510,18 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy{
         'setIdAduanaDespacho'
       )
     }
+  }
+
+  /**
+   * 
+   */
+  onIdSocioComercialChange(): void {
+    const ID_SOCIO_COMERCIAL: string = this.datosImportadorExportador.get('idSocioComercial')?.value;
+    this.socioComercial.getSocioComercial(ID_SOCIO_COMERCIAL).pipe(
+      map((response) => {
+        this.tramite5701Store.setBlnSocioComercial(response.datos);
+      })
+    ).subscribe();
+    this.setValoresStore(this.datosImportadorExportador, 'idSocioComercial', 'setIdSocioComercial')
   }
 }

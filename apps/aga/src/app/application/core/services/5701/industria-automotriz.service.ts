@@ -1,6 +1,4 @@
-
-import { API_GET_INDUSTRIA_AUTOMOTRIZ, API_GET_SOCIO_COMERCIAL, ID_SOCIO_COMERCIAL_QUERY, RFC_QUERY } from '../../../shared/constants/api-constants';
-import { CatalogosBooleanResponse, enviroment } from '@libs/shared/data-access-user/src';
+import { API_GET_INDUSTRIA_AUTOMOTRIZ, CatalogosBooleanResponse, enviroment, RFC_QUERY } from '@libs/shared/data-access-user/src';
 import { catchError, map, Observable, throwError } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';

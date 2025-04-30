@@ -19,6 +19,7 @@ export { TramiteFolioState, TramiteFolioStore } from './core/estados/tramiteFoli
 export { ValidacionesFormularioService } from './core/services/shared/validaciones-formulario/validaciones-formulario.service';
 export {TramiteStore} from './core/estados/tramite.store';
 export * from './core/ambientes';
+export * from './core/constants/api-constants';
 export * from './core/enums/constantes-alertas.enum';
 export * from './core/enums/constantes-alertas.enum';
 export * from './core/enums/forma-render.enum';

@@ -1,10 +1,10 @@
-import { API_GET_EMPRESA, CLAVE_PATENTE_QUERY, TIPO_PATENTE_QUERY } from '../../../shared/constants/api-constants';
+import { API_GET_EMPRESA, CLAVE_PATENTE_QUERY, enviroment, TIPO_PATENTE_QUERY } from '@libs/shared/data-access-user/src';
 import { catchError, map, Observable, throwError } from 'rxjs';
 import { EmpresaResponse } from '../../models/5701/empresa.model';
-import { enviroment } from '@libs/shared/data-access-user/src';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Patente } from '../../models/5701/patente.model';
+
 
 @Injectable({
   providedIn: 'root',

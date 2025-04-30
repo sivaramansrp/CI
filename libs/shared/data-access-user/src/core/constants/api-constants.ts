@@ -86,3 +86,9 @@ export const TIPO_GAFETE_QUERY = '{tipoGafete}'
  * @see http://api-vucem-1069277193.us-east-1.elb.amazonaws.com/api/gafete/swagger-ui/index.html#/Gafetes/consulta-responsable-gafete
  */
 export const API_GET_CONSULTA_RESPONSABLE = `gafete/responsable/${NUMERO_GAFETE_QUERY}/${TIPO_GAFETE_QUERY}`;
+/**
+ * API para recuperar los recintos inherentes de una aduana.
+ * @param CLAVE_ADUANA_QUERY El clave de la aduana seleccionada por el usuario.
+ * @see http://api-vucem-1069277193.us-east-1.elb.amazonaws.com/api/patente/swagger-ui/index.html
+ */
+export const API_GET_RECINTO = `catalogo/recintos-fiscalizados/${CLAVE_ADUANA_QUERY}`;

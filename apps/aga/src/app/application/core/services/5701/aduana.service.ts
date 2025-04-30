@@ -1,6 +1,5 @@
-import { CatalogosResponse, enviroment } from '@libs/shared/data-access-user/src';
+import { API_GET_ADUANA, CatalogosResponse, enviroment } from '@libs/shared/data-access-user/src';
 import { catchError, map, Observable, throwError } from 'rxjs';
-import { API_GET_ADUANA } from '../../../shared/constants/api-constants';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 

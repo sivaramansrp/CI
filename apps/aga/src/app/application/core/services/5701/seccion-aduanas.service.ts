@@ -1,10 +1,8 @@
 
-import { API_GET_SECCION_ADUANA, CLAVE_ADUANA_QUERY } from '../../../shared/constants/api-constants';
-import { CatalogosResponse, enviroment } from '@libs/shared/data-access-user/src';
+import { API_GET_SECCION_ADUANA, CatalogosResponse, CLAVE_ADUANA_QUERY, enviroment } from '@libs/shared/data-access-user/src';
 import { catchError, map, Observable, throwError } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-
 
 @Injectable({
   providedIn: 'root',

@@ -141,7 +141,7 @@
               @if (solicitudState.socioComercial) {*}:</label>
             <input class="form-control" id="idSocioComercial" formControlName="idSocioComercial" placeholder=""
               type="text"
-              (change)="setValoresStore(datosImportadorExportador, 'idSocioComercial', 'setIdSocioComercial')" />
+              (change)="onIdSocioComercialChange()" />
           </div>
         </div>
       </div>
@@ -299,9 +299,21 @@
         </div>
         @if (!tipoDespacho) {
         <div class="col-md-4">
-          <app-catalogo-select [catalogo]="recintoCatalogo" formControlName="nombreRecinto"
-            [label]="'Nombre del recinto'" [required]="false" [isDisabled]="desactivarSelectRecinto"
-            (change)="changeRecinto()"></app-catalogo-select>
+          <div>
+            <label for="">Nombre del recinto:</label>
+          </div>
+          <select 
+            class="form-control"
+            formControlName="nombreRecinto"
+            (change)="changeRecinto()"
+            [required]="false"
+            [disabled]="desactivarSelectRecinto">
+            <option
+              *ngFor="let recinto of recintoCatalogo"
+              [value]="recinto">
+              {{ recinto.descripcion }}
+            </option>
+          </select>
         </div>
         } @else {
         <div class="col-md-4">

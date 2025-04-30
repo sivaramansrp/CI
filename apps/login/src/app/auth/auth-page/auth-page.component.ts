@@ -39,7 +39,6 @@ export class AuthPageComponent implements OnInit {
   validarEFirma(login: boolean) {
     if ( login ) {
       const ROLES: Rol[] = [{idRol: 1, codigoRol:'', nombre:'', descripcion:''}];
-      console.log('entramos aquí ')
       const PERFIL_USUARIO: PerfilUsuario = {
         nombre: '',
         apellidoPaterno: '',

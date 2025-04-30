@@ -1,11 +1,11 @@
+import { Store, StoreConfig } from '@datorama/akita';
 import { TransporteAereo, TransporteCarretero, TransporteFerroviario, TransporteMaritimo, TransporteOtro, TransportePeatonal } from '@ng-mf/data-access-user';
 import {
   ResponsablesDespacho,
 } from '../../models/5701/tramite5701.model';
 
-import { Store, StoreConfig } from '@datorama/akita';
-
 import { Injectable } from '@angular/core';
+import { Patente } from '../../models/5701/patente.model';
 
 /**
  * Creacion del estado inicial para la interfaz de tramite 5701
@@ -35,6 +35,7 @@ export interface Solicitud5701State {
   tipoEmpresaCertificada: string;
   idSocioComercial: string;
   socioComercial: boolean;
+  blnSocioComercial: boolean;
   certificacionOEA: boolean;
   revision: boolean;
 
@@ -62,7 +63,8 @@ export interface Solicitud5701State {
   nombreRecinto: string;
   tipoDespacho: string;
   tipoOperacion: string;
-  patente: string;
+  patente: Patente;
+  patenteApoderado: Patente[];
   relacionSociedad: boolean;
   encargoConferido: boolean;
   domicilioDespacho: string;
@@ -121,6 +123,7 @@ export function createInitialState(): Solicitud5701State {
     tipoEmpresaCertificada: '',
     idSocioComercial: '',
     socioComercial: false,
+    blnSocioComercial: false,
     certificacionOEA: false,
     revision: false,
     fechaInicio: '',
@@ -140,7 +143,8 @@ export function createInitialState(): Solicitud5701State {
     nombreRecinto: '',
     tipoDespacho: '',
     tipoOperacion: '',
-    patente: '',
+    patente: {} as Patente,
+    patenteApoderado: [],
     relacionSociedad: false,
     encargoConferido: false,
     domicilioDespacho: '',
@@ -288,6 +292,13 @@ export class Tramite5701Store extends Store<Solicitud5701State> {
     }));
   }
 
+  public setBlnSocioComercial(blnSocioComercial: boolean): void {
+    this.update((state) => ({
+      ...state,
+      blnSocioComercial,
+    }));
+  }
+
   public setCertificacionOEA(certificacionOEA: boolean): void {
     this.update((state) => ({
       ...state,
@@ -421,10 +432,17 @@ export class Tramite5701Store extends Store<Solicitud5701State> {
     }));
   }
 
-  public setPatente(patente: string): void {
+  public setPatente(patente: Patente): void {
     this.update((state) => ({
       ...state,
       patente,
+    }));
+  }
+
+  public setPatenteApoderado(patenteApoderado: Patente[]): void {
+    this.update((state) => ({
+      ...state,
+      patenteApoderado,
     }));
   }
 

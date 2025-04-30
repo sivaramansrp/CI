@@ -1,14 +1,13 @@
-
-import { API_GET_SOCIO_COMERCIAL, CatalogosBooleanResponse, enviroment, ID_SOCIO_COMERCIAL_QUERY } from '@libs/shared/data-access-user/src';
+import { API_GET_ADUANA, CLAVE_ADUANA_QUERY, enviroment } from '@libs/shared/data-access-user/src';
 import { catchError, map, Observable, throwError } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-
+import { RecintoResponse } from '../../models/5701/recinto.model';
 
 @Injectable({
   providedIn: 'root',
 })
-export class SocioComercialService {
+export class RecintoService {
 
   private readonly host: string;
 
@@ -19,12 +18,12 @@ export class SocioComercialService {
   }
 
   /**
-   * Método para obtener la entidad o persona asociada a un proceso de comercio o negocio que interactúa con el sistema.
+   *
    */
-  getSocioComercial(claveSocioComercial: string): Observable<CatalogosBooleanResponse> {
-    const ENDPOINT = `${this.host}`+ API_GET_SOCIO_COMERCIAL.replace(ID_SOCIO_COMERCIAL_QUERY, claveSocioComercial);
+  getListaRecintos(claveAduana: string): Observable<RecintoResponse> {
+    const ENDPOINT = `${this.host}`+ API_GET_ADUANA.replace(CLAVE_ADUANA_QUERY, claveAduana);
 
-    return this.http.get<CatalogosBooleanResponse>(ENDPOINT).pipe(
+    return this.http.get<RecintoResponse>(ENDPOINT).pipe(
       map((response) => {
         return response;
       }),
