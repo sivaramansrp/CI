@@ -8,7 +8,7 @@ import { Observable, of as observableOf,Subject, throwError } from 'rxjs';
 
 import { Component } from '@angular/core';
 import { RegistroPageComponent } from './registro-page.component';
-import { AmpliacionServiciosQuery } from '../../estados/tramite80206.query';
+import { AmpliacionServiciosQuery } from '../../estados/tramite90302.query';
 import { SeccionLibStore } from '@libs/shared/data-access-user/src/core/estados/seccion.store';
 import { AmpliacionServiciosService } from '../../services/ampliacion-servicios.service';
 
@@ -91,8 +91,7 @@ describe('RegistroPageComponent', () => {
       valor: {},
       accion: {}
     });
-    // expect(component.wizardComponent.siguiente).toHaveBeenCalled();
-    // expect(component.wizardComponent.atras).toHaveBeenCalled();
+    
   });
 
   
@@ -102,8 +101,7 @@ describe('RegistroPageComponent', () => {
     component.destroyNotifier$.next = jest.fn();
     component.destroyNotifier$.complete = jest.fn();
     component.ngOnDestroy();
-    // expect(component.destroyNotifier$.next).toHaveBeenCalled();
-    // expect(component.destroyNotifier$.complete).toHaveBeenCalled();
+    
   });
 
 });

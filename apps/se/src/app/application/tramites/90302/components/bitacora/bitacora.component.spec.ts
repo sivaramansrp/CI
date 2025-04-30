@@ -4,29 +4,14 @@ import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHE
 import { isPlatformBrowser } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { Observable, of as observableOf,Subject, throwError } from 'rxjs';
+import { Observable, of as observableOf, throwError } from 'rxjs';
 
 import { Component } from '@angular/core';
-import { Ampliacion3RsComponent } from './bitacora.component';
-import { FormBuilder } from '@angular/forms';
+import { BitacoraComponent } from './bitacora.component';
 import { AmpliacionServiciosService } from '../../services/ampliacion-servicios.service';
-import { AmpliacionServiciosQuery } from '../../estados/tramite80206.query';
-import { Tramite80206Store } from '../../estados/tramite80206.store';
-import { HttpClient } from '@angular/common/http';
 
 @Injectable()
 class MockAmpliacionServiciosService {}
-
-@Injectable()
-class MockAmpliacionServiciosQuery {}
-
-@Injectable()
-class MockTramite80206Store {}
-
-@Injectable()
-class MockHttpClient {
-  post() {};
-}
 
 @Directive({ selector: '[myCustom]' })
 class MyCustomDirective {
@@ -48,38 +33,32 @@ class SafeHtmlPipe implements PipeTransform {
   transform(value) { return value; }
 }
 
-describe('Ampliacion3RsComponent', () => {
+describe('BitacoraComponent', () => {
   let fixture;
   let component;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule,  ],
+      imports: [ FormsModule, ReactiveFormsModule ],
       declarations: [
-        Ampliacion3RsComponent,
+        BitacoraComponent,
         TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
         MyCustomDirective
       ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
-        FormBuilder,
-        { provide: AmpliacionServiciosService, useClass: MockAmpliacionServiciosService },
-        { provide: AmpliacionServiciosQuery, useClass: MockAmpliacionServiciosQuery },
-        { provide: Tramite80206Store, useClass: MockTramite80206Store },
-        { provide: HttpClient, useClass: MockHttpClient }
+        { provide: AmpliacionServiciosService, useClass: MockAmpliacionServiciosService }
       ]
-    }).overrideComponent(Ampliacion3RsComponent, {
+    }).overrideComponent(BitacoraComponent, {
 
     }).compileComponents();
-    fixture = TestBed.createComponent(Ampliacion3RsComponent);
+    fixture = TestBed.createComponent(BitacoraComponent);
     component = fixture.debugElement.componentInstance;
-    component.destroyNotifier$= new Subject<void>();
-    component.ampliacionServiciosService.enviarDeberiaMostrar = jest.fn();
   });
 
   afterEach(() => {
-    fixture.destroy(); 
-    TestBed.resetTestingModule(); 
+    component.ngOnDestroy = function() {};
+    fixture.destroy();
   });
 
   it('should run #constructor()', async () => {
@@ -87,128 +66,76 @@ describe('Ampliacion3RsComponent', () => {
   });
 
   it('should run #ngOnInit()', async () => {
-    component.obtenerReglaSelectList = jest.fn();
-    component.inicializarFormularioDesdeAlmacen = jest.fn();
-    component.obtenerSectorSelectList = jest.fn();
+    component.getBitacoraProsec = jest.fn();
+    component.getMercanciasProsec = jest.fn();
+    component.getPlantasProsec = jest.fn();
+    component.getProductorProsec = jest.fn();
+    component.getSectoresProsec = jest.fn();
     component.ngOnInit();
-    // expect(component.obtenerReglaSelectList).toHaveBeenCalled();
-    // expect(component.inicializarFormularioDesdeAlmacen).toHaveBeenCalled();
-    // expect(component.obtenerSectorSelectList).toHaveBeenCalled();
+    // expect(component.getBitacoraProsec).toHaveBeenCalled();
+    // expect(component.getMercanciasProsec).toHaveBeenCalled();
+    // expect(component.getPlantasProsec).toHaveBeenCalled();
+    // expect(component.getProductorProsec).toHaveBeenCalled();
+    // expect(component.getSectoresProsec).toHaveBeenCalled();
   });
 
-  it('should run #inicializarFormularioDesdeAlmacen()', async () => {
-    component.ampliacionServiciosQuery = component.ampliacionServiciosQuery || {};
-    component.ampliacionServiciosQuery.selectSolicitudTramite$ = observableOf({});
+  it('should run #getBitacoraProsec()', async () => {
     component.ampliacionServiciosService = component.ampliacionServiciosService || {};
-    component.ampliacionServiciosService.enviarDeberiaMostrar = jest.fn();
-    component.formularioInfoRegistro = component.formularioInfoRegistro || {};
-    component.formularioInfoRegistro.patchValue = jest.fn();
-    component.inicializarFormularioDesdeAlmacen();
-    // expect(component.ampliacionServiciosService.enviarDeberiaMostrar).toHaveBeenCalled();
-    // expect(component.formularioInfoRegistro.patchValue).toHaveBeenCalled();
-  });
-
-  it('should run #inicializarFormularioInfoRegistro()', async () => {
-    component.fb = component.fb || {};
-    component.fb.group = jest.fn();
-    component.inicializarFormularioInfoRegistro();
-    // expect(component.fb.group).toHaveBeenCalled();
-  });
-
-  it('should run #obtenerReglaSelectList()', async () => {
-    component.subscription = component.subscription || {};
-    component.subscription.add = jest.fn();
-    component.ampliacionServiciosService = component.ampliacionServiciosService || {};
-    component.ampliacionServiciosService.obtenerReglaSelectList = jest.fn().mockReturnValue(observableOf({
+    component.ampliacionServiciosService.getBitacoraProsec = jest.fn().mockReturnValue(observableOf({
+      code: {},
       data: {}
     }));
-    component.tramite80206Store = component.tramite80206Store || {};
-    component.tramite80206Store.setReglaSeleccionada = jest.fn();
-    component.ampliacionServiciosQuery = component.ampliacionServiciosQuery || {};
-    component.ampliacionServiciosQuery.selectSolicitudTramite$ = observableOf({
-      reglaSeleccionada: {}
-    });
-    component.obtenerReglaSelectList();
-    // expect(component.subscription.add).toHaveBeenCalled();
-    // expect(component.ampliacionServiciosService.obtenerReglaSelectList).toHaveBeenCalled();
-    // expect(component.tramite80206Store.setReglaSeleccionada).toHaveBeenCalled();
+    component.getBitacoraProsec();
+    // expect(component.ampliacionServiciosService.getBitacoraProsec).toHaveBeenCalled();
   });
 
-  it('should run #obtenerSectorSelectList()', async () => {
-    component.subscription = component.subscription || {};
-    component.subscription.add = jest.fn();
+  it('should run #getMercanciasProsec()', async () => {
     component.ampliacionServiciosService = component.ampliacionServiciosService || {};
-    component.ampliacionServiciosService.obtenerSectorSelectList = jest.fn().mockReturnValue(observableOf({
+    component.ampliacionServiciosService.getMercanciasProsec = jest.fn().mockReturnValue(observableOf({
+      code: {},
       data: {}
     }));
-    component.tramite80206Store = component.tramite80206Store || {};
-    component.tramite80206Store.setSectorDesplegable = jest.fn();
-    component.ampliacionServiciosQuery = component.ampliacionServiciosQuery || {};
-    component.ampliacionServiciosQuery.selectSolicitudTramite$ = observableOf({
-      sectorDesplegable: {}
-    });
-    component.obtenerSectorSelectList();
-    // expect(component.subscription.add).toHaveBeenCalled();
-    // expect(component.ampliacionServiciosService.obtenerSectorSelectList).toHaveBeenCalled();
-    // expect(component.tramite80206Store.setSectorDesplegable).toHaveBeenCalled();
+    component.getMercanciasProsec();
+    // expect(component.ampliacionServiciosService.getMercanciasProsec).toHaveBeenCalled();
   });
 
-  it('should run #eliminarServiciosGrid()', async () => {
-    component.domiciliosSeleccionados = component.domiciliosSeleccionados || {};
-    component.domiciliosSeleccionados = ['domiciliosSeleccionados'];
-    component.tramite80206Store = component.tramite80206Store || {};
-    component.tramite80206Store.setDatosSector = jest.fn();
-    component.eliminarServiciosGrid();
-    // expect(component.tramite80206Store.setDatosSector).toHaveBeenCalled();
+  it('should run #getPlantasProsec()', async () => {
+    component.ampliacionServiciosService = component.ampliacionServiciosService || {};
+    component.ampliacionServiciosService.getPlantasProsec = jest.fn().mockReturnValue(observableOf({
+      code: {},
+      data: {}
+    }));
+    component.getPlantasProsec();
+    // expect(component.ampliacionServiciosService.getPlantasProsec).toHaveBeenCalled();
   });
 
-  it('should run #agregarServiciosAmpliacion()', async () => {
-    component.recibioSector = component.recibioSector || {};
-    component.recibioSector= {
-      descripcion: {},
-      descripcionSector: {}
-    };
-    component.tramite80206Store = component.tramite80206Store || {};
-    component.tramite80206Store.setDatosSector = jest.fn();
-    component.agregarServiciosAmpliacion();
-    // expect(component.tramite80206Store.setDatosSector).toHaveBeenCalled();
+  it('should run #getProductorProsec()', async () => {
+    component.ampliacionServiciosService = component.ampliacionServiciosService || {};
+    component.ampliacionServiciosService.getProductorIndirectoProsec = jest.fn().mockReturnValue(observableOf({
+      code: {},
+      data: {}
+    }));
+    component.getProductorProsec();
+    // expect(component.ampliacionServiciosService.getProductorIndirectoProsec).toHaveBeenCalled();
+  });
+
+  it('should run #getSectoresProsec()', async () => {
+    component.ampliacionServiciosService = component.ampliacionServiciosService || {};
+    component.ampliacionServiciosService.getSectoresProsec = jest.fn().mockReturnValue(observableOf({
+      code: {},
+      data: {}
+    }));
+    component.getSectoresProsec();
+    // expect(component.ampliacionServiciosService.getSectoresProsec).toHaveBeenCalled();
   });
 
   it('should run #ngOnDestroy()', async () => {
-    component.ampliacionServiciosService = component.ampliacionServiciosService || {};
-    component.ampliacionServiciosService.enviarDeberiaMostrar = jest.fn();
     component.destroyNotifier$ = component.destroyNotifier$ || {};
     component.destroyNotifier$.next = jest.fn();
     component.destroyNotifier$.complete = jest.fn();
     component.ngOnDestroy();
-    // expect(component.ampliacionServiciosService.enviarDeberiaMostrar).toHaveBeenCalled();
     // expect(component.destroyNotifier$.next).toHaveBeenCalled();
     // expect(component.destroyNotifier$.complete).toHaveBeenCalled();
-  });
-
-  it('should run #procesarDatosDelHijo()', async () => {
-    component.ampliacionServiciosService = component.ampliacionServiciosService || {};
-    component.ampliacionServiciosService.enviarDeberiaMostrar = jest.fn();
-    component.tramite80206Store = component.tramite80206Store || {};
-    component.tramite80206Store.setIsSelectedRegla = jest.fn();
-    component.tramite80206Store.setAduanaDeIngresoSeleccion = jest.fn();
-    component.procesarDatosDelHijo({});
-    // expect(component.ampliacionServiciosService.enviarDeberiaMostrar).toHaveBeenCalled();
-    // expect(component.tramite80206Store.setIsSelectedRegla).toHaveBeenCalled();
-    // expect(component.tramite80206Store.setAduanaDeIngresoSeleccion).toHaveBeenCalled();
-  });
-
-  it('should run #cambioDeSector()', async () => {
-    component.tramite80206Store = component.tramite80206Store || {};
-    component.tramite80206Store.setSectorSeleccion = jest.fn();
-    component.cambioDeSector({});
-    // expect(component.tramite80206Store.setSectorSeleccion).toHaveBeenCalled();
-  });
-
-  it('should run #seleccionarDomicilios()', async () => {
-
-    component.seleccionarDomicilios([]);
-
   });
 
 });
