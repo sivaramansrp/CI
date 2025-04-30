@@ -2,7 +2,7 @@
 
 import { Catalogo, REGEX_NUMERO_DECIMAL_ENTERO, REGEX_TEXTO_PREFIJO, REG_X } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { DATOS_INPUT_FIELDS, MERCANCIA_INPUT_VALUES } from '@libs/shared/data-access-user/src/tramites/constantes/valores-constantes.enum';
+import { DATOS_INPUT_FIELDS, MERCANCIA_INPUT_VALUES } from '../../../../shared/constantes/valores-constantes.enum';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 import { Tramite130121State, Tramite130121Store } from '../../estados/tramites/tramites130121.store';
@@ -18,7 +18,7 @@ import { PartidasDeLaMercanciaModelo } from '../../../../shared/models/partidas-
 import { PermisoDeHidrocarburosService } from '../../services/permiso-de-hidrocarburos.service';
 import { ProductoOpción } from '../../../../shared/constantes/vehiculos-adaptados.enum';
 import { TEXTOS } from '../../../../shared/constantes/representacion-federal.enum';
-import { TITULO_ORIGEN } from '@libs/shared/data-access-user/src/tramites/constantes/Pais-titulo.enum';
+import { TITULO_ORIGEN } from '../../../../shared/constantes/pais-titulo.enum';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
 import { Tramite130121Query } from '../../estados/queries/tramite130121.query';
 import mercanciaCatalogoVal from '@libs/shared/theme/assets/json/130121/datos-fraccion_arancelaria.json';
