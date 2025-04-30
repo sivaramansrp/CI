@@ -115,6 +115,13 @@ const ROUTES: Routes = [
         (m) => m.EndosoGarantiaModule
       ),
   },
+  {
+    path: 'importador-y-o-exportador',
+    loadChildren: () =>
+      import('./tramites/32605/importador-y-o-exportador.module').then(
+        (m) => m.ImportadorYOExportadorModule
+      ),
+  },
 ];
 
 @NgModule({
