@@ -1913,8 +1913,8 @@
     {
         "id": 274,
         "tramite": 230201,
-        "linkDashboard": "",
-        "linkDepartment": "",
+        "linkDashboard": "/semarnat/phytosanitary-export/solicitud",
+        "linkDepartment": "/pago/phytosanitary-export/solicitud",
         "department": "semarnat"
     },
     {
