@@ -1,8 +1,10 @@
 import { Component, OnDestroy, ViewChild } from '@angular/core';
 import { ListaPasosWizard, PASOS } from '@libs/shared/data-access-user/src';
 import { DatosDomicilioLegalService } from '../../../../shared/services/datos-domicilio-legal.service';
+import { DatosDomicilioLegalState } from '../../../../shared/estados/stores/datos-domicilio-legal.store';
 import { DatosPasos } from '@libs/shared/data-access-user/src/core/models/shared/components.model';
 import { PagoBancoService } from '../../../../shared/services/pago-banco.service';
+import { SolicitudPagoBancoState } from '../../../../shared/estados/stores/pago-banco.store';
 import { Subject } from 'rxjs';
 import { WizardComponent } from '@libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
 import { takeUntil } from 'rxjs/operators';
@@ -81,43 +83,49 @@ constructor(private datosDomicilioLegalService: DatosDomicilioLegalService,priva
 
   
 
-  /**
-   * Método que obtiene el estado de los datos del domicilio legal desde el servicio
-   * `datosDomicilioLegalService` y los asigna a la propiedad `datosDomicilioLegal`.
-   * 
-   * @returns {void} Este método no retorna ningún valor.
-   */
+ 
   
 
-  getDatosDomicilioLegalState(): void {
+  /**
+   * Obtiene el estado de los datos del domicilio legal desde el servicio `datosDomicilioLegalService`.
+   * 
+   * @returns {DatosDomicilioLegalState} El estado actual de los datos del domicilio legal.
+   * 
+   * @remarks
+   * Este método utiliza un observable para suscribirse al estado proporcionado por el servicio.
+   * Sin embargo, debido a la naturaleza asíncrona de los observables, el valor retornado puede no reflejar
+   * el estado actualizado en el momento de la ejecución. Es importante manejar este comportamiento
+   * adecuadamente si se requiere el estado más reciente.
+   */
+  getDatosDomicilioLegalState(): DatosDomicilioLegalState {
+    let PAYLOAD= {} as DatosDomicilioLegalState
     this.datosDomicilioLegalService.getDatosDomicilioLegalState()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((state) => {
-        const PAYLOAD = state;
-        return PAYLOAD;
+         PAYLOAD = state;
       });
+      return PAYLOAD;
   }
 
+ 
   /**
-   * Retrieves the state of the "Solicitud Pago Banco" from the service and processes it.
+   * Obtiene el estado de la solicitud de pago en el banco.
    * 
-   * This method subscribes to the `getSolicitudPagoBancoState` observable from the `pagoBancoService`,
-   * filters out any properties in the state object that have empty string, null, or undefined values,
-   * and logs the resulting payload to the console.
+   * Este método utiliza el servicio `pagoBancoService` para suscribirse al estado
+   * de la solicitud de pago en el banco y devuelve un objeto del tipo `SolicitudPagoBancoState`.
    * 
-   * The subscription is automatically unsubscribed when the `destroyNotifier$` observable emits a value,
-   * ensuring proper cleanup of resources.
-   * 
-   * @returns {void} This method does not return a value.
+   * @returns {SolicitudPagoBancoState} El estado de la solicitud de pago en el banco.
    */
-  getSolicitudPagoBancoState():void{
+  getSolicitudPagoBancoState():SolicitudPagoBancoState{
+  let PAYLOAD= {} as SolicitudPagoBancoState
     this.pagoBancoService.getSolicitudPagoBancoState()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((state) => {
-        const PAYLOAD = state;
-        return PAYLOAD;
+         PAYLOAD = state;
       });
+      return PAYLOAD;
   }
+
   /**
    * Cleanup logic to unsubscribe from observables when the component is destroyed.
    */
