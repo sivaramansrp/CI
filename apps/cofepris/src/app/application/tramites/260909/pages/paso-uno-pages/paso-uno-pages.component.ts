@@ -1,15 +1,15 @@
 /**
  * Componente para la modificación de permisos de importación de tratamientos.
  */
-import { AfterViewInit, Component, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { Component, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
 
 import { CompleteForm, Destinatario, DomicilioEstablecimiento, Fabricante, Facturador, FormMercancias, PagoDeDerechos, Proveedor, ScianForm, SolicitanteData, SolicitudEstablecimientoForm, TercerosRelacionados, Tramite } from '../../models/modificacion-permiso.model';
-import { DatosDelSolicitudModificacionComponent } from '../../../../shared/components/datos-del-solicitud-modificacion/datos-del-solicitud-modificacion.component';
 import { TercerosRelacionadosFabSeccionComponent } from '../../../../shared/components/terceros-relacionados-fab-seccion/terceros-relacionados-fab-seccion.component';
 
 import { PagoDeDerechosEntradaComponent } from '../../../../shared/components/pago-de-derechos-entrada/pago-de-derechos-entrada.component';
 import { TramitesAsociadosSeccionComponent } from '../../../../shared/components/tramites-asociados-seccion/tramites-asociados-seccion.component';
+import { DatosDelSolicitudModificacionComponent } from '../../components/datos-del-solicitud-modificacion/datos-del-solicitud-modificacion.component';
 /**
  * Clase que representa el componente de modificación de permisos de importación de tratamientos.
  */

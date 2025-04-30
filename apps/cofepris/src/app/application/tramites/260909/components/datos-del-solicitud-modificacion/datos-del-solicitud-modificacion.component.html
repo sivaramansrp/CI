@@ -77,6 +77,13 @@
               (change)="enCambioDeControl('establecimientoRazonSocial')"
             />
           </div>
+          @if(domicilioEstablecimiento.controls['establecimientoRazonSocial'].invalid && domicilioEstablecimiento.controls['establecimientoRazonSocial'].touched) {
+            <div class="d-grid">
+              @if(domicilioEstablecimiento.controls['establecimientoRazonSocial'].errors?.['required']) {
+                <span class="mensaje-error">Este campo es obligatorio</span>
+              }
+            </div>
+          }
         </div>
       </div>
       <div class="row">
@@ -111,6 +118,13 @@
            (change)="enCambioDeControl('establecimientoDomicilioCodigoPostal')"
             />
           </div>
+          @if(domicilioEstablecimiento.controls['establecimientoDomicilioCodigoPostal'].invalid && domicilioEstablecimiento.controls['establecimientoDomicilioCodigoPostal'].touched) {
+            <div class="d-grid">
+              @if(domicilioEstablecimiento.controls['establecimientoDomicilioCodigoPostal'].errors?.['required']) {
+                <span class="mensaje-error">Este campo es obligatorio</span>
+              }
+            </div>
+          }
         </div>
 
         <div class="col-md-4">
@@ -141,6 +155,13 @@
               (change)="enCambioDeControl('descripcionMunicipio')"
             />
           </div>
+          @if(domicilioEstablecimiento.controls['descripcionMunicipio'].invalid && domicilioEstablecimiento.controls['descripcionMunicipio'].touched) {
+            <div class="d-grid">
+              @if(domicilioEstablecimiento.controls['descripcionMunicipio'].errors?.['required']) {
+                <span class="mensaje-error">Este campo es obligatorio</span>
+              }
+            </div>
+          }
         </div>
       </div>
 
@@ -193,6 +214,13 @@
                (change)="enCambioDeControl('calle')"
             />
           </div>
+          @if(domicilioEstablecimiento.controls['calle'].invalid && domicilioEstablecimiento.controls['calle'].touched) {
+            <div class="d-grid">
+              @if(domicilioEstablecimiento.controls['calle'].errors?.['required']) {
+                <span class="mensaje-error">Este campo es obligatorio</span>
+              }
+            </div>
+          }
         </div>
       </div>
 
@@ -222,6 +250,13 @@
               (change)="enCambioDeControl('telefono')"
             />
           </div>
+          @if(domicilioEstablecimiento.controls['telefono'].invalid && domicilioEstablecimiento.controls['telefono'].touched) {
+            <div class="d-grid">
+              @if(domicilioEstablecimiento.controls['telefono'].errors?.['required']) {
+                <span class="mensaje-error">Este campo es obligatorio</span>
+              }
+            </div>
+          }
         </div>
       </div>
     </div>
@@ -333,8 +368,9 @@
       </div>
     </div>
 
-    <app-manifiestos-representante-seccion></app-manifiestos-representante-seccion>
-  
+    <app-manifiestos></app-manifiestos>
+    <app-representante-legal></app-representante-legal>
+
   </form>
 </div>
 @if (nuevaNotificacion) {
@@ -378,6 +414,13 @@ aria-hidden="true"
                 class="form-control"
                 (change)="onContriloChange('descripcionScian')"
               />
+              @if(scianForm.controls['descripcionScian'].invalid && scianForm.controls['descripcionScian'].touched) {
+                <div class="d-grid">
+                  @if(scianForm.controls['descripcionScian'].errors?.['required']) {
+                    <span class="mensaje-error">Este campo es obligatorio</span>
+                  }
+                </div>
+              }
             </div>
           </div>
         </div>
@@ -395,7 +438,6 @@ aria-hidden="true"
           <button
             type="button"
             class="btn btn-primary"
-            (click)="guardarScian()"
           >
             Guardar
           </button>
@@ -666,7 +708,7 @@ aria-hidden="true"
         <button type="button" class="btn btn-default" data-bs-dismiss="modal">
           Cancelar
         </button>
-        <button type="button" class="btn btn-primary" (click)="guardarMarcancia()" >
+        <button type="button" class="btn btn-primary">
           Agregar
         </button>
       </div>

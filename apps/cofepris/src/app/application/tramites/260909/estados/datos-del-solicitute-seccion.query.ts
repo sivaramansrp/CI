@@ -14,25 +14,9 @@ import { DatosDelSolicituteSeccionState, DatosDelSolicituteSeccionStateStore } f
  */
 @Injectable({ providedIn: 'root' })
 export class DatosDelSolicituteSeccionQuery extends Query<DatosDelSolicituteSeccionState> {
-  representanteRfc$ = this.select('representanteRfc');
-  representanteNombre$ = this.select('representanteNombre');
-  apellidoPaterno$ = this.select('apellidoPaterno');
-  apellidoMaterno$ = this.select('apellidoMaterno');
-  establecimientoDenominacionRazonSocial$ = this.select('establecimientoDenominacionRazonSocial');
+
   establecimientoCorreoElectronico$ = this.select('establecimientoCorreoElectronico');
-  establecimientoDomicilioCodigoPostal$ = this.select('establecimientoDomicilioCodigoPostal');
-  establecimientoDomicilioEstado$ = this.select('establecimientoDomicilioEstado');
-  establecimientoMunicipioYAlcaldia$ = this.select('establecimientoMunicipioYAlcaldia');
-  establecimientoDomicilioLocalidad$ = this.select('establecimientoDomicilioLocalidad');
-  establecimientoDomicilioColonia$ = this.select('establecimientoDomicilioColonia');
-  establecimientoDomicilioCalle$ = this.select('establecimientoDomicilioCalle');
-  establecimientoDomicilioLada$ = this.select('establecimientoDomicilioLada');
-  establecimientoDomicilioTelefono$ = this.select('establecimientoDomicilioTelefono');
-  rfcDelProfesionalResponsable$ =this.select('rfcDelProfesionalResponsable');
-  nombreDelProfesionalResponsable$ =this.select('nombreDelProfesionalResponsable');
-  informacionConfidencialRadio$ = this.select('informacionConfidencialRadio');
-   propietarioData$ = this.select('propietarioData');
-  establecimientoData$ = this.select('establecimientoData');
+  establecimientoDomicilioCodigoPostal$ = this.select('establecimientoDomicilioCodigoPostal');;
   ideGenerica1$ = this.select('ideGenerica1');
   observaciones$ = this.select('observaciones');
   establecimientoRFCResponsableSanitario$ = this.select('establecimientoRFCResponsableSanitario');
@@ -51,7 +35,6 @@ export class DatosDelSolicituteSeccionQuery extends Query<DatosDelSolicituteSecc
   licenciaSanitaria = this.select('licenciaSanitaria');  
   regimen = this.select('regimen');  
   aduanasEntradas = this.select('aduanasEntradas');  
-  aifaCheckbox = this.select('aifaCheckbox');  
   descripcionScian = this.select('descripcionScian');
 
   constructor(protected override store: DatosDelSolicituteSeccionStateStore) {

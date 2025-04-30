@@ -3,10 +3,10 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { of, Subject } from 'rxjs';
 import { DatosDelSolicitudModificacionComponent } from './datos-del-solicitud-modificacion.component';
-import { EstablecimientoService } from '../../services/establecimiento.service';
-import { DatosDelSolicituteSeccionState, DatosDelSolicituteSeccionStateStore } from '../../estados/stores/datos-del-solicitute-seccion.store';
-import { DatosDelSolicituteSeccionQuery } from '../../estados/queries/datos-del-solicitute-seccion.query';
 import { Catalogo } from '@libs/shared/data-access-user/src';
+import { EstablecimientoService } from '../../service/establecimiento.service';
+import { DatosDelSolicituteSeccionState, DatosDelSolicituteSeccionStateStore } from '../../estados/datos-del-solicitute-seccion.store';
+import { DatosDelSolicituteSeccionQuery } from '../../estados/datos-del-solicitute-seccion.query';
 
 describe('DatosDelSolicitudModificacionComponent', () => {
   let component: DatosDelSolicitudModificacionComponent;
@@ -52,10 +52,6 @@ describe('DatosDelSolicitudModificacionComponent', () => {
   
     // Provide a proper mock state
     const mockState: Partial<DatosDelSolicituteSeccionState> = {
-      representanteRfc: 'RFC123',
-      representanteNombre: 'John Doe',
-      apellidoPaterno: 'Smith',
-      apellidoMaterno: 'Johnson',
       ideGenerica1: 'Test Value',
     };
   
@@ -93,25 +89,9 @@ describe('DatosDelSolicitudModificacionComponent', () => {
 
   it('should initialize forms on ngOnInit', () => {
     const mockState: DatosDelSolicituteSeccionState = {
-      representanteRfc: 'RFC123',
-      representanteNombre: 'John Doe',
-      apellidoPaterno: 'Smith',
-      apellidoMaterno: 'Johnson',
-      establecimientoDenominacionRazonSocial: 'Test Establishment',
+  
       establecimientoCorreoElectronico: 'test@example.com',
       establecimientoDomicilioCodigoPostal: '12345',
-      establecimientoDomicilioEstado: 'Test State',
-      establecimientoMunicipioYAlcaldia: 'Test Municipality',
-      establecimientoDomicilioLocalidad: 'Test Locality',
-      establecimientoDomicilioColonia: 'Test Colony',
-      establecimientoDomicilioCalle: 'Test Street',
-      establecimientoDomicilioLada: '123',
-      establecimientoDomicilioTelefono: '4567890',
-      rfcDelProfesionalResponsable: 'RFC456',
-      nombreDelProfesionalResponsable: 'Jane Doe',
-      informacionConfidencialRadio: 'Yes',
-      propietarioData: [],
-      establecimientoData: [],
       ideGenerica1: 'Test Value',
       observaciones: 'Test Observations',
       establecimientoRFCResponsableSanitario: 'RFC456',
@@ -131,7 +111,6 @@ describe('DatosDelSolicitudModificacionComponent', () => {
       licenciaSanitaria: 'Test License',
       regimen: 'Test Regimen',
       aduanasEntradas: 'Test Customs',
-      aifaCheckbox: 'false',
     };
     jest.spyOn(mockQuery, 'select').mockReturnValue(of(mockState));
     component.ngOnInit();
