@@ -483,12 +483,19 @@ const ROUTES: Routes = [
     )
 },
 {
-  path: 'medicamentos-donacion',
-  loadChildren: () =>
-    import('./tramites/260909/medicamentos-donacion.module').then(
-      (m) => m.MedicamentosDonacionModule
-    )
-}
+      path: 'importacion-retorno-sanitario',
+      loadChildren: () =>
+        import('./tramites/260103/importacion-retorno-sanitario.module').then(
+          (m) => m.ImportacionRetornoSanitarioModule
+        ),
+},
+{
+    path: 'medicamentos-donacion',
+    loadChildren: () =>
+      import('./tramites/260909/medicamentos-donacion.module').then(
+        (m) => m.MedicamentosDonacionModule
+      )
+  }
 ];
 
 @NgModule({
