@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SolicitudDatosComponent } from './SolicitudDatos.component';
 import { SolicitudPantallasService } from '../../services/solicitud-pantallas.service';
-import { of } from 'rxjs';
+import { from, of } from 'rxjs';
 import { FormBuilder } from '@angular/forms';
 import { CargarDatosIniciales } from '../../models/solicitud-pantallas.model';
 import { DatosDelTramiteARealizarComponent } from '../../shared/datos-del-tramite-a-realizar/datos-del-tramite-a-realizar.component';
@@ -10,7 +10,10 @@ import { ResponsableInspeccionEnPuntoComponent } from '../../shared/responsable-
 import { SolicitudDatosTabComponent } from '../../shared/solicitud-datos/solicitud-datos.component';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
-
+import { HttpClientModule } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
+import {SharedModule, WizardComponent} from "@ng-mf/data-access-user";
 describe('SolicitudDatosComponent', () => {
   let component: SolicitudDatosComponent;
   let fixture: ComponentFixture<SolicitudDatosComponent>;
@@ -30,6 +33,11 @@ describe('SolicitudDatosComponent', () => {
         DatosDelTramiteARealizarComponent,
         ResponsableInspeccionEnPuntoComponent,
         MedioTransporteComponent,
+        RouterModule,
+        FormsModule,
+        HttpClientModule,
+        WizardComponent,
+        SharedModule,
       ],
       providers: [
         FormBuilder,
@@ -101,15 +109,11 @@ describe('SolicitudDatosComponent', () => {
   });
 
   it('should unsubscribe from observables on ngOnDestroy', () => {
-    const destroyed$Spy = jest.spyOn(component['destroyed$'], 'next');
-    const destroyed$CompleteSpy = jest.spyOn(
-      component['destroyed$'],
-      'complete'
-    );
-
+    const destroyedSpy = jest.spyOn(component['destroyed$'], 'next');
+    const completeSpy = jest.spyOn(component['destroyed$'], 'complete');
     component.ngOnDestroy();
-
-    expect(destroyed$Spy).toHaveBeenCalled();
-    expect(destroyed$CompleteSpy).toHaveBeenCalled();
+    expect(destroyedSpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
   });
+  
 });

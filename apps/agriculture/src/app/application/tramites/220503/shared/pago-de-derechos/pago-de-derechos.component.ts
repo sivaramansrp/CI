@@ -77,7 +77,7 @@ export class PagoDeDerechosComponent implements OnInit , OnDestroy{
     private destroyed$ = new Subject<void>();
 
   /** 
-   * Estado de la solicitud 220501. 
+   * Estado de la solicitud 220503. 
    * Se inicializa como un objeto vacío con la estructura de Solicitud220503State.
    */
   Solicitud220503State: Solicitud220503State = {} as Solicitud220503State;

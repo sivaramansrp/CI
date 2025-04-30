@@ -11,6 +11,7 @@ import {
 import { Catalogo } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { FOLIODELLBL } from '../../constantes/importador-exportador.enum';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { OnDestroy } from '@angular/core';
@@ -40,7 +41,6 @@ import { takeUntil } from 'rxjs';
     ReactiveFormsModule,
     TituloComponent,
     CatalogoSelectComponent,
-    // TableComponent,
     InputRadioComponent,
   ],
 })
@@ -50,6 +50,12 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
    * @type {FormGroup}
    */
   forma!: FormGroup;
+
+  /**
+   * Se asigna el valor de `FOLIODELLBL` a la variable `foliodelLbl`.
+   * Esto permite utilizar la constante `FOLIODELLBL` en la lógica del código.
+   */
+  foliodelLbl = FOLIODELLBL;
 
   /**
    * Opciones de rango de días.

@@ -2,7 +2,7 @@
   <div class="col-md-12">
     <div class="panel-group ficha-collapse" id="accordion">
       <div class="panel panel-default">
-        <!-- Collapsible Panel Header -->
+       <!-- Encabezado de panel plegable -->
         <div
           class="panel-heading"
           (click)="mostrarColapsable()"
@@ -14,36 +14,36 @@
               ><i class="bi bi-repeat" aria-hidden="true"></i
             ></a>
           </h4>
-          <!-- Collapse Toggle Button -->
+          <!-- Botón de alternar contraer -->
           <button
             type="button"
             class="collpase-button collapsed"
             (keydown)="mostrarColapsable()"
           > </button>
         </div>
-         <!-- Collapsible Panel Body -->
+         <!-- Cuerpo del panel plegable -->
         @if(colapsable){
         <div class="panel-collapse collapse in" id="panel-01">
           <div class="panel-body">
-            <!-- Alert Component Displaying Texto -->
+            <!-- Componente de alerta que muestra texto -->
             <ng-alert [CONTENIDO]="TEXTOS.TEXTOS_SOLICITUD"></ng-alert>
-            <!-- Label for the Table -->
+            <!-- Etiqueta para la tabla -->
             <div class="col-md-12 mr-0">
               <label for="solicitud">Solicitud</label>
             </div>
-            <!-- Responsive Table to Display Solicitudes -->
+            <!-- Tabla responsiva para mostrar solicitudes -->
             <div class="col-md-12">
               <table class="table table-responsive table-striped">
                 <thead>
                   <tr>
-                    <!-- Dynamic Table Headers from Input -->
+                   <!-- Encabezados de tabla dinámicos desde la entrada -->
                     @for (item of tablaHeadData; track $index) {
                     <th>{{ item }}</th>
                     }
                   </tr>
                 </thead>
                 <tbody>
-                   <!-- Dynamic Rows from Input Data -->
+                   <!-- Filas dinámicas a partir de datos de entrada -->
                   @for (item of tablaFilaDatos; let i = $index; track i) {
                   <tr>
                     <td>{{ item.fechaCreacion }}</td>

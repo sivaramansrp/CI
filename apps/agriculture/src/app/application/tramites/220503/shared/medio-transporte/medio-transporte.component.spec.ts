@@ -59,16 +59,6 @@ describe('MedioTransporteComponent', () => {
     component.parentContainer = {
       control: new FormGroup({}),
     } as any;
-
-    // mockQuery.selectSolicitud$.mockReturnValue(
-    //   of({
-    //     transporteIdMedio: '1',
-    //     identificacionTransporte: 'ABC123',
-    //     esSolicitudFerros: 'Yes',
-    //     totalDeGuiasAmparadas: '10',
-    //   })
-    // );
-
     fixture.detectChanges();
   });
 
