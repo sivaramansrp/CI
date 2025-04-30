@@ -23,7 +23,9 @@
 
         <btn-continuar
             [datos]="datosPasos"
-            
+            (continuarEvento)="getValorIndice($event)"
+            [popView]="popUpView"
+            [notification]="nuevaAlertaNotificacion"
             >
         </btn-continuar>
         </div>

@@ -2,8 +2,10 @@ import {
   Component,
   EventEmitter,
   Input,
+  OnChanges,
   OnInit,
   Output,
+  SimpleChanges,
   inject,
 } from '@angular/core';
 import { Subject, map, takeUntil } from 'rxjs';
@@ -11,6 +13,10 @@ import { DatosPasos } from '../../../core/models/shared/components.model';
 import { SeccionLibQuery } from '../../../core/queries/seccion.query';
 import { SeccionLibState } from '../../../core/estados/seccion.store';
 import { WizardService } from '../../../core/services/shared/wizard/wizard.service';
+
+import { PopUpView } from '../../../core/models/301/servicios-pantallas.model';
+
+import { Notificacion, NotificacionesComponent } from '../notificaciones/notificaciones.component';
 interface AccionBoton {
   accion: string;
   valor: number;
@@ -19,7 +25,7 @@ interface AccionBoton {
 @Component({
   selector: 'btn-continuar',
   standalone: true,
-  imports: [],
+  imports: [NotificacionesComponent],
   templateUrl: './btn-continuar.component.html',
   styleUrl: './btn-continuar.component.scss',
   host: {},
@@ -30,8 +36,13 @@ export class BtnContinuarComponent implements OnInit {
 
   @Output() continuarEvento = new EventEmitter<AccionBoton>();
   @Output() btnGuardarClicked = new EventEmitter<void>();
-
+  @Input() popView:PopUpView={
+    open:false,
+    index:1
+    };
+    @Input() notification!:Notificacion;
   wizardService = inject(WizardService);
+  popUpModule:boolean=false;
   public seccion!: SeccionLibState;
   private destroyNotifier$: Subject<void> = new Subject();
   public habilitarBoton: boolean = false;
@@ -77,6 +88,10 @@ export class BtnContinuarComponent implements OnInit {
    * @returns {void} No retorna ningún valor.
    */
   continuar(): void {
+    if(this.popView.open && this.datos.indice===this.popView.index){
+      this.popUpModule=true;
+    }
+    else{
     const CONDICION =
       this.datos.indice > 0 && this.datos.indice < this.datos.nroPasos;
     if (CONDICION) {
@@ -88,7 +103,7 @@ export class BtnContinuarComponent implements OnInit {
       this.continuarEvento.emit(DATOS_CONTINUAR);
     }
   }
-
+  }
   /**
    * Retrocede al paso anterior si el índice actual está dentro del rango permitido.
    * 
@@ -105,6 +120,30 @@ export class BtnContinuarComponent implements OnInit {
 
       this.continuarEvento.emit(DATOS_ANTERIOR);
     }
+  }
+  // ngOnChanges(changes: SimpleChanges): void {
+  //   if (changes['notification']) {
+     
+  //     // React to changes here
+  //   }
+  // }
+  eliminarPedimento(borrar: boolean): void {
+    this.popUpModule=false;
+    if(borrar){
+      const CONDICION =
+      this.datos.indice > 0 && this.datos.indice < this.datos.nroPasos;
+    if (CONDICION) {
+      this.wizardService.cambio_indice(this.datos.indice);
+      const DATOS_CONTINUAR: AccionBoton = {
+        accion: 'cont',
+        valor: (this.datos.indice += 1),
+      };
+      this.continuarEvento.emit(DATOS_CONTINUAR);
+    }
+    this.popUpModule=false;
+    }
+    
+
   }
 
   /**

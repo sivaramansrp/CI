@@ -1,9 +1,10 @@
-import { AccionBoton, BtnContinuarComponent, DatosPasos, ListaPasosWizard, Notificacion, NotificacionesComponent, SeccionLibStore, WizardComponent, WizardService } from '@ng-mf/data-access-user';
+import { AccionBoton, BtnContinuarComponent, DatosPasos, ListaPasosWizard, Notificacion, NotificacionesComponent, PopUpView, SeccionLibStore, WizardComponent, WizardService } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { ViewChild } from '@angular/core';
+
 import { PASOS } from '../../constantes/concluir-relacion.enum';
 import { SECCIONES_TRAMITE_420102 } from '../../models/tramite420102.enum';
 
@@ -35,6 +36,11 @@ export class SolicitantePageComponent {
   indice: number = 1;
   dummy!: AccionBoton ;
 
+
+popUpView:PopUpView={
+open:true,
+index:1
+  }
   /**
    * Lista de pasos del asistente.
    * @type {ListaPasosWizard[]}
@@ -56,7 +62,17 @@ export class SolicitantePageComponent {
     txtBtnSig: 'Continuar',
   };
 
-  public nuevaAlertaNotificacion!: Notificacion;  
+  public nuevaAlertaNotificacion: Notificacion = {
+    tipoNotificacion: 'alert',
+    categoria: 'danger',
+    modo: 'action',
+    titulo: 'Confirmar',
+    mensaje: '¿Deseas terminar relación con el proveedor?',
+    cerrar: false,
+    tiempoDeEspera: 2000,
+    txtBtnAceptar: 'Aceptar',
+    txtBtnCancelar: 'Cancelar',
+  };  
 
   constructor(private readonly seccionStore: SeccionLibStore,
     private readonly wizardService: WizardService,
@@ -72,39 +88,17 @@ export class SolicitantePageComponent {
    * @param {AccionBoton} e - Acción del botón.
    * @returns {void}
    */
-  getValorIndice(e: any, event: any): void {
-    console.log(e, "ACCION BUTTON STATE", this.indice, "this.indice");
-    console.log(this.datosPasos, "datosPasos");
-    // return;
-    if (!this.modalEmergente && 
-      this.indice === 1 && e.accion === 'cont' && e.valor === 2
-      && !this.continueTrigger
-    ) {
-      this.openmodal(e);
-      event.preventdefault();
-      this.indice = 1;
-      this.datosPasos.indice = 1;
-      this.seccionStore.limpiarSeccion();
-      this.wizardComponent.atras();
-      this.wizardService.cambio_indice(1);
-
-      return;
-    }
+  getValorIndice(e: AccionBoton):void {
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
       if (e.accion === 'cont') {
-      console.log(this.datosPasos, "contcontcontcontcontcont");
-      this.continueTrigger = false;
         this.wizardComponent.siguiente();
       } else {
-        console.log(this.datosPasos, "atrasatrasatrasatrasatras");
-        this.continueTrigger = false;
         this.wizardComponent.atras();
       }
     }
-    console.log(this.datosPasos, "datosPasos");
-
   }
+
 
   private asignarSecciones(): void {
     const SECCIONES: boolean[] = [];
@@ -156,17 +150,12 @@ export class SolicitantePageComponent {
   }
 
   openmodal(e:AccionBoton): void {
-      console.log("inside")
       this.dummy = e;
       this.modalEmergente = true;
       this.abrirAlertaSeleccionModal();
-      console.log(this.datosPasos, "PPPPPPPPPPP");
-
-      // this.datosPasos.indice = this.indice;
   }
 
   eliminarPedimento(borrar: boolean): void {
-    console.log(borrar);
     if(borrar){
       this.modalEmergente = false;
       this.continueTrigger = true;
@@ -176,11 +165,11 @@ export class SolicitantePageComponent {
       if (E.valor > 0 && E.valor < 5) {
         this.indice = E.valor;
         if (E.accion === 'cont') {
-        console.log(this.datosPasos, "contcontcontcontcontcont");
+
         this.continueTrigger = false;
           this.wizardComponent.siguiente();
         } else {
-          console.log(this.datosPasos, "atrasatrasatrasatrasatras");
+
           this.continueTrigger = false;
           this.wizardComponent.atras();
         }
@@ -192,9 +181,5 @@ export class SolicitantePageComponent {
       this.wizardComponent.atras();
 
     }
-  }
-
-  guardar() {
-    console.log("clicked")
   }
 }

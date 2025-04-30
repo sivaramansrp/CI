@@ -31,4 +31,12 @@
     </button>
     }
   </div>
+  <div>
+ @if(popUpModule){
+    <lib-notificaciones
+      [notificacionInput]="notification"
+      (confirmacionModal)="eliminarPedimento($event)"
+    ></lib-notificaciones>
+ }
+  </div>
 </div>
