@@ -4,6 +4,12 @@ export interface ListaTabla{
   sector:string;
   }
   
+  export interface ListaTablaBaja{
+    estatus:string;
+    claveDeSector:string;
+    sector:string;
+    }
+
 // export interface ColumnasTabla {
 //   fraccionArancelaria: string;
 //   nombreTecnico: string;

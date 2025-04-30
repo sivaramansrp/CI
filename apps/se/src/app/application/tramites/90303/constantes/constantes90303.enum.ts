@@ -1,5 +1,5 @@
 import { ConfiguracionColumna } from "@libs/shared/data-access-user/src";
-import { ListaTabla } from "../models/registro.model";
+import { ListaTabla, ListaTablaBaja } from "../models/registro.model";
 
 export const LISTA_DE_SECTORS: ConfiguracionColumna<ListaTabla>[] = [
     {
@@ -18,5 +18,23 @@ export const LISTA_DE_SECTORS: ConfiguracionColumna<ListaTabla>[] = [
         orden: 3,
     },
     ];
+
+    export const LISTA_DE_SECTORS_Baja: ConfiguracionColumna<ListaTablaBaja>[] = [
+        {
+            encabezado: 'Estatus',
+            clave: (ele: ListaTablaBaja) => ele.estatus,
+            orden: 1,
+        },
+        {
+            encabezado: 'Clave de sector',
+            clave: (ele: ListaTablaBaja) => ele.claveDeSector,
+            orden: 2,
+        },
+        {
+            encabezado: 'Sector',
+            clave: (ele: ListaTablaBaja) => ele.sector,
+            orden: 3,
+        },
+        ];
 
     

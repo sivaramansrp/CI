@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ListaTabla } from '../models/registro.model';
+import { ListaTabla, ListaTablaBaja } from '../models/registro.model';
 import { catchError, Observable, throwError } from 'rxjs';
 import { Mercancias, PlantasTabla, ProductorIndirecto, SectorTabla } from '../../../shared/models/complementaria.model';
 import { Bitacora } from '../../../shared/models/bitacora.model';
@@ -15,6 +15,16 @@ export class CatalogosService {
   obtenerTablaLista(): Observable<ListaTabla[]> {
     return this.http
       .get<ListaTabla[]>('assets/json/90303/lista-tabla.json')
+      .pipe(
+        catchError((error) => {
+          return throwError(() => error);
+        })
+      );
+  }
+
+  obtenerTablaListaBaja(): Observable<ListaTablaBaja[]> {
+    return this.http
+      .get<ListaTablaBaja[]>('assets/json/90303/lista-tabla-baja.json')
       .pipe(
         catchError((error) => {
           return throwError(() => error);
