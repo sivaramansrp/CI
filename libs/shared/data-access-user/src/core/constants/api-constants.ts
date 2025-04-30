@@ -98,3 +98,5 @@ export const API_GET_RECINTO = `catalogo/recintos-fiscalizados/${CLAVE_ADUANA_QU
  * @see http://api-vucem-1069277193.us-east-1.elb.amazonaws.com/api/sat-t5701/horario/swagger-ui/index.html
  */
 export const API_VALIDA_HORARIO = 'sat-t5701/horario/valida';
+
+export const API_CERTIFICACION = `certificacion/${RFC_QUERY}/TICPSE.PROSEC`;
