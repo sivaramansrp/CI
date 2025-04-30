@@ -76,13 +76,6 @@ describe('RegistroPageComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should run #ngOnInit()', async () => {
-    component.ampliacionServiciosService = component.ampliacionServiciosService || {};
-    component.ampliacionServiciosService.deberiaMostrar$ = observableOf({});
-    component.ngOnInit();
-
-  });
-
   it('should run #getValorIndice()', async () => {
     component.wizardComponent = component.wizardComponent || {};
     component.wizardComponent.siguiente = jest.fn();

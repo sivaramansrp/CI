@@ -1,14 +1,4 @@
-/**
- * @fileoverview
- * El `AmpliacionAnexoComponent` es un componente de Angular diseñado para gestionar la funcionalidad del módulo "Ampliación de Servicios".
- * Maneja formularios reactivos, catálogos, y la interacción con el estado para la gestión de datos relacionados con fracciones arancelarias,
- * importaciones y servicios IMMEX.
- *
- * @module AmpliacionAnexoComponent
- * @description
- * Este componente proporciona funcionalidad para la ampliación de servicios, incluyendo la inicialización de formularios,
- * la obtención de datos y la interacción con el estado para la gestión de fracciones arancelarias e importaciones.
- */
+
 
 import { FormBuilder, FormGroup } from '@angular/forms';
 
@@ -33,6 +23,20 @@ import { Subject } from 'rxjs';
 import { Tramite90302Store } from '../../estados/tramite90302.store';
 import { takeUntil } from 'rxjs/operators';
 
+/**
+ * @component
+ * @name ModificacionComponent
+ * @description
+ * Este componente es responsable de gestionar la lógica y la interfaz de usuario para la modificación de trámites específicos.
+ * Proporciona funcionalidades para inicializar formularios reactivos, cargar datos desde servicios, y gestionar la tabla dinámica
+ * que muestra los datos relacionados con los trámites.
+ *
+ * @selector app-modificacion
+ * @templateUrl ./modificacion.component.html
+ * @styleUrl ./modificacion.component.scss
+ *
+ * @implements OnInit, OnDestroy
+ */
 @Component({
   selector: 'app-modificacion',
   templateUrl: './modificacion.component.html',
