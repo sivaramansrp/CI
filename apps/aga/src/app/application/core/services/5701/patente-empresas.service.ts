@@ -1,9 +1,10 @@
+import { API_GET_EMPRESA, CLAVE_PATENTE_QUERY, TIPO_PATENTE_QUERY } from '../../../shared/constants/api-constants';
 import { catchError, map, Observable, throwError } from 'rxjs';
-import { API_GET_EMPRESA } from '../../../shared/constants/api-constants';
 import { EmpresaResponse } from '../../models/5701/empresa.model';
 import { enviroment } from '@libs/shared/data-access-user/src';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Patente } from '../../models/5701/patente.model';
 
 @Injectable({
   providedIn: 'root',
@@ -19,17 +20,11 @@ export class PatenteEmpresaService {
   }
 
   /**
-   * Obtiene el identificador único asociado a un agente aduanal,
-   * apoderado o empresa que realiza operaciones de comercio exterior.
-   * Este identificador es utilizado para representar la autorización o registro de una persona o
-   * entidad para realizar actividades relacionadas con la importación o exportación de mercancías.
-   *
-   * En algunos escenarios puede devolver más de un registro.
-   *
+   * 
    * @returns Observable con la lista de empresas
    */
-  getListaEmpresas(): Observable<EmpresaResponse> {
-    const ENDPOINT = `${this.host}`+API_GET_EMPRESA;
+  getListaEmpresas(patente:Patente): Observable<EmpresaResponse> {
+    const ENDPOINT = `${this.host}`+API_GET_EMPRESA.replace(CLAVE_PATENTE_QUERY, patente.patente).replace(TIPO_PATENTE_QUERY, patente.tipo_patente);
 
     return this.http.get<EmpresaResponse>(ENDPOINT).pipe(
       map((response) => {

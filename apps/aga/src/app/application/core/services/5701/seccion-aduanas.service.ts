@@ -1,7 +1,7 @@
 
+import { API_GET_SECCION_ADUANA, CLAVE_ADUANA_QUERY } from '../../../shared/constants/api-constants';
 import { CatalogosResponse, enviroment } from '@libs/shared/data-access-user/src';
 import { catchError, map, Observable, throwError } from 'rxjs';
-import { API_GET_SECCION_ADUANA } from '../../../shared/constants/api-constants';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
@@ -22,8 +22,8 @@ export class SeccionAduanaService {
   /**
    *
    */
-  getListaSeccionesAduanas(): Observable<CatalogosResponse> {
-    const ENDPOINT = `${this.host}`+ API_GET_SECCION_ADUANA;
+  getListaSeccionesAduanas(claveAduana: string): Observable<CatalogosResponse> {
+    const ENDPOINT = `${this.host}`+ API_GET_SECCION_ADUANA.replace(CLAVE_ADUANA_QUERY, claveAduana);
 
     return this.http.get<CatalogosResponse>(ENDPOINT).pipe(
       map((response) => {

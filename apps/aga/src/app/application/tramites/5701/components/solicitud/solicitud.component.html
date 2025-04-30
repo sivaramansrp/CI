@@ -275,7 +275,7 @@
           <select class="form-control" formControlName="idAduanaDespacho" (change)="changeAduana()" >
             <option
               *ngFor="let aduana of aduanas"
-              [value]="aduana.clave">
+              [value]="aduana">
               {{ aduana.descripcion }}
             </option>
           </select>

@@ -25,24 +25,26 @@ import {
   SeccionLibQuery,
   SeccionLibState,
   SeccionLibStore,
-  SessionQuery,
   TIPO_SOLICITUD,
   TipoPersona,
   TipoSolicitudService,
   ValidacionesFormularioService,
 } from '@ng-mf/data-access-user';
 import { Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
-import { delay, filter, map, merge, Observable, of, Subject, switchMap, take, takeUntil, tap } from 'rxjs';
+import { delay, EMPTY, filter, map, merge, Observable, of, Subject, switchMap, take, takeUntil, tap } from 'rxjs';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import {
   Solicitud5701State,
   Tramite5701Store,
 } from '../../../../core/estados/tramites/tramite5701.store';
+import { AduanaService } from '../../../../core/services/5701/aduana.service';
 import { CatalogoLista } from '@libs/shared/data-access-user/src/core/models/shared/tipo-solicitud.model';
 import { DatosCheckInputText } from '../../../../core/models/shared/check-input-text.model';
 import { DatosComponentePedimento } from '../../../../core/models/5701/tramite5701.model';
 import { Modal } from 'bootstrap';
+import { Patente } from '../../../../core/models/5701/patente.model';
 import { PatenteApoderadoService } from '../../../../core/services/5701/patente-apoderado.service';
+import { PatenteEmpresaService } from '../../../../core/services/5701/patente-empresas.service';
 import { PatenteService } from '../../../../core/services/5701/patente.service';
 import { ServiciosExtraordinariosService } from '../../../../core/services/5701/servicios-extraordinarios.service';
 import { Tramite5701Query } from '../../../../core/queries/tramite5701.query';
@@ -50,10 +52,9 @@ import { Tramite5701Query } from '../../../../core/queries/tramite5701.query';
 import patentes from 'libs/shared/theme/assets/json/5701/patentes.json';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import rfcs from 'libs/shared/theme/assets/json/5701/rfcs.json';
-import { UsuarioState } from '@libs/shared/data-access-user/src/core/estados/usuario.store';
-import { AduanaService } from '../../../../core/services/5701/aduana.service';
-import { PatenteEmpresaService } from '../../../../core/services/5701/patente-empresas.service';
 import { SeccionAduanaService } from '../../../../core/services/5701/seccion-aduanas.service';
+import { UsuarioState } from '@libs/shared/data-access-user/src/core/estados/usuario.store';
+
 
 @Component({
   selector: 'app-solicitud',
@@ -330,7 +331,8 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy{
   }
 
   private validaTipoPersona(){
-    // TODO: Esta validación debería cambiar y validar contra el valor almacenado en el store
+    // TODO: Esta validación debería cambiar y validar contra el valor almacenado
+    // en el store.
     if (this.tipoPersona === TipoPersona.FISICA) {
       this.obtenerPatente();
     }
@@ -622,30 +624,30 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy{
    * @private
    */
   private obtenerPatente(): void {
-    let patente: string = '';
+    let patente: Patente;
     this.patenteService.getListaPatente('SAAA980822LP1').pipe(
       switchMap(pantenteResponse => {
         if (pantenteResponse) {
-          patente = pantenteResponse.datos?.patente;
+          patente = pantenteResponse.datos;
           const DATOS_PATENTE: DatosAgregarFormulario = {
             form: this.despacho,
             field: 'patente',
-            valor: patente,
+            valor: patente?.patente,
           };
           FormulariosService.agregarValorCamposDesactivados(DATOS_PATENTE);
-          return of(null);
+          return EMPTY;
         }
         return this.patenteApoderadoService.getListaPatentesApoderado('SAAA980822LP1');
       }),
       switchMap(patenteApoderadoResponse => {
         if (patenteApoderadoResponse) {
           this.isApoderado = true;
-          if (patenteApoderadoResponse.datos.patente.length > 1) {
+          if (patenteApoderadoResponse.datos?.patente.length > 1) {
             this.masDeUnaPatente = true;
-            return of(null);
+            return EMPTY;
           }
         }
-        return this.patenteEmpresasService.getListaEmpresas();
+        return this.patenteEmpresasService.getListaEmpresas(patente);
       }),
       tap(empresaResponse => {
         if (empresaResponse) {
@@ -1474,12 +1476,12 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy{
    * 
    */
   public changeAduana() {
-    const ADUANA = this.despacho.get('idAduanaDespacho')?.value;
+    const ADUANA: ICatalogo = this.despacho.get('idAduanaDespacho')?.value;
 
     if (ADUANA) {
       this.desactivarSelectRecinto = true;
 
-      this.seccionAduanaService.getListaSeccionesAduanas().pipe(
+      this.seccionAduanaService.getListaSeccionesAduanas(ADUANA.clave).pipe(
         tap(response => {
           if (response) {
             this.seccionAduanera = response.datos;
