@@ -1717,8 +1717,8 @@
   {
     "id": 246,
     "tramite": 80301,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/se/registro-modificacion/registro-modificacion",
+    "linkDepartment":"/pago/registro-modificacion/registro-modificacion",
     "department": "se"
   },
   {

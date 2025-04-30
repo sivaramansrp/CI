@@ -431,7 +431,13 @@ const ROUTES: Routes = [
         (m) => m.ModalidadAmpliacionModule
       ),
   },
-  
+  {
+    path: 'registro-modificacion', 
+    loadChildren: () =>
+      import('./tramites/80301/registro-modificacion.module').then(
+        (m) => m.RegistroModificacionModule
+      ),
+  }
 ];
 
 @NgModule({
