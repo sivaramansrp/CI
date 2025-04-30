@@ -1,5 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SolicitudPageComponent } from './solicitud-page.component';
+import { HttpClientModule } from '@angular/common/http';
+import { BtnContinuarComponent, WizardComponent } from '@libs/shared/data-access-user/src';
 
 describe('SolicitudPageComponent', () => {
   let component: SolicitudPageComponent;
@@ -7,6 +9,7 @@ describe('SolicitudPageComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
+      imports: [HttpClientModule, WizardComponent,  BtnContinuarComponent],
       declarations: [SolicitudPageComponent],
     }).compileComponents();
 
