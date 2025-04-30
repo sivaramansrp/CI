@@ -2,24 +2,30 @@
   <div class="row">
     <ul class="nav nav-tabs">
       <li [ngClass]="indice === 1 ? 'active' : ''">
-        <a (click)="seleccionaTab(1)" (keyup.enter)="seleccionaTab(1)" (keydown.space)="seleccionaTab(1)" tabindex="0"
-          data-toggle="tab">Solicitante</a>
+        <a data-toggle="tab" (click)="seleccionaTab(1)" (keydown.enter)="seleccionaTab(1)"
+          (keydown.space)="seleccionaTab(1)" role="button" tabindex="1">Solicitante</a>
       </li>
+
       <li [ngClass]="indice === 2 ? 'active' : ''">
-        <a (click)="seleccionaTab(2)" (keyup.enter)="seleccionaTab(2)" (keydown.space)="seleccionaTab(2)" tabindex="0"
-          data-toggle="tab">Datos del trámite</a>
+        <a data-toggle="tab" (click)="seleccionaTab(2)" (keydown.enter)="seleccionaTab(2)"
+          (keydown.space)="seleccionaTab(2)" role="button" tabindex="2">Modificación</a>
+      </li>
+
+      <li [ngClass]="indice === 3 ? 'active' : ''">
+        <a data-toggle="tab" (click)="seleccionaTab(3)" (keydown.enter)="seleccionaTab(3)"
+          (keydown.space)="seleccionaTab(3)" role="button" tabindex="3">Bitácora</a>
       </li>
     </ul>
 
     <ng-container>
-      @switch (indice) { 
-        @case (1) {
-          <solicitante></solicitante>
-        } 
-        @case (2) {
-          <app-datos-tramite></app-datos-tramite>
-        } 
-      }
+      @switch (indice) { @case (1) {
+      <solicitante #Solicitante (continuarEvento)="continuar()"></solicitante>
+      } @case (2) {
+      <app-modificacion (continuarEvento)="continuar()"></app-modificacion>
+      <!-- <app-alta-planta (continuarEvento)="continuar()"></app-alta-planta> -->
+      } @case (3) {
+        <!-- <app-bitacora></app-bitacora> -->
+        } }
     </ng-container>
   </div>
 </div>
