@@ -1,9 +1,9 @@
+import { API_CERTIFICACION, RFC_QUERY } from "../../../shared/constants/api-constants";
+import { catchError, map, Observable, throwError } from "rxjs";
+import { CertificacionResponse } from "../../models/5701/Certificacion.model";
+import { enviroment } from "@libs/shared/data-access-user/src";
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { enviroment } from "@libs/shared/data-access-user/src";
-import { CertificacionResponse } from "../../models/5701/Certificacion.model";
-import { catchError, map, Observable, throwError } from "rxjs";
-import { API_CERTIFICACION, RFC_QUERY } from "../../../shared/constants/api-constants";
 
 @Injectable({
     providedIn: 'root',
@@ -15,8 +15,14 @@ export class CertificacionService {
         this.host = `${enviroment.API_HOST}/api/`;
     }
 
-    getCertificacion(rfc: string): Observable<CertificacionResponse> {
-        const ENDPOINT = `${this.host}${API_CERTIFICACION.replace(RFC_QUERY, rfc)}`;
+    /**
+     * Método para obtener la información de la certificación de un RFC
+     * @param rfc RFC del contribuyente
+     * @param tipo Tipo de certificación (TICPSE.PROSEC)
+     * @returns Observable<CertificacionResponse>
+     */
+    getCertificacion(rfc: string, tipo: string ): Observable<CertificacionResponse> {
+        const ENDPOINT = `${this.host}${API_CERTIFICACION.replace(RFC_QUERY, rfc)}/${tipo}`;
         return this.http.get<CertificacionResponse>(ENDPOINT).pipe(
             map(
                 (response) => {

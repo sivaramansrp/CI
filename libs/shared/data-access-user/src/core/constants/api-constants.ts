@@ -86,6 +86,7 @@ export const TIPO_GAFETE_QUERY = '{tipoGafete}'
  * @see http://api-vucem-1069277193.us-east-1.elb.amazonaws.com/api/gafete/swagger-ui/index.html#/Gafetes/consulta-responsable-gafete
  */
 export const API_GET_CONSULTA_RESPONSABLE = `gafete/responsable/${NUMERO_GAFETE_QUERY}/${TIPO_GAFETE_QUERY}`;
+
 /**
  * API para recuperar los recintos inherentes de una aduana.
  * @param CLAVE_ADUANA_QUERY El clave de la aduana seleccionada por el usuario.
@@ -95,8 +96,14 @@ export const API_GET_RECINTO = `catalogo/recintos-fiscalizados/${CLAVE_ADUANA_QU
 
 /**
  * API para validar el horario de una aduana y sección
- * @see http://api-vucem-1069277193.us-east-1.elb.amazonaws.com/api/sat-t5701/horario/swagger-ui/index.html
+ * @see http://api-vucem-1069277193.us-east-1.elb.amazonaws.com/api/sat-t5701/swagger-ui/index.html#/Horarios/valida
  */
 export const API_VALIDA_HORARIO = 'sat-t5701/horario/valida';
 
-export const API_CERTIFICACION = `certificacion/${RFC_QUERY}/TICPSE.PROSEC`;
+/**
+ * API para obtener las certificaciones de Programa Fomento e IMMEX
+ * @param RFC_QUERY El RFC del solicitante
+ * @see http://api-vucem-1069277193.us-east-1.elb.amazonaws.com/api/programa-se/swagger-ui/index.html
+ */
+export const API_CERTIFICACION = `programa-se/certificacion/${RFC_QUERY}`;
+

@@ -1,0 +1,1 @@
+export const API_GET_TIPO_EQUIPO = 'catalogo/busca/tipo-equipo';

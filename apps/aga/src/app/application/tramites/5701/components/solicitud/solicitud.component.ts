@@ -58,7 +58,6 @@ import { Tramite5701Query } from '../../../../core/queries/tramite5701.query';
 import { UsuarioState } from '@libs/shared/data-access-user/src/core/estados/usuario.store';
 
 import { SocioComercialService } from '../../../../core/services/5701/socio-comercial.service';
-import { ValidaHorarioService } from '../../../../core/services/5701/valida-horario.service';
 
 
 @Component({
@@ -280,7 +279,6 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
     private serviciosExtraordinariosService: ServiciosExtraordinariosService,
     private tipoSolicitudService: TipoSolicitudService,
     private readonly aduanaService: AduanaService,
-    private validaHorario: ValidaHorarioService,
     private readonly patenteService: PatenteService,
     private readonly patenteApoderadoService: PatenteApoderadoService,
     private readonly patenteEmpresasService: PatenteEmpresaService,
