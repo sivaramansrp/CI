@@ -75,34 +75,21 @@ export class SolicitantePageComponent {
   getValorIndice(e: any, event: any): void {
     console.log(e, "ACCION BUTTON STATE", this.indice, "this.indice");
     console.log(this.datosPasos, "datosPasos");
-
-    const showModal =
-    this.indice === 1 && e.accion === 'cont' && e.valor === 2 && !this.continueTrigger;
-
-  if (showModal) {
-    this.dummy = e;
-    this.modalEmergente = true;
-    this.abrirAlertaSeleccionModal();
-    return;
-  }
     // return;
-            // if (!this.modalEmergente && 
-            //   this.indice === 1 && e.accion === 'cont' && e.valor === 2
-            //   && !this.continueTrigger
-            // ) {
-            //   this.openmodal(e);
-            //   event.preventdefault();
-            //   this.indice = 1;
-            //   this.datosPasos.indice = 1;
-            //   this.seccionStore.limpiarSeccion();
-            //   this.wizardComponent.atras();
-            //   this.wizardService.cambio_indice(1);
+    if (!this.modalEmergente && 
+      this.indice === 1 && e.accion === 'cont' && e.valor === 2
+      && !this.continueTrigger
+    ) {
+      this.openmodal(e);
+      event.preventdefault();
+      this.indice = 1;
+      this.datosPasos.indice = 1;
+      this.seccionStore.limpiarSeccion();
+      this.wizardComponent.atras();
+      this.wizardService.cambio_indice(1);
 
-            //   return;
-            // }
-
-    this.advanceWizard(e);
-
+      return;
+    }
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
       if (e.accion === 'cont') {
@@ -134,17 +121,6 @@ export class SolicitantePageComponent {
     this.seccionStore.establecerFormaValida(FORMA_VALIDA);
     this.seccionStore.limpiarSeccion();
     
-  }
-
-  private advanceWizard(e: AccionBoton): void {
-    if (e.valor > 0 && e.valor < 5) {
-      this.indice = e.valor;
-      if (e.accion === 'cont') {
-        this.wizardComponent.siguiente();
-      } else {
-        this.wizardComponent.atras();
-      }
-    }
   }
 
   // getValorIndice22(e: AccionBoton): void {
@@ -213,11 +189,6 @@ export class SolicitantePageComponent {
     } else {
       this.modalEmergente = false;
       this.continueTrigger = false;
-      this.indice = 1;
-      this.datosPasos.indice = 1;
-      this.seccionStore.limpiarSeccion();
-      this.wizardComponent.atras();
-      this.wizardService.cambio_indice(1);
       this.wizardComponent.atras();
 
     }
