@@ -73,4 +73,11 @@
     </div>
     <ng-titulo titulo="Solicitud prórroga para permisos de importación/exportación"/>
     <p>Número de permiso: 1702C624000390</p>
+    <ng-titulo titulo="Prorrogar" />
+
+    <app-tabla-dinamica
+[configuracionTabla]="configuracionTabla"
+[datos]="tercerosProd"
+[tipoSeleccionTabla]="tipoSeleccionTabla.CHECKBOX">
+</app-tabla-dinamica>
 </form>
