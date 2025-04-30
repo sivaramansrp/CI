@@ -1,13 +1,19 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { FirmaElectronicaComponent } from '@libs/shared/data-access-user/src';
+import { FirmaElectronicaComponent, SharedModule } from '@libs/shared/data-access-user/src';
 
+/**
+ * @class PasoDosComponent
+ * @description Componente que representa el paso dos del trámite 420102.
+ * Este paso incluye la funcionalidad para realizar la firma electrónica.
+ */
 @Component({
   selector: 'app-paso-dos',
   standalone: true,
-  imports: [CommonModule,
+  imports: [
     CommonModule,
-    FirmaElectronicaComponent
+    FirmaElectronicaComponent,
+    SharedModule,
   ],
   templateUrl: './paso-dos.component.html',
   styleUrl: './paso-dos.component.scss',

@@ -31,12 +31,4 @@
     </button>
     }
   </div>
-  <div>
-  @if(moduloEmergente){
-      <lib-notificaciones
-        [notificacionInput]="notificacion"
-        (confirmacionModal)="eliminarPedimento($event)"
-      ></lib-notificaciones>
-  }
-  </div>
 </div>

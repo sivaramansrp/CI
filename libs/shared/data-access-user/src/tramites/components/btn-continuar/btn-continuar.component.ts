@@ -2,18 +2,14 @@ import {
   Component,
   EventEmitter,
   Input,
-  OnChanges,
   OnInit,
   Output,
-  SimpleChanges,
   inject,
 } from '@angular/core';
-import { Notificacion, NotificacionesComponent } from '../notificaciones/notificaciones.component';
 import { Subject, map, takeUntil } from 'rxjs';
 import { DatosPasos } from '../../../core/models/shared/components.model';
 import { SeccionLibQuery } from '../../../core/queries/seccion.query';
 import { SeccionLibState } from '../../../core/estados/seccion.store';
-import { VistaEmergente } from '../../../core/models/shared/datos-generales.model';
 import { WizardService } from '../../../core/services/shared/wizard/wizard.service';
 interface AccionBoton {
   accion: string;
@@ -23,7 +19,7 @@ interface AccionBoton {
 @Component({
   selector: 'btn-continuar',
   standalone: true,
-  imports: [NotificacionesComponent],
+  imports: [],
   templateUrl: './btn-continuar.component.html',
   styleUrl: './btn-continuar.component.scss',
   host: {},
@@ -34,12 +30,7 @@ export class BtnContinuarComponent implements OnInit {
 
   @Output() continuarEvento = new EventEmitter<AccionBoton>();
   @Output() btnGuardarClicked = new EventEmitter<void>();
-  @Input() vistaEmergente: VistaEmergente = {
-    abierto: false,
-    indice: 1
-  };
-  @Input() notificacion!:Notificacion;
-  moduloEmergente: boolean = false;
+
   wizardService = inject(WizardService);
   public seccion!: SeccionLibState;
   private destroyNotifier$: Subject<void> = new Subject();
@@ -86,10 +77,6 @@ export class BtnContinuarComponent implements OnInit {
    * @returns {void} No retorna ningún valor.
    */
   continuar(): void {
-    if(this.vistaEmergente.abierto && this.datos.indice === this.vistaEmergente.indice){
-      this.moduloEmergente=true;
-    } 
-    else {
     const CONDICION =
       this.datos.indice > 0 && this.datos.indice < this.datos.nroPasos;
     if (CONDICION) {
@@ -101,7 +88,7 @@ export class BtnContinuarComponent implements OnInit {
       this.continuarEvento.emit(DATOS_CONTINUAR);
     }
   }
-  }
+
   /**
    * Retrocede al paso anterior si el índice actual está dentro del rango permitido.
    * 
@@ -117,23 +104,6 @@ export class BtnContinuarComponent implements OnInit {
       };
 
       this.continuarEvento.emit(DATOS_ANTERIOR);
-    }
-  }
-
-  eliminarPedimento(borrar: boolean): void {
-    this.moduloEmergente=false;
-    if(borrar){
-      const CONDICION =
-      this.datos.indice > 0 && this.datos.indice < this.datos.nroPasos;
-    if (CONDICION) {
-      this.wizardService.cambio_indice(this.datos.indice);
-      const DATOS_CONTINUAR: AccionBoton = {
-        accion: 'cont',
-        valor: (this.datos.indice += 1),
-      };
-      this.continuarEvento.emit(DATOS_CONTINUAR);
-    }
-    this.moduloEmergente=false;
     }
   }
 
