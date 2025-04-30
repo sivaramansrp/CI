@@ -6,6 +6,7 @@ import { BitacoraComponent } from '../../components/bitacora/bitacora.component'
 import { AnexoUnoPestanaComponent } from '../../components/anexo-uno-pestana/anexo-uno-pestana.component';
 import { ComplementariaComponent } from '../../components/complementaria/complementaria.component';
 import { MontoYFactorComponent } from '../../components/monto-y-factor/monto-y-factor.component';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('PasoUnoComponent', () => {
   let component: PasoUnoComponent;
@@ -18,7 +19,8 @@ describe('PasoUnoComponent', () => {
         BitacoraComponent,
         AnexoUnoPestanaComponent,
         ComplementariaComponent,
-        MontoYFactorComponent,],
+        MontoYFactorComponent,
+      HttpClientModule],
       declarations: [PasoUnoComponent],
     }).compileComponents();
 

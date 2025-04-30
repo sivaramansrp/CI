@@ -1,17 +1,16 @@
-import { CommonModule } from '@angular/common';
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import {
+  BITACORA_ENCABEZADO_DE_TABLA,
+  Bitacora,
+} from '../../models/modificacion-programa-immex-baja-submanufacturera.model';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   TablaDinamicaComponent,
-  TablaSeleccion,
   TituloComponent,
 } from '@ng-mf/data-access-user';
-import {
-  Bitacora,
-  BITACORA_ENCABEZADO_DE_TABLA,
-} from '../../models/modificacion-programa-immex-baja-submanufacturera.model';
+import { CommonModule } from '@angular/common';
 import { ModificacionProgramaImmexBajaSubmanufactureraService } from '../../services/modificacion-programa-immex-baja-submanufacturera.service';
-import { Tramite80303Query } from '../../estados/tramite80303Query.query';
 import { Subject } from 'rxjs';
+import { Tramite80303Query } from '../../estados/tramite80303Query.query';
 import { takeUntil } from 'rxjs';
 
 @Component({

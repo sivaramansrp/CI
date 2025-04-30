@@ -1,18 +1,18 @@
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  EMPRESA_SUBMANUFACTURERA_ENCABEZADO_DE_TABLA,
+  EmpresaSubmanufacturera,
+} from '../../models/modificacion-programa-immex-baja-submanufacturera.model';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { Subject, takeUntil } from 'rxjs';
 import {
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
 } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import {
-  EMPRESA_SUBMANUFACTURERA_ENCABEZADO_DE_TABLA,
-  EmpresaSubmanufacturera,
-} from '../../models/modificacion-programa-immex-baja-submanufacturera.model';
-import { Tramite80303Query } from '../../estados/tramite80303Query.query';
 import { ModificacionProgramaImmexBajaSubmanufactureraService } from '../../services/modificacion-programa-immex-baja-submanufacturera.service';
-import { Subject, takeUntil } from 'rxjs';
+import { Tramite80303Query } from '../../estados/tramite80303Query.query';
 
 @Component({
   selector: 'app-modificacion',

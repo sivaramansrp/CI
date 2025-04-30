@@ -6,12 +6,12 @@ import { HttpClientModule } from '@angular/common/http';
 describe('ModificacionProgramaImmexBajaSubmanufactureraService', () => {
   let service: ModificacionProgramaImmexBajaSubmanufactureraService;
 
-  beforeEach(async () => {
-       await TestBed.configureTestingModule({
-          imports: [HttpClientModule]
-        }).compileComponents();
-      });
-      service = TestBed.inject(ModificacionProgramaImmexBajaSubmanufactureraService);
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [HttpClientModule],
+    });
+    service = TestBed.inject(ModificacionProgramaImmexBajaSubmanufactureraService);
+  });
 
   it('should be created', () => {
     expect(service).toBeTruthy();

@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { BitacoraComponent } from './bitacora.component';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('BitacoraComponent', () => {
   let component: BitacoraComponent;
@@ -7,7 +8,7 @@ describe('BitacoraComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [BitacoraComponent],
+      imports: [BitacoraComponent, HttpClientModule],
     }).compileComponents();
 
     fixture = TestBed.createComponent(BitacoraComponent);
