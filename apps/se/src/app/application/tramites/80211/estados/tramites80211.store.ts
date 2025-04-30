@@ -37,12 +37,9 @@ export interface Tramites80211State {
 }
 
 /**
- * @función
- * @nombre createInitialState
- * @descripción
  * Crea y devuelve el estado inicial para el trámite 80211.
  *
- * @retorna {Tramites80211State} El estado inicial del trámite.
+ * {Tramites80211State} El estado inicial del trámite.
  */
 export function createInitialState(): Tramites80211State {
   return {
