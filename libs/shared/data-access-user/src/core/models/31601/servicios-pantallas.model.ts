@@ -24,3 +24,11 @@ export interface Personas {
   apellidoPaterno: string; // Apellido paterno de la persona
   apellidoMaterno: string; // Apellido materno de la persona
 }
+export interface TableData {
+  tableHeader: string[];
+  tableBody: TableBodyRow[];
+}
+
+export interface TableBodyRow {
+  tbodyData: string[][];
+}
