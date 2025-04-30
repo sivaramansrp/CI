@@ -9,12 +9,14 @@ import{BtnContinuarComponent} from '@libs/shared/data-access-user/src/tramites/c
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import{FirmaElectronicaComponent} from '@libs/shared/data-access-user/src/tramites/components/firma-electronica/firma-electronica.component';
 import { TipodeAvisoComponent } from './components/aviso/tipode-aviso.component';
+import { MercanciaComponent } from './components/mercancia/mercancia.component';
 // import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 // import { Tramite40402Store } from '../../estados/tramite40402.store'; 
 @NgModule({
      declarations: [SolicitantePageComponent, PasoUnoComponent, PasoDosComponent, ],
 
      imports: [
+          MercanciaComponent,
           FirmaElectronicaComponent,
           TipodeAvisoComponent,
           TituloComponent,

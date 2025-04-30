@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
-import mockData from '@libs/shared/theme/assets/json/40402/solicitante-mockdata.json';
+import mockData from '@libs/shared/theme/assets/json/11101/solicitante-mockdata.json';
 /**
  * Componente para gestionar el formulario del solicitante.
  */
