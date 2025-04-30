@@ -7,15 +7,15 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {
   FormularioDatos,
   Plantas,
-} from '../../modelos/registro-solicitud-immex.model';
+} from '../../modelos/registro-expansion.model';
 import { Subject, takeUntil } from 'rxjs';
 import {
   Tramite80211Store,
   Tramites80211State,
 } from '../../estados/tramites80211.store';
-import { CONFIGURACION_TABLA_PLANTAS } from '../../enums/registro-solicitud-immex.enum';
+import { CONFIGURACION_TABLA_PLANTAS } from '../../enums/registro-expansion.enum';
 import { Tramite80211Query } from '../../estados/tramites80211.query';
-import { registroSolicitudImmexService } from '../../services/registro-solicitud-immex.service';
+import { registroSolicitudImmexService } from '../../services/registro-expansion.service';
 
 /**
  * Componente para gestionar las empresas terciarizadas.
@@ -153,7 +153,7 @@ export class EmpresasTerciarizadasComponent implements OnInit, OnDestroy {
       this.segregatePlantasDatos();
       this.tramite80211Store.setShowPlantas(this.showPlantas);
       this.empresasForm.get('rfc')?.reset();
-      this.empresasForm.get('estado')?.reset('1');
+      this.empresasForm.get('estado')?.reset();
     }
   }
 

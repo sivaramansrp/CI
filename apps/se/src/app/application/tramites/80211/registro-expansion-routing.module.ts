@@ -1,12 +1,12 @@
 import { NgModule } from '@angular/core';
+import { RegistroExpansionComponent } from './pages/registro-expansion/registro-expansion.component';
 import { RouterModule } from '@angular/router';
 import { Routes } from '@angular/router';
-import { registroSolicitudImmexComponent } from './pages/registro-solicitud-immex/registro-solicitud-immex.component';
 
 const ROUTES: Routes = [
   {
     path: 'modalidad-ampliacion-terciarizadoras',
-    component: registroSolicitudImmexComponent,
+    component: RegistroExpansionComponent,
   },
   {
     path: '',
@@ -19,4 +19,4 @@ const ROUTES: Routes = [
   imports: [RouterModule.forChild(ROUTES)],
   exports: [RouterModule],
 })
-export class registroSolicitudImmexRoutingModule {}
+export class RegistroExpansionRoutingModule {}

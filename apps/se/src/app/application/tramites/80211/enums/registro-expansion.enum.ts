@@ -1,5 +1,5 @@
 import { ConfiguracionColumna } from "@libs/shared/data-access-user/src"
-import { Plantas } from "../modelos/registro-solicitud-immex.model"
+import { Plantas } from "../modelos/registro-expansion.model"
 
 /**
  *  CONFIGURACION_TABLA_PLANTAS

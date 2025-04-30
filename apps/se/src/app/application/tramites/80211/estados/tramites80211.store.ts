@@ -1,6 +1,6 @@
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
-import { Plantas } from '../modelos/registro-solicitud-immex.model';
+import { Plantas } from '../modelos/registro-expansion.model';
 
 /**
  * @interfaz

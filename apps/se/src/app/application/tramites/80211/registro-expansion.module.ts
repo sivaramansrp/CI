@@ -15,26 +15,26 @@ import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { RegistroExpansionComponent } from './pages/registro-expansion/registro-expansion.component';
+import { RegistroExpansionRoutingModule } from './registro-expansion-routing.module';
 import { SolicitanteComponent } from '@ng-mf/data-access-user';
 import { SolicitarTransferenciaCuposModule } from '../120501/solicitar-transferencia-cupos.module';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { WizardComponent } from '@ng-mf/data-access-user';
-import { registroSolicitudImmexComponent } from './pages/registro-solicitud-immex/registro-solicitud-immex.component';
-import { registroSolicitudImmexRoutingModule } from './registro-solicitud-immex-routing.module';
-import { registroSolicitudImmexService } from './services/registro-solicitud-immex.service';
+import { registroSolicitudImmexService } from './services/registro-expansion.service';
 
 @NgModule({
   declarations: [
     PasoUnoComponent,
     PasoDosComponent,
     PasoTresComponent,
-    registroSolicitudImmexComponent,
+    RegistroExpansionComponent,
     EmpresasTerciarizadasComponent,
   ],
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    registroSolicitudImmexRoutingModule,
+    RegistroExpansionRoutingModule,
     WizardComponent,
     BtnContinuarComponent,
     SolicitanteComponent,
@@ -51,4 +51,4 @@ import { registroSolicitudImmexService } from './services/registro-solicitud-imm
   exports: [PasoUnoComponent, PasoDosComponent, PasoTresComponent],
   providers: [registroSolicitudImmexService, ToastrService],
 })
-export class registroSolicitudImmexModule {}
+export class RegistroExpansionModule {}

@@ -1,11 +1,11 @@
-import { registroSolicitudImmexComponent } from './registro-solicitud-immex.component';
+import { RegistroExpansionComponent } from './registro-expansion.component';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
-describe('registroSolicitudImmexComponent', () => {
-  let componente: registroSolicitudImmexComponent;
+describe('RegistroExpansionComponent', () => {
+  let componente: RegistroExpansionComponent;
 
   beforeEach(() => {
-    componente = new registroSolicitudImmexComponent();
+    componente = new RegistroExpansionComponent();
     componente.wizardComponent = {
       siguiente: jest.fn(),
       atras: jest.fn(),

@@ -1,5 +1,5 @@
 import { Catalogo, RespuestaCatalogos } from '@libs/shared/data-access-user/src';
-import { FormularioDatos, Plantas, RespuestaPlantas } from '../modelos/registro-solicitud-immex.model';
+import { FormularioDatos, Plantas, RespuestaPlantas } from '../modelos/registro-expansion.model';
 import { Injectable, OnDestroy } from '@angular/core';
 import { Observable, Subject, takeUntil } from 'rxjs';
 import { HttpClient } from '@angular/common/http';

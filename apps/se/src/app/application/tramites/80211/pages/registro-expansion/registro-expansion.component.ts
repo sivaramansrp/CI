@@ -20,20 +20,20 @@ interface AccionBoton {
 }
 
 /**
- * Componente de registro-solicitud-immex.
+ * Componente de registro-expansion.
  *
- * Este componente maneja el flujo de pasos para el proceso de registro-solicitud-immex.
+ * Este componente maneja el flujo de pasos para el proceso de registro-expansion.
  *
- * @selector 'app-registro-solicitud-immex'
- * @templateUrl './registro-solicitud-immex.component.html'
- * @styleUrl './registro-solicitud-immex.component.scss'
+ * @selector 'app-registro-expansion'
+ * @templateUrl './registro-expansion.component.html'
+ * @styleUrl './registro-expansion.component.scss'
  */
 @Component({
-  selector: 'app-registro-solicitud-immex',
-  templateUrl: './registro-solicitud-immex.component.html',
-  styleUrl: './registro-solicitud-immex.component.scss',
+  selector: 'app-registro-expansion',
+  templateUrl: './registro-expansion.component.html',
+  styleUrl: './registro-expansion.component.scss',
 })
-export class registroSolicitudImmexComponent {
+export class RegistroExpansionComponent {
   /**
    * Esta variable se utiliza para almacenar la lista de pasos.
    */
