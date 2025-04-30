@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { BtnContinuarComponent, WizardComponent } from '@libs/shared/data-access-user/src';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { PantallasComponent } from '../../../301/pages/pantallas/pantallas.component';
+import { PantallasComponent } from './pantallas.component';
 
 describe('PantallasComponent', () => {
   let component: PantallasComponent;
