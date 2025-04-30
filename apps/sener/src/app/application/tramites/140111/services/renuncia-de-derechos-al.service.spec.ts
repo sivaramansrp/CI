@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { RenunciaDeDerechosAlServicio } from '../../../../../../../../libs/shared/data-access-user/src/core/services/140111/renuncia-de-derechos-al.service';
+import { RenunciaDeDerechosAlServicio } from './renuncia-de-derechos-al.service';
 import { PermisoFormInterface } from '../model/renuncia-de-derechos.model';
 
 describe('RenunciaDeDerechosAlServicio', () => {
@@ -12,40 +12,42 @@ describe('RenunciaDeDerechosAlServicio', () => {
       imports: [HttpClientTestingModule],
       providers: [RenunciaDeDerechosAlServicio]
     });
+
     service = TestBed.inject(RenunciaDeDerechosAlServicio);
     httpMock = TestBed.inject(HttpTestingController);
   });
 
   afterEach(() => {
-    httpMock.verify();
+    httpMock.verify(); 
   });
 
-  it('should be created', () => {
+  it('debe ser creado', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should fetch the description of the cupo', () => {
+  it('debería buscar la descripción del cupo del archivo JSON', () => {
     const mockResponse: PermisoFormInterface = {
-        "folioTrámite": "1701300200420241702000028",
-        "tipoDeSolicitud": "Inicial",
-        "régimen": "Definitivos",
-        "clasificaciónDelRégimen": "De exportación",
-        "periodoDeVigencia": "Largo Plazo",
-        "unidadDeMedida": "Litro",
-        "fracciónArancelaria": "27111101",
-        "cantidadAutorizada": "100.00",
-        "valorAutorizado": "100",
-        "nico": "00",
-        "descripciónNico": "Gas Natural.",
-        "acotación": "Licuado",
-        "permisoVálidoDesde": "29/08/2024",
-        "permisoVálidoHasta": "29/08/2029",
-        "motivoRenunciaDeDerechos": "",
-        "controlar": false
+      folioTramite: '12345',
+      tipoDeSolicitud: 'Importación',
+      regimen: 'Regular',
+      clasificacionDelRegimen: 'Especial',
+      periodoDeVigencia: '2025-12-31',
+      unidadDeMedida: 'Kilogramos',
+      fraccionArancelaria: 'ABC123',
+      cantidadAutorizada: '100',
+      valorAutorizado: '5000',
+      nico: 'NICO-01',
+      descripcionNico: 'Descripción NICO',
+      acotacion: 'Acotación de prueba',
+      permisoValidoDesde: '2025-01-01',
+      permisoValidoHasta: '2025-12-31',
+      motivoRenunciaDeDerechos: '', 
+      controlar: true 
     };
+    
 
-    service.getDescripcionDelCupo().subscribe((response) => {
-      expect(response).toEqual(mockResponse);
+    service.getDescripcionDelCupo().subscribe((data) => {
+      expect(data).toEqual(mockResponse);
     });
 
     const req = httpMock.expectOne('assets/json/140111/renuncia-de-derechos.json');

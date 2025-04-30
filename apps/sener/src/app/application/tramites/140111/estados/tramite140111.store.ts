@@ -6,14 +6,21 @@ import { Injectable } from '@angular/core';
  * @returns Tramite140111
  */
 export interface Tramite140111State {
+  /** Motivo de la renuncia de derechos */
   motivoRenunciaDeDerechos: string;
+  /** Control de la mercancía en la solicitud */
   mercacniaSolicitudControlar:boolean;
 }
-
+/**
+ * Función createInitialState
+ * Inicializa el estado del trámite con valores predeterminados.
+ * 
+ * @returns {Tramite140111State} - Estado inicial del trámite 140111.
+*/
 export function createInitialState(): Tramite140111State {
   return {
     motivoRenunciaDeDerechos: '',
-    mercacniaSolicitudControlar:true
+    mercacniaSolicitudControlar:false
   };
 }
 
@@ -25,12 +32,16 @@ export class Tramite140111Store extends Store<Tramite140111State> {
   constructor() {
     super(createInitialState());
   }
-
-  setMotivoRenunciaDeDerechos(motivoRenunciaDeDerechos: string): void {
+  /**
+   * Método establecerDatos
+   * Actualiza el estado del trámite con los nuevos datos proporcionados.
+   * 
+   * @param {Partial<Tramite140111State>} Datos - Datos parciales para actualizar el estado.
+  */
+  public establecerDatos(Datos:Partial<Tramite140111State>): void {
     this.update((state) => ({
       ...state,
-      motivoRenunciaDeDerechos,
+      ...Datos
     }));
   }
-
 }

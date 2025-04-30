@@ -204,7 +204,7 @@
             rows="4"
             name="motivoRenunciaDeDerechos"
             formControlName="motivoRenunciaDeDerechos"
-            (change)="setValoresStore(formulario,'motivoRenunciaDeDerechos','setMotivoRenunciaDeDerechos')"
+            (change)="setValoresStore(formulario,'motivoRenunciaDeDerechos')"
           ></textarea>
 
           <div *ngIf="esInvalido('motivoRenunciaDeDerechos')" class="text-danger">
@@ -221,7 +221,8 @@
         <div class="form-check bg-light p-0">
 
             <div class="alert alert-info content-with-checkbox">
-              <input class="form-check-input" formControlName="mercacniaSolicitudControlar" [ngClass]="{'is-invalid': esInvalido('mercacniaSolicitudControlar')}" type="checkbox" id="manifiesto">
+              <input class="form-check-input" formControlName="mercacniaSolicitudControlar" [ngClass]="{'is-invalid': esInvalido('mercacniaSolicitudControlar')}" type="checkbox" id="manifiesto"
+              (change)="setValoresStore(formulario, 'mercacniaSolicitudControlar')">
               {{MANIFIESTO_BAJO_PROTESTA}}
             </div>
         </div>
