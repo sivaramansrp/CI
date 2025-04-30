@@ -5,16 +5,10 @@ import { Tramite80210Store } from '../../estados/tramites80210.store';
 import { Tramite80210Query } from '../../estados/tramites80210.query';
 import { registroSolicitudImmexService } from '../../services/registro-solicitud-immex.service';
 import { of } from 'rxjs';
-import { CUSTOM_ELEMENTS_SCHEMA, Component, NO_ERRORS_SCHEMA } from '@angular/core';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
-import { mock } from 'node:test';
 import { Plantas } from '../../modelos/registro-solicitud-immex.model';
 
-@Component({
-  selector: 'app-catalogo-select',
-  template: '<div></div>',
-})
-class MockCatalogoSelectComponent {}
 
 describe('EmpresasTerciarizadasComponent', () => {
   let componente: EmpresasTerciarizadasComponent;
@@ -122,13 +116,13 @@ describe('EmpresasTerciarizadasComponent', () => {
     expect(tramite80210StoreMock.setPlantasDisponibles).toHaveBeenCalledWith([]);
     expect(tramite80210StoreMock.setShowPlantas).toHaveBeenCalledWith(true);
     expect(componente.empresasForm.get('rfc')?.value).toBeNull();
-    expect(componente.empresasForm.get('estado')?.value).toBe('1');
+    expect(componente.empresasForm.get('estado')?.value).toBe('');
   });
 
   it('debería segregar plantas disponibles y seleccionadas', () => {
     componente.tramites80210State = {
       rfc: 'RFC123',
-      estados: 'Estado1',
+      estados: '',
       plantasDisponibles: [DATOS_MOCK[0]],
       plantasSeleccionadas: [DATOS_MOCK[1]],
       showPlantas: true,

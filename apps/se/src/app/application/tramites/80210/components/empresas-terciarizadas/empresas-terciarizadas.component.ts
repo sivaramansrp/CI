@@ -8,7 +8,7 @@ import {
   FormularioDatos,
   Plantas,
 } from '../../modelos/registro-solicitud-immex.model';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, takeUntil, tap } from 'rxjs';
 import {
   Tramite80210Store,
   Tramites80210State,
@@ -153,7 +153,7 @@ export class EmpresasTerciarizadasComponent implements OnInit, OnDestroy {
       this.segregatePlantasDatos();
       this.tramite80210Store.setShowPlantas(this.showPlantas);
       this.empresasForm.get('rfc')?.reset();
-      this.empresasForm.get('estado')?.reset('1');
+      this.empresasForm.get('estado')?.reset();
     }
   }
 
@@ -172,12 +172,18 @@ export class EmpresasTerciarizadasComponent implements OnInit, OnDestroy {
    * Segrega los datos de las plantas en disponibles y seleccionadas.
    */
   segregatePlantasDatos(): void {
+    
     if (this.tramites80210State.plantasDisponibles.length > 0) {
       this.plantasDisponibles = this.tramites80210State.plantasDisponibles;
     } else {
       if(this.empresasForm.valid) {
       this.registroSolicitudService.obtenerPlantasDatos()
-        .pipe(takeUntil(this.destoryNotification$))
+        .pipe(
+          takeUntil(this.destoryNotification$),
+          tap((plantas) => {
+            this.tramite80210Store.setPlantasDisponibles(plantas?.datos);
+          })
+        )
         .subscribe((plantas) => {
           this.plantasDisponibles = plantas?.datos;
         });
