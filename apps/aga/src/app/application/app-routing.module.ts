@@ -124,16 +124,14 @@ const ROUTES: Routes = [
   {
     path: 'registro-caat-naviero',
     loadChildren: () =>
-      import('./tramites/40301/registro-caat-naviero.module').then(
-        (m) => m.RegistroCaatNavieroModule
-      ),
+      import('./tramites/40301/registro-caat-naviero.module').then((m) => m.RegistroCaatNavieroModule),
   },
-  {
-    path: 'transferencia-contenedores',
-    loadChildren: () =>
-      import('./tramites/11204/temporal-contenedores.module').then(
-        (m) => m.TemporalContenedoresModule
-      ),
+{
+  path: 'transferencia-contenedores',
+  loadChildren: () =>
+    import('./tramites/11204/temporal-contenedores.module').then(
+      (m) => m.TemporalContenedoresModule
+    ),
   },
   {
     path: 'registro-digitalizar-documentos',
@@ -159,7 +157,9 @@ const ROUTES: Routes = [
   {
     path: 'invocar-modulo',
     loadChildren: () =>
-      import('./tramites/105/invocar.module').then((m) => m.InvocarModule),
+      import('./tramites/105/invocar.module').then(
+        (m) => m.InvocarModule
+      ),
   },
   {
     path: 'attention-Of-Renewal',
@@ -171,16 +171,16 @@ const ROUTES: Routes = [
   {
     path: 'retirada-de-la-autorizacion-de-donaciones',
     loadChildren: () =>
-      import(
-        './tramites/11105/retirada-de-la-autorizacion-de-donaciones.module'
-      ).then((m) => m.RetiradaDeLaAutorizacionDeDonacioneModule),
+      import('./tramites/11105/retirada-de-la-autorizacion-de-donaciones.module').then(
+        (m) => m.RetiradaDeLaAutorizacionDeDonacioneModule
+      )
   },
   {
     path: 'deposito-fiscal',
     loadChildren: () =>
-      import(
-        './tramites/104/deposito-fiscal-manufactura-vehiculos/deposito-fiscal-manufactura-vehiculos.module'
-      ).then((m) => m.DepositoFiscalManufacturaVehiculosModule),
+      import('./tramites/104/deposito-fiscal-manufactura-vehiculos/deposito-fiscal-manufactura-vehiculos.module').then(
+        (m) => m.DepositoFiscalManufacturaVehiculosModule
+      )
   },
   {
     path: 'transportacion-maritima',
@@ -194,21 +194,21 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/6101/junta-tecnica.module').then(
         (m) => m.JuntaTecnicaModule
-      ),
+      )
   },
   {
     path: 'modificacion-transportacion-maritima',
     loadChildren: () =>
-      import(
-        './tramites/40202/modificacion-transportacion-maritima.module'
-      ).then((m) => m.ModificacionTransportacionMaritimaModule),
+      import('./tramites/40202/modificacion-transportacion-maritima.module').then(
+        (m) => m.ModificacionTransportacionMaritimaModule
+      ),
   },
   {
     path: 'modificarCaatTerrestre',
     loadChildren: () =>
       import('./tramites/40103/modificarCaatTerrestre.module').then(
         (m) => m.ModificarCaatTerrestreModule
-      ),
+      )
   },
   {
     path: 'cancelacion-donaciones',
@@ -217,7 +217,7 @@ const ROUTES: Routes = [
         (m) => m.CancelacionDonacionesModule
       ),
   },
-  {
+  { 
     path: 'prestadores-servicio',
     loadChildren: () =>
       import('./tramites/202/prestadores-servicio.module').then(
@@ -232,32 +232,29 @@ const ROUTES: Routes = [
       ),
   },
   {
-    path: 'registro-solicitud',
+    path:'registro-solicitud',
     loadChildren: () =>
       import('./tramites/570102/registro-solicitud-desistimiento.module').then(
         (m) => m.RegistroSolicitudDesistimientoModule
       ),
-  },
-  {
+    },
+    {
     path: 'registro-del-codigo',
-    loadChildren: () =>
-      import('./tramites/40401/tramite40401.module').then(
-        (m) => m.Tramite40401Module
-      ),
+      loadChildren: () =>
+        import('./tramites/40401/tramite40401.module').then(
+          (m) => m.Tramite40401Module),
   },
   {
     path: 'codigo-transportista',
-    loadChildren: () =>
+    loadChildren: () => 
       import('./tramites/40402/codigo-transportista.module').then(
-        (m) => m.CodigoTransportistaModule
-      ),
+        (m) => m.CodigoTransportistaModule)
   },
   {
     path: 'registro-transportista',
     loadChildren: () =>
       import('./tramites/40302/registro-transportista.module').then(
-        (m) => m.RegistroTransportistaModule
-      ),
+        (m) => m.RegistroTransportistaModule),
   },
   {
     path: 'modificacion-donaciones-immex',
@@ -272,4 +269,4 @@ const ROUTES: Routes = [
   imports: [RouterModule.forChild(ROUTES)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }
