@@ -19,5 +19,5 @@ export class TercerosRelacionadosFabricanteComponent {
    * Constante que define el orden de la tabla para los terceros relacionados.
    * Se utiliza para mostrar la tabla en el componente TercerosRelacionadosComponent.
    */
-  tableOrder = TABLA_ORDEN;
+  tablaOrden = TABLA_ORDEN;
 }
