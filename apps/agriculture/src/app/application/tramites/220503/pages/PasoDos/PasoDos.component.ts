@@ -14,6 +14,7 @@ import { INFO_ALERT } from '../../enums/texto-enum';
 import { ReactiveFormsModule } from '@angular/forms';
 import documentList from '@libs/shared/theme/assets/json/220503/document-list.json';
 
+
 @Component({
   selector: 'app-paso-dos',
   standalone: true,
