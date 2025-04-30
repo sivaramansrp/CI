@@ -1,14 +1,13 @@
-import { Component, OnInit } from '@angular/core';
-import { ConfiguracionColumna, InputFecha, InputFechaComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
-import { DatosDelContenedor } from '@libs/shared/data-access-user/src/core/models/11202/datos-tramite.model';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { DOMICILIO_TABLA_COLUMNAS, FECHA_INGRESO } from '../../constantes/concluir-relacion.enum';
-import { Subject, takeUntil } from 'rxjs';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { InputFecha, InputFechaComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Subject, map, takeUntil} from 'rxjs';
+import { Tramite420102State, Tramite420102Store } from '../../estados/tramite420102.store';
+import { CommonModule } from '@angular/common';
 import { ConcluirRelacionService } from '../../services/concluir-relacion.service';
-import { Tramite420102Store } from '../../estados/tramite420102.store';
-import { Tramite4201023Query } from '../../estados/tramite420102.query';
+import { ReactiveFormsModule } from '@angular/forms';
+import { Tramite420102Query } from '../../estados/tramite420102.query';
 
 
 @Component({
@@ -23,7 +22,7 @@ import { Tramite4201023Query } from '../../estados/tramite420102.query';
   templateUrl: './concluir-relacion.component.html',
   styleUrl: './concluir-relacion.component.scss',
 })
-export class ConcluirRelacionComponent implements OnInit {
+export class ConcluirRelacionComponent implements OnInit, OnDestroy {
 
   /**
    * Formulario reactivo utilizado para capturar los datos del trámite.
@@ -32,59 +31,45 @@ export class ConcluirRelacionComponent implements OnInit {
   
   public fechaInicioInput: InputFecha = FECHA_INGRESO;
   
-  seleccionTabla = TablaSeleccion.RADIO;
 
   public encabezadoDeTabla = DOMICILIO_TABLA_COLUMNAS;
   
-  fechaPagoDate: string = '';
-
-  datosTabla: any[] = [];
 
   private destroyNotifier$: Subject<void> = new Subject();
+  
+  public solicitudState!: Tramite420102State;
 
+  fechaPagoDate: string = '';
+  
+  seleccionTabla = TablaSeleccion.RADIO;
+
+  datosTabla : any = [];
 
   constructor(
     private fb: FormBuilder,
     private concluirrelacionService: ConcluirRelacionService,
     private tramite420102Store: Tramite420102Store,
-    private tramite420102Query: Tramite4201023Query,
-    // private desistimientoService: DesistimientoSolicitudService,
-    // private readonly desistimientoStore: Solicitud230301Store,
-    // private consultaSolicitud230301: ConsultaSolicitud230301Query,
-    // private seccionQuery: SeccionLibQuery,
-    // private seccionStore: SeccionLibStore
+    private tramite420102Query: Tramite420102Query,
   ) {
         // Se puede agregar aquí la lógica del constructor si es necesario
   }
 
   ngOnInit(): void {
-    //   this.consultaSolicitud230301.estadoSolicitud$
-    //   .pipe(
-    //     takeUntil(this.destroyNotifier$),
-    //     map((seccionState) => {
-    //       this.solicitudState = seccionState;
-    //     })
-    //   )
-    //   .subscribe();
-
-    //   // Suscripción al estado de la sección
-    //   this.seccionQuery.selectSeccionState$
-    //     .pipe(
-    //       takeUntil(this.destroyNotifier$),
-    //       map((seccionState) => {
-    //         this.seccion = seccionState;
-    //       })
-    //     )
-    //     .subscribe();
+    this.tramite420102Query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+        })
+      )
+      .subscribe();
       this.crearDesistimientoForm();
-    //   this.getFromdata();
   }
 
   crearDesistimientoForm (): void {
-    // Inicialización del formulario reactivo
     this.concluirFormulario = this.fb.group({
       rfc: [
-        '',
+        this.solicitudState?.rfc || '',
         Validators.required,
       ],
       fechaInicial: [
@@ -96,10 +81,6 @@ export class ConcluirRelacionComponent implements OnInit {
     });
   }
 
-    
-  /**
-   * Busca una solicitud utilizando el valor de `claveFolioCAAT` proporcionado en el formulario.
-   */
   concluirFormularioSubmit(): void {
     if (this.concluirFormulario.valid) {
       this.concluirrelacionService.obtenerTablerList('concluir-relacion-Tablea.json').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
@@ -109,30 +90,32 @@ export class ConcluirRelacionComponent implements OnInit {
   }
 
   buscarRFC(): void {
-    console.log('buscando RFC');
     this.tramite420102Store.establecerRfc(this.concluirFormulario.get('rfc')?.value);
-
     if (this.concluirFormulario.valid) {
       this.concluirrelacionService.obtenerTablerList('concluir-relacion-Tablea.json').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
-        console.log(data, "DDDDDDDDd")
         this.datosTabla = data;
       });
     }
   }
 
-    public cambiarFechaInicio(nuevo_valor: string): void {
-      this.concluirFormulario.patchValue({
-          fechaInicial: nuevo_valor,
-      });
-      this.concluirFormulario.get('fechaInicial')?.setValue(nuevo_valor);
-      this.concluirFormulario.get('fechaInicial')?.markAsUntouched();
-    }
+  public cambiarFechaInicio(nuevo_valor: string): void {
+    this.concluirFormulario.patchValue({
+        fechaInicial: nuevo_valor,
+    });
+    this.concluirFormulario.get('fechaInicial')?.setValue(nuevo_valor);
+    this.concluirFormulario.get('fechaInicial')?.markAsUntouched();
+  }
 
-    public cambiarFechaFinal(nuevo_valor: string): void {
-      this.concluirFormulario.patchValue({
-          fechaFinal: nuevo_valor,
-      });
-      this.concluirFormulario.get('fechaFinal')?.setValue(nuevo_valor);
-      this.concluirFormulario.get('fechaFinal')?.markAsUntouched();
-    }
+  public cambiarFechaFinal(nuevo_valor: string): void {
+    this.concluirFormulario.patchValue({
+        fechaFinal: nuevo_valor,
+    });
+    this.concluirFormulario.get('fechaFinal')?.setValue(nuevo_valor);
+    this.concluirFormulario.get('fechaFinal')?.markAsUntouched();
+  }
+
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete(); 
+  }
 }

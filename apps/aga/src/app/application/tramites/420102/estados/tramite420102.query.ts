@@ -4,12 +4,12 @@ import { Query } from '@datorama/akita';
 
   
   @Injectable({ providedIn: 'root' })
-  export class Tramite4201023Query extends Query<Tramite420102State> {
+  export class Tramite420102Query extends Query<Tramite420102State> {
     constructor(protected override store: Tramite420102Store) {
       super(store);
     }
 
-    selectSeccionState$ = this.select((state) => {
+    selectSolicitud$ = this.select((state) => {
       return state;
     });
   }
