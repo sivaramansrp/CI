@@ -56,8 +56,8 @@ import { SeccionAduanaService } from '../../../../core/services/5701/seccion-adu
 import { ServiciosExtraordinariosService } from '../../../../core/services/5701/servicios-extraordinarios.service';
 import { Tramite5701Query } from '../../../../core/queries/tramite5701.query';
 import { UsuarioState } from '@libs/shared/data-access-user/src/core/estados/usuario.store';
-import { SocioComercialService } from '../../../../core/services/5701/socio-comercial.service';
 
+import { SocioComercialService } from '../../../../core/services/5701/socio-comercial.service';
 
 
 @Component({
@@ -65,7 +65,7 @@ import { SocioComercialService } from '../../../../core/services/5701/socio-come
   templateUrl: './solicitud.component.html',
   styleUrl: './solicitud.component.scss',
 })
-export class SolicitudComponent implements OnInit, OnChanges, OnDestroy{
+export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
 
   /**
    * Índice de tabulación para el control de enfoque en la interfaz.
@@ -320,6 +320,9 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy{
       })
     ).subscribe();
 
+    // Aqui se busca el nro de patente o autorizacion
+    //
+    this.obtenerPatente();
     this.tipoSolicitudSeleccion();
 
     this.desactivarSelectSeccionAduanera = (this.seccionAduanera && this.seccionAduanera.length === 0) ? true : false;

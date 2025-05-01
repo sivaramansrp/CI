@@ -58,9 +58,9 @@ export const TIPO_PERSONA = {
 };
 
 export const TIPO_SOLICITUD = {
-  INDIVIDUAL: 27,
-  SEMANAL: 28,
-  MENSUAL: 29,
+  INDIVIDUAL: 1,
+  SEMANAL: 2,
+  MENSUAL: 3,
 };
 
 export const PADDING = {
