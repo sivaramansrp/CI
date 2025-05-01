@@ -17,6 +17,10 @@ import { Modal } from 'bootstrap';
 import { Subject, take, takeUntil, tap } from 'rxjs';
 import { TipoEquipoService } from '../../../core/services/shared/catalogos/tipo-equipo.service';
 import { ICatalogo } from '../../../core/models/shared/catalogo.model';
+import { ValidaTransporteService } from '../../../core/services/shared/api-validaciones/valida-transporte.service';
+import { BodyValidaFerro } from '../../../core/models/shared/validaciones-transporte.model';
+import { get } from 'http';
+import { Notificacion, NotificacionesComponent } from '../notificaciones/notificaciones.component';
 
 @Component({
   selector: 'lib-agregar-transporte',
@@ -27,6 +31,7 @@ import { ICatalogo } from '../../../core/models/shared/catalogo.model';
     InputCheckComponent,
     ReactiveFormsModule,
     InputHoraComponent,
+    NotificacionesComponent,
   ],
   templateUrl: './agregar-transporte.component.html',
   styleUrl: './agregar-transporte.component.scss',
@@ -147,6 +152,11 @@ export class AgregarTransporteComponent implements OnChanges, OnInit {
   public observaciones: FormControl = new FormControl('', [Validators.maxLength(500)]);
   anios!: Catalogo[];
 
+  /**
+   * @descripcion Notificación para mostrar mensajes al usuario.
+   */
+  public nuevaNotificacion!: Notificacion;
+
 
   private destroyNotifier$: Subject<void> = new Subject();
 
@@ -154,6 +164,7 @@ export class AgregarTransporteComponent implements OnChanges, OnInit {
   constructor(
     private fb: FormBuilder,
     private tipoEquipoServicio: TipoEquipoService,
+    private validaTransporteService: ValidaTransporteService
   ) { }
 
   ngOnInit(): void {
@@ -203,9 +214,9 @@ export class AgregarTransporteComponent implements OnChanges, OnInit {
   crearFerroviarioForm(): void {
     this.ferroviarioForma = this.fb.group({
       numeroBL: ['', [Validators.maxLength(25)]],
-      tipoEquipo: [-1],
-      inicialesEquipo: ['', [Validators.maxLength(10)]],
-      numeroEquipo: ['', [Validators.maxLength(15)]],
+      tipoEquipo: [{ value: '-1', disabled: true }],
+      inicialesEquipo: [{ value: '', disabled: true }, [Validators.maxLength(10)]],
+      numeroEquipo: [{ value: '', disabled: true }, [Validators.maxLength(15)]],
     });
   }
 
@@ -341,13 +352,16 @@ export class AgregarTransporteComponent implements OnChanges, OnInit {
         const TRANSPORTE: TransporteCarretero = this.carreteroForma.value;
         TRANSPORTE.observaciones = this.observaciones.value;
         this.bodyTabla.push(TRANSPORTE);
+        this.carreteroForma.reset();
         break;
       }
 
       case 2: {
-        const TRANSPORTE: TransporteFerroviario = this.ferroviarioForma.value;
+        const TRANSPORTE: TransporteFerroviario = this.ferroviarioForma.getRawValue();
+        TRANSPORTE.tipoEquipo = TRANSPORTE.tipoEquipo === '-1' ? '' : TRANSPORTE.tipoEquipo;
         TRANSPORTE.observaciones = this.observaciones.value;
         this.bodyTabla.push(TRANSPORTE);
+        this.ferroviarioForma.reset();
         break;
       }
 
@@ -355,6 +369,7 @@ export class AgregarTransporteComponent implements OnChanges, OnInit {
         const TRANSPORTE: TransporteAereo = this.aereoForma.value;
         TRANSPORTE.observaciones = this.observaciones.value;
         this.bodyTabla.push(TRANSPORTE);
+        this.aereoForma.reset();
         break;
       }
 
@@ -362,14 +377,14 @@ export class AgregarTransporteComponent implements OnChanges, OnInit {
         const TRANSPORTE: TransporteMaritimo = this.maritimoForma.value;
         TRANSPORTE.observaciones = this.observaciones.value;
         this.bodyTabla.push(TRANSPORTE);
+        this.maritimoForma.reset();
         break;
       }
-
-
       case 5: {
         const TRANSPORTE: TransportePeatonal = this.peatonalForma.value;
         TRANSPORTE.observaciones = this.observaciones.value;
         this.bodyTabla.push(TRANSPORTE);
+        this.peatonalForma.reset();
         break;
       }
 
@@ -377,6 +392,7 @@ export class AgregarTransporteComponent implements OnChanges, OnInit {
         const TRANSPORTE: TransporteOtro = this.otroForma.value;
         TRANSPORTE.observaciones = this.observaciones.value;
         this.bodyTabla.push(TRANSPORTE);
+        this.otroForma.reset();
         break;
       }
     }
@@ -444,5 +460,62 @@ export class AgregarTransporteComponent implements OnChanges, OnInit {
         }),
         takeUntil(this.destroyNotifier$),
       ).subscribe();
+  }
+
+  /**
+   * Valida el número BL para el transporte ferroviario, si s valido, regresa los datos de tipo equipo, Iniciales de quipo y Número de equipo.
+   * @param tipo - Tipo de transporte (ferro).
+   * @returns {void} No retorna ningún valor.
+   */ 
+  postValidarNumeroBL(tipo: string): void {
+    const NUMERO_BL = parseInt(this.ferroviarioForma.get('numeroBL')?.value, 10);
+    if (NUMERO_BL) {
+      const BODY: BodyValidaFerro = {
+        numeroBL: NUMERO_BL,
+      }
+      this.validaTransporteService.getValidaFerroviario(tipo, BODY).pipe(
+        tap((response) => {
+          if (response.codigo === '00') {
+            const DATOS = response.datos;
+            this.agregarValorCampoDisabled('tipoEquipo', DATOS.tipoEquipo);
+            this.agregarValorCampoDisabled('inicialesEquipo', DATOS.inicialesEquipo);
+            this.agregarValorCampoDisabled('numeroEquipo', DATOS.numeroEquipo);
+          } else {
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'alert',
+              categoria: '',
+              modo: 'action',
+              titulo: 'Aviso',
+              mensaje: 'Número BL es inválido.',
+              cerrar: false,
+              txtBtnAceptar: 'Cerrar',
+              txtBtnCancelar: '',
+            }
+          }
+        }),
+        takeUntil(this.destroyNotifier$),
+      ).subscribe();
+    } else {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: '',
+        modo: 'action',
+        titulo: 'Aviso',
+        mensaje: 'Debes agregar un número BL.',
+        cerrar: false,
+        txtBtnAceptar: 'Cerrar',
+        txtBtnCancelar: '',
+      }
+    }
+  }
+
+  postValidarGuiaAerea(tipo: string): void {
+    
+  }
+
+  agregarValorCampoDisabled(campo: string, valor: string | null): void {
+    this.ferroviarioForma.get(campo)?.enable();
+    this.ferroviarioForma.get(campo)?.setValue(valor);
+    this.ferroviarioForma.get(campo)?.disable();
   }
 }

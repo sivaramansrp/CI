@@ -147,24 +147,20 @@
   <div class="row" [formGroup]="ferroviarioForma">
     <div class="col-md-6">
       <div class="form-group">
-        <label class="form-label" for="numeroBL">Npumero de BL:</label>
-        <input class="form-control" id="numeroBL" placeholder="" type="text" formControlName="numeroBL">
+        <label class="form-label" for="numeroBL">Número de BL:</label>
+        <div class="input-group">
+          <input class="form-control" id="numeroBL" placeholder="" type="text" formControlName="numeroBL">
+          <button class="btn btn-outline-secondary" type="button" id="button-addon2" (click)="postValidarNumeroBL('ferro')">Buscar</button>
+        </div>
       </div>
     </div>
     <div class="col-md-6">
       <div class="form-group">
         <label class="form-label" for="tipoEquipo">Tipo de equipo:</label>
-        <select class="form-control" name="tipoEquipo" id="tipoEquipo" class="form-control">
-          <option value="-1" selected>Seleccione una opción</option>
+        <select class="form-control" name="tipoEquipo" id="tipoEquipo" class="form-control" formControlName="tipoEquipo">
+          <option value="-1">Seleccione una opción</option>
           <option *ngFor="let item of tipoEquipoCatalogo" [value]="item.clave">{{ item.descripcion }}</option>
         </select>
-      </div>
-    </div>
-
-    <div class="col-md-6">
-      <div class="form-group">
-        <label class="form-label" for="tipoEquipo">Tipo de equipo:</label>
-        <input class="form-control" id="tipoEquipo" placeholder="" type="text" formControlName="tipoEquipo">
       </div>
     </div>
     <div class="col-md-6">
@@ -310,3 +306,13 @@
     </div>
   </div>
 </ng-template>
+
+@if (nuevaNotificacion) {
+  <section>
+    <lib-notificaciones [notificacionInput]="nuevaNotificacion">
+    </lib-notificaciones>
+  </section>
+  }
+
+  
+  
