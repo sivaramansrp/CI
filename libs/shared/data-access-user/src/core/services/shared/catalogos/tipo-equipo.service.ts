@@ -1,5 +1,5 @@
 import { catchError, map, Observable, throwError } from "rxjs";
-import { API_GET_TIPO_EQUIPO } from "../../../../tramites/constantes/api-constantes";
+import { API_GET_TIPO_EQUIPO } from "../../../constants/api-constants";
 import { CatalogosResponse } from "../../../models/shared/catalogo.model";
 import { enviroment } from "../../../../enviroments/enviroment";
 import { HttpClient } from "@angular/common/http";
