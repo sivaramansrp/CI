@@ -81,7 +81,7 @@ export interface ValidacionesTransporte {
 }
 
 /**
- * Representa el cuerpo de la solicitud para validar el transporte ferroviario.
+ * Representa el cuerpo de la solicitud para validar el número BL del transporte ferroviario.
  * 
  * @interface BodyValidaFerro
  * 
@@ -89,4 +89,15 @@ export interface ValidacionesTransporte {
  */
 export interface BodyValidaFerro {
     numeroBL: number;
+}
+
+/**
+ * Representa el cuerpo de la solicitud para validar la guía  del transporte aéreo.
+ * 
+ * @interface BodyValidaAereo
+ * 
+ * @property {string} guiaMaster - Número de guía master a validar.
+ */
+export interface BodyValidaAereo {
+    guiaHouseAereo: string;
 }
