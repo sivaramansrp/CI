@@ -182,3 +182,76 @@ export const DESTINATARIO_TABLE_ENTRY = {
    */
   codigoPostal: 96533,
 };
+
+/**
+ * Represents the options for nationality selection.
+ * Each option includes a label for display purposes and a corresponding value.
+ * 
+ * Options:
+ * - `Nacional`: Represents a national individual with the value 'nacional'.
+ * - `Extranjero`: Represents a foreign individual with the value 'extranjero'.
+ */
+export const NACIONALIDAD_OPCIONES = [
+  {
+    label: 'Nacional',
+    value: 'nacional',
+  },
+  {
+    label: 'Extranjero',
+    value: 'extranjero',
+  }
+];
+
+/**
+ * Represents the options for the type of person (persona) in a dropdown or selection component.
+ * Each option includes a label for display purposes and a corresponding value.
+ * 
+ * Options:
+ * - `Fisica`: Represents a physical person (individual).
+ * - `Moral`: Represents a moral person (legal entity or corporation).
+ */
+export const TIPO_PERSONA_OPCIONES = [
+  {
+    label: 'Fisica',
+    value: 'fisica',
+  },
+  {
+    label: 'Moral',
+    value: 'moral',
+  }
+];
+
+
+/**
+ * An object containing information labels for a recipient (destinatario).
+ * This object is used to define various properties related to a recipient's details,
+ * such as nationality, type of person, and address information.
+ *
+ * Properties:
+ * - `nacionalidad`: Label for the recipient's nationality.
+ * - `tipoPersona`: Label for the type of person (e.g., individual or entity).
+ * - `nacional`: Label indicating the recipient is a national.
+ * - `extranjero`: Label indicating the recipient is a foreigner.
+ * - `denominacion`: Label for the denomination or business name.
+ * - `nombre`: Label for the recipient's first name.
+ * - `apellidoPaterno`: Label for the recipient's paternal last name.
+ * - `apellidoMaterno`: Label for the recipient's maternal last name.
+ * - `codigoPostal`: Label for the recipient's postal code.
+ * - `pais`: Label for the recipient's country.
+ * - `ciudad`: Label for the recipient's city.
+ * - `domicilio`: Label for the recipient's address.
+ */
+export const DESTINARIO_INFO = {
+  nacionalidad: "Nacionalidad:",
+  tipoPersona: "Tipo de persona:",
+  nacional: 'Nacional',
+  extranjero: 'Extranjero',
+  denominacion: "Denominación o Razón Social",
+  nombre: "Nombre",
+  apellidoPaterno: "Apellido Paterno",
+  apellidoMaterno: "Apellido Materno",
+  codigoPostal: "Código Postal",
+  pais: "País",
+  ciudad: "Ciudad",
+  domicilio: "Domicilio"
+}

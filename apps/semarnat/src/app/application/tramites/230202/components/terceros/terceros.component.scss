@@ -44,3 +44,7 @@ textarea.form-control {
 #modalAgregarMercancias {
   min-height: 80%;;
 }
+
+.ng-touched.ng-invalid {
+  border-color: #dc3545 !important;
+}
