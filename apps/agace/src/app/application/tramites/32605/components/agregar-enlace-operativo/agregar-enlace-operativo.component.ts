@@ -1,20 +1,20 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-import { map, Subject, takeUntil } from 'rxjs';
-import {
-  Solicitud32605State,
-  Solicitud32605Store,
-} from '../../estados/solicitud32605.store';
-import { TituloComponent } from '@libs/shared/data-access-user/src';
-import { Solicitud32605Query } from '../../estados/solicitud32605.query';
-import { SolicitudService } from '../../services/solicitud.service';
+import { Component } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
+import { OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
 import { RepresentanteLegal } from '../../models/solicitud.model';
+import { Solicitud32605Query } from '../../estados/solicitud32605.query';
+import { Solicitud32605State } from '../../estados/solicitud32605.store';
+import { Solicitud32605Store } from '../../estados/solicitud32605.store';
+import { SolicitudService } from '../../services/solicitud.service';
+import { Subject } from 'rxjs';
+import { TituloComponent } from '@libs/shared/data-access-user/src';
+import { Validators } from '@angular/forms';
+import { map } from 'rxjs';
+import { takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-agregar-enlace-operativo',
