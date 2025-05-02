@@ -1,4 +1,4 @@
-import { ADV_MAXIMO_PERSONAS, ERR_BUSQUEDA_GAFETE_SIN_RESULTADOS, ERR_CAMPOS_OBLIGATORIOS, ERR_INPUT_BUSQUEDA_VACIO, MSG_ELIMINA_ELEMENTO, TITULO_MODAL } from '../../../../core/enums/5701/tramite5701.enum';
+import { ADV_MAXIMO_PERSONAS, ERR_BUSQUEDA_GAFETE_SIN_RESULTADOS, ERR_CAMPOS_OBLIGATORIOS, ERR_INPUT_BUSQUEDA_VACIO, MSG_DATOS_GUARDADOS, MSG_ELIMINA_ELEMENTO, TITULO_MODAL } from '../../../../core/enums/5701/tramite5701.enum';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
@@ -7,17 +7,19 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { map, Subject, takeUntil, tap } from 'rxjs';
+import { Notificacion, NotificacionesComponent, UppercaseDirective, ValidacionesFormularioService } from '@ng-mf/data-access-user';
 import { Solicitud5701State, Tramite5701Store } from '../../../../core/estados/tramites/tramite5701.store';
-import { Subject, map, takeUntil } from 'rxjs';
-import { UppercaseDirective, ValidacionesFormularioService } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
+import { ConsultaResponsableService } from '../../../../core/services/5701/consulta-responsable.service';
 import { ResponsablesDespacho } from '../../../../core/models/5701/tramite5701.model';
 import { Tramite5701Query } from '../../../../core/queries/tramite5701.query';
+import { TIPO_GAFETE } from '../../../../constantes/5701/constantes-tramite';
 
 @Component({
   selector: 'agrega-personas',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, UppercaseDirective],
+  imports: [ReactiveFormsModule, CommonModule, UppercaseDirective, NotificacionesComponent],
   templateUrl: './agrega-personas.component.html',
   styleUrl: './agrega-personas.component.scss',
 })
@@ -51,24 +53,6 @@ export class AgregaPersonasComponent implements OnInit, OnDestroy {
   personas: ResponsablesDespacho[] = [];
 
   /**
-   * Variable que representa el estado del modal.
-   * Se inicializa como una cadena vacía y se espera que contenga el estado del modal (por ejemplo, 'show' o '').
-   */
-  modal: string = '';
-
-  /**
-   * Título del modal.
-   * Se inicializa como una cadena vacía y se espera que contenga el título que se mostrará en el modal.
-   */
-  tituloModal!: string;
-
-  /**
-   * Mensaje del modal.
-   * Se inicializa como una cadena vacía y se espera que contenga el mensaje que se mostrará en el modal.
-   */
-  mensajeModal!: string;
-
-  /**
    * Estado de la solicitud 5701.
    */
   public solicitudState!: Solicitud5701State;
@@ -79,11 +63,17 @@ export class AgregaPersonasComponent implements OnInit, OnDestroy {
    */
   private destroyNotifier$: Subject<void> = new Subject();
 
+  /**
+   * @descripcion Notificación para mostrar mensajes al usuario.
+   */
+  public nuevaNotificacion!: Notificacion;
+
   constructor(
     private fb: FormBuilder,
     private validacionesService: ValidacionesFormularioService,
     private tramite5701Query: Tramite5701Query,
-    private tramite5701Store: Tramite5701Store
+    private tramite5701Store: Tramite5701Store,
+    private consultaResponsableService: ConsultaResponsableService,
   ) { }
 
   ngOnInit(): void {
@@ -132,22 +122,58 @@ export class AgregaPersonasComponent implements OnInit, OnDestroy {
    * @returns {void} No retorna ningún valor.
    */
   buscarGafete(): void {
-    // Aquí va a buscar por gafete a un endpoint
     const GAFETE = this.gafeteRespoDespacho.value;
 
     if (!GAFETE) {
-      this.tituloModal = TITULO_MODAL;
-      this.mensajeModal = ERR_INPUT_BUSQUEDA_VACIO;
-      this.abrirModal();
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: '',
+        modo: 'action',
+        titulo: TITULO_MODAL,
+        mensaje: ERR_INPUT_BUSQUEDA_VACIO,
+        cerrar: false,
+        txtBtnAceptar: 'Cerrar',
+        txtBtnCancelar: '',
+      }
+
       return;
     }
 
-    if (!this.persona) {
-      this.tituloModal = TITULO_MODAL;
-      this.mensajeModal = ERR_BUSQUEDA_GAFETE_SIN_RESULTADOS;
-      this.abrirModal();
-      this.habilitarCamposFormulario();
-    }
+    this.consultaResponsableService.getGafeteResponsable(GAFETE, TIPO_GAFETE).pipe(
+      tap((response) => {
+        if (response.datos) {
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          const { nombre, apellido_paterno, apellido_materno } = response.datos;
+
+          this.personaForm.get('nombreRespoDespacho')?.enable();
+          this.personaForm.get('nombreRespoDespacho')?.setValue(nombre);
+          this.personaForm.get('nombreRespoDespacho')?.disable();
+
+          this.personaForm.get('paternoRespoDespacho')?.enable();
+          this.personaForm.get('paternoRespoDespacho')?.setValue(apellido_paterno);
+          this.personaForm.get('paternoRespoDespacho')?.disable();
+
+          this.personaForm.get('maternoRespoDespacho')?.enable();
+          this.personaForm.get('maternoRespoDespacho')?.setValue(apellido_materno);
+          this.personaForm.get('maternoRespoDespacho')?.disable();
+        } else {
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'alert',
+            categoria: '',
+            modo: 'action',
+            titulo: TITULO_MODAL,
+            mensaje: ERR_BUSQUEDA_GAFETE_SIN_RESULTADOS,
+            cerrar: false,
+            txtBtnAceptar: 'Cerrar',
+            txtBtnCancelar: '',
+          }
+
+          this.habilitarCamposFormulario();
+
+        }
+      }),
+      takeUntil(this.destroyNotifier$),
+    ).subscribe();
   }
 
   /**
@@ -185,9 +211,16 @@ export class AgregaPersonasComponent implements OnInit, OnDestroy {
     this.gafeteRespoDespacho.updateValueAndValidity();
 
     if (this.gafeteRespoDespacho.invalid || this.personaForm.invalid) {
-      this.tituloModal = TITULO_MODAL;
-      this.mensajeModal = ERR_CAMPOS_OBLIGATORIOS;
-      this.abrirModal();
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: '',
+        modo: 'action',
+        titulo: TITULO_MODAL,
+        mensaje: ERR_CAMPOS_OBLIGATORIOS,
+        cerrar: false,
+        txtBtnAceptar: 'Cerrar',
+        txtBtnCancelar: '',
+      }
 
       this.gafeteRespoDespacho.markAllAsTouched();
       this.personaForm.markAllAsTouched();
@@ -196,22 +229,39 @@ export class AgregaPersonasComponent implements OnInit, OnDestroy {
     }
 
     if (this.personas.length >= 5) {
-      this.tituloModal = TITULO_MODAL;
-      this.mensajeModal = ADV_MAXIMO_PERSONAS;
-      this.abrirModal();
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: '',
+        modo: 'action',
+        titulo: TITULO_MODAL,
+        mensaje: ADV_MAXIMO_PERSONAS,
+        cerrar: false,
+        txtBtnAceptar: 'Cerrar',
+        txtBtnCancelar: '',
+      }
       return;
     }
 
     let responsable: ResponsablesDespacho | null = {
       gafeteRespoDespacho: this.gafeteRespoDespacho.value,
-      nombre: this.personaForm.get('nombreRespoDespacho')?.value,
-      primerApellido: this.personaForm.get('paternoRespoDespacho')?.value,
-      segundoApellido: this.personaForm.get('maternoRespoDespacho')?.value,
+      nombre: this.personaForm.get('nombreRespoDespacho')?.getRawValue(),
+      primerApellido: this.personaForm.get('paternoRespoDespacho')?.getRawValue(),
+      segundoApellido: this.personaForm.get('maternoRespoDespacho')?.getRawValue(),
     };
 
     if (responsable !== null) {
       this.personas.push(responsable);
       this.tramite5701Store.setPersonasResponsablesDespacho(this.personas);
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: '',
+        modo: 'action',
+        titulo: TITULO_MODAL,
+        mensaje: MSG_DATOS_GUARDADOS,
+        cerrar: false,
+        txtBtnAceptar: 'Cerrar',
+        txtBtnCancelar: '',
+      }
     }
 
     this.gafeteRespoDespacho.setValue('');
@@ -232,28 +282,17 @@ export class AgregaPersonasComponent implements OnInit, OnDestroy {
    */
   eliminar(i: number): void {
     this.personas.splice(i, 1);
-    this.tituloModal = TITULO_MODAL;
-    this.mensajeModal = MSG_ELIMINA_ELEMENTO;
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: '',
+      modo: 'action',
+      titulo: TITULO_MODAL,
+      mensaje: MSG_ELIMINA_ELEMENTO,
+      cerrar: false,
+      txtBtnAceptar: 'Cerrar',
+      txtBtnCancelar: '',
+    }
     this.tramite5701Store.setPersonasResponsablesDespacho(this.personas);
-    this.abrirModal();
-  }
-
-  /**
-* Abre el modal para eliminar un documento.
-* @param {number} i - El índice del documento.
-*/
-  abrirModal(): void {
-
-    this.modal = 'show';
-  }
-
-  /**
-  * Cierra el modal.
-  */
-  cerrarModal(): void {
-    this.modal = '';
-    this.tituloModal = '';
-    this.mensajeModal = '';
   }
 
   /**
