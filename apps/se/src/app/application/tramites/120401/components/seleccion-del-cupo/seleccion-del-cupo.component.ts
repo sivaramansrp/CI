@@ -306,6 +306,15 @@ export class SeleccionDelCupoComponent implements OnInit, OnDestroy {
     this.tramite120401Store.setSubproducto(SELECTED_SUBPRODUCTO);
   }
 
+  /**
+   * Maneja la selección de una fila en la tabla de selección del cupo.
+   * 
+   * @param fila - Objeto de tipo `SeleccionDelCupoTabla` que representa la fila seleccionada.
+   * 
+   * Este método actualiza la propiedad `filaSeleccionada` con la fila proporcionada
+   * y alterna el estado de visibilidad de la descripción del cupo mediante la propiedad
+   * `mostrarDescripcionDelCupo`.
+   */
   listaDeFilaSeleccionada(fila: SeleccionDelCupoTabla): void {
     this.filaSeleccionada = fila;
     this.mostrarDescripcionDelCupo = !this.mostrarDescripcionDelCupo;
