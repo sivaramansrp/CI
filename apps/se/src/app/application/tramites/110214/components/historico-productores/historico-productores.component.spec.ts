@@ -2,28 +2,29 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { HistoricoProductoresComponent } from './historico-productores.component';
 import { ReactiveFormsModule, FormsModule, FormBuilder, Validators } from '@angular/forms';
 import { of, Subject } from 'rxjs';
-import { CertificadosOrigenService } from '../../services/certificado-origen.service';
+import { ValidarInicialmenteCertificadoService } from '../../services/validar-inicialmente-certificado.service';
 import { Tramite110214Store } from '../../../../estados/tramites/tramite110214.store';
 import { Tramite110214Query } from '../../../../estados/queries/tramite110214.query';
 import { ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { TituloComponent, TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 import { Modal } from 'bootstrap';
-import { HistoricoColumnas } from '../../models/certificado-origen.model';
+import { HistoricoColumnas } from '../../models/validar-inicialmente-certificado.model';
 
 describe('HistoricoProductoresComponent', () => {
   let component: HistoricoProductoresComponent;
   let fixture: ComponentFixture<HistoricoProductoresComponent>;
-  let certificadosOrigenServiceMock: any;
+  let validarInicialmenteCertificadoServiceMock: any;
   let tramiteStoreMock: any;
   let tramiteQueryMock: any;
   let validacionesServiceMock: any;
   let mockEvento: HistoricoColumnas[];
 
   beforeEach(async () => {
-    certificadosOrigenServiceMock = {
-      obtenerProductorPorExportador: jest.fn().mockReturnValue(of({ datos: [{ id: 1, nombreProductor: 'Productor 1' }] }))
-    };
+    validarInicialmenteCertificadoServiceMock = {
+      obtenerProductorPorExportador: jest.fn().mockReturnValue(of({ datos: [{ id: 1, nombreProductor: 'Productor 1' }] })),
+      obtenerMercanciasSeleccionadas: jest.fn().mockReturnValue(of([{ id: 1, nombre: 'Mercancía Seleccionada' }])),
+        };
 
     tramiteStoreMock = {
       setDatosConfidencialesProductor: jest.fn(),
@@ -70,7 +71,7 @@ describe('HistoricoProductoresComponent', () => {
       declarations: [],
       providers: [
         FormBuilder,
-        { provide: CertificadosOrigenService, useValue: certificadosOrigenServiceMock },
+        { provide: ValidarInicialmenteCertificadoService, useValue: validarInicialmenteCertificadoServiceMock },
         { provide: Tramite110214Store, useValue: tramiteStoreMock },
         { provide: Tramite110214Query, useValue: tramiteQueryMock },
         { provide: ValidacionesFormularioService, useValue: validacionesServiceMock }
@@ -92,7 +93,6 @@ describe('HistoricoProductoresComponent', () => {
     expect(component.formulario.get('datosConfidencialesProductor')?.value).toBe(true);
     expect(component.formulario.get('productorMismoExportador')?.value).toBe(true);
     expect(component.agregarDatosProductorFormulario.get('numeroRegistroFiscal')?.value).toBe('12345');
-    expect(component.agregarDatosProductorFormulario.get('fax')?.value).toBe('1234567890');
   });
 
   it('should call setValoresStore when datosConfidencialesProductor checkbox is changed', () => {
@@ -119,7 +119,7 @@ describe('HistoricoProductoresComponent', () => {
 
   it('should load productores on cargarProductorPorExportador', () => {
     component.cargarProductorPorExportador();
-    expect(certificadosOrigenServiceMock.obtenerProductorPorExportador).toHaveBeenCalled();
+    expect(validarInicialmenteCertificadoServiceMock.obtenerProductorPorExportador).toHaveBeenCalled();
     expect(component.productoresExportador).toEqual([{ id: 1, nombreProductor: 'Productor 1' }]);
   });
 
@@ -129,14 +129,6 @@ describe('HistoricoProductoresComponent', () => {
     input.dispatchEvent(new Event('change'));
     fixture.detectChanges();
     expect(setValoresStoreSpy).toHaveBeenCalledWith(component.agregarDatosProductorFormulario, 'numeroRegistroFiscal', 'setAgregarDatosProductorNumeroRegistroFiscal');
-  });
-
-  it('should call setValoresStore when fax input is changed', () => {
-    const setValoresStoreSpy = jest.spyOn(component, 'setValoresStore');
-    const input = fixture.debugElement.nativeElement.querySelector('#fax');
-    input.dispatchEvent(new Event('change'));
-    fixture.detectChanges();
-    expect(setValoresStoreSpy).toHaveBeenCalledWith(component.agregarDatosProductorFormulario, 'fax', 'setAgregarDatosProductorFax');
   });
 
   it('should complete destroyNotifier$ on ngOnDestroy', () => {

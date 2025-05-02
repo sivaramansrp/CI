@@ -63,6 +63,13 @@ export const FECHAFACTURA = {
   required: true,
   habilitado: true,
 };
+/**
+ * Encabezados de la tabla de mercancías seleccionadas.
+ * 
+ * Define las columnas y su configuración para la tabla de mercancías seleccionadas.
+ * Cada columna incluye un encabezado, una clave para acceder al valor correspondiente
+ * en los datos y un orden para determinar su posición en la tabla.
+ */
 export const SELECCIONADAS_ENCABEZADOS = [
   {
     encabezado: 'RFC productor',
@@ -110,6 +117,13 @@ export const SELECCIONADAS_ENCABEZADOS = [
     orden: 9,
   },
 ];
+/**
+ * Encabezados de la tabla de productores históricos.
+ * 
+ * Define las columnas y su configuración para la tabla de productores históricos.
+ * Cada columna incluye un encabezado, una clave para acceder al valor correspondiente
+ * en los datos y un orden para determinar su posición en la tabla.
+ */
 export const TABLE_COLUMNS = [
   {
     encabezado: 'Nombre del productor',
@@ -142,6 +156,14 @@ export const TABLE_COLUMNS = [
     orden: 6,
   },
 ];
+
+/**
+ * Encabezados de la tabla de mercancías seleccionadas.
+ * 
+ * Define las columnas y su configuración para la tabla de mercancías seleccionadas.
+ * Cada columna incluye un encabezado, una clave para acceder al valor correspondiente
+ * en los datos y un orden para determinar su posición en la tabla.
+ */
 export const MERCANCIAS_ENCABEZADOS = [
   {
     encabezado: 'Fracción arancelaria',
@@ -184,6 +206,13 @@ export const MERCANCIAS_ENCABEZADOS = [
     orden: 8,
   },
 ];
+/**
+ * Encabezados de la tabla de mercancías disponibles.
+ * 
+ * Define las columnas y su configuración para la tabla de mercancías disponibles.
+ * Cada columna incluye un encabezado, una clave para acceder al valor correspondiente
+ * en los datos y un orden para determinar su posición en la tabla.
+ */
 export const DISPONIBLES_ENCABEZADOS = [
   {
     encabezado: 'Fracción arancelaria',
@@ -216,6 +245,13 @@ export const DISPONIBLES_ENCABEZADOS = [
     orden: 6,
   },
 ];
+/**
+ * Encabezados de la tabla de acuses.
+ * 
+ * Define las columnas y su configuración para la tabla de acuses.
+ * Cada columna incluye un encabezado, una clave para acceder al valor correspondiente
+ * en los datos y un orden para determinar su posición en la tabla.
+ */
 export const ACUSE_ENCABEZADOS = [
   {
     encabezado: 'No.',
@@ -227,6 +263,11 @@ export const ACUSE_ENCABEZADOS = [
     clave: (ele: AcuseLista): string => ele.documento,
     orden: 2,
   }];
+  /**
+ * Datos de ejemplo para la tabla de acuses.
+ * 
+ * Contiene un ejemplo de acuse con su identificador, nombre del documento y enlace de descarga.
+ */
 export const ACUSE_DATOS = [
   {
     id: 1,

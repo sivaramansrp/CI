@@ -5,24 +5,23 @@ import { Tramite110214Store } from '../../../../estados/tramites/tramite110214.s
 import { Tramite110214Query } from '../../../../estados/queries/tramite110214.query';
 import { ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { of, Subject } from 'rxjs';
-import { CertificadosOrigenService } from '../../services/certificado-origen.service';
-import { DisponiblesTabla, SeleccionadasTabla } from '../../models/certificado-origen.model';
+import { ValidarInicialmenteCertificadoService } from '../../services/validar-inicialmente-certificado.service';
+import { DisponiblesTabla, SeleccionadasTabla } from '../../models/validar-inicialmente-certificado.model';
 import { Modal } from 'bootstrap';
 
 describe('CertificadoOrigenComponent', () => {
   let component: CertificadoOrigenComponent;
   let fixture: ComponentFixture<CertificadoOrigenComponent>;
-  let certificadosOrigenServiceMock: any;
+  let validarInicialmenteCertificadoServiceMock: any;
   let tramiteQueryMock: any;
   let validacionesServiceMock: any;
   let mercanciaSeleccionadasTablaDatos: SeleccionadasTabla;
   let disponiblesTabla: DisponiblesTabla;
-
   let tramiteStoreMock: any;
 
 
   beforeEach(async () => {
-    certificadosOrigenServiceMock = {
+    validarInicialmenteCertificadoServiceMock = {
       obtenerTratado: jest.fn().mockReturnValue(of({ datos: [{ id: 1, nombre: 'Tratado 1' }] })),
       obtenerPais: jest.fn().mockReturnValue(of({ datos: [{ id: 1, nombre: 'País 1' }] })),
       obtenerMercanciasDisponibles: jest.fn().mockReturnValue(of([{ id: 1, nombre: 'Mercancía Disponible' }])),
@@ -32,8 +31,6 @@ describe('CertificadoOrigenComponent', () => {
       setGrupoTratadoFechaFinalInput: jest.fn(),
       setFecha: jest.fn(),
       setGrupoTratadoFechaInicialInput: jest.fn(),
-
-
     };
     tramiteQueryMock = {
       selectSolicitud$: of({
@@ -47,6 +44,7 @@ describe('CertificadoOrigenComponent', () => {
     mercanciaSeleccionadasTablaDatos =
     {
       "id": 0,
+      "rfcProductor":"",
       "fraccionArancelaria": "08888888",
       "cantidad": "100.00",
       "unidadMedida": "Caja",
@@ -73,7 +71,7 @@ describe('CertificadoOrigenComponent', () => {
       imports: [ReactiveFormsModule, CertificadoOrigenComponent],
       providers: [
         FormBuilder,
-        { provide: CertificadosOrigenService, useValue: certificadosOrigenServiceMock },
+        { provide: ValidarInicialmenteCertificadoService, useValue: validarInicialmenteCertificadoServiceMock },
         { provide: Tramite110214Store, useValue: tramiteStoreMock },
         { provide: Tramite110214Query, useValue: tramiteQueryMock },
         { provide: ValidacionesFormularioService, useValue: validacionesServiceMock },
@@ -97,26 +95,26 @@ describe('CertificadoOrigenComponent', () => {
 
   it('should call cargarTratado and set optionsTratado', () => {
     component.cargarTratado();
-    expect(certificadosOrigenServiceMock.obtenerTratado).toHaveBeenCalled();
+    expect(validarInicialmenteCertificadoServiceMock.obtenerTratado).toHaveBeenCalled();
     expect(component.optionsTratado).toEqual([{ id: 1, nombre: 'Tratado 1' }]);
   });
 
   it('should call cargarPais and set optionsPais and optionsTipoFactura', () => {
     component.cargarPais();
-    expect(certificadosOrigenServiceMock.obtenerPais).toHaveBeenCalled();
+    expect(validarInicialmenteCertificadoServiceMock.obtenerPais).toHaveBeenCalled();
     expect(component.optionsPais).toEqual([{ id: 1, nombre: 'País 1' }]);
     expect(component.optionsTipoFactura).toEqual([{ id: 1, nombre: 'País 1' }]);
   });
 
   it('should call cargarMercanciasDisponibles and set mercanciaDisponsiblesTablaDatos', () => {
     component.cargarMercanciasDisponibles();
-    expect(certificadosOrigenServiceMock.obtenerMercanciasDisponibles).toHaveBeenCalled();
+    expect(validarInicialmenteCertificadoServiceMock.obtenerMercanciasDisponibles).toHaveBeenCalled();
     expect(component.mercanciaDisponsiblesTablaDatos).toEqual([{ id: 1, nombre: 'Mercancía Disponible' }]);
   });
 
   it('should call cargarMercanciasSeleccionadas and set mercanciaSeleccionadasTablaDatos', () => {
     component.cargarMercanciasSeleccionadas();
-    expect(certificadosOrigenServiceMock.obtenerMercanciasSeleccionadas).toHaveBeenCalled();
+    expect(validarInicialmenteCertificadoServiceMock.obtenerMercanciasSeleccionadas).toHaveBeenCalled();
     expect(component.mercanciaSeleccionadasTablaDatos).toEqual([{ id: 1, nombre: 'Mercancía Seleccionada' }]);
   });
 
@@ -193,4 +191,30 @@ describe('CertificadoOrigenComponent', () => {
     expect(spyDestroyNotifier).toHaveBeenCalled();
     expect(spyDestroyComplete).toHaveBeenCalled();
   });
+  it('should set estaDeshabilitado to true on onClick', () => {
+      component.onClick();
+      expect(component.estaDeshabilitado).toBe(true);
+    });
+  
+    it('should call cerrarModal on enviar', () => {
+      const cerrarModalSpy = jest.spyOn(component, 'cerrarModal');
+      component.enviar();
+      expect(cerrarModalSpy).toHaveBeenCalled();
+    });
+  
+    it('should set nuevaNotificacion correctly on abrirModal', () => {
+      component.abrirModal();
+      expect(component.nuevaNotificacion).toEqual({
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: '',
+        mensaje:
+          'La lista de mercancías mostrada solamente contiene aquellas mercancías que tienen un registro de productos vigente para el tratado/ acuerdo-país/bloque y cuya fracción arancelaria no está asociada a un cupo.',
+        cerrar: false,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      });
+    });
 });
