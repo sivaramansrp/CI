@@ -187,7 +187,7 @@ export class AgregarTransporteComponent implements OnChanges, OnInit {
     }
 
     if (changes['tablaTransporte'] && changes['tablaTransporte'].currentValue) {
-      this.bodyTabla = this.tablaTransporte;
+      this.bodyTabla = [...this.tablaTransporte];
     }
   }
 
