@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
+import { MENSAJE_DE_EXITO_ETAPA_UNO, PASOS } from '../../constants/immex-ampliacion-sensibles.enums';
 import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '../../models/immex-ampliacion-sensibles.model';
-import { MENSAJE_DE_EXITO_ETAPA_UNO, PASOS } from '../../constants/immex-ampliacion-sensibles.enums';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
 /**

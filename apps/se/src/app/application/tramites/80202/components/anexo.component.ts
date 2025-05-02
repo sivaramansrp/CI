@@ -107,13 +107,14 @@ export class AnexoComponent implements OnInit, OnDestroy {
     metodoNombre: keyof ImmexAmpliacionSensiblesStore
   ): void {
     const VALOR = form.get(campo)?.value;
-    (this.immexAmpliacionSensiblesStore[metodoNombre] as (value: any) => void)(
+    (this.immexAmpliacionSensiblesStore[metodoNombre] as (value: string | number | boolean) => void)(
       VALOR
     );
   }
 
   isValid(form: FormGroup, field: string): boolean {
-    return this.validacionesService.isValid(form, field)!;
+    const IS_VALID = this.validacionesService.isValid(form, field);
+    return IS_VALID !== null && IS_VALID !== undefined ? IS_VALID : false;
   }
 
   /**
