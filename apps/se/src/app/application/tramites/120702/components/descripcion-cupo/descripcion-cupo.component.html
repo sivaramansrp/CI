@@ -1,111 +1,11 @@
 <div class="container">
     <div>
-        <form>
+        <form [formGroup]="descripcionCupoForm">
             <div class="descripcion-cupo mt-5">
-                <ng-titulo titulo="Descripción del cupo" />
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label class="form-label" for="regimenAduanero">Regimen aduanero:</label>
-                        <input type="text" class="form-control" id="regimenAduanero" name="regimenAduanero">
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label class="form-label" for="descripcionProducto">Descripción del producto:</label>
-                        <input type="text" class="form-control" id="descripcionProducto" name="descripcionProducto">
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label class="form-label" for="clasificacionSubProducto">Clasificacion del subproducto:</label>
-                        <input type="text" class="form-control" id="clasificacionSubProducto"
-                            name="clasificacionSubProducto">
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label class="form-label" for="unidadMedida">Unidad de medida:</label>
-                        <input type="text" class="form-control" id="unidadMedida" name="unidadMedida">
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <input-fecha class="width" [datos]="FECHA_INICIO_CUPO">
-                    </input-fecha>
-                </div>
-                <div class="col-md-4">
-                    <input-fecha class="width" [datos]="FECHA_FIN_CUPO">
-                    </input-fecha>
-                </div>
-                <div class="col-md-8">
-                    <div class="form-group">
-                        <label class="form-label" for="mecanismoAsignacion">Mecanismo de asignación:</label>
-                        <input type="text" class="form-control" id="mecanismoAsignacion" name="mecanismoAsignacion">
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label class="form-label" for="tratadoAcuerdo">Tratado / Acuerdo:</label>
-                        <input type="text" class="form-control" id="tratadoAcuerdo" name="tratadoAcuerdo">
-                    </div>
-                </div>
-                <div class="col-md-8">
-                    <div class="form-group">
-                        <label class="form-label" for="fraccionesArancelarias">Fracciones arancelarias:</label>
-                        <textarea cols="8" rows="6" class="form-control" id="fraccionesArancelarias"
-                            name="fraccionesArancelarias"></textarea>
-                    </div>
-                </div>
-                <div class="col-md-8">
-                    <div class="form-group">
-                        <label class="form-label" for="paises">Países:</label>
-                        <textarea cols="8" rows="6" class="form-control" id="paises" name="paises"></textarea>
-                    </div>
-                </div>
-                <div class="col-md-8">
-                    <div class="form-group">
-                        <label class="form-label" for="observaciones">Observaciones:</label>
-                        <textarea cols="8" rows="6" class="form-control" id="observaciones"
-                            name="observaciones"></textarea>
-                    </div>
-                </div>
-                <div class="col-md-8">
-                    <div class="form-group">
-                        <label class="form-label" for="fundamento">Fundamento:</label>
-                        <textarea cols="8" rows="6" class="form-control" id="fundamento" name="fundamento"></textarea>
-                    </div>
-                </div>
-            </div>
-
-            <div class="clearfix"></div>
-
-            <div class="distribucion-saldo mt-5">
-                <ng-titulo titulo="Distribución de saldo" />
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label class="form-label" for="montoDisponible">Monto disponible:</label>
-                        <input type="text" class="form-control" id="montoDisponible" name="motnoDisponible">
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label class="form-label" for="montoExpedir">Monto e expedir*:</label>
-                        <input type="text" class="form-control" id="montoExpedir" name="montoExpedir" [required]="true">
-                    </div>
-                </div>
-                <div class="col-md-8 mt-5 d-flex justify-content-end">
-                    <button type="button" class="btn btn-primary">Agregar</button>
-                </div>
-
                 <div class="demo">
-                    <!-- <formas-dinamicas 
-                    formularioTitulo="Información de la obra de arte que se pretende exportar"
-                    [forma]="forma"
-                    [formularioDatos]="informacionFormData"
-                    ></formas-dinamicas> -->
+                    <formas-dinamicas formularioTitulo="Descripción del cupo" [forma]="descripcionCupoForm"
+                        [formularioDatos]="informacionFormData"></formas-dinamicas>
                 </div>
-
-                <!-- have to implement forma-dinamicas in cupo component, fix console errors -->
-
             </div>
         </form>
     </div>

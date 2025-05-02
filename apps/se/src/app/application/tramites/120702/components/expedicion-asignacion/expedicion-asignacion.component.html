@@ -1,106 +1,131 @@
 <div class="container">
-    <div>
-        <form [formGroup]="asignacionForm">
-            <div class="numero-oficio mt-5">
-                <ng-titulo titulo="Número de oficio de asignación" />
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <app-catalogo-select [catalogo]="anoOficioDatos" [label]="'Año del oficio de asignación'"
-                            [required]="true" formControlName="anoDelOficio" for="anoDelOficio" id="anoDelOficio"></app-catalogo-select>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label class="form-label" for="numeroOficio">Número de oficio de asignación*:</label>
-                        <input type="text" class="form-control" id="numeroOficio" formControlName="numeroOficio" name="numeroOficio" [required]="true">
-                    </div>
-                </div>
-                <div class="col-md-8 mt-5 d-flex justify-content-end">
-                    <button type="button" class="btn btn-primary">Buscar</button>
+    <form [formGroup]="asignacionForm" class="form-container">
+        <div class="numero-oficio mt-5">
+            <ng-titulo titulo="Número de oficio de asignación" />
+            <div class="col-md-4">
+                <div class="form-group">
+                    <app-catalogo-select [catalogo]="anoOficioDatos" [label]="'Año del oficio de asignación'"
+                        [required]="true" formControlName="anoDelOficio" for="anoDelOficio"
+                        id="anoDelOficio"></app-catalogo-select>
                 </div>
             </div>
-
-            <div class="clearfix"></div>
-
-            <div class="representacion-federal mt-5">
-                <ng-titulo titulo="Representación federal" />
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label class="form-label" for="estado">Estado:</label>
-                        <input type="text" class="form-control" id="estado" formControlName="estado" name="estado">
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label class="form-label" for="representacionFederal">Representación federal:</label>
-                        <input type="text" class="form-control" id="representacionFederal" formControlName="representacionFederal" name="representacionFederal">
-                    </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="form-label" for="numeroOficio">Número de oficio de asignación*:</label>
+                    <input type="text" class="form-control" id="numeroOficio" formControlName="numeroOficio"
+                        name="numeroOficio" [required]="true">
                 </div>
             </div>
+            <div class="col-md-8 mt-5 d-flex justify-content-end">
+                <button type="button" class="btn btn-primary">Buscar</button>
+            </div>
+        </div>
 
-            <div class="clearfix"></div>
-
-            <div class="control-motos mt-5">
-                <ng-titulo titulo="Control de montos de la asignación" />
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label class="form-label" for="monteAsignado">Monto asignado:</label>
-                        <input type="number" class="form-control" id="monteAsignado" formControlName="monteAsignado" name="monteAsignado">
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label class="form-label" for="monteExpedido">Monto expedido:</label>
-                        <input type="number" class="form-control" id="monteExpedido" formControlName="monteExpedido" name="monteExpedido">
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label class="form-label" for="monteDisponible">Monto disponible:</label>
-                        <input type="number" class="form-control" id="monteDisponible" formControlName="monteDisponible" name="monteDisponible">
-                    </div>
+        <div class="representacion-federal mt-5">
+            <ng-titulo titulo="Representación federal" />
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="form-label" for="estado">Estado:</label>
+                    <input type="text" class="form-control" id="estado" formControlName="estado" name="estado">
                 </div>
             </div>
-
-            <div class="clearfix"></div>
-
-            <div class="datos-asignacion mt-5">
-                <ng-titulo titulo="Datos de la asignación" />
-                <div class="col-md-8">
-                    <div class="form-group">
-                        <label class="form-label" for="datosNumeroOficio">Número de oficio:</label>
-                        <input type="number" class="form-control" id="datosNumeroOficio" formControlName="datosNumeroOficio" name="datosNumeroOficio">
-                    </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="form-label" for="representacionFederal">Representación federal:</label>
+                    <input type="text" class="form-control" id="representacionFederal"
+                        formControlName="representacionFederal" name="representacionFederal">
                 </div>
             </div>
+        </div>
 
-            <div class="clearfix"></div>
+        <div class="control-motos mt-5">
+            <ng-titulo titulo="Control de montos de la asignación" />
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="form-label" for="montoAsignado">Monto asignado:</label>
+                    <input type="number" class="form-control" id="montoAsignado" formControlName="montoAsignado"
+                        name="montoAsignado">
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="form-label" for="montoExpedido">Monto expedido:</label>
+                    <input type="number" class="form-control" id="montoExpedido" formControlName="montoExpedido"
+                        name="montoExpedido">
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="form-label" for="montoDisponible">Monto disponible:</label>
+                    <input type="number" class="form-control" id="montoDisponible" formControlName="montoDisponible"
+                        name="montoDisponible">
+                </div>
+            </div>
+        </div>
 
+        <div class="datos-asignacion mt-5">
+            <ng-titulo titulo="Datos de la asignación" />
+            <div class="col-md-8">
+                <div class="form-group">
+                    <label class="form-label" for="datosNumeroOficio">Número de oficio:</label>
+                    <input type="number" class="form-control" id="datosNumeroOficio" formControlName="datosNumeroOficio"
+                        name="datosNumeroOficio">
+                </div>
+            </div>
+        </div>
+
+        <div>
             <div class="datos-asignacion mt-5">
                 <ng-titulo titulo="Vigencia de la asignación" />
                 <div class="col-md-4">
-                    <input-fecha class="width" [datos]="FECHA_INICIO">
-                    </input-fecha>
+                    <input-fecha [datos]="fechaIncicioAsignacion" />
                 </div>
                 <div class="col-md-4">
-                    <input-fecha class="width" [datos]="FECHA_FIN">
-                    </input-fecha>
+                    <input-fecha [datos]="fechaFinAsignacion" />
                 </div>
             </div>
+        </div>
 
-            <div class="clearfix"></div>
+        <div>
+            <app-descripcion-cupo></app-descripcion-cupo>
+        </div>
 
-            <div>
-                <app-descripcion-cupo></app-descripcion-cupo>
+        <div class="distribucion-saldo mt-5">
+            <ng-titulo titulo="Distribución de saldo" />
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="form-label" for="montoADisponible">Monto disponible:</label>
+                    <input type="text" class="form-control" id="montoADisponible" formControlName="montoADisponible"
+                        name="montoADisponible">
+                </div>
             </div>
-
-            <div>
-                <formas-dinamicas 
-                formularioTitulo="Información de la obra de arte que se pretende exportar"
-                [forma]="asignacionForm"
-                [formularioDatos]="informacionFormData"
-                ></formas-dinamicas>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="form-label" for="montoAExpedir">Monto a expedir*:</label>
+                    <input type="text" class="form-control" id="montoAExpedir" formControlName="montoAExpedir"
+                        name="montoAExpedir" [required]="true">
+                </div>
             </div>
-        </form>
-    </div>
+            <div class="col-md-12 mt-5 d-flex justify-content-end">
+                <button type="button" class="btn btn-primary" (click)="enviarMontoFormulario()">Agregar</button>
+            </div>
+        </div>
+
+        <div class="col-md-12 datos-table">
+            <div class="mt-5">
+                <ng-table [commonTableHeader]="montoTablaDatos" [commonTableBody]="montoTablaFilaDatos"></ng-table>
+            </div>
+        </div>
+        <div class="col-md-12 mt-5 d-flex justify-content-end">
+            <button type="button" class="btn btn-danger">Eliminar seleccionado</button>
+        </div>
+
+        <div class="col-md-4">
+            <div class="form-group">
+                <label class="form-label" for="totalAExpedir">Total a expedir:</label>
+                <input type="text" class="form-control" id="totalAExpedir" formControlName="totalAExpedir"
+                    name="totalAExpedir">
+            </div>
+        </div>
+    </form>
 </div>
