@@ -106,14 +106,6 @@ describe('SolicitantePageComponent', () => {
     const pasoTresElement = fixture.debugElement.nativeElement.querySelector('app-paso-tres');
     expect(pasoTresElement).toBeTruthy();
   });
-
-  it('should render ng-alert when indice is 1', () => {
-    component.indice = 1;
-    fixture.detectChanges();
-    const alertElement = fixture.debugElement.nativeElement.querySelector('ng-alert');
-    expect(alertElement).toBeTruthy();
-  });
-
   it('should not render ng-alert when indice is not 1', () => {
     component.indice = 2;
     fixture.detectChanges();

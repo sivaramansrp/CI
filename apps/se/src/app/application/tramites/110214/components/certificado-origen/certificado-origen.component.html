@@ -110,7 +110,7 @@
       <button type="button" class="btn btn-primary ms-3" (click)="cargaArchivo()"> Carga por archivo </button>
     </div>
     <div class="row mt-5">
-      <ng-alert [CONTENIDO]="TEXTO_DE_ALERTA" style="margin-top: 40px"></ng-alert>
+      <ng-alert [CONTENIDO]="TEXTO_DE_ALERTA" class="mt-5"></ng-alert>
     </div>
     <ng-container>
       <div class="row mt-5">
@@ -273,8 +273,15 @@
       </div>
       <div class="modal-footer custom-footer mt-4 justify-content-end">
         <button type="button" class="btn btn-default" data-bs-dismiss="modal" #closeModal> Cancelar </button>
-        <button type="submit" class="btn btn-primary" data-bs-dismiss="modal" #closeModal> Agregar </button>
+        <button type="submit" class="btn btn-primary" data-bs-dismiss="modal" #closeModal (click)="abrirModal()">
+          Agregar </button>
       </div>
     </div>
   </div>
 </div>
+@if (nuevaNotificacion) {
+<section>
+  <lib-notificaciones [notificacionInput]="nuevaNotificacion">
+  </lib-notificaciones>
+</section>
+}

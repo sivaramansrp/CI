@@ -1,8 +1,8 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { PASOS, TEXTO_DE_ALERTA, TEXTO_DE_PELIGRO } from '../../constants/validar-inicialmente-certificado.enum';
 import { AccionBoton } from '../../models/validar-inicialmente-certificado.model';
 import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
-import { PASOS } from '../../constants/validar-inicialmente-certificado.enum';
 import { Subject } from 'rxjs';
 import { Tramite110214Query } from '../../../../estados/queries/tramite110214.query';
 import { Tramite110214State } from '../../../../estados/tramites/tramite110214.store';
@@ -73,7 +73,37 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
     txtBtnAnt: 'Anterior',
     txtBtnSig: 'Continuar',
   };
+  /**
+ * Texto de alerta para notificaciones.
+ * 
+ * Esta propiedad contiene un mensaje de alerta que puede ser mostrado al usuario
+ * en situaciones específicas relacionadas con el trámite.
+ */
+TEXTO_DE_ALERTA = TEXTO_DE_ALERTA;
 
+/**
+ * Texto de peligro para notificaciones.
+ * 
+ * Esta propiedad contiene un mensaje de advertencia o peligro que puede ser mostrado
+ * al usuario en situaciones críticas relacionadas con el trámite.
+ */
+TEXTO_DE_PELIGRO = TEXTO_DE_PELIGRO;
+
+/**
+ * Indica si se debe mostrar una alerta.
+ * 
+ * Esta propiedad es un indicador booleano que determina si se debe mostrar
+ * un mensaje de alerta al usuario.
+ */
+isAlerta: boolean = false;
+
+/**
+ * Indica si se debe mostrar un mensaje de peligro.
+ * 
+ * Esta propiedad es un indicador booleano que determina si se debe mostrar
+ * un mensaje de advertencia o peligro al usuario.
+ */
+isPeligro: boolean = false;
   /**
    * Constructor del componente.
    * 

@@ -17,8 +17,6 @@ import { ValidarInicialmenteCertificadoService } from '../../services/validar-in
 import { Validators } from '@angular/forms';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
-
-
 /**
  * Componente para gestionar los datos del certificado.
  * 
@@ -77,7 +75,6 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
     private validarInicialmenteCertificadoService: ValidarInicialmenteCertificadoService,
     public store: Tramite110214Store,
     public tramiteQuery: Tramite110214Query,
-    // eslint-disable-next-line no-empty-function
   ) { }
 
   /**

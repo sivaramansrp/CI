@@ -1,3 +1,4 @@
+import { AcuseCerorComponent } from '../../components/acuse-ceror/acuse-ceror.component';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FirmaElectronicaComponent } from '@ng-mf/data-access-user';
@@ -23,7 +24,7 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-paso-tres',
   standalone: true,
-  imports: [CommonModule, FirmaElectronicaComponent],
+  imports: [CommonModule, FirmaElectronicaComponent, AcuseCerorComponent],
   templateUrl: './paso-tres.component.html',
   styleUrl: './paso-tres.component.scss',
 })

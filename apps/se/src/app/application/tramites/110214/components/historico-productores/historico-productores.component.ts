@@ -1,12 +1,14 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ConfiguracionColumna, Notificacion, NotificacionesComponent } from '@libs/shared/data-access-user/src';
+import { SELECCIONADAS_ENCABEZADOS, TABLE_COLUMNS } from '../../constants/validar-inicialmente-certificado.enum';
 import { CommonModule } from '@angular/common';
-import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
-import { HistoricoColumnas, SeleccionadasTabla } from '../../models/validar-inicialmente-certificado.model';
+import { HistoricoColumnas } from '../../models/validar-inicialmente-certificado.model';
 import { Modal } from 'bootstrap';
 import { ReactiveFormsModule } from '@angular/forms';
+import { SeleccionadasTabla } from '../../models/validar-inicialmente-certificado.model';
 import { Subject } from 'rxjs';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src';
@@ -30,7 +32,7 @@ import { takeUntil } from 'rxjs';
 @Component({
   selector: 'app-historico-productores',
   standalone: true,
-  imports: [CommonModule, TituloComponent, FormsModule, ReactiveFormsModule, TablaDinamicaComponent],
+  imports: [CommonModule, TituloComponent, FormsModule, ReactiveFormsModule, TablaDinamicaComponent, NotificacionesComponent],
   templateUrl: './historico-productores.component.html',
   styleUrl: './historico-productores.component.scss',
 })
@@ -53,38 +55,7 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
   /**
    * Configuración de las columnas de la tabla dinámica.
    */
-  tableColumns: ConfiguracionColumna<HistoricoColumnas>[] = [
-    {
-      encabezado: 'Nombre del productor',
-      clave: (elementos) => elementos.nombreProductor,
-      orden: 1
-    },
-    {
-      encabezado: 'Número de registro fiscal',
-      clave: (elementos) => elementos.numeroRegistroFiscal,
-      orden: 2,
-    },
-    {
-      encabezado: 'Dirección',
-      clave: (elementos) => elementos.direccion,
-      orden: 3,
-    },
-    {
-      encabezado: 'Correo Electrónico',
-      clave: (elementos) => elementos.correoElectronico,
-      orden: 4,
-    },
-    {
-      encabezado: 'Teléfono',
-      clave: (elementos) => elementos.telefono,
-      orden: 5,
-    },
-    {
-      encabezado: 'Fax',
-      clave: (elementos) => elementos.fax,
-      orden: 6,
-    },
-  ];
+  tableColumns: ConfiguracionColumna<HistoricoColumnas>[] = TABLE_COLUMNS;
 
   /**
    * Lista de productores disponibles para el exportador.
@@ -130,58 +101,35 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
    * Formulario para agregar datos del productor.
    */
   agregarDatosProductorFormulario!: FormGroup;
+  /**
+  * Lista de mercancías seleccionadas en la tabla.
+  * 
+  * Esta propiedad contiene los datos de las mercancías que han sido seleccionadas
+  * por el usuario en la tabla dinámica.
+  */
   mercanciaSeleccionadasTablaDatos: SeleccionadasTabla[] = [];
 
-  public seleccionadasEncabezados: ConfiguracionColumna<SeleccionadasTabla>[] = [
-    {
-      encabezado: 'RFC productor',
-      clave: (ele: SeleccionadasTabla) => ele.rfcProductor,
-      orden: 1,
-    },
-    {
-      encabezado: 'Fracción arancelaria',
-      clave: (ele: SeleccionadasTabla) => ele.fraccionArancelaria,
-      orden: 2,
-    },
-    {
-      encabezado: 'Cantidad',
-      clave: (ele: SeleccionadasTabla) => ele.cantidad,
-      orden: 3,
-    },
-    {
-      encabezado: 'Unidad de medida',
-      clave: (ele: SeleccionadasTabla) => ele.unidadMedida,
-      orden: 4,
-    },
-    {
-      encabezado: 'Valor mercancía',
-      clave: (ele: SeleccionadasTabla) => ele.valorMercancia,
-      orden: 5,
-    },
-    {
-      encabezado: 'Tipo de factura',
-      clave: (ele: SeleccionadasTabla) => ele.tipoFactura,
-      orden: 6,
-    },
-    {
-      encabezado: 'Número factura',
-      clave: (ele: SeleccionadasTabla) => ele.numFactura,
-      orden: 7,
-    },
-    {
-      encabezado: 'Complemento descripción',
-      clave: (ele: SeleccionadasTabla) => ele.complementoDescripcion,
-      orden: 8,
-    },
-    {
-      encabezado: 'Fecha factura',
-      clave: (ele: SeleccionadasTabla) => ele.fechaFactura,
-      orden: 9,
-    },
-  ];
+  /**
+   * Configuración de los encabezados de la tabla de mercancías seleccionadas.
+   * 
+   * Define las columnas y su configuración para la tabla de mercancías seleccionadas.
+   */
+  public seleccionadasEncabezados: ConfiguracionColumna<SeleccionadasTabla>[] = SELECCIONADAS_ENCABEZADOS;
+
+  /**
+   * Filas seleccionadas en la tabla de mercancías.
+   * 
+   * Contiene las mercancías seleccionadas por el usuario en la tabla dinámica.
+   */
   mercanciaSeleccionadasFila!: SeleccionadasTabla[] | null;
-
-
+  /**
+ * Propiedad para gestionar una nueva notificación.
+ * 
+ * Esta propiedad almacena la configuración de una notificación que puede ser mostrada
+ * al usuario. Incluye información como el tipo de notificación, categoría, mensaje,
+ * tiempo de espera y opciones de acción.
+ */
+  public nuevaNotificacion!: Notificacion;
   /**
    * Constructor del componente.
    * 
@@ -248,6 +196,9 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
         this.productoresExportador = respuesta.datos;
       });
   }
+  /**
+    * Carga la lista de mercancías seleccionadas desde el servicio.
+    */
   cargarMercanciasSeleccionadas(): void {
     this.validarInicialmenteCertificadoService.obtenerMercanciasSeleccionadas()
       .pipe(takeUntil(this.destroyNotifier$))
@@ -311,6 +262,14 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+  * Maneja la selección de filas en la tabla de mercancías.
+  * 
+  * Este método se ejecuta cuando el usuario selecciona una o más filas en la tabla dinámica
+  * de mercancías. Actualiza la propiedad `mercanciaSeleccionadasFila` con las filas seleccionadas.
+  * 
+  * @param {SeleccionadasTabla[]} evento - Lista de filas seleccionadas en la tabla.
+  */
   seleccionDeFilas(evento: SeleccionadasTabla[]): void {
     this.mercanciaSeleccionadasFila = evento;
   }
@@ -322,9 +281,18 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
     this.agregarDatosProductorFormulario.markAllAsTouched();
     if (this.agregarDatosProductorFormulario.valid) {
       this.cerrarModal();
+      this.abrirModal('El servicio de IDC está en unestado inválido.')
     }
   }
+  /**
+ * Asigna los productores seleccionados al estado del store.
+ * 
+ * Este método verifica si hay filas seleccionadas en la tabla de mercancías (`mercanciaSeleccionadasFila`).
+ * Si existen, utiliza esas filas; de lo contrario, utiliza todos los datos de la tabla de mercancías seleccionadas (`mercanciaSeleccionadasTablaDatos`).
+ * Luego, actualiza el estado del store con los productores seleccionados.
+ */
   asignarProductor(): void {
+    this.abrirModal('Debe seleccionar un productor para asignarle la mercancía');
     const VALOR: SeleccionadasTabla[] | null = this.mercanciaSeleccionadasFila ? this.mercanciaSeleccionadasFila : this.mercanciaSeleccionadasTablaDatos;
     this.store.setAsignarProductor(VALOR);
   }
@@ -350,6 +318,26 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite110214Store): void {
     const VALOR = form.get(campo)?.value;
     (this.store[metodoNombre] as (value: unknown) => void)(VALOR);
+  }
+  /**
+   * Abre un modal con una notificación de alerta.
+   * 
+   * Este método configura una notificación de tipo alerta con un mensaje de error
+   * relacionado con el estado inválido del servicio de IDC. La notificación incluye
+   * opciones de acción como aceptar o cancelar.
+   */
+  public abrirModal(msg: string): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: msg,
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    }
   }
 
   /**
