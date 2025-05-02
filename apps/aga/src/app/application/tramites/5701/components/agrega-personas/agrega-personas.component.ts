@@ -14,6 +14,7 @@ import { CommonModule } from '@angular/common';
 import { ConsultaResponsableService } from '../../../../core/services/5701/consulta-responsable.service';
 import { ResponsablesDespacho } from '../../../../core/models/5701/tramite5701.model';
 import { Tramite5701Query } from '../../../../core/queries/tramite5701.query';
+import { TIPO_GAFETE } from '../../../../constantes/5701/constantes-tramite';
 
 @Component({
   selector: 'agrega-personas',
@@ -138,7 +139,7 @@ export class AgregaPersonasComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.consultaResponsableService.getGafeteResponsable(GAFETE, 'TIGFT.GEA').pipe(
+    this.consultaResponsableService.getGafeteResponsable(GAFETE, TIPO_GAFETE).pipe(
       tap((response) => {
         if (response.datos) {
           // eslint-disable-next-line @typescript-eslint/naming-convention
