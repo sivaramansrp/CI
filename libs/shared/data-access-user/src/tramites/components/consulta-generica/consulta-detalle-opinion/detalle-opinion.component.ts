@@ -73,6 +73,11 @@ export class DetalleOpinionComponent implements OnInit, OnDestroy {
   public datosTablaOpiniones: BodyTablaOpinion[] = [];
 
   /**
+   * Método para descargar el PDF de la opinión.
+   */
+  public descargarPdfOpinion = DetalleOpinionComponent.descargarPdfOpinion;
+
+  /**
    * Constructor para la consulta de opiniones.
    * @param fb FormBuilder para crear formularios reactivos.
    * @param route ActivatedRoute para acceder a los parámetros de la ruta.
@@ -208,7 +213,7 @@ export class DetalleOpinionComponent implements OnInit, OnDestroy {
    * @param {string} url - La URL del archivo PDF que se va a abrir.
    * @returns {void}
    */
-  descargarPdfOpinion(url: string): void {
+  static descargarPdfOpinion(url: string): void {
     window.open(url, '_blank');
   }
 

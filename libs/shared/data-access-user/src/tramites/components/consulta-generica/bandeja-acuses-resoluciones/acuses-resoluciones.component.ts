@@ -90,6 +90,16 @@ export class AcusesResolucionesComponent
    */
   public unsubscribe$ = new Subject<void>();
 
+  /**
+   * Método para descargar el PDF de un acuse.
+   */
+  public descargarPdfAcuse = AcusesResolucionesComponent.descargarPdfAcuse;
+
+  /**
+   * Método para descargar el PDF de una resolución.
+   */
+  public descargarPdfResolucion = AcusesResolucionesComponent.descargarPdfResolucion;
+
   constructor(
     private router: Router,
     private acusesService: AcusesService,
@@ -163,7 +173,7 @@ export class AcusesResolucionesComponent
    * @param {string} url - La URL del archivo PDF que se va a abrir.
    * @returns {void}
    */
-  descargarPdfAcuse(url: string): void {
+  static descargarPdfAcuse(url: string): void {
     window.open(url, '_blank');
   }
   /**
@@ -172,7 +182,7 @@ export class AcusesResolucionesComponent
    * @param {string} url - La URL del archivo PDF que se va a abrir.
    * @returns {void}
    */
-  descargarPdfResolucion(url: string): void {
+  static descargarPdfResolucion(url: string): void {
     window.open(url, '_blank');
   }
   verDetalleResolucion(id: number): void {
