@@ -1,7 +1,7 @@
 /**
  * Componente que representa la descripción detallada de un cupo.
  * Se encarga de mostrar información específica sobre el cupo y su configuración.
- */
+*/
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
@@ -31,10 +31,13 @@ export class DescripcionDelCupoComponent implements OnInit, OnDestroy {
    */
   form!: FormGroup;
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
   /**
    * Subject utilizado para manejar la destrucción del componente y evitar fugas de memoria.
    */
   private destroyed$ = new Subject<void>();
+
 
   /**
    * Constructor del componente.
@@ -64,6 +67,7 @@ export class DescripcionDelCupoComponent implements OnInit, OnDestroy {
     this.destroyed$.complete();
   }
 
+  
   /**
    * Crea e inicializa el formulario con campos deshabilitados por defecto.
    */
@@ -105,4 +109,5 @@ export class DescripcionDelCupoComponent implements OnInit, OnDestroy {
         });
       });
   }
+  
 }

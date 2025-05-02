@@ -18,16 +18,18 @@ import {
   TituloComponent,
 } from '@ng-mf/data-access-user';
 
-import { ConfiguracionColumna } from '../../models/configuracio-columna.model';
-import { SeleccionDelCupoService } from '@ng-mf/data-access-user';
-
 import { Observable, Subject } from 'rxjs';
-import { CONFIGURACION_BITACORA_TABLA } from '../../constants/asignacion-directa-cupo.enums';
+import { AsignacionDirectaCupoPersonasFisicasPrimeraVezService } from '../../services/asignacion-directa-cupo-personas-fisicas-primera-vez.service';
+import { CONFIGURACION_CUPOS_DISPONIBLES_TABLA } from '../../constants/asignacion-directa-cupo.enums';
+import { ConfiguracionColumna } from '../../models/configuracio-columna.model';
+import { DescripcionDelCupoComponent } from '../descripcion-del-cupo/descripcion-del-cupo.component';
+import { SeleccionDelCupoService } from '@ng-mf/data-access-user';
 import { SeleccionDelCupoTabla} from '../../models/asignacion-directa-cupo.model'
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 import { Tramite120401Query } from '../../estados/queries/tramite120401.query';
 import { Tramite120401Store } from '../../estados/tramites/tramite120401.store';
 import { takeUntil } from 'rxjs';
+
 
 /**
  * Componente para la selección del cupo en el sistema.
@@ -43,7 +45,8 @@ import { takeUntil } from 'rxjs';
     TituloComponent,
     NgIf,
     TablaDinamicaComponent,
-    AlertComponent
+    AlertComponent,
+    DescripcionDelCupoComponent
 ],
   templateUrl: './seleccion-del-cupo.component.html',
   styleUrls: ['./seleccion-del-cupo.component.scss'],
@@ -54,10 +57,43 @@ import { takeUntil } from 'rxjs';
  * Permite seleccionar régimen aduanero, tratado comercial, producto y subproducto.
  */
 export class SeleccionDelCupoComponent implements OnInit, OnDestroy {
-
-   configuracionTabla: ConfiguracionColumna<SeleccionDelCupoTabla>[] =
-      CONFIGURACION_BITACORA_TABLA;
-    datos: SeleccionDelCupoTabla[] = [];
+ 
+  /**
+   * Indica si se debe mostrar la descripción del cupo.
+   * Esta propiedad controla la visibilidad de la sección
+   * que muestra información adicional sobre el cupo seleccionado.
+   */
+  mostrarDescripcionDelCupo = false;
+  /**
+   * Representa la fila seleccionada en la tabla de selección del cupo.
+   * Puede ser un objeto de tipo `SeleccionDelCupoTabla` o `null` si no hay ninguna fila seleccionada.
+   */
+  filaSeleccionada: SeleccionDelCupoTabla | null = null;
+  /**
+   * Indica si la descripción del elemento es visible o no.
+   * 
+   * @type {boolean}
+   * @default false
+   */
+  DescipcionDelVisible=false;
+  
+  /**
+   * Configuración para la tabla que muestra los cupos disponibles.
+   * Esta propiedad es un arreglo de configuraciones de columnas, donde cada columna
+   * está definida por la interfaz `ConfiguracionColumna` y adaptada al modelo de datos
+   * `SeleccionDelCupoTabla`.
+   *
+   * La configuración se inicializa con los ajustes predefinidos de
+   * `CONFIGURACION_CUPOS_DISPONIBLES_TABLA`.
+   */
+  configuracionTabla: ConfiguracionColumna<SeleccionDelCupoTabla>[] =
+      CONFIGURACION_CUPOS_DISPONIBLES_TABLA;
+  
+  /**
+   * Arreglo que contiene los datos de la tabla de selección del cupo.
+   * Cada elemento del arreglo es de tipo `SeleccionDelCupoTabla`.
+   */
+  datos: SeleccionDelCupoTabla[] = [];
   /**
    * Formulario reactivo para la selección del cupo.
    */
@@ -108,9 +144,15 @@ export class SeleccionDelCupoComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private service: SeleccionDelCupoService,
+    private asignacionDirectaCupoPersonasFisicasPrimeraVezService: AsignacionDirectaCupoPersonasFisicasPrimeraVezService,
     private tramite120401Store: Tramite120401Store,
     private tramite120401Query: Tramite120401Query
   ) {
+    this.asignacionDirectaCupoPersonasFisicasPrimeraVezService.obtenerRespuestaPorUrl(
+      this,
+      'datos',
+      '/120401/asignacion.json'
+    );
     // Constructor
   }
 
@@ -264,6 +306,8 @@ export class SeleccionDelCupoComponent implements OnInit, OnDestroy {
     this.tramite120401Store.setSubproducto(SELECTED_SUBPRODUCTO);
   }
 
-
-  
+  listaDeFilaSeleccionada(fila: SeleccionDelCupoTabla): void {
+    this.filaSeleccionada = fila;
+    this.mostrarDescripcionDelCupo = !this.mostrarDescripcionDelCupo;
+  }
 }

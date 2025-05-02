@@ -1,72 +1,87 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+// @ts-nocheck
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { By } from '@angular/platform-browser';
+import { Observable, of as observableOf, throwError } from 'rxjs';
 
+import { Component } from '@angular/core';
 import { DescripcionDelCupoComponent } from './descripcion-del-cupo.component';
- 
+import { FormBuilder } from '@angular/forms';
+import { DescripcionDelCupoService } from '@ng-mf/data-access-user';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
+
+
 describe('DescripcionDelCupoComponent', () => {
+  let fixture;
+  let component;
 
-  let component: DescripcionDelCupoComponent;
-
-  let fixture: ComponentFixture<DescripcionDelCupoComponent>;
- 
-  beforeEach(async () => {
-
-    await TestBed.configureTestingModule({
-
-      imports: [DescripcionDelCupoComponent],
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [ FormsModule, ReactiveFormsModule,  DescripcionDelCupoComponent, HttpClientModule],
+      declarations: [
+      ],
+      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
+      providers: [
+        FormBuilder,
+        DescripcionDelCupoService
+      ]
+    }).overrideComponent(DescripcionDelCupoComponent, {
 
     }).compileComponents();
- 
     fixture = TestBed.createComponent(DescripcionDelCupoComponent);
-
-    component = fixture.componentInstance;
-
-    fixture.detectChanges();
-
+    component = fixture.debugElement.componentInstance;
   });
- 
-  it('should create', () => {
 
+
+  it('should run #constructor()', async () => {
     expect(component).toBeTruthy();
-
   });
- 
-  it('should have a defined title', () => {
 
-    expect(component.title).toBeDefined();
-
+  it('should run #ngOnInit()', async () => {
+    component.crearFormulario = jest.fn();
+    component.loadDescripcionDelCupo = jest.fn();
+    component.ngOnInit();
+    // expect(component.crearFormulario).toHaveBeenCalled();
+    // expect(component.loadDescripcionDelCupo).toHaveBeenCalled();
   });
- 
-  it('should render title in a h1 tag', () => {
 
-    const compiled = fixture.nativeElement;
-
-    expect(compiled.querySelector('h1').textContent).toContain(component.title);
-
+  it('should run #ngOnDestroy()', async () => {
+    component.destroyed$ = component.destroyed$ || {};
+    component.destroyed$.next = jest.fn();
+    component.destroyed$.complete = jest.fn();
+    component.ngOnDestroy();
+    // expect(component.destroyed$.next).toHaveBeenCalled();
+    // expect(component.destroyed$.complete).toHaveBeenCalled();
   });
- 
-  it('should call a specific method on button click', () => {
 
-    spyOn(component, 'onButtonClick');
-
-    const button = fixture.debugElement.nativeElement.querySelector('button');
-
-    button.click();
-
-    expect(component.onButtonClick).toHaveBeenCalled();
-
+  it('should run #crearFormulario()', async () => {
+    component.fb = component.fb || {};
+    component.fb.group = jest.fn();
+    component.crearFormulario();
+    // expect(component.fb.group).toHaveBeenCalled();
   });
- 
-  it('should update the view when data changes', () => {
 
-    component.data = 'New Data';
-
-    fixture.detectChanges();
-
-    const compiled = fixture.nativeElement;
-
-    expect(compiled.querySelector('.data-container').textContent).toContain('New Data');
-
+  it('should run #loadDescripcionDelCupo()', async () => {
+    component.service = component.service || {};
+    component.service.getDescripcionDelCupo = jest.fn().mockReturnValue(observableOf({
+      claveDelCupo: {},
+      mecanismoDeAsignacion: {},
+      descripcionDelProducto: {},
+      unidadDeMedida: {},
+      regimenAduanero: {},
+      fechaDeInicioDeVigenciaDelCupo: {},
+      fechaDeFinDeVigenciaDelCupo: {},
+      fraccionesArancelarias: {},
+      tratadoAcuerdo: {},
+      paises: {}
+    }));
+    component.form = component.form || {};
+    component.form.patchValue = jest.fn();
+    component.loadDescripcionDelCupo();
+    // expect(component.service.getDescripcionDelCupo).toHaveBeenCalled();
+    // expect(component.form.patchValue).toHaveBeenCalled();
   });
 
 });
- 

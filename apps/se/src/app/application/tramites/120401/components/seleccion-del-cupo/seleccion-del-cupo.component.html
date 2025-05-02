@@ -58,9 +58,10 @@
 
   <div>
     <div class="table-responsive table-wrapper">
-      <H6> Cupos disponibles</H6>
-      <app-tabla-dinamica [configuracionTabla]="configuracionTabla"
+      <h4> Cupos disponibles</h4>
+      <app-tabla-dinamica [configuracionTabla]="configuracionTabla"  (filaClic)="listaDeFilaSeleccionada($event)"
       [datos]="datos"></app-tabla-dinamica>
+
       <!-- <table class="table table-striped centered-table">
         <tbody>
           <tr *ngIf="seleccionDelCupo">
@@ -75,5 +76,7 @@
       </table> -->
     </div>
   </div>
-  
+<app-descripcion-del-cupo *ngIf="mostrarDescripcionDelCupo">
+</app-descripcion-del-cupo>
+ 
 </div>
