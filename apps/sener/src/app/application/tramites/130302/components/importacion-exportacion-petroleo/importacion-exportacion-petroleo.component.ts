@@ -10,18 +10,28 @@ import { TablaSeleccion } from '@ng-mf/data-access-user';
 import { NICO_TABLA, PermisoModel } from '../../models/permiso-importacion.model';
 import {PermisoPetroleoService} from '../../services/permiso-petroleo.service' 
 import { Subject, takeUntil } from 'rxjs';
+import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
+import { INFORMACION_DE_LA_OBRA_ARTE } from '../../enums/permiso-petroleo.enum';
 
 @Component({
   selector: 'app-importacion-exportacion-petroleo',
   standalone: true,
-  imports: [CommonModule,ReactiveFormsModule,TituloComponent,TablaDinamicaComponent],
+  imports: [CommonModule,ReactiveFormsModule,TituloComponent,TablaDinamicaComponent,FormasDinamicasComponent],
   templateUrl: './importacion-exportacion-petroleo.component.html',
   styleUrls: ['./importacion-exportacion-petroleo.component.css']
 })
 export class ImportacionExportacionPetroleoComponent implements OnInit, OnDestroy {
   form!: FormGroup;
   private destroyed$ = new Subject<void>();
+  public informacionFormData = INFORMACION_DE_LA_OBRA_ARTE;
 
+  public forma: FormGroup = new FormGroup({
+    ninoFormGroup: new FormGroup({})
+  });
+
+  get ninoFormGroup(): FormGroup {
+    return this.forma.get('ninoFormGroup') as FormGroup;
+  }
   /**
    * property TablaSeleccion
    * description Configuración de la tabla de selección.
@@ -65,6 +75,7 @@ export class ImportacionExportacionPetroleoComponent implements OnInit, OnDestro
         this.tercerosProd = resp;
       });
   }
+  
 
   onSubmit(): void {
     if (this.form.valid) {
