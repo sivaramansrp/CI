@@ -23,30 +23,10 @@ export class ValidaTransporteService {
      * @param numeroBL: BodyValidarFerro - Número BL a validar
      * @returns Observable con la respuesta de la API
      */
-    getValidaFerroviario(numeroBL: BodyValidaFerro): Observable<ValidacionesTransporteResponse> {
-        const TIPO = 'ferro';
-        const ENDPOINT = `${this.host}/${API_CONSULTAR_VALIDACION.replace('{tipoTransporte}', TIPO)}`;
+    getValidaTransporte(tipo: string, body: BodyValidaAereo | BodyValidaFerro): Observable<ValidacionesTransporteResponse> {
+        const ENDPOINT = `${this.host}/${API_CONSULTAR_VALIDACION.replace('{tipoTransporte}', tipo)}`;
 
-        return this.http.post<ValidacionesTransporteResponse>(ENDPOINT, numeroBL).pipe(
-            map((response) => {
-                return response;
-            }),
-            catchError(() => {
-                const ERROR = new Error(`Ocurrió un error al devolver la información ${ENDPOINT} `);
-                return throwError(() => ERROR);
-            })
-        );
-    }
-
-    /**
-     * Petición a la API para validar la guía master o la guía house de transporte aéreo.
-     * @param numeroGuia: BodyValidarAereo - Número de guía a validar
-     * @returns Observable con la respuesta de la API
-     */
-    getValidaAereo(numeroGuia: BodyValidaAereo): Observable<ValidacionesTransporteResponse> {
-        const TIPO = 'aereo';
-        const ENDPOINT = `${this.host}/${API_CONSULTAR_VALIDACION.replace('{tipoTransporte}', TIPO)}`;
-        return this.http.post<ValidacionesTransporteResponse>(ENDPOINT, numeroGuia).pipe(
+        return this.http.post<ValidacionesTransporteResponse>(ENDPOINT, body).pipe(
             map((response) => {
                 return response;
             }),

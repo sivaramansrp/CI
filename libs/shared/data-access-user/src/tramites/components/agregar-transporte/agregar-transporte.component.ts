@@ -22,6 +22,7 @@ import { ValidaTransporteService } from '../../../core/services/shared/api-valid
 
 import { Notificacion, NotificacionesComponent } from '../notificaciones/notificaciones.component';
 import { BooleanoSiNoPipe } from '../../pipes/booleanoSiNo/booleano-si-no.pipe';
+import { TIPO_TRANSPORTE } from '../../constantes/agregar-transporte.enum';
 
 @Component({
   selector: 'lib-agregar-transporte',
@@ -469,10 +470,9 @@ export class AgregarTransporteComponent implements OnChanges, OnInit {
   postValidarNumeroBL(): void {
     const NUMERO_BL = parseInt(this.ferroviarioForma.get('numeroBL')?.value, 10);
     if (NUMERO_BL) {
-      const BODY: BodyValidaFerro = {
+      this.validaTransporteService.getValidaTransporte(TIPO_TRANSPORTE.FERRO, {
         numeroBL: NUMERO_BL,
-      }
-      this.validaTransporteService.getValidaFerroviario(BODY).pipe(
+      }).pipe(
         tap((response) => {
           if (response.codigo === '00') {
             const DATOS = response.datos;
@@ -545,7 +545,7 @@ export class AgregarTransporteComponent implements OnChanges, OnInit {
     }
 
     const GUIA = GUIA_MASTER ? GUIA_MASTER : GUIA_HOUSE;
-    this.validaTransporteService.getValidaAereo({ guiaHouseAereo: GUIA }).pipe(
+    this.validaTransporteService.getValidaTransporte(TIPO_TRANSPORTE.AEREO, { guiaHouseAereo: GUIA }).pipe(
       tap((response) => {
         if (response.codigo === '00') {
           this.aereoForma.get('guiaValida')?.setValue(true);
