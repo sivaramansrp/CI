@@ -162,15 +162,14 @@
       </div>
       <div class="col-md-8"></div>
       <div class="col-md-12">
-        <div class="form-group pull-right">
+        <div class="form-group pull-left">
           <button
             type="button"
-            name="Agregar"
+            name="Buscar"
             id="btnBusqRfc"
-            (click)="agregarRFCDatos()"
             class="btn btn-primary me-5"
           >
-            Agregar
+            Buscar
           </button>
         </div>
       </div>
@@ -831,7 +830,12 @@
             Modificar
           </button>
 
-          <button type="button" id="eliminarSocio" (click)="eliminarImmexProgram()" class="btn btn-danger ms-3">
+          <button
+            type="button"
+            id="eliminarSocio"
+            (click)="eliminarImmexProgram()"
+            class="btn btn-danger ms-3"
+          >
             Eliminar
           </button>
 
@@ -1448,7 +1452,9 @@
 >
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
-      <app-miembro-de-la-empresa (eventoActualizarMiembro)="eventoActualizarMiembro($event)"></app-miembro-de-la-empresa>
+      <app-miembro-de-la-empresa
+        (eventoActualizarMiembro)="eventoActualizarMiembro($event)"
+      ></app-miembro-de-la-empresa>
     </div>
   </div>
 </div>
@@ -1462,7 +1468,9 @@
 >
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
-      <app-modificar-immex-program (modificarImmexValor)="modificarImmexValor($event)"></app-modificar-immex-program>
+      <app-modificar-immex-program
+        (modificarImmexValor)="modificarImmexValor($event)"
+      ></app-modificar-immex-program>
     </div>
   </div>
 </div>
@@ -1476,7 +1484,9 @@
 >
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
-      <app-agregar-immex-program (agregarImmexValor)="agregarImmexValor($event)"></app-agregar-immex-program>
+      <app-agregar-immex-program
+        (agregarImmexValor)="agregarImmexValor($event)"
+      ></app-agregar-immex-program>
     </div>
   </div>
 </div>
