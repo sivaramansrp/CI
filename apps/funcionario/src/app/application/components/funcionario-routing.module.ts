@@ -8,6 +8,7 @@ import { AutorizarDictamenComponent } from './autorizar/autorizar-dictamen/autor
 import { SolicitudPageComponent } from './evaluar-solicitud/solicitud-page/solicitud-page.component';
 import { GenerarDictamenComponent } from './evaluar-solicitud/generar-dictamen/generar-dictamen.component';
 import { ObservacionesDictamenComponent } from './autorizar/observaciones/observaciones-dictamen.component';
+import { ConsultaComponent } from './consulta/consulta.component';
 
 const routes: Routes = [
   {
@@ -33,11 +34,15 @@ const routes: Routes = [
   {
     path: 'autorizar-dictamen',
     component: AutorizarDictamenComponent,
-  },
-  {
-    path: 'observaciones-dictamen',
-    component: ObservacionesDictamenComponent,
-  },
+    },
+    {
+        path: 'consulta',
+        component: ConsultaComponent,
+    },
+    {
+      path: 'observaciones-dictamen',
+      component: ObservacionesDictamenComponent,
+      },
 
 ];
 
