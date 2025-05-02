@@ -22,6 +22,7 @@ import {
   FechasService,
   FormulariosService,
   ICatalogo,
+  Notificacion,
   PROGRAMA_FOMENTO,
   PROGRAMA_IMMEX,
   REGEX_RFC,
@@ -269,6 +270,8 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    * Estado del usuario firmado en la aplicación
    */
   private usuarioState!: UsuarioState;
+
+  notificacionNueva!: Notificacion;
 
   /**
    * Bandera para saber el tipo de persona del usuario. 
