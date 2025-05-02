@@ -1,4 +1,4 @@
-import { ExportarIlustraciones270101State, Tramite270101Store } from '../tramite130302.store';
+import { ExportarIlustraciones130302State, Tramite130302Store } from '../tramite130302.store';
 import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
 
@@ -12,7 +12,7 @@ import { Query } from '@datorama/akita';
  * Clase que representa una consulta para el estado.
  * Proporciona métodos para seleccionar y observar el estado completo del formulario de la solicitud.
  */
-export class Tramite270101Query extends Query<ExportarIlustraciones270101State> {
+export class Tramite130302Query extends Query<ExportarIlustraciones130302State> {
   /**
    * Observable que selecciona el estado completo de la solicitud.
    * Permite observar los cambios en el estado del formulario.
@@ -22,12 +22,12 @@ export class Tramite270101Query extends Query<ExportarIlustraciones270101State> 
   });
 
   /**
-   * Constructor de la clase Tramite270101Store.
+   * Constructor de la clase Tramite130302Store.
    * Inicializa la consulta con el almacén proporcionado.
    * 
    * @param store - Instancia del almacén Tramite302Store.
    */
-  constructor(protected override store: Tramite270101Store) {
+  constructor(protected override store: Tramite130302Store) {
     super(store);
   }
 }

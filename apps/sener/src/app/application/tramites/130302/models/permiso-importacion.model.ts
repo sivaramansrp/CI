@@ -38,3 +38,22 @@ export interface AccionBoton {
     { encabezado: 'Fetcha Final', clave: (item: PermisoModel): string => item.fetchaFinal, orden: 3 },
   
 ]
+export const FECHA_DE_PAGO = {
+  /**
+   * @property {string} labelNombre
+   * @description Etiqueta que describe el campo de fecha de pago.
+   */
+  labelNombre: 'Prórroga al',
+
+  /**
+   * @property {boolean} required
+   * @description Indica si el campo de fecha de pago es obligatorio.
+   */
+  required: false,
+
+  /**
+   * @property {boolean} habilitado
+   * @description Indica si el campo de fecha de pago está habilitado.
+   */
+  habilitado: true,
+};
