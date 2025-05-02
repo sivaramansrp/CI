@@ -71,4 +71,13 @@ export interface InputRadio {
 export interface SolicitudRadioLista {
   /** Requisitos que deben cumplirse */
   requisitos: InputRadio;
+  clasificacionInformacion: InputRadio;
+  reconocimientoMutuo: InputRadio;
+}
+
+export interface TransportistasTable {
+  rfc: string;
+  razonSocial: string;
+  domicilio: string;
+  caat: string;
 }

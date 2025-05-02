@@ -1,5 +1,12 @@
-import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
-import { EnlaceOperativo, RecibirNotificaciones } from '../models/solicitud.model';
+import {
+  ConfiguracionColumna,
+  InputFecha,
+} from '@libs/shared/data-access-user/src';
+import {
+  EnlaceOperativo,
+  RecibirNotificaciones,
+  TransportistasTable,
+} from '../models/solicitud.model';
 
 /** Configuración de columnas para Recibir Notificaciones */
 export const RECIBIR_NOTIFICACIONES_CONFIGURACION: ConfiguracionColumna<RecibirNotificaciones>[] =
@@ -122,5 +129,59 @@ export const ENLACE_OPERATIVO_CONFIGURACION: ConfiguracionColumna<EnlaceOperativ
       encabezado: 'Delegacion Municipio',
       clave: (item: EnlaceOperativo) => item.delegacionMunicipio,
       orden: 1,
+    },
+  ];
+
+export const FECHA_DE_INICIO: InputFecha = {
+  /**
+   * Etiqueta del campo de fecha de fin de vigencia.
+   */
+  labelNombre: 'Fecha de Inicio de Operaciones de Comercio Exterior',
+  /**
+   * Indica si el campo es obligatorio.
+   */
+  required: false,
+  /**
+   * Indica si el campo está habilitado.
+   */
+  habilitado: true,
+};
+
+export const FECHA_DE_PAGO: InputFecha = {
+  /**
+   * Etiqueta del campo de fecha de fin de vigencia.
+   */
+  labelNombre: 'Fecha de pago',
+  /**
+   * Indica si el campo es obligatorio.
+   */
+  required: false,
+  /**
+   * Indica si el campo está habilitado.
+   */
+  habilitado: true,
+};
+
+export const TRANSPORTISTAS_CONFIGURACION: ConfiguracionColumna<TransportistasTable>[] =
+  [
+    {
+      encabezado: 'RFC',
+      clave: (item: TransportistasTable) => item.rfc,
+      orden: 1,
+    },
+    {
+      encabezado: 'Denominaci\u00F3n o Raz\u00F3n social',
+      clave: (item: TransportistasTable) => item.razonSocial,
+      orden: 2,
+    },
+    {
+      encabezado: 'Domicilio',
+      clave: (item: TransportistasTable) => item.domicilio,
+      orden: 3,
+    },
+    {
+      encabezado: 'Registro CAAT vigente',
+      clave: (item: TransportistasTable) => item.caat,
+      orden: 4,
     },
   ];

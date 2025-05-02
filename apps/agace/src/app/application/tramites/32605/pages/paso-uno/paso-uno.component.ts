@@ -1,8 +1,7 @@
+import { CTPATComponent } from '../../components/c-tpat/c-tpat.component';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-// import { DatosGeneralesDeLaSolicitudComponent } from '../../components/datos-generales-de-la-solicitud/datos-generales-de-la-solicitud.component';
-// import { DatosPorGarantiaComponent } from '../../components/datos-por-garantia/datos-por-garantia.component';
-import { CTPATComponent } from '../../components/c-tpat/c-tpat.component';
+import { ImportadorExportadorComponent } from '../../components/importador-exportador/importador-exportador.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
 import { TercerosRelacionadosComponent } from '../../components/terceros-relacionados/terceros-relacionados.component';
@@ -19,7 +18,7 @@ import { ViewChild } from '@angular/core';
     CommonModule,
     ReactiveFormsModule,
     SolicitanteComponent,
-    // DatosGeneralesDeLaSolicitudComponent,
+    ImportadorExportadorComponent,
     CTPATComponent,
     TercerosRelacionadosComponent,
   ],
@@ -37,7 +36,7 @@ export class PasoUnoComponent {
    * Índice utilizado para identificar la pestaña activa dentro del paso.
    * @type {number}
    */
-  indice: number = 1;
+  indice: number = 4;
 
 
   /**

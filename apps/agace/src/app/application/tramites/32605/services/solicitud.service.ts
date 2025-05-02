@@ -6,6 +6,7 @@ import {
   RecibirNotificaciones,
   RepresentanteLegal,
   SolicitudRadioLista,
+  TransportistasTable,
 } from '../models/solicitud.model';
 
 /**
@@ -50,4 +51,11 @@ export class SolicitudService {
       'assets/json/32605/solicitud-radio-lista.json'
     );
   }
+
+  conseguirTransportistasLista(): Observable<TransportistasTable[]> {
+    return this.http.get<TransportistasTable[]>(
+      'assets/json/32605/transportistas-lista.json'
+    );
+  }
+
 }

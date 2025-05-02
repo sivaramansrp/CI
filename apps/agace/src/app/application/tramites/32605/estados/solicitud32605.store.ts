@@ -26,6 +26,25 @@ export interface Solicitud32605State {
   '2089': number | string;
   '2090': number | string;
   '2091': number | string;
+
+  '2042': number | string;
+  '2043': number | string;
+  '2044': number | string;
+  fechaInicioComercio: string;
+  fechaPago: string;
+  monto: string;
+  operacionesBancarias: string;
+  llavePago: string;
+
+  transportistaRFC: string;
+  transportistaRFCModifTrans: string;
+  transportistaRazonSocial: string;
+  transportistaDomicilio: string;
+  transportistaCaat: string;
+  transportistaIdDomicilio: string;
+  transportistaIdRFC: string;
+  transportistaIdRazonSocial: string;
+  transportistaIdCaat: string;
 }
 
 export function createInitialSolicitudState(): Solicitud32605State {
@@ -53,6 +72,25 @@ export function createInitialSolicitudState(): Solicitud32605State {
     '2089': 0,
     '2090': 0,
     '2091': 0,
+
+    '2042': 0,
+    '2043': 0,
+    '2044': 0,
+    fechaInicioComercio: '',
+    fechaPago: '',
+    monto: '',
+    operacionesBancarias: '',
+    llavePago: '',
+
+    transportistaRFC: '',
+    transportistaRFCModifTrans: '',
+    transportistaRazonSocial: '',
+    transportistaDomicilio: '',
+    transportistaCaat: '',
+    transportistaIdDomicilio: '',
+    transportistaIdRFC: '',
+    transportistaIdRazonSocial: '',
+    transportistaIdCaat: '',
   };
 }
 @Injectable({
@@ -152,6 +190,74 @@ export class Solicitud32605Store extends Store<Solicitud32605State> {
 
   actualizar2091(valor: number | string): void {
     this.update((state) => ({ ...state, '2091': valor }));
+  }
+
+  actualizar2042(valor: number | string): void {
+    this.update((state) => ({ ...state, '2042': valor }));
+  }
+
+  actualizar2043(valor: number | string): void {
+    this.update((state) => ({ ...state, '2043': valor }));
+  }
+
+  actualizar2044(valor: number | string): void {
+    this.update((state) => ({ ...state, '2044': valor }));
+  }
+
+  actualizarFechaInicioComercio(valor: string): void {
+    this.update((state) => ({ ...state, fechaInicioComercio: valor }));
+  }
+
+  actualizarFechaPago(valor: string): void {
+    this.update((state) => ({ ...state, fechaPago: valor }));
+  }
+
+  actualizarMonto(valor: string): void {
+    this.update((state) => ({ ...state, monto: valor }));
+  }
+
+  actualizarOperacionesBancarias(valor: string): void {
+    this.update((state) => ({ ...state, operacionesBancarias: valor }));
+  }
+
+  actualizarLlavePago(valor: string): void {
+    this.update((state) => ({ ...state, llavePago: valor }));
+  }
+
+  actualizarTransportistaRFC(valor: string): void {
+    this.update((state) => ({ ...state, transportistaRFC: valor }));
+  }
+
+  actualizarTransportistaRFCModifTrans(valor: string): void {
+    this.update((state) => ({ ...state, transportistaRFCModifTrans: valor }));
+  }
+
+  actualizarTransportistaRazonSocial(valor: string): void {
+    this.update((state) => ({ ...state, transportistaRazonSocial: valor }));
+  }
+
+  actualizarTransportistaDomicilio(valor: string): void {
+    this.update((state) => ({ ...state, transportistaDomicilio: valor }));
+  }
+
+  actualizarTransportistaCaat(valor: string): void {
+    this.update((state) => ({ ...state, transportistaCaat: valor }));
+  }
+
+  actualizarTransportistaIdDomicilio(valor: string): void {
+    this.update((state) => ({ ...state, transportistaIdDomicilio: valor }));
+  }
+
+  actualizarTransportistaIdRFC(valor: string): void {
+    this.update((state) => ({ ...state, transportistaIdRFC: valor }));
+  }
+
+  actualizarTransportistaIdRazonSocial(valor: string): void {
+    this.update((state) => ({ ...state, transportistaIdRazonSocial: valor }));
+  }
+
+  actualizarTransportistaIdCaat(valor: string): void {
+    this.update((state) => ({ ...state, transportistaIdCaat: valor }));
   }
 
   /**
