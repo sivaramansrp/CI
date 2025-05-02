@@ -105,7 +105,14 @@ const ROUTES: Routes = [
       import('./tramites/221602/fitosanitario.module').then(
         (m) => m.FitosanitarioModule
       ),
-  }
+  },
+  {
+    path:'sanidad-acuicola-importacion',
+    loadChildren: () =>
+      import('./tramites/220103/sanidad-acuicola-importacion.module').then(
+        (m) => m.SanidadAcuicolaImportacionModule
+      )
+  },
 ];
 
 @NgModule({
