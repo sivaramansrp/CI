@@ -7,7 +7,7 @@ export const RFC_QUERY = '{rfc}'
  * @param RFC_QUERY El RFC del solicitante
  * @see http://api-vucem-1069277193.us-east-1.elb.amazonaws.com/api/patente/swagger-ui/index.html
  */
-export const API_GET_PATENTE = `patente/busca?rfc=${RFC_QUERY}`;
+export const API_GET_PATENTE = `patente/${RFC_QUERY}`;
 
 /**
  * API para recuperar las patentes asociadas a un apoderado
@@ -146,3 +146,16 @@ export const TIPO_TRAMITE_QUERY = '{tipoTramite}';
  * @see http://api-vucem-1069277193.us-east-1.elb.amazonaws.com/api/catalogo/swagger-ui/index.html#/Certificaciones/valida-certificaciones
  */
 export const API_GET_VALIDA_CERTIFICACIONES = `catalogo/valida-certificaciones/${TIPO_TRAMITE_QUERY}/${RFC_QUERY}`;
+/**
+ * La línea de pago por la que se filtrará la información.
+ */
+export const LINEA_PAGO_QUERY = '{lineaPago}';
+/**
+ * API para validar si una línea de pago es válida.
+ * @param LINEA_PAGO_QUERY La línea de pago
+ */
+export const API_GET_VALIDA_LINEA_PAGO = `pago/sea/${LINEA_PAGO_QUERY}`;
+/**
+ * API para obtener el monto del trámite
+ */
+export const API_GET_PARAMETRO_MONTO = `sat-t5701/parametro/monto`;

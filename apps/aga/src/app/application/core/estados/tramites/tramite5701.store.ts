@@ -7,6 +7,7 @@ import {
 import { Injectable } from '@angular/core';
 import { Patente } from '../../models/5701/patente.model';
 
+
 /**
  * Creacion del estado inicial para la interfaz de tramite 5701
  * @returns Solicitud5701
@@ -103,7 +104,7 @@ export interface Solicitud5701State {
   montoPagar: string;
   lineaCaptura: string;
   monto: string;
-
+  isMontoAceptable: boolean;
   rangoFechas: boolean;
   selectRangoDias: string[];
 }
@@ -186,6 +187,7 @@ export function createInitialState(): Solicitud5701State {
     montoPagar: '',
     lineaCaptura: '',
     monto: '',
+    isMontoAceptable: false,
     rangoFechas: false,
     selectRangoDias: [],
   };
@@ -686,7 +688,12 @@ export class Tramite5701Store extends Store<Solicitud5701State> {
     }));
   }
 
-
+  public setIsMontoAceptable(isMontoAceptable: boolean): void {
+    this.update((state) => ({
+      ...state,
+      isMontoAceptable,
+    }));
+  }
 
   /**
    * Limpia los datos de la solicitud

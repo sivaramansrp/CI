@@ -23,6 +23,7 @@ import {
   FormulariosService,
   ICatalogo,
   Notificacion,
+  ParametroMontoService,
   PROGRAMA_FOMENTO,
   PROGRAMA_IMMEX,
   REGEX_RFC,
@@ -34,6 +35,7 @@ import {
   TipoPersona,
   TipoSolicitudService,
   ValidacionesFormularioService,
+  ValidaLineaPagoService,
   ValidaRfcService,
 } from '@ng-mf/data-access-user';
 import { Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
@@ -45,6 +47,7 @@ import {
 } from '../../../../core/estados/tramites/tramite5701.store';
 import { AduanaService } from '../../../../core/services/5701/aduana.service';
 import { CatalogoLista } from '@libs/shared/data-access-user/src/core/models/shared/tipo-solicitud.model';
+import { CertificacionOeaService } from '../../../../core/services/5701/certificacion-oea.service';
 import { CertificacionOrigenService } from '../../../../core/services/5701/certificacion-origen.service';
 import { CertificacionService } from '../../../../core/services/5701/certificacion.service';
 import { DatosCheckInputText } from '../../../../core/models/shared/check-input-text.model';
@@ -52,6 +55,7 @@ import { DatosComponentePedimento } from '../../../../core/models/5701/tramite57
 import { IdcService } from '../../../../core/services/5701/idc.service';
 import { IndustriaAutomotrizService } from '../../../../core/services/5701/industria-automotriz.service';
 import { Modal } from 'bootstrap';
+import { MODALIDAD_OEA_IMPEXP } from '../../../../constantes/5701/constantes-tramite';
 import { Patente } from '../../../../core/models/5701/patente.model';
 import { PatenteApoderadoService } from '../../../../core/services/5701/patente-apoderado.service';
 import { PatenteEmpresaService } from '../../../../core/services/5701/patente-empresas.service';
@@ -67,8 +71,6 @@ import { UsuarioState } from '@libs/shared/data-access-user/src/core/estados/usu
 import patentes from 'libs/shared/theme/assets/json/5701/patentes.json';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import rfcs from 'libs/shared/theme/assets/json/5701/rfcs.json';
-import { CertificacionOeaService } from '../../../../core/services/5701/certificacion-oea.service';
-import { MODALIDAD_OEA_IMPEXP } from '../../../../constantes/5701/constantes-tramite';
 
 @Component({
   selector: 'app-solicitud',
@@ -311,6 +313,8 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
     private readonly certificacionIndustriaAutomotrizService: IndustriaAutomotrizService,
     private readonly certificacionOrigenService: CertificacionOrigenService,
     private readonly certificacionOeaService: CertificacionOeaService,
+    private readonly validaLineaPagoService: ValidaLineaPagoService,
+    private readonly parametroMontoService: ParametroMontoService
   ) { }
 
   ngOnInit(): void {
@@ -1648,4 +1652,39 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       }),
     ).subscribe();
   }
+
+    /**
+   * Consulta si la línea de captura es válida y actualiza el store correspondiente.
+   */
+    public consultarLineaCaptura(): void {
+      const LINEA_PAGO: string = this.pagoCaptura.get('lineaCaptura')?.value;
+      const MONTO: number = this.pagoCaptura.get('monto')?.value;
+  
+      this.validaLineaPagoService.getLineaPagoValidacion(LINEA_PAGO).pipe(
+        takeUntil(this.destroyNotifier$),
+        switchMap(responseValidaPago => {
+          if (responseValidaPago.codigo !== '00') {
+            // TODO: Implementar mensaje de error para línea de captura no válida.
+            return EMPTY;
+          }
+          return this.parametroMontoService.getParametroMonto();
+        }),
+        tap(montoResponse => {
+          // TODO:Implementar lógica para agregar información a tabla de pagos
+          if(montoResponse) {
+            let numeroDias: number = 0;
+            if(this.tipoSolicitudSeleccionada === 2 || this.tipoSolicitudSeleccionada === 3) {
+              numeroDias = this.fechasSeleccionadas.length;
+            }
+            if(montoResponse.datos) {
+              const MONTO_TOTAL: number = numeroDias > 0 
+                    ? montoResponse.datos * numeroDias 
+                    : montoResponse.datos;
+              const VALIDACION_MONTO: boolean = MONTO >= MONTO_TOTAL ? true : false;
+              this.tramite5701Store.setIsMontoAceptable(VALIDACION_MONTO);
+            }
+          }
+        }),
+      ).subscribe();
+    }
 }
