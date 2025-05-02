@@ -1,13 +1,19 @@
+import { AgregarEnlaceOperativoComponent } from '../agregar-enlace-operativo/agregar-enlace-operativo.component';
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
 import { ENLACE_OPERATIVO_CONFIGURACION } from '../../constants/solicitud.enum';
+import { ElementRef } from '@angular/core';
 import { EnlaceOperativo } from '../../models/solicitud.model';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { Modal } from 'bootstrap';
+import { Notificacion } from '@libs/shared/data-access-user/src';
+import { NotificacionesComponent } from '@libs/shared/data-access-user/src';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
+import { Pedimento } from '@libs/shared/data-access-user/src';
 import { RECIBIR_NOTIFICACIONES_CONFIGURACION } from '../../constants/solicitud.enum';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RecibirNotificaciones } from '../../models/solicitud.model';
@@ -21,10 +27,9 @@ import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { Validators } from '@angular/forms';
+import { ViewChild } from '@angular/core';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
-import { AgregarEnlaceOperativoComponent } from '../agregar-enlace-operativo/agregar-enlace-operativo.component';
-import { Modal } from 'bootstrap';
 /**
  * Componente encargado de mostrar la lista de terceros relacionados
  * que pueden recibir notificaciones. Utiliza una tabla dinámica para
@@ -40,6 +45,7 @@ import { Modal } from 'bootstrap';
     TablaDinamicaComponent,
     HttpClientModule,
     AgregarEnlaceOperativoComponent,
+    NotificacionesComponent,
   ],
   providers: [SolicitudService],
   templateUrl: './terceros-relacionados.component.html',
@@ -51,12 +57,22 @@ import { Modal } from 'bootstrap';
  * mostrar los datos obtenidos del servicio `SolicitudService`.
  */
 export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
+  /**
+   * @descripcion Notificación para mostrar mensajes al usuario.
+   */
+  public nuevaNotificacion!: Notificacion;
+
+  /**
+   * Elemento a eliminar de la tabla de pedimentos.
+   */
+  elementoParaEliminar!: number;
+
   tercerosRelacionadosForm!: FormGroup;
   /** Tipo de selección para la tabla (por defecto: UNDEFINED) */
   tipoSeleccionTabla = TablaSeleccion.UNDEFINED;
 
   enlaceOperativoTabla = TablaSeleccion.CHECKBOX;
-
+  pedimentos: Array<Pedimento> = [];
   seleccionEnlaceOperativoDatos: EnlaceOperativo[] = [] as EnlaceOperativo[];
 
   enlaceOperativoConfiguracionColumnas: ConfiguracionColumna<EnlaceOperativo>[] =
@@ -221,6 +237,40 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
         (element) => element.rfc !== this.seleccionEnlaceOperativoDatos[0].rfc
       );
     }
+  }
+
+  agregarEnlaceOperativo(evento: EnlaceOperativo): void {
+    const PEDIMENTO = {
+      patente: 0,
+      pedimento: 0,
+      aduana: 0,
+      idTipoPedimento: 0,
+      descTipoPedimento: 'Por evaluar',
+      numero: '',
+      comprobanteValor: '',
+      pedimentoValidado: false,
+    };
+    this.abrirModal(
+      'Se debe registrar por lo menos un enlace operativo que no sea suplente.'
+    );
+    this.pedimentos.push(PEDIMENTO);
+    this.enlaceOperativosLista.push(evento);
+  }
+
+  abrirModal(mensaje: string, i: number = 0): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: mensaje,
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
+
+    this.elementoParaEliminar = i;
   }
 
   /**

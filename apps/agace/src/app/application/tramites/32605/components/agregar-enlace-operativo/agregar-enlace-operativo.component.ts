@@ -1,9 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { EnlaceOperativo } from '../../models/solicitud.model';
+import { EventEmitter } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
+import { Output } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RepresentanteLegal } from '../../models/solicitud.model';
 import { Solicitud32605Query } from '../../estados/solicitud32605.query';
@@ -27,6 +30,7 @@ export class AgregarEnlaceOperativoComponent implements OnInit, OnDestroy {
   agregarEnlaceOperativoForm!: FormGroup;
   private destroy$: Subject<void> = new Subject<void>();
   solicitud32605State: Solicitud32605State = {} as Solicitud32605State;
+  @Output() agregarEnlaceOperativo = new EventEmitter<EnlaceOperativo>();
   constructor(
     public fb: FormBuilder,
     public solicitudService: SolicitudService,
@@ -142,6 +146,41 @@ export class AgregarEnlaceOperativoComponent implements OnInit, OnDestroy {
   actualizarEnlaceSuplente(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).checked;
     this.solicitud32605Store.actualizarEnlaceSuplente(VALOR);
+  }
+
+  aceptarEnlaceSuplente(): void {
+    const OBJETO_JSON: EnlaceOperativo = {
+      rfc: this.agregarEnlaceOperativoForm.get('agregarEnlaceRfc')?.value,
+      nombre: this.agregarEnlaceOperativoForm.get('agregarEnlaceNombre')?.value,
+      apellidoPaterno: this.agregarEnlaceOperativoForm.get(
+        'agregarEnlaceApellidoPaterno'
+      )?.value,
+      apellidoMaterno: this.agregarEnlaceOperativoForm.get(
+        'agregarEnlaceApellidoMaterno'
+      )?.value,
+      claveCiudad: '',
+      ciudad: this.agregarEnlaceOperativoForm.get('agregarEnlaceCiudadEstado')
+        ?.value,
+      cargo: this.agregarEnlaceOperativoForm.get('agregarEnlaceCargo')?.value,
+      telefono: this.agregarEnlaceOperativoForm.get('agregarEnlaceTelefono')
+        ?.value,
+      correo: this.agregarEnlaceOperativoForm.get(
+        'agregarEnlaceCorreoElectronico'
+      )?.value,
+      suplente:
+        this.agregarEnlaceOperativoForm.get('agregarEnlaceSuplente')?.value ===
+        true
+          ? 'Maria López'
+          : '',
+      calle: '',
+      numeroExterior: '',
+      numeroInterior: '',
+      colonia: '',
+      codigoPostal: '',
+      localidad: '',
+      delegacionMunicipio: '',
+    };
+    this.agregarEnlaceOperativo.emit(OBJETO_JSON);
   }
 
   ngOnDestroy(): void {

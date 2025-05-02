@@ -48,3 +48,27 @@ export interface RepresentanteLegal {
   telefono: string;
   correoElectronico: string;
 }
+
+export interface RadioOptions {
+  /** Etiqueta visible de la opción */
+  label: string;
+
+  /** Valor asociado a la opción */
+  value: string | number;
+
+  /** Texto auxiliar u orientativo */
+  hint?: string;
+}
+
+export interface InputRadio {
+  /** Opciones disponibles para seleccionar */
+  radioOptions: RadioOptions[];
+
+  /** Indica si la selección es obligatoria */
+  isRequired: boolean;
+}
+
+export interface SolicitudRadioLista {
+  /** Requisitos que deben cumplirse */
+  requisitos: InputRadio;
+}

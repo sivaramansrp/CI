@@ -1,7 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { EnlaceOperativo, RecibirNotificaciones, RepresentanteLegal } from '../models/solicitud.model';
+import {
+  EnlaceOperativo,
+  RecibirNotificaciones,
+  RepresentanteLegal,
+  SolicitudRadioLista,
+} from '../models/solicitud.model';
 
 /**
  * Servicio encargado de obtener los datos necesarios para el llenado del formulario
@@ -32,11 +37,17 @@ export class SolicitudService {
     return this.http.get<EnlaceOperativo[]>(
       'assets/json/32605/enlace-operativo-datos.json'
     );
-  } 
-  
+  }
+
   conseguirRepresentanteLegalDatos(): Observable<RepresentanteLegal> {
     return this.http.get<RepresentanteLegal>(
       'assets/json/32605/representante-legal-datos.json'
     );
-  } 
+  }
+
+  conseguirOpcionDeRadio(): Observable<SolicitudRadioLista> {
+    return this.http.get<SolicitudRadioLista>(
+      'assets/json/32605/solicitud-radio-lista.json'
+    );
+  }
 }

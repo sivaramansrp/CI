@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 // import { DatosGeneralesDeLaSolicitudComponent } from '../../components/datos-generales-de-la-solicitud/datos-generales-de-la-solicitud.component';
 // import { DatosPorGarantiaComponent } from '../../components/datos-por-garantia/datos-por-garantia.component';
+import { CTPATComponent } from '../../components/c-tpat/c-tpat.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
 import { TercerosRelacionadosComponent } from '../../components/terceros-relacionados/terceros-relacionados.component';
@@ -19,7 +20,7 @@ import { ViewChild } from '@angular/core';
     ReactiveFormsModule,
     SolicitanteComponent,
     // DatosGeneralesDeLaSolicitudComponent,
-    // DatosPorGarantiaComponent,
+    CTPATComponent,
     TercerosRelacionadosComponent,
   ],
   templateUrl: './paso-uno.component.html',

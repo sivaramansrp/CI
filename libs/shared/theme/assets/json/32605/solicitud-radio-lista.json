@@ -1,0 +1,15 @@
+{
+    "requisitos": {
+        "radioOptions": [
+            {
+                "label": "Sí",
+                "value": 1
+            },
+            {
+                "label": "No",
+                "value": 2
+            }
+        ],
+        "isRequired": true
+    }
+}
