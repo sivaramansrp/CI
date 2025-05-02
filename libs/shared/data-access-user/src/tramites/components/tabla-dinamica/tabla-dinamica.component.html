@@ -19,9 +19,7 @@
         <th *ngFor="let col of obtenerConfiguracionOrdenada()">
           {{ col.encabezado }}
         </th>
-        @if(acciones){
-        <th>Acciones</th>
-        }
+        <th *ngIf="acciones && acciones.length > 0">Acciones</th>
 
       </tr>
     </thead>
@@ -54,28 +52,27 @@
         }
 
         <!-- Renderizar cada columna de manera dinámica utilizando la función 'clave' -->
-        <td *ngFor="let col of obtenerConfiguracionOrdenada()" (click)="col.hiperenlace?cambiarValor(fila):null">
+        <td *ngFor="let col of obtenerConfiguracionOrdenada()" (click)="col.hiperenlace?cambiarValor(fila):null" [ngClass]="{'cursor-pointer': col.hiperenlace}">
           {{ col.clave(fila) || ' ' }}
         </td>
-        <td class="align-icon">
-          @if(acciones.length > 0){
-            @for(accion of acciones; track $index){
-              @switch(accion){
-                @case(accionesEnum.VER){
-                <i class="bi bi-eye color-icon-eye"></i>
-                }
-                @case(accionesEnum.EDITAR){
-                <i class="bi bi-pencil color-icon-edit"></i>
-                }
-                @case(accionesEnum.ELIMINAR){
-                <i class="bi bi-trash color-icon-trash"></i>
-                }
-                @case(accionesEnum.DESCARGAR){
-                <i class="bi bi-download color-icon-download"></i>
-                }
-                }
+         <!-- Conditionally display the "Acciones" column -->
+        <td class="align-icon" *ngIf="acciones && acciones.length > 0">
+          @for(accion of acciones; track $index) {
+            @switch(accion) {
+              @case(accionesEnum.VER) {
+              <i class="bi bi-eye color-icon-eye"></i>
+              }
+              @case(accionesEnum.EDITAR) {
+              <i class="bi bi-pencil color-icon-edit"></i>
+              }
+              @case(accionesEnum.ELIMINAR) {
+              <i class="bi bi-trash color-icon-trash"></i>
+              }
+              @case(accionesEnum.DESCARGAR) {
+              <i class="bi bi-download color-icon-download"></i>
+              }
             }
-        }
+          }
         </td>
       </tr>
     </tbody>
