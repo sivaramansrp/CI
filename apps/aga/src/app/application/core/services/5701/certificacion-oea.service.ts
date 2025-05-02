@@ -1,4 +1,5 @@
-import { API_GET_VALIDA_CERTIFICACIONES, CatalogosBooleanResponse, enviroment, RFC_QUERY, TIPO_TRAMITE_QUERY } from '@libs/shared/data-access-user/src';
+import { API_GET_VALIDA_CERTIFICACIONES, RFC_QUERY, TIPO_TRAMITE_QUERY } from '../../../constantes/5701/api-constants';
+import { CatalogosBooleanResponse, enviroment } from '@libs/shared/data-access-user/src';
 import { catchError, map, Observable, throwError } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -17,7 +18,10 @@ export class CertificacionOeaService {
   }
 
   /**
-   * 
+   * Valida las certificaciones de un RFC para un tipo de tramite
+   * @param tipoTramite Tipo de tramite a validar
+   * @param rfc RFC a validar
+   * @return Observable<CatalogosBooleanResponse> Respuesta de la validación
    */
   getValidacionCertificacion(tipoTramite: string, rfc: string): Observable<CatalogosBooleanResponse> {
     const ENDPOINT = `${this.host}`+ API_GET_VALIDA_CERTIFICACIONES.replace(TIPO_TRAMITE_QUERY, tipoTramite).replace(RFC_QUERY, rfc);

@@ -140,3 +140,8 @@ export { TramiteDetails } from './core/models/tramiteDetails';
 export { SolicitanteasigncionserviceService } from './core/services/120404/solicitanteasigncionservice.service';
 export * from './core/services/shared/catalogos/tipo-equipo.service';
 export { enviroment } from './enviroments/enviroment';
+
+export * from './core/services/shared/catalogos/aduana.service';
+export * from './core/services/shared/catalogos/recinto.service';
+export * from './core/services/shared/catalogos/seccion-aduanas.service';
+export * from './core/models/shared/recinto.model';

@@ -1,4 +1,5 @@
-import { API_GET_RFC_ORIGEN, CatalogosBooleanResponse, enviroment, RFC_QUERY } from '@libs/shared/data-access-user/src';
+import { API_GET_RFC_ORIGEN, RFC_QUERY } from '../../../constantes/5701/api-constants';
+import { CatalogosBooleanResponse, enviroment } from '@libs/shared/data-access-user/src';
 import { catchError, map, Observable, throwError } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';

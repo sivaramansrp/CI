@@ -1,8 +1,11 @@
-import { API_GET_ADUANA, CLAVE_ADUANA_QUERY, enviroment } from '@libs/shared/data-access-user/src';
+
+import { API_GET_ADUANA, CLAVE_ADUANA_QUERY } from '../../../constants/api-constants';
 import { catchError, map, Observable, throwError } from 'rxjs';
+import { enviroment } from '../../../../enviroments/enviroment'
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { RecintoResponse } from '../../models/5701/recinto.model';
+import { RecintoResponse } from '../../../models/shared/recinto.model';
+
 
 @Injectable({
   providedIn: 'root',
@@ -18,7 +21,9 @@ export class RecintoService {
   }
 
   /**
-   *
+   * Obtiene la lista de recintos fiscalizados de una aduana.
+   * @param claveAduana: {string} Clave de la aduana para la que se desea obtener la lista de recintos.
+   * @returns {Observable: RecintoResponse} que emite la respuesta del API con la lista de recintos fiscalizados.
    */
   getListaRecintos(claveAduana: string): Observable<RecintoResponse> {
     const ENDPOINT = `${this.host}`+ API_GET_ADUANA.replace(CLAVE_ADUANA_QUERY, claveAduana);
