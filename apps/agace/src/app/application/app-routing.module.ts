@@ -108,6 +108,13 @@ const ROUTES: Routes = [
         (m) => m.EndosoGarantiaModule
       ),
   },
+  {
+    path: 'aviso-opcion-seguro-global',
+    loadChildren: () =>
+      import('./tramites/32515/aviso-opcion-seguro-global.module').then(
+        (m) => m.AvisoOpcionSeguroGlobalModule
+      ),
+  },
 ];
 
 @NgModule({
