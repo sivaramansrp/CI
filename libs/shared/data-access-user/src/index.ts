@@ -20,6 +20,7 @@ export { ValidacionesFormularioService } from './core/services/shared/validacion
 export {TramiteStore} from './core/estados/tramite.store';
 export * from './core/ambientes';
 export * from './core/constants/api-constants';
+export * from './core/constants/constantes-generales';
 export * from './core/enums/constantes-alertas.enum';
 export * from './core/enums/constantes-alertas.enum';
 export * from './core/enums/forma-render.enum';
@@ -84,6 +85,7 @@ export * from './core/services/shared/tramite-folio/tramite-folio.service';
 export * from './core/services/shared/validaciones-formulario/validaciones-formulario.service';
 export * from './core/services/shared/wizard/wizard.service';
 export * from './core/services/shared/catalogos/tipo-solicitud.service';
+export * from './core/services/shared/valida-rfc.service';
 export * from './lib/data-access-user/data-access-user.component';
 export * from './lib/user.service';
 export * from './tramites/components/acuse/acuse.component';

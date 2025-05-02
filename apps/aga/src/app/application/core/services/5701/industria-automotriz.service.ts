@@ -1,7 +1,9 @@
-import { API_GET_INDUSTRIA_AUTOMOTRIZ, CatalogosBooleanResponse, enviroment, RFC_QUERY } from '@libs/shared/data-access-user/src';
+import { API_GET_INDUSTRIA_AUTOMOTRIZ, enviroment, RFC_QUERY } from '@libs/shared/data-access-user/src';
 import { catchError, map, Observable, throwError } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
+import { IndustriaAutomotrizResponse } from '../../models/5701/certificacion-automotriz.model';
 import { Injectable } from '@angular/core';
+
 
 
 @Injectable({
@@ -20,10 +22,10 @@ export class IndustriaAutomotrizService {
   /**
    * Método para obtener la entidad o persona asociada a un proceso de comercio o negocio que interactúa con el sistema.
    */
-  getCertificacionAutomotriz(rfc: string): Observable<CatalogosBooleanResponse> {
+  getCertificacionAutomotriz(rfc: string): Observable<IndustriaAutomotrizResponse> {
     const ENDPOINT = `${this.host}`+ API_GET_INDUSTRIA_AUTOMOTRIZ.replace(RFC_QUERY, rfc);
 
-    return this.http.get<CatalogosBooleanResponse>(ENDPOINT).pipe(
+    return this.http.get<IndustriaAutomotrizResponse>(ENDPOINT).pipe(
       map((response) => {
         return response;
       }),

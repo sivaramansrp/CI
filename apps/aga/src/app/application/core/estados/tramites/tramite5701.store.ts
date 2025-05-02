@@ -16,11 +16,13 @@ export interface Solicitud5701State {
   tipoSolicitud: string;
 
   RFCImportadorExportador: string;
+  rfcGenerico: boolean;
   nombre: string;
   descripcionNumeroRegistro: string;
 
   programa: boolean;
   descripcionProgramaFomento: string;
+  blnProgramaFomento: boolean;
 
 
   /**
@@ -28,9 +30,11 @@ export interface Solicitud5701State {
    */
   checkIMMEX: boolean;
   descripcionImmex: string;
+  blnImmex: boolean;
 
   industriaAutomotriz: boolean;
   descripcionIndustrialAutomotriz: string;
+  blnIndustriaAutomotriz: boolean;
 
   tipoEmpresaCertificada: string;
   idSocioComercial: string;
@@ -38,6 +42,11 @@ export interface Solicitud5701State {
   blnSocioComercial: boolean;
   certificacionOEA: boolean;
   revision: boolean;
+  blnRevisionOrigen: boolean;
+  blnCertificacionA: string;
+  blnCertificacionAA: string;
+  blnCertificacionAAA: string;
+  blnOEA: boolean;
 
   fechaInicio: string;
   horaInicio: string;
@@ -112,20 +121,29 @@ export function createInitialState(): Solicitud5701State {
     idSolicitud: '',
     tipoSolicitud: '',
     RFCImportadorExportador: '',
+    rfcGenerico: false,
     nombre: '',
     descripcionNumeroRegistro: '',
     programa: false,
     descripcionProgramaFomento: '',
+    blnProgramaFomento: false,
     checkIMMEX: false,
     descripcionImmex: '',
     industriaAutomotriz: false,
     descripcionIndustrialAutomotriz: '',
+    blnIndustriaAutomotriz: false,
     tipoEmpresaCertificada: '',
     idSocioComercial: '',
     socioComercial: false,
+    blnImmex: false,
     blnSocioComercial: false,
     certificacionOEA: false,
     revision: false,
+    blnRevisionOrigen: false,
+    blnCertificacionA: '',
+    blnCertificacionAA: '',
+    blnCertificacionAAA: '',
+    blnOEA: false,
     fechaInicio: '',
     horaInicio: '',
     fechaFinal: '',
@@ -215,6 +233,20 @@ export class Tramite5701Store extends Store<Solicitud5701State> {
     }));
   }
 
+  public setBlnImmex(blnImmex: boolean): void {
+    this.update((state) => ({
+      ...state,
+      blnImmex,
+    }));
+  }
+
+  public setRfcGenerico(rfcGenerico: boolean): void {
+    this.update((state) => ({
+      ...state,
+      rfcGenerico,
+    }));
+  }
+
   public setNombre(nombre: string): void {
     this.update((state) => ({
       ...state,
@@ -243,6 +275,13 @@ export class Tramite5701Store extends Store<Solicitud5701State> {
     }));
   }
 
+  public setBlnProgramaFomento(blnProgramaFomento: boolean): void {
+    this.update((state) => ({
+      ...state,
+      blnProgramaFomento,
+    }));
+  }
+
   public setCheckIMMEX(checkIMMEX: boolean): void {
     this.update((state) => ({
       ...state,
@@ -268,6 +307,13 @@ export class Tramite5701Store extends Store<Solicitud5701State> {
     this.update((state) => ({
       ...state,
       descripcionIndustrialAutomotriz,
+    }));
+  }
+
+  public setBlnIndustriaAutomotriz(blnIndustriaAutomotriz: boolean): void {
+    this.update((state) => ({
+      ...state,
+      blnIndustriaAutomotriz,
     }));
   }
 
@@ -310,6 +356,37 @@ export class Tramite5701Store extends Store<Solicitud5701State> {
     this.update((state) => ({
       ...state,
       revision,
+    }));
+  }
+
+  public setBlnRevisionOrigen(blnRevisionOrigen: boolean): void {
+    this.update((state) => ({
+      ...state,
+      blnRevisionOrigen,
+    }));
+  }
+  public setBlnCertificacionA(blnCertificacionA: string): void {
+    this.update((state) => ({
+      ...state,
+      blnCertificacionA,
+    }));
+  }
+  public setBlnCertificacionAA(blnCertificacionAA: string): void {
+    this.update((state) => ({
+      ...state,
+      blnCertificacionAA,
+    }));
+  }
+  public setBlnCertificacionAAA(blnCertificacionAAA: string): void {
+    this.update((state) => ({
+      ...state,
+      blnCertificacionAAA,
+    }));
+  }
+  public setBlnOEA(blnOEA: boolean): void {
+    this.update((state) => ({
+      ...state,
+      blnOEA,
     }));
   }
 

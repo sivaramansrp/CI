@@ -66,11 +66,11 @@ export const API_GET_SOCIO_COMERCIAL = `catalogo/certificacion/scc/valida/${ID_S
  */
 export const API_GET_INDUSTRIA_AUTOMOTRIZ = `programa-se/cert-automotriz/${RFC_QUERY}`;
 /**
- * API que permite validar si un RFC es genérico o no.
+ * API que permite verificar si el RFC proporcionado es válido.
  * @param RFC_QUERY EL RFC
  * @see http://api-vucem-1069277193.us-east-1.elb.amazonaws.com/api/sat-t5701/swagger-ui/index.html#/RFC/valida-rfc
  */
-export const API_GET_VALIDA_RFC_GENERICO = `sat-t5701/rfc/valida/${RFC_QUERY}`;
+export const API_GET_VALIDA_RFC = `sat-t5701/rfc/valida/${RFC_QUERY}`;
 /**
  * El número de gafete por el que se filtrará la información.
  */
@@ -125,3 +125,24 @@ export const TIPO_TRANSPORTE = '{tipoTransporte}'
  */
 export const API_CONSULTAR_VALIDACION = `privado/${TIPO_TRANSPORTE}/valida`
 
+/**
+ * API que obtiene la información del contribuyente por RFC.
+ * @param RFC_QUERY El RFC del contribuyente
+ */
+export const API_GET_RFC_IDC = `idc/contribuyente/detalle/${RFC_QUERY}`
+/**
+ * API que valida si un RFC (Registro Federal de Contribuyentes) está certificado para la revisión de origen.
+ * * @param RFC_QUERY El RFC del contribuyente
+ */
+export const API_GET_RFC_ORIGEN = `certificacion/origen/valida/${RFC_QUERY}`;
+/**
+ * El tipo de trámite por el que se filtrará la información.
+ */
+export const TIPO_TRAMITE_QUERY = '{tipoTramite}';
+/**
+ * API para validar si un RFC tiene certificaciones vigentes.
+ * @param TIPO_TRAMITE_QUERY El tipo de trámite
+ * @param RFC_QUERY El RFC del solicitante
+ * @see http://api-vucem-1069277193.us-east-1.elb.amazonaws.com/api/catalogo/swagger-ui/index.html#/Certificaciones/valida-certificaciones
+ */
+export const API_GET_VALIDA_CERTIFICACIONES = `catalogo/valida-certificaciones/${TIPO_TRAMITE_QUERY}/${RFC_QUERY}`;

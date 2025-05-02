@@ -1,7 +1,6 @@
-import { API_CERTIFICACION, RFC_QUERY } from "../../../shared/constants/api-constants";
+import { API_CERTIFICACION, enviroment, RFC_QUERY } from "@libs/shared/data-access-user/src";
 import { catchError, map, Observable, throwError } from "rxjs";
 import { CertificacionResponse } from "../../models/5701/Certificacion.model";
-import { enviroment } from "@libs/shared/data-access-user/src";
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 
