@@ -1,6 +1,6 @@
 
 
-import { API_GET_INDUSTRIA_AUTOMOTRIZ, enviroment, NUMERO_GAFETE_QUERY, TIPO_GAFETE_QUERY } from '@libs/shared/data-access-user/src';
+import { API_GET_CONSULTA_RESPONSABLE, API_GET_INDUSTRIA_AUTOMOTRIZ, enviroment, NUMERO_GAFETE_QUERY, TIPO_GAFETE_QUERY } from '@libs/shared/data-access-user/src';
 import { catchError, map, Observable, throwError } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -24,7 +24,7 @@ export class ConsultaResponsableService {
    *
    */
   getGafeteResponsable(numeroGafete: string, tipoGafete: string): Observable<ResponsableGafeteResponse> {
-    const ENDPOINT = `${this.host}`+ API_GET_INDUSTRIA_AUTOMOTRIZ.replace(NUMERO_GAFETE_QUERY, numeroGafete).replace(TIPO_GAFETE_QUERY, tipoGafete);    
+    const ENDPOINT = `${this.host}`+ API_GET_CONSULTA_RESPONSABLE.replace(NUMERO_GAFETE_QUERY, numeroGafete).replace(TIPO_GAFETE_QUERY, tipoGafete);    
 
     return this.http.get<ResponsableGafeteResponse>(ENDPOINT).pipe(
       map((response) => {

@@ -271,7 +271,10 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    */
   private usuarioState!: UsuarioState;
 
-  notificacionNueva!: Notificacion;
+  /**
+   * @descripcion Notificación para mostrar mensajes al usuario.
+   */
+  public nuevaNotificacion!: Notificacion;
 
   /**
    * Bandera para saber el tipo de persona del usuario. 
@@ -362,7 +365,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
 
   }
 
-  private validaTipoPersona(){
+  private validaTipoPersona() {
     // TODO: Esta validación debería cambiar y validar contra el valor almacenado
     // en el store.
     if (this.tipoPersona === TipoPersona.FISICA) {
@@ -946,7 +949,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
               );
               this.tramite5701Store.setNombre(RFC_GENERICO);
               return EMPTY;
-            } 
+            }
             return this.idcService.getInformacionContribuyente(RFC_IMP_EXP).pipe(tap());
           } else {
             // TODO: Implementar mensaje de error para RFC no encontrado.
@@ -961,7 +964,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
         })
       ).subscribe();
 
-      this.tramite5701Store.setRFCImportadorExportador(RFC_IMP_EXP);      
+      this.tramite5701Store.setRFCImportadorExportador(RFC_IMP_EXP);
     }
   }
 

@@ -18,6 +18,7 @@ export const ERR_BUSQUEDA_GAFETE_SIN_RESULTADOS = 'No se encontraron datos con e
 export const ADV_MAXIMO_PERSONAS = 'Solo puede agregar hasta 5 personas.';
 export const MSG_ELIMINA_ELEMENTO = 'Datos eliminados correctamente.';
 export const ADV_LIMPIA_CAMPOS = 'Los datos capturados serán borrados, estás de acuerdo (SI/NO)?';
+export const MSG_DATOS_GUARDADOS = 'Datos guardados correctamente.';
 
 export const MSG_NRO_PEDIMENTO = 'Necesita agregar un número de pedimento';
 export const MSG_ADUANA_PEDIMENTO = 'Necesita seleccionar una aduana de despacho y agregar un número de pedimento';

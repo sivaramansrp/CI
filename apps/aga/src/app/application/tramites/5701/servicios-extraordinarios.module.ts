@@ -1,4 +1,4 @@
-import { AgregarTransporteComponent, CatalogosService, InputRadioComponent, UppercaseDirective } from '@ng-mf/data-access-user';
+import { AgregarTransporteComponent, CatalogosService, InputRadioComponent, NotificacionesComponent, UppercaseDirective } from '@ng-mf/data-access-user';
 import { forwardRef, NgModule } from '@angular/core';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
 
@@ -66,6 +66,7 @@ import { WizardComponent } from '@ng-mf/data-access-user';
     forwardRef(() => WizardComponent),
     forwardRef(() => UppercaseDirective),
     forwardRef(() => InputRadioComponent),
+    forwardRef(() => NotificacionesComponent),
     ToastrModule.forRoot()
   ],
   exports: [

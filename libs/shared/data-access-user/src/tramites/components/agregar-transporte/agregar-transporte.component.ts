@@ -160,7 +160,10 @@ export class AgregarTransporteComponent implements OnChanges, OnInit {
    */
   public nuevaNotificacion!: Notificacion;
 
-
+  /**
+   * @description Notificador para destruir el observable al finalizar el componente.
+   * Se utiliza para evitar fugas de memoria y asegurar que los recursos se liberen adecuadamente.
+   */
   private destroyNotifier$: Subject<void> = new Subject();
 
 
